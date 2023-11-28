@@ -1,160 +1,2167 @@
-Return-Path: <linux-gpio+bounces-626-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-627-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F57E7FC810
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 22:36:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29FBA7FC9C1
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 23:43:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98968B2164F
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 21:36:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B98122830B3
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 22:43:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1FB644C83;
-	Tue, 28 Nov 2023 21:36:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA23246BA3;
+	Tue, 28 Nov 2023 22:43:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="kuDwZIAS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XASx6Mty"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x52d.google.com (mail-pg1-x52d.google.com [IPv6:2607:f8b0:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8E7C72D66
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 13:36:05 -0800 (PST)
-Received: by mail-pg1-x52d.google.com with SMTP id 41be03b00d2f7-5c21e185df5so4335633a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 13:36:05 -0800 (PST)
+Received: from mail-qk1-x72c.google.com (mail-qk1-x72c.google.com [IPv6:2607:f8b0:4864:20::72c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3477783
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 14:43:28 -0800 (PST)
+Received: by mail-qk1-x72c.google.com with SMTP id af79cd13be357-77d66c7af31so23297685a.1
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 14:43:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701207365; x=1701812165; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701211407; x=1701816207; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oTVlLTZZmikOeFqoqYLREHBTF55+gG2wuAmC6HPrHN4=;
-        b=kuDwZIASyagCsGZh2bDS2mH2gp0JyH33VXzAd9Rm35vw2Ra5iIGviyl+nJZvg7oHVg
-         kN2ccJKravFu28T/akIlvY2W9+Ag1AETWWBSP6gg3B7HC8JRt4/THHUXANXZJYedS53R
-         cx4MBxmEpR821F4t1/DmZzOyVAYbxxBQvKGwbwPI6B+YJQiShzoffkyHskkRlSSmp5PK
-         alIirvakrTNByJ0sLqMwC5WOq2TmE27QQYpizSznyZ8+CKLvHRzWWoX3msnQWZR02JOZ
-         0NlA+jrfoCTW6Y3ULy0bxebdmJYzOlxP+cCYWvPiGSUer2QtB9N2vCRqNSp2HvfHg+Gu
-         bkZw==
+        bh=uiFrfcpQlNRJfkcty4c6PEZeNM+M2lTL7MwS1Y06JDE=;
+        b=XASx6MtyYNVeQ81nKGtAdja+l+fOLgM/iWkGSxWeUfeeJtHr8RLnale2eVp+ZISz2f
+         7IvTmTlhnj6ukZPYt6IBmeDApaJAQj3kSzH043shh4jo2KSN+OAs/Kwl2mkedej1pfNh
+         xlJ8ZqN+yyY2yE+NsIeYoKHGIDFP7Dm9EiMQigrFKwBpO74VBefJRviS3ny80IHtOIb2
+         g4dhFHQb7chVmkdCxVosiks0oRa5I45Gr46GRk6d0AS6VNfz3iqobQv6OYa5IxkluQGc
+         QogC5sQE5+QG+w/BKxLpbucdzOIa+0n59pu2XO63henS6XXcQfmmiw0Ex5spCNKL65lQ
+         DKQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701207365; x=1701812165;
+        d=1e100.net; s=20230601; t=1701211407; x=1701816207;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oTVlLTZZmikOeFqoqYLREHBTF55+gG2wuAmC6HPrHN4=;
-        b=KblwFFwXUXqRqyer+TVh6eA4Ihq71cd1DLfhr7ATgc1NcwRw7OuJPK66A5QrvBTFc+
-         wlYZai7bVanT0A0JauuWcfjTAbykfbhQ19H6Hh3vK3ldPyB1y2Nm85Cijn1+7o8GnVQ3
-         eK4+I0gXxejXwOZUu28EnQBUGihYHOhU7kpjEW70V2N+FMCbUM9t44dxF8PxhrzS9YVi
-         FLi4UU8uTlu3P/w2D8fkPFk5NhelFcKUFCY2ycW8urQgaAh0/6FL5TkYYmhysWiNYmIZ
-         4Hha9bhrGIBf4Q1j6JY3XzYZxPThoMrO1s5UijQ4WUxi2E69D7VyBNVnmlBtxDFtBxz+
-         j+Zw==
-X-Gm-Message-State: AOJu0YzJHIADJGNyhk6fg+qZOAg/8RDKZN1xRamPnUXQusY0Oxed3b4h
-	QcMSrIMyiPhtRNlS4/iPtxWfiShrZ9zJgr32Csh22Q==
-X-Google-Smtp-Source: AGHT+IHnu+R39CMW8bY/8u262kP5zKg3VQ/mjN6LJEe4dATUMhYEKF46M96JeCHr013bip0jw7vCgK8zjEoEnqa15VE=
-X-Received: by 2002:a17:90b:390d:b0:285:da91:69a2 with SMTP id
- ob13-20020a17090b390d00b00285da9169a2mr7861663pjb.31.1701207364753; Tue, 28
- Nov 2023 13:36:04 -0800 (PST)
+        bh=uiFrfcpQlNRJfkcty4c6PEZeNM+M2lTL7MwS1Y06JDE=;
+        b=BZWsEqzSlt78Ohyi0JzHOtzM6nkarHQqrpF65dRIXRy1cqXrng9NSrXeKeCRyabWz2
+         xaOkzLLG41SkuhNLiHLr0CZQ2nNcKthkzcaEKkIJ/ZwEokzBcPolJDRn1fAits3M9mxE
+         CeXXXRNdQsPzfNWEHzywKg7tSQsEKuvfcd49TAAxZCpmNarLxqFXfbjACUV9/3lIU+rM
+         oFKz+KPDyLWhw2EDgG1iSa48nUspCNjbXbkA7Skqf0C7Wnr0YX8MFKhP4TXmBfk99NQe
+         3aGkcSjHD3J5Cbb00LgkL99VERsGSyKRKyUkQcRPLRMm/biDGA8NQYrmz0RZQdXiwUQ6
+         EqmA==
+X-Gm-Message-State: AOJu0YzYmVtMnTS6ajItWIpcKnra0lAphLXgtYvkx/XSnyhZs5Y19Xjf
+	MDPsWQP4kjxrcoAb2YJINj+zz0kZjzFjo8rmm0Emkg==
+X-Google-Smtp-Source: AGHT+IFHfciXbtSUPfhAeoR2DwhJNq/+HTA4ppmCxtjs3DxEktNhR1tHUxSHeot9n/jyqc3W2Loeo7iuyMsx7wstfS4=
+X-Received: by 2002:a05:620a:31e:b0:77d:a83b:85a0 with SMTP id
+ s30-20020a05620a031e00b0077da83b85a0mr10494456qkm.8.1701211406705; Tue, 28
+ Nov 2023 14:43:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
- <20231126094618.2545116-1-youngmin.nam@samsung.com> <bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org>
- <ZWU75VtJ/mXpMyQr@perf> <1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
-In-Reply-To: <1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Tue, 28 Nov 2023 15:35:53 -0600
-Message-ID: <CAPLW+4n0SAOTb6wocY-WjkxgSFMbx+nVuqdaPcNYVDsbfg+EfA@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non wake
- up external gpio interrupt
-To: Youngmin Nam <youngmin.nam@samsung.com>
-Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com, 
-	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20231011184823.443959-1-peter.griffin@linaro.org>
+ <20231011184823.443959-18-peter.griffin@linaro.org> <CAPLW+4=uDEcsJBbkjy48NMF5DPvheJ1ygO8=542=fb91ff8COw@mail.gmail.com>
+In-Reply-To: <CAPLW+4=uDEcsJBbkjy48NMF5DPvheJ1ygO8=542=fb91ff8COw@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Tue, 28 Nov 2023 22:43:14 +0000
+Message-ID: <CADrjBPp+AgiT75UCFtpswpZ8d4oZ=mcGF9296oyPQ72w=rKrDg@mail.gmail.com>
+Subject: Re: [PATCH v3 17/20] arm64: dts: google: Add initial Google gs101 SoC support
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	cw00.choi@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
+	saravanak@google.com, willmcvicker@google.com, soc@kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	kernel-team@android.com, linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023 at 1:29=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
+Hi Sam,
+
+Thanks for your review. Apologies I missed this in v4 series. See my
+comments inline below.
+
+On Thu, 12 Oct 2023 at 08:23, Sam Protsenko <semen.protsenko@linaro.org> wr=
+ote:
 >
-> On 28/11/2023 02:01, Youngmin Nam wrote:
-> > On Mon, Nov 27, 2023 at 10:54:56AM +0100, Krzysztof Kozlowski wrote:
-> >> On 26/11/2023 10:46, Youngmin Nam wrote:
-> >>> To support affinity setting for non wake up external gpio interrupt,
-> >>> add irq_set_affinity callback using irq number from pinctrl driver da=
-ta.
-> >>>
-> >>> Before this patch, changing the irq affinity of gpio interrupt is not=
- possible:
-> >>>
-> >>>     # cat /proc/irq/418/smp_affinity
-> >>>     3ff
-> >>>     # echo 00f > /proc/irq/418/smp_affinity
-> >>
-> >> Does this command succeed on your board?
-> >>
-> > Yes.
->
-> Hm, fails all the time one mine.
->
-
-I tried to test this patch on E850-96, and an attempt to write into
-smp_affinity (for some GPIO irq) also fails for me:
-
-    # echo f0 > smp_affinity
-    -bash: echo: write error: Input/output error
-
-When I add some pr_err() to exynos_irq_set_affinity(), I can't see
-those printed in dmesg. So I guess exynos_irq_set_affinity() doesn't
-get called at all. So the error probably happens before
-.irq_set_affinity callback gets called.
-
-Youngmin, can you please try and test this patch on E850-96? This
-board is already supported in upstream kernel. For example you can use
-"Volume Up" interrupt for the test, which is GPIO irq.
-
+> On Wed, Oct 11, 2023 at 1:49=E2=80=AFPM Peter Griffin <peter.griffin@lina=
+ro.org> wrote:
 > >
-> >>>     # cat /proc/irq/418/smp_affinity
-> >>>     3ff
-> >>>     # cat /proc/interrupts
-> >>>                CPU0       CPU1       CPU2       CPU3    ...
-> >>>     418:       3631          0          0          0    ...
-> >>>
-> >>> With this patch applied, it's possible to change irq affinity of gpio=
- interrupt:
-> >>
-> >> ...
-> >>
-> >> On which board did you test it?
-> >>
-> >>
-> > I tested on S5E9945 ERD(Exynos Reference Development) board.
->
-> There is no such board upstream. How can we reproduce this issue? I am
-> afraid we cannot test neither the bug nor the fix.
->
+> > Google gs101 SoC is ARMv8 mobile SoC found in the Pixel 6,
+> > (oriole) Pixel 6a (bluejay) and Pixel 6 pro (raven) mobile
+> > phones. It features:
+> > * 4xA55 little cluster
+> > * 2xA76 Mid cluster
+> > * 2xX1 Big cluster
 > >
-> >>> +   if (parent)
-> >>> +           return parent->chip->irq_set_affinity(parent, dest, force=
-);
-> >>> +
-> >>
-> >> I think there is a  helper for it: irq_chip_set_affinity_parent().
-> >>
-> >>
+> > This commit adds the basic device tree for gs101 (SoC).
+> > Further platform support will be added over time.
 > >
-> > The irq_chip_set_affinity_parent() requires parent_data of irq_data.
->
-> Hm, so now I wonder why do we not have parent_data...
->
-> > But when I tested as below, exynos's irqd->parent_data was null.
-> > So we should use irqchip's affinity function instead of the helper func=
-tion.
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  arch/arm64/Kconfig.platforms                  |    6 +
+> >  arch/arm64/boot/dts/Makefile                  |    1 +
+> >  arch/arm64/boot/dts/google/gs101-pinctrl.dtsi | 1275 +++++++++++++++++
+> >  arch/arm64/boot/dts/google/gs101-pinctrl.h    |   32 +
+> >  arch/arm64/boot/dts/google/gs101.dtsi         |  504 +++++++
+> >  5 files changed, 1818 insertions(+)
+> >  create mode 100644 arch/arm64/boot/dts/google/gs101-pinctrl.dtsi
+> >  create mode 100644 arch/arm64/boot/dts/google/gs101-pinctrl.h
+> >  create mode 100644 arch/arm64/boot/dts/google/gs101.dtsi
 > >
+> > diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platform=
+s
+> > index 6069120199bb..a5ed1b719488 100644
+> > --- a/arch/arm64/Kconfig.platforms
+> > +++ b/arch/arm64/Kconfig.platforms
+> > @@ -107,6 +107,12 @@ config ARCH_EXYNOS
+> >         help
+> >           This enables support for ARMv8 based Samsung Exynos SoC famil=
+y.
+> >
+> > +config ARCH_GOOGLE_TENSOR
+> > +       bool "Google Tensor SoC fmaily"
+> > +       depends on ARCH_EXYNOS
+> > +       help
+> > +         Support for ARMv8 based Google Tensor platforms.
+> > +
+> >  config ARCH_SPARX5
+> >         bool "Microchip Sparx5 SoC family"
+> >         select PINCTRL
+> > diff --git a/arch/arm64/boot/dts/Makefile b/arch/arm64/boot/dts/Makefil=
+e
+> > index 30dd6347a929..a4ee7b628114 100644
+> > --- a/arch/arm64/boot/dts/Makefile
+> > +++ b/arch/arm64/boot/dts/Makefile
+> > @@ -13,6 +13,7 @@ subdir-y +=3D broadcom
+> >  subdir-y +=3D cavium
+> >  subdir-y +=3D exynos
+> >  subdir-y +=3D freescale
+> > +subdir-y +=3D google
+> >  subdir-y +=3D hisilicon
+> >  subdir-y +=3D intel
+> >  subdir-y +=3D lg
+> > diff --git a/arch/arm64/boot/dts/google/gs101-pinctrl.dtsi b/arch/arm64=
+/boot/dts/google/gs101-pinctrl.dtsi
+> > new file mode 100644
+> > index 000000000000..ba88000c3ed8
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/google/gs101-pinctrl.dtsi
+> > @@ -0,0 +1,1275 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * GS101 SoC pin-mux and pin-config device tree source
+> > + *
+> > + * Copyright 2019-2023 Google LLC
+> > + *
 >
+> This line is not needed. Also, maybe also add Linaro copyright here?
+
+Will fix
 >
+> > + */
+> > +
+> > +#include "gs101-pinctrl.h"
+> > +
+> > +/* GPIO_ALIVE */
+> > +&pinctrl_0 {
 >
-> Best regards,
-> Krzysztof
+> Why not just rename it to pinctrl_alive and remove the comment? The
+> same goes for all pinctrl nodes below.
+
+Will fix
+
 >
+> > +       gpa0: gpa0-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+>
+> Here and further: please align it to be at the same indentation level
+> as above line.
+
+Will fix
+
+>
+> > +                          <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa1: gpa1-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa2: gpa2-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa3: gpa3-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa4: gpa4-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa5: gpa5-gpio-bank  {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa9: gpa9-gpio-bank  {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupts =3D <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa10: gpa10-gpio-bank  {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupts =3D <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       uart15_bus: uart15-bus-pins {
+> > +              samsung,pins =3D "gpa2-3", "gpa2-4";
+> > +              samsung,pin-function =3D <2>;
+> > +              samsung,pin-pud =3D <0>;
+>
+> Could above two lines be replaced with some meaningful consts? I see
+> it's done below.
+
+Will fix
+>
+> > +       };
+> > +
+> > +       uart16_bus: uart16-bus-pins {
+> > +              samsung,pins =3D "gpa3-0", "gpa3-1", "gpa3-2", "gpa3-3";
+> > +              samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +              samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +       };
+> > +
+> > +       uart16_bus_rts: uart1-bus-rts-pins {
+> > +               samsung,pins =3D "gpa3-2";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-val =3D <1>;
+> > +       };
+> > +
+> > +       uart16_bus_tx_dat: uart1-bus-tx-dat-pins {
+> > +               samsung,pins =3D "gpa3-1";
+> > +               samsung,pin-val =3D <1>;
+> > +       };
+> > +
+> > +       uart16_bus_tx_con: uart1-bus-tx-con-pins {
+> > +               samsung,pins =3D "gpa3-1";
+> > +               samsung,pin-function =3D <1>;
+>
+> Named const?
+
+Will fix
+>
+> > +       };
+> > +
+> > +       uart17_bus: uart17-bus-pins {
+> > +              samsung,pins =3D "gpa4-0", "gpa4-1", "gpa4-2", "gpa4-3";
+> > +              samsung,pin-function =3D <2>;
+> > +              samsung,pin-pud =3D <0>;
+>
+> Here and further: if possible, try to use named constants.
+
+Will fix throughout.
+
+>
+> > +       };
+> > +
+> > +       spi15_bus: spi15-bus-pins {
+> > +               samsung,pins =3D "gpa4-0", "gpa4-1", "gpa4-2";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi15_cs: spi15-cs-pins {
+> > +               samsung,pins =3D "gpa4-3";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_FAR_ALIVE */
+> > +&pinctrl_1 {
+> > +       gpa6: gpa6-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa7: gpa7-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa8: gpa8-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +
+> > +       gpa11: gpa11-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> > +                          <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_GSACORE */
+> > +&pinctrl_2 {
+> > +       gps0: gps0-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gps1: gps1-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gps2: gps2-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_GSACTRL */
+> > +&pinctrl_3 {
+> > +       gps3: gps3-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_HSI1 */
+> > +&pinctrl_6 {
+> > +       gph0: gph0-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gph1: gph1-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       pcie0_clkreq: pcie0-clkreq-pins{
+> > +               samsung,pins =3D "gph0-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <3>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_10_MA>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +               samsung,pin-pud-pdn =3D <3>;
+>
+> What are those two properties? I don't see them documented in
+> dt-bindings or being mentioned in the driver.
+
+These properties have been in the samsung pinctrl driver since it was
+upstreamed by Linaro in 2012 :) They are used for pin function and
+pull up/down config in power down mode. See also
+Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-pins-cfg.yaml
+
+>
+> > +       };
+> > +
+> > +       pcie0_perst: pcie0-perst-pins {
+> > +               samsung,pins =3D "gph0-0";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_10_MA>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_HSI2 */
+> > +&pinctrl_7 {
+> > +       gph2: gph2-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gph3: gph3-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gph4: gph4-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       sd2_clk: sd2-clk-pins {
+> > +               samsung,pins =3D "gph4-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_7_5_MA>;
+> > +       };
+> > +
+> > +       sd2_cmd: sd2-cmd-pins {
+> > +               samsung,pins =3D "gph4-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <3>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_7_5_MA>;
+> > +       };
+> > +
+> > +       sd2_bus1: sd2-bus-width1-pins {
+> > +               samsung,pins =3D "gph4-2";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <3>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_7_5_MA>;
+> > +       };
+> > +
+> > +       sd2_bus4: sd2-bus-width4-pins {
+> > +               samsung,pins =3D "gph4-3", "gph4-4", "gph4-5";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <3>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_7_5_MA>;
+> > +       };
+> > +
+> > +       sd2_clk_fast_slew_rate_1x: sd2-clk-fast-slew-rate-1x-pins {
+> > +               samsung,pins =3D "gph4-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       sd2_clk_fast_slew_rate_2x: sd2-clk-fast-slew-rate-2x-pins {
+> > +               samsung,pins =3D "gph4-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sd2_clk_fast_slew_rate_3x: sd2-clk-fast-slew-rate-3x-pins {
+> > +               samsung,pins =3D "gph4-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_7_5_MA>;
+> > +       };
+> > +
+> > +       sd2_clk_fast_slew_rate_4x: sd2-clk-fast-slew-rate-4x-pins {
+> > +               samsung,pins =3D "gph4-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_10_MA>;
+> > +       };
+> > +
+> > +       ufs_rst_n: ufs-rst-n-pins {
+> > +               samsung,pins =3D "gph3-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +               samsung,pin-pud-pdn =3D <0>;
+> > +       };
+> > +
+> > +       ufs_refclk_out: ufs-refclk-out-pins {
+> > +               samsung,pins =3D "gph3-0";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +               samsung,pin-pud-pdn =3D <0>;
+> > +       };
+> > +
+> > +       pcie1_clkreq: pcie1-clkreq-pins {
+> > +               samsung,pins =3D "gph2-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <3>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_10_MA>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +               samsung,pin-pud-pdn =3D <3>;
+> > +       };
+> > +
+> > +       pcie1_perst: pcie1-perst-pins {
+> > +               samsung,pins =3D "gph2-0";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_10_MA>;
+> > +               samsung,pin-con-pdn =3D <3>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_PERIC0 */
+> > +&pinctrl_4 {
+> > +       gpp0: gpp0-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp1: gpp1-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp2: gpp2-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp3: gpp3-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp4: gpp4-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp5: gpp5-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp6: gpp6-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp7: gpp7-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp8: gpp8-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp9: gpp9-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp10: gpp10-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp11: gpp11-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp12: gpp12-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp13: gpp13-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp14: gpp14-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp15: gpp15-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp16: gpp16-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp17: gpp17-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp18: gpp18-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp19: gpp19-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       /* USI_PERIC0_UART_DBG */
+> > +       uart0_bus: uart0-bus-pins {
+> > +               samsung,pins =3D "gpp1-2", "gpp1-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       disp_te_pri_on: disp-te-pri-on-pins {
+> > +               samsung,pins =3D "gpp0-3";
+> > +               samsung,pin-function =3D <0xf>;
+> > +       };
+> > +
+> > +       disp_te_pri_off: disp-te-pri-off-pins {
+> > +               samsung,pins =3D "gpp0-3";
+> > +               samsung,pin-function =3D <0>;
+> > +       };
+> > +
+> > +       disp_te_sec_on: disp-te-sec-on-pins {
+> > +               samsung,pins =3D "gpp0-4";
+> > +               samsung,pin-function =3D <0xf>;
+> > +       };
+> > +
+> > +       disp_te_sec_off: disp-te-sec-off-pins {
+> > +               samsung,pins =3D "gpp0-4";
+> > +               samsung,pin-function =3D <0>;
+> > +       };
+> > +
+> > +       sensor_mclk1_out: sensor-mclk1-out-pins {
+> > +               samsung,pins =3D "gpp3-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk1_fn: sensor-mclk1-fn-pins {
+> > +               samsung,pins =3D "gpp3-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk2_out: sensor-mclk2-out-pins {
+> > +               samsung,pins =3D "gpp5-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk2_fn: sensor-mclk2-fn-pins {
+> > +               samsung,pins =3D "gpp5-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk3_out: sensor-mclk3-out-pins {
+> > +               samsung,pins =3D "gpp7-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk3_fn: sensor-mclk3-fn-pins {
+> > +               samsung,pins =3D "gpp7-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk4_out: sensor-mclk4-out-pins {
+> > +               samsung,pins =3D "gpp9-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk4_fn: sensor-mclk4-fn-pins {
+> > +               samsung,pins =3D "gpp9-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk5_out: sensor-mclk5-out-pins {
+> > +               samsung,pins =3D "gpp11-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk5_fn: sensor-mclk5-fn-pins {
+> > +               samsung,pins =3D "gpp11-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk6_out: sensor-mclk6-out-pins {
+> > +               samsung,pins =3D "gpp13-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk6_fn: sensor-mclk6-fn-pins {
+> > +               samsung,pins =3D "gpp13-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk7_out: sensor-mclk7-out-pins {
+> > +               samsung,pins =3D "gpp15-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk7_fn: sensor-mclk7-fn-pins {
+> > +               samsung,pins =3D "gpp15-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk8_out: sensor-mclk8-out-pins {
+> > +               samsung,pins =3D "gpp17-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_DOWN>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       sensor_mclk8_fn: sensor-mclk8-fn-pins {
+> > +               samsung,pins =3D "gpp17-0";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_2>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c14_bus: hsi2c14-bus-pins {
+> > +               samsung,pins =3D "gpp18-0", "gpp18-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart14_bus_single: uart14-bus-pins {
+> > +               samsung,pins =3D "gpp18-0", "gpp18-1",
+> > +                              "gpp18-2", "gpp18-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi14_bus: spi14-bus-pins {
+> > +               samsung,pins =3D "gpp18-0", "gpp18-1", "gpp18-2";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi14_cs: spi14-cs-pins {
+> > +               samsung,pins =3D "gpp18-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi14_cs_func: spi14-cs-func-pins {
+> > +               samsung,pins =3D "gpp18-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c8_bus: hsi2c8-bus-pins {
+> > +               samsung,pins =3D "gpp16-0", "gpp16-1";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_3>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +               samsung,pin-pud-pdn =3D <GS101_PIN_PDN_OUT0>;
+> > +       };
+> > +
+> > +       uart8_bus_single: uart8-bus-pins {
+> > +               samsung,pins =3D "gpp16-0", "gpp16-1", "gpp16-2",
+> > +                              "gpp16-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi8_bus: spi8-bus-pins {
+> > +               samsung,pins =3D "gpp16-0", "gpp16-1", "gpp16-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi8_cs: spi8-cs-pins {
+> > +               samsung,pins =3D "gpp16-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi8_cs_func: spi8-cs-func-pins {
+> > +               samsung,pins =3D "gpp16-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c7_bus: hsi2c7-bus-pins {
+> > +               samsung,pins =3D "gpp14-0", "gpp14-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart7_bus_single: uart7-bus-pins {
+> > +               samsung,pins =3D "gpp14-0", "gpp14-1",
+> > +                              "gpp14-2", "gpp14-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi7_bus: spi7-bus-pins {
+> > +               samsung,pins =3D "gpp14-0", "gpp14-1", "gpp14-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi7_cs: spi7-cs-pins {
+> > +               samsung,pins =3D "gpp14-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi7_cs_func: spi7-cs-func-pins {
+> > +               samsung,pins =3D "gpp14-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c6_bus: hsi2c6-bus-pins {
+> > +               samsung,pins =3D "gpp12-0", "gpp12-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart6_bus_single: uart6-bus-pins {
+> > +               samsung,pins =3D "gpp12-0", "gpp12-1",
+> > +                              "gpp12-2", "gpp12-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi6_bus: spi6-bus-pins {
+> > +               samsung,pins =3D "gpp12-0", "gpp12-1", "gpp12-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi6_cs: spi6-cs-pins {
+> > +               samsung,pins =3D "gpp12-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi6_cs_func: spi6-cs-func-pins {
+> > +               samsung,pins =3D "gpp12-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c5_bus: hsi2c5-bus-pins {
+> > +               samsung,pins =3D "gpp10-0", "gpp10-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart5_bus_single: uart5-bus-pins {
+> > +               samsung,pins =3D "gpp10-0", "gpp10-1",
+> > +                              "gpp10-2", "gpp10-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi5_bus: spi5-bus-pins {
+> > +               samsung,pins =3D "gpp10-0", "gpp10-1", "gpp10-2";
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_3>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-con-pdn =3D <GS101_PIN_PDN_PREV>;
+> > +               samsung,pin-pud-pdn =3D <GS101_PIN_PULL_NONE>;
+> > +       };
+> > +
+> > +       spi5_cs_func: spi5-cs-func-pins {
+> > +               samsung,pins =3D "gpp10-3";
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_3>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-con-pdn =3D <GS101_PIN_PDN_PREV>;
+> > +               samsung,pin-pud-pdn =3D <GS101_PIN_PULL_NONE>;
+> > +       };
+> > +
+> > +       hsi2c4_bus: hsi2c4-bus-pins {
+> > +               samsung,pins =3D "gpp8-0", "gpp8-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart4_bus_single: uart4-bus-pins {
+> > +               samsung,pins =3D "gpp8-0", "gpp8-1",
+> > +                              "gpp8-2", "gpp8-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi4_bus: spi4-bus-pins {
+> > +               samsung,pins =3D "gpp8-0", "gpp8-1", "gpp8-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi4_cs: spi4-cs-pins {
+> > +               samsung,pins =3D "gpp8-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi4_cs_func: spi4-cs-func-pins {
+> > +               samsung,pins =3D "gpp8-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c3_bus: hsi2c3-bus-pins {
+> > +               samsung,pins =3D "gpp6-0", "gpp6-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart3_bus_single: uart3-bus-pins {
+> > +               samsung,pins =3D "gpp6-0", "gpp6-1",
+> > +                              "gpp6-2", "gpp6-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi3_bus: spi3-bus-pins {
+> > +               samsung,pins =3D "gpp6-0", "gpp6-1", "gpp6-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi3_cs: spi3-cs-pins {
+> > +               samsung,pins =3D "gpp6-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi3_cs_func: spi3-cs-func-pins {
+> > +               samsung,pins =3D "gpp6-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c2_bus: hsi2c2-bus-pins {
+> > +               samsung,pins =3D "gpp4-0", "gpp4-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart2_bus_single: uart2-bus-pins {
+> > +               samsung,pins =3D "gpp4-0", "gpp4-1",
+> > +                              "gpp4-2", "gpp4-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi2_bus: spi2-bus-pins {
+> > +               samsung,pins =3D "gpp4-0", "gpp4-1", "gpp4-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi2_cs: spi2-cs-pins {
+> > +               samsung,pins =3D "gpp4-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi2_cs_func: spi2-cs-func-pins {
+> > +               samsung,pins =3D "gpp4-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c1_bus: hsi2c1-bus-pins {
+> > +               samsung,pins =3D "gpp2-0", "gpp2-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart1_bus_single: uart1-bus-pins {
+> > +               samsung,pins =3D "gpp2-0", "gpp2-1",
+> > +                              "gpp2-2", "gpp2-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi1_bus: spi1-bus-pins {
+> > +               samsung,pins =3D "gpp2-0", "gpp2-1", "gpp2-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi1_cs: spi1-cs-pins {
+> > +               samsung,pins =3D "gpp2-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi1_cs_func: spi1-cs-func-pins {
+> > +               samsung,pins =3D "gpp2-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +};
+> > +
+> > +/* GPIO_PERIC1 */
+> > +&pinctrl_5 {
+> > +       gpp20: gpp20-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp21: gpp21-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp22: gpp22-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp23: gpp23-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp24: gpp24-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp25: gpp25-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp26: gpp26-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       gpp27: gpp27-gpio-bank {
+> > +               gpio-controller;
+> > +               #gpio-cells =3D <2>;
+> > +               interrupt-controller;
+> > +               #interrupt-cells =3D <2>;
+> > +       };
+> > +
+> > +       hsi2c13_bus: hsi2c13-bus-pins  {
+> > +               samsung,pins =3D "gpp25-0", "gpp25-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart13_bus_single: uart13-bus-pins {
+> > +              samsung,pins =3D "gpp25-0", "gpp25-1",
+> > +                             "gpp25-2", "gpp25-3";
+> > +              samsung,pin-function =3D <2>;
+> > +              samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi13_bus: spi13-bus-pins {
+> > +               samsung,pins =3D "gpp25-0", "gpp25-1", "gpp25-2";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi13_cs: spi13-cs-pins {
+> > +               samsung,pins =3D "gpp25-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi13_cs_func: spi13-cs-func-pins {
+> > +               samsung,pins =3D "gpp25-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c12_bus: hsi2c12-bus-pins {
+> > +               samsung,pins =3D "gpp23-4", "gpp23-5";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart12_bus_single: uart12-bus-pins {
+> > +               samsung,pins =3D "gpp23-4", "gpp23-5",
+> > +                              "gpp23-6", "gpp23-7";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi12_bus: spi12-bus-pins {
+> > +               samsung,pins =3D "gpp23-4", "gpp23-5", "gpp23-6";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi14_cs2: spi14-cs2-pins {
+> > +               samsung,pins =3D "gpp23-6";
+> > +               samsung,pin-function =3D <GS101_PIN_FUNC_OUTPUT>;
+> > +               samsung,pin-pud =3D <GS101_PIN_PULL_NONE>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi12_cs: spi12-cs-pins {
+> > +               samsung,pins =3D "gpp23-7";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi12_cs_func: spi12-cs-func-pins {
+> > +               samsung,pins =3D "gpp23-7";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c11_bus: hsi2c11-bus-pins {
+> > +               samsung,pins =3D "gpp23-0", "gpp23-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart11_bus_single: uart11-bus-pins {
+> > +               samsung,pins =3D "gpp23-0", "gpp23-1",
+> > +                              "gpp23-2", "gpp23-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi11_bus: spi11-bus-pins {
+> > +               samsung,pins =3D "gpp23-0", "gpp23-1", "gpp23-2";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi11_cs: spi11-cs-pins {
+> > +               samsung,pins =3D "gpp23-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi11_cs_func: spi11-cs-func-pins {
+> > +               samsung,pins =3D "gpp23-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c10_bus: hsi2c10-bus-pins {
+> > +               samsung,pins =3D "gpp21-0", "gpp21-1";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart10_bus_single: uart10-bus-pins {
+> > +               samsung,pins =3D "gpp21-0", "gpp21-1",
+> > +                              "gpp21-2", "gpp21-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi10_bus: spi10-bus-pins {
+> > +               samsung,pins =3D "gpp21-0", "gpp21-1", "gpp21-2";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi10_cs: spi10-cs-pins {
+> > +               samsung,pins =3D "gpp21-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi10_cs_func: spi10-cs-func-pins {
+> > +               samsung,pins =3D "gpp21-3";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c9_bus: hsi2c9-bus-pins {
+> > +               samsung,pins =3D "gpp20-4", "gpp20-5";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart9_bus_single: uart9-bus-pins {
+> > +               samsung,pins =3D "gpp20-4", "gpp20-5",
+> > +                              "gpp20-6", "gpp20-7";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi9_bus: spi9-bus-pins {
+> > +               samsung,pins =3D "gpp20-4", "gpp20-5", "gpp20-6";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi9_cs: spi9-cs-pins {
+> > +               samsung,pins =3D "gpp20-7";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi9_cs_func: spi9-cs-func-pins {
+> > +               samsung,pins =3D "gpp20-7";
+> > +               samsung,pin-function =3D <2>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       hsi2c0_bus: hsi2c0-bus-pins {
+> > +               samsung,pins =3D "gpp20-0", "gpp20-1";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       uart0_bus_single: uart0-bus-pins {
+> > +               samsung,pins =3D "gpp20-0", "gpp20-1",
+> > +                              "gpp20-2", "gpp20-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +       };
+> > +
+> > +       spi0_bus: spi0-bus-pins {
+> > +               samsung,pins =3D "gpp20-0", "gpp20-1", "gpp20-2";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi0_cs: spi0-cs-pins {
+> > +               samsung,pins =3D "gpp20-3";
+> > +               samsung,pin-function =3D <1>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +
+> > +       spi0_cs_func: spi0-cs-func-pins {
+> > +               samsung,pins =3D "gpp20-3";
+> > +               samsung,pin-function =3D <3>;
+> > +               samsung,pin-pud =3D <0>;
+> > +               samsung,pin-drv =3D <GS101_PIN_DRV_2_5_MA>;
+> > +       };
+> > +};
+> > +
+> > diff --git a/arch/arm64/boot/dts/google/gs101-pinctrl.h b/arch/arm64/bo=
+ot/dts/google/gs101-pinctrl.h
+> > new file mode 100644
+> > index 000000000000..16c54888f4bb
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/google/gs101-pinctrl.h
+> > @@ -0,0 +1,32 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Pinctrl binding constants for GS101
+> > + *
+> > + * Copyright (c) 2020-2023 Google, LLC.
+> > + */
+> > +
+> > +#ifndef __DT_BINDINGS_PINCTRL_GS101_H__
+> > +#define __DT_BINDINGS_PINCTRL_GS101_H__
+> > +
+> > +#define GS101_PIN_PULL_NONE            0
+> > +#define GS101_PIN_PULL_DOWN            1
+> > +#define GS101_PIN_PULL_UP              3
+> > +
+> > +/* Pin function in power down mode */
+> > +#define GS101_PIN_PDN_OUT0             0
+> > +#define GS101_PIN_PDN_OUT1             1
+> > +#define GS101_PIN_PDN_INPUT            2
+> > +#define GS101_PIN_PDN_PREV             3
+> > +
+> > +/* GS101 drive strengths */
+> > +#define GS101_PIN_DRV_2_5_MA           0
+> > +#define GS101_PIN_DRV_5_MA             1
+> > +#define GS101_PIN_DRV_7_5_MA           2
+> > +#define GS101_PIN_DRV_10_MA            3
+> > +
+> > +#define GS101_PIN_FUNC_INPUT           0
+> > +#define GS101_PIN_FUNC_OUTPUT          1
+> > +#define GS101_PIN_FUNC_2               2
+> > +#define GS101_PIN_FUNC_3               3
+> > +
+>
+> Maybe it's possible to somehow re-use already existing values in
+> arch/arm64/boot/dts/exynos/exynos-pinctrl.h?
+
+That is actually how it was in the first submission. The review
+feedback was not to do that and have a dedicated gs101 header.
+
+>
+> > +#endif /* __DT_BINDINGS_PINCTRL_GS101_H__ */
+> > diff --git a/arch/arm64/boot/dts/google/gs101.dtsi b/arch/arm64/boot/dt=
+s/google/gs101.dtsi
+> > new file mode 100644
+> > index 000000000000..37fb0a4dc8d3
+> > --- /dev/null
+> > +++ b/arch/arm64/boot/dts/google/gs101.dtsi
+> > @@ -0,0 +1,504 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * GS101 SoC
+> > + *
+> > + * Copyright 2019-2023 Google LLC
+> > + *
+>
+> This line is not needed. Also (but not sure): maybe add the author and
+> Linaro copyright?
+
+Will fix
+
+>
+> > + */
+> > +
+> > +#include <dt-bindings/clock/google,gs101.h>
+> > +#include <dt-bindings/gpio/gpio.h>
+> > +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +
+> > +/ {
+> > +       compatible =3D "google,gs101";
+> > +       #address-cells =3D <2>;
+> > +       #size-cells =3D <1>;
+> > +
+> > +       interrupt-parent =3D <&gic>;
+> > +
+> > +       aliases {
+> > +               pinctrl0 =3D &pinctrl_0;
+> > +               pinctrl1 =3D &pinctrl_1;
+> > +               pinctrl2 =3D &pinctrl_2;
+> > +               pinctrl3 =3D &pinctrl_3;
+> > +               pinctrl4 =3D &pinctrl_4;
+> > +               pinctrl5 =3D &pinctrl_5;
+> > +               pinctrl6 =3D &pinctrl_6;
+> > +               pinctrl7 =3D &pinctrl_7;
+> > +               serial0 =3D &serial_0;
+> > +       };
+> > +
+> > +       arm-pmu {
+> > +               compatible =3D "arm,armv8-pmuv3";
+>
+> Is there any more specifi Cortex PMU compatible for this chip?
+
+Yes will fix.
+
+>
+> > +               interrupts =3D <GIC_PPI 7 (GIC_CPU_MASK_SIMPLE(8) | IRQ=
+_TYPE_LEVEL_HIGH)>;
+>
+> Please try to keep it to 80 characters per line.
+
+Will fix
+
+>
+> > +       };
+> > +
+> > +       dsu-pmu-0 {
+> > +               compatible =3D "arm,dsu-pmu";
+> > +               interrupts =3D <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH>;
+> > +               cpus =3D <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>,
+> > +                      <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
+> > +       };
+> > +
+> > +       /* TODO replace with CCF clock */
+> > +       dummy_clk: oscillator {
+> > +               compatible =3D "fixed-clock";
+> > +               #clock-cells =3D <0>;
+> > +               clock-frequency =3D <12345>;
+> > +               clock-output-names =3D "pclk";
+> > +       };
+> > +
+> > +       cpus {
+> > +               #address-cells =3D <2>;
+>
+> Why 2-cells is needed here? If you make it 1, all below reg properties
+> can be made 1-cell, which removes not needed 0x0.
+
+Will fix
+>
+> > +               #size-cells =3D <0>;
+> > +
+> > +               cpu-map {
+> > +                       cluster0 {
+> > +                               core0 {
+> > +                                       cpu =3D <&cpu0>;
+> > +                               };
+> > +                               core1 {
+> > +                                       cpu =3D <&cpu1>;
+> > +                               };
+> > +                               core2 {
+> > +                                       cpu =3D <&cpu2>;
+> > +                               };
+> > +                               core3 {
+> > +                                       cpu =3D <&cpu3>;
+> > +                               };
+> > +                       };
+> > +
+> > +                       cluster1 {
+> > +                               core0 {
+> > +                                       cpu =3D <&cpu4>;
+> > +                               };
+> > +                               core1 {
+> > +                                       cpu =3D <&cpu5>;
+> > +                               };
+> > +                       };
+> > +
+> > +                       cluster2 {
+> > +                               core0 {
+> > +                                       cpu =3D <&cpu6>;
+> > +                               };
+> > +                               core1 {
+> > +                                       cpu =3D <&cpu7>;
+> > +                               };
+> > +                       };
+> > +               };
+> > +
+> > +               cpu0: cpu@0 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+>
+> Is there maybe any more specific Cortex compatible?
+
+Yes, will fix
+
+>
+> > +                       reg =3D <0x0 0x0000>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <250>;
+> > +                       dynamic-power-coefficient =3D <70>;
+> > +               };
+> > +
+> > +               cpu1: cpu@100 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0100>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <250>;
+> > +                       dynamic-power-coefficient =3D <70>;
+> > +               };
+> > +
+> > +               cpu2: cpu@200 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0200>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <250>;
+> > +                       dynamic-power-coefficient =3D <70>;
+> > +               };
+> > +
+> > +               cpu3: cpu@300 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0300>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ANANKE_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <250>;
+> > +                       dynamic-power-coefficient =3D <70>;
+> > +               };
+> > +
+> > +               cpu4: cpu@400 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0400>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ENYO_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <620>;
+> > +                       dynamic-power-coefficient =3D <284>;
+> > +               };
+> > +
+> > +               cpu5: cpu@500 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0500>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&ENYO_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <620>;
+> > +                       dynamic-power-coefficient =3D <284>;
+> > +               };
+> > +
+> > +               cpu6: cpu@600 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0600>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&HERA_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <1024>;
+> > +                       dynamic-power-coefficient =3D <650>;
+> > +               };
+> > +
+> > +               cpu7: cpu@700 {
+> > +                       device_type =3D "cpu";
+> > +                       compatible =3D "arm,armv8";
+> > +                       reg =3D <0x0 0x0700>;
+> > +                       enable-method =3D "psci";
+> > +                       cpu-idle-states =3D  <&HERA_CPU_SLEEP>;
+> > +                       capacity-dmips-mhz =3D <1024>;
+> > +                       dynamic-power-coefficient =3D <650>;
+> > +               };
+> > +
+> > +               idle-states {
+> > +                       entry-method =3D "psci";
+> > +
+> > +                       ANANKE_CPU_SLEEP: cpu-ananke-sleep {
+> > +                               idle-state-name =3D "c2";
+> > +                               compatible =3D "arm,idle-state";
+> > +                               arm,psci-suspend-param =3D <0x0010000>;
+> > +                               entry-latency-us =3D <70>;
+> > +                               exit-latency-us =3D <160>;
+> > +                               min-residency-us =3D <2000>;
+> > +                       };
+> > +
+> > +                       ENYO_CPU_SLEEP: cpu-enyo-sleep {
+> > +                               idle-state-name =3D "c2";
+> > +                               compatible =3D "arm,idle-state";
+> > +                               arm,psci-suspend-param =3D <0x0010000>;
+> > +                               entry-latency-us =3D <150>;
+> > +                               exit-latency-us =3D <190>;
+> > +                               min-residency-us =3D <2500>;
+> > +                       };
+> > +
+> > +                       HERA_CPU_SLEEP: cpu-hera-sleep {
+> > +                               idle-state-name =3D "c2";
+> > +                               compatible =3D "arm,idle-state";
+> > +                               arm,psci-suspend-param =3D <0x0010000>;
+> > +                               entry-latency-us =3D <235>;
+> > +                               exit-latency-us =3D <220>;
+> > +                               min-residency-us =3D <3500>;
+> > +                       };
+> > +               };
+> > +       };
+> > +
+> > +       /* bootloader requires ect node */
+> > +       ect {
+> > +               parameter_address =3D <0x90000000>;
+> > +               parameter_size =3D <0x53000>;
+> > +       };
+>
+> The bootloader doesn't work if you just remove this?
+
+That is correct, it boot loops failing to find the ect node in the
+bootloader. I did some more investigation and we can actually remove
+parameter_address and  parameter_size properties but the empty ect
+node needs to be present to boot the kernel.
+>
+> > +
+> > +       ext_24_5m: clock-1 {
+> > +               compatible =3D "fixed-clock";
+> > +               #clock-cells =3D <0>;
+> > +               clock-frequency =3D <24576000>;
+>
+> The frequency is probably should be set in board dts file. Because the
+> crystal is actually soldered on the board, not in SoC.
+
+Will move. Although Xtal can only be 24576000 for this SoC.
+
+>
+> > +               clock-output-names =3D "oscclk";
+> > +       };
+> > +
+> > +       ext_200m: clock-2 {
+> > +               compatible =3D "fixed-clock";
+> > +               #clock-cells =3D <0>;
+> > +               clock-frequency =3D <200000000>;
+>
+> Ditto.
+
+Will fix
+>
+> > +               clock-output-names =3D "ext-200m";
+> > +       };
+> > +
+> > +       psci {
+> > +               compatible =3D "arm,psci-1.0";
+> > +               method =3D "smc";
+> > +       };
+> > +
+> > +       reserved_memory: reserved-memory {
+> > +               #address-cells =3D <2>;
+>
+> Doesn't look like 2-cell address is really needed here.
+
+It is required, there is 8Gb of RAM on the board.
+
+>
+> > +               #size-cells =3D <1>;
+> > +               ranges;
+> > +
+> > +               gsa_reserved_protected: gsa@90200000 {
+> > +                       reg =3D <0x0 0x90200000 0x400000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               tpu_fw_reserved: tpu-fw@93000000 {
+> > +                       reg =3D <0x0 0x93000000 0x1000000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               aoc_reserve: aoc@94000000 {
+> > +                       reg =3D <0x0 0x94000000 0x03000000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               abl_reserved: abl@f8800000 {
+> > +                       reg =3D <0x0 0xf8800000 0x02000000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               dss_log_reserved: dss-log-reserved@fd3f0000 {
+> > +                       reg =3D <0 0xfd3f0000 0x0000e000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               debug_kinfo_reserved: debug-kinfo-reserved@fd3fe000 {
+> > +                       reg =3D <0 0xfd3fe000 0x00001000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               bldr_log_reserved: bldr-log-reserved@fd800000 {
+> > +                       reg =3D <0 0xfd800000 0x00100000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               bldr_log_hist_reserved: bldr-log-hist-reserved@fd900000=
+ {
+> > +                       reg =3D <0 0xfd900000 0x00002000>;
+> > +                       no-map;
+> > +               };
+> > +       };
+> > +
+> > +       timer {
+> > +               compatible =3D "arm,armv8-timer";
+> > +               interrupts =3D <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IR=
+Q_TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_=
+TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_=
+TYPE_LEVEL_LOW)>,
+> > +                            <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_=
+TYPE_LEVEL_LOW)>;
+> > +               clock-frequency =3D <24576000>;
+> > +       };
+> > +
+> > +       soc: soc@0 {
+> > +               compatible =3D "simple-bus";
+> > +               #address-cells =3D <2>;
+>
+> Is 2 cells are really needed for the addresses in this node? I only
+> see 32-bit addresses below in reg properties.
+
+It is a 36bit address bus, but I can add a ranges property to map the
+addresses and then use address-cells 1.
+So will fix in v5.
+
+>
+> > +               #size-cells =3D <1>;
+> > +               ranges;
+> > +
+> > +               cmu_misc: clock-controller@10010000 {
+> > +                       compatible =3D "google,gs101-cmu-misc";
+> > +                       reg =3D <0x0 0x10010000 0x8000>;
+> > +                       #clock-cells =3D <1>;
+> > +                       clocks =3D  <&ext_24_5m>, <&cmu_top CLK_DOUT_MI=
+SC_BUS>;
+> > +                       clock-names =3D "oscclk", "dout_cmu_misc_bus";
+> > +               };
+> > +
+> > +               watchdog_cl0: watchdog@10060000 {
+> > +                       compatible =3D "google,gs101-wdt";
+> > +                       reg =3D <0x0 0x10060000 0x100>;
+> > +                       interrupts =3D <GIC_SPI 765 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +                       clocks =3D <&cmu_misc CLK_GOUT_MISC_WDT_CLUSTER=
+0>, <&ext_24_5m>;
+> > +                       clock-names =3D "watchdog", "watchdog_src";
+> > +                       samsung,syscon-phandle =3D <&pmu_system_control=
+ler>;
+> > +                       samsung,cluster-index =3D <0>;
+> > +               };
+> > +
+> > +               watchdog_cl1: watchdog@10070000 {
+> > +                       compatible =3D "google,gs101-wdt";
+> > +                       reg =3D <0x0 0x10070000 0x100>;
+> > +                       interrupts =3D <GIC_SPI 766 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +                       clocks =3D <&cmu_misc CLK_GOUT_MISC_WDT_CLUSTER=
+1>, <&ext_24_5m>;
+> > +                       clock-names =3D "watchdog", "watchdog_src";
+> > +                       samsung,syscon-phandle =3D <&pmu_system_control=
+ler>;
+> > +                       samsung,cluster-index =3D <1>;
+> > +                       status =3D "disabled";
+> > +               };
+> > +
+> > +               gic: interrupt-controller@10400000 {
+> > +                    compatible =3D "arm,gic-v3";
+> > +                    #interrupt-cells =3D <3>;
+> > +                    interrupt-controller;
+> > +                    reg =3D <0x0 0x10400000 0x10000>,    /* GICD */
+> > +                          <0x0 0x10440000 0x100000>;   /* GICR * 8 */
+> > +                    interrupts =3D <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
+> > +               };
+> > +
+> > +               sysreg_peric0: syscon@10821000 {
+> > +                       compatible =3D "google,gs101-peric0-sysreg", "s=
+yscon";
+> > +                       reg =3D <0x0 0x10821000 0x40000>;
+> > +               };
+> > +
+> > +               /* GPIO_PERIC0 */
+>
+> This comment won't be needed if you rename pinctrl_4 -> pinctrl_peric0 :)
+
+Will fix
+
+>
+> > +               pinctrl_4: pinctrl@10840000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x10840000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +               };
+> > +
+> > +               serial_0: serial@10a00000 {
+> > +                       compatible =3D "google,gs101-uart";
+> > +                       reg =3D <0x0 0x10a00000 0xc0>;
+> > +                       reg-io-width =3D <4>;
+> > +                       samsung,uart-fifosize =3D <256>;
+> > +                       interrupts =3D <GIC_SPI 634 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +                       clocks =3D <&dummy_clk 0>, <&dummy_clk 0>;
+> > +                       clock-names =3D "uart", "clk_uart_baud0";
+> > +               };
+>
+> Does this SoC have USI blocks? If so, maybe this node should be made a
+> children of some USI node?
+
+Yes it is part of a USI block. I will update this in v5.
+
+>
+> > +
+> > +               /* GPIO_PERIC1 */
+> > +               pinctrl_5: pinctrl@10c40000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x10C40000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +               };
+> > +
+> > +               sysreg_peric1: syscon@10c21000 {
+> > +                       compatible =3D "google,gs101-peric1-sysreg", "s=
+yscon";
+> > +                       reg =3D <0x0 0x10C21000 0x40000>;
+> > +               };
+> > +
+> > +               /* GPIO_HSI1 */
+> > +               pinctrl_6: pinctrl@11840000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x11840000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +               };
+> > +
+> > +               /* GPIO_HSI2 */
+> > +               pinctrl_7: pinctrl@14440000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x14440000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH=
+>;
+> > +               };
+> > +
+> > +               cmu_apm: clock-controller@17400000 {
+> > +                       compatible =3D "google,gs101-cmu-apm";
+> > +                       reg =3D <0x0 0x17400000 0x8000>;
+> > +                       #clock-cells =3D <1>;
+> > +
+> > +                       clocks =3D <&ext_24_5m>;
+> > +                       clock-names =3D "oscclk";
+> > +               };
+> > +
+> > +               sysreg_apm: syscon@174204e0 {
+> > +                       compatible =3D "google,gs101-apm-sysreg", "sysc=
+on";
+> > +                       reg =3D <0x0 0x174204e0 0x1000>;
+> > +               };
+>
+> Sure it doesn't need any clock? I remember having some issues until I
+> declared a clock for some Exynos850 sysreg node.
+
+I deliberately left the clocks out for now. As APM has it's own
+firmware, mailbox I want to get more information on which entity is
+meant to be managing these clocks.
+
+>
+> > +
+> > +               pmu_system_controller: system-controller@17460000 {
+> > +                       compatible =3D "google,gs101-pmu", "syscon";
+> > +                       reg =3D <0x0 0x17460000 0x10000>;
+> > +               };
+> > +
+> > +               /* GPIO_ALIVE */
+> > +               pinctrl_0: pinctrl@174d0000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x174d0000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+>
+> Are you sure all those interrupts are actually needed? Please check
+> this patch: daeb1c2b50fb ("arm64: dts: exynos: drop incorrectly placed
+> wakeup interrupts in Exynos850"). If you decide to remove those
+> interrupts, then bindings doc should be changed too I guess.
+
+You were correct. fyi I fixed this in v4.
+
+>
+> > +
+> > +                       wakeup-interrupt-controller {
+> > +                               compatible =3D "google,gs101-wakeup-ein=
+t";
+> > +                       };
+> > +               };
+> > +
+> > +               /* GPIO_FAR_ALIVE */
+> > +               pinctrl_1: pinctrl@174e0000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x174e0000 0x00001000>;
+> > +                       interrupts =3D <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>=
+,
+> > +                                    <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
+> > +                                    <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
+> > +
+> > +                       wakeup-interrupt-controller {
+> > +                               compatible =3D "google,gs101-wakeup-ein=
+t";
+> > +                       };
+> > +               };
+> > +
+> > +               /* GPIO_GSACTRL */
+> > +               pinctrl_3: pinctrl@17940000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x17940000 0x00001000>;
+> > +               };
+> > +
+> > +               /* GPIO_GSACORE */
+> > +               pinctrl_2: pinctrl@17a80000 {
+> > +                       compatible =3D "google,gs101-pinctrl";
+> > +                       reg =3D <0x0 0x17a80000 0x00001000>;
+> > +               };
+> > +
+> > +               cmu_top: clock-controller@1e080000 {
+>
+> Move it up to other cmus, to make nodes under soc ordered alphabetically?
+
+The nodes under SoC are ordered by reg address, which IIRC was
+requested in earlier review feedback.
+
+regards,
+
+Peter.
+
+>
+> > +                       compatible =3D "google,gs101-cmu-top";
+> > +                       reg =3D <0x0 0x1e080000 0x8000>;
+> > +                       #clock-cells =3D <1>;
+> > +
+> > +                       clocks =3D <&ext_24_5m>;
+> > +                       clock-names =3D "oscclk";
+> > +               };
+> > +       };
+> > +};
+> > +
+> > +#include "gs101-pinctrl.dtsi"
+> > --
+> > 2.42.0.655.g421f12c284-goog
+> >
 
