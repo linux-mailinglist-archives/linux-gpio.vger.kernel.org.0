@@ -1,195 +1,241 @@
-Return-Path: <linux-gpio+bounces-556-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-557-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72CED7FB539
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 10:07:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 94E047FB5D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 10:30:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 318D8282585
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 09:07:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C67851C2109A
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 09:30:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AE43381A5;
-	Tue, 28 Nov 2023 09:07:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87ACF48CEF;
+	Tue, 28 Nov 2023 09:30:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Du8/im8O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 25F56D41
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 01:07:40 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u45-0003gR-Iy; Tue, 28 Nov 2023 10:07:33 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u44-00C8fG-VE; Tue, 28 Nov 2023 10:07:32 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1r7u44-00A46g-Lu; Tue, 28 Nov 2023 10:07:32 +0100
-Date: Tue, 28 Nov 2023 10:07:32 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
-Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
- <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
- <20231121161111.zphi7pn77ns7sgu2@pengutronix.de>
- <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
- <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
- <ZWCTtPVkTUQNLVoa@orome.fritz.box>
- <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
- <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
- <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+Received: from mail-vs1-xe35.google.com (mail-vs1-xe35.google.com [IPv6:2607:f8b0:4864:20::e35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94929E1
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 01:30:43 -0800 (PST)
+Received: by mail-vs1-xe35.google.com with SMTP id ada2fe7eead31-4643c51f775so71654137.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 01:30:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701163842; x=1701768642; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=RysSL349wtX71+LB9aMToXkLSEollEFV5Ko+eyRvxOc=;
+        b=Du8/im8OsTBF0QLxWEzV/gnUkiuFCeMhlCksHptJ/c3BN5wCjwFliHBMKXDlFJx65P
+         awVVPx1FdCpkuC72KCfQ1jd0tEEqhvYj//QCJJIyVpu4mdTKFN9V/tydKayAaJF1LVI0
+         GgewjTB3DrfE/bHoQoin7hizuHpi1FcUDdsInywV9Zb8CmPOP1omlJsP0HS4ZhJFAkvo
+         IHo0vgLSxxvt+F91FkOVBNNnl2DQe0hbKzP/sRAp7cbV2Iz0nQUto19bEJr8KpjuE27L
+         PsuuOpl8OJrCLbZyRA931Thr4n94ZMKoGDnDrRJDaTd3C3DX3l3f2+0ntK2EZNgC8f9i
+         BeNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701163842; x=1701768642;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=RysSL349wtX71+LB9aMToXkLSEollEFV5Ko+eyRvxOc=;
+        b=LDPcMtwpViOwMZVE5nqCQQ8PwQtD9as1PBqBpay/hdqjxTt6RsyatXn3xtMMqIH4mK
+         Xup5xpXts3RVcSzoGobJW6nzjFNY+Bgp6d0u+vLVqsje1GtnGNCyY1G+63xvQgC9mB2Q
+         g9OKt/1/Wtyjz+fDdTjBQiNjjHiuugtwHFzJisdyrkO2Ty7D3diNbKl+tLvJo9zWGW0Z
+         VyN6/lqy4LVGXSep4H8/QptoSlOXtWTTzlB8klWbiLheC3YQkZ3Ye0bkjj3ZA/In4iii
+         ICsz4NQLwHMEPDrC32rE++p3NUumK40/Qi8rG+JnoikPWMi5ANFvlfyBUCqDlWLkEvMj
+         ufCw==
+X-Gm-Message-State: AOJu0YxrHkr/DpJSbqgDSWojBRAFs3ZNaLiIKI9vR2a2TqAZugdEGFMb
+	W2EU2fy6SWwAo/2wb48rYGe0d98Osz3RfEa0USB66A==
+X-Google-Smtp-Source: AGHT+IHkuIAtRcV8IkdzBUFavg/7wgDk43HoJLjLYNj3a9prWCPjkVLZE61la+uUUIFD1opUnJvdm9gXU5uNADwJ8ss=
+X-Received: by 2002:a05:6102:54ac:b0:45f:3b30:9c9a with SMTP id
+ bk44-20020a05610254ac00b0045f3b309c9amr15983484vsb.27.1701163842635; Tue, 28
+ Nov 2023 01:30:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="bt6nvbkkqijug5ra"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20231126154335.643804657@linuxfoundation.org>
+In-Reply-To: <20231126154335.643804657@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 28 Nov 2023 15:00:31 +0530
+Message-ID: <CA+G9fYvmF=PVjePVE7m9-ZGW7EfKCv-9iwe-uwqdNqwVHGmNYA@mail.gmail.com>
+Subject: Re: [PATCH 5.10 000/187] 5.10.202-rc3 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	Marc Zyngier <maz@kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 
+On Sun, 26 Nov 2023 at 21:17, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.10.202 release.
+> There are 187 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Tue, 28 Nov 2023 15:43:06 +0000.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.10.202-rc3.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.10.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
---bt6nvbkkqijug5ra
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Results from Linaro's test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Hello Bart,
+Tested-by: Linux Kernel Functional Testing <lkft@linaro.org>
 
-On Mon, Nov 27, 2023 at 09:22:48PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Nov 27, 2023 at 11:58=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Fri, Nov 24, 2023 at 10:16:40PM +0100, Bartosz Golaszewski wrote:
-> > > I admit I've been quite busy but I do plan on going through Uwe's
-> > > series next week and maybe running tests similar to what I have for
-> > > GPIO on it.
-> >
-> > That's great. If you want to do that on my tree that already saw a few
-> > improvements compared to what I sent out, get it at
-> >
-> >         https://git.pengutronix.de/git/ukl/linux pwm-lifetime-tracking
-> >
-> > . The improvements are only on the driver level, so unless you're using
-> > one of the improved drivers, the difference wouldn't be that big I
-> > guess. For (maybe) quicker feedback loops, you can find me on irc (e.g.
-> > on libera's #linux-pwm) if that's a communication channel you like.
->=20
-> I don't see anything obviously wrong with the approach.
+NOTE:
+As others reported on gpio warning while booting arm and arm64 noticed.
 
-Is this the result of "running tests similar to what I have for GPIO on
-it" or did you only find the time for some high-level code inspection?
+[    0.466552] gpio gpiochip0: (1000000.pinctrl): not an immutable
+chip, please consider fixing it!
+[    4.741930] gpio gpiochip2: (200f000.spmi:pmic@0:gpios@c000): not
+an immutable chip, please consider fixing it!
 
-> I see the
-> chip->operational field that is set to false on release. In my
-> version, we just use a NULL-pointer to carry the same information.
+Links,
+ - https://lkft.validation.linaro.org/scheduler/job/7060124#L2577
 
-Yup, sounds obvious. Your usage of "just" sounds as if your variant was
-better. To give the alternative view where the suggested approach sounds
-better would be:
+## Build
+* kernel: 5.10.202-rc3
+* git: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+* git branch: linux-5.10.y
+* git commit: 80dc4301c91e15c9c3cf12b393d70e0952bcd9ee
+* git describe: v5.10.201-188-g80dc4301c91e
+* test details:
+https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-5.10.y/build/v5.10.201-188-g80dc4301c91e
 
-You need a pointer and I "just" a bool that even has a name implying its
-function. You need to dereference the pointer in several places as the
-needed information is distributed over two structures while it's all
-together in a single struct for the usual foo_alloc() + foo_register()
-approach.
+## Test Regressions (compared to v5.10.201)
 
-> Interestingly you DO have a pwm_device and pwm_chip structures. I'd
-> say it would be more logical to have the pwm_device embed struct
-> device.
+## Metric Regressions (compared to v5.10.201)
 
-A pwm_chip represents a piece of hardware that provides (possibly)
-several PWM lines. A pwm_device is the abstraction for a single PWM
-line. So that's two different concepts and I wonder why you find it
-interesting that we have two different structures for it.
+## Test Fixes (compared to v5.10.201)
 
-Today the pwm framework already has a struct device for the
-pwm_chip that appears in /sys/class/pwm/pwmchipX. If a PWM line is
-exported in sysfs, another struct containing a struct device is
-allocated (struct pwm_export) to manage /sys/class/pwm/pwmchipX/pwmY/.
+## Metric Fixes (compared to v5.10.201)
 
-I think it's good to have a struct device in the gpio_chip. I'd be open
-to put a struct device into pwm_device (unconditionally, not only when
-it's exported), but that's a change that is out of scope for this
-series. Also note that this would change the behaviour of
-/sys/class/pwm/ which I'd like to prevent (at least today until the
-character support is established, available for some time and known to
-be in use).
+## Test result summary
+total: 88957, pass: 67831, fail: 3474, skip: 17604, xfail: 48
 
-> My approach is more about maintaining the logical scope and not
-> changing the ownership of objects allocated in the driver. I also
-> don't see a reason to expose the internals of the subsystem (struct
-> device) to the provider drivers other than in callbacks where it is
-> relevant. Subsystems should handle as much as possible and any data
-> structures not relevant to what the driver does should be hidden from
-> it.
+## Build Summary
+* arc: 5 total, 5 passed, 0 failed
+* arm: 117 total, 117 passed, 0 failed
+* arm64: 44 total, 44 passed, 0 failed
+* i386: 35 total, 35 passed, 0 failed
+* mips: 24 total, 24 passed, 0 failed
+* parisc: 3 total, 0 passed, 3 failed
+* powerpc: 25 total, 25 passed, 0 failed
+* riscv: 11 total, 11 passed, 0 failed
+* s390: 12 total, 12 passed, 0 failed
+* sh: 10 total, 10 passed, 0 failed
+* sparc: 8 total, 8 passed, 0 failed
+* x86_64: 38 total, 38 passed, 0 failed
 
-Drivers see struct pwm_chip today and IMHO that's fine. I also feel
-little incentive to hide something from the driver in .probe() and then
-have to expose (more of) it in .apply() anyhow. Also I don't think the
-series would benefit from putting yet more changes into it.
+## Test suites summary
+* boot
+* kselftest-android
+* kselftest-arm64
+* kselftest-breakpoints
+* kselftest-capabilities
+* kselftest-cgroup
+* kselftest-clone3
+* kselftest-core
+* kselftest-cpu-hotplug
+* kselftest-cpufreq
+* kselftest-drivers-dma-buf
+* kselftest-efivarfs
+* kselftest-exec
+* kselftest-filesystems
+* kselftest-filesystems-binderfs
+* kselftest-filesystems-epoll
+* kselftest-firmware
+* kselftest-fpu
+* kselftest-ftrace
+* kselftest-futex
+* kselftest-gpio
+* kselftest-intel_pstate
+* kselftest-ipc
+* kselftest-ir
+* kselftest-kcmp
+* kselftest-kexec
+* kselftest-kvm
+* kselftest-lib
+* kselftest-membarrier
+* kselftest-memfd
+* kselftest-memory-hotplug
+* kselftest-mincore
+* kselftest-mount
+* kselftest-mqueue
+* kselftest-net
+* kselftest-net-forwarding
+* kselftest-net-mptcp
+* kselftest-netfilter
+* kselftest-nsfs
+* kselftest-openat2
+* kselftest-pid_namespace
+* kselftest-pidfd
+* kselftest-proc
+* kselftest-pstore
+* kselftest-ptrace
+* kselftest-rseq
+* kselftest-rtc
+* kselftest-sigaltstack
+* kselftest-size
+* kselftest-tc-testing
+* kselftest-timens
+* kselftest-tmpfs
+* kselftest-tpm2
+* kselftest-user
+* kselftest-user_events
+* kselftest-vDSO
+* kselftest-vm
+* kselftest-x86
+* kselftest-zram
+* kunit
+* libgpiod
+* log-parser-boot
+* log-parser-test
+* ltp-cap_bounds
+* ltp-commands
+* ltp-containers
+* ltp-controllers
+* ltp-cpuhotplug
+* ltp-crypto
+* ltp-cve
+* ltp-dio
+* ltp-fcntl-locktests
+* ltp-filecaps
+* ltp-fs
+* ltp-fs_bind
+* ltp-fs_perms_simple
+* ltp-fsx
+* ltp-hugetlb
+* ltp-io
+* ltp-ipc
+* ltp-math
+* ltp-mm
+* ltp-nptl
+* ltp-pty
+* ltp-sched
+* ltp-securebits
+* ltp-smoke
+* ltp-syscalls
+* ltp-tracing
+* perf
+* rcutorture
 
-Struct pwm_chip currently contains the following members:
-
-        struct device dev;
-        struct cdev cdev;
-        const struct pwm_ops *ops;
-        struct module *owner;
-        unsigned int id;
-        unsigned int npwm;
-
-        struct pwm_device * (*of_xlate)(struct pwm_chip *chip,
-                                        const struct of_phandle_args *args);
-        unsigned int of_pwm_n_cells;
-
-        /* only used internally by the PWM framework */
-        struct mutex lock;
-        bool uses_pwmchip_alloc;
-        bool operational;
-        void *drvdata;
-        struct pwm_device pwms[] __counted_by(npwm);
-
-Some of them should be moved below the "only used internally" comment.
-(i.e. dev, cdev, owner, id). For me this is "hidden" good enough then.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---bt6nvbkkqijug5ra
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVlrdMACgkQj4D7WH0S
-/k6c5wf9E2tdhwxXGvVzBTwP5Wg4xq/VjRfjNRrS8a3XVPZLQpkBZvdjOweJ9URS
-416ChSRdmw0rqB0FmvkSH6eGFEa4qE5dwB/JETObDLK6YEmrqdZkeC2DcDRciKIz
-gZWNEqfeAWLBTfc0qpuRaAfRD7rOq4mUEzBz4jJqH09vhrFRWDlhoa8wtqc1AzgS
-rcKqOVQjRZKGFacUJO7XOgiLkSB7V0c1/r7pVCt2pYuzHOFKV9lgKbKZHb/5GX2W
-JO6PPKShv1Dk6dRsRVBlKRuuOQIqy5FbMLegciBhkU/waQG86p/e5aSAzFVf6nlx
-jiE4PFAO9UHTqRsi1Z5Rb6LhfygIgQ==
-=OsxS
------END PGP SIGNATURE-----
-
---bt6nvbkkqijug5ra--
+--
+Linaro LKFT
+https://lkft.linaro.org
 
