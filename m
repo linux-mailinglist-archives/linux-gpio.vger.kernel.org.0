@@ -1,192 +1,328 @@
-Return-Path: <linux-gpio+bounces-570-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-571-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEA037FB8FB
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 12:06:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 99A4F7FB920
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 12:13:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 773A3B21DDC
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 11:06:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E7C09B20F61
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 11:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EE714EB50;
-	Tue, 28 Nov 2023 11:06:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4C704F5E0;
+	Tue, 28 Nov 2023 11:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="a+beYF7Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="u/6jtH/X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B494B10D2
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:06:18 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-54bbf08aa53so107998a12.0
-        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:06:18 -0800 (PST)
+Received: from mail-yw1-x112f.google.com (mail-yw1-x112f.google.com [IPv6:2607:f8b0:4864:20::112f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 947BE194
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:13:21 -0800 (PST)
+Received: by mail-yw1-x112f.google.com with SMTP id 00721157ae682-5cc5988f85eso54170367b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 03:13:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701169577; x=1701774377; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=UOs52IqsPNI3Y8G4cqoTGDVpRB2H5zau87t8At0sOPo=;
-        b=a+beYF7YOX/vdxcylplNdaZGixdFhAT64YXnammNbq3q+ZGGGxGCAqRcmqXF+coXgb
-         3TFslhV+oQNSWuvKXCYaMl8E+7JO1fTv7eTj6OxvxuL4s1ujhWaoBgi/d6ISUd2Vgnrl
-         DczNbov03Gg6plSjDw/fb0yJQwZt/IQ4BOaaPgInAniSomD9kvNIOG2QRXWn9VEExu+y
-         mbmyoGxrjSVYSjKFn/9s+/YpiWHXGbsz18emutmvDzbI6aJveNwU7U4x2vlLTU1Q0pBm
-         yqRxZMX6Nr1RK8ZDNBMmS13QOeD75qU8wtEEGc4cymPmvFvF9zGPBU/r/xhBDV3slRfV
-         6QsQ==
+        d=linaro.org; s=google; t=1701170001; x=1701774801; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=5+7m1qZKqcCsz92JzY98CnLRq03LO4op042hU6Jlus8=;
+        b=u/6jtH/XIXWHS+OuJkBKBg1j+crIKxo3k+jmFB7w9VgICUusnKbmSWfNALJz2ddpcH
+         9YKpN2SJBgKWWUYqSH69S2nnp5hWt+hfKrQUnJUfh7F25qwaMm2+kI9Kz2ZsVCYNrRUZ
+         MDQD8SHZ6GWVlW6tSPkGCq3hlJycjP2C6s2xlorUibIMXbVUEns/mGcu/t5uFxGSQl62
+         pzVkktGXSp2ulMcMJTbMiG5+r9FhIdfA1S5ffFTUl4nCdOn4qM0pubt88l0TKlHZ0LXH
+         nED1HAXpwSnbiu5HuNP8kxPX4Y3spF7Ex2sSAi8kXPo1hMxlxhNRUyc6bGMsgsh0koCx
+         6EFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701169577; x=1701774377;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UOs52IqsPNI3Y8G4cqoTGDVpRB2H5zau87t8At0sOPo=;
-        b=YHbi0GjqDArplGxqvEOd0anOxAUryZKQcTE/0qmsWNZVOOcwgCIMEBbd9h3OByI1p0
-         CWyD/dtcxKa+c/USpiD63+fgjCG6snUMnpwc/gFGm66hHImyFp7LkHZMceZpYDf0JPPi
-         l/BWSETAzioywDU2GFR81KkO14hUE3XNh6+//JeCpknWxT0oEZ56SEBBpisx2+nIOwPR
-         k9QxTWNyDN2Ob3839nPJUwUqDncGwrIL4KBU4czJgd0FzSoBVCcv26nB62Xj6GyBRev7
-         XyeUlgRHnKoELbA8sJasHPG5YGAAQf+MCMIegp6b6073TkEnm8AFZmOkrcvXPJCupeQn
-         r55A==
-X-Gm-Message-State: AOJu0Yx2ZsDYzKUOuFtT5oi1/ZBsry+1HoQMGwcjLbkz8Uau+xqxNbSv
-	9zX6kApQIrJG14gXOnP14VS+AQ==
-X-Google-Smtp-Source: AGHT+IHCm/RW3LDAqX7Df5SfpIS6CYpn11PXDAZFZLqHNgCSmpwUyJ44diqkskrFppwDMbp/4gyDOQ==
-X-Received: by 2002:aa7:c794:0:b0:54b:5c1d:4cea with SMTP id n20-20020aa7c794000000b0054b5c1d4ceamr4657584eds.26.1701169577236;
-        Tue, 28 Nov 2023 03:06:17 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id e28-20020a50d4dc000000b0054b9c98b852sm833294edj.55.2023.11.28.03.06.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 28 Nov 2023 03:06:16 -0800 (PST)
-Message-ID: <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
-Date: Tue, 28 Nov 2023 12:06:15 +0100
+        d=1e100.net; s=20230601; t=1701170001; x=1701774801;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5+7m1qZKqcCsz92JzY98CnLRq03LO4op042hU6Jlus8=;
+        b=kcOzMfP4mt9oymKmRjNfyVijwU4LWAY5wetAgZP9ETuWNK2x2+xHM6qeKQ99euJtKC
+         hf66WlCJ9OTE/M0AlDQy+R8nlab70jn76OSFgvNcjoMUORnmy0sqHCtSt88L04viZImO
+         c6NzpDIogBEtv1L17nLA5UxCZVjbbEn5O1ab9sXJjHFUSFLo1eW42YhDcylKn+2aiUyN
+         P9/GcogMblx3IovU95VvqDFBNg9uxjvHi0FOuJCjVDtw6BLKqz/QG4E2nKCYms+wVZe5
+         0HytU6UdbWY0piprMUcE4258UrwwXhOTIjaHHC00RrYo3MzJcQTgDcoZ32rCEjdZTAe1
+         6yZA==
+X-Gm-Message-State: AOJu0YzKdqOQWtNgBa/O8bxT9We1Zj/BYPjfoYJfvgQ2N0hF7SqDrp5W
+	5h4dgwBjulBF5Etc/c8pFMAWPpdP5bctwa78WF95Bg==
+X-Google-Smtp-Source: AGHT+IEIlYIUgXUVgijUk5SHHCon10nYrdq9xIAy+EVj6X4AyLg1jrCQz1JjEvO+OvZ+6zebaSGf51Pr4C1gpwhT2mE=
+X-Received: by 2002:a25:ab2d:0:b0:daf:686c:4919 with SMTP id
+ u42-20020a25ab2d000000b00daf686c4919mr15140437ybi.18.1701170000650; Tue, 28
+ Nov 2023 03:13:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
- ma35d1
-Content-Language: en-US
-To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20231128061118.575847-1-ychuang570808@gmail.com>
- <20231128061118.575847-4-ychuang570808@gmail.com>
- <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
- <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
- <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
- <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Date: Tue, 28 Nov 2023 12:12:44 +0100
+Message-ID: <CAPDyKFpiCOAobAKJ3o3udssKx4oHbQwOF3=hHgx3Uqtn1mxpaw@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: correct white-spaces in examples
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-mmc@vger.kernel.org, netdev@vger.kernel.org, linux-pci@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, 
+	linux-remoteproc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On 28/11/2023 11:45, Jacky Huang wrote:
-> Dear Krzysztof,
-> 
-> Thanks for your review.
-> 
-> On 2023/11/28 下午 05:34, Krzysztof Kozlowski wrote:
->> On 28/11/2023 09:37, Jacky Huang wrote:
->>>>> +			gpion: gpio@40040340 {
->>>>> +				reg = <0x340 0x40>;
->>>>> +				interrupts = <GIC_SPI  105 IRQ_TYPE_LEVEL_HIGH>;
->>>>> +				clocks = <&clk GPN_GATE>;
->>>>> +				gpio-controller;
->>>>> +				#gpio-cells = <2>;
->>>>> +				interrupt-controller;
->>>>> +				#interrupt-cells = <2>;
->>>>> +			};
->>>>> +
->>>>> +			pcfg_default: pin-default {
->>>>> +				slew-rate = <0>;
->>>>> +				input-schmitt-disable;
->>>>> +				bias-disable;
->>>>> +				power-source = <1>;
->>>>> +				drive-strength = <17100>;
->>>>> +			};
->>>> It does not look like you tested the DTS against bindings. Please run
->>>> `make dtbs_check W=1` (see
->>>> Documentation/devicetree/bindings/writing-schema.rst or
->>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
->>>> for instructions).
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>> I forgot to remove 'ma35d1-pinfunc.h' from my local copy.
->>> After remove the '#include <dt-bindings/pinctrl/ma35d1-pinfunc.h>', it
->>> can pass
->>> the `make dtbs_check W=1` check.
->>> I will fix it in the next version.
->> Really? Then your bindings look wrong. Why do you mix MMIO nodes and
->> non-MMIO in one device node?
->>
->> Best regards,
->> Krzysztof
->>
-> 
-> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such 
-> issues.
-> Anyway, I will fix it in the next version.
+On Fri, 24 Nov 2023 at 10:21, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Use only one and exactly one space around '=' in DTS example.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
-the binding issue.
+Acked-by: Ulf Hansson <ulf.hansson@linaro.org> # For MMC
 
-The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
-realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
+Kind regards
+Uffe
 
-I don't understand why do you need them yet. I don't see any populate of
-children. There are no compatibles, either.
-
-Which part of your driver uses them exactly?
-
-Best regards,
-Krzysztof
-
+>
+> ---
+>
+> Merging idea: Rob's DT.
+> Should apply cleanly on Rob's for-next.
+> ---
+>  .../devicetree/bindings/auxdisplay/hit,hd44780.yaml       | 2 +-
+>  .../devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml     | 2 +-
+>  Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml | 6 +++---
+>  .../devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml       | 2 +-
+>  .../devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml      | 2 +-
+>  .../interrupt-controller/st,stih407-irq-syscfg.yaml       | 4 ++--
+>  Documentation/devicetree/bindings/mmc/arm,pl18x.yaml      | 2 +-
+>  Documentation/devicetree/bindings/net/sff,sfp.yaml        | 2 +-
+>  .../devicetree/bindings/pci/toshiba,visconti-pcie.yaml    | 2 +-
+>  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml           | 6 +++---
+>  .../devicetree/bindings/power/supply/richtek,rt9455.yaml  | 8 ++++----
+>  .../devicetree/bindings/regulator/mps,mp5416.yaml         | 4 ++--
+>  .../devicetree/bindings/regulator/mps,mpq7920.yaml        | 4 ++--
+>  .../devicetree/bindings/remoteproc/fsl,imx-rproc.yaml     | 8 ++++----
+>  14 files changed, 27 insertions(+), 27 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+> index fde07e4b119d..406a922a714e 100644
+> --- a/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+> +++ b/Documentation/devicetree/bindings/auxdisplay/hit,hd44780.yaml
+> @@ -113,7 +113,7 @@ examples:
+>      hd44780 {
+>              compatible = "hit,hd44780";
+>              display-height-chars = <2>;
+> -            display-width-chars  = <16>;
+> +            display-width-chars = <16>;
+>              data-gpios = <&pcf8574 4 0>,
+>                           <&pcf8574 5 0>,
+>                           <&pcf8574 6 0>,
+> diff --git a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> index 624984d51c10..7f8d98226437 100644
+> --- a/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> +++ b/Documentation/devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml
+> @@ -125,7 +125,7 @@ examples:
+>      clk25m: clock-oscillator-25m {
+>        compatible = "fixed-clock";
+>        #clock-cells = <0>;
+> -      clock-frequency  = <25000000>;
+> +      clock-frequency = <25000000>;
+>        clock-output-names = "clk25m";
+>      };
+>  ...
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> index 5fcc8dd012f1..be2616ff9af6 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml
+> @@ -80,9 +80,9 @@ examples:
+>              compatible = "adi,ad7780";
+>              reg = <0>;
+>
+> -            avdd-supply      = <&vdd_supply>;
+> -            powerdown-gpios  = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> -            adi,gain-gpios   = <&gpio1  5 GPIO_ACTIVE_LOW>;
+> +            avdd-supply = <&vdd_supply>;
+> +            powerdown-gpios = <&gpio0 12 GPIO_ACTIVE_HIGH>;
+> +            adi,gain-gpios = <&gpio1  5 GPIO_ACTIVE_LOW>;
+>              adi,filter-gpios = <&gpio2 15 GPIO_ACTIVE_LOW>;
+>          };
+>      };
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml
+> index 73def67fbe01..b6a233cd5f6b 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml
+> @@ -58,7 +58,7 @@ examples:
+>              reg = <0x3600>;
+>              interrupts = <0x0 0x36 0x0 IRQ_TYPE_EDGE_RISING>;
+>              qcom,external-resistor-micro-ohms = <10000>;
+> -            #io-channel-cells  = <1>;
+> +            #io-channel-cells = <1>;
+>          };
+>      };
+>  ...
+> diff --git a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml
+> index b3a626389870..64abe9a4cd9e 100644
+> --- a/Documentation/devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml
+> +++ b/Documentation/devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml
+> @@ -46,6 +46,6 @@ examples:
+>          pmic_rradc: adc@4500 {
+>              compatible = "qcom,pmi8998-rradc";
+>              reg = <0x4500>;
+> -            #io-channel-cells  = <1>;
+> +            #io-channel-cells = <1>;
+>          };
+>      };
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/st,stih407-irq-syscfg.yaml b/Documentation/devicetree/bindings/interrupt-controller/st,stih407-irq-syscfg.yaml
+> index 2b153d7c5421..e44e4e5708a7 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/st,stih407-irq-syscfg.yaml
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/st,stih407-irq-syscfg.yaml
+> @@ -55,8 +55,8 @@ examples:
+>    - |
+>      #include <dt-bindings/interrupt-controller/irq-st.h>
+>      irq-syscfg {
+> -        compatible    = "st,stih407-irq-syscfg";
+> -        st,syscfg     = <&syscfg_cpu>;
+> +        compatible = "st,stih407-irq-syscfg";
+> +        st,syscfg = <&syscfg_cpu>;
+>          st,irq-device = <ST_IRQ_SYSCFG_PMU_0>,
+>                          <ST_IRQ_SYSCFG_PMU_1>;
+>          st,fiq-device = <ST_IRQ_SYSCFG_DISABLED>,
+> diff --git a/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml b/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
+> index 2459a55ed540..940b12688167 100644
+> --- a/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
+> +++ b/Documentation/devicetree/bindings/mmc/arm,pl18x.yaml
+> @@ -203,7 +203,7 @@ examples:
+>        bus-width = <4>;
+>        cap-sd-highspeed;
+>        cap-mmc-highspeed;
+> -      cd-gpios  = <&gpio2 31 0x4>;
+> +      cd-gpios = <&gpio2 31 0x4>;
+>        st,sig-dir-dat0;
+>        st,sig-dir-dat2;
+>        st,sig-dir-cmd;
+> diff --git a/Documentation/devicetree/bindings/net/sff,sfp.yaml b/Documentation/devicetree/bindings/net/sff,sfp.yaml
+> index 973e478a399d..bf6cbc7c2ba3 100644
+> --- a/Documentation/devicetree/bindings/net/sff,sfp.yaml
+> +++ b/Documentation/devicetree/bindings/net/sff,sfp.yaml
+> @@ -120,7 +120,7 @@ examples:
+>        pinctrl-names = "default";
+>        pinctrl-0 = <&cps_sfpp0_pins>;
+>        tx-disable-gpios = <&cps_gpio1 29 GPIO_ACTIVE_HIGH>;
+> -      tx-fault-gpios  = <&cps_gpio1 26 GPIO_ACTIVE_HIGH>;
+> +      tx-fault-gpios = <&cps_gpio1 26 GPIO_ACTIVE_HIGH>;
+>      };
+>
+>      mdio {
+> diff --git a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+> index 53da2edd7c9a..120e3bb1e545 100644
+> --- a/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+> +++ b/Documentation/devicetree/bindings/pci/toshiba,visconti-pcie.yaml
+> @@ -83,7 +83,7 @@ examples:
+>                    <0x0 0x28050000 0x0 0x00010000>,
+>                    <0x0 0x24200000 0x0 0x00002000>,
+>                    <0x0 0x24162000 0x0 0x00001000>;
+> -            reg-names  = "dbi", "config", "ulreg", "smu", "mpu";
+> +            reg-names = "dbi", "config", "ulreg", "smu", "mpu";
+>              device_type = "pci";
+>              bus-range = <0x00 0xff>;
+>              num-lanes = <2>;
+> diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> index b5ca40d0e251..d476de82e5c3 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.yaml
+> @@ -185,17 +185,17 @@ examples:
+>                      sd1_mux {
+>                              pinmux = <RZG2L_PORT_PINMUX(19, 0, 1)>, /* CD */
+>                                       <RZG2L_PORT_PINMUX(19, 1, 1)>; /* WP */
+> -                            power-source  = <3300>;
+> +                            power-source = <3300>;
+>                      };
+>
+>                      sd1_data {
+>                              pins = "SD1_DATA0", "SD1_DATA1", "SD1_DATA2", "SD1_DATA3";
+> -                            power-source  = <3300>;
+> +                            power-source = <3300>;
+>                      };
+>
+>                      sd1_ctrl {
+>                              pins = "SD1_CLK", "SD1_CMD";
+> -                            power-source  = <3300>;
+> +                            power-source = <3300>;
+>                      };
+>              };
+>      };
+> diff --git a/Documentation/devicetree/bindings/power/supply/richtek,rt9455.yaml b/Documentation/devicetree/bindings/power/supply/richtek,rt9455.yaml
+> index 07e38be39f1b..89f9603499b4 100644
+> --- a/Documentation/devicetree/bindings/power/supply/richtek,rt9455.yaml
+> +++ b/Documentation/devicetree/bindings/power/supply/richtek,rt9455.yaml
+> @@ -79,10 +79,10 @@ examples:
+>          interrupt-parent = <&gpio1>;
+>          interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
+>
+> -        richtek,output-charge-current      = <500000>;
+> -        richtek,end-of-charge-percentage    = <10>;
+> -        richtek,battery-regulation-voltage  = <4200000>;
+> -        richtek,boost-output-voltage       = <5050000>;
+> +        richtek,output-charge-current = <500000>;
+> +        richtek,end-of-charge-percentage = <10>;
+> +        richtek,battery-regulation-voltage = <4200000>;
+> +        richtek,boost-output-voltage = <5050000>;
+>
+>          richtek,min-input-voltage-regulation = <4500000>;
+>          richtek,avg-input-current-regulation = <500000>;
+> diff --git a/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+> index 0221397eb51e..f825ee9efd81 100644
+> --- a/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/mps,mp5416.yaml
+> @@ -62,8 +62,8 @@ examples:
+>               regulator-name = "buck1";
+>               regulator-min-microvolt = <600000>;
+>               regulator-max-microvolt = <2187500>;
+> -             regulator-min-microamp  = <3800000>;
+> -             regulator-max-microamp  = <6800000>;
+> +             regulator-min-microamp = <3800000>;
+> +             regulator-max-microamp = <6800000>;
+>               regulator-boot-on;
+>              };
+>
+> diff --git a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> index 6de5b027f990..0d34af98403f 100644
+> --- a/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> +++ b/Documentation/devicetree/bindings/regulator/mps,mpq7920.yaml
+> @@ -98,8 +98,8 @@ examples:
+>               regulator-name = "buck1";
+>               regulator-min-microvolt = <400000>;
+>               regulator-max-microvolt = <3587500>;
+> -             regulator-min-microamp  = <460000>;
+> -             regulator-max-microamp  = <7600000>;
+> +             regulator-min-microamp = <460000>;
+> +             regulator-max-microamp = <7600000>;
+>               regulator-boot-on;
+>               mps,buck-ovp-disable;
+>               mps,buck-phase-delay = /bits/ 8 <2>;
+> diff --git a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> index 30632efdad8b..df36e29d974c 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> +++ b/Documentation/devicetree/bindings/remoteproc/fsl,imx-rproc.yaml
+> @@ -113,10 +113,10 @@ examples:
+>      };
+>
+>      imx7d-cm4 {
+> -      compatible       = "fsl,imx7d-cm4";
+> -      memory-region    = <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
+> -      syscon           = <&src>;
+> -      clocks           = <&clks IMX7D_ARM_M4_ROOT_CLK>;
+> +      compatible = "fsl,imx7d-cm4";
+> +      memory-region = <&m4_reserved_sysmem1>, <&m4_reserved_sysmem2>;
+> +      syscon = <&src>;
+> +      clocks = <&clks IMX7D_ARM_M4_ROOT_CLK>;
+>      };
+>
+>    - |
+> --
+> 2.34.1
+>
+>
 
