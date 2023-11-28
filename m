@@ -1,108 +1,87 @@
-Return-Path: <linux-gpio+bounces-578-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-579-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 889A77FBC1D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 15:03:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB2BF7FBC20
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 15:04:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 44D9328230A
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 14:03:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 068561C20C12
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 14:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFCAE59B7B;
-	Tue, 28 Nov 2023 14:03:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0723B59B7E;
+	Tue, 28 Nov 2023 14:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UH/R7vhq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uaU2MYcs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9C65788D;
-	Tue, 28 Nov 2023 14:03:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A82FC433C7;
-	Tue, 28 Nov 2023 14:03:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701180223;
-	bh=OCL77S9JES4lmUWGIM9GXQQEsjN7sL0ioEmMb189EjE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UH/R7vhqGfBAfqpe60Y+KSqEINntkJP9Y3sPyeGVRcc5o8H7H22C6Cz+3z1ZJ6L+w
-	 RhI0R7noiCcm8RvHypeDlTU/bpABIX5699OxIt+2XKOIkWlwCZTWBJNkNjg72Bdik6
-	 o0j6CWZPLXFPAyoEwHfX9LnUvcu+sx0AK0eimbStKpQ7FFYHYkCKfH0NO19O9mWvVC
-	 9vPys5Ci/ACgsgSeKoNRRRtwTCdxrPMcpexp5uHFKQj7pZhrQt6E6PlsGEgN8NOMM2
-	 tPpSgjuhw7leyzl7LuGftjk76kROsmfI6vezFxs+CMQzjco3rHuuTxPHE7H8FKqTAV
-	 LZERXHUVnM3Hg==
-Date: Tue, 28 Nov 2023 14:03:36 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Liam Girdwood <lgirdwood@gmail.com>, netdev@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Christophe Leroy <christophe.leroy@csgroup.eu>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/5] Add support for framer infrastructure and PEF2256
- framer
-Message-ID: <17b2f126-f6a4-431c-9e72-56a9c2932a88@sirena.org.uk>
-References: <20231128132534.258459-1-herve.codina@bootlin.com>
+Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97800E4
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 06:04:19 -0800 (PST)
+Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5c85e8fdd2dso52018767b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 06:04:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701180259; x=1701785059; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PyTIAD88uiTFC+Ckur3HZ5JKDTkHFJddsUZ7zO5rxZY=;
+        b=uaU2MYcs/ZKaUckeClW/vh2SEpE4ILPsYdkSj1sPbE4DocOTEITSB+z6NsTcEEn0st
+         KdPS2DAHcaXVoTIzgF0Lr1o6fSilwkXDxSvflCbp0nM2KY6a3SdGjDS91qXTDo8GaSEP
+         u3HcFUTaw3O7CSYO5K91hIjoWBlwuMAKD8bNS0fcTqgM+rfCMTZHWcTjUxNw9+j+NyM7
+         lGSPw7E0oTChuSniyXBZTvtgPuFhyQ1LfBljs2asCwJBuFP1WqMMNtbsf8gv7drUCLY1
+         KQpu0rvhNeX2PhftNtr24mCXufQbK4Vw133IRHZtbu7tmHOi9GgoL1bQ3xOLbWS6QwjR
+         IF/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701180259; x=1701785059;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PyTIAD88uiTFC+Ckur3HZ5JKDTkHFJddsUZ7zO5rxZY=;
+        b=v2sgEZ/XKuYYkKYvEOmATnU+DqTGY345WrtCeIqPkbK/MHivNDh/stslMiWS9syVg0
+         Sz9uX5s6AhKiocxq3qfyyIL7RYX3AmhVUMFmvYvrkYFBvwI3iy6ksAA0mRFDDxJAWLCa
+         wOsduWmvuzlzWVsIKH55zyx856zbjwpMAGaYGHcFpvUcU+pLAPf4OqnU/1iUh18xWdak
+         M5gwgpye/ijATxz0z/Q8xq7bdjF3+zoa17qHJRPHr8hxs7+xa+RzK+Op82VRmYcf6dl8
+         8RHA2LITdgQrz2067zs1+gjFqmyxEMh6wG+yy6r0xwGtts1LPz0FUomJPNxAV0xuSLzJ
+         Ni/Q==
+X-Gm-Message-State: AOJu0YwU1U0UH/ypccUD5Qk0YetoxIgquYjZfXoe5fZ0Cw1/maKoH0U0
+	DVD7UQJ3oZdVQKCzOvVTya9hvocMz1pn/QH6yFoGNA==
+X-Google-Smtp-Source: AGHT+IEAhaxY7VXrsKyapb49YDVLidKEv2PVueicNtrV/zkkM1Fw6vnoicZOv1OP8hqYM6AKpWp8/dsN2BJz/2mmQrA=
+X-Received: by 2002:a05:690c:c09:b0:5ce:7ac9:d10c with SMTP id
+ cl9-20020a05690c0c0900b005ce7ac9d10cmr14223522ywb.32.1701180258562; Tue, 28
+ Nov 2023 06:04:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="5GNgz2yB04HlQ9Au"
-Content-Disposition: inline
-In-Reply-To: <20231128132534.258459-1-herve.codina@bootlin.com>
-X-Cookie: Must be over 21.
-
-
---5GNgz2yB04HlQ9Au
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20231127193716.63143-1-brgl@bgdev.pl>
+In-Reply-To: <20231127193716.63143-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 28 Nov 2023 15:04:06 +0100
+Message-ID: <CACRpkdaMCdMaqPrmBJgTKHLGsW8YJmq=KkuzRToiF2EYk1apeg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: sysfs: fix forward declaration of struct gpio_device
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023 at 02:25:29PM +0100, Herve Codina wrote:
-> Hi,
->=20
-> This series introduces the framer infrastructure and adds the PEF2256
-> framer provider.
->=20
-> Patches were previously sent as part of a full feature series and were
-> previously reviewed in that context:
-> "Add support for QMC HDLC, framer infrastructure and PEF2256 framer" [1]
->=20
-> In order to ease the merge, the full feature series has been split and
-> this series contains patches related to the framer part (infrastructure
-> and provider).
->  - Introduce framer infrastructure (patch 1)
->  - Add PEF2256 framer provider (patches 2, 3, 4, 5)
+On Mon, Nov 27, 2023 at 8:37=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-If this gets applied it'd be good to get a signed tag based off Linus'
-tree so things that depend on it can be pulled into other trees (eg, the
-ASoC mapping for the framer).
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The forward declaration for struct gpio_device should be provided for
+> both branches of the #ifdef.
+>
+> Fixes: 08a149c40bdb ("gpiolib: Clean up headers")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
---5GNgz2yB04HlQ9Au
-Content-Type: application/pgp-signature; name="signature.asc"
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmVl8zcACgkQJNaLcl1U
-h9B45wf8DqQLaggJbtU8xpDv+NJztPbUyIMo8nXzPFMLhFKjaj1cw3fhy1SemD1l
-ZhOA1pnDjsPfIREeU5NDZDSq5shqSQQzhrKwG6hGCnU6JyHJCtr7n/kENLG5ajLt
-KQhIGNm4mO/YPjtfxeJenMULKyV5vIHJiNjycJCvGs9kNLDvRerlloKSt+5KCY2u
-bGLxTV87+HuV1XNMaOmzSWcnvaaox+EGPo0/rGmXtyfF8R22E4Q5Cic2PvxBGYB/
-sYrpJCEizNpcygk1WhomNPH6o84uv2AdZxMiEdT6mFkQQBSe+uotm+Y9ASwWQpCi
-UeUhfpwZV+4guwnxm/bwOIySx5Bgdg==
-=Cmo+
------END PGP SIGNATURE-----
-
---5GNgz2yB04HlQ9Au--
+Yours,
+Linus Walleij
 
