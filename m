@@ -1,86 +1,95 @@
-Return-Path: <linux-gpio+bounces-595-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-596-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC05C7FBF33
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 17:29:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86D3D7FBF47
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 17:37:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 27F541C20AF9
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:29:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40409282A02
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:37:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E315C35292;
-	Tue, 28 Nov 2023 16:29:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D4758AC1;
+	Tue, 28 Nov 2023 16:37:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lKD719tJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 53FB4D4B;
-	Tue, 28 Nov 2023 08:29:16 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="11654321"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="11654321"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 08:29:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="797625148"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="797625148"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 08:29:14 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1r80xT-00000000D0T-0zzl;
-	Tue, 28 Nov 2023 18:29:11 +0200
-Date: Tue, 28 Nov 2023 18:29:10 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Boerge Struempfel <boerge.struempfel@gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C89A37D31;
+	Tue, 28 Nov 2023 16:37:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9B11C433C9;
+	Tue, 28 Nov 2023 16:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701189441;
+	bh=Rkd2WObdqH5uyXpuMYX4mfs7gUlcc9XyM6odEGDd6zk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lKD719tJUPV7x06fQ4wUQOdLYKRHwTYW8djLX2ZVzUjYTFhF4K8srnifyC+ebImgl
+	 sPCxll/LdF/rbFKQuAjq6TsZq39WxvF4Dt8d+QtdXqj+IPJ4YRXrZVbMwdcRcRb2Fr
+	 q+FZNB6R6UsaWyVG3vCbr0mtede+P5GAVA19+QF+5IztWPIVy1HXASNzumQRtyqIyN
+	 zGGOKa4PwNeFL/FSf7rBN+iJRYkyNHZBJ50BYlU7qiAAueOWamhyzjIjhrsH1E5VsF
+	 10vaONG+jJasv8oR1UL4lOdtDfR41xUWoD4KwF3SOLmigDMwE9US3XND4NrQzjmptj
+	 mV8BQfdM55WkA==
+Date: Tue, 28 Nov 2023 16:37:15 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bstruempfel@ultratronik.de
-Subject: Re: [PATCH v2] gpiolib: sysfs: Fix error handling on failed export
-Message-ID: <ZWYVVvB0O-CBIbos@smile.fi.intel.com>
-References: <20231128141321.51669-1-boerge.struempfel@gmail.com>
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
+	Tero Kristo <kristo@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, u-kumar1@ti.com
+Subject: Re: [PATCH 1/3] dt-bindings: pinctrl: pinctrl-single: add
+ ti,j7200-padconf compatible
+Message-ID: <20231128-obsessive-vessel-9dde08c823e1@spud>
+References: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
+ <20231128-j7200-pinctrl-s2r-v1-1-704e7dc24460@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="1WiGEFq1eieLw4sy"
+Content-Disposition: inline
+In-Reply-To: <20231128-j7200-pinctrl-s2r-v1-1-704e7dc24460@bootlin.com>
+
+
+--1WiGEFq1eieLw4sy
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231128141321.51669-1-boerge.struempfel@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023 at 03:13:21PM +0100, Boerge Struempfel wrote:
-> If gpio_set_transitory() fails, we should free the gpio again. Most
+On Tue, Nov 28, 2023 at 04:34:59PM +0100, Thomas Richard wrote:
+> Add the "ti,j7200-padconf" compatible to support suspend to ram on
+> j7200.
+>=20
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-gpio --> GPIO descriptor
-(I already mentioned capitalization in v1 review)
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
 
-> notably, the flag FLAG_REQUESTED has previously been set in
-> gpiod_request_commit(), and should be reset on failure.
-> 
-> To my knowledge, this does not affect any current users, since the
-> gpio_set_transitory() mainly returns 0 and -ENOTSUPP, which is converted
-> to 0. However the gpio_set_transitory() function calles the .set_config()
-> function of the corresponding gpio chip and there are some gpio drivers in
+Cheers,
+Conor.
 
-gpio --> GPIO
+--1WiGEFq1eieLw4sy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> which some (unlikely) branches return other values like -EPROBE_DEFER,
-> and EINVAL. In these cases, the above mentioned FLAG_REQUESTED would not
+-----BEGIN PGP SIGNATURE-----
 
--EINVAL
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZWYXOwAKCRB4tDGHoIJi
+0lZYAP0VgA4r/SbyFNFipdXQIjedIczLudV1H+qbE9BZCRhYaAD/fOCazM+LUpxl
+yiDLCw83aMiMjGVy8VieNXylZrJqXQs=
+=AtN7
+-----END PGP SIGNATURE-----
 
-> be reset, which results in the pin being blocked until the next reboot.
-
-Fixes tag?
-(`git log --no-merges --grep "Fixes:" will show you examples)
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+--1WiGEFq1eieLw4sy--
 
