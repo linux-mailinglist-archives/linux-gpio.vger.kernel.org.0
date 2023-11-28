@@ -1,175 +1,107 @@
-Return-Path: <linux-gpio+bounces-590-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-591-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EC597FBE34
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:36:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF7037FBEA8
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 16:53:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9B6E81C20DD5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 15:36:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 60413B21507
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 15:53:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 693411E48B;
-	Tue, 28 Nov 2023 15:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2712735284;
+	Tue, 28 Nov 2023 15:53:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dkbEz2Xl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JkCNAjnx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C21A010DF;
-	Tue, 28 Nov 2023 07:35:50 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id AC9A4FF809;
-	Tue, 28 Nov 2023 15:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1701185749;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=AK7buiuy0q5EunPjqa6ZrKOj1AxDsj+flUHv5iXiG+8=;
-	b=dkbEz2Xlnwkggz7DP873fWB6cd5xhXD1PI85tlh6MLqoXIgtmLm8rSw51HUJb2VsTA2BXu
-	YCJ2uhrPEszpFKe8GKZ7vQCtyiY9eIFTtI0uj+QwgJ5w92IEdWpRxzkXaRaATnTSCWtOZw
-	XITvo/fEo0dsnPlCggGr725hLIKoXAGXRnAy2ZaoyrsY0GhEtJXK9U0/fietxDaa4aMZNY
-	zxkC/QrT2WgJSNz+KZDkmzB1hlA3Jg3tWpRjLXtGStP/2Lix5Up1vYK3PfLXk1zCeXiMkn
-	TA5IMH3mYFwy953jzdwfEcvO+NWMhxYcgj/s9nfBxZ2uDQkFfttmru/ixt6bBA==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Tue, 28 Nov 2023 16:35:01 +0100
-Subject: [PATCH 3/3] arm64: dts: ti: k3-j7200: use ti,j7200-padconf
- compatible
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 745D919B4;
+	Tue, 28 Nov 2023 07:53:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701186812; x=1732722812;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=sEPbvoTt9M7AzxsulQ/KXP+SKFVRFBlAEP7wQyvf3hM=;
+  b=JkCNAjnxQlIJRIRCEu8TQi52kinRb6wVdDIZ28XEpu2QTdxlEUFlrS7k
+   NFG9sHdkwsrNF8E85wuHLzdDBsG3K7mtfBoulO74bG9QpgGCBosqtQSNb
+   FQhkonmVjOR67zNcYi6XNnjfbpiM5H3/ZyDvtYZ/oZnT3qz0piuIwz5A7
+   9KX086POV8LPwYR/PABi4ReQ6KP6q9Ln5Z+AINsaOI55bGlTwYPa9f8lY
+   IRdr2OU4w0ay83iDDxVTgkiMc5aE8hMbbLdz/GuwK4bj+3W9xXdq1lH21
+   zg5DPGDembDbUwoKI5JDhJqAPZkkG7OB4CuixglzAubPtxWCBY+Bjyv61
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="383336617"
+X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
+   d="scan'208";a="383336617"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:53:31 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="772352569"
+X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
+   d="scan'208";a="772352569"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 07:53:24 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1r80On-00000000CZZ-06Ld;
+	Tue, 28 Nov 2023 17:53:21 +0200
+Date: Tue, 28 Nov 2023 17:53:20 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: kernel test robot <lkp@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	oe-kbuild-all@lists.linux.dev, Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>
+Subject: Re: [PATCH v2 12/21] pinctrl: core: Embed struct pingroup into
+ struct group_desc
+Message-ID: <ZWYM8Pjl-S-8CMPu@smile.fi.intel.com>
+References: <20231123193355.3400852-13-andriy.shevchenko@linux.intel.com>
+ <202311250448.uz5Yom3N-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231128-j7200-pinctrl-s2r-v1-3-704e7dc24460@bootlin.com>
-References: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
-In-Reply-To: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, Nishanth Menon <nm@ti.com>, 
- Vignesh Raghavendra <vigneshr@ti.com>, Tero Kristo <kristo@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-omap@vger.kernel.org, thomas.petazzoni@bootlin.com, 
- gregory.clement@bootlin.com, theo.lebrun@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <202311250448.uz5Yom3N-lkp@intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-For suspend to ram on j7200, use ti,j7200-padconf compatible to save and
-restore pinctrl contexts.
+On Sat, Nov 25, 2023 at 07:39:02AM +0800, kernel test robot wrote:
+> Hi Andy,
+> 
+> kernel test robot noticed the following build errors:
 
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- arch/arm64/boot/dts/ti/k3-j7200-main.dtsi       |  8 ++++----
- arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi | 12 ++++++------
- 2 files changed, 10 insertions(+), 10 deletions(-)
+> [also build test ERROR on linusw-pinctrl/for-next next-20231124]
 
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-index 1ea809e41500..709081cd1e7f 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-main.dtsi
-@@ -395,7 +395,7 @@ cpts@3d000 {
- 
- 	/* TIMERIO pad input CTRLMMR_TIMER*_CTRL registers */
- 	main_timerio_input: pinctrl@104200 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		reg = <0x0 0x104200 0x0 0x50>;
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
-@@ -404,7 +404,7 @@ main_timerio_input: pinctrl@104200 {
- 
- 	/* TIMERIO pad output CTCTRLMMR_TIMERIO*_CTRL registers */
- 	main_timerio_output: pinctrl@104280 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		reg = <0x0 0x104280 0x0 0x20>;
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
-@@ -412,7 +412,7 @@ main_timerio_output: pinctrl@104280 {
- 	};
- 
- 	main_pmx0: pinctrl@11c000 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x11c000 0x00 0x10c>;
- 		#pinctrl-cells = <1>;
-@@ -421,7 +421,7 @@ main_pmx0: pinctrl@11c000 {
- 	};
- 
- 	main_pmx1: pinctrl@11c11c {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x11c11c 0x00 0xc>;
- 		#pinctrl-cells = <1>;
-diff --git a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-index 3fc588b848c6..467970fab3a0 100644
---- a/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-+++ b/arch/arm64/boot/dts/ti/k3-j7200-mcu-wakeup.dtsi
-@@ -185,7 +185,7 @@ chipid@43000014 {
- 
- 	/* MCU_TIMERIO pad input CTRLMMR_MCU_TIMER*_CTRL registers */
- 	mcu_timerio_input: pinctrl@40f04200 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		reg = <0x0 0x40f04200 0x0 0x28>;
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
-@@ -195,7 +195,7 @@ mcu_timerio_input: pinctrl@40f04200 {
- 
- 	/* MCU_TIMERIO pad output CTRLMMR_MCU_TIMERIO*_CTRL registers */
- 	mcu_timerio_output: pinctrl@40f04280 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		reg = <0x0 0x40f04280 0x0 0x28>;
- 		#pinctrl-cells = <1>;
- 		pinctrl-single,register-width = <32>;
-@@ -204,7 +204,7 @@ mcu_timerio_output: pinctrl@40f04280 {
- 	};
- 
- 	wkup_pmx0: pinctrl@4301c000 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x4301c000 0x00 0x34>;
- 		#pinctrl-cells = <1>;
-@@ -213,7 +213,7 @@ wkup_pmx0: pinctrl@4301c000 {
- 	};
- 
- 	wkup_pmx1: pinctrl@4301c038 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x4301c038 0x00 0x8>;
- 		#pinctrl-cells = <1>;
-@@ -222,7 +222,7 @@ wkup_pmx1: pinctrl@4301c038 {
- 	};
- 
- 	wkup_pmx2: pinctrl@4301c068 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x4301c068 0x00 0xec>;
- 		#pinctrl-cells = <1>;
-@@ -231,7 +231,7 @@ wkup_pmx2: pinctrl@4301c068 {
- 	};
- 
- 	wkup_pmx3: pinctrl@4301c174 {
--		compatible = "pinctrl-single";
-+		compatible = "ti,j7200-padconf", "pinctrl-single";
- 		/* Proxy 0 addressing */
- 		reg = <0x00 0x4301c174 0x00 0x20>;
- 		#pinctrl-cells = <1>;
+Hmm... I have compiled tested on Linux Next it several times, I can't reproduce
+this neither with GCC nor with LLVM.
 
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
 
