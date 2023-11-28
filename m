@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-550-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-551-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C850C7FB2D5
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 08:35:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 734257FB2D8
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 08:35:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 001701C20C8D
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 07:35:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 30336281DF7
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 07:35:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8556813AC2;
-	Tue, 28 Nov 2023 07:34:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6DF13ACA;
+	Tue, 28 Nov 2023 07:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="b5TBxvD/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FeThgYCG"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-ed1-x52d.google.com (mail-ed1-x52d.google.com [IPv6:2a00:1450:4864:20::52d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 19E0A10C3
-	for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:34:51 -0800 (PST)
-Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-54b8a4d64b5so1771795a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:34:50 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EBB421735
+	for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:35:22 -0800 (PST)
+Received: by mail-ed1-x52d.google.com with SMTP id 4fb4d7f45d1cf-54bb5ebbb35so145646a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 27 Nov 2023 23:35:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701156889; x=1701761689; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701156921; x=1701761721; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=oppdECoii9C97GzWPtRPxUKs5Z+XKzBXE30YzOcnZn4=;
-        b=b5TBxvD/lPlc7v/s6kjDIieZjpQMHzc4RPoRP3DSNneApKQecmdiCWWUvHei9B+SuC
-         aAfHjolS4/oQtNohdqymRjTCmQNJk3Bnx18bZhy7m0FMPzqFIENKeWOAWaI1QfFtMTzT
-         gtM9xraZED0vCtEnsO/2SXc1oWF38PRExxS2TgS2zpI5jTbYT8El6Iqt0fkZ2xi92bEM
-         Lr9xPIVOUHV+IHcAKRSIigwtL27PdP/C/Woyr0KpmhQysEsB/vryC5i3UtSIUg6XHbMz
-         /coiVPdBUGR1xRj1Dt+K4Alo7CtEgT4mxFPMaKREriPjYbImtEKuaMpHmPU/N6Mq8pJE
-         1h+A==
+        bh=pUq3T8OY7FYfFocDyKvX8NsZIIyr1P43JhtcmH98CZU=;
+        b=FeThgYCGyiGEyhYV4dEtipSruHjARiEHpaem5e3sFjwLMntH/HQMwpoV7oOMs+gD06
+         3CbdtQm07kyDWn1NsKnfm7zjlZjQ+dw2+F0ZHxG1oxn8Cy1FFCRqQ64Bn9nJu0mRb7Ix
+         ZrMKry1P1md6PZKja02leehBFw1I7z1PLh0e0WhARHZRXecUiefmsj+ONZrvJpiWVCoE
+         06ropWIX0nBX2Hl6d81x+fip4Akjuk5jXB1+LXcittmoBFf9R7uiNTC7Iti3gIOuSDAA
+         Zj59NvBWjFBcDCIsFHm6tSEpEjUM/nWLHJDI1gxfRLlOqnhgMj7dNskZWAFQZYDp/5FH
+         AdrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701156889; x=1701761689;
+        d=1e100.net; s=20230601; t=1701156921; x=1701761721;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=oppdECoii9C97GzWPtRPxUKs5Z+XKzBXE30YzOcnZn4=;
-        b=LOhryqd9CKV4Z+IJipk5UJg9YAT9d87F3C3Rqy/RiCpLIq/M9wN/JnyWhwtyCujzKd
-         CNVXVHHKcvSolp3pBrBa5uLQRnlL/GVXGqlPatyG6cwDOGm0SaOeTD9Pi+f5rUTZ/1QX
-         6aKvUdUSGL5f3fBUzU633nr1YWN1oGdOe3/kcblm64aM4lMZ/pbLYVFUEP76n7H+fmrC
-         wQlD+7dVOmgad5rVKHmQJ+aN34THPr6QG06KutbKhrB99/+TOzslP/ooBk8DsFsgAUQk
-         A5dYq4iZoGai56BbSPp32oB/d5C4wfC/f+SCy5T48m03Qi0zbcEQrTF3Cjg9yF++1s+N
-         ykPw==
-X-Gm-Message-State: AOJu0YxXjcYJEnlEXHjL5ysOMQw22J5prXHnMltm4u4Xq5byFIiAYz1/
-	P9pWasRJeBhcV0Kj+BUWOusSKQ==
-X-Google-Smtp-Source: AGHT+IGhSAZzfxGZiQjd7by5/oca1zu++XQytUpQyLpGfbCWRs3lVuhRqOi4AfEF0Mk9D5+VC2vXpw==
-X-Received: by 2002:a17:906:594a:b0:9dd:30c8:6f33 with SMTP id g10-20020a170906594a00b009dd30c86f33mr9988094ejr.57.1701156889465;
-        Mon, 27 Nov 2023 23:34:49 -0800 (PST)
+        bh=pUq3T8OY7FYfFocDyKvX8NsZIIyr1P43JhtcmH98CZU=;
+        b=hWUPjTxILXi5zt20MOF3OYvvybrH/GA0nzi7XqQ+qaB/tPOaCjH2RmSS0iqgWBsnPg
+         sVYY05/N95ihBNG2H6N29b8byg3wvKX6E40y0nWZ3MHH3r0tNQhIHxVYHb/dinoKu1Qd
+         BK7kwo4dJkJsR1nw3z07gqsTAo3JFyUQk6fBMinp07QIlc3oC2+mRv/mx+PGmp60z3To
+         NUfmdJwwo3sQJ59SLWCDxCrGZnsZ8jb/xSfIyFEM/M3ngeoEgXD9wxpNTvWvqDodeUiX
+         BxFG5hXqrKVhneW4Qg+fn4lq++38cn/jQUJ6yeumHE1B0t8RdhaFyEYpsoN3TWzkMJLq
+         Tt6A==
+X-Gm-Message-State: AOJu0YxdyaEdJaL5m1tIvzMIQN3qGjWbw+OYlxg2Y3vCy0p+Tgk6nzoJ
+	UQ99PgRU+rH5kXwmwxxMO1ZK9xb7AbqN4OZGtDM=
+X-Google-Smtp-Source: AGHT+IFhr+TgFLe5ZVVL2SeuuxMz4ugUtaV4jYwhPMWqKm7oKr912FIu0eYSZKzq4E8Av9K2rFJvZg==
+X-Received: by 2002:a17:906:73c5:b0:a10:ef07:fa9e with SMTP id n5-20020a17090673c500b00a10ef07fa9emr2504407ejl.6.1701156921394;
+        Mon, 27 Nov 2023 23:35:21 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id q23-20020a17090676d700b00a017da998bdsm6473249ejn.32.2023.11.27.23.34.47
+        by smtp.gmail.com with ESMTPSA id q23-20020a17090676d700b00a017da998bdsm6473249ejn.32.2023.11.27.23.35.19
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 27 Nov 2023 23:34:49 -0800 (PST)
-Message-ID: <7c24aaf8-8f93-4b93-b7e5-abc88e95682d@linaro.org>
-Date: Tue, 28 Nov 2023 08:34:46 +0100
+        Mon, 27 Nov 2023 23:35:21 -0800 (PST)
+Message-ID: <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
+Date: Tue, 28 Nov 2023 08:35:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,8 +62,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/4] dt-bindings: pinctrl: Document nuvoton ma35d1 pin
- control
+Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
+ ma35d1
 Content-Language: en-US
 To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
  robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -72,7 +72,7 @@ Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  ychuang3@nuvoton.com, schung@nuvoton.com
 References: <20231128061118.575847-1-ychuang570808@gmail.com>
- <20231128061118.575847-3-ychuang570808@gmail.com>
+ <20231128061118.575847-4-ychuang570808@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,162 +118,46 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231128061118.575847-3-ychuang570808@gmail.com>
+In-Reply-To: <20231128061118.575847-4-ychuang570808@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 28/11/2023 07:11, Jacky Huang wrote:
 > From: Jacky Huang <ychuang3@nuvoton.com>
 > 
-> Add documentation to describe nuvoton ma35d1 pin control and GPIO.
+> Add 'pinctrl' node and 'gpioa' ~ 'gpion' nodes to the dtsi of ma35d1
+> SoC and describe default pin configurations.
+> 
+> Enable all UART nodes presented on som and iot boards, and add pinctrl
+> function settings to these nodes.
 > 
 > Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-> ---
-
-Your changelog said:
-
->   - Remove ma35d1-pinfunc.h which is unused after update definition of
-'nuvoton,pins'.
-
-You forgot to add:
-
-" - Do not test the bindings before sending"
-
-I assume none of the driver changes compile either.
-
->  .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       | 189 ++++++++++++++++++
->  1 file changed, 189 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..84287293a726
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> @@ -0,0 +1,189 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,ma35d1-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton MA35D1 pin control and GPIO
-> +
-> +maintainers:
-> +  - Shan-Chun Hung <schung@nuvoton.com>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,ma35d1-pinctrl
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  nuvoton,sys:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      phandle of the system-management node.
-> +
-> +  ranges: true
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-
-allOf goes before additionalProperties.
-
-> +
-> +required:
-> +  - compatible
-> +  - nuvoton,sys
-
-This goes after patternProperties
-
-> +
-> +patternProperties:
-> +  "^gpio@[0-9a-f]+$":
-> +    type: object
-> +    additionalProperties: false
-> +    properties:
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      clocks:
-> +        maxItems: 1
-> +
-> +      interrupt-controller: true
-> +
-> +      '#interrupt-cells':
-> +        const: 2
-> +
-> +      interrupts:
-> +        description:
-> +          The interrupt outputs to sysirq.
-> +        maxItems: 1
-> +
-> +    required:
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +      - reg
-> +      - clocks
-> +      - interrupt-controller
-> +      - '#interrupt-cells'
-> +      - interrupts
-> +
-> +  "^pin-[a-z0-9]+$":
-> +    type: object
-> +    description:
-> +      A pinctrl node should contain at least one subnodes representing the
-> +      pinctrl groups available on the machine. Each subnode will list the
-> +      pins it needs, and how they should be configured, with regard to muxer
-> +      configuration, pullups, drive strength, input enable/disable and input
-> +      schmitt.
-> +
-> +    allOf:
-
-Drop allOf, just $ref
-
-> +      - $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      bias-disable: true
-
-Drop this and other "true", why do you need them here?
-
-> +
-> +      bias-pull-down: true
-> +
-> +      bias-pull-up: true
-> +
-> +      power-source:
-> +        description: |
-> +          Valid arguments are described as below:
-> +          0: power supply of 1.8V
-> +          1: power supply of 3.3V
-> +        enum: [0, 1]
-> +
-> +      drive-strength-microamp:
-> +        oneOf:
-> +          - enum: [ 2900, 4400, 5800, 7300, 8600, 10100, 11500, 13000 ]
-> +            description: 1.8V I/O driving strength
-> +          - enum: [ 17100, 25600, 34100, 42800, 48000, 56000, 77000, 82000 ]
-> +            description: 3.3V I/O driving strength
-> +
-> +      input-enable: true
-> +
-> +      input-schmitt-enable: true
-> +
-> +    unevaluatedProperties: false
 
 
+> +
+> +			gpion: gpio@40040340 {
+> +				reg = <0x340 0x40>;
+> +				interrupts = <GIC_SPI  105 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&clk GPN_GATE>;
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +			};
+> +
+> +			pcfg_default: pin-default {
+> +				slew-rate = <0>;
+> +				input-schmitt-disable;
+> +				bias-disable;
+> +				power-source = <1>;
+> +				drive-strength = <17100>;
+> +			};
+
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
 
 Best regards,
 Krzysztof
