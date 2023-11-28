@@ -1,169 +1,152 @@
-Return-Path: <linux-gpio+bounces-611-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-625-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CC65B7FC4C3
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 21:04:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D2E1E7FC688
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 21:59:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87F54282D70
-	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 20:04:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87A5F287BFA
+	for <lists+linux-gpio@lfdr.de>; Tue, 28 Nov 2023 20:59:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C5C40BF7;
-	Tue, 28 Nov 2023 20:04:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lFaUrj5M"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3C044438D;
+	Tue, 28 Nov 2023 20:59:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C580A19B9;
-	Tue, 28 Nov 2023 12:04:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701201873; x=1732737873;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=AMy4L5MTw99Pqy+OTzGL349/EMT3/j4eidtVRe1PNcE=;
-  b=lFaUrj5MTFtb55DpbRIVEFhZnQklMQP/KNR7nb6sGY9f/dGpEzL04SMJ
-   9sb2uit5YglvR814VDSyd3yWelPhyDMtdqWbVFMonlxqzDsbW7TiQFWst
-   iZvM9r2Jk3JveBVM7FhcWZC0dYY4jnJHJg1t6KvfTLuVPoMVtllHTIPgN
-   AncihKjVkV/WyFkYT6IS1MpV9X20w2TrNwa3RK5eSDF5UEuJpUWL25QwJ
-   KJoCQw0SgP/e/7uf1GK10JUwqvltA3HTnrC8OErUDLAELzOrnWQTNFN9I
-   EZppF/s+0xzzWMp33JB1ZzI6Y/2ZHtI3x61c6r9NCGWVOVMhE2pILDjNq
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="457345749"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="457345749"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Nov 2023 12:02:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10908"; a="772420483"
-X-IronPort-AV: E=Sophos;i="6.04,234,1695711600"; 
-   d="scan'208";a="772420483"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 28 Nov 2023 12:02:37 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 16434CA9; Tue, 28 Nov 2023 22:01:59 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	=?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	openbmc@lists.ozlabs.org,
-	linux-mips@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org
-Cc: Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Andy Gross <agross@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>
-Subject: [PATCH v3 22/22] pinctrl: core: Remove unused members from struct group_desc
-Date: Tue, 28 Nov 2023 21:57:11 +0200
-Message-ID: <20231128200155.438722-23-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20231128200155.438722-1-andriy.shevchenko@linux.intel.com>
-References: <20231128200155.438722-1-andriy.shevchenko@linux.intel.com>
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C518A1BCE
+	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 12:59:30 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r85AN-0006nV-7B; Tue, 28 Nov 2023 21:58:47 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r85AI-00CFt4-DE; Tue, 28 Nov 2023 21:58:42 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1r85AI-00AOAR-2T; Tue, 28 Nov 2023 21:58:42 +0100
+Date: Tue, 28 Nov 2023 21:58:41 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Tomasz Figa <tomasz.figa@gmail.com>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Jiri Slaby <jirislaby@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Jaehoon Chung <jh80.chung@samsung.com>,
+	Sam Protsenko <semen.protsenko@linaro.org>,
+	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Subject: Re: (subset) [PATCH 00/17] dt-bindings: samsung: add specific
+ compatibles for existing SoC
+Message-ID: <20231128205841.al23ra5s34rn3muj@pengutronix.de>
+References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
+ <170119374454.445690.515311393756577368.b4-ty@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="bibczb2zawwhoawf"
+Content-Disposition: inline
+In-Reply-To: <170119374454.445690.515311393756577368.b4-ty@gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-All drivers are converted to use embedded struct pingroup.
-Remove unused members from struct group_desc.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/pinctrl/core.c | 9 ---------
- drivers/pinctrl/core.h | 9 ---------
- 2 files changed, 18 deletions(-)
+--bibczb2zawwhoawf
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-index e08d4b3b0a56..88de80187445 100644
---- a/drivers/pinctrl/core.c
-+++ b/drivers/pinctrl/core.c
-@@ -559,9 +559,6 @@ const char *pinctrl_generic_get_group_name(struct pinctrl_dev *pctldev,
- 	if (!group)
- 		return NULL;
- 
--	if (group->name)
--		return group->name;
--
- 	return group->grp.name;
- }
- EXPORT_SYMBOL_GPL(pinctrl_generic_get_group_name);
-@@ -588,12 +585,6 @@ int pinctrl_generic_get_group_pins(struct pinctrl_dev *pctldev,
- 		return -EINVAL;
- 	}
- 
--	if (group->pins) {
--		*pins = group->pins;
--		*num_pins = group->num_pins;
--		return 0;
--	}
--
- 	*pins = group->grp.pins;
- 	*num_pins = group->grp.npins;
- 
-diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-index 863b4956a41e..c1ace4c2eccc 100644
---- a/drivers/pinctrl/core.h
-+++ b/drivers/pinctrl/core.h
-@@ -199,16 +199,10 @@ struct pinctrl_maps {
- /**
-  * struct group_desc - generic pin group descriptor
-  * @grp: generic data of the pin group (name and pins)
-- * @name: name of the pin group
-- * @pins: array of pins that belong to the group
-- * @num_pins: number of pins in the group
-  * @data: pin controller driver specific data
-  */
- struct group_desc {
- 	struct pingroup grp;
--	const char *name;
--	const int *pins;
--	int num_pins;
- 	void *data;
- };
- 
-@@ -216,9 +210,6 @@ struct group_desc {
- #define PINCTRL_GROUP_DESC(_name, _pins, _num_pins, _data)	\
- (struct group_desc) {						\
- 	.grp = PINCTRL_PINGROUP(_name, _pins, _num_pins),	\
--	.name = _name,						\
--	.pins = _pins,						\
--	.num_pins = _num_pins,					\
- 	.data = _data,						\
- }
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+On Tue, Nov 28, 2023 at 06:49:23PM +0100, Thierry Reding wrote:
+>=20
+> On Wed, 08 Nov 2023 11:43:26 +0100, Krzysztof Kozlowski wrote:
+> > Merging
+> > =3D=3D=3D=3D=3D=3D=3D
+> > I propose to take entire patchset through my tree (Samsung SoC), becaus=
+e:
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+> > 1. Next cycle two new SoCs will be coming (Google GS101 and ExynosAutov=
+920), so
+> >    they will touch the same lines in some of the DT bindings (not all, =
+though).
+> >    It is reasonable for me to take the bindings for the new SoCs, to ha=
+ve clean
+> >    `make dtbs_check` on the new DTS.
+> > 2. Having it together helps me to have clean `make dtbs_check` within m=
+y tree
+> >    on the existing DTS.
+> > 3. No drivers are affected by this change.
+> > 4. I plan to do the same for Tesla FSD and Exynos ARM32 SoCs, thus expe=
+ct
+> >    follow up patchsets.
+> >=20
+> > [...]
+>=20
+> Applied, thanks!
+>=20
+> [12/17] dt-bindings: pwm: samsung: add specific compatibles for existing =
+SoC
+>         commit: 5d67b8f81b9d598599366214e3b2eb5f84003c9f
+
+You didn't honor (or even comment) Krzysztof's proposal to take the
+whole patchset via his tree (marked above). Was there some off-list
+agreement?
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--bibczb2zawwhoawf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVmVIAACgkQj4D7WH0S
+/k4mPQgAuzfJsEw0Nil25KsPJwyY53qFjfCGd8WTObzTDFpeIlzV2EL87bWT2Gtd
+vEFgfX2Uj+RoOLX5CNnyuEfwH5e+O5oVYF9gfpsdqtRTJ3zyPV3dUiFCaIh2KNqZ
+aaY1tsb4vECeh7dmEL/y2VUWoO2bAa08sZe6EpJXOkeUWN54VdTCMBwncH1utjgh
+Tb/pHhjkfvdcbXuvxsFY4gL86pT8BER5EjIRZZaPN0kHDrGTBR+ZqjFvMVWTrFbq
+IUK1gAMX+BOooJDwVFE4SeRta6p/lfClW73PbWk1++SyLPA2KbTp8jTul4qgXWKT
+IbIJY8Qwg5trzJ0LHDMX3a02COS9hg==
+=P7ML
+-----END PGP SIGNATURE-----
+
+--bibczb2zawwhoawf--
 
