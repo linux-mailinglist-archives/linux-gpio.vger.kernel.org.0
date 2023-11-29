@@ -1,67 +1,67 @@
-Return-Path: <linux-gpio+bounces-678-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-679-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8D027FD93E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:24:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 49D667FD93F
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:24:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 62D7328309B
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:24:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7C0871C209F9
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:24:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C05B930D08;
-	Wed, 29 Nov 2023 14:24:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EA1131581;
+	Wed, 29 Nov 2023 14:24:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zmQJ4Ys4"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cmui+8oU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x334.google.com (mail-wm1-x334.google.com [IPv6:2a00:1450:4864:20::334])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF958197
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:29 -0800 (PST)
-Received: by mail-wm1-x334.google.com with SMTP id 5b1f17b1804b1-40b4a8db331so19249925e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:29 -0800 (PST)
+Received: from mail-lj1-x229.google.com (mail-lj1-x229.google.com [IPv6:2a00:1450:4864:20::229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1C534DD
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:31 -0800 (PST)
+Received: by mail-lj1-x229.google.com with SMTP id 38308e7fff4ca-2c9b77be7ceso22713781fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701267868; x=1701872668; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701267869; x=1701872669; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/NPguL+egm1B/3hLyNOqRomxlJRtvAY3YVXSaylJwM0=;
-        b=zmQJ4Ys49CuOfhXncDZdxnjlU0VLCAlLpshYRS+4NlZtnoC2PqhvVwi12XBV+5E/fs
-         /YZA9Qp/Ul69d90eO5E/O+jw9TO1B/5GId7K3nfbtE2uSiKUhiWmldQRw/nSynxooLGj
-         NASpy9sbNwUzTMlu4IAdolN2xvpA/1foW5hqbLEDYbjgDhUc+j5rHuSKxxOPy8UIWtUc
-         s/T6T4aPXSNpWhRsr6FlAyVFqwwgJq1ZevPf00uzIL2QAXRYlcsQT2eJ3ObiG8pBmOgJ
-         E3yqMES9ukpwMza18wvFtQg3O92NHp3iMOBHlGFZAcAX9ZGEo9PpVmHwcSyYZtD+xCna
-         jKdA==
+        bh=lX1sqlEJJ4vEUK91SFq6mj5SEAnM+ha5YxcxRVGS6+w=;
+        b=cmui+8oUvf4Ks+gTyWIBhQm5JG7ZMZ4iUa+RgGSbI1FOXXh9qfUqryLfKlHRm/NsR8
+         3sTfsLnrqes8B593KPQegLIqTkPCQIOTPGwqmxWQsxxNfg4po7gJhejOJJdSe2w0u5wA
+         6ulnaQENKCaSj9XjN1tQiW9dcMQ0iNIwMbLAsSqIAJXYeUAbjnLbB7m3sOJu18bNTQEG
+         7MYUe/nOcN3msrJCjSoDfUBtJg1ZtYInl6Qz+zmigAqKSkk5BXJ/3WdTlpPRKbj9wqZq
+         zqYKZIj7A78lP+mkRl1K6S7ahdKTqSzi3Umd2dqBup5tKd7kR/FglystB0cuEw+uMHc2
+         dkdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701267868; x=1701872668;
+        d=1e100.net; s=20230601; t=1701267869; x=1701872669;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/NPguL+egm1B/3hLyNOqRomxlJRtvAY3YVXSaylJwM0=;
-        b=mVINxhYf6IDEZQdErZobb6cvMACcJK1DZY9CvdZLpAMQK2Cn4dsLAIRB8ytw0owyTE
-         p5m1cx7eyS+XE2cjZF2/Gr2084Mo2mpvRa1J67rbdB94s1MfWrIaY3uXU99uRnm9CRb2
-         c9tYUXjV8s8cjGDVaw7k/liLBgHyeTImSDCWp11kOx4fKG6VLUekQrob9csq9q8M3xbG
-         gA1xQthJzLlXBdln0WIPTKqu3wZ+XX6WfNIC93fPY+J18jTJV/Ag2LMXfEREMi3TadSg
-         eJOKt709WOqxYsiJ0Ucl0DMNQyzWJ9dbFsT+DS0psdkvYaxeJVT4KyLPc+e6eEB9RAqs
-         ekwQ==
-X-Gm-Message-State: AOJu0Yzdi2WVkMjI1NHsW1t8kfgPh5mqNC59dGLlePlKAJUdojHL5jsD
-	OAAJIabQmdXdWWzG6Zgr3S7Spw==
-X-Google-Smtp-Source: AGHT+IEIUIxZE0FFWq33NVEE0m0n6KKNo0xXx+LcPgG8+tEi5gE5dQ6JB2ZNU3b7fWCs507DrqnJhQ==
-X-Received: by 2002:a05:600c:4f15:b0:405:3ae6:2413 with SMTP id l21-20020a05600c4f1500b004053ae62413mr10800607wmq.25.1701267868115;
-        Wed, 29 Nov 2023 06:24:28 -0800 (PST)
+        bh=lX1sqlEJJ4vEUK91SFq6mj5SEAnM+ha5YxcxRVGS6+w=;
+        b=pI7k6hB00ldZBbOuJ93lqypdOYCXtYgL1Nl5PyFO0dN7dq8Rwmck5U8eo6iDNDGuUC
+         xUjjnn9D9+VZ+/JMudFC2OKh1TsPn9e6XZftoh1fuxkpjW6tYOq+YKpr3wgyUT1CqXI/
+         7BC5iJkvXZotsbs+RDVOswmjZs1UJbuKIH6Mnpsy8nKKW9dFpev2I0dxGU+kl5vRT0Li
+         7Lcjo1m0cfsusucpikJH8QmpJVzYb4+yukXIGZXaJEqRhbdZ+8hlvNIO4m4/EUMewuGw
+         J6NI0kM8Pnd7zPeTHngd7CKSHRXd8uMpuAOgC2PUsALdHtm15jOMu429qHSU1luW8rnK
+         ta4A==
+X-Gm-Message-State: AOJu0YxmENFr+RU2/HF59pFrLsUQEFZ1vx+DijvhC1gai4BvVeDhw/6A
+	gxj3HOYQJ/EMvr5yUJSZhoOkyg==
+X-Google-Smtp-Source: AGHT+IFjEBWan0C97HdNCiQeMtPtXLlhZluROT5dGRXGCE0TfLtIbmQkWSsz4iIIEozMicZGD6j8hg==
+X-Received: by 2002:a2e:9855:0:b0:2c9:c00a:c28e with SMTP id e21-20020a2e9855000000b002c9c00ac28emr1331701ljj.33.1701267869205;
+        Wed, 29 Nov 2023 06:24:29 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4520:2f25:4d3a:4adf])
-        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040b34720206sm2406848wms.12.2023.11.29.06.24.27
+        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040b34720206sm2406848wms.12.2023.11.29.06.24.28
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 06:24:27 -0800 (PST)
+        Wed, 29 Nov 2023 06:24:28 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 06/10] pinctrl: nomadik: use gpiochip_dup_line_label()
-Date: Wed, 29 Nov 2023 15:24:07 +0100
-Message-Id: <20231129142411.76863-7-brgl@bgdev.pl>
+Subject: [PATCH 07/10] pinctrl: baytrail: use gpiochip_dup_line_label()
+Date: Wed, 29 Nov 2023 15:24:08 +0100
+Message-Id: <20231129142411.76863-8-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231129142411.76863-1-brgl@bgdev.pl>
 References: <20231129142411.76863-1-brgl@bgdev.pl>
@@ -80,40 +80,52 @@ descriptor label.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 863732287b1e..7911353ac97d 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -8,6 +8,7 @@
-  * Copyright (C) 2011-2013 Linus Walleij <linus.walleij@linaro.org>
-  */
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 3cd0798ee631..3c8c02043481 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -9,6 +9,7 @@
+ #include <linux/acpi.h>
+ #include <linux/array_size.h>
  #include <linux/bitops.h>
 +#include <linux/cleanup.h>
- #include <linux/clk.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -917,7 +918,6 @@ static void nmk_gpio_dbg_show_one(struct seq_file *s,
- 	struct pinctrl_dev *pctldev, struct gpio_chip *chip,
- 	unsigned offset, unsigned gpio)
- {
--	const char *label = gpiochip_is_requested(chip, offset);
- 	struct nmk_gpio_chip *nmk_chip = gpiochip_get_data(chip);
- 	int mode;
- 	bool is_out;
-@@ -934,6 +934,10 @@ static void nmk_gpio_dbg_show_one(struct seq_file *s,
- 		[NMK_GPIO_ALT_C+4]	= "altC4",
- 	};
+ #include <linux/gpio/driver.h>
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+@@ -1173,7 +1174,6 @@ static void byt_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 		const char *pull_str = NULL;
+ 		const char *pull = NULL;
+ 		unsigned long flags;
+-		const char *label;
+ 		unsigned int pin;
  
-+	char *label = gpiochip_dup_line_label(chip, offset);
-+	if (IS_ERR(label))
-+		return;
+ 		pin = vg->soc->pins[i].number;
+@@ -1200,9 +1200,10 @@ static void byt_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 			seq_printf(s, "Pin %i: can't retrieve community\n", pin);
+ 			continue;
+ 		}
+-		label = gpiochip_is_requested(chip, i);
+-		if (!label)
+-			label = "Unrequested";
 +
- 	clk_enable(nmk_chip->clk);
- 	is_out = !!(readl(nmk_chip->addr + NMK_GPIO_DIR) & BIT(offset));
- 	pull = !(readl(nmk_chip->addr + NMK_GPIO_PDIS) & BIT(offset));
++		char *label __free(kfree) = gpiochip_dup_line_label(chip, i);
++		if (IS_ERR(label))
++			continue;
+ 
+ 		switch (conf0 & BYT_PULL_ASSIGN_MASK) {
+ 		case BYT_PULL_ASSIGN_UP:
+@@ -1231,7 +1232,7 @@ static void byt_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
+ 		seq_printf(s,
+ 			   " gpio-%-3d (%-20.20s) %s %s %s pad-%-3d offset:0x%03x mux:%d %s%s%s",
+ 			   pin,
+-			   label,
++			   label ?: "Unrequested",
+ 			   val & BYT_INPUT_EN ? "  " : "in",
+ 			   val & BYT_OUTPUT_EN ? "   " : "out",
+ 			   str_hi_lo(val & BYT_LEVEL),
 -- 
 2.40.1
 
