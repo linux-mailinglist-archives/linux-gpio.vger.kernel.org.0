@@ -1,183 +1,170 @@
-Return-Path: <linux-gpio+bounces-641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-647-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 155B37FD2B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:30:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FD4F7FD3C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:14:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3904A1C20B42
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 09:29:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 137B5B216D3
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:14:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6D314F7D;
-	Wed, 29 Nov 2023 09:29:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7E519BAF;
+	Wed, 29 Nov 2023 10:14:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Uv56qPD+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W6s7uf/1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9374B2D76
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 01:29:46 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231129092944epoutp03e230f7d52f9f5c72d46ad0e901e04878~cDgd_Zk7s2059320593epoutp03g
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 09:29:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231129092944epoutp03e230f7d52f9f5c72d46ad0e901e04878~cDgd_Zk7s2059320593epoutp03g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1701250184;
-	bh=FHvSR/hYOGJJkx3HUz9cuc3ozsOZ6u4idcxy8RtY3ek=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=Uv56qPD+l3e2Z5W0lKtubPM87dE3u4JY363KS2Q0qL/6WR4tvLEHlumasMHg9UxDL
-	 +LLwe2PVcxGusEiZwfOReufcbTKXV7EpO1uvDwQ7xvG+sA/XCmiBTYZCZGW8XrA0eU
-	 B2zEhnmsbXZB4NgKLXm3swnSBXn1BbA9rVf826MY=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
-	20231129092944epcas2p48dd26563bb461298f3467b73415a494e~cDgdlzJnu1311413114epcas2p4Z;
-	Wed, 29 Nov 2023 09:29:44 +0000 (GMT)
-Received: from epsmgec2p1.samsung.com (unknown [182.195.36.69]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4SgDYg3rW4z4x9Pt; Wed, 29 Nov
-	2023 09:29:43 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	35.78.08648.78407656; Wed, 29 Nov 2023 18:29:43 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
-	20231129092942epcas2p1c4305207c4c3d3701e7ff6757f7a2b4f~cDgcJFYlJ0737107371epcas2p1g;
-	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231129092942epsmtrp13fa7b91dd84632b400609f49cb4e84bd~cDgcII0pu3031930319epsmtrp1k;
-	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
-X-AuditID: b6c32a43-4b3ff700000021c8-23-6567048740ae
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	1A.EE.07368.68407656; Wed, 29 Nov 2023 18:29:42 +0900 (KST)
-Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20231129092942epsmtip233070651858a9e02b1227e78ed12d3f1~cDgb3wbsf0969709697epsmtip2i;
-	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
-Date: Wed, 29 Nov 2023 19:04:47 +0900
-From: Youngmin Nam <youngmin.nam@samsung.com>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
-	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, semen.protsenko@linaro.org
-Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non
- wake up external gpio interrupt
-Message-ID: <ZWcMv8Bg12vqBCUm@perf>
+Received: from mail-oa1-x31.google.com (mail-oa1-x31.google.com [IPv6:2001:4860:4864:20::31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A645AF;
+	Wed, 29 Nov 2023 02:14:12 -0800 (PST)
+Received: by mail-oa1-x31.google.com with SMTP id 586e51a60fabf-1fa2b8f7f27so2308416fac.0;
+        Wed, 29 Nov 2023 02:14:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701252852; x=1701857652; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=FGZ3TgbJjq9FTWNge0Xm7kDLqkirObI8+B/QdDXRIsg=;
+        b=W6s7uf/1Eg/pt0nNYKH56gzXoDXwPzNPI6FVJmpMjuu1bNGrdayU2asVw+5tv0CdiZ
+         xojJL/fEMGp4JPCvKwvE/IAmZXNpBNrHGU+M5baTDigV+nEZgUIAiWC/yLuS/f/6VMig
+         Qx1SFCIyO4Ow3N+1ah37T87Wi8VNXwziu2ANf2TQq8cEway5SZJj39zly2nrW3Tim1OA
+         wG2O3HGu6zTPruWwkAFZkYUVBLf6i+F901refzOIwwcQOGlnThF9347/ZcCBJcWMTc9V
+         vG3p9M0amFwKbXRzM7VrchFbUxsL0gMUvWIBUow7m5rKB3IvrnC8HXpE4yU+BMkSOTAu
+         C7BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701252852; x=1701857652;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=FGZ3TgbJjq9FTWNge0Xm7kDLqkirObI8+B/QdDXRIsg=;
+        b=OaW6d2hYwJ0TmZEzS5oS6ojIb0n12UNDvIUMizEndxL0EwjiZ9+RKjw6oxIf5Nnwmk
+         o6ljGJmscOmjlsu9kZYhRcBZQvFgnVQtQUwikIZlyy1WnTYTAapAsUdWgbYA8UGYgM6E
+         H3r1JbXAvBc4ccMuDlaLqAr7f0WhvgvcHGVoD19liKOlujoGjHlvCOEYQWjnBTYLNtgO
+         izqru5IByTmPOePCgqikn9iNIJmDuxR1gbLoVuhNQu5MXZ3EAJBWLz82KyJOlDOTVcG6
+         jNx1RcjxKahRH5h2ttbfSo+IiahmU/x42ryOPD8sX9M39L5OC//c64vRyjwLAj2jZvbB
+         ZUvA==
+X-Gm-Message-State: AOJu0Yz/AzC70mcDrzqf/YXf1hsoLBMOuTJGWJ/UHj+F/CIyWKAUF/xE
+	Z6/fSgGgdZKsoPBK5iNVznk=
+X-Google-Smtp-Source: AGHT+IEPWKGIQhyEyqP/kA8WufJf3oEEHDE+txRrCHUCkSm+i0dp+E3Y9yS8oy/osYm2DLZZdpF5dA==
+X-Received: by 2002:a05:6870:75c9:b0:1e9:da6f:a161 with SMTP id de9-20020a05687075c900b001e9da6fa161mr25452160oab.3.1701252851813;
+        Wed, 29 Nov 2023 02:14:11 -0800 (PST)
+Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id e17-20020aa78c51000000b006c06779e593sm10682629pfd.16.2023.11.29.02.14.09
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Nov 2023 02:14:11 -0800 (PST)
+Message-ID: <6d511cc4-f22c-4c8f-a1ea-a8d99be95157@gmail.com>
+Date: Wed, 29 Nov 2023 18:14:07 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <f814a1f4-2e3d-4946-949a-8ddac5e30d5f@kernel.org>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmhW47S3qqwba5MhYP5m1jszh/fgO7
-	xZQ/y5ksNj2+xmqxef4fRovLu+awWcw4v4/J4vCbdlaL531A1qpdfxgduDx2zrrL7rFpVSeb
-	x51re9g8Ni+p9+jbsorR4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sL
-	cyWFvMTcVFslF58AXbfMHKDLlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkF5gV6
-	xYm5xaV56Xp5qSVWhgYGRqZAhQnZGSc+nWQpOCpUceywUwPjN74uRk4OCQETiRMvz7N0MXJx
-	CAnsYJS4d/okG4TziVHiyoWPTBDON0aJO08OscC0tN+7CdWyl1Hi5qz9zBDOQ0aJ/vkX2EGq
-	WARUJWZfvgHWwSagK7HtxD9GEFtEQFPi+t/vrCANzAKdTBLTt89kBUkIC2RJ3NnYDdbAK6As
-	8XfnOXYIW1Di5MwnQHEODk4BO4nJ8+pBeiUEOjkkFu6ZzwhxkovEue8roc4Tlnh1fAs7hC0l
-	8bK/DcrOllj96xKUXQH0Qg8zhG0sMetZO9gcZoEMiQ1HJrGC7JIAuuHILRaIMJ9Ex+G/7BBh
-	XomONiGITjWJX1M2QF0gI7F78QqoiR4SzyZvYocGI7PEnFt32Ccwys1C8s0sJNsgbB2JBbs/
-	sc0CWsEsIC2x/B8HhKkpsX6X/gJG1lWMYqkFxbnpqclGBYbwCE7Oz93ECE6oWs47GK/M/6d3
-	iJGJg/EQowQHs5IIr97H5FQh3pTEyqrUovz4otKc1OJDjKbAuJnILCWanA9M6Xkl8YYmlgYm
-	ZmaG5kamBuZK4rz3WuemCAmkJ5akZqemFqQWwfQxcXBKNTCFN/IuC6i9+c30MsflY2q8266L
-	Zf/656b50Clj243XpybN+yjgcXeJ2C7lmSt33LCJ+F2/9PIcG23rCwv8LnL0FeRaBNxQn/U9
-	ONheOvjGpNDjPpKqhrX8Zfb+Sg2zzL/3Hr/guj7MnXmPeYCE/3ppje0mp497VGqxHVu0fdrR
-	WUmKJexXVRXNmPY1HnyZn8KbtvDTs8554XHT1845W1Xd6uijHvbo6oQnX9b8jEwU4rRZ8mZe
-	byazyeaTR/k1DkZKTI6XFVp73e/sZC8LJtdE+Y0HhH4m1c3cea9n+wOvz1w6x001+nqSv0k0
-	Ta7ptO96o3p+anTUs1QlOVn+SfcKVtS2+ZS26fBqKKfGhSuxFGckGmoxFxUnAgBvbNQXMQQA
-	AA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSvG4bS3qqwfp3UhYP5m1jszh/fgO7
-	xZQ/y5ksNj2+xmqxef4fRovLu+awWcw4v4/J4vCbdlaL531A1qpdfxgduDx2zrrL7rFpVSeb
-	x51re9g8Ni+p9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6Mc39YC1oFKpb8esHWwHiep4uR
-	k0NCwESi/d5Nli5GLg4hgd2MEgunPmODSMhI3F55mRXCFpa433KEFaLoPqPEibVv2UESLAKq
-	ErMv32ABsdkEdCW2nfjHCGKLCGhKXP/7HayBWaCTSWL69plgk4QFsiQePjwPtoFXQFni785z
-	7BBTfzBLLFy9jAkiIShxcuYTsKnMAloSN/69BIpzANnSEsv/cYCYnAJ2EpPn1U9gFJiFpGEW
-	koZZCA0LGJlXMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefnbmIER4SWxg7Ge/P/6R1iZOJg
-	PMQowcGsJMKr9zE5VYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv4YzZKUIC6YklqdmpqQWpRTBZ
-	Jg5OqQam5OcuL9IX+13LSta7HLnn9leL2IgNSX1PC+qs3v9nWHL0pOS/qzln5XYJR2x/PitH
-	ZYL74xrz5iWHlrtI/vqasbT9iS/3p/wjOgXMs06se5OcME2olTdsb3XJuerQ/Qzq97T95txT
-	e3/4ZqXYulah1P2VwkmHWzqypi6z4z315H15TBDDtjVr2281rhXxZTrEVhgvL7Vc6ttMqwvT
-	r7nn5P+JY9hrvOxz56rbm4JMf81acND+eUJ5xS8rEZ2Atom3XqyrqxUqtE5eojzfe/Fu3QCt
-	l9W5XvevnzXanSbwaXFMPPfMa5daVijrHT/Sl3VrvZqzoKT9qw81fF0M3p7iN+3DFmVzLk2c
-	Uv+004xXiaU4I9FQi7moOBEA0CLvT/cCAAA=
-X-CMS-MailID: 20231129092942epcas2p1c4305207c4c3d3701e7ff6757f7a2b4f
-X-Msg-Generator: CA
-Content-Type: multipart/mixed;
-	boundary="----beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38
-References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
-	<20231126094618.2545116-1-youngmin.nam@samsung.com>
-	<bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org> <ZWU75VtJ/mXpMyQr@perf>
-	<1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
-	<CAPLW+4n0SAOTb6wocY-WjkxgSFMbx+nVuqdaPcNYVDsbfg+EfA@mail.gmail.com>
-	<ZWbjPIydJRrPnuDy@perf> <a0ac295b-ea96-475c-acde-5a61de8ca170@linaro.org>
-	<ZWb6cyTgyEcee7DZ@perf> <f814a1f4-2e3d-4946-949a-8ddac5e30d5f@kernel.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
+ ma35d1
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+ <20231128061118.575847-4-ychuang570808@gmail.com>
+ <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
+ <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
+ <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
+ <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
+ <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
+ <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
+ <db3ede63-8708-469f-8e7b-aca798ed50e0@linaro.org>
+ <4b00c41c-7751-40ca-bf2d-53f1179772d4@gmail.com>
+ <9ec2dd42-5173-40df-8e6b-9c09f2d77f67@linaro.org>
+From: Jacky Huang <ychuang570808@gmail.com>
+In-Reply-To: <9ec2dd42-5173-40df-8e6b-9c09f2d77f67@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
 
-On Wed, Nov 29, 2023 at 09:39:45AM +0100, Krzysztof Kozlowski wrote:
-> On 29/11/2023 09:46, Youngmin Nam wrote:
-> >>> I couldn't find out a pin for the test on E850-96 board yet.
-> >>> We can test if there is a usage of *Non" Wake up External Interrupt of GPIO
-> >>> on E850-96 board.
-> >>>
-> >>> Do you have any idea ?
-> >>
-> >> Please test on any upstream platform or upstream your existing platform.
-> >> I hesitate to take this change because I don't trust Samsung that this
-> >> was tested on mainline kernel. OK, for sure 100% it was not tested on
-> >> mainline, but I am afraid that differences were far beyond just missing
-> >> platforms. Therefore the issue might or might not exist at all. Maybe
-> >> issue is caused by other Samsung non-upstreamed code.
-> >>
-> >> Best regards,
-> >> Krzysztof
-> > 
-> > Sure. Let me find how to test on upstreamed device like E850-96 board.
-> 
-> There are many reasons why companies using Linux for their products
-> should be involved in upstreaming their devices.
-> 
-> The one visible from this conversation: Whatever technical debt you
-> have, it will be only growing because upstream might not even take
-> simple patches from you, until you start contributing with the rest.
-> Samsung's out-of-tree kernels are so far away from the upstream, that
-> basically we might feel that contributions from Samsung are not
-> addressing real problems. This will affect your Android trees due to GKI.
-> 
-> That's one more argument to talk to with your managers why staying away
-> from the upstream is not the best idea.
-> 
-> Second argument is look at your competitor: Qualcomm, one of the most
-> active upstreamers of SoC code doing awesome job.
-> 
+Dear Krzysztof,
+
+
+On 2023/11/29 下午 06:02, Krzysztof Kozlowski wrote:
+> On 29/11/2023 10:41, Jacky Huang wrote:
+>> Dear Krzysztof,
+>>
+>>
+>> On 2023/11/29 下午 04:11, Krzysztof Kozlowski wrote:
+>>> On 29/11/2023 04:35, Jacky Huang wrote:
+>>>>>>> Best regards,
+>>>>>>> Krzysztof
+>>>>>>>
+>>>>>> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such
+>>>>>> issues.
+>>>>>> Anyway, I will fix it in the next version.
+>>>>> Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
+>>>>> the binding issue.
+>>>>>
+>>>>> The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
+>>>>> realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
+>>>>>
+>>>>> I don't understand why do you need them yet. I don't see any populate of
+>>>>> children. There are no compatibles, either.
+>>>>>
+>>>>> Which part of your driver uses them exactly?
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>> I will move the 'pcfg_default: pin-default' from dtsi to dts, like this:
+>>>>
+>>>> &pinctrl {
+>>>>        pcfg_default: pin-default {
+>>>>            slew-rate = <0>;
+>>>>            input-schmitt-disable;
+>>>>            bias-disable;
+>>>>            power-source = <1>;
+>>>>            drive-strength = <17100>;
+>>>>        };
+>>> This solves nothing. It's the same placement.
+>>>
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>> OK, it stil be the binding issues.
+>> For "^pin-[a-z0-9]+$", I reference to the "pcfg-[a-z0-9-]+$" of
+>> rockchip,pinctrl.yaml.
+>>
+>> My intention is to describe a generic pin configuration, aiming to make
+>> the pin
+>> description more concise. In actual testing, it proves to be effective.
+> Can you instead respond to my actual questions?
+>
 > Best regards,
 > Krzysztof
+>
 
-Thank you for your opinion.
-By the way, this patch is not related with GKI and I just thought this work
-would be helpful to all exynos platform.
-
-But it seems that changing affinity of any irqs including gpio is not allowed
-on exynos platform. So we need to debug by adding some logs.
-
-> 
-> 
-
-------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_
-Content-Type: text/plain; charset="utf-8"
-
-
-------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_--
+The the last one item of nuvoton,pins is a phandle, which can refer to 
+'&pin-default'. The following code of driver pinctrl-ma35.c parse 
+"nuvoton,pins", including the node reference by phandle. list = 
+of_get_property(np, "nuvoton,pins", &size); size /= sizeof(*list); if 
+(!size || size % 4) { dev_err(npctl->dev, "wrong setting!\n"); return 
+-EINVAL; } grp->npins = size / 4; grp->pins = devm_kzalloc(npctl->dev, 
+grp->npins * sizeof(*grp->pins), GFP_KERNEL); if (!grp->pins) return 
+-ENOMEM; pin = grp->settings = devm_kzalloc(npctl->dev, grp->npins * 
+sizeof(*grp->settings), GFP_KERNEL); if (!grp->settings) return -ENOMEM; 
+for (i = 0, j = 0; i < size; i += 4, j++) { struct device_node 
+*np_config; const __be32 *phandle; pin->offset = be32_to_cpu(*list++) * 
+MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE; pin->shift = 
+(be32_to_cpu(*list++) * MA35_MFP_BITS_PER_PORT) % 32; pin->muxval = 
+be32_to_cpu(*list++); phandle = list++; if (!phandle) return -EINVAL; 
+np_config = of_find_node_by_phandle(be32_to_cpup(phandle)); ret = 
+pinconf_generic_parse_dt_config(np_config, NULL, &pin->configs, 
+&pin->nconfigs); if (ret) return ret; grp->pins[j] = 
+npctl->info->get_pin_num(pin->offset, pin->shift); pin++; } Best 
+Regards, Jacky Huang
 
