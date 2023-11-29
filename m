@@ -1,127 +1,143 @@
-Return-Path: <linux-gpio+bounces-691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 443C57FDAE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:14:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC5C37FDAFB
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:18:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB904B212E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:14:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9760F282B98
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346E3374D5;
-	Wed, 29 Nov 2023 15:13:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E130374EE;
+	Wed, 29 Nov 2023 15:18:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKrlOYww"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pwPjQlBR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA2DD5D;
-	Wed, 29 Nov 2023 07:13:56 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5bdfbd69bd5so779647a12.1;
-        Wed, 29 Nov 2023 07:13:56 -0800 (PST)
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 63D94D65
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 07:18:18 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5cbcfdeaff3so70775687b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 07:18:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701270836; x=1701875636; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0iIKWxGyiRbf3SG4rKDTOqBlNDSA1cc3f6H9uieYbWQ=;
-        b=cKrlOYww7cA9oC9eVtKWVO866JjR4DizsLqiWArerFVlB4p3vTGDlnoA2hQ8FuHyeS
-         uydfCRImVLOf7TZP2fxOjXFXEsnbqTjTBt29tBkl8qCym/EHJLqQqbuU7FV0pyalum4V
-         oEKw2RF/Kl718uN/Ij8Z58xwZsj+sXjuuSPaBMJw/mUAlGE/j43wL6nD0iEu7lRpJ5qQ
-         rRojGhhBzHSuGWgNMAIgfKsgLaVtQxm9Sx9N5Ipz6Xq9nys7iEuynJUPtw8o1ONbZcDQ
-         Brsvqq/d+DKWhnG0Y5rwGjoN0TXliFxpYoPJ8RlKU1A9rhsy7M5jm1JaoD+4mW0ABad/
-         OExw==
+        d=linaro.org; s=google; t=1701271097; x=1701875897; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=ww7Q/9ceLBE3UsdAE5GfPj/48ajdec2+lwr+X82WcYU=;
+        b=pwPjQlBRRKKvKA+D2rWvEslRW96hXjxoYYIe+tA2Y5yu2ZNrf04zabkP+ugHLv85j+
+         INydDO+F9jTj4k3xXIanEZtI7R0BJheN87MyWksOJBU6EXa2mxTdlT9XMd76B3BIlc79
+         Icgw7dOSDmThJs4t5BnlrDO2EKD2kFqqz4XP5jUj28CLsmYXa/vZn9Al37Xp7GNoOh1F
+         ZC/CWZLAIM8xbcdQVO/+FOyCcPWofgvtM4ZZHU6jMIEBUioGwlnG2aJw7mLVmeisOfor
+         AJ8sFy4Y7MbyYDSbCcOEyDGxbUIok5WqHNNKIuMq7bf1fiGZXsSo3l/xw/o1S2WBpZ2O
+         +x1w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701270836; x=1701875636;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=0iIKWxGyiRbf3SG4rKDTOqBlNDSA1cc3f6H9uieYbWQ=;
-        b=ufaLlVf6Q2xA9e0pWddQoBks3GwiC3xzoy3Ax/ggGef50aZn7Z2fputDHc3cWvFVSc
-         6+qFVPlgd5fszGQOfZOp80ez5C4I8NKzFSS3atpIvAlH/GtJeixSCS1uOe+MJsQW3iyQ
-         oY7tMMyOJnBxs8AA8BKiMQCzZoFX4QRfKgmIrvJDfaSiz22wxIBdhE+plznlHYf/cAS3
-         IS/t1eoDhBAQETHxrSDA0N2f6H1xdGHR3JPOwvh2Db15g7YenvifFsJv+veC0KvAjTbX
-         OfQBw15A2gf7FjBWblN91cFq4Nmf1Sn3gTM2n1oCJAoyiOlef44t+eGi+Y2FkzQUy6lk
-         trgw==
-X-Gm-Message-State: AOJu0Ywl7k3ua4e5xv4BnRptfOQkErmE7XGzrrIIZGdYGvRmrGT4uEJI
-	5OYOJN3HC53ziVe/0ALosLPVEukp3/LRn0r0vUI=
-X-Google-Smtp-Source: AGHT+IGefgEeFVwSE2YE0tvnc8G4Kez5vym0kVbW57S7KbimWr8xl59X64QhhOD/XIjQvIgaf5ts76/7Wg7OVUe/1HM=
-X-Received: by 2002:a17:90a:ad04:b0:285:a161:ad8f with SMTP id
- r4-20020a17090aad0400b00285a161ad8fmr19998927pjq.21.1701270835659; Wed, 29
- Nov 2023 07:13:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701271097; x=1701875897;
+        h=cc:to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=ww7Q/9ceLBE3UsdAE5GfPj/48ajdec2+lwr+X82WcYU=;
+        b=vSW9RN7e3wAzYxM2+SqmGh4+UHaT4975F1rlbyfQ8exZQFiSnr5+r1bqnO57IDpfT3
+         frL0dV4kS9FqxDsiO9cZAgwb8bDtqmhxjqvO/bXAbaRjuKyAyg797GrGV82Q4hc/ARB1
+         UG7mLroAhQ5Ex8MJSGgo6FKCmX9N2fA252HFs4gox9EagC9tPSzHuGBuk3XYmXqkKE9e
+         9YgXNsndxjKOCqYoJMVsN7PkikRrlMS8eXvao/4mOo0Xi/nz72gw8zFxJHKsIpfcnrXn
+         +wz6JLtkBY+bj1zjqFcaR0mv9mR8OUbNkxCrnFrznJEKvYvQPO9s8IRF7c5Y2KRmMQS9
+         ZQwQ==
+X-Gm-Message-State: AOJu0YyJzEiXiUIoCc4zkZuRgJB7g77hAfn0oMKZ86MzGrXIjl84KQhd
+	vAZn7kmfRBWDOUBnttw47/2Nupsq975cTGe27vFVZdlLFBGToqCdZBU=
+X-Google-Smtp-Source: AGHT+IEPT8Ws9NesmQWHMj5hZjPO3G5T4wYj+FYaoP8AFc5k6U1UkImn6UdXy1tcfwJdMRyJhtpysDaGAYEdS/bdlEY=
+X-Received: by 2002:a0d:df92:0:b0:5c9:d16b:a11b with SMTP id
+ i140-20020a0ddf92000000b005c9d16ba11bmr15635597ywe.36.1701271097463; Wed, 29
+ Nov 2023 07:18:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128141321.51669-1-boerge.struempfel@gmail.com> <ZWYVVvB0O-CBIbos@smile.fi.intel.com>
-In-Reply-To: <ZWYVVvB0O-CBIbos@smile.fi.intel.com>
-From: =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>
-Date: Wed, 29 Nov 2023 16:13:44 +0100
-Message-ID: <CAEktqcv8NC0Cy+wo7nRGOp9USoBdta=n=mrbo-WomxgcmWN5nQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: sysfs: Fix error handling on failed export
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, bstruempfel@ultratronik.de
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 29 Nov 2023 16:18:06 +0100
+Message-ID: <CACRpkdb8dwq7OYUFuyjJCv7VN9mH1zEmibcOwgFip0wDv5H1gA@mail.gmail.com>
+Subject: [GIT PULL] Pin control fixes for v6.7 minus one patch
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
+	Maria Yu <quic_aiquny@quicinc.com>, Charles Keepax <ckeepax@opensource.cirrus.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hello Andy
+Hi Linus,
 
-Thanks again for your feedback.
+Here is an updated tag on a branch where the only change
+is to drop the locking READ_ONCE() patch until we know
+more about what is going on here.
 
-On Tue, Nov 28, 2023 at 5:29=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Tue, Nov 28, 2023 at 03:13:21PM +0100, Boerge Struempfel wrote:
-> > If gpio_set_transitory() fails, we should free the gpio again. Most
->
-> gpio --> GPIO descriptor
-> (I already mentioned capitalization in v1 review)
->
+Remains: driver fixes.
 
-I'm sorry, I misunderstood your comment "GPIO" in the v1 review. I fixed it=
- for
-the next version.
+Some details on the fixes are in the tag.
 
-> > notably, the flag FLAG_REQUESTED has previously been set in
-> > gpiod_request_commit(), and should be reset on failure.
-> >
-> > To my knowledge, this does not affect any current users, since the
-> > gpio_set_transitory() mainly returns 0 and -ENOTSUPP, which is converte=
-d
-> > to 0. However the gpio_set_transitory() function calles the .set_config=
-()
-> > function of the corresponding gpio chip and there are some gpio drivers=
- in
->
-> gpio --> GPIO
->
+Please pull them in!
 
-thanks
+Yours,
+Linus Walleij
 
-> > which some (unlikely) branches return other values like -EPROBE_DEFER,
-> > and EINVAL. In these cases, the above mentioned FLAG_REQUESTED would no=
-t
->
-> -EINVAL
->
 
-thanks, I missed that, when I added the minus to all the other Error codes.
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
 
-> > be reset, which results in the pin being blocked until the next reboot.
->
-> Fixes tag?
-> (`git log --no-merges --grep "Fixes:" will show you examples)
->
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
 
-I thought it was optional. But I have added it for the next version.
+are available in the Git repository at:
 
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
+tags/pinctrl-v6.7-3
+
+for you to fetch changes up to 650d240056059296168b24ba47e76bafa37c0646:
+
+  dt-bindings: pinctrl: s32g2: change a maintainer email address
+(2023-11-29 16:11:52 +0100)
+
+----------------------------------------------------------------
+Some pin control fixes for the v6.7 cycle:
+
+- Check devm_kcalloc() return value and an array bounds in the STM32
+  driver.
+
+- Fix an exotic string truncation issue in the s32cc driver, found
+  by the kernel test robot (impressive!)
+
+- Fix an undocumented struct member in the cy8c95x0 driver.
+
+- Fix a symbol overlap with MIPS in the Lochnagar driver, MIPS
+  defines a global symbol "RST" which is a bit too generic and
+  collide with stuff. OK this one should be renamed too, we will
+  fix that as well.
+
+- Fix erroneous branch taking in the Realtek driver.
+
+- Fix the mail address in MAINTAINERS for the s32g2 driver.
+
+----------------------------------------------------------------
+Antonio Borneo (1):
+      pinctrl: stm32: fix array read out of bound
+
+Charles Keepax (1):
+      pinctrl: lochnagar: Don't build on MIPS
+
+Chen Ni (1):
+      pinctrl: stm32: Add check for devm_kcalloc
+
+Chester Lin (2):
+      pinctrl: s32cc: Avoid possible string truncation
+      dt-bindings: pinctrl: s32g2: change a maintainer email address
+
+Linus Walleij (1):
+      pinctrl: cy8c95x0: Fix doc warning
+
+Tzuyi Chang (1):
+      pinctrl: realtek: Fix logical error when finding descriptor
+
+ .../bindings/pinctrl/nxp,s32g2-siul2-pinctrl.yaml           |  2 +-
+ drivers/pinctrl/cirrus/Kconfig                              |  3 ++-
+ drivers/pinctrl/nxp/pinctrl-s32cc.c                         |  4 ++--
+ drivers/pinctrl/pinctrl-cy8c95x0.c                          |  1 +
+ drivers/pinctrl/realtek/pinctrl-rtd.c                       |  4 ++--
+ drivers/pinctrl/stm32/pinctrl-stm32.c                       | 13 ++++++++++---
+ 6 files changed, 18 insertions(+), 9 deletions(-)
 
