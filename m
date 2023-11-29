@@ -1,89 +1,189 @@
-Return-Path: <linux-gpio+bounces-632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E59437FCD04
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 03:40:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7FA527FCD87
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 04:35:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8C3631F20FD4
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 02:40:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 007D7B21411
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 03:35:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FA8E627;
-	Wed, 29 Nov 2023 02:40:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A04568A;
+	Wed, 29 Nov 2023 03:35:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NtuvMRAG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from szxga02-in.huawei.com (szxga02-in.huawei.com [45.249.212.188])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04D4F19A4
-	for <linux-gpio@vger.kernel.org>; Tue, 28 Nov 2023 18:40:21 -0800 (PST)
-Received: from dggpemm100024.china.huawei.com (unknown [172.30.72.55])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4Sg3NK230NzShP1;
-	Wed, 29 Nov 2023 10:36:01 +0800 (CST)
-Received: from dggpemm500007.china.huawei.com (7.185.36.183) by
- dggpemm100024.china.huawei.com (7.185.36.234) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Wed, 29 Nov 2023 10:40:19 +0800
-Received: from huawei.com (10.175.103.91) by dggpemm500007.china.huawei.com
- (7.185.36.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Wed, 29 Nov
- 2023 10:40:19 +0800
-From: Yang Yingliang <yangyingliang@huawei.com>
-To: <linux-gpio@vger.kernel.org>
-CC: <linus.walleij@linaro.org>, <andy.shevchenko@gmail.com>,
-	<asmaa@nvidia.com>, <yangyingliang@huawei.com>
-Subject: [PATCH] pinctrl: mlxbf3: fix wrong return pointer check in mlxbf3_pinctrl_probe()
-Date: Wed, 29 Nov 2023 10:44:25 +0800
-Message-ID: <20231129024425.4049758-1-yangyingliang@huawei.com>
-X-Mailer: git-send-email 2.25.1
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F027A170B;
+	Tue, 28 Nov 2023 19:35:33 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1cfb4d28c43so32310125ad.1;
+        Tue, 28 Nov 2023 19:35:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701228933; x=1701833733; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=tDEyZbCiD6Dl1gjsWghaLMq/5eUSRSd2QR51WySv6Oo=;
+        b=NtuvMRAGxmRPIFdbskElmPxes7oNTk2zumygoV/JBvO4f0hrCFwd3wrYYW5XWG7Ag+
+         /cnz/SIRwsXrAPrezaYwQSO51FUiu/s3GozpX0lFlostgutnR6hh9A0GIPmZRCb+mARO
+         Rw2WlkX2xsukiJYFxYqYCAbdnJHugqHeQMU6Nw7psGM3TKcsyze3gMRfnpqK1J4/iFh6
+         638LvNIGffWufsLCJR2VzP4XdxYENqRiIOEWSzDpwICfF8XJkaXTvkassa9wC1zVMLCg
+         eXvl+C3xAauK0R+xEwQmTPHS0CKLIV401+McmQD1vlQxs8bfXRBzW3K906px/YWCC8vu
+         XHEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701228933; x=1701833733;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tDEyZbCiD6Dl1gjsWghaLMq/5eUSRSd2QR51WySv6Oo=;
+        b=MrnEDofWRJQSZOzjng5XczRr+jFAvSPX93Ro7mZkDV3H3GpSvkG4aYL0d6+H4syBiX
+         PMuwCQdXcBVcKC4TqYTuHIplqBxl7C0kiA3ENqKqzwZL3kx9jjEaYE+BoHJ6bKlN9QTC
+         2sfi3WSmHmqQc0VkXPxw3aBaMF1avnyBNgFKaIsEfY68gPE2GljlY5D6qXrKGRSjHz2C
+         pCjg6GnkPOAJyOk1qegHHTIUG0YdCBLHvk0N/isjelBD6euR5x1Px63tgVv3koHyVcBR
+         /MdFsa7zKG1C9/4eXa4d4Vwu1glrWFn74bNmY349ksJ9oP765eS1jZ3VdgB5hA0e0nLZ
+         heFg==
+X-Gm-Message-State: AOJu0YwM3m5OoU6a3+aoU+ZdRjHlTJ3fEFkNh6Eye67hrcK9AN/srMTm
+	rhKXLdBFjQrVBuXyN6Hfbbk=
+X-Google-Smtp-Source: AGHT+IFrfXS/GRV0hJhefAcOaI2mYEMBX6t7lhvcc2/ZzrcGxhO/5K/nehfaOCh/ZV3gQsUn55bpDQ==
+X-Received: by 2002:a17:902:d590:b0:1cf:b43d:6b39 with SMTP id k16-20020a170902d59000b001cfb43d6b39mr16079665plh.52.1701228933203;
+        Tue, 28 Nov 2023 19:35:33 -0800 (PST)
+Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id ju12-20020a170903428c00b001cf5654fc29sm11145403plb.72.2023.11.28.19.35.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 28 Nov 2023 19:35:32 -0800 (PST)
+Message-ID: <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
+Date: Wed, 29 Nov 2023 11:35:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
+ ma35d1
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+ <20231128061118.575847-4-ychuang570808@gmail.com>
+ <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
+ <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
+ <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
+ <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
+ <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
+From: Jacky Huang <ychuang570808@gmail.com>
+In-Reply-To: <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500007.china.huawei.com (7.185.36.183)
-X-CFilter-Loop: Reflected
 
-Fix wrong return pointer check after calling devm_platform_ioremap_resource().
+Dear Krzysztof,
 
-Fixes: d11f932808dc ("pinctrl: mlxbf3: Add pinctrl driver support")
-Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
----
- drivers/pinctrl/pinctrl-mlxbf3.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+Thanks for your review.
 
-diff --git a/drivers/pinctrl/pinctrl-mlxbf3.c b/drivers/pinctrl/pinctrl-mlxbf3.c
-index 7d1713824a89..ffb5dda364dc 100644
---- a/drivers/pinctrl/pinctrl-mlxbf3.c
-+++ b/drivers/pinctrl/pinctrl-mlxbf3.c
-@@ -259,16 +259,16 @@ static int mlxbf3_pinctrl_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->fw_ctrl_set0);
- 
- 	priv->fw_ctrl_clr0 = devm_platform_ioremap_resource(pdev, 1);
--	if (IS_ERR(priv->fw_ctrl_set0))
--		return PTR_ERR(priv->fw_ctrl_set0);
-+	if (IS_ERR(priv->fw_ctrl_clr0))
-+		return PTR_ERR(priv->fw_ctrl_clr0);
- 
- 	priv->fw_ctrl_set1 = devm_platform_ioremap_resource(pdev, 2);
--	if (IS_ERR(priv->fw_ctrl_set0))
--		return PTR_ERR(priv->fw_ctrl_set0);
-+	if (IS_ERR(priv->fw_ctrl_set1))
-+		return PTR_ERR(priv->fw_ctrl_set1);
- 
- 	priv->fw_ctrl_clr1 = devm_platform_ioremap_resource(pdev, 3);
--	if (IS_ERR(priv->fw_ctrl_set0))
--		return PTR_ERR(priv->fw_ctrl_set0);
-+	if (IS_ERR(priv->fw_ctrl_clr1))
-+		return PTR_ERR(priv->fw_ctrl_clr1);
- 
- 	ret = devm_pinctrl_register_and_init(dev,
- 					     &mlxbf3_pin_desc,
--- 
-2.25.1
+On 2023/11/28 下午 07:06, Krzysztof Kozlowski wrote:
+> On 28/11/2023 11:45, Jacky Huang wrote:
+>> Dear Krzysztof,
+>>
+>> Thanks for your review.
+>>
+>> On 2023/11/28 下午 05:34, Krzysztof Kozlowski wrote:
+>>> On 28/11/2023 09:37, Jacky Huang wrote:
+>>>>>> +			gpion: gpio@40040340 {
+>>>>>> +				reg = <0x340 0x40>;
+>>>>>> +				interrupts = <GIC_SPI  105 IRQ_TYPE_LEVEL_HIGH>;
+>>>>>> +				clocks = <&clk GPN_GATE>;
+>>>>>> +				gpio-controller;
+>>>>>> +				#gpio-cells = <2>;
+>>>>>> +				interrupt-controller;
+>>>>>> +				#interrupt-cells = <2>;
+>>>>>> +			};
+>>>>>> +
+>>>>>> +			pcfg_default: pin-default {
+>>>>>> +				slew-rate = <0>;
+>>>>>> +				input-schmitt-disable;
+>>>>>> +				bias-disable;
+>>>>>> +				power-source = <1>;
+>>>>>> +				drive-strength = <17100>;
+>>>>>> +			};
+>>>>> It does not look like you tested the DTS against bindings. Please run
+>>>>> `make dtbs_check W=1` (see
+>>>>> Documentation/devicetree/bindings/writing-schema.rst or
+>>>>> https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+>>>>> for instructions).
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>> I forgot to remove 'ma35d1-pinfunc.h' from my local copy.
+>>>> After remove the '#include <dt-bindings/pinctrl/ma35d1-pinfunc.h>', it
+>>>> can pass
+>>>> the `make dtbs_check W=1` check.
+>>>> I will fix it in the next version.
+>>> Really? Then your bindings look wrong. Why do you mix MMIO nodes and
+>>> non-MMIO in one device node?
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such
+>> issues.
+>> Anyway, I will fix it in the next version.
+> Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
+> the binding issue.
+>
+> The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
+> realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
+>
+> I don't understand why do you need them yet. I don't see any populate of
+> children. There are no compatibles, either.
+>
+> Which part of your driver uses them exactly?
+>
+> Best regards,
+> Krzysztof
+>
+
+I will move the 'pcfg_default: pin-default' from dtsi to dts, like this:
+
+&pinctrl {
+     pcfg_default: pin-default {
+         slew-rate = <0>;
+         input-schmitt-disable;
+         bias-disable;
+         power-source = <1>;
+         drive-strength = <17100>;
+     };
+
+     uart-grp {
+         pinctrl_uart0: uart0-pins {
+             nuvoton,pins = <4 14 1 &pcfg_default>,
+                        <4 15 1 &pcfg_default>;
+         };
+
+         pinctrl_uart11: uart11-pins {
+             nuvoton,pins = <11 0 2 &pcfg_default>,
+                        <11 1 2 &pcfg_default>,
+                        <11 2 2 &pcfg_default>,
+                        <11 3 2 &pcfg_default>;
+         };
+...
+
+I use the 'pin-' and just intent to define a generic pin configuration, 
+such as the above 'pin-default'.
+
+
+Best Regards,
+Jacky Huang
+
+
+
 
 
