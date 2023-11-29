@@ -1,158 +1,94 @@
-Return-Path: <linux-gpio+bounces-659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2202D7FD56D
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 12:22:07 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7CA37FD58A
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 12:24:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D0C6B212A9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:22:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D775C1C21006
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:24:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47A651C6AD;
-	Wed, 29 Nov 2023 11:22:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A4721C69F;
+	Wed, 29 Nov 2023 11:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mnTgQ1Ej"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4C2BBD5C;
-	Wed, 29 Nov 2023 03:21:57 -0800 (PST)
-Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-db4422fff15so5594180276.1;
-        Wed, 29 Nov 2023 03:21:57 -0800 (PST)
+Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C202826B7
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 03:24:05 -0800 (PST)
+Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7c461a8684fso1654257241.2
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 03:24:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701257045; x=1701861845; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Jy/+T92MMQLqgInsqyqPERTmKim1Fctk9KTDK3z3N0o=;
+        b=mnTgQ1Ejc9S5oeYno1f2MiMqLbbQO+lesgry/NK/Xq5M8p1kVA/Ubirm+hqTG2Ff2w
+         FSrJctSDdTtI1vaa3B15ZncXSKuPfWhEcd5cV1gVpMMQhrwK7TMwy2yBAl1qzIX7RIhv
+         uThxbsqD+Rn7pvrr5YCPSiwFKQ3hb92j/8sjNmPuobuGIZXx21hTH35mOtHvdIhxce7u
+         YzUSnZdxPgD2zdGO0oys/lnf00nALSowlY+PGyBLTg1sx3yN//V7/hT8z9aglrxVrnbc
+         RQj+iQaEa8qN6h2ImW4BnUFlPDuGFwm63EFqiCG0302iYmM1Mc7EShCC/SwB0YlZY/ga
+         KSdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701256916; x=1701861716;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QQMIsPSnGej6JUmLAmR8223gXbEgbLhru5iUfZNaJ9Y=;
-        b=aG3ATMfT3/n0QjJZAKgzaLaeH9mOjMtsgwwPD4OnB/2zLPL9+9knXssPG0W+TEdMA/
-         vtPnx/c/bVaatTiTZYf3nbOjlEHSutM++w3B0lGZiz4bfKdpk7x4AzjETtdtRJNIw1at
-         ip+oMbP4AT4zTbQnCRVbdnw+WAgrON1Xc/7EyHtD8lVefsYUBGHRiahkQjy71Y91Y51u
-         LDYUPK4DbX4V8CsTif3b5B6BmVFDEPPSNRVErnY42hrPu63ueU09QADCgPucQ/ntmg7s
-         mWCVL558DegtFdF/8rpXOXkYL8BBLPDQ2b7EQse+EW7iqlg2SsVXvF9khgRTGtFW5e3d
-         vsFw==
-X-Gm-Message-State: AOJu0YyQZXo/qE1134HIvr5u9xQBQiA8E2nGbAMZS9A571mCT3wkQD43
-	4LXufgca+SnAf02lSZmGgyqMgRZFX00WCw==
-X-Google-Smtp-Source: AGHT+IFEXZ4xfi2mEgBMBigLSielKuHT15ssBs+m4TCTuJMeTnCclwHqIUn2Cz1OJb25aJ2NQGYCPA==
-X-Received: by 2002:a25:256:0:b0:da0:29df:ae62 with SMTP id 83-20020a250256000000b00da029dfae62mr16626470ybc.35.1701256916142;
-        Wed, 29 Nov 2023 03:21:56 -0800 (PST)
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id c84-20020a254e57000000b00d9abff76f5csm4143479ybb.9.2023.11.29.03.21.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 03:21:56 -0800 (PST)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-db4422fff15so5594173276.1;
-        Wed, 29 Nov 2023 03:21:56 -0800 (PST)
-X-Received: by 2002:a25:fc22:0:b0:d9a:618a:d727 with SMTP id
- v34-20020a25fc22000000b00d9a618ad727mr16348333ybd.41.1701256915894; Wed, 29
- Nov 2023 03:21:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701257045; x=1701861845;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Jy/+T92MMQLqgInsqyqPERTmKim1Fctk9KTDK3z3N0o=;
+        b=ko8Px7cuDecBb9aeIMbntOw7qRZjW9IbfaSKzVCvCHVIn53IRnSP5pVKuW4qYEA3jK
+         UsNY46/BfJPJgkINQv33pXN8uxes0fkptVjdd2xgIDuUxM7V98fAXlEQvY/9cbMR+Kp9
+         LO1tWXgVDd2llOOg8QvDaE+0aCTlSPjqL6YJwWvY1h4GeWRG26O7VvtFZSz5LnmQv+qp
+         VTCjCTCIbU3+OPQqqYOPrYkZ2lSKkMH7QFWT1noyWNQ2MEhaUIpI4s60J6SRrCfbwfg+
+         vQcrzOMiVVbi4rL3RggISnVP3kMmpMSYRicLTbp6/45ty8UW0tRec/08Q5h+A+Duojbd
+         sM1A==
+X-Gm-Message-State: AOJu0YzAGF5wfKSmr4uGyrW76IDKn9YCSXBFLyFZtUgTzOp/xMYbZMq3
+	6yVWF8Tr5K3VhhUt5ZQKgtN+nUCtbz8Q5L4GdK0=
+X-Google-Smtp-Source: AGHT+IEt65AJhZStSEl9jTvhvvrdoRTNYvE+Ls9rJdbUxdLcVpCs9vTbF44oyDhklKtEbNNFgFf8I4aTeZCSUMSEqyU=
+X-Received: by 2002:a67:ef97:0:b0:464:3c0a:fdee with SMTP id
+ r23-20020a67ef97000000b004643c0afdeemr4261859vsp.5.1701257044816; Wed, 29 Nov
+ 2023 03:24:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231128200155.438722-1-andriy.shevchenko@linux.intel.com> <20231128200155.438722-7-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20231128200155.438722-7-andriy.shevchenko@linux.intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 29 Nov 2023 12:21:45 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWt0qq-Umd8udb7fxpNVZ=X9O9eZGMVGFSGRO_d9UkgNw@mail.gmail.com>
-Message-ID: <CAMuHMdWt0qq-Umd8udb7fxpNVZ=X9O9eZGMVGFSGRO_d9UkgNw@mail.gmail.com>
-Subject: Re: [PATCH v3 06/22] pinctrl: core: Make pins const in struct group_desc
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Jianlong Huang <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org, 
-	linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, 
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	NXP Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, 
-	Paul Cercueil <paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
-	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Emil Renner Berthing <kernel@esmil.dk>, 
-	Hal Feng <hal.feng@starfivetech.com>
+References: <CAEydidmWPSiyQPOog=9poWEhLLWkJh7Ue4Me_O0Uvi_BYO7XKg@mail.gmail.com>
+ <CXB4K7SKB60P.3HQ6SAERTVNGW@ablu-work>
+In-Reply-To: <CXB4K7SKB60P.3HQ6SAERTVNGW@ablu-work>
+From: Mathias Dobler <mathias.dob@gmail.com>
+Date: Wed, 29 Nov 2023 12:23:55 +0100
+Message-ID: <CAEydidmUAZAo=8ni+idu20U-5LnSg8CFvaVRPyts=p2pPthxYg@mail.gmail.com>
+Subject: Re: libgpiod - stop waiting for events after request released
+To: Erik Schilling <erik.schilling@linaro.org>
+Cc: linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+Hi Erik!
+Thanks for the clarification and pointing me to the aspect of thread awareness.
+In the link to gpiod.h 2.1 you provided, it says: "Different,
+standalone objects can safely be used concurrently. Most libgpiod
+objects are standalone."
+There exists a warning annotation about thread safety on these 2 methods
+1. gpiod_info_event_get_line_info
+2. gpiod_edge_event_buffer_get_event
 
-On Tue, Nov 28, 2023 at 9:04=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
-> It's unclear why it's not a const from day 1. Make the pins member
-> const in struct group_desc. Update necessary APIs.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+ I try not to violate thread contracts, but in order to ensure that I
+have to know which object can deal with concurrency and which not. You
+mentioned the line_request being unsafe against multiple threads...
+did you have to go through the code to find that out, or is this maybe
+implicit knowledge?
 
-Thanks for your patch!
+Regarding the solution about my original problem: So I guess that
+would replace the usage of gpiod_line_request_wait_edge_events
+completely, right?
+I would have to get the fd, poll and read events (interpret structure
+and so on) from it and write exit signals to it? I am not a native C
+dev, so that would be quite a task for me... I think I might just fix
+threading access, to have only 1 thread access an object at a time,
+and then live with using timeouts on test shutdown :)
 
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -642,7 +642,7 @@ static int pinctrl_generic_group_name_to_selector(str=
-uct pinctrl_dev *pctldev,
->   * Note that the caller must take care of locking.
->   */
->  int pinctrl_generic_add_group(struct pinctrl_dev *pctldev, const char *n=
-ame,
-> -                             int *pins, int num_pins, void *data)
-> +                             const int *pins, int num_pins, void *data)
->  {
->         struct group_desc *group;
->         int selector, error;
-> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> index 530370443c19..01ea1ce99fe8 100644
-> --- a/drivers/pinctrl/core.h
-> +++ b/drivers/pinctrl/core.h
-> @@ -203,7 +203,7 @@ struct pinctrl_maps {
->   */
->  struct group_desc {
->         const char *name;
-> -       int *pins;
-> +       const int *pins;
->         int num_pins;
->         void *data;
->  };
-> @@ -222,7 +222,7 @@ struct group_desc *pinctrl_generic_get_group(struct p=
-inctrl_dev *pctldev,
->                                              unsigned int group_selector)=
-;
->
->  int pinctrl_generic_add_group(struct pinctrl_dev *pctldev, const char *n=
-ame,
-> -                             int *gpins, int ngpins, void *data);
-> +                             const int *pins, int num_pins, void *data);
->
->  int pinctrl_generic_remove_group(struct pinctrl_dev *pctldev,
->                                  unsigned int group_selector);
-
-Probably this is also the right moment to change all of these to arrays
-of unsigned ints?  Else you will have mixed int/unsigned int after
-"[PATCH v3 13/22] pinctrl: core: Embed struct pingroup into struct
-group_desc", and purely unsigned int after "[PATCH v3 22/22] pinctrl:
-core: Remove unused members from struct group_desc".
-
-The Renesas pinctrl drivers already pass arrays of unsigned ints.
-Some other drivers still use arrays of ints, though.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Mathias
 
