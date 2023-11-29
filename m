@@ -1,67 +1,67 @@
-Return-Path: <linux-gpio+bounces-680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-681-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DB2067FD943
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:24:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1FB47FD944
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:24:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 707D1B21531
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:24:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36F99B21737
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:24:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC28A31591;
-	Wed, 29 Nov 2023 14:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7180B30D04;
+	Wed, 29 Nov 2023 14:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fSB4WGkZ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="b2ZS6wga"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-x22a.google.com (mail-lj1-x22a.google.com [IPv6:2a00:1450:4864:20::22a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30A3010C6
+Received: from mail-wm1-x332.google.com (mail-wm1-x332.google.com [IPv6:2a00:1450:4864:20::332])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C666C10D1
 	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:32 -0800 (PST)
-Received: by mail-lj1-x22a.google.com with SMTP id 38308e7fff4ca-2c88b7e69dfso81569481fa.0
+Received: by mail-wm1-x332.google.com with SMTP id 5b1f17b1804b1-40b5155e154so8430175e9.3
         for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701267870; x=1701872670; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701267871; x=1701872671; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rQ4oN2yBzcOb1+JXtPZKrl0tpOl2eK1zlq9JfJmTld4=;
-        b=fSB4WGkZG35mb/eSTil6wJYHacf7Xy2ySbuqtE9u4PIxHoqiNA9geqZmdtJfQR8jFZ
-         PoM9Sm2m6/g3RKGh5M9zYdJo9+06YpdBb34gqjxqXZzfBq5N5ucgL1SqcC9CVhWFbmWl
-         MAhOGo8I5Iz31n0B97Y6/4WjK0J9mt9LbTWH11ptTjP2WvTf9j80SBoxBr4+IhzTbU39
-         cb/wepHsOFYajQuRCP265xQ8E4GLlBJaqwEJN2R+Wl1v/S4F7u/qgTpSmcQbD8lH+Q+q
-         AR+fgiK99L1kJyju2sbD3TKCLLhoEKM+EIOR8/WYUSh6/XtRP7vS/7vgw4zMZwMj1VoF
-         I5HQ==
+        bh=fr1TOXD+5EiiAKWXZPldv8mvv4Hxfk7OfOL3Vw/aLQs=;
+        b=b2ZS6wga3v9XoxDjeUSryuw1P4M6qlXzKNKjP25dKpR2fGbQkDw6OlONxWl6vU+60W
+         vBvnnoN19QdApekYchbioO0xkDXZWeS9uGMY315nz8+jc9GCZfp1FYrzehNWBL3In4Hp
+         kuqk02sODqkYicoWGnwkgmyYg/mVEer1w2PUL+rrBQYRsF4+6+BBdcXK6SKQQQ9fFzKR
+         4/sMLazccw4ZJkEXhVOOBRWtMPpjHfAQDR1CE4JTd+YKPXRU8Al4N+12V5AF0MkwYo0Q
+         awHCZ913nFmMcU8BYLhjfODTfHBJXm9gQPVuVQVpsp4quE9tPp9Yz6ZjOMmDGQJ+0n+i
+         6q2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701267870; x=1701872670;
+        d=1e100.net; s=20230601; t=1701267871; x=1701872671;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rQ4oN2yBzcOb1+JXtPZKrl0tpOl2eK1zlq9JfJmTld4=;
-        b=DXvrXTXd5szTVEcvmMNd1c5QP2OHymRnWB/BewLnqBMf/REs3NRdqazi4N8LJKkxfB
-         y1HuSMBZR3EMQu7XtfwD//hNqXaMyP9DMgAaqXmgR0noSEfEW+S0Dluc5hSTiGAwZJSK
-         rjkxPUZQ062JLs6PgG9BLX/AZ5yMYxNZXrgr5nDNcVphMtpUUuHVDMAGaWYPRRMzhVmU
-         zmxJdB6AdjkqfMJU8w3NpVP0j+SBjoY5b1jNz2CwqpvB3jjxgkc6UJzfKZmYHYd1/1nS
-         WNtW/04zZNqJ/2S80U3bEHiuLJEmALWclMOGN50p+oJd7vXjX/52qhcYC3gjj+o1bjcf
-         rsLw==
-X-Gm-Message-State: AOJu0YzpxATn3Wy7mzyeOz+ZIvQ1DIn5TcpCz/Y3D3uVSUNGqPeKQVrx
-	gxr+LJALXcL4vitsiJG0dO8aiQ==
-X-Google-Smtp-Source: AGHT+IEM0ferBCaODHhUulOSAu3F+ckHAPew6loNpc69zlAeek/BqCYvoUTSVE7JAcLnIlSQGFuJ5w==
-X-Received: by 2002:a2e:97d6:0:b0:2c5:16c0:6239 with SMTP id m22-20020a2e97d6000000b002c516c06239mr12471205ljj.51.1701267870294;
-        Wed, 29 Nov 2023 06:24:30 -0800 (PST)
+        bh=fr1TOXD+5EiiAKWXZPldv8mvv4Hxfk7OfOL3Vw/aLQs=;
+        b=Fyd+l8UCmXiFCkl6O55oU73mqVpelXSiJ88ev50wiMRlgH0XxBlWcAbxxkH9KuEMDz
+         P8Z3ZIy4CAuBKkk/h5pwNCxEovrr+YSBoWNw4MXIeT450BGHl73ZzaSEwlU/Lj24PyT0
+         T5pRyJbPQspH3KpQfPuAzSKrQ2b3/QLgQW5lWXo/nzlmk1pxWEHBwEuYx5Z3XRGerDeJ
+         ZtA0KSpR6q2znTZ2V7nGirAVZ2iPwdnentDqiHw8SkqckJAuIHKWJBcRfEZvLHO7dbi+
+         XIbTqsh20BpQY34Z4dmhLd46jaP0MVPkqHpCFLkYkUolZ7lSgkYUUaJ9KahHiHf+xP3k
+         dEKQ==
+X-Gm-Message-State: AOJu0YzYYRP2uLexnPG7WJ9HMTeGTxkSpJjKPWE0r1mXnBtGW6qmW/zJ
+	fqJbYVVZ1j3YbQHRJIEzz/klqQ==
+X-Google-Smtp-Source: AGHT+IGXheSQA/LGa1P9UW8p+tbga/Gnp13k7Ued9roRRHog+HQ8GZ429C+BiN61YuawC8IhiKC8tw==
+X-Received: by 2002:a05:600c:1c9d:b0:408:434c:dae7 with SMTP id k29-20020a05600c1c9d00b00408434cdae7mr10543652wms.2.1701267871356;
+        Wed, 29 Nov 2023 06:24:31 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4520:2f25:4d3a:4adf])
-        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040b34720206sm2406848wms.12.2023.11.29.06.24.29
+        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040b34720206sm2406848wms.12.2023.11.29.06.24.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 06:24:29 -0800 (PST)
+        Wed, 29 Nov 2023 06:24:30 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 08/10] pinctrl: sppctl: use gpiochip_dup_line_label()
-Date: Wed, 29 Nov 2023 15:24:09 +0100
-Message-Id: <20231129142411.76863-9-brgl@bgdev.pl>
+Subject: [PATCH 09/10] gpiolib: use gpiochip_dup_line_label() in for_each helpers
+Date: Wed, 29 Nov 2023 15:24:10 +0100
+Message-Id: <20231129142411.76863-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20231129142411.76863-1-brgl@bgdev.pl>
 References: <20231129142411.76863-1-brgl@bgdev.pl>
@@ -75,47 +75,32 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Use the new gpiochip_dup_line_label() helper to safely retrieve the
-descriptor label.
+Rework for_each_requested_gpio_in_range() to use the new helper to
+retrieve a dynamically allocated copy of the descriptor label and free
+it at the end of each iteration.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/pinctrl/sunplus/sppctl.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ include/linux/gpio/driver.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/sunplus/sppctl.c b/drivers/pinctrl/sunplus/sppctl.c
-index bb5ef391dbe4..ae156f779a16 100644
---- a/drivers/pinctrl/sunplus/sppctl.c
-+++ b/drivers/pinctrl/sunplus/sppctl.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) Sunplus Tech / Tibbo Tech.
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 9796a34e2fee..6405f6d454af 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -543,8 +543,10 @@ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset);
+  * @label:	label of current GPIO
   */
+ #define for_each_requested_gpio_in_range(chip, i, base, size, label)			\
+-	for (i = 0; i < size; i++)							\
+-		if ((label = gpiochip_is_requested(chip, base + i)) == NULL) {} else
++	for (i = 0; i < size; i++, kfree(label))					\
++		if ((label = gpiochip_dup_line_label(chip, base + i)) == NULL) {}	\
++		else if (IS_ERR(label)) {}						\
++		else
  
-+#include <linux/cleanup.h>
- #include <linux/bitfield.h>
- #include <linux/device.h>
- #include <linux/err.h>
-@@ -500,16 +501,15 @@ static int sppctl_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
- 
- static void sppctl_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
- {
--	const char *label;
- 	int i;
- 
- 	for (i = 0; i < chip->ngpio; i++) {
--		label = gpiochip_is_requested(chip, i);
--		if (!label)
--			label = "";
-+		char *label __free(kfree) = gpiochip_dup_line_label(chip, i);
-+		if (IS_ERR(label))
-+			continue;
- 
- 		seq_printf(s, " gpio-%03d (%-16.16s | %-16.16s)", i + chip->base,
--			   chip->names[i], label);
-+			   chip->names[i], label ?: "");
- 		seq_printf(s, " %c", sppctl_gpio_get_direction(chip, i) ? 'I' : 'O');
- 		seq_printf(s, ":%d", sppctl_gpio_get(chip, i));
- 		seq_printf(s, " %s", sppctl_first_get(chip, i) ? "gpi" : "mux");
+ /* Iterates over all requested GPIO of the given @chip */
+ #define for_each_requested_gpio(chip, i, label)						\
 -- 
 2.40.1
 
