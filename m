@@ -1,101 +1,117 @@
-Return-Path: <linux-gpio+bounces-735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 390547FE172
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 21:56:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 458427FE22A
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 22:41:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F275D2824B1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 20:56:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3D96282112
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 21:41:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0948F61664;
-	Wed, 29 Nov 2023 20:55:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7D132B9DF;
+	Wed, 29 Nov 2023 21:41:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q9qz13Ya"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PtOCbfGZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA99D69
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 12:55:54 -0800 (PST)
-Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-4644a04b690so52209137.1
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 12:55:54 -0800 (PST)
+Received: from mail-yw1-x112b.google.com (mail-yw1-x112b.google.com [IPv6:2607:f8b0:4864:20::112b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5FC67B0
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 13:41:26 -0800 (PST)
+Received: by mail-yw1-x112b.google.com with SMTP id 00721157ae682-5ce8eff71e1so2549507b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 13:41:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701291353; x=1701896153; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701294085; x=1701898885; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QI6JHtznXvmxE5PL87iXN1BnHx/Zg4tCgMdyIcxQ2lA=;
-        b=Q9qz13YamJMrwWsjqeLFo5h+5Vbr0FA8GXo5AVwhWZNPZ9z6GEjF45I0W3tEFts2fV
-         83Qg/42aqwRBqxYO70bAi3+euKE4dCAkdI808ykqIuQaCkiM/htlVtrms/b+IeKcTjKU
-         d1AwXtFeBjylbSg5xHTfr7V7RGIl8Isl9lpIxQ0P7P6zkCyRZ2OJpDvA94jLU3Z10E5a
-         fixKx3MeL2j2yxYSAZu3ihBahvPg2SPq0LuCiIiUyZPZTAEks1g2kiZqFYkOpC1VltC0
-         aD4z12O83brRfboYOAInH9lBLBuZoXAxdvrk1vaiN/cXWSWkGlic1hl0AFIM70ndf3lg
-         YxWw==
+        bh=D1ZO88hxLxdvNhHhYibiygRoAvqr8qAWNq84h8JNdaQ=;
+        b=PtOCbfGZ0T/92qS339NAXLjbaz1SCLNciYonAil0VSMnZ4BfMBsChhGrkKsJokFNgv
+         RT+DI/GACdqm8B1tuE5VOvGJRaB6o3NySXphZHQbxZhfRO+CIS+a62mmtk7bqSPUcAIM
+         hvPcDP8SDqDDkhTQRAJLBKrosHvALsQA9vgY272iR12lAG82Bj7f7V45mW9CDfVnkffx
+         AhgNtiWun4orgpAoHz7J25NYonELNplN6JajpWnAg6eL14oSejpLxBFwNroJIOHTqPkK
+         B6yTdHojyMzvLfbe2KyH1PXbVrPUW7BuMgSSRVdWnqXCoJtlqjysEDc3NWY9wn+y9hJ7
+         rqZw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701291353; x=1701896153;
+        d=1e100.net; s=20230601; t=1701294085; x=1701898885;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=QI6JHtznXvmxE5PL87iXN1BnHx/Zg4tCgMdyIcxQ2lA=;
-        b=fNtnFZWlcX2qdR2Vy3B/tJ2iNqN9mkihQk8P/C23sEpRhP8+C8PJS+TUph1jg88Pb1
-         6H0mo9omykSJEZDdqoBGL5c2U44b7tLZDICHugHIwFXGCEw3KfjHuaJcvPQYgXGyWWzW
-         mur2oOm9UTdHmjC6Qyn/GY4F6zNQ+XXnb2Ca6buUwAjRVTzQlPlnbpLFHHYgXYb3LPFP
-         n2Q/rSSYdCgkmszDVTe7mjnNC52nOc+bJju7a/svBacipOZ+ZC/unwtEmQ66a08bWoZG
-         9ilB4uB6xJ1eOEMoX0WToxvGcO9LRGNyrmyohOK5LTGmV6Fpx7I8q3LvGr0I5lLkwKL3
-         FnmA==
-X-Gm-Message-State: AOJu0YzEg2N8XI6ElJ/bv8q2Kbh0sfvwMqd0u2lixgH1zm7MQ/VHnpfN
-	r+5lmbYd5XKdRmHVS5E4QYs10r5SzLyZqC8uMO1Y5w==
-X-Google-Smtp-Source: AGHT+IFYja56yAWBv64kZZunPEALyydYma3ufW+t+R0uNHZSBEmO8UtfKU/tUiufd3UXP+tq6eccK0k3AG7Z4sn8Heg=
-X-Received: by 2002:a05:6102:e13:b0:462:dd0d:d028 with SMTP id
- o19-20020a0561020e1300b00462dd0dd028mr23246126vst.2.1701291353734; Wed, 29
- Nov 2023 12:55:53 -0800 (PST)
+        bh=D1ZO88hxLxdvNhHhYibiygRoAvqr8qAWNq84h8JNdaQ=;
+        b=q6of5HpjKEBIuRfFb09GW8plZI9RLz5LlJhSVqsS/vTTt+uO71M6TnzVvGOs+yi3NL
+         wwwQUBkFRqsuaSJmTXOgYBU20vaH87LokLiV3V65LGcgNn0fwb2i8Nko6DRvJiLFRAZ8
+         Gg+yuisBSqG+6ISm6Vgum0eHpgjZFrKc384TC5th6rw5Hvad1W7HvJUm3H3tbGiNQpk6
+         d63MEfMdfbHTdJSizVwNIfraLWr/zBdoPKNaBs/R7ibwiX6PpM021FeTGTYZlwYXbiaq
+         ArrwnZlYnHMnmMMGTqlVirhtibDHp/iAmcBZiAtYufP6ZMk8C++TURCDNc4SnCpUg7zC
+         NTxQ==
+X-Gm-Message-State: AOJu0YxwEMU714yODFu4JNeNs+sYsuMjVs7CGNOdN5aL/ztUgl8eKV4D
+	EArRsf8KCz23nieqqp16nRsr4Hd5AqiPrKzMBRFMrQ==
+X-Google-Smtp-Source: AGHT+IG1Uagfb05AQRCkYJ/sVdTN0npVgY7BidrNhD15Xi7KOYZSxtp9xnbO86r7NF5QEuNER2q641/tZFxOQM6la+4=
+X-Received: by 2002:a81:cf08:0:b0:5cd:c65c:8173 with SMTP id
+ u8-20020a81cf08000000b005cdc65c8173mr18687170ywi.10.1701294085422; Wed, 29
+ Nov 2023 13:41:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231129142411.76863-1-brgl@bgdev.pl> <20231129142411.76863-10-brgl@bgdev.pl>
- <CAMRc=MfL2nHF78TUmRjRSUC-2zyMjWotzU7Tv_27mVJPLET40Q@mail.gmail.com> <ZWdQK1kUe3zLqWIb@smile.fi.intel.com>
-In-Reply-To: <ZWdQK1kUe3zLqWIb@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 29 Nov 2023 21:55:42 +0100
-Message-ID: <CAMRc=Mc8Aahg1gD7DDtMOx77F2N9J10K+BBokY5w2ZDSG0ZJmg@mail.gmail.com>
-Subject: Re: [PATCH 09/10] gpiolib: use gpiochip_dup_line_label() in for_each helpers
+References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com>
+ <20231129161459.1002323-17-andriy.shevchenko@linux.intel.com>
+ <CAOMZO5CZpQjWKimNReUkwHOc-mF8vWoq2HDhjGKSu6E3g5-aVw@mail.gmail.com>
+ <ZWduPKmBWkaIdLhi@smile.fi.intel.com> <CAOMZO5C_dhvx70nk1HOSZdw8hMMmED69tdsXgydXdpnxHTJ58Q@mail.gmail.com>
+ <ZWdyOc3pCoNihDtD@smile.fi.intel.com>
+In-Reply-To: <ZWdyOc3pCoNihDtD@smile.fi.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 29 Nov 2023 22:41:14 +0100
+Message-ID: <CACRpkdap2fe-L0v7ttQULGq7d_zVCb2MmD4w=hHxKacKZH8jng@mail.gmail.com>
+Subject: Re: [PATCH v4 16/23] pinctrl: imx: Convert to use grp member
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Fabio Estevam <festevam@gmail.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org, 
+	linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	NXP Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Emil Renner Berthing <kernel@esmil.dk>, 
+	Hal Feng <hal.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 3:52=E2=80=AFPM Andy Shevchenko
+On Wed, Nov 29, 2023 at 6:18=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
->
-> On Wed, Nov 29, 2023 at 03:43:32PM +0100, Bartosz Golaszewski wrote:
-> > On Wed, Nov 29, 2023 at 3:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
->
-> ...
->
-> > Any ideas how to handle this one? I was thinking something like:
+> On Wed, Nov 29, 2023 at 02:08:38PM -0300, Fabio Estevam wrote:
+> > On Wed, Nov 29, 2023 at 2:01=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > It's explained in the first paragraph in the cover letter. Do you
+> > > want to copy this into each commit message?
 > >
-> >     for (i =3D 0, char *p __free(kfree) =3D label; i < size; i++)
-> >
-> > would work but it doesn't.
+> > Yes, much better to have the information into each commit message.
 >
-> Probably you want to ask Peter Z for this.
+> Here it would be like
+> "Because other members will be removed to avoid duplication and
+> desynchronisation of the generic pin group description."
 >
+> Linus, what do you think about this?
 
-Before I do, I'll give DEFINE_CLASS() a chance as it looks like it
-could be the answer looking at how scoped_guard works.
+I can just add that to each commit while applying if it makes everyone happ=
+y.
+No need to resend for that.
 
-Bart
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Yours,
+Linus Walleij
 
