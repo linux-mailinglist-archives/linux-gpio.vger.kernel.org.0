@@ -1,97 +1,127 @@
-Return-Path: <linux-gpio+bounces-690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-691-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 291EF7FDAD2
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:09:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 443C57FDAE5
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:14:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 599A31C208C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:08:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB904B212E4
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:14:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9B5F3717A;
-	Wed, 29 Nov 2023 15:08:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 346E3374D5;
+	Wed, 29 Nov 2023 15:13:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IZde46Vm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cKrlOYww"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 94F4E10E0
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 07:08:53 -0800 (PST)
-Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5cbcfdeaff3so70645047b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 07:08:53 -0800 (PST)
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5EA2DD5D;
+	Wed, 29 Nov 2023 07:13:56 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5bdfbd69bd5so779647a12.1;
+        Wed, 29 Nov 2023 07:13:56 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701270532; x=1701875332; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1701270836; x=1701875636; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zXic/+6itk3TGberNCqdj0WRwhs080Vma5guEUi6jGo=;
-        b=IZde46VmHNIIbuY24qvFOn6esBY00ngqFYFsgR5gyuXiSn+C7CdX3JnHzPrGYiKKy7
-         kP91XdBiN0VomlmBvuH7KV9uTSN4ccA6P6m5rLkzqqZE9tbh/B3CcZV8wBZjHXuko/Ug
-         a5Apw8ej9NkUx4opLrBqwKbbjo8BjIEmCCxbVDJ8np1Hzoe3OVPhZ53Tzhu7M7Ylvdpq
-         5jqTd7+NUjTU2CmTPcQkgFxUPr7dq/JuaJIBlueDsjSf1YRsjfNKG5M2DTSJzxOd3NDm
-         prwzGCSfuPDq417l/mkD563bVamc/yb5UgaixLOtiAg4H38anUPSta64Uh/e2cQ3NROC
-         nUEQ==
+        bh=0iIKWxGyiRbf3SG4rKDTOqBlNDSA1cc3f6H9uieYbWQ=;
+        b=cKrlOYww7cA9oC9eVtKWVO866JjR4DizsLqiWArerFVlB4p3vTGDlnoA2hQ8FuHyeS
+         uydfCRImVLOf7TZP2fxOjXFXEsnbqTjTBt29tBkl8qCym/EHJLqQqbuU7FV0pyalum4V
+         oEKw2RF/Kl718uN/Ij8Z58xwZsj+sXjuuSPaBMJw/mUAlGE/j43wL6nD0iEu7lRpJ5qQ
+         rRojGhhBzHSuGWgNMAIgfKsgLaVtQxm9Sx9N5Ipz6Xq9nys7iEuynJUPtw8o1ONbZcDQ
+         Brsvqq/d+DKWhnG0Y5rwGjoN0TXliFxpYoPJ8RlKU1A9rhsy7M5jm1JaoD+4mW0ABad/
+         OExw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701270532; x=1701875332;
+        d=1e100.net; s=20230601; t=1701270836; x=1701875636;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zXic/+6itk3TGberNCqdj0WRwhs080Vma5guEUi6jGo=;
-        b=X73yxOzdcy07+tWZjLm1KcZa9gssjgCQ2wHPFwjeJQeq0hbvuWMzwf7gsASyswXhdn
-         pBQwxuU6ScDi38X0hkyRnDn32PedWSyrXC6/0hwSkibCUuisEiruuORqq93X7O52E9AE
-         05phEPvgFGYlQ1EjR6mEwyqRvEfMp7g/ZL18454fALKn3z97NVtgJ5MFsZSsXnHHw2Jo
-         XTbJZ/HEZEpBKUozKyio0ZqHWc6JIByV0nIJlF4tHg8xHwSzPPxqNUrXrXrwhlyRkP+t
-         0avyKNIhlo7HY1Om2U0LBnxXmZhdtBW6WuVngiezQwqbZ0CWit0Oc+JSdyaiyqoaalp5
-         W1QA==
-X-Gm-Message-State: AOJu0YwyhOZc0FJtb0EMW/+HeZjn2+Nqu5eeAVNHHdAu6DmRcIL1scED
-	LrArei2on0NKkmRfjiPek4jkG6t1egi49jn3ESn6Fg==
-X-Google-Smtp-Source: AGHT+IH7uajT5yd4kNXCf/d1PhdaI1T+d+TSGNjzi5KTm1ObFm3BiIfA7yF+l/iNCuCXiIGfOOeUrxX1jG13TlH8GPI=
-X-Received: by 2002:a81:5c05:0:b0:5ce:4dfb:bce8 with SMTP id
- q5-20020a815c05000000b005ce4dfbbce8mr20114025ywb.7.1701270532587; Wed, 29 Nov
- 2023 07:08:52 -0800 (PST)
+        bh=0iIKWxGyiRbf3SG4rKDTOqBlNDSA1cc3f6H9uieYbWQ=;
+        b=ufaLlVf6Q2xA9e0pWddQoBks3GwiC3xzoy3Ax/ggGef50aZn7Z2fputDHc3cWvFVSc
+         6+qFVPlgd5fszGQOfZOp80ez5C4I8NKzFSS3atpIvAlH/GtJeixSCS1uOe+MJsQW3iyQ
+         oY7tMMyOJnBxs8AA8BKiMQCzZoFX4QRfKgmIrvJDfaSiz22wxIBdhE+plznlHYf/cAS3
+         IS/t1eoDhBAQETHxrSDA0N2f6H1xdGHR3JPOwvh2Db15g7YenvifFsJv+veC0KvAjTbX
+         OfQBw15A2gf7FjBWblN91cFq4Nmf1Sn3gTM2n1oCJAoyiOlef44t+eGi+Y2FkzQUy6lk
+         trgw==
+X-Gm-Message-State: AOJu0Ywl7k3ua4e5xv4BnRptfOQkErmE7XGzrrIIZGdYGvRmrGT4uEJI
+	5OYOJN3HC53ziVe/0ALosLPVEukp3/LRn0r0vUI=
+X-Google-Smtp-Source: AGHT+IGefgEeFVwSE2YE0tvnc8G4Kez5vym0kVbW57S7KbimWr8xl59X64QhhOD/XIjQvIgaf5ts76/7Wg7OVUe/1HM=
+X-Received: by 2002:a17:90a:ad04:b0:285:a161:ad8f with SMTP id
+ r4-20020a17090aad0400b00285a161ad8fmr19998927pjq.21.1701270835659; Wed, 29
+ Nov 2023 07:13:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACRpkdZtVNZFWSUgb4=gUE2mQRb=aT_3=zRv1U71Vsq0Mm34eg@mail.gmail.com>
- <CAHk-=whk4oNQazgpzkujc2=ntVQMhU5ko7Canp2Uuq6CpyGzmA@mail.gmail.com>
-In-Reply-To: <CAHk-=whk4oNQazgpzkujc2=ntVQMhU5ko7Canp2Uuq6CpyGzmA@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 29 Nov 2023 16:08:40 +0100
-Message-ID: <CACRpkdZRf7bNVmJCgsVD0uheD1VLkLKG13d1oS-kbT8BFyRKQw@mail.gmail.com>
-Subject: Re: [GIT PULL] Pin control fixes for v6.7
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, 
-	Maria Yu <quic_aiquny@quicinc.com>, Charles Keepax <ckeepax@opensource.cirrus.com>, 
-	Chester Lin <clin@suse.com>
+References: <20231128141321.51669-1-boerge.struempfel@gmail.com> <ZWYVVvB0O-CBIbos@smile.fi.intel.com>
+In-Reply-To: <ZWYVVvB0O-CBIbos@smile.fi.intel.com>
+From: =?UTF-8?B?QsO2cmdlIFN0csO8bXBmZWw=?= <boerge.struempfel@gmail.com>
+Date: Wed, 29 Nov 2023 16:13:44 +0100
+Message-ID: <CAEktqcv8NC0Cy+wo7nRGOp9USoBdta=n=mrbo-WomxgcmWN5nQ@mail.gmail.com>
+Subject: Re: [PATCH v2] gpiolib: sysfs: Fix error handling on failed export
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, bstruempfel@ultratronik.de
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 3:56=E2=80=AFPM Linus Torvalds
-<torvalds@linux-foundation.org> wrote:
-> On Wed, 29 Nov 2023 at 04:09, Linus Walleij <linus.walleij@linaro.org> wr=
-ote:
+Hello Andy
+
+Thanks again for your feedback.
+
+On Tue, Nov 28, 2023 at 5:29=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
+rote:
+>
+> On Tue, Nov 28, 2023 at 03:13:21PM +0100, Boerge Struempfel wrote:
+> > If gpio_set_transitory() fails, we should free the gpio again. Most
+>
+> gpio --> GPIO descriptor
+> (I already mentioned capitalization in v1 review)
+>
+
+I'm sorry, I misunderstood your comment "GPIO" in the v1 review. I fixed it=
+ for
+the next version.
+
+> > notably, the flag FLAG_REQUESTED has previously been set in
+> > gpiod_request_commit(), and should be reset on failure.
 > >
-> > The most interesting patch is the list iterator fix in the core by Mari=
-a
-> > Yu, it took a while for me to realize what was going on there.
+> > To my knowledge, this does not affect any current users, since the
+> > gpio_set_transitory() mainly returns 0 and -ENOTSUPP, which is converte=
+d
+> > to 0. However the gpio_set_transitory() function calles the .set_config=
+()
+> > function of the corresponding gpio chip and there are some gpio drivers=
+ in
 >
-> That commit message still doesn't explain what the problem was.
+> gpio --> GPIO
 >
-> Why is p->state volatile there? It seems to be a serious locking bug
-> if p->state can randomly change there, and the READ_ONCE() looks like
-> a "this hides the problem" rather than an actual real fix.
 
-Thanks for looking into it Linus, Maria can you look closer at this and
-try to pinpoint exactly what happens?
+thanks
 
-Is the bug never manifesting with GCC for example?
+> > which some (unlikely) branches return other values like -EPROBE_DEFER,
+> > and EINVAL. In these cases, the above mentioned FLAG_REQUESTED would no=
+t
+>
+> -EINVAL
+>
 
-In the meantime I'll cook a fixes branch without this one commit.
+thanks, I missed that, when I added the minus to all the other Error codes.
 
-Yours,
-Linus Walleij
+> > be reset, which results in the pin being blocked until the next reboot.
+>
+> Fixes tag?
+> (`git log --no-merges --grep "Fixes:" will show you examples)
+>
+
+I thought it was optional. But I have added it for the next version.
+
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
