@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-700-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-701-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020AA7FDC0F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:57:53 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1019A7FDC1D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 17:00:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B26BD2824D5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:57:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 41D471C20955
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:00:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAA739866;
-	Wed, 29 Nov 2023 15:57:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EFC39869;
+	Wed, 29 Nov 2023 16:00:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="FgpDKJxh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OH9C6ebI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 31BEF9D
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 07:57:44 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 28DF0BF
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 08:00:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701273464; x=1732809464;
+  t=1701273600; x=1732809600;
   h=date:from:to:cc:subject:message-id;
-  bh=cvdUVu2I5Ey00g9HNv3r/TzIfnBTu64uiw5m9GDuOwM=;
-  b=FgpDKJxhkBAEJHeOqMoqIhkXpJ/mcyQFBjOkA8/rdTe9uNKshpWmPvxw
-   e5BcvpYA2QujfA650hYDhzj/DgbwD9G6An6Q6JnDLhLAIeY2hACMcM1U2
-   99l/hfWYHz1jYjmRUjh5x/YHlx6/2BPpP08XISFYrX3Wea/Zyx0lTQxYC
-   50ITHvOkSNfarCWAlY1ZgzZmhVSOdLfAzy/CFzZOhqsMyWDK0bkbt6INx
-   2hjbmrTnIBLbbd4YSNoUyGkV2pOqnfZa8QN/J+kbQ9L5p79gTg/uQ8RvB
-   nb6qcnhBJeSjZEIYkE7o2AiYOVQRppt+NR/9lO2iEHE4SgGohnzY4wqZN
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="390347283"
+  bh=CoKTFBAOeljJastXwLoZ9kuEJEyRUt3m9GxmZRpDRP0=;
+  b=OH9C6ebIGFR7jicuLW7tJK9j+ynf3ZOyqt4fyF2PnTE0jei3Dm7iuCpf
+   wqp+3uXp1JsanYttjv+swmfnomt2eoAPTW//kowGOjB8IWNcvvjHru9Ml
+   nBU5wz/AXy9AJyl4oTfhFMv++gEa28aJYjohVD/NbCniuYhTLTJh87sDz
+   4SMnNo59sfTM7w+VQ4Ve38+iTJrRxf+6O1Jpe5hOcy0WQ3R6ltIzXGMel
+   /byvDpkPZ9ZM/POyzfNUinNb9gjBcUjtp7+TouuN70lKyLOxOe8R1DNQP
+   id+BGxeiEQBRFOS0GS1HQqKQi/tuAKNKsn701msaZiHKzpB8i5gYv3+FD
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="174400"
 X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="390347283"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 07:57:43 -0800
+   d="scan'208";a="174400"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 08:00:00 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="803340405"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="797956521"
 X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="803340405"
+   d="scan'208";a="797956521"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 29 Nov 2023 07:57:41 -0800
+  by orsmga008.jf.intel.com with ESMTP; 29 Nov 2023 07:59:57 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r8MwC-0000RW-1Y;
-	Wed, 29 Nov 2023 15:57:32 +0000
-Date: Wed, 29 Nov 2023 23:56:36 +0800
+	id 1r8MyV-0000S2-2i;
+	Wed, 29 Nov 2023 15:59:48 +0000
+Date: Wed, 29 Nov 2023 23:57:12 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 75eb87dfebda92508158d6356286366762c741f0
-Message-ID: <202311292332.iUly1Taf-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 5f0dedcc9decbe8e8655373a34c87a076502b6db
+Message-ID: <202311292310.epLHKHGv-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -59,10 +59,10 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 75eb87dfebda92508158d6356286366762c741f0  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 5f0dedcc9decbe8e8655373a34c87a076502b6db  pinctrl: don't include GPIOLIB private header
 
-elapsed time: 1467m
+elapsed time: 1468m
 
 configs tested: 185
 configs skipped: 3
