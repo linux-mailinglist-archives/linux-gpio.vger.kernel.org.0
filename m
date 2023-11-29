@@ -1,92 +1,101 @@
-Return-Path: <linux-gpio+bounces-734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9D637FE112
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 21:32:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 390547FE172
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 21:56:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3E188B20F5A
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 20:32:06 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F275D2824B1
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 20:56:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 811D960EF3;
-	Wed, 29 Nov 2023 20:32:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0948F61664;
+	Wed, 29 Nov 2023 20:55:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Q9qz13Ya"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A382ED67;
-	Wed, 29 Nov 2023 12:31:57 -0800 (PST)
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3b8929269a0so120026b6e.1;
-        Wed, 29 Nov 2023 12:31:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701289917; x=1701894717;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+Received: from mail-vs1-xe2c.google.com (mail-vs1-xe2c.google.com [IPv6:2607:f8b0:4864:20::e2c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9AA99D69
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 12:55:54 -0800 (PST)
+Received: by mail-vs1-xe2c.google.com with SMTP id ada2fe7eead31-4644a04b690so52209137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 12:55:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701291353; x=1701896153; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s3UcxPmOUBgoYRAN4nwqjieZhrpgvlcJhcBGE2O3Vbs=;
-        b=wL6uCgAs68sjbH2viDuIjFaeipso9xcZREiQa1GmodkrMQcfp1FYGar2AgbOPWj1/j
-         z+PeL+9H7it7YHCNoSNdayKt8miMgkWDhl/h5mcI5nGLBHIg7mGJNgz25QYUXbMCfdxr
-         ridmNtE9GEsdEBJlcwrMwuSVSwqwRFbn2kieuAPxBJSIPkoirUP7tjJXpIEmvOTveMKk
-         qWBhPEAk0KejV4hden0NrivHf6C2y3r7c2Ofw7MN3gQT8Jzo1zOnjuWtBOyd7hnwMBBs
-         cNmaCl7riTXfItI3C0SVCBOR6PnPcjinQl007lyRrlMHXfa5SY+bsaIJTldUpqsEYYLf
-         q02w==
-X-Gm-Message-State: AOJu0Yymp+YIN8VR1T5Q4AmsxUVIae+oJN0KcdXq5gRX+l57oc/wfamZ
-	HGm1PyCa3eT06cBBzeEfeZgbWB1pPw==
-X-Google-Smtp-Source: AGHT+IHnKlWulB62HnwQlLD1tDuKg56VsN7YCRwmT/bk5Ncq/4Op+u8dd0ytaBscKEYQnjSNzOmboQ==
-X-Received: by 2002:a05:6808:605:b0:3b8:958e:cd1 with SMTP id y5-20020a056808060500b003b8958e0cd1mr3221428oih.59.1701289916938;
-        Wed, 29 Nov 2023 12:31:56 -0800 (PST)
-Received: from herring.priv (66-90-144-107.dyn.grandenetworks.net. [66.90.144.107])
-        by smtp.gmail.com with ESMTPSA id w9-20020a056808140900b003b892a45d32sm511833oiv.4.2023.11.29.12.31.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 12:31:56 -0800 (PST)
-Received: (nullmailer pid 3291682 invoked by uid 1000);
-	Wed, 29 Nov 2023 20:31:55 -0000
-Date: Wed, 29 Nov 2023 14:31:55 -0600
-From: Rob Herring <robh@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, netdev@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-renesas-soc@vger.kernel.org, linux-pci@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: correct white-spaces in examples
-Message-ID: <170128990701.3291471.16328336597319307055.robh@kernel.org>
-References: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+        bh=QI6JHtznXvmxE5PL87iXN1BnHx/Zg4tCgMdyIcxQ2lA=;
+        b=Q9qz13YamJMrwWsjqeLFo5h+5Vbr0FA8GXo5AVwhWZNPZ9z6GEjF45I0W3tEFts2fV
+         83Qg/42aqwRBqxYO70bAi3+euKE4dCAkdI808ykqIuQaCkiM/htlVtrms/b+IeKcTjKU
+         d1AwXtFeBjylbSg5xHTfr7V7RGIl8Isl9lpIxQ0P7P6zkCyRZ2OJpDvA94jLU3Z10E5a
+         fixKx3MeL2j2yxYSAZu3ihBahvPg2SPq0LuCiIiUyZPZTAEks1g2kiZqFYkOpC1VltC0
+         aD4z12O83brRfboYOAInH9lBLBuZoXAxdvrk1vaiN/cXWSWkGlic1hl0AFIM70ndf3lg
+         YxWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701291353; x=1701896153;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QI6JHtznXvmxE5PL87iXN1BnHx/Zg4tCgMdyIcxQ2lA=;
+        b=fNtnFZWlcX2qdR2Vy3B/tJ2iNqN9mkihQk8P/C23sEpRhP8+C8PJS+TUph1jg88Pb1
+         6H0mo9omykSJEZDdqoBGL5c2U44b7tLZDICHugHIwFXGCEw3KfjHuaJcvPQYgXGyWWzW
+         mur2oOm9UTdHmjC6Qyn/GY4F6zNQ+XXnb2Ca6buUwAjRVTzQlPlnbpLFHHYgXYb3LPFP
+         n2Q/rSSYdCgkmszDVTe7mjnNC52nOc+bJju7a/svBacipOZ+ZC/unwtEmQ66a08bWoZG
+         9ilB4uB6xJ1eOEMoX0WToxvGcO9LRGNyrmyohOK5LTGmV6Fpx7I8q3LvGr0I5lLkwKL3
+         FnmA==
+X-Gm-Message-State: AOJu0YzEg2N8XI6ElJ/bv8q2Kbh0sfvwMqd0u2lixgH1zm7MQ/VHnpfN
+	r+5lmbYd5XKdRmHVS5E4QYs10r5SzLyZqC8uMO1Y5w==
+X-Google-Smtp-Source: AGHT+IFYja56yAWBv64kZZunPEALyydYma3ufW+t+R0uNHZSBEmO8UtfKU/tUiufd3UXP+tq6eccK0k3AG7Z4sn8Heg=
+X-Received: by 2002:a05:6102:e13:b0:462:dd0d:d028 with SMTP id
+ o19-20020a0561020e1300b00462dd0dd028mr23246126vst.2.1701291353734; Wed, 29
+ Nov 2023 12:55:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231124092121.16866-1-krzysztof.kozlowski@linaro.org>
+References: <20231129142411.76863-1-brgl@bgdev.pl> <20231129142411.76863-10-brgl@bgdev.pl>
+ <CAMRc=MfL2nHF78TUmRjRSUC-2zyMjWotzU7Tv_27mVJPLET40Q@mail.gmail.com> <ZWdQK1kUe3zLqWIb@smile.fi.intel.com>
+In-Reply-To: <ZWdQK1kUe3zLqWIb@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 29 Nov 2023 21:55:42 +0100
+Message-ID: <CAMRc=Mc8Aahg1gD7DDtMOx77F2N9J10K+BBokY5w2ZDSG0ZJmg@mail.gmail.com>
+Subject: Re: [PATCH 09/10] gpiolib: use gpiochip_dup_line_label() in for_each helpers
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Nov 29, 2023 at 3:52=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Wed, Nov 29, 2023 at 03:43:32PM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Nov 29, 2023 at 3:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+>
+> ...
+>
+> > Any ideas how to handle this one? I was thinking something like:
+> >
+> >     for (i =3D 0, char *p __free(kfree) =3D label; i < size; i++)
+> >
+> > would work but it doesn't.
+>
+> Probably you want to ask Peter Z for this.
+>
 
-On Fri, 24 Nov 2023 10:21:21 +0100, Krzysztof Kozlowski wrote:
-> Use only one and exactly one space around '=' in DTS example.
-> 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> 
-> ---
-> 
-> Merging idea: Rob's DT.
-> Should apply cleanly on Rob's for-next.
-> ---
->  .../devicetree/bindings/auxdisplay/hit,hd44780.yaml       | 2 +-
->  .../devicetree/bindings/clock/baikal,bt1-ccu-pll.yaml     | 2 +-
->  Documentation/devicetree/bindings/iio/adc/adi,ad7780.yaml | 6 +++---
->  .../devicetree/bindings/iio/adc/qcom,spmi-iadc.yaml       | 2 +-
->  .../devicetree/bindings/iio/adc/qcom,spmi-rradc.yaml      | 2 +-
->  .../interrupt-controller/st,stih407-irq-syscfg.yaml       | 4 ++--
->  Documentation/devicetree/bindings/mmc/arm,pl18x.yaml      | 2 +-
->  Documentation/devicetree/bindings/net/sff,sfp.yaml        | 2 +-
->  .../devicetree/bindings/pci/toshiba,visconti-pcie.yaml    | 2 +-
->  .../bindings/pinctrl/renesas,rzg2l-pinctrl.yaml           | 6 +++---
->  .../devicetree/bindings/power/supply/richtek,rt9455.yaml  | 8 ++++----
->  .../devicetree/bindings/regulator/mps,mp5416.yaml         | 4 ++--
->  .../devicetree/bindings/regulator/mps,mpq7920.yaml        | 4 ++--
->  .../devicetree/bindings/remoteproc/fsl,imx-rproc.yaml     | 8 ++++----
->  14 files changed, 27 insertions(+), 27 deletions(-)
-> 
+Before I do, I'll give DEFINE_CLASS() a chance as it looks like it
+could be the answer looking at how scoped_guard works.
 
-Applied, thanks!
+Bart
 
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
