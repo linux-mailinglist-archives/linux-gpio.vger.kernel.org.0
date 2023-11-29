@@ -1,70 +1,78 @@
-Return-Path: <linux-gpio+bounces-650-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-651-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FD287FD3F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:19:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9BE27FD41D
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:29:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61C3E1C2120E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:19:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 87B9F1F20FFE
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:29:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F3671A71B;
-	Wed, 29 Nov 2023 10:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="DBRmCOu0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 496F71B268;
+	Wed, 29 Nov 2023 10:29:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E81210C8;
-	Wed, 29 Nov 2023 02:19:44 -0800 (PST)
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 9FD92603F4;
-	Wed, 29 Nov 2023 10:19:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1701253183;
-	bh=vmbye+7xTc5TAprv8bGCBpYs5zBBQ4aAAXZTaK7F9vE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=DBRmCOu0DUrEn4TChU4oz1IFOZzm06cbvip6fGUF5tC+rzfjrlz4OXrApxJVGmZZv
-	 f5+mWJIjJ1knMo9A1y8fd9oC6dupwm1vbMEdNKMLnqT8q35G4bUOf9jqodxX53ljKP
-	 sXFkd5bfzPBqO9HettROaMgTKrRgeYgV/b93M8F300ujW9wXft+E3zDA7kKMwGDdKI
-	 03Jbpntz462NEJqXnZibC2puUH71cA0jZ1fG0mRV2xNK5Z5ix3jZCB8e+WGYx1VNji
-	 uRWP9JYMmEnjNUKcUYTUML+iT9t263OU63TXn8v9fAsTACflk4TAzQgV4UCIoo/ID1
-	 SCKrSZ2KrYQhA==
-Date: Wed, 29 Nov 2023 12:19:05 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Nishanth Menon <nm@ti.com>, Vignesh Raghavendra <vigneshr@ti.com>,
-	Tero Kristo <kristo@kernel.org>, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, u-kumar1@ti.com
-Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-j7200: use ti,j7200-padconf
- compatible
-Message-ID: <20231129101905.GY5169@atomide.com>
-References: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
- <20231128-j7200-pinctrl-s2r-v1-3-704e7dc24460@bootlin.com>
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A124ACE
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 02:29:06 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1r8HoR-0002qK-Tw; Wed, 29 Nov 2023 11:28:59 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1r8HoQ-00CNkv-P8; Wed, 29 Nov 2023 11:28:58 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1r8HoQ-0004uR-2I;
+	Wed, 29 Nov 2023 11:28:58 +0100
+Message-ID: <2fd0e3690c94e70a58d21b83694ef5fcff520663.camel@pengutronix.de>
+Subject: Re: [PATCH v2 1/4] dt-bindings: reset: Add syscon to nuvoton ma35d1
+ system-management node
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org, 
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+  j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com,  schung@nuvoton.com
+Date: Wed, 29 Nov 2023 11:28:58 +0100
+In-Reply-To: <20231128061118.575847-2-ychuang570808@gmail.com>
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+	 <20231128061118.575847-2-ychuang570808@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231128-j7200-pinctrl-s2r-v1-3-704e7dc24460@bootlin.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-* Thomas Richard <thomas.richard@bootlin.com> [231128 15:35]:
-> For suspend to ram on j7200, use ti,j7200-padconf compatible to save and
-> restore pinctrl contexts.
+On Di, 2023-11-28 at 06:11 +0000, Jacky Huang wrote:
+> From: Jacky Huang <ychuang3@nuvoton.com>
+>=20
+> Add a compatible 'syscon' to the system management node since the system
+> control registers are mapped by this driver. The other driver must access
+> the system control registers through 'regmap' using a phandle that
+> references this node.
+>=20
+> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
 
-Hmm are the mcu registers lost too? Anyways presumably you looked at it:
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-Reviewed-by: Tony Lindgren <tony@atomide.com>
+to be applied together with the dts changes.
+
+regards
+Philipp
 
