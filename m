@@ -1,79 +1,98 @@
-Return-Path: <linux-gpio+bounces-703-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-728-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 987287FDC44
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 17:10:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 355527FDD3B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 17:37:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4A8011F205A8
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:10:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D35D91F2101B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:37:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C56939ACC;
-	Wed, 29 Nov 2023 16:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dkim=none
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A01A38DF0;
+	Wed, 29 Nov 2023 16:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CbVZmAqI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B38ACD66;
-	Wed, 29 Nov 2023 08:10:25 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="397080488"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="397080488"
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 08:10:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="772729723"
-X-IronPort-AV: E=Sophos;i="6.04,235,1695711600"; 
-   d="scan'208";a="772729723"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga007.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Nov 2023 08:10:22 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1r8N8l-00000000Tvw-3QdB;
-	Wed, 29 Nov 2023 18:10:19 +0200
-Date: Wed, 29 Nov 2023 18:10:19 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Boerge Struempfel <boerge.struempfel@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andrew Jeffery <andrew@aj.id.au>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, bstruempfel@ultratronik.de
-Subject: Re: [PATCH v3] gpiolib: sysfs: Fix error handling on failed export
-Message-ID: <ZWdia1rDg9pH2Fhu@smile.fi.intel.com>
-References: <20231129152307.28517-1-boerge.struempfel@gmail.com>
+Received: from mail-pl1-x62f.google.com (mail-pl1-x62f.google.com [IPv6:2607:f8b0:4864:20::62f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E42910A;
+	Wed, 29 Nov 2023 08:37:01 -0800 (PST)
+Received: by mail-pl1-x62f.google.com with SMTP id d9443c01a7336-1cfa7be5650so13421955ad.0;
+        Wed, 29 Nov 2023 08:37:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701275820; x=1701880620; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kDYi0w7H+J+q+dM9ucawgoKr/ctQDdxFveeMbGCHqgs=;
+        b=CbVZmAqIjZJqcvnM1Qy+OLHpsdg+RuL6QSYn6cnFgIwvTEtJ8Qe/1czzuRReq5k+pn
+         cY8nFT/994cGbpi06YeurnMU8LX57wiZdcds41dmORZY77PiJDF4l8bikE0Z8alP085+
+         9pze1+YgJY4lGfsjE08oc6QNI71em697umzxeCgWNFiAdG0D02NO4GbTEaq0Kb4nlSpI
+         UgEd5H9DTbevpwKbVXiebsPCt0jjjru5+A99DmP0vX2t8YvnKBP917zSpfkOryPDbUNR
+         lWmeG1hvu/5YHQ2aNPPpdZ1Sg+1hWMkd8A8uNiunZIlJn1J+gy/hFbwhYlu8yDiKh444
+         56Mw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701275820; x=1701880620;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kDYi0w7H+J+q+dM9ucawgoKr/ctQDdxFveeMbGCHqgs=;
+        b=QS1SWHMJR3HFMHT8hQzhXYwU8DhfRNxoD4gydqxs3/bN+/FUEyB2hSvpkEKi7zArPT
+         YXYZsEsppv0z4rA1MiuseMqXShHEg4iqa3z65hH/ndi0XfdjUUJcMNshCa9I7mlMybfX
+         YA3T7AyF/G5ZR69RFhhOdgnthXeksvuW4DsK7mR88+BMkWkENVVmt5lfEjwqtiKMuN0a
+         AOoiJ52dsrCdqUaGPDmMDXMjAlNZUGVsKju8HmtSOOXJwUNHTBEf26YyfJVXQ3TGkGfg
+         s57Iqhb8lKM4YNI/ga7cTQ1kOlYwyfWz/2P895DTzLqEZ+qtf23qKWuk3InAp3vF4Lly
+         /bcw==
+X-Gm-Message-State: AOJu0YxdaMbPeyC049qBWmxsUYfWhu9GzGHvHlRvS5etsN16/yWWA9Yk
+	0yo9cTXEjkgVuyBZfar6MjKUcEVQ+shglk358SM=
+X-Google-Smtp-Source: AGHT+IEHOS/VoqEOAE9S0a4Bo0mCXwMfAjLAWB11WdwDsJGo7JPiUty3L8kqBCtFFqb6Z8cDlcEqIcrQbJXKS8k7E9Y=
+X-Received: by 2002:a17:90b:358f:b0:285:59aa:fceb with SMTP id
+ mm15-20020a17090b358f00b0028559aafcebmr18947614pjb.4.1701275820473; Wed, 29
+ Nov 2023 08:37:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231129152307.28517-1-boerge.struempfel@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com> <20231129161459.1002323-17-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231129161459.1002323-17-andriy.shevchenko@linux.intel.com>
+From: Fabio Estevam <festevam@gmail.com>
+Date: Wed, 29 Nov 2023 13:36:49 -0300
+Message-ID: <CAOMZO5CZpQjWKimNReUkwHOc-mF8vWoq2HDhjGKSu6E3g5-aVw@mail.gmail.com>
+Subject: Re: [PATCH v4 16/23] pinctrl: imx: Convert to use grp member
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org, 
+	linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	NXP Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Emil Renner Berthing <kernel@esmil.dk>, 
+	Hal Feng <hal.feng@starfivetech.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Nov 29, 2023 at 04:23:07PM +0100, Boerge Struempfel wrote:
-> If gpio_set_transitory() fails, we should free the GPIO again. Most
-> notably, the flag FLAG_REQUESTED has previously been set in
-> gpiod_request_commit(), and should be reset on failure.
-> 
-> To my knowledge, this does not affect any current users, since the
-> gpio_set_transitory() mainly returns 0 and -ENOTSUPP, which is converted
-> to 0. However the gpio_set_transitory() function calles the .set_config()
-> function of the corresponding GPIO chip and there are some GPIO drivers in
-> which some (unlikely) branches return other values like -EPROBE_DEFER,
-> and -EINVAL. In these cases, the above mentioned FLAG_REQUESTED would not
-> be reset, which results in the pin being blocked until the next reboot.
+Hi Andy,
 
-Thank you!
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+On Wed, Nov 29, 2023 at 1:15=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> Convert drivers to use grp member embedded in struct group_desc.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+You explained what you did, but you did not explain the reason.
 
