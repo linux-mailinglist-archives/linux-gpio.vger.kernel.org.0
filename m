@@ -1,177 +1,112 @@
-Return-Path: <linux-gpio+bounces-682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-684-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F09B27FD941
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:24:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8DF227FD9FD
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:44:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2EAEE1C20DEC
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:24:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 486A22834F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:44:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67FA330659;
-	Wed, 29 Nov 2023 14:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCC130340;
+	Wed, 29 Nov 2023 14:44:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2JS/SOyd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dx0z/LVU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x32f.google.com (mail-wm1-x32f.google.com [IPv6:2a00:1450:4864:20::32f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C9F9A10E6
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:33 -0800 (PST)
-Received: by mail-wm1-x32f.google.com with SMTP id 5b1f17b1804b1-40b4744d603so27777155e9.2
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 06:24:33 -0800 (PST)
+Received: from mail-ua1-x92d.google.com (mail-ua1-x92d.google.com [IPv6:2607:f8b0:4864:20::92d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2CD2ED7D;
+	Wed, 29 Nov 2023 06:44:22 -0800 (PST)
+Received: by mail-ua1-x92d.google.com with SMTP id a1e0cc1a2514c-7c51dd41046so385998241.2;
+        Wed, 29 Nov 2023 06:44:22 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701267872; x=1701872672; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1701269061; x=1701873861; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q4MUC5eIDni/buanxrUZQlfU7mM7/HRQ/uDUqZDkwLQ=;
-        b=2JS/SOydiknEuqmFOYDnpQfOVtxGkBRZY8XxDaZBUM0fS0jUw1xbvXhpHfg+ll24M+
-         s25G4Ll0kIQpwCF0XCy+nAE+JIF2QWIln1/wSFxrrBfryHwX/0aZTgaQ7RYgWWIfenok
-         hyYs9xJNsYbwURFUyXfa/ELuGq3jtb5rPSaKBoe6wlBohBeQo0IJWmS6x0EFq5XT0QiB
-         AmsmqOwI6Sq0N5SVE1qH+xcHsuOxZKPR4hiSbacH950E/4SPQ0KUQ4eUz+DMiwqlrTq4
-         KalbYjiJlpeLI0ccbYVXBCu+o7KLSieBN9tP4rDswlK6XAQ6trVmVDOHg0K4rw4rzWPP
-         0iJA==
+        bh=BTV80m9sniZZhV3ayqmHUOTEjpARmiBjH4lGv1FbT5I=;
+        b=dx0z/LVUZd0Ry64k8tKwDlJhhalxoWYDRFnNJW0j+dv3Xj8KMA1GX0D5fWFuZszdPE
+         bAuIJn4G+Slp99uQ2mQ4bDrvBkidXDXpFoslmJRJAuxHh7QBX4hgO9kj/Cq8CAYrTVEp
+         uD1i/u3qTa2OSGgQLjEvU0GC8Ob5wFddEK7jR8EMcsh5UlrZVAnjn1zj7GOr0ZzLP92N
+         pgZdMVayhoS1UI+68RvgMRXsfY5M4POnj6K3LAi4fCn5Cyp9pL66WP+FAWn8SNmfds57
+         Vbn48UJo9nppZfivnjEIYvSfxE712PHPRYps5/qgff6oKZGNqPjGj9rOR3g8W+Wqyqg9
+         LSUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701267872; x=1701872672;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1701269061; x=1701873861;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q4MUC5eIDni/buanxrUZQlfU7mM7/HRQ/uDUqZDkwLQ=;
-        b=QQbfEFmfr5ocYRMAiiZ9ktVsxV/rUyG9f/2CGOdkYZDDxNCXLP0iSlaNrk1QxHcVqT
-         9mV3AmpNhHG1gv22+1lDpBIv/oUPPp9qSdaow6Z47Ri3VyPfie4RIXf7JzkwEMsWw9Sz
-         akBW+jDxi3uWNv3ND8fnAM9WKF1Vg7QO5bHG3FEKiENOQ42rdCuBjLeIpi9gjbHiqvwj
-         eRT/qnO0K3pdoWoSQZyJitGgpKkSZPaSJXHPKrbyXLS3W/dB1P8hFKXOyFZlYhIJ94Q8
-         4s51u8EnZHib7FzQvQOPUKIon65Q8EAeHbl6kCl5yZWlsm7+3Pi7y5EaDrmH51s3wguo
-         psuA==
-X-Gm-Message-State: AOJu0YxJ1Ex2nUKveysJ/PhilHRZKYnw0VOEGflWIlQkuLFkbRlJ/489
-	4EMLsjKrx3eWhPXXVZ0q1YZ4Ig==
-X-Google-Smtp-Source: AGHT+IEIhjE3hyoM/RXTc0cdiJwPMiOTEp4g658vnqp6nZCY6jMei2HDNMvjcMgAUPil9kSpdJQRzA==
-X-Received: by 2002:a05:600c:3ca0:b0:40b:37d9:b646 with SMTP id bg32-20020a05600c3ca000b0040b37d9b646mr11047907wmb.3.1701267872204;
-        Wed, 29 Nov 2023 06:24:32 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:4520:2f25:4d3a:4adf])
-        by smtp.gmail.com with ESMTPSA id n40-20020a05600c3ba800b0040b34720206sm2406848wms.12.2023.11.29.06.24.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 06:24:31 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 10/10] gpiolib: remove gpiochip_is_requested()
-Date: Wed, 29 Nov 2023 15:24:11 +0100
-Message-Id: <20231129142411.76863-11-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231129142411.76863-1-brgl@bgdev.pl>
-References: <20231129142411.76863-1-brgl@bgdev.pl>
+        bh=BTV80m9sniZZhV3ayqmHUOTEjpARmiBjH4lGv1FbT5I=;
+        b=hFGCOAUdj59BYF5YU/6CU7w12fNmJzSRQClsKf4O1PJG/2WP3T/eav6ZLMs32IStbJ
+         BkrM33RhAhq939OTrOUHG4vsshdBdfyX2Bl5/LpCwLbpkAif2xPkXMAbfAFiawf/2Ujl
+         SvkqOIkd+srwid/X2vlAnYqnZhFrxV+ET28ELsJWALoAcqcdHj4MkYYPNZVoLNzWzQmt
+         24gjYebGBa1jN8+qx0TeNegz0MdE+M2cac/5qhNHwR1wUvr4LDzWHMmc7Yc1+Rwv8ndy
+         xFU3VCO90KeAscRpkXeYediMvi5ug4boc5cpKAzfdlidSXvkgJzpGyymkjxMsRbeO4IN
+         55Ag==
+X-Gm-Message-State: AOJu0YwAO292AwQVD+JpQgjwFl50l80q3EbduzCMW/Jqq+AB3sI5gxka
+	Fu8oymZCtytO//Nd4CEQ4Bwx95twgveovZDqPhE=
+X-Google-Smtp-Source: AGHT+IGCDZngG6ZtwGuhcqjwolhGC3Bvfp2wdcOUa92UIOUe7pr+Bgg29exfKB/1In2II5AeSFKMuEaLbCW3MxZjhBs=
+X-Received: by 2002:a05:6122:da5:b0:4ac:5a8:f45b with SMTP id
+ bc37-20020a0561220da500b004ac05a8f45bmr21359729vkb.5.1701269061166; Wed, 29
+ Nov 2023 06:44:21 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231017104638.201260-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20231017104638.201260-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Wed, 29 Nov 2023 14:43:32 +0000
+Message-ID: <CA+V-a8t3sGn83vpgjECf5dw=bbz2yPXpnn+v2Dx2q3yJRPsKgA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] Add missing port pins for RZ/Five SoC
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Geert,
 
-We have no external users of gpiochip_is_requested(). Let's remove it
-and replace its internal calls with direct testing of the REQUESTED flag.
+On Tue, Oct 17, 2023 at 11:47=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.=
+com> wrote:
+>
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Hi Geert,
+>
+> This patch series intends to incorporate the absent port pins P19 to P28,
+> which are exclusively available on the RZ/Five SoC.
+>
+> Cheers,
+> Prabhakar
+>
+> RFC -> v2:
+> * Fixed review comments pointed by Geert & Biju
+>
+> RFC: https://lore.kernel.org/lkml/20230630120433.49529-3-prabhakar.mahade=
+v-lad.rj@bp.renesas.com/T/
+>
+> Lad Prabhakar (3):
+>   pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
+>     macro
+>   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
+>   riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
+>
+>  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 263 ++++++++++++++++++--
+>  2 files changed, 242 insertions(+), 25 deletions(-)
+>
+Gentle ping.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c      | 46 ++++++++++---------------------------
- include/linux/gpio/driver.h |  1 -
- 2 files changed, 12 insertions(+), 35 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 8e932e6a6a8d..3070a4f7bbb1 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1085,7 +1085,7 @@ void gpiochip_remove(struct gpio_chip *gc)
- 
- 	spin_lock_irqsave(&gpio_lock, flags);
- 	for (i = 0; i < gdev->ngpio; i++) {
--		if (gpiochip_is_requested(gc, i))
-+		if (test_bit(FLAG_REQUESTED, &gdev->descs[i].flags))
- 			break;
- 	}
- 	spin_unlock_irqrestore(&gpio_lock, flags);
-@@ -2373,33 +2373,6 @@ void gpiod_free(struct gpio_desc *desc)
- 	gpio_device_put(desc->gdev);
- }
- 
--/**
-- * gpiochip_is_requested - return string iff signal was requested
-- * @gc: controller managing the signal
-- * @offset: of signal within controller's 0..(ngpio - 1) range
-- *
-- * Returns NULL if the GPIO is not currently requested, else a string.
-- * The string returned is the label passed to gpio_request(); if none has been
-- * passed it is a meaningless, non-NULL constant.
-- *
-- * This function is for use by GPIO controller drivers.  The label can
-- * help with diagnostics, and knowing that the signal is used as a GPIO
-- * can help avoid accidentally multiplexing it to another controller.
-- */
--const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset)
--{
--	struct gpio_desc *desc;
--
--	desc = gpiochip_get_desc(gc, offset);
--	if (IS_ERR(desc))
--		return NULL;
--
--	if (test_bit(FLAG_REQUESTED, &desc->flags) == 0)
--		return NULL;
--	return desc->label;
--}
--EXPORT_SYMBOL_GPL(gpiochip_is_requested);
--
- /**
-  * gpiochip_dup_line_label - Get a copy of the consumer label.
-  * @gc: GPIO chip controlling this line.
-@@ -2414,16 +2387,21 @@ EXPORT_SYMBOL_GPL(gpiochip_is_requested);
-  */
- char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
- {
--	const char *label;
-+	struct gpio_desc *desc;
- 	char *cpy;
- 
--	label = gpiochip_is_requested(gc, offset);
--	if (!label)
-+	desc = gpiochip_get_desc(gc, offset);
-+	if (IS_ERR(desc))
- 		return NULL;
- 
--	cpy = kstrdup(label, GFP_KERNEL);
--	if (!cpy)
--		return ERR_PTR(-ENOMEM);
-+	scoped_guard(spinlock_irqsave, &gpio_lock) {
-+		if (!test_bit(FLAG_REQUESTED, &desc->flags))
-+			return NULL;
-+
-+		cpy = kstrdup(desc->label, GFP_KERNEL);
-+		if (!cpy)
-+			return ERR_PTR(-ENOMEM);
-+	}
- 
- 	return cpy;
- }
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 6405f6d454af..1679e6fa5469 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -531,7 +531,6 @@ struct gpio_chip {
- #endif /* CONFIG_OF_GPIO */
- };
- 
--const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset);
- char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset);
- 
- /**
--- 
-2.40.1
-
+Cheers,
+Prabhakar
 
