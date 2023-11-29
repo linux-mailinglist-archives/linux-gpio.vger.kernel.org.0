@@ -1,118 +1,183 @@
-Return-Path: <linux-gpio+bounces-646-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-641-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 814E87FD383
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 11:05:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 155B37FD2B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:30:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B36DB1C20971
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 10:05:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3904A1C20B42
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 09:29:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6273199A6;
-	Wed, 29 Nov 2023 10:05:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B6D314F7D;
+	Wed, 29 Nov 2023 09:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="VLYhP2cr"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Uv56qPD+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A78121AD;
-	Wed, 29 Nov 2023 02:04:57 -0800 (PST)
-Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AT4CdUp017517;
-	Wed, 29 Nov 2023 10:04:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=eYdCxmqgHx/RQcgUZFoIKVQQsz5ARTpF8wqnMoRA7Rs=;
- b=VLYhP2crpfm/aMrXXT/lHtfGwIu6qZO11HqqhtlOic1SpxbdrjPaTlfZgoKRKhAKlUp5
- 2DUkPW49eWpzHJz7aGk2s0yPTt142aSkQMuHCADKTUATaEtonh/dXXBXfwMpq9mJ6n2u
- 5ChRyc9EZzI5I86v28SAyj7bTtwTK11mf8j6b2m1034WRwCIRebW2WkEVFJbIUBwPd6o
- xQbRFUBdAisqQex0F4CwZXdZGcQNVbvPFYKzNsTupeFaJqELEwRVUV4baAHgejbn+/w0
- dQr/uoDjQ2gp3AsJQkN8P1sQp9ZhVC22c5yh41Y8SssO5tYMmZfpzcWbPtXEgIxj/sN7 DQ== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3unmraa11u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 10:04:54 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3ATA4sBo013506
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 29 Nov 2023 10:04:54 GMT
-Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 29 Nov 2023 02:04:49 -0800
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-Subject: [PATCH 2/2] pinctrl: qcom: correct incorrect address offset
-Date: Wed, 29 Nov 2023 18:04:22 +0800
-Message-ID: <20231129100422.16659-3-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231129100422.16659-1-quic_tengfan@quicinc.com>
-References: <20231129100422.16659-1-quic_tengfan@quicinc.com>
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9374B2D76
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 01:29:46 -0800 (PST)
+Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231129092944epoutp03e230f7d52f9f5c72d46ad0e901e04878~cDgd_Zk7s2059320593epoutp03g
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 09:29:44 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231129092944epoutp03e230f7d52f9f5c72d46ad0e901e04878~cDgd_Zk7s2059320593epoutp03g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701250184;
+	bh=FHvSR/hYOGJJkx3HUz9cuc3ozsOZ6u4idcxy8RtY3ek=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=Uv56qPD+l3e2Z5W0lKtubPM87dE3u4JY363KS2Q0qL/6WR4tvLEHlumasMHg9UxDL
+	 +LLwe2PVcxGusEiZwfOReufcbTKXV7EpO1uvDwQ7xvG+sA/XCmiBTYZCZGW8XrA0eU
+	 B2zEhnmsbXZB4NgKLXm3swnSBXn1BbA9rVf826MY=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p4.samsung.com (KnoxPortal) with ESMTP id
+	20231129092944epcas2p48dd26563bb461298f3467b73415a494e~cDgdlzJnu1311413114epcas2p4Z;
+	Wed, 29 Nov 2023 09:29:44 +0000 (GMT)
+Received: from epsmgec2p1.samsung.com (unknown [182.195.36.69]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4SgDYg3rW4z4x9Pt; Wed, 29 Nov
+	2023 09:29:43 +0000 (GMT)
+Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
+	epsmgec2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	35.78.08648.78407656; Wed, 29 Nov 2023 18:29:43 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTPA id
+	20231129092942epcas2p1c4305207c4c3d3701e7ff6757f7a2b4f~cDgcJFYlJ0737107371epcas2p1g;
+	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231129092942epsmtrp13fa7b91dd84632b400609f49cb4e84bd~cDgcII0pu3031930319epsmtrp1k;
+	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
+X-AuditID: b6c32a43-4b3ff700000021c8-23-6567048740ae
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	1A.EE.07368.68407656; Wed, 29 Nov 2023 18:29:42 +0900 (KST)
+Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231129092942epsmtip233070651858a9e02b1227e78ed12d3f1~cDgb3wbsf0969709697epsmtip2i;
+	Wed, 29 Nov 2023 09:29:42 +0000 (GMT)
+Date: Wed, 29 Nov 2023 19:04:47 +0900
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
+	linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, semen.protsenko@linaro.org
+Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non
+ wake up external gpio interrupt
+Message-ID: <ZWcMv8Bg12vqBCUm@perf>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: t0H1JSDNZlAlyyojrphUunplbkQJeS83
-X-Proofpoint-ORIG-GUID: t0H1JSDNZlAlyyojrphUunplbkQJeS83
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-29_07,2023-11-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 priorityscore=1501 suspectscore=0 mlxscore=0 clxscore=1015
- lowpriorityscore=0 bulkscore=0 adultscore=0 spamscore=0 phishscore=0
- mlxlogscore=878 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311290075
+In-Reply-To: <f814a1f4-2e3d-4946-949a-8ddac5e30d5f@kernel.org>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprHJsWRmVeSWpSXmKPExsWy7bCmhW47S3qqwba5MhYP5m1jszh/fgO7
+	xZQ/y5ksNj2+xmqxef4fRovLu+awWcw4v4/J4vCbdlaL531A1qpdfxgduDx2zrrL7rFpVSeb
+	x51re9g8Ni+p9+jbsorR4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv4HjneFMzA0NdQ0sL
+	cyWFvMTcVFslF58AXbfMHKDLlBTKEnNKgUIBicXFSvp2NkX5pSWpChn5xSW2SqkFKTkF5gV6
+	xYm5xaV56Xp5qSVWhgYGRqZAhQnZGSc+nWQpOCpUceywUwPjN74uRk4OCQETiRMvz7N0MXJx
+	CAnsYJS4d/okG4TziVHiyoWPTBDON0aJO08OscC0tN+7CdWyl1Hi5qz9zBDOQ0aJ/vkX2EGq
+	WARUJWZfvgHWwSagK7HtxD9GEFtEQFPi+t/vrCANzAKdTBLTt89kBUkIC2RJ3NnYDdbAK6As
+	8XfnOXYIW1Di5MwnQHEODk4BO4nJ8+pBeiUEOjkkFu6ZzwhxkovEue8roc4Tlnh1fAs7hC0l
+	8bK/DcrOllj96xKUXQH0Qg8zhG0sMetZO9gcZoEMiQ1HJrGC7JIAuuHILRaIMJ9Ex+G/7BBh
+	XomONiGITjWJX1M2QF0gI7F78QqoiR4SzyZvYocGI7PEnFt32Ccwys1C8s0sJNsgbB2JBbs/
+	sc0CWsEsIC2x/B8HhKkpsX6X/gJG1lWMYqkFxbnpqclGBYbwCE7Oz93ECE6oWs47GK/M/6d3
+	iJGJg/EQowQHs5IIr97H5FQh3pTEyqrUovz4otKc1OJDjKbAuJnILCWanA9M6Xkl8YYmlgYm
+	ZmaG5kamBuZK4rz3WuemCAmkJ5akZqemFqQWwfQxcXBKNTCFN/IuC6i9+c30MsflY2q8266L
+	Zf/656b50Clj243XpybN+yjgcXeJ2C7lmSt33LCJ+F2/9PIcG23rCwv8LnL0FeRaBNxQn/U9
+	ONheOvjGpNDjPpKqhrX8Zfb+Sg2zzL/3Hr/guj7MnXmPeYCE/3ppje0mp497VGqxHVu0fdrR
+	WUmKJexXVRXNmPY1HnyZn8KbtvDTs8554XHT1845W1Xd6uijHvbo6oQnX9b8jEwU4rRZ8mZe
+	byazyeaTR/k1DkZKTI6XFVp73e/sZC8LJtdE+Y0HhH4m1c3cea9n+wOvz1w6x001+nqSv0k0
+	Ta7ptO96o3p+anTUs1QlOVn+SfcKVtS2+ZS26fBqKKfGhSuxFGckGmoxFxUnAgBvbNQXMQQA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrCLMWRmVeSWpSXmKPExsWy7bCSvG4bS3qqwfp3UhYP5m1jszh/fgO7
+	xZQ/y5ksNj2+xmqxef4fRovLu+awWcw4v4/J4vCbdlaL531A1qpdfxgduDx2zrrL7rFpVSeb
+	x51re9g8Ni+p9+jbsorR4/MmuQC2KC6blNSczLLUIn27BK6Mc39YC1oFKpb8esHWwHiep4uR
+	k0NCwESi/d5Nli5GLg4hgd2MEgunPmODSMhI3F55mRXCFpa433KEFaLoPqPEibVv2UESLAKq
+	ErMv32ABsdkEdCW2nfjHCGKLCGhKXP/7HayBWaCTSWL69plgk4QFsiQePjwPtoFXQFni785z
+	7BBTfzBLLFy9jAkiIShxcuYTsKnMAloSN/69BIpzANnSEsv/cYCYnAJ2EpPn1U9gFJiFpGEW
+	koZZCA0LGJlXMUqmFhTnpucmGxYY5qWW6xUn5haX5qXrJefnbmIER4SWxg7Ge/P/6R1iZOJg
+	PMQowcGsJMKr9zE5VYg3JbGyKrUoP76oNCe1+BCjNAeLkjiv4YzZKUIC6YklqdmpqQWpRTBZ
+	Jg5OqQam5OcuL9IX+13LSta7HLnn9leL2IgNSX1PC+qs3v9nWHL0pOS/qzln5XYJR2x/PitH
+	ZYL74xrz5iWHlrtI/vqasbT9iS/3p/wjOgXMs06se5OcME2olTdsb3XJuerQ/Qzq97T95txT
+	e3/4ZqXYulah1P2VwkmHWzqypi6z4z315H15TBDDtjVr2281rhXxZTrEVhgvL7Vc6ttMqwvT
+	r7nn5P+JY9hrvOxz56rbm4JMf81acND+eUJ5xS8rEZ2Atom3XqyrqxUqtE5eojzfe/Fu3QCt
+	l9W5XvevnzXanSbwaXFMPPfMa5daVijrHT/Sl3VrvZqzoKT9qw81fF0M3p7iN+3DFmVzLk2c
+	Uv+004xXiaU4I9FQi7moOBEA0CLvT/cCAAA=
+X-CMS-MailID: 20231129092942epcas2p1c4305207c4c3d3701e7ff6757f7a2b4f
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38
+References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
+	<20231126094618.2545116-1-youngmin.nam@samsung.com>
+	<bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org> <ZWU75VtJ/mXpMyQr@perf>
+	<1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
+	<CAPLW+4n0SAOTb6wocY-WjkxgSFMbx+nVuqdaPcNYVDsbfg+EfA@mail.gmail.com>
+	<ZWbjPIydJRrPnuDy@perf> <a0ac295b-ea96-475c-acde-5a61de8ca170@linaro.org>
+	<ZWb6cyTgyEcee7DZ@perf> <f814a1f4-2e3d-4946-949a-8ddac5e30d5f@kernel.org>
 
-The address offset of 0x100000 is already provided in SM4450 DTSI, so
-subtract 0x100000 from the offset which used by ufs and sdc.
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
 
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-sm4450.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+On Wed, Nov 29, 2023 at 09:39:45AM +0100, Krzysztof Kozlowski wrote:
+> On 29/11/2023 09:46, Youngmin Nam wrote:
+> >>> I couldn't find out a pin for the test on E850-96 board yet.
+> >>> We can test if there is a usage of *Non" Wake up External Interrupt of GPIO
+> >>> on E850-96 board.
+> >>>
+> >>> Do you have any idea ?
+> >>
+> >> Please test on any upstream platform or upstream your existing platform.
+> >> I hesitate to take this change because I don't trust Samsung that this
+> >> was tested on mainline kernel. OK, for sure 100% it was not tested on
+> >> mainline, but I am afraid that differences were far beyond just missing
+> >> platforms. Therefore the issue might or might not exist at all. Maybe
+> >> issue is caused by other Samsung non-upstreamed code.
+> >>
+> >> Best regards,
+> >> Krzysztof
+> > 
+> > Sure. Let me find how to test on upstreamed device like E850-96 board.
+> 
+> There are many reasons why companies using Linux for their products
+> should be involved in upstreaming their devices.
+> 
+> The one visible from this conversation: Whatever technical debt you
+> have, it will be only growing because upstream might not even take
+> simple patches from you, until you start contributing with the rest.
+> Samsung's out-of-tree kernels are so far away from the upstream, that
+> basically we might feel that contributions from Samsung are not
+> addressing real problems. This will affect your Android trees due to GKI.
+> 
+> That's one more argument to talk to with your managers why staying away
+> from the upstream is not the best idea.
+> 
+> Second argument is look at your competitor: Qualcomm, one of the most
+> active upstreamers of SoC code doing awesome job.
+> 
+> Best regards,
+> Krzysztof
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm4450.c b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-index 49e2e3a7a9cb..5496f955ed2a 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm4450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-@@ -936,14 +936,14 @@ static const struct msm_pingroup sm4450_groups[] = {
- 	[133] = PINGROUP(133, _, phase_flag, _, _, _, _, _, _, _),
- 	[134] = PINGROUP(134, tsense_pwm1_out, tsense_pwm2_out, _, _, _, _, _, _, _),
- 	[135] = PINGROUP(135, _, phase_flag, _, _, _, _, _, _, _),
--	[136] = UFS_RESET(ufs_reset, 0x197000),
--	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x18c004, 0, 0),
--	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x18c000, 13, 6),
--	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x18c000, 11, 3),
--	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x18c000, 9, 0),
--	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x18f000, 14, 6),
--	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x18f000, 11, 3),
--	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x18f000, 9, 0),
-+	[136] = UFS_RESET(ufs_reset, 0x97000),
-+	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x8c004, 0, 0),
-+	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x8c000, 13, 6),
-+	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x8c000, 11, 3),
-+	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x8c000, 9, 0),
-+	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x8f000, 14, 6),
-+	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x8f000, 11, 3),
-+	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x8f000, 9, 0),
- };
- 
- static const struct msm_gpio_wakeirq_map sm4450_pdc_map[] = {
--- 
-2.17.1
+Thank you for your opinion.
+By the way, this patch is not related with GKI and I just thought this work
+would be helpful to all exynos platform.
 
+But it seems that changing affinity of any irqs including gpio is not allowed
+on exynos platform. So we need to debug by adding some logs.
+
+> 
+> 
+
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_
+Content-Type: text/plain; charset="utf-8"
+
+
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_37ba7_--
 
