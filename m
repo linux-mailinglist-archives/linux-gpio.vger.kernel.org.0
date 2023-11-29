@@ -1,61 +1,60 @@
-Return-Path: <linux-gpio+bounces-637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-638-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7CC57FD03F
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 09:00:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB62E7FD065
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 09:11:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0BA89B21238
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 08:00:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E59CDB2154B
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 08:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357A3111BD;
-	Wed, 29 Nov 2023 08:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC23711731;
+	Wed, 29 Nov 2023 08:11:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SsZR4+oD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UBtBLPcg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x52e.google.com (mail-ed1-x52e.google.com [IPv6:2a00:1450:4864:20::52e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E783919B9
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 00:00:08 -0800 (PST)
-Received: by mail-ed1-x52e.google.com with SMTP id 4fb4d7f45d1cf-54b89582efeso3385190a12.0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 00:00:08 -0800 (PST)
+Received: from mail-lf1-x12e.google.com (mail-lf1-x12e.google.com [IPv6:2a00:1450:4864:20::12e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4333C19BC
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 00:11:21 -0800 (PST)
+Received: by mail-lf1-x12e.google.com with SMTP id 2adb3069b0e04-50baa2a278bso5663424e87.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 00:11:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701244807; x=1701849607; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=wUfUD/oQz54nGG7jbhVhWy8+i62QavId9Qpb09Q0Qyw=;
-        b=SsZR4+oDpas/jZScqZ7oUKNCMebX09qBx6NIIFkhqwVmAlhKNv4wV2i0c6fbZDowl+
-         PnHiJhKq+VpR5ieOt1v/3pkvx6RjudaQUQFlsAIAB0V47xyxP/DPUcfZwC3WmNtKx7nk
-         irAT/bgKvM11eXCY11a8TKHmJRtWRPyq56WT0n67Lc65B8R4F7yP9+NoV9A33b+XI3f8
-         WWXH0LLue8QzVMVJ6jMRq3fJDVMz0NHkk+lTC4CGS8ehoxEffalqpgaeK/RisgNZTPFw
-         ick8lm6Z12ObX0+dwpYVfp1bd7XDHL0wY1OrUJQ+YoCoxRNC/vfti7ksWQVgoCutHFMn
-         zruQ==
+        d=linaro.org; s=google; t=1701245479; x=1701850279; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=h8hB39U7zFZuE+RYHWIc6hAMzXdsKB0nNNKBmoc3gdY=;
+        b=UBtBLPcg5ywEM6sC9qlvawj6SkcikWvsZ6gRSg24AlNsrpwTBobKgoipdZG+gv15SP
+         Oblh7k7JQHbpZ1s0zqxnKtSQv6Sz2KbDL4rPgQJPambcSVi6Ts6Sh/ha4kz26RUU/ygp
+         2WRs74VJrxqFE30vOEIr7NWB4pkj3OTmo0VyA8k2jyyZ8NocbPo8tN8rYCyUnzwlX8lJ
+         PUzxXPBOqXgb9iMsbTbnqcZBW78UcnGewwOFzeAzaQLeWjQWFArZ+Ynys5ypcXyW8hPp
+         rw45JjqZ2+WGuRXh2HX/FsKIqEensDNcQpNZ7sq6mLZf6GBcgwlXlorDt6mweiWwf+UU
+         csbw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701244807; x=1701849607;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wUfUD/oQz54nGG7jbhVhWy8+i62QavId9Qpb09Q0Qyw=;
-        b=iaJ3XBqdCda4Y2Un45kZYIvrh2TcweBrX915Wa9pby7pfueJtkdab6UEYi7J2LOqo/
-         xZpwxQ2OEj26TILpwSJDBmLgQPdSdOS50GAlhoJBDBkNzseDiiTRWkipmO902u85sgwV
-         HjFPFvFtI5d7djSvGNmFbAnPsO/tfl/WZWyD4Lc/K2hRXpM9vEZ5oqtscMQ9cyxjfK7h
-         joag67I+DizFWk7O+CFfBEpJcmNtxGrj36YfBajHLXIIltIbrBmi+EGWfFX6Mk+cDSMI
-         FHwuGJ8ycyMbFMsOyIFkqb74VJE+PBCavgHDegJmnFrpmrz+5/lSj4BtVk2bFCRnUfj4
-         4EUA==
-X-Gm-Message-State: AOJu0Yx4sAIpvL4UeGwj0wfWekItEFFTmvPbHSeNbT0RHwOHwZDfs+dL
-	f7zkSkhXBLNHME6Ci+cV/ngyQQ==
-X-Google-Smtp-Source: AGHT+IEc14tdp6TvnxmKroZTOZjJqE7gPgswZziSscWMYri53yt+h5aqh/mjyofHXov+LCugo6Wcsg==
-X-Received: by 2002:a05:6402:320e:b0:54b:4e14:ee14 with SMTP id g14-20020a056402320e00b0054b4e14ee14mr8576603eda.23.1701244807219;
-        Wed, 29 Nov 2023 00:00:07 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701245479; x=1701850279;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=h8hB39U7zFZuE+RYHWIc6hAMzXdsKB0nNNKBmoc3gdY=;
+        b=nq3qtG1OoLFAdeaiZIHocdERnFZQvdM08xg+9XF02BlB4EmGuLfUQI9ZX54rHG5BhO
+         ojAzYv+yhZVQ5moxAHs3ALhY7lxw3chMMn8PIoAREQbtaqQlGAKH8w3PN0PNOO40X1ro
+         K99f2sh1zQKm1ffvkLgL6igWt3mNr01rA+0Ge8WgpCwkwjKEXAu5cNQANemcavAu2v26
+         cC8fbm+OquBKIh7XKlawSz1JxRD1Lq27kowkUCEXvcLXFUhdCVPtwDQioyLnAQ26hsdy
+         Bn0vdbYvGEup90QtkSaTdOWrB0juxlpoFtHj4DdyuWuoLmAyv49MUVb2DHlgtRl0EfxQ
+         5FeQ==
+X-Gm-Message-State: AOJu0Yz0Uo2SeJIEoZlogDAEYzL4t/MhqGjkDKABUSHSH9YpDm0L0jPg
+	hzHsT3y/ZNvfmCUzTAfoRyRAMQ==
+X-Google-Smtp-Source: AGHT+IE28+hV8H8YoZe24Jyii8nQk+otIT7PpL2YWrVVeGiL9uqWYcGSCVUDwzqIoEjHcOT7INpQ7A==
+X-Received: by 2002:a05:6512:2350:b0:507:9fc1:ca7a with SMTP id p16-20020a056512235000b005079fc1ca7amr11026901lfu.9.1701245479441;
+        Wed, 29 Nov 2023 00:11:19 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id s3-20020a056402014300b00543b2d6f88asm7061697edu.15.2023.11.29.00.00.05
+        by smtp.gmail.com with ESMTPSA id v12-20020a170906338c00b009f2b7282387sm7594010eja.46.2023.11.29.00.11.17
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 00:00:06 -0800 (PST)
-Message-ID: <a0ac295b-ea96-475c-acde-5a61de8ca170@linaro.org>
-Date: Wed, 29 Nov 2023 09:00:04 +0100
+        Wed, 29 Nov 2023 00:11:18 -0800 (PST)
+Message-ID: <db3ede63-8708-469f-8e7b-aca798ed50e0@linaro.org>
+Date: Wed, 29 Nov 2023 09:11:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,21 +62,23 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non wake
- up external gpio interrupt
-To: Youngmin Nam <youngmin.nam@samsung.com>,
- Sam Protsenko <semen.protsenko@linaro.org>
-Cc: tomasz.figa@gmail.com, s.nawrocki@samsung.com, alim.akhtar@samsung.com,
- linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
- <20231126094618.2545116-1-youngmin.nam@samsung.com>
- <bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org> <ZWU75VtJ/mXpMyQr@perf>
- <1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
- <CAPLW+4n0SAOTb6wocY-WjkxgSFMbx+nVuqdaPcNYVDsbfg+EfA@mail.gmail.com>
- <ZWbjPIydJRrPnuDy@perf>
+Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
+ ma35d1
 Content-Language: en-US
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+ <20231128061118.575847-4-ychuang570808@gmail.com>
+ <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
+ <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
+ <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
+ <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
+ <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
+ <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -123,66 +124,45 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <ZWbjPIydJRrPnuDy@perf>
+In-Reply-To: <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 29/11/2023 08:07, Youngmin Nam wrote:
-> On Tue, Nov 28, 2023 at 03:35:53PM -0600, Sam Protsenko wrote:
->> On Tue, Nov 28, 2023 at 1:29 AM Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 28/11/2023 02:01, Youngmin Nam wrote:
->>>> On Mon, Nov 27, 2023 at 10:54:56AM +0100, Krzysztof Kozlowski wrote:
->>>>> On 26/11/2023 10:46, Youngmin Nam wrote:
->>>>>> To support affinity setting for non wake up external gpio interrupt,
->>>>>> add irq_set_affinity callback using irq number from pinctrl driver data.
->>>>>>
->>>>>> Before this patch, changing the irq affinity of gpio interrupt is not possible:
->>>>>>
->>>>>>     # cat /proc/irq/418/smp_affinity
->>>>>>     3ff
->>>>>>     # echo 00f > /proc/irq/418/smp_affinity
->>>>>
->>>>> Does this command succeed on your board?
->>>>>
->>>> Yes.
->>>
->>> Hm, fails all the time one mine.
->>>
+On 29/11/2023 04:35, Jacky Huang wrote:
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such
+>>> issues.
+>>> Anyway, I will fix it in the next version.
+>> Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
+>> the binding issue.
 >>
->> I tried to test this patch on E850-96, and an attempt to write into
->> smp_affinity (for some GPIO irq) also fails for me:
+>> The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
+>> realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
 >>
->>     # echo f0 > smp_affinity
->>     -bash: echo: write error: Input/output error
+>> I don't understand why do you need them yet. I don't see any populate of
+>> children. There are no compatibles, either.
 >>
->> When I add some pr_err() to exynos_irq_set_affinity(), I can't see
->> those printed in dmesg. So I guess exynos_irq_set_affinity() doesn't
->> get called at all. So the error probably happens before
->> .irq_set_affinity callback gets called.
+>> Which part of your driver uses them exactly?
 >>
->> Youngmin, can you please try and test this patch on E850-96? This
->> board is already supported in upstream kernel. For example you can use
->> "Volume Up" interrupt for the test, which is GPIO irq.
+>> Best regards,
+>> Krzysztof
 >>
 > 
-> I intened this affinity setting would work only on *Non* Wakeup External Interrupt.
-> The "Volume Up" on E850-96 board is connected with "gpa0-7" and
-> that is Wakeup External interrupt so that we can't test the callback.
+> I will move the 'pcfg_default: pin-default' from dtsi to dts, like this:
 > 
-> I couldn't find out a pin for the test on E850-96 board yet.
-> We can test if there is a usage of *Non" Wake up External Interrupt of GPIO
-> on E850-96 board.
-> 
-> Do you have any idea ?
+> &pinctrl {
+>      pcfg_default: pin-default {
+>          slew-rate = <0>;
+>          input-schmitt-disable;
+>          bias-disable;
+>          power-source = <1>;
+>          drive-strength = <17100>;
+>      };
 
-Please test on any upstream platform or upstream your existing platform.
-I hesitate to take this change because I don't trust Samsung that this
-was tested on mainline kernel. OK, for sure 100% it was not tested on
-mainline, but I am afraid that differences were far beyond just missing
-platforms. Therefore the issue might or might not exist at all. Maybe
-issue is caused by other Samsung non-upstreamed code.
+This solves nothing. It's the same placement.
+
 
 Best regards,
 Krzysztof
