@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-665-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-666-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 503EB7FD7D9
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:21:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4677A7FD82C
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 14:32:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E70A8B20F30
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 13:21:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E30FF282ACA
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 13:32:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4D1200C7;
-	Wed, 29 Nov 2023 13:21:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF42120339;
+	Wed, 29 Nov 2023 13:32:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jGHLNph1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WNGrW8TJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-x633.google.com (mail-ej1-x633.google.com [IPv6:2a00:1450:4864:20::633])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 17F86194
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 05:21:43 -0800 (PST)
-Received: by mail-ej1-x633.google.com with SMTP id a640c23a62f3a-a02d91ab199so916522666b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 05:21:43 -0800 (PST)
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4FB0AA3
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 05:32:30 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a00191363c1so969875566b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 05:32:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701264101; x=1701868901; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701264749; x=1701869549; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=CKqVgmmmP85xT7paIKn2Y6mbmwhcI9WsvGmtiq0rLgg=;
-        b=jGHLNph1X6nT5BohT2XCfbasLVuvBF9aqleZOSw+I/f2NV8wW7ZpjMwMnE/3RgiIRC
-         CAD7Ckxu55aI6tL48aa+O3YrbVM5+GBFbRVI7a+sd3KZVffVAaWyiw7Wod0JK5WDCYzS
-         DWEVXjjWvGJ+BgSzNKO0zLuEF5yG4pNRCgbexb4paex+sqow8yAumbSxGlFeuRJeqPMm
-         yjBEfhKdNo1+HD4zTWFNXwM434sRpN3EaBwxqmdQygvsOgqdhWubPNsfhaCGf0EPXKfg
-         F7Kt9XzbjLMyG0CLrpVK0SYwvKZUiEZmblSDZLpVlUpPqTCnIYUf45gXXtp2P8bDwbtf
-         bfSQ==
+        bh=KKpuiDZtA1w6QU2KAQWqajNxdSDFkzvCpAu9bybWEi4=;
+        b=WNGrW8TJPjUa0+ERNgJnm6fce/eWW9mYCFu8E8Hd7gd77KMG9T2ghHixHGJhPB/eT6
+         +l/FWrYt00uuUNvomhxB/1hkoeByZieSsDu9qD3mu+2jUTsa8+XEpOeSuux18yBlaiTE
+         /f8/yitkJ1pI84yBgD78FpY7iH6g1687BYaROv/Wpzn/L242ADuCiJYYgFxycHS/ztF4
+         PJ1J3VT5JiMJUI0kjur15AjVthVE3fbLvIHru9UqXDE0kxNp9oSWHZCWLZW47k4ACoq+
+         88CucSgcUVm6AKE+50mteXwzh5byEtGxnL9vpkxpDiaOr3btsC+OevSLItS/spLaKk5e
+         mHjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701264101; x=1701868901;
+        d=1e100.net; s=20230601; t=1701264749; x=1701869549;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CKqVgmmmP85xT7paIKn2Y6mbmwhcI9WsvGmtiq0rLgg=;
-        b=E5BEt89tD3AK1YkApdPiegLR4wqJ64Q7odOwixWtML8rMnJilK/pxpjv6Y1wGgBOuz
-         rec7//rxBI7Yt9Pxwdm4r0MLbW/EXXWXTabwxIrLel0vLpRK1wkVGm9W8385gat61ZXc
-         WMM4adFGREzCHpJ4jsA+ozJmmGbuWrg6xPpLgDLGOeDAEvqOF5lzJBAiZo/Le9F2iRGV
-         okwdmPBqwcV0269akOdFsorCggHG4USeeBnA7oucAOrde+FDJ9wmBB9ras1HRf/ZcWKV
-         6JRUxFiev6WeWCpu+UnkFcWf31juwZnLHetr/r8QQSURFG3IhreM92Yzxx2g1hRS82oS
-         +Few==
-X-Gm-Message-State: AOJu0YwByoO3rnyL5lddT6b2L/V1F2GBBqX7WIHoaG0/7zX6Pzt2y+Nm
-	O8Scy82I9BAYUU/7dSAwkKm33g==
-X-Google-Smtp-Source: AGHT+IHHyUSZ6isQL9Gg3P4bkNKgpkgRqY7gYY8XwE/b6ZVC89XZtodpS6v9WiSekYotO/DV7gB4aA==
-X-Received: by 2002:a17:906:c445:b0:a02:8b23:895d with SMTP id ck5-20020a170906c44500b00a028b23895dmr13115240ejb.35.1701264101545;
-        Wed, 29 Nov 2023 05:21:41 -0800 (PST)
+        bh=KKpuiDZtA1w6QU2KAQWqajNxdSDFkzvCpAu9bybWEi4=;
+        b=wfENQld0ZLRegv4ABcFpYIj4T3ajNEgEZsSkDAhPcQGisq4vCyPLNkV2Od/AVUvGwu
+         rw5Wk6oVw+BOs1kxmHDron46U3RLiQDz0IEtQd9MqPssvzj4HWTBzaWbdTBNkc57Zmk6
+         nD04OmLeo32TOtNsPF3Tbb34fStMxmgOAiJLmcbZDh7zzJhJlbd22SwlS9HmCCKpj6OF
+         Z+PI4enX8Vk8Q1Yx5rq15jxYXdcg98Onw8QExwW/T0XSTvDEVeWj5A8F/SQki6kOLdYN
+         E/EZmbZMbvhuMxNG9Zxxf4EMWoVDnfsAX0Qy90HqL9sukc+HeSMlX4uGq+W5Lgc9sok9
+         u5Hg==
+X-Gm-Message-State: AOJu0Yx2CUbdMU0xYiFo+2ikSNjfR3fZDwJffFCXm+f0YsnC+7FgcV45
+	g+TO6UO2E7ZzXcT9WQKwvngJPA==
+X-Google-Smtp-Source: AGHT+IHLWTN7M42auC264W3nKmLSybN3hsUh/1LuGD25/+C424OvvSY8o/jyhvLXNKfX4lAKNBvX9w==
+X-Received: by 2002:a17:906:b5b:b0:a16:9cc4:87c3 with SMTP id v27-20020a1709060b5b00b00a169cc487c3mr2912970ejg.8.1701264748666;
+        Wed, 29 Nov 2023 05:32:28 -0800 (PST)
 Received: from [192.168.209.173] (178235187166.dynamic-4-waw-k-2-3-0.vectranet.pl. [178.235.187.166])
-        by smtp.gmail.com with ESMTPSA id rv24-20020a17090710d800b00a0958af2387sm6510255ejb.201.2023.11.29.05.21.39
+        by smtp.gmail.com with ESMTPSA id h26-20020a170906585a00b00a0bf09c9483sm5113340ejs.35.2023.11.29.05.32.27
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 05:21:40 -0800 (PST)
-Message-ID: <2d6c7d2e-c8f5-4e7f-901a-8ca208d7b442@linaro.org>
-Date: Wed, 29 Nov 2023 14:21:38 +0100
+        Wed, 29 Nov 2023 05:32:28 -0800 (PST)
+Message-ID: <09f46b92-edb0-4edd-aaf0-c6e685e2acae@linaro.org>
+Date: Wed, 29 Nov 2023 14:32:26 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,15 +62,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] pinctrl: qcom: Convert to platform remove callback
- returning void
+Subject: Re: [PATCH 2/2] pinctrl: qcom: correct incorrect address offset
 Content-Language: en-US
 To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
  agross@kernel.org, linus.walleij@linaro.org
 Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org, kernel@quicinc.com
 References: <20231129100422.16659-1-quic_tengfan@quicinc.com>
- <20231129100422.16659-2-quic_tengfan@quicinc.com>
+ <20231129100422.16659-3-quic_tengfan@quicinc.com>
 From: Konrad Dybcio <konrad.dybcio@linaro.org>
 Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  xsFNBF9ALYUBEADWAhxdTBWrwAgDQQzc1O/bJ5O7b6cXYxwbBd9xKP7MICh5YA0DcCjJSOum
@@ -107,22 +106,23 @@ Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
  bGqMHex48FVZhexNPYOd58EY9/7mL5u0sJmo+jTeb4JBgIbFPJCFyng4HwbniWgQJZ1WqaUC
  nas9J77uICis2WH7N8Bs9jy0wQYezNzqS+FxoNXmDQg2jetX8en4bO2Di7Pmx0jXA4TOb9TM
  izWDgYvmBE8=
-In-Reply-To: <20231129100422.16659-2-quic_tengfan@quicinc.com>
+In-Reply-To: <20231129100422.16659-3-quic_tengfan@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 29.11.2023 11:04, Tengfei Fan wrote:
-> Use .remove_new() instead of .remove() for converting to plarform remove
-s/plarform/platform
-
-> callback returning void.
+> The address offset of 0x100000 is already provided in SM4450 DTSI, so
+> subtract 0x100000 from the offset which used by ufs and sdc.
 > 
 > Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > ---
-The commit title should include the platform name, i.e.
-pinctrl: qcom: sm4450: xxx
+The change seems correct.
 
-The change itself looks good
+Looks like the pinctrl has not been merged, so these patches should
+be merged into the "Add SM4450 pinctrl driver" series and resent
+as another revision
 
 Konrad
+
+
 
