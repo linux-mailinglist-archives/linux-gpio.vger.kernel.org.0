@@ -1,111 +1,143 @@
-Return-Path: <linux-gpio+bounces-694-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-695-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C35E7FDB7E
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:32:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 721427FDB90
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 16:34:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE1881C20945
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:32:18 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2CF1C282470
+	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 15:34:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8EC238DFE;
-	Wed, 29 Nov 2023 15:32:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99DFB38F87;
+	Wed, 29 Nov 2023 15:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dkim=none
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7A7451980;
-	Wed, 29 Nov 2023 07:32:04 -0800 (PST)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-db527023652so615835276.3;
-        Wed, 29 Nov 2023 07:32:04 -0800 (PST)
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7CACDD6E;
+	Wed, 29 Nov 2023 07:34:31 -0800 (PST)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5ce8eff71e1so51041147b3.0;
+        Wed, 29 Nov 2023 07:34:31 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701271923; x=1701876723;
+        d=1e100.net; s=20230601; t=1701272070; x=1701876870;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=e4vTG8Hn0SjV13nxaNu0/LCBSnyuhM59vYVhKd+lgjk=;
-        b=Y5mWtG57AbHu8VEZR/evz8d3hqEr0Y/g4WCbAGMcscQfp/adYYZwptXAkVsN/Tkba1
-         097VXv1DcNvYR/OiLrfItGivK/tohQSl4yk/SAI4eutek7qjwNgdP7wzKaVyryiN91mE
-         Wre6oO2fsO7GE30GWlepWppDTIyxEeX5iFPfrvj7kuHmx7tvQHE2XfMtgWRGcoNJKbkb
-         wtQ6CsNRGlSzd5E17EbAHEvNAwPk5BGBxc2/pgKLALY5V5neVMhEhnJQ94WiJbYtKjKE
-         k8MgeD/Fey+SifnSlxCKxggbgauzRLoZbiZhf11jeemZH9ovFw3DRGeYeHoqJqEp0WB4
-         ggQA==
-X-Gm-Message-State: AOJu0YzwJfS6U9A9nOd82q36BKh+A4GVCJ6luSJr5f6rYNHqI6XtRAdl
-	Kh4FNqL4NEhoBkXpQeJCvhcfqIOq1v3VhA==
-X-Google-Smtp-Source: AGHT+IFoaIggFrWqGlHroWcJZ3Dkpos4tSHNDNIS7ZCv/ZV6OuM8iFA+yTxeun+1JYU72098usIB7A==
-X-Received: by 2002:a25:2417:0:b0:da3:ab31:ce22 with SMTP id k23-20020a252417000000b00da3ab31ce22mr16778335ybk.2.1701271923341;
-        Wed, 29 Nov 2023 07:32:03 -0800 (PST)
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com. [209.85.128.181])
-        by smtp.gmail.com with ESMTPSA id z6-20020a256646000000b00da0c63aa9f1sm4113831ybm.20.2023.11.29.07.32.02
+        bh=PopFwY+hhIZfxVE9aZTSkJkF/ON9bFHv/e84VhxRzic=;
+        b=twW48JyFlxMXpPKtz2BhpaRDlUE6GTOzVA0ww8tOU1BGVBe4f3LkmhrIT+9qN2aPvA
+         8UrWGx65AOo0oxDwfC/3V+bpI/rgRGiFGi6fLPP9nZsD1opaFN/BmsRkxpnf8Vtlhi+D
+         RaU4d+DANI7wNUCU4kwuws0A071c6qx5xR9Blba9wiPhZEOr1/SIO7kQbZDU5cb1re5J
+         uYE0DJJLiMJY5C0YOEoKTS8rcyaziafACRKHBFi34ZLQf6+8Dc8EVVApqAS2rFwUuHDa
+         M+2IgPss+i6W65XeOqQu17f50a6qWWIC8mSNaA91NPr0Isf+zspLJWelAFKLI3MAVtEE
+         nUIA==
+X-Gm-Message-State: AOJu0Yyb0N7Kyfg51yMKYyBBIAGFJ+V0Gl/5o8tGZ24tzPDDa5mER6Y6
+	ySqGdbAWbUVDf/7sIuSje3jrcBoeMvklSQ==
+X-Google-Smtp-Source: AGHT+IGHu7D8eS13TdxxyKSbAjrXpBQtZN0OmT0VadmL+cf9abgCKNoHUGqJAPSJp2LBYN88W0yKVg==
+X-Received: by 2002:a81:5e43:0:b0:5be:7046:b2f7 with SMTP id s64-20020a815e43000000b005be7046b2f7mr18852045ywb.40.1701272070526;
+        Wed, 29 Nov 2023 07:34:30 -0800 (PST)
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com. [209.85.128.171])
+        by smtp.gmail.com with ESMTPSA id j83-20020a816e56000000b0057d24f8278bsm4546860ywc.104.2023.11.29.07.34.30
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 29 Nov 2023 07:32:03 -0800 (PST)
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-5cc642e4c69so69637447b3.0;
-        Wed, 29 Nov 2023 07:32:02 -0800 (PST)
-X-Received: by 2002:a81:9a97:0:b0:5d2:b29a:5e08 with SMTP id
- r145-20020a819a97000000b005d2b29a5e08mr1119149ywg.17.1701271922781; Wed, 29
- Nov 2023 07:32:02 -0800 (PST)
+        Wed, 29 Nov 2023 07:34:30 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-59b5484fbe6so68699917b3.1;
+        Wed, 29 Nov 2023 07:34:30 -0800 (PST)
+X-Received: by 2002:a05:690c:fcb:b0:5cf:b2cc:cf5d with SMTP id
+ dg11-20020a05690c0fcb00b005cfb2cccf5dmr12967096ywb.5.1701272070101; Wed, 29
+ Nov 2023 07:34:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231017104638.201260-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8t3sGn83vpgjECf5dw=bbz2yPXpnn+v2Dx2q3yJRPsKgA@mail.gmail.com>
-In-Reply-To: <CA+V-a8t3sGn83vpgjECf5dw=bbz2yPXpnn+v2Dx2q3yJRPsKgA@mail.gmail.com>
+References: <20231128200155.438722-1-andriy.shevchenko@linux.intel.com>
+ <20231128200155.438722-7-andriy.shevchenko@linux.intel.com>
+ <CAMuHMdWt0qq-Umd8udb7fxpNVZ=X9O9eZGMVGFSGRO_d9UkgNw@mail.gmail.com>
+ <ZWc_o4Dcsb0v5TGB@smile.fi.intel.com> <ZWdJUBNMYj9qvCf2@smile.fi.intel.com>
+In-Reply-To: <ZWdJUBNMYj9qvCf2@smile.fi.intel.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 29 Nov 2023 16:31:50 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXMRj4quvO87LbLHCCLr14EK2AXsvr_muTDrBrA8+BMjg@mail.gmail.com>
-Message-ID: <CAMuHMdXMRj4quvO87LbLHCCLr14EK2AXsvr_muTDrBrA8+BMjg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] Add missing port pins for RZ/Five SoC
-To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-renesas-soc@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+Date: Wed, 29 Nov 2023 16:34:19 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVfMq=nuJhDSq6QFr-hev8af1UpHRAD4g5heVTgQ+7qWA@mail.gmail.com>
+Message-ID: <CAMuHMdVfMq=nuJhDSq6QFr-hev8af1UpHRAD4g5heVTgQ+7qWA@mail.gmail.com>
+Subject: Re: [PATCH v3 06/22] pinctrl: core: Make pins const in struct group_desc
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+	Jianlong Huang <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org, 
+	linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	NXP Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+	Andy Gross <agross@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Emil Renner Berthing <kernel@esmil.dk>, 
+	Hal Feng <hal.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Prabhakar,
+Hi Andy,
 
-On Wed, Nov 29, 2023 at 3:44=E2=80=AFPM Lad, Prabhakar
-<prabhakar.csengg@gmail.com> wrote:
-> On Tue, Oct 17, 2023 at 11:47=E2=80=AFAM Prabhakar <prabhakar.csengg@gmai=
-l.com> wrote:
-> > This patch series intends to incorporate the absent port pins P19 to P2=
-8,
-> > which are exclusively available on the RZ/Five SoC.
+On Wed, Nov 29, 2023 at 3:23=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Wed, Nov 29, 2023 at 03:41:55PM +0200, Andy Shevchenko wrote:
+> > On Wed, Nov 29, 2023 at 12:21:45PM +0100, Geert Uytterhoeven wrote:
+> > > On Tue, Nov 28, 2023 at 9:04=E2=80=AFPM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > It's unclear why it's not a const from day 1. Make the pins member
+> > > > const in struct group_desc. Update necessary APIs.
+>
+> ...
+>
+> > > >  int pinctrl_generic_add_group(struct pinctrl_dev *pctldev, const c=
+har *name,
+> > > > -                             int *gpins, int ngpins, void *data);
+> > > > +                             const int *pins, int num_pins, void *=
+data);
+> > > >
+> > > >  int pinctrl_generic_remove_group(struct pinctrl_dev *pctldev,
+> > > >                                  unsigned int group_selector);
+> > >
+> > > Probably this is also the right moment to change all of these to arra=
+ys
+> > > of unsigned ints?  Else you will have mixed int/unsigned int after
+> > > "[PATCH v3 13/22] pinctrl: core: Embed struct pingroup into struct
+> > > group_desc", and purely unsigned int after "[PATCH v3 22/22] pinctrl:
+> > > core: Remove unused members from struct group_desc".
 > >
-> > Cheers,
-> > Prabhakar
+> > Hmm... Can it be done later?
 > >
-> > RFC -> v2:
-> > * Fixed review comments pointed by Geert & Biju
+> > I can, of course try to change the parameter here to be unsigned, but i=
+t most
+> > likely fail the build for those drivers means need more patches, more d=
+elay to
+> > this series.
 > >
-> > RFC: https://lore.kernel.org/lkml/20230630120433.49529-3-prabhakar.maha=
-dev-lad.rj@bp.renesas.com/T/
-> >
-> > Lad Prabhakar (3):
-> >   pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
-> >     macro
-> >   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
-> >   riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
-> >
-> >  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
-> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 263 ++++++++++++++++++--
-> >  2 files changed, 242 insertions(+), 25 deletions(-)
-> >
-> Gentle ping.
+> > Linus?
+>
+> On the first glance updating API here does not fail the build.
 
-As the kernel test robot reported a build issue for PATCH 1/3, I had
-removed this series from my review queue.
-Do you still want me to review v2, or do you want to send a v3 first?
+That's what I had expected, as drivers already pass int or unsigned int
+arrays anyway.
+
+> Lemme incorporate this into v4.
 
 Thanks!
+
+> Meanwhile the drivers I left untouched, it might be separate changes
+> to convert from int to const unsigned int.
+
+Sounds fine to me.
 
 Gr{oetje,eeting}s,
 
