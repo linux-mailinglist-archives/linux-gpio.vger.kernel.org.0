@@ -1,138 +1,123 @@
-Return-Path: <linux-gpio+bounces-765-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-766-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39A417FED0F
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 11:40:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB6E87FEDAF
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 12:21:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6ABB51C20E02
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 10:40:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84CE6281D98
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 11:21:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E3B3A295;
-	Thu, 30 Nov 2023 10:40:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34F2A3C09E;
+	Thu, 30 Nov 2023 11:21:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZxrGU0sS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N0yL/cRS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09AA010E5
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 02:40:29 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3316c6e299eso510771f8f.1
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 02:40:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701340827; x=1701945627; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CWP4eap09zW919QW4E5s7jvXuCi8hDmjmiTB3wR4l3U=;
-        b=ZxrGU0sS0PkdSYLgBM628TauRmP5PFsFUDH9Hl5Wth8tm5r60O5awrPUeVVLUlDxZM
-         L0xIZNDXzh023kmOQ5xkuLgoIB3lEfVmSKYj5lfUZOgyVKdzvixhccLwsdyWrFjkKepb
-         8ybOVzjB6YCjNe92y/3UHLSxwlgojc8Hl2Qs8jmjIvPC8Q/JUgorzOczpwIl1IFWGe/H
-         8Qfa3gYOgRI5a233Tu7yScfCMVE6yasAHEuNogRZ37T0nlMePv8xo3SJ+AY0K6u9L7VK
-         sOK2P1H6+5rpx+DEUSw/VbZIvW+u4FQvskvFzyDEUQMlhdU/VB/x8qF5ctc/Tq7ymnUV
-         latw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701340827; x=1701945627;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CWP4eap09zW919QW4E5s7jvXuCi8hDmjmiTB3wR4l3U=;
-        b=Dhwyk2/dmt2XSuqQ0skoUlpwrKGCir1yVGKzaawBswKx2ditdViunYZ8V5kmWrvOpj
-         CXo8PvGJZEyApqBWXVeTM+IJg/4r7oEYPBno6vsCalRv3Nc3NiTprRAQ0OXFb5mXJX+x
-         c3jIjMX95/ifyQONBujiW6BsrFm1jHJXkyOf0QANov2yHlvQG/Hvu0n0jogCh24M2nQs
-         hT+rZnNjZwuQbK4ZDnNVIwOVvjFR1xuk5NnuO6Kt+LQ1RwMFrG+majdR/L7BSFZttyWU
-         hEYu+UTJrITwi9QF3fOrKz7cKQXKB+p450/hicTKL4DViPJZHHF2YbrQ0YFArnowd+Ha
-         pRWw==
-X-Gm-Message-State: AOJu0YxMtkKVkVdRGGu3iKWCr/0XHhD2nBaUSZnZTZzYhTbRbRLM4ej1
-	Mmo8oyBPi4Ld8sAr++pd7d8+QrO++RJ9VOWHbYE=
-X-Google-Smtp-Source: AGHT+IE32JyZOdFjeoOQW/D6eZambqTnRGbi7npeYSK8ldqD1D4UVoDOQSEAYAn+Joi6xBQuKfh/bw==
-X-Received: by 2002:adf:eb08:0:b0:333:635:c9b3 with SMTP id s8-20020adfeb08000000b003330635c9b3mr7698737wrn.16.1701340827266;
-        Thu, 30 Nov 2023 02:40:27 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ae84:904:6602:ec1e])
-        by smtp.gmail.com with ESMTPSA id l8-20020a5d4bc8000000b003316b3d69b3sm1161545wrt.46.2023.11.30.02.40.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 02:40:26 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: implement the dbg_show() callback
-Date: Thu, 30 Nov 2023 11:40:23 +0100
-Message-Id: <20231130104023.11885-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDCE318E01;
+	Thu, 30 Nov 2023 11:21:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F20EC433C7;
+	Thu, 30 Nov 2023 11:21:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701343295;
+	bh=NAX56mGLpXw5uJMlSh9lqnmNXCJ2hfJhtUZAindNF3E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=N0yL/cRSIVQpcl6fVvr8mxdMcZW+E5Dg42fs2g3tr5ZHCOCAtKiZpDjEtAg9oHw5L
+	 f8Viz58ff9taLyf8Rv0ZYqCv3mESK/dKzlp9mfD0xy9dG7P4TEf/q4usMU8oTYXYhf
+	 Ta0yKvmySjPyZfhHRbRGm2PQpklbO+AJ26Q36vmeqhYBPhct8+iBd+Qw3Sis6bhaGS
+	 eEsiiVSce8IY1DjQHft76URmCCw49tPdAMzr0BTweoaaKAcKvgrqSiNqQJTYsxs7Ko
+	 jC7nS8GxJRV3jRb1n1eF4lND8W5cNzDH/4510btFuu7w5KRxiSvXbn3dpoe4pgukwG
+	 SY3BvtCjonAyg==
+Date: Thu, 30 Nov 2023 11:21:30 +0000
+From: Lee Jones <lee@kernel.org>
+To: GaryWang =?utf-8?B?5rGq5LmL6YC4?= <GaryWang@aaeon.com.tw>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	"larry.lai" <larry.lai@yunjingtech.com>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"pavel@ucw.cz" <pavel@ucw.cz>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+	"musa.lin@yunjingtech.com" <musa.lin@yunjingtech.com>,
+	"jack.chang@yunjingtech.com" <jack.chang@yunjingtech.com>,
+	"noah.hung@yunjingtech.com" <noah.hung@yunjingtech.com>
+Subject: Re: [PATCH V7 2/3] pinctrl: Add support pin control for UP board
+ CPLD/FPGA
+Message-ID: <20231130112130.GH1470173@google.com>
+References: <20231031015119.29756-1-larry.lai@yunjingtech.com>
+ <20231031015119.29756-3-larry.lai@yunjingtech.com>
+ <ZVOBz8-tahhrVmO-@smile.fi.intel.com>
+ <SI2PR02MB568243153C4D4D7B636D2754EE82A@SI2PR02MB5682.apcprd02.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <SI2PR02MB568243153C4D4D7B636D2754EE82A@SI2PR02MB5682.apcprd02.prod.outlook.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, 30 Nov 2023, GaryWang 汪之逸 wrote:
 
-Provide a custom implementation of the dbg_show() callback that prints
-all requested lines together with their label, direction, value and
-bias. This improves the code coverage of GPIOLIB.
+> All,
+>         Reply again to plain text format & line-warp and trim agree part as Jones's suggestion,
+>         please let me know if there are still having format issue.
+>         please kindly to check our comments with ">>" beginning.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+This is still incorrect.
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index 1928209491e1..f60b0988c4db 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -28,6 +28,7 @@
- #include <linux/notifier.h>
- #include <linux/platform_device.h>
- #include <linux/property.h>
-+#include <linux/seq_file.h>
- #include <linux/slab.h>
- #include <linux/string.h>
- #include <linux/string_helpers.h>
-@@ -224,6 +225,29 @@ static void gpio_sim_free(struct gpio_chip *gc, unsigned int offset)
- 	}
- }
- 
-+#if IS_ENABLED(CONFIG_DEBUG_FS)
-+static void gpio_sim_dbg_show(struct seq_file *seq, struct gpio_chip *gc)
-+{
-+	struct gpio_sim_chip *chip = gpiochip_get_data(gc);
-+	const char *label;
-+	int i;
-+
-+	guard(mutex)(&chip->lock);
-+
-+	for_each_requested_gpio(gc, i, label)
-+		seq_printf(seq, " gpio-%-3d (%s) %s,%s\n",
-+			   gc->base + i,
-+			   label,
-+			   test_bit(i, chip->direction_map) ? "input" :
-+				test_bit(i, chip->value_map) ? "output-high" :
-+							       "output-low",
-+			   test_bit(i, chip->pull_map) ? "pull-up" :
-+							 "pull-down");
-+}
-+#else
-+#define gpio_sim_dbg_show NULL
-+#endif /* CONFIG_DEBUG_FS */
-+
- static ssize_t gpio_sim_sysfs_val_show(struct device *dev,
- 				       struct device_attribute *attr, char *buf)
- {
-@@ -460,6 +484,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
- 	gc->to_irq = gpio_sim_to_irq;
- 	gc->request = gpio_sim_request;
- 	gc->free = gpio_sim_free;
-+	gc->dbg_show = gpio_sim_dbg_show;
- 	gc->can_sleep = true;
- 
- 	ret = devm_gpiochip_add_data(dev, gc, chip);
+Please fix your mail client, or use a different one.
+
+> -----Original Message-----
+> From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Sent: Tuesday, November 14, 2023 10:19 PM
+> To: larry.lai <larry.lai@yunjingtech.com>
+> Cc: lee@kernel.org; linus.walleij@linaro.org; pavel@ucw.cz; linux-kernel@vger.kernel.org; linux-gpio@vger.kernel.org; linux-leds@vger.kernel.org; GaryWang 汪之逸 <GaryWang@aaeon.com.tw>; musa.lin@yunjingtech.com; jack.chang@yunjingtech.com; noah.hung@yunjingtech.com
+> Subject: Re: [PATCH V7 2/3] pinctrl: Add support pin control for UP board CPLD/FPGA
+
+Why is your client putting headers in the body?
+
+> On Tue, Oct 31, 2023 at 09:51:18AM +0800, larry.lai wrote:
+> > The UP Squared board
+> > <http://www.upboard.com/> implements certain features (pin control) through an on-board FPGA.
+> >
+> > Reported-by: kernel test robot <lkp@intel.com>
+> > Signed-off-by: Gary Wang <garywang@aaeon.com.tw>
+> > Signed-off-by: larry.lai <larry.lai@yunjingtech.com>
+> 
+> 
+> 
+> > +#include "intel/pinctrl-intel.h"
+> 
+> I do not think it's correct use of the header.
+> >> see below
+
+No, this should look like this:
+
+>  <Thing you're replying to here>
+
+[Your response here]
+
+Please fix the client to quote properly and drop the confusing ">>" stuff.
+
+> ...
+
+Make snips clearer please, either:
+
+  [...]
+
+Or:
+
+  [SNIP]
+
+[...]
+
 -- 
-2.40.1
-
+Lee Jones [李琼斯]
 
