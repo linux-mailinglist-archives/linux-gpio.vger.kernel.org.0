@@ -1,68 +1,69 @@
-Return-Path: <linux-gpio+bounces-795-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-796-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8510D7FF874
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 18:39:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCB6A7FF897
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 18:43:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B56EE1C20E3A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 17:39:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7874D28175B
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 17:42:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A5758105;
-	Thu, 30 Nov 2023 17:39:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EAB858133;
+	Thu, 30 Nov 2023 17:42:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="L5/BopSs"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D7MmWi9W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8A0F197
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 09:39:16 -0800 (PST)
-Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7c47142d595so662985241.1
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 09:39:16 -0800 (PST)
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 33742131
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 09:42:49 -0800 (PST)
+Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-4b28acfd3c5so347570e0c.2
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 09:42:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701365956; x=1701970756; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701366168; x=1701970968; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BNguKtwIvnyO2Gj9lJbmb0T+V4gmh2R9drIGOrDbnbI=;
-        b=L5/BopSsLhX7lwIzm1g8i14mn3tSN6qeGnNVAVX8VV6dzxAwJ6M0gqWDDBZIj0w+l9
-         cLWUaAYUqF/Yi33yahVsLvvvRPpdERVSOrMotkPOWb6znmoUEMWHbY+IzdfekDiH4MJh
-         TXdpGdwDXyJoBkw2ytexZcqHbsKCC4DCxhyPdL84lZ4GaKB5ZR12GfgFTGK2WKZCfemv
-         s+aOPor5BZpxlYHbbnwtWqLsO5seARIAXpZ94axgqch2bOzdQ36RVfOk7Kz2pwdVUJpt
-         PJfKdOtlGE1XZcsRbrGcNzV5EhgWOf905mNMiqyocuDwgqylv0LaODY2Qz1qr6AkoL/8
-         Tohg==
+        bh=HqziEWQ8hcVSIREtlgxXVkhZ6XD2q21JqLi48D18QSE=;
+        b=D7MmWi9WlXiqr2Ohii+aWqE3Czvgx6C2YApyxPHPAjsZQJdSGD0CB5EjfVdeF4qOTr
+         3GkexUjC2xt8l+ZPSRhkYxhQE2/FDbzDZUMR27BH03/Tj1vb4uk7Vxg8blGQaOeeBnxz
+         2vyAQ1YN6vAP0sOrtWVIf/zjHYAIqM8eFlH/Ajovrz/z58VfdL702KvQmnRW9z/xMo2Q
+         U7dW4Mr+7nde011eIHsmaJaJfXbacvESSQo4X7XqHbTDSLMfMDstJeCRhhBCOTbsHW+K
+         awR6G+6NXYUrGQrV1to6q+3loJVGpD2etwo2hfatv7/fx5mxUInPox6NGR/gToUo1z08
+         gZ2Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701365956; x=1701970756;
+        d=1e100.net; s=20230601; t=1701366168; x=1701970968;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BNguKtwIvnyO2Gj9lJbmb0T+V4gmh2R9drIGOrDbnbI=;
-        b=KdDobHw8cOfuOvnI/fQmGZxpv+c+nqkhGeX/dzNxjhQ+81wTlGyVIWzeXleK4FjtHU
-         gNx2cgCULRmBN2sC1EBZ7dmfDvUU3QiuJgcRd6pPyxBFqIk6x/wGsfVuu2SbMz9lGP79
-         nx7qVINz99t6adpBhI8rBVWtACd471wK3FTrmC9ISD+RC/qeFs4wIyHwsfqRGm/n2/jv
-         P11RNEm4jnQyThWcwhcSfi+Oa8Ns+AjYrHhsJoaY4Cdr7sn5tl9+utSY/lHbvhZxxZfv
-         0M8jjigvwV1o+mu/r5boShIrOhBfKB0CFeEk1uQhW2c5FaYLqfXzbV2vpgSVCi2PNRf6
-         CRPw==
-X-Gm-Message-State: AOJu0Yz4fDgeNOHFFAwlpv8NYenwpMwpOiXVP7FDQKQ/mdg1TmRcbgxF
-	GlRVOE4VcaZP8sZ4F2BRPuPhswUaw9Jm30L217++JQ==
-X-Google-Smtp-Source: AGHT+IHlEzVbLFXtUVKvNXK5OPlaLnHH9WMmD+cMOElsPuiPjPJbokxrcbzXeAaCqBx4JFdaaGRtna1fzpG7H//KYvA=
-X-Received: by 2002:a05:6102:1627:b0:462:7e73:c11f with SMTP id
- cu39-20020a056102162700b004627e73c11fmr27567494vsb.6.1701365955833; Thu, 30
- Nov 2023 09:39:15 -0800 (PST)
+        bh=HqziEWQ8hcVSIREtlgxXVkhZ6XD2q21JqLi48D18QSE=;
+        b=JEzEPkZGfgjs6Oq7nrPkBzkb+1hZYN0yIkygE/waUQrvklgSrjrTJXjOMhwnFxxHYj
+         xehG0t9VIQiOtMbdHkP6qKKDrVN7v2VbouKqFtgm8cZEGq2dRs7Lnl7nrbU0McA0/kqQ
+         igZc4qQ9Tryqe1KJT4hbUfpWMzYCvqA4tCb2Dp3dXB2WNnjkVL+kZtefRBhg0/Yssw9h
+         H0UZ1/f8ChEISpc1xagltrvY5WqQPKtVPtXJ1fTTjWPKLfdsgrQsrz6ZN0BAoIBvsqSG
+         byVAdzUcank5RDYGQ1Due8KEkvxSACO0+4o1gfraxkRT2/vRZ4XSQKddsZ/YobFkykkA
+         1sRg==
+X-Gm-Message-State: AOJu0Yy4rYBGJc6IlG8g91TNKYFIGiHkrKlHyztt6Csycnat50SvAcdX
+	AAvbe5T9+2ZeyYq3ZermsG+RkSVveGy2WT3wPYko8w==
+X-Google-Smtp-Source: AGHT+IG76s8PlXysbg/bGFFqcSBsEzLMyndFmxdYHz6VSVcOSJUOzOgaHvsILnhDYlzQt408pJ3KgSNZDoNn761blcg=
+X-Received: by 2002:a1f:c405:0:b0:4ac:b0a6:4c16 with SMTP id
+ u5-20020a1fc405000000b004acb0a64c16mr13397943vkf.10.1701366168281; Thu, 30
+ Nov 2023 09:42:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231130134630.18198-1-brgl@bgdev.pl> <20231130134630.18198-8-brgl@bgdev.pl>
- <ZWi5_VHlUSmgpLiB@smile.fi.intel.com>
-In-Reply-To: <ZWi5_VHlUSmgpLiB@smile.fi.intel.com>
+References: <20231130134630.18198-1-brgl@bgdev.pl> <20231130134630.18198-10-brgl@bgdev.pl>
+ <ZWi6_WnOQZB0vgPL@smile.fi.intel.com>
+In-Reply-To: <ZWi6_WnOQZB0vgPL@smile.fi.intel.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 30 Nov 2023 18:39:04 +0100
-Message-ID: <CAMRc=Mfuuri-67KBNWXeHApd-qHYQ0wJeU-6A5eb=B9NeQT8hg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/10] pinctrl: baytrail: use gpiochip_dup_line_label()
+Date: Thu, 30 Nov 2023 18:42:37 +0100
+Message-ID: <CAMRc=MfC9sxgvaigtP5=MMZwbzaSkUukfH61QBf+r_eTJh5fJA@mail.gmail.com>
+Subject: Re: [PATCH v2 09/10] gpiolib: use gpiochip_dup_line_label() in
+ for_each helpers
 To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, 
@@ -70,53 +71,67 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Nov 30, 2023 at 5:36=E2=80=AFPM Andy Shevchenko
+On Thu, Nov 30, 2023 at 5:40=E2=80=AFPM Andy Shevchenko
 <andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Thu, Nov 30, 2023 at 02:46:27PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Nov 30, 2023 at 02:46:29PM +0100, Bartosz Golaszewski wrote:
 > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > Use the new gpiochip_dup_line_label() helper to safely retrieve the
-> > descriptor label.
+> > Rework for_each_requested_gpio_in_range() to use the new helper to
+> > retrieve a dynamically allocated copy of the descriptor label and free
+> > it at the end of each iteration. We need to leverage the CLASS()'
+> > destructor to make sure that the label is freed even when breaking out
+> > of the loop.
 >
 > ...
 >
-> >               seq_printf(s,
-> >                          " gpio-%-3d (%-20.20s) %s %s %s pad-%-3d offse=
-t:0x%03x mux:%d %s%s%s",
-> >                          pin,
-> > -                        label,
-> > +                        label ?: "Unrequested",
+> >  const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int o=
+ffset);
+> >  char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offse=
+t);
+> >
+> > +
 >
-> This already fourth (?) duplication among drivers.
-> Perhaps you want a helper:
-> gpiochip_dup_line_label_fallback() // naming is up to you
-> which will return the same for everybody and we don't need to hunt for
-> the different meaning of "Unrequested".
+> One blank line is enough.
 >
-
-IMO the overhead here is very small in return for better readability
-(IOW: `label ?: "Unrequested"` is more readable than some function
-named `gpiochip_dup_line_label_fallback()`). Given the string is in
-.rodata anyway, I wouldn't be surprised if adding a helper resulted in
-bigger code.
-
-> Also the word "Unrequested" is a bit doubtful as it can be a label, right=
-?
-> Something with special characters / spaces / etc would suit better?
-> In any case it might require to add a warning (?) to the GPIO lib core
-> when label gets assigned if it clashes with the "reserved" word.
+> > +struct _gpiochip_for_each_data {
+> > +     const char **label;
+> > +     int *i;
+>
+> Why is this a signed?
 >
 
-Agreed but this is a functional change in debugfs output. I know
-debugfs is not considered stable but I didn't write it, I don't know
-who's using it and I prefer to leave it be.
+Some users use signed, others use unsigned. It doesn't matter as we
+can't overflow it with the limit on the lines we have.
 
 Bart
 
-> >                          val & BYT_INPUT_EN ? "  " : "in",
-> >                          val & BYT_OUTPUT_EN ? "   " : "out",
-> >                          str_hi_lo(val & BYT_LEVEL),
+> > +};
+>
+> ...
+>
+> > +DEFINE_CLASS(_gpiochip_for_each_data,
+> > +          struct _gpiochip_for_each_data,
+> > +          if (*_T.label) kfree(*_T.label),
+> > +          ({ struct _gpiochip_for_each_data _data =3D { label, i };
+> > +             *_data.i =3D 0;
+> > +             _data; }),
+>
+> To me indentation of ({}) is quite weird. Where is this style being used
+> instead of more readable
+>
+
+There are no guidelines for this type of C abuse AFAIK. The macro may
+be ugly but at least it hides the details from users which look nice
+instead.
+
+Bart
+
+>         ({
+>            ...
+>         })
+>
+> ?
 >
 > --
 > With Best Regards,
