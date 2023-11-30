@@ -1,39 +1,39 @@
-Return-Path: <linux-gpio+bounces-768-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 128757FEE53
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 12:56:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BCC67FEE5A
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 12:57:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 727D1B20DC3
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 11:56:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CFCE6B20D39
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 11:57:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AAA33D3AD;
-	Thu, 30 Nov 2023 11:56:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 048B73D3B2;
+	Thu, 30 Nov 2023 11:57:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F7cv5wVh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EPxIU2m0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E113C682;
-	Thu, 30 Nov 2023 11:56:35 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9003C433C9;
-	Thu, 30 Nov 2023 11:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B98E3364B5;
+	Thu, 30 Nov 2023 11:57:21 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 940D8C433C8;
+	Thu, 30 Nov 2023 11:57:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701345395;
-	bh=0gaYOMvA2ibyG2CRywXLakjvDH9m4tn3Iws7Ip0IFnk=;
+	s=k20201202; t=1701345441;
+	bh=8CCxDG2erkr44cih7hoQuTdkzaWJ5GXhxHs05U154co=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F7cv5wVhDmf6y3haumJzUzuGObqDB8fsop8lxgis0NXfhce1Gu2EAxU59Rw0jEH8K
-	 tFYbuDsGjObiAtkkoE0T74GjDgQpmb6DCV/ESM+c4LAwSSxuTRJWRDbjQiqiHSZdsF
-	 WuyPpO3fdLTbE9X4g+6ED2cGp1l18mUwUBFKod2Di7A6J5huIHNKzees2K1kCh0b4i
-	 5YV4RfmQhInv4sVCXSNiSX0eqaFWcOUX9FhsN7g54cgHhYnedFhI6U48+VhkYGb2Hi
-	 Ti075xZIagUrtm73SRmTy/d0yFRrd4O/KW9VD6xlDTbnq40xrxvi4oWyjRyIfYTt95
-	 q8dxT83LO2hNQ==
-Message-ID: <a41227df-9ceb-44d9-8d9a-eddfcf7d5fab@kernel.org>
-Date: Thu, 30 Nov 2023 12:56:26 +0100
+	b=EPxIU2m08MkeBD0FTUm5ybRbXe8QceQ8f0KZwFqwuqI83BnUdyJruLz9AbncAT36+
+	 jXG6gU2pXd0Q8CcDKpHzRoJ9fFeIxiv/ijKWwtV52/5B32WGVTDkAnYZLrMlTbrWfg
+	 UIwcrKabQftMo5f+z4eby8oqGypUNinJlOzVlukvaPM/DlusWQkGsusf1eChY1myX2
+	 RX8bltGl7cJ0a/iIwTYCeLwc7v+uIe9mwt57ubsDOD3l2GKJcFj+1njlC1Tr0qcWnM
+	 kpY9iqATIKBzKfTWw2X6jmIqzhA1LtLoizFRUEqSI0dUPWeSgy0BfS8fdYzkom6cx+
+	 BwfVgK7KA6hVQ==
+Message-ID: <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+Date: Thu, 30 Nov 2023 12:57:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -41,14 +41,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 1/4] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
+Content-Language: en-US
 To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
  agross@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org
 Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-kernel@vger.kernel.org, kernel@quicinc.com
 References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
- <20231130024046.25938-2-quic_tengfan@quicinc.com>
-Content-Language: en-US
+ <20231130024046.25938-3-quic_tengfan@quicinc.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -93,55 +93,24 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20231130024046.25938-2-quic_tengfan@quicinc.com>
+In-Reply-To: <20231130024046.25938-3-quic_tengfan@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 30/11/2023 03:40, Tengfei Fan wrote:
-> Add device tree binding Documentation details for Qualcomm SM4450
-> TLMM device.
+> Add pinctrl driver for TLMM block found in SM4450 SoC.
 > 
-
-Please use scripts/get_maintainers.pl to get a list of necessary people
-and lists to CC. It might happen, that command when run on an older
-kernel, gives you outdated entries. Therefore please be sure you base
-your patches on recent Linux kernel.
-
-You missed at least devicetree list (maybe more), so this won't be
-tested by automated tooling. Performing review on untested code might be
-a waste of time, thus I will skip this patch entirely till you follow
-the process allowing the patch to be tested.
-
-Please kindly resend and include all necessary To/Cc entries.
-
-
+> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > ---
->  .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    | 151 ++++++++++++++++++
->  1 file changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>  drivers/pinctrl/qcom/Kconfig.msm      |    8 +
+>  drivers/pinctrl/qcom/Makefile         |    1 +
+>  drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
+>  3 files changed, 1022 insertions(+)
+>  create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
 > 
 
-...
-
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    tlmm: pinctrl@f100000 {
-> +      compatible = "qcom,sm4450-tlmm";
-> +      reg = <0x0f100000 0x300000>;
-> +      gpio-controller;
-> +      #gpio-cells = <2>;
-> +      gpio-ranges = <&tlmm 0 0 137>;
-> +      interrupt-controller;
-> +      #interrupt-cells = <2>;
-> +      interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +      gpio-wo-state {
-> +          pins = "gpio1";
-
-Messed indentation.
-
-
+Hm, was this patch ever built?
 
 Best regards,
 Krzysztof
