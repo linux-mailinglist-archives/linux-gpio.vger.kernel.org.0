@@ -1,67 +1,70 @@
-Return-Path: <linux-gpio+bounces-773-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-774-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 410C47FF08C
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 14:46:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6681F7FF08F
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 14:46:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29DFE1C20C9B
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 13:46:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E139CB20EFE
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 13:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32EC5482D4;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5758482D8;
 	Thu, 30 Nov 2023 13:46:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ACQlgKEC"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rAgWJ7wy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F36571709
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 05:46:36 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40b54261442so7786405e9.1
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 05:46:36 -0800 (PST)
+Received: from mail-wr1-x432.google.com (mail-wr1-x432.google.com [IPv6:2a00:1450:4864:20::432])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4273C171E
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 05:46:38 -0800 (PST)
+Received: by mail-wr1-x432.google.com with SMTP id ffacd0b85a97d-3331974c2d2so683959f8f.2
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 05:46:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701351995; x=1701956795; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Q3aC6tvFROLQEKABOisLsa75C0gCr6RDOPC7pNb7PmE=;
-        b=ACQlgKECBbmNJ5SZR2JUaKBP6q8LPWRFBCXLf9qwXUbxQ+cUnTVBlO/KS8IxOMR9Rp
-         YB36nIHEGwVNb7ueBffSdUTjzA7CG3wHz6/kURsyV0utro+N6VBEDYgXCS0wftSJnQ1e
-         z++V+ERzaNzk3JLvzVInXkEqHDUsZ+bsigBb/gr7xKOlMeAuD42h3wtIZ+3d1JVzbhFM
-         B39pNiE7AptF3A2xXvCcxU+7geEbvFvQR84MoVBBa74Lab/lCRxT1Psip+nG5RGQsYns
-         EmtU+ltkUdeNUYfFFdZc71+PK03fjHEVn+ghjqRNrVbY6jRntLFKYArPOVjBPo8t5P8R
-         qqgA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701351997; x=1701956797; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W2vlGJhIze8sK7FhkyHeBLiiHYWZ044RLoNjc90UYtQ=;
+        b=rAgWJ7wyrL/2May5aYimych21ZT2tm9IZy5+6tzsEA7vOXntL9Srb5PvQQ9TcF6NhF
+         MaEOY5BLqtebCj71nnSZ6qxpL+an6GBNQd5/zmkU+Jvd2/5lH1DjGPS8/iFLmCBKwIQj
+         3eyEZNgYmlJ/AsdyLG2EdoK0emymKfJNylO6MyjoYvqAVqCmw/jR4ovjxSQ5Zgzhz3IV
+         e5+kOKCKXTGWmBja+iAksyYMosvX3FgCmT+cLnsvxTc8mZ2ePWnIZFPDLR5etuIvNaF5
+         XQFvEU7OZHF/bknywPNNwqgMz7tECkqqyusch/F0ivM1MruvTvbMlKblV6nA8drVsEeJ
+         VUsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701351995; x=1701956795;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Q3aC6tvFROLQEKABOisLsa75C0gCr6RDOPC7pNb7PmE=;
-        b=dL8fvMpA/rIubpn4pzVlSncI1IlEB9vIm2JMcfbSAz9FkjGb0HfIQew2+cY3qFjZG/
-         +EgB8Fy396xeLQZHhA2nPDB82mZWHPwAS/VNw96RX346APrOwWNxWTnngpwirgqeAexf
-         4QJ+nm0hATdV+iTwzwdajTcOGKVrr0EPTOmSNTdDTo274b+RTlYWVpOfh0Jzee7+oer5
-         gNh1lAlUCvmbMhCK6QqtZtJLBFPJHA/c/3W6NoDU9mAEa03OCCKQcqMRJRzcYDWz9XCS
-         N4jYaHkRvCgtMKLSrYDzI3fVUiOQFJYRpdSa6mAhEwv0g6rT6uhImJPxWrm12nMLI9S7
-         iiFQ==
-X-Gm-Message-State: AOJu0YzQhcUSnJqmF6Oa1M72AaI0RSsn/eMnVu1Y/0lT4vA7Sq27gZe4
-	UJzejjwV8I7n8Bl2ALPG732CxQ==
-X-Google-Smtp-Source: AGHT+IF0bpeTIeKNyhc9pCzTWiQOgUngrn/XA8xT5i8FJqEN5xPoOohKNHf9xpHxhWtu7nBsx4Q2Ow==
-X-Received: by 2002:a05:600c:310f:b0:40b:387b:1135 with SMTP id g15-20020a05600c310f00b0040b387b1135mr13398281wmo.5.1701351995242;
-        Thu, 30 Nov 2023 05:46:35 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701351997; x=1701956797;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=W2vlGJhIze8sK7FhkyHeBLiiHYWZ044RLoNjc90UYtQ=;
+        b=DxAT2bMvMMCtTwdqL3U6xOZcqTHjWcgpSil+KtvSfrZ8WAq8Uw3/a+YlW1RSBJyDVJ
+         04xwsRnKuGPvot52IIi0cLX40GTwFu5wyKdxVeRqxe5ECll35Rx/SK6x8r4plHBjL/M2
+         opH41ycNDjGpW1OLkCE5SZAW+FPeedU5Tsi5iNoR3z4zssPP6JXgvSGTvdarztp0s9NJ
+         XOG4gNUUZiQX1/iumkMSBRnrIyEgEOzUIxTdaOC8NODFpsm2oiRTiM5Kp7W+V3ZxHfKe
+         xpkTIg48ZRbMqicErKdLpwh2K0RmIqFay/yL+eynPbVUxvk1GnnNvxf99K27kSLO+tMj
+         I6kg==
+X-Gm-Message-State: AOJu0YwxbU2QZpy8HUaA4HKNyiPzdjrmPJeNgC0yqXQnmoQrxRx0S/PG
+	pu/ZL4rEb0AFPrPxwjuXZBAUJQ==
+X-Google-Smtp-Source: AGHT+IGtdd0VMXL+p2c6eyqLy6MItc8V4wcu+0Ncauj4wLWwBbw5ot6jZfezOIhzkjhPuljZoeg+Vg==
+X-Received: by 2002:adf:f64a:0:b0:333:12f9:d37a with SMTP id x10-20020adff64a000000b0033312f9d37amr5219213wrp.65.1701351996563;
+        Thu, 30 Nov 2023 05:46:36 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ae84:904:6602:ec1e])
-        by smtp.gmail.com with ESMTPSA id n18-20020adffe12000000b0032d2489a399sm1574824wrr.49.2023.11.30.05.46.34
+        by smtp.gmail.com with ESMTPSA id n18-20020adffe12000000b0032d2489a399sm1574824wrr.49.2023.11.30.05.46.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Nov 2023 05:46:34 -0800 (PST)
+        Thu, 30 Nov 2023 05:46:35 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2 00/10] gpio/pinctrl: replace gpiochip_is_requested() with a safer interface
-Date: Thu, 30 Nov 2023 14:46:20 +0100
-Message-Id: <20231130134630.18198-1-brgl@bgdev.pl>
+Subject: [PATCH v2 01/10] gpiolib: provide gpiochip_dup_line_label()
+Date: Thu, 30 Nov 2023 14:46:21 +0100
+Message-Id: <20231130134630.18198-2-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <20231130134630.18198-1-brgl@bgdev.pl>
+References: <20231130134630.18198-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,45 +75,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-While reworking the locking in GPIOLIB I realized that locking the
-descriptor with users still calling gpiochip_is_requested() will still
-be buggy as it returns a pointer to a string that can be freed whenever
-the descriptor is released. Let's provide a safer alternative in the
-form of a function that returns a copy of the label.
+gpiochip_is_requested() not only has a misleading name but it returns
+a pointer to a string that is freed when the descriptor is released.
 
-Use it in all drivers and remove gpiochip_is_requested().
+Provide a new helper meant to replace it, which returns a copy of the
+label string instead.
 
-I plan to provide this series in an immutable branch for the pinctrl and
-baytrail trees to pull.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c      | 29 +++++++++++++++++++++++++++++
+ include/linux/gpio/driver.h |  1 +
+ 2 files changed, 30 insertions(+)
 
-v1 -> v2:
-- use DEFINE_CLASS() to register a destructor for making sure that the
-  duplicated label doesn't leak out of the for_each loops even with
-  break;
-
-Bartosz Golaszewski (10):
-  gpiolib: provide gpiochip_dup_line_label()
-  gpio: wm831x: use gpiochip_dup_line_label()
-  gpio: wm8994: use gpiochip_dup_line_label()
-  gpio: stmpe: use gpiochip_dup_line_label()
-  pinctrl: abx500: use gpiochip_dup_line_label()
-  pinctrl: nomadik: use gpiochip_dup_line_label()
-  pinctrl: baytrail: use gpiochip_dup_line_label()
-  pinctrl: sppctl: use gpiochip_dup_line_label()
-  gpiolib: use gpiochip_dup_line_label() in for_each helpers
-  gpiolib: remove gpiochip_is_requested()
-
- drivers/gpio/gpio-stmpe.c                 |  6 +++-
- drivers/gpio/gpio-wm831x.c                | 14 ++++++---
- drivers/gpio/gpio-wm8994.c                | 13 +++++---
- drivers/gpio/gpiolib.c                    | 37 ++++++++++++++---------
- drivers/pinctrl/intel/pinctrl-baytrail.c  | 11 ++++---
- drivers/pinctrl/nomadik/pinctrl-abx500.c  |  9 ++++--
- drivers/pinctrl/nomadik/pinctrl-nomadik.c |  6 +++-
- drivers/pinctrl/sunplus/sppctl.c          | 10 +++---
- include/linux/gpio/driver.h               | 37 +++++++++++++++++------
- 9 files changed, 95 insertions(+), 48 deletions(-)
-
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index a5faaea6915d..8e932e6a6a8d 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2400,6 +2400,35 @@ const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset)
+ }
+ EXPORT_SYMBOL_GPL(gpiochip_is_requested);
+ 
++/**
++ * gpiochip_dup_line_label - Get a copy of the consumer label.
++ * @gc: GPIO chip controlling this line.
++ * @offset: Hardware offset of the line.
++ *
++ * Returns:
++ * Pointer to a copy of the consumer label if the line is requested or NULL
++ * if it's not. If a valid pointer was returned, it must be freed using
++ * kfree(). In case of a memory allocation error, the function returns %ENOMEM.
++ *
++ * Must not be called from atomic context.
++ */
++char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
++{
++	const char *label;
++	char *cpy;
++
++	label = gpiochip_is_requested(gc, offset);
++	if (!label)
++		return NULL;
++
++	cpy = kstrdup(label, GFP_KERNEL);
++	if (!cpy)
++		return ERR_PTR(-ENOMEM);
++
++	return cpy;
++}
++EXPORT_SYMBOL_GPL(gpiochip_dup_line_label);
++
+ /**
+  * gpiochip_request_own_desc - Allow GPIO chip to request its own descriptor
+  * @gc: GPIO chip
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 100c329dc986..9796a34e2fee 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -532,6 +532,7 @@ struct gpio_chip {
+ };
+ 
+ const char *gpiochip_is_requested(struct gpio_chip *gc, unsigned int offset);
++char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset);
+ 
+ /**
+  * for_each_requested_gpio_in_range - iterates over requested GPIOs in a given range
 -- 
 2.40.1
 
