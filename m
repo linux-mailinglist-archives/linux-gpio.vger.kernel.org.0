@@ -1,211 +1,259 @@
-Return-Path: <linux-gpio+bounces-751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 076C27FE912
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 07:19:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6E607FE966
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 07:55:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 895A128230C
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 06:19:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B07051C20B71
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 06:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A8151DA47;
-	Thu, 30 Nov 2023 06:19:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FBB017722;
+	Thu, 30 Nov 2023 06:55:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=aaeon365.onmicrosoft.com header.i=@aaeon365.onmicrosoft.com header.b="lidFE7y9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="YGh7T36I"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2099.outbound.protection.outlook.com [40.107.255.99])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F30C310CE;
-	Wed, 29 Nov 2023 22:19:12 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=m16WiT2uvwioQVyz3/KmkTDiJy5C7Sdn2ZnV/iV76XGHq/f5MOw7gpGlxC9x4DqBS5Sp/HIVwZF6wbhPYdemcGzAbpw4W3bhJjUVSCUzt6VJ3pPkOD14pZGx+2gBxPAmFBgGJParrcBfzJt1Jk/a/tEqVPmtBASEC/O7Z3zD0SNirYdLB3TEgWen+UVcfH9Oxv3zMC0gqivWcLmXROs2XVPPrk5jKvDfFp9IvsSZsQ6mBIxFTlbuaoAxKixd5msVb3EbDecwljS3Pqs0EN4DqqVJcGzjYGq1Yq+gW48Ua8hz5e8mfgGQkY6xIs/92AAXXsy6oStAphD4iruKJZoeXw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=6s7AaV3xdxCdp4jazERxqcF2RQMfLWixhUf19P7B+Co=;
- b=G1WJ0AUG3kkrCkyuxNTUBYvXgpVOv9Se8Yyuv9CrJ5yGkitEizdi6ejs/fEwpHYx7vjfn/jdnNhIP69mVTLLQmEVsUsJl0iCyrqGC4IHB1bQWZ9knNf/bJrtoGuBRE60njOI+GN5gAH1sBjO+sltwT7tycev7oTiWlsVUZBiGqjPSOBB1M32FgQIxeAuHZqUwNZ3TOxTOTZe5n8Cj/v5MbDbJh5h7jfCFMYlkZ2eHQJjbK66aIx9euHYXTTVO2m1iRVcKJRYcnMr+XlFqBkblzzVQiFDyrXR2FWO1XEknIdf2Tjn/ygvtbnvs9ozRe0mdjR0g8NcB9l+6WTmEtAdqw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=aaeon.com.tw; dmarc=pass action=none header.from=aaeon.com.tw;
- dkim=pass header.d=aaeon.com.tw; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=aaeon365.onmicrosoft.com; s=selector2-aaeon365-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=6s7AaV3xdxCdp4jazERxqcF2RQMfLWixhUf19P7B+Co=;
- b=lidFE7y9trPBAohroHJUR4rHlMf5CCSW+oBLIZgiRLwn/bF/F0CDN51FLSmBHs4v9wTywBTIqZSaAK3yMEZJ2jmmjinc+POjrFZYvx+ANI8CmOqn4gkibAvCvV5JhOB8z1qnH1xmC4ZADKD4mQOaHuntQ924Mzx0p3BZbayKumo=
-Received: from SI2PR02MB5682.apcprd02.prod.outlook.com (2603:1096:4:1ad::10)
- by TYZPR02MB6504.apcprd02.prod.outlook.com (2603:1096:400:363::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7025.27; Thu, 30 Nov
- 2023 06:19:04 +0000
-Received: from SI2PR02MB5682.apcprd02.prod.outlook.com
- ([fe80::e6ed:864f:d0ae:dce6]) by SI2PR02MB5682.apcprd02.prod.outlook.com
- ([fe80::e6ed:864f:d0ae:dce6%4]) with mapi id 15.20.7025.022; Thu, 30 Nov 2023
- 06:19:04 +0000
-From: =?big5?B?R2FyeVdhbmcgqEykp7Zo?= <GaryWang@aaeon.com.tw>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, larry.lai
-	<larry.lai@yunjingtech.com>
-CC: "lee@kernel.org" <lee@kernel.org>, "linus.walleij@linaro.org"
-	<linus.walleij@linaro.org>, "pavel@ucw.cz" <pavel@ucw.cz>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-	"musa.lin@yunjingtech.com" <musa.lin@yunjingtech.com>,
-	"jack.chang@yunjingtech.com" <jack.chang@yunjingtech.com>,
-	"noah.hung@yunjingtech.com" <noah.hung@yunjingtech.com>
-Subject: RE: [PATCH V7 2/3] pinctrl: Add support pin control for UP board
- CPLD/FPGA
-Thread-Topic: [PATCH V7 2/3] pinctrl: Add support pin control for UP board
- CPLD/FPGA
-Thread-Index: AQHaC5zQTtnnqyfTi0OETajcNkPqpLB588aAgBiXH9A=
-Date: Thu, 30 Nov 2023 06:19:04 +0000
-Message-ID:
- <SI2PR02MB568243153C4D4D7B636D2754EE82A@SI2PR02MB5682.apcprd02.prod.outlook.com>
-References: <20231031015119.29756-1-larry.lai@yunjingtech.com>
- <20231031015119.29756-3-larry.lai@yunjingtech.com>
- <ZVOBz8-tahhrVmO-@smile.fi.intel.com>
-In-Reply-To: <ZVOBz8-tahhrVmO-@smile.fi.intel.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=aaeon.com.tw;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: SI2PR02MB5682:EE_|TYZPR02MB6504:EE_
-x-ms-office365-filtering-correlation-id: 5afc8bb5-0f21-4152-57d0-08dbf16c4094
-x-ms-exchange-atpmessageproperties: SA
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- m4P+JW56qye1uQU0p2M/Y/FoxOs/u7V8pMzF8zghnQ+VsHyYkGFrkUxm/NlBdICRzDaYorxaWirfMhxEbcpYcomAexUEtIS6p/9XInb4rpHaOt14imL7eRqxrkUAdD3dmB6sxk6YSUklKvUeFlmU49IiMA3WX9JS8GUqq84ppaXKnfpYSCnAeUd5w8AfAgLFhysmXAV2vb/64OruCYhEwI+Z1RegL/aGUu3y2aZJZfdhXIe3vc68gHCQisfdgzMpJ4xSXa5SyBG3vYOqAyK+mV4NTF+yAZpQu7uJGLe9+JOnRRH2Gv2R59fIfWNAO5nt5/FE+T8sdmYDh1w/bSUb+5oJb5icyC9DpCZCIizqaI+chn98P+mvxRIvNxN6CYNkpVp6hhWGgI0RXkVVrCT8grSRBqwfGPuTG+pdZrfKRrJMwZJD7I/Cs+ej0U1pept/5HrDby2NE8xX7Z1ta6RJ+IQhV0rwFQvszfWyLuwIV/002z/E0iB8FU0uAh30/e3S026LMfi/tJVr1dy1tV92v6VgzXOHlC/8iKrSyqI4eOqD28njgcPiTBF2WKQEbrw3rmPW9gL5+R9nxj73Arl7/WyNF+QJA4XomPn7Lrw7UrpNU8WvCpQltMQQvKw580Q718atIc3dJJZPGcFvW6x8WA==
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SI2PR02MB5682.apcprd02.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366004)(396003)(346002)(39850400004)(376002)(136003)(64100799003)(186009)(451199024)(1800799012)(122000001)(6506007)(478600001)(7696005)(9686003)(26005)(53546011)(71200400001)(83380400001)(7416002)(66946007)(2906002)(110136005)(41300700001)(8676002)(5660300002)(66476007)(54906003)(52536014)(66556008)(4326008)(66446008)(64756008)(316002)(76116006)(8936002)(38070700009)(86362001)(85182001)(33656002)(38100700002)(55016003)(202311291699003);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?big5?B?SjFCVzJmSFZ2cy9WdjVWY3kyQnRTaG1JMmZjK1MvTmFyU216NFN0L1ZkZEtwTVdo?=
- =?big5?B?dXJtNzBodFhCaGFwNEQwZmJucTlLUVg0WUFYM3JES3Z1aG4wVDNsVGwvM2tNWjhs?=
- =?big5?B?RmhOZEFJQzJKdHhoSGFtS2ViRzJsRVgrMmY1L1B3WlpVNzRsTXlNT3RHa1NBUVhv?=
- =?big5?B?VFlhVCtKa2hSS2xMY3lqeUVzSjJzL0tPS2l3S0k4Y0llUlNpT29ydzJRN0ovQ2lV?=
- =?big5?B?T211c3B2aE5Kdmkzd0lNdHRYWEN6SXg0Lys1c3lwOE1ndk1raWh1T2JoSHViYUlh?=
- =?big5?B?NVZ6L1U0TWM3c3FjQWUwRXBhZ2FFWWtEckNDL283bDJIK2MwYVVjN1ZNaUE5RkNC?=
- =?big5?B?Qmx2RVBoVjhvUEZQSG5uNUlOSkVnK2xNRkcvK2RPTHY1NDlIYithMlR3SEdUdU5t?=
- =?big5?B?SW5sTHFKNEJ2MDIxYzNJYU5KdWovZHZ3YkpNaGZIU1hLQ1ZSYllYa0EyU0VTUzJO?=
- =?big5?B?Wm5WMStYOFZ3eDhMbGVnV0ErQWkrT1U0WG5GejFnTUd0WXBZeitDVzdoVVRiVzJW?=
- =?big5?B?VHlXeWRhMStScTdETk91eTczbEwyd1NLdm9WZlp6eHEybkMvd05FK25FVEtnVys4?=
- =?big5?B?bUJOUnZYTlY3NDNVWTdHNGlFcFIxcjltU3BUeWFDMktQdmZTLzFSdmw2QWlFc2xO?=
- =?big5?B?NTlUOGpEbDVZZU41dFl0blV3MjlnVUlQaVVtakpvbitoV3RnbkJ5N1c2SnNoSTB2?=
- =?big5?B?UW5qVzFGejJzRkUzT2kyRURUbnR0RWdhTEI0YzBGc0U1RS9tYnBDZ3NaZWVmMWdt?=
- =?big5?B?Q3FSMDFFejh0WjlRbExxSUdFcnRMSEZjdHJMb1JlanZnNisvZ1YxZDQ5T1c5Q25a?=
- =?big5?B?Q2szZjUzemZmY1ZWeDZoM3Nrb1RlY0lCbDNLcmhyMjlpU2dtQi9PNk0xUU1IUkox?=
- =?big5?B?emtWN1R5dE0zbm11VFVLNTBYREphYk1QZDJPK1FMZFV2Q1ZPclYzMHFLMTBVRVhn?=
- =?big5?B?cVczay8xaTEzeTRTUnJsOVk1aFo4YTd2eFlEdk9KaUFCZ1cwdnhkL0VuaHE2a2JV?=
- =?big5?B?ejQxeFdjS0twZXh4THU2VlA3dU1hL3dTWnBOQ2ZaWFovWVJlT2o0SktqU0k1bTZi?=
- =?big5?B?NTIvOEVwaVBVK25jYzFzZUVGTTNXQzVlN2srbXpBanVldjU4MHAwTWx6RDVGL05i?=
- =?big5?B?RDJZcy93ekdDamRlUVNJMXJJSDlCZXVrbllpUEMxNHhrdklSTEcrWHZIWUJzb1ly?=
- =?big5?B?eGdYVVB1ZmxPL1BoRlFhWlhOQWgycXdCS01oMTZXWU1CcXRQZTVnTzV5NTNObnBp?=
- =?big5?B?bC8reUV2MVRrU0c5c1BSdmxiSlpIc2JxUkY4a2JlQmFOUmZzRUpTc0E0bkxpMVpn?=
- =?big5?B?RmxZYnBzdXdvRytvbjU0ZXpGZ3p2bnNyK0crNW8rMmNJaGY2eHRnZWpFOGI4RXcr?=
- =?big5?B?VU9jbStSV050NmZ2TzdjSGY0di9QYS80SDFLbEg4MWtSaFBiMDhRZ1dDUDdLOEZJ?=
- =?big5?B?czJzTHJRci9hK0pIT3ErOEFMeDBuaFMwVHIvUFlwMW5HKy9XNndZQzBLUzJNeUNP?=
- =?big5?B?dDhjQi9wNEt2STQ3Nks0ZEtVRzBRSFdKczJSYTZZcm5nSjJ1VkMybVRjQ0tTWVZx?=
- =?big5?B?VENBbHN6ZTlyQkFHSTNQRDhTLzVmZTRocmxCVkJzTjJoQVY3Ly9CaGE2ZjdMU2Qz?=
- =?big5?B?WG55OXNYZDRieWszTVpSdlo0SXhoL0RmQUVRL3k0dEtzV1J1eTdBdlBZSmRpUDM2?=
- =?big5?B?alU4WHJwaDJwV0pYZytUL21nSjdKZ3VtUk03QnB6VFR0aFhjYkFSelQvR3BZSDNx?=
- =?big5?B?M2pIeG8yWFBqZ28yUktxMGhYTlhnNExQbjdwQmpWUjlhbDVJWlRFeFJ5NkFlVDh5?=
- =?big5?B?VUpqUWc5L0JmNFpNM3FjRXZWOVBMbjJGZWpROFRwM2U5SUtoeENndjU2TURNSm5Z?=
- =?big5?B?Y3NITkRNNnlOU3BSOG9JcGJjU0ttK1grREVuZ2JxTFV6Q3IyT09pdVV2bXZzaEEx?=
- =?big5?B?bEdGaDhOQWd3UGlLcCt5em45UGMxWHZEMjlyYWhuYU51TU00NXhOS3N6eXpCaWFm?=
- =?big5?Q?LOSXGiozVPLeXO1v?=
-Content-Type: text/plain; charset="big5"
-Content-Transfer-Encoding: base64
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD463C1
+	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 22:55:47 -0800 (PST)
+Received: from epcas2p4.samsung.com (unknown [182.195.41.56])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231130065541epoutp0109bd288ee07c232258caf5b974c70a46~cVDQGk0Ko1826618266epoutp01y
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 06:55:41 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231130065541epoutp0109bd288ee07c232258caf5b974c70a46~cVDQGk0Ko1826618266epoutp01y
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701327341;
+	bh=M3WQo99x16DxEeS8ZvdjBiRfWBfFI96MpCrGA2ivIO8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=YGh7T36IrKF7nyHljg331GfZ7dziZriq+0eSq4e3OZevNufjCJ0eUrgpcq34qdz1m
+	 zJcngzVUhk0uTBBtSGnxkMWMFbwgpYEBZxnzcwirX9PeN9vdyCV5c6HTohIhCoOmik
+	 UCmdIrqdvV6JkN8QTulm0LLPoZQa28vYtvtEwSqQ=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+	epcas2p1.samsung.com (KnoxPortal) with ESMTP id
+	20231130065540epcas2p12b9245d20693a8696c738df3b1839873~cVDO_dT2s1368613686epcas2p1c;
+	Thu, 30 Nov 2023 06:55:40 +0000 (GMT)
+Received: from epsmges2p1.samsung.com (unknown [182.195.36.99]) by
+	epsnrtp3.localdomain (Postfix) with ESMTP id 4Sgn5R6pjMz4x9QK; Thu, 30 Nov
+	2023 06:55:39 +0000 (GMT)
+Received: from epcas2p1.samsung.com ( [182.195.41.53]) by
+	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+	3B.DE.10006.BE138656; Thu, 30 Nov 2023 15:55:39 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231130065539epcas2p2b3a7a9a83eed1b37bea7e4bae101287e~cVDOE_zSl0407704077epcas2p2H;
+	Thu, 30 Nov 2023 06:55:39 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231130065539epsmtrp2d57f31985f2487fbb836776a58151707~cVDOEYbyE1048910489epsmtrp2H;
+	Thu, 30 Nov 2023 06:55:39 +0000 (GMT)
+X-AuditID: b6c32a45-179ff70000002716-ca-656831ebedb9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	D2.E5.08755.BE138656; Thu, 30 Nov 2023 15:55:39 +0900 (KST)
+Received: from perf (unknown [10.229.95.91]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231130065539epsmtip2f983996f97b3f4870fb03788ce67539e~cVDN1B6Mm1544015440epsmtip2n;
+	Thu, 30 Nov 2023 06:55:39 +0000 (GMT)
+Date: Thu, 30 Nov 2023 16:30:45 +0900
+From: Youngmin Nam <youngmin.nam@samsung.com>
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: tomasz.figa@gmail.com, krzysztof.kozlowski@linaro.org,
+	s.nawrocki@samsung.com, alim.akhtar@samsung.com, linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pinctrl: samsung: add irq_set_affinity() for non
+ wake up external gpio interrupt
+Message-ID: <ZWg5/rorgfSM/5UO@perf>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: AAEON.COM.TW
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: SI2PR02MB5682.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5afc8bb5-0f21-4152-57d0-08dbf16c4094
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Nov 2023 06:19:04.4621
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 56a2d4be-9fe3-430e-b539-7e13a4744857
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: EnuEqmFLej9HQnDm9I+Rk4GKyiRTA1kL7zf+J8r7QQDvW2d2WO9Xfq+wSoyrvS62o9jvqozCjF2glZmDNBGLiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYZPR02MB6504
+In-Reply-To: <CAPLW+4=QQR_u0Fi2L0orQFTd-_UpYZAQ94Je772Vs-2WKZGuiA@mail.gmail.com>
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrEJsWRmVeSWpSXmKPExsWy7bCmqe5rw4xUg0lNxhYP5m1js9j7eiu7
+	xZQ/y5ksNj2+xmqxef4fRovLu+awWcw4v4/J4vCbdlaL531A1qpdfxgduDx2zrrL7nHn2h42
+	j81L6j36tqxi9Pi8SS6ANSrbJiM1MSW1SCE1Lzk/JTMv3VbJOzjeOd7UzMBQ19DSwlxJIS8x
+	N9VWycUnQNctMwfoKCWFssScUqBQQGJxsZK+nU1RfmlJqkJGfnGJrVJqQUpOgXmBXnFibnFp
+	XrpeXmqJlaGBgZEpUGFCdsbWTUdZCxZqVPR/SW1gbJTpYuTkkBAwkZjX9pC5i5GLQ0hgB6PE
+	zhl/WSGcT4wSH/vOQmW+MUqc77nNCNPy8eE3JojEXkaJJ9/fsoIkhAQeMkrcag3sYuTgYBFQ
+	ldi1VRwkzCagK7HtxD+wXhEBPYl1M1+xg/QyC/QySayf2cIEkhAWyJK4s7GbBcTmFVCW+Pbi
+	JROELShxcuYTFpCZnAKBEr2/w0F6JQSmckhs+faIFeIgF4nDLXuhjhOWeHV8CzuELSXx+d1e
+	Ngg7W2L1r0tQ8QqJ9ns9zBC2scSsZ+1gvcwCGRJNW7cxg+ySALrhyC0WiDCfRMfhv+wQYV6J
+	jjYhiE41iV9TNkBtlZHYvXgF1EQPiWeTN7FDgmc3s8SX5rlsExjlZiH5ZhaSbbOAxjILaEqs
+	36UPEZaXaN46GyosLbH8HweSigWMbKsYxVILinPTU4uNCgzhMZ2cn7uJEZxYtVx3ME5++0Hv
+	ECMTB+MhRgkOZiUR3utP01OFeFMSK6tSi/Lji0pzUosPMZoCY2kis5Rocj4wteeVxBuaWBqY
+	mJkZmhuZGpgrifPea52bIiSQnliSmp2aWpBaBNPHxMEp1cDk3rQw8JJ5m64644Qkx2fHl197
+	zXc0fM2tLJGj35IviCbPFu9VPGsjYznlylX/oMzZzL8y45at5Pt2btNSwdd68qUek7Zn1U7p
+	23XM+2DmqScPGs4ozxW9stQzduXuI6nLw9pfpJSv15t6wivYcYvl4lbhtWrnGk51pj0Mi79i
+	eVzVfc2Ot1scS2ZvyAnJEOm4kpIUe7rO26i68n9tp2mdQbK5dtun3d0PIrmZemd/D+t0mK4k
+	XzG3PrfqZKZZ05ONYW/yys9M/SuttnLin5Ztdk3SWjfW+QTFrdr1RDXwefcKwSK5b59mn/NJ
+	ev3Q6/4ChkVLSt7niUw6o+38VarGzIet0Er++tmG5p4n4i5KLMUZiYZazEXFiQCjcUTuNQQA
+	AA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrKLMWRmVeSWpSXmKPExsWy7bCSvO5rw4xUg8XfhS0ezNvGZrH39VZ2
+	iyl/ljNZbHp8jdVi8/w/jBaXd81hs5hxfh+TxeE37awWz/uArFW7/jA6cHnsnHWX3ePOtT1s
+	HpuX1Hv0bVnF6PF5k1wAaxSXTUpqTmZZapG+XQJXRvfZ7ILDqhWP3y5ib2DcL9nFyMkhIWAi
+	8fHhN6YuRi4OIYHdjBKnlt5mh0jISNxeeZkVwhaWuN9yhBWi6D6jxLKFU4EcDg4WAVWJXVvF
+	QWrYBHQltp34xwhiiwjoSayb+YodpJ5ZoJ9J4v2uD2BDhQWyJB4+PM8GYvMKKEt8e/GSCcQW
+	EtjLLLHsuyJEXFDi5MwnLCA2s4C6xJ95l5hBdjELSEss/8cBEZaXaN46GyzMKRAo0fs7fAKj
+	4CwkzbOQNM9CaJ6FpHkBI8sqRsnUguLc9NxiwwLDvNRyveLE3OLSvHS95PzcTYzgmNHS3MG4
+	fdUHvUOMTByMhxglOJiVRHivP01PFeJNSaysSi3Kjy8qzUktPsQozcGiJM4r/qI3RUggPbEk
+	NTs1tSC1CCbLxMEp1cCkvnru8WtLyq137U1d/sH7DZdIXM61hM5WgUWJEddef+vSO/7tZuCz
+	fyc+TLj2J2ztXbdS/S7/T4bOYdrPWa57Vm01kvs373bb2vDYdWXWDHdu3PRmPZqoPX1+XIog
+	20zrgGfr7196ytBy9ALni/RG5xkXdSZvSNKqPVlrfto27sfMaxMbf1i+38d4rS7oEFNPnOf/
+	zqo/ldfcpOrtrnm3a205EmA0a0Xte0umrg+3JUy0zNMeuX+6ddL0hKCJcFdhfVxq2tVzvhO+
+	Hfg/7+GMCAeP6DUixtc4l4YwmWZlTTt1ftvxZWstWFfnzSrYcjbx1Jnf+VKn0v+VOBrr1Vyx
+	U5jlXVr7WpJv20sT6ZMMSizFGYmGWsxFxYkAk4ubjQgDAAA=
+X-CMS-MailID: 20231130065539epcas2p2b3a7a9a83eed1b37bea7e4bae101287e
+X-Msg-Generator: CA
+Content-Type: multipart/mixed;
+	boundary="----beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_42057_"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38
+References: <CGME20231126091120epcas2p4a1320e3b0f9be8f8a0f575a322981d38@epcas2p4.samsung.com>
+	<20231126094618.2545116-1-youngmin.nam@samsung.com>
+	<bb738a6b-815d-4fad-b73f-559f1ba8cd68@linaro.org> <ZWU75VtJ/mXpMyQr@perf>
+	<1fd55b36-0837-4bf7-9fde-e573d6cb214a@linaro.org>
+	<CAPLW+4n0SAOTb6wocY-WjkxgSFMbx+nVuqdaPcNYVDsbfg+EfA@mail.gmail.com>
+	<ZWbjPIydJRrPnuDy@perf>
+	<CAPLW+4=QQR_u0Fi2L0orQFTd-_UpYZAQ94Je772Vs-2WKZGuiA@mail.gmail.com>
 
-QWxsLA0KICAgICAgICBSZXBseSBhZ2FpbiB0byBwbGFpbiB0ZXh0IGZvcm1hdCAmIGxpbmUtd2Fy
-cCBhbmQgdHJpbSBhZ3JlZSBwYXJ0IGFzIEpvbmVzJ3Mgc3VnZ2VzdGlvbiwNCiAgICAgICAgcGxl
-YXNlIGxldCBtZSBrbm93IGlmIHRoZXJlIGFyZSBzdGlsbCBoYXZpbmcgZm9ybWF0IGlzc3VlLg0K
-ICAgICAgICBwbGVhc2Uga2luZGx5IHRvIGNoZWNrIG91ciBjb21tZW50cyB3aXRoICI+PiIgYmVn
-aW5uaW5nLg0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBbmR5IFNoZXZj
-aGVua28gPGFuZHJpeS5zaGV2Y2hlbmtvQGxpbnV4LmludGVsLmNvbT4NClNlbnQ6IFR1ZXNkYXks
-IE5vdmVtYmVyIDE0LCAyMDIzIDEwOjE5IFBNDQpUbzogbGFycnkubGFpIDxsYXJyeS5sYWlAeXVu
-amluZ3RlY2guY29tPg0KQ2M6IGxlZUBrZXJuZWwub3JnOyBsaW51cy53YWxsZWlqQGxpbmFyby5v
-cmc7IHBhdmVsQHVjdy5jejsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgbGludXgtZ3Bp
-b0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWxlZHNAdmdlci5rZXJuZWwub3JnOyBHYXJ5V2FuZyCo
-TKSntmggPEdhcnlXYW5nQGFhZW9uLmNvbS50dz47IG11c2EubGluQHl1bmppbmd0ZWNoLmNvbTsg
-amFjay5jaGFuZ0B5dW5qaW5ndGVjaC5jb207IG5vYWguaHVuZ0B5dW5qaW5ndGVjaC5jb20NClN1
-YmplY3Q6IFJlOiBbUEFUQ0ggVjcgMi8zXSBwaW5jdHJsOiBBZGQgc3VwcG9ydCBwaW4gY29udHJv
-bCBmb3IgVVAgYm9hcmQgQ1BMRC9GUEdBDQoNCk9uIFR1ZSwgT2N0IDMxLCAyMDIzIGF0IDA5OjUx
-OjE4QU0gKzA4MDAsIGxhcnJ5LmxhaSB3cm90ZToNCj4gVGhlIFVQIFNxdWFyZWQgYm9hcmQNCj4g
-PGh0dHA6Ly93d3cudXBib2FyZC5jb20vPiBpbXBsZW1lbnRzIGNlcnRhaW4gZmVhdHVyZXMgKHBp
-biBjb250cm9sKSB0aHJvdWdoIGFuIG9uLWJvYXJkIEZQR0EuDQo+DQo+IFJlcG9ydGVkLWJ5OiBr
-ZXJuZWwgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NCj4gU2lnbmVkLW9mZi1ieTogR2FyeSBX
-YW5nIDxnYXJ5d2FuZ0BhYWVvbi5jb20udHc+DQo+IFNpZ25lZC1vZmYtYnk6IGxhcnJ5LmxhaSA8
-bGFycnkubGFpQHl1bmppbmd0ZWNoLmNvbT4NCg0KDQoNCj4gKyNpbmNsdWRlICJpbnRlbC9waW5j
-dHJsLWludGVsLmgiDQoNCkkgZG8gbm90IHRoaW5rIGl0J3MgY29ycmVjdCB1c2Ugb2YgdGhlIGhl
-YWRlci4NCj4+IHNlZSBiZWxvdw0KLi4uDQoNCj4gKy8qIE9mZnNldCBmcm9tIHJlZ3MgKi8NCj4g
-KyNkZWZpbmUgUkVWSUQgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAweDAwMA0KPiArI2RlZmluZSBSRVZJRF9TSElGVCAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAxNg0KPiArI2RlZmluZSBSRVZJRF9NQVNLICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBHRU5NQVNLKDMxLCAxNikNCj4gKyNkZWZpbmUgUEFEQkFSICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAweDAwYw0KPiArDQo+ICsvKiBP
-ZmZzZXQgZnJvbSBwYWRfcmVncyAqLw0KPiArI2RlZmluZSBQQURDRkcwICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4MDAwDQo+ICsjZGVmaW5lIFBBRENGRzBf
-UlhFVkNGR19TSElGVCAgICAgICAgICAgICAgICAyNQ0KPiArI2RlZmluZSBQQURDRkcwX1JYRVZD
-RkdfTUFTSyAgICAgICAgIEdFTk1BU0soMjYsIDI1KQ0KPiArI2RlZmluZSBQQURDRkcwX1JYRVZD
-RkdfTEVWRUwgICAgICAgICAgICAgICAgMA0KPiArI2RlZmluZSBQQURDRkcwX1JYRVZDRkdfRURH
-RSAgICAgICAgIDENCj4gKyNkZWZpbmUgUEFEQ0ZHMF9SWEVWQ0ZHX0RJU0FCTEVEICAgICAyDQo+
-ICsjZGVmaW5lIFBBRENGRzBfUlhFVkNGR19FREdFX0JPVEggICAgMw0KPiArI2RlZmluZSBQQURD
-RkcwX1BSRUdGUlhTRUwgICAgICAgICAgICAgICAgICAgQklUKDI0KQ0KPiArI2RlZmluZSBQQURD
-RkcwX1JYSU5WICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBCSVQoMjMpDQo+ICsjZGVm
-aW5lIFBBRENGRzBfR1BJUk9VVElPWEFQSUMgICAgICAgICAgICAgICBCSVQoMjApDQo+ICsjZGVm
-aW5lIFBBRENGRzBfR1BJUk9VVFNDSSAgICAgICAgICAgICAgICAgICBCSVQoMTkpDQo+ICsjZGVm
-aW5lIFBBRENGRzBfR1BJUk9VVFNNSSAgICAgICAgICAgICAgICAgICBCSVQoMTgpDQo+ICsjZGVm
-aW5lIFBBRENGRzBfR1BJUk9VVE5NSSAgICAgICAgICAgICAgICAgICBCSVQoMTcpDQo+ICsjZGVm
-aW5lIFBBRENGRzBfUE1PREVfU0hJRlQgICAgICAgICAgICAgICAgICAxMA0KPiArI2RlZmluZSBQ
-QURDRkcwX1BNT0RFX01BU0sgICAgICAgICAgICAgICAgICAgR0VOTUFTSygxMywgMTApDQo+ICsj
-ZGVmaW5lIFBBRENGRzBfUE1PREVfR1BJTyAgICAgICAgICAgICAgICAgICAwDQo+ICsjZGVmaW5l
-IFBBRENGRzBfR1BJT1JYRElTICAgICAgICAgICAgICAgICAgICBCSVQoOSkNCj4gKyNkZWZpbmUg
-UEFEQ0ZHMF9HUElPVFhESVMgICAgICAgICAgICAgICAgICAgIEJJVCg4KQ0KPiArI2RlZmluZSBQ
-QURDRkcwX0dQSU9SWFNUQVRFICAgICAgICAgICAgICAgICAgQklUKDEpDQo+ICsjZGVmaW5lIFBB
-RENGRzBfR1BJT1RYU1RBVEUgICAgICAgICAgICAgICAgICBCSVQoMCkNCj4gKw0KPiArI2RlZmlu
-ZSBQQURDRkcxICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDB4
-MDA0DQo+ICsjZGVmaW5lIFBBRENGRzFfVEVSTV9VUCAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIEJJVCgxMykNCj4gKyNkZWZpbmUgUEFEQ0ZHMV9URVJNX1NISUZUICAgICAgICAgICAgICAg
-ICAgIDEwDQo+ICsjZGVmaW5lIFBBRENGRzFfVEVSTV9NQVNLICAgICAgICAgICAgICAgICAgICBH
-RU5NQVNLKDEyLCAxMCkNCj4gKyNkZWZpbmUgUEFEQ0ZHMV9URVJNXzIwSyAgICAgICAgICAgICAg
-ICAgICAgIEJJVCgyKQ0KPiArI2RlZmluZSBQQURDRkcxX1RFUk1fNUsgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBCSVQoMSkNCj4gKyNkZWZpbmUgUEFEQ0ZHMV9URVJNXzFLICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgQklUKDApDQo+ICsjZGVmaW5lIFBBRENGRzFfVEVSTV84MzMg
-ICAgICAgICAgICAgICAgICAgICAoQklUKDEpIHwgQklUKDApKQ0KPiArDQo+ICsjZGVmaW5lIFBB
-RENGRzIgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgMHgwMDgN
-Cj4gKyNkZWZpbmUgUEFEQ0ZHMl9ERUJFTiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-QklUKDApDQo+ICsjZGVmaW5lIFBBRENGRzJfREVCT1VOQ0VfU0hJRlQgICAgICAgICAgICAgICAx
-DQo+ICsjZGVmaW5lIFBBRENGRzJfREVCT1VOQ0VfTUFTSyAgICAgICAgICAgICAgICBHRU5NQVNL
-KDQsIDEpDQo+ICsNCj4gKyNkZWZpbmUgREVCT1VOQ0VfUEVSSU9EX05TRUMgICAgICAgICAzMTI1
-MA0KPiArDQo+ICsvKiBBZGRpdGlvbmFsIGZlYXR1cmVzIHN1cHBvcnRlZCBieSB0aGUgaGFyZHdh
-cmUgKi8NCj4gKyNkZWZpbmUgUElOQ1RSTF9GRUFUVVJFX0RFQk9VTkNFICAgICBCSVQoMCkNCj4g
-KyNkZWZpbmUgUElOQ1RSTF9GRUFUVVJFXzFLX1BEICAgICAgICAgICAgICAgIEJJVCgxKQ0KDQpI
-dWg/ISBObyB3YXkgaXQgc2hvdWxkIGJlIGhlcmUgaW4gX2FueV8gZm9ybSENCj4+IGFjdHVhbGx5
-IHdlIG5lZWQgc2V0IHBhZCBtb2RlIGF0IHJ1bnRpbWUgZm9yIEhBUCBwaW5zIEdQSU8sIGNvdWxk
-IGNvbnNpZGVyaW5nIGxldCBwaW5jdHJsLXVwYm9hcmQgdXNpbmcgaXQ/Pw0KICBpdCdzIG5vdCBh
-IGdvb2Qgd2F5IGJ1dCBnZXQgcmVnaXN0ZXIgb2Zmc2V0IGZyb20gaW50ZWxfcGluY3RybCBzdHJ1
-Y3R1cmUgY2FuIHJlZHVjZSAyOH40OCBwaW4gb2Zmc2V0IGRhdGEgZm9yIGVhY2ggYm9hcmQuDQou
-Li4NCg0KV2l0aCBCZXN0IFJlZ2FyZHMsDQpBbmR5IFNoZXZjaGVua28NCg0KDQo=
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_42057_
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+
+On Wed, Nov 29, 2023 at 12:48:56PM -0600, Sam Protsenko wrote:
+> On Wed, Nov 29, 2023 at 12:32 AM Youngmin Nam <youngmin.nam@samsung.com> wrote:
+> > > I tried to test this patch on E850-96, and an attempt to write into
+> > > smp_affinity (for some GPIO irq) also fails for me:
+> > >
+> > >     # echo f0 > smp_affinity
+> > >     -bash: echo: write error: Input/output error
+> > >
+> > > When I add some pr_err() to exynos_irq_set_affinity(), I can't see
+> > > those printed in dmesg. So I guess exynos_irq_set_affinity() doesn't
+> > > get called at all. So the error probably happens before
+> > > .irq_set_affinity callback gets called.
+> > >
+> > > Youngmin, can you please try and test this patch on E850-96? This
+> > > board is already supported in upstream kernel. For example you can use
+> > > "Volume Up" interrupt for the test, which is GPIO irq.
+> > >
+> >
+> > I intened this affinity setting would work only on *Non* Wakeup External Interrupt.
+> > The "Volume Up" on E850-96 board is connected with "gpa0-7" and
+> > that is Wakeup External interrupt so that we can't test the callback.
+> >
+> 
+> Oh no. It was really silly mistake on my part :) But please check my
+> answer below for good news.
+> 
+> > I couldn't find out a pin for the test on E850-96 board yet.
+> > We can test if there is a usage of *Non" Wake up External Interrupt of GPIO
+> > on E850-96 board.
+> >
+> > Do you have any idea ?
+> >
+> 
+> Yep, just managed to successfully test your patch on E850-96. My
+> testing procedure below might appear messy, but I didn't want to do
+> any extra soldering :)
+> 
+> Used GPG1[0] pin for testing. As you can see from schematics [1],
+> GPG1[0] is connected to R196 resistor (which is not installed on the
+> board).
+> 
+> I've modified E850-96 dts file like this:
+> 
+> 8<---------------------------------------------------------------------------->8
+>         gpio-keys {
+>                 compatible = "gpio-keys";
+>                 pinctrl-names = "default";
+> -               pinctrl-0 = <&key_voldown_pins &key_volup_pins>;
+> +               pinctrl-0 = <&key_voldown_pins &key_volup_pins &key_test_pins>;
+> 
+>                 ...
+> 
+> +               test-key {
+> +                       label = "Test Key";
+> +                       linux,code = <KEY_RIGHTCTRL>;
+> +                       gpios = <&gpg1 0 GPIO_ACTIVE_LOW>;
+> +               };
+>         };
+> 
+> ...
+> 
+> +&pinctrl_peri {
+> +       key_test_pins: key-test-pins {
+> +               samsung,pins = "gpg1-0";
+> +               samsung,pin-function = <EXYNOS_PIN_FUNC_EINT>;
+> +               samsung,pin-pud = <EXYNOS_PIN_PULL_NONE>;
+> +               samsung,pin-drv = <EXYNOS5420_PIN_DRV_LV1>;
+> +       };
+> +};
+> 8<---------------------------------------------------------------------------->8
+> 
+> It appeared in /proc/interrupts as follows:
+> 
+>     87:          2          0          0          0          0
+>  0          0          0      gpg1   0 Edge      Test Key
+> 
+> Then I touched R196 resistor pads with my finger (emulating key press)
+> and looked again at /proc/interrupts:
+> 
+>     87:        444          0          0          0          0
+>  0          0          0      gpg1   0 Edge      Test Key
+> 
+> Then I reconfigured smp_affinity like so:
+> 
+>     # cat /proc/irq/87/smp_affinity
+>     ff
+>     # echo f0 > /proc/irq/87/smp_affinity
+>     # cat /proc/irq/87/smp_affinity
+>     f0
+> 
+> Then I messed with R196 resistor pads with my finger again, and
+> re-checked /proc/interrupts:
+> 
+>                CPU0       CPU1       CPU2       CPU3       CPU4
+> CPU5       CPU6       CPU7
+>      87:        444          0          0          0        234
+>   0          0          0      gpg1   0 Edge      Test Key
+> 
+> And without this patch that procedure above of course doesn't work.
+> 
+> So as far as I'm concerned, feel free to add:
+> 
+> Tested-by: Sam Protsenko <semen.protsenko@linaro.org>
+> 
+> [1] https://protect2.fireeye.com/v1/url?k=d3eebafe-8c7293d4-d3ef31b1-000babe598f7-06c0db00473e1bca&q=1&e=855a917d-d0f9-49cd-8e05-7cccf44d06a8&u=https%3A%2F%2Fwww.96boards.org%2Fdocumentation%2Fconsumer%2Fe850-96b%2Fhardware-docs%2Ffiles%2Fe850-96b-schematics.pdf
+> 
+> Thanks!
+> 
+Thanks for your test Sam. It's really great work.
+I confirmed the patch did work by following your test sequence as below.
+
+* Before
+     CPU0       CPU1       CPU2       CPU3       CPU4 ...
+87:    40          0          0          0          0 ... gpg1   0 Edge   Test Key
+
+* After
+87:    40          0          0          0         22 ... gpg1   0 Edge   Test Key
+
+Krzysztof,
+Sam and I tested this patch on e850-95 board.
+Let me update commit message with test result and will update patchset.
+
+Thanks.
+
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_42057_
+Content-Type: text/plain; charset="utf-8"
+
+
+------beKDcrNeaD4oBIFRuchmvdVAwfnDGI5TYPt7fforSuRq9wgD=_42057_--
 
