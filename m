@@ -1,215 +1,206 @@
-Return-Path: <linux-gpio+bounces-739-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-740-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D2677FE343
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 23:37:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D71D47FE549
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 02:11:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CB3AB2822E1
-	for <lists+linux-gpio@lfdr.de>; Wed, 29 Nov 2023 22:37:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5F060B214BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 01:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA54F47A55;
-	Wed, 29 Nov 2023 22:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0B45EA5;
+	Thu, 30 Nov 2023 01:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XhemESQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UndvKYlQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-x231.google.com (mail-lj1-x231.google.com [IPv6:2a00:1450:4864:20::231])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5E53BC4
-	for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 14:37:47 -0800 (PST)
-Received: by mail-lj1-x231.google.com with SMTP id 38308e7fff4ca-2c9c5d30b32so4139511fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 29 Nov 2023 14:37:47 -0800 (PST)
+Received: from mail-pl1-x62b.google.com (mail-pl1-x62b.google.com [IPv6:2607:f8b0:4864:20::62b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4E447D54;
+	Wed, 29 Nov 2023 17:10:49 -0800 (PST)
+Received: by mail-pl1-x62b.google.com with SMTP id d9443c01a7336-1cfabcbda7bso12781305ad.0;
+        Wed, 29 Nov 2023 17:10:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701297465; x=1701902265; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=bxjDHRvqNf8As8nbmBC+EVTyuwWGJO53SVyTTlAXxs4=;
-        b=XhemESQ6L4viGgH9/2ksBl2n+XF3of44KapZZz2ZdR0xEd/n4g2SsRF/bxiKpy0162
-         p/1JMQXc9WKpHZ4ff6bnxHl63cBB0vK59pMc4ZL+VMcXajdNRWiPBo8UBYoAol3zcKyE
-         7zzJhRuHec3XurvJI66QhsNg++4qGW9Szviw8/+gcCZwbE5D2sLfelo0GqS2py4A1dhZ
-         MDae8xZU/7iVVZP2xoDsPlw5/UidY8cjxWC8nQhxX0XXvjdd21C8zui4TTzQJGnvgGti
-         nsdzESfQpvGf31QxCZh0/T7glGTMbwK/cXkiNZrGlx8NfEgZtxJc4lr6aw2gS+h+YuHp
-         8SkQ==
+        d=gmail.com; s=20230601; t=1701306649; x=1701911449; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6kr++LNoxhde2bcZzOtmobI8frTG3Z3GI3sj4jeWRAI=;
+        b=UndvKYlQUAGJwWgR7edKECRLAh1w3F5UF9zSMMGBJ7PdkCXMYKcAaje5X+YiMpV8ys
+         Oiq/8ovy9G05zg9uEueFZsrOHOd/WfZ7kd0grHf5JlwpoHMQ6zCvxgTENjjOJWQpkgPZ
+         m78/KRgZENp8BUo1kPDGkwYNhqOSg7J+i6rgMcC57D9r9+4w86HfMtGvo502nlpduVTP
+         2xPLoUO9ocBB7e+x3+O+93Igl1dFEYN9PCimIEq3VAvZvHPnI5BbXsUQwZ44HrwH3eXo
+         5Fc2d7IErQSffj7676hxq5zKR1h3cr8nF+g8uKcJmsZbJKGw/xujx95qyoenE/L4cz9T
+         o9UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701297465; x=1701902265;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=bxjDHRvqNf8As8nbmBC+EVTyuwWGJO53SVyTTlAXxs4=;
-        b=Gp7opiE9k7dOajcfi1IIFLBzoVi2937KeZQvVT6Jp0tCOS0BHSU6LF9XMHUxjlIXH2
-         f8MeAyu9YlcnmXX6fzHy2yzStwPuYCJNlx7HFDOBFUbmk4AIFVdRT5Y1vfoi5+ymlwM8
-         cwnD46zacdImjgWSXHXjhb9e/w2BLvmnuS8gcjjf6s6MdT8ToH0yjRq7ytRImrZLPWQ3
-         iUyT9xYttAxzHgHuEcvPrzIrZP8vAutvf1P/niBJ5C0a+t7JNglZHRokYvaPuQ4QHbDF
-         TYsraovNXe9wT6sUYm1/vRs78mS7nAoY6BuxZ2VeYxgYHmgBqmh+3z+W8u5p6Exo19kN
-         27sg==
-X-Gm-Message-State: AOJu0Ywb4MTpjNOTAwUpWjf45CA0Jou2wv8YxZ6Odu+Nr3sqWXyuY4g7
-	QzyANnt53heJOR4IVuFmkKs3JQ==
-X-Google-Smtp-Source: AGHT+IGqOHMpkJNi3MHQWntyW7OBj8quotaGsS43d+srALwTxtmGgH9ibFvTtPCcGtW9LJXOIuEtQQ==
-X-Received: by 2002:a2e:b003:0:b0:2c9:bc45:3206 with SMTP id y3-20020a2eb003000000b002c9bc453206mr3360214ljk.43.1701297465599;
-        Wed, 29 Nov 2023 14:37:45 -0800 (PST)
-Received: from [192.168.1.2] (c-21d3225c.014-348-6c756e10.bbcust.telenor.se. [92.34.211.33])
-        by smtp.gmail.com with ESMTPSA id s16-20020a2eb8d0000000b002c02cf6cac5sm2092680ljp.83.2023.11.29.14.37.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 29 Nov 2023 14:37:45 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 29 Nov 2023 23:37:41 +0100
-Subject: [PATCH v4] gpio: ixp4xx: Handle clock output on pin 14 and 15
+        d=1e100.net; s=20230601; t=1701306649; x=1701911449;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6kr++LNoxhde2bcZzOtmobI8frTG3Z3GI3sj4jeWRAI=;
+        b=QnY08srcGP4K74S/wpwwsN3bxEFXeK+iByoi/YkWW6JwBXc3UpCRSi7DAJfCve91aX
+         VwQTlofg9hcJSfXUcwNEE4re+lCokbEY8M+bvhW3o9ALOqfKyCtrejiv3QL7uCikkBOD
+         pzjgHpEuFMQxB0D0Ni9EOkkWp5uTNH2JO6rmFRT+f3zUJHTpQ6yc8VrrM5DrC9IyIcyi
+         ZaM7dzSr/baW5Yp81T0FTE5aF9aBpv2iGvb7zj8Ied3xDU312/Z+vzYbYKhcCAl5toKy
+         4+ic1aktWClmd8zus6C+ilsdYRl2G8qMNly7p4N01Wbk7hVNKtJuezRb398cs/YPh0rN
+         w+Kw==
+X-Gm-Message-State: AOJu0YzP2LZL86cK3EHFq47NlphhBTGn7X3wzFhRvJI97RK6UU83ryN8
+	0kF4Qh+yGAvnWEFnBXonBXI=
+X-Google-Smtp-Source: AGHT+IFWKugnGgB1Wx5UQ8Ed3SqjSAv0dxwnnx3lzDGxGYzLin7pZRhR0k2UbIAlXVeKgqTYI/B63A==
+X-Received: by 2002:a17:902:d2cb:b0:1cf:de3e:e4c9 with SMTP id n11-20020a170902d2cb00b001cfde3ee4c9mr17280161plc.29.1701306648523;
+        Wed, 29 Nov 2023 17:10:48 -0800 (PST)
+Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id w1-20020a636201000000b005b32d6b4f2fsm53522pgb.81.2023.11.29.17.10.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 29 Nov 2023 17:10:48 -0800 (PST)
+Message-ID: <9c41e6d4-fe47-4e87-b0a7-f5ecaec720b3@gmail.com>
+Date: Thu, 30 Nov 2023 09:10:43 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231129-ixp4xx-gpio-clocks-v4-1-345f79058c6b@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADS9Z2UC/33Nyw6CMBCF4VcxXVvTTsulrnwP44LLFCYSSlpDM
- IR3t7DCSFz+J5lvZhbQEwZ2Pc3M40iBXB9Dn0+saou+QU51bAYClDAgOU2DnibeDOR41bnqGXi
- GOUBurC5LxeLh4NHStKH3R+yWwsv59/ZjlOv6lxslFzzJtNFQWqN1ceuoL7y7ON+w1Rthb8ChA
- dEQIBNEKUyW1j+G2hvq0FDRSFObW9SYWZl8GcuyfACMCopwPQEAAA==
-To: Linus Walleij <linusw@kernel.org>, Imre Kaloz <kaloz@openwrt.org>, 
- Krzysztof Halasa <khalasa@piap.pl>, Bartosz Golaszewski <brgl@bgdev.pl>, 
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.4
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
+ ma35d1
+Content-Language: en-US
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+ linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20231128061118.575847-1-ychuang570808@gmail.com>
+ <20231128061118.575847-4-ychuang570808@gmail.com>
+ <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
+ <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
+ <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
+ <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
+ <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
+ <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
+ <db3ede63-8708-469f-8e7b-aca798ed50e0@linaro.org>
+ <4b00c41c-7751-40ca-bf2d-53f1179772d4@gmail.com>
+ <9ec2dd42-5173-40df-8e6b-9c09f2d77f67@linaro.org>
+ <6d511cc4-f22c-4c8f-a1ea-a8d99be95157@gmail.com>
+ <e3bc24d6-d9ef-4705-8de7-05460f915b17@linaro.org>
+From: Jacky Huang <ychuang570808@gmail.com>
+In-Reply-To: <e3bc24d6-d9ef-4705-8de7-05460f915b17@linaro.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-This makes it possible to provide basic clock output on pins
-14 and 15. The clocks are typically used by random electronics,
-not modeled in the device tree, so they just need to be provided
-on request.
+Dear Krzysztof,
 
-In order to not disturb old systems that require that the
-hardware defaults are kept in the clock setting bits, we only
-manipulate these if either device tree property is present.
-Once we know a device needs one of the clocks we can set it
-in the device tree.
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
-The GPIO block on the very legacy IXP4xx GPIO can provide
-a generated clock output on GPIO 14 and GPIO 15. This
-provides a straight-forward solution with a flag for each
-clock output.
+On 2023/11/29 下午 06:54, Krzysztof Kozlowski wrote:
+> On 29/11/2023 11:14, Jacky Huang wrote:
+>> Dear Krzysztof,
+>>
+>>
+>> On 2023/11/29 下午 06:02, Krzysztof Kozlowski wrote:
+>>> On 29/11/2023 10:41, Jacky Huang wrote:
+>>>> Dear Krzysztof,
+>>>>
+>>>>
+>>>> On 2023/11/29 下午 04:11, Krzysztof Kozlowski wrote:
+>>>>> On 29/11/2023 04:35, Jacky Huang wrote:
+>>>>>>>>> Best regards,
+>>>>>>>>> Krzysztof
+>>>>>>>>>
+>>>>>>>> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such
+>>>>>>>> issues.
+>>>>>>>> Anyway, I will fix it in the next version.
+>>>>>>> Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
+>>>>>>> the binding issue.
+>>>>>>>
+>>>>>>> The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
+>>>>>>> realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
+>>>>>>>
+>>>>>>> I don't understand why do you need them yet. I don't see any populate of
+>>>>>>> children. There are no compatibles, either.
+>>>>>>>
+>>>>>>> Which part of your driver uses them exactly?
+>>>>>>>
+>>>>>>> Best regards,
+>>>>>>> Krzysztof
+>>>>>>>
+>>>>>> I will move the 'pcfg_default: pin-default' from dtsi to dts, like this:
+>>>>>>
+>>>>>> &pinctrl {
+>>>>>>         pcfg_default: pin-default {
+>>>>>>             slew-rate = <0>;
+>>>>>>             input-schmitt-disable;
+>>>>>>             bias-disable;
+>>>>>>             power-source = <1>;
+>>>>>>             drive-strength = <17100>;
+>>>>>>         };
+>>>>> This solves nothing. It's the same placement.
+>>>>>
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>> OK, it stil be the binding issues.
+>>>> For "^pin-[a-z0-9]+$", I reference to the "pcfg-[a-z0-9-]+$" of
+>>>> rockchip,pinctrl.yaml.
+>>>>
+>>>> My intention is to describe a generic pin configuration, aiming to make
+>>>> the pin
+>>>> description more concise. In actual testing, it proves to be effective.
+>>> Can you instead respond to my actual questions?
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>> The the last one item of nuvoton,pins is a phandle, which can refer to
+>> '&pin-default'. The following code of driver pinctrl-ma35.c parse
+>> "nuvoton,pins", including the node reference by phandle. list =
+>> of_get_property(np, "nuvoton,pins", &size); size /= sizeof(*list); if
+>> (!size || size % 4) { dev_err(npctl->dev, "wrong setting!\n"); return
+>> -EINVAL; } grp->npins = size / 4; grp->pins = devm_kzalloc(npctl->dev,
+>> grp->npins * sizeof(*grp->pins), GFP_KERNEL); if (!grp->pins) return
+>> -ENOMEM; pin = grp->settings = devm_kzalloc(npctl->dev, grp->npins *
+>> sizeof(*grp->settings), GFP_KERNEL); if (!grp->settings) return -ENOMEM;
+>> for (i = 0, j = 0; i < size; i += 4, j++) { struct device_node
+>> *np_config; const __be32 *phandle; pin->offset = be32_to_cpu(*list++) *
+>> MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE; pin->shift =
+>> (be32_to_cpu(*list++) * MA35_MFP_BITS_PER_PORT) % 32; pin->muxval =
+>> be32_to_cpu(*list++); phandle = list++; if (!phandle) return -EINVAL;
+>> np_config = of_find_node_by_phandle(be32_to_cpup(phandle)); ret =
+>> pinconf_generic_parse_dt_config(np_config, NULL, &pin->configs,
+>> &pin->nconfigs); if (ret) return ret; grp->pins[j] =
+>> npctl->info->get_pin_num(pin->offset, pin->shift); pin++; } Best
+>> Regards, Jacky Huang
+> Sorry, I cannot parse it.
+>
+> I was referring to the children with unit addresses. I don't see any
+> populate of the children, so why do you need them?
+>
+> There are no compatibles, either.
+>
+> Which part of your driver uses them exactly?
+>
+> Best regards,
+> Krzysztof
+>
+So, I should update the binding from "^pin-[a-z0-9]+$" to something like 
+"-pincfg$".
+Just remove the unit address part, and it will become:
 
-More complicated solutions are thinkable, but I deemed them
-overdesigned for this legacy SoC.
----
-Changes in v4:
-- Drop the merged bindings patch from the series.
-- Fix a small optimization suggested by andy.
-- Do not |= zeroes on registers, just put in a comment.
-- Link to v3: https://lore.kernel.org/r/20230923-ixp4xx-gpio-clocks-v3-0-66f8fe4e7f15@linaro.org
+     default-pincfg {
+         slew-rate = <0>;
+         input-schmitt-disable;
+         bias-disable;
+         power-source = <1>;
+         drive-strength = <17100>;
+     };
 
-Changes in v3:
-- Make sure to only manipulate the clock bits if one of the clock
-  DT properties is set. Devices we can't test may rely on HW defaults being
-  preserved in the clock bits.
-- Link to v2: https://lore.kernel.org/r/20230922-ixp4xx-gpio-clocks-v2-0-0215ee10976d@linaro.org
 
-Changes in v2:
-- Fixed formatting pipe | in bindings
-- Fixed som blank lines in bindings
-- When we will just blank out the clock register settings,
-  don't spend time reading the initial value.
-- Link to v1: https://lore.kernel.org/r/20230921-ixp4xx-gpio-clocks-v1-0-574942bf944a@linaro.org
----
- drivers/gpio/gpio-ixp4xx.c | 51 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 50 insertions(+), 1 deletion(-)
+Best Regards,
+Jacky Huang
 
-diff --git a/drivers/gpio/gpio-ixp4xx.c b/drivers/gpio/gpio-ixp4xx.c
-index dde6cf3a5779..c5a9fa640566 100644
---- a/drivers/gpio/gpio-ixp4xx.c
-+++ b/drivers/gpio/gpio-ixp4xx.c
-@@ -38,6 +38,18 @@
- #define IXP4XX_GPIO_STYLE_MASK		GENMASK(2, 0)
- #define IXP4XX_GPIO_STYLE_SIZE		3
- 
-+/*
-+ * Clock output control register defines.
-+ */
-+#define IXP4XX_GPCLK_CLK0DC_SHIFT	0
-+#define IXP4XX_GPCLK_CLK0TC_SHIFT	4
-+#define IXP4XX_GPCLK_CLK0_MASK		GENMASK(7, 0)
-+#define IXP4XX_GPCLK_MUX14		BIT(8)
-+#define IXP4XX_GPCLK_CLK1DC_SHIFT	16
-+#define IXP4XX_GPCLK_CLK1TC_SHIFT	20
-+#define IXP4XX_GPCLK_CLK1_MASK		GENMASK(23, 16)
-+#define IXP4XX_GPCLK_MUX15		BIT(24)
-+
- /**
-  * struct ixp4xx_gpio - IXP4 GPIO state container
-  * @dev: containing device for this instance
-@@ -202,6 +214,8 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
- 	struct ixp4xx_gpio *g;
- 	struct gpio_irq_chip *girq;
- 	struct device_node *irq_parent;
-+	bool clk_14, clk_15;
-+	u32 val;
- 	int ret;
- 
- 	g = devm_kzalloc(dev, sizeof(*g), GFP_KERNEL);
-@@ -225,13 +239,48 @@ static int ixp4xx_gpio_probe(struct platform_device *pdev)
- 	}
- 	g->fwnode = of_node_to_fwnode(np);
- 
-+	/*
-+	 * If either clock output is enabled explicitly in the device tree
-+	 * we take full control of the clock by masking off all bits for
-+	 * the clock control and selectively enabling them. Otherwise
-+	 * we leave the hardware default settings.
-+	 *
-+	 * Enable clock outputs with default timings of requested clock.
-+	 * If you need control over TC and DC, add these to the device
-+	 * tree bindings and use them here.
-+	 */
-+	clk_14 = of_property_read_bool(np, "intel,ixp4xx-gpio14-clkout");
-+	clk_15 = of_property_read_bool(np, "intel,ixp4xx-gpio15-clkout");
-+
- 	/*
- 	 * Make sure GPIO 14 and 15 are NOT used as clocks but GPIO on
- 	 * specific machines.
- 	 */
- 	if (of_machine_is_compatible("dlink,dsm-g600-a") ||
- 	    of_machine_is_compatible("iom,nas-100d"))
--		__raw_writel(0x0, g->base + IXP4XX_REG_GPCLK);
-+		val = 0;
-+	else {
-+		val = __raw_readl(g->base + IXP4XX_REG_GPCLK);
-+
-+		if (clk_14 || clk_15) {
-+			val &= ~(IXP4XX_GPCLK_MUX14 | IXP4XX_GPCLK_MUX15);
-+			val &= ~IXP4XX_GPCLK_CLK0_MASK;
-+			val &= ~IXP4XX_GPCLK_CLK1_MASK;
-+			if (clk_14) {
-+				/* IXP4XX_GPCLK_CLK0DC implicit low */
-+				val |= (1 << IXP4XX_GPCLK_CLK0TC_SHIFT);
-+				val |= IXP4XX_GPCLK_MUX14;
-+			}
-+
-+			if (clk_15) {
-+				/* IXP4XX_GPCLK_CLK1DC implicit low */
-+				val |= (1 << IXP4XX_GPCLK_CLK1TC_SHIFT);
-+				val |= IXP4XX_GPCLK_MUX15;
-+			}
-+		}
-+	}
-+
-+	__raw_writel(val, g->base + IXP4XX_REG_GPCLK);
- 
- 	/*
- 	 * This is a very special big-endian ARM issue: when the IXP4xx is
 
----
-base-commit: b85ea95d086471afb4ad062012a4d73cd328fa86
-change-id: 20230921-ixp4xx-gpio-clocks-7e82289f4bb3
 
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
 
 
