@@ -1,119 +1,176 @@
-Return-Path: <linux-gpio+bounces-747-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-749-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 942217FE733
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 03:41:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A9FF7FE8C3
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 06:38:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C52891C20C2A
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 02:41:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3C7811C20B27
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 05:38:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E85811721;
-	Thu, 30 Nov 2023 02:41:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40F6D168B0;
+	Thu, 30 Nov 2023 05:38:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aX+sBUso"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="JuJD0AIy"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4261E10F0;
-	Wed, 29 Nov 2023 18:41:30 -0800 (PST)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AU2U8Dc028445;
-	Thu, 30 Nov 2023 02:41:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=qcppdkim1;
- bh=j238Yxooc4qTG9PLIHMfDLq47mg7/fDUNDBTLUxSb3g=;
- b=aX+sBUsoWs0X67I/fROjha3iT95FSaQb2p4LWrmKE6lgwUlqNKstlDcZHrXoxbmt/Pow
- z4tBy0BvXfR1fsXb3yhJ2N5jFhIYZy4XOgaR1OHn82oS3a80sTe/czblNByRNmFSDMzO
- nlTPkOdmyXVYJ34kc7SP67rKzW4Ew/sqWjrhO2onh+OKfkskyc8BJzb0hbogTMfobQ2s
- WaMaxwvZ63ZSyRzyby8XmEGtJzmuNsnD95tklT8wY/e8iNQ/J5HKMSwjhjfeZ2J1S7LO
- Vo5HJPg1fbibzkpAq2WzSwxssiSC31FxkpOUyE07s25Vol0QR5GUm+ktkLVvF9DL8xca 2Q== 
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3upbu58pu1-1
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4DB1F198;
+	Wed, 29 Nov 2023 21:38:02 -0800 (PST)
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3AU4rmH0004391;
+	Thu, 30 Nov 2023 05:37:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=IQ9Dg6khK07xMiIBzuk7297S9BV6a1vgqK58LceC2J0=;
+ b=JuJD0AIy9kdSpuImpU6k2rr8CK+cbVAyuRRQ/tNs4XOLIE1n334jag0BpMgJ+XRbF4G4
+ QdczhBW8Hi76mvmq+aqARxHfNVSihOAPiICkl40ayz/dUnwD/q6nEFHUOOxwpjI7q7ay
+ NpRdj7do3XWhXlA7Q1uREhLNQ4Fza6dSex/Hu+3FQ/t3dsnbEC9MuHpYHN20u5H0viTw
+ m1j4QCLwHl/iU13K9K1yK1bwlbuuxS4lank1+hmurht2S4zs/3Peu5udp7XYGUlpvkfL
+ 9tpT/Otu3k0mR1zS6Q0XgqLMVZZjkjhmgm6mD7AratuB65vW63TiIjYuoXDSe0G8UEXp bg== 
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3up5e8t99b-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Nov 2023 02:41:27 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AU2fQTp028779
+	Thu, 30 Nov 2023 05:37:56 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3AU5bt4G004641
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Nov 2023 02:41:26 GMT
-Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Wed, 29 Nov 2023 18:41:21 -0800
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-To: <andersson@kernel.org>, <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>
-Subject: [PATCH v5 4/4] pinctrl: qcom: sm4450: correct incorrect address offset
-Date: Thu, 30 Nov 2023 10:40:46 +0800
-Message-ID: <20231130024046.25938-5-quic_tengfan@quicinc.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20231130024046.25938-1-quic_tengfan@quicinc.com>
-References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
+	Thu, 30 Nov 2023 05:37:55 GMT
+Received: from [10.239.133.73] (10.80.80.8) by nasanex01a.na.qualcomm.com
+ (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 29 Nov
+ 2023 21:37:54 -0800
+Message-ID: <e703c87e-32b9-4dce-b232-89c0e909c35e@quicinc.com>
+Date: Thu, 30 Nov 2023 13:37:51 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla Thunderbird
+Subject: Re: [GIT PULL] Pin control fixes for v6.7
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Linus Torvalds
+	<torvalds@linux-foundation.org>
+CC: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel
+	<linux-kernel@vger.kernel.org>,
+        Charles Keepax
+	<ckeepax@opensource.cirrus.com>,
+        Chester Lin <clin@suse.com>
+References: <CACRpkdZtVNZFWSUgb4=gUE2mQRb=aT_3=zRv1U71Vsq0Mm34eg@mail.gmail.com>
+ <CAHk-=whk4oNQazgpzkujc2=ntVQMhU5ko7Canp2Uuq6CpyGzmA@mail.gmail.com>
+ <CACRpkdZRf7bNVmJCgsVD0uheD1VLkLKG13d1oS-kbT8BFyRKQw@mail.gmail.com>
+From: "Aiqun(Maria) Yu" <quic_aiquny@quicinc.com>
+In-Reply-To: <CACRpkdZRf7bNVmJCgsVD0uheD1VLkLKG13d1oS-kbT8BFyRKQw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
+ nasanex01a.na.qualcomm.com (10.52.223.231)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 3u7teUg1RMyEZPP3yz-L_OuC5EpW8tA9
-X-Proofpoint-GUID: 3u7teUg1RMyEZPP3yz-L_OuC5EpW8tA9
+X-Proofpoint-GUID: 3Uv19rQtdR-Dh05KVC5dC-5hsS6i6MBx
+X-Proofpoint-ORIG-GUID: 3Uv19rQtdR-Dh05KVC5dC-5hsS6i6MBx
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-11-29_21,2023-11-29_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 suspectscore=0 spamscore=0 clxscore=1015 impostorscore=0
- mlxscore=0 priorityscore=1501 phishscore=0 adultscore=0 mlxlogscore=889
+ definitions=2023-11-30_03,2023-11-29_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 phishscore=0 malwarescore=0 lowpriorityscore=0 spamscore=0
+ clxscore=1011 impostorscore=0 adultscore=0 mlxlogscore=933 mlxscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2311300018
+ engine=8.12.0-2311060000 definitions=main-2311300041
 
-The address offset of 0x100000 is already provided in SM4450 DTSI, so
-subtract 0x100000 from the offset which used by ufs and sdc.
+On 11/29/2023 11:08 PM, Linus Walleij wrote:
+> On Wed, Nov 29, 2023 at 3:56 PM Linus Torvalds
+> <torvalds@linux-foundation.org> wrote:
+>> On Wed, 29 Nov 2023 at 04:09, Linus Walleij <linus.walleij@linaro.org> wrote:
+>>>
+>>> The most interesting patch is the list iterator fix in the core by Maria
+>>> Yu, it took a while for me to realize what was going on there.
+>>
+>> That commit message still doesn't explain what the problem was.
+>>
+>> Why is p->state volatile there? It seems to be a serious locking bug
+>> if p->state can randomly change there, and the READ_ONCE() looks like
+>> a "this hides the problem" rather than an actual real fix.
+This is indeed an interesting issue. Thx for the comment, Linus.
+**Let me explain how: "p->state becomes volatile in the list iterator", 
+and "why READ_ONCE is suggested".
 
-Suggested-by: Can Guo <quic_cang@quicinc.com>
-Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-sm4450.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+The current critical code is:
+   list_for_each_entry(setting, &p->state->settings, node)
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-sm4450.c b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-index 49e2e3a7a9cb..5496f955ed2a 100644
---- a/drivers/pinctrl/qcom/pinctrl-sm4450.c
-+++ b/drivers/pinctrl/qcom/pinctrl-sm4450.c
-@@ -936,14 +936,14 @@ static const struct msm_pingroup sm4450_groups[] = {
- 	[133] = PINGROUP(133, _, phase_flag, _, _, _, _, _, _, _),
- 	[134] = PINGROUP(134, tsense_pwm1_out, tsense_pwm2_out, _, _, _, _, _, _, _),
- 	[135] = PINGROUP(135, _, phase_flag, _, _, _, _, _, _, _),
--	[136] = UFS_RESET(ufs_reset, 0x197000),
--	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x18c004, 0, 0),
--	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x18c000, 13, 6),
--	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x18c000, 11, 3),
--	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x18c000, 9, 0),
--	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x18f000, 14, 6),
--	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x18f000, 11, 3),
--	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x18f000, 9, 0),
-+	[136] = UFS_RESET(ufs_reset, 0x97000),
-+	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x8c004, 0, 0),
-+	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x8c000, 13, 6),
-+	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x8c000, 11, 3),
-+	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x8c000, 9, 0),
-+	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x8f000, 14, 6),
-+	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x8f000, 11, 3),
-+	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x8f000, 9, 0),
- };
- 
- static const struct msm_gpio_wakeirq_map sm4450_pdc_map[] = {
+after elaborating the define list_for_each_entry, so above critical code 
+will be:
+   for (setting = list_head(&p->state->settings, typeof(*setting), node); \
+&setting->node != (&p->state->settings); \
+setting = list_next(setting , node))
+
+The asm code(refer result from Clang version 10.0) can cleared explain 
+the step of p->state reload actions:
+loop:
+ldr x22,[x22] ; x22=list_next(setting , node))
+add x9,x8,#0x18 ; x9=&p->state->setting
+cmp x22,x9 ; setting,x9
+b.eq 0xFFFFFF9B24483530
+
+ldr w9,[x22,#0x10] ; w9,[setting,#16]
+cmp w9,#0x2 ; w9,#2
+b.ne 0xFFFFFF9B24483504
+
+mov x0,x22 ; x0,setting
+bl 0xFFFFFF9B24486048 ; pinmux_disable_setting
+
+ldr x8,[x19,#0x28] ; x19=p, x8=[p->state], *reload p->state*
+b loop
+
+The *reload p->state* inside the loop for checking is not needed and can 
+cause possible infinite loop. So READ_ONCE is highly suggested even if 
+p->state is not randomly changed. And then unnecessary "ldr 
+x8,[x19,#0x28]" can be removed from above loop code.
+
+**Comments about the locking bug:
+currently pinctrl_select_state is an export symbol and don't have 
+effective reentrance protect design. That's why current infinite loop 
+issue was observed with customer's multi thread call with 
+pinctrl_select_state without lock protection. pinctrl_select_state 
+totally rely on driver module user side to ensure the reentrant state.
+
+Usually the suggested usage from driver side who are using pinctrl would be:
+LOCK;
+pinctrl_select_state();
+gpio pulling;
+udelay();
+check state;
+other hardware behaviors;
+UNLOCK;
+
+So the locking bug fix I have told customer side to fix from their own 
+driver part. Since usually not only a simple pinctrl_select_state call 
+can finish the hardware state transaction.
+
+I myself also is fine to have a small per pinctrl lock to only protect 
+the current pinctrl_select_state->pinctrl_commit_state reentrance 
+issues. Pls any pinctrl maintainer help to comment to suggest or not and 
+I can prepare a change as well.
+> 
+> Thanks for looking into it Linus, Maria can you look closer at this and
+> try to pinpoint exactly what happens? 
+Sure, I am trying to explain from my end. If there is other thoughts pls 
+feel free to chime in.
+> 
+> Is the bug never manifesting with GCC for example?
+> 
+> In the meantime I'll cook a fixes branch without this one commit.
+> 
+> Yours,
+> Linus Walleij
+
 -- 
-2.17.1
+Thx and BRs,
+Aiqun(Maria) Yu
 
 
