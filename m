@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-759-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-758-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0397B7FEAD2
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 09:35:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 873EA7FEAD0
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 09:35:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AE12D284250
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 08:35:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3CB7F28423A
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 08:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D492C84A;
-	Thu, 30 Nov 2023 08:35:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65E202EB10;
+	Thu, 30 Nov 2023 08:34:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AMVv3dUv"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VNSekgl3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0789FB2
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 00:34:58 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6E0A410E0
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 00:34:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701333297; x=1732869297;
+  t=1701333294; x=1732869294;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=JHr+VCox4m2nofXFeu4Vg+oKk011j0SzF5wb0zg1MYo=;
-  b=AMVv3dUvyyicsTm1Oyg2p3wbR6TUaSuU+vTCZonGfRB6VRJFtJjqXdNf
-   r/WwUE6n2meJfBA1j1X/1jFiGdwY8I5eHxSw27kGTDKvcrgNYkN2xeXiJ
-   H3L3v9imBAoC/t/pm3uo00upOE/llXrHmSVlzVhQKT1EGZ0oWroP79v1W
-   AXPbQYDXmqPh91q1E0hABYHxEi0Edvbj3o/X1LjFtHN2uSjevpIYMWegq
-   yQNnCTIl0WAhl5dnCwoAtzm8iGG3D1FaJyT6BnEQBSyHRBibe/KNCnfyR
-   6xb1Ky9NNDtIqEUYjXI/YSPajh+1SqRodRD2n8xdnR3d+fXPj2WlWUH4Y
+  bh=eogZ8NxkyN8M/8VqKTmu1O9EFlbdUUod4mfuyHMNOKM=;
+  b=VNSekgl3F7FBy7Hcg9MoJ/80tiSVaSDr252ehBKwcCMn7u5L9TCwez33
+   swn6xCZOIePAFKs8lc17F6ano1Jx9xzLOcDR2jPwBgm6xDHJzNDigZ7el
+   4itWctCH76hmdhVXYgmvzYiEFaKUPrv19Pm8bXqQCSzlO7baoA/N/X0+Q
+   j7LMUCd3NPWbRn/XRtmPXA1FJpCmXeXP9NsIS83H2Hpe8jVY8416whSt0
+   Nj2VySD+u/PGbWlrjUYDPu7bPv8pX48aWwxYA8lAbGDzE1ieWeD2If+MJ
+   FV61XmHRb/UL4KYskrrp6kyfcwZ0r1eJ3RCTRi1NzecAXDzTV2VKFb3yp
    w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="390451529"
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="390451521"
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="390451529"
+   d="scan'208";a="390451521"
 Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 00:34:57 -0800
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 00:34:54 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
-   d="scan'208";a="17314278"
+   d="scan'208";a="17314265"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orviesa001.jf.intel.com with ESMTP; 30 Nov 2023 00:34:56 -0800
+  by orviesa001.jf.intel.com with ESMTP; 30 Nov 2023 00:34:53 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r8cVZ-0001aI-2y;
-	Thu, 30 Nov 2023 08:34:53 +0000
-Date: Thu, 30 Nov 2023 16:34:19 +0800
+	id 1r8cVV-0001a6-2n;
+	Thu, 30 Nov 2023 08:34:49 +0000
+Date: Thu, 30 Nov 2023 16:34:20 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
 Subject: [linusw-gpio:b4/descriptors-sound-cirrus 7/12]
- sound/soc/codecs/cs35l36.c:1843:8: warning: assignment to 'struct irq_data
- *' from 'int' makes pointer from integer without a cast
-Message-ID: <202311301538.eWFZQ2lU-lkp@intel.com>
+ sound/soc/codecs/cs35l36.c:1843:10: error: implicit declaration of function
+ 'irq_get_irq_data'; did you mean 'irq_set_irq_wake'?
+Message-ID: <202311301558.m5vYghpH-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,28 +64,29 @@ Content-Disposition: inline
 tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-sound-cirrus
 head:   7a0c40a60968f5390997298321ac8be86a7541de
 commit: f7347803759a03f9c457c85b961a946ece9f93f8 [7/12] ASoC: cs35l36: Drop legacy includes
-config: i386-buildonly-randconfig-005-20231130 (https://download.01.org/0day-ci/archive/20231130/202311301538.eWFZQ2lU-lkp@intel.com/config)
-compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231130/202311301538.eWFZQ2lU-lkp@intel.com/reproduce)
+config: i386-buildonly-randconfig-002-20231130 (https://download.01.org/0day-ci/archive/20231130/202311301558.m5vYghpH-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231130/202311301558.m5vYghpH-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202311301538.eWFZQ2lU-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311301558.m5vYghpH-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
    sound/soc/codecs/cs35l36.c: In function 'cs35l36_i2c_probe':
-   sound/soc/codecs/cs35l36.c:1843:10: error: implicit declaration of function 'irq_get_irq_data'; did you mean 'irq_set_irq_wake'? [-Werror=implicit-function-declaration]
-    1843 |  irq_d = irq_get_irq_data(i2c_client->irq);
-         |          ^~~~~~~~~~~~~~~~
-         |          irq_set_irq_wake
->> sound/soc/codecs/cs35l36.c:1843:8: warning: assignment to 'struct irq_data *' from 'int' makes pointer from integer without a cast [-Wint-conversion]
-    1843 |  irq_d = irq_get_irq_data(i2c_client->irq);
-         |        ^
-   sound/soc/codecs/cs35l36.c:1850:12: error: implicit declaration of function 'irqd_get_trigger_type' [-Werror=implicit-function-declaration]
-    1850 |  irq_pol = irqd_get_trigger_type(irq_d);
-         |            ^~~~~~~~~~~~~~~~~~~~~
+>> sound/soc/codecs/cs35l36.c:1843:10: error: implicit declaration of function 'irq_get_irq_data'; did you mean 'irq_set_irq_wake'? [-Werror=implicit-function-declaration]
+     irq_d = irq_get_irq_data(i2c_client->irq);
+             ^~~~~~~~~~~~~~~~
+             irq_set_irq_wake
+>> sound/soc/codecs/cs35l36.c:1843:8: warning: assignment makes pointer from integer without a cast [-Wint-conversion]
+     irq_d = irq_get_irq_data(i2c_client->irq);
+           ^
+>> sound/soc/codecs/cs35l36.c:1850:12: error: implicit declaration of function 'irqd_get_trigger_type'; did you mean 'snd_pcm_trigger_done'? [-Werror=implicit-function-declaration]
+     irq_pol = irqd_get_trigger_type(irq_d);
+               ^~~~~~~~~~~~~~~~~~~~~
+               snd_pcm_trigger_done
    cc1: some warnings being treated as errors
 
 
@@ -242,7 +243,7 @@ eb23dcd20e91fe Dan Carpenter      2019-02-22  1846  		ret = -ENODEV;
 6ba9dd6c893b8e James Schulman     2019-02-07  1847  		goto err;
 6ba9dd6c893b8e James Schulman     2019-02-07  1848  	}
 6ba9dd6c893b8e James Schulman     2019-02-07  1849  
-6ba9dd6c893b8e James Schulman     2019-02-07  1850  	irq_pol = irqd_get_trigger_type(irq_d);
+6ba9dd6c893b8e James Schulman     2019-02-07 @1850  	irq_pol = irqd_get_trigger_type(irq_d);
 6ba9dd6c893b8e James Schulman     2019-02-07  1851  
 6ba9dd6c893b8e James Schulman     2019-02-07  1852  	switch (irq_pol) {
 6ba9dd6c893b8e James Schulman     2019-02-07  1853  	case IRQF_TRIGGER_FALLING:
