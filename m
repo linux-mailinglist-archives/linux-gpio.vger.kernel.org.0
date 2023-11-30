@@ -1,251 +1,320 @@
-Return-Path: <linux-gpio+bounces-755-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-756-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4DBD7FEA27
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 09:04:19 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8623E7FEA44
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 09:14:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5FA0F281B55
-	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 08:04:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D832CB20EBF
+	for <lists+linux-gpio@lfdr.de>; Thu, 30 Nov 2023 08:14:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3A0320DF6;
-	Thu, 30 Nov 2023 08:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46F8D22095;
+	Thu, 30 Nov 2023 08:14:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RDMLMMsM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aq10C/E3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5367910EF
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 00:04:11 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-54c11430624so264910a12.1
-        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 00:04:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701331450; x=1701936250; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=z89fwBKk9m9+yFv5AqVLFvL0LJt5mjyMZmAmBxfuD7Y=;
-        b=RDMLMMsMavRPUotiwbuOEOFI0JiJmTXiG6Ubip6l+bTVeX1kbgoIUgzlBOiA/S2Sn8
-         l3YDmdm5SzDyoRzd8eaqmm3xwIX6d45FOWmLeRl6M2oM5lsLI1GDSytB4nCUIc2X/dYr
-         u7UcgdJXsWjfU1bLWuLNV1wnvRqCcnyfteWVkvCleGn2TPe/Yt8rfUpPF38hqW3MZU2r
-         O4YfLK/rExp9sFJQZMbWvemD5XUSJ/3Uhuf5FK9szMgDpM3SOIZho7GpLzsMzNN54uqC
-         zNUFWeWqGh4PCNld8zExON+Tbm6C5hqF9AXVLVymZ4tYP5+Xnqm75ky2rPxq34S4mgwH
-         W6qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701331450; x=1701936250;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=z89fwBKk9m9+yFv5AqVLFvL0LJt5mjyMZmAmBxfuD7Y=;
-        b=d5eVdHnXnoZZaunnphOW3MtOnegT35D+pnHa4CJoQRQhGXdBZByNOLizAmpPZvnr18
-         fZiekOAVRn5Kwf7vNl1D49DWmgn/i4d8MUgrctCRW/Z/9e2fIEIMb+3xJ2LVjB2fUmMB
-         OzXnKTT7TFHjNyf/tMdmL8dWW7opVLO/G/jULmAJ8OGOwtTNwmjs2u4ClxuU2USUf5tY
-         WjxSVfk3ghD8J0rqY6o9F/z/ezwlZwfV/a/cbLewFBDJ+QqmFWq/w5A7wjB2Y+6OOcSe
-         RG6xvAFXc2VVs+2aqtky1/IEpVcr0OPXNEYaSYPqSNiA+PhUe2/vwj8+fJ68ophRJ/d0
-         MGgg==
-X-Gm-Message-State: AOJu0YygEpGmH+MzTgMjiM3ySDmGOAxzDpvZlf4SpDYUedGvzsTcXQjj
-	TnmvdE3JxR1Tbg4aSRRkvjOW6w==
-X-Google-Smtp-Source: AGHT+IFm0tw2G+RxKE5+Kjg3DkA1Wmz63e2K7JXPSmxLpDcmyZulzZ1f53VtnysLnP51WymzKqdseg==
-X-Received: by 2002:a50:ccc2:0:b0:548:a1cd:a92c with SMTP id b2-20020a50ccc2000000b00548a1cda92cmr17295023edj.5.1701331449804;
-        Thu, 30 Nov 2023 00:04:09 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.223.109])
-        by smtp.gmail.com with ESMTPSA id b22-20020aa7df96000000b0054b3a6243b1sm291363edy.71.2023.11.30.00.04.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 30 Nov 2023 00:04:09 -0800 (PST)
-Message-ID: <4e4a67c8-6c95-497f-82b3-d4328a18f249@linaro.org>
-Date: Thu, 30 Nov 2023 09:04:08 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E8056A3
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 00:14:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701332055; x=1732868055;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=KyoLaXkYyFyoEpkVCocVFPAun/Weeg6wkf/4ytV72xI=;
+  b=aq10C/E3tJou6r59FNlDRYQEF+hLotV2AA3XO59QshOQ7odjyB2JJ/iM
+   KXDkJ65E7uJDPLcZtpsnyEaVD1rfPEQOmz53kyF83VIPalwYDrPiJuOda
+   MwmWjgBV3pNbyIZpKhMKYumFSa9hWgkAP+A3JFPGjnImCem76EaDxnC9f
+   SUDJHjTvljdl5E8QTZTJ9v62GkpY/ocbiycj9oufUO9d4njX+gyx4Uihz
+   28GB9cFSAgV6kJ4+pfdVxoXw+uY0rzowcF4wIWOv/qSTs4dDLnc5ucR9d
+   QhtB0EpPljOvTMzScV2ixlehe3A96iCD5kiK0ol40/QF0YkJSrkfrLUQC
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="479489137"
+X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
+   d="scan'208";a="479489137"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 00:14:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10909"; a="762605585"
+X-IronPort-AV: E=Sophos;i="6.04,237,1695711600"; 
+   d="scan'208";a="762605585"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 30 Nov 2023 00:14:13 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1r8cBN-0001Xq-34;
+	Thu, 30 Nov 2023 08:14:07 +0000
+Date: Thu, 30 Nov 2023 16:13:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:b4/descriptors-sound-cirrus 7/12]
+ sound/soc/codecs/cs35l36.c:1843:10: error: call to undeclared function
+ 'irq_get_irq_data'; ISO C99 and later do not support implicit function
+ declarations
+Message-ID: <202311301430.9zotvGQE-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/4] arm64: dts: nuvoton: Add pinctrl support for
- ma35d1
-Content-Language: en-US
-To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20231128061118.575847-1-ychuang570808@gmail.com>
- <20231128061118.575847-4-ychuang570808@gmail.com>
- <7edda3ca-b98a-4125-979f-3ee7ac718a9a@linaro.org>
- <a0be9aaa-290d-450e-b0b8-d87453bcaaa0@gmail.com>
- <7fed5d90-da04-40fb-8677-b807b6f51cc9@linaro.org>
- <8663d26e-32b8-4f2b-b497-9efa7440f070@gmail.com>
- <2fab32e6-23a4-41bb-b47b-4f993fc590dc@linaro.org>
- <ff83f0f2-541a-4677-a247-5f47fdcca3f1@gmail.com>
- <db3ede63-8708-469f-8e7b-aca798ed50e0@linaro.org>
- <4b00c41c-7751-40ca-bf2d-53f1179772d4@gmail.com>
- <9ec2dd42-5173-40df-8e6b-9c09f2d77f67@linaro.org>
- <6d511cc4-f22c-4c8f-a1ea-a8d99be95157@gmail.com>
- <e3bc24d6-d9ef-4705-8de7-05460f915b17@linaro.org>
- <9c41e6d4-fe47-4e87-b0a7-f5ecaec720b3@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <9c41e6d4-fe47-4e87-b0a7-f5ecaec720b3@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 30/11/2023 02:10, Jacky Huang wrote:
-> Dear Krzysztof,
-> 
-> 
-> On 2023/11/29 下午 06:54, Krzysztof Kozlowski wrote:
->> On 29/11/2023 11:14, Jacky Huang wrote:
->>> Dear Krzysztof,
->>>
->>>
->>> On 2023/11/29 下午 06:02, Krzysztof Kozlowski wrote:
->>>> On 29/11/2023 10:41, Jacky Huang wrote:
->>>>> Dear Krzysztof,
->>>>>
->>>>>
->>>>> On 2023/11/29 下午 04:11, Krzysztof Kozlowski wrote:
->>>>>> On 29/11/2023 04:35, Jacky Huang wrote:
->>>>>>>>>> Best regards,
->>>>>>>>>> Krzysztof
->>>>>>>>>>
->>>>>>>>> Yes, it did pass the 'dtbs_check'. I guess the tool does not detect such
->>>>>>>>> issues.
->>>>>>>>> Anyway, I will fix it in the next version.
->>>>>>>> Hm, I see your bindings indeed allow pin-.* and unit addresses, so it is
->>>>>>>> the binding issue.
->>>>>>>>
->>>>>>>> The examples you used as reference - xlnx,zynqmp-pinctrl.yaml and
->>>>>>>> realtek,rtd1315e-pinctrl.yaml - do not mix these as you do.
->>>>>>>>
->>>>>>>> I don't understand why do you need them yet. I don't see any populate of
->>>>>>>> children. There are no compatibles, either.
->>>>>>>>
->>>>>>>> Which part of your driver uses them exactly?
->>>>>>>>
->>>>>>>> Best regards,
->>>>>>>> Krzysztof
->>>>>>>>
->>>>>>> I will move the 'pcfg_default: pin-default' from dtsi to dts, like this:
->>>>>>>
->>>>>>> &pinctrl {
->>>>>>>         pcfg_default: pin-default {
->>>>>>>             slew-rate = <0>;
->>>>>>>             input-schmitt-disable;
->>>>>>>             bias-disable;
->>>>>>>             power-source = <1>;
->>>>>>>             drive-strength = <17100>;
->>>>>>>         };
->>>>>> This solves nothing. It's the same placement.
->>>>>>
->>>>>>
->>>>>> Best regards,
->>>>>> Krzysztof
->>>>>>
->>>>> OK, it stil be the binding issues.
->>>>> For "^pin-[a-z0-9]+$", I reference to the "pcfg-[a-z0-9-]+$" of
->>>>> rockchip,pinctrl.yaml.
->>>>>
->>>>> My intention is to describe a generic pin configuration, aiming to make
->>>>> the pin
->>>>> description more concise. In actual testing, it proves to be effective.
->>>> Can you instead respond to my actual questions?
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>>
->>> The the last one item of nuvoton,pins is a phandle, which can refer to
->>> '&pin-default'. The following code of driver pinctrl-ma35.c parse
->>> "nuvoton,pins", including the node reference by phandle. list =
->>> of_get_property(np, "nuvoton,pins", &size); size /= sizeof(*list); if
->>> (!size || size % 4) { dev_err(npctl->dev, "wrong setting!\n"); return
->>> -EINVAL; } grp->npins = size / 4; grp->pins = devm_kzalloc(npctl->dev,
->>> grp->npins * sizeof(*grp->pins), GFP_KERNEL); if (!grp->pins) return
->>> -ENOMEM; pin = grp->settings = devm_kzalloc(npctl->dev, grp->npins *
->>> sizeof(*grp->settings), GFP_KERNEL); if (!grp->settings) return -ENOMEM;
->>> for (i = 0, j = 0; i < size; i += 4, j++) { struct device_node
->>> *np_config; const __be32 *phandle; pin->offset = be32_to_cpu(*list++) *
->>> MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE; pin->shift =
->>> (be32_to_cpu(*list++) * MA35_MFP_BITS_PER_PORT) % 32; pin->muxval =
->>> be32_to_cpu(*list++); phandle = list++; if (!phandle) return -EINVAL;
->>> np_config = of_find_node_by_phandle(be32_to_cpup(phandle)); ret =
->>> pinconf_generic_parse_dt_config(np_config, NULL, &pin->configs,
->>> &pin->nconfigs); if (ret) return ret; grp->pins[j] =
->>> npctl->info->get_pin_num(pin->offset, pin->shift); pin++; } Best
->>> Regards, Jacky Huang
->> Sorry, I cannot parse it.
->>
->> I was referring to the children with unit addresses. I don't see any
->> populate of the children, so why do you need them?
->>
->> There are no compatibles, either.
->>
->> Which part of your driver uses them exactly?
->>
->> Best regards,
->> Krzysztof
->>
-> So, I should update the binding from "^pin-[a-z0-9]+$" to something like 
-> "-pincfg$".
-> Just remove the unit address part, and it will become:
-> 
->      default-pincfg {
->          slew-rate = <0>;
->          input-schmitt-disable;
->          bias-disable;
->          power-source = <1>;
->          drive-strength = <17100>;
->      };
-> 
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-sound-cirrus
+head:   7a0c40a60968f5390997298321ac8be86a7541de
+commit: f7347803759a03f9c457c85b961a946ece9f93f8 [7/12] ASoC: cs35l36: Drop legacy includes
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20231130/202311301430.9zotvGQE-lkp@intel.com/config)
+compiler: clang version 16.0.4 (https://github.com/llvm/llvm-project.git ae42196bc493ffe877a7e3dff8be32035dea4d07)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231130/202311301430.9zotvGQE-lkp@intel.com/reproduce)
 
-No, it solves nothing. Instead of pasting more code, can you answer my
-questions?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202311301430.9zotvGQE-lkp@intel.com/
 
-Best regards,
-Krzysztof
+All errors (new ones prefixed by >>):
 
+>> sound/soc/codecs/cs35l36.c:1843:10: error: call to undeclared function 'irq_get_irq_data'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           irq_d = irq_get_irq_data(i2c_client->irq);
+                   ^
+   sound/soc/codecs/cs35l36.c:1843:10: note: did you mean 'irq_set_irq_wake'?
+   include/linux/interrupt.h:482:12: note: 'irq_set_irq_wake' declared here
+   extern int irq_set_irq_wake(unsigned int irq, unsigned int on);
+              ^
+>> sound/soc/codecs/cs35l36.c:1843:8: error: incompatible integer to pointer conversion assigning to 'struct irq_data *' from 'int' [-Wint-conversion]
+           irq_d = irq_get_irq_data(i2c_client->irq);
+                 ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> sound/soc/codecs/cs35l36.c:1850:12: error: call to undeclared function 'irqd_get_trigger_type'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+           irq_pol = irqd_get_trigger_type(irq_d);
+                     ^
+   3 errors generated.
+
+
+vim +/irq_get_irq_data +1843 sound/soc/codecs/cs35l36.c
+
+6ba9dd6c893b8e James Schulman     2019-02-07  1699  
+4a4043456cb82d Stephen Kitt       2022-03-25  1700  static int cs35l36_i2c_probe(struct i2c_client *i2c_client)
+6ba9dd6c893b8e James Schulman     2019-02-07  1701  {
+6ba9dd6c893b8e James Schulman     2019-02-07  1702  	struct cs35l36_private *cs35l36;
+6ba9dd6c893b8e James Schulman     2019-02-07  1703  	struct device *dev = &i2c_client->dev;
+6ba9dd6c893b8e James Schulman     2019-02-07  1704  	struct cs35l36_platform_data *pdata = dev_get_platdata(dev);
+6ba9dd6c893b8e James Schulman     2019-02-07  1705  	struct irq_data *irq_d;
+6ba9dd6c893b8e James Schulman     2019-02-07  1706  	int ret, irq_pol, chip_irq_pol, i;
+6ba9dd6c893b8e James Schulman     2019-02-07  1707  	u32 reg_id, reg_revid, l37_id_reg;
+6ba9dd6c893b8e James Schulman     2019-02-07  1708  
+6ba9dd6c893b8e James Schulman     2019-02-07  1709  	cs35l36 = devm_kzalloc(dev, sizeof(struct cs35l36_private), GFP_KERNEL);
+6ba9dd6c893b8e James Schulman     2019-02-07  1710  	if (!cs35l36)
+6ba9dd6c893b8e James Schulman     2019-02-07  1711  		return -ENOMEM;
+6ba9dd6c893b8e James Schulman     2019-02-07  1712  
+6ba9dd6c893b8e James Schulman     2019-02-07  1713  	cs35l36->dev = dev;
+6ba9dd6c893b8e James Schulman     2019-02-07  1714  
+6ba9dd6c893b8e James Schulman     2019-02-07  1715  	i2c_set_clientdata(i2c_client, cs35l36);
+6ba9dd6c893b8e James Schulman     2019-02-07  1716  	cs35l36->regmap = devm_regmap_init_i2c(i2c_client, &cs35l36_regmap);
+6ba9dd6c893b8e James Schulman     2019-02-07  1717  	if (IS_ERR(cs35l36->regmap)) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1718  		ret = PTR_ERR(cs35l36->regmap);
+6ba9dd6c893b8e James Schulman     2019-02-07  1719  		dev_err(dev, "regmap_init() failed: %d\n", ret);
+cdf20c3ef0e90b Christophe JAILLET 2021-04-11  1720  		return ret;
+6ba9dd6c893b8e James Schulman     2019-02-07  1721  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1722  
+6ba9dd6c893b8e James Schulman     2019-02-07  1723  	cs35l36->num_supplies = ARRAY_SIZE(cs35l36_supplies);
+6ba9dd6c893b8e James Schulman     2019-02-07  1724  	for (i = 0; i < ARRAY_SIZE(cs35l36_supplies); i++)
+6ba9dd6c893b8e James Schulman     2019-02-07  1725  		cs35l36->supplies[i].supply = cs35l36_supplies[i];
+6ba9dd6c893b8e James Schulman     2019-02-07  1726  
+6ba9dd6c893b8e James Schulman     2019-02-07  1727  	ret = devm_regulator_bulk_get(dev, cs35l36->num_supplies,
+6ba9dd6c893b8e James Schulman     2019-02-07  1728  				      cs35l36->supplies);
+6ba9dd6c893b8e James Schulman     2019-02-07  1729  	if (ret != 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1730  		dev_err(dev, "Failed to request core supplies: %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1731  		return ret;
+6ba9dd6c893b8e James Schulman     2019-02-07  1732  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1733  
+6ba9dd6c893b8e James Schulman     2019-02-07  1734  	if (pdata) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1735  		cs35l36->pdata = *pdata;
+6ba9dd6c893b8e James Schulman     2019-02-07  1736  	} else {
+6ba9dd6c893b8e James Schulman     2019-02-07  1737  		pdata = devm_kzalloc(dev, sizeof(struct cs35l36_platform_data),
+6ba9dd6c893b8e James Schulman     2019-02-07  1738  				     GFP_KERNEL);
+6ba9dd6c893b8e James Schulman     2019-02-07  1739  		if (!pdata)
+6ba9dd6c893b8e James Schulman     2019-02-07  1740  			return -ENOMEM;
+6ba9dd6c893b8e James Schulman     2019-02-07  1741  
+6ba9dd6c893b8e James Schulman     2019-02-07  1742  		if (i2c_client->dev.of_node) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1743  			ret = cs35l36_handle_of_data(i2c_client, pdata);
+6ba9dd6c893b8e James Schulman     2019-02-07  1744  			if (ret != 0)
+6ba9dd6c893b8e James Schulman     2019-02-07  1745  				return ret;
+6ba9dd6c893b8e James Schulman     2019-02-07  1746  
+6ba9dd6c893b8e James Schulman     2019-02-07  1747  		}
+6ba9dd6c893b8e James Schulman     2019-02-07  1748  
+6ba9dd6c893b8e James Schulman     2019-02-07  1749  		cs35l36->pdata = *pdata;
+6ba9dd6c893b8e James Schulman     2019-02-07  1750  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1751  
+6ba9dd6c893b8e James Schulman     2019-02-07  1752  	ret = regulator_bulk_enable(cs35l36->num_supplies, cs35l36->supplies);
+6ba9dd6c893b8e James Schulman     2019-02-07  1753  	if (ret != 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1754  		dev_err(dev, "Failed to enable core supplies: %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1755  		return ret;
+6ba9dd6c893b8e James Schulman     2019-02-07  1756  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1757  
+6ba9dd6c893b8e James Schulman     2019-02-07  1758  	/* returning NULL can be an option if in stereo mode */
+6ba9dd6c893b8e James Schulman     2019-02-07  1759  	cs35l36->reset_gpio = devm_gpiod_get_optional(dev, "reset",
+6ba9dd6c893b8e James Schulman     2019-02-07  1760  						      GPIOD_OUT_LOW);
+6ba9dd6c893b8e James Schulman     2019-02-07  1761  	if (IS_ERR(cs35l36->reset_gpio)) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1762  		ret = PTR_ERR(cs35l36->reset_gpio);
+6ba9dd6c893b8e James Schulman     2019-02-07  1763  		cs35l36->reset_gpio = NULL;
+6ba9dd6c893b8e James Schulman     2019-02-07  1764  		if (ret == -EBUSY) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1765  			dev_info(dev, "Reset line busy, assuming shared reset\n");
+6ba9dd6c893b8e James Schulman     2019-02-07  1766  		} else {
+6ba9dd6c893b8e James Schulman     2019-02-07  1767  			dev_err(dev, "Failed to get reset GPIO: %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1768  			goto err_disable_regs;
+6ba9dd6c893b8e James Schulman     2019-02-07  1769  		}
+6ba9dd6c893b8e James Schulman     2019-02-07  1770  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1771  
+6ba9dd6c893b8e James Schulman     2019-02-07  1772  	if (cs35l36->reset_gpio)
+6ba9dd6c893b8e James Schulman     2019-02-07  1773  		gpiod_set_value_cansleep(cs35l36->reset_gpio, 1);
+6ba9dd6c893b8e James Schulman     2019-02-07  1774  
+6ba9dd6c893b8e James Schulman     2019-02-07  1775  	usleep_range(2000, 2100);
+6ba9dd6c893b8e James Schulman     2019-02-07  1776  
+6ba9dd6c893b8e James Schulman     2019-02-07  1777  	/* initialize amplifier */
+6ba9dd6c893b8e James Schulman     2019-02-07  1778  	ret = regmap_read(cs35l36->regmap, CS35L36_SW_RESET, &reg_id);
+6ba9dd6c893b8e James Schulman     2019-02-07  1779  	if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1780  		dev_err(dev, "Get Device ID failed %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1781  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1782  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1783  
+6ba9dd6c893b8e James Schulman     2019-02-07  1784  	if (reg_id != CS35L36_CHIP_ID) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1785  		dev_err(dev, "Device ID (%X). Expected ID %X\n", reg_id,
+6ba9dd6c893b8e James Schulman     2019-02-07  1786  			CS35L36_CHIP_ID);
+6ba9dd6c893b8e James Schulman     2019-02-07  1787  		ret = -ENODEV;
+6ba9dd6c893b8e James Schulman     2019-02-07  1788  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1789  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1790  
+6ba9dd6c893b8e James Schulman     2019-02-07  1791  	ret = regmap_read(cs35l36->regmap, CS35L36_REV_ID, &reg_revid);
+6ba9dd6c893b8e James Schulman     2019-02-07  1792  	if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1793  		dev_err(&i2c_client->dev, "Get Revision ID failed %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1794  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1795  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1796  
+6ba9dd6c893b8e James Schulman     2019-02-07  1797  	cs35l36->rev_id = reg_revid >> 8;
+6ba9dd6c893b8e James Schulman     2019-02-07  1798  
+6ba9dd6c893b8e James Schulman     2019-02-07  1799  	ret = regmap_read(cs35l36->regmap, CS35L36_OTP_MEM30, &l37_id_reg);
+6ba9dd6c893b8e James Schulman     2019-02-07  1800  	if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1801  		dev_err(&i2c_client->dev, "Failed to read otp_id Register %d\n",
+6ba9dd6c893b8e James Schulman     2019-02-07  1802  			ret);
+cf7250e95d309a Zheyu Ma           2022-05-10  1803  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1804  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1805  
+6ba9dd6c893b8e James Schulman     2019-02-07  1806  	if ((l37_id_reg & CS35L36_OTP_REV_MASK) == CS35L36_OTP_REV_L37)
+6ba9dd6c893b8e James Schulman     2019-02-07  1807  		cs35l36->chip_version = CS35L36_12V_L37;
+6ba9dd6c893b8e James Schulman     2019-02-07  1808  	else
+6ba9dd6c893b8e James Schulman     2019-02-07  1809  		cs35l36->chip_version = CS35L36_10V_L36;
+6ba9dd6c893b8e James Schulman     2019-02-07  1810  
+6ba9dd6c893b8e James Schulman     2019-02-07  1811  	switch (cs35l36->rev_id) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1812  	case CS35L36_REV_A0:
+6ba9dd6c893b8e James Schulman     2019-02-07  1813  		ret = regmap_register_patch(cs35l36->regmap,
+6ba9dd6c893b8e James Schulman     2019-02-07  1814  				cs35l36_reva0_errata_patch,
+6ba9dd6c893b8e James Schulman     2019-02-07  1815  				ARRAY_SIZE(cs35l36_reva0_errata_patch));
+6ba9dd6c893b8e James Schulman     2019-02-07  1816  		if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1817  			dev_err(dev, "Failed to apply A0 errata patch %d\n",
+6ba9dd6c893b8e James Schulman     2019-02-07  1818  				ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1819  			goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1820  		}
+6ba9dd6c893b8e James Schulman     2019-02-07  1821  		break;
+6ba9dd6c893b8e James Schulman     2019-02-07  1822  	case CS35L36_REV_B0:
+6ba9dd6c893b8e James Schulman     2019-02-07  1823  		ret = cs35l36_pac(cs35l36);
+6ba9dd6c893b8e James Schulman     2019-02-07  1824  		if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1825  			dev_err(dev, "Failed to Trim OTP %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1826  			goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1827  		}
+6ba9dd6c893b8e James Schulman     2019-02-07  1828  
+6ba9dd6c893b8e James Schulman     2019-02-07  1829  		ret = regmap_register_patch(cs35l36->regmap,
+6ba9dd6c893b8e James Schulman     2019-02-07  1830  				cs35l36_revb0_errata_patch,
+6ba9dd6c893b8e James Schulman     2019-02-07  1831  				ARRAY_SIZE(cs35l36_revb0_errata_patch));
+6ba9dd6c893b8e James Schulman     2019-02-07  1832  		if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1833  			dev_err(dev, "Failed to apply B0 errata patch %d\n",
+6ba9dd6c893b8e James Schulman     2019-02-07  1834  				ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1835  			goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1836  		}
+6ba9dd6c893b8e James Schulman     2019-02-07  1837  		break;
+6ba9dd6c893b8e James Schulman     2019-02-07  1838  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1839  
+6ba9dd6c893b8e James Schulman     2019-02-07  1840  	if (pdata->vpbr_config.is_present)
+6ba9dd6c893b8e James Schulman     2019-02-07  1841  		cs35l36_apply_vpbr_config(cs35l36);
+6ba9dd6c893b8e James Schulman     2019-02-07  1842  
+6ba9dd6c893b8e James Schulman     2019-02-07 @1843  	irq_d = irq_get_irq_data(i2c_client->irq);
+eb23dcd20e91fe Dan Carpenter      2019-02-22  1844  	if (!irq_d) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1845  		dev_err(&i2c_client->dev, "Invalid IRQ: %d\n", i2c_client->irq);
+eb23dcd20e91fe Dan Carpenter      2019-02-22  1846  		ret = -ENODEV;
+6ba9dd6c893b8e James Schulman     2019-02-07  1847  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1848  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1849  
+6ba9dd6c893b8e James Schulman     2019-02-07 @1850  	irq_pol = irqd_get_trigger_type(irq_d);
+6ba9dd6c893b8e James Schulman     2019-02-07  1851  
+6ba9dd6c893b8e James Schulman     2019-02-07  1852  	switch (irq_pol) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1853  	case IRQF_TRIGGER_FALLING:
+6ba9dd6c893b8e James Schulman     2019-02-07  1854  	case IRQF_TRIGGER_LOW:
+6ba9dd6c893b8e James Schulman     2019-02-07  1855  		chip_irq_pol = 0;
+6ba9dd6c893b8e James Schulman     2019-02-07  1856  		break;
+6ba9dd6c893b8e James Schulman     2019-02-07  1857  	case IRQF_TRIGGER_RISING:
+6ba9dd6c893b8e James Schulman     2019-02-07  1858  	case IRQF_TRIGGER_HIGH:
+6ba9dd6c893b8e James Schulman     2019-02-07  1859  		chip_irq_pol = 1;
+6ba9dd6c893b8e James Schulman     2019-02-07  1860  		break;
+6ba9dd6c893b8e James Schulman     2019-02-07  1861  	default:
+6ba9dd6c893b8e James Schulman     2019-02-07  1862  		dev_err(cs35l36->dev, "Invalid IRQ polarity: %d\n", irq_pol);
+6ba9dd6c893b8e James Schulman     2019-02-07  1863  		ret = -EINVAL;
+6ba9dd6c893b8e James Schulman     2019-02-07  1864  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1865  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1866  
+6ba9dd6c893b8e James Schulman     2019-02-07  1867  	regmap_update_bits(cs35l36->regmap, CS35L36_PAD_INTERFACE,
+6ba9dd6c893b8e James Schulman     2019-02-07  1868  			   CS35L36_INT_POL_SEL_MASK,
+6ba9dd6c893b8e James Schulman     2019-02-07  1869  			   chip_irq_pol << CS35L36_INT_POL_SEL_SHIFT);
+6ba9dd6c893b8e James Schulman     2019-02-07  1870  
+6ba9dd6c893b8e James Schulman     2019-02-07  1871  	ret = devm_request_threaded_irq(dev, i2c_client->irq, NULL, cs35l36_irq,
+6ba9dd6c893b8e James Schulman     2019-02-07  1872  					IRQF_ONESHOT | irq_pol, "cs35l36",
+6ba9dd6c893b8e James Schulman     2019-02-07  1873  					cs35l36);
+6ba9dd6c893b8e James Schulman     2019-02-07  1874  	if (ret != 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1875  		dev_err(dev, "Failed to request IRQ: %d\n", ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1876  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1877  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1878  
+6ba9dd6c893b8e James Schulman     2019-02-07  1879  	regmap_update_bits(cs35l36->regmap, CS35L36_PAD_INTERFACE,
+6ba9dd6c893b8e James Schulman     2019-02-07  1880  			   CS35L36_INT_OUTPUT_EN_MASK, 1);
+6ba9dd6c893b8e James Schulman     2019-02-07  1881  
+6ba9dd6c893b8e James Schulman     2019-02-07  1882  	/* Set interrupt masks for critical errors */
+6ba9dd6c893b8e James Schulman     2019-02-07  1883  	regmap_write(cs35l36->regmap, CS35L36_INT1_MASK,
+6ba9dd6c893b8e James Schulman     2019-02-07  1884  		     CS35L36_INT1_MASK_DEFAULT);
+6ba9dd6c893b8e James Schulman     2019-02-07  1885  	regmap_write(cs35l36->regmap, CS35L36_INT3_MASK,
+6ba9dd6c893b8e James Schulman     2019-02-07  1886  		     CS35L36_INT3_MASK_DEFAULT);
+6ba9dd6c893b8e James Schulman     2019-02-07  1887  
+6ba9dd6c893b8e James Schulman     2019-02-07  1888  	dev_info(&i2c_client->dev, "Cirrus Logic CS35L%d, Revision: %02X\n",
+6ba9dd6c893b8e James Schulman     2019-02-07  1889  		 cs35l36->chip_version, reg_revid >> 8);
+6ba9dd6c893b8e James Schulman     2019-02-07  1890  
+6ba9dd6c893b8e James Schulman     2019-02-07  1891  	ret =  devm_snd_soc_register_component(dev, &soc_component_dev_cs35l36,
+6ba9dd6c893b8e James Schulman     2019-02-07  1892  					       cs35l36_dai,
+6ba9dd6c893b8e James Schulman     2019-02-07  1893  					       ARRAY_SIZE(cs35l36_dai));
+6ba9dd6c893b8e James Schulman     2019-02-07  1894  	if (ret < 0) {
+6ba9dd6c893b8e James Schulman     2019-02-07  1895  		dev_err(dev, "%s: Register component failed %d\n", __func__,
+6ba9dd6c893b8e James Schulman     2019-02-07  1896  			ret);
+6ba9dd6c893b8e James Schulman     2019-02-07  1897  		goto err;
+6ba9dd6c893b8e James Schulman     2019-02-07  1898  	}
+6ba9dd6c893b8e James Schulman     2019-02-07  1899  
+6ba9dd6c893b8e James Schulman     2019-02-07  1900  	return 0;
+6ba9dd6c893b8e James Schulman     2019-02-07  1901  
+6ba9dd6c893b8e James Schulman     2019-02-07  1902  err:
+6ba9dd6c893b8e James Schulman     2019-02-07  1903  	gpiod_set_value_cansleep(cs35l36->reset_gpio, 0);
+6ba9dd6c893b8e James Schulman     2019-02-07  1904  
+6ba9dd6c893b8e James Schulman     2019-02-07  1905  err_disable_regs:
+6ba9dd6c893b8e James Schulman     2019-02-07  1906  	regulator_bulk_disable(cs35l36->num_supplies, cs35l36->supplies);
+6ba9dd6c893b8e James Schulman     2019-02-07  1907  	return ret;
+6ba9dd6c893b8e James Schulman     2019-02-07  1908  }
+6ba9dd6c893b8e James Schulman     2019-02-07  1909  
+
+:::::: The code at line 1843 was first introduced by commit
+:::::: 6ba9dd6c893b8e60639cfe34e983786068dba9fa ASoC: cs35l36: Add support for Cirrus CS35L36 Amplifier
+
+:::::: TO: James Schulman <james.schulman@cirrus.com>
+:::::: CC: Mark Brown <broonie@kernel.org>
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
