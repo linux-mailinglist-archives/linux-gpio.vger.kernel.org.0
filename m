@@ -1,138 +1,164 @@
-Return-Path: <linux-gpio+bounces-840-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-841-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B5D4D800DB1
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 15:50:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB9FA800E98
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 16:30:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 70BDE281254
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 14:50:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A5E1281B8C
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 15:30:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21B53D971;
-	Fri,  1 Dec 2023 14:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F34A14AF69;
+	Fri,  1 Dec 2023 15:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="COnBI6Wx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 55F5DD6C;
-	Fri,  1 Dec 2023 06:50:49 -0800 (PST)
-Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5d3687a6574so19772247b3.2;
-        Fri, 01 Dec 2023 06:50:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701442248; x=1702047048;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3M7EoJ54GWiJhbBfXyqo1Y8wwLQezejAIFdBP9qR8vI=;
-        b=Dv6zb5+ZOvJuy7uO/M4aTRMKxYMJ7bEk2iGGHaw8V1fuRgcSMighFNYo8XaaJSCnRm
-         fvShrPCE/hsKQdkDoeWtdcoTINCTwMZzR7k4w/LJPp+iNM9mQzUnHcwqUSSNoZ7nb8em
-         mkZ/fEmstZW5ZP0iCmdQ4NWKE46gxIDDYwpkNB0S4a8iqzoRlU0idGmpvX4cwdua6vWJ
-         Vw29W81WY/WZyt+mS8VtYeKn95AlVN4BJqKmWWGb+65EK7H2NsiLfYioHpwZ8v8oRRIP
-         tLuTeKo75izkkaOzE0cbTRFhKhYu3LVstzvn584OtqFZhUTNpRsflsOZC3raXeK6VePB
-         pl3Q==
-X-Gm-Message-State: AOJu0Yw3JpNSnWLrxibpXIZuL+zwB2/L3HQSGL2oq+DlFWGMZPFJpjry
-	Z9XJPiukWQMsKioju0YwbJWNb5p9cWtSgQ==
-X-Google-Smtp-Source: AGHT+IEfubUZG5DYXHsR1LmwirWjxbZBTvIncwwq62+VlAMZQhzhBMjlim261rS6bXBXv6uO2waEyg==
-X-Received: by 2002:a81:bb48:0:b0:5ae:c0e2:da1b with SMTP id a8-20020a81bb48000000b005aec0e2da1bmr27146371ywl.45.1701442248289;
-        Fri, 01 Dec 2023 06:50:48 -0800 (PST)
-Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
-        by smtp.gmail.com with ESMTPSA id l68-20020a815747000000b005d36f6c7836sm986942ywb.104.2023.12.01.06.50.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Dec 2023 06:50:47 -0800 (PST)
-Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-d9caf5cc948so578765276.0;
-        Fri, 01 Dec 2023 06:50:47 -0800 (PST)
-X-Received: by 2002:a25:4086:0:b0:db5:46ef:b3ca with SMTP id
- n128-20020a254086000000b00db546efb3camr4102295yba.47.1701442247565; Fri, 01
- Dec 2023 06:50:47 -0800 (PST)
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DD7ED10E4;
+	Fri,  1 Dec 2023 07:29:53 -0800 (PST)
+Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B1BUNui013936;
+	Fri, 1 Dec 2023 15:29:51 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-type; s=qcppdkim1;
+ bh=q3bEk0jgRGlHbYEBNYLlCZUrcpZe0e6Cv9QCLmPDcqQ=;
+ b=COnBI6WxIkbMrkETC9YX7IdBNt2xXaCprcAvEjs2FXYJLgI5f7QU6lweNrNbPVfWqfkf
+ P3I19lWG3iin6m9yv5RC0K9REhGFTm0ubRvLslTLLFro68rWn4PYjvJQiqAAwW8MjqY1
+ /N/IjXanyR8g2CZOnSBtHjg8w7Ema2FytpDF86jsheksHQAGS8b3NtFqB5nhgYPgQoTm
+ q2/4ER9Z5unIxd1wpgf61wdWIcL2N1XHaNjxuYnPCcLGYMFvxTJJ6Cj9lh8IpoucjGa3
+ 8N5Zt61OiiPxgV+5Mdt7DP6lBkSJTUdtSiJsQmup5OZRkxQge1sSN2AAZgucoI4UeqGN NQ== 
+Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uq2kpa6vp-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Dec 2023 15:29:51 +0000
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B1FToPp004863
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 1 Dec 2023 15:29:50 GMT
+Received: from aiquny2-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 1 Dec 2023 07:29:45 -0800
+From: Maria Yu <quic_aiquny@quicinc.com>
+To: <linus.walleij@linaro.org>
+CC: Maria Yu <quic_aiquny@quicinc.com>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
+        <torvalds@linux-foundation.org>, <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH] pinctrl: Add lock to ensure the state atomization
+Date: Fri, 1 Dec 2023 23:29:31 +0800
+Message-ID: <20231201152931.31161-1-quic_aiquny@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231006121823.229193-1-biju.das.jz@bp.renesas.com>
- <CAMuHMdWHkhonVmbjVCfc-s1iiUSOBNg9djWxaURNLHoAEaS3+w@mail.gmail.com> <TYCPR01MB112691C60EC823F8B55C6AEBB86D3A@TYCPR01MB11269.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYCPR01MB112691C60EC823F8B55C6AEBB86D3A@TYCPR01MB11269.jpnprd01.prod.outlook.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Dec 2023 15:50:35 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXBWbhL-wNEkcX63P68WSAK1V8ef0MQPj_NCnAQZPtCNg@mail.gmail.com>
-Message-ID: <CAMuHMdXBWbhL-wNEkcX63P68WSAK1V8ef0MQPj_NCnAQZPtCNg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Configure interrupt input mode
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: Wm301lwrpI7xCONVAXFQC28SP4NYl-zr
+X-Proofpoint-GUID: Wm301lwrpI7xCONVAXFQC28SP4NYl-zr
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-01_13,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
+ mlxscore=0 malwarescore=0 suspectscore=0 adultscore=0 lowpriorityscore=0
+ bulkscore=0 clxscore=1015 spamscore=0 mlxlogscore=756 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2311060000
+ definitions=main-2312010108
 
-Hi Biju,
+Currently pinctrl_select_state is an export symbol and don't have
+effective re-entrance protect design. And possible of pinctrl state
+changed during pinctrl_commit_state handling. Add per pinctrl lock to
+ensure the old state and new state transition atomization.
+Move dev error print message right before old_state pinctrl_select_state
+and out of lock protection to avoid console related driver call
+pinctrl_select_state recursively.
 
-On Thu, Oct 12, 2023 at 6:24=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
-> > Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Configure interrupt input
-> > mode
-> > On Fri, Oct 6, 2023 at 2:18=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas=
-.com> wrote:
-> > > Configure GPIO interrupt as input mode. Also if the bootloader sets
-> > > gpio interrupt pin as function, override it as gpio.
-> > >
-> > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> >
-> > Thanks for your patch!
-> >
-> > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > @@ -1580,6 +1580,26 @@ static const struct irq_chip rzg2l_gpio_irqchi=
-p =3D
-> > {
-> > >         GPIOCHIP_IRQ_RESOURCE_HELPERS,  };
-> > >
-> > > +static int rzg2l_gpio_interrupt_input_mode(struct gpio_chip *chip,
-> > > +unsigned int offset) {
-> > > +       struct rzg2l_pinctrl *pctrl =3D gpiochip_get_data(chip);
-> > > +       const struct pinctrl_pin_desc *pin_desc =3D &pctrl-
-> > >desc.pins[offset];
-> > > +       u32 *pin_data =3D pin_desc->drv_data;
+Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
+Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
+---
+ drivers/pinctrl/core.c | 11 +++++++++--
+ drivers/pinctrl/core.h |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Note to self: Prabhakar's patch[1] changes this to an array of u64s.
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index f2977eb65522..a19c286bf82e 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1066,6 +1066,7 @@ static struct pinctrl *create_pinctrl(struct device *dev,
+ 	p->dev = dev;
+ 	INIT_LIST_HEAD(&p->states);
+ 	INIT_LIST_HEAD(&p->dt_maps);
++	spin_lock_init(&p->lock);
+ 
+ 	ret = pinctrl_dt_to_map(p, pctldev);
+ 	if (ret < 0) {
+@@ -1262,9 +1263,12 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
+ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ {
+ 	struct pinctrl_setting *setting, *setting2;
+-	struct pinctrl_state *old_state = READ_ONCE(p->state);
++	struct pinctrl_state *old_state;
+ 	int ret;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&p->lock, flags);
++	old_state = p->state;
+ 	if (old_state) {
+ 		/*
+ 		 * For each pinmux setting in the old state, forget SW's record
+@@ -1329,11 +1333,11 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 	}
+ 
+ 	p->state = state;
++	spin_unlock_irqrestore(&p->lock, flags);
+ 
+ 	return 0;
+ 
+ unapply_new_state:
+-	dev_err(p->dev, "Error applying setting, reverse things back\n");
+ 
+ 	list_for_each_entry(setting2, &state->settings, node) {
+ 		if (&setting2->node == &setting->node)
+@@ -1349,6 +1353,9 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 			pinmux_disable_setting(setting2);
+ 	}
+ 
++	spin_unlock_irqrestore(&p->lock, flags);
++
++	dev_err(p->dev, "Error applying setting, reverse things back\n");
+ 	/* There's no infinite recursive loop here because p->state is NULL */
+ 	if (old_state)
+ 		pinctrl_select_state(p, old_state);
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 530370443c19..86fc41393f7b 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -12,6 +12,7 @@
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/radix-tree.h>
++#include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+ #include <linux/pinctrl/machine.h>
+@@ -91,6 +92,7 @@ struct pinctrl {
+ 	struct pinctrl_state *state;
+ 	struct list_head dt_maps;
+ 	struct kref users;
++	spinlock_t lock;
+ };
+ 
+ /**
 
-> > > +       u32 off =3D RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
-> > > +       u8 bit =3D RZG2L_PIN_ID_TO_PIN(offset);
-> > > +       u8 reg8;
-> > > +       int ret;
-> > > +
-> > > +       reg8 =3D readb(pctrl->base + PMC(off));
-> > > +       if (reg8 & BIT(bit)) {
-> > > +               ret =3D rzg2l_gpio_request(chip, offset);
-> >
-> > Who is taking care of calling pinctrl_gpio_free() when the interrupt ha=
-s
-> > been freed?
->
-> At the moment no, maybe we can use of rzg2l_gpio_irq_domain_free() to cal=
-l pinctrl_gpio_free(),
-> Similar to freeing bitmap region??
+base-commit: 994d5c58e50e91bb02c7be4a91d5186292a895c8
+-- 
+2.17.1
 
-Sounds good to me.
-Thanks!
-
-[1] "[PATCH v3 1/3] pinctrl: renesas: rzg2l: Include pinmap in
-    RZG2L_GPIO_PORT_PACK() macro"
-    https://lore.kernel.org/linux-renesas-soc/20231201131551.201503-2-prabh=
-akar.mahadev-lad.rj@bp.renesas.com
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
