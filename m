@@ -1,127 +1,158 @@
-Return-Path: <linux-gpio+bounces-877-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-878-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE510801469
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:25:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48A7580148A
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:35:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DDFC51C20CBB
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 20:25:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B58E1C21086
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 20:35:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A48E57866;
-	Fri,  1 Dec 2023 20:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7460B4F1F3;
+	Fri,  1 Dec 2023 20:35:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="It/jmjCg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuIUSC2K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x534.google.com (mail-pg1-x534.google.com [IPv6:2607:f8b0:4864:20::534])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 507EDFA
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 12:25:25 -0800 (PST)
-Received: by mail-pg1-x534.google.com with SMTP id 41be03b00d2f7-5c659db0ce2so91421a12.0
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 12:25:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701462325; x=1702067125; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=srxzfUuXBFkMVOn7OGaNdyaL+KSIWUVGXnTpFNQ9fis=;
-        b=It/jmjCg6qSzDVE/pAJ6hEk5g1Fk1ppJxx9o+8N5AXfwTq5UWAC/14YXIwxAD3lwnk
-         hW9L0wQ0HqztDtqBVJqqNGEpHVbnTdztR7WJ4GaYgarjAMorImA821lSHTQ4pPAVJClU
-         VLbM97OlE235JQY8pPKCF1pN6Zha9bkPKjP4dwiN25tXGsyEiSGQqsKDkA9ODuKykJ8a
-         VTYTOausGpADocJzHiKdunmthVmGPmJY0i+HLtwE41u+geamXwxAMAPZyggVRhTMW9Zg
-         Z/w23fM7wEA7yaTw8pqgD+0UITZzFGvf7RoM1lWtT6ZkFQcVmz2TMeDp0V6PfXidbSWy
-         x6zg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701462325; x=1702067125;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=srxzfUuXBFkMVOn7OGaNdyaL+KSIWUVGXnTpFNQ9fis=;
-        b=w0HkcJwEbIgfd+NcU2fuvLIcssdcxLHGMA+b7G8o6T7aueiVAi8xEFsFdCGsOPVbN2
-         cEvnnPV2tKsve2PesIfNb0kprRLrw2VSi2bqVNQXXLB9GREAjWtLenOL7lDprzDgK6bh
-         AqZxBH1ypzaT7DZjDNY/RVlSi4AJEJucnQ4GbiHlPaWJjzmR2TtOw/F6uJiEfKr++09e
-         MXEg1Hrvo+AIPo64LwduvumtOXKsPTFAynda+Ed6In3LXeQT0iupoSK1XTsZnjMeH8HO
-         Vv63mf5sYWX81daI6zWV0HuTa66N18hJXkYH8RQzpYQ7zwcFNPG2QMm4dW8sm0+j5dBL
-         fIKw==
-X-Gm-Message-State: AOJu0YxrgxI7ebknfhzPglWCQa8irPwTevUX4AIeqRPV6NHfi3qOMQmR
-	6OIhXZx7efmz0fDX4gItzdVyLdjhXhoU41gMQr3Osg==
-X-Google-Smtp-Source: AGHT+IGhcjjItpFP1S8xXsF49mbnFTtcjlU4G86zhv4yaAeBkLj2OCa5brrLkR7NmAsB4hi8jkTN6iLwfS0jbWLoyLw=
-X-Received: by 2002:a17:90b:4a92:b0:285:adb0:de3e with SMTP id
- lp18-20020a17090b4a9200b00285adb0de3emr93998pjb.34.1701462324828; Fri, 01 Dec
- 2023 12:25:24 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2C157866;
+	Fri,  1 Dec 2023 20:35:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346A3C433C9;
+	Fri,  1 Dec 2023 20:35:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701462949;
+	bh=/TnZS0HuOiZtqdpeKk51Z32DjLXO4zdmRL4p1KDlMX0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=nuIUSC2KcV7FM+30c0UfS9RFJL5UdaqyTsZOK2FqD//8T/b276NdoI8m+YF20LoNM
+	 5wAuKZj+wKVShIfyEbd0MimM68YPFpDzxA10NbkGhZcV2ocC944n6CGWfkSL8q0iRd
+	 P0ntSTShaDcjjILKCAngWAUTu3Z8lG7OJJIIJAEGqQ+hbcWsVNKpTFQ1GmjZUJNGa9
+	 6A3jugUlzCutWP3a2Wuuw1n8V7ee7oqzm41Jgxnh9KN6/EJKgcPnt31wN3mj2dmaLr
+	 i/EORjhhBN18rLz0bPJ7Fpvs8AlrLISUe7+BPUT/l/k+0HU9p/LC0AA3kX2yocc8m2
+	 J7z/uvgG7yMDQ==
+Date: Fri, 1 Dec 2023 12:39:15 -0800
+From: Bjorn Andersson <andersson@kernel.org>
+To: Maria Yu <quic_aiquny@quicinc.com>
+Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, kernel@quicinc.com, linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: Add lock to ensure the state atomization
+Message-ID: <6jlui5h7d2rs37sdvvwmii55mwhm5dzfo2m62hwt53mkx4z32a@aw5kcghe4bik>
+References: <20231201152931.31161-1-quic_aiquny@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201160925.3136868-1-peter.griffin@linaro.org> <20231201160925.3136868-8-peter.griffin@linaro.org>
-In-Reply-To: <20231201160925.3136868-8-peter.griffin@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Fri, 1 Dec 2023 14:25:13 -0600
-Message-ID: <CAPLW+4kMHhh2++F9pU3VSxBo9H-r+79XB8eSc9yi+DR48C=8vQ@mail.gmail.com>
-Subject: Re: [PATCH v5 07/20] dt-bindings: pinctrl: samsung: add
- gs101-wakeup-eint compatible
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
-	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
-	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com, 
-	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231201152931.31161-1-quic_aiquny@quicinc.com>
 
-On Fri, Dec 1, 2023 at 10:10=E2=80=AFAM Peter Griffin <peter.griffin@linaro=
-.org> wrote:
->
-> gs101 is similar to newer Exynos SoCs like Exynos850 and ExynosAutov9
-> where more than one pin controller can do external wake-up interrupt.
-> So add a dedicated compatible for it.
->
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+On Fri, Dec 01, 2023 at 11:29:31PM +0800, Maria Yu wrote:
+> Currently pinctrl_select_state is an export symbol and don't have
+> effective re-entrance protect design. And possible of pinctrl state
+> changed during pinctrl_commit_state handling. Add per pinctrl lock to
+> ensure the old state and new state transition atomization.
+> Move dev error print message right before old_state pinctrl_select_state
+> and out of lock protection to avoid console related driver call
+> pinctrl_select_state recursively.
+
+I'm uncertain about the validity of having client code call this api in
+a racy manner. I'm likely just missing something here... It would be
+nice if this scenario was described in a little bit more detail.
+
+The recursive error print sounds like a distinct problem of its own,
+that warrants being introduced in a patch of its own. But as with the
+other part, I'm not able to spot a code path in the upstream kernel
+where this hppens, so please properly describe the scenario where
+touching the console would result back in another pinctrl_select_state().
+
+Thanks,
+Bjorn
+
+> 
+> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
+> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
 > ---
-
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-
->  .../bindings/pinctrl/samsung,pinctrl-wakeup-interrupt.yaml      | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wa=
-keup-interrupt.yaml b/Documentation/devicetree/bindings/pinctrl/samsung,pin=
-ctrl-wakeup-interrupt.yaml
-> index 2bafa867aea2..de2209f8ba00 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-in=
-terrupt.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/samsung,pinctrl-wakeup-in=
-terrupt.yaml
-> @@ -44,6 +44,7 @@ properties:
->            - const: samsung,exynos7-wakeup-eint
->        - items:
->            - enum:
-> +              - google,gs101-wakeup-eint
->                - samsung,exynosautov9-wakeup-eint
->                - samsung,exynosautov920-wakeup-eint
->            - const: samsung,exynos850-wakeup-eint
-
-(to myself): I wonder why exynos850 isn't in the enum above.
-
-> @@ -111,6 +112,7 @@ allOf:
->          compatible:
->            contains:
->              enum:
-> +              - google,gs101-wakeup-eint
->                - samsung,exynos850-wakeup-eint
->      then:
->        properties:
-> --
-> 2.43.0.rc2.451.g8631bc7472-goog
->
+>  drivers/pinctrl/core.c | 11 +++++++++--
+>  drivers/pinctrl/core.h |  2 ++
+>  2 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+> index f2977eb65522..a19c286bf82e 100644
+> --- a/drivers/pinctrl/core.c
+> +++ b/drivers/pinctrl/core.c
+> @@ -1066,6 +1066,7 @@ static struct pinctrl *create_pinctrl(struct device *dev,
+>  	p->dev = dev;
+>  	INIT_LIST_HEAD(&p->states);
+>  	INIT_LIST_HEAD(&p->dt_maps);
+> +	spin_lock_init(&p->lock);
+>  
+>  	ret = pinctrl_dt_to_map(p, pctldev);
+>  	if (ret < 0) {
+> @@ -1262,9 +1263,12 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
+>  static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+>  {
+>  	struct pinctrl_setting *setting, *setting2;
+> -	struct pinctrl_state *old_state = READ_ONCE(p->state);
+> +	struct pinctrl_state *old_state;
+>  	int ret;
+> +	unsigned long flags;
+>  
+> +	spin_lock_irqsave(&p->lock, flags);
+> +	old_state = p->state;
+>  	if (old_state) {
+>  		/*
+>  		 * For each pinmux setting in the old state, forget SW's record
+> @@ -1329,11 +1333,11 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+>  	}
+>  
+>  	p->state = state;
+> +	spin_unlock_irqrestore(&p->lock, flags);
+>  
+>  	return 0;
+>  
+>  unapply_new_state:
+> -	dev_err(p->dev, "Error applying setting, reverse things back\n");
+>  
+>  	list_for_each_entry(setting2, &state->settings, node) {
+>  		if (&setting2->node == &setting->node)
+> @@ -1349,6 +1353,9 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+>  			pinmux_disable_setting(setting2);
+>  	}
+>  
+> +	spin_unlock_irqrestore(&p->lock, flags);
+> +
+> +	dev_err(p->dev, "Error applying setting, reverse things back\n");
+>  	/* There's no infinite recursive loop here because p->state is NULL */
+>  	if (old_state)
+>  		pinctrl_select_state(p, old_state);
+> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+> index 530370443c19..86fc41393f7b 100644
+> --- a/drivers/pinctrl/core.h
+> +++ b/drivers/pinctrl/core.h
+> @@ -12,6 +12,7 @@
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/radix-tree.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/types.h>
+>  
+>  #include <linux/pinctrl/machine.h>
+> @@ -91,6 +92,7 @@ struct pinctrl {
+>  	struct pinctrl_state *state;
+>  	struct list_head dt_maps;
+>  	struct kref users;
+> +	spinlock_t lock;
+>  };
+>  
+>  /**
+> 
+> base-commit: 994d5c58e50e91bb02c7be4a91d5186292a895c8
+> -- 
+> 2.17.1
+> 
+> 
 
