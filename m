@@ -1,158 +1,122 @@
-Return-Path: <linux-gpio+bounces-878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48A7580148A
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:35:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B052D8014A0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:39:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B58E1C21086
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 20:35:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5543F1F20FF8
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 20:39:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7460B4F1F3;
-	Fri,  1 Dec 2023 20:35:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738494D5B1;
+	Fri,  1 Dec 2023 20:39:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nuIUSC2K"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caIlE7gz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E2C157866;
-	Fri,  1 Dec 2023 20:35:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 346A3C433C9;
-	Fri,  1 Dec 2023 20:35:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701462949;
-	bh=/TnZS0HuOiZtqdpeKk51Z32DjLXO4zdmRL4p1KDlMX0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nuIUSC2KcV7FM+30c0UfS9RFJL5UdaqyTsZOK2FqD//8T/b276NdoI8m+YF20LoNM
-	 5wAuKZj+wKVShIfyEbd0MimM68YPFpDzxA10NbkGhZcV2ocC944n6CGWfkSL8q0iRd
-	 P0ntSTShaDcjjILKCAngWAUTu3Z8lG7OJJIIJAEGqQ+hbcWsVNKpTFQ1GmjZUJNGa9
-	 6A3jugUlzCutWP3a2Wuuw1n8V7ee7oqzm41Jgxnh9KN6/EJKgcPnt31wN3mj2dmaLr
-	 i/EORjhhBN18rLz0bPJ7Fpvs8AlrLISUe7+BPUT/l/k+0HU9p/LC0AA3kX2yocc8m2
-	 J7z/uvgG7yMDQ==
-Date: Fri, 1 Dec 2023 12:39:15 -0800
-From: Bjorn Andersson <andersson@kernel.org>
-To: Maria Yu <quic_aiquny@quicinc.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@quicinc.com, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: Add lock to ensure the state atomization
-Message-ID: <6jlui5h7d2rs37sdvvwmii55mwhm5dzfo2m62hwt53mkx4z32a@aw5kcghe4bik>
-References: <20231201152931.31161-1-quic_aiquny@quicinc.com>
+Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 284C6FF
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 12:39:37 -0800 (PST)
+Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso769233a12.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 12:39:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701463176; x=1702067976; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TIkFSFKTNqG5pJgN73rHGp3fFqpS3rYpv0qft22FsBI=;
+        b=caIlE7gzEG4OAJ9T7SGopsu/lu6cTxbYRn0DW7gbc+AcEA8fgMx8t2BQ6oKjSl/tCp
+         1OZ0il81UJWD7ErElR+h5wjycd9/QaAZyADkA5sxl6wTu/V7li149/BTZUWAtEvVtejm
+         yFhs1vD559e4aIccusEly+rxEsGXZtffOnbj5Ekr8ysBKEp07gG3YM0eZY6FC1dvMgXA
+         vm/noNhMY5adArffYxjaZKXkrzdQnmd9d0Y4L/JAwDPsY6xsAwc4eyU90anee7l7xgzb
+         TsY5uu262DbUQZqSXt72Lm9ipJD7H1TI6m86Zs50d4K64wBYHVOUa1W/oFYOEohIls3n
+         RLTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701463176; x=1702067976;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TIkFSFKTNqG5pJgN73rHGp3fFqpS3rYpv0qft22FsBI=;
+        b=mU0GaM43i03aPVM09OaQYWI+9Qc+FKdFMwI6YVEqW9kEfSqboPFwxNZV4mAIiRLK33
+         mhXjsK9hzePPPaThT8ICo8krzr61tOpDh69SF2ve0+R7mFfmdHhP9WfNeVkmbhIyFOYq
+         KicOKDA+obWjxqt7Nm+nkkLVq1isYQ92NGZblAQZpE1jRYEs7D8S1wHd+SgTT0gf/9Ly
+         Hlapjms+qKlfTb3iZ4GgWj7AAFSO3dxM9QaLAmTRJ0X/ruWUTcSWGTOa+Iyupby5VspM
+         CDUp+SVe5lO+liqrVVM5YjSi8ZxoJyhLl8Rjea3X1HLlZOg1NLMiN5rnxdQ/W78lJ9nF
+         Epog==
+X-Gm-Message-State: AOJu0Yw+jeMwaQ1XANhDiwNbOJIBl/Xu3zGzAv4azUJWgnU6rKyAOA6c
+	R05T6Oe6sU1qYYpzdvJuaA8LmAdxZLqsIskVqj7pwg==
+X-Google-Smtp-Source: AGHT+IH43vrh31UX2rertdGqcGoKOrUcSkFAhN2ABa2Tjpy7c4Re8Gr5gHANOJcx9cdbUKLq+BVtXmQ/7DBOMK7M+mo=
+X-Received: by 2002:a17:90a:de90:b0:286:6cc1:3f24 with SMTP id
+ n16-20020a17090ade9000b002866cc13f24mr75683pjv.91.1701463176618; Fri, 01 Dec
+ 2023 12:39:36 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231201152931.31161-1-quic_aiquny@quicinc.com>
+References: <20231201160925.3136868-1-peter.griffin@linaro.org> <20231201160925.3136868-11-peter.griffin@linaro.org>
+In-Reply-To: <20231201160925.3136868-11-peter.griffin@linaro.org>
+From: Sam Protsenko <semen.protsenko@linaro.org>
+Date: Fri, 1 Dec 2023 14:39:25 -0600
+Message-ID: <CAPLW+4n+Gg6yzFeKVw+p5M-Lxznt8X-jrNQ9NoJojdDhvjiFHQ@mail.gmail.com>
+Subject: Re: [PATCH v5 10/20] dt-bindings: soc: samsung: usi: add
+ google,gs101-usi compatible
+To: Peter Griffin <peter.griffin@linaro.org>, krzysztof.kozlowski+dt@linaro.org
+Cc: robh+dt@kernel.org, mturquette@baylibre.com, conor+dt@kernel.org, 
+	sboyd@kernel.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, 
+	linus.walleij@linaro.org, wim@linux-watchdog.org, linux@roeck-us.net, 
+	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, olof@lixom.net, 
+	gregkh@linuxfoundation.org, jirislaby@kernel.org, cw00.choi@samsung.com, 
+	alim.akhtar@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
+	saravanak@google.com, willmcvicker@google.com, soc@kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+	kernel-team@android.com, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 01, 2023 at 11:29:31PM +0800, Maria Yu wrote:
-> Currently pinctrl_select_state is an export symbol and don't have
-> effective re-entrance protect design. And possible of pinctrl state
-> changed during pinctrl_commit_state handling. Add per pinctrl lock to
-> ensure the old state and new state transition atomization.
-> Move dev error print message right before old_state pinctrl_select_state
-> and out of lock protection to avoid console related driver call
-> pinctrl_select_state recursively.
-
-I'm uncertain about the validity of having client code call this api in
-a racy manner. I'm likely just missing something here... It would be
-nice if this scenario was described in a little bit more detail.
-
-The recursive error print sounds like a distinct problem of its own,
-that warrants being introduced in a patch of its own. But as with the
-other part, I'm not able to spot a code path in the upstream kernel
-where this hppens, so please properly describe the scenario where
-touching the console would result back in another pinctrl_select_state().
-
-Thanks,
-Bjorn
-
-> 
-> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
-> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
+On Fri, Dec 1, 2023 at 10:11=E2=80=AFAM Peter Griffin <peter.griffin@linaro=
+.org> wrote:
+>
+> From: Tudor Ambarus <tudor.ambarus@linaro.org>
+>
+> Add google,gs101-usi dedicated compatible for representing USI of Google
+> GS101 SoC.
+>
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > ---
->  drivers/pinctrl/core.c | 11 +++++++++--
->  drivers/pinctrl/core.h |  2 ++
->  2 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index f2977eb65522..a19c286bf82e 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -1066,6 +1066,7 @@ static struct pinctrl *create_pinctrl(struct device *dev,
->  	p->dev = dev;
->  	INIT_LIST_HEAD(&p->states);
->  	INIT_LIST_HEAD(&p->dt_maps);
-> +	spin_lock_init(&p->lock);
->  
->  	ret = pinctrl_dt_to_map(p, pctldev);
->  	if (ret < 0) {
-> @@ -1262,9 +1263,12 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
->  static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->  {
->  	struct pinctrl_setting *setting, *setting2;
-> -	struct pinctrl_state *old_state = READ_ONCE(p->state);
-> +	struct pinctrl_state *old_state;
->  	int ret;
-> +	unsigned long flags;
->  
-> +	spin_lock_irqsave(&p->lock, flags);
-> +	old_state = p->state;
->  	if (old_state) {
->  		/*
->  		 * For each pinmux setting in the old state, forget SW's record
-> @@ -1329,11 +1333,11 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->  	}
->  
->  	p->state = state;
-> +	spin_unlock_irqrestore(&p->lock, flags);
->  
->  	return 0;
->  
->  unapply_new_state:
-> -	dev_err(p->dev, "Error applying setting, reverse things back\n");
->  
->  	list_for_each_entry(setting2, &state->settings, node) {
->  		if (&setting2->node == &setting->node)
-> @@ -1349,6 +1353,9 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->  			pinmux_disable_setting(setting2);
->  	}
->  
-> +	spin_unlock_irqrestore(&p->lock, flags);
-> +
-> +	dev_err(p->dev, "Error applying setting, reverse things back\n");
->  	/* There's no infinite recursive loop here because p->state is NULL */
->  	if (old_state)
->  		pinctrl_select_state(p, old_state);
-> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> index 530370443c19..86fc41393f7b 100644
-> --- a/drivers/pinctrl/core.h
-> +++ b/drivers/pinctrl/core.h
-> @@ -12,6 +12,7 @@
->  #include <linux/list.h>
->  #include <linux/mutex.h>
->  #include <linux/radix-tree.h>
-> +#include <linux/spinlock.h>
->  #include <linux/types.h>
->  
->  #include <linux/pinctrl/machine.h>
-> @@ -91,6 +92,7 @@ struct pinctrl {
->  	struct pinctrl_state *state;
->  	struct list_head dt_maps;
->  	struct kref users;
-> +	spinlock_t lock;
->  };
->  
->  /**
-> 
-> base-commit: 994d5c58e50e91bb02c7be4a91d5186292a895c8
-> -- 
-> 2.17.1
-> 
-> 
+
+Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+
+>  Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yam=
+l b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
+> index 61be1f2ddbe7..a10a438d89f0 100644
+> --- a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
+> +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
+> @@ -28,6 +28,9 @@ properties:
+>                - samsung,exynosautov9-usi
+>                - samsung,exynosautov920-usi
+>            - const: samsung,exynos850-usi
+> +      - items:
+> +          - const: google,gs101-usi
+> +          - const: samsung,exynos850-usi
+>        - enum:
+>            - samsung,exynos850-usi
+
+Krzysztof, Peter: can you please point me out the doc which explains
+the need to have all those enums/consts here repeating for exynos850?
+I kinda forgot why it's needed, can't find any documentation, and now
+it just looks confusing to me.
+
+>
+> --
+> 2.43.0.rc2.451.g8631bc7472-goog
+>
 
