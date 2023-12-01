@@ -1,61 +1,62 @@
-Return-Path: <linux-gpio+bounces-871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7143D8011A6
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 18:26:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 459938011D1
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 18:36:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89EE11C20D14
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:26:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DCB0BB2123C
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:36:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057094E1D3;
-	Fri,  1 Dec 2023 17:26:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA3CD4EB2C;
+	Fri,  1 Dec 2023 17:36:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297ED211E;
-	Fri,  1 Dec 2023 09:25:48 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d3ffa1ea24so11588397b3.3;
-        Fri, 01 Dec 2023 09:25:48 -0800 (PST)
+Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 074CBFE;
+	Fri,  1 Dec 2023 09:36:12 -0800 (PST)
+Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-daf26d84100so751179276.3;
+        Fri, 01 Dec 2023 09:36:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701451546; x=1702056346;
+        d=1e100.net; s=20230601; t=1701452171; x=1702056971;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ifFZ+tz2XMUa8Xxg+1KF6w2Puzkq4cfz8G0iZBhXb/w=;
-        b=sJGaUQh29M1IK0xOTKs/9sflb5J4Qwn3woY5wD/BVE3T6Y2VpO9JO82kQei+96cNqa
-         vGY0lVdg78NYRaZ3yPoW1aCRbWje19V9OxWPQcmbErsoC7Qlyx6lGRyM1X6K/9YwBL7P
-         wl0zKpAuW0DOxDcnzl0YPpA0iwyPk+tKnlcQUuclP041plepgWVwQ7s4lF86DBUUFxCx
-         Aj74OzPnYgU6UUkJl2wdVhGSrYlyoOginj+0O+BoHzuQUolgaO7kmwrQ3oe5J4fVdrG0
-         H/K1BoONG2g/u4ZtVfWCNIHggSUHQQ+wTqeXRyATbFCHqWubazdOUTfu0oeg00TS/BYU
-         L+YQ==
-X-Gm-Message-State: AOJu0Yy5H4nqI3MnSjbXjLIyd17yyK2SetJs6Wiul9OVnZP7C6YxrwOV
-	eyBrTan2wp6gJzTnCmiYJSaP+YXPydC5SA==
-X-Google-Smtp-Source: AGHT+IFKOnio0tcA3llLP+Sxov/BN6tmtwDgAcgcgSaqZvFNSxNyKSkYrV2nAuq7+wExpBMZjDlr0g==
-X-Received: by 2002:a81:ac1d:0:b0:5d4:36:c32c with SMTP id k29-20020a81ac1d000000b005d40036c32cmr2900511ywh.18.1701451546445;
-        Fri, 01 Dec 2023 09:25:46 -0800 (PST)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id u189-20020a8179c6000000b005d34a381f59sm1190705ywc.102.2023.12.01.09.25.44
+        bh=zk2S3SIrcftqOvoDhsi4gAIcuYBEVIeIZ5ZZ+mwqTiw=;
+        b=EQNUsP9BSg/rXbx5nDaJ4L0fKG84XySX+oeYduyl2mOFYLbXlrKYqJXwUUAUUFxoeh
+         squ64H+nGTDDwEO6rOCkqyoaCrkR+aGfY/LAs1FkLbVpqoG6qSIcKWigqiLmhpMi4Tq0
+         cMhMzuz86+eMHZmKhUb+FFhDv1XEiYIxUlATMMAIFcypbbV8kBcio1M98QsEpWHMCgRn
+         XH9uToghs3SsvAaFqh/Wx+IQyp4FzI+ETA8CCYHUbau/jXGer+zC6Qu1bMXhkiCRqbZ8
+         ChEz38CzlpoMjFzY/9omkVIgL4xfgFtQeTsFR7/JaMrV1iPPZ2MIbm7zgE8+z1MK0w7L
+         5F6g==
+X-Gm-Message-State: AOJu0YzO+W1QdcvAXfxYkgNGZEQYHRIB5mP36s4JrdF8TCMTAOc60HEF
+	3CYv0XQoRuhBVlb7Is6IfYyRPlESilaTDA==
+X-Google-Smtp-Source: AGHT+IGMJZLpeH28JslXaXLL6mgyIy6G2sNXs8zVPt/CpyYrsuHpMwOAe5nLb0EASmWyS+0nJ9W2Mg==
+X-Received: by 2002:a25:687:0:b0:daf:81e5:d2fa with SMTP id 129-20020a250687000000b00daf81e5d2famr23278194ybg.33.1701452171063;
+        Fri, 01 Dec 2023 09:36:11 -0800 (PST)
+Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com. [209.85.128.176])
+        by smtp.gmail.com with ESMTPSA id l36-20020a25b324000000b00d9abff76f5csm501019ybj.9.2023.12.01.09.36.09
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Dec 2023 09:25:44 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d34f8f211fso22410827b3.0;
-        Fri, 01 Dec 2023 09:25:44 -0800 (PST)
-X-Received: by 2002:a81:ac1d:0:b0:5d4:36:c32c with SMTP id k29-20020a81ac1d000000b005d40036c32cmr2900397ywh.18.1701451543993;
- Fri, 01 Dec 2023 09:25:43 -0800 (PST)
+        Fri, 01 Dec 2023 09:36:09 -0800 (PST)
+Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-5d2d0661a8dso26173127b3.2;
+        Fri, 01 Dec 2023 09:36:09 -0800 (PST)
+X-Received: by 2002:a81:a0c3:0:b0:5d6:85f1:1539 with SMTP id
+ x186-20020a81a0c3000000b005d685f11539mr1605684ywg.18.1701452168947; Fri, 01
+ Dec 2023 09:36:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-9-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231120070024.4079344-9-claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-11-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231120070024.4079344-11-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Dec 2023 18:25:32 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXygjeHvrSB=KpVB4n1BTAinvNLL+AmjRhERy+2QbJMiA@mail.gmail.com>
-Message-ID: <CAMuHMdXygjeHvrSB=KpVB4n1BTAinvNLL+AmjRhERy+2QbJMiA@mail.gmail.com>
-Subject: Re: [PATCH 08/14] pinctrl: renesas: rzg2l: Add output enable support
+Date: Fri, 1 Dec 2023 18:35:57 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
+Message-ID: <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
+Subject: Re: [PATCH 10/14] arm64: renesas: r9a08g045: Add Ethernet nodes
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
 	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
@@ -75,36 +76,56 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Claudiu,
 
-Thanks for your patch!
-
 On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
 wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Some of the Ethernet pins on RZ/G3S (but also valid for RZ/G2L) need to
-> have direction of the IO buffer set as output for Ethernet to work
-> properly. On RZ/G3S these pins are P1_0/P7_0, P1_1/P7_1 with could have
-> the following Ethernet functions: TXC/TX_CLK or TX_CTL/TX_EN. To be able
-> to configure this the output enable has been implemented. This is
-> implemented with 2 per-platform read/write functions to be able to simply
-> validate the pins supporting this on a platform basis. Moreover, on RZ/G2=
-L
-> the register though which these settings could be done is 8 bits long
-> whereas on RZ/G3S this is a 32 bit register. The Ethernet pins supporting
-> OEN are different. These differences could be handled in platform specifi=
-c
-> OEN read/write functions.
+> Add Ethernet nodes available on RZ/G3S (R9A08G045).
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-These registers are documented to support access sizes of 8/16/32 bits
-on RZ/G3S.  Hence you don't need to differentiate, but can just use
-8-bit accesses on all platforms.
+Thanks for your patch!
+
+> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+> @@ -149,6 +149,38 @@ sdhi2: mmc@11c20000 {
+>                         status =3D "disabled";
+>                 };
+>
+> +               eth0: ethernet@11c30000 {
+> +                       compatible =3D "renesas,r9a08g045-gbeth", "renesa=
+s,rzg2l-gbeth";
+> +                       reg =3D <0 0x11c30000 0 0x10000>;
+> +                       interrupts =3D <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+> +                                    <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
+> +                       interrupt-names =3D "mux", "fil", "arp_ns";
+> +                       clocks =3D <&cpg CPG_MOD R9A08G045_ETH0_CLK_AXI>,
+> +                                <&cpg CPG_MOD R9A08G045_ETH0_CLK_CHI>,
+> +                                <&cpg CPG_MOD R9A08G045_ETH0_REFCLK>;
+> +                       clock-names =3D "axi", "chi", "refclk";
+> +                       resets =3D <&cpg R9A08G045_ETH0_RST_HW_N>;
+> +                       power-domains =3D <&cpg>;
+
+Perhaps add a default phy mode, like on other SoCs?
+
+    phy-mode =3D "rgmii"';
+
+Also missing:
+
+    #address-cells =3D <1>;
+    #size-cells =3D <0>;
+
+> +                       status =3D "disabled";
+> +               };
+
+Same comments for eth1.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
-
---
+--=20
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
 .org
 
