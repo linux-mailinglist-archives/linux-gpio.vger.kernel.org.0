@@ -1,122 +1,107 @@
-Return-Path: <linux-gpio+bounces-879-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-880-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B052D8014A0
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:39:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B70D4801572
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 22:33:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5543F1F20FF8
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 20:39:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7191A281CDF
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 21:33:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 738494D5B1;
-	Fri,  1 Dec 2023 20:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5964759B54;
+	Fri,  1 Dec 2023 21:33:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="caIlE7gz"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F31NF7i8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x52a.google.com (mail-pg1-x52a.google.com [IPv6:2607:f8b0:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 284C6FF
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 12:39:37 -0800 (PST)
-Received: by mail-pg1-x52a.google.com with SMTP id 41be03b00d2f7-5bdbe2de25fso769233a12.3
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 12:39:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701463176; x=1702067976; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TIkFSFKTNqG5pJgN73rHGp3fFqpS3rYpv0qft22FsBI=;
-        b=caIlE7gzEG4OAJ9T7SGopsu/lu6cTxbYRn0DW7gbc+AcEA8fgMx8t2BQ6oKjSl/tCp
-         1OZ0il81UJWD7ErElR+h5wjycd9/QaAZyADkA5sxl6wTu/V7li149/BTZUWAtEvVtejm
-         yFhs1vD559e4aIccusEly+rxEsGXZtffOnbj5Ekr8ysBKEp07gG3YM0eZY6FC1dvMgXA
-         vm/noNhMY5adArffYxjaZKXkrzdQnmd9d0Y4L/JAwDPsY6xsAwc4eyU90anee7l7xgzb
-         TsY5uu262DbUQZqSXt72Lm9ipJD7H1TI6m86Zs50d4K64wBYHVOUa1W/oFYOEohIls3n
-         RLTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701463176; x=1702067976;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TIkFSFKTNqG5pJgN73rHGp3fFqpS3rYpv0qft22FsBI=;
-        b=mU0GaM43i03aPVM09OaQYWI+9Qc+FKdFMwI6YVEqW9kEfSqboPFwxNZV4mAIiRLK33
-         mhXjsK9hzePPPaThT8ICo8krzr61tOpDh69SF2ve0+R7mFfmdHhP9WfNeVkmbhIyFOYq
-         KicOKDA+obWjxqt7Nm+nkkLVq1isYQ92NGZblAQZpE1jRYEs7D8S1wHd+SgTT0gf/9Ly
-         Hlapjms+qKlfTb3iZ4GgWj7AAFSO3dxM9QaLAmTRJ0X/ruWUTcSWGTOa+Iyupby5VspM
-         CDUp+SVe5lO+liqrVVM5YjSi8ZxoJyhLl8Rjea3X1HLlZOg1NLMiN5rnxdQ/W78lJ9nF
-         Epog==
-X-Gm-Message-State: AOJu0Yw+jeMwaQ1XANhDiwNbOJIBl/Xu3zGzAv4azUJWgnU6rKyAOA6c
-	R05T6Oe6sU1qYYpzdvJuaA8LmAdxZLqsIskVqj7pwg==
-X-Google-Smtp-Source: AGHT+IH43vrh31UX2rertdGqcGoKOrUcSkFAhN2ABa2Tjpy7c4Re8Gr5gHANOJcx9cdbUKLq+BVtXmQ/7DBOMK7M+mo=
-X-Received: by 2002:a17:90a:de90:b0:286:6cc1:3f24 with SMTP id
- n16-20020a17090ade9000b002866cc13f24mr75683pjv.91.1701463176618; Fri, 01 Dec
- 2023 12:39:36 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1944E584C6;
+	Fri,  1 Dec 2023 21:33:20 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCFC9C433C7;
+	Fri,  1 Dec 2023 21:33:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701466400;
+	bh=YtF+HG7uyHGCB80zMWlxTQc+O5fEWTNNEjS+VJTvaKs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=F31NF7i8Qcu+arEuEbKWIVU5oWYsZGlTsBZSWkUo98N8FkrCPbmUOg5rOclyakcJ0
+	 3LnY8ogh/k+x5iIATms0MN/IFMsaD6p0WE6zCIkpyYS0Zu6iibcaVGXmXU7F5WOqOh
+	 Bj5/DrPK2aUb7aWZiKvSfIHmzc4bAseovq8gQn2CPbaCrI0CTA/tT0nyQAjFEVfWg6
+	 ZjAlQApmm1dN0GHUngQAFkbx69l0pGr1L4PAclJw6nIk++qAfKx8DhthObiN65kqrB
+	 Xk/82YE2Ctd3qRfMWarz8krvjuYStXuxNE9pgcm9vnDQyGhACJgP2siU8Bs2KPAPj7
+	 94WVkZcZfBoEg==
+Date: Fri, 1 Dec 2023 13:36:47 -0800
+From: Bjorn Andersson <andersson@kernel.org>
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: agross@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	kernel@quicinc.com
+Subject: Re: [PATCH v5 4/4] pinctrl: qcom: sm4450: correct incorrect address
+ offset
+Message-ID: <dx62durg3wmqviqdpecdqprd5wwkg4i7n5tgcab55axzssdeel@ftt35c6td2sh>
+References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
+ <20231130024046.25938-5-quic_tengfan@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201160925.3136868-1-peter.griffin@linaro.org> <20231201160925.3136868-11-peter.griffin@linaro.org>
-In-Reply-To: <20231201160925.3136868-11-peter.griffin@linaro.org>
-From: Sam Protsenko <semen.protsenko@linaro.org>
-Date: Fri, 1 Dec 2023 14:39:25 -0600
-Message-ID: <CAPLW+4n+Gg6yzFeKVw+p5M-Lxznt8X-jrNQ9NoJojdDhvjiFHQ@mail.gmail.com>
-Subject: Re: [PATCH v5 10/20] dt-bindings: soc: samsung: usi: add
- google,gs101-usi compatible
-To: Peter Griffin <peter.griffin@linaro.org>, krzysztof.kozlowski+dt@linaro.org
-Cc: robh+dt@kernel.org, mturquette@baylibre.com, conor+dt@kernel.org, 
-	sboyd@kernel.org, tomasz.figa@gmail.com, s.nawrocki@samsung.com, 
-	linus.walleij@linaro.org, wim@linux-watchdog.org, linux@roeck-us.net, 
-	catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, olof@lixom.net, 
-	gregkh@linuxfoundation.org, jirislaby@kernel.org, cw00.choi@samsung.com, 
-	alim.akhtar@samsung.com, tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
-	saravanak@google.com, willmcvicker@google.com, soc@kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	kernel-team@android.com, linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231130024046.25938-5-quic_tengfan@quicinc.com>
 
-On Fri, Dec 1, 2023 at 10:11=E2=80=AFAM Peter Griffin <peter.griffin@linaro=
-.org> wrote:
->
-> From: Tudor Ambarus <tudor.ambarus@linaro.org>
->
-> Add google,gs101-usi dedicated compatible for representing USI of Google
-> GS101 SoC.
->
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+On Thu, Nov 30, 2023 at 10:40:46AM +0800, Tengfei Fan wrote:
+> The address offset of 0x100000 is already provided in SM4450 DTSI, so
+> subtract 0x100000 from the offset which used by ufs and sdc.
+> 
+
+As Konrad points out, please fix the broken patch, don't add a separate
+fix in the same series.
+
+> Suggested-by: Can Guo <quic_cang@quicinc.com>
+
+We unfortunately don't have a way to give credit to those providing
+review feedback, so omit this when fixing patch #2.
+
+Regards,
+Bjorn
+
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
 > ---
-
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-
->  Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yam=
-l b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> index 61be1f2ddbe7..a10a438d89f0 100644
-> --- a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> @@ -28,6 +28,9 @@ properties:
->                - samsung,exynosautov9-usi
->                - samsung,exynosautov920-usi
->            - const: samsung,exynos850-usi
-> +      - items:
-> +          - const: google,gs101-usi
-> +          - const: samsung,exynos850-usi
->        - enum:
->            - samsung,exynos850-usi
-
-Krzysztof, Peter: can you please point me out the doc which explains
-the need to have all those enums/consts here repeating for exynos850?
-I kinda forgot why it's needed, can't find any documentation, and now
-it just looks confusing to me.
-
->
-> --
-> 2.43.0.rc2.451.g8631bc7472-goog
->
+>  drivers/pinctrl/qcom/pinctrl-sm4450.c | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm4450.c b/drivers/pinctrl/qcom/pinctrl-sm4450.c
+> index 49e2e3a7a9cb..5496f955ed2a 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm4450.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm4450.c
+> @@ -936,14 +936,14 @@ static const struct msm_pingroup sm4450_groups[] = {
+>  	[133] = PINGROUP(133, _, phase_flag, _, _, _, _, _, _, _),
+>  	[134] = PINGROUP(134, tsense_pwm1_out, tsense_pwm2_out, _, _, _, _, _, _, _),
+>  	[135] = PINGROUP(135, _, phase_flag, _, _, _, _, _, _, _),
+> -	[136] = UFS_RESET(ufs_reset, 0x197000),
+> -	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x18c004, 0, 0),
+> -	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x18c000, 13, 6),
+> -	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x18c000, 11, 3),
+> -	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x18c000, 9, 0),
+> -	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x18f000, 14, 6),
+> -	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x18f000, 11, 3),
+> -	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x18f000, 9, 0),
+> +	[136] = UFS_RESET(ufs_reset, 0x97000),
+> +	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x8c004, 0, 0),
+> +	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x8c000, 13, 6),
+> +	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x8c000, 11, 3),
+> +	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x8c000, 9, 0),
+> +	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x8f000, 14, 6),
+> +	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x8f000, 11, 3),
+> +	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x8f000, 9, 0),
+>  };
+>  
+>  static const struct msm_gpio_wakeirq_map sm4450_pdc_map[] = {
+> -- 
+> 2.17.1
+> 
 
