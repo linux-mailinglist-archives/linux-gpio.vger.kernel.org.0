@@ -1,206 +1,126 @@
-Return-Path: <linux-gpio+bounces-820-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-821-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 821E88007E6
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 11:07:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BCD8C800808
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 11:14:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09519B21087
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 10:07:02 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED95A1C20BD7
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 10:14:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24917200D5;
-	Fri,  1 Dec 2023 10:06:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324C5208D2;
+	Fri,  1 Dec 2023 10:14:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="L4OYvJMx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TK/uRypn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 458A7C7;
-	Fri,  1 Dec 2023 02:06:53 -0800 (PST)
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B17e3EP010711;
-	Fri, 1 Dec 2023 10:06:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=tUAP8wCFyJh9BD59PB2im9kCmmk+FkPAweHCMGjBBAA=;
- b=L4OYvJMxY0y25H+jtTuhS7h0sWK2U5YQSki6oRr8C3ONybbtOZ6wFxY9GbD0ZHQxlL/p
- 0eI2ToF/jOFNYC+fnijq0AqJbpjpKEpmM4Pc/rGW34ATtvaO77TKT7sC26JP9s+dIN5c
- C8ll+0bnc5tYs692NEPUh57S3Q8hwmgn4Qmi6ZUPB/iYOEhih85/ynUWk//+Bnp0lDW8
- tENu6LB5pY0pb3W7Cqis+LgK6myWyTeyre62XnyEebXTWWsNmxvx+xdqrNhrioNWFURw
- wvvGcihktvajBxvhQsJ/RyNztMtOQkz78W54KTAdXYo616q//JnAOvt2g/f3qoDffVQc 3g== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uq3f7s7hy-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Dec 2023 10:06:46 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B1A6kOI027353
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 1 Dec 2023 10:06:46 GMT
-Received: from [10.239.133.73] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 1 Dec
- 2023 02:06:44 -0800
-Message-ID: <9714f76f-0cf3-4f54-8e0d-fe3ca2990eed@quicinc.com>
-Date: Fri, 1 Dec 2023 18:06:42 +0800
+Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88917A8
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 02:14:44 -0800 (PST)
+Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-4b2891954fdso719646e0c.1
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 02:14:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701425683; x=1702030483; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KXLQkGJRElOZ/AJuYpoiy/ILVkLLNWbGBMHP1JFlW4o=;
+        b=TK/uRypn2ZnjCQQ3A4S7W7OD4Y86Wb9X/+8gZzp9UagjWTGa/zBksnzSF2HVuZaHNV
+         Ly1HnhCZ6tVpNbUz1FERw5FrWnASlyQZRbxpHM8x4uOLnLECzsyCYJuSTJFVAc+2y+3+
+         XlYU930VNjsFIO/CK9lnSLZ0a5pKEbD9RPQ1QtOd/a+JAImg2O733nu30zvG/72W8mKW
+         LO0fUn1+7QRDRYxa1gvh4mk4+6ql0U+oPurMK3vO1QPcs8Ip+aSTWk3Y66T5noZedCvT
+         0hB1tDPn2zUuBw+/5jgpzqoay3GbUDJ+ZMvnakwPcwnr7QIqGbBNACK7rtLOw3MA3PQk
+         LqVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701425683; x=1702030483;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KXLQkGJRElOZ/AJuYpoiy/ILVkLLNWbGBMHP1JFlW4o=;
+        b=gtjyd06Z+U8RUHImrOs8L4lonGO6fME7SP3uf5WnTGKqzT68vOaa+fDsNn/bWJEaLw
+         9uRbd2JlL6qCQs4jiNwI7YRn18OzeHeVljha5sMu9n4IzQQe2xn6ZqtdT2ruE9MKc/S2
+         XkRuFFkk7fGCEzoUJBx4kQRT50hUlEftm12ze75biEhj8mggjBBdVnNzEJRuTAD42Z/w
+         vkISznN/6Oqkt53m45WmvCopnKm+CVTp5jqzuNGh7zeus10p8j4K+5Pb8j1FiwZT1+IA
+         73LwoEYstHNS+h6g8FynsPeqC+HKmu6j1ZZLR+8gYPSIP22ZASck798BIe7OQe5UZgvN
+         j75w==
+X-Gm-Message-State: AOJu0Yxw2i43nMeBy/aG9EvIiCJ/JRBth6d0rhs15SCIroVQR3MqnMg2
+	B5Mr3idBTAaeSnf65PyeX3EBBnKt0/6+gaDa2ctEEw==
+X-Google-Smtp-Source: AGHT+IHlEdiuVHo4bAwL3XxaDUcT87Z5Lvn9EZXDn04lrPIPYKKGxyNRrU0aYaBpBOEpJBK9JsKmKMS2iMDOdQ+Ggw4=
+X-Received: by 2002:a1f:4944:0:b0:4b2:98f9:1206 with SMTP id
+ w65-20020a1f4944000000b004b298f91206mr5687765vka.14.1701425683565; Fri, 01
+ Dec 2023 02:14:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [GIT PULL] Pin control fixes for v6.7
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: Linus Torvalds <torvalds@linux-foundation.org>,
-        "open list:GPIO SUBSYSTEM"
-	<linux-gpio@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Charles Keepax <ckeepax@opensource.cirrus.com>,
-        Chester Lin <clin@suse.com>
-References: <CACRpkdZtVNZFWSUgb4=gUE2mQRb=aT_3=zRv1U71Vsq0Mm34eg@mail.gmail.com>
- <CAHk-=whk4oNQazgpzkujc2=ntVQMhU5ko7Canp2Uuq6CpyGzmA@mail.gmail.com>
- <CACRpkdZRf7bNVmJCgsVD0uheD1VLkLKG13d1oS-kbT8BFyRKQw@mail.gmail.com>
- <e703c87e-32b9-4dce-b232-89c0e909c35e@quicinc.com>
- <CACRpkdZtCxwLZCY4autrTvonmZ3XcVzH6iXqXanS97VKCZ+ERw@mail.gmail.com>
-From: "Aiqun(Maria) Yu" <quic_aiquny@quicinc.com>
-In-Reply-To: <CACRpkdZtCxwLZCY4autrTvonmZ3XcVzH6iXqXanS97VKCZ+ERw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 6VN6YwDyKRyki-DpCrDpO4bclbAQUFCp
-X-Proofpoint-GUID: 6VN6YwDyKRyki-DpCrDpO4bclbAQUFCp
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-01_07,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=964 bulkscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312010067
+References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
+ <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
+ <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+ <20231121161111.zphi7pn77ns7sgu2@pengutronix.de> <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+ <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box> <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+ <20231127105844.kpu5ori6o6umfynh@pengutronix.de> <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+ <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
+In-Reply-To: <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 1 Dec 2023 11:14:32 +0100
+Message-ID: <CAMRc=McAYSpCY=E1Ze7xKuBom8xOzQ4+5f7vYm33ihVU90xM1w@mail.gmail.com>
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc() function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/1/2023 4:10 PM, Linus Walleij wrote:
-> Hi Nathan, Nick,
-> 
-> (just picking some LLVM compiler people I know of... and trust)
-> 
-> Context is this patch:
-> https://lore.kernel.org/linux-gpio/20231115102824.23727-1-quic_aiquny@quicinc.com/
-> 
-> On Thu, Nov 30, 2023 at 6:37 AM Aiqun(Maria) Yu <quic_aiquny@quicinc.com> wrote:
->> On 11/29/2023 11:08 PM, Linus Walleij wrote:
->>> On Wed, Nov 29, 2023 at 3:56 PM Linus Torvalds
->>> <torvalds@linux-foundation.org> wrote:
->>>> On Wed, 29 Nov 2023 at 04:09, Linus Walleij <linus.walleij@linaro.org> wrote:
->>>>>
->>>>> The most interesting patch is the list iterator fix in the core by Maria
->>>>> Yu, it took a while for me to realize what was going on there.
->>>>
->>>> That commit message still doesn't explain what the problem was.
->>>>
->>>> Why is p->state volatile there? It seems to be a serious locking bug
->>>> if p->state can randomly change there, and the READ_ONCE() looks like
->>>> a "this hides the problem" rather than an actual real fix.
->>
->> This is indeed an interesting issue. Thx for the comment, Linus.
->> **Let me explain how: "p->state becomes volatile in the list iterator",
->> and "why READ_ONCE is suggested".
->>
->> The current critical code is:
->>     list_for_each_entry(setting, &p->state->settings, node)
->>
->> after elaborating the define list_for_each_entry, so above critical code
->> will be:
->>     for (setting = list_head(&p->state->settings, typeof(*setting), node); \
->> &setting->node != (&p->state->settings); \
->> setting = list_next(setting , node))
->>
->> The asm code(refer result from Clang version 10.0) can cleared explain
->> the step of p->state reload actions:
->> loop:
->> ldr x22,[x22] ; x22=list_next(setting , node))
->> add x9,x8,#0x18 ; x9=&p->state->setting
->> cmp x22,x9 ; setting,x9
->> b.eq 0xFFFFFF9B24483530
->>
->> ldr w9,[x22,#0x10] ; w9,[setting,#16]
->> cmp w9,#0x2 ; w9,#2
->> b.ne 0xFFFFFF9B24483504
->>
->> mov x0,x22 ; x0,setting
->> bl 0xFFFFFF9B24486048 ; pinmux_disable_setting
->>
->> ldr x8,[x19,#0x28] ; x19=p, x8=[p->state], *reload p->state*
->> b loop
->>
->> The *reload p->state* inside the loop for checking is not needed and can
->> cause possible infinite loop. So READ_ONCE is highly suggested even if
->> p->state is not randomly changed. And then unnecessary "ldr
->> x8,[x19,#0x28]" can be removed from above loop code.
->>
->> **Comments about the locking bug:
->> currently pinctrl_select_state is an export symbol and don't have
->> effective reentrance protect design. That's why current infinite loop
->> issue was observed with customer's multi thread call with
->> pinctrl_select_state without lock protection. pinctrl_select_state
->> totally rely on driver module user side to ensure the reentrant state.
->>
->> Usually the suggested usage from driver side who are using pinctrl would be:
->> LOCK;
->> pinctrl_select_state();
->> gpio pulling;
->> udelay();
->> check state;
->> other hardware behaviors;
->> UNLOCK;
->>
->> So the locking bug fix I have told customer side to fix from their own
->> driver part. Since usually not only a simple pinctrl_select_state call
->> can finish the hardware state transaction.
->>
->> I myself also is fine to have a small per pinctrl lock to only protect
->> the current pinctrl_select_state->pinctrl_commit_state reentrance
->> issues. Pls any pinctrl maintainer help to comment to suggest or not and
->> I can prepare a change as well.
-> 
-> Luckily I am the pin control maintainer :D
-> And I also ha my morning coffee and looked over the patch again.
-> 
-> So tilting the compiler to generate code that is less prone to race
-> conditions with READ_ONCE() isn't really the solution is it? We need
-> to introduce a proper lock that stops this from happening if it is
-> a problem people are facing.
-> 
-> Can you try to make a patch that removes READ_ONCE()
-> and introduce a lock instead?
-> 
-> Racing is rarely an issue in pin control for reasons explained
-> in another context here:
-> https://lore.kernel.org/linux-gpio/CACRpkdZ0cnJpYuzU=47-oW-7N_YGMo2vXpKOeXeNi5PhPY7QMA@mail.gmail.com/
-> 
-> ...but if people still manage to run into it, we better have a lock
-> there. Just make sure it is not just an issue with outoftree code,
-> but a real problem?
-> 
-> The change that changes the code to use the old_state variable
-> should stay in, it makes the code more readable, it's just the
-> READ_ONCE() macro which is dubious.
-Thx for confirm. I am preparing the new change now. :)
+On Tue, Nov 28, 2023 at 10:07=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
 
-READ_ONCE can only avoid the possible infinite loop and not crash the 
-whole kernel, while the lock is needed to protect the multi parallel 
-call of pinctrl_commit_state api have a consistent atomic hardware 
-result as well.
-> 
-> Yours,
-> Linus Walleij
+[snip]
 
--- 
-Thx and BRs,
-Aiqun(Maria) Yu
+>
+> > I see the
+> > chip->operational field that is set to false on release. In my
+> > version, we just use a NULL-pointer to carry the same information.
+>
+> Yup, sounds obvious. Your usage of "just" sounds as if your variant was
+> better. To give the alternative view where the suggested approach sounds
+> better would be:
+>
+> You need a pointer and I "just" a bool that even has a name implying its
+> function. You need to dereference the pointer in several places as the
+> needed information is distributed over two structures while it's all
+> together in a single struct for the usual foo_alloc() + foo_register()
+> approach.
+>
 
+There's another reason we do that. I'm no longer sure if I mentioned
+it in my talk (I meant to anyway).
+
+In GPIO we have API functions that may be called from any context -
+thus needing spinlocks for locking - but also driver callbacks that
+may use mutexes internally or otherwise sleep. I don't know if this is
+the case for PWM too but in GPIO we may end up in a situation where if
+we used a spinlock to protect some kind of an "is_operational" field,
+we'd end up sleeping with a spinlock taken and if we used a mutex, we
+couldn't use API function from atomic contexts.
+
+This is the reason behind locking being so broken in GPIO at the
+moment and why I'm trying to fix it this release cycle.
+
+Splitting the implementation into two structures and protecting the
+pointer to the provider structure with SRCU has the benefit of not
+limiting us in what locks we use underneath.
+
+Every subsystem has its own issues and we need to find something
+generic enough to cover them all (or most of them anyway). I don't
+think having a single structure cuts it.
+
+Bart
+
+[snip]
 
