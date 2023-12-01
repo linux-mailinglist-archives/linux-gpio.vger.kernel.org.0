@@ -1,137 +1,110 @@
-Return-Path: <linux-gpio+bounces-863-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-866-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0D91A800F7B
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:12:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFA5D800FFD
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:22:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCD80281C62
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 16:12:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6831328109D
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 16:22:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A6BF4D58C;
-	Fri,  1 Dec 2023 16:11:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wQ5yYzsu"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 410254CDE0;
+	Fri,  1 Dec 2023 16:22:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 945D110FE
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 08:11:22 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40b40423df8so20066535e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 08:11:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701447081; x=1702051881; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NW19mxe4mqyEScY6tYe0GRvxeq4h2O2gsGPGYkrMyss=;
-        b=wQ5yYzsuY34CGLshiJUSEMmCIOQpepP6X7nM4cbw3//Pr8v7YZXW876Jrc3uvIKo9H
-         lE4xEi2ckW+6gbsFHJb+U72bam1o3Xlkk8zth7s7gYdc5JylypzAiVNiKOhAL54yRFGp
-         jcJIcibCcpfL9arg7VzzhZX4vOqDTp7aFJ10hQ4wcQzWt+XBZZBYi9Ig1PaB7QB/8FyO
-         Ml8A8zbX/k5hXOCFVjUIjAP5hHI73WVPU9KL8G/ItPaVPasj8E3FIRwJdXanGbB4zhzv
-         DB+Q1mGl0L14AbybzPBeWF6noGaKL4FtXOA2v/r3IaYD5fguB13pVeHeRKP1z25N77k6
-         MCcg==
+Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1B3ACD50;
+	Fri,  1 Dec 2023 08:22:03 -0800 (PST)
+Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-58d9a4e9464so1144496eaf.0;
+        Fri, 01 Dec 2023 08:22:03 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701447081; x=1702051881;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1701447722; x=1702052522;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NW19mxe4mqyEScY6tYe0GRvxeq4h2O2gsGPGYkrMyss=;
-        b=LUAwGjBe6v8MX03e6YiVx1K9gsz6d1YHuxr3q+aKsGS/T4mHYqIKZvAp7pUTeOilBl
-         fGPv5nQ9tMzsSWTFOOm2y3LV6WTOSqaEeDT8ph8E/ln4pzbxKT8O+kbIytLZ6CDuEIBq
-         iVyTjUBPztkm0S1dRJZEvWqEVkuO3P516fhhvxp0Umn8AN3FIu5OS+8jmD8GWXMWQyUx
-         ovxk1+4Mq+meeZhonQJRv/BqMC8GZcK/Xftpm4Jdvp8qaNjw5pGPsdi1yV9qoMiTeME1
-         BERw+go/MXO2e0ixmCoh5fWBwMYrezCPzD2u6I5pxxJNCeI62XjxBzVKEXJ0XDgiynpo
-         pC+g==
-X-Gm-Message-State: AOJu0Yzeo77Ezuzlgds9e4IIgLSWyBmYADTGfhnoNXKn6wlfZIZcoTKb
-	gr+F84KAZWAH2XE6xCiPuHCMDA==
-X-Google-Smtp-Source: AGHT+IEAInbF0fkztmGpsgy6V1cv3bcIiQ/CkWEoRX4j4aDC0mNAEkPg+rKi6QFg/uuZCcRUUH4s0A==
-X-Received: by 2002:a05:600c:230c:b0:40b:5e21:bde1 with SMTP id 12-20020a05600c230c00b0040b5e21bde1mr406099wmo.112.1701447081131;
-        Fri, 01 Dec 2023 08:11:21 -0800 (PST)
-Received: from gpeter-l.lan (host-92-29-24-243.as13285.net. [92.29.24.243])
-        by smtp.gmail.com with ESMTPSA id cg16-20020a5d5cd0000000b003332656cd73sm3907386wrb.105.2023.12.01.08.11.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 08:11:20 -0800 (PST)
-From: Peter Griffin <peter.griffin@linaro.org>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	mturquette@baylibre.com,
-	conor+dt@kernel.org,
-	sboyd@kernel.org,
-	tomasz.figa@gmail.com,
-	s.nawrocki@samsung.com,
-	linus.walleij@linaro.org,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	arnd@arndb.de,
-	olof@lixom.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	cw00.choi@samsung.com,
-	alim.akhtar@samsung.com
-Cc: peter.griffin@linaro.org,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	semen.protsenko@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	soc@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	kernel-team@android.com,
-	linux-serial@vger.kernel.org
-Subject: [PATCH v5 20/20] MAINTAINERS: add entry for Google Tensor SoC
-Date: Fri,  1 Dec 2023 16:09:25 +0000
-Message-ID: <20231201160925.3136868-21-peter.griffin@linaro.org>
-X-Mailer: git-send-email 2.43.0.rc2.451.g8631bc7472-goog
-In-Reply-To: <20231201160925.3136868-1-peter.griffin@linaro.org>
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+        bh=XMzJQkWl3UCqt9MwlcLP28F/WjmJ8PvNuz3o00YLjoc=;
+        b=AhEECuELoNFQJOyh58mkZdZ/MP+HM3W6XTkhM9vyTB+4sMMXQkvBB/+aqPSJng36Br
+         M/K1qM1u5B4YAgRa7CYisnCAZ4BhjnrDGcNlK9PT03HbmCc9I6FAV7bMMbpqbb+R4AAK
+         OOKcmhKpCH7S7qzqzoTZZIeYL8+GhR64twRfsY8ILBdTVgXKPCF4FCVfRRZLGKJlLz9g
+         kDfSVacrVANTjDohkes8V++sC3M80gIO/AOeSQZ6Vul/diPYGO42w7JhCFC+pR5jfkuR
+         EjKMLcT0aVPshSaF+BqKqNIxmTj+WPChYXUqezbC3cAr1pe1ORHHpsNobT/+CqeCibpd
+         /uMQ==
+X-Gm-Message-State: AOJu0Yw/MqX9xBpST/cgl6INpOxtA5OTMYSqjN4InAof/yXDqj+gl4VM
+	xD92a+OPRI8cg0nEhr50kwheSrIfGLLTkA==
+X-Google-Smtp-Source: AGHT+IEeTn1ywH3y2w92NrZfUJmeikZUGwFBsI/ecRejWx/2yva3XMTPLWpF6EsizqYwR2k7A9w9Zg==
+X-Received: by 2002:a4a:621e:0:b0:58d:b174:9af6 with SMTP id x30-20020a4a621e000000b0058db1749af6mr3301490ooc.3.1701447722143;
+        Fri, 01 Dec 2023 08:22:02 -0800 (PST)
+Received: from mail-oa1-f43.google.com (mail-oa1-f43.google.com. [209.85.160.43])
+        by smtp.gmail.com with ESMTPSA id v3-20020a4a3143000000b0058d592deb89sm620159oog.17.2023.12.01.08.22.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 01 Dec 2023 08:22:00 -0800 (PST)
+Received: by mail-oa1-f43.google.com with SMTP id 586e51a60fabf-1fa21f561a1so361498fac.3;
+        Fri, 01 Dec 2023 08:22:00 -0800 (PST)
+X-Received: by 2002:a81:5258:0:b0:5d3:4923:2fed with SMTP id
+ g85-20020a815258000000b005d349232fedmr5600759ywb.36.1701447366859; Fri, 01
+ Dec 2023 08:16:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-6-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231120070024.4079344-6-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 1 Dec 2023 17:15:55 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWJJ=pjY5YFG=UxL+rWhYtWKicjbGUj-7KC1tgaz4tB3Q@mail.gmail.com>
+Message-ID: <CAMuHMdWJJ=pjY5YFG=UxL+rWhYtWKicjbGUj-7KC1tgaz4tB3Q@mail.gmail.com>
+Subject: Re: [PATCH 05/14] pinctrl: renesas: rzg2l: Move arg in the main
+ function block
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, linux@armlinux.org.uk, 
+	magnus.damm@gmail.com, mturquette@baylibre.com, sboyd@kernel.org, 
+	linus.walleij@linaro.org, p.zabel@pengutronix.de, arnd@arndb.de, 
+	m.szyprowski@samsung.com, alexandre.torgue@foss.st.com, afd@ti.com, 
+	broonie@kernel.org, alexander.stein@ew.tq-group.com, 
+	eugen.hristev@collabora.com, sergei.shtylyov@gmail.com, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add maintainers entry for the Google tensor SoC based
-platforms.
+Hi Claudiu,
 
-Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- MAINTAINERS | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
+wrote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Move arg in the main block of the function as this is used by 3 out of 4
+> case blocks of switch-case. In this way some lines of code are removed.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 36f6e76170e6..a3bd682c9e32 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9032,6 +9032,16 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chrome-platform/linux.git
- F:	drivers/firmware/google/
- 
-+GOOGLE TENSOR SoC SUPPORT
-+M:	Peter Griffin <peter.griffin@linaro.org>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-samsung-soc@vger.kernel.org
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/clock/google,gs101-clock.yaml
-+F:	arch/arm64/boot/dts/exynos/google/
-+F:	drivers/clk/samsung/clk-gs101.c
-+F:	include/dt-bindings/clock/google,clk-gs101.h
-+
- GPD POCKET FAN DRIVER
- M:	Hans de Goede <hdegoede@redhat.com>
- L:	platform-driver-x86@vger.kernel.org
--- 
-2.43.0.rc2.451.g8631bc7472-goog
+Thanks for your patch!
 
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+
+Unfortunately your claim is not really backed by the diffstat.
+What about moving index, too?
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
