@@ -1,117 +1,92 @@
-Return-Path: <linux-gpio+bounces-829-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-831-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFF8A800B9B
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 14:16:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB2AA800BBB
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 14:22:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A2D3B213B9
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 13:16:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 180471C20A09
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 13:22:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6FF282D633;
-	Fri,  1 Dec 2023 13:16:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3FE32F86F;
+	Fri,  1 Dec 2023 13:22:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nZvoYezt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hdzAAwsA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1CBB510E2;
-	Fri,  1 Dec 2023 05:16:28 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-332ddd8e0bdso2097964f8f.0;
-        Fri, 01 Dec 2023 05:16:28 -0800 (PST)
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 49A5710D0
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 05:22:34 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5d3ffa1ea24so8654627b3.3
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 05:22:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701436586; x=1702041386; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=linaro.org; s=google; t=1701436953; x=1702041753; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=u5l4PLs5fq2iOORKwjJCX/3NWfa03zarQdKsLZDtVEc=;
-        b=nZvoYeztf7imlKMou3/7CdxtcY06s6av1D0uliPmyuaMvuWevQJ5pWJPs9wWcfvDlS
-         M+CtQL9k4gcpXGPljPoAR47Z8ZN4iLX9lAWtoUdg3YqTU9aNJsep3dOJIomyURJpXp4S
-         9EMZpTBEOmePKbm4Z0B69/7TXNs4+gVnZqSROgJ8caiMhEQ5Cze3eUwz59ldrnpEdKo/
-         yub1w/tQ0A16g8SGFYtaX0bPhKIENsfIYkXZyW5c56zgnn7USIHaE1JDF7ZNe3r0ON9C
-         SDqY97RgOIcrh0L6eVo/HYTYwAkZofhxO0Xx0CZIa+7QrajiEk9dHAbpQYSv6WBX1eum
-         NPZQ==
+        bh=W7vbHf3J8sbJ3NXvRWx5w7Zh/yrl1LIRE3Tm8q3YHeI=;
+        b=hdzAAwsAJ9UOMkIrvpIIrGV4x7KG4LeySVKktoLw85F1pkvD/15T2XDVX9HFnq6Pfl
+         TiGHk0UfHUKtDmTxVxgHvlw2n0g1z1gHafGcs9cgq3XjJ1yD/RYwJ/bSd8BNjg7iRqP3
+         IcTK5c9LiwNuoHdGDCWuu9PC4PdFHDm+EqSIQkS2qqQ8g/qSbM42vLZ0mEW4ncCkxIJi
+         N8eiqMYwoLk8ZobWYRAf9BqFSswm5BMXOAz605buDQrrGTY67ST3xSfBd21Fm68FXAJg
+         eTXtMlLMIZgNlDCTavia0vfFuBOjGtxz7FtsHlAN0ePdDdw1/XyPB1SxmSRwy3FkXmmS
+         cY4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701436586; x=1702041386;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1701436953; x=1702041753;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=u5l4PLs5fq2iOORKwjJCX/3NWfa03zarQdKsLZDtVEc=;
-        b=P6pJixs5uKy0FKWVkq3PoG465R2F+l4V80Oi5G90SLRmGPjI/KU+o8kBLfHKTHocA9
-         Qvw7zfYDt5/bdQtly6hfBXVyNERFF/8uxUQQvXkreeOYNC8Qxc7r9To2opYy+v43P5zk
-         htF9poKnBy9NgOjvYtlub+ZRSEXmBRdV9apRN1v0aJf8Ug/mLTP+rwZ+FpDeh3Q1NIgK
-         fINufRcNTtKgk9b5sO3TjyAlLAnw9E4S+CjvabNYi0Ejn9h2qEo8Tt5c612qyyp3PB3a
-         32fUJIalL+rX64blaGj0I2EzOfRRFhQ8cQFX9ZBIMtQzCSArQvVqCI7UzCzJ6qjmXFrd
-         yO8g==
-X-Gm-Message-State: AOJu0Yx48fEipDElhTzGLPPSw06nOTqaJc/PzxX86pkQXd77TiBqSQ1i
-	yRBhRalyAoI+wn/hhJaA6nU=
-X-Google-Smtp-Source: AGHT+IGFHBFbqH5osZlxZuBfMWde0sWWX+h48EXeHAzLRuF+VW+iOm/S1NzSCFL0u0ZDbGzQbWx3Dw==
-X-Received: by 2002:a05:600c:21cd:b0:40b:5e4a:236a with SMTP id x13-20020a05600c21cd00b0040b5e4a236amr766057wmj.108.1701436586518;
-        Fri, 01 Dec 2023 05:16:26 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:3c2e:cd45:f50f:f083])
-        by smtp.gmail.com with ESMTPSA id fm21-20020a05600c0c1500b0040b3dbb5c93sm1451723wmb.1.2023.12.01.05.16.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 01 Dec 2023 05:16:25 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v3 3/3] riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
-Date: Fri,  1 Dec 2023 13:15:51 +0000
-Message-Id: <20231201131551.201503-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231201131551.201503-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20231201131551.201503-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+        bh=W7vbHf3J8sbJ3NXvRWx5w7Zh/yrl1LIRE3Tm8q3YHeI=;
+        b=wI9N3taKYzoGXLyblTpbnw/w1WrEPkCR8juIbX8baabl1Skzo0iGlNR0bmiJzZfxt/
+         vTyCoUVSlBKM94Antdh2JoUK41iHZPPmTVHX2vM8L0D9ruPyQDNqtEwQuLpzLOp2MvUd
+         RUdPEjVRo4lvq0EiEHkfpGz9IqEtlVUbd+2fJfQCeBMK2LGw3Q57IuVfIBsroPR//J9H
+         uhgl5aRYPPo8lHCFgSYMOwlovja5ejPnzQL8CP+FTMfFb3ZGDtC5s2DjO7kf84ZBnaTE
+         0DEibDel3oObFI8/LbLCOCVptAKWQ6SYrN9IjCkwG1IQvlcJjr3gLts+NjXG0Pt4MTNk
+         ljrQ==
+X-Gm-Message-State: AOJu0YwIsaqShHNBaxvWiHetT2LK/wi4dXiHZ+pm6KM+WbnhL9dRBytx
+	+j/Rz49JMiVYgnSEEPILrnBu8CilmFcrcxbHLCqv0bCceksP35/N
+X-Google-Smtp-Source: AGHT+IEfp8HOE1dfuYBXgtJ1ILn/FD4wsDwjp7SWmZjETNIt1tnCNanGAmThGjLaWsfCvU4zFVII9cQ47/r59+ugEHI=
+X-Received: by 2002:a0d:e254:0:b0:5d3:ad38:bd6d with SMTP id
+ l81-20020a0de254000000b005d3ad38bd6dmr4499520ywe.2.1701436953510; Fri, 01 Dec
+ 2023 05:22:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <cover.1701434258.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1701434258.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 1 Dec 2023 14:22:22 +0100
+Message-ID: <CACRpkdY7FkFPC5q_AsGmsGprf8_ATOS4-oEo5zE=rU0+85EO3w@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.8
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri, Dec 1, 2023 at 1:41=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
-On RZ/Five we have additional pins compared to the RZ/G2UL SoC so update
-the gpio-ranges property in RZ/Five SoC DTSI.
+> The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa=
+86:
+>
+>   Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.8-tag1
+>
+> for you to fetch changes up to dc99d4c8ac46bf533b9519a53795c4cd6ff0fa39:
+>
+>   dt-bindings: pinctrl: renesas: Drop unneeded quotes (2023-11-27 11:12:1=
+2 +0100)
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+Pulled into my devel branch, thanks!
 
-diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-index a92cfcfc021b..09ef10b39f46 100644
---- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-+++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-@@ -46,6 +46,10 @@ cpu0_intc: interrupt-controller {
- 	};
- };
- 
-+&pinctrl {
-+	gpio-ranges = <&pinctrl 0 0 232>;
-+};
-+
- &soc {
- 	dma-noncoherent;
- 	interrupt-parent = <&plic>;
--- 
-2.34.1
-
+Yours,
+Linus Walleij
 
