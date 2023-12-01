@@ -1,63 +1,61 @@
-Return-Path: <linux-gpio+bounces-870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94D4F8010C5
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 18:11:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7143D8011A6
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 18:26:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 24820B211FE
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:11:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89EE11C20D14
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 17:26:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB2164E1A3;
-	Fri,  1 Dec 2023 17:11:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 057094E1D3;
+	Fri,  1 Dec 2023 17:26:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E5122C1;
-	Fri,  1 Dec 2023 09:11:32 -0800 (PST)
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5d3ffa1ea24so11437607b3.3;
-        Fri, 01 Dec 2023 09:11:32 -0800 (PST)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 297ED211E;
+	Fri,  1 Dec 2023 09:25:48 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d3ffa1ea24so11588397b3.3;
+        Fri, 01 Dec 2023 09:25:48 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701450692; x=1702055492;
+        d=1e100.net; s=20230601; t=1701451546; x=1702056346;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LOYVG3uVS3nV7wf5Zl9tUOjXsJqVljlnHdmIj5/Ot90=;
-        b=osY0FD1UjD04Ov7gWiV8JzYzLxiuQNf5N52+4CnbAvDAiHbUsm3VXj6qxT4xQRDWtU
-         2joSDebGlB/M1T/wbKLLjvYkbJpjBGqkzXVi6aTjO+FEG6d+/iLpSeZxtvNfc4w9tVn+
-         iozKWROmi/8Mg77q6yBTiaCvSnZSMPzUPorcqAoV22Pb75thQxE6wqcGPjwLOelwDByT
-         Yc4B+j3MfZb6gG/qWRw11izh0KGjHZPc2NjMpK0+Zfnz6JsNIinLu77dVAoD56s9w25X
-         WeIRfdSofnnxEYxsRml4zgnhP46mhuNNh4y4ElsHFyGaT1/pVZYQ4RHw0vRtSv76l5Li
-         3gxg==
-X-Gm-Message-State: AOJu0Yw/tIQDchO/sUTqjsefZr7Lpup7eth8DxmP0/Cx64o4/qh3ueQ8
-	Dz0rXJIrLUCC2nwDD87fxsEKZAYaDkobgg==
-X-Google-Smtp-Source: AGHT+IGwmhhmHsTtrAaKEk6Y9/h8mCRZgE1kYoOmknWHdqcQOqALRpdveibx39d8VcXB9jTS1TneJw==
-X-Received: by 2002:a0d:cbcf:0:b0:5d3:7c0b:9547 with SMTP id n198-20020a0dcbcf000000b005d37c0b9547mr5778930ywd.12.1701450691960;
-        Fri, 01 Dec 2023 09:11:31 -0800 (PST)
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com. [209.85.219.171])
-        by smtp.gmail.com with ESMTPSA id i71-20020a0ddf4a000000b005d3758fda7dsm1078217ywe.31.2023.12.01.09.11.29
+        bh=ifFZ+tz2XMUa8Xxg+1KF6w2Puzkq4cfz8G0iZBhXb/w=;
+        b=sJGaUQh29M1IK0xOTKs/9sflb5J4Qwn3woY5wD/BVE3T6Y2VpO9JO82kQei+96cNqa
+         vGY0lVdg78NYRaZ3yPoW1aCRbWje19V9OxWPQcmbErsoC7Qlyx6lGRyM1X6K/9YwBL7P
+         wl0zKpAuW0DOxDcnzl0YPpA0iwyPk+tKnlcQUuclP041plepgWVwQ7s4lF86DBUUFxCx
+         Aj74OzPnYgU6UUkJl2wdVhGSrYlyoOginj+0O+BoHzuQUolgaO7kmwrQ3oe5J4fVdrG0
+         H/K1BoONG2g/u4ZtVfWCNIHggSUHQQ+wTqeXRyATbFCHqWubazdOUTfu0oeg00TS/BYU
+         L+YQ==
+X-Gm-Message-State: AOJu0Yy5H4nqI3MnSjbXjLIyd17yyK2SetJs6Wiul9OVnZP7C6YxrwOV
+	eyBrTan2wp6gJzTnCmiYJSaP+YXPydC5SA==
+X-Google-Smtp-Source: AGHT+IFKOnio0tcA3llLP+Sxov/BN6tmtwDgAcgcgSaqZvFNSxNyKSkYrV2nAuq7+wExpBMZjDlr0g==
+X-Received: by 2002:a81:ac1d:0:b0:5d4:36:c32c with SMTP id k29-20020a81ac1d000000b005d40036c32cmr2900511ywh.18.1701451546445;
+        Fri, 01 Dec 2023 09:25:46 -0800 (PST)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id u189-20020a8179c6000000b005d34a381f59sm1190705ywc.102.2023.12.01.09.25.44
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Dec 2023 09:11:29 -0800 (PST)
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-da37522a363so737500276.0;
-        Fri, 01 Dec 2023 09:11:29 -0800 (PST)
-X-Received: by 2002:a0d:c985:0:b0:5cd:6d0e:5369 with SMTP id
- l127-20020a0dc985000000b005cd6d0e5369mr29643228ywd.34.1701450688717; Fri, 01
- Dec 2023 09:11:28 -0800 (PST)
+        Fri, 01 Dec 2023 09:25:44 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d34f8f211fso22410827b3.0;
+        Fri, 01 Dec 2023 09:25:44 -0800 (PST)
+X-Received: by 2002:a81:ac1d:0:b0:5d4:36:c32c with SMTP id k29-20020a81ac1d000000b005d40036c32cmr2900397ywh.18.1701451543993;
+ Fri, 01 Dec 2023 09:25:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-8-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231120070024.4079344-8-claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com> <20231120070024.4079344-9-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231120070024.4079344-9-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 1 Dec 2023 18:11:17 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWFDD=c7f-jbB88BjMa75VBhjSrVK-E0OYYQ-gr_hi-zQ@mail.gmail.com>
-Message-ID: <CAMuHMdWFDD=c7f-jbB88BjMa75VBhjSrVK-E0OYYQ-gr_hi-zQ@mail.gmail.com>
-Subject: Re: [PATCH 07/14] pinctrl: renesas: rzg2l: Add support to select
- power source for Ethernet pins
+Date: Fri, 1 Dec 2023 18:25:32 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXygjeHvrSB=KpVB4n1BTAinvNLL+AmjRhERy+2QbJMiA@mail.gmail.com>
+Message-ID: <CAMuHMdXygjeHvrSB=KpVB4n1BTAinvNLL+AmjRhERy+2QbJMiA@mail.gmail.com>
+Subject: Re: [PATCH 08/14] pinctrl: renesas: rzg2l: Add output enable support
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
 	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
@@ -77,104 +75,36 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Claudiu,
 
+Thanks for your patch!
+
 On Mon, Nov 20, 2023 at 8:01=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> =
 wrote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> For Ethernet pins GPIO controller available on RZ/G3S (but also on RZ/G2L=
-)
-> allows setting the power source. Based on the interface b/w Ethernet
-> controller and Ethernet PHY and board design specific power source need t=
-o
-> be selected. The GPIO controller allow 1.8V, 2.5V and 3.3V power source
-> selection for Ethernet pins and this could be selected though ETHX_POC
-> registers (X=3D{0, 1}).
->
-> Commit adjust the driver to support this and does proper instantiation
-> for RZ/G3S and RZ/G2L SoC. On RZ/G2L only get operation has been tested
-> at the moment.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> Some of the Ethernet pins on RZ/G3S (but also valid for RZ/G2L) need to
+> have direction of the IO buffer set as output for Ethernet to work
+> properly. On RZ/G3S these pins are P1_0/P7_0, P1_1/P7_1 with could have
+> the following Ethernet functions: TXC/TX_CLK or TX_CTL/TX_EN. To be able
+> to configure this the output enable has been implemented. This is
+> implemented with 2 per-platform read/write functions to be able to simply
+> validate the pins supporting this on a platform basis. Moreover, on RZ/G2=
+L
+> the register though which these settings could be done is 8 bits long
+> whereas on RZ/G3S this is a 32 bit register. The Ethernet pins supporting
+> OEN are different. These differences could be handled in platform specifi=
+c
+> OEN read/write functions.
 
-Thanks for your patch!
-
-> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> @@ -623,7 +632,16 @@ static int rzg2l_get_power_source(struct rzg2l_pinct=
-rl *pctrl, u32 pin, u32 caps
->         if (pwr_reg < 0)
->                 return pwr_reg;
->
-> -       return (readl(pctrl->base + pwr_reg) & PVDD_MASK) ? 1800 : 3300;
-
-This removes the last user of PVDD_MASK. I guess it can be removed,
-as all unused register bits are documented to read as zeroes.
-
-> +       val =3D readl(pctrl->base + pwr_reg);
-
-While these registers are documented to support access sizes of
-8/16/32 bits on RZ/G3S, RZ/G2L is limited to 8 bits, so this should
-have used readb() from the beginning.
-
-> +       if (val =3D=3D PVDD_1800)
-> +               return 1800;
-> +       if (val =3D=3D PVDD_2500)
-> +               return 2500;
-> +       if (val =3D=3D PVDD_3300)
-> +               return 3300;
-> +
-> +       /* Should not happen. */
-> +       return -EINVAL;
-
-Please use a switch() statement.
-
->  }
->
->  static int rzg2l_set_power_source(struct rzg2l_pinctrl *pctrl, u32 pin, =
-u32 caps, u32 ps)
-> @@ -631,17 +649,27 @@ static int rzg2l_set_power_source(struct rzg2l_pinc=
-trl *pctrl, u32 pin, u32 caps
->         const struct rzg2l_hwcfg *hwcfg =3D pctrl->data->hwcfg;
->         const struct rzg2l_register_offsets *regs =3D &hwcfg->regs;
->         int pwr_reg;
-> +       u32 val;
->
->         if (caps & PIN_CFG_SOFT_PS) {
->                 pctrl->settings[pin].power_source =3D ps;
->                 return 0;
->         }
->
-> +       if (ps =3D=3D 1800)
-> +               val =3D PVDD_1800;
-> +       else if (ps =3D=3D 2500)
-> +               val =3D PVDD_2500;
-> +       else if (ps =3D=3D 3300)
-> +               val =3D PVDD_3300;
-> +       else
-> +               return -EINVAL;
-
-Please use a switch() statement.
-
-> +
->         pwr_reg =3D rzg2l_caps_to_pwr_reg(regs, caps);
->         if (pwr_reg < 0)
->                 return pwr_reg;
->
-> -       writel((ps =3D=3D 1800) ? PVDD_1800 : PVDD_3300, pctrl->base + pw=
-r_reg);
-> +       writel(val, pctrl->base + pwr_reg);
-
-writeb() for RZ/G2L.
-
->         pctrl->settings[pin].power_source =3D ps;
->
->         return 0;
+These registers are documented to support access sizes of 8/16/32 bits
+on RZ/G3S.  Hence you don't need to differentiate, but can just use
+8-bit accesses on all platforms.
 
 Gr{oetje,eeting}s,
 
                         Geert
 
---=20
+
+--
 Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
 .org
 
