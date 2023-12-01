@@ -1,93 +1,136 @@
-Return-Path: <linux-gpio+bounces-807-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-808-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3486780013B
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 02:51:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DB6A80038B
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 07:09:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E07F92815DF
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 01:51:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9821B20F1B
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 06:08:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3CCB17D2;
-	Fri,  1 Dec 2023 01:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D8BBC120;
+	Fri,  1 Dec 2023 06:08:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="hw3a/Iiu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0601C10FF;
-	Thu, 30 Nov 2023 17:51:08 -0800 (PST)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3B11ovBtB4138308, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3B11ovBtB4138308
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Dec 2023 09:50:57 +0800
-Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
- RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.32; Fri, 1 Dec 2023 09:50:57 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXDAG02.realtek.com.tw (172.21.6.101) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.7; Fri, 1 Dec 2023 09:50:56 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
- RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
- 15.01.2375.007; Fri, 1 Dec 2023 09:50:56 +0800
-From: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-To: Andy Shevchenko <andy@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 2/2] Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
-Thread-Topic: [PATCH v2 2/2] Add GPIO support for Realtek DHC(Digital Home
- Center) RTD SoCs.
-Thread-Index: AQHaGH4c7D0XjcmgAUiBOm4nmmy8ibCIvO0AgAAfgoCACuJyIA==
-Date: Fri, 1 Dec 2023 01:50:56 +0000
-Message-ID: <3482d87c4cd74363964d1d867e0c81cd@realtek.com>
-References: <20231116111441.2339-1-tychang@realtek.com>
- <20231116111441.2339-3-tychang@realtek.com>
- <CACRpkdZTFWnH1iwLCeJy02OXJAgTSSVTomzDNEQ3ebWocwkgPA@mail.gmail.com>
- <ZWCJkddstjpXTtQx@smile.fi.intel.com>
-In-Reply-To: <ZWCJkddstjpXTtQx@smile.fi.intel.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXDAG02.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Received: from mail-ej1-x62c.google.com (mail-ej1-x62c.google.com [IPv6:2a00:1450:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D186D7D
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 22:08:50 -0800 (PST)
+Received: by mail-ej1-x62c.google.com with SMTP id a640c23a62f3a-a18f732dc83so217446166b.1
+        for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 22:08:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1701410929; x=1702015729; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VLKk6oTrF6fAB77fJv+EXNaWWOWxqJcPWfPyun45kVU=;
+        b=hw3a/IiuNAnC+jktLUMQwxMJJxSsuhtheUQy/QDLOtazclZckiUTw+X2XAr1zNv8Vz
+         +PwbJ+MZGlWvjF3KJCVA/pL9fF97vLJX3ZbCNxFT1IrjrKcSIBN+1VUvbxI2+j/FFI9e
+         y7HGsjc/Rv8YcPEeOfKY5S7RrEt7KT5JJQZ4wXDfOGWCuKkt56aJ861wxNgKsjMGjw8U
+         MhNIA5v70TMLViCmFKoId+Exmp5FyIosp2jIeCBf/VlLzV0gJKUCG7vOx8mihueVVGqr
+         Q2g+Y+/VJ53geb3c1dJBuUas63dqCzDi2j2/QFTlA1azWEIE/cH4j2Kv7rjmGrupvfaL
+         40Zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701410929; x=1702015729;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=VLKk6oTrF6fAB77fJv+EXNaWWOWxqJcPWfPyun45kVU=;
+        b=fU3KG7fzGNRhHvrCmc+Pz9v1VMirdAwr+3guPIcmIo8aWnyTT7zS3A6QHtsIWq54tZ
+         6XD8neL9v0nWy9RFUdq13i5yOw975IdKpiXToHoOf0zdbz7dAOpLuX6dmdppfs4jZNQG
+         yTWBJi94eIzzNFgltVJhS54fofdOh2xliOSXfb1E0XsA6as1YJmp1Xym8yaV+ZPzUQ1O
+         vSt0Er4bqapuzy2DY+uCphiGckjnJJJBcJqOMatf9pFbJ2CYAIl1HL7jr5biX5SUmxNI
+         Kb1ZlTYmOlFCes8Zu098aJMEjxkRrEceJbxfUMuTWNUhCvs8duBFtOnVGXgntwTUvzDy
+         BSwg==
+X-Gm-Message-State: AOJu0YywrHmj3w+GrkRiGmpOis4GYMAJUWlSSL1P1xrVE84dOXARry/V
+	ZiSTlsr2i8XlSbwzoA627lj5J/OiGIBvGZ9xZFDiTA==
+X-Google-Smtp-Source: AGHT+IEzyszR763EpzzyaSNEQ3HbEzdWwIzjFHJIxSWdGQpefK5Y/sMDWH53RjR7RUG4YRs1uqkUSBiJJIziU8PqkuU=
+X-Received: by 2002:a17:906:738f:b0:a18:5ec7:b8af with SMTP id
+ f15-20020a170906738f00b00a185ec7b8afmr702085ejl.29.1701410928802; Thu, 30 Nov
+ 2023 22:08:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
-X-KSE-AntiSpam-Interceptor-Info: fallback
-X-KSE-Antivirus-Interceptor-Info: fallback
-X-KSE-AntiSpam-Interceptor-Info: fallback
+References: <20231110102054.1393570-1-joychakr@google.com> <CACRpkdZ9RHcHh4o5g62ywK0eQHpLZuGUF0Ud6jogk9Sfqe4krA@mail.gmail.com>
+ <ZVQkLqDB3KtOlIpK@surfacebook.localdomain> <CAOSNQF3QeFd857RCJE8wfJ=__-K7Bi4vfMeTVP-+O+LJ7y9SmQ@mail.gmail.com>
+ <CACRpkdZ+UMOqatH4oOusdaX1ieeH2TtpC7VbX1wf+tzGDSfR3A@mail.gmail.com>
+In-Reply-To: <CACRpkdZ+UMOqatH4oOusdaX1ieeH2TtpC7VbX1wf+tzGDSfR3A@mail.gmail.com>
+From: Joy Chakraborty <joychakr@google.com>
+Date: Fri, 1 Dec 2023 11:38:36 +0530
+Message-ID: <CAOSNQF1cwCa9hPNQjN3g5b+nMs2qx+H8057aypH+GHaVn29NQw@mail.gmail.com>
+Subject: Re: [RFC PATCH] PM: runtime: Apply pinctrl settings if defined
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: andy.shevchenko@gmail.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, 
+	linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, manugautam@google.com, aniketmaurya@google.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-SGkgQW5keSwNCg0KPg0KPk9uIEZyaSwgTm92IDI0LCAyMDIzIGF0IDEwOjM4OjQyQU0gKzAxMDAs
-IExpbnVzIFdhbGxlaWogd3JvdGU6DQo+PiBPbiBUaHUsIE5vdiAxNiwgMjAyMyBhdCAxMjoxNOKA
-r1BNIFR6dXlpIENoYW5nIDx0eWNoYW5nQHJlYWx0ZWsuY29tPg0KPndyb3RlOg0KPj4NCj4+ID4g
-VGhpcyBkcml2ZXIgZW5hYmxlcyBjb25maWd1cmF0aW9uIG9mIEdQSU8gZGlyZWN0aW9uLCBHUElP
-IHZhbHVlcywNCj4+ID4gR1BJTyBkZWJvdW5jZSBzZXR0aW5ncyBhbmQgaGFuZGxlcyBHUElPIGlu
-dGVycnVwdHMuDQo+PiA+DQo+PiA+IFNpZ25lZC1vZmYtYnk6IFR6dXlpIENoYW5nIDx0eWNoYW5n
-QHJlYWx0ZWsuY29tPg0KPj4NCj4+IEFwYXJ0IGZyb20gdGhlIG1pc3Npbmcga2VybmVsZG9jIHRo
-YXQgdGhlIGF1dG9idWlsZGVyIGlzIGNvbXBsYWluaW5nDQo+PiBhYm91dCB0aGlzIGxvb2tzIGdv
-b2QgdG8gbWUuIElmIHlvdSBmaXggdGhlIGtlcm5lbGRvYzoNCj4+IFJldmlld2VkLWJ5OiBMaW51
-cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+DQo+DQo+SSB0aGluayBJIG1pZ2h0
-IGhhdmUgY29tbWVudHMgaW4gdGhlIGZ1dHVyZS4NCj5JIGhhdmVuJ3QgbG9va2VkIGF0IHRoZSBz
-ZXJpZXMgZHVlIHRvIG5vdGljaW5nIExLUCBjb21wbGFpbnMuDQo+DQoNCkkgd2lsbCBmaXggdGhl
-IGJ1aWxkIHdhcm5pbmcgaW4gdGhlIG5leHQgdmVyc2lvbi4NCg0KVGhhbmtzLA0KVHp1eWkgQ2hh
-bmcNCg0K
+On Fri, Nov 17, 2023 at 1:30=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Thu, Nov 16, 2023 at 4:34=E2=80=AFPM Joy Chakraborty <joychakr@google.=
+com> wrote:
+>
+> > I tried to place the calls to set the pinctrl states after driver/user
+> > callback  based on my understanding of runtime code so that existing
+> > users do get a chance to set the state with any special sequence that
+> > needs to be performed post which doing another call to set the state
+> > would be ignored in the pinctrl framework.
+>
+> This makes sense. (And also is in the original commit.)
+>
+> I think you should actually over-document this by also mentioning
+> this in the kerneldoc above each of the *_try_* callbacks so
+> users simply can't miss this point.
+>
+> > But this only would be possible with the assumption that even in any
+> > special sequences executed by users they set nothing but "default"
+> > state in runtime_resume, "idle" state in runtime_idle and "'sleep"
+> > state in their runtime suspend callbacks.
+> > And like Andy mentions about "->prepare callback", if there are
+> > drivers that are setting pinctrl state "default", "sleep" or "idle"
+> > from any callback but
+> > ...
+> > int (*runtime_suspend)(struct device *dev);
+> > int (*runtime_resume)(struct device *dev);
+> > int (*runtime_idle)(struct device *dev);
+> > ...
+> > it could indeed be a problem.
+> > I'll dig into users of pinctrl_select_sleep/default/idle and see if
+> > there are such cases or if it could be done in some other way.
+>
+> It's worth a check but I doubt much will turn up. The "idle" and
+> "sleep" states are simply not used much in the kernel.
+>
+
+Right, I will look into this.
+
+> Your users will likely be the first.
+>
+> So which hardware target will use this?
+> It's immensely useful to have a good example to point at:
+> that device use "defaul", "sleep", "idle" the idiomatic way.
+
+I see some upstreaming activity on gs101 SOC.
+I think gs101 and follow on SOCs could use this, I will find that out
+and get back.
+
+>
+> Yours,
+> Linus Walleij
+
+Thanks a lot for your feedback
+Joy
+
+
+
+
+Joy
 
