@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-804-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-805-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F7CA800023
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 01:20:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BE11080002C
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 01:26:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0622B2815D1
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 00:20:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8931DB20E22
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 00:26:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E08E7EC;
-	Fri,  1 Dec 2023 00:20:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE88F63A;
+	Fri,  1 Dec 2023 00:26:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dJw/RPw0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OspSyLHx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1D3CB10FF
-	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 16:20:05 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50B06E6
+	for <linux-gpio@vger.kernel.org>; Thu, 30 Nov 2023 16:26:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701390005; x=1732926005;
+  t=1701390399; x=1732926399;
   h=date:from:to:cc:subject:message-id;
-  bh=Gw+sP5hL9Tfy5d8CnHgRj2MhCLgiztLtbmRqf75MVfg=;
-  b=dJw/RPw0D+SjIaxWCAmRAt2r7IjSPMSD3mx7+ADUEasVS5dgC5NICoY5
-   vNU6mHlS+DfQ8D39XPZ3MaA5m9rhUgQXeFiqnHM6E0Iz+ZLyhflEnuQW1
-   1dBtIRUzdpGgFAZ3GMGHvg63ohtFHnlNDPsa1SLee5Cr/2rs58MkiaZf8
-   KrK6XlY/Ib0jgdQhRp8BFEiAM5JARju0Bs4R3gyLPGNUePKr34OvQ0emU
-   3S2B1utpvR3dyfyygXjwSVyJYWnSNdlgpCgLbfYB7DcP+W64um2Jtd4iD
-   8XdDKUaLAATV7Bn8jn++R1AYdY3Gj3UQMpfZcQEcBjH3ZKKdcF9R7muCc
+  bh=WF3oU+197fK4ACBWK6UdqRtsTB6gWcVLlN0TcvgWtUU=;
+  b=OspSyLHxw4HgM8ExKLDKWY6hqXORlekACaqd4SlIpOrFDXewtnjl36ho
+   atoWp3Rx/QYVzTMMRQLebnlyx1J88BNLhxvZfxn0E+I95ClKrR3pZRX0H
+   oKSr6e/OYJLTR9kHPQE7yUfBmFf4x6zzJhMausTld4azQqvT7gCktCRIC
+   mLa0up3c8IwWIYTOFP9/rB5W9g+9bnFa6WciXq8TDx5+figYxYJKZvc7Z
+   McRYZlejwFiW1ZyHh3cjZXWEGdlODL41UYmCVGJ+X0XELmoawmRw5CyVU
+   t3Ssvq4j8y3WFYaSHaQWmztK0VcGj2WfJaRUYeRxw6m22tQAo1UkbEbL5
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="424563465"
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="407978"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="424563465"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 16:20:04 -0800
+   d="scan'208";a="407978"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Nov 2023 16:26:39 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="719301054"
+X-IronPort-AV: E=McAfee;i="6600,9927,10910"; a="942894881"
 X-IronPort-AV: E=Sophos;i="6.04,240,1695711600"; 
-   d="scan'208";a="719301054"
+   d="scan'208";a="942894881"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga003.jf.intel.com with ESMTP; 30 Nov 2023 16:20:03 -0800
+  by orsmga005.jf.intel.com with ESMTP; 30 Nov 2023 16:26:37 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1r8rGB-0002qS-0S;
-	Fri, 01 Dec 2023 00:19:59 +0000
-Date: Fri, 01 Dec 2023 08:19:33 +0800
+	id 1r8rMY-0002rm-0y;
+	Fri, 01 Dec 2023 00:26:34 +0000
+Date: Fri, 01 Dec 2023 08:26:16 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:b4/descriptors-iio] BUILD SUCCESS
- d747a2f6d097ea83e9c18059b47e4f981f51b88b
-Message-ID: <202312010831.o2nvcno4-lkp@intel.com>
+Subject: [linusw-gpio:b4/descriptors-input] BUILD SUCCESS
+ 7f0c3a3c294d53f74d54579dfc7036ba4a90d4b0
+Message-ID: <202312010813.n9UwmSyc-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -59,12 +59,12 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-iio
-branch HEAD: d747a2f6d097ea83e9c18059b47e4f981f51b88b  iio: proximity: irsd200: Drop unused include
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-input
+branch HEAD: 7f0c3a3c294d53f74d54579dfc7036ba4a90d4b0  Input: as5011 - Convert to GPIO descriptor
 
-elapsed time: 1459m
+elapsed time: 1464m
 
-configs tested: 223
+configs tested: 222
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -83,7 +83,6 @@ arc                   randconfig-001-20231201   gcc
 arc                   randconfig-002-20231130   gcc  
 arc                   randconfig-002-20231201   gcc  
 arc                        vdk_hs38_defconfig   gcc  
-arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                                 defconfig   clang
 arm                          exynos_defconfig   gcc  
