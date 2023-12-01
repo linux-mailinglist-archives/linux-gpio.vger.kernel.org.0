@@ -1,126 +1,119 @@
-Return-Path: <linux-gpio+bounces-821-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-822-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCD8C800808
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 11:14:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F79E800876
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 11:38:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED95A1C20BD7
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 10:14:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E2DDCB211D1
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Dec 2023 10:38:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 324C5208D2;
-	Fri,  1 Dec 2023 10:14:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4CCB1C6BB;
+	Fri,  1 Dec 2023 10:38:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="TK/uRypn"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kEJAUXez"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-xa35.google.com (mail-vk1-xa35.google.com [IPv6:2607:f8b0:4864:20::a35])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 88917A8
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 02:14:44 -0800 (PST)
-Received: by mail-vk1-xa35.google.com with SMTP id 71dfb90a1353d-4b2891954fdso719646e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 02:14:44 -0800 (PST)
+Received: from mail-vs1-xe32.google.com (mail-vs1-xe32.google.com [IPv6:2607:f8b0:4864:20::e32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 902FEF4
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Dec 2023 02:38:11 -0800 (PST)
+Received: by mail-vs1-xe32.google.com with SMTP id ada2fe7eead31-46446cd5c8eso665063137.0
+        for <linux-gpio@vger.kernel.org>; Fri, 01 Dec 2023 02:38:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701425683; x=1702030483; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701427090; x=1702031890; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KXLQkGJRElOZ/AJuYpoiy/ILVkLLNWbGBMHP1JFlW4o=;
-        b=TK/uRypn2ZnjCQQ3A4S7W7OD4Y86Wb9X/+8gZzp9UagjWTGa/zBksnzSF2HVuZaHNV
-         Ly1HnhCZ6tVpNbUz1FERw5FrWnASlyQZRbxpHM8x4uOLnLECzsyCYJuSTJFVAc+2y+3+
-         XlYU930VNjsFIO/CK9lnSLZ0a5pKEbD9RPQ1QtOd/a+JAImg2O733nu30zvG/72W8mKW
-         LO0fUn1+7QRDRYxa1gvh4mk4+6ql0U+oPurMK3vO1QPcs8Ip+aSTWk3Y66T5noZedCvT
-         0hB1tDPn2zUuBw+/5jgpzqoay3GbUDJ+ZMvnakwPcwnr7QIqGbBNACK7rtLOw3MA3PQk
-         LqVA==
+        bh=UTTB5Qf3NGi+WB3GCJHG37DhU59Gl9ODLb3haNT1v/c=;
+        b=kEJAUXezhcezJLZxMjtGjmmwIBcxqs+4A2DBK2At1NFG4VXACwh4I+X4Z5X6yja1lJ
+         F2ESnvA0dnxy2jC87uy7dPz+HuVPHbcQLwsthM/Jjh13zRLzl+7WXan2CNE2w0aTDOX6
+         2NVQENlG5BJw6FwWlmt2fkbh5kHFVpn8HOrrbzlTkxVX4P/TjecdWGfE3PB533uF++7H
+         Sj7TIgNjvdESagMEbr41pg38lJ3JiC5rLFZj5Eg4dRm4Ez01/9rHHQdUO/gOb7My+ja6
+         OuvuwWLdPBW3eWljkWFFNO/5gNi5S9rOv8cSTXx5d68se+xwosg0JzDSgEI9QMT9uJnz
+         q4AA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701425683; x=1702030483;
+        d=1e100.net; s=20230601; t=1701427090; x=1702031890;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KXLQkGJRElOZ/AJuYpoiy/ILVkLLNWbGBMHP1JFlW4o=;
-        b=gtjyd06Z+U8RUHImrOs8L4lonGO6fME7SP3uf5WnTGKqzT68vOaa+fDsNn/bWJEaLw
-         9uRbd2JlL6qCQs4jiNwI7YRn18OzeHeVljha5sMu9n4IzQQe2xn6ZqtdT2ruE9MKc/S2
-         XkRuFFkk7fGCEzoUJBx4kQRT50hUlEftm12ze75biEhj8mggjBBdVnNzEJRuTAD42Z/w
-         vkISznN/6Oqkt53m45WmvCopnKm+CVTp5jqzuNGh7zeus10p8j4K+5Pb8j1FiwZT1+IA
-         73LwoEYstHNS+h6g8FynsPeqC+HKmu6j1ZZLR+8gYPSIP22ZASck798BIe7OQe5UZgvN
-         j75w==
-X-Gm-Message-State: AOJu0Yxw2i43nMeBy/aG9EvIiCJ/JRBth6d0rhs15SCIroVQR3MqnMg2
-	B5Mr3idBTAaeSnf65PyeX3EBBnKt0/6+gaDa2ctEEw==
-X-Google-Smtp-Source: AGHT+IHlEdiuVHo4bAwL3XxaDUcT87Z5Lvn9EZXDn04lrPIPYKKGxyNRrU0aYaBpBOEpJBK9JsKmKMS2iMDOdQ+Ggw4=
-X-Received: by 2002:a1f:4944:0:b0:4b2:98f9:1206 with SMTP id
- w65-20020a1f4944000000b004b298f91206mr5687765vka.14.1701425683565; Fri, 01
- Dec 2023 02:14:43 -0800 (PST)
+        bh=UTTB5Qf3NGi+WB3GCJHG37DhU59Gl9ODLb3haNT1v/c=;
+        b=i7bSRjocvtax1WPlbBuNgi0baiVCodtzPutPdN1aM7xF9vsBzbQHIw96Lb2f1avSkA
+         Db3+Yi/mHdMmfteUz5+dFPAyWP2rbg5gf917jAuz+HzJPft238FxjxAgygUTAtuKjSzB
+         OJDqXiH3FOwfyLph3+JV5zgmuTR/lah2H8n/Y83QK857Bki/OtqUDBY52KYo4pa1dNay
+         svsYX3FvPTr/aALDrC7Hc5CAiOdryT7xuUP5GfLICRQ91zzhieYxLb3EzupG7lS9lHB/
+         B2VfKIiCyb80KJI6mLRVy4C7P0NhUqc3nc+dtqiIPQes89IPmgY4IFu4cEEoQ+tA6N52
+         0EKw==
+X-Gm-Message-State: AOJu0YzOR2GjQyNB/Yx0mxXJGAHxJ6EK/Qv3+t2HJOvgG1n8DPlTyvc3
+	ejoQkBCzOPVCl6sqKFuUjUc+bjjvmyx/DoIV+YDXbg==
+X-Google-Smtp-Source: AGHT+IHD3C4jeU8YUMrsywQzBJT50HuwUQ8yJRyHKKpw9tFA3HPIcqu/SHTN20FoIPSzlf2zVyUp/WJHxr0sgyP3xm4=
+X-Received: by 2002:a67:bc19:0:b0:464:4891:cce4 with SMTP id
+ t25-20020a67bc19000000b004644891cce4mr8735525vsn.20.1701427090706; Fri, 01
+ Dec 2023 02:38:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231121134901.208535-1-u.kleine-koenig@pengutronix.de>
- <20231121134901.208535-101-u.kleine-koenig@pengutronix.de>
- <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
- <20231121161111.zphi7pn77ns7sgu2@pengutronix.de> <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
- <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
- <ZWCTtPVkTUQNLVoa@orome.fritz.box> <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
- <20231127105844.kpu5ori6o6umfynh@pengutronix.de> <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
- <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
-In-Reply-To: <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
+References: <10db3021e8617c1f98eca51e26d350dc4b51b53c.1701335736.git.michal.simek@amd.com>
+In-Reply-To: <10db3021e8617c1f98eca51e26d350dc4b51b53c.1701335736.git.michal.simek@amd.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 1 Dec 2023 11:14:32 +0100
-Message-ID: <CAMRc=McAYSpCY=E1Ze7xKuBom8xOzQ4+5f7vYm33ihVU90xM1w@mail.gmail.com>
-Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Date: Fri, 1 Dec 2023 11:37:59 +0100
+Message-ID: <CAMRc=Md7iQnkOp+nB3=haakpt5jF_STtYgDAcxRVQJjYWnjFKA@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: gpio: modepin: Describe label property
+To: Michal Simek <michal.simek@amd.com>
+Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, 
+	git@xilinx.com, Andy Shevchenko <andy@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Piyush Mehta <piyush.mehta@amd.com>, 
+	Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Nov 28, 2023 at 10:07=E2=80=AFAM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+On Thu, Nov 30, 2023 at 10:15=E2=80=AFAM Michal Simek <michal.simek@amd.com=
+> wrote:
+>
+> Describe optional label property which can be used for better gpio
+> identification.
+>
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
+>
+>  .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml     | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-mode=
+pin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.=
+yaml
+> index 56143f1fe84a..b1fd632718d4 100644
+> --- a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yam=
+l
+> +++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yam=
+l
+> @@ -23,6 +23,8 @@ properties:
+>    "#gpio-cells":
+>      const: 2
+>
+> +  label: true
+> +
+>  required:
+>    - compatible
+>    - gpio-controller
+> @@ -37,6 +39,7 @@ examples:
+>              compatible =3D "xlnx,zynqmp-gpio-modepin";
+>              gpio-controller;
+>              #gpio-cells =3D <2>;
+> +            label =3D "modepin";
+>          };
+>      };
+>
+> --
+> 2.36.1
 >
 
-[snip]
-
->
-> > I see the
-> > chip->operational field that is set to false on release. In my
-> > version, we just use a NULL-pointer to carry the same information.
->
-> Yup, sounds obvious. Your usage of "just" sounds as if your variant was
-> better. To give the alternative view where the suggested approach sounds
-> better would be:
->
-> You need a pointer and I "just" a bool that even has a name implying its
-> function. You need to dereference the pointer in several places as the
-> needed information is distributed over two structures while it's all
-> together in a single struct for the usual foo_alloc() + foo_register()
-> approach.
->
-
-There's another reason we do that. I'm no longer sure if I mentioned
-it in my talk (I meant to anyway).
-
-In GPIO we have API functions that may be called from any context -
-thus needing spinlocks for locking - but also driver callbacks that
-may use mutexes internally or otherwise sleep. I don't know if this is
-the case for PWM too but in GPIO we may end up in a situation where if
-we used a spinlock to protect some kind of an "is_operational" field,
-we'd end up sleeping with a spinlock taken and if we used a mutex, we
-couldn't use API function from atomic contexts.
-
-This is the reason behind locking being so broken in GPIO at the
-moment and why I'm trying to fix it this release cycle.
-
-Splitting the implementation into two structures and protecting the
-pointer to the provider structure with SRCU has the benefit of not
-limiting us in what locks we use underneath.
-
-Every subsystem has its own issues and we need to find something
-generic enough to cover them all (or most of them anyway). I don't
-think having a single structure cuts it.
+Applied, thanks!
 
 Bart
-
-[snip]
 
