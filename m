@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-905-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-907-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FB68802088
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 04:25:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C33E180208B
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 04:25:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1112A1F21014
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 03:25:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 50C4C280FA0
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 03:25:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 995A4816;
-	Sun,  3 Dec 2023 03:25:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A720110F7;
+	Sun,  3 Dec 2023 03:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="M11J0p3m"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="5ZOvbeGn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (mail-sn1nam02on2082.outbound.protection.outlook.com [40.107.96.82])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CD2C5125;
-	Sat,  2 Dec 2023 19:25:02 -0800 (PST)
+Received: from NAM04-MW2-obe.outbound.protection.outlook.com (mail-mw2nam04on2040.outbound.protection.outlook.com [40.107.101.40])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5CBD4114;
+	Sat,  2 Dec 2023 19:25:07 -0800 (PST)
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iHbaRV9J0wV3Z90DXa2Whr7Si00sBNpUqU+Ubk995Wnk1MhDVyTSf30Lf1bwTlMDVeIvXkFM65GL/tBB2TusxXpdM/EtUCl8c/lReFv28BnlpiGbZwFY/+NM/+dQI/aJ8/xdOPyuPLTB/0NOwlEkMaMfiJIb2pqFVVOI/AarpoqOTf4Xmwj+XRj/en3rjhnET3C5g6Jp6yKGq+PMXgsmILDNWElzEEbUYssCOhIDtbp3h4W/1Oa0J+ClN5+L9k5S/BGGwxNet+h0qgUWLTOpiAO/npNIkMipMbJjP227p+N6pk27aIe74qqshl3OKa/CGm4NQMHEwyofjFOsTHF/mw==
+ b=E0261urfrYPKhMUoH3EP/lR5Eo2e1obVhCZ9vr8XGlsGpgB2tGY8bORNJ1YuC/jSDE3SZbpb4n4m+WL3raunxt589c4JgS7m9ix1aOv4atjHbWwbj00FCYGO1L+jwOTPr/96Rwepr/Mu+92MSouN3eMmxOumHBsTP6x4UReMrpmuISd1wctTF+RQesl4wn0qZoN4fco9hPvc4KqCGhJOXyfYYKq/WsUIebluB8H3SFePvjKWvDvvxu7Zr1fraXhvzFmnGD9LKituQAgMffbEIWmKtR6ERDtFXv8falojEwzET8iLDWw8TrGqGTPmZxCKpE0VOUFW01RJ9PILCRAyBg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1XmUoPsG8niYFGZjKrINLXOukbBatwwVbBIm2AsGTm8=;
- b=dAfOWf5jG8PPpuryiMdJn2c/VUIRLovtdRl/MPHeAw6ezPnp+52jZfBfZgpaBDhWrcOTOFb26HDCJ6RDqCuuuSZsR7JM/EiBlt8IY7fx9+w+G5X1h05U5Ci9f75NJOR+6PQxnq/9bLUPlOea2I3L9XqajDJkKBh33TB2oGYbKUYR11qJ4rjsfzyNb4dTfE9yGshh0vFPJAacLLhOfKEU+nFyRNXpOzgQ0bY1u1Uzy3BoECb2h4IVMrDbmJkYAnlvrlPVJEM8dHKeRcNj2lBV45p8tYJ3FtOoxe/L8aS8bEiPVIJ6dekKM0vO6VT8ScjAIGlUQNFsb1ntn8UiUdFHdA==
+ bh=U+0tFVgE4g8WGLUuwmexyRvYTYNkNme3z3im5Uc+8MU=;
+ b=Ow1wWsWB2asQW13/Yg6Eh5ecSuzyZSlfa06ChJWG0MU+5v9UHDGQ4kzsQI7rMZqTdY0QCzYqK8Xyqnyj98SQnkxntbEXvnlZB+JcD7RnBC+DeBeIh+cCQduv8LIfjpuRXcA1KhOojic5VhL/tIdo9SsrbASRF50ma7sf6icY2oVxMzwsqpq+Iizc9lITG93n7081nh4aOA3xf4BH9JamfNxYxuYPSIQiv1NK9Gs8NTq6p5Rcuv8wx02aqiv7qf/QjRXFdfnIWWUqbd8dqHrfZJ48GGHUZo8zVFG4OvRl29CPxV5qUJBbEfj4+Ixq+0A1vzm0tG9++cdzzOUTlF+AQA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
  165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
  (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
  dkim=none (message not signed); arc=none (0)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1XmUoPsG8niYFGZjKrINLXOukbBatwwVbBIm2AsGTm8=;
- b=M11J0p3mOiTeLWTlUb8loKBXfOJGxsgOBSADvAyZy8yF4eo/dBqgVK11hJqXyqWXbsEiZmvDpVlIMuSfNxZrXaI1QkVXZJ1FdatiXhRf/liavad74u8LnJYCryMVBPmQ94dlUIf5fbMs2XGUGmH3PCFpJw/jy2hnJaRE+pcd3yI=
-Received: from MN2PR11CA0024.namprd11.prod.outlook.com (2603:10b6:208:23b::29)
- by DS0PR12MB8366.namprd12.prod.outlook.com (2603:10b6:8:f9::17) with
+ bh=U+0tFVgE4g8WGLUuwmexyRvYTYNkNme3z3im5Uc+8MU=;
+ b=5ZOvbeGnezMQUNNwGrH9MUoM9FdYZV/ZVyWhBb8mWJKZjonUr6/aWFqbxZUhau2DaVP33NIwLPUCRZfi/5C6ENmyQZNl5g9lnv54WwiQb8AgqBxSMN5VdxUkqxAeuWLfhYXzTsIp2oB+aFQVn1XI5N5+Bd0nUJivgSG7GQhThLc=
+Received: from BL1PR13CA0259.namprd13.prod.outlook.com (2603:10b6:208:2ba::24)
+ by PH0PR12MB7840.namprd12.prod.outlook.com (2603:10b6:510:28a::16) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.32; Sun, 3 Dec
- 2023 03:24:59 +0000
-Received: from BL6PEPF0001AB50.namprd04.prod.outlook.com
- (2603:10b6:208:23b:cafe::1d) by MN2PR11CA0024.outlook.office365.com
- (2603:10b6:208:23b::29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.30 via Frontend
- Transport; Sun, 3 Dec 2023 03:24:59 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7046.30; Sun, 3 Dec
+ 2023 03:25:01 +0000
+Received: from BL6PEPF0001AB4B.namprd04.prod.outlook.com
+ (2603:10b6:208:2ba:cafe::54) by BL1PR13CA0259.outlook.office365.com
+ (2603:10b6:208:2ba::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.21 via Frontend
+ Transport; Sun, 3 Dec 2023 03:25:00 +0000
 X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
  smtp.mailfrom=amd.com; dkim=none (message not signed)
  header.d=none;dmarc=pass action=none header.from=amd.com;
@@ -50,24 +50,28 @@ Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
  165.204.84.17 as permitted sender) receiver=protection.outlook.com;
  client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
 Received: from SATLEXMB04.amd.com (165.204.84.17) by
- BL6PEPF0001AB50.mail.protection.outlook.com (10.167.242.74) with Microsoft
+ BL6PEPF0001AB4B.mail.protection.outlook.com (10.167.242.69) with Microsoft
  SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7068.20 via Frontend Transport; Sun, 3 Dec 2023 03:24:59 +0000
+ 15.20.7068.20 via Frontend Transport; Sun, 3 Dec 2023 03:25:00 +0000
 Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
  (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Sat, 2 Dec
- 2023 21:24:58 -0600
+ 2023 21:24:59 -0600
 From: Mario Limonciello <mario.limonciello@amd.com>
 To: Linus Walleij <linus.walleij@linaro.org>, Jiri Kosina <jikos@kernel.org>,
 	Benjamin Tissoires <benjamin.tissoires@redhat.com>
 CC: "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, open list
 	<linux-kernel@vger.kernel.org>, Basavaraj Natikar
 	<Basavaraj.Natikar@amd.com>, "open list:HID CORE LAYER"
-	<linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Subject: [PATCH 0/2] Fixes for spurious wakeups on some Lenovo laptops
-Date: Sat, 2 Dec 2023 21:24:29 -0600
-Message-ID: <20231203032431.30277-1-mario.limonciello@amd.com>
+	<linux-input@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>,
+	<stable@vger.kernel.org>, Marcus Aram <marcus+oss@oxar.nl>, Mark Herbert
+	<mark.herbert42@gmail.com>
+Subject: [PATCH 1/2] HID: i2c-hid: Add IDEA5002 to i2c_hid_acpi_blacklist[]
+Date: Sat, 2 Dec 2023 21:24:30 -0600
+Message-ID: <20231203032431.30277-2-mario.limonciello@amd.com>
 X-Mailer: git-send-email 2.34.1
+In-Reply-To: <20231203032431.30277-1-mario.limonciello@amd.com>
+References: <20231203032431.30277-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -80,52 +84,65 @@ X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
  (10.181.40.145)
 X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB50:EE_|DS0PR12MB8366:EE_
-X-MS-Office365-Filtering-Correlation-Id: 846072bf-b488-49f7-06b2-08dbf3af6df7
+X-MS-TrafficTypeDiagnostic: BL6PEPF0001AB4B:EE_|PH0PR12MB7840:EE_
+X-MS-Office365-Filtering-Correlation-Id: 4a48e995-9ad4-426d-4b69-08dbf3af6e9d
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	iSIStPZjfPQvLeeolZSzRHPs2orW8ArOKN5Jyi6WX+mnfjA6YnwbmFCshJE5ynUGZY9SuOPXZZzSXGPZflyoKo04IuN/bCZ9MYUDKvV7qGZBD2StW/YYQt4NMrQR6LQkkHA1gvaQ/7xSUJqk/m80uqqNEcWef4EGvYheRqPn4jrD622bA5kh+ZdnlkzBO87PSHrkxxjTSXz3toTrHZZPdGXMAunFOaj/eSuV3iwpGF29ymnJRXUwLpeIBMN6ado43W5Ks6M34dvpa9mTvNLJcogo2j5/zOlkex/VCwadvoiONpTR69oTgMHhndwfCL9vbaBShls4X9ZC06MJLDBPTr/7LoykOkq3Bl4Xea78g27s/A0zAIFo2N4Gu/hlRsKj6mjyGK8QNhaH3YCgGlYMA5Md5SwW7096rTV021l/vPGEPtQEB45OoPCLIzUDHeNbi20fRf3fbz3Vw9nkPUFoA/OLgL23F8Kd4cOcyqt1/IOAwxTjIU8KzHb1mm2Kdr5rLxAdN1hHfBBsbEGT35a8qFom0IpNlVdSxVMfhfjKQI2srNxknm0vEkmWw77jb4/sBQS9aNlD1XT9v4U0z7zRqh6DbWNZGIXdpWCapqJIoxhuuzGsZPSJBll/Hm7r3J4xyNoP4648XRBYHmPYTdfd2I4YELkg99GTbViYAy5W4AFRS3vMDwhug3TR9KAL3tz9Yg+bhDXSeG7sFVTy9wPeB/1MwMU4/nWa0POQ4JGwz8OJ54kD9VXcvHdUPOBTNez3NhzPYJYr/HjWbLNuVm0fyg==
+	o8qQOhgY+Mhz412zdr/Yq73u5C3ZD42yCV1rLYY8D6dVAx/uq20HjKQ2JbyqVERFSGq7Nuu8zvO8iaI4iHj/4NnaZ+w8WXprvqLa60dZp8QJT3dJHEDWK46nYEcbwpUjrjfNTHv7xJwzVSdqGyyFRuW0vz89mQL3oq4sUjTbDdgO/IGFxk8Ni5QXLc911KYIDDmgcxqWMnB8lC/Jg6cQEyUfOVY+sSBwweIEzjlEC6e+sWStqwPihcJChy9cxppV9u1SayX16Ncc2I8Y1nkR/ttJQBi3MNGXifdnnRalHdTtb2f6y/DSR+DYqNby57VTlb+v8Pb8odFvJqxqwBufmCH23sJ6gW6HQqxFYMR8lAcW4kfKGq7vKazHsMP+AijdVJqYqPJGBCZCysZUVtfHyB1yartybfjoY00qvTwu4VGnNL8XbUSihhHpvLPUfLr/X4EBBrP96r9ZGYwMTXkqColtZq8UkceNUEeyHdhUnnGr6CAkLfELFRvvPKYaB7A+2yMLCx8yKZyLeuKeImVW1/OSDRqeZ0e26S2wArbZUQaeLd11+vDg42vg/UsbBuaOz7MMoO2cbRC/OlTEkNe74kg3K6Heh72spa7UM4UJgYrVaKN705wCKyYvOLSpNWr4AX5M11rSv9pZJzPFzJ+5poJqn3X7VqSJ6RjrX8jf8v80gubFGn5e8s+NSWCaQlbOoyCfQsBHMPhHmMGxySn2gKGBUMTN+Hs0n4bookDta2Q6NVaoHVHKVNiJMxIyk+pF
 X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(136003)(396003)(39860400002)(346002)(376002)(230922051799003)(186009)(64100799003)(451199024)(82310400011)(1800799012)(36840700001)(40470700004)(46966006)(5660300002)(40460700003)(44832011)(4744005)(86362001)(4326008)(8676002)(8936002)(2906002)(41300700001)(36756003)(2616005)(40480700001)(1076003)(356005)(81166007)(82740400003)(426003)(83380400001)(16526019)(336012)(478600001)(26005)(7696005)(6666004)(47076005)(36860700001)(110136005)(316002)(54906003)(70586007)(70206006)(36900700001);DIR:OUT;SFP:1101;
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(39860400002)(396003)(346002)(136003)(230922051799003)(64100799003)(82310400011)(186009)(451199024)(1800799012)(40470700004)(36840700001)(46966006)(40460700003)(47076005)(336012)(83380400001)(426003)(16526019)(82740400003)(81166007)(356005)(41300700001)(70586007)(26005)(70206006)(44832011)(36860700001)(5660300002)(8936002)(8676002)(4326008)(316002)(54906003)(110136005)(1076003)(2616005)(6666004)(7696005)(478600001)(2906002)(966005)(86362001)(36756003)(40480700001)(36900700001);DIR:OUT;SFP:1101;
 X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2023 03:24:59.2320
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Dec 2023 03:25:00.3373
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 846072bf-b488-49f7-06b2-08dbf3af6df7
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4a48e995-9ad4-426d-4b69-08dbf3af6e9d
 X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
 X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
 X-MS-Exchange-CrossTenant-AuthSource:
-	BL6PEPF0001AB50.namprd04.prod.outlook.com
+	BL6PEPF0001AB4B.namprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Anonymous
 X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB8366
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB7840
 
-Users have reported the inability to properly suspend on
-Lenovo Yoga Slim 7 Gen 8 14APU8 and Lenovo YogaAir 14s APU8
+Users have reported problems with recent Lenovo laptops that contain
+an IDEA5002 I2C HID device. Reports include fans turning on and
+running even at idle and spurious wakeups from suspend.
 
-Analyzing the problem there are two issues where HID devices connected
-over I2C cause spurious wakeup events or high power consumption.
+Presumably in the Windows ecosystem there is an application that
+uses the HID device. Maybe that puts it into a lower power state so
+it doesn't cause spurious events.
 
-One of the HID devices isn't configured as a wakeup source so the APU
-if the interrupt fires over suspend it will wake the APU from a hardware
-sleep state but will not return control to the OS.
+This device doesn't serve any functional purpose in Linux as nothing
+interacts with it so blacklist it from being probed. This will
+prevent the GPIO driver from setting up the GPIO and the spurious
+interrupts and wake events will not occur.
 
-The second HID device is configured as a wakeup source and continually
-fires both at runtime and suspend.
-
-This series mitigates the impact from both of these devices.
-
-Mario Limonciello (2):
-  HID: i2c-hid: Add IDEA5002 to i2c_hid_acpi_blacklist[]
-  pinctrl: amd: Mask non-wake source pins with interrupt enabled at
-    suspend
-
+Cc: stable@vger.kernel.org # 6.1
+Reported-and-tested-by: Marcus Aram <marcus+oss@oxar.nl>
+Reported-and-tested-by: Mark Herbert <mark.herbert42@gmail.com>
+Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2812
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
  drivers/hid/i2c-hid/i2c-hid-acpi.c | 5 +++++
- drivers/pinctrl/pinctrl-amd.c      | 9 +++++++++
- drivers/pinctrl/pinctrl-amd.h      | 5 +++++
- 3 files changed, 19 insertions(+)
+ 1 file changed, 5 insertions(+)
 
+diff --git a/drivers/hid/i2c-hid/i2c-hid-acpi.c b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+index ac918a9ea8d3..1b49243adb16 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-acpi.c
++++ b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+@@ -40,6 +40,11 @@ static const struct acpi_device_id i2c_hid_acpi_blacklist[] = {
+ 	 * ICN8505 controller, has a _CID of PNP0C50 but is not HID compatible.
+ 	 */
+ 	{ "CHPN0001" },
++	/*
++	 * The IDEA5002 ACPI device causes high interrupt usage and spurious
++	 * wakeups from suspend.
++	 */
++	{ "IDEA5002" },
+ 	{ }
+ };
+ 
 -- 
 2.34.1
 
