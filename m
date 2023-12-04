@@ -1,155 +1,100 @@
-Return-Path: <linux-gpio+bounces-968-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-969-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52B6C803500
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 14:32:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9F7380351C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 14:38:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 852F61C20A90
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 13:32:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E10301C20B14
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 13:38:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C1BF25102;
-	Mon,  4 Dec 2023 13:32:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAB112511A;
+	Mon,  4 Dec 2023 13:38:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="laBeXsEB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CGA7vVyB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1A76DB2;
-	Mon,  4 Dec 2023 05:32:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701696758; x=1733232758;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Dkr4auhuaXm/2CFkaCr6ysuuxc8iZhZ8/KeupfzqlRg=;
-  b=laBeXsEBWrrgfDWBwIBfDhhrlg+aCO5FYS76PfYZuT4mZBvVewWCm4Z4
-   7nPsV3Zz3WlYa+VmKRi/qlh7x4ELsjvce8vw4F5sybk/ALUMfIKLQIieC
-   l/eKbL/G7bMHqtitgNJ9qtMcXSObPh/a/0lrWXHzL+TbrkcWw4PYhmQhR
-   wCFLZDYRoF5ORb7cvpNZiqvbNnx4xszvY5KXxjCnwTfcxkgzIiBe775zo
-   I6WpUv6lgVRgXK0ctKfcxIwS6+F+FFGgzLv4BCJvWFPeQ8Wf9DtBKLFcC
-   XZ+xDqxJEY1eDSKQFp8Pru+yzObEY09ouY/2RQwMWO8O2jC0aMzf0+4kC
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="7059246"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="7059246"
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 05:32:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10913"; a="720323840"
-X-IronPort-AV: E=Sophos;i="6.04,249,1695711600"; 
-   d="scan'208";a="720323840"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Dec 2023 05:32:27 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rA93f-00000001lCW-1RPq;
-	Mon, 04 Dec 2023 15:32:23 +0200
-Date: Mon, 4 Dec 2023 15:32:23 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Andy Gross <agross@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v4 12/23] pinctrl: mediatek: Make use of
- PINCTRL_GROUP_DESC()
-Message-ID: <ZW3U5-LBqWiyxB6-@smile.fi.intel.com>
-References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com>
- <20231129161459.1002323-13-andriy.shevchenko@linux.intel.com>
- <CGME20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf@eucas1p2.samsung.com>
- <9e4e65de-7234-4234-8091-796277a1f1c5@samsung.com>
- <ZW3PrSQWyZvvhN66@smile.fi.intel.com>
- <CAMuHMdU-E7jemjAS0EunWFPq1LfF9vcNE+50ah4WH9oD1TXYew@mail.gmail.com>
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 12FA3D4D
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 05:38:33 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7c5cb5eeab1so246241241.3
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 05:38:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701697112; x=1702301912; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y1UpuRerWKubmFOnOhiP1vLCixCHUqesCX/FHO4e/TE=;
+        b=CGA7vVyB5ChqTVVkV1hwVV8KS90GhdrGSkiq5tzDVvr4E5GcXep42sHeQIgOfODVFb
+         L/6hmiWHuadgMllTs34OvUwlY5HE3TlENDmYrLiOlDszKkvw99K/7jyaj8adquzBEJM0
+         XHRYvO6DSE+C0IG6ZOjsNBftedug/ToQggmA6KwlyIJQrBcEjaeNEOA4OkpSsfSN/rYY
+         BtxURbqvW1iURtRv428jq8YT7jduDD0kEWy2+iFk6rx25wVvr5ij8ojh8zb7S0ZVHr8w
+         9woJZytrFAbwqbrf+eoO+8Z0pdytfFoXBYPBRQ3Gd95wxAcd/HyH3uUcx7S9p37AyMKl
+         A8fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701697112; x=1702301912;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y1UpuRerWKubmFOnOhiP1vLCixCHUqesCX/FHO4e/TE=;
+        b=AEfszgIzpmDwP5XrEJveoar9Oc0/VRaybMKT8GTnT5gjM0sG2cqk0KgkH34vJv51wV
+         vuF0bGRj1NkKZoze/9nMwNGmFX8SotcmqTOCEUYCbxmO9ZdjSuIj2YQBgY4dViEuaBIB
+         8uWLmMz+ytKK9XpphDiIu8Yt+uZ+Y0EBaBy1Qaw9muPnUKAH5A2vFTBuNxoNSblmmBsB
+         33q6GJAwAGxWeXh3iA5Y1EAH0vqBnMkA0+PdojjLamFf9FihABFBj30iHcBydlLIiH2N
+         sBub1oKPxgDZrxiSnU0AM3L9ybSiIK2PJVqV+RArFqq44H2zJ/c2eGMhU+Wewrj/16yn
+         0f3w==
+X-Gm-Message-State: AOJu0YzhNzrInsJhj+5WtXu54Bv6e4ivUVtDZ/JlgI0Kt0JRDtJEP9pe
+	EHajmQD5ZKpgpJt9rckj0zBTisn+8K6J1tc7HjdNKSpznQhTHyfr
+X-Google-Smtp-Source: AGHT+IGM8wAGr7fLScqJtGZwmQGvYP9FpBLRz6Bjw+XTscV7du8vlhzmCYEnr9jCZ90nMnozFKOvOn0S4F1U+cCrhsk=
+X-Received: by 2002:ac5:cc48:0:b0:4b2:c554:e9b8 with SMTP id
+ l8-20020ac5cc48000000b004b2c554e9b8mr2292269vkm.26.1701697112157; Mon, 04 Dec
+ 2023 05:38:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMuHMdU-E7jemjAS0EunWFPq1LfF9vcNE+50ah4WH9oD1TXYew@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231204093509.19225-1-brgl@bgdev.pl> <20231204093509.19225-3-brgl@bgdev.pl>
+ <ZW3RPxjsNPacT9Si@smile.fi.intel.com>
+In-Reply-To: <ZW3RPxjsNPacT9Si@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 4 Dec 2023 14:38:21 +0100
+Message-ID: <CAMRc=Mf1MOFfN1XwTBt2=9rzB6kZ8+cW9cBR=7TTkMqHrLDh_w@mail.gmail.com>
+Subject: Re: [PATCH v3 02/10] gpio: wm831x: use gpiochip_dup_line_label()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 04, 2023 at 02:19:10PM +0100, Geert Uytterhoeven wrote:
-> Hi Andy,
-> 
-> On Mon, Dec 4, 2023 at 2:10 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Dec 04, 2023 at 12:40:38PM +0100, Marek Szyprowski wrote:
-> > > On 29.11.2023 17:06, Andy Shevchenko wrote:
-> > > > Make use of PINCTRL_GROUP_DESC() instead of open coding it.
+On Mon, Dec 4, 2023 at 2:16=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Dec 04, 2023 at 10:35:01AM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > > PINCTRL_GROUP_DESC() macro from drivers/pinctrl/core.h contains a cast
-> > > to (struct group_desc), what breaks users of the above macros.
-> >
-> > There is no cast (*).
-> > Thanks for report, I will check.
-> >
-> > But this was v4 of the series and LKP actually sent a positive feedback.
-> > Besides that I have tested this locally with modules enabled.
-> >
-> > *) It's a compound literal, _not_ a cast.
-> >    Taking above into consideration I'm wondering what compilers
-> >    are in use?
-> 
-> kisskb reported the following m68k failures to me:
->     linux-next/m68k-allmodconfig/m68k-gcc8
->     linux-next/m68k-allmodconfig/m68k-gcc11
->     linux-next/m68k-allmodconfig/m68k-gcc12
-> 
-> However, according to [1], linux-next/m68k-allmodconfig/m68k-gcc13
-> did succeed, so I guess you are using gcc13?
+> > Use the new gpiochip_dup_line_label() helper to safely retrieve the
+> > descriptor label.
+>
+> ...
+>
+> >       for (i =3D 0; i < chip->ngpio; i++) {
+> >               int gpio =3D i + chip->base;
+> >               int reg;
+> > -             const char *label, *pull, *powerdomain;
+> > +             const char *pull, *powerdomain;
+>
+> Make it reversed xmas tree?
+>
 
-Yes, I compiled with these:
+Bikeshedding again. :)
 
-$ gcc --version
-gcc (Debian 13.2.0-5) 13.2.0
-Copyright (C) 2023 Free Software Foundation, Inc.
-This is free software; see the source for copying conditions.  There is NO
-warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+But I plan on making all local variables across the core GPIOLIB code
+consistent (no tabs and reverse xmas tree) closer to the end of the
+release cycle.
 
-$ clang --version
-Debian clang version 16.0.6 (16)
-	Target: x86_64-pc-linux-gnu
-	Thread model: posix
-	InstalledDir: /usr/bin
-
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
