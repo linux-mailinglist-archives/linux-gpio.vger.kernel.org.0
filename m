@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-999-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-998-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 198BF803FD9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 21:36:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11A0F803FD6
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 21:36:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 94A05B20C09
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 20:36:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF7321F212E2
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 20:36:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D0735F0E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 562FE35EF5;
 	Mon,  4 Dec 2023 20:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b="puPA9UAs"
+	dkim=pass (2048-bit key) header.d=hefring-com.20230601.gappssmtp.com header.i=@hefring-com.20230601.gappssmtp.com header.b="b+vDXRMz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-xc30.google.com (mail-oo1-xc30.google.com [IPv6:2607:f8b0:4864:20::c30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D021D1B3
-	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 12:35:37 -0800 (PST)
-Received: by mail-oo1-xc30.google.com with SMTP id 006d021491bc7-58dd3528497so3325158eaf.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 12:35:37 -0800 (PST)
+Received: from mail-oo1-xc31.google.com (mail-oo1-xc31.google.com [IPv6:2607:f8b0:4864:20::c31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 381DE127
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 12:35:39 -0800 (PST)
+Received: by mail-oo1-xc31.google.com with SMTP id 006d021491bc7-58d9a4e9464so2021185eaf.0
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 12:35:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=hefring-com.20230601.gappssmtp.com; s=20230601; t=1701722137; x=1702326937; darn=vger.kernel.org;
+        d=hefring-com.20230601.gappssmtp.com; s=20230601; t=1701722138; x=1702326938; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=oMsMKq+fG5BsTJ38ktkUAvKvU/juEXAO2vxB2M78m9A=;
-        b=puPA9UAsbsiGjJK4bD5uzqiISC5Auxb/XPKl1W3DkM+OI2MEPNYPbYb6zYzUgicyHa
-         fYIz0J+O0rl1J5qJmJCGa3H5bZAvcGJl8H2AJV7RKvoEKaaU02LFgn0oAwhDe8y7ny6C
-         j0tDqK30HXoVNVZF/lbgHrz4Gv4X6hUAG5msxB5qymDLxOtZaYCwIMYltH9lzss6m4le
-         w1J047+L3fsRt8fuLnwmoQpjcu3oq9Pw44dQXZu64JrF/KqZhbZeRvoK/pbshm1qaU0B
-         gjKBrv9RN83aC8jPuNWH+buofCIhbegY0E1vH9uYgWX2hgYz7HW/SUNcTlv/IEExHGbc
-         MyVg==
+        bh=FWagGRv/i1MW5G1zwpH94jc78fOBc/tv6/pgOnwcx6k=;
+        b=b+vDXRMze/C1r4e24CUeK2VhFvtLtGE/yojAiTPjpqNP0zOjoF5EGSYgkfebMM87Ok
+         41+lNvkLHVfg5wYqgC1KSv/uAwiPfJSyj4j7Wd1KK50zRp8lCKOJ1j47MMBI5scT3KD/
+         WAQ+MtoH1Wjx5c0IqOD9lgVW3pCnmt35I8R4Rs4bsn7a2x0XWEBGWQ8tfy/5XhRoIA2h
+         Hgw2AlUxovbI+3Wt1XQKjrH6EjX5lLQfObCXV0uUrlyzWLCZB4o7LlxBuhU/hwYBVx9f
+         g7qKnCxGz68O4qb8h1t+Nz5dGEw3Bn8nkXAHX0vsYyFMLcVKhpQ7D+EgH3/bOuJMjNoC
+         YdDQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701722137; x=1702326937;
+        d=1e100.net; s=20230601; t=1701722138; x=1702326938;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=oMsMKq+fG5BsTJ38ktkUAvKvU/juEXAO2vxB2M78m9A=;
-        b=Wynr1UXVKyV3xZGUpW3GGFOL0EfIKfF4il/YkhpdrEysdNbasJa7lHF8u7Vi/ekWGl
-         dk2kEI/GCTsKWAh3pBzPZVaOwaZiptrjGr877E9Su5TYaYumyvhHnU1P7ryknNKoUA/C
-         NGulpplu3oIIICM4GWfNrBgrvLJBlCFNdpT+nK8M9cLfBD2l4EiCjgOutIQ4h1fwpVM9
-         n4eNT/JXi7pJ0bXpEdG0jc6UchHDlKYS82B4ubaQR3/fXmDLMDjn6oao0qBGbkG91s78
-         vynQgqauNKo/cmHUxKVtt6859mulLBvvB+1V9cbwwo42hC3CxEXk3yHB1FJo1kZzBh17
-         X9aA==
-X-Gm-Message-State: AOJu0YwmKtJzlDvb80M/A2SGZpYFsZBrbmI+4nlWqyNRYwMCHsSGScPg
-	rWTF3UmBaM6dZypr5JPyqchxiw==
-X-Google-Smtp-Source: AGHT+IF2Gj+iJqDa8aGY27lxy9gezYaVc/7geGOoCzfX8J7QXvpmy9rY5js/M1Vlkz5tRc2LBUEwAg==
-X-Received: by 2002:a05:6871:281:b0:1fa:f230:4c58 with SMTP id i1-20020a056871028100b001faf2304c58mr5820598oae.59.1701722136896;
-        Mon, 04 Dec 2023 12:35:36 -0800 (PST)
+        bh=FWagGRv/i1MW5G1zwpH94jc78fOBc/tv6/pgOnwcx6k=;
+        b=kEi2pSCRqBB9ekQw9GqJJQ4ohFmfUfhfJjNQdNuYDPZN2o+p+M8TiAcpYTXhfvMs/j
+         kV52Vl08ZO2EMFQSCuMK97PGFhGGVgkojbaYv/rWoCu2qJuXNgJLps6sl9cXDLK94pVF
+         MHaoW0xfeWMuOgNah2Blu+KmQgBHHiMz576SJb2yOyRRzLx/1X76kp0HKL044ZeOD55e
+         b52c5/9zEXBfedw7nD8Np/GfA1JJ5pn/oA+ZXcnKEPxv00Wt1z3qRqQpva4UwB1DMFCs
+         2YD97qEK27FPlWWcz7rkixb42uJRVfit5/OOjA5L7nMZnzBWNECxdFD3FQ5C1TknVxp9
+         qT/g==
+X-Gm-Message-State: AOJu0YylclXSPXZ23AaXWDFo0TfN9bzIgzdzCTw8/Jswyvk+/IjyneKI
+	eUizecit1fYO+E4jmvThkCOijQ==
+X-Google-Smtp-Source: AGHT+IGpvpasx/jsnz18GATaaZSXxidSk27F4tka23is5+bIfanisW7osRFJz0pud48XSUhXK+w7lw==
+X-Received: by 2002:a05:6358:640b:b0:16d:f932:b5f with SMTP id f11-20020a056358640b00b0016df9320b5fmr1254764rwh.30.1701722138274;
+        Mon, 04 Dec 2023 12:35:38 -0800 (PST)
 Received: from localhost.localdomain ([50.212.55.89])
-        by smtp.gmail.com with ESMTPSA id jo23-20020a056214501700b0067ac930d17asm1123469qvb.141.2023.12.04.12.35.35
+        by smtp.gmail.com with ESMTPSA id jo23-20020a056214501700b0067ac930d17asm1123469qvb.141.2023.12.04.12.35.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Dec 2023 12:35:35 -0800 (PST)
+        Mon, 04 Dec 2023 12:35:37 -0800 (PST)
 From: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 To: linux-kernel@vger.kernel.org,
 	linux-stm32@st-md-mailman.stormreply.com,
@@ -63,9 +63,9 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	Alexandre Torgue <alexandre.torgue@foss.st.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Ben Wolsieffer <ben.wolsieffer@hefring.com>
-Subject: [PATCH 1/2] irqchip/stm32-exti: support retriggering on STM32 MCUs
-Date: Mon,  4 Dec 2023 15:33:56 -0500
-Message-ID: <20231204203357.2897008-2-ben.wolsieffer@hefring.com>
+Subject: [PATCH 2/2] pinctrl: stm32: fix GPIO level interrupts
+Date: Mon,  4 Dec 2023 15:33:57 -0500
+Message-ID: <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
 X-Mailer: git-send-email 2.42.1
 In-Reply-To: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
 References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
@@ -77,46 +77,42 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-EXTI retriggering support was missing on STM32 MCUs. Retriggering is
-required to emulate GPIO level interrupts using edge interrupts in the
-STM32 pinctrl driver.
+The STM32 doesn't support GPIO level interrupts in hardware, so the
+driver tries to emulate them using edge interrupts, by retriggering the
+interrupt if necessary based on the pin state after the handler
+finishes.
+
+Currently, this functionality does not work because the irqchip uses
+handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
+callbacks after handling the interrupt. This patch fixes this by using
+handle_level_irq() for level interrupts, which causes irq_unmask() to be
+called to retrigger the interrupt.
 
 Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 ---
- drivers/irqchip/irq-stm32-exti.c | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ drivers/pinctrl/stm32/pinctrl-stm32.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/irqchip/irq-stm32-exti.c b/drivers/irqchip/irq-stm32-exti.c
-index 971240e2e31b..6b3f54457812 100644
---- a/drivers/irqchip/irq-stm32-exti.c
-+++ b/drivers/irqchip/irq-stm32-exti.c
-@@ -328,6 +328,18 @@ static void stm32_irq_handler(struct irq_desc *desc)
- 	chained_irq_exit(chip, desc);
- }
- 
-+static int stm32_irq_retrigger(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct stm32_exti_chip_data *chip_data = gc->private;
-+	const struct stm32_exti_bank *stm32_bank = chip_data->reg_bank;
-+	u32 mask = BIT(d->hwirq % IRQS_PER_BANK);
-+
-+	irq_reg_writel(gc, mask, stm32_bank->swier_ofst);
-+
-+	return 0;
-+}
-+
- static int stm32_exti_set_type(struct irq_data *d,
- 			       unsigned int type, u32 *rtsr, u32 *ftsr)
- {
-@@ -856,6 +868,7 @@ static int __init stm32_exti_init(const struct stm32_exti_drv_data *drv_data,
- 		gc->chip_types->chip.irq_ack = stm32_irq_ack;
- 		gc->chip_types->chip.irq_mask = irq_gc_mask_clr_bit;
- 		gc->chip_types->chip.irq_unmask = irq_gc_mask_set_bit;
-+		gc->chip_types->chip.irq_retrigger = stm32_irq_retrigger;
- 		gc->chip_types->chip.irq_set_type = stm32_irq_set_type;
- 		gc->chip_types->chip.irq_set_wake = irq_gc_set_wake;
- 		gc->suspend = stm32_irq_suspend;
+diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm32/pinctrl-stm32.c
+index 603f900e88c1..fb9532601cbb 100644
+--- a/drivers/pinctrl/stm32/pinctrl-stm32.c
++++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+@@ -348,12 +348,15 @@ static int stm32_gpio_set_type(struct irq_data *d, unsigned int type)
+ 	case IRQ_TYPE_EDGE_RISING:
+ 	case IRQ_TYPE_EDGE_FALLING:
+ 	case IRQ_TYPE_EDGE_BOTH:
++		irq_set_handler_locked(d, handle_edge_irq);
+ 		parent_type = type;
+ 		break;
+ 	case IRQ_TYPE_LEVEL_HIGH:
++		irq_set_handler_locked(d, handle_level_irq);
+ 		parent_type = IRQ_TYPE_EDGE_RISING;
+ 		break;
+ 	case IRQ_TYPE_LEVEL_LOW:
++		irq_set_handler_locked(d, handle_level_irq);
+ 		parent_type = IRQ_TYPE_EDGE_FALLING;
+ 		break;
+ 	default:
 -- 
 2.42.1
 
