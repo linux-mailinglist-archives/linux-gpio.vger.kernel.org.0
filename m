@@ -1,99 +1,204 @@
-Return-Path: <linux-gpio+bounces-956-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-957-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 315CC802FE9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 11:14:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED74D8031A5
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 12:40:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 621111C209AD
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 10:14:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7EB861F2106D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 11:40:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B9DE20B33;
-	Mon,  4 Dec 2023 10:14:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0CB222F0D;
+	Mon,  4 Dec 2023 11:40:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Pb0AFZ2L"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ZiElWQBW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F171FDF
-	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 02:14:23 -0800 (PST)
-Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-db54ec0c7b8so2161438276.0
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 02:14:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701684863; x=1702289663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=x6T1DQnSXHpRdTd/LbBCSLbNlM8eSq6nAzUcVYf1VEk=;
-        b=Pb0AFZ2LmsJ7dhpXT5xnsH5/wNR4NZL7It5bY7zdIhPvjzwTxUctt23r2ApzHk3XG+
-         qXUKWHtpUBj6d8lhh2axjGxozUAJqwDtcVNuJYd9/eSGLrnWX/bKRQOjzT/aTOjceabB
-         pTIKfb33Sq98Mok/ZTO3/ELKjS/0xHs6ET5q4sApNqOi9mXNkxV0pkhZhVIptZ5SOO/i
-         um/wAtfPqYXuQW+/i2HwFPLkrwC0TL/OMjoR2guMhdVIXs8sEzPt9tnTAyZy51eNGVEZ
-         OC6ceHSLyqF8FdtWtkkK4zuJtakngf3Q7Ii+fdMa99GL4fNFjM/I3yG3rxbCCPUJcCyS
-         Y/Sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701684863; x=1702289663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=x6T1DQnSXHpRdTd/LbBCSLbNlM8eSq6nAzUcVYf1VEk=;
-        b=lxsOCxaT6gPA7wkGGKuB06JGyIf468vORcjwWIYm93rrGkompvdrTyoP+jdqFOEMp6
-         UPxS40iXEPFpnNoZknfaBGkZQPiOFWIYxOCz1FlWT79skGiI3pu2+ODPTrO41XDARF9A
-         Qtjc293CSAanh2fuo79A55lrvmWDrQ2jGvKn0Nu45uRyItuTgxx4NdLl4KROjEsVfbAj
-         i7V6V68+vbe7jCWHY9wkWEbcoG8TgW/TpYIQUxFxyFYagKq2iYIcGUU66RmQh3gvwrQT
-         dfM8LHZ54VtnqCiEFg5HRLX9BRSkvkKqyto5TdB2XeDArGtIU6DEDRMgbkguiQcBEzIV
-         E6Lg==
-X-Gm-Message-State: AOJu0YyBihMrWmAwaslspfPBkbfu7cLH4VF4oWBku/tDPigODY9H6SLx
-	VcjRADuHMH3awqkQw3rD3HZwx0KLZrTm42AOdArxOA==
-X-Google-Smtp-Source: AGHT+IHhuDurJ8RdbjXooRiGJLv52npQVT6/Px+lFRxxtrp8WQLTQQplQz795ifTJ1edDRCXEJYqWVyVZzD1Wpcw/tw=
-X-Received: by 2002:a25:6f8b:0:b0:daf:6330:cc1d with SMTP id
- k133-20020a256f8b000000b00daf6330cc1dmr2323965ybc.24.1701684863177; Mon, 04
- Dec 2023 02:14:23 -0800 (PST)
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6ADCAB0;
+	Mon,  4 Dec 2023 03:40:41 -0800 (PST)
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20231204114040euoutp02292a0127f27ad873afe25d97659f31a9~dnhNdbYt51544815448euoutp02O;
+	Mon,  4 Dec 2023 11:40:40 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20231204114040euoutp02292a0127f27ad873afe25d97659f31a9~dnhNdbYt51544815448euoutp02O
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1701690040;
+	bh=qoSlDlAlmyMO1fD/zESFlbZVGoR0yDyo5RovorKXLGU=;
+	h=Date:From:Subject:To:Cc:In-Reply-To:References:From;
+	b=ZiElWQBWoN/gMkxnTbl4EIJxJaE/qWzC15BE8zltHkDgiAkzy4jcRQQtE89lZJRFE
+	 y0CAFQMH/8r3YrWb6vhMFfNnjlRU4OQG3F1D5CcUm6baAXYgCF3nBRHZq0UuUfINyM
+	 b9rZMUmPEL+y10xZs8D85HkEGozViYSZ4VZGZ/5w=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20231204114040eucas1p22e4e9d56a0f68b1e4d48c13f2cc13892~dnhNR4TKl1052710527eucas1p2C;
+	Mon,  4 Dec 2023 11:40:40 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 47.26.09814.7BABD656; Mon,  4
+	Dec 2023 11:40:39 +0000 (GMT)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf~dnhM11-r21052710527eucas1p2B;
+	Mon,  4 Dec 2023 11:40:39 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20231204114039eusmtrp2aa892cf8db8bcd9cc62f775c443bc043~dnhMyrE4x3101831018eusmtrp2K;
+	Mon,  4 Dec 2023 11:40:39 +0000 (GMT)
+X-AuditID: cbfec7f4-711ff70000002656-67-656dbab7ff2e
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms1.samsung.com (EUCPMTA) with SMTP id 1A.00.09146.7BABD656; Mon,  4
+	Dec 2023 11:40:39 +0000 (GMT)
+Received: from [106.210.134.192] (unknown [106.210.134.192]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20231204114037eusmtip1af7cdf53ae21703af228f6e129f28260~dnhLNXjH_2303523035eusmtip1g;
+	Mon,  4 Dec 2023 11:40:37 +0000 (GMT)
+Message-ID: <9e4e65de-7234-4234-8091-796277a1f1c5@samsung.com>
+Date: Mon, 4 Dec 2023 12:40:38 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <fd8bf044799ae50a6291ae150ef87b4f1923cacb.1701422582.git.namcao@linutronix.de>
- <fe4c15dcc3074412326b8dc296b0cbccf79c49bf.1701422582.git.namcao@linutronix.de>
-In-Reply-To: <fe4c15dcc3074412326b8dc296b0cbccf79c49bf.1701422582.git.namcao@linutronix.de>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 4 Dec 2023 11:14:12 +0100
-Message-ID: <CACRpkda0wdVgwTjX4bF411TEeZ96H+sqZVXaVgh4d5S2Ek_eZA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pinctrl: starfive: jh7100: ignore disabled device
- tree nodes
-To: Nam Cao <namcao@linutronix.de>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
-Cc: Emil Renner Berthing <kernel@esmil.dk>, Jianlong Huang <jianlong.huang@starfivetech.com>, 
-	Hal Feng <hal.feng@starfivetech.com>, Huan Feng <huan.feng@starfivetech.com>, 
-	Andy Shevchenko <andy.shevchenko@gmail.com>, Drew Fustini <drew@beagleboard.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v4 12/23] pinctrl: mediatek: Make use of
+ PINCTRL_GROUP_DESC()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, Rasmus Villemoes
+	<linux@rasmusvillemoes.dk>, =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?=
+	<j.neuschaefer@gmx.net>, Krzysztof Kozlowski
+	<krzysztof.kozlowski@linaro.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+	<u.kleine-koenig@pengutronix.de>, Geert Uytterhoeven
+	<geert+renesas@glider.be>, Biju Das <biju.das.jz@bp.renesas.com>, Claudiu
+	Beznea <claudiu.beznea.uj@bp.renesas.com>, Jianlong Huang
+	<jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-mediatek@lists.infradead.org, openbmc@lists.ozlabs.org,
+	linux-mips@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org
+Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list
+	<bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng
+	<aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo
+	<shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux
+	Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, Paul Cercueil
+	<paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+	Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Emil Renner Berthing
+	<kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>, Krzysztof Kozlowski
+	<krzk@kernel.org>
+Content-Language: en-US
+In-Reply-To: <20231129161459.1002323-13-andriy.shevchenko@linux.intel.com>
+Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta0xTZxjed87hnAOueKxsfEEJCQGjC3JZAL8NgmOT5EzdJpOxuBs2coZC
+	uaSF1REWG0GETgTacStQNBCuCqzcK6bKBg0wLlZhpEMZ4yJggHUSN0B0tgc3/j3v+z7P97zP
+	m3w0LlwgnegzcYmcJE4kdiXtiNae1cH9bbpYznvDfAANTq0TaCVPh6PWjECUdb4AQ9VPrmHo
+	elY3gTTtTzD0fXedDZoc+QiVFisBMl7owlDJ+TYKZa72AzR9rQig2rwOAmWo2gg0NNRIoZuP
+	Wii0rBmj0A9PqzCknRq1Qbn6AQo1lT0FSLFWg6O7uhIS3U29A1CmtgWglvklDE2pNSTqS5sj
+	UHa5kUB1g7dJNFPURKKNNi2BluqmAVLVv4/mmh3Rb7kq8M4etmaumGLVEwMkW2e8SLIZl58R
+	bO7AfrZDfZ9iy7V6ki3vnMdYbW0myY6PdpKspjeUbao4xw4VXgXsj0vtGJu94c0OK2KOCT+z
+	C4zkxGe+4SReQSftTqfNPiQTftp+tnW9gZKDvlcVwJaGjC+c1KzaKIAdLWSqAbxU30jwxQqA
+	Ff/c35w8BnAmdYN4KZFf7yD5QRWAFxYqMb4wAzhSc+sFi6YFTBB8oAIWAcG4wZnVAdKCBcwO
+	2Fs0bX3oNcYFTpgKKQsmGR+oWFRYOTuZ4/Dn8QdWAwfmFxLeK222GuBMDgkbeu5Z1TjjCE3T
+	ZZgF2zKH4aRy1obvu8C2xRLcIoCMfBvMX36+ufchqDT0kzzeCRcMzRSPd8PnHWUYL7gI4JX1
+	ic0iB0D5QxPgWQFwfHCNtGTDmX2wQefFt4PhLd2yNTJk7OHY4g5+CXuobC3A+bYAZqQLefYe
+	qDbU/2d7e9iI5wBX9ZbDqLdEU2+Jo/7f9wogaoEjlySNjeKkb8ZxMk+pKFaaFBfleSo+Vgte
+	fIf+Z4aVdlC1YPbsAhgNugCkcVcHgcYUwwkFkaJvkzlJfIQkScxJu8AumnB1FLhHunBCJkqU
+	yMVwXAIneTnFaFsnOVZj2q7sVh4Z85jpOfFK/Agnya/3EZszsuTy90aDvgpwp+cpMjPiQOhs
+	aVjKTffdic75Rx8Fiw4ZZB59Rv1JcU9kchf3eW/649+VMb5npz/9YFdIxK8uDmF3ZI3V7wZM
+	pWDLxUkHjc4H3ZzsQ4ZLR+3OReQ3OPVFJ4evb4CpTwL9C3NEl96O2isPNZRXJvy1z+DjvLJU
+	o0+LNoccSdSd8vvicGXn8VWpSe3fd/RPuUtHoD7ULXjc71gWIwv/o7TZIUUm/rgiKvDyiWy3
+	70K8C0zFVV+m9/ukKh23JYf7/e3lm2f8Gn3YemNNp/IQ+5r1BWGvJ/vfoIvfqotURbP1NriT
+	2ZWQnhb5vIFLpKJ/Ac8KBzB9BAAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf1CTdRzH+T579mxQq6eJ7HtcRO66PPGY29zoixHVJfVQaSZedmhHU5/A
+	Y2PcNrDsrIVU41GkbZJj4KjwFwxkbcCALHKhHHiAwsURTBAYAwowI7yQyQWs7vjvdZ/P+/35
+	fO5zby6L/4AdyT2cpaM1WQqlkAjDbyy13Y51N6to8bwXoq6xRRz9XdzMQg2GBFSYdwZDl+5X
+	Y6im8BqObI33MXTimp2NRn59C50tNQHU87kHQ2V5bg4qWLgBkK+6BKCq4iYcGcxuHHV3Ozjo
+	xz/qOeiurZ+DTgcuYsg51sdGxpZODnKVBwBiHlSyUG9zGYF6j98CqMBZD1D91CyGxqw2AnXk
+	T+KoqKIHR/auqwQaL3ER6KHbiaNZuw8g8+VkNFknQINGM3jpWapyspRDWYc7Ccre8yVBGU4t
+	4ZSxM5Zqst7mUBXOFoKquDKFUc6qAoLy9l0hKFv725Tr3KdUt+VbQH0/24hRRQ/F1E0mcxc/
+	VZSgUefo6Kcz1FrdC8J9EiQVSeKRSCqLF0m2PvfeNqlcuCUx4RCtPJxLa7Ykvi/KyPdPENm/
+	PP5hw2ItRw86HmVAKBeSMqivaSIYEMblk+cBHG0rx4ONJ2H713p2kNfBQB/zn+gugIsDo4AB
+	XC6PTIRDZrCiwcln4PhCJ7HCPPIJ2F7iW52znoyGwwMWzgoTpAQyM8yqZh2ZAlu9Q6scTnYR
+	0GhJW2EWaSLg8Jg0uMsA4NVbJ7FgQwAHfOWrHEq+DkdMfnawHgeZegYEORq6Z8pYXwG+dc0d
+	1jV26xqLdY3lG4BXgXA6R6tKV2klIq1Cpc3JShcdVKucYDmEDdcXXI3A9vs9kQdgXOABkMsS
+	hvNsA5k0n3dI8dFRWqNO0+Qoaa0HyJefYWRFrj+oXk5xli5NEieWS2Rx8WJ5fNxWoYCXnG1Q
+	8Ml0hY7OpOlsWvO/D+OGRuox9lL3u7uVNdKW0rCZs+7vilJvxso29qeM7KhLntjwmqPK8lf2
+	xiOj4qN5S09FDbp/cM+fsCd9cuQNSWrl5tqXDR6f75jjz4shJrKxS2baMdi2Vxohn5tXO1oP
+	6PIddz6uLX5Tb88P+BsDnL3nXIK6uk61xJ9k3u5Mn1OcDszlbst1CKriJl717vlg/2M7LYk7
+	W8v4l6XdPp/hWLUs5foj4v3eL2Yu9LuizpMXPBFNuy8l9b4yrRrMihiPjqmImRhNn/+tY1fI
+	0ELE9uMgtbmwuta/iR7+h+39Wft81FTIHlgUual8X8p02b2ozfq66QMbfjqDFU++46NPmV50
+	f9anvENUCnFthkISw9JoFf8CmRY9FQ0EAAA=
+X-CMS-MailID: 20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf
+References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com>
+	<20231129161459.1002323-13-andriy.shevchenko@linux.intel.com>
+	<CGME20231204114039eucas1p29c6f8a162191e58ff658d3a1c44429bf@eucas1p2.samsung.com>
 
-On Fri, Dec 1, 2023 at 10:23=E2=80=AFAM Nam Cao <namcao@linutronix.de> wrot=
-e:
-
-> The driver always registers pin configurations in device tree. This can
-> cause some inconvenience to users, as pin configurations in the base
-> device tree cannot be disabled in the device tree overlay, even when the
-> relevant devices are not used.
+On 29.11.2023 17:06, Andy Shevchenko wrote:
+> Make use of PINCTRL_GROUP_DESC() instead of open coding it.
 >
-> Ignore disabled pin configuration nodes in device tree.
+> Signed-off-by: Andy Shevchenko<andriy.shevchenko@linux.intel.com>
+
+This patch landed in linux-next as commit 1949e4630c3b ("pinctrl: 
+mediatek: Make use of PINCTRL_GROUP_DESC()"). Unfortunately it causes a 
+build break of ARM64 arch with standard defconfig.
+
+> ---
+>   drivers/pinctrl/mediatek/pinctrl-moore.h | 7 +------
+>   drivers/pinctrl/mediatek/pinctrl-paris.h | 7 +------
+>   2 files changed, 2 insertions(+), 12 deletions(-)
 >
-> Fixes: ec648f6b7686 ("pinctrl: starfive: Add pinctrl driver for StarFive =
-SoCs")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Nam Cao <namcao@linutronix.de>
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-moore.h b/drivers/pinctrl/mediatek/pinctrl-moore.h
+> index e1b4b82b9d3d..22ef1ffbcdcb 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-moore.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-moore.h
+> @@ -38,12 +38,7 @@
+>   	}
+>   
+>   #define PINCTRL_PIN_GROUP(name, id)			\
+> -	{						\
+> -		name,					\
+> -		id##_pins,				\
+> -		ARRAY_SIZE(id##_pins),			\
+> -		id##_funcs,				\
+> -	}
+> +	PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+>   int mtk_moore_pinctrl_probe(struct platform_device *pdev,
+>   			    const struct mtk_pin_soc *soc);
+> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.h b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> index 8762ac599329..f208a904c4a8 100644
+> --- a/drivers/pinctrl/mediatek/pinctrl-paris.h
+> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.h
+> @@ -50,12 +50,7 @@
+>   	}
+>   
+>   #define PINCTRL_PIN_GROUP(name, id)			\
+> -	{						\
+> -		name,					\
+> -		id##_pins,				\
+> -		ARRAY_SIZE(id##_pins),			\
+> -		id##_funcs,				\
+> -	}
+> +	PINCTRL_GROUP_DESC(name, id##_pins, ARRAY_SIZE(id##_pins), id##_funcs)
+>   
+>   int mtk_paris_pinctrl_probe(struct platform_device *pdev);
 
-Patch applied for fixes.
 
-If there is some doubts about the saneness of this patch, seek input
-from the devicetree maintainers.
+PINCTRL_GROUP_DESC() macro from drivers/pinctrl/core.h contains a cast 
+to (struct group_desc), what breaks users of the above macros.
 
-Yours,
-Linus Walleij
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
 
