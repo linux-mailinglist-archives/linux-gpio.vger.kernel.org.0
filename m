@@ -1,105 +1,161 @@
-Return-Path: <linux-gpio+bounces-991-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-992-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E32A8803B4B
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 18:22:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5D34803C0C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 18:52:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1248C1C20AEB
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 17:22:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D1C3281143
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 17:51:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DEC42E82F;
-	Mon,  4 Dec 2023 17:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE7852E85F;
+	Mon,  4 Dec 2023 17:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plB2EjoZ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eWvMOGEu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5311C2E827;
-	Mon,  4 Dec 2023 17:22:30 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC89FC433C8;
-	Mon,  4 Dec 2023 17:22:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701710550;
-	bh=fISovsUAugtGVbrmngMLVuIQZSTyx2zTDMISleFijck=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=plB2EjoZ+u/2syhFMHyNS5e/d88O7CerbI1EU1u4/BiPpQfkSJvSn4B97CmuDCFsp
-	 L6H+kucPJ9VYXMxMfyW16EMFywm2q2a0rxJj2AasuwrIagBWlNHRuhoerrRdRaryKn
-	 cpa+gyDxggZNMIPaKcJLzE9O/s94aywh5Hdb2YEzBwEqvsX6rY4KoRrfZfv44H4M0h
-	 zXBO9wApaoD+ATliMWLwEszY1GHhc/wkft2QFbIxm8N1hzJte8AeI1LxAFleXCRf6v
-	 3NCJ9u6JP638aZN5ZjEpSoVEaIQ99nAihmRHTqUc7npqXH7IFBxnEmP4sNUNmBEKie
-	 0aCDnrfskgJcw==
-Date: Mon, 4 Dec 2023 17:22:17 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Michael Walle <michael@walle.cc>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
- <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
- <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
- linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <20231204172217.6be90ae4@jic23-huawei>
-In-Reply-To: <9dbb81f8-7c75-411d-a77c-b670302f0dfe@gmail.com>
-References: <20231123152331.5751-1-user@HYB-hhAwRlzzMZb>
-	<20231123152331.5751-2-user@HYB-hhAwRlzzMZb>
-	<20231125172125.1b0f1ae7@jic23-huawei>
-	<9dbb81f8-7c75-411d-a77c-b670302f0dfe@gmail.com>
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D39F9109
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 09:51:47 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-40c08af319cso19176745e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 09:51:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701712306; x=1702317106; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=0xgC+ecJ/aYtY2CvVGurydBuFpa6kzX9Y0C6MFp5IkI=;
+        b=eWvMOGEudiafOX/lUDK0Cp7kzPnaQUBQSUkzISJLBEFQEOITgBRJXCeShENLgqRcwX
+         iNELsPNVTx2I1F8/lvE7sAgifmAbzu2MOaPJV5eKCkF8OxDoWukCpfpchUK2f888X9QO
+         TLXJomtduvblUgRg6JW5wzKhL7s60epsYiXtIZFVk+Viea5iErOcvAgrsGEUB5f2f00T
+         kcdXr6WYIzyqjwJMkNrMdeFoYI2v22ylO4MtOqtNGD9IuIYJyuREkxlAAeC4Rk9x/XTC
+         QRf9lvrglZ8PYTO6TNzhZd6Af8n5a5cV7a6Uduck5xe+Pc3zG/fE00RF+2mkquBzjg35
+         gbfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701712306; x=1702317106;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0xgC+ecJ/aYtY2CvVGurydBuFpa6kzX9Y0C6MFp5IkI=;
+        b=NaLfV/Vsm8S2vdcYrMZhtDWazp3//RPPcY3uwOjPvByTTHwq5UcVThpXLZ9KQSAhDw
+         bbJaPc5t0JvSfgqsKxrBA7+mM5LiAe5eftHPYCZgPSEjzZqzqzMLEkIAhq41yA0LJyYz
+         vRaeROaUkRS9HmW0Fjo33TZZMSouw7yJx4/Ceir6EC3/pvSOUD7xsfJjLABbTgzMULUD
+         sztcKBzHODeCPasMT3I9Fg+Eh60q3MsxrfEZ+54FxIZeSwbHwV1S/2XnofKXDizdSz7j
+         rAXXk/X3rVeRPQGWM8A2RbBKxLcyS63FOBlg/1k7CCGk4oGTxETJUN51RkqNZcuoYY/1
+         9oVw==
+X-Gm-Message-State: AOJu0YzLTb3iPiOy+0g6aMSo5H5YP3Y5RsxGOr6KE7UBCcf+lM5l9eTp
+	Gv+T5xCKBnB+1Uyg7EC/G8GiEw==
+X-Google-Smtp-Source: AGHT+IHg/7kveHuWDixjU8ouQ7zKYnDBAtnudtwu6W88VoQ8XBhhZ2T41NB6zJGoDZ53CE5QrdWRqQ==
+X-Received: by 2002:a7b:cd07:0:b0:40b:5e59:ea0b with SMTP id f7-20020a7bcd07000000b0040b5e59ea0bmr2920644wmj.170.1701712306207;
+        Mon, 04 Dec 2023 09:51:46 -0800 (PST)
+Received: from draszik.lan ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id f18-20020a05600c155200b004094d4292aesm15918570wmg.18.2023.12.04.09.51.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Dec 2023 09:51:45 -0800 (PST)
+Message-ID: <20bf05b9d9ccc5c11ef17500ac7a97c46dd46a9a.camel@linaro.org>
+Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
+ and cmu_apm support
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+ conor+dt@kernel.org,  sboyd@kernel.org, tomasz.figa@gmail.com,
+ s.nawrocki@samsung.com,  linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net,  catalin.marinas@arm.com, will@kernel.org,
+ arnd@arndb.de, olof@lixom.net,  gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, cw00.choi@samsung.com,  alim.akhtar@samsung.com
+Cc: tudor.ambarus@linaro.org, semen.protsenko@linaro.org,
+ saravanak@google.com,  willmcvicker@google.com, soc@kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ kernel-team@android.com,  linux-serial@vger.kernel.org
+Date: Mon, 04 Dec 2023 17:51:43 +0000
+In-Reply-To: <20231201160925.3136868-13-peter.griffin@linaro.org>
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+	 <20231201160925.3136868-13-peter.griffin@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.49.2-3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Mon, 4 Dec 2023 18:49:21 +0200
-Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
+On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
+> cmu_top is the top level clock management unit which contains PLLs, muxes=
+,
+> dividers and gates that feed the other clock management units.
+>=20
+> cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
+> APM module.
+>=20
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Will McVicker <willmcvicker@google.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+> =C2=A0drivers/clk/samsung/Makefile=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 =
+1 +
+> =C2=A0drivers/clk/samsung/clk-gs101.c | 2495 ++++++++++++++++++++++++++++=
++++
+> =C2=A02 files changed, 2496 insertions(+)
+> =C2=A0create mode 100644 drivers/clk/samsung/clk-gs101.c
+>=20
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index ebbeacabe88f..3056944a5a54 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos7.=
+o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos7885.o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos850.o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynosautov9.o
+> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-gs101.o
+> =C2=A0obj-$(CONFIG_S3C64XX_COMMON_CLK)	+=3D clk-s3c64xx.o
+> =C2=A0obj-$(CONFIG_S5PV210_COMMON_CLK)	+=3D clk-s5pv210.o clk-s5pv210-aud=
+ss.o
+> =C2=A0obj-$(CONFIG_TESLA_FSD_COMMON_CLK)	+=3D clk-fsd.o
+> diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs=
+101.c
+> new file mode 100644
+> index 000000000000..6bd233a7ab63
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-gs101.c
+> @@ -0,0 +1,2495 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Linaro Ltd.
+> + * Author: Peter Griffin <peter.griffin@linaro.org>
+> + *
+> + * Common Clock Framework support for GS101.
+> + */
+> [...]
+> +
+> +/* List of parent clocks for Muxes in CMU_TOP: for CMU_HSI0 */
+> +PNAME(mout_cmu_hsi0_usb31drd_p)	=3D { "oscclk", "dout_shared2_div2" };
+> +
+> +PNAME(mout_cmu_hsi0_bus_p)	=3D { "dout_shared0_div4", "dout_shared1_div4=
+",
+> +				=C2=A0=C2=A0=C2=A0 "dout_shared2_div2", "dout_shared3_div2",
+> +				=C2=A0=C2=A0=C2=A0 "fout_spare_pll" };
 
-> On 11/25/23 19:21, Jonathan Cameron wrote:
-> > On Thu, 23 Nov 2023 17:23:22 +0200
-> > mitrutzceclan <mitrutzceclan@gmail.com> wrote:
-> >   
-> >> From: Dumitru Ceclan <mitrutzceclan@gmail.com>  
-> 
-> ...
-> >> +	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
-> >> +	st->regulators[1].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF2];
-> >> +	st->regulators[2].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_AVDD1_AVSS];
-> >> +
-> >> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->regulators),
-> >> +				      st->regulators);  
-> > 
-> > If only some of them are supplied, the driver works fine as long as no channel is using them?
-> > If so should probably get the optionally then check for availability of the ones you
-> > want.  I'm sure someone will just wire up ref.  Incidentally, ref2 isn't there for all chips
-> > I think, so we should not get it on the ones where it can't exist.
-> >   
-> 
-> 
-> This sets a dummy regulator in place if no proper supply is found. Then
-> the call regulator_get_voltage() on the dummy will fail. About getting
-> ref2, sure, I'll set the string only with the right ID.
-> 
-> ...
-> >> +		ret = ad7173_get_ref_voltage_milli(st, (u8)ref_sel);
-> >> +		if (ret < 0)
-> >> +			return dev_err_probe(dev, ret,
-> >> +					     "Cannot use reference %u", ref_sel);  
-> 
-> Here the probe would not continue if a channel selects a supply that is
-> not available in the DT.
-Ok. It's a little ugly though - so maybe a comment at the bulk_get to say
-it will fail cleanly a bit later.
+This should also be updated....
+=20
+> [...]
+> +	MUX(CLK_MOUT_HSI0_BUS, "mout_cmu_hsi0_bus", mout_cmu_hsi0_bus_p,
+> +	=C2=A0=C2=A0=C2=A0 CLK_CON_MUX_MUX_CLKCMU_HSI0_BUS, 0, 3),
+
+...because we have 8 possibilities now.
+
+(I didn't check the other parents, but you mentioned you updated field widt=
+hs
+in other registers, too, so maybe need to double check the parent strings a=
+s well)
+
+
+Cheers,
+Andre'
+
 
