@@ -1,98 +1,182 @@
-Return-Path: <linux-gpio+bounces-1002-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1003-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BBD7804003
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 21:37:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABD888040FB
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 22:28:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DA736281374
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 20:37:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6040C2811B0
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 21:28:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07FF533CF6;
-	Mon,  4 Dec 2023 20:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31050381BF;
+	Mon,  4 Dec 2023 21:28:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bo6GMe3V"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="svqrHsHj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8BAA3306F;
-	Mon,  4 Dec 2023 20:37:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2349BC433C9;
-	Mon,  4 Dec 2023 20:37:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1701722246;
-	bh=C2U2qrCynZxI56Zkj6LUzA8sFR5k/ZUF1IMLPjunjXM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=Bo6GMe3Vv4RGooUoRtbfJ+7m5NxmOezW5RtYbz25Qgc9pR4xNt8TpHA5avxZgnEvL
-	 tqforuj19WmL8kTBO4y8OP1VV/7S9/DDUm9qkCLTZ+MzLRxbg+dKOfqDOTRpANX1zJ
-	 P3CLoZjTKoum9xHOwvAzBeHHGVbQIwy3FymTW+R3SD66p2FQTeFPxk6zuN5sCdKZWD
-	 n+4X+cp1iVrdqd6zLfhOWcOKW7fe/WITh1AJuY9K47ZuEqcFHXRuyqfOvyf8B+aV/Q
-	 /anQfW8qwV1f57v9y9KLP6GV/u/A7ZcnMh4ULo92zlCjaX9N9jfIBjaGsY/6tSZ580
-	 VJRZufTV+09rA==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Charles Keepax <ckeepax@opensource.cirrus.com>,
-	kernel test robot <lkp@intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sasha Levin <sashal@kernel.org>,
-	rf@opensource.cirrus.com,
-	alsa-devel@alsa-project.org,
-	patches@opensource.cirrus.com,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 1/3] pinctrl: lochnagar: Don't build on MIPS
-Date: Mon,  4 Dec 2023 15:37:18 -0500
-Message-ID: <20231204203723.2094942-1-sashal@kernel.org>
-X-Mailer: git-send-email 2.42.0
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 58237BB
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 13:28:27 -0800 (PST)
+Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-7c4a41372d3so1705909241.1
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 13:28:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701725306; x=1702330106; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EfptafwSrqN68gssEleMjIEcZ95dS5LQeLcFr7AJvrk=;
+        b=svqrHsHjfHB3zcNv7/CDOZoBa9qFyQccsM5kUZaBLQtFMCrE4vH3BsprOQKO1trruT
+         W1dEUTo2vPSkCRV3dIU7SRSSJgrCrplojuE657vZX7gBNnprRcfYgq3F95/0gMWz9r0M
+         h0oJWt/MwduEUonJQI10QPUfv+a7pN/1Kon37Wo4B63YX1HJvVvJLYbjK69zfEaGjxuf
+         ohZz0fh/ZLG1Z8tggoQsYv2PBG8yLJe6Uie/HlwylelNmTjfN0Sgz/trwbblpOZ77H+e
+         BXKvuZje0lA3ZMEISdgszeLz2OIo2Ovki8B8mZbtn/2znCXPOFFKWzbguaNbicrJwJCD
+         decg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701725306; x=1702330106;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EfptafwSrqN68gssEleMjIEcZ95dS5LQeLcFr7AJvrk=;
+        b=I02lGGe97QKWyDtxhwGGCyJoA9YV0OQ86Wk2zm7L/XS+qvbuy+dz4FKx6lI8kQrtt8
+         5N8XlSH0hUXUH6s34qDX5wP+lnZflD94NFk8YbepDChestbi8bXowHPe1ySslCBh2nHQ
+         Uz6oMLETtIuT4QzWhDyQ7xq38vPqrxbGIx6Q+yrYlA+6/8WQfpMPd1/CKMtTkK9D43jW
+         9lcUs3YnetIBsaUrZgW7w9fSjXf3tET9uCOv594picIhYlfxLwvhmY1R6SNFN+fOP/DL
+         Dbzd0y3y0wribhg7rRZByo8J4IDmXJhlX+sTC6zhvOBPazszJCt18XzFMcxl8Z/JVvNg
+         2xzg==
+X-Gm-Message-State: AOJu0YwCnBAbJLmBkEf3JjF5b8Zf504SyOj6ydM+BEmJngqte+a/28Qy
+	Sx28Cax0IN1yqEfriM6b6mGY4TW52fNfrRDE5Pi12g==
+X-Google-Smtp-Source: AGHT+IHDGpRj97nPa6xh+I+LOLTtqp4r10kIdJxDwzgAn2zHtkfsFa2EhibpSacM1m2O6ugtxmETyJCSbdt5g1a3dpY=
+X-Received: by 2002:a05:6102:3592:b0:464:99c2:5c5a with SMTP id
+ h18-20020a056102359200b0046499c25c5amr1729120vsu.17.1701725306419; Mon, 04
+ Dec 2023 13:28:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.4.262
-Content-Transfer-Encoding: 8bit
+References: <CAMRc=MdSc3emU+AJpCni6is0qsmR9HcqysSL33gpAmb8JTnjVA@mail.gmail.com>
+ <20231121161111.zphi7pn77ns7sgu2@pengutronix.de> <20231122090502.tcscaaaf7vuk6g7w@pengutronix.de>
+ <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box> <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+ <20231127105844.kpu5ori6o6umfynh@pengutronix.de> <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+ <20231128090732.54xm72pnnjmbsjqb@pengutronix.de> <CAMRc=McAYSpCY=E1Ze7xKuBom8xOzQ4+5f7vYm33ihVU90xM1w@mail.gmail.com>
+ <20231202004316.mxhrfsgcitupc6cc@pengutronix.de> <CAMRc=Md9bRdk5ZaCVu5gmZ4r5JR7eVZDriap32FMrN05PyTENQ@mail.gmail.com>
+In-Reply-To: <CAMRc=Md9bRdk5ZaCVu5gmZ4r5JR7eVZDriap32FMrN05PyTENQ@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 4 Dec 2023 22:28:15 +0100
+Message-ID: <CAMRc=MeiL7omJhe_gb_UiL_bbJGoujp3Js4=Fe=qXKHv8TjM-Q@mail.gmail.com>
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc() function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
+On Mon, Dec 4, 2023 at 9:27=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> On Sat, Dec 2, 2023 at 1:43=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> >
+> > On Fri, Dec 01, 2023 at 11:14:32AM +0100, Bartosz Golaszewski wrote:
+> > > On Tue, Nov 28, 2023 at 10:07=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > >
+> > >
+> > > [snip]
+> > >
+> > > >
+> > > > > I see the
+> > > > > chip->operational field that is set to false on release. In my
+> > > > > version, we just use a NULL-pointer to carry the same information=
+.
+> > > >
+> > > > Yup, sounds obvious. Your usage of "just" sounds as if your variant=
+ was
+> > > > better. To give the alternative view where the suggested approach s=
+ounds
+> > > > better would be:
+> > > >
+> > > > You need a pointer and I "just" a bool that even has a name implyin=
+g its
+> > > > function. You need to dereference the pointer in several places as =
+the
+> > > > needed information is distributed over two structures while it's al=
+l
+> > > > together in a single struct for the usual foo_alloc() + foo_registe=
+r()
+> > > > approach.
+> > > >
+> > >
+> > > There's another reason we do that. I'm no longer sure if I mentioned
+> > > it in my talk (I meant to anyway).
+> > >
+> > > In GPIO we have API functions that may be called from any context -
+> > > thus needing spinlocks for locking - but also driver callbacks that
+> > > may use mutexes internally or otherwise sleep. I don't know if this i=
+s
+> > > the case for PWM too but in GPIO we may end up in a situation where i=
+f
+> > > we used a spinlock to protect some kind of an "is_operational" field,
+> > > we'd end up sleeping with a spinlock taken and if we used a mutex, we
+> > > couldn't use API function from atomic contexts.
+> > >
+> > > This is the reason behind locking being so broken in GPIO at the
+> > > moment and why I'm trying to fix it this release cycle.
+> > >
+> > > Splitting the implementation into two structures and protecting the
+> > > pointer to the provider structure with SRCU has the benefit of not
+> > > limiting us in what locks we use underneath.
+> > >
+> > > Every subsystem has its own issues and we need to find something
+> > > generic enough to cover them all (or most of them anyway). I don't
+> > > think having a single structure cuts it.
+> >
+> > I'm convinced it works. I introduced a wrapper pwmchip_lock() that for
+> > now uses a mutex and once we have fast pwm_chips it uses a mutex for
+> > sleeping pwm_chips and a spinlock for the fast ones.
+> >
+> > That's similar to how struct irq_chip::irq_bus_lock works. For sleeping
+> > chips that callback uses a mutex, for fast chips a spinlock.
+> >
+>
+> Fair enough. I'd love to see a benchmark of what's faster one day
+> though: two structures with dereferencing and SRCU or one structure
+> with mutex/spinlock.
+>
 
-[ Upstream commit 6588732445ff19f6183f0fa72ddedf67e5a5be32 ]
+Actually there is one thing that - while not technically wrong - makes
+the split solution better. In case of your abstracted lock, you find
+yourself in a very all-or-nothing locking situation, where all of the
+structure is locked or none is. With SRCU protecting just the pointer
+to implementation, we can easily factor that part out and leave
+whatever fine-grained locking is required to the subsystem.
 
-MIPS appears to define a RST symbol at a high level, which clashes
-with some register naming in the driver. Since there is currently
-no case for running this driver on MIPS devices simply cut off the
-build of this driver on MIPS.
+Additionally: the pointer to implementation has many readers but only
+one writer. I believe this to be the same for your "operational"
+field. I don't know the PWM code very well but I can only guess that
+the situation is similar, where subsystem data structures are read
+more often than they are modified and multiple readers could access
+the structure at the same time lowering latencies.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202311071303.JJMAOjy4-lkp@intel.com/
-Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
-Link: https://lore.kernel.org/r/20231115162853.1891940-1-ckeepax@opensource.cirrus.com
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/cirrus/Kconfig | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Just another 2 cents.
 
-diff --git a/drivers/pinctrl/cirrus/Kconfig b/drivers/pinctrl/cirrus/Kconfig
-index 530426a74f751..b3cea8d56c4f6 100644
---- a/drivers/pinctrl/cirrus/Kconfig
-+++ b/drivers/pinctrl/cirrus/Kconfig
-@@ -1,7 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0-only
- config PINCTRL_LOCHNAGAR
- 	tristate "Cirrus Logic Lochnagar pinctrl driver"
--	depends on MFD_LOCHNAGAR
-+	# Avoid clash caused by MIPS defining RST, which is used in the driver
-+	depends on MFD_LOCHNAGAR && !MIPS
- 	select GPIOLIB
- 	select PINMUX
- 	select PINCONF
--- 
-2.42.0
+Bart
 
+> By "fair enough" I mean: I still don't like it for the reasons I
+> mentioned before but I cannot point out anything technically wrong.
+>
+> Bart
+>
+> > Best regards
+> > Uwe
+> >
+> > --
+> > Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig     =
+       |
+> > Industrial Linux Solutions                 | https://www.pengutronix.de=
+/ |
 
