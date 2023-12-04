@@ -1,112 +1,157 @@
-Return-Path: <linux-gpio+bounces-931-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-932-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74660802CF3
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:17:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A09DA802D01
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:19:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F26E1F210B1
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:17:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B6D9280F39
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:19:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55042D527;
-	Mon,  4 Dec 2023 08:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D53DDB5;
+	Mon,  4 Dec 2023 08:19:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CEt0M3Lb"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RLFsYv4f"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A7280DF
-	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 00:17:36 -0800 (PST)
-Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-7c513dc5815so1455538241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 00:17:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1701677856; x=1702282656; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Cv3+u5Nr1+Y2iihnZ3hSatBIAhuecZToXeDGh+GJlpE=;
-        b=CEt0M3LbMiLT0Oatr+I66PVQ1N92XKD1jJKM7LYOktmNqMWthQk4/jad5yvezvxTVB
-         1lqOB3o919JrWJaK5IlzKVv+4Hb++5xmPxX9JXpcVxJBDdnVQ2QTPN3f/2aBBQvNa+Ar
-         S51GToWvxdg0+HGyC7Ks+UH2RG8VlHvdGldPv7dSp+kIISJpxG2UIZ8yA/enr1HvL+oP
-         bDxiejYUeSWVqwWtvfeAeb3bi+VJprzzxc4iMFzMQUaDbLfn9GlYeHBMLbj7O0j9tr6m
-         ju4sOCScf99PnVGIfx+PLjVJJVaX6x2+EsUN9nk4AENyMsi71AiW4NttFLAcCIPKnQul
-         fEhg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701677856; x=1702282656;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Cv3+u5Nr1+Y2iihnZ3hSatBIAhuecZToXeDGh+GJlpE=;
-        b=WeMtFTQ58/c7MLBtEaLxN7XQnbedcv9eD4KcnBDW8kCCbKvjBG2Kh0E4VyTSIchDt8
-         mGXOPzI37+3e9De8zLeWbxfOZmItR+JhK8QciNxMZwSNeygpWfQCuC/DIJRzdbf6mv+7
-         FloyUjetlpmyFsCzTJARYKAMUpRCpJDe+Kq06DcR2Ck91KkE7jLiqqEwlb68nTWeREMk
-         oMqkDDhbhySpmYqzao7Jgzr4aaVSXHKjFOhhTFJPSsPbA39uwJGyrZLyjajaymlOMuEt
-         7OsYz+nUHgklKb7BmxezVWFDrSxTqqYDd/G7vgOxk2kxjvCg+jlOcUrz4ySAFy6cAVBf
-         YRRg==
-X-Gm-Message-State: AOJu0YyJDhHM/Y/WooVvdp71qC6WDwRVWG6KRkiWqQQ9u3G+FwhcuTJR
-	AXPGawOKGFjguEr1YEDgEuEbxdRCBaDh/CQnarF20A==
-X-Google-Smtp-Source: AGHT+IEFSa80B07cTwAmhpt40ecCmW1UM52sS0ruQH7XfF6sbBKQu+W0s56XmAPRzwmmQR5CnWl+0e+6m4sTSN9/1eA=
-X-Received: by 2002:a05:6102:292b:b0:464:77f2:554 with SMTP id
- cz43-20020a056102292b00b0046477f20554mr1865442vsb.38.1701677855333; Mon, 04
- Dec 2023 00:17:35 -0800 (PST)
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD983CB;
+	Mon,  4 Dec 2023 00:19:51 -0800 (PST)
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B45k8te017698;
+	Mon, 4 Dec 2023 08:19:48 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=7lyoP0LlnyFu/BiIos9IGHaAeEk3gWrvekSiH1bCIn4=;
+ b=RLFsYv4fiYvJnnn0rht1OjA7dOGI0xmtFVzY/zABzsQeDSMXPyG8ZGSe/9U7Ay0NeSeM
+ TBavSBakVzUQyROg+Y4d+MqFb2WI5dS5d+NrzELQ/UOsDa9FOK7qAxunx7Awxft479yA
+ e9/JhUCoCBqDE8ipOBIlFY+w+2V4V9UrkLHWx8w+Ge1hykOO0zDPKj5ixYtewJqaKYpv
+ p3eGMPAWL3uOif+EK8lW1XP20xLk5OXQwjZ6h7ADgXG/Y29JW06zeMTqNIKdsgH27DVB
+ xpOorKMUNeHO+PUniXi3BrcPjEyC4Qsy5+5Ncjv9smKFkmPy1WvgbTtT9pRYPp8ZyCtz 1w== 
+Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3us8wpgahs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 08:19:47 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B48JkiJ002607
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Dec 2023 08:19:46 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
+ 2023 00:19:40 -0800
+Message-ID: <34f7ac9b-e84d-45a0-9f43-c59fed7ee887@quicinc.com>
+Date: Mon, 4 Dec 2023 16:19:38 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201140840.323762-1-heiko@sntech.de>
-In-Reply-To: <20231201140840.323762-1-heiko@sntech.de>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 4 Dec 2023 09:17:23 +0100
-Message-ID: <CAMRc=McaQf+p1F3fP3pc8-icm1hjKv8VDLRAoXs5QGize1J=CQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: gpio: rockchip: add a pattern for gpio hogs
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linus.walleij@linaro.org, andy@kernel.org, linux-gpio@vger.kernel.org, 
-	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, quentin.schulz@theobroma-systems.com, 
-	Heiko Stuebner <heiko.stuebner@cherry.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
+        <agross@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
+References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
+ <20231130024046.25938-3-quic_tengfan@quicinc.com>
+ <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+ <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
+ <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
+ <c3e18a62-0d50-4291-94a2-17a51957253d@quicinc.com>
+ <6539d781-ecb2-4ffe-9daa-e82ec8d70bea@kernel.org>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <6539d781-ecb2-4ffe-9daa-e82ec8d70bea@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: cwUTpANtwVprO9cylqH2B0-jty5eIOyQ
+X-Proofpoint-ORIG-GUID: cwUTpANtwVprO9cylqH2B0-jty5eIOyQ
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-04_06,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0
+ mlxlogscore=745 impostorscore=0 adultscore=0 suspectscore=0
+ priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2311060000 definitions=main-2312040062
 
-On Fri, Dec 1, 2023 at 3:08=E2=80=AFPM Heiko Stuebner <heiko@sntech.de> wro=
-te:
->
-> From: Heiko Stuebner <heiko.stuebner@cherry.de>
->
-> Allow validating gpio-hogs defined inside the gpio controller node.
->
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@cherry.de>
-> ---
->  .../devicetree/bindings/gpio/rockchip,gpio-bank.yaml       | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.ya=
-ml b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> index affd823c881d..d76987ce8e50 100644
-> --- a/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/rockchip,gpio-bank.yaml
-> @@ -41,6 +41,13 @@ properties:
->    "#interrupt-cells":
->      const: 2
->
-> +patternProperties:
-> +  "^.+-hog(-[0-9]+)?$":
-> +    type: object
-> +
-> +    required:
-> +      - gpio-hog
-> +
->  required:
->    - compatible
->    - reg
-> --
-> 2.39.2
->
 
-Applied, thanks!
 
-Bart
+在 12/4/2023 4:14 PM, Krzysztof Kozlowski 写道:
+> On 04/12/2023 09:06, Tengfei Fan wrote:
+>>
+>>
+>> 在 12/4/2023 3:56 PM, Krzysztof Kozlowski 写道:
+>>> On 04/12/2023 02:57, Tengfei Fan wrote:
+>>>>
+>>>>
+>>>> 在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
+>>>>> On 30/11/2023 03:40, Tengfei Fan wrote:
+>>>>>> Add pinctrl driver for TLMM block found in SM4450 SoC.
+>>>>>>
+>>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>>>> ---
+>>>>>>     drivers/pinctrl/qcom/Kconfig.msm      |    8 +
+>>>>>>     drivers/pinctrl/qcom/Makefile         |    1 +
+>>>>>>     drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
+>>>>>>     3 files changed, 1022 insertions(+)
+>>>>>>     create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
+>>>>>>
+>>>>>
+>>>>> Hm, was this patch ever built?
+>>>>>
+>>>>> Best regards,
+>>>>> Krzysztof
+>>>>>
+>>>> This patch has been built before, I will check and compare if there are
+>>>> any errors and changes when I submitted this patch series.
+>>>>
+>>>
+>>> No, it wasn't built. I just tried - applied it and:
+>>>
+>>> pinctrl-sm4450.c:996:19: error: initialization of ‘int (*)(struct
+>>> platform_device *)’ from incompatible pointer type ‘void (*)(struct
+>>> platform_device *)’ [-Werror=incompatible-pointer-types]
+>>>     996 |         .remove = msm_pinctrl_remove,
+>>>         |                   ^~~~~~~~~~~~~~~~~~
+>>> ../drivers/pinctrl/qcom/pinctrl-sm4450.c:996:19: note: (near
+>>> initialization for ‘sm4450_tlmm_driver.remove’)
+>>>
+>>> So you just sent a patch which was not even compiled.
+>>>
+>>> NAK.
+>>>
+>>> Best regards,
+>>> Krzysztof
+>>>
+>> I compiled all the related patches together, but I did not compile this
+>> patch separately.
+> 
+> We talk about this patch here. Please do not send knowingly wrong code,
+> because it does not make sense and hurts bisectability.
+Sure, I will avoid similar problems in the future.
+> 
+>> The fact that there is a compilation problem is known, but because the
+>> patch is already reviewed-by, so a separate patch(patch 3) is submitted
+>> to fix the compilation error.
+> 
+> That's not the process. Each patch must be correct. Each.
+Yes, the correctness of each patch will be ensured in the future.
+> 
+> Best regards,
+> Krzysztof
+> 
+
+-- 
+Thx and BRs,
+Tengfei Fan
 
