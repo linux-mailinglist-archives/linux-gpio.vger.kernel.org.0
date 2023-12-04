@@ -1,117 +1,109 @@
-Return-Path: <linux-gpio+bounces-916-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-917-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27DF880280C
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 22:47:40 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56513802A01
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 02:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58A821C20997
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Dec 2023 21:47:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E354CB20851
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 01:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 900E81A598;
-	Sun,  3 Dec 2023 21:47:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AD9D17F0;
+	Mon,  4 Dec 2023 01:57:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="klrcDzH1"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="OHqR8SvF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qt1-x830.google.com (mail-qt1-x830.google.com [IPv6:2607:f8b0:4864:20::830])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3709D9
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 13:47:28 -0800 (PST)
-Received: by mail-qt1-x830.google.com with SMTP id d75a77b69052e-4254ad7b967so12273941cf.0
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 13:47:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701640047; x=1702244847; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=ypEtajSEZ/3+dju5T9JaBFEQ3JvraP41o/ylPX1p/IQ=;
-        b=klrcDzH1TM+HzbNLMLzDzDQXMq2zCpdLsEyZdIq6a+TUjTn+JQfzr5s1KzecLlr7v5
-         uCdPMmzBvWULsI1TD51henPtCmQ7c9M4IieN1rXCZUuQApndVWnD25ZZiyWe9UpXgEyZ
-         tbg4YY6+BeRVxN1fY+NIi1rSHoQfQCGsdrMb0Ym/0GoKycr4wUmchBurHNoFX2vr1ndv
-         FSjvomzDHJ7IsCVgFq9pzv/SvAqpagAf1CBP7segKEzbbyh5/k/y1dtQFNPPhrbnR+f6
-         Hod++Dt1K/Slv/M0iqutH36NJS9PN1MU9FM+LsMniPxgGoX7cp7zXKFiDR/mLiZnOj/9
-         wXzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701640047; x=1702244847;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ypEtajSEZ/3+dju5T9JaBFEQ3JvraP41o/ylPX1p/IQ=;
-        b=kkfsNPchTJ1EVhQmQxd9YpgUxqTcrC1dAUWvMWfdkIr9usIxVLGnm4ug1chwUQLzNf
-         VDpaez4CTgL3tJ39TQLsyk+dMctQi/U68W5hzDJVlpjJQhkdOhS53gxXao5R49cxKxvy
-         M6HSwf44KbiM/luPgw8IKpR3eS6LWX2S6BbCzi1FObgU9bD62augHF1RQF3AR96PBw0Y
-         EK8h+khkkXn2ebjuC5EJ+5xEP1CYmeJeFjfFZeD2eJb8x5a3Iky/148ZM7l8bQsuJmxZ
-         zj5XZn96m3KgDYeFJTLQngdOx0bRYGJoFl7GYH8hCcT1q9FvzdVFd+9l25f3kDmpGw73
-         UN6w==
-X-Gm-Message-State: AOJu0Yw8E/jk3Q5OSi0ij8a/tajUGj5hg++fxbNqQk8ASvcaKb/zTdNa
-	iE8Z8CFZgQThlgMuIpY1xCQbW2qpYh0XNz+FhdufWA==
-X-Google-Smtp-Source: AGHT+IHc/rln86HWRtRO8D+k4deS4wGOzHWIyvONBd5JHCCN4rJ37HsOLKPo9YqdJjypf9JsSc1dyZOBRmsFYFPuzZM=
-X-Received: by 2002:a05:622a:1752:b0:425:4043:96cc with SMTP id
- l18-20020a05622a175200b00425404396ccmr5772334qtk.89.1701640047675; Sun, 03
- Dec 2023 13:47:27 -0800 (PST)
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6263DA8;
+	Sun,  3 Dec 2023 17:57:28 -0800 (PST)
+Received: from pps.filterd (m0279866.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B41kavY025063;
+	Mon, 4 Dec 2023 01:57:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=qcppdkim1;
+ bh=Rah78uAY89ebyyX9kPALfkr8qngfwzR/N+ecXpvp8XI=;
+ b=OHqR8SvFuKjxX3qJYsEnhGWqj3eK6f2FVS6zLD5k5hAls8/Kvgs8XN14vBkKVi0XcCXq
+ lH58Ga8fqqIc6GQZXT+2arRxX29N8gOdtZtm7szvslrvf44l95i+uG0SThsd/6hBY2Mk
+ HiXtNZzOX2njCK7Uc9AXZwhL05CGNyWV+2TFCEeeGSdiSOWBkZQeGo6lHMm49bjz0kxX
+ dbcl6caE5bPA1my8VIpeyPZrAj5LmU5WLdgLPQHwiclZoYjjv3XEc0XfZckuk5y33UBo
+ 5cDXvBxq6ta+Abl5nEzhA9ncK7BdwsLLx7HGvLJ4z1hFm9Ldww9advWV/LMd2O6rfiDj fw== 
+Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uqwvhjhqe-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Dec 2023 01:57:25 +0000
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B41vOYi029235
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 4 Dec 2023 01:57:24 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 3 Dec
+ 2023 17:57:19 -0800
+Message-ID: <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
+Date: Mon, 4 Dec 2023 09:57:17 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
- <20231201160925.3136868-11-peter.griffin@linaro.org> <2854a9b5-d6c8-454c-bc3b-79744e613686@linaro.org>
-In-Reply-To: <2854a9b5-d6c8-454c-bc3b-79744e613686@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Sun, 3 Dec 2023 21:47:16 +0000
-Message-ID: <CADrjBPofpjB7iA3u1LGy61F_0dPX40ZrtJsHd6zumTOFu3bEjg@mail.gmail.com>
-Subject: Re: [PATCH v5 10/20] dt-bindings: soc: samsung: usi: add
- google,gs101-usi compatible
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
-	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
-	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
-	semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com, 
-	soc@kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
-	linux-serial@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
+To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
+        <agross@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
+References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
+ <20231130024046.25938-3-quic_tengfan@quicinc.com>
+ <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: sn_QD7iqzOCb85zgbV_HuurzrWZ7KyTY
+X-Proofpoint-ORIG-GUID: sn_QD7iqzOCb85zgbV_HuurzrWZ7KyTY
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-03_24,2023-11-30_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ adultscore=0 malwarescore=0 impostorscore=0 lowpriorityscore=0
+ phishscore=0 clxscore=1011 mlxscore=0 suspectscore=0 priorityscore=1501
+ mlxlogscore=736 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2312040013
 
-Hi Krzysztof,
 
-On Sun, 3 Dec 2023 at 15:10, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 01/12/2023 17:09, Peter Griffin wrote:
-> > From: Tudor Ambarus <tudor.ambarus@linaro.org>
-> >
-> > Add google,gs101-usi dedicated compatible for representing USI of Google
-> > GS101 SoC.
-> >
-> > Signed-off-by: Tudor Ambarus <tudor.ambarus@linaro.org>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml | 3 +++
-> >  1 file changed, 3 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> > index 61be1f2ddbe7..a10a438d89f0 100644
-> > --- a/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> > +++ b/Documentation/devicetree/bindings/soc/samsung/exynos-usi.yaml
-> > @@ -28,6 +28,9 @@ properties:
-> >                - samsung,exynosautov9-usi
-> >                - samsung,exynosautov920-usi
-> >            - const: samsung,exynos850-usi
-> > +      - items:
-> > +          - const: google,gs101-usi
->
-> This should be part of previous enum.
 
-will fix,
+在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
+> On 30/11/2023 03:40, Tengfei Fan wrote:
+>> Add pinctrl driver for TLMM block found in SM4450 SoC.
+>>
+>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>> ---
+>>   drivers/pinctrl/qcom/Kconfig.msm      |    8 +
+>>   drivers/pinctrl/qcom/Makefile         |    1 +
+>>   drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
+>>   3 files changed, 1022 insertions(+)
+>>   create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
+>>
+> 
+> Hm, was this patch ever built?
+> 
+> Best regards,
+> Krzysztof
+> 
+This patch has been built before, I will check and compare if there are 
+any errors and changes when I submitted this patch series.
 
-Thanks,
-
-Peter.
+-- 
+Thx and BRs,
+Tengfei Fan
 
