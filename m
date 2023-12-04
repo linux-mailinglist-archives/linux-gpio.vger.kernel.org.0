@@ -1,49 +1,60 @@
-Return-Path: <linux-gpio+bounces-932-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-933-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A09DA802D01
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:19:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 199EC802D5C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:38:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B6D9280F39
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:19:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 571A6B20953
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:38:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08D53DDB5;
-	Mon,  4 Dec 2023 08:19:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54BD5D29C;
+	Mon,  4 Dec 2023 08:38:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="RLFsYv4f"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="D1qGeoCD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD983CB;
-	Mon,  4 Dec 2023 00:19:51 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B45k8te017698;
-	Mon, 4 Dec 2023 08:19:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=7lyoP0LlnyFu/BiIos9IGHaAeEk3gWrvekSiH1bCIn4=;
- b=RLFsYv4fiYvJnnn0rht1OjA7dOGI0xmtFVzY/zABzsQeDSMXPyG8ZGSe/9U7Ay0NeSeM
- TBavSBakVzUQyROg+Y4d+MqFb2WI5dS5d+NrzELQ/UOsDa9FOK7qAxunx7Awxft479yA
- e9/JhUCoCBqDE8ipOBIlFY+w+2V4V9UrkLHWx8w+Ge1hykOO0zDPKj5ixYtewJqaKYpv
- p3eGMPAWL3uOif+EK8lW1XP20xLk5OXQwjZ6h7ADgXG/Y29JW06zeMTqNIKdsgH27DVB
- xpOorKMUNeHO+PUniXi3BrcPjEyC4Qsy5+5Ncjv9smKFkmPy1WvgbTtT9pRYPp8ZyCtz 1w== 
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3us8wpgahs-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 08:19:47 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B48JkiJ002607
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Dec 2023 08:19:46 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
- 2023 00:19:40 -0800
-Message-ID: <34f7ac9b-e84d-45a0-9f43-c59fed7ee887@quicinc.com>
-Date: Mon, 4 Dec 2023 16:19:38 +0800
+Received: from mail-wm1-x331.google.com (mail-wm1-x331.google.com [IPv6:2a00:1450:4864:20::331])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 84187CB
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 00:38:25 -0800 (PST)
+Received: by mail-wm1-x331.google.com with SMTP id 5b1f17b1804b1-40a4848c6e1so42828155e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 00:38:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1701679104; x=1702283904; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=mXHGFzYh/eKEpUPYl1Ap5PY48QYUpYTuUF24q1tFUVc=;
+        b=D1qGeoCDq5zYB+NJH9GWk24cNo7z/weNso2JJzXgjZWQLOXJMWGEdg46MxBBGcPDo6
+         eeSj1vDRp4vpyFgUYIijQsEoHHelAGomZRwh3P8iFzXaH10W/ZFSfqq/d6z+B1EWwHR9
+         YWzaTR1UsOUffe85mzS3+jpqXKNQW+SGEVDGCDzSG3X4EAg6uzCjkYxICFNmLLPP2QQA
+         uOL59qNrt3839+SCDExgg+FYdNMw1afpGBGHIdgMWRXj/a2o6O7J5Oohi/UluREbNpxP
+         sc8V1jioME0GXjXg7N/tyYrIVSlRWzamGT9ydTpIdt/Qt03D+RZIj7cu/DCyv7V5h7iI
+         FIrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701679104; x=1702283904;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mXHGFzYh/eKEpUPYl1Ap5PY48QYUpYTuUF24q1tFUVc=;
+        b=b0Y+7763h3EaQc7a7Qr4Pvuq/1o/PAqa8SUTvmTbH6vTLKfWpJODyiZrg+ShxU9R/C
+         lB6Xcb4vQ89m8M2z3fr1zTDE2CcEXdngIAUmPJP+MfG+6BJYpvwZJgT9JRtCUCBQN0QL
+         AMbPUemMWx76CxItlYbU7scdQBJ1JbxlyMRjbtQp4fo5nIURYYAOZ5CmtDZEaeQtVQQu
+         5kVRBpBeIzjBI+Ddpxy1gLjQglu33xqx8lUYZXxc8lVncqOaPdCXeQWEkNgSK1GVXJGU
+         rh6nNDvSkyl7b2TdK3lk9kwV2aBOtOh1pe4uNXH4CPDmMxeLB3g0EQC02kGVs1uNJu3V
+         oe7Q==
+X-Gm-Message-State: AOJu0YxwhjKDc6pb21jtUqZ3/1ef1Q1IpNQTyVbhXv5epPmZHDSSQtnH
+	5Q34y584T9W5vA7Q6n+kXHdWGuZOh/E7VQ0fqyI=
+X-Google-Smtp-Source: AGHT+IELNYw3RkOXAmb8vkG3gRt9A+IRTNasMaoq3lVyPbRRKkTGTZN2fAw1PANrCWuSZFt9WzbeTQ==
+X-Received: by 2002:a05:600c:164a:b0:40c:5c9:287 with SMTP id o10-20020a05600c164a00b0040c05c90287mr1354668wmn.195.1701679103805;
+        Mon, 04 Dec 2023 00:38:23 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.22])
+        by smtp.gmail.com with ESMTPSA id bd22-20020a05600c1f1600b004090798d29csm14232581wmb.15.2023.12.04.00.38.21
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Dec 2023 00:38:23 -0800 (PST)
+Message-ID: <b3701927-e41a-44d8-8f91-da245b76f532@tuxon.dev>
+Date: Mon, 4 Dec 2023 10:38:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -51,107 +62,99 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
-To: Krzysztof Kozlowski <krzk@kernel.org>, <andersson@kernel.org>,
-        <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
-References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
- <20231130024046.25938-3-quic_tengfan@quicinc.com>
- <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
- <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
- <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
- <c3e18a62-0d50-4291-94a2-17a51957253d@quicinc.com>
- <6539d781-ecb2-4ffe-9daa-e82ec8d70bea@kernel.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <6539d781-ecb2-4ffe-9daa-e82ec8d70bea@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH 10/14] arm64: renesas: r9a08g045: Add Ethernet nodes
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux@armlinux.org.uk, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com,
+ afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com,
+ eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
+ linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
+ <20231120070024.4079344-11-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
+ <96dd3f54-9560-4587-b4e8-bf75422ff5ef@tuxon.dev>
+ <CAMuHMdWGbEhBdzK4Swu4uX05vX7H2Ow4uE1C=JVNOrdcbZYL=A@mail.gmail.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdWGbEhBdzK4Swu4uX05vX7H2Ow4uE1C=JVNOrdcbZYL=A@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: cwUTpANtwVprO9cylqH2B0-jty5eIOyQ
-X-Proofpoint-ORIG-GUID: cwUTpANtwVprO9cylqH2B0-jty5eIOyQ
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-04_06,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0
- mlxlogscore=745 impostorscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2312040062
 
 
 
-在 12/4/2023 4:14 PM, Krzysztof Kozlowski 写道:
-> On 04/12/2023 09:06, Tengfei Fan wrote:
+On 04.12.2023 10:02, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Mon, Dec 4, 2023 at 8:41 AM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
+>> On 01.12.2023 19:35, Geert Uytterhoeven wrote:
+>>> On Mon, Nov 20, 2023 at 8:01 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>>
+>>>> Add Ethernet nodes available on RZ/G3S (R9A08G045).
+>>>>
+>>>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>>>
+>>> Thanks for your patch!
+>>>
+>>>> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>>>> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>>>> @@ -149,6 +149,38 @@ sdhi2: mmc@11c20000 {
+>>>>                         status = "disabled";
+>>>>                 };
+>>>>
+>>>> +               eth0: ethernet@11c30000 {
+>>>> +                       compatible = "renesas,r9a08g045-gbeth", "renesas,rzg2l-gbeth";
+>>>> +                       reg = <0 0x11c30000 0 0x10000>;
+>>>> +                       interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+>>>> +                                    <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+>>>> +                                    <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +                       interrupt-names = "mux", "fil", "arp_ns";
+>>>> +                       clocks = <&cpg CPG_MOD R9A08G045_ETH0_CLK_AXI>,
+>>>> +                                <&cpg CPG_MOD R9A08G045_ETH0_CLK_CHI>,
+>>>> +                                <&cpg CPG_MOD R9A08G045_ETH0_REFCLK>;
+>>>> +                       clock-names = "axi", "chi", "refclk";
+>>>> +                       resets = <&cpg R9A08G045_ETH0_RST_HW_N>;
+>>>> +                       power-domains = <&cpg>;
+>>>
+>>> Perhaps add a default phy mode, like on other SoCs?
+>>>
+>>>     phy-mode = "rgmii"';
 >>
+>> I skipped this (even it was available on the other SoCs) as I consider the
+>> phy-mode is board specific.
+> 
+> IC.  Still, it's good to have some consistency across boards.
+> 
+>>> Also missing:
+>>>
+>>>     #address-cells = <1>;
+>>>     #size-cells = <0>;
 >>
->> 在 12/4/2023 3:56 PM, Krzysztof Kozlowski 写道:
->>> On 04/12/2023 02:57, Tengfei Fan wrote:
->>>>
->>>>
->>>> 在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
->>>>> On 30/11/2023 03:40, Tengfei Fan wrote:
->>>>>> Add pinctrl driver for TLMM block found in SM4450 SoC.
->>>>>>
->>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
->>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>>>>> ---
->>>>>>     drivers/pinctrl/qcom/Kconfig.msm      |    8 +
->>>>>>     drivers/pinctrl/qcom/Makefile         |    1 +
->>>>>>     drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
->>>>>>     3 files changed, 1022 insertions(+)
->>>>>>     create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
->>>>>>
->>>>>
->>>>> Hm, was this patch ever built?
->>>>>
->>>>> Best regards,
->>>>> Krzysztof
->>>>>
->>>> This patch has been built before, I will check and compare if there are
->>>> any errors and changes when I submitted this patch series.
->>>>
->>>
->>> No, it wasn't built. I just tried - applied it and:
->>>
->>> pinctrl-sm4450.c:996:19: error: initialization of ‘int (*)(struct
->>> platform_device *)’ from incompatible pointer type ‘void (*)(struct
->>> platform_device *)’ [-Werror=incompatible-pointer-types]
->>>     996 |         .remove = msm_pinctrl_remove,
->>>         |                   ^~~~~~~~~~~~~~~~~~
->>> ../drivers/pinctrl/qcom/pinctrl-sm4450.c:996:19: note: (near
->>> initialization for ‘sm4450_tlmm_driver.remove’)
->>>
->>> So you just sent a patch which was not even compiled.
->>>
->>> NAK.
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> I compiled all the related patches together, but I did not compile this
->> patch separately.
+>> Same for these.
 > 
-> We talk about this patch here. Please do not send knowingly wrong code,
-> because it does not make sense and hurts bisectability.
-Sure, I will avoid similar problems in the future.
-> 
->> The fact that there is a compilation problem is known, but because the
->> patch is already reviewed-by, so a separate patch(patch 3) is submitted
->> to fix the compilation error.
-> 
-> That's not the process. Each patch must be correct. Each.
-Yes, the correctness of each patch will be ensured in the future.
-> 
-> Best regards,
-> Krzysztof
-> 
+> These are required, and always have the same values, so it makes more
+> sense to have them in the SoC .dtsi file, once.
 
--- 
-Thx and BRs,
-Tengfei Fan
+I remember I had a compilation warning with an Ethernet controller
+configured with fixed-link having #address-cells, #size-cells. With
+fixed-link these were not needed.
+
+Anyway... I'll keep all in dtsi if you prefer it this way.
+
+Thank you,
+Claudiu Beznea
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
