@@ -1,127 +1,125 @@
-Return-Path: <linux-gpio+bounces-977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA3CD803862
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 16:11:41 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DCC5803884
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 16:18:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DC5521C20ABA
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 15:11:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5886D1C20AA8
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 15:18:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1223E2C190;
-	Mon,  4 Dec 2023 15:11:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 597122C19D;
+	Mon,  4 Dec 2023 15:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="nWBU38NG";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rITqltm8"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="WPtHCzg4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out4-smtp.messagingengine.com (out4-smtp.messagingengine.com [66.111.4.28])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D2B7FD3;
-	Mon,  4 Dec 2023 07:11:34 -0800 (PST)
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailout.nyi.internal (Postfix) with ESMTP id 1405F5C009F;
-	Mon,  4 Dec 2023 10:11:34 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Mon, 04 Dec 2023 10:11:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-type:content-type:date:date:from:from:in-reply-to
-	:in-reply-to:message-id:mime-version:references:reply-to:sender
-	:subject:subject:to:to; s=fm3; t=1701702694; x=1701789094; bh=EX
-	CwC2QO1UvSxQX0tDRiqh9sUcZIzv34aR65e3WonXg=; b=nWBU38NGX0jmRlEgMU
-	nJ5L2yOjTVln9/4gN9a1EhCFkY2yXZPbf+ispfUlXLSAwXqKofPteRHJlmOVCmxj
-	2JfXkyzjNtUOPRvzx18xNbpFgdWRjaIQXhioKV9nx8TEI5Ok7R/wQPCXANzCUGej
-	5/v//zFjG5GtsYSRzmh31yF+bYXdn2Bt288AYV4X7KRxgsRvVofrY3TsnNCmSe3Y
-	nVilt4OnJIckD2In9QAlAprPtmJCeo+CBna7pI8FWymtKZTMPp8BVYzdPX+4jAn4
-	ntLWoCVw/PvR2FoShYuWMnveCjj6MsEq0giIIL+TX+tp7/emh3fg9cXsVy8er1eb
-	6GhA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-type:content-type:date:date
-	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
-	:message-id:mime-version:references:reply-to:sender:subject
-	:subject:to:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-	:x-sasl-enc; s=fm1; t=1701702694; x=1701789094; bh=EXCwC2QO1UvSx
-	QX0tDRiqh9sUcZIzv34aR65e3WonXg=; b=rITqltm8gzItjnKwd450G09/lyWvs
-	9H26qZDmz3u6QoUJYPDIhksn8sh25F+ttyx4jpS/L322xxWp8TMd7hlLNolYjeWZ
-	EHwzK8PrmOeZkd7z2QYA3WS7849PH0ISCyPoGqNTH3GfBXd9pGg9gW+TACfDam4N
-	adbpm55UI8x5zU7ggrhoJH3GRE6svm4YpAgwzi6cCQ2U+NNPUOoxtZzXnwCk/iQl
-	vdQ5df8GNSZacKQ8RRP7Hkb5SCxUvVA7HjGiQIjEP4OxZlb7OKOMOnzGfA3CBvVB
-	WjJuNpPgcVT8Syz9KM/pUYAZASgPjMvWZ6JB2tdomuhycaUoZEcJXcLcg==
-X-ME-Sender: <xms:JextZe6Hx2lXS0g19VPPjgsWqx8gFJZQybZ0ai58qqlfgaOm5dngJA>
-    <xme:JextZX7QcknLCl0Ydt1YjFJGQghhSpIlZw1lg4iSsTxFnlZbumCioGrOlVmB3XQY9
-    0JY9oMUCb2SLdWBnmo>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudejiedgjeehucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
-    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:JextZddRvNyWGthTpjDj3iDLQbRg5A8oX3xbukrRdReUWwuxp4oSnw>
-    <xmx:JextZbJuzVbMyZ3bjXwI1GogKPLvGrLhqsyN6evl-acU0XobtLtjAA>
-    <xmx:JextZSLSRytw9mi494nYmFAJ-52FKES-kctrY1HLKLvBxkKWQRQ6Jg>
-    <xmx:JuxtZR9ej3Fua_SZnvMVBsXXIm_d-U6mw4xo2yr6Z_ZR_ydGpfhucQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 046DBB60089; Mon,  4 Dec 2023 10:11:32 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.9.0-alpha0-1178-geeaf0069a7-fm-20231114.001-geeaf0069
+Received: from mail-wm1-x343.google.com (mail-wm1-x343.google.com [IPv6:2a00:1450:4864:20::343])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AD8E4C0
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 07:18:20 -0800 (PST)
+Received: by mail-wm1-x343.google.com with SMTP id 5b1f17b1804b1-40c039e9719so24657115e9.1
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 07:18:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1701703099; x=1702307899; darn=vger.kernel.org;
+        h=mime-version:user-agent:references:message-id:in-reply-to:subject
+         :cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=RsEmVqReDIIBR3i4Z2CPa0QYjl1YjrUYLXW2Vt7oYr4=;
+        b=WPtHCzg4DLqkjb2O+ZO2bxfR8/icO6OhL6lEKeYH5aWwGF7HPUnkHJepLMZwFpO4Ky
+         DlhPk+MLGi4OWFO1rIk7H2hTxIDPI99Ynh3rPqngdzjhNY8mTfgBk5bYPLVlRmVO3363
+         GZP48wBEAlZrgu4oFd/k6OHnAdeoDV2WRUJx2dmPlXz2/AxOjcQGiZ1i7r5JOOJNjOci
+         mN5SOBmxAq3ZSSSXb31mX0hj+jhlhj/qAto48ekExyGDlFJna2mLsOGn8ArE9zuDN7yk
+         atXa9mGPaZMVMbh9FL1AaWnkMt+bFwXjL2OhU2c9pLC7UEP1idJCVRPi/MVHQIXh0cBG
+         KOkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701703099; x=1702307899;
+        h=mime-version:user-agent:references:message-id:in-reply-to:subject
+         :cc:to:date:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=RsEmVqReDIIBR3i4Z2CPa0QYjl1YjrUYLXW2Vt7oYr4=;
+        b=EikvHhiZ8uDaw27k933cG8G/tyysYl2dGQTncmx4k5mdJg8wAIndfHlYAAUMnkLH3O
+         WUpvRCFxxGdApaIFEWcZZdGupGGhqtg423TleJ5NKJjOeltk4CUymE50Btiq8oPHn0H1
+         f7toHxzlO8VcQFKlA2TYXMjPpgTT4DRWqPKjMa6qZU8/Floz+On5UvtgMT66OvF/hSUj
+         tZVIBCXBCnVEHEpDTJkbKzP+qV2Bzqv8uBjGCDSQ4/l6VR+SrtO14kb0o7HAInIp625F
+         XG64bkDQ00vOK040zvw9wHLab26wEN7pIYsp72ruvmhNG3I7nrFUmuakEaKNUYq5zL7y
+         5v0w==
+X-Gm-Message-State: AOJu0YxwkB5HV1Mij6TbGU7sQUQYAsaxPPqWBcn+MrI+jF3uokUqOs1X
+	4QLh7bNkYy2OiXI5sQ8J29YxVg==
+X-Google-Smtp-Source: AGHT+IG4B+NlO+gk3Rg02QZFxTBy3g2VWTosovHo6HF5IQBKkdHE03A2H1v+GwZn031SukgDCWwPBw==
+X-Received: by 2002:a05:600c:3ba4:b0:408:3f87:cba with SMTP id n36-20020a05600c3ba400b004083f870cbamr2675403wms.39.1701703099168;
+        Mon, 04 Dec 2023 07:18:19 -0800 (PST)
+Received: from localhost ([193.86.92.180])
+        by smtp.gmail.com with ESMTPSA id v9-20020a05600c444900b0040b461550c4sm19050421wmn.42.2023.12.04.07.18.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Dec 2023 07:18:18 -0800 (PST)
+From: Jiri Kosina <jkosina@suse.com>
+X-Google-Original-From: Jiri Kosina <jikos@kernel.org>
+Date: Mon, 4 Dec 2023 16:18:19 +0100 (CET)
+To: Mario Limonciello <mario.limonciello@amd.com>
+cc: Linus Walleij <linus.walleij@linaro.org>, 
+    Benjamin Tissoires <benjamin.tissoires@redhat.com>, 
+    "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
+    open list <linux-kernel@vger.kernel.org>, 
+    Basavaraj Natikar <Basavaraj.Natikar@amd.com>, 
+    "open list:HID CORE LAYER" <linux-input@vger.kernel.org>, 
+    stable@vger.kernel.org, Marcus Aram <marcus+oss@oxar.nl>, 
+    Mark Herbert <mark.herbert42@gmail.com>
+Subject: Re: [PATCH 1/2] HID: i2c-hid: Add IDEA5002 to
+ i2c_hid_acpi_blacklist[]
+In-Reply-To: <20231203032431.30277-2-mario.limonciello@amd.com>
+Message-ID: <nycvar.YFH.7.76.2312041617590.29220@cbobk.fhfr.pm>
+References: <20231203032431.30277-1-mario.limonciello@amd.com> <20231203032431.30277-2-mario.limonciello@amd.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <ad6afb94-e221-4adb-a942-af59f5d7b92f@app.fastmail.com>
-In-Reply-To: 
- <CA+G9fYs1g2Pt=DQeaJC+3ZJTeMwKAs9GuGJ9k6BcwKwEXcn5kQ@mail.gmail.com>
-References: 
- <CA+G9fYs1g2Pt=DQeaJC+3ZJTeMwKAs9GuGJ9k6BcwKwEXcn5kQ@mail.gmail.com>
-Date: Mon, 04 Dec 2023 16:11:11 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Naresh Kamboju" <naresh.kamboju@linaro.org>,
- "Linux ARM" <linux-arm-kernel@lists.infradead.org>,
- "open list" <linux-kernel@vger.kernel.org>, lkft-triage@lists.linaro.org,
- "Linux Regressions" <regressions@lists.linux.dev>,
- "moderated list:ARM/Mediatek SoC..." <linux-mediatek@lists.infradead.org>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, sean.wang@kernel.org,
- "Russell King" <linux@armlinux.org.uk>
-Subject: Re: arm: gcc-8: drivers/pinctrl/mediatek/../core.h:211:21: error: initializer
- element is not constant (struct group_desc)
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
 
-On Mon, Dec 4, 2023, at 13:08, Naresh Kamboju wrote:
-> Following build errors noticed on Linux next-20231204 tag with gcc-8 toolchain
-> for arm and arm64.
->
-> ## Test Regressions (compared to next-20231201)
-> * arm, build
->   - gcc-8-defconfig
->
-> * arm64, build
->   - gcc-8-defconfig
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> Build log arm and arm64:
-> ------------
-> In file included from drivers/pinctrl/mediatek/pinctrl-moore.h:21,
->                  from drivers/pinctrl/mediatek/pinctrl-mt7623.c:11:
-> drivers/pinctrl/mediatek/../core.h:211:21: error: initializer element
-> is not constant
->  (struct group_desc) {      \
+On Sat, 2 Dec 2023, Mario Limonciello wrote:
 
+> Users have reported problems with recent Lenovo laptops that contain
+> an IDEA5002 I2C HID device. Reports include fans turning on and
+> running even at idle and spurious wakeups from suspend.
+> 
+> Presumably in the Windows ecosystem there is an application that
+> uses the HID device. Maybe that puts it into a lower power state so
+> it doesn't cause spurious events.
+> 
+> This device doesn't serve any functional purpose in Linux as nothing
+> interacts with it so blacklist it from being probed. This will
+> prevent the GPIO driver from setting up the GPIO and the spurious
+> interrupts and wake events will not occur.
+> 
+> Cc: stable@vger.kernel.org # 6.1
+> Reported-and-tested-by: Marcus Aram <marcus+oss@oxar.nl>
+> Reported-and-tested-by: Mark Herbert <mark.herbert42@gmail.com>
+> Closes: https://gitlab.freedesktop.org/drm/amd/-/issues/2812
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+>  drivers/hid/i2c-hid/i2c-hid-acpi.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/hid/i2c-hid/i2c-hid-acpi.c b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+> index ac918a9ea8d3..1b49243adb16 100644
+> --- a/drivers/hid/i2c-hid/i2c-hid-acpi.c
+> +++ b/drivers/hid/i2c-hid/i2c-hid-acpi.c
+> @@ -40,6 +40,11 @@ static const struct acpi_device_id i2c_hid_acpi_blacklist[] = {
+>  	 * ICN8505 controller, has a _CID of PNP0C50 but is not HID compatible.
+>  	 */
+>  	{ "CHPN0001" },
+> +	/*
+> +	 * The IDEA5002 ACPI device causes high interrupt usage and spurious
+> +	 * wakeups from suspend.
+> +	 */
+> +	{ "IDEA5002" },
 
-This apparently comes from c0c8dd0a7773 ("pinctrl: core: Add a
-convenient define PINCTRL_GROUP_DESC()") and following patches
-from Andy Shevchenko (added to Cc).
+Applied to hid.git#for-6.7/upstream-fixes. Thanks,
 
-I also checked different compiler versions and found that the
-new code works fine with gcc-13.2.0, but not with gcc-12 or
-older.
+-- 
+Jiri Kosina
+SUSE Labs
 
-      Arnd
 
