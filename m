@@ -1,137 +1,95 @@
-Return-Path: <linux-gpio+bounces-986-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-988-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A7F9803993
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 17:04:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7960E8039FA
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 17:19:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5DE0281513
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 16:04:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 221531F21214
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 16:19:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 775FE2D62D;
-	Mon,  4 Dec 2023 16:04:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="g42ijmI7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 78A7E2D796;
+	Mon,  4 Dec 2023 16:19:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D99D7AC;
-	Mon,  4 Dec 2023 08:04:46 -0800 (PST)
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B4FEVvg005446;
-	Mon, 4 Dec 2023 16:04:43 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=7SyjEZYix8RBtB52xZQgB2+0lCKxgrfJUq97NfAQsHg=;
- b=g42ijmI7q87bYocyUZZz6GyVLgBjDsSTVl/xah26NDsRXq03zXLU3DqZViuo1cS0gzYP
- 900uS1MlfbvTHLmGMdSuwZQHUcvWXo1bOyu1Lgdxaw0qjUNV+KqZPxVjdQ/VXV2ZKMUV
- 9T5gOWST7Zc0lKinvjs60T6qjZa30FejhcmjsUF5SFpP1DJE/yCzP6AUmK1VaIAXvRs2
- gjdjg2LcQEveES+nhcBZE3/hXj85xujlfbei6n3uAPLhQkeVJ5H5u4Ultf0jtJEzq4C1
- vix+T16wDtjSFlWUVi8zCI++8ItvIYKDMSw0Y54bZhh+oFZh/JHsjNjablmKkPzsLQx9 cg== 
-Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uqwbqmec6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 16:04:43 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B4G4goT021466
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Dec 2023 16:04:42 GMT
-Received: from [10.110.89.58] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
- 2023 08:04:39 -0800
-Message-ID: <e3817ea6-3cdc-418f-bbeb-ed93e7f537e3@quicinc.com>
-Date: Mon, 4 Dec 2023 08:04:38 -0800
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DDE5CCB;
+	Mon,  4 Dec 2023 08:19:03 -0800 (PST)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-da7ea62e76cso3051801276.3;
+        Mon, 04 Dec 2023 08:19:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701706743; x=1702311543;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=p7w+3vK1cdmy3dgE8i5YLvNj03CSI+W7QHOKK1BsUDk=;
+        b=Yd2/xKa+HXY8quN6KqHD4odBxQHNcYG71LvKD71RZgiOXB7CEjXCp58SCuJLJKKxnM
+         y6YAdi9VRxb9yvJ2NohFzcRnbSjbrvn9aqcC7pjxuCN2o0MG3PexNpzfFLSoWB35E4TY
+         yA8ok86YR5gC3CrY/1PEN7aQYbu0jiP4PVcAei9Yd/4sgK1iqfbO2uthQB4xWn+GUCh9
+         e9s459ZRCJLLR49NZKLr22/IOLY/qsAI/+ZU3NGXaotwwkRI12S50BvM4CQ6yg52zwrE
+         g69QbdfDrTbS7YPMl+qM81sOt46WI4aei6bZfaKMnklY8NpM4eXfep3LdMGFL9pSq1qo
+         aurA==
+X-Gm-Message-State: AOJu0Yy19Nsgoh+V0+8aw0FRfrbI56EChKB5Wp4elUV/aRyyprPQpmTT
+	cizJ+YmyAELYoQHRDNUbHb99T56XLOwQYg==
+X-Google-Smtp-Source: AGHT+IGiV1NdBNdmG+XCdpSpHlBoKkLvNa8BpKiX4YQW400Yhduo9FygSvUQvfZlI6LMeImPb/kpNg==
+X-Received: by 2002:a0d:dbd5:0:b0:5d7:1941:aad with SMTP id d204-20020a0ddbd5000000b005d719410aadmr3154455ywe.72.1701706742991;
+        Mon, 04 Dec 2023 08:19:02 -0800 (PST)
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
+        by smtp.gmail.com with ESMTPSA id u189-20020a8179c6000000b005d34a381f59sm3368108ywc.102.2023.12.04.08.19.01
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Dec 2023 08:19:01 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5d3d5b10197so37164417b3.2;
+        Mon, 04 Dec 2023 08:19:01 -0800 (PST)
+X-Received: by 2002:a81:9808:0:b0:5d3:464d:18d4 with SMTP id
+ p8-20020a819808000000b005d3464d18d4mr3058167ywg.21.1701706740819; Mon, 04 Dec
+ 2023 08:19:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzk@kernel.org>,
-        Tengfei Fan
-	<quic_tengfan@quicinc.com>, <andersson@kernel.org>,
-        <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
-References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
- <20231130024046.25938-3-quic_tengfan@quicinc.com>
- <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
- <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
- <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
-From: Jeff Johnson <quic_jjohnson@quicinc.com>
-In-Reply-To: <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
+References: <20231204160033.1872569-1-andriy.shevchenko@linux.intel.com> <20231204160033.1872569-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231204160033.1872569-2-andriy.shevchenko@linux.intel.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 4 Dec 2023 17:18:49 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU58NjjdOOLA_T1jr1u=H+2eVN69f1FDc6GhiXEenaxLw@mail.gmail.com>
+Message-ID: <CAMuHMdU58NjjdOOLA_T1jr1u=H+2eVN69f1FDc6GhiXEenaxLw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/5] pinctrl: renesas: Mark local variable with const
+ in ->set_mux()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	openbmc@lists.ozlabs.org, linux-renesas-soc@vger.kernel.org, 
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: QTtMnbm3_qEodrRL0BT35rbhPm5kbEM6
-X-Proofpoint-GUID: QTtMnbm3_qEodrRL0BT35rbhPm5kbEM6
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-04_15,2023-12-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- lowpriorityscore=0 priorityscore=1501 malwarescore=0 spamscore=0
- suspectscore=0 bulkscore=0 adultscore=0 impostorscore=0 phishscore=0
- mlxlogscore=801 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312040122
+Content-Transfer-Encoding: quoted-printable
 
-On 12/3/2023 11:56 PM, Krzysztof Kozlowski wrote:
-> On 04/12/2023 02:57, Tengfei Fan wrote:
->>
->>
->> 在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
->>> On 30/11/2023 03:40, Tengfei Fan wrote:
->>>> Add pinctrl driver for TLMM block found in SM4450 SoC.
->>>>
->>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
->>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>>> ---
->>>>   drivers/pinctrl/qcom/Kconfig.msm      |    8 +
->>>>   drivers/pinctrl/qcom/Makefile         |    1 +
->>>>   drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
->>>>   3 files changed, 1022 insertions(+)
->>>>   create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
->>>>
->>>
->>> Hm, was this patch ever built?
->>>
->>> Best regards,
->>> Krzysztof
->>>
->> This patch has been built before, I will check and compare if there are 
->> any errors and changes when I submitted this patch series.
->>
-> 
-> No, it wasn't built. I just tried - applied it and:
-> 
-> pinctrl-sm4450.c:996:19: error: initialization of ‘int (*)(struct
-> platform_device *)’ from incompatible pointer type ‘void (*)(struct
-> platform_device *)’ [-Werror=incompatible-pointer-types]
->   996 |         .remove = msm_pinctrl_remove,
->       |                   ^~~~~~~~~~~~~~~~~~
-> ../drivers/pinctrl/qcom/pinctrl-sm4450.c:996:19: note: (near
-> initialization for ‘sm4450_tlmm_driver.remove’)
-> 
-> So you just sent a patch which was not even compiled.
-> 
-> NAK.
-> 
-> Best regards,
-> Krzysztof
-> 
+On Mon, Dec 4, 2023 at 5:02=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> We are not going to change pins in the ->set_mux() callback. Mark
+> the local variable with a const qualifier. While at it, make it
+> also unsigned.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The problem here is patch 2/4 incorrectly initializes .remove and patch
-3/4 changes it to correctly use .remove_new. Bisection at patch 2
-doesn't build.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Those two patches should be squashed
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
