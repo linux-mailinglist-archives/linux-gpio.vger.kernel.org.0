@@ -1,60 +1,61 @@
-Return-Path: <linux-gpio+bounces-922-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-923-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B8200802C45
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:42:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 80DDD802C56
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:50:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 370371F210B6
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 07:42:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 049F11F2107D
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 07:50:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D7DC129;
-	Mon,  4 Dec 2023 07:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18196C14C;
+	Mon,  4 Dec 2023 07:50:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Hvof9gE1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ixhOnnTa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02436F2
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 23:41:56 -0800 (PST)
-Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40c05ce04a8so17848345e9.0
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 23:41:55 -0800 (PST)
+Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4EEC8101
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 23:49:55 -0800 (PST)
+Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-a1a0bc1e415so322357366b.0
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 23:49:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1701675714; x=1702280514; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=c8G1sh0qsI8d58akFwoRpnCXTsdhgVmXQ1PhU0QEiJM=;
-        b=Hvof9gE1GoQ+OfRFXpgiu2mIiTaIJdI356AHy95RhmF2FNZ1ms0wtP7NpMes0r3qLZ
-         ZWmo99RKANNBN6pm/CvRXJJcONHeRgPf9isIDMwIPsRfXfh3YsQUP4VNbhxwRJkRahyT
-         XnMwWcYqQf/9b8j2VIpyIjbLHfe7or0B58Eu9wpB074MKPO/W7zqRlXQrHIG5L8WRjYr
-         0n4aByVFHP1AKOjih0r8w1YLXB6+JyYLbxIfuoA4eu/m5x+BIepiykB2dGZTgv3tCnp0
-         TssAjm887DMBhtDMbLpTwNvniznWdoQjqLrwiMUsWmMO02r8X4B4AB0H4aKiZp4vNXn7
-         brjw==
+        d=linaro.org; s=google; t=1701676194; x=1702280994; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Qy9EsjQw1g9VRkevvbX9uBsJyMuEslts0ijpZTiewwo=;
+        b=ixhOnnTa9Bz9Md9fuBU+xoK6a35lvmCOxLtbn1z0vRHvyVj+VY5TJm7jVXjqvekZzt
+         JaFWTCFOp++VEt2fZLh2A2FsVGqI8K86BL8OD9Izy8PVghXap/AQadnrLmfv2unC/jcE
+         1+Qx3nW/5vnR9JQhTt6FA0hipP7JsaUJkkLFFGF7YX04SLRQwt8qeVzqYV+/Q1e6feME
+         X8UwMpJfgwaoqK0rWQREwa3TWWBz9mklTJeY+GTdMI4fasxM95eiWw7AMm5E9IIhrM0/
+         lLsBNQLd2ep0BND4oOOmd8Sby2uWQK1LUJJZvXsk3rS8Kf3yNrsR6OXxWHeVRuVVSn+7
+         kJaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701675714; x=1702280514;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=c8G1sh0qsI8d58akFwoRpnCXTsdhgVmXQ1PhU0QEiJM=;
-        b=Jaw/H0q6+INEe4vJR1z6W9LnJK782KMd3HiioqYgUE4o6N2806UhXYxc84bazAc0qF
-         1tLfPHFX4uxY8uHzl312rniysQ0Jx7D8v37KLe43x7EdlM7qJIsw1u5vN1oFC/9ZyYjG
-         lPmE8NQDkErEqPd6AKuKGeO3lSSWVMWyTeKDn0LxGg3X89DEJZ4ZI2J11Hd51r50U/qG
-         U5RPpmDh2j5NeI2XbevnrokDOSNvXHXCG+gKehZg3hizxu+RNRtxQ4CtVvKVNNFSs1oq
-         vZtYU6rJyVQauxQMKKJRQj7rMkxURTFuL+UuO8QLRIQ//I6Y1wi1OCEizX4nekYunb4j
-         VUIw==
-X-Gm-Message-State: AOJu0YwIIBRvhasts9005IFhKXmbQaT++9bnqhSJYThTLWW2T9Zb+HPg
-	Jal3oBZOqn+x8LzN0scpLCw5HA==
-X-Google-Smtp-Source: AGHT+IGnFhIB39yiIipKRI//SLw4hneqeadl9YkXMdwKranCz3MpSxZ/BicSrPOtY7Bi6Mkk854YEQ==
-X-Received: by 2002:a05:600c:3488:b0:40b:5f03:b3ef with SMTP id a8-20020a05600c348800b0040b5f03b3efmr1153446wmq.273.1701675714498;
-        Sun, 03 Dec 2023 23:41:54 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.22])
-        by smtp.gmail.com with ESMTPSA id o15-20020a05600c510f00b004064cd71aa8sm12582868wms.34.2023.12.03.23.41.52
+        d=1e100.net; s=20230601; t=1701676194; x=1702280994;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Qy9EsjQw1g9VRkevvbX9uBsJyMuEslts0ijpZTiewwo=;
+        b=WmBX/+GuUfCvm4JsvP/DKpS27s3W7Zyo0UPEcuy0Xbutvsw+ZWo+vM+MZpjYfauslN
+         3Ne/P8N27YN1D0TBquVC22nXOhj/v0UYV/4JZCIc6abR9ZTfc59xbI0z8rLXQPJkTWbJ
+         GLAE/nePhDrh+q41x0j733MMup9Bg+XlGSzL+W7wghtZTNmCewnnWJLUv12fcKZJ0mUk
+         bIk4Azu3V40TpsUKRgRr8tmUUb4Pk33fZcyz/QlTNo3PL3MG+mjPasHHhJJ9sXxTPf+B
+         Wq0pjgqxKRvN8yXqhcUF5TYIakkdy+Quf+OiYR/LX56tX+AK9APwr/1/MAqUzqbuoJMv
+         V6lg==
+X-Gm-Message-State: AOJu0YzPGd0kWspfKeGyjtjs5s1UfyiVTZAVQ5PZ7FL/xo7m1+zsDC7H
+	f1WSrg8jLjl2D4gWfgRe/Xn+8A==
+X-Google-Smtp-Source: AGHT+IG9rrGGxYQIgHWFzYhePOT1pthDDaSKERkAynT23Tb0rNgnTFO/UdYvGzvsoc9iFhDeh0jLMg==
+X-Received: by 2002:a17:906:7395:b0:a19:a1ba:8cd9 with SMTP id f21-20020a170906739500b00a19a1ba8cd9mr2840437ejl.119.1701676193738;
+        Sun, 03 Dec 2023 23:49:53 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.109])
+        by smtp.gmail.com with ESMTPSA id p20-20020a170906229400b00a18db59797dsm4694966eja.127.2023.12.03.23.49.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Dec 2023 23:41:54 -0800 (PST)
-Message-ID: <96dd3f54-9560-4587-b4e8-bf75422ff5ef@tuxon.dev>
-Date: Mon, 4 Dec 2023 09:41:51 +0200
+        Sun, 03 Dec 2023 23:49:52 -0800 (PST)
+Message-ID: <b2175abe-b989-4b77-891e-67e8240ba0be@linaro.org>
+Date: Mon, 4 Dec 2023 08:49:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,87 +63,109 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 10/14] arm64: renesas: r9a08g045: Add Ethernet nodes
+Subject: Re: [PATCH v4 00/23] pinctrl: Convert struct group_desc to use struct
+ pingroup
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+ =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Biju Das <biju.das.jz@bp.renesas.com>,
+ Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+ Jianlong Huang <jianlong.huang@starfivetech.com>,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+ openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+ Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng
+ <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>,
+ Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,
+ Pengutronix Kernel Team <kernel@pengutronix.de>,
+ Sascha Hauer <s.hauer@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>,
+ Sean Wang <sean.wang@kernel.org>, Paul Cercueil <paul@crapouillou.net>,
+ Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+ Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>,
+ Emil Renner Berthing <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>
+References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkdZAriTP3iOgmwvoAH-3-aO_ugoEkBHE7mHH5YLxhMXSXg@mail.gmail.com>
 Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux@armlinux.org.uk, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
- arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com,
- afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com,
- eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
- linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-11-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CACRpkdZAriTP3iOgmwvoAH-3-aO_ugoEkBHE7mHH5YLxhMXSXg@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi, Geert,
-
-On 01.12.2023 19:35, Geert Uytterhoeven wrote:
-> Hi Claudiu,
+On 01/12/2023 15:05, Linus Walleij wrote:
+> On Wed, Nov 29, 2023 at 5:15 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 > 
-> On Mon, Nov 20, 2023 at 8:01 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> The struct group_desc has a lot of duplication with struct pingroup.
+>> Deduplicate that by embeddind the latter in the former and convert
+>> users.
 >>
->> Add Ethernet nodes available on RZ/G3S (R9A08G045).
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>> Linus, assuming everything is fine, I can push this to my tree.
+>> Or you can apply it (assumming all CIs and people are happy with
+>> the series).
 > 
-> Thanks for your patch!
+> I applied the series to devel so we get some rotation in linux-next,
+> augmenting the relevant commit messages as discussed!
 > 
->> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
->> @@ -149,6 +149,38 @@ sdhi2: mmc@11c20000 {
->>                         status = "disabled";
->>                 };
->>
->> +               eth0: ethernet@11c30000 {
->> +                       compatible = "renesas,r9a08g045-gbeth", "renesas,rzg2l-gbeth";
->> +                       reg = <0 0x11c30000 0 0x10000>;
->> +                       interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
->> +                                    <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
->> +                                    <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
->> +                       interrupt-names = "mux", "fil", "arp_ns";
->> +                       clocks = <&cpg CPG_MOD R9A08G045_ETH0_CLK_AXI>,
->> +                                <&cpg CPG_MOD R9A08G045_ETH0_CLK_CHI>,
->> +                                <&cpg CPG_MOD R9A08G045_ETH0_REFCLK>;
->> +                       clock-names = "axi", "chi", "refclk";
->> +                       resets = <&cpg R9A08G045_ETH0_RST_HW_N>;
->> +                       power-domains = <&cpg>;
-> 
-> Perhaps add a default phy mode, like on other SoCs?
-> 
->     phy-mode = "rgmii"';
 
-I skipped this (even it was available on the other SoCs) as I consider the
-phy-mode is board specific.
+... and this next fails to build on standard defconfig:
+https://krzk.eu/#/builders/76/builds/420/steps/9/logs/stdio
 
-> 
-> Also missing:
-> 
->     #address-cells = <1>;
->     #size-cells = <0>;
+I did not bisect yet, so I am just guessing that error looks like
+something introduced here.
 
-Same for these.
+Best regards,
+Krzysztof
 
-> 
->> +                       status = "disabled";
->> +               };
-> 
-> Same comments for eth1.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
 
