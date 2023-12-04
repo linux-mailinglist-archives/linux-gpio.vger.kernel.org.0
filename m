@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-921-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-922-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EEF0802C29
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:38:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B8200802C45
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:42:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A7A7280D45
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 07:38:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 370371F210B6
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 07:42:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B91BE47;
-	Mon,  4 Dec 2023 07:38:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20D7DC129;
+	Mon,  4 Dec 2023 07:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="SIE4G4sT"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Hvof9gE1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F38CFD7
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 23:38:03 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-3334254cfa3so506726f8f.1
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 23:38:03 -0800 (PST)
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 02436F2
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 23:41:56 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40c05ce04a8so17848345e9.0
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 23:41:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1701675482; x=1702280282; darn=vger.kernel.org;
+        d=tuxon.dev; s=google; t=1701675714; x=1702280514; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+q9nPE5Jop3Q7yA3sdyMkSZevXSnAGPI5CdWYoOLt1w=;
-        b=SIE4G4sTNF8TlSWw5vMo1KC5E/ZxATteRf52rmyD3mckx6zOGEPXXHBgNMoYR8iHjW
-         1l21boETr0/iRtvEfCH43RtWWhMx0TFKV4Ow1tM3vrc3vAXxKca3eSj0iGL41oD4cuix
-         7bGYeZJqZnYCq7G2m8iJvIg6gCs7cb4SVVIYUsuq/jFzbRybe6IJEShLGU1z0P4Zhf+l
-         eduYFgTH12sFvGD5ydLEQVpe/WoVCcle1fMYQTdRwu20Tk40v/vJObeXRk/gi4Xtgb4S
-         HV9YazPOUYIi4/d3S7Y781q1hirBj/xxIoq6aiZtrihLYQTRkqIRx7iwM6DT1anAcYGJ
-         k7rw==
+        bh=c8G1sh0qsI8d58akFwoRpnCXTsdhgVmXQ1PhU0QEiJM=;
+        b=Hvof9gE1GoQ+OfRFXpgiu2mIiTaIJdI356AHy95RhmF2FNZ1ms0wtP7NpMes0r3qLZ
+         ZWmo99RKANNBN6pm/CvRXJJcONHeRgPf9isIDMwIPsRfXfh3YsQUP4VNbhxwRJkRahyT
+         XnMwWcYqQf/9b8j2VIpyIjbLHfe7or0B58Eu9wpB074MKPO/W7zqRlXQrHIG5L8WRjYr
+         0n4aByVFHP1AKOjih0r8w1YLXB6+JyYLbxIfuoA4eu/m5x+BIepiykB2dGZTgv3tCnp0
+         TssAjm887DMBhtDMbLpTwNvniznWdoQjqLrwiMUsWmMO02r8X4B4AB0H4aKiZp4vNXn7
+         brjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701675482; x=1702280282;
+        d=1e100.net; s=20230601; t=1701675714; x=1702280514;
         h=content-transfer-encoding:in-reply-to:from:references:cc:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+q9nPE5Jop3Q7yA3sdyMkSZevXSnAGPI5CdWYoOLt1w=;
-        b=gAvXePUaJsfPobKl6ixi1ct0U6fSyLo13izGi9qKe6kZ8189hAqNWaaewWdGGGCtr+
-         75QT/Zg3LwETZ64+VpPdCZNH+vIp4b8t5Z/Yz5dQvuR4NbQer80oxKCWFXnS4MrnRqhj
-         jtEr2kOFIMfeONHIU6X5xlARXSJbSzLrIHI00kZjOjwKy2MawuR1KQN2snef6zFdQ+iL
-         jvfCuwIDxttCcwGaUG1zYmbareoTf3+JKB6cZJV6P262XmhVzu9vWW4xvyT3RkufQcIj
-         Es/4oKOHZBYy3/o1L5BO38Tf9AJEFte5tYC9kUDR8THYIiIvd7jhj9TD1xgBiOkEnw/o
-         Y6bA==
-X-Gm-Message-State: AOJu0YzNURAuVuz/KH5gNY0EqyfsyZjc+/e2txR8/7NO6o/KQX6Eyeuc
-	vxBZfWGVhO2/2+ZDpCRnlsCFtQ==
-X-Google-Smtp-Source: AGHT+IFBMeVqCxTwC/4y34OFZSyYkJTII5ztxhOtTpa0nilRN10tKpaXZIshwtW5tUYhKuhIG2WwBw==
-X-Received: by 2002:a5d:6342:0:b0:333:2fd7:9604 with SMTP id b2-20020a5d6342000000b003332fd79604mr2512979wrw.63.1701675482341;
-        Sun, 03 Dec 2023 23:38:02 -0800 (PST)
+        bh=c8G1sh0qsI8d58akFwoRpnCXTsdhgVmXQ1PhU0QEiJM=;
+        b=Jaw/H0q6+INEe4vJR1z6W9LnJK782KMd3HiioqYgUE4o6N2806UhXYxc84bazAc0qF
+         1tLfPHFX4uxY8uHzl312rniysQ0Jx7D8v37KLe43x7EdlM7qJIsw1u5vN1oFC/9ZyYjG
+         lPmE8NQDkErEqPd6AKuKGeO3lSSWVMWyTeKDn0LxGg3X89DEJZ4ZI2J11Hd51r50U/qG
+         U5RPpmDh2j5NeI2XbevnrokDOSNvXHXCG+gKehZg3hizxu+RNRtxQ4CtVvKVNNFSs1oq
+         vZtYU6rJyVQauxQMKKJRQj7rMkxURTFuL+UuO8QLRIQ//I6Y1wi1OCEizX4nekYunb4j
+         VUIw==
+X-Gm-Message-State: AOJu0YwIIBRvhasts9005IFhKXmbQaT++9bnqhSJYThTLWW2T9Zb+HPg
+	Jal3oBZOqn+x8LzN0scpLCw5HA==
+X-Google-Smtp-Source: AGHT+IGnFhIB39yiIipKRI//SLw4hneqeadl9YkXMdwKranCz3MpSxZ/BicSrPOtY7Bi6Mkk854YEQ==
+X-Received: by 2002:a05:600c:3488:b0:40b:5f03:b3ef with SMTP id a8-20020a05600c348800b0040b5f03b3efmr1153446wmq.273.1701675714498;
+        Sun, 03 Dec 2023 23:41:54 -0800 (PST)
 Received: from [192.168.50.4] ([82.78.167.22])
-        by smtp.gmail.com with ESMTPSA id a4-20020a056000050400b003334675634bsm2946288wrf.29.2023.12.03.23.38.00
+        by smtp.gmail.com with ESMTPSA id o15-20020a05600c510f00b004064cd71aa8sm12582868wms.34.2023.12.03.23.41.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 03 Dec 2023 23:38:02 -0800 (PST)
-Message-ID: <f2282f18-e789-4f1e-a321-4c744c952537@tuxon.dev>
-Date: Mon, 4 Dec 2023 09:37:59 +0200
+        Sun, 03 Dec 2023 23:41:54 -0800 (PST)
+Message-ID: <96dd3f54-9560-4587-b4e8-bf75422ff5ef@tuxon.dev>
+Date: Mon, 4 Dec 2023 09:41:51 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,8 +62,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 05/14] pinctrl: renesas: rzg2l: Move arg in the main
- function block
+Subject: Re: [PATCH 10/14] arm64: renesas: r9a08g045: Add Ethernet nodes
 Content-Language: en-US
 To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
@@ -80,36 +79,67 @@ Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
  linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
  linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-6-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWJJ=pjY5YFG=UxL+rWhYtWKicjbGUj-7KC1tgaz4tB3Q@mail.gmail.com>
+ <20231120070024.4079344-11-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
 From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdWJJ=pjY5YFG=UxL+rWhYtWKicjbGUj-7KC1tgaz4tB3Q@mail.gmail.com>
+In-Reply-To: <CAMuHMdW9Unpw7NQOGWd4SeFV8XgvRYTKTXnt9Tsagb3Q3U9tNA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Hi, Geert,
 
-
-On 01.12.2023 18:15, Geert Uytterhoeven wrote:
+On 01.12.2023 19:35, Geert Uytterhoeven wrote:
 > Hi Claudiu,
 > 
 > On Mon, Nov 20, 2023 at 8:01 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
 >> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >>
->> Move arg in the main block of the function as this is used by 3 out of 4
->> case blocks of switch-case. In this way some lines of code are removed.
+>> Add Ethernet nodes available on RZ/G3S (R9A08G045).
 >>
 >> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > 
 > Thanks for your patch!
 > 
->>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 ++++++-----
->>  1 file changed, 6 insertions(+), 5 deletions(-)
+>> --- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>> +++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
+>> @@ -149,6 +149,38 @@ sdhi2: mmc@11c20000 {
+>>                         status = "disabled";
+>>                 };
+>>
+>> +               eth0: ethernet@11c30000 {
+>> +                       compatible = "renesas,r9a08g045-gbeth", "renesas,rzg2l-gbeth";
+>> +                       reg = <0 0x11c30000 0 0x10000>;
+>> +                       interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                    <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>,
+>> +                                    <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
+>> +                       interrupt-names = "mux", "fil", "arp_ns";
+>> +                       clocks = <&cpg CPG_MOD R9A08G045_ETH0_CLK_AXI>,
+>> +                                <&cpg CPG_MOD R9A08G045_ETH0_CLK_CHI>,
+>> +                                <&cpg CPG_MOD R9A08G045_ETH0_REFCLK>;
+>> +                       clock-names = "axi", "chi", "refclk";
+>> +                       resets = <&cpg R9A08G045_ETH0_RST_HW_N>;
+>> +                       power-domains = <&cpg>;
 > 
-> Unfortunately your claim is not really backed by the diffstat.
-> What about moving index, too?
+> Perhaps add a default phy mode, like on other SoCs?
+> 
+>     phy-mode = "rgmii"';
 
-Sure, I can move it, too.
+I skipped this (even it was available on the other SoCs) as I consider the
+phy-mode is board specific.
 
+> 
+> Also missing:
+> 
+>     #address-cells = <1>;
+>     #size-cells = <0>;
+
+Same for these.
+
+> 
+>> +                       status = "disabled";
+>> +               };
+> 
+> Same comments for eth1.
 > 
 > Gr{oetje,eeting}s,
 > 
