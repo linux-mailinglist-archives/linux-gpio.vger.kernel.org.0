@@ -1,49 +1,60 @@
-Return-Path: <linux-gpio+bounces-919-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-920-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46123802A0C
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 03:03:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC3B8802C1B
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:34:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3C72280C62
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 02:03:06 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 577A8B20974
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 07:34:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C92C510F0;
-	Mon,  4 Dec 2023 02:03:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71227946F;
+	Mon,  4 Dec 2023 07:34:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="HF4JFiem"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="GenIlH1X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 476D2C3;
-	Sun,  3 Dec 2023 18:02:59 -0800 (PST)
-Received: from pps.filterd (m0279873.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B41xRFm007171;
-	Mon, 4 Dec 2023 02:02:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=p57vtO1ik2rrzvNr6cjj8q52qSne8FWjtX9ybVgpZSY=;
- b=HF4JFiem4OX8l/clUUft6+FpgwcuSF81VL/tERCt1J8oEvvotnk1IXlcVoV0+W7+p6pC
- 6TCc8y3344T/KAd9ez20puwXaAuvexMH/FC+O4pK+gSjfU/+uFB5zLoNTdC81wtO5mzA
- TZiKF27bRCELsBbErFayvswxgewNPWM0jq40UgGEOWN7+z/+pVxr/HLMqqem+NTK0gAe
- KSm/0owgDIMAMdPSPOwg9Ncgch5/oJrMh2s0FOaDgR7zo59P8vHrarR0pb+T8yUp4F4H
- uZPmhll5VKgnyXU/HNNeA1HRjLZ04188i4C/brLGZzdGDa3BAD3+CTNRZWzXXh3Ln2My jw== 
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uqsxw2w6m-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 04 Dec 2023 02:02:55 +0000
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B422sQ4024804
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 4 Dec 2023 02:02:54 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Sun, 3 Dec
- 2023 18:02:50 -0800
-Message-ID: <64fd99b9-51f1-4288-9789-d4f71f7d9dd2@quicinc.com>
-Date: Mon, 4 Dec 2023 10:02:47 +0800
+Received: from mail-wm1-x32b.google.com (mail-wm1-x32b.google.com [IPv6:2a00:1450:4864:20::32b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0278FD7
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Dec 2023 23:34:21 -0800 (PST)
+Received: by mail-wm1-x32b.google.com with SMTP id 5b1f17b1804b1-40c09d0b045so10377995e9.0
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Dec 2023 23:34:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1701675259; x=1702280059; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xkT4drhpDzb1KxFICd/WEWnn5ymnnV9MLDEkeHmOOCg=;
+        b=GenIlH1XvR/zKD5YWhSwyIkO2MBACS6//FJ7NdorbfkVGhJQPzPFvMwY2Rdv4DtlGe
+         xXkUWqYAFWlI1VkUnoybT/g0ZquZsO1FKmoIb5+pejaplNVHc/M/ZX9KCwDVkQf1jArY
+         YmEB4ZfHdSzhKNU0wMH4svMvKTqfY5lFzLu68ZEZ1vAElx9GjleOy+Zs9c4iybZF2Wnr
+         QFBLyx90Fsj+cqBh4YHhylVQxnu8hEEC///EnNB7ViEXW0ZgH6jhA7S4V8NLEJpHrSuk
+         q6G/GAEcxWiiKt0AJfy3zvy+yenG2r4U1pD2Iu+xF/RczI6JqbQFDxfixkj5w8w0UBJm
+         cQAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701675259; x=1702280059;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xkT4drhpDzb1KxFICd/WEWnn5ymnnV9MLDEkeHmOOCg=;
+        b=YseFGdTt6sDMcWgET/1dqdf6GfZBAwuKXyN6B35H61GCZEjhqOLYaAY6ebFJ64X0Vl
+         nR58/UWQNli1pfKvAWBaAvpmdU9x5Exe/11SkQAB/3VDWHhVd95wF1G6y6cPzeBqkVVq
+         4gVJqy27ed8HUX9YinsndoXGeNbU3i2F2OSaCSzfKMc7Z7uN5elVnQK3PxjVQle3n1Pq
+         jnh2NtTk4LqwTSZvcBACgASeLKvY3UhleXhYaziuSfIaHcijF20gJuMXhQtkRmS7/Cu+
+         yzguBrAtNJLcFndy4c3sTm3Nlq+LDrxXHxXLToMmz99/SItmj1k81dMUVicZcV/HTHwl
+         IEjA==
+X-Gm-Message-State: AOJu0Yy/Uv6uBrTtT6tpEUoEaLcwv9Z/Je86z0mxe072Jc5Dre70p1br
+	2mk2g0GtAeIQ+1yXxJGJUyj04A==
+X-Google-Smtp-Source: AGHT+IFLd6uc1esRdus+n5JgwFdcILDLg2A8pTlH3V20qyXL/Hq+B/C3Ab2ic/OSyJAfnTqf0Cf6YA==
+X-Received: by 2002:a05:600c:4d96:b0:40b:4268:f375 with SMTP id v22-20020a05600c4d9600b0040b4268f375mr1338522wmp.36.1701675259379;
+        Sun, 03 Dec 2023 23:34:19 -0800 (PST)
+Received: from [192.168.50.4] ([82.78.167.22])
+        by smtp.gmail.com with ESMTPSA id q13-20020a05600c46cd00b004063c9f68f2sm13978721wmo.26.2023.12.03.23.34.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Dec 2023 23:34:19 -0800 (PST)
+Message-ID: <abbf8d0b-b766-4734-b4e9-a963e1dc8810@tuxon.dev>
+Date: Mon, 4 Dec 2023 09:34:16 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -51,93 +62,87 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] pinctrl: qcom: sm4450: correct incorrect address
- offset
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
- <20231130024046.25938-5-quic_tengfan@quicinc.com>
- <dx62durg3wmqviqdpecdqprd5wwkg4i7n5tgcab55axzssdeel@ftt35c6td2sh>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <dx62durg3wmqviqdpecdqprd5wwkg4i7n5tgcab55axzssdeel@ftt35c6td2sh>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Subject: Re: [PATCH 04/14] clk: renesas: r9a08g045-cpg: Add clock and reset
+ support for ETH0 and ETH1
+Content-Language: en-US
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ linux@armlinux.org.uk, magnus.damm@gmail.com, mturquette@baylibre.com,
+ sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
+ arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com,
+ afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com,
+ eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
+ prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
+ linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
+ <20231120070024.4079344-5-claudiu.beznea.uj@bp.renesas.com>
+ <CAMuHMdWwn8xcKX3vgawtGqksuMM3CKZx=3k6EKP3kDFZxbocdA@mail.gmail.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <CAMuHMdWwn8xcKX3vgawtGqksuMM3CKZx=3k6EKP3kDFZxbocdA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 2QTaamtn9KyXTNVxpVAjs_cF0LFeMMVu
-X-Proofpoint-GUID: 2QTaamtn9KyXTNVxpVAjs_cF0LFeMMVu
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-03_24,2023-11-30_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 suspectscore=0
- mlxscore=0 bulkscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- mlxlogscore=999 malwarescore=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2311060000 definitions=main-2312040013
 
+Hi, Geert,
 
-
-在 12/2/2023 5:36 AM, Bjorn Andersson 写道:
-> On Thu, Nov 30, 2023 at 10:40:46AM +0800, Tengfei Fan wrote:
->> The address offset of 0x100000 is already provided in SM4450 DTSI, so
->> subtract 0x100000 from the offset which used by ufs and sdc.
+On 01.12.2023 17:59, Geert Uytterhoeven wrote:
+> Hi Claudiu,
+> 
+> On Mon, Nov 20, 2023 at 8:01 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
+>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >>
-> 
-> As Konrad points out, please fix the broken patch, don't add a separate
-> fix in the same series.
-Sure, I will do this as comments.
-> 
->> Suggested-by: Can Guo <quic_cang@quicinc.com>
-> 
-> We unfortunately don't have a way to give credit to those providing
-> review feedback, so omit this when fixing patch #2.
-Sure, I will omit this in next version patch series.
-> 
-> Regards,
-> Bjorn
-> 
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   drivers/pinctrl/qcom/pinctrl-sm4450.c | 16 ++++++++--------
->>   1 file changed, 8 insertions(+), 8 deletions(-)
+>> RZ/G3S has 2 Gigabit Ethernet interfaces available. Add clock and reset
+>> support for both of them.
 >>
->> diff --git a/drivers/pinctrl/qcom/pinctrl-sm4450.c b/drivers/pinctrl/qcom/pinctrl-sm4450.c
->> index 49e2e3a7a9cb..5496f955ed2a 100644
->> --- a/drivers/pinctrl/qcom/pinctrl-sm4450.c
->> +++ b/drivers/pinctrl/qcom/pinctrl-sm4450.c
->> @@ -936,14 +936,14 @@ static const struct msm_pingroup sm4450_groups[] = {
->>   	[133] = PINGROUP(133, _, phase_flag, _, _, _, _, _, _, _),
->>   	[134] = PINGROUP(134, tsense_pwm1_out, tsense_pwm2_out, _, _, _, _, _, _, _),
->>   	[135] = PINGROUP(135, _, phase_flag, _, _, _, _, _, _, _),
->> -	[136] = UFS_RESET(ufs_reset, 0x197000),
->> -	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x18c004, 0, 0),
->> -	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x18c000, 13, 6),
->> -	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x18c000, 11, 3),
->> -	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x18c000, 9, 0),
->> -	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x18f000, 14, 6),
->> -	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x18f000, 11, 3),
->> -	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x18f000, 9, 0),
->> +	[136] = UFS_RESET(ufs_reset, 0x97000),
->> +	[137] = SDC_QDSD_PINGROUP(sdc1_rclk, 0x8c004, 0, 0),
->> +	[138] = SDC_QDSD_PINGROUP(sdc1_clk, 0x8c000, 13, 6),
->> +	[139] = SDC_QDSD_PINGROUP(sdc1_cmd, 0x8c000, 11, 3),
->> +	[140] = SDC_QDSD_PINGROUP(sdc1_data, 0x8c000, 9, 0),
->> +	[141] = SDC_QDSD_PINGROUP(sdc2_clk, 0x8f000, 14, 6),
->> +	[142] = SDC_QDSD_PINGROUP(sdc2_cmd, 0x8f000, 11, 3),
->> +	[143] = SDC_QDSD_PINGROUP(sdc2_data, 0x8f000, 9, 0),
->>   };
->>   
->>   static const struct msm_gpio_wakeirq_map sm4450_pdc_map[] = {
->> -- 
->> 2.17.1
->>
+>> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> 
+> Thanks for your patch!
+> 
+>> --- a/drivers/clk/renesas/r9a08g045-cpg.c
+>> +++ b/drivers/clk/renesas/r9a08g045-cpg.c
+>> @@ -217,6 +219,16 @@ static const struct rzg2l_mod_clk r9a08g045_mod_clks[] = {
+>>                                         MSTOP(PERI_COM, BIT(11))),
+>>         DEF_MOD("sdhi2_aclk",           R9A08G045_SDHI2_ACLK, R9A08G045_CLK_P1, 0x554, 11,
+>>                                         MSTOP(PERI_COM, BIT(11))),
+>> +       DEF_COUPLED("eth0_axi",         R9A08G045_ETH0_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 0,
+>> +                                       MSTOP(PERI_COM, BIT(2))),
+>> +       DEF_COUPLED("eth0_chi",         R9A08G045_ETH0_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 0,
+>> +                                       MSTOP(PERI_COM, BIT(2))),
+>> +       DEF_MOD("eth0_refclk",          R9A08G045_ETH0_REFCLK, R9A08G045_CLK_HP, 0x57c, 8, 0),
+>> +       DEF_COUPLED("eth1_axi",         R9A08G045_ETH1_CLK_AXI, R9A08G045_CLK_M0, 0x57c, 1,
+>> +                                       MSTOP(PERI_COM, BIT(3))),
+>> +       DEF_COUPLED("eth1_chi",         R9A08G045_ETH1_CLK_CHI, R9A08G045_CLK_ZT, 0x57c, 1,
+>> +                                       MSTOP(PERI_COM, BIT(3))),
+>> +       DEF_MOD("eth1_refclk",          R9A08G045_ETH1_REFCLK, R9A08G045_CLK_HP, 0x57c, 9, 0),
+>>         DEF_MOD("scif0_clk_pck",        R9A08G045_SCIF0_CLK_PCK, R9A08G045_CLK_P0, 0x584, 0,
+>>                                         MSTOP(MCPU2, BIT(1))),
+>>         DEF_MOD("gpio_hclk",            R9A08G045_GPIO_HCLK, R9A08G045_OSCCLK, 0x598, 0, 0),
+> 
+> LGTM, pending the MSTOP() part.
+> 
+> Is the MSTOP() handling needed to function? IIUIC, all modules are
+> enabled
+> out of reset.
 
--- 
-Thx and BRs,
-Tengfei Fan
+MSTOP is not needed for Ethernet to work. Indeed, all modules are enabled
+out of reset.
+
+> If it is not needed, I can take this patch and remove the MSTOP() part.
+
+It's OK for me. Thank you for handling this.
+
+Anyway, let me know if you encounter issues with it so I can resend it.
+
+Thank you,
+Claudiu Beznea
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
 
