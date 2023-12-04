@@ -1,82 +1,166 @@
-Return-Path: <linux-gpio+bounces-928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-930-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7A7C802CB6
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:08:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43197802CEA
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 09:14:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 524921F210D9
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:08:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C1FA3B209DC
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Dec 2023 08:14:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28F38CA6D;
-	Mon,  4 Dec 2023 08:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1CD2D53F;
+	Mon,  4 Dec 2023 08:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="C5U/F/Ll";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="fXHjAAxs"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ileSoowW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [IPv6:2a0a:51c0:0:12e:550::1])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42FFBD6;
-	Mon,  4 Dec 2023 00:08:04 -0800 (PST)
-Date: Mon, 4 Dec 2023 09:08:01 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1701677282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1O43gu5PaMZy8WHsduQMVxyUn86WTVQVBI1S32LITWU=;
-	b=C5U/F/LlO+5RNABUNBkv/Ol0xLQtsE8Xh8aRhQPOotP2REzKiRLOKo16IpYzLZEfryw94r
-	92qaOO7nOBbKtsVbFno4nmCI7i+ir49nMvOG6CaAhQI+02fcdNzjGJGAGiJoAWI4yGx4bk
-	nw5lQLzzQImfrgCKTtwMLE0erH8EXT7yEk1i0RCJ8lPiqtqO+XcKJsTlEWwNuhQDLqnJTO
-	fvNibImQCh16s8aZoD/mpz0tkpAIV8H/Lq5cbsl440uzTP2/lrldHIChZsQ5GAIFWZg1bf
-	sjsmtmoSERHT1UsnNrR/1dn0PdEtiuDXJRiS4mqKx5aNT13wXAED3flKWPgPDw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1701677282;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1O43gu5PaMZy8WHsduQMVxyUn86WTVQVBI1S32LITWU=;
-	b=fXHjAAxs2tbT0NWE56bKj7ScO4A2dt+QV/Gt00hi2wiJr/tZMqeaJXV2fxqbzwTU0jar7L
-	SAZ88CTh1rZJm2Aw==
-From: Nam Cao <namcao@linutronix.de>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Emil Renner Berthing <kernel@esmil.dk>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Huan Feng <huan.feng@starfivetech.com>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 2/2] pinctrl: starfive: jh7100: ignore disabled device
- tree nodes
-Message-ID: <20231204080801.uo8nzeyU@linutronix.de>
-References: <fd8bf044799ae50a6291ae150ef87b4f1923cacb.1701422582.git.namcao@linutronix.de>
- <fe4c15dcc3074412326b8dc296b0cbccf79c49bf.1701422582.git.namcao@linutronix.de>
- <CAJM55Z9CooaYqeTuZK0FARKupf_StTSfWBo7ziv4KtGq6pEVaQ@mail.gmail.com>
- <CAJM55Z-yam5RnsztYFSKVGoshLFaUau=rOmArsDsZnLYm3jE+Q@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81B6D50B;
+	Mon,  4 Dec 2023 08:14:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D5FBC433C8;
+	Mon,  4 Dec 2023 08:14:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701677665;
+	bh=fMFPIQKNQgD0rlqa1vmejcL5CVWsD1P2NQIr7QZ0AyY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ileSoowWK8JxxTKKpdDv/X1erln3oTJQ8pftp3cwxD00ldz8N8EvPka27n6T6Jq6m
+	 wQknGML2EPVT85/RsKkMs6qivPrjHzdDQpszagNUVFno8NIlR/EfE6TOxj4QWdwZBI
+	 RhWtftoa6XflsqC1VVMMVhpIadoTB/19vsDQ1Nmjrs2a7J6Hs8gccaUiVkx9H/GZxX
+	 9xerhgR34fCwTYA7AA7BxIsHgSIIZGRdrCtBwaLE4Py3b+6lhPq0DHQs9tqy7/4A86
+	 dHYrCVQPqrbZOO/Hn4gqMvrNqbS2ouZqhphZLmJaKR2B9PWSxvp4eC69zxrDwMOrCh
+	 IEJFPFkfge7Kw==
+Message-ID: <6539d781-ecb2-4ffe-9daa-e82ec8d70bea@kernel.org>
+Date: Mon, 4 Dec 2023 09:14:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAJM55Z-yam5RnsztYFSKVGoshLFaUau=rOmArsDsZnLYm3jE+Q@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
+Content-Language: en-US
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ agross@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
+ <20231130024046.25938-3-quic_tengfan@quicinc.com>
+ <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+ <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
+ <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
+ <c3e18a62-0d50-4291-94a2-17a51957253d@quicinc.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <c3e18a62-0d50-4291-94a2-17a51957253d@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 01, 2023 at 03:43:04PM +0100, Emil Renner Berthing wrote:
-> I just noticed the Allwinner D1 device trees use /omit-if-no-ref/ in front of
-> the pin group nodes. I think all current pin group nodes (for the JH7100 at
-> least) are used by some peripheral, so if you're removing peripherals from the
-> device tree you should be removing the reference too and this scheme should
-> work for you.
+On 04/12/2023 09:06, Tengfei Fan wrote:
+> 
+> 
+> 在 12/4/2023 3:56 PM, Krzysztof Kozlowski 写道:
+>> On 04/12/2023 02:57, Tengfei Fan wrote:
+>>>
+>>>
+>>> 在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
+>>>> On 30/11/2023 03:40, Tengfei Fan wrote:
+>>>>> Add pinctrl driver for TLMM block found in SM4450 SoC.
+>>>>>
+>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>>> ---
+>>>>>    drivers/pinctrl/qcom/Kconfig.msm      |    8 +
+>>>>>    drivers/pinctrl/qcom/Makefile         |    1 +
+>>>>>    drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
+>>>>>    3 files changed, 1022 insertions(+)
+>>>>>    create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
+>>>>>
+>>>>
+>>>> Hm, was this patch ever built?
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>> This patch has been built before, I will check and compare if there are
+>>> any errors and changes when I submitted this patch series.
+>>>
+>>
+>> No, it wasn't built. I just tried - applied it and:
+>>
+>> pinctrl-sm4450.c:996:19: error: initialization of ‘int (*)(struct
+>> platform_device *)’ from incompatible pointer type ‘void (*)(struct
+>> platform_device *)’ [-Werror=incompatible-pointer-types]
+>>    996 |         .remove = msm_pinctrl_remove,
+>>        |                   ^~~~~~~~~~~~~~~~~~
+>> ../drivers/pinctrl/qcom/pinctrl-sm4450.c:996:19: note: (near
+>> initialization for ‘sm4450_tlmm_driver.remove’)
+>>
+>> So you just sent a patch which was not even compiled.
+>>
+>> NAK.
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> I compiled all the related patches together, but I did not compile this 
+> patch separately.
 
-If I am not mistaken, /omit-if-no-ref/ (and similar stuffs like
-/delete-node/ and /delete-property/) is only for compile-time node
-removal. It doesn't do anything with device tree overlay.
+We talk about this patch here. Please do not send knowingly wrong code,
+because it does not make sense and hurts bisectability.
+
+> The fact that there is a compilation problem is known, but because the 
+> patch is already reviewed-by, so a separate patch(patch 3) is submitted 
+> to fix the compilation error.
+
+That's not the process. Each patch must be correct. Each.
 
 Best regards,
-Nam
+Krzysztof
+
 
