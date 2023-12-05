@@ -1,55 +1,55 @@
-Return-Path: <linux-gpio+bounces-1038-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1039-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B040F806197
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 23:20:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C7F68061A7
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 23:27:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D45001C210C7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 22:19:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 219C22820A9
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 22:27:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C43596E2C5;
-	Tue,  5 Dec 2023 22:19:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A319B6EB48;
+	Tue,  5 Dec 2023 22:27:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AGd03nBB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ICr5qkhG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7934D1B5
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 14:19:47 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-67ac8e5566cso16271996d6.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 14:19:47 -0800 (PST)
+Received: from mail-qv1-xf2e.google.com (mail-qv1-xf2e.google.com [IPv6:2607:f8b0:4864:20::f2e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 67CD41B8
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 14:27:33 -0800 (PST)
+Received: by mail-qv1-xf2e.google.com with SMTP id 6a1803df08f44-67a8a745c43so2292376d6.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 14:27:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701814786; x=1702419586; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701815252; x=1702420052; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9dvO7VEjEk5C7f+OgfK999Pm4HA3ckCcoehDtAD/q3U=;
-        b=AGd03nBBQ2vI7O351rBGob48hb4QwHzNBim9WZh2tAYp0FSODx7CxDFGvkcrvima98
-         EcnK/DcyoVSwq9ugn0OnBV1IhkDgFSwH13F5fMUePFH6DS4qRKozTeLYae3rOtWSlZFv
-         FdwOPwKD6CIpXIiatpieJ/OaOeS6RV6Kk3NL4iPuZOGxLk2r1Efqvx3igy1EyzGY9ipd
-         t8PCgSKGzgFD1MDTySE+02F3tcjipUSzFbPj99UcSR+9Ds/IfioaFYLpbcDkpz+tLemt
-         MEV3g7eKSIx6Wodnw8+4j3BRVIeXs5hsLVLe4LmnuEz+Nd/khDsRIlb70RaBJgjk1acS
-         /V3A==
+        bh=pQgUgsfQIHztV7qf++7j8HkPIKB30bIka5Ij6JClhqg=;
+        b=ICr5qkhG6OZNgtqLatbRTUuxRnBBFxdIc31FYT9GUwuJABB4khG6fp83f9F8lWBvsm
+         ryaWFp5TPh9hiEe4ROB7vu2dRBw5LU5TslW+szQYHuuLEh2IpRJyH672UQTm3VF5juZq
+         07Kws4IW7nIIMSsTyhk22HM1S4PVPo28gIrshhvXDXWKBV9WTq0AMVUi+d1iRUxCYXyW
+         POZVk2w99gFgVkUA8n/HVnN52crWGsLHB1xkZawa90wlMZdK+h9fNRgD0uzdUqO4an7p
+         dHpXzikS3AbK85a13BSg3jEC9yvtdK+nFmy0h5FlSyeqKth1Rw4P3p0R2srNq3bQUYbb
+         gbTA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701814786; x=1702419586;
+        d=1e100.net; s=20230601; t=1701815252; x=1702420052;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9dvO7VEjEk5C7f+OgfK999Pm4HA3ckCcoehDtAD/q3U=;
-        b=k4Tqcz7JMWFl0QApv/MvL39yAxbfWQzT3tWE++sjizMFg3hECjor7OEgEoExF3WDFz
-         NPP15xIH7/6VdK0a7EC6Kf99tQiTzJEtsXuxCgYXCdx1lvpV/m0f0+fihPjhCQsv0Np/
-         7IdAuso9y9bKltEEeTmeQBDwZ9kHCm1NZ9BQLm0d/OgAwmeT9oVrTscVybPF6ooarVbN
-         /ZjMNz6QdIoBhvuloPkf+qVr+/TGB7mn9CWHTntcf77f77RB7YJKnNJjJmFe2HQQFBlH
-         v1cSOw7IiVmIMMGo3B3jOiN2dNU/x9Q0DdVhntaMfKXJ0/JZ4A41WOR8SSwhig+38uUR
-         GTxQ==
-X-Gm-Message-State: AOJu0YwJUu03RXRGN6S6HV7GbM8lEMYRQDWsqBeBBvv2PA78Pd6HUuxt
-	r+hYKTRxvyGBOp+WhV4MniJamzeArR+6JQVkT7Hwtg==
-X-Google-Smtp-Source: AGHT+IHRUeT/+czt9e9e+AXU+ecUX33fbDPjvv+n7RELw6Z2TmnXnaaNwPMslAf+mw5hNMDgSVbEZODSDvnNUHcH5I4=
-X-Received: by 2002:a0c:ef41:0:b0:67a:c0f0:c0eb with SMTP id
- t1-20020a0cef41000000b0067ac0f0c0ebmr2132644qvs.35.1701814786323; Tue, 05 Dec
- 2023 14:19:46 -0800 (PST)
+        bh=pQgUgsfQIHztV7qf++7j8HkPIKB30bIka5Ij6JClhqg=;
+        b=kMjGMAx5qpLSQyeA11WJyvZbtkTvGRzT0HRy7fawMeK5Th4QCmXtEeMXG8MG52XOnq
+         aglMryUaLOD7Wifk7t0qb/JkXa9i9yJvqkZmqhlzyXRdg+3ivNXaJ+cnmiTEd4bOucCz
+         9IlTjdC8z6wYr2eVqoZrZWgZztH1QV8cw+r5hobtN0DRc6C/ctXypWNOLrEt94nRIJD9
+         XtGAoHcCokO8yCgiPpfaZU8UpsqHvf0YNuN/gZQeVFOJdQpsrJlHQuRZjSZky1/abB9l
+         zfI0pJvel89GlTcgnhcVS6NqrBcwmL2cIS70zHoAXlnq3kSo+ZwYiN+mdcvyhj5/GhU+
+         d5lA==
+X-Gm-Message-State: AOJu0YyRPL391JY+65NfPv3/kIdJwZ1aRkoVVA2m5wVCncwY4oXiv4uO
+	OOMY5FlzUFlUYbmyOvx+cV7Ud44RN7rorYVltXvzzQ==
+X-Google-Smtp-Source: AGHT+IFuDEXqi1Ls7n87zoNMDXFD61P4gM6AnIVd1rR2PME4KbK/L6lRfRb0eqCvwCLr4kwYzSStOq+H59d+aaGst+k=
+X-Received: by 2002:a05:6214:21aa:b0:67a:b5e4:db52 with SMTP id
+ t10-20020a05621421aa00b0067ab5e4db52mr3083352qvc.61.1701815252500; Tue, 05
+ Dec 2023 14:27:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -57,13 +57,13 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20231201160925.3136868-1-peter.griffin@linaro.org>
- <20231201160925.3136868-17-peter.griffin@linaro.org> <CAPLW+4mxzu4d_9i=ouDGtnSRMbhibfBnT5aXhkC4cGEC1bm6Bw@mail.gmail.com>
-In-Reply-To: <CAPLW+4mxzu4d_9i=ouDGtnSRMbhibfBnT5aXhkC4cGEC1bm6Bw@mail.gmail.com>
+ <20231201160925.3136868-18-peter.griffin@linaro.org> <CAPLW+4mGykKdYuhjcpYQwk7cabo0mFv6Qo3UedcrVcLvMkww_Q@mail.gmail.com>
+In-Reply-To: <CAPLW+4mGykKdYuhjcpYQwk7cabo0mFv6Qo3UedcrVcLvMkww_Q@mail.gmail.com>
 From: Peter Griffin <peter.griffin@linaro.org>
-Date: Tue, 5 Dec 2023 22:19:35 +0000
-Message-ID: <CADrjBPrK9+1O3u3MEh9VGGjdODidzTKM64a6P26fFPZqjvJSGQ@mail.gmail.com>
-Subject: Re: [PATCH v5 16/20] watchdog: s3c2410_wdt: Add support for Google
- gs101 SoC
+Date: Tue, 5 Dec 2023 22:27:21 +0000
+Message-ID: <CADrjBPrPqe8wnvmwB3+WKA_q=fkfNVAyhxHLe6Ok_LifGxARjg@mail.gmail.com>
+Subject: Re: [PATCH v5 17/20] tty: serial: samsung: Add gs101 compatible and
+ common fifoszdt_serial_drv_data
 To: Sam Protsenko <semen.protsenko@linaro.org>
 Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
 	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
@@ -82,151 +82,94 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Sam,
 
-On Sat, 2 Dec 2023 at 01:02, Sam Protsenko <semen.protsenko@linaro.org> wro=
+On Sat, 2 Dec 2023 at 01:09, Sam Protsenko <semen.protsenko@linaro.org> wro=
 te:
 >
 > On Fri, Dec 1, 2023 at 10:11=E2=80=AFAM Peter Griffin <peter.griffin@lina=
 ro.org> wrote:
 > >
-> > This patch adds the compatibles and drvdata for the Google
-> > gs101 SoC found in Pixel 6, Pixel 6a & Pixel 6 pro phones.
+> > Add serial driver data for Google Tensor gs101 SoC and a common
+> > fifoszdt_serial_drv_data that can be used by platforms that specify the
+> > samsung,uart-fifosize DT property.
 > >
-> > Similar to Exynos850 it has two watchdog instances, one for
-> > each cluster and has some control bits in PMU registers.
+> > A corresponding dt-bindings patch updates the yaml to ensure
+> > samsung,uart-fifosize is a required property.
 > >
-> > gs101 also has the dbgack_mask bit in wtcon register, so
-> > we also enable QUIRK_HAS_DBGACK_BIT.
-> >
+> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 > > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 > > ---
-> >  drivers/watchdog/s3c2410_wdt.c | 47 ++++++++++++++++++++++++++++++----
-> >  1 file changed, 42 insertions(+), 5 deletions(-)
+> >  drivers/tty/serial/samsung_tty.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
 > >
-> > diff --git a/drivers/watchdog/s3c2410_wdt.c b/drivers/watchdog/s3c2410_=
-wdt.c
-> > index 39f3489e41d6..c1ae71574457 100644
-> > --- a/drivers/watchdog/s3c2410_wdt.c
-> > +++ b/drivers/watchdog/s3c2410_wdt.c
-> > @@ -68,6 +68,13 @@
-> >  #define EXYNOSAUTOV9_CLUSTER0_WDTRESET_BIT     25
-> >  #define EXYNOSAUTOV9_CLUSTER1_WDTRESET_BIT     24
-> >
-> > +#define GS_CLUSTER0_NONCPU_OUT                 0x1220
-> > +#define GS_CLUSTER1_NONCPU_OUT                 0x1420
-> > +#define GS_CLUSTER0_NONCPU_INT_EN              0x1244
-> > +#define GS_CLUSTER1_NONCPU_INT_EN              0x1444
-> > +#define GS_CLUSTER2_NONCPU_INT_EN              0x1644
-> > +#define GS_RST_STAT_REG_OFFSET                 0x3B44
-> > +
-> >  /**
-> >   * DOC: Quirk flags for different Samsung watchdog IP-cores
-> >   *
-> > @@ -269,6 +276,30 @@ static const struct s3c2410_wdt_variant drv_data_e=
-xynosautov9_cl1 =3D {
-> >                   QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_CNT_EN,
+> > diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/sams=
+ung_tty.c
+> > index 1b0c2b467a30..f8d98f1006de 100644
+> > --- a/drivers/tty/serial/samsung_tty.c
+> > +++ b/drivers/tty/serial/samsung_tty.c
+> > @@ -2490,14 +2490,25 @@ static const struct s3c24xx_serial_drv_data exy=
+nos850_serial_drv_data =3D {
+> >         .fifosize =3D { 256, 64, 64, 64 },
 > >  };
 > >
-> > +static const struct s3c2410_wdt_variant drv_data_gs101_cl0 =3D {
-> > +       .mask_reset_reg =3D GS_CLUSTER0_NONCPU_INT_EN,
-> > +       .mask_bit =3D 2,
-> > +       .mask_reset_inv =3D true,
-> > +       .rst_stat_reg =3D GS_RST_STAT_REG_OFFSET,
-> > +       .rst_stat_bit =3D 0,
-> > +       .cnt_en_reg =3D GS_CLUSTER0_NONCPU_OUT,
-> > +       .cnt_en_bit =3D 8,
-> > +       .quirks =3D QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET |=
- QUIRK_HAS_PMU_CNT_EN |
+> > +/*
+> > + * Common drv_data struct for platforms that specify uart,fifosize in
+> > + * device tree.
 >
-> Please keep it at 80 characters limit.
+> Isn't it "samsung,uart-fifosize"? Or it was intended this way?
 
-will fix
+The comment should read "samsung,uart-fifosize". Will update.
+
+Thanks,
+
+Peter.
 >
-> > +                 QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT,
+> Other than this, LGTM (my R-b tag is already present in this patch).
+>
+> > + */
+> > +static const struct s3c24xx_serial_drv_data exynos_fifoszdt_serial_drv=
+_data =3D {
+> > +       EXYNOS_COMMON_SERIAL_DRV_DATA(),
+> > +       .fifosize =3D { 0 },
 > > +};
 > > +
-> > +static const struct s3c2410_wdt_variant drv_data_gs101_cl1 =3D {
-> > +       .mask_reset_reg =3D GS_CLUSTER1_NONCPU_INT_EN,
-> > +       .mask_bit =3D 2,
-> > +       .mask_reset_inv =3D true,
-> > +       .rst_stat_reg =3D GS_RST_STAT_REG_OFFSET,
-> > +       .rst_stat_bit =3D 1,
-> > +       .cnt_en_reg =3D GS_CLUSTER1_NONCPU_OUT,
-> > +       .cnt_en_bit =3D 7,
-> > +       .quirks =3D QUIRK_HAS_PMU_RST_STAT | QUIRK_HAS_PMU_MASK_RESET |=
- QUIRK_HAS_PMU_CNT_EN |
->
-> Please keep it at 80 characters limit.
-
-will fix
->
-> > +                 QUIRK_HAS_WTCLRINT_REG | QUIRK_HAS_DBGACK_BIT,
-> > +};
-> > +
-> >  static const struct of_device_id s3c2410_wdt_match[] =3D {
-> >         { .compatible =3D "samsung,s3c2410-wdt",
-> >           .data =3D &drv_data_s3c2410 },
-> > @@ -284,6 +315,8 @@ static const struct of_device_id s3c2410_wdt_match[=
-] =3D {
-> >           .data =3D &drv_data_exynos850_cl0 },
-> >         { .compatible =3D "samsung,exynosautov9-wdt",
-> >           .data =3D &drv_data_exynosautov9_cl0 },
-> > +       { .compatible =3D "google,gs101-wdt",
-> > +         .data =3D &drv_data_gs101_cl0 },
+> >  #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
+> >  #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
+> >  #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
+> > +#define EXYNOS_FIFOSZDT_DRV_DATA (&exynos_fifoszdt_serial_drv_data)
+> >
+> >  #else
+> >  #define EXYNOS4210_SERIAL_DRV_DATA NULL
+> >  #define EXYNOS5433_SERIAL_DRV_DATA NULL
+> >  #define EXYNOS850_SERIAL_DRV_DATA NULL
+> > +#define EXYNOS_FIFOSZDT_DRV_DATA NULL
+> >  #endif
+> >
+> >  #ifdef CONFIG_ARCH_APPLE
+> > @@ -2581,6 +2592,9 @@ static const struct platform_device_id s3c24xx_se=
+rial_driver_ids[] =3D {
+> >         }, {
+> >                 .name           =3D "artpec8-uart",
+> >                 .driver_data    =3D (kernel_ulong_t)ARTPEC8_SERIAL_DRV_=
+DATA,
+> > +       }, {
+> > +               .name           =3D "gs101-uart",
+> > +               .driver_data    =3D (kernel_ulong_t)EXYNOS_FIFOSZDT_DRV=
+_DATA,
+> >         },
+> >         { },
+> >  };
+> > @@ -2602,6 +2616,8 @@ static const struct of_device_id s3c24xx_uart_dt_=
+match[] =3D {
+> >                 .data =3D EXYNOS850_SERIAL_DRV_DATA },
+> >         { .compatible =3D "axis,artpec8-uart",
+> >                 .data =3D ARTPEC8_SERIAL_DRV_DATA },
+> > +       { .compatible =3D "google,gs101-uart",
+> > +               .data =3D EXYNOS_FIFOSZDT_DRV_DATA },
 > >         {},
 > >  };
-> >  MODULE_DEVICE_TABLE(of, s3c2410_wdt_match);
-> > @@ -604,9 +637,10 @@ s3c2410_get_wdt_drv_data(struct platform_device *p=
-dev, struct s3c2410_wdt *wdt)
-> >         }
-> >
-> >  #ifdef CONFIG_OF
-> > -       /* Choose Exynos850/ExynosAutov9 driver data w.r.t. cluster ind=
-ex */
-> > +       /* Choose Exynos850/ExynosAutov9/gs101 driver data w.r.t. clust=
-er index */
->
-> Please keep it at 80 characters limit. Also, maybe just make it more
-> generic and mention "Exynos9 platforms" instead of listing all SoCs?
->
-
-Will fix and reword.
-
-> Other than that:
->
-> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-
-Thanks!
-
-Peter
->
->
-> >         if (variant =3D=3D &drv_data_exynos850_cl0 ||
-> > -           variant =3D=3D &drv_data_exynosautov9_cl0) {
-> > +           variant =3D=3D &drv_data_exynosautov9_cl0 ||
-> > +           variant =3D=3D &drv_data_gs101_cl0) {
-> >                 u32 index;
-> >                 int err;
-> >
-> > @@ -619,9 +653,12 @@ s3c2410_get_wdt_drv_data(struct platform_device *p=
-dev, struct s3c2410_wdt *wdt)
-> >                 case 0:
-> >                         break;
-> >                 case 1:
-> > -                       variant =3D (variant =3D=3D &drv_data_exynos850=
-_cl0) ?
-> > -                               &drv_data_exynos850_cl1 :
-> > -                               &drv_data_exynosautov9_cl1;
-> > +                       if (variant =3D=3D &drv_data_exynos850_cl0)
-> > +                               variant =3D &drv_data_exynos850_cl1;
-> > +                       else if (variant =3D=3D &drv_data_exynosautov9_=
-cl0)
-> > +                               variant =3D &drv_data_exynosautov9_cl1;
-> > +                       else if (variant =3D=3D &drv_data_gs101_cl0)
-> > +                               variant =3D &drv_data_gs101_cl1;
-> >                         break;
-> >                 default:
-> >                         return dev_err_probe(dev, -EINVAL, "wrong clust=
-er index: %u\n", index);
+> >  MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
 > > --
 > > 2.43.0.rc2.451.g8631bc7472-goog
 > >
