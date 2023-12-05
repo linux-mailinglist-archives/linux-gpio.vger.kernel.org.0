@@ -1,171 +1,135 @@
-Return-Path: <linux-gpio+bounces-1029-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1030-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A4EB80599A
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:13:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 42F2A8059B4
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:16:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54ED41C210D9
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:13:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73BA41C211CF
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:16:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B8DE63DFB;
-	Tue,  5 Dec 2023 16:13:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846BF60B8A;
+	Tue,  5 Dec 2023 16:16:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WI7e9xZd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5353B19F
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 08:13:17 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAY21-00048v-Nv; Tue, 05 Dec 2023 17:12:21 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAY1z-00DmUU-DU; Tue, 05 Dec 2023 17:12:19 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rAY1z-00EqaV-2n; Tue, 05 Dec 2023 17:12:19 +0100
-Date: Tue, 5 Dec 2023 17:12:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Tomasz Figa <tomasz.figa@gmail.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	kernel@pengutronix.de
-Subject: Re: (subset) [PATCH 00/17] dt-bindings: samsung: add specific
- compatibles for existing SoC
-Message-ID: <20231205161218.wymlzvhk4pnnkwze@pengutronix.de>
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <170119374454.445690.515311393756577368.b4-ty@gmail.com>
- <20231128205841.al23ra5s34rn3muj@pengutronix.de>
- <ZW8ZNZ_FJSV8fq-U@orome.fritz.box>
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBB6122
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 08:16:51 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5c67c1ad5beso2023593a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 08:16:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1701793010; x=1702397810; darn=vger.kernel.org;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Nb6CHM3yfDtGTZBk7fxTwlk032gu1XjkkQ+jCGcfE7Q=;
+        b=WI7e9xZd87ef+QkS4MHI6hsVBJfNJ8Y3ofIHJJPAxuVz2qE2y0RG9DHOCfkJQb2Opo
+         DI76SJlt1jCmYJJhc/KkU95yaJru5FTyu343GE3ZMOvtqC4Yfm+LYnNrNzXnU00RxAm+
+         AQZOeDq4fx9VqCvde1MBcLPCnz5MaAV+ECuVuF6gPbP0yc5qOVEOunfP9iuHQJhlY592
+         gsxJiAh4+I+P4HZHyHh27woagOeMUy1qchaqD212Ud1TMV2JCDIiuODWs/AnrYv0gkZe
+         cZrULCC7l/JgRevtv0G6uiNICgw9KERszAeEg/ci/2ASS26dKarmcQAg8lzPp91N5+vj
+         Gqxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701793010; x=1702397810;
+        h=content-transfer-encoding:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Nb6CHM3yfDtGTZBk7fxTwlk032gu1XjkkQ+jCGcfE7Q=;
+        b=DI7Nt+b9hyF4oxv9gE9K3HQNjQ1XmR4v8Ufh8K//Ed5Pgclki/I1jRjfks6CHEQqvg
+         KoN3iW41n1lyqXwpoHAOH+ht7vO4uJO16bjKG8qPBzyVSYvIFkbsNLEuJoh6tC5xSJ5d
+         wZENiqbd6dvFD46sKcCVJ9oAotEsCK3p0m1mf9qSlbF6WAeKp+d2ch/LFjM3LOrw0T+j
+         ZhoznZNDO/+LuN06kNS5E4ok/u9mAezkiHL5WDqxJJ+ZwGsUdsa3FQuotabUWgBw2BXW
+         5zV8PdCm8DeRjAZy6HF9e++akklFWxxn0njzEEyCBfQnzjN2+s1CZFz7TaiYTIkLqBIo
+         WqZg==
+X-Gm-Message-State: AOJu0YwvduepfeAHenpcMGIU2PHJY5S0I6LaAhYW6D0cwNtqp4BDYkgb
+	0dU7IH9iIauWZdBuDe61oBZzS8SqUncmcQehw7oNgpvfULs=
+X-Google-Smtp-Source: AGHT+IEJg56YgzYeP7RhEtPnLkWMtHALIHtv4vBOqYOyvpURk+JFcASG0Wo34/0uVj0S9tPsBtDfGdGr/6zvIGZcwBg=
+X-Received: by 2002:a17:90b:17d2:b0:286:8f8f:5e3d with SMTP id
+ me18-20020a17090b17d200b002868f8f5e3dmr1558203pjb.30.1701793010280; Tue, 05
+ Dec 2023 08:16:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dyjed4xxkou772mg"
-Content-Disposition: inline
-In-Reply-To: <ZW8ZNZ_FJSV8fq-U@orome.fritz.box>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---dyjed4xxkou772mg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <CAKm-UmajXOivhNzy7hbL9-Afrk77uk=oSgCHQAL11jFOqE2FtA@mail.gmail.com>
+In-Reply-To: <CAKm-UmajXOivhNzy7hbL9-Afrk77uk=oSgCHQAL11jFOqE2FtA@mail.gmail.com>
+From: =?UTF-8?Q?S=C3=A9bastien_Chaumat?= <euidzero@gmail.com>
+Date: Tue, 5 Dec 2023 17:16:39 +0100
+Message-ID: <CAKm-Umbh1x=x+uk6CRVGJnqJg+dBEaOgkN1tCdi=Y+HVA9eNiw@mail.gmail.com>
+Subject: Re: [BUG]Xen : amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+To: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello Thierry,
+Le mar. 5 d=C3=A9c. 2023 =C3=A0 13:03, S=C3=A9bastien Chaumat <euidzero@gma=
+il.com> a =C3=A9crit :
 
-On Tue, Dec 05, 2023 at 01:36:05PM +0100, Thierry Reding wrote:
-> On Tue, Nov 28, 2023 at 09:58:41PM +0100, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Nov 28, 2023 at 06:49:23PM +0100, Thierry Reding wrote:
-> > >=20
-> > > On Wed, 08 Nov 2023 11:43:26 +0100, Krzysztof Kozlowski wrote:
-> > > > Merging
-> > > > =3D=3D=3D=3D=3D=3D=3D
-> > > > I propose to take entire patchset through my tree (Samsung SoC), be=
-cause:
-> >     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> >=20
-> > > > 1. Next cycle two new SoCs will be coming (Google GS101 and ExynosA=
-utov920), so
-> > > >    they will touch the same lines in some of the DT bindings (not a=
-ll, though).
-> > > >    It is reasonable for me to take the bindings for the new SoCs, t=
-o have clean
-> > > >    `make dtbs_check` on the new DTS.
-> > > > 2. Having it together helps me to have clean `make dtbs_check` with=
-in my tree
-> > > >    on the existing DTS.
-> > > > 3. No drivers are affected by this change.
-> > > > 4. I plan to do the same for Tesla FSD and Exynos ARM32 SoCs, thus =
-expect
-> > > >    follow up patchsets.
-> > > >=20
-> > > > [...]
-> > >=20
-> > > Applied, thanks!
-> > >=20
-> > > [12/17] dt-bindings: pwm: samsung: add specific compatibles for exist=
-ing SoC
-> > >         commit: 5d67b8f81b9d598599366214e3b2eb5f84003c9f
-> >=20
-> > You didn't honor (or even comment) Krzysztof's proposal to take the
-> > whole patchset via his tree (marked above). Was there some off-list
-> > agreement?
->=20
-> I had read all that and then looking at patchwork saw that you had
-> marked all other patches in the series as "handled-elsewhere" and only
-> this one was left as "new", so I assumed that, well, everything else was
-> handled elsewhere and I was supposed to pick this one up...
+>  Trying to get Framework Laptop 13 AMD with xen,  the touchpad is not
+> working because (in reverse order) :
+>
+>  no events received from evtest while device being detected
+>  i2c_hid_acpi i2c-FRMXXXXXXX: failed to reset device: -61
+>  amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+>
+>  Tested with xen 4.18.0 and kernel 6.6.4.
+>   We need to get the kernel to be more verbose about the issue to
+> understand what is happening.
 
-I didn't mark it as handled-elsewhere, but my expectation was that you
-might want to send an Ack only.
+booting kernel with "dyndbg=3Dfile drivers/gpio/* +p"
 
-For today's series by Krzysztof I acked and marked the patch as
-handled-elsewhere (together with the rest of the series that isn't pwm
-related). So you have to consult your inbox if you still want to send an
-Ack for that one.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---dyjed4xxkou772mg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVvS+IACgkQj4D7WH0S
-/k4wwAf6AlMbQoIitSxoLyL8EPf/AFm1OReNOJVSWyeoYnXJ6AOvGwmxAqCesfcV
-8NCugoHjF1JiraIJPpyVgrmmas8T0uk5v4N32GPcL7ld1hBZGsH8B9GsuTioS5R7
-+pMOUKwLPmf+vPiDCjkvAL9B3HOBCCSHjU6g9vf2b4O0dNvJK+vVFOuKPF5r+GQr
-fFPsuCRnPkkHNn8PWA6HWPUR+0V1rsyiabnsgxlnC6PPyu64tC9aD2Xto0+kM0D0
-WAdt4elH5P373tccyXATCZK4xaJWO4eHbzJTeVOCeEqcjB55BwuzMgVP8xQ85Mrx
-RHto9piBhu5zc5d4EcBjLTp4QpooUg==
-=k470
------END PGP SIGNATURE-----
-
---dyjed4xxkou772mg--
+[    1.997798] i2c_designware AMDI0010:00: using ACPI '\_SB.I2CA' for
+'scl' GPIO lookup
+[    1.997804] acpi AMDI0010:00: GPIO: looking up scl-gpios
+[    1.997806] acpi AMDI0010:00: GPIO: looking up scl-gpio
+[    1.997807] i2c_designware AMDI0010:00: using lookup tables for GPIO loo=
+kup
+[    1.997809] i2c_designware AMDI0010:00: No GPIO consumer scl found
+[    2.007517] i2c_designware AMDI0010:03: using ACPI '\_SB.I2CD' for
+'scl' GPIO lookup
+[    2.007521] acpi AMDI0010:03: GPIO: looking up scl-gpios
+[    2.007523] acpi AMDI0010:03: GPIO: looking up scl-gpio
+[    2.007524] i2c_designware AMDI0010:03: using lookup tables for GPIO loo=
+kup
+[    2.007526] i2c_designware AMDI0010:03: No GPIO consumer scl found
+[    2.343905] gpiochip_find_base: found new base at 512
+[    2.344408] gpio gpiochip0: Persistence not supported for GPIO 0
+[    2.344436] gpio gpiochip0: Persistence not supported for GPIO 61
+[    2.344458] gpio gpiochip0: Persistence not supported for GPIO 62
+[    2.344480] gpio gpiochip0: Persistence not supported for GPIO 58
+[    2.344502] gpio gpiochip0: Persistence not supported for GPIO 59
+[    2.344523] gpio gpiochip0: Persistence not supported for GPIO 2
+[    2.344546] gpio gpiochip0: Persistence not supported for GPIO 6
+[    2.344571] gpio gpiochip0: Persistence not supported for GPIO 54
+[    2.344646] gpio gpiochip0: (AMDI0030:00): added GPIO chardev (254:0)
+[    2.344648] gpio gpiochip0: registered GPIOs 512 to 767 on AMDI0030:00
+[    2.344650] gpio gpiochip0: (AMDI0030:00): created GPIO range
+0->255 =3D=3D> AMDI0030:00 PIN 0->255
+[    2.357663] acpi MSFT0101:00: GPIO: looking up 0 in _CRS
+[    2.376188] mdio_bus fixed-0: using lookup tables for GPIO lookup
+[    2.376193] mdio_bus fixed-0: No GPIO consumer reset found
+[    2.401459] rtc_cmos 00:01: using ACPI '\_SB.PCI0.LPC0.RTC' for
+'wp' GPIO lookup
+[    2.401464] acpi PNP0B00:00: GPIO: looking up wp-gpios
+[    2.401465] acpi PNP0B00:00: GPIO: looking up wp-gpio
+[    2.401467] rtc_cmos 00:01: using lookup tables for GPIO lookup
+[    2.401468] rtc_cmos 00:01: No GPIO consumer wp found
+[    2.659765] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660047] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660162] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660277] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660393] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660504] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660609] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    2.660726] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
+[    5.445265] acpi FRMW0004:00: GPIO: looking up 0 in _CRS
+[    5.445396] acpi FRMW0005:00: GPIO: looking up 0 in _CRS
+[    5.448467] acpi PIXA3854:00: GPIO: looking up 0 in _CRS
+[    5.448483] gpio gpiochip0: Persistence not supported for GPIO 84
+[    5.452476] gpio gpiochip0: Persistence not supported for GPIO 5
+[    5.463304] gpio gpiochip0: Persistence not supported for GPIO 8
 
