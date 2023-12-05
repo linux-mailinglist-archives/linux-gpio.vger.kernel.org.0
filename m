@@ -1,135 +1,179 @@
-Return-Path: <linux-gpio+bounces-1030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 42F2A8059B4
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:16:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EB42F8059EF
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:25:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73BA41C211CF
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:16:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 266221C211CD
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:25:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 846BF60B8A;
-	Tue,  5 Dec 2023 16:16:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AA2F675BA;
+	Tue,  5 Dec 2023 16:25:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WI7e9xZd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sAk9M7Em"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1EBB6122
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 08:16:51 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5c67c1ad5beso2023593a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 08:16:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701793010; x=1702397810; darn=vger.kernel.org;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nb6CHM3yfDtGTZBk7fxTwlk032gu1XjkkQ+jCGcfE7Q=;
-        b=WI7e9xZd87ef+QkS4MHI6hsVBJfNJ8Y3ofIHJJPAxuVz2qE2y0RG9DHOCfkJQb2Opo
-         DI76SJlt1jCmYJJhc/KkU95yaJru5FTyu343GE3ZMOvtqC4Yfm+LYnNrNzXnU00RxAm+
-         AQZOeDq4fx9VqCvde1MBcLPCnz5MaAV+ECuVuF6gPbP0yc5qOVEOunfP9iuHQJhlY592
-         gsxJiAh4+I+P4HZHyHh27woagOeMUy1qchaqD212Ud1TMV2JCDIiuODWs/AnrYv0gkZe
-         cZrULCC7l/JgRevtv0G6uiNICgw9KERszAeEg/ci/2ASS26dKarmcQAg8lzPp91N5+vj
-         Gqxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701793010; x=1702397810;
-        h=content-transfer-encoding:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nb6CHM3yfDtGTZBk7fxTwlk032gu1XjkkQ+jCGcfE7Q=;
-        b=DI7Nt+b9hyF4oxv9gE9K3HQNjQ1XmR4v8Ufh8K//Ed5Pgclki/I1jRjfks6CHEQqvg
-         KoN3iW41n1lyqXwpoHAOH+ht7vO4uJO16bjKG8qPBzyVSYvIFkbsNLEuJoh6tC5xSJ5d
-         wZENiqbd6dvFD46sKcCVJ9oAotEsCK3p0m1mf9qSlbF6WAeKp+d2ch/LFjM3LOrw0T+j
-         ZhoznZNDO/+LuN06kNS5E4ok/u9mAezkiHL5WDqxJJ+ZwGsUdsa3FQuotabUWgBw2BXW
-         5zV8PdCm8DeRjAZy6HF9e++akklFWxxn0njzEEyCBfQnzjN2+s1CZFz7TaiYTIkLqBIo
-         WqZg==
-X-Gm-Message-State: AOJu0YwvduepfeAHenpcMGIU2PHJY5S0I6LaAhYW6D0cwNtqp4BDYkgb
-	0dU7IH9iIauWZdBuDe61oBZzS8SqUncmcQehw7oNgpvfULs=
-X-Google-Smtp-Source: AGHT+IEJg56YgzYeP7RhEtPnLkWMtHALIHtv4vBOqYOyvpURk+JFcASG0Wo34/0uVj0S9tPsBtDfGdGr/6zvIGZcwBg=
-X-Received: by 2002:a17:90b:17d2:b0:286:8f8f:5e3d with SMTP id
- me18-20020a17090b17d200b002868f8f5e3dmr1558203pjb.30.1701793010280; Tue, 05
- Dec 2023 08:16:50 -0800 (PST)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F61675AF;
+	Tue,  5 Dec 2023 16:25:49 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28F1EC433C8;
+	Tue,  5 Dec 2023 16:25:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1701793549;
+	bh=l+yMCO/2N3ShBBsyZVkdZcF1uzW3j1QSS3UJ2FkcKQ4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sAk9M7Em7oE9ofYmyvxJZwMQ0oYdN/PKTB6VLJobCr+mwd8A3pFKZ4OpB5mf5jA4S
+	 lEfuu+E2+vduEx/OWDxvu8/NQLOqhle9nRvHCj8Q0Pb6S1cmtpNAHQ1SHQeBCYomRW
+	 koBITEzhdXcRj+FYKm06eNOO+o2yw5p60foAxVwVyMPkcOWFtmTM4jIMll0fMDfDP5
+	 MellRCj8GZ6PwA8NYIPOy1N19MAj0Gjqva9UpPC47Z3LgbFdAMLWZnMrrIIllt0s5w
+	 F1ozMR/6uCaMEqI+VETarD3cQbvq9uqqCHe/UEcL7UC6WAPixyZuVfFWxtHrqh+Lt2
+	 YpmZb3ScDo4SA==
+Date: Tue, 5 Dec 2023 16:25:42 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 1/2] dt-bindings: adc: add AD7173
+Message-ID: <20231205-jockey-chance-bc324d8809f9@spud>
+References: <20231205134223.17335-1-mitrutzceclan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAKm-UmajXOivhNzy7hbL9-Afrk77uk=oSgCHQAL11jFOqE2FtA@mail.gmail.com>
-In-Reply-To: <CAKm-UmajXOivhNzy7hbL9-Afrk77uk=oSgCHQAL11jFOqE2FtA@mail.gmail.com>
-From: =?UTF-8?Q?S=C3=A9bastien_Chaumat?= <euidzero@gmail.com>
-Date: Tue, 5 Dec 2023 17:16:39 +0100
-Message-ID: <CAKm-Umbh1x=x+uk6CRVGJnqJg+dBEaOgkN1tCdi=Y+HVA9eNiw@mail.gmail.com>
-Subject: Re: [BUG]Xen : amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-To: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="/ZchycVY0o6z6yFD"
+Content-Disposition: inline
+In-Reply-To: <20231205134223.17335-1-mitrutzceclan@gmail.com>
+
+
+--/ZchycVY0o6z6yFD
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Le mar. 5 d=C3=A9c. 2023 =C3=A0 13:03, S=C3=A9bastien Chaumat <euidzero@gma=
-il.com> a =C3=A9crit :
+On Tue, Dec 05, 2023 at 03:42:20PM +0200, Dumitru Ceclan wrote:
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel applications
+> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+> primarily for measurement of signals close to DC but also delivers
+> outstanding performance with input bandwidths out to ~10kHz.
+>=20
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7173.yaml          | 170 ++++++++++++++++++
+>  1 file changed, 170 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.=
+yaml
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+> new file mode 100644
+> index 000000000000..087820a0cf48
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+> @@ -0,0 +1,170 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +# Copyright 2023 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7173 ADC
+> +
+> +maintainers:
+> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported=
+ chips:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7172-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7173-8.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7175-2.pdf
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
+AD7176-2.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7172-2
+> +      - adi,ad7173-8
+> +      - adi,ad7175-2
+> +      - adi,ad7176-2
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  spi-max-frequency:
+> +    maximum: 20000000
+> +
+> +  refin-supply:
+> +    description: external reference supply, can be used as reference for=
+ conversion.
+> +
+> +  refin2-supply:
+> +    description: external reference supply, can be used as reference for=
+ conversion.
+> +
+> +  avdd-supply:
+> +    description: avdd supply, can be used as reference for conversion.
+> +
 
->  Trying to get Framework Laptop 13 AMD with xen,  the touchpad is not
-> working because (in reverse order) :
->
->  no events received from evtest while device being detected
->  i2c_hid_acpi i2c-FRMXXXXXXX: failed to reset device: -61
->  amd_gpio AMDI0030:00: failed to enable wake-up interrupt
->
->  Tested with xen 4.18.0 and kernel 6.6.4.
->   We need to get the kernel to be more verbose about the issue to
-> understand what is happening.
+> +  required:
+> +    - compatible
+> +    - reg
+> +    - interrupts
 
-booting kernel with "dyndbg=3Dfile drivers/gpio/* +p"
+This is at the wrong level of indent (as Rob's bot pointed out) and
+should come after patternProperties too.
 
-[    1.997798] i2c_designware AMDI0010:00: using ACPI '\_SB.I2CA' for
-'scl' GPIO lookup
-[    1.997804] acpi AMDI0010:00: GPIO: looking up scl-gpios
-[    1.997806] acpi AMDI0010:00: GPIO: looking up scl-gpio
-[    1.997807] i2c_designware AMDI0010:00: using lookup tables for GPIO loo=
-kup
-[    1.997809] i2c_designware AMDI0010:00: No GPIO consumer scl found
-[    2.007517] i2c_designware AMDI0010:03: using ACPI '\_SB.I2CD' for
-'scl' GPIO lookup
-[    2.007521] acpi AMDI0010:03: GPIO: looking up scl-gpios
-[    2.007523] acpi AMDI0010:03: GPIO: looking up scl-gpio
-[    2.007524] i2c_designware AMDI0010:03: using lookup tables for GPIO loo=
-kup
-[    2.007526] i2c_designware AMDI0010:03: No GPIO consumer scl found
-[    2.343905] gpiochip_find_base: found new base at 512
-[    2.344408] gpio gpiochip0: Persistence not supported for GPIO 0
-[    2.344436] gpio gpiochip0: Persistence not supported for GPIO 61
-[    2.344458] gpio gpiochip0: Persistence not supported for GPIO 62
-[    2.344480] gpio gpiochip0: Persistence not supported for GPIO 58
-[    2.344502] gpio gpiochip0: Persistence not supported for GPIO 59
-[    2.344523] gpio gpiochip0: Persistence not supported for GPIO 2
-[    2.344546] gpio gpiochip0: Persistence not supported for GPIO 6
-[    2.344571] gpio gpiochip0: Persistence not supported for GPIO 54
-[    2.344646] gpio gpiochip0: (AMDI0030:00): added GPIO chardev (254:0)
-[    2.344648] gpio gpiochip0: registered GPIOs 512 to 767 on AMDI0030:00
-[    2.344650] gpio gpiochip0: (AMDI0030:00): created GPIO range
-0->255 =3D=3D> AMDI0030:00 PIN 0->255
-[    2.357663] acpi MSFT0101:00: GPIO: looking up 0 in _CRS
-[    2.376188] mdio_bus fixed-0: using lookup tables for GPIO lookup
-[    2.376193] mdio_bus fixed-0: No GPIO consumer reset found
-[    2.401459] rtc_cmos 00:01: using ACPI '\_SB.PCI0.LPC0.RTC' for
-'wp' GPIO lookup
-[    2.401464] acpi PNP0B00:00: GPIO: looking up wp-gpios
-[    2.401465] acpi PNP0B00:00: GPIO: looking up wp-gpio
-[    2.401467] rtc_cmos 00:01: using lookup tables for GPIO lookup
-[    2.401468] rtc_cmos 00:01: No GPIO consumer wp found
-[    2.659765] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660047] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660162] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660277] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660393] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660504] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660609] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    2.660726] amd_gpio AMDI0030:00: failed to enable wake-up interrupt
-[    5.445265] acpi FRMW0004:00: GPIO: looking up 0 in _CRS
-[    5.445396] acpi FRMW0005:00: GPIO: looking up 0 in _CRS
-[    5.448467] acpi PIXA3854:00: GPIO: looking up 0 in _CRS
-[    5.448483] gpio gpiochip0: Persistence not supported for GPIO 84
-[    5.452476] gpio gpiochip0: Persistence not supported for GPIO 5
-[    5.463304] gpio gpiochip0: Persistence not supported for GPIO 8
+Otherwise, this looks okay to me.
+Thanks,
+Conor.
+
+--/ZchycVY0o6z6yFD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZW9PBgAKCRB4tDGHoIJi
+0hQJAQDLS/cTqT9ORoSbrXbQtoH978ZVY0+xnOhJDyqmEZK4cwD+M62KCeuB5Kh5
+1/k1EQxuWA7Di4h3IlK2+MsqyRfAKwQ=
+=F1ne
+-----END PGP SIGNATURE-----
+
+--/ZchycVY0o6z6yFD--
 
