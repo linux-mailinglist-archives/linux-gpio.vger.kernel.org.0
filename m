@@ -1,108 +1,110 @@
-Return-Path: <linux-gpio+bounces-1032-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1033-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C2978059FF
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:33:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 96B3C805B07
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 18:18:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 545CD281E91
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:33:30 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FCED1F219FE
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:18:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F63675D2;
-	Tue,  5 Dec 2023 16:33:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dqi2MDNB"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C10BC692BB;
+	Tue,  5 Dec 2023 17:18:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 838009E;
-	Tue,  5 Dec 2023 08:33:25 -0800 (PST)
-Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a1b7b6bf098so412684566b.1;
-        Tue, 05 Dec 2023 08:33:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701794004; x=1702398804; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=dHAUfP9J9hYw6Y/D0QYfGV3SZNbPrYlP0cxK2LyLc5w=;
-        b=dqi2MDNBAxf+t3ir3KC6vS3FtXx/NgPOyE9cvc3FlxuNnf9qYjYlvo/PhtQnFPH77w
-         w6t9U8VS/QEtK2F2ZR4qMzcclbaXVzg/d028pdtk30GF098Is7gKC1Xa4a80xS/BUE4y
-         iUVPu6JNZHV1eGvpEOj4AyWEEzkRuzLe4U5LJKvfBY1qqO2+s4J5/Gv4cYT8+notRIRx
-         jXwEi1FuK6nI+lGrwHuHCl2B3reaJFd2z0PGfxp2FJy4GfyQenGG9ZEPVnKQWSM3fsUs
-         Y5k5/LzFufwKpXt8MQYy09kZ/qpk5HToejBn2E0OpIDAZPu2Hxh4zDsgagl5L/j26nyd
-         ytvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701794004; x=1702398804;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=dHAUfP9J9hYw6Y/D0QYfGV3SZNbPrYlP0cxK2LyLc5w=;
-        b=SVEJAk9OKTqvxaJL89BbkPAyAB7K53M5/lUAlJJxM4WT4Ge/S89uoaCMXmy3J/VkVV
-         ENtkC1WB/mjclX9cyeTlxib9Bfkab9Jw+9tw4eBgZY90ldK1oax83vwPV95hPwLqkqqQ
-         PQ523e1VrIHggcbFJTl3ghaDiyL8yNYczwUC76K3vFtsamy0DRh8gQn9GrwBacxI7p+Y
-         OYme4BMpILVV8MOJqz7PhqpJTKI9MrBKvRkw7owIzO+338H5uZCOGtgw3oRpTn7Sy+Gc
-         KD3ybFTr4UowEP+FLJImpvOX59PPPE2NwngoSi1Yl5iSSWCQqy1/tTYdXEPQZFCCpN9X
-         qhXg==
-X-Gm-Message-State: AOJu0YxbV0Kf261r3DvBNdtM6VksQNWm/qtFAxRmlBOAQlu76hNZq1MA
-	S7u4sgypIdSB03mIQUpgsKIUrH5v86g6WO2o+y8=
-X-Google-Smtp-Source: AGHT+IGczDP9zD/T4pczBEFyAzDxRTWLESnCkO+AaVNv7qm7h1SrX5Wou+uF+c/hxOW2vL6k8xWsvA==
-X-Received: by 2002:a17:906:6bd9:b0:a1a:e3c6:f50 with SMTP id t25-20020a1709066bd900b00a1ae3c60f50mr1509048ejs.66.1701794003689;
-        Tue, 05 Dec 2023 08:33:23 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id l18-20020a1709066b9200b00a1d18c142eesm299267ejr.59.2023.12.05.08.33.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 08:33:23 -0800 (PST)
-Message-ID: <ac34ef21-493e-4a79-8a0a-1c37e2d9cbb4@gmail.com>
-Date: Tue, 5 Dec 2023 18:33:21 +0200
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 194E9C0;
+	Tue,  5 Dec 2023 09:18:22 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="425085150"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="425085150"
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 09:18:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="841545261"
+X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
+   d="scan'208";a="841545261"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 09:18:16 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rAZ3k-000000026Ns-2qE0;
+	Tue, 05 Dec 2023 19:18:12 +0200
+Date: Tue, 5 Dec 2023 19:18:12 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Ceclan Dumitru <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 2/2] iio: adc: ad7173: add AD7173 driver
+Message-ID: <ZW9bVDLZl4-QLIbg@smile.fi.intel.com>
+References: <20231205134223.17335-1-mitrutzceclan@gmail.com>
+ <20231205134223.17335-2-mitrutzceclan@gmail.com>
+ <CAHp75VeKhR5y4AB=L5VVSrm=13Ruw7e86m+K9m9t-LZg5puDow@mail.gmail.com>
+ <e72085fd-3203-4166-afab-73707d27d174@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7 1/2] dt-bindings: adc: add AD7173
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231205134223.17335-1-mitrutzceclan@gmail.com>
- <20231205-jockey-chance-bc324d8809f9@spud>
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <20231205-jockey-chance-bc324d8809f9@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e72085fd-3203-4166-afab-73707d27d174@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-On 12/5/23 18:25, Conor Dooley wrote:
-> On Tue, Dec 05, 2023 at 03:42:20PM +0200, Dumitru Ceclan wrote:
->> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
->> which can be used in high precision, low noise single channel applications
->> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
->> primarily for measurement of signals close to DC but also delivers
->> outstanding performance with input bandwidths out to ~10kHz.
->>
-...
->> +  required:
->> +    - compatible
->> +    - reg
->> +    - interrupts
+On Tue, Dec 05, 2023 at 06:12:18PM +0200, Ceclan Dumitru wrote:
+> On 12/5/23 17:28, Andy Shevchenko wrote:
+> >> +               ref_label = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_INT_REF];
+> >> +
+> >> +               fwnode_property_read_string(child, "adi,reference-select",
+> >> +                                           &ref_label);
+> >> +               ref_sel = match_string(ad7173_ref_sel_str,
+> >> +                                      ARRAY_SIZE(ad7173_ref_sel_str), ref_label);
+> >> +               if (ref_sel < 0) {
+> > Can we use fwnode_property_match_property_string()?
 > 
-> This is at the wrong level of indent (as Rob's bot pointed out) and
-> should come after patternProperties too.
-> 
+> fwnode_property_match_string() searches a given string in a device-tree
+> string array and returns the index. I do not think that this function
+> fits here as the DT attribute is a single string.
 
-Yep, it was fixed in V6, forgot to include it
+I'm not talking about that. I mentioned different API call.
+
+/**
+ * fwnode_property_match_property_string - find a property string value in an array and return index
+ * @fwnode: Firmware node to get the property of
+ * @propname: Name of the property holding the string value
+ * @array: String array to search in
+ * @n: Size of the @array
+ *
+ * Find a property string value in a given @array and if it is found return
+ * the index back.
+ *
+ * Return: index, starting from %0, if the string value was found in the @array (success),
+ *         %-ENOENT when the string value was not found in the @array,
+ *         %-EINVAL if given arguments are not valid,
+ *         %-ENODATA if the property does not have a value,
+ *         %-EPROTO or %-EILSEQ if the property is not a string,
+ *         %-ENXIO if no suitable firmware interface is present.
+ */
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
