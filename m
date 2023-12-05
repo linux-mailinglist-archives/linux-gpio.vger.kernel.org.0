@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-1027-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1026-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F648805977
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:05:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41C4E805976
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:05:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1FAAF281FDE
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:05:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 71ECD1C20ED9
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:05:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C954663DD8;
-	Tue,  5 Dec 2023 16:05:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6A8363DD6;
+	Tue,  5 Dec 2023 16:05:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TlTTTZBo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Fa2Vsz9t"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1196120
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 08:05:09 -0800 (PST)
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B34D9194
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 08:05:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701792309; x=1733328309;
+  t=1701792308; x=1733328308;
   h=date:from:to:cc:subject:message-id;
-  bh=J2Y/KkJVDKXYji4SKl3jv+zlWvaQzXVebMkw8ht3U6w=;
-  b=TlTTTZBoTGQWM1R8UpoHqmtEBhUX464wt0WqaPUCgjO6z+PRXhnqVIxV
-   RIw1iFC1MCA913dOFuA+moYZ/xEjfQ1xkG2jignDsePGnI9/gbQwlZJns
-   7a3wJr2cV9VfCvOR/rOwwViPZm6dqTrUecA73kz1t6I+/7NSs6DDFvHTw
-   1AkCIClS8aqoHd77AINzuqtOafLHsjpApVm76jgAb2kgpPimm3ven7Bej
-   hUY6G/SsYuU6krV742PvashqRwHuQ+c/mTkATM7EVnbjjnxTy6qZ8sser
-   gKSPHIAh7Fx1+MoZETL0A2BK+OIu6sjpeP1HrTNGS3fWJtdxCmbakiI15
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="374101166"
+  bh=Qi5OE0k9wlqmw4K1uf8bL90Uy9ix8HYnzGGV2dQIPfo=;
+  b=Fa2Vsz9tnTUMq3Uoqja5JE2zAfN6+ghPi1wi2Ri47inyPvx8wpzUbaCO
+   WhgJOKquRWdLJcexVLnJmf0FVOZO9lpjpkXoKYJb+cRd2U6fHPtL0PQH7
+   EybQ9eo857DP61XJZxgUM1+RUmxPRo8Rd9IviXJA2lJTJSUEBzlHFGksn
+   sXflnrDTpRAQ3wE0Fvnkdt0cAC5F8MEb6gxG++7FwOEL58eD/+tj/TZOG
+   34/NwCXA2NYjZeS3RdOGOGYZ+aWZ7RkOwce9ZreOTfBns/HgZRGhY+jcr
+   zLOcgecBSF/OF9Cnl9ycqGroAXeap6LlFrY6jVvz4rfm1Rd66izd/eRId
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="374101161"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="374101166"
+   d="scan'208";a="374101161"
 Received: from orsmga008.jf.intel.com ([10.7.209.65])
   by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:04:47 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="800011330"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="800011332"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="800011330"
+   d="scan'208";a="800011332"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
   by orsmga008.jf.intel.com with ESMTP; 05 Dec 2023 08:04:45 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rAXud-0009IJ-1B;
+	id 1rAXud-0009IH-14;
 	Tue, 05 Dec 2023 16:04:43 +0000
-Date: Wed, 06 Dec 2023 00:03:55 +0800
+Date: Wed, 06 Dec 2023 00:04:20 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- c88c6f2a2502f083259ca2e205dd1d7d8d897e07
-Message-ID: <202312060053.nQqOaxNu-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 253bad7f0436284ee0413b1c615a1d4be96893de
+Message-ID: <202312060017.mhuYicTl-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -59,18 +59,12 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: c88c6f2a2502f083259ca2e205dd1d7d8d897e07  Merge branch 'devel' into for-next
-
-Warning ids grouped by kconfigs:
-
-clang_recent_errors
-`-- um-randconfig-r121-20231205
-    `-- arch-um-drivers-rtc_user.c:warning:variable-err-is-used-uninitialized-whenever-if-condition-is-true
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 253bad7f0436284ee0413b1c615a1d4be96893de  dt-bindings: pinctrl: qcom,sm8550-lpass-lpi: add X1E80100 LPASS LPI
 
 elapsed time: 1460m
 
-configs tested: 175
+configs tested: 177
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -84,18 +78,20 @@ arc                              allmodconfig   gcc
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
 arc                   randconfig-001-20231205   gcc  
 arc                   randconfig-002-20231205   gcc  
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
 arm                                 defconfig   clang
-arm                      footbridge_defconfig   gcc  
-arm                       imx_v4_v5_defconfig   clang
+arm                             mxs_defconfig   clang
+arm                          pxa168_defconfig   clang
 arm                   randconfig-001-20231205   gcc  
 arm                   randconfig-002-20231205   gcc  
 arm                   randconfig-003-20231205   gcc  
 arm                   randconfig-004-20231205   gcc  
+arm                         s5pv210_defconfig   clang
 arm64                            allmodconfig   clang
 arm64                             allnoconfig   gcc  
 arm64                               defconfig   gcc  
@@ -109,6 +105,7 @@ csky                             allyesconfig   gcc
 csky                                defconfig   gcc  
 csky                  randconfig-001-20231205   gcc  
 csky                  randconfig-002-20231205   gcc  
+hexagon                          alldefconfig   clang
 hexagon                          allmodconfig   clang
 hexagon                           allnoconfig   clang
 hexagon                          allyesconfig   clang
@@ -145,16 +142,15 @@ loongarch             randconfig-002-20231205   gcc
 m68k                             allmodconfig   gcc  
 m68k                              allnoconfig   gcc  
 m68k                             allyesconfig   gcc  
-m68k                          amiga_defconfig   gcc  
+m68k                         apollo_defconfig   gcc  
 m68k                                defconfig   gcc  
-m68k                       m5475evb_defconfig   gcc  
 microblaze                       allmodconfig   gcc  
 microblaze                        allnoconfig   gcc  
 microblaze                       allyesconfig   gcc  
 microblaze                          defconfig   gcc  
 mips                              allnoconfig   clang
 mips                             allyesconfig   gcc  
-mips                        vocore2_defconfig   gcc  
+mips                         rt305x_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -174,10 +170,13 @@ parisc64                            defconfig   gcc
 powerpc                          allmodconfig   clang
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   clang
-powerpc                     ksi8560_defconfig   clang
+powerpc                      cm5200_defconfig   gcc  
+powerpc                         ps3_defconfig   gcc  
 powerpc               randconfig-001-20231205   gcc  
 powerpc               randconfig-002-20231205   gcc  
 powerpc               randconfig-003-20231205   gcc  
+powerpc                     redwood_defconfig   gcc  
+powerpc                     tqm8555_defconfig   gcc  
 powerpc64             randconfig-001-20231205   gcc  
 powerpc64             randconfig-002-20231205   gcc  
 powerpc64             randconfig-003-20231205   gcc  
@@ -185,28 +184,25 @@ riscv                            allmodconfig   gcc
 riscv                             allnoconfig   clang
 riscv                            allyesconfig   gcc  
 riscv                               defconfig   gcc  
-riscv                    nommu_virt_defconfig   clang
 riscv                 randconfig-001-20231205   gcc  
 riscv                 randconfig-002-20231205   gcc  
 riscv                          rv32_defconfig   clang
 s390                             allmodconfig   gcc  
 s390                              allnoconfig   gcc  
 s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
 s390                                defconfig   gcc  
 s390                  randconfig-001-20231205   clang
 s390                  randconfig-002-20231205   clang
-sh                               alldefconfig   gcc  
 sh                               allmodconfig   gcc  
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
+sh                        apsh4ad0a_defconfig   gcc  
 sh                                  defconfig   gcc  
-sh                        edosk7705_defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                          r7780mp_defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
 sh                    randconfig-001-20231205   gcc  
 sh                    randconfig-002-20231205   gcc  
-sh                        sh7757lcr_defconfig   gcc  
+sh                           se7724_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc64                          allmodconfig   gcc  
 sparc64                          allyesconfig   gcc  
