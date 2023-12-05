@@ -1,254 +1,513 @@
-Return-Path: <linux-gpio+bounces-1012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8751E804FD9
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 11:08:47 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EEF6805302
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 12:34:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B865F1C20A60
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 10:08:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C959BB20AF8
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 11:34:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC264C63F;
-	Tue,  5 Dec 2023 10:08:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2785E697B3;
+	Tue,  5 Dec 2023 11:34:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jHt34V8e"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ihKJJJT7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AC911A0
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 02:08:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701770918; x=1733306918;
-  h=date:from:to:cc:subject:message-id;
-  bh=kVeW+O0lDUddOE0eDspn+CjqEkrRZ1BIm8WrhGMupvQ=;
-  b=jHt34V8eru1AyETyBS5X4QSpngxB66Gw91+1JAL1z2a2RK7TI2V5xJFj
-   ub1LuiHWJbH/0QB8GdtjjCO9GgfzTiIzx+749fx4xXSWp44ni4Dzrfel7
-   hT4LAmnhGu+VWl4jq++1rnmtXa5KKzvkqJCfWvReTOURfSmvHDabAdWv/
-   j3aYKBSs/F+nde4MweNU10ZHtygc5Nc3cNseU+PppY+RAmxcSSwd+Qkoh
-   bCvBO7VfpxsjT2J7HJsJaGtosPWQhdGVFUUpZfaUjJBhhrDhOj9kWuZ6Y
-   5VYgiiWIaB2yRk/V8tRG90ly+uJKda5i8hOg2XKJA5eyh7/JSU8SHNVVH
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="714946"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="714946"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 02:08:38 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10914"; a="1102403036"
-X-IronPort-AV: E=Sophos;i="6.04,251,1695711600"; 
-   d="scan'208";a="1102403036"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga005.fm.intel.com with ESMTP; 05 Dec 2023 02:08:37 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rASLz-0008iz-0v;
-	Tue, 05 Dec 2023 10:08:35 +0000
-Date: Tue, 05 Dec 2023 18:07:43 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 52816298bd2a1e8c6fb3d9311730c00ef03c1f03
-Message-ID: <202312051840.W5cz56K6-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Received: from mail-qv1-xf2b.google.com (mail-qv1-xf2b.google.com [IPv6:2607:f8b0:4864:20::f2b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AEB7CD68
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 03:34:30 -0800 (PST)
+Received: by mail-qv1-xf2b.google.com with SMTP id 6a1803df08f44-67aa9a99915so23027866d6.3
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 03:34:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701776070; x=1702380870; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iwtFK4uZk8YXwxxWxxu0bCEynVzQGRZAOw69ApxLFiQ=;
+        b=ihKJJJT7y0e/y0ZPDK5C6hInE0FnJ52aCMDP3gAWADbxyCSIkDsmt8hAnpyUMtyDo2
+         SGFZhluROoQkXTzSPDmhl+oXxem4unyoDYWrUjW6OyBpl0J07ebLSlw0s8GziB/1sn+6
+         3fd3nPeudbVohPJPYWRYMrz0PTCkMrl+F13/Bvx7SGrYhbQQjhmenqnqPyjT2JYjuqPH
+         wEAaPL0Qp4QE27v6bZBqCe5cb8MjEYZNrKOKpARWIFRUGr8g2An+3i6CE++uEGFkCsh5
+         ws31sKK7XA3yn7GchqUoCrrjaJt1C5/d5FPpF8ssXHj1PzAwRktV6avns6TbgpWPnZ3z
+         X3Cg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701776070; x=1702380870;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iwtFK4uZk8YXwxxWxxu0bCEynVzQGRZAOw69ApxLFiQ=;
+        b=tarCJP+Tpz7intbO8uaaSyTgx1kThr/dkxITQ2pYj4X+yx5LmUFB87jdqARXnKeehh
+         u9nh38CsgkdM6JCsoZWmyuzPtvSNhcltFOvtEz/Kleu9uxoULNilgWEjlP7ewNO8mDMY
+         B/ThxTlSRA6bp7Oj63DqBZb5gOjgX3+I66nesf5mnF0YKqhsR33jLXH65LwVWUrhkyff
+         c+HE1AeC0vwV8p7NMDT3vyZ3TpZ1aKu+b0YxY6jCLJuzKNMs/5RrklDfeBjkr9h5u68A
+         9h6K71Skk67cAn8Wr3OIQ3Ml7szULDeEcbAYAFU42Ar/DJeNN+BVJjidplkOob6hKjE2
+         6JzA==
+X-Gm-Message-State: AOJu0YwZXGum/wDLgVrxYZJhP0HkUfawlpsFEsrD15yz77zwrihxBakY
+	pOnV2sPS/Ozu0za8LciDu4QhstnnXWpH3itOG4r/Nw==
+X-Google-Smtp-Source: AGHT+IGx7N4HJp+W5DRsPvhVHmiYYxTg2xQR3uNUhGbspvlU5nXwTu6Ab40JkEXEQ/QdRnqcCARDEIeu+koLqGwogag=
+X-Received: by 2002:ad4:44a3:0:b0:67a:509c:78af with SMTP id
+ n3-20020ad444a3000000b0067a509c78afmr1430322qvt.60.1701776069546; Tue, 05 Dec
+ 2023 03:34:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+ <20231201160925.3136868-14-peter.griffin@linaro.org> <CAPLW+4nJCabQhyGrTKZhKG40Z9ysRq7Zms413JrhZKzeYzad5w@mail.gmail.com>
+In-Reply-To: <CAPLW+4nJCabQhyGrTKZhKG40Z9ysRq7Zms413JrhZKzeYzad5w@mail.gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Tue, 5 Dec 2023 11:34:18 +0000
+Message-ID: <CADrjBPrq_CTzZsP+5cqpNkkyVYHu9Yey0AF+m4VxcSEz+Z+wrQ@mail.gmail.com>
+Subject: Re: [PATCH v5 13/20] pinctrl: samsung: Add filter selection support
+ for alive banks
+To: Sam Protsenko <semen.protsenko@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, saravanak@google.com, 
+	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 52816298bd2a1e8c6fb3d9311730c00ef03c1f03  dt-bindings: gpio: rockchip: add a pattern for gpio hogs
+Hi Sam,
 
-elapsed time: 1466m
+Thanks for your review.
 
-configs tested: 176
-configs skipped: 3
+On Sat, 2 Dec 2023 at 00:22, Sam Protsenko <semen.protsenko@linaro.org> wro=
+te:
+>
+> On Fri, Dec 1, 2023 at 10:11=E2=80=AFAM Peter Griffin <peter.griffin@lina=
+ro.org> wrote:
+> >
+> > Newer Exynos SoCs have a filter selection register on alive bank pins.
+> > This allows the selection of a digital or delay filter for each pin. If
+> > the filter selection register is not available then the default filter
+> > (digital) is applied.
+> >
+> > On suspend we apply the analog filter to all pins in the bank (as the
+> > digital filter relies on a clock). On resume the digital filter is
+> > reapplied to all pins in the bank. The digital filter is working via
+> > clock and has an adjustable filter delay register bitfield, whereas
+> > the analog filter uses a fixed delay.
+> >
+> > The filter determines to what extent signal fluctuations received throu=
+gh
+> > the pad are considered glitches.
+> >
+> > The code path can be exercised using
+> > echo mem > /sys/power/state
+> > And then wake the device using a eint gpio
+>
+> Period.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Will fix
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231204   gcc  
-arc                   randconfig-002-20231204   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                       omap2plus_defconfig   gcc  
-arm                   randconfig-001-20231204   clang
-arm                   randconfig-002-20231204   clang
-arm                   randconfig-003-20231204   clang
-arm                   randconfig-004-20231204   clang
-arm                         wpcm450_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231204   clang
-arm64                 randconfig-002-20231204   clang
-arm64                 randconfig-003-20231204   clang
-arm64                 randconfig-004-20231204   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231204   gcc  
-csky                  randconfig-002-20231204   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20231204   clang
-hexagon               randconfig-002-20231204   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231204   clang
-i386         buildonly-randconfig-002-20231204   clang
-i386         buildonly-randconfig-003-20231204   clang
-i386         buildonly-randconfig-004-20231204   clang
-i386         buildonly-randconfig-005-20231204   clang
-i386         buildonly-randconfig-006-20231204   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231204   clang
-i386                  randconfig-002-20231204   clang
-i386                  randconfig-003-20231204   clang
-i386                  randconfig-004-20231204   clang
-i386                  randconfig-005-20231204   clang
-i386                  randconfig-006-20231204   clang
-i386                  randconfig-011-20231204   gcc  
-i386                  randconfig-012-20231204   gcc  
-i386                  randconfig-013-20231204   gcc  
-i386                  randconfig-014-20231204   gcc  
-i386                  randconfig-015-20231204   gcc  
-i386                  randconfig-016-20231204   gcc  
-loongarch                        alldefconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231204   gcc  
-loongarch             randconfig-002-20231204   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                  maltasmvp_eva_defconfig   gcc  
-mips                           rs90_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231204   gcc  
-nios2                 randconfig-002-20231204   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231204   gcc  
-parisc                randconfig-002-20231204   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      bamboo_defconfig   gcc  
-powerpc                      ep88xc_defconfig   gcc  
-powerpc                        fsp2_defconfig   clang
-powerpc                  mpc885_ads_defconfig   clang
-powerpc                      pcm030_defconfig   gcc  
-powerpc                      pmac32_defconfig   clang
-powerpc               randconfig-001-20231204   clang
-powerpc               randconfig-002-20231204   clang
-powerpc               randconfig-003-20231204   clang
-powerpc                    sam440ep_defconfig   gcc  
-powerpc64             randconfig-001-20231204   clang
-powerpc64             randconfig-002-20231204   clang
-powerpc64             randconfig-003-20231204   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231204   clang
-riscv                 randconfig-002-20231204   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231204   gcc  
-s390                  randconfig-002-20231204   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20231204   gcc  
-sh                    randconfig-002-20231204   gcc  
-sh                   secureedge5410_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231204   gcc  
-sparc64               randconfig-002-20231204   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231204   clang
-um                    randconfig-002-20231204   clang
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231204   clang
-x86_64       buildonly-randconfig-002-20231204   clang
-x86_64       buildonly-randconfig-003-20231204   clang
-x86_64       buildonly-randconfig-004-20231204   clang
-x86_64       buildonly-randconfig-005-20231204   clang
-x86_64       buildonly-randconfig-006-20231204   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231204   gcc  
-x86_64                randconfig-002-20231204   gcc  
-x86_64                randconfig-003-20231204   gcc  
-x86_64                randconfig-004-20231204   gcc  
-x86_64                randconfig-005-20231204   gcc  
-x86_64                randconfig-006-20231204   gcc  
-x86_64                randconfig-011-20231204   clang
-x86_64                randconfig-012-20231204   clang
-x86_64                randconfig-013-20231204   clang
-x86_64                randconfig-014-20231204   clang
-x86_64                randconfig-015-20231204   clang
-x86_64                randconfig-016-20231204   clang
-x86_64                randconfig-071-20231204   clang
-x86_64                randconfig-072-20231204   clang
-x86_64                randconfig-073-20231204   clang
-x86_64                randconfig-074-20231204   clang
-x86_64                randconfig-075-20231204   clang
-x86_64                randconfig-076-20231204   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20231204   gcc  
-xtensa                randconfig-002-20231204   gcc  
-xtensa                    smp_lx200_defconfig   gcc  
-xtensa                    xip_kc705_defconfig   gcc  
+>
+> >
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  drivers/pinctrl/samsung/pinctrl-exynos.c  | 89 ++++++++++++++++++++++-
+> >  drivers/pinctrl/samsung/pinctrl-exynos.h  |  7 ++
+> >  drivers/pinctrl/samsung/pinctrl-samsung.c |  2 +
+> >  drivers/pinctrl/samsung/pinctrl-samsung.h | 22 ++++++
+> >  4 files changed, 119 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl=
+/samsung/pinctrl-exynos.c
+> > index 6b58ec84e34b..56fc11a1fe2f 100644
+> > --- a/drivers/pinctrl/samsung/pinctrl-exynos.c
+> > +++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+> > @@ -269,6 +269,71 @@ struct exynos_eint_gpio_save {
+> >         u32 eint_mask;
+> >  };
+> >
+> > +/*
+> > + * Set the desired filter (digital or analog delay) to every pin in
+> > + * the bank. Note the filter selection bitfield is only found on alive
+> > + * banks. The filter determines to what extent signal fluctuations
+> > + * received through the pad are considered glitches.
+> > + */
+> > +static void exynos_eint_flt_config(struct samsung_pinctrl_drv_data *d,
+> > +                                  struct samsung_pin_bank *bank, int f=
+ilter)
+> > +{
+> > +       unsigned int flt_reg, flt_con =3D 0;
+> > +       unsigned int val, shift;
+> > +       int i;
+> > +       int loop_cnt;
+> > +
+> > +       /*
+> > +        * The FLTCON register has the following layout
+> > +        *
+> > +        * BitfieldName[PinNum][Bit:Bit]
+> > +        * FLT_EN[3][31] FLT_SEL[3][30] FLT_WIDTH[3][29:24]
+> > +        * FLT_EN[2][23] FLT_SEL[2][22] FLT_WIDTH[2][21:16]
+> > +        * FLT_EN[1][15] FLT_SEL[1][14] FLT_WIDTH[1][13:8]
+> > +        * FLT_EN[0][7]  FLT_SEL[0][6]  FLT_WIDTH[0][5:0]
+> > +        *
+> > +        * FLT_EN       0x0 =3D Disable, 0x1=3DEnable
+> > +        * FLT_SEL      0x0 =3D Delay filter, 0x1 Digital filter
+> > +        * FLT_WIDTH    Filtering width. Valid when FLT_SEL is 0x1
+> > +        */
+> > +
+> > +       flt_con |=3D EXYNOS9_FLTCON_EN;
+> > +
+> > +       if (filter)
+> > +               flt_con |=3D EXYNOS9_FLTCON_DIGITAL;
+> > +
+> > +       flt_reg =3D EXYNOS_GPIO_EFLTCON_OFFSET + bank->fltcon_offset;
+> > +
+> > +       /*
+> > +        * If nr_pins > 4, we should set FLTCON0 register fully.
+> > +        * (pin0 ~ 3). So loop 4 times in case of FLTCON0.
+> > +        */
+> > +       if (bank->nr_pins > EXYNOS9_FLTCON_NR_PIN)
+> > +               loop_cnt =3D EXYNOS9_FLTCON_NR_PIN;
+> > +       else
+> > +               loop_cnt =3D bank->nr_pins;
+> > +
+> > +       val =3D readl(d->virt_base + flt_reg);
+> > +       for (i =3D 0; i < loop_cnt; i++) {
+> > +               shift =3D i * EXYNOS9_FLTCON_LEN;
+> > +               val &=3D ~(EXYNOS9_FLTCON_MASK << shift);
+> > +               val |=3D (flt_con << shift);
+> > +       }
+> > +       writel(val, d->virt_base + flt_reg);
+> > +
+> > +       /* Loop for FLTCON1 pin 4 ~ 7 */
+> > +       if (bank->nr_pins > EXYNOS9_FLTCON_NR_PIN) {
+> > +               loop_cnt =3D (bank->nr_pins - EXYNOS9_FLTCON_NR_PIN);
+> > +               val =3D readl(d->virt_base + flt_reg + 0x4);
+> > +               for (i =3D 0; i < loop_cnt; i++) {
+> > +                       shift =3D i * EXYNOS9_FLTCON_LEN;
+> > +                       val &=3D ~(EXYNOS9_FLTCON_MASK << shift);
+> > +                       val |=3D (flt_con << shift);
+> > +               }
+> > +               writel(val, d->virt_base + flt_reg + 0x4);
+> > +       }
+> > +}
+> > +
+>
+> This whole function needs a refactoring. Do you think below code looks be=
+tter?
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Yes it does!
+>
+> 8<----------------------------------------------------------------->8
+> static void exynos_eint_update_flt_reg(void __iomem *reg, int cnt, int co=
+n)
+> {
+>     unsigned int val, shift;
+>     int i;
+>
+>     val =3D readl(reg);
+>     for (i =3D 0; i < cnt; i++) {
+>         shift =3D i * EXYNOS9_FLTCON_LEN;
+>         val &=3D ~(EXYNOS9_FLTCON_MASK << shift);
+>         val |=3D con << shift;
+>     }
+>     writel(val, reg);
+> }
+>
+> /*
+>  * Set the desired filter (digital or analog delay) to every pin in the b=
+ank.
+>  * Note the filter selection bitfield is only found on alive banks. The f=
+ilter
+>  * determines to what extent signal fluctuations received through the pad=
+ are
+>  * considered glitches.
+>  *
+>  * The FLTCON register has the following layout:
+>  *
+>  *     BitfieldName[PinNum][Bit:Bit]
+>  *     FLT_EN[3][31] FLT_SEL[3][30] FLT_WIDTH[3][29:24]
+>  *     FLT_EN[2][23] FLT_SEL[2][22] FLT_WIDTH[2][21:16]
+>  *     FLT_EN[1][15] FLT_SEL[1][14] FLT_WIDTH[1][13:8]
+>  *     FLT_EN[0][7]  FLT_SEL[0][6]  FLT_WIDTH[0][5:0]
+>  *
+>  * FLT_EN    0x0 =3D Disable, 0x1 =3D Enable
+>  * FLT_SEL    0x0 =3D Delay filter, 0x1 =3D Digital filter
+>  * FLT_WIDTH    Filtering width. Valid when FLT_SEL is 0x1
+>  */
+> static void exynos_eint_flt_config(struct samsung_pinctrl_drv_data *d,
+>                    struct samsung_pin_bank *bank, int filter)
+> {
+>     unsigned int off =3D EXYNOS_GPIO_EFLTCON_OFFSET + bank->fltcon_offset=
+;
+>     unsigned int con =3D EXYNOS9_FLTCON_EN | filter;
+>     void __iomem *reg =3D d->virt_base + off;
+>     u8 n =3D bank->nr_pins;
+>
+>     if (bank->fltcon_type =3D=3D FLT_DEFAULT)
+>         return;
+>
+>     /*
+>      * If nr_pins > 4, we should set FLTCON0 register fully (pin0~3).
+>      * So loop 4 times in case of FLTCON0. Loop for FLTCON1 pin4~7.
+>      */
+>     if (n <=3D 4) {
+>         exynos_eint_update_flt_reg(reg, n, con);
+>     } else {
+>         exynos_eint_update_flt_reg(reg, 4, con);
+>         exynos_eint_update_flt_reg(reg + 0x4, n - 4, con);
+>     }
+> }
+> 8<----------------------------------------------------------------->8
+>
+> (the code is only to illustrate the idea, I never tested it).
+
+I can refactor it along those lines.
+
+>
+> >  /*
+> >   * exynos_eint_gpio_init() - setup handling of external gpio interrupt=
+s.
+> >   * @d: driver data of samsung pinctrl driver.
+> > @@ -321,6 +386,10 @@ __init int exynos_eint_gpio_init(struct samsung_pi=
+nctrl_drv_data *d)
+> >                         goto err_domains;
+> >                 }
+> >
+> > +               /* Set Delay Analog Filter */
+>
+> The code below looks quite self-explanatory to. Maybe remove all
+> comments like this? If you don't think exynos_eint_flt_config() is
+> clear, maybe rename it to exynos_eint_set_filter().
+
+Ok, I will update the function name to exynos_eint_set_filter() and
+remove the comments.
+
+>
+> > +               if (bank->fltcon_type !=3D FLT_DEFAULT)
+> > +                       exynos_eint_flt_config(d, bank,
+> > +                                              EXYNOS9_FLTCON_DELAY);
+>
+> It fits the previous line just fine, no need to break the line.
+>
+> Also, if you use the refactored version of exynos_eint_flt_config() I
+> mentioned above, you can drop all 'if' conditions like this.
+
+Will fix
+
+>
+> >         }
+> >
+> >         return 0;
+> > @@ -555,6 +624,11 @@ __init int exynos_eint_wkup_init(struct samsung_pi=
+nctrl_drv_data *d)
+> >                 if (bank->eint_type !=3D EINT_TYPE_WKUP)
+> >                         continue;
+> >
+> > +               /* Set Digital Filter */
+> > +               if (bank->fltcon_type !=3D FLT_DEFAULT)
+> > +                       exynos_eint_flt_config(d, bank,
+> > +                                              EXYNOS9_FLTCON_DIGITAL);
+>
+> Ditto: no need to break the line, remove the comment. If you use the
+> refactored function, you can drop 'if'.
+
+will fix
+
+>
+> > +
+> >                 bank->irq_chip =3D devm_kmemdup(dev, irq_chip, sizeof(*=
+irq_chip),
+> >                                               GFP_KERNEL);
+> >                 if (!bank->irq_chip) {
+> > @@ -658,6 +732,7 @@ static void exynos_pinctrl_suspend_bank(
+> >  void exynos_pinctrl_suspend(struct samsung_pinctrl_drv_data *drvdata)
+> >  {
+> >         struct samsung_pin_bank *bank =3D drvdata->pin_banks;
+> > +       struct samsung_pinctrl_drv_data *d =3D bank->drvdata;
+> >         struct exynos_irq_chip *irq_chip =3D NULL;
+> >         int i;
+> >
+> > @@ -665,6 +740,10 @@ void exynos_pinctrl_suspend(struct samsung_pinctrl=
+_drv_data *drvdata)
+> >                 if (bank->eint_type =3D=3D EINT_TYPE_GPIO)
+> >                         exynos_pinctrl_suspend_bank(drvdata, bank);
+> >                 else if (bank->eint_type =3D=3D EINT_TYPE_WKUP) {
+> > +                       /* Setting Delay (Analog) Filter */
+> > +                       if (bank->fltcon_type !=3D FLT_DEFAULT)
+> > +                               exynos_eint_flt_config(d, bank,
+> > +                                                      EXYNOS9_FLTCON_D=
+ELAY);
+>
+> Ditto: no need to break the line, remove the comment. If you use the
+> refactored function, you can drop 'if'.
+
+Will fix
+>
+> >                         if (!irq_chip) {
+> >                                 irq_chip =3D bank->irq_chip;
+> >                                 irq_chip->set_eint_wakeup_mask(drvdata,
+> > @@ -707,11 +786,19 @@ static void exynos_pinctrl_resume_bank(
+> >  void exynos_pinctrl_resume(struct samsung_pinctrl_drv_data *drvdata)
+> >  {
+> >         struct samsung_pin_bank *bank =3D drvdata->pin_banks;
+> > +       struct samsung_pinctrl_drv_data *d =3D bank->drvdata;
+> >         int i;
+> >
+> >         for (i =3D 0; i < drvdata->nr_banks; ++i, ++bank)
+> > -               if (bank->eint_type =3D=3D EINT_TYPE_GPIO)
+> > +               if (bank->eint_type =3D=3D EINT_TYPE_GPIO) {
+> >                         exynos_pinctrl_resume_bank(drvdata, bank);
+> > +               } else if (bank->eint_type =3D=3D EINT_TYPE_WKUP ||
+> > +                          bank->eint_type =3D=3D EINT_TYPE_WKUP_MUX) {
+> > +                       /* Set Digital Filter */
+> > +                       if (bank->fltcon_type !=3D FLT_DEFAULT)
+> > +                               exynos_eint_flt_config(d, bank,
+> > +                                                      EXYNOS9_FLTCON_D=
+IGITAL);
+>
+> Ditto: remove the comment, and if you use the refactored function, you
+> can drop 'if'; also there will be no need to break the line.
+
+Will fix
+>
+> > +               }
+> >  }
+> >
+> >  static void exynos_retention_enable(struct samsung_pinctrl_drv_data *d=
+rvdata)
+> > diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl=
+/samsung/pinctrl-exynos.h
+> > index 3ac52c2cf998..e2799ff1b5e9 100644
+> > --- a/drivers/pinctrl/samsung/pinctrl-exynos.h
+> > +++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
+> > @@ -50,6 +50,13 @@
+> >
+> >  #define EXYNOS_EINT_MAX_PER_BANK       8
+> >  #define EXYNOS_EINT_NR_WKUP_EINT
+>
+> Maybe add an empty line here?
+
+Will fix
+>
+> > +/* EINT filter configuration */
+> > +#define EXYNOS9_FLTCON_EN              BIT(7)
+> > +#define EXYNOS9_FLTCON_DIGITAL         BIT(6)
+> > +#define EXYNOS9_FLTCON_DELAY           (0 << 6)
+> > +#define EXYNOS9_FLTCON_MASK            0xff
+> > +#define EXYNOS9_FLTCON_LEN             8
+> > +#define EXYNOS9_FLTCON_NR_PIN          4
+>
+> I'd say drop this one and just hard-code it where needed?
+
+Ok, will drop.
+
+>
+> >
+> >  #define EXYNOS_PIN_BANK_EINTN(pins, reg, id)           \
+> >         {                                               \
+> > diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctr=
+l/samsung/pinctrl-samsung.c
+> > index 79babbb39ced..50c360b4753a 100644
+> > --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
+> > +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+> > @@ -1105,6 +1105,8 @@ samsung_pinctrl_get_soc_data(struct samsung_pinct=
+rl_drv_data *d,
+> >                 bank->eint_func =3D bdata->eint_func;
+> >                 bank->eint_type =3D bdata->eint_type;
+> >                 bank->eint_mask =3D bdata->eint_mask;
+> > +               bank->fltcon_type =3D bdata->fltcon_type;
+> > +               bank->fltcon_offset =3D bdata->fltcon_offset;
+> >                 bank->eint_offset =3D bdata->eint_offset;
+> >                 bank->name =3D bdata->name;
+> >
+> > diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctr=
+l/samsung/pinctrl-samsung.h
+> > index 9b3db50adef3..5fab3885a7d7 100644
+> > --- a/drivers/pinctrl/samsung/pinctrl-samsung.h
+> > +++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
+> > @@ -82,6 +82,20 @@ enum eint_type {
+> >         EINT_TYPE_WKUP_MUX,
+> >  };
+> >
+> > +/**
+> > + * enum fltcon_type - filter selection
+> > + * @FLT_DEFAULT: filter not selectable, default digital filter
+> > + * @FLT_SELECT: filter selectable (digital or delay)
+> > + *
+> > + * Some banks on newer Exynos based SoCs have a selectable filter on a=
+live
+> > + * banks of 'analog/delay' or 'digital'. If the filter selection regis=
+ter is
+> > + * not available then the default filter is used (digital).
+> > + */
+> > +enum fltcon_type {
+> > +       FLT_DEFAULT,
+> > +       FLT_SELECTABLE,
+> > +};
+>
+> Is there any benefit of having this enum over replacing it with just a
+> bool field (e.g. 'bool flt_selectable')?
+
+I thought it made it clearer at the callee sites which filter was
+being set, but I can update to a bool if that's what you prefer.
+
+regards,
+
+Peter.
+
+>
+> > +
+> >  /* maximum length of a pin in pin descriptor (example: "gpa0-0") */
+> >  #define PIN_NAME_LENGTH        10
+> >
+> > @@ -122,6 +136,8 @@ struct samsung_pin_bank_type {
+> >   * @eint_type: type of the external interrupt supported by the bank.
+> >   * @eint_mask: bit mask of pins which support EINT function.
+> >   * @eint_offset: SoC-specific EINT register or interrupt offset of ban=
+k.
+> > + * @fltcon_type: whether the filter (delay/digital) is selectable
+> > + * @fltcon_offset: SoC-specific EINT filter control register offset of=
+ bank.
+> >   * @name: name to be prefixed for each pin in this pin bank.
+> >   */
+> >  struct samsung_pin_bank_data {
+> > @@ -133,6 +149,8 @@ struct samsung_pin_bank_data {
+> >         enum eint_type  eint_type;
+> >         u32             eint_mask;
+> >         u32             eint_offset;
+> > +       enum fltcon_type fltcon_type;
+> > +       u32             fltcon_offset;
+> >         const char      *name;
+> >  };
+> >
+> > @@ -147,6 +165,8 @@ struct samsung_pin_bank_data {
+> >   * @eint_type: type of the external interrupt supported by the bank.
+> >   * @eint_mask: bit mask of pins which support EINT function.
+> >   * @eint_offset: SoC-specific EINT register or interrupt offset of ban=
+k.
+> > + * @fltcon_type: whether the filter (delay/digital) is selectable
+> > + * @fltcon_offset: SoC-specific EINT filter control register offset of=
+ bank.
+> >   * @name: name to be prefixed for each pin in this pin bank.
+> >   * @id: id of the bank, propagated to the pin range.
+> >   * @pin_base: starting pin number of the bank.
+> > @@ -170,6 +190,8 @@ struct samsung_pin_bank {
+> >         enum eint_type  eint_type;
+> >         u32             eint_mask;
+> >         u32             eint_offset;
+> > +       enum fltcon_type fltcon_type;
+> > +       u32             fltcon_offset;
+> >         const char      *name;
+> >         u32             id;
+> >
+> > --
+> > 2.43.0.rc2.451.g8631bc7472-goog
+> >
 
