@@ -1,84 +1,79 @@
-Return-Path: <linux-gpio+bounces-1023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B43FA80594C
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:00:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36246805953
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 17:01:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EEC161C210BE
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:00:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6F3A21C21133
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 16:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FB2060B9D;
-	Tue,  5 Dec 2023 15:59:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDE8160BAD;
+	Tue,  5 Dec 2023 16:01:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="grH7XrSu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 45886C3;
-	Tue,  5 Dec 2023 07:59:53 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="7210994"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F2E42120;
+	Tue,  5 Dec 2023 08:01:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701792061; x=1733328061;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jKYS+QhpoIvLq7GxMLGJgmwBA/2Fcl2kkmLSM/DkwU4=;
+  b=grH7XrSubjOtwEuUM+2eFg1FPpjHYI2mQzPJZClPeb+ZgH9VObZ+b4/+
+   F9njKKsorULMZViGdVMWgDYW6PRf1iE264mod7y/Ig+pMFf2RVf6i7hf4
+   TSlqNsofWmIrfPmQ7OdEVACOf6DYYeRUuca402aPF+Q4b8i8+hJQlCNDr
+   xC3fF/e+HCYOuQ0R5eLk2EP3lBz6e5GoPIlcNm8YCGBx/MqPK8WzKQHfB
+   4mamkHtrX2qZ7tbB95bfcVxpmlVzJ6w8NHCni8PAhnVUmioYY+lAVM7Xi
+   9wLh1pC8ncdMoi9/axFq2CyytEcykfmaaHpd2Op7cosXzxLjsFiw1gU6w
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="374100187"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="7210994"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 07:59:53 -0800
+   d="scan'208";a="374100187"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:01:00 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="770967314"
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="800008703"
 X-IronPort-AV: E=Sophos;i="6.04,252,1695711600"; 
-   d="scan'208";a="770967314"
+   d="scan'208";a="800008703"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 07:59:40 -0800
+  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2023 08:00:58 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rAXpf-000000024uc-3pS6;
-	Tue, 05 Dec 2023 17:59:35 +0200
-Date: Tue, 5 Dec 2023 17:59:35 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
-	ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v7 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <ZW9I59mUC2QGXhZ7@smile.fi.intel.com>
-References: <20231205134223.17335-1-mitrutzceclan@gmail.com>
- <20231205134223.17335-2-mitrutzceclan@gmail.com>
- <CAHp75VeKhR5y4AB=L5VVSrm=13Ruw7e86m+K9m9t-LZg5puDow@mail.gmail.com>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rAXqx-000000024w4-3d2g;
+	Tue, 05 Dec 2023 18:00:55 +0200
+Date: Tue, 5 Dec 2023 18:00:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH] gpio: sim: fix the email address in MODULE_AUTHOR()
+Message-ID: <ZW9JN_khy9shJjOd@smile.fi.intel.com>
+References: <20231205155430.31761-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeKhR5y4AB=L5VVSrm=13Ruw7e86m+K9m9t-LZg5puDow@mail.gmail.com>
+In-Reply-To: <20231205155430.31761-1-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 05, 2023 at 05:28:34PM +0200, Andy Shevchenko wrote:
-> On Tue, Dec 5, 2023 at 3:46 PM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
-
-...
-
-> > +       case IIO_CHAN_INFO_SCALE:
-> > +               if (chan->type == IIO_TEMP) {
-> > +                       *val = 250000000;
+On Tue, Dec 05, 2023 at 04:54:30PM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> MEGA?
+> Fix unterminated angle brackets in the email address in MODULE_AUTHOR().
 
-Or MICRO?
+Wondering if we have some tool to check this, as it's not the first time
+I see very similar fixes (missing >).
 
 -- 
 With Best Regards,
