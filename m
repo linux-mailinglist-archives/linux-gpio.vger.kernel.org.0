@@ -1,49 +1,49 @@
-Return-Path: <linux-gpio+bounces-1004-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1005-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9800A8043A7
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 01:59:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06F49804A9D
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 07:51:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4B2111F21300
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 00:59:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B28991F21493
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 06:51:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A690ED9;
-	Tue,  5 Dec 2023 00:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8898912E79;
+	Tue,  5 Dec 2023 06:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="J8fRcgT5"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="mrdeGsnd"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6CF32A4;
-	Mon,  4 Dec 2023 16:59:28 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B504MVZ025715;
-	Tue, 5 Dec 2023 00:59:24 GMT
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A934011F;
+	Mon,  4 Dec 2023 22:51:40 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B55gaWY022792;
+	Tue, 5 Dec 2023 06:51:37 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
  mime-version : subject : to : cc : references : from : in-reply-to :
  content-type : content-transfer-encoding; s=qcppdkim1;
- bh=T738itOozoPN5W91FwWVw0mvtukuJmpFNP5o/YIrwCY=;
- b=J8fRcgT5WB1raj9YoQNOGMnMiYYM+ql64CsYGEx06oxfpxRC6+OLUBhAmsuyJkq63HeW
- XJs+kXXozAJpJR7STup5souiCiSvcoYJnrBPPqhZiN5y8UJKr2Kr2C1YXCS0+NZIUyN3
- AtZor7z98YhQgJSi1x9cb8JRM3KeVxWBsMjnBaBwg/ghxg/hjERKJtybegOq5dRPRRwN
- cwj5aI3dzkVDDrvkkg58AoujSLybHOKG4P2vfxUKSsZ0bc9/3Ho5TudsnQ/Sts9zzQ8s
- bmd1O00f9NTpPZxHm9VQciGAhK0m3FMWoeY8nFacMikAUvevRVw2JidTKWVLH7AJvltD qQ== 
-Received: from nalasppmta04.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3us8wpjj4e-1
+ bh=BVvNCdvGjyZq25vNtHzXGLk/rYdZ12wJoWOL0EDbIEQ=;
+ b=mrdeGsndkw7uIl7/xk91UKGGsYoo9PYaaG388R+pSPf5Ub4JCoQxXFhygR8qBP9TvNTw
+ uuIK5iHeAB2pbaVi9BpHM1WIkfDA7PFw+9FyoMQVxH8tSDHwESwm9wAvd5o6/gWffJyH
+ eS4qHYIadznO7UXUx2j8gnI1QPZbk4UkrX1K/d3NKKsMh1Wgswze09bZpKxWiDRpRnSV
+ xVhy3kTtclLkVH6GExesdxQbj2cAsBFCnv7m12wtQDrFVvt2CoO7j4BBE0ZiXXd/xsJ7
+ mwTLQbl29DCLNcS6NcaJR7U78bWVnK7LufnBiacycO8zNyFXz1rSfmwy6YbmUZIVk4y2 oA== 
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3usdfwjf55-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 00:59:24 +0000
+	Tue, 05 Dec 2023 06:51:36 +0000
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B50xNG1013296
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B56pZRs025392
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Dec 2023 00:59:23 GMT
+	Tue, 5 Dec 2023 06:51:35 GMT
 Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
- 2023 16:59:18 -0800
-Message-ID: <5d2c734c-8a33-4a57-be2e-7c80357089ea@quicinc.com>
-Date: Tue, 5 Dec 2023 08:59:16 +0800
+ 2023 22:51:30 -0800
+Message-ID: <2e874228-b1b4-48b8-87e4-c81e0957cfd1@quicinc.com>
+Date: Tue, 5 Dec 2023 14:51:28 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -51,61 +51,93 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] pinctrl: qcom: sm4450: correct incorrect address
- offset
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Bjorn Andersson
-	<andersson@kernel.org>
-CC: <agross@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+Subject: Re: [PATCH v5 2/4] pinctrl: qcom: Add SM4450 pinctrl driver
+To: Jeff Johnson <quic_jjohnson@quicinc.com>,
+        Krzysztof Kozlowski
+	<krzk@kernel.org>, <andersson@kernel.org>,
+        <agross@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>
 References: <20231130024046.25938-1-quic_tengfan@quicinc.com>
- <20231130024046.25938-5-quic_tengfan@quicinc.com>
- <dx62durg3wmqviqdpecdqprd5wwkg4i7n5tgcab55axzssdeel@ftt35c6td2sh>
- <CACRpkdZRNvUY0rEY__v9wPy4bjuDSgFhEkXFHxixdfyKSw56Bg@mail.gmail.com>
+ <20231130024046.25938-3-quic_tengfan@quicinc.com>
+ <1d2fbb36-9476-4f32-8bcd-33fd5dcbd6e4@kernel.org>
+ <d192f32a-130f-4568-9622-d3465c709853@quicinc.com>
+ <1b65f67a-8142-4690-af6e-4a0bf641b7be@kernel.org>
+ <e3817ea6-3cdc-418f-bbeb-ed93e7f537e3@quicinc.com>
 From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <CACRpkdZRNvUY0rEY__v9wPy4bjuDSgFhEkXFHxixdfyKSw56Bg@mail.gmail.com>
+In-Reply-To: <e3817ea6-3cdc-418f-bbeb-ed93e7f537e3@quicinc.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: GsCL24S4eXQQVXi9z_E_7EBAyDQ91g3n
-X-Proofpoint-ORIG-GUID: GsCL24S4eXQQVXi9z_E_7EBAyDQ91g3n
+X-Proofpoint-GUID: QDYWXb2KgkVSCoGuVMRso-YW7uBKY_Bn
+X-Proofpoint-ORIG-GUID: QDYWXb2KgkVSCoGuVMRso-YW7uBKY_Bn
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-04_24,2023-12-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0
- mlxlogscore=990 impostorscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2312050005
+ definitions=2023-12-05_03,2023-12-04_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ mlxlogscore=827 mlxscore=0 suspectscore=0 lowpriorityscore=0 adultscore=0
+ priorityscore=1501 phishscore=0 spamscore=0 malwarescore=0 clxscore=1015
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2311060000 definitions=main-2312050053
 
 
 
-在 12/4/2023 5:57 PM, Linus Walleij 写道:
-> On Fri, Dec 1, 2023 at 10:33 PM Bjorn Andersson <andersson@kernel.org> wrote:
->> On Thu, Nov 30, 2023 at 10:40:46AM +0800, Tengfei Fan wrote:
->>> The address offset of 0x100000 is already provided in SM4450 DTSI, so
->>> subtract 0x100000 from the offset which used by ufs and sdc.
+在 12/5/2023 12:04 AM, Jeff Johnson 写道:
+> On 12/3/2023 11:56 PM, Krzysztof Kozlowski wrote:
+>> On 04/12/2023 02:57, Tengfei Fan wrote:
+>>>
+>>>
+>>> 在 11/30/2023 7:57 PM, Krzysztof Kozlowski 写道:
+>>>> On 30/11/2023 03:40, Tengfei Fan wrote:
+>>>>> Add pinctrl driver for TLMM block found in SM4450 SoC.
+>>>>>
+>>>>> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
+>>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>>> ---
+>>>>>    drivers/pinctrl/qcom/Kconfig.msm      |    8 +
+>>>>>    drivers/pinctrl/qcom/Makefile         |    1 +
+>>>>>    drivers/pinctrl/qcom/pinctrl-sm4450.c | 1013 +++++++++++++++++++++++++
+>>>>>    3 files changed, 1022 insertions(+)
+>>>>>    create mode 100644 drivers/pinctrl/qcom/pinctrl-sm4450.c
+>>>>>
+>>>>
+>>>> Hm, was this patch ever built?
+>>>>
+>>>> Best regards,
+>>>> Krzysztof
+>>>>
+>>> This patch has been built before, I will check and compare if there are
+>>> any errors and changes when I submitted this patch series.
 >>>
 >>
->> As Konrad points out, please fix the broken patch, don't add a separate
->> fix in the same series.
+>> No, it wasn't built. I just tried - applied it and:
 >>
->>> Suggested-by: Can Guo <quic_cang@quicinc.com>
+>> pinctrl-sm4450.c:996:19: error: initialization of ‘int (*)(struct
+>> platform_device *)’ from incompatible pointer type ‘void (*)(struct
+>> platform_device *)’ [-Werror=incompatible-pointer-types]
+>>    996 |         .remove = msm_pinctrl_remove,
+>>        |                   ^~~~~~~~~~~~~~~~~~
+>> ../drivers/pinctrl/qcom/pinctrl-sm4450.c:996:19: note: (near
+>> initialization for ‘sm4450_tlmm_driver.remove’)
 >>
->> We unfortunately don't have a way to give credit to those providing
->> review feedback, so omit this when fixing patch #2.
+>> So you just sent a patch which was not even compiled.
+>>
+>> NAK.
+>>
+>> Best regards,
+>> Krzysztof
+>>
 > 
-> Just write in the commit message that Can Guo helped out in reviewing
-> the driver (just some free text).
+> The problem here is patch 2/4 incorrectly initializes .remove and patch
+> 3/4 changes it to correctly use .remove_new. Bisection at patch 2
+> doesn't build.
 > 
-> Yours,
-> Linus Walleij
-Thanks for your suggestions, The next version patch commit message will 
-contain some description information.
+> Those two patches should be squashed
+Yes, next version patch series will squash these two patches.
 
 -- 
 Thx and BRs,
