@@ -1,184 +1,239 @@
-Return-Path: <linux-gpio+bounces-1010-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1011-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5B2DF804D65
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 10:16:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7177E804DEB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 10:32:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1004B281603
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 09:16:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2962C1F213C3
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 09:32:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 202EC3E483;
-	Tue,  5 Dec 2023 09:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZXSl2Um"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09E6C3F8F9;
+	Tue,  5 Dec 2023 09:31:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3258186
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 01:16:27 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-50bf7bc38c0so2277484e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 01:16:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701767786; x=1702372586; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OeEvgoAVw1dp1aM0OWfOemCjE5CEVoVWIKGJuAU8k5U=;
-        b=HZXSl2Um5jrhy96n+kQw3MKZMZPXcQB51M2gfqXTOJ1DOTyt7wdhQGEnhif6vCwNpU
-         RqPsOa3MbjDhYbOwYbGnbnuXRLJcyvJ4IAkpbIqSyN4V9U6KdlOGza/N9CEIo+T0EBZE
-         nmSWyCdJoVTYHZZfEnHXTH0gPPAPqwLGYBeHelWD/tObh5E2zT6Hvsbfdq0VpblvYhcm
-         VTsybofXEkUqQ4qAGVT0t2xds/XKG4ivsdtwz43RR87kXP4As4sC76bgHmoqabAmXDWA
-         wKf7jAbLpX4u/3qcD3gWBiBWY2NQNwg64Mh8LboOae16lkdrd2P9Svy4TLc7tYAWTSuy
-         uHvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701767786; x=1702372586;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OeEvgoAVw1dp1aM0OWfOemCjE5CEVoVWIKGJuAU8k5U=;
-        b=vU7mwXmDi6uYXBdHQbytkbAntvGwGB8rV9gOZFmefskXlK/z+kX7o3CWMi8hgksGAo
-         96d068Toj4Y4wW4/kRV2Ukri5ASmFaGeFo3pkw8GJyxQon+AVlj1UbRwHJDY/wXyLr9+
-         UN+aB6XwZaXu9X/QZ+VyylcRtcgLi1k++22EDVjUVPIS4BLxt8hjWm8RQEBHUyZ14v/R
-         S1jy5Quq2eV47ak0ia/+L1ETKUI2uwRmJzBZKc9HmMVR3v5n+3klbKa+FYpA452t0SEp
-         FNaMhObclPO3E7fJ1EdSMuIvnymVcDxqtliMghFN1FPSTTltdKmaMWcEwejQWQP2VXmc
-         BFyw==
-X-Gm-Message-State: AOJu0YymJlG0IfvBbxYzEVMB1tNjmemAwz86w/8JYhb3POGgEOhsHzBJ
-	VyxcrEehRvhec7fRrO/5nsltbQ==
-X-Google-Smtp-Source: AGHT+IFl+InzAht9wjGX3VbUVhsxqPXeTdzVpokOhMfKZ33B+RdV7sB9qjW4A5xQmHAw5a98muxprw==
-X-Received: by 2002:a05:6512:128b:b0:50b:f303:56cd with SMTP id u11-20020a056512128b00b0050bf30356cdmr2070360lfs.15.1701767786021;
-        Tue, 05 Dec 2023 01:16:26 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id f3-20020a056402068300b0054c0264a7fasm799997edy.64.2023.12.05.01.16.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Dec 2023 01:16:25 -0800 (PST)
-Message-ID: <369dfa0c-315d-47a9-81fc-c166c9632bac@linaro.org>
-Date: Tue, 5 Dec 2023 10:16:22 +0100
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 80A14AB
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 01:31:52 -0800 (PST)
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmM-0001GD-Ds; Tue, 05 Dec 2023 10:31:46 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmL-00DiB8-Uj; Tue, 05 Dec 2023 10:31:45 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rARmL-00Ed3C-Lb; Tue, 05 Dec 2023 10:31:45 +0100
+Date: Tue, 5 Dec 2023 10:31:45 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Thierry Reding <thierry.reding@gmail.com>, kernel@pengutronix.de
+Subject: Re: [PATCH v3 100/108] gpio: mvebu: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <20231205093145.l7p52xtw2ak756ra@pengutronix.de>
+References: <CAMRc=MdBvcS8pvtt_mB9NWskJPQgB4t4jot5YZRE=_d+jVNnMQ@mail.gmail.com>
+ <ZWCTtPVkTUQNLVoa@orome.fritz.box>
+ <CAMRc=MeuJKJWOXJQZXQr5mc-NB4mh_jF0JW1LuTNEO9EhTYncQ@mail.gmail.com>
+ <20231127105844.kpu5ori6o6umfynh@pengutronix.de>
+ <CAMRc=Me=J0f4epqmeLasqMYfMjMz46jpfmBpxV2bHGcp5Ev47Q@mail.gmail.com>
+ <20231128090732.54xm72pnnjmbsjqb@pengutronix.de>
+ <CAMRc=McAYSpCY=E1Ze7xKuBom8xOzQ4+5f7vYm33ihVU90xM1w@mail.gmail.com>
+ <20231202004316.mxhrfsgcitupc6cc@pengutronix.de>
+ <CAMRc=Md9bRdk5ZaCVu5gmZ4r5JR7eVZDriap32FMrN05PyTENQ@mail.gmail.com>
+ <CAMRc=MeiL7omJhe_gb_UiL_bbJGoujp3Js4=Fe=qXKHv8TjM-Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH 00/17] dt-bindings: samsung: add specific
- compatibles for existing SoC
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
- Thierry Reding <thierry.reding@gmail.com>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
- Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
- Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
- Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Alessandro Zummo <a.zummo@towertech.it>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>,
- Sam Protsenko <semen.protsenko@linaro.org>, dri-devel@lists.freedesktop.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <170119374454.445690.515311393756577368.b4-ty@gmail.com>
- <20231128205841.al23ra5s34rn3muj@pengutronix.de>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231128205841.al23ra5s34rn3muj@pengutronix.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7wf42ilwzebmm55z"
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MeiL7omJhe_gb_UiL_bbJGoujp3Js4=Fe=qXKHv8TjM-Q@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On 28/11/2023 21:58, Uwe Kleine-König wrote:
-> On Tue, Nov 28, 2023 at 06:49:23PM +0100, Thierry Reding wrote:
->>
->> On Wed, 08 Nov 2023 11:43:26 +0100, Krzysztof Kozlowski wrote:
->>> Merging
->>> =======
->>> I propose to take entire patchset through my tree (Samsung SoC), because:
->     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-> 
->>> 1. Next cycle two new SoCs will be coming (Google GS101 and ExynosAutov920), so
->>>    they will touch the same lines in some of the DT bindings (not all, though).
->>>    It is reasonable for me to take the bindings for the new SoCs, to have clean
->>>    `make dtbs_check` on the new DTS.
->>> 2. Having it together helps me to have clean `make dtbs_check` within my tree
->>>    on the existing DTS.
->>> 3. No drivers are affected by this change.
->>> 4. I plan to do the same for Tesla FSD and Exynos ARM32 SoCs, thus expect
->>>    follow up patchsets.
->>>
->>> [...]
->>
->> Applied, thanks!
->>
->> [12/17] dt-bindings: pwm: samsung: add specific compatibles for existing SoC
->>         commit: 5d67b8f81b9d598599366214e3b2eb5f84003c9f
-> 
-> You didn't honor (or even comment) Krzysztof's proposal to take the
-> whole patchset via his tree (marked above). Was there some off-list
-> agreement?
-> 
 
-It was also written in the PWM patch itself (under changelog ---) and
-expressed with my "applied" response when I took everything. I am
-sending now another set, also touching PWM.
+--7wf42ilwzebmm55z
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Krzysztof
+Hello,
 
+On Mon, Dec 04, 2023 at 10:28:15PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Dec 4, 2023 at 9:27=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+> >
+> > On Sat, Dec 2, 2023 at 1:43=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > >
+> > > On Fri, Dec 01, 2023 at 11:14:32AM +0100, Bartosz Golaszewski wrote:
+> > > > On Tue, Nov 28, 2023 at 10:07=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+> > > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > >
+> > > >
+> > > > [snip]
+> > > >
+> > > > >
+> > > > > > I see the
+> > > > > > chip->operational field that is set to false on release. In my
+> > > > > > version, we just use a NULL-pointer to carry the same informati=
+on.
+> > > > >
+> > > > > Yup, sounds obvious. Your usage of "just" sounds as if your varia=
+nt was
+> > > > > better. To give the alternative view where the suggested approach=
+ sounds
+> > > > > better would be:
+> > > > >
+> > > > > You need a pointer and I "just" a bool that even has a name imply=
+ing its
+> > > > > function. You need to dereference the pointer in several places a=
+s the
+> > > > > needed information is distributed over two structures while it's =
+all
+> > > > > together in a single struct for the usual foo_alloc() + foo_regis=
+ter()
+> > > > > approach.
+> > > > >
+> > > >
+> > > > There's another reason we do that. I'm no longer sure if I mentioned
+> > > > it in my talk (I meant to anyway).
+> > > >
+> > > > In GPIO we have API functions that may be called from any context -
+> > > > thus needing spinlocks for locking - but also driver callbacks that
+> > > > may use mutexes internally or otherwise sleep. I don't know if this=
+ is
+> > > > the case for PWM too but in GPIO we may end up in a situation where=
+ if
+> > > > we used a spinlock to protect some kind of an "is_operational" fiel=
+d,
+> > > > we'd end up sleeping with a spinlock taken and if we used a mutex, =
+we
+> > > > couldn't use API function from atomic contexts.
+> > > >
+> > > > This is the reason behind locking being so broken in GPIO at the
+> > > > moment and why I'm trying to fix it this release cycle.
+> > > >
+> > > > Splitting the implementation into two structures and protecting the
+> > > > pointer to the provider structure with SRCU has the benefit of not
+> > > > limiting us in what locks we use underneath.
+> > > >
+> > > > Every subsystem has its own issues and we need to find something
+> > > > generic enough to cover them all (or most of them anyway). I don't
+> > > > think having a single structure cuts it.
+> > >
+> > > I'm convinced it works. I introduced a wrapper pwmchip_lock() that for
+> > > now uses a mutex and once we have fast pwm_chips it uses a mutex for
+> > > sleeping pwm_chips and a spinlock for the fast ones.
+> > >
+> > > That's similar to how struct irq_chip::irq_bus_lock works. For sleepi=
+ng
+> > > chips that callback uses a mutex, for fast chips a spinlock.
+> > >
+> >
+> > Fair enough. I'd love to see a benchmark of what's faster one day
+> > though: two structures with dereferencing and SRCU or one structure
+> > with mutex/spinlock.
+
+I think until the day has come that we have a SRCU+two and
+mutex/spinlock+one implementation for one framework it's moot to discuss
+which one is the faster, so I suggest we stop here. (Note, you can
+already do mutex/spinlock+two already now. That's what I do for the
+non-pure PWM drivers in the next iteration. Preview at
+https://lore.kernel.org/linux-pwm/20231124215208.616551-4-u.kleine-koenig@p=
+engutronix.de/T/#u)
+For me it's not so clear that SRCU is the winner. Also the winner might
+vary depending on questions like:
+
+ - How many PWM (or GPIO) lines does the chip in question expose?
+ - Does the implementation of the callbacks need serialisation (because
+   the bits for different lines are in common registers)?
+ - Usage pattern (influencing the contention of the locks)
+
+(But I adhere to my suggestion to stop now :-)
+
+> Actually there is one thing that - while not technically wrong - makes
+> the split solution better. In case of your abstracted lock, you find
+> yourself in a very all-or-nothing locking situation, where all of the
+> structure is locked or none is. With SRCU protecting just the pointer
+> to implementation, we can easily factor that part out and leave
+> whatever fine-grained locking is required to the subsystem.
+
+The fine-grainedness of the locking scheme isn't fixed with my approach.
+
+In fact you could just not use the offer to handle framework struct and
+driver private data in a single memory chunk (and/or stop using the
+knowledge that it is (or can be) a single chunk) and then the two
+approaches are not fundamentally different and you can use the same
+locking mechanisms.
+
+The biggest difference between our approaches is that I handle
+allocation of the framework struct and its registration in two steps in
+the drivers while you do that in a single one.
+
+My approach has the advantage that it allows to handle private data in
+the same allocation and that the driver can fill in the framework struct
+without the need for copying or pointer dereferencing if the framework
+needs the driver provided information. Yours has the advantage that
+drivers see less of the framework and so are better separated from the
+core.
+
+How you weight the different advantages is very subjective.
+
+So if we rule out the subjective metrics we're left with: Both
+approaches solve the technical challenge at hand (i.e. ensure unloading
+a driver doesn't make the kernel crash if a character device is still
+open) and my approach already exists for pwm.
+
+> Additionally: the pointer to implementation has many readers but only
+> one writer. I believe this to be the same for your "operational"
+> field. I don't know the PWM code very well but I can only guess that
+> the situation is similar, where subsystem data structures are read
+> more often than they are modified and multiple readers could access
+> the structure at the same time lowering latencies.
+
+The lock serves to serialize access to .operational and ensures that the
+driver doesn't go away until all callbacks have completed. Is this
+serialized in your approach, too?
+(If you don't, I wonder if you should. And if you do, I think this
+better matches the use case spinlocks and mutexes are optimized for
+compared to SRCU.)
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--7wf42ilwzebmm55z
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmVu7gAACgkQj4D7WH0S
+/k5zJQgAnWzLDdMpPqjJZZYADCxbMOOj40HSDGnaLM7Mc5SoKMI2hi1DmYNdievd
+2SzA9V3TfOG0r8aA2bXVQcmGt5SF4JM7QVs/f+2yyqVdlZbhOwgbZQlnRCnHuVUj
+MfGJM7a7sbLdE1gseP888NCBuCe8AerygfrGxrMgTEJMEEsvbTasQSsYAQ5VdESH
+LY9fSRfihFjMLtHpfEnrl+UBcXhgbqeWR/1YlzbgBC6UXk24xwz1W0NeOtyf2v8c
++tgAPnTzqhYwmbIq25fP45Q8U+bWBExJNwtd8AuqjEGImLIPfbq6iuW/7OATHRfp
+ij4EFLGEF9jgOJdow4dCxBX/vFgyeQ==
+=xWE2
+-----END PGP SIGNATURE-----
+
+--7wf42ilwzebmm55z--
 
