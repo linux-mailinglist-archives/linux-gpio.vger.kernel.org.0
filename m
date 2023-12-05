@@ -1,146 +1,184 @@
-Return-Path: <linux-gpio+bounces-1009-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1010-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C16D804BE0
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 09:09:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B2DF804D65
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 10:16:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 35E281F21501
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 08:09:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1004B281603
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 09:16:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B990F3A8C7;
-	Tue,  5 Dec 2023 08:09:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 202EC3E483;
+	Tue,  5 Dec 2023 09:16:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NovNhaNJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HZXSl2Um"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DF82E11F
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 00:09:31 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-40a4848c6e1so56944595e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 00:09:31 -0800 (PST)
+Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3258186
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 01:16:27 -0800 (PST)
+Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-50bf7bc38c0so2277484e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 01:16:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701763770; x=1702368570; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=llS7f6J05UN7P4lvcEDyZPRcCQQD6OrCb5vmd5KnD6k=;
-        b=NovNhaNJA+SnPPI73/BoAabx2HN750hvhgCJnOAVlA+oUxyJ9H7qrS6xGtYEHlcxhd
-         SF7qGVO9MKRrXzy1W39Quo7RG4xmHAa/yb6ytvbMso8r44MW6dftf42ucGGo5a00TVBq
-         TTRG/Kt9I+Xg0vniAXutsgI0U6UlN9xhJ+EWrVGNvIk80CB9on2XyeyiLbiQejYa3FUD
-         y2L5DfmmTpRhJxetO1qiZ76d7NuLPGUE9tP7lpJMd9Fslv76/FJGFEUl/In98tNZP2tX
-         m1no03AoI7PRa5l3jVwau0oYrZXnDit2VtBAz10Fm2pDCaP7FXAom57nTf9VzyIz0eCg
-         cvQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701763770; x=1702368570;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1701767786; x=1702372586; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=llS7f6J05UN7P4lvcEDyZPRcCQQD6OrCb5vmd5KnD6k=;
-        b=przq8cU02aiBbZPD7sq9bW4VBvDDQ9aMzIpu7UhPm3hWJlTIpUyyFVF0ldLKdcMpVc
-         3c+YaMcyDTyxxJqlnFHiQ8n+5eWICUmArKw0hmf75DgRx2OoNMXY63Q1PZrDMrJwrVrD
-         tPLVuafNLdQUcWBxbPzNNCHdZOsbh4nAsdXo8uszqVGCB5dLZ/oEERGmGSggn263bq5T
-         TS49A0ROzCvJoK9hgb2bKnp3/v/27MtYw79eGKE+4RXMCBnAknb9XjHDtm48HkbKh6GV
-         Ve1XjiCAmuFoUd2oJhRCba9v7MDJ7f0QS+7izk7wJwkqa6BrWFZjHwEXEJY8LFljK5eW
-         buPw==
-X-Gm-Message-State: AOJu0YzZ/q7n7WCBoZSaRXR8g+nKr7KpbWiQ8lpHhLTfda0nqVPwgxNh
-	fxlBmlE4+RrrjrBfkRxBrPiUKA==
-X-Google-Smtp-Source: AGHT+IE+8qnIaRvP5U4oIVPqun3EKI7fA5pnVF2X2zE0apGVGOOPaI86NDaJpz7xHPp+qNxo2AQwbw==
-X-Received: by 2002:a05:600c:2146:b0:40b:63b0:e0b5 with SMTP id v6-20020a05600c214600b0040b63b0e0b5mr195357wml.224.1701763770352;
-        Tue, 05 Dec 2023 00:09:30 -0800 (PST)
-Received: from [10.1.1.118] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id s8-20020a05600c45c800b00405c7591b09sm17883711wmo.35.2023.12.05.00.09.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 00:09:29 -0800 (PST)
-Message-ID: <860ca122a08bbce70b27d8880c621f0d12ddd2a5.camel@linaro.org>
-Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
- and cmu_apm support
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Sam Protsenko <semen.protsenko@linaro.org>, Peter Griffin
-	 <peter.griffin@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
- mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
- tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
- wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
- will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org,
-  jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
- tudor.ambarus@linaro.org, saravanak@google.com, willmcvicker@google.com, 
- soc@kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-samsung-soc@vger.kernel.org,
- linux-clk@vger.kernel.org,  linux-gpio@vger.kernel.org,
- linux-watchdog@vger.kernel.org,  kernel-team@android.com,
- linux-serial@vger.kernel.org
-Date: Tue, 05 Dec 2023 08:09:28 +0000
-In-Reply-To: <CAPLW+4nAwWBHkAe2Wg2b+URsgN8ienPh14L=Fu8PUxf4gxq0ow@mail.gmail.com>
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
-	 <20231201160925.3136868-13-peter.griffin@linaro.org>
-	 <CAPLW+4nAwWBHkAe2Wg2b+URsgN8ienPh14L=Fu8PUxf4gxq0ow@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.49.2-3 
+        bh=OeEvgoAVw1dp1aM0OWfOemCjE5CEVoVWIKGJuAU8k5U=;
+        b=HZXSl2Um5jrhy96n+kQw3MKZMZPXcQB51M2gfqXTOJ1DOTyt7wdhQGEnhif6vCwNpU
+         RqPsOa3MbjDhYbOwYbGnbnuXRLJcyvJ4IAkpbIqSyN4V9U6KdlOGza/N9CEIo+T0EBZE
+         nmSWyCdJoVTYHZZfEnHXTH0gPPAPqwLGYBeHelWD/tObh5E2zT6Hvsbfdq0VpblvYhcm
+         VTsybofXEkUqQ4qAGVT0t2xds/XKG4ivsdtwz43RR87kXP4As4sC76bgHmoqabAmXDWA
+         wKf7jAbLpX4u/3qcD3gWBiBWY2NQNwg64Mh8LboOae16lkdrd2P9Svy4TLc7tYAWTSuy
+         uHvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701767786; x=1702372586;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=OeEvgoAVw1dp1aM0OWfOemCjE5CEVoVWIKGJuAU8k5U=;
+        b=vU7mwXmDi6uYXBdHQbytkbAntvGwGB8rV9gOZFmefskXlK/z+kX7o3CWMi8hgksGAo
+         96d068Toj4Y4wW4/kRV2Ukri5ASmFaGeFo3pkw8GJyxQon+AVlj1UbRwHJDY/wXyLr9+
+         UN+aB6XwZaXu9X/QZ+VyylcRtcgLi1k++22EDVjUVPIS4BLxt8hjWm8RQEBHUyZ14v/R
+         S1jy5Quq2eV47ak0ia/+L1ETKUI2uwRmJzBZKc9HmMVR3v5n+3klbKa+FYpA452t0SEp
+         FNaMhObclPO3E7fJ1EdSMuIvnymVcDxqtliMghFN1FPSTTltdKmaMWcEwejQWQP2VXmc
+         BFyw==
+X-Gm-Message-State: AOJu0YymJlG0IfvBbxYzEVMB1tNjmemAwz86w/8JYhb3POGgEOhsHzBJ
+	VyxcrEehRvhec7fRrO/5nsltbQ==
+X-Google-Smtp-Source: AGHT+IFl+InzAht9wjGX3VbUVhsxqPXeTdzVpokOhMfKZ33B+RdV7sB9qjW4A5xQmHAw5a98muxprw==
+X-Received: by 2002:a05:6512:128b:b0:50b:f303:56cd with SMTP id u11-20020a056512128b00b0050bf30356cdmr2070360lfs.15.1701767786021;
+        Tue, 05 Dec 2023 01:16:26 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id f3-20020a056402068300b0054c0264a7fasm799997edy.64.2023.12.05.01.16.23
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Dec 2023 01:16:25 -0800 (PST)
+Message-ID: <369dfa0c-315d-47a9-81fc-c166c9632bac@linaro.org>
+Date: Tue, 5 Dec 2023 10:16:22 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: (subset) [PATCH 00/17] dt-bindings: samsung: add specific
+ compatibles for existing SoC
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Thierry Reding <thierry.reding@gmail.com>
+Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Alim Akhtar <alim.akhtar@samsung.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>,
+ Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
+ Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>,
+ Sylwester Nawrocki <s.nawrocki@samsung.com>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Alessandro Zummo <a.zummo@towertech.it>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Jiri Slaby <jirislaby@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Jaehoon Chung <jh80.chung@samsung.com>,
+ Sam Protsenko <semen.protsenko@linaro.org>, dri-devel@lists.freedesktop.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org,
+ linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
+ linux-serial@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
+ <170119374454.445690.515311393756577368.b4-ty@gmail.com>
+ <20231128205841.al23ra5s34rn3muj@pengutronix.de>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231128205841.al23ra5s34rn3muj@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Sam,
+On 28/11/2023 21:58, Uwe Kleine-König wrote:
+> On Tue, Nov 28, 2023 at 06:49:23PM +0100, Thierry Reding wrote:
+>>
+>> On Wed, 08 Nov 2023 11:43:26 +0100, Krzysztof Kozlowski wrote:
+>>> Merging
+>>> =======
+>>> I propose to take entire patchset through my tree (Samsung SoC), because:
+>     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 
+>>> 1. Next cycle two new SoCs will be coming (Google GS101 and ExynosAutov920), so
+>>>    they will touch the same lines in some of the DT bindings (not all, though).
+>>>    It is reasonable for me to take the bindings for the new SoCs, to have clean
+>>>    `make dtbs_check` on the new DTS.
+>>> 2. Having it together helps me to have clean `make dtbs_check` within my tree
+>>>    on the existing DTS.
+>>> 3. No drivers are affected by this change.
+>>> 4. I plan to do the same for Tesla FSD and Exynos ARM32 SoCs, thus expect
+>>>    follow up patchsets.
+>>>
+>>> [...]
+>>
+>> Applied, thanks!
+>>
+>> [12/17] dt-bindings: pwm: samsung: add specific compatibles for existing SoC
+>>         commit: 5d67b8f81b9d598599366214e3b2eb5f84003c9f
+> 
+> You didn't honor (or even comment) Krzysztof's proposal to take the
+> whole patchset via his tree (marked above). Was there some off-list
+> agreement?
+> 
 
-On Fri, 2023-12-01 at 16:40 -0600, Sam Protsenko wrote:
-> On Fri, Dec 1, 2023 at 10:11=E2=80=AFAM Peter Griffin <peter.griffin@lina=
-ro.org> wrote:
-> >=20
-> > [...]
-> > +#define CLK_CON_GAT_GOUT_BLK_APM_UID_SSMT_G_DBGCORE_IPCLKPORT_ACLK=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x20b8
-> > +#define CLK_CON_GAT_GOUT_BLK_APM_UID_SSMT_G_DBGCORE_IPCLKPORT_PCLK=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x20bc
-> > +#define CLK_CON_GAT_GOUT_BLK_APM_UID_SS_DBGCORE_IPCLKPORT_SS_DBGCORE_I=
-PCLKPORT_HCLK=C2=A0=C2=A0=C2=A0 0x20c0
->=20
-> As I understand, all those parts like IPCLKPORT, BLK, UID (RSTNSYNC
-> probably too) -- they don't really mean anything in the context of the
-> driver, just noise. And if you remove those -- there won't be any
-> conflicts with other names, because those bits are not the unique
-> parts. Following the TRM letter for letter in this case just makes
-> things extremely long without adding any value IMHO. For example, that
-> name above might be:
->=20
-> =C2=A0=C2=A0=C2=A0 CLK_CON_GAT_GOUT_APM_SS_DBGCORE_SS_DBGCORE_HCLK
->=20
-> or even
->=20
-> =C2=A0=C2=A0=C2=A0 CLK_CON_GAT_GOUT_APM_SS_DBGCORE_HCLK
->=20
-> would be fine.
->=20
-> In clk-exynos850 driver I removed all those parts, because they make
-> it pretty much impossible to read both the driver and dts. And yeah,
-> because those names consequenty lead to very long string names, dts
-> will be hard to read too, which is even worse. But again, that's only
-> my IMHO.
+It was also written in the PWM patch itself (under changelog ---) and
+expressed with my "applied" response when I took everything. I am
+sending now another set, also touching PWM.
 
-The advantage of keeping the same name as in the data sheet is that then it=
-'s easy to
-correlate between driver and hardware and future / other hardware.
-By arbitrarily diverging from the TRM you make life much harder for yoursel=
-f when you
-have to look at this again in 12 months time after you've forgotten your na=
-me mangling
-approach; you also make it harder for everybody to review the driver or to =
-use the
-driver as a reference in the future for other hardware, as nobody except yo=
-u knows
-what kind of name-mangling was applied and which register (or clock in this=
- case) is
-really meant.
-
-
-Cheers,
-Andre'
+Best regards,
+Krzysztof
 
 
