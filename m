@@ -1,207 +1,177 @@
-Return-Path: <linux-gpio+bounces-1007-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1008-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AD7C804B54
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 08:47:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3134804B7F
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 08:52:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CE991C20D29
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 07:47:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DF393B20CE3
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 07:52:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 340B528DDE;
-	Tue,  5 Dec 2023 07:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F372F854;
+	Tue,  5 Dec 2023 07:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="AihshZxP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="An6VN3FL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FF8BCA;
-	Mon,  4 Dec 2023 23:47:01 -0800 (PST)
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 3B52oxUZ016853;
-	Tue, 5 Dec 2023 07:46:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=qcppdkim1;
- bh=kbodZWM2evYVptkeKv/TRiiQ0iRhUvgSJ4NO6T5niTg=;
- b=AihshZxP8tvNzsiAh4KijSEOxhuGRyqcAFTy3GmTI4kIZF/Ykfk66R/2hcnheE5WmxKS
- ZRIu1EDRNzXhOkQl6LOJcYgZC6mY1e+AGdYg9WzLmwpolgVK88+QhwW6J6uhkDOP8Dxw
- hrZC9L++mK6n8MaRNidz00f8oh6xHvT8wKUBAaiuIBIUstoyB66iFmFLfR8xTPuJOh7K
- 7l0ESFPGKsnkB2tIKNsnEr3BdskuaHsagcdmzKlEx0mPLnfUyThstKYlzEgDLfEgjLaS
- x6s+TKKigSCIjfkywhgY6npZsxfKBtbnzQO4DDtpi9WKIT/9bjaJD/FOBmgg2M+69Vtx DA== 
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3us8wpk7up-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Dec 2023 07:46:57 +0000
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3B57kuuv020485
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Dec 2023 07:46:56 GMT
-Received: from [10.239.133.73] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 4 Dec
- 2023 23:46:51 -0800
-Message-ID: <a715c4f1-dcba-4411-ae6b-20ce4ad849ac@quicinc.com>
-Date: Tue, 5 Dec 2023 15:46:48 +0800
+Received: from mail-ej1-x634.google.com (mail-ej1-x634.google.com [IPv6:2a00:1450:4864:20::634])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B1FDE11F
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Dec 2023 23:52:26 -0800 (PST)
+Received: by mail-ej1-x634.google.com with SMTP id a640c23a62f3a-a1c7d8f89a5so26904266b.2
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Dec 2023 23:52:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701762745; x=1702367545; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=HE/x2HX9YSFYGtjbEwzCNCIFrX4hXFWClA1p9cANaOA=;
+        b=An6VN3FL8YTngmvQIVKPM66F6MZ0eQLnLIfwi/xsxWsKpZ0Umowx3CtBCd5PB3sFOq
+         R5wY6vFHJxi6IyWlSt2i4gvAjHxYERxOid4sKqaV3qerONi20rldtIgVjNF3SzrsmAyj
+         sAzBOJvcx7QghwDi9S5VQd6pTPciUPs9e5+vi3VnQRBDwCvRQeAY5bBP3tab1IBXzxSL
+         993YBlUErRRYBjBSLBVIi5RyO6Bz3tMVMV/AO6Y9rMIpQdQbew5AwVc/0XeNHK5LB7Cz
+         BnUeZ7nedzQfJyLFZwkCoutFzQ1lo9jEK8IUmrdtSHXWtFW3XHMKyhJEMFGf7WIFzYrE
+         +ELw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701762745; x=1702367545;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=HE/x2HX9YSFYGtjbEwzCNCIFrX4hXFWClA1p9cANaOA=;
+        b=MVkepSShYi6yLhgd3QsdRLemGtaLV/v+WABYfZ4gAICQJuTaIthoFqssbvuQZ0+w17
+         pGW+jkg1+6uYV9kdqvw6+WYJI55YZKoDBHxEDQUnPRJJDj5koFe3ILdU9EHuR3IxrZLE
+         owIPOx6FDr2C2MNKNjX6QKCEzs8JvaNnOS0XoeruB2bZi4Qo4gTCDJViQ+tBT9LgBFvE
+         VadTdOELURJaFi49X/QXVui3EQGmnXjM0ipSWQ2sXKzVAW8lLzCejBBTDsSmVHExs/7V
+         PjeUkDD2BM4oqXdDwxdOdr3b75qFmffsbRuVp4nfRY1J7iAeP1pCqQmVGG03JBLP/ZgQ
+         wSMw==
+X-Gm-Message-State: AOJu0Yx9FafEVPZrdaNkbyvPCIHpdli+w3mqbuy4WFyXqUTReThA4QDJ
+	YCmWCeOfn7qXkLTFduJID4airg==
+X-Google-Smtp-Source: AGHT+IHbV8OwzZcl7l/X03ZGEbDkrVRvPZ9VTnKnRZqff4x1iAUtK7Aml/g+lGmSKaItydhkWAvUeg==
+X-Received: by 2002:a17:906:4a98:b0:a1c:9738:2235 with SMTP id x24-20020a1709064a9800b00a1c97382235mr148783eju.118.1701762745098;
+        Mon, 04 Dec 2023 23:52:25 -0800 (PST)
+Received: from [10.1.1.118] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id lt12-20020a170906fa8c00b00a0290da4a50sm6213248ejb.186.2023.12.04.23.52.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Dec 2023 23:52:24 -0800 (PST)
+Message-ID: <5e9c0b1c5885775a7bc32ef59cb09a2a93d4cbe1.camel@linaro.org>
+Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
+ and cmu_apm support
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+ conor+dt@kernel.org,  sboyd@kernel.org, tomasz.figa@gmail.com,
+ s.nawrocki@samsung.com,  linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net,  catalin.marinas@arm.com, will@kernel.org,
+ arnd@arndb.de, olof@lixom.net,  gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, cw00.choi@samsung.com,  alim.akhtar@samsung.com
+Cc: tudor.ambarus@linaro.org, semen.protsenko@linaro.org,
+ saravanak@google.com,  willmcvicker@google.com, soc@kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ kernel-team@android.com,  linux-serial@vger.kernel.org
+Date: Tue, 05 Dec 2023 07:52:22 +0000
+In-Reply-To: <20231201160925.3136868-13-peter.griffin@linaro.org>
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+	 <20231201160925.3136868-13-peter.griffin@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.49.2-3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: Add lock to ensure the state atomization
-To: Bjorn Andersson <andersson@kernel.org>
-CC: <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kernel@quicinc.com>,
-        <linux-arm-msm@vger.kernel.org>
-References: <20231201152931.31161-1-quic_aiquny@quicinc.com>
- <6jlui5h7d2rs37sdvvwmii55mwhm5dzfo2m62hwt53mkx4z32a@aw5kcghe4bik>
- <4d85fda9-6e00-4bb4-b8a8-85c5e66635bf@quicinc.com>
- <wmpsnz3lhqsqglwkbr5ohrywqeufrjmtobhnprvf4o6iarc5x6@6jeuqck4n2nc>
-From: "Aiqun(Maria) Yu" <quic_aiquny@quicinc.com>
-In-Reply-To: <wmpsnz3lhqsqglwkbr5ohrywqeufrjmtobhnprvf4o6iarc5x6@6jeuqck4n2nc>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: WUG1ez1NYRNFYBRUY8Y2L2nHUUc4RZ2d
-X-Proofpoint-ORIG-GUID: WUG1ez1NYRNFYBRUY8Y2L2nHUUc4RZ2d
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-05_03,2023-12-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 malwarescore=0 bulkscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2311060000 definitions=main-2312050062
 
-On 12/5/2023 12:46 AM, Bjorn Andersson wrote:
-> On Mon, Dec 04, 2023 at 05:57:42PM +0800, Aiqun(Maria) Yu wrote:
->> On 12/2/2023 4:39 AM, Bjorn Andersson wrote:
->>> On Fri, Dec 01, 2023 at 11:29:31PM +0800, Maria Yu wrote:
->>>> Currently pinctrl_select_state is an export symbol and don't have
->>>> effective re-entrance protect design. And possible of pinctrl state
->>>> changed during pinctrl_commit_state handling. Add per pinctrl lock to
->>>> ensure the old state and new state transition atomization.
->>>> Move dev error print message right before old_state pinctrl_select_state
->>>> and out of lock protection to avoid console related driver call
->>>> pinctrl_select_state recursively.
->>>
->>> I'm uncertain about the validity of having client code call this api in
->>> a racy manner. I'm likely just missing something here... It would be
->>> nice if this scenario was described in a little bit more detail.
->> Hi Bjorn,
->>
->> we've got a customer dump that the real racy happened, and the system
->> frequently have printk message like:
->>    "not freeing pin xx (xxx) as part of deactivating group xxx - it is
->> already used for some other setting".
->> Finally the system crashed after the flood log.
->>
-> 
-> Sounds like we have a valid issue, but let's make sure that we
-> describe the problem on its technical grounds in the commit that is
-> upstreamed - if nothing else, so that others can determine if the
-> solution matches their bug reports.
-> 
->> We've inform the customer to check their own client code which called this
->> api, to have proper lock to avoid racy of per dev pinctrl_select_state call
->> from customer driver end.
->> For example:
->> LOCK;
->> pinctrl_select_state();
-> 
-> Placing a lock inside pinctrl_select_state() will not make this whole
-> sequence atomic, so if the client driver needs to know that the state
-> remains from here until the "other hardware behaviors" below, something
-> more is needed.
-Agree.
-This is only an example to enforcing from the clients which call this 
-API. while apparently not all clients ensured this kind of lock safe 
-when to call pinctrl_select_state, so that's why placing a lock inside 
-pinctrl_select_state to ensure atomic of per dev pinctrl at least.
-> 
-> Perhaps I'm misunderstanding what you're saying though?
+Hi Pete,
 
-> 
->> gpio pulling;
->> udelay();
->> check state;
->> other hardware behaviors;
->> UNLOCK;
->>
->> While it is still unnecessary the volatile re-load of p->state for the
->> interation and so I upstream a patch like link[2].
->>
->> while during the merge discussion, upstream maintainer suggest to have the
->> lock issue fixed, instead of only READ_ONCE for the interation.
->> I think it is also make sense since although current in-tree driver have
->> take care of each pinctrl_select_state call, since it is a export symbole
->> and we've see the similar issue continuously (a year back ago also we've
->> seen similar issue before[3]).
->>
-> 
-> I think you're correcting a real problem, in that two contexts calling
-> pinctrl_select_state() seems to be able to cause non-deterministic
-> results. But is the motivation "pinctrl_select_state() is an
-> EXPORT_SYMBOL, so let's make it thread safe", or is the motivation
-EXPORT_SYMBOL pinctrl_select_state, let's make it thread safe is a 
-motivation here. As above reason explained.
-> "during async probing of devices it's possible to end up in
-> pinctrl_select_state() from multiple contexts simultaneously, so make it
-> thread safe"?
-> 
->> The whole serials discussion can be found link here:
->> [1] https://lore.kernel.org/lkml/e011b3e9-7c09-4214-8e9c-90e12c38bbaa@quicinc.com/
->> [2]
->> https://lore.kernel.org/lkml/20231115102824.23727-1-quic_aiquny@quicinc.com/
->> [3]
->> https://lore.kernel.org/lkml/20221027065408.36977-1-quic_aiquny@quicinc.com/
->>
->>>
->>> The recursive error print sounds like a distinct problem of its own,
->>> that warrants being introduced in a patch of its own. But as with the
->>> other part, I'm not able to spot a code path in the upstream kernel
->>> where this hppens, so please properly describe the scenario where
->>> touching the console would result back in another pinctrl_select_state().
->> For this part, I am thinking about a spin lock is introduced and have the
->> error log out of the lock will be safer.
->> The current patch disable irq during the lock, and some console driver rely
->> on interrupt to get tx dma/fifo ready.
-> 
-> Logging outside the region with interrupts disabled make total sense,
-> I'm definitely in favor of this.
-Fair enough.
-> 
->> Also console driver will be a pinctrl client, so avoid unnecessary recursive
->> in theory.
-> 
-> I don't think a console driver should pinctrl_select_state() from its
-> tx path, that's why I'm asking.
-> 
-Got you. I haven't seen in-tree console driver have tx path call 
-pinctrl_select_state. Will re-vise the commit comments accordingly.
-> But perhaps I'm missing some scenario, if so please describe this in the
-> commit message.
-> 
+On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
+> cmu_top is the top level clock management unit which contains PLLs, muxes=
+,
+> dividers and gates that feed the other clock management units.
+>=20
+> cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
+> APM module.
+>=20
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Will McVicker <willmcvicker@google.com>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+> =C2=A0drivers/clk/samsung/Makefile=C2=A0=C2=A0=C2=A0 |=C2=A0=C2=A0=C2=A0 =
+1 +
+> =C2=A0drivers/clk/samsung/clk-gs101.c | 2495 ++++++++++++++++++++++++++++=
++++
+> =C2=A02 files changed, 2496 insertions(+)
+> =C2=A0create mode 100644 drivers/clk/samsung/clk-gs101.c
+>=20
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index ebbeacabe88f..3056944a5a54 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos7.=
+o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos7885.o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynos850.o
+> =C2=A0obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-exynosautov9.o
+> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)	+=3D clk-gs101.o
+> =C2=A0obj-$(CONFIG_S3C64XX_COMMON_CLK)	+=3D clk-s3c64xx.o
+> =C2=A0obj-$(CONFIG_S5PV210_COMMON_CLK)	+=3D clk-s5pv210.o clk-s5pv210-aud=
+ss.o
+> =C2=A0obj-$(CONFIG_TESLA_FSD_COMMON_CLK)	+=3D clk-fsd.o
+> diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs=
+101.c
+> new file mode 100644
+> index 000000000000..6bd233a7ab63
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-gs101.c
+> @@ -0,0 +1,2495 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Linaro Ltd.
+> + * Author: Peter Griffin <peter.griffin@linaro.org>
+> + *
+> + * Common Clock Framework support for GS101.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include <dt-bindings/clock/google,gs101.h>
+> +
+> +#include "clk.h"
+> +#include "clk-exynos-arm64.h"
+> +
+> +/* NOTE: Must be equal to the last clock ID increased by one */
+> +#define TOP_NR_CLK	(CLK_GOUT_TPU_UART + 1)
+> +#define APM_NR_CLK	(CLK_APM_PLL_DIV16_APM + 1)
+> +#define MISC_NR_CLK	(CLK_GOUT_MISC_XIU_D_MISC_IPCLKPORT_ACLK + 1)
+> +
+> +/* ---- CMU_TOP --------------------------------------------------------=
+----- */
+> +
+> [...]
+> +
+> +/* ---- CMU_APM --------------------------------------------------------=
+----- */
+> [..]
+> +
+> +/* ---- CMU_MISC -------------------------------------------------------=
+------ */
 
->> Just incase some out of tree concole driver was able to use the
->> pinctrl_select_state in console write related APIs as well.
-> 
-> If there is a valid usage pattern I think we should consider that, but
-> we do not care about out-of-tree drivers misusing/abusing framework
-> APIs.
-Fair.
-> 
-> Regards,
-> Bjorn
+nit - the CMU_MISC comment here is an outlier.
 
--- 
-Thx and BRs,
-Aiqun(Maria) Yu
+> [..]
+> +
+> +/* ---- platform_driver ------------------------------------------------=
+----- */
+> +
+> [...]
+
+Cheers,
+Andre'
 
 
