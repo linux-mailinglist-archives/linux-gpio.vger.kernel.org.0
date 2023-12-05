@@ -1,171 +1,96 @@
-Return-Path: <linux-gpio+bounces-1040-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1041-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 162948061B2
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 23:29:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E7E7806217
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 23:49:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1C33282021
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 22:29:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 416581F21707
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 22:49:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7BF6EB4F;
-	Tue,  5 Dec 2023 22:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD6103FE37;
+	Tue,  5 Dec 2023 22:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SzUAPLx1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQZ3IFub"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-x936.google.com (mail-ua1-x936.google.com [IPv6:2607:f8b0:4864:20::936])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B0BA18B
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 14:29:46 -0800 (PST)
-Received: by mail-ua1-x936.google.com with SMTP id a1e0cc1a2514c-7c5a2b5e77bso970787241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 14:29:46 -0800 (PST)
+Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79954B5
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 14:49:51 -0800 (PST)
+Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5d226f51f71so69481017b3.3
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 14:49:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701815385; x=1702420185; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=NrXqJVDzW4Zm/gOjUfh5BbRIxo1FamErN2RJgIBt+Rg=;
-        b=SzUAPLx1mlnqn4xCO0z6RhzFtL9DkM1/MY4zDBwCSG6jXaCRcGwRJjvZo0YsDPu5m4
-         miQcdaeuy0lFWtFQ3QDmuGVjSNjGLUjKxRAVDq1dN2KPGT2UM+6lvh/VjEA32PAE85x2
-         xvO5/TeR/vKMn4zeWv7dhnyEum0V8i7jeos7zkwvD7RRvrbCiYaA1pv85Hc4H+q/4sml
-         XwmwgqdPkHONOWrQALsZkMyllVhU6XtqY35fClg9yq/re+QxBC94e7zAuutZ+07eFd9P
-         7lNcoqlriEImhZByQ40DKs6d9QcaI7VlIgr0K5ckFDW/5EcTFheYrVnhP/t9r2st1FeH
-         pJAg==
+        d=linaro.org; s=google; t=1701816590; x=1702421390; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JrFaCxut1vMUHEQKCkObXuZTRmt2Q25+qM/Ls973otI=;
+        b=dQZ3IFubH9gI2jg/gp8HqU98fc7aBOrxFTcjz4dnBQUqkese2qhIhh7Y3OrkDHYWue
+         D92MYGMHfDqX+lEqf4cEBeqDBJ7iqjOBjzZ84vgwfJP3dFkZvXUpf4wu3M0gmy9Gd3H+
+         OcQW4yE3CS8Am4IXUG+ZbcjTVZyGY4GDwiUG02FQu8uS5ry+DX6yR1GNwdl1DQWKmquF
+         yhaeHQMZKOe1O+Os6kaR06a7jNXRehDVOPic99k3JNPdlY91NP6IZrV5gOV+INj4lRqR
+         ilMKgqjSySnvotwzQm8zWpjHXpez+ZG3wQQJoVh8otuvIjDDJd+wNx0Z5GmkMf9EFG76
+         1gJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701815385; x=1702420185;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=NrXqJVDzW4Zm/gOjUfh5BbRIxo1FamErN2RJgIBt+Rg=;
-        b=MnPYittLk2b31q01AEMI4c2w3N5ux064pENG8zvUdEdxlmFh6J1peEmLTxM2pDOJ3v
-         3TAeN9vGeLOYLKJtgHo41YhfSP/UHXMQt4Pp5c65rxFr/GH1cyTbeOnP9+M2NqXUhmqU
-         tKIAKjH0t8EUhL68P6zOMeo4yUOv/TJvsj1O/u8YwMnFUyoFz3/AURpUM8FL4Qydunoo
-         5uzxLwosWm8g7OkTVzJy/4dQj0tM8p5L9F7RAiqKWMZPdjqEHSCgOlOYxY2+3a9GfO65
-         KemElPc9WEI9dYFR6UxY7cvHQTCnNh43CvUrFI+tRjLJvbLnqMtCfdL+h1p2G6r2YRZU
-         mnLw==
-X-Gm-Message-State: AOJu0Yxq0K6ICmjj4DA4wD+Q7n/bjTCn+Qm/fQMsIAc2p+69Sb4eiOjn
-	QAfs0Cyu8RN9QYK+lvSbHGqcnHx7L99Rv8YlczfCUw==
-X-Google-Smtp-Source: AGHT+IFF2TpItFKowjCZ8ASJ/0BWEWuvpsfiA6UqGLSiCQ0pnJ8/SuZznn+CD6peVXZleVKejXfbOHGauFLhVvJuCuQ=
-X-Received: by 2002:a67:af0b:0:b0:464:7b6d:2efc with SMTP id
- v11-20020a67af0b000000b004647b6d2efcmr4247312vsl.34.1701815385307; Tue, 05
- Dec 2023 14:29:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701816590; x=1702421390;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JrFaCxut1vMUHEQKCkObXuZTRmt2Q25+qM/Ls973otI=;
+        b=XakczIJSQA+pFYkyQ/RFINnXlIh8k3X1S+nNz5P5uYCCyQR/tQYJn9tBEHnqeYkwyq
+         Wq67PIM/DxDykbLMG+/oAwT3bqEUNnbFXDvIX9d3SlHxsBXB3XtGe2G8NBxC92vPKjcC
+         JygUhXXj/YG6ZGotQxt6/89GlrMcNrXyyGdPXDYBz0x9ww5RE2LpFbOcz5HX5nEB/RkN
+         FejlOytJ7aopmae93S26b5mAYMzML5OEsXPRsUeCrXyDHrPt6aWFz0sfYinOPh0Gpc8D
+         aTIX7D2MizAQqAYqLbWUsqyMAsgUA1Hehe5e2xBdK90lSXJI9yzBOjs61kMZAWVRlAKl
+         N3Xw==
+X-Gm-Message-State: AOJu0Ywstb5PpD9jaN7CZQgso4wHWWDs4b1stZghJ0eNCpyZY1QaYQNK
+	tHiO3Cmq99D32nIhoB/h4nDBehmPa8NXnDLK3mhang==
+X-Google-Smtp-Source: AGHT+IFEmFb+hr6nRdjNrf1j/t6+1nDZojjY2YlEds/9G8SBs8lIXxIchM5+Ia+fLcw0ALQ/l3k+kJcKL5pmaaIPjXc=
+X-Received: by 2002:a81:b622:0:b0:5d7:1940:dd63 with SMTP id
+ u34-20020a81b622000000b005d71940dd63mr5381287ywh.57.1701816590707; Tue, 05
+ Dec 2023 14:49:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
- <20231201160925.3136868-18-peter.griffin@linaro.org> <ZWpz5L2g4SB2cdVD@google.com>
-In-Reply-To: <ZWpz5L2g4SB2cdVD@google.com>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Tue, 5 Dec 2023 22:29:34 +0000
-Message-ID: <CADrjBPpOUf72k=tFWsOQUUuH2Nc8O9=_EaX7QexTCvRT-5QndQ@mail.gmail.com>
-Subject: Re: [PATCH v5 17/20] tty: serial: samsung: Add gs101 compatible and
- common fifoszdt_serial_drv_data
-To: William McVicker <willmcvicker@google.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
-	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
-	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
-	semen.protsenko@linaro.org, saravanak@google.com, soc@kernel.org, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	kernel-team@android.com, linux-serial@vger.kernel.org
+References: <20231204093509.19225-1-brgl@bgdev.pl>
+In-Reply-To: <20231204093509.19225-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Dec 2023 23:49:38 +0100
+Message-ID: <CACRpkdYn16SbWtS=hSx0r=pmNR9MKYTKd5q9Btr=wft8n8CRFw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/10] gpio/pinctrl: replace gpiochip_is_requested()
+ with a safer interface
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Will,
+On Mon, Dec 4, 2023 at 10:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 
-On Sat, 2 Dec 2023 at 00:01, William McVicker <willmcvicker@google.com> wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> On 12/01/2023, Peter Griffin wrote:
-> > Add serial driver data for Google Tensor gs101 SoC and a common
-> > fifoszdt_serial_drv_data that can be used by platforms that specify the
-> > samsung,uart-fifosize DT property.
-> >
-> > A corresponding dt-bindings patch updates the yaml to ensure
-> > samsung,uart-fifosize is a required property.
-> >
-> > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> > Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> While reworking the locking in GPIOLIB I realized that locking the
+> descriptor with users still calling gpiochip_is_requested() will still
+> be buggy as it returns a pointer to a string that can be freed whenever
+> the descriptor is released. Let's provide a safer alternative in the
+> form of a function that returns a copy of the label.
 >
-> Tested-by: Will McVicker <willmcvicker@google.com>
->
-> ---
->
-> I verified boot to a busybox console with kernel logs printed to the serial
-> port.
+> Use it in all drivers and remove gpiochip_is_requested().
 
-Thanks for testing :) I've added your Tested-by tags to the various
-patches apart from the pinctrl ones that have been refactored a bit.
+The series:
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks,
+> I plan to provide this series in an immutable branch for the pinctrl and
+> baytrail trees to pull.
 
-Peter.
->
-> Regards,
-> Will
->
-> > ---
-> >  drivers/tty/serial/samsung_tty.c | 16 ++++++++++++++++
-> >  1 file changed, 16 insertions(+)
-> >
-> > diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-> > index 1b0c2b467a30..f8d98f1006de 100644
-> > --- a/drivers/tty/serial/samsung_tty.c
-> > +++ b/drivers/tty/serial/samsung_tty.c
-> > @@ -2490,14 +2490,25 @@ static const struct s3c24xx_serial_drv_data exynos850_serial_drv_data = {
-> >       .fifosize = { 256, 64, 64, 64 },
-> >  };
-> >
-> > +/*
-> > + * Common drv_data struct for platforms that specify uart,fifosize in
-> > + * device tree.
-> > + */
-> > +static const struct s3c24xx_serial_drv_data exynos_fifoszdt_serial_drv_data = {
-> > +     EXYNOS_COMMON_SERIAL_DRV_DATA(),
-> > +     .fifosize = { 0 },
-> > +};
-> > +
-> >  #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
-> >  #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
-> >  #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
-> > +#define EXYNOS_FIFOSZDT_DRV_DATA (&exynos_fifoszdt_serial_drv_data)
-> >
-> >  #else
-> >  #define EXYNOS4210_SERIAL_DRV_DATA NULL
-> >  #define EXYNOS5433_SERIAL_DRV_DATA NULL
-> >  #define EXYNOS850_SERIAL_DRV_DATA NULL
-> > +#define EXYNOS_FIFOSZDT_DRV_DATA NULL
-> >  #endif
-> >
-> >  #ifdef CONFIG_ARCH_APPLE
-> > @@ -2581,6 +2592,9 @@ static const struct platform_device_id s3c24xx_serial_driver_ids[] = {
-> >       }, {
-> >               .name           = "artpec8-uart",
-> >               .driver_data    = (kernel_ulong_t)ARTPEC8_SERIAL_DRV_DATA,
-> > +     }, {
-> > +             .name           = "gs101-uart",
-> > +             .driver_data    = (kernel_ulong_t)EXYNOS_FIFOSZDT_DRV_DATA,
-> >       },
-> >       { },
-> >  };
-> > @@ -2602,6 +2616,8 @@ static const struct of_device_id s3c24xx_uart_dt_match[] = {
-> >               .data = EXYNOS850_SERIAL_DRV_DATA },
-> >       { .compatible = "axis,artpec8-uart",
-> >               .data = ARTPEC8_SERIAL_DRV_DATA },
-> > +     { .compatible = "google,gs101-uart",
-> > +             .data = EXYNOS_FIFOSZDT_DRV_DATA },
-> >       {},
-> >  };
-> >  MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
-> > --
-> > 2.43.0.rc2.451.g8631bc7472-goog
-> >
+Nice! I'll pull it.
+
+Yours,
+Linus Walleij
 
