@@ -1,181 +1,284 @@
-Return-Path: <linux-gpio+bounces-1015-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1016-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BD29805449
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 13:36:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 731CD80564D
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 14:46:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 000B81F21513
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 12:36:19 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 11947B20FAE
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 13:46:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 614E85C902;
-	Tue,  5 Dec 2023 12:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A1D5D91E;
+	Tue,  5 Dec 2023 13:46:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfFvdOgq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OSyp3xub"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x336.google.com (mail-wm1-x336.google.com [IPv6:2a00:1450:4864:20::336])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D0C801A5;
-	Tue,  5 Dec 2023 04:36:09 -0800 (PST)
-Received: by mail-wm1-x336.google.com with SMTP id 5b1f17b1804b1-40c09dfd82aso31063675e9.0;
-        Tue, 05 Dec 2023 04:36:09 -0800 (PST)
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E05218B;
+	Tue,  5 Dec 2023 05:46:26 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54cff638658so1589184a12.1;
+        Tue, 05 Dec 2023 05:46:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1701779768; x=1702384568; darn=vger.kernel.org;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vi/+U1S70zCpRCmtolwQMMJpjEnLtDmB7aIF6AJ1vQ4=;
-        b=VfFvdOgq00qRsq2xMcSXTxyqeNGdDJ4MXA7bx8Lncy8x4MH6a4ZkaHW9uG2miWHLBz
-         SJO1zcZCj+ejBfp2ijjBwDMhdZfkn07Zse5u1tdpIYli4mJul83mbChpmo6wLridTU6V
-         lDoZaGfMeYDC0jfGOUvhLxRMzpBMHxHf6hk7gI/hWNtr7rmBepxe3kt0k2RQQU8JKrSP
-         +juKAwkUFIEru4q1t2QEJ5vgiORWFOqXuikJARSr1KftCJL2Mf5+X8QWOr4FcPq3Kibd
-         su/m5ds+2LMEOdXpzWp620ef1iBXBi9KUkMUPGqFEAS4+0XtepApqcFqqONBG+WaCkI1
-         cbiQ==
+        d=gmail.com; s=20230601; t=1701783984; x=1702388784; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TTeJ0EDjbcdiYqEviIIm+5LsxySuiePtzDtzi3eR2Yk=;
+        b=OSyp3xubmVf3/SGcYs4CKgXLGwycCsS8MWahSbkOaPyGUMa45i2mQNsc9t51oOhcgE
+         rBMkdiOCTjBC5wjqsWv+oKCkRLWlRe5XaTPCkJH7aglwZIRfgMQCwp5cCMvGocVuHAgT
+         5KZRdep0T1afkyc+mf0PCLqtTvlWaf1if1ji8RbxcjjcvMsVG5qfYA+LIJH0/9BynOy+
+         iSuDAdncqkJDwAT80h5LucxqQBslJVJVgh9lfhr1wK8SRGo2vzci8rw2YXYvBLOFFnlG
+         svfBTahx3NkxAGNbtMTligud259B/8KkEXRY+Zmn2y5Y8JxOyqkPLcaU2os/rFG3C+Nn
+         KpoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701779768; x=1702384568;
-        h=user-agent:in-reply-to:content-disposition:mime-version:references
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vi/+U1S70zCpRCmtolwQMMJpjEnLtDmB7aIF6AJ1vQ4=;
-        b=AH0l64I/0OV8tm5OLHi724nq7uub2NVc3rtQCLEs0XnJXiCr4KD/cgZbUWiTbr80Cr
-         rWli7rhPf7mizG3/gQimvoYFWNSQi766nMWC47FdturbmniMjp+Nm/7dmMfKIHPhUMgm
-         fYPDg1tTnoSmVH24+cYj9pujgvTFpGV4Nk5w5cxLM90RHyWV0e7OriPHzE+JRw3lSyRH
-         0qBN0TxCBEVhDFRQiuqsJRi7zVynY63yHrCzSm3H6I7px68COXk9Ujy7tU/iNZixqQd4
-         ZqsYkjHieCReFL+aTbi5wle5hckT5K5OccK1PokHUbPjYZG7aQ0OZzSBHK0jHaCtZvkc
-         kCXg==
-X-Gm-Message-State: AOJu0YzFeUYPG6/K0+VPLPudXbHqSNLonSQ0TQcycLWHOfL+pDh5m/r9
-	slTlwjsYba45AEVUVEu7lsY=
-X-Google-Smtp-Source: AGHT+IFRXDtzFmX4tYMMU5n5XaYJrLQWKmuFyEOl3CF2puX317iplwOttL32TpsSZhFHKXsaDUn0Zw==
-X-Received: by 2002:a05:600c:3007:b0:40b:5e21:dd2c with SMTP id j7-20020a05600c300700b0040b5e21dd2cmr431012wmh.90.1701779767917;
-        Tue, 05 Dec 2023 04:36:07 -0800 (PST)
-Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id i21-20020a170906251500b009ff1997ce86sm6715307ejb.149.2023.12.05.04.36.06
+        d=1e100.net; s=20230601; t=1701783984; x=1702388784;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TTeJ0EDjbcdiYqEviIIm+5LsxySuiePtzDtzi3eR2Yk=;
+        b=fY+lKuxC1xeqvv3OUR8YpN0Oh9BQLeYa7z0FLc5r+ZamNfcNN3HIsyolS3RtuCRPd9
+         B9f/wPHwVZ9kysiJlCUAGZzjx6GqzR5IJD7v5Dm3X+6QiKW3e2YoGBKcVkFqn+VsDAF6
+         9GtvSIIlOt0J3swut/cwO1mwBaUXA3gTKCCLzQuYJ0KKQnbtiFqvYg/l1EBMJTJYMl8U
+         HV0QiSawIl128B564hoXMfJ5KeuuRdT30NQFhfxpP0JW2KaHODdIGLezUsZgr4evJTw3
+         zjpAgl7tIWUOhLDDzKtP6fz+tDao32UxlIeYrtP+JLSCfemquQhztSSZz0gfFT0MGmV+
+         oWog==
+X-Gm-Message-State: AOJu0YyYttdQ0y6sFxojNsdbPTGZt5Mv2hQlMpiAnX0+ZznfmoKkXAkZ
+	cHVsi2rNeOQ/WMZYDM1E/Xzw0T9NuLtoBuC8wDE=
+X-Google-Smtp-Source: AGHT+IHIGvB6u0O1iOh8G8NwKm8XBsB8DRTT0Cab/+S3uj7y2caskUdc4TFT7kN0IGVA7SpWD4NzKQ==
+X-Received: by 2002:a50:8d4e:0:b0:548:5605:4682 with SMTP id t14-20020a508d4e000000b0054856054682mr3942458edt.21.1701783984336;
+        Tue, 05 Dec 2023 05:46:24 -0800 (PST)
+Received: from HYB-hhAwRlzzMZb.ad.analog.com ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id by6-20020a0564021b0600b0054cacb41abasm1102233edb.60.2023.12.05.05.46.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Dec 2023 04:36:07 -0800 (PST)
-Date: Tue, 5 Dec 2023 13:36:05 +0100
-From: Thierry Reding <thierry.reding@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
+        Tue, 05 Dec 2023 05:46:23 -0800 (PST)
+From: Dumitru Ceclan <mitrutzceclan@gmail.com>
+To: 
+Cc: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andy@kernel.org,
+	linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
 	Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Alim Akhtar <alim.akhtar@samsung.com>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Lars-Peter Clausen <lars@metafoo.de>, Lee Jones <lee@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Tomasz Figa <tomasz.figa@gmail.com>,
-	Sylwester Nawrocki <s.nawrocki@samsung.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Alessandro Zummo <a.zummo@towertech.it>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Jiri Slaby <jirislaby@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Jaehoon Chung <jh80.chung@samsung.com>,
-	Sam Protsenko <semen.protsenko@linaro.org>,
-	dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-mmc@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-rtc@vger.kernel.org, linux-serial@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH 00/17] dt-bindings: samsung: add specific
- compatibles for existing SoC
-Message-ID: <ZW8ZNZ_FJSV8fq-U@orome.fritz.box>
-References: <20231108104343.24192-1-krzysztof.kozlowski@linaro.org>
- <170119374454.445690.515311393756577368.b4-ty@gmail.com>
- <20231128205841.al23ra5s34rn3muj@pengutronix.de>
+	Michael Walle <michael@walle.cc>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>,
+	Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	=?UTF-8?q?Leonard=20G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Dumitru Ceclan <mitrutzceclan@gmail.com>
+Subject: [PATCH v7 1/2] dt-bindings: adc: add AD7173
+Date: Tue,  5 Dec 2023 15:42:20 +0200
+Message-ID: <20231205134223.17335-1-mitrutzceclan@gmail.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="Tgq7dxd4jwke8dPo"
-Content-Disposition: inline
-In-Reply-To: <20231128205841.al23ra5s34rn3muj@pengutronix.de>
-User-Agent: Mutt/2.2.12 (2023-09-09)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
+The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+which can be used in high precision, low noise single channel applications
+or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+primarily for measurement of signals close to DC but also delivers
+outstanding performance with input bandwidths out to ~10kHz.
 
---Tgq7dxd4jwke8dPo
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+---
+ .../bindings/iio/adc/adi,ad7173.yaml          | 170 ++++++++++++++++++
+ 1 file changed, 170 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
 
-On Tue, Nov 28, 2023 at 09:58:41PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Tue, Nov 28, 2023 at 06:49:23PM +0100, Thierry Reding wrote:
-> >=20
-> > On Wed, 08 Nov 2023 11:43:26 +0100, Krzysztof Kozlowski wrote:
-> > > Merging
-> > > =3D=3D=3D=3D=3D=3D=3D
-> > > I propose to take entire patchset through my tree (Samsung SoC), beca=
-use:
->     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->=20
-> > > 1. Next cycle two new SoCs will be coming (Google GS101 and ExynosAut=
-ov920), so
-> > >    they will touch the same lines in some of the DT bindings (not all=
-, though).
-> > >    It is reasonable for me to take the bindings for the new SoCs, to =
-have clean
-> > >    `make dtbs_check` on the new DTS.
-> > > 2. Having it together helps me to have clean `make dtbs_check` within=
- my tree
-> > >    on the existing DTS.
-> > > 3. No drivers are affected by this change.
-> > > 4. I plan to do the same for Tesla FSD and Exynos ARM32 SoCs, thus ex=
-pect
-> > >    follow up patchsets.
-> > >=20
-> > > [...]
-> >=20
-> > Applied, thanks!
-> >=20
-> > [12/17] dt-bindings: pwm: samsung: add specific compatibles for existin=
-g SoC
-> >         commit: 5d67b8f81b9d598599366214e3b2eb5f84003c9f
->=20
-> You didn't honor (or even comment) Krzysztof's proposal to take the
-> whole patchset via his tree (marked above). Was there some off-list
-> agreement?
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+new file mode 100644
+index 000000000000..087820a0cf48
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
+@@ -0,0 +1,170 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2023 Analog Devices Inc.
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD7173 ADC
++
++maintainers:
++  - Ceclan Dumitru <dumitru.ceclan@analog.com>
++
++description: |
++  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
++    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
++
++properties:
++  compatible:
++    enum:
++      - adi,ad7172-2
++      - adi,ad7173-8
++      - adi,ad7175-2
++      - adi,ad7176-2
++
++  reg:
++    maxItems: 1
++
++  interrupts:
++    maxItems: 1
++
++  '#address-cells':
++    const: 1
++
++  '#size-cells':
++    const: 0
++
++  spi-max-frequency:
++    maximum: 20000000
++
++  refin-supply:
++    description: external reference supply, can be used as reference for conversion.
++
++  refin2-supply:
++    description: external reference supply, can be used as reference for conversion.
++
++  avdd-supply:
++    description: avdd supply, can be used as reference for conversion.
++
++  required:
++    - compatible
++    - reg
++    - interrupts
++
++patternProperties:
++  "^channel@[0-9a-f]$":
++    type: object
++    $ref: adc.yaml
++    unevaluatedProperties: false
++
++    properties:
++      reg:
++        minimum: 0
++        maximum: 15
++
++      diff-channels:
++        items:
++          minimum: 0
++          maximum: 31
++
++      adi,reference-select:
++        description: |
++          Select the reference source to use when converting on
++          the specific channel. Valid values are:
++          refin      : REFIN(+)/REFIN(−).
++          refin2     : REFIN2(+)/REFIN2(−)
++          refout-avss: REFOUT/AVSS (Internal reference)
++          avdd       : AVDD
++
++          External reference refin2 only available on ad7173-8.
++          If not specified, internal reference used.
++        enum:
++          - refin
++          - refin2
++          - refout-avss
++          - avdd
++        default: refout-avss
++
++    required:
++      - reg
++      - diff-channels
++
++allOf:
++  - $ref: /schemas/spi/spi-peripheral-props.yaml#
++
++  - if:
++      properties:
++        compatible:
++          not:
++            contains:
++              const: adi,ad7173-8
++    then:
++      properties:
++        refin2-supply: false
++      patternProperties:
++        "^channel@[0-9a-f]$":
++          properties:
++            adi,reference-select:
++              enum:
++                - refin
++                - refout-avss
++                - avdd
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++    #include <dt-bindings/interrupt-controller/irq.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      adc@0 {
++        compatible = "adi,ad7173-8";
++        reg = <0>;
++
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        interrupts = <25 IRQ_TYPE_EDGE_FALLING>;
++        interrupt-parent = <&gpio>;
++        spi-max-frequency = <5000000>;
++
++        refin-supply = <&dummy_regulator>;
++
++        channel@0 {
++          reg = <0>;
++          bipolar;
++          diff-channels = <0 1>;
++          adi,reference-select = "refin";
++        };
++
++        channel@1 {
++          reg = <1>;
++          diff-channels = <2 3>;
++        };
++
++        channel@2 {
++          reg = <2>;
++          bipolar;
++          diff-channels = <4 5>;
++        };
++
++        channel@3 {
++          reg = <3>;
++          bipolar;
++          diff-channels = <6 7>;
++        };
++
++        channel@4 {
++          reg = <4>;
++          diff-channels = <8 9>;
++          adi,reference-select = "avdd";
++        };
++      };
++    };
+-- 
+2.42.0
 
-I had read all that and then looking at patchwork saw that you had
-marked all other patches in the series as "handled-elsewhere" and only
-this one was left as "new", so I assumed that, well, everything else was
-handled elsewhere and I was supposed to pick this one up...
-
-I'll drop this one.
-
-Thierry
-
---Tgq7dxd4jwke8dPo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVvGTUACgkQ3SOs138+
-s6FxSg/9GYBUdx6f/ahQ2fBXUlTXv4ykvHBiRJGfUuGbx8MJaPoRIbAl2gcTnwnB
-fRuGMlQD0DbWYLVejy/wzASn//gvqYVp3sjPDSKFuFoUMSVNRBAJJy+DmdHcb7ia
-ZnhU2k/meHpKnCP8Y3im5k1MEbiexQ8OShzyVx8ARU/Y4BXrj2SfODDI/KGVYFa9
-Wfv2b1eoatUBHcDzYbjxow+qyza8E9Ym2b06HRhzQOotMSxLdBF5z1KP/29i4IWj
-WGwsIEbPMmM4rLFmQ45IRWz7GwZL8Fh3afeaUijl2cytKINUgBSkvqPsQPx25FdO
-xKMJHxcPjtERjnHorOGLNpotMNldbw2VRtQDD57QcqqqDBagcqpHfXwsOfuyK6v/
-r9p9gAFCFjF/bpQlKZdwLZ/+khDrkH+UH3cR0OBq/mN1Sb4JcSKbLwv8pGE/F+v6
-NXrlp9Xwx/gIyrRL6yijGCW50TXnE06/w4NDhHwi0tdio//f1BhQTWWYVKOArw0B
-Dpsrq/yDC2xJ7afiBdfKs+nTFuujmcTS1OguA5v+Ww/8a8Bp5bsBJj5p2GkbJa/3
-dChdDhsGy9As2KbUN2WYE+VIYUudcMiXbB8oKf+/kxhgwhSNgP+nirXkV422hKQs
-0w+Dee6JI0kKyL3S8AjiEW3ZmbKqJpV30pgyRVUlSIXRjoljdzA=
-=cbqG
------END PGP SIGNATURE-----
-
---Tgq7dxd4jwke8dPo--
 
