@@ -1,250 +1,348 @@
-Return-Path: <linux-gpio+bounces-1064-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1065-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7605D806FB2
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 13:29:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E7A2806FB8
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 13:30:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFFC71C20A9B
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:29:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3F51281882
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:30:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE19364DD;
-	Wed,  6 Dec 2023 12:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A27D36AE7;
+	Wed,  6 Dec 2023 12:30:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YzQzuKNC"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GL4G4Cpa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7497898;
-	Wed,  6 Dec 2023 04:29:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701865774; x=1733401774;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+GkCBS3JPIqJfqmVwwKDxl1JgdlAWVWExb1QL0i3ln4=;
-  b=YzQzuKNCU7/eX5LFily/FZaeS7bIklYc4uBTPri5Ebw4jw1aCbiNMxv1
-   dfgHso/+UFqCoNW4FQMBzrI/xMHkEAIkeFnOKbaMIhwZg/ImZ2Xq1JXAN
-   bHchB9/MXrjmt/HqfWsxqyv782DSloetYXg24cWCTdhrUENNdSEX7nzt/
-   ZB4Pzpt3nzx57lEk6n5frBMcFmqpQWAvtiz/Q/IG1njzz1CHyWZJN/I3W
-   9gW+srAVZyA4Nil4Pbuol4K5tGR62Rxtccj6gGTpAKreS2KNLq/W4Bcw4
-   wLf1gX0Mb/+9uQE6rEPGXrdrvfTbad/yyWJlnpUKrE+aYv3rBdy51VIzQ
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="1147663"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="1147663"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 04:29:34 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="764706491"
-X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
-   d="scan'208";a="764706491"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 06 Dec 2023 04:29:30 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rAr1q-000Amh-1e;
-	Wed, 06 Dec 2023 12:29:26 +0000
-Date: Wed, 6 Dec 2023 20:28:39 +0800
-From: kernel test robot <lkp@intel.com>
-To: Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
-	krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
-	andy@kernel.org, robh+dt@kernel.org, conor+dt@kernel.org,
-	KWLIU@nuvoton.com
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	openbmc@lists.ozlabs.org
-Subject: Re: [PATCH v8 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
-Message-ID: <202312062043.9nNc7GIZ-lkp@intel.com>
-References: <20231206014530.1600151-4-jim.t90615@gmail.com>
+Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FBED41
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Dec 2023 04:30:42 -0800 (PST)
+Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-40bda47c489so50368935e9.3
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Dec 2023 04:30:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1701865841; x=1702470641; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=Gc2ntkoTShdEBwllBOG4rF/rr9xiDv3tAETL/Jav0Vk=;
+        b=GL4G4CpafP7P2VnXOpEgbvYpbirY+bPPqu0793S8g0HQ/5QMog/dcWIG0+M+vWNuAc
+         GmbJjo9BJrjHG2gD9Jv87L2EAxyr9nj9SY0NxoCo27XbsiRnxM/1pHTegzMu1THX5K4W
+         1jVEgQWJywvO+q23ftcGLGQ5vurjWphWTBB3eEtEwHDaU6ePDPCChRLxIN37TtsaPV/5
+         5ckQ2w7cIa6gt4Zm1KySEmt1CqpyPmtQtOrMbMt7w0kskPdSJn5G9/Id+ASnUPiBxWXt
+         OsSpslSrqvLW6DpZPiwn6UgDQJzqMuXjDKVza3RrsSJ/i1hTK/i0tFT1pX7OyTi3KqUs
+         wNJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701865841; x=1702470641;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Gc2ntkoTShdEBwllBOG4rF/rr9xiDv3tAETL/Jav0Vk=;
+        b=bX76cfMxPdoLi2VKgRFZ77TtuRBvqgVXMiFIZCOmUiNH5gL0PThksJWattJI0Rialb
+         ZCaUX1MI/633rlOLlL6850+ehoWiy/AMTa1Q+Vg7UFgNHbCYKxX2YBh48WBUBrEJ37hA
+         DqkTd0pqgDTMCsLsYTZ+E9MLuilaAqiEoiPyjnCHvxoq5gnQbSZ96BjHWznO4Ny/8qWc
+         Bio/R0+HXJ+g23fLEYS/zf1sf9zp4GOS/+DkCvGSnTlZZ599iyhFS0lpsrU3Br14vOyk
+         rB+1bES/YJ6uNSozI5eakoZTarR6Lk+foDoomjkbLeQzT6Kd7AM2iOynHZ1EXV6QBrmy
+         YFjA==
+X-Gm-Message-State: AOJu0YxZVzonPYpScf8mHSdWHnHovg3kLDVWzkKAS8pAK+C8DOnw+z+Z
+	ygN1KPF4GjNedb/uLGivifLDfQ==
+X-Google-Smtp-Source: AGHT+IGbvAtCRyJ/+D7Ia80B4kAtNqKFbVvgpz/mjpVjvbfrPm9mXg4sGbWIF2mmxMZ4z9+ih3afgA==
+X-Received: by 2002:a7b:ca54:0:b0:40b:5e59:c567 with SMTP id m20-20020a7bca54000000b0040b5e59c567mr597074wml.145.1701865841085;
+        Wed, 06 Dec 2023 04:30:41 -0800 (PST)
+Received: from [10.1.1.118] ([80.111.64.44])
+        by smtp.gmail.com with ESMTPSA id hg10-20020a05600c538a00b0040b398f0585sm22066938wmb.9.2023.12.06.04.30.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 04:30:40 -0800 (PST)
+Message-ID: <6e595a110444033de6ecd35bedc6e84ea1c43fdc.camel@linaro.org>
+Subject: Re: [PATCH v5 02/20] dt-bindings: clock: Add Google gs101 clock
+ management unit bindings
+From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
+To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org, 
+ krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
+ conor+dt@kernel.org,  sboyd@kernel.org, tomasz.figa@gmail.com,
+ s.nawrocki@samsung.com,  linus.walleij@linaro.org, wim@linux-watchdog.org,
+ linux@roeck-us.net,  catalin.marinas@arm.com, will@kernel.org,
+ arnd@arndb.de, olof@lixom.net,  gregkh@linuxfoundation.org,
+ jirislaby@kernel.org, cw00.choi@samsung.com,  alim.akhtar@samsung.com
+Cc: tudor.ambarus@linaro.org, semen.protsenko@linaro.org,
+ saravanak@google.com,  willmcvicker@google.com, soc@kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org,  linux-watchdog@vger.kernel.org,
+ kernel-team@android.com,  linux-serial@vger.kernel.org
+Date: Wed, 06 Dec 2023 12:30:38 +0000
+In-Reply-To: <20231201160925.3136868-3-peter.griffin@linaro.org>
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+	 <20231201160925.3136868-3-peter.griffin@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.49.2-3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231206014530.1600151-4-jim.t90615@gmail.com>
 
-Hi Jim,
+Hi Pete,
 
-kernel test robot noticed the following build warnings:
+On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
+> [...]
+> +...
+> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindin=
+gs/clock/google,gs101.h
+> new file mode 100644
+> index 000000000000..9f280f74578a
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/google,gs101.h
+> @@ -0,0 +1,392 @@
+> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
+> +/*
+> + * Copyright (C) 2023 Linaro Ltd.
+> + * Author: Peter Griffin <peter.griffin@linaro.org>
+> + *
+> + * Device Tree binding constants for Google gs101 clock controller.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
+> +#define _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
+> +
+> +/* CMU_TOP PLL */
+> +#define CLK_FOUT_SHARED0_PLL		1
+> +#define CLK_FOUT_SHARED1_PLL		2
+> +#define CLK_FOUT_SHARED2_PLL		3
+> +#define CLK_FOUT_SHARED3_PLL		4
+> +#define CLK_FOUT_SPARE_PLL		5
+> +
+> +/* CMU_TOP MUX */
+> +#define CLK_MOUT_SHARED0_PLL		6
+> +#define CLK_MOUT_SHARED1_PLL		7
+> +#define CLK_MOUT_SHARED2_PLL		8
+> +#define CLK_MOUT_SHARED3_PLL		9
+> +#define CLK_MOUT_SPARE_PLL		10
+> +#define CLK_MOUT_BO_BUS			11
+> +#define CLK_MOUT_BUS0_BUS		12
+> +#define CLK_MOUT_BUS1_BUS		13
+> +#define CLK_MOUT_BUS2_BUS		14
+> +#define CLK_MOUT_CIS_CLK0		15
+> +#define CLK_MOUT_CIS_CLK1		16
+> +#define CLK_MOUT_CIS_CLK2		17
+> +#define CLK_MOUT_CIS_CLK3		18
+> +#define CLK_MOUT_CIS_CLK4		19
+> +#define CLK_MOUT_CIS_CLK5		20
+> +#define CLK_MOUT_CIS_CLK6		21
+> +#define CLK_MOUT_CIS_CLK7		22
+> +#define CLK_MOUT_CMU_BOOST		23
+> +#define CLK_MOUT_BOOST_OPTION1		24
+> +#define CLK_MOUT_CORE_BUS		25
+> +#define CLK_MOUT_CPUCL0_DBG		26
+> +#define CLK_MOUT_CPUCL0_SWITCH		27
+> +#define CLK_MOUT_CPUCL1_SWITCH		28
+> +#define CLK_MOUT_CPUCL2_SWITCH		29
+> +#define CLK_MOUT_CSIS_BUS		30
+> +#define CLK_MOUT_DISP_BUS		31
+> +#define CLK_MOUT_DNS_BUS		32
+> +#define CLK_MOUT_DPU_BUS		33
+> +#define CLK_MOUT_EH_BUS			34
+> +#define CLK_MOUT_G2D_G2D		35
+> +#define CLK_MOUT_G2D_MSCL		36
+> +#define CLK_MOUT_G3AA_G3AA		37
+> +#define CLK_MOUT_G3D_BUSD		38
+> +#define CLK_MOUT_G3D_GLB		39
+> +#define CLK_MOUT_G3D_SWITCH		40
+> +#define CLK_MOUT_GDC_GDC0		41
+> +#define CLK_MOUT_GDC_GDC1		42
+> +#define CLK_MOUT_GDC_SCSC		43
+> +#define CLK_MOUT_CMU_HPM		44
+> +#define CLK_MOUT_HSI0_BUS		45
+> +#define CLK_MOUT_HSI0_DPGTC		46
+> +#define CLK_MOUT_HSI0_USB31DRD		47
+> +#define CLK_MOUT_HSI0_USBDPDGB		48
+> +#define CLK_MOUT_HSI1_BUS		49
+> +#define CLK_MOUT_HSI1_PCIE		50
+> +#define CLK_MOUT_HSI2_BUS		51
+> +#define CLK_MOUT_HSI2_MMC_CARD		52
+> +#define CLK_MOUT_HSI2_PCIE		53
+> +#define CLK_MOUT_HSI2_UFS_EMBD		54
+> +#define CLK_MOUT_IPP_BUS		55
+> +#define CLK_MOUT_ITP_BUS		56
+> +#define CLK_MOUT_MCSC_ITSC		57
+> +#define CLK_MOUT_MCSC_MCSC		58
+> +#define CLK_MOUT_MFC_MFC		59
+> +#define CLK_MOUT_MIF_BUSP		60
+> +#define CLK_MOUT_MIF_SWITCH		61
+> +#define CLK_MOUT_MISC_BUS		62
+> +#define CLK_MOUT_MISC_SSS		63
+> +#define CLK_MOUT_PDP_BUS		64
+> +#define CLK_MOUT_PDP_VRA		65
+> +#define CLK_MOUT_PERIC0_BUS		66
+> +#define CLK_MOUT_PERIC0_IP		67
+> +#define CLK_MOUT_PERIC1_BUS		68
+> +#define CLK_MOUT_PERIC1_IP		69
+> +#define CLK_MOUT_TNR_BUS		70
+> +#define CLK_MOUT_TOP_BOOST_OPTION1	71
+> +#define CLK_MOUT_TOP_CMUREF		72
+> +#define CLK_MOUT_TPU_BUS		73
+> +#define CLK_MOUT_TPU_TPU		74
+> +#define CLK_MOUT_TPU_TPUCTL		75
+> +#define CLK_MOUT_TPU_UART		76
+> +#define CLK_MOUT_CMU_CMUREF		77
+> +
+> +/* CMU_TOP Dividers */
+> +#define CLK_DOUT_BO_BUS			78
+> +#define CLK_DOUT_BUS0_BUS		79
+> +#define CLK_DOUT_BUS1_BUS		80
+> +#define CLK_DOUT_BUS2_BUS		81
+> +#define CLK_DOUT_CIS_CLK0		82
+> +#define CLK_DOUT_CIS_CLK1		83
+> +#define CLK_DOUT_CIS_CLK2		84
+> +#define CLK_DOUT_CIS_CLK3		85
+> +#define CLK_DOUT_CIS_CLK4		86
+> +#define CLK_DOUT_CIS_CLK5		87
+> +#define CLK_DOUT_CIS_CLK6		88
+> +#define CLK_DOUT_CIS_CLK7		89
+> +#define CLK_DOUT_CORE_BUS		90
+> +#define CLK_DOUT_CPUCL0_DBG		91
+> +#define CLK_DOUT_CPUCL0_SWITCH		92
+> +#define CLK_DOUT_CPUCL1_SWITCH		93
+> +#define CLK_DOUT_CPUCL2_SWITCH		94
+> +#define CLK_DOUT_CSIS_BUS		95
+> +#define CLK_DOUT_DISP_BUS		96
+> +#define CLK_DOUT_DNS_BUS		97
+> +#define CLK_DOUT_DPU_BUS		98
+> +#define CLK_DOUT_EH_BUS			99
+> +#define CLK_DOUT_G2D_G2D		100
+> +#define CLK_DOUT_G2D_MSCL		101
+> +#define CLK_DOUT_G3AA_G3AA		102
+> +#define CLK_DOUT_G3D_BUSD		103
+> +#define CLK_DOUT_G3D_GLB		104
+> +#define CLK_DOUT_G3D_SWITCH		105
+> +#define CLK_DOUT_GDC_GDC0		106
+> +#define CLK_DOUT_GDC_GDC1		107
+> +#define CLK_DOUT_GDC_SCSC		108
+> +#define CLK_DOUT_CMU_HPM		109
+> +#define CLK_DOUT_HSI0_BUS		110
+> +#define CLK_DOUT_HSI0_DPGTC		111
+> +#define CLK_DOUT_HSI0_USB31DRD		112
+> +#define CLK_DOUT_HSI0_USBDPDGB		113
+> +#define CLK_DOUT_HSI1_BUS		114
+> +#define CLK_DOUT_HSI1_PCIE		115
+> +#define CLK_DOUT_HSI2_BUS		116
+> +#define CLK_DOUT_HSI2_MMC_CARD		117
+> +#define CLK_DOUT_HSI2_PCIE		118
+> +#define CLK_DOUT_HSI2_UFS_EMBD		119
+> +#define CLK_DOUT_IPP_BUS		107
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on robh/for-next linus/master v6.7-rc4 next-20231206]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+You're restarting at 107 here, but the numbers should continue at 120...
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Jim-Liu/dt-bindings-gpio-add-NPCM-sgpio-driver-bindings/20231206-095724
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20231206014530.1600151-4-jim.t90615%40gmail.com
-patch subject: [PATCH v8 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20231206/202312062043.9nNc7GIZ-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231206/202312062043.9nNc7GIZ-lkp@intel.com/reproduce)
+> +#define CLK_DOUT_ITP_BUS		108
+> +#define CLK_DOUT_MCSC_ITSC		109
+> +#define CLK_DOUT_MCSC_MCSC		110
+> +#define CLK_DOUT_MFC_MFC		111
+> +#define CLK_DOUT_MIF_BUSP		112
+> +#define CLK_DOUT_MISC_BUS		113
+> +#define CLK_DOUT_MISC_SSS		114
+> +#define CLK_DOUT_PDP_BUS		115
+> +#define CLK_DOUT_PDP_VRA		116
+> +#define CLK_DOUT_PERIC0_BUS		117
+> +#define CLK_DOUT_PERIC0_IP		118
+> +#define CLK_DOUT_PERIC1_BUS		119
+> +#define CLK_DOUT_PERIC1_IP		120
+> +#define CLK_DOUT_TNR_BUS		121
+> +#define CLK_DOUT_TPU_BUS		122
+> +#define CLK_DOUT_TPU_TPU		123
+> +#define CLK_DOUT_TPU_TPUCTL		124
+> +#define CLK_DOUT_TPU_UART		125
+> +#define CLK_DOUT_CMU_BOOST		126
+> +#define CLK_DOUT_CMU_CMUREF		127
+> +#define CLK_DOUT_SHARED0_DIV2		128
+> +#define CLK_DOUT_SHARED0_DIV3		129
+> +#define CLK_DOUT_SHARED0_DIV4		130
+> +#define CLK_DOUT_SHARED0_DIV5		131
+> +#define CLK_DOUT_SHARED1_DIV2		132
+> +#define CLK_DOUT_SHARED1_DIV3		133
+> +#define CLK_DOUT_SHARED1_DIV4		134
+> +#define CLK_DOUT_SHARED2_DIV2		135
+> +#define CLK_DOUT_SHARED3_DIV2		136
+> +
+> +/* CMU_TOP Gates */
+> +#define CLK_GOUT_BUS0_BOOST		137
+> +#define CLK_GOUT_BUS1_BOOST		138
+> +#define CLK_GOUT_BUS2_BOOST		139
+> +#define CLK_GOUT_CORE_BOOST		140
+> +#define CLK_GOUT_CPUCL0_BOOST		141
+> +#define CLK_GOUT_CPUCL1_BOOST		142
+> +#define CLK_GOUT_CPUCL2_BOOST		143
+> +#define CLK_GOUT_MIF_BOOST		144
+> +#define CLK_GOUT_MIF_SWITCH		145
+> +#define CLK_GOUT_BO_BUS			146
+> +#define CLK_GOUT_BUS0_BUS		147
+> +#define CLK_GOUT_BUS1_BUS		148
+> +#define CLK_GOUT_BUS2_BUS		149
+> +#define CLK_GOUT_CIS_CLK0		150
+> +#define CLK_GOUT_CIS_CLK1		151
+> +#define CLK_GOUT_CIS_CLK2		152
+> +#define CLK_GOUT_CIS_CLK3		153
+> +#define CLK_GOUT_CIS_CLK4		154
+> +#define CLK_GOUT_CIS_CLK5		155
+> +#define CLK_GOUT_CIS_CLK6		156
+> +#define CLK_GOUT_CIS_CLK7		157
+> +#define CLK_GOUT_CMU_BOOST		158
+> +#define CLK_GOUT_CORE_BUS		159
+> +#define CLK_GOUT_CPUCL0_DBG		160
+> +#define CLK_GOUT_CPUCL0_SWITCH		161
+> +#define CLK_GOUT_CPUCL1_SWITCH		162
+> +#define CLK_GOUT_CPUCL2_SWITCH		163
+> +#define CLK_GOUT_CSIS_BUS		164
+> +#define CLK_GOUT_DISP_BUS		165
+> +#define CLK_GOUT_DNS_BUS		166
+> +#define CLK_GOUT_DPU_BUS		167
+> +#define CLK_GOUT_EH_BUS			168
+> +#define CLK_GOUT_G2D_G2D		169
+> +#define CLK_GOUT_G2D_MSCL		170
+> +#define CLK_GOUT_G3AA_G3AA		171
+> +#define CLK_GOUT_G3D_BUSD		172
+> +#define CLK_GOUT_G3D_GLB		173
+> +#define CLK_GOUT_G3D_SWITCH		174
+> +#define CLK_GOUT_GDC_GDC0		175
+> +#define CLK_GOUT_GDC_GDC1		176
+> +#define CLK_GOUT_GDC_SCSC		177
+> +#define CLK_GOUT_CMU_HPM		178
+> +#define CLK_GOUT_HSI0_BUS		179
+> +#define CLK_GOUT_HSI0_DPGTC		180
+> +#define CLK_GOUT_HSI0_USB31DRD		181
+> +#define CLK_GOUT_HSI0_USBDPDGB		182
+> +#define CLK_GOUT_HSI1_BUS		183
+> +#define CLK_GOUT_HSI1_PCIE		184
+> +#define CLK_GOUT_HSI2_BUS		185
+> +#define CLK_GOUT_HSI2_MMC_CARD		186
+> +#define CLK_GOUT_HSI2_PCIE		187
+> +#define CLK_GOUT_HSI2_UFS_EMBD		188
+> +#define CLK_GOUT_IPP_BUS		189
+> +#define CLK_GOUT_ITP_BUS		190
+> +#define CLK_GOUT_MCSC_ITSC		191
+> +#define CLK_GOUT_MCSC_MCSC		192
+> +#define CLK_GOUT_MFC_MFC		193
+> +#define CLK_GOUT_MIF_BUSP		194
+> +#define CLK_GOUT_MISC_BUS		195
+> +#define CLK_GOUT_MISC_SSS		196
+> +#define CLK_GOUT_PDP_BUS		197
+> +#define CLK_GOUT_PDP_VRA		298
+> +#define CLK_GOUT_G3AA			299
+> +#define CLK_GOUT_PERIC0_BUS		200
+> +#define CLK_GOUT_PERIC0_IP		201
+> +#define CLK_GOUT_PERIC1_BUS		202
+> +#define CLK_GOUT_PERIC1_IP		203
+> +#define CLK_GOUT_TNR_BUS		204
+> +#define CLK_GOUT_TOP_CMUREF		205
+> +#define CLK_GOUT_TPU_BUS		206
+> +#define CLK_GOUT_TPU_TPU		207
+> +#define CLK_GOUT_TPU_TPUCTL		208
+> +#define CLK_GOUT_TPU_UART		209
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312062043.9nNc7GIZ-lkp@intel.com/
+... up to here. I also checked the other units, they seem to be OK.
 
-All warnings (new ones prefixed by >>):
+Cheers,
+Andre'
 
-   In file included from arch/alpha/include/asm/bug.h:23,
-                    from include/linux/bug.h:5,
-                    from include/linux/thread_info.h:13,
-                    from include/asm-generic/current.h:6,
-                    from ./arch/alpha/include/generated/asm/current.h:1,
-                    from include/linux/mutex.h:14,
-                    from include/linux/notifier.h:14,
-                    from include/linux/clk.h:14,
-                    from drivers/gpio/gpio-npcm-sgpio.c:9:
-   drivers/gpio/gpio-npcm-sgpio.c: In function 'bank_reg':
->> drivers/gpio/gpio-npcm-sgpio.c:150:26: warning: passing argument 1 of 'dev_driver_string' makes pointer from integer without a cast [-Wint-conversion]
-     150 |                 dev_WARN(true, "Getting here is an error condition");
-         |                          ^~~~
-         |                          |
-         |                          int
-   include/asm-generic/bug.h:99:62: note: in definition of macro '__WARN_printf'
-      99 |                 warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);      \
-         |                                                              ^~~
-   include/linux/dev_printk.h:271:9: note: in expansion of macro 'WARN'
-     271 |         WARN(1, "%s %s: " format, dev_driver_string(dev), dev_name(dev), ## arg)
-         |         ^~~~
-   drivers/gpio/gpio-npcm-sgpio.c:150:17: note: in expansion of macro 'dev_WARN'
-     150 |                 dev_WARN(true, "Getting here is an error condition");
-         |                 ^~~~~~~~
-   In file included from include/linux/platform_device.h:13,
-                    from drivers/gpio/gpio-npcm-sgpio.c:16:
-   include/linux/device.h:1242:52: note: expected 'const struct device *' but argument is of type 'int'
-    1242 | const char *dev_driver_string(const struct device *dev);
-         |                               ~~~~~~~~~~~~~~~~~~~~~^~~
->> drivers/gpio/gpio-npcm-sgpio.c:150:26: warning: passing argument 1 of 'dev_name' makes pointer from integer without a cast [-Wint-conversion]
-     150 |                 dev_WARN(true, "Getting here is an error condition");
-         |                          ^~~~
-         |                          |
-         |                          int
-   include/asm-generic/bug.h:99:62: note: in definition of macro '__WARN_printf'
-      99 |                 warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);      \
-         |                                                              ^~~
-   include/linux/dev_printk.h:271:9: note: in expansion of macro 'WARN'
-     271 |         WARN(1, "%s %s: " format, dev_driver_string(dev), dev_name(dev), ## arg)
-         |         ^~~~
-   drivers/gpio/gpio-npcm-sgpio.c:150:17: note: in expansion of macro 'dev_WARN'
-     150 |                 dev_WARN(true, "Getting here is an error condition");
-         |                 ^~~~~~~~
-   include/linux/device.h:858:57: note: expected 'const struct device *' but argument is of type 'int'
-     858 | static inline const char *dev_name(const struct device *dev)
-         |                                    ~~~~~~~~~~~~~~~~~~~~~^~~
-   drivers/gpio/gpio-npcm-sgpio.c: In function 'npcm_sgpio_dir_out':
->> drivers/gpio/gpio-npcm-sgpio.c:211:28: warning: unused variable 'gpio' [-Wunused-variable]
-     211 |         struct npcm_sgpio *gpio = gpiochip_get_data(gc);
-         |                            ^~~~
-   drivers/gpio/gpio-npcm-sgpio.c: At top level:
->> drivers/gpio/gpio-npcm-sgpio.c:534:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     534 |         .sft_clk = npcm750_SFT_CLK,
-         |                    ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-npcm-sgpio.c:535:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     535 |         .clk_sel = npcm750_CLK_SEL,
-         |                    ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-npcm-sgpio.c:540:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     540 |         .sft_clk = npcm845_SFT_CLK,
-         |                    ^~~~~~~~~~~~~~~
-   drivers/gpio/gpio-npcm-sgpio.c:541:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
-     541 |         .clk_sel = npcm845_CLK_SEL,
-         |                    ^~~~~~~~~~~~~~~
-
-
-vim +/dev_driver_string +150 drivers/gpio/gpio-npcm-sgpio.c
-
-   134	
-   135	static void __iomem *bank_reg(struct npcm_sgpio *gpio,
-   136				      const struct npcm_sgpio_bank *bank,
-   137				      const enum npcm_sgpio_reg reg)
-   138	{
-   139		switch (reg) {
-   140		case READ_DATA:
-   141			return gpio->base + bank->rdata_reg;
-   142		case WRITE_DATA:
-   143			return gpio->base + bank->wdata_reg;
-   144		case EVENT_CFG:
-   145			return gpio->base + bank->event_config;
-   146		case EVENT_STS:
-   147			return gpio->base + bank->event_status;
-   148		default:
-   149			/* actually if code runs to here, it's an error case */
- > 150			dev_WARN(true, "Getting here is an error condition");
-   151		}
-   152		return 0;
-   153	}
-   154	
-   155	static const struct npcm_sgpio_bank *offset_to_bank(unsigned int offset)
-   156	{
-   157		unsigned int bank = GPIO_BANK(offset);
-   158	
-   159		return &npcm_sgpio_banks[bank];
-   160	}
-   161	
-   162	static void irqd_to_npcm_sgpio_data(struct irq_data *d,
-   163					    struct npcm_sgpio **gpio,
-   164					    const struct npcm_sgpio_bank **bank,
-   165					    u8 *bit, unsigned int *offset)
-   166	{
-   167		struct npcm_sgpio *internal;
-   168	
-   169		*offset = irqd_to_hwirq(d);
-   170		internal = irq_data_get_irq_chip_data(d);
-   171	
-   172		*gpio = internal;
-   173		*offset -= internal->nout_sgpio;
-   174		*bank = offset_to_bank(*offset);
-   175		*bit = GPIO_BIT(*offset);
-   176	}
-   177	
-   178	static int npcm_sgpio_init_port(struct npcm_sgpio *gpio)
-   179	{
-   180		u8 in_port, out_port, set_port, reg;
-   181	
-   182		in_port = GPIO_BANK(gpio->nin_sgpio);
-   183		if (GPIO_BIT(gpio->nin_sgpio) > 0)
-   184			in_port += 1;
-   185	
-   186		out_port = GPIO_BANK(gpio->nout_sgpio);
-   187		if (GPIO_BIT(gpio->nout_sgpio) > 0)
-   188			out_port += 1;
-   189	
-   190		gpio->in_port = in_port;
-   191		gpio->out_port = out_port;
-   192		set_port = ((out_port & NPCM_IOXCFG2_PORT) << 4) | (in_port & NPCM_IOXCFG2_PORT);
-   193		iowrite8(set_port, gpio->base + NPCM_IOXCFG2);
-   194	
-   195		reg = ioread8(gpio->base + NPCM_IOXCFG2);
-   196	
-   197		return reg == set_port ? 0 : -EINVAL;
-   198	
-   199	}
-   200	
-   201	static int npcm_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
-   202	{
-   203		struct npcm_sgpio *gpio = gpiochip_get_data(gc);
-   204	
-   205		return offset <	gpio->nout_sgpio ? -EINVAL : 0;
-   206	
-   207	}
-   208	
-   209	static int npcm_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
-   210	{
- > 211		struct npcm_sgpio *gpio = gpiochip_get_data(gc);
-   212	
-   213		gc->set(gc, offset, val);
-   214	
-   215		return 0;
-   216	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
 
