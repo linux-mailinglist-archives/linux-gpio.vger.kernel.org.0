@@ -1,96 +1,105 @@
-Return-Path: <linux-gpio+bounces-1041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E7E7806217
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 23:49:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A84CF806453
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 02:46:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 416581F21707
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Dec 2023 22:49:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D995D1C20862
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 01:46:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD6103FE37;
-	Tue,  5 Dec 2023 22:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E421FD6;
+	Wed,  6 Dec 2023 01:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dQZ3IFub"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="afLkwm+E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x1136.google.com (mail-yw1-x1136.google.com [IPv6:2607:f8b0:4864:20::1136])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 79954B5
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Dec 2023 14:49:51 -0800 (PST)
-Received: by mail-yw1-x1136.google.com with SMTP id 00721157ae682-5d226f51f71so69481017b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Dec 2023 14:49:51 -0800 (PST)
+Received: from mail-pf1-x430.google.com (mail-pf1-x430.google.com [IPv6:2607:f8b0:4864:20::430])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9E23A10CC;
+	Tue,  5 Dec 2023 17:46:11 -0800 (PST)
+Received: by mail-pf1-x430.google.com with SMTP id d2e1a72fcca58-6cb749044a2so6692243b3a.0;
+        Tue, 05 Dec 2023 17:46:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701816590; x=1702421390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=JrFaCxut1vMUHEQKCkObXuZTRmt2Q25+qM/Ls973otI=;
-        b=dQZ3IFubH9gI2jg/gp8HqU98fc7aBOrxFTcjz4dnBQUqkese2qhIhh7Y3OrkDHYWue
-         D92MYGMHfDqX+lEqf4cEBeqDBJ7iqjOBjzZ84vgwfJP3dFkZvXUpf4wu3M0gmy9Gd3H+
-         OcQW4yE3CS8Am4IXUG+ZbcjTVZyGY4GDwiUG02FQu8uS5ry+DX6yR1GNwdl1DQWKmquF
-         yhaeHQMZKOe1O+Os6kaR06a7jNXRehDVOPic99k3JNPdlY91NP6IZrV5gOV+INj4lRqR
-         ilMKgqjSySnvotwzQm8zWpjHXpez+ZG3wQQJoVh8otuvIjDDJd+wNx0Z5GmkMf9EFG76
-         1gJQ==
+        d=gmail.com; s=20230601; t=1701827171; x=1702431971; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AqnaYhpCrvu4j/R7wQBWuZ3sMmDCeUlCefM7DEmKBhI=;
+        b=afLkwm+EpvJdIVFUtVPDC+a0ui7Xlc2vRkaSZ3TLXU6blcs5H2pLsWIxIQtpmGrA4I
+         DLV4EWAVA2C1TMhY2/Na7z0C7waW4mPkP/qV/T4M8DtMtN2IYQ9UDj3cOZaeYPJuXbdH
+         xGDz/cSaw+WB6klTL/DX8qxWdefUlcM90bz4TwLz1VsMgU3ZnmONVkq7jKFHMqM/6uJX
+         H2wwH7EzFIuzEZUVvnESLO7uivHgBeyKZ/7sbz9296lwLrK2vpwewUxVKkr7sMPidkhS
+         QskAeUMeXzeG4JPs+9AcsxBZj+WQEP9f/m+tfJAgFPFQ3f8vlcSdDLLiiNaACG1UQ2rN
+         SXJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701816590; x=1702421390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JrFaCxut1vMUHEQKCkObXuZTRmt2Q25+qM/Ls973otI=;
-        b=XakczIJSQA+pFYkyQ/RFINnXlIh8k3X1S+nNz5P5uYCCyQR/tQYJn9tBEHnqeYkwyq
-         Wq67PIM/DxDykbLMG+/oAwT3bqEUNnbFXDvIX9d3SlHxsBXB3XtGe2G8NBxC92vPKjcC
-         JygUhXXj/YG6ZGotQxt6/89GlrMcNrXyyGdPXDYBz0x9ww5RE2LpFbOcz5HX5nEB/RkN
-         FejlOytJ7aopmae93S26b5mAYMzML5OEsXPRsUeCrXyDHrPt6aWFz0sfYinOPh0Gpc8D
-         aTIX7D2MizAQqAYqLbWUsqyMAsgUA1Hehe5e2xBdK90lSXJI9yzBOjs61kMZAWVRlAKl
-         N3Xw==
-X-Gm-Message-State: AOJu0Ywstb5PpD9jaN7CZQgso4wHWWDs4b1stZghJ0eNCpyZY1QaYQNK
-	tHiO3Cmq99D32nIhoB/h4nDBehmPa8NXnDLK3mhang==
-X-Google-Smtp-Source: AGHT+IFEmFb+hr6nRdjNrf1j/t6+1nDZojjY2YlEds/9G8SBs8lIXxIchM5+Ia+fLcw0ALQ/l3k+kJcKL5pmaaIPjXc=
-X-Received: by 2002:a81:b622:0:b0:5d7:1940:dd63 with SMTP id
- u34-20020a81b622000000b005d71940dd63mr5381287ywh.57.1701816590707; Tue, 05
- Dec 2023 14:49:50 -0800 (PST)
+        d=1e100.net; s=20230601; t=1701827171; x=1702431971;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AqnaYhpCrvu4j/R7wQBWuZ3sMmDCeUlCefM7DEmKBhI=;
+        b=PKjkjMcEqAW7+g/lJ0mOskPKJ8FQVkgUhrlnpsb6sT7G/zr3ICmGsRITKpYoYW53Ok
+         +1wliHQ1KwLm32FTD9w9d3CN3w4DYNUCJfJG+FlQz1qMhiAQNnXzZ4+Eu0qR5CCjZjIR
+         uGGc0QEM2F0mR4wbfV9GLuxqb7dBk++68eWehMOX/jZiWK6EfgFHEBC4gIMUm2MyIevc
+         mb5VdPn5xSQEi9JdIhXkzwhq6MdhCbjtjYCdAWwZRf+un0soo4fGQnOV71JdVEOa3/BM
+         jOKMcCaJxyniUs4z576RbGwtzlfV/N3dnD32dqG4IOJ5xLg6V8BY+meIlAz32nxmKXuf
+         0P1Q==
+X-Gm-Message-State: AOJu0YzOZNmiuu0/tf+pR3hI4lWqRUmr2Tz6p3W9E2llrqLR4aqUP4HS
+	jFVB/ZR6KIa4uHbfEMONnEg=
+X-Google-Smtp-Source: AGHT+IE4OEO6AuDf+OS54EW0+E56+iiZ+R9SGm3qCf4t5dLhN0MKFbtRXY+ezoGotQNnhg6g1OocqQ==
+X-Received: by 2002:a05:6a20:7484:b0:18f:97c:8a1c with SMTP id p4-20020a056a20748400b0018f097c8a1cmr145930pzd.71.1701827170873;
+        Tue, 05 Dec 2023 17:46:10 -0800 (PST)
+Received: from localhost.localdomain ([112.78.94.69])
+        by smtp.gmail.com with ESMTPSA id g24-20020aa78758000000b006ce781f6f85sm1250956pfo.43.2023.12.05.17.46.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Dec 2023 17:46:10 -0800 (PST)
+From: Jim Liu <jim.t90615@gmail.com>
+To: JJLIU0@nuvoton.com,
+	krzysztof.kozlowski+dt@linaro.org,
+	linus.walleij@linaro.org,
+	andy@kernel.org,
+	robh+dt@kernel.org,
+	conor+dt@kernel.org,
+	KWLIU@nuvoton.com,
+	jim.t90615@gmail.com
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org
+Subject: [PATCH v8 0/3] Add Nuvoton NPCM SGPIO feature
+Date: Wed,  6 Dec 2023 09:45:27 +0800
+Message-Id: <20231206014530.1600151-1-jim.t90615@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204093509.19225-1-brgl@bgdev.pl>
-In-Reply-To: <20231204093509.19225-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 5 Dec 2023 23:49:38 +0100
-Message-ID: <CACRpkdYn16SbWtS=hSx0r=pmNR9MKYTKd5q9Btr=wft8n8CRFw@mail.gmail.com>
-Subject: Re: [PATCH v3 00/10] gpio/pinctrl: replace gpiochip_is_requested()
- with a safer interface
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Dec 4, 2023 at 10:35=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
+Nuvoton NPCM SGPIO module is combine serial to parallel IC (HC595)
+and parallel to serial IC (HC165), and use APB3 clock to control it.
+This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
+NPCM7xx/NPCM8xx have two sgpio module each module can support up
+to 64 output pins,and up to 64 input pin, the pin is only for GPI or GPO.
+GPIO pins have sequential, First half is GPO and second half is GPI.
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> While reworking the locking in GPIOLIB I realized that locking the
-> descriptor with users still calling gpiochip_is_requested() will still
-> be buggy as it returns a pointer to a string that can be freed whenever
-> the descriptor is released. Let's provide a safer alternative in the
-> form of a function that returns a copy of the label.
->
-> Use it in all drivers and remove gpiochip_is_requested().
+Jim Liu (3):
+  dt-bindings: gpio: add NPCM sgpio driver bindings
+  arm: dts: nuvoton: npcm: Add sgpio feature
+  gpio: nuvoton: Add Nuvoton NPCM sgpio driver
 
-The series:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+ .../bindings/gpio/nuvoton,sgpio.yaml          |  86 +++
+ .../dts/nuvoton/nuvoton-common-npcm7xx.dtsi   |  24 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-npcm-sgpio.c                | 637 ++++++++++++++++++
+ 5 files changed, 755 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+ create mode 100644 drivers/gpio/gpio-npcm-sgpio.c
 
-> I plan to provide this series in an immutable branch for the pinctrl and
-> baytrail trees to pull.
+-- 
+2.25.1
 
-Nice! I'll pull it.
-
-Yours,
-Linus Walleij
 
