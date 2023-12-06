@@ -1,185 +1,250 @@
-Return-Path: <linux-gpio+bounces-1062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C3D7806E8C
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:48:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7605D806FB2
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 13:29:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AE1DAB20F0B
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 11:48:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFFC71C20A9B
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:29:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A881347BF;
-	Wed,  6 Dec 2023 11:48:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE19364DD;
+	Wed,  6 Dec 2023 12:29:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="TMI0sLZt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YzQzuKNC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-x62e.google.com (mail-ej1-x62e.google.com [IPv6:2a00:1450:4864:20::62e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 70CBDD73
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Dec 2023 03:48:32 -0800 (PST)
-Received: by mail-ej1-x62e.google.com with SMTP id a640c23a62f3a-a1c8512349dso90004366b.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Dec 2023 03:48:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1701863311; x=1702468111; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=2atOuZ4m5Gd0/h1m8gOvMaL9Rsri8ziYxXRDoMiJ3Z4=;
-        b=TMI0sLZt4OmnHOdX/rHF7lP7iEiiu9tDICwH446miWRtN5dLMIe3IJohkVCogVU1Vy
-         Ow88vkSgWRAbCVEF5FMImYQGlDfchIVKT4g9XcItpG8Sy+83m4M1Q16LUblA+dTzoyk8
-         AnZfP5hivKxbm86yvrQvzUjrWsy7yS3N/ncZr1oZG5mJIFyM2uTKHIsC25TyGeWNC29K
-         hRNtfDXiT+77zvbU46YoEb3o9fdEJkW/5QchtqkwKNoDBclO2jbFG0/UE8SIKlt7SAge
-         6cMiEWft9lP+8x8se8mwSC2kcajRWNWaSiaV+o1ciQFE6YKFKACdd/F3r8NVa1waKunl
-         YEJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701863311; x=1702468111;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2atOuZ4m5Gd0/h1m8gOvMaL9Rsri8ziYxXRDoMiJ3Z4=;
-        b=L0/yFYPTFADXRTIeyWHv0DrEOQ4w5Hwr0B3ql2VowZSheFQ6QRt+6Z8pIOjGnyr0jH
-         3LllW+iPpPpr4vSVbd6TRlLrCRHnkS/q5VmjzLJKrvqvwkpQfkadLOuWa5wuAEu12wtT
-         lqMQmsp/xoE8EyOqDEWdtVo73arKWJa12VCq+ITEffXwhRzu0hS55ijMogmwPYJ/oaW9
-         nPrF55AzEsvTF9SxGJpDY5XM8udruZdc+Be32qV/sRrtONy1ZaefQSy3VbVbfGKzuvfy
-         35D4jOrGn/oJ43mTx12XT2tHt76qAQJPJ4/JTLhorqjkhXJmd3SpfZq5ci78KCYtoHWN
-         mi3Q==
-X-Gm-Message-State: AOJu0Yzy5DHrA1p0S4rLTmgJdD69dMmHx7yCLZXQDC77e/GsnQw7Xx8/
-	OVdvkcF5tIa5FfDor8ZQJ/3GBQ==
-X-Google-Smtp-Source: AGHT+IEdO1d6acuKq7fI7Zu+YUD1aCrLTPztZ/SxxNtASmnGXOvg9HfwOsUOMZBpcuZN8TYrQYwLYw==
-X-Received: by 2002:a17:906:3408:b0:a19:a19b:c741 with SMTP id c8-20020a170906340800b00a19a19bc741mr430304ejb.145.1701863310872;
-        Wed, 06 Dec 2023 03:48:30 -0800 (PST)
-Received: from [192.168.50.4] ([82.78.167.22])
-        by smtp.gmail.com with ESMTPSA id fx20-20020a170906b75400b00a1d38589c67sm1370637ejb.98.2023.12.06.03.48.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Dec 2023 03:48:30 -0800 (PST)
-Message-ID: <89b68781-b552-499d-a8f2-df4dccbb02e0@tuxon.dev>
-Date: Wed, 6 Dec 2023 13:48:26 +0200
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7497898;
+	Wed,  6 Dec 2023 04:29:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1701865774; x=1733401774;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=+GkCBS3JPIqJfqmVwwKDxl1JgdlAWVWExb1QL0i3ln4=;
+  b=YzQzuKNCU7/eX5LFily/FZaeS7bIklYc4uBTPri5Ebw4jw1aCbiNMxv1
+   dfgHso/+UFqCoNW4FQMBzrI/xMHkEAIkeFnOKbaMIhwZg/ImZ2Xq1JXAN
+   bHchB9/MXrjmt/HqfWsxqyv782DSloetYXg24cWCTdhrUENNdSEX7nzt/
+   ZB4Pzpt3nzx57lEk6n5frBMcFmqpQWAvtiz/Q/IG1njzz1CHyWZJN/I3W
+   9gW+srAVZyA4Nil4Pbuol4K5tGR62Rxtccj6gGTpAKreS2KNLq/W4Bcw4
+   wLf1gX0Mb/+9uQE6rEPGXrdrvfTbad/yyWJlnpUKrE+aYv3rBdy51VIzQ
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="1147663"
+X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
+   d="scan'208";a="1147663"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 04:29:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10915"; a="764706491"
+X-IronPort-AV: E=Sophos;i="6.04,255,1695711600"; 
+   d="scan'208";a="764706491"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga007.jf.intel.com with ESMTP; 06 Dec 2023 04:29:30 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rAr1q-000Amh-1e;
+	Wed, 06 Dec 2023 12:29:26 +0000
+Date: Wed, 6 Dec 2023 20:28:39 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+	krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+	andy@kernel.org, robh+dt@kernel.org, conor+dt@kernel.org,
+	KWLIU@nuvoton.com
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	openbmc@lists.ozlabs.org
+Subject: Re: [PATCH v8 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
+Message-ID: <202312062043.9nNc7GIZ-lkp@intel.com>
+References: <20231206014530.1600151-4-jim.t90615@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/14] arm64: dts: renesas: rzg3s-smarc-som: Enable
- Ethernet interfaces
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linux@armlinux.org.uk, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, linus.walleij@linaro.org, p.zabel@pengutronix.de,
- arnd@arndb.de, m.szyprowski@samsung.com, alexandre.torgue@foss.st.com,
- afd@ti.com, broonie@kernel.org, alexander.stein@ew.tq-group.com,
- eugen.hristev@collabora.com, sergei.shtylyov@gmail.com,
- prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
- linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20231120070024.4079344-1-claudiu.beznea.uj@bp.renesas.com>
- <20231120070024.4079344-14-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdXs9tKo9W31f5OybNR51a_i99Lyx=wHe0GLrADN_8KZTg@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdXs9tKo9W31f5OybNR51a_i99Lyx=wHe0GLrADN_8KZTg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231206014530.1600151-4-jim.t90615@gmail.com>
 
-Hi, Geert,
+Hi Jim,
 
-On 06.12.2023 13:22, Geert Uytterhoeven wrote:
-> Hi Claudiu,
-> 
-> Thanks for your patch!
-> 
-> On Mon, Nov 20, 2023 at 8:03 AM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>
->> RZ/G3S Smarc Module has Ethernet PHYs (KSZ9131) connected to each Ethernet
->> IP. For this add proper DT bindings to enable the Ethernet communication
->> though these PHYs.
->>
->> The interface b/w PHYs and MACs is RGMII. The skew settings were set to
->> zero as based on phy-mode (rgmii-id) the KSZ9131 driver enables internal
->> DLL which adds 2ns delay b/w clocks (TX/RX) and data signals.
-> 
-> So shouldn't you just use phy-mode "rgmii" instead?
+kernel test robot noticed the following build warnings:
 
-I chose it like this for simpler configuration of the skew settings. The
-PHY supports fixed 2ns delays which is enough for RGMII. And this is
-configured based on phy-mode="rgmii-id". As this delay depends also on
-soldering length I consider it better this way.
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on robh/for-next linus/master v6.7-rc4 next-20231206]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The other variant would have been using phy-mode="rgmii" + skew settings.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jim-Liu/dt-bindings-gpio-add-NPCM-sgpio-driver-bindings/20231206-095724
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20231206014530.1600151-4-jim.t90615%40gmail.com
+patch subject: [PATCH v8 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
+config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20231206/202312062043.9nNc7GIZ-lkp@intel.com/config)
+compiler: alpha-linux-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231206/202312062043.9nNc7GIZ-lkp@intel.com/reproduce)
 
-Also, same phy-mode is used by rzg2ul-smarc-som.dtsi which is using the
-same PHY.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312062043.9nNc7GIZ-lkp@intel.com/
 
->> Different pin settings were applied to TXC, TX_CTL compared with the rest
->> of the RGMII pins to comply with requirements for these pins imposed by
->> HW manual of RZ/G3S (see chapters "Ether Ch0 Voltage Mode Control
->> Register (ETH0_POC)", "Ether Ch1 Voltage Mode Control Register (ETH1_POC)",
->> for power source selection, "Ether MII/RGMII Mode Control Register
->> (ETH_MODE)" for output-enable and "Input Enable Control Register (IEN_m)"
->> for input-enable configurations).
->>
->> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
->> --- a/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
->> +++ b/arch/arm64/boot/dts/renesas/rzg3s-smarc-som.dtsi
->> @@ -25,7 +25,10 @@ / {
->>
->>         aliases {
->>                 mmc0 = &sdhi0;
->> -#if !SW_SD2_EN
->> +#if SW_SD2_EN
-> 
-> Cfr. my comment on [PATCH 11/14], this looks odd...
-> 
->> +               eth0 = &eth0;
->> +               eth1 = &eth1;
->> +#else
->>                 mmc2 = &sdhi2;
->>  #endif
->>         };
->> @@ -81,6 +84,64 @@ vcc_sdhi2: regulator2 {
->>         };
->>  };
->>
->> +#if SW_SD2_EN
-> 
-> Likewise.
-> 
->> +&eth0 {
->> +       pinctrl-0 = <&eth0_pins>;
->> +       pinctrl-names = "default";
->> +       phy-handle = <&phy0>;
->> +       phy-mode = "rgmii-id";
->> +       #address-cells = <1>;
->> +       #size-cells = <0>;
-> 
-> #{address,size}-cells should be in the SoC-specific .dtsi.
-> Same for eth1.
-> 
->> +       status = "okay";
-> 
-> The rest LGTM.
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/alpha/include/asm/bug.h:23,
+                    from include/linux/bug.h:5,
+                    from include/linux/thread_info.h:13,
+                    from include/asm-generic/current.h:6,
+                    from ./arch/alpha/include/generated/asm/current.h:1,
+                    from include/linux/mutex.h:14,
+                    from include/linux/notifier.h:14,
+                    from include/linux/clk.h:14,
+                    from drivers/gpio/gpio-npcm-sgpio.c:9:
+   drivers/gpio/gpio-npcm-sgpio.c: In function 'bank_reg':
+>> drivers/gpio/gpio-npcm-sgpio.c:150:26: warning: passing argument 1 of 'dev_driver_string' makes pointer from integer without a cast [-Wint-conversion]
+     150 |                 dev_WARN(true, "Getting here is an error condition");
+         |                          ^~~~
+         |                          |
+         |                          int
+   include/asm-generic/bug.h:99:62: note: in definition of macro '__WARN_printf'
+      99 |                 warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);      \
+         |                                                              ^~~
+   include/linux/dev_printk.h:271:9: note: in expansion of macro 'WARN'
+     271 |         WARN(1, "%s %s: " format, dev_driver_string(dev), dev_name(dev), ## arg)
+         |         ^~~~
+   drivers/gpio/gpio-npcm-sgpio.c:150:17: note: in expansion of macro 'dev_WARN'
+     150 |                 dev_WARN(true, "Getting here is an error condition");
+         |                 ^~~~~~~~
+   In file included from include/linux/platform_device.h:13,
+                    from drivers/gpio/gpio-npcm-sgpio.c:16:
+   include/linux/device.h:1242:52: note: expected 'const struct device *' but argument is of type 'int'
+    1242 | const char *dev_driver_string(const struct device *dev);
+         |                               ~~~~~~~~~~~~~~~~~~~~~^~~
+>> drivers/gpio/gpio-npcm-sgpio.c:150:26: warning: passing argument 1 of 'dev_name' makes pointer from integer without a cast [-Wint-conversion]
+     150 |                 dev_WARN(true, "Getting here is an error condition");
+         |                          ^~~~
+         |                          |
+         |                          int
+   include/asm-generic/bug.h:99:62: note: in definition of macro '__WARN_printf'
+      99 |                 warn_slowpath_fmt(__FILE__, __LINE__, taint, arg);      \
+         |                                                              ^~~
+   include/linux/dev_printk.h:271:9: note: in expansion of macro 'WARN'
+     271 |         WARN(1, "%s %s: " format, dev_driver_string(dev), dev_name(dev), ## arg)
+         |         ^~~~
+   drivers/gpio/gpio-npcm-sgpio.c:150:17: note: in expansion of macro 'dev_WARN'
+     150 |                 dev_WARN(true, "Getting here is an error condition");
+         |                 ^~~~~~~~
+   include/linux/device.h:858:57: note: expected 'const struct device *' but argument is of type 'int'
+     858 | static inline const char *dev_name(const struct device *dev)
+         |                                    ~~~~~~~~~~~~~~~~~~~~~^~~
+   drivers/gpio/gpio-npcm-sgpio.c: In function 'npcm_sgpio_dir_out':
+>> drivers/gpio/gpio-npcm-sgpio.c:211:28: warning: unused variable 'gpio' [-Wunused-variable]
+     211 |         struct npcm_sgpio *gpio = gpiochip_get_data(gc);
+         |                            ^~~~
+   drivers/gpio/gpio-npcm-sgpio.c: At top level:
+>> drivers/gpio/gpio-npcm-sgpio.c:534:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     534 |         .sft_clk = npcm750_SFT_CLK,
+         |                    ^~~~~~~~~~~~~~~
+   drivers/gpio/gpio-npcm-sgpio.c:535:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     535 |         .clk_sel = npcm750_CLK_SEL,
+         |                    ^~~~~~~~~~~~~~~
+   drivers/gpio/gpio-npcm-sgpio.c:540:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     540 |         .sft_clk = npcm845_SFT_CLK,
+         |                    ^~~~~~~~~~~~~~~
+   drivers/gpio/gpio-npcm-sgpio.c:541:20: warning: initialization discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     541 |         .clk_sel = npcm845_CLK_SEL,
+         |                    ^~~~~~~~~~~~~~~
+
+
+vim +/dev_driver_string +150 drivers/gpio/gpio-npcm-sgpio.c
+
+   134	
+   135	static void __iomem *bank_reg(struct npcm_sgpio *gpio,
+   136				      const struct npcm_sgpio_bank *bank,
+   137				      const enum npcm_sgpio_reg reg)
+   138	{
+   139		switch (reg) {
+   140		case READ_DATA:
+   141			return gpio->base + bank->rdata_reg;
+   142		case WRITE_DATA:
+   143			return gpio->base + bank->wdata_reg;
+   144		case EVENT_CFG:
+   145			return gpio->base + bank->event_config;
+   146		case EVENT_STS:
+   147			return gpio->base + bank->event_status;
+   148		default:
+   149			/* actually if code runs to here, it's an error case */
+ > 150			dev_WARN(true, "Getting here is an error condition");
+   151		}
+   152		return 0;
+   153	}
+   154	
+   155	static const struct npcm_sgpio_bank *offset_to_bank(unsigned int offset)
+   156	{
+   157		unsigned int bank = GPIO_BANK(offset);
+   158	
+   159		return &npcm_sgpio_banks[bank];
+   160	}
+   161	
+   162	static void irqd_to_npcm_sgpio_data(struct irq_data *d,
+   163					    struct npcm_sgpio **gpio,
+   164					    const struct npcm_sgpio_bank **bank,
+   165					    u8 *bit, unsigned int *offset)
+   166	{
+   167		struct npcm_sgpio *internal;
+   168	
+   169		*offset = irqd_to_hwirq(d);
+   170		internal = irq_data_get_irq_chip_data(d);
+   171	
+   172		*gpio = internal;
+   173		*offset -= internal->nout_sgpio;
+   174		*bank = offset_to_bank(*offset);
+   175		*bit = GPIO_BIT(*offset);
+   176	}
+   177	
+   178	static int npcm_sgpio_init_port(struct npcm_sgpio *gpio)
+   179	{
+   180		u8 in_port, out_port, set_port, reg;
+   181	
+   182		in_port = GPIO_BANK(gpio->nin_sgpio);
+   183		if (GPIO_BIT(gpio->nin_sgpio) > 0)
+   184			in_port += 1;
+   185	
+   186		out_port = GPIO_BANK(gpio->nout_sgpio);
+   187		if (GPIO_BIT(gpio->nout_sgpio) > 0)
+   188			out_port += 1;
+   189	
+   190		gpio->in_port = in_port;
+   191		gpio->out_port = out_port;
+   192		set_port = ((out_port & NPCM_IOXCFG2_PORT) << 4) | (in_port & NPCM_IOXCFG2_PORT);
+   193		iowrite8(set_port, gpio->base + NPCM_IOXCFG2);
+   194	
+   195		reg = ioread8(gpio->base + NPCM_IOXCFG2);
+   196	
+   197		return reg == set_port ? 0 : -EINVAL;
+   198	
+   199	}
+   200	
+   201	static int npcm_sgpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+   202	{
+   203		struct npcm_sgpio *gpio = gpiochip_get_data(gc);
+   204	
+   205		return offset <	gpio->nout_sgpio ? -EINVAL : 0;
+   206	
+   207	}
+   208	
+   209	static int npcm_sgpio_dir_out(struct gpio_chip *gc, unsigned int offset, int val)
+   210	{
+ > 211		struct npcm_sgpio *gpio = gpiochip_get_data(gc);
+   212	
+   213		gc->set(gc, offset, val);
+   214	
+   215		return 0;
+   216	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
