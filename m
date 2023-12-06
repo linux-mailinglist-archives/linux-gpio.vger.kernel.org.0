@@ -1,348 +1,159 @@
-Return-Path: <linux-gpio+bounces-1065-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1066-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E7A2806FB8
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 13:30:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 71D97806FD9
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 13:36:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B3F51281882
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:30:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A271B1C208CD
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Dec 2023 12:36:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A27D36AE7;
-	Wed,  6 Dec 2023 12:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC8C236B09;
+	Wed,  6 Dec 2023 12:36:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GL4G4Cpa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dztOIm3q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x329.google.com (mail-wm1-x329.google.com [IPv6:2a00:1450:4864:20::329])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7FBED41
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Dec 2023 04:30:42 -0800 (PST)
-Received: by mail-wm1-x329.google.com with SMTP id 5b1f17b1804b1-40bda47c489so50368935e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Dec 2023 04:30:42 -0800 (PST)
+Received: from mail-ed1-x534.google.com (mail-ed1-x534.google.com [IPv6:2a00:1450:4864:20::534])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83167112
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Dec 2023 04:36:16 -0800 (PST)
+Received: by mail-ed1-x534.google.com with SMTP id 4fb4d7f45d1cf-54cdef4c913so1676532a12.1
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Dec 2023 04:36:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701865841; x=1702470641; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Gc2ntkoTShdEBwllBOG4rF/rr9xiDv3tAETL/Jav0Vk=;
-        b=GL4G4CpafP7P2VnXOpEgbvYpbirY+bPPqu0793S8g0HQ/5QMog/dcWIG0+M+vWNuAc
-         GmbJjo9BJrjHG2gD9Jv87L2EAxyr9nj9SY0NxoCo27XbsiRnxM/1pHTegzMu1THX5K4W
-         1jVEgQWJywvO+q23ftcGLGQ5vurjWphWTBB3eEtEwHDaU6ePDPCChRLxIN37TtsaPV/5
-         5ckQ2w7cIa6gt4Zm1KySEmt1CqpyPmtQtOrMbMt7w0kskPdSJn5G9/Id+ASnUPiBxWXt
-         OsSpslSrqvLW6DpZPiwn6UgDQJzqMuXjDKVza3RrsSJ/i1hTK/i0tFT1pX7OyTi3KqUs
-         wNJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701865841; x=1702470641;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+        d=linaro.org; s=google; t=1701866175; x=1702470975; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Gc2ntkoTShdEBwllBOG4rF/rr9xiDv3tAETL/Jav0Vk=;
-        b=bX76cfMxPdoLi2VKgRFZ77TtuRBvqgVXMiFIZCOmUiNH5gL0PThksJWattJI0Rialb
-         ZCaUX1MI/633rlOLlL6850+ehoWiy/AMTa1Q+Vg7UFgNHbCYKxX2YBh48WBUBrEJ37hA
-         DqkTd0pqgDTMCsLsYTZ+E9MLuilaAqiEoiPyjnCHvxoq5gnQbSZ96BjHWznO4Ny/8qWc
-         Bio/R0+HXJ+g23fLEYS/zf1sf9zp4GOS/+DkCvGSnTlZZ599iyhFS0lpsrU3Br14vOyk
-         rB+1bES/YJ6uNSozI5eakoZTarR6Lk+foDoomjkbLeQzT6Kd7AM2iOynHZ1EXV6QBrmy
-         YFjA==
-X-Gm-Message-State: AOJu0YxZVzonPYpScf8mHSdWHnHovg3kLDVWzkKAS8pAK+C8DOnw+z+Z
-	ygN1KPF4GjNedb/uLGivifLDfQ==
-X-Google-Smtp-Source: AGHT+IGbvAtCRyJ/+D7Ia80B4kAtNqKFbVvgpz/mjpVjvbfrPm9mXg4sGbWIF2mmxMZ4z9+ih3afgA==
-X-Received: by 2002:a7b:ca54:0:b0:40b:5e59:c567 with SMTP id m20-20020a7bca54000000b0040b5e59c567mr597074wml.145.1701865841085;
-        Wed, 06 Dec 2023 04:30:41 -0800 (PST)
-Received: from [10.1.1.118] ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id hg10-20020a05600c538a00b0040b398f0585sm22066938wmb.9.2023.12.06.04.30.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Dec 2023 04:30:40 -0800 (PST)
-Message-ID: <6e595a110444033de6ecd35bedc6e84ea1c43fdc.camel@linaro.org>
-Subject: Re: [PATCH v5 02/20] dt-bindings: clock: Add Google gs101 clock
- management unit bindings
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
- conor+dt@kernel.org,  sboyd@kernel.org, tomasz.figa@gmail.com,
- s.nawrocki@samsung.com,  linus.walleij@linaro.org, wim@linux-watchdog.org,
- linux@roeck-us.net,  catalin.marinas@arm.com, will@kernel.org,
- arnd@arndb.de, olof@lixom.net,  gregkh@linuxfoundation.org,
- jirislaby@kernel.org, cw00.choi@samsung.com,  alim.akhtar@samsung.com
-Cc: tudor.ambarus@linaro.org, semen.protsenko@linaro.org,
- saravanak@google.com,  willmcvicker@google.com, soc@kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- kernel-team@android.com,  linux-serial@vger.kernel.org
-Date: Wed, 06 Dec 2023 12:30:38 +0000
-In-Reply-To: <20231201160925.3136868-3-peter.griffin@linaro.org>
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
-	 <20231201160925.3136868-3-peter.griffin@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.49.2-3 
+        bh=dhP0y3lO/PweF1RfHhFSQDOkyteb+oLvHY0gryFPYWI=;
+        b=dztOIm3qEwyrrlAhjghjt/2y0izUrCL3bWee5fMCH5Jbh3nOlDQ3nmYK9hZNMvd2OU
+         7iVX4G+DJzm32VKHHUjxWBMlWpff0xVywx8ynP0fGw5jFhYKAKv3/Gce5gvLf1PeYHZx
+         ZALYejgBHTLQnPEyQzPYwRCuvPHBCiqhSqvq8iaXuzrKh9H/nAW+IX7r/BdjgRLxVIpy
+         No1hc7hrVb8KBZhoEUkH2rExdBkweEDJ6kOdkeOH8yDjx+nw7JOOVWapMdbhy3ef0qLO
+         VP7Z3tLvkgipTyj/8wpBusqHVqIBIDGWYbfjtok0rHxaXM408fcxuOo1raBIS2bkho5+
+         usCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701866175; x=1702470975;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dhP0y3lO/PweF1RfHhFSQDOkyteb+oLvHY0gryFPYWI=;
+        b=g4tiwmuIiLwey3yey7wYqG0Q84iNuROvTiyPfxtxMdRsjty1m0sbygKxD9jnNpWiUW
+         ATRVnVscVc9GTReK7L3xe2mRFlGrRZr3MZDcC5LJkVTqZhcAWeuIinUKFaDUxCoG6vPZ
+         p41GUslU/TBTEbT22DOsIHynA6isiR1+o1xZQ51cAhtpXZleKL/qEVOxdYaIIkw1Si8/
+         gqyle3GQhYNMwkGobiMgn38S+SwviIam48yJM51MS7T7Ix6JOEDpCSMnBzazdw2DFliq
+         i6ROACjSY2m6iYpC6IngpxLXt2xSE860clXl0PNdg728dmpY6dkLLnlUSald9qe8Vbym
+         4h4A==
+X-Gm-Message-State: AOJu0Yy1Z8VP/GvZyvIAnSx2e7w62/j5f2GVE6DuU5eEMyZtVufeQOPj
+	JhxN/3mqa+M3OWvUVixivcBOQg==
+X-Google-Smtp-Source: AGHT+IEjEppnEL2GoHQL+oSSs+kXp+IGJw6L0InNoVjYIKYoc18xPZI23Uhq0UOlHEKfZ3JBehNE+w==
+X-Received: by 2002:a17:906:2201:b0:a1b:6f31:11d8 with SMTP id s1-20020a170906220100b00a1b6f3111d8mr3162054ejs.25.1701866174962;
+        Wed, 06 Dec 2023 04:36:14 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.218.27])
+        by smtp.gmail.com with ESMTPSA id h14-20020a1709063c0e00b00a1b7747e3c0sm3944175ejg.151.2023.12.06.04.36.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Dec 2023 04:36:13 -0800 (PST)
+Message-ID: <701278db-2ea3-49eb-a292-67294d3fdfa5@linaro.org>
+Date: Wed, 6 Dec 2023 13:36:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
+Content-Language: en-US
+To: Jim Liu <jim.t90615@gmail.com>, JJLIU0@nuvoton.com,
+ krzysztof.kozlowski+dt@linaro.org, linus.walleij@linaro.org,
+ andy@kernel.org, robh+dt@kernel.org, conor+dt@kernel.org, KWLIU@nuvoton.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+References: <20231206014530.1600151-1-jim.t90615@gmail.com>
+ <20231206014530.1600151-4-jim.t90615@gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20231206014530.1600151-4-jim.t90615@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Pete,
+On 06/12/2023 02:45, Jim Liu wrote:
+> Add Nuvoton BMC NPCM7xx/NPCM8xx sgpio driver support.
+> Nuvoton NPCM SGPIO module is combine serial to parallel IC (HC595)
+> and parallel to serial IC (HC165), and use APB3 clock to control it.
+> This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
+> BMC can use this driver to increase 64 GPI pins and 64 GPO pins to use.
+> 
+> Signed-off-by: Jim Liu <jim.t90615@gmail.com>
+> ---
 
-On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
-> [...]
-> +...
-> diff --git a/include/dt-bindings/clock/google,gs101.h b/include/dt-bindin=
-gs/clock/google,gs101.h
-> new file mode 100644
-> index 000000000000..9f280f74578a
-> --- /dev/null
-> +++ b/include/dt-bindings/clock/google,gs101.h
-> @@ -0,0 +1,392 @@
-> +/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
-> +/*
-> + * Copyright (C) 2023 Linaro Ltd.
-> + * Author: Peter Griffin <peter.griffin@linaro.org>
-> + *
-> + * Device Tree binding constants for Google gs101 clock controller.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
-> +#define _DT_BINDINGS_CLOCK_GOOGLE_GS101_H
-> +
-> +/* CMU_TOP PLL */
-> +#define CLK_FOUT_SHARED0_PLL		1
-> +#define CLK_FOUT_SHARED1_PLL		2
-> +#define CLK_FOUT_SHARED2_PLL		3
-> +#define CLK_FOUT_SHARED3_PLL		4
-> +#define CLK_FOUT_SPARE_PLL		5
-> +
-> +/* CMU_TOP MUX */
-> +#define CLK_MOUT_SHARED0_PLL		6
-> +#define CLK_MOUT_SHARED1_PLL		7
-> +#define CLK_MOUT_SHARED2_PLL		8
-> +#define CLK_MOUT_SHARED3_PLL		9
-> +#define CLK_MOUT_SPARE_PLL		10
-> +#define CLK_MOUT_BO_BUS			11
-> +#define CLK_MOUT_BUS0_BUS		12
-> +#define CLK_MOUT_BUS1_BUS		13
-> +#define CLK_MOUT_BUS2_BUS		14
-> +#define CLK_MOUT_CIS_CLK0		15
-> +#define CLK_MOUT_CIS_CLK1		16
-> +#define CLK_MOUT_CIS_CLK2		17
-> +#define CLK_MOUT_CIS_CLK3		18
-> +#define CLK_MOUT_CIS_CLK4		19
-> +#define CLK_MOUT_CIS_CLK5		20
-> +#define CLK_MOUT_CIS_CLK6		21
-> +#define CLK_MOUT_CIS_CLK7		22
-> +#define CLK_MOUT_CMU_BOOST		23
-> +#define CLK_MOUT_BOOST_OPTION1		24
-> +#define CLK_MOUT_CORE_BUS		25
-> +#define CLK_MOUT_CPUCL0_DBG		26
-> +#define CLK_MOUT_CPUCL0_SWITCH		27
-> +#define CLK_MOUT_CPUCL1_SWITCH		28
-> +#define CLK_MOUT_CPUCL2_SWITCH		29
-> +#define CLK_MOUT_CSIS_BUS		30
-> +#define CLK_MOUT_DISP_BUS		31
-> +#define CLK_MOUT_DNS_BUS		32
-> +#define CLK_MOUT_DPU_BUS		33
-> +#define CLK_MOUT_EH_BUS			34
-> +#define CLK_MOUT_G2D_G2D		35
-> +#define CLK_MOUT_G2D_MSCL		36
-> +#define CLK_MOUT_G3AA_G3AA		37
-> +#define CLK_MOUT_G3D_BUSD		38
-> +#define CLK_MOUT_G3D_GLB		39
-> +#define CLK_MOUT_G3D_SWITCH		40
-> +#define CLK_MOUT_GDC_GDC0		41
-> +#define CLK_MOUT_GDC_GDC1		42
-> +#define CLK_MOUT_GDC_SCSC		43
-> +#define CLK_MOUT_CMU_HPM		44
-> +#define CLK_MOUT_HSI0_BUS		45
-> +#define CLK_MOUT_HSI0_DPGTC		46
-> +#define CLK_MOUT_HSI0_USB31DRD		47
-> +#define CLK_MOUT_HSI0_USBDPDGB		48
-> +#define CLK_MOUT_HSI1_BUS		49
-> +#define CLK_MOUT_HSI1_PCIE		50
-> +#define CLK_MOUT_HSI2_BUS		51
-> +#define CLK_MOUT_HSI2_MMC_CARD		52
-> +#define CLK_MOUT_HSI2_PCIE		53
-> +#define CLK_MOUT_HSI2_UFS_EMBD		54
-> +#define CLK_MOUT_IPP_BUS		55
-> +#define CLK_MOUT_ITP_BUS		56
-> +#define CLK_MOUT_MCSC_ITSC		57
-> +#define CLK_MOUT_MCSC_MCSC		58
-> +#define CLK_MOUT_MFC_MFC		59
-> +#define CLK_MOUT_MIF_BUSP		60
-> +#define CLK_MOUT_MIF_SWITCH		61
-> +#define CLK_MOUT_MISC_BUS		62
-> +#define CLK_MOUT_MISC_SSS		63
-> +#define CLK_MOUT_PDP_BUS		64
-> +#define CLK_MOUT_PDP_VRA		65
-> +#define CLK_MOUT_PERIC0_BUS		66
-> +#define CLK_MOUT_PERIC0_IP		67
-> +#define CLK_MOUT_PERIC1_BUS		68
-> +#define CLK_MOUT_PERIC1_IP		69
-> +#define CLK_MOUT_TNR_BUS		70
-> +#define CLK_MOUT_TOP_BOOST_OPTION1	71
-> +#define CLK_MOUT_TOP_CMUREF		72
-> +#define CLK_MOUT_TPU_BUS		73
-> +#define CLK_MOUT_TPU_TPU		74
-> +#define CLK_MOUT_TPU_TPUCTL		75
-> +#define CLK_MOUT_TPU_UART		76
-> +#define CLK_MOUT_CMU_CMUREF		77
-> +
-> +/* CMU_TOP Dividers */
-> +#define CLK_DOUT_BO_BUS			78
-> +#define CLK_DOUT_BUS0_BUS		79
-> +#define CLK_DOUT_BUS1_BUS		80
-> +#define CLK_DOUT_BUS2_BUS		81
-> +#define CLK_DOUT_CIS_CLK0		82
-> +#define CLK_DOUT_CIS_CLK1		83
-> +#define CLK_DOUT_CIS_CLK2		84
-> +#define CLK_DOUT_CIS_CLK3		85
-> +#define CLK_DOUT_CIS_CLK4		86
-> +#define CLK_DOUT_CIS_CLK5		87
-> +#define CLK_DOUT_CIS_CLK6		88
-> +#define CLK_DOUT_CIS_CLK7		89
-> +#define CLK_DOUT_CORE_BUS		90
-> +#define CLK_DOUT_CPUCL0_DBG		91
-> +#define CLK_DOUT_CPUCL0_SWITCH		92
-> +#define CLK_DOUT_CPUCL1_SWITCH		93
-> +#define CLK_DOUT_CPUCL2_SWITCH		94
-> +#define CLK_DOUT_CSIS_BUS		95
-> +#define CLK_DOUT_DISP_BUS		96
-> +#define CLK_DOUT_DNS_BUS		97
-> +#define CLK_DOUT_DPU_BUS		98
-> +#define CLK_DOUT_EH_BUS			99
-> +#define CLK_DOUT_G2D_G2D		100
-> +#define CLK_DOUT_G2D_MSCL		101
-> +#define CLK_DOUT_G3AA_G3AA		102
-> +#define CLK_DOUT_G3D_BUSD		103
-> +#define CLK_DOUT_G3D_GLB		104
-> +#define CLK_DOUT_G3D_SWITCH		105
-> +#define CLK_DOUT_GDC_GDC0		106
-> +#define CLK_DOUT_GDC_GDC1		107
-> +#define CLK_DOUT_GDC_SCSC		108
-> +#define CLK_DOUT_CMU_HPM		109
-> +#define CLK_DOUT_HSI0_BUS		110
-> +#define CLK_DOUT_HSI0_DPGTC		111
-> +#define CLK_DOUT_HSI0_USB31DRD		112
-> +#define CLK_DOUT_HSI0_USBDPDGB		113
-> +#define CLK_DOUT_HSI1_BUS		114
-> +#define CLK_DOUT_HSI1_PCIE		115
-> +#define CLK_DOUT_HSI2_BUS		116
-> +#define CLK_DOUT_HSI2_MMC_CARD		117
-> +#define CLK_DOUT_HSI2_PCIE		118
-> +#define CLK_DOUT_HSI2_UFS_EMBD		119
-> +#define CLK_DOUT_IPP_BUS		107
+...
 
-You're restarting at 107 here, but the numbers should continue at 120...
+> +	switch (reg) {
+> +	case READ_DATA:
+> +		return gpio->base + bank->rdata_reg;
+> +	case WRITE_DATA:
+> +		return gpio->base + bank->wdata_reg;
+> +	case EVENT_CFG:
+> +		return gpio->base + bank->event_config;
+> +	case EVENT_STS:
+> +		return gpio->base + bank->event_status;
+> +	default:
+> +		/* actually if code runs to here, it's an error case */
+> +		dev_WARN(true, "Getting here is an error condition");
 
-> +#define CLK_DOUT_ITP_BUS		108
-> +#define CLK_DOUT_MCSC_ITSC		109
-> +#define CLK_DOUT_MCSC_MCSC		110
-> +#define CLK_DOUT_MFC_MFC		111
-> +#define CLK_DOUT_MIF_BUSP		112
-> +#define CLK_DOUT_MISC_BUS		113
-> +#define CLK_DOUT_MISC_SSS		114
-> +#define CLK_DOUT_PDP_BUS		115
-> +#define CLK_DOUT_PDP_VRA		116
-> +#define CLK_DOUT_PERIC0_BUS		117
-> +#define CLK_DOUT_PERIC0_IP		118
-> +#define CLK_DOUT_PERIC1_BUS		119
-> +#define CLK_DOUT_PERIC1_IP		120
-> +#define CLK_DOUT_TNR_BUS		121
-> +#define CLK_DOUT_TPU_BUS		122
-> +#define CLK_DOUT_TPU_TPU		123
-> +#define CLK_DOUT_TPU_TPUCTL		124
-> +#define CLK_DOUT_TPU_UART		125
-> +#define CLK_DOUT_CMU_BOOST		126
-> +#define CLK_DOUT_CMU_CMUREF		127
-> +#define CLK_DOUT_SHARED0_DIV2		128
-> +#define CLK_DOUT_SHARED0_DIV3		129
-> +#define CLK_DOUT_SHARED0_DIV4		130
-> +#define CLK_DOUT_SHARED0_DIV5		131
-> +#define CLK_DOUT_SHARED1_DIV2		132
-> +#define CLK_DOUT_SHARED1_DIV3		133
-> +#define CLK_DOUT_SHARED1_DIV4		134
-> +#define CLK_DOUT_SHARED2_DIV2		135
-> +#define CLK_DOUT_SHARED3_DIV2		136
-> +
-> +/* CMU_TOP Gates */
-> +#define CLK_GOUT_BUS0_BOOST		137
-> +#define CLK_GOUT_BUS1_BOOST		138
-> +#define CLK_GOUT_BUS2_BOOST		139
-> +#define CLK_GOUT_CORE_BOOST		140
-> +#define CLK_GOUT_CPUCL0_BOOST		141
-> +#define CLK_GOUT_CPUCL1_BOOST		142
-> +#define CLK_GOUT_CPUCL2_BOOST		143
-> +#define CLK_GOUT_MIF_BOOST		144
-> +#define CLK_GOUT_MIF_SWITCH		145
-> +#define CLK_GOUT_BO_BUS			146
-> +#define CLK_GOUT_BUS0_BUS		147
-> +#define CLK_GOUT_BUS1_BUS		148
-> +#define CLK_GOUT_BUS2_BUS		149
-> +#define CLK_GOUT_CIS_CLK0		150
-> +#define CLK_GOUT_CIS_CLK1		151
-> +#define CLK_GOUT_CIS_CLK2		152
-> +#define CLK_GOUT_CIS_CLK3		153
-> +#define CLK_GOUT_CIS_CLK4		154
-> +#define CLK_GOUT_CIS_CLK5		155
-> +#define CLK_GOUT_CIS_CLK6		156
-> +#define CLK_GOUT_CIS_CLK7		157
-> +#define CLK_GOUT_CMU_BOOST		158
-> +#define CLK_GOUT_CORE_BUS		159
-> +#define CLK_GOUT_CPUCL0_DBG		160
-> +#define CLK_GOUT_CPUCL0_SWITCH		161
-> +#define CLK_GOUT_CPUCL1_SWITCH		162
-> +#define CLK_GOUT_CPUCL2_SWITCH		163
-> +#define CLK_GOUT_CSIS_BUS		164
-> +#define CLK_GOUT_DISP_BUS		165
-> +#define CLK_GOUT_DNS_BUS		166
-> +#define CLK_GOUT_DPU_BUS		167
-> +#define CLK_GOUT_EH_BUS			168
-> +#define CLK_GOUT_G2D_G2D		169
-> +#define CLK_GOUT_G2D_MSCL		170
-> +#define CLK_GOUT_G3AA_G3AA		171
-> +#define CLK_GOUT_G3D_BUSD		172
-> +#define CLK_GOUT_G3D_GLB		173
-> +#define CLK_GOUT_G3D_SWITCH		174
-> +#define CLK_GOUT_GDC_GDC0		175
-> +#define CLK_GOUT_GDC_GDC1		176
-> +#define CLK_GOUT_GDC_SCSC		177
-> +#define CLK_GOUT_CMU_HPM		178
-> +#define CLK_GOUT_HSI0_BUS		179
-> +#define CLK_GOUT_HSI0_DPGTC		180
-> +#define CLK_GOUT_HSI0_USB31DRD		181
-> +#define CLK_GOUT_HSI0_USBDPDGB		182
-> +#define CLK_GOUT_HSI1_BUS		183
-> +#define CLK_GOUT_HSI1_PCIE		184
-> +#define CLK_GOUT_HSI2_BUS		185
-> +#define CLK_GOUT_HSI2_MMC_CARD		186
-> +#define CLK_GOUT_HSI2_PCIE		187
-> +#define CLK_GOUT_HSI2_UFS_EMBD		188
-> +#define CLK_GOUT_IPP_BUS		189
-> +#define CLK_GOUT_ITP_BUS		190
-> +#define CLK_GOUT_MCSC_ITSC		191
-> +#define CLK_GOUT_MCSC_MCSC		192
-> +#define CLK_GOUT_MFC_MFC		193
-> +#define CLK_GOUT_MIF_BUSP		194
-> +#define CLK_GOUT_MISC_BUS		195
-> +#define CLK_GOUT_MISC_SSS		196
-> +#define CLK_GOUT_PDP_BUS		197
-> +#define CLK_GOUT_PDP_VRA		298
-> +#define CLK_GOUT_G3AA			299
-> +#define CLK_GOUT_PERIC0_BUS		200
-> +#define CLK_GOUT_PERIC0_IP		201
-> +#define CLK_GOUT_PERIC1_BUS		202
-> +#define CLK_GOUT_PERIC1_IP		203
-> +#define CLK_GOUT_TNR_BUS		204
-> +#define CLK_GOUT_TOP_CMUREF		205
-> +#define CLK_GOUT_TPU_BUS		206
-> +#define CLK_GOUT_TPU_TPU		207
-> +#define CLK_GOUT_TPU_TPUCTL		208
-> +#define CLK_GOUT_TPU_UART		209
+So you did not even compile your code. v8 and still not built :(
 
-... up to here. I also checked the other units, they seem to be OK.
+> +	}
+> +	return 0;
+> +}
 
-Cheers,
-Andre'
+
+
+Best regards,
+Krzysztof
 
 
