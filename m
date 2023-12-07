@@ -1,66 +1,67 @@
-Return-Path: <linux-gpio+bounces-1092-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1093-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82530808506
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 10:56:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4BB0808510
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 10:59:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3E6ED283D66
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 09:56:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52AA7283E35
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 09:59:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525423527B;
-	Thu,  7 Dec 2023 09:56:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 069E335286;
+	Thu,  7 Dec 2023 09:59:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h5msvbpt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O55XMeMl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B9E89FA
-	for <linux-gpio@vger.kernel.org>; Thu,  7 Dec 2023 01:56:40 -0800 (PST)
-Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5cece20f006so5011357b3.3
-        for <linux-gpio@vger.kernel.org>; Thu, 07 Dec 2023 01:56:40 -0800 (PST)
+Received: from mail-yb1-xb2e.google.com (mail-yb1-xb2e.google.com [IPv6:2607:f8b0:4864:20::b2e])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 42BE7132
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Dec 2023 01:59:14 -0800 (PST)
+Received: by mail-yb1-xb2e.google.com with SMTP id 3f1490d57ef6-db538b07865so853409276.2
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Dec 2023 01:59:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1701943000; x=1702547800; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1701943153; x=1702547953; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TJnq125j0YdWG47h8sgeSrpDhVFiAnTytxHlskk2EhY=;
-        b=h5msvbptgCQw59PMItu4yKSNeB4votNJq7/JDvy69ZqNTpHpJTQHD7l8RKotTO+ML6
-         lDus2hDTgya5dA7ZbfrEqeqVGRjlisWxJo5SLae4w65DyZxi/nROl49SKZHBIFQ1GSoD
-         dOJTi/cIWKqvkcdNrvPh2WIgs0VehNfmYvtynPDAs5w1sWTOrnJJ9FFzpBxlC28PgKas
-         6d6FvnW0UxYojjB4KxCvHUStWrrOsZS9vCVWU7Nzq/rp2KFYU+Z7MKt9d/cpngqcbCKi
-         nQw6O3GDqUSv2ma1NZYUuH1FG9PfqUYHfim8+KkuNL9JVa18WmS54uRZE4Sjxv6SoN9l
-         yvVg==
+        bh=+6K465pI4zAWlwCamlpDG3HILRkV9gPVUA692gl6Sek=;
+        b=O55XMeMlHOwm+GbmwnwdJIf8Tb5gumCUwMQnspnn/K0AiiXvZ6jlXGOCT08XfFgORF
+         aWKiDAufxdj75Jb0o4eyq83/3da7EuU7EPQDTlXOHrp5Q8DvmRfu7VNORk/r4pRZ8ajy
+         eDSoajDaghkYNgKF2rGvI+PRjk5zSplohxDhAlbUSlAhfKNJKlxHoAZCEzogB7VQ7BSC
+         SeLoGsrzqoftl62DFFH25HLRyAPQMjUSlkk8NrtUfYTPXt03E7ZuXIECiV9tpyru1a7o
+         JvMFAEjrpPeSzex9bV3eWlFFJwF8+UJG0x8fqiVedGXAEnIMp9YJZhR7HQs+tiDcgt9J
+         jxlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1701943000; x=1702547800;
+        d=1e100.net; s=20230601; t=1701943153; x=1702547953;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TJnq125j0YdWG47h8sgeSrpDhVFiAnTytxHlskk2EhY=;
-        b=pbGwvciee61qT1ROsKQPacnMXOcQISrd/zwSFHA/M0TOxyQyIs69S0UU9/eKh1uD1u
-         khkxsBorCV3B6r+Y/7zsyJt6NVtpChrZK0lDG4VqVES1b0w4tY3XLlYTfvdUmAkxL4tp
-         NiTK5qRtoGGI9vzrgn2Px0/5jBp0iBepEPUJqdxgVGRKv0CMMnBYg7nwFfyhloAxgOmi
-         xdaVPJyngtEUUM3o3Vtc5zR4wa7XQCfBwnqFS75lCJgr03ykiz+0+L5z4XxJW3U7VNM8
-         GOjLGqyAroP0/aYV0x3wC13Cp/l0FAa03aWVQQ/ct6jOkQdjLTkRAhmLbNTeLEK9BB5a
-         wRcQ==
-X-Gm-Message-State: AOJu0Yydf3Vi9vkZRQe6AcM8z7i+aqoes57fdi+ALEAU1spCVbaUxtvS
-	r5xsFhEaBAzUOvaoVt8K2yUPlPDtkBb8okYdvsViFg==
-X-Google-Smtp-Source: AGHT+IFmG5Eix/w4QK05D8maIWu4NoSnt+3uvdJ7TmBB3MpQnzAeGZpXme98S/yULZnvsP6j+GPexkcwj6QKWJI6sGg=
-X-Received: by 2002:a25:190a:0:b0:da3:76d3:e4fb with SMTP id
- 10-20020a25190a000000b00da376d3e4fbmr1627701ybz.26.1701942999893; Thu, 07 Dec
- 2023 01:56:39 -0800 (PST)
+        bh=+6K465pI4zAWlwCamlpDG3HILRkV9gPVUA692gl6Sek=;
+        b=hKmJRlnfryEwrouHJtA8kSRCOrd+ks4Py0ohcjlTl23N/ELRgtWKPFCy3Pu+SXIh56
+         h/2JTsNuHCrFWTM2Nu+qqd0gSpOfSTNgol+kaXgZZEtLp4zfvBwUAk6iomawCffVyQ4Y
+         +RfKVzmLIbeiWKrAx04e8UJbsotKX85BggaB8js0bm0/hb25+AESFnPzuan7vh4/xNun
+         /awQFvAH6POxVtq97UbTKS4ztnJkFAT4V6wf9uGtadAqgPtiPNsGbo+W2nnJrojDcDnv
+         uq2DTtyJoiwg0qs2tIFsXAQsYz4cfButG8tp2FUZQ38jTW9vPdlH8M+SsoHuHQjjvjCE
+         HMOg==
+X-Gm-Message-State: AOJu0Yx5Rv3PDoLyAtXgOIDYomoZPO7Dk1quDYdRILz25WDU6HG7Pjqo
+	jYl0yeMX6ybnp769zkG3/lO7lN/HqTBQk8qROolktg==
+X-Google-Smtp-Source: AGHT+IHcD5fIoEp/CcfEh8HnMUMO2l3b3jKL0vWFNg+litPEiRW5cySzVq5LBwYkPm8QSog0pjXe77K4eJFUFT+j6Y4=
+X-Received: by 2002:a25:b8b:0:b0:db7:dacf:ed91 with SMTP id
+ 133-20020a250b8b000000b00db7dacfed91mr830253ybl.114.1701943153500; Thu, 07
+ Dec 2023 01:59:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com> <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
-In-Reply-To: <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
+ <20231204203357.2897008-3-ben.wolsieffer@hefring.com> <CACRpkdZKjcE5yMF0=E+4BRTEmrShSqFzCcyH8Rug7u7kOotUQQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZKjcE5yMF0=E+4BRTEmrShSqFzCcyH8Rug7u7kOotUQQ@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 7 Dec 2023 10:56:50 +0100
-Message-ID: <CACRpkdZKjcE5yMF0=E+4BRTEmrShSqFzCcyH8Rug7u7kOotUQQ@mail.gmail.com>
+Date: Thu, 7 Dec 2023 10:59:24 +0100
+Message-ID: <CACRpkdaqZ4+oefozT863YbsY7e1kVJvSMBuiFmwhKSeXtPsE2w@mail.gmail.com>
 Subject: Re: [PATCH 2/2] pinctrl: stm32: fix GPIO level interrupts
 To: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
@@ -70,26 +71,32 @@ Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 4, 2023 at 9:35=E2=80=AFPM Ben Wolsieffer
-<ben.wolsieffer@hefring.com> wrote:
+On Thu, Dec 7, 2023 at 10:56=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+> On Mon, Dec 4, 2023 at 9:35=E2=80=AFPM Ben Wolsieffer
 
-> The STM32 doesn't support GPIO level interrupts in hardware, so the
-> driver tries to emulate them using edge interrupts, by retriggering the
-> interrupt if necessary based on the pin state after the handler
-> finishes.
+> <ben.wolsieffer@hefring.com> wrote:
 >
-> Currently, this functionality does not work because the irqchip uses
-> handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
-> callbacks after handling the interrupt. This patch fixes this by using
-> handle_level_irq() for level interrupts, which causes irq_unmask() to be
-> called to retrigger the interrupt.
+> > The STM32 doesn't support GPIO level interrupts in hardware, so the
+> > driver tries to emulate them using edge interrupts, by retriggering the
+> > interrupt if necessary based on the pin state after the handler
+> > finishes.
+> >
+> > Currently, this functionality does not work because the irqchip uses
+> > handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
+> > callbacks after handling the interrupt. This patch fixes this by using
+> > handle_level_irq() for level interrupts, which causes irq_unmask() to b=
+e
+> > called to retrigger the interrupt.
+> >
+> > Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
 >
-> Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Marc Z can apply all the patches to the irq tree once he's happy
+> with the solution.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Marc Z can apply all the patches to the irq tree once he's happy
-with the solution.
+I see Marc stopped doing irq_chips, so tglx then!
 
 Yours,
 Linus Walleij
