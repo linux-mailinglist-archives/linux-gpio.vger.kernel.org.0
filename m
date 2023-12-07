@@ -1,259 +1,151 @@
-Return-Path: <linux-gpio+bounces-1074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C398807DDF
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 02:25:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2B5280815A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 08:08:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCBC41F213E9
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 01:25:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CC4A22819C9
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 07:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D8A111B;
-	Thu,  7 Dec 2023 01:25:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88EE11428D;
+	Thu,  7 Dec 2023 07:08:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="eWeLSCjk"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="YQkAT+Nx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2B7B830E7;
-	Wed,  6 Dec 2023 17:23:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701912232; x=1733448232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=haxRevXN/RxJvUHVAi69/QMEeMdiAMug75ZxQ4vmF6o=;
-  b=eWeLSCjkUGVuw9SoJlRq97E9b/YuFiak38nPQ+hzwmwdBKQFhfX7JFYi
-   K8McFimtd3Y2I5Ab+vkDOEt64ScvDF1COzMSnhicCI0daPv8HhaT1TS+J
-   XtuPbjYGVOmep+MW8Q8UV2+pvuND4yCpg7egh8Hmo2PGtP9Glj2v0+qT+
-   UPiJm2MRApRq+DjWBSf0R3qGlNamvaHzZGOQhe8A3oYriMRsgvQ/87pTH
-   tNZyxEufA0rKPL9S0ZCP9vzI98I2+pE7jfx3Iqq1s4l1kPGAb5wf0Lpao
-   sHhWHjeWXo3J95zc7onWAQBcOEEBJTgHeharo0s6fOyd+W6F/XVQhk7/H
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="391326002"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="391326002"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Dec 2023 17:22:33 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="894943613"
-X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="894943613"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga004.jf.intel.com with ESMTP; 06 Dec 2023 17:22:28 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rB35s-000BfC-14;
-	Thu, 07 Dec 2023 01:22:25 +0000
-Date: Thu, 7 Dec 2023 09:22:08 +0800
-From: kernel test robot <lkp@intel.com>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: oe-kbuild-all@lists.linux.dev, linus.walleij@linaro.org, brgl@bgdev.pl,
-	andy@kernel.org, linux-gpio@vger.kernel.org,
-	Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+Received: from mail-ed1-x52b.google.com (mail-ed1-x52b.google.com [IPv6:2a00:1450:4864:20::52b])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7985181
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Dec 2023 23:08:01 -0800 (PST)
+Received: by mail-ed1-x52b.google.com with SMTP id 4fb4d7f45d1cf-54c5d041c23so723442a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Dec 2023 23:08:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1701932880; x=1702537680; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TVyclZazJvX0BLnaExZFu9C3yH6+5Ao3su3cId334Q4=;
+        b=YQkAT+Nxdj3his7EyWpn1VUSiZ7ie8RiRYyZQ4gQKDDZ8OfTB3L/IeHEp/Lbd0LxDu
+         Be2zYwp/3MbEjlgeuwDsALXmMr5MebJkB7r80DPjB58ulbuFAvhzToO1KUqhnkvfLjRb
+         s1FuZVZp4HKAHR5QMicQlX483eg/y+yApoHpiyIfnZRWcq8cIvak/jeEO3ZCSC/tzEln
+         gmSp/ScUAbavTL9nVCZZwJKpDHBTkQFUlK6OZCo6cIzHg5uWgHXJ16N2ePjN6QiTLlHS
+         kgrRNRmX9ozJTwmNRRm+GUDtJufuJNIKV1Ns154h1ecEJLdmvPwio7F2OaSangP1Z96D
+         6hfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1701932880; x=1702537680;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=TVyclZazJvX0BLnaExZFu9C3yH6+5Ao3su3cId334Q4=;
+        b=smqY4jNmbn2OhWYfSQ+u5Ob86vEWHElzTMrJ10Df0K7KWLgG+74cPdZz383Eoz695p
+         iYeHifbJbtJo40wSu0DOTtJGyv++aj7ub8Rc5UUZSCpsVqPnAXwbMBnncsKI2UfJfpRX
+         Ol35YvNLkg3lWEA1hLDilkEzs4oV7UXjPnIy8+ggUE7wPLk9QRQRPPBzn0uc3sRmoTZY
+         avfTqFIQgEUdzyvc+iv+5JPATrwYF5rxwUDDjFBFL+JIaE5A1uGY+++m0l9QCvFCFw4k
+         TfGjcpW24CRkBMB8BCF6CQoiOYhO1B9F82La3tC1D7L31nyHavxPF8xwZ8Pjg4P8q5Cw
+         T/ZA==
+X-Gm-Message-State: AOJu0Yx756jVrK0c9BsUjojyhSnzBnJa4GEV+0LEdCurk63rb/mF/eTS
+	+R0+uy6Tg17OdRV+hlVj68PcDA==
+X-Google-Smtp-Source: AGHT+IEC0FkV7t0JGk/8vCkIjlrSN99fzjy/K71uEAV88dEq3aC+gkR+brEZ3swbNQIpMT1WiCCaHw==
+X-Received: by 2002:a05:6402:176b:b0:54c:4837:9fd8 with SMTP id da11-20020a056402176b00b0054c48379fd8mr565439edb.47.1701932880051;
+        Wed, 06 Dec 2023 23:08:00 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.22])
+        by smtp.gmail.com with ESMTPSA id b41-20020a509f2c000000b0054cb88a353dsm420818edf.14.2023.12.06.23.07.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Dec 2023 23:07:59 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: s.shtylyov@omp.ru,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	geert+renesas@glider.be,
+	magnus.damm@gmail.com,
+	mturquette@baylibre.com,
+	sboyd@kernel.org,
+	linus.walleij@linaro.org,
+	prabhakar.mahadev-lad.rj@bp.renesas.com,
+	biju.das.jz@bp.renesas.com
+Cc: linux-renesas-soc@vger.kernel.org,
+	netdev@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	Dumitru Ceclan <mitrutzceclan@gmail.com>
-Subject: Re: [PATCH v7 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <202312070921.XWcr7wUd-lkp@intel.com>
-References: <20231205134223.17335-2-mitrutzceclan@gmail.com>
+	linux-clk@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 00/11] renesas: rzg3s: Add support for Ethernet
+Date: Thu,  7 Dec 2023 09:06:49 +0200
+Message-Id: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231205134223.17335-2-mitrutzceclan@gmail.com>
+Content-Transfer-Encoding: 8bit
 
-Hi Dumitru,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-kernel test robot noticed the following build warnings:
+Hi,
 
-[auto build test WARNING on jic23-iio/togreg]
-[also build test WARNING on linus/master v6.7-rc4 next-20231206]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+Series adds Ethernet support for Renesas RZ/G3S.
+Along with it preparatory cleanups and fixes were included.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Dumitru-Ceclan/iio-adc-ad7173-add-AD7173-driver/20231205-214833
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git togreg
-patch link:    https://lore.kernel.org/r/20231205134223.17335-2-mitrutzceclan%40gmail.com
-patch subject: [PATCH v7 2/2] iio: adc: ad7173: add AD7173 driver
-config: m68k-randconfig-r071-20231207 (https://download.01.org/0day-ci/archive/20231207/202312070921.XWcr7wUd-lkp@intel.com/config)
-compiler: m68k-linux-gcc (GCC) 13.2.0
-reproduce: (https://download.01.org/0day-ci/archive/20231207/202312070921.XWcr7wUd-lkp@intel.com/reproduce)
+Patches 1-2 are clock specific.
+Patches 3-7 are pinctrl specific.
+Patches 8-11 are device tree specific.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202312070921.XWcr7wUd-lkp@intel.com/
+It is expected that patches will be integrated though Geert's tree.
 
-smatch warnings:
-drivers/iio/adc/ad7173.c:833 ad7173_fw_parse_channel_config() warn: unsigned 'ref_sel' is never less than zero.
+Thank you,
+Claudiu Beznea
 
-vim +/ref_sel +833 drivers/iio/adc/ad7173.c
+Changes in v2:
+- patches 1/14 and 14/14 from v1 were integrated thus, didn't include
+  them in this version
+- dropped patch 3/14 "clk: renesas: rzg2l-cpg: Add support for MSTOP"
+  from v1 and associated changes; a follow up will be done on it after
+  the current series will be accepted
+- addressed review comments
+- fixed typos in commit title and description
+- collected tags
+- removed IEN functinality form patch 6/12 and added it in a separate patch
+  (patch 7/12)
+- patch 11/14] "arm64: renesas: rzg3s-smarc-som: Invert the logic for
+  SW_SD2_EN macro from" from v1 was replaced by patch 10/11 in this
+  version "arm64: renesas: rzg3s-smarc-som: Use switches' names
+  to select on-board functionalities"
 
-   735	
-   736	static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
-   737	{
-   738		struct ad7173_channel *channels_st_priv_arr, *chan_st_priv;
-   739		struct ad7173_state *st = iio_priv(indio_dev);
-   740		struct device *dev = indio_dev->dev.parent;
-   741		struct iio_chan_spec *chan_arr, *chan;
-   742		struct fwnode_handle *child;
-   743		unsigned int ain[2], chan_index = 0;
-   744		unsigned int num_channels;
-   745		const char *ref_label;
-   746		u32 ref_sel;
-   747		int ret;
-   748	
-   749		st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
-   750		st->regulators[1].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF2];
-   751		st->regulators[2].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_AVDD1_AVSS];
-   752	
-   753		/* If a regulator is not available, it will be set to a dummy regulator.
-   754		 * Each channel reference is checked with regulator_get_voltage() before
-   755		 *  setting attributes so if any channel uses a dummy supply the driver
-   756		 *  probe will fail.
-   757		 */
-   758		ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->regulators),
-   759					      st->regulators);
-   760		if (ret)
-   761			return dev_err_probe(dev, ret, "Failed to get regulators\n");
-   762	
-   763		ret = regulator_bulk_enable(ARRAY_SIZE(st->regulators), st->regulators);
-   764		if (ret)
-   765			return dev_err_probe(dev, ret, "Failed to enable regulators\n");
-   766	
-   767		ret = devm_add_action_or_reset(dev, ad7173_disable_regulators, st);
-   768		if (ret)
-   769			return dev_err_probe(dev, ret,
-   770					     "Failed to add regulators disable action\n");
-   771	
-   772		num_channels = device_get_child_node_count(dev);
-   773	
-   774		if (st->info->has_temp)
-   775			num_channels++;
-   776	
-   777		if (num_channels == 0)
-   778			return dev_err_probe(dev, -EINVAL, "No channels specified\n");
-   779		st->num_channels = num_channels;
-   780	
-   781		chan_arr = devm_kcalloc(dev, sizeof(*chan_arr), num_channels, GFP_KERNEL);
-   782		if (!chan_arr)
-   783			return -ENOMEM;
-   784	
-   785		channels_st_priv_arr = devm_kcalloc(dev, num_channels,
-   786						    sizeof(*channels_st_priv_arr),
-   787						    GFP_KERNEL);
-   788		if (!channels_st_priv_arr)
-   789			return -ENOMEM;
-   790	
-   791		indio_dev->channels = chan_arr;
-   792		indio_dev->num_channels = num_channels;
-   793		st->channels = channels_st_priv_arr;
-   794	
-   795		if (st->info->has_temp) {
-   796			chan_arr[chan_index] = ad7173_temp_iio_channel_template;
-   797			chan_st_priv = &channels_st_priv_arr[chan_index];
-   798			chan_st_priv->ain =
-   799				AD7173_CH_ADDRESS(chan_arr[chan_index].channel, chan_arr[chan_index].channel2);
-   800			chan_st_priv->cfg.bipolar = false;
-   801			chan_st_priv->cfg.input_buf = true;
-   802			chan_st_priv->cfg.ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-   803			st->adc_mode |= AD7173_ADC_MODE_REF_EN;
-   804	
-   805			chan_index++;
-   806		}
-   807	
-   808		device_for_each_child_node(dev, child) {
-   809			chan = &chan_arr[chan_index];
-   810			chan_st_priv = &channels_st_priv_arr[chan_index];
-   811			ret = fwnode_property_read_u32_array(child, "diff-channels",
-   812							     ain, ARRAY_SIZE(ain));
-   813			if (ret) {
-   814				fwnode_handle_put(child);
-   815				return ret;
-   816			}
-   817	
-   818			if (ain[0] >= st->info->num_inputs ||
-   819			    ain[1] >= st->info->num_inputs) {
-   820				fwnode_handle_put(child);
-   821				return dev_err_probe(dev, -EINVAL,
-   822						     "Input pin number out of range for pair (%d %d).\n",
-   823						     ain[0], ain[1]);
-   824			}
-   825	
-   826			ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-   827			ref_label = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_INT_REF];
-   828	
-   829			fwnode_property_read_string(child, "adi,reference-select",
-   830						    &ref_label);
-   831			ref_sel = match_string(ad7173_ref_sel_str,
-   832					       ARRAY_SIZE(ad7173_ref_sel_str), ref_label);
- > 833			if (ref_sel < 0) {
-   834				fwnode_handle_put(child);
-   835				return dev_err_probe(dev, -EINVAL,
-   836						     "Invalid channel reference name %s\n",
-   837						     ref_label);
-   838			}
-   839	
-   840			if (ref_sel == AD7173_SETUP_REF_SEL_EXT_REF2 &&
-   841			    st->info->id != AD7173_ID) {
-   842				fwnode_handle_put(child);
-   843				return dev_err_probe(dev, -EINVAL, "External reference 2 is only available on ad7173-8\n");
-   844			}
-   845	
-   846			ret = ad7173_get_ref_voltage_milli(st, ref_sel);
-   847			if (ret < 0) {
-   848				fwnode_handle_put(child);
-   849				return dev_err_probe(dev, ret,
-   850						     "Cannot use reference %u\n", ref_sel);
-   851			}
-   852			if (ref_sel == AD7173_SETUP_REF_SEL_INT_REF)
-   853				st->adc_mode |= AD7173_ADC_MODE_REF_EN;
-   854			chan_st_priv->cfg.ref_sel = ref_sel;
-   855	
-   856			*chan = ad7173_channel_template;
-   857			chan->address = chan_index;
-   858			chan->scan_index = chan_index;
-   859			chan->channel = ain[0];
-   860			chan->channel2 = ain[1];
-   861			chan->differential = true;
-   862	
-   863			chan_st_priv->ain = AD7173_CH_ADDRESS(ain[0], ain[1]);
-   864			chan_st_priv->chan_reg = chan_index;
-   865			chan_st_priv->cfg.input_buf = true;
-   866			chan_st_priv->cfg.odr = 0;
-   867	
-   868			chan_st_priv->cfg.bipolar = fwnode_property_read_bool(child, "bipolar");
-   869			if (chan_st_priv->cfg.bipolar)
-   870				chan->info_mask_separate |= BIT(IIO_CHAN_INFO_OFFSET);
-   871	
-   872			chan_index++;
-   873		}
-   874	
-   875		return 0;
-   876	}
-   877	
+Claudiu Beznea (11):
+  clk: renesas: rzg2l-cpg: Check reset monitor registers
+  clk: renesas: r9a08g045-cpg: Add clock and reset support for ETH0 and
+    ETH1
+  pinctrl: renesas: rzg2l: Move arg and index in the main function block
+  pinctrl: renesas: rzg2l: Add pin configuration support for pinmux
+    groups
+  pinctrl: renesas: rzg2l: Add support to select power source for
+    Ethernet pins
+  pinctrl: renesas: rzg2l: Add output enable support
+  pinctrl: renesas: rzg2l: Add input enable to the Ethernet pins
+  dt-bindings: net: renesas,etheravb: Document RZ/G3S support
+  arm64: renesas: r9a08g045: Add the Ethernet nodes
+  arm64: renesas: rzg3s-smarc-som: Use switches' names to select
+    on-board functionalities
+  arm64: dts: renesas: rzg3s-smarc-som: Enable the Ethernet interfaces
+
+ .../bindings/net/renesas,etheravb.yaml        |   1 +
+ arch/arm64/boot/dts/renesas/r9a08g045.dtsi    |  38 ++++
+ .../boot/dts/renesas/rzg3s-smarc-som.dtsi     | 173 ++++++++++++++++--
+ drivers/clk/renesas/r9a08g045-cpg.c           |  10 +
+ drivers/clk/renesas/rzg2l-cpg.c               |  59 ++++--
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c       | 164 +++++++++++++++--
+ 6 files changed, 398 insertions(+), 47 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.39.2
+
 
