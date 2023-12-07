@@ -1,123 +1,455 @@
-Return-Path: <linux-gpio+bounces-1098-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1099-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28DCB808915
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 14:24:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A9D380896A
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 14:45:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B2B2F2818DA
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 13:24:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C2A55B20C49
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 13:45:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4705405ED;
-	Thu,  7 Dec 2023 13:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BkX+5ZMl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1A1340BFE;
+	Thu,  7 Dec 2023 13:45:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.43])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 295ACAA;
-	Thu,  7 Dec 2023 05:24:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1701955440; x=1733491440;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=NyaA+nnXoQWzMmCkDluoshiTF/uj4vBECGOztPiEMCQ=;
-  b=BkX+5ZMlvtt4w5iDW9qDRKG995jUElR3xAn8U77VRx8NO9zPVOGQMtU5
-   bJxY03E4m8jqIHdA8Cha/ZHCUXXy+cbuKu5Z3AEUt7j/zegOwwbvCfWbh
-   fgQxMlY0iBZO2878mWnx9Kz/jN+QrimfnoyuVUA90x7AIIgNZHHObXZG4
-   Foz4n7PMh9+xGv9Zl0z+9JIwqHL7vb7pRusWXnzEkLcOKbKtDVkoSbV2r
-   EsogKuV4bG3hScIF6T2Qv8JxALaTPAL6IcxTmRhC0hMZg/iPd8rMiYGKK
-   uWpjnSWVIcot1ppaQ4MOyxHADEmhY0tCL9NFJdsJocEdjJaN38ECjOzBz
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="480418401"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.120])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7DEDFD5E;
+	Thu,  7 Dec 2023 05:45:22 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="393100094"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="480418401"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:14:29 -0800
+   d="scan'208";a="393100094"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:45:22 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10916"; a="895143152"
+X-IronPort-AV: E=McAfee;i="6600,9927,10917"; a="915589071"
 X-IronPort-AV: E=Sophos;i="6.04,256,1695711600"; 
-   d="scan'208";a="895143152"
+   d="scan'208";a="915589071"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:14:19 -0800
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Dec 2023 05:45:19 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rBECk-00000002bf1-3JAj;
-	Thu, 07 Dec 2023 15:14:14 +0200
-Date: Thu, 7 Dec 2023 15:14:14 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Jonathan =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	openbmc@lists.ozlabs.org, linux-mips@vger.kernel.org,
-	linux-arm-msm@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Paul Cercueil <paul@crapouillou.net>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Andy Gross <agross@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>
-Subject: Re: [PATCH v4 00/23] pinctrl: Convert struct group_desc to use
- struct pingroup
-Message-ID: <ZXHFJgs5y4RxhtBf@smile.fi.intel.com>
-References: <20231129161459.1002323-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdZhpXcx2FZYKM69j3x4dP5Nu-=3sXW+BQAw3k6c5aRrWw@mail.gmail.com>
- <ZW3m-KDhs39i0E5n@smile.fi.intel.com>
- <CACRpkdaDDJfDznGZE1OGNt0Rc6Wbh0-0suu6PgL+veJea9rBRQ@mail.gmail.com>
+	(envelope-from <andy@kernel.org>)
+	id 1rBEgn-00000002c3h-1M7R;
+	Thu, 07 Dec 2023 15:45:17 +0200
+Date: Thu, 7 Dec 2023 15:45:17 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: TY Chang <tychang@realtek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Message-ID: <ZXHMbZRXLXGa_tq8@smile.fi.intel.com>
+References: <20231207100723.15015-1-tychang@realtek.com>
+ <20231207100723.15015-3-tychang@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdaDDJfDznGZE1OGNt0Rc6Wbh0-0suu6PgL+veJea9rBRQ@mail.gmail.com>
+In-Reply-To: <20231207100723.15015-3-tychang@realtek.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 07, 2023 at 10:50:29AM +0100, Linus Walleij wrote:
-> On Mon, Dec 4, 2023 at 3:49 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Dec 04, 2023 at 03:38:43PM +0100, Linus Walleij wrote:
+On Thu, Dec 07, 2023 at 06:07:23PM +0800, TY Chang wrote:
+> From: Tzuyi Chang <tychang@realtek.com>
+> 
+> This driver enables configuration of GPIO direction, GPIO values, GPIO
+> debounce settings and handles GPIO interrupts.
+
+Why gpio-regmap can't be used?
 
 ...
 
-> > > >   pinctrl: core: Make pins const unsigned int pointer in struct
-> > > >     group_desc
-> > > >   pinctrl: equilibrium: Convert to use struct pingroup
-> > > >   pinctrl: keembay: Convert to use struct pingroup
-> > > >   pinctrl: nuvoton: Convert to use struct pingroup and
-> > > >     PINCTRL_PINGROUP()
-> >
-> > Hmm... Why these to be dropped?
-> 
-> I couldn't tell apart which ones could cross depend on the others,
-> simple as that...
+> +struct rtd_gpio_info {
 
-No problem as I have noticed a warning which had been fixed in a separate
-series I sent earlier and which you already applied today. Thanks!
+> +	u8			*dir_offset;
+> +	u8			num_dir;
+> +	u8			*dato_offset;
+> +	u8			num_dato;
+> +	u8			*dati_offset;
+> +	u8			num_dati;
+> +	u8			*ie_offset;
+> +	u8			num_ie;
+> +	u8			*dp_offset;
+> +	u8			num_dp;
+> +	u8			*gpa_offset;
+> +	u8			num_gpa;
+> +	u8			*gpda_offset;
+> +	u8			num_gpda;
+> +	u8			*deb_offset;
+> +	u8			num_deb;
+
+A lot of wasted space. Can you group pointers followed by u8 members?
+Note, use `pahole` tool to check the struct layout in C.
+
+> +};
+
+...
+
+> +struct rtd_gpio {
+> +	struct platform_device		*pdev;
+
+Why
+
+	struct device *dev;
+
+is not suffice?
+
+> +	const struct rtd_gpio_info	*info;
+> +	void __iomem			*base;
+> +	void __iomem			*irq_base;
+
+> +	struct gpio_chip		gpio_chip;
+
+Make this to be the first member, it might reduce some code
+(due to pointer arithmetics).
+
+> +	unsigned int			irqs[2];
+> +	spinlock_t			lock;
+> +};
+> +
+> +
+
+One blank line is enough.
+
+...
+
+> +static const struct rtd_gpio_info rtd_iso_gpio_info = {
+> +	.name		= "rtd_iso_gpio",
+> +	.type		= RTD_ISO_GPIO,
+> +	.gpio_base	= 0,
+> +	.num_gpios	= 82,
+> +	.dir_offset	= (u8 []){ 0x0, 0x18, 0x2c },
+> +	.num_dir	= 3,
+> +	.dato_offset	= (u8 []){ 0x4, 0x1c, 0x30 },
+> +	.num_dato	= 3,
+> +	.dati_offset	= (u8 []){ 0x8, 0x20, 0x34 },
+> +	.num_dati	= 3,
+> +	.ie_offset	= (u8 []){ 0xc, 0x24, 0x38 },
+> +	.num_ie		= 3,
+> +	.dp_offset	= (u8 []){ 0x10, 0x28, 0x3c },
+> +	.num_dp		= 3,
+> +	.gpa_offset	= (u8 []){ 0x8, 0xe0, 0x90 },
+> +	.num_gpa	= 3,
+> +	.gpda_offset	= (u8 []){ 0xc, 0xe4, 0x94 },
+> +	.num_gpda	= 3,
+> +	.deb_offset	= (u8 []){ 0x44, 0x48, 0x4c, 0x50, 0x54, 0x58, 0x5c,
+> +				   0x60, 0x64, 0x68, 0x6c },
+> +	.num_deb	= 11,
+
+Use ARRAY_SIZE() from array_size.h for all num_* assignments.
+
+> +};
+
+...
+
+> +static const struct rtd_gpio_info rtd1619_iso_gpio_info = {
+
+Ditto.
+
+> +};
+
+...
+
+> +static const struct rtd_gpio_info rtd1395_iso_gpio_info = {
+
+Ditto.
+
+> +};
+> +
+> +static const struct rtd_gpio_info rtd1295_misc_gpio_info = {
+
+Ditto.
+
+> +};
+> +
+> +static const struct rtd_gpio_info rtd1295_iso_gpio_info = {
+
+Ditto.
+
+> +};
+
+...
+
+> +static int rtd_gpio_dir_offset(struct rtd_gpio *data, unsigned int offset)
+> +{
+> +	int index = offset / 32;
+
+> +	if (index > data->info->num_dir)
+> +		return -EINVAL;
+
+When this conditional can be true?
+Same Q to the similar checks over the code.
+
+> +	return data->info->dir_offset[index];
+> +}
+
+...
+
+> +	if (data->info->type == RTD1295_ISO_GPIO) {
+> +		reg_offset = rtd_gpio_deb_offset(data, 0);
+> +		if (reg_offset < 0)
+> +			return reg_offset;
+> +		shift = 0;
+> +		deb_val += 1;
+> +		write_en = BIT(shift + 3);
+> +	} else if (data->info->type == RTD1295_MISC_GPIO) {
+> +		reg_offset = rtd_gpio_deb_offset(data, 0);
+> +		if (reg_offset < 0)
+> +			return reg_offset;
+> +		shift = (offset >> 4) * 4;
+> +		deb_val += 1;
+> +		write_en = BIT(shift + 3);
+> +	} else {
+> +		reg_offset = rtd_gpio_deb_offset(data, offset);
+> +		if (reg_offset < 0)
+> +			return reg_offset;
+> +		shift = (offset % 8) * 4;
+> +		write_en = BIT(shift + 3);
+> +	}
+
+You should probably have kind of chip_info constant structure that goes via
+driver_data and will have a callback, so, here you will call one and get all
+three at once:
+ - register offset;
+ - shift
+ - updated debounce value
+
+...
+
+> +static int rtd_gpio_get_direction(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	struct rtd_gpio *data = gpiochip_get_data(chip);
+> +	unsigned long flags;
+> +	int reg_offset;
+> +	u32 val;
+> +
+> +	reg_offset = rtd_gpio_dir_offset(data, offset);
+> +	if (reg_offset < 0)
+> +		return reg_offset;
+
+> +	spin_lock_irqsave(&data->lock, flags);
+
+So, is your IRQ chip going to work with CONFIG_PREEMT_RT?
+
+> +	val = readl_relaxed(data->base + reg_offset);
+
+> +	val &= BIT(offset % 32);
+
+Why this is is under lock?
+
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+> +}
+
+...
+
+> +static int rtd_gpio_set_direction(struct gpio_chip *chip, unsigned int offset, bool out)
+> +{
+
+> +	unsigned long flags;
+
+
+> +	spin_lock_irqsave(&data->lock, flags);
+
+
+> +	spin_unlock_irqrestore(&data->lock, flags);
+
+Consider to utilise guard() / scoped_guard() from cleanup.h.
+
+> +}
+
+...
+
+> +static int rtd_gpio_direction_output(struct gpio_chip *chip, unsigned int offset, int value)
+> +{
+
+> +	chip->set(chip, offset, value);
+
+Why? Can't you call the function by its name directly?
+
+> +
+> +	return rtd_gpio_set_direction(chip, offset, true);
+> +}
+
+...
+
+> +static int rtd_gpio_get(struct gpio_chip *chip, unsigned int offset)
+> +{
+> +	struct rtd_gpio *data = gpiochip_get_data(chip);
+> +	int dir_reg_offset, dat_reg_offset;
+> +	unsigned long flags;
+> +	u32 val;
+> +
+> +	dir_reg_offset = rtd_gpio_dir_offset(data, offset);
+> +	if (dir_reg_offset < 0)
+> +		return dir_reg_offset;
+> +
+> +	spin_lock_irqsave(&data->lock, flags);
+> +
+> +	val = readl_relaxed(data->base + dir_reg_offset);
+> +	val &= BIT(offset % 32);
+
+> +	dat_reg_offset = val ?
+> +			 rtd_gpio_dato_offset(data, offset) : rtd_gpio_dati_offset(data, offset);
+
+Can't you have the direction be cached and already know which offset to use
+even before the lock?
+
+> +	val = readl_relaxed(data->base + dat_reg_offset);
+
+> +	val >>= offset % 32;
+> +	val &= 0x1;
+
+Why were these operations done under the lock?
+
+> +	spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return val;
+> +}
+
+...
+
+> +static void rtd_gpio_irq_handle(struct irq_desc *desc)
+> +{
+> +	int (*get_reg_offset)(struct rtd_gpio *gpio, unsigned int offset);
+> +	struct rtd_gpio *data = irq_desc_get_handler_data(desc);
+> +	struct irq_domain *domain = data->gpio_chip.irq.domain;
+> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+> +	unsigned int irq = irq_desc_get_irq(desc);
+> +	int reg_offset;
+> +	u32 status;
+
+> +	int hwirq;
+
+Why signed?
+
+> +	int i;
+> +	int j;
+> +
+> +	chained_irq_enter(chip, desc);
+
+> +	if (irq == data->irqs[0])
+> +		get_reg_offset = &rtd_gpio_gpa_offset;
+> +	else if (irq == data->irqs[1])
+> +		get_reg_offset = &rtd_gpio_gpda_offset;
+
+Can't it be done before entering into chained IRQ handler?
+
+> +	for (i = 0; i < data->info->num_gpios; i = i + 31) {
+
+31 ?!  In any case i += 31 is simply shorter.
+
+> +		reg_offset = get_reg_offset(data, i);
+> +		if (reg_offset < 0)
+> +			return;
+> +
+> +		status = readl_relaxed(data->irq_base + reg_offset) >> 1;
+> +		writel_relaxed(status << 1, data->irq_base + reg_offset);
+
+> +		while (status) {
+> +			j = __ffs(status);
+> +			status &= ~BIT(j);
+
+NIH for_each_set_bit()
+
+> +			hwirq = i + j;
+> +			if (rtd_gpio_check_ie(data, hwirq)) {
+> +				int girq = irq_find_mapping(domain, hwirq);
+> +				u32 irq_type = irq_get_trigger_type(girq);
+> +
+> +				if ((irq == data->irqs[1]) && ((irq_type & IRQ_TYPE_SENSE_MASK) !=
+> +					IRQ_TYPE_EDGE_BOTH))
+> +					break;
+
+> +				generic_handle_irq(girq);
+
+Why you can't use generic_handle_domain_irq()?
+
+> +			}
+> +		}
+> +	}
+> +
+> +	chained_irq_exit(chip, desc);
+> +}
+
+...
+
+> +	u32 mask = BIT(d->hwirq % 32);
+
+Use proper type and getter for hwirq. It's mentioned in the Documentation.
+
+...
+
+> +static const struct irq_chip rtd_gpio_irq_chip = {
+> +	.name = "rtd-gpio",
+> +	.irq_enable = rtd_gpio_enable_irq,
+> +	.irq_disable = rtd_gpio_disable_irq,
+> +	.irq_set_type = rtd_gpio_irq_set_type,
+
+> +	.flags = IRQCHIP_IMMUTABLE,
+
+Is it? You seems missed something to fulfill the immutability requirements.
+Please consult with the Documentation, it's all written there.
+
+> +};
+
+...
+
+> +static const struct of_device_id rtd_gpio_of_matches[] = {
+> +	{ .compatible = "realtek,rtd1295-misc-gpio", .data = &rtd1295_misc_gpio_info },
+> +	{ .compatible = "realtek,rtd1295-iso-gpio", .data = &rtd1295_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1395-iso-gpio", .data = &rtd1395_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1619-iso-gpio", .data = &rtd1619_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1319-iso-gpio", .data = &rtd_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1619b-iso-gpio", .data = &rtd_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1319d-iso-gpio", .data = &rtd_iso_gpio_info },
+> +	{ .compatible = "realtek,rtd1315e-iso-gpio", .data = &rtd_iso_gpio_info },
+
+> +	{ },
+
+No comma in the terminator entry.
+
+> +};
+> +MODULE_DEVICE_TABLE(of, rtd_gpio_of_matches);
+
+Move all these closer to its user (struct platform_device below).
+
+...
+
+> +	data->gpio_chip.label = dev_name(&pdev->dev);
+
+dev
+
+...
+
+> +	data->gpio_chip.fwnode = dev_fwnode(&pdev->dev);
+
+dev
+
+But why setting parent device is not suffice?
+
+...
+
+> +static int rtd_gpio_init(void)
+> +{
+> +	return platform_driver_register(&rtd_gpio_platform_driver);
+> +}
+
+> +
+
+Unneeded blank line.
+
+> +subsys_initcall(rtd_gpio_init);
+
+Why? Anything that is not on standard initcall must be justified.
 
 -- 
 With Best Regards,
