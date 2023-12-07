@@ -1,30 +1,30 @@
-Return-Path: <linux-gpio+bounces-1094-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1095-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3DCE808527
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 11:08:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E4EA808529
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 11:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4F2B1C2135A
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 10:08:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E780B1F2271E
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Dec 2023 10:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ECD735297;
-	Thu,  7 Dec 2023 10:08:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62BC93529E;
+	Thu,  7 Dec 2023 10:08:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFCB8193;
-	Thu,  7 Dec 2023 02:08:02 -0800 (PST)
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3B7A7mB32077970, This message is accepted by code: ctloc85258
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 76B8A133;
+	Thu,  7 Dec 2023 02:08:03 -0800 (PST)
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3B7A7nB52077970, This message is accepted by code: ctloc85258
 Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3B7A7mB32077970
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3B7A7nB52077970
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 7 Dec 2023 18:07:48 +0800
+	Thu, 7 Dec 2023 18:07:49 +0800
 Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
  RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2375.32; Thu, 7 Dec 2023 18:07:48 +0800
+ 15.1.2375.32; Thu, 7 Dec 2023 18:07:49 +0800
 Received: from RTEXH36506.realtek.com.tw (172.21.6.27) by
  RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
@@ -43,10 +43,12 @@ To: Linus Walleij <linus.walleij@linaro.org>,
         Conor Dooley <conor+dt@kernel.org>
 CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, TY Chang <tychang@realtek.com>
-Subject: [PATCH v3 0/2] Add gpio driver support for Realtek DHC SoCs
-Date: Thu, 7 Dec 2023 18:07:21 +0800
-Message-ID: <20231207100723.15015-1-tychang@realtek.com>
+Subject: [PATCH v3 1/2] dt-bindings: gpio: realtek: Add realtek,rtd-gpio
+Date: Thu, 7 Dec 2023 18:07:22 +0800
+Message-ID: <20231207100723.15015-2-tychang@realtek.com>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231207100723.15015-1-tychang@realtek.com>
+References: <20231207100723.15015-1-tychang@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,37 +66,99 @@ X-KSE-AntiSpam-Interceptor-Info: fallback
 X-KSE-Antivirus-Interceptor-Info: fallback
 X-KSE-AntiSpam-Interceptor-Info: fallback
 
-These patches add the bindings and the gpio driver for Realtek
-DHC(Digital Home Center) RTD SoCs, including RTD1295, RTD1395,
-RTD1619, RTD1319, RTD1619B, RTD1319D and RTD1315E.
+From: Tzuyi Chang <tychang@realtek.com>
 
-Change log:
-v2->v3:
-1. Remove generic compatible and use SoC-specific compatible instead.
-2. Add the missing descriptions for the rtd_gpio_info structure members.
-3. Assign gpio_chip fwnode.
-v1->v2:
-1. Add description for DHC RTD SoCs in the bindings.
-2. Revise the compatible names in the bindings.
-3. Transitioned from OF API to platform_device API.
-4. Use u8 for the offset array within the rtd_gpio_info structure.
-5. Record the size of each array within the rtd_gpio_info structure and
-   implement checks to prevent out-of-bounds access.
-6. Use GPIOLIB_IRQCHIP helpers to register interrupts.
-7. Use dynamic allocation for GPIO base.
+Add the device tree bindings for the Realtek DHC(Digital Home Center)
+RTD SoCs GPIO controllers.
 
-Tzuyi Chang (2):
-  dt-bindings: gpio: realtek: Add realtek,rtd-gpio
-  Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
-
- .../bindings/gpio/realtek,rtd-gpio.yaml       |  69 ++
- drivers/gpio/Kconfig                          |   9 +
- drivers/gpio/Makefile                         |   1 +
- drivers/gpio/gpio-rtd.c                       | 748 ++++++++++++++++++
- 4 files changed, 827 insertions(+)
+Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+---
+v2 to v3 change:
+    1. Remove generic compatible and use SoC-specific compatible instead.
+v1 to v2 change:
+    1. Add description for DHC RTD SoCs.
+    2. Revise the compatible names.
+    3. Add descriptions for reg and interrupts properties.
+---
+ .../bindings/gpio/realtek,rtd-gpio.yaml       | 69 +++++++++++++++++++
+ 1 file changed, 69 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
- create mode 100644 drivers/gpio/gpio-rtd.c
 
+diff --git a/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+new file mode 100644
+index 000000000000..984e7dbd322e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+@@ -0,0 +1,69 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++# Copyright 2023 Realtek Semiconductor Corporation
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/realtek,rtd-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Realtek DHC GPIO controller
++
++maintainers:
++  - Tzuyi Chang <tychang@realtek.com>
++
++description:
++  The GPIO controller is designed for the Realtek DHC (Digital Home Center)
++  RTD series SoC family, which are high-definition media processor SoCs.
++
++properties:
++  compatible:
++    enum:
++      - realtek,rtd1295-misc-gpio
++      - realtek,rtd1295-iso-gpio
++      - realtek,rtd1395-iso-gpio
++      - realtek,rtd1619-iso-gpio
++      - realtek,rtd1319-iso-gpio
++      - realtek,rtd1619b-iso-gpio
++      - realtek,rtd1319d-iso-gpio
++      - realtek,rtd1315e-iso-gpio
++
++  reg:
++    items:
++      - description: GPIO controller registers
++      - description: GPIO interrupt registers
++
++  interrupts:
++    items:
++      - description: Interrupt number of the assert GPIO interrupt, which is
++                     triggered when there is a rising edge.
++      - description: Interrupt number of the deassert GPIO interrupt, which is
++                     triggered when there is a falling edge.
++
++  gpio-ranges: true
++
++  gpio-controller: true
++
++  "#gpio-cells":
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - gpio-ranges
++  - gpio-controller
++  - "#gpio-cells"
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@100 {
++      compatible = "realtek,rtd1319d-iso-gpio";
++      reg = <0x100 0x100>,
++            <0x000 0x0b0>;
++      interrupt-parent = <&iso_irq_mux>;
++      interrupts = <19>, <20>;
++      gpio-ranges = <&pinctrl 0 0 82>;
++      gpio-controller;
++      #gpio-cells = <2>;
++    };
 -- 
 2.43.0
 
