@@ -1,183 +1,125 @@
-Return-Path: <linux-gpio+bounces-1110-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1111-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCD2B809DEE
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 09:13:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 27627809E56
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 09:37:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88651281610
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 08:13:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CE5592817CA
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 08:37:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AB61097A;
-	Fri,  8 Dec 2023 08:13:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6345B63C9;
+	Fri,  8 Dec 2023 08:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wq71ZEEr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gZ5RtFhk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B46D1721
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 00:13:29 -0800 (PST)
-Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-4b2d237ab87so541721e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 00:13:29 -0800 (PST)
+Received: from mail-wm1-x330.google.com (mail-wm1-x330.google.com [IPv6:2a00:1450:4864:20::330])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A3F49BA
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 00:37:01 -0800 (PST)
+Received: by mail-wm1-x330.google.com with SMTP id 5b1f17b1804b1-40c09f4bea8so19772645e9.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 00:37:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702023208; x=1702628008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=r54JKG3RSzzY1woO7RL5tT6pxy8wH9NW+BZSfr3Ygqo=;
-        b=wq71ZEErxMbwkw8TnsfOxjarVku6DUipKZm1+yy4QXf0DXUm2HmnLRVT0nRAfIsusR
-         olIoWHgB88zAdMSR1R50R4/Q31W/Ljm4GvcRQzLV1Hk2/kNozFnhrmAoqAOSOl42rrOb
-         ZmN+MIMezJ0MIVS4yAeF+xQJHdqjV79sJd6hd3UpZ1v6e86O0ZZa6+FkBissuuXGoepU
-         EAus6FNp3/CmS6CWT3AsfDKHyVqCTZFwudSAqk6gbWr6Ws6xPQ1ikYNmnigHGP0RP6wX
-         s5YxgOGTeu/yfC4q0cD+MuZZmyGZUdMQwrG4wcTjYQylBP4ZlEqQI8q46w0xIdWTDFNV
-         nPFw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702024620; x=1702629420; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=wNfU9DBaDJWRRxmgHYFx4nHbGgVZAwp+QKmlmlzyeuQ=;
+        b=gZ5RtFhk197PCmeKXMy761pH5NclNaCp6XuJvUumzJR9BF8Ok3lhhAt5/QioDaMwoK
+         eh+/B3d8TivCVwz8DLqnK4MmI7svyW3R8nUVzxhz51Ixs7iDlA+sm1p9iFdP7YR1q4Qw
+         PCeCgS1L37XeXlHF4wKMDPGxGc0Teh6llHyOPJ2t286FJdqS5qlhLE2oMlblOWUEbrAy
+         /xwATJH5i2SfDP91y7JyLYILjcyngt6CnGnXBcfQIQHvxxNikfagvKVAoWoxn4JGpziM
+         uLUcPF2gnauTrnWIcLhL5Dy267NT8bFbPWUvGd12J5/i+8tQCFmdW5t5cdm6jVDZgeDh
+         RgMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702023208; x=1702628008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=r54JKG3RSzzY1woO7RL5tT6pxy8wH9NW+BZSfr3Ygqo=;
-        b=kX/zVU58p167i8AF6yaS3T3D/s3QH5919wzY1Kw5oaxum6dg4oSlB7+V+ZoyMHxmQG
-         ejJDGi7F5UwoE+tSHfup8VfvAERWU4mJtEJns1AwV4xcIuX/FwbF4GKjqjcy9EMRzcE7
-         oiJ7OyKRXk872StwC6ehgKHZ+PqlY4bFsL1wYSJrEVPLX7mpomJVpFc3rrYO9RPtoVbH
-         MAFkmmLs7mEVuR/gyh2XgfdthMDBvTA88mMyo3knmIYWz0U2z5+TB/6Uitc3ksXzElBw
-         9oaN6mNOmp2bIJc0hLUydjDYrLMWDEbsNP25UPX0xp8BAuvIf0djOXZAuC2hcaKaX5xL
-         d2iA==
-X-Gm-Message-State: AOJu0YyJNycOzIiwBs6TuGFtX47oAE8zaOeE8WF7NtHJ711uAoSYZ25A
-	t0I3DvaD6n/Lpbg/cFbH3NylgQf7kt2jOlFiPLNQ6Q==
-X-Google-Smtp-Source: AGHT+IFPgKz9YSc8YN8/BhVndKW7SIljM4vGdQZWz37K5dCrj2tJcC5pRcib60s3af6NaEOxglSn+UcPg/SjBaLPJ+U=
-X-Received: by 2002:a05:6102:32cc:b0:465:d9da:ab11 with SMTP id
- o12-20020a05610232cc00b00465d9daab11mr4452471vss.59.1702023208444; Fri, 08
- Dec 2023 00:13:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702024620; x=1702629420;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=wNfU9DBaDJWRRxmgHYFx4nHbGgVZAwp+QKmlmlzyeuQ=;
+        b=dqWg4XkP4vVhZDTCfNmhxW3CWEcw0nBqlYUnozg4Z4SAkWLsohEv9xL5Nela7jXmrk
+         gAGN1QU1rqVmZM4m/70epdkwVcpYUB8PCDew4jAYC7IbNGvX9sBlwOC4S7agDhRWhj86
+         KCzNv5J+tygWe7fG51O6XJS7TnEH+gZn+4w85tXEjPQgoOeQjzTP8MoAlIjtteFghLkG
+         7WO4fzpFkY/pe60hu9qkb+EekhvYjchpW2SktlnbWNaYnjPlh+QdoivfZsUiyFX5sXvD
+         DZhTNOoUUpOi5N0Mae6dwoR6nc6QKv55XSETmyP0hKwhfzVwSmtSb/o14z30TkyqPflJ
+         uAaw==
+X-Gm-Message-State: AOJu0YxcNH/sSdV2RIcZBTpEzTOwVC/He2tUEPnpSyLjj/4UAeDeIIDM
+	MUWHlT1ylGh2grHotuFkSYFM/w==
+X-Google-Smtp-Source: AGHT+IFTDanBKxnNxQj3jzP20OiOzKn2N0tR8XTkfJOvIBTmyMTeK2zrzuve+Z4+WUb6UkIgGVs/JA==
+X-Received: by 2002:a05:600c:3093:b0:40b:5e59:da99 with SMTP id g19-20020a05600c309300b0040b5e59da99mr2355770wmn.172.1702024619510;
+        Fri, 08 Dec 2023 00:36:59 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:b162:2510:4488:c0c3])
+        by smtp.gmail.com with ESMTPSA id bi11-20020a05600c3d8b00b0040c2963e5f3sm2113880wmb.38.2023.12.08.00.36.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 00:36:59 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: immutable branch between the GPIO and pinctrl trees for v6.8-rc1
+Date: Fri,  8 Dec 2023 09:36:50 +0100
+Message-Id: <20231208083650.25015-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
- <ZWFN8RVUy7Vx72CE@rigel> <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
- <ZWKL4r9DREwYjnyo@rigel> <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
- <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com> <ZXJq2zGjBT0yQAXv@rigel>
-In-Reply-To: <ZXJq2zGjBT0yQAXv@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 8 Dec 2023 09:13:17 +0100
-Message-ID: <CAMRc=MemJobowO_+FFaF0r6OGx1cWTc899A5yPzR+q+2=rwADA@mail.gmail.com>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Dec 8, 2023 at 2:01=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Thu, Dec 07, 2023 at 07:37:54PM +0100, Bartosz Golaszewski wrote:
-> > On Tue, Nov 28, 2023 at 11:47=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
-v.pl> wrote:
-> > >
-> >
-> > [snip]
-> >
-> > >
-> > > Because years of technical debt, that's why. :)
-> > >
-> >
-> > Speaking of technical debt: you may have noticed that despite stating
-> > I'm almost done last week, I still haven't submitted my locking
-> > rework.
-> >
-> > The reason for that is that I'm stuck on some corner-cases related to
-> > the GPIO <-> pinctrl interaction. Specifically the fact that we have
-> > GPIOLIB API functions that may be called from atomic context which may
-> > end up calling into pinctrl where a mutex will be acquired.
-> >
->
-> To be clear, that is an existing pinctrl mutex?
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes, I'm talking about pctldev->mutex. TBH set_config IMO should never
-be called from atomic context but that's already there and will be
-hard to change it now. :(
+Linus, Andy,
 
->
-> > An example of that is any of the GPIO chips that don't set the
-> > can_sleep field in struct gpio_chip but still use
-> > gpiochip_generic_config() (e.g. tegra186). We can then encounter the
-> > following situation:
-> >
-> > irq_handler() // in atomic context
-> >   gpiod_direction_output() // line is open-drain
-> >     gpio_set_config()
-> >       gpiochip_generic_config()
-> >         pinctrl_gpio_set_config()
-> >           mutex_lock()
-> >
->
-> Isn't using a mutex (the pinctrl one here) from atomic always a
-> problem?  Shouldn't this flow be handed off to irq_thread()?
->
-
-This is a corner-case. Typically we won't be calling gpio_set_config()
-from gpiod_direction_output(). This only happens if the line has
-special config like open-source/open-drain. Any other places where we
-may end up calling into pinctrl is request() and free() and those
-already might sleep.
-
-> > Currently we don't take any locks nor synchronize in any other way
-> > (which is wrong as concurrent gpiod_direction_output() and
-> > gpiod_direction_input() will get in each other's way). Using a mutex
-> > will be fine but for non-sleeping chips if we use a spinlock here (no
-> > other choice really) we'll set off fireworks.
-> >
-> > One of the ideas I have is using the fact that we already use atomic
-> > bitops in most places. Let's not take locks but add a new flag:
-> > FLAG_SETTING_DIRECTION. Now when we go into
-> > gpiod_direction_output/input(), we test and set it. A subsequent call
-> > will fail with EBUSY or EAGAIN as long as it's set. It will have no
-> > effect on set/get() - any synchronization will be left to the driver.
-> > When we're done, we clear it after setting the relevant direction
-> > flag.
-> >
-> > Does this make any sense? There's still the label pointer and debounce
-> > period stored in the descriptor but these are not accessed in atomic
-> > context AFAICT.
-> >
->
-> Makes sense to me, as it is basically the sub-state solution I suggested
-> earlier for request/release, but applied to direction.  Not sure about
-> the contention behaviour though, as that is something userspace will
-> see and might not be expecting.
->
-
-User-space will never call from atomic context. We could potentially
-use a work-queue here even for sleeping chips and serialize the
-operations
-
-> OTOH I'm starting to think that serialising callbacks might be a good ide=
-a
-> - unless it is crystal clear to the driver authors that the callbacks may
-> be called concurrently.
-
-This was my initial idea: use mutex for sleeping chips, spinlock for
-non-sleeping ones and make it possible for drivers to disable locking
-entirely. Except that we cannot use spinlock for chips interacting
-with pinctrl at all even if they can never sleep. :/
-
->
-> The debounce is really a cdev field.  Putting it in the desc made sense
-> to me at the time as it is per-line, not per-request, but perhaps it
-> should moved into the cdev linereq, even if that means having to alloc
-> space for it, just to get it out of your hair.
->
-
-This sounds good actually.
+Please pull the following changes into your trees for the next merge window.
+These are the patches providing a safer alternative for gpiochip_is_requested()
+before we rework the locking in GPIOLIB.
 
 Bart
 
-> Cheers,
-> Kent.
+The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa86:
+
+  Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio-remove-gpiochip_is_requested-for-v6.8-rc1
+
+for you to fetch changes up to f8d05e276b45e3097dfddd628fa991ce69c05c99:
+
+  gpiolib: remove gpiochip_is_requested() (2023-12-08 09:26:43 +0100)
+
+----------------------------------------------------------------
+gpio: remove gpiochip_is_requested()
+
+- provide a safer alternative to gpiochip_is_requested()
+- convert all existing users
+- remove gpiochip_is_requested()
+
+----------------------------------------------------------------
+Bartosz Golaszewski (10):
+      gpiolib: provide gpiochip_dup_line_label()
+      gpio: wm831x: use gpiochip_dup_line_label()
+      gpio: wm8994: use gpiochip_dup_line_label()
+      gpio: stmpe: use gpiochip_dup_line_label()
+      pinctrl: abx500: use gpiochip_dup_line_label()
+      pinctrl: nomadik: use gpiochip_dup_line_label()
+      pinctrl: baytrail: use gpiochip_dup_line_label()
+      pinctrl: sppctl: use gpiochip_dup_line_label()
+      gpiolib: use gpiochip_dup_line_label() in for_each helpers
+      gpiolib: remove gpiochip_is_requested()
+
+ drivers/gpio/gpio-stmpe.c                 |  6 ++++-
+ drivers/gpio/gpio-wm831x.c                | 14 +++++++----
+ drivers/gpio/gpio-wm8994.c                | 13 +++++++----
+ drivers/gpio/gpiolib.c                    | 35 ++++++++++++++++-----------
+ drivers/pinctrl/intel/pinctrl-baytrail.c  | 11 +++++----
+ drivers/pinctrl/nomadik/pinctrl-abx500.c  |  9 +++++--
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c |  6 ++++-
+ drivers/pinctrl/sunplus/sppctl.c          | 10 ++++----
+ include/linux/gpio/driver.h               | 39 ++++++++++++++++++++++++-------
+ 9 files changed, 96 insertions(+), 47 deletions(-)
 
