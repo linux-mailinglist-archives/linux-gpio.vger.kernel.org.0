@@ -1,175 +1,136 @@
-Return-Path: <linux-gpio+bounces-1126-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1127-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B5D880A56E
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 15:28:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 548AF80A5D9
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 15:47:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3860281BEA
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:28:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7BF321C20D83
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:47:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E3401DFFD;
-	Fri,  8 Dec 2023 14:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18EBF1E48B;
+	Fri,  8 Dec 2023 14:47:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcKxEqDW"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MLaDttHA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4551738
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 06:27:56 -0800 (PST)
-Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-67a948922aaso11457416d6.3
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 06:27:56 -0800 (PST)
+Received: from mail-yb1-xb31.google.com (mail-yb1-xb31.google.com [IPv6:2607:f8b0:4864:20::b31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9F27E1720
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 06:47:12 -0800 (PST)
+Received: by mail-yb1-xb31.google.com with SMTP id 3f1490d57ef6-dbc1efc23f7so2189195276.2
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 06:47:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702045675; x=1702650475; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702046832; x=1702651632; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Y6tktGOmflBDjrD9owZW8jUp+CHgDfz/rbbtd4HS0Vg=;
-        b=AcKxEqDWB30LUoTaGIxcjeHFnrqK0ABDkGOsbov3A8vTm7Yu0yQN4qekM/aJ3VZCTE
-         nLWAGgtMYfDRmp7PU6nIwXuMxNejq7Hfg7LcbWjUXy9v3SnN4oeh6MsrFkxMTFiEQOup
-         AL5QxcW08YlnSsJo9Px8vfcIcnigzDTGsCNdxrw5PzVjlcO4IC+LdDs63y+Wnb59j7jP
-         FrEGejWh+Ywqw9qu/8UU5G62cN6+Sm+jDrU+LIEBik8tIDucfg7YXChDmYlaJKN1fYsZ
-         D1E0HKOOQfN+giKLigY/J6X7KozqnbF7hwSR1JgDKI+RjdRr6OnGCJezZ5X6xFIlxUeb
-         Wjfw==
+        bh=0/60tlL0sJYx8SdIBiTTw8wU2Z45ejr+talAnqSSdr4=;
+        b=MLaDttHAVQtkUwObPvJS1qd/vOqwdSGw4dc5xLrcESVbqvfL2nnPA8Q2pqJQlaQD6c
+         oOrMMcexIWxcCZqdIrZSPpovvyBVVk5xCrHtHfP2VfCJoDk/2ghIIoNVaPjgA/buxzou
+         D+YvKKj48ZFyslqN2GePiHjiO7XOdFP1J+01PEVAi9ZCwOui+8e8PfWPPoC65Bq5d1nJ
+         feGyaNyyVMpGSs6hlRJ1x3Fq23yVYZmSXn6vNV0andytC7S49GMSz3NutAf5kMHyYgFE
+         c+PiQnFMFVaBCfb+HPbxfIvhoAsrGH3G0CVhkm14wqSozET96SPgyXiqgkH79oKW77JW
+         QXag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702045675; x=1702650475;
+        d=1e100.net; s=20230601; t=1702046832; x=1702651632;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Y6tktGOmflBDjrD9owZW8jUp+CHgDfz/rbbtd4HS0Vg=;
-        b=bztJZyABinrrbDslT3HbHsFFdYv2U0SqpznAQ0cr3fBVx/fyCGyD+0XHvqZOP3oY/I
-         z/WTrQp3U0Hoi6+mehfbMPtypyPT4WZdS4aum8awlg7JsbHt1tPufu2lVVFOJ2KVxoNb
-         s8al+v503NZ7EX3GOo3iMsBcFPDgFcIn4tfX8RlglrmJEwehg5F6SMo+kSIud4LeLEi8
-         yBeeSFH+nMgfH2ALH9bJ45hqOAABmzo0pbWrV1Z7wkoemXN2gxMPSVWcjPMRDQnWxf3O
-         a99DE3YHJBL7OP1/XlkVKojq09zNQqirNqGRUUuay4SHBo7GOPYC428sr2ZQ8nCqhrD6
-         a2Mg==
-X-Gm-Message-State: AOJu0YwtJ2yyDXAUma9s5Pq9jBuIlCYeiowJDscau15dDTgkVwiAmIRI
-	DAso/h5OFtOZFK2hN9rrOV7i6U9lLWvuzZtYPikeSg==
-X-Google-Smtp-Source: AGHT+IGbiA6FsS80GfwV+c82tNjaevxVqMuJe5EJncnQTyRiVvDHSd4AgX2BqsQb6YkJ2YjyEjuCQy/avC/S0mz+amg=
-X-Received: by 2002:ad4:5695:0:b0:67a:a721:e150 with SMTP id
- bd21-20020ad45695000000b0067aa721e150mr16777qvb.125.1702045675625; Fri, 08
- Dec 2023 06:27:55 -0800 (PST)
+        bh=0/60tlL0sJYx8SdIBiTTw8wU2Z45ejr+talAnqSSdr4=;
+        b=S3NJSG3aM+Fj8qS/gHwxGGEvgdMnEUe6dXQOAEz1PPcPJTzdajymBCRWjQTyqZz4UA
+         7FehlO/PoP603me7WMZfjSvVlJhDIaNDstz1j930L2gYUHF85vgQXXlev4M2teXivYnS
+         Evn9PJWd86MkEN01N2yvGz0EZgSBrRA5NGUWij8qSpdLNw1LStYYxqcrb5gIEEm69+VC
+         QztQX95sifGI6L2mlBHeVaV29qw/oBDBVHJNhJZcUEdQsnx7wCYP+1rq1gPwuzlMTetU
+         x+0MQRwnA8zwBDn3oJTLs8qDuTrA/b7aMbVnRBO3f8A8b8+g9bLZxtHDZK/scMrqxuwk
+         MsXg==
+X-Gm-Message-State: AOJu0Yzq7XGSUJP2hr2qEdK2o9bluiRsx693/QJEjTEPNJIomsJ4810t
+	h4aJj9srjzSqbkfv0MAmaDaxfwjtOqwlCSifBnA7dg==
+X-Google-Smtp-Source: AGHT+IEi5a9mkKhIEe4DuZ82Ml6zaAnbgVXU4T51mvwgiyoXcc9waX0S515GLgDdPFahy/kbGKBk2XYABMmUQowzkUM=
+X-Received: by 2002:a25:42c9:0:b0:db7:dad0:76b5 with SMTP id
+ p192-20020a2542c9000000b00db7dad076b5mr18289yba.81.1702046831856; Fri, 08 Dec
+ 2023 06:47:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231201160925.3136868-1-peter.griffin@linaro.org>
- <20231201160925.3136868-13-peter.griffin@linaro.org> <20bf05b9d9ccc5c11ef17500ac7a97c46dd46a9a.camel@linaro.org>
-In-Reply-To: <20bf05b9d9ccc5c11ef17500ac7a97c46dd46a9a.camel@linaro.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Fri, 8 Dec 2023 14:27:44 +0000
-Message-ID: <CADrjBPr_sv29Dc3F-4wVvH_N+qU6509kvHqkyZG==Q1RRpi5gA@mail.gmail.com>
-Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
- and cmu_apm support
-To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
-	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
-	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
-	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
-	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
-	tudor.ambarus@linaro.org, semen.protsenko@linaro.org, saravanak@google.com, 
-	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
-	linux-serial@vger.kernel.org
+References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
+ <ZWFN8RVUy7Vx72CE@rigel> <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
+ <ZWKL4r9DREwYjnyo@rigel> <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
+ <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
+ <CACRpkdb06kOV82Ssyv4ERPbRorbwj9QdpZtHAEVDv6GMGMhFOA@mail.gmail.com> <ZXMgmhTioEQ78Xeq@orome.fritz.box>
+In-Reply-To: <ZXMgmhTioEQ78Xeq@orome.fritz.box>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 8 Dec 2023 15:47:00 +0100
+Message-ID: <CAMRc=MeB9noBavBRiuKZf_6iWZJY0+ZG=n+ddGOs+TVavvuEfQ@mail.gmail.com>
+Subject: Re: GPIOLIB locking is broken and how to fix it
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Kent Gibson <warthog618@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andr=C3=A9,
-
-Thanks for the review
-
-On Mon, 4 Dec 2023 at 17:51, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
-wrote:
+On Fri, Dec 8, 2023 at 2:56=E2=80=AFPM Thierry Reding <thierry.reding@gmail=
+.com> wrote:
 >
-> On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
-> > cmu_top is the top level clock management unit which contains PLLs, mux=
-es,
-> > dividers and gates that feed the other clock management units.
+> On Fri, Dec 08, 2023 at 02:12:45PM +0100, Linus Walleij wrote:
+> > On Thu, Dec 7, 2023 at 7:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
 > >
-> > cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
-> > APM module.
+> > > The reason for that is that I'm stuck on some corner-cases related to
+> > > the GPIO <-> pinctrl interaction. Specifically the fact that we have
+> > > GPIOLIB API functions that may be called from atomic context which ma=
+y
+> > > end up calling into pinctrl where a mutex will be acquired.
 > >
-> > Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> > Tested-by: Will McVicker <willmcvicker@google.com>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> >  drivers/clk/samsung/Makefile    |    1 +
-> >  drivers/clk/samsung/clk-gs101.c | 2495 +++++++++++++++++++++++++++++++
-> >  2 files changed, 2496 insertions(+)
-> >  create mode 100644 drivers/clk/samsung/clk-gs101.c
+> > OK I see the problem.
 > >
-> > diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefil=
-e
-> > index ebbeacabe88f..3056944a5a54 100644
-> > --- a/drivers/clk/samsung/Makefile
-> > +++ b/drivers/clk/samsung/Makefile
-> > @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)       +=3D clk-=
-exynos7.o
-> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos7885.o
-> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos850.o
-> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynosautov9.o
-> > +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-gs101.o
-> >  obj-$(CONFIG_S3C64XX_COMMON_CLK)     +=3D clk-s3c64xx.o
-> >  obj-$(CONFIG_S5PV210_COMMON_CLK)     +=3D clk-s5pv210.o clk-s5pv210-au=
-dss.o
-> >  obj-$(CONFIG_TESLA_FSD_COMMON_CLK)   +=3D clk-fsd.o
-> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
-gs101.c
-> > new file mode 100644
-> > index 000000000000..6bd233a7ab63
-> > --- /dev/null
-> > +++ b/drivers/clk/samsung/clk-gs101.c
-> > @@ -0,0 +1,2495 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +/*
-> > + * Copyright (C) 2023 Linaro Ltd.
-> > + * Author: Peter Griffin <peter.griffin@linaro.org>
-> > + *
-> > + * Common Clock Framework support for GS101.
-> > + */
-> > [...]
-> > +
-> > +/* List of parent clocks for Muxes in CMU_TOP: for CMU_HSI0 */
-> > +PNAME(mout_cmu_hsi0_usb31drd_p)      =3D { "oscclk", "dout_shared2_div=
-2" };
-> > +
-> > +PNAME(mout_cmu_hsi0_bus_p)   =3D { "dout_shared0_div4", "dout_shared1_=
-div4",
-> > +                                 "dout_shared2_div2", "dout_shared3_di=
-v2",
-> > +                                 "fout_spare_pll" };
+> > > An example of that is any of the GPIO chips that don't set the
+> > > can_sleep field in struct gpio_chip but still use
+> > > gpiochip_generic_config() (e.g. tegra186). We can then encounter the
+> > > following situation:
+> > >
+> > > irq_handler() // in atomic context
+> > >   gpiod_direction_output() // line is open-drain
+> > >     gpio_set_config()
+> > >       gpiochip_generic_config()
+> > >         pinctrl_gpio_set_config()
+> > >           mutex_lock()
+> > >
+> > > Currently we don't take any locks nor synchronize in any other way
+> > > (which is wrong as concurrent gpiod_direction_output() and
+> > > gpiod_direction_input() will get in each other's way).
+> >
+> > The only thing that really make sense to protect from here is
+> > concurrent access to the same register (such as if a single
+> > register contains multiple bits to set a number of GPIOs at
+> > output or input).
+> >
+> > The real usecases for gpiod_direction_* I know of are limited to:
+> >
+> > 1. Once when the GPIO is obtained.
+> >
+> > 2. In strict sequence switching back and forth as in
+> >     drivers/i2c/busses/i2c-cbus-gpio.c
+> >     cbus_transfer()
 >
-> This should also be updated....
+> Isn't this a very special case already? cbus_transfer() holds the spin
+> lock across the entire function, so it will only work for a very small
+> set of GPIO providers anyway, right? Anything that's sleepable just is
+> not going to work. I suspect that direction configuration is then also
+> not going to sleep, so this should be fine.
 >
-> > [...]
-> > +     MUX(CLK_MOUT_HSI0_BUS, "mout_cmu_hsi0_bus", mout_cmu_hsi0_bus_p,
-> > +         CLK_CON_MUX_MUX_CLKCMU_HSI0_BUS, 0, 3),
->
-> ...because we have 8 possibilities now.
 
-Interesting, unfortunately there is some discrepancy between the
-documentation again :( All the cmu_top clock parents were authored
-using the cmu_diagrams which only shows the 5 parents listed above.
-Checking the mux register definition it lists 5-7 as being oscclk
-5=3Dosclk
-6=3Dosclk
-7=3Doscclk
+Maybe we could switch to using gpiod_direction_*_raw() here and then
+mark regular gpiod_direction_input/output() as might_sleep() and be
+done with it? Treat this one as a special-case and then not accept
+anyone new calling these from atomic context?
 
-Downstream clock implementation lists these oscclk 5-7 as well, so I
-guess we should add them...sigh
+Bart
 
-> (I didn't check the other parents, but you mentioned you updated field wi=
-dths
-> in other registers, too, so maybe need to double check the parent strings=
- as well)
-
-Yes I will go through and re-check these parent names again.
-
-Peter
+> Thierry
 
