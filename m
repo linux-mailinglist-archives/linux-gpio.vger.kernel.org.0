@@ -1,143 +1,149 @@
-Return-Path: <linux-gpio+bounces-1121-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1122-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67DE380A438
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:13:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AB0680A4D5
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:53:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 12CD41F20FB4
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 13:13:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BB0241C20D36
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 13:53:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C13461C6B2;
-	Fri,  8 Dec 2023 13:13:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044C11DA43;
+	Fri,  8 Dec 2023 13:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ctLRFmzM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T8XZmqQH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x1134.google.com (mail-yw1-x1134.google.com [IPv6:2607:f8b0:4864:20::1134])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3CBAF172A
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 05:12:57 -0800 (PST)
-Received: by mail-yw1-x1134.google.com with SMTP id 00721157ae682-5d7692542beso19500507b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 05:12:57 -0800 (PST)
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B6211732
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 05:53:46 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-54bfa9b3ffaso3029904a12.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 05:53:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702041176; x=1702645976; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1702043624; x=1702648424; darn=vger.kernel.org;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s/h2VaDL8yK0KYT1e7MleKRl/bdsrQUTAKlxgH3CUmI=;
-        b=ctLRFmzM54S2+KDgqovJLXUWxTgn4fxs2L2d725/R6kv++8+8Dl3JfebGobiaXn4iM
-         SKeGqNg0LPcDNszsIRf3cmX0AxIXotgaFen2HxwuyIk8bdLtKJlYdgHwaR7Yy1pm0G1y
-         Wcz6At36cjSbZsx6USXaX/uSmt//2Wt+PduqWRsEXsS/gYJnny6ANZomh3tjqKX6p/5f
-         c5Ff7KEPtPT6ucDhnSzdkoFLzEJ1gqLgzlFsrp31nB/k8m44t3Cjbuw5PHBGVK2Nhlku
-         weDzcTq5uDiFE5/0pt5x33Kyxa/tM5vRJydlDPEYp6BGINShHSiUfmH6cPUKY2VtM+nB
-         80Aw==
+        bh=z5tU4k/G7ZErkONVwah7cod53Wjfp0Nn+JHYTrxPoIs=;
+        b=T8XZmqQHVwS9NqLmXA3dN9J5V5PK1+oW/CiBCSc86ujmQig6IcS079oHp2kyCOs5U9
+         gFUuBkGRfulYrCatF/oWgxUxMd/ZLUiZ0kG5tWICvLizbAhVJyWy4TlF+SP9IOrnddqC
+         S5p5S/CB6aa8voEii/vZRa3B/hauNjCBjXoB0HBkxhesU3spnQHndxxHHUoSVxd4LHOu
+         6Re+QOxLAiSCapUUiUVUznTLRD4PxRSKPAqty8n1IIhUitfu2gzl1q76tBv6Og66eW+I
+         s7IPtvI7hyc5ol8KK/K/ByJIXLTfEriW1yslVzvq1ZNj6Hia9xKK+5KLXPo17e98oEju
+         3MBw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702041176; x=1702645976;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1702043624; x=1702648424;
+        h=user-agent:in-reply-to:content-disposition:mime-version:references
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s/h2VaDL8yK0KYT1e7MleKRl/bdsrQUTAKlxgH3CUmI=;
-        b=H+csd0+P+38oas5BAbJ9RGMrp63IEO4WaOsMcM3cNPaQqgYBHm6hz+I20H6GXvDvE3
-         uEFsBfgjt0IICodjoOJNNSRkwDbDcCoWytVhCCuEMkMhdT2p5YSsOGqHOhsyFrryOcHt
-         IxltNoLhzOM62toXvgRLVPhT9OlTf0ViC8d82WKWgH/yfZ2242GGOKIIJ5hEWzUzlTn/
-         HZ6iOpHom/Ga8YnNNG+suvs2p3K1K8+tHL3ucFFKFHPUDzzNfVNMcwQJg6yLwIsgq5sY
-         F1QCyoWDbYkRu4rNceQO7he7Y0p/VhKEwT+//s5Fuo8686UiMUvLRRDulDO++Y4Dw9Fo
-         Lzmg==
-X-Gm-Message-State: AOJu0YwTbHmM6jwCMcvXkb7jCF24t+PnhaKv64bp/PfDPahos5Iq49Ta
-	0S1pv4mQK/dIhyVjfXkNeT9n5oYTXEZBv6eWlMfHGyJNM4HJIiT+blw=
-X-Google-Smtp-Source: AGHT+IEZr7apHUvhMG8bpIocM4+M3f1BQpdGJUfTfz7QlLGi+7L/9zBUXC+SvQYwhPExUmiLkT6aDcWV9iKnevvDlcA=
-X-Received: by 2002:a81:b650:0:b0:5d7:8bf2:de3d with SMTP id
- h16-20020a81b650000000b005d78bf2de3dmr4041678ywk.67.1702041176421; Fri, 08
- Dec 2023 05:12:56 -0800 (PST)
+        bh=z5tU4k/G7ZErkONVwah7cod53Wjfp0Nn+JHYTrxPoIs=;
+        b=X1osxgj9h4Slk490X/72YE7ki9yosfx7njdAER+SJgmiacSai703vxhJgUjzU6KXjX
+         WpJiHT27+jn1C+jOonf9HUtwYkumFOai+rTPp3fyRKFd6pR96bohfd6mHBFtGphFfQB4
+         S+DSAYyEcAMu3cYK8mHD39SiZ2FCKfAyZ0Gd4no2tYmjULfpHmcUbMyiRsZtnVwDHQZb
+         GXV7vVwbzTiFXKdblANpsYOqlpWRY04TUOltcxHpzt3VD7SPu2oWO1pb6XXA7h9qI3as
+         4rY5knUd2ampbOKIxKBzE59w+o+Ab7RbMZUSX2feyCx7htpmxmrbOpb8vhCAis38UuVx
+         MdpQ==
+X-Gm-Message-State: AOJu0Yzoyvg6wklavaZWVfU+mjG8g6tZKKTPXnLi9xOJoo/vn4FKMKio
+	+dbP0PD7f5RYG6mEl2kDppY=
+X-Google-Smtp-Source: AGHT+IGDdDuP32NX0E8andG/1k3Fo6G3Xqc67Um+f4+x52dxLo3hYOVX7k+fTyLuHyAC2FtB71uOxQ==
+X-Received: by 2002:a50:bb29:0:b0:54c:4837:9a9d with SMTP id y38-20020a50bb29000000b0054c48379a9dmr95626ede.68.1702043623972;
+        Fri, 08 Dec 2023 05:53:43 -0800 (PST)
+Received: from orome.fritz.box (p200300e41f0fa600f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f0f:a600:f22f:74ff:fe1f:3a53])
+        by smtp.gmail.com with ESMTPSA id h28-20020a50cddc000000b0054c72a6a07csm847395edj.84.2023.12.08.05.53.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 08 Dec 2023 05:53:43 -0800 (PST)
+Date: Fri, 8 Dec 2023 14:53:42 +0100
+From: Thierry Reding <thierry.reding@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Kent Gibson <warthog618@gmail.com>
+Subject: Re: GPIOLIB locking is broken and how to fix it
+Message-ID: <ZXMf5jT6F4EwHDx3@orome.fritz.box>
+References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
+ <ZWFN8RVUy7Vx72CE@rigel>
+ <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
+ <ZWKL4r9DREwYjnyo@rigel>
+ <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
+ <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
- <ZWFN8RVUy7Vx72CE@rigel> <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
- <ZWKL4r9DREwYjnyo@rigel> <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
- <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="SdYz8TwSaB8Z8KC0"
+Content-Disposition: inline
 In-Reply-To: <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 8 Dec 2023 14:12:45 +0100
-Message-ID: <CACRpkdb06kOV82Ssyv4ERPbRorbwj9QdpZtHAEVDv6GMGMhFOA@mail.gmail.com>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Kent Gibson <warthog618@gmail.com>, 
-	Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mutt/2.2.12 (2023-09-09)
+
+
+--SdYz8TwSaB8Z8KC0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 7, 2023 at 7:38=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
-
+On Thu, Dec 07, 2023 at 07:37:54PM +0100, Bartosz Golaszewski wrote:
+> On Tue, Nov 28, 2023 at 11:47=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> >
+>=20
+> [snip]
+>=20
+> >
+> > Because years of technical debt, that's why. :)
+> >
+>=20
+> Speaking of technical debt: you may have noticed that despite stating
+> I'm almost done last week, I still haven't submitted my locking
+> rework.
+>=20
 > The reason for that is that I'm stuck on some corner-cases related to
 > the GPIO <-> pinctrl interaction. Specifically the fact that we have
 > GPIOLIB API functions that may be called from atomic context which may
 > end up calling into pinctrl where a mutex will be acquired.
-
-OK I see the problem.
-
+>=20
 > An example of that is any of the GPIO chips that don't set the
 > can_sleep field in struct gpio_chip but still use
 > gpiochip_generic_config() (e.g. tegra186). We can then encounter the
 > following situation:
->
+>=20
 > irq_handler() // in atomic context
 >   gpiod_direction_output() // line is open-drain
 >     gpio_set_config()
 >       gpiochip_generic_config()
 >         pinctrl_gpio_set_config()
 >           mutex_lock()
->
-> Currently we don't take any locks nor synchronize in any other way
-> (which is wrong as concurrent gpiod_direction_output() and
-> gpiod_direction_input() will get in each other's way).
 
-The only thing that really make sense to protect from here is
-concurrent access to the same register (such as if a single
-register contains multiple bits to set a number of GPIOs at
-output or input).
+I don't know of any case (at least on Tegra) where we would change
+direction in atomic context. In fact, I would argue that configuration
+like this should never happen in atomic context.
 
-The real usecases for gpiod_direction_* I know of are limited to:
+Thierry
 
-1. Once when the GPIO is obtained.
+--SdYz8TwSaB8Z8KC0
+Content-Type: application/pgp-signature; name="signature.asc"
 
-2. In strict sequence switching back and forth as in
-    drivers/i2c/busses/i2c-cbus-gpio.c
-    cbus_transfer()
+-----BEGIN PGP SIGNATURE-----
 
-But *two* execution contexts contesting over *the same* GPIO?
-I've never heard of that one. But I'm not sure that is what you mean
-to address? Sounds like a theoretical problem to me.
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmVzH+UACgkQ3SOs138+
+s6GaxQ/+Ln0O5jV5DX4PfRL7cXJOy2Wo7csC8M9ER4fB72Lw5/MH/nyfElBKblmZ
+1cIjkSpMEa4HToe2/Cdel+VutowqEk+tL6IgxSnNxtD1nMPNx9jlCLMS9L/9NJmi
++WQEkZ0bLOAgWRZLdMSFLpjTdjhGRJTGdNFhSTZ6H+CP39DpHWrICUg/eFTGR7Gs
+q4rk8Gsb0L6kSc6yLFzzhqvTuAjfegWvrCNLNhaw7da+eJ3+e3MxErCsIaxykYLz
+HuFmCbKxDyK508CEsu0Na1DtLaIYTaIR8hGCBNEixbkK022TPBIC4SCv0ezmMTHR
+Oqa+jBDv9eUqorhCTrd4mw3NszqYBNCbusXzZZJaShxFYQDXDQGxuhu5Ya/ueAct
+B03OVe/AXSdcqnJY3A15e8oa97pDm90um2lmEE7/KsNcz0gJggICp0ETOsc3Oog1
+4hjFsKoh5WIdMH/gCHWnWEIBrhMRgWSHgY+twN0WgcfPOySPKpyYbFleJU4oIe29
+Jr1ntY+v+pE/GfauH3nqd+J2f4w6RY9aLLXRqz8/c9oQaNufiG7H5RyQF4u+Iwcp
+SEaRjCfnZRWE81o47LIvP4+gaXJOsBBqKFQhf01KJuIbQHryWVtgmGjdyz0Jy1Be
+T+FmGNIk/3bfFeqkGEDgITfn1AzAIkvgJjGu+F6AhUoA0sxfDfE=
+=ICf3
+-----END PGP SIGNATURE-----
 
-> One of the ideas I have is using the fact that we already use atomic
-> bitops in most places. Let's not take locks but add a new flag:
-> FLAG_SETTING_DIRECTION. Now when we go into
-> gpiod_direction_output/input(), we test and set it. A subsequent call
-> will fail with EBUSY or EAGAIN as long as it's set. It will have no
-> effect on set/get() - any synchronization will be left to the driver.
-> When we're done, we clear it after setting the relevant direction
-> flag.
-
-Given that I think the situation is entirely theoretical I'm certainly
-happy with that solution.
-
-Whoever want to do this crazy thing can very well teach their code
-to recover from errors as well...
-
-> Does this make any sense? There's still the label pointer and debounce
-> period stored in the descriptor but these are not accessed in atomic
-> context AFAICT.
-
-Sounds fair to me, if it's even a problem. But I trust you, so if you
-think this is needed, I'm game!
-
-Yours,
-Linus Walleij
+--SdYz8TwSaB8Z8KC0--
 
