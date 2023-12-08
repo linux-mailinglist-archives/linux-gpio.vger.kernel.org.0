@@ -1,242 +1,170 @@
-Return-Path: <linux-gpio+bounces-1132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBEEA80AE22
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 21:43:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB70280AEA2
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 22:14:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 766DC281A7E
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 20:43:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8023F281B7D
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 21:14:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC9F34180;
-	Fri,  8 Dec 2023 20:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78D85733B;
+	Fri,  8 Dec 2023 21:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z/kpVp+x";
-	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G09GrqqG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BRTtM8Hy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFB1171F;
-	Fri,  8 Dec 2023 12:43:25 -0800 (PST)
-From: Thomas Gleixner <tglx@linutronix.de>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020; t=1702068203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FhWMGItMyMopaoZ9JYHTOAW7DtcvRQ4SKNAg4c9vMrk=;
-	b=z/kpVp+xnVyaxaBZ8E7KDP422Tc0/FU5nU/clN/dKP5WKNzobsdK6+a1sh2Cvxy11eSlLU
-	ZZc3KAeOxzZeo2tT98q92AT6JOpDOb36UU7qi/V8VHy7VR5kSf6HfHFn1F26YXIqLpy44x
-	KmzNODXvLx+WCdqN3EAnck4K2N61fyDgW5gNXVqdznzi2ck5/q52wFJ/OXm1ZNL+XocXyK
-	OwWVw4lCbdSYl/Tf7BYZZz+6PshSeuFzDT1tEN7Yq0Iq/oyPN057Rpz7M1ELbFnzZMgLph
-	XMajUp8xWLkyv5z427R4q+YOYrtKY8/iy4PTncU9i0Vr/RjHNy2/1SOAdBg5zw==
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
-	s=2020e; t=1702068203;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FhWMGItMyMopaoZ9JYHTOAW7DtcvRQ4SKNAg4c9vMrk=;
-	b=G09GrqqGjLqCD+0vATnk1ceFRWhbzIUYKuO+FvHcAywKkmU9f6GOnGnk1Q/z4BQ2BFLjjv
-	IUlfWrlOkslaKBCg==
-To: Ben Wolsieffer <ben.wolsieffer@hefring.com>,
- linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
- <alexandre.torgue@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>,
- Ben Wolsieffer <ben.wolsieffer@hefring.com>
-Subject: Re: [PATCH 2/2] pinctrl: stm32: fix GPIO level interrupts
-In-Reply-To: <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
-References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
- <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
-Date: Fri, 08 Dec 2023 21:43:21 +0100
-Message-ID: <87ttosqvbq.ffs@tglx>
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7482A171E
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 13:14:33 -0800 (PST)
+Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-67ac4fc7217so14407836d6.0
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 13:14:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702070072; x=1702674872; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eMdZYz3DPUe4bdT/CXZ3OjIbw+BdLseGOOZQ+mLDsoY=;
+        b=BRTtM8HyZ5oo26RBVqVnaW3H4dNEwvwuMf+/k9lwAuSiUTnsWtOgwS+NZ74gHzFQPl
+         c3JxqVdVi+6KZAJq2mgSsWdF1+Nk4GyjYyL/YQHeup3LwJc/5Hw7tLRKHM7JbdrHNwEp
+         pzjjtKICWNTqRya+iSwgtad2E0CcLE0lgZ79M0A/g2E/ZY9zui9IocEztLq38IIOZW5x
+         J4f9K0ZeEIr3P/5zMaEtaDx+MbfW5lPwWoBcvsjoJuSrYk95tsfUw662AhPq3c5vBAXw
+         VE0KOtTXNrKmqT1Mi1cKea8OORceEUpi/tlYsHVRd0N8/Lro1X/snnfWoTHp+HMBCDk/
+         Xs8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702070072; x=1702674872;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=eMdZYz3DPUe4bdT/CXZ3OjIbw+BdLseGOOZQ+mLDsoY=;
+        b=H7o45ej0rE1TXBtO9Dx0jqKw1UJwoFpROP0Z117ANwuqT3t4207ebEyuPbcW6DV9+I
+         jWc8bNReiM56Sh21Qk4xMzb7WGBkbx/sUVqk6UI4EhIt/6+i9v2Kos4A6a6llWnkyzF2
+         OYixYjZh+yE3pNFpG633ER1AOsT0sVHVsrsOHhR2QoPxZw5QADxMcZELqzF3ga7aU96Z
+         eBuzNHYbKo45mhMfJFym2V3l6cuX+mqWdhd4tuyXlO0TH5Te6uytZbXOiL3daopMO73o
+         MBi2OmmcmCieFdfG0I3DNaQZuwvjsJ/vAczB8Nno0uq/BvM9rNGuxwTQCpk9g/omGvkM
+         E2og==
+X-Gm-Message-State: AOJu0Yw0jfAkF5LfSTIwGWum1Zb8ObQaE2mgiNp/smqFMOvPXvomS0+1
+	OVeLS83hwPuM0/7ro7f+vbGubmKmsWVEXvxMHiodsQ==
+X-Google-Smtp-Source: AGHT+IGpulKyZ3OIbS0DyP2qkU03il9CmjBCOxhzoGEpedDhT+htnC+NzAmQyXg4CgZlNXYQiSL6lZrAvMlkclzO+XA=
+X-Received: by 2002:a05:6214:a91:b0:67a:a721:f304 with SMTP id
+ ev17-20020a0562140a9100b0067aa721f304mr526927qvb.68.1702070072556; Fri, 08
+ Dec 2023 13:14:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+ <20231201160925.3136868-13-peter.griffin@linaro.org> <5e9c0b1c5885775a7bc32ef59cb09a2a93d4cbe1.camel@linaro.org>
+In-Reply-To: <5e9c0b1c5885775a7bc32ef59cb09a2a93d4cbe1.camel@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Fri, 8 Dec 2023 21:14:21 +0000
+Message-ID: <CADrjBPqAjqW27TvvT3BpEovOsouRedsnB49qdkkgSto=z0jM3Q@mail.gmail.com>
+Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
+ and cmu_apm support
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, semen.protsenko@linaro.org, saravanak@google.com, 
+	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Ben!
+Hi Andr=C3=A9
 
-On Mon, Dec 04 2023 at 15:33, Ben Wolsieffer wrote:
-> The STM32 doesn't support GPIO level interrupts in hardware, so the
-> driver tries to emulate them using edge interrupts, by retriggering the
-> interrupt if necessary based on the pin state after the handler
-> finishes.
+On Tue, 5 Dec 2023 at 07:52, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
+wrote:
 >
-> Currently, this functionality does not work because the irqchip uses
-> handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
-> callbacks after handling the interrupt. This patch fixes this by using
-> handle_level_irq() for level interrupts, which causes irq_unmask() to be
-> called to retrigger the interrupt.
+> Hi Pete,
+>
+> On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
+> > cmu_top is the top level clock management unit which contains PLLs, mux=
+es,
+> > dividers and gates that feed the other clock management units.
+> >
+> > cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
+> > APM module.
+> >
+> > Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > Tested-by: Will McVicker <willmcvicker@google.com>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  drivers/clk/samsung/Makefile    |    1 +
+> >  drivers/clk/samsung/clk-gs101.c | 2495 +++++++++++++++++++++++++++++++
+> >  2 files changed, 2496 insertions(+)
+> >  create mode 100644 drivers/clk/samsung/clk-gs101.c
+> >
+> > diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefil=
+e
+> > index ebbeacabe88f..3056944a5a54 100644
+> > --- a/drivers/clk/samsung/Makefile
+> > +++ b/drivers/clk/samsung/Makefile
+> > @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)       +=3D clk-=
+exynos7.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos7885.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos850.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynosautov9.o
+> > +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-gs101.o
+> >  obj-$(CONFIG_S3C64XX_COMMON_CLK)     +=3D clk-s3c64xx.o
+> >  obj-$(CONFIG_S5PV210_COMMON_CLK)     +=3D clk-s5pv210.o clk-s5pv210-au=
+dss.o
+> >  obj-$(CONFIG_TESLA_FSD_COMMON_CLK)   +=3D clk-fsd.o
+> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
+gs101.c
+> > new file mode 100644
+> > index 000000000000..6bd233a7ab63
+> > --- /dev/null
+> > +++ b/drivers/clk/samsung/clk-gs101.c
+> > @@ -0,0 +1,2495 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2023 Linaro Ltd.
+> > + * Author: Peter Griffin <peter.griffin@linaro.org>
+> > + *
+> > + * Common Clock Framework support for GS101.
+> > + */
+> > +
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <dt-bindings/clock/google,gs101.h>
+> > +
+> > +#include "clk.h"
+> > +#include "clk-exynos-arm64.h"
+> > +
+> > +/* NOTE: Must be equal to the last clock ID increased by one */
+> > +#define TOP_NR_CLK   (CLK_GOUT_TPU_UART + 1)
+> > +#define APM_NR_CLK   (CLK_APM_PLL_DIV16_APM + 1)
+> > +#define MISC_NR_CLK  (CLK_GOUT_MISC_XIU_D_MISC_IPCLKPORT_ACLK + 1)
+> > +
+> > +/* ---- CMU_TOP ------------------------------------------------------=
+------- */
+> > +
+> > [...]
+> > +
+> > +/* ---- CMU_APM ------------------------------------------------------=
+------- */
+> > [..]
+> > +
+> > +/* ---- CMU_MISC -----------------------------------------------------=
+-------- */
+>
+> nit - the CMU_MISC comment here is an outlier.
 
-This does not make any sense at all. irq_unmask() does not retrigger
-anything. It sets the corresponding bit in the mask register, not more
-not less.
+Will fix.
 
-Switching to handle_level_irq() makes the following difference
-vs. handle_edge_irq() when an interrupt is handled (ignoring the inner
-loop):
-
-      + irq_mask();
-        irq_ack();
-        ....
-        handle();
-        ....
-      + irq_unmask();
-
-So in both cases irq_ack() clears the interrupt in the Pending register,
-right?
-
-Now comes the interesting difference.
-
-When the interrupt is raised again after irq_ack() while the handler is
-running, i.e. a full toggle from active to inactive and back to active
-where the back to active transition causes the edge detector to trigger,
-then:
-
-  1) in case of handle_edge_irq() this should immediately set it in the
-     pending register again and raise another CPU interrupt, which
-     should be handled once the interrupt service routine returned.
-
-  2) in case of handle_level_irq() this does not set it in the pending
-     register because it's masked. The unmask will set the pending
-     register bit _if_ and only _if_ the edge detector has latched the
-     detection. No idea whether that's the case. The manual is
-     exceptionally blury about this.
-
-So in theory both #1 and #2 should work. But the explanation in the
-changelog is fairy tale material.
-
-As I couldn't figure out why #1 would not work, I looked at the driver
-in more detail and also at the STM32 manual. That tells me that the
-irqchip driver is at least suboptimal. Why?
-
-The EXTI controller is just an intermediate between the peripheral
-(including GPIO pins) and the NVIC:
-
-         |--------------|
-         | Edge config  |   |-----------------|
- Source -|              |---| Int. Mask logic |---> Dedicated NVIC interrupt
-         | Edge detect  | | |-----------------|
-         |--------------| |
-                          | |-----------------|   
-                          |-| Evt. Mask logic |---> CPU event input
-                          | |-----------------|   
-                          |
-                          | |-----------------|   
-                          |-| Wakeup logic    |--->....
-                            |-----------------|   
-
-So there are two classes of sources conntect to EXTI:
-
-   1) Direct events
-
-      - Have a fixed edge
-      - Can be masked for Interrupt and Event generation
-      - No software trigger
-      - Not tracked in the Pending register
-      - Can evtl. wakeup the CPUs or from D3
-
-   2) Configurable events
-
-      - Have a configurable edge
-      - Can be masked for Interrupt and Event generation
-      - Software trigger
-      - Tracked in the Pending register
-      - Can evtl. wakeup the CPUs or from D3
-
-The CPU event is a single input to the CPU which can be triggered by any
-source which has the Event mask enabled.
-
-For both classes there are sources which have no connection to the NVIC,
-they can only be used to generate CPU events or trigger the wakeup
-logic.
-
-For direct events there is a category where the peripherial interrupt is
-routed to both the EXTI and the NVIC directly. The EXTI does not provide
-a connection to the NVIC and the event cannot be masked in EXTI to
-prevent CPU interrupts. Only the CPU event masking works.
-
-GPIO pins are configurable events which are connected to the NVIC via
-the EXTI.
-
-But the EXTI driver implements a chained interrupt handler which listens
-on a ton of NVIC interrupts. I.e. for the STM32H7 on:
-
-  <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <62>, <76>
-
-NVIC   1: PVD_PVM           EXTI-SRC 16
-NVIC   2: RTC_TAMP_STAMP    EXTI-SRC 18
-NVIC   3: RTC_WAKEUP        EXTI-SRC 19
-NVIC   6: EXTI0             EXTI-SRC  0
-NVIC   7: EXTI1             EXTI-SRC  1
-NVIC   8: EXTI2             EXTI-SRC  2
-NVIC   9: EXTI3             EXTI-SRC  3
-NVIC  10: EXTI4             EXTI-SRC  4
-NVIC  23: EXTI5-9           EXTI-SRC  5-9
-NVIC  40: EXTI10-15         EXTI-SRC 10-15
-NVIC  41: RTC_ALARM         EXTI-SRC 17
-NVIC  62: ETH_WKUP          EXTI-SRC 86
-NVIC  76: OTG_HS_WKUP       EXTI-SRC 43
-
-Each of these chained interrupts handles the full EXTI interrupt domain
-with all three banks. This does not make any sense at all especially not
-on a SMP machine.
-
-Though it _should_ work, but it might cause interrupts handlers to be
-invoked when nothing is pending when the edge handler is active. Which
-in turn can confuse the underlying device driver depending on the
-quality...
-
-CPU0					CPU1
-
-NVIC int X                      	NVIC int Y
-
- // read_pending() is serialized by a lock, but both read the same state
- pend = read_pending()			pend = read_pending()
- 
- for_each_bit(bit, pend)	 	for_each_bit(bit, pend)	
-    handle_irq(domain, base + bit)         handle_irq(domain, base + bit)
-      lock(desc);                            lock(desc);
-      ack();
-      do {
-         clear(PENDING);
-         set(IN_PROGRESS);
-         unlock(desc);
-         handle();                           if (IN_PROGRESS) {
-         lock(desc);                           ack();
-                                               set(PENDING);
-         				       unlock(desc);
-         clear(IN_PROGRESS);                   return;
-                                             }
-      } while (PENDING); <- Will loop
-
-See?
-
-In fact the only NVIC interrupts which actually need demultiplexing are
-NVIC #23 and NVIC #40 and those should only care about the EXTI
-interrupts which are actually multiplexed on them. This let's randomly
-run whatever is pending on any demux handler is far from correct.
-
-All others are direct NVIC interrupts which just have the extra EXTI
-interrupt masking, event masking and the wakeup magic. The indirection
-via the chained handler is just pointless overhead and not necessarily
-correct.
-
-The exti_h variant of that driver does the right thing and installs a
-hierarchical interrupt domain which acts as man in the middle between
-the source and the NVIC. Though granted they don't have the odd problem
-of multiplexing several GPIO interrupts to a single NVIC interrupt.
-
-But in fact the regular exti driver could do the same and just handle
-the two NVIC interrupts which need demultiplexing separately and let
-everything else go through the hierarchy without bells and whistles.
-
-Thanks,
-
-        tglx
+Peter.
 
