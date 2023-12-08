@@ -1,145 +1,242 @@
-Return-Path: <linux-gpio+bounces-1131-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1132-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E603580AC83
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 19:55:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBEEA80AE22
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 21:43:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9BE621F2126A
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 18:55:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 766DC281A7E
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 20:43:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A38F941C70;
-	Fri,  8 Dec 2023 18:54:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AC9F34180;
+	Fri,  8 Dec 2023 20:43:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LllUZrFc"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="z/kpVp+x";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="G09GrqqG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-xe30.google.com (mail-vs1-xe30.google.com [IPv6:2607:f8b0:4864:20::e30])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 30BF9E0
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 10:54:52 -0800 (PST)
-Received: by mail-vs1-xe30.google.com with SMTP id ada2fe7eead31-464889ff296so553939137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 10:54:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702061691; x=1702666491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mgermj6ROz4XCkmqRVYqza5P0xh3ZuE8ngng0y+XB5M=;
-        b=LllUZrFcOioXr+gxfRa6Hwfrf89e3xUhE2BALsOibqBenYdoZxpPIyOfVxJhBpxDmK
-         kCagVpElCnWtqjQVzSt+bOb2ERF1nS/kRyzxgDCBwUMx4yBpLHiGaA7jWmnmFNz+WKIV
-         I6ojBAHv8HvOW1n3S7F3EA/bn/iSQtA09OUUiWlrHgGVexuRBTKSkbB6cVx9WebyE7wI
-         eo1iSgC5qdd9WpsupSzl5CawIzwty9b3/9vOHzwOuqqPcNT5r5fSmzAk0yGNR/udYIx4
-         OCJpZ2OrIy/5tSJR9cK/bSHihvfoGnFUtMzonaMwD+ct+GpHWAUktlZm/hNzYyCKEPDk
-         D56Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702061691; x=1702666491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mgermj6ROz4XCkmqRVYqza5P0xh3ZuE8ngng0y+XB5M=;
-        b=QALnr4J5S1SgWowNaGwJ397KDQD5J3UUBXAp2Se5T0k4OXJdSSbtzOg6OBtaQXlHQ3
-         ejRd4FLWtpMM6JXFMI42RACYXhHMtVPBy78YnVH/Q6P22DM3nksjSQLFuQ/JYmT5Ih+h
-         q/uSEZPgwMLVnf/PTbgP2+RyD7fLrrqa6c8VkrDkdq+od8B7++JgeHTUTKSO4EdKi5p/
-         5ArSabsrKETYU9/da2jS49ok4vn70T7gkWndOOINNF4iHVLR9YcPWqqvHlGXG7N5WYGx
-         QzB3Mwe3rLJOCSiDjbxfDo003JV2+91SXYLbfJLJmbMmi316x+1IHx9shltDQOs7YRKo
-         6aXw==
-X-Gm-Message-State: AOJu0Yxq50VQphg5Ms1ysXcXXernDSoC9yGnUPykM5uEfhIPUiP0l9+V
-	NcD4Gv/v0ZcS7Go7vgxpxcqblBzORpvAKaY1TJ1IxQ==
-X-Google-Smtp-Source: AGHT+IH0XQdmonnNPq2CcEHxyBQhIEDX9Hgx+/1eMB/jJCOAFaX2zSnPwuMtIuDYCLvu4i/vE18swH2ekkijrOJrnvI=
-X-Received: by 2002:a05:6102:3f4a:b0:464:92fe:4233 with SMTP id
- l10-20020a0561023f4a00b0046492fe4233mr506742vsv.35.1702061691237; Fri, 08 Dec
- 2023 10:54:51 -0800 (PST)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2BFB1171F;
+	Fri,  8 Dec 2023 12:43:25 -0800 (PST)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1702068203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FhWMGItMyMopaoZ9JYHTOAW7DtcvRQ4SKNAg4c9vMrk=;
+	b=z/kpVp+xnVyaxaBZ8E7KDP422Tc0/FU5nU/clN/dKP5WKNzobsdK6+a1sh2Cvxy11eSlLU
+	ZZc3KAeOxzZeo2tT98q92AT6JOpDOb36UU7qi/V8VHy7VR5kSf6HfHFn1F26YXIqLpy44x
+	KmzNODXvLx+WCdqN3EAnck4K2N61fyDgW5gNXVqdznzi2ck5/q52wFJ/OXm1ZNL+XocXyK
+	OwWVw4lCbdSYl/Tf7BYZZz+6PshSeuFzDT1tEN7Yq0Iq/oyPN057Rpz7M1ELbFnzZMgLph
+	XMajUp8xWLkyv5z427R4q+YOYrtKY8/iy4PTncU9i0Vr/RjHNy2/1SOAdBg5zw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1702068203;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=FhWMGItMyMopaoZ9JYHTOAW7DtcvRQ4SKNAg4c9vMrk=;
+	b=G09GrqqGjLqCD+0vATnk1ceFRWhbzIUYKuO+FvHcAywKkmU9f6GOnGnk1Q/z4BQ2BFLjjv
+	IUlfWrlOkslaKBCg==
+To: Ben Wolsieffer <ben.wolsieffer@hefring.com>,
+ linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>,
+ Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Subject: Re: [PATCH 2/2] pinctrl: stm32: fix GPIO level interrupts
+In-Reply-To: <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
+ <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+Date: Fri, 08 Dec 2023 21:43:21 +0100
+Message-ID: <87ttosqvbq.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
- <ZWFN8RVUy7Vx72CE@rigel> <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
- <ZWKL4r9DREwYjnyo@rigel> <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
- <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
- <ZXJq2zGjBT0yQAXv@rigel> <CAMRc=MemJobowO_+FFaF0r6OGx1cWTc899A5yPzR+q+2=rwADA@mail.gmail.com>
- <ZXLWHTjv9W-IH_OP@rigel> <CAMRc=MfXQb=A=4f0kFEW4ENuNk0ZmL_qAkWihEvFcYaizCf8LA@mail.gmail.com>
- <ZXLvfBWTAGZt0f0L@rigel>
-In-Reply-To: <ZXLvfBWTAGZt0f0L@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 8 Dec 2023 19:54:40 +0100
-Message-ID: <CAMRc=MdhcYToMixdFh6Kf+GZ_MhDeHxd5_2U00neLGoH2M_P9Q@mail.gmail.com>
-Subject: Re: GPIOLIB locking is broken and how to fix it
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Geert Uytterhoeven <geert@linux-m68k.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 
-On Fri, Dec 8, 2023 at 11:27=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+Ben!
+
+On Mon, Dec 04 2023 at 15:33, Ben Wolsieffer wrote:
+> The STM32 doesn't support GPIO level interrupts in hardware, so the
+> driver tries to emulate them using edge interrupts, by retriggering the
+> interrupt if necessary based on the pin state after the handler
+> finishes.
 >
-> On Fri, Dec 08, 2023 at 10:52:09AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Dec 8, 2023 at 9:38=E2=80=AFAM Kent Gibson <warthog618@gmail.co=
-m> wrote:
-> > >
-> > > On Fri, Dec 08, 2023 at 09:13:17AM +0100, Bartosz Golaszewski wrote:
-> > > > On Fri, Dec 8, 2023 at 2:01=E2=80=AFAM Kent Gibson <warthog618@gmai=
-l.com> wrote:
-> > > > >
-> > > > > On Thu, Dec 07, 2023 at 07:37:54PM +0100, Bartosz Golaszewski wro=
-te:
-> > > > > > On Tue, Nov 28, 2023 at 11:47=E2=80=AFAM Bartosz Golaszewski <b=
-rgl@bgdev.pl> wrote:
-> > > > > > >
-> > > > > >
-> > > > > > [snip]
-> > > >
-> > >
-> > > Yeah, no need to risk other GPIO users messing with it if it is only =
-there
-> > > for cdev.
-> > > Want me to take a look at it or are you happy to take care of it?
-> > >
-> >
-> > If you'll find the time to do it in the following days then sure, go
-> > ahead, otherwise, I'll have some pare cycles today and next week to
-> > spend on it.
-> >
->
-> It would probably take me longer than that to context switch, so go for
-> it.
->
+> Currently, this functionality does not work because the irqchip uses
+> handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
+> callbacks after handling the interrupt. This patch fixes this by using
+> handle_level_irq() for level interrupts, which causes irq_unmask() to be
+> called to retrigger the interrupt.
 
-Well I went for it and it turns out to be quite tricky. We have
-linereq and gpio_chardev_data that have independent lifetimes and the
-only resource they share is the gpio_device and - by extension - gpio
-descriptors . If we want to store some additional data locally within
-the context of gpiolib-cdev.c then I see the following options:
+This does not make any sense at all. irq_unmask() does not retrigger
+anything. It sets the corresponding bit in the mask register, not more
+not less.
 
-1. Global radix_tree containing additional configuration
-(debounce_period_us for now) looked up by the descriptor's address.
-Lookup can be done locklessly using RCU and from atomic context
-(interrupt handlers in cdev code).
+Switching to handle_level_irq() makes the following difference
+vs. handle_edge_irq() when an interrupt is handled (ignoring the inner
+loop):
 
-2. Reference counted wrapper around descriptors. It would look something li=
-ke:
+      + irq_mask();
+        irq_ack();
+        ....
+        handle();
+        ....
+      + irq_unmask();
 
-struct gpio_cdev_desc {
-    struct kref ref;
-    struct gpio_desc *desc;
-    unsigned int debounce_period_us;
-};
+So in both cases irq_ack() clears the interrupt in the Pending register,
+right?
 
-And then struct gpio_chardev_data would store an array of pointers to
-this wrapper while struct line would store a pointer to it instead of
-directly referencing struct gpio_desc.
+Now comes the interesting difference.
 
-Any other ideas?
+When the interrupt is raised again after irq_ack() while the handler is
+running, i.e. a full toggle from active to inactive and back to active
+where the back to active transition causes the edge detector to trigger,
+then:
 
-Bart
+  1) in case of handle_edge_irq() this should immediately set it in the
+     pending register again and raise another CPU interrupt, which
+     should be handled once the interrupt service routine returned.
 
-> Cheers,
-> Kent.
->
+  2) in case of handle_level_irq() this does not set it in the pending
+     register because it's masked. The unmask will set the pending
+     register bit _if_ and only _if_ the edge detector has latched the
+     detection. No idea whether that's the case. The manual is
+     exceptionally blury about this.
+
+So in theory both #1 and #2 should work. But the explanation in the
+changelog is fairy tale material.
+
+As I couldn't figure out why #1 would not work, I looked at the driver
+in more detail and also at the STM32 manual. That tells me that the
+irqchip driver is at least suboptimal. Why?
+
+The EXTI controller is just an intermediate between the peripheral
+(including GPIO pins) and the NVIC:
+
+         |--------------|
+         | Edge config  |   |-----------------|
+ Source -|              |---| Int. Mask logic |---> Dedicated NVIC interrupt
+         | Edge detect  | | |-----------------|
+         |--------------| |
+                          | |-----------------|   
+                          |-| Evt. Mask logic |---> CPU event input
+                          | |-----------------|   
+                          |
+                          | |-----------------|   
+                          |-| Wakeup logic    |--->....
+                            |-----------------|   
+
+So there are two classes of sources conntect to EXTI:
+
+   1) Direct events
+
+      - Have a fixed edge
+      - Can be masked for Interrupt and Event generation
+      - No software trigger
+      - Not tracked in the Pending register
+      - Can evtl. wakeup the CPUs or from D3
+
+   2) Configurable events
+
+      - Have a configurable edge
+      - Can be masked for Interrupt and Event generation
+      - Software trigger
+      - Tracked in the Pending register
+      - Can evtl. wakeup the CPUs or from D3
+
+The CPU event is a single input to the CPU which can be triggered by any
+source which has the Event mask enabled.
+
+For both classes there are sources which have no connection to the NVIC,
+they can only be used to generate CPU events or trigger the wakeup
+logic.
+
+For direct events there is a category where the peripherial interrupt is
+routed to both the EXTI and the NVIC directly. The EXTI does not provide
+a connection to the NVIC and the event cannot be masked in EXTI to
+prevent CPU interrupts. Only the CPU event masking works.
+
+GPIO pins are configurable events which are connected to the NVIC via
+the EXTI.
+
+But the EXTI driver implements a chained interrupt handler which listens
+on a ton of NVIC interrupts. I.e. for the STM32H7 on:
+
+  <1>, <2>, <3>, <6>, <7>, <8>, <9>, <10>, <23>, <40>, <41>, <62>, <76>
+
+NVIC   1: PVD_PVM           EXTI-SRC 16
+NVIC   2: RTC_TAMP_STAMP    EXTI-SRC 18
+NVIC   3: RTC_WAKEUP        EXTI-SRC 19
+NVIC   6: EXTI0             EXTI-SRC  0
+NVIC   7: EXTI1             EXTI-SRC  1
+NVIC   8: EXTI2             EXTI-SRC  2
+NVIC   9: EXTI3             EXTI-SRC  3
+NVIC  10: EXTI4             EXTI-SRC  4
+NVIC  23: EXTI5-9           EXTI-SRC  5-9
+NVIC  40: EXTI10-15         EXTI-SRC 10-15
+NVIC  41: RTC_ALARM         EXTI-SRC 17
+NVIC  62: ETH_WKUP          EXTI-SRC 86
+NVIC  76: OTG_HS_WKUP       EXTI-SRC 43
+
+Each of these chained interrupts handles the full EXTI interrupt domain
+with all three banks. This does not make any sense at all especially not
+on a SMP machine.
+
+Though it _should_ work, but it might cause interrupts handlers to be
+invoked when nothing is pending when the edge handler is active. Which
+in turn can confuse the underlying device driver depending on the
+quality...
+
+CPU0					CPU1
+
+NVIC int X                      	NVIC int Y
+
+ // read_pending() is serialized by a lock, but both read the same state
+ pend = read_pending()			pend = read_pending()
+ 
+ for_each_bit(bit, pend)	 	for_each_bit(bit, pend)	
+    handle_irq(domain, base + bit)         handle_irq(domain, base + bit)
+      lock(desc);                            lock(desc);
+      ack();
+      do {
+         clear(PENDING);
+         set(IN_PROGRESS);
+         unlock(desc);
+         handle();                           if (IN_PROGRESS) {
+         lock(desc);                           ack();
+                                               set(PENDING);
+         				       unlock(desc);
+         clear(IN_PROGRESS);                   return;
+                                             }
+      } while (PENDING); <- Will loop
+
+See?
+
+In fact the only NVIC interrupts which actually need demultiplexing are
+NVIC #23 and NVIC #40 and those should only care about the EXTI
+interrupts which are actually multiplexed on them. This let's randomly
+run whatever is pending on any demux handler is far from correct.
+
+All others are direct NVIC interrupts which just have the extra EXTI
+interrupt masking, event masking and the wakeup magic. The indirection
+via the chained handler is just pointless overhead and not necessarily
+correct.
+
+The exti_h variant of that driver does the right thing and installs a
+hierarchical interrupt domain which acts as man in the middle between
+the source and the NVIC. Though granted they don't have the odd problem
+of multiplexing several GPIO interrupts to a single NVIC interrupt.
+
+But in fact the regular exti driver could do the same and just handle
+the two NVIC interrupts which need demultiplexing separately and let
+everything else go through the hierarchy without bells and whistles.
+
+Thanks,
+
+        tglx
 
