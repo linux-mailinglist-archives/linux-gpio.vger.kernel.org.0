@@ -1,103 +1,175 @@
-Return-Path: <linux-gpio+bounces-1125-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1126-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 648DC80A565
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 15:26:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B5D880A56E
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 15:28:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 938DF1C20D87
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:26:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C3860281BEA
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 14:28:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0EC31DFD7;
-	Fri,  8 Dec 2023 14:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E3401DFFD;
+	Fri,  8 Dec 2023 14:28:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Nf2hjyDv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcKxEqDW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::228])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C3E41738
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 06:26:04 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E8D841BF205;
-	Fri,  8 Dec 2023 14:26:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1702045563;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=6Cul0TBbYEtzC30+f9W9k6p8Gg5s0PWpQ/0hISXTeEs=;
-	b=Nf2hjyDv5jZZ0Z7zW3aVU0c2y4t8XlktF4v6Y65uVD71BrNWpW0bB0aPgM6uymaPLp4j7b
-	TciIDpLhEPbhrv3bZHjcTiJ4c4QWuiUbTRqEG7Cf9+ECfkuJAARArDBtvO7oApB4TeIBdz
-	T+shsHb19v0ZWfzhvT/19CIaZ6OWdMkgDegjnXrolcROEufTZ0qVJ2J+nslg7VtlVGamE/
-	2BsjNj07kAevyoE7L5gSipBRm1Lsh4Tc8D7Tq+jTtfumm79QYpWL1p470I7Qt+2JOArmOj
-	YN6LQ22mN0TDNcgaMUUQmMdVpzW9nWwl5JVLssfBbJsWXL7yGMdyKZSDK6Op6g==
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-To: Marek =?utf-8?Q?Beh=C3=BAn?= <kabel@kernel.org>, Arnd Bergmann
- <arnd@arndb.de>,
- soc@kernel.org, arm@kernel.org, Andy Shevchenko <andy@kernel.org>, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz
- Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v4 3/7] platform: cznic: turris-omnia-mcu: Add support
- for MCU connected GPIOs
-In-Reply-To: <20231101123806.4d258ddb@dellmb>
-References: <20231026161803.16750-1-kabel@kernel.org>
- <20231026161803.16750-4-kabel@kernel.org> <20231101123806.4d258ddb@dellmb>
-Date: Fri, 08 Dec 2023 15:26:02 +0100
-Message-ID: <87il58epol.fsf@BL-laptop>
+Received: from mail-qv1-xf2a.google.com (mail-qv1-xf2a.google.com [IPv6:2607:f8b0:4864:20::f2a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E4551738
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 06:27:56 -0800 (PST)
+Received: by mail-qv1-xf2a.google.com with SMTP id 6a1803df08f44-67a948922aaso11457416d6.3
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 06:27:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702045675; x=1702650475; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Y6tktGOmflBDjrD9owZW8jUp+CHgDfz/rbbtd4HS0Vg=;
+        b=AcKxEqDWB30LUoTaGIxcjeHFnrqK0ABDkGOsbov3A8vTm7Yu0yQN4qekM/aJ3VZCTE
+         nLWAGgtMYfDRmp7PU6nIwXuMxNejq7Hfg7LcbWjUXy9v3SnN4oeh6MsrFkxMTFiEQOup
+         AL5QxcW08YlnSsJo9Px8vfcIcnigzDTGsCNdxrw5PzVjlcO4IC+LdDs63y+Wnb59j7jP
+         FrEGejWh+Ywqw9qu/8UU5G62cN6+Sm+jDrU+LIEBik8tIDucfg7YXChDmYlaJKN1fYsZ
+         D1E0HKOOQfN+giKLigY/J6X7KozqnbF7hwSR1JgDKI+RjdRr6OnGCJezZ5X6xFIlxUeb
+         Wjfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702045675; x=1702650475;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Y6tktGOmflBDjrD9owZW8jUp+CHgDfz/rbbtd4HS0Vg=;
+        b=bztJZyABinrrbDslT3HbHsFFdYv2U0SqpznAQ0cr3fBVx/fyCGyD+0XHvqZOP3oY/I
+         z/WTrQp3U0Hoi6+mehfbMPtypyPT4WZdS4aum8awlg7JsbHt1tPufu2lVVFOJ2KVxoNb
+         s8al+v503NZ7EX3GOo3iMsBcFPDgFcIn4tfX8RlglrmJEwehg5F6SMo+kSIud4LeLEi8
+         yBeeSFH+nMgfH2ALH9bJ45hqOAABmzo0pbWrV1Z7wkoemXN2gxMPSVWcjPMRDQnWxf3O
+         a99DE3YHJBL7OP1/XlkVKojq09zNQqirNqGRUUuay4SHBo7GOPYC428sr2ZQ8nCqhrD6
+         a2Mg==
+X-Gm-Message-State: AOJu0YwtJ2yyDXAUma9s5Pq9jBuIlCYeiowJDscau15dDTgkVwiAmIRI
+	DAso/h5OFtOZFK2hN9rrOV7i6U9lLWvuzZtYPikeSg==
+X-Google-Smtp-Source: AGHT+IGbiA6FsS80GfwV+c82tNjaevxVqMuJe5EJncnQTyRiVvDHSd4AgX2BqsQb6YkJ2YjyEjuCQy/avC/S0mz+amg=
+X-Received: by 2002:ad4:5695:0:b0:67a:a721:e150 with SMTP id
+ bd21-20020ad45695000000b0067aa721e150mr16777qvb.125.1702045675625; Fri, 08
+ Dec 2023 06:27:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+References: <20231201160925.3136868-1-peter.griffin@linaro.org>
+ <20231201160925.3136868-13-peter.griffin@linaro.org> <20bf05b9d9ccc5c11ef17500ac7a97c46dd46a9a.camel@linaro.org>
+In-Reply-To: <20bf05b9d9ccc5c11ef17500ac7a97c46dd46a9a.camel@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Fri, 8 Dec 2023 14:27:44 +0000
+Message-ID: <CADrjBPr_sv29Dc3F-4wVvH_N+qU6509kvHqkyZG==Q1RRpi5gA@mail.gmail.com>
+Subject: Re: [PATCH v5 12/20] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
+ and cmu_apm support
+To: =?UTF-8?Q?Andr=C3=A9_Draszik?= <andre.draszik@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, semen.protsenko@linaro.org, saravanak@google.com, 
+	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-GND-Sasl: gregory.clement@bootlin.com
 
-Hello Marek,
+Hi Andr=C3=A9,
 
-> On Thu, 26 Oct 2023 18:17:59 +0200
-> Marek Beh=C3=BAn <kabel@kernel.org> wrote:
+Thanks for the review
+
+On Mon, 4 Dec 2023 at 17:51, Andr=C3=A9 Draszik <andre.draszik@linaro.org> =
+wrote:
 >
->> +	mcu->gc.request =3D omnia_gpio_request;
->> +	mcu->gc.get_direction =3D omnia_gpio_get_direction;
->> +	mcu->gc.direction_input =3D omnia_gpio_direction_input;
->> +	mcu->gc.direction_output =3D omnia_gpio_direction_output;
->> +	mcu->gc.get =3D omnia_gpio_get;
->> +	mcu->gc.get_multiple =3D omnia_gpio_get_multiple;
->> +	mcu->gc.set =3D omnia_gpio_set;
->> +	mcu->gc.set_multiple =3D omnia_gpio_set_multiple;
->> +	mcu->gc.init_valid_mask =3D omnia_gpio_init_valid_mask;
->> +	mcu->gc.can_sleep =3D true;
->> +	mcu->gc.names =3D omnia_mcu_gpio_templates;
->> +	mcu->gc.base =3D -1;
->> +	mcu->gc.ngpio =3D ARRAY_SIZE(omnia_gpios);
->> +	mcu->gc.label =3D "Turris Omnia MCU GPIOs";
->> +	mcu->gc.parent =3D dev;
->> +	mcu->gc.owner =3D THIS_MODULE;
+> On Fri, 2023-12-01 at 16:09 +0000, Peter Griffin wrote:
+> > cmu_top is the top level clock management unit which contains PLLs, mux=
+es,
+> > dividers and gates that feed the other clock management units.
+> >
+> > cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
+> > APM module.
+> >
+> > Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> > Tested-by: Will McVicker <willmcvicker@google.com>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  drivers/clk/samsung/Makefile    |    1 +
+> >  drivers/clk/samsung/clk-gs101.c | 2495 +++++++++++++++++++++++++++++++
+> >  2 files changed, 2496 insertions(+)
+> >  create mode 100644 drivers/clk/samsung/clk-gs101.c
+> >
+> > diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefil=
+e
+> > index ebbeacabe88f..3056944a5a54 100644
+> > --- a/drivers/clk/samsung/Makefile
+> > +++ b/drivers/clk/samsung/Makefile
+> > @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)       +=3D clk-=
+exynos7.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos7885.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynos850.o
+> >  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-exynosautov9.o
+> > +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)        +=3D clk-gs101.o
+> >  obj-$(CONFIG_S3C64XX_COMMON_CLK)     +=3D clk-s3c64xx.o
+> >  obj-$(CONFIG_S5PV210_COMMON_CLK)     +=3D clk-s5pv210.o clk-s5pv210-au=
+dss.o
+> >  obj-$(CONFIG_TESLA_FSD_COMMON_CLK)   +=3D clk-fsd.o
+> > diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-=
+gs101.c
+> > new file mode 100644
+> > index 000000000000..6bd233a7ab63
+> > --- /dev/null
+> > +++ b/drivers/clk/samsung/clk-gs101.c
+> > @@ -0,0 +1,2495 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +/*
+> > + * Copyright (C) 2023 Linaro Ltd.
+> > + * Author: Peter Griffin <peter.griffin@linaro.org>
+> > + *
+> > + * Common Clock Framework support for GS101.
+> > + */
+> > [...]
+> > +
+> > +/* List of parent clocks for Muxes in CMU_TOP: for CMU_HSI0 */
+> > +PNAME(mout_cmu_hsi0_usb31drd_p)      =3D { "oscclk", "dout_shared2_div=
+2" };
+> > +
+> > +PNAME(mout_cmu_hsi0_bus_p)   =3D { "dout_shared0_div4", "dout_shared1_=
+div4",
+> > +                                 "dout_shared2_div2", "dout_shared3_di=
+v2",
+> > +                                 "fout_spare_pll" };
 >
-> Sigh. I will need to add a custom of_xlate here that accepts 3 cells
-> instead of 2. The reason is that Pali prepared U-Boot code last year to
-> patch reset-gpios into pcie nodes if MCU node is present in the
-> devicetree, and back then we decided that the binding should be
-> 3-celled:
->   reset-gpios =3D <&mcu BANK GPIO FLAGS>;
+> This should also be updated....
 >
-> So now the pcie controllers do not work because OF cannot give proper
-> GPIOs.
+> > [...]
+> > +     MUX(CLK_MOUT_HSI0_BUS, "mout_cmu_hsi0_bus", mout_cmu_hsi0_bus_p,
+> > +         CLK_CON_MUX_MUX_CLKCMU_HSI0_BUS, 0, 3),
 >
-> I will fix this in v5.
+> ...because we have 8 possibilities now.
 
-I was reviewing the seris in order to apply it, but I didn't find your
-v5 in the mainling list. Did you send it ?
+Interesting, unfortunately there is some discrepancy between the
+documentation again :( All the cmu_top clock parents were authored
+using the cmu_diagrams which only shows the 5 parents listed above.
+Checking the mux register definition it lists 5-7 as being oscclk
+5=3Dosclk
+6=3Dosclk
+7=3Doscclk
 
-Regards,
+Downstream clock implementation lists these oscclk 5-7 as well, so I
+guess we should add them...sigh
 
-Gregory
+> (I didn't check the other parents, but you mentioned you updated field wi=
+dths
+> in other registers, too, so maybe need to double check the parent strings=
+ as well)
 
---=20
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Yes I will go through and re-check these parent names again.
+
+Peter
 
