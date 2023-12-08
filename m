@@ -1,393 +1,183 @@
-Return-Path: <linux-gpio+bounces-1109-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1110-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7DABA809D8E
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 08:50:50 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCD2B809DEE
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 09:13:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D0641C208F4
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 07:50:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 88651281610
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Dec 2023 08:13:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 589AF10A26;
-	Fri,  8 Dec 2023 07:50:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72AB61097A;
+	Fri,  8 Dec 2023 08:13:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="qx41GLFp"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wq71ZEEr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9A3A6173F
-	for <linux-gpio@vger.kernel.org>; Thu,  7 Dec 2023 23:50:31 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231208075022epoutp04f910e078f3ad36f2899c19e53a6f63dd~ey9Rc5hSf0961409614epoutp04j
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 07:50:22 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231208075022epoutp04f910e078f3ad36f2899c19e53a6f63dd~ey9Rc5hSf0961409614epoutp04j
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702021822;
-	bh=tDx7+j5DykI148IvsokWJUA3ERR2qHhvO15Vvo+brS4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qx41GLFpCix6yG6WToUPIbRxheV62itvLf4+9xgoGCv27APHgcNzsvimgFxz6FC6L
-	 N12c/wW72xotEdqSK84t14P8VU71UxREi/qXqS8iV8oSk9FaVD+q8sGWRHoY/BpxaI
-	 I7bauuH0eRkDmxiWis0hxezZm5MbzqpWvW/EXID8=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20231208075021epcas2p3a079d1a5512c90ba6e2d2a98a9002f2b~ey9Q5Ug5P0598705987epcas2p3n;
-	Fri,  8 Dec 2023 07:50:21 +0000 (GMT)
-Received: from epsmges2p1.samsung.com (unknown [182.195.36.70]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Smjwr6vH2z4x9Q1; Fri,  8 Dec
-	2023 07:50:20 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p1.samsung.com (Symantec Messaging Gateway) with SMTP id
-	C6.D3.10006.CBAC2756; Fri,  8 Dec 2023 16:50:20 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231208075020epcas2p414c85e03d18327665eeff54082314b56~ey9P6bxPo0754707547epcas2p48;
-	Fri,  8 Dec 2023 07:50:20 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231208075020epsmtrp1a874498b4d1f8fb3e2635c9b45b4a7c1~ey9P36vit0202202022epsmtrp11;
-	Fri,  8 Dec 2023 07:50:20 +0000 (GMT)
-X-AuditID: b6c32a45-3ebfd70000002716-7c-6572cabca78e
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	DB.C4.08755.CBAC2756; Fri,  8 Dec 2023 16:50:20 +0900 (KST)
-Received: from localhost.localdomain (unknown [10.229.9.55]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231208075020epsmtip24c69b3412c34bfffa92e5bd6c348fd89~ey9PmcHxA1333813338epsmtip2Z;
-	Fri,  8 Dec 2023 07:50:20 +0000 (GMT)
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
-	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
-	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org, Jaewon Kim <jaewon02.kim@samsung.com>
-Subject: [PATCH v3 4/4] pinctrl: samsung: add exynosautov920 pinctrl
-Date: Fri,  8 Dec 2023 16:45:27 +0900
-Message-ID: <20231208074527.50840-5-jaewon02.kim@samsung.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231208074527.50840-1-jaewon02.kim@samsung.com>
+Received: from mail-vk1-xa29.google.com (mail-vk1-xa29.google.com [IPv6:2607:f8b0:4864:20::a29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5B46D1721
+	for <linux-gpio@vger.kernel.org>; Fri,  8 Dec 2023 00:13:29 -0800 (PST)
+Received: by mail-vk1-xa29.google.com with SMTP id 71dfb90a1353d-4b2d237ab87so541721e0c.1
+        for <linux-gpio@vger.kernel.org>; Fri, 08 Dec 2023 00:13:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702023208; x=1702628008; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=r54JKG3RSzzY1woO7RL5tT6pxy8wH9NW+BZSfr3Ygqo=;
+        b=wq71ZEErxMbwkw8TnsfOxjarVku6DUipKZm1+yy4QXf0DXUm2HmnLRVT0nRAfIsusR
+         olIoWHgB88zAdMSR1R50R4/Q31W/Ljm4GvcRQzLV1Hk2/kNozFnhrmAoqAOSOl42rrOb
+         ZmN+MIMezJ0MIVS4yAeF+xQJHdqjV79sJd6hd3UpZ1v6e86O0ZZa6+FkBissuuXGoepU
+         EAus6FNp3/CmS6CWT3AsfDKHyVqCTZFwudSAqk6gbWr6Ws6xPQ1ikYNmnigHGP0RP6wX
+         s5YxgOGTeu/yfC4q0cD+MuZZmyGZUdMQwrG4wcTjYQylBP4ZlEqQI8q46w0xIdWTDFNV
+         nPFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702023208; x=1702628008;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=r54JKG3RSzzY1woO7RL5tT6pxy8wH9NW+BZSfr3Ygqo=;
+        b=kX/zVU58p167i8AF6yaS3T3D/s3QH5919wzY1Kw5oaxum6dg4oSlB7+V+ZoyMHxmQG
+         ejJDGi7F5UwoE+tSHfup8VfvAERWU4mJtEJns1AwV4xcIuX/FwbF4GKjqjcy9EMRzcE7
+         oiJ7OyKRXk872StwC6ehgKHZ+PqlY4bFsL1wYSJrEVPLX7mpomJVpFc3rrYO9RPtoVbH
+         MAFkmmLs7mEVuR/gyh2XgfdthMDBvTA88mMyo3knmIYWz0U2z5+TB/6Uitc3ksXzElBw
+         9oaN6mNOmp2bIJc0hLUydjDYrLMWDEbsNP25UPX0xp8BAuvIf0djOXZAuC2hcaKaX5xL
+         d2iA==
+X-Gm-Message-State: AOJu0YyJNycOzIiwBs6TuGFtX47oAE8zaOeE8WF7NtHJ711uAoSYZ25A
+	t0I3DvaD6n/Lpbg/cFbH3NylgQf7kt2jOlFiPLNQ6Q==
+X-Google-Smtp-Source: AGHT+IFPgKz9YSc8YN8/BhVndKW7SIljM4vGdQZWz37K5dCrj2tJcC5pRcib60s3af6NaEOxglSn+UcPg/SjBaLPJ+U=
+X-Received: by 2002:a05:6102:32cc:b0:465:d9da:ab11 with SMTP id
+ o12-20020a05610232cc00b00465d9daab11mr4452471vss.59.1702023208444; Fri, 08
+ Dec 2023 00:13:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0xbdRTH8+ttby8QyKUw91u7sdrFGSBASyi9kLEtguYmg4UpMWZO8Ao3
-	hVHaprc1G2oECTBAnh1sLa+yYiYNG1mhS4dUkVZFgqCDDWXjYcQpLyMsbsrGYuntdP99f+d8
-	vr9zzu+BIYIpVIgVqPW0Tk2pJGgg97o7kogZGtPR0ukmObHYcR0lel0THKLTM8Ejyqx9KOEs
-	8fCIP9r3Eq5VB584//gyh7D/cptH9Hc+BsTUYBtKzM3ZAHFx8nMOMW6t5RPlLg+fcK9V8oh/
-	Bju4hG3Qy91pNIKjYeQN8xyftNuqUPLu7SGU/KK9l0/2d39I1m9LyboBGyDv2yMysZOFh/Jp
-	Ko/WiWl1riavQK1MkRx7LSc1R54olcXIkgiFRKymiugUSVp6ZswrBSrvOBLxu5TK4A1lUgwj
-	iTt8SKcx6GlxvobRp0hobZ5Kq9DGMlQRY1ArY9W0PlkmlcbLveDbhfnDGys87cdvnrHcaOaW
-	gKmMahCAQTwBrj4y8qtBICbAnQC6v5pB2cUmgLWTHyHs4gGALabfeE8tTdeaeGzCBaBj4aqf
-	2gDwZtV5zg6F4tHwYZ/V5wjHFxC4WvHeDoTglRzY8WCZu5MIw9PgZFsZsqO5+Avwlu2uLx6M
-	p8DtlicoW24/tDov+5gA/DC01DoRlgmF35qWfDziZcocrQjLj2PQ6jjC6jTYuHaVw+owuPLN
-	AJ/VQrhcX+HXGlgxPe7X78NrlpuA1Ueg+dGAdwDMu38k7BuM25EQPwA9s/6qIfCce5vPhoPh
-	uQoBazwIF5on/M3vhU2eHn8DJBy7M+RrUoA3Alh+T9UAxOZnZjE/M4v5/7oWgNjAc7SWKVLS
-	TLxW9t8F52qK7MD3uqNedgLj+p+xI4CDgREAMUQSHqya1NCC4DzqbDGt0+ToDCqaGQFy70k3
-	IsJduRrv91Drc2QJSdKExESZIl4uVUh2B8+Xt+cJcCWlpwtpWkvrnvo4WICwhBO1tZiV7Om8
-	gmd1IwFryz2iU9np+w4e6+0ZNZSj87rwU/V7AnPiQu2iH9ZfPT3pUIXZRgPt/Z9EL5yMWO4L
-	kUdWCvGf58XjennWcND9lT2/ZxebGraMjaWbH6SNbJS6m5SLhoWO5Ldc2SI9N1VZfUDYbA5J
-	r1vkt176einoR8tEze6HxghHRtdo/fAbx6+8pPhefvZvIAx/3iXiBoTWbF4ofXFWsX4C636i
-	vvX6X2hmRujMdybC5DaUhH0a/xkTlTS//ydp++nQrtmxC9G/HqVrjtcFdc0023chdV+SVdSJ
-	aaeoLvFMQ+uQE23bmukSJW7uK8q41PJOavG9pWHpImmUcJl8ShaF6BjqX/8r/IxmBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCSvO6eU0WpBqvOCFs8mLeNzWLN3nNM
-	FvOPnGO1aF68ns1iR8MRVot3c2Us9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWd++uYrSY
-	cX4fk8WZxb3sFq17j7BbHH7Tzmrxc9c8FotVu4Dqbk+czOgg7LFz1l12j02rOtk87lzbw+ax
-	f+4ado/NS+o9+v8aePRtWcXo8XmTXABHFJdNSmpOZllqkb5dAlfGgY+vWAt6oisW7JzK0sB4
-	2beLkZNDQsBEYtLGSaxdjFwcQgK7GSX6Zs5mhUjISCx/1scGYQtL3G85AlX0nlHi96GPzCAJ
-	NgFtie/rF4MlRASeM0uc/fMILMEs0M8kcX1TAogtLOAicX5OM1icRUBV4uqqOywgNq+ArcTf
-	af+gNshLLN6xHKyGU8BOYkHvDjBbCKhmzdYOdoh6QYmTM5+wQMyXl2jeOpt5AqPALCSpWUhS
-	CxiZVjFKphYU56bnFhsWGOallusVJ+YWl+al6yXn525iBEealuYOxu2rPugdYmTiYDzEKMHB
-	rCTCm3M+P1WINyWxsiq1KD++qDQntfgQozQHi5I4r/iL3hQhgfTEktTs1NSC1CKYLBMHp1QD
-	k9HVZJnOeVrzfWIL0oVeNR/jnX73z2WWuEyuC8yZ7J/SdwVE3I6QuqE9WbVk+mPmW7ZeCdOa
-	j6aEMWn/CGNynGy/p4OheinH/U5RTu2KN3eXs02RE7Fwa1hrqCBYtj4pt0xW3qfnZDm3r4hJ
-	rmVA482QhIl3yl9xXFDdMKftgsGxl+Vnk5SDKnJyzsW7ptQW/byZ+fXWqXmV7/k4Tv1RWPnk
-	7JFtvjfbNV78WBPzs0FOsf1QttuljZxvcjXzz306mVgSzLLKsv6z36Mdv9c7SV1RyJS+uenF
-	wtzpv+LLDN2eM/8wZcvJP51n+5hjjyjX7y9LleI6vzE3lzI32jNEbEgI5nIK9YtRf7mJa7IS
-	S3FGoqEWc1FxIgCYdcqgIwMAAA==
-X-CMS-MailID: 20231208075020epcas2p414c85e03d18327665eeff54082314b56
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231208075020epcas2p414c85e03d18327665eeff54082314b56
-References: <20231208074527.50840-1-jaewon02.kim@samsung.com>
-	<CGME20231208075020epcas2p414c85e03d18327665eeff54082314b56@epcas2p4.samsung.com>
+References: <CAMRc=McMxnYQosDDip3KGNBsQHDpHg_7bJgvS_Yr_7Y=2kqyUg@mail.gmail.com>
+ <ZWFN8RVUy7Vx72CE@rigel> <CAMRc=MdcPNrbhXWm6NX_=kA8ut9pcfy5wJGP7EZFNkHDLrSZUQ@mail.gmail.com>
+ <ZWKL4r9DREwYjnyo@rigel> <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
+ <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com> <ZXJq2zGjBT0yQAXv@rigel>
+In-Reply-To: <ZXJq2zGjBT0yQAXv@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 8 Dec 2023 09:13:17 +0100
+Message-ID: <CAMRc=MemJobowO_+FFaF0r6OGx1cWTc899A5yPzR+q+2=rwADA@mail.gmail.com>
+Subject: Re: GPIOLIB locking is broken and how to fix it
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Geert Uytterhoeven <geert@linux-m68k.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Add pinctrl data for ExynosAutov920 SoC.
+On Fri, Dec 8, 2023 at 2:01=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Thu, Dec 07, 2023 at 07:37:54PM +0100, Bartosz Golaszewski wrote:
+> > On Tue, Nov 28, 2023 at 11:47=E2=80=AFAM Bartosz Golaszewski <brgl@bgde=
+v.pl> wrote:
+> > >
+> >
+> > [snip]
+> >
+> > >
+> > > Because years of technical debt, that's why. :)
+> > >
+> >
+> > Speaking of technical debt: you may have noticed that despite stating
+> > I'm almost done last week, I still haven't submitted my locking
+> > rework.
+> >
+> > The reason for that is that I'm stuck on some corner-cases related to
+> > the GPIO <-> pinctrl interaction. Specifically the fact that we have
+> > GPIOLIB API functions that may be called from atomic context which may
+> > end up calling into pinctrl where a mutex will be acquired.
+> >
+>
+> To be clear, that is an existing pinctrl mutex?
 
-Pinctrl data for ExynosAutoV920 SoC.
- - GPA0,GPA1 (10): External wake up interrupt
- - GPQ0 (2): SPMI (PMIC I/F)
- - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
- - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
- - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
- - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
+Yes, I'm talking about pctldev->mutex. TBH set_config IMO should never
+be called from atomic context but that's already there and will be
+hard to change it now. :(
 
-Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
----
- .../pinctrl/samsung/pinctrl-exynos-arm64.c    | 140 ++++++++++++++++++
- drivers/pinctrl/samsung/pinctrl-exynos.c      |  18 +++
- drivers/pinctrl/samsung/pinctrl-exynos.h      |  24 +++
- drivers/pinctrl/samsung/pinctrl-samsung.c     |   2 +
- drivers/pinctrl/samsung/pinctrl-samsung.h     |   1 +
- 5 files changed, 185 insertions(+)
+>
+> > An example of that is any of the GPIO chips that don't set the
+> > can_sleep field in struct gpio_chip but still use
+> > gpiochip_generic_config() (e.g. tegra186). We can then encounter the
+> > following situation:
+> >
+> > irq_handler() // in atomic context
+> >   gpiod_direction_output() // line is open-drain
+> >     gpio_set_config()
+> >       gpiochip_generic_config()
+> >         pinctrl_gpio_set_config()
+> >           mutex_lock()
+> >
+>
+> Isn't using a mutex (the pinctrl one here) from atomic always a
+> problem?  Shouldn't this flow be handed off to irq_thread()?
+>
 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-index cb965cf93705..a998c296dd05 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos-arm64.c
-@@ -796,3 +796,143 @@ const struct samsung_pinctrl_of_match_data fsd_of_data __initconst = {
- 	.ctrl		= fsd_pin_ctrl,
- 	.num_ctrl	= ARRAY_SIZE(fsd_pin_ctrl),
- };
-+
-+/* pin banks of exynosautov920 pin-controller 0 (ALIVE) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks0[] = {
-+	EXYNOSV920_PIN_BANK_EINTW(8, 0x0000, "gpa0", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTW(2, 0x1000, "gpa1", 0x18, 0x20, 0x24),
-+	EXYNOS850_PIN_BANK_EINTN(2, 0x2000, "gpq0"),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 1 (AUD) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks1[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(7, 0x0000, "gpb0", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(6, 0x1000, "gpb1", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x2000, "gpb2", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x3000, "gpb3", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x4000, "gpb4", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(5, 0x5000, "gpb5", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(5, 0x6000, "gpb6", 0x18, 0x24, 0x28),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 2 (HSI0) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks2[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(6, 0x0000, "gph0", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(2, 0x1000, "gph1", 0x18, 0x20, 0x24),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 3 (HSI1) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks3[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(7, 0x000, "gph8", 0x18, 0x24, 0x28),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 4 (HSI2) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks4[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x0000, "gph3", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(7, 0x1000, "gph4", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x2000, "gph5", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(7, 0x3000, "gph6", 0x18, 0x24, 0x28),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 5 (HSI2UFS) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks5[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x000, "gph2", 0x18, 0x20, 0x24),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 6 (PERIC0) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks6[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x0000, "gpp0", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x1000, "gpp1", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x2000, "gpp2", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(5, 0x3000, "gpg0", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x4000, "gpp3", 0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x5000, "gpp4", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x6000, "gpg2", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x7000, "gpg5", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(3, 0x8000, "gpg3", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(5, 0x9000, "gpg4", 0x18, 0x24, 0x28),
-+};
-+
-+/* pin banks of exynosautov920 pin-controller 7 (PERIC1) */
-+static const struct samsung_pin_bank_data exynosautov920_pin_banks7[] = {
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x0000, "gpp5",  0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(5, 0x1000, "gpp6",  0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x2000, "gpp10", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x3000, "gpp7",  0x18, 0x24, 0x28),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x4000, "gpp8",  0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x5000, "gpp11", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x6000, "gpp9",  0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(4, 0x7000, "gpp12", 0x18, 0x20, 0x24),
-+	EXYNOSV920_PIN_BANK_EINTG(8, 0x8000, "gpg1",  0x18, 0x24, 0x28),
-+};
-+
-+static const struct samsung_retention_data exynosautov920_retention_data __initconst = {
-+	.regs	 = NULL,
-+	.nr_regs = 0,
-+	.value	 = 0,
-+	.refcnt	 = &exynos_shared_retention_refcnt,
-+	.init	 = exynos_retention_init,
-+};
-+
-+static const struct samsung_pin_ctrl exynosautov920_pin_ctrl[] = {
-+	{
-+		/* pin-controller instance 0 ALIVE data */
-+		.pin_banks	= exynosautov920_pin_banks0,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks0),
-+		.eint_wkup_init	= exynos_eint_wkup_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+		.retention_data	= &exynosautov920_retention_data,
-+	}, {
-+		/* pin-controller instance 1 AUD data */
-+		.pin_banks	= exynosautov920_pin_banks1,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks1),
-+	}, {
-+		/* pin-controller instance 2 HSI0 data */
-+		.pin_banks	= exynosautov920_pin_banks2,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks2),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 3 HSI1 data */
-+		.pin_banks	= exynosautov920_pin_banks3,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks3),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 4 HSI2 data */
-+		.pin_banks	= exynosautov920_pin_banks4,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks4),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 5 HSI2UFS data */
-+		.pin_banks	= exynosautov920_pin_banks5,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks5),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 6 PERIC0 data */
-+		.pin_banks	= exynosautov920_pin_banks6,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks6),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	}, {
-+		/* pin-controller instance 7 PERIC1 data */
-+		.pin_banks	= exynosautov920_pin_banks7,
-+		.nr_banks	= ARRAY_SIZE(exynosautov920_pin_banks7),
-+		.eint_gpio_init	= exynos_eint_gpio_init,
-+		.suspend	= exynos_pinctrl_suspend,
-+		.resume		= exynos_pinctrl_resume,
-+	},
-+};
-+
-+const struct samsung_pinctrl_of_match_data exynosautov920_of_data __initconst = {
-+	.ctrl		= exynosautov920_pin_ctrl,
-+	.num_ctrl	= ARRAY_SIZE(exynosautov920_pin_ctrl),
-+};
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
-index f798f64b1122..593633d09aa2 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.c
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
-@@ -487,6 +487,22 @@ static const struct exynos_irq_chip exynos7_wkup_irq_chip __initconst = {
- 	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
- };
- 
-+static const struct exynos_irq_chip exynosautov920_wkup_irq_chip __initconst = {
-+	.chip = {
-+		.name = "exynosautov920_wkup_irq_chip",
-+		.irq_unmask = exynos_irq_unmask,
-+		.irq_mask = exynos_irq_mask,
-+		.irq_ack = exynos_irq_ack,
-+		.irq_set_type = exynos_irq_set_type,
-+		.irq_set_wake = exynos_wkup_irq_set_wake,
-+		.irq_request_resources = exynos_irq_request_resources,
-+		.irq_release_resources = exynos_irq_release_resources,
-+	},
-+	.eint_wake_mask_value = &eint_wake_mask_value,
-+	.eint_wake_mask_reg = EXYNOS5433_EINT_WAKEUP_MASK,
-+	.set_eint_wakeup_mask = exynos_pinctrl_set_eint_wakeup_mask,
-+};
-+
- /* list of external wakeup controllers supported */
- static const struct of_device_id exynos_wkup_irq_ids[] = {
- 	{ .compatible = "samsung,s5pv210-wakeup-eint",
-@@ -499,6 +515,8 @@ static const struct of_device_id exynos_wkup_irq_ids[] = {
- 			.data = &exynos7_wkup_irq_chip },
- 	{ .compatible = "samsung,exynosautov9-wakeup-eint",
- 			.data = &exynos7_wkup_irq_chip },
-+	{ .compatible = "samsung,exynosautov920-wakeup-eint",
-+			.data = &exynosautov920_wkup_irq_chip },
- 	{ }
- };
- 
-diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.h b/drivers/pinctrl/samsung/pinctrl-exynos.h
-index 5049c170e958..305cb1d31de4 100644
---- a/drivers/pinctrl/samsung/pinctrl-exynos.h
-+++ b/drivers/pinctrl/samsung/pinctrl-exynos.h
-@@ -141,6 +141,30 @@
- 		.name		= id				\
- 	}
- 
-+#define EXYNOSV920_PIN_BANK_EINTG(pins, reg, id, con_offs, mask_offs, pend_offs)	\
-+	{							\
-+		.type			= &exynos850_bank_type_off,	\
-+		.pctl_offset		= reg,				\
-+		.nr_pins		= pins,				\
-+		.eint_type		= EINT_TYPE_GPIO,		\
-+		.eint_con_offset	= con_offs,			\
-+		.eint_mask_offset	= mask_offs,			\
-+		.eint_pend_offset	= pend_offs,			\
-+		.name			= id				\
-+	}
-+
-+#define EXYNOSV920_PIN_BANK_EINTW(pins, reg, id, con_offs, mask_offs, pend_offs)	\
-+	{							\
-+		.type			= &exynos850_bank_type_alive,	\
-+		.pctl_offset		= reg,				\
-+		.nr_pins		= pins,				\
-+		.eint_type		= EINT_TYPE_WKUP,		\
-+		.eint_con_offset	= con_offs,			\
-+		.eint_mask_offset	= mask_offs,			\
-+		.eint_pend_offset	= pend_offs,			\
-+		.name			= id				\
-+	}
-+
- /**
-  * struct exynos_weint_data: irq specific data for all the wakeup interrupts
-  * generated by the external wakeup interrupt controller.
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
-index 362e99566919..800a2f0a026a 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.c
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
-@@ -1324,6 +1324,8 @@ static const struct of_device_id samsung_pinctrl_dt_match[] = {
- 		.data = &exynosautov9_of_data },
- 	{ .compatible = "tesla,fsd-pinctrl",
- 		.data = &fsd_of_data },
-+	{ .compatible = "samsung,exynosautov920-pinctrl",
-+		.data = &exynosautov920_of_data },
- #endif
- #ifdef CONFIG_PINCTRL_S3C64XX
- 	{ .compatible = "samsung,s3c64xx-pinctrl",
-diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.h b/drivers/pinctrl/samsung/pinctrl-samsung.h
-index 789358bcd9c5..987086fa0d1d 100644
---- a/drivers/pinctrl/samsung/pinctrl-samsung.h
-+++ b/drivers/pinctrl/samsung/pinctrl-samsung.h
-@@ -362,6 +362,7 @@ extern const struct samsung_pinctrl_of_match_data exynos7_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos7885_of_data;
- extern const struct samsung_pinctrl_of_match_data exynos850_of_data;
- extern const struct samsung_pinctrl_of_match_data exynosautov9_of_data;
-+extern const struct samsung_pinctrl_of_match_data exynosautov920_of_data;
- extern const struct samsung_pinctrl_of_match_data fsd_of_data;
- extern const struct samsung_pinctrl_of_match_data s3c64xx_of_data;
- extern const struct samsung_pinctrl_of_match_data s3c2412_of_data;
--- 
-2.43.0
+This is a corner-case. Typically we won't be calling gpio_set_config()
+from gpiod_direction_output(). This only happens if the line has
+special config like open-source/open-drain. Any other places where we
+may end up calling into pinctrl is request() and free() and those
+already might sleep.
 
+> > Currently we don't take any locks nor synchronize in any other way
+> > (which is wrong as concurrent gpiod_direction_output() and
+> > gpiod_direction_input() will get in each other's way). Using a mutex
+> > will be fine but for non-sleeping chips if we use a spinlock here (no
+> > other choice really) we'll set off fireworks.
+> >
+> > One of the ideas I have is using the fact that we already use atomic
+> > bitops in most places. Let's not take locks but add a new flag:
+> > FLAG_SETTING_DIRECTION. Now when we go into
+> > gpiod_direction_output/input(), we test and set it. A subsequent call
+> > will fail with EBUSY or EAGAIN as long as it's set. It will have no
+> > effect on set/get() - any synchronization will be left to the driver.
+> > When we're done, we clear it after setting the relevant direction
+> > flag.
+> >
+> > Does this make any sense? There's still the label pointer and debounce
+> > period stored in the descriptor but these are not accessed in atomic
+> > context AFAICT.
+> >
+>
+> Makes sense to me, as it is basically the sub-state solution I suggested
+> earlier for request/release, but applied to direction.  Not sure about
+> the contention behaviour though, as that is something userspace will
+> see and might not be expecting.
+>
+
+User-space will never call from atomic context. We could potentially
+use a work-queue here even for sleeping chips and serialize the
+operations
+
+> OTOH I'm starting to think that serialising callbacks might be a good ide=
+a
+> - unless it is crystal clear to the driver authors that the callbacks may
+> be called concurrently.
+
+This was my initial idea: use mutex for sleeping chips, spinlock for
+non-sleeping ones and make it possible for drivers to disable locking
+entirely. Except that we cannot use spinlock for chips interacting
+with pinctrl at all even if they can never sleep. :/
+
+>
+> The debounce is really a cdev field.  Putting it in the desc made sense
+> to me at the time as it is per-line, not per-request, but perhaps it
+> should moved into the cdev linereq, even if that means having to alloc
+> space for it, just to get it out of your hair.
+>
+
+This sounds good actually.
+
+Bart
+
+> Cheers,
+> Kent.
 
