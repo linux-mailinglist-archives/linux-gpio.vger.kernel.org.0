@@ -1,184 +1,105 @@
-Return-Path: <linux-gpio+bounces-1459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1461-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1ECC18130A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 13:57:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E812181323A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 14:53:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EA121C219BC
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:57:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA6B91C21789
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 13:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D59A4E614;
-	Thu, 14 Dec 2023 12:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EE7D5786B;
+	Thu, 14 Dec 2023 13:53:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R55KsC/N"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gCgpIgK5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-x636.google.com (mail-ej1-x636.google.com [IPv6:2a00:1450:4864:20::636])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7751BA6;
-	Thu, 14 Dec 2023 04:57:39 -0800 (PST)
-Received: by mail-ej1-x636.google.com with SMTP id a640c23a62f3a-a1db6c63028so935949866b.2;
-        Thu, 14 Dec 2023 04:57:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702558658; x=1703163458; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=g2GKWz1rRyCNwha7gGcRolq2RILUdPIiIt5FzDdvILQ=;
-        b=R55KsC/NDMFJnCucTbjK5g5o6ELzDY2jFcfTZR678xc3Cyqzv4YZEAfkohXIY2IU07
-         4dl4paNF15fmPy/hDhPj4ZT9E/ws8+OPCaaEZXSf745M3Mza6oET9Y+g0BvZub2aDCKH
-         lHVcwFLKwhyCwvdWLhDXy6mUPqgAe7lfRhv0ubP7boMtSjypehMixvZk41QdZXx2NyM/
-         RrI7cu6nbU3pT9XRYB/PtgZUKhsJg+O4JqxnSS1H9uloO3a794NcJJy3ijw+CpFR99tL
-         fvRd7A/zUqUO0zZCvA1kM/ZfLPRFL//PzPpphkn4gvi2h/VVWCi4WBOQDKAyhvvQeWZE
-         sQSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702558658; x=1703163458;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=g2GKWz1rRyCNwha7gGcRolq2RILUdPIiIt5FzDdvILQ=;
-        b=fnXUPG4rDFyD+WBn32ix6SI74MeCIA64XP/p0HXV+lPPaNrNkMYKKigvQvLSrgan10
-         MNbXKTPo3YdP8gZiqPPs8p11Tvwi860UvQN6cN91+EMsj8oUE0SdwZB6j5Dg15KVNLF/
-         1krsZgZ1qo88P+JxiET/QX7UAh5o9KsNo0nUfOPW7LIffr1jpmWNp+8RPf3hcewuIRI2
-         5pr8jvlkydqj+9pqCx9VQ27meRr5TN6di+wabj3Xa+xG1HMpnU9e07DN0K5GMQ0992hK
-         yojN3OiqGXLHEB4lTfQdN3puUoUlTGN9DJNONA/VlLBdz9OhodWMxBs259ElAl0enwfS
-         Swmw==
-X-Gm-Message-State: AOJu0YyTmFIzCznmuAM9dzM5NctEhmlUlOFmuQXcXqXEZeTOfv0smpyU
-	EmHXAhpHTWNxtcV3CMLbtlU=
-X-Google-Smtp-Source: AGHT+IHtIY7rFcQC93tfnJBXkLGQRNbPQabINCfXb9w5tCgijrk98Ge2WRXokyVfdLbqczA2V1R56A==
-X-Received: by 2002:a17:906:4546:b0:a01:fc1b:8197 with SMTP id s6-20020a170906454600b00a01fc1b8197mr4262851ejq.62.1702558657491;
-        Thu, 14 Dec 2023 04:57:37 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id ub14-20020a170907c80e00b00a1da5d9a602sm9368347ejc.138.2023.12.14.04.57.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 04:57:36 -0800 (PST)
-Message-ID: <375bf803-a5d5-4778-938a-b8218b116375@gmail.com>
-Date: Thu, 14 Dec 2023 14:57:35 +0200
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8379111B
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 05:53:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702562000; x=1734098000;
+  h=resent-from:resent-date:resent-message-id:resent-to:date:
+   from:to:cc:subject:message-id:references:mime-version:
+   in-reply-to;
+  bh=zKPcMKNBLeHW6dwGMo4dXzEnGw5ow/M15/TjNTUWIsw=;
+  b=gCgpIgK56/8Yh+t+HWAgsUQrLdPbhIMdwfqPoxcrclfCxUI4aLDTvGWu
+   DWoA6pnW50mI/OT1fbM66sZeuMaY6a1KqxfoE/EShA5mnw1V2cUoV97GX
+   jdjh3opdwoZEwJebmSjHQCs/Ncvn4ys5KIthTMYulUhnTRnTM/HsGwHff
+   y4ayWZm1r+pJDd3wWwUsxxJAZ06gGiNNQnSkOXqE2/jEgQw85qnAeEKtJ
+   IcXEDzCchVQFdMp8TxWLPsX+HpFXfSslfiUpdmVo4XljR8HK9/Ncr1E2N
+   HMdn9oHmpc1Co1SVBWOzwkgso9qaV1c/G2xewBpVQEexo6dPvGpEuS0Xn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1957331"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="1957331"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 05:53:19 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="947581748"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="947581748"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 05:53:17 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rDm9K-00000005rDN-3l3s;
+	Thu, 14 Dec 2023 15:53:14 +0200
+Resent-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Resent-Date: Thu, 14 Dec 2023 15:53:14 +0200
+Resent-Message-ID: <ZXsIyn3kZ7W5s64i@smile.fi.intel.com>
+Resent-To: brgl@bgdev.pl, linus.walleij@linaro.org, warthog618@gmail.com,
+	linux-gpio@vger.kernel.org
+Date: Fri, 8 Dec 2023 16:05:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 2/2] gpiolib: use a mutex to protect the list of GPIO
+ devices
+Message-ID: <ZXMiq3wDOt9zFzuX@smile.fi.intel.com>
+References: <20231208102020.36390-1-brgl@bgdev.pl>
+ <20231208102020.36390-3-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] iio: adc: ad7173: add AD7173 driver
-Content-Language: en-US
-To: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
- <20231212104451.22522-2-mitrutzceclan@gmail.com>
- <20231214123029.000002f1@Huawei.com>
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <20231214123029.000002f1@Huawei.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231208102020.36390-3-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Fri, Dec 08, 2023 at 11:20:20AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The global list of GPIO devices is never modified or accessed from
+> atomic context so it's fine to protect it using a mutex. Add a new
+> global lock dedicated to the gpio_devices list and use it whenever
+> accessing or modifying it.
+
+...
+
+> While at it: fold the sysfs registering of existing devices into
+> gpiolib.c and make gpio_devices static within its compilation unit.
+
+TBH I do not like injecting sysfs (legacy!) code into gpiolib.
+It makes things at very least confusing.
+
+That _ugly_ ifdeffery and sysfs in the function name are not okay.
+
+If you want do that, please create a separate change and explain the rationale
+behind with answering to the Q "Why do we need all that and why is it better
+than any alternatives?".
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-
-On 12/14/23 14:30, Jonathan Cameron wrote:
-> On Tue, 12 Dec 2023 12:44:36 +0200
-> Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
-> 
->> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
->> which can be used in high precision, low noise single channel
->> applications or higher speed multiplexed applications. The Sigma-Delta
->> ADC is intended primarily for measurement of signals close to DC but also
->> delivers outstanding performance with input bandwidths out to ~10kHz.
->>
->> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
->> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> Hi
-> 
-> Given it seems like you'll be doing a v9, one quick comment from me below.
-> 
-> Jonathan
-> 
->> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
->> new file mode 100644
->> index 000000000000..96918b24a10a
->> --- /dev/null
->> +++ b/drivers/iio/adc/ad7173.c
->> @@ -0,0 +1,964 @@
-> ...
-> 
->> +static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
->> +{
-> 
-> ...
-> 
->> +
->> +	if (st->info->has_temp) {
->> +		chan_arr[chan_index] = ad7173_temp_iio_channel_template;
->> +		chan_st_priv = &channels_st_priv_arr[chan_index];
->> +		chan_st_priv->ain =
->> +			AD7173_CH_ADDRESS(chan_arr[chan_index].channel, chan_arr[chan_index].channel2);
->> +		chan_st_priv->cfg.bipolar = false;
->> +		chan_st_priv->cfg.input_buf = true;
->> +		chan_st_priv->cfg.ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
->> +		st->adc_mode |= AD7173_ADC_MODE_REF_EN;
->> +
->> +		chan_index++;
->> +	}
->> +
->> +	device_for_each_child_node(dev, child) {
->> +		chan = &chan_arr[chan_index];
->> +		chan_st_priv = &channels_st_priv_arr[chan_index];
->> +		ret = fwnode_property_read_u32_array(child, "diff-channels",
->> +						     ain, ARRAY_SIZE(ain));
->> +		if (ret) {
->> +			fwnode_handle_put(child);
->> +			return ret;
->> +		}
->> +
->> +		if (ain[0] >= st->info->num_inputs ||
->> +		    ain[1] >= st->info->num_inputs) {
->> +			fwnode_handle_put(child);
->> +			return dev_err_probe(dev, -EINVAL,
->> +					     "Input pin number out of range for pair (%d %d).\n",
->> +					     ain[0], ain[1]);
->> +		}
->> +
->> +		ret = fwnode_property_match_property_string(child,
->> +							    "adi,reference-select",
->> +							    ad7173_ref_sel_str,
->> +							    ARRAY_SIZE(ad7173_ref_sel_str));
->> +
->> +		if (ret < 0)
->> +			ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
->> +		else
->> +			ref_sel = ret;
-> Simpler pattern for properties with a default is not to check the error code.
-> 
-> 		ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> 
-> 		fwnode_property_match_property_String(child, ...
-> 
-> so only if it succeeds is the value overridden.
-
-Where exactly would the value be overridden, the function does not have
-an argument passed for the found index. The function is written to
-return either the found index or a negative error.
-
-The proposed pattern would just ignore the returned index and would
-always leave ref_sel to default. Am I missing something?
-
-I can see in the thread where it was introduced that you proposed:
-"Looking at the usecases I wonder if it would be better to pass in
-
-an unsigned int *ret which is only updated on a match?"
-
-But on the iio togreg branch that was suggested I could the function on,
-it does not have that parameter.
 
