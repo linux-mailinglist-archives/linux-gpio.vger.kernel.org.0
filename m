@@ -1,219 +1,244 @@
-Return-Path: <linux-gpio+bounces-1175-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1176-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06E2180B84C
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Dec 2023 02:22:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A4D080B86D
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Dec 2023 03:35:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AA269280E58
-	for <lists+linux-gpio@lfdr.de>; Sun, 10 Dec 2023 01:22:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9513E1C208CD
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Dec 2023 02:35:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1992DEA5;
-	Sun, 10 Dec 2023 01:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6765C620;
+	Sun, 10 Dec 2023 02:34:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jMemrDaZ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hspYSK2Y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A14C3D0
-	for <linux-gpio@vger.kernel.org>; Sat,  9 Dec 2023 17:22:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702171336; x=1733707336;
-  h=date:from:to:cc:subject:message-id;
-  bh=cbOyYtMAcKweBHYklRArUnWYegvniiubbyTMV5DUagU=;
-  b=jMemrDaZFBXXwBNn1tWl3KeIfW0ESMrn3AyW3+605fpVw1wtnxHVYZTN
-   y1WistMiqonJPLw8tet0f9irv5sRxNkj+qkiNBxirT9V9R4AyYMpxQNkf
-   eUyz36rYAXreyKlRQX8UX3z1T2Z0Ie4SfQrZS/qnAB/2H2pmmTjxy30+a
-   NAH3B+wSehPA+Sce5EG8vUDZVba4o9gI2+ZrQLgW3p8B+GGRCCfYGIb4G
-   +zB5Gp7F6Q5O5xVfCPTUHphFs++TS+hW3zHDA7p6q0fvIKZiUKkBkp8Gs
-   t7yjpIp9+Xd0W6CHcXfhJ40XVphOcszu7Dl5qfmCCIg95+ak3NU99bpGF
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="1633290"
-X-IronPort-AV: E=Sophos;i="6.04,264,1695711600"; 
-   d="scan'208";a="1633290"
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Dec 2023 17:22:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10919"; a="765893329"
-X-IronPort-AV: E=Sophos;i="6.04,264,1695711600"; 
-   d="scan'208";a="765893329"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga007.jf.intel.com with ESMTP; 09 Dec 2023 17:22:14 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rC8WJ-000GEJ-2x;
-	Sun, 10 Dec 2023 01:22:11 +0000
-Date: Sun, 10 Dec 2023 09:21:35 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 583b5273a624e7d87b7038404cb1524450abdfbc
-Message-ID: <202312100933.mLPbO8hG-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 89CD4B7
+	for <linux-gpio@vger.kernel.org>; Sat,  9 Dec 2023 18:34:53 -0800 (PST)
+Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5c690c3d113so2775202a12.1
+        for <linux-gpio@vger.kernel.org>; Sat, 09 Dec 2023 18:34:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702175693; x=1702780493; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=tJpA9wNXRzttvJ7+MGP9xafSW+yuX43TVx+Ans7LS4c=;
+        b=hspYSK2YYCFhK+stLLOQeNaOCn39db2ScFmfhunvCBs1JDkf7ETKm4/OrjhzhReVsd
+         lpvzbsc+Fl1NLosRU/kkPhezlKMnQLox+AXx3XGqJSWO+EFLG7NhcY0EOqwWF14kPW6a
+         VAEE4ysJ/yX/rcUwRS/zBc4h4L5t18uhLESAP7iEes2fbo/ypX9TTH12nTGBep5g1EIg
+         PgTWKzeKrrQtzLaIO2IraJpuoOzY2h5f08jYrpV226jYyp3JzOwOtPl3aaJO1n3sUj2S
+         39p3zWiszdG8FKb5is+fiGTqk/ATg/e9rDRSCkqFqL/F/f+rXqFstmmvRxvVQR4xjNYK
+         obFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702175693; x=1702780493;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=tJpA9wNXRzttvJ7+MGP9xafSW+yuX43TVx+Ans7LS4c=;
+        b=TIpXzHQp3Axj8+/qe72tKIwvZA5WjwsYFljyUmsOY80WpOWi6QYDGB+RvdNJJwVQ2V
+         rL9jwo6qn5KB2pbeite0Gm0+wc4WHD/hfsRGik0pXgnLuDpPzqaRaC6x/D+iq1PE48zn
+         4G+A1nRVVdLaLRf/8WfTiXPeFjRXSNMb+XMAg/c7wxZ1B6LsIMdnop4dvDkv15kCBm1n
+         4T1SIaNYHb0RWZ4gbu4gJajEuOyifbfwyq4Bt3W1Pl1r/4ygim2PcT3D4TLCgNgmxhlr
+         dgloAgWtprI0BL6Lnd7Jm90YQkm8sT8IYka1wP4pO/mADMAgfWRQz5vXHn3Pz05RG7f9
+         Ye+w==
+X-Gm-Message-State: AOJu0YyH+t5QrfvQro1K6ZfGr+Fg1ruj9+KNcbK5uFjY45Hz3IkxroY2
+	cifAfYZXAng/tzCWdIRvy0Q1Ji5jD8I=
+X-Google-Smtp-Source: AGHT+IFMph7/M9sFoR2LZ4q9xELNPvqU3NHjeDOPIXhUCOakaLyHm8bXoE30JzwTpXzYYPh8hHvmJA==
+X-Received: by 2002:a17:90a:c252:b0:286:6cc0:cade with SMTP id d18-20020a17090ac25200b002866cc0cademr1733160pjx.85.1702175692463;
+        Sat, 09 Dec 2023 18:34:52 -0800 (PST)
+Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
+        by smtp.gmail.com with ESMTPSA id 4-20020a17090a08c400b00286da7407f2sm5663649pjn.7.2023.12.09.18.34.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 09 Dec 2023 18:34:52 -0800 (PST)
+Date: Sun, 10 Dec 2023 10:34:47 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: GPIOLIB locking is broken and how to fix it
+Message-ID: <ZXUjx5UTgC9tvkp9@rigel>
+References: <CAMRc=Md6y=91o_zB7ePLM1tEfG7sjgE2tujZXSRTQQ8y8oJnPg@mail.gmail.com>
+ <CAMRc=Me3JV6yjfRK6TaVtVYV0zhbn=274uCzbfYZ-uywaSuz0A@mail.gmail.com>
+ <ZXJq2zGjBT0yQAXv@rigel>
+ <CAMRc=MemJobowO_+FFaF0r6OGx1cWTc899A5yPzR+q+2=rwADA@mail.gmail.com>
+ <ZXLWHTjv9W-IH_OP@rigel>
+ <CAMRc=MfXQb=A=4f0kFEW4ENuNk0ZmL_qAkWihEvFcYaizCf8LA@mail.gmail.com>
+ <ZXLvfBWTAGZt0f0L@rigel>
+ <CAMRc=MdhcYToMixdFh6Kf+GZ_MhDeHxd5_2U00neLGoH2M_P9Q@mail.gmail.com>
+ <ZXPJXTm3pzBKFX08@rigel>
+ <CAMRc=MdDg8pcu=iTCUDjdpgYMuBubjeL5po8Fmhz6z3ri0fOZw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdDg8pcu=iTCUDjdpgYMuBubjeL5po8Fmhz6z3ri0fOZw@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 583b5273a624e7d87b7038404cb1524450abdfbc  pinctrl: nuvoton: Convert to use struct pingroup and PINCTRL_PINGROUP()
+On Sat, Dec 09, 2023 at 08:24:59PM +0100, Bartosz Golaszewski wrote:
+> On Sat, Dec 9, 2023 at 2:56 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Fri, Dec 08, 2023 at 07:54:40PM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Dec 8, 2023 at 11:27 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> > > > On Fri, Dec 08, 2023 at 10:52:09AM +0100, Bartosz Golaszewski wrote:
+> > > > > On Fri, Dec 8, 2023 at 9:38 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > >
+> > > > > > On Fri, Dec 08, 2023 at 09:13:17AM +0100, Bartosz Golaszewski wrote:
+> > > > > > > On Fri, Dec 8, 2023 at 2:01 AM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > > > >
+> > > > > > > > On Thu, Dec 07, 2023 at 07:37:54PM +0100, Bartosz Golaszewski wrote:
+> > > > > > > > > On Tue, Nov 28, 2023 at 11:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > > > > > > > >
+> > > > > > > > >
+> > > > > > > > > [snip]
+> > > > > > >
+> > > > > >
+> > > > > > Yeah, no need to risk other GPIO users messing with it if it is only there
+> > > > > > for cdev.
+> > > > > > Want me to take a look at it or are you happy to take care of it?
+> > > > > >
+> > > > >
+> > > > > If you'll find the time to do it in the following days then sure, go
+> > > > > ahead, otherwise, I'll have some pare cycles today and next week to
+> > > > > spend on it.
+> > > > >
+> > > >
+> > > > It would probably take me longer than that to context switch, so go for
+> > > > it.
+> > > >
+> > >
+> > > Well I went for it and it turns out to be quite tricky. We have
+> > > linereq and gpio_chardev_data that have independent lifetimes and the
+> > > only resource they share is the gpio_device and - by extension - gpio
+> > > descriptors . If we want to store some additional data locally within
+> > > the context of gpiolib-cdev.c then I see the following options:
+> > >
+> >
+> > Well that probably explains why putting it in the desc made so much
+> > sense at the time.
+> >
+> > Lets take a look at the code...
+> >
+> > I had thought it could be moved to struct line (contained within
+> > struct linereq), so basically replacing line->desc->debounce_period_us
+> > with line->debounce_period_us.  That almost works, but the problem there
+> > is that gpio_desc_to_lineinfo() returns the debounce period in the line
+> > info - and there is no way to access the linereq/line from the desc...
+> >
+> > Ah, so the lineinfo_get/_v1() functions that call
+> > gpio_desc_to_lineinfo() also have the gpio_chardev_data to work with -
+> > now I see where you are coming from.
+> > (Debounce is not relevant for v1, so that reduces the problem to
+> > lineinfo_get().)
+> >
+> > > 1. Global radix_tree containing additional configuration
+> > > (debounce_period_us for now) looked up by the descriptor's address.
+> > > Lookup can be done locklessly using RCU and from atomic context
+> > > (interrupt handlers in cdev code).
+> > >
+> >
+> > The irq handlers are already protected from changes to debounce period.
+> > It is either set before the irqs are enabled (in the request), or the
+> > irq is disabled, debounce updated, and irq re-enabled (in set_config).
+> >
 
-elapsed time: 1526m
+Having had a closer look at the code and strictly speaking, one of the
+corner cases (updating the period for sw debouncing) doesn't do the
+disable/enable but lives with the possibility of the debouncer using a
+stale value for one debounce period (as that is much simpler).
 
-configs tested: 141
-configs skipped: 2
+But the end result is the same - the debounce period doesn't require
+additional locking.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+> > > 2. Reference counted wrapper around descriptors. It would look something like:
+> > >
+> > > struct gpio_cdev_desc {
+> > >     struct kref ref;
+> > >     struct gpio_desc *desc;
+> > >     unsigned int debounce_period_us;
+> > > };
+> > >
+> > > And then struct gpio_chardev_data would store an array of pointers to
+> > > this wrapper while struct line would store a pointer to it instead of
+> > > directly referencing struct gpio_desc.
+> > >
+> > > Any other ideas?
+> > >
+> >
+> > I still think the primary location for any additional line config is in
+> > struct line - that makes it clear and simple for the majority of cdev and
+> > matches the lifetimes of the accessors (other than lineinfo_get()).
+> >
+> > The only issue being how to access that info from lineinfo_get().
+> > I guess we can't stop reporting the debounce in the line info :-(.
+> >
+> > Rather than worry about an linkage between gpio_chardev_data and the
+> > linereq/line, I would consider a separate copy of this supplemental line
+> > info for the chardev, possibly using a radix_tree as you suggest.
+> > That would be updated by the linereq to match its value in struct line.
+> > So basically Option 1 but for a shadow copy of the additional info.
+> >
+>
+> We still need to connect linereq with its "parent" gpio_chardev_data
+> somehow and make this link weak so that it can survive one or the
+> other being destroyed. Maybe a notifier in linereq to which
+> gpio_chardev_data would subscribe? It would send out notifications on
+> changes to debounce_period which gpio_chardev_data could store. When
+> linereq goes out of scope it sends a corresponding notification
+> allowing gpio_chardev_data to unsubscribe before linereq is freed,
+> while when gpio_chardev_data goes out of scope first, it unsubscribes
+> when being released.
+>
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                               defconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20231210   gcc  
-arc                   randconfig-002-20231210   gcc  
-arm                               allnoconfig   gcc  
-arm                     am200epdkit_defconfig   clang
-arm                                 defconfig   clang
-arm                          exynos_defconfig   gcc  
-arm                          ixp4xx_defconfig   clang
-arm                         nhk8815_defconfig   gcc  
-arm                   randconfig-001-20231210   gcc  
-arm                   randconfig-002-20231210   gcc  
-arm                   randconfig-003-20231210   gcc  
-arm                   randconfig-004-20231210   gcc  
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20231210   gcc  
-arm64                 randconfig-002-20231210   gcc  
-arm64                 randconfig-003-20231210   gcc  
-arm64                 randconfig-004-20231210   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20231210   gcc  
-csky                  randconfig-002-20231210   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20231210   clang
-hexagon               randconfig-002-20231210   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20231209   gcc  
-i386         buildonly-randconfig-002-20231209   gcc  
-i386         buildonly-randconfig-003-20231209   gcc  
-i386         buildonly-randconfig-004-20231209   gcc  
-i386         buildonly-randconfig-005-20231209   gcc  
-i386         buildonly-randconfig-006-20231209   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20231209   gcc  
-i386                  randconfig-002-20231209   gcc  
-i386                  randconfig-003-20231209   gcc  
-i386                  randconfig-004-20231209   gcc  
-i386                  randconfig-005-20231209   gcc  
-i386                  randconfig-006-20231209   gcc  
-i386                  randconfig-011-20231209   clang
-i386                  randconfig-012-20231209   clang
-i386                  randconfig-013-20231209   clang
-i386                  randconfig-014-20231209   clang
-i386                  randconfig-015-20231209   clang
-i386                  randconfig-016-20231209   clang
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20231210   gcc  
-loongarch             randconfig-002-20231210   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                          ath79_defconfig   clang
-nios2                             allnoconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20231210   gcc  
-nios2                 randconfig-002-20231210   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20231210   gcc  
-parisc                randconfig-002-20231210   gcc  
-parisc64                            defconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                    amigaone_defconfig   gcc  
-powerpc                 mpc8315_rdb_defconfig   clang
-powerpc                 mpc836x_rdk_defconfig   clang
-powerpc                 mpc837x_rdb_defconfig   gcc  
-powerpc                      pasemi_defconfig   gcc  
-powerpc               randconfig-001-20231210   gcc  
-powerpc               randconfig-002-20231210   gcc  
-powerpc               randconfig-003-20231210   gcc  
-powerpc                    socrates_defconfig   gcc  
-powerpc                        warp_defconfig   gcc  
-powerpc64             randconfig-001-20231210   gcc  
-powerpc64             randconfig-002-20231210   gcc  
-powerpc64             randconfig-003-20231210   gcc  
-riscv                             allnoconfig   clang
-riscv                               defconfig   gcc  
-riscv                 randconfig-001-20231210   gcc  
-riscv                 randconfig-002-20231210   gcc  
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20231210   clang
-s390                  randconfig-002-20231210   clang
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                               j2_defconfig   gcc  
-sh                    randconfig-001-20231210   gcc  
-sh                    randconfig-002-20231210   gcc  
-sh                           se7619_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20231210   gcc  
-sparc64               randconfig-002-20231210   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20231210   gcc  
-um                    randconfig-002-20231210   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                           alldefconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20231210   gcc  
-x86_64       buildonly-randconfig-002-20231210   gcc  
-x86_64       buildonly-randconfig-003-20231210   gcc  
-x86_64       buildonly-randconfig-004-20231210   gcc  
-x86_64       buildonly-randconfig-005-20231210   gcc  
-x86_64       buildonly-randconfig-006-20231210   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20231210   clang
-x86_64                randconfig-002-20231210   clang
-x86_64                randconfig-005-20231210   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                randconfig-001-20231210   gcc  
-xtensa                randconfig-002-20231210   gcc  
+No, there has to be a link between both and the supplemental info.
+For gpio_chardev_data that is to create lineinfo, and for the linereq it
+is to keep the value reported in lineinfo mirroring the current value.
+Below I suggested making the supplemental info a reference counted
+object, with chip scope, referenced by both gpio_chardev_data and the
+linereq. So last one out turns off the lights.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Having the shadow copy allows most usage to avoid the tree lookup and any
+associated locking (assuming the tree isn't inherently thread safe and
+requires a spinlock to prevent modification during a lookup).
+It is only populating the lineinfo or updating the value that would
+require the lookup, and neither are a hot path (if there is such a thing
+in cdev).
+
+Hmmm, the radix_tree allocates a page of entries at a time, which might
+be a bit of overkill per-chip, so maybe a global is the way to go?
+Or something other than a radix_tree, say a rbtree?
+
+All this is getting rather complicated just to relocate one field, so I'm
+starting to reconsider whether the desc was the right place for it after
+all. ¯\_(ツ)_/¯
+
+OTOH, I've partially coded my suggestion, to the point of skeletons for
+the supplemental info, so if you like I'm happy to finish that off and
+provide patches.  Though what remains is probably 90% of the work...
+
+Cheers,
+Kent.
+
+> Bart
+>
+> > I'm not a fan of globals, so would go per chip and indexed by line
+> > offset rather than desc. But then, given the lifetime issues at play, that
+> > would have to be in a reference counted object that both gpio_chardev_data
+> > and linereq would reference.  So swings and roundabouts.
+> >
+> > Does that make sense? Anyway, that's my $/50.
+> >
+> > Cheers,
+> > Kent.
+> >
 
