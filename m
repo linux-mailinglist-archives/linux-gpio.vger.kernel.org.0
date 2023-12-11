@@ -1,104 +1,131 @@
-Return-Path: <linux-gpio+bounces-1249-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1250-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 134AE80D1FB
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 17:36:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB3FD80D285
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 17:43:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCCFE1F217DD
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 16:36:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 755691F21892
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 16:43:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFAED1EB5D;
-	Mon, 11 Dec 2023 16:36:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 375E9487A8;
+	Mon, 11 Dec 2023 16:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oqnSl9xk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YDgwPGeu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-x32d.google.com (mail-wm1-x32d.google.com [IPv6:2a00:1450:4864:20::32d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 726C4B3
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:36:19 -0800 (PST)
-Received: by mail-wm1-x32d.google.com with SMTP id 5b1f17b1804b1-40c339d2b88so33047435e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:36:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702312578; x=1702917378; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=bK1lX1hwHqRE0qWwNG1aUzZucX1tBAoUd44IP9gaN34=;
-        b=oqnSl9xk2RTxEzD6yma+xPajtnZb4XBh3BBnBDKAKEPUAM2omQ7B1U9RCKM5K+duWl
-         UM7GY0xkGuUFhfqq6TDZF9Wd/vPPLm7fJyGi6DMulMyxoYe4ewT9toCLqRirkW8/CpJD
-         0rWsm57VT/Q7jYcVEnuGfA/8w+bUf9NHJ3mfAwp/I9BP4yIbFx1wKbqgc1WbIPiP4IRz
-         2cnJB+gi8rP6rDaxZFeXnwYfgSJT6Bqh/hDig0vjxnoFJxvo03142EP4R+NSCoWWpc3X
-         9u+WICBhxruqK/9ZGVCkw0qGkSxQ0hH7rZTpkYQX+ZKgk8n07ftc6Y3aZ4yG6qF2Qmcd
-         FG0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702312578; x=1702917378;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=bK1lX1hwHqRE0qWwNG1aUzZucX1tBAoUd44IP9gaN34=;
-        b=eDPx/+RoGNhrt4oFU04ajk6ek5Lqun/HrF5mrn4lGe0WEeJIYPokVjee9yToAIlP0x
-         PmNKAlu7rX66iK4miQlHBVOJbPzJRNsn2qCZpv9KPXh9RQk+UxWWZebtNvqHqG9YZQuI
-         mNLn32veiQHyXuTirSHKHd3NYCRmpE1M/x0eHSjhd5F6jPfh6oShNRgxZlePYfHc4yGp
-         bVUotO2g4UnruNykyNAKQw5PO66Tul45YNL+yeoJobE8CarYmEtJVQIQet17+BiCR0qs
-         rjjz/Kf2IiULFJ0z/qO4ERbd1rtYinO4/UW0Medv/bFNZ3IY8dLQkJNFnjhjjT9fTJSr
-         2cOw==
-X-Gm-Message-State: AOJu0YwRXAH4V1AWzpwQROvxxjK7qHDaaXB+iRxG88PqMRuWqjtwUFpe
-	XTXrn+gVnXsS/uysmxbf5cPENA==
-X-Google-Smtp-Source: AGHT+IHqlghak/z1rUpsIZnKDYLf/Lji2enrhgj53Kac2omQn554ooTGIUHbzfez0RtduglMO9UMiw==
-X-Received: by 2002:a05:600c:510e:b0:40c:67a:b3bc with SMTP id o14-20020a05600c510e00b0040c067ab3bcmr2342567wms.71.1702312577700;
-        Mon, 11 Dec 2023 08:36:17 -0800 (PST)
-Received: from draszik.lan ([80.111.64.44])
-        by smtp.gmail.com with ESMTPSA id w7-20020a05600c474700b0040c41846919sm7404061wmo.41.2023.12.11.08.36.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Dec 2023 08:36:17 -0800 (PST)
-Message-ID: <f3299aaf9392aaedf8cca1c4756605b11c59b98f.camel@linaro.org>
-Subject: Re: [PATCH v7 06/16] dt-bindings: clock: google,gs101: fix
- incorrect numbering and DGB suffix
-From: =?ISO-8859-1?Q?Andr=E9?= Draszik <andre.draszik@linaro.org>
-To: Peter Griffin <peter.griffin@linaro.org>, robh+dt@kernel.org, 
- krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com,
- conor+dt@kernel.org,  sboyd@kernel.org, tomasz.figa@gmail.com,
- s.nawrocki@samsung.com,  linus.walleij@linaro.org, wim@linux-watchdog.org,
- linux@roeck-us.net,  catalin.marinas@arm.com, will@kernel.org,
- arnd@arndb.de, olof@lixom.net,  gregkh@linuxfoundation.org,
- jirislaby@kernel.org, cw00.choi@samsung.com,  alim.akhtar@samsung.com
-Cc: tudor.ambarus@linaro.org, semen.protsenko@linaro.org,
- saravanak@google.com,  willmcvicker@google.com, soc@kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-samsung-soc@vger.kernel.org,  linux-clk@vger.kernel.org,
- linux-gpio@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- kernel-team@android.com,  linux-serial@vger.kernel.org
-Date: Mon, 11 Dec 2023 16:36:15 +0000
-In-Reply-To: <20231211162331.435900-7-peter.griffin@linaro.org>
-References: <20231211162331.435900-1-peter.griffin@linaro.org>
-	 <20231211162331.435900-7-peter.griffin@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.49.2-3 
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D692A6128;
+	Mon, 11 Dec 2023 16:43:03 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DB72C43395;
+	Mon, 11 Dec 2023 16:43:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702312983;
+	bh=O42VfB6B/NKT45YG7/w+tzHV+vFk/9ubv9SFczzG5L0=;
+	h=References:In-Reply-To:From:Date:Subject:To:List-Id:Cc:From;
+	b=YDgwPGeue5DBU6BcGt8oAMWNp2wU0ujmkYoY5HoVVqcv0hphcrNSDbI1E48AbdsdX
+	 FJchg2BAjmX8HT/GBLQOKBNLWUCChP0fxRtsmLNoqGpy4hKuo5beQ1TEBlr65CmiMX
+	 R2HK47cTKoJEVFw6DSRm6en8DzIOqLJFrrPMsyejWaEqrOnkHxljf4/WBrrQPjpSu5
+	 iz+Zp1LFVIS5X4AQliUoSx/0P8UIXSKDLdU1caNc8vlDAzllZ19so7ob4lTOIa5U+K
+	 TOU/av5PLIxQsFcB23MnJefK1GdwqKeB1jkrJe+jKnSsOt7IJ3mvGV/0nKfkKkaxSx
+	 PJjYPLIyTAZkA==
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50be03cc8a3so6129224e87.1;
+        Mon, 11 Dec 2023 08:43:03 -0800 (PST)
+X-Gm-Message-State: AOJu0Yyqj2jN4i60rkh+PLbJIyJveIfeF5x3tparC614v0ft25uqZ4Cg
+	f8aNlG+8bpO+iWQXvB2o/9xrZlDN8B8tEqr9rQ==
+X-Google-Smtp-Source: AGHT+IE+BuXwI7UD9Kku6Z+7AFIfpY5y8FXvZ7fPoyMcKoLOwdUc9Eno1NvK829t1ShWBDdZ9wMmEuPLOErAklj5W88=
+X-Received: by 2002:a05:6512:ad5:b0:50d:1eb3:7bfd with SMTP id
+ n21-20020a0565120ad500b0050d1eb37bfdmr1914116lfu.13.1702312981546; Mon, 11
+ Dec 2023 08:43:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231211162331.435900-1-peter.griffin@linaro.org> <20231211162331.435900-9-peter.griffin@linaro.org>
+In-Reply-To: <20231211162331.435900-9-peter.griffin@linaro.org>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Mon, 11 Dec 2023 10:42:49 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJ_NUajmQs8ZYiE2GpvNxBwtkLRE2jvWDU3hKtztt92Ug@mail.gmail.com>
+Message-ID: <CAL_JsqJ_NUajmQs8ZYiE2GpvNxBwtkLRE2jvWDU3hKtztt92Ug@mail.gmail.com>
+Subject: Re: [PATCH v7 08/16] clk: samsung: clk-gs101: Add cmu_top, cmu_misc
+ and cmu_apm support
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: krzysztof.kozlowski+dt@linaro.org, mturquette@baylibre.com, 
+	conor+dt@kernel.org, sboyd@kernel.org, tomasz.figa@gmail.com, 
+	s.nawrocki@samsung.com, linus.walleij@linaro.org, wim@linux-watchdog.org, 
+	linux@roeck-us.net, catalin.marinas@arm.com, will@kernel.org, arnd@arndb.de, 
+	olof@lixom.net, gregkh@linuxfoundation.org, jirislaby@kernel.org, 
+	cw00.choi@samsung.com, alim.akhtar@samsung.com, tudor.ambarus@linaro.org, 
+	andre.draszik@linaro.org, semen.protsenko@linaro.org, saravanak@google.com, 
+	willmcvicker@google.com, soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 2023-12-11 at 16:23 +0000, Peter Griffin wrote:
-> 166 was skipped by mistake and two clocks:
-> * CLK_MOUT_CMU_HSI0_USBDPDGB
-> * CLK_GOUT_HSI0_USBDPDGB
->=20
-> Have an incorrect DGB ending instead of DBG.
->=20
-> This is an ABI break, but as the patch was only applied yesterday this
-> header has never been in an actual release so it seems better to fix
-> this early than ignore it.
->=20
-> Fixes: 0a910f160638 ("dt-bindings: clock: Add Google gs101 clock manageme=
-nt unit bindings")
+On Mon, Dec 11, 2023 at 10:24=E2=80=AFAM Peter Griffin <peter.griffin@linar=
+o.org> wrote:
+>
+> cmu_top is the top level clock management unit which contains PLLs, muxes=
+,
+> dividers and gates that feed the other clock management units.
+>
+> cmu_misc clocks IPs such as Watchdog and cmu_apm clocks ips part of the
+> APM module.
+>
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Tested-by: Will McVicker <willmcvicker@google.com>
 > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  drivers/clk/samsung/Makefile    |    1 +
+>  drivers/clk/samsung/clk-gs101.c | 2512 +++++++++++++++++++++++++++++++
+>  2 files changed, 2513 insertions(+)
+>  create mode 100644 drivers/clk/samsung/clk-gs101.c
+>
+> diff --git a/drivers/clk/samsung/Makefile b/drivers/clk/samsung/Makefile
+> index ebbeacabe88f..3056944a5a54 100644
+> --- a/drivers/clk/samsung/Makefile
+> +++ b/drivers/clk/samsung/Makefile
+> @@ -21,6 +21,7 @@ obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK) +=3D clk-exynos7.=
+o
+>  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)  +=3D clk-exynos7885.o
+>  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)  +=3D clk-exynos850.o
+>  obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)  +=3D clk-exynosautov9.o
+> +obj-$(CONFIG_EXYNOS_ARM64_COMMON_CLK)  +=3D clk-gs101.o
+>  obj-$(CONFIG_S3C64XX_COMMON_CLK)       +=3D clk-s3c64xx.o
+>  obj-$(CONFIG_S5PV210_COMMON_CLK)       +=3D clk-s5pv210.o clk-s5pv210-au=
+dss.o
+>  obj-$(CONFIG_TESLA_FSD_COMMON_CLK)     +=3D clk-fsd.o
+> diff --git a/drivers/clk/samsung/clk-gs101.c b/drivers/clk/samsung/clk-gs=
+101.c
+> new file mode 100644
+> index 000000000000..05361fce3c6f
+> --- /dev/null
+> +++ b/drivers/clk/samsung/clk-gs101.c
+> @@ -0,0 +1,2512 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (C) 2023 Linaro Ltd.
+> + * Author: Peter Griffin <peter.griffin@linaro.org>
+> + *
+> + * Common Clock Framework support for GS101.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-Reviewed-by: Andr=C3=A9 Draszik <andre.draszik@linaro.org>
+You probably don't need this header. Please check.
 
+> +#include <linux/platform_device.h>
 
