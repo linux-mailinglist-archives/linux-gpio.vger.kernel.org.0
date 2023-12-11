@@ -1,89 +1,99 @@
-Return-Path: <linux-gpio+bounces-1270-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1271-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EB0980DFA8
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 00:47:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 36AF080DFAE
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 00:48:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0240AB21531
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 23:47:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E18E81F21BF7
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 23:48:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DA40C56772;
-	Mon, 11 Dec 2023 23:47:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 665D156776;
+	Mon, 11 Dec 2023 23:48:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OVvOwT1J"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="x4GX/zQ/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-x112e.google.com (mail-yw1-x112e.google.com [IPv6:2607:f8b0:4864:20::112e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 98DDAD0
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 15:47:11 -0800 (PST)
-Received: by mail-yw1-x112e.google.com with SMTP id 00721157ae682-5d74186170fso44795647b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 15:47:11 -0800 (PST)
+Received: from mail-yb1-xb2f.google.com (mail-yb1-xb2f.google.com [IPv6:2607:f8b0:4864:20::b2f])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05884CF
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 15:48:45 -0800 (PST)
+Received: by mail-yb1-xb2f.google.com with SMTP id 3f1490d57ef6-db54611b920so4637757276.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 15:48:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702338431; x=1702943231; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702338524; x=1702943324; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5ArXTC/xeZqxu6gWS7eaFl9W6mwBJ0u0LhdXscG2ZEs=;
-        b=OVvOwT1J2lzSsdsNN3owuRtlNuxnPtmYu+d/jvO7GuLOA+g77Dcz1XGjdtb9gI1NY7
-         MD9ELQgpKVLo1y7n55OKuWMw2LsZU1PTNOxb3HI2y+lY3ARRVwlFlD5w8h1yPKpDPmHZ
-         syFSAroyNsMyW27GGBCskTlrgOV+gDmiFSBi6vle+gR8Yv6Ibl+wV0h6arLkXQMWGvci
-         yQE2yGVpId6vNXvwigz8uFaCYprLu2RqnT0f2kSs10EoR7y7uHnL9HkLqyxU4C0b2rLx
-         J4AnS5ifoHLWyvci561BmDe7gfHibkHBo6rBD58/4gh5F5/lthNmaVE1jsn+qjtt48aL
-         pqYQ==
+        bh=euwhIsXaz0VLvDyOMBm+aGeo2N9PmOW4/s9hUBEtSZo=;
+        b=x4GX/zQ/bn9bZMeZ5vnmGHY9Bgw5VNMkl82qDdU7+7fFWYNnVCWJv7yEwYQDvldJiI
+         +ruO/a4Wpd5fxSeOo8+7CIrOO79h2a5Qb0VOu7SVfsOIY8dINIK+AHE3PwQSrBN/CL/s
+         US6FfLbb2NsW/H4g3P+5km4V8i6mLeV3jpzmUz0yPDk5kgikznNTM4LmNroElKUJhqpo
+         X/aQL49+u+ZxUVh9LaALaOQle//ExuzjBcyudB7CKWmwmxSk2SrToc98KWQkdEuWqH1u
+         QrT0S8245VmLA3p22yNloX8RbzfBKEPilN+ArhaF88nvW5vbBsR33XoV00TxokAVYxW+
+         7Q5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702338431; x=1702943231;
+        d=1e100.net; s=20230601; t=1702338524; x=1702943324;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5ArXTC/xeZqxu6gWS7eaFl9W6mwBJ0u0LhdXscG2ZEs=;
-        b=r7k4iztRyoUOmJ46KCWHe3odBy+qFxC2ofWMzYgvmFfqtDl3JS/yCNAM1iT36W8lT0
-         64Ry6FVtkxj4++Q/xP/tIkETlOE65wTsvvy4KhwEcyv7/tr6ZOmIscFj3b2r9iUf8rIW
-         Pl8uNknoR3ZuR9eC66U5cqasgDK3/vmdplEWGzkB80u2B6uRX3dye2GFepg6T7OELhWe
-         HDJ1ijImvhB2n6UKEU23y0dwJdqATOMH2h7NsIRDrxcIvxvv88HC+PjwPG9gDerYzVo4
-         DVH7ZSxyEfihOUomVNbxvvpaCrELyUER99oXgDDWTbUwKuntcHF8fWQCh6SZJU/tiOE6
-         05pw==
-X-Gm-Message-State: AOJu0Yy/mUNfeKFC+ZZ7wLZaRugX1mP39Oz8Wl/7y7ZndhAQJAVE1ROX
-	6bnB4fj7+kke9jeoHlXiON21pKz2VP4I9I5JkAKVeZx3vyrTLZ7x
-X-Google-Smtp-Source: AGHT+IFK9uYJuRbHGv1SXFtZuTcuj72PKdDKu3s4DZM7a8oXOLoxkotONFx2SVn2whlKcO3Jb1pkCctyu0Vb136hGn8=
-X-Received: by 2002:a0d:e652:0:b0:5d8:21f9:4efc with SMTP id
- p79-20020a0de652000000b005d821f94efcmr4077957ywe.14.1702338430812; Mon, 11
- Dec 2023 15:47:10 -0800 (PST)
+        bh=euwhIsXaz0VLvDyOMBm+aGeo2N9PmOW4/s9hUBEtSZo=;
+        b=Hd+ABhZy9HfmlI9xSB9j6ASdlRSVyiAyKZLVzZ/VSMppdM3GVohcXlNzjUo1con3df
+         7ynjMKFszQYSVp57aJEGOgdww+n/NR8EWPIoc+ezEA5c/ONsWmlxr++hUQoNz/tiBEf2
+         BOjmyOzBFqirVUa4H1p77klGQmYviejmj7C/53bNAW5DkPEYkLxbWLtJN+8jmRs9M2Z+
+         apTpJCDxUNry0e/WKI6RSLqfNeCTQPmAgDZfLENCavQniLpadVuPdQ2RfgwM3Nw1jJG3
+         eVFovHWxw/PgqE9QF/Nv3MsxHkqIdZExvIAQwmlxNIoEviql5K8kO3I4jNR8GoqkdOCA
+         RaHw==
+X-Gm-Message-State: AOJu0YxbzoeaSdwrHl/c4em0yjbKTC005jrLTvgHzZX6SymfAKkk72MM
+	7T+qajivgl7MGTW8D+hTYNKzrCZcvkuTBvwyz47IPw==
+X-Google-Smtp-Source: AGHT+IF3tcL6UUeVPz0zW8dM+eYBEA/+XZsY8k/PjoTsu5zg1gtMmDM1MoplNrzJcbsk6c/SNpSN4vT8MNFw/3YCimY=
+X-Received: by 2002:a25:254:0:b0:db5:4715:da36 with SMTP id
+ 81-20020a250254000000b00db54715da36mr3859002ybc.58.1702338524206; Mon, 11 Dec
+ 2023 15:48:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231208083650.25015-1-brgl@bgdev.pl>
-In-Reply-To: <20231208083650.25015-1-brgl@bgdev.pl>
+References: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 12 Dec 2023 00:46:59 +0100
-Message-ID: <CACRpkdb1FAnTupSASYgBTm4mWizz1Z0Pi6QBnXeQxxzsPZHzYA@mail.gmail.com>
-Subject: Re: [GIT PULL] gpio: immutable branch between the GPIO and pinctrl
- trees for v6.8-rc1
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Tue, 12 Dec 2023 00:48:33 +0100
+Message-ID: <CACRpkdbbDAph2gUyvPCPD0s6LtjekK8zVBPLMg1ESB_1SMow_A@mail.gmail.com>
+Subject: Re: [PATCH v5 00/13] pinctrl: Convert struct group_desc to use struct pingroup
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, 
+	Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, 
+	linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, 
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng <aisheng.dong@nxp.com>, 
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	NXP Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, 
+	Paul Cercueil <paul@crapouillou.net>, Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>, 
+	Emil Renner Berthing <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 8, 2023 at 9:37=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Mon, Dec 11, 2023 at 8:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> The struct group_desc has a lot of duplication with struct pingroup.
+> Deduplicate that by embeddind the latter in the former and convert
+> users.
 >
-> Linus, Andy,
+> NB. The function_desc is in plan to follow the similar deduplication.
 >
-> Please pull the following changes into your trees for the next merge wind=
-ow.
-> These are the patches providing a safer alternative for gpiochip_is_reque=
-sted()
-> before we rework the locking in GPIOLIB.
+> This time test-compiled with old GCC 8 for arm64, besides GCC 13 and
+> LLVM 16 for x86_64.
 
-I pulled this into the pin control devel branch.
+Applied to my pin control devel branch for v6.8.
 
 Yours,
 Linus Walleij
