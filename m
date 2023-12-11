@@ -1,164 +1,164 @@
-Return-Path: <linux-gpio+bounces-1214-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1215-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C63E80C246
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 08:43:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4069A80C2F6
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 09:24:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 23C8B1C20953
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 07:43:57 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE842280D1B
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 08:24:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EED85208DE;
-	Mon, 11 Dec 2023 07:43:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F14E820DC3;
+	Mon, 11 Dec 2023 08:24:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DBS8q8Tb"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="hywGTI6R"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x42c.google.com (mail-wr1-x42c.google.com [IPv6:2a00:1450:4864:20::42c])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97585F3
-	for <linux-gpio@vger.kernel.org>; Sun, 10 Dec 2023 23:43:49 -0800 (PST)
-Received: by mail-wr1-x42c.google.com with SMTP id ffacd0b85a97d-333630e9e43so4314967f8f.2
-        for <linux-gpio@vger.kernel.org>; Sun, 10 Dec 2023 23:43:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702280628; x=1702885428; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=KD6JLBEGmK6pNbZtqSJBY+e7RE3d+rewukjVSghCHqU=;
-        b=DBS8q8TbQfs8XB3O6KF00lIM1rZP6RrCAKktJFJP9DxS2oGJJ9MhpQfr9VVICVCUSM
-         itrkBS9DauK6Tn1nIBnX5O4xU5DXWzGz3xAwy+yTsT7af3vtWe4/JL4PZDv0v6uNi6bI
-         XDMIgbRsL4U7tKiZ/T9JPLusBH2bvMpNJrxQLOQkxex+TTnZrTOpMmZd+yjBsS0lJy0t
-         F7X/f1S61ARu1M5eELpapgNMlg4GCeC9UPiTVXl01KCYig2xWjHY2NPIesUhu9sYY1/I
-         42D4TFAJ8oAYAlX6c92DPK7Y29FSqlU4ZwZ0Emas3tF2ugLy/8UIV4wJ0JVaZtjIEkU1
-         q7FA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702280628; x=1702885428;
-        h=content-transfer-encoding:in-reply-to:autocrypt:references:cc:to
-         :from:content-language:subject:user-agent:mime-version:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KD6JLBEGmK6pNbZtqSJBY+e7RE3d+rewukjVSghCHqU=;
-        b=cA73mOY3oRPJKRYG1L7ZJWgwG9s27uxBxJ9UZGAoEfdu33Gf1fTOSKKiXil32RNHeI
-         ajgCQ0cyyGQacWgKF9CIybPyRkZqu9SuZMWC1WRiftk86gM1aYC83h5HAg51EZ2MLaD0
-         4shzknuywsnXVJSR9n5dlphJK2iwytEOJ86/FMtwOBv6O+N5C2srIYbi5mtIR51DewgQ
-         tEcZIgSexhmQpPgSRrBo5GIGAYIG9dJjs42zaDbMxqpBCcgyfVMpUgpKirajDesck7ae
-         HixXnxzTW4IDqOpfx9Z6CH0SVm46uOLOQwFUkRE7cC6zTT0QslBA5oSwNPJf9HU2WEis
-         kWdg==
-X-Gm-Message-State: AOJu0YxJPwctOaVOLkjNl47VX4XvzAdzgPJ3VLeFqNwHtd9aIJViAWaw
-	x3rzhgKmQFM4xdDmPCF3ulJUmg==
-X-Google-Smtp-Source: AGHT+IFXaTXZrbSaAu1y3v2m9t6dOe1n+xv6MekjywSqwO6NlUoA/yTQuWAFITneMBCTrT4VLAr0pQ==
-X-Received: by 2002:a5d:5605:0:b0:333:53bd:b1de with SMTP id l5-20020a5d5605000000b0033353bdb1demr1367575wrv.157.1702280628085;
-        Sun, 10 Dec 2023 23:43:48 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id o4-20020a5d58c4000000b0033333bee379sm7861152wrf.107.2023.12.10.23.43.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 10 Dec 2023 23:43:47 -0800 (PST)
-Message-ID: <2789e0d3-1770-45b8-be7d-384a758c10b7@linaro.org>
-Date: Mon, 11 Dec 2023 08:43:45 +0100
+Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 116CFB6
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 00:24:42 -0800 (PST)
+Received: from epcas2p2.samsung.com (unknown [182.195.41.54])
+	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231211082439epoutp0491e588ae0208c062bdd01942860eeac2~fuXEo5JrL0577305773epoutp04G
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:24:39 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231211082439epoutp0491e588ae0208c062bdd01942860eeac2~fuXEo5JrL0577305773epoutp04G
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702283079;
+	bh=1QHsgPv06bRps25jxYuFz/UImpThxn0lF7/XtP8wrO8=;
+	h=Date:Subject:To:From:In-Reply-To:References:From;
+	b=hywGTI6REwCiJgl5LvrLG+SrCKqn2Fd9b2fl1QzRoSSf9Dysfrg5pAf1e5h2cat5s
+	 I7ChKDVaQk73kkrDDuOZLGjIQxNXjulrgQM9Iao959n7UWEMo3DZ7OJO64ixmhUfa2
+	 ETPe9cbj5UDEYzrPrtYNRNuMlJQWwGJxrRwsVc78=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+	20231211082439epcas2p2541bfba26e777f97f5f530d988e5e19a~fuXEPI00A0332003320epcas2p2X;
+	Mon, 11 Dec 2023 08:24:39 +0000 (GMT)
+Received: from epsmgec2p1-new.samsung.com (unknown [182.195.36.68]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4SpZY26128z4x9Py; Mon, 11 Dec
+	2023 08:24:38 +0000 (GMT)
+Received: from epcas2p3.samsung.com ( [182.195.41.55]) by
+	epsmgec2p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	26.B6.18994.647C6756; Mon, 11 Dec 2023 17:24:38 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas2p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231211082438epcas2p2bedc2e4d9e640cac4832aecbdbcbbd4c~fuXDP6Xof0332003320epcas2p2P;
+	Mon, 11 Dec 2023 08:24:38 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231211082438epsmtrp1fe72969afb90d74c9bcf2cfc689c06df~fuXDO7iWu2131721317epsmtrp1g;
+	Mon, 11 Dec 2023 08:24:38 +0000 (GMT)
+X-AuditID: b6c32a4d-9f7ff70000004a32-69-6576c74685cf
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	69.CC.07368.647C6756; Mon, 11 Dec 2023 17:24:38 +0900 (KST)
+Received: from [10.229.8.168] (unknown [10.229.8.168]) by
+	epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20231211082437epsmtip13574ccbcc7ea834f56fcc0fedefd9476~fuXC55wLW2620926209epsmtip1b;
+	Mon, 11 Dec 2023 08:24:37 +0000 (GMT)
+Message-ID: <4bc0bd93-130d-1293-eca6-46cf9ba85cd9@samsung.com>
+Date: Mon, 11 Dec 2023 17:24:37 +0900
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: (subset) [PATCH v3 1/4] arm64: dts: exynos: add initial support
- for exynosautov920 SoC
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
+	Thunderbird/102.11.0
+Subject: Re: [PATCH] dt-bindings: pinctrl: samsung: correct ExynosAutov920
+ wake-up compatibles
 Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Alim Akhtar <alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>,
- Sylwester Nawrocki <s.nawrocki@samsung.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Thierry Reding <thierry.reding@gmail.com>,
- Uwe Kleine-K?nig <u.kleine-koenig@pengutronix.de>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Jiri Slaby <jirislaby@kernel.org>, Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-serial@vger.kernel.org
-References: <20231208074527.50840-1-jaewon02.kim@samsung.com>
- <CGME20231208075020epcas2p25f18d225f91f185085078461b290cb19@epcas2p2.samsung.com>
- <20231208074527.50840-2-jaewon02.kim@samsung.com>
- <170228052808.12030.1188300498236704832.b4-ty@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <170228052808.12030.1188300498236704832.b4-ty@linaro.org>
-Content-Type: text/plain; charset=UTF-8
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Tomasz Figa
+	<tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Alim
+	Akhtar <alim.akhtar@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+In-Reply-To: <a441ca43-8631-4a6a-b828-6d744fce5aee@linaro.org>
 Content-Transfer-Encoding: 7bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrFJsWRmVeSWpSXmKPExsWy7bCmua7b8bJUg/1fdSwezNvGZrFm7zkm
+	i/lHzrFa7H29ld1iyp/lTBabHl9jtdg8/w+jxeVdc9gsZpzfx2TRuvcIu8XhN+2sFqt2/WF0
+	4PHYOesuu8emVZ1sHneu7WHz2Lyk3qNvyypGj8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8
+	g+Od403NDAx1DS0tzJUU8hJzU22VXHwCdN0yc4BuVFIoS8wpBQoFJBYXK+nb2RTll5akKmTk
+	F5fYKqUWpOQUmBfoFSfmFpfmpevlpZZYGRoYGJkCFSZkZ7xvnMtecJu9YvOau4wNjDPZuhg5
+	OSQETCSaty5j6WLk4hAS2MMo8W3JbGYI5xOjRNvy++wQzjdGiTd/f8C13Dp2GqplL6PEukkX
+	mCCc14wSVw7OYAap4hWwk2jet58VxGYRUJVYPW8yO0RcUOLkzCcsILaoQLRE67L7YFOFBRIk
+	tnz8BVbPLCAucevJfLChIgJnmCVmrbvNCJJgE9CW+L5+MVgRJ9CCW89WsUM0yEtsfzsH7HAJ
+	gZUcEgeWvmWHuNVF4uWqFkYIW1ji1fEtUHEpiZf9bVB2vkTblTNQdo3ExgWXoOrtJRad+QkU
+	5wBaoCmxfpc+iCkhoCxx5BYLxFo+iY7Df9khwrwSHW1CEI1qEvennoMGlozEpCMrmSBsD4nr
+	D06wQcKqgUlizdkfbBMYFWYhBcssJO/PQvLZLIQjFjCyrGKUSi0ozk1PTTYqMNTNSy2HR3ly
+	fu4mRnAi1vLdwfh6/V+9Q4xMHIyHGCU4mJVEeGWOFKcK8aYkVlalFuXHF5XmpBYfYjQFRtBE
+	ZinR5HxgLsgriTc0sTQwMTMzNDcyNTBXEue91zo3RUggPbEkNTs1tSC1CKaPiYNTqoFJ6tVC
+	W1/XrIuT5xhx3H3StYlzzteiU+/kDCQb58c4XQ9nkAvfn+V67ci7TweYAualBk5s6Xxnub1/
+	zuodel/FhCZMV89r/5Xpw+ISmhLzQ616x0Gjg5qJftNe2THd9dFybfcw+no5xJnVwLbggfux
+	zweXZmpX/H+/UIXjReq9N8knVhxr59jC/L+tWmT7/+8vhDuUl0wwux0kLmNfrqppG/+2xDlM
+	4OHP/DmbbOdHhepotG9dvyo2/pm39q3Dl/sCHHRk/dge7/9wy3Dll7vtm9PvP1G6sEd6Oft/
+	TnttZQOuij07k82NF65imDrzgMkmtuObQxSl+zie+C4U2RknpVk1+etZx5u6AjuDf65QYinO
+	SDTUYi4qTgQA4h2jgE0EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupikeLIzCtJLcpLzFFi42LZdlhJTtfteFmqwdTtfBYP5m1js1iz9xyT
+	xfwj51gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7Jo3XuE3eLwm3ZWi1W7/jA6
+	8HjsnHWX3WPTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZ7xvnshfc
+	Zq/YvOYuYwPjTLYuRk4OCQETiVvHTrN0MXJxCAnsZpTomnKHESIhI7H8WR9UkbDE/ZYjrBBF
+	LxklXn07zQSS4BWwk2jet58VxGYRUJVYPW8yO0RcUOLkzCcsILaoQLTE6s8XwGqEBRIktnz8
+	BWYzC4hL3HoynwlkqIjAOWaJ7RO+sENsaGCS2Pj3H1g3m4C2xPf1i8E6OIG23Xq2ih2i20yi
+	a2sXI4QtL7H97RzmCYyCs5Asn4VkySwkLbOQtCxgZFnFKJlaUJybnptsWGCYl1quV5yYW1ya
+	l66XnJ+7iREcXVoaOxjvzf+nd4iRiYPxEKMEB7OSCK/MkeJUId6UxMqq1KL8+KLSnNTiQ4zS
+	HCxK4ryGM2anCAmkJ5akZqemFqQWwWSZODilGphm3q3yNO5h2Lld+/rUs4l2O6+s0Wa+3eEZ
+	uNCvKzD12fMpgn3he+W7V/00kK/8ticsWWVC+tbplwL+HjjJxOP41fe6ia/AAc7dJe98rgu3
+	5QWWLs0MSnxp/4v5Xfe69lK/CV2KD0/O/DBp2U2eDc/L9edeW6bOqhIeFdM04RjjApUF2jPf
+	M250i7o7s2pn7pm/lx4UFiXXpD5/8qHtTM38378ztHLOP5S8vV6g+0uo2X/7M21ceVInzllO
+	TmWNyBEyC+Y95KlTFHL25KLbK98cCWm5qtQcqv3bqErssoxT35l4Ze4VKzwrtto2HFE5cqVy
+	/SM1F7+nhk29fq8bwzNyhZmXBLyy1Wt5H2pSLKjEUpyRaKjFXFScCAAJSu7WHQMAAA==
+X-CMS-MailID: 20231211082438epcas2p2bedc2e4d9e640cac4832aecbdbcbbd4c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: AUTO_CONFIDENTIAL
+CMS-TYPE: 102P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231210133927epcas2p3e2633ad371b03d5ab19f9b44118fcb58
+References: <CGME20231210133927epcas2p3e2633ad371b03d5ab19f9b44118fcb58@epcas2p3.samsung.com>
+	<20231210133915.42112-1-krzysztof.kozlowski@linaro.org>
+	<c63bd0b3-ecb2-d4c6-2147-43f19c1dcfee@samsung.com>
+	<a441ca43-8631-4a6a-b828-6d744fce5aee@linaro.org>
 
-On 11/12/2023 08:42, Krzysztof Kozlowski wrote:
-> 
-> On Fri, 08 Dec 2023 16:45:24 +0900, Jaewon Kim wrote:
->> Samsung ExynosAutov920 is ARMv8-based automotive-oriented SoC.
->> It has AE(Automotive Enhanced) IPs for safety.
->>  * Cortex-A78AE 10-cores
->>  * GIC-600AE
+
+On 23. 12. 11. 16:34, Krzysztof Kozlowski wrote:
+> On 11/12/2023 03:18, Jaewon Kim wrote:
+>> On 23. 12. 10. 22:39, Krzysztof Kozlowski wrote:
+>>> ExynosAutov920 SoC wake-up pin controller has different register layout
+>>> than Exynos7, thus it should not be marked as compatible.  Neither DTS
+>>> nor Linux driver was merged yet, so the change does not impact ABI.
+>>>
+>>> Cc: Jaewon Kim <jaewon02.kim@samsung.com>
+>>> Fixes: 904140fa4553 ("dt-bindings: pinctrl: samsung: use Exynos7 fallbacks for newer wake-up controllers")
+>>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+>>>
+>>>
+>> It is reasonable.
 >>
->> This is minimal support for ExynosAutov920 SoC.
->>  * Enumerate all pinctrl nodes
->>  * Enable Chip-Id
->>  * Serial0 for console
->>  * PWM
+>> I will also fix this in v4 patch.
 >>
->> [...]
-> 
-> Applied, thanks!
-> 
-> [1/4] arm64: dts: exynos: add initial support for exynosautov920 SoC
->       https://git.kernel.org/krzk/linux/c/c96dab1993d247b7b05ba2fdef8f185cbbd5454e
+>>
+>> Reviewed-by:Jaewon Kim <jaewon02.kim@samsung.com>
+> Please send correct tags so I won't need to manually fix them. Otherwise
+> they get ignored by b4.
 
-With changes:
+Thanks Krzysztof
 
-Re-order nodes to match coding style: UFS reset pins,
-gpg/gpp in peric0 and peric1, all nodes in the soc@0;
-drop fallback compatibles from wakeup-interrupt-controller
+I miss space. I will check it again next time.
 
-Best regards,
-Krzysztof
+>
+> Best regards,
+> Krzysztof
+>
+>
+>
+
+Thanks
+
+Jaewon Kim
 
 
