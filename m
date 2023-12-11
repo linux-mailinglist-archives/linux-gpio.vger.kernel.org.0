@@ -1,65 +1,117 @@
-Return-Path: <linux-gpio+bounces-1216-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1217-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8A1980C344
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 09:31:22 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE4F180C448
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 10:18:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 634B9280D30
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 08:31:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A8BB9281428
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 09:18:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997C01F612;
-	Mon, 11 Dec 2023 08:31:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E0CF21117;
+	Mon, 11 Dec 2023 09:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=venturelinkage.com header.i=@venturelinkage.com header.b="iwteRqg/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GLWdKz+4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.venturelinkage.com (mail.venturelinkage.com [80.211.143.151])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EB4BDFF
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 00:31:12 -0800 (PST)
-Received: by mail.venturelinkage.com (Postfix, from userid 1002)
-	id 8F69482470; Mon, 11 Dec 2023 09:31:11 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=venturelinkage.com;
-	s=mail; t=1702283471;
-	bh=7iowqdzve/IIiUUjcEwx8j3uMrVqqiE7R9zbOCKRV9Q=;
-	h=Date:From:To:Subject:From;
-	b=iwteRqg/XpNifyqa2HsTAlCr6boJGnAYzwICeBBKIL7kxs1gEULq62glD+pUeE5TV
-	 Z4YUAf1VMrEqqqznjnRrQJz45wPt8u84TGfmlB886CCePXpM0PgEDP7AIT1FjVaDib
-	 8PMMYnvQrIlar9p17ARJzpkMsdsVdtOmpY4EU+OxbkNRwbrxqm+lpL3PsQkLwC87vq
-	 7IYY/+QwnJICqWQFqx3WaapdHGy6AKyIkO1Tk+isszsnhSdNABCsYUPXBLpHjHPPou
-	 HO9rVwDD4kScEs4D9rKaXTsJmdDVaLs4TMGAoDK6dN1DdOD+UC1UmbUzp9XfX8G/1L
-	 ZXrzOZYJkrPUQ==
-Received: by mail.venturelinkage.com for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:31:03 GMT
-Message-ID: <20231211084500-0.1.25.5dlz.0.k8s2dqt3mm@venturelinkage.com>
-Date: Mon, 11 Dec 2023 08:31:03 GMT
-From: "Lukas Varga" <lukas.varga@venturelinkage.com>
-To: <linux-gpio@vger.kernel.org>
-Subject: =?UTF-8?Q?Popt=C3=A1vka?=
-X-Mailer: mail.venturelinkage.com
+Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E9C96FD
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 01:18:04 -0800 (PST)
+Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-677fba00a49so33949406d6.1
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 01:18:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702286284; x=1702891084; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=/z0fIrgey0ax47ogB/tuo0R84muzHuQ+ydDig5s54Lc=;
+        b=GLWdKz+4fg8mPDx1ELnuojeEe2T/1XyB36ZvIENuMsR3fCl7ln+rr+pUXcPb2VFVbW
+         sPIw76ndiczt/NSqQ6/l81FNJwxsmSQbIzbgsnGG8kdAZndJRpYXnKH/S1Ej99Yu6koY
+         gPYg/BB8EdJL/2JP1yMVLRaRulrNnBlK95L1XMF8SDIdVaQgYQ4I6TScanJ3XCzTsD6M
+         Jgh39J/dsNCzJ7FmG8n7AwVvvQmP1igOzbuEvsKCkXtXO9ydm1bsBxyJ6SaD+Re4u7ac
+         wnwNX6eyjiVT55sw6buh6HQWTPf5k1QiXf4vxFLAXcSkDHdpnzyCoNVYfX6xlPptDYMB
+         SuHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702286284; x=1702891084;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/z0fIrgey0ax47ogB/tuo0R84muzHuQ+ydDig5s54Lc=;
+        b=eZNDeNaGazJAleH81jgrRldKJUP2oaoJ0Vqwfa6YBJ18vY9fdAiiYD4zRaLgNppUH9
+         49pB4I+ts1HLgKzVAeSJx+peN18Wq2yK06O7qO+VXCGBjG1hF96YpxIkdRS/7dTdbct/
+         HYtB08hehnMAyNe6rAfJi4pDRPZuRFmtzVkmJzvqNsTTyBs7BjR/FeZZ2kr2Y9mJ1vk+
+         V+sBs+0Hi7wMfBQFfNLxmsEIWAmdQP7FswrrKuvShoke52bJv2bhgKS0BY3An+QMvYDQ
+         5J+2KviUTB43sA7JIUR+gYRRQXwn363FJVUR5IxpBXhRMxnDl6IMidjMU8K7OTBuUlEj
+         4U2g==
+X-Gm-Message-State: AOJu0YzFVBHygl7cBGhy9HtXndu7CUlM+Tr2QRzcPKvuvbqpHn+ExQud
+	7Jjj3MHy/3TWizS1V89/2PzeVs+ylAiILBGnL+85/w==
+X-Google-Smtp-Source: AGHT+IF2FD/yZWTaJspuz2ZkGnHtLmu9yc29fMOCKmFWdGSQxO5eLtwgHWeyaAYDFzw+Ks+VHIEsnPYl7wNEw90Fzik=
+X-Received: by 2002:ad4:5dec:0:b0:67a:568e:5b10 with SMTP id
+ jn12-20020ad45dec000000b0067a568e5b10mr7473425qvb.20.1702286284034; Mon, 11
+ Dec 2023 01:18:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231209233106.147416-1-peter.griffin@linaro.org>
+ <20231209233106.147416-4-peter.griffin@linaro.org> <c2244932-cb2f-423a-bbe6-9ab2b08b9d63@linaro.org>
+In-Reply-To: <c2244932-cb2f-423a-bbe6-9ab2b08b9d63@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Date: Mon, 11 Dec 2023 09:17:53 +0000
+Message-ID: <CADrjBPpd5mT6SZyPEgxFGy18pr5Gypcwv7aoG4R978d__Pk3LA@mail.gmail.com>
+Subject: Re: [PATCH v6 03/20] dt-bindings: soc: google: exynos-sysreg: add
+ dedicated SYSREG compatibles to GS101
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	mturquette@baylibre.com, conor+dt@kernel.org, sboyd@kernel.org, 
+	tomasz.figa@gmail.com, s.nawrocki@samsung.com, linus.walleij@linaro.org, 
+	wim@linux-watchdog.org, linux@roeck-us.net, catalin.marinas@arm.com, 
+	will@kernel.org, arnd@arndb.de, olof@lixom.net, gregkh@linuxfoundation.org, 
+	jirislaby@kernel.org, cw00.choi@samsung.com, alim.akhtar@samsung.com, 
+	tudor.ambarus@linaro.org, andre.draszik@linaro.org, 
+	semen.protsenko@linaro.org, saravanak@google.com, willmcvicker@google.com, 
+	soc@kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-watchdog@vger.kernel.org, kernel-team@android.com, 
+	linux-serial@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Dobr=C3=A9 r=C3=A1no,
+Hi Krzysztof,
 
-Dovolil jsem si V=C3=A1s kontaktovat, proto=C5=BEe m=C3=A1m z=C3=A1jem ov=
-=C4=9B=C5=99it mo=C5=BEnost nav=C3=A1z=C3=A1n=C3=AD spolupr=C3=A1ce.
+On Sun, 10 Dec 2023 at 13:49, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 10/12/2023 00:30, Peter Griffin wrote:
+> > GS101 has three different SYSREG controllers, add dedicated
+> > compatibles for them to the documentation.
+> >
+> > Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> > ---
+> >  .../bindings/soc/samsung/samsung,exynos-sysreg.yaml         | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
+> > index 2de4301a467d..127f4ffde76a 100644
+> > --- a/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
+> > +++ b/Documentation/devicetree/bindings/soc/samsung/samsung,exynos-sysreg.yaml
+> > @@ -22,6 +22,12 @@ properties:
+> >                - tesla,fsd-fsys1-sysreg
+> >                - tesla,fsd-peric-sysreg
+> >            - const: syscon
+> > +      - items:
+> > +          - enum:
+> > +              - google,gs101-apm-sysreg
+> > +              - google,gs101-peric0-sysreg
+> > +              - google,gs101-peric1-sysreg
+>
+> This should be part of the first enum. No need for new list for every
+> new SoC. I'll fix it while applying.
 
-Podporujeme firmy p=C5=99i z=C3=ADsk=C3=A1v=C3=A1n=C3=AD nov=C3=BDch obch=
-odn=C3=ADch z=C3=A1kazn=C3=ADk=C5=AF.
+Noted, thanks!
 
-M=C5=AF=C5=BEeme si promluvit a poskytnout podrobnosti?
-
-V p=C5=99=C3=ADpad=C4=9B z=C3=A1jmu V=C3=A1s bude kontaktovat n=C3=A1=C5=A1=
- anglicky mluv=C3=ADc=C3=AD z=C3=A1stupce.
-
-
-Pozdravy
-Lukas Varga
+Peter
 
