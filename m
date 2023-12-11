@@ -1,181 +1,329 @@
-Return-Path: <linux-gpio+bounces-1207-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1208-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2595380BF51
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 03:48:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A259F80C0C5
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 06:41:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BABAAB20978
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 02:48:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 27DFD1F20EF3
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 05:41:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6277114F65;
-	Mon, 11 Dec 2023 02:48:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE7F31CF88;
+	Mon, 11 Dec 2023 05:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="E4ZuNcly"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="a1dUasRa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout4.samsung.com (mailout4.samsung.com [203.254.224.34])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 2E829E8
-	for <linux-gpio@vger.kernel.org>; Sun, 10 Dec 2023 18:48:19 -0800 (PST)
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-	by mailout4.samsung.com (KnoxPortal) with ESMTP id 20231211024817epoutp04072e00eb68c5c7295889227aa5c408bd~fpxYk5twU1364513645epoutp04A
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 02:48:17 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20231211024817epoutp04072e00eb68c5c7295889227aa5c408bd~fpxYk5twU1364513645epoutp04A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702262897;
-	bh=rZejJMBuaSwsVc/aCyPlkYrHKlHgmO7Ghhnl4Zu9oB0=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=E4ZuNclykDyWzTZYG7i2med6WthYAFhuSbPjAKuMjIzpkSI4FVugjBkB4nVdD/DFL
-	 AWITUds0APoEG+ATyGa/k3cyGUxFj2q29FJ62b5Md9iML306g1DhD4jQankYkP84u+
-	 sNhz7RttqhXEmy5cJhcC6YFtfNHy0YjfZBj2SuSs=
-Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
-	epcas2p3.samsung.com (KnoxPortal) with ESMTP id
-	20231211024817epcas2p387c9241c90237856d659b6dd309585c3~fpxX6attj2305223052epcas2p3z;
-	Mon, 11 Dec 2023 02:48:17 +0000 (GMT)
-Received: from epsmges2p2.samsung.com (unknown [182.195.36.100]) by
-	epsnrtp3.localdomain (Postfix) with ESMTP id 4SpR4w3HY1z4x9Px; Mon, 11 Dec
-	2023 02:48:16 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-	epsmges2p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D0.8F.09622.07876756; Mon, 11 Dec 2023 11:48:16 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas2p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231211024815epcas2p4bab12232eb9182f4de1c1b5d7d6b4568~fpxWqpqBs0127201272epcas2p4C;
-	Mon, 11 Dec 2023 02:48:15 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231211024815epsmtrp27aabd70c6663656bcac0051fc27bfa47~fpxWjVu9O2544325443epsmtrp2E;
-	Mon, 11 Dec 2023 02:48:15 +0000 (GMT)
-X-AuditID: b6c32a46-fcdfd70000002596-1b-657678707158
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	D6.3C.08755.F6876756; Mon, 11 Dec 2023 11:48:15 +0900 (KST)
-Received: from [10.229.8.168] (unknown [10.229.8.168]) by
-	epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20231211024815epsmtip2ddbf42bdf4ab5eff4d60d8fad33b55ef~fpxWPCIz42494524945epsmtip2L;
-	Mon, 11 Dec 2023 02:48:15 +0000 (GMT)
-Message-ID: <5e5df314-e64c-4181-b9b8-0674b36898d1@samsung.com>
-Date: Mon, 11 Dec 2023 11:45:25 +0900
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5153DD9
+	for <linux-gpio@vger.kernel.org>; Sun, 10 Dec 2023 21:41:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702273301; x=1733809301;
+  h=date:from:to:cc:subject:message-id:references:
+   content-transfer-encoding:in-reply-to:mime-version;
+  bh=oH2GwFbm2l3mEjNfoB2q8XFjj9hEIS5NLQ+meHQK6Ks=;
+  b=a1dUasRaf+MVTBLI9zpEJk1ngA8z6yRC7ppNqQwGGl7v/BsrgJyUSo7I
+   cuT63QNHGMaPTYb+KxeJc4FpiJZn5PHkgShHeT2j3NvzJetV2tA3C3GRk
+   YqVQwCzCwenVAxmbb4vxUp6yEvWz9x3itNPRYW1BupCGktxySb6kxbiAx
+   Fi9bvxSxoVdkZkx0Go9ZTGUGRJwONMosw/O533YBNF5ec/WENFqav+gVj
+   bUydNgrbmWrnGMfpR7foIWqAb5DAMVQcBn7KtTFk7hJl2Clwht/t7BuG0
+   hfO/S/P2+yzkmjAG+9qbJmTuFZF93IfJbLdIQDM0rEPb+XBon+LQy0Efd
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="458906424"
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="458906424"
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Dec 2023 21:41:40 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10920"; a="772916426"
+X-IronPort-AV: E=Sophos;i="6.04,267,1695711600"; 
+   d="scan'208";a="772916426"
+Received: from orsmsx601.amr.corp.intel.com ([10.22.229.14])
+  by orsmga002.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 10 Dec 2023 21:41:38 -0800
+Received: from orsmsx611.amr.corp.intel.com (10.22.229.24) by
+ ORSMSX601.amr.corp.intel.com (10.22.229.14) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 10 Dec 2023 21:41:38 -0800
+Received: from orsmsx610.amr.corp.intel.com (10.22.229.23) by
+ ORSMSX611.amr.corp.intel.com (10.22.229.24) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Sun, 10 Dec 2023 21:41:37 -0800
+Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
+ orsmsx610.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35 via Frontend Transport; Sun, 10 Dec 2023 21:41:37 -0800
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (104.47.59.169)
+ by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2507.35; Sun, 10 Dec 2023 21:41:35 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Gq2ARmfDJYG/2idnryIOPTxUoihetO0+Jr+jOmUnpTEpsLIXr4tY4NFBXvJPMofTggWN8Y7alKJPyYMAuI8IuQkaqWml5gtx2IUHDrrgrU6vW9tIsKqiT+P7Y7STomarnPJ6WIsUz4CZ9rlCvgedeKkzVJws/Xlx7sEQe6OrFuoAtZMKq351gcyqDX7d5OCFwJVFdmXrvFHpQQlzgVt7ir5JASFCriTkLXmIJJbkmIwc4hE5SMXxEQe5eSuWQU7LjuT0DpNiJCZrJVzchWVBNMK/z/9mUrJUPqMv6xJ9Hp+k/3GgwpESlRaAIMbRIATDLdAXiw/zs+Wez4n0EJ9bXQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=chnqoPko8BCJunFWSoa2hUXmA5T+k51PVn5wSlHHGlI=;
+ b=jyyTLjlL3ojonSApOpFaiQaGBWXu/LMGPIsaOxmSWrrOWkqWGom2oIi6JapdKY5j4A3CPCcOPXIhIlmE271hv6xnwdCf096ZhKawb25fjtPJ5eU/UGccjE/YPbM/cmshdU6E1GubSSIJRgcfwXjath9KL/3t1nbU1ew9E2p7de9SPUBs/c+Rog4zybUX8gT8DZBvmBtEILXSI7jRTqjcvJaDxYSD0d3bFuQ7r1J2JrIadxoNOa5LpVRYQ3+4nmz3ZbYQ2imWReqIoioA/sqchiloHRa9gGvEw8MPzfHzu92rjrRZyJUlIooyYp3GQQdNXGNpAN8I+q2veJ3dH/TmXg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
+ dkim=pass header.d=intel.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=intel.com;
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com (2603:10b6:930:37::15)
+ by MN2PR11MB4728.namprd11.prod.outlook.com (2603:10b6:208:261::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Mon, 11 Dec
+ 2023 05:41:33 +0000
+Received: from CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::15d3:7425:a09e:1c86]) by CY5PR11MB6392.namprd11.prod.outlook.com
+ ([fe80::15d3:7425:a09e:1c86%4]) with mapi id 15.20.7068.031; Mon, 11 Dec 2023
+ 05:41:32 +0000
+Date: Mon, 11 Dec 2023 13:37:02 +0800
+From: Yujie Liu <yujie.liu@intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: kernel test robot <lkp@intel.com>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [brgl:gpio/for-next] BUILD REGRESSION
+ d22f93c6a0df15b9d1f500ab57d97ecc99b3657a
+Message-ID: <ZXaf/mcA358gmZEP@yujie-X299>
+References: <202312091806.NgjIKxZC-lkp@intel.com>
+ <CAMRc=MdTQ1n+xJUZNrnEPn3uu9_kYatuW3EayTve9-EJ22MsTA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MdTQ1n+xJUZNrnEPn3uu9_kYatuW3EayTve9-EJ22MsTA@mail.gmail.com>
+X-ClientProxiedBy: SG2PR02CA0080.apcprd02.prod.outlook.com
+ (2603:1096:4:90::20) To CY5PR11MB6392.namprd11.prod.outlook.com
+ (2603:10b6:930:37::15)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:102.0) Gecko/20100101
-	Thunderbird/102.11.0
-Subject: Re: [PATCH v3 4/4] pinctrl: samsung: add exynosautov920 pinctrl
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Alim Akhtar
-	<alim.akhtar@samsung.com>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester
-	Nawrocki <s.nawrocki@samsung.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Thierry Reding <thierry.reding@gmail.com>, Uwe Kleine-K?nig
-	<u.kleine-koenig@pengutronix.de>, Greg Kroah-Hartman
-	<gregkh@linuxfoundation.org>, Jiri Slaby <jirislaby@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org
-From: Jaewon Kim <jaewon02.kim@samsung.com>
-In-Reply-To: <a695f62f-5d08-49d6-a0b9-9f023ad7f586@linaro.org>
-Content-Transfer-Encoding: 7bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TfUwTZxz2vWuvVw3mrKBvGNFyyzDgwBaBvjhgHzZ42RZH3Ja4zQRu5VIY
-	pa29lsGGKRnhQwObTjags4DDuFA/iJShNlQHdGwQUzdH2FJFWAZsUFAmccRIYS0HG/89v4/n
-	9/w+3pfEZT4ikszXmzmTntXRxEZRV18sijcWF3GKtnkZGmvqItBFtxdDzR6vGJW3thPogT0K
-	uf3fSlDd4jcY6vhjWIyczYsA/eI6Q6CREQdADbdvYOhWa60EVbg9EtQ3UyVGT1xNIuRwBfPu
-	njoNXpIx120jEqbDcZxg7g13E8xN+0UJ4zxnZT4LKJhPOx2Ame/YkUW+W5CWx7G5nEnO6TWG
-	3Hy9Np1+7c3s/dnJKQplvDIVqWi5ni3k0mn161nxmfm64CS0vIjVWYKuLJbn6T0ZaSaDxczJ
-	8wy8OZ3mjLk6o8qYwLOFvEWvTdBz5n1KhSIxOZiYU5C3/KuDME5tKh6tPIuVgSHpCSAlIZUE
-	L7kqxCfARlJGXQNwYmoCE4xHAH7VU78a+QfAAbuXWKPMPurChYAbwNqfq1YNP4DnrlZJQllh
-	VAZsvNmAh7CIeg42NwwCwb8FDjSOi0I4gnoPVpwfXam6lWJgxxWBi1PboW+8GQvhcGoUh/7K
-	j0MCODUGoN37eKUQQe2GC+2twf5IUhoUW3zICNyd8OrsmZWGIDVDwqXHZSKhbTVsWhoHAt4K
-	p3/olAg4Es4/cK+OZoCVQ7dW/aXwSsud1fwXoe1p54oWTsXCdteeEITUs9DjEwmym2F1X0Ai
-	uMNgdaVMIMbA0S/W9hYFP/e0YQJm4ODdbvwkiLatW4pt3fC2dcPY/tdtASIH2MYZ+UItxyca
-	E/87tsZQ2AFWHnlc5jVQNzuX0AswEvQCSOJ0eFiUh+dkYblsyUecyZBtsug4vhckB09zCo+M
-	0BiCv0RvzlYmpSqSUlKUqsRkhYreHna/wp4ro7SsmSvgOCNnWuNhpDSyDIsITEZUm3fdk70a
-	Na090EVMz2GuA1/GDbfNfa1pjE/IocclC2iI7fFZgTSAyMBc/6Z3xh4mtVpekb/dUlbzwf7k
-	koN/iy7tOyjeldaPVPlSaU6R9ce2mIladWn9DeeM//SS+y/7hsLJ875o5+9v7f1pecMLZ0uj
-	3yh4Gn3nExO2o6jGP/C88rrZgJfMZoEP69R13xWTv1kv99SeFHXuljYenjjSb76/N1wVTizQ
-	NcvLdP2WSdX3Vndmd9tlcZOaydrMTB0KR5bY/OycwWeqWq1/Wsud3thhc2zPsYSYmaLjmguH
-	uxd9/dtulx89OkA+aUnNOHTk5Qvu9Kal9xeP7RTTIj6PVcbhJp79F8UGjphtBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrDIsWRmVeSWpSXmKPExsWy7bCSvG5+RVmqwYJmSYsH87axWazZe47J
-	Yv6Rc6wWzYvXs1m8mytjsff1VnaLKX+WM1lsenyN1WLz/D+MFpd3zWGzuHt3FaPFjPP7mCzO
-	LO5lt2jde4Td4vCbdlaLn7vmsVis2gVUd3viZEYHIY+ds+6ye2xa1cnmcefaHjaP/XPXsHts
-	XlLv0f/XwKNvyypGj8+b5AI4orhsUlJzMstSi/TtErgy/l9fxVbwkrvifttCpgbGK5xdjJwc
-	EgImEm8/bWPuYuTiEBLYzSgxe8sPZoiEjMTyZ31sELawxP2WI6wQRS8ZJSa96mYESfAK2EnM
-	3D8DrIFFQFVi/oxTUHFBiZMzn7CA2KIC0RKrP19gBbGFBTwkNm1sZwexmQXEJW49mc8EMlRE
-	4DGzxMOp/8HOYBZ4wCixfNIjqHU/GSVmnpoCdgebgLbE9/WLgRIcHJxAq/+894CYZCbRtbWL
-	EcKWl9j+dg7zBEahWUgOmYVk4SwkLbOQtCxgZFnFKJlaUJybnltsWGCYl1quV5yYW1yal66X
-	nJ+7iREcwVqaOxi3r/qgd4iRiYPxEKMEB7OSCK/MkeJUId6UxMqq1KL8+KLSnNTiQ4zSHCxK
-	4rziL3pThATSE0tSs1NTC1KLYLJMHJxSDUx6h/e0z5NZm7HUuVEwTyDrzAnZng9Hnx508eIN
-	mMeqFDUjqe7IgXm/TLnaT19wbFlns9dbnPX/WZfwQ6wzmu84xvxM4Tkm+2gvZ9t8u3fnnq+e
-	Ldu7n0OjlFmtxiF1/0fFtJyVNTd/PzALVejbX1xp0xvYPz/vw0ZrlhOct54wJObeubt8qZHF
-	t3LH2myxoCkSU3KaOXZ//LZF+VjXswbtl2kXL7N/mHL+Mcuv54teC1YlszmrBUp6zblc++bF
-	dUHW4BqnTfyRoccfMepcUP2XVl/PylV081GO79PsdN9NzpuFA+SaRYMXVrddY34jPL2r5GrB
-	6nNyNcfYBCUERWbXzigVe3u8IXdFdc23V0osxRmJhlrMRcWJAHcYMg1PAwAA
-X-CMS-MailID: 20231211024815epcas2p4bab12232eb9182f4de1c1b5d7d6b4568
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: AUTO_CONFIDENTIAL
-CMS-TYPE: 102P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231208075020epcas2p414c85e03d18327665eeff54082314b56
-References: <20231208074527.50840-1-jaewon02.kim@samsung.com>
-	<CGME20231208075020epcas2p414c85e03d18327665eeff54082314b56@epcas2p4.samsung.com>
-	<20231208074527.50840-5-jaewon02.kim@samsung.com>
-	<a695f62f-5d08-49d6-a0b9-9f023ad7f586@linaro.org>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY5PR11MB6392:EE_|MN2PR11MB4728:EE_
+X-MS-Office365-Filtering-Correlation-Id: b25b9a31-1695-4679-e836-08dbfa0bd4ca
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: HQejV+drsP2Egn9Fn2zcCUXzqplOc+yGJVLoJdQy9f3aFocGY/2/jxBtdWTj6RAcGj4q+GQTB2XWAUyq6GYoQeh+fhkkdpewR1qVVJwKqRpMXpqDGOkheyjDqEFbaTVQXr0+cy1MFjy+4MAhsTeaMEYiqJhJArwQ1E4GfUnW/d2h0CdY/i9yO2T2dcqq8NHRrGhs7wjfI2FdeFMtgnezlsd/tCZK6ePljqKwa6fgzgd0QL/cTxC4dFg0zpcidDGCGEZu2AwEco51TtCdc9F7tb/R5SZuzSWO8QfrrGhmtWdgmfb/R3qmJilD5etto5mfz0EUjrJYDCEalFCPnehppliCbFZGba6HnWmSfvbWnajCw2pBnShfPj6YUjc++cranZeLluDcDyOLtst55NumqhKeLizBsqzw8ZnEcrSLiCw7tpMQ090tt+TliMUPXRD+8A1bWKvqwL9OU/9YJFp3mjfoiu7IvXS1Np17leVzKIedBN4kj7GZDLK+TA7JA/1aCszyzWGI3e7nRvXPwNYE9kZlaCScvh/uioqeCF7ow1yiqOmsTzLJ0+e55N4zR1uKrzEb5iMopsfgAffp+i2pUvIYSGwuD0H9VsiOAZ9viYLTdva5dvD2IufO+1p0qcYQBj+8h6G+sPdJYrBSI8reXIAmpPO64gsdAw04hOvnnU38o+wFCA0adVifgVePrnfT
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:CY5PR11MB6392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7916004)(376002)(39860400002)(346002)(136003)(366004)(396003)(230273577357003)(230922051799003)(230173577357003)(1800799012)(186009)(64100799003)(451199024)(2906002)(41300700001)(33716001)(38100700002)(86362001)(82960400001)(9686003)(6512007)(26005)(478600001)(6666004)(53546011)(6506007)(966005)(6486002)(83380400001)(4326008)(5660300002)(44832011)(316002)(6916009)(66556008)(66476007)(54906003)(66946007)(8936002)(8676002)(98903001);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: =?utf-8?B?Mkt0eDNQWDZlejV4aXN1WTREcjYwUmpncHJoVWJHQ0RqQU5UaWtualYwZUgz?=
+ =?utf-8?B?Y3J3QVpLN0llVk5LWlQwc3ZTalJLVXA5SzhBUm5HLzB5dGloS25BaWFCb2VC?=
+ =?utf-8?B?Ni8xU0g2OFZrWENiM3pEdm1hTTlMV2ZuUTVuai85b2lza3ovUnJrZnN4bEVu?=
+ =?utf-8?B?MFdHRThyS2Z0L1BYZmhxWFdycy9UcUtDQTJybGh2SktKN09kTEVDbXRsZ0Jx?=
+ =?utf-8?B?U3NCd2g5Ymh4NGV5Z3hndmZvRlF0TkxrWk1LaTBWbXNsaEZ0VWhSRzhyemtJ?=
+ =?utf-8?B?UzRqK0oyb2NoQVZZKytXdWVNWmlZdmdlK3plZlI0WDNJMUNRM3U4M2lFWThR?=
+ =?utf-8?B?QnJyTE1BWkJQbjJCN2tQSkl5WkhrTndXcE96dFVkMUEzUHlrRlpKd2JmaDRR?=
+ =?utf-8?B?L3JZTk1MQzlZMlVqdmxEYXF3SFJmSXZIekFzV0sxaE5sRHVXalBjM2dnc0ha?=
+ =?utf-8?B?YmdpamRsSmswSndsaEtBRFlsK2hvM0tRRnQyUHptWWozaG9waVBxYUFHZnRB?=
+ =?utf-8?B?N0lZV1h0NnArYXJVM2FjUis0NGtIZ2VNMWw5dlJoamlaTzM1M0tRcW1CaXZT?=
+ =?utf-8?B?WXVZZm43aEZsT0hPSW5nRUVOclBETDAveHdlTkVGalFKcnhiRS92aEpWemhZ?=
+ =?utf-8?B?RWNoRWkwR0Z1REIvUEVsUkpLakVZMkxZSXc4TUpJWjdObk9zdi92cXlLZ1FF?=
+ =?utf-8?B?WGpVZ1RSdW1HRmlZWjZYOGZHMU1vYzMrZHROZXBFMzBvVlNnS3E5UTI3aGdJ?=
+ =?utf-8?B?ZHlIeDJsVlcyWTZTaUtBcmJUUnJjeHArVE5pS0NyTUpPWE80T2E5N3V6VDV0?=
+ =?utf-8?B?QjRHN21uYWppWFZQS0pKcStMaW40eE81dzRTc3pEUkxYK2xEQzVNZnUvekhL?=
+ =?utf-8?B?dmp0OThVTjNkc256amJ1ZzNoTUt6WnVBVjVISFpPQjRFb3FsTmJnUmM1eGxG?=
+ =?utf-8?B?bzJPVG1ybVNJSm0zWkcvOWhZT29RL3dtU1ZzY21saUxjTDhsTlRzTEVhUXU5?=
+ =?utf-8?B?SlpiWnBER2V1SmFJQ1NDMW0xVHpjMG45bUsveUdvQ1d0bFBVaUVJQms0dXNN?=
+ =?utf-8?B?dm1oclpsYVNCTENHWHJsRmRCTTZ0ai9uenhNWmoraWlaVUpJaEt0SDIzbWdp?=
+ =?utf-8?B?NmFYQktGNmw0MVlSNjZKSnNubHhzNDFFUUVUZ01BNkNMWUNnNVMyZTdTTlNl?=
+ =?utf-8?B?SThUb3ZvSm92NmZ2b0hYdWtLbGRNazhRNW83Q0dwTGViYkpvQnpQRkloTGdp?=
+ =?utf-8?B?RXVrZXhodjdxZXZhbWZCTWZTY2FIcVVHc0ZlbXFDQWVRSi9YYUtxRk9hWW9v?=
+ =?utf-8?B?QUpYZTI5d2tWU1pkVTJvSmJnUkZzWmFheEtJR0FGSVJ4MFg1UVN1MmZ4TWRt?=
+ =?utf-8?B?VEx1SFZEdjVYaWYzcFFhb2ZHdUc5U0N1YUZRRk9xL3B1ZTRXSk9pb3pCNVBB?=
+ =?utf-8?B?RlVpYW1IcnRnMTN6NGJSRzZkbnJZNWl0T0hHK2ZmUFJVZ1YxRUF4dWZDRHRi?=
+ =?utf-8?B?R3U5Y1I2aHlaUVVNc012cTJiN2wwbncvVzEybm9TUEJ0ekVzSkVnNzNxYjJn?=
+ =?utf-8?B?Q1k3T2Qva3JCelh3Z2hRVXhYWmdqR1RqNUJiVU4rd2x6MEZBajB6UjA2b1VN?=
+ =?utf-8?B?ZDBOY0ROSWFtcWFmcC9uNUJ3bVFqMUJoTXZhT3VydmNwbnE3UVo1WDVaZnNU?=
+ =?utf-8?B?cUxwbEx6ZGJkcnFuT2NiTlBVeVFlVzduNEEyOUZaNU5YQWRkc1VhUE1mYk9E?=
+ =?utf-8?B?NWttVjMxcUZueDMyVVVUbjFsV2MyVHVPRkl3dld4QXdKL2lYNU1ic3Y0b1ZT?=
+ =?utf-8?B?VmI1RE9Od2EwWXBkNnZ1T0RwU2pZdVZCcG5CNWtBMm1EK0NRclNTcWd5WStK?=
+ =?utf-8?B?Z0RKR2lNS1ZERm1Uc2NJakQ4bk5OMTY0ejVpU3Y1d0xlY05SeDBPTUludlI0?=
+ =?utf-8?B?STBqTysrdEdMMHhNQmoyU1VyYUs4MzVKQjdLU25nMEFiRFcxMjZ3YWh4MC9H?=
+ =?utf-8?B?amJ5M05lVXdCdmhXTHB5OEcrZzhXYjFXMW9NNnBZbmc3SFJWaS81UmdOSjVy?=
+ =?utf-8?B?ZUZjSXUxK3dDQ1NOcWlWdmI2RGVKQ1hCVFZ6QzRGWTI1WDN1dWtrQ2hmSlEv?=
+ =?utf-8?Q?cjUmUBTVGj4N6yw6rkk0CkvIX?=
+X-MS-Exchange-CrossTenant-Network-Message-Id: b25b9a31-1695-4679-e836-08dbfa0bd4ca
+X-MS-Exchange-CrossTenant-AuthSource: CY5PR11MB6392.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 11 Dec 2023 05:41:32.7384
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: jsGuUIeTDxSdl8pzLZhoZNIJBzqWCAA2SCBb497Pv6vcQ4+LC/OroSmWiC1GnnQDnxN7uQL9DxZmLAYriijCkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB4728
+X-OriginatorOrg: intel.com
 
-Hello Krzysztof,
+Hi Bart,
 
-Thanks for your review.
+On Sat, Dec 09, 2023 at 08:10:03PM +0100, Bartosz Golaszewski wrote:
+> On Sat, Dec 9, 2023 at 11:00 AM kernel test robot <lkp@intel.com> wrote:
+> >
+> > tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+> > branch HEAD: d22f93c6a0df15b9d1f500ab57d97ecc99b3657a  gpio: sim: implement the dbg_show() callback
+> >
+> > Error/Warning ids grouped by kconfigs:
+> >
+> > clang_recent_errors
+> > `-- i386-allmodconfig
+> >     `-- fs-bcachefs-replicas.c:error:builtin-functions-must-be-directly-called
+> >
+> 
+> Is there any more information on this error? It doesn't even look like
+> it's related to GPIO at all.
 
+Sorry it is a wrong info. This is a mainline error reported at [1], but
+wrongly added into this mail due to a bug of the bot. We've found the
+root cause and fixed it just now. Sorry for the noise and please kindly
+ignore it.
 
-On 23. 12. 10. 22:23, Krzysztof Kozlowski wrote:
-> On 08/12/2023 08:45, Jaewon Kim wrote:
->> Add pinctrl data for ExynosAutov920 SoC.
->>
->> Pinctrl data for ExynosAutoV920 SoC.
->>   - GPA0,GPA1 (10): External wake up interrupt
->>   - GPQ0 (2): SPMI (PMIC I/F)
->>   - GPB0,GPB1,GPB2,GPB3,GPB4,GPB5,GPB6 (47): I2S Audio
->>   - GPH0,GPH1,GPH2,GPH3,GPH4,GPH5,GPH6,GPH8 (49): PCIE, UFS, Ethernet
->>   - GPG0,GPG1,GPG2,GPG3,GPG4,GPG5 (29): General purpose
->>   - GPP0,GPP1,GPP2,GPP3,GPP4,GPP5,GPP6,GPP7,GPP8,GPP9,GPP10 (77): USI
->>
->> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
->> ---
-> ...
->
->
->>   /**
->>    * struct exynos_weint_data: irq specific data for all the wakeup interrupts
->>    * generated by the external wakeup interrupt controller.
->> diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
->> index 362e99566919..800a2f0a026a 100644
->> --- a/drivers/pinctrl/samsung/pinctrl-samsung.c
->> +++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
->> @@ -1324,6 +1324,8 @@ static const struct of_device_id samsung_pinctrl_dt_match[] = {
->>   		.data = &exynosautov9_of_data },
->>   	{ .compatible = "tesla,fsd-pinctrl",
->>   		.data = &fsd_of_data },
->> +	{ .compatible = "samsung,exynosautov920-pinctrl",
->> +		.data = &exynosautov920_of_data },
-> Please put it after autov9.
+[1] https://lore.kernel.org/all/202311201620.mhbq1YMe-lkp@intel.com/
 
-Okay, I will change the order.
+Best Regards,
+Yujie
 
->
-> Best regards,
-> Krzysztof
->
->
->
-
-Thanks
-
-Jaewon Kim
-
+> 
+> Bart
+> 
+> > elapsed time: 1472m
+> >
+> > configs tested: 124
+> > configs skipped: 2
+> >
+> > tested configs:
+> > alpha                             allnoconfig   gcc
+> > alpha                            allyesconfig   gcc
+> > alpha                               defconfig   gcc
+> > arc                              allmodconfig   gcc
+> > arc                               allnoconfig   gcc
+> > arc                              allyesconfig   gcc
+> > arc                                 defconfig   gcc
+> > arc                   randconfig-001-20231209   gcc
+> > arc                   randconfig-002-20231209   gcc
+> > arm                               allnoconfig   gcc
+> > arm                                 defconfig   clang
+> > arm                   randconfig-001-20231209   gcc
+> > arm                   randconfig-002-20231209   gcc
+> > arm                   randconfig-003-20231209   gcc
+> > arm                   randconfig-004-20231209   gcc
+> > arm64                             allnoconfig   gcc
+> > arm64                               defconfig   gcc
+> > arm64                 randconfig-001-20231209   gcc
+> > arm64                 randconfig-002-20231209   gcc
+> > arm64                 randconfig-003-20231209   gcc
+> > arm64                 randconfig-004-20231209   gcc
+> > csky                              allnoconfig   gcc
+> > csky                                defconfig   gcc
+> > csky                  randconfig-001-20231209   gcc
+> > csky                  randconfig-002-20231209   gcc
+> > hexagon                           allnoconfig   clang
+> > hexagon                             defconfig   clang
+> > hexagon               randconfig-001-20231209   clang
+> > hexagon               randconfig-002-20231209   clang
+> > i386                             allmodconfig   clang
+> > i386                              allnoconfig   clang
+> > i386                             allyesconfig   clang
+> > i386         buildonly-randconfig-001-20231208   clang
+> > i386         buildonly-randconfig-002-20231208   clang
+> > i386         buildonly-randconfig-003-20231208   clang
+> > i386         buildonly-randconfig-004-20231208   clang
+> > i386         buildonly-randconfig-005-20231208   clang
+> > i386         buildonly-randconfig-006-20231208   clang
+> > i386                                defconfig   gcc
+> > i386                  randconfig-001-20231208   clang
+> > i386                  randconfig-002-20231208   clang
+> > i386                  randconfig-003-20231208   clang
+> > i386                  randconfig-004-20231208   clang
+> > i386                  randconfig-005-20231208   clang
+> > i386                  randconfig-006-20231208   clang
+> > i386                  randconfig-011-20231208   gcc
+> > i386                  randconfig-012-20231208   gcc
+> > i386                  randconfig-013-20231208   gcc
+> > i386                  randconfig-014-20231208   gcc
+> > i386                  randconfig-015-20231208   gcc
+> > i386                  randconfig-016-20231208   gcc
+> > loongarch                        allmodconfig   gcc
+> > loongarch                         allnoconfig   gcc
+> > loongarch                           defconfig   gcc
+> > loongarch             randconfig-001-20231209   gcc
+> > loongarch             randconfig-002-20231209   gcc
+> > m68k                             allmodconfig   gcc
+> > m68k                              allnoconfig   gcc
+> > m68k                             allyesconfig   gcc
+> > m68k                                defconfig   gcc
+> > microblaze                       allmodconfig   gcc
+> > microblaze                        allnoconfig   gcc
+> > microblaze                       allyesconfig   gcc
+> > microblaze                          defconfig   gcc
+> > mips                              allnoconfig   clang
+> > mips                             allyesconfig   gcc
+> > nios2                            allmodconfig   gcc
+> > nios2                             allnoconfig   gcc
+> > nios2                            allyesconfig   gcc
+> > nios2                               defconfig   gcc
+> > nios2                 randconfig-001-20231209   gcc
+> > nios2                 randconfig-002-20231209   gcc
+> > openrisc                          allnoconfig   gcc
+> > openrisc                         allyesconfig   gcc
+> > openrisc                            defconfig   gcc
+> > parisc                           allmodconfig   gcc
+> > parisc                            allnoconfig   gcc
+> > parisc                           allyesconfig   gcc
+> > parisc                              defconfig   gcc
+> > parisc                randconfig-001-20231209   gcc
+> > parisc                randconfig-002-20231209   gcc
+> > parisc64                            defconfig   gcc
+> > powerpc                          allmodconfig   clang
+> > powerpc                           allnoconfig   gcc
+> > powerpc                          allyesconfig   clang
+> > powerpc               randconfig-001-20231209   gcc
+> > powerpc               randconfig-002-20231209   gcc
+> > powerpc               randconfig-003-20231209   gcc
+> > powerpc64             randconfig-001-20231209   gcc
+> > powerpc64             randconfig-002-20231209   gcc
+> > powerpc64             randconfig-003-20231209   gcc
+> > riscv                            allmodconfig   gcc
+> > riscv                             allnoconfig   clang
+> > riscv                            allyesconfig   gcc
+> > riscv                               defconfig   gcc
+> > riscv                 randconfig-001-20231209   gcc
+> > riscv                 randconfig-002-20231209   gcc
+> > riscv                          rv32_defconfig   clang
+> > s390                             allmodconfig   gcc
+> > s390                              allnoconfig   gcc
+> > s390                             allyesconfig   gcc
+> > s390                                defconfig   gcc
+> > s390                  randconfig-001-20231209   clang
+> > s390                  randconfig-002-20231209   clang
+> > sh                               allmodconfig   gcc
+> > sh                                allnoconfig   gcc
+> > sh                               allyesconfig   gcc
+> > sh                                  defconfig   gcc
+> > sh                    randconfig-001-20231209   gcc
+> > sparc                            allmodconfig   gcc
+> > sparc64                          allmodconfig   gcc
+> > sparc64                          allyesconfig   gcc
+> > sparc64                             defconfig   gcc
+> > um                               allmodconfig   clang
+> > um                                allnoconfig   clang
+> > um                               allyesconfig   clang
+> > um                                  defconfig   gcc
+> > um                             i386_defconfig   gcc
+> > um                           x86_64_defconfig   gcc
+> > x86_64                            allnoconfig   gcc
+> > x86_64                           allyesconfig   clang
+> > x86_64                              defconfig   gcc
+> > x86_64                          rhel-8.3-rust   clang
+> > xtensa                            allnoconfig   gcc
+> >
+> > --
+> > 0-DAY CI Kernel Test Service
+> > https://github.com/intel/lkp-tests/wiki
+> >
+> 
 
