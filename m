@@ -1,58 +1,58 @@
-Return-Path: <linux-gpio+bounces-1244-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1248-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C4AD80D178
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 17:25:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B06B80D18D
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 17:25:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CB788B212F3
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 16:25:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3B13A2818EA
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 16:25:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBBB4CB31;
-	Mon, 11 Dec 2023 16:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BF334E623;
+	Mon, 11 Dec 2023 16:24:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mv90KEiF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pMPOeiZ0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x434.google.com (mail-wr1-x434.google.com [IPv6:2a00:1450:4864:20::434])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E997412C
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:24:34 -0800 (PST)
-Received: by mail-wr1-x434.google.com with SMTP id ffacd0b85a97d-33622099f23so918255f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:24:34 -0800 (PST)
+Received: from mail-wm1-x333.google.com (mail-wm1-x333.google.com [IPv6:2a00:1450:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09FBF118
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:24:37 -0800 (PST)
+Received: by mail-wm1-x333.google.com with SMTP id 5b1f17b1804b1-40c2c65e6aaso46989715e9.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 08:24:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702311873; x=1702916673; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702311875; x=1702916675; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=soCDsbziWMjEDTQYnQ64foy2UwOB+R/XTZlhNIOpiP0=;
-        b=Mv90KEiFdCnukZEC8IyQeMn4ix8LVHXIfq2XsEVKPIez3t9KniRglfc6bcuHODhKxy
-         vNyma+Fn+NwGy2SCUqpb+XeOMbrWNTLhyzwxHgCK4fgPlC/lM6/yTdsipXyyedQ8UbWK
-         +MtTJPgXAPr5O92gC10f/lWGK82kfk+VEK4DPotd5RNGTZyDrrVcDTIPZvYBMKiPoNBW
-         MAXB0uxHwkYEBrAe6cFM1Kwu/lNEjjGbn4amV7ke98yHhmPYrmD7DtOvp2+DjIZspf2T
-         EW/7htLGltebBIDwa4a5x1waUPx17rqH6PcsTz1dleXx3izX2YEhWkKC6bZxyGpnc0Fv
-         yw9w==
+        bh=1z11ehNUv2+773xfMz0kuZJbXdHyANhljsxA0MVCc9w=;
+        b=pMPOeiZ0WEn9Knx0ZSVAeh5Vh29+TlDynv1cN/Fb/lxLJeGGJXMriQYoIBd2c58skl
+         FKeKkl9Xts02aXWFFxsh3v84rCZQa/2iRhszTAJ7HHCEJA1A59x4sae0oxilxHuShUaz
+         n8xOI7fp3ebofq7OaIMpBpabwB6ck87vzDYK+GJpV12FldZymz5kxyHcnK8776XxS50d
+         luosofjV4uK+sBS8o87Te0fPuTXRHdCFSbxRO/DQ31N4Ineaf6W4rsRKRp/9p1Ie0Aty
+         S/d3rZgpHziY5d4RdEDVT763pEjCB3Ir7NcOgFotEfk0wVVi1mv8wliyx3OFyRRU20D7
+         /Qhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702311873; x=1702916673;
+        d=1e100.net; s=20230601; t=1702311875; x=1702916675;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=soCDsbziWMjEDTQYnQ64foy2UwOB+R/XTZlhNIOpiP0=;
-        b=swJ/XowsjeRHNXvbZB5aK/PS4j/DTaR/vXBGH9VleEnO2CAPDR/uU6KPCcPvb25nHQ
-         t1kA7dIj8S1efGdCOxnVvl6dObwJDlljRasY6u548tM3ctjFTlrCnTOA4TErI3/OH3Yd
-         KXNQK0J+0mciklheA3Kz9E7nEITQ6h+KsoPj8V/nvRwMp2ivfCTMwDXLaQiVRwxgcarN
-         gtEtdyd3z9h2jZCc2omxqszpJG4C3IMqEgmt/zGYS55EZKrz6VZIWr5L/m2TFJcKXlWb
-         FZYSYNlcsl5DhIA16+JOQQh2qgnT8n58X3hzhZX1wloM66IHo2HL+NTA8fZ29YSTG4ce
-         vSTQ==
-X-Gm-Message-State: AOJu0Yy68l1muFy9s3Ze3NBAFBFN943M4IKYM0E+2er2ZBSzHEWjNJ6D
-	MMgJogLls1Xq2osrjmTNhpyf/A==
-X-Google-Smtp-Source: AGHT+IG8umBo1u1ZfEfeCl0PvULKc4ZOBWDQmYUZk0RSYEHoF9NTjOzHwGb+4PRIdrH5nk5CfFUEqQ==
-X-Received: by 2002:adf:f70f:0:b0:333:3af7:a4ef with SMTP id r15-20020adff70f000000b003333af7a4efmr2016600wrp.8.1702311873314;
-        Mon, 11 Dec 2023 08:24:33 -0800 (PST)
+        bh=1z11ehNUv2+773xfMz0kuZJbXdHyANhljsxA0MVCc9w=;
+        b=INK7KGgDc+zVkkdpUxBfP2/LK3oc33t8mM4zXyuIzZsMpwyIgAMe4POVbLjNF+tOwh
+         rsF9I/rp42NE/q6AC3gSArX91FCxZaPgsPb+B2U2VkTf9h/H3FAGsJg4/3zkEqjjNJcg
+         Bs4W8jw2RcrgKyK1nJx7uOiPbTC/DrB43ch7OkmhqxwMuKQyM4P+gPQf0h9/nfgEZ/KC
+         uLTTSs1Gz4zfARsLsbnwtbVcoABogKvCH6NaFcAMA4aO1N+/CpPWUCqIrnwh1KEOSONN
+         bPsqb/9CzTnNsRu5tYRTunvX/+YSIzRJh6QVLsuDrAfEduQ3vMj22IiXlLJESZibICpV
+         tLmA==
+X-Gm-Message-State: AOJu0YxkW+XhXyYBdz4+jBHgnyh6GA5Om7a4Yh4W8tolr5OuyL+1RYMo
+	mMg6IJiSmTmGp9GlxqwCUzKj6w==
+X-Google-Smtp-Source: AGHT+IG0wa3KV7HXlD+zk/jkeAOBKMD7rqFf07nG3kcf3aj3vfUahSzS8NXGMX7UsiLDiu8QTYd6YA==
+X-Received: by 2002:a05:600c:1c0e:b0:40c:2964:557d with SMTP id j14-20020a05600c1c0e00b0040c2964557dmr2204759wms.238.1702311875205;
+        Mon, 11 Dec 2023 08:24:35 -0800 (PST)
 Received: from gpeter-l.lan (host-92-29-28-58.as13285.net. [92.29.28.58])
-        by smtp.gmail.com with ESMTPSA id o4-20020a5d58c4000000b0033333bee379sm8923103wrf.107.2023.12.11.08.24.31
+        by smtp.gmail.com with ESMTPSA id o4-20020a5d58c4000000b0033333bee379sm8923103wrf.107.2023.12.11.08.24.33
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Dec 2023 08:24:32 -0800 (PST)
+        Mon, 11 Dec 2023 08:24:34 -0800 (PST)
 From: Peter Griffin <peter.griffin@linaro.org>
 To: robh+dt@kernel.org,
 	krzysztof.kozlowski+dt@linaro.org,
@@ -87,9 +87,9 @@ Cc: peter.griffin@linaro.org,
 	linux-watchdog@vger.kernel.org,
 	kernel-team@android.com,
 	linux-serial@vger.kernel.org
-Subject: [PATCH v7 13/16] tty: serial: samsung: Add gs101 compatible and common fifoszdt_serial_drv_data
-Date: Mon, 11 Dec 2023 16:23:28 +0000
-Message-ID: <20231211162331.435900-14-peter.griffin@linaro.org>
+Subject: [PATCH v7 14/16] arm64: dts: exynos: google: Add initial Google gs101 SoC support
+Date: Mon, 11 Dec 2023 16:23:29 +0000
+Message-ID: <20231211162331.435900-15-peter.griffin@linaro.org>
 X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
 In-Reply-To: <20231211162331.435900-1-peter.griffin@linaro.org>
 References: <20231211162331.435900-1-peter.griffin@linaro.org>
@@ -101,71 +101,1803 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add serial driver data for Google Tensor gs101 SoC and a common
-fifoszdt_serial_drv_data that can be used by platforms that specify the
-samsung,uart-fifosize DT property.
+Google gs101 SoC is a ARMv8 mobile SoC found in the Pixel 6
+(oriole), Pixel 6a (bluejay) and Pixel 6 pro (raven) mobile
+phones.
 
-A corresponding dt-bindings patch updates the yaml to ensure
-samsung,uart-fifosize is a required property.
+It features:
+* 4xA55 Little cluster
+* 2xA76 Mid cluster
+* 2xX1 Big cluster
 
-Tested-by: Will McVicker <willmcvicker@google.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This commit adds the basic device tree for gs101 (SoC).
+Further platform support will be added over time.
+
 Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Tested-by: Will McVicker <willmcvicker@google.com>
 Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
 ---
- drivers/tty/serial/samsung_tty.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ .../boot/dts/exynos/google/gs101-pinctrl.dtsi | 1249 +++++++++++++++++
+ .../boot/dts/exynos/google/gs101-pinctrl.h    |   33 +
+ arch/arm64/boot/dts/exynos/google/gs101.dtsi  |  473 +++++++
+ 3 files changed, 1755 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
+ create mode 100644 arch/arm64/boot/dts/exynos/google/gs101-pinctrl.h
+ create mode 100644 arch/arm64/boot/dts/exynos/google/gs101.dtsi
 
-diff --git a/drivers/tty/serial/samsung_tty.c b/drivers/tty/serial/samsung_tty.c
-index 1b0c2b467a30..71d17d804fda 100644
---- a/drivers/tty/serial/samsung_tty.c
-+++ b/drivers/tty/serial/samsung_tty.c
-@@ -2490,14 +2490,25 @@ static const struct s3c24xx_serial_drv_data exynos850_serial_drv_data = {
- 	.fifosize = { 256, 64, 64, 64 },
- };
- 
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi b/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
+new file mode 100644
+index 000000000000..e6a9776d4d62
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.dtsi
+@@ -0,0 +1,1249 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
-+ * Common drv_data struct for platforms that specify samsung,uart-fifosize in
-+ * device tree.
++ * GS101 SoC pin-mux and pin-config device tree source
++ *
++ * Copyright 2019-2023 Google LLC
++ * Copyright 2023 Linaro Ltd - <peter.griffin@linaro.org>
 + */
-+static const struct s3c24xx_serial_drv_data exynos_fifoszdt_serial_drv_data = {
-+	EXYNOS_COMMON_SERIAL_DRV_DATA(),
-+	.fifosize = { 0 },
++
++#include "gs101-pinctrl.h"
++
++&pinctrl_gpio_alive {
++	gpa0: gpa0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa1: gpa1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa2: gpa2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa3: gpa3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa4: gpa4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa5: gpa5-gpio-bank  {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa9: gpa9-gpio-bank  {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa10: gpa10-gpio-bank  {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	uart15_bus: uart15-bus-pins {
++		samsung,pins = "gpa2-3", "gpa2-4";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	uart16_bus: uart16-bus-pins {
++		samsung,pins = "gpa3-0", "gpa3-1", "gpa3-2", "gpa3-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	uart17_bus: uart17-bus-pins {
++		samsung,pins = "gpa4-0", "gpa4-1", "gpa4-2", "gpa4-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi15_bus: spi15-bus-pins {
++		samsung,pins = "gpa4-0", "gpa4-1", "gpa4-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi15_cs: spi15-cs-pins {
++		samsung,pins = "gpa4-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
 +};
 +
- #define EXYNOS4210_SERIAL_DRV_DATA (&exynos4210_serial_drv_data)
- #define EXYNOS5433_SERIAL_DRV_DATA (&exynos5433_serial_drv_data)
- #define EXYNOS850_SERIAL_DRV_DATA (&exynos850_serial_drv_data)
-+#define EXYNOS_FIFOSZDT_DRV_DATA (&exynos_fifoszdt_serial_drv_data)
- 
- #else
- #define EXYNOS4210_SERIAL_DRV_DATA NULL
- #define EXYNOS5433_SERIAL_DRV_DATA NULL
- #define EXYNOS850_SERIAL_DRV_DATA NULL
-+#define EXYNOS_FIFOSZDT_DRV_DATA NULL
- #endif
- 
- #ifdef CONFIG_ARCH_APPLE
-@@ -2581,6 +2592,9 @@ static const struct platform_device_id s3c24xx_serial_driver_ids[] = {
- 	}, {
- 		.name		= "artpec8-uart",
- 		.driver_data	= (kernel_ulong_t)ARTPEC8_SERIAL_DRV_DATA,
-+	}, {
-+		.name		= "gs101-uart",
-+		.driver_data	= (kernel_ulong_t)EXYNOS_FIFOSZDT_DRV_DATA,
- 	},
- 	{ },
- };
-@@ -2602,6 +2616,8 @@ static const struct of_device_id s3c24xx_uart_dt_match[] = {
- 		.data = EXYNOS850_SERIAL_DRV_DATA },
- 	{ .compatible = "axis,artpec8-uart",
- 		.data = ARTPEC8_SERIAL_DRV_DATA },
-+	{ .compatible = "google,gs101-uart",
-+		.data = EXYNOS_FIFOSZDT_DRV_DATA },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
++&pinctrl_far_alive {
++	gpa6: gpa6-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 50 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa7: gpa7-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 53 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa8: gpa8-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 58 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 59 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 63 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++
++	gpa11: gpa11-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		interrupt-parent = <&gic>;
++		interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH 0>,
++			     <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH 0>;
++	};
++};
++
++&pinctrl_gsacore {
++	gps0: gps0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gps1: gps1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gps2: gps2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++};
++
++&pinctrl_gsactrl {
++	gps3: gps3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++};
++
++&pinctrl_hsi1 {
++	gph0: gph0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gph1: gph1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	pcie0_clkreq: pcie0-clkreq-pins{
++		samsung,pins = "gph0-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_UP>;
++		samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_UP>;
++	};
++
++	pcie0_perst: pcie0-perst-pins {
++		samsung,pins = "gph0-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++	};
++};
++
++&pinctrl_hsi2 {
++	gph2: gph2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gph3: gph3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gph4: gph4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	sd2_clk: sd2-clk-pins {
++		samsung,pins = "gph4-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_7_5_MA>;
++	};
++
++	sd2_cmd: sd2-cmd-pins {
++		samsung,pins = "gph4-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_UP>;
++		samsung,pin-drv = <GS101_PIN_DRV_7_5_MA>;
++	};
++
++	sd2_bus1: sd2-bus-width1-pins {
++		samsung,pins = "gph4-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_UP>;
++		samsung,pin-drv = <GS101_PIN_DRV_7_5_MA>;
++	};
++
++	sd2_bus4: sd2-bus-width4-pins {
++		samsung,pins = "gph4-3", "gph4-4", "gph4-5";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_UP>;
++		samsung,pin-drv = <GS101_PIN_DRV_7_5_MA>;
++	};
++
++	sd2_clk_fast_slew_rate_1x: sd2-clk-fast-slew-rate-1x-pins {
++		samsung,pins = "gph4-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	sd2_clk_fast_slew_rate_2x: sd2-clk-fast-slew-rate-2x-pins {
++		samsung,pins = "gph4-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sd2_clk_fast_slew_rate_3x: sd2-clk-fast-slew-rate-3x-pins {
++		samsung,pins = "gph4-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_7_5_MA>;
++	};
++
++	sd2_clk_fast_slew_rate_4x: sd2-clk-fast-slew-rate-4x-pins {
++		samsung,pins = "gph4-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
++	};
++
++	ufs_rst_n: ufs-rst-n-pins {
++		samsung,pins = "gph3-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_NONE>;
++	};
++
++	ufs_refclk_out: ufs-refclk-out-pins {
++		samsung,pins = "gph3-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_NONE>;
++	};
++
++	pcie1_clkreq: pcie1-clkreq-pins {
++		samsung,pins = "gph2-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_UP>;
++		samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_UP>;
++	};
++
++	pcie1_perst: pcie1-perst-pins {
++		samsung,pins = "gph2-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-drv = <GS101_PIN_DRV_10_MA>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++	};
++};
++
++&pinctrl_peric0 {
++	gpp0: gpp0-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp1: gpp1-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp2: gpp2-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp3: gpp3-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp4: gpp4-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp5: gpp5-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp6: gpp6-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp7: gpp7-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp8: gpp8-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp9: gpp9-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp10: gpp10-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp11: gpp11-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp12: gpp12-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp13: gpp13-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp14: gpp14-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp15: gpp15-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp16: gpp16-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp17: gpp17-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp18: gpp18-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp19: gpp19-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	/* USI_PERIC0_UART_DBG */
++	uart0_bus: uart0-bus-pins {
++		samsung,pins = "gpp1-2", "gpp1-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	disp_te_pri_on: disp-te-pri-on-pins {
++		samsung,pins = "gpp0-3";
++		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
++	};
++
++	disp_te_pri_off: disp-te-pri-off-pins {
++		samsung,pins = "gpp0-3";
++		samsung,pin-function = <GS101_PIN_FUNC_INPUT>;
++	};
++
++	disp_te_sec_on: disp-te-sec-on-pins {
++		samsung,pins = "gpp0-4";
++		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
++	};
++
++	disp_te_sec_off: disp-te-sec-off-pins {
++		samsung,pins = "gpp0-4";
++		samsung,pin-function = <GS101_PIN_FUNC_INPUT>;
++	};
++
++	sensor_mclk1_out: sensor-mclk1-out-pins {
++		samsung,pins = "gpp3-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk1_fn: sensor-mclk1-fn-pins {
++		samsung,pins = "gpp3-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk2_out: sensor-mclk2-out-pins {
++		samsung,pins = "gpp5-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk2_fn: sensor-mclk2-fn-pins {
++		samsung,pins = "gpp5-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk3_out: sensor-mclk3-out-pins {
++		samsung,pins = "gpp7-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk3_fn: sensor-mclk3-fn-pins {
++		samsung,pins = "gpp7-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk4_out: sensor-mclk4-out-pins {
++		samsung,pins = "gpp9-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk4_fn: sensor-mclk4-fn-pins {
++		samsung,pins = "gpp9-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk5_out: sensor-mclk5-out-pins {
++		samsung,pins = "gpp11-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk5_fn: sensor-mclk5-fn-pins {
++		samsung,pins = "gpp11-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk6_out: sensor-mclk6-out-pins {
++		samsung,pins = "gpp13-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk6_fn: sensor-mclk6-fn-pins {
++		samsung,pins = "gpp13-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk7_out: sensor-mclk7-out-pins {
++		samsung,pins = "gpp15-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk7_fn: sensor-mclk7-fn-pins {
++		samsung,pins = "gpp15-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk8_out: sensor-mclk8-out-pins {
++		samsung,pins = "gpp17-0";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_DOWN>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	sensor_mclk8_fn: sensor-mclk8-fn-pins {
++		samsung,pins = "gpp17-0";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_5_MA>;
++	};
++
++	hsi2c14_bus: hsi2c14-bus-pins {
++		samsung,pins = "gpp18-0", "gpp18-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart14_bus_single: uart14-bus-pins {
++		samsung,pins = "gpp18-0", "gpp18-1",
++			       "gpp18-2", "gpp18-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi14_bus: spi14-bus-pins {
++		samsung,pins = "gpp18-0", "gpp18-1", "gpp18-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi14_cs: spi14-cs-pins {
++		samsung,pins = "gpp18-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi14_cs_func: spi14-cs-func-pins {
++		samsung,pins = "gpp18-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c8_bus: hsi2c8-bus-pins {
++		samsung,pins = "gpp16-0", "gpp16-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++		samsung,pin-pud-pdn = <GS101_PIN_PDN_OUT0>;
++	};
++
++	uart8_bus_single: uart8-bus-pins {
++		samsung,pins = "gpp16-0", "gpp16-1", "gpp16-2",
++			       "gpp16-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi8_bus: spi8-bus-pins {
++		samsung,pins = "gpp16-0", "gpp16-1", "gpp16-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi8_cs: spi8-cs-pins {
++		samsung,pins = "gpp16-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi8_cs_func: spi8-cs-func-pins {
++		samsung,pins = "gpp16-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c7_bus: hsi2c7-bus-pins {
++		samsung,pins = "gpp14-0", "gpp14-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart7_bus_single: uart7-bus-pins {
++		samsung,pins = "gpp14-0", "gpp14-1",
++			       "gpp14-2", "gpp14-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi7_bus: spi7-bus-pins {
++		samsung,pins = "gpp14-0", "gpp14-1", "gpp14-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi7_cs: spi7-cs-pins {
++		samsung,pins = "gpp14-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi7_cs_func: spi7-cs-func-pins {
++		samsung,pins = "gpp14-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c6_bus: hsi2c6-bus-pins {
++		samsung,pins = "gpp12-0", "gpp12-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart6_bus_single: uart6-bus-pins {
++		samsung,pins = "gpp12-0", "gpp12-1",
++			       "gpp12-2", "gpp12-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi6_bus: spi6-bus-pins {
++		samsung,pins = "gpp12-0", "gpp12-1", "gpp12-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi6_cs: spi6-cs-pins {
++		samsung,pins = "gpp12-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi6_cs_func: spi6-cs-func-pins {
++		samsung,pins = "gpp12-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c5_bus: hsi2c5-bus-pins {
++		samsung,pins = "gpp10-0", "gpp10-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart5_bus_single: uart5-bus-pins {
++		samsung,pins = "gpp10-0", "gpp10-1",
++			       "gpp10-2", "gpp10-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi5_bus: spi5-bus-pins {
++		samsung,pins = "gpp10-0", "gpp10-1", "gpp10-2";
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi5_cs_func: spi5-cs-func-pins {
++		samsung,pins = "gpp10-3";
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-con-pdn = <GS101_PIN_PDN_PREV>;
++		samsung,pin-pud-pdn = <GS101_PIN_PULL_NONE>;
++	};
++
++	hsi2c4_bus: hsi2c4-bus-pins {
++		samsung,pins = "gpp8-0", "gpp8-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart4_bus_single: uart4-bus-pins {
++		samsung,pins = "gpp8-0", "gpp8-1",
++			       "gpp8-2", "gpp8-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi4_bus: spi4-bus-pins {
++		samsung,pins = "gpp8-0", "gpp8-1", "gpp8-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi4_cs: spi4-cs-pins {
++		samsung,pins = "gpp8-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi4_cs_func: spi4-cs-func-pins {
++		samsung,pins = "gpp8-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c3_bus: hsi2c3-bus-pins {
++		samsung,pins = "gpp6-0", "gpp6-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart3_bus_single: uart3-bus-pins {
++		samsung,pins = "gpp6-0", "gpp6-1",
++			       "gpp6-2", "gpp6-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi3_bus: spi3-bus-pins {
++		samsung,pins = "gpp6-0", "gpp6-1", "gpp6-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi3_cs: spi3-cs-pins {
++		samsung,pins = "gpp6-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi3_cs_func: spi3-cs-func-pins {
++		samsung,pins = "gpp6-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c2_bus: hsi2c2-bus-pins {
++		samsung,pins = "gpp4-0", "gpp4-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart2_bus_single: uart2-bus-pins {
++		samsung,pins = "gpp4-0", "gpp4-1",
++			       "gpp4-2", "gpp4-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi2_bus: spi2-bus-pins {
++		samsung,pins = "gpp4-0", "gpp4-1", "gpp4-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi2_cs: spi2-cs-pins {
++		samsung,pins = "gpp4-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi2_cs_func: spi2-cs-func-pins {
++		samsung,pins = "gpp4-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c1_bus: hsi2c1-bus-pins {
++		samsung,pins = "gpp2-0", "gpp2-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart1_bus_single: uart1-bus-pins {
++		samsung,pins = "gpp2-0", "gpp2-1",
++			       "gpp2-2", "gpp2-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi1_bus: spi1-bus-pins {
++		samsung,pins = "gpp2-0", "gpp2-1", "gpp2-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi1_cs: spi1-cs-pins {
++		samsung,pins = "gpp2-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi1_cs_func: spi1-cs-func-pins {
++		samsung,pins = "gpp2-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++};
++
++&pinctrl_peric1 {
++	gpp20: gpp20-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp21: gpp21-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp22: gpp22-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp23: gpp23-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp24: gpp24-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp25: gpp25-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp26: gpp26-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	gpp27: gpp27-gpio-bank {
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
++
++	hsi2c13_bus: hsi2c13-bus-pins  {
++		samsung,pins = "gpp25-0", "gpp25-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart13_bus_single: uart13-bus-pins {
++		samsung,pins = "gpp25-0", "gpp25-1",
++			       "gpp25-2", "gpp25-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi13_bus: spi13-bus-pins {
++		samsung,pins = "gpp25-0", "gpp25-1", "gpp25-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi13_cs: spi13-cs-pins {
++		samsung,pins = "gpp25-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi13_cs_func: spi13-cs-func-pins {
++		samsung,pins = "gpp25-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c12_bus: hsi2c12-bus-pins {
++		samsung,pins = "gpp23-4", "gpp23-5";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart12_bus_single: uart12-bus-pins {
++		samsung,pins = "gpp23-4", "gpp23-5",
++			       "gpp23-6", "gpp23-7";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi12_bus: spi12-bus-pins {
++		samsung,pins = "gpp23-4", "gpp23-5", "gpp23-6";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi14_cs2: spi14-cs2-pins {
++		samsung,pins = "gpp23-6";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi12_cs: spi12-cs-pins {
++		samsung,pins = "gpp23-7";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi12_cs_func: spi12-cs-func-pins {
++		samsung,pins = "gpp23-7";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c11_bus: hsi2c11-bus-pins {
++		samsung,pins = "gpp23-0", "gpp23-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart11_bus_single: uart11-bus-pins {
++		samsung,pins = "gpp23-0", "gpp23-1",
++			       "gpp23-2", "gpp23-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi11_bus: spi11-bus-pins {
++		samsung,pins = "gpp23-0", "gpp23-1", "gpp23-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi11_cs: spi11-cs-pins {
++		samsung,pins = "gpp23-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi11_cs_func: spi11-cs-func-pins {
++		samsung,pins = "gpp23-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c10_bus: hsi2c10-bus-pins {
++		samsung,pins = "gpp21-0", "gpp21-1";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart10_bus_single: uart10-bus-pins {
++		samsung,pins = "gpp21-0", "gpp21-1",
++			       "gpp21-2", "gpp21-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi10_bus: spi10-bus-pins {
++		samsung,pins = "gpp21-0", "gpp21-1", "gpp21-2";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi10_cs: spi10-cs-pins {
++		samsung,pins = "gpp21-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi10_cs_func: spi10-cs-func-pins {
++		samsung,pins = "gpp21-3";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c9_bus: hsi2c9-bus-pins {
++		samsung,pins = "gpp20-4", "gpp20-5";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart9_bus_single: uart9-bus-pins {
++		samsung,pins = "gpp20-4", "gpp20-5",
++			       "gpp20-6", "gpp20-7";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi9_bus: spi9-bus-pins {
++		samsung,pins = "gpp20-4", "gpp20-5", "gpp20-6";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi9_cs: spi9-cs-pins {
++		samsung,pins = "gpp20-7";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi9_cs_func: spi9-cs-func-pins {
++		samsung,pins = "gpp20-7";
++		samsung,pin-function = <GS101_PIN_FUNC_2>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	hsi2c0_bus: hsi2c0-bus-pins {
++		samsung,pins = "gpp20-0", "gpp20-1";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	uart0_bus_single: uart0-bus-pins {
++		samsung,pins = "gpp20-0", "gpp20-1",
++			       "gpp20-2", "gpp20-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++	};
++
++	spi0_bus: spi0-bus-pins {
++		samsung,pins = "gpp20-0", "gpp20-1", "gpp20-2";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi0_cs: spi0-cs-pins {
++		samsung,pins = "gpp20-3";
++		samsung,pin-function = <GS101_PIN_FUNC_OUTPUT>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++
++	spi0_cs_func: spi0-cs-func-pins {
++		samsung,pins = "gpp20-3";
++		samsung,pin-function = <GS101_PIN_FUNC_3>;
++		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
++		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
++	};
++};
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.h b/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.h
+new file mode 100644
+index 000000000000..b7d276b1e25a
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/google/gs101-pinctrl.h
+@@ -0,0 +1,33 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Pinctrl binding constants for GS101
++ *
++ * Copyright 2020-2023 Google LLC
++ */
++
++#ifndef __DTS_ARM64_SAMSUNG_EXYNOS_GOOGLE_PINCTRL_GS101_H__
++#define __DTS_ARM64_SAMSUNG_EXYNOS_GOOGLE_PINCTRL_GS101_H__
++
++#define GS101_PIN_PULL_NONE		0
++#define GS101_PIN_PULL_DOWN		1
++#define GS101_PIN_PULL_UP		3
++
++/* Pin function in power down mode */
++#define GS101_PIN_PDN_OUT0		0
++#define GS101_PIN_PDN_OUT1		1
++#define GS101_PIN_PDN_INPUT		2
++#define GS101_PIN_PDN_PREV		3
++
++/* GS101 drive strengths */
++#define GS101_PIN_DRV_2_5_MA		0
++#define GS101_PIN_DRV_5_MA		1
++#define GS101_PIN_DRV_7_5_MA		2
++#define GS101_PIN_DRV_10_MA		3
++
++#define GS101_PIN_FUNC_INPUT		0
++#define GS101_PIN_FUNC_OUTPUT		1
++#define GS101_PIN_FUNC_2		2
++#define GS101_PIN_FUNC_3		3
++#define GS101_PIN_FUNC_EINT		0xf
++
++#endif /* __DTS_ARM64_SAMSUNG_EXYNOS_GOOGLE_PINCTRL_GS101_H__ */
+diff --git a/arch/arm64/boot/dts/exynos/google/gs101.dtsi b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+new file mode 100644
+index 000000000000..9747cb3fa03a
+--- /dev/null
++++ b/arch/arm64/boot/dts/exynos/google/gs101.dtsi
+@@ -0,0 +1,473 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * GS101 SoC
++ *
++ * Copyright 2019-2023 Google LLC
++ * Copyright 2023 Linaro Ltd - <peter.griffin@linaro.org>
++ */
++
++#include <dt-bindings/clock/google,gs101.h>
++#include <dt-bindings/gpio/gpio.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include <dt-bindings/soc/samsung,exynos-usi.h>
++
++/ {
++	compatible = "google,gs101";
++	#address-cells = <2>;
++	#size-cells = <1>;
++
++	interrupt-parent = <&gic>;
++
++	aliases {
++		pinctrl0 = &pinctrl_gpio_alive;
++		pinctrl1 = &pinctrl_far_alive;
++		pinctrl2 = &pinctrl_gsacore;
++		pinctrl3 = &pinctrl_gsactrl;
++		pinctrl4 = &pinctrl_peric0;
++		pinctrl5 = &pinctrl_peric1;
++		pinctrl6 = &pinctrl_hsi1;
++		pinctrl7 = &pinctrl_hsi2;
++	};
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&cpu0>;
++				};
++				core1 {
++					cpu = <&cpu1>;
++				};
++				core2 {
++					cpu = <&cpu2>;
++				};
++				core3 {
++					cpu = <&cpu3>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&cpu4>;
++				};
++				core1 {
++					cpu = <&cpu5>;
++				};
++			};
++
++			cluster2 {
++				core0 {
++					cpu = <&cpu6>;
++				};
++				core1 {
++					cpu = <&cpu7>;
++				};
++			};
++		};
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0000>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
++			capacity-dmips-mhz = <250>;
++			dynamic-power-coefficient = <70>;
++		};
++
++		cpu1: cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0100>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
++			capacity-dmips-mhz = <250>;
++			dynamic-power-coefficient = <70>;
++		};
++
++		cpu2: cpu@200 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0200>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
++			capacity-dmips-mhz = <250>;
++			dynamic-power-coefficient = <70>;
++		};
++
++		cpu3: cpu@300 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a55";
++			reg = <0x0300>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ANANKE_CPU_SLEEP>;
++			capacity-dmips-mhz = <250>;
++			dynamic-power-coefficient = <70>;
++		};
++
++		cpu4: cpu@400 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a76";
++			reg = <0x0400>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ENYO_CPU_SLEEP>;
++			capacity-dmips-mhz = <620>;
++			dynamic-power-coefficient = <284>;
++		};
++
++		cpu5: cpu@500 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a76";
++			reg = <0x0500>;
++			enable-method = "psci";
++			cpu-idle-states =  <&ENYO_CPU_SLEEP>;
++			capacity-dmips-mhz = <620>;
++			dynamic-power-coefficient = <284>;
++		};
++
++		cpu6: cpu@600 {
++			device_type = "cpu";
++			compatible = "arm,cortex-x1";
++			reg = <0x0600>;
++			enable-method = "psci";
++			cpu-idle-states =  <&HERA_CPU_SLEEP>;
++			capacity-dmips-mhz = <1024>;
++			dynamic-power-coefficient = <650>;
++		};
++
++		cpu7: cpu@700 {
++			device_type = "cpu";
++			compatible = "arm,cortex-x1";
++			reg = <0x0700>;
++			enable-method = "psci";
++			cpu-idle-states =  <&HERA_CPU_SLEEP>;
++			capacity-dmips-mhz = <1024>;
++			dynamic-power-coefficient = <650>;
++		};
++
++		idle-states {
++			entry-method = "psci";
++
++			ANANKE_CPU_SLEEP: cpu-ananke-sleep {
++				idle-state-name = "c2";
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <70>;
++				exit-latency-us = <160>;
++				min-residency-us = <2000>;
++			};
++
++			ENYO_CPU_SLEEP: cpu-enyo-sleep {
++				idle-state-name = "c2";
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <150>;
++				exit-latency-us = <190>;
++				min-residency-us = <2500>;
++			};
++
++			HERA_CPU_SLEEP: cpu-hera-sleep {
++				idle-state-name = "c2";
++				compatible = "arm,idle-state";
++				arm,psci-suspend-param = <0x0010000>;
++				entry-latency-us = <235>;
++				exit-latency-us = <220>;
++				min-residency-us = <3500>;
++			};
++		};
++	};
++
++	/* TODO replace with CCF clock */
++	dummy_clk: clock-3 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <12345>;
++		clock-output-names = "pclk";
++	};
++
++	/* ect node is required to be present by bootloader */
++	ect {
++	};
++
++	ext_24_5m: clock-1 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-output-names = "oscclk";
++	};
++
++	ext_200m: clock-2 {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-output-names = "ext-200m";
++	};
++
++	pmu-0 {
++		compatible = "arm,cortex-a55-pmu";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH &ppi_cluster0>;
++	};
++
++	pmu-1 {
++		compatible = "arm,cortex-a76-pmu";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH &ppi_cluster1>;
++	};
++
++	pmu-2 {
++		compatible = "arm,cortex-x1-pmu";
++		interrupts = <GIC_PPI 7 IRQ_TYPE_LEVEL_HIGH &ppi_cluster2>;
++	};
++
++	pmu-3 {
++		compatible = "arm,dsu-pmu";
++		interrupts = <GIC_SPI 257 IRQ_TYPE_LEVEL_HIGH 0>;
++		cpus = <&cpu0>, <&cpu1>, <&cpu2>, <&cpu3>,
++		       <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
++	};
++
++	psci {
++		compatible = "arm,psci-1.0";
++		method = "smc";
++	};
++
++	reserved_memory: reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <1>;
++		ranges;
++
++		gsa_reserved_protected: gsa@90200000 {
++			reg = <0x0 0x90200000 0x400000>;
++			no-map;
++		};
++
++		tpu_fw_reserved: tpu-fw@93000000 {
++			reg = <0x0 0x93000000 0x1000000>;
++			no-map;
++		};
++
++		aoc_reserve: aoc@94000000 {
++			reg = <0x0 0x94000000 0x03000000>;
++			no-map;
++		};
++
++		abl_reserved: abl@f8800000 {
++			reg = <0x0 0xf8800000 0x02000000>;
++			no-map;
++		};
++
++		dss_log_reserved: dss-log-reserved@fd3f0000 {
++			reg = <0x0 0xfd3f0000 0x0000e000>;
++			no-map;
++		};
++
++		debug_kinfo_reserved: debug-kinfo-reserved@fd3fe000 {
++			reg = <0x0 0xfd3fe000 0x00001000>;
++			no-map;
++		};
++
++		bldr_log_reserved: bldr-log-reserved@fd800000 {
++			reg = <0x0 0xfd800000 0x00100000>;
++			no-map;
++		};
++
++		bldr_log_hist_reserved: bldr-log-hist-reserved@fd900000 {
++			reg = <0x0 0xfd900000 0x00002000>;
++			no-map;
++		};
++	};
++
++	soc: soc@0 {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x0 0x40000000>;
++
++		cmu_misc: clock-controller@10010000 {
++			compatible = "google,gs101-cmu-misc";
++			reg = <0x10010000 0x8000>;
++			#clock-cells = <1>;
++			clocks = <&cmu_top CLK_DOUT_CMU_MISC_BUS>,
++				 <&cmu_top CLK_DOUT_CMU_MISC_SSS>;
++			clock-names = "dout_cmu_misc_bus", "dout_cmu_misc_sss";
++		};
++
++		watchdog_cl0: watchdog@10060000 {
++			compatible = "google,gs101-wdt";
++			reg = <0x10060000 0x100>;
++			interrupts = <GIC_SPI 765 IRQ_TYPE_LEVEL_HIGH 0>;
++			clocks = <&cmu_misc CLK_GOUT_MISC_WDT_CLUSTER0_PCLK>,
++				 <&ext_24_5m>;
++			clock-names = "watchdog", "watchdog_src";
++			samsung,syscon-phandle = <&pmu_system_controller>;
++			samsung,cluster-index = <0>;
++			status = "disabled";
++		};
++
++		watchdog_cl1: watchdog@10070000 {
++			compatible = "google,gs101-wdt";
++			reg = <0x10070000 0x100>;
++			interrupts = <GIC_SPI 766 IRQ_TYPE_LEVEL_HIGH 0>;
++			clocks = <&cmu_misc CLK_GOUT_MISC_WDT_CLUSTER1_PCLK>,
++				 <&ext_24_5m>;
++			clock-names = "watchdog", "watchdog_src";
++			samsung,syscon-phandle = <&pmu_system_controller>;
++			samsung,cluster-index = <1>;
++			status = "disabled";
++		};
++
++		gic: interrupt-controller@10400000 {
++			compatible = "arm,gic-v3";
++			#interrupt-cells = <4>;
++			interrupt-controller;
++			reg = <0x10400000 0x10000>, /* GICD */
++			      <0x10440000 0x100000>;/* GICR * 8 */
++			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH 0>;
++
++			ppi-partitions {
++				ppi_cluster0: interrupt-partition-0 {
++					affinity = <&cpu0 &cpu1 &cpu2 &cpu3>;
++				};
++
++				ppi_cluster1: interrupt-partition-1 {
++					affinity = <&cpu4 &cpu5>;
++				};
++
++				ppi_cluster2: interrupt-partition-2 {
++					affinity = <&cpu6 &cpu7>;
++				};
++			};
++		};
++
++		sysreg_peric0: syscon@10820000 {
++			compatible = "google,gs101-peric0-sysreg", "syscon";
++			reg = <0x10820000 0x10000>;
++		};
++
++		pinctrl_peric0: pinctrl@10840000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x10840000 0x00001000>;
++			interrupts = <GIC_SPI 625 IRQ_TYPE_LEVEL_HIGH 0>;
++		};
++
++		usi_uart: usi@10a000c0 {
++			compatible = "google,gs101-usi",
++				     "samsung,exynos850-usi";
++			reg = <0x10a000c0 0x20>;
++			ranges;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			clocks = <&dummy_clk>, <&dummy_clk>;
++			clock-names = "pclk", "ipclk";
++			samsung,sysreg = <&sysreg_peric0 0x1020>;
++			samsung,mode = <USI_V2_UART>;
++			status = "disabled";
++
++			serial_0: serial@10a00000 {
++				compatible = "google,gs101-uart";
++				reg = <0x10a00000 0xc0>;
++				reg-io-width = <4>;
++				interrupts = <GIC_SPI 634
++					      IRQ_TYPE_LEVEL_HIGH 0>;
++				clocks = <&dummy_clk 0>, <&dummy_clk 0>;
++				clock-names = "uart", "clk_uart_baud0";
++				samsung,uart-fifosize = <256>;
++				status = "disabled";
++			};
++		};
++
++		sysreg_peric1: syscon@10c20000 {
++			compatible = "google,gs101-peric1-sysreg", "syscon";
++			reg = <0x10c20000 0x10000>;
++		};
++
++		pinctrl_peric1: pinctrl@10c40000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x10c40000 0x00001000>;
++			interrupts = <GIC_SPI 644 IRQ_TYPE_LEVEL_HIGH 0>;
++		};
++
++		pinctrl_hsi1: pinctrl@11840000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x11840000 0x00001000>;
++			interrupts = <GIC_SPI 471 IRQ_TYPE_LEVEL_HIGH 0>;
++		};
++
++		pinctrl_hsi2: pinctrl@14440000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x14440000 0x00001000>;
++			interrupts = <GIC_SPI 503 IRQ_TYPE_LEVEL_HIGH 0>;
++		};
++
++		cmu_apm: clock-controller@17400000 {
++			compatible = "google,gs101-cmu-apm";
++			reg = <0x17400000 0x8000>;
++			#clock-cells = <1>;
++
++			clocks = <&ext_24_5m>;
++			clock-names = "oscclk";
++		};
++
++		sysreg_apm: syscon@174204e0 {
++			compatible = "google,gs101-apm-sysreg", "syscon";
++			reg = <0x174204e0 0x1000>;
++		};
++
++		pmu_system_controller: system-controller@17460000 {
++			compatible = "google,gs101-pmu", "syscon";
++			reg = <0x17460000 0x10000>;
++		};
++
++		pinctrl_gpio_alive: pinctrl@174d0000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x174d0000 0x00001000>;
++
++			wakeup-interrupt-controller {
++				compatible = "google,gs101-wakeup-eint",
++					     "samsung,exynos850-wakeup-eint",
++					     "samsung,exynos7-wakeup-eint";
++			};
++		};
++
++		pinctrl_far_alive: pinctrl@174e0000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x174e0000 0x00001000>;
++
++			wakeup-interrupt-controller {
++				compatible = "google,gs101-wakeup-eint",
++					     "samsung,exynos850-wakeup-eint",
++					     "samsung,exynos7-wakeup-eint";
++			};
++		};
++
++		pinctrl_gsactrl: pinctrl@17940000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x17940000 0x00001000>;
++		};
++
++		pinctrl_gsacore: pinctrl@17a80000 {
++			compatible = "google,gs101-pinctrl";
++			reg = <0x17a80000 0x00001000>;
++		};
++
++		cmu_top: clock-controller@1e080000 {
++			compatible = "google,gs101-cmu-top";
++			reg = <0x1e080000 0x8000>;
++			#clock-cells = <1>;
++
++			clocks = <&ext_24_5m>;
++			clock-names = "oscclk";
++		};
++	};
++
++	timer {
++		compatible = "arm,armv8-timer";
++		interrupts =
++		   <GIC_PPI 13 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW) 0>,
++		   <GIC_PPI 14 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW) 0>,
++		   <GIC_PPI 11 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW) 0>,
++		   <GIC_PPI 10 (GIC_CPU_MASK_SIMPLE(8) | IRQ_TYPE_LEVEL_LOW) 0>;
++	};
++};
++
++#include "gs101-pinctrl.dtsi"
 -- 
 2.43.0.472.g3155946c3a-goog
 
