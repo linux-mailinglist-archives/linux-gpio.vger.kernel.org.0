@@ -1,211 +1,256 @@
-Return-Path: <linux-gpio+bounces-1287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9284780E5EE
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 09:23:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23C5180E66D
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 09:41:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3642B1F21833
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 08:23:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 544A81C213C4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 08:41:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7E9053E27;
-	Tue, 12 Dec 2023 08:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5601420DC6;
+	Tue, 12 Dec 2023 08:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rQ/5RCGq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTf1RxFw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A053986D
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 08:22:06 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id E47F4C32774;
-	Tue, 12 Dec 2023 08:22:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702369325;
-	bh=caawVOpxHFy9cm3i7DwECM4693fhFarzsOiGy9doXoc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rQ/5RCGq/ykasqMp2XtDyoXiuXXnKSHGyZtV7ysaiytqZtgRDtiRqcjND2dKsCDQ1
-	 utrI1jYleyXVngTpaRtiwcoCjZgtB/qIxxwzuDTcN5gX+rMjO2zBptPtajRCIXg7s6
-	 81+hZ5asRJcFlErnW9ItkUO235fnqiqzoPqbzo4rAfyT7DwAY2h3lzBL+EQkMyQZ4k
-	 yXRqpHf6vVpEQq7vwXU+plDmBv3GKjFWZroV/nehvBs6vfxqGTDArRbDCwNfKUyixK
-	 6q6GjQm7hyjg3z2+GXUwLhrbIeTP2gAkpd5J1xcwTn9T6pxgfZ37uUq3JamQWYLYor
-	 56jKiJBekzJLw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D32C4C4167B;
-	Tue, 12 Dec 2023 08:22:05 +0000 (UTC)
-From:
- Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Tue, 12 Dec 2023 11:20:44 +0300
-Subject: [PATCH v6 27/40] gpio: ep93xx: add DT support for gpio-ep93xx
+Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04881CD;
+	Tue, 12 Dec 2023 00:41:46 -0800 (PST)
+Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50c0478f970so5606681e87.3;
+        Tue, 12 Dec 2023 00:41:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702370504; x=1702975304; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=oPld8vpr14XTiVIBO9OqUWjltLKOYMI1v6JQhvMLahY=;
+        b=HTf1RxFwlSjD4YK19k7c3zbDHQ1AjW3ba+pig2Mkg/8rAf5mwbevdbYVrF2SZIfOl1
+         LG0kfhFtXXDKlYN7rlNDl822x7ynWVEnEYWnRRWtakJSn1pe6ByuZPhlq/+9Jc+nmMog
+         ZUkOeNS849m5tWJ39Y4Uh99WSlFHS5tBlMNGA7XNKTRKKJNc6gBwbbfKuZlBjxR6YB33
+         GI4VrWWSQBgfyWm46lzmiCbufAcwYfmbuXIUeTCM2rZPHJAfc4DG/j7g8ynvapurSugL
+         V0Rjd4YL5Xo4JjPyistF/LmmOaanE08CTdG4aVHzsJFTlpRlHLilrHXoa5qZxCHrfv09
+         wxPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702370504; x=1702975304;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=oPld8vpr14XTiVIBO9OqUWjltLKOYMI1v6JQhvMLahY=;
+        b=nbx7JqNIwXRLObmHuFR/XIh9gYG9xJoElNKb9ZzgLD2IeHNSvgA3/xBQap5pK2lN1P
+         DXqNL80WHOWxjiMTtH798lvMVSDHeUOwt2ajGsGKbB2na5F8OdyjhSBIO0/3Z7cq8dfc
+         6cb+xExxlgigDdtIE1y+OQMnxrDiByp8f1o4WgnjOXWY/b8unAJKaoEOCm+Ke7QZenOl
+         grrbTAgdLazBKFCX6Jm67+boBC5mrsukXRAFOw4vZ5CuH1ZZgVkNmQn3k2Ij9tNjQnXj
+         rPKXhZ/EUIWhWM92pgpwarBbRjmF4p2r3E9iU6bpYDZjg3mnWOLSdB310Sok6Xyrd1VJ
+         MqFg==
+X-Gm-Message-State: AOJu0Yy7FAnQHgIj66/RK9Wn3D23W9OpLMmQo6H9VdsUEesgBMuBawtQ
+	p1m8qRLpb+5R/tUldxAjmPUrIkIdJYAtpy0fiqc=
+X-Google-Smtp-Source: AGHT+IEnmLpJcpamygkwP+7KOsXkqETOpVob6/2P22G2CYhFSXy52IIq0Hg6V/NCKv/PygX9xNpkXY0DHWV/woCamb0=
+X-Received: by 2002:a05:6512:2019:b0:50b:d764:8046 with SMTP id
+ a25-20020a056512201900b0050bd7648046mr2243403lfb.121.1702370503834; Tue, 12
+ Dec 2023 00:41:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20231212-ep93xx-v6-27-c307b8ac9aa8@maquefel.me>
-References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
-In-Reply-To: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1702369322; l=4650;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=veUYE/VzU1y37Z5M8NkA7tAbUvE+Vs49lzqAWz+krrk=; =?utf-8?q?b=3DCs0ft9ZrLGoI?=
- =?utf-8?q?z/sgcMycvbE6wClqwYCs1GSpEs0A5HEnzbd5rhyEhk6tGCe3QezzMoZeC5YaSSag?=
- CqSNE+f4Cibv4EXZB+wwa+6z/cCmcC1czZx/3xYCxmogE6FhXGzl
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received:
- by B4 Relay for nikita.shubin@maquefel.me/20230718 with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: <nikita.shubin@maquefel.me>
+References: <20231212065147.3475413-1-jim.t90615@gmail.com>
+ <20231212065147.3475413-2-jim.t90615@gmail.com> <72fe6f18-e3d7-4c74-9734-01a33dc8e100@molgen.mpg.de>
+In-Reply-To: <72fe6f18-e3d7-4c74-9734-01a33dc8e100@molgen.mpg.de>
+From: Jim Liu <jim.t90615@gmail.com>
+Date: Tue, 12 Dec 2023 16:41:32 +0800
+Message-ID: <CAKUZ0+Ekx=-G0V1OXXdQCraL+sAXvmZffT65iLsGJ2QHs=1cAg@mail.gmail.com>
+Subject: Re: [PATCH v9 1/3] dt-bindings: gpio: add NPCM sgpio driver bindings
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Jim Liu <JJLIU0@nuvoton.com>, KWLIU@nuvoton.com, linus.walleij@linaro.org, 
+	brgl@bgdev.pl, andy@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+Hi Paul
 
-Add OF ID match table.
+Thanks for your review.
+I will modify it in the next version.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- drivers/gpio/gpio-ep93xx.c | 38 +++++++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+Best regards,
+Jim
 
-diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-index a55f635585f4..ab798c848215 100644
---- a/drivers/gpio/gpio-ep93xx.c
-+++ b/drivers/gpio/gpio-ep93xx.c
-@@ -12,13 +12,13 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
- #include <linux/seq_file.h>
--#include <linux/interrupt.h>
- 
- struct ep93xx_gpio_irq_chip {
- 	void __iomem *base;
-@@ -138,7 +138,8 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	int port_mask = BIT(irqd_to_hwirq(d));
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	int port_mask = BIT(hwirq);
- 
- 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH)
- 		eic->int_type2 ^= port_mask; /* switch edge direction */
-@@ -147,26 +148,28 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
- 	ep93xx_gpio_update_int_params(eic);
- 
- 	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
--	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void ep93xx_gpio_irq_mask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	eic->int_unmasked &= ~BIT(irqd_to_hwirq(d));
-+	eic->int_unmasked &= ~BIT(hwirq);
- 	ep93xx_gpio_update_int_params(eic);
--	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void ep93xx_gpio_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
--	eic->int_unmasked |= BIT(irqd_to_hwirq(d));
-+	gpiochip_enable_irq(gc, hwirq);
-+	eic->int_unmasked |= BIT(hwirq);
- 	ep93xx_gpio_update_int_params(eic);
- }
- 
-@@ -179,11 +182,11 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	irq_hw_number_t offset = irqd_to_hwirq(d);
--	int port_mask = BIT(offset);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	int port_mask = BIT(hwirq);
- 	irq_flow_handler_t handler;
- 
--	gc->direction_input(gc, offset);
-+	gc->direction_input(gc, hwirq);
- 
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -209,7 +212,7 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- 	case IRQ_TYPE_EDGE_BOTH:
- 		eic->int_type1 |= port_mask;
- 		/* set initial polarity based on current input level */
--		if (gc->get(gc, offset))
-+		if (gc->get(gc, hwirq))
- 			eic->int_type2 &= ~port_mask; /* falling */
- 		else
- 			eic->int_type2 |= port_mask; /* rising */
-@@ -285,9 +288,8 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
- 	if (girq->num_parents == 0)
- 		return -EINVAL;
- 
--	girq->parents = devm_kcalloc(dev, girq->num_parents,
--				   sizeof(*girq->parents),
--				   GFP_KERNEL);
-+	girq->parents = devm_kcalloc(dev, girq->num_parents, sizeof(*girq->parents),
-+				     GFP_KERNEL);
- 	if (!girq->parents)
- 		return -ENOMEM;
- 
-@@ -306,7 +308,7 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
- 		girq->parent_handler = ep93xx_gpio_f_irq_handler;
- 
- 		for (i = 0; i < girq->num_parents; i++) {
--			irq = platform_get_irq(pdev, i);
-+			irq = platform_get_irq_optional(pdev, i);
- 			if (irq < 0)
- 				continue;
- 
-@@ -359,9 +361,15 @@ static int ep93xx_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
- }
- 
-+static const struct of_device_id ep93xx_gpio_match[] = {
-+	{ .compatible = "cirrus,ep9301-gpio" },
-+	{ /* sentinel */ }
-+};
+On Tue, Dec 12, 2023 at 3:00=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de>=
+ wrote:
+>
+> Dear Jim,
+>
+>
+> Thank you for your patch.
+>
+> Am 12.12.23 um 07:51 schrieb Jim Liu:
+> > Add dt-bindings document for the Nuvoton NPCM7xx sgpio driver
+> >
+> > Signed-off-by: Jim Liu <jim.t90615@gmail.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> As you seem to be employed by Nuvoton, should your company/work email be
+> listed somehow, and even be used for the author address?
+>
+> > ---
+> > Changes for v9:
+> >     - no changed
+> > Changes for v8:
+> >     - no changed
+> > Changes for v7:
+> >     - no changed
+> > ---
+> >   .../bindings/gpio/nuvoton,sgpio.yaml          | 86 ++++++++++++++++++=
 +
- static struct platform_driver ep93xx_gpio_driver = {
- 	.driver		= {
- 		.name	= "gpio-ep93xx",
-+		.of_match_table = ep93xx_gpio_match,
- 	},
- 	.probe		= ep93xx_gpio_probe,
- };
-
--- 
-2.41.0
-
+> >   1 file changed, 86 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgp=
+io.yaml
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml =
+b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+> > new file mode 100644
+> > index 000000000000..84e0dbcb066c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+> > @@ -0,0 +1,86 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/gpio/nuvoton,sgpio.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Nuvoton SGPIO controller
+> > +
+> > +maintainers:
+> > +  - Jim LIU <JJLIU0@nuvoton.com>
+> > +
+> > +description: |
+> > +  This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
+> > +  Nuvoton NPCM7xx SGPIO module is combine serial to parallel IC (HC595=
+)
+>
+> s/is combine/combines a/
+>
+> > +  and parallel to serial IC (HC165), and use APB3 clock to control it.
+>
+> use*s*
+>
+> > +  This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
+>
+> Only one space before the (.
+>
+> > +  NPCM7xx/NPCM8xx have two sgpio module each module can support up
+>
+> =E2=80=A6 modules. Each module =E2=80=A6
+>
+> > +  to 64 output pins,and up to 64 input pin, the pin is only for gpi or=
+ gpo.
+>
+> 1.  Space after the comma.
+> 2.  64 input pin*s
+>
+> > +  GPIO pins have sequential, First half is gpo and second half is gpi.
+>
+> have sequential ?.
+>
+> > +  GPIO pins can be programmed to support the following options
+> > +  - Support interrupt option for each input port and various interrupt
+> > +    sensitivity option (level-high, level-low, edge-high, edge-low)
+>
+> option*s*
+>
+> > +  - ngpios is number of nuvoton,input-ngpios GPIO lines and nuvoton,ou=
+tput-ngpios GPIO lines.
+> > +    nuvoton,input-ngpios GPIO lines is only for gpi.
+>
+> s/is/are/
+>
+> > +    nuvoton,output-ngpios GPIO lines is only for gpo.
+>
+> s/is/are/
+>
+> It=E2=80=99d be great if you mentioned the datasheet name and revision in=
+ the
+> description.
+>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - nuvoton,npcm750-sgpio
+> > +      - nuvoton,npcm845-sgpio
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  gpio-controller: true
+> > +
+> > +  '#gpio-cells':
+> > +    const: 2
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +
+> > +  nuvoton,input-ngpios:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      The numbers of GPIO's exposed. GPIO lines is only for gpi.
+>
+> s/is/are/
+>
+> > +    minimum: 0
+> > +    maximum: 64
+> > +
+> > +  nuvoton,output-ngpios:
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +    description:
+> > +      The numbers of GPIO's exposed. GPIO lines is only for gpo.
+>
+> s/is/are/
+>
+> > +    minimum: 0
+> > +    maximum: 64
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +  - gpio-controller
+> > +  - '#gpio-cells'
+> > +  - interrupts
+> > +  - nuvoton,input-ngpios
+> > +  - nuvoton,output-ngpios
+> > +  - clocks
+> > +
+> > +additionalProperties: false
+> > +
+> > +examples:
+> > +  - |
+> > +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
+> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> > +    gpio8: gpio@101000 {
+> > +        compatible =3D "nuvoton,npcm750-sgpio";
+> > +        reg =3D <0x101000 0x200>;
+> > +        clocks =3D <&clk NPCM7XX_CLK_APB3>;
+> > +        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
+> > +        gpio-controller;
+> > +        #gpio-cells =3D <2>;
+> > +        nuvoton,input-ngpios =3D <64>;
+> > +        nuvoton,output-ngpios =3D <64>;
+> > +    };
+>
+> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+>
+>
+> Kind regards,
+>
+> Paul Menzel
 
