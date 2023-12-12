@@ -1,256 +1,171 @@
-Return-Path: <linux-gpio+bounces-1288-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1289-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23C5180E66D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 09:41:52 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 141E380E70E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 10:06:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 544A81C213C4
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 08:41:50 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BAD2A1F21B43
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 09:06:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5601420DC6;
-	Tue, 12 Dec 2023 08:41:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9D0158125;
+	Tue, 12 Dec 2023 09:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HTf1RxFw"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="BLqpe9uC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-x129.google.com (mail-lf1-x129.google.com [IPv6:2a00:1450:4864:20::129])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 04881CD;
-	Tue, 12 Dec 2023 00:41:46 -0800 (PST)
-Received: by mail-lf1-x129.google.com with SMTP id 2adb3069b0e04-50c0478f970so5606681e87.3;
-        Tue, 12 Dec 2023 00:41:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702370504; x=1702975304; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oPld8vpr14XTiVIBO9OqUWjltLKOYMI1v6JQhvMLahY=;
-        b=HTf1RxFwlSjD4YK19k7c3zbDHQ1AjW3ba+pig2Mkg/8rAf5mwbevdbYVrF2SZIfOl1
-         LG0kfhFtXXDKlYN7rlNDl822x7ynWVEnEYWnRRWtakJSn1pe6ByuZPhlq/+9Jc+nmMog
-         ZUkOeNS849m5tWJ39Y4Uh99WSlFHS5tBlMNGA7XNKTRKKJNc6gBwbbfKuZlBjxR6YB33
-         GI4VrWWSQBgfyWm46lzmiCbufAcwYfmbuXIUeTCM2rZPHJAfc4DG/j7g8ynvapurSugL
-         V0Rjd4YL5Xo4JjPyistF/LmmOaanE08CTdG4aVHzsJFTlpRlHLilrHXoa5qZxCHrfv09
-         wxPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702370504; x=1702975304;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oPld8vpr14XTiVIBO9OqUWjltLKOYMI1v6JQhvMLahY=;
-        b=nbx7JqNIwXRLObmHuFR/XIh9gYG9xJoElNKb9ZzgLD2IeHNSvgA3/xBQap5pK2lN1P
-         DXqNL80WHOWxjiMTtH798lvMVSDHeUOwt2ajGsGKbB2na5F8OdyjhSBIO0/3Z7cq8dfc
-         6cb+xExxlgigDdtIE1y+OQMnxrDiByp8f1o4WgnjOXWY/b8unAJKaoEOCm+Ke7QZenOl
-         grrbTAgdLazBKFCX6Jm67+boBC5mrsukXRAFOw4vZ5CuH1ZZgVkNmQn3k2Ij9tNjQnXj
-         rPKXhZ/EUIWhWM92pgpwarBbRjmF4p2r3E9iU6bpYDZjg3mnWOLSdB310Sok6Xyrd1VJ
-         MqFg==
-X-Gm-Message-State: AOJu0Yy7FAnQHgIj66/RK9Wn3D23W9OpLMmQo6H9VdsUEesgBMuBawtQ
-	p1m8qRLpb+5R/tUldxAjmPUrIkIdJYAtpy0fiqc=
-X-Google-Smtp-Source: AGHT+IEnmLpJcpamygkwP+7KOsXkqETOpVob6/2P22G2CYhFSXy52IIq0Hg6V/NCKv/PygX9xNpkXY0DHWV/woCamb0=
-X-Received: by 2002:a05:6512:2019:b0:50b:d764:8046 with SMTP id
- a25-20020a056512201900b0050bd7648046mr2243403lfb.121.1702370503834; Tue, 12
- Dec 2023 00:41:43 -0800 (PST)
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE87B7;
+	Tue, 12 Dec 2023 01:06:40 -0800 (PST)
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 3BC4FqQl012890;
+	Tue, 12 Dec 2023 09:06:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=s1dBI9/E3rx9/JOjkcgCAjP1EckoNhhcDmODPaccMws=; b=BL
+	qpe9uCg8JL8QZWaret70aPnnT31QOwh+rgVt2H5jcDRmQsnMMnmaAOqCiZ3LkBJi
+	AGWBCAuuShqT/fwNn9wdRaO72FPzvHhfO8f5DwEJMKXX3Mp8TN6MQWEuEWrSkMxO
+	yfIBMH6oSjIf3iax1a0z0nSj54eu3BBMwCvtGIMAr8TIRadhlDCQupK3olUejDM9
+	TkhZie0F8DeBi2WpdzRnanGqdvrSVdeyP8fkt+X3OumKZNLCZ9DCZDBEOXQKSA9h
+	4eIlI8lKUczonCA7g9N+DroMcvDSCM1gBFwOQnKaMt345/QQlKNYhiXTlI2s4bYR
+	T66g9yaFycWXTRiPbQpA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3uxgbb0j0t-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 09:06:37 +0000 (GMT)
+Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 3BC96aBC030091
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 12 Dec 2023 09:06:36 GMT
+Received: from aiquny2-gv.qualcomm.com (10.80.80.8) by
+ nasanex01a.na.qualcomm.com (10.52.223.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 12 Dec 2023 01:06:30 -0800
+From: Maria Yu <quic_aiquny@quicinc.com>
+To: <andersson@kernel.org>, <linus.walleij@linaro.org>
+CC: Maria Yu <quic_aiquny@quicinc.com>, <kernel@quicinc.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-msm@vger.kernel.org>
+Subject: [PATCH v2] pinctrl: Add lock to ensure the state atomization
+Date: Tue, 12 Dec 2023 17:06:11 +0800
+Message-ID: <20231212090611.950-1-quic_aiquny@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212065147.3475413-1-jim.t90615@gmail.com>
- <20231212065147.3475413-2-jim.t90615@gmail.com> <72fe6f18-e3d7-4c74-9734-01a33dc8e100@molgen.mpg.de>
-In-Reply-To: <72fe6f18-e3d7-4c74-9734-01a33dc8e100@molgen.mpg.de>
-From: Jim Liu <jim.t90615@gmail.com>
-Date: Tue, 12 Dec 2023 16:41:32 +0800
-Message-ID: <CAKUZ0+Ekx=-G0V1OXXdQCraL+sAXvmZffT65iLsGJ2QHs=1cAg@mail.gmail.com>
-Subject: Re: [PATCH v9 1/3] dt-bindings: gpio: add NPCM sgpio driver bindings
-To: Paul Menzel <pmenzel@molgen.mpg.de>
-Cc: Jim Liu <JJLIU0@nuvoton.com>, KWLIU@nuvoton.com, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, andy@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, openbmc@lists.ozlabs.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01a.na.qualcomm.com (10.52.223.231)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: G0TUX0OI5oYT2_hlsST-JrJWUVlHd4lm
+X-Proofpoint-ORIG-GUID: G0TUX0OI5oYT2_hlsST-JrJWUVlHd4lm
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ impostorscore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
+ clxscore=1015 spamscore=0 adultscore=0 mlxlogscore=976 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
+ definitions=main-2312120071
 
-Hi Paul
+Currently pinctrl_select_state is an export symbol and don't have
+effective re-entrance protect design. During async probing of devices
+it's possible to end up in pinctrl_select_state() from multiple
+contexts simultaneously, so make it thread safe.
+More over, when the real racy happened, the system frequently have
+printk message like:
+  "not freeing pin xx (xxx) as part of deactivating group xxx - it is
+already used for some other setting".
+Finally the system crashed after the flood log.
+Add per pinctrl lock to ensure the old state and new state transition
+atomization.
+Also move dev error print message outside the region with interrupts
+disabled.
 
-Thanks for your review.
-I will modify it in the next version.
+Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
+Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
+---
+ drivers/pinctrl/core.c | 11 +++++++++--
+ drivers/pinctrl/core.h |  2 ++
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Best regards,
-Jim
-
-On Tue, Dec 12, 2023 at 3:00=E2=80=AFPM Paul Menzel <pmenzel@molgen.mpg.de>=
- wrote:
->
-> Dear Jim,
->
->
-> Thank you for your patch.
->
-> Am 12.12.23 um 07:51 schrieb Jim Liu:
-> > Add dt-bindings document for the Nuvoton NPCM7xx sgpio driver
-> >
-> > Signed-off-by: Jim Liu <jim.t90615@gmail.com>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> As you seem to be employed by Nuvoton, should your company/work email be
-> listed somehow, and even be used for the author address?
->
-> > ---
-> > Changes for v9:
-> >     - no changed
-> > Changes for v8:
-> >     - no changed
-> > Changes for v7:
-> >     - no changed
-> > ---
-> >   .../bindings/gpio/nuvoton,sgpio.yaml          | 86 ++++++++++++++++++=
+diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
+index f2977eb65522..a19c286bf82e 100644
+--- a/drivers/pinctrl/core.c
++++ b/drivers/pinctrl/core.c
+@@ -1066,6 +1066,7 @@ static struct pinctrl *create_pinctrl(struct device *dev,
+ 	p->dev = dev;
+ 	INIT_LIST_HEAD(&p->states);
+ 	INIT_LIST_HEAD(&p->dt_maps);
++	spin_lock_init(&p->lock);
+ 
+ 	ret = pinctrl_dt_to_map(p, pctldev);
+ 	if (ret < 0) {
+@@ -1262,9 +1263,12 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
+ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ {
+ 	struct pinctrl_setting *setting, *setting2;
+-	struct pinctrl_state *old_state = READ_ONCE(p->state);
++	struct pinctrl_state *old_state;
+ 	int ret;
++	unsigned long flags;
+ 
++	spin_lock_irqsave(&p->lock, flags);
++	old_state = p->state;
+ 	if (old_state) {
+ 		/*
+ 		 * For each pinmux setting in the old state, forget SW's record
+@@ -1329,11 +1333,11 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 	}
+ 
+ 	p->state = state;
++	spin_unlock_irqrestore(&p->lock, flags);
+ 
+ 	return 0;
+ 
+ unapply_new_state:
+-	dev_err(p->dev, "Error applying setting, reverse things back\n");
+ 
+ 	list_for_each_entry(setting2, &state->settings, node) {
+ 		if (&setting2->node == &setting->node)
+@@ -1349,6 +1353,9 @@ static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
+ 			pinmux_disable_setting(setting2);
+ 	}
+ 
++	spin_unlock_irqrestore(&p->lock, flags);
 +
-> >   1 file changed, 86 insertions(+)
-> >   create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgp=
-io.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml =
-b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
-> > new file mode 100644
-> > index 000000000000..84e0dbcb066c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
-> > @@ -0,0 +1,86 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/gpio/nuvoton,sgpio.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Nuvoton SGPIO controller
-> > +
-> > +maintainers:
-> > +  - Jim LIU <JJLIU0@nuvoton.com>
-> > +
-> > +description: |
-> > +  This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
-> > +  Nuvoton NPCM7xx SGPIO module is combine serial to parallel IC (HC595=
-)
->
-> s/is combine/combines a/
->
-> > +  and parallel to serial IC (HC165), and use APB3 clock to control it.
->
-> use*s*
->
-> > +  This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
->
-> Only one space before the (.
->
-> > +  NPCM7xx/NPCM8xx have two sgpio module each module can support up
->
-> =E2=80=A6 modules. Each module =E2=80=A6
->
-> > +  to 64 output pins,and up to 64 input pin, the pin is only for gpi or=
- gpo.
->
-> 1.  Space after the comma.
-> 2.  64 input pin*s
->
-> > +  GPIO pins have sequential, First half is gpo and second half is gpi.
->
-> have sequential ?.
->
-> > +  GPIO pins can be programmed to support the following options
-> > +  - Support interrupt option for each input port and various interrupt
-> > +    sensitivity option (level-high, level-low, edge-high, edge-low)
->
-> option*s*
->
-> > +  - ngpios is number of nuvoton,input-ngpios GPIO lines and nuvoton,ou=
-tput-ngpios GPIO lines.
-> > +    nuvoton,input-ngpios GPIO lines is only for gpi.
->
-> s/is/are/
->
-> > +    nuvoton,output-ngpios GPIO lines is only for gpo.
->
-> s/is/are/
->
-> It=E2=80=99d be great if you mentioned the datasheet name and revision in=
- the
-> description.
->
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - nuvoton,npcm750-sgpio
-> > +      - nuvoton,npcm845-sgpio
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  gpio-controller: true
-> > +
-> > +  '#gpio-cells':
-> > +    const: 2
-> > +
-> > +  interrupts:
-> > +    maxItems: 1
-> > +
-> > +  clocks:
-> > +    maxItems: 1
-> > +
-> > +  nuvoton,input-ngpios:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      The numbers of GPIO's exposed. GPIO lines is only for gpi.
->
-> s/is/are/
->
-> > +    minimum: 0
-> > +    maximum: 64
-> > +
-> > +  nuvoton,output-ngpios:
-> > +    $ref: /schemas/types.yaml#/definitions/uint32
-> > +    description:
-> > +      The numbers of GPIO's exposed. GPIO lines is only for gpo.
->
-> s/is/are/
->
-> > +    minimum: 0
-> > +    maximum: 64
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - gpio-controller
-> > +  - '#gpio-cells'
-> > +  - interrupts
-> > +  - nuvoton,input-ngpios
-> > +  - nuvoton,output-ngpios
-> > +  - clocks
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    #include <dt-bindings/clock/nuvoton,npcm7xx-clock.h>
-> > +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > +    gpio8: gpio@101000 {
-> > +        compatible =3D "nuvoton,npcm750-sgpio";
-> > +        reg =3D <0x101000 0x200>;
-> > +        clocks =3D <&clk NPCM7XX_CLK_APB3>;
-> > +        interrupts =3D <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>;
-> > +        gpio-controller;
-> > +        #gpio-cells =3D <2>;
-> > +        nuvoton,input-ngpios =3D <64>;
-> > +        nuvoton,output-ngpios =3D <64>;
-> > +    };
->
-> Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
->
->
-> Kind regards,
->
-> Paul Menzel
++	dev_err(p->dev, "Error applying setting, reverse things back\n");
+ 	/* There's no infinite recursive loop here because p->state is NULL */
+ 	if (old_state)
+ 		pinctrl_select_state(p, old_state);
+diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
+index 530370443c19..86fc41393f7b 100644
+--- a/drivers/pinctrl/core.h
++++ b/drivers/pinctrl/core.h
+@@ -12,6 +12,7 @@
+ #include <linux/list.h>
+ #include <linux/mutex.h>
+ #include <linux/radix-tree.h>
++#include <linux/spinlock.h>
+ #include <linux/types.h>
+ 
+ #include <linux/pinctrl/machine.h>
+@@ -91,6 +92,7 @@ struct pinctrl {
+ 	struct pinctrl_state *state;
+ 	struct list_head dt_maps;
+ 	struct kref users;
++	spinlock_t lock;
+ };
+ 
+ /**
+
+base-commit: 26aff849438cebcd05f1a647390c4aa700d5c0f1
+-- 
+2.17.1
+
 
