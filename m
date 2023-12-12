@@ -1,121 +1,138 @@
-Return-Path: <linux-gpio+bounces-1319-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1320-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A638080F65E
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 20:17:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1398580F6BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 20:33:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C1B41F216A9
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 19:17:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C15F0281F91
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 19:32:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EA8881E3D;
-	Tue, 12 Dec 2023 19:17:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD86481E57;
+	Tue, 12 Dec 2023 19:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OmE+tv7o"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="pfPa+PgC";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="qqf0D/th"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x52a.google.com (mail-ed1-x52a.google.com [IPv6:2a00:1450:4864:20::52a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 48B52D2
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 11:17:22 -0800 (PST)
-Received: by mail-ed1-x52a.google.com with SMTP id 4fb4d7f45d1cf-550dd0e3304so4963909a12.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 11:17:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702408641; x=1703013441; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=q81f6tvuC/62M26cD5+zhpnHZ0bvi1DcQhgd2N8HT8g=;
-        b=OmE+tv7olRThtF0Ebt9AUAvFUI6P5OoTQuykjvT9AZS1xN4p7w2nco7R+6zGI4Z1Qy
-         UtN94WNEIhYppATJrZohER5xZUTgtYJX138MNHCVO+nvPitoF4opAG6R5s699enphIxj
-         4p46qbc0CfigrTyEn9UoD4yJUlXk1UPtbMpzkyOt7leozD+gRJZp0sk5HMc9AoZyXo09
-         i0MasLaO1Ls+8O1juy3OZKU10VSyCd+zmTvXZxOTF2BseBI/Qc0xLrlXUD9MF9bMoEAL
-         YsD+fp3zqYa5dPd+Jl0F47QKvXpAVqRVG5cuXGtoxaaXcmISZRNotmBSswjJcw2RL3zb
-         1kfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702408641; x=1703013441;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=q81f6tvuC/62M26cD5+zhpnHZ0bvi1DcQhgd2N8HT8g=;
-        b=WBJiDHgV2alHixAqTA40NMSwDOT7Ytvh9OYgE5SioHCgiVAlmplDgqafBEdo8mlHVE
-         nAUQJkj9/2SxtBuFx+uclco7/qVD56jX3PwhlOECeoulb0048VjPgdMwv6j8bkRO9dS1
-         pzZYRbYRIQjKz3uLPsU/So0PmPZ0k4Tvwf0tX+JZeAuli6j4zDlvnh1jZ3Tzxc3SdFOC
-         g+hbu7Uj2+/Z1HHxnfzHnEA8ZeSsHywKaqTwRlmRsw7oVAG8RUW+HyzLkP2SYonP2SLP
-         PXLExYrfRE8OtDA6hJe1/Y0rldzBWa+LudIDrkoP7UskMdpFCXoAkrdqYSJ/CRmjM3mx
-         Lm4w==
-X-Gm-Message-State: AOJu0YzRsH/yCwYh0wJCOo2gVpfhYNKWts3YOIMre18XPEzatxikiWav
-	qq9/k1C0TnTvSAjxEq/4GcTzdA==
-X-Google-Smtp-Source: AGHT+IErxwGD3BlZkSUookdNqWVQz7uPq0j3jdF2YUIwZl8jPuzuYHu/C9CZmUM1+hb143ssA3PhaA==
-X-Received: by 2002:a17:906:6a19:b0:9d8:78f2:7ea2 with SMTP id qw25-20020a1709066a1900b009d878f27ea2mr4682806ejc.54.1702408640691;
-        Tue, 12 Dec 2023 11:17:20 -0800 (PST)
-Received: from krzk-bin.. ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id sf22-20020a1709078a9600b00982a92a849asm6739126ejc.91.2023.12.12.11.17.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 11:17:20 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	mturquette@baylibre.com,
-	conor+dt@kernel.org,
-	sboyd@kernel.org,
-	tomasz.figa@gmail.com,
-	s.nawrocki@samsung.com,
-	linus.walleij@linaro.org,
-	wim@linux-watchdog.org,
-	linux@roeck-us.net,
-	catalin.marinas@arm.com,
-	will@kernel.org,
-	arnd@arndb.de,
-	olof@lixom.net,
-	gregkh@linuxfoundation.org,
-	jirislaby@kernel.org,
-	cw00.choi@samsung.com,
-	alim.akhtar@samsung.com,
-	Peter Griffin <peter.griffin@linaro.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	tudor.ambarus@linaro.org,
-	andre.draszik@linaro.org,
-	semen.protsenko@linaro.org,
-	saravanak@google.com,
-	willmcvicker@google.com,
-	soc@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-clk@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	kernel-team@android.com,
-	linux-serial@vger.kernel.org
-Subject: Re: (subset) [PATCH v7 09/16] pinctrl: samsung: Add gs101 SoC pinctrl configuration
-Date: Tue, 12 Dec 2023 20:17:15 +0100
-Message-Id: <170240862865.229534.3131999037082419524.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20231211162331.435900-10-peter.griffin@linaro.org>
-References: <20231211162331.435900-1-peter.griffin@linaro.org> <20231211162331.435900-10-peter.griffin@linaro.org>
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8FEEABD;
+	Tue, 12 Dec 2023 11:32:52 -0800 (PST)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1702409571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yAuQflHlpP7PQHRCxurGh8vd3qGPf7EP4mCw7mI4KPo=;
+	b=pfPa+PgC45CXpOi9IvcThsAxhVtXutuSJaSBreWJQmzOBlJH16M51b2bMcjpbVbRDay/hP
+	GiKvtTpwrl9dA0pTYXhgG5O0yXMsOCNC3oyY8Q9J04ILzUOyWQUeVB5wJzpOhgPa+gW2Je
+	dhEk9ttMmhkS7CVo4GUV21hz8aABq9rp5slulmo5N6clvfy/h3D+dNkEuLKlLDjxLNbjoL
+	DfpNWRgYZo1RZ0j8o+7bnBkZu3eODUUU77FBBs9Tg0RNZ6huPfPnDUOMMzJVoR4wD/0GoO
+	KKjeIZbpOGMklxvmH8qYkPU0lblYu4YX+gv2TmvK8vmVyOkasYNVUzISPi2+bQ==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1702409571;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=yAuQflHlpP7PQHRCxurGh8vd3qGPf7EP4mCw7mI4KPo=;
+	b=qqf0D/thwWl4/VatQWveBxWB+9Ei1hdZ4zfCGMXPgZFxuCV59ZD06fPGWd1NUTVm2wTNfe
+	4FKztjP2ODZOuPBg==
+To: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+Cc: linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, Maxime
+ Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue
+ <alexandre.torgue@foss.st.com>, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] pinctrl: stm32: fix GPIO level interrupts
+In-Reply-To: <ZXh9rIyy6mu9zFry@dell-precision-5540>
+References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
+ <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+ <87ttosqvbq.ffs@tglx> <ZXh9rIyy6mu9zFry@dell-precision-5540>
+Date: Tue, 12 Dec 2023 20:32:50 +0100
+Message-ID: <87il53p671.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 
+Ben!
 
-On Mon, 11 Dec 2023 16:23:24 +0000, Peter Griffin wrote:
-> Add support for the pin-controller found on the gs101 SoC used in
-> Pixel 6 phones.
-> 
-> 
+On Tue, Dec 12 2023 at 10:35, Ben Wolsieffer wrote:
+> On Fri, Dec 08, 2023 at 09:43:21PM +0100, Thomas Gleixner wrote:
+>> On Mon, Dec 04 2023 at 15:33, Ben Wolsieffer wrote:
+>> > The STM32 doesn't support GPIO level interrupts in hardware, so the
+>> > driver tries to emulate them using edge interrupts, by retriggering the
+>> > interrupt if necessary based on the pin state after the handler
+>> > finishes.
+>> >
+>> > Currently, this functionality does not work because the irqchip uses
+>> > handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
+>> > callbacks after handling the interrupt. This patch fixes this by using
+>> > handle_level_irq() for level interrupts, which causes irq_unmask() to be
+>> > called to retrigger the interrupt.
+>> 
+>> This does not make any sense at all. irq_unmask() does not retrigger
+>> anything. It sets the corresponding bit in the mask register, not more
+>> not less.
+>
+> I don't think this is correct. I was referring to
+> stm32_gpio_irq_unmask(), which calls stm32_gpio_irq_trigger(), which in
+> turn (for level interrupts) checks the GPIO pin state and retriggers the
+> interrupt if necessary.
 
-Applied, thanks!
+Ah. That makes a lot more sense. Sorry that I missed that driver
+detail. The changelog could mention explicitely where the retrigger
+comes from. 
 
-[09/16] pinctrl: samsung: Add gs101 SoC pinctrl configuration
-        https://git.kernel.org/pinctrl/samsung/c/4a8be01a1a7a030ae7b6138602d2e060cf7a0946
+>> Switching to handle_level_irq() makes the following difference
+>> vs. handle_edge_irq() when an interrupt is handled (ignoring the inner
+>> loop):
+>> 
+>>       + irq_mask();
+>>         irq_ack();
+>>         ....
+>>         handle();
+>>         ....
+>>       + irq_unmask();
+>
+> Yes, the additional call to irq_unmask() is the key difference here, as
+> that callback performs the retriggering for level interrupts.
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Sorry to be pedantic here. irq_unmask() is a function in the interrupt
+core code which eventually ends up invoking the irqchip::irq_unmask().
+
+>> When the interrupt is raised again after irq_ack() while the handler is
+>> running, i.e. a full toggle from active to inactive and back to active
+>> where the back to active transition causes the edge detector to trigger,
+>> then:
+>
+> I don't see how this is relevant. The bug occurs with level interrupts
+> in the case where there are no new transitions while the handler is
+> running. For example, with a high level interrupt, if the pin is still
+> high after the handler finishes, the interrupt should be immediately
+> triggered again.
+
+Ah. That's the problem you are trying to solve. Now we are getting
+closer to a proper description :)
+
+>> But in fact the regular exti driver could do the same and just handle
+>> the two NVIC interrupts which need demultiplexing separately and let
+>> everything else go through the hierarchy without bells and whistles.
+>
+> This sounds reasonable to me. It did seem strange to me that the exti
+> and exti_h drivers used such different approaches, although I wasn't
+> aware of the reasons behind them. I think this refactoring is out of
+> scope of this bug fix though.
+
+Sure. It just occured to me while looking at this stuff..
+
+Care to resend with a proper explanation in the changelog?
+
+Thanks,
+
+        tglx
 
