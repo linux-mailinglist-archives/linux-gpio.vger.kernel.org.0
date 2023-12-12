@@ -1,193 +1,127 @@
-Return-Path: <linux-gpio+bounces-1272-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1273-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE48D80DFC3
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 00:57:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4828380E072
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 01:47:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 852962825FE
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Dec 2023 23:57:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 033B92824B9
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 00:47:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 702F656B84;
-	Mon, 11 Dec 2023 23:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4AE939B;
+	Tue, 12 Dec 2023 00:47:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="PUT/0HrM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JGTrum1K"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF8439B;
-	Mon, 11 Dec 2023 15:57:17 -0800 (PST)
-Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231211235712epoutp02fc6492c306a0c87b00f73d2b96eaddb1~f7FS22I-N1560215602epoutp02X;
-	Mon, 11 Dec 2023 23:57:12 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231211235712epoutp02fc6492c306a0c87b00f73d2b96eaddb1~f7FS22I-N1560215602epoutp02X
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702339032;
-	bh=bBw6NK33ONaSuHSNqwie2fG1DfnIrR8z9bBcfqRccco=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=PUT/0HrMIoBxCMk8iXdgFD0X2Sg28os0ByEf6vCuabil4sWM0oFEYVseZv4lSYqGa
-	 LsccOknD0Dn8ODSwTq9QpwtT39Vp0wonnBzyqeETRPkUJk0S10LW+thNOiM5+ibXmp
-	 AU+1O/H/t6/tRSNZdApzyfnLCAzYAFg6AXeuaPOU=
-Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTP id
-	20231211235712epcas1p39dede76e04ae14189f0260fca7d7d07a~f7FSfcmRd2517825178epcas1p3Y;
-	Mon, 11 Dec 2023 23:57:12 +0000 (GMT)
-Received: from epsmgec1p1-new.samsung.com (unknown [182.195.36.144]) by
-	epsnrtp2.localdomain (Postfix) with ESMTP id 4SpzF30zJRz4x9Q1; Mon, 11 Dec
-	2023 23:57:11 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-	epsmgec1p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	40.C5.19104.6D1A7756; Tue, 12 Dec 2023 08:57:11 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-	epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-	20231211235710epcas1p314c62a7abccf937bd63907c3c8166efc~f7FQ4CCEp2515825158epcas1p3o;
-	Mon, 11 Dec 2023 23:57:10 +0000 (GMT)
-Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
-	epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20231211235710epsmtrp27050d1763a3b4c4daa8ddc76689a55d1~f7FQ2wCih2834428344epsmtrp2m;
-	Mon, 11 Dec 2023 23:57:10 +0000 (GMT)
-X-AuditID: b6c32a4c-80dff70000004aa0-47-6577a1d65ccb
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	5D.68.07368.6D1A7756; Tue, 12 Dec 2023 08:57:10 +0900 (KST)
-Received: from cw00choi03 (unknown [10.113.111.106]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20231211235710epsmtip18f3770cc7713786a97d3d0f4185e114d~f7FQUXaxH1746317463epsmtip1G;
-	Mon, 11 Dec 2023 23:57:10 +0000 (GMT)
-From: "Chanwoo Choi" <cw00.choi@samsung.com>
-To: "'Peter Griffin'" <peter.griffin@linaro.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-	<conor+dt@kernel.org>, <sboyd@kernel.org>, <tomasz.figa@gmail.com>,
-	<s.nawrocki@samsung.com>, <linus.walleij@linaro.org>,
-	<wim@linux-watchdog.org>, <linux@roeck-us.net>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <arnd@arndb.de>, <olof@lixom.net>,
-	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-	<alim.akhtar@samsung.com>
-Cc: <tudor.ambarus@linaro.org>, <andre.draszik@linaro.org>,
-	<semen.protsenko@linaro.org>, <saravanak@google.com>,
-	<willmcvicker@google.com>, <soc@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-watchdog@vger.kernel.org>, <kernel-team@android.com>,
-	<linux-serial@vger.kernel.org>
-In-Reply-To: <20231211162331.435900-7-peter.griffin@linaro.org>
-Subject: RE: [PATCH v7 06/16] dt-bindings: clock: google,gs101: fix
- incorrect numbering and DGB suffix
-Date: Tue, 12 Dec 2023 08:57:09 +0900
-Message-ID: <0ecc01da2c8d$c129e490$437dadb0$@samsung.com>
+Received: from mail-yw1-x112d.google.com (mail-yw1-x112d.google.com [IPv6:2607:f8b0:4864:20::112d])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 615C899
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 16:47:14 -0800 (PST)
+Received: by mail-yw1-x112d.google.com with SMTP id 00721157ae682-5d2d0661a8dso51230167b3.2
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Dec 2023 16:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702342033; x=1702946833; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=rKtNvmR1OGqhE8lo3DXe6G/FraRwOvDvfXypTok+jow=;
+        b=JGTrum1KMYuzgmS8GMX3qNqxIWAl75GoPTXZWuW95aNCfIKqYcG0cZ146tlKgzuv6v
+         c/oZx5ZW5e00BlFZEjdAxDs7bEnCKFIcWptOxFvcZzmkst7f47Wn3LD1bJFHm2JHWOKT
+         lgXyN2wuAEU1toP03cLYTSTqM6J2dnVnKBw5hIoR/rfKByhid/o7VIt2ZMkDW8z3gixM
+         v8y2JGogdgmHD3tRyhy1E0w7MXBdAwkI1hu3vIX6wtaSSrKWuClvLyAwllF3eFCYChc+
+         ESrwtvYN6UswgnNRaNL1aF+LFU6B3YQFGA0IOjLq4aGGHfjOO0tLldCpo4XiVSNft+ej
+         YA/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702342033; x=1702946833;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=rKtNvmR1OGqhE8lo3DXe6G/FraRwOvDvfXypTok+jow=;
+        b=S9LM9UHc3bwT6bymBu0V90yxEyZNXd+N4Y94gKdjSOts/61DdJ7arrEqS0f4xKuZTW
+         F5AlkEAOfqmDF3JyihqEYTe1fCebtynCnx5pxY58TRf9+pqHT05jsYgTCEsPd8OEdK9O
+         5v2fDQYZmfvrkzNl21wPrSuMX4/ArRFNCepO9GBTwEU76ICLu7FHuXSJOYSpTAmVUQ7u
+         QthrgKktKmwYFeNCzI8q4wCb6kYSlqYzp1CiTSf/IjWdBMezVQZ6Zbr6Yss1F0QDvLow
+         hfor7JPAo7KqpyQcJa3sIKyJA1g0SssvPnCbRaUtom475Fw7OEopvKunsNH+6CWHGrd2
+         tFlw==
+X-Gm-Message-State: AOJu0YwSpEDWrW+WsxcvruOIYLDpF8oRm3NMkYcU9FE0zIkM5Apn+e6j
+	ogsUYJpZ4nRXJgWi61HaycphOPjDaDc=
+X-Google-Smtp-Source: AGHT+IGHfrRC7SVbafUIfQDibuGrGhhPKTg28bkyyuSdfflK6vfTd8hluP85cM0x93EBPVvzs4GGdQ==
+X-Received: by 2002:a81:df06:0:b0:5d4:b7a:ebfc with SMTP id c6-20020a81df06000000b005d40b7aebfcmr4414185ywn.22.1702342033573;
+        Mon, 11 Dec 2023 16:47:13 -0800 (PST)
+Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
+        by smtp.gmail.com with ESMTPSA id jk8-20020a170903330800b001c61073b076sm7315424plb.144.2023.12.11.16.47.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Dec 2023 16:47:13 -0800 (PST)
+Date: Tue, 12 Dec 2023 08:47:07 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Geert Uytterhoeven <geert@linux-m68k.org>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: GPIOLIB locking is broken and how to fix it
+Message-ID: <ZXetiwHbDGBWBDDF@rigel>
+References: <CAMRc=MemJobowO_+FFaF0r6OGx1cWTc899A5yPzR+q+2=rwADA@mail.gmail.com>
+ <ZXLWHTjv9W-IH_OP@rigel>
+ <CAMRc=MfXQb=A=4f0kFEW4ENuNk0ZmL_qAkWihEvFcYaizCf8LA@mail.gmail.com>
+ <ZXLvfBWTAGZt0f0L@rigel>
+ <CAMRc=MdhcYToMixdFh6Kf+GZ_MhDeHxd5_2U00neLGoH2M_P9Q@mail.gmail.com>
+ <ZXPJXTm3pzBKFX08@rigel>
+ <CAMRc=MdDg8pcu=iTCUDjdpgYMuBubjeL5po8Fmhz6z3ri0fOZw@mail.gmail.com>
+ <ZXUjx5UTgC9tvkp9@rigel>
+ <ZXW86Ad4MOq4IFsn@rigel>
+ <CAMRc=MfG5jSrmiAxqnDTBd6L=RbD+ZZ2w5KqvH5zK70He6hG5g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: ko
-Thread-Index: AQEeDlMUs+qnFg95EVUf+Z9FZqMuEwIO8XO4Aj/o0Sqx+ofWIA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Te0xbVRz29La3hQ28KzWcIWFdjS5DCxQoHshw6hi5GZiQoeCMDhq4UkJp
-	mz4ANWbEPRgPCRsQoZPBwkTA8n6/xiiMDUTcskFR2AYWB4xZBIIbg4Itlyn/fb/vfN/vdfLj
-	YNwbbBdOvFxDqeQSmQC3Zzb3HvQUGq8kU163lxlo8nIzjhofNzCR5WI/Gy2UZQGk7xpmoOK+
-	YRY6XVqDI3ORK2pt4aHs2SkM5a3/yED1plEWWsx6wEINxesAFfx6jYGGSr9lo7Hqa2w0fWWI
-	ge4MHkWDxmUc1RZsMNHZrj426n2SxkIZBguONkbrmGgm2+oyGddxVNluTbL0+0l0ZkKMKpc2
-	ATLNbWDv8snmjmYWqb+sB+Ta84uAXBg7yybbdPfZZEm9lqyvTMfJidFOnKzQ61lkd5GeTTZc
-	PUXeu/UNi2x7msomsxsrAblc7xb28icJh6SUJJZS8Sl5jCI2Xh4XKAgJjzoSJfbzEglF/uht
-	AV8uSaQCBUGhYcLgeJl1XQJ+kkSmtVJhErVa4PnOIZVCq6H4UoVaEyiglLEypVjpoZYkqrXy
-	OA85pQkQeXl5i63C6ARpz4MLbGWjY4pxKikVtOzOAHYcSPjCkqYWdgaw53CJTgCLxywYHSwB
-	2HKpA6eDfwCs7s/DXliKh0oB/dAF4FrrPJMO5gBMvTppVXE4OPEWLHn2kc3AIyYx2JVnZ9Ng
-	hB6Dq5sTW5nsiMNwrCuVacNOhBROmsu3eCbxOlzMKcJt2IHwh+3V/Swa74EDhdNbeozYB1v+
-	+n67Iz5c/bOMRfM8eCn9HEYXfh8+HC1g2ApDIt8ejlWtsGlDELQsDbNo7AQf32zc5l3gsrkL
-	pw25AN6Zn8fooAbAuooz2+V8YPcPuQzbmBhxENa0e9L0fti2VgToLhyheSWLZZNAwgGeP8el
-	Ja/Bu5P3GTTeC0vT0vEcINDtmE23Yzbdjnl0/xcrAcxK4EIp1YlxVIxIKRLKqeT/vjxGkVgP
-	tu7JPbQVPK2xeBgAgwMMAHIwAc/BtU9NcR1iJV98SakUUSqtjFIbgNi68QuYyysxCutByjVR
-	Il9/L18/bx9fJPITCZwdhu4lUVwiTqKhEihKSale+BgcO5dURuG4wJkbohAmGTLtlPExCTdK
-	onXy/bzdAcnhP9UYuj/46jtqc5yXfCsenxl42EQWvKk9/+y97LvtsRXD3ZbstM58t2nxqONh
-	QwrgJ7XxnGqdgqOTmv7+xXRkSusXODcyN1Pce6D1WM5vhaFCc6QUKBJz43qYox+fqLPfNC3l
-	D2QOwD1uE4O1DQufPRefTnX8XK3K7vMZ3+e0Ykkxyma/No9M1UasRxuH+t0OSL0fhWTCXe03
-	J6TOp9449vPxhiBRd3mhMau36mREMOuEynfcHPfk9qOEYPdF18Jd4WXXj2dwZ6tGcvcarq+W
-	j3/4amT9HwUdJpfIgD5PYYRF1hP2KfMlAVMtlYjcMZVa8i8FxU6q2AQAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sb0xTVxyGc+6/XpqBl9K5U8YY62JG3FYpzu3MGCUsS26yxJHhPogZ2MC1
-	GKCQVtAuY1QcVYsQhhspZVgMiuFSRUoH0lL+tEwRkdmGFMKUaQpBHOgEE8RBGaVZxrf3PL/f
-	+5zz4dC4qJmMpo+qjnFqlSJXSgmJDrc09kPfxeNcwuy4BD280EEh25N2Aq1W3xSgZ03nALI4
-	RzBkHhgh0anGVgo9rY9BNzrFqPLxIxz9tHIFQ1a/j0TPz02SqN28ApDx9x4MDTdWCND4tR4B
-	mro4jCHP0OdoaGyRQteNAQKVOQcEyD13mkQG1yqFAr42As1Urrf8YysU4u3rkoWJdPTD/V2I
-	X1gDyD8bwJPi2A5HB8laLlgA+8+rasA+Gy8TsF2mBwK2wVrIWvmzFHvf102xzRYLyfbWWwRs
-	+6USdnSwlGS7lnQCttLGA3bRGpuyJU24J4vLPVrEqXfsPSzM7p/8UVBgizgx9qhIBzpfM4Aw
-	GjIfQfNwIzAAIS1iHAB6WhxkaCCBNZ7fcAOg13MUdLs1oZ0ZAO/8VY4FOcV8ABtefh3kYuYF
-	Dvkzy1jwgDN2HI7o9GSo4QbQ52+hgtYwZh8cd+qIYI5ijkBvTQ0WzASzDT6vqt/YCWc+hfZr
-	N8lQjoS3a6eI4G04I4P6NhDEOPM27Jz/BQ89NA4uTzeRIS6GdWf1G1zMJMM/fUasCkSZNplM
-	/5tMm0ymTe0GQPBAwhVo8pR5mfICuYo7LtMo8jSFKqUsMz/PCjZ+0/b4G2DSHJC5AEYDF4A0
-	LhWHxwxoOFF4lkL7LafOz1AX5nIaF3iTJqRvhMuNdVkiRqk4xuVwXAGn/m+K0WHROux7+9Wr
-	ezOe1qWW7dvzyiZL8bRsPZDaVjrnuuXw9CrfT5p8oD15K/HQnb4rVF1i9VfqmlHzZ+9VvEVL
-	17zf/IFNxyfm/GxIbb1X+mVgd0l/SqSxb3m6L3lL8b14yimUL+3cKuku1zmaGXPsdxMv/Ky+
-	9YTXe+A6//iTXQ8zLqkjlxUV8w5YX2zvGZpaLUy//W5CX/7r/KxWX5Sf0G7PTIpbTFOF7b+c
-	TPe+FGqravX8RO1aSWzE0oDmi3Rbv69p4e6TrkGt/dcdimhMdNiLV6gaD/49f3Iu+4zNtDvt
-	/PlyOklSlHMk+uPLztMGZluxcnSn/FTbIB+xMH/3nZmY7pJqKaHJVsi342qN4l/cq8GFvAMA
-	AA==
-X-CMS-MailID: 20231211235710epcas1p314c62a7abccf937bd63907c3c8166efc
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231211162506epcas1p290e6adbb82f27ebade65376f298f7fd3
-References: <20231211162331.435900-1-peter.griffin@linaro.org>
-	<CGME20231211162506epcas1p290e6adbb82f27ebade65376f298f7fd3@epcas1p2.samsung.com>
-	<20231211162331.435900-7-peter.griffin@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfG5jSrmiAxqnDTBd6L=RbD+ZZ2w5KqvH5zK70He6hG5g@mail.gmail.com>
 
+On Mon, Dec 11, 2023 at 04:10:27PM +0100, Bartosz Golaszewski wrote:
+> On Sun, Dec 10, 2023 at 2:28 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Sun, Dec 10, 2023 at 10:34:47AM +0800, Kent Gibson wrote:
+> > > > >
+> > > >
+> >
+> > Bah, just ignore me wrt the supplemental info per chip.
+> > That solution only works for the chip fd used to request the lines.
+> > If you close the chip and re-open it there will be no connection between
+> > the new gpio_chardev_data and the existing line requests or the
+> > supplemental info.
+> >
+> > So it would have to be a global indexed by desc as you suggested.
+> > Well that sucks.
+> >
+>
+> Yeah, I don't see any other way if we want to contain this within
+> gpiolib-cdev.c. I tried fiddling with notifiers but it went nowhere.
+> :(
+>
 
+I've got a working patch that uses a global rbtree to contain any
+struct line that contains supplemental information required by
+the chip to fill out the info, i.e. a non-zero debounce period.
+The rbtree keeps the memory overhead minimal, as compared to a radix_tree
+or xarray, and only the lines containing supplemental info go in the tree,
+so the tree size, and the lookup overhead, is kept to a minimum.
+There is no performance impact on general use, though there is a minor
+overhead in adding the line to the tree when necessary or doing the lookup
+to construct lineinfo.
 
-> -----Original Message-----
-> From: Peter Griffin <peter.griffin@linaro.org>
-> Sent: Tuesday, December 12, 2023 1:23 AM
-> To: robh+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
-> mturquette@baylibre.com; conor+dt@kernel.org; sboyd@kernel.org;
-> tomasz.figa@gmail.com; s.nawrocki@samsung.com; linus.walleij@linaro.org;
-> wim@linux-watchdog.org; linux@roeck-us.net; catalin.marinas@arm.com;
-> will@kernel.org; arnd@arndb.de; olof@lixom.net;
-gregkh@linuxfoundation.org;
-> jirislaby@kernel.org; cw00.choi@samsung.com; alim.akhtar@samsung.com
-> Cc: peter.griffin@linaro.org; tudor.ambarus@linaro.org;
-> andre.draszik@linaro.org; semen.protsenko@linaro.org;
-saravanak@google.com;
-> willmcvicker@google.com; soc@kernel.org; devicetree@vger.kernel.org;
-linux-
-> arm-kernel@lists.infradead.org; linux-samsung-soc@vger.kernel.org; linux-
-> clk@vger.kernel.org; linux-gpio@vger.kernel.org; linux-
-> watchdog@vger.kernel.org; kernel-team@android.com; linux-
-> serial@vger.kernel.org
-> Subject: [PATCH v7 06/16] dt-bindings: clock: google,gs101: fix incorrect
-> numbering and DGB suffix
-> 
-> 166 was skipped by mistake and two clocks:
-> * CLK_MOUT_CMU_HSI0_USBDPDGB
-> * CLK_GOUT_HSI0_USBDPDGB
-> 
-> Have an incorrect DGB ending instead of DBG.
-> 
-> This is an ABI break, but as the patch was only applied yesterday this
-header
-> has never been in an actual release so it seems better to fix this early
-than
-> ignore it.
-> 
-> Fixes: 0a910f160638 ("dt-bindings: clock: Add Google gs101 clock
-management
-> unit bindings")
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
->  include/dt-bindings/clock/google,gs101.h | 118 +++++++++++------------
->  1 file changed, 59 insertions(+), 59 deletions(-)
-> 
+As well as reducing the visibility of that cdev specific field, it reduces
+the size of the gpio_desc at the expense of larger struct line, which is
+a net win (as there are fewer struct lines than descs), albeit a small one.
 
-(snip)
+I'll tidy it up and submit it so you can see if that works for you.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-
-Best Regards,
-Chanwoo Choi
-
-
+Cheers,
+Kent.
 
