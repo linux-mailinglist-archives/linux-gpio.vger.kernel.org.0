@@ -1,102 +1,126 @@
-Return-Path: <linux-gpio+bounces-1317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68C7C80F406
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 18:07:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CBD8280F413
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 18:09:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26B77281BE4
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 17:07:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0980A1C20CA1
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 17:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA2E7B3C1;
-	Tue, 12 Dec 2023 17:07:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 426A57B3C6;
+	Tue, 12 Dec 2023 17:09:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmNW4hkB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rAWyGhEl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4BC8F
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:07:06 -0800 (PST)
-Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6d9f879f784so3099189a34.2
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:07:06 -0800 (PST)
+Received: from mail-ua1-x933.google.com (mail-ua1-x933.google.com [IPv6:2607:f8b0:4864:20::933])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0C31EB7
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:09:12 -0800 (PST)
+Received: by mail-ua1-x933.google.com with SMTP id a1e0cc1a2514c-7c5ed425e8bso1517239241.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:09:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702400825; x=1703005625; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=qyp/xcwXJAh5WYkVbpddBlHbrFJQdwFRkjjvlIdkFnY=;
-        b=cmNW4hkB3ligBDsECZp1uNm5zx5hRphEI4SZpkHDz4fF6VFCT+w3OFKsBpvbDVdnC2
-         05zfn86ThDTL+BTs6DNbLDSgXRhEx5m86TBGLX0egpHD5wG59KIO6JicHNdSr5yNCwi9
-         g/dbdAikvXP4Qb2iRoq+CMDd90wue0eN+r5Dg889e8jtHv2QfCYBBNPrah2abrz9YPrw
-         F8e+c7xv1hhXPaZqMIWYhc8u2M9f+Py77FZR5DTu/eWK7qbozq3wppgleAqAjvjPb2W0
-         An3QfIVsGVsUjaRp7pV26imIFuTkDxQ3HzQ2K7nHAN95Vsbf1L+gIlrB8SFo3ZJtFvTg
-         b7XQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702400951; x=1703005751; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=upBnebOqwsJ597ZlmCLWx528Yzi3Wcu30Pu2fcleukU=;
+        b=rAWyGhEl5QZfENy+2tW1KWXOJt9iy4tJAm3F8/l0IKbulyyqMgyS5WlFH2XYZN9ph4
+         yXM+LTOPpboux6iMsqxOlKiI2A3LOrn2aAwpdOph9tJ51eptXZcBkYw3VRH5TZYBIjk6
+         IwiPxV0dn9/wKrj8bOFzpxKiLuy+ZIQjz7owiV2GbGoh/HuaaUBmNtndOZiHUtqBYOIJ
+         RufYfAN/rbvMYFxEXcThRSGZf8qGSERM2mMEomhH9WBcbMSaYCdXCQQ1RHmJ2gMAp3z8
+         qaC1Ucy4rN79qHxJCz9pxxqkwB8NOhICKOR+i89PxyuUzPBczjXki6m6OT/VDmMcUoSN
+         7iAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702400825; x=1703005625;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=qyp/xcwXJAh5WYkVbpddBlHbrFJQdwFRkjjvlIdkFnY=;
-        b=KmpHU1+hdMGDfee5T3VcTzl+IBatKNMoCtwj8gqRLijf1lMnrul/uJPajrw1zQ8gNF
-         vkvJJKcit+GED6peu0NjDmcavUpVYni6CImLjbFRssLbqu4OS3j2RItnrcteddvk7Ztr
-         FlmfUMifejq7jC02a5rqDMyjOgHtII/XF5w7zyU9/Eeb8mntuqlr2+F6jHROCRPVUWTK
-         zC3RCDC8kxWlOAEHITQB6HO/vf0rO6Od0pYknG0+uIqUIX/pNPLKYM5qKbpofjla0h6y
-         2Cvn0hbpHQ5zZ9Q89c7kyLrB8+hD6ye26MCbuyEsH1Nosb16bT/5b8tiPGK/9ekGYVMl
-         Z0wQ==
-X-Gm-Message-State: AOJu0Yx06b2CG8WzhXQDY5+z0++d2PVjWQJVRd69KKR6bHMXMuoPlPxc
-	Xv4AOFp20tc4z0cv6bNa47Brpa8Foxweip4RzJ0=
-X-Google-Smtp-Source: AGHT+IHNCA2hvwbmESkAshsIUU2GZovKv/zIm/f910RUh+s5UA+IUjEp2Q2tC/Y4KaMN+9iYXWN016fqNImrbzb8y84=
-X-Received: by 2002:a9d:69d2:0:b0:6d9:a81b:3735 with SMTP id
- v18-20020a9d69d2000000b006d9a81b3735mr7446328oto.45.1702400825284; Tue, 12
- Dec 2023 09:07:05 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702400951; x=1703005751;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=upBnebOqwsJ597ZlmCLWx528Yzi3Wcu30Pu2fcleukU=;
+        b=k7X9PYbHbhQ5b+hJ8e+Yix4fCq8oD8vmjrPbglsnNiwlvFZr1V5DJvDGORT9sq0+0l
+         TDV7g+LDUcheGsqwvJF2qW/UsMyhQ10YfqWAfVlfE52L1VyozpVnj21meyR35YJRMWoh
+         W0gulfrsvnp8KIjHZYGBCb7Z2n9V6iidLZjcfBCssfaQu9cIpdIrMDucDNDkwHCQsCow
+         +MDxsmUEeBZ95mDBVRUZbJMKutIVyYATfv+uMqbBaVJf4DAJeTmg8etD6zgOpip+c4uy
+         1I1vrqTqdXLi4vWHxiUoq3b03mtw7RqZw7QD0T5RCLtYNZO0LU1w75GJTVt2ZPltT6xS
+         y+RA==
+X-Gm-Message-State: AOJu0YyDii0ZFjR9eI/oLc9imuMDyqrY/cTe3lTBNkj9VNhK3P1FRCdf
+	Tp3ajNshMwOvvrSlLqLCI6072A8Ca6N1gi88g8BLWg==
+X-Google-Smtp-Source: AGHT+IHWPQk3/S1nqdVFY2SvYM4mv4RMcFM6GJosPjrDfPNXU9stefweNMroytoNPvvl5pcUN2P754MhzBIe3u4BaAY=
+X-Received: by 2002:a05:6122:2897:b0:4b2:acda:e1e4 with SMTP id
+ fl23-20020a056122289700b004b2acdae1e4mr5776460vkb.6.1702400951144; Tue, 12
+ Dec 2023 09:09:11 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEydid=u3zTn-P-OW=58=bQOV7hVeyWbyPAnYqqQJSOnB_Z4vw@mail.gmail.com>
- <CAMRc=Mf+O-irNhM8Fx=T1H7uFddYeXMECxB1qMm8-knuw6hH-Q@mail.gmail.com>
- <CAEydidnnqmaX_vAVFSq=7Q=UpbY_Owh+07=jBR-fHs5dc=RLsA@mail.gmail.com> <ZXiEBXWFVmz_cmdM@rigel>
-In-Reply-To: <ZXiEBXWFVmz_cmdM@rigel>
-From: Mathias Dobler <mathias.dob@gmail.com>
-Date: Tue, 12 Dec 2023 18:06:54 +0100
-Message-ID: <CAEydidkEikZciGD_EzS95tMXznPH=OFP__Q2Bkk6HrQ+sNhkxQ@mail.gmail.com>
-Subject: Re: [libgpiod] - fast writing while waiting for edge events
+References: <20231212054253.50094-1-warthog618@gmail.com>
+In-Reply-To: <20231212054253.50094-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 12 Dec 2023 18:09:00 +0100
+Message-ID: <CAMRc=Me90Lu7Duc8-4xSfDcHQd6M7+0t0O8FAa6jiizp-OO5=Q@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpiolib: cdev: relocate debounce_period_us
 To: Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Kent,
-> Don't top reply - reply inline instead.
-Sorry, still new here.
+On Tue, Dec 12, 2023 at 6:43=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> This series contains minor improvements to gpiolib-cdev.
+>
+> The banner change is relocating the debounce_period_us from gpiolib's
+> struct gpio_desc to cdev's struct line.  The first patch stores the
+> field locally in cdev.  The second removes the now unused field from
+> gpiolib.
+>
+> The third patch is somewhat related and removes a FIXME from
+> gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
+> the calculation of the used  flag, but I would assert that from
+> the userspace perspective the read operation itself is inherently racy.
+> The line being reported as unused in the info provides no guarantee -
+> it just an indicator that requesting the line is likely to succeed -
+> assuming the line is not otherwise requested in the meantime.
+> Give the overall operation is racy, trying to stamp out an unlikely
+> race within the operation is pointless. Accept it as a possibility
+> that has negligible side-effects and reduce the number of locks held
+> simultaneously and the duration that the gpio_lock is held.
+>
+> The fourth patch is unrelated to debounce or info, but addresses Andy's
+> recent assertion that the linereq get/set values functions are confusing
+> and under documented.  Figured I may as well add that while I was in
+> there.
+>
+> Kent Gibson (4):
+>   gpiolib: cdev: relocate debounce_period_us from struct gpio_desc
+>   gpiolib: remove debounce_period_us from struct gpio_desc
+>   gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
+>   gpiolib: cdev: improve documentation of get/set values
+>
+>  drivers/gpio/gpiolib-cdev.c | 257 ++++++++++++++++++++++++++++--------
+>  drivers/gpio/gpiolib.c      |   3 -
+>  drivers/gpio/gpiolib.h      |   5 -
+>  3 files changed, 201 insertions(+), 64 deletions(-)
+>
+> --
+> 2.39.2
+>
 
-> Firstly, as noted, if you are talking separate requests then they are
-> separate objects and you can do what you like.  So have one request for
-> your PWM edge generator and another for the lines to read/write.
-It doesn't add much, but just to clarify, the PWM signal is not
-generated through libgpiod, I only use line requests to read lines and
-edge events.
+Patches 2-4 look fine, I was about to review patch 1 in detail but I
+thought I'd just throw this one in here before we commit to a specific
+solution.
 
-> In the current implementation, the gpiod_line_request object is immutable
-> so it is safe to access it from multiple threads.
-Thanks for giving insights into the current implementation. Knowing
-this opens up a lot of easier options for synchronization, for example
-synchronizing only writes (maybe not even necessary).
+For some reason I thought this would not work but I'm now considering
+it as an alternative approach: is there anything wrong with adding
+struct kref to struct line, allocating it separately per-line when
+gpio_chardev_data is created, referencing it from struct linereq when
+the line is being requested, and dropping the reference from
+gpio_chardev_data and linereq when either is being removed? Other than
+the increased number of allocations?
 
-> Or it may be a defensive measure - in case
-> a future change makes a currently immutable object mutable.
-However, I also understand that the restrictive nature of the
-documentation could presumably be designed for changes in the future.
-
-Due to this I am a bit undecided whether I should base the C# binding
-on the current implementation, but there is probably not much else
-left for me. Even creating a separate request object for every
-individual line would not fully solve the problem to be quick in
-reading edge events and reading/writing lines of the same request
-object, while adhering to the restrictions of the current
-documentation.
-
-Regards,
-Mathias
+Bartosz
 
