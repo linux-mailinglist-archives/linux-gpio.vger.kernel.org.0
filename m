@@ -1,112 +1,143 @@
-Return-Path: <linux-gpio+bounces-1296-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1297-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B850A80E85F
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 10:59:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65C0780E8A6
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 11:07:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66EC61F212F9
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 09:59:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B44D9B20AAA
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 10:07:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4666F5915D;
-	Tue, 12 Dec 2023 09:59:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 189C759524;
+	Tue, 12 Dec 2023 10:07:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Rk79/zp7"
+	dkim=pass (1024-bit key) header.d=nuvoton.onmicrosoft.com header.i=@nuvoton.onmicrosoft.com header.b="RxtWJinR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [IPv6:2001:4b98:dc4:8::229])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D9955A6;
-	Tue, 12 Dec 2023 01:59:18 -0800 (PST)
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 89DD2FF803;
-	Tue, 12 Dec 2023 09:59:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1702375156;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=q0/3Sh2eETJdeZKVLmp2oI+wYLwADP2lZuTfmz4YhfQ=;
-	b=Rk79/zp7ossMcvHhiqp98keiVcv2gf1k87JOuYi/QLilq8f6xx+Gh19mWu7nDU4GeYpq5Q
-	lRAq+xxqZKFZMqfm3v4apQZT8Eo9qLKTSvd08PZJt9pgPyMHVvNPn3vGh/gy+jkcjjZu5r
-	wCvV60IHuTJoUZ/9pXNbrDOHs/6pqvz4+6vJDPlffMiVNhwS5sKlSDDoJbM/82dbwdegCM
-	e/wzYFgh3Eyy3Q4vUTWXVi+n7g+kWD2I4tihNRFoZePsrg5xf0CTlntvsMEHd0sUIf5F+a
-	GeETxE6cLFojuL7k1GfrfDLArZPz425zbHBa/uR6Zj/b3legUK3tmLo+C1qbLA==
-Date: Tue, 12 Dec 2023 10:59:14 +0100
-From: Herve Codina <herve.codina@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jakub Kicinski <kuba@kernel.org>, Mark Brown <broonie@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Andrew Lunn
- <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- netdev@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Christophe Leroy
- <christophe.leroy@csgroup.eu>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/5] Add support for framer infrastructure and PEF2256
- framer
-Message-ID: <20231212105914.7eeb092b@bootlin.com>
-In-Reply-To: <CACRpkdbrH-WWVrVWx6MvReUuUW8tU_J8Mb7nW3G8fJGAoiS38g@mail.gmail.com>
-References: <20231128132534.258459-1-herve.codina@bootlin.com>
-	<17b2f126-f6a4-431c-9e72-56a9c2932a88@sirena.org.uk>
-	<CACRpkda5VMuXccwSBd-DBkM4W7A1E+UfZwBxWqtqxZzKjrqY4A@mail.gmail.com>
-	<511c83d1-d77f-4ac0-927e-91070787bc34@sirena.org.uk>
-	<CACRpkdYmN4318b1wXwUOeFjPN0S2w8M9FpXHOs3LtFa+XoTxVw@mail.gmail.com>
-	<20231128173110.0ccb8f53@kernel.org>
-	<CACRpkdbrH-WWVrVWx6MvReUuUW8tU_J8Mb7nW3G8fJGAoiS38g@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01rlnn2064.outbound.protection.outlook.com [40.95.53.64])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 97D6F95;
+	Tue, 12 Dec 2023 02:07:13 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=A/cRGaNPAq/ylzgl2ZOk/YlbDXOq3Zd28HxKe/iIDQCkozExOt6S9aBxt5u8sZpWJgOrMmNj65PtFS1lPdSpbXaXMYqlYFn9fqSPlJDXMWMBojXoQHqgG5tLyw4ysq6w1jgTkaQcCsQ/BlokqCZ9KCOVb4JHwKa8qnjWxEpD3XM0UBvnVgh9U/shmBxEjF25hkZP4DkBom6XBFqPj4jh34UurwIOv9Gm7JNk9GUEFZJmU51gg41JsThSzkYQRIFOHLsBRbKAmugd8iN9PEbYQVTYQXyFxUWqzOISxDmAP2EytFuKbtTLOQDYrlyU1Xa8O2UqYmAjoj7jyZbBZZQqAQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=ZOaVrE8lnrkHPMFZN1jgjNOoq2n0qz/XHmtRv9xEnJY=;
+ b=Z8g+ZjJRgjbvlOAeltgvHOauXPPeEMCwlaTYgjWDBu8+Y9X3hioJGZM8fRxp+x7mBCElCG3AobBp6yYP/IzOGSRmz3nDu/RGSJcKWWOhGzW8MRn0PH3Y+nniWMoM/r7gEboDrupBgE+i43mvtcXwU7kfynRXTPUksbm2bKWkg5Q3vtUjNqDCzv/UEdQSsT/Nnwt6ECp9H2IHLasO4tNKDwr0glCmBcOl/MhU87oAbFwwAjGUtmpnyFzUb14An5fHxLEkntfnzK7VCQ7U6H5kB+qUW9oCLbEFBJmX7pjCuwtwG9fMC0ZtkjmMQsVkB33bbEI/MhxMR0frWEIsYjSpOA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=softfail (sender ip
+ is 175.98.123.7) smtp.rcpttodomain=arndb.de smtp.mailfrom=gmail.com;
+ dmarc=fail (p=none sp=quarantine pct=100) action=none header.from=gmail.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=nuvoton.onmicrosoft.com; s=selector2-nuvoton-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZOaVrE8lnrkHPMFZN1jgjNOoq2n0qz/XHmtRv9xEnJY=;
+ b=RxtWJinRXz6x0FgyAO8lJkRbDwZTF3QcwT/OFrBMbd+xpn28jUP+SiFSVALnUUqbfm+m5wvxHnMpGekVhcQTWmu7wXbIaQCGDvao1rA/b2yvOev2NldDKFBshN9Ng96Dtgj47MnUujH9T7TwGjO26uVSP3X2EOCiODjtH9PXCSI=
+Received: from KL1P15301CA0057.APCP153.PROD.OUTLOOK.COM (2603:1096:820:3d::19)
+ by SEZPR03MB7701.apcprd03.prod.outlook.com (2603:1096:101:128::14) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7068.32; Tue, 12 Dec
+ 2023 10:07:10 +0000
+Received: from HK3PEPF0000021B.apcprd03.prod.outlook.com
+ (2603:1096:820:3d:cafe::ba) by KL1P15301CA0057.outlook.office365.com
+ (2603:1096:820:3d::19) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.4 via Frontend
+ Transport; Tue, 12 Dec 2023 10:07:09 +0000
+X-MS-Exchange-Authentication-Results: spf=softfail (sender IP is 175.98.123.7)
+ smtp.mailfrom=gmail.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=none header.from=gmail.com;
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ gmail.com discourages use of 175.98.123.7 as permitted sender)
+Received: from NTHCCAS04.nuvoton.com (175.98.123.7) by
+ HK3PEPF0000021B.mail.protection.outlook.com (10.167.8.37) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id
+ 15.20.7091.26 via Frontend Transport; Tue, 12 Dec 2023 10:07:08 +0000
+Received: from NTHCCAS02.nuvoton.com (10.1.9.121) by NTHCCAS04.nuvoton.com
+ (10.1.8.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2176.14; Tue, 12
+ Dec 2023 18:07:07 +0800
+Received: from NTHCCAS01.nuvoton.com (10.1.8.28) by NTHCCAS02.nuvoton.com
+ (10.1.9.121) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2176.14; Tue, 12 Dec
+ 2023 18:07:07 +0800
+Received: from taln58.nuvoton.co.il (10.191.1.178) by NTHCCAS01.nuvoton.com
+ (10.1.8.28) with Microsoft SMTP Server id 15.1.2375.34 via Frontend
+ Transport; Tue, 12 Dec 2023 18:07:07 +0800
+Received: from taln60.nuvoton.co.il (taln60 [10.191.1.180])
+	by taln58.nuvoton.co.il (Postfix) with ESMTP id B6E885F5B2;
+	Tue, 12 Dec 2023 12:07:06 +0200 (IST)
+From: Tomer Maimon <tmaimon77@gmail.com>
+To: <arnd@arndb.de>, <pmenzel@molgen.mpg.de>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<avifishman70@gmail.com>, <tali.perry1@gmail.com>, <joel@jms.id.au>,
+	<venture@google.com>, <yuenn@google.com>, <benjaminfair@google.com>,
+	<j.neuschaefer@gmx.net>
+CC: <openbmc@lists.ozlabs.org>, <linux-gpio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Tomer Maimon
+	<tmaimon77@gmail.com>
+Subject: [PATCH v2 0/3] soc: add NPCM BPC driver support 
+Date: Tue, 12 Dec 2023 12:07:00 +0200
+Message-ID: <20231212100703.3374555-1-tmaimon77@gmail.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain
+X-NotSetDelaration: True
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK3PEPF0000021B:EE_|SEZPR03MB7701:EE_
+X-MS-Office365-Filtering-Correlation-Id: fc88d3f5-dcdf-42dc-2ed5-08dbfafa19bb
+X-MS-Exchange-SenderADCheck: 2
+X-MS-Exchange-AntiSpam-Relay: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	T2J2jGHPgNd8T9YQXBduU52L2Ys8fmPyV3Ucdtg335HI2oWZqiPaLXd98BdXo2RE5uCTnQnOjuXfwrtR1vF8ozd4Y3eFl0aVVlBFBPVsa//grzjVqFYMkxqOT9TbzM3JSG+9rgtdyvqEXlK/6QLFUabOGZz85zbPrQU4B6nAuZMV8dIeOksZyN+D+MPiE9qp6ykk1snX8QxUMxXG6MpBzR1LazCC8CnN2JHT7EYme5TTOJCS+JSyajxoZFJgTB/oe1l81z0dfn5HSUhv/oHr/aDE3i2Posaxvu636wWGmwEt6+QlEoX5UN81jKe0/9NBdeuJgxKg5UOxxs4BleAAGp2gB8aoOFh5kmoqUD2U4amOGJRwZSwKeV0tHgXlDQtWQw1gmb0qeERnJndKwSRJ3tMZ4o9KL8bRgpxNUD8GiZcwpe9BVrWY1Cl99NoOMANrCNnjZcWNLy+xeUU6zd/5yeqzqnK1sqVx/AYl4iFv8lf1Mh8pBSzdSEpiZ0ClQ/f2A0TH42SP0ap39CZzOdeskeYpsenQpErvEJLgFwA4oPg+CyWvtDKlKgZe103dMXiK8cqeJEibcN9uoPplG65srEJrQra/Ef+XK0CgWAkf4yVK3pVW4G9+0Ll5V378i6D5G3Xq19LApwqJBbPSpEceTCuV/L597XwNiYi5Z12irodVQfnsOzbftzGBxr02RA1eJQhYoiN2RPxeuSsXmSiqkvCXb1y7XAJsU8Z7fWTKRrxN3jqzsGqNTUkQyn3lbQYzdM0Fj0QbG5w3rShM3Ijz4bS7hT8iq/0Z9Gzwbq/Pbcg8QmEfilo/s9rjmPNzNs+S
+X-Forefront-Antispam-Report:
+	CIP:175.98.123.7;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:NTHCCAS04.nuvoton.com;PTR:175-98-123-7.static.tfn.net.tw;CAT:NONE;SFS:(13230031)(4636009)(346002)(136003)(396003)(376002)(39860400002)(230922051799003)(64100799003)(451199024)(48200799006)(82310400011)(61400799012)(40470700004)(46966006)(40480700001)(40460700003)(82202003)(336012)(6266002)(4743002)(26005)(1076003)(2616005)(73392003)(81166007)(356005)(86362001)(82740400003)(921008)(36756003)(55446002)(4326008)(47076005)(83380400001)(5660300002)(35950700001)(7416002)(70586007)(70206006)(41300700001)(8936002)(54906003)(316002)(4744005)(8676002)(2906002)(76482006)(498600001)(110136005)(6666004);DIR:OUT;SFP:1022;
+X-OriginatorOrg: nuvoton.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Dec 2023 10:07:08.3053
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: fc88d3f5-dcdf-42dc-2ed5-08dbfafa19bb
+X-MS-Exchange-CrossTenant-Id: a3f24931-d403-4b4a-94f1-7d83ac638e07
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=a3f24931-d403-4b4a-94f1-7d83ac638e07;Ip=[175.98.123.7];Helo=[NTHCCAS04.nuvoton.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK3PEPF0000021B.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEZPR03MB7701
+X-Spam-Level: **
 
-Hi Linus,
+This patch set adds BIOS Post code (BPC) support for the Nuvoton 
+NPCM Baseboard Management Controller (BMC).
 
-On Wed, 29 Nov 2023 15:00:40 +0100
-Linus Walleij <linus.walleij@linaro.org> wrote:
+Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable 
+I/O addresses written by the host on the bus, the capture data 
+stored in 128-word FIFO.
 
-> On Wed, Nov 29, 2023 at 2:31 AM Jakub Kicinski <kuba@kernel.org> wrote:
-> > On Tue, 28 Nov 2023 15:51:01 +0100 Linus Walleij wrote:  
-> > > > > I thought this thing would be merged primarily into the networking
-> > > > > tree, and I don't know if they do signed tags, I usually create an
-> > > > > immutable branch but that should work just as fine I guess.  
-> > > >
-> > > > Right, I'd expect a signed tag on the immutable branch - it's generally
-> > > > helpful to avoid confusion about the branch actually being immutable.  
-> > >
-> > > Makes sense, best to create that in the netdev tree if possible
-> > > I guess.  
-> >
-> > I think you offered creating the branch / tag in an earlier reply,
-> > that's less work for me so yes please! :)  
-> 
-> OK I fix!
-> 
-> Just waiting for some final reviews to trickle in.
-> 
-> Herve: nag me if it doesn't happen in time!
+NPCM BPC can support capture double words.
 
-As you tell me, this is my reminder.
+The NPCM BPC driver tested on NPCM750 Olympus board.
 
-Best regards,
-Hervé
+Tomer Maimon (3):
+  dt-bindings: soc: nuvoton: Add NPCM BPC
+  soc: nuvoton: add configuration menu
+  soc: nuvoton: add NPCM BPC driver
 
-> 
-> > FWIW I usually put the branches / tags in my personal k.org tree.
-> > I don't wanna pollute the trees for the $many people who fetch
-> > netdev with random tags.  
-> 
-> Aha yeah pin control is relatively small so I just carry misc sync
-> tags there.
-> 
-> Yours,
-> Linus Walleij
+ .../soc/nuvoton/nuvoton,npcm-bpc.yaml         |  63 +++
+ drivers/soc/nuvoton/Kconfig                   |  16 +-
+ drivers/soc/nuvoton/Makefile                  |   1 +
+ drivers/soc/nuvoton/npcm-bpc.c                | 388 ++++++++++++++++++
+ 4 files changed, 467 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
+ create mode 100644 drivers/soc/nuvoton/npcm-bpc.c
+
+-- 
+2.34.1
+
 
