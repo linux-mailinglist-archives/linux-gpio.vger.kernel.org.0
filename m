@@ -1,152 +1,92 @@
-Return-Path: <linux-gpio+bounces-1308-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1309-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 74BCF80EAF0
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 12:55:10 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEAB780EBE0
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 13:34:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8498C1C20A90
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 11:55:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 56DCC1F21379
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 12:34:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83BBC5DF1D;
-	Tue, 12 Dec 2023 11:55:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 677865952F;
+	Tue, 12 Dec 2023 12:34:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AnM0wMWV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [IPv6:2a0a:edc0:2:b01:1d::104])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D57E9C7
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 03:55:02 -0800 (PST)
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD1KL-0007kg-9r; Tue, 12 Dec 2023 12:53:29 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD1KH-00FKLk-Ov; Tue, 12 Dec 2023 12:53:25 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rD1KH-001bPz-E7; Tue, 12 Dec 2023 12:53:25 +0100
-Date: Tue, 12 Dec 2023 12:53:25 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: nikita.shubin@maquefel.me
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Lukasz Majewski <lukma@denx.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v6 00/40] ep93xx device tree conversion
-Message-ID: <20231212115325.m4w6cg4ttdispkvm@pengutronix.de>
-References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
+Received: from mail-yw1-x1135.google.com (mail-yw1-x1135.google.com [IPv6:2607:f8b0:4864:20::1135])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0239EEA
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 04:32:57 -0800 (PST)
+Received: by mail-yw1-x1135.google.com with SMTP id 00721157ae682-5d34f8f211fso55576557b3.0
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 04:32:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702384376; x=1702989176; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S4iQ3WOkHEblQ3xu0B39kuBfSgqaQxZyrXhGlk5rPik=;
+        b=AnM0wMWVUuiYWw4wNu97nWbdaoKXFgBgbLDt9rxZkcVyKxx9E6Mi/Zkvh97AoyrSEH
+         ZJlLfgOS43VfjCmDOir0qxdYfTG8wrvuvubl+cF2tnucGD5QPAHntUo5UYLgbVWI7xaK
+         lB44IDsb+/U2CizSq50gyN9mLevxwuc4Qp9KYSViTPWn7ntCHME8zv9gOLh9wnge/Kg4
+         4Y8jQmtl6cZT3K9gxt8b+BV4tQFHZsnunqpLosjQJmH2m3ZElao+gAZnFYgGR9bKwHzp
+         eO+9VUxIbtoTqhf6VD/0tgcKdZbRnQlLHE8wz6KvRaAGwJUdZUQWCPfWieFnmCPkF+gz
+         Xm1Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702384376; x=1702989176;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S4iQ3WOkHEblQ3xu0B39kuBfSgqaQxZyrXhGlk5rPik=;
+        b=DvJ1j9eQym9FLgYujEukWo/o7OHAXr/KAiFz5Bltrkn+9byx/L+rkmKMe+SPwOxYor
+         jmZbcsrdfth6KR7ckoeDWvFUdLsrlh+Gc7uJ0ebeIEhtIBOrIqeqmR2UqS+PimXNIu8M
+         1HURW48r9GkW+jMB/qcYQCtPESoPif+OcFmjRSg7hI/q9GKb2TAkZ5dPP2CQxtGwduzQ
+         oT8w5zJ0UPqoubHCMwIvfX7/5k9tDDZoCxVHlLCJfELU1Q9shvM+oS0HkXwMbjG9+/Ic
+         xorx2kdyaCe8ukV00VNwK5/VRnaHV+NpJXlzUPb/RkHtZhEl9HC/P02ZaShCLZeJfzen
+         THSw==
+X-Gm-Message-State: AOJu0Yx37/wirCRviJrY4pmzD7kT5b05K0oKXBG2FnivxFyq1HFeOoJK
+	hfY50dd2bIlUi9D6aD5gXcQo242f/J3IWnhFRkEfyvKXlHyQqF5F
+X-Google-Smtp-Source: AGHT+IFn301SXBawdjYt+pES8aneAtb0/wEInppLQePe1QNM3JJJlA9BRCJC1T5FkpIF2yn8Fy7ha1WrAdPqkOpdtg8=
+X-Received: by 2002:a0d:cc8a:0:b0:5b3:1d71:6df7 with SMTP id
+ o132-20020a0dcc8a000000b005b31d716df7mr4619087ywd.22.1702384376192; Tue, 12
+ Dec 2023 04:32:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="aamqyrxtxz2kjjms"
-Content-Disposition: inline
-In-Reply-To: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---aamqyrxtxz2kjjms
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20231212105501.16347-1-brgl@bgdev.pl>
+In-Reply-To: <20231212105501.16347-1-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 12 Dec 2023 13:32:44 +0100
+Message-ID: <CACRpkdaVLPbpKGt=Oa13GVgvz+1CEONbAGHwvDJb0L96cS7CZg@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: allocate memory atomically with a spinlock held
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Tue, Dec 12, 2023 at 11:55=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 
-On Tue, Dec 12, 2023 at 11:20:17AM +0300, Nikita Shubin via B4 Relay wrote:
-> No major changes since last version all changes are cometic.
->=20
-> Following patches require attention from Stephen Boyd, as they were conve=
-rted to aux_dev as suggested:
->=20
-> - ARM: ep93xx: add regmap aux_dev
-> - clk: ep93xx: add DT support for Cirrus EP93xx
->=20
-> DMA related patches still require Acked or Reviewed tags.
->=20
-> got approval LGTM from Miquel:
-> - mtd: rawnand: add support for ts72xx
-> Link: https://lore.kernel.org/lkml/20231004103911.2aa65354@xps-13/
->=20
-> new patches:
->=20
-> ARM: ep93xx:  Add terminator to gpiod_lookup_table
->   - fixed terminator in gpiod_lockup_table
->=20
-> So mostly all patches got approval.
->=20
-> Patches should be now formated with '--histogram'
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We will eventually switch to protecting the GPIO descriptors with a mutex
+> but until then, we need to allocate memory for the label copy atomically
+> while we're holding the global spinlock.
+>
+> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> Closes: https://lore.kernel.org/linux-gpio/62588146-eed6-42f7-ba26-160226=
+b109fe@moroto.mountain/T/#u
+> Fixes: f8d05e276b45 ("gpiolib: remove gpiochip_is_requested()")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-You didn't mention how this should be merged. IIRC for the earlier
-rounds the idea was to merge it all together via arm-soc when all
-necessary agreement is reached. I assume that's still the case here?
+Makes sense.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---aamqyrxtxz2kjjms
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmV4SbQACgkQj4D7WH0S
-/k4PhAf9FUkX+fzsz5zB6lrl7lgCvYm5ZVb3B7jDw5VKDO3L/jcpIQBnKW28hqdN
-fjyiqoG4kcqJrqfSN7RxYVHnxPmPMREuU5dkbLnXs4nakNuG6kYOLoWYRW6g7LHA
-2aJAqNPA3r1vRHwgyLaSlwVy4TxsWEJoU/Wa7pnN5VGjjyA22i9iruZRGzbsfSbG
-b4TPtncg2+HG5Z2NtBTY2w2wy/0XOTgO40vcUbW+gfh+ktRpJl5quupeZdYByknj
-l9QU3yt6tCJoKvAXYc2/jykymWajShXD0UJhcLTTYcWnQYEgfLWypFNR4YXJmJGC
-SbVz5vPzsa56pT4BPvsUI7alw9v79g==
-=T2K5
------END PGP SIGNATURE-----
-
---aamqyrxtxz2kjjms--
+Yours,
+Linus Walleij
 
