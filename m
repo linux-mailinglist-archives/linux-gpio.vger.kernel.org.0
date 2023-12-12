@@ -1,176 +1,102 @@
-Return-Path: <linux-gpio+bounces-1316-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1317-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1857D80F244
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 17:18:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68C7C80F406
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 18:07:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C8516281BD4
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 16:18:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 26B77281BE4
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 17:07:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3942C77F0F;
-	Tue, 12 Dec 2023 16:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAA2E7B3C1;
+	Tue, 12 Dec 2023 17:07:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uY9B8bTG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cmNW4hkB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5B0977F02;
-	Tue, 12 Dec 2023 16:18:49 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFC3C433C7;
-	Tue, 12 Dec 2023 16:18:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702397929;
-	bh=UYaXZrFDR/cy/SyqvoOFltStolzjOE3ACy1szjYwMKg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=uY9B8bTGeoApiuOFnJoml3G+mhJpKS4M7gpksSdv8eIO/TM1Q/6bOcRWyWMql1eFy
-	 SFSeCAMH9JpJCXM3I0ZQNo4gx0/gx2mfxDSluDvRkLk7ceSrpAe5L6CjlFT/HPxtph
-	 HfgoyafWpBfd/J1Omjoral0LpYzL6JW3iO28+/0JJ9KBx4v0p72azZZQY5HaztlUHu
-	 pWK4DyLohwVfCqhS6MXNbDWZaY6VSla3fyzcjpCe6gogZ3E18mO3j/kgk8YSMePsKW
-	 Kbh3wNKfJpD5QNsv1A/S0h3Pk6fkNrtpg3bkzqjyA8fTJVeaslqC7RIDbwlQ621ews
-	 vP4J4lK7i8WLQ==
-Date: Tue, 12 Dec 2023 16:18:43 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: arnd@arndb.de, pmenzel@molgen.mpg.de, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au,
-	venture@google.com, yuenn@google.com, benjaminfair@google.com,
-	j.neuschaefer@gmx.net, openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/3] dt-bindings: soc: nuvoton: Add NPCM BPC
-Message-ID: <20231212-uncut-sixfold-9359b141b149@spud>
-References: <20231212100703.3374555-1-tmaimon77@gmail.com>
- <20231212100703.3374555-2-tmaimon77@gmail.com>
+Received: from mail-ot1-x333.google.com (mail-ot1-x333.google.com [IPv6:2607:f8b0:4864:20::333])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 0E4BC8F
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:07:06 -0800 (PST)
+Received: by mail-ot1-x333.google.com with SMTP id 46e09a7af769-6d9f879f784so3099189a34.2
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 09:07:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702400825; x=1703005625; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=qyp/xcwXJAh5WYkVbpddBlHbrFJQdwFRkjjvlIdkFnY=;
+        b=cmNW4hkB3ligBDsECZp1uNm5zx5hRphEI4SZpkHDz4fF6VFCT+w3OFKsBpvbDVdnC2
+         05zfn86ThDTL+BTs6DNbLDSgXRhEx5m86TBGLX0egpHD5wG59KIO6JicHNdSr5yNCwi9
+         g/dbdAikvXP4Qb2iRoq+CMDd90wue0eN+r5Dg889e8jtHv2QfCYBBNPrah2abrz9YPrw
+         F8e+c7xv1hhXPaZqMIWYhc8u2M9f+Py77FZR5DTu/eWK7qbozq3wppgleAqAjvjPb2W0
+         An3QfIVsGVsUjaRp7pV26imIFuTkDxQ3HzQ2K7nHAN95Vsbf1L+gIlrB8SFo3ZJtFvTg
+         b7XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702400825; x=1703005625;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=qyp/xcwXJAh5WYkVbpddBlHbrFJQdwFRkjjvlIdkFnY=;
+        b=KmpHU1+hdMGDfee5T3VcTzl+IBatKNMoCtwj8gqRLijf1lMnrul/uJPajrw1zQ8gNF
+         vkvJJKcit+GED6peu0NjDmcavUpVYni6CImLjbFRssLbqu4OS3j2RItnrcteddvk7Ztr
+         FlmfUMifejq7jC02a5rqDMyjOgHtII/XF5w7zyU9/Eeb8mntuqlr2+F6jHROCRPVUWTK
+         zC3RCDC8kxWlOAEHITQB6HO/vf0rO6Od0pYknG0+uIqUIX/pNPLKYM5qKbpofjla0h6y
+         2Cvn0hbpHQ5zZ9Q89c7kyLrB8+hD6ye26MCbuyEsH1Nosb16bT/5b8tiPGK/9ekGYVMl
+         Z0wQ==
+X-Gm-Message-State: AOJu0Yx06b2CG8WzhXQDY5+z0++d2PVjWQJVRd69KKR6bHMXMuoPlPxc
+	Xv4AOFp20tc4z0cv6bNa47Brpa8Foxweip4RzJ0=
+X-Google-Smtp-Source: AGHT+IHNCA2hvwbmESkAshsIUU2GZovKv/zIm/f910RUh+s5UA+IUjEp2Q2tC/Y4KaMN+9iYXWN016fqNImrbzb8y84=
+X-Received: by 2002:a9d:69d2:0:b0:6d9:a81b:3735 with SMTP id
+ v18-20020a9d69d2000000b006d9a81b3735mr7446328oto.45.1702400825284; Tue, 12
+ Dec 2023 09:07:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="EKatXyW3mv8oRlRW"
-Content-Disposition: inline
-In-Reply-To: <20231212100703.3374555-2-tmaimon77@gmail.com>
+References: <CAEydid=u3zTn-P-OW=58=bQOV7hVeyWbyPAnYqqQJSOnB_Z4vw@mail.gmail.com>
+ <CAMRc=Mf+O-irNhM8Fx=T1H7uFddYeXMECxB1qMm8-knuw6hH-Q@mail.gmail.com>
+ <CAEydidnnqmaX_vAVFSq=7Q=UpbY_Owh+07=jBR-fHs5dc=RLsA@mail.gmail.com> <ZXiEBXWFVmz_cmdM@rigel>
+In-Reply-To: <ZXiEBXWFVmz_cmdM@rigel>
+From: Mathias Dobler <mathias.dob@gmail.com>
+Date: Tue, 12 Dec 2023 18:06:54 +0100
+Message-ID: <CAEydidkEikZciGD_EzS95tMXznPH=OFP__Q2Bkk6HrQ+sNhkxQ@mail.gmail.com>
+Subject: Re: [libgpiod] - fast writing while waiting for edge events
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hello Kent,
+> Don't top reply - reply inline instead.
+Sorry, still new here.
 
---EKatXyW3mv8oRlRW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Firstly, as noted, if you are talking separate requests then they are
+> separate objects and you can do what you like.  So have one request for
+> your PWM edge generator and another for the lines to read/write.
+It doesn't add much, but just to clarify, the PWM signal is not
+generated through libgpiod, I only use line requests to read lines and
+edge events.
 
-On Tue, Dec 12, 2023 at 12:07:01PM +0200, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC NPCM BIOS Post
-> Code (BPC).
->=20
-> The NPCM BPC monitoring two configurable I/O addresses written by the
-> host on the bus.
->=20
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../soc/nuvoton/nuvoton,npcm-bpc.yaml         | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton=
-,npcm-bpc.yaml
->=20
-> diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-b=
-pc.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.ya=
-ml
-> new file mode 100644
-> index 000000000000..30033cdac8f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-bpc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton BMC NPCM BIOS Post Code (bpc) controller
-> +
-> +maintainers:
-> +  - Tomer Maimon <tmaimon77@gmail.com>
-> +
-> +description:
-> +  Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable I/O
-> +  addresses written by the host on the bus, the capture data stored in
-> +  128-word FIFO.
-> +
-> +  NPCM BPC supports capture double words, when using capture
-> +  double word only I/O address 1 is monitored.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,npcm750-bpc
-> +      - nuvoton,npcm845-bpc
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  nuvoton,monitor-ports:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-> +    description:
-> +      Contain monitor I/O addresses on the bus, at least one monitor I/O
-> +      address required.
-> +
-> +  nuvoton,bpc-en-dwcapture:
-> +    description:
-> +      If present, Enable FIFO capture of the DWord address according to
-> +      one address setting.
+> In the current implementation, the gpiod_line_request object is immutable
+> so it is safe to access it from multiple threads.
+Thanks for giving insights into the current implementation. Knowing
+this opens up a lot of easier options for synchronization, for example
+synchronizing only writes (maybe not even necessary).
 
-This sounds like something you can either infer from the compatible or
-is determining software policy. A more detailed
-explanation/justification is required here.
+> Or it may be a defensive measure - in case
+> a future change makes a currently immutable object mutable.
+However, I also understand that the restrictive nature of the
+documentation could presumably be designed for changes in the future.
 
-Thanks,
-Conor.
+Due to this I am a bit undecided whether I should base the C# binding
+on the current implementation, but there is probably not much else
+left for me. Even creating a separate request object for every
+individual line would not fully solve the problem to be quick in
+reading edge events and reading/writing lines of the same request
+object, while adhering to the restrictions of the current
+documentation.
 
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - nuvoton,monitor-ports
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    bpc: bpc@f0007040 {
-> +        compatible =3D "nuvoton,npcm750-bpc";
-> +        reg =3D <0xf0007040 0x20>;
-> +        interrupts =3D <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
-> +        nuvoton,monitor-ports =3D <0x80>;
-> +    };
-> +...
-> --=20
-> 2.34.1
->=20
->=20
-
---EKatXyW3mv8oRlRW
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZXiH4wAKCRB4tDGHoIJi
-0sLCAQDUf4LaNco4BW20mKaW2lH+BVibKLD9Jte4xNrK4aGvzQD+O4RM8COYi+g1
-NthOdrrQn5Cf2XV545V37YT7QRKckAI=
-=Ch0H
------END PGP SIGNATURE-----
-
---EKatXyW3mv8oRlRW--
+Regards,
+Mathias
 
