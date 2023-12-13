@@ -1,121 +1,171 @@
-Return-Path: <linux-gpio+bounces-1371-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1372-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 54B93811450
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:10:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EB15811486
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:24:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0C42A28286B
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:10:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2795C1F2167D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:24:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0239D2E836;
-	Wed, 13 Dec 2023 14:10:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4EB2E851;
+	Wed, 13 Dec 2023 14:24:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B73929C;
-	Wed, 13 Dec 2023 06:10:09 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5d8a772157fso61503027b3.3;
-        Wed, 13 Dec 2023 06:10:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702476608; x=1703081408;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lctB7HRIwcjgOPSYwLKN7AvXZwasrHyg/ppK58pb6FQ=;
-        b=rgAthnrB6ry20TwHvow877fohFwKW75PmFBDsAnV4g4DeSxKtDtQPv9wFQpPJ0EmN6
-         fRDwiQfysGWH4AnyNbnTlN3QDAnH3uAc32SaLwKd5kmyLuyzMXiKVX/OtSpk5I9ovLk5
-         aKHkY6sOKm3kCLyS8j1qOlZ7j2av4idIAlueo/P3VXElM1uqRCNnYkoSO+r4uBBwH3LE
-         WOw8/F6OLKwYbpkrsYZ9iPXFzF6ndMiFT4inhwQheLhmgutm1jDlBDOVDhKFe5BnPJnW
-         brVTcsDGX0qX2v3hIgZpAasy6lbRY5POZdlyr/hVRAWSoz/5ZL+1kUlQv5ZwAFJIaQh2
-         XBzA==
-X-Gm-Message-State: AOJu0YyS6dugah+M+RaGUBwTHXeZ+kgYN7dLrc+59iST9cfrrCGeCdLy
-	3H3TvzppGSLvdIUIUdkMeEcIC9xe6buQKg==
-X-Google-Smtp-Source: AGHT+IEod+B+NCcMD5ZPfsOWfS7gVSwpF/VNt02LFpFTCsItur++77J5mCfNM43w39sxyHR7vcHILg==
-X-Received: by 2002:a25:ab23:0:b0:dbc:d22a:9135 with SMTP id u32-20020a25ab23000000b00dbcd22a9135mr446757ybi.105.1702476608583;
-        Wed, 13 Dec 2023 06:10:08 -0800 (PST)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id u4-20020a258f84000000b00dafa5f86dc2sm3967368ybl.16.2023.12.13.06.10.07
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Dec 2023 06:10:07 -0800 (PST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5d8a772157fso61502697b3.3;
-        Wed, 13 Dec 2023 06:10:07 -0800 (PST)
-X-Received: by 2002:a81:6582:0:b0:5d3:f36c:4aa3 with SMTP id
- z124-20020a816582000000b005d3f36c4aa3mr6180811ywb.15.1702476607543; Wed, 13
- Dec 2023 06:10:07 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id EAD94B9;
+	Wed, 13 Dec 2023 06:24:15 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="8330526"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="8330526"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:24:15 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="897344794"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="897344794"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 06:24:10 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rDQ9e-00000005Xtn-0GjE;
+	Wed, 13 Dec 2023 16:24:06 +0200
+Date: Wed, 13 Dec 2023 16:24:05 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Jonathan Cameron <jic23@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>,
+	ChiaEn Wu <chiaen_wu@richtek.com>,
+	Niklas Schnelle <schnelle@linux.ibm.com>,
+	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
+	Mike Looijmans <mike.looijmans@topic.nl>,
+	Haibo Chen <haibo.chen@nxp.com>,
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+	Ceclan Dumitru <dumitru.ceclan@analog.com>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v8 2/2] iio: adc: ad7173: add AD7173 driver
+Message-ID: <ZXm-hf8UQ3VEyP-2@smile.fi.intel.com>
+References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
+ <20231212104451.22522-2-mitrutzceclan@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com> <20231207070700.4156557-12-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231207070700.4156557-12-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 13 Dec 2023 15:09:56 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdW5PdFc6AE-G6u3hiRn8g45AYfyqytBvzWPB_Maj2x45Q@mail.gmail.com>
-Message-ID: <CAMuHMdW5PdFc6AE-G6u3hiRn8g45AYfyqytBvzWPB_Maj2x45Q@mail.gmail.com>
-Subject: Re: [PATCH v2 11/11] arm64: dts: renesas: rzg3s-smarc-som: Enable the
- Ethernet interfaces
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
-	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
-	mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, 
-	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
-	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231212104451.22522-2-mitrutzceclan@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 7, 2023 at 8:08=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> w=
-rote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> The RZ/G3S Smarc Module has Ethernet PHYs (KSZ9131) connected to each
-> Ethernet IP. For this, add proper DT bindings to enable the Ethernet
-> communication through these PHYs.
->
-> The interface b/w PHYs and MACs is RGMII. The skew settings were set to
-> zero as based on phy-mode (rgmii-id) the KSZ9131 driver enables internal
-> DLL, which adds a 2ns delay b/w clocks (TX/RX) and data signals.
->
-> Different pin settings were applied to TXC and TX_CTL compared with the
-> rest of the RGMII pins to comply with requirements for these pins imposed
-> by HW manual of RZ/G3S (see chapters "Ether Ch0 Voltage Mode Control
-> Register (ETH0_POC)", "Ether Ch1 Voltage Mode Control Register (ETH1_POC)=
-",
-> for power source selection, "Ether MII/RGMII Mode Control Register
-> (ETH_MODE)" for output-enable and "Input Enable Control Register (IEN_m)"
-> for input-enable configurations).
->
-> Commit also enables the Ethernet interfaces by selecting
-> SW_CONFIG3 =3D SW_ON.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - removed #address-cells, #size-cells
-> - adapted patch description to reflect the usage of SW_CONFIG
+On Tue, Dec 12, 2023 at 12:44:36PM +0200, Dumitru Ceclan wrote:
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel
+> applications or higher speed multiplexed applications. The Sigma-Delta
+> ADC is intended primarily for measurement of signals close to DC but also
+> delivers outstanding performance with input bandwidths out to ~10kHz.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.8.
+I do not see any major problem in the code,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Gr{oetje,eeting}s,
+Some nit-picks below, but it's fine if it get addressed later on. Up to you
+and Jonathan.
 
-                        Geert
+...
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+> +static const unsigned int ad7173_sinc5_data_rates[] = {
+> +	6211000, 6211000, 6211000, 6211000, 6211000, 6211000, 5181000, 4444000,
+> +	3115000, 2597000, 1007000, 503800,  381000,  200300,  100500,  59520,
+> +	49680,	 20010,	  16333,   10000,   5000,    2500,    1250,
+> +};
+> +
+> +static const unsigned int ad7175_sinc5_data_rates[] = {
+> +	50000000, 41667000, 31250000, 27778000, 20833000, 17857000, 12500000,
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+I would add a comment with offsets, like
+
+	... /* 0-6 */
+
+But better to make it power of two, like each 4 on one line or 8.
+
+> +	10000000, 5000000,  2500000,  1000000,	500000,	  397500,   200000,
+> +	100000,	  59920,    49960,    20000,	16666,	  10000,    5000,
+> +};
+
+Not that I insist, just consider readability of these tables.
+
+...
+
+> +		if (chan->type == IIO_TEMP) {
+> +			temp = ((u32)AD7173_VOLTAGE_INT_REF_uV) * MILLI;
+
+Hmm... Is the casting mandatory here?
+
+> +			temp /= AD7173_TEMP_SENSIIVITY_uV_per_C;
+> +			*val = temp;
+> +			*val2 = chan->scan_type.realbits;
+> +		} else {
+> +			*val = ad7173_get_ref_voltage_milli(st, ch->cfg.ref_sel);
+> +			*val2 = chan->scan_type.realbits - !!(ch->cfg.bipolar);
+> +		}
+
+...
+
+> +		if (chan->type == IIO_TEMP)
+> +			*val = -874379; //-milli_kelvin_to_millicelsius(0)/scale
+
+Hmm... Besides C99 comment format, can we actually use the mentioned API?
+In such a case the comment won't be needed and the value semantics is better
+to get.
+
+> +		else
+> +			*val = -BIT(chan->scan_type.realbits - 1);
+
+...
+
+> +static int ad7173_debug_reg_access(struct iio_dev *indio_dev, unsigned int reg,
+> +				   unsigned int writeval, unsigned int *readval)
+> +{
+> +	struct ad7173_state *st = iio_priv(indio_dev);
+> +	u8 reg_size;
+> +
+> +	if (reg == 0)
+
+0 does not have its definition, does it?
+
+> +		reg_size = 1;
+> +	else if (reg == AD7173_REG_CRC || reg == AD7173_REG_DATA ||
+> +		 reg >= AD7173_REG_OFFSET(0))
+> +		reg_size = 3;
+> +	else
+> +		reg_size = 2;
+> +
+> +	if (readval)
+> +		return ad_sd_read_reg(&st->sd, reg, reg_size, readval);
+> +
+> +	return ad_sd_write_reg(&st->sd, reg, reg_size, writeval);
+> +}
+
+...
+
+> +	channels_st_priv_arr = devm_kcalloc(dev, num_channels,
+> +					    sizeof(*channels_st_priv_arr),
+> +					    GFP_KERNEL);
+> +	if (!channels_st_priv_arr)
+> +		return -ENOMEM;
+
+The variable name can be made shorter and hence the above will take less LoCs.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
