@@ -1,92 +1,126 @@
-Return-Path: <linux-gpio+bounces-1433-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1434-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63CD4811F16
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 20:40:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97E7E811FAF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 21:07:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F13712829E7
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 19:40:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4E7711F2107F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 20:07:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7ACD06829C;
-	Wed, 13 Dec 2023 19:40:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="lL9acd/5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84F307A229;
+	Wed, 13 Dec 2023 20:07:19 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AFB40E0;
-	Wed, 13 Dec 2023 11:40:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702496431; x=1734032431;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=TB6pdHRQrOCaGMVFpuGPsB29t4yb42FXCMwWcj1ZwFY=;
-  b=lL9acd/50tmS4n/6fGFTtWucnFVoEQCDfLYwD7PcbN9NzMmT4AaSVdTB
-   sul3FnkseHcKHYeunYtKenLYEdMD7PnIFbYK24xFbPTq0Zq0ybTp7uFjp
-   03ZQkZYe8n0WA0RUTNHlI9ySgPUTHeo+GQ05naxJCVgtu47VLxKZVAPhw
-   xMiapz95LrC8QBSx+SOUJHjo3YRYTHM9q1na040jXRgf2uOwIq8tDk/03
-   qJDsIy0UQ0J2yTl0qWfuUbcT8Q+quiY9Dj7yGQc0H32zTzDelB85yfn+N
-   +KgN+4p7Vbh+vrllAUkaU9Elbqe7ctPx17xbQS3MrRLNzPIh9yTjgIMyg
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="380003847"
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CEF39C9;
+	Wed, 13 Dec 2023 12:07:16 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="374526113"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="380003847"
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:40:31 -0800
+   d="scan'208";a="374526113"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 12:07:16 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="802985825"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="1105425546"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="802985825"
+   d="scan'208";a="1105425546"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga008.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 11:40:28 -0800
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 12:07:14 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rDV5l-00000005cxH-1HEp;
-	Wed, 13 Dec 2023 21:40:25 +0200
-Date: Wed, 13 Dec 2023 21:40:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Raul Rangel <rrangel@chromium.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] gpiolib: acpi: Modify acpi_dev_irq_wake_get_by to
- use resource
-Message-ID: <ZXoIqfXVYiYAuL86@smile.fi.intel.com>
-References: <20231213110009.v1.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+	(envelope-from <andy@kernel.org>)
+	id 1rDVVg-00000005dLp-1J2A;
+	Wed, 13 Dec 2023 22:07:12 +0200
+Date: Wed, 13 Dec 2023 22:07:12 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZXoO8B0N3S49GnvX@smile.fi.intel.com>
+References: <20231212054253.50094-1-warthog618@gmail.com>
+ <20231212054253.50094-2-warthog618@gmail.com>
+ <ZXm3rayrcvfO1t1Z@smile.fi.intel.com>
+ <ZXm_WsIpgIyOUNHt@rigel>
+ <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
+ <ZXnU3tMYCc2Rw8Qv@rigel>
+ <ZXnX8jPHxRLW8lhi@smile.fi.intel.com>
+ <CAMRc=Mfj_4YvQVP=UWkULBwJniDDjapttU+qSgqfN5ZWNgikKw@mail.gmail.com>
+ <ZXnb-ks_noYLWZZ2@smile.fi.intel.com>
+ <CAMRc=MfaHKKKNkXW0L1FPjCH4VvG22Vn9q8z9tupZCtCEKZU2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231213110009.v1.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfaHKKKNkXW0L1FPjCH4VvG22Vn9q8z9tupZCtCEKZU2g@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 13, 2023 at 11:00:19AM -0700, Mark Hasemeyer wrote:
-> Other information besides wake capability can be provided about GPIO
-> IRQs such as triggering, polarity, and sharability. Use resource flags
-> to provide this information to the caller if they want it.
-> 
-> This should keep the API more robust over time as flags are added,
-> modified, or removed. It also more closely matches acpi_irq_get which
-> take a resource as an argument.
-> 
-> Rename the function to acpi_dev_get_gpio_irq_resource to better describe
-> the function's new behavior.
+On Wed, Dec 13, 2023 at 08:03:44PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Dec 13, 2023 at 5:29 PM Andy Shevchenko <andy@kernel.org> wrote:
+> > On Wed, Dec 13, 2023 at 05:15:38PM +0100, Bartosz Golaszewski wrote:
+> > > On Wed, Dec 13, 2023 at 5:12 PM Andy Shevchenko <andy@kernel.org> wrote:
+> > > > On Wed, Dec 13, 2023 at 11:59:26PM +0800, Kent Gibson wrote:
+> > > > > On Wed, Dec 13, 2023 at 04:40:12PM +0100, Bartosz Golaszewski wrote:
+> > > > > > On Wed, Dec 13, 2023 at 3:27 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > > > > > On Wed, Dec 13, 2023 at 03:54:53PM +0200, Andy Shevchenko wrote:
+> > > > > > > > On Tue, Dec 12, 2023 at 01:42:50PM +0800, Kent Gibson wrote:
 
-I have got only one patch out of 6.
-Also the series is missing a cover letter.
+...
 
-Please, fix both issues in the next version of the series.
+> > > > > > > > > +static struct supinfo supinfo;
+> > > > > > > >
+> > > > > > > > Why supinfo should be a struct to begin with? Seems to me as an unneeded
+> > > > > > > > complication.
+> > > > > >
+> > > > > > I think we should keep it as a struct but defined the following way:
+> > > > > >
+> > > > > > struct {
+> > > > > >     spinlock_t lock;
+> > > > > >     struct rb_root tree;
+> > > > > > } supinfo;
+> > > > >
+> > > > > That is what I meant be merging the struct definition with the variable
+> > > > > definition.  Or is there some other way to completely do away with the
+> > > > > struct that I'm missing?
+> > > >
+> > > > Look at the top of gpiolib.c:
+> > > >
+> > > > static DEFINE_MUTEX(gpio_lookup_lock);
+> > > > static LIST_HEAD(gpio_lookup_list);
+> > > >
+> > > > In the similar way you can simply do
+> > > >
+> > > > static DEFINE_SPINLOCK(gpio_sup_lock);
+> > > > static struct rb_root gpio_sup_tree;
+> > >
+> > > The fact that this has been like this, doesn't mean it's the only
+> > > right way. IMO putting these into the same structure makes logical
+> > > sense.
+> >
+> > I disagree on the struct like this on the grounds:
+> > - it's global
+> > - it's one time use
+> > - it adds complications for no benefit
+> > - it makes code uglier and longer
+> >
+> 
+> It boils down to supinfo.lock vs supinfo_lock. I do prefer the former
+> but it's a weak opinion, I won't die on that hill.
+
+Me neither, just showing rationale from my side.
+
+> > What we probably want to have is a singleton objects in C language or at least
+> > inside Linux kernel project. But I'm not sure it's feasible.
+> >
+> > > > > > > Yeah, that is a hangover from an earlier iteration where supinfo was
+> > > > > > > contained in other object rather than being a global.
+> > > > > > > Could merge the struct definition into the variable now.
 
 -- 
 With Best Regards,
