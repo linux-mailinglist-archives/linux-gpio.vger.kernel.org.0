@@ -1,147 +1,69 @@
-Return-Path: <linux-gpio+bounces-1334-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D2B2C80FBA1
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 00:58:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AEE9B80FBA8
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 01:00:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 415E21F21965
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Dec 2023 23:58:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6F73D1F219D4
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 00:00:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE157D8A7;
-	Tue, 12 Dec 2023 23:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F23B12F2E;
+	Wed, 13 Dec 2023 00:00:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kD/xs5DG"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rr+8sXVa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x532.google.com (mail-pg1-x532.google.com [IPv6:2607:f8b0:4864:20::532])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87BFDB2;
-	Tue, 12 Dec 2023 15:58:14 -0800 (PST)
-Received: by mail-pg1-x532.google.com with SMTP id 41be03b00d2f7-5c210e34088so5228291a12.2;
-        Tue, 12 Dec 2023 15:58:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702425490; x=1703030290; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=WY977mAi5HwM1Re1JNSyw1hSd3wTJM+QSi5mNmNbSmY=;
-        b=kD/xs5DG8YRdT4UUhe+frEZQxebNTUXf/Sh+XSMIh6ANWlqxYtynZxe0JJ1AfW9bPq
-         BFuMKYw4f7A1G9v3Jt36ZiaHGcKh/Y/BgekfByYuSd7rsy3SAAurywiFO72/5Z12kSkn
-         Kks97R3wjj2q5e+jm+31rVs8KGVYPDzskloN/wcA5NJ5YnwTMVP6mJ25BYVLz/e09ZgP
-         x4tYFU20j5ZknLke+uL+fgTZmVm1TDVoUw0z/ElKpKT13pJJwMCC9nyEd/UpvFyad5xD
-         FplNvFpkxyNv+tyd5zRkgxM9z1H9bx+V97nBfhXsL6gEP/niKNkQhGtPcVICNQm0+yOS
-         p8gA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702425490; x=1703030290;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=WY977mAi5HwM1Re1JNSyw1hSd3wTJM+QSi5mNmNbSmY=;
-        b=aQa8LVdCfNIFNCNQdlOMO6D4dNW1RxS1pVGVDjuYqJv2TgRiw2BcbRzbfujhX7ijgf
-         dAAXBNwrT95Z8rAfiBPkZdvrCiBtHSNr9F9gg2KxexATIjgE3x98zDHVW+iOUcSXGDvy
-         inyurEuaYYf7he/U0SPOYRF3Kgx5ToM/owWeTL7C+Qri7UNeirYfJSeyKTEr+NzuiSYv
-         rcuVKirGdjHmI2CGok61vM+LzTF/nlCO4++yzDv4FFTqJ3r4yEkwZBkAraMjI2wqZJAX
-         VgQ+FeCEWejeTSgwrDZjYfPXn6gxqs3MipqkWxq1NECLe0iNpH/YG9hQvRcnujhg/VLg
-         DQAA==
-X-Gm-Message-State: AOJu0YwxDt5uMnFXok1v22ACRcWCKzSLt2UurO9ckRZpyqbDkza8za+f
-	p5tKpEUWz7CrdG/qM4FuC+hs8KcXBBQ=
-X-Google-Smtp-Source: AGHT+IEN1M2m1fMPKM1QlMZNADUU9UIl8/5swPq2xJewaX3t8kJvummweEvIbGb+B2HDSgH1vZA0eA==
-X-Received: by 2002:a17:902:f7c5:b0:1d0:98db:6fd4 with SMTP id h5-20020a170902f7c500b001d098db6fd4mr6344189plw.56.1702425489555;
-        Tue, 12 Dec 2023 15:58:09 -0800 (PST)
-Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
-        by smtp.gmail.com with ESMTPSA id z3-20020a170902834300b001d1d1ef8be5sm9144470pln.173.2023.12.12.15.58.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 12 Dec 2023 15:58:09 -0800 (PST)
-Date: Wed, 13 Dec 2023 07:58:04 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH 0/4] gpiolib: cdev: relocate debounce_period_us
-Message-ID: <ZXjzjOtKFoMRhKA-@rigel>
-References: <20231212054253.50094-1-warthog618@gmail.com>
- <CAMRc=Me90Lu7Duc8-4xSfDcHQd6M7+0t0O8FAa6jiizp-OO5=Q@mail.gmail.com>
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1D0828F7;
+	Wed, 13 Dec 2023 00:00:43 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C07BC433C8;
+	Wed, 13 Dec 2023 00:00:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702425643;
+	bh=P4ZmKF2m1aszLr/cpUggGxXzp94xFrO2iZjJ8pMqg+E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=rr+8sXVaCR0cZJfv25f5QiVFngRPZpU9NmLl4uCO7WxxK3BPCXWN1Wh+LmpLBBu2a
+	 ClLlVD7V0O5cpv+vf6COEK3i6JxOcNQyV0Dnixbb7Xb5cWW5u4fY0ICqclW2zB1DGN
+	 3e/DE0Mkib942xdPVP+h0rZ/bkRQiBfy17+afZz67kdJDPRhEt/JIPT0lQQCgn0dQO
+	 q7oc2gvw17TkeossVqF6P4nUL0UyfHPd0Z6cn5zvBMS8S3Bo7VTmIjQTSF3oIbjV7h
+	 vwGtq/DqUKlSMsfBSA4VS0yTlCtaKUYrk/yN0YD6rzwi0hZhROXhX9nFATIMhKDzAp
+	 S1J94Ehdjyoxw==
+Date: Tue, 12 Dec 2023 16:00:41 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Herve Codina <herve.codina@bootlin.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
+ <pabeni@redhat.com>, Andrew Lunn <andrew@lunn.ch>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, netdev@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Christophe Leroy
+ <christophe.leroy@csgroup.eu>, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 0/5] Add support for framer infrastructure and PEF2256
+ framer
+Message-ID: <20231212160041.59c93d8a@kernel.org>
+In-Reply-To: <CACRpkdYT1J7noFUhObFgfA60XQAfL4rb=knEmWS__TKKtCMh7Q@mail.gmail.com>
+References: <20231128132534.258459-1-herve.codina@bootlin.com>
+	<CACRpkdYT1J7noFUhObFgfA60XQAfL4rb=knEmWS__TKKtCMh7Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me90Lu7Duc8-4xSfDcHQd6M7+0t0O8FAa6jiizp-OO5=Q@mail.gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Tue, Dec 12, 2023 at 06:09:00PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Dec 12, 2023 at 6:43 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > This series contains minor improvements to gpiolib-cdev.
-> >
-> > The banner change is relocating the debounce_period_us from gpiolib's
-> > struct gpio_desc to cdev's struct line.  The first patch stores the
-> > field locally in cdev.  The second removes the now unused field from
-> > gpiolib.
-> >
-> > The third patch is somewhat related and removes a FIXME from
-> > gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
-> > the calculation of the used  flag, but I would assert that from
-> > the userspace perspective the read operation itself is inherently racy.
-> > The line being reported as unused in the info provides no guarantee -
-> > it just an indicator that requesting the line is likely to succeed -
-> > assuming the line is not otherwise requested in the meantime.
-> > Give the overall operation is racy, trying to stamp out an unlikely
-> > race within the operation is pointless. Accept it as a possibility
-> > that has negligible side-effects and reduce the number of locks held
-> > simultaneously and the duration that the gpio_lock is held.
-> >
-> > The fourth patch is unrelated to debounce or info, but addresses Andy's
-> > recent assertion that the linereq get/set values functions are confusing
-> > and under documented.  Figured I may as well add that while I was in
-> > there.
-> >
-> > Kent Gibson (4):
-> >   gpiolib: cdev: relocate debounce_period_us from struct gpio_desc
-> >   gpiolib: remove debounce_period_us from struct gpio_desc
-> >   gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
-> >   gpiolib: cdev: improve documentation of get/set values
-> >
-> >  drivers/gpio/gpiolib-cdev.c | 257 ++++++++++++++++++++++++++++--------
-> >  drivers/gpio/gpiolib.c      |   3 -
-> >  drivers/gpio/gpiolib.h      |   5 -
-> >  3 files changed, 201 insertions(+), 64 deletions(-)
-> >
-> > --
-> > 2.39.2
-> >
->
-> Patches 2-4 look fine, I was about to review patch 1 in detail but I
-> thought I'd just throw this one in here before we commit to a specific
-> solution.
->
-> For some reason I thought this would not work but I'm now considering
-> it as an alternative approach: is there anything wrong with adding
-> struct kref to struct line, allocating it separately per-line when
-> gpio_chardev_data is created, referencing it from struct linereq when
-> the line is being requested, and dropping the reference from
-> gpio_chardev_data and linereq when either is being removed? Other than
-> the increased number of allocations?
->
+On Tue, 12 Dec 2023 23:15:38 +0100 Linus Walleij wrote:
+> here is an immutable tag for the PEF2256 framer, as promised.
+> 
+> I have already merged it into the pinctrl tree for starters.
 
-The collection of struct line always has to be global, right, as both
-gpio_chardev_data and linereq are ephemeral.  e.g. if one process requests
-a line and another checks the lineinfo, those will have distinct
-gpio_chardev_data.
-
-But the key issue is that the linereq and struct line lifetimes are
-strictly tied - a struct line does not live beyond the containing linereq.
-Leaving the struct line alive after the linereq is released is just wrong.
-The line has been released back to gpiolib so there can be no
-supplemental info left.
-If you want any such info to persist beyond the line release then it
-should be located in gpiolib itself, not cdev.
-
-Cheers,
-Kent.
-
+Pulled to net-next as well, thank you!
 
