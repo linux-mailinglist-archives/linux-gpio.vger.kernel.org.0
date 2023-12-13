@@ -1,122 +1,124 @@
-Return-Path: <linux-gpio+bounces-1356-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1357-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 028C981129F
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:18:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A05DC8112B3
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:22:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B5239281A4E
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:17:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55E171F215DB
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B22192C85B;
-	Wed, 13 Dec 2023 13:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3092C872;
+	Wed, 13 Dec 2023 13:22:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCF2fxch"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgvNcYez"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x533.google.com (mail-pg1-x533.google.com [IPv6:2607:f8b0:4864:20::533])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 36322AB;
-	Wed, 13 Dec 2023 05:17:53 -0800 (PST)
-Received: by mail-pg1-x533.google.com with SMTP id 41be03b00d2f7-5c210e34088so5643593a12.2;
-        Wed, 13 Dec 2023 05:17:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702473472; x=1703078272; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=KhFWIv693FrFNXy1wxTzy6P4wGplYo8sfcTZnDhyq0Q=;
-        b=BCF2fxchDLFaNB21/glU/Ncw92and6asYPqoZr8XNrM6gf6yckeY4ht06cGY8Dr47e
-         DcYBJ3ApVfw3PRNqVd7//GbZ1RVYl+kFZ/V/5Zj0AeNk8a3Hn5gNr4KF8iWv1sQSWSlp
-         8oDvtkwJHt3ssqChotYQy68sCIAzdL3KrHmX5ILqIEgjuyNPPTfDYuwHSCAyVQ5hPpb4
-         WK8EnWWpUFWT0B5kABN3wOoG4pQJojySri/QWJH4g6UY+yoXoSq8DqM/m+HcMy6dxcHx
-         w9WUbJMf9F94ZqYeTJFz1hfZYW/O4hJc3XhxWvFXY+IKcKBBQkJ3K8tRbb9NygRtFgLw
-         TTiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702473472; x=1703078272;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=KhFWIv693FrFNXy1wxTzy6P4wGplYo8sfcTZnDhyq0Q=;
-        b=T/kRzON25UUvcv3D0zK+FvIeqZIykkEPhP0BXClDkKMPd69TI+BlfM336DFWgExxCa
-         NYedg14gFLewgK+LbG8uXw3jvf1Bn77kbxM4GDQFEgTw7Z9whXidwgZGaOZIoNUQUn+r
-         kHJDQjjSOEWHRkNDn5xeCB3j3ysCbvSLE7Pg4/e+O5IG3qmqLe9AYDKHj3eJLkzT+7/J
-         TltffURv3lpBgbaMfgAm14R2QzFUJyiHyHOcKUjmLqS3n3ppPumBFAdt4eA/HhKCKGf3
-         TZavWfaKsDOkbifZkvhT7K2mzJg860qtCENDcZBus+6wqjwMMMnE0l/cP2mvf4YgKMIl
-         Z3xA==
-X-Gm-Message-State: AOJu0YyV6a68tRI82PvsRcOQwEhakrqx1xiheFRFeweJ/qmh8GVIMaWb
-	9CIsV1QkOrXvIrzCAt517cM=
-X-Google-Smtp-Source: AGHT+IGB8hDFzv/mvPiYgA4wJj6Y5z2/GSEOWmS28c/9doXtxeXFg0BxZMGuFdkzdD3stULDwa4u0A==
-X-Received: by 2002:a17:902:e54b:b0:1d0:796c:b06d with SMTP id n11-20020a170902e54b00b001d0796cb06dmr9321996plf.7.1702473472506;
-        Wed, 13 Dec 2023 05:17:52 -0800 (PST)
-Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
-        by smtp.gmail.com with ESMTPSA id j21-20020a170902759500b001d326103500sm5243110pll.277.2023.12.13.05.17.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 05:17:52 -0800 (PST)
-Date: Wed, 13 Dec 2023 21:17:47 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH 0/4] gpiolib: cdev: relocate debounce_period_us
-Message-ID: <ZXmu-2AB0s-T5pF9@rigel>
-References: <20231212054253.50094-1-warthog618@gmail.com>
- <CAMRc=Me90Lu7Duc8-4xSfDcHQd6M7+0t0O8FAa6jiizp-OO5=Q@mail.gmail.com>
- <ZXjzjOtKFoMRhKA-@rigel>
- <CAMRc=Me1czOqnJUG3sth6kZh=G+iXAHp7HHL1u-Oy3=MwkCPug@mail.gmail.com>
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E8DAB;
+	Wed, 13 Dec 2023 05:22:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702473729; x=1734009729;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=aynrVvDsgLEQ+oNpXkj3YsTsnJctWZHApJV8F3owo30=;
+  b=hgvNcYezeBjiQ/qv58XjF9NRFTvZ/5kUMix9yF7LU/5YhhEz1P3CR1RU
+   Sso90NlRp441xL05XJAzGeZp8rva+PJb6HeqT7FeDa7VKHBlB287++3o/
+   0KLUmadjg3OzIinqjpKJwP+95WM45tP42Mg1grSjgkUh7eoC7NbmrGxlg
+   2fTN5AiCAjFVmks51PmU4TfpSbqx0DgZcO1xzNBFLkMWUgwTgFBskR3U5
+   cNxH5/Jw4hfxH9ZpRPQzXCXFW6NWaxwB7Os3Qx5u23hHEiPXzRmkIsVcW
+   /Sp39rkyweiXtrh3+VhIpmoke7nXuqOYA3z90x/ROjY8/KhGK6FBaK6hZ
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="398804938"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="398804938"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:22:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864625953"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="864625953"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:21:59 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rDPBT-00000005X7P-2zJE;
+	Wed, 13 Dec 2023 15:21:55 +0200
+Date: Wed, 13 Dec 2023 15:21:55 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Biju Das <biju.das.jz@bp.renesas.com>,
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Dong Aisheng <aisheng.dong@nxp.com>,
+	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
+	Jacky Bai <ping.bai@nxp.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	Sean Wang <sean.wang@kernel.org>,
+	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Hal Feng <hal.feng@starfivetech.com>
+Subject: Re: [PATCH v5 03/13] pinctrl: ingenic: Use C99 initializers in
+ PINCTRL_PIN_GROUP()
+Message-ID: <ZXmv81bJRMqB1GLY@smile.fi.intel.com>
+References: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
+ <20231211190321.307330-4-andriy.shevchenko@linux.intel.com>
+ <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Me1czOqnJUG3sth6kZh=G+iXAHp7HHL1u-Oy3=MwkCPug@mail.gmail.com>
+In-Reply-To: <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 13, 2023 at 11:03:40AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Dec 13, 2023 at 12:58â€¯AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Tue, Dec 12, 2023 at 06:09:00PM +0100, Bartosz Golaszewski wrote:
->
-> [snip]
->
-> > >
-> > > Patches 2-4 look fine, I was about to review patch 1 in detail but I
-> > > thought I'd just throw this one in here before we commit to a specific
-> > > solution.
-> > >
-> > > For some reason I thought this would not work but I'm now considering
-> > > it as an alternative approach: is there anything wrong with adding
-> > > struct kref to struct line, allocating it separately per-line when
-> > > gpio_chardev_data is created, referencing it from struct linereq when
-> > > the line is being requested, and dropping the reference from
-> > > gpio_chardev_data and linereq when either is being removed? Other than
-> > > the increased number of allocations?
-> > >
-> >
-> > The collection of struct line always has to be global, right, as both
-> > gpio_chardev_data and linereq are ephemeral.  e.g. if one process requests
-> > a line and another checks the lineinfo, those will have distinct
-> > gpio_chardev_data.
-> >
->
-> Strictly speaking at least the supplemental info has to be globally
-> accessible. But I get your point.
->
-> > But the key issue is that the linereq and struct line lifetimes are
-> > strictly tied - a struct line does not live beyond the containing linereq.
->
-> I was thinking about decoupling one from the other actually.
->
+On Wed, Dec 13, 2023 at 10:55:46AM +0100, Paul Cercueil wrote:
+> Le lundi 11 décembre 2023 à 20:57 +0200, Andy Shevchenko a écrit :
 
-I was also headed down that path - making the supplemental info for each
-line distinct from the struct line.  But then I realised that the lifetime
-is strictly tied to the linereq, as per the struct line, and there was no
-benefit in a separate object - just more overhead.
+...
 
-Cheers,
-Kent.
+> > -#define INGENIC_PIN_GROUP(name, id, func)		\
+> > -	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
+> > +#define INGENIC_PIN_GROUP(_name_, id,
+> > func)						\
+> > +	{							
+> > 			\
+> > +		.name =
+> > _name_,								\
+> > +		.pins =
+> > id##_pins,							\
+> > +		.num_pins =
+> > ARRAY_SIZE(id##_pins),					\
+> > +		.data = (void
+> > *)func,							\
+> > +	}
+> 
+> This INGENIC_PIN_GROUP() macro doesn't need to be modified, does it?
+
+We can go either way. I prefer to go this way as it reduces level of
+indirections in the macros. It makes code easier to read and understand.
+But if you insist, I can drop that change in next version.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
