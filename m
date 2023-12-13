@@ -1,75 +1,197 @@
-Return-Path: <linux-gpio+bounces-1382-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1383-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7A92811804
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 16:46:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA2AB811880
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:00:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3938F1F21964
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:46:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 587BD281F2D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:59:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76ADA59553;
-	Wed, 13 Dec 2023 15:42:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF07C2FC40;
+	Wed, 13 Dec 2023 15:59:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ffta2sAi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRks4ymi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224F15954F;
-	Wed, 13 Dec 2023 15:42:26 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23AB6C433C9;
-	Wed, 13 Dec 2023 15:42:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702482146;
-	bh=GcusTtDa/xUz/eWeRnRe/jGZ7M5e05jlT9WsJ3wX1Aw=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=ffta2sAir1jM4m+st2G1XjKJwbMxZHgj5f/t5FIM8J+TcIpJrMm8ZOXt4C8IZbTZ0
-	 4/6nUIZ29UyleFKeoEJh151Bb5llzinRSD+j7HupWYTI0AUbMDl3X+25t/AeCfiAPj
-	 qRgrcm+QNlJaBI+gdjJ5TxOLmrGcWtiyXdzbHBVrLS2d3YhZhGOe0c3yDWjAAPGO+N
-	 V96sYnmzxLWgMsOkZOCKuBHivNFd8XHm/eEGh0c9dhTahunm4NCvdY35yMb/XSiKhG
-	 13Rb3fQ5R2FdKldI6F1mbkyCiZ/FM62m3qEwDmsjVfUh7Sar3EBewWHexBp8X3JSel
-	 gGGnrJxo0E0BQ==
-From: Lee Jones <lee@kernel.org>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
- Daniel Thompson <daniel.thompson@linaro.org>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-fbdev@vger.kernel.org, 
- Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, 
- Helge Deller <deller@gmx.de>
-In-Reply-To: <20231207161513.3195509-2-andriy.shevchenko@linux.intel.com>
-References: <20231207161513.3195509-2-andriy.shevchenko@linux.intel.com>
-Subject: Re: (subset) [PATCH v2 1/1] backlight: hx8357: Convert to agnostic
- GPIO API
-Message-Id: <170248214388.988965.2531555627636674132.b4-ty@kernel.org>
-Date: Wed, 13 Dec 2023 15:42:23 +0000
+Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83971B9;
+	Wed, 13 Dec 2023 07:59:31 -0800 (PST)
+Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5c69ecda229so3832304a12.2;
+        Wed, 13 Dec 2023 07:59:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702483171; x=1703087971; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=7t/IBYcxcZn26VUq/ox2cXPfMGFXBFP5p9RWCWJmVpc=;
+        b=GRks4ymibZjMCnNx4IXOuj1gAk9a9/3caOiYPW3xutT+k6MLfnXRBw59xfV+H/Wmtx
+         gQh+HGHBHN42vO8C5TPiDSTuuA+nXuYPfW3zJrEyKdmsgfOvidZmN+pZiZj6RrhOleKK
+         EAOwAWxWaUNPmCoo2sbSOfPPleaFZMmOJgbZxr5hd6d+HoLVtxzU6bDT7o5EzxsPDnvD
+         /Td+8tTYnMw9nUDJ2bW/9XJtJlOPkpwCpXlkKfMN2wEka/neZ6JHfQWRZrYnH6yhx+Qa
+         RQ2viOUH7nkM9LpfvY4I6VnN8eZZUkTJidMxXMqAuAtLjWp75M/58SUDfDkj6aY0BKXH
+         ezLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702483171; x=1703087971;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7t/IBYcxcZn26VUq/ox2cXPfMGFXBFP5p9RWCWJmVpc=;
+        b=JtVK++99kOLnmPWRcynhbYccoeYOJuun7HbudsCPG8RvZn6cqsyspFzRHJrLQ21Lvb
+         GZFZ8wzjti5rG2pf5urttMzBxI9/M8MuqjfhuDHD9Dd0h+QcHlPFAxOYgjcr9BnAl45J
+         c/KkINXtWnAhrOToImlzUQEvndP0FfIAeDBTgyBnVQ6jzE4vwicgdCHE20cym5F7Prsn
+         muOaJUuT9jtH961M1h2CoOUg+xMreNV9jxeU2a1NuZiyFSXxMTSdjpbauxHxxL8gOTy3
+         cNn5l3KNZLcZpnk3o6hTAH2sk23GXA28FIYOF9zybji6LaGkKlTJmemrzLzOEomRtsUy
+         GP/w==
+X-Gm-Message-State: AOJu0Yzs7P41xzgx1OZJ5pyj5K0BjDNyQW7/f6SmgrjuzrvtGWVvjOiH
+	zQdl2N+cERDvH4R6e02XdFQ=
+X-Google-Smtp-Source: AGHT+IH3WNLtvYo6YQYwxojy0A3ep03IXCsjYXYhamREgqphSx+qRQgqXiVYHrKZpGfCHAlB+J3ZfA==
+X-Received: by 2002:a05:6a20:daa1:b0:18f:97c:9262 with SMTP id iy33-20020a056a20daa100b0018f097c9262mr5236339pzb.71.1702483170840;
+        Wed, 13 Dec 2023 07:59:30 -0800 (PST)
+Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
+        by smtp.gmail.com with ESMTPSA id c10-20020a62f84a000000b006d0d83a11c9sm1074841pfm.202.2023.12.13.07.59.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 07:59:30 -0800 (PST)
+Date: Wed, 13 Dec 2023 23:59:26 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZXnU3tMYCc2Rw8Qv@rigel>
+References: <20231212054253.50094-1-warthog618@gmail.com>
+ <20231212054253.50094-2-warthog618@gmail.com>
+ <ZXm3rayrcvfO1t1Z@smile.fi.intel.com>
+ <ZXm_WsIpgIyOUNHt@rigel>
+ <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.12.3
+In-Reply-To: <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
 
-On Thu, 07 Dec 2023 18:14:32 +0200, Andy Shevchenko wrote:
-> The of_gpio.h is going to be removed. In preparation of that convert
-> the driver to the agnostic API.
-> 
-> 
+On Wed, Dec 13, 2023 at 04:40:12PM +0100, Bartosz Golaszewski wrote:
+> On Wed, Dec 13, 2023 at 3:27 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Dec 13, 2023 at 03:54:53PM +0200, Andy Shevchenko wrote:
+> > > On Tue, Dec 12, 2023 at 01:42:50PM +0800, Kent Gibson wrote:
+> > > > Store the debounce period for a requested line locally, rather than in
+> > > > the debounce_period_us field in the gpiolib struct gpio_desc.
+> > > >
+> > > > Add a global tree of lines containing supplemental line information
+> > > > to make the debounce period available to be reported by the
+> > > > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
+> > >
+> > > ...
+> > >
+> > > >  struct line {
+> > > >     struct gpio_desc *desc;
+> > > > +   struct rb_node node;
+> > >
+> > > If you swap them, would it benefit in a code generation (bloat-o-meter)?
+> > >
+> >
+> > Didn't consider that placement within the scruct could impact code
+> > generation.
+> > Having the rb_nodes at the beginning of struct is preferable?
+> >
+>
+> I suppose it has something to do with 0 offset when using
+> container_of(). Not sure if that really matters though.
+>
 
-Applied, thanks!
+There are other fields that get the container_of() treatment, but node
+does look to be the one most used, so probably makes sense to put it
+first.
 
-[1/1] backlight: hx8357: Convert to agnostic GPIO API
-      commit: 7d84a63a39b78443d09f2b4edf7ecb1d586379b4
+> > > >  };
+> > >
+> > > ...
+> > >
+> > > > +struct supinfo {
+> > > > +   spinlock_t lock;
+> > > > +   struct rb_root tree;
+> > > > +};
+> > >
+> > > Same Q.
+> > >
+> >
+> > Same - I tend to put locks before the field(s) they cover.
+> > But if the node being first results in nicer code then happy to swap.
+> >
+> > > ...
+> > >
+> > > > +static struct supinfo supinfo;
+> > >
+> > > Why supinfo should be a struct to begin with? Seems to me as an unneeded
+> > > complication.
+> > >
+>
+> I think we should keep it as a struct but defined the following way:
+>
+> struct {
+>     spinlock_t lock;
+>     struct rb_root tree;
+> } supinfo;
 
---
-Lee Jones [李琼斯]
+That is what I meant be merging the struct definition with the variable
+definition.  Or is there some other way to completely do away with the
+struct that I'm missing?
 
+> >
+> > Yeah, that is a hangover from an earlier iteration where supinfo was
+> > contained in other object rather than being a global.
+> > Could merge the struct definition into the variable now.
+> >
+> > > ...
+> > >
+> > > > +                   pr_warn("%s: duplicate line inserted\n", __func__);
+> > >
+> > > I hope at bare minimum we have pr_fmt(), but even though this is poor message
+> > > that might require some information about exact duplication (GPIO chip label /
+> > > name, line number, etc). Generally speaking the __func__ in non-debug messages
+> > > _usually_ is a symptom of poorly written message.
+> > >
+> > > ...
+> >
+> > Yeah, I wasn't sure about the best way to log here.
+> >
+> > The details of chip or line etc don't add anything - seeing this error
+> > means there is a logic error in the code - we have inserted a line
+> > without erasing it.  Knowing which chip or line it happened to occur on
+> > wont help debug it.  It should never happen, but you can't just leave it
+> > unhandled, so I went with a basic log.
+> >
+>
+> We should yell loudly in that case - use one of the WARN() variants
+> that'll print a stack trace too and point you to the relevant line in
+> the code.
+>
+
+Ok, so any suggestion as to which WARN() variant would make the most sense?
+
+> > >
+> > > > +out_unlock:
+> > > > +   spin_unlock(&supinfo.lock);
+> > >
+> > > No use of cleanup.h?
+> > >
+> >
+> > Again, that is new to me, so no not yet.
+> >
+>
+> Yep, please use a guard, they're awesome. :)
+>
+
+Will do.
+
+Thanks,
+Kent.
 
