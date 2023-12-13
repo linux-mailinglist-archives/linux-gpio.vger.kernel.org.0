@@ -1,197 +1,165 @@
-Return-Path: <linux-gpio+bounces-1383-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1384-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA2AB811880
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:00:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 330478118C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:10:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 587BD281F2D
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:59:59 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5EB661C20EA5
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 16:10:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BF07C2FC40;
-	Wed, 13 Dec 2023 15:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B62563218E;
+	Wed, 13 Dec 2023 16:09:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GRks4ymi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="pWE8HBU2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x536.google.com (mail-pg1-x536.google.com [IPv6:2607:f8b0:4864:20::536])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 83971B9;
-	Wed, 13 Dec 2023 07:59:31 -0800 (PST)
-Received: by mail-pg1-x536.google.com with SMTP id 41be03b00d2f7-5c69ecda229so3832304a12.2;
-        Wed, 13 Dec 2023 07:59:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702483171; x=1703087971; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=7t/IBYcxcZn26VUq/ox2cXPfMGFXBFP5p9RWCWJmVpc=;
-        b=GRks4ymibZjMCnNx4IXOuj1gAk9a9/3caOiYPW3xutT+k6MLfnXRBw59xfV+H/Wmtx
-         gQh+HGHBHN42vO8C5TPiDSTuuA+nXuYPfW3zJrEyKdmsgfOvidZmN+pZiZj6RrhOleKK
-         EAOwAWxWaUNPmCoo2sbSOfPPleaFZMmOJgbZxr5hd6d+HoLVtxzU6bDT7o5EzxsPDnvD
-         /Td+8tTYnMw9nUDJ2bW/9XJtJlOPkpwCpXlkKfMN2wEka/neZ6JHfQWRZrYnH6yhx+Qa
-         RQ2viOUH7nkM9LpfvY4I6VnN8eZZUkTJidMxXMqAuAtLjWp75M/58SUDfDkj6aY0BKXH
-         ezLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702483171; x=1703087971;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7t/IBYcxcZn26VUq/ox2cXPfMGFXBFP5p9RWCWJmVpc=;
-        b=JtVK++99kOLnmPWRcynhbYccoeYOJuun7HbudsCPG8RvZn6cqsyspFzRHJrLQ21Lvb
-         GZFZ8wzjti5rG2pf5urttMzBxI9/M8MuqjfhuDHD9Dd0h+QcHlPFAxOYgjcr9BnAl45J
-         c/KkINXtWnAhrOToImlzUQEvndP0FfIAeDBTgyBnVQ6jzE4vwicgdCHE20cym5F7Prsn
-         muOaJUuT9jtH961M1h2CoOUg+xMreNV9jxeU2a1NuZiyFSXxMTSdjpbauxHxxL8gOTy3
-         cNn5l3KNZLcZpnk3o6hTAH2sk23GXA28FIYOF9zybji6LaGkKlTJmemrzLzOEomRtsUy
-         GP/w==
-X-Gm-Message-State: AOJu0Yzs7P41xzgx1OZJ5pyj5K0BjDNyQW7/f6SmgrjuzrvtGWVvjOiH
-	zQdl2N+cERDvH4R6e02XdFQ=
-X-Google-Smtp-Source: AGHT+IH3WNLtvYo6YQYwxojy0A3ep03IXCsjYXYhamREgqphSx+qRQgqXiVYHrKZpGfCHAlB+J3ZfA==
-X-Received: by 2002:a05:6a20:daa1:b0:18f:97c:9262 with SMTP id iy33-20020a056a20daa100b0018f097c9262mr5236339pzb.71.1702483170840;
-        Wed, 13 Dec 2023 07:59:30 -0800 (PST)
-Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
-        by smtp.gmail.com with ESMTPSA id c10-20020a62f84a000000b006d0d83a11c9sm1074841pfm.202.2023.12.13.07.59.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 07:59:30 -0800 (PST)
-Date: Wed, 13 Dec 2023 23:59:26 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZXnU3tMYCc2Rw8Qv@rigel>
-References: <20231212054253.50094-1-warthog618@gmail.com>
- <20231212054253.50094-2-warthog618@gmail.com>
- <ZXm3rayrcvfO1t1Z@smile.fi.intel.com>
- <ZXm_WsIpgIyOUNHt@rigel>
- <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
+Received: from mailout3.samsung.com (mailout3.samsung.com [203.254.224.33])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1E58FCF
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 08:09:50 -0800 (PST)
+Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
+	by mailout3.samsung.com (KnoxPortal) with ESMTP id 20231213160948epoutp03b7bdbf6b3866c095582447a018d639ec~gb-w5mveU1640116401epoutp03d
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 16:09:48 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20231213160948epoutp03b7bdbf6b3866c095582447a018d639ec~gb-w5mveU1640116401epoutp03d
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702483788;
+	bh=afVvJieNT+llfsmtaR1nNoSD0bljlOmyLWrGv/f0GlA=;
+	h=From:To:In-Reply-To:Subject:Date:References:From;
+	b=pWE8HBU2PORXnNdPyW24obJSdQYv7CfFCpLZAupVLrCi1oCQgj/XnJazdTpZQKBan
+	 fi8Y34QQl9ly8VnUgBA+TLY1Utg/Y0Bi1YJ3O9jEONzdq+eH5NIIpfkvIrhWPuGmVT
+	 z1vh/5XiP9DUYh96myTTFJQEWl2Q3uoPNG+HxHxc=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p3.samsung.com (KnoxPortal) with ESMTP id
+	20231213160947epcas5p3325683ce64e485d30828497c7725e703~gb-v9fiYY2618626186epcas5p3p;
+	Wed, 13 Dec 2023 16:09:47 +0000 (GMT)
+Received: from epsmgec5p1new.samsung.com (unknown [182.195.38.174]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Sr0mn4Mgfz4x9Pt; Wed, 13 Dec
+	2023 16:09:45 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+	epsmgec5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	DD.92.08567.947D9756; Thu, 14 Dec 2023 01:09:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
+	20231213160945epcas5p4968cf82b20ac40bb7a89937f5f83e3b1~gb-t5sIpr1187811878epcas5p4Y;
+	Wed, 13 Dec 2023 16:09:45 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231213160945epsmtrp1aea7a274763388f1e005033043e810e8~gb-t41qNv0255102551epsmtrp1d;
+	Wed, 13 Dec 2023 16:09:45 +0000 (GMT)
+X-AuditID: b6c32a44-617fd70000002177-4c-6579d74935e4
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+	epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	15.B3.08817.847D9756; Thu, 14 Dec 2023 01:09:44 +0900 (KST)
+Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip1.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231213160943epsmtip15a2583debde02121028b0b3c6ef0368b~gb-sHTVNv0109401094epsmtip1A;
+	Wed, 13 Dec 2023 16:09:42 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Krzysztof Kozlowski'" <krzysztof.kozlowski@linaro.org>, "'Tomasz
+	Figa'" <tomasz.figa@gmail.com>, "'Sylwester Nawrocki'"
+ <s.nawrocki@samsung.com>, "'Linus	Walleij'" <linus.walleij@linaro.org>,
+	"'Rob Herring'" <robh+dt@kernel.org>, "'Conor	Dooley'"
+	<conor+dt@kernel.org>, "'Jaewon Kim'" <jaewon02.kim@samsung.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>
+In-Reply-To: <20231210133915.42112-1-krzysztof.kozlowski@linaro.org>
+Subject: RE: [PATCH] dt-bindings: pinctrl: samsung: correct ExynosAutov920
+ wake-up compatibles
+Date: Wed, 13 Dec 2023 21:39:41 +0530
+Message-ID: <016e01da2dde$c9777610$5c666230$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQDwuG9IClMSYxFsO+y1snlGxJj/YwKcDPHesmVr46A=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrKJsWRmVeSWpSXmKPExsWy7bCmhq7n9cpUg9blihZr9p5jsph/5Byr
+	xY6GI6wWe19vZbeY8mc5k8Wmx9dYLTbP/8NocXnXHDaLGef3MVm07j3CbnH4TTurxapdfxgd
+	eDx2zrrL7rFpVSebx51re9g8Ni+p9+jbsorR4/MmuQC2qGybjNTElNQihdS85PyUzLx0WyXv
+	4HjneFMzA0NdQ0sLcyWFvMTcVFslF58AXbfMHKAblRTKEnNKgUIBicXFSvp2NkX5pSWpChn5
+	xSW2SqkFKTkFJgV6xYm5xaV56Xp5qSVWhgYGRqZAhQnZGZfOJRZM56pY/uYbSwPjLY4uRk4O
+	CQETiYPnpzN3MXJxCAnsZpS4PuclO0hCSOATo8S3HbwQiW+MEjffbmOD6Wg99psJIrGXUWLr
+	9ivMEB0vGCWmLPUAsdkEdCV2LG5jAykSEfjCLDHr0CcWkASngIvE7qufGUFsYYEEiSnn77KC
+	2CwCqhIrT00A28ArYCnxat9lFghbUOLkzCdgNrOAvMT2t3OYIa5QkPj5dBkrRFxc4uXRI2Bn
+	iwhYSVxe/5QRZLGEwA4OiZ3Ne4ESHECOi8SjBYIQvcISr45vYYewpSRe9rdBlXhILPojBRHO
+	kHi7fD0jhG0vceDKHBaQEmYBTYn1u/QhtvJJ9P5+wgTRySvR0SYEUa0q0fzuKguELS0xsbub
+	FcL2kHj4exYLJNimM0qcnvmAZQKjwiwkT85C8uQsJI/NQti8gJFlFaNkakFxbnpqsmmBYV5q
+	OTy2k/NzNzGC06+Wyw7GG/P/6R1iZOJgPMQowcGsJMJ7ckd5qhBvSmJlVWpRfnxRaU5q8SFG
+	U2DIT2SWEk3OB2aAvJJ4QxNLAxMzMzMTS2MzQyVx3tetc1OEBNITS1KzU1MLUotg+pg4OKUa
+	mAqUfm671np7vmH4JosJz69/rmzONedb5GO9i+NF/pSnldFhaxjuaty/EsTe/upqHufBfacm
+	9/jZJUvLTvgky+K4bgX3owSVp4XbhbeY/pP71BAwNXKR24GKomi5uS/vytaq5fPeYxF7+pHr
+	UILjpZkiKpHfPk6SYu4+z8ie/d2srf3K9Qmfp1zO2Pfi+bMf/Klr4vIW3n50k29thTWTfW3k
+	/vyjPa8n9VXOre/qFbF+919cpPoQh0HT3Ne3v//sLDKa/XpRqVgQy/d4m81sab/dVNX6C3/s
+	/vlo3tTCtzXXy19fMxfe7HDO+oHJlFfZa/qu/jkfolc693HXhPs8y02k3d4X9nlHaBU/kxeQ
+	DFdiKc5INNRiLipOBADeDrEBSAQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprEIsWRmVeSWpSXmKPExsWy7bCSnK7H9cpUg32LTCzW7D3HZDH/yDlW
+	ix0NR1gt9r7eym4x5c9yJotNj6+xWmye/4fR4vKuOWwWM87vY7Jo3XuE3eLwm3ZWi1W7/jA6
+	8HjsnHWX3WPTqk42jzvX9rB5bF5S79G3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZl84lFkzn
+	qlj+5htLA+Mtji5GTg4JAROJ1mO/mboYuTiEBHYzSuw/8Y8VIiEtcX3jBHYIW1hi5b/n7BBF
+	zxglds3ZzAaSYBPQldixuA3MFhH4wyyxZXk6RNFURomXC5pZQBKcAi4Su69+ZgSxhQXiJF5M
+	vMIMYrMIqEqsPDUBrJlXwFLi1b7LLBC2oMTJmU+AbA4OZgE9ibaNYK3MAvIS29/OYYY4SEHi
+	59NlrBBxcYmXR4+wQ9xgJXF5/VPGCYxCs5BMmoUwaRaSSbOQdC9gZFnFKJlaUJybnltsWGCU
+	l1quV5yYW1yal66XnJ+7iREcbVpaOxj3rPqgd4iRiYPxEKMEB7OSCO/JHeWpQrwpiZVVqUX5
+	8UWlOanFhxilOViUxHm/ve5NERJITyxJzU5NLUgtgskycXBKNTB1bLFYcvhNUVP8pyV5hgJC
+	uyOkFpzPOXa8NfGqbHL4P9NmbS6P0k/Zs/L01kZ3HNDcfOh0yqpzy2ODbjV4dG8MfONnG18f
+	9d5Jd+Xif+HeXwPPtgr6G/31t/v/duHf3wtPpCzN3b1u+3fTWeVd1hH93I2ur2f0iJsqztfi
+	KVlgeJzJ3qjw3ONLapf4u37eetrNUMW2d077GpOTtWyaf5Yo7P52ZWur4frnSzbrLD8b/FpQ
+	6fOj5fNPvH72ZvKuNzlV5acS1rfYRkssyMv4q+Lk6/tml+bbHXlvjrvta3l0wqqxbNvKnA/S
+	H9U/aq5zSjL/9cdo21lt5suGy1+8cj365KAJQ7fPteRjBw4mr3XsVWIpzkg01GIuKk4EAJMG
+	Vy4lAwAA
+X-CMS-MailID: 20231213160945epcas5p4968cf82b20ac40bb7a89937f5f83e3b1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231210133923epcas5p2b8c2e0d2bd5f54a338deb13ccde8f9ba
+References: <CGME20231210133923epcas5p2b8c2e0d2bd5f54a338deb13ccde8f9ba@epcas5p2.samsung.com>
+	<20231210133915.42112-1-krzysztof.kozlowski@linaro.org>
 
-On Wed, Dec 13, 2023 at 04:40:12PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Dec 13, 2023 at 3:27 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Wed, Dec 13, 2023 at 03:54:53PM +0200, Andy Shevchenko wrote:
-> > > On Tue, Dec 12, 2023 at 01:42:50PM +0800, Kent Gibson wrote:
-> > > > Store the debounce period for a requested line locally, rather than in
-> > > > the debounce_period_us field in the gpiolib struct gpio_desc.
-> > > >
-> > > > Add a global tree of lines containing supplemental line information
-> > > > to make the debounce period available to be reported by the
-> > > > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
-> > >
-> > > ...
-> > >
-> > > >  struct line {
-> > > >     struct gpio_desc *desc;
-> > > > +   struct rb_node node;
-> > >
-> > > If you swap them, would it benefit in a code generation (bloat-o-meter)?
-> > >
-> >
-> > Didn't consider that placement within the scruct could impact code
-> > generation.
-> > Having the rb_nodes at the beginning of struct is preferable?
-> >
->
-> I suppose it has something to do with 0 offset when using
-> container_of(). Not sure if that really matters though.
->
 
-There are other fields that get the container_of() treatment, but node
-does look to be the one most used, so probably makes sense to put it
-first.
 
-> > > >  };
-> > >
-> > > ...
-> > >
-> > > > +struct supinfo {
-> > > > +   spinlock_t lock;
-> > > > +   struct rb_root tree;
-> > > > +};
-> > >
-> > > Same Q.
-> > >
-> >
-> > Same - I tend to put locks before the field(s) they cover.
-> > But if the node being first results in nicer code then happy to swap.
-> >
-> > > ...
-> > >
-> > > > +static struct supinfo supinfo;
-> > >
-> > > Why supinfo should be a struct to begin with? Seems to me as an unneeded
-> > > complication.
-> > >
->
-> I think we should keep it as a struct but defined the following way:
->
-> struct {
->     spinlock_t lock;
->     struct rb_root tree;
-> } supinfo;
+> -----Original Message-----
+> From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Sent: Sunday, December 10, 2023 7:09 PM
+> To: Tomasz Figa <tomasz.figa@gmail.com>; Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org>; Sylwester Nawrocki
+> <s.nawrocki@samsung.com>; Alim Akhtar <alim.akhtar@samsung.com>;
+> Linus Walleij <linus.walleij@linaro.org>; Rob Herring
+<robh+dt@kernel.org>;
+> Conor Dooley <conor+dt@kernel.org>; Jaewon Kim
+> <jaewon02.kim@samsung.com>; linux-arm-kernel@lists.infradead.org;
+> linux-samsung-soc@vger.kernel.org; linux-gpio@vger.kernel.org;
+> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [PATCH] dt-bindings: pinctrl: samsung: correct ExynosAutov920
+> wake-up compatibles
+> 
+> ExynosAutov920 SoC wake-up pin controller has different register layout
+> than Exynos7, thus it should not be marked as compatible.  Neither DTS nor
+> Linux driver was merged yet, so the change does not impact ABI.
+> 
+> Cc: Jaewon Kim <jaewon02.kim@samsung.com>
+> Fixes: 904140fa4553 ("dt-bindings: pinctrl: samsung: use Exynos7 fallbacks
+for
+> newer wake-up controllers")
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-That is what I meant be merging the struct definition with the variable
-definition.  Or is there some other way to completely do away with the
-struct that I'm missing?
+> ---
+> 
+.
+.
+.
+--
+> 2.34.1
+> 
 
-> >
-> > Yeah, that is a hangover from an earlier iteration where supinfo was
-> > contained in other object rather than being a global.
-> > Could merge the struct definition into the variable now.
-> >
-> > > ...
-> > >
-> > > > +                   pr_warn("%s: duplicate line inserted\n", __func__);
-> > >
-> > > I hope at bare minimum we have pr_fmt(), but even though this is poor message
-> > > that might require some information about exact duplication (GPIO chip label /
-> > > name, line number, etc). Generally speaking the __func__ in non-debug messages
-> > > _usually_ is a symptom of poorly written message.
-> > >
-> > > ...
-> >
-> > Yeah, I wasn't sure about the best way to log here.
-> >
-> > The details of chip or line etc don't add anything - seeing this error
-> > means there is a logic error in the code - we have inserted a line
-> > without erasing it.  Knowing which chip or line it happened to occur on
-> > wont help debug it.  It should never happen, but you can't just leave it
-> > unhandled, so I went with a basic log.
-> >
->
-> We should yell loudly in that case - use one of the WARN() variants
-> that'll print a stack trace too and point you to the relevant line in
-> the code.
->
 
-Ok, so any suggestion as to which WARN() variant would make the most sense?
-
-> > >
-> > > > +out_unlock:
-> > > > +   spin_unlock(&supinfo.lock);
-> > >
-> > > No use of cleanup.h?
-> > >
-> >
-> > Again, that is new to me, so no not yet.
-> >
->
-> Yep, please use a guard, they're awesome. :)
->
-
-Will do.
-
-Thanks,
-Kent.
 
