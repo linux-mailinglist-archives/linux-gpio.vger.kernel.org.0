@@ -1,124 +1,149 @@
-Return-Path: <linux-gpio+bounces-1357-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1358-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A05DC8112B3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:22:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 490A28112CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:26:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55E171F215DB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:22:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0543B2818C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:26:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E3092C872;
-	Wed, 13 Dec 2023 13:22:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hgvNcYez"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F3632D022;
+	Wed, 13 Dec 2023 13:26:33 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D3E8DAB;
-	Wed, 13 Dec 2023 05:22:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702473729; x=1734009729;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=aynrVvDsgLEQ+oNpXkj3YsTsnJctWZHApJV8F3owo30=;
-  b=hgvNcYezeBjiQ/qv58XjF9NRFTvZ/5kUMix9yF7LU/5YhhEz1P3CR1RU
-   Sso90NlRp441xL05XJAzGeZp8rva+PJb6HeqT7FeDa7VKHBlB287++3o/
-   0KLUmadjg3OzIinqjpKJwP+95WM45tP42Mg1grSjgkUh7eoC7NbmrGxlg
-   2fTN5AiCAjFVmks51PmU4TfpSbqx0DgZcO1xzNBFLkMWUgwTgFBskR3U5
-   cNxH5/Jw4hfxH9ZpRPQzXCXFW6NWaxwB7Os3Qx5u23hHEiPXzRmkIsVcW
-   /Sp39rkyweiXtrh3+VhIpmoke7nXuqOYA3z90x/ROjY8/KhGK6FBaK6hZ
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="398804938"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="398804938"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:22:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864625953"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="864625953"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:21:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rDPBT-00000005X7P-2zJE;
-	Wed, 13 Dec 2023 15:21:55 +0200
-Date: Wed, 13 Dec 2023 15:21:55 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-mips@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	Sean Wang <sean.wang@kernel.org>,
-	Lakshmi Sowjanya D <lakshmi.sowjanya.d@intel.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Hal Feng <hal.feng@starfivetech.com>
-Subject: Re: [PATCH v5 03/13] pinctrl: ingenic: Use C99 initializers in
- PINCTRL_PIN_GROUP()
-Message-ID: <ZXmv81bJRMqB1GLY@smile.fi.intel.com>
-References: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
- <20231211190321.307330-4-andriy.shevchenko@linux.intel.com>
- <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6848391;
+	Wed, 13 Dec 2023 05:26:29 -0800 (PST)
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-5e263e43ff2so12275317b3.0;
+        Wed, 13 Dec 2023 05:26:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702473988; x=1703078788;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=z/dW7y/88rRyjaO7r00R6o21E2y2IyUgTVUEboam7dg=;
+        b=Oz+yXYJpq+Oct7FrkI1dqm8rpVBHqo2R5SHLaG6h5EcjNQHCdNMHay8Q8EKkw6wB7c
+         tTq46YkMbHxT8AJiBIFuriCIysg403prfas+oCNFJQiYgOpZTj3tpOlfm7cjko2pPebU
+         +b9+kC4xJu2thZPy8lQGb37eVcS1h9DcKHDj7tq0DldInrUzBH1vxgLvrrmDMB6ZStBq
+         7wjcEB09iiIBATMaoOPCnBL7of9PVe3ieHGxSDsxlzRGq0xQ7dy9vowALELBukDivO2V
+         B8PQWroNhq6H8Un+pPhkHol8XrcnRf+zJEKtZaNfuM3q4V3UjQtvtrazJirzkEWkyYzc
+         shGQ==
+X-Gm-Message-State: AOJu0YyksD0PKXPM92NAJatNFvU6YrKtsSLFDqVdmAtEPZgIA8Wzv5bG
+	je4K5S2JU2pyD7o2xJt0qYVuexnX64qApg==
+X-Google-Smtp-Source: AGHT+IGxXAV5YJNHjGtnfjrTF6PsWA95v4gJZvwnyes1B2rIui/NwQOTqCwPeq3xFEYM+5W4Z7whrw==
+X-Received: by 2002:a81:df06:0:b0:5d7:1940:53c2 with SMTP id c6-20020a81df06000000b005d7194053c2mr6746365ywn.58.1702473988427;
+        Wed, 13 Dec 2023 05:26:28 -0800 (PST)
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id u11-20020a0deb0b000000b005af5bb5e840sm4666932ywe.34.2023.12.13.05.26.28
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Dec 2023 05:26:28 -0800 (PST)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-da819902678so6335862276.1;
+        Wed, 13 Dec 2023 05:26:28 -0800 (PST)
+X-Received: by 2002:a25:e655:0:b0:dbc:bbff:68fe with SMTP id
+ d82-20020a25e655000000b00dbcbbff68femr1786964ybh.76.1702473988098; Wed, 13
+ Dec 2023 05:26:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com> <20231207070700.4156557-2-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231207070700.4156557-2-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 13 Dec 2023 14:26:16 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWfh7U6WqAgO85bLwZDKWpMgmviNdNfKRYtcxs4VEXsgQ@mail.gmail.com>
+Message-ID: <CAMuHMdWfh7U6WqAgO85bLwZDKWpMgmviNdNfKRYtcxs4VEXsgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] clk: renesas: rzg2l-cpg: Check reset monitor registers
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com, 
+	sboyd@kernel.org, linus.walleij@linaro.org, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 13, 2023 at 10:55:46AM +0100, Paul Cercueil wrote:
-> Le lundi 11 décembre 2023 à 20:57 +0200, Andy Shevchenko a écrit :
+Hi Claudiu,
 
-...
+On Thu, Dec 7, 2023 at 8:08=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> w=
+rote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> The hardware manual of both RZ/G2L and RZ/G3S specifies that the reset
+> monitor registers need to be interrogated when the reset signals are
+> toggled (chapters "Procedures for Supplying and Stopping Reset Signals"
+> and "Procedure for Activating Modules"). Without this, there is a chance
+> that different modules (e.g., Ethernet) to not be ready after their reset
+> signal is toggled, leading to failures (on probe or resume from deep slee=
+p
+> states).
+>
+> The same indications are available for RZ/V2M for TYPE-B reset controls.
+>
+> Fixes: ef3c613ccd68 ("clk: renesas: Add CPG core wrapper for RZ/G2L SoC")
+> Fixes: 8090bea32484 ("clk: renesas: rzg2l: Add support for RZ/V2M reset m=
+onitor reg")
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Changes in v2:
+> - adapted for CPG versions with monbit (e.g., RZ/V2M)
+> - added a fixes tag for RZ/V2M
+> - fixed typos in commit description
 
-> > -#define INGENIC_PIN_GROUP(name, id, func)		\
-> > -	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
-> > +#define INGENIC_PIN_GROUP(_name_, id,
-> > func)						\
-> > +	{							
-> > 			\
-> > +		.name =
-> > _name_,								\
-> > +		.pins =
-> > id##_pins,							\
-> > +		.num_pins =
-> > ARRAY_SIZE(id##_pins),					\
-> > +		.data = (void
-> > *)func,							\
-> > +	}
-> 
-> This INGENIC_PIN_GROUP() macro doesn't need to be modified, does it?
+Thanks for the update!
 
-We can go either way. I prefer to go this way as it reduces level of
-indirections in the macros. It makes code easier to read and understand.
-But if you insist, I can drop that change in next version.
+> --- a/drivers/clk/renesas/rzg2l-cpg.c
+> +++ b/drivers/clk/renesas/rzg2l-cpg.c
+> @@ -1416,12 +1416,27 @@ static int rzg2l_cpg_assert(struct reset_controll=
+er_dev *rcdev,
+>         struct rzg2l_cpg_priv *priv =3D rcdev_to_priv(rcdev);
+>         const struct rzg2l_cpg_info *info =3D priv->info;
+>         unsigned int reg =3D info->resets[id].off;
+> -       u32 value =3D BIT(info->resets[id].bit) << 16;
+> +       u32 mask =3D BIT(info->resets[id].bit);
+> +       s8 monbit =3D info->resets[id].monbit;
+> +       u32 value =3D mask << 16;
+>
+>         dev_dbg(rcdev->dev, "assert id:%ld offset:0x%x\n", id, CLK_RST_R(=
+reg));
+>
+>         writel(value, priv->base + CLK_RST_R(reg));
+> -       return 0;
+> +
+> +       if (info->has_clk_mon_regs) {
+> +               reg =3D CLK_MRST_R(reg);
+> +       } else if (monbit >=3D 0) {
+> +               reg =3D CPG_RST_MON;
+> +               mask =3D BIT(monbit);
+> +       } else {
+> +               /* Wait for at least one cyc le of the RCLK clock (@ ca. =
+32 kHz) */
 
--- 
-With Best Regards,
-Andy Shevchenko
+cycle
 
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-clk-for-v6.8 with the above fixed.
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
