@@ -1,105 +1,136 @@
-Return-Path: <linux-gpio+bounces-1375-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1376-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC9B08114BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:35:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 65AA7811564
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:59:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2C4728282C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:35:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 22D881F2110B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:59:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B6F02EAF1;
-	Wed, 13 Dec 2023 14:35:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0F792F841;
+	Wed, 13 Dec 2023 14:59:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sg+541+8"
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="1Dk+2Wow";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="uST60tem"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-xf29.google.com (mail-qv1-xf29.google.com [IPv6:2607:f8b0:4864:20::f29])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C57EFE8
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 06:35:10 -0800 (PST)
-Received: by mail-qv1-xf29.google.com with SMTP id 6a1803df08f44-677fba00a49so54438466d6.1
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 06:35:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702478110; x=1703082910; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=KTNi7dR+svtLHr9EuyRcDA6UpdWYvTWzjT4RYlMslAc=;
-        b=sg+541+8zoRqfCoVuuIghcwZCGZAVzR+QvKWoNdUAkV3UR3j2Htv6zggzTw/6BtkZV
-         D6Fz3VvD/wwNPs8TBpH4UCukTtp8g0V+kxNyWaZ79Al9+5szwuxdZsQ2dERr+l7SDXZE
-         umAoyKWkAsuGmNpP7TAGrY7Mqw8hA0XHJRdb7WCjHSbWHWXngUVl0e0N1kfx/u9Sdn6q
-         FL1bT5WFMUJwdjDYcC9+R3ao+LY6xUqMhLknyz9NUaRlNcXjfySly7DZZQRLKX5fCSUx
-         mPwGsVHwFbAFSpNx8m6LRYCXd0ZRQhCVsIMLeUbhfb6BQTtJWlluzRTGfcBllr1rCAv+
-         R+DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702478110; x=1703082910;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=KTNi7dR+svtLHr9EuyRcDA6UpdWYvTWzjT4RYlMslAc=;
-        b=WpzjeUb2Glbkk6X5YFVR+SI25nmMIc0LIm0wI8t/wdc3QuLHAZcar+v5WFYEl0b65w
-         UDdEPnGtYi0X2HiUTx3hjCEDBVle8aJChteXax3WLaFl490QfCmtC96XkkzJTgpfiCCp
-         jNGEDVPrv4whbjRYxWgkZZu0nQ8OdfL2J0hAFG2kurPqRRUfaHjMqLRuajgwhf8iYPzE
-         zO6lGDKIPafKQ7KdMUG49Er3CVc+H63Gkue71PRoRT2R/pCYXp1YlHd9oHgeuyJ9OuY9
-         zUIu2DWgcRqBM6bmSjZIP9ltUGv/bgIRTx2kN6b8NIh30NCy34KFHnF6GLpJsZQXa1KX
-         uTSg==
-X-Gm-Message-State: AOJu0YzJcYWAlm3hXj6d4TrQoBqCAFo0PBBEStaqNwMXUkW5U58LpsOj
-	6eEWjRlegzpvgy4fASFLct+yUkslgJIuJ7zhHeiWgA==
-X-Google-Smtp-Source: AGHT+IH6ErSqj4HVtA2uJPaby1dJ9yyZlKr4jTaQrX7sGd+lhiiTWLXuE/j7czQuoLQh4Qis/8Wg8Qzn43NmjP/zrwU=
-X-Received: by 2002:a0c:f992:0:b0:67a:d9f5:19fc with SMTP id
- t18-20020a0cf992000000b0067ad9f519fcmr11200900qvn.28.1702478109905; Wed, 13
- Dec 2023 06:35:09 -0800 (PST)
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DB32393;
+	Wed, 13 Dec 2023 06:59:33 -0800 (PST)
+From: Thomas Gleixner <tglx@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1702479572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=foW+ZiDixud3U2NWD+f47jXaCIGRQEuK1RL8JyJXNEg=;
+	b=1Dk+2WowdGiO+Nc6YoCeRk4MBUkLTmEwK1mTz1+Vnbq0zDiUYn03tPXac7qQ3Z8PrUaVyG
+	uxT+XMkLI7qjPKpo3QtzqODBn4rg1LBdIdXjpQM1Ejr39aCZXJljpnO3YAbGaH7h1qltsZ
+	NpcKEB80J+0EVgBA27u819GQ0quMT3V7rlemWWKFDLjGK/GkW4kKrGeiQueSuqJIkYe4l/
+	H0aFiiYw6q+mgLU9q4YP6TG/Qo53kW2OgnZASTZCkUTih4lyGcT9tjhJQ8AYhwftuT2AsW
+	OeK2dxLagtBG5LTY6Qvbu2k4rG60jJnJITnVWnBMhbMYVCq44qVU8FNma/Nqng==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1702479572;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=foW+ZiDixud3U2NWD+f47jXaCIGRQEuK1RL8JyJXNEg=;
+	b=uST60temtwUPk5nrXczqgBP/EwCCDyRB14JgeVhMZ8CGUimz2/EkOl9pnl/fM76Vjxi/ym
+	wmL30e05LKJRA8Dw==
+To: xiongxin <xiongxin@kylinos.cn>, jikos@kernel.org,
+ benjamin.tissoires@redhat.com
+Cc: linux-input@vger.kernel.org, stable@vger.kernel.org, Riwen Lu
+ <luriwen@kylinos.cn>, hoan@os.amperecomputing.com,
+ fancer.lancer@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+ andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] irq: Resolve that mask_irq/unmask_irq may not be called
+ in pairs
+In-Reply-To: <bf4004bf-4868-4953-8d8e-0c0e03be673e@kylinos.cn>
+References: <20231207014003.12919-1-xiongxin@kylinos.cn>
+ <87ttosssxd.ffs@tglx> <e125491c-4cdb-4870-924a-baeb7453bf78@kylinos.cn>
+ <874jgnqwlo.ffs@tglx> <bf4004bf-4868-4953-8d8e-0c0e03be673e@kylinos.cn>
+Date: Wed, 13 Dec 2023 15:59:31 +0100
+Message-ID: <875y12p2r0.ffs@tglx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231211162331.435900-1-peter.griffin@linaro.org>
- <20231211162331.435900-3-peter.griffin@linaro.org> <170247795662.1093374.11352509671907840697.robh@kernel.org>
-In-Reply-To: <170247795662.1093374.11352509671907840697.robh@kernel.org>
-From: Peter Griffin <peter.griffin@linaro.org>
-Date: Wed, 13 Dec 2023 14:34:58 +0000
-Message-ID: <CADrjBPqqTtimdR_twqqvvzyMAZ=Z4YoVKm80LT_utqcO6LAgOA@mail.gmail.com>
-Subject: Re: [PATCH v7 02/16] dt-bindings: arm: google: Add bindings for
- Google ARM platforms
-To: Rob Herring <robh@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, arnd@arndb.de, catalin.marinas@arm.com, 
-	s.nawrocki@samsung.com, willmcvicker@google.com, gregkh@linuxfoundation.org, 
-	linux@roeck-us.net, linux-arm-kernel@lists.infradead.org, 
-	kernel-team@android.com, olof@lixom.net, linux-watchdog@vger.kernel.org, 
-	linux-clk@vger.kernel.org, alim.akhtar@samsung.com, saravanak@google.com, 
-	will@kernel.org, cw00.choi@samsung.com, tudor.ambarus@linaro.org, 
-	linus.walleij@linaro.org, mturquette@baylibre.com, soc@kernel.org, 
-	conor+dt@kernel.org, wim@linux-watchdog.org, sboyd@kernel.org, 
-	robh+dt@kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, 
-	tomasz.figa@gmail.com, linux-gpio@vger.kernel.org, jirislaby@kernel.org, 
-	semen.protsenko@linaro.org, krzysztof.kozlowski+dt@linaro.org, 
-	andre.draszik@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 13 Dec 2023 at 14:32, Rob Herring <robh@kernel.org> wrote:
->
->
-> On Mon, 11 Dec 2023 16:23:17 +0000, Peter Griffin wrote:
-> > This introduces bindings and dt-schema for the Google Tensor SoCs.
-> > Currently just gs101 and pixel 6 are supported.
-> >
-> > Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> > Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> > ---
-> > @RobH I removed your 'Reviewed-by: Rob Herring <robh@kernel.org>' tag
-> > as since you reviewed this I added the empty ect node. Can you please
-> > do the review again?
-> >
-> > x# Please enter the commit message for your changes. Lines starting
-> > ---
-> >  .../devicetree/bindings/arm/google.yaml       | 53 +++++++++++++++++++
-> >  1 file changed, 53 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/google.yaml
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Wed, Dec 13 2023 at 10:29, xiongxin wrote:
+> =E5=9C=A8 2023/12/12 23:17, Thomas Gleixner =E5=86=99=E9=81=93:
+> Sorry, the previous reply may not have clarified the BUG process. I=20
+> re-debugged and confirmed it yesterday. The current BUG execution=20
+> sequence is described as follows:
 
-Thanks Rob :)
+It's the sequence how this works and it works correctly.
+
+Just because it does not work on your machine it does not mean that this
+is incorrect and a BUG.
+
+You are trying to fix a symptom and thereby violating guarantees of the
+core code.
+
+> That is, there is a time between the 1:handle_level_irq() and=20
+> 3:irq_thread_fn() calls for the 2:disable_irq() call to acquire the lock=
+=20
+> and then implement the irq_state_set_disabled() operation. When finally=20
+> call irq_thread_fn()->irq_finalize_oneshot(), it cannot enter the=20
+> unmask_thread_irq() process.
+
+Correct, because the interrupt has been DISABLED in the mean time.
+
+> In this case, the gpio irq_chip irq_mask()/irq_unmask() callback pairs=20
+> are not called in pairs, so I think this is a BUG, but not necessarily=20
+> fixed from the irq core code layer.
+
+No. It is _NOT_ a BUG. unmask() is not allowed to be invoked when the
+interrupt is DISABLED. That's the last time I'm going to tell you that.
+Only enable_irq() can undo the effect of disable_irq(), period.
+
+> Next, when the gpio controller driver calls the suspend/resume process,=20
+> it is as follows:
+>
+> suspend process:
+> dwapb_gpio_suspend()
+>      ctx->int_mask   =3D dwapb_read(gpio, GPIO_INTMASK);
+>
+> resume process:
+> dwapb_gpio_resume()
+>      dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
+
+Did you actually look at the sequence I gave you?
+
+   Suspend:
+
+	  i2c_hid_core_suspend()
+	     disable_irq();       <- Marks it disabled and eventually
+				     masks it.
+
+	  gpio_irq_suspend()
+	     save_registers();    <- Saves masked interrupt
+
+   Resume:
+
+	  gpio_irq_resume()
+	     restore_registers(); <- Restores masked interrupt
+
+	  i2c_hid_core_resume()
+	     enable_irq();        <- Unmasks interrupt and removes the
+				     disabled marker
+
+
+Have you verified that this order of invocations is what happens on
+your machine?
+
+Thanks,
+
+        tglx
 
