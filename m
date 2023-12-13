@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-1341-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1342-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E788B810A32
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 07:22:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D46A9810A39
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 07:23:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A5BD9281E80
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 06:22:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7EF91C20A61
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 06:23:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB61F9FA;
-	Wed, 13 Dec 2023 06:22:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7ABF9F7;
+	Wed, 13 Dec 2023 06:23:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMHDDNNt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9PwBLkO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x42f.google.com (mail-wr1-x42f.google.com [IPv6:2a00:1450:4864:20::42f])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 87A4DDB
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:22:18 -0800 (PST)
-Received: by mail-wr1-x42f.google.com with SMTP id ffacd0b85a97d-33634d2e059so1022830f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:22:18 -0800 (PST)
+Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB89EB
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:23:20 -0800 (PST)
+Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-33338c47134so5981384f8f.1
+        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:23:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702448537; x=1703053337; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702448599; x=1703053399; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=7Wc8lh1qWNyETO1FmFmLBqzXMWPjFfaUtsfz0oMIVUw=;
-        b=hMHDDNNtgwWFFvU37P/xh3dgceC1ihyi6mCHvPpN2d7Ny2T4lVHAX2c8Y65OsjzFJ+
-         lsqot0RnrFOTai8o+VHFRqMHAWB7MdQOp9eyC6dIU3fnmCAPSR64k+Dzt4mNziEWMFdu
-         1GN5UWJH8LIeOthOYvvUiVj7YLcUYd033LTs0fz/VWTVm/MhN99EJETo7/KGWnyK4X+o
-         56b7Wz8bshxHXtrfxqYzNvMJHvrCMQpEzl83feXXbzjJZxs61XDTX94u0WvUI5/vpUAt
-         H4zAo38lYO5PbJhY/OWC3CWCe+Uf9h8ki5QjUVKsd7GN4yH84ytVMQyW4G0Pbv4sv0dS
-         NB9A==
+        bh=OOeFpJK4OYoAw3qn3oCy1TCCDOQeXt6aQHprsTtnDUE=;
+        b=f9PwBLkOm51cobyqkGF1oGiWRE0BJ0QUqduOv0HDezLOVAmCZ0aCiBnHtsrPGI7fH4
+         zQbDex2aTijmFgR+tewBsPc6qZ4QOqhGbBNTehd7SFlOkOOJ/uswsi7tthpSp1LKHEkF
+         NNQGeeQZkz5+9P68FX5u0E1jPPwwXPplsx0nVxmKm4E8a2KDTznvMIhJwdzNPy+wttlM
+         7Brs+1LM6mqsiyYMysspGRzEEarWMfzhPPefte1EcMtOZJn38Q25J0hAwqFNayCzDAz/
+         8B0BpNHlIXJqEvXeALa0C+krN24U7gdfRqS4mYU6aQWF/ddWORTEpBfy9ODYMH61j1Mk
+         vZkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702448537; x=1703053337;
+        d=1e100.net; s=20230601; t=1702448599; x=1703053399;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7Wc8lh1qWNyETO1FmFmLBqzXMWPjFfaUtsfz0oMIVUw=;
-        b=re6RX4Ri81JKyBVaHpx3j8i+OUmCTczll1wAX1k4A4Hr4khj2M3VKggdUdtZ34hOYW
-         YOswNt9j4iECuME8RtLw7dRfMxT7sMd4gZl6qWLJg5zSUuc++5012lIGOvzR+Oph6rmA
-         Y8VWI+5S9vEl/2NTS0d/HU5wSS1+qvs+awKc2uLXpRvXyLv+JM+BBQ3d/CykyBFGSzN4
-         fqBRfz9L2y11WwXESLMTBFmbd0CVxNV7BpLMZEMlWrlWR1SC8f1NRsCxslKJDnF3CVER
-         c6KInLiwE08hT53Ri6NW5DYZ4Da9C7iiIpSrLnGE3zVTc5RntbhtEgbleXPVo9SO20CF
-         NRVg==
-X-Gm-Message-State: AOJu0Yy2A2q1rq8T0jgpaUvHWxNJLuKi28FpS25CakKZU8rZXWOgCh1s
-	Ti3BUkyxX9wmc7lOs+KNAfcQYg==
-X-Google-Smtp-Source: AGHT+IHHXA1d9FUQemPu84ZoLd0cHk57uDKUQYOjv3md1udbQVOKz7OVPQsA/WLOHFLg/Ai9rdUIEg==
-X-Received: by 2002:adf:e712:0:b0:336:30b5:3c19 with SMTP id c18-20020adfe712000000b0033630b53c19mr1116032wrm.126.1702448537013;
-        Tue, 12 Dec 2023 22:22:17 -0800 (PST)
+        bh=OOeFpJK4OYoAw3qn3oCy1TCCDOQeXt6aQHprsTtnDUE=;
+        b=jOftSyhWkdCL1tkxkR/QT8qVpgjnkKNaS8P2t5GwN5ORX2BXoXsI0q9FXRQgLfqWp3
+         5JKQO+L0qv4yGfKT7Am0vwIfyB5sa6WiuPyKydvWUbDgyAR7DlutMMIivKXYlJF0+oVe
+         SiAvwZUz1WnbAdfztwq5oNvsNJj/lgoQLrJAa3wVjYgnpJnZ7vYSo0Sc6jZp4Tn7lHbX
+         T+D7Xf/Jqk0DJ9uy4+tZ3BBgSB8PqJEkxrNQrs61cx4fz0JKpQr9OQ0dGah3/NeI0e+k
+         G54frqErSsxSLtow6I2qKaPdHOgdwOferYsrlg7QPhYOFQ+z+2Ysn4/5pK2KvSS8nH66
+         lBQw==
+X-Gm-Message-State: AOJu0YyaqPzWsQuolDApukwyk+Y7YRJjhB2phJ6Q4HkScqz5bg5yXSNy
+	vcrp4t9Jn0VuT2qQaLrgaKgLVA==
+X-Google-Smtp-Source: AGHT+IHizJKfXzdrkxg67JeIOicbOp8AjE+tlskqBNgEFMLN9azUW98KEjGCmuWVK9irIdOHQvedrQ==
+X-Received: by 2002:a05:6000:b0f:b0:333:5eea:921d with SMTP id dj15-20020a0560000b0f00b003335eea921dmr3597691wrb.61.1702448598836;
+        Tue, 12 Dec 2023 22:23:18 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id m1-20020a056000008100b00334b3208700sm12332952wrx.49.2023.12.12.22.22.15
+        by smtp.gmail.com with ESMTPSA id m1-20020a056000008100b00334b3208700sm12332952wrx.49.2023.12.12.22.23.16
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 22:22:16 -0800 (PST)
-Message-ID: <3cb1647d-c58e-4040-9e3a-61965e6a08ac@linaro.org>
-Date: Wed, 13 Dec 2023 07:22:14 +0100
+        Tue, 12 Dec 2023 22:23:18 -0800 (PST)
+Message-ID: <3ccfae77-eaa3-4928-9ad6-c61c73d96bcb@linaro.org>
+Date: Wed, 13 Dec 2023 07:23:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -62,7 +62,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/3] soc: add NPCM BPC driver support
+Subject: Re: [PATCH v2 1/3] dt-bindings: soc: nuvoton: Add NPCM BPC
 Content-Language: en-US
 To: Tomer Maimon <tmaimon77@gmail.com>, arnd@arndb.de, pmenzel@molgen.mpg.de,
  robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
@@ -72,6 +72,7 @@ To: Tomer Maimon <tmaimon77@gmail.com>, arnd@arndb.de, pmenzel@molgen.mpg.de,
 Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 References: <20231212100703.3374555-1-tmaimon77@gmail.com>
+ <20231212100703.3374555-2-tmaimon77@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -117,23 +118,68 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231212100703.3374555-1-tmaimon77@gmail.com>
+In-Reply-To: <20231212100703.3374555-2-tmaimon77@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 12/12/2023 11:07, Tomer Maimon wrote:
-> This patch set adds BIOS Post code (BPC) support for the Nuvoton 
-> NPCM Baseboard Management Controller (BMC).
+> Added device tree binding documentation for Nuvoton BMC NPCM BIOS Post
+> Code (BPC).
 > 
-> Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable 
-> I/O addresses written by the host on the bus, the capture data 
-> stored in 128-word FIFO.
+> The NPCM BPC monitoring two configurable I/O addresses written by the
+> host on the bus.
 > 
-> NPCM BPC can support capture double words.
-> 
-> The NPCM BPC driver tested on NPCM750 Olympus board.
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
 
-Where is the changelog?
+It's v2, so changelog?
+
+>  .../soc/nuvoton/nuvoton,npcm-bpc.yaml         | 63 +++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
+> new file mode 100644
+> index 000000000000..30033cdac8f5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
+> @@ -0,0 +1,63 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-bpc.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Nuvoton BMC NPCM BIOS Post Code (bpc) controller
+
+s/bpc/BPC/
+
+> +
+> +maintainers:
+> +  - Tomer Maimon <tmaimon77@gmail.com>
+> +
+> +description:
+> +  Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable I/O
+> +  addresses written by the host on the bus, the capture data stored in
+> +  128-word FIFO.
+> +
+> +  NPCM BPC supports capture double words, when using capture
+> +  double word only I/O address 1 is monitored.
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - nuvoton,npcm750-bpc
+> +      - nuvoton,npcm845-bpc
+
+Your device driver suggests these are compatible, so express it in the
+bindings and modify driver respectively.
+
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+
 
 Best regards,
 Krzysztof
