@@ -1,63 +1,62 @@
-Return-Path: <linux-gpio+bounces-1367-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1368-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E106C8113DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:58:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A4A38113F7
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 15:01:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 74178B20CA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:58:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33EBD1F21D0C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:01:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33CBB2E62E;
-	Wed, 13 Dec 2023 13:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22F1E2E63C;
+	Wed, 13 Dec 2023 14:01:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05B4A1FF3;
-	Wed, 13 Dec 2023 05:57:51 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5e309941f46so3397827b3.3;
-        Wed, 13 Dec 2023 05:57:50 -0800 (PST)
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 5091CDC;
+	Wed, 13 Dec 2023 06:01:05 -0800 (PST)
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbcc63b7c68so1274186276.1;
+        Wed, 13 Dec 2023 06:01:05 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702475870; x=1703080670;
+        d=1e100.net; s=20230601; t=1702476064; x=1703080864;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UkSaEpyh42RBZh83DgNkq5VoFb5r0mvpA7lmVJ1rqEI=;
-        b=q9z8FKLpB/NgUWsfXA46Ep/grVGRLjskqXzYMlfTiDqxM4NuRcD5siSNRV5W8f1cY9
-         Zhqj3Wwowkc2lioKhKfxIoSLjTkonDi5vBV76kppAVmUanqblYStatu5DTbWH3NsSMcQ
-         erS8QhZGewDmE7IwPVx/A5B99fbt0TKLNPN3z79ucIPDyG5lE9jc0IarcaoHmVSrFvye
-         ZYuvVpjxZdNWyEiHq/92drlCVs7joXGvRCcVyXQ5Xe0X8e/ewCZM6KEO4PIinZjBEwdD
-         hDwyVBKDaWG0AQ5C2j2wIPaImdYdcCt7J122aXmrGx7CB0qNNVUh3AGtNOLu2C/tIENL
-         31Hg==
-X-Gm-Message-State: AOJu0Yx5D6TB2oh8HDJYnUvfT4pwSSjpbLNk9RYsQzQWCxnjOc7Jxr5j
-	36aR8L357JyLP7VR1iXkXsH5fV/ixKx6BA==
-X-Google-Smtp-Source: AGHT+IE3TkxpPrX3EgfZG512Q467HHxUgYSxFWnyP+k7NS0M4fXO+aBetnbJWwZrLPoLbRxwSXaixQ==
-X-Received: by 2002:a05:690c:4605:b0:5e1:7129:7cc3 with SMTP id gw5-20020a05690c460500b005e171297cc3mr3098646ywb.26.1702475869729;
-        Wed, 13 Dec 2023 05:57:49 -0800 (PST)
+        bh=LMmwUrV5CRxo8tqF2JhkTTOms97Pc/NRUWXWg3QDi0I=;
+        b=t9hy22/LqXxW7CDjRuL+tUmkeA3G0fIoBOAJ1xBVZBaecQnU6XMFbsfwl8rmiLDzbv
+         XI4uzmqDaqkxMA0688hzM5fo2D+OWZv/ctMbwm2PalMcMl27IuvkB2yZSDiqHf2DMuXR
+         KOyLKxnC2iXOjZdonlUjcoGr5TADkMp5V5CXxY76WNSsLRyBS5RKi2Ib1P8j8ujL6iXJ
+         FT86fsePifCYQ2BBelvhBuofVKUgEkf4DxjR9vRPNWfrkEHJ2b6RsIOEuChwVtRuQr67
+         TlIGZxDbnwviesSvgLEBupnKGImBNo3Y9J2+/X542MjVsZa8RJAoUqHACvZ2OEZJzrSp
+         3ZOw==
+X-Gm-Message-State: AOJu0Yxv3lVHAUCbvQq/7+5ZTiYNf0/JK5/fOJFWE4OxEl3xwFNqZu02
+	l4Y2vVq17+WYQQW6jJtsbmzPKzyGTaK8/A==
+X-Google-Smtp-Source: AGHT+IHU5dpCs/G2K+qi63p2PFcNo/f8adtTk2eu8lutu1dnCSYMF2ZPuD1wPSePhTctkUvdXXTm7w==
+X-Received: by 2002:a5b:7c6:0:b0:db5:4dc4:13e6 with SMTP id t6-20020a5b07c6000000b00db54dc413e6mr4897781ybq.32.1702476064311;
+        Wed, 13 Dec 2023 06:01:04 -0800 (PST)
 Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id j68-20020a0df947000000b005b37c6e01f9sm4708827ywf.90.2023.12.13.05.57.49
+        by smtp.gmail.com with ESMTPSA id p13-20020a259e8d000000b00da082362238sm3971826ybq.0.2023.12.13.06.01.03
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Dec 2023 05:57:49 -0800 (PST)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5c08c47c055so68270887b3.1;
-        Wed, 13 Dec 2023 05:57:49 -0800 (PST)
-X-Received: by 2002:a0d:f6c6:0:b0:5e2:5d71:56c with SMTP id
- g189-20020a0df6c6000000b005e25d71056cmr1895352ywf.32.1702475868892; Wed, 13
- Dec 2023 05:57:48 -0800 (PST)
+        Wed, 13 Dec 2023 06:01:03 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5df49931b4eso46933187b3.0;
+        Wed, 13 Dec 2023 06:01:03 -0800 (PST)
+X-Received: by 2002:a0d:cb0c:0:b0:5e2:bd18:b253 with SMTP id
+ n12-20020a0dcb0c000000b005e2bd18b253mr888130ywd.24.1702476063304; Wed, 13 Dec
+ 2023 06:01:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com> <20231207070700.4156557-8-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231207070700.4156557-8-claudiu.beznea.uj@bp.renesas.com>
+References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com> <20231207070700.4156557-10-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231207070700.4156557-10-claudiu.beznea.uj@bp.renesas.com>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 13 Dec 2023 14:57:37 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVhMB6_WPwLP=RwP7nkjXovkrb+qY6g3HFTDtyS=pq9Gg@mail.gmail.com>
-Message-ID: <CAMuHMdVhMB6_WPwLP=RwP7nkjXovkrb+qY6g3HFTDtyS=pq9Gg@mail.gmail.com>
-Subject: Re: [PATCH v2 07/11] pinctrl: renesas: rzg2l: Add input enable to the
- Ethernet pins
+Date: Wed, 13 Dec 2023 15:00:52 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU+7RsiKhCidRJaCk_wMQbovqbGtn0qF63RzXEq3SQVWw@mail.gmail.com>
+Message-ID: <CAMuHMdU+7RsiKhCidRJaCk_wMQbovqbGtn0qF63RzXEq3SQVWw@mail.gmail.com>
+Subject: Re: [PATCH v2 09/11] arm64: renesas: r9a08g045: Add the Ethernet nodes
 To: Claudiu <claudiu.beznea@tuxon.dev>
 Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
 	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
@@ -75,17 +74,17 @@ On Thu, Dec 7, 2023 at 8:08=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> w=
 rote:
 > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 >
-> Some of the RZ/G3S Ethernet pins (P1_0, P7_0) could be configured with
-> input enable. Enable this functionality for these pins.
+> Add the Ethernet nodes available on RZ/G3S (R9A08G045).
 >
 > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 > ---
 >
 > Changes in v2:
-> - this patch is new in v2
+> - added phy-mode =3D "rgmii" and #address-cells, #size-cells for both
+>   Ethernet nodes
 
 Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl-for-v6.8.
+i.e. will queue in renesas-devel for v6.8.
 
 Gr{oetje,eeting}s,
 
