@@ -1,204 +1,163 @@
-Return-Path: <linux-gpio+bounces-1396-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1397-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF0028119E9
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:45:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D63E0811A0C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:50:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AA791C211A7
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 16:45:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90D962828FB
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 16:50:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA1939FCF;
-	Wed, 13 Dec 2023 16:44:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F4E539FD7;
+	Wed, 13 Dec 2023 16:50:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="rrg1DXMa"
+	dkim=pass (2048-bit key) header.d=FII-NA.com header.i=@FII-NA.com header.b="VhGieWTq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout2.samsung.com (mailout2.samsung.com [203.254.224.25])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 1076B189;
-	Wed, 13 Dec 2023 08:44:51 -0800 (PST)
-Received: from epcas5p4.samsung.com (unknown [182.195.41.42])
-	by mailout2.samsung.com (KnoxPortal) with ESMTP id 20231213164449epoutp023fd64615399e6e62e744eadbe1de0d03~gceVxlC9d0917409174epoutp02V;
-	Wed, 13 Dec 2023 16:44:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20231213164449epoutp023fd64615399e6e62e744eadbe1de0d03~gceVxlC9d0917409174epoutp02V
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1702485889;
-	bh=RD0jG/REDL3S4PTv/Ck6hMfscjCMHfpmiHODJta/i+4=;
-	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-	b=rrg1DXMab0ZoBrqQJ6/jivHONHqfn+9bCe0dOZ9W8qydXK17X3EU88oSAVfPO/RTL
-	 mAa7+b3Aw99ev55GWPK9OvKdbaqOtVZTxpXQP8BBzQF6Hm1oZoNx2AtftU3ON4Yy1l
-	 wFqbbKeja3vval2Ox812QZMuPuYy4/bF8ENwvjNg=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTP id
-	20231213164448epcas5p4e976f034ca8830f70a48a1cf9e14ae6e~gceVI4JSX2992729927epcas5p4y;
-	Wed, 13 Dec 2023 16:44:48 +0000 (GMT)
-Received: from epsmgec5p1-new.samsung.com (unknown [182.195.38.181]) by
-	epsnrtp4.localdomain (Postfix) with ESMTP id 4Sr1YC0x4Mz4x9Pq; Wed, 13 Dec
-	2023 16:44:47 +0000 (GMT)
-Received: from epcas5p1.samsung.com ( [182.195.41.39]) by
-	epsmgec5p1-new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	6B.79.19369.E7FD9756; Thu, 14 Dec 2023 01:44:47 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-	epcas5p4.samsung.com (KnoxPortal) with ESMTPA id
-	20231213164446epcas5p43cb1c94693f386127918f6b15e6f2bd5~gceTOeOGm2992729927epcas5p4v;
-	Wed, 13 Dec 2023 16:44:46 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20231213164446epsmtrp1ab24ca6f10f89d2b8bd173b303387534~gceTMBZaB2259122591epsmtrp1F;
-	Wed, 13 Dec 2023 16:44:46 +0000 (GMT)
-X-AuditID: b6c32a50-c99ff70000004ba9-65-6579df7ecbd4
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-	epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-	03.7C.08755.E7FD9756; Thu, 14 Dec 2023 01:44:46 +0900 (KST)
-Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip1.samsung.com
-	(KnoxPortal) with ESMTPA id
-	20231213164442epsmtip14c8055805388afac3f2d1c0e9a4cd35e~gcePBbyEn2325823258epsmtip1b;
-	Wed, 13 Dec 2023 16:44:42 +0000 (GMT)
-From: "Alim Akhtar" <alim.akhtar@samsung.com>
-To: "'Peter Griffin'" <peter.griffin@linaro.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
-	<conor+dt@kernel.org>, <sboyd@kernel.org>, <tomasz.figa@gmail.com>,
-	<s.nawrocki@samsung.com>, <linus.walleij@linaro.org>,
-	<wim@linux-watchdog.org>, <linux@roeck-us.net>, <catalin.marinas@arm.com>,
-	<will@kernel.org>, <arnd@arndb.de>, <olof@lixom.net>,
-	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
-	<cw00.choi@samsung.com>
-Cc: <tudor.ambarus@linaro.org>, <andre.draszik@linaro.org>,
-	<semen.protsenko@linaro.org>, <saravanak@google.com>,
-	<willmcvicker@google.com>, <soc@kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
-	<linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<linux-watchdog@vger.kernel.org>, <kernel-team@android.com>,
-	<linux-serial@vger.kernel.org>
-In-Reply-To: <20231211162331.435900-14-peter.griffin@linaro.org>
-Subject: RE: [PATCH v7 13/16] tty: serial: samsung: Add gs101 compatible and
- common fifoszdt_serial_drv_data
-Date: Wed, 13 Dec 2023 22:14:41 +0530
-Message-ID: <017601da2de3$ae2298e0$0a67caa0$@samsung.com>
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BF48E
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 08:50:15 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=V9I6aqVmagTej/BvadLbxBxThHzIh6VmcjEhaOh5wsMJl3AzwvIArOQaYyK8Xu6jx0AtZ9qQoAya48c3zRawm7oaPLZ4TNlQ+Anha/Kh8PC/pVj1vnE8yPwx4JaSSeSflT8RiKO4WA1vAQ9JydTeFdBumHAsdq+sj52N8sDMVFz/G2vy90i/E8ZJ9c4iJiPBxh/bT/9yArvGrH+d2LtCmJsxzwb4Ik+egl9VismxvB/MkToi0WwnT26rv7WJjzKiWgUs879UR7wa2tYr8y+YVmLUoeYWCnIhIxF7Ud/LyTYaXlb4/h4koe0XFkzy9uqpwd2Lwr1gwW6WHi80gSDruA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=9aFl3ATUl72avNGEAvWL6uo84MPwSnTLiI5CGSaSmoo=;
+ b=LJTZir351YFqd93+ncNmQQL6O5ZgxuEN6plfAI0l2ztUWjbBPoUR3uGl+cRHiOwbdbEeX7HhNlY4oRAP7eRssurX5GYbH2mXwpmg3prR/QltFs7W3B0DF9BufDfJ4NpwaxAm+vbtxU8RfhyswRX43cMUMOb43eg3mVoFiw7OUdiUeft3sOy1kYDp7QFDmEG7De1tfYhL/TjRXn0Pd57DBynJVsZNjcsdtJb+Wbd0rNc7w1MkyOb3zlZhDDjyh/FGzaEuXK96PYMjD3UrbMjjc8z6q4Fjm0CSNbyMC7tsTp2t7qeN7U0BUNZORxztp4FOQp9SHDsoso4R+v/f5KbUHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fii-na.com; dmarc=pass action=none header.from=fii-na.com;
+ dkim=pass header.d=fii-na.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=FII-NA.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9aFl3ATUl72avNGEAvWL6uo84MPwSnTLiI5CGSaSmoo=;
+ b=VhGieWTq/AuW2yPD/UmCZ2iGNPljWY5V8CQaUCBQNgfihZDprKv4+1haJ/EC48wy4VH8xh4t1Ne3QaTrkcirM8xlaHWTY35nYrdVgVRZBw/jfBwbqMxLzY/iry1T065aCHDhK4i2Y9V2MJ9AYsDrcwYgHkb9Btk9W1i6dq5xFmK4/A8HVUU/7dMgZc/pAtjkwnKPgEH0lZKWnIaQrc8+KFm9Nb78w8/g2yW+GFw/uW8YXoIGf3XuIV2Ta3oCLPIuLgvFZs8AFa9Ueloir/wgmZvWt0IEJb47XLgANlHc2dnhCFfh6/sjBrF7OWbKuGeV4XUzWoKTAQbq1mYgftlp8A==
+Received: from DM6PR08MB5322.namprd08.prod.outlook.com (2603:10b6:5:14::30) by
+ IA1PR08MB8744.namprd08.prod.outlook.com (2603:10b6:208:454::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Wed, 13 Dec
+ 2023 16:50:12 +0000
+Received: from DM6PR08MB5322.namprd08.prod.outlook.com
+ ([fe80::c768:b08d:3b37:fdf3]) by DM6PR08MB5322.namprd08.prod.outlook.com
+ ([fe80::c768:b08d:3b37:fdf3%7]) with mapi id 15.20.7091.022; Wed, 13 Dec 2023
+ 16:50:11 +0000
+From: Kyle Nieman <Kyle.Nieman@FII-NA.com>
+To: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: [libgpiod] Simplify GPIO monitoring
+Thread-Topic: [libgpiod] Simplify GPIO monitoring
+Thread-Index: Adot202IHyhmBq+ySJy3Wd56KKERiQ==
+Date: Wed, 13 Dec 2023 16:50:11 +0000
+Message-ID:
+ <DM6PR08MB5322659E14BB25DBAF6CD3CCC48DA@DM6PR08MB5322.namprd08.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=FII-NA.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DM6PR08MB5322:EE_|IA1PR08MB8744:EE_
+x-ms-office365-filtering-correlation-id: 52fa8231-12dc-4f9e-9f5d-08dbfbfb927c
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ kaFTX4OaTuf8bVcMpiI30UlsY9IAH9P+e48pdLrkk+tVBrNbkTNbn5jmphmbZHo+88bJUqUPSv31e0ofvsKvqjOuMb7UUX+rLtohZ+F7mbBRNc4cYkwYZ4pSs0/Bgtq9zEMeowa0qu5KvUGPCcVtak6Lq/uZAN8XQO1te7+yobYl/aMzwQ0T9DouWu3Z1ra6KJ536SHYU8SCOCqQ/3/EaIqiExZTHokxkaEwqmGVyC4xTPN3j7puDzgNH50ET37Rbr8ASzYMSZE5JyimyipB9i02qx8xHpeE8eruvYXlUmy0O3IchhGV1VPecAhQENp2VM2Rzksme6myGWbaaKlBUra1N/NSqkUWIQpMyk8BwzuvfsQj9m6lNsN/W91uqaZ9hNRh8XEVCoBt6H6WO095hu2X5DZEQsiMAx1IJZERcIk2v39xusm0erw+XWWWlNzIQuQjlX6Bl9dJx70aunVm7zo9DAMSbe1Jm+922HCaAFa0IMwGh+Tw5EUYx8YB7YVOARnqg3HPYZmlLMvElFwAkXlI2jnSrkqvfQzsVpoFxRsu0u/mmVuhkq/huNIn2e3EzIzpU55MBlsfcN9LtpHSgJ/MUnt3EiRnoLxIW89XmwY=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR08MB5322.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(396003)(376002)(366004)(39860400002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(64756008)(66446008)(66476007)(76116006)(66946007)(66556008)(9686003)(6506007)(7696005)(71200400001)(26005)(38070700009)(122000001)(86362001)(38100700002)(33656002)(966005)(41300700001)(478600001)(52536014)(8936002)(8676002)(2906002)(55016003)(5660300002)(6916009)(316002);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?txSWGyBQGFYrsxoKrC/BfKCdaTW1zA0rswWgxHY9wntYgAjF/3BMG3lrYJNs?=
+ =?us-ascii?Q?t72lFvKZIEo0W2qaM6XJPfKO4QyurA7woV1amSPUQhvBAZenF1BwklOo8Wtb?=
+ =?us-ascii?Q?HenD8vAw9SNqlFMy+Jakzl5ZwnwG55hXRmChmahxol33m14ZUG3XrQuCubIb?=
+ =?us-ascii?Q?kXNk4H7fCwHxVm8KiIB3PWCkjz5h/bfykUVezfTft5ponOXrRf4bOafQK3y4?=
+ =?us-ascii?Q?OheZcPyZqwoBM1qk3MRJWv6pq5dBcKEv4o8VurDrWkpcQyXXmA7R5Wy0Emmq?=
+ =?us-ascii?Q?BeaYeWgRCLoUV8Gu7jZZMTFsr6T3kRu6JK6XJChFrmDrDhdnxLzU6j++o53V?=
+ =?us-ascii?Q?NGhcXqif5YmeCjEhGTRn1L31zwYRNdPYLfXwxnCS2IEzSbsPbW0zoPBIoqcF?=
+ =?us-ascii?Q?g0DnSwu7DGdWNzMcGAad11/DXBXjutdS2nEJZ2XGI2dPdyW1S91jKvabsbuA?=
+ =?us-ascii?Q?LZlZZJ2flM5ajPl8ruKgCf3E7RT60f4LHGN4rG1EHLlTZ7Ic3ShCyJw5h62r?=
+ =?us-ascii?Q?iNnU3ZFIH3RrMkMCTBbK6+DhBNSy07e2Vooh3C7xSF0I1msJ0WzE7cMKTPJP?=
+ =?us-ascii?Q?ZdckbpyDhVjR6UbXQFogK7w7lE9SfiV3eH4eYAXN/LYKn6voF9QZrh8XpemZ?=
+ =?us-ascii?Q?JmMbQGpLAktj0b3qnkrqeE+YsfFX8Mg/X+MlAGWRhevdHDk4rSENHqkt3vuO?=
+ =?us-ascii?Q?wLZnme1eFmMssA19L85yeIWKZdUWcWeXiba011Q33+uIb/T9XsHeHjJplH/z?=
+ =?us-ascii?Q?2iOGCFuyU6m1hpbN7kuJ+mnNW4aeosLtRJLeZXmScWdCi1K+VqKVBltSpV5I?=
+ =?us-ascii?Q?CFzolupegV88hvMFmZuQLVV553eADNYb3mlG3WV3PyYt5HOyK3PLMMUhw3RH?=
+ =?us-ascii?Q?dya9hjfPYxYtigpkX4jgCOvUNC2qIQotlkU+MPYi+TlecQj6lr8txadeAfpb?=
+ =?us-ascii?Q?KkPfVdSp9NxnTTM8xpAPT/kaRAG7vCtJsNtDI6ohoPc9GRhjFVmOeyXsLhUW?=
+ =?us-ascii?Q?2jAfnfzru1A7mtjmFt/+rKyokvDiXnjIu0lZaKmJtUrgtlaSmEsMg9jVyZeE?=
+ =?us-ascii?Q?E3yUza37x2EGBaHZTNZR2iwT6muQgsM8oNoanCSB3kN0RlPhzbMNDFwPlPE1?=
+ =?us-ascii?Q?1f61e86ipAg3pfUv7K0O/xa2LntzuVW7EcoLPg8dYftruhoQGjmgVA46Fk7V?=
+ =?us-ascii?Q?NJ6aOCJFXLZKNrOQI3qPXEUg3dgJycnMNkQ+jQHQLw7T6DzXx2ua225wPDr1?=
+ =?us-ascii?Q?kIEx0ZRrZJucMOsQT+eJtKzpR50VLqgxn91dbMvmQJBxzGFwg4AXap0MSHNn?=
+ =?us-ascii?Q?3gG4obX1HlP5D3uSa+GmpmdGScDDuzQwqB4+U9+ap65i0SuE6UhMbRY5rsJf?=
+ =?us-ascii?Q?KamEFkNUfl4IspZLWZvKCzD4EHi/ih6kZUEk6rnzzsukzaAOwBvxFc3XdzY8?=
+ =?us-ascii?Q?DFERSiSEx5stqUl0MA1AO1E122Zl0eyu6lG0s9yjFkRpDODopZTCok0qFnQU?=
+ =?us-ascii?Q?vDQKFQwndRXcxWrhXYX1znowZtgJJlQpJsdSVqNynrZTmJ9p3RbHnHCkBSMg?=
+ =?us-ascii?Q?4GTbV1Ft7L/bGYk8S8GUCWU5AEn9vk/+ygoRfKbV?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Mailer: Microsoft Outlook 16.0
-Content-Language: en-us
-Thread-Index: AQEeDlMUs+qnFg95EVUf+Z9FZqMuEwIiSpF9Afs8Mk6x/r4tkA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Te0zTVxTHc/trfy1M9Gdl41odds2YSga22HaXIeKUbb/FmZD5z+aSsQ5+
-	oYzSdn2omGUwHMh4CUQIa3goOIldXaFAKU9neSiIuCUMkFTUUcdjilJB5b2Wn27897nnfr/n
-	3HNuDgfjtrN5nHiljtIoZQoB7s20tu/cHpR8J4kSNqUwUN1kLRMtFXSx0aML2QCZWvsYaHBm
-	jIXKO/pY6GSlGUdTpVuRrcEX5Y7fw9CZxSoGsowOsNB09ggL1ZYvAlR8s42Beitz2Gjo1zY2
-	cp7rZaA/et5HPYNPcFRdvMxEaa0dbNT+4BQLZdqXcLQ8UMNEY7lu1+jgIo6MTe4kruEv0A8O
-	CTK6VgAanVjG9vFJa7OVRZrKTIBcmC8A5KOhNDbZaLjNJs9a9KTF+CNOOgZacPKiycQiL5ea
-	2GTt+WSy/1oqi2x8lsImc+uMgHxi8Y/acCRhj5ySxVIaPqWMUcXGK+PCBQcPRx+IlkiFoiBR
-	KHpHwFfKEqlwQeTHUUEfxCvc4xLwj8oUencoSqbVCnbt3aNR6XUUX67S6sIFlDpWoRarg7Wy
-	RK1eGRespHTvioTCEIlb+GWCvOD5HVxd4Xv81MpFRgro2ZgJvDiQEMPzZUW4h7lEC4BnKkIy
-	gbebXQCmmi/h9OEpgH2mW6yXjvvWbIy+aAVw8ec5Bn0YB3Dq90GmR4UTQdBWmb6a15cYweBg
-	33seEUaYMDi34sA8F17EPrjcdhd4eBOhhM5r11cNTCIAFvZ2sD3sQ4TCjroCjOaNsPsn52oB
-	jNgGGx6WYPST+HDu/gUWHfeDE52015fYD69XW4GnMCQyveH49BROGyLhuclCQPMmOHm1jk0z
-	D06cTnczx80krFjk0WE5fFhlfiGPgL/1lzA9EozYCc1Nu+iy62HOgpNBO31gRjqXVgfAk1N/
-	MmneAvOzsl4MkYTGii52HnjDsKYxw5rGDGuaMfxf7CxgGgGPUmsT46gYiVoUpKSO/ffhMapE
-	C1jdpsAoG/ileinYDhgcYAeQgwl8fbptxyiuT6ws6QSlUUVr9ApKawcS97jzMd6rMSr3Oip1
-	0SJxqFAslUrFobulIoGfzz9ppbFcIk6moxIoSk1pXvoYHC9eCqPRIE/M7r4cIrYf1Oe99bbs
-	7ontH/bZmjvbW4r9j1QN610R0PFNyXei52MNqUWznwpmL30k2XKziBn293z+XIvQu9lirdtd
-	z/O6QUEmcWjGcFW7P8SRHRwmxcPyuAuZLuvxHPO8d2dVWti6bZ/ZT9ckPbjRb3/FSUa1uhbt
-	f+2Yrer/5LHxcHhr1kBE4Jvf6pPLwvg1M7OdY1hO/WsbGv2wo8EZHV8t3dLnTYRqpnZMT9e8
-	jh9w8BOF6F6P/wiX8zWVEbA1AnPOefV+f6U/b3P93s1mWM0LSR9RRQ49u40+HxiR8Z7iysJh
-	cZmi4fGVJVv2ukNyla6rfH3tkDDc7C1gauUyUSCm0cr+BXTGkFLWBAAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDKsWRmVeSWpSXmKPExsWy7bCSnG7d/cpUg1PLZC22vNrMYvF30jF2
-	i/fLehgt1uw9x2Rx/ctzVov5R86xWjQvXs9m8W6ujMWO7SIWfS8eMltM+bOcyWLT42usFh97
-	7rFabJ7/h9Fixvl9TBZnFveyW9xYt4/d4snCM0wWF0+5Wpy6/pnNYsOMfywWrXuPsFscftPO
-	atF16C+bxb9rG1ksnvcBdT2+/ofNYtUuoCGfbsVZtNwxtVj16T+jxeOX/5gdFDy27d7G6rFm
-	3hpGj9+/JjF6vL/Ryu6xc9Zddo8Fm0o9Nq3qZPO4c20Pm8fKNWtYPfbPXcPusXlJvceVE02s
-	Hju/N7B79G1ZxejxeZNcAH8Ul01Kak5mWWqRvl0CV8akH/fZChaJVLT/X8nUwHhKsIuRk0NC
-	wETi6bYe5i5GLg4hgd2MElvu/GaESEhLXN84gR3CFpZY+e85O0TRM0aJPx++sYAk2AR0JXYs
-	bmMDSYgIfGKWWP3/BpjDLLCLWeJcQxsrRMsRRom12+6DzeUUcJD4t+8BmC0skCOxcvE+sFEs
-	AqoSU88cAdvHK2ApcWTLJGYIW1Di5MwnQDUcQFP1JNo2grUyC8hLbH87hxniPAWJn0+XsULE
-	xSVeHoUYIyLgJHF6wzbGCYzCs5BMmoUwaRaSSbOQdC9gZFnFKJlaUJybnltsWGCYl1quV5yY
-	W1yal66XnJ+7iRGcoLQ0dzBuX/VB7xAjEwfjIUYJDmYlEd6TO8pThXhTEiurUovy44tKc1KL
-	DzFKc7AoifOKv+hNERJITyxJzU5NLUgtgskycXBKNTCdFFNaUj65wTFWmMXQvt6t0NF7OaOu
-	QoqBVJnn08jF6f8ydacaTKoNtP19IZibJWSZTndMtuClxuMsvgXm/EeOrnNXDdebY+inkCDY
-	OWVWnIPUlWUH7zTN+WmTbdbTfIcpQrbujBDz6fnH91peWLCZ2798xURR2cBZ3m33hI4cWnPx
-	AuPBwATvjnvX7aJl5tVfv+L22Z7nea79raeVcrVN/QYLz0SXChgwPjnGxMO/MuNFSuj6556n
-	TrY9mfM11WLvQ+0lb2zmlKYKzTdYtEek8cmpsoz6J3rciSWc50uMXjxiaVS+rBLbEp+a08fg
-	KB8ilFvj1SCQJdcfG3DLx/yr9f0vs9k2X3z5dMckJZbijERDLeai4kQA4KQRub8DAAA=
-X-CMS-MailID: 20231213164446epcas5p43cb1c94693f386127918f6b15e6f2bd5
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20231211162437epcas5p2d640158c5afd1b4a58c7f9f7b2966300
-References: <20231211162331.435900-1-peter.griffin@linaro.org>
-	<CGME20231211162437epcas5p2d640158c5afd1b4a58c7f9f7b2966300@epcas5p2.samsung.com>
-	<20231211162331.435900-14-peter.griffin@linaro.org>
+X-OriginatorOrg: FII-NA.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DM6PR08MB5322.namprd08.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52fa8231-12dc-4f9e-9f5d-08dbfbfb927c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2023 16:50:11.5757
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 2f78a81d-6abb-4840-a061-3fe5396c72f2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: lKnr7rYltgBauhC0JKfWHV0glN1vEANtFzHkDNu+L9YJwN0/QKtjtZE1E7AAeK32BM4oR8IRwluIkNXXDaxttA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR08MB8744
 
+Hello,
 
+In embedded linux systems, GPIO monitoring for edge-events is common.
+For example, OpenBMC has several applications/packages that monitor GPIOs f=
+or an
+extended period of time.
 
-> -----Original Message-----
-> From: Peter Griffin <peter.griffin@linaro.org>
-> Sent: Monday, December 11, 2023 9:53 PM
-> To: robh+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
-> mturquette@baylibre.com; conor+dt@kernel.org; sboyd@kernel.org;
-> tomasz.figa@gmail.com; s.nawrocki@samsung.com; linus.walleij@linaro.org;
-> wim@linux-watchdog.org; linux@roeck-us.net; catalin.marinas@arm.com;
-> will@kernel.org; arnd@arndb.de; olof@lixom.net;
-> gregkh@linuxfoundation.org; jirislaby@kernel.org;
-> cw00.choi@samsung.com; alim.akhtar@samsung.com
-> Cc: peter.griffin@linaro.org; tudor.ambarus@linaro.org;
-> andre.draszik@linaro.org; semen.protsenko@linaro.org;
-> saravanak@google.com; willmcvicker@google.com; soc@kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
-> samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
-> gpio@vger.kernel.org; linux-watchdog@vger.kernel.org; kernel-
-> team@android.com; linux-serial@vger.kernel.org
-> Subject: [PATCH v7 13/16] tty: serial: samsung: Add gs101 compatible and
-> common fifoszdt_serial_drv_data
-> 
-> Add serial driver data for Google Tensor gs101 SoC and a common
-> fifoszdt_serial_drv_data that can be used by platforms that specify the
-> samsung,uart-fifosize DT property.
-> 
-> A corresponding dt-bindings patch updates the yaml to ensure
-> samsung,uart-fifosize is a required property.
-> 
-> Tested-by: Will McVicker <willmcvicker@google.com>
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+phosphor-gpio-monitor:
+        1. Starts a systemd service on GPIO events
+        2. Sets a dbus property based upon initial state and on GPIO events
+https://github.com/openbmc/phosphor-gpio-monitor
 
->  drivers/tty/serial/samsung_tty.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/drivers/tty/serial/samsung_tty.c
-> b/drivers/tty/serial/samsung_tty.c
-> index 1b0c2b467a30..71d17d804fda 100644
-> --- a/drivers/tty/serial/samsung_tty.c
-> +++ b/drivers/tty/serial/samsung_tty.c
-> @@ -2490,14 +2490,25 @@ static const struct s3c24xx_serial_drv_data
-> exynos850_serial_drv_data = {
->  	.fifosize = { 256, 64, 64, 64 },
->  };
-> 
-> +/*
-> + * Common drv_data struct for platforms that specify
-> +samsung,uart-fifosize in
-> + * device tree.
-> + */
-> +static const struct s3c24xx_serial_drv_data
-> exynos_fifoszdt_serial_drv_data = {
-> +	EXYNOS_COMMON_SERIAL_DRV_DATA(),
-> +	.fifosize = { 0 },
-> +};
-[snip]
->  MODULE_DEVICE_TABLE(of, s3c24xx_uart_dt_match);
-> --
-> 2.43.0.472.g3155946c3a-goog
+x86-power-control:
+        1. Controls system power based on different button presses
+https://github.com/openbmc/x86-power-control
 
+However, there seems to be a lot of duplicate code between these applicatio=
+ns
+related to monitoring in general that looks like it could be reduced.
 
+GPIO monitoring tends to have the following steps:
+1. Configure/set up the GPIO line for monitoring
+2. Read the initial value of GPIO line
+3. Take action based upon initial value
+4. Wait for event by monitoring fd
+5. Take action on event, then continue monitoring or cleanup
+
+A function could internally complete the common steps regardless of what GP=
+IO
+line is being monitored such as steps 1, 2, and 4. The other steps unique t=
+o the
+GPIO being monitored could be handled by callbacks. The
+gpiod_ctxless_event_monitor functions seemed to do this partially, but were
+removed along with the rest of the ctxless functions in commit
+9b6e6d268671ef2dd00d9a9abe7ba43d14e7a84b
+(ctxless: drop all context-less interfaces).
+https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/commit/?id=3D9b6e=
+6d268671ef2dd00d9a9abe7ba43d14e7a84b
+
+Would there be an issue with adding a higher level abstraction to simplify =
+GPIO
+monitoring?
+
+Thanks,
+Kyle
 
