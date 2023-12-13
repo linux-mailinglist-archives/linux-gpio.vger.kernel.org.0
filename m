@@ -1,185 +1,122 @@
-Return-Path: <linux-gpio+bounces-1401-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1402-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8F09F811B88
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 18:51:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 18952811BBF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 19:00:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B05D028218C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:51:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C87662828A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 18:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E21C556B98;
-	Wed, 13 Dec 2023 17:51:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tivckpyi"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8197E59B6E;
+	Wed, 13 Dec 2023 17:59:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B7428D5;
-	Wed, 13 Dec 2023 09:51:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702489890; x=1734025890;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=rEF+bIXymy5m74WPjfjq0rqR99CnFPj089dPgtd282Q=;
-  b=TivckpyibG2deet/37GmiQekyIZ20FvVBby5pWegk/9cPsQOTCAqTQP5
-   owZV1zzT45VUOsd2CZ8Oy0nqItXCLrxPXuzcQAve7oXJNFoEQJ2v1ZxiT
-   w9FHiNBubv5d1W9r2JuFlNAb7FO+Q7mYytUfIFSfr1irll2Zc5k92WmSG
-   wtrycivHic6WmskRlsCQn/RdWuEz8AX2fWPUWKVGxl0V8ePcKrcxZ4/Ti
-   o0TpF+Gtkx5WSpem2koSi+NcNNhL7Yd3n0seDAjr2+Z7pqkF+mDrVZOmX
-   jsTIBhwjY0rVYEeoXcYeu2sn0D+nlxWSw0ZpdMHNXooOVKo/VRusuXtTD
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="459318857"
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 50D2783;
+	Wed, 13 Dec 2023 09:59:52 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="385419697"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="459318857"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 09:51:30 -0800
+   d="scan'208";a="385419697"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 09:59:51 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="844402016"
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="864707289"
 X-IronPort-AV: E=Sophos;i="6.04,273,1695711600"; 
-   d="scan'208";a="844402016"
+   d="scan'208";a="864707289"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 09:51:28 -0800
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 09:59:40 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rDTOH-00000005bDa-3pRL;
-	Wed, 13 Dec 2023 19:51:25 +0200
-Date: Wed, 13 Dec 2023 19:51:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+	(envelope-from <andy@kernel.org>)
+	id 1rDTWB-00000005bJa-0XiK;
+	Wed, 13 Dec 2023 19:59:35 +0200
+Date: Wed, 13 Dec 2023 19:59:34 +0200
+From: Andy Shevchenko <andy@kernel.org>
 To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v6 05/40] pinctrl: add a Cirrus ep93xx SoC pin controller
-Message-ID: <ZXnvHYjgnc3VsXnX@smile.fi.intel.com>
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>,
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+	Russell King <linux@armlinux.org.uk>,
+	Lukasz Majewski <lukma@denx.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Mark Brown <broonie@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Richard Weinberger <richard@nod.at>,
+	Vignesh Raghavendra <vigneshr@ti.com>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Sergey Shtylyov <s.shtylyov@omp.ru>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
+	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
+	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
+	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v6 00/40] ep93xx device tree conversion
+Message-ID: <ZXnxBtqbneUMbvwq@smile.fi.intel.com>
 References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
- <20231212-ep93xx-v6-5-c307b8ac9aa8@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20231212-ep93xx-v6-5-c307b8ac9aa8@maquefel.me>
+In-Reply-To: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 12, 2023 at 11:20:22AM +0300, Nikita Shubin wrote:
-> Add a pin control (only multiplexing) driver for ep93xx SoC so
-> we can fully convert ep93xx to device tree.
+On Tue, Dec 12, 2023 at 11:20:17AM +0300, Nikita Shubin wrote:
+> No major changes since last version all changes are cometic.
 > 
-> This driver is capable of muxing ep9301/ep9302/ep9307/ep9312/ep9315
-> variants, this is chosen based on "compatible" in device tree.
+> Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
+> 
+> - ARM: ep93xx: add regmap aux_dev
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+> 
+> DMA related patches still require Acked or Reviewed tags.
+> 
+> got approval LGTM from Miquel:
+> - mtd: rawnand: add support for ts72xx
+> Link: https://lore.kernel.org/lkml/20231004103911.2aa65354@xps-13/
+> 
+> new patches:
+> 
+> ARM: ep93xx:  Add terminator to gpiod_lookup_table
+>   - fixed terminator in gpiod_lockup_table
+> 
+> So mostly all patches got approval.
+> 
+> Patches should be now formated with '--histogram'
 
-Mostly nit-picks below, with the exception to setting device node.
-See below.
+It _feels_ like some tags might be missing.
+In any case I suggest to use `b4` tool to retrieve tags when preparing
+the next version:
 
-...
-
-> +/*
-> + * There are several system configuration options selectable by the DeviceCfg and SysCfg
-> + * registers. These registers provide the selection of several pin multiplexing options and also
-> + * provide software access to the system reset configuration options. Please refer to the
-> + * descriptions of the registers, “DeviceCfg” on page 5-25 and “SysCfg” on page 5-34, for a
-> + * detailed explanation.
-> + */
-> +#define EP93XX_SYSCON_DEVCFG_D1ONG	BIT(30) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_D0ONG	BIT(29) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_IONU2	BIT(28) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_GONK	BIT(27) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_TONG	BIT(26) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_MONG	BIT(25) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_A2ONG	BIT(22) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_A1ONG	BIT(21) /* not used */
-> +#define EP93XX_SYSCON_DEVCFG_HONIDE	BIT(11) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_GONIDE	BIT(10) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_PONG	BIT(9) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_EONIDE	BIT(8) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_I2SONSSP	BIT(7) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_I2SONAC97	BIT(6) /* done */
-> +#define EP93XX_SYSCON_DEVCFG_RASONP3	BIT(4) /* done */
-
-What are these comments supposed to mean?
-
-...
-
-> +static const struct pinctrl_ops ep93xx_pctrl_ops = {
-> +	.get_groups_count = ep93xx_get_groups_count,
-> +	.get_group_name = ep93xx_get_group_name,
-> +	.get_group_pins = ep93xx_get_group_pins,
-
-> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
-> +	.dt_free_map = pinconf_generic_dt_free_map,
-
-Hmm... Don you need to ifdef these fields?
-
-> +};
-
-...
-
-> +static const struct pinfunction ep93xx_pmx_functions[] = {
-> +	PINCTRL_PINFUNCTION("spi", spigrps, ARRAY_SIZE(spigrps)),
-
-Is array_size.h being included?
-
-> +	PINCTRL_PINFUNCTION("ac97", ac97grps, ARRAY_SIZE(ac97grps)),
-> +	PINCTRL_PINFUNCTION("i2s", i2sgrps, ARRAY_SIZE(i2sgrps)),
-> +	PINCTRL_PINFUNCTION("pwm", pwm1grps, ARRAY_SIZE(pwm1grps)),
-> +	PINCTRL_PINFUNCTION("keypad", keypadgrps, ARRAY_SIZE(keypadgrps)),
-> +	PINCTRL_PINFUNCTION("pata", idegrps, ARRAY_SIZE(idegrps)),
-> +	PINCTRL_PINFUNCTION("lcd", rastergrps, ARRAY_SIZE(rastergrps)),
-> +	PINCTRL_PINFUNCTION("gpio", gpiogrps, ARRAY_SIZE(gpiogrps)),
-> +};
-
-...
-
-> +	switch (pmx->model) {
-> +	case EP93XX_9301_PINCTRL:
-> +		grp = &ep9301_pin_groups[group];
-> +		break;
-> +	case EP93XX_9307_PINCTRL:
-> +		grp = &ep9307_pin_groups[group];
-> +		break;
-> +	case EP93XX_9312_PINCTRL:
-> +		grp = &ep9312_pin_groups[group];
-> +		break;
-
-default?
-
-> +	}
-
-...
-
-> +	pmx->model = (int)(uintptr_t)id->driver_data;
-
-Is the model defined as int (signed)?
-
-Otherwise can we use proper type?
-
-...
-
-> +	/* using parent of_node to match in get_pinctrl_dev_from_of_node() */
-> +	device_set_of_node_from_dev(dev, adev->dev.parent);
-
-Hmm... This takes references in comparison to device_set_node(). Is it intended?
-
-...
-
-> +	pmx->pctl = devm_pinctrl_register(dev, &ep93xx_pmx_desc, pmx);
-> +	if (IS_ERR(pmx->pctl))
-> +		return dev_err_probe(dev, PTR_ERR(pmx->pctl), "could not register pinmux driver\n");
-
-It can be written as
-
-	pmx->pctl = devm_pinctrl_register(dev, &ep93xx_pmx_desc, pmx);
-	ret = PTR_ERR_OR_ZERO(...);
-	if (ret)
-		return dev_err_probe(dev, ret, "could not register pinmux driver\n");
-
-(makes line shorter). But it's up to you.
+	git checkout -b vXX v6.7-rcX
+	b4 am -slt $MSG_ID_OF_v(XX-1)
+	git am ...
+	git rebase --interactive ... # to address comments
 
 -- 
 With Best Regards,
