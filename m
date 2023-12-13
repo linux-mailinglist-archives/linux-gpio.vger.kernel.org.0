@@ -1,163 +1,318 @@
-Return-Path: <linux-gpio+bounces-1397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D63E0811A0C
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:50:19 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84FD8811A3A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 18:00:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 90D962828FB
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 16:50:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BBA961C2120F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 17:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F4E539FD7;
-	Wed, 13 Dec 2023 16:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F9FA3A8C4;
+	Wed, 13 Dec 2023 16:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=FII-NA.com header.i=@FII-NA.com header.b="VhGieWTq"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jbv6KQtZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2055.outbound.protection.outlook.com [40.107.220.55])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09BF48E
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 08:50:15 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=V9I6aqVmagTej/BvadLbxBxThHzIh6VmcjEhaOh5wsMJl3AzwvIArOQaYyK8Xu6jx0AtZ9qQoAya48c3zRawm7oaPLZ4TNlQ+Anha/Kh8PC/pVj1vnE8yPwx4JaSSeSflT8RiKO4WA1vAQ9JydTeFdBumHAsdq+sj52N8sDMVFz/G2vy90i/E8ZJ9c4iJiPBxh/bT/9yArvGrH+d2LtCmJsxzwb4Ik+egl9VismxvB/MkToi0WwnT26rv7WJjzKiWgUs879UR7wa2tYr8y+YVmLUoeYWCnIhIxF7Ud/LyTYaXlb4/h4koe0XFkzy9uqpwd2Lwr1gwW6WHi80gSDruA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=9aFl3ATUl72avNGEAvWL6uo84MPwSnTLiI5CGSaSmoo=;
- b=LJTZir351YFqd93+ncNmQQL6O5ZgxuEN6plfAI0l2ztUWjbBPoUR3uGl+cRHiOwbdbEeX7HhNlY4oRAP7eRssurX5GYbH2mXwpmg3prR/QltFs7W3B0DF9BufDfJ4NpwaxAm+vbtxU8RfhyswRX43cMUMOb43eg3mVoFiw7OUdiUeft3sOy1kYDp7QFDmEG7De1tfYhL/TjRXn0Pd57DBynJVsZNjcsdtJb+Wbd0rNc7w1MkyOb3zlZhDDjyh/FGzaEuXK96PYMjD3UrbMjjc8z6q4Fjm0CSNbyMC7tsTp2t7qeN7U0BUNZORxztp4FOQp9SHDsoso4R+v/f5KbUHA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fii-na.com; dmarc=pass action=none header.from=fii-na.com;
- dkim=pass header.d=fii-na.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=FII-NA.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=9aFl3ATUl72avNGEAvWL6uo84MPwSnTLiI5CGSaSmoo=;
- b=VhGieWTq/AuW2yPD/UmCZ2iGNPljWY5V8CQaUCBQNgfihZDprKv4+1haJ/EC48wy4VH8xh4t1Ne3QaTrkcirM8xlaHWTY35nYrdVgVRZBw/jfBwbqMxLzY/iry1T065aCHDhK4i2Y9V2MJ9AYsDrcwYgHkb9Btk9W1i6dq5xFmK4/A8HVUU/7dMgZc/pAtjkwnKPgEH0lZKWnIaQrc8+KFm9Nb78w8/g2yW+GFw/uW8YXoIGf3XuIV2Ta3oCLPIuLgvFZs8AFa9Ueloir/wgmZvWt0IEJb47XLgANlHc2dnhCFfh6/sjBrF7OWbKuGeV4XUzWoKTAQbq1mYgftlp8A==
-Received: from DM6PR08MB5322.namprd08.prod.outlook.com (2603:10b6:5:14::30) by
- IA1PR08MB8744.namprd08.prod.outlook.com (2603:10b6:208:454::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.26; Wed, 13 Dec
- 2023 16:50:12 +0000
-Received: from DM6PR08MB5322.namprd08.prod.outlook.com
- ([fe80::c768:b08d:3b37:fdf3]) by DM6PR08MB5322.namprd08.prod.outlook.com
- ([fe80::c768:b08d:3b37:fdf3%7]) with mapi id 15.20.7091.022; Wed, 13 Dec 2023
- 16:50:11 +0000
-From: Kyle Nieman <Kyle.Nieman@FII-NA.com>
-To: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: [libgpiod] Simplify GPIO monitoring
-Thread-Topic: [libgpiod] Simplify GPIO monitoring
-Thread-Index: Adot202IHyhmBq+ySJy3Wd56KKERiQ==
-Date: Wed, 13 Dec 2023 16:50:11 +0000
-Message-ID:
- <DM6PR08MB5322659E14BB25DBAF6CD3CCC48DA@DM6PR08MB5322.namprd08.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=FII-NA.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DM6PR08MB5322:EE_|IA1PR08MB8744:EE_
-x-ms-office365-filtering-correlation-id: 52fa8231-12dc-4f9e-9f5d-08dbfbfb927c
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- kaFTX4OaTuf8bVcMpiI30UlsY9IAH9P+e48pdLrkk+tVBrNbkTNbn5jmphmbZHo+88bJUqUPSv31e0ofvsKvqjOuMb7UUX+rLtohZ+F7mbBRNc4cYkwYZ4pSs0/Bgtq9zEMeowa0qu5KvUGPCcVtak6Lq/uZAN8XQO1te7+yobYl/aMzwQ0T9DouWu3Z1ra6KJ536SHYU8SCOCqQ/3/EaIqiExZTHokxkaEwqmGVyC4xTPN3j7puDzgNH50ET37Rbr8ASzYMSZE5JyimyipB9i02qx8xHpeE8eruvYXlUmy0O3IchhGV1VPecAhQENp2VM2Rzksme6myGWbaaKlBUra1N/NSqkUWIQpMyk8BwzuvfsQj9m6lNsN/W91uqaZ9hNRh8XEVCoBt6H6WO095hu2X5DZEQsiMAx1IJZERcIk2v39xusm0erw+XWWWlNzIQuQjlX6Bl9dJx70aunVm7zo9DAMSbe1Jm+922HCaAFa0IMwGh+Tw5EUYx8YB7YVOARnqg3HPYZmlLMvElFwAkXlI2jnSrkqvfQzsVpoFxRsu0u/mmVuhkq/huNIn2e3EzIzpU55MBlsfcN9LtpHSgJ/MUnt3EiRnoLxIW89XmwY=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DM6PR08MB5322.namprd08.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(136003)(346002)(396003)(376002)(366004)(39860400002)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(64756008)(66446008)(66476007)(76116006)(66946007)(66556008)(9686003)(6506007)(7696005)(71200400001)(26005)(38070700009)(122000001)(86362001)(38100700002)(33656002)(966005)(41300700001)(478600001)(52536014)(8936002)(8676002)(2906002)(55016003)(5660300002)(6916009)(316002);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?txSWGyBQGFYrsxoKrC/BfKCdaTW1zA0rswWgxHY9wntYgAjF/3BMG3lrYJNs?=
- =?us-ascii?Q?t72lFvKZIEo0W2qaM6XJPfKO4QyurA7woV1amSPUQhvBAZenF1BwklOo8Wtb?=
- =?us-ascii?Q?HenD8vAw9SNqlFMy+Jakzl5ZwnwG55hXRmChmahxol33m14ZUG3XrQuCubIb?=
- =?us-ascii?Q?kXNk4H7fCwHxVm8KiIB3PWCkjz5h/bfykUVezfTft5ponOXrRf4bOafQK3y4?=
- =?us-ascii?Q?OheZcPyZqwoBM1qk3MRJWv6pq5dBcKEv4o8VurDrWkpcQyXXmA7R5Wy0Emmq?=
- =?us-ascii?Q?BeaYeWgRCLoUV8Gu7jZZMTFsr6T3kRu6JK6XJChFrmDrDhdnxLzU6j++o53V?=
- =?us-ascii?Q?NGhcXqif5YmeCjEhGTRn1L31zwYRNdPYLfXwxnCS2IEzSbsPbW0zoPBIoqcF?=
- =?us-ascii?Q?g0DnSwu7DGdWNzMcGAad11/DXBXjutdS2nEJZ2XGI2dPdyW1S91jKvabsbuA?=
- =?us-ascii?Q?LZlZZJ2flM5ajPl8ruKgCf3E7RT60f4LHGN4rG1EHLlTZ7Ic3ShCyJw5h62r?=
- =?us-ascii?Q?iNnU3ZFIH3RrMkMCTBbK6+DhBNSy07e2Vooh3C7xSF0I1msJ0WzE7cMKTPJP?=
- =?us-ascii?Q?ZdckbpyDhVjR6UbXQFogK7w7lE9SfiV3eH4eYAXN/LYKn6voF9QZrh8XpemZ?=
- =?us-ascii?Q?JmMbQGpLAktj0b3qnkrqeE+YsfFX8Mg/X+MlAGWRhevdHDk4rSENHqkt3vuO?=
- =?us-ascii?Q?wLZnme1eFmMssA19L85yeIWKZdUWcWeXiba011Q33+uIb/T9XsHeHjJplH/z?=
- =?us-ascii?Q?2iOGCFuyU6m1hpbN7kuJ+mnNW4aeosLtRJLeZXmScWdCi1K+VqKVBltSpV5I?=
- =?us-ascii?Q?CFzolupegV88hvMFmZuQLVV553eADNYb3mlG3WV3PyYt5HOyK3PLMMUhw3RH?=
- =?us-ascii?Q?dya9hjfPYxYtigpkX4jgCOvUNC2qIQotlkU+MPYi+TlecQj6lr8txadeAfpb?=
- =?us-ascii?Q?KkPfVdSp9NxnTTM8xpAPT/kaRAG7vCtJsNtDI6ohoPc9GRhjFVmOeyXsLhUW?=
- =?us-ascii?Q?2jAfnfzru1A7mtjmFt/+rKyokvDiXnjIu0lZaKmJtUrgtlaSmEsMg9jVyZeE?=
- =?us-ascii?Q?E3yUza37x2EGBaHZTNZR2iwT6muQgsM8oNoanCSB3kN0RlPhzbMNDFwPlPE1?=
- =?us-ascii?Q?1f61e86ipAg3pfUv7K0O/xa2LntzuVW7EcoLPg8dYftruhoQGjmgVA46Fk7V?=
- =?us-ascii?Q?NJ6aOCJFXLZKNrOQI3qPXEUg3dgJycnMNkQ+jQHQLw7T6DzXx2ua225wPDr1?=
- =?us-ascii?Q?kIEx0ZRrZJucMOsQT+eJtKzpR50VLqgxn91dbMvmQJBxzGFwg4AXap0MSHNn?=
- =?us-ascii?Q?3gG4obX1HlP5D3uSa+GmpmdGScDDuzQwqB4+U9+ap65i0SuE6UhMbRY5rsJf?=
- =?us-ascii?Q?KamEFkNUfl4IspZLWZvKCzD4EHi/ih6kZUEk6rnzzsukzaAOwBvxFc3XdzY8?=
- =?us-ascii?Q?DFERSiSEx5stqUl0MA1AO1E122Zl0eyu6lG0s9yjFkRpDODopZTCok0qFnQU?=
- =?us-ascii?Q?vDQKFQwndRXcxWrhXYX1znowZtgJJlQpJsdSVqNynrZTmJ9p3RbHnHCkBSMg?=
- =?us-ascii?Q?4GTbV1Ft7L/bGYk8S8GUCWU5AEn9vk/+ygoRfKbV?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Received: from mailout1.samsung.com (mailout1.samsung.com [203.254.224.24])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AA6B5EA;
+	Wed, 13 Dec 2023 08:59:52 -0800 (PST)
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+	by mailout1.samsung.com (KnoxPortal) with ESMTP id 20231213165950epoutp01b110eb4e2939a8f4e887d97f490ec30d~gcrdENLmY2597125971epoutp01E;
+	Wed, 13 Dec 2023 16:59:50 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20231213165950epoutp01b110eb4e2939a8f4e887d97f490ec30d~gcrdENLmY2597125971epoutp01E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1702486790;
+	bh=d1P9fWCrpZA9GKdYIUHFi/3vlYR+11N04hqaneTRS7c=;
+	h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+	b=jbv6KQtZHs2O5pNge91bEuqpQ/q7aYKwT700yjrDutZZsg9PYToD/q+/0GZiO+r4o
+	 eV7oo10uJIgI5uuio3pdtme9OMgC/x6DMjTEYTDjqW2YT/flpXXbo/795cIb32RsZh
+	 h1PQEWhM5s7tbbWJO0Ybn2caafjLG0h6Pqv0tMsA=
+Received: from epsnrtp2.localdomain (unknown [182.195.42.163]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTP id
+	20231213165949epcas5p2d33be29db8698d42fa2aa0b55d30a9f3~gcrcgeJXv0076600766epcas5p2c;
+	Wed, 13 Dec 2023 16:59:49 +0000 (GMT)
+Received: from epsmges5p3new.samsung.com (unknown [182.195.38.176]) by
+	epsnrtp2.localdomain (Postfix) with ESMTP id 4Sr1tX2rMdz4x9Pt; Wed, 13 Dec
+	2023 16:59:48 +0000 (GMT)
+Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
+	epsmges5p3new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	2C.C3.09672.403E9756; Thu, 14 Dec 2023 01:59:48 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+	epcas5p2.samsung.com (KnoxPortal) with ESMTPA id
+	20231213165947epcas5p2ea8a715b68d03d788e6c96c1e2a0153a~gcraLo9dV1505615056epcas5p2s;
+	Wed, 13 Dec 2023 16:59:47 +0000 (GMT)
+Received: from epsmgmc1p1new.samsung.com (unknown [182.195.42.40]) by
+	epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20231213165947epsmtrp1119415af4c01f9b8da7bba5adc0f6c83~gcraKD_Ut2889328893epsmtrp14;
+	Wed, 13 Dec 2023 16:59:47 +0000 (GMT)
+X-AuditID: b6c32a4b-60bfd700000025c8-62-6579e30476f9
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+	epsmgmc1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+	02.66.07368.303E9756; Thu, 14 Dec 2023 01:59:47 +0900 (KST)
+Received: from INBRO000447 (unknown [107.122.12.5]) by epsmtip2.samsung.com
+	(KnoxPortal) with ESMTPA id
+	20231213165943epsmtip2b97c5865caab5215e212efc678a16a3b~gcrWDQbBQ0136401364epsmtip2G;
+	Wed, 13 Dec 2023 16:59:42 +0000 (GMT)
+From: "Alim Akhtar" <alim.akhtar@samsung.com>
+To: "'Peter Griffin'" <peter.griffin@linaro.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <mturquette@baylibre.com>,
+	<conor+dt@kernel.org>, <sboyd@kernel.org>, <tomasz.figa@gmail.com>,
+	<s.nawrocki@samsung.com>, <linus.walleij@linaro.org>,
+	<wim@linux-watchdog.org>, <linux@roeck-us.net>, <catalin.marinas@arm.com>,
+	<will@kernel.org>, <arnd@arndb.de>, <olof@lixom.net>,
+	<gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+	<cw00.choi@samsung.com>
+Cc: <tudor.ambarus@linaro.org>, <andre.draszik@linaro.org>,
+	<semen.protsenko@linaro.org>, <saravanak@google.com>,
+	<willmcvicker@google.com>, <soc@kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-samsung-soc@vger.kernel.org>,
+	<linux-clk@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-watchdog@vger.kernel.org>, <kernel-team@android.com>,
+	<linux-serial@vger.kernel.org>
+In-Reply-To: <20231211162331.435900-16-peter.griffin@linaro.org>
+Subject: RE: [PATCH v7 15/16] arm64: dts: exynos: google: Add initial
+ Oriole/pixel 6 board support
+Date: Wed, 13 Dec 2023 22:29:41 +0530
+Message-ID: <018d01da2de5$c7153ef0$553fbcd0$@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: FII-NA.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DM6PR08MB5322.namprd08.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 52fa8231-12dc-4f9e-9f5d-08dbfbfb927c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Dec 2023 16:50:11.5757
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 2f78a81d-6abb-4840-a061-3fe5396c72f2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lKnr7rYltgBauhC0JKfWHV0glN1vEANtFzHkDNu+L9YJwN0/QKtjtZE1E7AAeK32BM4oR8IRwluIkNXXDaxttA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: IA1PR08MB8744
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Content-Language: en-us
+Thread-Index: AQEeDlMUs+qnFg95EVUf+Z9FZqMuEwDnnW+uAJFCo7eyE+eYwA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA01Ta1ATVxTuZjfZQCeyBpRLsBIyYxVakFTASweqrWi3I7VIZzotHUszZCUU
+	SGISitBO5S1EiIKMoxkQMAojRqCBIo+CEBANUiytAlLE8hKRhzxaKAGxCcGWf9859/vOOd+5
+	c5gouwnnMMPFCkomFkTyGNZYVbOLixs2FEt56AcJWPmsAoMvsltx+LwoA4Ha+g4a7P5rlA7z
+	WzroMElTxoBTeVtg9Q07qHo6gMKc5WIa1A110eFMRj8dVuQvI/D8vQYabNdk4rCntAGHw4Xt
+	NNjZth+2dc8xYPn5FQym1LfgsHniJB0q9S8YcKXrRwyOqkyqoe5lBiypNRWZ7f0KJvd5wZLZ
+	lwgcGltB93LJqroqOqm9qEXIJWM2Qj7vScHJGvUjnCzQRZO6knQG2df1M4O8qtXSyZt5Wpys
+	uHyCvH8nkU7WLMTjpKqyBCHndFsDbYIjfEWUQEjJuJQ4VCIMF4f58Q5+GrIvxMvbg+/G94G7
+	eVyxIIry4/kHBLodCI80rYvH/VYQGW1KBQrkct7O93xlkmgFxRVJ5Ao/HiUVRko9pe5yQZQ8
+	WhzmLqYU7/I9PN7xMhG/jhCdPnsJk5a7Hi9JnEHjkXmeErFiAsIT9E2epCkRayabqENAzpXl
+	tWAWAT1Td1BLMI+AFaMReSXJmr+HWB7qTazZzLXgKQJ+H8xjmFkMwg1Ua1JXsR3Rj4LujvfN
+	JJTQomDxZZ+pLpNpRewFt6YoM8eWEIKKdv1qB4zYBgyqGroZswgfUHVOi1vwRmC4MIyZMUo4
+	gRuTuahlIi5YHCmiW/L2YOxWC24ub0d8ANJHVh0AQmUNNAv5dAvfH6RPDuAWbAue3a5cwxww
+	djp1VQsIElxa5ljSIjBZXLZmfg9ovJ+LmSko4QLKandaum4AmUvDNIuSBdJS2Rb2NpA09QCz
+	YEeQderU2gAkSG8tZZxBnNXrfKnX+VKv86L+v1kBgpUgDpRUHhVGyb2ku8RUzH/fHSqJ0iGr
+	t+R6sBoZ/HPaXY/QmIgeAUyUZ8cyVMdQbJZQEBtHySQhsuhISq5HvEzLzkI5m0IlpmMUK0L4
+	nj4ent7e3p4+u7z5PHvWeEqekE2ECRRUBEVJKdkrHY1pxYmnbQo9VPj9tKo0K8uALUwEP4hQ
+	Pjr8sUam/E0zK5vb8NaRPYZWh+u3Pa4FJOMFhp9cBx6+8eSzHU5xv4rKQ3SHbWNJx6b+v5lL
+	x5ysw9VLotxyOHd98xdXMn27Lo4rl26WOrfZ1tTs31GN9tlVbPY9BDs7yyL+yF1s1/mrdus/
+	ZL191e/oa9I0ljGhNuExTODiMcUjXkryy7gzQYH7GvxXMp7ctS+se9xshDYPlY3CT1odx6/9
+	MHohLYj9+RHn9G+Ck3/p9W4+cXe669y0eEucP4evitxYtX2G3vTRP0FFVdkHtgaIh7c3X35z
+	4LvAxuMTcw5HXTTpwza0XknSsVBjmTQn8XUBD5OLBHxXVCYX/AtWBi2V1AQAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrFKsWRmVeSWpSXmKPExsWy7bCSvC7z48pUg1ubRS22vNrMYvF30jF2
+	i/fLehgt1uw9x2Rx/ctzVov5R86xWjQvXs9m8W6ujMWO7SIWfS8eMltM+bOcyWLT42usFh97
+	7rFabJ7/h9Fixvl9TBZnFveyW9xYt4/d4snCM0wWF0+5Wpy6/pnNYsOMfywWrXuPsFscftPO
+	atF16C+bxb9rG1ksnvcBdT2+/ofNYtUuoCGfbsVZtNwxtVj16T+jxeOX/5gdFDy27d7G6rFm
+	3hpGj9+/JjF6vL/Ryu6xc9Zddo8Fm0o9Nq3qZPO4c20Pm8fKNWtYPfbPXcPusXlJvceVE02s
+	Hju/N7B79G1ZxejxeZNcAH8Ul01Kak5mWWqRvl0CV0b/5EUsBRu0KlY1fWRuYPym1MXIySEh
+	YCIx8dt5xi5GLg4hgd2MEu3/uxghEtIS1zdOYIewhSVW/nvODlH0jFFi5r3nYEVsAroSOxa3
+	sYEkRAQ+MUus/n8DzGEW2MUsca6hjRWi5QijxJKJHUAZDg5OAQeJo+9SQbqFBZIkDv77ywxi
+	swioSpzs28kKYvMKWEpsm7aGHcIWlDg58wkLSCuzgJ5E20awxcwC8hLb385hhrhOQeLn02Ws
+	EHFxiZdHj7CDlIsIOEl0PmWewCg8C8mgWQiDZiEZNAtJ8wJGllWMkqkFxbnpucmGBYZ5qeV6
+	xYm5xaV56XrJ+bmbGMHJSUtjB+O9+f/0DjEycTAeYpTgYFYS4T25ozxViDclsbIqtSg/vqg0
+	J7X4EKM0B4uSOK/hjNkpQgLpiSWp2ampBalFMFkmDk6pBia/fw1Ooc/v7uB8K1m2cIvbTYMq
+	ffWO0Cr9iQvPXW5revXCoJCLTeb5Ws5vq2rDj88RfGL+7orWk+i90Z0M1k5vJ8UYbGh1VExJ
+	2H+ns18446r/6wBrA6tGDslbpwJ39goITV9hdmmR8LX39it7w/T+LA29HJz87oWQg6oNY0Ns
+	wtvbCS3aWyfWbL6czCoQ4cyzMvoMS+/G0qTNujOqL7jqz3YOW6xW+2x6f/n6iaeMONY+eT+1
+	Z5GRRfEW20gO83+dbvNcVhq+nhwr8HDfzSVKsVJWz1t2Kxzez+R7ZcXSKP41HH/m3Tz1YI+h
+	0VWtNO++9gKJvYdi/Hft7rBS03/+9J5S8zuns5nFz43VG5VYijMSDbWYi4oTAdIRjHe9AwAA
+X-CMS-MailID: 20231213165947epcas5p2ea8a715b68d03d788e6c96c1e2a0153a
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20231211162439epcas5p208ddd651650cb5e8de3e8f411db7663d
+References: <20231211162331.435900-1-peter.griffin@linaro.org>
+	<CGME20231211162439epcas5p208ddd651650cb5e8de3e8f411db7663d@epcas5p2.samsung.com>
+	<20231211162331.435900-16-peter.griffin@linaro.org>
 
-Hello,
 
-In embedded linux systems, GPIO monitoring for edge-events is common.
-For example, OpenBMC has several applications/packages that monitor GPIOs f=
-or an
-extended period of time.
 
-phosphor-gpio-monitor:
-        1. Starts a systemd service on GPIO events
-        2. Sets a dbus property based upon initial state and on GPIO events
-https://github.com/openbmc/phosphor-gpio-monitor
+> -----Original Message-----
+> From: Peter Griffin <peter.griffin@linaro.org>
+> Sent: Monday, December 11, 2023 9:54 PM
+> To: robh+dt@kernel.org; krzysztof.kozlowski+dt@linaro.org;
+> mturquette@baylibre.com; conor+dt@kernel.org; sboyd@kernel.org;
+> tomasz.figa@gmail.com; s.nawrocki@samsung.com; linus.walleij@linaro.org;
+> wim@linux-watchdog.org; linux@roeck-us.net; catalin.marinas@arm.com;
+> will@kernel.org; arnd@arndb.de; olof@lixom.net;
+> gregkh@linuxfoundation.org; jirislaby@kernel.org;
+> cw00.choi@samsung.com; alim.akhtar@samsung.com
+> Cc: peter.griffin@linaro.org; tudor.ambarus@linaro.org;
+> andre.draszik@linaro.org; semen.protsenko@linaro.org;
+> saravanak@google.com; willmcvicker@google.com; soc@kernel.org;
+> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; linux-
+> samsung-soc@vger.kernel.org; linux-clk@vger.kernel.org; linux-
+> gpio@vger.kernel.org; linux-watchdog@vger.kernel.org; kernel-
+> team@android.com; linux-serial@vger.kernel.org
+> Subject: [PATCH v7 15/16] arm64: dts: exynos: google: Add initial
+Oriole/pixel
+> 6 board support
+> 
+> Add initial board support for the Pixel 6 phone code named Oriole. This
+has
+> been tested with a minimal busybox initramfs and boots to a shell.
+> 
+> Tested-by: Will McVicker <willmcvicker@google.com>
+> Reviewed-by: Sam Protsenko <semen.protsenko@linaro.org>
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-x86-power-control:
-        1. Controls system power based on different button presses
-https://github.com/openbmc/x86-power-control
+>  arch/arm64/boot/dts/exynos/Makefile           |   2 +
+>  arch/arm64/boot/dts/exynos/google/Makefile    |   4 +
+>  .../boot/dts/exynos/google/gs101-oriole.dts   | 105 ++++++++++++++++++
+>  3 files changed, 111 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/exynos/google/Makefile
+>  create mode 100644 arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> 
+> diff --git a/arch/arm64/boot/dts/exynos/Makefile
+> b/arch/arm64/boot/dts/exynos/Makefile
+> index 6e4ba69268e5..44c24a8ad9e1 100644
+> --- a/arch/arm64/boot/dts/exynos/Makefile
+> +++ b/arch/arm64/boot/dts/exynos/Makefile
+> @@ -1,4 +1,6 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +subdir-y += google
+> +
+>  dtb-$(CONFIG_ARCH_EXYNOS) += \
+>  	exynos5433-tm2.dtb		\
+>  	exynos5433-tm2e.dtb		\
+> diff --git a/arch/arm64/boot/dts/exynos/google/Makefile
+> b/arch/arm64/boot/dts/exynos/google/Makefile
+> new file mode 100644
+> index 000000000000..0a6d5e1fe4ee
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/google/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +dtb-$(CONFIG_ARCH_EXYNOS) += \
+> +	gs101-oriole.dtb \
+> diff --git a/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> new file mode 100644
+> index 000000000000..4a71f752200d
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/exynos/google/gs101-oriole.dts
+> @@ -0,0 +1,105 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Oriole Device Tree
+> + *
+> + * Copyright 2021-2023 Google LLC
+> + * Copyright 2023 Linaro Ltd - <peter.griffin@linaro.org>  */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/input/input.h>
+> +#include "gs101-pinctrl.h"
+> +#include "gs101.dtsi"
+> +
+> +/ {
+> +	model = "Oriole";
+> +	compatible = "google,gs101-oriole", "google,gs101";
+> +
+> +	aliases {
+> +		serial0 = &serial_0;
+> +	};
+> +
+> +	chosen {
+> +		/* Bootloader expects bootargs specified otherwise it
+> crashes */
+> +		bootargs = "";
+> +		stdout-path = &serial_0;
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&key_voldown>, <&key_volup>,
+> <&key_power>;
+> +
+> +		button-vol-down {
+> +			label = "KEY_VOLUMEDOWN";
+> +			linux,code = <KEY_VOLUMEDOWN>;
+> +			gpios = <&gpa7 3 GPIO_ACTIVE_LOW>;
+> +			wakeup-source;
+> +		};
+> +
+> +		button-vol-up {
+> +			label = "KEY_VOLUMEUP";
+> +			linux,code = <KEY_VOLUMEUP>;
+> +			gpios = <&gpa8 1 GPIO_ACTIVE_LOW>;
+> +			wakeup-source;
+> +		};
+> +
+> +		button-power {
+> +			label = "KEY_POWER";
+> +			linux,code = <KEY_POWER>;
+> +			gpios = <&gpa10 1 GPIO_ACTIVE_LOW>;
+> +			wakeup-source;
+> +		};
+> +	};
+> +};
+> +
+> +&ext_24_5m {
+> +	clock-frequency = <24576000>;
+> +};
+> +
+> +&ext_200m {
+> +	clock-frequency = <200000000>;
+> +};
+> +
+> +&pinctrl_far_alive {
+> +	key_voldown: key-voldown-pins {
+> +		samsung,pins = "gpa7-3";
+> +		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
+> +		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
+> +	};
+> +
+> +	key_volup: key-volup-pins {
+> +		samsung,pins = "gpa8-1";
+> +		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
+> +		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
+> +	};
+> +};
+> +
+> +&pinctrl_gpio_alive {
+> +	key_power: key-power-pins {
+> +		samsung,pins = "gpa10-1";
+> +		samsung,pin-function = <GS101_PIN_FUNC_EINT>;
+> +		samsung,pin-pud = <GS101_PIN_PULL_NONE>;
+> +		samsung,pin-drv = <GS101_PIN_DRV_2_5_MA>;
+> +	};
+> +};
+> +
+> +&serial_0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_bus>;
+> +	status = "okay";
+> +};
+> +
+> +&usi_uart {
+> +	samsung,clkreq-on; /* needed for UART mode */
+> +	status = "okay";
+> +};
+> +
+> +&watchdog_cl0 {
+> +	timeout-sec = <30>;
+> +	status = "okay";
+> +};
+> --
+> 2.43.0.472.g3155946c3a-goog
 
-However, there seems to be a lot of duplicate code between these applicatio=
-ns
-related to monitoring in general that looks like it could be reduced.
 
-GPIO monitoring tends to have the following steps:
-1. Configure/set up the GPIO line for monitoring
-2. Read the initial value of GPIO line
-3. Take action based upon initial value
-4. Wait for event by monitoring fd
-5. Take action on event, then continue monitoring or cleanup
-
-A function could internally complete the common steps regardless of what GP=
-IO
-line is being monitored such as steps 1, 2, and 4. The other steps unique t=
-o the
-GPIO being monitored could be handled by callbacks. The
-gpiod_ctxless_event_monitor functions seemed to do this partially, but were
-removed along with the rest of the ctxless functions in commit
-9b6e6d268671ef2dd00d9a9abe7ba43d14e7a84b
-(ctxless: drop all context-less interfaces).
-https://git.kernel.org/pub/scm/libs/libgpiod/libgpiod.git/commit/?id=3D9b6e=
-6d268671ef2dd00d9a9abe7ba43d14e7a84b
-
-Would there be an issue with adding a higher level abstraction to simplify =
-GPIO
-monitoring?
-
-Thanks,
-Kyle
 
