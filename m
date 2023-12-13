@@ -1,136 +1,124 @@
-Return-Path: <linux-gpio+bounces-1350-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1351-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9EAA810DC0
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 10:56:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CCBB810DD2
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 11:04:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F152B20BE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 09:56:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 579351C20952
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 10:03:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEAB6219FA;
-	Wed, 13 Dec 2023 09:55:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA49222313;
+	Wed, 13 Dec 2023 10:03:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="PYtZ1FH7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="mB5aZ8hh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from aposti.net (aposti.net [89.234.176.197])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 82ECAD0;
-	Wed, 13 Dec 2023 01:55:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1702461349;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=O+nOj5MYcM4srD76YhSDWHxSUN6Beaf32aCqIr/6IcY=;
-	b=PYtZ1FH72J9BtqoyieIYRE3EXQzn8sFVHJ2pZLYJ5FGmyWewc81Q1u4AxE+RdcEK48yz1b
-	16qAyF9wivlgKlaVJ7YH1liZymekiefMXYHXnuQ0i/55n0f/lmT90fEAeBt8rzxnwMWPum
-	dN45uxJ7uLcn+Pv3j2ZbVn/c0EsQsxk=
-Message-ID: <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
-Subject: Re: [PATCH v5 03/13] pinctrl: ingenic: Use C99 initializers in
- PINCTRL_PIN_GROUP()
-From: Paul Cercueil <paul@crapouillou.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij
- <linus.walleij@linaro.org>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>,  Geert Uytterhoeven
- <geert+renesas@glider.be>, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Biju Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
- <claudiu.beznea.uj@bp.renesas.com>,  Jianlong Huang
- <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org
-Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng
- <aisheng.dong@nxp.com>,  Fabio Estevam <festevam@gmail.com>, Shawn Guo
- <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,  Pengutronix Kernel
- Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, NXP
- Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, Lakshmi
- Sowjanya D <lakshmi.sowjanya.d@intel.com>, Emil Renner Berthing
- <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>
-Date: Wed, 13 Dec 2023 10:55:46 +0100
-In-Reply-To: <20231211190321.307330-4-andriy.shevchenko@linux.intel.com>
-References: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
-	 <20231211190321.307330-4-andriy.shevchenko@linux.intel.com>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
-	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Received: from mail-ua1-x92a.google.com (mail-ua1-x92a.google.com [IPv6:2607:f8b0:4864:20::92a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id CFE18A4
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 02:03:51 -0800 (PST)
+Received: by mail-ua1-x92a.google.com with SMTP id a1e0cc1a2514c-7ca9c5921ceso2058572241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 02:03:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702461831; x=1703066631; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2/qPaIfmghWpTcqxcVuuhDpPLoLBeCE+kTWvQmM/68A=;
+        b=mB5aZ8hhw7+zC5YruVNA2JWNN/+81p4tppiYN04VmoiaOKPhbTP09KNO9KKEXxwbvg
+         T0RFtsLYvn5Jy95so7ExV3Sk7DIKpKMT9k7vsTKQGCW693xqNDYMbuFcNfDtlAFIE+y0
+         ukyxS2VN484hlFKwCIKgDvpvRPjsPIB4De8Vnn6tbxFVvOj+npr2OLN7OceRfxN0pJiV
+         Md0bho/E7IRH79XTo4s08GG5EHJA9YTng6zA0nU0MCiP9qV7BcLpsmRveENws7uKXPUx
+         GxwfIJszvMfK40uilqAUDIEzOPcdmZvg0tfeabXhTGvKOVvxB9B0I8W/26K9KCegsy23
+         mAkg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702461831; x=1703066631;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2/qPaIfmghWpTcqxcVuuhDpPLoLBeCE+kTWvQmM/68A=;
+        b=JD7rj2de20HD1KsOBVKh9lqaMNqPyuM8UK/6HvqRvd9l739XQ9f7BAQ9bpwijMeePw
+         /B06+xpaPeANnfQK0BKgeAPoahBBn/Ip3eXzkrZrWlRHsR17PfzmfkPBXqawtooB7UgH
+         N813x7tBLNqE5kaK4QPM50QS7hoBfxJuQum/A4V9gJtrTETDrnQoZL+rtR2DFdHPKRYh
+         JBLoBl/33bBrpk3KYfnvxrT6Jw66BfiZoxPh/f6L/3OTQHWB/SvYmaD1FBFmzyR/1VpO
+         LOlPgY1tnbH479qhZBdH/BVu9qTu7hXQc4vBzFW8y+9Hhqagkal5//LYSDscSI3jfSUv
+         +8lg==
+X-Gm-Message-State: AOJu0Ywc1x3P2MYlHt/Ipvh/Fq9DW469Y+SpQcWilEk6hq5Hb5i7QUYe
+	+EkNd/dLFgDand5NqixQdrjLp/c7P6KHOp7mj7fyZQ==
+X-Google-Smtp-Source: AGHT+IG3ImtM5KXcZ7eTb8vW10Gvrumis+otVhTYGJe6eSKBhEy2rOOc9T3pTbOBsxNp/lr4gzSTWkji28AMoMKXwgc=
+X-Received: by 2002:a05:6102:3a0c:b0:464:865e:6aaf with SMTP id
+ b12-20020a0561023a0c00b00464865e6aafmr5265030vsu.1.1702461830883; Wed, 13 Dec
+ 2023 02:03:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231212054253.50094-1-warthog618@gmail.com> <CAMRc=Me90Lu7Duc8-4xSfDcHQd6M7+0t0O8FAa6jiizp-OO5=Q@mail.gmail.com>
+ <ZXjzjOtKFoMRhKA-@rigel>
+In-Reply-To: <ZXjzjOtKFoMRhKA-@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 13 Dec 2023 11:03:40 +0100
+Message-ID: <CAMRc=Me1czOqnJUG3sth6kZh=G+iXAHp7HHL1u-Oy3=MwkCPug@mail.gmail.com>
+Subject: Re: [PATCH 0/4] gpiolib: cdev: relocate debounce_period_us
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Wed, Dec 13, 2023 at 12:58=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
+ wrote:
+>
+> On Tue, Dec 12, 2023 at 06:09:00PM +0100, Bartosz Golaszewski wrote:
 
-Le lundi 11 d=C3=A9cembre 2023 =C3=A0 20:57 +0200, Andy Shevchenko a =C3=A9=
-crit=C2=A0:
-> For the better flexibility use C99 initializers in
-> PINCTRL_PIN_GROUP().
->=20
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-> =C2=A0drivers/pinctrl/pinctrl-ingenic.c | 21 +++++++++++++--------
-> =C2=A01 file changed, 13 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/pinctrl-ingenic.c
-> b/drivers/pinctrl/pinctrl-ingenic.c
-> index ee718f6e2556..f5661dcdedf5 100644
-> --- a/drivers/pinctrl/pinctrl-ingenic.c
-> +++ b/drivers/pinctrl/pinctrl-ingenic.c
-> @@ -82,16 +82,21 @@
-> =C2=A0#define PINS_PER_GPIO_CHIP			32
-> =C2=A0#define JZ4730_PINS_PER_PAIRED_REG	16
-> =C2=A0
-> -#define INGENIC_PIN_GROUP_FUNCS(name, id, funcs)		\
-> -	{						\
-> -		name,					\
-> -		id##_pins,				\
-> -		ARRAY_SIZE(id##_pins),			\
-> -		funcs,					\
-> +#define INGENIC_PIN_GROUP_FUNCS(_name_, id,
-> funcs)					\
-> +	{						=09
-> 			\
-> +		.name =3D
-> _name_,								\
-> +		.pins =3D
-> id##_pins,							\
-> +		.num_pins =3D
-> ARRAY_SIZE(id##_pins),					\
-> +		.data =3D
-> funcs,								\
-> =C2=A0	}
-> =C2=A0
-> -#define INGENIC_PIN_GROUP(name, id, func)		\
-> -	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
-> +#define INGENIC_PIN_GROUP(_name_, id,
-> func)						\
-> +	{						=09
-> 			\
-> +		.name =3D
-> _name_,								\
-> +		.pins =3D
-> id##_pins,							\
-> +		.num_pins =3D
-> ARRAY_SIZE(id##_pins),					\
-> +		.data =3D (void
-> *)func,							\
-> +	}
+[snip]
 
-This INGENIC_PIN_GROUP() macro doesn't need to be modified, does it?
+> >
+> > Patches 2-4 look fine, I was about to review patch 1 in detail but I
+> > thought I'd just throw this one in here before we commit to a specific
+> > solution.
+> >
+> > For some reason I thought this would not work but I'm now considering
+> > it as an alternative approach: is there anything wrong with adding
+> > struct kref to struct line, allocating it separately per-line when
+> > gpio_chardev_data is created, referencing it from struct linereq when
+> > the line is being requested, and dropping the reference from
+> > gpio_chardev_data and linereq when either is being removed? Other than
+> > the increased number of allocations?
+> >
+>
+> The collection of struct line always has to be global, right, as both
+> gpio_chardev_data and linereq are ephemeral.  e.g. if one process request=
+s
+> a line and another checks the lineinfo, those will have distinct
+> gpio_chardev_data.
+>
 
-Cheers,
--Paul
+Strictly speaking at least the supplemental info has to be globally
+accessible. But I get your point.
 
-> =C2=A0
-> =C2=A0enum jz_version {
-> =C2=A0	ID_JZ4730,
+> But the key issue is that the linereq and struct line lifetimes are
+> strictly tied - a struct line does not live beyond the containing linereq=
+.
 
+I was thinking about decoupling one from the other actually.
+
+> Leaving the struct line alive after the linereq is released is just wrong=
+.
+> The line has been released back to gpiolib so there can be no
+> supplemental info left.
+
+Indeed.
+
+> If you want any such info to persist beyond the line release then it
+> should be located in gpiolib itself, not cdev.
+>
+
+Right, we even zero debounce_period_us anyway on line release - just
+as if we released struct line.
+
+Bart
 
