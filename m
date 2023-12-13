@@ -1,156 +1,114 @@
-Return-Path: <linux-gpio+bounces-1365-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1364-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 388818113D3
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:57:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 476E38113CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 14:57:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E281B1F22B75
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:57:27 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F2E53281D47
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 13:57:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E83D42E405;
-	Wed, 13 Dec 2023 13:57:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 462552E417;
+	Wed, 13 Dec 2023 13:56:59 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A271E49E2;
-	Wed, 13 Dec 2023 05:55:40 -0800 (PST)
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="2104255"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="2104255"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:54:58 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="864636987"
-X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
-   d="scan'208";a="864636987"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Dec 2023 05:54:56 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rDPhO-00000005XYC-0NhR;
-	Wed, 13 Dec 2023 15:54:54 +0200
-Date: Wed, 13 Dec 2023 15:54:53 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZXm3rayrcvfO1t1Z@smile.fi.intel.com>
-References: <20231212054253.50094-1-warthog618@gmail.com>
- <20231212054253.50094-2-warthog618@gmail.com>
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7D2C010C8;
+	Wed, 13 Dec 2023 05:56:34 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d7a47d06eeso69614617b3.1;
+        Wed, 13 Dec 2023 05:56:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702475793; x=1703080593;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=pNM6E8+SHt9X2piL1ip1N/9u4xOKhbMUn9SjgcJ1jCM=;
+        b=GoelHr3VPtAxE8od0om2X+8c7bNvjDbs78pBSVuuoYP7fzW0pk90mRKq6bbDPyIK8h
+         DvOfx5ia037aQtVFR1hb94h5CV/khu8BTDhboM4q6o/FZxJE0UJa3TMRdKiCiEM8mZnY
+         0KUDzVoaFWllNXlVckI8g/uVZZw50u5hmB9GGLGsKJzL/8hvWwc8+UGGoArQuR71N5LG
+         Tk2PrYi7nac5f11M6KEDkjf4+oNRDwDS5WtQ4NYdWIgD9YmI8khyPOD6cWVAxrA5SG9o
+         UkSMKXEuOCmlcyDGjBFFRWSQQU1aVp+0eLRu9JC1jb4XFelVzgKswa4QmEq2QCbSpfjH
+         HQiQ==
+X-Gm-Message-State: AOJu0YzJ/hhU+BU+PdRVFi7x/w7cmR5omj3fB5P1IAPR4YqNBooBNJAH
+	xMvEKM5xxkxDXXpCuCWSg4UYZUs452kKsQ==
+X-Google-Smtp-Source: AGHT+IHgR2J5J4CA3jieTuP7YbzbcydKcJFpyeci91lO7wJZz596yV2HxItX28hI6rkj5UryzWpURw==
+X-Received: by 2002:a05:690c:2787:b0:5d7:1940:f3f2 with SMTP id dz7-20020a05690c278700b005d71940f3f2mr4373683ywb.90.1702475793228;
+        Wed, 13 Dec 2023 05:56:33 -0800 (PST)
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com. [209.85.128.174])
+        by smtp.gmail.com with ESMTPSA id i129-20020a0dc687000000b005463e45458bsm4678994ywd.123.2023.12.13.05.56.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 13 Dec 2023 05:56:32 -0800 (PST)
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5e248b40c97so14194527b3.2;
+        Wed, 13 Dec 2023 05:56:32 -0800 (PST)
+X-Received: by 2002:a81:df0f:0:b0:5d7:1940:f3cf with SMTP id
+ c15-20020a81df0f000000b005d71940f3cfmr5689752ywn.55.1702475792558; Wed, 13
+ Dec 2023 05:56:32 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231212054253.50094-2-warthog618@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com> <20231207070700.4156557-7-claudiu.beznea.uj@bp.renesas.com>
+In-Reply-To: <20231207070700.4156557-7-claudiu.beznea.uj@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 13 Dec 2023 14:56:21 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU02=qcsX8kn0b=qMGCry1gLMjhQzht265_N8CbgJ1bEw@mail.gmail.com>
+Message-ID: <CAMuHMdU02=qcsX8kn0b=qMGCry1gLMjhQzht265_N8CbgJ1bEw@mail.gmail.com>
+Subject: Re: [PATCH v2 06/11] pinctrl: renesas: rzg2l: Add output enable support
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com, 
+	kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, magnus.damm@gmail.com, 
+	mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, 
+	prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com, 
+	linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 12, 2023 at 01:42:50PM +0800, Kent Gibson wrote:
-> Store the debounce period for a requested line locally, rather than in
-> the debounce_period_us field in the gpiolib struct gpio_desc.
-> 
-> Add a global tree of lines containing supplemental line information
-> to make the debounce period available to be reported by the
-> GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
+On Thu, Dec 7, 2023 at 8:08=E2=80=AFAM Claudiu <claudiu.beznea@tuxon.dev> w=
+rote:
+> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Some of the Ethernet pins on RZ/G3S (but also valid for RZ/G2L) need to
+> have the direction of the IO buffer set as output for Ethernet to work
+> properly. On RZ/G3S, these pins are P1_0/P7_0, P1_1/P7_1 which could have
+> the following Ethernet functions: TXC/TX_CLK or TX_CTL/TX_EN.
+>
+> As the pins supporting output enable are SoC specific and there is a
+> limited number of these pins (TXC/TX_CLK and/or TX_CTL/TX_EN), for proper
+> validation the output enable capable port limits were specified on
+> platform-based configuration data structure.
+>
+> The OEN support has been intantiated for RZ/G3S at the moment.
+>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> ---
+>
+> Changes in v2:
+> - use 8 bit helpers to get/set value of output enable register
+> - adapted to code to work for both RZ/G2L based devices and RZ/G3S
+> - removed IEN capability for Ethernet pins and added it in a separate
+>   patch (patch 07/12)
 
-...
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in renesas-pinctrl-for-v6.8.
 
->  struct line {
->  	struct gpio_desc *desc;
-> +	struct rb_node node;
+Gr{oetje,eeting}s,
 
-If you swap them, would it benefit in a code generation (bloat-o-meter)?
+                        Geert
 
->  };
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
 
-...
-
-> +struct supinfo {
-> +	spinlock_t lock;
-> +	struct rb_root tree;
-> +};
-
-Same Q.
-
-...
-
-> +static struct supinfo supinfo;
-
-Why supinfo should be a struct to begin with? Seems to me as an unneeded
-complication.
-
-...
-
-> +			pr_warn("%s: duplicate line inserted\n", __func__);
-
-I hope at bare minimum we have pr_fmt(), but even though this is poor message
-that might require some information about exact duplication (GPIO chip label /
-name, line number, etc). Generally speaking the __func__ in non-debug messages
-_usually_ is a symptom of poorly written message.
-
-...
-
-> +out_unlock:
-> +	spin_unlock(&supinfo.lock);
-
-No use of cleanup.h?
-
-...
-
-> +static inline bool line_is_supplemental(struct line *line)
-> +{
-> +	return READ_ONCE(line->debounce_period_us) != 0;
-
-" != 0" is redundant.
-
-> +}
-
-...
-
->  	for (i = 0; i < lr->num_lines; i++) {
-> -		if (lr->lines[i].desc) {
-> -			edge_detector_stop(&lr->lines[i]);
-> -			gpiod_free(lr->lines[i].desc);
-> +		line = &lr->lines[i];
-> +		if (line->desc) {
-
-Perhaps
-
-		if (!line->desc)
-			continue;
-
-?
-
-> +			edge_detector_stop(line);
-> +			if (line_is_supplemental(line))
-> +				supinfo_erase(line);
-> +			gpiod_free(line->desc);
->  		}
->  	}
-
-...
-
-> +static int __init gpiolib_cdev_init(void)
-> +{
-> +	supinfo_init();
-> +	return 0;
-> +}
-
-It's a good practice to explain initcalls (different to the default ones),
-can you add a comment on top to explain the choice of this initcall, please?
-
-> +postcore_initcall(gpiolib_cdev_init);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
