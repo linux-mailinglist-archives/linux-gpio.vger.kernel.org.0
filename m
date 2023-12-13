@@ -1,127 +1,134 @@
-Return-Path: <linux-gpio+bounces-1352-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1353-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85FB8810EE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 11:50:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41A2D81108A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 12:52:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B977C1C20B92
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 10:50:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6D2171C2099E
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 11:52:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8FBB22EED;
-	Wed, 13 Dec 2023 10:50:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FC1628DA1;
+	Wed, 13 Dec 2023 11:52:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eN72oClR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHr/71w5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-x934.google.com (mail-ua1-x934.google.com [IPv6:2607:f8b0:4864:20::934])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id A09FD183
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 02:49:55 -0800 (PST)
-Received: by mail-ua1-x934.google.com with SMTP id a1e0cc1a2514c-7cb48ecbc20so167578241.3
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 02:49:55 -0800 (PST)
+Received: from mail-oi1-x229.google.com (mail-oi1-x229.google.com [IPv6:2607:f8b0:4864:20::229])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E3C93B0
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 03:51:59 -0800 (PST)
+Received: by mail-oi1-x229.google.com with SMTP id 5614622812f47-3b9fcb3223dso3692586b6e.3
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 03:51:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702464594; x=1703069394; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=jQ/eqZyInWvPV/p/BnJCchD1NxYc5f2d9uZwx+OK+W0=;
-        b=eN72oClRc1c6RLwtMmYyibkDWCFpXhE7SGAfd1Mi54tpSg9MSXsJfW05TQcAX217An
-         H58cnozdihay09emK4Ry3eH8YcY5OlhXCLedahqWWgNAyptN2fttC+suQAdPazF9hV2u
-         mQLps5w4B7l+Lsms0vkWfsaTvKFj7/2Ho3pb0w+Bb5+0Ehk/GuCtLgn3+fbq0QsNeU9u
-         1slD4OdukCm/ujRMNKfnw+DLTWDwMUUEv8xgx/Ay9rMYNIB7szSqlWuWMKD1pclIppGs
-         l6YauUokxQjcPznLu5je0788m/GfGoCvsElqttrIuSCPAiGIwzJrW8tZ4RrsJ3TJgO+7
-         Wo3A==
+        d=gmail.com; s=20230601; t=1702468319; x=1703073119; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kzY4dfF2EVravhkNwqxvYb8qj3gpv3p+PrP+OyUvRLk=;
+        b=bHr/71w5GMX2bxy4cGIbodIcIxG1uUx/Vg/SZRubtrQZ+U+mbbZoGhHKvbCKnMgcWk
+         mUUr6ibdzoAAfvbIqFEQYcwd6F34UqIqiVXlPaSIAQ1ucZMEiRNVItbJuCIoV42X5UfW
+         9PKwtKMgTgk2DX4SdlH8uY4SxsnWYiGI/D+s3BfSQ/iPc2YZbv3yOgZ9LQLuy+WaILiD
+         mdEwP0Mkt+Yqo/UOYDsTQS6gYQwKK/57NbkxJW9afYI7y0ayDMklEV2obkZCEugzfGj8
+         Z+938yf8TRR8eAaqurvkuv6v4/mj32Mj5jxFKzVYRFaZapWeF1Jhy2ZmQogxRmJvuKOO
+         VCyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702464594; x=1703069394;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jQ/eqZyInWvPV/p/BnJCchD1NxYc5f2d9uZwx+OK+W0=;
-        b=U9VD63CLpexnxVVFHfOFaH5SPoiDwyXmo7bfY/jO0+TVpy2WY0vl9fEtWJ/oqOX8vQ
-         UANoZ5nJOErdQM+zW4GJ6MSrIsLeLlzjSjLTR1GhxSKPOOSb3cKeeKgRK1jIWGrMh+pZ
-         IpGYSuoEoMtFj5QQuf6ny6oJbSYUK0QlGD+RDnx16bM2Ol/MtgT1vQgb6ZgJTP1cpVAw
-         /xmzvovfo0PhaPXc8FwjBxyyuxbQqWUSwPZ20iyWAslmzuwBGIjC+ESqgqAOwdq29/+I
-         LwmJvkCHFYg/wbPRk7ztBmUT6WGungjwNSDB4U7XAJeZS4tBO4zh8djYUmxbD8nc6H35
-         sQQA==
-X-Gm-Message-State: AOJu0YwBcP/kBAI9Q4ufCA8VTDVz3/nv6+iyhwCdMMuIYhL1fSJ5dSMd
-	BGLaOoG6qLnvFzduJ722GYk2fFfVx31rUWBPODQ=
-X-Google-Smtp-Source: AGHT+IGLOxTd1kRXYKZTbbp7p7qfperTRpRjvpLXPo9VsQaRKfyOF+Wo8YoRqraJVtVE4J69agTCn5Zq6/ksiyaq04M=
-X-Received: by 2002:a05:6102:3711:b0:464:4753:d3b6 with SMTP id
- s17-20020a056102371100b004644753d3b6mr4734253vst.26.1702464594102; Wed, 13
- Dec 2023 02:49:54 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702468319; x=1703073119;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kzY4dfF2EVravhkNwqxvYb8qj3gpv3p+PrP+OyUvRLk=;
+        b=oDvAiLHXVe/lFdwaXBQoOy7d9bjuTVoBS6EFbC/Nr0SPlZYHTfXGPcGrzjdnFS0fmT
+         eWRtDJfA9F4awsAEgffGdiXAuDHqgYTAB0B/3YXxyy5wCVNb6IfkeDG6tFXZi+XBXdfh
+         jnElJc8KkEoX+tIIqPrnFpafA6U5XacYtWKzuxbxnM4r4h5sY4XAyBJrb/r4AqCaQDzX
+         xLGQ6DcMtHe0Bz8Jm/ycpHG0fnIvIYl7wtrrhfi91YiW2GIkeDMXA2Rk18gnXb2T2y3f
+         LII6paw/n5WKlhSdkYgtQHBzKm/GdoOCt7wKqgyel8JowSsBnig1Bcvzms6k9bRuLbfq
+         B/1w==
+X-Gm-Message-State: AOJu0YwXViSx+apkTMQ7j9smqiWDX9RixnpwxAmShHwTEtmL4GL/E/g1
+	Bt/9B/1bwrxchA+ybTauFfVs3KK6G70=
+X-Google-Smtp-Source: AGHT+IGEBYftKeG2408UxogiPRIv+Tr+naKQ7essRFGXzhfGPADyAIim8hbEiR58vVE6TKLQcsLp5w==
+X-Received: by 2002:a05:6808:1b23:b0:3b9:e2bf:c24e with SMTP id bx35-20020a0568081b2300b003b9e2bfc24emr10972590oib.15.1702468319120;
+        Wed, 13 Dec 2023 03:51:59 -0800 (PST)
+Received: from rigel (194-223-186-106.tpgi.com.au. [194.223.186.106])
+        by smtp.gmail.com with ESMTPSA id b9-20020a056a0002c900b006cee656cb3fsm8684998pft.132.2023.12.13.03.51.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 13 Dec 2023 03:51:58 -0800 (PST)
+Date: Wed, 13 Dec 2023 19:51:54 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Mathias Dobler <mathias.dob@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] - fast writing while waiting for edge events
+Message-ID: <ZXma2gzOkbjawsH2@rigel>
+References: <CAEydid=u3zTn-P-OW=58=bQOV7hVeyWbyPAnYqqQJSOnB_Z4vw@mail.gmail.com>
+ <CAMRc=Mf+O-irNhM8Fx=T1H7uFddYeXMECxB1qMm8-knuw6hH-Q@mail.gmail.com>
+ <CAEydidnnqmaX_vAVFSq=7Q=UpbY_Owh+07=jBR-fHs5dc=RLsA@mail.gmail.com>
+ <ZXiEBXWFVmz_cmdM@rigel>
+ <CAEydidkEikZciGD_EzS95tMXznPH=OFP__Q2Bkk6HrQ+sNhkxQ@mail.gmail.com>
+ <ZXkD7f5GUZ2WWfoD@rigel>
+ <CAEydid=UvfRZMHRVRgXs0dtc4p72exc-h6Bs00OHsp3+zsS8XA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAEydid=u3zTn-P-OW=58=bQOV7hVeyWbyPAnYqqQJSOnB_Z4vw@mail.gmail.com>
- <CAMRc=Mf+O-irNhM8Fx=T1H7uFddYeXMECxB1qMm8-knuw6hH-Q@mail.gmail.com>
- <CAEydidnnqmaX_vAVFSq=7Q=UpbY_Owh+07=jBR-fHs5dc=RLsA@mail.gmail.com>
- <ZXiEBXWFVmz_cmdM@rigel> <CAEydidkEikZciGD_EzS95tMXznPH=OFP__Q2Bkk6HrQ+sNhkxQ@mail.gmail.com>
- <ZXkD7f5GUZ2WWfoD@rigel>
-In-Reply-To: <ZXkD7f5GUZ2WWfoD@rigel>
-From: Mathias Dobler <mathias.dob@gmail.com>
-Date: Wed, 13 Dec 2023 11:49:43 +0100
-Message-ID: <CAEydid=UvfRZMHRVRgXs0dtc4p72exc-h6Bs00OHsp3+zsS8XA@mail.gmail.com>
-Subject: Re: [libgpiod] - fast writing while waiting for edge events
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAEydid=UvfRZMHRVRgXs0dtc4p72exc-h6Bs00OHsp3+zsS8XA@mail.gmail.com>
 
-Am Mi., 13. Dez. 2023 um 02:08 Uhr schrieb Kent Gibson <warthog618@gmail.com>:
-> I wasn't suggesting that you were using libgpiod to generate the PWM - but
-> the PWM signal is being used to generate edge events, right?  And you
-> use a libgpiod request to receive those events?
-Yes, exactly.
+On Wed, Dec 13, 2023 at 11:49:43AM +0100, Mathias Dobler wrote:
+> Am Mi., 13. Dez. 2023 um 02:08 Uhr schrieb Kent Gibson <warthog618@gmail.com>:
+>
+> > Or are you using separate threads for lines within one request?
+> > That is not what multi-line requests are intended for, and you would be
+> > better off with separate requests for that case.
+> > Multi-line requests are for cases where you need to read or write a set
+> > of lines as atomically as possible - but you would do that from one
+> > thread.  They can also be used where you only have a single thread
+> > controlling several lines, so you only have to deal with the one request.
+> > But if you want to independently control separate lines from separate
+> > threads then separate requests is the way to go.
 
-> Or are you using separate threads for lines within one request?
-> That is not what multi-line requests are intended for, and you would be
-> better off with separate requests for that case.
-> Multi-line requests are for cases where you need to read or write a set
-> of lines as atomically as possible - but you would do that from one
-> thread.  They can also be used where you only have a single thread
-> controlling several lines, so you only have to deal with the one request.
-> But if you want to independently control separate lines from separate
-> threads then separate requests is the way to go.
-I have one request object for 1 line 'req1' that's monitored (=wait
-and read edge_events) by 1 thread 't1'. At the same time,
-there lives another request object 'req2' for multiple lines, that's
-monitored by another thread 't2'. My use case is, that
-when t1 reads an edge event, it executes a callback that requires to
-read multiple values of 'req2'. Now the dilemma occurs.
-Does t1 interrupt t2 from waiting for edge events to gain the mutex,
-risking t2 missing edge events while t1 holds the mutex, or does
-t1 bypass the mutex and violate the libgpiod threading contract?
-I think this scenario could also be boiled down to a having only 1
-request for 1 line. Monitoring edge events, and at the same time
-trying to read/write or other performing other operations on the
-request object would result in the same dilemma.
-Again, this might just be a a very specific use case with strong time
-constraints (that I wish libgpiod supported out of the box).
+> I have one request object for 1 line 'req1' that's monitored (=wait
+> and read edge_events) by 1 thread 't1'. At the same time,
+> there lives another request object 'req2' for multiple lines, that's
+> monitored by another thread 't2'. My use case is, that
+> when t1 reads an edge event, it executes a callback that requires to
+> read multiple values of 'req2'. Now the dilemma occurs.
+> Does t1 interrupt t2 from waiting for edge events to gain the mutex,
+> risking t2 missing edge events while t1 holds the mutex, or does
+> t1 bypass the mutex and violate the libgpiod threading contract?
+> I think this scenario could also be boiled down to a having only 1
+> request for 1 line. Monitoring edge events, and at the same time
+> trying to read/write or other performing other operations on the
+> request object would result in the same dilemma.
+> Again, this might just be a a very specific use case with strong time
+> constraints (that I wish libgpiod supported out of the box).
+>
 
-> Correct - going by the documentation the edge event handler thread
-> should be the only thread accessing that request.
+Firstly note that you cannot lose edge events. They are queued in the
+kernel in case userspace is a bit busy.  It is still possible to overflow
+the queue, but it takes serious effort.  You can check the seqnos in the
+events to detect an overflow.
 
-> My preference for higher level languages is to bypass libgpiod and go
-> direct to the kernel GPIO uAPI (the ioctl calls), which is thread safe.
-> Then you don't have to worry about libgpiod objects or the libgpiod API
-> and wrapping or mapping them to your language.
-> That is the approach I took for both my Go[1] and Rust[2] libraries.
+It is also a bit odd to be monitoring a line for edges AND polling it
+at the same time.  You get edge events when it changes value, so polling
+between edges is redundant.
 
-> OTOH I'm very familiar with the kernel uAPI (I wrote v2), which is a bit
-> convoluted due to the restrictions imposed by ioctl calls and kernel ABI
-> compatibility.  And I initially wrote the Go library to test the uAPI v2
-> as I wrote it, so libgpiod was not even an option then (libgpiod v1 only
-> supports the uAPI v1, and libgpiod v2 only supports uAPI v2).
-> Going direct to the uAPI also means you can support both uAPI v1 and v2,
-> if you want, though that is becoming less of an issue now uAPI v2 has
-> been out for a while.
-> Anyway, libgpiod is not the only option.
-Hmm... sounds like an interesting challenge... and there would already
-be something to look at.
-Maybe a project for the future ;)
+I suggest not holding the mutex while waiting, only reading.
+Holding a mutex while waiting is generally poor form.  Use a structural
+mechanism to prevent the requests being closed while threads are waiting
+on them. e.g. cancel the wait before performing the release.
 
-Regards,
-Mathias
+Though if you are using a libgpiod function to perform the wait you are
+still stuck, as going by the documentation you have to prevent other
+access while you are waiting....
+
+So you have to not use a libgpiod function and wait by poll()ing the
+request fd.
+At that point you may as well wait on both requests in the one thread.
+And then you don't need the mutex as you only have one thread accessing the
+requests.
+
+Cheers,
+Kent.
 
