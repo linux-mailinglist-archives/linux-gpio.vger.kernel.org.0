@@ -1,57 +1,57 @@
-Return-Path: <linux-gpio+bounces-1336-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1337-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE9F7810672
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 01:27:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 962E1810678
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 01:28:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 95EB31F212FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 00:27:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 73E491C20E1E
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 00:28:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20A6A65C;
-	Wed, 13 Dec 2023 00:27:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58CF4EB8;
+	Wed, 13 Dec 2023 00:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kawT14PV"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="VIjqvOwF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 407E7CE
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 16:27:29 -0800 (PST)
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id DCDD392
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 16:28:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702427249; x=1733963249;
+  t=1702427295; x=1733963295;
   h=date:from:to:cc:subject:message-id;
-  bh=ks2n512Uf3mHg/ECGbwTj7qyR9UrY7Oj++K02z1vKuk=;
-  b=kawT14PVgx08lSWt/Qn8v5oyNb4t1cLz2MiEZvSVWfVkA5ryHB+3JYNu
-   Wn1lIO3WrIzK6BncpqXRJutvb9V4xiqotRxtkc3C+eMm2o1wbPoILdNkE
-   HCdv9tPGvs62id8fK9cZqNgN50UsBWwWbLuZWmq+jyXu+SePkVHG7yon+
-   SkMQyje54B1XqZfXkql42BPkoXlkRRAJseJ+gjRUJ1kENpol5pxwGmj/h
-   R9p1st2OvdwAoXIG0hyUcOm0cficx3nYWEU2axdUtoemuimqtKdlLNxxv
-   xwj7vmCSLCHNAgpJ/D8kgr+Gl2FV++IiHStY2nuohdlWTzQdYSCmqN8mj
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="2026629"
+  bh=gmopCRaQVBi9zNiTkYXR5Yk+1I9gcrn2NXfz5TYYXeA=;
+  b=VIjqvOwF3wHYX5u7yhygMG7mpaT1kroLK+XbxRYxX8mkt+jjTfwoX2R8
+   sAOxKuPUYqjj0ocaH+d/yccuSrZMAUp3XRcV5JnLDHT1rB4iRoEDKlduj
+   Lp/NrknDVV/K7EzWAPXZ8pP+Ka7FdXtqv2m2k2CWhpw1+yTcLn9Oar7aI
+   Kl/L9qsegk0hFwjSQ7fPhMSZrqVqs/BLyd4/2QnVDqOBIXN10wgIcZxW4
+   oeMWeQJWYZT1hV0qmUqDL65fcSfu0AiF8pH/SuRk/OBO9qIsWh/Aoo6ki
+   RwlwM93GVxx8nFt4vUkfbh5EIwrk5PQHQbSa0rqr/z9rfzFMFsyHVY4QS
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="392068168"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="2026629"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 16:27:15 -0800
+   d="scan'208";a="392068168"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 16:28:15 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="891819273"
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="1020915450"
 X-IronPort-AV: E=Sophos;i="6.04,271,1695711600"; 
-   d="scan'208";a="891819273"
+   d="scan'208";a="1020915450"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by fmsmga002.fm.intel.com with ESMTP; 12 Dec 2023 16:27:14 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 12 Dec 2023 16:28:14 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rDD5j-000Jtf-2a;
-	Wed, 13 Dec 2023 00:27:11 +0000
-Date: Wed, 13 Dec 2023 08:27:00 +0800
+	id 1rDD6i-000JuA-0Q;
+	Wed, 13 Dec 2023 00:28:12 +0000
+Date: Wed, 13 Dec 2023 08:27:27 +0800
 From: kernel test robot <lkp@intel.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
- 977f293b0b844069cf17a420e04ea30d34719cc5
-Message-ID: <202312130857.nsmRtGGo-lkp@intel.com>
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ db4a9133511c4a325be04644bf8754ffdfc550bc
+Message-ID: <202312130825.ivpnRmCC-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -59,12 +59,12 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
-branch HEAD: 977f293b0b844069cf17a420e04ea30d34719cc5  Merge branch 'devel' into for-next
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: db4a9133511c4a325be04644bf8754ffdfc550bc  pinctrl: core: Remove unused members from struct group_desc
 
 elapsed time: 1465m
 
-configs tested: 179
+configs tested: 178
 configs skipped: 2
 
 The following configs have been built successfully.
@@ -78,17 +78,15 @@ arc                              allmodconfig   gcc
 arc                               allnoconfig   gcc  
 arc                              allyesconfig   gcc  
 arc                                 defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
 arc                   randconfig-001-20231212   gcc  
 arc                   randconfig-002-20231212   gcc  
+arm                              alldefconfig   clang
 arm                              allmodconfig   gcc  
 arm                               allnoconfig   gcc  
 arm                              allyesconfig   gcc  
 arm                                 defconfig   clang
-arm                          exynos_defconfig   gcc  
-arm                      footbridge_defconfig   gcc  
-arm                      integrator_defconfig   gcc  
-arm                      jornada720_defconfig   gcc  
-arm                         nhk8815_defconfig   gcc  
+arm                         lpc32xx_defconfig   clang
 arm                   randconfig-001-20231212   gcc  
 arm                   randconfig-002-20231212   gcc  
 arm                   randconfig-003-20231212   gcc  
@@ -142,19 +140,18 @@ loongarch             randconfig-002-20231212   gcc
 m68k                             allmodconfig   gcc  
 m68k                              allnoconfig   gcc  
 m68k                             allyesconfig   gcc  
-m68k                       bvme6000_defconfig   gcc  
 m68k                                defconfig   gcc  
-m68k                            mac_defconfig   gcc  
+m68k                        m5407c3_defconfig   gcc  
+m68k                          sun3x_defconfig   gcc  
 microblaze                       allmodconfig   gcc  
 microblaze                        allnoconfig   gcc  
 microblaze                       allyesconfig   gcc  
 microblaze                          defconfig   gcc  
 mips                              allnoconfig   clang
 mips                             allyesconfig   gcc  
-mips                           ci20_defconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                      maltasmvp_defconfig   gcc  
-mips                          rb532_defconfig   gcc  
+mips                        bcm63xx_defconfig   clang
+mips                         db1xxx_defconfig   gcc  
+mips                     decstation_defconfig   gcc  
 nios2                            allmodconfig   gcc  
 nios2                             allnoconfig   gcc  
 nios2                            allyesconfig   gcc  
@@ -171,13 +168,13 @@ parisc                              defconfig   gcc
 parisc                randconfig-001-20231212   gcc  
 parisc                randconfig-002-20231212   gcc  
 parisc64                            defconfig   gcc  
-powerpc                    adder875_defconfig   gcc  
+powerpc                     akebono_defconfig   clang
 powerpc                          allmodconfig   clang
 powerpc                           allnoconfig   gcc  
 powerpc                          allyesconfig   clang
-powerpc                   microwatt_defconfig   clang
-powerpc                      pmac32_defconfig   clang
-powerpc                      ppc6xx_defconfig   gcc  
+powerpc                 mpc8315_rdb_defconfig   clang
+powerpc                 mpc836x_rdk_defconfig   clang
+powerpc                         ps3_defconfig   gcc  
 powerpc               randconfig-001-20231212   gcc  
 powerpc               randconfig-002-20231212   gcc  
 powerpc               randconfig-003-20231212   gcc  
@@ -197,14 +194,14 @@ s390                             allyesconfig   gcc
 s390                                defconfig   gcc  
 s390                  randconfig-001-20231212   clang
 s390                  randconfig-002-20231212   clang
-sh                               alldefconfig   gcc  
 sh                               allmodconfig   gcc  
 sh                                allnoconfig   gcc  
 sh                               allyesconfig   gcc  
 sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
 sh                    randconfig-001-20231212   gcc  
 sh                    randconfig-002-20231212   gcc  
-sh                          rsk7203_defconfig   gcc  
+sh                          rsk7269_defconfig   gcc  
 sparc                            allmodconfig   gcc  
 sparc64                          allmodconfig   gcc  
 sparc64                          allyesconfig   gcc  
@@ -248,6 +245,8 @@ x86_64                randconfig-075-20231212   gcc
 x86_64                randconfig-076-20231212   gcc  
 x86_64                          rhel-8.3-rust   clang
 xtensa                            allnoconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                          iss_defconfig   gcc  
 xtensa                randconfig-001-20231212   gcc  
 xtensa                randconfig-002-20231212   gcc  
 
