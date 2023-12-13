@@ -1,187 +1,182 @@
-Return-Path: <linux-gpio+bounces-1342-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1343-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D46A9810A39
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 07:23:28 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3DBDC810B1A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 08:12:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E7EF91C20A61
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 06:23:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC9D91F21683
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Dec 2023 07:12:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B7ABF9F7;
-	Wed, 13 Dec 2023 06:23:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8267217751;
+	Wed, 13 Dec 2023 07:12:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f9PwBLkO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="THR9wNEr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-x436.google.com (mail-wr1-x436.google.com [IPv6:2a00:1450:4864:20::436])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6AB89EB
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:23:20 -0800 (PST)
-Received: by mail-wr1-x436.google.com with SMTP id ffacd0b85a97d-33338c47134so5981384f8f.1
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 22:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702448599; x=1703053399; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=OOeFpJK4OYoAw3qn3oCy1TCCDOQeXt6aQHprsTtnDUE=;
-        b=f9PwBLkOm51cobyqkGF1oGiWRE0BJ0QUqduOv0HDezLOVAmCZ0aCiBnHtsrPGI7fH4
-         zQbDex2aTijmFgR+tewBsPc6qZ4QOqhGbBNTehd7SFlOkOOJ/uswsi7tthpSp1LKHEkF
-         NNQGeeQZkz5+9P68FX5u0E1jPPwwXPplsx0nVxmKm4E8a2KDTznvMIhJwdzNPy+wttlM
-         7Brs+1LM6mqsiyYMysspGRzEEarWMfzhPPefte1EcMtOZJn38Q25J0hAwqFNayCzDAz/
-         8B0BpNHlIXJqEvXeALa0C+krN24U7gdfRqS4mYU6aQWF/ddWORTEpBfy9ODYMH61j1Mk
-         vZkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702448599; x=1703053399;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=OOeFpJK4OYoAw3qn3oCy1TCCDOQeXt6aQHprsTtnDUE=;
-        b=jOftSyhWkdCL1tkxkR/QT8qVpgjnkKNaS8P2t5GwN5ORX2BXoXsI0q9FXRQgLfqWp3
-         5JKQO+L0qv4yGfKT7Am0vwIfyB5sa6WiuPyKydvWUbDgyAR7DlutMMIivKXYlJF0+oVe
-         SiAvwZUz1WnbAdfztwq5oNvsNJj/lgoQLrJAa3wVjYgnpJnZ7vYSo0Sc6jZp4Tn7lHbX
-         T+D7Xf/Jqk0DJ9uy4+tZ3BBgSB8PqJEkxrNQrs61cx4fz0JKpQr9OQ0dGah3/NeI0e+k
-         G54frqErSsxSLtow6I2qKaPdHOgdwOferYsrlg7QPhYOFQ+z+2Ysn4/5pK2KvSS8nH66
-         lBQw==
-X-Gm-Message-State: AOJu0YyaqPzWsQuolDApukwyk+Y7YRJjhB2phJ6Q4HkScqz5bg5yXSNy
-	vcrp4t9Jn0VuT2qQaLrgaKgLVA==
-X-Google-Smtp-Source: AGHT+IHizJKfXzdrkxg67JeIOicbOp8AjE+tlskqBNgEFMLN9azUW98KEjGCmuWVK9irIdOHQvedrQ==
-X-Received: by 2002:a05:6000:b0f:b0:333:5eea:921d with SMTP id dj15-20020a0560000b0f00b003335eea921dmr3597691wrb.61.1702448598836;
-        Tue, 12 Dec 2023 22:23:18 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id m1-20020a056000008100b00334b3208700sm12332952wrx.49.2023.12.12.22.23.16
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Dec 2023 22:23:18 -0800 (PST)
-Message-ID: <3ccfae77-eaa3-4928-9ad6-c61c73d96bcb@linaro.org>
-Date: Wed, 13 Dec 2023 07:23:16 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F11CE120
+	for <linux-gpio@vger.kernel.org>; Tue, 12 Dec 2023 23:11:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702451518; x=1733987518;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=0wv2VcEiu8/TZx7vPxNTFFPQFsqN1ltE7M9wiYMdAhw=;
+  b=THR9wNEr13dJPhHBORSB0+NjfV0a88gakv5fCjSSPf63bnj+qTbtKeIX
+   jv2qcZc2hkMkfebwMIUjP9BkNJ4IazHlpxnLWUoqt41WqVd9RFiJsdVtU
+   LMKYoT98HkPsOdPUfhw4U9pTAx1o3X3l4M9DkPGqn/z/ZiQi2K5WNNix/
+   c2vIafQtpJsvrPZAiU3xI2OaSESvLpLCUhsxqrSsgp8DxPc8LZZ0qe09C
+   2XK6IXEFbFujw5Lu1A4QKQ2BloNXp7IZoxBf2tHSo9mSEKgC3/7qOf7GT
+   NsYytkLyTmnLQBPO+tcq+dZ74TPWyXUd5W7UrPX7P3RSq1R1az46nH1t3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="8309963"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="8309963"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 12 Dec 2023 23:11:57 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10922"; a="947078302"
+X-IronPort-AV: E=Sophos;i="6.04,272,1695711600"; 
+   d="scan'208";a="947078302"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 12 Dec 2023 23:11:55 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rDJPM-000KBj-0Y;
+	Wed, 13 Dec 2023 07:11:52 +0000
+Date: Wed, 13 Dec 2023 15:11:28 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:b4/gpio-descriptors-sound-misc 5/5]
+ sound/soc/tegra/tegra20_ac97.c:46:18: warning: incompatible integer to
+ pointer conversion passing 'int' to parameter of type 'struct gpio_desc *'
+Message-ID: <202312131517.ksxVggg2-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/3] dt-bindings: soc: nuvoton: Add NPCM BPC
-Content-Language: en-US
-To: Tomer Maimon <tmaimon77@gmail.com>, arnd@arndb.de, pmenzel@molgen.mpg.de,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au,
- venture@google.com, yuenn@google.com, benjaminfair@google.com,
- j.neuschaefer@gmx.net
-Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231212100703.3374555-1-tmaimon77@gmail.com>
- <20231212100703.3374555-2-tmaimon77@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231212100703.3374555-2-tmaimon77@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 12/12/2023 11:07, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC NPCM BIOS Post
-> Code (BPC).
-> 
-> The NPCM BPC monitoring two configurable I/O addresses written by the
-> host on the bus.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/gpio-descriptors-sound-misc
+head:   cbde31b95f12d0b3059938194b704f40cdd55540
+commit: cbde31b95f12d0b3059938194b704f40cdd55540 [5/5] ASoC: tegra: tegra20_ac97: Convert to use GPIO descriptors
+config: arm-defconfig (https://download.01.org/0day-ci/archive/20231213/202312131517.ksxVggg2-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231213/202312131517.ksxVggg2-lkp@intel.com/reproduce)
 
-It's v2, so changelog?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312131517.ksxVggg2-lkp@intel.com/
 
->  .../soc/nuvoton/nuvoton,npcm-bpc.yaml         | 63 +++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> new file mode 100644
-> index 000000000000..30033cdac8f5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> @@ -0,0 +1,63 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-bpc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton BMC NPCM BIOS Post Code (bpc) controller
+All warnings (new ones prefixed by >>):
 
-s/bpc/BPC/
-
-> +
-> +maintainers:
-> +  - Tomer Maimon <tmaimon77@gmail.com>
-> +
-> +description:
-> +  Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable I/O
-> +  addresses written by the host on the bus, the capture data stored in
-> +  128-word FIFO.
-> +
-> +  NPCM BPC supports capture double words, when using capture
-> +  double word only I/O address 1 is monitored.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,npcm750-bpc
-> +      - nuvoton,npcm845-bpc
-
-Your device driver suggests these are compatible, so express it in the
-bindings and modify driver respectively.
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
+>> sound/soc/tegra/tegra20_ac97.c:46:18: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_set_value(workdata->reset_gpio, 1);
+                           ^~~~~~~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:122:40: note: passing argument to parameter 'desc' here
+   void gpiod_set_value(struct gpio_desc *desc, int value);
+                                          ^
+   sound/soc/tegra/tegra20_ac97.c:49:18: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_set_value(workdata->reset_gpio, 0);
+                           ^~~~~~~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:122:40: note: passing argument to parameter 'desc' here
+   void gpiod_set_value(struct gpio_desc *desc, int value);
+                                          ^
+   sound/soc/tegra/tegra20_ac97.c:72:25: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_direction_output(workdata->sync_gpio, 1);
+                                  ^~~~~~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:111:46: note: passing argument to parameter 'desc' here
+   int gpiod_direction_output(struct gpio_desc *desc, int value);
+                                                ^
+   sound/soc/tegra/tegra20_ac97.c:74:18: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_set_value(workdata->sync_gpio, 0);
+                           ^~~~~~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:122:40: note: passing argument to parameter 'desc' here
+   void gpiod_set_value(struct gpio_desc *desc, int value);
+                                          ^
+>> sound/soc/tegra/tegra20_ac97.c:345:19: warning: incompatible pointer to integer conversion assigning to 'int' from 'struct gpio_desc *' [-Wint-conversion]
+           ac97->reset_gpio = devm_gpiod_get(&pdev->dev,
+                            ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+>> sound/soc/tegra/tegra20_ac97.c:348:13: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'const void *' [-Wint-conversion]
+           if (IS_ERR(ac97->reset_gpio)) {
+                      ^~~~~~~~~~~~~~~~
+   include/linux/err.h:59:60: note: passing argument to parameter 'ptr' here
+   static inline bool __must_check IS_ERR(__force const void *ptr)
+                                                              ^
+   sound/soc/tegra/tegra20_ac97.c:349:17: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'const void *' [-Wint-conversion]
+                   ret = PTR_ERR(ac97->reset_gpio);
+                                 ^~~~~~~~~~~~~~~~
+   include/linux/err.h:49:61: note: passing argument to parameter 'ptr' here
+   static inline long __must_check PTR_ERR(__force const void *ptr)
+                                                               ^
+   sound/soc/tegra/tegra20_ac97.c:353:26: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_set_consumer_name(ac97->reset_gpio, "codec-reset");
+                                   ^~~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:168:47: note: passing argument to parameter 'desc' here
+   int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name);
+                                                 ^
+   sound/soc/tegra/tegra20_ac97.c:355:18: warning: incompatible pointer to integer conversion assigning to 'int' from 'struct gpio_desc *' [-Wint-conversion]
+           ac97->sync_gpio = devm_gpiod_get(&pdev->dev,
+                           ^ ~~~~~~~~~~~~~~~~~~~~~~~~~~
+   sound/soc/tegra/tegra20_ac97.c:358:13: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'const void *' [-Wint-conversion]
+           if (IS_ERR(ac97->sync_gpio)) {
+                      ^~~~~~~~~~~~~~~
+   include/linux/err.h:59:60: note: passing argument to parameter 'ptr' here
+   static inline bool __must_check IS_ERR(__force const void *ptr)
+                                                              ^
+   sound/soc/tegra/tegra20_ac97.c:359:17: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'const void *' [-Wint-conversion]
+                   ret = PTR_ERR(ac97->sync_gpio);
+                                 ^~~~~~~~~~~~~~~
+   include/linux/err.h:49:61: note: passing argument to parameter 'ptr' here
+   static inline long __must_check PTR_ERR(__force const void *ptr)
+                                                               ^
+   sound/soc/tegra/tegra20_ac97.c:363:26: warning: incompatible integer to pointer conversion passing 'int' to parameter of type 'struct gpio_desc *' [-Wint-conversion]
+           gpiod_set_consumer_name(ac97->sync_gpio, "codec-sync");
+                                   ^~~~~~~~~~~~~~~
+   include/linux/gpio/consumer.h:168:47: note: passing argument to parameter 'desc' here
+   int gpiod_set_consumer_name(struct gpio_desc *desc, const char *name);
+                                                 ^
+   12 warnings generated.
 
 
-Best regards,
-Krzysztof
+vim +46 sound/soc/tegra/tegra20_ac97.c
 
+    35	
+    36	static void tegra20_ac97_codec_reset(struct snd_ac97 *ac97)
+    37	{
+    38		u32 readback;
+    39		unsigned long timeout;
+    40	
+    41		/*
+    42		 * The reset line is not driven by DAC pad group, have to toggle GPIO.
+    43		 * The RESET line is active low but this is abstracted by the GPIO
+    44		 * library.
+    45		 */
+  > 46		gpiod_set_value(workdata->reset_gpio, 1);
+    47		udelay(2);
+    48	
+    49		gpiod_set_value(workdata->reset_gpio, 0);
+    50		udelay(2);
+    51	
+    52		timeout = jiffies + msecs_to_jiffies(100);
+    53	
+    54		do {
+    55			regmap_read(workdata->regmap, TEGRA20_AC97_STATUS1, &readback);
+    56			if (readback & TEGRA20_AC97_STATUS1_CODEC1_RDY)
+    57				break;
+    58			usleep_range(1000, 2000);
+    59		} while (!time_after(jiffies, timeout));
+    60	}
+    61	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
