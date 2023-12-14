@@ -1,83 +1,90 @@
-Return-Path: <linux-gpio+bounces-1454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 057EB812F65
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:50:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE826812FFE
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 13:26:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BE3E1C218B7
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 11:50:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4163EB21854
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:26:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76771405D8;
-	Thu, 14 Dec 2023 11:50:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80ABD41779;
+	Thu, 14 Dec 2023 12:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmv/m90x"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2SPUgaQF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31C9113;
-	Thu, 14 Dec 2023 03:50:49 -0800 (PST)
-Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6d9d209c9bbso6591312a34.0;
-        Thu, 14 Dec 2023 03:50:49 -0800 (PST)
+Received: from mail-ua1-x931.google.com (mail-ua1-x931.google.com [IPv6:2607:f8b0:4864:20::931])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 09E4F118
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 04:26:36 -0800 (PST)
+Received: by mail-ua1-x931.google.com with SMTP id a1e0cc1a2514c-7cb3f1d1ff4so326452241.1
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 04:26:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702554649; x=1703159449; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=GKt11ljdbrQuqgwD8h0TcinNH0vRuCIxothOamPhbdc=;
-        b=Fmv/m90xFqGeXgAIlW2erJMSrPKn16A/7lvl1myUBAQPbAkd2D9mVhsDABZOEHCXdE
-         9KThEzikiHNpukc7Z0rg4E6Ijs6XymKkFVqqZYf21uEcrZWfQREdrGzqraeW1ayAYWTp
-         8IxcCqYGWXeC8kzX9i07yx7FZpL9sqlyr2cLpj+Q2xkVHxaM+vDJ2kBYqI6ZoA24SAUF
-         rieUZQU2FvmTMevfFjalXtKDUgp8cqeCTy66tXekQvyLZi/NKGNWrob2tkbt52+Bqyo7
-         ZOrbLnhxua69LI3CF9lhjSYHGM9eL3Af+ELm61zIcsK5ELyAokQ4aPt3zR7mMA6IHEyg
-         uf0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702554649; x=1703159449;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702556795; x=1703161595; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=GKt11ljdbrQuqgwD8h0TcinNH0vRuCIxothOamPhbdc=;
-        b=nzafL5yXNXu/6+1ymZPF6TeCCLDC+5q53W9NVSi/RtBDyA56BLd1eXaITdgkmC4giB
-         +ZsZfoBnR3CLbnfRrovPqhtD5gfCNvFkdcfaazY9ASBrZjQnYOnqQ3t5SOzJPrNIfQQ/
-         qIacHbwF+LdqsK6wFDHzvxoRCj6+4jyHwkds1fQpgxTOiJEnUsmqVogbE8wooWiW9Hlr
-         422Oq1dVsbdaqJCH6Lcfeax4Bs/j7uIackY6+D2weNSK/lTGJY2AQamTFMxD1z+SXBKQ
-         44+c+E1fcUIWshPZS9xrYK9h9MbHVUrhDyMg2iS8BtDp8YhOx4Lgios3c6FO0NufFMxj
-         S9/Q==
-X-Gm-Message-State: AOJu0YweQAiumQtVORO6+wHhe7Wm8twwvtz+eCglmQi2HuQ2TQ8UuPQf
-	D5rEMOtT5k98izq5FevA0L4DCp7iVxo=
-X-Google-Smtp-Source: AGHT+IF2ShbB/brNYRN/j5G4nliv7r6d/I3VA70v7aP6fSXTpF+5YgsBYMkeicLjBx7lC6K8RIjjVg==
-X-Received: by 2002:a05:6830:1bdb:b0:6da:32cd:893a with SMTP id v27-20020a0568301bdb00b006da32cd893amr3466239ota.41.1702554649168;
-        Thu, 14 Dec 2023 03:50:49 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id c7-20020a056a00008700b006ce458995f8sm11686994pfj.173.2023.12.14.03.50.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 03:50:48 -0800 (PST)
-Date: Thu, 14 Dec 2023 19:50:44 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH v2 1/5] gpiolib: cdev: adopt scoped_guard()
-Message-ID: <ZXrsFD2l5S5BXEHH@rigel>
-References: <20231214095814.132400-1-warthog618@gmail.com>
- <20231214095814.132400-2-warthog618@gmail.com>
+        bh=o2Q8hlZ64NbmJ0/ekFmh7A+/wN3OLdaYsRhF1/tMxRs=;
+        b=2SPUgaQFC9IWe+1lIiZoD+/02se25m2NtbGisXy4ym64j7aJt0KsWzfa4iKEKq4o9k
+         4yXM+znMqYhYQWDCFXoLU54RpaPnuCaEVJUX+iwcSWFyt2yNvyrn9MsKAIIlwxq8ParK
+         ahIP7qXNa9pKO9a50i+/ibXSV9lK21SxDlwm5/subM9JiwOAnRwDrYPc05kkJErISQzn
+         JcOJbGJx+6gmZrNQFdMtgvP6IAAINbhUBnm38t9iSBLkChn3kV1XwSd17HcdEBywOHKg
+         4bTS6tsh2ruy8vL3uI6AUd932nMGMWg2ZOpH8AGVBabuzuDLnLSb3We+nSCCct8YYcPZ
+         lsVA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702556795; x=1703161595;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o2Q8hlZ64NbmJ0/ekFmh7A+/wN3OLdaYsRhF1/tMxRs=;
+        b=FVwSWwjIqmQ58D+zdgfKXa9RGF/4raBel2fRtDoKynq9h4dejXdGMmmyWLO3OC68FR
+         90eDMo/IT3wINxMpt6qzYF7CCef+Nq4tOWnVJbKYtKOvj1nZ7Gy+URXIXRjj3BNhYG8s
+         X0v4BSpPeMcznCRvs/QeHRBihtZyPgMLowNB55s0q4yLJ2kNC9vC13NbeM12xQG/CepZ
+         6gYe+QncWLxUCcTtN2Vj15+08X9oqU+S0kWzatRbJdV/JX4s5CdpVY5uP6Ug1EWpXlhc
+         EyaT4WJlvFKTLEXm4WnHBfhrA3/YleCxbq784YXKRftfo+RnxE7FrLJdHKFtHBVnga9p
+         11Cg==
+X-Gm-Message-State: AOJu0YzOgFkd5P0JpRnM/aYd4xQz/KyAq/h1WfnvqclSzoVbNdfLmEtL
+	JZNqeKRE1BTwqwwjQDX875M+L9sdDbx+ic+h+fO+6A==
+X-Google-Smtp-Source: AGHT+IFJnd3NWdiALNpof+UgNDsWh0lKMJt0WRqf4oRVtEa5JqmD+fdi95HGY5hitlPjecpCFXm/yCAIBJ43ZrsRK9c=
+X-Received: by 2002:a05:6102:3f14:b0:466:255a:69fe with SMTP id
+ k20-20020a0561023f1400b00466255a69femr6746510vsv.35.1702556795153; Thu, 14
+ Dec 2023 04:26:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231214095814.132400-2-warthog618@gmail.com>
+References: <20231208102020.36390-1-brgl@bgdev.pl> <20231208102020.36390-3-brgl@bgdev.pl>
+In-Reply-To: <20231208102020.36390-3-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 14 Dec 2023 13:26:24 +0100
+Message-ID: <CAMRc=MfV7uf-K-+aGN8QWrGBDjvvtcsimWDTXEBZMHXrmFiSgQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: use a mutex to protect the list of GPIO devices
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 14, 2023 at 05:58:10PM +0800, Kent Gibson wrote:
-> Use scoped_guard for critical sections rather than distinct
-> lock/unlock pairs.
+On Fri, Dec 8, 2023 at 11:20=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The global list of GPIO devices is never modified or accessed from
+> atomic context so it's fine to protect it using a mutex. Add a new
+> global lock dedicated to the gpio_devices list and use it whenever
+> accessing or modifying it.
+>
+> While at it: fold the sysfs registering of existing devices into
+> gpiolib.c and make gpio_devices static within its compilation unit.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-It seems using guard() can further simplify cases where the scope extends
-to the end of the function, so I'll replace those cases when I do v3.
+If there are no objections, I'll apply it tomorrow.
 
-Cheers,
-Kent.
+Bart
 
