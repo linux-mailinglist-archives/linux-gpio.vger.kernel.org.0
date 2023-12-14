@@ -1,104 +1,83 @@
-Return-Path: <linux-gpio+bounces-1453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D07D812E03
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:03:12 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 057EB812F65
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:50:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6ED61F21B50
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 11:03:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0BE3E1C218B7
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 11:50:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF7B3E484;
-	Thu, 14 Dec 2023 11:03:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76771405D8;
+	Thu, 14 Dec 2023 11:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UeNfZ/sj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fmv/m90x"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-x135.google.com (mail-lf1-x135.google.com [IPv6:2a00:1450:4864:20::135])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id BD10F11B;
-	Thu, 14 Dec 2023 03:03:03 -0800 (PST)
-Received: by mail-lf1-x135.google.com with SMTP id 2adb3069b0e04-50bfa5a6cffso9287074e87.0;
-        Thu, 14 Dec 2023 03:03:03 -0800 (PST)
+Received: from mail-ot1-x32a.google.com (mail-ot1-x32a.google.com [IPv6:2607:f8b0:4864:20::32a])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31C9113;
+	Thu, 14 Dec 2023 03:50:49 -0800 (PST)
+Received: by mail-ot1-x32a.google.com with SMTP id 46e09a7af769-6d9d209c9bbso6591312a34.0;
+        Thu, 14 Dec 2023 03:50:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702551782; x=1703156582; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=wu2c3DwVvYEQBllF+/J+S28oH/5LztrNNWHtWraW0sc=;
-        b=UeNfZ/sjAcHJwE47q13oEhNa/P1qRCcN5zfyQMKC6CQV3p8qL5aDiaLeWywD7vB5Bv
-         n5W+at9asoyRx0ncRDqrNvAkotWsvks9N6ETxWiyMZMr5RKiaH4KZi5WAAKkhdGXTT9J
-         tML7SDpaCgYD+y7qVP0+eU65tHVj1BqbDDldyxqAcQTW1ECshRAbTzw3+rpdB5o3IQlT
-         lI09BzNezUDvC4bTTbGMsOVkWxy2HWDs9nBpLbzAwHnYkjAoJajFB6+KQs41JRvrQYT8
-         f/SMWM0RIFk2Yy8zvydFWARD0T3EoKA/hLtW1SqmHOicAJAmppbwKykC2ao0Cowcp/5K
-         NA4g==
+        d=gmail.com; s=20230601; t=1702554649; x=1703159449; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GKt11ljdbrQuqgwD8h0TcinNH0vRuCIxothOamPhbdc=;
+        b=Fmv/m90xFqGeXgAIlW2erJMSrPKn16A/7lvl1myUBAQPbAkd2D9mVhsDABZOEHCXdE
+         9KThEzikiHNpukc7Z0rg4E6Ijs6XymKkFVqqZYf21uEcrZWfQREdrGzqraeW1ayAYWTp
+         8IxcCqYGWXeC8kzX9i07yx7FZpL9sqlyr2cLpj+Q2xkVHxaM+vDJ2kBYqI6ZoA24SAUF
+         rieUZQU2FvmTMevfFjalXtKDUgp8cqeCTy66tXekQvyLZi/NKGNWrob2tkbt52+Bqyo7
+         ZOrbLnhxua69LI3CF9lhjSYHGM9eL3Af+ELm61zIcsK5ELyAokQ4aPt3zR7mMA6IHEyg
+         uf0A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702551782; x=1703156582;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=wu2c3DwVvYEQBllF+/J+S28oH/5LztrNNWHtWraW0sc=;
-        b=pukQQBoUdarLuqRiLUXlskQ63rls/As9kkhHA5YK9bKRHlO5vbbUD6TRKwy37j//5R
-         N2iTWqeb785le7WHdJY8wrKKr4vrEW/RqD29Nb5sGY4G13FKi1OlwtxJ7AqWlmo+42Db
-         NiwM+tjLEpQDOPEFZnjjcmtkS4cHRo1AUn+oujto2fbbHEhvEK7QgUIprXpuUe7G7ywX
-         oVgF2ItOOPTwUsa0KIkdN5pr5ieNdw9R3/3REfd5T+6a8Vv2JxszjVaS97RTbkqAsrrH
-         XM0yRHj9eAMCtTmykXWfAJOKqCQHiKNLMi7Psu8b1DnwKFaFG5bRJCrBP3pz+JRptm7r
-         02NA==
-X-Gm-Message-State: AOJu0YxmBOqD8lhsab7i0/HGNBAGu/iAffcpN3ccKjgFEXM2XwaOMHxM
-	mDtn7fqrqWt5A/ImPn07ynU=
-X-Google-Smtp-Source: AGHT+IGkA/6XtvCqg7LSR6AbDUensyCKLPT5PPoyzAFxddrwL2e8LOG9GSSHWOPFrBJSfpn7oxdjnQ==
-X-Received: by 2002:a05:6512:11c2:b0:50b:e790:e96c with SMTP id h2-20020a05651211c200b0050be790e96cmr3522017lfr.30.1702551781616;
-        Thu, 14 Dec 2023 03:03:01 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id vc11-20020a170907d08b00b00a1b6d503e7esm9152162ejc.157.2023.12.14.03.03.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 03:03:01 -0800 (PST)
-Message-ID: <fd9f6465-fd72-401e-bcc2-59f775a43d9b@gmail.com>
-Date: Thu, 14 Dec 2023 13:02:59 +0200
+        d=1e100.net; s=20230601; t=1702554649; x=1703159449;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GKt11ljdbrQuqgwD8h0TcinNH0vRuCIxothOamPhbdc=;
+        b=nzafL5yXNXu/6+1ymZPF6TeCCLDC+5q53W9NVSi/RtBDyA56BLd1eXaITdgkmC4giB
+         +ZsZfoBnR3CLbnfRrovPqhtD5gfCNvFkdcfaazY9ASBrZjQnYOnqQ3t5SOzJPrNIfQQ/
+         qIacHbwF+LdqsK6wFDHzvxoRCj6+4jyHwkds1fQpgxTOiJEnUsmqVogbE8wooWiW9Hlr
+         422Oq1dVsbdaqJCH6Lcfeax4Bs/j7uIackY6+D2weNSK/lTGJY2AQamTFMxD1z+SXBKQ
+         44+c+E1fcUIWshPZS9xrYK9h9MbHVUrhDyMg2iS8BtDp8YhOx4Lgios3c6FO0NufFMxj
+         S9/Q==
+X-Gm-Message-State: AOJu0YweQAiumQtVORO6+wHhe7Wm8twwvtz+eCglmQi2HuQ2TQ8UuPQf
+	D5rEMOtT5k98izq5FevA0L4DCp7iVxo=
+X-Google-Smtp-Source: AGHT+IF2ShbB/brNYRN/j5G4nliv7r6d/I3VA70v7aP6fSXTpF+5YgsBYMkeicLjBx7lC6K8RIjjVg==
+X-Received: by 2002:a05:6830:1bdb:b0:6da:32cd:893a with SMTP id v27-20020a0568301bdb00b006da32cd893amr3466239ota.41.1702554649168;
+        Thu, 14 Dec 2023 03:50:49 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id c7-20020a056a00008700b006ce458995f8sm11686994pfj.173.2023.12.14.03.50.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 03:50:48 -0800 (PST)
+Date: Thu, 14 Dec 2023 19:50:44 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org, andy@kernel.org
+Subject: Re: [PATCH v2 1/5] gpiolib: cdev: adopt scoped_guard()
+Message-ID: <ZXrsFD2l5S5BXEHH@rigel>
+References: <20231214095814.132400-1-warthog618@gmail.com>
+ <20231214095814.132400-2-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 2/2] iio: adc: ad7173: add AD7173 driver
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
- Lars-Peter Clausen <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
- Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
- <20231212104451.22522-2-mitrutzceclan@gmail.com>
- <ZXm-hf8UQ3VEyP-2@smile.fi.intel.com>
-Content-Language: en-US
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <ZXm-hf8UQ3VEyP-2@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231214095814.132400-2-warthog618@gmail.com>
 
+On Thu, Dec 14, 2023 at 05:58:10PM +0800, Kent Gibson wrote:
+> Use scoped_guard for critical sections rather than distinct
+> lock/unlock pairs.
+>
 
+It seems using guard() can further simplify cases where the scope extends
+to the end of the function, so I'll replace those cases when I do v3.
 
-On 12/13/23 16:24, Andy Shevchenko wrote:
-> On Tue, Dec 12, 2023 at 12:44:36PM +0200, Dumitru Ceclan wrote:
-> ...
-> 
->> +		if (chan->type == IIO_TEMP) {
->> +			temp = ((u32)AD7173_VOLTAGE_INT_REF_uV) * MILLI;
-> 
-> Hmm... Is the casting mandatory here?
-> 
-
-Yep, not really needed as MILLI is already declared as unsigned and it
-will promote the _INT_REF as well. On signed32 it would have overflowed.
-
-Are there any cases where this would not be alright?
+Cheers,
+Kent.
 
