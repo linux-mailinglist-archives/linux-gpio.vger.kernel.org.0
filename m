@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-1439-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1440-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 805AA8129CB
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 08:56:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A831C8129D0
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 08:57:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8074B20D8E
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 07:56:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4327128230F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 07:57:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13DBF1401B;
-	Thu, 14 Dec 2023 07:56:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3419D14AAC;
+	Thu, 14 Dec 2023 07:57:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aCfRjNHg"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="C5N6d6mS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x530.google.com (mail-ed1-x530.google.com [IPv6:2a00:1450:4864:20::530])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id C17E7CF
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:56:37 -0800 (PST)
-Received: by mail-ed1-x530.google.com with SMTP id 4fb4d7f45d1cf-54c5d041c23so10263233a12.2
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:56:37 -0800 (PST)
+Received: from mail-ed1-x533.google.com (mail-ed1-x533.google.com [IPv6:2a00:1450:4864:20::533])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 521A8115
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:57:02 -0800 (PST)
+Received: by mail-ed1-x533.google.com with SMTP id 4fb4d7f45d1cf-551c03ae050so2758786a12.2
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:57:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702540596; x=1703145396; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1702540621; x=1703145421; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=2Zem+IoqiDSt9SE3xTzrfoGlM+d23Np3UT+OODoLpTQ=;
-        b=aCfRjNHg9CV47gkexQjkKRQnRV05tgROoVLLlFJVGWXgI11/cR4mT3iMXs6q0rLq4M
-         sxY7bhuaNdReuP/cgSm/4MMVxAFWHeM0JtNUtOCOdstfCml2mwkgQWpZ5UIfenaQDav8
-         yXi3vqSyqTbb1uJRqwB2jpEhaiMUUwFTLQkQ5Jm2EEnI2Vc5K0k2ebZjFCR2TRIIMTd4
-         lOsvohOqY6cVFTkosFwL/beZRQ/ZSQIIKWMjKST0eNwiL8OQfW+l1mUiv7gH6L2E2Bt1
-         e+CGY4vaDBIoP46zqOOTtMoluTBA4uB1562bmvBwTWl+C7OKiQ5kXWn2lJ4zTCGETY6L
-         1rfw==
+        bh=JmN9P3W+M+sqts+jYY4Z4dJK+AcErulFIvFmPjfReLI=;
+        b=C5N6d6mS8893O1FFmNW0PTCPtB23ecyYhzbHmPSGKyacNh8O7oXLHMgiqrpIkZleRT
+         SxunXz99yERj882m4oCPb5I84wRHWxU8CS4RwVCygdzb+1wtDY9fJ5L8/fGKrmDFLVol
+         HdOVtUpYJCOeKg1KWjfBxryHcaAhy5g+iXkacy1/D3JpJvztE+JDkPHuu77d+WddeolT
+         r8Z9bUNfHqf7X2ovJTd7R0Nbc9IkjRZhv8ZlEaR6IDIJN+u0kqstEecH84fSfytUP3BF
+         vCTxHVqop2Tt7szlIwou4pbVg7xLeZ4+m1jwnnWEgWpx9ENRIB3qMr0dDWe8QpjRtfyx
+         ZLoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702540596; x=1703145396;
+        d=1e100.net; s=20230601; t=1702540621; x=1703145421;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2Zem+IoqiDSt9SE3xTzrfoGlM+d23Np3UT+OODoLpTQ=;
-        b=mnHqIMIfOWGoHUC45lsIRHQoF3Ea5z0yBfuElG1BjIk5vx4fVQLpXUmoZAsy8ABtH6
-         4WWvRKs9LNk7D6k2CVtD7ImixHP1jZFnPK7eu65+Gytudc+eVLMXn5u6V3yivrlMSLrC
-         LYejjAZTdUd7LXso+i7AgaDZmh/9iQhRSTXxMReaeF37W3uGy68E4V2B+AX5MttzYxQ6
-         hBoIP/ccMsWWdE51yK7Rx8YPb0FCgGPnp8HuNSEvcr5o/IXPicst7Jj5BxMUnfH/SQGT
-         +fSDvvBis0RAU9gunqSjDu5u/cRdBUdY5dQZPMMl/mHuzPwnq2e9m9HqXtsVHxAqCKKZ
-         uubg==
-X-Gm-Message-State: AOJu0YzHE4T+x0w3vg6CvrJ6hEgzfI6Z1eo7/1VSxz1z/+SSoM+zdpcJ
-	Wee1vPFy9FesL2JGL+dtsWLKKA==
-X-Google-Smtp-Source: AGHT+IFiZQlwHGhWiaakHjDSJOsYO0kJVnO6/7Zsug4oFjjcP8bNFS+Oy0IvN68sJTA5aTBQPBSrZQ==
-X-Received: by 2002:a17:907:c2a:b0:a1c:695d:c936 with SMTP id ga42-20020a1709070c2a00b00a1c695dc936mr2968484ejc.73.1702540596114;
-        Wed, 13 Dec 2023 23:56:36 -0800 (PST)
+        bh=JmN9P3W+M+sqts+jYY4Z4dJK+AcErulFIvFmPjfReLI=;
+        b=qJMdDtBsnsn1VSJv3vZesERgXbFu28mHoR4GdSZ5zB4Z3udt7y1syJ5E5lBrQAKZAW
+         nRWfd3wFNiQ/YEvQWtnYsEDBITr8/lqsEdziLBVAiOrdtbD5kKMUp5SR22IGWkmp8QQr
+         Ml7r//Df7bhVf4XviBztcFcHZCyZtvl6ke26yLYQtyjrPtFo7GbdGvRFsZx4ULLRA8Mp
+         BiIdPf/Yb3SS1m1u5JHZiRTHvaVmjpuLP7EgWdKjnJNdCVxvwWToLN+KfiYwVu07fH7W
+         erIhOOiGKjNXxdvbLhmby2kfiyk/9axB1RG5jMR9SzUvuPyVtnRe4MGC7qggQSv9qi+0
+         zoUg==
+X-Gm-Message-State: AOJu0Ywj0yGGiv/4+mONxTG4HYxISsy3rfq/vxZ7KCT/WGfUSssng2ge
+	TFRskdQelaXjajtO7PC0BzKoqA==
+X-Google-Smtp-Source: AGHT+IEFF1FAAHCpchIEg2WUpSTva/bxGfk6Dcv0nbUqZXeyEQbVQgPNC2m34v1R7c6nd9ZdDjq8+g==
+X-Received: by 2002:a17:906:3f46:b0:a1d:b0c7:90a3 with SMTP id f6-20020a1709063f4600b00a1db0c790a3mr4818046ejj.93.1702540620866;
+        Wed, 13 Dec 2023 23:57:00 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id vt6-20020a170907a60600b00a1ce98016b6sm9071633ejc.97.2023.12.13.23.56.34
+        by smtp.gmail.com with ESMTPSA id vt6-20020a170907a60600b00a1ce98016b6sm9071633ejc.97.2023.12.13.23.56.59
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Dec 2023 23:56:35 -0800 (PST)
-Message-ID: <ccaefd08-161f-4aa1-acc1-5216c5f7f7c7@linaro.org>
-Date: Thu, 14 Dec 2023 08:56:33 +0100
+        Wed, 13 Dec 2023 23:57:00 -0800 (PST)
+Message-ID: <2dd1a8af-725f-4631-ac92-abaf4188e3b8@linaro.org>
+Date: Thu, 14 Dec 2023 08:56:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,8 +71,8 @@ To: Tomer Maimon <tmaimon77@gmail.com>, arnd@arndb.de, pmenzel@molgen.mpg.de,
  j.neuschaefer@gmx.net
 Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231213190528.3751583-1-tmaimon77@gmail.com>
- <20231213190528.3751583-2-tmaimon77@gmail.com>
+References: <20231213182845.3744685-1-tmaimon77@gmail.com>
+ <20231213182845.3744685-2-tmaimon77@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -118,90 +118,21 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231213190528.3751583-2-tmaimon77@gmail.com>
+In-Reply-To: <20231213182845.3744685-2-tmaimon77@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 13/12/2023 20:05, Tomer Maimon wrote:
+On 13/12/2023 19:28, Tomer Maimon wrote:
 > Added device tree binding documentation for Nuvoton BMC NPCM BIOS Post
 > Code (BPC).
 > 
 > The NPCM BPC monitoring two configurable I/O addresses written by the
 > host on the bus.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  .../soc/nuvoton/nuvoton,npcm-bpc.yaml         | 65 +++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> new file mode 100644
-> index 000000000000..c04302a1d52b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/nuvoton/nuvoton,npcm-bpc.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/soc/nuvoton/nuvoton,npcm-bpc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton BMC NPCM BIOS Post Code (BPC) controller
-> +
-> +maintainers:
-> +  - Tomer Maimon <tmaimon77@gmail.com>
-> +
-> +description:
-> +  Nuvoton BMC NPCM BIOS Post Code (BPC) monitoring two configurable I/O
-> +  addresses written by the host on the bus, the capture data stored in
-> +  128-word FIFO.
-> +
-> +  NPCM BPC supports capture double words, when using capture
-> +  double word only I/O address 1 is monitored.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +          - nuvoton,npcm845-bpc
-> +          - nuvoton,npcm750-bpc
-> +      - const: nuvoton,npcm-bpc
 
-That's not what I suggested. I asked to make 845 compatible with 750.
-This works, but I want to be sure you really, really understand the
-consequences of this.
+You sent multiple same patchsets, so to make it clear:
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  nuvoton,monitor-ports:
-> +    $ref: /schemas/types.yaml#/definitions/uint32-array
-
-Missing constraints, like min/maxItems and maybe values.
-
-> +    description:
-> +      Contain monitor I/O addresses on the bus, at least one monitor I/O
-> +      address required.
-> +
-> +  nuvoton,bpc-en-dwcapture:
-
-nuvoton,double-word-capture?
-
-> +    description:
-> +      Set DWCAPTURE bit in BPCFEN register that enable double words capture
-> +      according to the first address setting.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - nuvoton,monitor-ports
+NAK
 
 Best regards,
 Krzysztof
