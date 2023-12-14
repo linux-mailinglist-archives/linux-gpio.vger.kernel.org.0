@@ -1,140 +1,200 @@
-Return-Path: <linux-gpio+bounces-1456-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1457-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E1E2813027
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 13:30:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB37B813074
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 13:43:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5AE74281BF3
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:30:52 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 83F51B20B5A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 12:43:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98C4C4AF95;
-	Thu, 14 Dec 2023 12:30:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68C4C4D13D;
+	Thu, 14 Dec 2023 12:43:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GuBkbk8X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 29463125;
-	Thu, 14 Dec 2023 04:30:34 -0800 (PST)
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4SrWrx5dZRz67G9n;
-	Thu, 14 Dec 2023 20:30:09 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4C1031400DD;
-	Thu, 14 Dec 2023 20:30:32 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 14 Dec
- 2023 12:30:31 +0000
-Date: Thu, 14 Dec 2023 12:30:29 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-CC: <linus.walleij@linaro.org>, <brgl@bgdev.pl>, <andy@kernel.org>,
-	<linux-gpio@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, "Jonathan
- Cameron" <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
-	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
-	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
-	<hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v8 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <20231214123029.000002f1@Huawei.com>
-In-Reply-To: <20231212104451.22522-2-mitrutzceclan@gmail.com>
-References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
-	<20231212104451.22522-2-mitrutzceclan@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+Received: from mail-lf1-x136.google.com (mail-lf1-x136.google.com [IPv6:2a00:1450:4864:20::136])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ECA9D11D;
+	Thu, 14 Dec 2023 04:43:13 -0800 (PST)
+Received: by mail-lf1-x136.google.com with SMTP id 2adb3069b0e04-50bf2d9b3fdso10891313e87.3;
+        Thu, 14 Dec 2023 04:43:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702557792; x=1703162592; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DLS5Sl/tcs7UdHUclsP8wzE7HsHwHptKsbrYJkJgZGU=;
+        b=GuBkbk8X//vN2MqB3QH9cyd69URtayCAMJI12a8HoECoWdRwrkDVsnAhZ+q/Is84Pr
+         bIrt+2dEmsP4wXyOZtRghQO77n7wK2foJsDpEdotyABrYNkPWO4iUvawl/slzmWrvm0q
+         6h1fksVXcrhD5U3VJAzTLpDnCtMCfLv+6eQILKWQnA2GhIMjlsrQR43NsTcxEcnYzmJ7
+         ketzu+CDgiTuM1rxANdo8HBqnArsvQFTGXOZTcbUwgpsS5Dc1WH5mDGxA6VtDnvSZWvB
+         p3tSBD3vv/Ui6zeZHfINakAFjeydfrv+7TtcEqdAKigJK3QY8PLlOjWzKb0V3liaGLJo
+         q+wA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702557792; x=1703162592;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=DLS5Sl/tcs7UdHUclsP8wzE7HsHwHptKsbrYJkJgZGU=;
+        b=Uwxo0wK8cIOGJzAeyKbxAH+9irj8ryaxKdpKDaKPYYOEKqn6EVGS58YmAZgK2QgQgI
+         wgo909Zue0WQXIZppT5EsVlHJuS7sdNjpbqNA1lfmKL+/HKHfetECA3WmUWFUnCZQcnB
+         6xPEM6J1ubnVWCKxCs3gNStwzly/IAOY3Fjfr+epmbUaLEB9MEtxvNTq7gsjysVg4z8/
+         RIaOQs1uCXxyyUbbMtdulGpAKWujhDfu/nhhbmtbCtdqQ8E0wEkMRV8VHLzs3q768kSY
+         PfuaNTWgO7Pw9xGT7prr9dQdjawbxHsLsJidFXHLkkpB9UeD/H4sEALyVfopXPEAGSLa
+         XcKA==
+X-Gm-Message-State: AOJu0YzLrFjBrHEE4+yWpdGc3KW9zBjA4tpDwbuxRnft/M3tHd35FdH7
+	M5NXY3v0fMSiJCkRbMoYI3Q=
+X-Google-Smtp-Source: AGHT+IGua8eR59eAZWjpuEYJuoRA4g6iYT9xAqu1nYyVI+ph0ivN3XaLaaXUVKwY8kqqIGO1CcwTQA==
+X-Received: by 2002:a05:6512:238f:b0:50d:1a7f:f76 with SMTP id c15-20020a056512238f00b0050d1a7f0f76mr5708024lfv.65.1702557791782;
+        Thu, 14 Dec 2023 04:43:11 -0800 (PST)
+Received: from [172.25.98.130] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id vh2-20020a170907d38200b00a1be80a0b69sm9324342ejc.58.2023.12.14.04.43.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Dec 2023 04:43:11 -0800 (PST)
+Message-ID: <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
+Date: Thu, 14 Dec 2023 14:43:09 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
+Content-Language: en-US
+To: David Lechner <dlechner@baylibre.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
+ <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, 12 Dec 2023 12:44:36 +0200
-Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
 
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel
-> applications or higher speed multiplexed applications. The Sigma-Delta
-> ADC is intended primarily for measurement of signals close to DC but also
-> delivers outstanding performance with input bandwidths out to ~10kHz.
+
+On 12/12/23 17:09, David Lechner wrote:
+> On Tue, Dec 12, 2023 at 11:45 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+>>
+>> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+>> which can be used in high precision, low noise single channel applications
+>> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+>> primarily for measurement of signals close to DC but also delivers
+>> outstanding performance with input bandwidths out to ~10kHz.
 > 
-> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
-> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Hi
+> As stated in [1], we should try to make complete bindings. I think
+> more could be done here to make this more complete. Most notably, the
+> gpio-controller binding is missing. Also maybe something is needed to
+> describe how the SYNC/ERROR pin is wired up since it can be an input
+> or an output with different functions?
+> 
 
-Given it seems like you'll be doing a v9, one quick comment from me below.
+GPIO-controller:
+  '#gpio-cells':
 
-Jonathan
+    const: 2
 
-> diff --git a/drivers/iio/adc/ad7173.c b/drivers/iio/adc/ad7173.c
-> new file mode 100644
-> index 000000000000..96918b24a10a
-> --- /dev/null
-> +++ b/drivers/iio/adc/ad7173.c
-> @@ -0,0 +1,964 @@
+
+  gpio-controller: true
+Like this, in properties?
+
+Sync can only be an output, Error is configurable. Are there any
+examples for how something like this is described?
+
 ...
 
-> +static int ad7173_fw_parse_channel_config(struct iio_dev *indio_dev)
-> +{
+>> +  interrupts:
+>> +    maxItems: 1
+> 
+> Shouldn't this be 2? The datasheet says there is a "Data Output Ready"
+> signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
+> pin. Although I could see how RDY could be considered part of the SPI
+> bus. In any case, a description explaining what the interrupt is would
+> be useful.
+> 
+
+I do not see how there could be 2 interrupts. DOUT/RDY is used as an
+interrupt when waiting for a conversion to finalize.
+
+Sync and Error are sepparate pins, Sync(if enabled) works only as an
+input that resets the modulator and the digital filter.
+
+Error can be configured as input, output or ERROR output (OR between all
+internal error sources).
+
+Would this be alright
+  interrupts:
+
+    description: Conversion completion interrupt.
+		 Pin is shared with SPI DOUT.
+    maxItems: 1
 
 ...
 
-> +
-> +	if (st->info->has_temp) {
-> +		chan_arr[chan_index] = ad7173_temp_iio_channel_template;
-> +		chan_st_priv = &channels_st_priv_arr[chan_index];
-> +		chan_st_priv->ain =
-> +			AD7173_CH_ADDRESS(chan_arr[chan_index].channel, chan_arr[chan_index].channel2);
-> +		chan_st_priv->cfg.bipolar = false;
-> +		chan_st_priv->cfg.input_buf = true;
-> +		chan_st_priv->cfg.ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> +		st->adc_mode |= AD7173_ADC_MODE_REF_EN;
-> +
-> +		chan_index++;
-> +	}
-> +
-> +	device_for_each_child_node(dev, child) {
-> +		chan = &chan_arr[chan_index];
-> +		chan_st_priv = &channels_st_priv_arr[chan_index];
-> +		ret = fwnode_property_read_u32_array(child, "diff-channels",
-> +						     ain, ARRAY_SIZE(ain));
-> +		if (ret) {
-> +			fwnode_handle_put(child);
-> +			return ret;
-> +		}
-> +
-> +		if (ain[0] >= st->info->num_inputs ||
-> +		    ain[1] >= st->info->num_inputs) {
-> +			fwnode_handle_put(child);
-> +			return dev_err_probe(dev, -EINVAL,
-> +					     "Input pin number out of range for pair (%d %d).\n",
-> +					     ain[0], ain[1]);
-> +		}
-> +
-> +		ret = fwnode_property_match_property_string(child,
-> +							    "adi,reference-select",
-> +							    ad7173_ref_sel_str,
-> +							    ARRAY_SIZE(ad7173_ref_sel_str));
-> +
-> +		if (ret < 0)
-> +			ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> +		else
-> +			ref_sel = ret;
-Simpler pattern for properties with a default is not to check the error code.
+>> +
+>> +patternProperties:
+>> +  "^channel@[0-9a-f]$":
+>> +    type: object
+>> +    $ref: adc.yaml
+>> +    unevaluatedProperties: false
+>> +
+>> +    properties:
+>> +      reg:
+>> +        minimum: 0
+>> +        maximum: 15
+>> +
+>> +      diff-channels:
+>> +        items:
+>> +          minimum: 0
+>> +          maximum: 31
+> 
+> Do we need to add overrides to limit the maximums for each compatible string?
+> 
 
-		ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
+Just to be sure, in the allOf section?
+If yes, is there any other more elegant method to obtain this behavior?
 
-		fwnode_property_match_property_String(child, ...
+...
 
-so only if it succeeds is the value overridden.
+>> +
+>> +    required:
+>> +      - reg
+>> +      - diff-channels
+> 
+> Individual analog inputs can be used as single-ended or in pairs as
+> differential, right? If so, diff-channels should not be required to
+> allow for single-ended use.
+> 
+> And we would need to add something like a single-ended-channel
+> property to adc.yaml to allow mapping analog input pins to channels
+> similar to how diff-channels works, I think (I don't see anything like
+> that there already)?
+> 
+> So maybe something like:
+> 
+> oneOf:
+>   - required:
+>       single-ended-channel
+>   - required:
+>       diff-channels
+> 
+All channels must specify 2 analog input sources, there is no input
+source wired by default to AVSS.
+
+In my opinion, there is no need to specify channels as single-ended
+because that would require a property that specifies the input that is
+wired to AVSS.
 
