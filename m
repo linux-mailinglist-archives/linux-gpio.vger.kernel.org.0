@@ -1,151 +1,163 @@
-Return-Path: <linux-gpio+bounces-1502-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1503-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 276B081372F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 18:03:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 558C58137DB
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 18:13:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A3CBB21746
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:03:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10FA7283227
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D55363DD8;
-	Thu, 14 Dec 2023 17:03:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E762C65EAB;
+	Thu, 14 Dec 2023 17:13:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l25U2BUz"
+	dkim=pass (2048-bit key) header.d=foss.st.com header.i=@foss.st.com header.b="ZKW4NG7C"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064DE9A;
-	Thu, 14 Dec 2023 09:03:33 -0800 (PST)
-Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5527ee1b5c3so1210679a12.1;
-        Thu, 14 Dec 2023 09:03:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702573411; x=1703178211; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=m+lglxETz+fWuFm30gl8riT+YXHxcre+z450cDyvkZs=;
-        b=l25U2BUz7/AJXxKejqiQedLOZM3UNYP6j8fpXIcqavb5EqXTKB/Z1+OV10aqJW/MgA
-         kyN/D1YqbPNoIT4QjK8qL9HLY+QeerPPrwRawew9Q5c4RBCJOC3HFmY06IbeqSKTcT7r
-         QCZPg5c4Hft/GRUGXuyK/y1tCNwX9oB4jMwBOcbUkUyZGwRSwzdAsUXrtEx2vwLlz9cd
-         zYwHnfF0fJttJx1cVpNIpPviC1zmLuBI8eGWwT1a5GezhFnCzZigcL3id9orf8jWuDUT
-         lHhnfc4f3OTorjfypNRORTyGMqJgQV8+/UjHeusUlQ7rBU27ifC9Sl23XBXv1fFHnZ8s
-         cz3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702573411; x=1703178211;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=m+lglxETz+fWuFm30gl8riT+YXHxcre+z450cDyvkZs=;
-        b=LpPEbv6BqM9LS03fOKyHScgnGL6uDQbk2qGJqG/kJ1qpdNmTSx5v/sxBl35CP1GDVL
-         Dwl8zrkYZEJbnvg0Jsvi4DMOEzR50QOKDIIHTMmu2GhI0lGtwFJ50FeVjzP1m7zol88t
-         pHQSR/qj97CTrCJSPpur3qVrZUn/z2hwqI4VoxaG+aSuapphhauzxPBrbmTC5GdJhsRD
-         phRN+MHVyc64u1ENzb/GaJv0IMkuX+cDau8EJgkUXALiDRdO5JqI7RYqfW0uJ/3+3gR0
-         G0166Lbsu+gdN8b8EuzVAfMuumUVfkhB+EF1BqkXTADfblccN0mTxIKKJDi7umps+4jg
-         ATpw==
-X-Gm-Message-State: AOJu0Yx/lhCv8AtUUhFep57nxo372timslSpC2YPyde6ZjbQ+RSxOjs6
-	Q5Q9PQ4RWUPkG9QZy1niIZk=
-X-Google-Smtp-Source: AGHT+IEiyYYre0/uJwpHGfY4Q6A9LX0eNGn78B8SJTWcCnWQnDgsz8GyuwoMo0Rm/VlgLpP6o4qBKA==
-X-Received: by 2002:a17:906:48d:b0:9a5:dc2b:6a5 with SMTP id f13-20020a170906048d00b009a5dc2b06a5mr11055203eja.35.1702573411184;
-        Thu, 14 Dec 2023 09:03:31 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id mm20-20020a1709077a9400b00a1a53e9f401sm9666879ejc.132.2023.12.14.09.03.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Dec 2023 09:03:30 -0800 (PST)
-Message-ID: <a1f60bf6-5fb6-4814-b3b5-799fb8ffb847@gmail.com>
-Date: Thu, 14 Dec 2023 19:03:28 +0200
+Received: from mx07-00178001.pphosted.com (mx07-00178001.pphosted.com [185.132.182.106])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 8A67D11A;
+	Thu, 14 Dec 2023 09:13:10 -0800 (PST)
+Received: from pps.filterd (m0241204.ppops.net [127.0.0.1])
+	by mx07-00178001.pphosted.com (8.17.1.22/8.17.1.22) with ESMTP id 3BEFknrP009412;
+	Thu, 14 Dec 2023 18:12:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foss.st.com; h=
+	message-id:subject:from:to:cc:date:in-reply-to:references
+	:content-type:content-transfer-encoding:mime-version; s=
+	selector1; bh=K1A/PPNJBGqkruf8X8nVhc1/sg7nXB8ln3XDnZhh2B0=; b=ZK
+	W4NG7CAR9E7mB1Zc39RfsI5XhrgZoMHpLE7ZXNd77c5lcOREZ4zZ2DKxSsROHzpI
+	+YIbCIII20Mykc6BhTIGKen698cnupimeGgMTbk1I+VgJoK9cNxf8xB9t8vtVafR
+	v5AuyNrzQXkuekspHya2StNpF4iuVUwzRiMD7nHuJuuNTqUa/ugNh6q99Gq4dsQ8
+	v77W3S8JtmZFkZSHlzn4L6HLdJgg9W2gZhrsNEGZe0wbjr2uz6jZOf392vppDF6m
+	Pypc0dtyWJ01kMqwD3Hsjs3znulEfJbockN/eehlpuC6woFe1qEB7fTTlWOILX9G
+	cph3ctGHoWMgC1yCnS+w==
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+	by mx07-00178001.pphosted.com (PPS) with ESMTPS id 3uvgf1xash-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Dec 2023 18:12:49 +0100 (CET)
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+	by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 17E2F100053;
+	Thu, 14 Dec 2023 18:12:49 +0100 (CET)
+Received: from Webmail-eu.st.com (shfdag1node1.st.com [10.75.129.69])
+	by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 0E8252291A9;
+	Thu, 14 Dec 2023 18:12:49 +0100 (CET)
+Received: from [192.168.8.15] (10.201.20.114) by SHFDAG1NODE1.st.com
+ (10.75.129.69) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.27; Thu, 14 Dec
+ 2023 18:12:48 +0100
+Message-ID: <72700f397d32f6a81164aafbf6f9d30b510672cf.camel@foss.st.com>
+Subject: Re: [Linux-stm32] [PATCH 2/2] pinctrl: stm32: fix GPIO level
+ interrupts
+From: Antonio Borneo <antonio.borneo@foss.st.com>
+To: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+CC: Thomas Gleixner <tglx@linutronix.de>,
+        Maxime Coquelin
+	<mcoquelin.stm32@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-gpio@vger.kernel.org>
+Date: Thu, 14 Dec 2023 18:12:46 +0100
+In-Reply-To: <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+References: <20231204203357.2897008-1-ben.wolsieffer@hefring.com>
+	 <20231204203357.2897008-3-ben.wolsieffer@hefring.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.3 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
-To: David Lechner <dlechner@baylibre.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
- <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
- <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
- <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
-Content-Language: en-US
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EQNCAS1NODE4.st.com (10.75.129.82) To SHFDAG1NODE1.st.com
+ (10.75.129.69)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-14_11,2023-12-14_01,2023-05-22_02
+
+On Mon, 2023-12-04 at 15:33 -0500, Ben Wolsieffer wrote:
+> The STM32 doesn't support GPIO level interrupts in hardware, so the
+> driver tries to emulate them using edge interrupts, by retriggering the
+> interrupt if necessary based on the pin state after the handler
+> finishes.
+>=20
+> Currently, this functionality does not work because the irqchip uses
+> handle_edge_irq(), which doesn't run the irq_eoi() or irq_unmask()
+> callbacks after handling the interrupt. This patch fixes this by using
+> handle_level_irq() for level interrupts, which causes irq_unmask() to be
+> called to retrigger the interrupt.
+>=20
+> Signed-off-by: Ben Wolsieffer <ben.wolsieffer@hefring.com>
+> ---
+> =C2=A0drivers/pinctrl/stm32/pinctrl-stm32.c | 3 +++
+> =C2=A01 file changed, 3 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/stm32/pinctrl-stm32.c b/drivers/pinctrl/stm3=
+2/pinctrl-stm32.c
+> index 603f900e88c1..fb9532601cbb 100644
+> --- a/drivers/pinctrl/stm32/pinctrl-stm32.c
+> +++ b/drivers/pinctrl/stm32/pinctrl-stm32.c
+> @@ -348,12 +348,15 @@ static int stm32_gpio_set_type(struct irq_data *d, =
+unsigned int type)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case IRQ_TYPE_EDGE_RISING=
+:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case IRQ_TYPE_EDGE_FALLIN=
+G:
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case IRQ_TYPE_EDGE_BOTH:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0irq_set_handler_locked(d, handle_edge_irq);
+
+Hi,
+this patch causes a NULL pointer dereference and crashes the kernel boot on=
+ STM32 MPU's,
+either STM32MP13x, STM32MP15x and the new STM32MP25x.
+
+Please do not merge it as is.
+
+This pinctrl-stm32 driver is shared between STM32 MCUs and MPUs.
+In both cases the EXTI is the parent interrupt controller of this pinctrl, =
+but despite
+the fact that there is a single file irq-stm32-exti.c, it contains two inde=
+pendent
+drivers, one for MCUs and the other for MPUs.
+Swapping in this function the irq_desc::handle_irq between handle_edge_irq(=
+) and
+handle_level_irq() is probably fine for MCU (I have not tested it).
+But on MPUs the default handler is handle_fasteoi_irq(); should not be chan=
+ged here.
+
+Checking quickly ... this function calls irq_chip_set_type_parent() at the =
+very end.
+It will in turn call EXTI's irq_set_type(), which has different implementat=
+ions for MCU
+and MPU.
+By moving this handler swap in the MCU specific stm32_irq_set_type() it wil=
+l not impact
+MPUs.
+
+Best Regards,
+Antonio
 
 
-
-On 12/14/23 18:12, David Lechner wrote:
-> On Thu, Dec 14, 2023 at 1:43 PM Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
->> On 12/12/23 17:09, David Lechner wrote:
->>> On Tue, Dec 12, 2023 at 11:45 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
-
->> ...
->>
->>>> +  interrupts:
->>>> +    maxItems: 1
->>>
->>> Shouldn't this be 2? The datasheet says there is a "Data Output Ready"
->>> signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
->>> pin. Although I could see how RDY could be considered part of the SPI
->>> bus. In any case, a description explaining what the interrupt is would
->>> be useful.
->>>
->>
->> I do not see how there could be 2 interrupts. DOUT/RDY is used as an
->> interrupt when waiting for a conversion to finalize.
->>
->> Sync and Error are sepparate pins, Sync(if enabled) works only as an
->> input that resets the modulator and the digital filter.
-> 
-> I only looked at the AD7172-2 datasheet and pin 15 is labeled
-> SYNC/ERROR. Maybe they are separate pins on other chips?
-
-Yep, sorry, missed that. All other supported models have them separate.
-
-> 
->>
->> Error can be configured as input, output or ERROR output (OR between all
->> internal error sources).
->>
->> Would this be alright
->>   interrupts:
->>
->>     description: Conversion completion interrupt.
->>                  Pin is shared with SPI DOUT.
->>     maxItems: 1
-> 
-> Since ERROR is an output, I would expect it to be an interrupt. The
-> RDY output, on the other hand, would be wired to a SPI controller with
-> the SPI_READY feature (I use the Linux flag name here because I'm not
-> aware of a corresponding devicetree flag). So I don't think the RDY
-> signal would be an interrupt.
-> 
-
-Error does not have the purpose to be an interrupt. The only interrupt
-used from this chip is the one from the DOUT/~RDY pin. Sure, it is wired
-to the SPI controller, but when you can't also receive interrupts on
-that very same CPU pin an issue arises. So that pin is also wired to
-another GPIO with interrupt support.
-
-This is the same way that ad4130.yaml is written for example (with the
-exception that ad4130 supports configuring where the interrupt is routed).
-
-In regards to SPI_READY _BITUL(7) /* slave pulls low to pause */: the
-ad_sigma_delta framework (if it can be called that) is written to expect
-a pin interrupt, not to use SPI_READY controller feature.
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0parent_type =3D type;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0break;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case IRQ_TYPE_LEVEL_HIGH:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0irq_set_handler_locked(d, handle_level_irq);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0parent_type =3D IRQ_TYPE_EDGE_RISING;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0break;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case IRQ_TYPE_LEVEL_LOW:
+> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0irq_set_handler_locked(d, handle_level_irq);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0parent_type =3D IRQ_TYPE_EDGE_FALLING;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0break;
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0default:
 
 
