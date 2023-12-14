@@ -1,132 +1,131 @@
-Return-Path: <linux-gpio+bounces-1488-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1490-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EE98813526
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 16:47:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69422813530
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 16:49:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0E634B20E2F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:47:11 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 086D22825E9
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:49:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C465D8FA;
-	Thu, 14 Dec 2023 15:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25B9E5D909;
+	Thu, 14 Dec 2023 15:49:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Jl9Uri0H"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="pPhCwWxj";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="c4yS8tbE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-x629.google.com (mail-pl1-x629.google.com [IPv6:2607:f8b0:4864:20::629])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E2386115;
-	Thu, 14 Dec 2023 07:46:59 -0800 (PST)
-Received: by mail-pl1-x629.google.com with SMTP id d9443c01a7336-1d0b2752dc6so74222935ad.3;
-        Thu, 14 Dec 2023 07:46:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702568819; x=1703173619; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTLSA/5Au/MFq4YJd5jR9otFaawbNkkP53RJQOluPHw=;
-        b=Jl9Uri0HSnmy/7g0P9SS9HXK3oTraVXZMXk+ZtPvBA9o4WO19IsIC3wqSHNIK32fu7
-         srf1sjfXGkRSQSyu5aVaf803r3iq/Rpfpbhip33dGDPUDtE9/bFhK6H5O9L/xCYip/HS
-         qxtRuIOXYGxmQGbudXmP5KcNT4dumoX+g4XFnoUbobWiIne4VcGBBOU8v4P8h8iZEOEW
-         L3DBvcsk1LPXNxK5udc3OaQjji9o7eJke/OKyeYRjIfENd6oyJ3L6CZIIkZtvO/mN3B3
-         JO/dQE7uPHNx1lHBHBRfakC5mx5WgPR+fi8MuuY+FecyFfbrWA5Fp00We5sbsz9Nqaxr
-         ku8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702568819; x=1703173619;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QTLSA/5Au/MFq4YJd5jR9otFaawbNkkP53RJQOluPHw=;
-        b=IeOi32xEwNgQDY9xsOPNsMhaqH5905MZKr8eOQfxTbNOsi6M2fh2kYjdMXH8kIVjMz
-         NMc/BSuVktwgYp0HYSr1pQdX21fSnnWGqmqw9Dk2rbO3pyWL2eQpX7VTE03arKbVxNjL
-         w6+NS/yF3YbclOetjj+P5pYLmJrTgFLRZLjYdFvshEGoXMZHUw1P/ph0T9Bt4HwbJcuE
-         lny+p2G/4Y+0PSZOrQEXPNAAyAAM0tVieE/CdKgr3Q9FGSmQiXjqCWVyf2sGSvYk91aA
-         VbUa4cb3sAN3JWCOxeFvbxam/U+d9YoIs21s4Px+VHM09nDjHKDk14eXQ9ZEBRwBZDEB
-         o9Nw==
-X-Gm-Message-State: AOJu0YyLPJ4A5F6wAxwGnqQi6olM5ClpCFaULUCIUMAJ6OqzAVLv2+xw
-	5eOOVS6k9woivKSrFL2nTKM=
-X-Google-Smtp-Source: AGHT+IFLo6cnTA+JoGLmu2BD08QC009Br4AybD/FVUxOYZDoT8N/eTA5x3KnjZeP/95vxzgkQmyt9A==
-X-Received: by 2002:a17:903:2b0e:b0:1d3:6b17:5eb with SMTP id mc14-20020a1709032b0e00b001d36b1705ebmr1378286plb.49.1702568819340;
-        Thu, 14 Dec 2023 07:46:59 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id r2-20020a1709028bc200b001bc6e6069a6sm1475008plo.122.2023.12.14.07.46.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 07:46:59 -0800 (PST)
-Date: Thu, 14 Dec 2023 23:46:54 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH v2 4/5] gpiolib: cdev: reduce locking in
- gpio_desc_to_lineinfo()
-Message-ID: <ZXsjbvUYJGmGU6bs@rigel>
-References: <20231214095814.132400-1-warthog618@gmail.com>
- <20231214095814.132400-5-warthog618@gmail.com>
- <ZXsa39xneH6Rh7Gd@smile.fi.intel.com>
- <ZXsc5T1G5Y28lVqw@rigel>
- <ZXse4UDKGlVqzsyD@smile.fi.intel.com>
- <ZXsglIJtK50XYCIV@rigel>
+Received: from out5-smtp.messagingengine.com (out5-smtp.messagingengine.com [66.111.4.29])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 558CD9A;
+	Thu, 14 Dec 2023 07:49:18 -0800 (PST)
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailout.nyi.internal (Postfix) with ESMTP id ECBA65C01EA;
+	Thu, 14 Dec 2023 10:49:15 -0500 (EST)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Thu, 14 Dec 2023 10:49:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1702568955; x=1702655355; bh=rsrWTQjBQT
+	0relicSVB/5hAbF9a2jab8bg2oUsSBSH0=; b=pPhCwWxjGRTA+Ledc/1HB99oEb
+	8m6nFpU2rW2Noyj3dojFZQxVbpA0DrdpUEPTOEN8DgIrK77y2pQd82YC7pS75xeI
+	BX33FP7DLfdxJFGdi5aaD++Ftl1olEcQhZAGMuu7egNySEysrblxu23QpVh47xAn
+	xZqh5KMEW6x8kyc4Hf04dSjyaoG8kXzD/fEosNq75ptGk4q01XptqM2eB3eGKoJ0
+	jdfee8R4NA/q8h4u9QDnN31s1OW3adPEuUqbThF6CruJ5gGIwfIlei/XPrMs+Zq3
+	smRwEyUp+s6lF4mK2jVN/QxzzHYGuLVFwk/onuoPFg5ORxs4EDhP+CvleFOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm1; t=1702568955; x=1702655355; bh=rsrWTQjBQT0relicSVB/5hAbF9a2
+	jab8bg2oUsSBSH0=; b=c4yS8tbEPEwCWwCRUDPNftjnOF78gNL7VN7cHmHXmukZ
+	dAcl18nRyV0cJ/yBC8C4x0rD0X0d5iAhmCpKGdTQ4aLeONb9kRnMyndnJ4NG/kTP
+	+oP6HoV24kH6wrMPxW2dRi3WMha525Wh2qbbvEYTBYn4r7FjhazNPA7T1TBs2lM9
+	Wq4uumy9RAaXqRuFX7hBqslN+eEADuRms/AexDhIxZRUjbdBBh7wqRKRsAgLGRqH
+	h28Fh2ZQtVtJ1vj0ZPtItgmnAE5ekXQGiaJ+sww5BaxXopDDN1GD4NqVAk0lYlh9
+	KplQnGkgCmU64EXomkFjvE5RPKy68daJEOUlPAYK5A==
+X-ME-Sender: <xms:-yN7Za9jQoCeaHiVVCPVOx-5XJBAPjG6qr1e7FOYeaZnVNjTKTJznA>
+    <xme:-yN7ZavHHTFLcbp9OUI3VYychZyyzhWxbQCMR4X8ODbG10YP5q6LJPUXy3qtzk-5R
+    1ckNyvh_irQOWgX17A>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrudelledgkedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepjedvvddvudeludehjeeitdehheeivdejgfelleffiefgvefhhfeuudfhgeef
+    feehnecuffhomhgrihhnpehgihhthhhusgdrtghomhenucevlhhushhtvghrufhiiigvpe
+    dtnecurfgrrhgrmhepmhgrihhlfhhrohhmpegrrhhnugesrghrnhgusgdruggv
+X-ME-Proxy: <xmx:-yN7ZQD-Ff4o3JfCIel-uzk49qql3Rs1LZ902Bos7sUNcjldKYCJrg>
+    <xmx:-yN7ZSeSdF6MY2y9Q-1DWPtZ36dJ1eWSTtojvSZOLGJesJFiC_-wyQ>
+    <xmx:-yN7ZfMIKb28qEiuWYvuXiHbVbNfkISfRyxEnPltMd1KmKuA9YeOEA>
+    <xmx:-yN7ZdsA6kJMPxgatqIM5Qzl-GYWtph8qh1i0kDuPF3queGrAj1ESQ>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 15800B6008D; Thu, 14 Dec 2023 10:49:15 -0500 (EST)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.9.0-alpha0-1283-g327e3ec917-fm-20231207.002-g327e3ec9
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXsglIJtK50XYCIV@rigel>
+Message-Id: <88040035-d971-4012-bb9f-9f2ae91fdc6e@app.fastmail.com>
+In-Reply-To: 
+ <CAP6Zq1inLOMHORqO8=RbP6NfwJ63kLaH0G3+TKBhfn0p2CE53w@mail.gmail.com>
+References: <20231213190528.3751583-1-tmaimon77@gmail.com>
+ <20231213190528.3751583-4-tmaimon77@gmail.com>
+ <cf3ce945-2f1c-4dae-86b8-349dae3d962b@app.fastmail.com>
+ <CAP6Zq1inLOMHORqO8=RbP6NfwJ63kLaH0G3+TKBhfn0p2CE53w@mail.gmail.com>
+Date: Thu, 14 Dec 2023 15:48:55 +0000
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Tomer Maimon" <tmaimon77@gmail.com>
+Cc: pmenzel@molgen.mpg.de, "Rob Herring" <robh+dt@kernel.org>,
+ krzysztof.kozlowski+dt@linaro.org, "Conor Dooley" <conor+dt@kernel.org>,
+ avifishman70@gmail.com, tali.perry1@gmail.com,
+ "Joel Stanley" <joel@jms.id.au>, venture@google.com, yuenn@google.com,
+ benjaminfair@google.com,
+ =?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
+ openbmc@lists.ozlabs.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 3/3] soc: nuvoton: add NPCM BPC driver
+Content-Type: text/plain
 
-On Thu, Dec 14, 2023 at 11:34:44PM +0800, Kent Gibson wrote:
-> On Thu, Dec 14, 2023 at 05:27:29PM +0200, Andy Shevchenko wrote:
-> > On Thu, Dec 14, 2023 at 11:19:01PM +0800, Kent Gibson wrote:
-> > > On Thu, Dec 14, 2023 at 05:10:23PM +0200, Andy Shevchenko wrote:
-> > > > On Thu, Dec 14, 2023 at 05:58:13PM +0800, Kent Gibson wrote:
-> > > > > Reduce the time holding the gpio_lock by snapshotting the desc flags,
-> > > > > rather than testing them individually while holding the lock.
-> > > > >
-> > > > > Accept that the calculation of the used field is inherently racy, and
-> > > > > only check the availability of the line from pinctrl if other checks
-> > > > > pass, so avoiding the check for lines that are otherwise in use.
-> >
-> > ...
-> >
-> > > > > -	spin_lock_irqsave(&gpio_lock, flags);
-> > > >
-> > > > Shouldn't this be covered by patch 1 (I mean conversion to scoped_guard()
-> > > > instead of spinlock)?
-> > > >
-> > >
-> > > Read the cover letter.
-> > > Doing that made the change larger, as flags gets removed then restored.
-> > > I had also thought the flag tests would get indented then unindented, but
-> > > if we use guard() the indentation should remain unchanged.
-> >
-> > I'm fine with that as I pointed out (have you received that mail? I had
-> > problems with my mail server) the dflags is better semantically, so restoration
-> > with _different_ name is fine.
-> >
->
-> I have noted that some of your replies have been delayed, and I can't be sure
-> of what I might not've received. I can't say I've seen one that mentions the
-> dflags name being preferable.
->
-> I prefer the plain flags name, if there is only one flag variable in the
-> function.
->
-> > > Can do it in 1 if you are happy with the flags declaration being
-> > > removed in patch 1 and restored in 4.
-> >
-> > Definitely.
-> >
->
-> Ok will re-arrange in v3.
->
+On Thu, Dec 14, 2023, at 14:09, Tomer Maimon wrote:
+> On Thu, 14 Dec 2023 at 14:44, Arnd Bergmann <arnd@arndb.de> wrote:
+>> >
+>> > +config NPCM_BPC
+>> > +     tristate "NPCM BIOS Post Code support"
+>> > +     depends on (ARCH_NPCM || COMPILE_TEST)
+>> > +     help
+>> > +       Provides NPCM driver to control the BIOS Post Code
+>> > +       interface which allows the BMC to monitor and save
+>> > +       the data written by the host to an arbitrary I/O port,
+>> > +       the BPC is connected to the host thourgh LPC or eSPI bus.
+>> > +
+>>
+>> This one in particular looks like this might be implemented
+>> by more than one BMC type, it's a fairly generic functionality.
+>>
+>> Have you talked to the other maintainers of SoCs used in
+>> OpenBMC about coming up with a common interface?
+> Yes, Both Nuvoton and Aspeed use the same user-facing code to manage
+> the host snooping.
+> https://github.com/openbmc/phosphor-host-postd
 
-Hang on - patch 4 has to use a scoped_guard(), so are you ok for patch 1
-to introduce a guard(), to avoid changing the indentation, only to
-replace it with a scoped_guard(), to perform the tests after releasing
-the lock, in patch 4?
+Ok, that's good. I found the driver in drivers/soc/aspeed/aspeed-lpc-snoop.c
+now and see that the implementation looks very similar. 
 
-Cheers,
-Kent.
+I think we should do two things here:
+
+ - split out the common code into a shared module that exports the
+   symbols to be used by either one
+
+ - find a better place for both drivers outside of drivers/soc.
+   I would suggest drivers/misc/bmc/ but am open to other suggestions.
+
+      Arnd
 
