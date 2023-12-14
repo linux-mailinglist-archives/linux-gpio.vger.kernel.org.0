@@ -1,139 +1,123 @@
-Return-Path: <linux-gpio+bounces-1465-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1466-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40CA3813292
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:09:48 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87E688132D6
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:19:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F06B2282533
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 14:09:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B9DDE1C2185E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 14:19:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9C2659B56;
-	Thu, 14 Dec 2023 14:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1448359E33;
+	Thu, 14 Dec 2023 14:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6udWIjP"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kYYZoevh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-x22b.google.com (mail-oi1-x22b.google.com [IPv6:2607:f8b0:4864:20::22b])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 18282CF;
-	Thu, 14 Dec 2023 06:09:41 -0800 (PST)
-Received: by mail-oi1-x22b.google.com with SMTP id 5614622812f47-3b9df0a6560so5617566b6e.2;
-        Thu, 14 Dec 2023 06:09:41 -0800 (PST)
+Received: from mail-vk1-xa32.google.com (mail-vk1-xa32.google.com [IPv6:2607:f8b0:4864:20::a32])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F31BC11A
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 06:19:00 -0800 (PST)
+Received: by mail-vk1-xa32.google.com with SMTP id 71dfb90a1353d-4b2dc44d54aso2087254e0c.3
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 06:19:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702562980; x=1703167780; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OnDoJ6wVmo9VoXzzMiE8cFoyXSZgzadjzCBeRZFN5gs=;
-        b=N6udWIjPR42EV3mF0HsCdZ8AJRJnqFSLT/nbX7a/j9+ZkN3ufzit9LrX7aPiqHKBtQ
-         WJoUAFXOu4qFHDIQDpDiwMI0el8EhzrDvSJHareCFvOwrPpf3cAzL2FCDTqWVVDRAo+0
-         TgFZLn83b5nRR6NEwi5C8pGhF47EXKsG4AHV9sv3ldEdwCJI+hMz7Fr/6Ug02chfu7i7
-         aDbms3ibQ55Uj/xaamrMdOhN2fk5Uk4C4F3/s9fygrtrkk3uFvoWFERj1Npr3uBPndyW
-         cskwDfTHRsJvddNY+PhNj9aYCcpt33lYo1sabakK5+gJZ37GRlcAElnCDJXMAsJIM1Oj
-         k6hQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702563540; x=1703168340; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xK1Zz0ik7xN5iCx8Rt0y08scTAc5eJ32ICjBtV1g5R0=;
+        b=kYYZoevhROyiajdFeiO6llNmswfxd1iVdGn/Tf5GNyNGkBUxtJ9ipHU2WyVB9eymgY
+         CfaeT0Gf/A4UU+fsq2F8iJsr1iGR7t8K/sw8ehYFwCMPJXVEXOLJTElaYPpgpk0fQPG4
+         t1zaMtBtxcdPpss0b8mvSUK+LaXyP4BddU05txoQew26l7OKlu6KSJGLNnlfc2NvmKjM
+         lAtKfJpEjgsdRkue26KyhcPjHAjVWolCpGxNzKwxmZTdZFBrhx8NyOrK0eWkODM4hN58
+         pEHhYhP6O5Dx7feNPOhtjs8pXjwZhe8Hhr//EykN1A3jYRX1kHE/6qj3ZKhLcmDXrAFV
+         Cb9w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702562980; x=1703167780;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OnDoJ6wVmo9VoXzzMiE8cFoyXSZgzadjzCBeRZFN5gs=;
-        b=tThvsQNPO1l80N0E/P5d6aE11z+2ve+N8R9OFOj92nIhXLSArLHbANWeFhAzHSByW4
-         xmTooAUwUVv5oFxZryRE+8OCEm7KytAjhS4PMlJPeYvTQmCFkUtX1i4ScOexakWtOHOS
-         v0IDd4XviR21zP/WM66+44RCsCPwrqeffxvXnjCg06AYJH7Z0Gq3lqMJQlCKSF9nVI9N
-         KF4DE+C9iigot1+1+meThVkwXGhcs2CEneGlu0lcrGiptrtObt5GPx4DcLSHNs4+5vCk
-         ZTKqfm76100xd1GIC5aD3otuJAx5bELUZAB+/lAEiURQ6TOWlDaAjuRD3h1ikA/m+IU8
-         DlUQ==
-X-Gm-Message-State: AOJu0Yxma45T5dvB+YyyQBwq0dyQ47R7Df9JpIAQWPlx1MKxFQIdUhT1
-	qlvR4dbnqFJQDToP04vrcxEIDmJ13szEsFJvSnI=
-X-Google-Smtp-Source: AGHT+IGPp77OIeq0HPwK1G1mRuXPVT/TNiXRQRsdPVwq0HzCh+/6goRnf27mZqKmRhoHC4FS1baWhsKabTH7NXn1ZHo=
-X-Received: by 2002:a05:6808:f91:b0:3b9:e654:9010 with SMTP id
- o17-20020a0568080f9100b003b9e6549010mr10465714oiw.34.1702562980290; Thu, 14
- Dec 2023 06:09:40 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702563540; x=1703168340;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xK1Zz0ik7xN5iCx8Rt0y08scTAc5eJ32ICjBtV1g5R0=;
+        b=s+vJfR6i4JNRm5IV/z7LFzGM758s0GmmooJK0+hOWhVoBuZ1jXAoKSFmSK84DfjbEF
+         4SW/FZWuAzBK9RSMpQUGaimeFd5fIx3lu2RDT7MMUxA5P6/ZrUL1L8fRcKLfwW1oi2oY
+         cqxG5Kt4szs/uv69GP4BbRn/asSpJxOsp/XaqBfCdN+aOcSi0VTrOkq6xro9zE6ZZCrv
+         jzWHLSz6iGNZdzSywXqFLRTconfChHjPOQyI3eSVqrua+dzmlSR5a94TMPyQMyWwBbjW
+         bpv107DZR8r3DdyyVbFt7c6KLDl3blDa9lqU3Jwi89K7B2mVrspV7T0K2UXhQ/eoeSYo
+         Plmw==
+X-Gm-Message-State: AOJu0YxqhJ3IyL4RLyfIDB9huOM6J6ivXgZh6eDo1rFJjXbii4t3H4Z7
+	TSSlfkotVZzTurK3AtA4Oi9x1sza4CMqV78ksZctFg==
+X-Google-Smtp-Source: AGHT+IGp7N0kDKKmg44BR/UTVhPYQAXaP/J0i9EfoiSn3v8/kmsSPtwUVxlkF51Mb6DLMeWbbOQ2HLX16hUnLvPRqkk=
+X-Received: by 2002:a05:6122:2986:b0:4b2:c554:d2bf with SMTP id
+ fn6-20020a056122298600b004b2c554d2bfmr6676722vkb.33.1702563540050; Thu, 14
+ Dec 2023 06:19:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213190528.3751583-1-tmaimon77@gmail.com> <20231213190528.3751583-4-tmaimon77@gmail.com>
- <cf3ce945-2f1c-4dae-86b8-349dae3d962b@app.fastmail.com>
-In-Reply-To: <cf3ce945-2f1c-4dae-86b8-349dae3d962b@app.fastmail.com>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Thu, 14 Dec 2023 16:09:29 +0200
-Message-ID: <CAP6Zq1inLOMHORqO8=RbP6NfwJ63kLaH0G3+TKBhfn0p2CE53w@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] soc: nuvoton: add NPCM BPC driver
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: pmenzel@molgen.mpg.de, Rob Herring <robh+dt@kernel.org>, 
-	krzysztof.kozlowski+dt@linaro.org, Conor Dooley <conor+dt@kernel.org>, 
-	avifishman70@gmail.com, tali.perry1@gmail.com, Joel Stanley <joel@jms.id.au>, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	openbmc@lists.ozlabs.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <20231208102020.36390-1-brgl@bgdev.pl> <20231208102020.36390-3-brgl@bgdev.pl>
+ <ZXMiq3wDOt9zFzuX@smile.fi.intel.com> <CAMRc=Me5fzUaxQZ8Ec086papUpOD+chZ3+BM4CzASmB=ksh9kw@mail.gmail.com>
+ <ZXsLhDGeNofXp4IC@smile.fi.intel.com>
+In-Reply-To: <ZXsLhDGeNofXp4IC@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 14 Dec 2023 15:18:48 +0100
+Message-ID: <CAMRc=Me5mj19jH7QxkL4LPfwUkr0F9t5UQpPjz5GDjRbC5XDsg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] gpiolib: use a mutex to protect the list of GPIO devices
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Arnd,
-
-Thanks for your comments.
-
-On Thu, 14 Dec 2023 at 14:44, Arnd Bergmann <arnd@arndb.de> wrote:
+On Thu, Dec 14, 2023 at 3:04=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> On Wed, Dec 13, 2023, at 20:05, Tomer Maimon wrote:
-> > Add Nuvoton BMC NPCM BIOS post code (BPC) driver.
+> On Thu, Dec 14, 2023 at 02:59:28PM +0100, Bartosz Golaszewski wrote:
+> > On Thu, Dec 14, 2023 at 2:53=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > On Fri, Dec 08, 2023 at 11:20:20AM +0100, Bartosz Golaszewski wrote:
+> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > >
+> > > > The global list of GPIO devices is never modified or accessed from
+> > > > atomic context so it's fine to protect it using a mutex. Add a new
+> > > > global lock dedicated to the gpio_devices list and use it whenever
+> > > > accessing or modifying it.
+>
+> ...
+>
+> > > > While at it: fold the sysfs registering of existing devices into
+> > > > gpiolib.c and make gpio_devices static within its compilation unit.
+> > >
+> > > TBH I do not like injecting sysfs (legacy!) code into gpiolib.
+> > > It makes things at very least confusing.
+> > >
+> > > That _ugly_ ifdeffery and sysfs in the function name are not okay.
+> > >
+> > > If you want do that, please create a separate change and explain the =
+rationale
+> > > behind with answering to the Q "Why do we need all that and why is it=
+ better
+> > > than any alternatives?".
 > >
-> > The NPCM BPC monitoring two configurable I/O address written by the host
-> > on the bus.
-> >
-> > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> > ---
-> >  drivers/soc/nuvoton/Kconfig    |   9 +
-> >  drivers/soc/nuvoton/Makefile   |   1 +
-> >  drivers/soc/nuvoton/npcm-bpc.c | 387 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 397 insertions(+)
-> >  create mode 100644 drivers/soc/nuvoton/npcm-bpc.c
+> > I can move it back to gpiolib-sysfs.c but this way we'll have to keep
+> > the GPIO device mutex public in gpiolib.h.
 >
-> I try hard to avoid having user interfaces in drivers/soc/, that
-> subsystem should primarily be used for things that don't have an
-> existing subsystem in the kernel and are used by other in-kernel
-> drivers but don't export hteir own misc device.
+> And I'm fine with that. Again, we can discuss this in a separate change t=
+hat
+> will do that (make that mutex local with the explanation why).
 >
-> > diff --git a/drivers/soc/nuvoton/Kconfig b/drivers/soc/nuvoton/Kconfig
-> > index d5102f5f0c28..ebd162633942 100644
-> > --- a/drivers/soc/nuvoton/Kconfig
-> > +++ b/drivers/soc/nuvoton/Kconfig
-> > @@ -2,6 +2,15 @@
-> >
-> >  menu "NUVOTON SoC drivers"
-> >
-> > +config NPCM_BPC
-> > +     tristate "NPCM BIOS Post Code support"
-> > +     depends on (ARCH_NPCM || COMPILE_TEST)
-> > +     help
-> > +       Provides NPCM driver to control the BIOS Post Code
-> > +       interface which allows the BMC to monitor and save
-> > +       the data written by the host to an arbitrary I/O port,
-> > +       the BPC is connected to the host thourgh LPC or eSPI bus.
-> > +
->
-> This one in particular looks like this might be implemented
-> by more than one BMC type, it's a fairly generic functionality.
->
-> Have you talked to the other maintainers of SoCs used in
-> OpenBMC about coming up with a common interface?
-Yes, Both Nuvoton and Aspeed use the same user-facing code to manage
-the host snooping.
-https://github.com/openbmc/phosphor-host-postd
->
-> > +#define DEVICE_NAME  "npcm-bpc"
-Will do.
->
-> [nitpicking] No need for macros like this one, open-coding the
-> string is usually more readable.
->
->     Arnd
 
-Thanks,
+No, I won't be sending one. I'll send another iteration of this with
+sysfs stuff contained to gpiolib-sysfs.c.
 
-Tomer
+Bart
+
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
