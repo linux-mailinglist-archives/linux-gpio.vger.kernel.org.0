@@ -1,75 +1,57 @@
-Return-Path: <linux-gpio+bounces-1471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1473-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EE5181337F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:47:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17DE681338B
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 15:49:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 60ADD1C2169D
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 14:47:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BBE421F2214D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 14:49:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB2375B1EB;
-	Thu, 14 Dec 2023 14:47:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kkp5xwOt"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1DB45B209;
+	Thu, 14 Dec 2023 14:49:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-x52e.google.com (mail-pg1-x52e.google.com [IPv6:2607:f8b0:4864:20::52e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id AF9C0115;
-	Thu, 14 Dec 2023 06:47:39 -0800 (PST)
-Received: by mail-pg1-x52e.google.com with SMTP id 41be03b00d2f7-5c701bd9a3cso2405347a12.0;
-        Thu, 14 Dec 2023 06:47:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702565259; x=1703170059; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sof1gkerYbku5v+b3jW5lmXu1VdUZ0QZgBhWQoXBGdc=;
-        b=Kkp5xwOtxrYv10OSa5shZ21cAy928zSXM36Qw1ckljhPbPIGgnp5VIFhO04gf2ms49
-         lwMhceJJEhjJesldb717PFdsOWpIMPPdTP7pPN1e0AQj8hdzZhfejl6BJw+pHQ1fV8nW
-         13ERwX6ypl3x5UW42Tbdq2eZWa3nw2oNHW8zBBg/OMSDwdllQnuFQKUPWFZNtt7M1TnV
-         NMlqxndxrnPYARe8XBCIo8SyCeHvyoRSPvYKpScYRvAIa07Tlg5ZK4nBwh41h/4G9f8i
-         GwqfJdrwW8tYQHbSEuT735zHRaac1nhDvLPzqnWmcEwxtfDhG+VuJfhc2dSGSPqQBrBd
-         IZFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702565259; x=1703170059;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sof1gkerYbku5v+b3jW5lmXu1VdUZ0QZgBhWQoXBGdc=;
-        b=me0jY1fgPwEfhYun08c2BU6iKeZuX/N5dkk8aeba+BMS3DuFLzI7zUgCoxrrVAxEMs
-         7V0IcNcHpzmQqA6r4ch2r+XiVP2EdLUOIgCrHsTu9PYxDpgMW2bYstIT0NDkwyxOUehL
-         fDxeVd3+KXGcyiKtawOOcWDDYZxISlfPAo9PBPFK13i0y3w/gSTJ8WnhjKS8GcKMjoXV
-         rWfKYgjUwhlAxp/6ADwahrxMEVxj5mqvKN+hjF+kFYMVvuwXTqdeJF0WLseMAevy5E/i
-         vpkrWOg/XKt65rhTLvynb7OKE8eaEVujBFf6QvN47k1oDVF0Dy+Pe45MnVxVfenFZ/KL
-         sMgA==
-X-Gm-Message-State: AOJu0YxQ3ira8sxeg1kp3tS8dfNj4pkwbcN1cwbpWvkekVzMuVc9QeBj
-	061n226x2G/cl7+b8RxpPaBvE3GHAcE=
-X-Google-Smtp-Source: AGHT+IHawo4hfwDtk3k2HkdR8iPUFBOsPm5v1cld8SI6HPoRP6qWJjkIxc29qlJ3dhzd2ztBxSDNcA==
-X-Received: by 2002:a05:6a20:1445:b0:18c:14e2:ad8c with SMTP id a5-20020a056a20144500b0018c14e2ad8cmr4954016pzi.25.1702565259046;
-        Thu, 14 Dec 2023 06:47:39 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id d18-20020aa78692000000b006bdd7cbcf98sm11901912pfo.182.2023.12.14.06.47.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 06:47:38 -0800 (PST)
-Date: Thu, 14 Dec 2023 22:47:34 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZXsVhtkitzaJFUyl@rigel>
-References: <ZXnU3tMYCc2Rw8Qv@rigel>
- <ZXnX8jPHxRLW8lhi@smile.fi.intel.com>
- <CAMRc=Mfj_4YvQVP=UWkULBwJniDDjapttU+qSgqfN5ZWNgikKw@mail.gmail.com>
- <ZXnb-ks_noYLWZZ2@smile.fi.intel.com>
- <CAMRc=MfaHKKKNkXW0L1FPjCH4VvG22Vn9q8z9tupZCtCEKZU2g@mail.gmail.com>
- <ZXoO8B0N3S49GnvX@smile.fi.intel.com>
- <ZXpJueTnmtUIecCd@rigel>
- <ZXplMThBSD53UV0s@rigel>
- <CAMRc=MeZg0xg7ASA3x4PxCYymCmCEp0zZbUgGTCCzrjPaPZCag@mail.gmail.com>
- <ZXsSnTcnAsopYodl@smile.fi.intel.com>
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 20D6EBD;
+	Thu, 14 Dec 2023 06:49:45 -0800 (PST)
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="2213382"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="2213382"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:49:42 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="767629176"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="767629176"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga007.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 06:49:31 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rDn1j-00000005s2k-2Jqg;
+	Thu, 14 Dec 2023 16:49:27 +0200
+Date: Thu, 14 Dec 2023 16:49:27 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Michael Walle <michael@walle.cc>
+Cc: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Message-ID: <ZXsV96xhuvVSyc1f@smile.fi.intel.com>
+References: <20231207100723.15015-1-tychang@realtek.com>
+ <20231207100723.15015-3-tychang@realtek.com>
+ <ZXHMbZRXLXGa_tq8@smile.fi.intel.com>
+ <989146448858478b975c66899b8f3fed@realtek.com>
+ <ZXm0MIub8X2q_lnp@smile.fi.intel.com>
+ <23574204547646779d02f0109c20b3ff@realtek.com>
+ <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
+ <0f0b3b65a838aea6797ae78c47d6af49@walle.cc>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,24 +60,76 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXsSnTcnAsopYodl@smile.fi.intel.com>
+In-Reply-To: <0f0b3b65a838aea6797ae78c47d6af49@walle.cc>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Dec 14, 2023 at 04:35:09PM +0200, Andy Shevchenko wrote:
-> On Thu, Dec 14, 2023 at 10:40:26AM +0100, Bartosz Golaszewski wrote:
->
-> ...
->
-> > > Opinions?
-> >
-> > Yeah, don't make it a kernel doc. It's a private structure, no need to
-> > expose documentation for it in docs. Just use a regular comment - say
-> > what it is and why it's here.
->
-> I agree with Bart, make it plain comment if needed.
->
+On Thu, Dec 14, 2023 at 03:35:18PM +0100, Michael Walle wrote:
 
-It is a plain comment in v2.
+> > > >> >> This driver enables configuration of GPIO direction, GPIO values,
+> > > >> >> GPIO debounce settings and handles GPIO interrupts.
+> > > >> >
+> > > >> >Why gpio-regmap can't be used?
+> > > >>
+> > > >> I will try to use gpio-remap in the next version.
+> > > >
+> > > >If it appears that it makes code uglier / complicated, please add the note
+> > > >somewhere to answer the above question.
+> > > 
+> > > I've traced the gpio-regmap.c file. It appears that for the driver
+> > > to register
+> > > gpio_irq_chip, it must create the irq_domain and add it into
+> > > gpio_regmap_config.
+> > > Additionally, the driver needs to register the irq handler by itself.
+> > > However, this process can be managed by the gpiolib if the driver
+> > > fills in the struct
+> > > gpio_irq_chip inside struct gpio_chip before invoking
+> > > gpiochip_add_data.
+> > 
+> > Hmm... I thought this is solvable issue.
+> > Michael, is there a limitation in GPIO regmap that this driver can't be
+> > converted?
+> 
+> gpio-regmap is designed that regmap-irq (drivers/base/regmap/irq.c) can be
+> used. So, if regmap-irq fit this driver, then it can be used together with
+> gpio-regmap.
+> 
+> From a quick glance at the patch, it looks like the gpio portion might fit
+> gpio-regmap.
+> 
+> > > Moreover, apart from managing the registers for gpio direction and
+> > > value, there
+> > > are several other registers that require access(interrupt enable,
+> > > debounce...).
+> > > The GPIO IRQ status registers are located at different base
+> > > addresses and are
+> > > not contiguous. It may need to create an additional regmap and
+> > > assign the access
+> > > table to this regmap.
+> > 
+> > AFAIK this is not a problem as you can provide your own xlate function
+> > that
+> > will take care about register mapping.
+> 
+> Just for the gpio part. IIRC regmap has it own translation (regmap fields).
+> 
+> > > With the above consideration, I tend to keep using the existing
+> > > method.
+> > 
+> > I would like to hear from Michael if it's indeed a big obstacle.
+> 
+> So, regarding the irq portion, again, it must fit the regmap-irq. For the
+> additional requirement to set the debounce, you can add a .set_config to
+> gpio_regmap_config and supply your own set_config callback. See also [1].
 
-Cheers,
-Kent.
+Thank you, Michael, for the prompt answer. It's insightful to me, I will try to
+remember these aspects for the future reviews.
+
+> [1]
+> https://lore.kernel.org/linux-gpio/d4a6a640c373b6d939e147691efa596c@walle.cc/
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
