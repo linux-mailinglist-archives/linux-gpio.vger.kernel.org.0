@@ -1,125 +1,151 @@
-Return-Path: <linux-gpio+bounces-1501-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1502-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E6728136E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:50:55 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 276B081372F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 18:03:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7029D1C20864
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 16:50:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8A3CBB21746
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBC9863DC1;
-	Thu, 14 Dec 2023 16:50:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D55363DD8;
+	Thu, 14 Dec 2023 17:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQqUft8O"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l25U2BUz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-xb2d.google.com (mail-yb1-xb2d.google.com [IPv6:2607:f8b0:4864:20::b2d])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id F16B01A7;
-	Thu, 14 Dec 2023 08:50:33 -0800 (PST)
-Received: by mail-yb1-xb2d.google.com with SMTP id 3f1490d57ef6-dbcd7d63789so1174686276.3;
-        Thu, 14 Dec 2023 08:50:33 -0800 (PST)
+Received: from mail-ed1-x531.google.com (mail-ed1-x531.google.com [IPv6:2a00:1450:4864:20::531])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 064DE9A;
+	Thu, 14 Dec 2023 09:03:33 -0800 (PST)
+Received: by mail-ed1-x531.google.com with SMTP id 4fb4d7f45d1cf-5527ee1b5c3so1210679a12.1;
+        Thu, 14 Dec 2023 09:03:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702572633; x=1703177433; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=GCp7oH/gOJp7J9eGa5Fv3Vw5adjzdlx0cxRf567SUHs=;
-        b=gQqUft8OxkQt7V/pOUO3nNujYVABSB+zXRDRQhgAt7hr82sD5ife0HehJJF9+uBv0H
-         kGueEGeL3Pbv4uuct4dB13L13/Xii27IfoiV1GuZYct+HC+sy965xn/VZJbQsIoPjzTK
-         yiPOdJmWFPbVMIHTgHq/dmJxwOFdi7yeFCkvH6Y1DBrmFglJZatgAqFQAUISG4ZTqZO1
-         tHhHupsimyhAWoxodaHqa+P6+O+W8a8mhkGjshjZawscLDaDjBLSZNCHjWMn4eC0iACy
-         NwQAvyL9tFn3vxnzbzzfDBpIrYbUc/2ia6cDgjUCTRRC0uu3F52HSoYy02bg0PvOxmOl
-         kngw==
+        d=gmail.com; s=20230601; t=1702573411; x=1703178211; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m+lglxETz+fWuFm30gl8riT+YXHxcre+z450cDyvkZs=;
+        b=l25U2BUz7/AJXxKejqiQedLOZM3UNYP6j8fpXIcqavb5EqXTKB/Z1+OV10aqJW/MgA
+         kyN/D1YqbPNoIT4QjK8qL9HLY+QeerPPrwRawew9Q5c4RBCJOC3HFmY06IbeqSKTcT7r
+         QCZPg5c4Hft/GRUGXuyK/y1tCNwX9oB4jMwBOcbUkUyZGwRSwzdAsUXrtEx2vwLlz9cd
+         zYwHnfF0fJttJx1cVpNIpPviC1zmLuBI8eGWwT1a5GezhFnCzZigcL3id9orf8jWuDUT
+         lHhnfc4f3OTorjfypNRORTyGMqJgQV8+/UjHeusUlQ7rBU27ifC9Sl23XBXv1fFHnZ8s
+         cz3Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702572633; x=1703177433;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=GCp7oH/gOJp7J9eGa5Fv3Vw5adjzdlx0cxRf567SUHs=;
-        b=PRku5DYx5eePZ/D/WlqdCUIr8cBEY4pMBlgdgjLhVcd7alET7bciMlIrFyJoThGuP1
-         5Bts1EXkD0NRsKYebW6fq0dNwjT6/vGKxMg5mWfrxi+6vcoy5r1BcMZJi4HauNlFt5hP
-         2ZR3bPhNhp72d7pnBP6wXuFNa748OEvhQ041l/gitoQ71kbUb3R8bnOqy2iHEJmtLPkn
-         aygfwmQfNROu8igPnMlmf0RBBtcPMUKBo1ehJ/Ta1HNMkPh2G+twNW3/NWI9kMtzDpk0
-         ltRzZcMq2diYa4Il7ZmJG2pgh9N66Cl2Ghjwdsq9n5EmhZ1A9vFqVH2HA899r+s5CEpr
-         JoKg==
-X-Gm-Message-State: AOJu0YzglB9F/bUnaAUOt6iTy1o+oGqPI8geH2Q3NokWxB2HO5pKC3jD
-	CWdpysl24nVs9xznAa9ChVUCNXwXHUaCuWISXTkMj58O
-X-Google-Smtp-Source: AGHT+IHrQv/zGVf9OaFxbpocOPZzcUmOj8Ved/+MSnhM0SJDoI50jIVku44SJoWKiweBXvQlPaNG5U0SeghbqBkrEJ0=
-X-Received: by 2002:a25:55c2:0:b0:dbc:b6e0:e302 with SMTP id
- j185-20020a2555c2000000b00dbcb6e0e302mr2171816ybb.83.1702572632960; Thu, 14
- Dec 2023 08:50:32 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702573411; x=1703178211;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m+lglxETz+fWuFm30gl8riT+YXHxcre+z450cDyvkZs=;
+        b=LpPEbv6BqM9LS03fOKyHScgnGL6uDQbk2qGJqG/kJ1qpdNmTSx5v/sxBl35CP1GDVL
+         Dwl8zrkYZEJbnvg0Jsvi4DMOEzR50QOKDIIHTMmu2GhI0lGtwFJ50FeVjzP1m7zol88t
+         pHQSR/qj97CTrCJSPpur3qVrZUn/z2hwqI4VoxaG+aSuapphhauzxPBrbmTC5GdJhsRD
+         phRN+MHVyc64u1ENzb/GaJv0IMkuX+cDau8EJgkUXALiDRdO5JqI7RYqfW0uJ/3+3gR0
+         G0166Lbsu+gdN8b8EuzVAfMuumUVfkhB+EF1BqkXTADfblccN0mTxIKKJDi7umps+4jg
+         ATpw==
+X-Gm-Message-State: AOJu0Yx/lhCv8AtUUhFep57nxo372timslSpC2YPyde6ZjbQ+RSxOjs6
+	Q5Q9PQ4RWUPkG9QZy1niIZk=
+X-Google-Smtp-Source: AGHT+IEiyYYre0/uJwpHGfY4Q6A9LX0eNGn78B8SJTWcCnWQnDgsz8GyuwoMo0Rm/VlgLpP6o4qBKA==
+X-Received: by 2002:a17:906:48d:b0:9a5:dc2b:6a5 with SMTP id f13-20020a170906048d00b009a5dc2b06a5mr11055203eja.35.1702573411184;
+        Thu, 14 Dec 2023 09:03:31 -0800 (PST)
+Received: from [172.25.98.130] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id mm20-20020a1709077a9400b00a1a53e9f401sm9666879ejc.132.2023.12.14.09.03.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Dec 2023 09:03:30 -0800 (PST)
+Message-ID: <a1f60bf6-5fb6-4814-b3b5-799fb8ffb847@gmail.com>
+Date: Thu, 14 Dec 2023 19:03:28 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231213190528.3751583-1-tmaimon77@gmail.com> <20231213190528.3751583-4-tmaimon77@gmail.com>
- <cf3ce945-2f1c-4dae-86b8-349dae3d962b@app.fastmail.com> <CAP6Zq1inLOMHORqO8=RbP6NfwJ63kLaH0G3+TKBhfn0p2CE53w@mail.gmail.com>
- <88040035-d971-4012-bb9f-9f2ae91fdc6e@app.fastmail.com>
-In-Reply-To: <88040035-d971-4012-bb9f-9f2ae91fdc6e@app.fastmail.com>
-From: Tomer Maimon <tmaimon77@gmail.com>
-Date: Thu, 14 Dec 2023 18:50:21 +0200
-Message-ID: <CAP6Zq1iZbNnPuVnJW0=HhnOryrdZOcnNMK420H3X0KcA1k3-Uw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/3] soc: nuvoton: add NPCM BPC driver
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: pmenzel@molgen.mpg.de, Rob Herring <robh+dt@kernel.org>, 
-	krzysztof.kozlowski+dt@linaro.org, Conor Dooley <conor+dt@kernel.org>, 
-	avifishman70@gmail.com, tali.perry1@gmail.com, Joel Stanley <joel@jms.id.au>, 
-	venture@google.com, yuenn@google.com, benjaminfair@google.com, 
-	=?UTF-8?Q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, 
-	openbmc@lists.ozlabs.org, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
+To: David Lechner <dlechner@baylibre.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
+ <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
+ <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
+ <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
+Content-Language: en-US
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Arnd,
-
-Thanks for your suggestion.
-
-Appreciate it if Joel, OpenBMC Linux kernel maintainer,  could share
-his thoughts about it.
 
 
-On Thu, 14 Dec 2023 at 17:49, Arnd Bergmann <arnd@arndb.de> wrote:
->
-> On Thu, Dec 14, 2023, at 14:09, Tomer Maimon wrote:
-> > On Thu, 14 Dec 2023 at 14:44, Arnd Bergmann <arnd@arndb.de> wrote:
-> >> >
-> >> > +config NPCM_BP
-> >> > +     tristate "NPCM BIOS Post Code support"
-> >> > +     depends on (ARCH_NPCM || COMPILE_TEST)
-> >> > +     help
-> >> > +       Provides NPCM driver to control the BIOS Post Code
-> >> > +       interface which allows the BMC to monitor and save
-> >> > +       the data written by the host to an arbitrary I/O port,
-> >> > +       the BPC is connected to the host thourgh LPC or eSPI bus.
-> >> > +
-> >>
-> >> This one in particular looks like this might be implemented
-> >> by more than one BMC type, it's a fairly generic functionality.
-> >>
-> >> Have you talked to the other maintainers of SoCs used in
-> >> OpenBMC about coming up with a common interface?
-> > Yes, Both Nuvoton and Aspeed use the same user-facing code to manage
-> > the host snooping.
-> > https://github.com/openbmc/phosphor-host-postd
->
-> Ok, that's good. I found the driver in drivers/soc/aspeed/aspeed-lpc-snoop.c
-> now and see that the implementation looks very similar.
->
-> I think we should do two things here:
->
->  - split out the common code into a shared module that exports the
->    symbols to be used by either one
->
->  - find a better place for both drivers outside of drivers/soc.
->    I would suggest drivers/misc/bmc/ but am open to other suggestions.
->
->       Arnd
+On 12/14/23 18:12, David Lechner wrote:
+> On Thu, Dec 14, 2023 at 1:43 PM Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
+>> On 12/12/23 17:09, David Lechner wrote:
+>>> On Tue, Dec 12, 2023 at 11:45 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
 
-Best regards,
+>> ...
+>>
+>>>> +  interrupts:
+>>>> +    maxItems: 1
+>>>
+>>> Shouldn't this be 2? The datasheet says there is a "Data Output Ready"
+>>> signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
+>>> pin. Although I could see how RDY could be considered part of the SPI
+>>> bus. In any case, a description explaining what the interrupt is would
+>>> be useful.
+>>>
+>>
+>> I do not see how there could be 2 interrupts. DOUT/RDY is used as an
+>> interrupt when waiting for a conversion to finalize.
+>>
+>> Sync and Error are sepparate pins, Sync(if enabled) works only as an
+>> input that resets the modulator and the digital filter.
+> 
+> I only looked at the AD7172-2 datasheet and pin 15 is labeled
+> SYNC/ERROR. Maybe they are separate pins on other chips?
 
-Tomer
+Yep, sorry, missed that. All other supported models have them separate.
+
+> 
+>>
+>> Error can be configured as input, output or ERROR output (OR between all
+>> internal error sources).
+>>
+>> Would this be alright
+>>   interrupts:
+>>
+>>     description: Conversion completion interrupt.
+>>                  Pin is shared with SPI DOUT.
+>>     maxItems: 1
+> 
+> Since ERROR is an output, I would expect it to be an interrupt. The
+> RDY output, on the other hand, would be wired to a SPI controller with
+> the SPI_READY feature (I use the Linux flag name here because I'm not
+> aware of a corresponding devicetree flag). So I don't think the RDY
+> signal would be an interrupt.
+> 
+
+Error does not have the purpose to be an interrupt. The only interrupt
+used from this chip is the one from the DOUT/~RDY pin. Sure, it is wired
+to the SPI controller, but when you can't also receive interrupts on
+that very same CPU pin an issue arises. So that pin is also wired to
+another GPIO with interrupt support.
+
+This is the same way that ad4130.yaml is written for example (with the
+exception that ad4130 supports configuring where the interrupt is routed).
+
+In regards to SPI_READY _BITUL(7) /* slave pulls low to pause */: the
+ad_sigma_delta framework (if it can be called that) is written to expect
+a pin interrupt, not to use SPI_READY controller feature.
+
 
