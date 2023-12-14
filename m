@@ -1,355 +1,333 @@
-Return-Path: <linux-gpio+bounces-1442-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1443-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EC298129DF
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 08:59:49 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EE4D812BC0
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 10:33:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 43BB428241A
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 07:59:48 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 58CB3B2128F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 09:33:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AF0F154A1;
-	Thu, 14 Dec 2023 07:59:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F010B2E846;
+	Thu, 14 Dec 2023 09:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PGqKjB11"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="c2yoJXv8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-x22e.google.com (mail-lj1-x22e.google.com [IPv6:2a00:1450:4864:20::22e])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B06FDE0
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:59:39 -0800 (PST)
-Received: by mail-lj1-x22e.google.com with SMTP id 38308e7fff4ca-2cc4029dc6eso8903571fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 13 Dec 2023 23:59:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702540778; x=1703145578; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=n9wEnUDIRvKLyzOqX0O3tx30Tvjspr7MEcA9HRHm9qk=;
-        b=PGqKjB11cnsez4TKVIE9XCSDSIWcs/diMkYEeVYu3nJupUISGrnSNXC7rONfLCrnVu
-         Yy8AH1T8x10lgUeHHG+JnXK+HCoW7LrIja/9COwD3tidKDjr6Ann02/lqUPoaV2GIlDe
-         CN0PCHETk/AUlZy/4QW1lMQLlvf96GWKmhKNNkNpNrVX9P6zF355YHNjhDx/4eJCWkvF
-         70/tKn3Tf3ORrywuqL7+4gE5pLs3qfezvgj1DaeO+mdgMUimipeCVKV3ObbZYFWDCDrM
-         Rn64CZ0toDo6smKpUY0fTQHe1mHczt09aKhPKMBb3s4SGwc1ML4KwqktyBwm0PHfLCsN
-         RkZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702540778; x=1703145578;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=n9wEnUDIRvKLyzOqX0O3tx30Tvjspr7MEcA9HRHm9qk=;
-        b=xQHd2c4V++/V3mq62wJd7AvrKKukcwc0WipDfWPi4GoBzzX/xksJxm/dnT9vMNTEEM
-         q2xefgw7YOmcjqMwcYgssNGEb+/GGJ1691kSz/1qsC4i5bvDIO129+L5pPLsihkpLim6
-         9AkUojEImhEw3oo2Ta80OjNgJwLVNaa4Q/MLS6gYKBpFiY17Fx4J7Uawqjhh8uwiTIou
-         j1vDPQY1Pas+eWf8uQsBmgVrFiCaSXs+ZaDyy2HsynmcVhdOfuxmLYkv2MDOJqwBIsL7
-         or6Ih3HQjjKPhBF5qm4O+x8YuppPAllz3QaSqvR0IzDlJOEJ5LQnaqr9u6MRw/d1hoOD
-         XfCQ==
-X-Gm-Message-State: AOJu0YwwscLbUfDB4CyszsZKtKi6Fbs5AkvV89yaXfIJzYwpVZKUWVjq
-	wY/M8F2umeObqh1RmwcEalxqqg==
-X-Google-Smtp-Source: AGHT+IEe1lSgOXPocDgp9kCh/V3KjoKfM051nF7MsjqFJM+J46Ouy4zBpfOW7arvRyUz2R2cq6bW8Q==
-X-Received: by 2002:ac2:51b0:0:b0:50b:fd52:e629 with SMTP id f16-20020ac251b0000000b0050bfd52e629mr3702789lfk.125.1702540777832;
-        Wed, 13 Dec 2023 23:59:37 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.218.27])
-        by smtp.gmail.com with ESMTPSA id rm6-20020a1709076b0600b00a1f6f120b33sm8476917ejc.110.2023.12.13.23.59.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 13 Dec 2023 23:59:37 -0800 (PST)
-Message-ID: <ada0b523-d0a9-405b-a7f3-d4d58c6a6696@linaro.org>
-Date: Thu, 14 Dec 2023 08:59:35 +0100
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 553BC98
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 01:33:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702546409; x=1734082409;
+  h=date:from:to:cc:subject:message-id;
+  bh=6Z3x+R08cd/2yxWsFWwoO9+6laTi/AZ4ScPvlsXf7IE=;
+  b=c2yoJXv8iz/SNuVazkL6+9o9M1Xw+l2U3DmLinExrPMUKymnW9/d0aV7
+   Az22Gu3kvvewX/bOMskpvDFAhlW6s5ZOaFaKGgQb2kjUV4bDV24iiEHL+
+   L+fj1aPkz3VCAjxKvcwWk9Kdt0TQmtqzI2yRRWMQF9JTLXWwC0XIXCuRE
+   UWtZ6DwWPV1VIB9UKUGDHR2Vc66kybJk6Syixu1gpdJ88ND0Zujp5Q/Jx
+   4Uv5fFvfkQVAkrN0fRafL0s0lqXzc7SGLAIBLC4LruAgO2uoBDoc9zy40
+   5elmMzrZIRJIi06gCanx4GWcArJZKzvhRoKkNsm8qepA07Zi9myIq9sCz
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="461559635"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="461559635"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 01:33:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10923"; a="947514696"
+X-IronPort-AV: E=Sophos;i="6.04,275,1695711600"; 
+   d="scan'208";a="947514696"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 14 Dec 2023 01:33:27 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rDi5s-000Lqv-0N;
+	Thu, 14 Dec 2023 09:33:24 +0000
+Date: Thu, 14 Dec 2023 17:33:07 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:b4/gpio-descriptors-sound-misc] BUILD SUCCESS
+ 5634debdfb50c8f3d7af74adca070f0993163d55
+Message-ID: <202312141704.hJghJJEW-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 3/3] soc: nuvoton: add NPCM BPC driver
-Content-Language: en-US
-To: Tomer Maimon <tmaimon77@gmail.com>, arnd@arndb.de, pmenzel@molgen.mpg.de,
- robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- avifishman70@gmail.com, tali.perry1@gmail.com, joel@jms.id.au,
- venture@google.com, yuenn@google.com, benjaminfair@google.com,
- j.neuschaefer@gmx.net
-Cc: openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231213190528.3751583-1-tmaimon77@gmail.com>
- <20231213190528.3751583-4-tmaimon77@gmail.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231213190528.3751583-4-tmaimon77@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 13/12/2023 20:05, Tomer Maimon wrote:
-> Add Nuvoton BMC NPCM BIOS post code (BPC) driver.
-> 
-> The NPCM BPC monitoring two configurable I/O address written by the host
-> on the bus.
-> 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
-> ---
->  drivers/soc/nuvoton/Kconfig    |   9 +
->  drivers/soc/nuvoton/Makefile   |   1 +
->  drivers/soc/nuvoton/npcm-bpc.c | 387 +++++++++++++++++++++++++++++++++
->  3 files changed, 397 insertions(+)
->  create mode 100644 drivers/soc/nuvoton/npcm-bpc.c
-> 
-> diff --git a/drivers/soc/nuvoton/Kconfig b/drivers/soc/nuvoton/Kconfig
-> index d5102f5f0c28..ebd162633942 100644
-> --- a/drivers/soc/nuvoton/Kconfig
-> +++ b/drivers/soc/nuvoton/Kconfig
-> @@ -2,6 +2,15 @@
->  
->  menu "NUVOTON SoC drivers"
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/gpio-descriptors-sound-misc
+branch HEAD: 5634debdfb50c8f3d7af74adca070f0993163d55  ASoC: tegra: tegra20_ac97: Convert to use GPIO descriptors
 
-...
+elapsed time: 1499m
 
-> +
-> +static int npcm_bpc_config_irq(struct npcm_bpc *bpc,
-> +			       struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	int rc;
-> +
-> +	bpc->irq = platform_get_irq(pdev, 0);
-> +	if (bpc->irq < 0) {
-> +		dev_err(dev, "get IRQ failed\n");
-> +		return bpc->irq;
+configs tested: 255
+configs skipped: 2
 
-return dev_err_probe
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-> +	}
-> +
-> +	rc = devm_request_irq(dev, bpc->irq,
-> +			      npcm_bpc_irq, IRQF_SHARED,
-> +			      DEVICE_NAME, bpc);
-> +	if (rc < 0) {
-> +		dev_warn(dev, "Unable to request IRQ %d\n", bpc->irq);
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs103_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20231213   gcc  
+arc                   randconfig-001-20231214   gcc  
+arc                   randconfig-002-20231213   gcc  
+arc                   randconfig-002-20231214   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                          gemini_defconfig   gcc  
+arm                           imxrt_defconfig   gcc  
+arm                      integrator_defconfig   gcc  
+arm                   randconfig-001-20231213   clang
+arm                   randconfig-001-20231214   gcc  
+arm                   randconfig-002-20231213   clang
+arm                   randconfig-002-20231214   gcc  
+arm                   randconfig-003-20231213   clang
+arm                   randconfig-003-20231214   gcc  
+arm                   randconfig-004-20231213   clang
+arm                   randconfig-004-20231214   gcc  
+arm                        shmobile_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20231213   clang
+arm64                 randconfig-001-20231214   gcc  
+arm64                 randconfig-002-20231213   clang
+arm64                 randconfig-002-20231214   gcc  
+arm64                 randconfig-003-20231213   clang
+arm64                 randconfig-003-20231214   gcc  
+arm64                 randconfig-004-20231213   clang
+arm64                 randconfig-004-20231214   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20231213   gcc  
+csky                  randconfig-001-20231214   gcc  
+csky                  randconfig-002-20231213   gcc  
+csky                  randconfig-002-20231214   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20231213   clang
+hexagon               randconfig-002-20231213   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231213   clang
+i386         buildonly-randconfig-002-20231213   clang
+i386         buildonly-randconfig-003-20231213   clang
+i386         buildonly-randconfig-004-20231213   clang
+i386         buildonly-randconfig-005-20231213   clang
+i386         buildonly-randconfig-006-20231213   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231213   clang
+i386                  randconfig-002-20231213   clang
+i386                  randconfig-003-20231213   clang
+i386                  randconfig-004-20231213   clang
+i386                  randconfig-005-20231213   clang
+i386                  randconfig-006-20231213   clang
+i386                  randconfig-011-20231213   gcc  
+i386                  randconfig-011-20231214   clang
+i386                  randconfig-012-20231213   gcc  
+i386                  randconfig-012-20231214   clang
+i386                  randconfig-013-20231213   gcc  
+i386                  randconfig-013-20231214   clang
+i386                  randconfig-014-20231213   gcc  
+i386                  randconfig-014-20231214   clang
+i386                  randconfig-015-20231213   gcc  
+i386                  randconfig-015-20231214   clang
+i386                  randconfig-016-20231213   gcc  
+i386                  randconfig-016-20231214   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231213   gcc  
+loongarch             randconfig-001-20231214   gcc  
+loongarch             randconfig-002-20231213   gcc  
+loongarch             randconfig-002-20231214   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+m68k                          multi_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                         cobalt_defconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20231213   gcc  
+nios2                 randconfig-001-20231214   gcc  
+nios2                 randconfig-002-20231213   gcc  
+nios2                 randconfig-002-20231214   gcc  
+openrisc                         alldefconfig   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20231213   gcc  
+parisc                randconfig-001-20231214   gcc  
+parisc                randconfig-002-20231213   gcc  
+parisc                randconfig-002-20231214   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     asp8347_defconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                      makalu_defconfig   gcc  
+powerpc                 mpc834x_itx_defconfig   gcc  
+powerpc                       ppc64_defconfig   gcc  
+powerpc                      ppc6xx_defconfig   gcc  
+powerpc               randconfig-001-20231213   clang
+powerpc               randconfig-001-20231214   gcc  
+powerpc               randconfig-002-20231213   clang
+powerpc               randconfig-002-20231214   gcc  
+powerpc               randconfig-003-20231213   clang
+powerpc               randconfig-003-20231214   gcc  
+powerpc                    sam440ep_defconfig   gcc  
+powerpc                        warp_defconfig   gcc  
+powerpc64             randconfig-001-20231213   clang
+powerpc64             randconfig-001-20231214   gcc  
+powerpc64             randconfig-002-20231213   clang
+powerpc64             randconfig-002-20231214   gcc  
+powerpc64             randconfig-003-20231213   clang
+powerpc64             randconfig-003-20231214   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv             nommu_k210_sdcard_defconfig   gcc  
+riscv                 randconfig-001-20231213   clang
+riscv                 randconfig-001-20231214   gcc  
+riscv                 randconfig-002-20231213   clang
+riscv                 randconfig-002-20231214   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20231213   gcc  
+s390                  randconfig-002-20231213   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         apsh4a3a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                    randconfig-001-20231213   gcc  
+sh                    randconfig-001-20231214   gcc  
+sh                    randconfig-002-20231213   gcc  
+sh                    randconfig-002-20231214   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                           se7780_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sh                          urquell_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                       sparc32_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20231213   gcc  
+sparc64               randconfig-001-20231214   gcc  
+sparc64               randconfig-002-20231213   gcc  
+sparc64               randconfig-002-20231214   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20231213   clang
+um                    randconfig-001-20231214   gcc  
+um                    randconfig-002-20231213   clang
+um                    randconfig-002-20231214   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231213   clang
+x86_64       buildonly-randconfig-001-20231214   gcc  
+x86_64       buildonly-randconfig-002-20231213   clang
+x86_64       buildonly-randconfig-002-20231214   gcc  
+x86_64       buildonly-randconfig-003-20231213   clang
+x86_64       buildonly-randconfig-003-20231214   gcc  
+x86_64       buildonly-randconfig-004-20231213   clang
+x86_64       buildonly-randconfig-004-20231214   gcc  
+x86_64       buildonly-randconfig-005-20231213   clang
+x86_64       buildonly-randconfig-005-20231214   gcc  
+x86_64       buildonly-randconfig-006-20231213   clang
+x86_64       buildonly-randconfig-006-20231214   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20231213   clang
+x86_64                randconfig-011-20231214   gcc  
+x86_64                randconfig-012-20231213   clang
+x86_64                randconfig-012-20231214   gcc  
+x86_64                randconfig-013-20231213   clang
+x86_64                randconfig-013-20231214   gcc  
+x86_64                randconfig-014-20231213   clang
+x86_64                randconfig-014-20231214   gcc  
+x86_64                randconfig-015-20231213   clang
+x86_64                randconfig-015-20231214   gcc  
+x86_64                randconfig-016-20231213   clang
+x86_64                randconfig-016-20231214   gcc  
+x86_64                randconfig-071-20231213   clang
+x86_64                randconfig-071-20231214   gcc  
+x86_64                randconfig-072-20231213   clang
+x86_64                randconfig-072-20231214   gcc  
+x86_64                randconfig-073-20231213   clang
+x86_64                randconfig-073-20231214   gcc  
+x86_64                randconfig-074-20231213   clang
+x86_64                randconfig-074-20231214   gcc  
+x86_64                randconfig-075-20231213   clang
+x86_64                randconfig-075-20231214   gcc  
+x86_64                randconfig-076-20231213   clang
+x86_64                randconfig-076-20231214   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           alldefconfig   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20231213   gcc  
+xtensa                randconfig-001-20231214   gcc  
+xtensa                randconfig-002-20231213   gcc  
+xtensa                randconfig-002-20231214   gcc  
+xtensa                         virt_defconfig   gcc  
 
-return dev_err_probe
-
-> +		return rc;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int npcm_enable_bpc(struct npcm_bpc *bpc, struct device *dev,
-> +			   int channel, u16 host_port)
-> +{
-> +	u8 addr_en, reg_en;
-> +	int err;
-> +
-> +	init_waitqueue_head(&bpc->ch[channel].wq);
-> +
-> +	err = kfifo_alloc(&bpc->ch[channel].fifo, BPC_KFIFO_SIZE,
-> +			  GFP_KERNEL);
-> +	if (err)
-> +		return err;
-> +
-> +	bpc->ch[channel].miscdev.minor = MISC_DYNAMIC_MINOR;
-> +	bpc->ch[channel].miscdev.name =
-> +		devm_kasprintf(dev, GFP_KERNEL, "%s%d", DEVICE_NAME, channel);
-> +	bpc->ch[channel].miscdev.fops = &npcm_bpc_fops;
-> +	bpc->ch[channel].miscdev.parent = dev;
-> +	err = misc_register(&bpc->ch[channel].miscdev);
-> +	if (err)
-> +		return err;
-> +
-> +	bpc->ch[channel].data = bpc;
-> +	bpc->ch[channel].host_reset = false;
-> +
-> +	/* Enable host snoop channel at requested port */
-> +	switch (channel) {
-> +	case 0:
-> +		addr_en = FIFO_IOADDR1_ENABLE;
-> +		iowrite8((u8)host_port & 0xFF,
-> +			 bpc->base + NPCM_BPCFA1L_REG);
-> +		iowrite8((u8)(host_port >> 8),
-> +			 bpc->base + NPCM_BPCFA1M_REG);
-> +		break;
-> +	case 1:
-> +		addr_en = FIFO_IOADDR2_ENABLE;
-> +		iowrite8((u8)host_port & 0xFF,
-> +			 bpc->base + NPCM_BPCFA2L_REG);
-> +		iowrite8((u8)(host_port >> 8),
-> +			 bpc->base + NPCM_BPCFA2M_REG);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	if (bpc->en_dwcap)
-> +		addr_en = FIFO_DWCAPTURE;
-> +
-> +	/*
-> +	 * Enable FIFO Ready Interrupt, FIFO Capture of I/O addr,
-> +	 * and Host Reset
-> +	 */
-> +	reg_en = ioread8(bpc->base + NPCM_BPCFEN_REG);
-> +	iowrite8(reg_en | addr_en | FIFO_READY_INT_ENABLE |
-> +		 HOST_RESET_INT_ENABLE, bpc->base + NPCM_BPCFEN_REG);
-> +
-> +	return 0;
-> +}
-> +
-> +static void npcm_disable_bpc(struct npcm_bpc *bpc, int channel)
-> +{
-> +	u8 reg_en;
-> +
-> +	switch (channel) {
-> +	case 0:
-> +		reg_en = ioread8(bpc->base + NPCM_BPCFEN_REG);
-> +		if (bpc->en_dwcap)
-> +			iowrite8(reg_en & ~FIFO_DWCAPTURE,
-> +				 bpc->base + NPCM_BPCFEN_REG);
-> +		else
-> +			iowrite8(reg_en & ~FIFO_IOADDR1_ENABLE,
-> +				 bpc->base + NPCM_BPCFEN_REG);
-> +		break;
-> +	case 1:
-> +		reg_en = ioread8(bpc->base + NPCM_BPCFEN_REG);
-> +		iowrite8(reg_en & ~FIFO_IOADDR2_ENABLE,
-> +			 bpc->base + NPCM_BPCFEN_REG);
-> +		break;
-> +	default:
-> +		return;
-> +	}
-> +
-> +	if (!(reg_en & (FIFO_IOADDR1_ENABLE | FIFO_IOADDR2_ENABLE)))
-> +		iowrite8(reg_en &
-> +			 ~(FIFO_READY_INT_ENABLE | HOST_RESET_INT_ENABLE),
-> +			 bpc->base + NPCM_BPCFEN_REG);
-> +
-> +	kfifo_free(&bpc->ch[channel].fifo);
-> +	misc_deregister(&bpc->ch[channel].miscdev);
-> +}
-> +
-> +static int npcm_bpc_probe(struct platform_device *pdev)
-> +{
-> +	struct npcm_bpc *bpc;
-> +	struct device *dev;
-> +	u32 port;
-> +	int err;
-> +
-> +	dev = &pdev->dev;
-> +
-> +	bpc = devm_kzalloc(dev, sizeof(*bpc), GFP_KERNEL);
-> +	if (!bpc)
-> +		return -ENOMEM;
-> +
-> +	bpc->base = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(bpc->base))
-> +		return PTR_ERR(bpc->base);
-> +
-> +	dev_set_drvdata(&pdev->dev, bpc);
-
-Why do you use pdev again? Look earlier, you have local variable for this.
-
-> +
-> +	err = of_property_read_u32_index(dev->of_node, "nuvoton,monitor-ports",
-> +					 0, &port);
-> +	if (err) {
-> +		dev_err(dev, "no monitor ports configured\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	bpc->en_dwcap =
-> +		of_property_read_bool(dev->of_node, "nuvoton,bpc-en-dwcapture");
-> +
-> +	bpc->dev = dev;
-> +
-> +	err = npcm_bpc_config_irq(bpc, pdev);
-> +	if (err)
-> +		return err;
-> +
-> +	err = npcm_enable_bpc(bpc, dev, 0, port);
-> +	if (err) {
-> +		dev_err(dev, "Enable BIOS post code I/O port 0 failed\n");
-> +		return err;
-> +	}
-> +
-> +	/*
-> +	 * Configuration of second BPC channel port is optional
-> +	 * Double-Word Capture ignoring address 2
-> +	 */
-> +	if (!bpc->en_dwcap) {
-> +		if (of_property_read_u32_index(dev->of_node,
-> +					       "nuvoton,monitor-ports", 1,
-> +					       &port) == 0) {
-> +			err = npcm_enable_bpc(bpc, dev, 1, port);
-> +			if (err) {
-> +				dev_err(dev, "Enable BIOS post code I/O port 1 failed, disable I/O port 0\n");
-> +				npcm_disable_bpc(bpc, 0);
-> +				return err;
-> +			}
-> +		}
-> +	}
-> +
-> +	pr_info("NPCM BIOS Post Code probe\n");
-
-Drop
-
-> +
-> +	return err;
-> +}
-> +
-> +static int npcm_bpc_remove(struct platform_device *pdev)
-> +{
-> +	struct npcm_bpc *bpc = dev_get_drvdata(&pdev->dev);
-> +	u8 reg_en;
-> +
-> +	reg_en = ioread8(bpc->base + NPCM_BPCFEN_REG);
-> +
-> +	if (reg_en & FIFO_IOADDR1_ENABLE)
-> +		npcm_disable_bpc(bpc, 0);
-> +	if (reg_en & FIFO_IOADDR2_ENABLE)
-> +		npcm_disable_bpc(bpc, 1);
-> +
-
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
