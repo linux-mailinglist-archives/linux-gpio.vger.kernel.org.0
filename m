@@ -1,155 +1,178 @@
-Return-Path: <linux-gpio+bounces-1436-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1437-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFA9C8123C9
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 01:18:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D31058124D3
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 02:54:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E08FB211BF
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 00:18:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 47870B21188
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 01:54:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF85377;
-	Thu, 14 Dec 2023 00:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hKwKfsDZ"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77517F9;
+	Thu, 14 Dec 2023 01:54:33 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-x132.google.com (mail-il1-x132.google.com [IPv6:2607:f8b0:4864:20::132])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 51ED1C9;
-	Wed, 13 Dec 2023 16:18:07 -0800 (PST)
-Received: by mail-il1-x132.google.com with SMTP id e9e14a558f8ab-35f71436397so9335895ab.3;
-        Wed, 13 Dec 2023 16:18:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702513086; x=1703117886; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=sBplHsQKCXk6W0ml/hFriO8Dxkh7jyAyK1nM1uz0Edw=;
-        b=hKwKfsDZovSElzbZiRNVrJQlbgdjjvqT6817muiboOaALd/dcC0hxiSZTiDQ2zkm3x
-         YdEVQG9FVDzavNlDUJfZhbF0Nn8cDRoOCy6zEhto1TqI6W6pjfiLbdsZyBnB8+xHYbbI
-         XzAa3qu+11702Ox3Idqnvn7Ar/qXctPyoO2WtB2S5W968hYbnYXGx3eP4e2R5Ou8LvY2
-         +L/5YALGiY6GU5kKfTMfT8mkHh5vuNmcjjNoBDJCwe2IVMmguj4Fzab8FYnuPpgBACGj
-         Dc73sPv4LjWIbmeH+W3Ja/D8VPf5Gtz6VqC8JEBniUCl0ayEDc0+WfdGU+Yus0tGGi7J
-         p9aA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702513086; x=1703117886;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sBplHsQKCXk6W0ml/hFriO8Dxkh7jyAyK1nM1uz0Edw=;
-        b=BiDHG9//AlGh890YOxlLXsGeUcED+FNJE0CK9yXHw8ld/fhL1sTjQiREjc5HVIWXOr
-         EbsWjCd5oDm8UNLu1BrspqoHsHwZrKIzmXe+wyrFJVp7mYWXoSDtPc//73/ZLz2PSz6W
-         EdkRzAabdl9DjBTtLjvgRL66CgagcU608kvvQ2G4j32IdyeUkpDgdIWHE0Ax61yguHT+
-         7Bgx0e8IxIqisZZiwlWOkhkzMOexTku2dGqrnLWtESBwGJeclSER0UD/VTzFEtE7ZVvJ
-         S0PF4nS8nRgFxUY7R9WPIQO0eG4FSWWuVALBz/ZFwvlGhDTGgq4IdSMQA5pDf7/0vowQ
-         q/Lw==
-X-Gm-Message-State: AOJu0YxY7r/1tGaCyfiaHRhfT6eJVz0XWwBxr1lAnC6eKGpq/TgtmAAd
-	GBHZrnaxoRXC1NdNOd68Zxc=
-X-Google-Smtp-Source: AGHT+IFMzrScwsQpOQeMMsaRM3rfiiEcPr1gU3wq3Oe+XkLrXn2/Inbd/xxBkN0SHqHBPtdpb4+HYw==
-X-Received: by 2002:a05:6e02:144:b0:35f:7200:cdbb with SMTP id j4-20020a056e02014400b0035f7200cdbbmr1864666ilr.83.1702513086548;
-        Wed, 13 Dec 2023 16:18:06 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id bs9-20020a632809000000b0059b2316be86sm10465036pgb.46.2023.12.13.16.18.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 13 Dec 2023 16:18:06 -0800 (PST)
-Date: Thu, 14 Dec 2023 08:18:01 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH 1/4] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZXpJueTnmtUIecCd@rigel>
-References: <20231212054253.50094-2-warthog618@gmail.com>
- <ZXm3rayrcvfO1t1Z@smile.fi.intel.com>
- <ZXm_WsIpgIyOUNHt@rigel>
- <CAMRc=Mfri8K4ZqcHb_eQY6gi+q_-uBZc2wiMrrb-+a7Tric3FA@mail.gmail.com>
- <ZXnU3tMYCc2Rw8Qv@rigel>
- <ZXnX8jPHxRLW8lhi@smile.fi.intel.com>
- <CAMRc=Mfj_4YvQVP=UWkULBwJniDDjapttU+qSgqfN5ZWNgikKw@mail.gmail.com>
- <ZXnb-ks_noYLWZZ2@smile.fi.intel.com>
- <CAMRc=MfaHKKKNkXW0L1FPjCH4VvG22Vn9q8z9tupZCtCEKZU2g@mail.gmail.com>
- <ZXoO8B0N3S49GnvX@smile.fi.intel.com>
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 4673EE3;
+	Wed, 13 Dec 2023 17:54:25 -0800 (PST)
+X-UUID: 9adb435ddafe451b89aac4d78a16ce0f-20231214
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.33,REQID:93de4f45-1a62-41a9-b5b1-da36f8375241,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.33,REQID:93de4f45-1a62-41a9-b5b1-da36f8375241,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:364b77b,CLOUDID:e05e2c61-c89d-4129-91cb-8ebfae4653fc,B
+	ulkID:231212231719IH1VMLZ5,BulkQuantity:15,Recheck:0,SF:38|24|17|19|44|64|
+	66|102,TC:nil,Content:0,EDM:-3,IP:-2,URL:0,File:nil,Bulk:40,QS:nil,BEC:nil
+	,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_OBB,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,
+	TF_CID_SPAM_FSD
+X-UUID: 9adb435ddafe451b89aac4d78a16ce0f-20231214
+Received: from node4.com.cn [(39.156.73.12)] by mailgw
+	(envelope-from <xiongxin@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 473595861; Thu, 14 Dec 2023 09:54:10 +0800
+Received: from node4.com.cn (localhost [127.0.0.1])
+	by node4.com.cn (NSMail) with SMTP id 4062B16001CC8;
+	Thu, 14 Dec 2023 09:54:10 +0800 (CST)
+X-ns-mid: postfix-657A6042-155688377
+Received: from [172.20.116.203] (unknown [172.20.116.203])
+	by node4.com.cn (NSMail) with ESMTPA id 8192316001CC8;
+	Thu, 14 Dec 2023 01:54:07 +0000 (UTC)
+Message-ID: <1844c927-2dd4-49b4-a6c4-c4c176b1f75d@kylinos.cn>
+Date: Thu, 14 Dec 2023 09:54:06 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXoO8B0N3S49GnvX@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] irq: Resolve that mask_irq/unmask_irq may not be called
+ in pairs
+Content-Language: en-US
+To: Thomas Gleixner <tglx@linutronix.de>, jikos@kernel.org,
+ benjamin.tissoires@redhat.com
+Cc: linux-input@vger.kernel.org, stable@vger.kernel.org,
+ Riwen Lu <luriwen@kylinos.cn>, hoan@os.amperecomputing.com,
+ fancer.lancer@gmail.com, linus.walleij@linaro.org, brgl@bgdev.pl,
+ andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231207014003.12919-1-xiongxin@kylinos.cn> <87ttosssxd.ffs@tglx>
+ <e125491c-4cdb-4870-924a-baeb7453bf78@kylinos.cn> <874jgnqwlo.ffs@tglx>
+ <bf4004bf-4868-4953-8d8e-0c0e03be673e@kylinos.cn> <875y12p2r0.ffs@tglx>
+From: xiongxin <xiongxin@kylinos.cn>
+In-Reply-To: <875y12p2r0.ffs@tglx>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 13, 2023 at 10:07:12PM +0200, Andy Shevchenko wrote:
-> On Wed, Dec 13, 2023 at 08:03:44PM +0100, Bartosz Golaszewski wrote:
->
-> ...
->
-> > > > > > > > > > +static struct supinfo supinfo;
-> > > > > > > > >
-> > > > > > > > > Why supinfo should be a struct to begin with? Seems to me as an unneeded
-> > > > > > > > > complication.
-> > > > > > >
-> > > > > > > I think we should keep it as a struct but defined the following way:
-> > > > > > >
-> > > > > > > struct {
-> > > > > > >     spinlock_t lock;
-> > > > > > >     struct rb_root tree;
-> > > > > > > } supinfo;
-> > > > > >
-> > > > > > That is what I meant be merging the struct definition with the variable
-> > > > > > definition.  Or is there some other way to completely do away with the
-> > > > > > struct that I'm missing?
-> > > > >
-> > > > > Look at the top of gpiolib.c:
-> > > > >
-> > > > > static DEFINE_MUTEX(gpio_lookup_lock);
-> > > > > static LIST_HEAD(gpio_lookup_list);
-> > > > >
-> > > > > In the similar way you can simply do
-> > > > >
-> > > > > static DEFINE_SPINLOCK(gpio_sup_lock);
-> > > > > static struct rb_root gpio_sup_tree;
-> > > >
-> > > > The fact that this has been like this, doesn't mean it's the only
-> > > > right way. IMO putting these into the same structure makes logical
-> > > > sense.
-> > >
-> > > I disagree on the struct like this on the grounds:
-> > > - it's global
+=E5=9C=A8 2023/12/13 22:59, Thomas Gleixner =E5=86=99=E9=81=93:
+> On Wed, Dec 13 2023 at 10:29, xiongxin wrote:
+>> =E5=9C=A8 2023/12/12 23:17, Thomas Gleixner =E5=86=99=E9=81=93:
+>> Sorry, the previous reply may not have clarified the BUG process. I
+>> re-debugged and confirmed it yesterday. The current BUG execution
+>> sequence is described as follows:
+>=20
+> It's the sequence how this works and it works correctly.
+>=20
+> Just because it does not work on your machine it does not mean that thi=
+s
+> is incorrect and a BUG.
+>=20
+> You are trying to fix a symptom and thereby violating guarantees of the
+> core code.
+>=20
+>> That is, there is a time between the 1:handle_level_irq() and
+>> 3:irq_thread_fn() calls for the 2:disable_irq() call to acquire the lo=
+ck
+>> and then implement the irq_state_set_disabled() operation. When finall=
+y
+>> call irq_thread_fn()->irq_finalize_oneshot(), it cannot enter the
+>> unmask_thread_irq() process.
+>=20
+> Correct, because the interrupt has been DISABLED in the mean time.
+>=20
+>> In this case, the gpio irq_chip irq_mask()/irq_unmask() callback pairs
+>> are not called in pairs, so I think this is a BUG, but not necessarily
+>> fixed from the irq core code layer.
+>=20
+> No. It is _NOT_ a BUG. unmask() is not allowed to be invoked when the
+> interrupt is DISABLED. That's the last time I'm going to tell you that.
+> Only enable_irq() can undo the effect of disable_irq(), period.
+>=20
+>> Next, when the gpio controller driver calls the suspend/resume process=
+,
+>> it is as follows:
+>>
+>> suspend process:
+>> dwapb_gpio_suspend()
+>>       ctx->int_mask   =3D dwapb_read(gpio, GPIO_INTMASK);
+>>
+>> resume process:
+>> dwapb_gpio_resume()
+>>       dwapb_write(gpio, GPIO_INTMASK, ctx->int_mask);
+>=20
+> Did you actually look at the sequence I gave you?
+>=20
+>     Suspend:
+>=20
+> 	  i2c_hid_core_suspend()
+> 	     disable_irq();       <- Marks it disabled and eventually
+> 				     masks it.
+>=20
+> 	  gpio_irq_suspend()
+> 	     save_registers();    <- Saves masked interrupt
+>=20
+>     Resume:
+>=20
+> 	  gpio_irq_resume()
+> 	     restore_registers(); <- Restores masked interrupt
+>=20
+> 	  i2c_hid_core_resume()
+> 	     enable_irq();        <- Unmasks interrupt and removes the
+> 				     disabled marker
+>=20
+>=20
+> Have you verified that this order of invocations is what happens on
+> your machine?
+>=20
+> Thanks,
+>=20
+>          tglx
 
-I dislike having the global at all - and now you want two :-(.
+As described earlier, in the current situation, the irq_mask() callback=20
+of gpio irq_chip is called in mask_irq(), followed by the disable_irq()=20
+in i2c_hid_core_suspend(), unmask_irq() will not be executed.
 
-> > > - it's one time use
+Then call enable_irq() in i2c_hid_core_resume(). Since gpio irq_chip=20
+does not implement the irq_startup() callback, it ends up calling=20
+irq_enable().
 
-Its not about how many times it is instanciated, it is about
-maintainability.
+The irq_enable() function is then implemented as follows:
 
-> > > - it adds complications for no benefit
+irq_state_clr_disabled(desc);
+if (desc->irq_data.chip->irq_enable) {
+	desc->irq_data.chip->irq_enable(&desc->irq_data);
+	irq_state_clr_masked(desc);
+} else {
+	unmask_irq(desc);
+}
 
-It provides a placeholder for collective documentation and clarifies
-scope for the reader.
-How is it more complicated?
+Because gpio irq_chip implements irq_enable(), unmask_irq() is not=20
+executed, and gpio irq_chip's irq_unmask() callback is not called.=20
+Instead, irq_state_clr_masked() was called to clear the masked flag.
 
-> > > - it makes code uglier and longer
-> > >
+The irq masked behavior is actually controlled by the=20
+irq_mask()/irq_unmask() callback function pairs in gpio irq_chip. When=20
+the whole situation occurs, there is one more irq_mask() operation, or=20
+one less irq_unmask() operation. This ends the i2c hid resume and the=20
+gpio corresponding i2c hid interrupt is also masked.
 
-What, swapping an underscore for a period?
-
-And you would hope the generated code is essentially the same.
-
-> >
-> > It boils down to supinfo.lock vs supinfo_lock. I do prefer the former
-> > but it's a weak opinion, I won't die on that hill.
->
-> Me neither, just showing rationale from my side.
->
-
-I can't recall the last time I intentionally used separate globals over a
-struct, so if there are no strong opinions otherwise I'll leave it as a
-struct.
-
-Cheers,
-Kent.
+Please help confirm whether the current situation is a BUG, or suggest=20
+other solutions to fix it.
 
 
