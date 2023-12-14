@@ -1,227 +1,125 @@
-Return-Path: <linux-gpio+bounces-1497-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1498-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8E8948135E2
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:12:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A9E5C8135EC
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 17:14:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4BC962820C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 16:12:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5FD881F2191D
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Dec 2023 16:14:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB5DA5F1D9;
-	Thu, 14 Dec 2023 16:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F0715F1D6;
+	Thu, 14 Dec 2023 16:14:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="mNZxsiA/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LYZ9yyGI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-x234.google.com (mail-lj1-x234.google.com [IPv6:2a00:1450:4864:20::234])
-	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 7E981112
-	for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 08:12:43 -0800 (PST)
-Received: by mail-lj1-x234.google.com with SMTP id 38308e7fff4ca-2cc3647bf06so26006791fa.2
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Dec 2023 08:12:43 -0800 (PST)
+Received: from mail-pl1-x62c.google.com (mail-pl1-x62c.google.com [IPv6:2607:f8b0:4864:20::62c])
+	by lindbergh.monkeyblade.net (Postfix) with ESMTPS id B8C27E8;
+	Thu, 14 Dec 2023 08:14:46 -0800 (PST)
+Received: by mail-pl1-x62c.google.com with SMTP id d9443c01a7336-1d37a6926f7so1843055ad.3;
+        Thu, 14 Dec 2023 08:14:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1702570362; x=1703175162; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VgLd3wB0jQIWdxHpeHgoYJ7Y9WZfKwtfMLFflx+P7WA=;
-        b=mNZxsiA/3meM1yhZjRfKJqxXba/j6o85TFggXM+yxsl+XTPnk8AQtRvI/ZH469O+c8
-         hIjF5T6m4vUPV7uBwmiDgSl1o+iHbtv7JXc8vrx2grbObvacdRp1ACiT0yq82IMz0xLA
-         SeDA7+U7AP4m38L6rXe8sB+ucUySKcI/PuZ76fBvk1JsJGF4JAzHco96EPRtyZEqWtN9
-         6R8TFzeL2wTVbmdjwhTv1rfCNK3Ic7mIvCdmNeOmOpmi6C0vyGINWfIA+pfSFWorX/JU
-         bJCfHRYvzIx2Ar1nYUWUhTt8c6+7BYwyFFPUpEbxp1u8Hc7wUSA0Xq47OfgycbukDZPs
-         V9sQ==
+        d=gmail.com; s=20230601; t=1702570486; x=1703175286; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ren91EB9Lk+40jzwODpGvvvWMNi0QOKNAMntVYGkGks=;
+        b=LYZ9yyGI5/O6134+RaTEfcY3rpurNmo9UWPTn1nf7ke3yaYVSA5m+eEGbcWLXIcHa+
+         W8MuCnZMGxYnWZKrStjeL57XUA/LjdWQeaYbil9+ydNe0CqzY4aOuLRo/E9LBn104fUt
+         CogVzlvsdmeqZ7cO/nWqYcvmx+kz7Pv92kTU7axozpOcX0AD67DJIK6FVCrGtvJaxM3o
+         aiDUnnMgv1487V9S58D+tUv6ifrksWPWUKRSXaqFx2o7jLGkqow4B4A1aVMV/bCTUbR5
+         Nv/N/yvJtc9cZeePOYqjr4bjb09tYZBGQfudlez5zLKfXiRiTmYGSY3ifMJv7gkBu0R9
+         76wQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702570362; x=1703175162;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=VgLd3wB0jQIWdxHpeHgoYJ7Y9WZfKwtfMLFflx+P7WA=;
-        b=TLnkhDLyIt/tMFzMSKPPc1PbSqu3c6dNKM/uQjXzFtfwojvKcVNuUmkYnn+iw/9vV2
-         enAeND/V1VBMjinepcY4AMGC4qarIs5uz6LjHKRTPSEXd9LEnlrOVq+HoJ4GFlVrl9Jy
-         PSs402EnqbqVpIxNhg9mC8Y0+TIz/gIXabwYe2V5MehUY4+aV+5vpAcKH2THbHJQ0a5C
-         cwR1onCBJd+HXIblxlRuYhWNoQDYTiqqEAfUlQ0gzd6Kv/SIGGl5wlAio1IJ4m6WeUkC
-         Ts6BTwz/YwpCoeBlGA/xKOmkDjCIeOKRIfupQL8q9aZQfQZacrpStAyuAXJtFCDX7AhW
-         s95g==
-X-Gm-Message-State: AOJu0YxSjq6B7U3Vp9hB70bwcMVHFrzRZidRNEPTKQl4Hybh7ywUXWYY
-	Xr4N/2Tbzi3SthWYEpzCju35bsVckCfd0M3oDB0jNzldoFusvQ1/Aq0=
-X-Google-Smtp-Source: AGHT+IHQs312dUOBx5Ma7ewlNipNdaXg0ZHYPKPXysvpx5x/Rfo9iSSn2F9H0pVWT/hd9w+Jt4dBV+8rIwazDfs5/TE=
-X-Received: by 2002:a05:651c:1a24:b0:2cb:28f3:244d with SMTP id
- by36-20020a05651c1a2400b002cb28f3244dmr3432134ljb.6.1702570361698; Thu, 14
- Dec 2023 08:12:41 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702570486; x=1703175286;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ren91EB9Lk+40jzwODpGvvvWMNi0QOKNAMntVYGkGks=;
+        b=Be8+IRQYBSmj12WOJTHw1Ac0yWP84CUs92pT3xALWr7PPHW6aynjw6e605PTeAQvjH
+         uLG2172lM3YmVGgcw1DGai4Mc6+OMm7766R53owJubjxCxJMQ8ed3UOUGMnBM0At7w8r
+         j/9CLQwn4WjNs5qwyzrZ4ZbXO3omDO31vxHSkxmz17CLAgXMPYQDiR8+9CeKSFtL6exP
+         HMpiiYcK57yLeC5FfEy+oa+TkvtdtaYHati8j5yf2JYd+ow3L1X48Ui+bSQEW0GzcsRk
+         zzSKbCIZoecRUvp3Y6S95cqYr0+mhrxYNOf6vQWCPusA1SmFtSzcyaHLK2SQvnQLzABX
+         8O/A==
+X-Gm-Message-State: AOJu0Yzk7z2hnCMcgQt2v80FeuPEcDAEDYCetpqSiDAQaWf+qKZqsl1U
+	BZMDIOSvEvpgxKnz2oAauwU=
+X-Google-Smtp-Source: AGHT+IEEvjksM+ciHK7Jxy5B51QteYGpk+B4xz9dctLrrUi1I6oQB8FANtdvlyC47FWJUjvxUq2vZg==
+X-Received: by 2002:a17:902:e54a:b0:1d0:6ffe:1e8b with SMTP id n10-20020a170902e54a00b001d06ffe1e8bmr6740695plf.110.1702570486156;
+        Thu, 14 Dec 2023 08:14:46 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id j8-20020a17090a734800b0028ae9cb6ce0sm3444773pjs.6.2023.12.14.08.14.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Dec 2023 08:14:45 -0800 (PST)
+Date: Fri, 15 Dec 2023 00:14:41 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Subject: Re: [PATCH v2 2/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZXsp8QjxsUMPlZIR@rigel>
+References: <20231214095814.132400-1-warthog618@gmail.com>
+ <20231214095814.132400-3-warthog618@gmail.com>
+ <ZXsZJ9z7iln8uMf8@smile.fi.intel.com>
+ <ZXsajZoQRw7HgHl1@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
- <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com> <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
-In-Reply-To: <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Thu, 14 Dec 2023 17:12:30 +0100
-Message-ID: <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZXsajZoQRw7HgHl1@smile.fi.intel.com>
 
-On Thu, Dec 14, 2023 at 1:43=E2=80=AFPM Ceclan Dumitru <mitrutzceclan@gmail=
-.com> wrote:
->
->
->
-> On 12/12/23 17:09, David Lechner wrote:
-> > On Tue, Dec 12, 2023 at 11:45=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@=
-gmail.com> wrote:
-> >>
-> >> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> >> which can be used in high precision, low noise single channel applicat=
-ions
-> >> or higher speed multiplexed applications. The Sigma-Delta ADC is inten=
-ded
-> >> primarily for measurement of signals close to DC but also delivers
-> >> outstanding performance with input bandwidths out to ~10kHz.
-> >
-> > As stated in [1], we should try to make complete bindings. I think
-> > more could be done here to make this more complete. Most notably, the
-> > gpio-controller binding is missing. Also maybe something is needed to
-> > describe how the SYNC/ERROR pin is wired up since it can be an input
-> > or an output with different functions?
-> >
->
-> GPIO-controller:
->   '#gpio-cells':
->
->     const: 2
->
->
->   gpio-controller: true
-> Like this, in properties?
-
-Yes (with not so many blank lines).
-
->
-> Sync can only be an output, Error is configurable. Are there any
-> examples for how something like this is described?
->
-
-Configurable pins sounds like a pinmux. Sounds a bit overkill to
-specify everything for a pin-controller for one pin if no one is ever
-going to use it. But I will leave it to the DT maintainers to say how
-complete the bindings should be.
-
-> ...
->
-> >> +  interrupts:
-> >> +    maxItems: 1
-> >
-> > Shouldn't this be 2? The datasheet says there is a "Data Output Ready"
-> > signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
-> > pin. Although I could see how RDY could be considered part of the SPI
-> > bus. In any case, a description explaining what the interrupt is would
-> > be useful.
-> >
->
-> I do not see how there could be 2 interrupts. DOUT/RDY is used as an
-> interrupt when waiting for a conversion to finalize.
->
-> Sync and Error are sepparate pins, Sync(if enabled) works only as an
-> input that resets the modulator and the digital filter.
-
-I only looked at the AD7172-2 datasheet and pin 15 is labeled
-SYNC/ERROR. Maybe they are separate pins on other chips?
-
->
-> Error can be configured as input, output or ERROR output (OR between all
-> internal error sources).
->
-> Would this be alright
->   interrupts:
->
->     description: Conversion completion interrupt.
->                  Pin is shared with SPI DOUT.
->     maxItems: 1
-
-Since ERROR is an output, I would expect it to be an interrupt. The
-RDY output, on the other hand, would be wired to a SPI controller with
-the SPI_READY feature (I use the Linux flag name here because I'm not
-aware of a corresponding devicetree flag). So I don't think the RDY
-signal would be an interrupt.
-
+On Thu, Dec 14, 2023 at 05:09:01PM +0200, Andy Shevchenko wrote:
+> On Thu, Dec 14, 2023 at 05:03:03PM +0200, Andy Shevchenko wrote:
+> > On Thu, Dec 14, 2023 at 05:58:11PM +0800, Kent Gibson wrote:
 >
 > ...
 >
-> >> +
-> >> +patternProperties:
-> >> +  "^channel@[0-9a-f]$":
-> >> +    type: object
-> >> +    $ref: adc.yaml
-> >> +    unevaluatedProperties: false
-> >> +
-> >> +    properties:
-> >> +      reg:
-> >> +        minimum: 0
-> >> +        maximum: 15
-> >> +
-> >> +      diff-channels:
-> >> +        items:
-> >> +          minimum: 0
-> >> +          maximum: 31
-> >
-> > Do we need to add overrides to limit the maximums for each compatible s=
-tring?
-> >
+> > > +/*
+> > > + * Used to populate gpio_v2_line_info with cdev specific fields not contained
+> > > + * in the struct gpio_desc.
+> > > + * A line is determined to contain supplemental information by
+> > > + * line_is_supplemental().
+> > > + */
+> > > +static struct {
+> > > +	/* a rbtree of the struct lines containing the supplemental info */
+> > > +	struct rb_root tree;
+> > > +	/* covers tree */
+> > > +	spinlock_t lock;
+> > > +} supinfo;
 >
-> Just to be sure, in the allOf section?
-> If yes, is there any other more elegant method to obtain this behavior?
-
-I'm not sure. I would like to know if there is a more elegant way as well. =
-;-)
-
+> Hmm... If I read the kernel-doc script it should support anonymous structs
+> and unions...
 >
 > ...
 >
-> >> +
-> >> +    required:
-> >> +      - reg
-> >> +      - diff-channels
+> > > +static void supinfo_init(void)
+> > > +{
+> > > +	supinfo.tree = RB_ROOT;
+> > > +	spin_lock_init(&supinfo.lock);
+> > > +}
 > >
-> > Individual analog inputs can be used as single-ended or in pairs as
-> > differential, right? If so, diff-channels should not be required to
-> > allow for single-ended use.
+> > Can it be done statically?
 > >
-> > And we would need to add something like a single-ended-channel
-> > property to adc.yaml to allow mapping analog input pins to channels
-> > similar to how diff-channels works, I think (I don't see anything like
-> > that there already)?
-> >
-> > So maybe something like:
-> >
-> > oneOf:
-> >   - required:
-> >       single-ended-channel
-> >   - required:
-> >       diff-channels
-> >
-> All channels must specify 2 analog input sources, there is no input
-> source wired by default to AVSS.
+> > supinfo = {
+> > 	.tree = RB_ROOT,
+> > 	.lock = __SPIN_LOCK_UNLOCKED(supinfo.lock),
 >
-> In my opinion, there is no need to specify channels as single-ended
-> because that would require a property that specifies the input that is
-> wired to AVSS.
+> I even checked the current tree, we have 32 users of this pattern in drivers/.
+>
 
-Makes sense to me.
+Ah, that is what you meant.  Yeah sure can - the supinfo_init() is
+another hangover from when I was trying to create the supinfo per chip,
+but now it is a global a static initialiser makes sense.
+
+And I still haven't received the email you quote there.
+
+Cheers,
+Kent.
+
 
