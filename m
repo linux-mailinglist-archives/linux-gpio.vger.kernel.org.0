@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-1576-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1577-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A275681547C
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:29:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4911815492
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:33:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 593631F24904
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 23:29:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87EAAB23C9A
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 23:33:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F6CE18EDC;
-	Fri, 15 Dec 2023 23:27:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D69618EDA;
+	Fri, 15 Dec 2023 23:33:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HFy7ZrvP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHwb3tb0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B23766AA6;
-	Fri, 15 Dec 2023 23:27:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59A4495C9;
+	Fri, 15 Dec 2023 23:33:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1d39afa1eecso316705ad.2;
-        Fri, 15 Dec 2023 15:27:26 -0800 (PST)
+Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3b9e2a014e8so981724b6e.2;
+        Fri, 15 Dec 2023 15:33:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702682846; x=1703287646; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1702683221; x=1703288021; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SUijnMG3eQXM+CVKamx2ToNpricn5q+qhrLr2Z8uHac=;
-        b=HFy7ZrvPnH/oHGRrRduk4JtNmCwXzSrT4FeqiTK6R/tDnaXXINCavimCTf8a1QMF+n
-         0cRPTU2xvnumnyFMZJDFyHDN76exXL03cd/11xS/Bz/rt99Fg87fUJ9qX/yYDpeZcqlA
-         VXOV/RuveMQjU0jv+5GiqIW/cJwoUQBtnrR+4pwcAftFjyd8vM2F2TC1SgzK3fGBXvZv
-         ws1SPYqKf79aFRngIADq52IimG4N0FTf9N1xnoH7tDZXXiZoX6qnPTBk3Ak2QlGViaJW
-         IjCxEc4ZlOwJPnymJvtqHxrt13uxZoiA2G66ViC2l/nARR/tiNjFcNktksxs3H124Qiq
-         ez5A==
+        bh=+hMnTlRGS/PXAXBP5TPslgIi8w7BTIAAQCZQIaoU8eQ=;
+        b=HHwb3tb01uNXh/jLi3nQLIRLGs9CYcAsNVX393SALLkkbB3COBASkv9Y+bhd7BePJh
+         dGNr+v1CkuapkAEHcSzcOi+QnPaWVQzq3HyFNX3nVppEZVqGGmDoT+tGM6oHap8XJdIo
+         NV1WODxhJbmf8Pu6TmEYfkVnImHUfaqlax8OCeBIGSwGxZMwwD2K2/6KPz800c/OFhOA
+         GrLN1mja+Q62SEtWpv4EEg3dXPQA/etDI6JEplsThOxndz5UrrCq3VC1sfqlb1Xn5ym8
+         cVvpeNpiyq+K94qB27gsoJrvKfzNlYcpUcEzYFq1xSVnpYCwS5Fx1CQja3SEUIhPVdvH
+         XUlA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702682846; x=1703287646;
+        d=1e100.net; s=20230601; t=1702683221; x=1703288021;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SUijnMG3eQXM+CVKamx2ToNpricn5q+qhrLr2Z8uHac=;
-        b=OBqTm5/vc29IHslUUok3ZJoR+Ynna9HHj6/EZTUSBDhwKeCkWYugTTtb4ST7h4KG5k
-         QJSw2Xk2Mqfz6B9YL+EMpnhGA+fL3dcc1XmLdvI7hVFtnCrw5eTHgDPR+hArPDVjMOvL
-         lp1SPPiS+po31uuZyMxi6A5v0aRB5WgKTlvro81BwuHccyfdI5bIfWnJ2xnfgdK6MAX1
-         8qJOpV1voU8BvTeDJ590M8QJMhiQsGmT2MyGkrixlBieRBCLQ0yAOo4o+aTNjWQ5pXz2
-         brij5c/BvyWg9wha4TLws90K0pXdQf/CjHtCFp/R68A92VuvQkW+WlbMkC/xUNOilmMC
-         fl0g==
-X-Gm-Message-State: AOJu0YwmM6OGQEz6OR7mpGZ5ossA1W2vu0fm1fzZRU6dYm8vDsUEhLr+
-	REjZy+sqQ0s/UrmRlGPHjoE=
-X-Google-Smtp-Source: AGHT+IESSr8LJWu5eM7SL9dIxxkhfdU1ZWd3ocqekNNBxYjPFqYts+ArRbeNWJoNint/5zU1NXbjHQ==
-X-Received: by 2002:a17:902:7d8e:b0:1d3:45b7:bc09 with SMTP id a14-20020a1709027d8e00b001d345b7bc09mr5647033plm.55.1702682845703;
-        Fri, 15 Dec 2023 15:27:25 -0800 (PST)
+        bh=+hMnTlRGS/PXAXBP5TPslgIi8w7BTIAAQCZQIaoU8eQ=;
+        b=ZdsaPK11xeq2pZb1owqgC68A3YK+vHPPVUZqktp0XNIljMnsvGpA/aPqfNJaiA5kcp
+         94u+hiHTT+wdxf4Wb456LVMTXUC5UMI7K5xXdu4E4f9FCjgbtNtDvUwmyr/zMV2v/SSm
+         jBdqOhIUgjdoVAfAdq9Tq7T+FQ4SbDyDuH9LlEvSE7IDaf34OCTSswmKnIyVnuj76YtJ
+         s/XVEi8nUDWM4iMH/F/HKiG3pHAVhGuDJTqzD7A4KO1tDK6EptqJ4rplfoNdGhLtd2+4
+         jIPFCGtjNVPcvj+4Ov4hO9aQFQd7oyzh8GF1+KeFAimYS1TAQVxFOindmcx1FafH98N0
+         qc3g==
+X-Gm-Message-State: AOJu0YzAAEIok3dlbD1wKdRSqxn+YEz1H/ZcrPcb+9MN49JyXxE6K+Qk
+	jnX0Mh/bSRIGWRJTFzjTnAVGeUxYIKY=
+X-Google-Smtp-Source: AGHT+IFt6HYJ/TQPfxqy8q2sMFCyk3omOehMQg5P3QqDOGTONmqpvsXvJNqg8cv6+Quv718plUhXwA==
+X-Received: by 2002:a05:6808:6494:b0:3ba:10b1:7a1e with SMTP id fh20-20020a056808649400b003ba10b17a1emr10299294oib.5.1702683221569;
+        Fri, 15 Dec 2023 15:33:41 -0800 (PST)
 Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id y24-20020a17090aa41800b00287731b0ceasm7756536pjp.13.2023.12.15.15.27.23
+        by smtp.gmail.com with ESMTPSA id jw20-20020a170903279400b001d36df58ba2sm3463505plb.308.2023.12.15.15.33.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 15:27:25 -0800 (PST)
-Date: Sat, 16 Dec 2023 07:27:20 +0800
+        Fri, 15 Dec 2023 15:33:41 -0800 (PST)
+Date: Sat, 16 Dec 2023 07:33:37 +0800
 From: Kent Gibson <warthog618@gmail.com>
 To: Andy Shevchenko <andy@kernel.org>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
 	linus.walleij@linaro.org
-Subject: Re: [PATCH v3 3/5] gpiolib: cdev: reduce locking in
- gpio_desc_to_lineinfo()
-Message-ID: <ZXzg2DkAPPQV8vft@rigel>
+Subject: Re: [PATCH v3 1/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZXziUYicXaENTDk_@rigel>
 References: <20231215023805.63289-1-warthog618@gmail.com>
- <20231215023805.63289-4-warthog618@gmail.com>
- <ZXyAh2hfhb3l5ogO@smile.fi.intel.com>
+ <20231215023805.63289-2-warthog618@gmail.com>
+ <ZXyAQq7tVaOFI2Vs@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,25 +75,88 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <ZXyAh2hfhb3l5ogO@smile.fi.intel.com>
+In-Reply-To: <ZXyAQq7tVaOFI2Vs@smile.fi.intel.com>
 
-On Fri, Dec 15, 2023 at 06:36:23PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 15, 2023 at 10:38:03AM +0800, Kent Gibson wrote:
-> > Reduce the time holding the gpio_lock by snapshotting the desc flags,
-> > rather than testing them individually while holding the lock.
+On Fri, Dec 15, 2023 at 06:35:14PM +0200, Andy Shevchenko wrote:
+> On Fri, Dec 15, 2023 at 10:38:01AM +0800, Kent Gibson wrote:
+> > Store the debounce period for a requested line locally, rather than in
+> > the debounce_period_us field in the gpiolib struct gpio_desc.
 > >
-> > Accept that the calculation of the used field is inherently racy, and
-> > only check the availability of the line from pinctrl if other checks
-> > pass, so avoiding the check for lines that are otherwise in use.
+> > Add a global tree of lines containing supplemental line information
+> > to make the debounce period available to be reported by the
+> > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
 >
-> Just wondering if you are using --histogram (diff algo) when preparing
-> the patches...
+> LGTM, a few minor comments below.
+>
+> ...
+>
+> > +/*
+>
+> (now you can have a kernel doc :-)
 >
 
-Was just using the default myers.
-Only changes patch 4, which it does make slightly more readable, so
-will use it for v4.
+Maybe you can, but I can't.
+
+> > + * a rbtree of the struct lines containing supplemental info.
+> > + * Used to populate gpio_v2_line_info with cdev specific fields not contained
+> > + * in the struct gpio_desc.
+> > + * A line is determined to contain supplemental information by
+> > + * line_is_supplemental().
+> > + */
+> > +static struct rb_root supinfo_tree = RB_ROOT;
+> > +/* covers supinfo_tree */
+> > +DEFINE_SPINLOCK(supinfo_lock);
+>
+> Shouldn't this also be static?
+>
+
+Indeed.
+
+> ...
+>
+> > +	guard(spinlock)(&supinfo_lock);
+>
+> + cleanup.h ?
+>
+
+Bah, I could've sworn I added that in, but it isn't evident in any of
+the patches all the way back to v1, so apparently not.
+
+> ...
+>
+> > +static void supinfo_to_lineinfo(struct gpio_desc *desc,
+> > +				struct gpio_v2_line_info *info)
+> > +{
+> > +	struct gpio_v2_line_attribute *attr;
+> > +	struct line *line;
+> > +
+> > +	guard(spinlock)(&supinfo_lock);
+> > +
+> > +	line = supinfo_find(desc);
+> > +	if (line) {
+>
+> 	if (!line)
+> 		return;
+>
+> ?
+
+Will do.
+
+>
+> > +		attr = &info->attrs[info->num_attrs];
+> > +		attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> > +		attr->debounce_period_us = READ_ONCE(line->debounce_period_us);
+> > +		info->num_attrs++;
+> > +	}
+> > +}
+>
 
 Cheers,
 Kent.
+
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
