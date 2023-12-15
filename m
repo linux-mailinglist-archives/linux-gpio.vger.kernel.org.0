@@ -1,50 +1,48 @@
-Return-Path: <linux-gpio+bounces-1567-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1568-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2101814D32
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:36:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5CCF3814D5D
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:43:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EC2B282861
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 16:36:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F013281272
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 16:43:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 986CD3D396;
-	Fri, 15 Dec 2023 16:36:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4323DB96;
+	Fri, 15 Dec 2023 16:43:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51ADC3EA73;
-	Fri, 15 Dec 2023 16:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E27381C3;
+	Fri, 15 Dec 2023 16:43:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="398088456"
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="426427620"
 X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="398088456"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:36:34 -0800
+   d="scan'208";a="426427620"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:43:36 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="948021596"
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1106173081"
 X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="948021596"
+   d="scan'208";a="1106173081"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:36:26 -0800
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:43:32 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andy@kernel.org>)
-	id 1rEBAl-00000006AaA-3piW;
-	Fri, 15 Dec 2023 18:36:23 +0200
-Date: Fri, 15 Dec 2023 18:36:23 +0200
+	id 1rEBHd-00000006Ag8-3BCB;
+	Fri, 15 Dec 2023 18:43:29 +0200
+Date: Fri, 15 Dec 2023 18:43:29 +0200
 From: Andy Shevchenko <andy@kernel.org>
 To: Kent Gibson <warthog618@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
 	linus.walleij@linaro.org
-Subject: Re: [PATCH v3 3/5] gpiolib: cdev: reduce locking in
- gpio_desc_to_lineinfo()
-Message-ID: <ZXyAh2hfhb3l5ogO@smile.fi.intel.com>
+Subject: Re: [PATCH v3 0/5] gpiolib: cdev: relocate debounce_period_us
+Message-ID: <ZXyCMaAa3eFToICm@smile.fi.intel.com>
 References: <20231215023805.63289-1-warthog618@gmail.com>
- <20231215023805.63289-4-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,19 +51,40 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215023805.63289-4-warthog618@gmail.com>
+In-Reply-To: <20231215023805.63289-1-warthog618@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 15, 2023 at 10:38:03AM +0800, Kent Gibson wrote:
-> Reduce the time holding the gpio_lock by snapshotting the desc flags,
-> rather than testing them individually while holding the lock.
+On Fri, Dec 15, 2023 at 10:38:00AM +0800, Kent Gibson wrote:
+> This series contains minor improvements to gpiolib-cdev.
 > 
-> Accept that the calculation of the used field is inherently racy, and
-> only check the availability of the line from pinctrl if other checks
-> pass, so avoiding the check for lines that are otherwise in use.
+> The banner change is relocating the debounce_period_us from gpiolib's
+> struct gpio_desc to cdev's struct line.  Patch 1 stores the field
+> locally in cdev.  Patch 2 removes the now unused field from gpiolib.
+> 
+> Patch 3 is somewhat related and removes a FIXME from
+> gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
+> the calculation of the used flag, but I would assert that from
+> the userspace perspective the read operation itself is inherently racy.
+> The line being reported as unused in the info provides no guarantee -
+> it just an indicator that requesting the line is likely to succeed -
+> assuming the line is not otherwise requested in the meantime.
+> Given the overall operation is racy, trying to stamp out an unlikely
+> race within the operation is pointless. Accept it as a possibility
+> that has negligible side-effects and reduce the number of locks held
+> simultaneously and the duration that the gpio_lock is held.
+> 
+> Patches 1 and 3 introduce usage of guard() and scoped_guard() to cdev.
+> Patch 4 replaces any remaining discrete lock/unlock calls around
+> critical sections with guard() or scoped_guard().
+> 
+> Patch 5 is unrelated to debounce or info, but addresses Andy's
+> recent lamentation that the linereq get/set values functions are
+> confusing and under documented.
+> Figured I may as well add that while I was in there.
 
-Just wondering if you are using --histogram (diff algo) when preparing
-the patches...
+This version LGTM, few minor comments here and there, but feel free to add
+
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
 -- 
 With Best Regards,
