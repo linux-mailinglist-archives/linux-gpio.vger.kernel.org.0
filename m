@@ -1,216 +1,262 @@
-Return-Path: <linux-gpio+bounces-1532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A98DC81465E
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 12:09:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id B066D814752
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 12:52:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 34EC61F24823
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 11:09:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D52411C23285
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 11:52:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE2471CF95;
-	Fri, 15 Dec 2023 11:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48E7F2555B;
+	Fri, 15 Dec 2023 11:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="J2CgtAdu"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="VPowCvnC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2058.outbound.protection.outlook.com [40.107.243.58])
+Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2043.outbound.protection.outlook.com [40.107.6.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07B12208A0;
-	Fri, 15 Dec 2023 11:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE8C62556D;
+	Fri, 15 Dec 2023 11:52:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=TPeMJiFPVX8spnxJnUQOITY4SNdqnc73JBFlzt44Dckds8IFdG66qqYqU+ldwcX7qMeUMoxvwuBAJokP7fDolVBUpA8qyl0w64qUEKSALW55uuhfqh9DCDtasdUAGusoi2fgRuANm758L76w00hLKiawZvO3ZhJZoBuudc82HDVOQBga44OBWYlBWh9/0hXheUKPEtxveiQQ5HQC2gYY4wAnYFv4GU/8ZgaoUnZcA0xRpLpH0xDogP3wlgmLTNOsXTUN/9fenC2xUT41CiiZu4l6s+MpauS4IbM9dayA3Em7EuEnTNNUwAfNKFt+fSjStG//3KuVPPhfq5g0AKj+9g==
+ b=YyyDpilbRxjdrSMI8aS7OLGe055Ax9yinjmQcKjQHRPpctdEYfa1FRdO4dp01DRMCOV8ESAuSy4y/IHznzbKFgkwFxb3Df49S8Rgdl324NzAsfnX5ra9+b0TAC3bHQ8LX4aMuPo8a8N94FXgwFAnAWThqirNWYnAnwdOFpulV5sk1m2a4ksYHRtLZdG5ab2JdFj+16khRYs5zW0Uo8nWdeI/yq1MrFTZVqBAQhRTmwbKXR9DoRUm68pq9TZrJ8NNV+NlBnaBkZA/yRp5cOA9AI0J5bSYdgMBupa4zJSj4ljt9IjaldeDLebhrhjjH15oK5dSnDHfNozemU4O1dKCJg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=XwDXZ9f1oyJfdgZQV7h/w2EpKs43RP2brx2869K5HpY=;
- b=nNTWlkdrNutFwkMcDkamQ0Gcezp7hUCKLXF5xRlZIHZIv17ce//AFsIPETWkkptKdwcghFcE7wiFt+lbpFrqCSJNetEPaImvfiwfpMKr8+zUabEhcCAcxJjZ4q47K2BM4RoAqMw0IelpjbfO24f1RBXzChAleYjY2Fdsg1pVaAwPNThkPltqNUiTJ5iuPGsZxJi8WOxufCCJ71tWAXKFx4bH86jfZpXYY1va2luxs2V8dwBt6AgebVzj5YHD/sba1TpehOoeB224cvzvEAfVSHIU2ew3YbRk/4/UG5AfWnDJ0iFdA6xD/I4NpTNboWtSnnrOfvWBbGVBYuTpQ0uomw==
+ bh=WArr+GKRwQhChos07cYAns1GrsifHS9XSM2OK3y6H3k=;
+ b=miLN5fpyvaPthZJFvmRbPRjqvW+TkA9jjyIsPLt1BKGqNUB877EsppEOUv8KjgNZwmCVZ4eQ+OpJCeyeNIb6PyrB35x2udyS8EzJVkmaU692BUq6BG58s/i0zPDXM+R/iPu95akXWFDWQuD66pNrr6RVoMcJc39BIFp4yDLlm9kzlG3J2S2lQG9uupex7qTvaQ1/qA5mXBc3NjWNVFGrvs7steFqWIa/K7uPH3W4LnmBYyVKYF/0LqqqttvJ9ygxKW1hLeMu0N7NmCslFWxEise+ERUK4J0nqih9kM34OhztfnaKfS5/Ch4xuAYkujYpusnyJgIaOKarwlxeBnCyWQ==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=XwDXZ9f1oyJfdgZQV7h/w2EpKs43RP2brx2869K5HpY=;
- b=J2CgtAduFFSjVSSd7cu5I5fOVNjWA0ZoIB0DF1GrTjFc5DJs+xpXw9gl+/GEH7dtRRGgIISqpoXYkE8Ftb6nql10GjFWu6I2vJQvgR2BLsA3/wJvkb+yzA5/cC4r+QWvFchltctIktMQJeNcvYarNJIY+XLbQ0nZxE5v+yQGx7k=
+ bh=WArr+GKRwQhChos07cYAns1GrsifHS9XSM2OK3y6H3k=;
+ b=VPowCvnCKW1bxscHQeR5/STvOiTXNolU+TuQzcBbCXaXNyt2yKkigC9DABXe6rKZa+7/XjePNfNw66tBRq93FiHbmtPVDqB6RaQ97VmODfN6saUZN3a2U0FWevmVLC5KKrgsyGeYDy/1oSUVQqjxNWWV7fGshdZq35qjEldp9v4=
 Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=amd.com;
-Received: from BYAPR12MB4758.namprd12.prod.outlook.com (2603:10b6:a03:a5::28)
- by PH0PR12MB5417.namprd12.prod.outlook.com (2603:10b6:510:e1::10) with
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AS8PR04MB8328.eurprd04.prod.outlook.com (2603:10a6:20b:3fc::13) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.31; Fri, 15 Dec
- 2023 11:09:05 +0000
-Received: from BYAPR12MB4758.namprd12.prod.outlook.com
- ([fe80::39a2:42da:ea20:3349]) by BYAPR12MB4758.namprd12.prod.outlook.com
- ([fe80::39a2:42da:ea20:3349%5]) with mapi id 15.20.7091.030; Fri, 15 Dec 2023
- 11:09:05 +0000
-Message-ID: <e9ee989a-aa48-46a7-9035-765cfd7b808b@amd.com>
-Date: Fri, 15 Dec 2023 12:08:58 +0100
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: xilinx: remove excess kernel doc
-Content-Language: en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
- Srinivas Neeli <srinivas.neeli@amd.com>, Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- kernel test robot <lkp@intel.com>
-References: <20231215090943.9245-1-brgl@bgdev.pl>
-From: Michal Simek <michal.simek@amd.com>
-Autocrypt: addr=michal.simek@amd.com; keydata=
- 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
- 3i3l5DA=
-In-Reply-To: <20231215090943.9245-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+ 2023 11:52:11 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::ff06:bbb2:c068:5fb3]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::ff06:bbb2:c068:5fb3%7]) with mapi id 15.20.7046.015; Fri, 15 Dec 2023
+ 11:52:11 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Subject: [PATCH 0/7] firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol
+ basic support
+Date: Fri, 15 Dec 2023 19:56:28 +0800
+Message-Id: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SJ0PR05CA0182.namprd05.prod.outlook.com
- (2603:10b6:a03:330::7) To BYAPR12MB4758.namprd12.prod.outlook.com
- (2603:10b6:a03:a5::28)
+X-B4-Tracking: v=1; b=H4sIAOw+fGUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDI0NT3YLMvOSSohzd4uTcTF2TZNMkA2NzkzSTZDMloJaCotS0zAqwcdG
+ xtbUAccJ9zV4AAAA=
+To: Sudeep Holla <sudeep.holla@arm.com>, 
+ Cristian Marussi <cristian.marussi@arm.com>, 
+ Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Oleksii Moisieiev <oleksii_moisieiev@epam.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ Peng Fan <peng.fan@nxp.com>, Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+X-Mailer: b4 0.12.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1702641405; l=3586;
+ i=peng.fan@nxp.com; s=20230812; h=from:subject:message-id;
+ bh=pAWpJqoFFqdLHmTGmRObVjm8YL8FM1jb885qED/nIkY=;
+ b=8ORGIt0vTFeWVNkuecJ0l/NRu0E/eiwQj4VeBf2nC0w0f6lXXUPZIxa0GP70CdtUhyEWtKj+P
+ dbdcerFku4gC7W7KYOYdts7u6rpeYsqX6P51PD7/H0cYv6wgfVTF3it
+X-Developer-Key: i=peng.fan@nxp.com; a=ed25519;
+ pk=I4sJg7atIT1g63H7bb5lDRGR2gJW14RKDD0wFL8TT1g=
+X-ClientProxiedBy: SG2PR02CA0138.apcprd02.prod.outlook.com
+ (2603:1096:4:188::12) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BYAPR12MB4758:EE_|PH0PR12MB5417:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7436fc7c-e6f0-44ac-af01-08dbfd5e3fd7
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AS8PR04MB8328:EE_
+X-MS-Office365-Filtering-Correlation-Id: f83daa0b-e9e3-49dc-983a-08dbfd6445cb
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam: BCL:0;
 X-Microsoft-Antispam-Message-Info:
-	yjs3bg+LnzV2Q/RgQ5t7ZkmvjtFoxhAMFasEwpvPs3PymVkY+hv94KhtBoYxjSogS8BCjScBtllPhvD37716wPvb+7onfFVz754Fq4bXMuZkl1mB6+SPbPRiMwS6hpG0YL8wjJ1l7R3bCyAdvsZbJYuq39JCnunz14jaRLMoRmLGYeQXTR61GU4V3/+PV5n5zxCK3shKiqdzVmmyiY6YTrxWodHa7d7srwotaOqqQvQhLEaQDM6GlG9aQWyzOJmP+5GeivKNp1jiS7BLDCqlfXUvW+qi7ImvsGmU3NpfeBp/WpXqgshH+/bfFHhd6QcvOeXWQEsBVJutFNlBc+VWwqHKZGBOvxF20aZaXVr1DjuI/nfGOKJ5jRhLaUAh/uvTsxfQyNif0Hsdgrbh3Rk85/2QVgEtKK5uQbtW5FhxYZ3AgQqz8Iq7Obv6yDZNhAFQppWHhTXxg8M/0iBPb9kUGbFgvSp0DyWGzCX10HF0yn9C+htfU8sjjmocdQG/v2CAwgzEt9uSxzvEmMyQiWBqzBbgmRtJbeLvOI7Dg3nzFMfBJnW/x1FEBkyEF+1mRxt0cWwMmsWlDhrMae47p4q14Wuwr73C92FzLjwdAUscwWGCRjKtfcxrXWeoW/RX6sR4JHDbRndCVmu0zTejNGsshQ==
+	6aGDvcuY6cwneWEcsx87uBi0gDl30XSVZFZ58COwImRgH6D8iAXJOGdOnAObTAdf7vLTLC8LB7+Wo7E7eEhya8miLaYbNZlZflaxkTfsL/tEfvNIpt5bgIoBods1CoyT6limGdKeSXkAWJ/3wnkx/TV+yIFNEACLWdP4rU+bFm7Q3REtYPxiGvlVu7qioyNeP6Df3NbCqb8hVHDyWv/02W58deduDIXOz8tig2CR3mqpJEbxHKHyNd8XoUafePtVKzAQqipySLQPfDTjRMSO54UhDaPadTARl+SMovp6jIuybcB5UEZ8ExzMaak4iEs2UPuDEO4aU9b5HRjXhlWIIpwajKMqUMPlgUARbpjMhvyzTVt8rh7H+SGz1GPzG3zoBQQMaZaiBAhn919Gns1Jm/AiJAJYScVFni4l4fzSHR+Rys1A5deKNlE/BLBvR8CRt3xMZWosIL8LydhwgZW6brHQIJ8QbSg0mlMZvve7CtSV8FhVHlfbvVZ/JlDIiDzF/VPHkUCfCpU60MhLntwpz/ZopqwkKsSJJmJ0PAtYeQyiBsHzAEGFth19jr/ftEPxIp6zsEIHND8gSCe5v+q73/J9XpjYb29aD8q9QenFmzBzHyBGtoQeybq2YRdDSjBV
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR12MB4758.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(396003)(366004)(39860400002)(376002)(230922051799003)(451199024)(64100799003)(186009)(1800799012)(6486002)(86362001)(31696002)(53546011)(6506007)(6512007)(26005)(36756003)(2616005)(966005)(478600001)(2906002)(83380400001)(6666004)(44832011)(8936002)(31686004)(41300700001)(8676002)(66556008)(110136005)(54906003)(66476007)(66946007)(316002)(5660300002)(38100700002)(4326008)(43740500002)(45980500001);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(396003)(136003)(346002)(376002)(366004)(230922051799003)(64100799003)(1800799012)(451199024)(186009)(4326008)(8936002)(8676002)(4001150100001)(2906002)(7416002)(5660300002)(478600001)(6506007)(6512007)(6666004)(9686003)(52116002)(110136005)(54906003)(66476007)(66556008)(66946007)(316002)(966005)(6486002)(41300700001)(38100700002)(86362001)(36756003)(921008)(38350700005)(26005)(83380400001);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?YnhXZDM2TUUwWDUyOENHTVdZcFFhbWxhdk9hc1kyQlhtZTBEcDFrNVd4M3I0?=
- =?utf-8?B?bFlMRWprZU96QjQ1VlE3aWFKV2kzTjNrYVo3RFFyOE1FVmtMNnRJZWR4eWRs?=
- =?utf-8?B?QVUxdnRleTJxazNiR3RSYS9OdGpsSVp6c0JMalpDYTBvTUFRbWo5L2praHhS?=
- =?utf-8?B?M2hEWWRGb3BCVDJ5ZHNJTzlMVVY3TmRtSjFVZ2FxYWpoZTlEQ3B1bjUvVENU?=
- =?utf-8?B?UWRvY1hNSE95R0htOWFCQ0IrOGQ4bk4zNFI0bkx5RWFnazdqc1VPeUxzUkpD?=
- =?utf-8?B?cFNVbDNtanIzajJlWlNtN1J2QWJIQVFjNVN1UVRsWWx0RlZjU3VXUVlYM21Z?=
- =?utf-8?B?L1RqT25QaUtIbFhsTURteVBGMkFDcUs0MWp2eWs4N0EyU3B6TkdtOHVCQWhp?=
- =?utf-8?B?dWZGZDBYZHl5TVRmd2M4RFBYL2QySm8vSkJxMnJrWmlBei9IRlNaNHU3dDZH?=
- =?utf-8?B?cWRBVXRUUS9NVko4SzFid0lJbnFicVVFK2txRmVITjhLV3JsMVNLd0F6MHNY?=
- =?utf-8?B?bGhSOHpWbUdsTnhqQW9TaHBoYUpMbU03M09lQzhQWE9ZeEtNS1YvMHNMQnJD?=
- =?utf-8?B?ZDB1bXhpNkxVSXF0VDBwYnF2Zlo4RThoVDIvVEVHdjduZVh0Q0R3WHFKbWlp?=
- =?utf-8?B?ZjdmODg0TmNrWk92VUlQanJyS1dYRkd0OEdzcnJ1U21RR0p0WDBsK3p5NDhF?=
- =?utf-8?B?RDluSW9Td2ptTnRnRnVJeHk5MXJnT2oyTERQSTFXbXhxQ2c5MG9jZG1VVDU0?=
- =?utf-8?B?UDNrYmpFUlBnOG9MQ1FxcnFvT2Z2M1psZTJCU1J1c1V3WVBnLzRqWmpDRkxt?=
- =?utf-8?B?UmFuNHFVVkgrTHBUQVJWa2xaMUcxR1J2RzJPSHY5VmFqekgzdnd4eTVtNFc3?=
- =?utf-8?B?N25DSW14QVNXYlJtb2pCUDA1SnRWMFIwUDF1dlpKSnRwcWdJemJjT2lEcG5a?=
- =?utf-8?B?dkRTMDZndmpGcHNJcGVNQndaN2hVL0pWdkJQWDkwQ2VqSmhmQkF2ek41Nzhx?=
- =?utf-8?B?YVQrZFVKZktMMXZqVUhPMUozL2psSXBIS3MwRHlpWDJmaHY5UHg1MlJ4TnVj?=
- =?utf-8?B?NVpNekpOV3h1SzhoY0hQejlqNDdoc290VjdKb1hrN3lvOG9jd2U4ZEZ0WjdI?=
- =?utf-8?B?bmFlQ1hLNmJMZ253YS9yUWp6T3d3UjJScnVjS0FhMjdraXN2S0xvaGY5aU9Q?=
- =?utf-8?B?SXhXUjNHVVpsTmc5NzNHakhDVmd5am05SDhhNUFkS2VPd1RURitoc2p1anZq?=
- =?utf-8?B?NHhZbk1SOGxJZ0w3VjE3OWNMbTRXdTh5RUZrR3ZuQjlob0ZGSnRJZlZ4clNX?=
- =?utf-8?B?TnFYcnR2ODA5ZzZuQ3ZZQWZZZTdxNkR1WUdiQmNKV3hkaTd3RWlEOTVSM3I5?=
- =?utf-8?B?eTFjbWpRZjlKTzJmSk1VYkRpRnJmUDF4TU0yOXZCb2dTamdLN3ZSb2dQOVdC?=
- =?utf-8?B?WXRycDUzdGdNZGFQY2RzOWJQYldFMVl2TnJLemhKdldMems4Z1dwZnkvTWoy?=
- =?utf-8?B?Y2VQSThuSUhHTlNwa091d0hnWnNMQkpXRTk2YVgxaVFpT1V0cnpoL1BoTXBs?=
- =?utf-8?B?dmVKb2tFMnJEOExxSnVGbWFWQm5xTWxUNTVtRkxRQ21DSmhabDBHY1hHUzZB?=
- =?utf-8?B?bjd1bXlzanY4WGh2clU3eVlJd3Zvb3NLVTZibnBLNnJiQWFJWmNCQ1FEbUVB?=
- =?utf-8?B?cE1pTFVtMlM1YzZoY0NaY0Z6Y0w0TUt1QTgzUEJ0ZGIxNlZRaG9YTXNuMXdD?=
- =?utf-8?B?SWRJK3p1SUJGS1pKMkJYL3VobFlFZDgxallrY1U3N1d4Ri9mVFYwbElrZGxh?=
- =?utf-8?B?cmVYSWNJK3N1TlpoYnhYSFBBZExqUDVOd20xZWdmUnpZemJ0NHFyaTNESEVr?=
- =?utf-8?B?QjVtSVN4blhEMXhrcGllNDBya2VHdU5MaGVVRTRDdW5yaE5Fd0RpTzNMUFk5?=
- =?utf-8?B?TmNQRXZES0VMTVJxKytyWFRQMDgrZ25oNlplZjlzc1hHUnViMlJ2SUx4UGQ1?=
- =?utf-8?B?VU44czlHU0wzdnJRQlB1WFU1bUhXcStwV09qN2FvUm9lNE5lQ25CektsVUtQ?=
- =?utf-8?B?Q1FQVDJ3bG9VTEduWUhiTnhoMGpiQi9Jd2ozdHZET09hQ2E5SzM5ZXZwQ3FN?=
- =?utf-8?Q?SGRBrr6+lM4hZ5r3z67OCT976?=
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7436fc7c-e6f0-44ac-af01-08dbfd5e3fd7
-X-MS-Exchange-CrossTenant-AuthSource: BYAPR12MB4758.namprd12.prod.outlook.com
+	=?utf-8?B?bjJPUXBoQ2wwcmFkYlNJSDFwdGFDbWxURDZiTGJCbkp2V3FQRStHVTdKWG1j?=
+ =?utf-8?B?bG9zaVNuRHlzcmFyeDN6QlhBOGErVWhiME5iUlA3RC9yWWJzdUorcGExZzVQ?=
+ =?utf-8?B?OVF2SWkyTWhPc0xxUjhtbzd2ZVB0eVZ0K1VPekxKRkZuUHdiYjZCeGVIN29n?=
+ =?utf-8?B?c0FhVGxEN2NSMFRYSmxEMWNyOEEwQ3lvVHdRYmlSUU9hWForZFZ6d3pNQkQy?=
+ =?utf-8?B?aWU3UUVFcFJUUm83WTRRMUFWaWd5ZFkrTTJiclc1U2JjRFdOVEdFM0VEcC9m?=
+ =?utf-8?B?U2ZSS21zOXIzRWs3Q3lsQ0lVQ01HOS82Q1JuRGtNSUMzK0pVeDJuV0lJQVRG?=
+ =?utf-8?B?aFBwM3NjelRNNXZXdlI5dmsvN3JzSTR4b2hEdzhIZFFtQk9oR1c2cXVOSVN2?=
+ =?utf-8?B?c2pLL3BlTGlVcjd2b3lDbU1zcWh3Y255MlJSWGJTRENQckZLRkVJbXhuMlRC?=
+ =?utf-8?B?c3N6akxFTDA1N20xZzBWNnFNNXdOTG9DSEJUZVUzbXhRbjdnTWxtMUtSTHBB?=
+ =?utf-8?B?RjdsRnhwUnZSeFIzWXk2cVRvUElzL0ttRWcvMkUweW1ZM1J5ZE5GZkRrdjhQ?=
+ =?utf-8?B?d2NvU09FQlBUSjVYNEc0ZCtOWWRKUHJ5Y09LY2JqUWtmUy9DbDY1aG8wRWRR?=
+ =?utf-8?B?aGg0MU9WRVQxMitZQTRYNmpFV3BzK1YvS0tXY3paN21LcjBiZ3dkT3VLVUNJ?=
+ =?utf-8?B?UmwrOUs3ckZFc3RvL1RGUVFRWXlPYzFTZmJGc2ZkRm5yeU1nQXhQM1JXUFRY?=
+ =?utf-8?B?cVplZTNBZmp3WHFaNGo2cXZIZWpFb0xZNFUvMDh2YXluS3ovaWVYN0YvZEpM?=
+ =?utf-8?B?VzRjQmJlYkpHYmRySVdDU1ZKUGF5REZYMThxTE5rVGFYcGVLOGFzMTN6dUVN?=
+ =?utf-8?B?TXJJV2R4b3N3dng0NUpYOG01ZVNXYTNCOCtROGY0ZFROYVlyWUs5NXY2Wm5l?=
+ =?utf-8?B?ck9wcy8zTDhEbnFQbEFoem51WEF5R1NhRmpFaC9pdnVla3k2aGhuT2U5ME54?=
+ =?utf-8?B?VEpTR3o5eTdHZUJ4Szl2STN2Mzk0YUtteXFRUHZCQTk2blB4S2pRZ1JoNzlI?=
+ =?utf-8?B?Y05GVmxyYzdvcEl0SG4zNGhyemZGektlcStOSm0yZE1xeWplcS9kcnAvYkpv?=
+ =?utf-8?B?RmlKN2VrT1N6aUhpVTkyUXZ1bEhySkN5SVowQUI3aWhQTFF5R1lyZEhrMlBa?=
+ =?utf-8?B?eEpuZ2ZJWm1RRTJpeGpNQTR6ODBXZnBxZHlJQzVMMmZLeVQ5dy8wWTZDanNr?=
+ =?utf-8?B?emdpZEczZ2NJY3NGV2lHenRUMlNvUnFHWCtjQlpUNlprU3JnM0tRL2NLanVM?=
+ =?utf-8?B?YktzTXhuNitwRGZkR1h4b3R5VjFIZnprTDhBcllGVlNUZXlFWmh4ZTFYNHdq?=
+ =?utf-8?B?SGlvaGp3amhVdjd3Um11R0xyNGtJZVh1bnhMT2IyVDg4SnozODBCanVENWF3?=
+ =?utf-8?B?SkgwV29CUG83cEpSMklRckdyK3hPRTNxSVl2ZGxqdjRkYTNMeEQ2eEhHWTVy?=
+ =?utf-8?B?NGhRR3piSjhqNzEvVkdGTU1nbnk2SEEvbWV5MjFCNzFNbm81eWN2RSthb1RQ?=
+ =?utf-8?B?NEJRYmZ0N0xwVWZRVFRwZjdFc1VBemhhVVA1QjBzdEl5aEpNTmVIODg1WEJP?=
+ =?utf-8?B?bmp2TjZNNjJ3U0FaWkhBMURIVlZ2RUYxWUx4RXRBYjdqSDlzb2R5S2lSSmF2?=
+ =?utf-8?B?WTRnL05Wc3hneTQ1RUQ3NFNTQkxJOW83WEd1TW1zMWpaVjl3UU5VTEdhQ1FI?=
+ =?utf-8?B?cjNSVE5nUUxmd1JrQW9INXYyUE5aaUxGQUZOZVFONVZzWmlBWjc3WHlKOGFC?=
+ =?utf-8?B?eXZJWENiSzdoMk1iU0dPWWdqY3loSkpkNmE3Qkc0YnBuZW9Oc3dXclgvL2JT?=
+ =?utf-8?B?QVQ2SFdQVTQzWHErUURxeWl5ZlB1ZGxpblNZSnNOS0UxTGVUUUx1RjJwZHVE?=
+ =?utf-8?B?eUdyRDFmWFoxRTNyNVJSVDgxRDVLekcyKzB6UU02WU95T1hraVNpd00rQUFn?=
+ =?utf-8?B?Q1JRWjI5SklKTmJmWGtaKzR3K0o2dUJUWXNSV1MzSGV1SjFpM1BrZjhHK29G?=
+ =?utf-8?B?eS9PYjV6SnNWSTNRTHladHVPcHdBMDZZQWRYQURmVVlUVmZwa0E2a3lNVytz?=
+ =?utf-8?Q?IbFPiBY9v9o1ZiRhBtZingfhR?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f83daa0b-e9e3-49dc-983a-08dbfd6445cb
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2023 11:09:04.8590
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Dec 2023 11:52:11.4665
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: DX87toxku0HDpGzcevY5mKng/Uf5AC14HOjfEODFZWyjBUxgnCyNCecmfnFyYO04
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH0PR12MB5417
+X-MS-Exchange-CrossTenant-UserPrincipalName: aqJoWbNw0w1mPObJ71DwrYsOzr6n/R+JFcvEAfncpvikZPkZF44e31RiQ6aVp7sJyPfxzhw+qzEzGYCON82/uQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB8328
 
+This patchset is a rework from Oleksii's RFC v5 patchset
+https://lore.kernel.org/all/cover.1698353854.git.oleksii_moisieiev@epam.com/
 
+This patchset introduces some changes based on RFC v5:
+- introduce helper get_max_msg_size
+- support compatible string
+- iterate the id_table
+- Support multiple configs in one command
+- Added i.MX support
+- Patch 5 firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol basic support
+  is almost same as RFCv5 expect multiple configs support.
+- Patch 4 the dt-bindings includes compatible string to support i.MX
+- Rebased on 2023-12-15 linux-next/master
 
-On 12/15/23 10:09, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> The irqchip field has been removed from struct xgpio_instance so remove
-> the doc as well.
-> 
-> Fixes: b4510f8fd5d0 ("gpio: xilinx: Convert to immutable irq_chip")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312150239.IyuTVvrL-lkp@intel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->   drivers/gpio/gpio-xilinx.c | 1 -
->   1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 823198368250..7348df385198 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -52,7 +52,6 @@
->    * @dir: GPIO direction shadow register
->    * @gpio_lock: Lock used for synchronization
->    * @irq: IRQ used by GPIO device
-> - * @irqchip: IRQ chip
->    * @enable: GPIO IRQ enable/disable bitfield
->    * @rising_edge: GPIO IRQ rising edge enable/disable bitfield
->    * @falling_edge: GPIO IRQ falling edge enable/disable bitfield
+If any comments from RFC v5 are missed, I am sorry in advance.
 
-Interesting because kernel-doc is not reporting any issue but issue is there.
+This PINCTRL Protocol is following Version 3.2 SCMI Spec Beta release.
 
-Reviewed-by: Michal Simek <michal.simek@amd.com>
+On ARM-based systems, a separate Cortex-M based System Control Processor
+(SCP) provides control on pins, as well as with power, clocks, reset
+controllers. So implement the driver to support such cases.
 
-Thanks,
-Michal
+The i.MX95 Example as below:
+
+Configuration:
+The scmi-pinctrl driver can be configured using DT bindings.
+For example:
+/ {
+	sram0: sram@445b1000 {
+		compatible = "mmio-sram";
+		reg = <0x0 0x445b1000 0x0 0x400>;
+
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0x0 0x0 0x445b1000 0x400>;
+
+		scmi_buf0: scmi-sram-section@0 {
+			compatible = "arm,scmi-shmem";
+			reg = <0x0 0x80>;
+		};
+
+		scmi_buf1: scmi-sram-section@80 {
+			compatible = "arm,scmi-shmem";
+			reg = <0x80 0x80>;
+		};
+	};
+
+	firmware {
+		scmi {
+			compatible = "arm,scmi";
+			mboxes = <&mu2 5 0>, <&mu2 3 0>, <&mu2 3 1>;
+			shmem = <&scmi_buf0>, <&scmi_buf1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			scmi_iomuxc: protocol@19 {
+				compatible = "fsl,imx95-scmi-pinctrl";
+				reg = <0x19>;
+			};
+		};
+	};
+};
+
+&scmi_iomuxc {
+	pinctrl_tpm3: tpm3grp {
+		fsl,pins = <
+			IMX95_PAD_GPIO_IO12__TPM3_CH2		0x51e
+		>;
+	};
+};
+
+This patchset has been tested on i.MX95-19x19-EVK board.
+
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+Oleksii Moisieiev (1):
+      firmware: arm_scmi: Add SCMI v3.2 pincontrol protocol basic support
+
+Peng Fan (6):
+      firmware: arm_scmi: introduce helper get_max_msg_size
+      firmware: scmi: support compatible string
+      firmware: arm_scmi: bus: iterate the id_table
+      dt-bindings: firmware: arm,scmi: support pinctrl protocol
+      pinctrl: Implementation of the generic scmi-pinctrl driver
+      pinctrl: scmi: implement pinctrl_scmi_imx_dt_node_to_map
+
+ .../devicetree/bindings/firmware/arm,scmi.yaml     |  99 +++
+ MAINTAINERS                                        |   7 +
+ drivers/firmware/arm_scmi/Makefile                 |   1 +
+ drivers/firmware/arm_scmi/bus.c                    |  49 +-
+ drivers/firmware/arm_scmi/common.h                 |   2 +-
+ drivers/firmware/arm_scmi/driver.c                 |  32 +-
+ drivers/firmware/arm_scmi/pinctrl.c                | 927 +++++++++++++++++++++
+ drivers/firmware/arm_scmi/protocols.h              |   2 +
+ drivers/pinctrl/Kconfig                            |  11 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-scmi-imx.c                 | 117 +++
+ drivers/pinctrl/pinctrl-scmi.c                     | 419 ++++++++++
+ drivers/pinctrl/pinctrl-scmi.h                     |  12 +
+ include/linux/scmi_protocol.h                      |  48 ++
+ 14 files changed, 1710 insertions(+), 17 deletions(-)
+---
+base-commit: 17cb8a20bde66a520a2ca7aad1063e1ce7382240
+change-id: 20231215-pinctrl-scmi-4c5b0374f4c6
+
+Best regards,
+-- 
+Peng Fan <peng.fan@nxp.com>
+
 
