@@ -1,94 +1,103 @@
-Return-Path: <linux-gpio+bounces-1568-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1569-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CCF3814D5D
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:43:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 84E70814DF7
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 18:09:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F013281272
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 16:43:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 398FC1F22663
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:09:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B4323DB96;
-	Fri, 15 Dec 2023 16:43:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC063FB20;
+	Fri, 15 Dec 2023 17:09:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ORQ+4YXq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37E27381C3;
-	Fri, 15 Dec 2023 16:43:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="426427620"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="426427620"
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:43:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="1106173081"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="1106173081"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 08:43:32 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rEBHd-00000006Ag8-3BCB;
-	Fri, 15 Dec 2023 18:43:29 +0200
-Date: Fri, 15 Dec 2023 18:43:29 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH v3 0/5] gpiolib: cdev: relocate debounce_period_us
-Message-ID: <ZXyCMaAa3eFToICm@smile.fi.intel.com>
-References: <20231215023805.63289-1-warthog618@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E9C3FB0B;
+	Fri, 15 Dec 2023 17:09:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=9qcX9KuXgoERlz1kjtjKG7ROeacwCAgo0vP8jCcr9Ec=; b=ORQ+4YXqvsUSjuX0YGzYHrBr1k
+	CQckn5EBhLVUtwbxr4rD8GCpW3vuoLNYUDgHZW6W0sD78vwT+AyKuG765zUacgXkBYvwKc4V159er
+	ANgDEMQA09+xgjpgxoM3/iE85nZstnlXwb1ci8IjcWgPxd1+QiJrszty8loN7lASBfiB6VRkL0ur5
+	nZy1dQLiU6JbzPQfZsC7heTAe2MrMpFHKEVNFDABZsGTxKU3co897RYFA9dJfZ1nCwujnqcEndRfa
+	g+IeiAY+xoEz1kzRNHbSHsnPfrEYan/5O1Ch9Xn/WPY+VARGeIULkAUyRRhOyxI6YpOEt2wCzBKfN
+	8VyK0goQ==;
+Received: from [50.53.46.231] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rEBgV-003zF6-35;
+	Fri, 15 Dec 2023 17:09:11 +0000
+Message-ID: <f47bba41-a2a6-404d-8bd6-b67bf7d369b2@infradead.org>
+Date: Fri, 15 Dec 2023 09:09:11 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231215023805.63289-1-warthog618@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpio: xilinx: remove excess kernel doc
+Content-Language: en-US
+To: Bartosz Golaszewski <brgl@bgdev.pl>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek
+ <michal.simek@amd.com>, Andy Shevchenko <andy@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org,
+ Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ kernel test robot <lkp@intel.com>
+References: <20231215090943.9245-1-brgl@bgdev.pl>
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20231215090943.9245-1-brgl@bgdev.pl>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 15, 2023 at 10:38:00AM +0800, Kent Gibson wrote:
-> This series contains minor improvements to gpiolib-cdev.
-> 
-> The banner change is relocating the debounce_period_us from gpiolib's
-> struct gpio_desc to cdev's struct line.  Patch 1 stores the field
-> locally in cdev.  Patch 2 removes the now unused field from gpiolib.
-> 
-> Patch 3 is somewhat related and removes a FIXME from
-> gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
-> the calculation of the used flag, but I would assert that from
-> the userspace perspective the read operation itself is inherently racy.
-> The line being reported as unused in the info provides no guarantee -
-> it just an indicator that requesting the line is likely to succeed -
-> assuming the line is not otherwise requested in the meantime.
-> Given the overall operation is racy, trying to stamp out an unlikely
-> race within the operation is pointless. Accept it as a possibility
-> that has negligible side-effects and reduce the number of locks held
-> simultaneously and the duration that the gpio_lock is held.
-> 
-> Patches 1 and 3 introduce usage of guard() and scoped_guard() to cdev.
-> Patch 4 replaces any remaining discrete lock/unlock calls around
-> critical sections with guard() or scoped_guard().
-> 
-> Patch 5 is unrelated to debounce or info, but addresses Andy's
-> recent lamentation that the linereq get/set values functions are
-> confusing and under documented.
-> Figured I may as well add that while I was in there.
 
-This version LGTM, few minor comments here and there, but feel free to add
 
-Reviewed-by: Andy Shevchenko <andy@kernel.org>
+On 12/15/23 01:09, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> The irqchip field has been removed from struct xgpio_instance so remove
+> the doc as well.
+> 
+> Fixes: b4510f8fd5d0 ("gpio: xilinx: Convert to immutable irq_chip")
+> Reported-by: kernel test robot <lkp@intel.com>
+> Closes: https://lore.kernel.org/oe-kbuild-all/202312150239.IyuTVvrL-lkp@intel.com/
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+
+Thanks.
+
+> ---
+>  drivers/gpio/gpio-xilinx.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
+> index 823198368250..7348df385198 100644
+> --- a/drivers/gpio/gpio-xilinx.c
+> +++ b/drivers/gpio/gpio-xilinx.c
+> @@ -52,7 +52,6 @@
+>   * @dir: GPIO direction shadow register
+>   * @gpio_lock: Lock used for synchronization
+>   * @irq: IRQ used by GPIO device
+> - * @irqchip: IRQ chip
+>   * @enable: GPIO IRQ enable/disable bitfield
+>   * @rising_edge: GPIO IRQ rising edge enable/disable bitfield
+>   * @falling_edge: GPIO IRQ falling edge enable/disable bitfield
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
 
