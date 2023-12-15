@@ -1,103 +1,312 @@
-Return-Path: <linux-gpio+bounces-1569-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1570-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 84E70814DF7
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 18:09:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2740814EC5
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 18:31:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 398FC1F22663
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:09:23 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B471C20F93
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DC063FB20;
-	Fri, 15 Dec 2023 17:09:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ORQ+4YXq"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB67582EE9;
+	Fri, 15 Dec 2023 17:27:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03E9C3FB0B;
-	Fri, 15 Dec 2023 17:09:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=9qcX9KuXgoERlz1kjtjKG7ROeacwCAgo0vP8jCcr9Ec=; b=ORQ+4YXqvsUSjuX0YGzYHrBr1k
-	CQckn5EBhLVUtwbxr4rD8GCpW3vuoLNYUDgHZW6W0sD78vwT+AyKuG765zUacgXkBYvwKc4V159er
-	ANgDEMQA09+xgjpgxoM3/iE85nZstnlXwb1ci8IjcWgPxd1+QiJrszty8loN7lASBfiB6VRkL0ur5
-	nZy1dQLiU6JbzPQfZsC7heTAe2MrMpFHKEVNFDABZsGTxKU3co897RYFA9dJfZ1nCwujnqcEndRfa
-	g+IeiAY+xoEz1kzRNHbSHsnPfrEYan/5O1Ch9Xn/WPY+VARGeIULkAUyRRhOyxI6YpOEt2wCzBKfN
-	8VyK0goQ==;
-Received: from [50.53.46.231] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rEBgV-003zF6-35;
-	Fri, 15 Dec 2023 17:09:11 +0000
-Message-ID: <f47bba41-a2a6-404d-8bd6-b67bf7d369b2@infradead.org>
-Date: Fri, 15 Dec 2023 09:09:11 -0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AA933012B;
+	Fri, 15 Dec 2023 17:27:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="8727217"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="8727217"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:27:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="892973975"
+X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
+   d="scan'208";a="892973975"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:27:03 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rEBxk-00000006BAk-29KE;
+	Fri, 15 Dec 2023 19:27:00 +0200
+Date: Fri, 15 Dec 2023 19:27:00 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+	Hoan Tran <hoan@os.amperecomputing.com>,
+	Serge Semin <fancer.lancer@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>
+Subject: Re: [PATCH v1 2/8] pinctrl: Add driver for the T-Head TH1520 SoC
+Message-ID: <ZXyMZKvREy_FIl46@smile.fi.intel.com>
+References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
+ <20231215143906.3651122-3-emil.renner.berthing@canonical.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: xilinx: remove excess kernel doc
-Content-Language: en-US
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
- Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
- Srinivas Neeli <srinivas.neeli@amd.com>, Michal Simek
- <michal.simek@amd.com>, Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Marc Zyngier <maz@kernel.org>
-Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-kernel@vger.kernel.org,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- kernel test robot <lkp@intel.com>
-References: <20231215090943.9245-1-brgl@bgdev.pl>
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20231215090943.9245-1-brgl@bgdev.pl>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215143906.3651122-3-emil.renner.berthing@canonical.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Fri, Dec 15, 2023 at 03:39:00PM +0100, Emil Renner Berthing wrote:
+> Add pinctrl driver for the T-Head TH1520 RISC-V SoC.
+
+...
+
++ array_size.h
++ bits.h
++ device.h
+
+(and so on, please make sure you follow IWYU principle --
+ "include what you use")
+
+> +#include <linux/io.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+
+> +#include <linux/of.h>
+
+Can you use device property API instead?
+
+(I briefly checked, all of the used of_ ones have the respective generic
+ implementations either in fwnode_property_ or device_property_ namespace).
+
+OTOH, it's used in xlate/map functions which have device_node as a parameter...
+
+> +#include <linux/platform_device.h>
+> +#include <linux/seq_file.h>
+> +#include <linux/spinlock.h>
+
+...
+
+> +#include "core.h"
+> +#include "pinmux.h"
+> +#include "pinconf.h"
+
+All of them are needed?
+
+...
+
+> +static unsigned int th1520_padcfg_shift(unsigned int pin)
+> +{
+> +	return 16 * (pin & 0x1U);
+
+BIT(0) ?
+
+> +}
+
+...
+
+> +static unsigned int th1520_muxcfg_shift(unsigned int pin)
+> +{
+> +	return 4 * (pin & 0x7U);
+
+GENMASK() ?
+
+> +}
+
+...
+
+> +			return dev_err_probe(thp->pctl->dev, -EINVAL,
+> +					     "no pins selected for %pOFn.%pOFn\n",
+> +					     np, child);
+
+> +			dev_err(thp->pctl->dev, "error parsing pin config of group %pOFn.%pOFn\n",
+> +				np, child);
+
+In the very same function you are using dev_err_probe(), please make sure
+you use the same for all error messages as it will be a unified format
+(in case of dev_err_probe() or if you explicitly do that with dev_err()
+calls).
+
+> +		}
+
+...
+
+> +static const struct pinctrl_ops th1520_pinctrl_ops = {
+> +	.get_groups_count = th1520_pinctrl_get_groups_count,
+> +	.get_group_name = th1520_pinctrl_get_group_name,
+> +	.get_group_pins = th1520_pinctrl_get_group_pins,
+
+> +	.pin_dbg_show = th1520_pin_dbg_show,
+
+Is ifdeffery needed for this one?
 
 
+> +	.dt_node_to_map = th1520_pinctrl_dt_node_to_map,
+> +	.dt_free_map = th1520_pinctrl_dt_free_map,
 
-On 12/15/23 01:09, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> The irqchip field has been removed from struct xgpio_instance so remove
-> the doc as well.
-> 
-> Fixes: b4510f8fd5d0 ("gpio: xilinx: Convert to immutable irq_chip")
-> Reported-by: kernel test robot <lkp@intel.com>
-> Closes: https://lore.kernel.org/oe-kbuild-all/202312150239.IyuTVvrL-lkp@intel.com/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Is ifdeffery needed for these two?
 
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
+> +};
 
-Thanks.
+...
 
-> ---
->  drivers/gpio/gpio-xilinx.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-xilinx.c b/drivers/gpio/gpio-xilinx.c
-> index 823198368250..7348df385198 100644
-> --- a/drivers/gpio/gpio-xilinx.c
-> +++ b/drivers/gpio/gpio-xilinx.c
-> @@ -52,7 +52,6 @@
->   * @dir: GPIO direction shadow register
->   * @gpio_lock: Lock used for synchronization
->   * @irq: IRQ used by GPIO device
-> - * @irqchip: IRQ chip
->   * @enable: GPIO IRQ enable/disable bitfield
->   * @rising_edge: GPIO IRQ rising edge enable/disable bitfield
->   * @falling_edge: GPIO IRQ falling edge enable/disable bitfield
+> +	mask = 0xfU << shift;
+> +	value = ((uintptr_t)func->data & 0xfU) << shift;
+
+GENMASK() in both cases.
+
+> +	raw_spin_lock_irqsave(&thp->lock, flags);
+> +	value |= readl_relaxed(muxcfg) & ~mask;
+
+Instead of above, use the traditional pattern
+
+	value = read()
+	value = (value & ~mask) | (newval & mask);
+	write()
+
+where newval is defined with a proper type and you get rid of all those ugly
+castings at once.
+
+> +	writel_relaxed(value, muxcfg);
+> +	raw_spin_unlock_irqrestore(&thp->lock, flags);
+
+...
+
+> +static u16 th1520_drive_strength_from_mA(u32 arg)
+> +{
+> +	u16 v;
+> +
+> +	for (v = 0; v < ARRAY_SIZE(th1520_drive_strength_in_mA) - 1; v++) {
+
+You may drop -1 here AFAIU (see below).
+
+> +		if (arg <= th1520_drive_strength_in_mA[v])
+> +			break;
+
+return directly.
+
+> +	}
+
+> +	return v;
+
+return explicit value which will be robust against changes in the for-loop or
+elsewhere in the code.
+
+> +}
+
+...
+
+> +static int th1520_padcfg_rmw(struct th1520_pinctrl *thp, unsigned int pin,
+> +			     u16 _mask, u16 _value)
+
+Why not naming them without underscores?
+
+> +{
+> +	void __iomem *padcfg = th1520_padcfg(thp, pin);
+> +	unsigned int shift = th1520_padcfg_shift(pin);
+
+> +	u32 mask = (u32)_mask << shift;
+> +	u32 value = (u32)_value << shift;
+
+Oh, no castings, please.
+
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&thp->lock, flags);
+
+Use cleanup.h.
+
+> +	value |= readl_relaxed(padcfg) & ~mask;
+> +	writel_relaxed(value, padcfg);
+> +	raw_spin_unlock_irqrestore(&thp->lock, flags);
+> +	return 0;
+> +}
+
+...
+
+> +#define PIN_CONFIG_THEAD_STRONG_PULL_UP	(PIN_CONFIG_END + 1)
+
+Oh, custom flag! Linus, what is the expected approach for custom flags like this?
+I believe this is quite error prone.
+
+...
+
+> +	value = readl_relaxed(th1520_padcfg(thp, pin));
+> +	value = (value >> th1520_padcfg_shift(pin)) & 0x3ffU;
+
+GENMASK() and in many other places like this.
+
+...
+
+> +		enabled = value & TH1520_PADCFG_IE;
+> +		arg = enabled;
+
+Assigning boolean to integer... Hmm...
+
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		enabled = value & TH1520_PADCFG_ST;
+> +		arg = enabled;
+> +		break;
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		enabled = value & TH1520_PADCFG_SL;
+> +		arg = enabled;
+> +		break;
+
+...
+
+> +static int th1520_pinctrl_probe(struct platform_device *pdev)
+> +{
+
+	struct device *dev = &pdev->dev;
+
+may give you some benefits.
+
+> +	const struct th1520_padgroup *group = device_get_match_data(&pdev->dev);
+> +	struct th1520_pinctrl *thp;
+> +	int ret;
+> +
+> +	thp = devm_kzalloc(&pdev->dev, sizeof(*thp), GFP_KERNEL);
+> +	if (!thp)
+> +		return -ENOMEM;
+> +
+> +	thp->base = devm_platform_ioremap_resource(pdev, 0);
+> +	if (IS_ERR(thp->base))
+> +		return PTR_ERR(thp->base);
+> +
+> +	thp->desc.name = group->name;
+> +	thp->desc.pins = group->pins;
+> +	thp->desc.npins = group->npins;
+> +	thp->desc.pctlops = &th1520_pinctrl_ops;
+> +	thp->desc.pmxops = &th1520_pinmux_ops;
+> +	thp->desc.confops = &th1520_pinconf_ops;
+> +	thp->desc.owner = THIS_MODULE;
+> +	thp->desc.num_custom_params = ARRAY_SIZE(th1520_pinconf_custom_params);
+> +	thp->desc.custom_params = th1520_pinconf_custom_params;
+> +	thp->desc.custom_conf_items = th1520_pinconf_custom_conf_items;
+> +	mutex_init(&thp->mutex);
+> +	raw_spin_lock_init(&thp->lock);
+> +
+> +	ret = devm_pinctrl_register_and_init(&pdev->dev, &thp->desc, thp, &thp->pctl);
+> +	if (ret)
+> +		return dev_err_probe(&pdev->dev, ret, "could not register pinctrl driver\n");
+> +
+> +	return pinctrl_enable(thp->pctl);
+> +}
 
 -- 
-#Randy
-https://people.kernel.org/tglx/notes-about-netiquette
-https://subspace.kernel.org/etiquette.html
+With Best Regards,
+Andy Shevchenko
+
+
 
