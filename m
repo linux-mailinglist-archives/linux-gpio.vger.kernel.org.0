@@ -1,67 +1,48 @@
-Return-Path: <linux-gpio+bounces-1571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99ED2814EE6
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 18:33:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B148150EA
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 21:11:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 39E241F21964
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 17:33:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 300D328AB80
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 20:11:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87D6482ED2;
-	Fri, 15 Dec 2023 17:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8027245975;
+	Fri, 15 Dec 2023 20:11:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="humko8g6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWpnZ5+J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 357F982ECD;
-	Fri, 15 Dec 2023 17:33:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702661611; x=1734197611;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=y3i9ObbG7YHUbC2/n+tb9zuNB3tXQIBP33yXqqK+ZoU=;
-  b=humko8g6bZfV7iJ8C4Ukpp5x+PFcBF3Cz3dSQ5B47OHteyNIT4GU5K3m
-   tY6cu3UxbMrw3V5AtRim3aI1d0RvSOhFSgflZWN3b/LzIHWx4PAOy160l
-   K8jiRWkAguk8lreCH/NpIYjIBzBjm7t/KXXGvU916EhKy9gmmhlFcxklL
-   bRnrPWGec95Tll7jTaLsloerbExEGeLALuql2t+ixlLgApsgLn+LtXgqc
-   vmfWgPWeWpDRBWh0pHI7DadNkKQV0dN02JBe9D0nfr5o2IDkkgiW1m7Kg
-   AzmHxhNppl165abnGEa0Iw0Nce7SmFE27Ok2drAUVOxTgLLpG8h/fKvLE
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="385723422"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="385723422"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:33:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10925"; a="865473028"
-X-IronPort-AV: E=Sophos;i="6.04,279,1695711600"; 
-   d="scan'208";a="865473028"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 15 Dec 2023 09:33:28 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rEC3x-00000006BG9-2tef;
-	Fri, 15 Dec 2023 19:33:25 +0200
-Date: Fri, 15 Dec 2023 19:33:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 2/2] gpiolib: use a mutex to protect the list of GPIO
- devices
-Message-ID: <ZXyN5WrJL6NmV_l8@smile.fi.intel.com>
-References: <20231215155300.21186-1-brgl@bgdev.pl>
- <20231215155300.21186-3-brgl@bgdev.pl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4080C45976;
+	Fri, 15 Dec 2023 20:11:51 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60920C433C8;
+	Fri, 15 Dec 2023 20:11:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1702671111;
+	bh=EUiuIHWpQWay5Non15wnwY2bYiIVOSA0QToDDvFgkvQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=EWpnZ5+JVYPcKTuLcXuH8iyhfMZjJmqZE14hu9sPks72iIxwQFNy9oxIuY1KhLCSi
+	 TuWtX5oeU5k07pOON0GzP5edTlKbUML6BVygLNOzHJ1XKHlOQkxpkm1bJqgHLK00T0
+	 tbMmkvOvyAKJInBePMR6S7lMEN6W+8AhheSMaFlX373hhcbuttEL70FhDod5eer1mu
+	 rYd7aoWQ3oXl5Q1t8GRvO1E7fNw+TROFWTugq9yBXBMNTg8PzAiutHBZbFpi7UnLx9
+	 ZYisAMAcLr+gVZTbxaPol66jJmRZSKCdSDUeiXJpwQkwP3DuCjUWoLCCSYUBn7CUEn
+	 IZPMCGn4KOjbQ==
+Received: (nullmailer pid 315123 invoked by uid 1000);
+	Fri, 15 Dec 2023 20:11:48 -0000
+Date: Fri, 15 Dec 2023 14:11:48 -0600
+From: Rob Herring <robh@kernel.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+ protocol
+Message-ID: <20231215201148.GA304363-robh@kernel.org>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+ <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,26 +51,151 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231215155300.21186-3-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
 
-On Fri, Dec 15, 2023 at 04:53:00PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Dec 15, 2023 at 07:56:32PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> The global list of GPIO devices is never modified or accessed from
-> atomic context so it's fine to protect it using a mutex. Add a new
-> global lock dedicated to the gpio_devices list and use it whenever
-> accessing or modifying it.
+> Add SCMI v3.2 pinctrl protocol bindings and example.
 > 
-> While at it: fold the sysfs registering of existing devices into
-> gpiolib.c and make gpio_devices static within its compilation unit.
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  .../devicetree/bindings/firmware/arm,scmi.yaml     | 99 ++++++++++++++++++++++
+>  1 file changed, 99 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> index 4591523b51a0..bfd2b6a89979 100644
+> --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> @@ -247,6 +247,85 @@ properties:
+>        reg:
+>          const: 0x18
+>  
+> +  protocol@19:
+> +    type: object
+> +    allOf:
+> +      - $ref: '#/$defs/protocol-node'
+> +      - $ref: /schemas/pinctrl/pinctrl.yaml
+> +      - if:
+> +          properties:
+> +            compatible:
+> +              const: fsl,imx95-scmi-pinctrl
+> +        then:
+> +          patternProperties:
+> +            "grp$": false
+> +            "-pins$": true
+> +        else:
+> +          patternProperties:
+> +            "grp$": false
+> +            "-pins$": true
+> +    unevaluatedProperties: false
 
-LGTM,
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This will not scale if each vendor adds to arm,scmi.yaml. You need to 
+move this to its own file. That can have a ref to 
+/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Here you can just say compatible is "fsl,imx95-scmi-pinctrl" and 
+'additionalProperties: true'.
 
+> +
+> +    properties:
+> +      reg:
+> +        const: 0x19
+> +
+> +      '#pinctrl-cells':
+> +        const: 0
 
+Generally not used if 0.
+
+> +
+> +      compatible:
+> +        const: fsl,imx95-scmi-pinctrl
+> +
+> +    patternProperties:
+> +      '-pins$':
+> +        type: object
+> +        allOf:
+> +          - $ref: /schemas/pinctrl/pincfg-node.yaml#
+> +          - $ref: /schemas/pinctrl/pinmux-node.yaml#
+> +        unevaluatedProperties: false
+> +
+> +        description:
+> +          A pin multiplexing sub-node describe how to configure a
+> +          set of pins is some desired function.
+> +          A single sub-node may define several pin configurations.
+> +          This sub-node is using default pinctrl bindings to configure
+> +          pin multiplexing and using SCMI protocol to apply specified
+> +          configuration using SCMI protocol.
+> +
+> +      'grp$':
+> +        type: object
+> +        description:
+> +          Pinctrl node's client devices use subnodes for desired pin configuration.
+> +          Client device subnodes use below standard properties.
+> +
+> +        properties:
+> +          fsl,pins:
+> +            description:
+> +              each entry consists of 6 integers and represents the mux and config
+> +              setting for one pin. The first 5 integers <mux_reg conf_reg input_reg
+> +              mux_val input_val> are specified using a PIN_FUNC_ID macro, which can
+> +              be found in <arch/arm64/boot/dts/freescale/imx95-pinfunc.h>. The last
+> +              integer CONFIG is the pad setting value like pull-up on this pin. Please
+> +              refer to i.MX95 Plus Reference Manual for detailed CONFIG settings.
+> +            $ref: /schemas/types.yaml#/definitions/uint32-matrix
+> +            items:
+> +              items:
+> +                - description: |
+> +                    "mux_reg" indicates the offset of mux register.
+> +                - description: |
+> +                    "conf_reg" indicates the offset of pad configuration register.
+> +                - description: |
+> +                    "input_reg" indicates the offset of select input register.
+> +                - description: |
+> +                    "mux_val" indicates the mux value to be applied.
+> +                - description: |
+> +                    "input_val" indicates the select input value to be applied.
+> +                - description: |
+> +                    "pad_setting" indicates the pad configuration value to be applied.
+> +
+> +    required:
+> +      - reg
+> +
+>  additionalProperties: false
+>  
+>  $defs:
+> @@ -401,6 +480,26 @@ examples:
+>              scmi_powercap: protocol@18 {
+>                  reg = <0x18>;
+>              };
+> +
+> +            scmi_pinctrl: protocol@19 {
+> +                reg = <0x19>;
+> +                #pinctrl-cells = <0>;
+
+Missing compatible. Schema should catch that...
+
+> +
+> +                i2c2-pins {
+> +                    groups = "i2c2_a", "i2c2_b";
+> +                    function = "i2c2";
+> +                };
+> +
+> +                mdio-pins {
+> +                    groups = "avb_mdio";
+> +                    drive-strength = <24>;
+> +                };
+> +
+> +                keys_pins: keys-pins {
+> +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> +                    bias-pull-up;
+> +                };
+> +            };
+>          };
+>      };
+>  
+> 
+> -- 
+> 2.37.1
+> 
 
