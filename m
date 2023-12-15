@@ -1,104 +1,128 @@
-Return-Path: <linux-gpio+bounces-1599-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1602-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6EBF8816908
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 10:01:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85C28816A89
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 11:08:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 518241C20BCC
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 09:01:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CB70B20C51
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 10:08:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1D1B10A10;
-	Mon, 18 Dec 2023 09:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74BF612B92;
+	Mon, 18 Dec 2023 10:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PxrFdoT+"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IVS2dyX4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEB15125C0
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 09:00:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7cbc56a8023so493378241.1
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 01:00:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702890050; x=1703494850; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Dw026XAnMtLtxWNCzhpPAk2Qu2t2BiOON2FGMJeyr7g=;
-        b=PxrFdoT+DSIB6eEzateOpfY4/ZhLgx569COxdfk9kGK6c/eEMRhkTUspc4IPkyTELL
-         WMuggvwAnC4BOplgrCIX0l4xPtOG/Va90wnPLaSwbVtw7m6ksYE7Ls7tvuycK4Tvodcn
-         6ptYHPi2TguKa4uoOxUidMZbczE/LfVVL0ovgV/Baihz7guz1IjjEVd3o4XJ6ma3xZ8u
-         D8xE0EuPJsLsj0zsJTFBYw8wZzPFbikFL9OCbz4fPmgYWaPuy3GDFNzMh9kHCQzxP/yP
-         fSY5VLPJr0aWay9WnROv/RA2jV5a7GFLi4N8dxKvvXO2gRkw7zKzFjrUHyXpiz38Z9Ls
-         B5FQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702890050; x=1703494850;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Dw026XAnMtLtxWNCzhpPAk2Qu2t2BiOON2FGMJeyr7g=;
-        b=FMHV7geJ1yhuOMItv/wmTug2WEoZmswXm2mtRKEtoX0RtmJi9NxCDNwi7/KPx7XJzg
-         SfGCOJeBUEK/DS2HuOHP+6U0R4S8AsrEOhLa72S88HWikPESaTHzPbXGdRBMzdKQFdGh
-         /c+7Ul1aeqbsH1Z9Kf5gt95oihX3p8dLIDq0J/HdSLHEyBessIThF6deAc2zy9FOtwvS
-         tqDe3fqFjwpDUiHIFz2n71OU16FYYo/IUEehbd6hl2jioZPT+rnCDeszPFZdbW/2+FZV
-         pbikpfc1EpzrP/TDh2UJ+bFWRON3rjbAcTE+ZC1UZ7IPpu3dewPSIpCqhmDQsJZ2iNa7
-         Yccw==
-X-Gm-Message-State: AOJu0YwWzuYmpDcI2JxnzEyHTlUKbodFgkjWJf8ObqGeMO5+9MS/p/CT
-	Kem4/0ULbcN0QRS0M17PHOBxLafeWAyuXzgoQUR+Hw==
-X-Google-Smtp-Source: AGHT+IGAem1nDjnIi/J+LHNBgQ4NtWFW5yBV6M0O+03v+atNRenIB54exX2ziXmYNDuGtPwz9HtnjyZK+OpGDUlNAj4=
-X-Received: by 2002:a05:6102:2b82:b0:466:8748:1309 with SMTP id
- ib2-20020a0561022b8200b0046687481309mr1799507vsb.13.1702890050618; Mon, 18
- Dec 2023 01:00:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A31212B8D
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 10:08:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702894116; x=1734430116;
+  h=resent-from:resent-date:resent-message-id:resent-to:date:
+   from:to:cc:subject:message-id:mime-version:
+   content-transfer-encoding;
+  bh=NQVXUOqwzxLj0eqfz1P6sNQP+i2ia+SaPVQO/yRBZek=;
+  b=IVS2dyX4eS4brNjqR0o/GE91DBPz2aRS1OWJrmS1W+08cuFspt3uhg9b
+   aKgSehTreFLZ2BVWbuPoG06iZRrmLPvVnR7VWd2YMFqfkpZcYvsVlbWeV
+   tuhcyQ3fPsb4I3PgO6nrGNVouUOBXOx+W20FPY3QoCxOA+TGZ2M2rCndP
+   L8ssh1EJUEV75oTWLNCNNCaU0oLIWoozImgvp34SMd/cYnl4kK63S14xK
+   4gw4JoFyioLZk1pK7DWTPyAmy2d9k9wRh0fVWW4RA9Er2T7043RQDvUAK
+   O/64b+K3SJzeGfnO82v2uvw2n+UZWALX6AMkoLXKIRcVLj7DXx6wjL+6Y
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="2691378"
+X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
+   d="scan'208";a="2691378"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 02:08:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="841423053"
+X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
+   d="scan'208";a="841423053"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 02:08:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rFAXz-00000006t0O-3n2P;
+	Mon, 18 Dec 2023 12:08:27 +0200
+Resent-From: Andy Shevchenko <andriy.shevchenko@intel.com>
+Resent-Date: Mon, 18 Dec 2023 12:08:27 +0200
+Resent-Message-ID: <ZYAaG5LDgT-Er03t@smile.fi.intel.com>
+Resent-To: brgl@bgdev.pl, linux-gpio@vger.kernel.org, warthog618@gmail.com,
+	linus.walleij@linaro.org
+Date: Fri, 15 Dec 2023 22:23:17 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH v2 2/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZXy1tWOX-y4MJq69@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215155300.21186-1-brgl@bgdev.pl> <20231215155300.21186-3-brgl@bgdev.pl>
- <ZXyN5WrJL6NmV_l8@smile.fi.intel.com>
-In-Reply-To: <ZXyN5WrJL6NmV_l8@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 18 Dec 2023 10:00:39 +0100
-Message-ID: <CAMRc=MfiiF3SGY-4t+EQYEL1gjUN6-EQsdSP7LKdOA=a+H+_PQ@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpiolib: use a mutex to protect the list of GPIO devices
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 15, 2023 at 6:33=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Fri, Dec 15, 2023 at 04:53:00PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Dec 14, 2023 at 10:06:14PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Dec 14, 2023 at 5:41 PM Andy Shevchenko <andy@kernel.org> wrote:
+> > On Fri, Dec 15, 2023 at 12:14:41AM +0800, Kent Gibson wrote:
+> > > On Thu, Dec 14, 2023 at 05:09:01PM +0200, Andy Shevchenko wrote:
+> > > > On Thu, Dec 14, 2023 at 05:03:03PM +0200, Andy Shevchenko wrote:
+> > > > > On Thu, Dec 14, 2023 at 05:58:11PM +0800, Kent Gibson wrote:
+
+...
+
+> > > > > > +static void supinfo_init(void)
+> > > > > > +{
+> > > > > > +       supinfo.tree = RB_ROOT;
+> > > > > > +       spin_lock_init(&supinfo.lock);
+> > > > > > +}
+> > > > >
+> > > > > Can it be done statically?
+> > > > >
+> > > > > supinfo = {
+> > > > >   .tree = RB_ROOT,
+> > > > >   .lock = __SPIN_LOCK_UNLOCKED(supinfo.lock),
+> 
+> Double underscore typically means it's private and shouldn't be used.
+
+Right, but when you have a struct you have no other means to initialize this
+directly.
+
+> > > > I even checked the current tree, we have 32 users of this pattern in drivers/.
+
+See, there are users of the __ initializers.
+
+> > > Ah, that is what you meant.  Yeah sure can - the supinfo_init() is
+> > > another hangover from when I was trying to create the supinfo per chip,
+> > > but now it is a global a static initialiser makes sense.
 > >
-> > The global list of GPIO devices is never modified or accessed from
-> > atomic context so it's fine to protect it using a mutex. Add a new
-> > global lock dedicated to the gpio_devices list and use it whenever
-> > accessing or modifying it.
+> > Yep, the DEFINE_MUTEX() / DEFINE_SPINLOCK() / etc looks better naturally
+> > than above.
+> 
+> Yeah, so maybe we should use non-struct, global variables after all.
+
+At least this will allow to get rid of (questionable) initcall.
+
+> > > And I still haven't received the email you quote there.
 > >
-> > While at it: fold the sysfs registering of existing devices into
-> > gpiolib.c and make gpio_devices static within its compilation unit.
->
+> > :-( I'm not sure we will get it, it most likely that I removed it already
+> > and it has disappeared due to problems with email server...
 
-This part is no longer true, I'll remove it and apply the patches.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Bart
-
-> LGTM,
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
 
