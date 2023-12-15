@@ -1,104 +1,79 @@
-Return-Path: <linux-gpio+bounces-1517-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1518-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EC8E8140A2
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 04:30:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF5748141E4
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 07:44:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 613981C220F5
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 03:30:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2D5162826F4
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 06:44:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E617A46AB;
-	Fri, 15 Dec 2023 03:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1216CA6F;
+	Fri, 15 Dec 2023 06:44:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="I9qfQm4r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2070CDF46;
-	Fri, 15 Dec 2023 03:30:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
-X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BF3TmrgE1329966, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
-	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BF3TmrgE1329966
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 15 Dec 2023 11:29:48 +0800
-Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
- RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.17; Fri, 15 Dec 2023 11:29:49 +0800
-Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
- RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.34; Fri, 15 Dec 2023 11:29:49 +0800
-Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
- RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
- 15.01.2375.007; Fri, 15 Dec 2023 11:29:48 +0800
-From: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
-To: Andy Shevchenko <andy@kernel.org>, Michael Walle <michael@walle.cc>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
-Thread-Topic: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home
- Center) RTD SoCs.
-Thread-Index: AQHaKPU79lITdFvfw06smVDh+ZvZWbCdTzKAgAeXZrCAAdUdAIABjNeAgAAKpoCAAVHkAA==
-Date: Fri, 15 Dec 2023 03:29:48 +0000
-Message-ID: <e710818ae24542f08564ba671adcebee@realtek.com>
-References: <20231207100723.15015-1-tychang@realtek.com>
- <20231207100723.15015-3-tychang@realtek.com>
- <ZXHMbZRXLXGa_tq8@smile.fi.intel.com>
- <989146448858478b975c66899b8f3fed@realtek.com>
- <ZXm0MIub8X2q_lnp@smile.fi.intel.com>
- <23574204547646779d02f0109c20b3ff@realtek.com>
- <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
-In-Reply-To: <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
-x-kse-antispam-interceptor-info: fallback
-x-kse-antivirus-interceptor-info: fallback
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E97ADDA6;
+	Fri, 15 Dec 2023 06:44:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1702622663; x=1734158663;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=63EgPcBRFaJVMnMAE03v+S8ALEccu0QFpneLzykEYp0=;
+  b=I9qfQm4rA5TBElwi+ephzaPsj/ay/+PRZJTW7oib2r34vON2ollTR7Lr
+   iyNIv3d3dBqEmtrAXOsz27n+1c9Xm6iLqGo11GYhN5jCF5l2IIpOLdNLE
+   N1MYXwEYs9rijdBKr9fNumbbSC7G12FFaDWjzBCGV7o/uWh4xl1TrueLk
+   0BA2r2oUbSMGDoSg88Mig9+U8fm38JVuI/wGvdvpef8DjCBhDI8yQGaYn
+   u3gPMm//GA/29GgZUBfNNH889e7GfzElWKd5bYj8NM7uAHm66Ci2ZItg6
+   8MvMoJQoLmRDUflHZq4UUiFjiznSMWq78LOMev04ZocDLfxqTpb19RCya
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="2090602"
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="2090602"
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Dec 2023 22:44:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10924"; a="767868433"
+X-IronPort-AV: E=Sophos;i="6.04,277,1695711600"; 
+   d="scan'208";a="767868433"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga007.jf.intel.com with ESMTP; 14 Dec 2023 22:44:19 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+	id E664F3A3; Fri, 15 Dec 2023 08:44:17 +0200 (EET)
+Date: Fri, 15 Dec 2023 08:44:17 +0200
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Raag Jadav <raag.jadav@intel.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] pinctrl: intel: Add Intel Meteor Point pin
+ controller and GPIO support
+Message-ID: <20231215064417.GV1074920@black.fi.intel.com>
+References: <20231214154653.1087747-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-KSE-AntiSpam-Interceptor-Info: fallback
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20231214154653.1087747-1-andriy.shevchenko@linux.intel.com>
 
-SGkgQW5keSwNCg0KPj4gPj4gPj4gKyAgICAgaWYgKGlycSA9PSBkYXRhLT5pcnFzWzBdKQ0KPj4g
-Pj4gPj4gKyAgICAgICAgICAgICBnZXRfcmVnX29mZnNldCA9ICZydGRfZ3Bpb19ncGFfb2Zmc2V0
-Ow0KPj4gPj4gPj4gKyAgICAgZWxzZSBpZiAoaXJxID09IGRhdGEtPmlycXNbMV0pDQo+PiA+PiA+
-PiArICAgICAgICAgICAgIGdldF9yZWdfb2Zmc2V0ID0gJnJ0ZF9ncGlvX2dwZGFfb2Zmc2V0Ow0K
-Pj4gPj4gPg0KPj4gPj4gPkNhbid0IGl0IGJlIGRvbmUgYmVmb3JlIGVudGVyaW5nIGludG8gY2hh
-aW5lZCBJUlEgaGFuZGxlcj8NCj4+ID4+DQo+PiA+PiBJIHdpbGwgcmV2aXNlIGl0Lg0KPj4gPg0K
-Pj4gPlRoaW5raW5nIGFib3V0IHRoaXMgbW9yZSwgcGVyaGFwcyB5b3UgY2FuIHJlZ2lzdGVyIHR3
-byBJUlEgY2hpcHMgd2l0aA0KPj4gPmRpZmZlcmVudCBmdW5jdGlvbnMsIHNvIHRoaXMgd29uJ3Qg
-YmUgcGFydCBvZiB0aGUgdmVyeSBjcml0aWNhbA0KPj4gPmludGVycnVwdCBoYW5kbGVyIChhcyB3
-ZSBhbGwgd2FudCB0byByZWR1Y2Ugb3ZlcmhlYWQgaW4gaXQgYXMgbXVjaCBhcw0KPnBvc3NpYmxl
-KS4NCj4+ID5Bbnl3YXksIHRoaW5rIGFib3V0IHRoaXMgYW5kIHRyeSBkaWZmZXJlbnQgb3B0aW9u
-cywgY2hvb3NlIHRoZSBvbmUNCj4+ID55b3UgdGhpbmsgdGhlIGJlc3QuDQo+Pg0KPj4gSW4gdGhl
-IHByZXZpb3VzIHBhdGNoICh2MSksIEkgaGFkIHJlZ2lzdGVyZWQgdHdvIElSUSBjaGlwcyB3aXRo
-DQo+PiBkaWZmZXJlbnQgaGFuZGxlcnMuIEhvd2V2ZXIsIHRoZXNlIHR3byBoYW5kbGVycyBhcHBl
-YXJlZCBxdWl0ZSBzaW1pbGFyDQo+PiBhbmQgdGhlIGdwaW9faXJxX2NoaXAgb25seSBhbGxvd3Mg
-dGhlIHJlZ2lzdHJhdGlvbiBvZiBhIHNpbmdsZQ0KPj4gaGFuZGxlci4gVGhlcmVmb3JlLCBJIGVu
-ZGVkIHVwIHJlZ2lzdGVyaW5nIG9uZSBoYW5kbGVyIGZvciBib3RoIElSUXMNCj4+IGFuZCBpbmNs
-dWRlZCBjb25kaXRpb25hbCBjaGVja3Mgd2l0aGluIHRoZSBoYW5kbGVyIHRvIGRpZmZlcmVudGlh
-dGUgYmV0d2Vlbg0KPnRoZSB0d28uDQo+DQo+V2hhdCBpcyB0aGUgcGVyZm9ybWFuY2UgaW1wYWN0
-IHRoYXQgeW91IGhhdmUgdGhhdCBjb25kaXRpb24gaW4gdGhlIGludGVycnVwdA0KPmhhbmRsZXI/
-DQo+DQoNCkkgYmVsaWV2ZSB0aGUgcGVyZm9ybWFuY2UgaW1wYWN0IGlzIG1pbmltYWwgc2luY2Ug
-dGhpcyBjb25kaXRpb25hbCBjaGVjayBpcw0KYSBzaW1wbGUgb3BlcmF0aW9uIGFpbWVkIGF0IHJl
-dHJpZXZpbmcgdGhlIGNvcnJlc3BvbmRpbmcgb2Zmc2V0IG9mIHRoZQ0KaW50ZXJydXB0IHN0YXR1
-cyByZWdpc3RlcnMuDQpPciBpcyB0aGVyZSBzb21ldGhpbmcgSSBtaWdodCBub3QgaGF2ZSBjb25z
-aWRlcmVkPw0KDQpUaGFua3MsDQpUenV5aSBDaGFuZw0KDQo=
+On Thu, Dec 14, 2023 at 05:46:53PM +0200, Andy Shevchenko wrote:
+> This driver supports pinctrl/GPIO hardware found on Intel Meteor Point
+> (a Meteor Lake PCH) providing users a pinctrl and GPIO interfaces
+> including GPIO interrupts.
+
+This is driver for Meteor Lake-S and related, correct? Why it cannot use
+pinctrl-meteorlake.c instead? Same way we do for other desktop CPUs
+whose PCHs have the GPIO/pinctrl block.
 
