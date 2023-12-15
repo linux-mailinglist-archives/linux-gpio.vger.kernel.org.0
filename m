@@ -1,167 +1,104 @@
-Return-Path: <linux-gpio+bounces-1516-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1517-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1A0A81401B
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 03:44:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2EC8E8140A2
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 04:30:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 894AC287D4C
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 02:44:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 613981C220F5
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 03:30:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47306DDBC;
-	Fri, 15 Dec 2023 02:39:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YKJomVo0"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E617A46AB;
+	Fri, 15 Dec 2023 03:30:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B64EBC;
-	Fri, 15 Dec 2023 02:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5c66988c2eeso104494a12.1;
-        Thu, 14 Dec 2023 18:39:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702607989; x=1703212789; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=cJew1Ut9h95zC9IuFrB6MxorQq1lAg1fBre3mDpboVk=;
-        b=YKJomVo0MbYyn+/pvpivd+zDy4KFTQ4wbSymKOjd2VcG4uYVYVMEnsuIxgniKWF7FH
-         vMwKBRPnhClh69dqHGrR2L/qTcNBRTDSzLhpNQCDAZ1aZ5oNWwroqr8cDotC7X839Kdr
-         54AIqQBIlvJYoHLTVsl5STp2AR5nIbuY1XElP5Qu6vRE7LrY0UmDhMgV4s2ojYSrpO6R
-         fw1rxGYS8unlPZKZsjuqsDtb9UEEz30yo6c9SA7UR2v5Out1bD6p/FbWpK78Xiur/BUP
-         VZsBdVFnWTuDcGg+oYsbo+avedFBbA6YWNY0n1xHHxhKWlC73/SY8eeNdCDSKdvgzczY
-         rR/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702607989; x=1703212789;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cJew1Ut9h95zC9IuFrB6MxorQq1lAg1fBre3mDpboVk=;
-        b=oJ+VU1Ru2Ow1SadVwrjXl8hvq7m/elIJHji84y2HNhHUHCpaq9Ojg/J6WYcgWMlpJW
-         bWwRS2bPQ3ncZ2vpdnvsJ6CTmjL5501XNOHbF/R0YWDiukqqbCaVhAHAWeIS5PnRjr3z
-         jhg27ZxGPNS9qyyBiAk5NkH1LI10ZeabuxRp372iHMnhjxoxeQwLIAgzBeDYpSAmCKnR
-         tNo9KJxTP1yX3Nd9xuq7fdsOxP6iJSho5z+Dh6HRWSVQ5ZnGHUMVQ3UTVm7Y7I1XVFZ8
-         eG/3IYM7G+LWGSxK4uMoLqpVMjETihjJrQfELH4x2ILfHdXW6Jvj6VQeHlxxh9aMqNW0
-         EyLQ==
-X-Gm-Message-State: AOJu0Yz8YBlda+4NExuet3IwxIO/Qopnw3451IRkNd85Q3OJCp4ZVR/5
-	Ef8ag54aH7RT9RxKw5U1Phl1KvfA1tw=
-X-Google-Smtp-Source: AGHT+IHfWb3wL97Ns3I3ixu/6Q6yRWaGN1PcI1hxQgrd8A1/ldvCSZ4yZZYksRY9zq0Ge9ImqnhR2Q==
-X-Received: by 2002:a05:6a21:998e:b0:190:24f9:d579 with SMTP id ve14-20020a056a21998e00b0019024f9d579mr15682414pzb.1.1702607988870;
-        Thu, 14 Dec 2023 18:39:48 -0800 (PST)
-Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id fk16-20020a056a003a9000b006d26920a11dsm1437987pfb.0.2023.12.14.18.39.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Dec 2023 18:39:48 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v3 5/5] gpiolib: cdev: improve documentation of get/set values
-Date: Fri, 15 Dec 2023 10:38:05 +0800
-Message-Id: <20231215023805.63289-6-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231215023805.63289-1-warthog618@gmail.com>
-References: <20231215023805.63289-1-warthog618@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2070CDF46;
+	Fri, 15 Dec 2023 03:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BF3TmrgE1329966, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36506.realtek.com.tw[172.21.6.27])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BF3TmrgE1329966
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 15 Dec 2023 11:29:48 +0800
+Received: from RTEXMBS06.realtek.com.tw (172.21.6.99) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.17; Fri, 15 Dec 2023 11:29:49 +0800
+Received: from RTEXMBS04.realtek.com.tw (172.21.6.97) by
+ RTEXMBS06.realtek.com.tw (172.21.6.99) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.34; Fri, 15 Dec 2023 11:29:49 +0800
+Received: from RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7]) by
+ RTEXMBS04.realtek.com.tw ([fe80::40c2:6c24:2df4:e6c7%5]) with mapi id
+ 15.01.2375.007; Fri, 15 Dec 2023 11:29:48 +0800
+From: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To: Andy Shevchenko <andy@kernel.org>, Michael Walle <michael@walle.cc>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
+Thread-Topic: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Thread-Index: AQHaKPU79lITdFvfw06smVDh+ZvZWbCdTzKAgAeXZrCAAdUdAIABjNeAgAAKpoCAAVHkAA==
+Date: Fri, 15 Dec 2023 03:29:48 +0000
+Message-ID: <e710818ae24542f08564ba671adcebee@realtek.com>
+References: <20231207100723.15015-1-tychang@realtek.com>
+ <20231207100723.15015-3-tychang@realtek.com>
+ <ZXHMbZRXLXGa_tq8@smile.fi.intel.com>
+ <989146448858478b975c66899b8f3fed@realtek.com>
+ <ZXm0MIub8X2q_lnp@smile.fi.intel.com>
+ <23574204547646779d02f0109c20b3ff@realtek.com>
+ <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
+In-Reply-To: <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS06.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Add documentation of the algorithm used to perform scatter/gather
-of the requested lines and values in linereq_get_values() and
-linereq_set_values_unlocked() to improve maintainability.
-
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 24 +++++++++++++++++++++++-
- 1 file changed, 23 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index b956664f8649..37794de691f3 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -1383,9 +1383,18 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- 	if (copy_from_user(&lv, ip, sizeof(lv)))
- 		return -EFAULT;
- 
-+	/*
-+	 * gpiod_get_array_value_complex() requires compacted desc and val
-+	 * arrays, rather than the sparse ones in lv.
-+	 * Calculation of num_get and construction of the desc array is
-+	 * optimized to avoid allocation for the desc array for the common
-+	 * num_get == 1 case.
-+	 */
-+	/* scan requested lines to calculate the subset to get */
- 	for (num_get = 0, i = 0; i < lr->num_lines; i++) {
- 		if (lv.mask & BIT_ULL(i)) {
- 			num_get++;
-+			/* capture desc for the num_get == 1 case */
- 			descs = &lr->lines[i].desc;
- 		}
- 	}
-@@ -1394,6 +1403,7 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- 		return -EINVAL;
- 
- 	if (num_get != 1) {
-+		/* build compacted desc array */
- 		descs = kmalloc_array(num_get, sizeof(*descs), GFP_KERNEL);
- 		if (!descs)
- 			return -ENOMEM;
-@@ -1414,6 +1424,7 @@ static long linereq_get_values(struct linereq *lr, void __user *ip)
- 
- 	lv.bits = 0;
- 	for (didx = 0, i = 0; i < lr->num_lines; i++) {
-+		/* unpack compacted vals for the response */
- 		if (lv.mask & BIT_ULL(i)) {
- 			if (lr->lines[i].sw_debounced)
- 				val = debounced_value(&lr->lines[i]);
-@@ -1439,14 +1450,25 @@ static long linereq_set_values_unlocked(struct linereq *lr,
- 	unsigned int i, didx, num_set;
- 	int ret;
- 
-+	/*
-+	 * gpiod_set_array_value_complex() requires compacted desc and val
-+	 * arrays, rather than the sparse ones in lv.
-+	 * Calculation of num_set and construction of the descs and vals arrays
-+	 * is optimized to minimize scanning the lv->mask, and to avoid
-+	 * allocation for the desc array for the common num_set == 1 case.
-+	 */
- 	bitmap_zero(vals, GPIO_V2_LINES_MAX);
-+	/* scan requested lines to determine the subset to be set */
- 	for (num_set = 0, i = 0; i < lr->num_lines; i++) {
- 		if (lv->mask & BIT_ULL(i)) {
-+			/* setting inputs is not allowed */
- 			if (!test_bit(FLAG_IS_OUT, &lr->lines[i].desc->flags))
- 				return -EPERM;
-+			/* add to compacted values */
- 			if (lv->bits & BIT_ULL(i))
- 				__set_bit(num_set, vals);
- 			num_set++;
-+			/* capture desc for the num_set == 1 case */
- 			descs = &lr->lines[i].desc;
- 		}
- 	}
-@@ -1454,7 +1476,7 @@ static long linereq_set_values_unlocked(struct linereq *lr,
- 		return -EINVAL;
- 
- 	if (num_set != 1) {
--		/* build compacted desc array and values */
-+		/* build compacted desc array */
- 		descs = kmalloc_array(num_set, sizeof(*descs), GFP_KERNEL);
- 		if (!descs)
- 			return -ENOMEM;
--- 
-2.39.2
-
+SGkgQW5keSwNCg0KPj4gPj4gPj4gKyAgICAgaWYgKGlycSA9PSBkYXRhLT5pcnFzWzBdKQ0KPj4g
+Pj4gPj4gKyAgICAgICAgICAgICBnZXRfcmVnX29mZnNldCA9ICZydGRfZ3Bpb19ncGFfb2Zmc2V0
+Ow0KPj4gPj4gPj4gKyAgICAgZWxzZSBpZiAoaXJxID09IGRhdGEtPmlycXNbMV0pDQo+PiA+PiA+
+PiArICAgICAgICAgICAgIGdldF9yZWdfb2Zmc2V0ID0gJnJ0ZF9ncGlvX2dwZGFfb2Zmc2V0Ow0K
+Pj4gPj4gPg0KPj4gPj4gPkNhbid0IGl0IGJlIGRvbmUgYmVmb3JlIGVudGVyaW5nIGludG8gY2hh
+aW5lZCBJUlEgaGFuZGxlcj8NCj4+ID4+DQo+PiA+PiBJIHdpbGwgcmV2aXNlIGl0Lg0KPj4gPg0K
+Pj4gPlRoaW5raW5nIGFib3V0IHRoaXMgbW9yZSwgcGVyaGFwcyB5b3UgY2FuIHJlZ2lzdGVyIHR3
+byBJUlEgY2hpcHMgd2l0aA0KPj4gPmRpZmZlcmVudCBmdW5jdGlvbnMsIHNvIHRoaXMgd29uJ3Qg
+YmUgcGFydCBvZiB0aGUgdmVyeSBjcml0aWNhbA0KPj4gPmludGVycnVwdCBoYW5kbGVyIChhcyB3
+ZSBhbGwgd2FudCB0byByZWR1Y2Ugb3ZlcmhlYWQgaW4gaXQgYXMgbXVjaCBhcw0KPnBvc3NpYmxl
+KS4NCj4+ID5Bbnl3YXksIHRoaW5rIGFib3V0IHRoaXMgYW5kIHRyeSBkaWZmZXJlbnQgb3B0aW9u
+cywgY2hvb3NlIHRoZSBvbmUNCj4+ID55b3UgdGhpbmsgdGhlIGJlc3QuDQo+Pg0KPj4gSW4gdGhl
+IHByZXZpb3VzIHBhdGNoICh2MSksIEkgaGFkIHJlZ2lzdGVyZWQgdHdvIElSUSBjaGlwcyB3aXRo
+DQo+PiBkaWZmZXJlbnQgaGFuZGxlcnMuIEhvd2V2ZXIsIHRoZXNlIHR3byBoYW5kbGVycyBhcHBl
+YXJlZCBxdWl0ZSBzaW1pbGFyDQo+PiBhbmQgdGhlIGdwaW9faXJxX2NoaXAgb25seSBhbGxvd3Mg
+dGhlIHJlZ2lzdHJhdGlvbiBvZiBhIHNpbmdsZQ0KPj4gaGFuZGxlci4gVGhlcmVmb3JlLCBJIGVu
+ZGVkIHVwIHJlZ2lzdGVyaW5nIG9uZSBoYW5kbGVyIGZvciBib3RoIElSUXMNCj4+IGFuZCBpbmNs
+dWRlZCBjb25kaXRpb25hbCBjaGVja3Mgd2l0aGluIHRoZSBoYW5kbGVyIHRvIGRpZmZlcmVudGlh
+dGUgYmV0d2Vlbg0KPnRoZSB0d28uDQo+DQo+V2hhdCBpcyB0aGUgcGVyZm9ybWFuY2UgaW1wYWN0
+IHRoYXQgeW91IGhhdmUgdGhhdCBjb25kaXRpb24gaW4gdGhlIGludGVycnVwdA0KPmhhbmRsZXI/
+DQo+DQoNCkkgYmVsaWV2ZSB0aGUgcGVyZm9ybWFuY2UgaW1wYWN0IGlzIG1pbmltYWwgc2luY2Ug
+dGhpcyBjb25kaXRpb25hbCBjaGVjayBpcw0KYSBzaW1wbGUgb3BlcmF0aW9uIGFpbWVkIGF0IHJl
+dHJpZXZpbmcgdGhlIGNvcnJlc3BvbmRpbmcgb2Zmc2V0IG9mIHRoZQ0KaW50ZXJydXB0IHN0YXR1
+cyByZWdpc3RlcnMuDQpPciBpcyB0aGVyZSBzb21ldGhpbmcgSSBtaWdodCBub3QgaGF2ZSBjb25z
+aWRlcmVkPw0KDQpUaGFua3MsDQpUenV5aSBDaGFuZw0KDQo=
 
