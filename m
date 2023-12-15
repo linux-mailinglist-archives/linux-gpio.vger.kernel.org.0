@@ -1,114 +1,99 @@
-Return-Path: <linux-gpio+bounces-1528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3764C81453F
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 11:15:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5A3B081456D
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 11:22:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1C831F23D28
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 10:15:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EE4771F234BF
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 10:22:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4DD218E14;
-	Fri, 15 Dec 2023 10:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T4cS0VIg"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6085D1A5BB;
+	Fri, 15 Dec 2023 10:22:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21CE918E24
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Dec 2023 10:15:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EF4C1A720;
+	Fri, 15 Dec 2023 10:22:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-28659348677so317694a91.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Dec 2023 02:15:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702635303; x=1703240103; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=xqcNGU6ck1zcC1JF38W+jlxZ+1VOq4foxBPPizm63hM=;
-        b=T4cS0VIgPwfhbk6MNEcL8v7oT7xbaiLON1/WgwYAjgI/L2b3auiK6DOgHpVy0oSsl6
-         ROIFXELdbARTMYMQz4/3hJRtytJJM8TX2jqMB38PTP80zsVMM8x2HKD2VP+u/ZOnZjWr
-         /N14YCKys6FN1dQptqI6ekmKM+tX3dDvLoMZAdGr50Bz1e1BwSRV4gwuc0BE4jWoRMsP
-         Tns0rEA4CUCgSSzal5puQrCpdIe63IWXL1DUTLfp3y0D870vIlLadHB/T6C0iPIpptaj
-         D+DezUF0VzzA01xqP818hVEUWDVMnH50butfu9DqMyuwOIZfJafi+n/ZAU3WVkzUFEBJ
-         6iZw==
+Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5d279bcce64so4116577b3.3;
+        Fri, 15 Dec 2023 02:22:02 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702635303; x=1703240103;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=xqcNGU6ck1zcC1JF38W+jlxZ+1VOq4foxBPPizm63hM=;
-        b=tX53Q5ecwtkQtzUw6jwyrp9CkHhRlF2mh6lC9sl3tckxzv/k3DKxKqze3NsPekewLI
-         JtS+csvNuhaDnB03pbVR3M5gGCisJzm/O3WlP9LRPbfV+51qHQJt2iSz/doik89+SgEx
-         2/myIEHzET+9OR+KT3nr9GDuY1y5Z5hcW+UDGlVPPpdfl08l9EGQmb6gC8pr1ZJuCHyd
-         /CC3wgSSFUFGLF+LuG56D5CULsbWOgOBOEPJbGF7vC0LP6IR46kTSWBvMd979uxquPaP
-         OqH8S+XRqOcHg1+1Xk13Tkh8BNJ/hfyZkdlMQsl2cNKwTHsOssEcn4KsDoeD6/HDVyvW
-         uZRg==
-X-Gm-Message-State: AOJu0Yyv5aX4O/nlVUEnSuvsaGRFREcVJv24/C72ZWMc8cAcMg0xOokP
-	qRYd5XZxb7UPxCmONoL713Q=
-X-Google-Smtp-Source: AGHT+IFluv1XqB8JaC+7NXy1ilb2TINRrgjPY5DJM+jO/m4pmh9+aqFR+ZxCmIu3Jt5TvtpeVStQNQ==
-X-Received: by 2002:a17:90b:216:b0:28b:3917:3cfd with SMTP id fy22-20020a17090b021600b0028b39173cfdmr179451pjb.12.1702635303250;
-        Fri, 15 Dec 2023 02:15:03 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id e19-20020a63e013000000b00578b40a4903sm13128935pgh.22.2023.12.15.02.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 02:15:02 -0800 (PST)
-Date: Fri, 15 Dec 2023 18:14:59 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: "18711529674@163.com" <18711529674@163.com>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [libgpiod] How to gets gpio status but does not change it
-Message-ID: <ZXwnIwtsQ2mf8L1C@rigel>
-References: <TYZPR01MB462621CF5B056907A3340C1FF193A@TYZPR01MB4626.apcprd01.prod.exchangelabs.com>
+        d=1e100.net; s=20230601; t=1702635720; x=1703240520;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zIqyMLDoz3bUGP62JyhcKO5VrQi/N9+QK4f+5otTgHs=;
+        b=KnL/SxQP8xtqjlIYBGfNHSIza/5jnuoRmUiad3gZu8EbVHF5NYKBIoqFO18Bg8KyXy
+         DDpZvxTWqjMzDKg4/O0gaPWlB7asGix9+Lb4ZRrKwf3OY6rvd6Y/Wq3Rq2yV7QWY1P+V
+         TerhfYCd/zWDOpXR3wBJHAlCgZ/aYpxvAsMDwEILlCDVf7cUxAe2KAx5cSCbfAeL5Rcw
+         4SwGkfUa0I0LlEEre3ZaEq0yxI5Hhj4ngD21WKXGGBc8rFkKk4tFW7h37eBr+/g0konp
+         qlWrDFJ07yqWC+uLUSmY9FKBDwMQlctbVfAtV+y1UcuuUqVZf7mfizZiGwHYYQt0PYme
+         uNpA==
+X-Gm-Message-State: AOJu0YxBk4Jnz5DckkIPCXB0dnNwNatHT4pLHmOvMVbHxIbrVMS8vkvt
+	VdgHN8W5nP1mPGxkNck2Icq8oJgQSi/spw==
+X-Google-Smtp-Source: AGHT+IHrK0C2ZiIt+zrexReq7miKG1eUegeuz9keqdLcdp0m93zdrcTPsp6CewNjd0XcWnLLfQBV4A==
+X-Received: by 2002:a81:a04e:0:b0:5e2:93f0:884b with SMTP id x75-20020a81a04e000000b005e293f0884bmr3901907ywg.85.1702635719797;
+        Fri, 15 Dec 2023 02:21:59 -0800 (PST)
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com. [209.85.219.172])
+        by smtp.gmail.com with ESMTPSA id ey7-20020a05690c300700b005e33364be2bsm39852ywb.70.2023.12.15.02.21.59
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Dec 2023 02:21:59 -0800 (PST)
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-db3fa47c2f7so338801276.0;
+        Fri, 15 Dec 2023 02:21:59 -0800 (PST)
+X-Received: by 2002:a05:6902:100d:b0:dbc:f470:33e1 with SMTP id
+ w13-20020a056902100d00b00dbcf47033e1mr744766ybt.72.1702635719251; Fri, 15 Dec
+ 2023 02:21:59 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <TYZPR01MB462621CF5B056907A3340C1FF193A@TYZPR01MB4626.apcprd01.prod.exchangelabs.com>
+References: <20231215004700.46147-1-yang.lee@linux.alibaba.com>
+In-Reply-To: <20231215004700.46147-1-yang.lee@linux.alibaba.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Fri, 15 Dec 2023 11:21:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdVR-HgRkOkfGRaAVmxRQhepQSspyCS1YyOwwfPW5-R7tA@mail.gmail.com>
+Message-ID: <CAMuHMdVR-HgRkOkfGRaAVmxRQhepQSspyCS1YyOwwfPW5-R7tA@mail.gmail.com>
+Subject: Re: [PATCH -next] pinctrl: renesas: rzg2l: Remove unneeded semicolon
+To: Yang Li <yang.lee@linux.alibaba.com>
+Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Abaci Robot <abaci@linux.alibaba.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 15, 2023 at 07:49:19AM +0000, 18711529674@163.com wrote:
-> Hello.
+On Fri, Dec 15, 2023 at 1:47=E2=80=AFAM Yang Li <yang.lee@linux.alibaba.com=
+> wrote:
+> ./drivers/pinctrl/renesas/pinctrl-rzg2l.c:485:2-3: Unneeded semicolon
 >
->     According to the example get_line_value. I try to request the status of the gpio, but the return is always low.
->     try 
->       gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_AS_IS);
->   or
->       gpiod_line_settings_set_direction(settings, GPIOD_LINE_DIRECTION_INPUT);
->   Their result is always low
->
->   Is there any way to get the correct value without changing the original state?
->
->                                            Thank you in advance for your time.
+> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
+> Closes: https://bugzilla.openanolis.cn/show_bug.cgi?id=3D7749
+> Signed-off-by: Yang Li <yang.lee@linux.alibaba.com>
 
-By status you mean the electrical level of the line?
-That is returned by this line from the example:
+Thanks for your patch!
 
-        value = gpiod_line_request_get_value(request, line_offset);
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-The gpiod_line_settings_set_direction() controls whether the line is
-expected to electrically be an input or output or, in the case of
-GPIOD_LINE_DIRECTION_AS_IS, left unchanged.
-When the line is requested by gpiod_chip_request_lines() those settings
-will be applied.
+As the issue is not yet upstream, I will fold your fix into the original
+commit in renesas-pinctrl-for-v6.8.
 
-Assuming your line is already configured an input, neither of the examples
-you provide would change the electrical settings of the line, so you are
-already doing what you have asked for.
+Gr{oetje,eeting}s,
 
-Are you sure you have the correct line?
-Have you confirmed that the line is being pulled high externally?
-What does gpioinfo report for that line?
-Have you tried using gpioget on that line to see what value it reports?
+                        Geert
 
-Cheers,
-Kent.
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
