@@ -1,162 +1,127 @@
-Return-Path: <linux-gpio+bounces-1577-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1578-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4911815492
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:33:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD5758154CF
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 01:04:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 87EAAB23C9A
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Dec 2023 23:33:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C6DB1C245E2
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D69618EDA;
-	Fri, 15 Dec 2023 23:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0D3156FB;
+	Sat, 16 Dec 2023 00:04:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HHwb3tb0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1/T57Pr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59A4495C9;
-	Fri, 15 Dec 2023 23:33:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3b9e2a014e8so981724b6e.2;
-        Fri, 15 Dec 2023 15:33:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C9815487
+	for <linux-gpio@vger.kernel.org>; Sat, 16 Dec 2023 00:04:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a1ef2f5ed01so161723666b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Dec 2023 16:04:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702683221; x=1703288021; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+hMnTlRGS/PXAXBP5TPslgIi8w7BTIAAQCZQIaoU8eQ=;
-        b=HHwb3tb01uNXh/jLi3nQLIRLGs9CYcAsNVX393SALLkkbB3COBASkv9Y+bhd7BePJh
-         dGNr+v1CkuapkAEHcSzcOi+QnPaWVQzq3HyFNX3nVppEZVqGGmDoT+tGM6oHap8XJdIo
-         NV1WODxhJbmf8Pu6TmEYfkVnImHUfaqlax8OCeBIGSwGxZMwwD2K2/6KPz800c/OFhOA
-         GrLN1mja+Q62SEtWpv4EEg3dXPQA/etDI6JEplsThOxndz5UrrCq3VC1sfqlb1Xn5ym8
-         cVvpeNpiyq+K94qB27gsoJrvKfzNlYcpUcEzYFq1xSVnpYCwS5Fx1CQja3SEUIhPVdvH
-         XUlA==
+        d=linaro.org; s=google; t=1702685046; x=1703289846; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=nNgeSAH5q0OtOCzk+H3FSYuqGN2SuWi6yBqSzeQWIGQ=;
+        b=k1/T57PrRRpbO0WxZAtg+UaldD/fNLNdIg+j1hUGyAUYhzrqS02t4YZX3bIyTC3Jom
+         qVw31xYtP3wC7giKhnPRekBzW4yyp2hkA/e1vCKBLZj2nkXT72YviWtg3/XH47ycfrB3
+         qiKe7jnnxZ7EAhRDe8YbC4OI9Ui7yOWxTAb71Ta1pbpKS1QQ+MS+3xe1TaW0Vzt8gJoF
+         Bp5zlTIRlPlBkhCY5v+cG4mbjMQfNzXTuzA6tTM/caewmxBeEJWCICwvUsRhYedgjQ4n
+         WI2RQvq2hha+lv2NFB0g+iAXG5dPH+1xAIyuy1HayptR3bn9ZlsHO+qraOHDVov81+C8
+         N/+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702683221; x=1703288021;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+hMnTlRGS/PXAXBP5TPslgIi8w7BTIAAQCZQIaoU8eQ=;
-        b=ZdsaPK11xeq2pZb1owqgC68A3YK+vHPPVUZqktp0XNIljMnsvGpA/aPqfNJaiA5kcp
-         94u+hiHTT+wdxf4Wb456LVMTXUC5UMI7K5xXdu4E4f9FCjgbtNtDvUwmyr/zMV2v/SSm
-         jBdqOhIUgjdoVAfAdq9Tq7T+FQ4SbDyDuH9LlEvSE7IDaf34OCTSswmKnIyVnuj76YtJ
-         s/XVEi8nUDWM4iMH/F/HKiG3pHAVhGuDJTqzD7A4KO1tDK6EptqJ4rplfoNdGhLtd2+4
-         jIPFCGtjNVPcvj+4Ov4hO9aQFQd7oyzh8GF1+KeFAimYS1TAQVxFOindmcx1FafH98N0
-         qc3g==
-X-Gm-Message-State: AOJu0YzAAEIok3dlbD1wKdRSqxn+YEz1H/ZcrPcb+9MN49JyXxE6K+Qk
-	jnX0Mh/bSRIGWRJTFzjTnAVGeUxYIKY=
-X-Google-Smtp-Source: AGHT+IFt6HYJ/TQPfxqy8q2sMFCyk3omOehMQg5P3QqDOGTONmqpvsXvJNqg8cv6+Quv718plUhXwA==
-X-Received: by 2002:a05:6808:6494:b0:3ba:10b1:7a1e with SMTP id fh20-20020a056808649400b003ba10b17a1emr10299294oib.5.1702683221569;
-        Fri, 15 Dec 2023 15:33:41 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id jw20-20020a170903279400b001d36df58ba2sm3463505plb.308.2023.12.15.15.33.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Dec 2023 15:33:41 -0800 (PST)
-Date: Sat, 16 Dec 2023 07:33:37 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH v3 1/5] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZXziUYicXaENTDk_@rigel>
-References: <20231215023805.63289-1-warthog618@gmail.com>
- <20231215023805.63289-2-warthog618@gmail.com>
- <ZXyAQq7tVaOFI2Vs@smile.fi.intel.com>
+        d=1e100.net; s=20230601; t=1702685046; x=1703289846;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=nNgeSAH5q0OtOCzk+H3FSYuqGN2SuWi6yBqSzeQWIGQ=;
+        b=FwGYE12q3dC/l4nn9XNYfc9yIWH1mI2w9Fk+ygFwbEU5biBo1IIzu1rSGKn4aGWVHf
+         E5Gm5xfpjBW02QoYQsXnIjQLtZAGgF9gCpZTAUI3J6rxNQae1INU7zfc64MIPXauPeMO
+         5Mc7LwPTYhvKhkoAWGWtx3AryJC7A2zLU/roNKUyT+XI5WR4HRCYg89dP2vDHm5c7NLp
+         2iU4SYUjTl/A+XfFfTKlJLLD/p6MseoD4jiBxyzDyi1eHXxWCfhfj+kSXp1kKMSvsTS/
+         UeI3HieXxQqxaV4Mheil/WO2GvpZ88+9DhU+TukJ5PIO27qZZhYC75ZqGdEcv3dDVq2G
+         6QoQ==
+X-Gm-Message-State: AOJu0YzOsRI+Pbve6Vsq2pDoUcWn9pJ4LQMtmzNYlVItAZg/Ih6Vozhg
+	p4rZbe3RijvtNSGQiJiVIZyL0Q==
+X-Google-Smtp-Source: AGHT+IGrjMUr9+21sdvFU6X/qCsgRoQhMmqzkuES7zatJFOCOcVgweBY7d7P+eUnglypIRG1AVGw/w==
+X-Received: by 2002:a17:906:bf41:b0:a1d:86c0:7be1 with SMTP id ps1-20020a170906bf4100b00a1d86c07be1mr3622095ejb.251.1702685046208;
+        Fri, 15 Dec 2023 16:04:06 -0800 (PST)
+Received: from [192.168.199.59] (178235179137.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.137])
+        by smtp.gmail.com with ESMTPSA id tm6-20020a170907c38600b00a1ca6f5f189sm11420733ejc.179.2023.12.15.16.04.05
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 15 Dec 2023 16:04:05 -0800 (PST)
+Message-ID: <f355630b-4010-4785-a9c9-5f65ef016db0@linaro.org>
+Date: Sat, 16 Dec 2023 01:04:04 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZXyAQq7tVaOFI2Vs@smile.fi.intel.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] pinctrl: qcom: lpass-lpi: remove duplicated include
+Content-Language: en-US
+To: Wang Jinchao <wangjinchao@xfusion.com>,
+ Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: stone.xulei@xfusion.com
+References: <202312151810+0800-wangjinchao@xfusion.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
+ 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
+ izWDgYvmBE8=
+In-Reply-To: <202312151810+0800-wangjinchao@xfusion.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, Dec 15, 2023 at 06:35:14PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 15, 2023 at 10:38:01AM +0800, Kent Gibson wrote:
-> > Store the debounce period for a requested line locally, rather than in
-> > the debounce_period_us field in the gpiolib struct gpio_desc.
-> >
-> > Add a global tree of lines containing supplemental line information
-> > to make the debounce period available to be reported by the
-> > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
->
-> LGTM, a few minor comments below.
->
-> ...
->
-> > +/*
->
-> (now you can have a kernel doc :-)
->
+On 15.12.2023 11:11, Wang Jinchao wrote:
+> remove the second #include <linux/seq_file.h>
+> 
+> Signed-off-by: Wang Jinchao <wangjinchao@xfusion.com>
+> ---
+Lol, nice find
 
-Maybe you can, but I can't.
+Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
-> > + * a rbtree of the struct lines containing supplemental info.
-> > + * Used to populate gpio_v2_line_info with cdev specific fields not contained
-> > + * in the struct gpio_desc.
-> > + * A line is determined to contain supplemental information by
-> > + * line_is_supplemental().
-> > + */
-> > +static struct rb_root supinfo_tree = RB_ROOT;
-> > +/* covers supinfo_tree */
-> > +DEFINE_SPINLOCK(supinfo_lock);
->
-> Shouldn't this also be static?
->
-
-Indeed.
-
-> ...
->
-> > +	guard(spinlock)(&supinfo_lock);
->
-> + cleanup.h ?
->
-
-Bah, I could've sworn I added that in, but it isn't evident in any of
-the patches all the way back to v1, so apparently not.
-
-> ...
->
-> > +static void supinfo_to_lineinfo(struct gpio_desc *desc,
-> > +				struct gpio_v2_line_info *info)
-> > +{
-> > +	struct gpio_v2_line_attribute *attr;
-> > +	struct line *line;
-> > +
-> > +	guard(spinlock)(&supinfo_lock);
-> > +
-> > +	line = supinfo_find(desc);
-> > +	if (line) {
->
-> 	if (!line)
-> 		return;
->
-> ?
-
-Will do.
-
->
-> > +		attr = &info->attrs[info->num_attrs];
-> > +		attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
-> > +		attr->debounce_period_us = READ_ONCE(line->debounce_period_us);
-> > +		info->num_attrs++;
-> > +	}
-> > +}
->
-
-Cheers,
-Kent.
-
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Konrad
 
