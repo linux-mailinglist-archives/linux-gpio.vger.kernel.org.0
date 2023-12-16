@@ -1,383 +1,282 @@
-Return-Path: <linux-gpio+bounces-1586-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1587-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 354FE81578F
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 05:44:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E3B88159AB
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 14:58:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B6118287DAE
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 04:44:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 42A2B1C21831
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 13:58:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 504F610A1C;
-	Sat, 16 Dec 2023 04:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264DB2C6B1;
+	Sat, 16 Dec 2023 13:58:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="sYVCXFAn"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="s7136yAp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2080.outbound.protection.outlook.com [40.107.21.80])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE7313ACA;
-	Sat, 16 Dec 2023 04:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=R/3Ljg5t5RJi5FA8LvZeEYkXaeUDPc/AXiPyHOUphVnHeb3wtIOiSb7jR3oMU5qDn3qrbVMIQcjHeW9GTfM5PVBMHisQpFSrLbGWCDca0ON28yBMlNpOujsCY7baS1GlFEJJp36MG9H7nQbTMKBTWiHzWAD79KdS4iP00WjSQn+/zOkkFsM61SnVjJvcgCfO7EqfP7ghPlcgcRR97PwVHO6mqYcxsL4aGwcz3nDVurD78tR7oZfqUfQjLcVygS3uZ+Jc0uVsWn4IWTA/3ioXHa157L873nlEBgv4907ro5mTKQpp0gVsx1n2XNx4HRNfx79OGpHtcuIOoAKHTMzN3A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=o/B5UvwpggWNbSG/AvsjVgcAblMd4aRyRP3sJu8QWG0=;
- b=c5RhZzli5hHYb3T8UBOcbY4/qqnfzuiFwyLRdhMjjBlUm21uNRflXlMjC1xzSGar3YjTQHsJ+bGrgRKt6SPOughviW6slKztaDM03AVCJDHn1CnfKZHn03zYkoCf+xU7Y+wjsWa4SKiUQwE94JFTp+BL4PZOybCFyeikD5djd/S8Yr3/xv0VakyrFxrBo0+HfX34p8nwuhTqYMpIPPzPjBlX+M8S0B447c4/lJM7o5HXUlaIS7l9z9zyXIjEMqLCb6NODTRks/TXPA9bDH0zysgurgPTaQk+uVzeNsua5bLuK6iU866B+nqNyPyFX2K1i+ghquYOJUa088MEQq0Kpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o/B5UvwpggWNbSG/AvsjVgcAblMd4aRyRP3sJu8QWG0=;
- b=sYVCXFAnz6UCWi2CtSypxCpvedNC/YzgixsOmQjZLQLAQVNdt716skpQaAZT9q78oMQgKXldzjmB0KwhFqs8FvCDaiKkjRId6x/JuaXweohphIlblAihJgxYvCsPzC0+QqI/HxauNXvLkMkAwAI5WzN6uElKMcQ+1LAIr6dk6Bw=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by AM0PR04MB6883.eurprd04.prod.outlook.com (2603:10a6:208:17f::14) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.33; Sat, 16 Dec
- 2023 04:44:39 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::ff06:bbb2:c068:5fb3]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::ff06:bbb2:c068:5fb3%7]) with mapi id 15.20.7046.015; Sat, 16 Dec 2023
- 04:44:38 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Rob Herring <robh@kernel.org>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus Walleij
-	<linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer
-	<s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>, dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
- protocol
-Thread-Topic: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
- protocol
-Thread-Index: AQHaL00vUsuXdEJTYUWYoB3T3FLKXbCqx0MAgACOi2A=
-Date: Sat, 16 Dec 2023 04:44:38 +0000
-Message-ID:
- <DU0PR04MB94177607820C463B904173DF8892A@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
- <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
- <20231215201148.GA304363-robh@kernel.org>
-In-Reply-To: <20231215201148.GA304363-robh@kernel.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|AM0PR04MB6883:EE_
-x-ms-office365-filtering-correlation-id: 72447c2b-2f0f-4162-8724-08dbfdf1b5d6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- squhPc9o8ADgbLJiSRSAmLGa8MCIWCn0D4uNFIi/zcH/VTcR+MzCMpKY4C7pdSn8tNUqTqmSiDhzLTvWjSO6s4y6RRdOdU9cDA/7vIq3d6Z8v9cIX32ikYvh2z40BEJUFb+/GYwzwxV/i/vaqVYkH2gq7IzWbn9s5wEGS76ufo65MQVAZnzRwVua2ZYic9qp/pZ/LfNV+o0JrEHheThGsy85gBA0cIn+SFO7XR22voqn2MXSFoDMRdSypUqoWX0ScI0dMtDGLMjOHmKG/Ol+5blj69TCFirmpi7oyGyR+z800HHYvFUrkrqXJeyXCJ9O/ys8P1C8FIZO372olJarQzRW59eLAM7DXgZaWdnjZ96SpxGcxQrmbWYRbgdqGEOymAVPiD4oebBusXUZoK/ixR1Np4To15I9NGaAwQUb+R35ZsKkAd+4WGlSCcMzKkfo97d7hh7aiCLzOHK6Gweew3AuETt4kvJch4BiyeqvnNu5j3iFp6MAqqyIfmjE3g8lHblE0nSJouluWx2OiasTL4tmb2PF+Zpa0iGG4FwFafygLpk3xcNak2gbaPxPTCWyc5CoYYl4Hc5LO8AIhxsbmUnravuKz1TWfoKQNjPXBbyNv52t2LDIjvRUKwYX8TaH
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(39860400002)(346002)(136003)(366004)(396003)(230922051799003)(1800799012)(451199024)(186009)(64100799003)(83380400001)(71200400001)(26005)(122000001)(38100700002)(4326008)(8676002)(5660300002)(8936002)(44832011)(52536014)(41300700001)(7416002)(2906002)(478600001)(66946007)(316002)(6506007)(7696005)(9686003)(54906003)(64756008)(66446008)(66476007)(66556008)(76116006)(110136005)(33656002)(86362001)(38070700009)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?w4jNGk9Vd6+SlxcXN3wmGzpnBTMA0tCSn29QzggvSG5sEtiGZY9ZKX4alHBO?=
- =?us-ascii?Q?Q7OFugTTtFnKsS7LLwE8SBCkp/MCjxKdNDa/zCTbBzen6GVhbuuy+TB/YsVC?=
- =?us-ascii?Q?R6Sa/zyaj7K9XpuOAOGJwszenOLDETe5dBK5KIGr3GtKhTpR1rqKM/PIMffG?=
- =?us-ascii?Q?YjH6xHWcXzUMk7ine3dmMtLyYkQ4UTPTFtgzFBLpVhpRhdTseUdWB/UGVHJD?=
- =?us-ascii?Q?kM3NZ1fUMSeExgoQOaq/R0iy5fOXZ9hzVil7FUWuTmVoOBwkFn8VhO4GXKGl?=
- =?us-ascii?Q?vDJfP3G0W2mwC7dlxkciLjBiFD5h/XFgLRvkOybIXKpXdHtZsnPH2YQj88rk?=
- =?us-ascii?Q?9gRCQr0d9/LhNeRw1qgMuGNNSCG2FT3RLnLW4p/cdHPrBXS4rW3octvxzgcz?=
- =?us-ascii?Q?DbBXNbptZdOrcLKoXrIVDJ5SrH+i+DBR/dWk1Tm7qsHCPCvekSWtoTn2qNqJ?=
- =?us-ascii?Q?zO4Ie/vonaG+NC7/Pp9J+X0wsWlcrfGOVhmlf/Z95oZUTA0z8xpCDbvWey6q?=
- =?us-ascii?Q?QfZlKRTpv2j94dvhh08me8v7uxl+/icOZZfwpSL4REJec0pptP4NzIHjWarI?=
- =?us-ascii?Q?TXOlDmpvnoF+85FaQdU0PG1JG+hGaiZuESd4cb/yXk/Lisb9nr6ke0KEm0Qs?=
- =?us-ascii?Q?CpIRoK7C/jdGUlhF3U9SppgcibvPVuh1DqH1LMESvROf4kKW/MohVUiJhzci?=
- =?us-ascii?Q?6kr/khPA/uUB6EJ5oEjMMvB/mk0SV8QwaI4Rj11SZDgAp5VOO+8W+RZtbs84?=
- =?us-ascii?Q?pSLDHfpcvApCNP4vXW0DPBaoNbiAwRfcxGrXd2kOdjAswISw1YB8VnHpaaM/?=
- =?us-ascii?Q?n8nyvR0V8ksm7miPOzqtAUupo8KdXrVQkiMCTanaGmzR+GxSEegQwiPcnlou?=
- =?us-ascii?Q?DwZprwAchzW3JMLNKDE2g2pTwwMP1zZGF5O/rvrLfrdaGCnUSFJCFTsMUjlv?=
- =?us-ascii?Q?qPXZUXMpxnkvQvFiR8f04c1p/kTGLREG91ofzpVB74RlJLjU2rP/vGPjq9UN?=
- =?us-ascii?Q?iKPEDPjVHcJhUtiXMuw4KmYnZUbAK7w+n+Tj974aTSnzvM88qb/hLuo+P/2y?=
- =?us-ascii?Q?s9OwfLBwBkln41hb3G7ZApE6ZGe8MZ8zOtIUaLDVJSi/HAQZaFP+uDq3ay69?=
- =?us-ascii?Q?qMFNtliYJkxoKkNV+cpbZ+44Ht61BMjLGHQMInd6rGF4hOAfer7bCDKImtU+?=
- =?us-ascii?Q?1NGaxl/UAkBg2fAUESBrodDEA3+bSA8/Mcq6HfFemqF1Rd4704bJpKzyDjIy?=
- =?us-ascii?Q?Cw7dkG40aWjsbH/TEn6TLQYXGL2F+clBU06bOfnA4/IxfIDmCVLBEMNWZO1S?=
- =?us-ascii?Q?qVxsKzzmv1CvnShW0dgA+CUOvDu5C7hm6tUx4n8PDpMilhwVY6ws//iytrZ6?=
- =?us-ascii?Q?4HOkyCVGZUDsJifA9bK+KB3eslzOE4FpNptLI5IfrPMtvL/ViUiLPunv+v7U?=
- =?us-ascii?Q?etjHpxeRu7z9XCkIQv4AeRJEd4GH48K+CVrJOmgOv3oOLIGcUVwgBhTkR/rD?=
- =?us-ascii?Q?/ckqVCN2LcvdthN3KAaeyGmqIC0sxayqEOyiyriBtW27dnAgRTW7EmAuV0q2?=
- =?us-ascii?Q?fYUeooE+NiiEh44TrQc=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B2230645
+	for <linux-gpio@vger.kernel.org>; Sat, 16 Dec 2023 13:58:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 97A703F2C8
+	for <linux-gpio@vger.kernel.org>; Sat, 16 Dec 2023 13:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1702735076;
+	bh=1IDqTgxXQymbTimq5NcK1mhvY0gI9NehYSyLAkXJSA4=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=s7136yApbUMQIVm5zgZmdOTlzWyCrnNdkOAFsY5rmrEctRk7Ji4EE+b+lh4dxJQ/4
+	 EstfAwxqgzdF2QW+9uEwprda72J2+s+1W6Nbf+S1kCyGBkLWJO+XoKyrItVAvovK1B
+	 m50AEF8cKQQqrgq8EC0iK20eM2p2ze8CPvGEqDVsDqsoOCKdgSZw6pIKdL5CCku5SG
+	 tvJFQ4BnSvWF7FEP9924+je/593NZk8l332anB4kl9UfawKcPSPFgJ3kmPt0FLnVUG
+	 DC8HbVPDMsUywzD6Db9qxcIVceb+BotGpU6YJLyr0PA1PUHjmPuwUgYlCuZuX7Kj4Z
+	 I/AR8E7IRiiSw==
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-425886864f4so25943041cf.2
+        for <linux-gpio@vger.kernel.org>; Sat, 16 Dec 2023 05:57:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702735075; x=1703339875;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1IDqTgxXQymbTimq5NcK1mhvY0gI9NehYSyLAkXJSA4=;
+        b=eeBAfTDQLBCHrc6ha1AvkdtIvH3HqL8yYvawauInsu1c1faqRpCLg1+H170O8V1lHl
+         t7Cdeu9eJEcywIoNPhW1lMtVoJmXU+b/pPwvNMPruxzf4U3GQYsXuSBfxQpjZd536YIq
+         PHupycMJmuPc6WaKDtbcOlZ+qWfnd7X92limxcGGDwbPP8a3IDLb8VrIktULnrHaCXcW
+         Jp+lSpQBAF6DCk36HkuxJaWtJHavY0jYYBZPNQL1pOUn9C8DeZtkxEQ+C8rDnccoKACk
+         lRYMJxORpc924zrDIllEB805WipVPOd6XSOLE1/LuTLaUD90bTbJhXYMtt2la4xxYYta
+         te2w==
+X-Gm-Message-State: AOJu0Ywncd/nMI3ESzk0XFx6K6XiovobxZHXBVe2vWrPGzT0Br0t0+eI
+	GloQ2zfbIeC5K7yif9xPZzIQCbO6ofAbv/2xK9oAgpWc9IG7vkts2fYPVDznRNs1N2ItzqZKyTO
+	StIF9HRRGIgPRtMRt2ohUpdXHnP/BI9alaUBedK9oxPXj/jrs57J3z9w=
+X-Received: by 2002:ac8:5d8d:0:b0:425:72f3:efc2 with SMTP id d13-20020ac85d8d000000b0042572f3efc2mr17906432qtx.23.1702735075351;
+        Sat, 16 Dec 2023 05:57:55 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE2z15djvfq92lfCW5SVLTfQogWiKIQlYCWLwzNRZaqcornDI7KUR95VQS0vrC8KmFSlGJ+d0WEqwEbw0+MxUQ=
+X-Received: by 2002:ac8:5d8d:0:b0:425:72f3:efc2 with SMTP id
+ d13-20020ac85d8d000000b0042572f3efc2mr17906407qtx.23.1702735074956; Sat, 16
+ Dec 2023 05:57:54 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Sat, 16 Dec 2023 05:57:54 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20231215202137.GA317624-robh@kernel.org>
+References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
+ <20231215143906.3651122-2-emil.renner.berthing@canonical.com> <20231215202137.GA317624-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 72447c2b-2f0f-4162-8724-08dbfdf1b5d6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Dec 2023 04:44:38.2308
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: X6/LwSeTR3PtpFAlAG5rZUYEpWmifgFNE9z5vn7S+ybFEnBd5dq2lWugvbGyf8o7og7Qdx8XzcclP3f9ylIFiA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6883
+Mime-Version: 1.0
+Date: Sat, 16 Dec 2023 05:57:54 -0800
+Message-ID: <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
+To: Rob Herring <robh@kernel.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Rob,
-
-> Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
-> protocol
->=20
-> On Fri, Dec 15, 2023 at 07:56:32PM +0800, Peng Fan (OSS) wrote:
-> > From: Peng Fan <peng.fan@nxp.com>
+Rob Herring wrote:
+> On Fri, Dec 15, 2023 at 03:38:59PM +0100, Emil Renner Berthing wrote:
+> > Add bindings for the pin controllers on the T-Head TH1520 RISC-V SoC.
 > >
-> > Add SCMI v3.2 pinctrl protocol bindings and example.
-> >
-> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
 > > ---
-> >  .../devicetree/bindings/firmware/arm,scmi.yaml     | 99
-> ++++++++++++++++++++++
-> >  1 file changed, 99 insertions(+)
+> >  .../pinctrl/thead,th1520-pinctrl.yaml         | 156 ++++++++++++++++++
+> >  1 file changed, 156 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
 > >
-> > diff --git a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > index 4591523b51a0..bfd2b6a89979 100644
-> > --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
-> > @@ -247,6 +247,85 @@ properties:
-> >        reg:
-> >          const: 0x18
-> >
-> > +  protocol@19:
-> > +    type: object
-> > +    allOf:
-> > +      - $ref: '#/$defs/protocol-node'
-> > +      - $ref: /schemas/pinctrl/pinctrl.yaml
-> > +      - if:
-> > +          properties:
-> > +            compatible:
-> > +              const: fsl,imx95-scmi-pinctrl
-> > +        then:
-> > +          patternProperties:
-> > +            "grp$": false
-> > +            "-pins$": true
-> > +        else:
-> > +          patternProperties:
-> > +            "grp$": false
-> > +            "-pins$": true
-> > +    unevaluatedProperties: false
->=20
-> This will not scale if each vendor adds to arm,scmi.yaml. You need to mov=
-e
-> this to its own file. That can have a ref to
-> /schemas/firmware/arm,scmi.yaml#/$defs/protocol-node.
->=20
-> Here you can just say compatible is "fsl,imx95-scmi-pinctrl" and
-> 'additionalProperties: true'.
-
-Do you have an example for this? I am not able write a correct
-one to pass the dt check.
-      - if:                                                                =
-                        =20
-          properties:                                                      =
-                        =20
-            compatible:                                                    =
-                        =20
-              const: fsl,imx95-scmi-pinctrl                                =
-                        =20
-        then:                                                              =
-                        =20
-          properties:                                                      =
-                        =20
-            additionalProperties: true
-
-.......
-      compatible: true
-
-And in fsl,imx95-scmi-pinctrl.yaml
-
-allOf:                                                                     =
-                        =20
-  - $ref: '/schemas/firmware/arm,scmi.yaml#/$defs/protocol-node'           =
-                        =20
-                                                                           =
-                        =20
-properties:                                                                =
-                        =20
-  reg:                                                                     =
-                        =20
-    const: 0x19                                                            =
-                        =20
-                                                                           =
-                        =20
-  compatible:                                                              =
-                        =20
-    const: fsl,imx95-scmi-pinctrl                                          =
-                        =20
-                                                                           =
-                        =20
-patternProperties:                                                         =
-                        =20
-  'grp$':                                                                  =
-                        =20
-    type: object                                                           =
-                        =20
-    description:                                                           =
-                        =20
-      Pinctrl node's client devices use subnodes for desired pin configurat=
-ion.                    =20
-      Client device subnodes use below standard properties.                =
-                        =20
-                                                                           =
-                        =20
-    properties:                                                            =
-                        =20
-      fsl,pins:                                                            =
-                        =20
-        description:     =20
-
-.....
->=20
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+> > new file mode 100644
+> > index 000000000000..1b1b446cd498
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+> > @@ -0,0 +1,156 @@
+> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/pinctrl/thead,th1520-pinctrl.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > > +
-> > +    properties:
-> > +      reg:
-> > +        const: 0x19
+> > +title: T-Head TH1520 SoC pin controller
 > > +
-> > +      '#pinctrl-cells':
-> > +        const: 0
->=20
-> Generally not used if 0.
+> > +maintainers:
+> > +  - Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > +
+> > +description: |
+> > +  Pinmux and pinconf controller in the T-Head TH1520 RISC-V SoC.
+> > +
+> > +  The TH1520 has 3 groups of pads each controlled from different memory ranges.
+> > +  Confusingly the memory ranges are named
+> > +    PADCTRL_AOSYS  -> PAD Group 1
+> > +    PADCTRL1_APSYS -> PAD Group 2
+> > +    PADCTRL0_APSYS -> PAD Group 3
+>
+> Are the programming models different?
 
-Will drop this property.
+Yes, they control different pads and different number of pads. Pad group 1 also
+has some special pins that have bespoke pinconf, no pinconf and/or no
+pinmux and a
+"gap" in the registers. Also if some day we'll need to set up pinmux
+on behald of the
+audio co-processor then pad group 1 will be even more special.
 
->=20
 > > +
-> > +      compatible:
-> > +        const: fsl,imx95-scmi-pinctrl
+> > +  Each pad can be muxed individually to up to 5 different functions. For most
+> > +  pads only a few of those 5 configurations are valid though, and a few pads in
+> > +  group 1 does not support muxing at all.
 > > +
+> > +  Pinconf is fairly regular except for a few pads in group 1 that either can't
+> > +  be configured or has some special functions. The rest have configurable drive
+> > +  strength, input enable, schmitt trigger, slew rate, pull-up and pull-down in
+> > +  addition to a special strong pull up.
+> > +
+> > +  Certain pads in group 1 can be muxed to AUDIO_PA0 - AUDIO_PA30 functions and
+> > +  are then meant to be used by the audio co-processor. Each such pad can then
+> > +  be further muxed to either audio GPIO or one of 4 functions such as UART, I2C
+> > +  and I2S. If the audio pad is muxed to one of the 4 functions then pinconf is
+> > +  also configured in different registers. All of this is done from a different
+> > +  AUDIO_IOCTRL memory range and is left to the audio co-processor for now.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - thead,th1520-group1-pinctrl
+> > +      - thead,th1520-group2-pinctrl
+> > +      - thead,th1520-group3-pinctrl
+> > +
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +patternProperties:
+> > +  '-[0-9]+$':
+>
+> Please make this a bit more specific. "-grp-[0-9]+$"?
+
+Oh, I was just trying to copy what other drivers did, but I see now that eg.
+mediatek,mt6779-pinctrl is not in the majority. Unfortunately "group" already
+has 2 meanings in this context. One are the pad groups from the datasheet
+described above and then there are the mux groups in the pinctrl framework,
+which in this case just contains a single pin since each pin can be muxed
+individually. Can we come up with a better name or should we just add this 3rd
+type of group?
+
 > > +    patternProperties:
 > > +      '-pins$':
 > > +        type: object
-> > +        allOf:
-> > +          - $ref: /schemas/pinctrl/pincfg-node.yaml#
-> > +          - $ref: /schemas/pinctrl/pinmux-node.yaml#
-> > +        unevaluatedProperties: false
-> > +
+> > +        $ref: /schemas/pinctrl/pincfg-node.yaml
 > > +        description:
-> > +          A pin multiplexing sub-node describe how to configure a
-> > +          set of pins is some desired function.
-> > +          A single sub-node may define several pin configurations.
-> > +          This sub-node is using default pinctrl bindings to configure
-> > +          pin multiplexing and using SCMI protocol to apply specified
-> > +          configuration using SCMI protocol.
-> > +
-> > +      'grp$':
-> > +        type: object
-> > +        description:
-> > +          Pinctrl node's client devices use subnodes for desired pin
-> configuration.
-> > +          Client device subnodes use below standard properties.
+> > +          A pinctrl node should contain at least one subnode describing one
+> > +          or more pads and their associated pinmux and pinconf settings.
 > > +
 > > +        properties:
-> > +          fsl,pins:
-> > +            description:
-> > +              each entry consists of 6 integers and represents the mux=
- and
-> config
-> > +              setting for one pin. The first 5 integers <mux_reg conf_=
-reg
-> input_reg
-> > +              mux_val input_val> are specified using a PIN_FUNC_ID mac=
-ro,
-> which can
-> > +              be found in <arch/arm64/boot/dts/freescale/imx95-pinfunc=
-.h>.
-> The last
-> > +              integer CONFIG is the pad setting value like pull-up on =
-this pin.
-> Please
-> > +              refer to i.MX95 Plus Reference Manual for detailed CONFI=
-G
-> settings.
-> > +            $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> > +            items:
-> > +              items:
-> > +                - description: |
-> > +                    "mux_reg" indicates the offset of mux register.
-> > +                - description: |
-> > +                    "conf_reg" indicates the offset of pad configurati=
-on register.
-> > +                - description: |
-> > +                    "input_reg" indicates the offset of select input r=
-egister.
-> > +                - description: |
-> > +                    "mux_val" indicates the mux value to be applied.
-> > +                - description: |
-> > +                    "input_val" indicates the select input value to be=
- applied.
-> > +                - description: |
-> > +                    "pad_setting" indicates the pad configuration valu=
-e to be
-> applied.
-> > +
-> > +    required:
-> > +      - reg
-> > +
-> >  additionalProperties: false
-> >
-> >  $defs:
-> > @@ -401,6 +480,26 @@ examples:
-> >              scmi_powercap: protocol@18 {
-> >                  reg =3D <0x18>;
-> >              };
-> > +
-> > +            scmi_pinctrl: protocol@19 {
-> > +                reg =3D <0x19>;
-> > +                #pinctrl-cells =3D <0>;
->=20
-> Missing compatible. Schema should catch that...
+> > +          pins:
+> > +            $ref: /schemas/types.yaml#/definitions/string-array
+>
+> Type is defined in pinmux-node.yaml. You need to reference it and drop
+> this.
+>
+> Normally the possible values are listed out.
 
-Only i.MX need compatible here.
+This seems to work for me:
 
-Thanks,
-Peng.
+allOf:
+  - if:
+      properties:
+        compatible:
+          const: thead,th1520-group1-pinctrl
+    then:
+      patternProperties:
+        '-[0-9]+$':
+          patternProperties:
+            '-pins$':
+              properties:
+                pins:
+                  items:
+                    enum:
+                      - OSC_CLK_IN
+                      - OSC_CLK_OUT
+		      ...
+  - if:
+      properties:
+        compatible:
+          const: thead,th1520-group2-pinctrl
+    then:
+      patternProperties:
+        '-[0-9]+$':
+          patternProperties:
+            '-pins$':
+              properties:
+                pins:
+                  items:
+                    enum:
+                      - QSPI1_SCLK
+                      - QSPI1_CSN0
+		      ...
+  ...
 
->=20
+Would that be the way to go about it?
+
+> > +            description: List of pads that properties in the node apply to.
 > > +
-> > +                i2c2-pins {
-> > +                    groups =3D "i2c2_a", "i2c2_b";
-> > +                    function =3D "i2c2";
-> > +                };
+> > +          function:
+> > +            $ref: /schemas/types.yaml#/definitions/string
+> > +            enum: [ "0", "1", "2", "3", "4", "5" ]
+> > +            description: The mux function to select for the given pins.
 > > +
-> > +                mdio-pins {
-> > +                    groups =3D "avb_mdio";
-> > +                    drive-strength =3D <24>;
-> > +                };
+> > +          bias-disable: true
 > > +
-> > +                keys_pins: keys-pins {
-> > +                    pins =3D "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1"=
-;
-> > +                    bias-pull-up;
-> > +                };
-> > +            };
-> >          };
-> >      };
-> >
-> >
-> > --
-> > 2.37.1
-> >
+> > +          bias-pull-up:
+> > +            type: boolean
+> > +
+> > +          bias-pull-down:
+> > +            type: boolean
+> > +
+> > +          drive-strength:
+> > +            enum: [ 1, 2, 3, 5, 7, 8, 10, 12, 13, 15, 16, 18, 20, 21, 23, 25 ]
+> > +
+> > +          input-enable: true
+> > +
+> > +          input-disable: true
+> > +
+> > +          input-schmitt-enable: true
+> > +
+> > +          input-schmitt-disable: true
+> > +
+> > +          slew-rate:
+> > +            maximum: 1
+> > +
+> > +          thead,strong-pull-up:
+> > +            oneOf:
+> > +              - type: boolean
+> > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > +                enum: [ 0, 2100 ]
+> > +            description: Enable or disable strong 2.1kOhm pull-up.
+>
+> bias-pull-up can already specify the strength in Ohms.
+
+The strong pull up is a separate bit that can be enabled independently from the
+regular pull-up/down, so in theory you could enable both the regular pull-up
+and the strong pull-up at the same time, or even the regular poll-down and the
+strong pull-up which is probably not advised.
+So the idea here was just to make sure that you can do eg.
+
+	thead,strong-pull-up = <0>;
+
+to make sure the bit is cleared.
+
+Thanks!
+/Emil
 
