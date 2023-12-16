@@ -1,127 +1,147 @@
-Return-Path: <linux-gpio+bounces-1578-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1579-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CD5758154CF
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 01:04:15 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B11D8154E3
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 01:17:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C6DB1C245E2
-	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:04:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3AA511C242A7
+	for <lists+linux-gpio@lfdr.de>; Sat, 16 Dec 2023 00:17:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B0D3156FB;
-	Sat, 16 Dec 2023 00:04:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE5D936B;
+	Sat, 16 Dec 2023 00:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="k1/T57Pr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hCTlkieo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
+Received: from mail-oa1-f50.google.com (mail-oa1-f50.google.com [209.85.160.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C9815487
-	for <linux-gpio@vger.kernel.org>; Sat, 16 Dec 2023 00:04:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a1ef2f5ed01so161723666b.0
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Dec 2023 16:04:07 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B22B7E;
+	Sat, 16 Dec 2023 00:17:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f50.google.com with SMTP id 586e51a60fabf-2031b9c8389so813565fac.1;
+        Fri, 15 Dec 2023 16:17:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1702685046; x=1703289846; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=nNgeSAH5q0OtOCzk+H3FSYuqGN2SuWi6yBqSzeQWIGQ=;
-        b=k1/T57PrRRpbO0WxZAtg+UaldD/fNLNdIg+j1hUGyAUYhzrqS02t4YZX3bIyTC3Jom
-         qVw31xYtP3wC7giKhnPRekBzW4yyp2hkA/e1vCKBLZj2nkXT72YviWtg3/XH47ycfrB3
-         qiKe7jnnxZ7EAhRDe8YbC4OI9Ui7yOWxTAb71Ta1pbpKS1QQ+MS+3xe1TaW0Vzt8gJoF
-         Bp5zlTIRlPlBkhCY5v+cG4mbjMQfNzXTuzA6tTM/caewmxBeEJWCICwvUsRhYedgjQ4n
-         WI2RQvq2hha+lv2NFB0g+iAXG5dPH+1xAIyuy1HayptR3bn9ZlsHO+qraOHDVov81+C8
-         N/+w==
+        d=gmail.com; s=20230601; t=1702685825; x=1703290625; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=flXnXhNzYj5bQT+Vtb1f16zrrFTB81Pqcpw5aYSnuoc=;
+        b=hCTlkieoc41uSpFVZzNEWmhZJRYuAqCSBdTRw8o6kboINv/58KGL00vcdQIS7GWwvV
+         zc4buU6WQcY64r6wEVfahQl6BLhjn6j9O40e6/JmoTd/anRjHtMfMH0yrri/4WcK179N
+         ykMNS/WFo1lQjYsSfGUwHcSzQlaCIpSBiUUzd+NriWo28m63Sg22mMKqwVqNlFBn6Z2x
+         EkHJIMQy3nQlv+QUf4HpE41wKM2msNiPiymt7WhBvXI4N5IzZoV165/c83iEP7Cfnw0v
+         1RrtrWE/80irVg1kdHkJSY8NiYiG/tmEl3AosROpfT/eYr1KYmomtZzcPep0srJtdUlY
+         WsxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702685046; x=1703289846;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=nNgeSAH5q0OtOCzk+H3FSYuqGN2SuWi6yBqSzeQWIGQ=;
-        b=FwGYE12q3dC/l4nn9XNYfc9yIWH1mI2w9Fk+ygFwbEU5biBo1IIzu1rSGKn4aGWVHf
-         E5Gm5xfpjBW02QoYQsXnIjQLtZAGgF9gCpZTAUI3J6rxNQae1INU7zfc64MIPXauPeMO
-         5Mc7LwPTYhvKhkoAWGWtx3AryJC7A2zLU/roNKUyT+XI5WR4HRCYg89dP2vDHm5c7NLp
-         2iU4SYUjTl/A+XfFfTKlJLLD/p6MseoD4jiBxyzDyi1eHXxWCfhfj+kSXp1kKMSvsTS/
-         UeI3HieXxQqxaV4Mheil/WO2GvpZ88+9DhU+TukJ5PIO27qZZhYC75ZqGdEcv3dDVq2G
-         6QoQ==
-X-Gm-Message-State: AOJu0YzOsRI+Pbve6Vsq2pDoUcWn9pJ4LQMtmzNYlVItAZg/Ih6Vozhg
-	p4rZbe3RijvtNSGQiJiVIZyL0Q==
-X-Google-Smtp-Source: AGHT+IGrjMUr9+21sdvFU6X/qCsgRoQhMmqzkuES7zatJFOCOcVgweBY7d7P+eUnglypIRG1AVGw/w==
-X-Received: by 2002:a17:906:bf41:b0:a1d:86c0:7be1 with SMTP id ps1-20020a170906bf4100b00a1d86c07be1mr3622095ejb.251.1702685046208;
-        Fri, 15 Dec 2023 16:04:06 -0800 (PST)
-Received: from [192.168.199.59] (178235179137.dynamic-4-waw-k-1-3-0.vectranet.pl. [178.235.179.137])
-        by smtp.gmail.com with ESMTPSA id tm6-20020a170907c38600b00a1ca6f5f189sm11420733ejc.179.2023.12.15.16.04.05
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Dec 2023 16:04:05 -0800 (PST)
-Message-ID: <f355630b-4010-4785-a9c9-5f65ef016db0@linaro.org>
-Date: Sat, 16 Dec 2023 01:04:04 +0100
+        d=1e100.net; s=20230601; t=1702685825; x=1703290625;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=flXnXhNzYj5bQT+Vtb1f16zrrFTB81Pqcpw5aYSnuoc=;
+        b=eJzfJqjPEknwtIpcAtcw0M2QQ65SioSo1oTcupJkuf5rr9qMWufvdRoGQTA0L2xCtG
+         O11jxPig28EHtBRUT43kRo/md2kf710rHsDdwXA0MFQix/R/UJDJRvZhZJnhj/f1vUzR
+         m1bIIP7cA/qIRy/lqp+rDv2FZn6UHhH3nXBpJ6KYy/QZmMjwTQvg24iNsyaCfEvkzuNO
+         rd5wIlrdzpApw1Yee2WnfjOYESk3kgUsAolLtMiY0q8Cig07dykRu0jXiDBAlGQ2zSin
+         BA59MgmtrbV9QfwByzB9KMpUQ79OburxlIFGlLMvolkOf8yFQkW23KANeNFftNzC3WjW
+         z8Fw==
+X-Gm-Message-State: AOJu0YyHCXC6jlFuEQNYtq1spwF4LUTdKz7ZOlDk6SG1AGdlEUohOHwV
+	E1IKhn94EhNM1CniIOGeX8BvCXz3j4E=
+X-Google-Smtp-Source: AGHT+IFiH2Va1bq91PF0SJLnOe7zL/EkoQ+GjsOM0C/r0rgtv9ubuSWnaxVAATbtLd8T6CE7qdoUIw==
+X-Received: by 2002:a05:6870:8926:b0:203:521f:7611 with SMTP id i38-20020a056870892600b00203521f7611mr3944369oao.4.1702685824405;
+        Fri, 15 Dec 2023 16:17:04 -0800 (PST)
+Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id ei39-20020a056a0080e700b006cbef269712sm14176124pfb.9.2023.12.15.16.17.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 15 Dec 2023 16:17:04 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v4 0/5] gpiolib: cdev: relocate debounce_period_us
+Date: Sat, 16 Dec 2023 08:16:47 +0800
+Message-Id: <20231216001652.56276-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: qcom: lpass-lpi: remove duplicated include
-Content-Language: en-US
-To: Wang Jinchao <wangjinchao@xfusion.com>,
- Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: stone.xulei@xfusion.com
-References: <202312151810+0800-wangjinchao@xfusion.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <202312151810+0800-wangjinchao@xfusion.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15.12.2023 11:11, Wang Jinchao wrote:
-> remove the second #include <linux/seq_file.h>
-> 
-> Signed-off-by: Wang Jinchao <wangjinchao@xfusion.com>
-> ---
-Lol, nice find
+This series contains minor improvements to gpiolib-cdev.
 
-Reviewed-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+The banner change is relocating the debounce_period_us from gpiolib's
+struct gpio_desc to cdev's struct line.  Patch 1 stores the field
+locally in cdev.  Patch 2 removes the now unused field from gpiolib.
 
-Konrad
+Patch 3 is somewhat related and removes a FIXME from
+gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
+the calculation of the used flag, but I would assert that from
+the userspace perspective the read operation itself is inherently racy.
+The line being reported as unused in the info provides no guarantee -
+it just an indicator that requesting the line is likely to succeed -
+assuming the line is not otherwise requested in the meantime.
+Given the overall operation is racy, trying to stamp out an unlikely
+race within the operation is pointless. Accept it as a possibility
+that has negligible side-effects and reduce the number of locks held
+simultaneously and the duration that the gpio_lock is held.
+
+Patches 1 and 3 introduce usage of guard() and scoped_guard() to cdev.
+Patch 4 replaces any remaining discrete lock/unlock calls around
+critical sections with guard() or scoped_guard().
+
+Patch 5 is unrelated to debounce or info, but addresses Andy's
+recent lamentation that the linereq get/set values functions are
+confusing and under documented.
+Figured I may as well add that while I was in there.
+
+Changes v3 -> v4:
+ (changes other than using --histogram are to patch 1)
+ - use --histogram to generate patches.
+ - include cleanup.h.
+ - make supinfo_lock static.
+ - immediately return from supinfo_to_lineinfo() if line not found.
+
+Changes v2 -> v3:
+ - reorder patches to move full adoption of guard()/scoped_guard() to
+   patch 4.
+ - use guard() rather than scoped_guard() where the scope extends to the
+   end of the function.
+ - split supinfo into supinfo_tree and supinfo_lock (patch 1).
+ - rename flags to dflags in gpio_desc_to_lineinfo() (patch 3).
+
+Changes v1 -> v2:
+ (changes are to patch 2 unless otherwise noted)
+ - adopt scoped_guard() for critical sections, inserting patch 1 and
+   updating patch 2 and 4.
+ - move rb_node field to beginning of struct line.
+ - merge struct supinfo into supinfo var declaration.
+ - move rb_tree field to beginning of struct supinfo.
+ - replace pr_warn() with WARN().
+ - drop explicit int to bool conversion in line_is_supplemental().
+ - use continue to bypass cleanup in linereq_free().
+ - fix typo in commit message (patch 4)
+
+Kent Gibson (5):
+  gpiolib: cdev: relocate debounce_period_us from struct gpio_desc
+  gpiolib: remove debounce_period_us from struct gpio_desc
+  gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
+  gpiolib: cdev: fully adopt guard() and scoped_guard()
+  gpiolib: cdev: improve documentation of get/set values
+
+ drivers/gpio/gpiolib-cdev.c | 391 +++++++++++++++++++++++-------------
+ drivers/gpio/gpiolib.c      |   3 -
+ drivers/gpio/gpiolib.h      |   5 -
+ 3 files changed, 246 insertions(+), 153 deletions(-)
+
+--
+2.39.2
+
 
