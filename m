@@ -1,60 +1,60 @@
-Return-Path: <linux-gpio+bounces-1589-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1590-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E76D4815F72
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 14:31:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB232815F80
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 14:50:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A552D282BBC
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 13:31:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D33D31C209AD
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 13:50:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6D244381;
-	Sun, 17 Dec 2023 13:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D24DB4438A;
+	Sun, 17 Dec 2023 13:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P78yriM8"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EHw12kjq"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C42374CA;
-	Sun, 17 Dec 2023 13:31:32 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3E22DC433C7;
-	Sun, 17 Dec 2023 13:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FDDA44373;
+	Sun, 17 Dec 2023 13:50:28 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58FF6C433C8;
+	Sun, 17 Dec 2023 13:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1702819892;
-	bh=ALp9/9f0txG4FMxlU/u1nEfS+4f4LKu9JESa7bHHH7o=;
+	s=k20201202; t=1702821027;
+	bh=/CcuNmqN52zYvPRkUzjQtGuO/nnq5PUkRpKVWAUrwCQ=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=P78yriM8EXtFLn7GdBVidKVrrnG4zQat53WdB7LY40S1mCJhumQfQyuBNcbBPNy6y
-	 topLRmfYbnUsZiNcHwFMRBOKCFOyKxcmeYQEaUioqbDsAGDE/UXP+lDoopJ45oqJCk
-	 JxVznpAs5if3+bolAR0Iek+xvsf1sQSKtW0WSc5sPkUDd+YG+ZrFKocSwFoEeiYpKD
-	 fiYomzNwmkCL2EMsgaQ8eYSQ0ra8x6nel+CknYp0CMknE1TLnjDUzppeMl+K7LzJOn
-	 wR/yg2qptA43HbKlQZCRr32jwvJqHV9A9oHo2hSsc1KQQnjyIWbWYl4q+QEoA5b87s
-	 oa1VlhGfqSHGA==
-Date: Sun, 17 Dec 2023 13:31:12 +0000
+	b=EHw12kjqfyJ85oNK19fgeKkhrLzPr70n75sZmTed5fSHrcsEddvcjDFWhQ+FqBooK
+	 5/YY9glFS+MzDHgvXz9p5QHq7eiBPh3CmDWf6zsap1N5AxxEANwaGlo03FKJEFGZKu
+	 gq8E7Sk94Z1d3HsfEAtiuNIVwTLD7fZYeCm11ky2gMC2mmfe8HcN/84MAQfjjmI5DN
+	 jTET0cerEcVlU5KNMKzehjQE+m3aAYURM4WwYYdvMAQAM6BW6dbf3fojeRD40utbsX
+	 Rn5Rl1DVY42RS9rBYhH6uIxEEwgU8IicP20Yx2HhOvTZmJiuHN1lejYjn+FyI+SOtV
+	 UVMp6N8/UOHXg==
+Date: Sun, 17 Dec 2023 13:50:07 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Ceclan Dumitru <mitrutzceclan@gmail.com>, Jonathan Cameron
- <Jonathan.Cameron@huawei.com>, linus.walleij@linaro.org, brgl@bgdev.pl,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+To: Ceclan Dumitru <mitrutzceclan@gmail.com>
+Cc: David Lechner <dlechner@baylibre.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
+ <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
  <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
  =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
  <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
  <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
  linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v8 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <20231217133112.0054ef56@jic23-huawei>
-In-Reply-To: <ZXsVgVzcK6Om4td_@smile.fi.intel.com>
+ linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
+Message-ID: <20231217135007.3e5d959a@jic23-huawei>
+In-Reply-To: <a1f60bf6-5fb6-4814-b3b5-799fb8ffb847@gmail.com>
 References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
-	<20231212104451.22522-2-mitrutzceclan@gmail.com>
-	<20231214123029.000002f1@Huawei.com>
-	<375bf803-a5d5-4778-938a-b8218b116375@gmail.com>
-	<ZXsVgVzcK6Om4td_@smile.fi.intel.com>
+	<CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
+	<e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com>
+	<CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
+	<a1f60bf6-5fb6-4814-b3b5-799fb8ffb847@gmail.com>
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -62,81 +62,104 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 14 Dec 2023 16:47:29 +0200
-Andy Shevchenko <andy@kernel.org> wrote:
+On Thu, 14 Dec 2023 19:03:28 +0200
+Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
 
-> On Thu, Dec 14, 2023 at 02:57:35PM +0200, Ceclan Dumitru wrote:
-> > On 12/14/23 14:30, Jonathan Cameron wrote:  
-> > > On Tue, 12 Dec 2023 12:44:36 +0200
-> > > Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:  
-> 
-> ...
-> 
-> > >> +		ret = fwnode_property_match_property_string(child,
-> > >> +							    "adi,reference-select",
-> > >> +							    ad7173_ref_sel_str,
-> > >> +							    ARRAY_SIZE(ad7173_ref_sel_str));  
-> 
-> > >> +  
-> 
-> Redundant blank line.
-> 
-> > >> +		if (ret < 0)
-> > >> +			ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> > >> +		else
-> > >> +			ref_sel = ret;  
-> > > Simpler pattern for properties with a default is not to check the error code.
-> > > 
-> > > 		ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> > > 
-> > > 		fwnode_property_match_property_String(child, ...
-> > > 
-> > > so only if it succeeds is the value overridden.  
-> > 
-> > Where exactly would the value be overridden, the function does not have an
-> > argument passed for the found index. The function is written to return either
-> > the found index or a negative error.
-> > 
-> > The proposed pattern would just ignore the returned index and would always
-> > leave ref_sel to default. Am I missing something?
-> > 
-> > I can see in the thread where it was introduced that you proposed:
-> > "Looking at the usecases I wonder if it would be better to pass in
-> > an unsigned int *ret which is only updated on a match?"
-> > 
-> > But on the iio togreg branch that was suggested I could the function on, it
-> > does not have that parameter.  
-> 
-> Yeah, with the current API we can have one check (no 'else' branch):
-> 
-> 		ref_sel = AD7173_SETUP_REF_SEL_INT_REF;
-> 		ret = ...
-> 		if (ret >= 0)
-> 			ref_sel = ret;
-> 
-Yeah. I was clearly lacking in coffee or just being an idiot that day!
+> On 12/14/23 18:12, David Lechner wrote:
+> > On Thu, Dec 14, 2023 at 1:43=E2=80=AFPM Ceclan Dumitru <mitrutzceclan@g=
+mail.com> wrote: =20
+> >> On 12/12/23 17:09, David Lechner wrote: =20
+> >>> On Tue, Dec 12, 2023 at 11:45=E2=80=AFAM Dumitru Ceclan <mitrutzcecla=
+n@gmail.com> wrote: =20
+>=20
+> >> ...
+> >> =20
+> >>>> +  interrupts:
+> >>>> +    maxItems: 1 =20
+> >>>
+> >>> Shouldn't this be 2? The datasheet says there is a "Data Output Ready"
+> >>> signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
+> >>> pin. Although I could see how RDY could be considered part of the SPI
+> >>> bus. In any case, a description explaining what the interrupt is would
+> >>> be useful.
+> >>> =20
+> >>
+> >> I do not see how there could be 2 interrupts. DOUT/RDY is used as an
+> >> interrupt when waiting for a conversion to finalize.
+> >>
+> >> Sync and Error are sepparate pins, Sync(if enabled) works only as an
+> >> input that resets the modulator and the digital filter. =20
+> >=20
+> > I only looked at the AD7172-2 datasheet and pin 15 is labeled
+> > SYNC/ERROR. Maybe they are separate pins on other chips? =20
+>=20
+> Yep, sorry, missed that. All other supported models have them separate.
 
-> But your approach is good to me.
-> 
-> ...
-> 
-> It's always possible to change prototype, and now of course is the best time
-> as all the users are provided in the single tree. That said, patches are
-> welcome if this is what we want. (My proposal was to return index in case of
-> no error, but at the same time leave it in the returned code, so it will be
-> aligned with other match functions of fwnode.
-> 
-> But this in either way will complicate the implementation. And I don't find
-> critical to have if-else in each caller as some of them may do something
-> different on the error case, when option is mandatory. In such cases we
-> usually don't provide output if we know that an error condition occurs.
+=20
+> >  =20
+> >>
+> >> Error can be configured as input, output or ERROR output (OR between a=
+ll
+> >> internal error sources).
+> >>
+> >> Would this be alright
+> >>   interrupts:
+> >>
+> >>     description: Conversion completion interrupt.
+> >>                  Pin is shared with SPI DOUT.
+> >>     maxItems: 1 =20
+> >=20
+> > Since ERROR is an output, I would expect it to be an interrupt. The
+> > RDY output, on the other hand, would be wired to a SPI controller with
+> > the SPI_READY feature (I use the Linux flag name here because I'm not
+> > aware of a corresponding devicetree flag). So I don't think the RDY
+> > signal would be an interrupt.
+> >  =20
+>=20
+> Error does not have the purpose to be an interrupt. The only interrupt
+> used from this chip is the one from the DOUT/~RDY pin. Sure, it is wired
+> to the SPI controller, but when you can't also receive interrupts on
+> that very same CPU pin an issue arises. So that pin is also wired to
+> another GPIO with interrupt support.
 
-I'm fine with it being as it is.  Was just having a slow brain day.
+You've lost me.  It's a pin that has a state change when an error condition
+occurs.  Why not an interrupt?  Doesn't matter that the driver doesn't
+use this functionality. dt-bindings should be as comprehensive as possible.
+Given it's a multipurpose pin you'd also want to support it as a gpio to be
+complete alongside the other GPIOs.
 
-J
-> 
+>=20
+> This is the same way that ad4130.yaml is written for example (with the
+> exception that ad4130 supports configuring where the interrupt is routed).
+>=20
+> In regards to SPI_READY _BITUL(7) /* slave pulls low to pause */: the
+> ad_sigma_delta framework (if it can be called that) is written to expect
+> a pin interrupt, not to use SPI_READY controller feature.
+
+SPI_READY is supported by only a couple of controllers. I'm not even that
+sure exactly how it is defined and whether that lines up with this usecase.
+=46rom some old asci art. https://lore.kernel.org/all/1456747459-8559-1-git-s=
+end-email-linux@rempel-privat.de/
+
+Flow control: Ready Sequence
+Master CS   |-----1\_______________________|
+Slave  FC   |--------2\____________________|
+DATA        |-----------3\_________________|
+
+So you set master and then wait for a flow control pin (the ready signal) b=
+efore
+you can actually talk to the device.
+
+Here we are indicating data is ready to be be read out.
+
+So I don't 'think' SPI_READY applies.
+
+Jonathan
+
+
+>=20
 
 
