@@ -1,146 +1,163 @@
-Return-Path: <linux-gpio+bounces-1626-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1627-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1585817605
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:46:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1A9DE8176A1
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 17:02:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5226E28143C
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:46:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9C1161F25017
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:02:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD34760AE;
-	Mon, 18 Dec 2023 15:40:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69983D54C;
+	Mon, 18 Dec 2023 16:01:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8tO9Q71"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="U94XMpT0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B737348D;
-	Mon, 18 Dec 2023 15:40:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6d741fb7c8eso1164206b3a.2;
-        Mon, 18 Dec 2023 07:40:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC2C93D557
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 16:01:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-4b6c3a37ddeso312511e0c.0
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 08:01:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702914056; x=1703518856; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=fb3xViNCky7HL/E9H8gcMa197c94g0r+2fV811yw6SM=;
-        b=G8tO9Q71dFhYDmSJ93FLJJ5pG5ZejhfJVtGHoy6TcTXHbNUhplFig3JzLXSDxaHvlC
-         CU8+Sr94QFaKYUxJsJc/sLr43GpZW5SugAK0nF7MpBInDhG0zeIJT7tX9oFzmq37/1CS
-         GGXW9wMzHA+Fbt6OWeXRUbrGhgemfrPayELm+uGxFYXKM4ZGENwj/KpPSuv1XUUgANmO
-         3CCceUfPfwNeyucJ7QZ5qi1eoF1Xk1Amsc2KNvids7Q6l3hXmYDJKm7ra7F7AUVFvNZG
-         EhaGAr0MTtWfSX08FyUZVEGrozZxDwRKM6dYnukUQaVOoHG9EHYop7A1SspQkzWtLqFi
-         nloA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702915303; x=1703520103; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yGsftRUwsP12LQ30FBWYDs/WH5EY9TUOi7H6csPAxGw=;
+        b=U94XMpT0QLBlxq8bYxp3/sS8NKhOnDJNMoe95l8Kz6Jw2spo+XtO0leVWb4rHyjmzg
+         qm13lwpczUpYXcJxdYiy8Wjd9BwBVhTb3nireB6o1cy4c4oVvnv+Zn2UCA0rFNS7bC6X
+         Xu2UxEva3ThSP95xCHzymDKyA7yiqxdTGMNnk4jEYv4O5bcvR7nAjk3SLuaUx8u/gBya
+         7m6HuZ9b3fpu8LtmCL6DlK223mq5WWKkxYfyjd68zbOaUKXUCrVb2eoaZbcyWX5lGiBg
+         qAahpqlPzE4/QkxUU5rab3zT/oXGuvfclkvG2TPqs++68qEVf1ZMxAClva155JhoftGG
+         f7Zg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702914056; x=1703518856;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=fb3xViNCky7HL/E9H8gcMa197c94g0r+2fV811yw6SM=;
-        b=J9xJuBZdNcHaReOjYS5HU4xwP05QELZW2zsFZJi45d105/j3/981/oGNjiJnBB5/W+
-         xUjhI7esGb7czsdiY3d6CNUOMIZ8+yGpbE7utX/Pq82weDeEzb2aLlTvRSoSFKgnZpvl
-         NK2sUnZGgadlRT90ThxKb5/YRqiVQJivOEIyKw7pNyYpNuQXj5uc7f25rt9zZbsHJe0Z
-         lohmnUj2Jf7ZuabT+kMMKS3XXmPWI4MlMkgnc/gKGw3Lp721e1bwb6GpHkWUq0ShxYlA
-         fBr9z2OS4ViJFjXcaigM7N6hBmV3298NWSbJ3a6/mg5syz+1eIEGPXms31p6DcD2uaEl
-         /E5Q==
-X-Gm-Message-State: AOJu0Yy0eC0qizMC5C3YPT3H0oGHarhNjZH9kODaBbJ30PYYCHx0dqd/
-	JTxoe/Lb7WTJQUKTQGSnF1A=
-X-Google-Smtp-Source: AGHT+IGYIxS0lU5Kztj4lcstkl+IRTx8yCPAKAtucmPng8XS7d+le9tnfimdybDcvjWGm6uRePWsOQ==
-X-Received: by 2002:a05:6a00:80de:b0:6d6:4c9:53f2 with SMTP id ei30-20020a056a0080de00b006d604c953f2mr2413715pfb.25.1702914056504;
-        Mon, 18 Dec 2023 07:40:56 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id s5-20020a62e705000000b006d91c425eb7sm230242pfh.184.2023.12.18.07.40.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Dec 2023 07:40:56 -0800 (PST)
-Date: Mon, 18 Dec 2023 23:40:51 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH v4 1/5] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZYBoA25z76uutBBI@rigel>
-References: <20231216001652.56276-1-warthog618@gmail.com>
- <20231216001652.56276-2-warthog618@gmail.com>
- <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1702915303; x=1703520103;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yGsftRUwsP12LQ30FBWYDs/WH5EY9TUOi7H6csPAxGw=;
+        b=FmXNDVIeTe9A92poOoCpUOzIzYpLQ92bE+FlamVivb9W/myX+AL3obL69xI5hZW5HX
+         qC4o2QL2fDTN9xAVofxOZiebKr30ImEf6r0M2lEFF7SWzShWdWKHQ84Ob+DX9JygWAWj
+         /w6RYZSWgWZK52FotkFJA9KFx7y8qsoexDauGKQj7fnQulEZKSRrzMT8aswUwDUX0gS/
+         5odUlqMpi1v4wFjCSl4DLGij1ypzf0fKkQv467rX18GR4+Q5q2PsvexrM2eMkpOdWPai
+         xtwKxc81V+2bu6sBq1n5ILdRel37OXtwWfCwMxuPcoINAR/yve4ERUGF6TffKnlyNDwD
+         7HHg==
+X-Gm-Message-State: AOJu0YxKcesMnx2y5ia7zuk9aS4djLVyuRQHmFqPacE0Q5W7eGFC4+ui
+	vhqS1II2ZMLlK1wxGG+KMACSltNMen8Cku2xpRaIFQ==
+X-Google-Smtp-Source: AGHT+IHc27efHm1oPrfnUlMRPn8IUs/f3CkxX/C5qBu8BNaZdCSCbdm+IytJJb9k8TJC1cMswI99IhwBc39aQg71/Z0=
+X-Received: by 2002:a05:6122:180a:b0:4b6:d379:7f5 with SMTP id
+ ay10-20020a056122180a00b004b6d37907f5mr510520vkb.1.1702915303687; Mon, 18 Dec
+ 2023 08:01:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
+References: <20231216001652.56276-1-warthog618@gmail.com> <20231216001652.56276-2-warthog618@gmail.com>
+ <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com> <ZYBoA25z76uutBBI@rigel>
+In-Reply-To: <ZYBoA25z76uutBBI@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 18 Dec 2023 17:01:32 +0100
+Message-ID: <CAMRc=MdKfs1ok2KgkO0C64cA9k8bOupxsjReBMQSdZbP+MQMCQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 04:24:50PM +0100, Bartosz Golaszewski wrote:
-> On Sat, Dec 16, 2023 at 1:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > Store the debounce period for a requested line locally, rather than in
-> > the debounce_period_us field in the gpiolib struct gpio_desc.
-> >
-> > Add a global tree of lines containing supplemental line information
-> > to make the debounce period available to be reported by the
-> > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
-> >
-> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 154 ++++++++++++++++++++++++++++++------
-> >  1 file changed, 132 insertions(+), 22 deletions(-)
-> >
-> > +static inline bool line_is_supplemental(struct line *line)
+On Mon, Dec 18, 2023 at 4:40=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
 >
-> Under v2 I suggested naming this line_has_suppinfo(). Any reason not
-> to do it? I think it's more logical than saying "line is
-> supplemental". The latter makes it seem as if certain line objects
-> would "supplement" some third party with something. What this really
-> checks is: does this line contain additional information.
+> On Mon, Dec 18, 2023 at 04:24:50PM +0100, Bartosz Golaszewski wrote:
+> > On Sat, Dec 16, 2023 at 1:17=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > Store the debounce period for a requested line locally, rather than i=
+n
+> > > the debounce_period_us field in the gpiolib struct gpio_desc.
+> > >
+> > > Add a global tree of lines containing supplemental line information
+> > > to make the debounce period available to be reported by the
+> > > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
+> > >
+> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > > ---
+> > >  drivers/gpio/gpiolib-cdev.c | 154 ++++++++++++++++++++++++++++++----=
+--
+> > >  1 file changed, 132 insertions(+), 22 deletions(-)
+> > >
+> > > +static inline bool line_is_supplemental(struct line *line)
+> >
+> > Under v2 I suggested naming this line_has_suppinfo(). Any reason not
+> > to do it? I think it's more logical than saying "line is
+> > supplemental". The latter makes it seem as if certain line objects
+> > would "supplement" some third party with something. What this really
+> > checks is: does this line contain additional information.
+> >
+>
+>
+> My bad - responded to your first comment and then missed the rest.
+>
+> Agreed - the naming could be better. Will fix for v5.
+>
+> > > +{
+> > > +       return READ_ONCE(line->debounce_period_us);
+> > > +}
+> > > +
+> > > +static void line_set_debounce_period(struct line *line,
+> > > +                                    unsigned int debounce_period_us)
+> > > +{
+> > > +       bool was_suppl =3D line_is_supplemental(line);
+> > > +
+> > > +       WRITE_ONCE(line->debounce_period_us, debounce_period_us);
+> > > +
+> > > +       if (line_is_supplemental(line) =3D=3D was_suppl)
+> > > +               return;
+> > > +
+> > > +       if (was_suppl)
+> > > +               supinfo_erase(line);
+> > > +       else
+> > > +               supinfo_insert(line);
+> >
+> > Could you add a comment here saying it's called with the config mutex
+> > taken as at first glance it looks racy but actually isn't?
+> >
+>
+> Sure.  Though it is also covered by the gdev->sem you added, right?
+> So the config_mutex is now redundant?
+> Should I document it is covered by both?
+> Or drop the config_mutex entirely?
 >
 
+No! The semaphore is a read-write semaphore and we can have multiple
+readers at once. This semaphore only protects us from the chip being
+set to NULL during a system call. It will also go away once I get the
+descriptor access serialized (or not - I'm figuring out a lockless
+approach) and finally use SRCU to protect gdev->chip.
 
-My bad - responded to your first comment and then missed the rest.
-
-Agreed - the naming could be better. Will fix for v5.
-
-> > +{
-> > +       return READ_ONCE(line->debounce_period_us);
-> > +}
-> > +
-> > +static void line_set_debounce_period(struct line *line,
-> > +                                    unsigned int debounce_period_us)
-> > +{
-> > +       bool was_suppl = line_is_supplemental(line);
-> > +
-> > +       WRITE_ONCE(line->debounce_period_us, debounce_period_us);
-> > +
-> > +       if (line_is_supplemental(line) == was_suppl)
-> > +               return;
-> > +
-> > +       if (was_suppl)
-> > +               supinfo_erase(line);
-> > +       else
-> > +               supinfo_insert(line);
->
-> Could you add a comment here saying it's called with the config mutex
-> taken as at first glance it looks racy but actually isn't?
+> And you wanted some comments to explain the logic?
+> I thought this is a common "has it changed" pattern, and so didn't
+> require additional explanation, but I guess not as common as I thought.
 >
 
-Sure.  Though it is also covered by the gdev->sem you added, right?
-So the config_mutex is now redundant?
-Should I document it is covered by both?
-Or drop the config_mutex entirely?
+If line_set_debounce_period() could be called concurrently for the
+same line, this approach would be racy. It cannot but I want a comment
+here as I fear that if in the future we add some more attributes that
+constitute "supplemental info" and which may be changed outside of the
+config lock then this would in fact become racy.
 
-And you wanted some comments to explain the logic?
-I thought this is a common "has it changed" pattern, and so didn't
-require additional explanation, but I guess not as common as I thought.
+Bart
 
-Cheers,
-Kent.
+> Cheers,
+> Kent.
 
