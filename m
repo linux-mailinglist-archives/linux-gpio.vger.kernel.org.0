@@ -1,146 +1,146 @@
-Return-Path: <linux-gpio+bounces-1625-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5620B817548
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:33:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1585817605
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:46:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1770B223AE
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:33:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5226E28143C
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:46:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B59A43D574;
-	Mon, 18 Dec 2023 15:33:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FD34760AE;
+	Mon, 18 Dec 2023 15:40:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NU+qIRBb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G8tO9Q71"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D873D54A
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 15:33:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7c51d5e6184so964608241.2
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 07:33:18 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B737348D;
+	Mon, 18 Dec 2023 15:40:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-6d741fb7c8eso1164206b3a.2;
+        Mon, 18 Dec 2023 07:40:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702913598; x=1703518398; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iOIzgqju8uFofUCDDly6gslT8lnwVtboFBFx0UJQJso=;
-        b=NU+qIRBbklIMfV47OD519hAZqQLMykk+kTAQl260YB7iucDjs1BrxBRqEhelDHVd94
-         WXHHvZPNlDCnwLXlcNIBWTex0DeRsFQcVYAmzhfR4q8NWwS8yrWVjBnVdEAwsPX8FFeW
-         7O0C4Lnr1hEF8UZ5fhjCkyRyfmWJWafSuJudsrfHL/5fppRKawZ4b+K1XBaElvxTnO4B
-         p8GWFUPiM3Fj5mBXBVt4aVCxkwVsIe0mjGE0OxGEcd7x9WoikOOft/SImhJrIlUgiA0O
-         dAfcijvHH4yaUhImdguldqvIvpCowpQn86+P4cROxpNPYI1z+CyxPaRKZZcMhlDglPin
-         J8hw==
+        d=gmail.com; s=20230601; t=1702914056; x=1703518856; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=fb3xViNCky7HL/E9H8gcMa197c94g0r+2fV811yw6SM=;
+        b=G8tO9Q71dFhYDmSJ93FLJJ5pG5ZejhfJVtGHoy6TcTXHbNUhplFig3JzLXSDxaHvlC
+         CU8+Sr94QFaKYUxJsJc/sLr43GpZW5SugAK0nF7MpBInDhG0zeIJT7tX9oFzmq37/1CS
+         GGXW9wMzHA+Fbt6OWeXRUbrGhgemfrPayELm+uGxFYXKM4ZGENwj/KpPSuv1XUUgANmO
+         3CCceUfPfwNeyucJ7QZ5qi1eoF1Xk1Amsc2KNvids7Q6l3hXmYDJKm7ra7F7AUVFvNZG
+         EhaGAr0MTtWfSX08FyUZVEGrozZxDwRKM6dYnukUQaVOoHG9EHYop7A1SspQkzWtLqFi
+         nloA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702913598; x=1703518398;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iOIzgqju8uFofUCDDly6gslT8lnwVtboFBFx0UJQJso=;
-        b=an25vVaa5uPcnFfYkGtWoPCGIAlHTD/yldTBVsaqD1a1hu/U3Uxm/J0P71sMwXYo64
-         5otdZimmwaXWGwPSQQY88VImhbCZ1+xMdLlNc4Y39zljuREF+bOUWemL6LF5lmRRTe57
-         XEaqLApGUBkMiSVRfGfU8AH0hFLp4Vc+7nNq/cIsiDAyPkkT3IXCJ+49HRcp/aaE+VYK
-         gaVuvJw1y4k0UwYUVx4dhZgrOyTUVD3dRx9OqtMNdFEfNKHdSqE1Nh8TvhS9giGiFiuG
-         rj6KQI0pBYcl4Ct/oWQz5bCB90QHMY3qWuEROxQVhgQYfGxgCytbQyYyvuEhdRyRF/r2
-         fbcw==
-X-Gm-Message-State: AOJu0YwcSXNFiZ4m1Sb25AxVcKMadw5nCz+eiFgXsharVTvPnSKMV7OI
-	+i1qKFYgb7YWNhQZUduMkpaRNHti6AdtWTIz46kxEw==
-X-Google-Smtp-Source: AGHT+IHxATbhN+Wr6VTcaavsfmOY38pBHoQqPyGGw/QyJZm0y6ZMpwn9O2gXuufEhDnwx9R65BqPsk+PMSYWHj7AeBg=
-X-Received: by 2002:ac5:c819:0:b0:4b6:c781:a97d with SMTP id
- y25-20020ac5c819000000b004b6c781a97dmr826007vkl.1.1702913597574; Mon, 18 Dec
- 2023 07:33:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702914056; x=1703518856;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=fb3xViNCky7HL/E9H8gcMa197c94g0r+2fV811yw6SM=;
+        b=J9xJuBZdNcHaReOjYS5HU4xwP05QELZW2zsFZJi45d105/j3/981/oGNjiJnBB5/W+
+         xUjhI7esGb7czsdiY3d6CNUOMIZ8+yGpbE7utX/Pq82weDeEzb2aLlTvRSoSFKgnZpvl
+         NK2sUnZGgadlRT90ThxKb5/YRqiVQJivOEIyKw7pNyYpNuQXj5uc7f25rt9zZbsHJe0Z
+         lohmnUj2Jf7ZuabT+kMMKS3XXmPWI4MlMkgnc/gKGw3Lp721e1bwb6GpHkWUq0ShxYlA
+         fBr9z2OS4ViJFjXcaigM7N6hBmV3298NWSbJ3a6/mg5syz+1eIEGPXms31p6DcD2uaEl
+         /E5Q==
+X-Gm-Message-State: AOJu0Yy0eC0qizMC5C3YPT3H0oGHarhNjZH9kODaBbJ30PYYCHx0dqd/
+	JTxoe/Lb7WTJQUKTQGSnF1A=
+X-Google-Smtp-Source: AGHT+IGYIxS0lU5Kztj4lcstkl+IRTx8yCPAKAtucmPng8XS7d+le9tnfimdybDcvjWGm6uRePWsOQ==
+X-Received: by 2002:a05:6a00:80de:b0:6d6:4c9:53f2 with SMTP id ei30-20020a056a0080de00b006d604c953f2mr2413715pfb.25.1702914056504;
+        Mon, 18 Dec 2023 07:40:56 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id s5-20020a62e705000000b006d91c425eb7sm230242pfh.184.2023.12.18.07.40.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 18 Dec 2023 07:40:56 -0800 (PST)
+Date: Mon, 18 Dec 2023 23:40:51 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linus.walleij@linaro.org, andy@kernel.org
+Subject: Re: [PATCH v4 1/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+Message-ID: <ZYBoA25z76uutBBI@rigel>
+References: <20231216001652.56276-1-warthog618@gmail.com>
+ <20231216001652.56276-2-warthog618@gmail.com>
+ <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <ZYBJzHyrI92KiPSP@black.fi.intel.com>
-In-Reply-To: <ZYBJzHyrI92KiPSP@black.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 18 Dec 2023 16:33:04 +0100
-Message-ID: <CAMRc=MciMU+Hv3K9FVMYMRWZCQKUXCHh6bsSMBetfY-qYwL=Tg@mail.gmail.com>
-Subject: Re: [GIT PULL] intel-gpio for 6.8-1
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linux GPIO <linux-gpio@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
 
-On Mon, Dec 18, 2023 at 2:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Mon, Dec 18, 2023 at 04:24:50PM +0100, Bartosz Golaszewski wrote:
+> On Sat, Dec 16, 2023 at 1:17 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Store the debounce period for a requested line locally, rather than in
+> > the debounce_period_us field in the gpiolib struct gpio_desc.
+> >
+> > Add a global tree of lines containing supplemental line information
+> > to make the debounce period available to be reported by the
+> > GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 154 ++++++++++++++++++++++++++++++------
+> >  1 file changed, 132 insertions(+), 22 deletions(-)
+> >
+> > +static inline bool line_is_supplemental(struct line *line)
 >
-> Hi Linux GPIO  maintainers,
->
-> A small set of cleanups for the Tangier family of drivers.
-> Has been a while in Linux Next without any error reported.
-> Please, pull for v6.8-rc1.
->
->
-> Thanks,
->
-> With Best Regards,
-> Andy Shevchenko
->
-> The following changes since commit b85ea95d086471afb4ad062012a4d73cd328fa=
-86:
->
->   Linux 6.7-rc1 (2023-11-12 16:19:07 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel.git=
- tags/intel-gpio-v6.8-1
->
-> for you to fetch changes up to 92fc925f838660eec25862a7fa7e6ef79d22f3ea:
->
->   gpio: tangier: simplify locking using cleanup helpers (2023-11-20 13:33=
-:31 +0200)
->
-> ----------------------------------------------------------------
-> intel-gpio for v6.8-1
->
-> * Use RAII for locking in the Tangier family of drivers (Raag)
-> * Update Tangier family of drivers to use new PM helpers (Raag)
->
-> The following is an automated git shortlog grouped by driver:
->
-> elkhartlake:
->  -  reuse pm_ops from Intel Tangier driver
->
-> tangier:
->  -  simplify locking using cleanup helpers
->  -  unexport suspend/resume handles
->  -  use EXPORT_NS_GPL_SIMPLE_DEV_PM_OPS() helper
->
-> ----------------------------------------------------------------
-> Andy Shevchenko (1):
->       Merge patch series "Use the standard _PM_OPS() export macro in Inte=
-l Tangier GPIO driver"
->
-> Raag Jadav (4):
->       gpio: tangier: use EXPORT_NS_GPL_SIMPLE_DEV_PM_OPS() helper
->       gpio: elkhartlake: reuse pm_ops from Intel Tangier driver
->       gpio: tangier: unexport suspend/resume handles
->       gpio: tangier: simplify locking using cleanup helpers
->
->  drivers/gpio/gpio-elkhartlake.c | 14 +--------
->  drivers/gpio/gpio-tangier.c     | 63 +++++++++++++----------------------=
-------
->  drivers/gpio/gpio-tangier.h     |  4 +--
->  3 files changed, 22 insertions(+), 59 deletions(-)
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
+> Under v2 I suggested naming this line_has_suppinfo(). Any reason not
+> to do it? I think it's more logical than saying "line is
+> supplemental". The latter makes it seem as if certain line objects
+> would "supplement" some third party with something. What this really
+> checks is: does this line contain additional information.
 >
 
-Pulled, thanks!
 
-Bart
+My bad - responded to your first comment and then missed the rest.
+
+Agreed - the naming could be better. Will fix for v5.
+
+> > +{
+> > +       return READ_ONCE(line->debounce_period_us);
+> > +}
+> > +
+> > +static void line_set_debounce_period(struct line *line,
+> > +                                    unsigned int debounce_period_us)
+> > +{
+> > +       bool was_suppl = line_is_supplemental(line);
+> > +
+> > +       WRITE_ONCE(line->debounce_period_us, debounce_period_us);
+> > +
+> > +       if (line_is_supplemental(line) == was_suppl)
+> > +               return;
+> > +
+> > +       if (was_suppl)
+> > +               supinfo_erase(line);
+> > +       else
+> > +               supinfo_insert(line);
+>
+> Could you add a comment here saying it's called with the config mutex
+> taken as at first glance it looks racy but actually isn't?
+>
+
+Sure.  Though it is also covered by the gdev->sem you added, right?
+So the config_mutex is now redundant?
+Should I document it is covered by both?
+Or drop the config_mutex entirely?
+
+And you wanted some comments to explain the logic?
+I thought this is a common "has it changed" pattern, and so didn't
+require additional explanation, but I guess not as common as I thought.
+
+Cheers,
+Kent.
 
