@@ -1,109 +1,439 @@
-Return-Path: <linux-gpio+bounces-1622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F104817493
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:02:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A53281752D
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:25:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D6F301F21FD5
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:02:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7AB691C212C8
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2D1437888;
-	Mon, 18 Dec 2023 15:02:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90DF33A1C7;
+	Mon, 18 Dec 2023 15:25:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Q84+5Cpu"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZFM8yLHW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E9D1D15F;
-	Mon, 18 Dec 2023 15:02:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702911755; x=1734447755;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=n+CcIVCq8nUf1G5r1wyIIWCphC7mHVA3V90KQXIpPuU=;
-  b=Q84+5Cpus3jFocHsFXUU+HtRao80Bt7psQ6kQdZEV7KKRgpkk+XuAaYo
-   9rdOrmKkhpe767NTP0y9yJuS/SJCWi9Q3fyJ+t0zKce4iHD3BtQIg+AbF
-   heHPI1v/bwyRYayYyeRF05gRl98QJn1tbm3V/0S4fUy3k5tfiaED+XZck
-   IsoxXCXVzO2GpNb9YJhbFaBmBqzA4dsMUbu03lRXup3eCXX/Pt/+GZ4Qg
-   +7Ea3v9KLSn1cE5fFmtdhRlns3D6+GTh+FNC/wwppC2uu7j/HNk3sr7Vu
-   5vLJH9k/Wrvf3FLQYcUVyCEuz3lDTb59DraqFifvze90NALqa7U+fwSTs
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="426651283"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="426651283"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 07:02:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10928"; a="948802262"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="948802262"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 07:02:29 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rFF8U-00000006y5z-00uS;
-	Mon, 18 Dec 2023 17:02:26 +0200
-Date: Mon, 18 Dec 2023 17:02:25 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 0/3] gpio: mmio: Make driver agnostic
-Message-ID: <ZYBfAbvs-7lMzuy-@smile.fi.intel.com>
-References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MfZm7TDHRRLrDmnyj3vmbscmpveR0fveYfsGz0SdaskKw@mail.gmail.com>
- <ZYBKn9UZIhY03DiV@smile.fi.intel.com>
- <ZYBKxv_M23j0k_K-@smile.fi.intel.com>
- <CAMRc=Mcu4H12pV0rT4OXLsaEShn4r9XM2rbQ1VK-SmgxwidWUg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77FA43A1BA
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 15:25:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f48.google.com with SMTP id a1e0cc1a2514c-7cbc56a8023so703056241.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 07:25:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702913102; x=1703517902; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cCsxDVfbkPMS/NMa2lYVcbOzQY9wpYT80t55EoX5NeE=;
+        b=ZFM8yLHWvFJWREvSsOn4PmaST5wQDQpKwaqdDTsTDYc1Bm007ylw65L9ZZcqV3v1JS
+         B4JMJ/P+oOOwTNYQ0QDSe7EqL06UWKi7PJKKICakKImjhFwPKCWOU90DLJr/8VZMvmOR
+         hKmvLabPcakImU7bigCmS7qCG6ZAQpbvh20TmaubMO09q5CB//uMd43GS9S8AMC8RYqS
+         8DlOrZU9IuWvCtqyXVABvKaO5JSLUfqEFxiJZHq9ME44y8L36l9BCHk5qdil7a9SB4t3
+         lOWHEh5sf/vzN/WSBLLP4ku18jBb8QOMvODc4eXdZwyVbcYQrb/p4Y2kQganCQGL9eGT
+         CHaA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702913102; x=1703517902;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cCsxDVfbkPMS/NMa2lYVcbOzQY9wpYT80t55EoX5NeE=;
+        b=kLXAMeErZ4WPnbsA/65VB8yZF1AcqyI/YEIVI6J1HWY4Qs7D5rZq+BVH3rziHHl1eo
+         26Eo0BHRVp7lucZT0kyv4z8gRnVg5IyxKOMzRNeg4L1jY0kNDDrmykLjSUBiLneRv1t2
+         otdJDZexJeCpWJOFON/oiX3T4leoFaEmLMY1yY00dWT7Le9Yq3Bu5OF7a2XIbUUWQ9gg
+         ifg6wTwNTCL5wXN7w7a3BZHePjPzuLH5imGlNFXXflrwLjkfs2KI9Eje0fB3qAoRz7HS
+         wjc7/GpwHh57tlieq3JTt46bF8l52VIbFEkS0YQYIqtqMNVogDpg8fvk3QQoGiYyt+IY
+         xZ3g==
+X-Gm-Message-State: AOJu0YytQfgRzd0jbeBTcWJ7Ed8k6dNAX2aHKZE8cITJA1GiinISU/wY
+	w8/edPD/RTc51FKHgiTacG4QrwR4PtSyEFLmaHiuNiPhwbmRPEvBH3c=
+X-Google-Smtp-Source: AGHT+IGO2l6lmZVPnsi/ZR+YxC0Zep6Oj+duEmPDbZ2DeoMwFZAeAiQFG66nGwh4PwOejyRm6JC8FV0ylyAhD6YzfAI=
+X-Received: by 2002:a05:6122:f05:b0:4b2:c573:ed5b with SMTP id
+ bn5-20020a0561220f0500b004b2c573ed5bmr15236450vkb.13.1702913102093; Mon, 18
+ Dec 2023 07:25:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcu4H12pV0rT4OXLsaEShn4r9XM2rbQ1VK-SmgxwidWUg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231216001652.56276-1-warthog618@gmail.com> <20231216001652.56276-2-warthog618@gmail.com>
+In-Reply-To: <20231216001652.56276-2-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 18 Dec 2023 16:24:50 +0100
+Message-ID: <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] gpiolib: cdev: relocate debounce_period_us from
+ struct gpio_desc
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 02:37:48PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 18, 2023 at 2:36 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Dec 18, 2023 at 03:35:28PM +0200, Andy Shevchenko wrote:
-> > > On Mon, Dec 18, 2023 at 01:43:40PM +0100, Bartosz Golaszewski wrote:
+On Sat, Dec 16, 2023 at 1:17=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> Store the debounce period for a requested line locally, rather than in
+> the debounce_period_us field in the gpiolib struct gpio_desc.
+>
+> Add a global tree of lines containing supplemental line information
+> to make the debounce period available to be reported by the
+> GPIO_V2_GET_LINEINFO_IOCTL and the line change notifier.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> ---
+>  drivers/gpio/gpiolib-cdev.c | 154 ++++++++++++++++++++++++++++++------
+>  1 file changed, 132 insertions(+), 22 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> index 02ffda6c1e51..47197f6339c4 100644
+> --- a/drivers/gpio/gpiolib-cdev.c
+> +++ b/drivers/gpio/gpiolib-cdev.c
+> @@ -5,6 +5,7 @@
+>  #include <linux/bitmap.h>
+>  #include <linux/build_bug.h>
+>  #include <linux/cdev.h>
+> +#include <linux/cleanup.h>
+>  #include <linux/compat.h>
+>  #include <linux/compiler.h>
+>  #include <linux/device.h>
+> @@ -21,6 +22,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/pinctrl/consumer.h>
+>  #include <linux/poll.h>
+> +#include <linux/rbtree.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/spinlock.h>
+>  #include <linux/timekeeping.h>
+> @@ -461,6 +463,7 @@ static int linehandle_create(struct gpio_device *gdev=
+, void __user *ip)
+>
+>  /**
+>   * struct line - contains the state of a requested line
+> + * @node: to store the object in supinfo_tree if supplemental
+>   * @desc: the GPIO descriptor for this line.
+>   * @req: the corresponding line request
+>   * @irq: the interrupt triggered in response to events on this GPIO
+> @@ -473,6 +476,7 @@ static int linehandle_create(struct gpio_device *gdev=
+, void __user *ip)
+>   * @line_seqno: the seqno for the current edge event in the sequence of
+>   * events for this line.
+>   * @work: the worker that implements software debouncing
+> + * @debounce_period_us: the debounce period in microseconds
+>   * @sw_debounced: flag indicating if the software debouncer is active
+>   * @level: the current debounced physical level of the line
+>   * @hdesc: the Hardware Timestamp Engine (HTE) descriptor
+> @@ -481,6 +485,7 @@ static int linehandle_create(struct gpio_device *gdev=
+, void __user *ip)
+>   * @last_seqno: the last sequence number before debounce period expires
+>   */
+>  struct line {
+> +       struct rb_node node;
+>         struct gpio_desc *desc;
+>         /*
+>          * -- edge detector specific fields --
+> @@ -514,6 +519,15 @@ struct line {
+>          * -- debouncer specific fields --
+>          */
+>         struct delayed_work work;
+> +       /*
+> +        * debounce_period_us is accessed by debounce_irq_handler() and
+> +        * process_hw_ts() which are disabled when modified by
+> +        * debounce_setup(), edge_detector_setup() or edge_detector_stop(=
+)
+> +        * or can live with a stale version when updated by
+> +        * edge_detector_update().
+> +        * The modifying functions are themselves mutually exclusive.
+> +        */
+> +       unsigned int debounce_period_us;
+>         /*
+>          * sw_debounce is accessed by linereq_set_config(), which is the
+>          * only setter, and linereq_get_values(), which can live with a
+> @@ -546,6 +560,17 @@ struct line {
+>  #endif /* CONFIG_HTE */
+>  };
+>
+> +/*
+> + * a rbtree of the struct lines containing supplemental info.
+> + * Used to populate gpio_v2_line_info with cdev specific fields not cont=
+ained
+> + * in the struct gpio_desc.
+> + * A line is determined to contain supplemental information by
+> + * line_is_supplemental().
+> + */
+> +static struct rb_root supinfo_tree =3D RB_ROOT;
+> +/* covers supinfo_tree */
+> +static DEFINE_SPINLOCK(supinfo_lock);
+> +
+>  /**
+>   * struct linereq - contains the state of a userspace line request
+>   * @gdev: the GPIO device the line request pertains to
+> @@ -575,6 +600,95 @@ struct linereq {
+>         struct line lines[] __counted_by(num_lines);
+>  };
+>
+> +static void supinfo_insert(struct line *line)
+> +{
+> +       struct rb_node **new =3D &(supinfo_tree.rb_node), *parent =3D NUL=
+L;
+> +       struct line *entry;
+> +
+> +       guard(spinlock)(&supinfo_lock);
+> +
+> +       while (*new) {
+> +               entry =3D container_of(*new, struct line, node);
+> +
+> +               parent =3D *new;
+> +               if (line->desc < entry->desc) {
+> +                       new =3D &((*new)->rb_left);
+> +               } else if (line->desc > entry->desc) {
+> +                       new =3D &((*new)->rb_right);
+> +               } else {
+> +                       /* this should never happen */
+> +                       WARN(1, "duplicate line inserted");
+> +                       return;
+> +               }
+> +       }
+> +
+> +       rb_link_node(&line->node, parent, new);
+> +       rb_insert_color(&line->node, &supinfo_tree);
+> +}
+> +
+> +static void supinfo_erase(struct line *line)
+> +{
+> +       guard(spinlock)(&supinfo_lock);
+> +
+> +       rb_erase(&line->node, &supinfo_tree);
+> +}
+> +
+> +static struct line *supinfo_find(struct gpio_desc *desc)
+> +{
+> +       struct rb_node *node =3D supinfo_tree.rb_node;
+> +       struct line *line;
+> +
+> +       while (node) {
+> +               line =3D container_of(node, struct line, node);
+> +               if (desc < line->desc)
+> +                       node =3D node->rb_left;
+> +               else if (desc > line->desc)
+> +                       node =3D node->rb_right;
+> +               else
+> +                       return line;
+> +       }
+> +       return NULL;
+> +}
+> +
+> +static void supinfo_to_lineinfo(struct gpio_desc *desc,
+> +                               struct gpio_v2_line_info *info)
+> +{
+> +       struct gpio_v2_line_attribute *attr;
+> +       struct line *line;
+> +
+> +       guard(spinlock)(&supinfo_lock);
+> +
+> +       line =3D supinfo_find(desc);
+> +       if (!line)
+> +               return;
+> +
+> +       attr =3D &info->attrs[info->num_attrs];
+> +       attr->id =3D GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
+> +       attr->debounce_period_us =3D READ_ONCE(line->debounce_period_us);
+> +       info->num_attrs++;
+> +}
+> +
+> +static inline bool line_is_supplemental(struct line *line)
 
-...
+Under v2 I suggested naming this line_has_suppinfo(). Any reason not
+to do it? I think it's more logical than saying "line is
+supplemental". The latter makes it seem as if certain line objects
+would "supplement" some third party with something. What this really
+checks is: does this line contain additional information.
 
-> > > Thank you! I guess you forgot to add --sign-off to the `git merge ...`
-> >
-> > Sorry, it's --signoff.
-> 
-> I never sign-off on merges though, is it mandatory? Probably not as
-> there are no warnings from next like for regular commits about missing
-> sign-offs.
+> +{
+> +       return READ_ONCE(line->debounce_period_us);
+> +}
+> +
+> +static void line_set_debounce_period(struct line *line,
+> +                                    unsigned int debounce_period_us)
+> +{
+> +       bool was_suppl =3D line_is_supplemental(line);
+> +
+> +       WRITE_ONCE(line->debounce_period_us, debounce_period_us);
+> +
+> +       if (line_is_supplemental(line) =3D=3D was_suppl)
+> +               return;
+> +
+> +       if (was_suppl)
+> +               supinfo_erase(line);
+> +       else
+> +               supinfo_insert(line);
 
-No idea. I do it as it is harmless, and makes commit more robust.
+Could you add a comment here saying it's called with the config mutex
+taken as at first glance it looks racy but actually isn't?
 
-For me it's fine, but I leave for me to exclaim later "Yay, had told ya!" :-)
+Bart
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> +}
+> +
+>  #define GPIO_V2_LINE_BIAS_FLAGS \
+>         (GPIO_V2_LINE_FLAG_BIAS_PULL_UP | \
+>          GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN | \
+> @@ -723,7 +837,7 @@ static enum hte_return process_hw_ts(struct hte_ts_da=
+ta *ts, void *p)
+>                 line->total_discard_seq++;
+>                 line->last_seqno =3D ts->seq;
+>                 mod_delayed_work(system_wq, &line->work,
+> -                 usecs_to_jiffies(READ_ONCE(line->desc->debounce_period_=
+us)));
+> +                 usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
+>         } else {
+>                 if (unlikely(ts->seq < line->line_seqno))
+>                         return HTE_CB_HANDLED;
+> @@ -864,7 +978,7 @@ static irqreturn_t debounce_irq_handler(int irq, void=
+ *p)
+>         struct line *line =3D p;
+>
+>         mod_delayed_work(system_wq, &line->work,
+> -               usecs_to_jiffies(READ_ONCE(line->desc->debounce_period_us=
+)));
+> +               usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
+>
+>         return IRQ_HANDLED;
+>  }
+> @@ -946,7 +1060,7 @@ static int debounce_setup(struct line *line, unsigne=
+d int debounce_period_us)
+>         /* try hardware */
+>         ret =3D gpiod_set_debounce(line->desc, debounce_period_us);
+>         if (!ret) {
+> -               WRITE_ONCE(line->desc->debounce_period_us, debounce_perio=
+d_us);
+> +               line_set_debounce_period(line, debounce_period_us);
+>                 return ret;
+>         }
+>         if (ret !=3D -ENOTSUPP)
+> @@ -1025,8 +1139,7 @@ static void edge_detector_stop(struct line *line)
+>         cancel_delayed_work_sync(&line->work);
+>         WRITE_ONCE(line->sw_debounced, 0);
+>         WRITE_ONCE(line->edflags, 0);
+> -       if (line->desc)
+> -               WRITE_ONCE(line->desc->debounce_period_us, 0);
+> +       line_set_debounce_period(line, 0);
+>         /* do not change line->level - see comment in debounced_value() *=
+/
+>  }
+>
+> @@ -1051,7 +1164,7 @@ static int edge_detector_setup(struct line *line,
+>                 ret =3D debounce_setup(line, debounce_period_us);
+>                 if (ret)
+>                         return ret;
+> -               WRITE_ONCE(line->desc->debounce_period_us, debounce_perio=
+d_us);
+> +               line_set_debounce_period(line, debounce_period_us);
+>         }
+>
+>         /* detection disabled or sw debouncer will provide edge detection=
+ */
+> @@ -1093,12 +1206,12 @@ static int edge_detector_update(struct line *line=
+,
+>                         gpio_v2_line_config_debounce_period(lc, line_idx)=
+;
+>
+>         if ((active_edflags =3D=3D edflags) &&
+> -           (READ_ONCE(line->desc->debounce_period_us) =3D=3D debounce_pe=
+riod_us))
+> +           (READ_ONCE(line->debounce_period_us) =3D=3D debounce_period_u=
+s))
+>                 return 0;
+>
+>         /* sw debounced and still will be...*/
+>         if (debounce_period_us && READ_ONCE(line->sw_debounced)) {
+> -               WRITE_ONCE(line->desc->debounce_period_us, debounce_perio=
+d_us);
+> +               line_set_debounce_period(line, debounce_period_us);
+>                 return 0;
+>         }
+>
+> @@ -1573,6 +1686,7 @@ static ssize_t linereq_read(struct file *file, char=
+ __user *buf,
+>
+>  static void linereq_free(struct linereq *lr)
+>  {
+> +       struct line *line;
+>         unsigned int i;
+>
+>         if (lr->device_unregistered_nb.notifier_call)
+> @@ -1580,10 +1694,14 @@ static void linereq_free(struct linereq *lr)
+>                                                    &lr->device_unregister=
+ed_nb);
+>
+>         for (i =3D 0; i < lr->num_lines; i++) {
+> -               if (lr->lines[i].desc) {
+> -                       edge_detector_stop(&lr->lines[i]);
+> -                       gpiod_free(lr->lines[i].desc);
+> -               }
+> +               line =3D &lr->lines[i];
+> +               if (!line->desc)
+> +                       continue;
+> +
+> +               edge_detector_stop(line);
+> +               if (line_is_supplemental(line))
+> +                       supinfo_erase(line);
+> +               gpiod_free(line->desc);
+>         }
+>         kfifo_free(&lr->events);
+>         kfree(lr->label);
+> @@ -2274,8 +2392,6 @@ static void gpio_desc_to_lineinfo(struct gpio_desc =
+*desc,
+>         struct gpio_chip *gc =3D desc->gdev->chip;
+>         bool ok_for_pinctrl;
+>         unsigned long flags;
+> -       u32 debounce_period_us;
+> -       unsigned int num_attrs =3D 0;
+>
+>         memset(info, 0, sizeof(*info));
+>         info->offset =3D gpio_chip_hwgpio(desc);
+> @@ -2341,14 +2457,6 @@ static void gpio_desc_to_lineinfo(struct gpio_desc=
+ *desc,
+>         else if (test_bit(FLAG_EVENT_CLOCK_HTE, &desc->flags))
+>                 info->flags |=3D GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE;
+>
+> -       debounce_period_us =3D READ_ONCE(desc->debounce_period_us);
+> -       if (debounce_period_us) {
+> -               info->attrs[num_attrs].id =3D GPIO_V2_LINE_ATTR_ID_DEBOUN=
+CE;
+> -               info->attrs[num_attrs].debounce_period_us =3D debounce_pe=
+riod_us;
+> -               num_attrs++;
+> -       }
+> -       info->num_attrs =3D num_attrs;
+> -
+>         spin_unlock_irqrestore(&gpio_lock, flags);
+>  }
+>
+> @@ -2455,6 +2563,7 @@ static int lineinfo_get(struct gpio_chardev_data *c=
+dev, void __user *ip,
+>                         return -EBUSY;
+>         }
+>         gpio_desc_to_lineinfo(desc, &lineinfo);
+> +       supinfo_to_lineinfo(desc, &lineinfo);
+>
+>         if (copy_to_user(ip, &lineinfo, sizeof(lineinfo))) {
+>                 if (watch)
+> @@ -2545,6 +2654,7 @@ static int lineinfo_changed_notify(struct notifier_=
+block *nb,
+>         chg.event_type =3D action;
+>         chg.timestamp_ns =3D ktime_get_ns();
+>         gpio_desc_to_lineinfo(desc, &chg.info);
+> +       supinfo_to_lineinfo(desc, &chg.info);
+>
+>         ret =3D kfifo_in_spinlocked(&cdev->events, &chg, 1, &cdev->wait.l=
+ock);
+>         if (ret)
+> --
+> 2.39.2
+>
 
