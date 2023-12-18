@@ -1,144 +1,120 @@
-Return-Path: <linux-gpio+bounces-1628-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1629-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C55B78176FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 17:09:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B72D8817873
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 18:20:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 78B9C1F259D8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 16:09:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C5F028493B
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 17:20:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 241053D57A;
-	Mon, 18 Dec 2023 16:08:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FC295BF99;
+	Mon, 18 Dec 2023 17:20:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HsqVrdQl"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="CmTZp2PG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6963E3D56F;
-	Mon, 18 Dec 2023 16:08:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-591487a1941so2476198eaf.3;
-        Mon, 18 Dec 2023 08:08:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702915708; x=1703520508; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sVPPzIcxJTHHwl2PGodBQ7T+AVsNaRwSVhdAPKqSJh8=;
-        b=HsqVrdQlNkvuqUXf8bZonB38t12k4Vm82uYzUKsWeJYouQ7ivb00KIpnZL9R3HEGmk
-         KV12cKgBJUNaybWLUfiJpuagjxE9+PKXBJIQlzzGYzSC7hQuOwpLWhHgNibyGF+oYLO9
-         Qvtaqnlw9WrHOG8+pF8IWW0uddSFrkF5RHSb/cADRVzL2/9i+2jRqFteo+1VlmTUKxed
-         DuFJuTIOJVUCtkNkDH2oyA5iejOY5cOFLsA3V7ChNuVmMthv87uOgkU6qXuCQL5zCE3d
-         5WFXBH7FqqlpPoRLagoCT3Nxi+vWpcbRHSoDYOYgAy10J/7vXekUN0fj+qk04b09INrJ
-         4TZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702915708; x=1703520508;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sVPPzIcxJTHHwl2PGodBQ7T+AVsNaRwSVhdAPKqSJh8=;
-        b=eDOvExA2zOaBHBtS0j/mwbrFE7OpjydeQqVu3lYmmf92Jrofjzgtv772AD0FyZhChn
-         PEj6eGblc/HXL4DsufRSFDiTRnNV0Q4rH40vamTBUf2vuetxfI1kJMj3hyJUzA4oV+3Q
-         HH583Aoj1BAc+3SfoWGuru64SRel0m9bseyEfYw0JelczdUQ2IpVBD/r8N3z0R8dhMdb
-         1K5hJHyG+6FvPkHS/CuqMA4zhsvAi5KVP1iy5PgNZiXCXMxeISEc7g44bQx8HeS1iAzB
-         35YzmrOrGiFejZt6p3zWRJlFPS5JNgcdZ4sCmJOCXyJCHDBWClfZiOy3rB4ht70Qc13V
-         /l5g==
-X-Gm-Message-State: AOJu0YyrdNFM2KcTJSXK3zbod6nBbLSd/b9jvAmC5cVE107ua5ZhPuyp
-	U9cTlJgB6l/miNl8Ske77P0=
-X-Google-Smtp-Source: AGHT+IH3hyB/OHezF8gVk8v+Ju9d9lXTX+94o1lL+vFj9yEr44sc4odT+aLOuG8bf4wdn2R0dbmHKg==
-X-Received: by 2002:a05:6358:6f14:b0:170:68c8:1894 with SMTP id r20-20020a0563586f1400b0017068c81894mr16775514rwn.64.1702915708501;
-        Mon, 18 Dec 2023 08:08:28 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id w22-20020a63c116000000b005cd9bc22bdfsm2042605pgf.87.2023.12.18.08.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Dec 2023 08:08:28 -0800 (PST)
-Date: Tue, 19 Dec 2023 00:08:23 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH v4 1/5] gpiolib: cdev: relocate debounce_period_us from
- struct gpio_desc
-Message-ID: <ZYBud4tobG3x9Zhh@rigel>
-References: <20231216001652.56276-1-warthog618@gmail.com>
- <20231216001652.56276-2-warthog618@gmail.com>
- <CAMRc=McBVeQ=yRpGRsnPEULfPx15PBO3kiGscdS4s6-d0URc3w@mail.gmail.com>
- <ZYBoA25z76uutBBI@rigel>
- <CAMRc=MdKfs1ok2KgkO0C64cA9k8bOupxsjReBMQSdZbP+MQMCQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 747EE5A85A;
+	Mon, 18 Dec 2023 17:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 30F2B20004;
+	Mon, 18 Dec 2023 17:20:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1702920007;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=Ti36AdyiFQvN3/eY4vcX7OOVTVxOSw0U3/0TkVosSso=;
+	b=CmTZp2PGXgK4u4XpIXG7p/+mZ69OemtMncx3up09ozpyP4QhtvKSzx5kQgZO8Pl61ZcpDb
+	uj9rLR5Iz4LEhjsuxnkK8qpwtyVT+gzLUziclCy25VqYnrhfWB3yHRQOjIdZlV5KcnGbXb
+	ZlDyTYi4nMZ9D8jdHZkJC0rPXc6AZdHSyfAkGsPgOwPt0CeYKhJUBgGzLQkKamNjtrr1cz
+	nOffJZr7CuED37AFBFrAGgtx5U7vQoBJbr8SPPcJi+c5NBjQ9i6CvLVwQazjlqYrDBbIj5
+	JzDj8Sga+F+ZzHFxJowhcq0jFTPkJC22+JXNvlYXtfZYnphhnBb5TKFjCHfZlg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH 0/4] Add support for Mobileye EyeQ5 pin controller
+Date: Mon, 18 Dec 2023 18:19:45 +0100
+Message-Id: <20231218-mbly-pinctrl-v1-0-2f7d366c2051@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdKfs1ok2KgkO0C64cA9k8bOupxsjReBMQSdZbP+MQMCQ@mail.gmail.com>
+X-B4-Tracking: v=1; b=H4sIADF/gGUC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDI2NDINbNTcqp1C3IzEsuKcrRNU9MS7VMNje2sDQ2UwJqKShKTcusABsXHVt
+ bCwBMJ+pmXgAAAA==
+To: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: linux-mips@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.12.4
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Mon, Dec 18, 2023 at 05:01:32PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 18, 2023 at 4:40 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Mon, Dec 18, 2023 at 04:24:50PM +0100, Bartosz Golaszewski wrote:
-> > > On Sat, Dec 16, 2023 at 1:17 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
+Hi,
 
-> > > > +static void line_set_debounce_period(struct line *line,
-> > > > +                                    unsigned int debounce_period_us)
-> > > > +{
-> > > > +       bool was_suppl = line_is_supplemental(line);
-> > > > +
-> > > > +       WRITE_ONCE(line->debounce_period_us, debounce_period_us);
-> > > > +
-> > > > +       if (line_is_supplemental(line) == was_suppl)
-> > > > +               return;
-> > > > +
-> > > > +       if (was_suppl)
-> > > > +               supinfo_erase(line);
-> > > > +       else
-> > > > +               supinfo_insert(line);
-> > >
-> > > Could you add a comment here saying it's called with the config mutex
-> > > taken as at first glance it looks racy but actually isn't?
-> > >
-> >
-> > Sure.  Though it is also covered by the gdev->sem you added, right?
-> > So the config_mutex is now redundant?
-> > Should I document it is covered by both?
-> > Or drop the config_mutex entirely?
-> >
->
-> No! The semaphore is a read-write semaphore and we can have multiple
-> readers at once. This semaphore only protects us from the chip being
-> set to NULL during a system call. It will also go away once I get the
-> descriptor access serialized (or not - I'm figuring out a lockless
-> approach) and finally use SRCU to protect gdev->chip.
->
+This series adds pinctrl support to the Mobileye EyeQ5 platform,
+following up on the platform support series by Grégory Clement [1].
 
-Ah, so it is.
+All registers involved live in a shared register region called OLB
+("Other Logic Block"). We have control over bias, drive strength and
+muxing. The latter allows two functions per pin; the first function is
+always GPIO while the second one is pin-dependent. Functions are
+statically declared in the driver, associated to compatibles. Two
+compatibles exist, one for each bank.
 
-> > And you wanted some comments to explain the logic?
-> > I thought this is a common "has it changed" pattern, and so didn't
-> > require additional explanation, but I guess not as common as I thought.
-> >
->
-> If line_set_debounce_period() could be called concurrently for the
-> same line, this approach would be racy. It cannot but I want a comment
-> here as I fear that if in the future we add some more attributes that
-> constitute "supplemental info" and which may be changed outside of the
-> config lock then this would in fact become racy.
->
+The pin controller's functionality is not limited so each pin maps to
+one group. That makes pin & group indexes the same, simplifying logic.
+Having two instances, one per bank, also is done to simplify the
+driver's logic.
 
-If any line config is going to be changed from the userspace side then
-it will be by the SET_CONFIG ioctl, and so be covered by the config_mutex,
-but it can't hurt to explicitly document it here as well.
+The series ends by adding the two banks as devicetree nodes and
+declaring a pin-mux node for each function. We also add pinctrl
+references to the existing UART nodes. We are based on the reset
+series [2] for the sole reason of avoiding merge conflicts in the
+devicetree.
 
-Cheers,
-Kent.
+[1]: https://lore.kernel.org/lkml/20231212163459.1923041-1-gregory.clement@bootlin.com/
+[2]: https://lore.kernel.org/lkml/20231218-mbly-reset-v1-0-b4688b916213@bootlin.com/
+
+Have a nice day,
+Théo Lebrun
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Théo Lebrun (4):
+      dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings
+      pinctrl: eyeq5: add driver
+      MIPS: mobileye: eyeq5: add pinctrl nodes & pinmux function nodes
+      MIPS: mobileye: eyeq5: add pinctrl properties to uarts
+
+ .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 125 +++++
+ MAINTAINERS                                        |   2 +
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 128 +++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  17 +
+ drivers/pinctrl/Kconfig                            |  15 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 593 +++++++++++++++++++++
+ 7 files changed, 881 insertions(+)
+---
+base-commit: cfa954ebcdc3504dbf38ff5ba1589ed0cdfc8313
+change-id: 20231023-mbly-pinctrl-7afe9c738936
+
+Best regards,
+-- 
+Théo Lebrun <theo.lebrun@bootlin.com>
 
 
