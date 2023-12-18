@@ -1,122 +1,209 @@
-Return-Path: <linux-gpio+bounces-1592-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1593-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAF4815FE6
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 15:43:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D2398163E9
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 02:00:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 521A71F2140A
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Dec 2023 14:43:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7D22281BF4
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 01:00:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4761636AF2;
-	Sun, 17 Dec 2023 14:43:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A821FCC;
+	Mon, 18 Dec 2023 01:00:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="QFc0hG3c"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IQO386vW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from aposti.net (aposti.net [89.234.176.197])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F83346441;
-	Sun, 17 Dec 2023 14:43:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=crapouillou.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=crapouillou.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-	s=mail; t=1702824208;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=7up0xNh2ORIiEUbqH50P1CWetD6TUmJxMwpCW1gSaUg=;
-	b=QFc0hG3cmXDMi3vrAYkSLc6BdDem19p8J1FM6D82oDIWr/84AKpWtkks6/DQwUZKr4KSci
-	OuW+zMEoP0YFfK03Yl0nGn5VmsaxudxMw8KsIhRvTHtNlOlF1RXb71RG5cmjwuj+cqS6H/
-	uh9RrmXCiT55qFgDCBcB3GP3RfoYN1s=
-Message-ID: <9cbaf60cd6cf1a581e7587088f71ca7cf6b6ff37.camel@crapouillou.net>
-Subject: Re: [PATCH v5 03/13] pinctrl: ingenic: Use C99 initializers in
- PINCTRL_PIN_GROUP()
-From: Paul Cercueil <paul@crapouillou.net>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, Geert Uytterhoeven
- <geert+renesas@glider.be>,  Rasmus Villemoes <linux@rasmusvillemoes.dk>,
- Biju Das <biju.das.jz@bp.renesas.com>, Claudiu Beznea
- <claudiu.beznea.uj@bp.renesas.com>, Jianlong Huang
- <jianlong.huang@starfivetech.com>, linux-arm-kernel@lists.infradead.org, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-mediatek@lists.infradead.org, linux-mips@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Scott
- Branden <sbranden@broadcom.com>, Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Dong Aisheng
- <aisheng.dong@nxp.com>,  Fabio Estevam <festevam@gmail.com>, Shawn Guo
- <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>,  Pengutronix Kernel
- Team <kernel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, NXP
- Linux Team <linux-imx@nxp.com>, Sean Wang <sean.wang@kernel.org>, Lakshmi
- Sowjanya D <lakshmi.sowjanya.d@intel.com>, Emil Renner Berthing
- <kernel@esmil.dk>, Hal Feng <hal.feng@starfivetech.com>
-Date: Sun, 17 Dec 2023 15:43:24 +0100
-In-Reply-To: <ZXmv81bJRMqB1GLY@smile.fi.intel.com>
-References: <20231211190321.307330-1-andriy.shevchenko@linux.intel.com>
-	 <20231211190321.307330-4-andriy.shevchenko@linux.intel.com>
-	 <fb29c3bca8d245e3f7496539b7293aa4fc4bccd0.camel@crapouillou.net>
-	 <ZXmv81bJRMqB1GLY@smile.fi.intel.com>
-Autocrypt: addr=paul@crapouillou.net; prefer-encrypt=mutual;
- keydata=mQENBF0KhcEBCADkfmrzdTOp/gFOMQX0QwKE2WgeCJiHPWkpEuPH81/HB2dpjPZNW03ZMLQfECbbaEkdbN4YnPfXgcc1uBe5mwOAPV1MBlaZcEt4M67iYQwSNrP7maPS3IaQJ18ES8JJ5Uf5UzFZaUawgH+oipYGW+v31cX6L3k+dGsPRM0Pyo0sQt52fsopNPZ9iag0iY7dGNuKenaEqkYNjwEgTtNz8dt6s3hMpHIKZFL3OhAGi88wF/21isv0zkF4J0wlf9gYUTEEY3Eulx80PTVqGIcHZzfavlWIdzhe+rxHTDGVwseR2Y1WjgFGQ2F+vXetAB8NEeygXee+i9nY5qt9c07m8mzjABEBAAG0JFBhdWwgQ2VyY3VlaWwgPHBhdWxAY3JhcG91aWxsb3UubmV0PokBTgQTAQoAOBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsDBQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHPua9InSr1BgvIH/0kLyrI3V0f33a6D3BJwc1grbygPVYGuC5l5eMnAI+rDmLR19E2yvibRpgUc87NmPEQPpbbtAZt8On/2WZoE5OIPdlId/AHNpdgAtGXo0ZX4LGeVPjxjdkbrKVHxbcdcnY+zzaFglpbVSvp76pxqgVg8PgxkAAeeJV+ET4t0823Gz2HzCL/6JZhvKAEtHVulOWoBh368SYdolp1TSfORWmHzvQiCCCA+j0cMkYVGzIQzEQhX7Urf9N/nhU5/SGLFEi9DcBfXoGzhyQyLXflhJtKm3XGB1K/pPulbKaPcKAl6rIDWPuFpHkSbmZ9r4KFlBwgAhlGy6nqP7O3u7q23hRW5AQ0EXQqFwQEIAMo+MgvYHsyjX3Ja4Oolg1Txzm8woj30ch2nACFCqaO0R/1kLj2VVeLrDyQUOlXx9PD6IQI4M8wy8m0sR4wV2p/g/paw7k65cjzYYLh+FdLNyO7IW
-	YXndJO+wDPi3aK/YKUYepqlP+QsmaHNYNdXEQDRKqNfJg8t0f5rfzp9ryxd1tCnbV+tG8VHQWiZXNqN7062DygSNXFUfQ0vZ3J2D4oAcIAEXTymRQ2+hr3Hf7I61KMHWeSkCvCG2decTYsHlw5Erix/jYWqVOtX0roOOLqWkqpQQJWtU+biWrAksmFmCp5fXIg1Nlg39v21xCXBGxJkxyTYuhdWyu1yDQ+LSIUAEQEAAYkBNgQYAQoAIBYhBNdHYd8OeCBwpMuVxnPua9InSr1BBQJdCoXBAhsMAAoJEHPua9InSr1B4wsH/Az767YCT0FSsMNt1jkkdLCBi7nY0GTW+PLP1a4zvVqFMo/vD6uz1ZflVTUAEvcTi3VHYZrlgjcxmcGu239oruqUS8Qy/xgZBp9KF0NTWQSl1iBfVbIU5VV1vHS6r77W5x0qXgfvAUWOH4gmN3MnF01SH2zMcLiaUGF+mcwl15rHbjnT3Nu2399aSE6cep86igfCAyFUOXjYEGlJy+c6UyT+DUylpjQg0nl8MlZ/7Whg2fAU9+FALIbQYQzGlT4c71SibR9T741jnegHhlmV4WXXUD6roFt54t0MSAFSVxzG8mLcSjR2cLUJ3NIPXixYUSEn3tQhfZj07xIIjWxAYZo=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A7D1FA5
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 01:00:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cc6121c113so11306381fa.0
+        for <linux-gpio@vger.kernel.org>; Sun, 17 Dec 2023 17:00:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1702861243; x=1703466043; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EYhM54+sMY2tBRKqpDaD5Gx2Jei7oYxE5mh0exAmkgk=;
+        b=IQO386vW6DGGmQQjD2LzYmJJorHBqdMYptvsqfBlulPsSD4whf+Ehh6k4Lz7KR9Ikj
+         MPik2LKqs2gJS1XZi78AjYOoCTUvlqGBEgC0PQhJ6u08OZ3yenbyTOySET7//857oytM
+         uwmSlKRi8wM1pUTEQlaJ0Kl6gCqzXG1YXCE1lf52muJ8kL+Q5prwwLovOQKLQNVOlgbF
+         0tZ/6w5X1fQFaSUXiSB1XAKK/Y9wiV5UqSH4+VN48PbzO74J3INS8DANQb77oaBSrpui
+         +u+534eXrPUwqJ3QJtiodPWK0732pXF1Qbw37b8nozGWHhPJ0cGEvdxzDMJCu0l5tQju
+         804A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702861243; x=1703466043;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=EYhM54+sMY2tBRKqpDaD5Gx2Jei7oYxE5mh0exAmkgk=;
+        b=ggKEa+egFNS8V8V73Iwza953XS2WNisQxOmA+7hlA9U2UxkMzBKkyuQAjOaUFKOQDI
+         pVvqw84yrgCaJAGsIfEeNVsQZaCZOYy7N4QLah3iq51ltBsonrqbQ4OiTNikUtSOGTJN
+         6wuElnYMypXuUIbzb1x12DpRw/V66CMR5JnQu09aLEkaZJ91Gv/o3kTvi0UPdqRPK241
+         bZg7xB1rNnFGmnew9l+0homMdhCNZIB/GVymJJP+vlUTrYcRofaZsakQHhVwXuc1Sg8K
+         /yQJSNyOUj7Tl3sFsU5LAQbUX0RnHWZ5o/D2eWL3zMKU0IrmZLxptXPniUVnVCAOYJKF
+         cDZw==
+X-Gm-Message-State: AOJu0YxxPW/T2DTFsR6GRoprmlYsrTMmews0mFDwxWkM0+uEzJxZ7SVX
+	S44SE1Ic1eBO68z+SnAU4en1SaJ3GDDCe7kQ2ByIWw==
+X-Google-Smtp-Source: AGHT+IGT+13egZruEA6UBIyNn6mhLZfwdbUiXunPJ5JYwT6M/cXeoLwloFIFi6Do8ovp2sRvdiDM906QH2fckik0l2c=
+X-Received: by 2002:a05:651c:2106:b0:2cc:1f36:2abe with SMTP id
+ a6-20020a05651c210600b002cc1f362abemr3032047ljq.92.1702861243536; Sun, 17 Dec
+ 2023 17:00:43 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20231212104451.22522-1-mitrutzceclan@gmail.com>
+ <CAMknhBEfisaSbHhnnei=gT1HZvHNWHrJD3O2y4b_TikkH=v2Ag@mail.gmail.com>
+ <e4a9dde7-dca6-4862-bfb3-a93b879c9a1f@gmail.com> <CAMknhBFQ56SwMvOni6UDqvaq8t0iydHcggiL0biUeLQ6OV1ONA@mail.gmail.com>
+ <a1f60bf6-5fb6-4814-b3b5-799fb8ffb847@gmail.com> <20231217135007.3e5d959a@jic23-huawei>
+In-Reply-To: <20231217135007.3e5d959a@jic23-huawei>
+From: David Lechner <dlechner@baylibre.com>
+Date: Sun, 17 Dec 2023 19:00:32 -0600
+Message-ID: <CAMknhBEzM202_pu=yYcmuC2Tz1HNv2zC=iy77q09hryfcGQ=Zw@mail.gmail.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: adc: add AD7173
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Ceclan Dumitru <mitrutzceclan@gmail.com>, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	andy@kernel.org, linux-gpio@vger.kernel.org, 
+	Lars-Peter Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
+	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Sun, Dec 17, 2023 at 7:50=E2=80=AFAM Jonathan Cameron <jic23@kernel.org>=
+ wrote:
+>
+> On Thu, 14 Dec 2023 19:03:28 +0200
+> Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
+>
+> > On 12/14/23 18:12, David Lechner wrote:
+> > > On Thu, Dec 14, 2023 at 1:43=E2=80=AFPM Ceclan Dumitru <mitrutzceclan=
+@gmail.com> wrote:
+> > >> On 12/12/23 17:09, David Lechner wrote:
+> > >>> On Tue, Dec 12, 2023 at 11:45=E2=80=AFAM Dumitru Ceclan <mitrutzcec=
+lan@gmail.com> wrote:
+> >
+> > >> ...
+> > >>
+> > >>>> +  interrupts:
+> > >>>> +    maxItems: 1
+> > >>>
+> > >>> Shouldn't this be 2? The datasheet says there is a "Data Output Rea=
+dy"
+> > >>> signal on the DOUT/RDY pin and an "Error Output" on the SYNC/ERROR
+> > >>> pin. Although I could see how RDY could be considered part of the S=
+PI
+> > >>> bus. In any case, a description explaining what the interrupt is wo=
+uld
+> > >>> be useful.
+> > >>>
+> > >>
+> > >> I do not see how there could be 2 interrupts. DOUT/RDY is used as an
+> > >> interrupt when waiting for a conversion to finalize.
+> > >>
+> > >> Sync and Error are sepparate pins, Sync(if enabled) works only as an
+> > >> input that resets the modulator and the digital filter.
+> > >
+> > > I only looked at the AD7172-2 datasheet and pin 15 is labeled
+> > > SYNC/ERROR. Maybe they are separate pins on other chips?
+> >
+> > Yep, sorry, missed that. All other supported models have them separate.
+>
+>
+> > >
+> > >>
+> > >> Error can be configured as input, output or ERROR output (OR between=
+ all
+> > >> internal error sources).
+> > >>
+> > >> Would this be alright
+> > >>   interrupts:
+> > >>
+> > >>     description: Conversion completion interrupt.
+> > >>                  Pin is shared with SPI DOUT.
+> > >>     maxItems: 1
+> > >
+> > > Since ERROR is an output, I would expect it to be an interrupt. The
+> > > RDY output, on the other hand, would be wired to a SPI controller wit=
+h
+> > > the SPI_READY feature (I use the Linux flag name here because I'm not
+> > > aware of a corresponding devicetree flag). So I don't think the RDY
+> > > signal would be an interrupt.
+> > >
+> >
+> > Error does not have the purpose to be an interrupt. The only interrupt
+> > used from this chip is the one from the DOUT/~RDY pin. Sure, it is wire=
+d
+> > to the SPI controller, but when you can't also receive interrupts on
+> > that very same CPU pin an issue arises. So that pin is also wired to
+> > another GPIO with interrupt support.
+>
+> You've lost me.  It's a pin that has a state change when an error conditi=
+on
+> occurs.  Why not an interrupt?  Doesn't matter that the driver doesn't
+> use this functionality. dt-bindings should be as comprehensive as possibl=
+e.
+> Given it's a multipurpose pin you'd also want to support it as a gpio to =
+be
+> complete alongside the other GPIOs.
+>
+> >
+> > This is the same way that ad4130.yaml is written for example (with the
+> > exception that ad4130 supports configuring where the interrupt is route=
+d).
+> >
+> > In regards to SPI_READY _BITUL(7) /* slave pulls low to pause */: the
+> > ad_sigma_delta framework (if it can be called that) is written to expec=
+t
+> > a pin interrupt, not to use SPI_READY controller feature.
+>
+> SPI_READY is supported by only a couple of controllers. I'm not even that
+> sure exactly how it is defined and whether that lines up with this usecas=
+e.
+> From some old asci art. https://lore.kernel.org/all/1456747459-8559-1-git=
+-send-email-linux@rempel-privat.de/
+>
+> Flow control: Ready Sequence
+> Master CS   |-----1\_______________________|
+> Slave  FC   |--------2\____________________|
+> DATA        |-----------3\_________________|
+>
+> So you set master and then wait for a flow control pin (the ready signal)=
+ before
+> you can actually talk to the device.
+>
+> Here we are indicating data is ready to be be read out.
+>
+> So I don't 'think' SPI_READY applies.
+>
+> Jonathan
+>
 
-Le mercredi 13 d=C3=A9cembre 2023 =C3=A0 15:21 +0200, Andy Shevchenko a =C3=
-=A9crit=C2=A0:
-> On Wed, Dec 13, 2023 at 10:55:46AM +0100, Paul Cercueil wrote:
-> > Le lundi 11 d=C3=A9cembre 2023 =C3=A0 20:57 +0200, Andy Shevchenko a =
-=C3=A9crit=C2=A0:
->=20
-> ...
->=20
-> > > -#define INGENIC_PIN_GROUP(name, id, func)		\
-> > > -	INGENIC_PIN_GROUP_FUNCS(name, id, (void *)(func))
-> > > +#define INGENIC_PIN_GROUP(_name_, id,
-> > > func)						\
-> > > +	{						=09
-> > > 			\
-> > > +		.name =3D
-> > > _name_,								\
-> > > +		.pins =3D
-> > > id##_pins,							\
-> > > +		.num_pins =3D
-> > > ARRAY_SIZE(id##_pins),					\
-> > > +		.data =3D (void
-> > > *)func,							\
-> > > +	}
-> >=20
-> > This INGENIC_PIN_GROUP() macro doesn't need to be modified, does
-> > it?
->=20
-> We can go either way. I prefer to go this way as it reduces level of
-> indirections in the macros. It makes code easier to read and
-> understand.
-> But if you insist, I can drop that change in next version.
->=20
+I'm not arguing that SPI_READY applies in this particular case, but
+FWIW it does seem to me like...
 
-I like the patches to be minimal. But I understand your point of view
-as well.
-
-If you have to issue a v6, maybe state the reason why you also modify
-INGENIC_PIN_GROUP() then. But I don't care enough to request a v6 just
-for that.
-
-So:
-Acked-by: Paul Cercueil <paul@crapouillou.net>
-
-Cheers,
--Paul
+1) SPI_READY could be implemented in any SPI driver using a GPIO
+interrupt (similar to how we already have GPIO CS)
+2) In cases where the SPI controller does have actual hardware support
+for SPI_READY and the ADC chip A) uses CS to trigger a conversion and
+B) has a "busy" signal that goes low when the conversion is complete,
+then the SPI_READY feature could be used to make reading sample data
+more efficient by avoiding any CPU intervention between CS assertion
+and starting the data xfer due to waiting for the conversion to
+complete either by waiting for an interrupt or sleeping for a fixed
+amount of time.
 
