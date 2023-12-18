@@ -1,148 +1,100 @@
-Return-Path: <linux-gpio+bounces-1618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79F618170A8
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 14:40:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A781817276
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 15:09:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 29752282C22
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 13:40:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DDD3F2856C5
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 14:09:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2FE129EFA;
-	Mon, 18 Dec 2023 13:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 414A937889;
+	Mon, 18 Dec 2023 14:06:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i4i5PDqG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQOr/ghN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f176.google.com (mail-oi1-f176.google.com [209.85.167.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AB80129EE3;
-	Mon, 18 Dec 2023 13:40:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702906840; x=1734442840;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=o+zE+sjrn3v1eFh6D59oFX7RAmbPwzBszxq/pKNAJRw=;
-  b=i4i5PDqGwVBUdWlKAwNwfEXmc+jDPzJ4Dsb5LjnaVtdvNKH+UQQFMSFB
-   IUsFAOfNu0kfxz1pTrV9v38wZGndCTAE8EItky/mvdl3grHh2NsvbPzev
-   ZxPaEk8V+4bA6mHWYgZm7FjGLqpdZy88vjSZxYyiqfPmsf4kY+kvJzzaK
-   kmIrgDPAl6SXAuxyLrjCVq3qogEg7YWR0/FMtfjfKJAEnEJ3EjiA7K2Y9
-   v5FKf2ZPJACmQHWFsIg+qUTTxOELWj1eXLtHbtFEqpHR3bNVBiDuTHmDN
-   Wqm9MtaIGBgwXDoRBspTWi2eA9U+c/L0fZcxRJWDl+V125nBxax3Ucgdp
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="8957355"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="8957355"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 05:40:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="845954022"
-X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
-   d="scan'208";a="845954022"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga004.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 05:40:36 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rFDrF-00000006x5g-335i;
-	Mon, 18 Dec 2023 15:40:33 +0200
-Date: Mon, 18 Dec 2023 15:40:33 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/3] device property: Implement device_is_big_endian()
-Message-ID: <ZYBL0Y9VaWeVFbg5@smile.fi.intel.com>
-References: <CAMRc=MdSpk_OszeDCyA5_Sp-w=sL9DHB2gGCOFP+FCiobm2cbA@mail.gmail.com>
- <2023111513-stinky-doorframe-8cd1@gregkh>
- <ZXHUat2Xo1VcAxN2@smile.fi.intel.com>
- <2023121512-breeches-snaking-74ad@gregkh>
- <ZXxr8LD1P63k-xRV@smile.fi.intel.com>
- <CAMRc=MeBh5Uq1YTvcnGugnvOFYh+rqc7fJpZrSvfmHbwh3SKXw@mail.gmail.com>
- <ZYAlOpjJBuvY-wTR@smile.fi.intel.com>
- <CAMRc=MeJgJj7ikp85vj9KMxgh6Rfx5BrCa3uq52Rj+iDFmQunQ@mail.gmail.com>
- <2023121834-exuberant-visibly-329f@gregkh>
- <CAMRc=MfUNaBcsxGstAk3Y1To2AMGvDY6EoQYcyBALDQuA=QGdg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C4A5A84F
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 14:06:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oi1-f176.google.com with SMTP id 5614622812f47-3bb53e20a43so385817b6e.1
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 06:06:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1702908415; x=1703513215; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9wIOhibGJXFofpfSDEGIwPzynecnxLJGufeFrCuiEGA=;
+        b=ZQOr/ghNQs+H55FQ63Hr/LxN7Y5r9rKEerXLGgsu7I333f7ruJ2mVzWqaJqsiVPjUi
+         5ny/6aaF+v1PSQ2uLMBWFlfWYuDzk15XMGWSq/n854LCnh9OEIywp2hxbz4zDHK5/W79
+         zasOC7OjSCmHDiVaj1otAwqTYImPGOuyK5bJK7me+LA8xrG1zoZJT/knM1/XBIQ6TCPy
+         gbnT9D0WhJjR5y9oPIITX0iM2PkYIer37bhsU5bzK0FjsoYeCaPUvMqXqa1Wis/FO3rK
+         1rLT64ldaKYq+tNcBEBsTSan8gaYxwZ5JXSifizoltDCSp1GcffEAwK960artqN3HJYH
+         +v2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702908415; x=1703513215;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9wIOhibGJXFofpfSDEGIwPzynecnxLJGufeFrCuiEGA=;
+        b=bg/kKu/YZbFM3c5JIwByj1WQuEhXmW2cw7ApMig0PW2u/IbXmJmMeXM2kAzQNZOBiO
+         fZ0UJ/5rwNmn+Ygc6hEYD5uNGXKpTkQSWX1dPCRU9CeO+/JI5cACmGBtZzEpNqF9IS6i
+         NiszfQomwxvxsogDoddFtEx+VJOQ/wMIrFxgBGwuZswOMyfCmyP4NVnlHx2oQsamzuzf
+         6gjpj7osjIcOIUH0u1vam20ox4ZpXpjoOWm7mHgBDVxShtKHzvbBpVbU7J+pm2O64SCq
+         Te2+X0McliodrTkWpSl/v92TAJrDRKu/KWFYSu5ITSJDu9A3bfCrFS4KcgrL6p3wPyRK
+         rD+Q==
+X-Gm-Message-State: AOJu0Yz83MpXnS8+2OABIGMgyVeyf4urFl838ilBJ+fOzEH3UedIkTlL
+	BIf+9PaD54qVc2rypLJTb9oxsxQHxqQmJEcWdoq77A==
+X-Google-Smtp-Source: AGHT+IGW9lwauNcpVu3C788nmkRoMvRhPi/6Vtdkith2DcDMCYrdIGJRCyTh2167K6c/ggb0E03sWA/dWtsLOc3323Y=
+X-Received: by 2002:a05:6808:1307:b0:3b8:3442:8d99 with SMTP id
+ y7-20020a056808130700b003b834428d99mr21287470oiv.20.1702908415587; Mon, 18
+ Dec 2023 06:06:55 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfUNaBcsxGstAk3Y1To2AMGvDY6EoQYcyBALDQuA=QGdg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <cover.1702642700.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1702642700.git.geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 18 Dec 2023 15:06:44 +0100
+Message-ID: <CACRpkdbtWtLEFr_AvgHZ6yfL17+0zXY_Czwc2zJdaSTU1dbWHQ@mail.gmail.com>
+Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.8 (take two)
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 01:38:18PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 18, 2023 at 12:18 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> > On Mon, Dec 18, 2023 at 12:05:54PM +0100, Bartosz Golaszewski wrote:
-> > > On Mon, Dec 18, 2023 at 11:56 AM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Mon, Dec 18, 2023 at 11:35:04AM +0100, Bartosz Golaszewski wrote:
-> > > > > On Fri, Dec 15, 2023 at 4:11 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
-
-...
-
-> > > > > Ugh, this is rebased on top of 6.7-rc3...
-> > > > >
-> > > > > My tree is based on rc1, if I pull it, then it'll be a mess.
-> > > >
-> > > > But v6.7-rc3 is something that is already in the upstream.
-> > > > I don't see how it can be more "mess" with this. Whatever...
-> > >
-> > > My for-next branch is based on v6.7-rc1 (as it should IIUC) and if I
-> > > now pull Greg's tag, I will be sending rc1-rc3 stuff to Linus Torvalds
-> > > in addition to the GPIO changes for v6.8. I bet he will not appreciate
-> > > it.
-> >
-> > No, you will not be sending him -rc1-rc3 stuff at all, that's not how
-> > git works.
-> >
-> > Try it yourself and see.  Git does a "what's the changesets that are
-> > in this pull request and not already in mine" when determining this.
-> > You can see it when doing a 'git request-pull', it will only show you
-> > the diff of what will be sent.
-> >
-> > Also look at the 'git merge-base' output, it will show the point where
-> > things will start to be sent, and that will not have all of the -rc1
-> > through -rc3 changes in it.
-> >
-> > > Greg: Is it too late to have this rebased on top of v6.7-rc1 instead?
-> >
-> > Sorry, but yes.  But don't worry, again, git can handle all of this
-> > easily!  Try it locally and see.  Don't fear the 'fast-forward' :)
-> 
-> Sorry for the noise. I did try it locally and noticed that a bunch of
-> commits that were merged before rc3 moved "before it" in git log and
-> figured this is what the PR would look like. However the PR is correct
-> and I should have generated it before sending the email.
-
-Right.
-
-What Linus can rant on is when one rebases his stuff on newer rcX,
-the merges on contrary are pretty much okay as long as they are
-justified.
-
-> Thanks for a lesson in git.
-
--- 
-With Best Regards,
-Andy Shevchenko
+On Fri, Dec 15, 2023 at 3:20=E2=80=AFPM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
 
 
+> The following changes since commit dc99d4c8ac46bf533b9519a53795c4cd6ff0fa=
+39:
+>
+>   dt-bindings: pinctrl: renesas: Drop unneeded quotes (2023-11-27 11:12:1=
+2 +0100)
+>
+> are available in the Git repository at:
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
+ tags/renesas-pinctrl-for-v6.8-tag2
+>
+> for you to fetch changes up to 9e5889c68d992b65efd10aa0a4523c96fd07077f:
+>
+>   pinctrl: renesas: rzg2l: Add input enable to the Ethernet pins (2023-12=
+-15 11:34:34 +0100)
+
+Pulled in!
+
+Thanks!
+
+Yours,
+Linus Walleij
 
