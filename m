@@ -1,159 +1,163 @@
-Return-Path: <linux-gpio+bounces-1603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7D8816A96
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 11:10:23 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6875E816B3F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 11:35:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 063B71F21A50
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 10:10:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E0F09B20FF2
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 10:35:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50989134B5;
-	Mon, 18 Dec 2023 10:10:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90695154A9;
+	Mon, 18 Dec 2023 10:35:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzBDenRg"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="d/lXs4H+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF49134C3;
-	Mon, 18 Dec 2023 10:10:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2cc3f5e7451so32910061fa.2;
-        Mon, 18 Dec 2023 02:10:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FCD19442
+	for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 10:35:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7c51d5e6184so859280241.2
+        for <linux-gpio@vger.kernel.org>; Mon, 18 Dec 2023 02:35:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702894214; x=1703499014; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=YC7nUYxtMAPXUFOtVXTFzk0D+Ha1NUghjTTPnYwUs+c=;
-        b=lzBDenRge3xD+m5ur0rDocyPV4wcKtS3SpcNRP1ugzPIn/7WTwlQW02aaHV8vACvzJ
-         EMhifKY+aOEtLz5Px6tzu97kVoal+6JtHCHUg2E0psNXxzrZOkqaICxndg7DL7Ga4TsH
-         n0S+hIxRWGn+FdjuSeFV2oGRvfRDjProRKgY5EWZ9jNm5jxU93AnAK22PykEzoaph6Wj
-         UPaPajaFKT/bGsg/hJsIEs2NJKdwGOOhLVu3ojxRsXn0uUrpA7JaU21ZL0MuZ0F44ITO
-         19hJgj8wmIvv4FZExHI2l8Uaib4GGa765sMt5L66YkLggVZLIVN0tzvInQaKYCaEtDZ+
-         eh1w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702894214; x=1703499014;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702895716; x=1703500516; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=YC7nUYxtMAPXUFOtVXTFzk0D+Ha1NUghjTTPnYwUs+c=;
-        b=gXve+/OLNyDofbC5Sq704Ox8MYHt1DMHAgzzKMRh3ocNDf9N5r9RMkkO2yD/VG4UPi
-         iDy7i47F1OECDCuX1hvwIfjgQ6T2q2pqaYFNtd1yFlgDVAUKBIx8nosn/IFSJxm5H2hD
-         GlWZ8xzLjSOPgX7f/Go0zISfG3EDteqpJSpnFzDmheTlrbaTRThLhXypmu8+ynu8sH3e
-         b91EcGuVNBVFcRvtIxU5umkcaojQYHarwFphN8Ft4Sxm+HQFjMUYCqD2w4u4jIuNDzPQ
-         PyAG2gbynllMljs9GVAqg5GB4J1EVLeaq8pyNme/iNYDg25/C7xh2aprxq/jUdfxqT7I
-         zRHA==
-X-Gm-Message-State: AOJu0YwjoQAxD7fPeGkDdSu5TsAUn905Tkh1rGTUxx735zk3jCg9pdTy
-	UlKh/M2BgB7vBdRHMnr2RqA=
-X-Google-Smtp-Source: AGHT+IE3EVLnFggdzYIFxGY/O4qZvTMXQtcau7VkqurJWHdYJ1W+qQxqmBjun1z1ouLDhPHAtx2Kpw==
-X-Received: by 2002:a05:651c:1a13:b0:2cb:314f:c300 with SMTP id by19-20020a05651c1a1300b002cb314fc300mr6926538ljb.27.1702894213998;
-        Mon, 18 Dec 2023 02:10:13 -0800 (PST)
-Received: from mobilestation ([178.176.56.174])
-        by smtp.gmail.com with ESMTPSA id e15-20020a05651c150f00b002cc6b5ab63asm552635ljf.119.2023.12.18.02.10.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Dec 2023 02:10:13 -0800 (PST)
-Date: Mon, 18 Dec 2023 13:10:08 +0300
-From: Serge Semin <fancer.lancer@gmail.com>
-To: xiongxin <xiongxin@kylinos.cn>
-Cc: hoan@os.amperecomputing.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	andy@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Riwen Lu <luriwen@kylinos.cn>
-Subject: Re: [v2] gpio: dwapb: mask/unmask IRQ when disable/enale it
-Message-ID: <26nje24sbwccuenarcttuskk7q2ngyxun2nbuynd32ylcozc5y@aasey6najeji>
-References: <20231218081246.1921152-1-xiongxin@kylinos.cn>
+        bh=nKrnhG/k4CH/2ssOYwTqTZAwFSpFGjNkbLSrYXrswEY=;
+        b=d/lXs4H+VsuQXiHUHncv2NCoIJF9zEWJCzMtZ4DW54/07yG7QJs3ttqAFuS/eZHA0t
+         ZCaamwJ0AkPSK6D+APgDTdA+74ou4d2oo/Fz5ovSL3vsFibdJlejNL8wEmdmvyzdLYfA
+         GpxROGVdd/sWRUD3EOEFD65Cb7YBtvzgLOz5Au0bvOJY74N6BSdpnkDGFhxE/ybEKnGV
+         EJ/Icl6g34xcjbZcNppu262HcxgMOODHOLGIxhlfeQSCryK/gCnxIHukc24iBA/eOyFp
+         B1RapFlHO4xh3MhtnKnZuHiSTG0uUCzbi9YTQqeLqo2OIfBKlugQ8q4teRF595ik5qbQ
+         WZSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702895716; x=1703500516;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nKrnhG/k4CH/2ssOYwTqTZAwFSpFGjNkbLSrYXrswEY=;
+        b=bFfEb+R88C/Evp4JN7oH+cnQCw2/Zi/Vcj8z3NnskmmJorAugJE0Y6LOCn2z1CVd0A
+         v2QV/TUNnjATDfjmRzazeN7522TucAgwTrCQke0TtiWmtpw6MRiesS1+nzbzZNDvWIA0
+         KizWw1tE36NwJLSD9CXFSE0ybW8S9k0FFjZLVtXFpq7Hf4fYSDxC+YLVYJiP5WtWth8f
+         0yorhFOw4L7seCQJ86V2S6WitHRgtsz1SR/AYBhz1sHf0gHH6n+mLiySi2J3cI3HEV9u
+         jgfvXQ7Du+BtPsXikYUPtSy7C10rUP+cNEFck3qlxn0tTaHJoG029VbVieSS7vACMOBi
+         o2LQ==
+X-Gm-Message-State: AOJu0YxQXGeVUbjLsO98rKxcS2lRXtm6swG1EcAsPkj5Oti57y8IIPuX
+	NusI8cNHM2N577s+O9OX2FPciwEBn6XVEqnJ+js5zg==
+X-Google-Smtp-Source: AGHT+IHmqH+3qSJ/Y7dqSyKgdHLfx6vJ7fuT6ziEoB4me/46MgTAYdahXJV2j8MGtNt5cOiJSPrCVM+uB2TQfZcZOE8=
+X-Received: by 2002:a1f:7ccd:0:b0:4b6:b8c7:2bcf with SMTP id
+ x196-20020a1f7ccd000000b004b6b8c72bcfmr837498vkc.0.1702895715966; Mon, 18 Dec
+ 2023 02:35:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231218081246.1921152-1-xiongxin@kylinos.cn>
+References: <20231025184259.250588-1-andriy.shevchenko@linux.intel.com>
+ <20231025184259.250588-2-andriy.shevchenko@linux.intel.com>
+ <2023102624-moonshine-duller-3043@gregkh> <ZTpbMVSdKlOgLbwv@smile.fi.intel.com>
+ <ZUPBVMdi3hcTyW2n@smile.fi.intel.com> <CAMRc=MeV9ZyOzuQFEE_duPTHYgfmr6UZU6bpjDPhrczZX4PHpg@mail.gmail.com>
+ <CAMRc=MdSpk_OszeDCyA5_Sp-w=sL9DHB2gGCOFP+FCiobm2cbA@mail.gmail.com>
+ <2023111513-stinky-doorframe-8cd1@gregkh> <ZXHUat2Xo1VcAxN2@smile.fi.intel.com>
+ <2023121512-breeches-snaking-74ad@gregkh> <ZXxr8LD1P63k-xRV@smile.fi.intel.com>
+In-Reply-To: <ZXxr8LD1P63k-xRV@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 18 Dec 2023 11:35:04 +0100
+Message-ID: <CAMRc=MeBh5Uq1YTvcnGugnvOFYh+rqc7fJpZrSvfmHbwh3SKXw@mail.gmail.com>
+Subject: Re: [PATCH v1 1/3] device property: Implement device_is_big_endian()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-acpi@vger.kernel.org, 
+	Linus Walleij <linus.walleij@linaro.org>, Daniel Scally <djrscally@gmail.com>, 
+	Heikki Krogerus <heikki.krogerus@linux.intel.com>, 
+	Sakari Ailus <sakari.ailus@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 18, 2023 at 04:12:46PM +0800, xiongxin wrote:
-> In the hardware implementation of the i2c hid driver based on dwapb gpio
-> irq, when the user continues to use the i2c hid device in the suspend
-> process, the i2c hid interrupt will be masked after the resume process
-> is finished.
-> 
-> This is because the disable_irq()/enable_irq() of the dwapb gpio driver
-> does not synchronize the irq mask register state. In normal use of the
-> i2c hid procedure, the gpio irq irq_mask()/irq_unmask() functions are
-> called in pairs. In case of an exception, i2c_hid_core_suspend() calls
-> disable_irq() to disable the gpio irq. With low probability, this causes
-> irq_unmask() to not be called, which causes the gpio irq to be masked
-> and not unmasked in enable_irq(), raising an exception.
-> 
-> Add synchronization to the masked register state in the
-> dwapb_irq_enable()/dwapb_irq_disable() function. mask the gpio irq
-> before disabling it. After enabling the gpio irq, unmask the irq.
-> 
-> Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB GPIO block")
-> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-> Tested-by: xiongxin <xiongxin@kylinos.cn>
-> ---
->  drivers/gpio/gpio-dwapb.c | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-> index 4a4f61bf6c58..8c59332429c2 100644
-> --- a/drivers/gpio/gpio-dwapb.c
-> +++ b/drivers/gpio/gpio-dwapb.c
-> @@ -282,13 +282,15 @@ static void dwapb_irq_enable(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+On Fri, Dec 15, 2023 at 4:11=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Fri, Dec 15, 2023 at 03:49:38PM +0100, Greg Kroah-Hartman wrote:
+> > On Thu, Dec 07, 2023 at 04:19:22PM +0200, Andy Shevchenko wrote:
+> > > On Wed, Nov 15, 2023 at 03:21:29PM -0500, Greg Kroah-Hartman wrote:
+> > > > On Wed, Nov 15, 2023 at 03:58:54PM +0100, Bartosz Golaszewski wrote=
+:
+> > > > > On Fri, Nov 3, 2023 at 10:08=E2=80=AFAM Bartosz Golaszewski <brgl=
+@bgdev.pl> wrote:
+> > > > > > On Thu, Nov 2, 2023 at 4:33=E2=80=AFPM Andy Shevchenko
+> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > On Thu, Oct 26, 2023 at 03:27:30PM +0300, Andy Shevchenko wro=
+te:
+> > > > > > > > On Thu, Oct 26, 2023 at 07:25:35AM +0200, Greg Kroah-Hartma=
+n wrote:
+> > > > > > > > > On Wed, Oct 25, 2023 at 09:42:57PM +0300, Andy Shevchenko=
+ wrote:
+>
+> ...
+>
+> > > > > > > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > > >
+> > > > > > > > Thank you, Greg.
+> > > > > > > >
+> > > > > > > > Bart, would it be still possible to take this into next?
+> > > > > > > > I would like to have at least this patch applied (with the =
+first user)
+> > > > > > > > to allow conversion of others (I have some more users of ne=
+w API).
+> > > > > > >
+> > > > > > > Okay, seems we missed v6.7 with this, can you then prepare an=
+ immutable
+> > > > > > > branch / tag with this, so other maintainers can pull in case=
+ it's needed?
+> > > > > > > (I have something against tty already and perhaps something e=
+lse, let's
+> > > > > > >  see.)
+> > > > > >
+> > > > > > It arrived too late in the cycle, I needed to send my PR earlie=
+r this
+> > > > > > time as I was OoO this week.
+> > > > >
+> > > > > Greg, will you take this patch through your tree and provide me w=
+ith
+> > > > > an immutable tag for this cycle?
+> > > >
+> > > > Sure, let me catch up with patches after I return from Plumbers nex=
+t
+> > > > week.
+> > >
+> > > Hope Plumbers went well!
+> >
+> > Sorry for the delay, immutable tag can be found at:
+> >       git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.=
+git device_is_big_endian-6.8-rc1
+> > for anyone to pull from now.
+>
+> No problem and thank you!
+>
+> Bart, can you pull that? Or should I to my tree and then push with other
+> GPIO patches?
+>
 
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+Ugh, this is rebased on top of 6.7-rc3...
 
-Thanks for submitting the patch. I wasn't sure which way was better:
-define a "mask" or "hwirq" local vars with respective semantics. From
-my point of view both were correct with the first version being more
-optimized and the second one making enable()/disable() methods looking
-alike the mask()/unmask() functions. No objections against you
-implementing the second version. So
+My tree is based on rc1, if I pull it, then it'll be a mess.
 
-Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Andy: How badly do you want it in v6.8? Can this wait until after the
+merge window?
 
--Serge(y)
+Bart
 
->  	unsigned long flags;
->  	u32 val;
->  
->  	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -	val = dwapb_read(gpio, GPIO_INTEN);
-> -	val |= BIT(irqd_to_hwirq(d));
-> +	val = dwapb_read(gpio, GPIO_INTEN) | BIT(hwirq);
->  	dwapb_write(gpio, GPIO_INTEN, val);
-> +	val = dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
-> +	dwapb_write(gpio, GPIO_INTMASK, val);
->  	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
->  
-> @@ -296,12 +298,14 @@ static void dwapb_irq_disable(struct irq_data *d)
->  {
->  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
->  	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
-> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
->  	unsigned long flags;
->  	u32 val;
->  
->  	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
-> -	val = dwapb_read(gpio, GPIO_INTEN);
-> -	val &= ~BIT(irqd_to_hwirq(d));
-> +	val = dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
-> +	dwapb_write(gpio, GPIO_INTMASK, val);
-> +	val = dwapb_read(gpio, GPIO_INTEN) & ~BIT(hwirq);
->  	dwapb_write(gpio, GPIO_INTEN, val);
->  	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
->  }
-> -- 
-> 2.34.1
-> 
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
