@@ -1,153 +1,102 @@
-Return-Path: <linux-gpio+bounces-1608-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1609-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B5A5816C0F
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 12:18:33 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25145816C2F
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 12:33:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7091E1C23061
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 11:18:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C818028447A
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 11:33:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C09BB19461;
-	Mon, 18 Dec 2023 11:18:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IL6Znv8V"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81DF1199C4;
+	Mon, 18 Dec 2023 11:33:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0CF199C4;
-	Mon, 18 Dec 2023 11:18:27 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98526C433C7;
-	Mon, 18 Dec 2023 11:18:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1702898307;
-	bh=ufXno5QaVYIQWgYYApuQcawRur2UKiV0ccBmrkoLQ1A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IL6Znv8VFrT2eLmlExKRvZwWw39lU/r0xZTS8f+UNZJBy580ZMzL0XMWYTIe++FdT
-	 FllhtgBG8yaDEgXkegqTJiLOXKkekcEXaNs0LLV7xWkOnryptdMFOHQc4+gncxVx93
-	 +xJHTw8158ISdz8I6VKNe+2hFGtSV4kIdlEo87WA=
-Date: Mon, 18 Dec 2023 12:18:24 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Daniel Scally <djrscally@gmail.com>,
-	Heikki Krogerus <heikki.krogerus@linux.intel.com>,
-	Sakari Ailus <sakari.ailus@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v1 1/3] device property: Implement device_is_big_endian()
-Message-ID: <2023121834-exuberant-visibly-329f@gregkh>
-References: <ZUPBVMdi3hcTyW2n@smile.fi.intel.com>
- <CAMRc=MeV9ZyOzuQFEE_duPTHYgfmr6UZU6bpjDPhrczZX4PHpg@mail.gmail.com>
- <CAMRc=MdSpk_OszeDCyA5_Sp-w=sL9DHB2gGCOFP+FCiobm2cbA@mail.gmail.com>
- <2023111513-stinky-doorframe-8cd1@gregkh>
- <ZXHUat2Xo1VcAxN2@smile.fi.intel.com>
- <2023121512-breeches-snaking-74ad@gregkh>
- <ZXxr8LD1P63k-xRV@smile.fi.intel.com>
- <CAMRc=MeBh5Uq1YTvcnGugnvOFYh+rqc7fJpZrSvfmHbwh3SKXw@mail.gmail.com>
- <ZYAlOpjJBuvY-wTR@smile.fi.intel.com>
- <CAMRc=MeJgJj7ikp85vj9KMxgh6Rfx5BrCa3uq52Rj+iDFmQunQ@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8CCF19BD6;
+	Mon, 18 Dec 2023 11:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="399324312"
+X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
+   d="scan'208";a="399324312"
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 03:33:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10927"; a="841448115"
+X-IronPort-AV: E=Sophos;i="6.04,285,1695711600"; 
+   d="scan'208";a="841448115"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga008.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Dec 2023 03:33:08 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rFBrt-00000006uZd-1qHe;
+	Mon, 18 Dec 2023 13:33:05 +0200
+Date: Mon, 18 Dec 2023 13:33:05 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: xiongxin <xiongxin@kylinos.cn>
+Cc: fancer.lancer@gmail.com, hoan@os.amperecomputing.com,
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [v2] gpio: dwapb: mask/unmask IRQ when disable/enale it
+Message-ID: <ZYAt8Zlv9XMYO5FF@smile.fi.intel.com>
+References: <20231218081246.1921152-1-xiongxin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MeJgJj7ikp85vj9KMxgh6Rfx5BrCa3uq52Rj+iDFmQunQ@mail.gmail.com>
+In-Reply-To: <20231218081246.1921152-1-xiongxin@kylinos.cn>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Dec 18, 2023 at 12:05:54PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Dec 18, 2023 at 11:56 AM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Mon, Dec 18, 2023 at 11:35:04AM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Dec 15, 2023 at 4:11 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Fri, Dec 15, 2023 at 03:49:38PM +0100, Greg Kroah-Hartman wrote:
-> > > > > On Thu, Dec 07, 2023 at 04:19:22PM +0200, Andy Shevchenko wrote:
-> > > > > > On Wed, Nov 15, 2023 at 03:21:29PM -0500, Greg Kroah-Hartman wrote:
-> > > > > > > On Wed, Nov 15, 2023 at 03:58:54PM +0100, Bartosz Golaszewski wrote:
-> > > > > > > > On Fri, Nov 3, 2023 at 10:08 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
-> > > > > > > > > On Thu, Nov 2, 2023 at 4:33 PM Andy Shevchenko
-> > > > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > > > > > > > On Thu, Oct 26, 2023 at 03:27:30PM +0300, Andy Shevchenko wrote:
-> > > > > > > > > > > On Thu, Oct 26, 2023 at 07:25:35AM +0200, Greg Kroah-Hartman wrote:
-> > > > > > > > > > > > On Wed, Oct 25, 2023 at 09:42:57PM +0300, Andy Shevchenko wrote:
-> >
-> > ...
-> >
-> > > > > > > > > > > > Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > > > > > > > > > >
-> > > > > > > > > > > Thank you, Greg.
-> > > > > > > > > > >
-> > > > > > > > > > > Bart, would it be still possible to take this into next?
-> > > > > > > > > > > I would like to have at least this patch applied (with the first user)
-> > > > > > > > > > > to allow conversion of others (I have some more users of new API).
-> > > > > > > > > >
-> > > > > > > > > > Okay, seems we missed v6.7 with this, can you then prepare an immutable
-> > > > > > > > > > branch / tag with this, so other maintainers can pull in case it's needed?
-> > > > > > > > > > (I have something against tty already and perhaps something else, let's
-> > > > > > > > > >  see.)
-> > > > > > > > >
-> > > > > > > > > It arrived too late in the cycle, I needed to send my PR earlier this
-> > > > > > > > > time as I was OoO this week.
-> > > > > > > >
-> > > > > > > > Greg, will you take this patch through your tree and provide me with
-> > > > > > > > an immutable tag for this cycle?
-> > > > > > >
-> > > > > > > Sure, let me catch up with patches after I return from Plumbers next
-> > > > > > > week.
-> > > > > >
-> > > > > > Hope Plumbers went well!
-> > > > >
-> > > > > Sorry for the delay, immutable tag can be found at:
-> > > > >       git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core.git device_is_big_endian-6.8-rc1
-> > > > > for anyone to pull from now.
-> > > >
-> > > > No problem and thank you!
-> > > >
-> > > > Bart, can you pull that? Or should I to my tree and then push with other
-> > > > GPIO patches?
-> > >
-> > > Ugh, this is rebased on top of 6.7-rc3...
-> > >
-> > > My tree is based on rc1, if I pull it, then it'll be a mess.
-> >
-> > But v6.7-rc3 is something that is already in the upstream.
-> > I don't see how it can be more "mess" with this. Whatever...
-> >
+On Mon, Dec 18, 2023 at 04:12:46PM +0800, xiongxin wrote:
+> In the hardware implementation of the i2c hid driver based on dwapb gpio
+> irq, when the user continues to use the i2c hid device in the suspend
+> process, the i2c hid interrupt will be masked after the resume process
+> is finished.
 > 
-> My for-next branch is based on v6.7-rc1 (as it should IIUC) and if I
-> now pull Greg's tag, I will be sending rc1-rc3 stuff to Linus Torvalds
-> in addition to the GPIO changes for v6.8. I bet he will not appreciate
-> it.
+> This is because the disable_irq()/enable_irq() of the dwapb gpio driver
+> does not synchronize the irq mask register state. In normal use of the
+> i2c hid procedure, the gpio irq irq_mask()/irq_unmask() functions are
+> called in pairs. In case of an exception, i2c_hid_core_suspend() calls
+> disable_irq() to disable the gpio irq. With low probability, this causes
+> irq_unmask() to not be called, which causes the gpio irq to be masked
+> and not unmasked in enable_irq(), raising an exception.
+> 
+> Add synchronization to the masked register state in the
+> dwapb_irq_enable()/dwapb_irq_disable() function. mask the gpio irq
+> before disabling it. After enabling the gpio irq, unmask the irq.
 
-No, you will not be sending him -rc1-rc3 stuff at all, that's not how
-git works.
+> Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB GPIO block")
+> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
 
-Try it yourself and see.  Git does a "what's the changesets that are
-in this pull request and not already in mine" when determining this.
-You can see it when doing a 'git request-pull', it will only show you
-the diff of what will be sent.
+Your SoB should go last.
 
-Also look at the 'git merge-base' output, it will show the point where
-things will start to be sent, and that will not have all of the -rc1
-through -rc3 changes in it.
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
 
-> Greg: Is it too late to have this rebased on top of v6.7-rc1 instead?
+Then at all means what this SoB for? Either it's missing Co-developed-by,
+or simply wrong.
 
-Sorry, but yes.  But don't worry, again, git can handle all of this
-easily!  Try it locally and see.  Don't fear the 'fast-forward' :)
+> Tested-by: xiongxin <xiongxin@kylinos.cn>
 
-thanks,
+This is assumed to be done by the contributor, but it's harmless to have it.
 
-greg k-h
+With the above being sorted out,
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
+
+...
+
+To Serge, I give my vote to hwirq as it is aligned with the documentation.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
