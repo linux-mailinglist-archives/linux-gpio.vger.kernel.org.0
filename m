@@ -1,135 +1,97 @@
-Return-Path: <linux-gpio+bounces-1595-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1598-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 689138167DB
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 09:13:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB0F48168EC
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 09:57:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 24FBF2825B3
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 08:13:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6B5C8B21987
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Dec 2023 08:57:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B60F9F6;
-	Mon, 18 Dec 2023 08:13:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 686011118B;
+	Mon, 18 Dec 2023 08:57:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="rLVZ4rwO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17417F9D1;
-	Mon, 18 Dec 2023 08:12:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d3b84173feso1776165ad.1;
-        Mon, 18 Dec 2023 00:12:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702887178; x=1703491978;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Ezu7kE5Fqyr7u6fL3bLv75SonronEgw3Sg7hagUo9IU=;
-        b=La7DLbaw1Olvxdw5yb7qPF9rLrt5BQteyuwnUboktHXPRacK33ydzRup03vlpQTEc8
-         YmvFDLe6JUdMgoARC9JXukJRIYPJR5aKWqHKO2/ncoW8xP0HW683xwE7up3aYweK3CAH
-         fvh7AFeC2IPOj6cLVA4K7cR4P7X41af9JuvzI6ycSELlK2CYINbJUW3epBawXG+qDz9+
-         P5nhIay+o8ijhAd9Qp7XjfBL+8l/RtdCQ3ld1oyTNYw7W3TVzERctwlL3Ttl9OpIW2vv
-         x7FQ9i9wQEkaKmaWSoHaXenianOnMLuIFyjfZmN87RkgLcO8M8CiFgfwmznFewUW0n4q
-         AxRA==
-X-Gm-Message-State: AOJu0Ywv1oDQZWEcuylYwn1wXbNtUX+2ZN9lPJwPGS6ncUl4oPvT9rig
-	HA8U1WMjIGju5ZIpEONmRFk=
-X-Google-Smtp-Source: AGHT+IEDzZNRFbAMAVqNFpJEclL2hSAh4O2fY8+5lAVyuLynEAZcwzMubX2xIy2QyAa29pq6d1aImw==
-X-Received: by 2002:a17:902:d48b:b0:1d0:73ca:660 with SMTP id c11-20020a170902d48b00b001d073ca0660mr32337484plg.4.1702887178245;
-        Mon, 18 Dec 2023 00:12:58 -0800 (PST)
-Received: from tgsp-ThinkPad-X280.. ([116.128.244.171])
-        by smtp.gmail.com with ESMTPSA id d21-20020a170902729500b001d3797d6899sm6215725pll.263.2023.12.18.00.12.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Dec 2023 00:12:57 -0800 (PST)
-From: xiongxin <xiongxin@kylinos.cn>
-To: fancer.lancer@gmail.com,
-	hoan@os.amperecomputing.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andy@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	xiongxin <xiongxin@kylinos.cn>,
-	Riwen Lu <luriwen@kylinos.cn>
-Subject: [v2] gpio: dwapb: mask/unmask IRQ when disable/enale it
-Date: Mon, 18 Dec 2023 16:12:46 +0800
-Message-Id: <20231218081246.1921152-1-xiongxin@kylinos.cn>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0461111C92;
+	Mon, 18 Dec 2023 08:57:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
+Received: from 3ffe.de (0001.3ffe.de [IPv6:2a01:4f8:c0c:9d57::1])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mail.3ffe.de (Postfix) with ESMTPSA id 3C6734FB;
+	Mon, 18 Dec 2023 09:50:22 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
+	t=1702889422;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=t7y980s7TlqjCCAo0oCLZY8k6BxPJ803Kug7xEFCoGk=;
+	b=rLVZ4rwOEPGlYUtRcUAdVLk5m7XBx4vX8PZBc+L8VhucInDrJkExOLW9giC4bwcIbREtbU
+	Je3WaYQXn/btQGQQqiPpyyqWcA5DRdeh21JyX5yDS/u1rYCWa45KnBM7IUGDavZRTav2Zl
+	X0MH9Ty/zWgE+4zV9He07kqI56vn0wrFZaDJkyWt5UFfTcMlHLoEo7QJBhNpSIsAekAwQt
+	sWrBUMuBVC+YmODug75aTaImAUbgmuPqVvVJlm347hwJ107AoXamXtaJwJaQkjz6dMnJf5
+	dF6wdDqyd9iC56O6rdID2Z8HXpk5Zj3Z8CaKqC1zg0wmij/i6sGW3A5vGJgyQQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Date: Mon, 18 Dec 2023 09:50:21 +0100
+From: Michael Walle <michael@walle.cc>
+To: =?UTF-8?Q?TY=5FChang=5B=E5=BC=B5=E5=AD=90=E9=80=B8=5D?=
+ <tychang@realtek.com>
+Cc: Andy Shevchenko <andy@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+In-Reply-To: <be8db58b51d04043a255a702a08cdaba@realtek.com>
+References: <20231207100723.15015-1-tychang@realtek.com>
+ <20231207100723.15015-3-tychang@realtek.com>
+ <ZXHMbZRXLXGa_tq8@smile.fi.intel.com>
+ <989146448858478b975c66899b8f3fed@realtek.com>
+ <ZXm0MIub8X2q_lnp@smile.fi.intel.com>
+ <23574204547646779d02f0109c20b3ff@realtek.com>
+ <ZXsKAyIlY3y3tgUi@smile.fi.intel.com>
+ <0f0b3b65a838aea6797ae78c47d6af49@walle.cc>
+ <ZXsV96xhuvVSyc1f@smile.fi.intel.com>
+ <be8db58b51d04043a255a702a08cdaba@realtek.com>
+Message-ID: <3dd3a101e61f5a8f8931114ddc80cecf@walle.cc>
+X-Sender: michael@walle.cc
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 
-In the hardware implementation of the i2c hid driver based on dwapb gpio
-irq, when the user continues to use the i2c hid device in the suspend
-process, the i2c hid interrupt will be masked after the resume process
-is finished.
+Hi,
 
-This is because the disable_irq()/enable_irq() of the dwapb gpio driver
-does not synchronize the irq mask register state. In normal use of the
-i2c hid procedure, the gpio irq irq_mask()/irq_unmask() functions are
-called in pairs. In case of an exception, i2c_hid_core_suspend() calls
-disable_irq() to disable the gpio irq. With low probability, this causes
-irq_unmask() to not be called, which causes the gpio irq to be masked
-and not unmasked in enable_irq(), raising an exception.
+> I have looked into regmap-irq, it appears that using the default irq
+> thread_fn(regmap_irq_thread) is required. However, due to hardware 
+> limitation,
+> we need to inspect the IRQ_TYPE to determine whether to manage the irq 
+> within
+> the irq handler. I think our irq portion does not perfectly fit the 
+> regmap-irq.
+> Moreover, it seems that the gpio-regmap.c file needs to be modified if 
+> the GPIO driver
+> requires debounce settings. I think the gpio-regmap may not be 
+> appropriate for our driver.
+> Do you have any suggestions?
 
-Add synchronization to the masked register state in the
-dwapb_irq_enable()/dwapb_irq_disable() function. mask the gpio irq
-before disabling it. After enabling the gpio irq, unmask the irq.
+Can't say anything regarding the interrupt handling but adding literally
+one line to gpio-regmap shouldn't be a reason not to use it.
 
-Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB GPIO block")
-Signed-off-by: xiongxin <xiongxin@kylinos.cn>
-Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
-Tested-by: xiongxin <xiongxin@kylinos.cn>
----
- drivers/gpio/gpio-dwapb.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 4a4f61bf6c58..8c59332429c2 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -282,13 +282,15 @@ static void dwapb_irq_enable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	unsigned long flags;
- 	u32 val;
- 
- 	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
--	val = dwapb_read(gpio, GPIO_INTEN);
--	val |= BIT(irqd_to_hwirq(d));
-+	val = dwapb_read(gpio, GPIO_INTEN) | BIT(hwirq);
- 	dwapb_write(gpio, GPIO_INTEN, val);
-+	val = dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
-+	dwapb_write(gpio, GPIO_INTMASK, val);
- 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
- }
- 
-@@ -296,12 +298,14 @@ static void dwapb_irq_disable(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 	unsigned long flags;
- 	u32 val;
- 
- 	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
--	val = dwapb_read(gpio, GPIO_INTEN);
--	val &= ~BIT(irqd_to_hwirq(d));
-+	val = dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
-+	dwapb_write(gpio, GPIO_INTMASK, val);
-+	val = dwapb_read(gpio, GPIO_INTEN) & ~BIT(hwirq);
- 	dwapb_write(gpio, GPIO_INTEN, val);
- 	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
- }
--- 
-2.34.1
-
+-michael
 
