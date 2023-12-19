@@ -1,67 +1,65 @@
-Return-Path: <linux-gpio+bounces-1671-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1672-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EB84818ACF
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 16:08:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0B86E818AE2
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 16:12:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 54F051C23C31
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:07:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D46B282DC8
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:12:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CE81C29F;
-	Tue, 19 Dec 2023 15:07:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A92B1C688;
+	Tue, 19 Dec 2023 15:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="E/6WGUMJ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIkGZftw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF9231CA91;
-	Tue, 19 Dec 2023 15:07:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31CA1CF86;
+	Tue, 19 Dec 2023 15:11:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702998473; x=1734534473;
+  t=1702998719; x=1734534719;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=VpRVJ1zExz6huDZJ3HmFgTWDVwJK268swtCYqe98ikU=;
-  b=E/6WGUMJ2V5Cd5tAvBsaaZ2YBW5qq+AUEEWpMeLeCv+XdvaDxV1TTFlD
-   gOG0EPaaJ0Z4SpJ3y68+7s+8jrOu2Qc8e3nx7TOxtl4tZQOqjel2+E1FI
-   TrVabELgg5eiVqUW6LyBrozsOFCi/EwZTrwL7+YUR4OnlZYqQbxE68k7v
-   uEsMCmdT7LaRufVXqtxnh/mmyA5HKyzbqJRE8DkIMQgzavoRfsRm1jRux
-   7sQ+aMDIAe5MD2/a+cD2DCRxf5A6kO6L+KMjlK/1ltAc4rr4sQdoHmMht
-   zjkHlG7Mzmovy5thq7rb3nm6jqH41mbASMOeQ1OtY+i0NZzVsYFs977ft
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="375161801"
+  bh=+xlnfKcJqebKZFuV6jH/QlOiaHFOq5igRUWnHrLzm+U=;
+  b=NIkGZftwLirVlqp0o2yFyWhIyGIMeJEEoLJOpJ+A3vUzqewi+bldG+U+
+   11yAIZR0yu/B6sKQeFfIvOlBwbL98szYQnoomk5Hp31Crxszegkxhblgi
+   tqX1lAkxsxoqf+ijGPUYY+vzLjzpyv4Ov5uPK1r5v5n151EdBiOZSa2vJ
+   ugY/CeP5QBibfHuRAIE17yAzZNlDpBon8vzN1B2X7N4MnUM3B7wti7Zzt
+   YxJlpTujECRoHFVnEemU/Smq14iyYcLBy8JDjW+tct9qyQls8ULcwGHPR
+   r9xI5WlaE+1JL7UK/pHFROS+5PHi+7YWqDn03biWCFPRZ6vTR4moqYQ/n
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="460014993"
 X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="375161801"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:07:52 -0800
+   d="scan'208";a="460014993"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:11:59 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="776005017"
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="866669664"
 X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="776005017"
+   d="scan'208";a="866669664"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga002.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:07:49 -0800
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:11:57 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rFbhD-00000007IBc-0qtj;
-	Tue, 19 Dec 2023 17:07:47 +0200
-Date: Tue, 19 Dec 2023 17:07:46 +0200
+	id 1rFblC-00000007IDy-3Oqf;
+	Tue, 19 Dec 2023 17:11:54 +0200
+Date: Tue, 19 Dec 2023 17:11:54 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: sysfs: drop tabs from local variable
- declarations
-Message-ID: <ZYGxwgkngL2c5KE3@smile.fi.intel.com>
-References: <20231219142323.28929-1-brgl@bgdev.pl>
- <20231219142323.28929-2-brgl@bgdev.pl>
+Subject: Re: [PATCH] gpiolib: use __counted_by() for GPIO descriptors
+Message-ID: <ZYGyumQXaM8PXzcz@smile.fi.intel.com>
+References: <20231219125706.23284-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -70,36 +68,21 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231219142323.28929-2-brgl@bgdev.pl>
+In-Reply-To: <20231219125706.23284-1-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 19, 2023 at 03:23:23PM +0100, Bartosz Golaszewski wrote:
+On Tue, Dec 19, 2023 at 01:57:06PM +0100, Bartosz Golaszewski wrote:
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > 
-> Older code has an annoying habit of putting tabs between the type and the
-> name of the variable. This doesn't really add to readability and newer
-> code doesn't do it so make the entire file consistent.
+> Pull the array of GPIO descriptors into struct gpio_device as a flexible
+> array and use __counted_by() to control its size.
 
-Besides similar comments as per previous patch, see below.
+How big is the struct gpio_device? Unifying like this might provoke subtle
+errors on very fragmented memory, where k*alloc() might not find enough free
+space. Note, k*alloc() guarantees finding only memory for a single page.
+With PAGE_SIZE = 4k, this might be an issue.
 
-...
-
-> +	struct gpiod_data *data = dev_get_drvdata(dev);
-> +	struct gpio_desc *desc = data->desc;
->  	int			status = 0;
->  	unsigned int		flags = data->irq_flags;
-
-???
-
-...
-
-> +	struct gpio_device *gdev;
-> +	struct gpiod_data *data;
->  	unsigned long		flags;
->  	int			status;
->  	const char		*ioname = NULL;
-
-???
+I would suggest, if nothing prevents us from switching, to use kvmalloc().
 
 -- 
 With Best Regards,
