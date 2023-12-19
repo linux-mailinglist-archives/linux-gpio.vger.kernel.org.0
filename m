@@ -1,96 +1,187 @@
-Return-Path: <linux-gpio+bounces-1659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id C052881899B
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:18:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 80EEA8189AE
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:24:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 52636B23CC5
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:18:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA8A4B23B26
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:23:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1DB1B275;
-	Tue, 19 Dec 2023 14:17:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83EF11B27D;
+	Tue, 19 Dec 2023 14:23:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrbHC6cv"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HrdbuES1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256641A73C;
-	Tue, 19 Dec 2023 14:17:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6d9f069e9b0so3656860a34.3;
-        Tue, 19 Dec 2023 06:17:53 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DA21B289
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 14:23:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33666fb9318so2594907f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 06:23:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1702995473; x=1703600273; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ljrRBMnlh16OHGX7758wO6bL6cdZsS9ay9gaLHzUAb4=;
-        b=RrbHC6cvTsuCgONTCFv/aDoXxavfQX6QFCSqEqQq0h3GL3dMsfKp3zAowtrxniLCRF
-         tlMU+sRnc60F9Zqa9hdkSB8CFKdVy4ujtz593SqPN3jbjMMjZYvbxjsiDvraEGJO9A0z
-         8rdyJGAyqKjS5IxDUweKEBdR7YvHVY7RnxDIiI17O6dG3lbRSjXiZ1v/2dmLU3vEeFmP
-         ZUALfkaoUI5uKWbrZNGGyH4OdNg+AYQppOR1ThYXZPC2sBMes4jcFct2ty3hsFEBna0g
-         c+Oq2byy5DYf1YXSapbtFG0gYdyd+A0m2nNCp8ch/SyqTcsw07CzCJXJUhfg3XpTYNxb
-         lC2w==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702995807; x=1703600607; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=m0ixPtoAPGKvK37J2//i5TEfAHvCqoh+89EGr3jhVvs=;
+        b=HrdbuES1NGfwpowO7HGB7Jqz39EI2lOXKUviEuq/dwNfLnQhkKMcaxe5Rt2KHH0xYA
+         mb9JwllXypjYLiZGREbFoPVQ/rZ3+c2X29f2k7lt9gbSd3PS7J08UFZa6ImoMxf/r2HT
+         fNnj+PaFsy3yiM2wdYG7e3ooU+ly9RsfTKB3jZsDBOvXzNXHHph3JeJWrHJTi4tVZWZ8
+         sYdwz55wfwnL/sHUHIU5OxW1MkFiswC5H+s44xYzUbWJLmuu9d1w0N4knLPR/U5Imt5C
+         HPs9yGDZ5kQQYu4bzhxQ4vqngKByIDMfsG7O7vCYzp1sIaz3RD0Xz2RZFQd3a0y5lbms
+         UHQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702995473; x=1703600273;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ljrRBMnlh16OHGX7758wO6bL6cdZsS9ay9gaLHzUAb4=;
-        b=LIzCiG0nCkJEhRYWuvAmyPDvvve1Sl092bMKZPzb3nR8jECKHn5Fo917OJDsMd+iOj
-         W5PEEQ7uQ02RG4qP/0eo60IyRFEm/Wt+gQ5h6PAT2T4hl/vSz3bGDR6KJVxhLqA3b00Y
-         Ybq9AQaH3qZeFdJ3Slri0RkPCXZR/7nNW45iMPkLyi71H97AqVOsnXt6RLda71ZEsUOQ
-         E1W1hBuQiet5TNPyZ2ubESszOu85AAwIo1YtjuZZx9dMc49W7Og64BWdZOWlcbSYB+jE
-         +LnG4EpxeRjSprVs1JYt5q+bEBbFOEt0wos1LcLoQleWGZW+NG4jSxPp8jP3gR0an8kU
-         7PJA==
-X-Gm-Message-State: AOJu0YwaLyZoecfKW9l561D5CqXKoETLVE1oA/9+UI5AZVLWYZiLV3Mu
-	DSziWMEm/PNScI4omGS5FWcIDJEnrR+kl22s/dQ=
-X-Google-Smtp-Source: AGHT+IE0rG9seHB58w6n7hrtXZhdhRpo5fgXrjXWSA1QE2ETljm/UhcFW6RCsor8X9EVQPUcQ4z5JqmktWX2RHbX5/s=
-X-Received: by 2002:a05:6358:339e:b0:172:8a22:9df5 with SMTP id
- i30-20020a056358339e00b001728a229df5mr12315536rwd.24.1702995472972; Tue, 19
- Dec 2023 06:17:52 -0800 (PST)
+        d=1e100.net; s=20230601; t=1702995807; x=1703600607;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=m0ixPtoAPGKvK37J2//i5TEfAHvCqoh+89EGr3jhVvs=;
+        b=uYfnjMLhiCz20YIU6wvkR5oZIn7c3D1zmpZaRXJUICwVx+thJGr4rznblnirDsNIzf
+         1z6FcxHQo5Ae+LGcg8GcoiTqID30KumJHLqHL0ctIdyNe/pi5NMMc7BK00v43M13wjeR
+         8JYMJiNTmuaHAbwRjMCdt/fNR7l2FZHRMpUtWT+OVruA54MGxAIGNak6ZA2nqY5am+Y7
+         SUM+I3ES+hSwIU189pPsXvK4WFumItEkH/vYjQhHqz0Ffj49KzeaiPumy9rMgSsC2sTC
+         iygM1MDFlgXbWIB5bJtRyOXcaw5/XKuvWEH4hLEA8vIfrapxRmNBkDaQb18kA/TdWueY
+         PRbw==
+X-Gm-Message-State: AOJu0YyWL++iX+rvre2nckLFjgDWk1Z09Zfk+5flysjINQx+SEyBNZfZ
+	faGVkK2WhwADerhh5mScyYumKA==
+X-Google-Smtp-Source: AGHT+IFvNmhtyifEJ4GHGe70PPcjYzfZWnXn3ygiMX9XgGBp4xqmE8p6Hw+W7P5FfDSWVXMQicaqTQ==
+X-Received: by 2002:a05:6000:1d84:b0:336:1fcf:5aec with SMTP id bk4-20020a0560001d8400b003361fcf5aecmr9838671wrb.55.1702995807441;
+        Tue, 19 Dec 2023 06:23:27 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bfd0:6ab0:50e2:7f18])
+        by smtp.gmail.com with ESMTPSA id e32-20020a5d5960000000b003366e3b434bsm3038375wri.65.2023.12.19.06.23.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 06:23:27 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 1/2] gpiolib: drop tabs from local variable declarations
+Date: Tue, 19 Dec 2023 15:23:22 +0100
+Message-Id: <20231219142323.28929-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219013751.20386-1-xiongxin@kylinos.cn> <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
-In-Reply-To: <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 19 Dec 2023 16:17:16 +0200
-Message-ID: <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
-To: Serge Semin <fancer.lancer@gmail.com>
-Cc: xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>, hoan@os.amperecomputing.com, 
-	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@kernel.org, 
-	Riwen Lu <luriwen@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Dec 19, 2023 at 11:14=E2=80=AFAM Serge Semin <fancer.lancer@gmail.c=
-om> wrote:
-> On Tue, Dec 19, 2023 at 09:37:51AM +0800, xiongxin wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-...
+Older code has an annoying habit of putting tabs between the type and the
+name of the variable. This doesn't really add to readability and newer
+code doesn't do it so make the entire file consistent.
 
-> Also note all the tags you've already got must be preserved on the
-> next patch revisions. One more time:
+While at it: convert 'unsigned' to 'unsigned int'.
 
-> Acked-by: Serge Semin <fancer.lancer@gmail.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ drivers/gpio/gpiolib.c | 40 ++++++++++++++++++++--------------------
+ 1 file changed, 20 insertions(+), 20 deletions(-)
 
-I recommend using `b4` for that.
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index c9ca809b55de..c3704d32afdd 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1049,8 +1049,8 @@ EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
+ void gpiochip_remove(struct gpio_chip *gc)
+ {
+ 	struct gpio_device *gdev = gc->gpiodev;
+-	unsigned long	flags;
+-	unsigned int	i;
++	unsigned long flags;
++	unsigned int i;
+ 
+ 	down_write(&gdev->sem);
+ 
+@@ -2186,10 +2186,10 @@ EXPORT_SYMBOL_GPL(gpiochip_remove_pin_ranges);
+  */
+ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ {
+-	struct gpio_chip	*gc = desc->gdev->chip;
+-	int			ret;
+-	unsigned long		flags;
+-	unsigned		offset;
++	struct gpio_chip *gc = desc->gdev->chip;
++	int ret;
++	unsigned long flags;
++	unsigned int offset;
+ 
+ 	if (label) {
+ 		label = kstrdup_const(label, GFP_KERNEL);
+@@ -2301,9 +2301,9 @@ int gpiod_request(struct gpio_desc *desc, const char *label)
+ 
+ static bool gpiod_free_commit(struct gpio_desc *desc)
+ {
+-	bool			ret = false;
+-	unsigned long		flags;
+-	struct gpio_chip	*gc;
++	bool ret = false;
++	unsigned long flags;
++	struct gpio_chip *gc;
+ 
+ 	might_sleep();
+ 
+@@ -2577,8 +2577,8 @@ int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce)
+  */
+ int gpiod_direction_input(struct gpio_desc *desc)
+ {
+-	struct gpio_chip	*gc;
+-	int			ret = 0;
++	struct gpio_chip *gc;
++	int ret = 0;
+ 
+ 	VALIDATE_DESC(desc);
+ 	gc = desc->gdev->chip;
+@@ -2927,7 +2927,7 @@ static int gpio_chip_get_value(struct gpio_chip *gc, const struct gpio_desc *des
+ 
+ static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
+ {
+-	struct gpio_chip	*gc;
++	struct gpio_chip *gc;
+ 	int value;
+ 
+ 	gc = desc->gdev->chip;
+@@ -3222,7 +3222,7 @@ static void gpio_set_open_source_value_commit(struct gpio_desc *desc, bool value
+ 
+ static void gpiod_set_raw_value_commit(struct gpio_desc *desc, bool value)
+ {
+-	struct gpio_chip	*gc;
++	struct gpio_chip *gc;
+ 
+ 	gc = desc->gdev->chip;
+ 	trace_gpio_value(desc_to_gpio(desc), 0, value);
+@@ -4709,13 +4709,13 @@ core_initcall(gpiolib_dev_init);
+ 
+ static void gpiolib_dbg_show(struct seq_file *s, struct gpio_device *gdev)
+ {
+-	struct gpio_chip	*gc = gdev->chip;
+-	struct gpio_desc	*desc;
+-	unsigned		gpio = gdev->base;
+-	int			value;
+-	bool			is_out;
+-	bool			is_irq;
+-	bool			active_low;
++	struct gpio_chip *gc = gdev->chip;
++	struct gpio_desc *desc;
++	unsigned int gpio = gdev->base;
++	int value;
++	bool is_out;
++	bool is_irq;
++	bool active_low;
+ 
+ 	for_each_gpio_desc(gc, desc) {
+ 		if (test_bit(FLAG_REQUESTED, &desc->flags)) {
+-- 
+2.40.1
 
-it harvests tags from the email thread, so no need to care about
-possible misses.
-
---=20
-With Best Regards,
-Andy Shevchenko
 
