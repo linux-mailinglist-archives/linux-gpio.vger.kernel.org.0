@@ -1,292 +1,96 @@
-Return-Path: <linux-gpio+bounces-1658-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1659-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8850C818823
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 13:57:53 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C052881899B
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:18:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 136441F26769
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 12:57:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 52636B23CC5
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:18:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1FCE18E15;
-	Tue, 19 Dec 2023 12:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D1DB1B275;
+	Tue, 19 Dec 2023 14:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zl/WnuSJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RrbHC6cv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com [209.85.210.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8194618E31
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 12:57:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40d190df5d0so27605035e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 04:57:15 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 256641A73C;
+	Tue, 19 Dec 2023 14:17:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-6d9f069e9b0so3656860a34.3;
+        Tue, 19 Dec 2023 06:17:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702990633; x=1703595433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=iYHstZ7DJyRwFTy0VAWhYMgjrdwXsEjgu4laOEmIlZI=;
-        b=zl/WnuSJg4ikU8pYqzgwmUEuCzAovb127QdUkiZcDP+NiB7Jbp8n0sa7FIcTShyGfX
-         9ET1xYOno/75P0tOvijDOnDs+5+J+t0IEv1FMMlfHs+HWPmfwIH60v0M0HPLtekIDlxH
-         BXxKe6N510uyYSriaG7tN1qWQjEpx2XB8IQCmfQPFGiJH1eSIb8uTXobL3agKv9vK1Az
-         LZHwBFS3c6NJCF795Uqufx2UgEl6RH4v/VMlTCxk1pelGhuLge5RNTrmAUZwFalfJ0UQ
-         mmNEeog5KfEzNgmcmDc6ZI6hio2NiqSWEwXaU5PpBX4owQDPP6HuDIqAWLnY2VGj/Sud
-         Ldpg==
+        d=gmail.com; s=20230601; t=1702995473; x=1703600273; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ljrRBMnlh16OHGX7758wO6bL6cdZsS9ay9gaLHzUAb4=;
+        b=RrbHC6cvTsuCgONTCFv/aDoXxavfQX6QFCSqEqQq0h3GL3dMsfKp3zAowtrxniLCRF
+         tlMU+sRnc60F9Zqa9hdkSB8CFKdVy4ujtz593SqPN3jbjMMjZYvbxjsiDvraEGJO9A0z
+         8rdyJGAyqKjS5IxDUweKEBdR7YvHVY7RnxDIiI17O6dG3lbRSjXiZ1v/2dmLU3vEeFmP
+         ZUALfkaoUI5uKWbrZNGGyH4OdNg+AYQppOR1ThYXZPC2sBMes4jcFct2ty3hsFEBna0g
+         c+Oq2byy5DYf1YXSapbtFG0gYdyd+A0m2nNCp8ch/SyqTcsw07CzCJXJUhfg3XpTYNxb
+         lC2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702990633; x=1703595433;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=iYHstZ7DJyRwFTy0VAWhYMgjrdwXsEjgu4laOEmIlZI=;
-        b=mwEDwcpKOhGh6DXc/DL6Bbwu38agyeFF7rb8Fa9e61Yud6+M6XXIv7IIYXq+UETdOI
-         vbMyutVX3xWTyDmQ1bqcN9+RQb60gtMqpykfcZZe1PoQDnC7bKJVIGifCTlfQV4XxBor
-         qz/XTSniHFJpFNDoKOiZeflaiXcQNWc9v/kZv69sqUmu/eIOD8v9NvS3X9q0Di1ITf28
-         yT9WnZ+hRJJQFUFJGvfsCsH//UyjvxMGc3AGQ1bvfWIjgZYWEI/vpiLpM+Nal49zTk6p
-         J9CxiSSwIDbZScKc7hck8hLKN53PWM6Qvg4eWoiq0llg5a3UcuL+uDuJ/JzulO7Tib9C
-         SUsg==
-X-Gm-Message-State: AOJu0YwG7udoUZF25TuGhc2vdZarkP4nasotdMR8AYsbSZEGf5UEhNLc
-	/t9AJLbSiVzK7x8Vc9OrCYGiaLw+ldGt+7G88rM=
-X-Google-Smtp-Source: AGHT+IF7sHcxswXf1ong/94KQXP83mbBDgSXGIAbu+2o6haRW1hkhZI7gait1LflE1BudWdwNjLP2A==
-X-Received: by 2002:a05:600c:a05:b0:40d:1744:6cf9 with SMTP id z5-20020a05600c0a0500b0040d17446cf9mr2378201wmp.114.1702990633363;
-        Tue, 19 Dec 2023 04:57:13 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bfd0:6ab0:50e2:7f18])
-        by smtp.gmail.com with ESMTPSA id n35-20020a05600c3ba300b004064e3b94afsm2844403wms.4.2023.12.19.04.57.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 04:57:13 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpiolib: use __counted_by() for GPIO descriptors
-Date: Tue, 19 Dec 2023 13:57:06 +0100
-Message-Id: <20231219125706.23284-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1702995473; x=1703600273;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ljrRBMnlh16OHGX7758wO6bL6cdZsS9ay9gaLHzUAb4=;
+        b=LIzCiG0nCkJEhRYWuvAmyPDvvve1Sl092bMKZPzb3nR8jECKHn5Fo917OJDsMd+iOj
+         W5PEEQ7uQ02RG4qP/0eo60IyRFEm/Wt+gQ5h6PAT2T4hl/vSz3bGDR6KJVxhLqA3b00Y
+         Ybq9AQaH3qZeFdJ3Slri0RkPCXZR/7nNW45iMPkLyi71H97AqVOsnXt6RLda71ZEsUOQ
+         E1W1hBuQiet5TNPyZ2ubESszOu85AAwIo1YtjuZZx9dMc49W7Og64BWdZOWlcbSYB+jE
+         +LnG4EpxeRjSprVs1JYt5q+bEBbFOEt0wos1LcLoQleWGZW+NG4jSxPp8jP3gR0an8kU
+         7PJA==
+X-Gm-Message-State: AOJu0YwaLyZoecfKW9l561D5CqXKoETLVE1oA/9+UI5AZVLWYZiLV3Mu
+	DSziWMEm/PNScI4omGS5FWcIDJEnrR+kl22s/dQ=
+X-Google-Smtp-Source: AGHT+IE0rG9seHB58w6n7hrtXZhdhRpo5fgXrjXWSA1QE2ETljm/UhcFW6RCsor8X9EVQPUcQ4z5JqmktWX2RHbX5/s=
+X-Received: by 2002:a05:6358:339e:b0:172:8a22:9df5 with SMTP id
+ i30-20020a056358339e00b001728a229df5mr12315536rwd.24.1702995472972; Tue, 19
+ Dec 2023 06:17:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231219013751.20386-1-xiongxin@kylinos.cn> <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+In-Reply-To: <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 19 Dec 2023 16:17:16 +0200
+Message-ID: <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>, hoan@os.amperecomputing.com, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@kernel.org, 
+	Riwen Lu <luriwen@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Dec 19, 2023 at 11:14=E2=80=AFAM Serge Semin <fancer.lancer@gmail.c=
+om> wrote:
+> On Tue, Dec 19, 2023 at 09:37:51AM +0800, xiongxin wrote:
 
-Pull the array of GPIO descriptors into struct gpio_device as a flexible
-array and use __counted_by() to control its size.
+...
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 14 ++----
- drivers/gpio/gpiolib.h | 98 +++++++++++++++++++++---------------------
- 2 files changed, 52 insertions(+), 60 deletions(-)
+> Also note all the tags you've already got must be preserved on the
+> next patch revisions. One more time:
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c9ca809b55de..7ebeb5bb7918 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/of.h>
-+#include <linux/overflow.h>
- #include <linux/pinctrl/consumer.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-@@ -669,7 +670,6 @@ static void gpiodev_release(struct device *dev)
- 
- 	ida_free(&gpio_ida, gdev->id);
- 	kfree_const(gdev->label);
--	kfree(gdev->descs);
- 	kfree(gdev);
- }
- 
-@@ -831,7 +831,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	 * First: allocate and populate the internal stat container, and
- 	 * set up the struct device.
- 	 */
--	gdev = kzalloc(sizeof(*gdev), GFP_KERNEL);
-+	gdev = kzalloc(struct_size(gdev, descs, gc->ngpio), GFP_KERNEL);
- 	if (!gdev)
- 		return -ENOMEM;
- 	gdev->dev.bus = &gpio_bus_type;
-@@ -873,16 +873,10 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	if (ret)
- 		goto err_free_dev_name;
- 
--	gdev->descs = kcalloc(gc->ngpio, sizeof(*gdev->descs), GFP_KERNEL);
--	if (!gdev->descs) {
--		ret = -ENOMEM;
--		goto err_free_dev_name;
--	}
--
- 	gdev->label = kstrdup_const(gc->label ?: "unknown", GFP_KERNEL);
- 	if (!gdev->label) {
- 		ret = -ENOMEM;
--		goto err_free_descs;
-+		goto err_free_dev_name;
- 	}
- 
- 	gdev->ngpio = gc->ngpio;
-@@ -1021,8 +1015,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		list_del(&gdev->list);
- err_free_label:
- 	kfree_const(gdev->label);
--err_free_descs:
--	kfree(gdev->descs);
- err_free_dev_name:
- 	kfree(dev_name(&gdev->dev));
- err_free_ida:
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index 0ce7451a6b24..d65ee94d88f8 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -21,6 +21,53 @@
- 
- #define GPIOCHIP_NAME	"gpiochip"
- 
-+/**
-+ * struct gpio_desc - Opaque descriptor for a GPIO
-+ *
-+ * @gdev:		Pointer to the parent GPIO device
-+ * @flags:		Binary descriptor flags
-+ * @label:		Name of the consumer
-+ * @name:		Line name
-+ * @hog:		Pointer to the device node that hogs this line (if any)
-+ *
-+ * These are obtained using gpiod_get() and are preferable to the old
-+ * integer-based handles.
-+ *
-+ * Contrary to integers, a pointer to a &struct gpio_desc is guaranteed to be
-+ * valid until the GPIO is released.
-+ */
-+struct gpio_desc {
-+	struct gpio_device	*gdev;
-+	unsigned long		flags;
-+/* flag symbols are bit numbers */
-+#define FLAG_REQUESTED	0
-+#define FLAG_IS_OUT	1
-+#define FLAG_EXPORT	2	/* protected by sysfs_lock */
-+#define FLAG_SYSFS	3	/* exported via /sys/class/gpio/control */
-+#define FLAG_ACTIVE_LOW	6	/* value has active low */
-+#define FLAG_OPEN_DRAIN	7	/* Gpio is open drain type */
-+#define FLAG_OPEN_SOURCE 8	/* Gpio is open source type */
-+#define FLAG_USED_AS_IRQ 9	/* GPIO is connected to an IRQ */
-+#define FLAG_IRQ_IS_ENABLED 10	/* GPIO is connected to an enabled IRQ */
-+#define FLAG_IS_HOGGED	11	/* GPIO is hogged */
-+#define FLAG_TRANSITORY 12	/* GPIO may lose value in sleep or reset */
-+#define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
-+#define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
-+#define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
-+#define FLAG_EDGE_RISING     16	/* GPIO CDEV detects rising edge events */
-+#define FLAG_EDGE_FALLING    17	/* GPIO CDEV detects falling edge events */
-+#define FLAG_EVENT_CLOCK_REALTIME	18 /* GPIO CDEV reports REALTIME timestamps in events */
-+#define FLAG_EVENT_CLOCK_HTE		19 /* GPIO CDEV reports hardware timestamps in events */
-+
-+	/* Connection label */
-+	const char		*label;
-+	/* Name of the GPIO */
-+	const char		*name;
-+#ifdef CONFIG_OF_DYNAMIC
-+	struct device_node	*hog;
-+#endif
-+};
-+
- /**
-  * struct gpio_device - internal state container for GPIO devices
-  * @dev: the GPIO device struct
-@@ -31,7 +78,6 @@
-  * @owner: helps prevent removal of modules exporting active GPIOs
-  * @chip: pointer to the corresponding gpiochip, holding static
-  * data for this device
-- * @descs: array of ngpio descriptors.
-  * @ngpio: the number of GPIO lines on this GPIO device, equal to the size
-  * of the @descs array.
-  * @base: GPIO base in the DEPRECATED global Linux GPIO numberspace, assigned
-@@ -48,6 +94,7 @@
-  *       user-space operations when the device gets unregistered during
-  *       a hot-unplug event
-  * @pin_ranges: range of pins served by the GPIO driver
-+ * @descs: array of ngpio descriptors.
-  *
-  * This state container holds most of the runtime variable data
-  * for a GPIO device and can hold references and live on after the
-@@ -61,7 +108,6 @@ struct gpio_device {
- 	struct device		*mockdev;
- 	struct module		*owner;
- 	struct gpio_chip	*chip;
--	struct gpio_desc	*descs;
- 	int			base;
- 	u16			ngpio;
- 	const char		*label;
-@@ -80,6 +126,7 @@ struct gpio_device {
- 	 */
- 	struct list_head pin_ranges;
- #endif
-+	struct gpio_desc	descs[] __counted_by(ngpio);
- };
- 
- static inline struct gpio_device *to_gpio_device(struct device *dev)
-@@ -141,53 +188,6 @@ extern struct mutex gpio_devices_lock;
- 
- void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
- 
--/**
-- * struct gpio_desc - Opaque descriptor for a GPIO
-- *
-- * @gdev:		Pointer to the parent GPIO device
-- * @flags:		Binary descriptor flags
-- * @label:		Name of the consumer
-- * @name:		Line name
-- * @hog:		Pointer to the device node that hogs this line (if any)
-- *
-- * These are obtained using gpiod_get() and are preferable to the old
-- * integer-based handles.
-- *
-- * Contrary to integers, a pointer to a &struct gpio_desc is guaranteed to be
-- * valid until the GPIO is released.
-- */
--struct gpio_desc {
--	struct gpio_device	*gdev;
--	unsigned long		flags;
--/* flag symbols are bit numbers */
--#define FLAG_REQUESTED	0
--#define FLAG_IS_OUT	1
--#define FLAG_EXPORT	2	/* protected by sysfs_lock */
--#define FLAG_SYSFS	3	/* exported via /sys/class/gpio/control */
--#define FLAG_ACTIVE_LOW	6	/* value has active low */
--#define FLAG_OPEN_DRAIN	7	/* Gpio is open drain type */
--#define FLAG_OPEN_SOURCE 8	/* Gpio is open source type */
--#define FLAG_USED_AS_IRQ 9	/* GPIO is connected to an IRQ */
--#define FLAG_IRQ_IS_ENABLED 10	/* GPIO is connected to an enabled IRQ */
--#define FLAG_IS_HOGGED	11	/* GPIO is hogged */
--#define FLAG_TRANSITORY 12	/* GPIO may lose value in sleep or reset */
--#define FLAG_PULL_UP    13	/* GPIO has pull up enabled */
--#define FLAG_PULL_DOWN  14	/* GPIO has pull down enabled */
--#define FLAG_BIAS_DISABLE    15	/* GPIO has pull disabled */
--#define FLAG_EDGE_RISING     16	/* GPIO CDEV detects rising edge events */
--#define FLAG_EDGE_FALLING    17	/* GPIO CDEV detects falling edge events */
--#define FLAG_EVENT_CLOCK_REALTIME	18 /* GPIO CDEV reports REALTIME timestamps in events */
--#define FLAG_EVENT_CLOCK_HTE		19 /* GPIO CDEV reports hardware timestamps in events */
--
--	/* Connection label */
--	const char		*label;
--	/* Name of the GPIO */
--	const char		*name;
--#ifdef CONFIG_OF_DYNAMIC
--	struct device_node	*hog;
--#endif
--};
--
- #define gpiod_not_found(desc)		(IS_ERR(desc) && PTR_ERR(desc) == -ENOENT)
- 
- int gpiod_request(struct gpio_desc *desc, const char *label);
--- 
-2.40.1
+> Acked-by: Serge Semin <fancer.lancer@gmail.com>
 
+I recommend using `b4` for that.
+
+it harvests tags from the email thread, so no need to care about
+possible misses.
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
