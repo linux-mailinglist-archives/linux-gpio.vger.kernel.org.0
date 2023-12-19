@@ -1,226 +1,110 @@
-Return-Path: <linux-gpio+bounces-1661-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1662-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF128189B1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:24:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9733D818A0C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:33:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C72E01C245B0
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:24:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 344B9281CB7
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:33:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 516061BDC8;
-	Tue, 19 Dec 2023 14:23:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67D651C2A5;
+	Tue, 19 Dec 2023 14:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Jy98Jn5W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxCD58sh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45C861B292
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 14:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d2e5e8d1dso2652485e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 06:23:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC2A91D53F;
+	Tue, 19 Dec 2023 14:31:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2ca04b1cc37so45257541fa.1;
+        Tue, 19 Dec 2023 06:31:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702995808; x=1703600608; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gfcLeZaLTjQTB/4CmKh3Sp+MO7DUd7IqjLS//Br89XY=;
-        b=Jy98Jn5W6y412GDrYTU2jFV0K49tWvISwdcLJilwDtnEkZvwuMWoAGQFBmf5CjCJOb
-         lRHxBVq16bZ/QZzXAVuqvyr3LdWnWPKkL8OUNqiPM0kQcL0+xj8qW1EdlGYCMginAfLD
-         M4wp2wch/JXDa8sUwIGORMBpVa+2Zg3ez9WrpsILWR8BOQy2MgaZuJ2Wh/PoKK4L6RJl
-         6vwzB5XF5NFliLGLSOClnsVRCKDt7WXGPZ31R/v2t7wh7NkIwAFqE/aCQo3WA5W2r20M
-         jaBzNPGW9qkGwZ8dzhjyNprrE4yhv2R7OWSe9ZFei80L//Duwi300i1LxjvXFC1MmorI
-         HpmA==
+        d=gmail.com; s=20230601; t=1702996302; x=1703601102; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=WyA9uR2so4rEGMydW8w1UnQ0pww6PlgrH3NKuDhjS1A=;
+        b=dxCD58sh2AQdO3Iz7i3+dwj2fiPGBbAZy0taBxCU3GxPjT4hWqshC8dMyp3upN9lIC
+         gvs5Gs0yIbgAHDejZVuVyj17vAcLYYYXxyeITY4mw1inm7cT9hDD5D493YzVbiGNTt4x
+         BjWezEVuFqroj9luw5YRe37U7cr6xeezZhBr9rwHrfJXfg8evmWxcbjWdg1xnvQwm+4f
+         /XKUizYtQE9WBoAYjdH6XkXnTC0awHgpz/sBU8nOwVf6a0Zr7v1bsZTuC7PWoR8ZJDFN
+         rQhE04IgjhgvU463DaVXf3APOXcPaA3eZOnwWE4J/vrknEujYsAN95yGRt9AOMpW7qUK
+         xyUA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702995808; x=1703600608;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gfcLeZaLTjQTB/4CmKh3Sp+MO7DUd7IqjLS//Br89XY=;
-        b=G4GEUR39JIj+g+fVG+g8uN4NsxBbaGknYyrONYgN2rZhhWRm0jHzpWQgxpZuGUnzOw
-         +mzbRETqdlHwGw8smVRmtqprl45ARg+4h6RA7nlbDJ8+OibyJTFCCIf2z0ferrbhf7kT
-         9JuxWNgDl7lD7xOah6lCcYvD5ccHHKT6oYSzoFUp4+jcVgDyeksQiP0LstG/hEZkRYy+
-         BJKpRGg74NJOfPycthgl9Kg9mNhIzTYiTHExbQMMWZ6AnqOyoA96SuLhvs0FZqh3hbbO
-         83+HKTh8LBtDJanroFiYz41VWi3D+rz4HzTIKjbeVgxhux6jS+bdrUBpOVjSD845cQGH
-         r/BA==
-X-Gm-Message-State: AOJu0YxJ0FRIF8b2NQP3O02A5ATLgkRxVr6wEMVhTLbbxmQ8NB/Vr6W9
-	8sTlJhrjepmLtcEHOeNHlzZjSg==
-X-Google-Smtp-Source: AGHT+IFBff7Fs+VnxhoM6srZ0BjeqqeYnMlBY27mWOzUARTHniyikFpcXtTFKuRQGcIJbY6Ny98kiQ==
-X-Received: by 2002:a05:600c:1f8e:b0:40c:53c2:d7ec with SMTP id je14-20020a05600c1f8e00b0040c53c2d7ecmr4293373wmb.97.1702995808437;
-        Tue, 19 Dec 2023 06:23:28 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bfd0:6ab0:50e2:7f18])
-        by smtp.gmail.com with ESMTPSA id e32-20020a5d5960000000b003366e3b434bsm3038375wri.65.2023.12.19.06.23.27
+        d=1e100.net; s=20230601; t=1702996302; x=1703601102;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=WyA9uR2so4rEGMydW8w1UnQ0pww6PlgrH3NKuDhjS1A=;
+        b=ep94380giuez3zUhV6onY66+IdPA6ZVcLG1TdJAKe51mMh+1PCrrYX/VbpzL3GYS19
+         jrKplEFCobT45jkkOBcUwboaMuHHvNuipD6Vs6I4OpDHZSJX87P1zQQvypUN6pM4IRLq
+         MHfYxqZPHAXT23Zwuy0mOg/5WXAALGQmiblnkqQWJRY4DQuD6mKZS4uDjLguhDFDPvms
+         BcmSYEWV8nn4zzDZRP0gwTw16HtEF8mF86JNyByDerlpfgIDNrLb6HM8vgtFT3+jdkGX
+         piZz0TA3dKleIjfsxAV4EojaUbqKPpXUPBK06XzWovYgWatm8TylYlA8vqWk5F4EBq6k
+         wRIA==
+X-Gm-Message-State: AOJu0Yzulg/m/lAAktjbKc5fzeR4OazpiEOhJnMa8idU3xhAXyuY/LaX
+	zyKL8FQ1kNgkWSBw9LfIDOg=
+X-Google-Smtp-Source: AGHT+IHhHCyRsL72DRpdrORUD2XCeOSYWjCbvA6Qqs+EvG1GjQbAKWiShou4dtBv7zW1m7iDBOUN8w==
+X-Received: by 2002:a2e:8746:0:b0:2cc:7019:4cee with SMTP id q6-20020a2e8746000000b002cc70194ceemr745805ljj.24.1702996301628;
+        Tue, 19 Dec 2023 06:31:41 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id w22-20020a2e9bd6000000b002cc710614besm784454ljj.0.2023.12.19.06.31.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 06:23:27 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 2/2] gpio: sysfs: drop tabs from local variable declarations
-Date: Tue, 19 Dec 2023 15:23:23 +0100
-Message-Id: <20231219142323.28929-2-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <20231219142323.28929-1-brgl@bgdev.pl>
-References: <20231219142323.28929-1-brgl@bgdev.pl>
+        Tue, 19 Dec 2023 06:31:41 -0800 (PST)
+Date: Tue, 19 Dec 2023 17:31:38 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>, 
+	hoan@os.amperecomputing.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, 
+	Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
+Message-ID: <euhbczna4hk5sacb23i2xwqh2jewlek7cfceprfslpsiijhwk3@3d6vtybmgag5>
+References: <20231219013751.20386-1-xiongxin@kylinos.cn>
+ <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+ <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Dec 19, 2023 at 04:17:16PM +0200, Andy Shevchenko wrote:
+> On Tue, Dec 19, 2023 at 11:14 AM Serge Semin <fancer.lancer@gmail.com> wrote:
+> > On Tue, Dec 19, 2023 at 09:37:51AM +0800, xiongxin wrote:
+> 
+> ...
+> 
+> > Also note all the tags you've already got must be preserved on the
+> > next patch revisions. One more time:
+> 
+> > Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> 
+> I recommend using `b4` for that.
+> 
+> it harvests tags from the email thread, so no need to care about
+> possible misses.
 
-Older code has an annoying habit of putting tabs between the type and the
-name of the variable. This doesn't really add to readability and newer
-code doesn't do it so make the entire file consistent.
+AFAICS it doesn't pick up the tags from the previous revisions at
+least if the new patch wasn't submitted as in-reply-to the prev one.
+Just tested it on v3. b4 found my new ab-tag only and no yours rb-tag.
+Did you mean something other than I thought you did?
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib-sysfs.c | 50 ++++++++++++++++++------------------
- 1 file changed, 25 insertions(+), 25 deletions(-)
+-Serge(y)
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index ae4fc013b675..f4be847a8e92 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -165,10 +165,10 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
- /* Caller holds gpiod-data mutex. */
- static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	struct gpio_desc	*desc = data->desc;
--	unsigned long		irq_flags;
--	int			ret;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	struct gpio_desc *desc = data->desc;
-+	unsigned long irq_flags;
-+	int ret;
- 
- 	data->irq = gpiod_to_irq(desc);
- 	if (data->irq < 0)
-@@ -259,7 +259,7 @@ static ssize_t edge_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t size)
- {
- 	struct gpiod_data *data = dev_get_drvdata(dev);
--	ssize_t	status = size;
-+	ssize_t status = size;
- 	int flags;
- 
- 	flags = sysfs_match_string(trigger_names, buf);
-@@ -292,8 +292,8 @@ static DEVICE_ATTR_RW(edge);
- /* Caller holds gpiod-data mutex. */
- static int gpio_sysfs_set_active_low(struct device *dev, int value)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	struct gpio_desc	*desc = data->desc;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	struct gpio_desc *desc = data->desc;
- 	int			status = 0;
- 	unsigned int		flags = data->irq_flags;
- 
-@@ -331,9 +331,9 @@ static ssize_t active_low_show(struct device *dev,
- static ssize_t active_low_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t size)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	ssize_t			status;
--	long			value;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	ssize_t status;
-+	long value;
- 
- 	status = kstrtol(buf, 0, &value);
- 	if (status)
-@@ -399,7 +399,7 @@ static const struct attribute_group *gpio_groups[] = {
- static ssize_t base_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%d\n", chip->base);
- }
-@@ -408,7 +408,7 @@ static DEVICE_ATTR_RO(base);
- static ssize_t label_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%s\n", chip->label ?: "");
- }
-@@ -417,7 +417,7 @@ static DEVICE_ATTR_RO(label);
- static ssize_t ngpio_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%u\n", chip->ngpio);
- }
-@@ -441,10 +441,10 @@ static ssize_t export_store(const struct class *class,
- 				const struct class_attribute *attr,
- 				const char *buf, size_t len)
- {
--	long			gpio;
--	struct gpio_desc	*desc;
--	int			status;
--	struct gpio_chip	*gc;
-+	long gpio;
-+	struct gpio_desc *desc;
-+	int status;
-+	struct gpio_chip *gc;
- 	int			offset;
- 
- 	status = kstrtol(buf, 0, &gpio);
-@@ -493,9 +493,9 @@ static ssize_t unexport_store(const struct class *class,
- 				const struct class_attribute *attr,
- 				const char *buf, size_t len)
- {
--	long			gpio;
--	struct gpio_desc	*desc;
--	int			status;
-+	long gpio;
-+	struct gpio_desc *desc;
-+	int status;
- 
- 	status = kstrtol(buf, 0, &gpio);
- 	if (status < 0)
-@@ -556,9 +556,9 @@ static struct class gpio_class = {
-  */
- int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- {
--	struct gpio_chip	*chip;
--	struct gpio_device	*gdev;
--	struct gpiod_data	*data;
-+	struct gpio_chip *chip;
-+	struct gpio_device *gdev;
-+	struct gpiod_data *data;
- 	unsigned long		flags;
- 	int			status;
- 	const char		*ioname = NULL;
-@@ -730,8 +730,8 @@ EXPORT_SYMBOL_GPL(gpiod_unexport);
- 
- int gpiochip_sysfs_register(struct gpio_device *gdev)
- {
--	struct device	*dev;
--	struct device	*parent;
-+	struct device *dev;
-+	struct device *parent;
- 	struct gpio_chip *chip = gdev->chip;
- 
- 	/*
--- 
-2.40.1
-
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
 
