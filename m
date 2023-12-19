@@ -1,121 +1,169 @@
-Return-Path: <linux-gpio+bounces-1645-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1646-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75EA5818436
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 10:13:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAB88818438
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 10:14:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9BE331C237D7
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 09:13:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3A461C2183A
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 09:14:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73C3913AD7;
-	Tue, 19 Dec 2023 09:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1AF212B8F;
+	Tue, 19 Dec 2023 09:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=walle.cc header.i=@walle.cc header.b="IY8ZJwZV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvKwqTxu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.3ffe.de (0001.3ffe.de [159.69.201.130])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C849134A7;
-	Tue, 19 Dec 2023 09:12:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=walle.cc
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=walle.cc
-Received: from mwalle01.kontron.local. (unknown [213.135.10.150])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.3ffe.de (Postfix) with ESMTPSA id 7E51A4FB;
-	Tue, 19 Dec 2023 10:12:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc; s=mail2022082101;
-	t=1702977151;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=Nb4BQkMn7CZUy/4xRlRCnIBheKJWvx746c+gdEFQdbI=;
-	b=IY8ZJwZVbahaHuHYYGRoZk0kSMGVxk+tKPqTsXVE+4DDGlMISmg79kT+Sghj60CI0WAKxN
-	2/PP1dsYYIKYq6lVBwvZ6tEcLH/A6jHi05mGOrrGKQkEdf0srOkkMGajQ1p1nrHVbqFSyn
-	S//CGgvlTToDRG4QG5sE/8x6dhNZZLLN2Bg0vK/IVtDnwccJ4jO7VYdOJ3mbOfgcWR+OSX
-	Mlbbxvv6CscqpY/eTKtitayDiKaFqmRKKw4zk67pjJhzVSm+Pdm5oyoLQHokHDIU+X+I1z
-	Cvle7foK5RxmjIATmv0CqUjzmLk6CuDayPx61PeVh/Axqs9+jzTfakzlmZk2hw==
-From: Michael Walle <michael@walle.cc>
-To: linux-gpio@vger.kernel.org,
-	linux-mtd@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Tudor Ambarus <tudor.ambarus@linaro.org>,
-	Pratyush Yadav <pratyush@kernel.org>,
-	mwalle@kernel.org,
-	Michael Walle <michael@walle.cc>
-Subject: [PATCH] MAINTAINERS: change my mail to the kernel.org one
-Date: Tue, 19 Dec 2023 10:12:18 +0100
-Message-Id: <20231219091218.2846297-1-michael@walle.cc>
-X-Mailer: git-send-email 2.39.2
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E262B14267;
+	Tue, 19 Dec 2023 09:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2ca0715f0faso51522641fa.0;
+        Tue, 19 Dec 2023 01:14:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1702977281; x=1703582081; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=O6OiXOUZXhtGYW35OzGLCeQh5EJuMC/9rPiUUV6bTLU=;
+        b=XvKwqTxuOwo2nL4QsdhctoGby4p4d4IKqmoc+LL+Hol0bZx/O0XBbFGIudV1maptEm
+         f6wMzjUV67yMi7cDyk9E6pewvJVmb38AgKeimx0aHk8OrXcO8xLL28G4m6+jxqgfngO/
+         qB9gKUif6ycE9DqEuvwHYfyOl9tt/PFue0P7qsVafbhe05G1Sjs+8MmzBOtiOgyswBV2
+         ZLPIfIlGtci+YOO8PqQFy3zsh3XTshgF/b+Zwf0Y6UhqBI6FlBnrISkDiuwIHz4DtC4V
+         uz72DTR+Eh24/aukeNhTJ4v4495psoVNLlsEDXrA6cc3OTXGLAE5z602EpV24a+EAA5K
+         5Bug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1702977281; x=1703582081;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O6OiXOUZXhtGYW35OzGLCeQh5EJuMC/9rPiUUV6bTLU=;
+        b=FPvFDsIXI9nOGAYNrAin0hWDyr0WfEXTJiww7RBLauctegxlaNSkmwIa5ZGe3HOPpZ
+         0+3Kvu4UmQDDIt90NqLAiLPyCqQ2RYJt9+DsjuKNVka9S+HDDocM02TYwmUBO4kMqwNn
+         DU+byNFU2KKHr/XRns9Ki6k3cvBwtvqkVK0wkW+sXidEzLjIg8cCIMZAN7pnhhJqjzZg
+         wecrtC7Za+LkyaFxpRR3p474TZ+9HQs/rqL2BLKgCzYZQPHDGlWRGd2Yi/8jCaG+EJ3T
+         oyrJTV4iwWoehsf62G/2nTW3k+LixAqb7juQCrSbhLzwLF1Y23QtErj4rwuebKHVy5d5
+         xUBw==
+X-Gm-Message-State: AOJu0YwN93y+Tt6Ph3nsWImGjxPHGPvoDOUjlRb+8yonUoLXqLFKxdEb
+	jCgtoFScqKkR3w5WKAUght4=
+X-Google-Smtp-Source: AGHT+IFLYicXBKgraStbWTfJgP9ikiib+mUE28mqICzkCLHxENu1CfDsQci/VgLWHHE8o+ROJGWSUw==
+X-Received: by 2002:a2e:860b:0:b0:2cc:6e37:f0df with SMTP id a11-20020a2e860b000000b002cc6e37f0dfmr1667287lji.34.1702977280441;
+        Tue, 19 Dec 2023 01:14:40 -0800 (PST)
+Received: from mobilestation ([178.176.56.174])
+        by smtp.gmail.com with ESMTPSA id y12-20020a05651c154c00b002cc701caf7asm746882ljp.21.2023.12.19.01.14.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Dec 2023 01:14:39 -0800 (PST)
+Date: Tue, 19 Dec 2023 12:14:38 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>
+Cc: hoan@os.amperecomputing.com, linus.walleij@linaro.org, brgl@bgdev.pl, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, stable@kernel.org, 
+	Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
+Message-ID: <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+References: <20231219013751.20386-1-xiongxin@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231219013751.20386-1-xiongxin@kylinos.cn>
 
-As I'm doing more and more work professionally, move away from my
-private mail address.
+On Tue, Dec 19, 2023 at 09:37:51AM +0800, xiongxin wrote:
+> In the hardware implementation of the i2c hid driver based on dwapb gpio
+> irq, when the user continues to use the i2c hid device in the suspend
+> process, the i2c hid interrupt will be masked after the resume process
+> is finished.
+> 
+> This is because the disable_irq()/enable_irq() of the dwapb gpio driver
+> does not synchronize the irq mask register state. In normal use of the
+> i2c hid procedure, the gpio irq irq_mask()/irq_unmask() functions are
+> called in pairs. In case of an exception, i2c_hid_core_suspend() calls
+> disable_irq() to disable the gpio irq. With low probability, this causes
+> irq_unmask() to not be called, which causes the gpio irq to be masked
+> and not unmasked in enable_irq(), raising an exception.
+> 
+> Add synchronization to the masked register state in the
+> dwapb_irq_enable()/dwapb_irq_disable() function. mask the gpio irq
+> before disabling it. After enabling the gpio irq, unmask the irq.
+> 
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
-I'd like this to go through the spi-nor tree. Hope everyone is fine with
-that.
+> v3:
+> 	* Modify the submitter's information
+> v2:
+> 	* Resubmit the patch to fix this exception from the dwapb gpio
+> 	  driver side.
+> v1:
+> 	* Resolve the exception from the IRQ core layer. (key point not
+> 	  found correctly)
 
-No update to the mailmap as I still (and will indefinetly) own my private
-mail address :)
+This should have been placed below the '---' marker:
+Documentation/process/submitting-patches.rst
 
- MAINTAINERS | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB GPIO block")
+> Cc: stable@kernel.org
+> Co-developed-by: Riwen Lu <luriwen@kylinos.cn>
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index d3ada3bb3652..8279761421ec 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9056,7 +9056,7 @@ F:	drivers/gpio/gpio-mockup.c
- F:	tools/testing/selftests/gpio/
- 
- GPIO REGMAP
--M:	Michael Walle <michael@walle.cc>
-+M:	Michael Walle <mwalle@kernel.org>
- S:	Maintained
- F:	drivers/gpio/gpio-regmap.c
- F:	include/linux/gpio/regmap.h
-@@ -19920,7 +19920,7 @@ W:	http://www.winischhofer.at/linuxsisusbvga.shtml
- F:	drivers/usb/misc/sisusbvga/
- 
- SL28 CPLD MFD DRIVER
--M:	Michael Walle <michael@walle.cc>
-+M:	Michael Walle <mwalle@kernel.org>
- S:	Maintained
- F:	Documentation/devicetree/bindings/gpio/kontron,sl28cpld-gpio.yaml
- F:	Documentation/devicetree/bindings/hwmon/kontron,sl28cpld-hwmon.yaml
-@@ -19935,7 +19935,7 @@ F:	drivers/pwm/pwm-sl28cpld.c
- F:	drivers/watchdog/sl28cpld_wdt.c
- 
- SL28 VPD NVMEM LAYOUT DRIVER
--M:	Michael Walle <michael@walle.cc>
-+M:	Michael Walle <mwalle@kernel.org>
- S:	Maintained
- F:	Documentation/devicetree/bindings/nvmem/layouts/kontron,sl28-vpd.yaml
- F:	drivers/nvmem/layouts/sl28vpd.c
-@@ -20446,7 +20446,7 @@ F:	drivers/pinctrl/spear/
- SPI NOR SUBSYSTEM
- M:	Tudor Ambarus <tudor.ambarus@linaro.org>
- M:	Pratyush Yadav <pratyush@kernel.org>
--M:	Michael Walle <michael@walle.cc>
-+M:	Michael Walle <mwalle@kernel.org>
- L:	linux-mtd@lists.infradead.org
- S:	Maintained
- W:	http://www.linux-mtd.infradead.org/
--- 
-2.39.2
+Also note all the tags you've already got must be preserved on the
+next patch revisions. One more time:
 
+Acked-by: Serge Semin <fancer.lancer@gmail.com>
+
+-Serge(y)
+
+> ---
+>  drivers/gpio/gpio-dwapb.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 4a4f61bf6c58..8c59332429c2 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -282,13 +282,15 @@ static void dwapb_irq_enable(struct irq_data *d)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>  	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+>  	unsigned long flags;
+>  	u32 val;
+>  
+>  	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> -	val = dwapb_read(gpio, GPIO_INTEN);
+> -	val |= BIT(irqd_to_hwirq(d));
+> +	val = dwapb_read(gpio, GPIO_INTEN) | BIT(hwirq);
+>  	dwapb_write(gpio, GPIO_INTEN, val);
+> +	val = dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
+> +	dwapb_write(gpio, GPIO_INTMASK, val);
+>  	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  }
+>  
+> @@ -296,12 +298,14 @@ static void dwapb_irq_disable(struct irq_data *d)
+>  {
+>  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+>  	struct dwapb_gpio *gpio = to_dwapb_gpio(gc);
+> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+>  	unsigned long flags;
+>  	u32 val;
+>  
+>  	raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> -	val = dwapb_read(gpio, GPIO_INTEN);
+> -	val &= ~BIT(irqd_to_hwirq(d));
+> +	val = dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
+> +	dwapb_write(gpio, GPIO_INTMASK, val);
+> +	val = dwapb_read(gpio, GPIO_INTEN) & ~BIT(hwirq);
+>  	dwapb_write(gpio, GPIO_INTEN, val);
+>  	raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  }
+> -- 
+> 2.34.1
+> 
 
