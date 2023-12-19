@@ -1,198 +1,117 @@
-Return-Path: <linux-gpio+bounces-1678-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1679-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6C83819136
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 21:11:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E0C2C8192BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 23:01:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 521011F254D6
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 20:11:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 117211C247B8
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 22:01:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5BC839AC5;
-	Tue, 19 Dec 2023 20:11:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5056240C1D;
+	Tue, 19 Dec 2023 21:58:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MkPrScov"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="REx5fXq5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96F933986E
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 20:11:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33671384e50so1206862f8f.0
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 12:11:09 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABAB41874;
+	Tue, 19 Dec 2023 21:58:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-50dfac6c0beso6319364e87.2;
+        Tue, 19 Dec 2023 13:58:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703016668; x=1703621468; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=eKIwE+5cUM1YHQTlDvspjas01+2C8lRyX9Kr4YHxh9w=;
-        b=MkPrScovR7/YPKAFyTvi7Ln40iS45rJG9r+CpP4WjLbNVo8DDWsZZF1hEUr3nLfDz2
-         Ge7nFGMAeGzTpOIcghdpou1OiUcNq0Hru4HZKHZwEphD92zYPufQDO98txLFKbTUNFZc
-         YaYBzoTBsTbDH/1SfrFrUIY1DSsCn8ad0THHftE3fGCWO0uWizxbxU4+53J+BvGMwXwA
-         FOZXByrS7aM0HJQ+VXnJ4nTGBWNA4pBYKgIyIHL+gC2V4gyFNTvo7aEY3DEje7sh6Pkk
-         PEwPf9HaLgassa8FypCR3Ze38GRAK0urF3XvF48IP6Bjj2w2edCs0vbHAtX5zQ9joSSk
-         fV2Q==
+        d=gmail.com; s=20230601; t=1703023099; x=1703627899; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=Kz9JF40z27Tc61PdR3QxG4vNBWOXy1nBSVjeHDCKSlI=;
+        b=REx5fXq5HdYlzPpyxOZTXbXGgiJRrpkrzR0wEuD4CEUuLbM9DbDXcaIvZktR2IMJw9
+         2HGMXeqEYH3X0v9GqOw9xXyMiOebNMfqMwQq8InjYXePGF98IKkx83esB9EWCAE0GAlR
+         Dt3Xt15qRyJvq4wkW3TcKa7DroAkZWC2PTAdJak0gGHheJPbluW4aFeFJOfL8faizPe5
+         v/Em5NmF+5e0afcDti/toyALGng92epnV7P3CRMDWSARjKPc4Mhfkt+T5UwGMZzsIe/N
+         EhaWJPWWaJ91Jk7f+qiOgeIdbgqhoPmQeiqG4cbgAol9ihEclKvJPJ+Oq8pbEn3fEzwV
+         0tVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703016668; x=1703621468;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=eKIwE+5cUM1YHQTlDvspjas01+2C8lRyX9Kr4YHxh9w=;
-        b=ruOia5vaNxelBW5JvFnD7vV6r4g6YTpUBtG4rDzpoTTr1KU/8LQ4BKbtXKDzflA50X
-         so20UOy2dTFtaol9T8TgR5Oya171YqM8s6+bh+LlGz8rL7sNBhEW4L05HqUb4Gn9eFHI
-         cYtSq+whBMSXPiTiLP2pMgVXQb2TjbrFl7+EnvtQPqyOlnqY1PncZavoeKQTVjT/WP18
-         0vBvLzVYc0HETc06DatxP+L+DTXoAH8l4oa9rZ/5UVjs2YGi0a/gYJkDPWHJo7Gzq++z
-         +tOs7tXvJ0DE6KCnOpxF4iIiSfHoZRiiJflybcAIvrCXc0QlKD6ptQeix3f/N7INM5xS
-         Qc3w==
-X-Gm-Message-State: AOJu0YyNqkV/sIkTM+dYldAqFlpJLrRTgVrQggU7dt88op/BlmJOSp05
-	z08h+76lbjm6ySxVpb1VMdzdQA==
-X-Google-Smtp-Source: AGHT+IGVjLp1ideSdQfZT5iaXGEDl4v6lNQQmUdDMZiKSmn61aihOOR64K7Bc+JkP9rFVQl7aAFdlQ==
-X-Received: by 2002:adf:e547:0:b0:336:779e:7a2a with SMTP id z7-20020adfe547000000b00336779e7a2amr242632wrm.94.1703016667367;
-        Tue, 19 Dec 2023 12:11:07 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:bfd0:6ab0:50e2:7f18])
-        by smtp.gmail.com with ESMTPSA id e17-20020a5d5011000000b00336344c3c3fsm16402752wrt.90.2023.12.19.12.11.06
+        d=1e100.net; s=20230601; t=1703023099; x=1703627899;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Kz9JF40z27Tc61PdR3QxG4vNBWOXy1nBSVjeHDCKSlI=;
+        b=xPUtHw7eaLkaBn41r72iQit/23yIBH1BvbzYtKFyfLfSXa6x/BHinha0RhpG4/ZPhd
+         Ja7sqw6mCX6PIMn0orm2SwEZlB19fraJ6NGjcctUqpZFuIcN6F7b+gz34NPfC5B1nlIg
+         jgII5kLSZBh8xH5PBcxZ5S57n2VMkMLUNcgkiNm2il0Mj9ev1wR9wKTBx+5qFW30l1fL
+         kCY0PyQ0kT54y9Fjc0KXEvcSVFIGGhwsDtJN7iEjE0OhNuOp6ETHkVnHcUVceBbg6pHP
+         eQQ1v5qPrA2Eop4wa4AQbCJILJLmeTPngtJ4f7pjf/Ups4kqK3tVd7hCOv+UTMsVjXV5
+         eExw==
+X-Gm-Message-State: AOJu0Yzh3CJBT1J/3zPSzxOy/vUOXhjn5R0bpm5sYIkygZLI5IdWNqAh
+	dmEcxhvCY9l3G/cFhH0j7As=
+X-Google-Smtp-Source: AGHT+IGeE/9w5pHPPep+4WMt0OaCwQcV0qV9NOm1GXEkMYA1C7XmpnU1StQs7FjxHp0Oiwyx2ktz9g==
+X-Received: by 2002:a05:6512:e88:b0:50b:fc9f:3031 with SMTP id bi8-20020a0565120e8800b0050bfc9f3031mr12163956lfb.90.1703023098612;
+        Tue, 19 Dec 2023 13:58:18 -0800 (PST)
+Received: from mobilestation ([95.79.203.166])
+        by smtp.gmail.com with ESMTPSA id z9-20020a19f709000000b0050e37bb4000sm734026lfe.40.2023.12.19.13.58.17
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 19 Dec 2023 12:11:07 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [RFC PATCH] gpiolib: remove extra_checks
-Date: Tue, 19 Dec 2023 21:11:02 +0100
-Message-Id: <20231219201102.41639-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        Tue, 19 Dec 2023 13:58:18 -0800 (PST)
+Date: Wed, 20 Dec 2023 00:58:16 +0300
+From: Serge Semin <fancer.lancer@gmail.com>
+To: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>, hoan@os.amperecomputing.com, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@kernel.org, Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
+Message-ID: <yko4bwzrnlvncljpgyxlsvioqeyf3zxb255qexlawooqjxvedn@dkr7i7fame3n>
+References: <20231219013751.20386-1-xiongxin@kylinos.cn>
+ <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+ <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
+ <euhbczna4hk5sacb23i2xwqh2jewlek7cfceprfslpsiijhwk3@3d6vtybmgag5>
+ <20231219-whispering-independent-bonobo-d14a04@lemur>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231219-whispering-independent-bonobo-d14a04@lemur>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Konstantin
 
-extra_checks is only used in a few places. It also depends on
-a non-standard DEBUG define one needs to add to the source file. The
-overhead of removing it should be minimal (we already use pure
-might_sleep() in the code anyway) so drop it.
+On Tue, Dec 19, 2023 at 01:56:47PM -0500, Konstantin Ryabitsev wrote:
+> On Tue, Dec 19, 2023 at 05:31:38PM +0300, Serge Semin wrote:
+> > > > Also note all the tags you've already got must be preserved on the
+> > > > next patch revisions. One more time:
+> > > 
+> > > > Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> > > 
+> > > I recommend using `b4` for that.
+> > > 
+> > > it harvests tags from the email thread, so no need to care about
+> > > possible misses.
+> > 
+> > AFAICS it doesn't pick up the tags from the previous revisions at
+> > least if the new patch wasn't submitted as in-reply-to the prev one.
+> 
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 31 +++++++++----------------------
- 1 file changed, 9 insertions(+), 22 deletions(-)
+> It's a known limitation at this time, but it will be improved in the near
+> future and we'll be able to grab trailers across revisions as long as the
+> patch-id remains the same.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index c9ca809b55de..837e9919bf07 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -47,19 +47,6 @@
-  * GPIOs can sometimes cost only an instruction or two per bit.
-  */
- 
--
--/* When debugging, extend minimal trust to callers and platform code.
-- * Also emit diagnostic messages that may help initial bringup, when
-- * board setup or driver bugs are most common.
-- *
-- * Otherwise, minimize overhead in what may be bitbanging codepaths.
-- */
--#ifdef	DEBUG
--#define	extra_checks	1
--#else
--#define	extra_checks	0
--#endif
--
- /* Device and char device-related information */
- static DEFINE_IDA(gpio_ida);
- static dev_t gpio_devt;
-@@ -2351,7 +2338,7 @@ void gpiod_free(struct gpio_desc *desc)
- 		return;
- 
- 	if (!gpiod_free_commit(desc))
--		WARN_ON(extra_checks);
-+		WARN_ON(1);
- 
- 	module_put(desc->gdev->owner);
- 	gpio_device_put(desc->gdev);
-@@ -3729,7 +3716,7 @@ EXPORT_SYMBOL_GPL(gpiochip_line_is_persistent);
-  */
- int gpiod_get_raw_value_cansleep(const struct gpio_desc *desc)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	VALIDATE_DESC(desc);
- 	return gpiod_get_raw_value_commit(desc);
- }
-@@ -3748,7 +3735,7 @@ int gpiod_get_value_cansleep(const struct gpio_desc *desc)
- {
- 	int value;
- 
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	VALIDATE_DESC(desc);
- 	value = gpiod_get_raw_value_commit(desc);
- 	if (value < 0)
-@@ -3779,7 +3766,7 @@ int gpiod_get_raw_array_value_cansleep(unsigned int array_size,
- 				       struct gpio_array *array_info,
- 				       unsigned long *value_bitmap)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	if (!desc_array)
- 		return -EINVAL;
- 	return gpiod_get_array_value_complex(true, true, array_size,
-@@ -3805,7 +3792,7 @@ int gpiod_get_array_value_cansleep(unsigned int array_size,
- 				   struct gpio_array *array_info,
- 				   unsigned long *value_bitmap)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	if (!desc_array)
- 		return -EINVAL;
- 	return gpiod_get_array_value_complex(false, true, array_size,
-@@ -3826,7 +3813,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_array_value_cansleep);
-  */
- void gpiod_set_raw_value_cansleep(struct gpio_desc *desc, int value)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	VALIDATE_DESC_VOID(desc);
- 	gpiod_set_raw_value_commit(desc, value);
- }
-@@ -3844,7 +3831,7 @@ EXPORT_SYMBOL_GPL(gpiod_set_raw_value_cansleep);
-  */
- void gpiod_set_value_cansleep(struct gpio_desc *desc, int value)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	VALIDATE_DESC_VOID(desc);
- 	gpiod_set_value_nocheck(desc, value);
- }
-@@ -3867,7 +3854,7 @@ int gpiod_set_raw_array_value_cansleep(unsigned int array_size,
- 				       struct gpio_array *array_info,
- 				       unsigned long *value_bitmap)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	if (!desc_array)
- 		return -EINVAL;
- 	return gpiod_set_array_value_complex(true, true, array_size, desc_array,
-@@ -3909,7 +3896,7 @@ int gpiod_set_array_value_cansleep(unsigned int array_size,
- 				   struct gpio_array *array_info,
- 				   unsigned long *value_bitmap)
- {
--	might_sleep_if(extra_checks);
-+	might_sleep();
- 	if (!desc_array)
- 		return -EINVAL;
- 	return gpiod_set_array_value_complex(false, true, array_size,
--- 
-2.40.1
+Ok. Thanks for the note.
 
+I am sure you are well aware of that, but in some cases the tags are
+intentionally omitted in the new patch revisions for instance due to
+significant patch body change. How are you going to handle that? Just
+make the tags picking up optional? Perhaps making the tags handling
+interactive with printing a text/context around the tag?
+
+-Serge(y)
+
+> 
+> -K
 
