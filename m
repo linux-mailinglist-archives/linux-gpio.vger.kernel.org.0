@@ -1,65 +1,54 @@
-Return-Path: <linux-gpio+bounces-1672-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1673-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B86E818AE2
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 16:12:06 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 217B1818BBC
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 17:00:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9D46B282DC8
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:12:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5C3A2875D1
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 16:00:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A92B1C688;
-	Tue, 19 Dec 2023 15:12:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A301D130;
+	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NIkGZftw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6qp/rYy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C31CA1CF86;
-	Tue, 19 Dec 2023 15:11:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702998719; x=1734534719;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=+xlnfKcJqebKZFuV6jH/QlOiaHFOq5igRUWnHrLzm+U=;
-  b=NIkGZftwLirVlqp0o2yFyWhIyGIMeJEEoLJOpJ+A3vUzqewi+bldG+U+
-   11yAIZR0yu/B6sKQeFfIvOlBwbL98szYQnoomk5Hp31Crxszegkxhblgi
-   tqX1lAkxsxoqf+ijGPUYY+vzLjzpyv4Ov5uPK1r5v5n151EdBiOZSa2vJ
-   ugY/CeP5QBibfHuRAIE17yAzZNlDpBon8vzN1B2X7N4MnUM3B7wti7Zzt
-   YxJlpTujECRoHFVnEemU/Smq14iyYcLBy8JDjW+tct9qyQls8ULcwGHPR
-   r9xI5WlaE+1JL7UK/pHFROS+5PHi+7YWqDn03biWCFPRZ6vTR4moqYQ/n
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="460014993"
-X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="460014993"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:11:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="866669664"
-X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="866669664"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 07:11:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rFblC-00000007IDy-3Oqf;
-	Tue, 19 Dec 2023 17:11:54 +0200
-Date: Tue, 19 Dec 2023 17:11:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpiolib: use __counted_by() for GPIO descriptors
-Message-ID: <ZYGyumQXaM8PXzcz@smile.fi.intel.com>
-References: <20231219125706.23284-1-brgl@bgdev.pl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935661CF8D;
+	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22BCEC433C8;
+	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703001625;
+	bh=6OAazItlXZJb2RxR9H3/uVNW6w630Htp7mI9+DI1Y+8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=h6qp/rYyRU+mlbN7Gwg5AiRzgx1Rbk2cEcW7os7DvgtbRVUSVD5jwYfKeOFo7d6lj
+	 xkJeHhmYXgq4qBejzL6PbgBTptUlC3dxXs43BarrIUonCkHTUt+QY4Au/UJTm0fuz8
+	 TuOQQHW0N0hk1Km2RVCIdp6zAvaYrWaqvE/pjMXHOrWHH4TJf1E1D0pDrXLA557Qnm
+	 oaHm0qvDwOGaLPe4BoFRFGYLMk754Amrp/MlqYcwqmBoYWGYb+JAtruBTy4Oz7dISQ
+	 aFj/FE7GffOZKKKRcl28kEEoW81aJbB6fW6/Nr/hiAZfQ2GVt65u9L5A4U/Si89vEQ
+	 ZVsDeiBHfIHOg==
+Received: from johan by xi.lan with local (Exim 4.96.2)
+	(envelope-from <johan@kernel.org>)
+	id 1rFcW6-0008KD-0D;
+	Tue, 19 Dec 2023 17:00:22 +0100
+Date: Tue, 19 Dec 2023 17:00:22 +0100
+From: Johan Hovold <johan@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: clean up example
+Message-ID: <ZYG-Fr9FfIQUup_r@hovoldconsulting.com>
+References: <20231130172834.12653-1-johan+linaro@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,25 +57,23 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231219125706.23284-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20231130172834.12653-1-johan+linaro@kernel.org>
 
-On Tue, Dec 19, 2023 at 01:57:06PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Linus,
+
+On Thu, Nov 30, 2023 at 06:28:34PM +0100, Johan Hovold wrote:
+> The Multi-Purpose Pin controller block is part of an SPMI PMIC (which in
+> turns sits on an SPMI bus) and uses a single value for the register
+> property that corresponds to its base address.
 > 
-> Pull the array of GPIO descriptors into struct gpio_device as a flexible
-> array and use __counted_by() to control its size.
+> Clean up the example by adding a parent PMIC node with proper
+> '#address-cells' and '#size-cells' properties, dropping the incorrect
+> second register value, adding some newline separators and increasing the
+> indentation to four spaces.
+> 
+> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
 
-How big is the struct gpio_device? Unifying like this might provoke subtle
-errors on very fragmented memory, where k*alloc() might not find enough free
-space. Note, k*alloc() guarantees finding only memory for a single page.
-With PAGE_SIZE = 4k, this might be an issue.
+Can you pick this one up for 6.8?
 
-I would suggest, if nothing prevents us from switching, to use kvmalloc().
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Johan
 
