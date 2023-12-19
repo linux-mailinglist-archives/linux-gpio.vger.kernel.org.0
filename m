@@ -1,110 +1,239 @@
-Return-Path: <linux-gpio+bounces-1648-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1649-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02AED81846D
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 10:31:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4520A81847F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 10:33:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6629280CD5
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 09:31:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B00471F2667F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 09:33:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8F4D134DE;
-	Tue, 19 Dec 2023 09:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD4A413AD5;
+	Tue, 19 Dec 2023 09:32:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PsmEEk4v"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="1nvUaizl"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52D7913AC4
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 09:31:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8A7C14F82
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 09:32:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7cbffb691cfso159874241.2
-        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 01:31:01 -0800 (PST)
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-462e70f1c20so885032137.0
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 01:32:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702978260; x=1703583060; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1702978373; x=1703583173; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=43MFGB5RuUymiXAB/bUEsYfRC+PGoTDFmWi6lTDtBws=;
-        b=PsmEEk4v3qSt6h+eDkhyoaSQwNhc6po1FwCk/EIOlMBbcegHDVShvJ5ypVLubVl7cj
-         XnBkspLILab5RZOrpTud+2agQkGcKSSO4rqkAVlcU9asVchzHUbDIwe2eZSJ8r4G2Rs0
-         ASaj45yTGwNy5U/0JJeZWzyi384ax3rIT+XrZOhEwZHykGgNvdMmZJJPvh3GtQ2weLjT
-         rBO/P7ayU7rTy0zaC9T+mPf+HHCh1nEBxmiWmN5/dBWVHhNmBdZqc5cy8f/r//fbNrl6
-         dCXAmn6EA1TJajiUp2H2/9eocHhtgbJoksmkfRqfo52GR+JyGL7MT+jxPF73vVxPo+Pl
-         r5RA==
+        bh=Xkq0SDyBM5lizOUSB78gmtdwqPXagFKt4mg0KQVX4eQ=;
+        b=1nvUaizlkFH9CYTgtTRorlqjv95ulpOXznrnewlvQhH9vc2CCKxK2ZAotD0/izTqQq
+         pzxHlW0lqvIV8Od64WQVna83fSV3ohkWrZM6MCJKD+u/mbqx1D3QHQN3l7VymveE867G
+         G0l5H900db6FhlEKY9ojaGtkX9sNnJHXbsq+OwqTE+3W+oQUKu1zaZlwWWjJqizShrp2
+         +JXpaAA+2aOdgSpfkU0LL4G8+9zPG50pIaYvbvoi2ez+oaFeo6KxE8F4OLLAnEfA4x+5
+         rYZFkolHKAYY50HcA0PpqNuINQWe+WahPMs9+IRw7mTINjwIk/PQ9Nb9a0seuJNCy+5Q
+         O67Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1702978260; x=1703583060;
+        d=1e100.net; s=20230601; t=1702978373; x=1703583173;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=43MFGB5RuUymiXAB/bUEsYfRC+PGoTDFmWi6lTDtBws=;
-        b=ucr+/OcmJrtKroXjEdD7yp5S0mhdgUUaXy5GsAmVsLFYJS56kN6806X2gZ/x9Wh4Vc
-         210NyLBOytFbVtL6nynR+IfLU4UocLo1jft+CfSuUWynOkc57oQAameb73M5+T67X7EG
-         IIAb1ZGAuGZA5KHSCATugRL9kxFDJozMymRDD8b2nmcpwtv2syXYEvMJtHWB/4zDO2Jc
-         gtjt6z0nD01eifXc2NDp7NmPLdKI3AcnlE1B+JXQLb9dIRfspuxKk+jnJe6B0GZPXs/Z
-         WUW7rOnE7ms5Se7dcwTUmIXmfHxpJMxv6FPRJ5zN6U30CPQf1MwyLhKX2atobwmxpSFw
-         4ZqA==
-X-Gm-Message-State: AOJu0Yw3ZCoKX+3ajFdTg8ViadqlVQB9SK3fyeSCHaofotSe+Fn9YeI9
-	3i+8cw6lP2QMS34Bq60gT+GPLkub/DUYD+SPT9qpWQ==
-X-Google-Smtp-Source: AGHT+IGLPSdhHOK7TeFasU8Y19mVZPNNfXsxhyEjEvdfaY/3tjQ1id+5awZZcpiuASPwISZjDiwtmG3qRwfFd9sfB+0=
-X-Received: by 2002:a05:6102:151f:b0:466:91b8:ba4 with SMTP id
- f31-20020a056102151f00b0046691b80ba4mr1741946vsv.23.1702978260244; Tue, 19
- Dec 2023 01:31:00 -0800 (PST)
+        bh=Xkq0SDyBM5lizOUSB78gmtdwqPXagFKt4mg0KQVX4eQ=;
+        b=jaOo1t/XXH1cnGNs2LlEvU2cC4PCXWNXw4fZBj/qyb8KMXhmdutO1pW2JvhtR+zTcP
+         pOdSDYj2R1c8FGlKeYvBPY8MjkOY1CFPUfANtYrRvnBKsR/QzmYvYp0S89JCuEvU88TG
+         qHUss1PET5OipW183HnIX3s4NVQicYlfUmeRN50DFWyzhhtUEInlb0HlfxpgL1RHtONu
+         Jy+QFgpUMA2qLgPE9rYOVnmqgwxnxOH/Pexc7G7wdkW9Qu33cBwr4AcjVgcNKFm61Rxv
+         8X65TH+y1Zuvgc6ef0CIN756/X+aYUf56pRNWc442jHrkab8r6TbQKFlshUFdxVGsBz1
+         MlXg==
+X-Gm-Message-State: AOJu0YxF1+zKIs5LaqKVHw+fN9Vw6GM0aS3CR5i+QpgvNvYfoZx8taob
+	/Eh+nkF3ZxrbZv6XPMYrk8U7T9EotNhmdzvARRK7JQ==
+X-Google-Smtp-Source: AGHT+IErNM386cNukBQeeIR7tghhw7iSyETZ0c5uwniY0v7UZTLsxSx6wmwXT4WzV+G+s/r7fB7KOgl/WN1/q8QSSzk=
+X-Received: by 2002:a05:6102:e12:b0:466:9d70:6f0b with SMTP id
+ o18-20020a0561020e1200b004669d706f0bmr1834848vst.49.1702978373626; Tue, 19
+ Dec 2023 01:32:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219004158.12405-1-warthog618@gmail.com>
-In-Reply-To: <20231219004158.12405-1-warthog618@gmail.com>
+References: <20231219004158.12405-1-warthog618@gmail.com> <20231219004158.12405-4-warthog618@gmail.com>
+ <CAMRc=McPQnLzPCJz6AKV44=qp6z=V9sCAcYkDTQA6FVjWj6E3A@mail.gmail.com>
+In-Reply-To: <CAMRc=McPQnLzPCJz6AKV44=qp6z=V9sCAcYkDTQA6FVjWj6E3A@mail.gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 19 Dec 2023 10:30:49 +0100
-Message-ID: <CAMRc=McUAo6LGXwG-haWNbcCoSL9HkvO-85_5vsCGeEO=6BoKg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] gpiolib: cdev: relocate debounce_period_us
+Date: Tue, 19 Dec 2023 10:32:42 +0100
+Message-ID: <CAMRc=McirXisM34GTDQbbs7pEzAsLMNHZRQy_vS34HfEFxdu+w@mail.gmail.com>
+Subject: Re: [PATCH v5 3/5] gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
 To: Kent Gibson <warthog618@gmail.com>
 Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
 	linus.walleij@linaro.org, andy@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 19, 2023 at 1:42=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Tue, Dec 19, 2023 at 10:30=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> This series contains minor improvements to gpiolib-cdev.
+> On Tue, Dec 19, 2023 at 1:42=E2=80=AFAM Kent Gibson <warthog618@gmail.com=
+> wrote:
+> >
+> > Reduce the time holding the gpio_lock by snapshotting the desc flags,
+> > rather than testing them individually while holding the lock.
+> >
+> > Accept that the calculation of the used field is inherently racy, and
+> > only check the availability of the line from pinctrl if other checks
+> > pass, so avoiding the check for lines that are otherwise in use.
+> >
+> > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> > ---
+> >  drivers/gpio/gpiolib-cdev.c | 74 ++++++++++++++++++-------------------
+> >  1 file changed, 36 insertions(+), 38 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > index aecc4241b6c8..9f5104d7532f 100644
+> > --- a/drivers/gpio/gpiolib-cdev.c
+> > +++ b/drivers/gpio/gpiolib-cdev.c
+> > @@ -2399,74 +2399,72 @@ static void gpio_desc_to_lineinfo(struct gpio_d=
+esc *desc,
+> >                                   struct gpio_v2_line_info *info)
+> >  {
+> >         struct gpio_chip *gc =3D desc->gdev->chip;
+> > -       bool ok_for_pinctrl;
+> > -       unsigned long flags;
+> > +       unsigned long dflags;
+> >
+> >         memset(info, 0, sizeof(*info));
+> >         info->offset =3D gpio_chip_hwgpio(desc);
+> >
+> > -       /*
+> > -        * This function takes a mutex so we must check this before tak=
+ing
+> > -        * the spinlock.
+> > -        *
+> > -        * FIXME: find a non-racy way to retrieve this information. May=
+be a
+> > -        * lock common to both frameworks?
+> > -        */
+> > -       ok_for_pinctrl =3D pinctrl_gpio_can_use_line(gc, info->offset);
+> > +       scoped_guard(spinlock_irqsave, &gpio_lock) {
+> > +               if (desc->name)
+> > +                       strscpy(info->name, desc->name, sizeof(info->na=
+me));
+> >
+> > -       spin_lock_irqsave(&gpio_lock, flags);
+> > +               if (desc->label)
+> > +                       strscpy(info->consumer, desc->label,
+> > +                               sizeof(info->consumer));
+> >
+> > -       if (desc->name)
+> > -               strscpy(info->name, desc->name, sizeof(info->name));
+> > -
+> > -       if (desc->label)
+> > -               strscpy(info->consumer, desc->label, sizeof(info->consu=
+mer));
+> > +               dflags =3D READ_ONCE(desc->flags);
+> > +       }
+> >
+> >         /*
+> > -        * Userspace only need to know that the kernel is using this GP=
+IO so
+> > -        * it can't use it.
+> > +        * Userspace only need know that the kernel is using this GPIO =
+so it
+> > +        * can't use it.
+> > +        * The calculation of the used flag is slightly racy, as it may=
+ read
+> > +        * desc, gc and pinctrl state without a lock covering all three=
+ at
+> > +        * once.  Worst case if the line is in transition and the calcu=
+lation
+> > +        * is inconsistent then it looks to the user like they performe=
+d the
+> > +        * read on the other side of the transition - but that can alwa=
+ys
+> > +        * happen.
+> > +        * The definitive test that a line is available to userspace is=
+ to
+> > +        * request it.
+> >          */
+> > -       info->flags =3D 0;
+> > -       if (test_bit(FLAG_REQUESTED, &desc->flags) ||
+> > -           test_bit(FLAG_IS_HOGGED, &desc->flags) ||
+> > -           test_bit(FLAG_USED_AS_IRQ, &desc->flags) ||
+> > -           test_bit(FLAG_EXPORT, &desc->flags) ||
+> > -           test_bit(FLAG_SYSFS, &desc->flags) ||
+> > +       if (test_bit(FLAG_REQUESTED, &dflags) ||
+> > +           test_bit(FLAG_IS_HOGGED, &dflags) ||
+> > +           test_bit(FLAG_USED_AS_IRQ, &dflags) ||
+> > +           test_bit(FLAG_EXPORT, &dflags) ||
+> > +           test_bit(FLAG_SYSFS, &dflags) ||
+> >             !gpiochip_line_is_valid(gc, info->offset) ||
+> > -           !ok_for_pinctrl)
+> > +           !pinctrl_gpio_can_use_line(gc, info->offset))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_USED;
+> >
+> > -       if (test_bit(FLAG_IS_OUT, &desc->flags))
+> > +       if (test_bit(FLAG_IS_OUT, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_OUTPUT;
+> >         else
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_INPUT;
+> >
+> > -       if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
+> > +       if (test_bit(FLAG_ACTIVE_LOW, &dflags))
 >
-> The banner change is relocating the debounce_period_us from gpiolib's
-> struct gpio_desc to cdev's struct line.  Patch 1 stores the field
-> locally in cdev.  Patch 2 removes the now unused field from gpiolib.
->
-> Patch 3 is somewhat related and removes a FIXME from
-> gpio_desc_to_lineinfo().  The FIXME relates to a race condition in
-> the calculation of the used flag, but I would assert that from
-> the userspace perspective the read operation itself is inherently racy.
-> The line being reported as unused in the info provides no guarantee -
-> it just an indicator that requesting the line is likely to succeed -
-> assuming the line is not otherwise requested in the meantime.
-> Given the overall operation is racy, trying to stamp out an unlikely
-> race within the operation is pointless. Accept it as a possibility
-> that has negligible side-effects and reduce the number of locks held
-> simultaneously and the duration that the gpio_lock is held.
->
-> Patches 1 and 3 introduce usage of guard() and scoped_guard() to cdev.
-> Patch 4 replaces any remaining discrete lock/unlock calls around
-> critical sections with guard() or scoped_guard().
->
-> Patch 5 is unrelated to debounce or info, but addresses Andy's
-> recent lamentation that the linereq get/set values functions are
-> confusing and under documented.
-> Figured I may as well add that while I was in there.
->
+> One more nit: you no longer have to use atomic bitops here, you can
+> switch to the ones without guarantees for better performance.
 
-I applied patches 1,2, 4 and 5. I have one more suggestion for patch 3
-so I held it off.
+-ENEVERMIND, there's no non-atomic test_bit(). I'll go ahead and apply
+this one too.
 
 Bart
+
+>
+> Bart
+>
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_ACTIVE_LOW;
+> >
+> > -       if (test_bit(FLAG_OPEN_DRAIN, &desc->flags))
+> > +       if (test_bit(FLAG_OPEN_DRAIN, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_OPEN_DRAIN;
+> > -       if (test_bit(FLAG_OPEN_SOURCE, &desc->flags))
+> > +       if (test_bit(FLAG_OPEN_SOURCE, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_OPEN_SOURCE;
+> >
+> > -       if (test_bit(FLAG_BIAS_DISABLE, &desc->flags))
+> > +       if (test_bit(FLAG_BIAS_DISABLE, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_BIAS_DISABLED;
+> > -       if (test_bit(FLAG_PULL_DOWN, &desc->flags))
+> > +       if (test_bit(FLAG_PULL_DOWN, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_BIAS_PULL_DOWN;
+> > -       if (test_bit(FLAG_PULL_UP, &desc->flags))
+> > +       if (test_bit(FLAG_PULL_UP, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_BIAS_PULL_UP;
+> >
+> > -       if (test_bit(FLAG_EDGE_RISING, &desc->flags))
+> > +       if (test_bit(FLAG_EDGE_RISING, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_EDGE_RISING;
+> > -       if (test_bit(FLAG_EDGE_FALLING, &desc->flags))
+> > +       if (test_bit(FLAG_EDGE_FALLING, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_EDGE_FALLING;
+> >
+> > -       if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &desc->flags))
+> > +       if (test_bit(FLAG_EVENT_CLOCK_REALTIME, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_EVENT_CLOCK_REALTIME=
+;
+> > -       else if (test_bit(FLAG_EVENT_CLOCK_HTE, &desc->flags))
+> > +       else if (test_bit(FLAG_EVENT_CLOCK_HTE, &dflags))
+> >                 info->flags |=3D GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE;
+> > -
+> > -       spin_unlock_irqrestore(&gpio_lock, flags);
+> >  }
+> >
+> >  struct gpio_chardev_data {
+> > --
+> > 2.39.2
+> >
 
