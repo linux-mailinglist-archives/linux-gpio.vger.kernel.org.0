@@ -1,79 +1,74 @@
-Return-Path: <linux-gpio+bounces-1673-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1674-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 217B1818BBC
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 17:00:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4351081902A
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 20:00:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C5C3A2875D1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 16:00:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C557AB247F4
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 19:00:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3A301D130;
-	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7859C38DF5;
+	Tue, 19 Dec 2023 18:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h6qp/rYy"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lrVUtA1Q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935661CF8D;
-	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22BCEC433C8;
-	Tue, 19 Dec 2023 16:00:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703001625;
-	bh=6OAazItlXZJb2RxR9H3/uVNW6w630Htp7mI9+DI1Y+8=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E7039AE0;
+	Tue, 19 Dec 2023 18:56:48 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D3D5C433C8;
+	Tue, 19 Dec 2023 18:56:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1703012208;
+	bh=aP+oDZf3uBfmiJg3JSNLhHNnVs/OqvcxJ8ra0X82FPw=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=h6qp/rYyRU+mlbN7Gwg5AiRzgx1Rbk2cEcW7os7DvgtbRVUSVD5jwYfKeOFo7d6lj
-	 xkJeHhmYXgq4qBejzL6PbgBTptUlC3dxXs43BarrIUonCkHTUt+QY4Au/UJTm0fuz8
-	 TuOQQHW0N0hk1Km2RVCIdp6zAvaYrWaqvE/pjMXHOrWHH4TJf1E1D0pDrXLA557Qnm
-	 oaHm0qvDwOGaLPe4BoFRFGYLMk754Amrp/MlqYcwqmBoYWGYb+JAtruBTy4Oz7dISQ
-	 aFj/FE7GffOZKKKRcl28kEEoW81aJbB6fW6/Nr/hiAZfQ2GVt65u9L5A4U/Si89vEQ
-	 ZVsDeiBHfIHOg==
-Received: from johan by xi.lan with local (Exim 4.96.2)
-	(envelope-from <johan@kernel.org>)
-	id 1rFcW6-0008KD-0D;
-	Tue, 19 Dec 2023 17:00:22 +0100
-Date: Tue, 19 Dec 2023 17:00:22 +0100
-From: Johan Hovold <johan@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bjorn Andersson <andersson@kernel.org>, Andy Gross <agross@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-arm-msm@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: pinctrl: qcom,pmic-mpp: clean up example
-Message-ID: <ZYG-Fr9FfIQUup_r@hovoldconsulting.com>
-References: <20231130172834.12653-1-johan+linaro@kernel.org>
+	b=lrVUtA1QQbnYGSWhNTQU44tJcv6byJibtmumxObF5u0KcBiqeRdgkUyc5w6UmO+UR
+	 sJtek4k1UskwJkokiFTI457+Eozv2INqalst9nHWi9V2IZz0ekMZIBM+aXSzKBzz8e
+	 I0fNYZ6X4P2os8jIStQ6ShxZVtpT0Vk2037GBTgM=
+Date: Tue, 19 Dec 2023 13:56:47 -0500
+From: Konstantin Ryabitsev <konstantin@linuxfoundation.org>
+To: Serge Semin <fancer.lancer@gmail.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	xiongxin <xiongxin@kylinos.cn>, Andy Shevchenko <andy@kernel.org>, hoan@os.amperecomputing.com, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@kernel.org, Riwen Lu <luriwen@kylinos.cn>
+Subject: Re: [PATCH v3] gpio: dwapb: mask/unmask IRQ when disable/enale it
+Message-ID: <20231219-whispering-independent-bonobo-d14a04@lemur>
+References: <20231219013751.20386-1-xiongxin@kylinos.cn>
+ <7zdg5ujizncarxvdyahnusojiq44rzxx2zybqj4kzsonzr27gq@fm5wj7npqsk3>
+ <CAHp75VceVAZYTNsJaYYRN+EMExFZSQARsJowd-CvDLRtuOPKSg@mail.gmail.com>
+ <euhbczna4hk5sacb23i2xwqh2jewlek7cfceprfslpsiijhwk3@3d6vtybmgag5>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20231130172834.12653-1-johan+linaro@kernel.org>
+In-Reply-To: <euhbczna4hk5sacb23i2xwqh2jewlek7cfceprfslpsiijhwk3@3d6vtybmgag5>
 
-Hi Linus,
-
-On Thu, Nov 30, 2023 at 06:28:34PM +0100, Johan Hovold wrote:
-> The Multi-Purpose Pin controller block is part of an SPMI PMIC (which in
-> turns sits on an SPMI bus) and uses a single value for the register
-> property that corresponds to its base address.
+On Tue, Dec 19, 2023 at 05:31:38PM +0300, Serge Semin wrote:
+> > > Also note all the tags you've already got must be preserved on the
+> > > next patch revisions. One more time:
+> > 
+> > > Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> > 
+> > I recommend using `b4` for that.
+> > 
+> > it harvests tags from the email thread, so no need to care about
+> > possible misses.
 > 
-> Clean up the example by adding a parent PMIC node with proper
-> '#address-cells' and '#size-cells' properties, dropping the incorrect
-> second register value, adding some newline separators and increasing the
-> indentation to four spaces.
-> 
-> Signed-off-by: Johan Hovold <johan+linaro@kernel.org>
+> AFAICS it doesn't pick up the tags from the previous revisions at
+> least if the new patch wasn't submitted as in-reply-to the prev one.
 
-Can you pick this one up for 6.8?
+It's a known limitation at this time, but it will be improved in the near
+future and we'll be able to grab trailers across revisions as long as the
+patch-id remains the same.
 
-Johan
+-K
 
