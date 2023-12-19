@@ -1,124 +1,152 @@
-Return-Path: <linux-gpio+bounces-1663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E27F818A30
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:39:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70F4D818A47
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 15:41:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D28851F2B29A
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:39:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 89D711C21A9A
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Dec 2023 14:41:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E72051805C;
-	Tue, 19 Dec 2023 14:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1851C68E;
+	Tue, 19 Dec 2023 14:41:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="krOtKW/G"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="I5pFWUvp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2077.outbound.protection.outlook.com [40.107.100.77])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D6AA1CAAA
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Dec 2023 14:38:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1702996693; x=1734532693;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=UVBO8tdrNYRZN9t5L07KY7zM0cTYLl3+qRWvJNBsPBg=;
-  b=krOtKW/G4yJUO5U7mt9x4U8Hr0Q5AnwrdnebQmQcN2O2wqXLnSdum2Sc
-   FmVXwl7WC+VwyjJc2ZeXMzTRHN/Zi5tnDYkx+Nf19Hs/ANsLOpWTxMAhV
-   Sm0tGiwRaSO4lsdSTKRrXjxwuv6ThCx9L4RnBa/pfLqOikgIwcApK+CU+
-   q0dd7RbqAi9n8gwOS1AqiSoYoDB2aF/40GDi5sAmoLtMIQAR1gh+VA+Tl
-   Acup4Rf5C57iZ0+7IBjoJ4ke9sYII1v7S8GgbdPhBZ2OreYed+osSxTXt
-   IougDNDAUhvwgsSuzABZ4sYdvlxF69WN9nHLUNLkrx9/TMiqWRSx7Picw
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="9113277"
-X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="9113277"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 06:38:12 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="949184021"
-X-IronPort-AV: E=Sophos;i="6.04,288,1695711600"; 
-   d="scan'208";a="949184021"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Dec 2023 06:38:10 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rFbEW-00000007HmS-1GxG;
-	Tue, 19 Dec 2023 16:38:08 +0200
-Date: Tue, 19 Dec 2023 16:38:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linux pin control <linux-gpio@vger.kernel.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [GIT PULL] intel-pinctrl for 6.8-1
-Message-ID: <ZYGqz-XW7LSlui2N@smile.fi.intel.com>
-References: <20231218145559.2209291-1-andriy.shevchenko@linux.intel.com>
- <CACRpkdbej2mwny4i44J+3yzCfvZo_=QQVSkJnxfqrMHtETmJ8g@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E66691C2AE;
+	Tue, 19 Dec 2023 14:41:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=P5SrdF6skf7fnjDxIRDAqwrmFbn5eAi2vcUE/oNSxmmKYTKNchFupYhxpqQ8z4c0BSjqT+rgtaqV5zhpRGneR9K74q7LJo8uAgs4rX3U5jHEc7Vwe1zbqw0bVypToDAPdefbfY7OrgyoVCBX8z263Vnt5WYkaxwX/s4e54+SvKKg3+/KCvE86uqbq7Xvs8XyuMjPFTqrW6mFdW0eLIBQwVGYHkC91TFzJBuX0O4AfB+BVLQxjyoyUcqqcrbL1h9bPrR+0H+txNJKXd3NLhLNlQ7S2XdsZfMqlvOZL6dF6u/8QQW9InWgLCEPlYrrkGW5YxtMdVxvkZpxRgNekIdAdg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=FJaZ5jmWBXX9tuTCfqiQwZpSdqIc+9R+nKDlMQ+bYyw=;
+ b=QiN6gJal1RYsfmW7TbD7zr2J7VlD1g/t/BwqbjcBcmNS9bRbzuEOq7iPC/NmO2tCmvWazY/uJ2QRpIxscbW+bNy7kvGy8/6X5KFDE2kaqpGDq4tZxSmxSDjGG71YjQaCPE3c7rbVB1H9FHOHvl8w4cEeu9Z+ReMv5+B26ra3WVTBdNRX83S+FdvwmS9Er7r2l3G5t1vbPyRa7FfDYHNwjvnZ73fb87P0BLQsxhnyFkTMLuHJzCX0mXopiCJR1oCtlbjZSXKmOUbWwhylTh/c7jt3TKiAGHr3MNfYpZ/xuhaSty7T/kgkTUMLNcCptRxVnqlZeVVG/VDdWv6no2ly6A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=FJaZ5jmWBXX9tuTCfqiQwZpSdqIc+9R+nKDlMQ+bYyw=;
+ b=I5pFWUvp84KfQJ8ZMvOrzUl14qJ+kB1SGRnb34BLGCeh0WaKDtqUbeJLyUMiPXUCA+jJOm4+1vNYh6k6Y+3AwiZhhDKnPL3k0HX9wZlMjuL63nSuCDrNusBw+O9a9T8QxHkz0I5PQGExDQnnOIk1sQ7NVSDO6EXgMB5aMD+5qtU=
+Received: from CH2PR18CA0042.namprd18.prod.outlook.com (2603:10b6:610:55::22)
+ by DM4PR12MB5937.namprd12.prod.outlook.com (2603:10b6:8:68::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38; Tue, 19 Dec
+ 2023 14:41:08 +0000
+Received: from SN1PEPF0002636D.namprd02.prod.outlook.com
+ (2603:10b6:610:55:cafe::ca) by CH2PR18CA0042.outlook.office365.com
+ (2603:10b6:610:55::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7091.38 via Frontend
+ Transport; Tue, 19 Dec 2023 14:41:08 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ SN1PEPF0002636D.mail.protection.outlook.com (10.167.241.138) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7113.14 via Frontend Transport; Tue, 19 Dec 2023 14:41:08 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 19 Dec
+ 2023 08:41:06 -0600
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Conor Dooley <conor+dt@kernel.org>, Krishna Potthuri
+	<sai.krishna.potthuri@amd.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-gpio@vger.kernel.org>
+Subject: [PATCH] dt-bindings: pinctrl: xilinx: Rename *gpio to *gpio-grp
+Date: Tue, 19 Dec 2023 15:41:02 +0100
+Message-ID: <2e3a1f1f57cf929bd05115bc081e6d01d5a53443.1702996859.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1575; i=michal.simek@amd.com; h=from:subject:message-id; bh=Ul92XtjmUMbFtE4gmwkva9K4Y+so50w22oxs/Dx05Ik=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtTG1TXBpe7xJ01jOb/+bmS9JF90cOXtZJVtB1d/TZfq9 AyXqNTpiGVhEGRikBVTZJG2uXJmb+WMKcIXD8vBzGFlAhnCwMUpABM5vZphNtv/Cg1D/otOy/2K 5XVq/mo8PBQuy7BgemTJ2/X/d7a4OqhFKXmmzN11pMUXAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbej2mwny4i44J+3yzCfvZo_=QQVSkJnxfqrMHtETmJ8g@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SN1PEPF0002636D:EE_|DM4PR12MB5937:EE_
+X-MS-Office365-Filtering-Correlation-Id: b0f55c64-21b2-4956-c2e2-08dc00a08987
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	vh7dEciXUpBl9UAmJ4hYnq4u826YU3YxXZjQLWixwgN/nHpJXHwIuDkA96kf3LtrcW+aaJyO0M5zP4dUnz5KURb6+aAtWou2rR8DKwVvUxzUuP5lZDjoVd0zDaBqElObQPidVT22KHv3IJlLaUSUsfKX4SO+Ai7TP9ej2QU0KQxz1RS5gmj4ztXrTfjaN7zFDTbexMGSeaHU6/9a1tMGvAFmaTKk+xcaKBRugtsIQqAxdVqZOBwieB+xoQH/EshNnrCWeqdAt3Om5wG3J+HuvdvuKHj+HnIupwJ/DJVYVyPuZ5wGg9L1Jhle8H2TsiyBjLTPQA9SmZqusmquaoLGQI82i/pi8pr/ycZoWF58vIQIBj5WQyM0neoPsEJ6dNf6iR90jDQ/DZdHkd2IG4FaFNIx/Nos+Gnbrv26+nwtBrJs1izxbbUrBIcRUf1am9OGJLPfMHxhmAJR5NPE/2N7fXI7uaHaFXKETIVbMZ+ljVPACCgYdAmydVPhkNzbL893uD5EuQ3UPho0kPcOhPnCcoRmcUXBWIQ8YVfS66MZ+bmn5NiU18oeWmQ3O3JREDCRlUz0OF90BlZEvbgPRqRZrODagvlgbOc82GFZNZjXov2SAEDRzxB6V4k/3FDmpmSqPeKDcH3ZjWNKuZrRkOOm8iDbXNGdcnQIoH/4HibeYJvIt0YLifrM3ELDgzIHOCCyAv6HcrJhrIQTvwE299q3BsWfTmokDf++m8dXkGVwFRB8R0JRhf79eOoSadUm2kh1X601pr8OMq1AnnMVaMGS3Vrk6QxYDLLC3mfPblWPNG0=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(39860400002)(396003)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(82310400011)(46966006)(40470700004)(36840700001)(40460700003)(40480700001)(426003)(16526019)(336012)(2616005)(6666004)(26005)(82740400003)(356005)(81166007)(36756003)(86362001)(8936002)(8676002)(4326008)(478600001)(110136005)(41300700001)(36860700001)(7416002)(5660300002)(2906002)(47076005)(83380400001)(70206006)(44832011)(70586007)(54906003)(316002)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Dec 2023 14:41:08.1285
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b0f55c64-21b2-4956-c2e2-08dc00a08987
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	SN1PEPF0002636D.namprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5937
 
-On Mon, Dec 18, 2023 at 11:44:03PM +0100, Linus Walleij wrote:
-> On Mon, Dec 18, 2023 at 3:56 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> 
-> > Rather big (by amount of touched drivers and overall due to a couple of new
-> > ones) PR for Intel pin control drivers. Has been for a while in Linux Next
-> > without reported errors. Please, pull for v6.8-rc1.
-> 
-> Pulled in and resolved a minor merge conflict (which I guess was solved also
-> in -next?)
-> 
-> diff --cc drivers/pinctrl/intel/pinctrl-baytrail.c
-> index 3c8c02043481,9b76819e606a..000000000000
-> --- a/drivers/pinctrl/intel/pinctrl-baytrail.c
-> +++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
-> @@@ -1173,7 -1136,7 +1136,11 @@@ static void byt_gpio_dbg_show(struct se
->                 void __iomem *conf_reg, *val_reg;
->                 const char *pull_str = NULL;
->                 const char *pull = NULL;
-> ++<<<<<<< HEAD
->  +              unsigned long flags;
-> ++=======
-> +               const char *label;
-> ++>>>>>>> 85a7d543f2d4c4893914b46c9236f45b3ad87573
->                 unsigned int pin;
-> 
->                 pin = vg->soc->pins[i].number;
-> 
-> 
-> Deleted both since label is defined inline, and this is how
-> linux-next looks like as well.
-> 
-> I hope it's the right resolution!
+Anything ending with gpio/gpios is taken as gpio phande/description which
+is reported as the issue coming from gpio-consumer.yaml schema.
+That's why rename the gpio suffix to gpio-grp to avoid name collision.
 
-Yes, Linux Next has the correct resolution and IIRC you were Cc'ed
-to that thread where we discussed the conflict.
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-> The rest just applied cleanly.
-> 
-> Doing some test builds now before I push, thanks for all the nice
-> work!
+ .../devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml          | 2 +-
+ .../devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml        | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Thank you!
-And happy holidays!
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+index b85f9e36ce4b..d2676f92ef5b 100644
+--- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynq-pinctrl.yaml
+@@ -39,7 +39,7 @@ properties:
+       phandle to the SLCR.
+ 
+ patternProperties:
+-  '^(.*-)?(default|gpio)$':
++  '^(.*-)?(default|gpio-grp)$':
+     type: object
+     patternProperties:
+       '^mux':
+diff --git a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
+index 01b6f2b57843..f13d315b5d5e 100644
+--- a/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.yaml
+@@ -31,7 +31,7 @@ properties:
+     const: xlnx,zynqmp-pinctrl
+ 
+ patternProperties:
+-  '^(.*-)?(default|gpio)$':
++  '^(.*-)?(default|gpio-grp)$':
+     type: object
+     patternProperties:
+       '^mux':
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.36.1
 
 
