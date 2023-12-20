@@ -1,91 +1,90 @@
-Return-Path: <linux-gpio+bounces-1713-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1714-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BB96819E75
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:51:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C363B819E76
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:51:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA9351F2300C
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:51:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80626287CD4
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:51:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FB1C21A19;
-	Wed, 20 Dec 2023 11:50:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 656CE219F7;
+	Wed, 20 Dec 2023 11:51:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jjSEIKK4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZzCWtjY/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D41A219EE
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:50:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4C98219F0
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:51:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-da7ea62e76cso4718939276.3
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:50:50 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5d3758fdd2eso45721547b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:51:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703073050; x=1703677850; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703073103; x=1703677903; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ENZiFDY9dzKiwXJYDovPLkS8MWEkOTJIkD9WmcdrBZo=;
-        b=jjSEIKK4D45vt/gyDc5n/5UxVF9ihfxZwtEHLqAFcW8863BrXxRlxnYfS2dpl6EKWR
-         ZsUij8XcKwMiM5URfPYdGZWLYtSNl4bN/NiCa65w93YAMpcfMGk1GpkHzgAVI+3VcX4S
-         0jC5nHhEVf3AzQNpB3G3fGbEs0cKva4x8RjwyA6dGaX+McODSWdNmIwyH3M3cvlbMuFB
-         jBYhEQfGbjE92uN46lasHuMPvQPwNPUJg6pPmaX0t8Bjx5Kdf8uVJLp7IT5FvLkRZ8Mk
-         qBhKXjYQ26tfHRKxjVB60lC87+M5WBinBYSJfNgx3pnL7+He+uekSbN9oK7KIwSOahZP
-         KVPg==
+        bh=hh9FsaGkEflghOxyUW77x/dPI2M6/UTNQwPdaRI2GuI=;
+        b=ZzCWtjY/QOhrRcqn1esVAnWRmIY+dVHxra4zml5SvaTSs4Sij9b9b0T/KnZGiC432g
+         9T8QZZFwwqjqP4gYYhf8G42ht2w/n7F300DRrKdUrZw6r0hkKOm22KQb41fJX4U2YbLE
+         G98Mvh6kc0MR+4P179sL3uOJuaDqZ7WBRGvoLYnQ278cP4fEZHvbt3Z8xstVeMGx9vv7
+         xuMAYakgAk5W+HW+PlIP8AjtCJP3POl1IT1fdx8ds7j0XACPMX2qvl8XjcwrRB1OGppQ
+         f8rqsgIXolsh79wVkFgxduRxOP3TPPUCftgrupedyM3KRrQ3Dr3o0g7IDVDki864Apl8
+         W7eg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703073050; x=1703677850;
+        d=1e100.net; s=20230601; t=1703073103; x=1703677903;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ENZiFDY9dzKiwXJYDovPLkS8MWEkOTJIkD9WmcdrBZo=;
-        b=EVeTSwyefDZL/FEZuXSllphlNekUZHkZcMhpKUJ3U5M5vpGSDDDw1tS7fon5X0kbra
-         qE7tX0xUR3uhlWHjp1TvNBMXq7YLm2b9rU0N+00Rks4EUNZ5KCY9rCnh6dQOnD5qGcA9
-         r/5mIMjWoY9AX+qk9T3MZiedVjI3OTw+JF4Xe6X7cf4tXAJS4w0js+Ni41ekZt0H/KxP
-         nVmPHNpnixlYzFwNsIAIr3kWcypQhUxgeF7n1E0eK1PIZFViMkaWBHzfA5yckTvBhiY9
-         g1su4lPQLfjAoNfAgfi5cQbOOYBSUQUfm+L3LC1UbMVjDBXFE2eJtUmSUNvnWj48s2/Y
-         EL6g==
-X-Gm-Message-State: AOJu0YxAvKVtNNZd2ZA1Av1RQG0X27RZtN7B6IQcXSgxj6eqFi2bXX+y
-	crT2RvpLTXUK+Y1NrMaZtPtRWU7WS4nRMjJbY5MmCg==
-X-Google-Smtp-Source: AGHT+IGEpNhS7yXamseKl7c1M4nKOmbpO4zGBeq5d3MuzpWLfieU9qZ138SjQ+sOe4ye8yDBnUE/BHY/uK8F2xi5yYk=
-X-Received: by 2002:a5b:306:0:b0:dbd:45f0:9eaf with SMTP id
- j6-20020a5b0306000000b00dbd45f09eafmr2570179ybp.114.1703073050151; Wed, 20
- Dec 2023 03:50:50 -0800 (PST)
+        bh=hh9FsaGkEflghOxyUW77x/dPI2M6/UTNQwPdaRI2GuI=;
+        b=GGPmM6V1V26dNutwNL22JE/NOGtSEgC6igrv7qgZznUD/bfqWJTnDEJi/ICXzXXyJ1
+         nTzCiquK09jj3ZXUQXnahbjqab08BXa4Wc6pQ8P5p4Tad1yTHA3cGNmc7pvIFT4Skuo9
+         LA6OfiG1hsQYgx4Doi7GnguXa7z7MDwYyG5Y4og5K7y+nVZYSE5cjVmP0Qt14Xlv2UD4
+         GrplyxE7iVqCLFVMU5iQPk60fq6yOQG846tjqZPMWCvTGcLYRW58s5LUO4YlIZMbc501
+         rPyXVa7I5eCg+pQHhqtorLtHgQsr901+8P43kYB1buSdkZxJZ1SbgdXUig0mDwqz5kb1
+         hh3A==
+X-Gm-Message-State: AOJu0YxxSKIF6ZQ0iD7K9RGIclLwXbWjflNch/BEUfmvdYKZHgqeur/T
+	TGJGg29BqXjmMJ8ljFmpGpuRgGgepVr6lCpkl6jj+Q==
+X-Google-Smtp-Source: AGHT+IHyGRouZU82OHXZbx+6D4OzfTkt4tW/DQrMOd1fK1qNzgXU9PHzPEhVuwJTq5DmPpg9O2NahTkYCVAhK7fDv9U=
+X-Received: by 2002:a81:a18a:0:b0:5e2:f064:a5ba with SMTP id
+ y132-20020a81a18a000000b005e2f064a5bamr8692245ywg.36.1703073102902; Wed, 20
+ Dec 2023 03:51:42 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <2e3a1f1f57cf929bd05115bc081e6d01d5a53443.1702996859.git.michal.simek@amd.com>
-In-Reply-To: <2e3a1f1f57cf929bd05115bc081e6d01d5a53443.1702996859.git.michal.simek@amd.com>
+References: <20231220080942.8381-1-brgl@bgdev.pl>
+In-Reply-To: <20231220080942.8381-1-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Dec 2023 12:50:38 +0100
-Message-ID: <CACRpkda4nqcBpF6Xv2gAS9QzrmWOTeKi52Fe1qW+t7NuM2i_ZA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: xilinx: Rename *gpio to *gpio-grp
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org, monstr@monstr.eu, michal.simek@xilinx.com, 
-	git@xilinx.com, Conor Dooley <conor+dt@kernel.org>, 
-	Krishna Potthuri <sai.krishna.potthuri@amd.com>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org
+Date: Wed, 20 Dec 2023 12:51:32 +0100
+Message-ID: <CACRpkdZBzXOQORZWUG1+q8pE6vWd3-LpWLobAo2FOng_FS8Pcw@mail.gmail.com>
+Subject: Re: [PATCH v2] gpio: sysfs: drop tabs from local variable declarations
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 19, 2023 at 3:41=E2=80=AFPM Michal Simek <michal.simek@amd.com>=
+On Wed, Dec 20, 2023 at 9:09=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
  wrote:
 
-> Anything ending with gpio/gpios is taken as gpio phande/description which
-> is reported as the issue coming from gpio-consumer.yaml schema.
-> That's why rename the gpio suffix to gpio-grp to avoid name collision.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> Older code has an annoying habit of putting tabs between the type and the
+> name of the variable. This doesn't really add to readability and newer
+> code doesn't do it so make the entire file consistent.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Patch applied.
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
