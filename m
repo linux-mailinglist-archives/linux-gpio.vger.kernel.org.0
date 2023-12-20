@@ -1,122 +1,191 @@
-Return-Path: <linux-gpio+bounces-1725-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1726-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F76F819F23
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 13:36:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FF06819F27
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 13:38:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96712B2474A
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:36:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC542287AFF
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:38:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7979C22EE3;
-	Wed, 20 Dec 2023 12:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dhxn1kBD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B75DF25548;
+	Wed, 20 Dec 2023 12:37:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 198582554E
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 12:35:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7cbffb691cfso581799241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 04:35:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703075748; x=1703680548; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=z5q57e0yI1dw2nfIkLVz7L+kM2nw1Ddm91mJrAmwHjE=;
-        b=dhxn1kBDrX+hmPW3UKzfEKizBj0QPltSytVrrNvJU5MVSA83zb6waxKAIcK+DROwL8
-         NS7Nevf6izB2BSiTnjbcJAnurKs9ezdFISh8lT+Jq94r58qKO86KAxDCtkZrE5rdPszn
-         7gvnZ/V20jsEjSOvdUBdm3jt+Dw0n+pSQdSpvsSMwjesG5h4PDgZr3xWjjg0DofMzNvR
-         l4MAg6ii9BxFKcV2MktfVGC/vFT+ro0Rx8kH5xqb+zAs3Il2gWIYrkj4eYttRghSp82n
-         qn0+Dnzf50wgSvYy21YhkSxunctGf89wdy+qXGP/8DHIOyvXIJb0Mqh/Foc3kB2DcqKC
-         leQw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703075748; x=1703680548;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=z5q57e0yI1dw2nfIkLVz7L+kM2nw1Ddm91mJrAmwHjE=;
-        b=Kd0lUh6ZI1RJqhqC62S2awNCdU55VwuvNlNTBEqye4I61dS3mmZ+RYkko+9z4InRgE
-         xwYYqg/Dru1GrOUHDbklrMe2EipXg3U+4XWFq9AeGneqv8Xr1WAPoot65W6Iy/sBdayK
-         uPazsjHQ53i/Beb/JM1BfxsqSZaw7qFbehhf32afmOw6TZMFfVE1YsPZ1eTPgRO/shvK
-         mbuF9zGJ0HmBkAEVpTHo8Hm/7aP/1EWiPtmslnq/5VGG3Fh16dmDFXLPQTFVJXSjxzXb
-         z/JLzgnYoD2m+K5M7/gGozg4kkKciupHTTOk+DriX9aRB3KJdmeUIk2Drmwps+oAsuD4
-         ERnA==
-X-Gm-Message-State: AOJu0Yz6ySjAv9cFAMaEUzxU+sQFyttSjwb1pnfEmuV5M4twAEuMM+It
-	iirpNC8IqI0MY5Ocj0e/iaWmPaWy62yUdchRxwJO8A==
-X-Google-Smtp-Source: AGHT+IGTgI8+TbffUVpoa3RFSUatMapO3hg0Xf4GerUA7/+fM9d5IKIR4fIpSpkBR78ygqxi/+5GnKcKI8/AeAJ+WqY=
-X-Received: by 2002:a05:6102:4b17:b0:466:9d92:786c with SMTP id
- ia23-20020a0561024b1700b004669d92786cmr3279485vsb.8.1703075748043; Wed, 20
- Dec 2023 04:35:48 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDDDB24B3B
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 12:37:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rFvpb-0005KA-Ig; Wed, 20 Dec 2023 13:37:47 +0100
+Received: from [2a0a:edc0:2:b01:1d::c0] (helo=ptx.whiteo.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rFvpY-000FU7-V8; Wed, 20 Dec 2023 13:37:46 +0100
+Received: from mfe by ptx.whiteo.stw.pengutronix.de with local (Exim 4.92)
+	(envelope-from <mfe@pengutronix.de>)
+	id 1rFvpZ-007vo4-V2; Wed, 20 Dec 2023 13:37:45 +0100
+Date: Wed, 20 Dec 2023 13:37:45 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+To: Peng Fan <peng.fan@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Fabio Estevam <festevam@gmail.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
+	dl-linux-imx <linux-imx@nxp.com>
+Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+ protocol
+Message-ID: <20231220123745.ksdumfymu4xruufa@pengutronix.de>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+ <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
+ <20231219192912.yulmczvqbuh4jizg@pengutronix.de>
+ <DU0PR04MB94170BCA413C2FD48A397B538896A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <20231220123033.nrbperhbr4jifuvh@pengutronix.de>
+ <DU0PR04MB9417E926CBD95BD7298B64D28896A@DU0PR04MB9417.eurprd04.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219125706.23284-1-brgl@bgdev.pl> <ZYGyumQXaM8PXzcz@smile.fi.intel.com>
- <CAMRc=McFsswSjCU5m+_wmmxQh+T1DkwnrBsYp_KsQfOSwENvLw@mail.gmail.com>
-In-Reply-To: <CAMRc=McFsswSjCU5m+_wmmxQh+T1DkwnrBsYp_KsQfOSwENvLw@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 20 Dec 2023 13:35:37 +0100
-Message-ID: <CAMRc=MesmR+=gMsk2y0Y7jiwtFpcHCofYsi3mxWFrdY9=1Y46A@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: use __counted_by() for GPIO descriptors
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <DU0PR04MB9417E926CBD95BD7298B64D28896A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Dec 20, 2023 at 9:16=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> On Tue, Dec 19, 2023 at 4:12=E2=80=AFPM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Tue, Dec 19, 2023 at 01:57:06PM +0100, Bartosz Golaszewski wrote:
-> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On 23-12-20, Peng Fan wrote:
+> > Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+> > protocol
+> > 
+> > On 23-12-20, Peng Fan wrote:
+> > > > Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support
+> > > > pinctrl protocol
+> > > >
+> > > > Hi Peng,
+> > > >
+> > > > On 23-12-15, Peng Fan (OSS) wrote:
+> > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > >
+> > > > > Add SCMI v3.2 pinctrl protocol bindings and example.
+> > > > >
+> > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > ---
+> > > > >  .../devicetree/bindings/firmware/arm,scmi.yaml     | 99
+> > > > ++++++++++++++++++++++
+> > > > >  1 file changed, 99 insertions(+)
+> > > > >
+> > > > > diff --git
+> > > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > index 4591523b51a0..bfd2b6a89979 100644
+> > > > > --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > @@ -247,6 +247,85 @@ properties:
+> > > > >        reg:
+> > > > >          const: 0x18
+> > > > >
+> > > > > +  protocol@19:
+> > > >
+> > > > ...
+> > > >
+> > > > > @@ -401,6 +480,26 @@ examples:
+> > > > >              scmi_powercap: protocol@18 {
+> > > > >                  reg = <0x18>;
+> > > > >              };
+> > > > > +
+> > > > > +            scmi_pinctrl: protocol@19 {
+> > > > > +                reg = <0x19>;
+> > > > > +                #pinctrl-cells = <0>;
+> > > > > +
+> > > > > +                i2c2-pins {
+> > > > > +                    groups = "i2c2_a", "i2c2_b";
+> > > > > +                    function = "i2c2";
+> > > > > +                };
+> > > > > +
+> > > > > +                mdio-pins {
+> > > > > +                    groups = "avb_mdio";
+> > > > > +                    drive-strength = <24>;
+> > > > > +                };
+> > > > > +
+> > > > > +                keys_pins: keys-pins {
+> > > > > +                    pins = "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+> > > > > +                    bias-pull-up;
+> > > > > +                };
+> > > > > +            };
+> > > >
+> > > > This example is different to the one you mentioned within the
+> > > > cover-letter. I didn't checked all patches just want to ask which
+> > > > API will be implemented by this patchset?
 > > >
-> > > Pull the array of GPIO descriptors into struct gpio_device as a flexi=
-ble
-> > > array and use __counted_by() to control its size.
-> >
-> > How big is the struct gpio_device? Unifying like this might provoke sub=
-tle
-> > errors on very fragmented memory, where k*alloc() might not find enough=
- free
-> > space. Note, k*alloc() guarantees finding only memory for a single page=
-.
-> > With PAGE_SIZE =3D 4k, this might be an issue.
-> >
-> > I would suggest, if nothing prevents us from switching, to use kvmalloc=
-().
-> >
->
-> That's a good point but there's another thing. We need to call
-> gpiochip_get_ngpios() before the allocation. I need to revisit this
-> one.
->
+> > > I kept this change since it was tested by Oleksii, but anyway i.MX not use
+> > these.
+> > >
+> > > The API, I suppose you are asking about this?
+> > > static const struct pinctrl_ops pinctrl_scmi_pinctrl_ops = {
+> > >         .get_groups_count = pinctrl_scmi_get_groups_count,
+> > >         .get_group_name = pinctrl_scmi_get_group_name,
+> > >         .get_group_pins = pinctrl_scmi_get_group_pins,
+> > > #ifdef CONFIG_OF
+> > >         .dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+> > >         .dt_free_map = pinconf_generic_dt_free_map,
+> > > #endif
+> > > };
+> > >
+> > > static const struct pinctrl_ops pinctrl_scmi_imx_pinctrl_ops = {
+> > >         .get_groups_count = pinctrl_scmi_get_groups_count,
+> > >         .get_group_name = pinctrl_scmi_get_group_name,
+> > >         .get_group_pins = pinctrl_scmi_get_group_pins,
+> > > #ifdef CONFIG_OF
+> > >         .dt_node_to_map = pinctrl_scmi_imx_dt_node_to_map,
+> > >         .dt_free_map = pinconf_generic_dt_free_map,
+> > > #endif
+> > > };
+> > 
+> > I see, thanks for the clarification. In short: the i.MX SMCI pinctrl DT-API is the
+> > same as the non-SCMI pinctrl API since the dt_node_to_map will convert it.
+> 
+> Yes, the fsl,pins format is same whether SCMI or non-SCMI. But we need
+> to pack the data to a format that matches the i.MX OEM SCMI PINCTRL
+> protocol, so we need to dedicated dt_node_to_map here.
 
-It's trickier than I thought. We need the struct device to exist (have
-its software node assigned) before we check the property but we cannot
-allocate gdev (embedding struct device) + descs before we have read
-it. Eh, maybe it's not worth it and let's keep the two allocations
-separate.
+Yes, I saw that you're using the enum values 192-255 for the OEM
+specific part and the packing. Does you have public access to the FW
+implementing the SCMI?
 
-Bart
+Regards,
+  Marco
 
-> Bart
->
-> > --
-> > With Best Regards,
-> > Andy Shevchenko
-> >
-> >
+> 
+> Thanks,
+> Peng.
+> 
+> > 
+> > Regards,
+> >   Marco
+> 
+> 
 
