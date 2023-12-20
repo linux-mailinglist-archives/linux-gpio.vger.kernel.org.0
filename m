@@ -1,133 +1,141 @@
-Return-Path: <linux-gpio+bounces-1719-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1720-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C252819EC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 13:14:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9EC7819ED6
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 13:16:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A14A7288B91
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:14:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4BFCEB2618A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:16:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BC7624213;
-	Wed, 20 Dec 2023 12:13:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20EB522320;
+	Wed, 20 Dec 2023 12:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MvNF/c5l"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="I4vF9Gjh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2879C2511E;
-	Wed, 20 Dec 2023 12:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-28a5d0ebf1fso521822a91.0;
-        Wed, 20 Dec 2023 04:13:36 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BEC22307
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 12:16:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-46692558657so832217137.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 04:16:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703074416; x=1703679216; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=lkbaWKNWG4TQluqIF/XAJ7K7LvKr8qSqNHNv/8QuIYM=;
-        b=MvNF/c5lcZ4VU4OH0qSk8YM6k7lLbnIk5pdhTeBaJItw5nl1Hc3I8N4wGn+HvmNZhc
-         MiAyjg/uxtCIzwU48NadTq7+1xh5R5JpDp/NX18N3QlfUOR4mUH6u1mk9FHT0SapeCOt
-         cfbAipWWkS2OO1NnBmWeam3vSYBGLTbNBa16nT6eymD7JcVLRqTNqp7FG7S+HlAfMK8u
-         zHnxg9FGpTpbdS8xL97lSEqKj47FaTVGit6pTRKJHocDPzhf9I/25shpWTjjzrwPXY+8
-         IqHeRToiuVfb5OpD2FLfDG6xXTs0k2bqb6lXuolA8VINgbabIdJQF4tYNYtzVDwtsQ9a
-         WUvQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703074571; x=1703679371; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YeO6iJYH/BlL7HMTey5lm079xrGQ9yeg7knsXJCVjCw=;
+        b=I4vF9Gjh8zrxvBHmAQl8mrGSfb2PpwRmDWWjp4xrcYyKZYZYMDxCLiwCGeLjAB7Od6
+         ugUx7OJkUDyjC6Q7ZaBpWu7pQWWT3Ee18V0bFUMgE1mNvPAjzqeszWSQNP/VJ+hxn5SC
+         6YMKigtAjqQ/ja0L+peLQXuPMh3gA441JW3gl6lbDCdkFspInXuq5O2TgbfnGiM/speI
+         43iWkhULteuMk80jG8HcS4W+mcq9a3tYTGj3rM/jVB92NM2TLzsjQ3qWPD+pA5mGqwLV
+         wod8ltjFHWTFhl2U0c/RcrbhV4Dik1Lj1LGgfGqqcElp0If1Qbo2TiBnOugJVqYWNvQo
+         YtgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703074416; x=1703679216;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=lkbaWKNWG4TQluqIF/XAJ7K7LvKr8qSqNHNv/8QuIYM=;
-        b=tPbKnB83rjYkhxlftjI23g5tqcJiLyiwp3boeCCrv4tJXGdRqOQ7VoFTDb+obzNtUC
-         1dVgmvpTPv345zKiIabddL7c+tOeA5wLZ3GuUoXlh5CnZ8u8eoxGOlwTAIVfgGFpMC02
-         fmGER1R6qSt4nOP6qQWiAZm3fWg/o47PqZTdKYgNRJYbVlBO0bYzJaMkFGfTzS9aDhHT
-         N07a79gQP3lM9JwfjZswsFGwTYTKehC7S3sHz5KzYHSEZtfusBcdop8RuvyQhhH7lTwZ
-         q5rvJQStptbxaUzAQqyy76gC4R9u3NV7kI9EmnpJU3phogi72DQ0E3bGM0d174KhKisk
-         MoAw==
-X-Gm-Message-State: AOJu0YyH2QiEVnuVC4L4YBvxpv///mdw8B3rqWLHKEySKNvbUAA9b/Nq
-	DCr81vf6SDk8eBTqHrwy+jU=
-X-Google-Smtp-Source: AGHT+IES1mpG4Qe2wBWXtmr4NcORcJtEtICofgfzJ5NZzKIOvuVmES7rjyL6i1Y6bi2PbffYeNyPdw==
-X-Received: by 2002:a17:90a:f293:b0:28b:d2fa:1725 with SMTP id fs19-20020a17090af29300b0028bd2fa1725mr1334548pjb.43.1703074416316;
-        Wed, 20 Dec 2023 04:13:36 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id n14-20020a17090a2fce00b0028ad32914basm3398249pjm.41.2023.12.20.04.13.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 04:13:36 -0800 (PST)
-Date: Wed, 20 Dec 2023 20:13:31 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, andy@kernel.org
-Subject: Re: [PATCH 4/4] gpiolib: cdev: replace locking wrappers for
- gpio_device with guards
-Message-ID: <ZYLaayENrvL1Nh6H@rigel>
-References: <20231220015106.16732-1-warthog618@gmail.com>
- <20231220015106.16732-5-warthog618@gmail.com>
- <CACRpkdZ5HzOxtbexQNE-A-bKhiUW1nHjvJQA_CCnmVXf+R6dbg@mail.gmail.com>
- <CAMRc=MfvKzOxPrmz1wmgWMwYUbNhWAjqoKOmcaggQntcDprLmQ@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1703074571; x=1703679371;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YeO6iJYH/BlL7HMTey5lm079xrGQ9yeg7knsXJCVjCw=;
+        b=uZrWiViSHWqHZxKO6rjmA2+oK+JRciUtjz8Pr4Gk/3rZjizAMTDWMx40aUiDw3Cl4v
+         Vh8PFpP2eRp11p2eUJ6Zl2c4qXHXYCYA6pvlaWS7CU9sJ7kEUbAv0B70AiP0DFRhTxVr
+         HZS7Xunpq29OWHLWo6ZBB0PRSk586cW2xj1dwI8RVLBeix56x04WF7ZsNbybUlu7Y1HK
+         E+eEWp7x2qn9ycxyP4yOEHKwpKlUUIrnwUxalGutUooUP2MqdfQbhMhkHkDMZ5xoHeZ8
+         3i4/5G6pfJebPs/hYuVgoLcyZwJAJqEYB5EMfgECyHf4e4hV4u6Iogn5Bf2+NxnKO/VG
+         HB/w==
+X-Gm-Message-State: AOJu0YzrE2BfZfGTF+rvN1jq/Oiosi/jzxu9jybdFXGp7wIjULmJiF1/
+	lmR/3QK76rfwXKEge/iKDzc+Xnp0U4RzauBAMthuWw==
+X-Google-Smtp-Source: AGHT+IHX5RL2vAymeh1Wqp+tfTMsJ81EMk2fRMCpI1Ly/3KctxYbW28janOyeZOaaPdQfAUJ3vSGOo3fuptAC9/MLdA=
+X-Received: by 2002:a05:6102:3f46:b0:464:89e8:a362 with SMTP id
+ l6-20020a0561023f4600b0046489e8a362mr15657307vsv.26.1703074570870; Wed, 20
+ Dec 2023 04:16:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfvKzOxPrmz1wmgWMwYUbNhWAjqoKOmcaggQntcDprLmQ@mail.gmail.com>
+References: <20231220015106.16732-1-warthog618@gmail.com> <20231220015106.16732-5-warthog618@gmail.com>
+ <CACRpkdZ5HzOxtbexQNE-A-bKhiUW1nHjvJQA_CCnmVXf+R6dbg@mail.gmail.com>
+ <CAMRc=MfvKzOxPrmz1wmgWMwYUbNhWAjqoKOmcaggQntcDprLmQ@mail.gmail.com> <ZYLaayENrvL1Nh6H@rigel>
+In-Reply-To: <ZYLaayENrvL1Nh6H@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 20 Dec 2023 13:16:00 +0100
+Message-ID: <CAMRc=MfyCBpZ07SYfxMtug6FVYiKA0MRgvjMTOAzKiVLGdPM+w@mail.gmail.com>
+Subject: Re: [PATCH 4/4] gpiolib: cdev: replace locking wrappers for
+ gpio_device with guards
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Peter Zijlstra <peterz@infradead.org>, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 01:05:35PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Dec 20, 2023 at 12:56 PM Linus Walleij <linus.walleij@linaro.org> wrote:
-> >
-> > (+PeterZ)
-> >
-> > On Wed, Dec 20, 2023 at 2:52 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > > Replace the wrapping functions that inhibit removal of the gpio_device
-> > > with equivalent guard macros.
+On Wed, Dec 20, 2023 at 1:13=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Wed, Dec 20, 2023 at 01:05:35PM +0100, Bartosz Golaszewski wrote:
+> > On Wed, Dec 20, 2023 at 12:56=E2=80=AFPM Linus Walleij <linus.walleij@l=
+inaro.org> wrote:
 > > >
-> > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> > (...)
-> > > +DEFINE_CLASS(_read_sem_guard,
-> > > +            struct rw_semaphore *,
-> > > +            up_read(_T),
-> > > +            ({
-> > > +               down_read(sem);
-> > > +               sem;
-> > > +            }),
-> > > +            struct rw_semaphore *sem);
+> > > (+PeterZ)
+> > >
+> > > On Wed, Dec 20, 2023 at 2:52=E2=80=AFAM Kent Gibson <warthog618@gmail=
+.com> wrote:
+> > >
+> > > > Replace the wrapping functions that inhibit removal of the gpio_dev=
+ice
+> > > > with equivalent guard macros.
+> > > >
+> > > > Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> > > (...)
+> > > > +DEFINE_CLASS(_read_sem_guard,
+> > > > +            struct rw_semaphore *,
+> > > > +            up_read(_T),
+> > > > +            ({
+> > > > +               down_read(sem);
+> > > > +               sem;
+> > > > +            }),
+> > > > +            struct rw_semaphore *sem);
+> > >
+> > > Isn't this so generic that it should be in <linux/cleanup.h>?
+> > >
+> > > Otherwise all the patches look good to me.
+> > >
 > >
-> > Isn't this so generic that it should be in <linux/cleanup.h>?
+> > We already have this:
 > >
-> > Otherwise all the patches look good to me.
+> > DEFINE_GUARD(rwsem_read, struct rw_semaphore *, down_read(_T), up_read(=
+_T))
+> > DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_wri=
+te(_T))
+> >
+> > DEFINE_FREE(up_read, struct rw_semaphore *, if (_T) up_read(_T))
+> > DEFINE_FREE(up_write, struct rw_semaphore *, if (_T) up_write(_T))
 > >
 >
-> We already have this:
+> Ah - in rwsem.h - I missed that.
 >
-> DEFINE_GUARD(rwsem_read, struct rw_semaphore *, down_read(_T), up_read(_T))
-> DEFINE_GUARD(rwsem_write, struct rw_semaphore *, down_write(_T), up_write(_T))
+> > This can surely be used here, right?
+> >
 >
-> DEFINE_FREE(up_read, struct rw_semaphore *, if (_T) up_read(_T))
-> DEFINE_FREE(up_write, struct rw_semaphore *, if (_T) up_write(_T))
+> Don't see why not.
 >
+> I would still like to move the gpio_device specific macros to gpiolib.h,
+> as they apply to the struct gpio_device defined there.
 
-Ah - in rwsem.h - I missed that.
+Which ones? Because I'd rather use guard(rwsem_read)(&gdev->sem); than
+some custom wrapper as this one's purpose is clearer.
 
-> This can surely be used here, right?
+Bart
+
+> The naming probably needs some reworking, so open to suggestions on
+> that.
 >
-
-Don't see why not.
-
-I would still like to move the gpio_device specific macros to gpiolib.h,
-as they apply to the struct gpio_device defined there.
-The naming probably needs some reworking, so open to suggestions on
-that.
-
-Cheers,
-Kent.
+> Cheers,
+> Kent.
 
