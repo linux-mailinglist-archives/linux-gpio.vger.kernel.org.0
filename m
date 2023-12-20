@@ -1,242 +1,108 @@
-Return-Path: <linux-gpio+bounces-1694-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1695-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 039DF819A20
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 09:09:57 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9377B819A47
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 09:16:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF8322828B5
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 08:09:55 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4884B1F22A79
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 08:16:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FB11179AD;
-	Wed, 20 Dec 2023 08:09:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DB5C1944F;
+	Wed, 20 Dec 2023 08:16:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dXRz7QoF"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="v8ILWJwy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BD9E1D528
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 08:09:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6261DA34
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 08:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40c39ef63d9so58750895e9.3
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 00:09:47 -0800 (PST)
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4b6c1d3edcfso687131e0c.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 00:16:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703059785; x=1703664585; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=zIsSMD7i5NE719u+31dGpBwzTze1hY2hnasRjy34amk=;
-        b=dXRz7QoFbgGyGT5nfE3NRCJZ4yIjlbK1lrNvMW+bCfDLSn6AjR5hhEwjN6VSFWOmly
-         nVWGS50/3dCXMEu8MsDT/O7vbmqArOSjSeLlm/aXQm5KuI6LBYQJ9ssmV1ung/gUXycb
-         79f5EVOrTmG6U6t94rFIRotya4XLMofPk/ZYcma0jLWpzWzGm+WYHA9vfzXw73zh0DgZ
-         IFq8gmg2GZK/tgbuWIeZfxRBYJYBeFeZwyoKblcZcutPACzHgh08bvzz6RiRHo4fXRJI
-         qehmECYnHZB8XMSXnjw7YzsKeYGCecOHipyXDpgALl10wtNy89Nzz/Mj+NEVBw7j9B9x
-         jf7Q==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703060188; x=1703664988; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gdtLFukSYKWmYynS80QImJw0tgI06bZ4ZKFg+X9Mqb0=;
+        b=v8ILWJwyawDOgm4me8Su39pXdXkp44E9sP1g2CMQ6X+ZLaASBt/mL2N67iedsV/FRt
+         ULyupbONBo18qIRFQ4mEiEk0rjBo0jiIDuK30pIYJml1QHLaeXGdl1HgCctHEPR+flou
+         vyjQA4V+LVXdingX3rZF+pXxMRIzTG/mB2Mw8UBI3N4NaP106NuJkKqFV2t3R12Jr6vQ
+         S0GEKRebRS9H+hJK9PtXUOr7gIxeVSNaLCwRGOuWr78Qpaa3tweGMyOgAanhOvS0fsPs
+         5c9zpTkcQiMSujAhOPqUFVtw1R7Yc+OP/EdWTl6D9H3O5lY3z8M0z/yp8lRxIPqZtaT/
+         +rGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703059785; x=1703664585;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=zIsSMD7i5NE719u+31dGpBwzTze1hY2hnasRjy34amk=;
-        b=vVE2p70nEcwJRu/sBgFvW4tV49P8o5X3GIop6z5viS3rKXA5yyOvGwxcThNUzSOHeF
-         6gG5uXKlxjLx4PQw5N9DUJsBUtcZ27vcwc3KboyMt/wuAKLiOad5TnNNFS8X3DGMDXBj
-         pThodpS6pKZWDYCmGhaQ1LV7Q3G4sF6mYo9Nnra5e4Sl+HnH0W1PZxnIMdst3uSjbAHo
-         ZPQl5a0Sxc38YVD56a8DlgauVTB/rq9bRG6pwHnyGTSwVGd8Uq5a6U81gFA9ET0+CzaH
-         Ilb+cC0pitDbEq2/CCdsneNbY2Ox50ubWgvrg6rv1mpmjLlKmxk6+mJAtig4mPqL/Nbu
-         tD0A==
-X-Gm-Message-State: AOJu0Yyb/KCbMpfcZCoMm2p9Ox4kIqDjGyxVnkOJ3lpY/vLo7AUFzt4+
-	P4gCM1CpouCpV0TbD1NSF34FVQ==
-X-Google-Smtp-Source: AGHT+IEjNzvn0De543+sEAGcJw6eIRBYEeq9uwlb09OSuVoO3JhemUfa5gg0rIaIN0ZM7/5Jt8t/ww==
-X-Received: by 2002:a05:600c:4c1a:b0:40c:d4d:68ec with SMTP id d26-20020a05600c4c1a00b0040c0d4d68ecmr9804231wmp.183.1703059785403;
-        Wed, 20 Dec 2023 00:09:45 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:ecf7:fc79:9704:9cf7])
-        by smtp.gmail.com with ESMTPSA id k36-20020a05600c1ca400b0040b38292253sm6344729wms.30.2023.12.20.00.09.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 00:09:45 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH v2] gpio: sysfs: drop tabs from local variable declarations
-Date: Wed, 20 Dec 2023 09:09:42 +0100
-Message-Id: <20231220080942.8381-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1703060188; x=1703664988;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gdtLFukSYKWmYynS80QImJw0tgI06bZ4ZKFg+X9Mqb0=;
+        b=Awn8pBR+EKiscMOY/+xeduw/YTeOfz3JaS6xNHIkuV5gRVFCqvbmTfEZQlitzGB9yX
+         J+pLmScy+mkyLtAJxdzltO8n5cYi6/o3wPJvrIbC7QWBLK/gEeEmuJZ4YtqZVw2Oue/e
+         blL/8ePhTgJFdXEbRUzJLeTRmdV1ByhGxSLIJMBCTOy7UR9A0ejXHcSlVU1kc9+QiBP9
+         GOYr1czDk+zvig3QRwu23x1W/2n3Vfv0glO3dCv6CNfvZvNZGH99a2jICF4iK15huWzv
+         NcpeCXWRm8PXd6h9a4JkBTQ9e5jmZIPtcSXGB2QFIm7a2aV81zx9qsJcpviEbHts19JI
+         it3A==
+X-Gm-Message-State: AOJu0Yz6H7xhyLVa5cznh9QTt40BLK4Y+GTtPKwgvE3IyD5PMtl+CFJ9
+	6rz92JDyAJMxViDXbrYE32BSs6q0VMeRjLcVW8DkiQ==
+X-Google-Smtp-Source: AGHT+IGCs91iOMhB1HDLmGWTDjKTl15UCjrTXw6C5O4CXa5jbAXrbAj2/d7CTEm2KzCcEHnIkFVkyRvG/ZlUfSLTyI4=
+X-Received: by 2002:ac5:cc49:0:b0:4b6:cdb7:9818 with SMTP id
+ l9-20020ac5cc49000000b004b6cdb79818mr1809694vkm.8.1703060188540; Wed, 20 Dec
+ 2023 00:16:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231219125706.23284-1-brgl@bgdev.pl> <ZYGyumQXaM8PXzcz@smile.fi.intel.com>
+In-Reply-To: <ZYGyumQXaM8PXzcz@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 20 Dec 2023 09:16:17 +0100
+Message-ID: <CAMRc=McFsswSjCU5m+_wmmxQh+T1DkwnrBsYp_KsQfOSwENvLw@mail.gmail.com>
+Subject: Re: [PATCH] gpiolib: use __counted_by() for GPIO descriptors
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Dec 19, 2023 at 4:12=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Dec 19, 2023 at 01:57:06PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > Pull the array of GPIO descriptors into struct gpio_device as a flexibl=
+e
+> > array and use __counted_by() to control its size.
+>
+> How big is the struct gpio_device? Unifying like this might provoke subtl=
+e
+> errors on very fragmented memory, where k*alloc() might not find enough f=
+ree
+> space. Note, k*alloc() guarantees finding only memory for a single page.
+> With PAGE_SIZE =3D 4k, this might be an issue.
+>
+> I would suggest, if nothing prevents us from switching, to use kvmalloc()=
+.
+>
 
-Older code has an annoying habit of putting tabs between the type and the
-name of the variable. This doesn't really add to readability and newer
-code doesn't do it so make the entire file consistent.
+That's a good point but there's another thing. We need to call
+gpiochip_get_ngpios() before the allocation. I need to revisit this
+one.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
-v1 -> v2:
-- drop more tabs where my regex didn't find them before
+Bart
 
- drivers/gpio/gpiolib-sysfs.c | 66 ++++++++++++++++++------------------
- 1 file changed, 33 insertions(+), 33 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index ae4fc013b675..6c9fde19d46e 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -165,10 +165,10 @@ static irqreturn_t gpio_sysfs_irq(int irq, void *priv)
- /* Caller holds gpiod-data mutex. */
- static int gpio_sysfs_request_irq(struct device *dev, unsigned char flags)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	struct gpio_desc	*desc = data->desc;
--	unsigned long		irq_flags;
--	int			ret;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	struct gpio_desc *desc = data->desc;
-+	unsigned long irq_flags;
-+	int ret;
- 
- 	data->irq = gpiod_to_irq(desc);
- 	if (data->irq < 0)
-@@ -259,7 +259,7 @@ static ssize_t edge_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t size)
- {
- 	struct gpiod_data *data = dev_get_drvdata(dev);
--	ssize_t	status = size;
-+	ssize_t status = size;
- 	int flags;
- 
- 	flags = sysfs_match_string(trigger_names, buf);
-@@ -292,10 +292,10 @@ static DEVICE_ATTR_RW(edge);
- /* Caller holds gpiod-data mutex. */
- static int gpio_sysfs_set_active_low(struct device *dev, int value)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	struct gpio_desc	*desc = data->desc;
--	int			status = 0;
--	unsigned int		flags = data->irq_flags;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	struct gpio_desc *desc = data->desc;
-+	int status = 0;
-+	unsigned int flags = data->irq_flags;
- 
- 	if (!!test_bit(FLAG_ACTIVE_LOW, &desc->flags) == !!value)
- 		return 0;
-@@ -331,9 +331,9 @@ static ssize_t active_low_show(struct device *dev,
- static ssize_t active_low_store(struct device *dev,
- 		struct device_attribute *attr, const char *buf, size_t size)
- {
--	struct gpiod_data	*data = dev_get_drvdata(dev);
--	ssize_t			status;
--	long			value;
-+	struct gpiod_data *data = dev_get_drvdata(dev);
-+	ssize_t status;
-+	long value;
- 
- 	status = kstrtol(buf, 0, &value);
- 	if (status)
-@@ -399,7 +399,7 @@ static const struct attribute_group *gpio_groups[] = {
- static ssize_t base_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%d\n", chip->base);
- }
-@@ -408,7 +408,7 @@ static DEVICE_ATTR_RO(base);
- static ssize_t label_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%s\n", chip->label ?: "");
- }
-@@ -417,7 +417,7 @@ static DEVICE_ATTR_RO(label);
- static ssize_t ngpio_show(struct device *dev,
- 			       struct device_attribute *attr, char *buf)
- {
--	const struct gpio_chip	*chip = dev_get_drvdata(dev);
-+	const struct gpio_chip *chip = dev_get_drvdata(dev);
- 
- 	return sysfs_emit(buf, "%u\n", chip->ngpio);
- }
-@@ -441,11 +441,11 @@ static ssize_t export_store(const struct class *class,
- 				const struct class_attribute *attr,
- 				const char *buf, size_t len)
- {
--	long			gpio;
--	struct gpio_desc	*desc;
--	int			status;
--	struct gpio_chip	*gc;
--	int			offset;
-+	long gpio;
-+	struct gpio_desc *desc;
-+	int status;
-+	struct gpio_chip *gc;
-+	int offset;
- 
- 	status = kstrtol(buf, 0, &gpio);
- 	if (status < 0)
-@@ -493,9 +493,9 @@ static ssize_t unexport_store(const struct class *class,
- 				const struct class_attribute *attr,
- 				const char *buf, size_t len)
- {
--	long			gpio;
--	struct gpio_desc	*desc;
--	int			status;
-+	long gpio;
-+	struct gpio_desc *desc;
-+	int status;
- 
- 	status = kstrtol(buf, 0, &gpio);
- 	if (status < 0)
-@@ -556,14 +556,14 @@ static struct class gpio_class = {
-  */
- int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- {
--	struct gpio_chip	*chip;
--	struct gpio_device	*gdev;
--	struct gpiod_data	*data;
--	unsigned long		flags;
--	int			status;
--	const char		*ioname = NULL;
--	struct device		*dev;
--	int			offset;
-+	struct gpio_chip *chip;
-+	struct gpio_device *gdev;
-+	struct gpiod_data *data;
-+	unsigned long flags;
-+	int status;
-+	const char *ioname = NULL;
-+	struct device *dev;
-+	int offset;
- 
- 	/* can't export until sysfs is available ... */
- 	if (!class_is_registered(&gpio_class)) {
-@@ -730,8 +730,8 @@ EXPORT_SYMBOL_GPL(gpiod_unexport);
- 
- int gpiochip_sysfs_register(struct gpio_device *gdev)
- {
--	struct device	*dev;
--	struct device	*parent;
-+	struct device *dev;
-+	struct device *parent;
- 	struct gpio_chip *chip = gdev->chip;
- 
- 	/*
--- 
-2.40.1
-
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
