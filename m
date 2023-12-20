@@ -1,93 +1,123 @@
-Return-Path: <linux-gpio+bounces-1711-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1712-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F2B7819E33
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:35:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1C12819E4E
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:42:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1D8FB289CA9
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:35:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DBE981C2218A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:42:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06CFF219FE;
-	Wed, 20 Dec 2023 11:35:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93105219F3;
+	Wed, 20 Dec 2023 11:42:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uJdZiz2Z"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e6PfQ08l"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com [209.85.219.177])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1233B2137C
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B07219EF
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dbd73620c82so1107039276.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:35:42 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-5e89ba9810aso3529057b3.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:42:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703072142; x=1703676942; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703072558; x=1703677358; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=NamHnT73jUJNImDK5rKe/+cirCI0RyTQ89t6M3BsshU=;
-        b=uJdZiz2Z3cBrfdAR78dzaz/pmMmgFkky6ljRBqB5HCOyiE7t3nGMNPAPZnA9sFtvKe
-         qXcDvoUv1EwMeXKRbklGKMW2Kg2feTFUIdAzRZjxs7LI5G1P5m72NjvJ9hoLfjTxGUS2
-         HHk9CVQGUwqH1HC5HT1GdI8eEebf731KvpUScqdrJv1kcIGZ20VLg+v+NWtWXEBW3mt9
-         usGU47SmEAqJp/jeeBoH+InimP1/CrmKNk6cfFBteHtvM5vvXgVG1u+Be4IEUTb7w/uO
-         S741CCsk78IYGrvtaja0ijv7h5fC2Z5ESs1jdtD3ahi7jqNPMZudtE3shBbJ1HdekUBC
-         HMDw==
+        bh=9FLRBJiNc6al0xeoGFcYf16xBZK82GduG3jNIF84OAQ=;
+        b=e6PfQ08lwOZZ7MX7LkhGnQFyUDXjnsM2BvakPJ70/70UltcOnwAyD8DdtGuYwX+d3D
+         9g3fqIE9uH+Li5zkJw5D3VuJQn08FkDe+iyRk9LOnU/vFAnLEn+a6n4PDbD2e7vceFUS
+         87rqldDxqeeh22XAiWpEF8HKoZ/MWo09H1uh6pGIaXas2uPwvlCPe/M3PrE/XmJ1iC0h
+         fadTU49A5Dei1r6FjT6iv2mYsaM8hLna/mxuID24cJ1L9ue0pWRs3gSxfGgSVyIgYtzY
+         P6M2H4y9Qm0XeB4XrTykcN4Z6Mc8nH49W+ONO2OC1qj2MsVORprClaEFpIYH50jcqmJg
+         jQ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703072142; x=1703676942;
+        d=1e100.net; s=20230601; t=1703072558; x=1703677358;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=NamHnT73jUJNImDK5rKe/+cirCI0RyTQ89t6M3BsshU=;
-        b=VeGoZLDsp8LpgLiL/eu+MYvSg9vmJaCvKrpEHl4vsHUYhNagJaZJxFaDpJHE6frbjR
-         uA+wpnkbffAomAhYz/K2D8BBcVFVTYM5uWkFaURm74x3tV7ecrCEBpAgcqxy0rzmb5I9
-         Uo1P+Ke8Z69tmEVBK9m7xXNrROU+k3Qtvh6iudueIMIGFtROY3DEoBqmoEszQD2+fPxz
-         g9eq7QutvY0LI6a+wLSuuMt9iaBp9ZOenD4PRZ3rduU6V/Jb1NiK8Xxy4HKxf/eAeIQx
-         HhWsmm2b03pfomiCEQUk/nSE1m0Cp9woWLmdkslfnArMdLH/jBThghMQtYsoq14aPDnP
-         SceQ==
-X-Gm-Message-State: AOJu0YwELgbv2Gg5I48WUelIX7Hl8k54lvB4d7zrvHL1OacS36Ty78hk
-	6QhZgdzVr4kHgizOPEkR2FJYzhWD2bI74a4skwm6vv10kU3Q0W+E
-X-Google-Smtp-Source: AGHT+IHhZGNaq/ykMCVlsxZIoP0nT75ImyBpYvveH4wnPNiv7CYjde8jYs5CQxRD1ieGxTVBWFi5UTqJ9IacEiNfp2k=
-X-Received: by 2002:a5b:712:0:b0:dbd:5536:33f3 with SMTP id
- g18-20020a5b0712000000b00dbd553633f3mr1538189ybq.39.1703072141977; Wed, 20
- Dec 2023 03:35:41 -0800 (PST)
+        bh=9FLRBJiNc6al0xeoGFcYf16xBZK82GduG3jNIF84OAQ=;
+        b=LqI7eiVUZ/TjC3IpkfF6THdQcZ6HIBoqh2YuKeLw0QCG6CRKeOFrnWK9B3xy4qNJM4
+         ayo2lzbi2BKN90jEF2lEyz8RYpfJNpZAA/hiPTkA/E8w7JCcM1XLWly4Vf9H0zVYdLGq
+         EDBlkowqevESZ80eRoi7pxhDypeSAcLYx90pa4EbAlCtNgg+L3ZBZjrmdc/dm/xCCOgh
+         pahbm8Mk3fjtfcVhykkHdYy5BsPYM8mbXev5sPhcIlcw151v3kzXJ2O6YtpUltsnmUw/
+         z6WjJk56gW8zxvV2BoaCGqmx26AqzkaiVks3KR7bCe/x5Cff8+k/eXq4eJ2ERGAV57g8
+         gTuw==
+X-Gm-Message-State: AOJu0YzJGgCsNAt7OiZErn7Ag6IlvSPjJfZ+8/dSgiumBnKeqGNQuzwY
+	e33/yRpKgu7gmpa8340LfOt+kxpsKYhh9aH2H14FIw==
+X-Google-Smtp-Source: AGHT+IH3m7OJl+wThf8u3VljPqCG95kkRpc/xctYLP3ucKD0Kbqc3CXmlXTyhUH1P63lrHUB2J1XyLYIBc+4z1ycFC8=
+X-Received: by 2002:a0d:c704:0:b0:5d7:1940:53c4 with SMTP id
+ j4-20020a0dc704000000b005d7194053c4mr16842637ywd.60.1703072558142; Wed, 20
+ Dec 2023 03:42:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219201102.41639-1-brgl@bgdev.pl>
-In-Reply-To: <20231219201102.41639-1-brgl@bgdev.pl>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com> <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
+In-Reply-To: <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Dec 2023 12:35:30 +0100
-Message-ID: <CACRpkdZ7BO455gN1QBVdSqe3VupYaEnnDbGty031nj_uPXgHfg@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 20 Dec 2023 12:42:27 +0100
+Message-ID: <CACRpkdbpcwADJnZz1Q0KQ-gJv8FvnvJS=4PpMF+Np4rNCN3x+w@mail.gmail.com>
+Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl protocol
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>, Takahiro Akashi <takahiro.akashi@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 19, 2023 at 9:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+Hi Peng,
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> extra_checks is only used in a few places. It also depends on
-> a non-standard DEBUG define one needs to add to the source file. The
-> overhead of removing it should be minimal (we already use pure
-> might_sleep() in the code anyway) so drop it.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Dec 15, 2023 at 12:52=E2=80=AFPM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
 
-I see you pinged me to fix this and I didn't get around to look into it
-even, but you fixed it just as fine yourself :D
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+In this example, as it is not intended to reflect any specific hardware,
+use the latest canonical naming:
+
+> +
+> +            scmi_pinctrl: protocol@19 {
+> +                reg =3D <0x19>;
+> +                #pinctrl-cells =3D <0>;
+> +
+> +                i2c2-pins {
+> +                    groups =3D "i2c2_a", "i2c2_b";
+
+groups =3D "g_i2c2_a", "g_i2c2_b";
+
+> +                    function =3D "i2c2";
+
+function =3D "f_i2c2";
+
+> +                };
+> +
+> +                mdio-pins {
+> +                    groups =3D "avb_mdio";
+
+groups =3D "g_avb_mdio";
+
+> +                    drive-strength =3D <24>;
+> +                };
+> +
+> +                keys_pins: keys-pins {
+> +                    pins =3D "GP_5_17", "GP_5_20", "GP_5_22", "GP_2_1";
+
+pins =3D "gpio_5_17", "gpio_5_20", "gpio_5_22", "gpio_2_1";
+
+These names look odd to me, like these are actually groups
+with pins 5..17 etc. Should it be groups =3D "g_gpio_5_17" etc?
 
 Yours,
 Linus Walleij
