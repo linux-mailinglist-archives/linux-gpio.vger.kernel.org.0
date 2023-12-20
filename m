@@ -1,51 +1,49 @@
-Return-Path: <linux-gpio+bounces-1736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9302681A0FD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:20:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6FC581A122
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:30:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C42891C22F59
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 14:20:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C2C71F22BB3
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 14:30:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 710AA38DF5;
-	Wed, 20 Dec 2023 14:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA08B38F90;
+	Wed, 20 Dec 2023 14:30:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.136])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5E5B38DDF;
-	Wed, 20 Dec 2023 14:20:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB138FAB;
+	Wed, 20 Dec 2023 14:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="375309609"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="380811906"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="375309609"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:20:03 -0800
+   d="scan'208";a="380811906"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:30:28 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="866987944"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="919992164"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="866987944"
+   d="scan'208";a="919992164"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:20:00 -0800
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:30:27 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andy@kernel.org>)
-	id 1rFxQT-00000007YXL-3LxH;
-	Wed, 20 Dec 2023 16:19:57 +0200
-Date: Wed, 20 Dec 2023 16:19:57 +0200
+	id 1rFxaa-00000007YhR-3EWU;
+	Wed, 20 Dec 2023 16:30:24 +0200
+Date: Wed, 20 Dec 2023 16:30:24 +0200
 From: Andy Shevchenko <andy@kernel.org>
-To: xiongxin <xiongxin@kylinos.cn>
-Cc: fancer.lancer@gmail.com, hoan@os.amperecomputing.com,
-	linus.walleij@linaro.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@kernel.org,
-	Riwen Lu <luriwen@kylinos.cn>
-Subject: Re: [PATCH v5] gpio: dwapb: mask/unmask IRQ when disable/enale it
-Message-ID: <ZYL4DfamQdj45gxh@smile.fi.intel.com>
-References: <20231219101620.4617-1-xiongxin@kylinos.cn>
- <20231220022901.29158-1-xiongxin@kylinos.cn>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Subject: Re: [PATCH 2/4] gpiolib: cdev: allocate linereq using kvzalloc()
+Message-ID: <ZYL6gIpG5GBONVSO@smile.fi.intel.com>
+References: <20231220015106.16732-1-warthog618@gmail.com>
+ <20231220015106.16732-3-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -54,33 +52,17 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220022901.29158-1-xiongxin@kylinos.cn>
+In-Reply-To: <20231220015106.16732-3-warthog618@gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 20, 2023 at 10:29:01AM +0800, xiongxin wrote:
-> In the hardware implementation of the I2C HID driver based on DesignWare
-> GPIO IRQ chip, when the user continues to use the I2C HID device in the
-> suspend process, the I2C HID interrupt will be masked after the resume
-> process is finished.
-> 
-> This is because the disable_irq()/enable_irq() of the DesignWare GPIO
-> driver does not synchronize the IRQ mask register state. In normal use
-> of the I2C HID procedure, the GPIO IRQ irq_mask()/irq_unmask() functions
-> are called in pairs. In case of an exception, i2c_hid_core_suspend()
-> calls disable_irq() to disable the GPIO IRQ. With low probability, this
-> causes irq_unmask() to not be called, which causes the GPIO IRQ to be
-> masked and not unmasked in enable_irq(), raising an exception.
-> 
-> Add synchronization to the masked register state in the
-> dwapb_irq_enable()/dwapb_irq_disable() function. mask the GPIO IRQ
-> before disabling it. After enabling the GPIO IRQ, unmask the IRQ.
+On Wed, Dec 20, 2023 at 09:51:04AM +0800, Kent Gibson wrote:
+> The size of struct linereq may exceed a page, so allocate space for
+> it using kvzalloc() instead of kzalloc().
 
-...
-
-> v5:
-> 	* fix typo in patch description
-
-Thank you! This looks perfect!
+It might be this needs a bit of elaboration. The kmalloc() tries to allocate
+a contiguous (in physical address space) chunk of memory and with fragmented
+memory it might be not possible. So the above issue might (rarely) happen.
+In most cases the call to kmalloc() will succeed.
 
 -- 
 With Best Regards,
