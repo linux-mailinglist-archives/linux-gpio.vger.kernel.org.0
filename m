@@ -1,172 +1,264 @@
-Return-Path: <linux-gpio+bounces-1707-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1708-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AA6A819DF1
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:23:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 894F3819E05
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D4E81C22A2A
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:23:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 40B2A28A890
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:29:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478B12135A;
-	Wed, 20 Dec 2023 11:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAF1C21358;
+	Wed, 20 Dec 2023 11:28:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="svf6PlCL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Gkhh/Om4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918F921353
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:23:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6d9e993d94dso4033298a34.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:23:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703071422; x=1703676222; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YGSNWkw+c2ahRiQtvGQvOgHzADZ0JXbLjHdO1qBBAyk=;
-        b=svf6PlCLWwM4g7ssg2G9aMKUTqsqB1HzMCAE5pPQLWAgkVhZeCwea/8zdxT0QVv7uY
-         G7+MqmcufZWqDSY4LV0z0lDOTTvUU6B7NsFgVnwjeZSOqK4W2X0k86PvCF30rxk955CR
-         C4uEuufe3lhGGt+z7hn17IGh/Y0fAsGEVi59Xe91PSXeuM4yu2QGYz4WbVcqf0s42jGs
-         eZwkRz10gEoHZAHE9I5szSTeHd+4JKASTDTVcaX4sEifVVpzgHRrHbJY1w3kmVFCeHbI
-         IUhq36IFOzgwk1Zg9UZE7TbxOjODCWKRYET8GF1VSF4sru8PD0k7z15Lmo3lDZK/rBPk
-         96QA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703071422; x=1703676222;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YGSNWkw+c2ahRiQtvGQvOgHzADZ0JXbLjHdO1qBBAyk=;
-        b=HW4nHTclsr18jOAoftbZ7UnDzm4sieAS4srbs7C9aBMbjNWQEauj2LaZOsyRsw8dac
-         RKpq3+mTrTVivrCnFVHMvg6K5MUJNwRwRxB0L5ZdeoNjTAFDlwr1V8DnkWq0mqW7h6VB
-         H7W5YG0OVHmgddCytlAdvb8yrCwBcG3r1dLzkh7XTZd0ROOJB00tAfoULGNTAQ/ih267
-         pF/kG+cjIB2BZWWSzcnBdkuTRECdcSNJOMQYVt7nfoBM/8SbQ5qiXNrir1QnR/LYMxvP
-         lMyFDImbyUF7nSx8uTwKS1PF+3ip09AuWl2IqqX5tQdqWWlCbuRwJHCCTqOy4trggcvV
-         O8ww==
-X-Gm-Message-State: AOJu0YyulgFxw5izXIzt/8LPTw+x885BDtRCOglopom02YAdT9Fk4cGT
-	LKxqrKWvMJrSgpsvEC6FmiKOZPssYCJvX5N/lZ+3SA==
-X-Google-Smtp-Source: AGHT+IE4kJPxysEjDN1T6CCZTzDaHjjNNxoNgmPKSPVKwrazuOl+5EB0conrXCT7ZIBnAiTtmITMDx/f6TOOwLRZDhs=
-X-Received: by 2002:a05:6830:11a:b0:6d8:17d9:308a with SMTP id
- i26-20020a056830011a00b006d817d9308amr15625047otp.26.1703071421719; Wed, 20
- Dec 2023 03:23:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2992231A
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:28:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703071736; x=1734607736;
+  h=date:from:to:cc:subject:message-id;
+  bh=6CW3+L+cyo6rnG1Nsdh5Ne9S1pVUF7rKVqRs3RxvWQQ=;
+  b=Gkhh/Om4pqR9LFimcZ15IPQoTe3FMA3AlKEEOMTe7MFEWVBeQSC/u4rC
+   93EOno/1sXdWTxJwAqkm7UErAs7nolymIlNaopctmgWdd4ri75+eFTAFR
+   ZT+an5fKm1WrK/kYIvPcbvz/2c6qkmd1CuYIV3oMjyu9Znmlxb8lul5td
+   SwArdPbAvjpnPDC9k3CaxqWKieSxYz7kUTAARLyuRwYu0dRuKL4XYEdjJ
+   +Y2mhWwHu4UxenzHiebXebpJSG1VKYtWz9HJVg70NWRvhxN0TFu61aMKi
+   FfMLLgqo89ATgzDRtyV+Fbahv42FD+le1UTeI5ZexeGigeX0KHyha0kbS
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="2638469"
+X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
+   d="scan'208";a="2638469"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 03:28:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10929"; a="949500340"
+X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
+   d="scan'208";a="949500340"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga005.jf.intel.com with ESMTP; 20 Dec 2023 03:28:50 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rFujw-0006n1-2s;
+	Wed, 20 Dec 2023 11:27:58 +0000
+Date: Wed, 20 Dec 2023 19:24:20 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 1cdc605c7d70a390ff75a814a26c6f45d75778be
+Message-ID: <202312201917.UpOkAnub-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
-In-Reply-To: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Dec 2023 12:23:30 +0100
-Message-ID: <CACRpkdYVg47zfPgZFcPyXjTX-p_o-HFALBh1FaDOgmDaomypew@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91-pio4: use dedicated lock class for IRQ
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 15, 2023 at 10:35=E2=80=AFPM Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 1cdc605c7d70a390ff75a814a26c6f45d75778be  gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
 
-> Trying to suspend to RAM on SAMA5D27 EVK leads to the following lockdep
-> warning:
->
->  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->  WARNING: possible recursive locking detected
->  6.7.0-rc5-wt+ #532 Not tainted
->  --------------------------------------------
->  sh/92 is trying to acquire lock:
->  c3cf306c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0xe=
-8/0x100
->
->  but task is already holding lock:
->  c3d7c46c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0xe=
-8/0x100
->
->  other info that might help us debug this:
->   Possible unsafe locking scenario:
->
->         CPU0
->         ----
->    lock(&irq_desc_lock_class);
->    lock(&irq_desc_lock_class);
->
->   *** DEADLOCK ***
->
->   May be due to missing lock nesting notation
->
->  6 locks held by sh/92:
->   #0: c3aa0258 (sb_writers#6){.+.+}-{0:0}, at: ksys_write+0xd8/0x178
->   #1: c4c2df44 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x138/=
-0x284
->   #2: c32684a0 (kn->active){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x148/=
-0x284
->   #3: c232b6d4 (system_transition_mutex){+.+.}-{3:3}, at: pm_suspend+0x13=
-c/0x4e8
->   #4: c387b088 (&dev->mutex){....}-{3:3}, at: __device_suspend+0x1e8/0x91=
-c
->   #5: c3d7c46c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_loc=
-k+0xe8/0x100
->
->  stack backtrace:
->  CPU: 0 PID: 92 Comm: sh Not tainted 6.7.0-rc5-wt+ #532
->  Hardware name: Atmel SAMA5
->   unwind_backtrace from show_stack+0x18/0x1c
->   show_stack from dump_stack_lvl+0x34/0x48
->   dump_stack_lvl from __lock_acquire+0x19ec/0x3a0c
->   __lock_acquire from lock_acquire.part.0+0x124/0x2d0
->   lock_acquire.part.0 from _raw_spin_lock_irqsave+0x5c/0x78
->   _raw_spin_lock_irqsave from __irq_get_desc_lock+0xe8/0x100
->   __irq_get_desc_lock from irq_set_irq_wake+0xa8/0x204
->   irq_set_irq_wake from atmel_gpio_irq_set_wake+0x58/0xb4
->   atmel_gpio_irq_set_wake from irq_set_irq_wake+0x100/0x204
->   irq_set_irq_wake from gpio_keys_suspend+0xec/0x2b8
->   gpio_keys_suspend from dpm_run_callback+0xe4/0x248
->   dpm_run_callback from __device_suspend+0x234/0x91c
->   __device_suspend from dpm_suspend+0x224/0x43c
->   dpm_suspend from dpm_suspend_start+0x9c/0xa8
->   dpm_suspend_start from suspend_devices_and_enter+0x1e0/0xa84
->   suspend_devices_and_enter from pm_suspend+0x460/0x4e8
->   pm_suspend from state_store+0x78/0xe4
->   state_store from kernfs_fop_write_iter+0x1a0/0x284
->   kernfs_fop_write_iter from vfs_write+0x38c/0x6f4
->   vfs_write from ksys_write+0xd8/0x178
->   ksys_write from ret_fast_syscall+0x0/0x1c
->  Exception stack(0xc52b3fa8 to 0xc52b3ff0)
->  3fa0:                   00000004 005a0ae8 00000001 005a0ae8 00000004 000=
-00001
->  3fc0: 00000004 005a0ae8 00000001 00000004 00000004 b6c616c0 00000020 005=
-9d190
->  3fe0: 00000004 b6c61678 aec5a041 aebf1a26
->
-> This warning is raised because pinctrl-at91-pio4 uses chained IRQ. Whenev=
-er
-> a wake up source configures an IRQ through irq_set_irq_wake, it will
-> lock the corresponding IRQ desc, and then call irq_set_irq_wake on "paren=
-t"
-> IRQ which will do the same on its own IRQ desc, but since those two locks
-> share the same class, lockdep reports this as an issue.
->
-> Fix lockdep false positive by setting a different class for parent and
-> children IRQ
->
-> Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller=
-")
-> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
+elapsed time: 1488m
 
-This is a serious bug, what do the PIO4 maintainers say?
+configs tested: 182
+configs skipped: 2
 
-Yours,
-Linus Walleij
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20231220   gcc  
+arc                   randconfig-002-20231220   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                        clps711x_defconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20231220   gcc  
+arm                   randconfig-002-20231220   gcc  
+arm                   randconfig-003-20231220   gcc  
+arm                   randconfig-004-20231220   gcc  
+arm                        spear6xx_defconfig   gcc  
+arm                           u8500_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20231220   gcc  
+arm64                 randconfig-002-20231220   gcc  
+arm64                 randconfig-003-20231220   gcc  
+arm64                 randconfig-004-20231220   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20231220   gcc  
+csky                  randconfig-002-20231220   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20231219   clang
+i386         buildonly-randconfig-002-20231219   clang
+i386         buildonly-randconfig-003-20231219   clang
+i386         buildonly-randconfig-004-20231219   clang
+i386         buildonly-randconfig-005-20231219   clang
+i386         buildonly-randconfig-006-20231219   clang
+i386                                defconfig   gcc  
+i386                  randconfig-001-20231219   clang
+i386                  randconfig-002-20231219   clang
+i386                  randconfig-003-20231219   clang
+i386                  randconfig-004-20231219   clang
+i386                  randconfig-005-20231219   clang
+i386                  randconfig-006-20231219   clang
+i386                  randconfig-011-20231219   gcc  
+i386                  randconfig-011-20231220   clang
+i386                  randconfig-012-20231219   gcc  
+i386                  randconfig-012-20231220   clang
+i386                  randconfig-013-20231219   gcc  
+i386                  randconfig-013-20231220   clang
+i386                  randconfig-014-20231219   gcc  
+i386                  randconfig-014-20231220   clang
+i386                  randconfig-015-20231219   gcc  
+i386                  randconfig-015-20231220   clang
+i386                  randconfig-016-20231219   gcc  
+i386                  randconfig-016-20231220   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20231220   gcc  
+loongarch             randconfig-002-20231220   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                         amcore_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        m5272c3_defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+m68k                            mac_defconfig   gcc  
+m68k                          sun3x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                         db1xxx_defconfig   gcc  
+mips                      fuloong2e_defconfig   gcc  
+mips                       rbtx49xx_defconfig   gcc  
+nios2                            alldefconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20231220   gcc  
+nios2                 randconfig-002-20231220   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20231220   gcc  
+parisc                randconfig-002-20231220   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                      mgcoge_defconfig   gcc  
+powerpc               randconfig-001-20231220   gcc  
+powerpc               randconfig-002-20231220   gcc  
+powerpc               randconfig-003-20231220   gcc  
+powerpc64             randconfig-001-20231220   gcc  
+powerpc64             randconfig-002-20231220   gcc  
+powerpc64             randconfig-003-20231220   gcc  
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20231220   gcc  
+riscv                 randconfig-002-20231220   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                            hp6xx_defconfig   gcc  
+sh                     magicpanelr2_defconfig   gcc  
+sh                    randconfig-001-20231220   gcc  
+sh                    randconfig-002-20231220   gcc  
+sh                          rsk7269_defconfig   gcc  
+sh                          sdk7780_defconfig   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                           se7343_defconfig   gcc  
+sh                           se7619_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20231220   gcc  
+sparc64               randconfig-002-20231220   gcc  
+um                               alldefconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20231220   gcc  
+um                    randconfig-002-20231220   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20231220   gcc  
+x86_64       buildonly-randconfig-002-20231220   gcc  
+x86_64       buildonly-randconfig-003-20231220   gcc  
+x86_64       buildonly-randconfig-004-20231220   gcc  
+x86_64       buildonly-randconfig-005-20231220   gcc  
+x86_64       buildonly-randconfig-006-20231220   gcc  
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-011-20231220   gcc  
+x86_64                randconfig-012-20231220   gcc  
+x86_64                randconfig-013-20231220   gcc  
+x86_64                randconfig-014-20231220   gcc  
+x86_64                randconfig-015-20231220   gcc  
+x86_64                randconfig-016-20231220   gcc  
+x86_64                randconfig-071-20231220   gcc  
+x86_64                randconfig-072-20231220   gcc  
+x86_64                randconfig-073-20231220   gcc  
+x86_64                randconfig-074-20231220   gcc  
+x86_64                randconfig-075-20231220   gcc  
+x86_64                randconfig-076-20231220   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20231220   gcc  
+xtensa                randconfig-002-20231220   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
