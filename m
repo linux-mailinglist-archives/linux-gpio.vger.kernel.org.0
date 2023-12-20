@@ -1,49 +1,66 @@
-Return-Path: <linux-gpio+bounces-1737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6FC581A122
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:30:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8F52B81A17C
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:52:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7C2C71F22BB3
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 14:30:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2EEA71F22B73
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 14:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA08B38F90;
-	Wed, 20 Dec 2023 14:30:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53A343D966;
+	Wed, 20 Dec 2023 14:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="fLnfpUwy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.126])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CCB138FAB;
-	Wed, 20 Dec 2023 14:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="380811906"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97DB3F8D0;
+	Wed, 20 Dec 2023 14:51:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703083916; x=1734619916;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=4wHmGZHe3svEJVhmHtSCWZ7shvpHcD4OJm9FlO0yOSU=;
+  b=fLnfpUwy5cSiaySQyvWr2tVQOJNqMwalghLifuCS3Iu2lHGh4kYO1Njk
+   pwaj5mSmn8DNsOoV2jFZseCafQp4WkrteUc7RgiQE646BaEY+bYKIkSPN
+   xI5VGR2wzAYrR+KVnm/fI4n6Ixbw4aR25/SZqSIm9guBpxk1AgnXx8QBK
+   wYPmzbhO8x14mxSFbhgxm1ZD9M2do3i1qRZEZvKgmz+g4swSZv70KG1on
+   nMQoolu2yd+1k8yULi0BRVkKxORgdzHpBLokVxLeJzpUXunXzkNB3npqp
+   zNTco3nHdpZQ/oYD9NaZUtJPFAh7ROoAzA0ZzHmacQDRRnq9BY6mclX55
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="9204582"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="380811906"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:30:28 -0800
+   d="scan'208";a="9204582"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:51:56 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="919992164"
+X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="726098329"
 X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="919992164"
+   d="scan'208";a="726098329"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:30:27 -0800
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 06:51:54 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rFxaa-00000007YhR-3EWU;
-	Wed, 20 Dec 2023 16:30:24 +0200
-Date: Wed, 20 Dec 2023 16:30:24 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH 2/4] gpiolib: cdev: allocate linereq using kvzalloc()
-Message-ID: <ZYL6gIpG5GBONVSO@smile.fi.intel.com>
-References: <20231220015106.16732-1-warthog618@gmail.com>
- <20231220015106.16732-3-warthog618@gmail.com>
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rFxvL-00000007YwM-0MuC;
+	Wed, 20 Dec 2023 16:51:51 +0200
+Date: Wed, 20 Dec 2023 16:51:50 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: sysfs: drop tabs from local variable
+ declarations
+Message-ID: <ZYL_hrjwUP-O8GTI@smile.fi.intel.com>
+References: <20231220080942.8381-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -52,17 +69,21 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231220015106.16732-3-warthog618@gmail.com>
+In-Reply-To: <20231220080942.8381-1-brgl@bgdev.pl>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Dec 20, 2023 at 09:51:04AM +0800, Kent Gibson wrote:
-> The size of struct linereq may exceed a page, so allocate space for
-> it using kvzalloc() instead of kzalloc().
+On Wed, Dec 20, 2023 at 09:09:42AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> Older code has an annoying habit of putting tabs between the type and the
+> name of the variable. This doesn't really add to readability and newer
+> code doesn't do it so make the entire file consistent.
 
-It might be this needs a bit of elaboration. The kmalloc() tries to allocate
-a contiguous (in physical address space) chunk of memory and with fragmented
-memory it might be not possible. So the above issue might (rarely) happen.
-In most cases the call to kmalloc() will succeed.
+So, I would go with reversed xmas tree ordering in the lines you changed.
+It will decrease the churn for both: the future changes and backporting
+efforts.
+
+I explained that in my previous reply to v1 thread.
 
 -- 
 With Best Regards,
