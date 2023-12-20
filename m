@@ -1,98 +1,99 @@
-Return-Path: <linux-gpio+bounces-1740-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1741-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F78F81A1C2
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 16:02:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8172681A27F
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 16:30:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91D9028589D
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:02:09 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 199871F25507
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 15:30:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20AF938DEA;
-	Wed, 20 Dec 2023 15:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 058363FB0B;
+	Wed, 20 Dec 2023 15:28:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W03/Qc6D"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7B4F3D97C;
-	Wed, 20 Dec 2023 15:02:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="3044485"
-X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="3044485"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 07:02:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10930"; a="920005433"
-X-IronPort-AV: E=Sophos;i="6.04,291,1695711600"; 
-   d="scan'208";a="920005433"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Dec 2023 07:02:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rFy1q-00000007ZA3-1w1S;
-	Wed, 20 Dec 2023 16:58:34 +0200
-Date: Wed, 20 Dec 2023 16:58:34 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org
-Subject: Re: [PATCH 2/4] gpiolib: cdev: allocate linereq using kvzalloc()
-Message-ID: <ZYMBGrlY3mTWhKVv@smile.fi.intel.com>
-References: <20231220015106.16732-1-warthog618@gmail.com>
- <20231220015106.16732-3-warthog618@gmail.com>
- <ZYL6gIpG5GBONVSO@smile.fi.intel.com>
- <ZYL_077xycZ0ZVBy@rigel>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63AA947F61
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 15:28:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5e54d40cca2so28342947b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 07:28:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703086092; x=1703690892; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=g7gRsnGK/98vqBcsCXhR92alkXxNhTCIZpp/DaIxwxU=;
+        b=W03/Qc6DiZ9M5AEqYCbf56BpRCY1qPSlkNH2IkrU2lC6zhIxQ3rHitPnk351jdBwp5
+         zIz+FgtEM6Zt4HBwgGL2nT5dKWTdBS4ggVZp1RliG3Nplnb3s4LOc3+9jOST4cpiLDQB
+         qSWQR1LmkSOvrJ973LuL22xik2cD9IroSPT199BhFBdotNP7ZfGdhRBprAK3herbLy62
+         ZJe+utp/qyB3ReQkSOT5gV6D0uHd8cJLMfgCNY7TdcwQXvrTos62VnAl6eXYMPTJ0cju
+         HW7w8pCkC8Hmp6m3rsV5MVqlyA/wuR8wUD6Q0OEnBd1s6VZ9H/a0f7G/McNQA0Ub+weg
+         LMNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703086092; x=1703690892;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=g7gRsnGK/98vqBcsCXhR92alkXxNhTCIZpp/DaIxwxU=;
+        b=Gvnoru+JheJ/vYAC/4/55lfiRfqClIICtI5q5FyxxvslyyqpcjbQb7ckk5OZkutigo
+         wpmUEoE5oqIJ5wdoIzxpfM+uh0YeXHqQDwluYHzgQkpB/knD5yKYWSoyVDs+SAmTeuB1
+         aEJYuoNRlV9ClBiCdn9EpkivLOfvh7CKoNHVBoWC6rV7ZxLDMIBEoQHRL4KpvnH5Keh3
+         wtj6JY7rzWEzvqKRp43FXAvOMqhqXFrhmbbVgQH660d8WHiGJ5CaZ6fLRglE1Ty0sTdG
+         gWB10rHj5/TCsoHv7nj9KghaYjcf1FAWqxI4IcTfH062ZVGW+NdMrnEmfizDOOzcoLu2
+         sjWg==
+X-Gm-Message-State: AOJu0YwsUt7tgK89mXzGkmYsblGxZ4aYHpZkXU9a26d6vjlLZ6WG198E
+	2gv/rLEvF2Hw4eRDZOC718myrK28RLJAKUnjIyPixQ==
+X-Google-Smtp-Source: AGHT+IHvLkJ6Yg8dTs7bidAxdL9xHex4/uIhS8hfLIfdr0GXHNzu4uRJv+qfme+slkFJoK416zFCj/8x8mLra8uNxak=
+X-Received: by 2002:a25:ae1f:0:b0:dbc:d6ad:616c with SMTP id
+ a31-20020a25ae1f000000b00dbcd6ad616cmr5779335ybj.24.1703086092356; Wed, 20
+ Dec 2023 07:28:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZYL_077xycZ0ZVBy@rigel>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231219201102.41639-1-brgl@bgdev.pl> <ZYL0MWAQ-frYLnZq@smile.fi.intel.com>
+In-Reply-To: <ZYL0MWAQ-frYLnZq@smile.fi.intel.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 20 Dec 2023 16:28:00 +0100
+Message-ID: <CACRpkdZB-5DN5NYJNGheDJnNWRt8x4LwgOQpL4NDyX2JSn+_9g@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 20, 2023 at 10:53:07PM +0800, Kent Gibson wrote:
-> On Wed, Dec 20, 2023 at 04:30:24PM +0200, Andy Shevchenko wrote:
-> > On Wed, Dec 20, 2023 at 09:51:04AM +0800, Kent Gibson wrote:
-> > > The size of struct linereq may exceed a page, so allocate space for
-> > > it using kvzalloc() instead of kzalloc().
+On Wed, Dec 20, 2023 at 3:03=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+> On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > It might be this needs a bit of elaboration. The kmalloc() tries to allocate
-> > a contiguous (in physical address space) chunk of memory and with fragmented
-> > memory it might be not possible. So the above issue might (rarely) happen.
-> > In most cases the call to kmalloc() will succeed.
-> 
-> For sure, the kzalloc() generally works - or we wouldn't've gotten this
-> far as tests with MAX_LINES would've been failing.
-> We are targetting a very niche failure mode here.
-> 
-> The size allocated can only be determined at runtime, may be more or
-> less than a page, and we don't care whether the physical memory allocated
-> is contiguous.
-> As such kvzalloc() is the appropriate allocator.
-> 
-> Are you suggesting repeating the relevant sections of the
-> kmalloc/vmalloc() documentation or Memory Allocation Guide as part of the
-> checkin comment?
+> > extra_checks is only used in a few places. It also depends on
+>
+> > a non-standard DEBUG define one needs to add to the source file.
+>
+> Huh?!
+>
+> What then CONFIG_DEBUG_GPIO is about?
 
-I suggesting to make clear in the commit message that:
-- there is no bug per se with the code logic (i.o.w.
-  there is no issue to have allocations bigger than one page)
-- this is very rarely case when it might be a problem
+Yeah that is some helper DBrownell added because like me he could
+never figure out how to pass -DDEBUG to a single file on the command
+line and besides gpiolib is several files. I added the same to pinctrl
+to get core debug messages.
 
-You can also put a reference to the documentation, if you wish.
-This should be harmless and adding not more than a line into
-the commit message (or even as a Link: tag to the HTML variant of it).
+I guess Bartosz means extra_checks is =3D=3D a non-standard DEBUG
+define.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
