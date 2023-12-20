@@ -1,165 +1,118 @@
-Return-Path: <linux-gpio+bounces-1742-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1743-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3026E81A738
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 20:21:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E113D81A746
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 20:25:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E04A4287468
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 19:21:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7F3DDB23290
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 19:25:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E61148789;
-	Wed, 20 Dec 2023 19:21:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38B35487A3;
+	Wed, 20 Dec 2023 19:25:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hsJP9FXo"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFlspcyi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99B28482F4
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 19:21:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B207B48CEB
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 19:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dbd532e6e8aso6706276.2
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:21:03 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5d2d0661a8dso508787b3.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:25:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703100062; x=1703704862; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703100309; x=1703705109; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ps3P/pvG74IGGnT8GqUmphrkn8oo7nKEcsYAKREB89c=;
-        b=hsJP9FXowB9Go9/CUlXoDwre8bu3Ej24ZqEXSduvqsC47KX5v3WTHf50QCkcc7SQfb
-         ajJiPHl/tNndtgdXZBVbzN7PDDBQrV0b3gXwoF7lypm0YWCZjiBjTmar/YpgL1Nga5gm
-         vjEGReyWvXEXkIk+r+egyjLaZ8vmW/VRkln5MC5A71NKYTYQpnOnvuU1c0HqpF/C1396
-         GFYJAV9GPf1+/UPMxx+BmLVP9SXPEOAUGM7G6j9x9KtZNMdbYAxDyxtWcvyr/Lqh3Icv
-         t90E88kJ5A+zJNZ5/bJksfXbyYizKUEDGXG35IkxVGHBUU/TLiLVyYMOPFIikPJRwEN5
-         I25w==
+        bh=QNmCP+oe3oSMVeft7bEuEgPHXSe736/+Mn6NnLSCe2I=;
+        b=zFlspcyihG7gzbLJJMkrNtjBdvCMt+fHWDNFvGaAQ1t3yUqL7425UfcBNu1+mYegI7
+         AdzHNZ8Mp6pgKv87k+JCS7KI/TWQTIkGJrYc5gMqmBla/x+cFxHZUOianeg8zG+S4TVw
+         qJ4E7UA9qQ4BADjLwjNValnWejobFeoifiZ2GzwfXtatdONsgytdGgUos+RZn4oOUkN1
+         TiGHK4KReFPN4ZTsyf09lV1NUVVcI3PotTvfbTwUzXf+LN9sB10/sOzo2JKDGUEm9Mhn
+         7J6HjmLTVxLgHzLchD89JlgAgTaaPZ/cSrDKYi9EEOs3R08zfdAUYGrGFA2MsHmAoc13
+         hZHQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703100062; x=1703704862;
+        d=1e100.net; s=20230601; t=1703100309; x=1703705109;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ps3P/pvG74IGGnT8GqUmphrkn8oo7nKEcsYAKREB89c=;
-        b=cKeHTg2O3TtXNF5/D1Q8vhqnWrfS1twsEoczxbo3my50zfY55wjsfQ+/3bmz10uEzk
-         I07uAWYdNi1Xm09o6VzS6gcRYI3vjYpGBTMzPCUu0CoSCAxaebPtlqD835tghFilzlJG
-         YWit8LIj+Ead2hMtGI84bUpTAdq8iDM+qaD8acQ6cnQ/lg49prBs9BV4B1K/UHPR1CMm
-         scHNMP1e2ea33DWx8oVr4SCLcvgnemOyFTBN8GLNQEM/ifyo1X9TxCxJD5vYvmTcAsgQ
-         QNhCfqvUAiiIBG31piOCn+sw50y1dAj908HC2XVfdmEWZGeLzoKcMOBTiLXY+SKG70Yo
-         iJFg==
-X-Gm-Message-State: AOJu0Yzsi/FXTYn8gUqvW19sSlyVX0Pr1ojpDZOnL++Ypcam1qyg8aLx
-	qJpMWNWQtVZ40kPtkrHwB5UdmstncHSNUDVTSCZjSXIRrcxkts4vxRs=
-X-Google-Smtp-Source: AGHT+IE0/lC2Cx520RUvUKQoxpsf0wmqJ8BQXaOwxQm86Cv5E07vosKnSijGbt5II7X94Q8Sms9uxQ9pRCNxE/GNr9k=
-X-Received: by 2002:a25:1c1:0:b0:dbd:b165:43d with SMTP id 184-20020a2501c1000000b00dbdb165043dmr247285ybb.18.1703100062573;
- Wed, 20 Dec 2023 11:21:02 -0800 (PST)
+        bh=QNmCP+oe3oSMVeft7bEuEgPHXSe736/+Mn6NnLSCe2I=;
+        b=u85XadLM6QsHJvpD4Dn4dp58ZgOdwlMyDOrGxDT3zge8TCcJttYTFPC+MEwpHXxyuv
+         mB4mhw+V6xt70G13gZEIhB/OrzSPe0md+zKiNEo82EOEWnPDK3exd68vs+UyiN26Govt
+         U2HqVtjF6TsYxXnYX0z6dQ0BXtZlMDM/TTFvuTkCMXR+TCvp63MKbDKysdnNXRrtOFyr
+         HPKH6CGXEIq5P7PgxhEPvAfX/Ivij46jsdR7GbtvJNBo/a/eYdokQhQ/5zWJUGdXPHdU
+         NdySEn3qkdPdlfekXNSHRgwdpzgCCWfF+D3kBJXTQSvTJ0g/K2cw8bmwUFAWiSPIhFEG
+         VyIQ==
+X-Gm-Message-State: AOJu0Yx/a3PLzh83SVvFQUBH3OJLwiXLSVCj71ymlUrocVSL75Ja4VQK
+	Ce9iDnHPPuKwXt0ZugGbbp4K+R7Tny/CTVkJlvIvvw==
+X-Google-Smtp-Source: AGHT+IHKQoxOSx/75Yu3bPfICRilkmmatfOTZGCwh6ZIG0MIHwmi1SgmuqkGllO5XCdAmaUsxQDOtWdj3LD1JcBG/pk=
+X-Received: by 2002:a0d:d80a:0:b0:5e2:a469:71b6 with SMTP id
+ a10-20020a0dd80a000000b005e2a46971b6mr258824ywe.4.1703100309747; Wed, 20 Dec
+ 2023 11:25:09 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com> <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
-In-Reply-To: <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
+References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
+ <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
+ <20231215202137.GA317624-robh@kernel.org> <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
+In-Reply-To: <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Dec 2023 20:20:51 +0100
-Message-ID: <CACRpkdZf09uKr+ka0_rsw5kHMjjQbaGypn2fx2-QobLFBKYrtQ@mail.gmail.com>
+Date: Wed, 20 Dec 2023 20:24:58 +0100
+Message-ID: <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
 Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
 To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
 	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
 	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Emil,
-
-thanks for your patch!
-
-On Fri, Dec 15, 2023 at 3:39=E2=80=AFPM Emil Renner Berthing
+On Sat, Dec 16, 2023 at 2:57=E2=80=AFPM Emil Renner Berthing
 <emil.renner.berthing@canonical.com> wrote:
 
-> +  The TH1520 has 3 groups of pads each controlled from different memory =
-ranges.
-> +  Confusingly the memory ranges are named
-> +    PADCTRL_AOSYS  -> PAD Group 1
-> +    PADCTRL1_APSYS -> PAD Group 2
-> +    PADCTRL0_APSYS -> PAD Group 3
+> > > +          thead,strong-pull-up:
+> > > +            oneOf:
+> > > +              - type: boolean
+> > > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > > +                enum: [ 0, 2100 ]
+> > > +            description: Enable or disable strong 2.1kOhm pull-up.
+> >
+> > bias-pull-up can already specify the strength in Ohms.
+>
+> The strong pull up is a separate bit that can be enabled independently fr=
+om the
+> regular pull-up/down, so in theory you could enable both the regular pull=
+-up
+> and the strong pull-up at the same time, or even the regular poll-down an=
+d the
+> strong pull-up which is probably not advised.
 
-Really, even in the documentation? If you look at the layout on the actual
-chip, does a pattern emerge?
+bias-pull-up; <- Just regular pulling up the ordinary
+bias-pull-up =3D <100>; <- Same thing if the ordinary is 100 Ohm (figure ou=
+t what
+  resistance it actually is....)
+bias-pull-up =3D <21000000>; <- strong pull up
+bias-pull-up =3D <21000100>; <- both at the same time
 
-I think some use the north/south/east/west as group names with the BGA
-chip facing up with the package text correctly readable then it is a bit
-like a map.
+> So the idea here was just to make sure that you can do eg.
+>
+>         thead,strong-pull-up =3D <0>;
+>
+> to make sure the bit is cleared.
 
-> +          function:
-> +            $ref: /schemas/types.yaml#/definitions/string
-> +            enum: [ "0", "1", "2", "3", "4", "5" ]
-> +            description: The mux function to select for the given pins.
-
-So why is the opaque names "0", "1" etc used, and they will be the same for
-all pins I bet. Most drivers use a string identifying the actual function h=
-ere.
-Such as "i2c", "gpio", etc.
-
-Names that are just figures are *impossible* to understand without access
-to a datasheet.
-
-The point of device trees sources are to be human readable, strings of
-magic numbers are not human readable at all.
-
-> +          bias-disable: true
-> +
-> +          bias-pull-up:
-> +            type: boolean
-> +
-> +          bias-pull-down:
-> +            type: boolean
-> +
-> +          drive-strength:
-> +            enum: [ 1, 2, 3, 5, 7, 8, 10, 12, 13, 15, 16, 18, 20, 21, 23=
-, 25 ]
-
-milliamperes? Then use drive-strength-microamp.
-
-If not, explain what each setting means, i.e. the number of max microamps.
-
-At which point using drive-strength-microamp and a translation table in the
-driver may be a better idea.
-
-The only reason to use opaque numbers is if 1, 2 (etc) mean something like
-"number of driver stages" with a current output that varies with technology=
-.
-
-> +          thead,strong-pull-up:
-> +            oneOf:
-> +              - type: boolean
-> +              - $ref: /schemas/types.yaml#/definitions/uint32
-> +                enum: [ 0, 2100 ]
-> +            description: Enable or disable strong 2.1kOhm pull-up.
-
-Just use bias-pull-up with an argument.
-
-bias-pull-up =3D <2100000>;
-
-No argument would be the default setting.
-
-No need for custom bindings.
-
-> +        uart0_pins: uart0-0 {
-> +            tx-pins {
-> +                pins =3D "UART0_TXD";
-
-Pins have reasonable names, but...
-
-> +                function =3D "0";
-
-What about function =3D "uart_0" hmmm?
+No use bias-disable; for this.
 
 Yours,
 Linus Walleij
