@@ -1,95 +1,171 @@
-Return-Path: <linux-gpio+bounces-1706-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1707-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39A38819DE8
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:20:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5AA6A819DF1
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 12:23:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA852287A33
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:20:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8D4E81C22A2A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Dec 2023 11:23:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6C8821358;
-	Wed, 20 Dec 2023 11:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 478B12135A;
+	Wed, 20 Dec 2023 11:23:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OBtUPpvz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="svf6PlCL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 397E121353
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:20:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 918F921353
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 11:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dbd38c6598fso2103621276.0
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:20:20 -0800 (PST)
+Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6d9e993d94dso4033298a34.0
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Dec 2023 03:23:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703071220; x=1703676020; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703071422; x=1703676222; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Ts19aDh9Y+uEYtwA159YtXFlbdYpuc2+dTBf9e+tLA=;
-        b=OBtUPpvzJcOjCdf4UgozcJBzxizD68+MeqormSinuYZqaZPyDZygMX7q/6w+Tx26B3
-         8m3wkVfbUJFpEYGKYjrgCntbCxASogSUfQir5Komc18HZVyNnKq9QKUxGrmrcHu4zyeI
-         qe/++YtyUtoZmXL6TTKtplCvQ2bWtPx5L3TnT39RMQEdKFLxDitbWNPHCzP2bWskym91
-         apn5dhBzPvaaPWR+8ufHDXZndMQphThwYy+RRR5VVo4ZHJZc3cZMCpsfvSpLSdhO048X
-         qr7GHdlKls9zD3ZGNwTxL2w78a3qOvB41v0+FvMIi5ICs/wEeSDw9OleHEDD57U42Yyh
-         RvcA==
+        bh=YGSNWkw+c2ahRiQtvGQvOgHzADZ0JXbLjHdO1qBBAyk=;
+        b=svf6PlCLWwM4g7ssg2G9aMKUTqsqB1HzMCAE5pPQLWAgkVhZeCwea/8zdxT0QVv7uY
+         G7+MqmcufZWqDSY4LV0z0lDOTTvUU6B7NsFgVnwjeZSOqK4W2X0k86PvCF30rxk955CR
+         C4uEuufe3lhGGt+z7hn17IGh/Y0fAsGEVi59Xe91PSXeuM4yu2QGYz4WbVcqf0s42jGs
+         eZwkRz10gEoHZAHE9I5szSTeHd+4JKASTDTVcaX4sEifVVpzgHRrHbJY1w3kmVFCeHbI
+         IUhq36IFOzgwk1Zg9UZE7TbxOjODCWKRYET8GF1VSF4sru8PD0k7z15Lmo3lDZK/rBPk
+         96QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703071220; x=1703676020;
+        d=1e100.net; s=20230601; t=1703071422; x=1703676222;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6Ts19aDh9Y+uEYtwA159YtXFlbdYpuc2+dTBf9e+tLA=;
-        b=SIxsZZJEucd3J2UV+k7Nffn9HF15r4L/6fk+m4sQjmzYyD2445ROJf+8KTfaeBGJov
-         Q/weC5zTGdjvLazzuZPHrYI7j9xeRP3+vZuionOK5hXDqNVPPmLuLMXjADak90hUL2kE
-         ASkFQUKU+Mi1JLkDH9MnCWCawBtH8yowXk4Pb6lyV5xbPT1W4NkxRSRqKLUrOEP2Ux27
-         Y1ydQ0049s129dwmz/9mygzQk5Mg2F0rbh0sYUTq+ZlpeioITSXnJoYKizgDmb9dzWEZ
-         FMGI0T3zVoNX3kNSBq1L56no/OmqjkVFqMGar1qlgjGkDjAFwhaLQhGuXxv8uyHeYQnk
-         jecQ==
-X-Gm-Message-State: AOJu0YxYP1fa02voiqjqP5ivdiak0+sZpZZYBBy0gPaI6JZIjYQgu0uK
-	AeJcdxzv+0Y+nvDkrr2p5ki5WllN4k2ChsI15Es3oQ==
-X-Google-Smtp-Source: AGHT+IEeQxHg05YpcChvpZ7Exy5g8Kv2n61cNJG+8dfGVBVggjeSBz/CrJZiwlA3U2vDWizkQQjD9YAmwfcim3SeoDQ=
-X-Received: by 2002:a05:6902:531:b0:dbd:6584:ca3c with SMTP id
- y17-20020a056902053100b00dbd6584ca3cmr1126598ybs.35.1703071220041; Wed, 20
- Dec 2023 03:20:20 -0800 (PST)
+        bh=YGSNWkw+c2ahRiQtvGQvOgHzADZ0JXbLjHdO1qBBAyk=;
+        b=HW4nHTclsr18jOAoftbZ7UnDzm4sieAS4srbs7C9aBMbjNWQEauj2LaZOsyRsw8dac
+         RKpq3+mTrTVivrCnFVHMvg6K5MUJNwRwRxB0L5ZdeoNjTAFDlwr1V8DnkWq0mqW7h6VB
+         H7W5YG0OVHmgddCytlAdvb8yrCwBcG3r1dLzkh7XTZd0ROOJB00tAfoULGNTAQ/ih267
+         pF/kG+cjIB2BZWWSzcnBdkuTRECdcSNJOMQYVt7nfoBM/8SbQ5qiXNrir1QnR/LYMxvP
+         lMyFDImbyUF7nSx8uTwKS1PF+3ip09AuWl2IqqX5tQdqWWlCbuRwJHCCTqOy4trggcvV
+         O8ww==
+X-Gm-Message-State: AOJu0YyulgFxw5izXIzt/8LPTw+x885BDtRCOglopom02YAdT9Fk4cGT
+	LKxqrKWvMJrSgpsvEC6FmiKOZPssYCJvX5N/lZ+3SA==
+X-Google-Smtp-Source: AGHT+IE4kJPxysEjDN1T6CCZTzDaHjjNNxoNgmPKSPVKwrazuOl+5EB0conrXCT7ZIBnAiTtmITMDx/f6TOOwLRZDhs=
+X-Received: by 2002:a05:6830:11a:b0:6d8:17d9:308a with SMTP id
+ i26-20020a056830011a00b006d817d9308amr15625047otp.26.1703071421719; Wed, 20
+ Dec 2023 03:23:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215155300.21186-1-brgl@bgdev.pl> <20231215155300.21186-3-brgl@bgdev.pl>
-In-Reply-To: <20231215155300.21186-3-brgl@bgdev.pl>
+References: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
+In-Reply-To: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 20 Dec 2023 12:20:09 +0100
-Message-ID: <CACRpkdYXz6Oi+ebdaW9Lu+Yz7ZyzKEwA1-unSnTEBEQhfOEWkg@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] gpiolib: use a mutex to protect the list of GPIO devices
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 20 Dec 2023 12:23:30 +0100
+Message-ID: <CACRpkdYVg47zfPgZFcPyXjTX-p_o-HFALBh1FaDOgmDaomypew@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: at91-pio4: use dedicated lock class for IRQ
+To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
+Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
+	Nicolas Ferre <nicolas.ferre@microchip.com>, 
+	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 15, 2023 at 4:53=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+On Fri, Dec 15, 2023 at 10:35=E2=80=AFPM Alexis Lothor=C3=A9
+<alexis.lothore@bootlin.com> wrote:
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Trying to suspend to RAM on SAMA5D27 EVK leads to the following lockdep
+> warning:
 >
-> The global list of GPIO devices is never modified or accessed from
-> atomic context so it's fine to protect it using a mutex. Add a new
-> global lock dedicated to the gpio_devices list and use it whenever
-> accessing or modifying it.
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>  WARNING: possible recursive locking detected
+>  6.7.0-rc5-wt+ #532 Not tainted
+>  --------------------------------------------
+>  sh/92 is trying to acquire lock:
+>  c3cf306c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0xe=
+8/0x100
 >
-> While at it: fold the sysfs registering of existing devices into
-> gpiolib.c and make gpio_devices static within its compilation unit.
+>  but task is already holding lock:
+>  c3d7c46c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_lock+0xe=
+8/0x100
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>  other info that might help us debug this:
+>   Possible unsafe locking scenario:
+>
+>         CPU0
+>         ----
+>    lock(&irq_desc_lock_class);
+>    lock(&irq_desc_lock_class);
+>
+>   *** DEADLOCK ***
+>
+>   May be due to missing lock nesting notation
+>
+>  6 locks held by sh/92:
+>   #0: c3aa0258 (sb_writers#6){.+.+}-{0:0}, at: ksys_write+0xd8/0x178
+>   #1: c4c2df44 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0x138/=
+0x284
+>   #2: c32684a0 (kn->active){.+.+}-{0:0}, at: kernfs_fop_write_iter+0x148/=
+0x284
+>   #3: c232b6d4 (system_transition_mutex){+.+.}-{3:3}, at: pm_suspend+0x13=
+c/0x4e8
+>   #4: c387b088 (&dev->mutex){....}-{3:3}, at: __device_suspend+0x1e8/0x91=
+c
+>   #5: c3d7c46c (&irq_desc_lock_class){-.-.}-{2:2}, at: __irq_get_desc_loc=
+k+0xe8/0x100
+>
+>  stack backtrace:
+>  CPU: 0 PID: 92 Comm: sh Not tainted 6.7.0-rc5-wt+ #532
+>  Hardware name: Atmel SAMA5
+>   unwind_backtrace from show_stack+0x18/0x1c
+>   show_stack from dump_stack_lvl+0x34/0x48
+>   dump_stack_lvl from __lock_acquire+0x19ec/0x3a0c
+>   __lock_acquire from lock_acquire.part.0+0x124/0x2d0
+>   lock_acquire.part.0 from _raw_spin_lock_irqsave+0x5c/0x78
+>   _raw_spin_lock_irqsave from __irq_get_desc_lock+0xe8/0x100
+>   __irq_get_desc_lock from irq_set_irq_wake+0xa8/0x204
+>   irq_set_irq_wake from atmel_gpio_irq_set_wake+0x58/0xb4
+>   atmel_gpio_irq_set_wake from irq_set_irq_wake+0x100/0x204
+>   irq_set_irq_wake from gpio_keys_suspend+0xec/0x2b8
+>   gpio_keys_suspend from dpm_run_callback+0xe4/0x248
+>   dpm_run_callback from __device_suspend+0x234/0x91c
+>   __device_suspend from dpm_suspend+0x224/0x43c
+>   dpm_suspend from dpm_suspend_start+0x9c/0xa8
+>   dpm_suspend_start from suspend_devices_and_enter+0x1e0/0xa84
+>   suspend_devices_and_enter from pm_suspend+0x460/0x4e8
+>   pm_suspend from state_store+0x78/0xe4
+>   state_store from kernfs_fop_write_iter+0x1a0/0x284
+>   kernfs_fop_write_iter from vfs_write+0x38c/0x6f4
+>   vfs_write from ksys_write+0xd8/0x178
+>   ksys_write from ret_fast_syscall+0x0/0x1c
+>  Exception stack(0xc52b3fa8 to 0xc52b3ff0)
+>  3fa0:                   00000004 005a0ae8 00000001 005a0ae8 00000004 000=
+00001
+>  3fc0: 00000004 005a0ae8 00000001 00000004 00000004 b6c616c0 00000020 005=
+9d190
+>  3fe0: 00000004 b6c61678 aec5a041 aebf1a26
+>
+> This warning is raised because pinctrl-at91-pio4 uses chained IRQ. Whenev=
+er
+> a wake up source configures an IRQ through irq_set_irq_wake, it will
+> lock the corresponding IRQ desc, and then call irq_set_irq_wake on "paren=
+t"
+> IRQ which will do the same on its own IRQ desc, but since those two locks
+> share the same class, lockdep reports this as an issue.
+>
+> Fix lockdep false positive by setting a different class for parent and
+> children IRQ
+>
+> Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller=
+")
+> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
 
-Excellent patch, and a conclusion of the previous discussions on this.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+This is a serious bug, what do the PIO4 maintainers say?
 
 Yours,
 Linus Walleij
