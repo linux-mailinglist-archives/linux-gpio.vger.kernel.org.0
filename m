@@ -1,146 +1,168 @@
-Return-Path: <linux-gpio+bounces-1766-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1767-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E20AF81B28C
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 10:37:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8BD381B36A
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 11:20:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9B91B28497B
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 09:37:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2701D1C24EDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 10:20:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A157224C7;
-	Thu, 21 Dec 2023 09:32:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAA964F20E;
+	Thu, 21 Dec 2023 10:20:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wPttn67a"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GLCWmb80"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f50.google.com (mail-vs1-f50.google.com [209.85.217.50])
+Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E12824C608
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 09:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32A4551C2F
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 10:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f50.google.com with SMTP id ada2fe7eead31-466a7b271a1so26284137.3
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 01:32:27 -0800 (PST)
+Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4b6c2480cccso367155e0c.0
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 02:20:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703151147; x=1703755947; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703154007; x=1703758807; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OyY4mdyAupWFIlLPs9X7YkxcEJUGvfcgSLNoWs9Uhs4=;
-        b=wPttn67aQ4F6f373BIdfEdYCMa5QlhAaSxS+ymj7z0QVQVuzteToTcJz8gc+aZiPWn
-         +9C3titwRmRKk+vocLX/4PKbyQlf6q/oz1D3Egrc6Bdzha5kJ/MIBW/a/CEze3PcY99+
-         OSdH26W6HxoC7yEjh5esph7dYdR+mkEUQ7cifoWqmDrq/Ry6YcWBeMGHbTlY2sFmEZWq
-         jXkfsgMlwDWbmUcrCWCvxdTZ/F13qdwBi9Lzc/dlzInrOznt7+dpGaVzMliPiOI/cjkh
-         TH/ccxFjL7H7RpiSH9G+Lfl/UZPNhGoOAiEa7R7WJ1+k3gmepW0mP2tGOKhJvLR0Isx6
-         MrnA==
+        bh=03hQ4xDH3ZdArEtlBeQWM6+JQhq7YbGI4xUxwEElpFc=;
+        b=GLCWmb80ulkj1cUuoQsoImKjrKl/pUq3AfImb4zTiiU+VQW6YbCXDCpZXoewFr1EkO
+         z7ItTfR2EUJdwJDMXfeuThrRc+3B1cipuMRp1vwK9ToybzEPkkjJ7hnobAKeBf6OJbl7
+         pn5GShfu1BGCeYYRtLv8l+Iq93NlH8s4mfr9wPdzTJ44QexmusTt5LIkbnajPoneG6wF
+         KWvXgJO17G3Qi9PylOA4UvgNMPWmIyKpgNw4VerBcDoxOmuLVV7z8PF6F5YIRKbH5hE2
+         TXW5fx7ZOLKV5UciY1K5gTuFrVTnfq4xN4xKIYGUFixoVikXYmE+SBgXDTiz6iZOk1pA
+         7neg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703151147; x=1703755947;
+        d=1e100.net; s=20230601; t=1703154007; x=1703758807;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OyY4mdyAupWFIlLPs9X7YkxcEJUGvfcgSLNoWs9Uhs4=;
-        b=WWImWxubtLatyewIX9yxVo5d9QSv7F2r9ubxEg20VpoXeLb8wtyC1UcSDLXp66C+pc
-         N12e0XYumplflLQ6fuLtVSISGKLPnv2yti0JGduBW/dVP05FmWQNGY3RBB+2DZjXWLcH
-         jK1qAQiGrdo90WEWGoHgJC/t43XaEtxsdC55+g67OKz6dLFXuAdlsbwIW3428kvrCWPe
-         hijwIbcM7piptL+CLhphwwQmzmXlvEyPD603Dge0Ga+X8CYiMtSy2zQ1RJ28AWdKJik/
-         FRuxugeh5U56xfko77lRRihPxRIcmEKf5NP9C5fy/M4FR+Kg3kY/isJ8UjUgyxoRvLEg
-         8pCA==
-X-Gm-Message-State: AOJu0YxNskM8CUc1UiFGqvpleuSKk/1daQ1+xlO1bMeyZ3UtugH9Hv8G
-	nYKJc4OXVNAZ0B/KwpLCpC5E2rbPT2uHzceliJSSg0Ks1tw214Mz
-X-Google-Smtp-Source: AGHT+IEkwVPubXgzWg5dFIkGFVTlHElpt879SUONLleVKD7u5tPDhhN0keFPSGT1s9u0e5UucfnwJXN2XmsLPsDjGfw=
-X-Received: by 2002:a05:6102:441d:b0:466:3496:b66f with SMTP id
- df29-20020a056102441d00b004663496b66fmr310132vsb.35.1703151146804; Thu, 21
- Dec 2023 01:32:26 -0800 (PST)
+        bh=03hQ4xDH3ZdArEtlBeQWM6+JQhq7YbGI4xUxwEElpFc=;
+        b=gQ7PbN4B4sWI492bftAhabMxsdKHNd78jkeiG6YhB2p5Maq2zDGRhPij5jbmFIR00O
+         CIcrep63W17jdgKSZKpNZFxfGzbiXHXJQmN7dZmcSSIV0zOg6eTJ/GABgsfcouAPpSI4
+         B5l4w1SyoJOB0Q9fjw1CvlmNx8P2nuJdd57ueL7sDSteC4LP34P2fCWpiM+XL2P6UXOb
+         9Ywr/hxq1R3PCdJWTHDhV8nNc1jxl0TMHIJHYlH2SZQcL8OTuD2DCdPRmOSeltsSFziK
+         z8EJPdwfVHTKFVrc7N79VLg8jS9MltX/HEs8PujAEJib+fvpWGfV14DMn60To/g1OvaE
+         q91g==
+X-Gm-Message-State: AOJu0YxIrxqe+ug7xLPrUWqrwJtLxbJbrm+UlCwroZjHG9GZkSFKTTGU
+	jYqhWHZJCeAlvd4zEywk+b5+HEiAJkqzv1tv7fv1gOS8cmOBZw==
+X-Google-Smtp-Source: AGHT+IF7JcaUe7esEAOgMsDE8x43U2N9OCJ++O3rTCKcYNxpvMih3JiYiKgj/YASzRkyb5lC7vXlxWIfVjMTcmMVpJQ=
+X-Received: by 2002:a05:6122:3119:b0:4b6:dbc2:1079 with SMTP id
+ cg25-20020a056122311900b004b6dbc21079mr168382vkb.0.1703154006993; Thu, 21 Dec
+ 2023 02:20:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221012040.17763-1-warthog618@gmail.com> <20231221012040.17763-2-warthog618@gmail.com>
-In-Reply-To: <20231221012040.17763-2-warthog618@gmail.com>
+References: <20231219101620.4617-1-xiongxin@kylinos.cn> <20231220022901.29158-1-xiongxin@kylinos.cn>
+In-Reply-To: <20231220022901.29158-1-xiongxin@kylinos.cn>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Dec 2023 10:32:15 +0100
-Message-ID: <CAMRc=McSOij2kChZh-zCLBP75cxmnnHSqKg2=uk9dEDJquKZhg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] gpiolib: cdev: add gpio_device locking wrapper
- around gpio_ioctl()
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linus.walleij@linaro.org, andy@kernel.org
+Date: Thu, 21 Dec 2023 11:19:55 +0100
+Message-ID: <CAMRc=Md7ODHUSe2fa37NazgJoV5aGXRh1Pp24LcFc49=UXgnwA@mail.gmail.com>
+Subject: Re: [PATCH v5] gpio: dwapb: mask/unmask IRQ when disable/enale it
+To: xiongxin <xiongxin@kylinos.cn>
+Cc: fancer.lancer@gmail.com, hoan@os.amperecomputing.com, 
+	linus.walleij@linaro.org, andy@kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, stable@kernel.org, 
+	Riwen Lu <luriwen@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 2:21=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Wed, Dec 20, 2023 at 3:29=E2=80=AFAM xiongxin <xiongxin@kylinos.cn> wrot=
+e:
 >
-> While the GPIO cdev gpio_ioctl() call is in progress, the kernel can
-> call gpiochip_remove() which will set gdev->chip to NULL, after which
-> any subsequent access will cause a crash.
+> In the hardware implementation of the I2C HID driver based on DesignWare
+> GPIO IRQ chip, when the user continues to use the I2C HID device in the
+> suspend process, the I2C HID interrupt will be masked after the resume
+> process is finished.
 >
-> gpio_ioctl() was overlooked by the previous fix to protect syscalls
-> (bdbbae241a04), so add protection for that.
+> This is because the disable_irq()/enable_irq() of the DesignWare GPIO
+> driver does not synchronize the IRQ mask register state. In normal use
+> of the I2C HID procedure, the GPIO IRQ irq_mask()/irq_unmask() functions
+> are called in pairs. In case of an exception, i2c_hid_core_suspend()
+> calls disable_irq() to disable the GPIO IRQ. With low probability, this
+> causes irq_unmask() to not be called, which causes the GPIO IRQ to be
+> masked and not unmasked in enable_irq(), raising an exception.
 >
-> Fixes: bdbbae241a04 ("gpiolib: protect the GPIO device against being drop=
-ped while in use by user-space")
-> Fixes: d7c51b47ac11 ("gpio: userspace ABI for reading/writing GPIO lines"=
-)
-> Fixes: 3c0d9c635ae2 ("gpiolib: cdev: support GPIO_V2_GET_LINE_IOCTL and G=
-PIO_V2_LINE_GET_VALUES_IOCTL")
-> Fixes: aad955842d1c ("gpiolib: cdev: support GPIO_V2_GET_LINEINFO_IOCTL a=
-nd GPIO_V2_GET_LINEINFO_WATCH_IOCTL")
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> Add synchronization to the masked register state in the
+> dwapb_irq_enable()/dwapb_irq_disable() function. mask the GPIO IRQ
+> before disabling it. After enabling the GPIO IRQ, unmask the IRQ.
+>
+> Fixes: 7779b3455697 ("gpio: add a driver for the Synopsys DesignWare APB =
+GPIO block")
+> Cc: stable@kernel.org
+> Co-developed-by: Riwen Lu <luriwen@kylinos.cn>
+> Signed-off-by: Riwen Lu <luriwen@kylinos.cn>
+> Signed-off-by: xiongxin <xiongxin@kylinos.cn>
+> Acked-by: Serge Semin <fancer.lancer@gmail.com>
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
 > ---
->  drivers/gpio/gpiolib-cdev.c | 16 ++++++++++++----
->  1 file changed, 12 insertions(+), 4 deletions(-)
+> v5:
+>         * fix typo in patch description
+> v4:
+>         * Add patch tag information
+> v3:
+>         * Modify the submitter's information
+> v2:
+>         * Resubmit the patch to fix this exception from the DesignWare
+>           GPIO driver side
+> v1:
+>         * Resolve the exception from the IRQ core layer. (key point not
+>           found correctly)
+> ---
+>  drivers/gpio/gpio-dwapb.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 >
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 744734405912..9155c54acc1e 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -2598,10 +2598,7 @@ static int lineinfo_unwatch(struct gpio_chardev_da=
-ta *cdev, void __user *ip)
->         return 0;
->  }
->
-> -/*
-> - * gpio_ioctl() - ioctl handler for the GPIO chardev
-> - */
-> -static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned lon=
-g arg)
-> +static long gpio_ioctl_unlocked(struct file *file, unsigned int cmd, uns=
-igned long arg)
+> diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
+> index 4a4f61bf6c58..8c59332429c2 100644
+> --- a/drivers/gpio/gpio-dwapb.c
+> +++ b/drivers/gpio/gpio-dwapb.c
+> @@ -282,13 +282,15 @@ static void dwapb_irq_enable(struct irq_data *d)
 >  {
->         struct gpio_chardev_data *cdev =3D file->private_data;
->         struct gpio_device *gdev =3D cdev->gdev;
-> @@ -2638,6 +2635,17 @@ static long gpio_ioctl(struct file *file, unsigned=
- int cmd, unsigned long arg)
->         }
+>         struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+>         struct dwapb_gpio *gpio =3D to_dwapb_gpio(gc);
+> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+>         unsigned long flags;
+>         u32 val;
+>
+>         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> -       val =3D dwapb_read(gpio, GPIO_INTEN);
+> -       val |=3D BIT(irqd_to_hwirq(d));
+> +       val =3D dwapb_read(gpio, GPIO_INTEN) | BIT(hwirq);
+>         dwapb_write(gpio, GPIO_INTEN, val);
+> +       val =3D dwapb_read(gpio, GPIO_INTMASK) & ~BIT(hwirq);
+> +       dwapb_write(gpio, GPIO_INTMASK, val);
+>         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
 >  }
 >
-> +/*
-> + * gpio_ioctl() - ioctl handler for the GPIO chardev
-> + */
-> +static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned lon=
-g arg)
-> +{
-> +       struct gpio_chardev_data *cdev =3D file->private_data;
-> +
-> +       return call_ioctl_locked(file, cmd, arg, cdev->gdev,
-> +                                gpio_ioctl_unlocked);
-> +}
-> +
->  #ifdef CONFIG_COMPAT
->  static long gpio_ioctl_compat(struct file *file, unsigned int cmd,
->                               unsigned long arg)
+> @@ -296,12 +298,14 @@ static void dwapb_irq_disable(struct irq_data *d)
+>  {
+>         struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
+>         struct dwapb_gpio *gpio =3D to_dwapb_gpio(gc);
+> +       irq_hw_number_t hwirq =3D irqd_to_hwirq(d);
+>         unsigned long flags;
+>         u32 val;
+>
+>         raw_spin_lock_irqsave(&gc->bgpio_lock, flags);
+> -       val =3D dwapb_read(gpio, GPIO_INTEN);
+> -       val &=3D ~BIT(irqd_to_hwirq(d));
+> +       val =3D dwapb_read(gpio, GPIO_INTMASK) | BIT(hwirq);
+> +       dwapb_write(gpio, GPIO_INTMASK, val);
+> +       val =3D dwapb_read(gpio, GPIO_INTEN) & ~BIT(hwirq);
+>         dwapb_write(gpio, GPIO_INTEN, val);
+>         raw_spin_unlock_irqrestore(&gc->bgpio_lock, flags);
+>  }
 > --
-> 2.39.2
+> 2.34.1
 >
 
-I applied this. I'll send it upstream tomorrow and once it's in
-master, I'll pick up the rest on Monday.
+Queued for fixes, thanks!
 
-Bart
+Bartosz
 
