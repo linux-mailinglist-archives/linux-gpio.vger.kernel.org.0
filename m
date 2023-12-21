@@ -1,95 +1,126 @@
-Return-Path: <linux-gpio+bounces-1754-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1756-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E51F081AFFC
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 09:06:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A06F281B067
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 09:37:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2392A1C233C7
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 08:06:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5CE9928591F
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 08:37:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E3DB15AC3;
-	Thu, 21 Dec 2023 08:06:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X782y/94"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8C2617748;
+	Thu, 21 Dec 2023 08:36:49 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fd01.gateway.ufhost.com (fd01.gateway.ufhost.com [61.152.239.71])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92FC1156EF
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 08:06:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5e7409797a1so5766017b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 00:06:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703145984; x=1703750784; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S7MnvmBC0PDW2dA6Fz6TSLG0xbK9jfAoZs6lV1vRHHI=;
-        b=X782y/94O5Ag4gKWtxjeZtZUd+ap2n+JMOcLMYaizCHxCiaWmv30dEnfPNRqcZ5jy2
-         obAHDRmHxlr7MvKZMCABTq6UefYuqIkGyIPDQwa/yld7ai+3mCyasG2nkDpITm8OZIRm
-         Ta/MnccWbbgbhvrw0gNnFKbtAU7+6n+WB36aSmASGjiBMPJinMIRALIn6FYb7I01fCg+
-         SzdzQjPGALzz0PcEeZQwkyM1yZMq6+xF3Z0+W2DUV9SEj12e5JYuO0qtx9D3YsPS4fji
-         FjXfCBqDJlztlstirKji+3xTjMEFW8VebFZvwXniso9LC6wT5fyleFBoQ/OtddBsQJmV
-         0KLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703145984; x=1703750784;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S7MnvmBC0PDW2dA6Fz6TSLG0xbK9jfAoZs6lV1vRHHI=;
-        b=IJry/BrUY3f7hsPZ1vGbS07fj1Xh9yCbILxsDT/wI4t7u9mIb6VvhXif29VEMKd5fe
-         muLDZA3+IVW1KYgPnHsDbvHLMhYIo4+sOzGVnKhei44RRIRszDJtifzfU9OqdXsufLZG
-         +f5f+tZZcpmls5TBXYXKFMy39xtKzaJzVtw0UPXDnPMgSXMFCPkaxU1pv42zPDl3jGsT
-         KaT0BgUncJRsv0twZesxsX+pJWu8pD29tK2lGlzfdCMjWRbM4R+fM10Dh1m2jsOxMWRT
-         KjbnHFZtO2XS8nyfSQN5wRl94T2U2gE49YsSC+FL14ZPuBf2ydVYDWLKy4UugpMRxhQu
-         EcPw==
-X-Gm-Message-State: AOJu0YxNaE+JbPkEy5jX8e4FY7b/bvFk530lpPF+g4RgzUz5z1JErQie
-	3bEN5knYe0cgASDlEfOagnXsoXN0vIi+m6N9rsC3+w==
-X-Google-Smtp-Source: AGHT+IElBBLbm29CF99k2e2smo3K3wGeeZiMFnIyoHCG750znXGo9kQEMBUl5LRIIwJWKVMnqLqGeqvBF6SsfUp6Jjs=
-X-Received: by 2002:a25:e0c3:0:b0:dbd:2b6:6cfd with SMTP id
- x186-20020a25e0c3000000b00dbd02b66cfdmr763204ybg.2.1703145984546; Thu, 21 Dec
- 2023 00:06:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5DD3171C4;
+	Thu, 21 Dec 2023 08:36:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+Received: from EXMBX166.cuchost.com (unknown [175.102.18.54])
+	(using TLSv1 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+	(Client CN "EXMBX166", Issuer "EXMBX166" (not verified))
+	by fd01.gateway.ufhost.com (Postfix) with ESMTP id 53DC07FFE;
+	Thu, 21 Dec 2023 16:36:32 +0800 (CST)
+Received: from EXMBX066.cuchost.com (172.16.7.66) by EXMBX166.cuchost.com
+ (172.16.6.76) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
+ 2023 16:36:32 +0800
+Received: from localhost.localdomain (202.188.176.82) by EXMBX066.cuchost.com
+ (172.16.6.66) with Microsoft SMTP Server (TLS) id 15.0.1497.42; Thu, 21 Dec
+ 2023 16:36:25 +0800
+From: Alex Soo <yuklin.soo@starfivetech.com>
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, "Ley
+ Foon Tan" <leyfoon.tan@starfivetech.com>, Jianlong Huang
+	<jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	"Drew Fustini" <drew@beagleboard.org>
+CC: <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-riscv@lists.infradead.org>, "Paul
+ Walmsley" <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alex Soo <yuklin.soo@starfivetech.com>
+Subject: [RFC PATCH 0/6] Add Pinctrl driver for Starfive JH8100 SoC
+Date: Thu, 21 Dec 2023 16:36:16 +0800
+Message-ID: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
-In-Reply-To: <20231215-lockdep_warning-v1-1-8137b2510ed5@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Dec 2023 09:06:13 +0100
-Message-ID: <CACRpkdZnPPHgRf+taFPOM4P0U+4w2LuAUyfgJuRtawVhFQWQkg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: at91-pio4: use dedicated lock class for IRQ
-To: =?UTF-8?Q?Alexis_Lothor=C3=A9?= <alexis.lothore@bootlin.com>
-Cc: Ludovic Desroches <ludovic.desroches@microchip.com>, 
-	Nicolas Ferre <nicolas.ferre@microchip.com>, 
-	Alexandre Belloni <alexandre.belloni@bootlin.com>, Claudiu Beznea <claudiu.beznea@tuxon.dev>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ClientProxiedBy: EXCAS064.cuchost.com (172.16.6.24) To EXMBX066.cuchost.com
+ (172.16.6.66)
+X-YovoleRuleAgent: yovoleflag
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 15, 2023 at 10:35=E2=80=AFPM Alexis Lothor=C3=A9
-<alexis.lothore@bootlin.com> wrote:
+Starfive JH8100 SoC consists of 4 pinctrl domains - sys_east,
+sys_west, sys_gmac, and aon. This patch series adds pinctrl
+drivers for these 4 pinctrl domains and this patch series is
+depending on the JH8100 base patch series in [1] and [2].
+The relevant dt-binding documentation for each pinctrl domain has
+been updated accordingly.
 
-> Trying to suspend to RAM on SAMA5D27 EVK leads to the following lockdep
-> warning:
-(...)
-> Fix lockdep false positive by setting a different class for parent and
-> children IRQ
->
-> Fixes: 776180848b57 ("pinctrl: introduce driver for Atmel PIO4 controller=
-")
-> Signed-off-by: Alexis Lothor=C3=A9 <alexis.lothore@bootlin.com>
+[1] https://lore.kernel.org/lkml/20231201121410.95298-1-jeeheng.sia@starf=
+ivetech.com/
+[2] https://lore.kernel.org/lkml/20231206115000.295825-1-jeeheng.sia@star=
+fivetech.com/
 
-Patch applied for fixes.
+Alex Soo (6):
+  dt-bindings: pinctrl: starfive: add JH8100 pinctrl bindings
+  pinctrl: starfive: jh8100: add pinctrl driver for sys_east domain
+  pinctrl: starfive: jh8100: add pinctrl driver for sys_west domain
+  pinctrl: starfive: jh8100: add pinctrl driver for sys_gmac domain
+  pinctrl: starfive: jh8100: add pinctrl driver for AON domain
+  riscv: dts: starfive: jh8100: add pinctrl device tree nodes
 
-Yours,
-Linus Walleij
+ .../pinctrl/starfive,jh8100-aon-pinctrl.yaml  |  183 +++
+ .../starfive,jh8100-sys-east-pinctrl.yaml     |  188 +++
+ .../starfive,jh8100-sys-gmac-pinctrl.yaml     |  124 ++
+ .../starfive,jh8100-sys-west-pinctrl.yaml     |  188 +++
+ MAINTAINERS                                   |    7 +
+ arch/riscv/boot/dts/starfive/jh8100-evb.dts   |    5 +
+ arch/riscv/boot/dts/starfive/jh8100-pinfunc.h |  418 +++++++
+ arch/riscv/boot/dts/starfive/jh8100.dtsi      |   44 +
+ drivers/pinctrl/starfive/Kconfig              |   57 +
+ drivers/pinctrl/starfive/Makefile             |    6 +
+ .../starfive/pinctrl-starfive-jh8100-aon.c    |  241 ++++
+ .../pinctrl-starfive-jh8100-sys-east.c        |  326 +++++
+ .../pinctrl-starfive-jh8100-sys-gmac.c        |  164 +++
+ .../pinctrl-starfive-jh8100-sys-west.c        |  264 ++++
+ .../starfive/pinctrl-starfive-jh8100.c        | 1090 +++++++++++++++++
+ .../starfive/pinctrl-starfive-jh8100.h        |   85 ++
+ .../pinctrl/starfive,jh8100-pinctrl.h         |  303 +++++
+ 17 files changed, 3693 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh=
+8100-aon-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh=
+8100-sys-east-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh=
+8100-sys-gmac-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh=
+8100-sys-west-pinctrl.yaml
+ create mode 100644 arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-aon.=
+c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-=
+east.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-=
+gmac.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-=
+west.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.h
+ create mode 100644 include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
+
+
+base-commit: ddb42e41c0991b443dd6cc97213b478a7324d72b
+--=20
+2.25.1
+
 
