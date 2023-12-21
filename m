@@ -1,64 +1,64 @@
-Return-Path: <linux-gpio+bounces-1782-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1783-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7C96581BB4E
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 16:50:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1436A81BB58
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 16:53:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28095B21A86
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:50:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D9611F21FA1
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:53:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 736C553A03;
-	Thu, 21 Dec 2023 15:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8D7F55E62;
+	Thu, 21 Dec 2023 15:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ut4Po0oq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="If9nwYPz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B5453A04
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 15:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBC8855E60
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 15:53:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-54c77e0835bso1209276a12.2
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 07:49:56 -0800 (PST)
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2cc5e48779aso10206781fa.2
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 07:53:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703173794; x=1703778594; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703173993; x=1703778793; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=SoiMDU+0MarmCY6pLDeiLlpD4jrLOiR8oPDP6pvBqeU=;
-        b=ut4Po0oq0o1amXJwrL+yCX49Criatm2nhyWs2BgIC4ZpKbhBBak1IHyfQtFm5gldCP
-         ZSUoT6tY0eWdad4Ic6Qx9F8OD4elsZKZrwExLPh709D7IHjchwJOJW5XgJOudjBn4mTh
-         mSXIOqiVJ1FeKWyG6ftsgY+puOObx2RLpU/dis0jAT1HHNltFPjavniBd4eulsIxM6tk
-         1u0fu/5hbNmglVnvtSf/YeQNOZUFSW2N/R4eNs/mjBN9d/SwK5IM96BQ5C/48bSRG/a8
-         +EpTfyYQBTBySd0Rslbuti0XuoVKISB5l9da6hKDH2tx2I9TcK3Pyi0vxq8juynvnrCt
-         Wjtg==
+        bh=fDrrIdjlKkAVYHhks69AqjX6/crnGDz7sEjm8hq2EtI=;
+        b=If9nwYPzmfT1+o03F2dIpXsPBPZ7LAtQ1eyZFfHvndrAauSMnmNSSTenIXoHFxKU8G
+         zhsD6/u/3EuHFiXzzu/9eGv55c6IEXNkV0cRyu54suIh1lh4del843j0WyVtVnTbDFcC
+         lc1uCYF3GcC4YJMbJwaAZaRCNxUnWFfByq1lCIGTOg3+FaLRmwMMdXLquPllGT8JrJfm
+         srmjEvwRvWito5rwfiM7b2nbQhW1gWPyVEDR8zacHjmSwm5kDDN1uQ0CcEyLjNIlESIj
+         b4XENSZtoHWQP6H85y9PvMZWKTiKPGPRcKBlGjy6xc1Ffs33GYrndPZyw/Fn+2qMWISO
+         7IKw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703173794; x=1703778594;
+        d=1e100.net; s=20230601; t=1703173993; x=1703778793;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=SoiMDU+0MarmCY6pLDeiLlpD4jrLOiR8oPDP6pvBqeU=;
-        b=ZQCVxBQj8WWu86bBDtejj8XNWgotzo4vWO4cUCRXGXMeTAZGWp5RiVDUPacWDC+oUD
-         xSFOljiHYBCME585ave6DskcloqLbo/KMAqbTJSVLZT5c+dyU31lwCLb5+s2SDvHEB2F
-         TyQGeXlZCE27bWCp39iougg9VWXyz3KDV5L4T2MrSZZ9w+MXnTyHU0WO7n2lShBoWcaG
-         aBOUta4jKdnJUPLLDXOusm7ocYetrhtKi0nVb254z6ImzaHU7kdVHqVI5A/AlmweAhgP
-         RXy3mWD8TpkgpsP52rYZJaDzrOe0IcJP31mKtBokgF4QA/y1DqGP6MlIlETUwfoXhxs3
-         YjOg==
-X-Gm-Message-State: AOJu0YwANupahXv114FD7HQbuMXYgGCAJsR4iYB/VqrpN8MKiEdeDtP8
-	kSnUGzO5g5/eEfWnzmfqMkdvIA==
-X-Google-Smtp-Source: AGHT+IHIk/tTPdzz0XgMG8R6Ho14M7KVyEcY4r/RZkhWT1E/yj+CkSvaogLDSUEi/0ldWZITxlEK+A==
-X-Received: by 2002:a50:ccc8:0:b0:553:bf41:3411 with SMTP id b8-20020a50ccc8000000b00553bf413411mr1682320edj.57.1703173794481;
-        Thu, 21 Dec 2023 07:49:54 -0800 (PST)
+        bh=fDrrIdjlKkAVYHhks69AqjX6/crnGDz7sEjm8hq2EtI=;
+        b=Q0ja1wq3eIHy5Elu1ZuAKwPH/yX3PqWZ7jHSCwmm48zCUub27r5uROUw6yyIlECMdr
+         7V1sIY8S2K0uAY7dgZLijGFRC2C9xDtPifwWaVD5yUNLcg6JGLzHzSyaoHB8X7sJ99Rw
+         MIbJn5BtfhJEvczAxX7gaI95OPIZt70Q4mePnf2ukyk2nHrPAd5Ak+h0ZP4yov8fybA/
+         mLBfP3Zs/PuGhvx5nqtMf4MdWGWwdgAQBg8itlkvzgVDufvlj/h+Z0+RLcD68yPq5nRH
+         YKDmV4tPzAAHU7H3buAw+nt8vsyMTY1QAEbihD5oqFijeOrIWDuB/6kMetnBnkjDPzOh
+         OaLw==
+X-Gm-Message-State: AOJu0YyPj+EI//Rp6bype7Uh7CV7XjoKIT83z729l+Gndy8/zayjVAsP
+	ndezHEDEqTV7Gx48/BDjTyCB7fQ66GyH5jjX0IUjYw==
+X-Google-Smtp-Source: AGHT+IGMe6tn+9yupgK9xl4jzrWZFb4Y7XjFnFbDwcRcReEwEO/uEZjLbELU6cNodcI+K9XDidfxkQ==
+X-Received: by 2002:a2e:be8b:0:b0:2cc:6bf0:8ea with SMTP id a11-20020a2ebe8b000000b002cc6bf008eamr2429410ljr.34.1703173993094;
+        Thu, 21 Dec 2023 07:53:13 -0800 (PST)
 Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id u17-20020a05640207d100b005538d504793sm1307382edy.23.2023.12.21.07.49.52
+        by smtp.gmail.com with ESMTPSA id z23-20020aa7c657000000b0054ccac03945sm1319836edr.12.2023.12.21.07.53.11
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 21 Dec 2023 07:49:54 -0800 (PST)
-Message-ID: <3b9201e0-e1d9-463c-aa1a-cbbedd1f8907@linaro.org>
-Date: Thu, 21 Dec 2023 16:49:52 +0100
+        Thu, 21 Dec 2023 07:53:12 -0800 (PST)
+Message-ID: <f72b6ea4-a99b-4821-bb35-ee47b7b5cb8f@linaro.org>
+Date: Thu, 21 Dec 2023 16:53:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,8 +66,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
+Subject: Re: [RFC PATCH 6/6] riscv: dts: starfive: jh8100: add pinctrl device
+ tree nodes
 Content-Language: en-US
 To: Alex Soo <yuklin.soo@starfivetech.com>,
  Linus Walleij <linus.walleij@linaro.org>,
@@ -83,7 +83,7 @@ Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
  Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
  <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
 References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
- <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
+ <20231221083622.3445726-7-yuklin.soo@starfivetech.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -129,139 +129,57 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
+In-Reply-To: <20231221083622.3445726-7-yuklin.soo@starfivetech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 21/12/2023 09:36, Alex Soo wrote:
-> Add dt-binding documentation and header file for JH8100 pinctrl
-> driver.
+> Add pinctrl_east/pinctrl_west/pinctrl_gmac/pinctrl_aon device
+> tree nodes for JH8100 SoC.
 > 
 > Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
 > Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
+
+I have some doubts about it...
+
 > ---
-
-
-A nit, subject: drop second/last, redundant "bindings". The
-"dt-bindings" prefix is already stating that these are bindings.
-
-...
-> +  i
-
-nterrupt-controller: true
+>  arch/riscv/boot/dts/starfive/jh8100-evb.dts   |   5 +
+>  arch/riscv/boot/dts/starfive/jh8100-pinfunc.h | 418 ++++++++++++++++++
+>  arch/riscv/boot/dts/starfive/jh8100.dtsi      |  44 ++
+>  3 files changed, 467 insertions(+)
+>  create mode 100644 arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+> 
+> diff --git a/arch/riscv/boot/dts/starfive/jh8100-evb.dts b/arch/riscv/boot/dts/starfive/jh8100-evb.dts
+> index c16bc25d8988..8634e41984f8 100644
+> --- a/arch/riscv/boot/dts/starfive/jh8100-evb.dts
+> +++ b/arch/riscv/boot/dts/starfive/jh8100-evb.dts
+> @@ -26,3 +26,8 @@ memory@40000000 {
+>  &uart0 {
+>  	status = "okay";
+>  };
 > +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +patternProperties:
-> +  '-[0-9]+$':
+> +&pinctrl_aon {
 
-This is a bit too wide pattern. Consider some suffix like -grp or
--group. Look at other bindings how they do it.
+Wrong order. Nodes do not go to the end.
 
-> +    type: object
-> +    additionalProperties: false
-> +    patternProperties:
-> +      '-pins$':
-> +        type: object
-> +        description: |
-> +          A pinctrl node should contain at least one subnode representing the
-> +          pinctrl groups available in the domain. Each subnode will list the
-> +          pins it needs, and how they should be configured, with regard to
-> +          muxer configuration, bias, input enable/disable, input schmitt
-> +          trigger enable/disable, slew-rate and drive strength.
-> +        allOf:
-> +          - $ref: /schemas/pinctrl/pincfg-node.yaml
-> +          - $ref: /schemas/pinctrl/pinmux-node.yaml
-> +        additionalProperties: false
+> +	wakeup-gpios = <&pinctrl_aon PAD_RGPIO2 GPIO_ACTIVE_HIGH>;
+> +	wakeup-source;
 
-Why the rest of the properties is not applicable?
+None of these were tested.
 
-> +
-> +        properties:
-> +          pinmux:
-> +            description: |
-> +              The list of GPIOs and their mux settings or function select.
-> +              The GPIOMUX and PINMUX macros are used to configure the
-> +              I/O multiplexing and function selection respectively.
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-up:
-> +            type: boolean
-> +
-> +          bias-pull-down:
-> +            type: boolean
-> +
-> +          drive-strength:
-> +            enum: [ 2, 4, 8, 12 ]
-> +
-> +          input-enable: true
-> +
-> +          input-disable: true
-> +
-> +          input-schmitt-enable: true
-> +
-> +          input-schmitt-disable: true
-> +
-> +          slew-rate:
-> +            maximum: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - resets
-> +  - interrupts
-> +  - interrupt-controller
-> +  - gpio-controller
-> +  - '#gpio-cells'
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/starfive,jh8100.h>
-> +    #include <dt-bindings/reset/starfive-jh8100.h>
-> +    #include <dt-bindings/pinctrl/starfive,jh8100-pinctrl.h>
-> +
-> +    soc {
-> +        #address-cells = <2>;
-> +        #size-cells = <2>;
-> +
-> +        pinctrl_aon: pinctrl@1f300000 {
-> +                compatible = "starfive,jh8100-aon-pinctrl",
-> +                             "syscon", "simple-mfd";
+It does not look like you tested the DTS against bindings. Please run
+`make dtbs_check W=1` (see
+Documentation/devicetree/bindings/writing-schema.rst or
+https://www.linaro.org/blog/tips-and-tricks-for-validating-devicetree-sources-with-the-devicetree-schema/
+for instructions).
 
-You did not even bother to test it before sending.
-
-> +                reg = <0x0 0x1f300000 0x0 0x10000>;
-> +                resets = <&aoncrg 0>;
-
-Use 4 spaces for example indentation.
-
-> +                interrupts = <160>;
-> +                interrupt-controller;
-> +                gpio-controller;
-> +                #gpio-cells = <2>;
-
-
-Incomplete example.
-
-I'll stop review, except one more comment, this was not tested and does
-not work. Reviewing code which was never tested is a waste of reviewer's
-time.
-
-
-...
-
-> diff --git a/include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h b/include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
+> +};
+> diff --git a/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h b/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
 > new file mode 100644
-> index 000000000000..c57b7ece37a2
+> index 000000000000..3fb16ef62d90
 > --- /dev/null
-> +++ b/include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
-> @@ -0,0 +1,303 @@
+> +++ b/arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+> @@ -0,0 +1,418 @@
 > +/* SPDX-License-Identifier: GPL-2.0 OR MIT */
 > +/*
 > + * Copyright (C) 2023 StarFive Technology Co., Ltd.
@@ -269,222 +187,44 @@ time.
 > + *
 > + */
 > +
-> +#ifndef __DT_BINDINGS_PINCTRL_STARFIVE_JH8100_H__
-> +#define __DT_BINDINGS_PINCTRL_STARFIVE_JH8100_H__
+> +#ifndef __JH8100_PINFUNC_H__
+> +#define __JH8100_PINFUNC_H__
 > +
-> +/* sys_iomux_west pins */
-> +#define PAD_GPIO0_W				0
-> +#define PAD_GPIO1_W				1
-> +#define PAD_GPIO2_W				2
-> +#define PAD_GPIO3_W				3
-> +#define PAD_GPIO4_W				4
-> +#define PAD_GPIO5_W				5
-> +#define PAD_GPIO6_W				6
-> +#define PAD_GPIO7_W				7
-> +#define PAD_GPIO8_W				8
-> +#define PAD_GPIO9_W				9
-> +#define PAD_GPIO10_W				10
-> +#define PAD_GPIO11_W				11
-> +#define PAD_GPIO12_W				12
-> +#define PAD_GPIO13_W				13
-> +#define PAD_GPIO14_W				14
-> +#define PAD_GPIO15_W				15
+> +/*
+> + * mux bits:
+> + *  | 31 - 24 | 23 - 16 | 15 - 10 |  9 - 8   |  7 - 0  |
+> + *  |  din    |  dout   |  doen   | function | gpio nr |
+> + *
+> + * dout:     output signal
+> + * doen:     output enable signal
+> + * din:      optional input signal, 0xff = none
+> + * function:
+> + * gpio nr:  gpio number, 0 - 63
+> + */
+> +#define GPIOMUX(n, dout, doen, din) ( \
+> +		(((din)  & 0xff) << 24) | \
+> +		(((dout) & 0xff) << 16) | \
+> +		(((doen) & 0x3f) << 10) | \
+> +		((n) & 0x3f))
 > +
-> +/* sys_iomux_west syscon */
-> +#define SYS_W_VREF_GPIO_W_SYSCON_REG		0x6c
-> +#define SYS_W_VREF_GPIO_W_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_W_VREF_GPIO_W_SYSCON_SHIFT		0
-> +#define SYS_W_VREF_ATB_ISP_VOUT_SYSCON_REG	0x70
-> +#define SYS_W_VREF_ATB_ISP_VOUT_SYSCON_MASK	GENMASK(1, 0)
-> +#define SYS_W_VREF_ATB_ISP_VOUT_SYSCON_SHIFT	0
-
-None of these are bindings, drop.
-
+> +#define PINMUX(n, func) ((1 << 10) | (((func) & 0x3) << 8) | ((n) & 0xff))
 > +
-> +/* sys_iomux_east pins */
-> +#define PAD_GPIO0_E				0
-> +#define PAD_GPIO1_E				1
-> +#define PAD_GPIO2_E				2
-> +#define PAD_GPIO3_E				3
-> +#define PAD_GPIO4_E				4
-> +#define PAD_GPIO5_E				5
-> +#define PAD_GPIO6_E				6
-> +#define PAD_GPIO7_E				7
-> +#define PAD_GPIO8_E				8
-> +#define PAD_GPIO9_E				9
-> +#define PAD_GPIO10_E				10
-> +#define PAD_GPIO11_E				11
-> +#define PAD_GPIO12_E				12
-> +#define PAD_GPIO13_E				13
-> +#define PAD_GPIO14_E				14
-> +#define PAD_GPIO15_E				15
-> +#define PAD_GPIO16_E				16
-> +#define PAD_GPIO17_E				17
-> +#define PAD_GPIO18_E				18
-> +#define PAD_GPIO19_E				19
-> +#define PAD_GPIO20_E				20
-> +#define PAD_GPIO21_E				21
-> +#define PAD_GPIO22_E				22
-> +#define PAD_GPIO23_E				23
-> +#define PAD_GPIO24_E				24
-> +#define PAD_GPIO25_E				25
-> +#define PAD_GPIO26_E				26
-> +#define PAD_GPIO27_E				27
-> +#define PAD_GPIO28_E				28
-> +#define PAD_GPIO29_E				29
-> +#define PAD_GPIO30_E				30
-> +#define PAD_GPIO31_E				31
-> +#define PAD_GPIO32_E				32
-> +#define PAD_GPIO33_E				33
-> +#define PAD_GPIO34_E				34
-> +#define PAD_GPIO35_E				35
-> +#define PAD_GPIO36_E				36
-> +#define PAD_GPIO37_E				37
-> +#define PAD_GPIO38_E				38
-> +#define PAD_GPIO39_E				39
-> +#define PAD_GPIO40_E				40
-> +#define PAD_GPIO41_E				41
-> +#define PAD_GPIO42_E				42
-> +#define PAD_GPIO43_E				43
-> +#define PAD_GPIO44_E				44
-> +#define PAD_GPIO45_E				45
-> +#define PAD_GPIO46_E				46
-> +#define PAD_GPIO47_E				47
-
-Please explain why do you think these are bindings?
-
-> +
-> +/* sys_iomux_east syscon */
-> +#define SYS_E_VREF_GPIO_E0_SYSCON_REG		0x0fc
-> +#define SYS_E_VREF_GPIO_E0_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_GPIO_E0_SYSCON_SHIFT		0
-> +#define SYS_E_VREF_GPIO_E1_SYSCON_REG		0x100
-> +#define SYS_E_VREF_GPIO_E1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_GPIO_E1_SYSCON_SHIFT		0
-> +#define SYS_E_VREF_GPIO_E2_SYSCON_REG		0x104
-> +#define SYS_E_VREF_GPIO_E2_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_GPIO_E2_SYSCON_SHIFT		0
-> +#define SYS_E_VREF_GPIO_E3_SYSCON_REG		0x108
-> +#define SYS_E_VREF_GPIO_E3_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_GPIO_E3_SYSCON_SHIFT		0
-> +#define SYS_E_VREF_ATB_STG1_SYSCON_REG		0x10c
-> +#define SYS_E_VREF_ATB_STG1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_ATB_STG1_SYSCON_SHIFT	0
-> +#define SYS_E_VREF_ATB_USB_SYSCON_REG		0x110
-> +#define SYS_E_VREF_ATB_USB_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_E_VREF_ATB_USB_SYSCON_SHIFT		0
-
-Drop all of this, not bindings.
-
-> +
-> +/* sys_iomux_gmac pins */
-> +#define PAD_GMAC1_MDC				0
-> +#define PAD_GMAC1_MDIO				1
-> +#define PAD_GMAC1_RXD0				2
-> +#define PAD_GMAC1_RXD1				3
-> +#define PAD_GMAC1_RXD2				4
-> +#define PAD_GMAC1_RXD3				5
-> +#define PAD_GMAC1_RXDV				6
-> +#define PAD_GMAC1_RXC				7
-> +#define PAD_GMAC1_TXD0				8
-> +#define PAD_GMAC1_TXD1				9
-> +#define PAD_GMAC1_TXD2				10
-> +#define PAD_GMAC1_TXD3				11
-> +#define PAD_GMAC1_TXEN				12
-> +#define PAD_GMAC1_TXC				13
-> +
-> +/* sys_iomux_gmac vref syscon registers */
-> +#define SYS_G_VREF_GMAC1_SYSCON_REG		0x08
-> +#define SYS_G_VREF_GMAC1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_VREF_GMAC1_SYSCON_SHIFT		0
-> +#define SYS_G_VREF_SDIO1_SYSCON_REG		0x0c
-> +#define SYS_G_VREF_SDIO1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_VREF_SDIO1_SYSCON_SHIFT		0
-
-Drop all this.
-
-> +
-> +/* sys_iomux_gmac interface (rmii/rgmii) syscon registers */
-> +#define SYS_G_GMAC1_MDC_SYSCON_REG		0x10
-> +#define SYS_G_GMAC1_MDC_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_MDC_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_MDIO_SYSCON_REG		0x14
-> +#define SYS_G_GMAC1_MDIO_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_MDIO_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXD0_SYSCON_REG		0x18
-> +#define SYS_G_GMAC1_RXD0_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXD0_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXD1_SYSCON_REG		0x1c
-> +#define SYS_G_GMAC1_RXD1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXD1_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXD2_SYSCON_REG		0x20
-> +#define SYS_G_GMAC1_RXD2_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXD2_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXD3_SYSCON_REG		0x24
-> +#define SYS_G_GMAC1_RXD3_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXD3_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXDV_SYSCON_REG		0x28
-> +#define SYS_G_GMAC1_RXDV_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXDV_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_RXC_SYSCON_REG		0x2c
-> +#define SYS_G_GMAC1_RXC_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_RXC_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXD0_SYSCON_REG		0x30
-> +#define SYS_G_GMAC1_TXD0_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXD0_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXD1_SYSCON_REG		0x34
-> +#define SYS_G_GMAC1_TXD1_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXD1_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXD2_SYSCON_REG		0x38
-> +#define SYS_G_GMAC1_TXD2_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXD2_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXD3_SYSCON_REG		0x3c
-> +#define SYS_G_GMAC1_TXD3_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXD3_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXEN_SYSCON_REG		0x40
-> +#define SYS_G_GMAC1_TXEN_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXEN_SYSCON_SHIFT		0
-> +#define SYS_G_GMAC1_TXC_SYSCON_REG		0x44
-> +#define SYS_G_GMAC1_TXC_SYSCON_MASK		GENMASK(1, 0)
-> +#define SYS_G_GMAC1_TXC_SYSCON_SHIFT		0
-
-Drop all this.
-
-
-> +
-> +/* sys_iomux_gmac timing (slew rate) registers */
-
-Srsly, "registers", so not bindings.
-
-
-> +
+> +/* sys_iomux_east dout */
 > +#define GPOUT_LOW				0
 > +#define GPOUT_HIGH				1
 
-That's it. Really. Please do not redefine existing bindings.
+Where are these used?
 
-> +
-> +#define GPOEN_ENABLE				0
-> +#define GPOEN_DISABLE				1
-> +
-> +#define GPI_NONE				255
-> +
-> +/* vref syscon value  */
-> +#define PAD_VREF_SYSCON_IO_3V3			0
-> +#define PAD_VREF_SYSCON_IO_1V8			2
-> +
-> +/* gmac interface (rmii/rgmii) syscon value */
-> +#define GMAC_RMII_MODE				0	/* RMII mode,  DVDD 2.5V/3.3V */
-> +#define GMAC_RGMII_MODE				1	/* RGMII mode, DVDD 1.8V/2.5V */
-> +
-> +/* gmac timing syscon value */
-> +#define GMAC_SLEW_RATE_FAST			0
-> +#define GMAC_SLEW_RATE_SLOW			1
+> +#define GPOUT_SYS_CAN0_STBY			2
+> +#define GPOUT_SYS_CAN0_TST_NEXT_BIT		3
+> +#define GPOUT_SYS_CAN0_TST_SAMPLE_POINT		4
+> +#define GPOUT_SYS_CAN0_TXD			5
+> +#define GPOUT_SYS_I2C0_CLK			6
+> +#define GPOUT_SYS_I2C0_DATA			7
+> +#define GPOUT_SYS_I2S0_STEREO_RSCKO		8
 
-Drop all above.
-
-> +
-> +#endif
+You add here bunch of constants not used anywhere. No single example of
+their usage, not a one.
 
 Best regards,
 Krzysztof
