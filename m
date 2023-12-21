@@ -1,118 +1,148 @@
-Return-Path: <linux-gpio+bounces-1779-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1780-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BA94381BA69
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 16:17:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EA5C81BB3D
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 16:46:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E16EB1C2407F
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:17:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2D2ACB26113
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:46:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB2D4B15B;
-	Thu, 21 Dec 2023 15:17:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7127758205;
+	Thu, 21 Dec 2023 15:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meFCWKZ+"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZAMD1InP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D031D6A9;
-	Thu, 21 Dec 2023 15:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703171837; x=1734707837;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=EOkAr+xks6NnAFalQxZEayj9BKUN4na1y02YSzTzR8k=;
-  b=meFCWKZ+2wnslpRTe9fOgJ3Cp3m1TWmThPYt8dkFTdhSRdPVqda22qu2
-   vJsitH3b3xlQG56J0KPqAbZpuvYR8ogrF5fV3fp4Y1/lXFd47RrtWzcvy
-   8JB6u5lXURh/45ymmLM5Z24lnZQctSsRBQQu6quK9f+yYx4uybPtanXIO
-   TLJc9NT5dMiq9V0yJ2+8TrfXAplgJwFCbhRIBMdRQ4XoFS0Am57WyfR/k
-   thsiE06bTtHUI2P0BmNE7O9IzWSlZ5pGtH0a+0KUo35Ky/MOR7VxStgkY
-   UFDCQC7Y94KvN1cvrEYZHuoeBkrqyt5CbwyuqTUJTXu0MISTwvzg5G8T4
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3077406"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="3077406"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 07:17:16 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="867338199"
-X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
-   d="scan'208";a="867338199"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 07:17:11 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rGKnL-00000007sec-42uD;
-	Thu, 21 Dec 2023 17:17:07 +0200
-Date: Thu, 21 Dec 2023 17:17:07 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Raul Rangel <rrangel@chromium.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v2 01/22] gpiolib: acpi: Modify
- acpi_dev_irq_wake_get_by() to use resource
-Message-ID: <ZYRW84GX-SOEKDIG@smile.fi.intel.com>
-References: <20231220235459.2965548-1-markhas@chromium.org>
- <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD15753A03
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 15:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-54c70c70952so1154249a12.3
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 07:45:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703173517; x=1703778317; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=m/b5iQHKDfLfxEbu4CjDI+2uhu+76N6kWKG4/IT+Dpo=;
+        b=ZAMD1InPV2YU9DZMMvwJDIGJW7s1xl7a1Dmtvlsmgay2yRG8XyYUA6OrQu6cYHOyxr
+         ESQHYkqLNafS5+hqNJ1u8y/HlRAkWEGvTTo76EbgW8TQfwHvKQbwRy6pqlkk/Q7r1/K6
+         XQJjQ6JKySEaamQrSzbJgxi+Fb8MLRx3AyJFMINSn+2JG2FNsm/HHbvmm2WRj50cbgvi
+         nDYs/ZDiBn09kcgMr/Tzzp0bBMqu7SBzzr2Th3b+4x3Ddw0CXl/X6bi9jvN3PLOkvQrM
+         giSPGAvhjKZXOnbJFM/4QeuIIuSTuV3Ja0dK57jk2NfVlozHBB+NkY2RhAqSat5+4PCL
+         sNSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703173517; x=1703778317;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=m/b5iQHKDfLfxEbu4CjDI+2uhu+76N6kWKG4/IT+Dpo=;
+        b=iBbAX2pr4Es4aNOjVtR6sgnV1ud+cApB8gWOdntw1j6XbxjIYyjA7jhqQifVjgT1zJ
+         BJpiqlOgecxwJaUKPe6W12fuDcLoq34qRh3gCQBslp0Z/7bbwoHF3ToUDslJphbMPAk/
+         o56jRuDEeMbk2S10Rwm+Qd+AqqDwSeWcibwoeCMnaapiTYotLYm8ai62Dm/xxbj1rDfe
+         X4W/gWFOKiGLTbD897ibGMFQKyV5QRWVbJCnYv16OGOaF/+MQAY4C6IQwzaohQgj5IHo
+         p3BhQBI0EbzieFif8dmmKWwsjz/7TgaHAXFlP0KYjJsUZkrQ+AybN3o6zvAYC69Zd52Z
+         SKmQ==
+X-Gm-Message-State: AOJu0YwCNQ/CjNiMiSR9QtCkSELmOIZTgBKN1hUQAqNI02/xupFjH1iL
+	Mfbt2iDE5T0ojvEjuNxjyEI3SA==
+X-Google-Smtp-Source: AGHT+IFxWImuWoVhgpNQ0bgA9fR+Kp9O3SFQ+RWL48EjB1AbVsDmlMmdWt/6ISbjHs4w1QJPyNsHRA==
+X-Received: by 2002:a50:8d1b:0:b0:553:a78c:ff27 with SMTP id s27-20020a508d1b000000b00553a78cff27mr1757222eds.33.1703173516962;
+        Thu, 21 Dec 2023 07:45:16 -0800 (PST)
+Received: from [192.168.0.22] ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id d5-20020a50fe85000000b0054cb88a353dsm1306724edt.14.2023.12.21.07.45.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 21 Dec 2023 07:45:16 -0800 (PST)
+Message-ID: <6c861db8-f6cd-4e12-856a-ef45efc654a2@linaro.org>
+Date: Thu, 21 Dec 2023 16:45:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
+ pinctrl bindings
+Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Alex Soo <yuklin.soo@starfivetech.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Hal Feng <hal.feng@starfivetech.com>,
+ Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+ Jianlong Huang <jianlong.huang@starfivetech.com>,
+ Emil Renner Berthing <kernel@esmil.dk>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+ Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt
+ <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
+ <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
+ <CACRpkdYL8wK2vX7P7p4QvU9VV2CPjRv_aXiLqO+07MMCCKKk4Q@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CACRpkdYL8wK2vX7P7p4QvU9VV2CPjRv_aXiLqO+07MMCCKKk4Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Dec 20, 2023 at 04:54:15PM -0700, Mark Hasemeyer wrote:
-> Other information besides wake capability can be provided about GPIO
-> IRQs such as triggering, polarity, and sharability. Use resource flags
-> to provide this information to the caller if they want it.
+On 21/12/2023 14:57, Linus Walleij wrote:
+>> +          drive-strength:
+>> +            enum: [ 2, 4, 8, 12 ]
 > 
-> This should keep the API more robust over time as flags are added,
-> modified, or removed. It also more closely matches acpi_irq_get() which
-> take a resource as an argument.
-> 
-> Rename the function to acpi_dev_get_gpio_irq_resource() to better
-> describe the function's new behavior.
+> Milliamperes? Then spell that out in a description:
 
-...
+Or just use drive-strength-microamp
 
-> +			*r = DEFINE_RES_IRQ(irq);
-> +			r->flags = acpi_dev_irq_flags(info.triggering, info.polarity,
-> +						      info.shareable, info.wake_capable);
-
-Looking at this I am wondering if we can actually to have
-
-			unsigned long irq_flags;
-			...
-			irq_flags = acpi_dev_irq_flags(info.triggering, info.polarity,
-						       info.shareable, info.wake_capable);
-			*r = DEFINE_RES_NAMED(irq, 1, NULL, irq_flags);
-
-as we don't need to duplicate IORESOURCE_IRQ.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Best regards,
+Krzysztof
 
 
