@@ -1,65 +1,72 @@
-Return-Path: <linux-gpio+bounces-1792-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1788-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF98B81BE7D
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 19:51:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07F4E81BE63
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 19:43:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2D99B1C23B91
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 18:51:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8CEF8282BAD
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 18:43:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1923F745C5;
-	Thu, 21 Dec 2023 18:50:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6EA164A99;
+	Thu, 21 Dec 2023 18:43:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="NRSvr9xw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="swi0vRw4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77C636518B;
-	Thu, 21 Dec 2023 18:50:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703184631; x=1734720631;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=6lqfECsnx9YNGz7mNu1P1q5RcYfS8nYI6pc/nxTM7UQ=;
-  b=NRSvr9xwu8uUsCJvIuUNMSq4vmzVfwdjoepfVThM+cj1amxFYXz1HfN4
-   aeGC0pFU0JNpOqZJu3snBaAIwYrRsY4Nhccg90CsH+07tC4mQV/NBdfiJ
-   QyEOTYO0FyfXRDDos3biRWv+ktHvIiu220Xdla3tN9f13bb8OArZgoLMh
-   eGW2nRaGFFrB5wXKXLd2kWYBu12kB1fEqGICz5xm95FsvMskLDNPQFjX/
-   XjX8U8qPFQJF5wu4q2+RZ7r+j80cRgSH9CsP4fmmZmlMzUU5PBLELdIg8
-   MILUq2Yp3fLFw2dnPLCar6VdLmL4yimdGQZboNThB1DKE1ntADzlqlC7s
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="462463230"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="462463230"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 10:50:30 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="920407804"
-X-IronPort-AV: E=Sophos;i="6.04,294,1695711600"; 
-   d="scan'208";a="920407804"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Dec 2023 10:50:28 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 93260B8; Thu, 21 Dec 2023 19:55:28 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period() and use
-Date: Thu, 21 Dec 2023 19:55:27 +0200
-Message-ID: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7D2D64A98
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 18:43:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d41555f9dso5478215e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 10:43:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703184201; x=1703789001; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9prIx0x75i3yA19ZQlbyqFnaDcFcCc2+BwEJ02WTlZI=;
+        b=swi0vRw4BYWxBvG4KVUVF+pRpXWJUCHJqYbvM3OhOyroLd9AwqwlkX24Dy3ivMJDjP
+         n9d/2Wk4Ah/R1qiIndPYOaQZZ9ONEpOMiIAHmlpTtFdm+YPntTq5hcbtmP8HoYzlDpGK
+         2y9qcB66beC2P0fRIunfbNLR/8+GcNQYpt6TMimf0QO4lAkM/ObVfMzhjDZvZxiVr1P7
+         Rfcaog3tspiwcuECzE5WlnUSlbgivnefmMtGonvaQ60pluwRplin3pSK2WliUsQl68QB
+         1EFgBiuZOgrmNt/IyOiB7EazmbNMnWKYgWs7ENYR7aR75ePXxUNPtdJv+wDf7HLPf0yQ
+         JHWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703184201; x=1703789001;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9prIx0x75i3yA19ZQlbyqFnaDcFcCc2+BwEJ02WTlZI=;
+        b=KVRgoYDf+WIvruBHHq34ULWTuNBDMKu4zHx4bcqLLtWbeRgObhgXsR2kUVzofKZPBT
+         EuVOK9ph4iBpLJo4W0CpCkQgNqd/Q73vT9uNlkXO1o70fr+w5LNjT4U3vqwZtUk8MsS4
+         hDbh+n25VPrtjic57uV66ed6xc+2IpwK276QRbtefRUMm/rbgEp4l72GVRI5fLimX+3K
+         pxlCV+V3uSa/HJQgqnZuTa9EzbEiBRIkqjxF3acytp0Ch/T6QIPVsNm9C5pBI6RNqrqB
+         VmwCMU4jkg23Dr4xLq42rdtTR40u957+Rq5HiJ8plwgq5qOE/tlLG2j4HKMKTmgZBXWV
+         JG9Q==
+X-Gm-Message-State: AOJu0YwLaU1dKyOBNGNPK5SaKpgT6ZqNtY9BMqPueMV0ZC8kfn1aSRAl
+	Hm5Kcq4pBakk+bDR5M1JtlBewT6N5VQC5w==
+X-Google-Smtp-Source: AGHT+IENwuUJNj2XOxqxCyvHYBTsmnIiHVSSUIF2AWbnh/BX9XLROMGAiuFxSqTFiAO1dLE6ZWcuWg==
+X-Received: by 2002:a05:600c:4d92:b0:40b:5e59:e9fa with SMTP id v18-20020a05600c4d9200b0040b5e59e9famr78090wmp.153.1703184200735;
+        Thu, 21 Dec 2023 10:43:20 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7701:a2c3:cba4:74db])
+        by smtp.gmail.com with ESMTPSA id t20-20020a05600c199400b0040c42681fcesm4188059wmq.15.2023.12.21.10.43.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 10:43:20 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 0/2] gpiolib: use a read-write semaphore to protect the GPIO device list
+Date: Thu, 21 Dec 2023 19:43:14 +0100
+Message-Id: <20231221184316.24506-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,81 +75,25 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Instead of repeating the same code and reduce possible miss
-of READ_ONCE(), split line_get_debounce_period() heler out
-and use in the existing cases.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-cdev.c | 23 ++++++++++++++---------
- 1 file changed, 14 insertions(+), 9 deletions(-)
+I'm still figuring out how to keep GPIO descriptors coherent while
+(mostly) lockless. In the meantime, I found a potential race-condition
+during GPIO descriptor lookup and also figured that the correct way to
+protect the GPIO device list is actually a read-write semaphore as we're
+not modifying the list very often and readers should be able to iterate
+over it concurrently.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 744734405912..c573820d5722 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -651,6 +651,16 @@ static struct line *supinfo_find(struct gpio_desc *desc)
- 	return NULL;
- }
- 
-+static unsigned int line_get_debounce_period(struct line *line)
-+{
-+	return READ_ONCE(line->debounce_period_us);
-+}
-+
-+static inline bool line_has_supinfo(struct line *line)
-+{
-+	return line_get_debounce_period(line);
-+}
-+
- static void supinfo_to_lineinfo(struct gpio_desc *desc,
- 				struct gpio_v2_line_info *info)
- {
-@@ -665,15 +675,10 @@ static void supinfo_to_lineinfo(struct gpio_desc *desc,
- 
- 	attr = &info->attrs[info->num_attrs];
- 	attr->id = GPIO_V2_LINE_ATTR_ID_DEBOUNCE;
--	attr->debounce_period_us = READ_ONCE(line->debounce_period_us);
-+	attr->debounce_period_us = line_get_debounce_period(line);
- 	info->num_attrs++;
- }
- 
--static inline bool line_has_supinfo(struct line *line)
--{
--	return READ_ONCE(line->debounce_period_us);
--}
--
- /*
-  * Checks line_has_supinfo() before and after the change to avoid unnecessary
-  * supinfo_tree access.
-@@ -846,7 +851,7 @@ static enum hte_return process_hw_ts(struct hte_ts_data *ts, void *p)
- 		line->total_discard_seq++;
- 		line->last_seqno = ts->seq;
- 		mod_delayed_work(system_wq, &line->work,
--		  usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
-+				 usecs_to_jiffies(line_get_debounce_period(line)));
- 	} else {
- 		if (unlikely(ts->seq < line->line_seqno))
- 			return HTE_CB_HANDLED;
-@@ -987,7 +992,7 @@ static irqreturn_t debounce_irq_handler(int irq, void *p)
- 	struct line *line = p;
- 
- 	mod_delayed_work(system_wq, &line->work,
--		usecs_to_jiffies(READ_ONCE(line->debounce_period_us)));
-+			 usecs_to_jiffies(line_get_debounce_period(line)));
- 
- 	return IRQ_HANDLED;
- }
-@@ -1215,7 +1220,7 @@ static int edge_detector_update(struct line *line,
- 			gpio_v2_line_config_debounce_period(lc, line_idx);
- 
- 	if ((active_edflags == edflags) &&
--	    (READ_ONCE(line->debounce_period_us) == debounce_period_us))
-+	    (line_get_debounce_period(line) == debounce_period_us))
- 		return 0;
- 
- 	/* sw debounced and still will be...*/
+Bartosz Golaszewski (2):
+  gpiolib: replace the GPIO device mutex with a read-write semaphore
+  gpiolib: pin GPIO devices in place during descriptor lookup
+
+ drivers/gpio/gpiolib-sysfs.c |  2 +-
+ drivers/gpio/gpiolib.c       | 58 ++++++++++++++++++++----------------
+ drivers/gpio/gpiolib.h       |  2 +-
+ 3 files changed, 34 insertions(+), 28 deletions(-)
+
 -- 
-2.43.0.rc1.1.gbec44491f096
+2.40.1
 
 
