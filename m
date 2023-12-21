@@ -1,155 +1,118 @@
-Return-Path: <linux-gpio+bounces-1778-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1779-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61F7381B950
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:08:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA94381BA69
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 16:17:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17A461F2922B
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 14:08:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E16EB1C2407F
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:17:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CCC6D6C9;
-	Thu, 21 Dec 2023 14:07:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB2D4B15B;
+	Thu, 21 Dec 2023 15:17:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="J8oBeN4B"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="meFCWKZ+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1B16D6C1
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 14:07:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com [209.85.208.199])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3DD813F73C
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 14:07:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1703167660;
-	bh=YSFGFVOxlECeWrb1201TBHQMqNul2EH+RYRBpW3Owdk=;
-	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
-	 To:Cc:Content-Type;
-	b=J8oBeN4BFAcMmrF2xmdQa3RqsJwHgt+RclA2WQCUc2RyWVrs9rO4Pp8BcBTTZl3yi
-	 zZ9bTyuOfSDgnBbfpFVLt1Qi/SAn7OmldDBoj+6G2N5OkBu9Dxg4fCk5P8HsFvW1V0
-	 4gONjHm/XXDLj0pd5297F3tLbadRnG8nEaj8F6lBimIn45B/sgOoE/Lcn60NI96QcE
-	 Y4ZvSJ8CHVCaPcmk+Gk3ZP6IDK+rSTzit5OGs1InymXHmrmvld6u37/aLcBFuZeQ9l
-	 OaDaLMuk6JPA2YdHWj2S6q7h3FFi1JPOnCuAc+qnEi1Kq6Pf+xQMUtNGtsiqOjFG47
-	 gvCMzTcrrqlbQ==
-Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2cc83b19edeso6022981fa.1
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 06:07:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703167658; x=1703772458;
-        h=content-transfer-encoding:cc:to:subject:message-id:date
-         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=YSFGFVOxlECeWrb1201TBHQMqNul2EH+RYRBpW3Owdk=;
-        b=lEeZQYhKj3D0DKp4wt4W+pJV29K1A6OlZDMvdpp83blL7i8xvAN6EBOTOByeUaqqly
-         b8J86ZtPYO7hI1opU3lr+Y9W9wmN3sRxk9qvp9OQLAEtb7Q3LchY04RV+kxz/OXlQkmq
-         rOxMmTd99BBy9+a31qtPgxe/jXrs2aDbE/K8Q8HwsrJYHtTHADTpSV/IWh9X1hdG/5Fy
-         /c/6FO0W+uCJgRcnW3xmvyYuzo7btIqPOH1QcuvfYYya2nhvfu0b+cuyjXxII1RJTtRB
-         cy/iJZLgaZUO7yoGA9Jd9fAwMiQYyq3ZvmhNfbgPTSyHUHbYwmefiLnax5M2EhVXI02s
-         CHgQ==
-X-Gm-Message-State: AOJu0YziqjInFCzv7a+vijYhOi8QaMu8UkSk2STo2cg9KlvjAQOCbAtr
-	Fc3CfbM0D91vklqeaqIOMp9uInPXBxT29sQ/qzPNTohZWb292gDShYCogPAzq0fjNFnIf7t3ycF
-	LzwH/jLHH8ZXxfUXgJLX0JwsjHIZSc+HU+2n9M2t+DmYSA+ReDdoRtjuhk0WgQkA=
-X-Received: by 2002:ac2:5617:0:b0:50e:29c1:f829 with SMTP id v23-20020ac25617000000b0050e29c1f829mr3635661lfd.74.1703167658223;
-        Thu, 21 Dec 2023 06:07:38 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGplfpPbW0FT9ATmbiZqm1++et4V4L718raZzPodJBABIbwHrAdrNT6mNWONQxZ+jsDmjLpy/oSnYqjsp61ks4=
-X-Received: by 2002:ac2:5617:0:b0:50e:29c1:f829 with SMTP id
- v23-20020ac25617000000b0050e29c1f829mr3635656lfd.74.1703167657892; Thu, 21
- Dec 2023 06:07:37 -0800 (PST)
-Received: from 348282803490 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 21 Dec 2023 09:07:36 -0500
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-In-Reply-To: <CACRpkdbx7BOoHzbGd6n5p=Ho3GhMcujwUzQam0jLe6Ysg+xsNg@mail.gmail.com>
-References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
- <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
- <20231215202137.GA317624-robh@kernel.org> <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
- <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
- <CAJM55Z8osSFxKi_7=aRkEr+U3vAq0TS93OggnRzyPpssNuuJ3Q@mail.gmail.com> <CACRpkdbx7BOoHzbGd6n5p=Ho3GhMcujwUzQam0jLe6Ysg+xsNg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D031D6A9;
+	Thu, 21 Dec 2023 15:17:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703171837; x=1734707837;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=EOkAr+xks6NnAFalQxZEayj9BKUN4na1y02YSzTzR8k=;
+  b=meFCWKZ+2wnslpRTe9fOgJ3Cp3m1TWmThPYt8dkFTdhSRdPVqda22qu2
+   vJsitH3b3xlQG56J0KPqAbZpuvYR8ogrF5fV3fp4Y1/lXFd47RrtWzcvy
+   8JB6u5lXURh/45ymmLM5Z24lnZQctSsRBQQu6quK9f+yYx4uybPtanXIO
+   TLJc9NT5dMiq9V0yJ2+8TrfXAplgJwFCbhRIBMdRQ4XoFS0Am57WyfR/k
+   thsiE06bTtHUI2P0BmNE7O9IzWSlZ5pGtH0a+0KUo35Ky/MOR7VxStgkY
+   UFDCQC7Y94KvN1cvrEYZHuoeBkrqyt5CbwyuqTUJTXu0MISTwvzg5G8T4
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3077406"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="3077406"
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 07:17:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="867338199"
+X-IronPort-AV: E=Sophos;i="6.04,293,1695711600"; 
+   d="scan'208";a="867338199"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Dec 2023 07:17:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rGKnL-00000007sec-42uD;
+	Thu, 21 Dec 2023 17:17:07 +0200
+Date: Thu, 21 Dec 2023 17:17:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Raul Rangel <rrangel@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 01/22] gpiolib: acpi: Modify
+ acpi_dev_irq_wake_get_by() to use resource
+Message-ID: <ZYRW84GX-SOEKDIG@smile.fi.intel.com>
+References: <20231220235459.2965548-1-markhas@chromium.org>
+ <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Thu, 21 Dec 2023 09:07:36 -0500
-Message-ID: <CAJM55Z8SwyNEqw4HWRd7G8Y9rdtOGtKy-KbzDorqohdK3nZg0A@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
-To: Linus Walleij <linus.walleij@linaro.org>, 
-	Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Linus Walleij wrote:
-> On Thu, Dec 21, 2023 at 1:28=E2=80=AFPM Emil Renner Berthing
-> <emil.renner.berthing@canonical.com> wrote:
-> > Linus Walleij wrote:
-> > > On Sat, Dec 16, 2023 at 2:57=E2=80=AFPM Emil Renner Berthing
-> > > <emil.renner.berthing@canonical.com> wrote:
-> > >
-> > > > > > +          thead,strong-pull-up:
-> > > > > > +            oneOf:
-> > > > > > +              - type: boolean
-> > > > > > +              - $ref: /schemas/types.yaml#/definitions/uint32
-> > > > > > +                enum: [ 0, 2100 ]
-> > > > > > +            description: Enable or disable strong 2.1kOhm pull=
--up.
-> > > > >
-> > > > > bias-pull-up can already specify the strength in Ohms.
-> > > >
-> > > > The strong pull up is a separate bit that can be enabled independen=
-tly from the
-> > > > regular pull-up/down, so in theory you could enable both the regula=
-r pull-up
-> > > > and the strong pull-up at the same time, or even the regular poll-d=
-own and the
-> > > > strong pull-up which is probably not advised.
-> > >
-> > > bias-pull-up; <- Just regular pulling up the ordinary
-> > > bias-pull-up =3D <100>; <- Same thing if the ordinary is 100 Ohm (fig=
-ure out what
-> > >   resistance it actually is....)
-> > > bias-pull-up =3D <21000000>; <- strong pull up
-> > > bias-pull-up =3D <21000100>; <- both at the same time
-> >
-> > Hmm.. the two pull-ups combined would be a stronger pull-up, eg. lower
-> > resistance, right? So you'd need to calculate it using
-> > https://en.wikipedia.org/wiki/Series_and_parallel_circuits#Resistance_u=
-nits_2
->
-> Yeah hehe elementary electronics beats me, of course it is in parallel.
->
-> > The problem is that the documentation doesn't actually mention what wil=
-l happen
-> > if you combine the strong pull-up with the regular bias.
->
-> So why even allow it then?
->
-> Do the people designing boards using this have better documentation than =
-what
-> you have? Then either get that documentation or just don't give them
-> too much rope.
+On Wed, Dec 20, 2023 at 04:54:15PM -0700, Mark Hasemeyer wrote:
+> Other information besides wake capability can be provided about GPIO
+> IRQs such as triggering, polarity, and sharability. Use resource flags
+> to provide this information to the caller if they want it.
+> 
+> This should keep the API more robust over time as flags are added,
+> modified, or removed. It also more closely matches acpi_irq_get() which
+> take a resource as an argument.
+> 
+> Rename the function to acpi_dev_get_gpio_irq_resource() to better
+> describe the function's new behavior.
 
-We can certainly prevent Linux from ever combining the strong pull-up with =
-the
-regular bias, but that doesn't mean that the vendor u-boot can't find a use=
- for
-it and might hand over pins in such states Linux then wouldn't know how to
-handle.
+...
 
-If you think its better we could just postpone that problem to when/if it e=
-ver
-happens.
+> +			*r = DEFINE_RES_IRQ(irq);
+> +			r->flags = acpi_dev_irq_flags(info.triggering, info.polarity,
+> +						      info.shareable, info.wake_capable);
+
+Looking at this I am wondering if we can actually to have
+
+			unsigned long irq_flags;
+			...
+			irq_flags = acpi_dev_irq_flags(info.triggering, info.polarity,
+						       info.shareable, info.wake_capable);
+			*r = DEFINE_RES_NAMED(irq, 1, NULL, irq_flags);
+
+as we don't need to duplicate IORESOURCE_IRQ.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
