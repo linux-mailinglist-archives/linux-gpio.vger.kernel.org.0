@@ -1,123 +1,172 @@
-Return-Path: <linux-gpio+bounces-1793-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1794-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24E981BE8D
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 19:57:23 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54AC781BEC3
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 20:03:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 63D761F24C93
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 18:57:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0A9D028257F
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 19:03:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9E8565194;
-	Thu, 21 Dec 2023 18:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC77B65198;
+	Thu, 21 Dec 2023 19:03:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qvgKvBWV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QHvihfx+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+Received: from mail-oi1-f177.google.com (mail-oi1-f177.google.com [209.85.167.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57AD664AA1
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 18:57:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EEE55E74
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 19:03:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-40d31116dbeso12411745e9.3
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 10:57:16 -0800 (PST)
+Received: by mail-oi1-f177.google.com with SMTP id 5614622812f47-3bb7376957eso790372b6e.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 11:03:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703185034; x=1703789834; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1ez827Nwv0PCJp7yHRGpscI+PcE4XwM2uw7IbXMXl5M=;
-        b=qvgKvBWVreZP4ptG+yOSgyuE1TFvcA+YCN4BTK5biADBd6x6p56gUp92DKl3UlzfmW
-         J618miRJe6oxxdS9iUGgDJ6PnSjJ2wI5nDsqtD7Yuk4VyAAY5pG4pmPBhNbKdwGCx7Vg
-         j4smXPG8+YZffONKuiAlNUFBYfMAiRk+rtlD8R4kckrOv7t/g76kTmEJLw0uF14cqDFq
-         OA37br+y/NaeAqUwf69oTmB584yB0mY8hzLaYCOteQoAFKzV5/G7V+ESJQHvyBYK2W4p
-         TZ/Ht9hkZ5haEOn+AB2JabYtO/UJiqJwSohaeUKtlPPSr7+qcDD8DWqofjoNwP8LDRVL
-         E7UA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703185414; x=1703790214; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=S8E3wEmEl8khAD92xQyPHbsm2TZrkNBkE9+5wPLVsBE=;
+        b=QHvihfx+QwDN1VHVyh2FgN5NGFqMmiUFu8NzLJ2pFYsIJ4yNpUDYJt6CrbTgrO41bC
+         fXOz2st/vEdMJ/jFkpNDqwGdoMYf0tUHG8eC1IipS8dk4eciqtCCObmq042BFfrSss67
+         JdBaHTJlQAacsrbitWRKzq1J9QPPr98JsmO5phiEMv4O7F76YET3xeewUWSElJpWvkL7
+         GdFoPr0CLULeV7xnx6ftOe/9oU6LR7YZlpQme9CPzE1F8tMATEZ9ldwPY+dTRCkjuUEs
+         XC16wp0orNqJWlzKM1APefyWSjcxMKaAxD804gLCKqwl4lmRCrsAQII66qwSgbqrIShP
+         ckUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703185034; x=1703789834;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1ez827Nwv0PCJp7yHRGpscI+PcE4XwM2uw7IbXMXl5M=;
-        b=JZJLK100PkYYi8LeU6PAcsKwKsTjJkZQ9M4JSRLWvDU6TvU/GrHVfSBaDhHAFJT3gX
-         wemNpUh5RvqtDEoo9eijeHTX1iIiLeiCYG/M7vfjr4pIyIVbeyGh/ZtRDASW2wrg905y
-         ycHdV+GFBxTT5sjmLRLhPXMSeCRr9rK9giwVi0r+sKrKPGoQuJZRo1H1jCt0nof0ioBB
-         xA1tUmKoeWf4JaEUeYZ2yzoqv3ctElt14h8V3I6ktBMbSqBEs4SX1hu5YF5EFrtBb7ys
-         To05gUeaprv68G+ehQVXf70GQhSRyL735J5ctCtAmXUaJF7Am1WF9hAcinsQgMTIA1fB
-         w27Q==
-X-Gm-Message-State: AOJu0YzRCzi7N1hj4JbUfzXkd9ZHuGPJsx06iphGq8OUhJ+P3qruiLz6
-	ibNRfRwWl1n7iOQ8B0ClYQeCqFVwpAHpBQ==
-X-Google-Smtp-Source: AGHT+IETlTI6wAfVOp5F4c8392SkTN9zkl2x5ytVqBeSIDMi4vkgq2+YYf6CeXrpzwk1bjBp9KY+oA==
-X-Received: by 2002:a05:600c:a42:b0:40c:3905:51e4 with SMTP id c2-20020a05600c0a4200b0040c390551e4mr101519wmq.68.1703185034624;
-        Thu, 21 Dec 2023 10:57:14 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7701:a2c3:cba4:74db])
-        by smtp.gmail.com with ESMTPSA id u4-20020a05600c138400b0040c03c3289bsm4277125wmf.37.2023.12.21.10.57.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Dec 2023 10:57:14 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Tony Lindgren <tony@atomide.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andy@kernel.org>
-Cc: linux-omap@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: tps65219: don't use CONFIG_DEBUG_GPIO
-Date: Thu, 21 Dec 2023 19:57:02 +0100
-Message-Id: <20231221185702.24685-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1703185414; x=1703790214;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=S8E3wEmEl8khAD92xQyPHbsm2TZrkNBkE9+5wPLVsBE=;
+        b=Dd+F+cydOYp2rvDrk/CataTcEQHnookxNFQgufnOeR3ZlUNdRDT5p6kZZGGy7Zt2TF
+         FRk/UA+h53rnbXtKO3QCqkinQFX/09RPOzSAdpfkrAICERqeqIIL4vTnEDu5dp8TCsad
+         lHnLPHEwqFkq0VT1OTbG37FrUQ+j2JWlwa+oOR8chgtldyUwCQ/bQNNiFFkfmWtvmYIi
+         hAG5a0kp1ph9sImCZ2l9ljYfgpj/t3myIsy68B51LeOnzIaGzCqSkAX9giKG1gBWzCok
+         1Xs0MCy9vBPpdAM///CGvNPhJoeQI4iF1C0akroE9oksU/7MnAlXFhlRRULsxgDp+ioS
+         g+kw==
+X-Gm-Message-State: AOJu0Yzvjdy6RfKl1NFuXKL3iaP9pskcT0tSRTcCz0nSG+XxgUogWVdY
+	sUHN08iaLBT6989xIO9PmWuTGvglqd/XriAuNCC+CzB4Ek+9IA==
+X-Google-Smtp-Source: AGHT+IFuUzdtc/tkGQt0c3FRS3IbVe0aoSkfgXl1TJRxaMRPjqq/jHMelEvOCi4BP3w9hhEK3aOcn5oXAR+XSJNPoHo=
+X-Received: by 2002:a05:6870:648b:b0:1fb:75a:6d4c with SMTP id
+ cz11-20020a056870648b00b001fb075a6d4cmr292671oab.115.1703185414671; Thu, 21
+ Dec 2023 11:03:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231221184316.24506-1-brgl@bgdev.pl> <20231221184316.24506-3-brgl@bgdev.pl>
+In-Reply-To: <20231221184316.24506-3-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 21 Dec 2023 20:03:23 +0100
+Message-ID: <CAMRc=Mdz7fVOOcN80YV1hGMqqhDVNM+1Da3BysaZG=9+P1oMAQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: pin GPIO devices in place during descriptor lookup
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Dec 21, 2023 at 7:43=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> There's time between when we locate the relevant descriptor during
+> lookup and when we actually take the reference to its parent GPIO
+> device where - if the GPIO device in question is removed - we'll end up
+> with a dangling pointer to freed memory. Make sure devices cannot be
+> removed until we hold a new reference to the device.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  drivers/gpio/gpiolib.c | 40 +++++++++++++++++++++++-----------------
+>  1 file changed, 23 insertions(+), 17 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 1baeb6778ec6..8a15b8f6b50e 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -4147,27 +4147,33 @@ static struct gpio_desc *gpiod_find_and_request(s=
+truct device *consumer,
+>         struct gpio_desc *desc;
+>         int ret;
+>
+> -       desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, &fla=
+gs, &lookupflags);
+> -       if (gpiod_not_found(desc) && platform_lookup_allowed) {
+> +       scoped_guard(rwsem_read, &gpio_devices_sem) {
 
-CONFIG_DEBUG_GPIO should only be used to enable debug log messages and
-for core GPIOLIB debugging. Don't use it to control the execution of
-potentially buggy code. Just put it under an always-false #if.
+I am too sleep deprived to be coding. This doesn't make sense because
+if we are held at the write semaphore in gpiodev_release() then it's
+already too late as the device is being removed already and we'll
+still end up with a dangling pointer.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-tps65219.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Should we hold off any reference putting for all GPIO devices when a
+descriptor lookup is in progress?
 
-diff --git a/drivers/gpio/gpio-tps65219.c b/drivers/gpio/gpio-tps65219.c
-index 7b38aa360112..cd1f17041f8c 100644
---- a/drivers/gpio/gpio-tps65219.c
-+++ b/drivers/gpio/gpio-tps65219.c
-@@ -96,16 +96,16 @@ static int tps65219_gpio_change_direction(struct gpio_chip *gc, unsigned int off
- 	 * Below can be used for test purpose only.
- 	 */
- 
--	if (IS_ENABLED(CONFIG_DEBUG_GPIO)) {
--		int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
--					     TPS65219_GPIO0_DIR_MASK, direction);
--		if (ret) {
--			dev_err(dev,
--				"GPIO DEBUG enabled: Fail to change direction to %u for GPIO%d.\n",
--				direction, offset);
--			return ret;
--		}
-+#if 0
-+	int ret = regmap_update_bits(gpio->tps->regmap, TPS65219_REG_MFP_1_CONFIG,
-+				     TPS65219_GPIO0_DIR_MASK, direction);
-+	if (ret) {
-+		dev_err(dev,
-+			"GPIO DEBUG enabled: Fail to change direction to %u for GPIO%d.\n",
-+			direction, offset);
-+		return ret;
- 	}
-+#endif
- 
- 	dev_err(dev,
- 		"GPIO%d direction set by NVM, change to %u failed, not allowed by specification\n",
--- 
-2.40.1
+Bart
 
+> +               desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, i=
+dx,
+> +                                           &flags, &lookupflags);
+> +               if (gpiod_not_found(desc) && platform_lookup_allowed) {
+> +                       /*
+> +                        * Either we are not using DT or ACPI, or their l=
+ookup
+> +                        * did not return a result. In that case, use pla=
+tform
+> +                        * lookup as a fallback.
+> +                        */
+> +                       dev_dbg(consumer,
+> +                               "using lookup tables for GPIO lookup\n");
+> +                       desc =3D gpiod_find(consumer, con_id, idx, &looku=
+pflags);
+> +               }
+> +
+> +               if (IS_ERR(desc)) {
+> +                       dev_dbg(consumer, "No GPIO consumer %s found\n",
+> +                               con_id);
+> +                       return desc;
+> +               }
+> +
+>                 /*
+> -                * Either we are not using DT or ACPI, or their lookup di=
+d not
+> -                * return a result. In that case, use platform lookup as =
+a
+> -                * fallback.
+> +                * If a connection label was passed use that, else attemp=
+t to
+> +                * use the device name as label
+>                  */
+> -               dev_dbg(consumer, "using lookup tables for GPIO lookup\n"=
+);
+> -               desc =3D gpiod_find(consumer, con_id, idx, &lookupflags);
+> +               ret =3D gpiod_request(desc, label);
+>         }
+>
+> -       if (IS_ERR(desc)) {
+> -               dev_dbg(consumer, "No GPIO consumer %s found\n", con_id);
+> -               return desc;
+> -       }
+> -
+> -       /*
+> -        * If a connection label was passed use that, else attempt to use
+> -        * the device name as label
+> -        */
+> -       ret =3D gpiod_request(desc, label);
+>         if (ret) {
+>                 if (!(ret =3D=3D -EBUSY && flags & GPIOD_FLAGS_BIT_NONEXC=
+LUSIVE))
+>                         return ERR_PTR(ret);
+> --
+> 2.40.1
+>
 
