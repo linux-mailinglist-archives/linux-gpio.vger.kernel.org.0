@@ -1,163 +1,155 @@
-Return-Path: <linux-gpio+bounces-1777-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1778-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEBBC81B92C
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:04:23 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61F7381B950
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 15:08:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DE6B1C25BC5
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 14:04:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 17A461F2922B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 14:08:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F5B7539F9;
-	Thu, 21 Dec 2023 13:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CCC6D6C9;
+	Thu, 21 Dec 2023 14:07:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="dyjI6cK0"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="J8oBeN4B"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2D0155E4D
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 13:57:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5e78d94855fso8431047b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 05:57:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703167046; x=1703771846; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wVLL5bW0YfWBSEGexgyYtg+trVF7bli3OEKILg9N7tk=;
-        b=dyjI6cK0RNC/IWBwTtNidlkB7BN3iZzMev+4M6CvQ+hAT3+pC5XX+1vyA0su5Eg9Fw
-         1rku3VHCDc2yGu9NHIwfSn46+zDqvKMEPvI/lE2z284B24Q1ufHxWjVLer51aW2gwpQZ
-         zxlYjnyjBbE+0r9wzX1c5liQ4C17F9i2p0+W2e3bG1BiIcTozcrAiO2gCG1SF5yUxlQl
-         N5krboA+joOtQbBWjgyu2H7KJkJTDPK8o9tqGhlNpVj/rivdYRMq+LQJLId59Gwp6jj2
-         ylV+AMNabrzN9X+M9e95fjr6qiHNR9mjMoZJl5RebvbxuRBHbLTw9RyZ2Hpt9pWnSkFZ
-         bPdQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1B16D6C1
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 14:07:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-lj1-f199.google.com (mail-lj1-f199.google.com [209.85.208.199])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 3DD813F73C
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 14:07:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1703167660;
+	bh=YSFGFVOxlECeWrb1201TBHQMqNul2EH+RYRBpW3Owdk=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=J8oBeN4BFAcMmrF2xmdQa3RqsJwHgt+RclA2WQCUc2RyWVrs9rO4Pp8BcBTTZl3yi
+	 zZ9bTyuOfSDgnBbfpFVLt1Qi/SAn7OmldDBoj+6G2N5OkBu9Dxg4fCk5P8HsFvW1V0
+	 4gONjHm/XXDLj0pd5297F3tLbadRnG8nEaj8F6lBimIn45B/sgOoE/Lcn60NI96QcE
+	 Y4ZvSJ8CHVCaPcmk+Gk3ZP6IDK+rSTzit5OGs1InymXHmrmvld6u37/aLcBFuZeQ9l
+	 OaDaLMuk6JPA2YdHWj2S6q7h3FFi1JPOnCuAc+qnEi1Kq6Pf+xQMUtNGtsiqOjFG47
+	 gvCMzTcrrqlbQ==
+Received: by mail-lj1-f199.google.com with SMTP id 38308e7fff4ca-2cc83b19edeso6022981fa.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 06:07:40 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703167046; x=1703771846;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wVLL5bW0YfWBSEGexgyYtg+trVF7bli3OEKILg9N7tk=;
-        b=oiLQcS+mf7JGWedZwbmXA3d4t+YOolls0cMh1q0w8jGxKYs0s4xorJ7G1EuQaEScJW
-         ZpooyZE52W+7wJMsgUjw5v5sP0+GqNpe8jbW/ZbkEffRhwMUloRZifInV3FPBzcgW8o1
-         nPGjyXlc9LmYNkWgffZw0iUWO3Mf85G/xkQOB1gA1AQYkGes6nJXaaigM/beC3aCV3L/
-         4eoqoEK6PqsFYqriBYK0WJCamUzp46dyzvPKDzruFmv5OEShFclqiJ8cn3u/AmCe5AEE
-         UCdw0XgJV9sJPS326vQ2BCakAiHZ+Xw/dh61LPqjyRMnJ5v/Sumntj4u3ZDqwlRNe9sk
-         rgiA==
-X-Gm-Message-State: AOJu0YzuDVoaZTiDWS2ZJN1yP0ntdLFd74i/YUO8tbaDHlhMwimi/aFz
-	ssW/t15fG5w818TZGciXFuHjwgCwy/3CD+3Piqin1A==
-X-Google-Smtp-Source: AGHT+IFZ1qcBfCLgb/cLThThc+4qRwsmiFwVndI+yAxTHyzBnGORoB5NRPxyw4AHtrKddus3UTta0WhtQOhSqN6hFts=
-X-Received: by 2002:a81:52c8:0:b0:5e7:5a66:9a9 with SMTP id
- g191-20020a8152c8000000b005e75a6609a9mr1202944ywb.90.1703167045735; Thu, 21
- Dec 2023 05:57:25 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703167658; x=1703772458;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=YSFGFVOxlECeWrb1201TBHQMqNul2EH+RYRBpW3Owdk=;
+        b=lEeZQYhKj3D0DKp4wt4W+pJV29K1A6OlZDMvdpp83blL7i8xvAN6EBOTOByeUaqqly
+         b8J86ZtPYO7hI1opU3lr+Y9W9wmN3sRxk9qvp9OQLAEtb7Q3LchY04RV+kxz/OXlQkmq
+         rOxMmTd99BBy9+a31qtPgxe/jXrs2aDbE/K8Q8HwsrJYHtTHADTpSV/IWh9X1hdG/5Fy
+         /c/6FO0W+uCJgRcnW3xmvyYuzo7btIqPOH1QcuvfYYya2nhvfu0b+cuyjXxII1RJTtRB
+         cy/iJZLgaZUO7yoGA9Jd9fAwMiQYyq3ZvmhNfbgPTSyHUHbYwmefiLnax5M2EhVXI02s
+         CHgQ==
+X-Gm-Message-State: AOJu0YziqjInFCzv7a+vijYhOi8QaMu8UkSk2STo2cg9KlvjAQOCbAtr
+	Fc3CfbM0D91vklqeaqIOMp9uInPXBxT29sQ/qzPNTohZWb292gDShYCogPAzq0fjNFnIf7t3ycF
+	LzwH/jLHH8ZXxfUXgJLX0JwsjHIZSc+HU+2n9M2t+DmYSA+ReDdoRtjuhk0WgQkA=
+X-Received: by 2002:ac2:5617:0:b0:50e:29c1:f829 with SMTP id v23-20020ac25617000000b0050e29c1f829mr3635661lfd.74.1703167658223;
+        Thu, 21 Dec 2023 06:07:38 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGplfpPbW0FT9ATmbiZqm1++et4V4L718raZzPodJBABIbwHrAdrNT6mNWONQxZ+jsDmjLpy/oSnYqjsp61ks4=
+X-Received: by 2002:ac2:5617:0:b0:50e:29c1:f829 with SMTP id
+ v23-20020ac25617000000b0050e29c1f829mr3635656lfd.74.1703167657892; Thu, 21
+ Dec 2023 06:07:37 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 21 Dec 2023 09:07:36 -0500
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <CACRpkdbx7BOoHzbGd6n5p=Ho3GhMcujwUzQam0jLe6Ysg+xsNg@mail.gmail.com>
+References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
+ <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
+ <20231215202137.GA317624-robh@kernel.org> <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
+ <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
+ <CAJM55Z8osSFxKi_7=aRkEr+U3vAq0TS93OggnRzyPpssNuuJ3Q@mail.gmail.com> <CACRpkdbx7BOoHzbGd6n5p=Ho3GhMcujwUzQam0jLe6Ysg+xsNg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com> <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
-In-Reply-To: <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Dec 2023 14:57:14 +0100
-Message-ID: <CACRpkdYL8wK2vX7P7p4QvU9VV2CPjRv_aXiLqO+07MMCCKKk4Q@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Mime-Version: 1.0
+Date: Thu, 21 Dec 2023 09:07:36 -0500
+Message-ID: <CAJM55Z8SwyNEqw4HWRd7G8Y9rdtOGtKy-KbzDorqohdK3nZg0A@mail.gmail.com>
+Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
+	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Alex,
-
-thanks for your patch!
-
-On Thu, Dec 21, 2023 at 9:36=E2=80=AFAM Alex Soo <yuklin.soo@starfivetech.c=
-om> wrote:
-
-> Add dt-binding documentation and header file for JH8100 pinctrl
-> driver.
+Linus Walleij wrote:
+> On Thu, Dec 21, 2023 at 1:28=E2=80=AFPM Emil Renner Berthing
+> <emil.renner.berthing@canonical.com> wrote:
+> > Linus Walleij wrote:
+> > > On Sat, Dec 16, 2023 at 2:57=E2=80=AFPM Emil Renner Berthing
+> > > <emil.renner.berthing@canonical.com> wrote:
+> > >
+> > > > > > +          thead,strong-pull-up:
+> > > > > > +            oneOf:
+> > > > > > +              - type: boolean
+> > > > > > +              - $ref: /schemas/types.yaml#/definitions/uint32
+> > > > > > +                enum: [ 0, 2100 ]
+> > > > > > +            description: Enable or disable strong 2.1kOhm pull=
+-up.
+> > > > >
+> > > > > bias-pull-up can already specify the strength in Ohms.
+> > > >
+> > > > The strong pull up is a separate bit that can be enabled independen=
+tly from the
+> > > > regular pull-up/down, so in theory you could enable both the regula=
+r pull-up
+> > > > and the strong pull-up at the same time, or even the regular poll-d=
+own and the
+> > > > strong pull-up which is probably not advised.
+> > >
+> > > bias-pull-up; <- Just regular pulling up the ordinary
+> > > bias-pull-up =3D <100>; <- Same thing if the ordinary is 100 Ohm (fig=
+ure out what
+> > >   resistance it actually is....)
+> > > bias-pull-up =3D <21000000>; <- strong pull up
+> > > bias-pull-up =3D <21000100>; <- both at the same time
+> >
+> > Hmm.. the two pull-ups combined would be a stronger pull-up, eg. lower
+> > resistance, right? So you'd need to calculate it using
+> > https://en.wikipedia.org/wiki/Series_and_parallel_circuits#Resistance_u=
+nits_2
 >
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
-> Reviewed-by: Ley Foon Tan <leyfoon.tan@starfivetech.com>
-(...)
-> +title: StarFive JH8100 AON Pin Controller
+> Yeah hehe elementary electronics beats me, of course it is in parallel.
+>
+> > The problem is that the documentation doesn't actually mention what wil=
+l happen
+> > if you combine the strong pull-up with the regular bias.
+>
+> So why even allow it then?
+>
+> Do the people designing boards using this have better documentation than =
+what
+> you have? Then either get that documentation or just don't give them
+> too much rope.
 
-If AON means "always-on" then spell that out in the title, the world has
-too many opaque TLAs.
+We can certainly prevent Linux from ever combining the strong pull-up with =
+the
+regular bias, but that doesn't mean that the vendor u-boot can't find a use=
+ for
+it and might hand over pins in such states Linux then wouldn't know how to
+handle.
 
-title: StarFive JH8100 AON (always-on) Pin Controller
-
-(...)
-> +        properties:
-> +          pinmux:
-> +            description: |
-> +              The list of GPIOs and their mux settings or function selec=
-t.
-> +              The GPIOMUX and PINMUX macros are used to configure the
-> +              I/O multiplexing and function selection respectively.
-> +
-> +          bias-disable: true
-> +
-> +          bias-pull-up:
-> +            type: boolean
-> +
-> +          bias-pull-down:
-> +            type: boolean
-> +
-> +          drive-strength:
-> +            enum: [ 2, 4, 8, 12 ]
-
-Milliamperes? Then spell that out in a description:
-
-> +  Voltage regulator supply the actual voltage to the GPIO bank while the=
- syscon register
-> +  configuration in bit [1:0] indicates the current voltage setting.
-> +
-> +  +------+------+-------------------+
-> +  | Bit1 | Bit0 | Reference Voltage |
-> +  +------+------+-------------------+
-> +  |  0   |  0   |     3.3 V         |
-> +  +------+------+-------------------+
-> +  |  1   |  x   |     1.8 V         |
-> +  +------+------+-------------------+
-> +
-> +  To increase the device voltage, set bit [1:0] to the new operating sta=
-te first before
-> +  raising the actual voltage to the higher operating point.
-> +
-> +  To decrease the device voltage, hold bit [1:0] to the current operatin=
-g state until
-> +  the actual voltage has stabilized at the lower operating point before =
-changing the
-> +  setting.
-> +
-> +  Alternatively, a device voltage change can always be initiated by firs=
-t setting syscon
-> +  register bit [1:0] =3D 0, the safe 3.3V startup condition, before chan=
-ging the device
-> +  voltage. Then once the actual voltage is changed and has stabilized at=
- the new operating
-> +  point, bit [1:0] can be reset as appropriate.
-
-Actually: where is this information even used?
-
-> +          slew-rate:
-> +            maximum: 1
-
-Milliseconds? Write unit in description please.
-
-Yours,
-Linus Walleij
+If you think its better we could just postpone that problem to when/if it e=
+ver
+happens.
 
