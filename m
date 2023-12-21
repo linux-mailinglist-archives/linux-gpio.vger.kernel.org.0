@@ -1,520 +1,264 @@
-Return-Path: <linux-gpio+bounces-1751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4C4D81AC20
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 02:22:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB23081AC39
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 02:31:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A7E22877A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 01:22:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CFC41C23885
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 01:31:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B03C1115;
-	Thu, 21 Dec 2023 01:22:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362CA15B7;
+	Thu, 21 Dec 2023 01:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UVdHktCq"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="secysEIG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f47.google.com (mail-ot1-f47.google.com [209.85.210.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2048.outbound.protection.outlook.com [40.107.8.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 559DF4419;
-	Thu, 21 Dec 2023 01:22:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f47.google.com with SMTP id 46e09a7af769-6da69dd6e9fso189255a34.1;
-        Wed, 20 Dec 2023 17:22:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703121732; x=1703726532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4oIuaHLOj8O8LSsFxzvBYQlFdWLFJBkiRSrLUWFUI2U=;
-        b=UVdHktCq3w70KOorItu17K2Fve6VFbveD+CAUOP4rWxUIH1HjMW7rIAvf5g5Qtt8LN
-         OZolnuC8WjLp4TOXj3v6nWJRNDKXJHJbiSd4/RPadPKTCVHUjFI++oc39SQYK8JKydiO
-         8iwPJBeH7CMNbgG438InKpWQc4XNX47SMAj7FmV2twmGPhXqvW/heInOW/MnSAaNa9jo
-         SZpiCTOOGZ0RVdlRbsFEbuG6YXZskEoi+rtGlbyR606P63D5NvW+HHm9SXB3lrb373fx
-         6hdSEmB5Q72jJXv27Z69bSXf9nmqXs7z/LoMQ4XAtmo7nwsJevvgTGn/ar7cmcVQfERW
-         bFAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703121732; x=1703726532;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4oIuaHLOj8O8LSsFxzvBYQlFdWLFJBkiRSrLUWFUI2U=;
-        b=ivf1zgAFhOOp16VNnUHxKuhVg8JTinjQ4IrXWTp/tlUeNdvhTnZFcFve7m+WSQezfg
-         MVNRPwgDk65aw55nqAPshX6yOPLj2A1PfMoDplJFb8GfsCqkpucPPSyncgZE6oxCIk9j
-         sQ+S/NFjGOAeGxyFigcn/spUgj2zRvyckcB8vTvJQ1XFf3rK0YvFI3aocUf+8XDIji36
-         3+/CSMhjcHaE8Cela1zDTuXGW2afQodx/OxRjswAk+Vaf8ArNYz3cFKMKgNhMH0mWqIc
-         nL+MuDc/lgk/guHTNg613ajkr/uhqzgNeJUUiX67bJMKJU2xl+A3Xi7fYv5hjVHvu6ML
-         lEUg==
-X-Gm-Message-State: AOJu0Yy1DUtxVWNMmsop8xfteevzuRjWL8iPBdHgN1h/PVAgxiP+UrbE
-	8nmahs87tWLBXT44/KndQxTELwUC0ZI=
-X-Google-Smtp-Source: AGHT+IGAnDITY3XgghV1SlTFLy/8kmlDmtPvvVrotVqkefawGSjwgRRMI0P217+kADCnXhW3jseUIQ==
-X-Received: by 2002:a05:6830:138a:b0:6db:b215:ad8d with SMTP id d10-20020a056830138a00b006dbb215ad8dmr1070230otq.36.1703121732119;
-        Wed, 20 Dec 2023 17:22:12 -0800 (PST)
-Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id x1-20020a056a00270100b006d088356541sm375959pfv.104.2023.12.20.17.22.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 Dec 2023 17:22:11 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH v2 5/5] gpiolib: cdev: replace locking wrappers for gpio_device with guards
-Date: Thu, 21 Dec 2023 09:20:40 +0800
-Message-Id: <20231221012040.17763-6-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20231221012040.17763-1-warthog618@gmail.com>
-References: <20231221012040.17763-1-warthog618@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57C04258B;
+	Thu, 21 Dec 2023 01:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=d/ncyb7poZ7+gN68z5PyDaME9PLZAnwuXo4OOA5Hph+DgHNoAeCi9COwVK0KfeFcsV8QD9evKOZB9pwSW9DzLH7m4LZ8sjsPQqCJqje6vQI4ySuHT0I3WtQ7zQ11TnV9Gqh3vgIr78/XKwJTOL27eCxPg+LIIOhXUT6L+Wl10MTkf90hiGNoROmaN+slIJsHpt2hDoRyNFQJCIO5ofnq95JqsVRyv9v01T5t0LKFlsPvLY8Rr/Pi1feoGdE0NIE3zXo/X4dqRUKq4OCNF/X8qrj1N4LsNd7vwCJsAmB0XV+FhJFJVvJp1K+pCWQuKBMJclXK/YzG+hU7FSoUQa/7wg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WnQ5kXKMflYLhB9jobiuP9wisvfAEBXPKwiknV58/ks=;
+ b=cpDwwXO3efsCcfABlfdokk9w7+hcuFFLNJT9MjeghaxvoBLlPAx8MOraWwIZ4SJAz/0Mb0Hx4BsUq1eRjMbcukArlOc/oshkqD1xUDHfwRuyWDh7Lgxk9VfretqereW1RXjS1A8AkTT5BGsrYCnc/dFH//JJWLZeokdrs7t58i+0QpknToVxz1YqNkZDz2VbFcXm5Fz0A1qnMSr4fVMDqlgEVt64UTq6eWdR93mTliP4Pt6D9Du0V1bpWf32AMHdffpIMSdvkgoTnhiC6BpI/hGgb0DbowugxytsAJdWdtGQfPlG7XlrJfXMpl2ZQGJUNOiIK6NVPtyQQbvSm0MJbg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WnQ5kXKMflYLhB9jobiuP9wisvfAEBXPKwiknV58/ks=;
+ b=secysEIGYvXLXsdVSuoeTzPLuhrsYGFdekMmhaKSK1bbN5uS6W0URUAeiuVNPa+Z2n8/2CVklsFAxn/pMXUIbRdjefFGf/7+0CxllO24lUX4UQWKvTC5e/ELx2ZUvkClb3ogdMCxlcWVzqrDqlf1V09NQMpFO7HL7tiGnVQ0MEw=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DBAPR04MB7415.eurprd04.prod.outlook.com (2603:10a6:10:1aa::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7113.20; Thu, 21 Dec
+ 2023 01:31:27 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::ff06:bbb2:c068:5fb3]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::ff06:bbb2:c068:5fb3%7]) with mapi id 15.20.7091.034; Thu, 21 Dec 2023
+ 01:31:27 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Marco Felsch <m.felsch@pengutronix.de>
+CC: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Cristian Marussi <cristian.marussi@arm.com>, "Peng Fan
+ (OSS)" <peng.fan@oss.nxp.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Linus
+ Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Oleksii
+ Moisieiev <oleksii_moisieiev@epam.com>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Sudeep Holla <sudeep.holla@arm.com>, Fabio Estevam
+	<festevam@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+ protocol
+Thread-Topic: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+ protocol
+Thread-Index:
+ AQHaL00vUsuXdEJTYUWYoB3T3FLKXbCxBK8AgABsGdCAALFEgIAAAH0ggAABhoCAANgEsA==
+Date: Thu, 21 Dec 2023 01:31:27 +0000
+Message-ID:
+ <DU0PR04MB941736A1EEE3A98F188A59488895A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+ <20231215-pinctrl-scmi-v1-4-0fe35e4611f7@nxp.com>
+ <20231219192912.yulmczvqbuh4jizg@pengutronix.de>
+ <DU0PR04MB94170BCA413C2FD48A397B538896A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <20231220123033.nrbperhbr4jifuvh@pengutronix.de>
+ <DU0PR04MB9417E926CBD95BD7298B64D28896A@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <20231220123745.ksdumfymu4xruufa@pengutronix.de>
+In-Reply-To: <20231220123745.ksdumfymu4xruufa@pengutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DBAPR04MB7415:EE_
+x-ms-office365-filtering-correlation-id: 988d9df1-5604-4071-71e5-08dc01c48d55
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ KrPh5rS3/ScxrkNCicDcoQNmvrzLpp0MmqFTFHlkwV51HSmS5uwn0lvEZoTB6b7PXr9hI77Dxh2XVYotmMBkq4oUHM3FakfujXagG7BYXj7DLPt4CpM4Bxabjzbm4yQkocwZSzY2ziHD9t0sJs0SfdQGfVDrO2OkJvKOz698esQhAc+K4s5HSWBrDiOM7JYPz3AjN0//GgzZtOIPFd4phwZuIi8DpQDGFMeLas4EgvX2FwD2ZsSyZhXeHr9wZOuJvktUnO+hSaYjx6xZzy5JtIpp2cdYNa6Mv1jWIC4ofszQfjqWMYuIHaNFjBnNsqGg3v/mKuq4qkLT1BqQ4RyIptJbd3OP2ZHhwaRErH456A66d01YrAaUUWf/FUpsUZwAqA0j03ID5DRyJnZf6ke9fQMBdvlYLxst4097uFK8Qgk9pG9pN8Mu4kvH1TDIeezk8NQsViKJTMBRoA9vcOQwyjfBeVOQOJLIEmVhnE8fKlYlgxputdTxR10YRK1GUumR66zPnbWmDRa1sX92T+CKTq6QM6SKLt+FWAcnTxax1zXIpML1WN3Ftzi1V3XdGtHr1lSfJEGYbRibASok4WCTnpT5eCblxb2LO6lYKX+6hgs=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39860400002)(366004)(396003)(376002)(346002)(136003)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(76116006)(33656002)(66946007)(66556008)(6916009)(26005)(54906003)(66476007)(66446008)(64756008)(966005)(478600001)(55016003)(8676002)(83380400001)(4326008)(8936002)(52536014)(38070700009)(71200400001)(316002)(7696005)(9686003)(6506007)(44832011)(7416002)(5660300002)(2906002)(38100700002)(41300700001)(86362001)(122000001);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?CyKOASUHnmeROaHzDne9GtFuJlxymWKhaLLJMc3+8v2AnqbOtXgyGZsZPqSr?=
+ =?us-ascii?Q?DC1mGoxZvsZnsT4RUH9t6V8O9CHbtU5lxC54YcpW1OwaTh2p6WA0ePsIRW83?=
+ =?us-ascii?Q?/KXq3/RPGfDbqHQUQNIAOAH8yHXmrlu0v8Xx0Y1FpEheLgX4GehSr0hyHVsZ?=
+ =?us-ascii?Q?KOgNq4rMokteQAeI+QPDw2QfUJ4kYvAwbMm4CT9X/8KGgq9GW67p3VLTe0n+?=
+ =?us-ascii?Q?m4DEqMPiwfPPfPrmKhcni84YFWtYOI3kZ1eY9dMzWYmX2ko24Bqk7xWIkITy?=
+ =?us-ascii?Q?LniqD/HQ4ZjYxiYgGtmsbYIa+PJtK6T2kMXkH6Ab59+9IWUGkPPt4ZO1TmI3?=
+ =?us-ascii?Q?KE8G7mK+E+XbnRngehI9ZfXYMnyPsHYXHxYy+z8wc4vQXaFnD8KIX1lV9waR?=
+ =?us-ascii?Q?T4mnPqLeKXjlkc1SkKX8zjh3M4he9fn6RL9rIS8k6yHe/M7fuuiUexiIvMAw?=
+ =?us-ascii?Q?eQyFkFCreWpNFjLqo+Ad89LB6foxguk04SoziRr1rwZOMn835sz8Y+Y9zE+/?=
+ =?us-ascii?Q?p0+Zp4J/xMzTgei119NRaM9o13hx6bfKqVI8K4vdi1XttwTQVbTHsANqZfts?=
+ =?us-ascii?Q?4ohIIKbB8K27BOqf/m9dvfMSEikHS9rsNkJPvR0dDHcNTFBLJANqE8mgW13l?=
+ =?us-ascii?Q?3uDtapupTsDXrcXVAjTWiSR1ZiBlkdOFJPiCC83NI5yyAfRrMOYgG1bggU1f?=
+ =?us-ascii?Q?dP4gyBqi4LCr3tA0O0DdyFCT6V9z1aT4y2fr+rxNeBEcgfdjM1L/RnKx0cY4?=
+ =?us-ascii?Q?MePH3qlZWTU8Vt/2V1p6cq0awKopaj6Z+Ibvd5es8JoOdEVJDMZ4h635jlTb?=
+ =?us-ascii?Q?oYRQrFH0Mg5oJ4YEBr5PEmW1ysPwy2wsmegFB/vW7IxeX7l+p08qZHEe3pjs?=
+ =?us-ascii?Q?Jfbb5F1oO9cv7EQNeM14+wdjeynzsZxBq+LGRFRMLQ6QBNN6ujMv/27eq57x?=
+ =?us-ascii?Q?Way0q1JAgqY4WmfZxy9TFKLhPuljOnOFM0Djb1Rk1hAWlpRGasybIR5k3ph4?=
+ =?us-ascii?Q?e3iHYbdz8SRBXJwCRcISYrNrImQzkALOZ3tcXePQdrL94W/CpRBGBLw8K3vx?=
+ =?us-ascii?Q?3ldYsnr7v70+k4k/Qso5W/rEXiYxubJuCWqshyRJQbc282nzJhwU5J5kcezl?=
+ =?us-ascii?Q?cPbCY2c5e8knRiGqkG6H7Q/udyATgcqEbfogd5pZ+WzuSBNpMVVAcU19p2UH?=
+ =?us-ascii?Q?g2HWDbZj+iQqjOPkKLwcFE5WFc2dYW/kyZ26C6ljIHa6WAl98kksAwOKVM9K?=
+ =?us-ascii?Q?j5Ni6WTlSl77W/y5HW4gPFQM3ckwmrkP1oxb8XB08Fm9xMPZQbdHnbvRCjyB?=
+ =?us-ascii?Q?ioMU6k7sBwWr5HHRkSYn6NuRgt882K12R5RbM6R24pnaZa1rdzC2u7Ooeb4N?=
+ =?us-ascii?Q?bIAuFs5W0xWEvMMCVmzgKYJ9WMZ3I62R3UMy5xFBkK587jsTZHn97lIxrSOM?=
+ =?us-ascii?Q?nFmCK2aJLx2/3XXq1NJ2LylYxa5kbizApXqe7Q4tGVk+cDt+vd+lKvvcdCoN?=
+ =?us-ascii?Q?vvRyaZe7wDIn4JBE8lYZLi7XiU5SHZA9MasC36Ska+t6CSpUo5Lu2oTMM0QE?=
+ =?us-ascii?Q?HvtCY9aNTDDhcNFnSFc=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 988d9df1-5604-4071-71e5-08dc01c48d55
+X-MS-Exchange-CrossTenant-originalarrivaltime: 21 Dec 2023 01:31:27.5927
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: yU6ejnToMkv/hR+pnmHAlOaIKhRod315Xpg/0FE5IBakXnGHBQ/BRvLQF00gS4MoVk71INWOIIizG7zL+V1oEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBAPR04MB7415
 
-Replace the wrapping functions that inhibit removal of the gpio chip
-with equivalent guards.
+> Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support pinctrl
+> protocol
+>=20
+> On 23-12-20, Peng Fan wrote:
+> > > Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi: support
+> > > pinctrl protocol
+> > >
+> > > On 23-12-20, Peng Fan wrote:
+> > > > > Subject: Re: [PATCH 4/7] dt-bindings: firmware: arm,scmi:
+> > > > > support pinctrl protocol
+> > > > >
+> > > > > Hi Peng,
+> > > > >
+> > > > > On 23-12-15, Peng Fan (OSS) wrote:
+> > > > > > From: Peng Fan <peng.fan@nxp.com>
+> > > > > >
+> > > > > > Add SCMI v3.2 pinctrl protocol bindings and example.
+> > > > > >
+> > > > > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/firmware/arm,scmi.yaml     | 99
+> > > > > ++++++++++++++++++++++
+> > > > > >  1 file changed, 99 insertions(+)
+> > > > > >
+> > > > > > diff --git
+> > > > > > a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > index 4591523b51a0..bfd2b6a89979 100644
+> > > > > > --- a/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > +++ b/Documentation/devicetree/bindings/firmware/arm,scmi.yaml
+> > > > > > @@ -247,6 +247,85 @@ properties:
+> > > > > >        reg:
+> > > > > >          const: 0x18
+> > > > > >
+> > > > > > +  protocol@19:
+> > > > >
+> > > > > ...
+> > > > >
+> > > > > > @@ -401,6 +480,26 @@ examples:
+> > > > > >              scmi_powercap: protocol@18 {
+> > > > > >                  reg =3D <0x18>;
+> > > > > >              };
+> > > > > > +
+> > > > > > +            scmi_pinctrl: protocol@19 {
+> > > > > > +                reg =3D <0x19>;
+> > > > > > +                #pinctrl-cells =3D <0>;
+> > > > > > +
+> > > > > > +                i2c2-pins {
+> > > > > > +                    groups =3D "i2c2_a", "i2c2_b";
+> > > > > > +                    function =3D "i2c2";
+> > > > > > +                };
+> > > > > > +
+> > > > > > +                mdio-pins {
+> > > > > > +                    groups =3D "avb_mdio";
+> > > > > > +                    drive-strength =3D <24>;
+> > > > > > +                };
+> > > > > > +
+> > > > > > +                keys_pins: keys-pins {
+> > > > > > +                    pins =3D "GP_5_17", "GP_5_20", "GP_5_22", =
+"GP_2_1";
+> > > > > > +                    bias-pull-up;
+> > > > > > +                };
+> > > > > > +            };
+> > > > >
+> > > > > This example is different to the one you mentioned within the
+> > > > > cover-letter. I didn't checked all patches just want to ask
+> > > > > which API will be implemented by this patchset?
+> > > >
+> > > > I kept this change since it was tested by Oleksii, but anyway i.MX
+> > > > not use
+> > > these.
+> > > >
+> > > > The API, I suppose you are asking about this?
+> > > > static const struct pinctrl_ops pinctrl_scmi_pinctrl_ops =3D {
+> > > >         .get_groups_count =3D pinctrl_scmi_get_groups_count,
+> > > >         .get_group_name =3D pinctrl_scmi_get_group_name,
+> > > >         .get_group_pins =3D pinctrl_scmi_get_group_pins, #ifdef
+> > > > CONFIG_OF
+> > > >         .dt_node_to_map =3D pinconf_generic_dt_node_to_map_all,
+> > > >         .dt_free_map =3D pinconf_generic_dt_free_map, #endif };
+> > > >
+> > > > static const struct pinctrl_ops pinctrl_scmi_imx_pinctrl_ops =3D {
+> > > >         .get_groups_count =3D pinctrl_scmi_get_groups_count,
+> > > >         .get_group_name =3D pinctrl_scmi_get_group_name,
+> > > >         .get_group_pins =3D pinctrl_scmi_get_group_pins, #ifdef
+> > > > CONFIG_OF
+> > > >         .dt_node_to_map =3D pinctrl_scmi_imx_dt_node_to_map,
+> > > >         .dt_free_map =3D pinconf_generic_dt_free_map, #endif };
+> > >
+> > > I see, thanks for the clarification. In short: the i.MX SMCI pinctrl
+> > > DT-API is the same as the non-SCMI pinctrl API since the dt_node_to_m=
+ap
+> will convert it.
+> >
+> > Yes, the fsl,pins format is same whether SCMI or non-SCMI. But we need
+> > to pack the data to a format that matches the i.MX OEM SCMI PINCTRL
+> > protocol, so we need to dedicated dt_node_to_map here.
+>=20
+> Yes, I saw that you're using the enum values 192-255 for the OEM specific
+> part and the packing. Does you have public access to the FW implementing
+> the SCMI?
+>=20
+The system manager firmware:
+https://github.com/nxp-imx/imx-sm
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- drivers/gpio/gpiolib-cdev.c | 205 +++++++++---------------------------
- 1 file changed, 47 insertions(+), 158 deletions(-)
+Regards,
+Peng.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 9ff2b447cc20..2a88736629ef 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -24,6 +24,7 @@
- #include <linux/pinctrl/consumer.h>
- #include <linux/poll.h>
- #include <linux/rbtree.h>
-+#include <linux/rwsem.h>
- #include <linux/seq_file.h>
- #include <linux/spinlock.h>
- #include <linux/timekeeping.h>
-@@ -65,45 +66,6 @@ typedef long (*ioctl_fn)(struct file *, unsigned int, unsigned long);
- typedef ssize_t (*read_fn)(struct file *, char __user *,
- 			   size_t count, loff_t *);
- 
--static __poll_t call_poll_locked(struct file *file,
--				 struct poll_table_struct *wait,
--				 struct gpio_device *gdev, poll_fn func)
--{
--	__poll_t ret;
--
--	down_read(&gdev->sem);
--	ret = func(file, wait);
--	up_read(&gdev->sem);
--
--	return ret;
--}
--
--static long call_ioctl_locked(struct file *file, unsigned int cmd,
--			      unsigned long arg, struct gpio_device *gdev,
--			      ioctl_fn func)
--{
--	long ret;
--
--	down_read(&gdev->sem);
--	ret = func(file, cmd, arg);
--	up_read(&gdev->sem);
--
--	return ret;
--}
--
--static ssize_t call_read_locked(struct file *file, char __user *buf,
--				size_t count, loff_t *f_ps,
--				struct gpio_device *gdev, read_fn func)
--{
--	ssize_t ret;
--
--	down_read(&gdev->sem);
--	ret = func(file, buf, count, f_ps);
--	up_read(&gdev->sem);
--
--	return ret;
--}
--
- /*
-  * GPIO line handle management
-  */
-@@ -238,8 +200,8 @@ static long linehandle_set_config(struct linehandle_state *lh,
- 	return 0;
- }
- 
--static long linehandle_ioctl_unlocked(struct file *file, unsigned int cmd,
--				      unsigned long arg)
-+static long linehandle_ioctl(struct file *file, unsigned int cmd,
-+			     unsigned long arg)
- {
- 	struct linehandle_state *lh = file->private_data;
- 	void __user *ip = (void __user *)arg;
-@@ -248,6 +210,8 @@ static long linehandle_ioctl_unlocked(struct file *file, unsigned int cmd,
- 	unsigned int i;
- 	int ret;
- 
-+	guard(rwsem_read)(&lh->gdev->sem);
-+
- 	if (!lh->gdev->chip)
- 		return -ENODEV;
- 
-@@ -297,15 +261,6 @@ static long linehandle_ioctl_unlocked(struct file *file, unsigned int cmd,
- 	}
- }
- 
--static long linehandle_ioctl(struct file *file, unsigned int cmd,
--			     unsigned long arg)
--{
--	struct linehandle_state *lh = file->private_data;
--
--	return call_ioctl_locked(file, cmd, arg, lh->gdev,
--				 linehandle_ioctl_unlocked);
--}
--
- #ifdef CONFIG_COMPAT
- static long linehandle_ioctl_compat(struct file *file, unsigned int cmd,
- 				    unsigned long arg)
-@@ -1564,12 +1519,14 @@ static long linereq_set_config(struct linereq *lr, void __user *ip)
- 	return 0;
- }
- 
--static long linereq_ioctl_unlocked(struct file *file, unsigned int cmd,
--				   unsigned long arg)
-+static long linereq_ioctl(struct file *file, unsigned int cmd,
-+			  unsigned long arg)
- {
- 	struct linereq *lr = file->private_data;
- 	void __user *ip = (void __user *)arg;
- 
-+	guard(rwsem_read)(&lr->gdev->sem);
-+
- 	if (!lr->gdev->chip)
- 		return -ENODEV;
- 
-@@ -1585,15 +1542,6 @@ static long linereq_ioctl_unlocked(struct file *file, unsigned int cmd,
- 	}
- }
- 
--static long linereq_ioctl(struct file *file, unsigned int cmd,
--			  unsigned long arg)
--{
--	struct linereq *lr = file->private_data;
--
--	return call_ioctl_locked(file, cmd, arg, lr->gdev,
--				 linereq_ioctl_unlocked);
--}
--
- #ifdef CONFIG_COMPAT
- static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
- 				 unsigned long arg)
-@@ -1602,12 +1550,14 @@ static long linereq_ioctl_compat(struct file *file, unsigned int cmd,
- }
- #endif
- 
--static __poll_t linereq_poll_unlocked(struct file *file,
--				      struct poll_table_struct *wait)
-+static __poll_t linereq_poll(struct file *file,
-+			     struct poll_table_struct *wait)
- {
- 	struct linereq *lr = file->private_data;
- 	__poll_t events = 0;
- 
-+	guard(rwsem_read)(&lr->gdev->sem);
-+
- 	if (!lr->gdev->chip)
- 		return EPOLLHUP | EPOLLERR;
- 
-@@ -1620,22 +1570,16 @@ static __poll_t linereq_poll_unlocked(struct file *file,
- 	return events;
- }
- 
--static __poll_t linereq_poll(struct file *file,
--			     struct poll_table_struct *wait)
--{
--	struct linereq *lr = file->private_data;
--
--	return call_poll_locked(file, wait, lr->gdev, linereq_poll_unlocked);
--}
--
--static ssize_t linereq_read_unlocked(struct file *file, char __user *buf,
--				     size_t count, loff_t *f_ps)
-+static ssize_t linereq_read(struct file *file, char __user *buf,
-+			    size_t count, loff_t *f_ps)
- {
- 	struct linereq *lr = file->private_data;
- 	struct gpio_v2_line_event le;
- 	ssize_t bytes_read = 0;
- 	int ret;
- 
-+	guard(rwsem_read)(&lr->gdev->sem);
-+
- 	if (!lr->gdev->chip)
- 		return -ENODEV;
- 
-@@ -1677,15 +1621,6 @@ static ssize_t linereq_read_unlocked(struct file *file, char __user *buf,
- 	return bytes_read;
- }
- 
--static ssize_t linereq_read(struct file *file, char __user *buf,
--			    size_t count, loff_t *f_ps)
--{
--	struct linereq *lr = file->private_data;
--
--	return call_read_locked(file, buf, count, f_ps, lr->gdev,
--				linereq_read_unlocked);
--}
--
- static void linereq_free(struct linereq *lr)
- {
- 	struct line *line;
-@@ -1938,12 +1873,14 @@ struct lineevent_state {
- 	(GPIOEVENT_REQUEST_RISING_EDGE | \
- 	GPIOEVENT_REQUEST_FALLING_EDGE)
- 
--static __poll_t lineevent_poll_unlocked(struct file *file,
--					struct poll_table_struct *wait)
-+static __poll_t lineevent_poll(struct file *file,
-+			       struct poll_table_struct *wait)
- {
- 	struct lineevent_state *le = file->private_data;
- 	__poll_t events = 0;
- 
-+	guard(rwsem_read)(&le->gdev->sem);
-+
- 	if (!le->gdev->chip)
- 		return EPOLLHUP | EPOLLERR;
- 
-@@ -1955,14 +1892,6 @@ static __poll_t lineevent_poll_unlocked(struct file *file,
- 	return events;
- }
- 
--static __poll_t lineevent_poll(struct file *file,
--			       struct poll_table_struct *wait)
--{
--	struct lineevent_state *le = file->private_data;
--
--	return call_poll_locked(file, wait, le->gdev, lineevent_poll_unlocked);
--}
--
- static int lineevent_unregistered_notify(struct notifier_block *nb,
- 					 unsigned long action, void *data)
- {
-@@ -1979,8 +1908,8 @@ struct compat_gpioeevent_data {
- 	u32		id;
- };
- 
--static ssize_t lineevent_read_unlocked(struct file *file, char __user *buf,
--				       size_t count, loff_t *f_ps)
-+static ssize_t lineevent_read(struct file *file, char __user *buf,
-+			      size_t count, loff_t *f_ps)
- {
- 	struct lineevent_state *le = file->private_data;
- 	struct gpioevent_data ge;
-@@ -1988,6 +1917,8 @@ static ssize_t lineevent_read_unlocked(struct file *file, char __user *buf,
- 	ssize_t ge_size;
- 	int ret;
- 
-+	guard(rwsem_read)(&le->gdev->sem);
-+
- 	if (!le->gdev->chip)
- 		return -ENODEV;
- 
-@@ -2042,15 +1973,6 @@ static ssize_t lineevent_read_unlocked(struct file *file, char __user *buf,
- 	return bytes_read;
- }
- 
--static ssize_t lineevent_read(struct file *file, char __user *buf,
--			      size_t count, loff_t *f_ps)
--{
--	struct lineevent_state *le = file->private_data;
--
--	return call_read_locked(file, buf, count, f_ps, le->gdev,
--				lineevent_read_unlocked);
--}
--
- static void lineevent_free(struct lineevent_state *le)
- {
- 	if (le->device_unregistered_nb.notifier_call)
-@@ -2071,13 +1993,15 @@ static int lineevent_release(struct inode *inode, struct file *file)
- 	return 0;
- }
- 
--static long lineevent_ioctl_unlocked(struct file *file, unsigned int cmd,
--				     unsigned long arg)
-+static long lineevent_ioctl(struct file *file, unsigned int cmd,
-+			    unsigned long arg)
- {
- 	struct lineevent_state *le = file->private_data;
- 	void __user *ip = (void __user *)arg;
- 	struct gpiohandle_data ghd;
- 
-+	guard(rwsem_read)(&le->gdev->sem);
-+
- 	if (!le->gdev->chip)
- 		return -ENODEV;
- 
-@@ -2103,15 +2027,6 @@ static long lineevent_ioctl_unlocked(struct file *file, unsigned int cmd,
- 	return -EINVAL;
- }
- 
--static long lineevent_ioctl(struct file *file, unsigned int cmd,
--			    unsigned long arg)
--{
--	struct lineevent_state *le = file->private_data;
--
--	return call_ioctl_locked(file, cmd, arg, le->gdev,
--				 lineevent_ioctl_unlocked);
--}
--
- #ifdef CONFIG_COMPAT
- static long lineevent_ioctl_compat(struct file *file, unsigned int cmd,
- 				   unsigned long arg)
-@@ -2584,12 +2499,17 @@ static int lineinfo_unwatch(struct gpio_chardev_data *cdev, void __user *ip)
- 	return 0;
- }
- 
--static long gpio_ioctl_unlocked(struct file *file, unsigned int cmd, unsigned long arg)
-+/*
-+ * gpio_ioctl() - ioctl handler for the GPIO chardev
-+ */
-+static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- {
- 	struct gpio_chardev_data *cdev = file->private_data;
- 	struct gpio_device *gdev = cdev->gdev;
- 	void __user *ip = (void __user *)arg;
- 
-+	guard(rwsem_read)(&gdev->sem);
-+
- 	/* We fail any subsequent ioctl():s when the chip is gone */
- 	if (!gdev->chip)
- 		return -ENODEV;
-@@ -2621,17 +2541,6 @@ static long gpio_ioctl_unlocked(struct file *file, unsigned int cmd, unsigned lo
- 	}
- }
- 
--/*
-- * gpio_ioctl() - ioctl handler for the GPIO chardev
-- */
--static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
--{
--	struct gpio_chardev_data *cdev = file->private_data;
--
--	return call_ioctl_locked(file, cmd, arg, cdev->gdev,
--				 gpio_ioctl_unlocked);
--}
--
- #ifdef CONFIG_COMPAT
- static long gpio_ioctl_compat(struct file *file, unsigned int cmd,
- 			      unsigned long arg)
-@@ -2679,12 +2588,14 @@ static int gpio_device_unregistered_notify(struct notifier_block *nb,
- 	return NOTIFY_OK;
- }
- 
--static __poll_t lineinfo_watch_poll_unlocked(struct file *file,
--					     struct poll_table_struct *pollt)
-+static __poll_t lineinfo_watch_poll(struct file *file,
-+				    struct poll_table_struct *pollt)
- {
- 	struct gpio_chardev_data *cdev = file->private_data;
- 	__poll_t events = 0;
- 
-+	guard(rwsem_read)(&cdev->gdev->sem);
-+
- 	if (!cdev->gdev->chip)
- 		return EPOLLHUP | EPOLLERR;
- 
-@@ -2697,17 +2608,8 @@ static __poll_t lineinfo_watch_poll_unlocked(struct file *file,
- 	return events;
- }
- 
--static __poll_t lineinfo_watch_poll(struct file *file,
--				    struct poll_table_struct *pollt)
--{
--	struct gpio_chardev_data *cdev = file->private_data;
--
--	return call_poll_locked(file, pollt, cdev->gdev,
--				lineinfo_watch_poll_unlocked);
--}
--
--static ssize_t lineinfo_watch_read_unlocked(struct file *file, char __user *buf,
--					    size_t count, loff_t *off)
-+static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
-+				   size_t count, loff_t *off)
- {
- 	struct gpio_chardev_data *cdev = file->private_data;
- 	struct gpio_v2_line_info_changed event;
-@@ -2715,6 +2617,8 @@ static ssize_t lineinfo_watch_read_unlocked(struct file *file, char __user *buf,
- 	int ret;
- 	size_t event_size;
- 
-+	guard(rwsem_read)(&cdev->gdev->sem);
-+
- 	if (!cdev->gdev->chip)
- 		return -ENODEV;
- 
-@@ -2777,15 +2681,6 @@ static ssize_t lineinfo_watch_read_unlocked(struct file *file, char __user *buf,
- 	return bytes_read;
- }
- 
--static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
--				   size_t count, loff_t *off)
--{
--	struct gpio_chardev_data *cdev = file->private_data;
--
--	return call_read_locked(file, buf, count, off, cdev->gdev,
--				lineinfo_watch_read_unlocked);
--}
--
- /**
-  * gpio_chrdev_open() - open the chardev for ioctl operations
-  * @inode: inode for this chardev
-@@ -2799,17 +2694,15 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
- 	struct gpio_chardev_data *cdev;
- 	int ret = -ENOMEM;
- 
--	down_read(&gdev->sem);
-+	guard(rwsem_read)(&gdev->sem);
- 
- 	/* Fail on open if the backing gpiochip is gone */
--	if (!gdev->chip) {
--		ret = -ENODEV;
--		goto out_unlock;
--	}
-+	if (!gdev->chip)
-+		return -ENODEV;
- 
- 	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
- 	if (!cdev)
--		goto out_unlock;
-+		return -ENODEV;
- 
- 	cdev->watched_lines = bitmap_zalloc(gdev->chip->ngpio, GFP_KERNEL);
- 	if (!cdev->watched_lines)
-@@ -2838,8 +2731,6 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
- 	if (ret)
- 		goto out_unregister_device_notifier;
- 
--	up_read(&gdev->sem);
--
- 	return ret;
- 
- out_unregister_device_notifier:
-@@ -2853,8 +2744,6 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
- 	bitmap_free(cdev->watched_lines);
- out_free_cdev:
- 	kfree(cdev);
--out_unlock:
--	up_read(&gdev->sem);
- 	return ret;
- }
- 
--- 
-2.39.2
-
+> Regards,
+>   Marco
+>=20
+> >
+> > Thanks,
+> > Peng.
+> >
+> > >
+> > > Regards,
+> > >   Marco
+> >
+> >
 
