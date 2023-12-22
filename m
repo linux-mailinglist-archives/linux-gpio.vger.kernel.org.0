@@ -1,65 +1,49 @@
-Return-Path: <linux-gpio+bounces-1822-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1823-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E620381CB54
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:30:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 64A2181CC38
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 16:30:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A37E9284562
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:30:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21455285986
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:30:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8AF0C1D55E;
-	Fri, 22 Dec 2023 14:29:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OVkPEw0W"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33B2A23763;
+	Fri, 22 Dec 2023 15:30:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E3EB1D52F;
-	Fri, 22 Dec 2023 14:29:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703255398; x=1734791398;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=suVjjCTSnC7KfiQTEv2ADRlfYvstLRrdTQT/YXGwxXo=;
-  b=OVkPEw0WEIjviDsQ7sdHAd+gKytYDBve9wLDpo5AkTdOkIl9OwRaztcu
-   gefej1jA5G8tl22QzLvEbbueK1r0qs9v4BqWPERjzKnMUw5GuFOrUOuJI
-   e+tJxrxEbfIaRNU1D+ODHB3lP3iQ6W3/uCkJR8LYIGiN2r+enbjHl0jQE
-   /wqt3ILqDj8jE4A2u3icrVe+/NFJwmBDsK84qgoI2VHUwo9oa0cqIAE/p
-   /kh+KrAEUUOcl12i02u3c0F6NTRucm7r20AZ6C/r8rzqDfsm+PZSdrtRE
-   70W1i0zN6GndM2cDnSMYvXdE7sqT7nDlAuSFAr4gH2/F5iCNF6JUvbVUr
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="376261662"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="376261662"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="950289620"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="950289620"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 06:29:55 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rGgUQ-00000008AkY-2ec4;
-	Fri, 22 Dec 2023 16:27:02 +0200
-Date: Fri, 22 Dec 2023 16:27:02 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] MAINTAINERS: split out the uAPI into a new section
-Message-ID: <ZYWctoOnMLcPFeKy@smile.fi.intel.com>
-References: <20231222141952.16254-1-brgl@bgdev.pl>
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D70C923750;
+	Fri, 22 Dec 2023 15:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C2322F4;
+	Fri, 22 Dec 2023 07:31:03 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 999953F5A1;
+	Fri, 22 Dec 2023 07:30:14 -0800 (PST)
+Date: Fri, 22 Dec 2023 15:30:11 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 1/7] firmware: arm_scmi: introduce helper get_max_msg_size
+Message-ID: <ZYWrgzujGh84CT-5@pluto>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+ <20231215-pinctrl-scmi-v1-1-0fe35e4611f7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,23 +52,73 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20231222141952.16254-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20231215-pinctrl-scmi-v1-1-0fe35e4611f7@nxp.com>
 
-On Fri, Dec 22, 2023 at 03:19:52PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Dec 15, 2023 at 07:56:29PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Kent Gibson is the author of the character device uAPI v2 and should be
-> Cc'ed on all patches aimed for it. Unfortunately this is not the case as
-> he's not listed in MAINTAINERS. Split the uAPI files into their own
-> section and make Kent the reviewer.
+> When Agent sending data to SCMI server, the Agent driver could check
+> the size to avoid protocol buffer overflow. So introduce the helper
+> get_max_msg_size.
+> 
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/arm_scmi/driver.c    | 15 +++++++++++++++
+>  drivers/firmware/arm_scmi/protocols.h |  1 +
+>  2 files changed, 16 insertions(+)
+> 
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index a9f70e6e58ac..b4f8f190351b 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -1481,6 +1481,20 @@ static int scmi_common_extended_name_get(const struct scmi_protocol_handle *ph,
+>  	return ret;
+>  }
+>  
+> +/**
+> + * scmi_common_get_max_msg_size  - Get maximum message size
+> + * @ph: A protocol handle reference.
+> + *
+> + * Return: Maximum message size for the current protocol.
+> + */
+> +static int scmi_common_get_max_msg_size(const struct scmi_protocol_handle *ph)
+> +{
+> +	const struct scmi_protocol_instance *pi = ph_to_pi(ph);
+> +	struct scmi_info *info = handle_to_scmi_info(pi->handle);
+> +
+> +	return info->desc->max_msg_size;
+> +}
+> +
+>  /**
+>   * struct scmi_iterator  - Iterator descriptor
+>   * @msg: A reference to the message TX buffer; filled by @prepare_message with
+> @@ -1756,6 +1770,7 @@ static void scmi_common_fastchannel_db_ring(struct scmi_fc_db_info *db)
+>  
+>  static const struct scmi_proto_helpers_ops helpers_ops = {
+>  	.extended_name_get = scmi_common_extended_name_get,
+> +	.get_max_msg_size = scmi_common_get_max_msg_size,
+>  	.iter_response_init = scmi_iterator_init,
+>  	.iter_response_run = scmi_iterator_run,
+>  	.fastchannel_init = scmi_common_fastchannel_init,
+> diff --git a/drivers/firmware/arm_scmi/protocols.h b/drivers/firmware/arm_scmi/protocols.h
+> index e683c26f24eb..08de8dc064c1 100644
+> --- a/drivers/firmware/arm_scmi/protocols.h
+> +++ b/drivers/firmware/arm_scmi/protocols.h
+> @@ -270,6 +270,7 @@ struct scmi_proto_helpers_ops {
+>  				 void __iomem **p_addr,
+>  				 struct scmi_fc_db_info **p_db);
+>  	void (*fastchannel_db_ring)(struct scmi_fc_db_info *db);
+> +	int (*get_max_msg_size)(const struct scmi_protocol_handle *ph);
+>  };
 
-Cool! Thank you for doing this.
-Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This looks good to me, but please add a comment for this new helper in
+the comment block above.
 
--- 
-With Best Regards,
-Andy Shevchenko
+Other than that:
 
+Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+
+Thanks,
+Cristian
 
 
