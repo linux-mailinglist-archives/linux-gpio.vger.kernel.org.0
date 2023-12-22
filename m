@@ -1,93 +1,119 @@
-Return-Path: <linux-gpio+bounces-1833-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1834-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23B7181CE21
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 18:52:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E236D81CE36
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 18:59:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A63EEB21079
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 17:52:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3B78BB21B1A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 17:59:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6147F28E1C;
-	Fri, 22 Dec 2023 17:51:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43EE92C190;
+	Fri, 22 Dec 2023 17:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="D8x1n+VH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="IWCDRfnG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EAB2E63C
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 17:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B931A28E16
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 17:59:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbd5b96b12eso2019037276.2
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 09:51:42 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dbd71f33cd3so2016403276.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 09:59:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703267502; x=1703872302; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1703267943; x=1703872743; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UCjV6fjtLNH5x3H55hZxl+1y0FuIxxcKcoHuCuyhtB4=;
-        b=D8x1n+VHawXZg+1hryLya493jDOiMGK1YCkK70aKtRJLKAkoS2ICs76O7gjXnqSEpm
-         ETGnG5aUCSAoUc58vgqwjUDeGFlvVuA4CnWzlKBQ14vbL3tNoRSdMdEiVZnpVMLeVrF0
-         uZ9TqHamLsX72lv/z9OkC9Yt/LehhrgF3zkEArJ/NMWCRGt+jRMjS7qV2qyH+MNh2UiK
-         qYZ26hpvFlRXYfUdFdRFVab1flrx03kzJXVsguk5CX1RWkLwk/7ifK354pf4mjG4gGLM
-         mTedjxUT8Z1cENP5uvn/seH15pDRciQ1Qr91xYiNka1VaQC1cMl+mBPt3zBbL18H2Pkh
-         oCCw==
+        bh=gXO5LLAj4QYxQv9ZV22GFZ8aR0i5IaDWjNJqzoS+Cu0=;
+        b=IWCDRfnGHAQI/ws9Sv/cnQ4kxPhM8LA+mYyOMnTw6RPTWt0EJ2fHMub6XvTJwEKZK5
+         4QJt3K73GS2qwgu3NshjdY8h5AKpaHy4owVd+TECP33AWQVRyiQQUD9ibtRy8wEW+10y
+         ZLxFb0WB0bRuiQReYe/M/yxlTiQMOgTGR+gK0o0/y14uTSTMVOi4hkCqYwRftu0uao2h
+         gfDpTWYmDwZgOAcbpj1cTGkjG92lQKlZxWpLkvILBQkSdo7SxA0u5+yfxmC68La9ssud
+         F9sYklpvgMoW/6A6AXEaeJ6NxymLvVxEI/hgW245lM5bbt48b/JG6ZGbbcmhcDyhplXo
+         Dk4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703267502; x=1703872302;
+        d=1e100.net; s=20230601; t=1703267943; x=1703872743;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UCjV6fjtLNH5x3H55hZxl+1y0FuIxxcKcoHuCuyhtB4=;
-        b=r6hZFqRHwOvv14hsZUXeFHsr+93/IIcUT9/z6tZJnego111f7RFdz/jCNebkRdh/LB
-         +2fy7+50x/Y8rppm9UA7NKTq0TiCCkYu7gUwKNfsBDkZTYw8D3pQldBKcIKP5ueLIAld
-         2qmr06b437q7v3v/jmwAqncykpMsnwKQy+NLOKQC2KiV1zRWPpn6P3C48jWHlxKFEFA7
-         3gCiE305/jBEp/19Ewaf90PFDZcW7lOHibYluGvpWgzfj0nP1BYpPKne0+CDfx5AtTKV
-         cSGHpKXDtlQoxVxbjcoPu3dmcRaHzHuXVxqZ5nC9jaMqavO4G3ncM5wnAOJgZa86I/TL
-         kq9g==
-X-Gm-Message-State: AOJu0Yw2SsnbtGiot/pA5gbNSgkySCoWYAHRNApsL/QyYklSkSKEqA2W
-	Mdw0Yz+ATC8m5OybQxtEeWAl9vX2sW6Wf1twHdKmSxIcGkZ+aA==
-X-Google-Smtp-Source: AGHT+IFwM7I0XkX8vmzOkYUSUylo3B4O346tEUebZhgDmXGbnTgxuxAqc0HXd40WPEl8VBkD8J354qKBO3ydasHbBOk=
-X-Received: by 2002:a05:6902:18d0:b0:dbc:ea09:b545 with SMTP id
- ck16-20020a05690218d000b00dbcea09b545mr1509915ybb.111.1703267501916; Fri, 22
- Dec 2023 09:51:41 -0800 (PST)
+        bh=gXO5LLAj4QYxQv9ZV22GFZ8aR0i5IaDWjNJqzoS+Cu0=;
+        b=TUr+XqO43WZshFZUASbMx8gcmA/Kezm4d0KpFsMVUMPjIUItpWJS7U4UidVW8Cp12f
+         oEQU5le3VuCLaIqFTUdYJ1SlMBZvSo0jvgPIQcmwYVVp/QQBw3Z8ikqkTeIpTikR2p0o
+         naDVirFVB6biKJjVs7hqsAKMU5Pe7aBxShO/O41+DStSK+IW50gKqu09JTqTdw21EQOX
+         YsRfePOCxKzpF0NFIErgcLvCwXCOpKNJxNy4e4iEjGcTg/LjdPgXyNHyxaxmJOPX2JVW
+         n4qygGIGp81GImxWuFe9XRrLjqwlTKThfmAKo65TQ+Kv9OSQ794trlmlYCHt2GaNefUl
+         kgkA==
+X-Gm-Message-State: AOJu0YxEG7yWJqVWoF0huqR0rfPrccVsNCyhKZFbmBzqHPkvWa5vc12S
+	/sf22sAg8WcUMlL7BGhizOvKoNWCuGTH4g1xi+mu8yjWxWbI+Q==
+X-Google-Smtp-Source: AGHT+IFFvH5JIWmYxJbv9X2zBhzWMzPFLRuyOvj2wSlxJlPI+Sw5EQ6vaJ8v7l8wEiYlQw5zy6yOt1W4FquIjX/y+EY=
+X-Received: by 2002:a25:d606:0:b0:dbd:d3a8:74c with SMTP id
+ n6-20020a25d606000000b00dbdd3a8074cmr1266996ybg.48.1703267943739; Fri, 22 Dec
+ 2023 09:59:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231221185702.24685-1-brgl@bgdev.pl>
-In-Reply-To: <20231221185702.24685-1-brgl@bgdev.pl>
+References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
+In-Reply-To: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 22 Dec 2023 18:51:31 +0100
-Message-ID: <CACRpkdbuJ6bzXGwoa7nMKYb9U+EsaKeE8ZQz0XhQYX4Ukdz44A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: tps65219: don't use CONFIG_DEBUG_GPIO
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Tony Lindgren <tony@atomide.com>, Andy Shevchenko <andy@kernel.org>, linux-omap@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Fri, 22 Dec 2023 18:58:53 +0100
+Message-ID: <CACRpkdZEu5AcdPtaH7MQSC88+CT-PhgegEVcWk6KAzAipzasPw@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/6] Add Pinctrl driver for Starfive JH8100 SoC
+To: Alex Soo <yuklin.soo@starfivetech.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
+	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 21, 2023 at 7:57=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
+Hi Alex,
 
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> CONFIG_DEBUG_GPIO should only be used to enable debug log messages and
-> for core GPIOLIB debugging. Don't use it to control the execution of
-> potentially buggy code. Just put it under an always-false #if.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+thanks for your patch!
 
-Maybe I would have simply deleted the code, but OK. I bet some static
-analyzers will promptly return complaints about "no #if 0 in the kernel" :/
-In this case it's an OK compromise.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Dec 21, 2023 at 9:36=E2=80=AFAM Alex Soo <yuklin.soo@starfivetech.c=
+om> wrote:
+
+>   pinctrl: starfive: jh8100: add pinctrl driver for sys_east domain
+>   pinctrl: starfive: jh8100: add pinctrl driver for sys_west domain
+>   pinctrl: starfive: jh8100: add pinctrl driver for sys_gmac domain
+>   pinctrl: starfive: jh8100: add pinctrl driver for AON domain
+
+To my eye it looks like a lot of code is duplicated between the four subdri=
+vers.
+
+The pattern from other pin controllers is to create a file with all the com=
+mon
+code and then subdrivers for each sub-pincontroller that have their own
+probe but calls into the library.
+
+C.f.
+drivers/pinctrl/qcom/pinctrl-apq8064.c:
+
+static int apq8064_pinctrl_probe(struct platform_device *pdev)
+{
+        return msm_pinctrl_probe(pdev, &apq8064_pinctrl);
+}
+
+And that function is in drivers/pinctrl/qcom/pinctrl-msm.c
+and you find great inspiration in the qcom Kconfig and Makefile
+and drivers/pinctrl/qcom/pinctrl-msm.h
+that you can copypaste to pull this off.
+
+Maybe you should start with a patch that extract the common stuff
+from the existing jh7100/jh7110 drivers and then reuse that for
+jh8100?
 
 Yours,
 Linus Walleij
