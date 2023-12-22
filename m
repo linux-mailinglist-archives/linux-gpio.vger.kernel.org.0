@@ -1,124 +1,112 @@
-Return-Path: <linux-gpio+bounces-1801-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1802-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4123C81C2B7
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 02:28:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B1D681C605
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 08:58:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EDE91C22E62
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 01:27:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E973C1F2604B
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 07:58:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61474611B;
-	Fri, 22 Dec 2023 01:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a3OLoF/l"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4BD2BE53;
+	Fri, 22 Dec 2023 07:58:41 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f181.google.com (mail-lj1-f181.google.com [209.85.208.181])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A228E612E;
-	Fri, 22 Dec 2023 01:27:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f181.google.com with SMTP id 38308e7fff4ca-2cc95f1102eso15022171fa.1;
-        Thu, 21 Dec 2023 17:27:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703208470; x=1703813270; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=cbiwt6IU8kOI0izJYNgyXRRGilmtjvoO7sPIgNCgD0Y=;
-        b=a3OLoF/lLCOsSO9XfNOud1fXQf1Pe7zLVEyUIEOlaA9TJEUC9wOV2NcT96rBC7HvyT
-         AjTDsQZsR4Gytp4LS0w4IdRJoVTrjjCyUXvLuHs7ZVsdVz7kviI1ZrnImPjqI8OmrVvP
-         hnFSLNkeSdFLQ/0vwiwcd/6i2HMRWWjlIvqvLiqyLCvFcvVcf9VaKXoYsym6b7PU9ZMd
-         Wwb/HnQWfW1/yq66iRw0vyUVplbRgQyGqnicLh1/XRV0cwOff8RJlOJeIQTK+b1jKb5a
-         WC8b/ZbpCpFodlYPUAo+w25NxnHX9jKfs8y/bicPppjNYus3phHd+o+A4ILVBUZAx92S
-         KOaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703208470; x=1703813270;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=cbiwt6IU8kOI0izJYNgyXRRGilmtjvoO7sPIgNCgD0Y=;
-        b=nO8iovgTYhYT8Codcj/YPSADVJHBEBO11epiFbkem7PZRVV4JPpATQcLBEW/cRL9Nx
-         VgX8qLPy4lIN7JWgWPv3GsrMWxDal66WXYXTsvmb4mW7jZEGqX5YdZrXCxafiLqyeAqw
-         qaJqwrZlkrW6B5I/0lDQJK6/TbWtx5ohMu5QhXiJfvG6fItCUQmSffy/OnCX5MVTfXMC
-         5tHuhg2YRMiH8T4Q4821k1/a9a+4DvynRhk5pSErLVj32Gie2h9O5U+Ukcu4J6ymp7XU
-         Q98NWHL1t7+zfwTZ03MybrO3CluX5UsFAhXBJPrgjz4PTWAV7x/1JU67ZnfF8sipNXBe
-         EJpA==
-X-Gm-Message-State: AOJu0Yw1Q09/EFTnfagZB7BoBthlKmA6GPo3LjBWQ36eWVsHKpCp7Brv
-	yhGVstz6g93oT8gW1YOqboeCShLoe7/uFWXW+ao=
-X-Google-Smtp-Source: AGHT+IGRFK340w+pzPlHUVllDThXR7WV8h/dGJL2cFunQZ3oNcWSX+JYJBEJ24qUE3U0QajRYKvKBv9l8k4Hh3J73GI=
-X-Received: by 2002:a2e:6e04:0:b0:2cc:89ef:23f9 with SMTP id
- j4-20020a2e6e04000000b002cc89ef23f9mr142991ljc.17.1703208470239; Thu, 21 Dec
- 2023 17:27:50 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24439468;
+	Fri, 22 Dec 2023 07:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BM7wODs91988916, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BM7wODs91988916
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 22 Dec 2023 15:58:24 +0800
+Received: from RTEXDAG01.realtek.com.tw (172.21.6.100) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.32; Fri, 22 Dec 2023 15:58:24 +0800
+Received: from RTEXH36506.realtek.com.tw (172.21.6.27) by
+ RTEXDAG01.realtek.com.tw (172.21.6.100) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.7; Fri, 22 Dec 2023 15:58:24 +0800
+Received: from localhost.localdomain (172.21.252.101) by
+ RTEXH36506.realtek.com.tw (172.21.6.27) with Microsoft SMTP Server id
+ 15.1.2507.17 via Frontend Transport; Fri, 22 Dec 2023 15:58:24 +0800
+From: Tzuyi Chang <tychang@realtek.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Rob Herring
+	<robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>
+CC: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, TY Chang <tychang@realtek.com>
+Subject: [PATCH v4 0/2] Add gpio driver support for Realtek DHC SoCs
+Date: Fri, 22 Dec 2023 15:58:10 +0800
+Message-ID: <20231222075812.6540-1-tychang@realtek.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212065147.3475413-1-jim.t90615@gmail.com>
- <20231212065147.3475413-4-jim.t90615@gmail.com> <ZXnNRoGmeibdRAwq@smile.fi.intel.com>
- <CAKUZ0+EDdBnPdY828L3DUTHKyXX209cJEuFWBs7xff_6bbDWPg@mail.gmail.com>
-In-Reply-To: <CAKUZ0+EDdBnPdY828L3DUTHKyXX209cJEuFWBs7xff_6bbDWPg@mail.gmail.com>
-From: Jim Liu <jim.t90615@gmail.com>
-Date: Fri, 22 Dec 2023 09:27:39 +0800
-Message-ID: <CAKUZ0+GhB9m5c-5PtZNM3YrXmXfDRPVH_ZKAPxecF5dQO7Jdcw@mail.gmail.com>
-Subject: Re: [PATCH v9 3/3] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
-To: Andy Shevchenko <andy@kernel.org>
-Cc: JJLIU0@nuvoton.com, KWLIU@nuvoton.com, linus.walleij@linaro.org, 
-	brgl@bgdev.pl, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-KSE-ServerInfo: RTEXDAG01.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hi  Andy
+These patches add the bindings and the gpio driver for Realtek
+DHC(Digital Home Center) RTD SoCs, including RTD1295, RTD1395,
+RTD1619, RTD1319, RTD1619B, RTD1319D and RTD1315E.
 
-Thanks for your reply.
-The description as below
+Change log:
+v3->v4:
+1. Arrange the compatible list in alphanumerical order.
+2. Remove the size check for the offset array.
+3. Add the debounce callback.
+4. Conducted a review of the critical section, employing raw_spinlock_t for locking purposes.
+5. Add gpiochip_enable_irq/gpiochip_disable_irq to fulfill the immutability requirements.
+6. Use irqd_to_hwirq to get hwirq.
+v2->v3:
+1. Remove generic compatible and use SoC-specific compatible instead.
+2. Add the missing descriptions for the rtd_gpio_info structure members.
+3. Assign gpio_chip fwnode.
+v1->v2:
+1. Add description for DHC RTD SoCs in the bindings.
+2. Revise the compatible names in the bindings.
+3. Transitioned from OF API to platform_device API.
+4. Use u8 for the offset array within the rtd_gpio_info structure.
+5. Record the size of each array within the rtd_gpio_info structure and
+   implement checks to prevent out-of-bounds access.
+6. Use GPIOLIB_IRQCHIP helpers to register interrupts.
+7. Use dynamic allocation for GPIO base.
 
+Tzuyi Chang (2):
+  dt-bindings: gpio: realtek: Add realtek,rtd-gpio
+  Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
 
-> > > +     in_port = GPIO_BANK(gpio->nin_sgpio);
-> > > +     if (GPIO_BIT(gpio->nin_sgpio) > 0)
-> > > +             in_port += 1;
-> >
-> > This is strange... So, you are telling that offsets start from 1 and not 0?
-> >
-> > > +     out_port = GPIO_BANK(gpio->nout_sgpio);
-> > > +     if (GPIO_BIT(gpio->nout_sgpio) > 0)
-> > > +             out_port += 1;
-> >
-> > Ditto.
-> >
-> Yes,  if the customer has defined the in/out pins the offsets start from 1.
+ .../bindings/gpio/realtek,rtd-gpio.yaml       |  69 ++
+ drivers/gpio/Kconfig                          |   9 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-rtd.c                       | 616 ++++++++++++++++++
+ 4 files changed, 695 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-rtd.c
 
->Why?
+-- 
+2.43.0
 
-The NPCM_IOXCFG2_PORT  default setting is to enable 0 input port and 0
-output port.
-The register default value is 0x0. Each port can support 8 pins.
-If the register value is 0x31 means enable 3 output ports and 1 input port.
-If customer has define nuvoton,input-ngpios  or  nuvoton,output-ngpios
-dts property
-
-For example , nuvoton,output-ngpios = <9>
-> > > +     out_port = GPIO_BANK(gpio->nout_sgpio);
-The out_port value is 1 but one port only supports 8 pins.
-> > > +     if (GPIO_BIT(gpio->nout_sgpio) > 0)
-> > > +             out_port += 1;
-This out_port value is 2, the driver will enable two port to support 9 pins.
-
-Maybe it is my expression error , the out_port and in_port default value is 0.
-
-
-> The NPCM_IOXCFG2_PORT register is the set number of in/out ports.
-> NPCM_IOXCFG2_PORT register define as below:
-> 0~3 bit is the number of input ports
-> 4~7 bit is the number of output ports
-> Each module can support 8 input ports and 8 output ports.
-
-Best regards,
-Jim
 
