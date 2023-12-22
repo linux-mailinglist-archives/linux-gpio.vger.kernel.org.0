@@ -1,117 +1,343 @@
-Return-Path: <linux-gpio+bounces-1812-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1814-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C0A981CA5A
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 13:58:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 60FBF81CAA9
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:26:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CFFF5B2117D
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 12:58:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 189D9289150
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 13:26:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0820118AEB;
-	Fri, 22 Dec 2023 12:58:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DTnxdcqI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 524FB1CA9C;
+	Fri, 22 Dec 2023 13:26:40 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A529B1863F;
-	Fri, 22 Dec 2023 12:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d3eabe9321so12502845ad.2;
-        Fri, 22 Dec 2023 04:58:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703249923; x=1703854723; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=9HjnNbNH2TVinJM34IOYgMM2Kxh5j+hwMU83vJZ9rBI=;
-        b=DTnxdcqImOHwB7iWELzSs5yC/WL5o5/3POS1vHTygsGImBKEjI4e7JLoP2YqQrQrKK
-         Q8z1hjBK3yXDnFVMGFb7rFNKwWFy/MpcoIeayFPZmoD6M0WrMt3In45FwtsUVgeNEAGY
-         KONz/qV05KLrqR1kPt7MFpQFm+oaIMvPr/vEmVv5safw7EsMqnv7xdic2lzWE8iC+lnz
-         3uu+Saaa+dmFrqUFXk7/kZBNwpVg1/2P587hijOMQA1i3nL7NoGq5+hQUqv4av+5grMD
-         t+93iQCiPehc4hwuJp+P/E01wpLEl5u7w84J1R6sbkGdjzBg70Q5Rq+ZPOnGhZe0CWdK
-         gqfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703249923; x=1703854723;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9HjnNbNH2TVinJM34IOYgMM2Kxh5j+hwMU83vJZ9rBI=;
-        b=Xlm+3KrFVAu0GVXL+NGZC73Zno3eKOcIoYMIgtCddrO4695MeqOO25RbrcyTwEEY3p
-         90Rg+fenYST7O48+mTsTiVL2yL7q6XUcJS4afJ2E10QxrmuAIOpCVx2W8XMUpeZlBRcm
-         Nqh/GU6ac3IlX6ffqOu7BLRtR+8WtK5dOQa3cEN/Em12J0G2dHZVyIXsEia9X9DK2D0T
-         Asr/j28T7mTt2F36O/w6/Ey74HAZ44x5IlCpkdArZYzthxQ81nJCOyJFMhVhloNouEsM
-         b7NeTlGfGsi3NsRk0GENLnZdolplYaK/6TJqbO4w9SjyXflzCdx5C6PxXERUYTkLxvBw
-         qGAg==
-X-Gm-Message-State: AOJu0YwvPEoiWiZSePCwScnjJtZKSMWXuR2ift5FCYzrhYIfPbSo2v5P
-	YnmwezhHwdcmOl8M8qPC94U=
-X-Google-Smtp-Source: AGHT+IF8Jz7J4xTrM8h+jgL9PBo16u8k7NgSfDJiJxStwc5yhbCB0A0b2H3LUcMuNoYb5olFmjldiA==
-X-Received: by 2002:a17:902:7293:b0:1d3:fa3f:6688 with SMTP id d19-20020a170902729300b001d3fa3f6688mr1001796pll.61.1703249922833;
-        Fri, 22 Dec 2023 04:58:42 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id f3-20020a17090274c300b001cf6453b237sm3385299plt.236.2023.12.22.04.58.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 04:58:42 -0800 (PST)
-Date: Fri, 22 Dec 2023 20:58:37 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period()
- and use
-Message-ID: <ZYWH_ZLOz7eKh0CE@rigel>
-References: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
- <ZYTihbWMcHMHSkC_@rigel>
- <CAMRc=McSXrivkzhJVEh7-+1fzO6EBLMawhxYd7YgcsXW9wBKbA@mail.gmail.com>
- <ZYWD26B-xQqiDOD2@smile.fi.intel.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B04DC1A5A2;
+	Fri, 22 Dec 2023 13:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="398900520"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="398900520"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 05:26:38 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="726787897"
+X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
+   d="scan'208";a="726787897"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga003.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 05:26:35 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rGfLA-000000089ng-2UHH;
+	Fri, 22 Dec 2023 15:13:24 +0200
+Date: Fri, 22 Dec 2023 15:13:24 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Tzuyi Chang <tychang@realtek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Message-ID: <ZYWLdG9kxm2ql0uf@smile.fi.intel.com>
+References: <20231222075812.6540-1-tychang@realtek.com>
+ <20231222075812.6540-3-tychang@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZYWD26B-xQqiDOD2@smile.fi.intel.com>
+In-Reply-To: <20231222075812.6540-3-tychang@realtek.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 22, 2023 at 02:40:59PM +0200, Andy Shevchenko wrote:
-> On Fri, Dec 22, 2023 at 09:58:48AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Dec 22, 2023 at 2:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Thu, Dec 21, 2023 at 07:55:27PM +0200, Andy Shevchenko wrote:
-> > > > Instead of repeating the same code and reduce possible miss
-> > > > of READ_ONCE(), split line_get_debounce_period() heler out
-> > > > and use in the existing cases.
-> > > >
-> > >
-> > > helper
-> > >
-> > >
-> > > Not a fan of this change.
-> > >
-> >
-> > Yeah, sorry but NAK. READ_ONCE() is well known and tells you what the
-> > code does. Arbitrary line_get_debounce_period() makes me have to look
-> > it up.
->
-> We have setter, but not getter. It looks confusing, more over, the setter makes
-> much more than just set. Hence another way to solve this is make clear (by
-> changing name) that the setter is not _just_ a setter.
->
+On Fri, Dec 22, 2023 at 03:58:12PM +0800, Tzuyi Chang wrote:
+> This driver enables configuration of GPIO direction, GPIO values, GPIO
+> debounce settings and handles GPIO interrupts.
 
-As I mentioned elsewhere, the side effects of the setter are irrelevant
-to the caller, so from their point of view it is _just_ a setter.
-Calling it something else would actually be more confusing.
+...
 
-Cheers,
-Kent.
+> +	help
+> +	  Say yes here to support GPIO on Realtek DHC(Digital Home Center)
+> +	  SoCs.
+
+checkpatch.pl complains if it's less than 3 lines.
+
+...
+
+Please, follow IWYU principle.
+
+> +#include <linux/bitops.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/property.h>
+
+> +#include <linux/spinlock.h>
+
++ types.h
+
+...
+
+> +struct rtd_gpio_info {
+> +	const char		*name;
+> +	unsigned int		gpio_base;
+> +	unsigned int		num_gpios;
+> +	u8			*dir_offset;
+> +	u8			*dato_offset;
+> +	u8			*dati_offset;
+> +	u8			*ie_offset;
+> +	u8			*dp_offset;
+> +	u8			*gpa_offset;
+> +	u8			*gpda_offset;
+> +	u8			*deb_offset;
+> +	u8			*deb_val;
+> +	u8			(*get_deb_setval)(const struct rtd_gpio_info *info,
+> +						   unsigned int offset, u8 *reg_offset,
+> +						   u8 *shift, u8 deb_index);
+
+Basically you should group input parameters and output for better
+understanding.
+
+	u8		(*get_deb_setval)(const struct rtd_gpio_info *info,
+					  unsigned int offset, u8 deb_index,
+					  u8 *reg_offset, u8 *shift);
+
+Also indent the lines properly (besides the TABs).
+
+> +};
+
+Make it one TAB less in the middle.
+
+...
+
+> +static u8 rtd_gpio_get_deb_setval(const struct rtd_gpio_info *info, unsigned int offset,
+> +				u8 *reg_offset, u8 *shift, u8 deb_val)
+
+Why is it called val here and index in the other cases?
+Can you come up with better naming that it can be consistent in all four places?
+
+> +{
+> +	*reg_offset = info->deb_offset[offset / 8];
+> +	*shift = (offset % 8) * 4;
+> +	return info->deb_val[deb_val];
+> +}
+> +
+> +static u8 rtd1295_misc_gpio_get_deb_setval(const struct rtd_gpio_info *info, unsigned int offset,
+> +					 u8 *reg_offset, u8 *shift, u8 deb_index)
+> +{
+> +	*reg_offset = info->deb_offset[0];
+> +	*shift = (offset % 8) * 4;
+> +	return info->deb_val[deb_index];
+> +}
+
+> +static u8 rtd1295_iso_gpio_get_deb_setval(const struct rtd_gpio_info *info, unsigned int offset,
+> +					u8 *reg_offset, u8 *shift, u8 deb_index)
+> +{
+> +	*reg_offset = info->deb_offset[0];
+> +	*shift = 0;
+> +	return info->deb_val[deb_index];
+> +}
+
+...
+
+> +static int rtd_gpio_gpa_offset(struct rtd_gpio *data, unsigned int offset)
+> +{
+> +	return data->info->gpa_offset[offset / 31];
+> +}
+> +
+> +static int rtd_gpio_gpda_offset(struct rtd_gpio *data, unsigned int offset)
+> +{
+> +	return data->info->gpda_offset[offset / 31];
+> +}
+
+The / 31 so-o-o counter intuitive, please add a comment in each case to explain
+why [it's not 32 or other power-of-2].
+
+...
+
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +	writel_relaxed(val, data->base + reg_offset);
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
+
+Convert to use cleanup.c, in particular here it becomes
+
+	guard(raw_spinlock_irqsave)(&data->lock);
+
+	writel_relaxed(val, data->base + reg_offset);
+
+...
+
+> +	val = readl_relaxed(data->base + dir_reg_offset);
+> +	val &= BIT(offset % 32);
+> +	dat_reg_offset = val ?
+> +			 rtd_gpio_dato_offset(data, offset) : rtd_gpio_dati_offset(data, offset);
+> +
+> +	val = readl_relaxed(data->base + dat_reg_offset);
+
+> +	val >>= offset % 32;
+> +	val &= 0x1;
+
+Replace 3 LoCs by 1:
+
+	return !!(val & BIT(ofsset % 32));
+
+
+Missed locking. How do you guarantee that you will get consistent results
+between the reads?
+
+...
+
+> +	val &= BIT(offset % 32);
+> +
+> +	return val ? GPIO_LINE_DIRECTION_OUT : GPIO_LINE_DIRECTION_IN;
+
+	if (val & BIT(...))
+		return _OUT;
+	return _IN;
+
+...
+
+> +	for (i = 0; i < data->info->num_gpios; i += 31) {
+
+Same, add explanation why 31.
+
+Note, I actually prefer to see use of valid_mask instead of this weirdness.
+Then you will need to comment only once and use 32 (almost?) everywhere.
+
+> +		reg_offset = get_reg_offset(data, i);
+> +
+> +		status = readl_relaxed(data->irq_base + reg_offset) >> 1;
+> +		writel_relaxed(status << 1, data->irq_base + reg_offset);
+> +
+> +		for_each_set_bit(j, &status, 31) {
+> +			hwirq = i + j;
+
+Nice, but you can do better
+
+		/* Bit 0 is special... bla-bla-bla... */
+		status = readl_relaxed(data->irq_base + reg_offset);
+		status &= ~BIT(0);
+		writel_relaxed(status, data->irq_base + reg_offset);
+
+		for_each_set_bit(j, &status, 32) {
+			hwirq = i + j - 1;
+
+> +			if (rtd_gpio_check_ie(data, hwirq)) {
+> +				int girq = irq_find_mapping(domain, hwirq);
+> +				u32 irq_type = irq_get_trigger_type(girq);
+> +
+> +				if ((irq == data->irqs[1]) && ((irq_type & IRQ_TYPE_SENSE_MASK) !=
+> +					IRQ_TYPE_EDGE_BOTH))
+
+Do you need mask? Isn't irq_type already properly masked here?
+
+> +					break;
+> +				generic_handle_domain_irq(domain, hwirq);
+> +			}
+> +		}
+> +	}
+
+...
+
+> +	u32 clr_mask = BIT(hwirq % 31) << 1;
+> +	u32 ie_mask = BIT(hwirq % 32);
+
+This blows the mind. Needs a comment.
+
+...
+
+> +static int rtd_gpio_irq_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+> +	struct rtd_gpio *data = gpiochip_get_data(gc);
+> +	irq_hw_number_t hwirq = irqd_to_hwirq(d);
+> +	u32 mask = BIT(hwirq % 32);
+> +	unsigned long flags;
+> +	int dp_reg_offset;
+> +	bool polarity;
+> +	u32 val;
+> +
+> +	dp_reg_offset = rtd_gpio_dp_offset(data, hwirq);
+> +
+> +	switch (type & IRQ_TYPE_SENSE_MASK) {
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		polarity = 1;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		polarity = 0;
+> +		break;
+> +
+> +	case IRQ_TYPE_EDGE_BOTH:
+> +		polarity = 1;
+> +		break;
+> +
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	raw_spin_lock_irqsave(&data->lock, flags);
+> +
+> +	val = readl_relaxed(data->base + dp_reg_offset);
+> +	if (polarity)
+> +		val |= mask;
+> +	else
+> +		val &= ~mask;
+> +	writel_relaxed(val, data->base + dp_reg_offset);
+> +
+> +	raw_spin_unlock_irqrestore(&data->lock, flags);
+> +
+> +	return 0;
+> +}
+
+...
+
+> +	irq_chip->handler = handle_simple_irq;
+
+Please, apply bad handler here and lock it in the set_type callback above.
+
+You may read eb441337c714 ("gpio: pca953x: Set IRQ type when handle Intel
+Galileo Gen 2") to understand the difference.
+
+...
+
+> +static int rtd_gpio_init(void)
+> +{
+> +	return platform_driver_register(&rtd_gpio_platform_driver);
+> +}
+
+> +
+
+Redundant blank line, but see below.
+
+> +module_init(rtd_gpio_init);
+> +
+> +static void __exit rtd_gpio_exit(void)
+> +{
+> +	platform_driver_unregister(&rtd_gpio_platform_driver);
+> +}
+> +module_exit(rtd_gpio_exit);
+
+There is no special initcall, you may use module_platform_driver() macro
+instead.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
