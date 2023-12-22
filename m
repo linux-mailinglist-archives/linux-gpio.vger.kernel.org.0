@@ -1,130 +1,124 @@
-Return-Path: <linux-gpio+bounces-1820-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1821-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9A2C281CB2C
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:15:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8550E81CB3B
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:20:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 859581C212DF
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:15:11 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CAB71F27257
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:20:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052491C6A5;
-	Fri, 22 Dec 2023 14:15:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081E41CA9C;
+	Fri, 22 Dec 2023 14:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYm1uYro"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IExblT51"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED1E2031B;
-	Fri, 22 Dec 2023 14:15:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so254814a12.1;
-        Fri, 22 Dec 2023 06:15:05 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E6CC20B09
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 14:19:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40d4aabc620so1642295e9.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 06:19:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703254505; x=1703859305; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=zSMHDuQX1y5+DYhjAAy/0kV003znPZue6vWKu4XMzcM=;
-        b=gYm1uYroCKmxmSJzdloQ7lUn/STP99g9cZKDBszIggG/qVCmPVU679AJguP8NStMpi
-         OhiXwXLATrHmIDTDEKYoY/uC0HjvdhB/jYwuRmdAYjy4WgEzsCcuF23+k0jZv6Sj9IyA
-         JfTuQFwHtl5miFJt+VWDLZb6RGV2RrLKDeoJvUBSuUqQLJsbAAgpEo33UomrS155EDHW
-         NlB1qdemmSdXNhYDU3xAcQYaAB30DI66UEGtkC4T+FBrUpa8nLZU/Vk5/yXQUwSCbCQ6
-         3jZ7JfuvyihevaF6742I0zpPE/ggD3lI4xVBqdHomM16f27dxBf2xURsvcWOSxx1tXoB
-         RPiw==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703254796; x=1703859596; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XXQFp/gck9c6Nmkzo2Y6NIEQ8C8P8Yu/6/nlDIHiGXo=;
+        b=IExblT51C4YfyV+awzjbtr7su33ZkxIZeTbZ3TD9NU8z+puoh/bi64unNqJCyZNtZI
+         L4w0A4c8Ei/DpkwwyaV1m4zD6nppqoVvb6u0zELFL6qT703RhxgoEKgx3srhIm2Pj3nn
+         iJBdrPbNMFcPzxxQEqZqUN0H+Lzz0l9x5Wa/zJuqa/cW0bUICc1t3IhNFS3KbBMoaPYm
+         Zv1OK0aND1kW51SBtH4Flozo7Uc+zqyOncQBSwsF7SAU+xt08skqmJ5PkFAc11kh+Feg
+         IuKMed9b/VL9AeEfu0r5pNGMaEBi6LECeDugzWKlL2gINQBj6ADPzUjHYMVfWbTfRKCQ
+         40UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703254505; x=1703859305;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=zSMHDuQX1y5+DYhjAAy/0kV003znPZue6vWKu4XMzcM=;
-        b=LcpewFvmnMHkKrX8KGsFikOGGovgPto67UYd+qUJRQnWf/4f3kj+MQgGUO5XtUEk1M
-         SJtfxm4gQLBj2UUjVngddG94VlstNs7Jr6fooDtdwrmvGrp8F0wfBPvuyUjPEoW1upOh
-         /dJMRQ3RKIE9oISCrDOPsW7M8B36H/rnLuyTM/k4I9oPxv7mpu9D5lf/jRJDeTjmbrYl
-         P3L77U1cYVS5YXLhfxHpxVC3f4JnhyoILj85a8a9szCNtoXBVacyDqhNoxXoLd2Ms7DV
-         Y14H3jsV6Tei0AD03XAtfoV0KLWSK7cWI8O2skyA8drsbUHCutE8HKrWx2bTAq8x0xY5
-         V5NA==
-X-Gm-Message-State: AOJu0YxJq8q/5i4kTl0UOTcZ79CZ7vCwdo54EoNhV2cjAohc3I/NEBc3
-	BGLQUqWmYV5sxaUDQNB15Yc=
-X-Google-Smtp-Source: AGHT+IF925AGB69UOlptiaAH4z/poi0QYDbpNb9g0blYiQZ+nfY2PqOSUMGxBI7zS38w3vvvpKXXqw==
-X-Received: by 2002:a05:6a20:4905:b0:195:37be:952f with SMTP id ft5-20020a056a20490500b0019537be952fmr479040pzb.107.1703254504814;
-        Fri, 22 Dec 2023 06:15:04 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id o18-20020a170902d4d200b001d3ef3eb988sm1667855plg.253.2023.12.22.06.15.02
+        d=1e100.net; s=20230601; t=1703254796; x=1703859596;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XXQFp/gck9c6Nmkzo2Y6NIEQ8C8P8Yu/6/nlDIHiGXo=;
+        b=LRpxRFd/bXVIHCZKv0KD1vm1e/rRSB3VnQJ6GDG9nDb3JnQiuoJaUvGw12hH7bWQXD
+         nmW0bvm9Tw9VeQnI/0J2d8+VtfYDblp5Ai6OTNVYfgy1T5+HnTzkG67Ph3DbOiQcM3h4
+         G2mOwnVj1NNvXHCLWnUZtBXZUic/2OdT0/ImqWIXk5f6hKg9Xcg0mVmqymVzPmlAURfK
+         Vc4vUV2KhFLKmVhYJ67JHESd4EH9r/e+JxdEvNzfqLZUqZBKSSsrFLhsFMy+Ly5DMjoW
+         JJallwL7KEUdcvpqmRPsegc5f6Hkaz/z8fc7N2o0uMZ8G9CT3UCQe3JOZnw7iLVnaCqj
+         86aA==
+X-Gm-Message-State: AOJu0YzQs8DFff3fghVTYYpL+op07j5ee88TK1yHZXcM0IHoGaKT99IU
+	pb295dxagWebft/8Zre1uJTpomfhiKE3hg==
+X-Google-Smtp-Source: AGHT+IHUOd3iMWO2SfxiJZKIp226vCNzdenWdF/W1sfjX4uslziVsJnSdSoZj79/dbeWSGIxfrg2PQ==
+X-Received: by 2002:a05:600c:1994:b0:40c:6d4b:2fa5 with SMTP id t20-20020a05600c199400b0040c6d4b2fa5mr850837wmq.63.1703254796389;
+        Fri, 22 Dec 2023 06:19:56 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:8792:dee:938e:1ecc])
+        by smtp.gmail.com with ESMTPSA id v8-20020a05600c444800b0040c2c5f5844sm6991395wmn.21.2023.12.22.06.19.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 06:15:04 -0800 (PST)
-Date: Fri, 22 Dec 2023 22:14:59 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+        Fri, 22 Dec 2023 06:19:56 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period()
- and use
-Message-ID: <ZYWZ4yhqzTF8rShe@rigel>
-References: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
- <ZYTihbWMcHMHSkC_@rigel>
- <ZYWDij-J1YruTIM7@smile.fi.intel.com>
- <ZYWHjq_7PnwO27ro@rigel>
- <CAMRc=McPzQyR1J5Mhn7_cBrWEcqz2JKg7t8CpjHx6jgVEnYBvA@mail.gmail.com>
- <ZYWYZ6Ys3hSb4IOe@rigel>
- <CACMJSeu-bS+MpP8HCcD74w0j6vFt821bpgth5LHpqq-fHnEe1w@mail.gmail.com>
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH] MAINTAINERS: split out the uAPI into a new section
+Date: Fri, 22 Dec 2023 15:19:52 +0100
+Message-Id: <20231222141952.16254-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACMJSeu-bS+MpP8HCcD74w0j6vFt821bpgth5LHpqq-fHnEe1w@mail.gmail.com>
 
-On Fri, Dec 22, 2023 at 03:09:54PM +0100, Bartosz Golaszewski wrote:
-> On Fri, 22 Dec 2023 at 15:08, Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Fri, Dec 22, 2023 at 02:37:43PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Dec 22, 2023 at 1:56 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > >
-> >
-> > > > > > And you could've included me in the Cc so I didn't just find it by
-> > > > > > accident.
-> > > > >
-> > > > > Maybe it's time to add you to the MAINTAINERS for this file as a designated
-> > > > > reviewer?
-> > > > >
-> > > >
-> > > > You are patching my recent change that you yourself reviewed only days
-> > > > ago. I would think that you would Cc me whether I were a maintainer or
-> > > > not as I'm very likely to have relevant feedback.
-> > >
-> > > On that note: do you see yourself as a full GPIO reviewer or do you
-> > > prefer I split out the uAPI part into a separate section in
-> > > MAINTAINERS and nominate you as its maintainer?
-> > >
-> >
-> > Not sure I'm comfortable with either.
-> >
-> > Definitely not full GPIO.  I don't feel sufficiently familiar with GPIO
-> > and the related subsystems to qualify.
-> >
-> > Splitting out cdev and the uAPI makes more sense to me, but in my mind at
-> > least even that requires a level of commitment higher than the rather
-> > spotty attention I've been providing recently.
-> > I'm more inclined to leave it as is.
-> >
->
-> I can still split the uAPI files into their own section, make Linus
-> and myself maintainers and make you a reviewer, how about that?
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-That is closer to the reality, so that would work for me.
+Kent Gibson is the author of the character device uAPI v2 and should be
+Cc'ed on all patches aimed for it. Unfortunately this is not the case as
+he's not listed in MAINTAINERS. Split the uAPI files into their own
+section and make Kent the reviewer.
 
-Cheers,
-Kent.
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ MAINTAINERS | 13 +++++++++++--
+ 1 file changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 9104430e148e..2867da6e233d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9006,8 +9006,6 @@ R:	Andy Shevchenko <andy@kernel.org>
+ L:	linux-gpio@vger.kernel.org
+ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+-F:	Documentation/ABI/obsolete/sysfs-gpio
+-F:	Documentation/ABI/testing/gpio-cdev
+ F:	Documentation/admin-guide/gpio/
+ F:	Documentation/devicetree/bindings/gpio/
+ F:	Documentation/driver-api/gpio/
+@@ -9016,6 +9014,17 @@ F:	include/dt-bindings/gpio/
+ F:	include/linux/gpio.h
+ F:	include/linux/gpio/
+ F:	include/linux/of_gpio.h
++
++GPIO UAPI
++M:	Linus Walleij <linus.walleij@linaro.org>
++M:	Bartosz Golaszewski <brgl@bgdev.pl>
++R:	Kent Gibson <warthog618@gmail.com>
++L:	linux-gpio@vger.kernel.org
++S:	Maintained
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
++F:	Documentation/ABI/obsolete/sysfs-gpio
++F:	Documentation/ABI/testing/gpio-cdev
++F:	drivers/gpio/gpiolib-cdev.c
+ F:	include/uapi/linux/gpio.h
+ F:	tools/gpio/
+ 
+-- 
+2.40.1
+
 
