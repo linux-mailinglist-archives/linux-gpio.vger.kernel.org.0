@@ -1,122 +1,110 @@
-Return-Path: <linux-gpio+bounces-1829-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1830-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CDD4281CDB8
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 18:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1DF2181CE10
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 18:50:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0B7121C21D47
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 17:42:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D8901C20AA9
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 17:50:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3114828E01;
-	Fri, 22 Dec 2023 17:42:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VpSe0/Jd"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E39452C196;
+	Fri, 22 Dec 2023 17:44:03 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75D682C186
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 17:42:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-da7ea62e76cso2074618276.3
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 09:42:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703266943; x=1703871743; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=sORYQjvjhn91mhHWmml7PbQMB+VcO/Ox7jN+qS08qmM=;
-        b=VpSe0/Jd5nXGG62u0Ae6fVsFugDUcoVPeh+s9yLQo6l4ZbeXQlFdwPQPvOQ8Hlr8Kt
-         5OetozNsCSQUUHHpnZ1uy4NQpPGqxDrRtV42ATp3H5JpDebOvjvZLe++6m0zqAdL4RJ5
-         YSXCpbblvH0Sj/P/Vt+YnoujtyKDRvd/1blj6by9nyatK2uhfIfJKqBuoNVOEKUGvwh1
-         zHjBS+l/sWwVIUCyPJhhZNbGG3c0s6c6H/FZJOowldLDuiBzeCqogOC2zHVfYHP4ynE7
-         rpLvnFfjOb6ZXXmun2q5YjkhO8GuQUwla3uWY7c58T8kqw1mAWeEsXhcCj+CE5uDVVAs
-         OSfg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703266943; x=1703871743;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=sORYQjvjhn91mhHWmml7PbQMB+VcO/Ox7jN+qS08qmM=;
-        b=hKVG0/t38C7B1mzEn4Xy+HvkartFrtaHoPGxgo6En3Wy2YyfQ+SoT8PJ/U8LhckkND
-         3G5P/DIKH+fgGWL28uDdUVC5GkaWPA/VbTKDUbNjAN7yR+g1vLelv7Ox1m4FGkrsgb8H
-         Cm3RZVBKYE99pVV8b0IFZmPLBlys75RLlviIuoX4Uh/Pn5jqcvT76aeIqBMdQFkoxuzU
-         a91mbNWr3+MPUW4IYBOaryOz4jOBTFMmhV3VAndREZqayWT3WbeR8kfZHOnV354JQfjB
-         E4/cmO3Sf9gzKfgu1oLVh2dmkqF1COX2KOexoSRtgYJvLZ9MwKmWFd74kkuZ3bP3Ym5l
-         RtiQ==
-X-Gm-Message-State: AOJu0YxxRjLAJjc8UaLiojzp2kxCUiY60MpaH/CjPykgh6MBeiHgKTyx
-	M6/H1ic2iId2A9uULGVGXk4kbgNkVZywSWQQeehvsFntfYcX0A==
-X-Google-Smtp-Source: AGHT+IEPyD9jGVm07hqjtuuMcVr/kIdFIZwi5RVJ0LxxpraRGb6Srxhqt/JNYhC0I9XOqK9ADOwhPpHrjOa2o3mQ16g=
-X-Received: by 2002:a25:830f:0:b0:dbd:5baa:366d with SMTP id
- s15-20020a25830f000000b00dbd5baa366dmr1412617ybk.54.1703266943410; Fri, 22
- Dec 2023 09:42:23 -0800 (PST)
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 084FE2C188;
+	Fri, 22 Dec 2023 17:44:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 772B92F4;
+	Fri, 22 Dec 2023 09:44:45 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A76543F738;
+	Fri, 22 Dec 2023 09:43:56 -0800 (PST)
+Date: Fri, 22 Dec 2023 17:43:53 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH 7/7] pinctrl: scmi: implement
+ pinctrl_scmi_imx_dt_node_to_map
+Message-ID: <ZYXK2YVJ1nnETSuI@pluto>
+References: <20231215-pinctrl-scmi-v1-0-0fe35e4611f7@nxp.com>
+ <20231215-pinctrl-scmi-v1-7-0fe35e4611f7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231222141952.16254-1-brgl@bgdev.pl>
-In-Reply-To: <20231222141952.16254-1-brgl@bgdev.pl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 22 Dec 2023 18:42:12 +0100
-Message-ID: <CACRpkdb32EpsHMMR2vSQg51NzCVAnEFTXpsWWMvwY0mCVpnXLw@mail.gmail.com>
-Subject: Re: [PATCH] MAINTAINERS: split out the uAPI into a new section
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231215-pinctrl-scmi-v1-7-0fe35e4611f7@nxp.com>
 
-On Fri, Dec 22, 2023 at 3:19=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Fri, Dec 15, 2023 at 07:56:35PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> i.MX95 System Manager FW supports SCMI PINCTRL protocol, but uses
+> OEM Pin Configuration type, so need i.MX specific dt_node_to_map.
+> 
 
-> Kent Gibson is the author of the character device uAPI v2 and should be
-> Cc'ed on all patches aimed for it. Unfortunately this is not the case as
-> he's not listed in MAINTAINERS. Split the uAPI files into their own
-> section and make Kent the reviewer.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  MAINTAINERS | 13 +++++++++++--
->  1 file changed, 11 insertions(+), 2 deletions(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9104430e148e..2867da6e233d 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9006,8 +9006,6 @@ R:        Andy Shevchenko <andy@kernel.org>
->  L:     linux-gpio@vger.kernel.org
->  S:     Maintained
->  T:     git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
-> -F:     Documentation/ABI/obsolete/sysfs-gpio
-> -F:     Documentation/ABI/testing/gpio-cdev
->  F:     Documentation/admin-guide/gpio/
->  F:     Documentation/devicetree/bindings/gpio/
->  F:     Documentation/driver-api/gpio/
-> @@ -9016,6 +9014,17 @@ F:       include/dt-bindings/gpio/
->  F:     include/linux/gpio.h
->  F:     include/linux/gpio/
->  F:     include/linux/of_gpio.h
-> +
-> +GPIO UAPI
-> +M:     Linus Walleij <linus.walleij@linaro.org>
+This does not even compile for me, as of now, when configuring the Pinctrl
+SCMI driver as a module with your IMX custom additions. (I think the
+Makefile with the additional pinctrl-imx is wrong in how describes the
+objects composing the pinctrl-scmi module with IMX addons...)
 
-Uh, I don't know if I'm competent at this point, I think Kent and you
-are the proper maintainers of the UAPI.
+ERROR: modpost: "pinctrl_scmi_imx_dt_node_to_map" [drivers/pinctrl/pinctrl-scmi.ko] undefined!              
+make[3]: *** [dev/src/linux/scripts/Makefile.modpost:145: Module.symvers] Error 1                                   
+make[2]: *** [dev/src/linux/Makefile:1863: modpost] Error 2                                                         
+make[1]: *** [dev/src/linux/Makefile:234: __sub-make] Error 2 
+make[1]: Leaving directory dev/out_linux       
+make: *** [Makefile:234: __sub-make] Error 2                                                  
 
-With me dropped from the UAPI:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+More in general, I think that this NXP OEM specific additions, which are
+in general welcome (and indeed as you know part of the spec was modified
+to allow for OEM specific needs), do NOT belong to this generic SCMI
+Pinctrl driver, because the driver from Oleksii/EPAM was born as a
+generic SCMI driver and it fits perfectly with the Generic Pinctrl
+Linux subsystem and related generic bindings parsing: now with this
+you are trying to stick a custom OEM slight varied behaviour (and
+related binding) on top of a generic thing.
 
-(OK I know I wrote v1 but think of that just makes me feel ashamed
-these days wrt where it has gone since in v2.)
+And this choice leads to a number of additional changes in the SCMI core
+to support an even more complex handling of SCMI devices, which is
+already too complex IMO..
 
-Yours,
-Linus Walleij
+IOW...I dont think that the whole idea of the per-protocol optional
+compatible to be able to select slightly different behaviours/parsing
+would have a great chance to fly sincerely...
+
+I know there is an issue with having a completely distinct SCMI IMX
+pinctrl driver that uses the same protocol node @19 (without the need for
+the compatible trick) due to the way in which the Pinctrl subsystem
+searches for devices (by of_node)...I'll think about an alternative
+way to allow this but I am not sure (as you saw) that would be so easily
+doable...
+
+Also, I am wondering if this is really a problem in reality since I would
+NOT expect you to load/ship both the OEM/NXP custom specific SCMI pinctrl
+driver AND the generic one on the same platform (after having made them
+distinct I mean...) am I wrong ?
+(so you could even made them exclude each other at compile time...far
+from being the best option I agree...)
+
+Thanks,
+Cristian
 
