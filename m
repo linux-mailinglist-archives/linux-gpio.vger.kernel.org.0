@@ -1,81 +1,162 @@
-Return-Path: <linux-gpio+bounces-1835-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1836-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B638981CFCA
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 23:31:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3559381D079
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 00:33:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4CAD4285FB1
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 22:31:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 59AD31C21453
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 23:33:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDA3C1EB4F;
-	Fri, 22 Dec 2023 22:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49B8133CF4;
+	Fri, 22 Dec 2023 23:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jc1gwCwy"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SpF30si0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f42.google.com (mail-ot1-f42.google.com [209.85.210.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8591EB2F
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 22:30:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-ot1-f42.google.com with SMTP id 46e09a7af769-6dbc2914825so680063a34.1
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 14:30:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703284254; x=1703889054; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=WwejgOu3CLIEy7WBg6DtMDhgjRDGncrbITb/o+9tVKM=;
-        b=jc1gwCwyQC21YuJLxDsICmF8Dbjr0sHq5z+GvXy0tBzbhINVUHXoKTR0gSBjt4G+w8
-         eDOeDBMbAgN9/1sDZrT6xsfOPHi9t9AWRVlSc2GGUBCLE3/GMmblVr2nA6eqkaKl4dop
-         eKga4UW2c2Ia9GROQ/9shFmdwHRT9crzltIKc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703284254; x=1703889054;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=WwejgOu3CLIEy7WBg6DtMDhgjRDGncrbITb/o+9tVKM=;
-        b=Aj9476h2hsgKpg/yRN/iFB2Ed1DVdr79YprUxXItTdYq8gYTePx+IiWcxJm+Nw9OaI
-         u2JWOQAAClxmmKr77Cp2voTC0br5mHQmPIpF3RtzY/0UL9JYmZxjhZD/LPveJwIYnVL+
-         cL9hEjiRMVeeTHoeS6ujGc6th8WYUK9KsTdUM5NWev7lfD0rX5tgQqWEfIFKI3/Mkz1M
-         aM5+cmYwONl/PSRozk1Gc/o7OxSq4vr7HtacnT1ZKABtHewo2SH3r/t8T9YfCZIqtn5k
-         KdNO5qThLhFbI6qkVqqeTaYL0UA00Jp7YSLVnfNnESOaSIpDBNlwXlsQQmqsk/YL1o4B
-         YcIg==
-X-Gm-Message-State: AOJu0YzeB9IjT6PNvGsvPHyizYvqsPjxEJH5KAJAtDa3pYK+nFrQxz4u
-	SBskHQmsdkr098fyhpn0uu8QMOYJ4wQBPtisKlhVrIxihuB8
-X-Google-Smtp-Source: AGHT+IER1bh8jMPP1/3cXJs8YlZWz0DMEgd5cLDf4OrRRbTGp5gF9dbStw6xbzqvzSRoXTPBelayfBgYtrmw0We3VHY=
-X-Received: by 2002:a05:6830:97:b0:6db:c040:b5e9 with SMTP id
- a23-20020a056830009700b006dbc040b5e9mr1589627oto.51.1703284254400; Fri, 22
- Dec 2023 14:30:54 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6814A33CF3
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 23:33:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703287997; x=1734823997;
+  h=date:from:to:cc:subject:message-id;
+  bh=Pq+jinwIR60WtW3Q5aZ2kr8C99xsqGk76ZB1ZApWtgg=;
+  b=SpF30si0SJNqzsPHNEAEEtBDIni56Y1l3CguznshcjiMQh/+/xihQFWM
+   Wpnykd6i94bARPd60xqFJdiv44tVdGjKYCc5n0vS5oLhywSh955ki1JoW
+   v6dP86Si4AjR6IHPuBlqFuRerv5ZV08B62lgh6+zuS5B+YClWMN6kYD6U
+   ERedo1mNNyDcj2BJeGPl7vz060S6hnbipVpNvfdCPGMyvhdYuq+oq0AyM
+   piTdk/en4+KQih4lwsQq5jrm0Ik9erM0aj6hM8dgtOLwocuxKF9sVN6vQ
+   j0UJ0AVnGvREQ3w03lVogyY7AIr6MfgLw4YOF/q0VE0//bbdJDHrZ3lOa
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="14848462"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="14848462"
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 15:33:16 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="780723518"
+X-IronPort-AV: E=Sophos;i="6.04,297,1695711600"; 
+   d="scan'208";a="780723518"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by fmsmga007.fm.intel.com with ESMTP; 22 Dec 2023 15:33:15 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGp0w-0009zs-23;
+	Fri, 22 Dec 2023 23:33:11 +0000
+Date: Sat, 23 Dec 2023 07:31:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ da1294407cb1142719706d77fca569df93f0c67d
+Message-ID: <202312230723.Z5Ek6Sl7-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20231220235459.2965548-1-markhas@chromium.org> <ZYRAuY1LGdD8_u5K@smile.fi.intel.com>
-In-Reply-To: <ZYRAuY1LGdD8_u5K@smile.fi.intel.com>
-From: Mark Hasemeyer <markhas@chromium.org>
-Date: Fri, 22 Dec 2023 15:30:43 -0700
-Message-ID: <CANg-bXDw+bYNTu-HFaNAPb4e+_oKt2ExR6PehWR_==vpboKGaw@mail.gmail.com>
-Subject: Re: [PATCH v2 00/22] Improve IRQ wake capability reporting and update
- the cros_ec driver to use it
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev, 
-	cros-qcom-dts-watchers@chromium.org, devicetree@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org, 
-	linux-rockchip@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 
-	linux-tegra@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 
-> Just wondering if you used --histogram diff algo when preparing patches.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: da1294407cb1142719706d77fca569df93f0c67d  Merge branch 'devel' into for-next
 
-Not knowingly. I use patman which uses 'git format-patch' under the
-covers with some added options:
-https://github.com/siemens/u-boot/blob/master/tools/patman/gitutil.py#L308
+elapsed time: 2314m
+
+configs tested: 80
+configs skipped: 2
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+hexagon                           allnoconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386                                defconfig   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                          rv32_defconfig   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
