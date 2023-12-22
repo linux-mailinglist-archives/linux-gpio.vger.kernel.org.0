@@ -1,75 +1,79 @@
-Return-Path: <linux-gpio+bounces-1819-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1820-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C7B2F81CB25
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:12:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9A2C281CB2C
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 15:15:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 67E591F22DD9
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:12:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 859581C212DF
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 14:15:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEAF51B271;
-	Fri, 22 Dec 2023 14:12:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052491C6A5;
+	Fri, 22 Dec 2023 14:15:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="STpIxPPR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gYm1uYro"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94BE21C693;
-	Fri, 22 Dec 2023 14:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9ED1E2031B;
+	Fri, 22 Dec 2023 14:15:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d41bb4da91so3226665ad.0;
-        Fri, 22 Dec 2023 06:12:27 -0800 (PST)
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cdf76cde78so254814a12.1;
+        Fri, 22 Dec 2023 06:15:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703254347; x=1703859147; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703254505; x=1703859305; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=TskB6em0ocvTargEDFcD5G0O4xeSFVLyNkdQ5H3hjGo=;
-        b=STpIxPPRKRz772kmCfEG23b4jJKpXzdwUxuNz8SJqjAFdYaKTlc2uvTL5Ni9UOmsBf
-         H+HAuP65lXnG64Vd9OriESgsb1M0A7+yJzIoy0LWzsoTq2vrxt6xgE3n6ee+2XXaKC5S
-         xyiChlwtfBG3c2vD2bGxPIf5If5Skpf/ZJFLYxCut++XsSzNRxiBwoaa7vNXlM0AYVpp
-         rTXqpvLiYT6bo4Bu460584zyiSuvObs1OT8scLrTsJpxcuyUBAG7GBqoD1J2PfcCYr5i
-         FBin1cP9Ljl3LFrDstUSPsMKIVX5Uij7saKPji1I+zLMcyLU5k/Vy0mU/8CLKN5jT/eZ
-         RHdA==
+        bh=zSMHDuQX1y5+DYhjAAy/0kV003znPZue6vWKu4XMzcM=;
+        b=gYm1uYroCKmxmSJzdloQ7lUn/STP99g9cZKDBszIggG/qVCmPVU679AJguP8NStMpi
+         OhiXwXLATrHmIDTDEKYoY/uC0HjvdhB/jYwuRmdAYjy4WgEzsCcuF23+k0jZv6Sj9IyA
+         JfTuQFwHtl5miFJt+VWDLZb6RGV2RrLKDeoJvUBSuUqQLJsbAAgpEo33UomrS155EDHW
+         NlB1qdemmSdXNhYDU3xAcQYaAB30DI66UEGtkC4T+FBrUpa8nLZU/Vk5/yXQUwSCbCQ6
+         3jZ7JfuvyihevaF6742I0zpPE/ggD3lI4xVBqdHomM16f27dxBf2xURsvcWOSxx1tXoB
+         RPiw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703254347; x=1703859147;
+        d=1e100.net; s=20230601; t=1703254505; x=1703859305;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TskB6em0ocvTargEDFcD5G0O4xeSFVLyNkdQ5H3hjGo=;
-        b=i37nBC+UEYhvBF6vljHhKwyPIVt3q4MP8Da+L8zf0/jFaO4dfYLJmA4WMiI15yPQUy
-         9pZZram2x3i2wx2wgXCMJPWNAG2ZEnXnq1P7pxmpkGHVkW4gLyMKUvDFecQEHyxI+goR
-         DJPde5yqyVxAZAuszO4+9tlEhjlhiJJnCLGn9fzifpnysC/yFrHDCkOhy2EJPtEk6nTR
-         iefXF8PZtpxcf1TLWDju3TqFmFUWPHqWwnv1YVvfyzfsRU6FZT2oR2tUdEhcmGe9L3Om
-         3BPMCrg5nNnaZpflv0gOTR5AZOZ+FNcD1toT7KUouQkjnPu6sqqjBsetGBiQvLJvDhgz
-         X/Ow==
-X-Gm-Message-State: AOJu0YyrTtRa8jFZDJFVkaAuAH5dil2tQO5MkwuMTnhDKRLQIi/+1XlQ
-	g5rRJpQS7dBRIrKEHeIRGRw=
-X-Google-Smtp-Source: AGHT+IFxLt9bLrpqg6GFD0HTlBdFwTP/cz4FXzA9un2OiN48hpbC1FvfopisJQJ2JP4kAFYSqsQF4w==
-X-Received: by 2002:a17:90b:517:b0:28b:e74b:6c05 with SMTP id r23-20020a17090b051700b0028be74b6c05mr799869pjz.24.1703254346739;
-        Fri, 22 Dec 2023 06:12:26 -0800 (PST)
+        bh=zSMHDuQX1y5+DYhjAAy/0kV003znPZue6vWKu4XMzcM=;
+        b=LcpewFvmnMHkKrX8KGsFikOGGovgPto67UYd+qUJRQnWf/4f3kj+MQgGUO5XtUEk1M
+         SJtfxm4gQLBj2UUjVngddG94VlstNs7Jr6fooDtdwrmvGrp8F0wfBPvuyUjPEoW1upOh
+         /dJMRQ3RKIE9oISCrDOPsW7M8B36H/rnLuyTM/k4I9oPxv7mpu9D5lf/jRJDeTjmbrYl
+         P3L77U1cYVS5YXLhfxHpxVC3f4JnhyoILj85a8a9szCNtoXBVacyDqhNoxXoLd2Ms7DV
+         Y14H3jsV6Tei0AD03XAtfoV0KLWSK7cWI8O2skyA8drsbUHCutE8HKrWx2bTAq8x0xY5
+         V5NA==
+X-Gm-Message-State: AOJu0YxJq8q/5i4kTl0UOTcZ79CZ7vCwdo54EoNhV2cjAohc3I/NEBc3
+	BGLQUqWmYV5sxaUDQNB15Yc=
+X-Google-Smtp-Source: AGHT+IF925AGB69UOlptiaAH4z/poi0QYDbpNb9g0blYiQZ+nfY2PqOSUMGxBI7zS38w3vvvpKXXqw==
+X-Received: by 2002:a05:6a20:4905:b0:195:37be:952f with SMTP id ft5-20020a056a20490500b0019537be952fmr479040pzb.107.1703254504814;
+        Fri, 22 Dec 2023 06:15:04 -0800 (PST)
 Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id sh18-20020a17090b525200b0028ae9cb6ce0sm7673652pjb.6.2023.12.22.06.12.24
+        by smtp.gmail.com with ESMTPSA id o18-20020a170902d4d200b001d3ef3eb988sm1667855plg.253.2023.12.22.06.15.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Dec 2023 06:12:26 -0800 (PST)
-Date: Fri, 22 Dec 2023 22:12:21 +0800
+        Fri, 22 Dec 2023 06:15:04 -0800 (PST)
+Date: Fri, 22 Dec 2023 22:14:59 +0800
 From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: andy@kernel.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
-Subject: Re: [PATCH v2 5/5] gpiolib: cdev: replace locking wrappers for
- gpio_device with guards
-Message-ID: <ZYWZRWvwBTdKNHF-@rigel>
-References: <20231221012040.17763-1-warthog618@gmail.com>
- <20231221012040.17763-6-warthog618@gmail.com>
- <ZYReZI_TnX1MyvP7@smile.fi.intel.com>
- <ZYTcn-UX0TUM5P9O@rigel>
- <CAMRc=MfNme1VavLNnX9whjgohNCs4Q5qADByX8c_tdw05UVYUA@mail.gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period()
+ and use
+Message-ID: <ZYWZ4yhqzTF8rShe@rigel>
+References: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
+ <ZYTihbWMcHMHSkC_@rigel>
+ <ZYWDij-J1YruTIM7@smile.fi.intel.com>
+ <ZYWHjq_7PnwO27ro@rigel>
+ <CAMRc=McPzQyR1J5Mhn7_cBrWEcqz2JKg7t8CpjHx6jgVEnYBvA@mail.gmail.com>
+ <ZYWYZ6Ys3hSb4IOe@rigel>
+ <CACMJSeu-bS+MpP8HCcD74w0j6vFt821bpgth5LHpqq-fHnEe1w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,33 +83,47 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MfNme1VavLNnX9whjgohNCs4Q5qADByX8c_tdw05UVYUA@mail.gmail.com>
+In-Reply-To: <CACMJSeu-bS+MpP8HCcD74w0j6vFt821bpgth5LHpqq-fHnEe1w@mail.gmail.com>
 
-On Fri, Dec 22, 2023 at 03:05:41PM +0100, Bartosz Golaszewski wrote:
-> On Fri, Dec 22, 2023 at 1:47 AM Kent Gibson <warthog618@gmail.com> wrote:
+On Fri, Dec 22, 2023 at 03:09:54PM +0100, Bartosz Golaszewski wrote:
+> On Fri, 22 Dec 2023 at 15:08, Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > On Thu, Dec 21, 2023 at 05:48:52PM +0200, Andy Shevchenko wrote:
-> > > On Thu, Dec 21, 2023 at 09:20:40AM +0800, Kent Gibson wrote:
-> > > > Replace the wrapping functions that inhibit removal of the gpio chip
+> > On Fri, Dec 22, 2023 at 02:37:43PM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Dec 22, 2023 at 1:56 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > > >
+> >
+> > > > > > And you could've included me in the Cc so I didn't just find it by
+> > > > > > accident.
+> > > > >
+> > > > > Maybe it's time to add you to the MAINTAINERS for this file as a designated
+> > > > > reviewer?
+> > > > >
+> > > >
+> > > > You are patching my recent change that you yourself reviewed only days
+> > > > ago. I would think that you would Cc me whether I were a maintainer or
+> > > > not as I'm very likely to have relevant feedback.
 > > >
-> > > GPIO
+> > > On that note: do you see yourself as a full GPIO reviewer or do you
+> > > prefer I split out the uAPI part into a separate section in
+> > > MAINTAINERS and nominate you as its maintainer?
 > > >
 > >
-> > Bart, I don't care either way and not enough to respin a v3.
-> > If it bothers you could you fix it on the way in?
+> > Not sure I'm comfortable with either.
+> >
+> > Definitely not full GPIO.  I don't feel sufficiently familiar with GPIO
+> > and the related subsystems to qualify.
+> >
+> > Splitting out cdev and the uAPI makes more sense to me, but in my mind at
+> > least even that requires a level of commitment higher than the rather
+> > spotty attention I've been providing recently.
+> > I'm more inclined to leave it as is.
 > >
 >
-> Sure!
->
-> > That is if you aren't too busy reversing xmas trees ;-).
-> >
->
-> Joke's on you, I actually do find them easier to read and try to use
-> them everywhere in new code I write. :)
+> I can still split the uAPI files into their own section, make Linus
+> and myself maintainers and make you a reviewer, how about that?
 >
 
-Oh, I agree - it is more readable.  It just seems very timely that Andy
-keeps griping about them not being inverted.
+That is closer to the reality, so that would work for me.
 
 Cheers,
 Kent.
