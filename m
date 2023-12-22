@@ -1,83 +1,86 @@
-Return-Path: <linux-gpio+bounces-1810-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1811-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5923481CA20
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 13:41:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 12E9781CA58
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 13:57:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8C96C1C20F2F
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 12:41:09 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 533DDB21F2E
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 12:56:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 712CA179AE;
-	Fri, 22 Dec 2023 12:41:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D22411864D;
+	Fri, 22 Dec 2023 12:56:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="cy1EqYpX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PlU11bx0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B8718624;
-	Fri, 22 Dec 2023 12:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703248865; x=1734784865;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7ZJveX1s7cgliTk+K43ko5ol4fPOQ4lq4WTKaVnm9yM=;
-  b=cy1EqYpXh0BNY2Z+mDv0C5Psx864p6UHoA9Y/3kHPKowy2M47zn020SI
-   O/AbkzDvEH9Eg62h71gCWFD1jGYojjMct+rm2R/dV1dow0N4VyhjSQFD7
-   I+Z4EsLKSHT+5PVYMK2aWLXs+q5i2PpzokRMAdbo1T/tTr4116TRArknO
-   Ty9XoCXXBI7Ux9+v6Ui2qWtJxXK76nuKdQD8XJXTTq2WNz1Lj9fIa57+T
-   qmolHMiHQIHSFiNjW+oz0MWXGPigdsuaJdkHClN2DqfzGuCEy87HlnwNV
-   0aPMr0t0WRtbDlS4ky7cUM78bmBdIoYyKedrPntAFYm0OPpF4EYpDIvWC
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="3196494"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="3196494"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:41:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10931"; a="950265804"
-X-IronPort-AV: E=Sophos;i="6.04,296,1695711600"; 
-   d="scan'208";a="950265804"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 04:41:02 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rGepo-0000000891T-0eik;
-	Fri, 22 Dec 2023 14:41:00 +0200
-Date: Fri, 22 Dec 2023 14:40:59 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772B118C20;
+	Fri, 22 Dec 2023 12:56:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-1d422c9f894so3198365ad.3;
+        Fri, 22 Dec 2023 04:56:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703249812; x=1703854612; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZesGLqsg0Mup8BizWmbcf46waNTPQG/aVlm/0mdvhUE=;
+        b=PlU11bx03gbIyW+XNdmjpoChm+oO3LJgwe0dIols3AUZ2baEjwhXZ5fD3XTR8Fityi
+         rzh4222THCLvIbn43dzgD0EHvJFKVnahaEILgwjTmI2dQgfzAhSuE5znsLOjqOwEGHlV
+         pGfgkUVIHAg0X2ioROQLP/ts/nJo0fzE2gWFsWKUo8FDQp1TtzkmrQDNXwCDX6H6ypL1
+         Z6KuVkIWPlpqeo8dfgRU7ZXUsRcHYTmSE3Yzqz+0Ze1ID+WC6jVogJiOgBrXPhcvmWHL
+         OmMrlsv8/876HEkosvPwURydHsW2a/buGtGAIy/nu+3kWzmsLrO0+5OfAkb5dTJicAxW
+         cXGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703249812; x=1703854612;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZesGLqsg0Mup8BizWmbcf46waNTPQG/aVlm/0mdvhUE=;
+        b=SyCcuvUP1MuVCTzz0T9BEHDQ8i5YnSRNv9Co/bmG7Bz4EVn0yKAV0XUwotvJE72+XA
+         mCgs4K4afOCggLeeG7TfxdfN1jG7zBAwhUAJSCXqxoRs6pjBoAD9BOp0c0+RJa7DysTG
+         BShFQWbszGYQaAE92tzJTsHLdOOwu7CyrpsnzSCH0OhjEwpZg4pkJ7CtdJDQWHT5lgoF
+         omfSNL8phteWb69aqKGh6vrgMifHC1jWtOhVX6TWdf2TbXo1ZR2r7QQHEO7QuneGECFs
+         c1oQmDZbJMzt0QgcujZZJMR6hIl3c3iqUZCerB7KKpNk5iwXGI+oVld+Rcp+4XO+ZWDc
+         yJrQ==
+X-Gm-Message-State: AOJu0YyV0x2JGui93dvZJrfWfIzvGyByVVpIJYW6uCmh/bNKRHM0uU8Q
+	EdQxleevv6Q4WmW5+ymkhXk=
+X-Google-Smtp-Source: AGHT+IHWIyot6GnsOhwZVS68Y2Z/KfzA4Mi75nlSQVmIWAMUJTZVi4tReINh1yTVSGM+Cz/U5ke2Vg==
+X-Received: by 2002:a17:902:d4cb:b0:1d3:8032:ccc1 with SMTP id o11-20020a170902d4cb00b001d38032ccc1mr1345752plg.113.1703249811462;
+        Fri, 22 Dec 2023 04:56:51 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id f10-20020a170902ce8a00b001d347a98e7asm3351248plg.260.2023.12.22.04.56.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 Dec 2023 04:56:51 -0800 (PST)
+Date: Fri, 22 Dec 2023 20:56:46 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
 Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period()
  and use
-Message-ID: <ZYWD26B-xQqiDOD2@smile.fi.intel.com>
+Message-ID: <ZYWHjq_7PnwO27ro@rigel>
 References: <20231221175527.2814506-1-andriy.shevchenko@linux.intel.com>
  <ZYTihbWMcHMHSkC_@rigel>
- <CAMRc=McSXrivkzhJVEh7-+1fzO6EBLMawhxYd7YgcsXW9wBKbA@mail.gmail.com>
+ <ZYWDij-J1YruTIM7@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McSXrivkzhJVEh7-+1fzO6EBLMawhxYd7YgcsXW9wBKbA@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <ZYWDij-J1YruTIM7@smile.fi.intel.com>
 
-On Fri, Dec 22, 2023 at 09:58:48AM +0100, Bartosz Golaszewski wrote:
-> On Fri, Dec 22, 2023 at 2:12 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
+On Fri, Dec 22, 2023 at 02:39:38PM +0200, Andy Shevchenko wrote:
+> On Fri, Dec 22, 2023 at 09:12:37AM +0800, Kent Gibson wrote:
 > > On Thu, Dec 21, 2023 at 07:55:27PM +0200, Andy Shevchenko wrote:
 > > > Instead of repeating the same code and reduce possible miss
 > > > of READ_ONCE(), split line_get_debounce_period() heler out
@@ -86,21 +89,49 @@ On Fri, Dec 22, 2023 at 09:58:48AM +0100, Bartosz Golaszewski wrote:
 > >
 > > helper
 > >
-> >
 > > Not a fan of this change.
 > >
-> 
-> Yeah, sorry but NAK. READ_ONCE() is well known and tells you what the
-> code does. Arbitrary line_get_debounce_period() makes me have to look
-> it up.
+> > So using READ_ONCE() is repeating code??
+>
+> Yes. Because one may forget about it.
 
-We have setter, but not getter. It looks confusing, more over, the setter makes
-much more than just set. Hence another way to solve this is make clear (by
-changing name) that the setter is not _just_ a setter.
+Just as one may forget to use your wrapper.
+This argument is a NULL - so I'll just forget about it.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> > Doesn't providing a wrapper around READ_ONCE() just rename that repitition?
+> > What of all the other uses of READ_ONCE() in cdev (and there are a lot) -
+> > why pick on debounce_period?
+>
+> Because you have a setter, but getter. Inconsistency.
+>
 
+But then "for consistency" ALL the struct line fields require accessors
+and mutators.  That path is insanity.
 
+The setter is there as setting the value now has side effects - none of
+which are visible to the caller, hence the usage of the standard
+setter name.
+You are siggesting every function name describe everything the function
+does?
+
+And, in case you've forgotten, YOU REVIEWED THIS.
+
+> > The line_set_debounce_period() is necessary as the set is now a
+> > multi-step process as it can impact whether the line is contained
+> > in the supinfo_tree.  The get is just a get.
+> >
+> > And you could've included me in the Cc so I didn't just find it by
+> > accident.
+>
+> Maybe it's time to add you to the MAINTAINERS for this file as a designated
+> reviewer?
+>
+
+You are patching my recent change that you yourself reviewed only days
+ago. I would think that you would Cc me whether I were a maintainer or
+not as I'm very likely to have relevant feedback.
+
+Cheers,
+Kent.
 
