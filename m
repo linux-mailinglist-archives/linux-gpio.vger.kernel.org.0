@@ -1,143 +1,95 @@
-Return-Path: <linux-gpio+bounces-1797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9D7D781C130
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 23:51:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C640B81C269
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 01:47:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 525381F21840
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Dec 2023 22:51:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CE471C225CC
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Dec 2023 00:47:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5F578E84;
-	Thu, 21 Dec 2023 22:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A479A50;
+	Fri, 22 Dec 2023 00:47:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hFqRmhGA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X56fcH9F"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09F0878E64
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 22:50:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-5e89ba9810aso12626047b3.2
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Dec 2023 14:50:56 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4108A23;
+	Fri, 22 Dec 2023 00:47:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6d7f1109abcso943428b3a.3;
+        Thu, 21 Dec 2023 16:47:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703199056; x=1703803856; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6NSdayl0t2KVF215soihYjUo/9+OE7MdLIOTA1vidAU=;
-        b=hFqRmhGA70RfauA9k159PZLNATls5/CTYxPhm+6PxVbWrSwtH7p1UtXoYCkQkC7hXM
-         A/fDQdYsEL1I6iIQ2ddw/ERZWh3ATWfJ8qcX6+xDUiWuRYglE06QIQLynLzgSFQeladg
-         lQQBDMytOBd+w9WcDibksfLSQVATF9uzJa7PusfI1wfFSO2vLjMzUGQfy/lT5iZEOKmy
-         Z1qP58TyV0HcEV+lo6+vxIX2f7tkpltVq2VE7C/+4yGYqqe6uK3MZf7cp8aTuA8V0jRP
-         DgpFh9S31zHT5a4DSDoI6BVqkDd50FMS8INqs+BarVms0U5aco42QsT3T0L/fQt5eizQ
-         mpag==
+        d=gmail.com; s=20230601; t=1703206053; x=1703810853; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=F0DkFx3QkS/a8cZdxuqsiGOFIG2X1G3gZilc4HvyolY=;
+        b=X56fcH9FTFqHZ+B0Nwas+tTCfN9pInLDIgvrrgoLTnnm82QWrhIlg1cnyq+Bub7vTs
+         yNAitTv7JZURmfqGR8XZUqjMnr5ys795fsHvYI6l73Gj25F+Hd5qjxdNBAFHgs2DjUf1
+         xBihI6jCPBmUyUW6Y0mF6NtdefdGrB4Z6W+NnlSkIvRMW8LpuQJEl+DRkaj5yIl2Ellz
+         z1Z8++TD8bNq9Ce/ZB7hl/4vfcs5kALw/P3KvMe4iNzzmXZgk7CmLqG5/vD8c4Dogtz7
+         /cIpFFLGj5hk13HZvVlCakXdCyFSxlnJyPLktZSlUvv//mDGNLrtByT2uRqikvmkvPjz
+         uk1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703199056; x=1703803856;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6NSdayl0t2KVF215soihYjUo/9+OE7MdLIOTA1vidAU=;
-        b=moto0wbTiYWxZfdqxbn1G+41qoktuDd4Ddayp6aKh/ccoVX2cwEGhZFnb8hBj9ch1U
-         WcerJI6Pzc9RN7272/xES7BMynos8tSyHGJCtlxYnz1YYLr8/gkUglZSHpd2Eiee1jOJ
-         HzDncT7Qi3gP1aW3eCYNBE8hse8zW+tPemzk93BnuEC24jXme8MguhWT6EZsrI0MqnHr
-         MQJdx6LUBzFyWiB8o0bHrJTWMEieXoc/hlVaYHbw5JO+BqJ/AsyYFufEVfsVaPCR8TU6
-         FFhZj1CcxJCOzCTVS+bk8V7QjHTGW+KvTCGNPvLqmJdP934sI9A3FyJ1pkFEaR6CblLm
-         yzDg==
-X-Gm-Message-State: AOJu0YxzmWHw9vf2aMCD7fYahe1uxO0tKESADFcSNMo3vKet8QPEXXPk
-	y+utRUQnq9kAdHHNU/XoU+BViQgy2QMvT732rtz3vPLU5fJCHgiFnbj7XflfwBs=
-X-Google-Smtp-Source: AGHT+IFBUZXIyGBMhCvEfUqDYzVUs1SN9CNeH7VZYaba5ZgQkjg3KjvQ1uTpx5YbyJI9Ub1oRGyeZ35Rh8NQ+31T49U=
-X-Received: by 2002:a0d:d713:0:b0:5e8:9a64:9b5d with SMTP id
- z19-20020a0dd713000000b005e89a649b5dmr565454ywd.34.1703199055931; Thu, 21 Dec
- 2023 14:50:55 -0800 (PST)
+        d=1e100.net; s=20230601; t=1703206053; x=1703810853;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=F0DkFx3QkS/a8cZdxuqsiGOFIG2X1G3gZilc4HvyolY=;
+        b=n3b08YJE30vJiqR/KAgFzsZGz/I+7SJmKfAR6TwwOI6Zc/ngu3libff5CvvArzIsjN
+         zQ6XDDM4ikJlcFuKEu8Jijq46nah0Jl2gbGYYUs+rLC4AINNLWJyzARZGJvjCdYVjBfM
+         LqDyNffOu2R9qvSVRvGB4M0loku5cBONdCMKDHUcR5YndnDAR7xZxjwiwJSJqa0iTFUy
+         Mf92aAnODACkx+X7P97IU1s1tyx9w+VWppNcR79kjkBcqgzI64RBdWVSS8AUBjQi69KZ
+         lejj7GjlIKfr2gt/7fwhaPAD1ThhD9UQxzgefucgkm4JlsaAciVVoXsPfInCBZIqIPWt
+         eMOg==
+X-Gm-Message-State: AOJu0Yx4grmAppS/OnV+V+OxMiURxVzG5YbP4MH3+exAOmq41iW3U0XJ
+	TAw4wsSd+oF10Dta+8FXdL4=
+X-Google-Smtp-Source: AGHT+IGeefGo6HnuINBQc66Bc5fAf0J2wMMeqn1LKaBmVMrEU/rhaVTOrAVbtDmvFcPdOMKBgkRjfg==
+X-Received: by 2002:a05:6a21:a59d:b0:187:23f4:d061 with SMTP id gd29-20020a056a21a59d00b0018723f4d061mr561588pzc.37.1703206052811;
+        Thu, 21 Dec 2023 16:47:32 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id b1-20020a170903228100b001b86dd825e7sm2241282plh.108.2023.12.21.16.47.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Dec 2023 16:47:32 -0800 (PST)
+Date: Fri, 22 Dec 2023 08:47:27 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: brgl@bgdev.pl
+Cc: andy@kernel.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linus.walleij@linaro.org
+Subject: Re: [PATCH v2 5/5] gpiolib: cdev: replace locking wrappers for
+ gpio_device with guards
+Message-ID: <ZYTcn-UX0TUM5P9O@rigel>
+References: <20231221012040.17763-1-warthog618@gmail.com>
+ <20231221012040.17763-6-warthog618@gmail.com>
+ <ZYReZI_TnX1MyvP7@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 21 Dec 2023 23:50:44 +0100
-Message-ID: <CACRpkdY=R+tyyFxQVuXJARqVDRXCi_A=JvYACWJ6L5JQa_8pHg@mail.gmail.com>
-Subject: [GIT PULL] pin control fixes for v6.7
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Mario Limonciello <mario.limonciello@amd.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZYReZI_TnX1MyvP7@smile.fi.intel.com>
 
-Hi Linus,
+On Thu, Dec 21, 2023 at 05:48:52PM +0200, Andy Shevchenko wrote:
+> On Thu, Dec 21, 2023 at 09:20:40AM +0800, Kent Gibson wrote:
+> > Replace the wrapping functions that inhibit removal of the gpio chip
+>
+> GPIO
+>
 
-here are some driver fixes for v6.7, all are in drivers, the most
-interesting one is probably the AMD laptop suspend bug which really
-needs fixing. The Freedestop org has the bug description:
-https://gitlab.freedesktop.org/drm/amd/-/issues/2812
+Bart, I don't care either way and not enough to respin a v3.
+If it bothers you could you fix it on the way in?
 
-More details in the tag and changelogs.
+That is if you aren't too busy reversing xmas trees ;-).
 
-Please pull it in!
+Thanks,
+Kent.
 
-Yours,
-Linus Walleij
-
-The following changes since commit 33cc938e65a98f1d29d0a18403dbbee050dcad9a=
-:
-
-  Linux 6.7-rc4 (2023-12-03 18:52:56 +0900)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git
-tags/pinctrl-v6.7-4
-
-for you to fetch changes up to 14694179e561b5f2f7e56a0f590e2cb49a9cc7ab:
-
-  pinctrl: at91-pio4: use dedicated lock class for IRQ (2023-12-21
-09:05:02 +0100)
-
-----------------------------------------------------------------
-Pin control fixes for v6.7:
-
-- Ignore disabled device tree nodes in the Starfive 7100 and
-  7100 drivers.
-
-- Mask non-wake source pins with interrupt enabled at suspend
-  in the AMD driver, this blocks unnecessary wakeups from misc
-  interrupts. This can be power consuming because in many cases
-  the system doesn't really suspend, it just wakes right back
-  up.
-
-- Fix a typo breaking compilation of the cy8c95x0 driver, and
-  fix up bugs in the get/set config callbacks.
-
-- Use a dedicated lock class for the PIO4 drivers IRQ.
-  This fixes a crash on suspend.
-
-----------------------------------------------------------------
-Alexis Lothor=C3=A9 (1):
-      pinctrl: at91-pio4: use dedicated lock class for IRQ
-
-Mario Limonciello (1):
-      pinctrl: amd: Mask non-wake source pins with interrupt enabled at sus=
-pend
-
-Nam Cao (2):
-      pinctrl: starfive: jh7110: ignore disabled device tree nodes
-      pinctrl: starfive: jh7100: ignore disabled device tree nodes
-
-Patrick Rudolph (3):
-      pinctrl: cy8c95x0: Fix typo
-      pinctrl: cy8c95x0: Fix regression
-      pinctrl: cy8c95x0: Fix get_pincfg
-
- drivers/pinctrl/pinctrl-amd.c                      |  9 +++++++++
- drivers/pinctrl/pinctrl-amd.h                      |  5 +++++
- drivers/pinctrl/pinctrl-at91-pio4.c                |  8 ++++++++
- drivers/pinctrl/pinctrl-cy8c95x0.c                 | 14 +++++++++++++-
- drivers/pinctrl/starfive/pinctrl-starfive-jh7100.c |  4 ++--
- drivers/pinctrl/starfive/pinctrl-starfive-jh7110.c |  4 ++--
- 6 files changed, 39 insertions(+), 5 deletions(-)
 
