@@ -1,241 +1,175 @@
-Return-Path: <linux-gpio+bounces-1842-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1843-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD99781D1C4
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 04:10:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E6B081D1CD
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 04:11:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 340761F24386
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 03:10:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50EF01C210E1
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 03:11:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A3911113;
-	Sat, 23 Dec 2023 03:06:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110D56ABF;
+	Sat, 23 Dec 2023 03:09:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzmgH3n4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="luMoaPWh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B85A6117;
-	Sat, 23 Dec 2023 03:06:08 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79B1DC433C7;
-	Sat, 23 Dec 2023 03:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703300768;
-	bh=feauVRkn1GyCCgLiGGwukw53SZb2tkOcoRSRGRxpTRE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PzmgH3n45hCMxxGD5DB5WOPPyusXj6GPPiKP4IrMRQgZJ3K0FDr7XMoz17MJINoJ4
-	 Gu1Y+N1noPiZ2ON5V3EWPPil+AlxyywElrnrR+tsPR9w2I2BQBSHceDTTf7AoExiCX
-	 sdnn/SWmrkArK0KoeO3UOFgKFUykaAW0IIpF6mXDZtIh5hj9gIYcEZ9VDuoPgeWQV7
-	 vO0qs39ivGUr+5H5IOa45TjbnP5QY+gsp1DmQhOlWYARCGynMQUHZLc8HykJeY1VEF
-	 8oDdOAp9giVEIORScWf6QMNGwC0h2kEkY6mSvdO0FlrcscesBZyqoLXRyYeKWCK0vc
-	 XZdZTEtk97Zug==
-Date: Fri, 22 Dec 2023 21:06:03 -0600
-From: Bjorn Andersson <andersson@kernel.org>
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: agross@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org
-Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: qcom: Add SM4450 pinctrl
-Message-ID: <suy4rrpplvhsg2pfblg5amkvy7mrrkzsd3vzizhhpfj5xlog3q@i2n5wvsxb5wa>
-References: <20231206020840.33228-1-quic_tengfan@quicinc.com>
- <20231206020840.33228-2-quic_tengfan@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8B3186F
+	for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 03:09:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-781161d18ecso157715585a.3
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 19:09:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1703300985; x=1703905785; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ywzTa8fMWuNa/JuhVm+nHhoMjqqOsifKMd1nKPgEx10=;
+        b=luMoaPWhIhDUdruoTQjWyw+cO20Zc6DH5XiEW8aNY9Dy5ftPaAGbYc13HyqrgvJ4fC
+         ngTb1SeAtW+RwrWh0RSFUyf+dpT8ie4FvJvr19OiP0OenZftbmLJNrz2TqjX8oYZuVJC
+         851xJsi7sYB55os698lZ70G178k1Dk8NhEVys=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703300985; x=1703905785;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=ywzTa8fMWuNa/JuhVm+nHhoMjqqOsifKMd1nKPgEx10=;
+        b=gnShjpL1JUzCWjVv6EaIlDUEzBUP3N52RfuaqtCmkhQbQuheRCDjfvRT1erGZcT4MQ
+         ie7PMpc+W9As0sU/MSKVfrWkHaEDpJXVh2R5e7JBI8MmOgZ8yjmyLYuiApCuoYsRgkqT
+         3U4UZm0T8kxlm6qszzB701ZGtuNU7qhbZeVP3u1zLbpRAMLE/xvXu3NXsfRYdIyikfIt
+         sIj8YeI4OQS+uQLSURWSKLcMgbUbVFyK7SSPzemlbRjNaOGO67HSZLkqF3uBQ+nPsdZO
+         26IO3pozMyD1/kQAIjRT5vIM6fqTz9KIjxj49/yljBXeCZ0H65owoHixWBAuIYqOwOZT
+         NKow==
+X-Gm-Message-State: AOJu0YxOJ4jRvpBdue1JGavTiGp8AXuEh5P/W7uWR9UDW+WaijPs3Kp+
+	+L6BcWAL8Zg/1h77Bm7ixVh6TK3s8Xo/2LjWTzretOwVDgS7
+X-Google-Smtp-Source: AGHT+IEBvqegMfdoedSyh3kxbutEtn5gV5GDWkisfZz7Iuigcnj/FFwhpAcdsdZp1jH/qHyBjmxuTEjnkwczuhHeur4=
+X-Received: by 2002:a05:620a:4f6:b0:781:37c2:f17a with SMTP id
+ b22-20020a05620a04f600b0078137c2f17amr949586qkh.92.1703300985054; Fri, 22 Dec
+ 2023 19:09:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231206020840.33228-2-quic_tengfan@quicinc.com>
+References: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+ <202312230907.szXqJyXq-lkp@intel.com>
+In-Reply-To: <202312230907.szXqJyXq-lkp@intel.com>
+From: Mark Hasemeyer <markhas@chromium.org>
+Date: Fri, 22 Dec 2023 20:09:34 -0700
+Message-ID: <CANg-bXBWNQpnz99Yf5NmfX03Xa5jsiiw-89NVBqBwhmESnueuw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/22] gpiolib: acpi: Modify acpi_dev_irq_wake_get_by()
+ to use resource
+To: kernel test robot <lkp@intel.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, oe-kbuild-all@lists.linux.dev, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, Tzung-Bi Shih <tzungbi@kernel.org>, Raul Rangel <rrangel@chromium.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, 
+	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Wolfram Sang <wsa-dev@sang-engineering.com>, linux-acpi@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 06, 2023 at 10:08:39AM +0800, Tengfei Fan wrote:
-> Add device tree binding Documentation details for Qualcomm SM4450
-> TLMM device.
-> 
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
-> ---
->  .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    | 151 ++++++++++++++++++
->  1 file changed, 151 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
-> new file mode 100644
-> index 000000000000..bb08ca5a1509
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
-> @@ -0,0 +1,151 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/qcom,sm4450-tlmm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Technologies, Inc. SM4450 TLMM block
-> +
-> +maintainers:
-> +  - Tengfei Fan <quic_tengfan@quicinc.com>
-> +
-> +description:
-> +  Top Level Mode Multiplexer pin controller in Qualcomm SM4450 SoC.
-> +
-> +allOf:
-> +  - $ref: /schemas/pinctrl/qcom,tlmm-common.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    const: qcom,sm4450-pinctrl
+On Fri, Dec 22, 2023 at 7:09=E2=80=AFPM kernel test robot <lkp@intel.com> w=
+rote:
+>
+> Hi Mark,
+>
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on robh/for-next]
+> [also build test WARNING on chrome-platform/for-next chrome-platform/for-=
+firmware-next wsa/i2c/for-next driver-core/driver-core-testing driver-core/=
+driver-core-next driver-core/driver-core-linus linus/master v6.7-rc6 next-2=
+0231222]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Hasemeyer/gpi=
+olib-acpi-Modify-acpi_dev_irq_wake_get_by-to-use-resource/20231222-172104
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git fo=
+r-next
+> patch link:    https://lore.kernel.org/r/20231220165423.v2.1.Ifd0903f1c35=
+1e84376d71dbdadbd43931197f5ea%40changeid
+> patch subject: [PATCH v2 01/22] gpiolib: acpi: Modify acpi_dev_irq_wake_g=
+et_by() to use resource
+> config: x86_64-randconfig-161-20231222 (https://download.01.org/0day-ci/a=
+rchive/20231223/202312230907.szXqJyXq-lkp@intel.com/config)
+> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20231223/202312230907.szXqJyXq-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202312230907.szXqJyXq-lkp=
+@intel.com/
+>
+> All warnings (new ones prefixed by >>):
+>
+> >> drivers/gpio/gpiolib-acpi.c:117: warning: Function parameter or member=
+ 'shareable' not described in 'acpi_gpio_info'
+>
+>
+> vim +117 drivers/gpio/gpiolib-acpi.c
+>
+> aa92b6f689acf1 Mika Westerberg 2014-03-10   93
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   94  /**
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   95   * struct acpi_gpio_info =
+- ACPI GPIO specific information
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   96   * @adev: reference to AC=
+PI device which consumes GPIO resource
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   97   * @flags: GPIO initializ=
+ation flags
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   98   * @gpioint: if %true thi=
+s GPIO is of type GpioInt otherwise type is GpioIo
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15   99   * @pin_config: pin bias =
+as provided by ACPI
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  100   * @polarity: interrupt p=
+olarity as provided by ACPI
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  101   * @triggering: triggerin=
+g type as provided by ACPI
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  102   * @wake_capable: wake ca=
+pability as provided by ACPI
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  103   * @debounce: debounce ti=
+meout as provided by ACPI
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  104   * @quirks: Linux specifi=
+c quirks as provided by struct acpi_gpio_mapping
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  105   */
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  106  struct acpi_gpio_info {
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  107          struct acpi_devic=
+e *adev;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  108          enum gpiod_flags =
+flags;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  109          bool gpioint;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  110          int pin_config;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  111          int polarity;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  112          int triggering;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  113          bool wake_capable=
+;
+> 189f4620fa2d51 Mark Hasemeyer  2023-12-20  114          bool shareable;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  115          unsigned int debo=
+unce;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  116          unsigned int quir=
+ks;
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15 @117  };
+> b7452d670fdef8 Dmitry Torokhov 2022-11-15  118
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-This should be qcom,sm4450-tlmm
-
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts: true
-> +  interrupt-controller: true
-> +  "#interrupt-cells": true
-> +  gpio-controller: true
-> +
-> +  gpio-reserved-ranges:
-> +    minItems: 1
-> +    maxItems: 68
-> +
-> +  gpio-line-names:
-> +    maxItems: 136
-> +
-> +  "#gpio-cells": true
-> +  gpio-ranges: true
-> +  wakeup-parent: true
-> +
-> +patternProperties:
-> +  "-state$":
-> +    oneOf:
-> +      - $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> +      - patternProperties:
-> +          "-pins$":
-> +            $ref: "#/$defs/qcom-sm4450-tlmm-state"
-> +        additionalProperties: false
-> +
-> +$defs:
-> +  qcom-sm4450-tlmm-state:
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +    $ref: qcom,tlmm-common.yaml#/$defs/qcom-tlmm-state
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      pins:
-> +        description:
-> +          List of gpio pins affected by the properties specified in this
-> +          subnode.
-> +        items:
-> +          oneOf:
-> +            - pattern: "^gpio([0-9]|[1-9][0-9]|1[0-2][0-9]|13[0-5])$"
-> +            - enum: [ sdc2_clk, sdc2_cmd, sdc2_data, ufs_reset ]
-> +          minItems: 1
-> +          maxItems: 36
-> +
-> +      function:
-> +        description:
-> +          Specify the alternative function to be configured for the specified
-> +          pins.
-> +        enum: [ gpio, atest_char, atest_char0, atest_char1, atest_char2,
-> +                atest_char3, atest_usb0, atest_usb00, atest_usb01, atest_usb02,
-> +                atest_usb03, audio_ref, cam_mclk, cci_async, cci_i2c,
-> +                cci_timer0, cci_timer1, cci_timer2, cci_timer3, cci_timer4,
-> +                cmu_rng0, cmu_rng1, cmu_rng2, cmu_rng3, coex_uart1, cri_trng,
-> +                cri_trng0, cri_trng1, dbg_out, ddr_bist, ddr_pxi0, ddr_pxi1,
-> +                dp0_hot, gcc_gp1, gcc_gp2, gcc_gp3, host2wlan_sol, ibi_i3c,
-> +                jitter_bist, mdp_vsync, mdp_vsync0, mdp_vsync1, mdp_vsync2,
-> +                mdp_vsync3, mi2s0_data0, mi2s0_data1, mi2s0_sck, mi2s0_ws,
-> +                mi2s2_data0, mi2s2_data1, mi2s2_sck, mi2s2_ws, mi2s_mclk0,
-> +                mi2s_mclk1, nav_gpio0, nav_gpio1, nav_gpio2, pcie0_clk,
-> +                phase_flag0, phase_flag1, phase_flag10, phase_flag11,
-> +                phase_flag12, phase_flag13, phase_flag14, phase_flag15,
-> +                phase_flag16, phase_flag17, phase_flag18, phase_flag19,
-> +                phase_flag2, phase_flag20, phase_flag21, phase_flag22,
-> +                phase_flag23, phase_flag24, phase_flag25, phase_flag26,
-> +                phase_flag27, phase_flag28, phase_flag29, phase_flag3,
-> +                phase_flag30, phase_flag31, phase_flag4, phase_flag5,
-> +                phase_flag6, phase_flag7, phase_flag8, phase_flag9,
-> +                pll_bist, pll_clk, prng_rosc0, prng_rosc1, prng_rosc2,
-> +                prng_rosc3, qdss_cti, qdss_gpio, qdss_gpio0, qdss_gpio1,
-> +                qdss_gpio10, qdss_gpio11, qdss_gpio12, qdss_gpio13, qdss_gpio14,
-> +                qdss_gpio15, qdss_gpio2, qdss_gpio3, qdss_gpio4, qdss_gpio5,
-> +                qdss_gpio6, qdss_gpio7, qdss_gpio8, qdss_gpio9, qlink0_enable,
-> +                qlink0_request, qlink0_wmss, qlink1_enable, qlink1_request,
-> +                qlink1_wmss, qlink2_enable, qlink2_request, qlink2_wmss,
-> +                qup0_se0, qup0_se1, qup0_se2, qup0_se3, qup0_se4, qup0_se5,
-> +                qup0_se6, qup0_se7, qup1_se0, qup1_se1, qup1_se2, qup1_se3,
-> +                qup1_se4, qup1_se5, qup1_se6, sd_write, tb_trig, tgu_ch0,
-> +                tgu_ch1, tgu_ch2, tgu_ch3, tmess_prng0, tmess_prng1,
-> +                tmess_prng2, tmess_prng3, tsense_pwm1, tsense_pwm2, uim0_clk,
-> +                uim0_data, uim0_present, uim0_reset, uim1_clk, uim1_data,
-> +                uim1_present, uim1_reset, usb0_hs, usb0_phy, vfr_0, vfr_1,
-> +                vsense_trigger ]
-
-You consolidated the functions in the driver, but you forgot to update
-this list accordingly.
-
-> +
-> +        required:
-> +          - pins
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    tlmm: pinctrl@f100000 {
-> +        compatible = "qcom,sm4450-tlmm";
-
-Please feel free to ping me if you're having issues running
-dt_binding_check and dtb_check. I believe the prior should complain
-about this compatible being unknown.
-
-Regards,
-Bjorn
-
-> +        reg = <0x0f100000 0x300000>;
-> +        gpio-controller;
-> +        #gpio-cells = <2>;
-> +        gpio-ranges = <&tlmm 0 0 137>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <2>;
-> +        interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
-> +
-> +        gpio-wo-state {
-> +            pins = "gpio1";
-> +            function = "gpio";
-> +        };
-> +
-> +        uart-w-state {
-> +            rx-pins {
-> +                pins = "gpio23";
-> +                function = "qup1_se2";
-> +                bias-pull-up;
-> +            };
-> +
-> +            tx-pins {
-> +                pins = "gpio22";
-> +                function = "qup1_se2";
-> +                bias-disable;
-> +            };
-> +        };
-> +    };
-> +...
-> -- 
-> 2.17.1
-> 
+Ack. Missing documentation for acpi_gpio_info.shareable member. Will
+add in next version.
 
