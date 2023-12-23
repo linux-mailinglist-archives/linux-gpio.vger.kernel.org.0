@@ -1,121 +1,147 @@
-Return-Path: <linux-gpio+bounces-1837-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1839-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B92A481D0C5
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 01:18:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8718A81D130
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 03:09:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3766FB22368
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 00:18:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3CCB41F2345B
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 02:09:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F09A539C;
-	Sat, 23 Dec 2023 00:18:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 488211111;
+	Sat, 23 Dec 2023 02:09:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ka8ZELYE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AoywBHE+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D969389
-	for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 00:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5cbcfdeaff3so23365907b3.0
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 16:18:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703290711; x=1703895511; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Lp9vWQxdAPDDdlHKGcJ8qgp0FvOo9mvy4HBh0flEGoE=;
-        b=ka8ZELYEQtP85db6yj291tuWZYHMfmwkKM1t8l1UiKtd5+UCxAj7bw6E9n3DYVkXs0
-         kwLnj/DZiOtKtk6dbC1Qe6j/rpZ32Eg0oCQ8pQ35s+DSBbaeh5xe3y2VU3v6SNnATG24
-         /CZkmvHhLwt0pYqD0FSQaKweE1jIl0Fy06Qa3bk1gxdhYOo2dCdNXgLFGGgVOyE9brLQ
-         AKEfSVzK1nGo9Y58sB2iCPgf+WVAgjXaBcj6zFnZWYwwuaF/3tMWdA3wA/QKpWb/sXLb
-         4tsRy2dHe6ALd0AzhjvX+7KjUpxlcobidiendwFeWog2OUSnyOpr62pAFLrIZrU1gBrf
-         eD6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703290711; x=1703895511;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Lp9vWQxdAPDDdlHKGcJ8qgp0FvOo9mvy4HBh0flEGoE=;
-        b=Ir9AzjUz04T+zzSMlL4mjvJ2Fvm985/Xzle1NlatLOG0QXFEp3uCaHyjBLJ1GnAYuw
-         NAMkNQtnxpDWLrGCkA3qd9Fttu87r7fYgmOvtMOOFKCZsexVfw2VToVGdmtZwJyu8zy6
-         iRdL5cXL1A002t82BP1M6lphJoM8kKkh3RdjYnyaEvo3+SbcJxngKt7YZmgAtuGOejrT
-         quAScvc9QogZRInag5/7tzKRaN/WcN0Q2AjVBVqY30JZU7YAisedAo+0PyMuAV2gIokI
-         XPv3QpqE9fjHWi2rX7KWdQegUT6Vfqb20LPLMLWEJ1P41tVGQY2ivIE+ExknJysi7hnu
-         RRBA==
-X-Gm-Message-State: AOJu0YyzdcBj0xWLHYV5aFRKMv4cclErIRU0z5p3Kg5SNO6Ve3nEF+mo
-	Drgbcm+W/oU1fIEaDLggenseBeLeQw+UkJo45Q+WnFuhq6Nhbw==
-X-Google-Smtp-Source: AGHT+IH0J9appb9YaOYYWr0pL/JzayP1h7qzAi5FZV+YX3znd3OxV1cD/KlvJy/FEWLrONbRLEArBL7fAvmtung+mUc=
-X-Received: by 2002:a05:690c:c0d:b0:5e7:e838:633a with SMTP id
- cl13-20020a05690c0c0d00b005e7e838633amr995068ywb.34.1703290711253; Fri, 22
- Dec 2023 16:18:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6115EC2;
+	Sat, 23 Dec 2023 02:09:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703297368; x=1734833368;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=Ekeuoa497ZgFzIEjn/5Xeu97N8IhNPV7uMRulAKkYao=;
+  b=AoywBHE+EAsou1qL+t3Fkey9FUPBrWjFCybL0ORpnFIoi5dOh5wcuWpL
+   mSlSNj5ZDZ1uSw+4YIAxdN/gB9Y3kwCJ0ntngwF2AKawTOsqHG9zmEzcI
+   dCDsB5wAC/pcRXoEkLAFe20In9r8mAZi0dKokz1okUsmL14JqKG32CXeP
+   lqhj2ixhHCD1nqhXNImWNKA0Xddl8rD7pRIhKnAtlCX/TTtS5pLl7grDv
+   +qZeG0ZLyrg1F9221bixyRGExVYePZO88X6IOc7/CidZV9wAwlsF59YYE
+   IgRnl5ByBz/fIEY+dpT7DZ1GcqQDuFk/VxwLssYV5aXvH92Y9BRPCoM0V
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="393339586"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="393339586"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Dec 2023 18:09:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10932"; a="806163004"
+X-IronPort-AV: E=Sophos;i="6.04,298,1695711600"; 
+   d="scan'208";a="806163004"
+Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
+  by orsmga008.jf.intel.com with ESMTP; 22 Dec 2023 18:09:21 -0800
+Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rGrS0-000A8h-0c;
+	Sat, 23 Dec 2023 02:09:17 +0000
+Date: Sat, 23 Dec 2023 10:05:43 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>,
+	LKML <linux-kernel@vger.kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Tzung-Bi Shih <tzungbi@kernel.org>,
+	Raul Rangel <rrangel@chromium.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Andy Shevchenko <andriy.shevchenko@intel.com>,
+	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>,
+	Mark Hasemeyer <markhas@chromium.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Wolfram Sang <wsa-dev@sang-engineering.com>,
+	linux-acpi@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org
+Subject: Re: [PATCH v2 01/22] gpiolib: acpi: Modify
+ acpi_dev_irq_wake_get_by() to use resource
+Message-ID: <202312230907.szXqJyXq-lkp@intel.com>
+References: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231215143906.3651122-1-emil.renner.berthing@canonical.com>
- <20231215143906.3651122-2-emil.renner.berthing@canonical.com>
- <20231215202137.GA317624-robh@kernel.org> <CAJM55Z9pBpYfwpxPH7bUumuosVDn9DHLSBngW6CtG7aK_z+_bQ@mail.gmail.com>
- <CACRpkdYT+jf4=dk3Y9cwa_=aYCihVq93N-iT0RUbtT2-+PX69w@mail.gmail.com>
- <CAJM55Z8osSFxKi_7=aRkEr+U3vAq0TS93OggnRzyPpssNuuJ3Q@mail.gmail.com>
- <CACRpkdbx7BOoHzbGd6n5p=Ho3GhMcujwUzQam0jLe6Ysg+xsNg@mail.gmail.com> <CAJM55Z8SwyNEqw4HWRd7G8Y9rdtOGtKy-KbzDorqohdK3nZg0A@mail.gmail.com>
-In-Reply-To: <CAJM55Z8SwyNEqw4HWRd7G8Y9rdtOGtKy-KbzDorqohdK3nZg0A@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 23 Dec 2023 01:18:19 +0100
-Message-ID: <CACRpkdazVUJnfEJTXmAErfxptgnNGByQPU=aLz2RReZD_3GyyA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/8] dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Rob Herring <robh@kernel.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Hoan Tran <hoan@os.amperecomputing.com>, Serge Semin <fancer.lancer@gmail.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
 
-On Thu, Dec 21, 2023 at 3:07=E2=80=AFPM Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
-> Linus Walleij wrote:
+Hi Mark,
 
-> > Do the people designing boards using this have better documentation tha=
-n what
-> > you have? Then either get that documentation or just don't give them
-> > too much rope.
->
-> We can certainly prevent Linux from ever combining the strong pull-up wit=
-h the
-> regular bias, but that doesn't mean that the vendor u-boot can't find a u=
-se for
-> it and might hand over pins in such states Linux then wouldn't know how t=
-o
-> handle.
+kernel test robot noticed the following build warnings:
 
-What you are saying is "there might be people who have access to
-documentation that I don't have so they do this crazy thing".
+[auto build test WARNING on robh/for-next]
+[also build test WARNING on chrome-platform/for-next chrome-platform/for-firmware-next wsa/i2c/for-next driver-core/driver-core-testing driver-core/driver-core-next driver-core/driver-core-linus linus/master v6.7-rc6 next-20231222]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Clearly you cannot design for that.
+url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Hasemeyer/gpiolib-acpi-Modify-acpi_dev_irq_wake_get_by-to-use-resource/20231222-172104
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+patch link:    https://lore.kernel.org/r/20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea%40changeid
+patch subject: [PATCH v2 01/22] gpiolib: acpi: Modify acpi_dev_irq_wake_get_by() to use resource
+config: x86_64-randconfig-161-20231222 (https://download.01.org/0day-ci/archive/20231223/202312230907.szXqJyXq-lkp@intel.com/config)
+compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20231223/202312230907.szXqJyXq-lkp@intel.com/reproduce)
 
-Print a big fat warning and fail probe if it happens.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202312230907.szXqJyXq-lkp@intel.com/
 
-If U-Boot is using some feature you definitely cannot deal with if this
-happens, and then the people doing this can very well write a patch for
-the kernel.
+All warnings (new ones prefixed by >>):
 
-> If you think its better we could just postpone that problem to when/if it=
- ever
-> happens.
+>> drivers/gpio/gpiolib-acpi.c:117: warning: Function parameter or member 'shareable' not described in 'acpi_gpio_info'
 
-Yes please.
 
-Yours,
-Linus Walleij
+vim +117 drivers/gpio/gpiolib-acpi.c
+
+aa92b6f689acf1 Mika Westerberg 2014-03-10   93  
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   94  /**
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   95   * struct acpi_gpio_info - ACPI GPIO specific information
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   96   * @adev: reference to ACPI device which consumes GPIO resource
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   97   * @flags: GPIO initialization flags
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   98   * @gpioint: if %true this GPIO is of type GpioInt otherwise type is GpioIo
+b7452d670fdef8 Dmitry Torokhov 2022-11-15   99   * @pin_config: pin bias as provided by ACPI
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  100   * @polarity: interrupt polarity as provided by ACPI
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  101   * @triggering: triggering type as provided by ACPI
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  102   * @wake_capable: wake capability as provided by ACPI
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  103   * @debounce: debounce timeout as provided by ACPI
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  104   * @quirks: Linux specific quirks as provided by struct acpi_gpio_mapping
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  105   */
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  106  struct acpi_gpio_info {
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  107  	struct acpi_device *adev;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  108  	enum gpiod_flags flags;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  109  	bool gpioint;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  110  	int pin_config;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  111  	int polarity;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  112  	int triggering;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  113  	bool wake_capable;
+189f4620fa2d51 Mark Hasemeyer  2023-12-20  114  	bool shareable;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  115  	unsigned int debounce;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  116  	unsigned int quirks;
+b7452d670fdef8 Dmitry Torokhov 2022-11-15 @117  };
+b7452d670fdef8 Dmitry Torokhov 2022-11-15  118  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
