@@ -1,142 +1,136 @@
-Return-Path: <linux-gpio+bounces-1847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F06A881D487
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 15:19:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D11C181D63D
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 20:19:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 919871F22358
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 14:19:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6CBC0B218E5
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 19:19:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19A21DDB3;
-	Sat, 23 Dec 2023 14:19:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A62B513ACC;
+	Sat, 23 Dec 2023 19:19:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VnOvurs6"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gH582sO3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74E27DDA1
-	for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 14:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEBF71401A
+	for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 19:19:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a233bf14cafso329112966b.2
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 06:19:50 -0800 (PST)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a233bf14cafso344988266b.2
+        for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 11:19:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1703341189; x=1703945989; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=0+dLS4lBiLMnpq+hOx3yugZhbEmDV4yXeEFQ+DY8CUU=;
-        b=VnOvurs6Z52J19akfeMFwYFZaaiu0p8GO8rYfl3nGE7a6rCsxlb/luVcYeOocBLQA/
-         Xg58leZRgfYyfMGoe1H4FBSAd5a3Pbj6Azf52CRVpbZbk36X5VVCgDTewxOf2m8RLtky
-         VLOujqTX1rQtRs0IHDHbcTh38ix77DXc+1Bg2WbqdZSlbYQczZG7DM+T+pIZjbJARK6+
-         1QieelLoe7A2gC2iEDlpqNBjIn2I7/ESzHJKh3EKnEY89TDjYsI3hMpT31e5THC4GInJ
-         4kY43JbveVCKc3Ja4lLtraqZIt6NTUGVZZB9SunJksROYY5LLsWNpln2WxRwRxp0lYkU
-         6FfQ==
+        d=linaro.org; s=google; t=1703359145; x=1703963945; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=dl+++DRdm00PXx9jJ+9cB6WjPEZdIF4coFJBY+INy5g=;
+        b=gH582sO3vvVGnFqahMl7hOz6g6iud0pu0gXIXakkJCQbwX+oXD/uuKt6ZmokPVpTaX
+         Vkp44aWlEGPwPrhQ8VavKUaDZ7vRMExPSLIDU2CSBa5mGFZ4bbaVOxvZ1BOybHUtxLbP
+         c4JIyU/Ev+JK0RDmWmw6iVRo8xUfk9uWugxlSR+2gbGV4LdLo9TkOJM2nD5KP2ibZcdA
+         Sr5Yspfcr69UxE607bDNJuL7UAG0VhFTqe6Ry0FeodVyk03tluTQjj9YfTay363BXrPc
+         ebbsgM8k9j1F0GBvLHjdHNwumYjMlVKXBZbyUA7b8cr3oZlX3fED95vpZhQIc8Ln2Pga
+         psKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703341189; x=1703945989;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0+dLS4lBiLMnpq+hOx3yugZhbEmDV4yXeEFQ+DY8CUU=;
-        b=lJPssVJcCvRB/Db7slxwVp4qsLvjB0eDR6zC6IBbN4tfqI+j9pu3Eeni2m9p/h9sc7
-         JwSqsduxuQME4S72nOfss4HA2/Dv/QtphPmJWsVooafeu7WVxQ0rIeKbLetEjx05sqWX
-         3zE4NSVTK/YEBo+H8fCDqkjp394sj2H+wNQ1QetebIwIV94Eza6OCpZO02Akk5aMHiGz
-         jzp8KQjE3w8uUlloVOd0kj1q4+COYLCCf371CAy5yM/CHf0I7TjQtz/y2kex5EaVae6p
-         YkWLJ3mh5KC2gFbLXYSrHq6yNpSySl+j7fzx0kQX0h/dvoKXSxnE3j84mYsRIU3rCPvA
-         AqzA==
-X-Gm-Message-State: AOJu0YxE3axpC/YBvJn0c8myij/fdidUG7m1ewS8U6Fl6L8QAyexca0i
-	XGuhRyUq9HRm9ukjsPeD0xPbqDUYsjq12Q==
-X-Google-Smtp-Source: AGHT+IFlNJvm3ciEK/UqPriH1mqBK1EbmXHrhiK6fh96uN5ddqyZ+9pZvUVHwjG1nm4QPlO3e+fzBQ==
-X-Received: by 2002:a17:906:22d3:b0:a26:85bb:6355 with SMTP id q19-20020a17090622d300b00a2685bb6355mr1657560eja.77.1703341188917;
-        Sat, 23 Dec 2023 06:19:48 -0800 (PST)
-Received: from [192.168.0.22] ([78.10.206.178])
-        by smtp.gmail.com with ESMTPSA id ge21-20020a170907909500b00a18c2737203sm3100498ejb.109.2023.12.23.06.19.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Dec 2023 06:19:48 -0800 (PST)
-Message-ID: <b75099af-4ca5-460b-8dd4-d92892982ec2@linaro.org>
-Date: Sat, 23 Dec 2023 15:19:47 +0100
+        d=1e100.net; s=20230601; t=1703359145; x=1703963945;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=dl+++DRdm00PXx9jJ+9cB6WjPEZdIF4coFJBY+INy5g=;
+        b=Lt6okhDFEOyff+1HFcweVXl56cgnCcFRn80Hy34gS1S+BRCAyOBYJvJn2swzC8mSYF
+         4HA2FoeZ84H8LFtF6U6mc1SVuBTYEzCrLwaBrb8YIYjy9l9KyL0gSdBzbKUAAru2H6Kk
+         YUvdWz+w+OKFMDZExAPXOaEpxN6G4o2V6I7O4iBMy5vtgBmjBOuNVDJNuN4GfKkGoZXB
+         GEq8ypj281IzkADFLqC3Msz+SOa3T4pPlBxCfG9m1Y+WT7HymsAXJOi91LNw9j966aiI
+         0jbpFg/roa43Sr+fEu2W3PneFaH170gR3OmlAemPAHFK6aHwj5UcX50X2vxf2YQxY0Bp
+         MWZA==
+X-Gm-Message-State: AOJu0YwiHcBqbVatM1TTC7Bmp2KHo8zN6Ipdoufy17L3LmXnz1rtjAto
+	owb+2chp/81XWPfGftSCwjSCb5lRlzylDQ==
+X-Google-Smtp-Source: AGHT+IFTnnh0k8o1Ulu+wZ6pXsn6Fbgloq5p6tPXvLGXwAjvJ/OEjsTKUixyPvU+j9hVX44R89PSzw==
+X-Received: by 2002:a17:906:364d:b0:a23:3399:31c4 with SMTP id r13-20020a170906364d00b00a23339931c4mr1621067ejb.120.1703359145101;
+        Sat, 23 Dec 2023 11:19:05 -0800 (PST)
+Received: from krzk-bin.. ([78.10.206.178])
+        by smtp.gmail.com with ESMTPSA id cl2-20020a170906c4c200b00a19afc16d23sm3278613ejb.104.2023.12.23.11.19.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 23 Dec 2023 11:19:04 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Tomasz Figa <tomasz.figa@gmail.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Sylwester Nawrocki <s.nawrocki@samsung.com>,
+	Alim Akhtar <alim.akhtar@samsung.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] pinctrl: samsung: constify iomem pointers
+Date: Sat, 23 Dec 2023 20:19:02 +0100
+Message-Id: <20231223191902.22857-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 1/2] dt-bindings: gpio: realtek: Add realtek,rtd-gpio
-Content-Language: en-US
-To: Tzuyi Chang <tychang@realtek.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20231222075812.6540-1-tychang@realtek.com>
- <20231222075812.6540-2-tychang@realtek.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20231222075812.6540-2-tychang@realtek.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 22/12/2023 08:58, Tzuyi Chang wrote:
-> Add the device tree bindings for the Realtek DHC(Digital Home Center)
-> RTD SoCs GPIO controllers.
-> 
-> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> ---
+Constify few pointers to iomem, where the destination memory is not
+modified, for code safety and readability.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/pinctrl/samsung/pinctrl-exynos.c  | 4 ++--
+ drivers/pinctrl/samsung/pinctrl-samsung.c | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Best regards,
-Krzysztof
+diff --git a/drivers/pinctrl/samsung/pinctrl-exynos.c b/drivers/pinctrl/samsung/pinctrl-exynos.c
+index d3d4b5d036c8..871c1eb46ddf 100644
+--- a/drivers/pinctrl/samsung/pinctrl-exynos.c
++++ b/drivers/pinctrl/samsung/pinctrl-exynos.c
+@@ -693,7 +693,7 @@ static void exynos_pinctrl_suspend_bank(
+ 				struct samsung_pin_bank *bank)
+ {
+ 	struct exynos_eint_gpio_save *save = bank->soc_priv;
+-	void __iomem *regs = bank->eint_base;
++	const void __iomem *regs = bank->eint_base;
+ 
+ 	save->eint_con = readl(regs + EXYNOS_GPIO_ECON_OFFSET
+ 						+ bank->eint_offset);
+@@ -714,7 +714,7 @@ static void exynosauto_pinctrl_suspend_bank(struct samsung_pinctrl_drv_data *drv
+ 					    struct samsung_pin_bank *bank)
+ {
+ 	struct exynos_eint_gpio_save *save = bank->soc_priv;
+-	void __iomem *regs = bank->eint_base;
++	const void __iomem *regs = bank->eint_base;
+ 
+ 	save->eint_con = readl(regs + bank->pctl_offset + bank->eint_con_offset);
+ 	save->eint_mask = readl(regs + bank->pctl_offset + bank->eint_mask_offset);
+diff --git a/drivers/pinctrl/samsung/pinctrl-samsung.c b/drivers/pinctrl/samsung/pinctrl-samsung.c
+index dbf38767f15f..ed07e23e0912 100644
+--- a/drivers/pinctrl/samsung/pinctrl-samsung.c
++++ b/drivers/pinctrl/samsung/pinctrl-samsung.c
+@@ -565,7 +565,7 @@ static void samsung_gpio_set(struct gpio_chip *gc, unsigned offset, int value)
+ /* gpiolib gpio_get callback function */
+ static int samsung_gpio_get(struct gpio_chip *gc, unsigned offset)
+ {
+-	void __iomem *reg;
++	const void __iomem *reg;
+ 	u32 data;
+ 	struct samsung_pin_bank *bank = gpiochip_get_data(gc);
+ 	const struct samsung_pin_bank_type *type = bank->type;
+@@ -1204,7 +1204,7 @@ static int __maybe_unused samsung_pinctrl_suspend(struct device *dev)
+ 
+ 	for (i = 0; i < drvdata->nr_banks; i++) {
+ 		struct samsung_pin_bank *bank = &drvdata->pin_banks[i];
+-		void __iomem *reg = bank->pctl_base + bank->pctl_offset;
++		const void __iomem *reg = bank->pctl_base + bank->pctl_offset;
+ 		const u8 *offs = bank->type->reg_offset;
+ 		const u8 *widths = bank->type->fld_width;
+ 		enum pincfg_type type;
+-- 
+2.34.1
 
 
