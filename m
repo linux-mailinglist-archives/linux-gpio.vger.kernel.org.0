@@ -1,175 +1,239 @@
-Return-Path: <linux-gpio+bounces-1843-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1844-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E6B081D1CD
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 04:11:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2831481D339
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 09:55:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50EF01C210E1
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 03:11:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C950C284DD6
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Dec 2023 08:55:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 110D56ABF;
-	Sat, 23 Dec 2023 03:09:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF7458C1A;
+	Sat, 23 Dec 2023 08:55:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="luMoaPWh"
+	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="onQozyUB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from forward501b.mail.yandex.net (forward501b.mail.yandex.net [178.154.239.145])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C8B3186F
-	for <linux-gpio@vger.kernel.org>; Sat, 23 Dec 2023 03:09:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-781161d18ecso157715585a.3
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Dec 2023 19:09:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703300985; x=1703905785; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ywzTa8fMWuNa/JuhVm+nHhoMjqqOsifKMd1nKPgEx10=;
-        b=luMoaPWhIhDUdruoTQjWyw+cO20Zc6DH5XiEW8aNY9Dy5ftPaAGbYc13HyqrgvJ4fC
-         ngTb1SeAtW+RwrWh0RSFUyf+dpT8ie4FvJvr19OiP0OenZftbmLJNrz2TqjX8oYZuVJC
-         851xJsi7sYB55os698lZ70G178k1Dk8NhEVys=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703300985; x=1703905785;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ywzTa8fMWuNa/JuhVm+nHhoMjqqOsifKMd1nKPgEx10=;
-        b=gnShjpL1JUzCWjVv6EaIlDUEzBUP3N52RfuaqtCmkhQbQuheRCDjfvRT1erGZcT4MQ
-         ie7PMpc+W9As0sU/MSKVfrWkHaEDpJXVh2R5e7JBI8MmOgZ8yjmyLYuiApCuoYsRgkqT
-         3U4UZm0T8kxlm6qszzB701ZGtuNU7qhbZeVP3u1zLbpRAMLE/xvXu3NXsfRYdIyikfIt
-         sIj8YeI4OQS+uQLSURWSKLcMgbUbVFyK7SSPzemlbRjNaOGO67HSZLkqF3uBQ+nPsdZO
-         26IO3pozMyD1/kQAIjRT5vIM6fqTz9KIjxj49/yljBXeCZ0H65owoHixWBAuIYqOwOZT
-         NKow==
-X-Gm-Message-State: AOJu0YxOJ4jRvpBdue1JGavTiGp8AXuEh5P/W7uWR9UDW+WaijPs3Kp+
-	+L6BcWAL8Zg/1h77Bm7ixVh6TK3s8Xo/2LjWTzretOwVDgS7
-X-Google-Smtp-Source: AGHT+IEBvqegMfdoedSyh3kxbutEtn5gV5GDWkisfZz7Iuigcnj/FFwhpAcdsdZp1jH/qHyBjmxuTEjnkwczuhHeur4=
-X-Received: by 2002:a05:620a:4f6:b0:781:37c2:f17a with SMTP id
- b22-20020a05620a04f600b0078137c2f17amr949586qkh.92.1703300985054; Fri, 22 Dec
- 2023 19:09:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200238BE5;
+	Sat, 23 Dec 2023 08:55:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
+Received: from mail-nwsmtp-smtp-production-main-46.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-46.sas.yp-c.yandex.net [IPv6:2a02:6b8:c08:4212:0:640:eaad:0])
+	by forward501b.mail.yandex.net (Yandex) with ESMTP id BDE0160FA8;
+	Sat, 23 Dec 2023 11:55:17 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-46.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id GtLkxf7Jg8c0-ngXbzi6F;
+	Sat, 23 Dec 2023 11:55:17 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
+	t=1703321717; bh=qDvMSV6PVH/nDhWHl+NvBmgQ0eTfsFDftxt+1k/0RyQ=;
+	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
+	b=onQozyUBVAqgQMnlccqsJaffI+Q4TWZMweFRkn3FM6AUwfw5HU9+mUWYtEqzX9CsS
+	 V0omKjhdeuFBTssf6QT3s/I3mfRqim+gAR9icqhmaQgPr/lwvkOJwwURiwn17HdMG8
+	 lQN3EbKhmVbBwKUkqUsFPrlqRyOmVsooZfJX31W8=
+Authentication-Results: mail-nwsmtp-smtp-production-main-46.sas.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
+Message-ID: <26adbdb01f238b7fb74b2bcd110c1bdec77ab4bc.camel@maquefel.me>
+Subject: Re: [PATCH v6 05/40] pinctrl: add a Cirrus ep93xx SoC pin controller
+From: Nikita Shubin <nikita.shubin@maquefel.me>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Date: Sat, 23 Dec 2023 11:55:17 +0300
+In-Reply-To: <ZXnvHYjgnc3VsXnX@smile.fi.intel.com>
+References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
+	 <20231212-ep93xx-v6-5-c307b8ac9aa8@maquefel.me>
+	 <ZXnvHYjgnc3VsXnX@smile.fi.intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.48.4 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231220165423.v2.1.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
- <202312230907.szXqJyXq-lkp@intel.com>
-In-Reply-To: <202312230907.szXqJyXq-lkp@intel.com>
-From: Mark Hasemeyer <markhas@chromium.org>
-Date: Fri, 22 Dec 2023 20:09:34 -0700
-Message-ID: <CANg-bXBWNQpnz99Yf5NmfX03Xa5jsiiw-89NVBqBwhmESnueuw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/22] gpiolib: acpi: Modify acpi_dev_irq_wake_get_by()
- to use resource
-To: kernel test robot <lkp@intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, oe-kbuild-all@lists.linux.dev, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, Tzung-Bi Shih <tzungbi@kernel.org>, Raul Rangel <rrangel@chromium.org>, 
-	Konrad Dybcio <konrad.dybcio@linaro.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
-	Rob Herring <robh@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Wolfram Sang <wsa-dev@sang-engineering.com>, linux-acpi@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Dec 22, 2023 at 7:09=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
->
-> Hi Mark,
->
-> kernel test robot noticed the following build warnings:
->
-> [auto build test WARNING on robh/for-next]
-> [also build test WARNING on chrome-platform/for-next chrome-platform/for-=
-firmware-next wsa/i2c/for-next driver-core/driver-core-testing driver-core/=
-driver-core-next driver-core/driver-core-linus linus/master v6.7-rc6 next-2=
-0231222]
-> [If your patch is applied to the wrong git tree, kindly drop us a note.
-> And when submitting patch, we suggest to use '--base' as documented in
-> https://git-scm.com/docs/git-format-patch#_base_tree_information]
->
-> url:    https://github.com/intel-lab-lkp/linux/commits/Mark-Hasemeyer/gpi=
-olib-acpi-Modify-acpi_dev_irq_wake_get_by-to-use-resource/20231222-172104
-> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git fo=
-r-next
-> patch link:    https://lore.kernel.org/r/20231220165423.v2.1.Ifd0903f1c35=
-1e84376d71dbdadbd43931197f5ea%40changeid
-> patch subject: [PATCH v2 01/22] gpiolib: acpi: Modify acpi_dev_irq_wake_g=
-et_by() to use resource
-> config: x86_64-randconfig-161-20231222 (https://download.01.org/0day-ci/a=
-rchive/20231223/202312230907.szXqJyXq-lkp@intel.com/config)
-> compiler: gcc-9 (Debian 9.3.0-22) 9.3.0
-> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
-ve/20231223/202312230907.szXqJyXq-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
-ion of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202312230907.szXqJyXq-lkp=
-@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
-> >> drivers/gpio/gpiolib-acpi.c:117: warning: Function parameter or member=
- 'shareable' not described in 'acpi_gpio_info'
->
->
-> vim +117 drivers/gpio/gpiolib-acpi.c
->
-> aa92b6f689acf1 Mika Westerberg 2014-03-10   93
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   94  /**
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   95   * struct acpi_gpio_info =
-- ACPI GPIO specific information
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   96   * @adev: reference to AC=
-PI device which consumes GPIO resource
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   97   * @flags: GPIO initializ=
-ation flags
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   98   * @gpioint: if %true thi=
-s GPIO is of type GpioInt otherwise type is GpioIo
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15   99   * @pin_config: pin bias =
-as provided by ACPI
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  100   * @polarity: interrupt p=
-olarity as provided by ACPI
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  101   * @triggering: triggerin=
-g type as provided by ACPI
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  102   * @wake_capable: wake ca=
-pability as provided by ACPI
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  103   * @debounce: debounce ti=
-meout as provided by ACPI
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  104   * @quirks: Linux specifi=
-c quirks as provided by struct acpi_gpio_mapping
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  105   */
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  106  struct acpi_gpio_info {
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  107          struct acpi_devic=
-e *adev;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  108          enum gpiod_flags =
-flags;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  109          bool gpioint;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  110          int pin_config;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  111          int polarity;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  112          int triggering;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  113          bool wake_capable=
-;
-> 189f4620fa2d51 Mark Hasemeyer  2023-12-20  114          bool shareable;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  115          unsigned int debo=
-unce;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  116          unsigned int quir=
-ks;
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15 @117  };
-> b7452d670fdef8 Dmitry Torokhov 2022-11-15  118
->
-> --
-> 0-DAY CI Kernel Test Service
-> https://github.com/intel/lkp-tests/wiki
+Hello Andy!
 
-Ack. Missing documentation for acpi_gpio_info.shareable member. Will
-add in next version.
+On Wed, 2023-12-13 at 19:51 +0200, Andy Shevchenko wrote:
+> On Tue, Dec 12, 2023 at 11:20:22AM +0300, Nikita Shubin wrote:
+> > Add a pin control (only multiplexing) driver for ep93xx SoC so
+> > we can fully convert ep93xx to device tree.
+> >=20
+> > This driver is capable of muxing ep9301/ep9302/ep9307/ep9312/ep9315
+> > variants, this is chosen based on "compatible" in device tree.
+>=20
+> Mostly nit-picks below, with the exception to setting device node.
+> See below.
+>=20
+> ...
+>=20
+> > +/*
+> > + * There are several system configuration options selectable by
+> > the DeviceCfg and SysCfg
+> > + * registers. These registers provide the selection of several pin
+> > multiplexing options and also
+> > + * provide software access to the system reset configuration
+> > options. Please refer to the
+> > + * descriptions of the registers, =E2=80=9CDeviceCfg=E2=80=9D on page =
+5-25 and
+> > =E2=80=9CSysCfg=E2=80=9D on page 5-34, for a
+> > + * detailed explanation.
+> > + */
+> > +#define EP93XX_SYSCON_DEVCFG_D1ONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(30=
+) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_D0ONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(29=
+) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_IONU2=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(28=
+) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_GONK=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0B=
+IT(27) /* done */
+> > +#define EP93XX_SYSCON_DEVCFG_TONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0B=
+IT(26) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_MONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0B=
+IT(25) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_A2ONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(22=
+) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_A1ONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0BIT(21=
+) /* not used */
+> > +#define EP93XX_SYSCON_DEVCFG_HONIDE=C2=A0=C2=A0=C2=A0=C2=A0BIT(11) /* =
+done */
+> > +#define EP93XX_SYSCON_DEVCFG_GONIDE=C2=A0=C2=A0=C2=A0=C2=A0BIT(10) /* =
+done */
+> > +#define EP93XX_SYSCON_DEVCFG_PONG=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0B=
+IT(9) /* done */
+> > +#define EP93XX_SYSCON_DEVCFG_EONIDE=C2=A0=C2=A0=C2=A0=C2=A0BIT(8) /* d=
+one */
+> > +#define EP93XX_SYSCON_DEVCFG_I2SONSSP=C2=A0=C2=A0BIT(7) /* done */
+> > +#define EP93XX_SYSCON_DEVCFG_I2SONAC97=C2=A0BIT(6) /* done */
+> > +#define EP93XX_SYSCON_DEVCFG_RASONP3=C2=A0=C2=A0=C2=A0BIT(4) /* done *=
+/
+>=20
+> What are these comments supposed to mean?
+>=20
+> ...
+>=20
+> > +static const struct pinctrl_ops ep93xx_pctrl_ops =3D {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.get_groups_count =3D ep93xx=
+_get_groups_count,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.get_group_name =3D ep93xx_g=
+et_group_name,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.get_group_pins =3D ep93xx_g=
+et_group_pins,
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.dt_node_to_map =3D pinconf_=
+generic_dt_node_to_map_all,
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0.dt_free_map =3D pinconf_gen=
+eric_dt_free_map,
+>=20
+> Hmm... Don you need to ifdef these fields?
+
+From now on we can't live without CONFIG_OF, so i don't think it's
+necessary.
+
+>=20
+> > +};
+>=20
+> ...
+>=20
+> > +static const struct pinfunction ep93xx_pmx_functions[] =3D {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("spi", s=
+pigrps, ARRAY_SIZE(spigrps)),
+>=20
+> Is array_size.h being included?
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("ac97", =
+ac97grps,
+> > ARRAY_SIZE(ac97grps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("i2s", i=
+2sgrps, ARRAY_SIZE(i2sgrps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("pwm", p=
+wm1grps, ARRAY_SIZE(pwm1grps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("keypad"=
+, keypadgrps,
+> > ARRAY_SIZE(keypadgrps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("pata", =
+idegrps, ARRAY_SIZE(idegrps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("lcd", r=
+astergrps,
+> > ARRAY_SIZE(rastergrps)),
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0PINCTRL_PINFUNCTION("gpio", =
+gpiogrps,
+> > ARRAY_SIZE(gpiogrps)),
+> > +};
+>=20
+> ...
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0switch (pmx->model) {
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case EP93XX_9301_PINCTRL:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0grp =3D &ep9301_pin_groups[group];
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0break;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case EP93XX_9307_PINCTRL:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0grp =3D &ep9307_pin_groups[group];
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0break;
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0case EP93XX_9312_PINCTRL:
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0grp =3D &ep9312_pin_groups[group];
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0break;
+>=20
+> default?
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0}
+>=20
+> ...
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmx->model =3D (int)(uintptr=
+_t)id->driver_data;
+>=20
+> Is the model defined as int (signed)?
+>=20
+> Otherwise can we use proper type?
+>=20
+> ...
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0/* using parent of_node to m=
+atch in
+> > get_pinctrl_dev_from_of_node() */
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0device_set_of_node_from_dev(=
+dev, adev->dev.parent);
+>=20
+> Hmm... This takes references in comparison to device_set_node(). Is
+> it intended?
+
+Nope, switched to "device_set_node(dev, dev_fwnode(adev-dev.parent));".
+
+>=20
+> ...
+>=20
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmx->pctl =3D devm_pinctrl_r=
+egister(dev, &ep93xx_pmx_desc,
+> > pmx);
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (IS_ERR(pmx->pctl))
+> > +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0=C2=A0return dev_err_probe(dev, PTR_ERR(pmx->pctl),
+> > "could not register pinmux driver\n");
+>=20
+> It can be written as
+>=20
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0pmx->pctl =3D devm_pinctr=
+l_register(dev, &ep93xx_pmx_desc,
+> pmx);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0ret =3D PTR_ERR_OR_ZERO(.=
+..);
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0if (ret)
+> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0return dev_err_probe(dev, ret, "could not register
+> pinmux driver\n");
+>=20
+> (makes line shorter). But it's up to you.
+>=20
+
 
