@@ -1,116 +1,125 @@
-Return-Path: <linux-gpio+bounces-1855-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1856-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AED3B81E231
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Dec 2023 20:56:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B7F081E31E
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 01:22:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 69C6128210E
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Dec 2023 19:56:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0EF59B21DEA
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 00:22:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E36745380C;
-	Mon, 25 Dec 2023 19:55:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 507D2523D;
+	Tue, 26 Dec 2023 00:20:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NxYtli9Z"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOTBumd4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55A9D537F1;
-	Mon, 25 Dec 2023 19:55:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f9fac086bso25831486d6.3;
-        Mon, 25 Dec 2023 11:55:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703534157; x=1704138957; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v+5mdzcIi0J0U/jyti3PngFAcX/L3/DjChGGJD4WjO0=;
-        b=NxYtli9ZFO+nMhFI9jJM7AmM0UEQP1AYBBIsOQxfutncfFzrXXCl15MO/db7qTycZK
-         E+BH/bT9aSglTtOFm3KR2+eZigo1JECteRjB+Lf6D4H+VUekocZzQOW9kNtiT6vNAEdu
-         eyULYF4OpMBf9aO1e3D6n6vle9kAczFQsb+PP3Gpcj0oNr7p6TzgdohHThbsm/UKZGkI
-         b7vElq1p6YB//aONShEDs/fdGYpRWY/CXq75zdr+SSC1pzI1Yeu71uwlTIlo01Fasmfd
-         zmN59m49OnC7ZyKAwFOtXPoIG+DlBtpEIU1qiuOKJ3GnObSqiIA8sdeJ/CFmjuNqHnfP
-         vTTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703534157; x=1704138957;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=v+5mdzcIi0J0U/jyti3PngFAcX/L3/DjChGGJD4WjO0=;
-        b=MfRAV5ecmWVJGgpiky0hi3GmiB0RSj+818pzkavsUq3u4xlw+Whbpcbc4NR5ck1qNu
-         mzcma0jmC70uzLWUrPKdfEreDwKq/4KUHcuv50N6x93Ea0w6D5niLKf+VqYbmmktx+dR
-         p/wzOi9BfKKdLdt4VCrQiHo7gACGfG9umiT0lEHhZ5QJd1G1H52wPrcp25SfIZSe3LJu
-         qsrKc7seUPyYM3N5xNz4c1jHqGLQbBsDPt3yFtFm9t9Evr+B6lr0lA9cg6lXJbFBJxGZ
-         N7io5fHfSC5x1GBHnVGrxyrUjEKl7ebN4OVw9EPlUrU//1Fuw8ySkFOPhyunRP3aN9l5
-         Q0KQ==
-X-Gm-Message-State: AOJu0YzROFql4ZIsbY1+HX9/cPP1tbA3e8CECrK5NuBBHPpoHCInyVBG
-	ikQqfEgCpEjx2AuIkPwvZPFRqML9CAnc1JlNO8I=
-X-Google-Smtp-Source: AGHT+IGXQ1DzDW/z7mbnW1aKOma9kP1mZ08AqBa7wFFHcRRfcWmagU8jQFFGhrorFhUOmpGd2hGTlBhrmy9h8xA7nx4=
-X-Received: by 2002:ad4:5c49:0:b0:67f:6982:edb4 with SMTP id
- a9-20020ad45c49000000b0067f6982edb4mr13149244qva.14.1703534157222; Mon, 25
- Dec 2023 11:55:57 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 139A163AD;
+	Tue, 26 Dec 2023 00:20:40 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35D4BC433C8;
+	Tue, 26 Dec 2023 00:20:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703550040;
+	bh=GpwQqUeeo7Qp19pOKugu5fFK+Qp8yciRrnemQCjQ5K8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lOTBumd47DG0/+raW4moeqj05I1oj0ZVuzGWFhEelWmyAphD6LreE1v0KAdbg9Gzm
+	 28VcAXVsxXEHL2Qsa+Y7U2k8Fczu/9+0sPlkLOJDj4jjDrYL5+YlcfkjnSspmXkIAd
+	 5j63G3HDZ1aaI5YvHtdo1VLzwjZ+H/mkXqv6snad+ayRKz2hB4kFohvrx0Sp4qgTiG
+	 FX4MzgCrFv5A3luIYAJGo/b+nPA0rpHM80w0AFHVNaABLQcquIzfqdMmqIUF0aFmn5
+	 jgCDI758qY1mppVKM+LRIlh7L/Ki7QNgItGaUXH0RrWZ1F/10A0eWX/N2y+o4lz1mF
+	 dbGrUh75ddkXA==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Marcus Aram <marcus+oss@oxar.nl>,
+	Mark Herbert <mark.herbert42@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Sasha Levin <sashal@kernel.org>,
+	Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.6 06/39] pinctrl: amd: Mask non-wake source pins with interrupt enabled at suspend
+Date: Mon, 25 Dec 2023 19:18:56 -0500
+Message-ID: <20231226002021.4776-6-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20231226002021.4776-1-sashal@kernel.org>
+References: <20231226002021.4776-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231212-ep93xx-v6-0-c307b8ac9aa8@maquefel.me>
- <ZXnxBtqbneUMbvwq@smile.fi.intel.com> <d6e898200b96e816ea8c8c9a847307088ec5821c.camel@maquefel.me>
-In-Reply-To: <d6e898200b96e816ea8c8c9a847307088ec5821c.camel@maquefel.me>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 25 Dec 2023 21:55:20 +0200
-Message-ID: <CAHp75Vcx8oviLiCu=cnzKcdXjEq9wG=PCiBuPTBYe6FFfUcz7Q@mail.gmail.com>
-Subject: Re: [PATCH v6 00/40] ep93xx device tree conversion
-To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Andy Shevchenko <andy@kernel.org>, Hartley Sweeten <hsweeten@visionengravers.com>, 
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
-	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
-	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, 
-	Vignesh Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, 
-	Sergey Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org, 
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org, 
-	linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
-	Arnd Bergmann <arnd@arndb.de>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Andrew Lunn <andrew@lunn.ch>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.6.8
+Content-Transfer-Encoding: 8bit
 
-On Sat, Dec 23, 2023 at 11:13=E2=80=AFAM Nikita Shubin
-<nikita.shubin@maquefel.me> wrote:
-> On Wed, 2023-12-13 at 19:59 +0200, Andy Shevchenko wrote:
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-...
+[ Upstream commit 2fff0b5e1a6b9c577b4dd4958902c877159c856b ]
 
-> I haven't found any missing tags, that b4 didn't apply, the ones above
-> refer to a very old iteration and were given to cover letter and i
-> don't feel like they need to be included.
+If a pin isn't marked as a wake source processing any interrupts is
+just going to destroy battery life.  The APU may wake up from a hardware
+sleep state to process the interrupt but not return control to the OS.
 
-When somebody gives you a tag against a cover letter, it means the
-entire series (if not spelled differently). `b4` even has a parameter
--t for that IIRC.
+Mask interrupt for all non-wake source pins at suspend. They'll be
+re-enabled at resume.
 
+Reported-and-tested-by: Marcus Aram <marcus+oss@oxar.nl>
+Reported-and-tested-by: Mark Herbert <mark.herbert42@gmail.com>
+Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2812
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://lore.kernel.org/r/20231203032431.30277-3-mario.limonciello@amd.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/pinctrl-amd.c | 9 +++++++++
+ drivers/pinctrl/pinctrl-amd.h | 5 +++++
+ 2 files changed, 14 insertions(+)
 
---=20
-With Best Regards,
-Andy Shevchenko
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 74241b2ff21e3..86034c457c043 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -923,6 +923,15 @@ static int amd_gpio_suspend(struct device *dev)
+ 
+ 		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 		gpio_dev->saved_regs[i] = readl(gpio_dev->base + pin * 4) & ~PIN_IRQ_PENDING;
++
++		/* mask any interrupts not intended to be a wake source */
++		if (!(gpio_dev->saved_regs[i] & WAKE_SOURCE)) {
++			writel(gpio_dev->saved_regs[i] & ~BIT(INTERRUPT_MASK_OFF),
++			       gpio_dev->base + pin * 4);
++			pm_pr_dbg("Disabling GPIO #%d interrupt for suspend.\n",
++				  pin);
++		}
++
+ 		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 	}
+ 
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 34c5c3e71fb26..cf59089f27763 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -80,6 +80,11 @@
+ #define FUNCTION_MASK		GENMASK(1, 0)
+ #define FUNCTION_INVALID	GENMASK(7, 0)
+ 
++#define WAKE_SOURCE	(BIT(WAKE_CNTRL_OFF_S0I3) | \
++			 BIT(WAKE_CNTRL_OFF_S3)   | \
++			 BIT(WAKE_CNTRL_OFF_S4)   | \
++			 BIT(WAKECNTRL_Z_OFF))
++
+ struct amd_function {
+ 	const char *name;
+ 	const char * const groups[NSELECTS];
+-- 
+2.43.0
+
 
