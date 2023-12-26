@@ -1,50 +1,54 @@
-Return-Path: <linux-gpio+bounces-1862-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1863-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BB7D81E3B9
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 01:36:58 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8B57F81E423
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 01:49:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0644BB22617
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 00:36:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 362FD1F2245E
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 00:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F93359B50;
-	Tue, 26 Dec 2023 00:23:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 169CC60BAB;
+	Tue, 26 Dec 2023 00:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hNZrKYys"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G22Hqhsf"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6495059B46;
-	Tue, 26 Dec 2023 00:23:57 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 214A9C433C8;
-	Tue, 26 Dec 2023 00:23:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D042260BA4;
+	Tue, 26 Dec 2023 00:27:33 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DCDFC433C8;
+	Tue, 26 Dec 2023 00:27:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703550237;
-	bh=Bmr2KJSHLE3jYu92u4jB4H3npK88ZS0ZQcmhtihwVRo=;
+	s=k20201202; t=1703550453;
+	bh=CNBU/Y9sLgZ+fGEB2eCCzMGg0xo/YT9sWLvCQfkKNrU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=hNZrKYysIqTrKfxIFBdrP08yHASZFfdmSr71CQMztQWZmqZkKyIw+ou1b8KOWhGr0
-	 npsQO9Znf5nKoUybvXzNBUXRyYZydM6IwkYTdXoxKBk9L2V8rz8szxdey3uEdKGnlu
-	 fEGLHStk+fqqSaNcA+tsIu0I16S4axhVuR9McgMyC1RoDDqMStIKBEkIES2Hxr7Fka
-	 lwHORjiXhadwVrpseOTff8LsKi70S4dPbN1vQ7PaJq7c1gvIBnllXE4ANqjMEq8mY9
-	 r7PCD552fPl2ReBM68wb1wllw4G71b/XACmkhpJoVw6jRRjxcpZcodB5kKQzUjHUG/
-	 zjsqt/VuX9i1Q==
+	b=G22HqhsfdcixYRmDteh+9SCeR58N2wEBQ2+JWRSi0cMT2asEvcHxRZAcjc4x3JKLh
+	 8bym3OqGbGKerGKuG+N8fI7OQ1KnwCv3LOeUtk1kh8kuzv61Ya1XbdPiliNp6iJX9w
+	 E6pARRXK8/BTwH5MxtYbn+TZqA5bTOLCAgIS/kuhtMf02jzl6xQah/QfVlEUtMi/it
+	 K4UhV7k2Y0QvIf2ijf6Qc92at4u8Vi3MfZO4KjkoDUFdtqOevf3qUWLuDgr2JYExcf
+	 /bYWxwkq1pT0v7s9Mwt/MqcD2NEBhlWa8L1Sc+p9SH4Otfi0f3HOYqWOuEBcBuB9Dg
+	 /kCq0hHcMRpNA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
-Cc: Patrick Rudolph <patrick.rudolph@9elements.com>,
+Cc: Mario Limonciello <mario.limonciello@amd.com>,
+	Marcus Aram <marcus+oss@oxar.nl>,
+	Mark Herbert <mark.herbert42@gmail.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Sasha Levin <sashal@kernel.org>,
+	Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 6.1 23/24] pinctrl: cy8c95x0: Fix get_pincfg
-Date: Mon, 25 Dec 2023 19:22:16 -0500
-Message-ID: <20231226002255.5730-23-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 3/6] pinctrl: amd: Mask non-wake source pins with interrupt enabled at suspend
+Date: Mon, 25 Dec 2023 19:27:10 -0500
+Message-ID: <20231226002725.7471-3-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231226002255.5730-1-sashal@kernel.org>
-References: <20231226002255.5730-1-sashal@kernel.org>
+In-Reply-To: <20231226002725.7471-1-sashal@kernel.org>
+References: <20231226002725.7471-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,37 +57,68 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.69
+X-stable-base: Linux 4.14.334
 Content-Transfer-Encoding: 8bit
 
-From: Patrick Rudolph <patrick.rudolph@9elements.com>
+From: Mario Limonciello <mario.limonciello@amd.com>
 
-[ Upstream commit 94c71705cc49092cef60ece13a28680809096fd4 ]
+[ Upstream commit 2fff0b5e1a6b9c577b4dd4958902c877159c856b ]
 
-Invert the register value for PIN_CONFIG_OUTPUT_ENABLE to return
-the opposite of PIN_CONFIG_INPUT_ENABLE.
+If a pin isn't marked as a wake source processing any interrupts is
+just going to destroy battery life.  The APU may wake up from a hardware
+sleep state to process the interrupt but not return control to the OS.
 
-Signed-off-by: Patrick Rudolph <patrick.rudolph@9elements.com>
-Link: https://lore.kernel.org/r/20231219125120.4028862-3-patrick.rudolph@9elements.com
+Mask interrupt for all non-wake source pins at suspend. They'll be
+re-enabled at resume.
+
+Reported-and-tested-by: Marcus Aram <marcus+oss@oxar.nl>
+Reported-and-tested-by: Mark Herbert <mark.herbert42@gmail.com>
+Link: https://gitlab.freedesktop.org/drm/amd/-/issues/2812
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+Link: https://lore.kernel.org/r/20231203032431.30277-3-mario.limonciello@amd.com
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-cy8c95x0.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/pinctrl/pinctrl-amd.c | 9 +++++++++
+ drivers/pinctrl/pinctrl-amd.h | 5 +++++
+ 2 files changed, 14 insertions(+)
 
-diff --git a/drivers/pinctrl/pinctrl-cy8c95x0.c b/drivers/pinctrl/pinctrl-cy8c95x0.c
-index 501b7c181df00..2a6158a052a31 100644
---- a/drivers/pinctrl/pinctrl-cy8c95x0.c
-+++ b/drivers/pinctrl/pinctrl-cy8c95x0.c
-@@ -752,6 +752,8 @@ static int cy8c95x0_gpio_get_pincfg(struct cy8c95x0_pinctrl *chip,
- 	ret = regmap_read(chip->regmap, reg, &reg_val);
- 	if (reg_val & bit)
- 		arg = 1;
-+	if (param == PIN_CONFIG_OUTPUT_ENABLE)
-+		arg = !arg;
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index 509ba4bceefcb..a5cd88c5dd844 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -766,6 +766,15 @@ int amd_gpio_suspend(struct device *dev)
  
- 	*config = pinconf_to_config_packed(param, (u16)arg);
- out:
+ 		raw_spin_lock_irqsave(&gpio_dev->lock, flags);
+ 		gpio_dev->saved_regs[i] = readl(gpio_dev->base + pin * 4) & ~PIN_IRQ_PENDING;
++
++		/* mask any interrupts not intended to be a wake source */
++		if (!(gpio_dev->saved_regs[i] & WAKE_SOURCE)) {
++			writel(gpio_dev->saved_regs[i] & ~BIT(INTERRUPT_MASK_OFF),
++			       gpio_dev->base + pin * 4);
++			pm_pr_dbg("Disabling GPIO #%d interrupt for suspend.\n",
++				  pin);
++		}
++
+ 		raw_spin_unlock_irqrestore(&gpio_dev->lock, flags);
+ 	}
+ 
+diff --git a/drivers/pinctrl/pinctrl-amd.h b/drivers/pinctrl/pinctrl-amd.h
+index 884f48f7a6a36..065419dabffb5 100644
+--- a/drivers/pinctrl/pinctrl-amd.h
++++ b/drivers/pinctrl/pinctrl-amd.h
+@@ -80,6 +80,11 @@ struct amd_pingroup {
+ 	unsigned npins;
+ };
+ 
++#define WAKE_SOURCE	(BIT(WAKE_CNTRL_OFF_S0I3) | \
++			 BIT(WAKE_CNTRL_OFF_S3)   | \
++			 BIT(WAKE_CNTRL_OFF_S4)   | \
++			 BIT(WAKECNTRL_Z_OFF))
++
+ struct amd_function {
+ 	const char *name;
+ 	const char * const *groups;
 -- 
 2.43.0
 
