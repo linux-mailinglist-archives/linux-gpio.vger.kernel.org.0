@@ -1,292 +1,125 @@
-Return-Path: <linux-gpio+bounces-1867-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1868-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2909981E938
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 20:22:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id A069381EF87
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 15:46:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F1A6E1C20E0C
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Dec 2023 19:22:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 05614B215A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 14:46:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D46F187A;
-	Tue, 26 Dec 2023 19:22:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F89945943;
+	Wed, 27 Dec 2023 14:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="lvB4bEwh"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QVlF2r+o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-il1-f178.google.com (mail-il1-f178.google.com [209.85.166.178])
+Received: from mail-vs1-f51.google.com (mail-vs1-f51.google.com [209.85.217.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B21954C8B
-	for <linux-gpio@vger.kernel.org>; Tue, 26 Dec 2023 19:22:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-il1-f178.google.com with SMTP id e9e14a558f8ab-35fc6eb9075so11377135ab.1
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Dec 2023 11:22:04 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58E224502B
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 14:46:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f51.google.com with SMTP id ada2fe7eead31-4672008b2c7so585363137.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 06:46:46 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1703618524; x=1704223324; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703688405; x=1704293205; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KWSLh74Sjb1tnv40s7SuHViSbHQs5lvDO8AcO/YGKCU=;
-        b=lvB4bEwh8SzCjHd25S6XOlpwpVCpAz8icWVBXvruNofgp/9Zz42hlBEogjopzaeH1D
-         MJLKuLZoVAf1Bf3sU9YeaoI4jcx0/tbgBLIaJ9BKh+7VSCtMBCtasXDp8VlBqesCk4ZW
-         7upaiqdH4jiySA5UnJ687sjvAbGn5mVgQij1w=
+        bh=d4Y7smc2pkp/vBMB9fXvY7F4m1V5SMuNQGmvZZc5JqI=;
+        b=QVlF2r+ohzHZoMFe5gR8TKTwiO2FO0dzVtIOL3Koug4CDsIH+Cm+bxd0z2Hl3Q+Djq
+         qx/2v5KDaGrxiJbOfrxXzrdWNW4n6mKWfMEczvXdecMxHfccVRKoatg959TI3fhb5VEh
+         pokcvfRNSwuQpp+/Lqnq/fs2JVJU6wH/fhvBIO3syjMTg/k6naZcWGZrWvGArpmWf+U6
+         PEOprLeL6sWnl6hkaZyBQKuaWna+IxoCwlqsKbj7AuvymZbBB2gd1+R4Dk+SKtA3K/Dr
+         Ez9uRAk1qjTIQmcibGoPMUrapZbWK0vEZ6lld054r2JRTCw2QusNLeWC9YSiod4UkPR/
+         gjCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703618524; x=1704223324;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1703688405; x=1704293205;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KWSLh74Sjb1tnv40s7SuHViSbHQs5lvDO8AcO/YGKCU=;
-        b=fyk6Nl0uMWAjLmaGdsp1Jq4fryzkDcH0SuMW0mLkt/pDCtC5Zwf5oKipeWGJ8MV0sl
-         csz6y/aD97O5kQs6psShkxUwYto9Kb7NGy6ymrChaDuNcoI5jBU4cw5j8N63ZoMybMvQ
-         9dE2BiEpW9qmhRKGRFAxZbSouzuX3dxuId/7lrg8z6UDCmH0/NTk2k7VfmG9wjfqcEli
-         oYBi/n7rS0BlWeNjXjEdEOaZO3DVLHYQzsRFJlnCUPYdCrctXUVS83atkHUFB8bafcQQ
-         0rlnWQlYO1f1BhIRCbKH7wZyKzoJJpRfZDuZzJkQ9JGjyY26fu82RHRZ2phAuDt53j9I
-         6qhw==
-X-Gm-Message-State: AOJu0YwRNVrLkTi1S4UVPMfxfNPqeidWEvrT4iqW4I/C35O4hONlOjYx
-	25wb9eQNoFLVebVoVtsYV/TPeIheoqFM
-X-Google-Smtp-Source: AGHT+IGDCtaOFBQfliLMWuw+Bp0lLVTZeCWzg9u2yDUWIqDNp8kfxPkAF10al2bkUVOApEziXN9uEA==
-X-Received: by 2002:a05:6e02:144a:b0:360:193:f434 with SMTP id p10-20020a056e02144a00b003600193f434mr1829834ilo.28.1703618523868;
-        Tue, 26 Dec 2023 11:22:03 -0800 (PST)
-Received: from markhas1.lan (71-218-50-136.hlrn.qwest.net. [71.218.50.136])
-        by smtp.gmail.com with ESMTPSA id gw3-20020a0566381ee300b0046b692e719esm3207609jab.150.2023.12.26.11.22.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 26 Dec 2023 11:22:03 -0800 (PST)
-From: Mark Hasemeyer <markhas@chromium.org>
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Raul Rangel <rrangel@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Mark Hasemeyer <markhas@chromium.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Len Brown <lenb@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wolfram Sang <wsa@kernel.org>,
-	linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org
-Subject: [PATCH v3 02/24] gpiolib: acpi: Modify acpi_dev_irq_wake_get_by() to use resource
-Date: Tue, 26 Dec 2023 12:21:06 -0700
-Message-ID: <20231226122113.v3.2.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
-X-Mailer: git-send-email 2.43.0.472.g3155946c3a-goog
-In-Reply-To: <20231226192149.1830592-1-markhas@chromium.org>
-References: <20231226192149.1830592-1-markhas@chromium.org>
+        bh=d4Y7smc2pkp/vBMB9fXvY7F4m1V5SMuNQGmvZZc5JqI=;
+        b=aYIqzdFiVfuhGRCC2wLrOnfWXRSQqNICSjW1yveSW9l9iVb0YSt4vqjo1fwGax8bHg
+         hLPz+YedVHPTP0gdvqGb7Nl+cAVUqTu4CzKPr4nutZtWqsaptraDdk1XgeWgtX0wcNVt
+         0y3tyYL15Xyzw1qlXTznJO0BGmHXoMyVmZ86GNbgfGH7KaNyrlJWJDIsYOx8+fGVN1mG
+         tfiU9Odw4pcRK3Z+A9mYUG8s/oeWniDtbaNsGjoLL61MVg9YMxmq+uAnXIIKyBHFILu0
+         DIPtkhOoniUpT6x1xH6qTQQdaxZM4YU6PDX4K1N01B3vso9hy3mcZx1A00vSPsGW/m38
+         1wYA==
+X-Gm-Message-State: AOJu0YyS8OgKbZo82QU7SieryHjDu2WLPyIqjsVLDjGJM/yo693fLDD9
+	GR6MRbxfKLacYzXfKrSTr6n1b9qQEjX4mkn8osH4SreVTjasyw==
+X-Google-Smtp-Source: AGHT+IFS7xecxURZcVbt+I2hL4uy6bzPQc50FajzGNELsuDtJen9mfaWyBsIUZXoWWC8uZY2zDhd2CiNCF/4WaOtqhA=
+X-Received: by 2002:a67:f543:0:b0:466:fb17:bad2 with SMTP id
+ z3-20020a67f543000000b00466fb17bad2mr2641352vsn.28.1703688405139; Wed, 27 Dec
+ 2023 06:46:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20231221012040.17763-1-warthog618@gmail.com>
+In-Reply-To: <20231221012040.17763-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 27 Dec 2023 15:46:34 +0100
+Message-ID: <CAMRc=Mcg6sT0w4Dfn5MhWcLxUjvJV4rT-Pfoe-fYDe5JhYMpig@mail.gmail.com>
+Subject: Re: [PATCH v2 0/5] gpiolib: cdev: guard tidying
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Other information besides wake capability can be provided about GPIO
-IRQs such as triggering, polarity, and sharability. Use resource flags
-to provide this information to the caller if they want it.
+On Thu, Dec 21, 2023 at 2:20=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> This series contains some tidying up of gpiolib-cdev following the
+> recent adoption of guard().
+>
+> The first patch is a fix to protect gpio_ioctl() from having the
+> gpio chip removed while the ioctl is in progress.
+>
+> The next couple of patches are minor fixes inspired by recent
+> submissions and reviews for gpiolib.c.
+>
+> Patch 2 adds a missing include.
+>
+> Patch 3 switches allocation of struct linereq from kzalloc() to
+> kvzalloc() as it can be larger than one page - even more so after the
+> recent relocation of debounce_period_us.
+>
+> The final two patches replace wrapper functions with guards.
+>
+> Patch 4 tidies up the functions that use a guard on the linereq
+> config_mutex.
+>
+> Patch 5 tidies up the functions that use a guard on the gpio_device.
+>
+> Changes v1 -> v2:
+>  - add patch 1 to protect gpio_ioctl() from chip removal
+>  - improve commit comment (patch 3)
+>  - use guard(rwsem_read) rather than rolling our own (patch 5)
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (5):
+>   gpiolib: cdev: add gpio_device locking wrapper around gpio_ioctl()
+>   gpiolib: cdev: include overflow.h
+>   gpiolib: cdev: allocate linereq using kvzalloc()
+>   gpiolib: cdev: replace locking wrappers for config_mutex with guards
+>   gpiolib: cdev: replace locking wrappers for gpio_device with guards
+>
+>  drivers/gpio/gpiolib-cdev.c | 257 ++++++++++--------------------------
+>  1 file changed, 70 insertions(+), 187 deletions(-)
+>
+> --
+> 2.39.2
+>
 
-This should keep the API more robust over time as flags are added,
-modified, or removed. It also more closely matches acpi_irq_get() which
-take a resource as an argument.
+I applied the remaining patches, thanks.
 
-Rename the function to acpi_dev_get_gpio_irq_resource() to better
-describe the function's new behavior.
-
-Signed-off-by: Mark Hasemeyer <markhas@chromium.org>
----
-
-Changes in v3:
--Use DEFINE_RES_NAMED macro
--Add acpi_gpio_info.shareable doc
-
-Changes in v2:
--Remove explicit cast to struct resource
--irq -> IRQ
-
- drivers/gpio/gpiolib-acpi.c | 27 ++++++++++++++++++---------
- drivers/i2c/i2c-core-acpi.c | 10 ++++++++--
- include/linux/acpi.h        | 23 ++++++++++-------------
- 3 files changed, 36 insertions(+), 24 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 88066826d8e5b..24232534a9cdf 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -99,6 +99,7 @@ struct acpi_gpio_chip {
-  * @pin_config: pin bias as provided by ACPI
-  * @polarity: interrupt polarity as provided by ACPI
-  * @triggering: triggering type as provided by ACPI
-+ * @shareable: share type as provided by ACPI (shared vs exclusive).
-  * @wake_capable: wake capability as provided by ACPI
-  * @debounce: debounce timeout as provided by ACPI
-  * @quirks: Linux specific quirks as provided by struct acpi_gpio_mapping
-@@ -111,6 +112,7 @@ struct acpi_gpio_info {
- 	int polarity;
- 	int triggering;
- 	bool wake_capable;
-+	bool shareable;
- 	unsigned int debounce;
- 	unsigned int quirks;
- };
-@@ -760,6 +762,7 @@ static int acpi_populate_gpio_lookup(struct acpi_resource *ares, void *data)
- 		lookup->info.debounce = agpio->debounce_timeout;
- 		lookup->info.gpioint = gpioint;
- 		lookup->info.wake_capable = acpi_gpio_irq_is_wake(&lookup->info.adev->dev, agpio);
-+		lookup->info.shareable = agpio->shareable == ACPI_SHARED;
- 
- 		/*
- 		 * Polarity and triggering are only specified for GpioInt
-@@ -1004,11 +1007,11 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- }
- 
- /**
-- * acpi_dev_gpio_irq_wake_get_by() - Find GpioInt and translate it to Linux IRQ number
-+ * acpi_dev_get_gpio_irq_resource() - Find GpioInt and populate resource struct
-  * @adev: pointer to a ACPI device to get IRQ from
-  * @name: optional name of GpioInt resource
-  * @index: index of GpioInt resource (starting from %0)
-- * @wake_capable: Set to true if the IRQ is wake capable
-+ * @r: pointer to resource to populate with IRQ information.
-  *
-  * If the device has one or more GpioInt resources, this function can be
-  * used to translate from the GPIO offset in the resource to the Linux IRQ
-@@ -1023,10 +1026,12 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
-  * The GPIO is considered wake capable if the GpioInt resource specifies
-  * SharedAndWake or ExclusiveAndWake.
-  *
-- * Return: Linux IRQ number (> %0) on success, negative errno on failure.
-+ * IRQ number will be available in the resource structure.
-+ *
-+ * Return: 0 on success, negative errno on failure.
-  */
--int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, int index,
--				  bool *wake_capable)
-+int acpi_dev_get_gpio_irq_resource(struct acpi_device *adev, const char *name, int index,
-+				   struct resource *r)
- {
- 	int idx, i;
- 	unsigned int irq_flags;
-@@ -1045,6 +1050,7 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, in
- 		if (info.gpioint && idx++ == index) {
- 			unsigned long lflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 			enum gpiod_flags dflags = GPIOD_ASIS;
-+			unsigned long res_flags;
- 			char label[32];
- 			int irq;
- 
-@@ -1084,16 +1090,19 @@ int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, in
- 			}
- 
- 			/* avoid suspend issues with GPIOs when systems are using S3 */
--			if (wake_capable && acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0)
--				*wake_capable = info.wake_capable;
-+			if (info.wake_capable && !(acpi_gbl_FADT.flags & ACPI_FADT_LOW_POWER_S0))
-+				info.wake_capable = false;
- 
--			return irq;
-+			res_flags = acpi_dev_irq_flags(info.triggering, info.polarity,
-+							   info.shareable, info.wake_capable);
-+			*r = DEFINE_RES_NAMED(irq, 1, NULL, res_flags);
-+			return 0;
- 		}
- 
- 	}
- 	return -ENOENT;
- }
--EXPORT_SYMBOL_GPL(acpi_dev_gpio_irq_wake_get_by);
-+EXPORT_SYMBOL_GPL(acpi_dev_get_gpio_irq_resource);
- 
- static acpi_status
- acpi_gpio_adr_space_handler(u32 function, acpi_physical_address address,
-diff --git a/drivers/i2c/i2c-core-acpi.c b/drivers/i2c/i2c-core-acpi.c
-index d6037a3286690..8126a87baf3d4 100644
---- a/drivers/i2c/i2c-core-acpi.c
-+++ b/drivers/i2c/i2c-core-acpi.c
-@@ -203,6 +203,7 @@ int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
- {
- 	struct acpi_device *adev = ACPI_COMPANION(&client->dev);
- 	struct list_head resource_list;
-+	struct resource irqres;
- 	struct i2c_acpi_irq_context irq_ctx = {
- 		.irq = -ENOENT,
- 	};
-@@ -217,8 +218,13 @@ int i2c_acpi_get_irq(struct i2c_client *client, bool *wake_capable)
- 
- 	acpi_dev_free_resource_list(&resource_list);
- 
--	if (irq_ctx.irq == -ENOENT)
--		irq_ctx.irq = acpi_dev_gpio_irq_wake_get(adev, 0, &irq_ctx.wake_capable);
-+	if (irq_ctx.irq == -ENOENT) {
-+		ret = acpi_dev_get_gpio_irq_resource(adev, NULL, 0, &irqres);
-+		if (ret)
-+			return ret;
-+		irq_ctx.irq = irqres.start;
-+		irq_ctx.wake_capable = irqres.flags & IORESOURCE_IRQ_WAKECAPABLE;
-+	}
- 
- 	if (irq_ctx.irq < 0)
- 		return irq_ctx.irq;
-diff --git a/include/linux/acpi.h b/include/linux/acpi.h
-index 118a18b7ff844..83aa2fa8e81fc 100644
---- a/include/linux/acpi.h
-+++ b/include/linux/acpi.h
-@@ -1221,8 +1221,8 @@ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 				struct acpi_resource_gpio **agpio);
- bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
- 			       struct acpi_resource_gpio **agpio);
--int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name, int index,
--				  bool *wake_capable);
-+int acpi_dev_get_gpio_irq_resource(struct acpi_device *adev, const char *name, int index,
-+				   struct resource *r);
- #else
- static inline bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 					      struct acpi_resource_gpio **agpio)
-@@ -1234,28 +1234,25 @@ static inline bool acpi_gpio_get_io_resource(struct acpi_resource *ares,
- {
- 	return false;
- }
--static inline int acpi_dev_gpio_irq_wake_get_by(struct acpi_device *adev, const char *name,
--						int index, bool *wake_capable)
-+static inline int acpi_dev_get_gpio_irq_resource(struct acpi_device *adev, const char *name,
-+						 int index, struct resource *r)
- {
- 	return -ENXIO;
- }
- #endif
- 
--static inline int acpi_dev_gpio_irq_wake_get(struct acpi_device *adev, int index,
--					     bool *wake_capable)
-+static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name, int index)
- {
--	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, wake_capable);
--}
-+	struct resource r;
-+	int ret;
- 
--static inline int acpi_dev_gpio_irq_get_by(struct acpi_device *adev, const char *name,
--					   int index)
--{
--	return acpi_dev_gpio_irq_wake_get_by(adev, name, index, NULL);
-+	ret = acpi_dev_get_gpio_irq_resource(adev, name, index, &r);
-+	return ret ?: r.start;
- }
- 
- static inline int acpi_dev_gpio_irq_get(struct acpi_device *adev, int index)
- {
--	return acpi_dev_gpio_irq_wake_get_by(adev, NULL, index, NULL);
-+	return acpi_dev_gpio_irq_get_by(adev, NULL, index);
- }
- 
- /* Device properties */
--- 
-2.43.0.472.g3155946c3a-goog
-
+Bart
 
