@@ -1,92 +1,95 @@
-Return-Path: <linux-gpio+bounces-1871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72A0781EF9F
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 15:59:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7025981EFFD
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 17:02:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C47E28376F
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 14:59:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 221211F221A4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 16:02:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EFEA445954;
-	Wed, 27 Dec 2023 14:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926B246440;
+	Wed, 27 Dec 2023 16:01:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cg2mbWk2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="foh7IH6s"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A441545947
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 14:59:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4b72e63821eso1555017e0c.1
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 06:59:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1703689163; x=1704293963; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kwySJh/J4PGlkxiWlBxpZNUY6nu3Z/pDgnojJZIqxMM=;
-        b=cg2mbWk240AAdxIpvAE9wQLiSlh5+1uyU1TmSGbkb5t9LLbBBn+uOUOhdMGYUGLqfs
-         9gwJ4BvWhHkI4mPnFO3E8as7/SbSPYfli6Osz4a0kqMBJYz8AQFX6dGy36ARrgz0bk+8
-         90rtfDxd7j9DQZn76biI2jAAzqY4kokmm8oz3p6isc89eoI4xJGz/igR+9E+BdNlkVKY
-         WMkMepJW3CaQSJxOC13/y2fSAgKXzOdXhZUPYRbfAImHMiAAfEXjbxbRtw2cBNGIoTr/
-         ThQggN7LoUh0AGX/rtHmezGJNciqhB6ADMENAwvhWFNBUS8TYHWXNccB7hj0FAfYUEbv
-         5dXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703689163; x=1704293963;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kwySJh/J4PGlkxiWlBxpZNUY6nu3Z/pDgnojJZIqxMM=;
-        b=PBR4/Jf8Klt2SiOesSYubRVm/JP/6HWJ+a5/+gq9nS81eZ6mLbBa/ldeRqaZsCFPhU
-         iaKOOPNVSIo/Z/8ehb3SyoXVFF8YjHy0NkMLFt71w3Lf9KRExkU1xaF8foKjk39q/ofP
-         3ZWYW1WukY9/9KmtzaMLVLFVeQ7gCxuBBHAu0GacRtqwjakPon2kBaIJlvN+dVJ32ZCQ
-         QvkZPmxUJB9x9tRS2Tm/AkwkjPjRWiAl5Yw8pD9YxkpN0RqWiLztzuxlWpBmR4rWFb6L
-         ZwAx2xg+qqF0XA9ys2Iy39wTzUEoH6EfaVu3zEd244CzhJuXi0FUMzSp6CfHoX263d/p
-         0GWQ==
-X-Gm-Message-State: AOJu0YyKZzCwxcO9RfogoqqTSrWmy2WnctvfzXwO3GTe2dpfqYo4MliR
-	jqrtrHcgFfoal6gN1/2POfHdn6DzsA9cAQx3by2QyZK7JxOnTSMffIvBiOG3
-X-Google-Smtp-Source: AGHT+IEWvgutdHrCNZKp261VtrNGk+PsDQZ2EnbxomLnNrlQYwldRvQHCWXLaSB/r7H8U14ilgmpGiXnpaCA35V3/VU=
-X-Received: by 2002:a05:6122:3222:b0:4b7:1f17:55f0 with SMTP id
- ci34-20020a056122322200b004b71f1755f0mr4866948vkb.17.1703689163542; Wed, 27
- Dec 2023 06:59:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF245C06;
+	Wed, 27 Dec 2023 16:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1703692909; x=1735228909;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=qIi6/FGG1XhIsYOH+tdaJ+Cr8i/oTUD6GGfo2SnNl+w=;
+  b=foh7IH6sUAdPK/7HQUTa+ZATl0wbkaH0hNlnLWM/mrHpnUOt6y8gzDcI
+   Zvc2ZkfrjbdoTVzLSYy1ULKMpTZXwU6UqD77GCdCDa3ZRJEA9mvZoWrgK
+   2WeM28kqsVQIkJmq7iagS9g+yJ9frFFvqD3Q5zCWmjaxXizomr3BDjaRL
+   Y6a6+RLHVGzGKiW0ltbS4J3ADbIsFf7wtlubDDOo8V19Whaz/fbFHO7Cd
+   f4g37rLKVPiL18jMyG8fzS0o6K+iL63YCMnzvovtLQzqLVLnue8JAklkG
+   p8pXqV8uk55BAQUp2JgZjzK0kL4Km+tIrW1AkmihYULMfjUWb6PgwtUv4
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3745327"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="3745327"
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:01:48 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="951530427"
+X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
+   d="scan'208";a="951530427"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:01:43 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rIWLk-00000009SPM-3mSN;
+	Wed, 27 Dec 2023 18:01:40 +0200
+Date: Wed, 27 Dec 2023 18:01:40 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Mark Hasemeyer <markhas@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev,
+	cros-qcom-dts-watchers@chromium.org, devicetree@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v2 00/22] Improve IRQ wake capability reporting and
+ update the cros_ec driver to use it
+Message-ID: <ZYxKZD4IMJH_QjQW@smile.fi.intel.com>
+References: <20231220235459.2965548-1-markhas@chromium.org>
+ <ZYRAuY1LGdD8_u5K@smile.fi.intel.com>
+ <CANg-bXDw+bYNTu-HFaNAPb4e+_oKt2ExR6PehWR_==vpboKGaw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219201102.41639-1-brgl@bgdev.pl>
-In-Reply-To: <20231219201102.41639-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 27 Dec 2023 15:59:12 +0100
-Message-ID: <CAMRc=MeS_eoYmvAcTknBZ-e3op4d+rjC4hBcTPhTPw2JpcyLKw@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-To: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANg-bXDw+bYNTu-HFaNAPb4e+_oKt2ExR6PehWR_==vpboKGaw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Dec 19, 2023 at 9:11=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> extra_checks is only used in a few places. It also depends on
-> a non-standard DEBUG define one needs to add to the source file. The
-> overhead of removing it should be minimal (we already use pure
-> might_sleep() in the code anyway) so drop it.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+On Fri, Dec 22, 2023 at 03:30:43PM -0700, Mark Hasemeyer wrote:
+> > Just wondering if you used --histogram diff algo when preparing patches.
+> 
+> Not knowingly. I use patman which uses 'git format-patch' under the
+> covers with some added options:
+> https://github.com/siemens/u-boot/blob/master/tools/patman/gitutil.py#L308
 
-Patch applied.
+Add a configuration into your ~/.gitconfig (or local for the project),
+it really makes the difference.
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
