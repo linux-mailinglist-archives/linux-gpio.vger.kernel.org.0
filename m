@@ -1,91 +1,146 @@
-Return-Path: <linux-gpio+bounces-1872-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1873-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7025981EFFD
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 17:02:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7BEAA81F038
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 17:18:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 221211F221A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 16:02:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1E0A9B22974
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 16:18:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 926B246440;
-	Wed, 27 Dec 2023 16:01:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="foh7IH6s"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 722AC45BFE;
+	Wed, 27 Dec 2023 16:18:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.24])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ECF245C06;
-	Wed, 27 Dec 2023 16:01:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703692909; x=1735228909;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qIi6/FGG1XhIsYOH+tdaJ+Cr8i/oTUD6GGfo2SnNl+w=;
-  b=foh7IH6sUAdPK/7HQUTa+ZATl0wbkaH0hNlnLWM/mrHpnUOt6y8gzDcI
-   Zvc2ZkfrjbdoTVzLSYy1ULKMpTZXwU6UqD77GCdCDa3ZRJEA9mvZoWrgK
-   2WeM28kqsVQIkJmq7iagS9g+yJ9frFFvqD3Q5zCWmjaxXizomr3BDjaRL
-   Y6a6+RLHVGzGKiW0ltbS4J3ADbIsFf7wtlubDDOo8V19Whaz/fbFHO7Cd
-   f4g37rLKVPiL18jMyG8fzS0o6K+iL63YCMnzvovtLQzqLVLnue8JAklkG
-   p8pXqV8uk55BAQUp2JgZjzK0kL4Km+tIrW1AkmihYULMfjUWb6PgwtUv4
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="3745327"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F042346420;
+	Wed, 27 Dec 2023 16:17:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="399246276"
 X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="3745327"
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:01:48 -0800
+   d="scan'208";a="399246276"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:17:55 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="951530427"
+X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="1109673536"
 X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="951530427"
+   d="scan'208";a="1109673536"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga005.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:01:43 -0800
+  by fmsmga005.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 08:17:52 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rIWLk-00000009SPM-3mSN;
-	Wed, 27 Dec 2023 18:01:40 +0200
-Date: Wed, 27 Dec 2023 18:01:40 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, chrome-platform@lists.linux.dev,
-	cros-qcom-dts-watchers@chromium.org, devicetree@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-mediatek@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v2 00/22] Improve IRQ wake capability reporting and
- update the cros_ec driver to use it
-Message-ID: <ZYxKZD4IMJH_QjQW@smile.fi.intel.com>
-References: <20231220235459.2965548-1-markhas@chromium.org>
- <ZYRAuY1LGdD8_u5K@smile.fi.intel.com>
- <CANg-bXDw+bYNTu-HFaNAPb4e+_oKt2ExR6PehWR_==vpboKGaw@mail.gmail.com>
+	(envelope-from <andy@kernel.org>)
+	id 1rIWbN-00000009Sb9-3quq;
+	Wed, 27 Dec 2023 18:17:49 +0200
+Date: Wed, 27 Dec 2023 18:17:49 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Message-ID: <ZYxOLXiV6IQQ7IlD@smile.fi.intel.com>
+References: <20231222075812.6540-1-tychang@realtek.com>
+ <20231222075812.6540-3-tychang@realtek.com>
+ <ZYWLdG9kxm2ql0uf@smile.fi.intel.com>
+ <63983de33ce2415abb8b5b745db58911@realtek.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <CANg-bXDw+bYNTu-HFaNAPb4e+_oKt2ExR6PehWR_==vpboKGaw@mail.gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <63983de33ce2415abb8b5b745db58911@realtek.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Dec 22, 2023 at 03:30:43PM -0700, Mark Hasemeyer wrote:
-> > Just wondering if you used --histogram diff algo when preparing patches.
-> 
-> Not knowingly. I use patman which uses 'git format-patch' under the
-> covers with some added options:
-> https://github.com/siemens/u-boot/blob/master/tools/patman/gitutil.py#L308
+On Tue, Dec 26, 2023 at 07:34:37AM +0000, TY_Chang[張子逸] wrote:
+> >On Fri, Dec 22, 2023 at 03:58:12PM +0800, Tzuyi Chang wrote:
 
-Add a configuration into your ~/.gitconfig (or local for the project),
-it really makes the difference.
+...
+
+> >> +static int rtd_gpio_gpa_offset(struct rtd_gpio *data, unsigned int
+> >> +offset) {
+> >> +     return data->info->gpa_offset[offset / 31]; }
+> >> +
+> >> +static int rtd_gpio_gpda_offset(struct rtd_gpio *data, unsigned int
+> >> +offset) {
+> >> +     return data->info->gpda_offset[offset / 31]; }
+> >
+> >The / 31 so-o-o counter intuitive, please add a comment in each case to explain
+> >why [it's not 32 or other power-of-2].
+> >
+> 
+> In our hardware design, the bit 0 of the gpda and gpa status registers does not correspond to a GPIO.
+> If bit 0 is set to 1, the other bit can be set to 1 by writing 1.
+> If bit 0 is set to 0, the other bit can be clear to 0 by writing 1.
+> 
+> Therefore, each status register only contains the status of 31 GPIOs. I will add the comment for this.
+
+Yes, please add in all places, while it's a dup, it helps understanding
+the point without looking around for a while.
+
+...
+
+> >> +     for (i = 0; i < data->info->num_gpios; i += 31) {
+> >
+> >Same, add explanation why 31.
+> >
+> >Note, I actually prefer to see use of valid_mask instead of this weirdness.
+> >Then you will need to comment only once and use 32 (almost?) everywhere.
+> >
+> 
+> The reason remains consistent with the previous explanation. Each status
+> register exclusively holds the status of 31 GPIOs.
+
+As per above, add a comment.
+
+> >> +             reg_offset = get_reg_offset(data, i);
+> >> +
+> >> +             status = readl_relaxed(data->irq_base + reg_offset) >> 1;
+> >> +             writel_relaxed(status << 1, data->irq_base +
+> >> + reg_offset);
+> >> +
+> >> +             for_each_set_bit(j, &status, 31) {
+> >> +                     hwirq = i + j;
+> >
+> >Nice, but you can do better
+> >
+> >                /* Bit 0 is special... bla-bla-bla... */
+> >                status = readl_relaxed(data->irq_base + reg_offset);
+> >                status &= ~BIT(0);
+> >                writel_relaxed(status, data->irq_base + reg_offset);
+> >
+> >                for_each_set_bit(j, &status, 32) {
+> >                        hwirq = i + j - 1;
+> >
+> 
+> Given that each status register accommodates the status of only 31 GPIOs, I
+> think utilizing the upper format and including explanatory comments would be
+> appropriate. It can indicate the status registers only contains 31 GPIOs.
+> Please correct me if my understanding is incorrect.
+
+The above is just a code hack to help bitops to optimise. 32 is power-of-2
+which might be treated better by the compiler and hence produce better code.
+
+Yet, it's an interrupt handler where we want to have the ops as shorter as
+possible, so even micro-optimizations are good to have here (I don't insist
+to follow the same idea elsewhere).
+
+> >> +                     }
+> >> +             }
+> >> +     }
 
 -- 
 With Best Regards,
