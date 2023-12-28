@@ -1,118 +1,137 @@
-Return-Path: <linux-gpio+bounces-1878-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1879-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4185B81F38F
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 02:20:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4395C81F41F
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 03:27:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AEA68B21384
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 01:20:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D4005B217B6
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 02:27:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F17D7FB;
-	Thu, 28 Dec 2023 01:20:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="US2qZWRV"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2020010F9;
+	Thu, 28 Dec 2023 02:27:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+Received: from rtits2.realtek.com.tw (rtits2.realtek.com [211.75.126.72])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D935910E3
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 01:20:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ccbd9000f3so29796841fa.2
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 17:20:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703726431; x=1704331231; darn=vger.kernel.org;
-        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=enfV9vYRZpC/atynuj1hSr/yhMcTHvPtKFvOrWACAs4=;
-        b=US2qZWRV2k29CPquYPdNwRwHQAPhNXS/9uqSaQ7zsd64i1aBO7h/WcEthtnlixtLGw
-         g3gdB7OYoI9i3gwCcoIDmGickd/3cIsoWH1dmeeaCHmuzHoNQ50JvJ4LjJ6PiwvaYS60
-         M5t1K0XrQtUQ20vC/4mXoSRJ8v16VZcKCIE2cyEymPgvu9ZfMd6PnXVa4P3cKjcSEWJo
-         wStnQ8FC8+/9nS80v+CT2fnBOlZ+F/PZK9AZsXfRrWU+FVZF8RSI061fuqljIY+7WAgP
-         4ZD3PlOH6Z0emOnzDw7nl1mQPbxEntsnHbQhWYeQiyvo6+ixOtZxPKDZb+Ow7zHVUFDu
-         VxoQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703726431; x=1704331231;
-        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=enfV9vYRZpC/atynuj1hSr/yhMcTHvPtKFvOrWACAs4=;
-        b=bz+kJUZo5GE3Mkn0+9PD5Bo20LARpjoLssnoSrMsJpt53NEeeCK0kbA7snNunZJhSK
-         QRjs/S59NVGejSi+5WjDCNS/e0GScLkki3gcaNC2dj5GrjlsruXJFd4vYhpH8Uoqzlth
-         +yazdFwjLnJCWkejGgl59GoNV32KU+8TyYXY1VhHTpfV5g7ZkR1rwF39576rK9FO+gFa
-         /wh2sKdNkI7v8KIUIsIB62h+n8RGbjGl8LlQGUi+ZA/gr6CKkM27SrHiaFFaSSO4NPo6
-         C0uPdCpE6FLRBVWQ17B7H+XcBMo6xIjdDPJ4g2LSd7BGd9zRnhNRokVxwlIuJEYYe6ZS
-         ihog==
-X-Gm-Message-State: AOJu0YxR7ehZHeO2Z4t1gVXV2gKp3uoedj/uAG82BakNnEtAMtlLf2BM
-	pxKKiBD/ncjjU23wf/nLgH6KaHhTtQR3FtK6lRVdl19az/8=
-X-Google-Smtp-Source: AGHT+IHeoS/lVEqmL5v6ZeblRa3A2h12Ibf45kPZbJTtyaPdFyFToedEREBLe4agSl/sjXR7mNw1PuW+KoY0CuRPbDE=
-X-Received: by 2002:a2e:86c2:0:b0:2cc:6b07:e271 with SMTP id
- n2-20020a2e86c2000000b002cc6b07e271mr3513371ljj.54.1703726431177; Wed, 27 Dec
- 2023 17:20:31 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B11F2ED8;
+	Thu, 28 Dec 2023 02:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=realtek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=realtek.com
+X-SpamFilter-By: ArmorX SpamTrap 5.78 with qID 3BS2R7hZ41639675, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtexh36505.realtek.com.tw[172.21.6.25])
+	by rtits2.realtek.com.tw (8.15.2/2.95/5.92) with ESMTPS id 3BS2R7hZ41639675
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Thu, 28 Dec 2023 10:27:07 +0800
+Received: from RTEXMBS01.realtek.com.tw (172.21.6.94) by
+ RTEXH36505.realtek.com.tw (172.21.6.25) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.1.2375.32; Thu, 28 Dec 2023 10:27:07 +0800
+Received: from RTEXDAG02.realtek.com.tw (172.21.6.101) by
+ RTEXMBS01.realtek.com.tw (172.21.6.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Thu, 28 Dec 2023 10:27:06 +0800
+Received: from RTEXDAG02.realtek.com.tw ([fe80::5d58:7838:d352:d6b8]) by
+ RTEXDAG02.realtek.com.tw ([fe80::5d58:7838:d352:d6b8%5]) with mapi id
+ 15.01.2375.007; Thu, 28 Dec 2023 10:27:06 +0800
+From: =?utf-8?B?VFlfQ2hhbmdb5by15a2Q6YC4XQ==?= <tychang@realtek.com>
+To: Andy Shevchenko <andy@kernel.org>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v4 2/2] Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
+Thread-Topic: [PATCH v4 2/2] Add GPIO support for Realtek DHC(Digital Home
+ Center) RTD SoCs.
+Thread-Index: AQHaNKykAxQglRQ65UeKSWnkfMw4BLC0wdMAgAYrmgCAAeOVgIABL1Sw
+Date: Thu, 28 Dec 2023 02:27:06 +0000
+Message-ID: <532f905a4df6444c85c7932bca60aeca@realtek.com>
+References: <20231222075812.6540-1-tychang@realtek.com>
+ <20231222075812.6540-3-tychang@realtek.com>
+ <ZYWLdG9kxm2ql0uf@smile.fi.intel.com>
+ <63983de33ce2415abb8b5b745db58911@realtek.com>
+ <ZYxOLXiV6IQQ7IlD@smile.fi.intel.com>
+In-Reply-To: <ZYxOLXiV6IQQ7IlD@smile.fi.intel.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+x-kse-serverinfo: RTEXMBS01.realtek.com.tw, 9
+x-kse-antispam-interceptor-info: fallback
+x-kse-antivirus-interceptor-info: fallback
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Seamus de Mora <seamusdemora@gmail.com>
-Date: Wed, 27 Dec 2023 19:19:54 -0600
-Message-ID: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
-Subject: Some thoughts following a brief test of libgpiod ver 2.1
-To: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-ServerInfo: RTEXH36505.realtek.com.tw, 9
+X-KSE-AntiSpam-Interceptor-Info: fallback
+X-KSE-Antivirus-Interceptor-Info: fallback
+X-KSE-AntiSpam-Interceptor-Info: fallback
 
-Hello,
-
-I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'd
-like to share a few thoughts from that experience. By way of
-introduction, I have a degree in Electrical Engineering, and I like to
-experiment and build things using "small computers" that run Linux. I
-have zero Linux kernel experience. I did my testing on a Raspberry Pi
-model 3 running a variant of Debian "bullseye".
-
-1. I do not agree with the lack of "persistence" - at least as far as
-it seems to be practiced in the 'gpioset' tool. When it comes to
-"turning things ON and OFF", there is a long-established paradigm that
-says when something is 'turned ON', it remains ON until the user takes
-an action to turn it OFF. This seems simple and obvious to me. Using
-the light switch in my bedroom as a simple example, I cannot see the
-logic behind a Design Decision that requires me to keep my finger on
-the light switch to keep it OFF so I can sleep.
-
-When I was in school we studied 'state machines'. I felt I had a
-decent understanding of them - they were useful in designing automated
-systems. Yet, in 'gpioset' it seems the concept of a 'state' has been
-turned on its ear! We can 'set' a GPIO pin to a state, but that state
-reverts immediately (a single clock cycle?). There seems to be an
-underlying thought/theory at work in 'gpioset' that demands that it be
-kept resident in memory to maintain a 'state'. There may be hardware
-systems that demand continuous software oversight to function, but I
-know of no such GPIO hardware systems. Also, AFAIK previous
-programming interfaces/libraries all had "persistence".
-
-I'll make one final comment re. 'gpioset' wrt to the '-z / -daemonize'
-option: First, this option seems to admit the failings of "lack of
-persistence", but beyond that lies a question: How does one control
-the daemon? The only way I could terminate the daemon was to search
-for, and then kill the process. At least with '&`, one gets
-notification of the process id.
-
-2. Why does a tool with 'get' in the name write/change GPIO
-parameters? Would it not make more sense to relegate 'gpioget' to a
-simply **reading** and reporting the state of the GPIO?
-
-I'll stop here. I don't really expect a considered reply because AIUI
-this (libgpiod) project has been going on for 5 or 6 years now. I
-assume that there have been other attempts to inject critical
-thoughts, and they have clearly been dismissed. I felt that without
-expressing my thoughts here I would fall in with the silent majority
-whose enthusiasm and support for the present design is assumed... I
-can't have that. :)
-
-Rgds,
-~S
+SGkgQW5keSwNCg0KPk9uIFR1ZSwgRGVjIDI2LCAyMDIzIGF0IDA3OjM0OjM3QU0gKzAwMDAsIFRZ
+X0NoYW5nW+W8teWtkOmAuF0gd3JvdGU6DQo+PiA+T24gRnJpLCBEZWMgMjIsIDIwMjMgYXQgMDM6
+NTg6MTJQTSArMDgwMCwgVHp1eWkgQ2hhbmcgd3JvdGU6DQo+DQo+Li4uDQo+DQo+PiA+PiArc3Rh
+dGljIGludCBydGRfZ3Bpb19ncGFfb2Zmc2V0KHN0cnVjdCBydGRfZ3BpbyAqZGF0YSwgdW5zaWdu
+ZWQgaW50DQo+PiA+PiArb2Zmc2V0KSB7DQo+PiA+PiArICAgICByZXR1cm4gZGF0YS0+aW5mby0+
+Z3BhX29mZnNldFtvZmZzZXQgLyAzMV07IH0NCj4+ID4+ICsNCj4+ID4+ICtzdGF0aWMgaW50IHJ0
+ZF9ncGlvX2dwZGFfb2Zmc2V0KHN0cnVjdCBydGRfZ3BpbyAqZGF0YSwgdW5zaWduZWQNCj4+ID4+
+ICtpbnQNCj4+ID4+ICtvZmZzZXQpIHsNCj4+ID4+ICsgICAgIHJldHVybiBkYXRhLT5pbmZvLT5n
+cGRhX29mZnNldFtvZmZzZXQgLyAzMV07IH0NCj4+ID4NCj4+ID5UaGUgLyAzMSBzby1vLW8gY291
+bnRlciBpbnR1aXRpdmUsIHBsZWFzZSBhZGQgYSBjb21tZW50IGluIGVhY2ggY2FzZQ0KPj4gPnRv
+IGV4cGxhaW4gd2h5IFtpdCdzIG5vdCAzMiBvciBvdGhlciBwb3dlci1vZi0yXS4NCj4+ID4NCj4+
+DQo+PiBJbiBvdXIgaGFyZHdhcmUgZGVzaWduLCB0aGUgYml0IDAgb2YgdGhlIGdwZGEgYW5kIGdw
+YSBzdGF0dXMgcmVnaXN0ZXJzIGRvZXMgbm90DQo+Y29ycmVzcG9uZCB0byBhIEdQSU8uDQo+PiBJ
+ZiBiaXQgMCBpcyBzZXQgdG8gMSwgdGhlIG90aGVyIGJpdCBjYW4gYmUgc2V0IHRvIDEgYnkgd3Jp
+dGluZyAxLg0KPj4gSWYgYml0IDAgaXMgc2V0IHRvIDAsIHRoZSBvdGhlciBiaXQgY2FuIGJlIGNs
+ZWFyIHRvIDAgYnkgd3JpdGluZyAxLg0KPj4NCj4+IFRoZXJlZm9yZSwgZWFjaCBzdGF0dXMgcmVn
+aXN0ZXIgb25seSBjb250YWlucyB0aGUgc3RhdHVzIG9mIDMxIEdQSU9zLiBJIHdpbGwgYWRkDQo+
+dGhlIGNvbW1lbnQgZm9yIHRoaXMuDQo+DQo+WWVzLCBwbGVhc2UgYWRkIGluIGFsbCBwbGFjZXMs
+IHdoaWxlIGl0J3MgYSBkdXAsIGl0IGhlbHBzIHVuZGVyc3RhbmRpbmcgdGhlIHBvaW50DQo+d2l0
+aG91dCBsb29raW5nIGFyb3VuZCBmb3IgYSB3aGlsZS4NCj4NCj4uLi4NCj4NCj4+ID4+ICsgICAg
+IGZvciAoaSA9IDA7IGkgPCBkYXRhLT5pbmZvLT5udW1fZ3Bpb3M7IGkgKz0gMzEpIHsNCj4+ID4N
+Cj4+ID5TYW1lLCBhZGQgZXhwbGFuYXRpb24gd2h5IDMxLg0KPj4gPg0KPj4gPk5vdGUsIEkgYWN0
+dWFsbHkgcHJlZmVyIHRvIHNlZSB1c2Ugb2YgdmFsaWRfbWFzayBpbnN0ZWFkIG9mIHRoaXMgd2Vp
+cmRuZXNzLg0KPj4gPlRoZW4geW91IHdpbGwgbmVlZCB0byBjb21tZW50IG9ubHkgb25jZSBhbmQg
+dXNlIDMyIChhbG1vc3Q/KSBldmVyeXdoZXJlLg0KPj4gPg0KPj4NCj4+IFRoZSByZWFzb24gcmVt
+YWlucyBjb25zaXN0ZW50IHdpdGggdGhlIHByZXZpb3VzIGV4cGxhbmF0aW9uLiBFYWNoDQo+PiBz
+dGF0dXMgcmVnaXN0ZXIgZXhjbHVzaXZlbHkgaG9sZHMgdGhlIHN0YXR1cyBvZiAzMSBHUElPcy4N
+Cj4NCj5BcyBwZXIgYWJvdmUsIGFkZCBhIGNvbW1lbnQuDQo+DQo+PiA+PiArICAgICAgICAgICAg
+IHJlZ19vZmZzZXQgPSBnZXRfcmVnX29mZnNldChkYXRhLCBpKTsNCj4+ID4+ICsNCj4+ID4+ICsg
+ICAgICAgICAgICAgc3RhdHVzID0gcmVhZGxfcmVsYXhlZChkYXRhLT5pcnFfYmFzZSArIHJlZ19v
+ZmZzZXQpID4+IDE7DQo+PiA+PiArICAgICAgICAgICAgIHdyaXRlbF9yZWxheGVkKHN0YXR1cyA8
+PCAxLCBkYXRhLT5pcnFfYmFzZSArDQo+PiA+PiArIHJlZ19vZmZzZXQpOw0KPj4gPj4gKw0KPj4g
+Pj4gKyAgICAgICAgICAgICBmb3JfZWFjaF9zZXRfYml0KGosICZzdGF0dXMsIDMxKSB7DQo+PiA+
+PiArICAgICAgICAgICAgICAgICAgICAgaHdpcnEgPSBpICsgajsNCj4+ID4NCj4+ID5OaWNlLCBi
+dXQgeW91IGNhbiBkbyBiZXR0ZXINCj4+ID4NCj4+ID4gICAgICAgICAgICAgICAgLyogQml0IDAg
+aXMgc3BlY2lhbC4uLiBibGEtYmxhLWJsYS4uLiAqLw0KPj4gPiAgICAgICAgICAgICAgICBzdGF0
+dXMgPSByZWFkbF9yZWxheGVkKGRhdGEtPmlycV9iYXNlICsgcmVnX29mZnNldCk7DQo+PiA+ICAg
+ICAgICAgICAgICAgIHN0YXR1cyAmPSB+QklUKDApOw0KPj4gPiAgICAgICAgICAgICAgICB3cml0
+ZWxfcmVsYXhlZChzdGF0dXMsIGRhdGEtPmlycV9iYXNlICsgcmVnX29mZnNldCk7DQo+PiA+DQo+
+PiA+ICAgICAgICAgICAgICAgIGZvcl9lYWNoX3NldF9iaXQoaiwgJnN0YXR1cywgMzIpIHsNCj4+
+ID4gICAgICAgICAgICAgICAgICAgICAgICBod2lycSA9IGkgKyBqIC0gMTsNCj4+ID4NCj4+DQo+
+PiBHaXZlbiB0aGF0IGVhY2ggc3RhdHVzIHJlZ2lzdGVyIGFjY29tbW9kYXRlcyB0aGUgc3RhdHVz
+IG9mIG9ubHkgMzENCj4+IEdQSU9zLCBJIHRoaW5rIHV0aWxpemluZyB0aGUgdXBwZXIgZm9ybWF0
+IGFuZCBpbmNsdWRpbmcgZXhwbGFuYXRvcnkNCj4+IGNvbW1lbnRzIHdvdWxkIGJlIGFwcHJvcHJp
+YXRlLiBJdCBjYW4gaW5kaWNhdGUgdGhlIHN0YXR1cyByZWdpc3RlcnMgb25seQ0KPmNvbnRhaW5z
+IDMxIEdQSU9zLg0KPj4gUGxlYXNlIGNvcnJlY3QgbWUgaWYgbXkgdW5kZXJzdGFuZGluZyBpcyBp
+bmNvcnJlY3QuDQo+DQo+VGhlIGFib3ZlIGlzIGp1c3QgYSBjb2RlIGhhY2sgdG8gaGVscCBiaXRv
+cHMgdG8gb3B0aW1pc2UuIDMyIGlzIHBvd2VyLW9mLTIgd2hpY2gNCj5taWdodCBiZSB0cmVhdGVk
+IGJldHRlciBieSB0aGUgY29tcGlsZXIgYW5kIGhlbmNlIHByb2R1Y2UgYmV0dGVyIGNvZGUuDQo+
+DQo+WWV0LCBpdCdzIGFuIGludGVycnVwdCBoYW5kbGVyIHdoZXJlIHdlIHdhbnQgdG8gaGF2ZSB0
+aGUgb3BzIGFzIHNob3J0ZXIgYXMNCj5wb3NzaWJsZSwgc28gZXZlbiBtaWNyby1vcHRpbWl6YXRp
+b25zIGFyZSBnb29kIHRvIGhhdmUgaGVyZSAoSSBkb24ndCBpbnNpc3QgdG8NCj5mb2xsb3cgdGhl
+IHNhbWUgaWRlYSBlbHNld2hlcmUpLg0KPg0KDQpJIHVuZGVyc3RhbmQuIFRoYW5rIHlvdSBmb3Ig
+ZXhwbGFpbmluZy4gSSB3aWxsIHJldmlzZSBpdC4NCg0KPj4gPj4gKyAgICAgICAgICAgICAgICAg
+ICAgIH0NCj4+ID4+ICsgICAgICAgICAgICAgfQ0KPj4gPj4gKyAgICAgfQ0KPg0KDQpUaGFua3Ms
+DQpUenV5aSBDaGFuZw0K
 
