@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-1896-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1897-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 274CE81F9E0
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 17:14:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89BBB81F9E1
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 17:15:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CA75282C7E
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:14:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADC591C211DA
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:15:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764A5F4E1;
-	Thu, 28 Dec 2023 16:14:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2DB44F502;
+	Thu, 28 Dec 2023 16:15:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jICJm3S2"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nJGcpfG3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.31])
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88E40F9C2
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 16:14:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E39E5F4F8
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 16:15:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703780075; x=1735316075;
+  t=1703780135; x=1735316135;
   h=date:from:to:cc:subject:message-id;
-  bh=q6XylQRGhSZcsgnRFaa9QRURAXbJtiFBLRXs0JDiVL4=;
-  b=jICJm3S2fhw7tew/LdtPeNcTqzpYOP7/ClhnQu0/ZipF7OubZoDPdN83
-   f1/hu/19etMDcW5wHscWzcDkt4WuadOOClltY64pkpPNn9tyvffC29jij
-   snNugI0TqR6YGzS/5ekC5n9NIc5eljyVZhiJpcy5hsuDcwoTmMF94lYel
-   0tkFp3VInAW1LkuOyvTWXlc3XEXSr7lk387v9GAn4uBjX5gmrujhTbRXe
-   qVPZmZhWBXrAa7x8gecWQvVh+m19FRy01ijrlunrPK5N50cufG6g1s8q5
-   cshRPjoh04ZwBqOvZW14znNT1sQX11OPV63PkPWzS0epqFPrRW9PGyjlZ
+  bh=6+10l47mDVcwvTUh3ZSF7JiwJDWsKEtx2+HlEi+nhIc=;
+  b=nJGcpfG3+tlsb3rFAtqbSVRY/hl9q6E/quHzTnLySojb9WBvno6FBHDA
+   WkJZN2UD1O5jwUkkzFvtP/fnbfP2F1yMni1UrqwqznjTrAaKi5L5p+Qab
+   a6AGb7O0/E6QYQFseLdFirYYXSu3tBSwgYfU2rA4Gw9MJFfRHfh0Os4b6
+   5VmF7kNG7MwQ895LNMgRSNHwumwvpEe+hcNeQxXtP+Q/ar8NEB5BwijYc
+   BIcrxKzRCSYu09q3x7bcbd+m1LV8Kz2gpE+4Jd5x0hwxfVE60i2cbLju3
+   kKaKW6v2+ikCzsHtKrrccTUbZEXqZhq8oioEu6KvhSh3fWkOBvMJqDbkp
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="460882476"
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="386997724"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="460882476"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:14:35 -0800
+   d="scan'208";a="386997724"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Dec 2023 08:15:35 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="754769357"
+X-IronPort-AV: E=McAfee;i="6600,9927,10937"; a="897241013"
 X-IronPort-AV: E=Sophos;i="6.04,312,1695711600"; 
-   d="scan'208";a="754769357"
+   d="scan'208";a="897241013"
 Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 28 Dec 2023 08:14:33 -0800
+  by fmsmga002.fm.intel.com with ESMTP; 28 Dec 2023 08:15:33 -0800
 Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rIt1j-000Gc8-1A;
-	Thu, 28 Dec 2023 16:14:31 +0000
-Date: Fri, 29 Dec 2023 00:14:13 +0800
+	id 1rIt2h-000GcL-1P;
+	Thu, 28 Dec 2023 16:15:31 +0000
+Date: Fri, 29 Dec 2023 00:15:08 +0800
 From: kernel test robot <lkp@intel.com>
 To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 513246a34b8dc5d5280a40c1cbef112594220ba6
-Message-ID: <202312290010.hfAjUve5-lkp@intel.com>
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ ad5575eb6278892aa25a5d249c5009860d6d8bbc
+Message-ID: <202312290005.VtjtqXoy-lkp@intel.com>
 User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -63,13 +63,13 @@ List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 513246a34b8dc5d5280a40c1cbef112594220ba6  gpio: sysfs: drop tabs from local variable declarations
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: ad5575eb6278892aa25a5d249c5009860d6d8bbc  MAINTAINERS: Add a missing file to the INTEL GPIO section
 
-elapsed time: 1447m
+elapsed time: 1448m
 
-configs tested: 178
-configs skipped: 3
+configs tested: 179
+configs skipped: 2
 
 The following configs have been built successfully.
 More configs may be tested in the coming days.
@@ -168,6 +168,7 @@ openrisc                         allyesconfig   gcc
 openrisc                            defconfig   gcc  
 openrisc                 simple_smp_defconfig   gcc  
 parisc                           alldefconfig   gcc  
+parisc                           allmodconfig   gcc  
 parisc                            allnoconfig   gcc  
 parisc                           allyesconfig   gcc  
 parisc                              defconfig   gcc  
