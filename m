@@ -1,39 +1,39 @@
-Return-Path: <linux-gpio+bounces-1894-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1895-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24E4C81F9AB
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:29:51 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id C92A281F9AE
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:31:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D435B284987
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 15:29:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 98593B234C2
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 15:31:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3FDE578;
-	Thu, 28 Dec 2023 15:29:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 325A4E575;
+	Thu, 28 Dec 2023 15:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkhVO1si"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGPmvxfC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9064FE54E;
-	Thu, 28 Dec 2023 15:29:45 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA67C433C7;
-	Thu, 28 Dec 2023 15:29:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BE5E541;
+	Thu, 28 Dec 2023 15:31:12 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C382AC433C8;
+	Thu, 28 Dec 2023 15:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1703777385;
-	bh=kGqaPiWe87W+qKQNuAZXfmZ46EmuGzB7sckchD9aWJk=;
+	s=k20201202; t=1703777472;
+	bh=kQgRsnECmNI3qdKlTv/CsxYkpfnDe3eS+i1kkeQiG1M=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IkhVO1si84o49z+Z7may5z0QqOod2xI559smAPq8dRAwZhmRoiz4JCt9KmfBYbc/I
-	 ku78kDR43P5rlwQ4Y8tAqXzHZODqmnwOEDotY4I2FEr3JBGCmg39xhpJJHRjnhdJ72
-	 8aK/S+RSaI2q3aPUYKihGHOaXV0bRlAbdpD4tiPfUDwsIBQ/upjal6ajLx7Uc4mvIa
-	 xZjFj/QvziZAuOutOBD2GV7sWkBFfgjnQ4xdq9sX1gzXImIgQsTe/YFiwV7yF8oHUY
-	 VF88N6987Iwks3oEZ1SCmrC5Sw9prmuQOSLMTiF7YOZvLwH/nyM4U4h3iTlfFQlMnG
-	 NzN8pK+gqApUg==
-Message-ID: <f02f1a6d-88fe-463b-b3a0-4feb5a6f8c85@kernel.org>
-Date: Thu, 28 Dec 2023 16:29:40 +0100
+	b=WGPmvxfCel2l3WbOWVP/xRKtepwA2uKfxd7ypZCqvcSNtk5XtikIGkITdkIWAHV52
+	 7+OmCNp2jfHZC2862w/m1fcYEU6+fSS25NsJJ4aizfd7X8h4ACMuQFcQ+tXlyTIWrR
+	 5WvDAmesHLCinyHXQsQA699FxIjDlFangS/tSHFXyFJ+RdkL6HCLD9oybkeL4pVeHg
+	 2wICgHaj0QqG5CShGPajWHZE76s+Bv750HwHRXq8vZTRvR45CXYtxKcI48G8m++mZb
+	 Re7bBUWnctlBjHcwjvOT5SRs8W164mhE66JTcr6ITHPPX7CtBcK9kfZhw+qZU4X4KL
+	 47gcTEwyWKEcw==
+Message-ID: <c684f26c-029f-4264-9cd8-d3a2bb330ad2@kernel.org>
+Date: Thu, 28 Dec 2023 16:31:08 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -41,7 +41,7 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V8 3/3] leds: Add support for UP board CPLD onboard LEDS
+Subject: Re: [PATCH V8 1/3] mfd: Add support for UP board CPLD/FPGA
 Content-Language: en-US
 To: "larry.lai" <larry.lai@yunjingtech.com>, lee@kernel.org,
  andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, pavel@ucw.cz
@@ -49,7 +49,7 @@ Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
  jack.chang@yunjingtech.com, noah.hung@yunjingtech.com
 References: <20231228151544.14408-1-larry.lai@yunjingtech.com>
- <20231228151544.14408-4-larry.lai@yunjingtech.com>
+ <20231228151544.14408-2-larry.lai@yunjingtech.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -94,50 +94,37 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20231228151544.14408-4-larry.lai@yunjingtech.com>
+In-Reply-To: <20231228151544.14408-2-larry.lai@yunjingtech.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 28/12/2023 16:15, larry.lai wrote:
-> The UP boards come with a few FPGA-controlled onboard LEDs:
-> * UP Board: yellow, green, red
-> * UP Squared: blue, yellow, green, red
+> The UP Squared board <http://www.upboard.com> implements certain
+> features (pin control, onboard LEDs or CEC) through an on-board CPLD/FPGA.
+> 
+> This driver implements the line protocol to read and write registers
+> from the FPGA through regmap. The register address map is also included.
 > 
 
 ...
 
+> +#define FIRMWARE_ID_BUILD_OFFSET	12
+> +#define FIRMWARE_ID_MAJOR_OFFSET	8
+> +#define FIRMWARE_ID_MINOR_OFFSET	4
+> +#define FIRMWARE_ID_PATCH_OFFSET	0
+> +#define FIRMWARE_ID_MASK		GENMASK(3, 0)
 > +
-> +static int upboard_led_probe(struct platform_device *pdev)
+> +/*
+> + * read CPLD register on custom protocol
+> + * send clock and addr bit in strobe and datain pins then read from dataout pin
+> + */
+> +static int upboard_cpld_read(void *context, unsigned int reg, unsigned int *val)
 > +{
-> +	struct upboard_fpga * const cpld = dev_get_drvdata(pdev->dev.parent);
-> +	struct reg_field fldconf = {
-> +		.reg = UPFPGA_REG_FUNC_EN0,
-> +	};
-> +	struct upboard_led_data * const pdata = pdev->dev.platform_data;
+> +	struct upboard_fpga * const fpga = context;
 
-Your const does not make sense. Please read C standard how qualifiers
-are applied.
-
-...
-
-> +module_platform_driver_probe(upboard_led_driver, upboard_led_probe);
-> +
-> +MODULE_AUTHOR("Gary Wang <garywang@aaeon.com.tw>");
-> +MODULE_DESCRIPTION("UP Board LED driver");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:upboard-led");
-
-Nothing improved here.
-
-This is a friendly reminder during the review process.
-
-It seems my or other reviewer's previous comments were not fully
-addressed. Maybe the feedback got lost between the quotes, maybe you
-just forgot to apply it. Please go back to the previous discussion and
-either implement all requested changes or keep discussing them.
-
-Thank you.
-
+This const does not make sense. Drop it. Unless you wanted to say
+something else, like struct is not modified, but then please read C
+tutorials. This applies to all your three patches.
 
 Best regards,
 Krzysztof
