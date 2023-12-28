@@ -1,135 +1,91 @@
-Return-Path: <linux-gpio+bounces-1874-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1875-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0AF6781F0BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 18:12:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 81F8181F35B
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 01:24:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC527280FCF
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Dec 2023 17:12:57 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E5E89B22827
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 00:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B7AF46444;
-	Wed, 27 Dec 2023 17:12:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3605380A;
+	Thu, 28 Dec 2023 00:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dsijAqtz"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PZjXOvyU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.100])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 630EB46424;
-	Wed, 27 Dec 2023 17:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1703697168; x=1735233168;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=qalwygJ87p9QV791YnIvbzqccRFudEl4NadPNjBhtRE=;
-  b=dsijAqtztvz0TaekfuLAAD8Sf/VoXF0RoxvdOirjbR9q7PHwYHZEaL63
-   9ICGisz+bibQzwjRMlflofhnctraxfF1NLAoYAHbK+fcfZreCnT9DV6o2
-   tLXOV20TGPHHjE75XJ0dr385MCjHrbJ398j/qe6ywr8ochBejVfsC4sRF
-   IOMzXLbLJWVirGUP8XcZ/wKpWQ/6Dz6xkzI/JUIkyoatCQ9GBYuyNUc6E
-   91uaYSyZ5DuwsjUjObKWwmBdHH0kY34caQpQPt7/wk4QOGsCPq3WSy8DQ
-   iuB7adArxq7IeQgT4ykDYLOWqYpOFo7qTRprh8Bb7sVdmDsP4iDx1OsEe
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="462886380"
-X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="462886380"
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:12:47 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10936"; a="868901508"
-X-IronPort-AV: E=Sophos;i="6.04,309,1695711600"; 
-   d="scan'208";a="868901508"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by FMSMGA003.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Dec 2023 09:12:42 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rIXSR-00000009TKB-0D1R;
-	Wed, 27 Dec 2023 19:12:39 +0200
-Date: Wed, 27 Dec 2023 19:12:38 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Mark Hasemeyer <markhas@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Raul Rangel <rrangel@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Len Brown <lenb@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Wolfram Sang <wsa@kernel.org>, linux-acpi@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org
-Subject: Re: [PATCH v3 02/24] gpiolib: acpi: Modify
- acpi_dev_irq_wake_get_by() to use resource
-Message-ID: <ZYxbBkimS1VIuU0a@smile.fi.intel.com>
-References: <20231226192149.1830592-1-markhas@chromium.org>
- <20231226122113.v3.2.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1AAB368
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 00:24:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5e7c1012a42so46508417b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 16:24:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1703723048; x=1704327848; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AnZpCbxpG9ZXkJEKbWpCszWIDg90Dh3GgSsbG0XTifs=;
+        b=PZjXOvyUqbK9cwTda+j4ivq5zTCdszAVnhlXxXGeP1qv+ELsDTl9/+yCDwoV/U0kDr
+         GbJoZYtcoKfQ6qXKE3C4lIBLfc7dkzpMl7AAOGnfzznR2o517vlK13bc/gbQ3vN0QORP
+         cDy92eSPOr0T+2JHePNYPnQCub8XDeuSFlSgHlu/aseCfa3/xVYie8Xf+C6I8ikqUNT3
+         QkSkgPo2OEEETqTYBHfSFANMoFjGUm5rSPaahZG2xi82CpMpMhZK0mipqqp1PEX2FpxN
+         7csNs7rLbBIEW2GA9MsAeEtT8qTAqvHnanSG/8AaztyLOHltPlcsZdkzHvMG32IY4TU/
+         g60A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1703723048; x=1704327848;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AnZpCbxpG9ZXkJEKbWpCszWIDg90Dh3GgSsbG0XTifs=;
+        b=K9k0xjDN5PHpyiZBuFoEojhcBBndHlvryoqFzwUakw6XSneG42i4VJM1ccKE4DAhyl
+         l9eYaXnjY10McyU6bLKch2lQauQcDjy3ClSnXSdcSMDCBDq+Jcw2yw8Hqyt0MjvL0Q0A
+         S+uAqbdQIRoxD6F2RPr/+j7FXasGHy42tT7rTEaqZkHF86v8P01mnLNfhQAYjakv771K
+         qYcPod0ExstgC69G2U4eGPLiBCX7kwEGFq1LoPe7HWwvIcIposlgSO3Z6AqNsFShJL4A
+         bQIkvN9E26ZeRh3+KwxThMrFh3fNcOXMH5UOJHQ/dGoQWdsO003kxkUH0hxUCl18l8fp
+         tF3g==
+X-Gm-Message-State: AOJu0Yyodc78riwtKjODfib6zvHmm9HQqq/KX7F42VrU8rzSxqAWGGdA
+	+S2ysMpvj7u6X8ZVVsnZDNlMY30Rxpn8AJ48dVAv6Nrvrw7mjg==
+X-Google-Smtp-Source: AGHT+IHR03vSvnVmsAq8IM/pF0LR5N+8EMmwK+moEtYhcqnSeJ27VYApYh9cAOplXTxeV7EiRxv+ruW5Sp+tuHtRJos=
+X-Received: by 2002:a0d:dd92:0:b0:5e7:bb3e:606 with SMTP id
+ g140-20020a0ddd92000000b005e7bb3e0606mr5250773ywe.89.1703723047806; Wed, 27
+ Dec 2023 16:24:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231226122113.v3.2.Ifd0903f1c351e84376d71dbdadbd43931197f5ea@changeid>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20231223191902.22857-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20231223191902.22857-1-krzysztof.kozlowski@linaro.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 28 Dec 2023 01:23:56 +0100
+Message-ID: <CACRpkdYLXEA3D-_22jsios5-CdpC5CLxFbTUA-Z=dqTHmtH9XQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: samsung: constify iomem pointers
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, 
+	Alim Akhtar <alim.akhtar@samsung.com>, linux-arm-kernel@lists.infradead.org, 
+	linux-samsung-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Dec 26, 2023 at 12:21:06PM -0700, Mark Hasemeyer wrote:
-> Other information besides wake capability can be provided about GPIO
-> IRQs such as triggering, polarity, and sharability. Use resource flags
-> to provide this information to the caller if they want it.
-> 
-> This should keep the API more robust over time as flags are added,
-> modified, or removed. It also more closely matches acpi_irq_get() which
-> take a resource as an argument.
-> 
-> Rename the function to acpi_dev_get_gpio_irq_resource() to better
-> describe the function's new behavior.
+On Sat, Dec 23, 2023 at 8:19=E2=80=AFPM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
 
-...
+> Constify few pointers to iomem, where the destination memory is not
+> modified, for code safety and readability.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-> +			res_flags = acpi_dev_irq_flags(info.triggering, info.polarity,
-> +							   info.shareable, info.wake_capable);
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Broken indentation of the second line.
+Is this something I should just apply directly at this point?
 
-...
-
-> +			*r = DEFINE_RES_NAMED(irq, 1, NULL, res_flags);
-
-So? The whole exercise with the first patch is to have here:
-
-			*r = DEFINE_RES_IRQ_NAMED_FLAGS(irq, NULL, res_flags);
-
-...
-
-> +	struct resource r;
-
-I prefer to see
-
-	struct resource r = {};
-
-even if it makes no difference. This allows to have robust code.
-
-> +	ret = acpi_dev_get_gpio_irq_resource(adev, name, index, &r);
-> +	return ret ?: r.start;
-
-Btw, this function requires header to include ioport.h. I'm not sure
-if it's good for ACPI. I would prefer safest approach, i.e. exporting
-this from a C code, i.e. gpiolib-acpi.c.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
