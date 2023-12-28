@@ -1,114 +1,118 @@
-Return-Path: <linux-gpio+bounces-1877-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1878-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2177B81F37A
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 01:50:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4185B81F38F
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 02:20:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B14D8B2285C
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 00:50:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AEA68B21384
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 01:20:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2295564E;
-	Thu, 28 Dec 2023 00:49:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F17D7FB;
+	Thu, 28 Dec 2023 01:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aykBkaDf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="US2qZWRV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC7E510E4;
-	Thu, 28 Dec 2023 00:49:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D935910E3
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 01:20:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1d3e05abcaeso26234565ad.1;
-        Wed, 27 Dec 2023 16:49:52 -0800 (PST)
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2ccbd9000f3so29796841fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Dec 2023 17:20:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703724592; x=1704329392; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=bgeaAk0wjakFWXH8x1gkpYZCJkAnW3C2smy5PZQoqqc=;
-        b=aykBkaDfGky9oW+eW2wv6rT2ZCZXgrTkPivA9BBEQjufCk30d88cY7HnXxOeiwflBB
-         hMQ3S2QkIgnrMx2kGb/Va96+3d6WS3fwG56rksuJD3TaKfKjcZZQ8W5U+qUUF1R51MSP
-         /N0PUTJqR3RlnnbF6EJ927eioRIp3eUtYGGwyOD+25VVH8igZ4p8+JIqUzwwOqxjXMfa
-         YaFrQUARiXZUKVyw5Fz/a3NTBw+zoUxSkeB/gxnNA2jCcTHSLCwq1h8HApYVpuArq81x
-         Qf2m3DMaqnwwNWqcy92j0WYUXHJWn1CqYZpmdvfV3GPh5elbfaprlg3j1LnuAyULiq/p
-         8vpg==
+        d=gmail.com; s=20230601; t=1703726431; x=1704331231; darn=vger.kernel.org;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=enfV9vYRZpC/atynuj1hSr/yhMcTHvPtKFvOrWACAs4=;
+        b=US2qZWRV2k29CPquYPdNwRwHQAPhNXS/9uqSaQ7zsd64i1aBO7h/WcEthtnlixtLGw
+         g3gdB7OYoI9i3gwCcoIDmGickd/3cIsoWH1dmeeaCHmuzHoNQ50JvJ4LjJ6PiwvaYS60
+         M5t1K0XrQtUQ20vC/4mXoSRJ8v16VZcKCIE2cyEymPgvu9ZfMd6PnXVa4P3cKjcSEWJo
+         wStnQ8FC8+/9nS80v+CT2fnBOlZ+F/PZK9AZsXfRrWU+FVZF8RSI061fuqljIY+7WAgP
+         4ZD3PlOH6Z0emOnzDw7nl1mQPbxEntsnHbQhWYeQiyvo6+ixOtZxPKDZb+Ow7zHVUFDu
+         VxoQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703724592; x=1704329392;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=bgeaAk0wjakFWXH8x1gkpYZCJkAnW3C2smy5PZQoqqc=;
-        b=n0mwO+ixWxu2UhSHC1pwtXc7ChHcDK+uMHLj7DsRPW/xJC3Lnvg429wzYSIvxzAIT9
-         XU0rLKlzxhjsFXir8l/ll12gSbv7BGx/V0ZHvL4hZeEK6+9qUXmJpfxfMt59q2Ri+ajy
-         PgzS3EjzJ5Ijk1siDWlCu9K4Nw7WSxBJTrCd9JnIWObh868aWPRROBB0dHCIl4Ccqgus
-         0SV4PFNjzPJQ8Jj/BivN0PJIGNV2lEj3hqlpCz+AstxxSHSjIVbtJuu1UZXpyoTYgPoi
-         AjQgvNeFVoPmqM3L4M7wWqtgK2XE2fLaRU0rU0LYFFzFKyS4jln4CdEDtpO6eJCbQwFs
-         GQNw==
-X-Gm-Message-State: AOJu0YynQhJQg/OGQtQvhNuHZYzzWxCA3jSarhDR94pZaeMfBtc6tMMg
-	r+yBVGN250stoYwNirnTbw7WczjFtIU=
-X-Google-Smtp-Source: AGHT+IE2Y1UQbfVKIe0QW+Mr5bxzT1ZxN5V32PCI/WdrFg0lZaSnmoOGiEMMScOGTjuHK3hLRWk/lA==
-X-Received: by 2002:a17:902:ee4d:b0:1d3:e474:b863 with SMTP id 13-20020a170902ee4d00b001d3e474b863mr4256701plo.88.1703724591867;
-        Wed, 27 Dec 2023 16:49:51 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id u17-20020a170902a61100b001d43872309asm8736093plq.286.2023.12.27.16.49.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Dec 2023 16:49:51 -0800 (PST)
-Date: Thu, 28 Dec 2023 08:49:46 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpiolib: cdev: Split line_get_debounce_period()
- and use
-Message-ID: <20231228004946.GA21793@rigel>
-References: <ZYTihbWMcHMHSkC_@rigel>
- <ZYWDij-J1YruTIM7@smile.fi.intel.com>
- <ZYWHjq_7PnwO27ro@rigel>
- <CAMRc=McPzQyR1J5Mhn7_cBrWEcqz2JKg7t8CpjHx6jgVEnYBvA@mail.gmail.com>
- <ZYWYZ6Ys3hSb4IOe@rigel>
- <CACMJSeu-bS+MpP8HCcD74w0j6vFt821bpgth5LHpqq-fHnEe1w@mail.gmail.com>
- <ZYWZ4yhqzTF8rShe@rigel>
- <CACRpkdZrnOJ-Sjj4VpuVU0Gvzca_uGN9Um5Zj=bRMH2df4kRZw@mail.gmail.com>
- <ZYZBDu1HjtU23fnB@rigel>
- <CACRpkda9j+5zT58vqip-JjtNQEZ+dWFLxdCmmLN8GpS8R8e7zA@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1703726431; x=1704331231;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=enfV9vYRZpC/atynuj1hSr/yhMcTHvPtKFvOrWACAs4=;
+        b=bz+kJUZo5GE3Mkn0+9PD5Bo20LARpjoLssnoSrMsJpt53NEeeCK0kbA7snNunZJhSK
+         QRjs/S59NVGejSi+5WjDCNS/e0GScLkki3gcaNC2dj5GrjlsruXJFd4vYhpH8Uoqzlth
+         +yazdFwjLnJCWkejGgl59GoNV32KU+8TyYXY1VhHTpfV5g7ZkR1rwF39576rK9FO+gFa
+         /wh2sKdNkI7v8KIUIsIB62h+n8RGbjGl8LlQGUi+ZA/gr6CKkM27SrHiaFFaSSO4NPo6
+         C0uPdCpE6FLRBVWQ17B7H+XcBMo6xIjdDPJ4g2LSd7BGd9zRnhNRokVxwlIuJEYYe6ZS
+         ihog==
+X-Gm-Message-State: AOJu0YxR7ehZHeO2Z4t1gVXV2gKp3uoedj/uAG82BakNnEtAMtlLf2BM
+	pxKKiBD/ncjjU23wf/nLgH6KaHhTtQR3FtK6lRVdl19az/8=
+X-Google-Smtp-Source: AGHT+IHeoS/lVEqmL5v6ZeblRa3A2h12Ibf45kPZbJTtyaPdFyFToedEREBLe4agSl/sjXR7mNw1PuW+KoY0CuRPbDE=
+X-Received: by 2002:a2e:86c2:0:b0:2cc:6b07:e271 with SMTP id
+ n2-20020a2e86c2000000b002cc6b07e271mr3513371ljj.54.1703726431177; Wed, 27 Dec
+ 2023 17:20:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkda9j+5zT58vqip-JjtNQEZ+dWFLxdCmmLN8GpS8R8e7zA@mail.gmail.com>
+From: Seamus de Mora <seamusdemora@gmail.com>
+Date: Wed, 27 Dec 2023 19:19:54 -0600
+Message-ID: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+Subject: Some thoughts following a brief test of libgpiod ver 2.1
+To: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Dec 28, 2023 at 01:26:13AM +0100, Linus Walleij wrote:
-> Hi Kent,
->
-> On Sat, Dec 23, 2023 at 3:08 AM Kent Gibson <warthog618@gmail.com> wrote:
->
-> > There is no escaping that my fingerprints are all over that so it does
-> > make sense to list me over you. Given that patch and git-tree management
-> > will be deferred to the GPIO subsystem/Bart, there isn't much distinction
-> > between a reviewer and a maintainer, so I'm ok with being listed as a
-> > maintainer - I'll just have to pay a bit more attention to the list mails
-> > than I have been.
->
-> You're doing fine with responsiveness and feedback is always timely
-> and verbose, so just keep doing what you do :)
->
+Hello,
 
-I endeavour to reply to direct mail promptly, but I was thinking more of
-mail directed generally to the list and there have been times I haven't
-checked the list for months.
+I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'd
+like to share a few thoughts from that experience. By way of
+introduction, I have a degree in Electrical Engineering, and I like to
+experiment and build things using "small computers" that run Linux. I
+have zero Linux kernel experience. I did my testing on a Raspberry Pi
+model 3 running a variant of Debian "bullseye".
 
-Cheers,
-Kent.
+1. I do not agree with the lack of "persistence" - at least as far as
+it seems to be practiced in the 'gpioset' tool. When it comes to
+"turning things ON and OFF", there is a long-established paradigm that
+says when something is 'turned ON', it remains ON until the user takes
+an action to turn it OFF. This seems simple and obvious to me. Using
+the light switch in my bedroom as a simple example, I cannot see the
+logic behind a Design Decision that requires me to keep my finger on
+the light switch to keep it OFF so I can sleep.
 
+When I was in school we studied 'state machines'. I felt I had a
+decent understanding of them - they were useful in designing automated
+systems. Yet, in 'gpioset' it seems the concept of a 'state' has been
+turned on its ear! We can 'set' a GPIO pin to a state, but that state
+reverts immediately (a single clock cycle?). There seems to be an
+underlying thought/theory at work in 'gpioset' that demands that it be
+kept resident in memory to maintain a 'state'. There may be hardware
+systems that demand continuous software oversight to function, but I
+know of no such GPIO hardware systems. Also, AFAIK previous
+programming interfaces/libraries all had "persistence".
+
+I'll make one final comment re. 'gpioset' wrt to the '-z / -daemonize'
+option: First, this option seems to admit the failings of "lack of
+persistence", but beyond that lies a question: How does one control
+the daemon? The only way I could terminate the daemon was to search
+for, and then kill the process. At least with '&`, one gets
+notification of the process id.
+
+2. Why does a tool with 'get' in the name write/change GPIO
+parameters? Would it not make more sense to relegate 'gpioget' to a
+simply **reading** and reporting the state of the GPIO?
+
+I'll stop here. I don't really expect a considered reply because AIUI
+this (libgpiod) project has been going on for 5 or 6 years now. I
+assume that there have been other attempts to inject critical
+thoughts, and they have clearly been dismissed. I felt that without
+expressing my thoughts here I would fall in with the silent majority
+whose enthusiasm and support for the present design is assumed... I
+can't have that. :)
+
+Rgds,
+~S
 
