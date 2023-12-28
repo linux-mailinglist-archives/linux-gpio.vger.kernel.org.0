@@ -1,90 +1,145 @@
-Return-Path: <linux-gpio+bounces-1893-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1894-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9792381F9A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:29:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24E4C81F9AB
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 16:29:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 53A83284B16
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 15:29:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D435B284987
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Dec 2023 15:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DD5E56D;
-	Thu, 28 Dec 2023 15:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD3FDE578;
+	Thu, 28 Dec 2023 15:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FtYoj8gm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IkhVO1si"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51C21E541
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 15:29:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d3ed1ca402so48090475ad.2
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Dec 2023 07:29:33 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703777372; x=1704382172; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=+rN3jnLiSA5lTL37YbXp03oKFnyH0U1kxNlWu7pTwjM=;
-        b=FtYoj8gmYSyYzikfHgPG8mLWfBorXN6euwX2vEJuFf5I8qf8+cDlKHGSqB0e4igmqP
-         hdlFszOsdCEOfLEJJ1aJpQhOcnhEv0tT0/+fNpCLlmWhnsHZFHj6HTLafwHAGEWIc3yU
-         5qR37l0pRFAGxVmmnUKzz/X3731N20+mRgr1vRa//Ha8PxgQ4BPs3tJYqUIyOt561Yea
-         QbKOzZSSMEYBcybWK+8xithSiQVDWHZI24tlHcVv9/kP34MeaLpdvnIoWM7iAh5CnYcQ
-         nTWQMIeu5kcloactsHzLUG6B1A46fvKYo/nQtT3PJCiyXXAthbdmorAwJXVTJ5ATsa9V
-         d6uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703777372; x=1704382172;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+rN3jnLiSA5lTL37YbXp03oKFnyH0U1kxNlWu7pTwjM=;
-        b=V/sQLJJIqSJomKkdmb6ektSIhGZBbbVONhEnyYO6Ga8TT3SztlhobSyhIYB8MwoXnL
-         ffI2R52b/E7Qzw1zgjr78e/MMHMwfBEkO1IFr4iHMCYLRuZZxvgPWGU7rP7un4Se7tbE
-         mILcQJYcfQDI5Zg3wBI80mwFGDs8d/DI3TyXkwAfD8GwZUKDqU6yGA9Amh6FAX5ZvZAq
-         n9PVkT7BM9MxKt4fhRfzAGBnD1oiXYtWoTm3pOxQfRondg0gFN0NjEjLHws9ggX0TH8l
-         MjH2IqUh12/cPCd7u7tsfDv1Li1gHRjddv8RG660LPbOgWd94xmmRULo2AipFAVfREXz
-         eVzg==
-X-Gm-Message-State: AOJu0YwoZgUggvDeGQmBkQO2vDQsGsIQ6j7Dr7Okg8YQu3blRmC9a9Lr
-	kEcSLrIg7rOjZTY//IoscnAlxcjD+L0=
-X-Google-Smtp-Source: AGHT+IHFy/6ww8+2clpcja/AVehOECXDPKxp9doYbRTocy7gZRexLL2XMeFNZS39bDjfDRCscrJiBw==
-X-Received: by 2002:a17:903:44d:b0:1d0:9471:808d with SMTP id iw13-20020a170903044d00b001d09471808dmr9926881plb.93.1703777372436;
-        Thu, 28 Dec 2023 07:29:32 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id i7-20020a17090a65c700b0028c7f99d93fsm5350154pjs.57.2023.12.28.07.29.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 28 Dec 2023 07:29:32 -0800 (PST)
-Date: Thu, 28 Dec 2023 23:29:28 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org, brgl@bgdev.pl
-Subject: Re: [libgpiod][PATCH] gpioset: reword note on post-exit behaviour
-Message-ID: <20231228152928.GA124845@rigel>
-References: <20231228130837.102524-1-warthog618@gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9064FE54E;
+	Thu, 28 Dec 2023 15:29:45 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CA67C433C7;
+	Thu, 28 Dec 2023 15:29:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1703777385;
+	bh=kGqaPiWe87W+qKQNuAZXfmZ46EmuGzB7sckchD9aWJk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IkhVO1si84o49z+Z7may5z0QqOod2xI559smAPq8dRAwZhmRoiz4JCt9KmfBYbc/I
+	 ku78kDR43P5rlwQ4Y8tAqXzHZODqmnwOEDotY4I2FEr3JBGCmg39xhpJJHRjnhdJ72
+	 8aK/S+RSaI2q3aPUYKihGHOaXV0bRlAbdpD4tiPfUDwsIBQ/upjal6ajLx7Uc4mvIa
+	 xZjFj/QvziZAuOutOBD2GV7sWkBFfgjnQ4xdq9sX1gzXImIgQsTe/YFiwV7yF8oHUY
+	 VF88N6987Iwks3oEZ1SCmrC5Sw9prmuQOSLMTiF7YOZvLwH/nyM4U4h3iTlfFQlMnG
+	 NzN8pK+gqApUg==
+Message-ID: <f02f1a6d-88fe-463b-b3a0-4feb5a6f8c85@kernel.org>
+Date: Thu, 28 Dec 2023 16:29:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231228130837.102524-1-warthog618@gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V8 3/3] leds: Add support for UP board CPLD onboard LEDS
+Content-Language: en-US
+To: "larry.lai" <larry.lai@yunjingtech.com>, lee@kernel.org,
+ andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, pavel@ucw.cz
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-leds@vger.kernel.org, GaryWang@aaeon.com.tw, musa.lin@yunjingtech.com,
+ jack.chang@yunjingtech.com, noah.hung@yunjingtech.com
+References: <20231228151544.14408-1-larry.lai@yunjingtech.com>
+ <20231228151544.14408-4-larry.lai@yunjingtech.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20231228151544.14408-4-larry.lai@yunjingtech.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Dec 28, 2023 at 09:08:37PM +0800, Kent Gibson wrote:
-> The note regarding the state of a line after gpioset exits is
-> confusing and unhelpful to the average reader, if not outright
-> incorrect.
-> A common mis-interpretation is that this behaviour is arbitrarily
-> chosen by spiteful implementors. The note also specifies that the line
-> reverts to default, but that is not always the case, or is at least
-> out of the control of gpioset or libgpiod.
->
-> Reword the note to constrain the scope to that relevant to the
-> likely reader, and to emphasize that the behaviour is inherent
-> in the kernel GPIO interface, not in the gpioset implementation.
->
+On 28/12/2023 16:15, larry.lai wrote:
+> The UP boards come with a few FPGA-controlled onboard LEDs:
+> * UP Board: yellow, green, red
+> * UP Squared: blue, yellow, green, red
+> 
 
-Could've sworn I added the [libgpiod] subject prefix, but clearly not.
+...
+
+> +
+> +static int upboard_led_probe(struct platform_device *pdev)
+> +{
+> +	struct upboard_fpga * const cpld = dev_get_drvdata(pdev->dev.parent);
+> +	struct reg_field fldconf = {
+> +		.reg = UPFPGA_REG_FUNC_EN0,
+> +	};
+> +	struct upboard_led_data * const pdata = pdev->dev.platform_data;
+
+Your const does not make sense. Please read C standard how qualifiers
+are applied.
+
+...
+
+> +module_platform_driver_probe(upboard_led_driver, upboard_led_probe);
+> +
+> +MODULE_AUTHOR("Gary Wang <garywang@aaeon.com.tw>");
+> +MODULE_DESCRIPTION("UP Board LED driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:upboard-led");
+
+Nothing improved here.
+
+This is a friendly reminder during the review process.
+
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
+
+Thank you.
+
+
+Best regards,
+Krzysztof
+
 
