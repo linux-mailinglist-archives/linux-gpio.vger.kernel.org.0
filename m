@@ -1,137 +1,158 @@
-Return-Path: <linux-gpio+bounces-1917-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1918-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D945081FF95
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 14:08:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A593282006B
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 16:58:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F6B61F21B24
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 13:08:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55C341F21FD0
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 15:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09F92111BA;
-	Fri, 29 Dec 2023 13:08:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83F91125BB;
+	Fri, 29 Dec 2023 15:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="eK9NUZ75"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eH/W0tCz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D288C111B0
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 13:08:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id CABEE3F73C
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 13:08:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
-	s=20210705; t=1703855290;
-	bh=R+U2uLziDgx+IP4bP4iaMKnlOMS40so+TR+KdlJRETI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
-	b=eK9NUZ751EG8XuCqHJjBkaq+ncUXr6PzlYT+zrbvp2ACMCzKJpSx4DvkmFeKL5Q99
-	 boW7ZeongFkRMzciT9OS9UVesrn+sn9vWQnNqoqVxpZrkXfiuPBZwd1Obr1yaMLyRt
-	 l9q0yqHBFXfz6fX95Tqa8yghJqsqxhTkfjWzizuQu25jyxrcQ1FEwxkvI6Yf4vIwgI
-	 oZQ0i+fW9PjPrZ1IKwLBgyaNGiQb/KhnUFAjqgOROalCparTY7u4BpRoxxNxtmOZMY
-	 XlBONN9+8eFY1gs8NFvzc5JTZIFxV4iv3n/APR4+1eVB6+HBGFT9KLfvVW3WQcLUbt
-	 PEXMMpXwW/ekw==
-Received: by mail-ed1-f72.google.com with SMTP id 4fb4d7f45d1cf-555aa6b787dso477317a12.3
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 05:08:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B81125A4
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 15:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6d9bf6f24f3so1553362b3a.2
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 07:58:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1703865522; x=1704470322; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IdNEz0dZU0+TyDt+VV2CkzmWahVuHF8T+ANIgn4Mtpc=;
+        b=eH/W0tCzLfqJjoVAVz0zFvptn0YrbDphXb9HlZPOlOrvGPJNVa0e1wp3ox7XUJHATH
+         bJ2A/erXSIj2Zi51ShVAUDNFtw+ZgeEqVK+H/kd5fvK+E4PGaasDIZy8GuMgWqEHxOWa
+         5JwoQ5b4nXj0AdiPhMQ35ozP9pjStcRBNvXTs4z64qBxyzSeBEAHyiACLqxLrD2pi11R
+         LCtM8cHFoEx3oCpvOJaSKvIPTRjpheBocxkPMLMk+lvpwNPp1zHmu6NasdgDvj077Ys5
+         VqEQm/G9EosFeuCBz3oOiLKF4C8tZMvxg3xivmk1ci12JRjfIuLG8X8IAM6wsg+DnTld
+         /LMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703855290; x=1704460090;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=R+U2uLziDgx+IP4bP4iaMKnlOMS40so+TR+KdlJRETI=;
-        b=Sjz28jGUhXL4PMWQprgFedFOAzQq4P1Y/uy2T4UZ7/JL6VTLsAZvnek9GiST0BuoQ9
-         su6/lIOg5AY//X/HN0g/Btu9WcaJN9dDfvKWyK1RxPi6bU1syJaMGNw8LGwRUiJKcEC/
-         X+PUmF5xmSmupcfEje9CLr0zFmyAMHFe2dn/wxvxrCPYOrFsYIoDSWkqd/NEfdgHa9bz
-         4F7OZybExQMcIAY3obobL4yzTNRecpLDZPxN+j/uSHSpXy3JHbNy+pi5s7VvCww3zju4
-         PI7IKyPbr3dxIUzkKm0dTxKeRuW/mtb2AZ5Z/TZisBznK7z+Bsk2027/Qz0BBLDlgzuv
-         t+4A==
-X-Gm-Message-State: AOJu0YzZ+LwzNToCnwIUfVhywQtGiAJaug0ADNfwvBhsMi/uABHkQQrh
-	AYOz76cnWyi+hTIRHZqsbBm2CWomF7zvFR7A6JucTQ5LQQPEXt3Q1vVmc1p/vJAt+LKXLbH+w+W
-	AwhyldJ/AoYXqn0qTEOfYd3wdFevSsrQxcYOhV5m6/iC3y4j4AHZdKjy0
-X-Received: by 2002:a17:907:1047:b0:a1f:7298:aa25 with SMTP id oy7-20020a170907104700b00a1f7298aa25mr5908872ejb.45.1703855290056;
-        Fri, 29 Dec 2023 05:08:10 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGOl2xY+pSzy8GIwLI8YWCBORZjtn0Q6seBKWUm/MYOhifqEVMnq+cdXs9qSb+TuynSBKEeaQ==
-X-Received: by 2002:a17:907:1047:b0:a1f:7298:aa25 with SMTP id oy7-20020a170907104700b00a1f7298aa25mr5908860ejb.45.1703855289728;
-        Fri, 29 Dec 2023 05:08:09 -0800 (PST)
-Received: from stitch.. ([2001:67c:20a1:1909:b62b:6d4a:f569:ad01])
-        by smtp.gmail.com with ESMTPSA id ex1-20020a170907954100b00a26f22dca5asm4359327ejc.0.2023.12.29.05.08.03
+        d=1e100.net; s=20230601; t=1703865522; x=1704470322;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IdNEz0dZU0+TyDt+VV2CkzmWahVuHF8T+ANIgn4Mtpc=;
+        b=LKKN6PS/TbkX5/yzzRi5H1l84vXAjdrHtIL1mGM8oPoPPni4C+QerrFIJRG7mxwN55
+         WlQdCT7JphrSPaS7QrQybnqTCA/1FP0U/0vRo+Pj4iYIDJa9ZiSCYPSK2/5G6oD07d1R
+         DnqV1v9oannl8syCLwRG2qwS2uLFCnbaL/uJRPYB8mfKegHqSPVbmk2Cwz3nwgXvTiWa
+         qxLzZXNdKAmkxMfEMl2xYk+9DpLzDduhtohzkU/4RVUGyK4K0NrSaVpckiOpe3aN9J2u
+         2fWwTwxcU9i+TVVHHOXUMJo2X0m4m4atNZ2n1Hx91Gqha4QcEzCZaxSNmx7WQRYjBhW/
+         1GqA==
+X-Gm-Message-State: AOJu0Yxc7LQPruqrthY4HDzdUFi6FC3zJvcZCEovn18kj+Mu0woRgbAV
+	BsqIiKV6x9KQIENC1d03XBM=
+X-Google-Smtp-Source: AGHT+IGennDIYXBX5F1E95aXf/VjGgvu8lv1I2aKmCp60LGqHy5FDZV+dpzjnchPdRVwHSQ1LAODKA==
+X-Received: by 2002:a05:6a20:1593:b0:196:5f47:f6a1 with SMTP id h19-20020a056a20159300b001965f47f6a1mr1433079pzj.49.1703865522312;
+        Fri, 29 Dec 2023 07:58:42 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id 25-20020a17090a035900b0028aeb7839a5sm22104292pjf.47.2023.12.29.07.58.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Dec 2023 05:08:09 -0800 (PST)
-From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-To: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Hoan Tran <hoan@os.amperecomputing.com>,
-	Serge Semin <fancer.lancer@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>,
-	Drew Fustini <dfustini@baylibre.com>
-Subject: [PATCH v1] gpio: dwapb: Use generic request, free and set_config
-Date: Fri, 29 Dec 2023 14:07:51 +0100
-Message-ID: <20231229130758.84214-1-emil.renner.berthing@canonical.com>
-X-Mailer: git-send-email 2.43.0
+        Fri, 29 Dec 2023 07:58:41 -0800 (PST)
+Date: Fri, 29 Dec 2023 23:58:37 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Seamus de Mora <seamusdemora@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] help with GPIOSET_INTERACTIVE
+Message-ID: <20231229155837.GA103278@rigel>
+References: <CAJ8C1XMX+piJQiyKSz+KyZfoe4FfL=SVycAuYGh+p+noyzNm5w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJ8C1XMX+piJQiyKSz+KyZfoe4FfL=SVycAuYGh+p+noyzNm5w@mail.gmail.com>
 
-This way GPIO will be denied on pins already claimed by other devices
-and basic pin configuration (pull-up, pull-down etc.) can be done
-through the userspace GPIO API.
+On Fri, Dec 29, 2023 at 03:14:04AM -0600, Seamus de Mora wrote:
+> I'm trying to add the 'GPIOSET_INTERACTIVE' definition to 'gpioset.c':
+> I've installed 'libeditline-dev' and 'libedit-dev' via apt; each
+> separately, and then both
+>
 
-Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
----
- drivers/gpio/gpio-dwapb.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Please prefix emails related to libgpiod with [libgpiod], as noted in
+the CONTRIBUTING section of the README, so your mail is more likely to
+be recognized by the appropriate people.
 
-diff --git a/drivers/gpio/gpio-dwapb.c b/drivers/gpio/gpio-dwapb.c
-index 8c59332429c2..798235791f70 100644
---- a/drivers/gpio/gpio-dwapb.c
-+++ b/drivers/gpio/gpio-dwapb.c
-@@ -416,11 +416,12 @@ static int dwapb_gpio_set_config(struct gpio_chip *gc, unsigned offset,
- {
- 	u32 debounce;
- 
--	if (pinconf_to_config_param(config) != PIN_CONFIG_INPUT_DEBOUNCE)
--		return -ENOTSUPP;
-+	if (pinconf_to_config_param(config) == PIN_CONFIG_INPUT_DEBOUNCE) {
-+		debounce = pinconf_to_config_argument(config);
-+		return dwapb_gpio_set_debounce(gc, offset, debounce);
-+	}
- 
--	debounce = pinconf_to_config_argument(config);
--	return dwapb_gpio_set_debounce(gc, offset, debounce);
-+	return gpiochip_generic_config(gc, offset, config);
- }
- 
- static int dwapb_convert_irqs(struct dwapb_gpio_port_irqchip *pirq,
-@@ -530,10 +531,14 @@ static int dwapb_gpio_add_port(struct dwapb_gpio *gpio,
- 	port->gc.fwnode = pp->fwnode;
- 	port->gc.ngpio = pp->ngpio;
- 	port->gc.base = pp->gpio_base;
-+	port->gc.request = gpiochip_generic_request;
-+	port->gc.free = gpiochip_generic_free;
- 
- 	/* Only port A support debounce */
- 	if (pp->idx == 0)
- 		port->gc.set_config = dwapb_gpio_set_config;
-+	else
-+		port->gc.set_config = gpiochip_generic_config;
- 
- 	/* Only port A can provide interrupts in all configurations of the IP */
- 	if (pp->idx == 0)
--- 
-2.43.0
+You don't specify your platform and what you've done to get this far -
+you provide the output you are seeing but not the inputs.
+It is apparently a Pi, but the distro and version would be helpful,
+as well as the build commands themselves.
 
+Have you read the BUILDING section of the README?
+How are you performing the build? I would expect autoconf to choke
+if it can't find the required headers before it even gets to the actual
+compile step.
+
+This works for me on a Pi, both bullseye and bookworm:
+
+$ ./autogen.sh --enable-tools --enable-gpioset-interactive
+$ make
+
+That results in tools being built in the tools directory, and the
+built gpioset supports the -i option.
+
+That is with the following packages installed:
+ autoconf
+ autoconf-archive
+ libtool
+ m4
+ libedit-dev
+
+Cheers,
+Kent.
+
+> With 'libeditline-dev' alone I am getting the compile error:
+> gpioset.c:16:10: fatal error: editline/readline.h: No such file or directory
+>    16 | #include <editline/readline.h>
+>       |          ^~~~~~~~~~~~~~~~~~~~~
+>
+> With 'libedit-dev' alone (or both), I get these errors:
+> /usr/bin/ld: gpioset.o: in function `tab_completion':
+> /home/pi/libgpiod-2.1/tools/gpioset.c:732: undefined reference to
+> `rl_completion_matches'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:713: undefined
+> reference to `rl_completion_matches'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:725: undefined
+> reference to `rl_completion_matches'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:725: undefined
+> reference to `rl_attempted_completion_over'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:725: undefined
+> reference to `rl_completion_type'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:725: undefined
+> reference to `rl_completion_append_character'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:725: undefined
+> reference to `rl_line_buffer'
+> /usr/bin/ld: gpioset.o: in function `complete_line_id':
+> /home/pi/libgpiod-2.1/tools/gpioset.c:642: undefined reference to
+> `rl_line_buffer'
+> /usr/bin/ld: gpioset.o: in function `interact':
+> /home/pi/libgpiod-2.1/tools/gpioset.c:748: undefined reference to
+> `stifle_history'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:769: undefined
+> reference to `readline'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:853: undefined
+> reference to `history_list'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:855: undefined
+> reference to `add_history'
+> /usr/bin/ld: gpioset.o: in function `print_line_values':
+> /home/pi/libgpiod-2.1/tools/gpioset.c:484: undefined reference to
+> `rl_attempted_completion_function'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:484: undefined
+> reference to `rl_basic_word_break_characters'
+> /usr/bin/ld: /home/pi/libgpiod-2.1/tools/gpioset.c:484: undefined
+> reference to `history_length'
+> collect2: error: ld returned 1 exit status
+> make: *** [Makefile:513: gpioset] Error 1
+>
+> Can someone explain how to add GPIOSET_INTERACTIVE & compile successfully?
 
