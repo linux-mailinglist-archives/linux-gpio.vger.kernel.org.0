@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-1914-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1915-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E71A681FEB6
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 10:33:59 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6D8F081FEB7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 10:34:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9A7621F2309F
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 09:33:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1F545282BC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Dec 2023 09:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E786D101F8;
-	Fri, 29 Dec 2023 09:33:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EE1101F8;
+	Fri, 29 Dec 2023 09:34:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2HjGQ9W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XWOjniMX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f50.google.com (mail-pj1-f50.google.com [209.85.216.50])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77F2510A00
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 09:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A9B10A00
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 09:34:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f50.google.com with SMTP id 98e67ed59e1d1-28c075ad8e7so4587309a91.2
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 01:33:52 -0800 (PST)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d9bee259c5so1429151b3a.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Dec 2023 01:34:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1703842431; x=1704447231; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1703842441; x=1704447241; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=9//bAFoz6vEI5nCZG+2mrTfj4Z29wGMt2kFPQl4urQ0=;
-        b=A2HjGQ9WkO9TbrRDHfVys/Tzt3qESnijnb+3cYmCpMGqCGqnIZE88jnPtO2TmX22IV
-         n4PaVcO6fZCqV+8tyhuCcEMSv6eFhMbO1MV8xxiOYJTsmdWxLnQd0QuiDbyFI/ftIFKl
-         iYR6INU856AIEWo1cbUpu4wsFFkyDkmFuJ2CbJ4zj+o2PIQHilUvlDdD00BDrXiQy9eQ
-         5BUBo3yOk7jJ3YQ5jue8Nq8tjKCcwJYFL8GxdIhU9y6/UjVNKr6W7/tZjYEOXzfV2f9t
-         KgC4P1R3h4CPLfENy/2UarLvC5veEbPt7W6xqbwfLOBru1sAtYb8yjovbp44ZmgYb4eS
-         WUYQ==
+        bh=8vS0Wn45sps+TwL3iN7GzIBr4cClZFxKj71HYPN1OV8=;
+        b=XWOjniMXz27sYdOnMvVrfaNvWQu/RaRiS8GzwT+jO9RnEifkERSWp8+kpys8Aawjss
+         +OKjFf6HLSrR713WsyKXGu2FUyG0uZ88gO7qfPehGzbdNvrZ5I2tvKs67F8DbYh6ivaH
+         0HWQzd8ctk/HORyjds3O2xJc9ShfIgDxjRWbPqB3lqwe/4dZoC883hFU6ikpVgXUSkIz
+         PT6CFOPKHQO9mfPlxmYIbKH46pNwhsDk3RhPIM0PRZc5GKkE/1NAt9H8q7Yu5BdavZJp
+         j2CbJfoUcTGsZX/TsjqpZzMDI80tYaxan9SmBci+1oAAC0IHgGvUapTI9YYFdOmAEjaY
+         24dA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1703842431; x=1704447231;
+        d=1e100.net; s=20230601; t=1703842441; x=1704447241;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=9//bAFoz6vEI5nCZG+2mrTfj4Z29wGMt2kFPQl4urQ0=;
-        b=LPzJEPppA1DOr8T/nHmZqGiR8J6os8qJSS9Qmd8lepP1nnN7y+IKc1Gj9QOr2tjTKI
-         ElQ1MrS9ehYzve0aqBCnbacAMZCVwwT7l9ndfDunc6jg8C0mtiAhUvLLbq5MO/jzXrL7
-         9c54aGeQuEt6mIEaHvb3oci2EEJBsH+Mt0xAFdWJz52n3YsyExDzY8dEE2mdJCmPoDWi
-         HDOmvReXXX7wMv1Tgi0rZ3UGi6Zk+/YSVROhsU9IEQe0X25zMNmTt6tVfVJsGXBSYJN8
-         Vyp3Kp960Qq53NS/9hbFkAJcRtVwevDqsHtT0J3IJLNQscSJSm5GiF7aYdyr5gVHCPX8
-         zi8w==
-X-Gm-Message-State: AOJu0Yx1ouVnpe+mdgCcHuIi8W3qS8eWluh/BNkaDO6lMWcJlBczTtIQ
-	RqhFlh/8RFm4g9kUG/yoQricBdKi8WQ=
-X-Google-Smtp-Source: AGHT+IEJM/6MwoG/5mqW58tTMSO2QV7jSYY0WdXCxThQsMol1lElWSkhKsuDKzE5nXl9hAGvUH9StA==
-X-Received: by 2002:a17:90a:9307:b0:28c:7a2c:c690 with SMTP id p7-20020a17090a930700b0028c7a2cc690mr3579139pjo.7.1703842431713;
-        Fri, 29 Dec 2023 01:33:51 -0800 (PST)
+        bh=8vS0Wn45sps+TwL3iN7GzIBr4cClZFxKj71HYPN1OV8=;
+        b=iB2hniugJpQdhfOHJ8pFb+qkAu0t5b7yhgrVUrYGSA2OQQTtYLK5wTivCcx8XqgSQ6
+         liUGzHenoj7HPJT5gzu3zhNDIxfyfV1NMLfdfsZw+s/39phGzZGCmDvECdUFv0NwRcFt
+         uQBNRrgABqodWYrM3Sg8XW+Jzca0D+c7Cz911OsEoF7lsuG5YntPN2TlSnoSCSsTXeX+
+         d8jrCGi6WhiQdWekR+ram3stayoTyDPV3rloZHroZk9O1olkqYVrqQBJe+St7AyztW92
+         bjdmC15lzQf77dti2S6q42EJiumHVqgAjjFhLNkxUQZUmwxeP1n26/qILpDgKZvwAAPo
+         xSBA==
+X-Gm-Message-State: AOJu0YyPCAocMv5We/vZT74gP9+onJYC0gF9e6vI0jRaSBGpcSJp82AX
+	eT6NH+bqupvg/38biaf9B1otIgjcouQ=
+X-Google-Smtp-Source: AGHT+IEwOxC5nhpbKQe0gNSU/HkONYN4FE/DVPXEZMsn6aezsLDD8xiy1K1aV/GDvdLbBg8Pz7MtxQ==
+X-Received: by 2002:a05:6a20:54a8:b0:196:5720:fbba with SMTP id i40-20020a056a2054a800b001965720fbbamr1391160pzk.62.1703842441080;
+        Fri, 29 Dec 2023 01:34:01 -0800 (PST)
 Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id pi15-20020a17090b1e4f00b0028be1aec1b6sm15600907pjb.52.2023.12.29.01.33.49
+        by smtp.gmail.com with ESMTPSA id pi15-20020a17090b1e4f00b0028be1aec1b6sm15600907pjb.52.2023.12.29.01.33.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Dec 2023 01:33:51 -0800 (PST)
+        Fri, 29 Dec 2023 01:34:00 -0800 (PST)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-gpio@vger.kernel.org,
 	brgl@bgdev.pl
 Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH v2 1/2] gpioset: reword note on post-exit behaviour
-Date: Fri, 29 Dec 2023 17:33:27 +0800
-Message-Id: <20231229093328.62366-2-warthog618@gmail.com>
+Subject: [libgpiod][PATCH v2 2/2] gpioset: improve toggle option help
+Date: Fri, 29 Dec 2023 17:33:28 +0800
+Message-Id: <20231229093328.62366-3-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20231229093328.62366-1-warthog618@gmail.com>
 References: <20231229093328.62366-1-warthog618@gmail.com>
@@ -75,43 +75,27 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The note regarding the state of a line after gpioset exits is
-confusing and unhelpful to the average reader, if not outright
-incorrect.
-A common mis-interpretation is that this behaviour is arbitrarily
-chosen by spiteful implementors. The note also specifies that the line
-reverts to default, but that is not always the case, or is at least
-out of the control of gpioset or libgpiod.
-
-Reword the note to constrain the scope to that relevant to the
-likely reader, and to emphasize that the behaviour is inherent
-in the kernel GPIO interface, not in the gpioset implementation.
+Reword toggle option help to add that a 0 terminated sequence will
+exit.
 
 Signed-off-by: Kent Gibson <warthog618@gmail.com>
 ---
- tools/gpioset.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ tools/gpioset.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/gpioset.c b/tools/gpioset.c
-index 9dc5aeb..f2f9a15 100644
+index f2f9a15..863da4a 100644
 --- a/tools/gpioset.c
 +++ b/tools/gpioset.c
-@@ -76,11 +76,10 @@ static void print_help(void)
- 	print_period_help();
- 	printf("\n");
- 	printf("*Note*\n");
--	printf("    The state of a GPIO line controlled over the character device reverts to default\n");
--	printf("    when the last process referencing the file descriptor representing the device file exits.\n");
--	printf("    This means that it's wrong to run gpioset, have it exit and expect the line to continue\n");
--	printf("    being driven high or low. It may happen if given pin is floating but it must be interpreted\n");
--	printf("    as undefined behavior.\n");
-+	printf("    It should not be assumed that a line will retain its state after gpioset exits.\n");
-+	printf("    When a process exits, any GPIO lines it has requested are automatically released.\n");
-+	printf("    Once released, the state of a line may be modified by the kernel or another process.\n");
-+	printf("    To guarantee the requested value, by default gpioset does not exit.\n");
- }
- 
- static int parse_drive_or_die(const char *option)
+@@ -68,7 +68,7 @@ static void print_help(void)
+ 	printf("  -s, --strict\t\tabort if requested line names are not unique\n");
+ 	printf("  -t, --toggle <period>[,period]...\n");
+ 	printf("\t\t\ttoggle the line(s) after the specified period(s)\n");
+-	printf("\t\t\tIf the last period is non-zero then the sequence repeats.\n");
++	printf("\t\t\tIf the last period is 0 then gpioset exits else the sequence repeats.\n");
+ 	printf("      --unquoted\tdon't quote line names\n");
+ 	printf("  -v, --version\t\toutput version information and exit\n");
+ 	printf("  -z, --daemonize\tset values then detach from the controlling terminal\n");
 -- 
 2.39.2
 
