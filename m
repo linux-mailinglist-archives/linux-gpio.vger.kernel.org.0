@@ -1,106 +1,69 @@
-Return-Path: <linux-gpio+bounces-1957-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1958-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 331A9821D6D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 15:09:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97CEF821E11
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 15:50:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C29E02838A6
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 14:09:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3696A1F22957
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 14:50:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D9DC1078D;
-	Tue,  2 Jan 2024 14:09:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uij4ipDm"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1795911C85;
+	Tue,  2 Jan 2024 14:50:42 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AAAC101D5
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jan 2024 14:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7ccf60f3600so1775774241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jan 2024 06:09:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704204592; x=1704809392; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=iJedsGZeT4ZWibqXYFJg3UnqI1x38OlbgGSH9LgR9cI=;
-        b=uij4ipDmBgrNuU9Nk3MUKLzeok2WDb3KrzAUGYcsG1q2CEsMivFeW5onN5qBwhUHX8
-         qwMOaQkhSrf1KUQltj+Iu1rAoDuHbGlGGr9Gt8ah1brA2gSkMWbTc3J7mz0Wzl2I0cRJ
-         nfz97I+BuvxUP/4oIx8qSrNzZPAzj055xDUOUGJjeL5gi7oQGTpSvrMTcoMmpctA8hpU
-         CqaYkufUYC850/wtoI08aGOFUniSKhfR7v+cE6+6/LKWQCAjQB+lwX1JRz1AELSnMqe0
-         QIN6OT8tcxECMRBniJa6fOIiROf0NMhRAwY30ERIdrqD6fJ7Tam1pQbsoCDkC1yvddK5
-         Gp5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704204592; x=1704809392;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=iJedsGZeT4ZWibqXYFJg3UnqI1x38OlbgGSH9LgR9cI=;
-        b=XOpvuyeKIGMQxIJ+V7IgQjgtYqIdMk8goN+DX/wsxRAbPdtK/ZvDZsoadY9nxDf9AZ
-         /ZRS7EqYZ6xh+7In0xuCuERF50In2xznjaDN3vAh9DDC2MZS6Y5W+c6/YNN3g6/AMzkJ
-         QE4K9hOvim1VlI1xyx7CO22577or1Bg1pqrT/zcaNMuCR8N+KD+TRHSxXYQgLjTlbMJn
-         SSCKXT0fVQSROiPQDX+tdqQRlOxe4acZWZ4084a+kBX7qGG2x6VtCIP+MeJn7c3bNb5v
-         7ocxCur0T7891GEOrMIXGl/GhcRR/fqFj/VU9mcaJyiLMUYHlpzDEjao6QAA9VT+I65r
-         bBlA==
-X-Gm-Message-State: AOJu0YwlT7bB5ZJHDiZSgf66Xueo6bEcwowqQvHHjwWMu/AaXQC1bMou
-	ZUSQoEVxtySDpoFGzbRTNenKcFx9gcjU89v+NDI14v4+kSowvyviHdNl73cf
-X-Google-Smtp-Source: AGHT+IFNZK2+FvnrXm65Remw3ivMrWjANNM4VfeK2PFKx2OgQfjT3mHFCmZ9+F6grbd6NCMbgy78NeS76LmLet9Gkxs=
-X-Received: by 2002:a05:6122:181d:b0:4b7:9dc:9ab with SMTP id
- ay29-20020a056122181d00b004b709dc09abmr5535119vkb.16.1704204591795; Tue, 02
- Jan 2024 06:09:51 -0800 (PST)
+Received: from wormhole.robuust.nl (leaseweb-ip1.robuust.nl [178.162.147.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D1C11C93
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jan 2024 14:50:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=opensourcepartners.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wormhole.robuust.nl
+Received: from costar (helo=localhost)
+	by wormhole.robuust.nl with local-esmtp (Exim 3.36 #1 (Debian))
+	id 1rKg6B-0005Av-00; Tue, 02 Jan 2024 15:50:31 +0100
+Date: Tue, 2 Jan 2024 15:50:31 +0100 (CET)
+From: "J.A. Bezemer" <j.a.bezemer@opensourcepartners.nl>
+X-X-Sender: costar@wormhole.robuust.nl
+To: Kent Gibson <warthog618@gmail.com>
+cc: linux-gpio@vger.kernel.org, brgl@bgdev.pl
+Subject: Re: [libgpiod][PATCH] line-config.c: Fix library enum used for kernel
+ flags bitfield
+In-Reply-To: <20231231020228.GA8143@rigel>
+Message-ID: <Pine.LNX.4.64.2401021546300.16108@wormhole.robuust.nl>
+References: <Pine.LNX.4.64.2312301347330.29540@wormhole.robuust.nl>
+ <20231231015727.GA3304@rigel> <20231231020228.GA8143@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231230023413.23473-1-warthog618@gmail.com>
-In-Reply-To: <20231230023413.23473-1-warthog618@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Jan 2024 15:09:41 +0100
-Message-ID: <CAMRc=McsddsXVxkxn3WvjeGHkunOnw3yN6x2ZkALTvxrRaWYMg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH] README: fix typo
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 
-On Sat, Dec 30, 2023 at 3:34=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> Fix typo in --enable-gpioset-interactive in TOOLS section.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  README | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/README b/README
-> index 962dc06..69128dc 100644
-> --- a/README
-> +++ b/README
-> @@ -134,7 +134,7 @@ Examples:
->      # Blink an LED on GPIO22 at 1Hz with a 20% duty cycle
->      $ gpioset -t200ms,800ms GPIO22=3D1
->
-> -    # Set some lines interactively (requires --enable-gpioset-interative=
-)
-> +    # Set some lines interactively (requires --enable-gpioset-interactiv=
-e)
->      $ gpioset --interactive --unquoted GPIO23=3Dinactive GPIO24=3Dactive
->      gpioset> get
->      GPIO23=3Dinactive GPIO24=3Dactive
-> --
-> 2.39.2
->
 
-Applied, thanks!
+On Sun, 31 Dec 2023, Kent Gibson wrote:
+> On Sun, Dec 31, 2023 at 09:57:27AM +0800, Kent Gibson wrote:
+>> On Sat, Dec 30, 2023 at 01:48:53PM +0100, J.A. Bezemer wrote:
+>>> Library enum was used to sanitize kernel flags.
+>>>
+>>
+>> Rephrase to make imperative and better describe what is being fixed.
+>> e.g.
+>>
+>> "Fix deselection of output direction when edge detection is selected in
+>> make_kernel_flags(). Use correct flag to perform deselection rather than
+>> a library enum."
+>>
+>
+> While I think if it, that also applies to the subject line.
+> And that should probably begin with "core:" as it indicates the section
+> of the code tree being modified.
+>
+> Sorry - more nitpicking.
 
-Bart
+Hi Kent, thanks for the guidance. Keeping a high standard is very much
+appreciated. Updated version upcoming.
+
+Regards,
+Anne Bezemer
 
