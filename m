@@ -1,146 +1,107 @@
-Return-Path: <linux-gpio+bounces-1950-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1951-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3124482185D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 09:29:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 26A3082186E
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 09:35:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A0F351F2105D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 08:29:00 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8F975B20B17
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 08:35:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CE6746B1;
-	Tue,  2 Jan 2024 08:28:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 934B84C84;
+	Tue,  2 Jan 2024 08:35:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lmcIjbj7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FBFD4693
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jan 2024 08:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
-Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 4028SX5a044296;
-	Tue, 2 Jan 2024 16:28:33 +0800 (+08)
-	(envelope-from Wenhua.Lin@unisoc.com)
-Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4T45Rj2tMfz2Qxlxk;
-	Tue,  2 Jan 2024 16:21:53 +0800 (CST)
-Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx06.spreadtrum.com
- (10.0.1.11) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Tue, 2 Jan 2024
- 16:28:32 +0800
-From: Wenhua Lin <Wenhua.Lin@unisoc.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko
-	<andy@kernel.org>,
-        Bartosz Golaszewski <brgl@bgdev.pl>
-CC: Orson Zhai <orsonzhai@gmail.com>,
-        Baolin Wang
-	<baolin.wang@linux.alibaba.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, wenhua lin
-	<wenhua.lin1994@gmail.com>,
-        Wenhua Lin <Wenhua.Lin@unisoc.com>,
-        Xiongpeng Wu
-	<xiongpeng.wu@unisoc.com>
-Subject: [PATCH V3] gpio: pmic-eic-sprd: Configure the bit corresponding to the EIC through offset
-Date: Tue, 2 Jan 2024 16:28:29 +0800
-Message-ID: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
-X-Mailer: git-send-email 2.17.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E18D146B6;
+	Tue,  2 Jan 2024 08:35:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5451faa3aa7so1554843a12.0;
+        Tue, 02 Jan 2024 00:35:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704184508; x=1704789308; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Bs+RzqBf3EtYOScRDWfXPPQOOIsFVUV87Fz7UZN69Gc=;
+        b=lmcIjbj7mSQNvx72p2QK4LfzozcTICRwEYJxBgOAqYcwM8wuUsn7kvs3X1No1fuI3T
+         3Dz4Bax5+OudmvqKP+Iee5Thu0eWoiaQVkAHyP8SNn7PwWG1fV6/lJQmn4lRZkvp3m+Z
+         dNo9vq2mR15Au9G0/tGCLSiOH6J33kfNJTMaC/a4hoQiGpOnshy/wITudngqSZs3/5XA
+         578ubJl3QOz8ma0ozEKqmVAmhg/kPnNYMLeOO+8MZizYKPc2I0cq81oGVwPqzvGeFvdB
+         0xDm1ZkCmxj0MzVK5UsIaRpPmXqap3GT7xb/l6uAc+NQi7emQ3Phnyepe/utCEKa0UND
+         ow1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704184508; x=1704789308;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Bs+RzqBf3EtYOScRDWfXPPQOOIsFVUV87Fz7UZN69Gc=;
+        b=YncVTD0sovPlznryN5nx7z1VJx+Umm6Y77NITk8NOpTc3m49AHd80FLPVwDaHBQkI6
+         JIBFoTPq4Z0OV8LoNgJhBeaSYYdwtUXxwvpqaFsVh5xCEMF+dDIVoP8Pa9SLqKRVyqzs
+         2vta/gqMeJe1SCbN7Bg06aF/hTLfW+sIyzJ1sy+bwt+Is0k4Y0cNyINusX8LjMXF7UOA
+         ud2p3r9abz9myhljs+rD2SzvIpowdatmpGnnmyKK0osK3I8ZNSdJtND8pG59UbE0enym
+         FqCpx+UyOGGHuXElSSWkkLYOgXA6DNTmIWCnlyiNGqfZH0JPQemDUpFzTytU53AgbgfY
+         SQvQ==
+X-Gm-Message-State: AOJu0Yyym7y4hTBYFvqIBfHCpW2deiHfnM7zpzNN2bmQ75o4uf/mVnqr
+	WvQebtaG7MJ7PHwWzo8Gl+7NvIw1zmNOunBct3c=
+X-Google-Smtp-Source: AGHT+IF4e8DglVWhHc2y2IxCZ3Q0Ze/T2S8SQfR0giGQ71QVzpBTXlRdwcI6/Zcton810xIScU2ZBwK1eWr2JFQ8LP4=
+X-Received: by 2002:a17:907:1a55:b0:a26:a4e8:5454 with SMTP id
+ mf21-20020a1709071a5500b00a26a4e85454mr10288049ejc.0.1704184506262; Tue, 02
+ Jan 2024 00:35:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: SHCAS01.spreadtrum.com (10.0.1.201) To
- shmbx06.spreadtrum.com (10.0.1.11)
-X-MAIL:SHSQR01.spreadtrum.com 4028SX5a044296
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com> <20230921090027.11136-2-Wenhua.Lin@unisoc.com>
+ <ZQwny/NO8qjPU7AH@smile.fi.intel.com>
+In-Reply-To: <ZQwny/NO8qjPU7AH@smile.fi.intel.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Tue, 2 Jan 2024 16:34:54 +0800
+Message-ID: <CAB9BWheUgc6banjt_eui3SeTb6EkZtkX7dPxFvswQ9_O-a7LrQ@mail.gmail.com>
+Subject: Re: [PATCH V2 1/4] gpio: sprd: In the sleep state, the eic debounce
+ clk must be forced open
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-A bank PMIC EIC contains 16 EICs, and the operating registers
-are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
-Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
-will cause the configuration of other EICs to be affected when
-operating a certain EIC. In order to solve this problem, configure
-the bit corresponding to the EIC through offset.
+On Thu, Sep 21, 2023 at 7:25=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
+rote:
+>
+> On Thu, Sep 21, 2023 at 05:00:24PM +0800, Wenhua Lin wrote:
+> > In the sleep state, Eic debounce has no clock and the clk of
+>
+> Eic --> The eic
+>
+> clk --> clock
+>
+> > debounce needs to be forced open, so that eic can wake up normally.
+>
+> > Fixes: 2788938b7946 ("gpio: eic-sprd: Make the irqchip immutable")
+> >
+> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+>
+> The tag block mustn't have blank lines.
+>
 
-Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
----
-Change in V3:
--Change title.
--Change commit message.
--Delete the modification of the two-dimensional array maintenance pmic eic,
- and add the corresponding bits to configure the eic according to the offset.
----
----
- drivers/gpio/gpio-pmic-eic-sprd.c | 19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+Thank you very much for your review.
+I will fix this issue in patch v3.
 
-diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
-index 01c0fd0a9d8c..d9b228bea42e 100644
---- a/drivers/gpio/gpio-pmic-eic-sprd.c
-+++ b/drivers/gpio/gpio-pmic-eic-sprd.c
-@@ -151,8 +151,8 @@ static void sprd_pmic_eic_irq_mask(struct irq_data *data)
- 	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
- 	u32 offset = irqd_to_hwirq(data);
- 
--	pmic_eic->reg[REG_IE] = 0;
--	pmic_eic->reg[REG_TRIG] = 0;
-+	pmic_eic->reg[REG_IE] &= ~BIT(offset);
-+	pmic_eic->reg[REG_TRIG] &= ~BIT(offset);
- 
- 	gpiochip_disable_irq(chip, offset);
- }
-@@ -165,8 +165,8 @@ static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
- 
- 	gpiochip_enable_irq(chip, offset);
- 
--	pmic_eic->reg[REG_IE] = 1;
--	pmic_eic->reg[REG_TRIG] = 1;
-+	pmic_eic->reg[REG_IE] |= BIT(offset);
-+	pmic_eic->reg[REG_TRIG] |= BIT(offset);
- }
- 
- static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
-@@ -174,13 +174,14 @@ static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
- {
- 	struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
- 	struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
-+	u32 offset = irqd_to_hwirq(data);
- 
- 	switch (flow_type) {
- 	case IRQ_TYPE_LEVEL_HIGH:
--		pmic_eic->reg[REG_IEV] = 1;
-+		pmic_eic->reg[REG_IEV] |= BIT(offset);
- 		break;
- 	case IRQ_TYPE_LEVEL_LOW:
--		pmic_eic->reg[REG_IEV] = 0;
-+		pmic_eic->reg[REG_IEV] &= ~BIT(offset);
- 		break;
- 	case IRQ_TYPE_EDGE_RISING:
- 	case IRQ_TYPE_EDGE_FALLING:
-@@ -222,15 +223,15 @@ static void sprd_pmic_eic_bus_sync_unlock(struct irq_data *data)
- 			sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV, 1);
- 	} else {
- 		sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
--				     pmic_eic->reg[REG_IEV]);
-+				     !!(pmic_eic->reg[REG_IEV] & BIT(offset)));
- 	}
- 
- 	/* Set irq unmask */
- 	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
--			     pmic_eic->reg[REG_IE]);
-+			     !!(pmic_eic->reg[REG_IE] & BIT(offset)));
- 	/* Generate trigger start pulse for debounce EIC */
- 	sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
--			     pmic_eic->reg[REG_TRIG]);
-+			     !!(pmic_eic->reg[REG_TRIG] & BIT(offset)));
- 
- 	mutex_unlock(&pmic_eic->buslock);
- }
--- 
-2.17.1
-
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
