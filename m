@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-1970-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 38EDA822494
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 23:13:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B8C08224A0
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 23:16:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5DF561C22B48
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 22:13:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 005DE1F22068
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 22:16:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CA03168DC;
-	Tue,  2 Jan 2024 22:13:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85FF5171AE;
+	Tue,  2 Jan 2024 22:16:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HsilkCjj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VkOm05o2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D2ED171B6
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Jan 2024 22:12:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F4C1773E
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Jan 2024 22:16:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5edbcdc323dso53492907b3.3
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jan 2024 14:12:58 -0800 (PST)
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-5f2d44a6842so11062747b3.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Jan 2024 14:16:07 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704233578; x=1704838378; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1704233766; x=1704838566; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=UGUJijc4OnYyIel7J37KEqrTE1jlQtmqCqdxc5ZaayQ=;
-        b=HsilkCjj24/HE77B6kTgN6uROOSOGzxYdIcPPESg82BkeLzb8h+QXhqf0wnKXJYQ78
-         MpTKdcexihC70+CRpZjUrNM/wOvA+VO4Ee9LxR+iUEENR8cDCqvSFoyYrGxzF+ZPzlN+
-         r+NyQzTPBEM6U9LjXAZKK2jSaw4hLaiiH0+dRYMZ7CNhDUPRGHxgIZAFho1lppSTNb0C
-         ROUULkq3g8Ie4pB4dHTl6ltNFvgNhAQ095YJ3E7hTsv/KqX5jkyfJKAnpzwgURtTMkl1
-         2oAanYqhP9GpGXo6FmK9mibEuBKehARNX1rGiZ5pl4d++ylyIuwzIaCD/Lp81xo7iou/
-         3Ysg==
+        bh=VuJtr/eFj8l5yUvmrpmvnpHJm2PY39l6dDM8XPwVvLA=;
+        b=VkOm05o24PqBTcmZkDuFYcmORIBE1SI5qVwojgt94TNd1J8akAbTSKYBeEIwFiQdRU
+         P/ZM1t8PPWOmGFpNNryAC8OeIYY+LcqfO/pe3ngWvtEX1LFxPtGH2nEjkvUqz/Vmr8RZ
+         W1GDswJn54iy/Z5OmuC5fWaqr9SZcCM6wX/l54l7uIyvABzvj14CcSdFT7ehYVtKZcR1
+         ndOaJ1mkua+qwERYQLurDpsTiortj5sgS9aZpJJO4VrJ77fSLu92IiKE66JcqKmMXi4D
+         y4wwDUTB3sulF0xaKZih6e+mvWusrALoMIX52mLxcPCuNT2bympC6aamQ+0kzkyIJOj1
+         L4VA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704233578; x=1704838378;
+        d=1e100.net; s=20230601; t=1704233766; x=1704838566;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UGUJijc4OnYyIel7J37KEqrTE1jlQtmqCqdxc5ZaayQ=;
-        b=RozxVzNPndRivwXAYmWy+E3a7geU5gzSE4T1ScOzPMIDv2yNJSMJRPbhDqEK0EoUm+
-         G9m6yxwstQdg7Zs6+818DVtIkTAC0Ff7EWTyqCUdguDig4nuMtDeqYzDEFgqFN6uPAvl
-         mvFe+4pVjC6AeAwwFAWBmKQ/5i5C1oVgmGgbI52xkjzyihFgjPI492DKkrtBPpl2Yf8S
-         K/pxkbuumRbGVGMUc08sw9HAk1upMrO3Wcat0p/oaWzQyTEXISH6dnawfVUUKNURXau6
-         VYL5E884am60oQEo65gBUTImgePG2vL3urFNh+7XfD0qUMXmFTkYFzPOAE9QHBw9CznX
-         0zXw==
-X-Gm-Message-State: AOJu0YyxDX3n6XLpgxvAQGZ8EAX7bi++SI3uHVCUaSSBUuqTY53hIIkx
-	qACFvf/hzSVUB0iAP3fCO1y4p/e8rJgZNWr18i1OS0BEvlZJtg==
-X-Google-Smtp-Source: AGHT+IE0xJZcg3E/ZTqtVst25+xM6cxuIjy2yKCWB3vdCkHEi2RBGv/FY3KBQnb54tf6I1Rn04uiu/lUVOVp+Gc9dWY=
-X-Received: by 2002:a0d:da46:0:b0:5e7:8d32:dbd5 with SMTP id
- c67-20020a0dda46000000b005e78d32dbd5mr14305900ywe.41.1704233578063; Tue, 02
- Jan 2024 14:12:58 -0800 (PST)
+        bh=VuJtr/eFj8l5yUvmrpmvnpHJm2PY39l6dDM8XPwVvLA=;
+        b=iLNgqeoDI8t1+X3SQbQQJcVthDbyEzvoy4SjwwbdxHV3xBge3vbitY56mCvE1ivvtq
+         kUGWGcbCo39brJn9JxQpwOTjSsjYC/uoiueclMJeaW+ZQbdcdAcUcK2I2fbHO1wp+ERp
+         wdqzHCChEGVKGtkqElHVJ3TNFYpV+gkeZc4a7bGG6jiz+mpy7Lk5qLNIc7B5/90Zqdng
+         jWczC+ZfiqUKHSPpoiHWlis0cFvpN1i3wIGC4tB2MytKGc+DauBpasuv/PsJhAt5Z6Ib
+         pZvNiegzGVKmfMZEYB7OgVLgHTXQxahpxZQ9tqmrVeHjzlMwxKHJsdepWnl6XZrjIrlu
+         z/EQ==
+X-Gm-Message-State: AOJu0YybiNwpGOWJIr1nqIioQmWHG552B4uDNQrKDfQMHuIr68Tootw+
+	gzNpFzxdkj9s3gzSbbFbPWuYqLPkxZvzUybl/KiINMXPtQ6kO5ot/9SzrBbbviM=
+X-Google-Smtp-Source: AGHT+IGYIlhVkzMxXraSGMBYskllORtfHCp3vfn4WERmi0DREtFOUZfXz/hDVyKpGg78aZO4ZXdz/JoY42VtmpUn6AE=
+X-Received: by 2002:a81:aa0f:0:b0:5f2:6cd:3f7c with SMTP id
+ i15-20020a81aa0f000000b005f206cd3f7cmr2671421ywh.20.1704233766490; Tue, 02
+ Jan 2024 14:16:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102155949.73434-1-brgl@bgdev.pl> <20240102155949.73434-3-brgl@bgdev.pl>
-In-Reply-To: <20240102155949.73434-3-brgl@bgdev.pl>
+References: <20240102155949.73434-1-brgl@bgdev.pl> <20240102155949.73434-4-brgl@bgdev.pl>
+In-Reply-To: <20240102155949.73434-4-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 2 Jan 2024 23:12:47 +0100
-Message-ID: <CACRpkdZ6ZUp79OqtWKSR9teqRcrpX6DwmsDmRsh2yxFaX5mTZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] gpiolib: replace the GPIO device mutex with a
- read-write semaphore
+Date: Tue, 2 Jan 2024 23:15:55 +0100
+Message-ID: <CACRpkdb8idg-rtbxLgGjGmfLN3SUWP4Wt4SKfuHd496P+kVL5w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: pin GPIO devices in place during
+ descriptor lookup
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
@@ -78,14 +78,15 @@ wrote:
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> There are only two spots where we modify (add to or remove objects from)
-> the GPIO device list. Readers should be able to access it concurrently.
-> Replace the mutex with a read-write semaphore and adjust the locking
-> operations accordingly.
+> There's time between when we locate the relevant descriptor during
+> lookup and when we actually take the reference to its parent GPIO
+> device where - if the GPIO device in question is removed - we'll end up
+> with a dangling pointer to freed memory. Make sure devices cannot be
+> removed until we hold a new reference to the device.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Looks correct to me.
+Also looks right to me!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
