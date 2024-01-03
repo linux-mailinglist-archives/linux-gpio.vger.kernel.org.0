@@ -1,102 +1,94 @@
-Return-Path: <linux-gpio+bounces-1985-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1986-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BD59822CA3
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 13:06:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0E93822CC2
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 13:12:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 879F31C231EC
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 12:06:38 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D9F1B2136C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 12:12:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6EA9418EB4;
-	Wed,  3 Jan 2024 12:06:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E3A18EA7;
+	Wed,  3 Jan 2024 12:12:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WbE/Jrf9"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tR4LAQLy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f66.google.com (mail-ed1-f66.google.com [209.85.208.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB0618EA7;
-	Wed,  3 Jan 2024 12:06:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f66.google.com with SMTP id 4fb4d7f45d1cf-5451faa3aa7so1790341a12.0;
-        Wed, 03 Jan 2024 04:06:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704283590; x=1704888390; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1ueRG6BSdXWKUjlFJsTZENszkrZcp/l9zvPLzSkiZ9c=;
-        b=WbE/Jrf9WxZlvmNBO0iUEL23iqeSnS8PrL5Ze5YDaQCt9IG4W45dMSkfmd6woDlcLN
-         mwXWtjN+prJ/JVs99FPkGJtHQN59oa4iHyVgC/AiavEdPCAM3ESVSwBTOmM8JWSI6z15
-         UzoQ0+ILg9vbIfU5IqNoVupwC3f8Iscfk5Wonj/fkx3ASGEVDURW3hHSaKIdd8G/8/XX
-         /Gh7aDusnvTXyNQ4L23JMtYfNg53en2lLMSKl6qaFuquZ29H0I8uwEXQHt1FxaT7Pz0l
-         njs/1W6+POc+L51bvbzWlBTEc00i2LxlurTOZLdyL3/5E8gevwLkNoruHbezZAOW2Oh4
-         sgVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704283590; x=1704888390;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ueRG6BSdXWKUjlFJsTZENszkrZcp/l9zvPLzSkiZ9c=;
-        b=xMeSpduE56lrzZEP+IesJj7NAiVblF7EOkQz2I/0dcvUzfAHnjGML4TPyqGYML7dHe
-         0Lo8LOStk3qJwJkV1QbR79ji+bX85RrD1fdL5r2TiYJrYoFLHz2EBdCHNU3b5UCtV65c
-         ygYPElgvvuGBJ2TpBuiZgEk+LbJvprP6YAYRyZAHEzmj890kOUHQxGiHj8IcngpPUgQF
-         E85g+HD1ok9UehIBOiXxLusXCYy0IebS+goxoKOTN2Nlq5SLDYfkI8twEZNdnE4H4pAD
-         SlEBy3g6xwofuHKMpGxArpXhgRJCVjW/31iBttit808YepQL2gEpStC0TFbPwg2+dD+W
-         lFuw==
-X-Gm-Message-State: AOJu0YywBBGZ25uHAXtukzmLUeUgvMTca3CnR0F1NN/OBmPaafet4SiN
-	pf3UdL3PSxC9bfz2pt8GOi70QumFvvx23sTe5Yk=
-X-Google-Smtp-Source: AGHT+IGSfPlSHMAx9inskYXFTF2vjqw1N82QCwuFQZp4SY+UlQpbxoKm0+IV2hG+A2/cZB6KYwsx1fx2lrpi4Qeskdo=
-X-Received: by 2002:a17:906:2843:b0:a23:30ac:fd13 with SMTP id
- s3-20020a170906284300b00a2330acfd13mr22235099ejc.3.1704283589902; Wed, 03 Jan
- 2024 04:06:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8A819444
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 12:12:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1704283960; x=1704888760; i=wahrenst@gmx.net;
+	bh=I8IbvcqJ/V4BVgfuSlOrsiazgtHjYr9gQ62c3psKhEQ=;
+	h=X-UI-Sender-Class:Date:To:From:Subject;
+	b=tR4LAQLyxKBUfz+ZvxYFcQP8XP8Ebu4geGF9w8ecH+tLIzayQaTgn1eOgU1AE4o9
+	 onOAG1GO6sYQmE9fDxLRV1o8iJa1K5JijepdS0ApP0aZNynRZsFfyRZgqrF3B84uH
+	 /nDvyj4n5LDw3BWiTwrHNEBTDZf2/2h56ckU7kNpCW6cyIomCKRPRmOTM7ej46tVS
+	 gY8IkJRVIfjrV9i39mBnMmLRc7iid4bbGnrzg1R/68qSnmFrsZ4ReDU37LzSAPoeK
+	 aQ1uGXmg4WJ0kG9n+EOmIiWWiBCfCU6GDjzF/zCaqytUpTY6l6Wipo+PvB5eDBUjm
+	 VKD/sfxRFW0pMiV1qQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Md6Mt-1qmDG71vuN-00aDl5 for
+ <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 13:12:40 +0100
+Message-ID: <bbc667b5-366b-430f-afd5-fa8a9326d9b7@gmx.net>
+Date: Wed, 3 Jan 2024 13:12:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com> <20230921090027.11136-3-Wenhua.Lin@unisoc.com>
- <ZQwn7lEJVfKWtKDx@smile.fi.intel.com>
-In-Reply-To: <ZQwn7lEJVfKWtKDx@smile.fi.intel.com>
-From: wenhua lin <wenhua.lin1994@gmail.com>
-Date: Wed, 3 Jan 2024 20:06:18 +0800
-Message-ID: <CAB9BWhfa=DZcNibjMCNKLxjbBWnO9qus8+H-AwwX2epjKjDn=w@mail.gmail.com>
-Subject: Re: [PATCH V2 2/4] gpio: sprd: Clear interrupt after set the
- interrupt type
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, Chunyan Zhang <zhang.lyra@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: linux-gpio@vger.kernel.org
+From: Stefan Wahren <wahrenst@gmx.net>
+Subject: pinctrl: Questions regarding pinconf_ops and bcm2835
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:rYAG3VwmYe8HpGxQYKsyrV6OUtH/Ijl36po3pD3XCLNXkxDLFOY
+ zq5AGvkQQvdUGu+1uFZ4YO0hBvOwV/Qkn+zgsMbhZPZjIyaVfWyTVotG796r11kQCvfK7QM
+ WeAJSReUJ1nHvqvonH0vr0h5USijR8iSzwIEPZMfBPUbZyXCey3WOdEzyTE5c4wBB64m9L3
+ fAqda9DpHXqfMM8JOOAjg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:lo6d+CFui6Q=;38E+iNXLnH0VymnssDk/eqv0ug3
+ oytNOIXZn23CCWuaOWZka8FdHU/OEDzTxek25S7ofJD2C6olLk/1HVk1gsnWEyjLHX4NBPD74
+ ZWuUqn+T7sM+pDJnfYlYpLg2Oj9AMN76jzzIcZVh4mXBE86EIYiIVKa4w6RMwmGKJxkG6UySR
+ lDTTlcAyr//Zld5ISDlLdA1p3uEQitRec+7DSzKZ1bHqHaxGwm0QKLv7rjsu33syLOUt3fxWv
+ gWaJeigPib7JoPbUrKVs0vGAma2GEfnvO7NvohpA9OGyERh0vX37j22h6tGaHckMafVO3eWnc
+ i0PZsNlG2If0Z6S4jTDPEnP6EPDa9s6ciBInWYO/l4fq6bVzi0yyE0c+jal0O4ShpXW0WeGOO
+ oW2r66EWnMidfqbcjS/D8MUbEl+k50tJkGrzg+4Y4mW5aKODB960weMbRQThGbdKBgsPkySvC
+ 2aGAG7xIl0Zx+fTzWyE8DjrfZFkmiFhjnKUr9cQoGao+FEDLsMUs9D4VM/KRNhYCnG1WqMGx6
+ yGN7YrLz9pGOgyvXPUyCw3ZGPpysSdqWv8gIlwPOencm5tgpg6WdEKYApU91w+mYHyz6aV5fh
+ yIaxMP5V1qQKXd7JLsT1KKcmwos0h72v/2KaTBd66H5+TjDyayQUPCQ6MOjvzUD7UUpT7rugu
+ yyl4mEtCPPQdQ36YDNyzPQ0q20HAtA4VhweqJts7zSz9Eo9O2tVPRBqUoc8i74+IREPK58jjU
+ FyeudiVG6C1zp0PGghmLNh+Zwz6VkgfJm209k9ND5Qi8rOvFo28Y6PQi+SVtEkNTuh90ftSKW
+ 9Daz7HZ7OP9hwes2d2HPFj6EqY38UAv7O/aTITHFuOw6WQ9QtQ9+Wwcipmq8jLq0qzWigd2Nd
+ dmi4EL7yMKkS4rJTOcSV5g1T/kbogXkGTrkAHmK/x66EoRjMkVqEMV7jrrkRF/szst+5NCcyt
+ EKaXOw==
 
-On Thu, Sep 21, 2023 at 7:24=E2=80=AFPM Andy Shevchenko <andy@kernel.org> w=
-rote:
->
-> On Thu, Sep 21, 2023 at 05:00:25PM +0800, Wenhua Lin wrote:
-> > The initialization state of the EIC module is a high level trigger.
->
-> Here you use EIC, in other places eic. Can you, please, be consistent?
+Hi,
+i recently noticed that the BCM2711 (used on Raspberry Pi 4) doesn't
+implement pin_config_get, but this SOC is able to read back the bias
+settings of the pins. After looking deeper into the pinconf_ops i had
+some questions:
 
-Thank you very much for your review.
-I will fix this issue in patch v3.
+1. Are there any other benefits from implementing pin_config_get except
+of a proper debugfs output?
 
->
-> > If it is currently a high level, the interrupt condition is met at
-> > this time, and the EIC interrupt has a latch capability, which will
-> > cause an interrupt to occur after booting. To avoid this, When setting
-> > the EIC interrupt trigger type, clear the interrupt once.
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+2. Since the pin direction of BCM2835/2711 (input/output) is already
+handled by pinmux_ops via gpio_set_direction, how should pin_config_set
+handle PIN_CONFIG_OUTPUT_ENABLE?
+
+3. In case pin_config_get is implemented should the parameter
+PIN_CONFIG_OUTPUT_ENABLE and PIN_CONFIG_OUTPUT be handled?
+
+Best regards
+
+
 
