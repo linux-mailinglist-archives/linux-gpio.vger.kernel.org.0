@@ -1,135 +1,142 @@
-Return-Path: <linux-gpio+bounces-1979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1980-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1A4BE822A6E
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 10:47:59 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BC9B822A89
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 10:50:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BDC2D284E1E
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:47:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1C4D1C23250
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:50:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71F5518627;
-	Wed,  3 Jan 2024 09:47:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1A31862A;
+	Wed,  3 Jan 2024 09:49:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VNE1vr6+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZu/o/vB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D596B18623
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 09:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7cbeaacbcb8so2849421241.0
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 01:47:45 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D956A18E35
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 09:49:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso1136939b3a.2
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 01:49:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704275265; x=1704880065; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/Uu3c8CS1lVfKVNMcApNeIRZ8Y8V3EqweSncyL4lcTY=;
-        b=VNE1vr6+zbcW+RbuKh48/16HqjYZBHVcz0NYHe6UiYsVmbAde+BZjIMHpmbK8O+C4M
-         hjK+UG4v0/aOOvpogWzUWGJJw2wWt3BTRPKh9BH7OMJ2RFLeyJuE5wGdRzAdmx6taF3U
-         WosPh1KaxZAHyIQqYqbN73SbzE8hOAm6miln6AlWZasmp+iPBfx6nOmY97nWlQk2F040
-         eKx4W169JBStTe+7qr2H9KhYEAVSeECiVfaKokqZ9eB1MomNCXAZnQeOMMalwmfQs/eU
-         gXHxFwewzNeZ7Ga16rKuBAlLxfrQhY8rajcwasv3SW6lehcMRtl1BHOqkdKnt4dEVZKg
-         Rofg==
+        d=gmail.com; s=20230601; t=1704275375; x=1704880175; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=L8Swz2yIZ/T2u7iElJjdidE/5nYsKtVPHXA9sRYctrg=;
+        b=DZu/o/vBCVdGjInbyUhbwpva4AXkxC5ZNTM14CjP+dzLvzaVtQRbJOVRA5MoNT9bjo
+         jFJzSbEGV3+6Xqtr1alKlusqJ5W6YTlqPKTr6BPEN9a4+03gmhG2K2Wa6OFtAkauIBAc
+         pvNklAYT+eV2VcpfSk3rwcdgCY/74mEuykcKj27PGwSLFn+0NEFj4ihFmAKBMKYK4imV
+         wzf1Ei9pqHh56tnCGEMZvfDYrxS5sURbnRoljtz6wRCg9b14efn3b3kQw8mR2egjxqom
+         obVJCvHSUXdbae+TSp3cVj25JxmaOOu0LFElT9x09COygrN6IncKhUwRofOjx4AtzAuW
+         1aKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704275265; x=1704880065;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/Uu3c8CS1lVfKVNMcApNeIRZ8Y8V3EqweSncyL4lcTY=;
-        b=Bu45WaFlyWJEa2QzlusjuM2S2gUdD88mWHX9VKx0HK+PIFi5PBIgBjhkdfTdHhWGLe
-         pBMXlEiXfeLxXs3p6LphBaBFTrtHffkCRxO8kIa9J/AF8/pTo+cTUyoZnIeTSD2mhdH7
-         E/MgKFmhhH34vSOQUQ0Hq7Mf0m4yEcQXqdhDHu91FzpotkEereaDPdllBvFMsJvbFqSg
-         6hDO47I/xUwLCSWxob9cT3vSGu6Ri/p82MSIZt5dowFIPm2yxk5I4sq01wDjY7/Kh+mQ
-         LI8n5N+IUj9GqC5LryWMatW61zTKcz9jTlxDwieB48RzSznZEMFSvpKjiWXibnQgTpVX
-         F36w==
-X-Gm-Message-State: AOJu0YwQgUTyvAEGFqVJPf0q/psI9rjQ7uUwZKeisDUMqfg+5lwvE0ye
-	kqMpmieMOCubKRWYd+GjahcmEvpVDsStKkhGlepZ1IfRYoNLuw==
-X-Google-Smtp-Source: AGHT+IEYu7lrKPktfj6xVwnpsPDmZsLaProxg+WpiLZAf8IdKHO8AmnXGk+VkPfNvNleTDCFWcsjOBbBtgiFrLe2YUo=
-X-Received: by 2002:a05:6102:2b86:b0:467:7814:ec21 with SMTP id
- ib6-20020a0561022b8600b004677814ec21mr2561562vsb.9.1704275264727; Wed, 03 Jan
- 2024 01:47:44 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704275375; x=1704880175;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=L8Swz2yIZ/T2u7iElJjdidE/5nYsKtVPHXA9sRYctrg=;
+        b=f351Dy6o6g14AsHNFNKDPWC0zQ2L3T9qnI0uUW268z7fp9b3gz96P1rJVDgjs3PLoc
+         fC7U59QhAP86wE5YXSs3Po+a6d0/MOMhadgLMBCVdU9kp5ueMEQCf6aMNtKdPayDn91m
+         Rr6ZrXxySjtQ67HUQx4/bZ6vhxuXPWQs5vuYAAY9YlON+bUQn/L8tSxYS6A+EW5Fi3gL
+         Sus3q59JziLbMuOBdqik8Yl12+Te51fp3dV7QSYpHtiMNI6K7Esyl2plQR+Xg2gb0ez/
+         uohX2WPKtIWi74j+ce9Br6rC4gKOKFNCX6IGYOlBwa1Vp6zfA/GJihd9iPc1PmIqAWjk
+         kaxg==
+X-Gm-Message-State: AOJu0YzwgWIUJNAYIADUcWseiQCOXdez995GKFjqzu4Q3mNKM1Io4jef
+	1wVd2Shn2KbTdEZDa8N80AQ=
+X-Google-Smtp-Source: AGHT+IGCbgvcZEzP5N5Jle1XCM/+LiQByIN65lwK1fJIzetYGHAbDcfLpUgIS8u0prC0ZJYvpczynQ==
+X-Received: by 2002:aa7:8185:0:b0:6da:18e8:6f83 with SMTP id g5-20020aa78185000000b006da18e86f83mr3881515pfi.62.1704275375054;
+        Wed, 03 Jan 2024 01:49:35 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id k16-20020aa792d0000000b006cbe1bb5e3asm22447691pfa.138.2024.01.03.01.49.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 01:49:34 -0800 (PST)
+Date: Wed, 3 Jan 2024 17:49:31 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Seamus de Mora <seamusdemora@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver
+ 2.1
+Message-ID: <20240103094931.GA117646@rigel>
+References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+ <20231228092915.GA67274@rigel>
+ <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231228104800.24913-1-tychang@realtek.com>
-In-Reply-To: <20231228104800.24913-1-tychang@realtek.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Jan 2024 10:47:33 +0100
-Message-ID: <CAMRc=MeB6UBf2cCrB8XHtfKigmS3Gb41SV-G6F+0X7Dd+7oatw@mail.gmail.com>
-Subject: Re: [PATCH v5 0/2] Add gpio driver support for Realtek DHC SoCs
-To: Tzuyi Chang <tychang@realtek.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
 
-On Thu, Dec 28, 2023 at 11:48=E2=80=AFAM Tzuyi Chang <tychang@realtek.com> =
-wrote:
+On Wed, Jan 03, 2024 at 01:51:53AM -0600, Seamus de Mora wrote:
+> On Thu, Dec 28, 2023 at 3:29 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Wed, Dec 27, 2023 at 07:19:54PM -0600, Seamus de Mora wrote:
+> > > Hello,
+> > >
+> > > I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'd
+> > > like to share a few thoughts from that experience.
+> > > <snip>
 >
-> These patches add the bindings and the gpio driver for Realtek
-> DHC(Digital Home Center) RTD SoCs, including RTD1295, RTD1395,
-> RTD1619, RTD1319, RTD1619B, RTD1319D and RTD1315E.
+> > Then you might want to update your kernel - the kernel device driver was
+> > changed to support peristing [1].
+> >
+> > I get this on my Pi4 running bookworm:
+> >
+> > $ gpioset -t0 GPIO23=0
+> > $ gpioinfo GPIO23
+> > gpiochip0 23    "GPIO23"                output
+> > $ gpioget -a GPIO23
+> > "GPIO23"=inactive
+> > $ gpioinfo GPIO23
+> > gpiochip0 23    "GPIO23"                output
+> > $ gpioset -t0 GPIO23=1
+> > $ gpioget -a GPIO23
+> > "GPIO23"=active
 >
-> Change log:
-> v4->v5:
-> 1. Add more description in the Kconfig.
-> 2. Add comment for the counter-intuitive number 31.
-> 3. Convert to use cleanup API and module_platform_driver() macro.
-> 4. Simplify some of the code as suggested in patch v4.
-> v3->v4:
-> 1. Arrange the compatible list in alphanumerical order.
-> 2. Remove the size check for the offset array.
-> 3. Add the debounce callback.
-> 4. Conducted a review of the critical section, employing raw_spinlock_t f=
-or locking purposes.
-> 5. Add gpiochip_enable_irq/gpiochip_disable_irq to fulfill the immutabili=
-ty requirements.
-> 6. Use irqd_to_hwirq to get hwirq.
-> v2->v3:
-> 1. Remove generic compatible and use SoC-specific compatible instead.
-> 2. Add the missing descriptions for the rtd_gpio_info structure members.
-> 3. Assign gpio_chip fwnode.
-> v1->v2:
-> 1. Add description for DHC RTD SoCs in the bindings.
-> 2. Revise the compatible names in the bindings.
-> 3. Transitioned from OF API to platform_device API.
-> 4. Use u8 for the offset array within the rtd_gpio_info structure.
-> 5. Record the size of each array within the rtd_gpio_info structure and
->    implement checks to prevent out-of-bounds access.
-> 6. Use GPIOLIB_IRQCHIP helpers to register interrupts.
-> 7. Use dynamic allocation for GPIO base.
+> Yes - the device driver on my bulleye is current; that change was
+> committed back in 1Q 2023 IIRC...
 >
-> Tzuyi Chang (2):
->   dt-bindings: gpio: realtek: Add realtek,rtd-gpio
->   Add GPIO support for Realtek DHC(Digital Home Center) RTD SoCs.
+> I hope I've not already asked this, but:
+> In ver 1.6.X of libgpiod, gpioset exits immediately, and returns to
+> the bash prompt. The GPIO line remains set at the value designated
+> after gpioset exits. AIUI, the driver change from 1Q 2023 was
+> responsible for this.
 >
->  .../bindings/gpio/realtek,rtd-gpio.yaml       |  69 ++
->  drivers/gpio/Kconfig                          |  13 +
->  drivers/gpio/Makefile                         |   1 +
->  drivers/gpio/gpio-rtd.c                       | 604 ++++++++++++++++++
->  4 files changed, 687 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gp=
-io.yaml
->  create mode 100644 drivers/gpio/gpio-rtd.c
+> In ver 2.1 of libgpiod, gpioset (without options) does not exit. This
+> means there is no return to the bash prompt. The GPIO line still
+> remains set at the designated value, so there is no change in the
+> behavior of the GPIO line between ver 1.6.X and 2.1.
 >
-> --
-> 2.43.0
+> My question is why does the un-optioned gpioset ver 2.1 not exit - as
+> it did in ver 1.6.X?
 >
 
-I applied this series. For the future: the commit subject should have
-the "gpio: rtd: ..." prefix. I added it this time.
+You did, and I answered on SE.
+But to reiterate; gpioset v1 exited immediately and that caused
+confusion when the driver would revert the line to its default state.
+That made it look like gpoioset wasn't doing anything or was generating
+a glitch.
+That results in "gpioset doesn't work" bug reports, and we got tired of
+that.
+The decision was to make it block by default to make it clearer that you
+lose control over the line when it exits.
 
-Bart
+In short, we changed it because people complained about it, either
+explicitly or implicitly.
+
+The -t0 option can be used to emulate the v1 behaviour.
+
+Cheers,
+Kent.
 
