@@ -1,90 +1,103 @@
-Return-Path: <linux-gpio+bounces-1976-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1977-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3A318229B0
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:47:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8846A8229C4
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:51:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6C11FB22635
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:47:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 404F12851A9
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:51:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F14F01804D;
-	Wed,  3 Jan 2024 08:47:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D6818049;
+	Wed,  3 Jan 2024 08:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RmOlLDEO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from cstnet.cn (smtp84.cstnet.cn [159.226.251.84])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE5AC18049;
-	Wed,  3 Jan 2024 08:47:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-05 (Coremail) with SMTP id zQCowAAH6AwZH5Vl66EnAw--.36358S2;
-	Wed, 03 Jan 2024 16:47:21 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: patrice.chotard@foss.st.com,
-	linus.walleij@linaro.org,
-	bartosz.golaszewski@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] pinctrl: st: Return pinctrl_gpio_direction_output to transfer the error
-Date: Wed,  3 Jan 2024 08:50:58 +0000
-Message-Id: <20240103085058.3771653-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361AA18622
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 08:51:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7cd7d5c1276so607640241.2
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 00:51:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704271888; x=1704876688; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=8vgekKZ/OlG7JICiZDEFn9JZQAvlVZRayuPQgdK4A3Y=;
+        b=RmOlLDEOGcUN6ItkidKPz5rcHWhOwPSxPO6J2UcmKGHkGY9eVksKFn4NldD8O4opW7
+         OTDNm8A56G43f3E3RDa1H+CEuXOFgqE+RGQbyBezBnxAXO1NuvlbxmiOcwp8JWgs1aOc
+         LEqjlQvz+Uqwg9dDbHsa8OTRYI7GAr7f1kVEmKi+cApYX6Mf72qtVtGa2bCzLwpAowBs
+         QqU8b9rIQlnZyzw5AY+VowElwQUGPVTxyCurCoLXN5PMpFCTZhlqkMlnMkHAOPbSvQFr
+         WihHlP5js52lGyd69ky07xo9DqnmSH7ALAaQ9YhBA57U0v2UUCKFzhSQVF6l4Gk7Yacx
+         mp0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704271888; x=1704876688;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=8vgekKZ/OlG7JICiZDEFn9JZQAvlVZRayuPQgdK4A3Y=;
+        b=F7dMNFHhgskYDX1a0taWzMH0XGtIo0TRiOdv8qLmFy97Rkder+T+fY/didb1Y0fTnQ
+         318z/5+gNDQDaAeA+eCURV5Ctqsnmv3yrEsBrilIckrtjMc9wqFaadYghDlgeePN4dMv
+         XraTuDUjBxm2dPcYnMlJsAQubrOVQPkIcF+CyEI+epIVpwUx+DP4IrszmWtlgsW/GqzM
+         9RbRyFNa9S8o6uZGW4b4EJjToDHuegQQKgpef0jnC5WbTDdabdrh/leUr0cSCbaU+4DV
+         cq+Uhrb2nmHHR75PdjX5yBn+L/YRnl1Jeih1Rx0AzmCsx0c78HM9MKwkFNsrbuNHQ/8V
+         TpVQ==
+X-Gm-Message-State: AOJu0YzWDuYConvHreYZhAMtAioSdnR7x7T1i+ZsgKpaMhHTTjtZ4iN8
+	CVoG/W6/xaK38T7hDEzbU/7STa830B6NSH9a96rgIRuMLDbZ8g==
+X-Google-Smtp-Source: AGHT+IGlCDun+5AZYjonVjIbZIWyoWJfpOTl00hEI6erZzD7dQFVLcGlY2MgsTLACmwfHfuGizoarZKojMhAgXVHtjI=
+X-Received: by 2002:a05:6102:4b15:b0:466:ecfa:88de with SMTP id
+ ia21-20020a0561024b1500b00466ecfa88demr9565508vsb.14.1704271888154; Wed, 03
+ Jan 2024 00:51:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:zQCowAAH6AwZH5Vl66EnAw--.36358S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrtw4rtr1fuw1kZw4rJr45Awb_yoWfZrX_Ca
-	4fWFy7JryUC3WkWr1ayw13XFyIkanrXF10vFsYqr1akry5Cw4qv3s7urW5G3s7WrW7J345
-	GrWDXryrAw47AjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbcxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
-	A2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr0_
-	Cr1l84ACjcxK6I8E87Iv67AKxVW8Jr0_Cr1UM28EF7xvwVC2z280aVCY1x0267AKxVWxJr
-	0_GcWle2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-	2Ix0cI8IcVAFwI0_Jw0_WrylYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lc2xSY4AK67AK6r43
-	MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr
-	0_Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUAVWUtwCIc40Y0x0E
-	wIxGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVWUJV
-	W8JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAI
-	cVC2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUjYLvtUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+References: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Jan 2024 09:51:17 +0100
+Message-ID: <CAMRc=Md-9vh7-r+SWm-TFPhonntindgj4cjeATUr2uZxEUxLxw@mail.gmail.com>
+Subject: Re: [PATCH V3] gpio: pmic-eic-sprd: Configure the bit corresponding
+ to the EIC through offset
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Return pinctrl_gpio_direction_output() in order to transfer the error
-if it fails.
+On Tue, Jan 2, 2024 at 9:28=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
+rote:
+>
+> A bank PMIC EIC contains 16 EICs, and the operating registers
+> are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
+> Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
+> will cause the configuration of other EICs to be affected when
+> operating a certain EIC. In order to solve this problem, configure
+> the bit corresponding to the EIC through offset.
+>
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> ---
+> Change in V3:
+> -Change title.
+> -Change commit message.
+> -Delete the modification of the two-dimensional array maintenance pmic ei=
+c,
+>  and add the corresponding bits to configure the eic according to the off=
+set.
+> ---
 
-Fixes: b679d6c06b2b ("treewide: rename pinctrl_gpio_direction_output_new()")
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/pinctrl/pinctrl-st.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
-index 1485573b523c..5d9abd6547d0 100644
---- a/drivers/pinctrl/pinctrl-st.c
-+++ b/drivers/pinctrl/pinctrl-st.c
-@@ -723,9 +723,8 @@ static int st_gpio_direction_output(struct gpio_chip *chip,
- 	struct st_gpio_bank *bank = gpiochip_get_data(chip);
- 
- 	__st_gpio_set(bank, offset, value);
--	pinctrl_gpio_direction_output(chip, offset);
- 
--	return 0;
-+	return pinctrl_gpio_direction_output(chip, offset);
- }
- 
- static int st_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
--- 
-2.25.1
-
+Bart
 
