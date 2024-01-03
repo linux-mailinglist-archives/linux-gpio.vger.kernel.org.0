@@ -1,103 +1,164 @@
-Return-Path: <linux-gpio+bounces-2000-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2001-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFE86823596
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 20:30:18 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BF47C8235DF
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 20:48:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B4441F24F0C
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 19:30:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 08F4BB23DF8
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 19:48:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 534E41CAA8;
-	Wed,  3 Jan 2024 19:30:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DB771CF8A;
+	Wed,  3 Jan 2024 19:48:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="RVc/2TzO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DLixBNzT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F8731CAA6
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 19:30:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1704310206; x=1704915006; i=wahrenst@gmx.net;
-	bh=nHuUi5SfMms56Ibzm4hSkheF+BqJFDwXZ2pTCT9vxSE=;
-	h=X-UI-Sender-Class:Date:In-Reply-To:To:Cc:From:Subject;
-	b=RVc/2TzOHONJyBliwYufC5eQZqPKlg3m0izvM6TjNrPsXuS8nzf3PfMsL4tZm4sV
-	 Q+aeLe9GPkBDi65yx93BVuAa0rSpLxE5+ktt6uZZrb9Lr+jubU9DEf/a+3pcT09Wz
-	 DlGKz53AxExhd2nXwBpGPnUTvCZFCuX35uyUUGJX2zQhqJTpA45Ct5Vb7wphaPVTh
-	 LnVKczK68afvP0k23ImxvRK4dx3Zjadh5DwsKH5szma8fpCkjUvUEB0kcgf4vxmpR
-	 UGT1SsZzviWGTAvEHMhHuWlOtkMnUnf4TT1GiX3o04ZiIOmhVlLwQICelqFi56eFx
-	 DZ8notlVlnZNprzFnw==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N6bfq-1r9RnE393u-0186jL; Wed, 03
- Jan 2024 20:30:06 +0100
-Message-ID: <68431c5c-e74c-49a6-be3c-9a0d85cc0030@gmx.net>
-Date: Wed, 3 Jan 2024 20:30:06 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 935371D528
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 19:48:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2cd1919f0acso11994081fa.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 11:48:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704311311; x=1704916111; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3ee+tGBq0nwSKNBK0Aoan0iDCSn1AN7fXkS3uqTIYK0=;
+        b=DLixBNzTKUU10DzxXPp5H3NWTrxw3rrTO/CkAvciHN54yChhOVh+TUO3+0Sp3SCjCS
+         gG5uVDufvmmA7rCJNMyvfWz8N5kLhft7p7Sqf8SSXSBWVY3uAAPtpjXS2YtUWpA/UHue
+         pQsB/0msBZei2+ZwGh3xGlEO4eCDYL0Z4ytT/Bz7R7CAQVX+umRUziMYUjz6i8dwH/FN
+         TnNSG06wxw/YwHK2PqEVn+8mFZB/g4HQ2LsRkl7KjzwfNGfSKEQqnsG1YsFFeAxfN5Uh
+         qiX5vDjZkrEXAZcaQN8cG84wmc5oS69oUHktbQl0k6fwRHuzv5xfanwdP4Agbpuy1tlK
+         qHkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704311311; x=1704916111;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3ee+tGBq0nwSKNBK0Aoan0iDCSn1AN7fXkS3uqTIYK0=;
+        b=Xs2MAbu5/O37s0MlqnoULw/abygX5bz9ASGAKJdENG5qEl3nFWEpKfclDw3vjoYsXy
+         b8dLSg1nkiptHk3Iq9F30YdRcQgIjWhhpH/oe9zLUjOdxCgficuef2FNvK/gbuN9aYpA
+         G9b3RWT7s9tOgZAsQUQDfkxFDIKFAJkaens3fTwhAfoJYxbWuYjZxLh6UWHvDd3vGq8t
+         IuX18+0GFhiPsleKht9+P9Ldj7dcgyN3lLhn4NO1jkQocsg7+jPwJzvSJyN+o3N/x5zc
+         jwfBV9XfyEf9voDm7tgrhvqL7aixZZFHCNcDD5jp28Vr3VvDpuVScF7LIRW5ls2Q4iGE
+         LWWg==
+X-Gm-Message-State: AOJu0YxAbocd2ejsezCRAfg2t8ITRFYLdHPOe1JyfYlZ9l5iqkXxDN+8
+	2D7wsjVHTlh3pJUviyaug7NlCTsmtTCN0N6Yiv2dMOaR
+X-Google-Smtp-Source: AGHT+IEPUO/W4nCZsjgFXzmlGR5PtjWdlrsu3bqq04cA2c0lmB3k+kg8JubbZHJtlKB8a3s8prhaRRC+NdrB3wkBrmM=
+X-Received: by 2002:a2e:a4d9:0:b0:2cc:f02c:c97d with SMTP id
+ p25-20020a2ea4d9000000b002ccf02cc97dmr4067824ljm.87.1704311311271; Wed, 03
+ Jan 2024 11:48:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-In-Reply-To: <20231228092915.GA67274@rigel>
-To: Kent Gibson <warthog618@gmail.com>,
- Seamus de Mora <seamusdemora@gmail.com>
-Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver
- 2.1
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+ <20231228092915.GA67274@rigel> <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
+ <20240103094931.GA117646@rigel>
+In-Reply-To: <20240103094931.GA117646@rigel>
+From: Seamus de Mora <seamusdemora@gmail.com>
+Date: Wed, 3 Jan 2024 13:47:54 -0600
+Message-ID: <CAJ8C1XPe5nG30O89AVboZa=iqRu=-4=jNtuWj3v6KY921kfq8w@mail.gmail.com>
+Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver 2.1
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:gVRJjUi3JBaptJg40W2iKpEp6+XBU5sJOwgMf7mjR/rh6FyzAb2
- BnZqWPijh42KKDItvpP7Xld/xZ8U4wjb6xYyxCS5ycawrg8lKHuEMYX/WRgu3NgJ8JDCT8N
- 2LmoPxpQxEzpEsQTcZAKF7qIvOErBZkYsPOzZbWF9qI2bLLvwiCP3J7TYvcHLCXCPYlCbjC
- mkGRX4rSJMzlrNKDYcptg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:wA4zF4EG4vc=;Yp1kto117kEdodiKlYL8TMTkRAR
- aGGKM5cmWEz2kXiiHkHUcGR94obFq+FauvlFEqF5kyekARDqnYe5HC+X52Buc5VqCx0+iepKP
- /v7FseJqJKqPRneil2vMxuIoeU7n9o+TB0UjEC6IoN5n1zg9924Ki7+NXsLqKAw775+yp5cOg
- 6Kj86ax29FNZXGkFp8IGY2CQCpLa9RIgTY71v2R0nA/bIYa/kcgsoqsnLtr/GqujeDV3Wj8/y
- kUZUKYwdX8eo3EmuJUWXeUytO43WJ5FYO0PUDarBkDLiicbgBotyMTbs7B/lP/UaeoHUIdGfZ
- YlwU+29Pt5s7SvNIzZ8622dY9VWXDt6EVggk2GfiOXPd6PxR1sW8UD3wj2qelM1i9J4K+DUTT
- EgHwQCOSaJBil4SgLFzVPtctkGwQLPzGcLKKUPd9MK4GQcKHz8ErIZAX+gw9XUyPBIStPyO+J
- ZjMqy+n0Ct2yjRYpDzaTWrf5dUTSpPxWu24YMoWDENKjVu8yNHoIR2LN/gsu1f22Odntijjzg
- j150y9NC/xcPHi9wjzLwbhKGa+1WkdXSyejy3jxHlZE7LSI50N+VgTSsA3CTk2C4wMsEIJHRw
- CtijclHZW1OVyI6MFyjU2US2WEPExLbkjLoC0t2hrxpra47Yo2yYtTtJilERxaFIJTIJwryPQ
- kCT1lzUfpeglrhQpi3IKUnsNvPvCVeN9i0E5Vg5cEkQ55YB+om6Iry55BxKtPn515M0gMrQp1
- 6mrZC105gsVq+kigGgSMSxUZiS7uI4RO2WTjd7znDGESKghu622CdQ+3ymS2/dT4y49kXsxRj
- z3dyRhtaQbz/K7Ad+SDfYckdUvHSkp+YPuQOy7m4FfV3V/zaeuSmxVCvm3amurnNSN561B4gd
- oy7wAHJ38gugB3lJTanYio/KIl5UT06oMvRQNGMjUISDtj6huc32Aj9dkpWLoOk1wDhvK/Plz
- ScFAj2CrB7anWQ13nNEKvz2ImIQ=
 
-Hi,
-
-> Then you might want to update your kernel - the kernel device driver was
-> changed to support peristing [1].
+On Wed, Jan 3, 2024 at 3:49=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
+rote:
 >
-> I get this on my Pi4 running bookworm:
+> On Wed, Jan 03, 2024 at 01:51:53AM -0600, Seamus de Mora wrote:
+> > On Thu, Dec 28, 2023 at 3:29=E2=80=AFAM Kent Gibson <warthog618@gmail.c=
+om> wrote:
+> > >
+> > > On Wed, Dec 27, 2023 at 07:19:54PM -0600, Seamus de Mora wrote:
+> > > > Hello,
+> > > >
+> > > > I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'=
+d
+> > > > like to share a few thoughts from that experience.
+> > > > <snip>
+> >
+> > > Then you might want to update your kernel - the kernel device driver =
+was
+> > > changed to support peristing [1].
+> > >
+> > > I get this on my Pi4 running bookworm:
+> > >
+> > > $ gpioset -t0 GPIO23=3D0
+> > > $ gpioinfo GPIO23
+> > > gpiochip0 23    "GPIO23"                output
+> > > $ gpioget -a GPIO23
+> > > "GPIO23"=3Dinactive
+> > > $ gpioinfo GPIO23
+> > > gpiochip0 23    "GPIO23"                output
+> > > $ gpioset -t0 GPIO23=3D1
+> > > $ gpioget -a GPIO23
+> > > "GPIO23"=3Dactive
+> >
+> > Yes - the device driver on my bulleye is current; that change was
+> > committed back in 1Q 2023 IIRC...
+> >
+> > I hope I've not already asked this, but:
+> > In ver 1.6.X of libgpiod, gpioset exits immediately, and returns to
+> > the bash prompt. The GPIO line remains set at the value designated
+> > after gpioset exits. AIUI, the driver change from 1Q 2023 was
+> > responsible for this.
+> >
+> > In ver 2.1 of libgpiod, gpioset (without options) does not exit. This
+> > means there is no return to the bash prompt. The GPIO line still
+> > remains set at the designated value, so there is no change in the
+> > behavior of the GPIO line between ver 1.6.X and 2.1.
+> >
+> > My question is why does the un-optioned gpioset ver 2.1 not exit - as
+> > it did in ver 1.6.X?
+> >
+>
+> You did, and I answered on SE.
 
-> $ gpioset -t0 GPIO23=3D0
-> $ gpioinfo GPIO23
-> gpiochip0 23	"GPIO23"        	output
-> $ gpioget -a GPIO23
-> "GPIO23"=3Dinactive
-> $ gpioinfo GPIO23
-> gpiochip0 23	"GPIO23"        	output
-> $ gpioset -t0 GPIO23=3D1
-> $ gpioget -a GPIO23
-> "GPIO23"=3Dactive
+I missed that - for me I guess it's lost in the details.
 
-in order to increase the confusion, i need to mention that this behavior o=
-nly applies to the vendor kernel tree. The bcm2835 pinctrl driver in mainl=
-ine kernel always falls back to GPIO input during the pin is freed since 2=
-016.
+> But to reiterate; gpioset v1 exited immediately and that caused
+> confusion when the driver would revert the line to its default state.
+> That made it look like gpoioset wasn't doing anything or was generating
+> a glitch.
+> That results in "gpioset doesn't work" bug reports, and we got tired of
+> that.
+> The decision was to make it block by default to make it clearer that you
+> lose control over the line when it exits.
+>
+> In short, we changed it because people complained about it, either
+> explicitly or implicitly.
+>
+> The -t0 option can be used to emulate the v1 behaviour.
 
+But... you've also explained that libgpiod/gpioset's
+default/proper/correct behavior is to delegate the persistence issue
+to the driver (or pinctrl in the RPi case) - right?
 
+So it **sounds like** what you are saying is this:
+
+    gpioset does *not exit* because people complained about lack of
+    persistence. When the persistence issue was fixed in the driver,
+    we also fixed it in gpioset by not allowing it to exit.
+
+Have I got that right??
+
+If so, why not stick by your initial assertion that persistence is a
+driver issue - not a libgpiod issue?
+
+I won't make a recommendation - or tell you what I *think/feel* -
+because I know "you don't care", but if this is the case...
+
+Best Rgds,
+~S
 
