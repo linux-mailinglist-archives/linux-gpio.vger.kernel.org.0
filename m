@@ -1,192 +1,114 @@
-Return-Path: <linux-gpio+bounces-1997-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1998-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8C17823490
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 19:35:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39896823576
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 20:17:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2BE341F2502F
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 18:35:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C93B71F26073
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 19:17:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9D101BDD8;
-	Wed,  3 Jan 2024 18:35:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ye011TIU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCE161CA9F;
+	Wed,  3 Jan 2024 19:17:47 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B181C698
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 18:35:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4b7a3189d47so423766e0c.0
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 10:35:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704306928; x=1704911728; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OV3rv5Mhf1Yf5Hva/rKIG3fd796vqiDDqmQoJ1yCIbQ=;
-        b=ye011TIU8X7WKRiaqZi9gxGfjLFHVw9A4bh3tsl3wUlA9g4B4q+e1zKi+SXRECwcH8
-         8cWKD7LAEQZSzTjz2JvT3/13sAxW2wBM44biCl8gfLINdEIRmKhMX+ukPADgY8UYeVqK
-         YnM0OpokmJKHx/vFi3EBSRI1l8pjYBCgo1Y818un+Gr7cjWqF0PrUjEAx5RZw8LHzpRx
-         /Vdu/fycg9cpvYPcCH0Lj7+sBUlrKvvpT+BoiDIXKbPodz4Z5nf3+4aekyW0foGNaZTb
-         CaHaKiw2SLJTeyWHa192i+dseBjpXHkKLAx+aPBSuzV3YdPkha1TSzlETuKsz5HO4zls
-         QbGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704306928; x=1704911728;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OV3rv5Mhf1Yf5Hva/rKIG3fd796vqiDDqmQoJ1yCIbQ=;
-        b=ZBpt84N6SS6r7tInV8DmqqMoFgAki6i2q5Y1nbv0ugT6EB3375KvjWlrBHax+MIY3R
-         zr+4x6hyZpykUUyAnqVEnrT71WM304jM7Qjz62l+Hbl4wEZK4VB1nYZsJwpHz/WJ4Fwo
-         Gf+EHcUW0xTW+XpyYU1qacHo8OmO0yaBWw5fStiD6Pf4XHEFceh7ypuRl22oXeHBXybK
-         cjbn4p354lTAPVcsnZOscoK8bxDo8AHyYhRyuP4tJ19B3F3X3Cy11Nj2dMndF9M4JTWR
-         QZgQuo7kxlNWsyz9FlfJyqssX6jHjgguMT2YPtEeGRBk5Kv4G5uGkW9audFafZLWr6am
-         6Q0A==
-X-Gm-Message-State: AOJu0YzFvpfZJDcrvDkntUWxDvzdOcCJ8CfxMFIObalF8pgip5TnP/TS
-	qyLyhey8DLv3UQr27Aa6R1DXQ04tYbhfckf6EwBX/qkTrB1+jw==
-X-Google-Smtp-Source: AGHT+IEGHSHt84x/2P/f8NakMgMWM/na4uWQGJ36qPDNBdNLn4Ve0rO/IxWWViUkUUr3BR2/y2qOje1qYfPSZALyBWI=
-X-Received: by 2002:a1f:fc4c:0:b0:4b7:e07c:57b6 with SMTP id
- a73-20020a1ffc4c000000b004b7e07c57b6mr424081vki.7.1704306928434; Wed, 03 Jan
- 2024 10:35:28 -0800 (PST)
+Received: from wormhole.robuust.nl (leaseweb-ip1.robuust.nl [178.162.147.1])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 195241CA9B
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 19:17:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=opensourcepartners.nl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=wormhole.robuust.nl
+Received: from costar (helo=localhost)
+	by wormhole.robuust.nl with local-esmtp (Exim 3.36 #1 (Debian))
+	id 1rL6kB-00009t-00; Wed, 03 Jan 2024 20:17:35 +0100
+Date: Wed, 3 Jan 2024 20:17:35 +0100 (CET)
+From: "J.A. Bezemer" <j.a.bezemer@opensourcepartners.nl>
+X-X-Sender: costar@wormhole.robuust.nl
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+cc: linux-gpio@vger.kernel.org
+Subject: Re: [libgpiod][PATCH v2] core: fix deselection of output direction
+ when edge detection is selected
+In-Reply-To: <CAMRc=MeaD6DQq_xph4H+_c=Mrix-Wgcafkdhh4ByMsFi9A2AwA@mail.gmail.com>
+Message-ID: <Pine.LNX.4.64.2401032015330.31157@wormhole.robuust.nl>
+References: <Pine.LNX.4.64.2401021550390.16108@wormhole.robuust.nl>
+ <CAMRc=MeaD6DQq_xph4H+_c=Mrix-Wgcafkdhh4ByMsFi9A2AwA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
- <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com> <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
-In-Reply-To: <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Jan 2024 19:35:17 +0100
-Message-ID: <CAMRc=MeyHkHyK7YVx_5YpPxvgY4b2XTBtNVHDrC3FNxiEg4Bjw@mail.gmail.com>
-Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
-To: Seamus de Mora <seamusdemora@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: MULTIPART/MIXED; BOUNDARY="1616093619-1190470617-1704309455=:31157"
 
-On Wed, Jan 3, 2024 at 6:53=E2=80=AFPM Seamus de Mora <seamusdemora@gmail.c=
-om> wrote:
->
-> On Wed, Jan 3, 2024 at 4:47=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--1616093619-1190470617-1704309455=:31157
+Content-Type: TEXT/PLAIN; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+
+
+On Wed, 3 Jan 2024, Bartosz Golaszewski wrote:
+> On Tue, Jan 2, 2024 at 3:52=FF=FFPM J.A. Bezemer
+> <j.a.bezemer@opensourcepartners.nl> wrote:
 > >
-> > On Thu, Dec 28, 2023 at 2:20=E2=80=AFAM Seamus de Mora <seamusdemora@gm=
-ail.com> wrote:
-> > >
+> > Fix deselection of output direction when edge detection is selected in
+> > make_kernel_flags(). Use correct flag to perform deselection rather tha=
+n
+> > a library enum.
 > >
-> > [snip]
+> > For correct usage, there are no visible side-effects. The wrongly reset
+> > kernel flags are always zero already.
 > >
-> > >
-> > > 1. I do not agree with the lack of "persistence" - at least as far as
-> > > it seems to be practiced in the 'gpioset' tool. When it comes to
-> > > "turning things ON and OFF", there is a long-established paradigm tha=
-t
-> > > says when something is 'turned ON', it remains ON until the user take=
-s
-> > > an action to turn it OFF. This seems simple and obvious to me. Using
-> > > the light switch in my bedroom as a simple example, I cannot see the
-> > > logic behind a Design Decision that requires me to keep my finger on
-> > > the light switch to keep it OFF so I can sleep.
-> > >
+> > For incorrect usage of edge detection combined with output direction,
+> > both output and input directions would have been requested from the
+> > kernel, causing a confusing error. Such usage will now be sanitized, as
+> > intended, into a working configuration with only input direction.
 > >
-> > This begs the question: WHO is the user? Are you making an assumption
-> > that the bash process (and its associated UID) that invoked gpioset is
-> > THE ONLY user on your multi user linux system? When gpioset acquires
-> > the GPIO for exclusive usage, it becomes THE user but as soon as it
-> > releases it - anyone else (with appropriate permissions) can come
-> > around and re-claim that GPIO.
+> > Signed-off-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
+> > ---
+> >   lib/line-config.c | 6 +++---
+> >   1 file changed, 3 insertions(+), 3 deletions(-)
 > >
-> I thought this issue of line ownership had been resolved...  i.e. the
-> system driver would take control of the line once the user's process
-> had exited? Maybe I'm confused on this point, but I *thought* I had
-> read that somewhere else?
-
-The driver is just a low-level interface between the core GPIO code
-and the hardware. It does not typically take control of any GPIOs
-(unless it calls gpiochip_request_own_desc() but that's an internal
-detail).
-
->
-> Nevertheless, to address your questions: No - I didn't mean to infer
-> that there's only one user. I understand that you (library developer)
-> need to account for different users. But GPIO control is not a unique
-> issue in Linux (or any multi-user OS). It is the same if we were
-> talking about control of a serial port/UART... how is that arbitrated
-> between users?
-
-It's exactly the same. The first user to claim a serial port (be it an
-in-kernel serdev or a user opening /dev/ttyX) takes exclusive usage
-and keeps the port until it releases it.
-
->
-> WRT a GPIO line, I'd say "the user" is the one who issued the gpioset
-> command. In the context of your example ("When gpioset acquires the
-> GPIO for exclusive usage"), why could gpioset (or the user who issued
-> the gpioset command) not 'make a claim for exclusive usage' of the
-> GPIO line? If other users/processes subsequently attempted to claim
-> the same line, their claim would simply be disallowed - unless they
-> were `root`. Is there a reason why this model of ownership could not
-> work?
-
-This is precisely what happens though (except for root being able to
-override a regular user)? Or am I not understanding this paragraph?
-
+> > diff --git a/lib/line-config.c b/lib/line-config.c
+> > index 2749a2a..9bf7734 100644
+> > --- a/lib/line-config.c
+> > +++ b/lib/line-config.c
+> > @@ -381,18 +381,18 @@ static uint64_t make_kernel_flags(struct gpiod_li=
+ne_settings *settings)
+> >         case GPIOD_LINE_EDGE_FALLING:
+> >                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+> >                           GPIO_V2_LINE_FLAG_INPUT);
+> > -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> > +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+> >                 break;
+> >         case GPIOD_LINE_EDGE_RISING:
+> >                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_RISING |
+> >                           GPIO_V2_LINE_FLAG_INPUT);
+> > -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> > +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+> >                 break;
+> >         case GPIOD_LINE_EDGE_BOTH:
+> >                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+> >                           GPIO_V2_LINE_FLAG_EDGE_RISING |
+> >                           GPIO_V2_LINE_FLAG_INPUT);
+> > -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> > +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+> >                 break;
+> >         default:
+> >                 break;
+> > --
+> > 2.30.2
 > >
-> > To use your light switch example: you turn it ON and take a step back.
-> > The light is still on. But then your friend walks by and turns it OFF
-> > because you were not actively blocking access to that switch.
 > >
->
-> Granted, I did not take the issue of "light switch ownership" into
-> account in that example.
->
-> > > When I was in school we studied 'state machines'. I felt I had a
-> > > decent understanding of them - they were useful in designing automate=
-d
-> > > systems. Yet, in 'gpioset' it seems the concept of a 'state' has been
-> > > turned on its ear! We can 'set' a GPIO pin to a state, but that state
-> > > reverts immediately (a single clock cycle?). There seems to be an
-> > > underlying thought/theory at work in 'gpioset' that demands that it b=
-e
-> > > kept resident in memory to maintain a 'state'. There may be hardware
-> > > systems that demand continuous software oversight to function, but I
-> > > know of no such GPIO hardware systems. Also, AFAIK previous
-> > > programming interfaces/libraries all had "persistence".
-> > >
-> >
-> > If you're referring to sysfs, then it has no more persistence than a
-> > driver that requests a GPIO and keeps it requested. You can imagine it
-> > as a central GPIO authority - a guy holding the lightswitch whom you
-> > tell how to set it. And your friend can tell him the opposite and
-> > he'll gladly comply.
-> >
->
-> No - not referring to sysfs... and I'm not sure I'm following your
-> argument here. But the only point I'm trying to make is wrt
-> 'persistence': First, I'll assume that you are saying that gpioset has
-> a role to play in persistence, and that it does not delegate the
-> persistence question to the driver. Under that assumption, I am
-> suggesting that another model for persistence is as I outlined above.
-> And I'll ask again, "Is there a reason that model could not work?"
->
+>=20
+> This does not apply on top of current master, could you please verify?
+>=20
+> Bart
 
-I'm sorry, I'm not sure what *that model* is. Gpioset has no role in
-persistence because it's merely a wrapper around libgpiod which is a
-wrapper around the kernel uAPI which - by design - offers no
-persistence.
+Some weird whitespace mangling. Retrying a different way...
 
-FYI I understand the need for a user-space GPIO authority that's more
-centralized and am working on a DBus daemon that will become exactly
-that. However my cup runneth over so it'll be some time before it's
-done. :(
-
-Bartosz
+Thanks,
+Anne Bezemer
+--1616093619-1190470617-1704309455=:31157--
 
