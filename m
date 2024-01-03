@@ -1,103 +1,114 @@
-Return-Path: <linux-gpio+bounces-1977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8846A8229C4
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:51:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0DAC8229D1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:56:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 404F12851A9
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:51:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 554EC1F23D4C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:56:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8D6818049;
-	Wed,  3 Jan 2024 08:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E498E182B6;
+	Wed,  3 Jan 2024 08:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RmOlLDEO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gUUtY0F8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 361AA18622
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 08:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7cd7d5c1276so607640241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 00:51:29 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F1CF182A4
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 08:56:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5e7f0bf46a2so83976927b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 00:56:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704271888; x=1704876688; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8vgekKZ/OlG7JICiZDEFn9JZQAvlVZRayuPQgdK4A3Y=;
-        b=RmOlLDEOGcUN6ItkidKPz5rcHWhOwPSxPO6J2UcmKGHkGY9eVksKFn4NldD8O4opW7
-         OTDNm8A56G43f3E3RDa1H+CEuXOFgqE+RGQbyBezBnxAXO1NuvlbxmiOcwp8JWgs1aOc
-         LEqjlQvz+Uqwg9dDbHsa8OTRYI7GAr7f1kVEmKi+cApYX6Mf72qtVtGa2bCzLwpAowBs
-         QqU8b9rIQlnZyzw5AY+VowElwQUGPVTxyCurCoLXN5PMpFCTZhlqkMlnMkHAOPbSvQFr
-         WihHlP5js52lGyd69ky07xo9DqnmSH7ALAaQ9YhBA57U0v2UUCKFzhSQVF6l4Gk7Yacx
-         mp0w==
+        d=linaro.org; s=google; t=1704272187; x=1704876987; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=tzXmJg9q/TEPH8vMAiIdPpmy3D/WZd5MqG19qzYtfJg=;
+        b=gUUtY0F80nle3WnUSmjK0lRyc0DCWVzNa78QBJjq2iugGLdOfMgd5wNHfDhBlmUXiK
+         QsxuAgyyGbPf8DCA2HI/YqcDaZN7IH5z+OBJHLSlEZff7+TcwChe+t8yNaAXB/J/xDgz
+         WrXYWDwf/EI7SyT2AirPQTVO8jz6QEetgIrcQW9K0eIAigvwguzAyKJQ7/H8QdNc4uoB
+         5fYu9BCv5lu1lKm2BXTtKPlrd1T4DPVEwbEviIQafSGy2Vh/52vzym5IzMzgfYBWK+MM
+         CTElDmuy11hWeTNjIE0eiSsfMCFi1sZqhGHtjdcg/1BZsLAgTQQY6OxRMZhgxa2fda/N
+         zoxg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704271888; x=1704876688;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8vgekKZ/OlG7JICiZDEFn9JZQAvlVZRayuPQgdK4A3Y=;
-        b=F7dMNFHhgskYDX1a0taWzMH0XGtIo0TRiOdv8qLmFy97Rkder+T+fY/didb1Y0fTnQ
-         318z/5+gNDQDaAeA+eCURV5Ctqsnmv3yrEsBrilIckrtjMc9wqFaadYghDlgeePN4dMv
-         XraTuDUjBxm2dPcYnMlJsAQubrOVQPkIcF+CyEI+epIVpwUx+DP4IrszmWtlgsW/GqzM
-         9RbRyFNa9S8o6uZGW4b4EJjToDHuegQQKgpef0jnC5WbTDdabdrh/leUr0cSCbaU+4DV
-         cq+Uhrb2nmHHR75PdjX5yBn+L/YRnl1Jeih1Rx0AzmCsx0c78HM9MKwkFNsrbuNHQ/8V
-         TpVQ==
-X-Gm-Message-State: AOJu0YzWDuYConvHreYZhAMtAioSdnR7x7T1i+ZsgKpaMhHTTjtZ4iN8
-	CVoG/W6/xaK38T7hDEzbU/7STa830B6NSH9a96rgIRuMLDbZ8g==
-X-Google-Smtp-Source: AGHT+IGlCDun+5AZYjonVjIbZIWyoWJfpOTl00hEI6erZzD7dQFVLcGlY2MgsTLACmwfHfuGizoarZKojMhAgXVHtjI=
-X-Received: by 2002:a05:6102:4b15:b0:466:ecfa:88de with SMTP id
- ia21-20020a0561024b1500b00466ecfa88demr9565508vsb.14.1704271888154; Wed, 03
- Jan 2024 00:51:28 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704272187; x=1704876987;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tzXmJg9q/TEPH8vMAiIdPpmy3D/WZd5MqG19qzYtfJg=;
+        b=BVR3MSdbwgO6A+zuSivDO7153a10GIbMGDFj/jgzZIslHz5j9rcHxqC6TM8YJXSAL2
+         Jsk1jwO1SSxzTo/JSVaZIotuBwHZzDH2+KJk7haa4bo3+JUewgc5iZupsDnRjK9MQrAO
+         RMfe5tNYEtRkOSG23FCkWdMjk2o+zdDo2kYdSGFKLiZ0DgWtkKx8haRwW5lnhepN5nAl
+         a+jVvUrQpLzbZrDED5XH5A9F9dDIFaIbx7e1ISpxmTo+W+Jrp/KD9DthoFC4RS0+JQgb
+         UDF97YPOGyWwSfY/ID96RfyXWDZIqtSjYmJ7mzHka00FLSxarl8U0XbQOmBbNYhq7K2A
+         2K7Q==
+X-Gm-Message-State: AOJu0YxOHBUbZLAT6l6Peq77qZl/xORKoNYtHT7DCTTzU2N4S5hPgGXI
+	nLYPq+JY9t8CkMfIlrhYvx5eI4GU8ingUb/DEuDyix8KS2feAw==
+X-Google-Smtp-Source: AGHT+IF4WrM7sBfrk0tR3OteyYEXhhRrWcCjLgeYlF7JPOuAqw8QBcUyT7zrFXSwMTQm7ulzLcp1XD7xSNsgLRXA8Rk=
+X-Received: by 2002:a05:690c:2a46:b0:5ee:6403:8931 with SMTP id
+ ej6-20020a05690c2a4600b005ee64038931mr5109646ywb.55.1704272187368; Wed, 03
+ Jan 2024 00:56:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Jan 2024 09:51:17 +0100
-Message-ID: <CAMRc=Md-9vh7-r+SWm-TFPhonntindgj4cjeATUr2uZxEUxLxw@mail.gmail.com>
-Subject: Re: [PATCH V3] gpio: pmic-eic-sprd: Configure the bit corresponding
- to the EIC through offset
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20240103085058.3771653-1-nichen@iscas.ac.cn>
+In-Reply-To: <20240103085058.3771653-1-nichen@iscas.ac.cn>
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 3 Jan 2024 09:56:16 +0100
+Message-ID: <CACMJSetTdEOVc5S2tCNzXy3CFmNq+Dh-tB07Kfgw7C3EfEbBSQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: st: Return pinctrl_gpio_direction_output to
+ transfer the error
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: patrice.chotard@foss.st.com, linus.walleij@linaro.org, 
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 2, 2024 at 9:28=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
-rote:
+On Wed, 3 Jan 2024 at 09:47, Chen Ni <nichen@iscas.ac.cn> wrote:
 >
-> A bank PMIC EIC contains 16 EICs, and the operating registers
-> are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
-> Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
-> will cause the configuration of other EICs to be affected when
-> operating a certain EIC. In order to solve this problem, configure
-> the bit corresponding to the EIC through offset.
+> Return pinctrl_gpio_direction_output() in order to transfer the error
+> if it fails.
 >
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
-> ---
-> Change in V3:
-> -Change title.
-> -Change commit message.
-> -Delete the modification of the two-dimensional array maintenance pmic ei=
-c,
->  and add the corresponding bits to configure the eic according to the off=
-set.
-> ---
+> Fixes: b679d6c06b2b ("treewide: rename pinctrl_gpio_direction_output_new()")
 
-Applied, thanks!
+It doesn't technically fix this commit as the return value was never
+propagated here in the first place.
+
+Anyway:
+
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 Bart
+
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+> ---
+>  drivers/pinctrl/pinctrl-st.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+> index 1485573b523c..5d9abd6547d0 100644
+> --- a/drivers/pinctrl/pinctrl-st.c
+> +++ b/drivers/pinctrl/pinctrl-st.c
+> @@ -723,9 +723,8 @@ static int st_gpio_direction_output(struct gpio_chip *chip,
+>         struct st_gpio_bank *bank = gpiochip_get_data(chip);
+>
+>         __st_gpio_set(bank, offset, value);
+> -       pinctrl_gpio_direction_output(chip, offset);
+>
+> -       return 0;
+> +       return pinctrl_gpio_direction_output(chip, offset);
+>  }
+>
+>  static int st_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+> --
+> 2.25.1
+>
 
