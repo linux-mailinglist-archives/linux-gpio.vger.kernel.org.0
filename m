@@ -1,123 +1,133 @@
-Return-Path: <linux-gpio+bounces-1982-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1983-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1317D822B95
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 11:48:13 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8934A822C9C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 13:04:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 26C041C22868
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 10:48:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D088B211A8
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 12:04:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EAD418C2A;
-	Wed,  3 Jan 2024 10:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA16518EAA;
+	Wed,  3 Jan 2024 12:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="IEOhpq6o"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F6ry8eee"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
+Received: from mail-ej1-f68.google.com (mail-ej1-f68.google.com [209.85.218.68])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5CCA18C1B
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 10:47:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-46788b25f95so292392137.0
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 02:47:42 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111D118EA6;
+	Wed,  3 Jan 2024 12:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f68.google.com with SMTP id a640c23a62f3a-a232b787259so142135266b.0;
+        Wed, 03 Jan 2024 04:03:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704278861; x=1704883661; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704283434; x=1704888234; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5K4oedJlgK7fm0kTTajG8Yf6Z8+LscjYprqJKbd1jFQ=;
-        b=IEOhpq6oyseJJX6TRDUlKYCRsjw3VRaH5vDJsDMrQRyuIMeVkPYkwSnND0eOkjgAb3
-         LPtGTgHrA7aVeaBxa/3IiQ2miREdu9riv9bsPfnn4Ae6Mdnqf76JgOxog4U2mhirmQ+a
-         dqcITsukUEbo3c97d89KUPDO659oXYPsD/WGdpB7KTQfKkx0xG6xdn8ULPvYnSc8JouW
-         HBdYuSXOlaugZ8cRGijA+J47qUquk11wOjeUCgAxXh2g/aWfsaOF7NJxHEhC5du14Wnm
-         vuh8kI0TcrQDZvlOJsUO9zCJT9JP9QcBz/+eK0XuXGkPv9hODsZvaq8c2dEaq8Mhvvge
-         goLA==
+        bh=OJ68mM3ENyCFlFoKsRXtTYapy1Od7dvlW9m4qkREFmw=;
+        b=F6ry8eee82Ux91UMrhhDvRhcOL/TJDI3pQvPQLWd7kjn9/kscbtZEmLfME87GzkXLB
+         ZpTKRHU/+s19Fel680rktHgHANt2gk39wARwfYZGjJHwR9jxngEwQSnLxGPJXgke5Svi
+         vO4yJdogRqovbanwP+PNI/f7u0gAbcutxewHpJgcK76nRIl/sQkIIloIGju5eFIjDGOA
+         B1cAyzudR9euvjRTkSdw0la5wvWlSgU3kKzviRchexkOXTZm6uPVPWL6QdlPMJ13Cggw
+         VuoE3SrXD6UTIuTEJ0EwG5Got0yCuitr9ihjxPZxnoQNnLmaXzPk778QeRNsq3a5RNA/
+         X+HQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704278861; x=1704883661;
+        d=1e100.net; s=20230601; t=1704283434; x=1704888234;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5K4oedJlgK7fm0kTTajG8Yf6Z8+LscjYprqJKbd1jFQ=;
-        b=OoWH8zqAvlP5KRVm7+SXy9TKfPZR/MMAbhwUHt2GYcNtH14x5R87zfMqgs27osJeYq
-         Wu8aeRhDiBBYGwKy3Ym6y5GR3AO5/Mip+3u2SHhQkuJlhtuNBzSZjQnvcSfqLndOHvsn
-         KnHl+osTfOSyQQ6QP+deqy7c9C0ynj6NKXRxBRFiIRjDSiSdl7bfjF5I+xYJgOsKwQ5M
-         tBt5UbhvkwNAdAG23jQ3PgxkjlIFaIR7oOYIPjLR4H/KZSje7wle9Dn6ZYMky8bA12eR
-         a7sck9svUifw0abgwALJ7T3AJElBf/l6hnMxQ0kqbz6OZVKXnKngtIrqx+8jAOnQXdOF
-         mu6A==
-X-Gm-Message-State: AOJu0YwIdrtYwHuXn7ftYG4HUKunvXbeGrIANJ0Ch+e2Blb8p7xS/x85
-	wmyq2emLJRD67jeEAzFPdE2M8HPQWIGtJC6UkQ/p7prNRhsh4Q==
-X-Google-Smtp-Source: AGHT+IHi8XxiCT7XQL5cHO6EzQzHVM40A96vJDWAEVBjQDx4n9kUVD/7G3bR8AOh1osJOecBZgGpAoYE1yoJ+4xKcKU=
-X-Received: by 2002:a05:6102:6c1:b0:466:61aa:8de9 with SMTP id
- m1-20020a05610206c100b0046661aa8de9mr8460699vsg.6.1704278861585; Wed, 03 Jan
- 2024 02:47:41 -0800 (PST)
+        bh=OJ68mM3ENyCFlFoKsRXtTYapy1Od7dvlW9m4qkREFmw=;
+        b=umeflHp6xbEoT5Z4Hr4mjJjcP5YEAhSNt3iJbLNhMbZdVLlxCCUMxwgJFD12MKjiIQ
+         4knPEi+WoSyyU866cxtZIg0EqsymSbMlbHYRab8lMAo+AE3ThvFdEd4UtPs/lIl9LKhY
+         DcEzeWULfa7zYgdX+c/6b/x1+76h0IHQmZxIwkC2a0dDEyvSbGABSAnLDzT6CA9Ezu8J
+         Tc9UgqHdsJrWuXeoc/NhpiAsr7EyDIszm7g/1cF21jdijFXPVq07u5phpnBVFnjF8ifQ
+         1f7EI6lY4dOCQVABLqXzm26dcnjsX808Z6SGSY8979q0u3V9NFoUfCytL2IvIBz43LE3
+         aH1g==
+X-Gm-Message-State: AOJu0Yw8buVJkQ2qfHv13Z4sQmfr/UWF8KxlOk9c5lN1YulpnCkaPMVo
+	AXK7uPMhlJADupO3iYIyoIAQELmQE8AhccdWDkK+mWUBYq1r6g==
+X-Google-Smtp-Source: AGHT+IEuYC9oGoTmGkChhADCEW2yxUR60dS77231L4O9iyDZ6v3p7muWT+2mgLP+uaZzVLEG8EKtLoMxGrP6bkT65lg=
+X-Received: by 2002:a17:906:7114:b0:a28:926f:a6c1 with SMTP id
+ x20-20020a170906711400b00a28926fa6c1mr950589ejj.1.1704283434067; Wed, 03 Jan
+ 2024 04:03:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
-In-Reply-To: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 3 Jan 2024 11:47:30 +0100
-Message-ID: <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com>
-Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
-To: Seamus de Mora <seamusdemora@gmail.com>
-Cc: linux-gpio@vger.kernel.org
+References: <20230921090027.11136-1-Wenhua.Lin@unisoc.com> <20230921090027.11136-5-Wenhua.Lin@unisoc.com>
+ <89009348-9580-433a-05b5-1290116e7633@linux.alibaba.com>
+In-Reply-To: <89009348-9580-433a-05b5-1290116e7633@linux.alibaba.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Wed, 3 Jan 2024 20:03:42 +0800
+Message-ID: <CAB9BWhdqebdLjzVX83YHcsJ6iZ01FOqSdMB-VB1JQaQEVCPEwg@mail.gmail.com>
+Subject: Re: [PATCH V2 4/4] gpio: sprd: Support 8 banks EIC controller
+To: Baolin Wang <baolin.wang@linux.alibaba.com>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 28, 2023 at 2:20=E2=80=AFAM Seamus de Mora <seamusdemora@gmail.=
-com> wrote:
+On Wed, Sep 27, 2023 at 5:28=E2=80=AFPM Baolin Wang
+<baolin.wang@linux.alibaba.com> wrote:
 >
+>
+>
+> On 9/21/2023 5:00 PM, Wenhua Lin wrote:
+> > In order to solve the problem of insufficient eic,
+> > it supports 8 banks of eic controller, each bank contains 8 eic.
+> >
+> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> > ---
+> >   drivers/gpio/gpio-eic-sprd.c | 8 ++++----
+> >   1 file changed, 4 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.=
+c
+> > index e85addbdf8aa..6bb002060c3e 100644
+> > --- a/drivers/gpio/gpio-eic-sprd.c
+> > +++ b/drivers/gpio/gpio-eic-sprd.c
+> > @@ -51,10 +51,10 @@
+> >   #define SPRD_EIC_SYNC_DATA          0x1c
+> >
+> >   /*
+> > - * The digital-chip EIC controller can support maximum 3 banks, and ea=
+ch bank
+> > + * The digital-chip EIC controller can support maximum 8 banks, and ea=
+ch bank
+> >    * contains 8 EICs.
+> >    */
+> > -#define SPRD_EIC_MAX_BANK            3
+> > +#define SPRD_EIC_MAX_BANK            8
+> >   #define SPRD_EIC_PER_BANK_NR                8
+> >   #define SPRD_EIC_DATA_MASK          GENMASK(7, 0)
+> >   #define SPRD_EIC_BIT(x)                     ((x) & (SPRD_EIC_PER_BANK=
+_NR - 1))
+> > @@ -615,9 +615,9 @@ static int sprd_eic_probe(struct platform_device *p=
+dev)
+> >
+> >       for (i =3D 0; i < SPRD_EIC_MAX_BANK; i++) {
+> >               /*
+> > -              * We can have maximum 3 banks EICs, and each EIC has
+> > +              * We can have maximum 8 banks EICs, and each EIC has
+> >                * its own base address. But some platform maybe only
+> > -              * have one bank EIC, thus base[1] and base[2] can be
+> > +              * have one bank EIC, thus base[1] and base[7] can be
+>
+> Should be "base[1] to base[7]"
 
-[snip]
+Thank you very much for your review.
+I will fix this issue in patch v3.
 
 >
-> 1. I do not agree with the lack of "persistence" - at least as far as
-> it seems to be practiced in the 'gpioset' tool. When it comes to
-> "turning things ON and OFF", there is a long-established paradigm that
-> says when something is 'turned ON', it remains ON until the user takes
-> an action to turn it OFF. This seems simple and obvious to me. Using
-> the light switch in my bedroom as a simple example, I cannot see the
-> logic behind a Design Decision that requires me to keep my finger on
-> the light switch to keep it OFF so I can sleep.
->
-
-This begs the question: WHO is the user? Are you making an assumption
-that the bash process (and its associated UID) that invoked gpioset is
-THE ONLY user on your multi user linux system? When gpioset acquires
-the GPIO for exclusive usage, it becomes THE user but as soon as it
-releases it - anyone else (with appropriate permissions) can come
-around and re-claim that GPIO.
-
-To use your light switch example: you turn it ON and take a step back.
-The light is still on. But then your friend walks by and turns it OFF
-because you were not actively blocking access to that switch.
-
-> When I was in school we studied 'state machines'. I felt I had a
-> decent understanding of them - they were useful in designing automated
-> systems. Yet, in 'gpioset' it seems the concept of a 'state' has been
-> turned on its ear! We can 'set' a GPIO pin to a state, but that state
-> reverts immediately (a single clock cycle?). There seems to be an
-> underlying thought/theory at work in 'gpioset' that demands that it be
-> kept resident in memory to maintain a 'state'. There may be hardware
-> systems that demand continuous software oversight to function, but I
-> know of no such GPIO hardware systems. Also, AFAIK previous
-> programming interfaces/libraries all had "persistence".
->
-
-If you're referring to sysfs, then it has no more persistence than a
-driver that requests a GPIO and keeps it requested. You can imagine it
-as a central GPIO authority - a guy holding the lightswitch whom you
-tell how to set it. And your friend can tell him the opposite and
-he'll gladly comply.
-
-[snip]
-
-Bart
+> >                * optional.
+> >                */
+> >               res =3D platform_get_resource(pdev, IORESOURCE_MEM, i);
 
