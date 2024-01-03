@@ -1,110 +1,167 @@
-Return-Path: <linux-gpio+bounces-1972-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1973-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BE868224E0
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 23:40:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B71C38226C1
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 03:05:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 994681F22D04
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Jan 2024 22:40:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C1B31F2261C
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 02:05:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B068217725;
-	Tue,  2 Jan 2024 22:40:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 467E4111B;
+	Wed,  3 Jan 2024 02:05:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XLiwZxOi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Oiznzegw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 628F817722;
-	Tue,  2 Jan 2024 22:40:25 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C8C54C433CA;
-	Tue,  2 Jan 2024 22:40:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704235224;
-	bh=TYmyaLmtrD1cirMWGNO8g+3fto9TzrYtNubox6icnAI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=XLiwZxOiZosnthuFXBIG2y1aPYcvYRawalg/x73AEZfoq4ssPQrndx2gOtCp/xbyr
-	 hSFTA31e7JoPYAwFNphYdBQwytVxpOniQ3PfgvmqNqe1sFDl9Fmsdabnol5El0YxD3
-	 gHcLYc6aCl4bFT/3nowuIpeOmkRGKmBicUs3o0/bvVOmel5EfY8PI/Jnxro4qPU+3c
-	 t5Q5fy8klQJ0Bxqn3cHeDgVgF3aK71SMEHE2gHEvbUNSmswfdbDGEqVP8yoK/TQ1vf
-	 VWbwXcBje+zH/vCwGxJIhkQlGQ+zgzMnt0XNi4b+ssEUj9FwY/Y73Uqcmg94+BUECI
-	 2GUBqYOxksxRg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AE547C395C5;
-	Tue,  2 Jan 2024 22:40:24 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A018F1379;
+	Wed,  3 Jan 2024 02:05:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-204301f2934so7337242fac.1;
+        Tue, 02 Jan 2024 18:05:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704247538; x=1704852338; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=p020yGJyYpoVDenDw3eDpTN5RjpFSz8umqgrPZ/4H8o=;
+        b=Oiznzegw1W8aj2OMWtJxXfyNPNF1qpUsiqB09UxFcqveacWPY3H4aDiUytTTgMnBw0
+         vOwmj8jEfUfTwoX9wb0NllrpF6KreA32FI6FfhvnjH/PxPA6ryE/9duydDVmt6nMMNhV
+         gRUxJ50A8uKjsdeP5Q+GWmGGcCpPnemX39AiMWJIQXMQ7kcNL69Ih2KvttD2+SHagtBZ
+         E1ocGaGAYDKUgS+99fySV+X0Acs1lh2jB0N83wsvEvdCEKvUghc3vpw8HFsTjFkKSlhy
+         CU9CbZekbEtepkf3CG2Bdx090UOjhz/8hLCak8a7LHji0YVchRqAw9E+yEX1Z7WwNHoc
+         ZXJg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704247538; x=1704852338;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=p020yGJyYpoVDenDw3eDpTN5RjpFSz8umqgrPZ/4H8o=;
+        b=eeTCXJsPo3JUNWFWUzgyhp85gYLpRlxtKI2MwjFhZZ1fON6KWN+x4AyE4hZfBV4zbr
+         CAbBJ53PzNAju9FektBTxTM5E+xdAfr53Q1LLok+9MPmla764vPErgATwwweg+FfYkTb
+         v2GXufSjx6KPEAj13/8K3Uj5V8GL0sLBoiheHxL9rIHuzWVqsc3uwz5pulqJFbQHj/5j
+         VONgeadABzGxsQ8pdE/tvKsvNbaocl8gEUSeDUsgWbUByyZ1WShCEnn/uSmmD1Z7+AVL
+         sYMs8i58qomHimUmu3TEefzkxt8uEZYPQNKZBYLaNEuSvuVE0w8fMU6Zj+reF5efRHnl
+         BY3Q==
+X-Gm-Message-State: AOJu0Yzq2eKW3CZ6TXMaJ3YGHC6OXSxJoMYjw6IH4igjMWFfHWYt6g6P
+	oycjjgx0ZTpTaOz/C7Sw5UN5i6nkMFaNxP7ZRP8RDdQr
+X-Google-Smtp-Source: AGHT+IEffjYGB+G4zoepu/jPH6eB9cuUM3oNqCu62NlS+1/u6d3KCu9pGHloVQH+rFxwnIf8SXQJqngVwv1U6ASg28A=
+X-Received: by 2002:a05:6870:d24a:b0:204:2bd9:7e89 with SMTP id
+ h10-20020a056870d24a00b002042bd97e89mr22822057oac.88.1704247538555; Tue, 02
+ Jan 2024 18:05:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2 00/11] renesas: rzg3s: Add support for Ethernet
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170423522471.27299.969624057457704166.git-patchwork-notify@kernel.org>
-Date: Tue, 02 Jan 2024 22:40:24 +0000
-References: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20231207070700.4156557-1-claudiu.beznea.uj@bp.renesas.com>
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: s.shtylyov@omp.ru, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- geert+renesas@glider.be, magnus.damm@gmail.com, mturquette@baylibre.com,
- sboyd@kernel.org, linus.walleij@linaro.org,
- prabhakar.mahadev-lad.rj@bp.renesas.com, biju.das.jz@bp.renesas.com,
- linux-renesas-soc@vger.kernel.org, netdev@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
- claudiu.beznea.uj@bp.renesas.com
+References: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240102082829.30874-1-Wenhua.Lin@unisoc.com>
+From: Chunyan Zhang <zhang.lyra@gmail.com>
+Date: Wed, 3 Jan 2024 10:05:01 +0800
+Message-ID: <CAAfSe-sJSwvPLi0OaGUDShrFZKpworStH=6LTjzfK82w-bbDZg@mail.gmail.com>
+Subject: Re: [PATCH V3] gpio: pmic-eic-sprd: Configure the bit corresponding
+ to the EIC through offset
+To: Wenhua Lin <Wenhua.Lin@unisoc.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
+	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+On Tue, 2 Jan 2024 at 16:29, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
+>
+> A bank PMIC EIC contains 16 EICs, and the operating registers
+> are BIT0-BIT15, such as BIT0 of the register operated by EIC0.
+> Using the one-dimensional array reg[CACHE_NR_REGS] for maintenance
+> will cause the configuration of other EICs to be affected when
+> operating a certain EIC. In order to solve this problem, configure
+> the bit corresponding to the EIC through offset.
+>
+> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu,  7 Dec 2023 09:06:49 +0200 you wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> 
-> Hi,
-> 
-> Series adds Ethernet support for Renesas RZ/G3S.
-> Along with it preparatory cleanups and fixes were included.
-> 
-> [...]
-
-Here is the summary with links:
-  - [v2,01/11] clk: renesas: rzg2l-cpg: Check reset monitor registers
-    (no matching commit)
-  - [v2,02/11] clk: renesas: r9a08g045-cpg: Add clock and reset support for ETH0 and ETH1
-    (no matching commit)
-  - [v2,03/11] pinctrl: renesas: rzg2l: Move arg and index in the main function block
-    (no matching commit)
-  - [v2,04/11] pinctrl: renesas: rzg2l: Add pin configuration support for pinmux groups
-    (no matching commit)
-  - [v2,05/11] pinctrl: renesas: rzg2l: Add support to select power source for Ethernet pins
-    (no matching commit)
-  - [v2,06/11] pinctrl: renesas: rzg2l: Add output enable support
-    (no matching commit)
-  - [v2,07/11] pinctrl: renesas: rzg2l: Add input enable to the Ethernet pins
-    (no matching commit)
-  - [v2,08/11] dt-bindings: net: renesas,etheravb: Document RZ/G3S support
-    https://git.kernel.org/netdev/net-next/c/060baa9b90d4
-  - [v2,09/11] arm64: renesas: r9a08g045: Add the Ethernet nodes
-    (no matching commit)
-  - [v2,10/11] arm64: renesas: rzg3s-smarc-som: Use switches' names to select on-board functionalities
-    (no matching commit)
-  - [v2,11/11] arm64: dts: renesas: rzg3s-smarc-som: Enable the Ethernet interfaces
-    (no matching commit)
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Reviewed-by: Chunyan Zhang <zhang.lyra@gmail.com>
 
 
+> ---
+> Change in V3:
+> -Change title.
+> -Change commit message.
+> -Delete the modification of the two-dimensional array maintenance pmic eic,
+>  and add the corresponding bits to configure the eic according to the offset.
+> ---
+> ---
+>  drivers/gpio/gpio-pmic-eic-sprd.c | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-pmic-eic-sprd.c b/drivers/gpio/gpio-pmic-eic-sprd.c
+> index 01c0fd0a9d8c..d9b228bea42e 100644
+> --- a/drivers/gpio/gpio-pmic-eic-sprd.c
+> +++ b/drivers/gpio/gpio-pmic-eic-sprd.c
+> @@ -151,8 +151,8 @@ static void sprd_pmic_eic_irq_mask(struct irq_data *data)
+>         struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+>         u32 offset = irqd_to_hwirq(data);
+>
+> -       pmic_eic->reg[REG_IE] = 0;
+> -       pmic_eic->reg[REG_TRIG] = 0;
+> +       pmic_eic->reg[REG_IE] &= ~BIT(offset);
+> +       pmic_eic->reg[REG_TRIG] &= ~BIT(offset);
+>
+>         gpiochip_disable_irq(chip, offset);
+>  }
+> @@ -165,8 +165,8 @@ static void sprd_pmic_eic_irq_unmask(struct irq_data *data)
+>
+>         gpiochip_enable_irq(chip, offset);
+>
+> -       pmic_eic->reg[REG_IE] = 1;
+> -       pmic_eic->reg[REG_TRIG] = 1;
+> +       pmic_eic->reg[REG_IE] |= BIT(offset);
+> +       pmic_eic->reg[REG_TRIG] |= BIT(offset);
+>  }
+>
+>  static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
+> @@ -174,13 +174,14 @@ static int sprd_pmic_eic_irq_set_type(struct irq_data *data,
+>  {
+>         struct gpio_chip *chip = irq_data_get_irq_chip_data(data);
+>         struct sprd_pmic_eic *pmic_eic = gpiochip_get_data(chip);
+> +       u32 offset = irqd_to_hwirq(data);
+>
+>         switch (flow_type) {
+>         case IRQ_TYPE_LEVEL_HIGH:
+> -               pmic_eic->reg[REG_IEV] = 1;
+> +               pmic_eic->reg[REG_IEV] |= BIT(offset);
+>                 break;
+>         case IRQ_TYPE_LEVEL_LOW:
+> -               pmic_eic->reg[REG_IEV] = 0;
+> +               pmic_eic->reg[REG_IEV] &= ~BIT(offset);
+>                 break;
+>         case IRQ_TYPE_EDGE_RISING:
+>         case IRQ_TYPE_EDGE_FALLING:
+> @@ -222,15 +223,15 @@ static void sprd_pmic_eic_bus_sync_unlock(struct irq_data *data)
+>                         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV, 1);
+>         } else {
+>                 sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IEV,
+> -                                    pmic_eic->reg[REG_IEV]);
+> +                                    !!(pmic_eic->reg[REG_IEV] & BIT(offset)));
+>         }
+>
+>         /* Set irq unmask */
+>         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_IE,
+> -                            pmic_eic->reg[REG_IE]);
+> +                            !!(pmic_eic->reg[REG_IE] & BIT(offset)));
+>         /* Generate trigger start pulse for debounce EIC */
+>         sprd_pmic_eic_update(chip, offset, SPRD_PMIC_EIC_TRIG,
+> -                            pmic_eic->reg[REG_TRIG]);
+> +                            !!(pmic_eic->reg[REG_TRIG] & BIT(offset)));
+>
+>         mutex_unlock(&pmic_eic->buslock);
+>  }
+> --
+> 2.17.1
+>
 
