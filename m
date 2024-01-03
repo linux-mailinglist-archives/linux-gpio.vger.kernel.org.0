@@ -1,120 +1,130 @@
-Return-Path: <linux-gpio+bounces-1974-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1975-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64DED822920
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:52:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E75CC8229AF
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:46:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 402551C22DE8
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 07:52:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 98C3C1F23D1D
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 08:46:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A8591803D;
-	Wed,  3 Jan 2024 07:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122DD1799A;
+	Wed,  3 Jan 2024 08:46:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrmdEvBb"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="cXI2N51L"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAF3918040
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 07:52:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2cce6c719caso51142531fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Jan 2024 23:52:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C96D618032
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 08:46:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4b7a3189d47so270380e0c.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 00:46:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704268354; x=1704873154; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704271590; x=1704876390; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=51pgvH2c22PJ3N/KrU7cqRwztHnhdONq6BzXqYY0mAM=;
-        b=mrmdEvBbqrFvk5lEuUoZCwF/sXBy8J/lPK+n2Qu4kqprPLCPZUAvevbUjkwfJL6lB4
-         RGuBhdsqEDn3ZjTreKXLWEXiF6QcW5IDgWpB+aIUugk1lz6XnCJuW832DLiGdmOnO1jh
-         uXdSHeKp9KXAprektMlGJhNWiRcJ7ngmzvggFVG+NvF5AuG5B1VU1a2K37Wfz6d8Dwal
-         nZ86qnLt8XD1ncEw/8VCzEL4XEeE3aCgx24KLE4CEKHt5dY7y7g91vZ8Jb8GXIvbEq76
-         ZlGhmaxAPHsqreB5BarS0utEo27CSQSIeBgLOd2U7Q8bjd+DDvefgbOeSe0iHXB4MZ61
-         SE6g==
+        bh=qr5k1eCQgKhAWxDFtU7XVem7q2d4j2uarLrX3N+6i9U=;
+        b=cXI2N51LUGuTQBJHp6Y74+Ol3ZlKYmXxMvKO0N1wSuS92UMxdEuusWcWYdS7vy1mjt
+         hcAva6/fZTq4M0VNxvKCpiWPc8WtpgOuVmK3trlLYD98mNdEs+CzigipCgqupGDZ7KM+
+         2zfbATHjo56Hc7+bdBfYj+njHnuzkPYWc4JRQcumx+KBtOYxga7kPouEwyh2w64OEkBd
+         o9CjKyTbbUX/miPoo+SIF/uD3BqU1LNC180dVhw//K4yOQA+J9QwgBQjA1/LJ6M+SubX
+         kl1e0jUT2S7Y2rSeWAvelFyXu7qcxe+ZOhtxeFMbq2jn1EYtIKxI0uAxzLhAlahcL+zz
+         5Waw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704268354; x=1704873154;
+        d=1e100.net; s=20230601; t=1704271590; x=1704876390;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=51pgvH2c22PJ3N/KrU7cqRwztHnhdONq6BzXqYY0mAM=;
-        b=BQBTjjP9o/yyJndZ0UBLChOpl1t1rtjtbZm1oEaRF0xGyoLAylqnq1zuGXQu7b7w6i
-         y/BpH2mW6PcnVLpyJVkbH9/gbOLfF9HGjmv2kF9BBE2A797UUJ/UfxeciOSWoGeVcBDB
-         6XqxsGxT8dKp8+yrxzdQpQQseDyvr7WJu8SzFO/KI8W6pwc3/MIgwPdehTGqssfI9yuA
-         QJqsq63q2GDySSl9ZOb52rZW2VsdPAbrR79XQY2r+1vTJWGfr4bY32KxgJmRWAri9Pe6
-         nSrPk69Praz+OsdXCCS73/tevK2tk4xxWSGh8IbheAhpLiwfDKW1bvWwNAscPwT6Tqxm
-         KdrQ==
-X-Gm-Message-State: AOJu0YzCojeFK7q6b1086zrL4V+8rnKVXX4prCIzsob1Hvi6GC7Y8gRk
-	XPdchD3RdS7jtMYWGQi+lqL2Vu3LzQq081Tc5EEMHhI+
-X-Google-Smtp-Source: AGHT+IFNkmQkhfcXDcD5CPIz/OfOGGLyDvLq/aFV66W2AjGCklZ8haKQKRw+RtQ8l0qTw5rwlo2FCEJCuSkPjzBwLB0=
-X-Received: by 2002:a05:651c:2059:b0:2cc:80ec:5dc5 with SMTP id
- t25-20020a05651c205900b002cc80ec5dc5mr6953172ljo.31.1704268353499; Tue, 02
- Jan 2024 23:52:33 -0800 (PST)
+        bh=qr5k1eCQgKhAWxDFtU7XVem7q2d4j2uarLrX3N+6i9U=;
+        b=I5UKjP7QDQ3pt19L4MbUcCwlnKWCaqqk22yA1Lt5XZGqhgCGcV24+U7LT4rWU6gr3A
+         LHbS/zImAG3xWCooT1jqf5gGjCA7+L/HONsON6IZ7mTS8j9iY4zyM5llYCxzuZtQSRy6
+         Izc19M+HhCqlw04Oh1JS9qTRNGUaQPkfbSJvCyEfdTNgNFUEBuZwrqNwyKu00ICjGQTi
+         X/GIjwqIk4FUkDDYbepakN90InO33skTvIIKLxLzIJQbqCI3V6d+tTcXqswmOv13TeZv
+         Ti18Gxwr0RoKpZjo0dVOS3YO5gPNUTfMf/LHwnAGQgBDyNEjZzBxhEbIqTySK09raeTt
+         ElBw==
+X-Gm-Message-State: AOJu0YynYcKkM6aP3NZcwAShzxKfesTVV85wXMEpiMcT9EVCeKhAjxd+
+	wjMIcfVxx7Mhk4Z40tlGG9cIGvePKrrfSSybFvzh2lhVsl9OJZgk2n7KZEdH
+X-Google-Smtp-Source: AGHT+IHFvMjH3y83V2qKVdWyZBi4oAiuOEbmyOb12sNiwT0pCG+8xK3RCh9Ot4VnkhMtc/6pzHdfuZdiQoE6VTioi5g=
+X-Received: by 2002:a05:6122:448f:b0:4b7:2ffd:9431 with SMTP id
+ cz15-20020a056122448f00b004b72ffd9431mr5277626vkb.33.1704271590349; Wed, 03
+ Jan 2024 00:46:30 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
- <20231228092915.GA67274@rigel>
-In-Reply-To: <20231228092915.GA67274@rigel>
-From: Seamus de Mora <seamusdemora@gmail.com>
-Date: Wed, 3 Jan 2024 01:51:53 -0600
-Message-ID: <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
-Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver 2.1
-To: Kent Gibson <warthog618@gmail.com>
+References: <Pine.LNX.4.64.2401021550390.16108@wormhole.robuust.nl>
+In-Reply-To: <Pine.LNX.4.64.2401021550390.16108@wormhole.robuust.nl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Jan 2024 09:46:19 +0100
+Message-ID: <CAMRc=MeaD6DQq_xph4H+_c=Mrix-Wgcafkdhh4ByMsFi9A2AwA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH v2] core: fix deselection of output direction
+ when edge detection is selected
+To: "J.A. Bezemer" <j.a.bezemer@opensourcepartners.nl>
 Cc: linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Dec 28, 2023 at 3:29=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Tue, Jan 2, 2024 at 3:52=E2=80=AFPM J.A. Bezemer
+<j.a.bezemer@opensourcepartners.nl> wrote:
 >
-> On Wed, Dec 27, 2023 at 07:19:54PM -0600, Seamus de Mora wrote:
-> > Hello,
-> >
-> > I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'd
-> > like to share a few thoughts from that experience.
-> > <snip>
-
-> Then you might want to update your kernel - the kernel device driver was
-> changed to support peristing [1].
+> Fix deselection of output direction when edge detection is selected in
+> make_kernel_flags(). Use correct flag to perform deselection rather than
+> a library enum.
 >
-> I get this on my Pi4 running bookworm:
+> For correct usage, there are no visible side-effects. The wrongly reset
+> kernel flags are always zero already.
 >
-> $ gpioset -t0 GPIO23=3D0
-> $ gpioinfo GPIO23
-> gpiochip0 23    "GPIO23"                output
-> $ gpioget -a GPIO23
-> "GPIO23"=3Dinactive
-> $ gpioinfo GPIO23
-> gpiochip0 23    "GPIO23"                output
-> $ gpioset -t0 GPIO23=3D1
-> $ gpioget -a GPIO23
-> "GPIO23"=3Dactive
+> For incorrect usage of edge detection combined with output direction,
+> both output and input directions would have been requested from the
+> kernel, causing a confusing error. Such usage will now be sanitized, as
+> intended, into a working configuration with only input direction.
+>
+> Signed-off-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
+> ---
+>   lib/line-config.c | 6 +++---
+>   1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/lib/line-config.c b/lib/line-config.c
+> index 2749a2a..9bf7734 100644
+> --- a/lib/line-config.c
+> +++ b/lib/line-config.c
+> @@ -381,18 +381,18 @@ static uint64_t make_kernel_flags(struct gpiod_line=
+_settings *settings)
+>         case GPIOD_LINE_EDGE_FALLING:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+>                 break;
+>         case GPIOD_LINE_EDGE_RISING:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_RISING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+>                 break;
+>         case GPIOD_LINE_EDGE_BOTH:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+>                           GPIO_V2_LINE_FLAG_EDGE_RISING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+> +               flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
+>                 break;
+>         default:
+>                 break;
+> --
+> 2.30.2
+>
+>
 
-Yes - the device driver on my bulleye is current; that change was
-committed back in 1Q 2023 IIRC...
+This does not apply on top of current master, could you please verify?
 
-I hope I've not already asked this, but:
-In ver 1.6.X of libgpiod, gpioset exits immediately, and returns to
-the bash prompt. The GPIO line remains set at the value designated
-after gpioset exits. AIUI, the driver change from 1Q 2023 was
-responsible for this.
-
-In ver 2.1 of libgpiod, gpioset (without options) does not exit. This
-means there is no return to the bash prompt. The GPIO line still
-remains set at the designated value, so there is no change in the
-behavior of the GPIO line between ver 1.6.X and 2.1.
-
-My question is why does the un-optioned gpioset ver 2.1 not exit - as
-it did in ver 1.6.X?
-
-Thanks,
-~S
+Bart
 
