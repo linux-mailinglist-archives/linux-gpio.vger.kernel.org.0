@@ -1,94 +1,158 @@
-Return-Path: <linux-gpio+bounces-1986-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1987-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id B0E93822CC2
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 13:12:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8A14B822E42
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 14:29:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D9F1B2136C
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 12:12:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AFD831C23566
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 13:29:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38E3A18EA7;
-	Wed,  3 Jan 2024 12:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74800199B8;
+	Wed,  3 Jan 2024 13:29:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="tR4LAQLy"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="oBVzL9xV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B8A819444
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 12:12:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1704283960; x=1704888760; i=wahrenst@gmx.net;
-	bh=I8IbvcqJ/V4BVgfuSlOrsiazgtHjYr9gQ62c3psKhEQ=;
-	h=X-UI-Sender-Class:Date:To:From:Subject;
-	b=tR4LAQLyxKBUfz+ZvxYFcQP8XP8Ebu4geGF9w8ecH+tLIzayQaTgn1eOgU1AE4o9
-	 onOAG1GO6sYQmE9fDxLRV1o8iJa1K5JijepdS0ApP0aZNynRZsFfyRZgqrF3B84uH
-	 /nDvyj4n5LDw3BWiTwrHNEBTDZf2/2h56ckU7kNpCW6cyIomCKRPRmOTM7ej46tVS
-	 gY8IkJRVIfjrV9i39mBnMmLRc7iid4bbGnrzg1R/68qSnmFrsZ4ReDU37LzSAPoeK
-	 aQ1uGXmg4WJ0kG9n+EOmIiWWiBCfCU6GDjzF/zCaqytUpTY6l6Wipo+PvB5eDBUjm
-	 VKD/sfxRFW0pMiV1qQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Md6Mt-1qmDG71vuN-00aDl5 for
- <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 13:12:40 +0100
-Message-ID: <bbc667b5-366b-430f-afd5-fa8a9326d9b7@gmx.net>
-Date: Wed, 3 Jan 2024 13:12:40 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33811A28F
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 13:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-ej1-f72.google.com (mail-ej1-f72.google.com [209.85.218.72])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 32E863F74C
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 13:28:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1704288536;
+	bh=yWWe6H23myTSvjfVff9zG/62qYLCD/sbWwOipagSJuM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version;
+	b=oBVzL9xVAQ/5evAZW5+By3z6tyFpB0FMqcCpS6fw/l4c42E9JdB8Rg8bzNWUrRd/s
+	 pCx0TdiHBXbV0TIIRAVHZpZYgTZvsUm/zHoVasJs1h5mNzffkVj0ecPkdrzOsPIcca
+	 /FhuSKaKC97Nxf1rlVsaCpMexD7k4voHjG10GW9czu8GUqmMGUwyIDvPY94HYmODre
+	 RqQxKKjhSeUC42/VQmI6zAComeRcdDktGXKvO+ocmF+sceJbjuDKrlZjk2cFGjnMdy
+	 NcgiCkO0KKGynZPt7PzIbcq3vEA9Vl77X5OYtS2TFmQ4kDHnv+bIhG6XtJR6jixrNK
+	 ofvSUFR3k5Y4A==
+Received: by mail-ej1-f72.google.com with SMTP id a640c23a62f3a-a28102bc0f1so85408566b.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 05:28:56 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704288534; x=1704893334;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=yWWe6H23myTSvjfVff9zG/62qYLCD/sbWwOipagSJuM=;
+        b=DmDhsco2dpGhgKYKIq7P2mZ5DCPtSUvl8kmKGyo2homLNGRu/BeMXW4GVDclD4kpqG
+         35NsEh3LdBtioDM0kWR/Gpf1DBLojvcW108HaNWaN8tGWN6wGQxkThS1fgB4axg/azD+
+         gC3FU/uHq8rJ/dA2bMM1/9si9ILMdS6vmzYg4YAr9BK46tnwDIp+ldRCP3XQIf42jPK4
+         xL34kKkpy6TbW5PK6ZnThq2HfSjzVMfJPrr+Qj+DQi3B16yE9A15KLCboFec5x2jPTVT
+         mFt9wZ8D7hK4R4LcBggLyJiM4DKxBCDucaC6nq6wf2yxsH/8RyhUvYIQbeDKZsi8k9aK
+         HCKg==
+X-Gm-Message-State: AOJu0Yyi3i9Y8CUz5GPqsDzTO2uzG2dVe5UdoC9rtHwF7GwS7ZQI6F/5
+	/aKKp+uKA7Junhu7aYxJzUFBjLkzrQLsYYM9cdayeHcMmojleYH8yA/p5xmY2DSlAVQLJnvbZnP
+	BI4zZI6YKw66CMS3T/TVw8qkbYt2mVCP18rJfAxRWGFva9Q==
+X-Received: by 2002:a17:907:36c7:b0:a27:d55d:73d3 with SMTP id bj7-20020a17090736c700b00a27d55d73d3mr3348198ejc.23.1704288534032;
+        Wed, 03 Jan 2024 05:28:54 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGCAg1DXImZMtkXe7TWoLXcnmyhjNjWaMpeNZkVAjpDt/dd1YDA1CXZvWTJalXLzI+MUZw+JQ==
+X-Received: by 2002:a17:907:36c7:b0:a27:d55d:73d3 with SMTP id bj7-20020a17090736c700b00a27d55d73d3mr3348189ejc.23.1704288533638;
+        Wed, 03 Jan 2024 05:28:53 -0800 (PST)
+Received: from stitch.. ([2a01:4262:1ab:c:5af0:999b:bb78:7614])
+        by smtp.gmail.com with ESMTPSA id eu18-20020a170907299200b00a26e53be089sm9549873ejc.44.2024.01.03.05.28.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 05:28:53 -0800 (PST)
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>,
+	Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Drew Fustini <dfustini@baylibre.com>
+Subject: [PATCH v2 0/8] Add T-Head TH1520 SoC pin control
+Date: Wed,  3 Jan 2024 14:28:37 +0100
+Message-ID: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Content-Language: en-US
-To: linux-gpio@vger.kernel.org
-From: Stefan Wahren <wahrenst@gmx.net>
-Subject: pinctrl: Questions regarding pinconf_ops and bcm2835
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:rYAG3VwmYe8HpGxQYKsyrV6OUtH/Ijl36po3pD3XCLNXkxDLFOY
- zq5AGvkQQvdUGu+1uFZ4YO0hBvOwV/Qkn+zgsMbhZPZjIyaVfWyTVotG796r11kQCvfK7QM
- WeAJSReUJ1nHvqvonH0vr0h5USijR8iSzwIEPZMfBPUbZyXCey3WOdEzyTE5c4wBB64m9L3
- fAqda9DpHXqfMM8JOOAjg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:lo6d+CFui6Q=;38E+iNXLnH0VymnssDk/eqv0ug3
- oytNOIXZn23CCWuaOWZka8FdHU/OEDzTxek25S7ofJD2C6olLk/1HVk1gsnWEyjLHX4NBPD74
- ZWuUqn+T7sM+pDJnfYlYpLg2Oj9AMN76jzzIcZVh4mXBE86EIYiIVKa4w6RMwmGKJxkG6UySR
- lDTTlcAyr//Zld5ISDlLdA1p3uEQitRec+7DSzKZ1bHqHaxGwm0QKLv7rjsu33syLOUt3fxWv
- gWaJeigPib7JoPbUrKVs0vGAma2GEfnvO7NvohpA9OGyERh0vX37j22h6tGaHckMafVO3eWnc
- i0PZsNlG2If0Z6S4jTDPEnP6EPDa9s6ciBInWYO/l4fq6bVzi0yyE0c+jal0O4ShpXW0WeGOO
- oW2r66EWnMidfqbcjS/D8MUbEl+k50tJkGrzg+4Y4mW5aKODB960weMbRQThGbdKBgsPkySvC
- 2aGAG7xIl0Zx+fTzWyE8DjrfZFkmiFhjnKUr9cQoGao+FEDLsMUs9D4VM/KRNhYCnG1WqMGx6
- yGN7YrLz9pGOgyvXPUyCw3ZGPpysSdqWv8gIlwPOencm5tgpg6WdEKYApU91w+mYHyz6aV5fh
- yIaxMP5V1qQKXd7JLsT1KKcmwos0h72v/2KaTBd66H5+TjDyayQUPCQ6MOjvzUD7UUpT7rugu
- yyl4mEtCPPQdQ36YDNyzPQ0q20HAtA4VhweqJts7zSz9Eo9O2tVPRBqUoc8i74+IREPK58jjU
- FyeudiVG6C1zp0PGghmLNh+Zwz6VkgfJm209k9ND5Qi8rOvFo28Y6PQi+SVtEkNTuh90ftSKW
- 9Daz7HZ7OP9hwes2d2HPFj6EqY38UAv7O/aTITHFuOw6WQ9QtQ9+Wwcipmq8jLq0qzWigd2Nd
- dmi4EL7yMKkS4rJTOcSV5g1T/kbogXkGTrkAHmK/x66EoRjMkVqEMV7jrrkRF/szst+5NCcyt
- EKaXOw==
+Content-Transfer-Encoding: 8bit
 
-Hi,
-i recently noticed that the BCM2711 (used on Raspberry Pi 4) doesn't
-implement pin_config_get, but this SOC is able to read back the bias
-settings of the pins. After looking deeper into the pinconf_ops i had
-some questions:
+This adds a pin control driver for the T-Head TH1520 RISC-V SoC used on
+the Lichee Pi 4A and BeagleV Ahead boards and updates the device trees
+to make use of it.
 
-1. Are there any other benefits from implementing pin_config_get except
-of a proper debugfs output?
+It can be easily tested using my th1520 branch at
 
-2. Since the pin direction of BCM2835/2711 (input/output) is already
-handled by pinmux_ops via gpio_set_direction, how should pin_config_set
-handle PIN_CONFIG_OUTPUT_ENABLE?
+  https://github.com/esmil/linux.git
 
-3. In case pin_config_get is implemented should the parameter
-PIN_CONFIG_OUTPUT_ENABLE and PIN_CONFIG_OUTPUT be handled?
+..which also adds the MMC, PWM, ethernet and USB drivers that have
+been posted but are not upstream yet.
 
-Best regards
+Jisheng: I've added this driver to the generic TH1520 entry in
+MAINTAINERS like you did with your USB driver. Let me know if that's not
+ok and I'll create a separate entry for this driver with me as
+maintainer.
 
+Drew: The last patch is purely based on reading the schematics. It'd be
+great if you could give it a spin on real hardware.
+
+Changes since v1
+- Keep pinmux data for each pin so we can mux by type instead of directly
+  using the mux index. Eg. use function = "uart" etc. (Linus)
+- Drop the strong pull-up property and prevent Linux from combining the strong
+  pull-up with the regular pull up/down. This also means we can't report such
+  usage if it set up by earlier stages, but that problem is deferred until we
+  encounter it (Linus)
+- Reference pinmux-node.yaml properly (Rob)
+- Specify valid pin names for each group (Rob)
+- Enable bus clock (Emil)
+- Implement gpio_request_enable() and gpio_set_direction() for automatic
+  GPIO handling (Emil)
+- Drop patch adding gpio-ranges to the gpio-dwapb bindings that is
+  merged in gpio/for-next. (Emil)
+- Patch 6/8 adding GPIO line names for the Lichee Pi 4M module (Emil)
+- Various code nits (Andy)
+
+/Emil
+
+Emil Renner Berthing (8):
+  dt-bindings: pinctrl: Add thead,th1520-pinctrl bindings
+  pinctrl: Add driver for the T-Head TH1520 SoC
+  riscv: dts: thead: Add TH1520 pin control nodes
+  riscv: dts: thead: Add TH1520 GPIO ranges
+  riscv: dts: thead: Adjust TH1520 GPIO labels
+  riscv: dts: thead: Add Lichee Pi 4M GPIO line names
+  riscv: dts: thead: Add TH1520 pinctrl settings for UART0
+  riscv: dtb: thead: Add BeagleV Ahead LEDs
+
+ .../pinctrl/thead,th1520-pinctrl.yaml         | 372 ++++++++
+ MAINTAINERS                                   |   1 +
+ .../boot/dts/thead/th1520-beaglev-ahead.dts   |  87 ++
+ .../dts/thead/th1520-lichee-module-4a.dtsi    |  43 +
+ .../boot/dts/thead/th1520-lichee-pi-4a.dts    |  28 +
+ arch/riscv/boot/dts/thead/th1520.dtsi         |  62 +-
+ drivers/pinctrl/Kconfig                       |   9 +
+ drivers/pinctrl/Makefile                      |   1 +
+ drivers/pinctrl/pinctrl-th1520.c              | 891 ++++++++++++++++++
+ 9 files changed, 1478 insertions(+), 16 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/pinctrl-th1520.c
+
+-- 
+2.43.0
 
 
