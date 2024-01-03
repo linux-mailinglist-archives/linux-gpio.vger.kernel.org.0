@@ -1,142 +1,110 @@
-Return-Path: <linux-gpio+bounces-1980-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-1981-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BC9B822A89
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 10:50:41 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC1C8822B41
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 11:26:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A1C4D1C23250
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 09:50:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7B1571F23EAF
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 10:26:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5C1A31862A;
-	Wed,  3 Jan 2024 09:49:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F99518B0C;
+	Wed,  3 Jan 2024 10:26:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DZu/o/vB"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gBdXRcKJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D956A18E35
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 09:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso1136939b3a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 01:49:35 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFAEF18C27
+	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 10:26:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7ccf60f3600so2066604241.0
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 02:26:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704275375; x=1704880175; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=L8Swz2yIZ/T2u7iElJjdidE/5nYsKtVPHXA9sRYctrg=;
-        b=DZu/o/vBCVdGjInbyUhbwpva4AXkxC5ZNTM14CjP+dzLvzaVtQRbJOVRA5MoNT9bjo
-         jFJzSbEGV3+6Xqtr1alKlusqJ5W6YTlqPKTr6BPEN9a4+03gmhG2K2Wa6OFtAkauIBAc
-         pvNklAYT+eV2VcpfSk3rwcdgCY/74mEuykcKj27PGwSLFn+0NEFj4ihFmAKBMKYK4imV
-         wzf1Ei9pqHh56tnCGEMZvfDYrxS5sURbnRoljtz6wRCg9b14efn3b3kQw8mR2egjxqom
-         obVJCvHSUXdbae+TSp3cVj25JxmaOOu0LFElT9x09COygrN6IncKhUwRofOjx4AtzAuW
-         1aKg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704277578; x=1704882378; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=1d7qdkI7VcKd65R+llbhREgSlk8bC5HVMhsfJ3f5O8Q=;
+        b=gBdXRcKJFmRY66aM7eCJ7oVfMGK52ggM2gfVCX5IbNN7JWMo+ueV/HOvi2225x2OPb
+         i8cx/i4O5NUnXTg866sioGWa2zGXu2iH3VZ0WSlAzFWoFgUDYY3OeNPTmU4EpK7uveBF
+         Z/h6J2hWG/6PhyEkQLRTlKR5eCKxn7QlxpL4NQRZNozT0bzIXQxCZU5AGePIV/qQNnky
+         gabq6OSlFHKMPGsynlrZQjivGCA8B5IcmA3t60jYX40E6OYiYee5GH4JzHvFu6WEsdLR
+         1GjBF9iYnEQ18ES/nUToyiu8Q7/eApml/iui6+KbMRT6raWApfClgRoC6SECZN6BoqJw
+         2IRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704275375; x=1704880175;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=L8Swz2yIZ/T2u7iElJjdidE/5nYsKtVPHXA9sRYctrg=;
-        b=f351Dy6o6g14AsHNFNKDPWC0zQ2L3T9qnI0uUW268z7fp9b3gz96P1rJVDgjs3PLoc
-         fC7U59QhAP86wE5YXSs3Po+a6d0/MOMhadgLMBCVdU9kp5ueMEQCf6aMNtKdPayDn91m
-         Rr6ZrXxySjtQ67HUQx4/bZ6vhxuXPWQs5vuYAAY9YlON+bUQn/L8tSxYS6A+EW5Fi3gL
-         Sus3q59JziLbMuOBdqik8Yl12+Te51fp3dV7QSYpHtiMNI6K7Esyl2plQR+Xg2gb0ez/
-         uohX2WPKtIWi74j+ce9Br6rC4gKOKFNCX6IGYOlBwa1Vp6zfA/GJihd9iPc1PmIqAWjk
-         kaxg==
-X-Gm-Message-State: AOJu0YzwgWIUJNAYIADUcWseiQCOXdez995GKFjqzu4Q3mNKM1Io4jef
-	1wVd2Shn2KbTdEZDa8N80AQ=
-X-Google-Smtp-Source: AGHT+IGCbgvcZEzP5N5Jle1XCM/+LiQByIN65lwK1fJIzetYGHAbDcfLpUgIS8u0prC0ZJYvpczynQ==
-X-Received: by 2002:aa7:8185:0:b0:6da:18e8:6f83 with SMTP id g5-20020aa78185000000b006da18e86f83mr3881515pfi.62.1704275375054;
-        Wed, 03 Jan 2024 01:49:35 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id k16-20020aa792d0000000b006cbe1bb5e3asm22447691pfa.138.2024.01.03.01.49.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jan 2024 01:49:34 -0800 (PST)
-Date: Wed, 3 Jan 2024 17:49:31 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Seamus de Mora <seamusdemora@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver
- 2.1
-Message-ID: <20240103094931.GA117646@rigel>
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
- <20231228092915.GA67274@rigel>
- <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
+        d=1e100.net; s=20230601; t=1704277578; x=1704882378;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1d7qdkI7VcKd65R+llbhREgSlk8bC5HVMhsfJ3f5O8Q=;
+        b=o7DEqrFOWXdM6F9KYsA1hVyEFiaEEpzzAfMQg+ioWweoKWLSQiW/BIJZ+fbOd1ANXu
+         yVsdUPzskeddsdZMQ28/fBYomx8DGESUSRWQ1eKOSRww0RnjNZJjkGqVg1cLq+ZKvSkd
+         1Wb4MCksqB3akUt3Y7e/06xGTiiA6XQREql6vnMmh5w2pVUdh8lHse5A4g6yItoL2uH1
+         6820yr74aoMG/85HmCTiW4V7IdTIlyFM33EKPdIv79yWXkg0IOVOBC/8MvMFN1KqE0P5
+         9yC3Tu5BuMCgaSMC9+p7GZx1+X0tRM38IoChUPpJ+K0H/AhGO3tB9Quz4Cpj36q8y/AB
+         exPA==
+X-Gm-Message-State: AOJu0YzOasMLK0a1q/cnwNDX4PfGF2VDGmKV/7m93x3NsNp5TgCZwLku
+	f1URxL/xWMl+CNqswt4aaj/3AmKg40BsQkBCf2Aq93iIV/Zjcw==
+X-Google-Smtp-Source: AGHT+IE5jAGVmqMJmEEUn9XlR3Ju9xjVR+lwzAqo9Xfbl9h69dD5XR7wi3AVa2oOSBEa2fbNaqf2DaS3Lpcd+UAX4Yo=
+X-Received: by 2002:a05:6102:2d05:b0:466:fd31:def8 with SMTP id
+ ih5-20020a0561022d0500b00466fd31def8mr7847832vsb.55.1704277578749; Wed, 03
+ Jan 2024 02:26:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
+References: <20231229074508.2709093-1-JJLIU0@nuvoton.com>
+In-Reply-To: <20231229074508.2709093-1-JJLIU0@nuvoton.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 3 Jan 2024 11:26:07 +0100
+Message-ID: <CAMRc=McNDMBXebq_KC50F4XaXrFTCw6+GQqNmhbzPQ=2oGpLzQ@mail.gmail.com>
+Subject: Re: [PATCH v10 0/3] Add Nuvoton NPCM SGPIO feature
+To: jim.t90615@gmail.com
+Cc: JJLIU0@nuvoton.com, KWLIU@nuvoton.com, linus.walleij@linaro.org, 
+	andy@kernel.org, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
+	conor+dt@kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, openbmc@lists.ozlabs.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 03, 2024 at 01:51:53AM -0600, Seamus de Mora wrote:
-> On Thu, Dec 28, 2023 at 3:29 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > On Wed, Dec 27, 2023 at 07:19:54PM -0600, Seamus de Mora wrote:
-> > > Hello,
-> > >
-> > > I've done some testing/evaluation of the 'libgpiod ver 2.1', and I'd
-> > > like to share a few thoughts from that experience.
-> > > <snip>
+On Fri, Dec 29, 2023 at 8:45=E2=80=AFAM <jim.t90615@gmail.com> wrote:
 >
-> > Then you might want to update your kernel - the kernel device driver was
-> > changed to support peristing [1].
-> >
-> > I get this on my Pi4 running bookworm:
-> >
-> > $ gpioset -t0 GPIO23=0
-> > $ gpioinfo GPIO23
-> > gpiochip0 23    "GPIO23"                output
-> > $ gpioget -a GPIO23
-> > "GPIO23"=inactive
-> > $ gpioinfo GPIO23
-> > gpiochip0 23    "GPIO23"                output
-> > $ gpioset -t0 GPIO23=1
-> > $ gpioget -a GPIO23
-> > "GPIO23"=active
+> From: Jim Liu <JJLIU0@nuvoton.com>
 >
-> Yes - the device driver on my bulleye is current; that change was
-> committed back in 1Q 2023 IIRC...
+> This SGPIO controller is for NUVOTON NPCM7xx and NPCM8xx SoC.
+> Nuvoton NPCM SGPIO module is combine serial to parallel IC (HC595)
+> and parallel to serial IC (HC165), and use APB3 clock to control it.
+> This interface has 4 pins  (D_out , D_in, S_CLK, LDSH).
+> NPCM7xx/NPCM8xx have two sgpio module each module can support up
+> to 64 output pins,and up to 64 input pin, the pin is only for GPI or GPO.
 >
-> I hope I've not already asked this, but:
-> In ver 1.6.X of libgpiod, gpioset exits immediately, and returns to
-> the bash prompt. The GPIO line remains set at the value designated
-> after gpioset exits. AIUI, the driver change from 1Q 2023 was
-> responsible for this.
+> Jim Liu (3):
+>   dt-bindings: gpio: add NPCM sgpio driver bindings
+>   arm: dts: nuvoton: npcm: Add sgpio feature
+>   gpio: nuvoton: Add Nuvoton NPCM sgpio driver
 >
-> In ver 2.1 of libgpiod, gpioset (without options) does not exit. This
-> means there is no return to the bash prompt. The GPIO line still
-> remains set at the designated value, so there is no change in the
-> behavior of the GPIO line between ver 1.6.X and 2.1.
+>  .../bindings/gpio/nuvoton,sgpio.yaml          |  87 +++
+>  .../dts/nuvoton/nuvoton-common-npcm7xx.dtsi   |  24 +
+>  drivers/gpio/Kconfig                          |   7 +
+>  drivers/gpio/Makefile                         |   1 +
+>  drivers/gpio/gpio-npcm-sgpio.c                | 612 ++++++++++++++++++
+>  5 files changed, 731 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.=
+yaml
+>  create mode 100644 drivers/gpio/gpio-npcm-sgpio.c
 >
-> My question is why does the un-optioned gpioset ver 2.1 not exit - as
-> it did in ver 1.6.X?
+> --
+> 2.25.1
 >
 
-You did, and I answered on SE.
-But to reiterate; gpioset v1 exited immediately and that caused
-confusion when the driver would revert the line to its default state.
-That made it look like gpoioset wasn't doing anything or was generating
-a glitch.
-That results in "gpioset doesn't work" bug reports, and we got tired of
-that.
-The decision was to make it block by default to make it clearer that you
-lose control over the line when it exits.
+Applied patches 1 and 3.
 
-In short, we changed it because people complained about it, either
-explicitly or implicitly.
-
-The -t0 option can be used to emulate the v1 behaviour.
-
-Cheers,
-Kent.
+Bart
 
