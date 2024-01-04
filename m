@@ -1,187 +1,117 @@
-Return-Path: <linux-gpio+bounces-2032-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2033-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 768DA8242BC
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 14:37:23 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC0A582431C
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 14:52:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DFDD91F23283
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 13:37:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECC2E1C23EB6
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 13:52:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09A40210F0;
-	Thu,  4 Jan 2024 13:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A9682233E;
+	Thu,  4 Jan 2024 13:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fQBLy4LA"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="huzcx9cV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68C362231B
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 13:37:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 514D5224C1
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 13:51:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4b743ca0597so165608e0c.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jan 2024 05:37:16 -0800 (PST)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40d858c56cbso5570235e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jan 2024 05:51:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704375435; x=1704980235; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YqqTXKOUVwpCgu9BnFin5+QoIMKL9JWfssNZ5mmuC7A=;
-        b=fQBLy4LAc9s8+JbCWLnoWEpwO6WJ8HCmpL0j8IC0JqxMj/KQAoh6sTwUXTeHGdPTXn
-         Ung+6s9TcrlMqsSsc2+DrfznsF6GwgEKulYiNRDrhjtky6n853kraT1uswCR16K/Qe61
-         XiJf6ekQh4BZ2SJ08p3q1mLt7MinH1aVKj4zZ6uFoM9+cIqFyo9h7IjhOC4hBLNxjsmR
-         vnPr9lZcG71WKOI5KHgOfLfs972SOoGVamQb/iszOx7CY1dcCwAiJRKXdAfUsVO9dEFZ
-         r1xfsepI68TGbJrQfN84b1qi0BmU2iNdQ05E2ozkcXFiUg2GN8zmxA+iy4pXmMs3Rxz+
-         dthQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704376261; x=1704981061; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=fHnPIwYaIUyiEHw32i1Z1FFaA5YcTg9egjLOSfsl5NI=;
+        b=huzcx9cVFXjWBeKkLiS9z3xMUxlnUhTk71j5/wft2lg67ey1fA5r9HUbyTUibSPnif
+         QWi7XFUMpvYIawX3S7Nawlipeax7CqLqFi+lEJlqPJTvaYCklh+4W6vgcld8540qr70M
+         5RbG1jAfOBJGyW3R5tWBTJuETl2529DDv/GA67G036cAcpfWf5hrXjuw08t0iaM8/ATN
+         Lqa3CdMuKQdmJ+r5zJg4oUoFMPan0R2tBpvhzV9FEVdOIUfdRjRcZ0/8LX38VXoKBtfQ
+         XpcSobpGjU2AibxcrxQ3KhZX3KxwzjU25WbkBW3KxgFrqwqbF7oghra+YbWOMFbxD7QW
+         LEjQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704375435; x=1704980235;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YqqTXKOUVwpCgu9BnFin5+QoIMKL9JWfssNZ5mmuC7A=;
-        b=LMqR0R/VfsrODLecqvy0tZ4C2IP9LrDHiFAaK3NFeI6NaIKfNC90MCaPsP+pukJlR8
-         oH7bYfCbQHa8uTxKAi5qNiB7bHaqFVJHVn8atgKq3V3KDK7CKOnEagzWyLzIvsNlRqq7
-         Tc1v6T/+ryNfNHwXID9/PhpWAzjWT96JKnhubZdasp44g5pA7BlB6bOJrDVpEdPSmibz
-         Y191/8S7OkwO/kY3r6cdNG0tX95WLv41RviakUr8vY3DQBYOEkxQHEtsmbEw00j/iJT+
-         j6zS2FssCoB5gLoO/9Fy7n2ur5ifmHp5wKCm0Q8+sQqBNJz3UHE2pVLov8+YTDy4+voy
-         GH6Q==
-X-Gm-Message-State: AOJu0Yw5oXsVkt/vZ7l3dcT68I20ukeWSZ7BIkaVct6MA5P+Ak/tzEnv
-	9w2tYOsktHfMVBaoSP8Us5tqFuo7tnngXC+LwUtiRZTv9l9NUg==
-X-Google-Smtp-Source: AGHT+IEIrQM9ZW/BNPeTUPXG83heWdHZhwm/OkbStpa8cYII8nwh/9aVyBcdhCGc/lQc36tlwwPMlA8OOe+SEdFMd+M=
-X-Received: by 2002:ac5:cc63:0:b0:4b6:da2d:643a with SMTP id
- w3-20020ac5cc63000000b004b6da2d643amr514595vkm.24.1704375435097; Thu, 04 Jan
- 2024 05:37:15 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704376261; x=1704981061;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=fHnPIwYaIUyiEHw32i1Z1FFaA5YcTg9egjLOSfsl5NI=;
+        b=Vv9yInf7qJVUcfNn3u7kEnxIH8ZpD+UpKGSSRtjpFUDot8X+qXMH31GR8ps115g3ES
+         eZSpqnEwIXhyafXhIc9qUd53gqeGfhTJ/zOEbJ8rBIvSa3NgcNUPQ1D8dVgTN5UYqKQW
+         aXzT6yw+5GgJELgHuvGup8IumfQSSudPc/k9IGHFAGhGZSZuiaR4BGAEKeM9216pSnz7
+         Jq2z7JA3jawK0HLY7Q5VSbvY2p+LPOscMzVAdvM+wDHfjify/g5BimCPGolRUGzEKK5K
+         5WGN0R+TfA+qaO66Jpt30nG9Ymp0BquyCFK30Kt408kt3OtnmInn+xF8+45Ph9RvOVyT
+         M5+w==
+X-Gm-Message-State: AOJu0Yx5nHmOeSsohwZMH3B1CUDKoBnAHj9H+BPK1kaYupSA5/exn8Y0
+	Ji3uufil3oU2X0clJzyQX2qFkKFIeOwgkA==
+X-Google-Smtp-Source: AGHT+IGRHL+L6YS59bXwI0Mfzs5lNytxiJRXvBMa3SL3mezGR47W2MYGoqWy/Z/Cx5NfhFY1YUWGFA==
+X-Received: by 2002:a05:600c:524e:b0:40d:609d:d62f with SMTP id fc14-20020a05600c524e00b0040d609dd62fmr372621wmb.87.1704376261534;
+        Thu, 04 Jan 2024 05:51:01 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5b69:3768:8459:8fee])
+        by smtp.gmail.com with ESMTPSA id k39-20020a05600c1ca700b0040d8af75e19sm5798567wms.24.2024.01.04.05.51.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 04 Jan 2024 05:51:01 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
+Subject: [libgpiod][PATCH] core: remove buggy flags sanitization from line-config
+Date: Thu,  4 Jan 2024 14:50:58 +0100
+Message-Id: <20240104135058.46703-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Pine.LNX.4.64.2401032017390.31157@wormhole.robuust.nl>
- <CAMRc=MeoSzL=BbknUWFZkUD57pym+D9Ghjb9iyrgJJBUhRdXHg@mail.gmail.com>
- <20240104105150.GA68799@rigel> <CAMRc=MeDbWcCOnKYNnVxJgij-qsY01aFYsHiY76xmVnaD05+oA@mail.gmail.com>
- <20240104133458.GA86666@rigel>
-In-Reply-To: <20240104133458.GA86666@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 4 Jan 2024 14:37:04 +0100
-Message-ID: <CAMRc=Me7X-DhviOCxKXnpG8Mxaj_gM0cVj5B=F0BE5N1C-7z+g@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 retry] core: fix deselection of output
- direction when edge detection is selected
-To: Kent Gibson <warthog618@gmail.com>
-Cc: "J.A. Bezemer" <j.a.bezemer@opensourcepartners.nl>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Jan 4, 2024 at 2:35=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Thu, Jan 04, 2024 at 05:13:59AM -0800, Bartosz Golaszewski wrote:
-> > On Thu, 4 Jan 2024 11:51:50 +0100, Kent Gibson <warthog618@gmail.com> s=
-aid:
-> > > On Thu, Jan 04, 2024 at 01:13:35AM -0800, Bartosz Golaszewski wrote:
-> > >> On Wed, 3 Jan 2024 20:18:27 +0100, "J.A. Bezemer"
-> > >> <j.a.bezemer@opensourcepartners.nl> said:
-> > >> > Fix deselection of output direction when edge detection is selecte=
-d in
-> > >> > make_kernel_flags(). Use correct flag to perform deselection rathe=
-r than
-> > >> > a library enum.
-> > >> >
-> > >> > For correct usage, there are no visible side-effects. The wrongly =
-reset
-> > >> > kernel flags are always zero already.
-> > >> >
-> > >> > For incorrect usage of edge detection combined with output directi=
-on,
-> > >> > both output and input directions would have been requested from th=
-e
-> > >> > kernel, causing a confusing error. Such usage will now be sanitize=
-d, as
-> > >> > intended, into a working configuration with only input direction.
-> > >> >
-> > >> > Signed-off-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
-> > >> > ---
-> > >> >  lib/line-config.c | 6 +++---
-> > >> >  1 file changed, 3 insertions(+), 3 deletions(-)
-> > >> >
-> > >> > diff --git a/lib/line-config.c b/lib/line-config.c
-> > >> > index 2749a2a..9bf7734 100644
-> > >> > --- a/lib/line-config.c
-> > >> > +++ b/lib/line-config.c
-> > >> > @@ -381,18 +381,18 @@ static uint64_t make_kernel_flags(struct gpi=
-od_line_settings *settings)
-> > >> >          case GPIOD_LINE_EDGE_FALLING:
-> > >> >                  flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
-> > >> >                            GPIO_V2_LINE_FLAG_INPUT);
-> > >> > -                flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
-> > >> > +                flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
-> > >> >                  break;
-> > >> >          case GPIOD_LINE_EDGE_RISING:
-> > >> >                  flags |=3D (GPIO_V2_LINE_FLAG_EDGE_RISING |
-> > >> >                            GPIO_V2_LINE_FLAG_INPUT);
-> > >> > -                flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
-> > >> > +                flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
-> > >> >                  break;
-> > >> >          case GPIOD_LINE_EDGE_BOTH:
-> > >> >                  flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
-> > >> >                            GPIO_V2_LINE_FLAG_EDGE_RISING |
-> > >> >                            GPIO_V2_LINE_FLAG_INPUT);
-> > >> > -                flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
-> > >> > +                flags &=3D ~GPIO_V2_LINE_FLAG_OUTPUT;
-> > >> >                  break;
-> > >> >          default:
-> > >> >                  break;
-> > >> > --
-> > >> > 2.30.2
-> > >> >
-> > >> >
-> > >> >
-> > >>
-> > >> It doesn't seem like you ran the test suite because it breaks one of
-> > >> the test cases:
-> > >>
-> > >> **
-> > >> gpiod-test:ERROR:tests-edge-event.c:80:_gpiod_test_func_cannot_reque=
-st_lines_in_output_mode_with_edge_detection:
-> > >> 'request' should be NULL
-> > >> # gpiod-test:ERROR:tests-edge-event.c:80:_gpiod_test_func_cannot_req=
-uest_lines_in_output_mode_with_edge_detection:
-> > >> 'request' should be NULL
-> > >> **
-> > >> gpiod-test:ERROR:tests-edge-event.c:81:_gpiod_test_func_cannot_reque=
-st_lines_in_output_mode_with_edge_detection:
-> > >> assertion failed (22 =3D=3D errno): (22 =3D=3D 0)
-> > >> # gpiod-test:ERROR:tests-edge-event.c:81:_gpiod_test_func_cannot_req=
-uest_lines_in_output_mode_with_edge_detection:
-> > >> assertion failed (22 =3D=3D errno): (22 =3D=3D 0)
-> > >> not ok 19 /gpiod/edge-event/cannot_request_lines_in_output_mode_with=
-_edge_detection
-> > >>
-> > >
-> > > Interesting.  So the actual bug is that make_kernel_flags() shouldm't=
- be
-> > > sanatizing the flags at all?
-> > >
-> >
-> > Yes, I think so because we don't want to silently drop the output flag =
-but
-> > rather complain the user tried to use it together with edge detection.
-> >
->
-> That is what I thought you meant - it just seems at odds with what you
-> were thinking when you wrote it, cos the intent does look to be sanitizin=
-g.
->
-> I'm fine either approach way, btw, just verifiying which way you wanted
-> to go - the other option being changing the test.
->
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-I no longer remember what I was thinking at the time but it makes more
-sense to me now to not sanitize and complain loudly about a clearly
-wrong configuration.
+We try to drop potentially set output flags from line config if edge
+detection is enabled but we use the library enum instead of the one from
+the uAPI. In any case, we should actually loudly complain if user tries
+to use the output mode with edge-detection (like we do currently) so just
+remove offending lines entirely.
 
-Bartosz
+Reported-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ lib/line-config.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/lib/line-config.c b/lib/line-config.c
+index 2749a2a..9302c1b 100644
+--- a/lib/line-config.c
++++ b/lib/line-config.c
+@@ -381,18 +381,15 @@ static uint64_t make_kernel_flags(struct gpiod_line_settings *settings)
+ 	case GPIOD_LINE_EDGE_FALLING:
+ 		flags |= (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+ 			  GPIO_V2_LINE_FLAG_INPUT);
+-		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
+ 		break;
+ 	case GPIOD_LINE_EDGE_RISING:
+ 		flags |= (GPIO_V2_LINE_FLAG_EDGE_RISING |
+ 			  GPIO_V2_LINE_FLAG_INPUT);
+-		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
+ 		break;
+ 	case GPIOD_LINE_EDGE_BOTH:
+ 		flags |= (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+ 			  GPIO_V2_LINE_FLAG_EDGE_RISING |
+ 			  GPIO_V2_LINE_FLAG_INPUT);
+-		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
+ 		break;
+ 	default:
+ 		break;
+-- 
+2.40.1
+
 
