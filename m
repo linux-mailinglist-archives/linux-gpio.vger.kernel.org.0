@@ -1,71 +1,72 @@
-Return-Path: <linux-gpio+bounces-2028-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2029-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1900824222
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 14:00:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6979824228
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 14:01:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E5831C21773
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 13:00:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62ED91F226ED
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 13:01:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9A522305;
-	Thu,  4 Jan 2024 13:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95CE122313;
+	Thu,  4 Jan 2024 13:01:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iKomG6EL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFf1h/U2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318272230A;
-	Thu,  4 Jan 2024 13:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F612230B;
+	Thu,  4 Jan 2024 13:01:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-680d2ec3459so3360206d6.0;
-        Thu, 04 Jan 2024 05:00:31 -0800 (PST)
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7815c5b69e1so29377185a.1;
+        Thu, 04 Jan 2024 05:01:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704373231; x=1704978031; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704373301; x=1704978101; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0nIrL28BMXphB/rrvwi7A3ipYuJ+0Mt1C/a/HABGUGM=;
-        b=iKomG6EL+le/sIir45GMtv5PAFxT7PRBTK+faFt7X+e/unXNc9YONdmW/gyUDmAV17
-         x3nvanKAKqnWZrVlvpmukrAKISOfWnMHFIhkFDagMGgXOG/mIKeT+89u9C+/KspABWg5
-         Dq3NivLS4ZZQIf5ziuDr3zmJRZB0HV3W1TnoM0bVw7G9x5/iqL2n6ZVFAR7z1wYQQfnc
-         Z0YfHa/kOsxbfYX7nh72CWZ6cnNKH9tN7GMhzM9anSE/84LtshAQ8yHVPTLDC1fY4Bif
-         0qMOdDIPIIfGKC1yRDYwjAbgT+Nx5E+o3qQRHY5+2RhHjiB9oXbQp61Kh3sLcVpeCPJO
-         42aw==
+        bh=T58SQKnZ9f/XAhQbGGB3bCkUckh7sbRsHba15J+0qeE=;
+        b=eFf1h/U2AiR6u549cfIt5SUeQ24WfroIj4rJ25GxCcSXMnFL6+Idh4Gd6PmN5ErKa+
+         TNLKGIPyaSmxp0s1YCJ3Me73o3tKbeelr4jtstI2wWiddkOCuLQAfYkTMax5/I3qhoXq
+         Pk1dd5MALIRGA027Pw1icJ24l7WF+o6OGij3KGiXptKyBdcugAS7Gf0EjCYSuaHcvdRw
+         15NxvHiDLs/8mYosjLpDUbMW+vLxbexO+U61VcwTqOzWeQkqDSTNmUBXXC5ehesaYDac
+         tgT97CPEI+IIqSx/BNN6NFR2sf06qD/KCa57xdQUn/L2KLYPBI656qodLsZCmDwEonyu
+         8BxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704373231; x=1704978031;
+        d=1e100.net; s=20230601; t=1704373301; x=1704978101;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0nIrL28BMXphB/rrvwi7A3ipYuJ+0Mt1C/a/HABGUGM=;
-        b=MIexvL7ExiDFRI1E6aQUcJZtHCNFUeDaYFhtPealkZixvxRN6x46LpNr2arYCANubt
-         bdrmKy5t/shXL5i3jlmljEchRIPaGGMkrfaFv16pNCxDo4jINFPCXjQtk1FqnTz7jAuX
-         DqUcirfEgipxm/dQRb5CANnbBu2JT29AKvb5oaB4HQ/uE09VUp5iJ39cuF2uA2hYDQDh
-         75q9Gukqp3bl5Fk6JB4zKz1Nb3r+hBUJaUt8Rzg6/h1aSUo5B/pG2MQ7+IgjUTTn++Yy
-         6ob4HirWVZT5a7QHjuaUfB6jSET+ptjy/7ORT7Pbj01u0bmVKF9PRIi453yOK0djrnD8
-         6Xbg==
-X-Gm-Message-State: AOJu0YwhThxLCtPpEdTgnRe97DMZ47nO1BiBEaylQnxfW0RsskI+/f7P
-	1nxkwqPr9JIBMda9kT1930OFlxzCK3qGivfznmI=
-X-Google-Smtp-Source: AGHT+IHKS4qebg5nUXwf/Jgik19KfX2MEHI198BGYVjzKZ5GC8oFuWwJ5+FRovNxNyd2Vc2zwn7xKgEgDgz3ST1P0gc=
-X-Received: by 2002:a05:6214:411e:b0:67f:457c:21ac with SMTP id
- kc30-20020a056214411e00b0067f457c21acmr586686qvb.48.1704373230947; Thu, 04
- Jan 2024 05:00:30 -0800 (PST)
+        bh=T58SQKnZ9f/XAhQbGGB3bCkUckh7sbRsHba15J+0qeE=;
+        b=DatJ6HQ9Eq31BBtimJXaVPPKHaMfKLVu358xicSSKu+87gie+SI2itm9+bdrhP96xd
+         ejeDw6SBaw3ML8cgPtJXTH487NcVAaKefJ1uh6tRbB4HOpb4GIK4T3jO6noLS57jZUs/
+         qUX/X2SVwieWL69bty6O3sipcZUm7Ph6HrGgY+4JyVCx7Bn+xzMtavwqMU3+GSkTg2GC
+         LA6FLVQ5iivHyjA7FwPWxoaSfXQSyRxa3unieQhTWptRUttvMc0hwO8qtC1tOOwJICxY
+         yAeu0VtrpLCQSHQNeoMU1oPLKiVVQcVTyzNHxKGn3nL5OzlH1Hw8ywdI2be1PXoRreCU
+         VKVw==
+X-Gm-Message-State: AOJu0YwLi/0xLkC/+7kiaeXhBvzf0uHSDuqsb+9J0hNcO01XgtwcJc7u
+	89nG1bwHncHPd3LrG73t18hE2HwTDVTvGMuWy68=
+X-Google-Smtp-Source: AGHT+IFcDZI9hrCkMltXk9QWR9FnqhH+RH0B1LwJDugeCrbUY7Qgi2qlTd+dNkV+hbw7m7RwWabWZ2FnZohJHiUE88c=
+X-Received: by 2002:a05:6214:c64:b0:680:8373:4932 with SMTP id
+ t4-20020a0562140c6400b0068083734932mr552788qvj.69.1704373301098; Thu, 04 Jan
+ 2024 05:01:41 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-4-Wenhua.Lin@unisoc.com>
+In-Reply-To: <20240104024244.12163-4-Wenhua.Lin@unisoc.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 4 Jan 2024 14:59:54 +0200
-Message-ID: <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
-Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+Date: Thu, 4 Jan 2024 15:01:05 +0200
+Message-ID: <CAHp75VcUU-FUYJKN40dzMbe5KmmAR7--0JV00qdgnbNwHqFjQg@mail.gmail.com>
+Subject: Re: [PATCH V3 3/4] gpio: eic-sprd: Modify the calculation method of
+ eic number
 To: Wenhua Lin <Wenhua.Lin@unisoc.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
 	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
@@ -78,15 +79,14 @@ Content-Transfer-Encoding: quoted-printable
 On Thu, Jan 4, 2024 at 4:43=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
 rote:
 >
-> The eic debounce does not have a clock of rtc_1k in the sleep state,
-> but the eic debounce will be used to wake up the system, therefore the
-> clock of rtc_1k needs to be kept open.
+> When the soc changes, the corresponding gpio-eic-sprd.c
 
-...
+SoC
 
-> +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
-
-BIT(15) ?
+> code needs to be modified, and the corresponding
+> Document must also be modified, which is quite troublesome.
+> To avoid modifying the driver file, the number of eics
+> is automatically calculated by matching dts nodes.
 
 --=20
 With Best Regards,
