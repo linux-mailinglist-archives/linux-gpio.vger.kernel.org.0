@@ -1,204 +1,232 @@
-Return-Path: <linux-gpio+bounces-2012-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2013-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D446823B15
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 04:23:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 236EE823B90
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 05:43:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BF081C24B3F
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 03:23:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BF911C24B51
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 04:43:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96760522A;
-	Thu,  4 Jan 2024 03:23:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC54510A04;
+	Thu,  4 Jan 2024 04:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH4BIHiW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="azJ/A4da"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+Received: from mail-il1-f180.google.com (mail-il1-f180.google.com [209.85.166.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F9F11196
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 03:23:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20F8C1CA98
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 04:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd20d9d483so1186591fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 19:23:04 -0800 (PST)
+Received: by mail-il1-f180.google.com with SMTP id e9e14a558f8ab-35fff22678eso258905ab.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 20:43:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704338583; x=1704943383; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bmKudvyRYHDpKyg4wSasa/se0ntcHf3jE/HR3F+biGU=;
-        b=MH4BIHiWlNEzq+Ai+SHf/Q4rHeaDdotqa2YXH4WEIKYyIEq/pGAMEM70HMmvem1+W2
-         +QBwl+139tAZlk7pleREdzwQ6N4zBi2zanqdrPwiCP4xYjMO1ZqlRjbDN+7cbqhvceTL
-         s+sj1vdoSWluQU87miaESqM8zEpjg8piAfF4w/tLFNBueya5FGoJUqzwWevM45tWHTyV
-         aYZBkl6aTSkiDoa357IN2lu1abK901Ysr13Z31BsxH1onSzSgJ1jqVT31KLNm6z3diqb
-         UQ4QCuvikHsOcilsuCwgcN2A5n66hq4979g3fttHqg6vfSpvVqewjhSUTbhto8lB+N3f
-         UBzQ==
+        d=gmail.com; s=20230601; t=1704343418; x=1704948218; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=SD1TOex58hXkT/umAHtX5LWZKBV8or93zWvxhmj1c/c=;
+        b=azJ/A4da8ujIcZ8o+TASjd8FiQBOm5kIfFMSfJuFdeBwfsu/QbzBPkw8FrqssvBm1Q
+         11CLVjyy7h4EPoo6qm3u5ODlIZ4KDCvXVnXcMmYSR2PscECsapesb1dbf3BSeHUveLEP
+         trAeGfGVeyshKpljGFmnHnM+Q/BUPcZ8jeRBC2T8SbAlXO3VobNeQClobai75IQriJZd
+         J7SFestdlxWCCn8pxDU4aioTmXPm0eUOsTWXoq27wZQTI+Tolw7MMTcjvi1R/kwhKX0Y
+         6VhgjNsxZv4++IZK9aj8uZFq39KXtRZrhMAtVSIJQV/okWWvmnQiqZUcjPiXTaCVyJiy
+         zZsw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704338583; x=1704943383;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bmKudvyRYHDpKyg4wSasa/se0ntcHf3jE/HR3F+biGU=;
-        b=oUDfYWZ7673nOEtaNwkMNCVA8Qw6tr7pesdFeOcqjJWlmcxDgRfK/XHtxd6ZHkrc5v
-         dMYECalV0i6bDJpkI6Oy/s5H8XVAF2XKnOTjODea5k+9toU62Daus0RcdZLYGSomAFbr
-         cgSSonOR2irOTVHUgXeilIvcWT7hC5CjBthUJCoVb828CYy395NLaoSTE7wQ2SUZPMtR
-         Wiqj2cSHWTp2XlHiUKodoyYxWN7ri3SWdmku+0mcHS5P1i6XEQqHuXhzERP103242nqr
-         7ks/SqZPXiysPHAabuO+jV4QfjHDM+NCr+0CZUoq9ehWJzaJFfOKpQXbJe/epL9D0P2o
-         ipyw==
-X-Gm-Message-State: AOJu0Yw+jnbM7iZbtOPOhcYEloM9sM7Xtu1vAVLKuv0E/CY7+KZcXMIU
-	zKkqADXkC6SrfMLCoV4zJdPpK40jmfiKrr2EYjiuPwWbWTo=
-X-Google-Smtp-Source: AGHT+IFTbO3j3tfBjxRaE8eS13V8LumJF4usoVypsamH7+79fHW5ILQ02UWUS2pTMzUCqRyoqbdIs/ET3TBwqI1jADk=
-X-Received: by 2002:a2e:7804:0:b0:2cc:f135:8d60 with SMTP id
- t4-20020a2e7804000000b002ccf1358d60mr4117407ljc.91.1704338582401; Wed, 03 Jan
- 2024 19:23:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704343418; x=1704948218;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SD1TOex58hXkT/umAHtX5LWZKBV8or93zWvxhmj1c/c=;
+        b=Z1uilXOtuE1mv8FUI+Ba0k6Ckdqk8NqT+jnoUOZ0W4PJEku8W3IV61M/uy31PppDcq
+         sW5uaKtFADZe+xdr/LQW2UQhxsBLaVxBlWoO5L+IdybEYqOSAtjdMhdDJOcNDp37rzyD
+         UcCXPif3e61wdotK6TFjjIcDX8sTBcdypoxWonyBXppUKatwiQl/Hb29gFhxPWMAI1sc
+         cFRQ6q7IWn6zI68WxdQnCm0sYWgjVfFNx1s5pnzoE0LOmbIxyzw1c9lTKimklmACwAFC
+         gt1uTWbRW2TfLFnY1S3YApZ+v4xzAcGfZ7PmkcLnjZRqC4qKRb+nxPNslhM9uyTMg5Rt
+         2zgw==
+X-Gm-Message-State: AOJu0YxxnJVcUNxa/DxdYyK5M9+oRM1U+fjxS3ANMPG9/aDvrFufiZG0
+	i5Ve2L1LveXgALgMZ5af1RDH2/JmIf4=
+X-Google-Smtp-Source: AGHT+IFBCgyfiVTV/IT0d53A1QolLzW2jAg+SqGUtTfIDLLdu3iWbhN9/7mBtk4mPJBotsbYZyy84A==
+X-Received: by 2002:a05:6e02:180c:b0:360:e6b:bc18 with SMTP id a12-20020a056e02180c00b003600e6bbc18mr76572ilv.9.1704343417906;
+        Wed, 03 Jan 2024 20:43:37 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id p21-20020a634f55000000b005cebb10e28fsm1956192pgl.69.2024.01.03.20.43.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 20:43:37 -0800 (PST)
+Date: Thu, 4 Jan 2024 12:43:33 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Seamus de Mora <seamusdemora@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
+Message-ID: <20240104044333.GA25151@rigel>
+References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+ <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com>
+ <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
+ <CAMRc=MeyHkHyK7YVx_5YpPxvgY4b2XTBtNVHDrC3FNxiEg4Bjw@mail.gmail.com>
+ <CAJ8C1XMsjLNdRFS8dDCua7=zha+LnuOcWCy-7W_uU5+LWgqpxQ@mail.gmail.com>
+ <20240104001532.GA5165@rigel>
+ <CAJ8C1XPTK9K-oMhPmAVm1U==QAfMcCDJ7ujMJ2mCV_0QOtiY9g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
- <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com>
- <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
- <CAMRc=MeyHkHyK7YVx_5YpPxvgY4b2XTBtNVHDrC3FNxiEg4Bjw@mail.gmail.com>
- <CAJ8C1XMsjLNdRFS8dDCua7=zha+LnuOcWCy-7W_uU5+LWgqpxQ@mail.gmail.com> <20240104001532.GA5165@rigel>
-In-Reply-To: <20240104001532.GA5165@rigel>
-From: Seamus de Mora <seamusdemora@gmail.com>
-Date: Wed, 3 Jan 2024 21:22:25 -0600
-Message-ID: <CAJ8C1XPTK9K-oMhPmAVm1U==QAfMcCDJ7ujMJ2mCV_0QOtiY9g@mail.gmail.com>
-Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ8C1XPTK9K-oMhPmAVm1U==QAfMcCDJ7ujMJ2mCV_0QOtiY9g@mail.gmail.com>
 
-On Wed, Jan 3, 2024 at 6:15=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Wed, Jan 03, 2024 at 04:09:01PM -0600, Seamus de Mora wrote:
-> > On Wed, Jan 3, 2024 at 12:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
-
-> > >      [ snip ]
-
-> > OK - that *sounds* like a different story than the one your partner is
-> > telling... do you guys ever "talk"?
+On Wed, Jan 03, 2024 at 09:22:25PM -0600, Seamus de Mora wrote:
+> On Wed, Jan 3, 2024 at 6:15 PM Kent Gibson <warthog618@gmail.com> wrote:
 > >
+> > On Wed, Jan 03, 2024 at 04:09:01PM -0600, Seamus de Mora wrote:
+> > > On Wed, Jan 3, 2024 at 12:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 >
-> Formerly, once the user releases the line it becomes unowned.  That is
-> certainly true from the userspace perspective.  My interpretation is
-> that when a user releases the request the line ownership reverts to the
-> driver, cos in reality that is now in control of the line.
->
-> Sure we talk, but we can also have differing points of view.
-> You clearly have no problems talking, and I still take issue with
-> your tone.  Where is that damn hatchet?
->
-
-I understand that... Like you, I also live in the real world, and deal
-with people that sometimes see things differently. No need to get
-tetchy again.
-
-> > > >
-      [ snip ]
-
-> > > I'm sorry, I'm not sure what *that model* is. Gpioset has no role in
-> > > persistence because it's merely a wrapper around libgpiod which is a
-> > > wrapper around the kernel uAPI which - by design - offers no
-> > > persistence.
-> >
-> > Well - we're back to 'square one' it seems. There must be persistence
-> > in GPIO control. It gets back to my example with the bedroom light.
-> > Do you agree that persistence must exist in GPIO control?
-> >
-> > > FYI I understand the need for a user-space GPIO authority that's more
-> > > centralized and am working on a DBus daemon that will become exactly
-> > > that. However my cup runneth over so it'll be some time before it's
-> > > done. :(
+> > > >      [ snip ]
+> > >
+> > > So - does that mean that we're going to have to wait for version 3 (or
+> > > 4?) of libgpiod to get something that provides persistence of GPIO
+> > > control?
 > > >
 > >
-> > So - does that mean that we're going to have to wait for version 3 (or
-> > 4?) of libgpiod to get something that provides persistence of GPIO
-> > control?
+> > And there is that tone again...
+>
+> That's a logical follow-up question to the statement. Perhaps with a
+> tinge of the frustration I feel over not understanding why this
+> problem keeps getting bigger - or more elusive.
+>
+
+The tone is unhelpful, and you know it.  Yet you persist.
+You could've just asked when that might be available.
+
+You think I'm not tired of trying to explain the same thing to you over
+and over and over again?  You've been told how things work, and why.
+You've been told what is being changed in the future to better address
+your use case.  But you aren't satisfied unless things work just the way
+you want.
+
+> >
+> > No, AIUI this will be added to libgpiod or be a separate component.
+> > No API changes involved and so no major version bump.
+> >
+> > These things always take longer than you would like, and the gpioset
+> > interactive mode is partly my attempt to provide an interrim solution
+> > until the daemon is available.
 > >
 >
-> And there is that tone again...
-
-That's a logical follow-up question to the statement. Perhaps with a
-tinge of the frustration I feel over not understanding why this
-problem keeps getting bigger - or more elusive.
-
->
-> No, AIUI this will be added to libgpiod or be a separate component.
-> No API changes involved and so no major version bump.
->
-> These things always take longer than you would like, and the gpioset
-> interactive mode is partly my attempt to provide an interrim solution
-> until the daemon is available.
+> That's reassuring, but I have to say this: It's unclear to me if we
+> even see the bottom of the well yet.
 >
 
-That's reassuring, but I have to say this: It's unclear to me if we
-even see the bottom of the well yet.
+I don't see how this comment helpful in any way.
 
-> > I apologize if this sounds "short", but if we cannot agree that
-> > persistence is fundamental to GPIO control, then I'm at a loss for
-> > words.
+> > > I apologize if this sounds "short", but if we cannot agree that
+> > > persistence is fundamental to GPIO control, then I'm at a loss for
+> > > words.
+> > >
 > >
+> > I would rather focus on providing a solution to your problem, whatever
+> > that actually is, rather than arguing over whether the existing options
+> > are sufficiently persistent, or what persistence even means in this
+> > context.
+> >
+> > The underlying issue is that the post-release behaviour is not clearly
+> > defined across the GPIO driver interface. IIRC there has been some
+> > discussion on signalling to the driver that it should not alter the line
+> > post-release (on second thought maybe I'm thinking of the reading the
+> > input/output buffer distinction), but if that were to go ahead it needs
+> > to be done in a way that is backwardly compatible, all the way out to the
+> > ABI, and involves updating ALL the drivers to suit.  All that is a
+> > non-trivial task, i.e. you are looking at a butt ton of work.
+> > It is therefore worthwhile to examine the alternatives.
+> >
+> > So, what exactly is your problem and how does that that absolutely require
+> > "persistence" to solve?
 >
-> I would rather focus on providing a solution to your problem, whatever
-> that actually is, rather than arguing over whether the existing options
-> are sufficiently persistent, or what persistence even means in this
-> context.
+> Are you really asking why persistence is necessary?
+> Or are you asking why I'm not keen on the command line options needed
+> to get persistence?
 >
-> The underlying issue is that the post-release behaviour is not clearly
-> defined across the GPIO driver interface. IIRC there has been some
-> discussion on signalling to the driver that it should not alter the line
-> post-release (on second thought maybe I'm thinking of the reading the
-> input/output buffer distinction), but if that were to go ahead it needs
-> to be done in a way that is backwardly compatible, all the way out to the
-> ABI, and involves updating ALL the drivers to suit.  All that is a
-> non-trivial task, i.e. you are looking at a butt ton of work.
-> It is therefore worthwhile to examine the alternatives.
+> If I need to answer the first question, I'd like for you to first
+> explain how you illuminate an LED without it (e.g. imagine a warning
+> light telling a driver he's lost pressure in the brake lines in his
+> car).
 >
-> So, what exactly is your problem and how does that that absolutely requir=
-e
-> "persistence" to solve?
 
-Are you really asking why persistence is necessary?
-Or are you asking why I'm not keen on the command line options needed
-to get persistence?
+Sure, and, I would have a process managing that LED.
 
-If I need to answer the first question, I'd like for you to first
-explain how you illuminate an LED without it (e.g. imagine a warning
-light telling a driver he's lost pressure in the brake lines in his
-car).
+So where has your app that manages the car gone?
+Doesn't that persist?  Or does it magically appear when the pressure
+light needs to be lit and then flit off back into the ether?
 
-WRT the second Q, all I can really say is that I am pretty
-simple-minded. I need/want tools that I understand - tools that
-operate like all the other tools I use now - or have used in the past
-(e.g. tools that don't refuse to exit after they've completed their
-assigned task(s), and tools that don't have to be coaxed to 'do the
-right thing' by adding "options"). Before libgpiod tools, I used a
-tool called 'gpio' - a part of WiringPi. Perhaps you'd like to spend
-30 minutes to check it out?... I feel it's the essence of simplicity,
-and quite straightforward to use. It did many things that libgpiod
-tools are not required to do. I liked this tool because it operated in
-the fashion of all the other tools I use. In "my world", with tools
-I've used previously, setting a GPIO to High to illuminate an LED is a
-very trivial task - by that I mean in the overall context of a project
-I work on, turning LEDs on is not something I've ever had to spend
-much time thinking about. Yet here I am today - explaining to the
-libgpiod s/w developer why persistence is important?!
+Why do you insist on managing everything, including your car warning
+lights, from shell?
 
-Apologies to you both if I've said anything that was offensive, but
-the more I talk with you about this - the more confused I get. I think
-I'll give this libgpiod stuff a rest - maybe I'll have a revelation.
-One final request: You've mentioned this "microAPI" (??) several
-times. Is that a document?; if so, can I get a copy?
+> WRT the second Q, all I can really say is that I am pretty
+> simple-minded. I need/want tools that I understand - tools that
+> operate like all the other tools I use now - or have used in the past
+> (e.g. tools that don't refuse to exit after they've completed their
+> assigned task(s), and tools that don't have to be coaxed to 'do the
+> right thing' by adding "options").
 
-Rgds,
-~S
+That is exactly the point - when gpioset exits its task is done - and
+the line is then free to revert.  And that isn't what you want - you
+want it to hold the line, so now it doesn't exit.
+
+Having to use options to get tools to behave as you want is too hard?
+WTF.  I mean really.  Seems to me you just want to vent, not actually
+solve your problem.
+
+> Before libgpiod tools, I used a
+> tool called 'gpio' - a part of WiringPi. Perhaps you'd like to spend
+> 30 minutes to check it out?...
+
+It is Pi specific and has different contraints to work with.  It plays
+with hardware directly, quite possibly in dangerous ways (it does nothing
+to prevent contention that I am aware of), and due to the architecture
+change does not work for the RPi5.
+
+You could almost certainly write something to emulate it using libgpiod.
+I haven't personally had any need, so haven't bothered, particular since
+up until now wiringPi itself filled that niche.
+
+> I feel it's the essence of simplicity,
+> and quite straightforward to use. It did many things that libgpiod
+> tools are not required to do. I liked this tool because it operated in
+> the fashion of all the other tools I use. In "my world", with tools
+> I've used previously, setting a GPIO to High to illuminate an LED is a
+> very trivial task - by that I mean in the overall context of a project
+> I work on, turning LEDs on is not something I've ever had to spend
+> much time thinking about. Yet here I am today - explaining to the
+> libgpiod s/w developer why persistence is important?!
+>
+> Apologies to you both if I've said anything that was offensive, but
+> the more I talk with you about this - the more confused I get. I think
+> I'll give this libgpiod stuff a rest - maybe I'll have a revelation.
+
+Seems very unlikely at this point.  <-- gratuitous snide remark ;-)
+
+> One final request: You've mentioned this "microAPI" (??) several
+> times. Is that a document?; if so, can I get a copy?
+>
+
+It isn't microAPI, uAPI stands for userspace API. So its full name is
+the GPIO Character Device Userspace API.  It is covered by gpio.h,
+though that really only describes the structs, not the ioctls or how to
+use them.
+
+I'm endeavouring to write up a more detailed textual description
+of the ioctls for the kernel documentation, but I keep getting distracted
+with other things, particularly the kid in the backseat asking if we are
+there yet.  I've already sunk too much time in this today.
+
+Cheers,
+Kent.
+
+
 
