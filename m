@@ -1,141 +1,115 @@
-Return-Path: <linux-gpio+bounces-2018-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2019-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 58FFC823E68
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 10:13:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A0DA9823ECA
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 10:39:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E8A4B283FC5
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 09:13:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C751A1C23B64
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 09:39:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 965C720303;
-	Thu,  4 Jan 2024 09:13:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E86A208D1;
+	Thu,  4 Jan 2024 09:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="y1NGOLhL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="aSOsN92H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E55520307
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 09:13:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1A0208A5
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 09:39:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-467a7a376d5so59509137.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Jan 2024 01:13:37 -0800 (PST)
+Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-4670af5bd56so62617137.2
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Jan 2024 01:39:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704359616; x=1704964416; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=CL0PrSQZZVH4inukeLkNwrEZwMRmBc+n2yOANyAfZ0A=;
-        b=y1NGOLhLxZxStc+zODiFVM9Qw5c3Pl8606pO+7ctbxKIfkdRrK3ckgWOxTTa6nmECZ
-         FSotftxuFSGIx7zaHa8RNhoDuAOM1aGMZm5Bz9ns1TmYOWaCS5LVZ89IHo3FTEjoIqqt
-         pKPDzMxuaCszaB7YNfGsI2era1FaZTwOKSBn8wEGzynWE+xOpagkVBUzpoPJ8PCD7+P5
-         k75wXgEw7cc/BLCMXW6bya2qyOYmPTHzlAenBH4QknO3Jk/d9py0wGByhLVaM5QIqlth
-         00skUx4XVKl0W/dCfE/YSuDuaahzCHOg+AMVS+HoeUiQYVhZVrdCV2WXX+dvoAu+/Tpf
-         xU4A==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704361178; x=1704965978; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=61KUe9jqsXYQoO1QYQkTPTk8aeh1CA04cUXPGRuI+s4=;
+        b=aSOsN92HHr/ys1+v+LlpsnalHLS9rchbo3C/zFi+gLSvBo5CjQCcM2enJDd2/GLzkE
+         BCSgWxKeSoSWilSa2cz010MOrD6N9QGew9X6UWFw71yppwI3tL3Ur7BI9TIk8jld4l88
+         v93JkJkSLs1+7RNBaC5wnAZAHWuF7llm3P0c+kIPMgZo1Az3PEU0G4pDOm8TAKQd0L3T
+         2y09fFJVJEl45EinAVL5VkdVj0y3ahcq81rc7pNbMuon5gNc42h+smUVKfhtNmjrdZmb
+         Mx1gLRK55mf8ylr1xN/Ex9xgrKQ1kQ7wisoU0yO5PXu4nf3U8FhJSqRUW1Wy6QR8/1Bj
+         0V8A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704359616; x=1704964416;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CL0PrSQZZVH4inukeLkNwrEZwMRmBc+n2yOANyAfZ0A=;
-        b=g+RRAYaQ6B6qkLIXl+Pwdz8+iqLMF8Z18y01VmcLk2XKxMXKtOcyDRecbYLEX7HVbm
-         1ZAetPYlYh1iUCxglWagHEX6dXT2oNjGj80oeTSPAiLH4WbGh9Y0ZVRcW0QCYJWJgB97
-         3DM9ZDF92TNirI9H8IHUCJxikOS/J4bprpBC3oagZ9CN8a467Ay2tRlO/NGADcHYNjfs
-         ijxsBfOQNviJDUHuuRAQdZQ/KAKPreFZ7ARDsmlwVOYjApbbOa7WEGtE2fH/p3dVWi1S
-         CqkJGqWBnF1PKR9cOOrdLvh1BJ0n5sRHofnYiQ+/OiSaevvwRlfGuCAuR8PxR++HDRx1
-         C5Tw==
-X-Gm-Message-State: AOJu0Yz7TSlKkoC8op5StgM5esV3GSOWt31MoJJQwPteMMdYeZMLOGLV
-	nhZ6QIun0ApREz8c2TiAoATiNnib6982AEn3fLRsXyQqXPasGHtyoGr+oLuh
-X-Google-Smtp-Source: AGHT+IEBkBElHgsRuwgFfyX4RSn4tGgqkosAAVD71QTeqmvChXdtXmGOd+ytDhYIUlBIxcn0KxSj+6F7L0Ry3s4aYBk=
-X-Received: by 2002:a05:6102:510b:b0:467:aa5:269 with SMTP id
- bm11-20020a056102510b00b004670aa50269mr147136vsb.13.1704359616232; Thu, 04
- Jan 2024 01:13:36 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 4 Jan 2024 01:13:35 -0800
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <Pine.LNX.4.64.2401032017390.31157@wormhole.robuust.nl>
+        d=1e100.net; s=20230601; t=1704361178; x=1704965978;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=61KUe9jqsXYQoO1QYQkTPTk8aeh1CA04cUXPGRuI+s4=;
+        b=T4gGlUEsZViKTfTtCAYrfE61ZYjoDg79aciL+YxZYK7o00ugIwyhSAazplos50YObo
+         Myql2lBKT7hD1LqzXcETbvuyCSTr8+v5wPRHsBGKF5OhH4K1Z9JtzGBWwaTQ+T/XXjlz
+         maw5oTUQ9AQEZ1w0uwWf1MPcrzJiu/1FLuIwbGyN6AkqsMa1p88MzK1T6Kp1Nl2vYcUL
+         yTfRdLtqnsJKY7DZAsB4PLpaIA6mWTMn1uLtBNk8CCf6eGEirovNu5LvdKiuns3BKEr0
+         UNxQVuBkADOVffSlfhHVovFI/4YOW03WtOuNzndRxcmiCM+LhNtr/LcLoDhcKAlzXYYP
+         YnWw==
+X-Gm-Message-State: AOJu0Ywb0V3Us5kmT0otHrseX32bBqONaSyum0s3oqc30ys6bCohwnk8
+	asXnghh8UanolMMm8/9ZQAuMlHtpCL67KfJpjf6UfDAcVhOjjw==
+X-Google-Smtp-Source: AGHT+IH5krxCMGszS8p4FxRjAHh+2FsupY07JyT60raT4qA9xlHXyTb+3/PpVOgFzWiUJiqYa/de835vl0Fh9EzL2m0=
+X-Received: by 2002:a05:6102:14a7:b0:466:f402:3db7 with SMTP id
+ d39-20020a05610214a700b00466f4023db7mr227210vsv.35.1704361178510; Thu, 04 Jan
+ 2024 01:39:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Pine.LNX.4.64.2401032017390.31157@wormhole.robuust.nl>
-Date: Thu, 4 Jan 2024 01:13:35 -0800
-Message-ID: <CAMRc=MeoSzL=BbknUWFZkUD57pym+D9Ghjb9iyrgJJBUhRdXHg@mail.gmail.com>
-Subject: Re: [libgpiod][PATCH v2 retry] core: fix deselection of output
- direction when edge detection is selected
-To: "J.A. Bezemer" <j.a.bezemer@opensourcepartners.nl>
-Cc: linux-gpio@vger.kernel.org
+References: <20240102155949.73434-1-brgl@bgdev.pl>
+In-Reply-To: <20240102155949.73434-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 4 Jan 2024 10:39:27 +0100
+Message-ID: <CAMRc=Mfj6Fik0qfFiC_LvBiBdr5PP2sqNNAPQpKzignmwHCajA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] gpiolib: use a read-write semaphore to protect the
+ GPIO device list
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 3 Jan 2024 20:18:27 +0100, "J.A. Bezemer"
-<j.a.bezemer@opensourcepartners.nl> said:
-> Fix deselection of output direction when edge detection is selected in
-> make_kernel_flags(). Use correct flag to perform deselection rather than
-> a library enum.
+On Tue, Jan 2, 2024 at 4:59=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> For correct usage, there are no visible side-effects. The wrongly reset
-> kernel flags are always zero already.
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> For incorrect usage of edge detection combined with output direction,
-> both output and input directions would have been requested from the
-> kernel, causing a confusing error. Such usage will now be sanitized, as
-> intended, into a working configuration with only input direction.
+> I'm still figuring out how to keep GPIO descriptors coherent while
+> (mostly) lockless. In the meantime, I found a potential race-condition
+> during GPIO descriptor lookup and also figured that the correct way to
+> protect the GPIO device list is actually a read-write semaphore as we're
+> not modifying the list very often and readers should be able to iterate
+> over it concurrently.
 >
-> Signed-off-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
-> ---
->  lib/line-config.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> The first patch in this series is new in v2. I realized that we must not
+> wait until .release() to remove the GPIO device from the list as this is
+> why pinning down the GPIO device list during lookup would never work -
+> we always could end up re-taking a reference to an object that was being
+> released if it got looked up between when the last reference is dropped
+> and the object is finally removed from the device list.
 >
-> diff --git a/lib/line-config.c b/lib/line-config.c
-> index 2749a2a..9bf7734 100644
-> --- a/lib/line-config.c
-> +++ b/lib/line-config.c
-> @@ -381,18 +381,18 @@ static uint64_t make_kernel_flags(struct gpiod_line_settings *settings)
->  	case GPIOD_LINE_EDGE_FALLING:
->  		flags |= (GPIO_V2_LINE_FLAG_EDGE_FALLING |
->  			  GPIO_V2_LINE_FLAG_INPUT);
-> -		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
-> +		flags &= ~GPIO_V2_LINE_FLAG_OUTPUT;
->  		break;
->  	case GPIOD_LINE_EDGE_RISING:
->  		flags |= (GPIO_V2_LINE_FLAG_EDGE_RISING |
->  			  GPIO_V2_LINE_FLAG_INPUT);
-> -		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
-> +		flags &= ~GPIO_V2_LINE_FLAG_OUTPUT;
->  		break;
->  	case GPIOD_LINE_EDGE_BOTH:
->  		flags |= (GPIO_V2_LINE_FLAG_EDGE_FALLING |
->  			  GPIO_V2_LINE_FLAG_EDGE_RISING |
->  			  GPIO_V2_LINE_FLAG_INPUT);
-> -		flags &= ~GPIOD_LINE_DIRECTION_OUTPUT;
-> +		flags &= ~GPIO_V2_LINE_FLAG_OUTPUT;
->  		break;
->  	default:
->  		break;
+> v1 -> v2:
+> - add patch 1/3 to fix a release timing issue
+>
+> Bartosz Golaszewski (3):
+>   gpiolib: remove the GPIO device from the list when it's unregistered
+>   gpiolib: replace the GPIO device mutex with a read-write semaphore
+>   gpiolib: pin GPIO devices in place during descriptor lookup
+>
+>  drivers/gpio/gpiolib-sysfs.c |  2 +-
+>  drivers/gpio/gpiolib.c       | 62 ++++++++++++++++++++----------------
+>  drivers/gpio/gpiolib.h       |  2 +-
+>  3 files changed, 36 insertions(+), 30 deletions(-)
+>
 > --
-> 2.30.2
->
->
+> 2.40.1
 >
 
-It doesn't seem like you ran the test suite because it breaks one of
-the test cases:
+Series applied.
 
-**
-gpiod-test:ERROR:tests-edge-event.c:80:_gpiod_test_func_cannot_request_lines_in_output_mode_with_edge_detection:
-'request' should be NULL
-# gpiod-test:ERROR:tests-edge-event.c:80:_gpiod_test_func_cannot_request_lines_in_output_mode_with_edge_detection:
-'request' should be NULL
-**
-gpiod-test:ERROR:tests-edge-event.c:81:_gpiod_test_func_cannot_request_lines_in_output_mode_with_edge_detection:
-assertion failed (22 == errno): (22 == 0)
-# gpiod-test:ERROR:tests-edge-event.c:81:_gpiod_test_func_cannot_request_lines_in_output_mode_with_edge_detection:
-assertion failed (22 == errno): (22 == 0)
-not ok 19 /gpiod/edge-event/cannot_request_lines_in_output_mode_with_edge_detection
-
-Bartosz
+Bart
 
