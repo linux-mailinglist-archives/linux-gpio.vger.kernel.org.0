@@ -1,59 +1,53 @@
-Return-Path: <linux-gpio+bounces-2035-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2036-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC69282457B
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 16:55:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F2C2A824611
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 17:25:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8F16A2821A6
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 15:55:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 50D29B234A0
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 16:25:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 928C024217;
-	Thu,  4 Jan 2024 15:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fvZjdmoW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8550B24B30;
+	Thu,  4 Jan 2024 16:25:14 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f173.google.com (mail-vk1-f173.google.com [209.85.221.173])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8EF3249EC;
-	Thu,  4 Jan 2024 15:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3815924B20;
+	Thu,  4 Jan 2024 16:25:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f173.google.com with SMTP id 71dfb90a1353d-4b732dfa6e4so187303e0c.1;
-        Thu, 04 Jan 2024 07:55:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704383723; x=1704988523; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UPeDIiQjNkPvl4Ik1+JkTjR4o2Soc24WzRcdY8DaVYo=;
-        b=fvZjdmoWk6wPXVGe4F4nqa57sn02xom6y1xg+NPAKOfxSccOkMRO16bTL4JTuEmvEX
-         xr+Gp8vIkZ68Izwg9cLZRFDwof56nQnzGHIFAYPbe7+bZD+2FrV3Eq5EEy2DYTBBv7/n
-         +exlCiyRXPfHIX2Qnu4q8cxY1G8zxzZd97aTbwPrVE0qqGrbU5/biAn8xBQnMMQNfo0s
-         50rwuEMRZcTCCbwnPHDY692OPm2PBPtSb+nRzYUom9EK4+waflic7yy0DcW6HlhFb4j1
-         lqrtcVbGOlbpjTqhJ967GYCoVdYeVeAqZ36M6T19s0AvM9NZHuBG0LlBjAxKse3/zOTQ
-         Mhvg==
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-5e6c8b70766so6628997b3.3;
+        Thu, 04 Jan 2024 08:25:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704383723; x=1704988523;
+        d=1e100.net; s=20230601; t=1704385510; x=1704990310;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=UPeDIiQjNkPvl4Ik1+JkTjR4o2Soc24WzRcdY8DaVYo=;
-        b=HktXfpQdbaE+58/YoWKl04lYDqYF7lrv7sEzQd0IVGV+OAe1y4qFzgQ9linNmPkzoB
-         MECYfACkKk9qpUswnlCJnooHySOcfbAj2d5cOplfijZMEt4k4llIVxvHCtCNCPAmxrpi
-         0GD6BKKHW3DCUKHAtPD5eT0mr+pYsReWP9KDqQq+U5XRL9D3G7xLCtX+sOhapkk5dHmw
-         fZOG+o0MfwQlf6XRq1/n+O4OmobY1Sbr20TjI2vxRwkRgQw6l1M0bhRkDkc1L8NQP/dk
-         N/sF5gXLoy3HWzGyVPzqYfYEhj0mYPS6vNgsY9/vJ7dqSPyD0GxeaZcKX9Zeab2FUZXX
-         WTvw==
-X-Gm-Message-State: AOJu0YyWNTyrE0DU4l7pTEe6JPs3hvYlU2flCtNFtZLFbkJUkWTN0nEh
-	w8jOoJnwgNwPqIIvB9dQfTPsfwM/MP86vlE6MPU=
-X-Google-Smtp-Source: AGHT+IFziaDJ3NSo7BkYW/w+OWVaUUgoZfbD/12fbvF28wfa+TcMRxgPb+Fu8jzlDe/pBw9yISY7j4W7adlO3cvMmnA=
-X-Received: by 2002:a05:6122:12d3:b0:4b7:3d44:9b05 with SMTP id
- d19-20020a05612212d300b004b73d449b05mr664953vkp.4.1704383723681; Thu, 04 Jan
- 2024 07:55:23 -0800 (PST)
+        bh=MBdLCUmjrZ1+GTPDcEU99j/uV9mS9a4gKvyVmqcT1n4=;
+        b=pNfYDDKJzt4ZXKAjrXnLECwyK4RRPTroDAPplr4Y+Guo7yfJ5lqteX6onvu3kU2xMG
+         Hi6GxK1zK3BnIpj0++05vzJvnRs/gDR6MBQRGDUL4eWGOHjxpIlCkX/3RIrZS/f2UTr4
+         TmpGQzzxKBqVUdQmBKC3PhJbNuIvoSdwPn3twIjIeK8xApn7KJpFz4WFZMOPj5eLg+t2
+         OQYOwUeKfP0mu7j5khK1gR3ExgQrJP4K1Lb6ZhACAgC2R88N7J+XkuvYrUMr4JAIhPjK
+         RtygIbdhMsizIMQALIVT2WkqJfPv+8iyhG/L16ML1ZB8EE8VSaI4NNqBW1op05PF+JeU
+         x6iw==
+X-Gm-Message-State: AOJu0YwOBnWWU6JoPYN0/vTTp3t1ndJH3Jrp/I+cve7kNAfU3dBBd1Dz
+	irZfWw8A5yx8AiDtHA7PwRUtwdXrCONYPg==
+X-Google-Smtp-Source: AGHT+IGfZ5vrkM5ern0qADyGf4wpdOAwoOkvMI9LP/1RBmU9o9DehYKxf8B4DAnFPkzQkiiJ2V52fg==
+X-Received: by 2002:a25:aa30:0:b0:dbc:3009:42dd with SMTP id s45-20020a25aa30000000b00dbc300942ddmr734171ybi.93.1704385509798;
+        Thu, 04 Jan 2024 08:25:09 -0800 (PST)
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com. [209.85.128.173])
+        by smtp.gmail.com with ESMTPSA id 185-20020a2518c2000000b00dbccc57e9c8sm1363500yby.56.2024.01.04.08.25.08
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 04 Jan 2024 08:25:08 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-5f254d1a6daso6652327b3.2;
+        Thu, 04 Jan 2024 08:25:08 -0800 (PST)
+X-Received: by 2002:a81:5307:0:b0:5e7:7526:62b5 with SMTP id
+ h7-20020a815307000000b005e7752662b5mr924671ywb.44.1704385508356; Thu, 04 Jan
+ 2024 08:25:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,14 +57,16 @@ MIME-Version: 1.0
 References: <20231201131551.201503-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
  <20231201131551.201503-2-prabhakar.mahadev-lad.rj@bp.renesas.com>
  <CAMuHMdUiaL__+CDaFxRbUFgrz69SYBNfZm4JvY_qQRKLMTCY0w@mail.gmail.com>
- <CA+V-a8tTWf8Kx-Ex=DPsSR2ZWHC29N_pAoEZN1sR5Nqobf139A@mail.gmail.com> <CAMuHMdXosvV=EuRtL69r6=UT0SO8Aq-XjWwJMJQpWAhT2z+ffA@mail.gmail.com>
-In-Reply-To: <CAMuHMdXosvV=EuRtL69r6=UT0SO8Aq-XjWwJMJQpWAhT2z+ffA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 4 Jan 2024 15:54:29 +0000
-Message-ID: <CA+V-a8tNeiyvK90urPF9s3JZOav77TRO8xdAEiCmYurrf3-4RA@mail.gmail.com>
+ <CA+V-a8tTWf8Kx-Ex=DPsSR2ZWHC29N_pAoEZN1sR5Nqobf139A@mail.gmail.com>
+ <CAMuHMdXosvV=EuRtL69r6=UT0SO8Aq-XjWwJMJQpWAhT2z+ffA@mail.gmail.com> <CA+V-a8tNeiyvK90urPF9s3JZOav77TRO8xdAEiCmYurrf3-4RA@mail.gmail.com>
+In-Reply-To: <CA+V-a8tNeiyvK90urPF9s3JZOav77TRO8xdAEiCmYurrf3-4RA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 4 Jan 2024 17:24:55 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdXYEBg7MMJG7tqDib8eaKdvd4Fxo+ZR8K8Vq82DzjSaqg@mail.gmail.com>
+Message-ID: <CAMuHMdXYEBg7MMJG7tqDib8eaKdvd4Fxo+ZR8K8Vq82DzjSaqg@mail.gmail.com>
 Subject: Re: [PATCH v3 1/3] pinctrl: renesas: rzg2l: Include pinmap in
  RZG2L_GPIO_PORT_PACK() macro
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
 	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
@@ -82,132 +78,138 @@ Cc: Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Hi Prabhakar,
 
-On Tue, Jan 2, 2024 at 10:18=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Thu, Dec 21, 2023 at 10:04=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
-> > On Wed, Dec 6, 2023 at 1:13=E2=80=AFPM Geert Uytterhoeven <geert@linux-=
-m68k.org> wrote:
-> > > On Fri, Dec 1, 2023 at 2:16=E2=80=AFPM Prabhakar <prabhakar.csengg@gm=
-ail.com> wrote:
-> > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Thu, Jan 4, 2024 at 4:55=E2=80=AFPM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Tue, Jan 2, 2024 at 10:18=E2=80=AFAM Geert Uytterhoeven <geert@linux-m=
+68k.org> wrote:
+> > On Thu, Dec 21, 2023 at 10:04=E2=80=AFPM Lad, Prabhakar
+> > <prabhakar.csengg@gmail.com> wrote:
+> > > On Wed, Dec 6, 2023 at 1:13=E2=80=AFPM Geert Uytterhoeven <geert@linu=
+x-m68k.org> wrote:
+> > > > On Fri, Dec 1, 2023 at 2:16=E2=80=AFPM Prabhakar <prabhakar.csengg@=
+gmail.com> wrote:
+> > > > > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > > > >
+> > > > > Currently we assume all the port pins are sequential ie always PX=
+_0 to
+> > > > > PX_n (n=3D1..7) exist, but on RZ/Five SoC we have additional pins=
+ P19_1 to
+> > > > > P28_5 which have holes in them, for example only one pin on port1=
+9 is
+> > > > > available and that is P19_1 and not P19_0. So to handle such case=
+s
+> > > > > include pinmap for each port which would indicate the pin availab=
+ility
+> > > > > on each port. As the pincount can be calculated based on pinmap d=
+rop this
+> > > > > from RZG2L_GPIO_PORT_PACK() macro and update RZG2L_GPIO_PORT_GET_=
+PINCNT()
+> > > > > macro.
+> > > > >
+> > > > > Previously we had a max of 7 pins on each port but on RZ/Five Por=
+t-20
+> > > > > has 8 pins, so move the single pin configuration to BIT(63).
+> > > > >
+> > > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas=
+.com>
 > > > >
-> > > > Currently we assume all the port pins are sequential ie always PX_0=
- to
-> > > > PX_n (n=3D1..7) exist, but on RZ/Five SoC we have additional pins P=
-19_1 to
-> > > > P28_5 which have holes in them, for example only one pin on port19 =
-is
-> > > > available and that is P19_1 and not P19_0. So to handle such cases
-> > > > include pinmap for each port which would indicate the pin availabil=
-ity
-> > > > on each port. As the pincount can be calculated based on pinmap dro=
-p this
-> > > > from RZG2L_GPIO_PORT_PACK() macro and update RZG2L_GPIO_PORT_GET_PI=
-NCNT()
-> > > > macro.
+> > > > Thanks for your patch!
 > > > >
-> > > > Previously we had a max of 7 pins on each port but on RZ/Five Port-=
-20
-> > > > has 8 pins, so move the single pin configuration to BIT(63).
+> > > > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > > > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > > > > @@ -80,15 +80,17 @@
+> > > > >   * n indicates number of pins in the port, a is the register ind=
+ex
+> > > > >   * and f is pin configuration capabilities supported.
+> > > > >   */
+> > > > > -#define RZG2L_GPIO_PORT_PACK(n, a, f)  (((n) << 28) | ((a) << 20=
+) | (f))
+> > > > > -#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (((x) & GENMASK(30, 28)) =
+>> 28)
+> > > > > +#define RZG2L_GPIO_PORT_PACK(n, a, f)  (((n) > 0 ? ((u64)(GENMAS=
+K_ULL(((n) - 1 + 28), 28))) : 0) | \
 > > > >
-> > > > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.c=
-om>
+> > > > The mask creation can be simplified to
+> > > >
+> > > >     ((1ULL << (n)) - 1) << 28
+> > > >
+> > > OK.
 > > >
-> > > Thanks for your patch!
-> > >
-> > > > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > > > @@ -80,15 +80,17 @@
-> > > >   * n indicates number of pins in the port, a is the register index
-> > > >   * and f is pin configuration capabilities supported.
-> > > >   */
-> > > > -#define RZG2L_GPIO_PORT_PACK(n, a, f)  (((n) << 28) | ((a) << 20) =
-| (f))
-> > > > -#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (((x) & GENMASK(30, 28)) >>=
- 28)
-> > > > +#define RZG2L_GPIO_PORT_PACK(n, a, f)  (((n) > 0 ? ((u64)(GENMASK_=
-ULL(((n) - 1 + 28), 28))) : 0) | \
-> > >
-> > > The mask creation can be simplified to
-> > >
-> > >     ((1ULL << (n)) - 1) << 28
-> > >
-> > OK.
-> >
-> > > but see below...
-> > >
-> > > > +                                        ((a) << 20) | (f))
-> > > > +#define RZG2L_GPIO_PORT_GET_PINMAP(x)  (((x) & GENMASK_ULL(35, 28)=
-) >> 28)
-> > > > +#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (hweight8(RZG2L_GPIO_PORT_G=
-ET_PINMAP((x))))
-> > >
-> > > I think we've reached the point where it would be easier for the
-> > > casual reviewer to #define PIN_CFG_*_MASK for all fields, and use
-> > > FIELD_{PREP,GET}() to pack resp. extract values.  That would also
-> > > make it more obvious which bits are in use, and how many bits are
-> > > still available for future use.
-> > >
-> > If I use the FIELD_PREP() macro like below I get build issues as below:
-> >
-> > #define RZG2L_GPIO_PORT_PIN_CNT_MASK    GENMASK(31, 28)
-> > #define RZG2L_GPIO_PORT_PIN_REG_MASK    GENMASK(27, 20)
-> > #define RZG2L_GPIO_PORT_PIN_CFG_MASK    GENMASK(19, 0)
-> > #define RZG2L_GPIO_PORT_PACK(n, a, f)
-> > FIELD_PREP(RZG2L_GPIO_PORT_PIN_CNT_MASK, n) | \
-> >                     FIELD_PREP(RZG2L_GPIO_PORT_PIN_REG_MASK, a) | \
-> >                     FIELD_PREP(RZG2L_GPIO_PORT_PIN_CFG_MASK, f)
-> >
-> >
-> > drivers/pinctrl/renesas/pinctrl-rzg2l.c:91:41: note: in expansion of
-> > macro 'FIELD_PREP'
-> >    91 |
-> > FIELD_PREP(RZG2L_GPIO_PORT_PIN_CFG_MASK, f)
-> >       |                                         ^~~~~~~~~~
-> > drivers/pinctrl/renesas/pinctrl-rzg2l.c:1486:9: note: in expansion of
-> > macro 'RZG2L_GPIO_PORT_PACK'
-> >  1486 |         RZG2L_GPIO_PORT_PACK(6, 0x2a,
-> > RZG3S_MPXED_PIN_FUNCS(A)),                        /* P18 */
-> >       |         ^~~~~~~~~~~~~~~~~~~~
-> >
-> > Do you have any pointers?
->
-> You left out the actual error :-(
->
-Oops sorry.
+> > > > but see below...
+> > > >
+> > > > > +                                        ((a) << 20) | (f))
+> > > > > +#define RZG2L_GPIO_PORT_GET_PINMAP(x)  (((x) & GENMASK_ULL(35, 2=
+8)) >> 28)
+> > > > > +#define RZG2L_GPIO_PORT_GET_PINCNT(x)  (hweight8(RZG2L_GPIO_PORT=
+_GET_PINMAP((x))))
+> > > >
+> > > > I think we've reached the point where it would be easier for the
+> > > > casual reviewer to #define PIN_CFG_*_MASK for all fields, and use
+> > > > FIELD_{PREP,GET}() to pack resp. extract values.  That would also
+> > > > make it more obvious which bits are in use, and how many bits are
+> > > > still available for future use.
 
-> include/linux/bitfield.h:113:9: error: braced-group within expression
-> allowed only inside a function
->   113 |         ({
->          \
->       |         ^
-> drivers/pinctrl/renesas/pinctrl-rzg2l.c:93:39: note: in expansion of
-> macro =E2=80=98FIELD_PREP=E2=80=99
->    93 | #define RZG2L_GPIO_PORT_PACK(n, a, f)
-> FIELD_PREP(RZG2L_GPIO_PORT_PIN_CNT_MASK, n) | \
->       |                                       ^~~~~~~~~~
-> drivers/pinctrl/renesas/pinctrl-rzg2l.c:1555:9: note: in expansion of
-> macro =E2=80=98RZG2L_GPIO_PORT_PACK=E2=80=99
->  1555 |         RZG2L_GPIO_PORT_PACK(2, 0x10, RZG2L_MPXED_PIN_FUNCS),
->       |         ^~~~~~~~~~~~~~~~~~~~
->
-> Using FIELD_PREP_CONST() instead makes it build.
->
-Thanks for the pointer, that did the trick.
+> To clarify, you mean to define PIN_CFG_*_MASK for all
+> PIN_CFG_IOLH_A..PIN_CFG_OEN macros? I ask because we dont extract the
+> respective CFG flags in the code.
 
-> I think we've reached the point where it would be easier for the
-> casual reviewer to #define PIN_CFG_*_MASK for all fields, and use
-> FIELD_{PREP,GET}() to pack resp.
-To clarify, you mean to define PIN_CFG_*_MASK for all
-PIN_CFG_IOLH_A..PIN_CFG_OEN macros? I ask because we dont extract the
-respective CFG flags in the code.
+The PIN_CFG_IOLH_A..PIN_CFG_OEN macros are single-bit definitions.
+I mean to #define PIN_CFG_*_MASK macros for all multi-bit fields, currently
+accessed using open-coded GENMASK().
 
-Cheers,
-Prabhakar
+You already tried:
+
+    #define RZG2L_GPIO_PORT_PIN_CNT_MASK    GENMASK(31, 28)
+    #define RZG2L_GPIO_PORT_PIN_REG_MASK    GENMASK(27, 20)
+    #define RZG2L_GPIO_PORT_PIN_CFG_MASK    GENMASK(19, 0)
+
+As they actually share the PIN_CFG_* bit space, I'd call them:
+
+    #define PIN_CFG_PIN_CNT_MASK    GENMASK(31, 28)
+    #define PIN_CFG_PIN_REG_MASK    GENMASK(27, 20)
+    #define PIN_CFG_MASK    GENMASK(19, 0)
+
+Also, you already have:
+
+    #define MUX_PIN_ID_MASK         GENMASK(15, 0)
+    #define MUX_FUNC_MASK           GENMASK(31, 16)
+    #define MUX_FUNC_OFFS           16
+
+But all of
+
+    #define MUX_FUNC(pinconf)       (((pinconf) & MUX_FUNC_MASK) >>
+MUX_FUNC_OFFS)
+
+    pins[i] =3D value & MUX_PIN_ID_MASK;
+
+can use FIELD_GET(), removing the need for MUX_FUNC_OFFS.
+
+Also:
+
+    u8 pincount =3D RZG2L_GPIO_PORT_GET_PINCNT(cfg);
+
+can become
+
+    u8 pincount =3D FIELD_GET(PIN_CFG_PIN_CNT_MASK, cfg);
+
+Same for all the other macros using GENMASK().
+
+I hope this makes it more clear what I had in mind?
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
