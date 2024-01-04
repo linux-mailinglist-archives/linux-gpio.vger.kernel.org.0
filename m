@@ -1,112 +1,219 @@
-Return-Path: <linux-gpio+bounces-2004-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2005-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D6B7D82394F
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 00:47:30 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D22E82397A
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 01:15:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F19811C249EF
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Jan 2024 23:47:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FF3B1F25EE4
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 00:15:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A1E71F92C;
-	Wed,  3 Jan 2024 23:47:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59C4F37A;
+	Thu,  4 Jan 2024 00:15:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+RTksN2"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NN+TyRWm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3201F609
-	for <linux-gpio@vger.kernel.org>; Wed,  3 Jan 2024 23:47:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B139D36B
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 00:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2ccbf8cbf3aso105564301fa.3
-        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 15:47:23 -0800 (PST)
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-28ca8a37adeso4201690a91.3
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 16:15:37 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704325641; x=1704930441; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=L5i3vNz1GWYj8zmDwnsMw7M3QiHzXDaBa/Jxc4SAtJI=;
-        b=Z+RTksN2gWBapz0a/QJaSQk0QZeqNEIkL8OVoY4QE5EqkRzl6++o1p7At2+E+quGfL
-         gMGFzZy/UoOrcE+uaE6bX0phOz2lYKtwFqQ/PSSBzceOylCgIAR/Ukm6l8QnNX1gsPAR
-         2KiQaNhGF9DqMXeiuBTbtBQvsaM+zaoDjJ/STZn3HYBH4+liP1HJfhUrjnmmC6C2nokI
-         NijmbYU54w70bMAtxl9HpQyZG1ODgIwJ+6W0T1vF7E9EH1x8F0tfAoMENvpza6q6UjNK
-         /RhaW8FQlxd3usSa4s2Msm1C/851trGJILjst/IF0CruRcHtPEtO8p+Y+1O2amzDJw2r
-         cBOw==
+        d=gmail.com; s=20230601; t=1704327337; x=1704932137; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yn3kgVUSfT2ZAEn2xfVGbqzukEaUDEpY4DQ4DXkfcFU=;
+        b=NN+TyRWmWcKc/O3SEgFO31qEfT5KsAgDHSbLQSe4E+QjQ5J35HcnKensXzPx9UttuP
+         Eld2lkBf91sqouK04qUPBveujSN9lkoyCduW8axIfbihO3o9K3JUG12b5dT0p9bynszc
+         csMziTzSblsPX1lEpriKYKbdXM0BgEcGeuDnTU3X77YwieLSw9RwXadCpp9qt7FMg74d
+         AkUW5rqydadndCzTNq+UBneKca7tqQ9nPWjK6Lbh5rSX9IfC3zVdlZJCLNnZT2yKoc1+
+         7+Ew6sDk30v49TvZd/p/ezgnPVZIk0jMuVRfa0wPU/sVLRuRO1YTVq/HsQszk8EzQxqi
+         swFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704325641; x=1704930441;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=L5i3vNz1GWYj8zmDwnsMw7M3QiHzXDaBa/Jxc4SAtJI=;
-        b=acJQT53nill7hp+nf1G9OQxwx4MHbO2xJZ83PNuKPyGyHmZRkD6k9/4GAdjWFD0Zq/
-         LnhR7hTAypd1Y0T+/nw/9a7/JrDUk8AwNCYFBU+ujvOOPR2BfLy8tpxIevRsQ72rGmnP
-         /5q2rpF72/XOyQLz3OT2CrmHxhJ3xmuz38yoPMAy626p13jyMZ3ld5kI0A60mDqM68KG
-         SIzkJm+fDSncDsUV5AeV1fyC4yCzZpq+C5Oce7ZDqIzz9P0Y7daKYAhAl0Ns8JXcS4Cj
-         zZBGEOC2KhRAxvdWBfd0l/t39hnSyGtyrP95PZQrciYCx2WUggWnLN277lhMcSe2FUOe
-         rt8g==
-X-Gm-Message-State: AOJu0YwnDVcxTByr0fdXah+nv8jQiq4By3hRwafjaCxrG3vYEFxb/bdp
-	wugsSZ6yJUesBP1CH3cRc+sHRoTb8Rd3seF5jg8=
-X-Google-Smtp-Source: AGHT+IH/d/7E9foI7+Wg+GT1HYrIB3CzXn7FY1ZnvyS6cGmG2z8SWA2vGmhXktyuXN/1+zmjETdujPwrUpDudlOvO00=
-X-Received: by 2002:a2e:2d09:0:b0:2cc:9389:ca1 with SMTP id
- t9-20020a2e2d09000000b002cc93890ca1mr9158096ljt.73.1704325641097; Wed, 03 Jan
- 2024 15:47:21 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704327337; x=1704932137;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yn3kgVUSfT2ZAEn2xfVGbqzukEaUDEpY4DQ4DXkfcFU=;
+        b=R6tlg9sN2Lj2badgRi3QLDD99FmUfCW8OJLkmlKJP5t3/2t0T47JEk85PU/cjqEju4
+         PLWBTyf5+Qj3YMt1rXKj1gr8EdOz85l0f3MDrN8m6HDPkhx+XGozskUssdkiocfeXM1n
+         CLLOpjsjxVc9+ydQcSmpkhPd8XegQxUdSlgWZYxkMuMfrR7tQxQa8296roPYkEdSB4RR
+         ikZXn/2B+c/PyyS4jfCiwHfU9IlZlqTRmymJnbfldPRu4pwp5QNxZpZysrQ1i3O5LCiZ
+         1rEChQwn4AjhKk7CsNk60o+ORKWBvVINk8iZwTCwvA12SPFRe6a8PGB2mz5TuuuHMyJb
+         7ZXQ==
+X-Gm-Message-State: AOJu0YyJck860p8O8AXxSfNonn5G385SZ+6zresOw2S1JgaiRocDmuOy
+	B/KYJWZeENg0Uc/IEMTZpL/iDECql7c=
+X-Google-Smtp-Source: AGHT+IE8F2Ij89ogj5MUKM5iWYSGJTiHrNPwVqk8MnyUw6aiLCyr661Jb7h6kzqQKiN5DjmIi6gNlw==
+X-Received: by 2002:a17:90a:af81:b0:28b:542a:dc91 with SMTP id w1-20020a17090aaf8100b0028b542adc91mr10526860pjq.65.1704327336886;
+        Wed, 03 Jan 2024 16:15:36 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id r59-20020a17090a43c100b0028ce507cd7dsm2536307pjg.55.2024.01.03.16.15.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jan 2024 16:15:36 -0800 (PST)
+Date: Thu, 4 Jan 2024 08:15:32 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Seamus de Mora <seamusdemora@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
+Message-ID: <20240104001532.GA5165@rigel>
+References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+ <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com>
+ <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
+ <CAMRc=MeyHkHyK7YVx_5YpPxvgY4b2XTBtNVHDrC3FNxiEg4Bjw@mail.gmail.com>
+ <CAJ8C1XMsjLNdRFS8dDCua7=zha+LnuOcWCy-7W_uU5+LWgqpxQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
- <20231228092915.GA67274@rigel> <CAJ8C1XOP+h9iptC2gB0-6+Loaxr3Ow2MXYUjAxqr_t2EgBmDew@mail.gmail.com>
- <20240103094931.GA117646@rigel> <CAJ8C1XPe5nG30O89AVboZa=iqRu=-4=jNtuWj3v6KY921kfq8w@mail.gmail.com>
- <20240103232514.GA3339@rigel>
-In-Reply-To: <20240103232514.GA3339@rigel>
-From: Seamus de Mora <seamusdemora@gmail.com>
-Date: Wed, 3 Jan 2024 17:46:44 -0600
-Message-ID: <CAJ8C1XMMUJgOHOMPayom_8itNpt7kNcSyz-1R4hPJ-LGzQTd_Q@mail.gmail.com>
-Subject: Re: [libgpiod] Some thoughts following a brief test of libgpiod ver 2.1
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJ8C1XMsjLNdRFS8dDCua7=zha+LnuOcWCy-7W_uU5+LWgqpxQ@mail.gmail.com>
 
-On Wed, Jan 3, 2024 at 5:25=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> On Wed, Jan 03, 2024 at 01:47:54PM -0600, Seamus de Mora wrote:
-> > On Wed, Jan 3, 2024 at 3:49=E2=80=AFAM Kent Gibson <warthog618@gmail.co=
-m> wrote:
-   [ snip ]
-> >     gpioset does *not exit* because people complained about lack of
-> >     persistence. When the persistence issue was fixed in the driver,
-> >     we also fixed it in gpioset by not allowing it to exit.
+On Wed, Jan 03, 2024 at 04:09:01PM -0600, Seamus de Mora wrote:
+> On Wed, Jan 3, 2024 at 12:35 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 > >
-> > Have I got that right??
+> > On Wed, Jan 3, 2024 at 6:53 PM Seamus de Mora <seamusdemora@gmail.com> wrote:
+> > >
+> > > On Wed, Jan 3, 2024 at 4:47 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > > >
+> > > > On Thu, Dec 28, 2023 at 2:20 AM Seamus de Mora <seamusdemora@gmail.com> wrote:
+> > > > >
+> > > >
+>         [ snip ]
+> > > >
+> > > I thought this issue of line ownership had been resolved...  i.e. the
+> > > system driver would take control of the line once the user's process
+> > > had exited? Maybe I'm confused on this point, but I *thought* I had
+> > > read that somewhere else?
 > >
-> > If so, why not stick by your initial assertion that persistence is a
-> > driver issue - not a libgpiod issue?
-> >
-> > I won't make a recommendation - or tell you what I *think/feel* -
-> > because I know "you don't care", but if this is the case...
+> > The driver is just a low-level interface between the core GPIO code
+> > and the hardware. It does not typically take control of any GPIOs
+> > (unless it calls gpiochip_request_own_desc() but that's an internal
+> > detail).
 > >
 >
-> The behaviour was changed in A driver, and as noted by Stefan even that
-> is in the vendor tree, not the mainline tree.
+> OK - that *sounds* like a different story than the one your partner is
+> telling... do you guys ever "talk"?
 >
-> Your perspective is too narrow - we need to deal with the general case.
 
-Probably my perspective is rather narrow; as I said at the top of this
-thread, "I have zero Linux kernel experience."
+Formerly, once the user releases the line it becomes unowned.  That is
+certainly true from the userspace perspective.  My interpretation is
+that when a user releases the request the line ownership reverts to the
+driver, cos in reality that is now in control of the line.
 
-But I know that we need persistence, and it should be possible to get
-that in a rational fashion. But not to worry, I'll try to find an
-explanation for all of this  that makes sense to one with a narrow
-perspective.
+Sure we talk, but we can also have differing points of view.
+You clearly have no problems talking, and I still take issue with
+your tone.  Where is that damn hatchet?
 
-Best Rgds,
-~S
+> > >
+> > > Nevertheless, to address your questions: No - I didn't mean to infer
+> > > that there's only one user. I understand that you (library developer)
+> > > need to account for different users. But GPIO control is not a unique
+> > > issue in Linux (or any multi-user OS). It is the same if we were
+> > > talking about control of a serial port/UART... how is that arbitrated
+> > > between users?
+> >
+> > It's exactly the same. The first user to claim a serial port (be it an
+> > in-kernel serdev or a user opening /dev/ttyX) takes exclusive usage
+> > and keeps the port until it releases it.
+> >
+>
+> OK - we agree on that much.
+>
+> > >
+> > > WRT a GPIO line, I'd say "the user" is the one who issued the gpioset
+> > > command. In the context of your example ("When gpioset acquires the
+> > > GPIO for exclusive usage"), why could gpioset (or the user who issued
+> > > the gpioset command) not 'make a claim for exclusive usage' of the
+> > > GPIO line? If other users/processes subsequently attempted to claim
+> > > the same line, their claim would simply be disallowed - unless they
+> > > were `root`. Is there a reason why this model of ownership could not
+> > > work?
+> >
+> > This is precisely what happens though (except for root being able to
+> > override a regular user)? Or am I not understanding this paragraph?
+> >
+>
+> I think you and I have a common understanding on this point. I only
+> brought the root user in because the primary concern seems to be
+> "ownership" of the line, and I thought 'root' could arbitrate that.
+>
+
+Even root cannot access a line held by gpioset, at least not via the
+GPIO uAPI.  Root would have to kill the process holding the line first.
+
+> > >
+> > > No - not referring to sysfs... and I'm not sure I'm following your
+> > > argument here. But the only point I'm trying to make is wrt
+> > > 'persistence': First, I'll assume that you are saying that gpioset has
+> > > a role to play in persistence, and that it does not delegate the
+> > > persistence question to the driver. Under that assumption, I am
+> > > suggesting that another model for persistence is as I outlined above.
+> > > And I'll ask again, "Is there a reason that model could not work?"
+> > >
+> >
+> > I'm sorry, I'm not sure what *that model* is. Gpioset has no role in
+> > persistence because it's merely a wrapper around libgpiod which is a
+> > wrapper around the kernel uAPI which - by design - offers no
+> > persistence.
+>
+> Well - we're back to 'square one' it seems. There must be persistence
+> in GPIO control. It gets back to my example with the bedroom light.
+> Do you agree that persistence must exist in GPIO control?
+>
+> > FYI I understand the need for a user-space GPIO authority that's more
+> > centralized and am working on a DBus daemon that will become exactly
+> > that. However my cup runneth over so it'll be some time before it's
+> > done. :(
+> >
+>
+> So - does that mean that we're going to have to wait for version 3 (or
+> 4?) of libgpiod to get something that provides persistence of GPIO
+> control?
+>
+
+And there is that tone again...
+
+No, AIUI this will be added to libgpiod or be a separate component.
+No API changes involved and so no major version bump.
+
+These things always take longer than you would like, and the gpioset
+interactive mode is partly my attempt to provide an interrim solution
+until the daemon is available.
+
+> I apologize if this sounds "short", but if we cannot agree that
+> persistence is fundamental to GPIO control, then I'm at a loss for
+> words.
+>
+
+I would rather focus on providing a solution to your problem, whatever
+that actually is, rather than arguing over whether the existing options
+are sufficiently persistent, or what persistence even means in this
+context.
+
+The underlying issue is that the post-release behaviour is not clearly
+defined across the GPIO driver interface. IIRC there has been some
+discussion on signalling to the driver that it should not alter the line
+post-release (on second thought maybe I'm thinking of the reading the
+input/output buffer distinction), but if that were to go ahead it needs
+to be done in a way that is backwardly compatible, all the way out to the
+ABI, and involves updating ALL the drivers to suit.  All that is a
+non-trivial task, i.e. you are looking at a butt ton of work.
+It is therefore worthwhile to examine the alternatives.
+
+So, what exactly is your problem and how does that that absolutely require
+"persistence" to solve?
+
+Cheers,
+Kent.
 
