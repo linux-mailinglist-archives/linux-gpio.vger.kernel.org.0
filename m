@@ -1,167 +1,204 @@
-Return-Path: <linux-gpio+bounces-2014-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2012-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E0AD823BE3
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 06:48:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D446823B15
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 04:23:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7217B1C24AB3
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 05:48:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4BF081C24B3F
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Jan 2024 03:23:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1ACEE18C29;
-	Thu,  4 Jan 2024 05:48:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96760522A;
+	Thu,  4 Jan 2024 03:23:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MH4BIHiW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from CHN02-SH0-obe.outbound.protection.partner.outlook.cn (mail-sh0chn02on2086.outbound.protection.partner.outlook.cn [139.219.146.86])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDBA18B00;
-	Thu,  4 Jan 2024 05:48:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=gqT+AlBJA9Z0u9ZvMetJHpTyN8oRCkABtusA6vtNxMcZiiJRbntAASR5Zqj74aO1FtPerf8xoaE/7qbM5c3ytbTtkShD/mImQVoyQiB2T6zVZeIM5+f71zD5a1vI+w8UbJh3aXKNtLSluLI4xjAu8yRjnwrr2cpnjn9uDOR15JaDM2sFd8PpgEvOeRr+1MQGobIZ+vf+YP0rtxV6e8qDSqPCx15mLvTqiswBYunpyDYJXJiXxxbI3hLBuXscLFOG1bp20cASoxEnF46LR+6S4jaA3yNH+mlAOnEY1DvRTuEUBSraLfzD65bbE43MJMp5FVbwC979XEVVwEE+Yc12TA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=JpIlqX1F6oRIEE2HeyDQPUNE1uK+ZdFiOZnZJLQ/mDk=;
- b=XLvA1BXmkm7e8eSn7ixqXl/rGZ6OPys/5cn7l8r8T8OMmRBelAaKkpE11uK6WX1NAKq4s6Kemg4wN8vIwsJoBFiAo9VL76heLyDd1oz2eWClX+HrHxc5LWWFSETA5GrV/7KPBVkx8CBZV4qAKZTwq3V3PlYFceJ3y4TtLfF8XJdV96gdX7eBVhLRacoieLy3KmQpgBR7rJwtCmfbwsZ1sH3R5BwSehXCY8L5yqwAUvcuPaInD0QMK7HuZHMEV/Jc/sXxSjttIcnkRF6bcL1i/U3lyOeL7tJ5U+kkAM7sT3Yle5xtSvrswFVqrTUflyjvnBr+Lk7Wo3Sv4102nGM27w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=starfivetech.com; dmarc=pass action=none
- header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550:1b::9) by ZQ0PR01MB0981.CHNPR01.prod.partner.outlook.cn
- (2406:e500:c550::13) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7135.14; Thu, 4 Jan
- 2024 03:12:31 +0000
-Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
- ([fe80::bc6e:a7fa:7ab5:7417]) by
- ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::bc6e:a7fa:7ab5:7417%4])
- with mapi id 15.20.7135.026; Thu, 4 Jan 2024 03:12:31 +0000
-From: Yuklin Soo <yuklin.soo@starfivetech.com>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Yuklin Soo <yuklin.soo@starfivetech.com>
-CC: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng
-	<hal.feng@starfivetech.com>, Leyfoon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing
-	<kernel@esmil.dk>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Drew
- Fustini <drew@beagleboard.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-riscv@lists.infradead.org"
-	<linux-riscv@lists.infradead.org>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: RE: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
-Thread-Topic: [RFC PATCH 1/6] dt-bindings: pinctrl: starfive: add JH8100
- pinctrl bindings
-Thread-Index: AQHaM+jQtC6UubUli02XCaS05iYu97CzPUUAgAAeLoCAFbP3wA==
-Date: Thu, 4 Jan 2024 03:12:31 +0000
-Message-ID:
- <ZQ0PR01MB130273F2A3286849FB5BB0C9F667A@ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn>
-References: <20231221083622.3445726-1-yuklin.soo@starfivetech.com>
- <20231221083622.3445726-2-yuklin.soo@starfivetech.com>
- <CACRpkdYL8wK2vX7P7p4QvU9VV2CPjRv_aXiLqO+07MMCCKKk4Q@mail.gmail.com>
- <6c861db8-f6cd-4e12-856a-ef45efc654a2@linaro.org>
-In-Reply-To: <6c861db8-f6cd-4e12-856a-ef45efc654a2@linaro.org>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=starfivetech.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB0981:EE_
-x-ms-office365-filtering-correlation-id: 7c26bebd-085b-4543-d7fb-08dc0cd2fd48
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- K1Ldjc4x8GBitLIl5yNqAX6F7V5BPSOwwijz8yCF0rsHrDeBsqaYQ50L5dzOxwXRdc33zhH2TjmB6Pn8rpb2lFqH0n2m4Xcq58SywcBtRaD/vuA7L66k8Y91yY1bOj1Vw02En7owFsEWz8CBLxMHkhTtlKoNo3rCGk7/wF0M2+Q93AbT2G/uO0zuh9A3sC9ULh+mkts3EgoED163nd9eQQ1bVHGYaCirfQJKye2CZkPwtUxu/RGniWJ34AF4/ZDhww2uy1/Iw5jTEnw96nTXvU/deHwzCR+3lIteh0MMlNZ9RV6CAp7eJSnCfVy3o3t6glb5O2gXtGasVAv+d5Vpl10qf+73iS+2uPwh0A8Ltm6dK21iGf9+zxsqtAGYQahtaIvy5j99rtVF0JuIe+SbfEZOjUvxIyy3vcB3zfTpMHQdb4vhG/QSq0zdt4+xsSc9ZKorH/2oyU1b7J6kHyQdFU1ZdZlitd0CYkJJBl5zglIY4Hzwnlo9YymMHqqbWXiYXi9MMZptx0bigIY32J1NfKJcQMYfXHEh18eJYNIk7V6dnr6RwXGZaCBYWBeABXlt
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(39830400003)(346002)(366004)(396003)(136003)(230922051799003)(451199024)(186009)(1800799012)(64100799003)(7696005)(41320700001)(122000001)(53546011)(9686003)(508600001)(66556008)(55016003)(71200400001)(110136005)(66446008)(4326008)(76116006)(40160700002)(33656002)(66946007)(54906003)(44832011)(66476007)(41300700001)(2906002)(8936002)(8676002)(83380400001)(5660300002)(40180700001)(4744005)(7416002)(86362001)(38100700002)(64756008)(26005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?VTZtcVBzZ2xsOXdTbFFuQ1I2engvTVM3TWgzSG9aZTRZY1ZKSUY3dXd3N2g5?=
- =?utf-8?B?QVR3L1F0bEh4LzBXZ2FhSHI0Y3I2SWxRSlVKM3k5UWxpZVdRd2ZFZGNtTTdU?=
- =?utf-8?B?cUxrS05jRjk0VDFNRVFKek11bnBHaTBFVVNTR0FEWHR3bHZsMzN4ZVh1Rldn?=
- =?utf-8?B?MXB3OTljNkJzdkU0YW5EejUxc0Z2WG5kMUE3N3dpWE5JMnNTaGVBK3YyM3dw?=
- =?utf-8?B?elBnL2huWm9sUGNIcWkrSG9OM3czNG5FSGdDdC9yeWE2aGJGTENXZXcxSVo3?=
- =?utf-8?B?c1VvRENxZEFlUHNONzFhdTJZdGhoMFUrMVpNbHhBK1ZjZEhFZHJuNFgrd3pw?=
- =?utf-8?B?dFVrV0xub0ZpNFZnM3NhMmx3ZW95QzRyUFRNMTdpRm4wQ0haR1lBbWFQenJ1?=
- =?utf-8?B?Y1NBaThrMks0TFlDa1dEa1k4eTcxWlBLWGhsT0dqUGhWV3QvMzBFMlBCdllI?=
- =?utf-8?B?WHJNMGU1Sy9FNHJtanROQWJvNCtadVRCYzVrOXRaUVV4bk14UDBvWU4xS29S?=
- =?utf-8?B?OWdtQWhaaERCMDNJTGFpcWIya1NnV1hQZXUwZVFuNEpJVVVlZEIzNHBhZ3U0?=
- =?utf-8?B?Q0JrSEg2SS91YXpIdzdpcmtDYjBPWVFMalBRdGgvQXJwTlR0YXFpeHdkc2lu?=
- =?utf-8?B?Q3grUW93N3VXMmhoL0FLRkJOWDNKN1pCVTcvbGJkdWRQQTRZRVR2MEsyclF0?=
- =?utf-8?B?WDh3V3h4YUszNVBndmJ4cUFHb3pLYmVJVzNCdWo5Umo2YVlXb0duTnB1Njln?=
- =?utf-8?B?R2NjTnJDOWFaMXNFdWxuWk1HTlJMaWRmUW53alBDeFp4N2c1TmdRck50UVdU?=
- =?utf-8?B?aW5ZNk5yT2JDcXQvUWszNDVuV0E0djJCY21OZmo3TFpvR2t5T3JGQmlDaTM4?=
- =?utf-8?B?SFdHWjVOWVVCV2RiOHVpdXBRc2RzbFdldTZSMnJ3WE83cXR2OWlsVHVDbUFH?=
- =?utf-8?B?ZXd0TTR6M0JuMWJlMjJBUTZZUEc5Q2M4c0dvWDJBbURKcEpXMmpDWUd0UXBk?=
- =?utf-8?B?MG9DbTd5WkZyWXU3QUNXQUN0MFUvcGFYVUh2OTBBK01YOW92OFpXeGtscVVy?=
- =?utf-8?B?TnhFS0NYVVZXU1BrVXg1dXNLbEpiY1RBSDVoeUFnR2szTkNpdy9nQ1lPdmNG?=
- =?utf-8?B?QkVhT21EVHZNU0JRSGhWQVZLcTU0ZHc3NC93SFNwdS95RUpMZHlxNXJmT0ZR?=
- =?utf-8?B?UmRxMTFwS1pweXRQVGc3eXdaNEJGSld3VitCQ0F0ajkxbDkzQ1RjbVlLNmxY?=
- =?utf-8?B?a0dKY1NJa2JDOFYvM21zUGt2TVBvbzNLbzVqc3JFdWJLd1l3cTZIMnVVK3A0?=
- =?utf-8?B?TS9pNlVVZE9ITXFGcDNKWHExV2FLbE0zaCtYRmUzZ2w2VFhIMHB4QkdmUG5D?=
- =?utf-8?B?bURUTDNKNVM0WlJhTUc3dFpZZ0Y1UzhGcEk5ZS96am15VUNoNXZYYTU0MlNK?=
- =?utf-8?B?R3ZFcVVpYjdWWStKeTVPcmJyaXdid3dIRWNtWHM3TCtNOGlTMk9SUm50amJV?=
- =?utf-8?B?NW8rMURkMGNISFdOZDNsR2dFY2xNY2I1LzJiNE5TK203cXZWRFdjcERSalZL?=
- =?utf-8?B?QlZ6aGdoZ3JTU1lLTExKdDlob0pmeHVHQ1lYS1B0RDczb0paUmh0MnZEcWdT?=
- =?utf-8?B?d2pTMVRsbjdDcC96VEhpODdCUUVYTkdvcWpQVUhoMHJubTUyRG5JSjRUbmdv?=
- =?utf-8?B?SmIrQWJNMVNaQnJGY2tDN3Y2RVVtbS8rRERhR0RPc1RKNVJXV2dpeDhmelNI?=
- =?utf-8?B?bk1QR0hrMzYrWEUwQjlYbElseENlbzlVL3NUOS9ocXFDcWJ0RGJwaHg4WS9K?=
- =?utf-8?B?V285SWR1d1J5bnEzRzFPcGVjNkgyWlA3VUdkaDMwRFN6dGIwRFBDcDE1dC9L?=
- =?utf-8?B?S1J2dHdTTTJxSHovbWVweGVna05leFdhOHc2cyt2MVA3ZjhoK0czRjN5bFZD?=
- =?utf-8?B?eE4wR1lNeHYzV0o5Wk9qdFloMldyR1BtY0JZdEduUG5WNVR6NmMrdHQ3RTJ0?=
- =?utf-8?B?dEUyZG5USDJVUUxHb0k4NVBUVXd0dVY4SXQwVk55WjAvc2wwWlUrYzJNMCtZ?=
- =?utf-8?B?cGVRMWZmSFhTdFZ3S29JOFlUTTZJa0tvZnVNZVA5c1ZGdGZQVWwvTWIyZjVw?=
- =?utf-8?B?RUlMRU1PMUgzYUdhblMvdWZuNE55cnNXOGhaa3pzbSt6NjVmamJhbkRkcUw2?=
- =?utf-8?B?eFE9PQ==?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F9F11196
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Jan 2024 03:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd20d9d483so1186591fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 03 Jan 2024 19:23:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704338583; x=1704943383; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bmKudvyRYHDpKyg4wSasa/se0ntcHf3jE/HR3F+biGU=;
+        b=MH4BIHiWlNEzq+Ai+SHf/Q4rHeaDdotqa2YXH4WEIKYyIEq/pGAMEM70HMmvem1+W2
+         +QBwl+139tAZlk7pleREdzwQ6N4zBi2zanqdrPwiCP4xYjMO1ZqlRjbDN+7cbqhvceTL
+         s+sj1vdoSWluQU87miaESqM8zEpjg8piAfF4w/tLFNBueya5FGoJUqzwWevM45tWHTyV
+         aYZBkl6aTSkiDoa357IN2lu1abK901Ysr13Z31BsxH1onSzSgJ1jqVT31KLNm6z3diqb
+         UQ4QCuvikHsOcilsuCwgcN2A5n66hq4979g3fttHqg6vfSpvVqewjhSUTbhto8lB+N3f
+         UBzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704338583; x=1704943383;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=bmKudvyRYHDpKyg4wSasa/se0ntcHf3jE/HR3F+biGU=;
+        b=oUDfYWZ7673nOEtaNwkMNCVA8Qw6tr7pesdFeOcqjJWlmcxDgRfK/XHtxd6ZHkrc5v
+         dMYECalV0i6bDJpkI6Oy/s5H8XVAF2XKnOTjODea5k+9toU62Daus0RcdZLYGSomAFbr
+         cgSSonOR2irOTVHUgXeilIvcWT7hC5CjBthUJCoVb828CYy395NLaoSTE7wQ2SUZPMtR
+         Wiqj2cSHWTp2XlHiUKodoyYxWN7ri3SWdmku+0mcHS5P1i6XEQqHuXhzERP103242nqr
+         7ks/SqZPXiysPHAabuO+jV4QfjHDM+NCr+0CZUoq9ehWJzaJFfOKpQXbJe/epL9D0P2o
+         ipyw==
+X-Gm-Message-State: AOJu0Yw+jnbM7iZbtOPOhcYEloM9sM7Xtu1vAVLKuv0E/CY7+KZcXMIU
+	zKkqADXkC6SrfMLCoV4zJdPpK40jmfiKrr2EYjiuPwWbWTo=
+X-Google-Smtp-Source: AGHT+IFTbO3j3tfBjxRaE8eS13V8LumJF4usoVypsamH7+79fHW5ILQ02UWUS2pTMzUCqRyoqbdIs/ET3TBwqI1jADk=
+X-Received: by 2002:a2e:7804:0:b0:2cc:f135:8d60 with SMTP id
+ t4-20020a2e7804000000b002ccf1358d60mr4117407ljc.91.1704338582401; Wed, 03 Jan
+ 2024 19:23:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7c26bebd-085b-4543-d7fb-08dc0cd2fd48
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Jan 2024 03:12:31.1619
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: cEKQ+uOLOAEHkLcT55Gx70YbFwzFD35ObA+9pt22zX7vCC4K/udwhewuPMCfTag2jqYON3+7axJEWBIk1Zvm0cxm7XpMPt2rwNjlObJScKs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB0981
+References: <CAJ8C1XPiYYeOzbZXcDFR2GX-CoRFuvJim6QVi9-O-oR4mZBauA@mail.gmail.com>
+ <CAMRc=Mfmf1pPnkGkyZZKmucOprq4cLnnfxSLaSxSB3Ra_3iYeg@mail.gmail.com>
+ <CAJ8C1XMySRzbM1Unj+7LhY9_0AiSyAjoJC-qMQvUAPQfBcu5Wg@mail.gmail.com>
+ <CAMRc=MeyHkHyK7YVx_5YpPxvgY4b2XTBtNVHDrC3FNxiEg4Bjw@mail.gmail.com>
+ <CAJ8C1XMsjLNdRFS8dDCua7=zha+LnuOcWCy-7W_uU5+LWgqpxQ@mail.gmail.com> <20240104001532.GA5165@rigel>
+In-Reply-To: <20240104001532.GA5165@rigel>
+From: Seamus de Mora <seamusdemora@gmail.com>
+Date: Wed, 3 Jan 2024 21:22:25 -0600
+Message-ID: <CAJ8C1XPTK9K-oMhPmAVm1U==QAfMcCDJ7ujMJ2mCV_0QOtiY9g@mail.gmail.com>
+Subject: Re: Some thoughts following a brief test of libgpiod ver 2.1
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS3J6eXN6dG9mIEtvemxv
-d3NraSA8a3J6eXN6dG9mLmtvemxvd3NraUBsaW5hcm8ub3JnPg0KPiBTZW50OiBUaHVyc2RheSwg
-RGVjZW1iZXIgMjEsIDIwMjMgMTE6NDUgUE0NCj4gVG86IExpbnVzIFdhbGxlaWogPGxpbnVzLndh
-bGxlaWpAbGluYXJvLm9yZz47IFl1a2xpbiBTb28NCj4gPHl1a2xpbi5zb29Ac3RhcmZpdmV0ZWNo
-LmNvbT4NCj4gQ2M6IEJhcnRvc3ogR29sYXN6ZXdza2kgPGJhcnRvc3ouZ29sYXN6ZXdza2lAbGlu
-YXJvLm9yZz47IEhhbCBGZW5nDQo+IDxoYWwuZmVuZ0BzdGFyZml2ZXRlY2guY29tPjsgTGV5Zm9v
-biBUYW4gPGxleWZvb24udGFuQHN0YXJmaXZldGVjaC5jb20+Ow0KPiBKaWFubG9uZyBIdWFuZyA8
-amlhbmxvbmcuaHVhbmdAc3RhcmZpdmV0ZWNoLmNvbT47IEVtaWwgUmVubmVyIEJlcnRoaW5nDQo+
-IDxrZXJuZWxAZXNtaWwuZGs+OyBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgS3J6eXN6
-dG9mIEtvemxvd3NraQ0KPiA8a3J6eXN6dG9mLmtvemxvd3NraStkdEBsaW5hcm8ub3JnPjsgQ29u
-b3IgRG9vbGV5IDxjb25vcitkdEBrZXJuZWwub3JnPjsNCj4gRHJldyBGdXN0aW5pIDxkcmV3QGJl
-YWdsZWJvYXJkLm9yZz47IGxpbnV4LWdwaW9Admdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2Vy
-bmVsQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LQ0K
-PiByaXNjdkBsaXN0cy5pbmZyYWRlYWQub3JnOyBQYXVsIFdhbG1zbGV5IDxwYXVsLndhbG1zbGV5
-QHNpZml2ZS5jb20+OyBQYWxtZXINCj4gRGFiYmVsdCA8cGFsbWVyQGRhYmJlbHQuY29tPjsgQWxi
-ZXJ0IE91IDxhb3VAZWVjcy5iZXJrZWxleS5lZHU+DQo+IFN1YmplY3Q6IFJlOiBbUkZDIFBBVENI
-IDEvNl0gZHQtYmluZGluZ3M6IHBpbmN0cmw6IHN0YXJmaXZlOiBhZGQgSkg4MTAwIHBpbmN0cmwN
-Cj4gYmluZGluZ3MNCj4gDQo+IE9uIDIxLzEyLzIwMjMgMTQ6NTcsIExpbnVzIFdhbGxlaWogd3Jv
-dGU6DQo+ID4+ICsgICAgICAgICAgZHJpdmUtc3RyZW5ndGg6DQo+ID4+ICsgICAgICAgICAgICBl
-bnVtOiBbIDIsIDQsIDgsIDEyIF0NCj4gPg0KPiA+IE1pbGxpYW1wZXJlcz8gVGhlbiBzcGVsbCB0
-aGF0IG91dCBpbiBhIGRlc2NyaXB0aW9uOg0KPiANCj4gT3IganVzdCB1c2UgZHJpdmUtc3RyZW5n
-dGgtbWljcm9hbXANCg0KU3VnZ2VzdCBjaGFuZ2luZyDigJxkcml2ZS1zdHJlbmd0aDrigJ0gdG8g
-4oCcZHJpdmUtc3RyZW5ndGg6IERyaXZlIHN0cmVuZ3RoIGluIG1B4oCdIHNpbmNlIHRoZSB1bml0
-IGlzIGluIG1BLg0KDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IEtyenlzenRvZg0KDQo=
+On Wed, Jan 3, 2024 at 6:15=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Wed, Jan 03, 2024 at 04:09:01PM -0600, Seamus de Mora wrote:
+> > On Wed, Jan 3, 2024 at 12:35=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+
+> > >      [ snip ]
+
+> > OK - that *sounds* like a different story than the one your partner is
+> > telling... do you guys ever "talk"?
+> >
+>
+> Formerly, once the user releases the line it becomes unowned.  That is
+> certainly true from the userspace perspective.  My interpretation is
+> that when a user releases the request the line ownership reverts to the
+> driver, cos in reality that is now in control of the line.
+>
+> Sure we talk, but we can also have differing points of view.
+> You clearly have no problems talking, and I still take issue with
+> your tone.  Where is that damn hatchet?
+>
+
+I understand that... Like you, I also live in the real world, and deal
+with people that sometimes see things differently. No need to get
+tetchy again.
+
+> > > >
+      [ snip ]
+
+> > > I'm sorry, I'm not sure what *that model* is. Gpioset has no role in
+> > > persistence because it's merely a wrapper around libgpiod which is a
+> > > wrapper around the kernel uAPI which - by design - offers no
+> > > persistence.
+> >
+> > Well - we're back to 'square one' it seems. There must be persistence
+> > in GPIO control. It gets back to my example with the bedroom light.
+> > Do you agree that persistence must exist in GPIO control?
+> >
+> > > FYI I understand the need for a user-space GPIO authority that's more
+> > > centralized and am working on a DBus daemon that will become exactly
+> > > that. However my cup runneth over so it'll be some time before it's
+> > > done. :(
+> > >
+> >
+> > So - does that mean that we're going to have to wait for version 3 (or
+> > 4?) of libgpiod to get something that provides persistence of GPIO
+> > control?
+> >
+>
+> And there is that tone again...
+
+That's a logical follow-up question to the statement. Perhaps with a
+tinge of the frustration I feel over not understanding why this
+problem keeps getting bigger - or more elusive.
+
+>
+> No, AIUI this will be added to libgpiod or be a separate component.
+> No API changes involved and so no major version bump.
+>
+> These things always take longer than you would like, and the gpioset
+> interactive mode is partly my attempt to provide an interrim solution
+> until the daemon is available.
+>
+
+That's reassuring, but I have to say this: It's unclear to me if we
+even see the bottom of the well yet.
+
+> > I apologize if this sounds "short", but if we cannot agree that
+> > persistence is fundamental to GPIO control, then I'm at a loss for
+> > words.
+> >
+>
+> I would rather focus on providing a solution to your problem, whatever
+> that actually is, rather than arguing over whether the existing options
+> are sufficiently persistent, or what persistence even means in this
+> context.
+>
+> The underlying issue is that the post-release behaviour is not clearly
+> defined across the GPIO driver interface. IIRC there has been some
+> discussion on signalling to the driver that it should not alter the line
+> post-release (on second thought maybe I'm thinking of the reading the
+> input/output buffer distinction), but if that were to go ahead it needs
+> to be done in a way that is backwardly compatible, all the way out to the
+> ABI, and involves updating ALL the drivers to suit.  All that is a
+> non-trivial task, i.e. you are looking at a butt ton of work.
+> It is therefore worthwhile to examine the alternatives.
+>
+> So, what exactly is your problem and how does that that absolutely requir=
+e
+> "persistence" to solve?
+
+Are you really asking why persistence is necessary?
+Or are you asking why I'm not keen on the command line options needed
+to get persistence?
+
+If I need to answer the first question, I'd like for you to first
+explain how you illuminate an LED without it (e.g. imagine a warning
+light telling a driver he's lost pressure in the brake lines in his
+car).
+
+WRT the second Q, all I can really say is that I am pretty
+simple-minded. I need/want tools that I understand - tools that
+operate like all the other tools I use now - or have used in the past
+(e.g. tools that don't refuse to exit after they've completed their
+assigned task(s), and tools that don't have to be coaxed to 'do the
+right thing' by adding "options"). Before libgpiod tools, I used a
+tool called 'gpio' - a part of WiringPi. Perhaps you'd like to spend
+30 minutes to check it out?... I feel it's the essence of simplicity,
+and quite straightforward to use. It did many things that libgpiod
+tools are not required to do. I liked this tool because it operated in
+the fashion of all the other tools I use. In "my world", with tools
+I've used previously, setting a GPIO to High to illuminate an LED is a
+very trivial task - by that I mean in the overall context of a project
+I work on, turning LEDs on is not something I've ever had to spend
+much time thinking about. Yet here I am today - explaining to the
+libgpiod s/w developer why persistence is important?!
+
+Apologies to you both if I've said anything that was offensive, but
+the more I talk with you about this - the more confused I get. I think
+I'll give this libgpiod stuff a rest - maybe I'll have a revelation.
+One final request: You've mentioned this "microAPI" (??) several
+times. Is that a document?; if so, can I get a copy?
+
+Rgds,
+~S
 
