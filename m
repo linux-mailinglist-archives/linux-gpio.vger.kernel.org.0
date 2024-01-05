@@ -1,72 +1,73 @@
-Return-Path: <linux-gpio+bounces-2041-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2042-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B92F5824CBB
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 03:11:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD7AA824CCE
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 03:14:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 595D51F2316D
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 02:11:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76DE4286D63
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 02:14:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82CB51FC8;
-	Fri,  5 Jan 2024 02:11:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 313011FBF;
+	Fri,  5 Jan 2024 02:14:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AHAk27qn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WtzIKr3+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com [209.85.208.173])
+Received: from mail-ed1-f67.google.com (mail-ed1-f67.google.com [209.85.208.67])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C14911FBE;
-	Fri,  5 Jan 2024 02:11:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF183C2C;
+	Fri,  5 Jan 2024 02:14:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2ccb6ddf651so3428211fa.0;
-        Thu, 04 Jan 2024 18:11:27 -0800 (PST)
+Received: by mail-ed1-f67.google.com with SMTP id 4fb4d7f45d1cf-5451faa3aa7so304416a12.0;
+        Thu, 04 Jan 2024 18:14:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704420686; x=1705025486; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1704420846; x=1705025646; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XmPAokCF8XiRAhvGBrhmqGsgT7mk/J8HnsnCH8uI4Xg=;
-        b=AHAk27qnDZng4VBpj9+36AkAbKQqphnfZ1sfmkUaNXTloMRG4ivAYZvc3KDN1NS3lb
-         3frEgACaBVkf4pb47MJUqrHN89ZWd4fvFHiSiDw67heUZa9+/6UWUhBzECkXQ0R2f/X1
-         lCDl/58QgO5z7/VS/ZFrzZfB/7sL1/VnrLKSlQHmJpOQN1hR2Tfe+NdOPBIiIQD4BUCW
-         jhIvxUlBYdLA01lrwILA3URGVkqmGijlhg2dpCAOkiqbZg01cgceCcJ0OfZcrM0hPmCB
-         vDUqZfU6M0QXPJt+RWbMABasGXpOYiaiFm02Ke3vG/NEc8UTy8tft0EDXJjI8YcLLaDm
-         5pdQ==
+        bh=QIhc/XiXTFib4YoSd7gnfHZK2aRrIl/0V0Y6XDlyDD0=;
+        b=WtzIKr3+/ug2feyHKw9bmCZ6HurbvcWIMR/wAbLQXdKjjdxsAZRM9zpd5RU/3AZvUs
+         Rvy8CddAgasFn0s0n9Dwpl3cW1/iHoU7TppJKBJCm7s6/aJ0+EHUyHUQEXdv8nvJXzk5
+         qiDcGFhoKKgl5J3ZxLTWDSWIItJFDFF4ixp99dhNeEYf125iQopYS1XPZ61JwXKnk7FJ
+         CDuP9gUIdu1TTAKF3/UHMaTuKghxX8+h6ie9pVX3tx+5ltnd++qQkbYe9tCt6Mam2+ST
+         23blI/xqmcNfLEqytwn6TrfX70tnS/Q4RJw/+6zyc2DVACOSBsY/asYM9n5E8cosF/SD
+         rLvw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704420686; x=1705025486;
+        d=1e100.net; s=20230601; t=1704420846; x=1705025646;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XmPAokCF8XiRAhvGBrhmqGsgT7mk/J8HnsnCH8uI4Xg=;
-        b=mH1m3gWu/7iXQrOQKDYUh0uhUgVHpGFixAXms7IpcvM+kJuTdKeFKjLZ1DQU86Hs8j
-         NLb0U6H9wo0bQJlK9KdiQ8PyLX8NH5PPKC4iJJ0OdDJ+1aR5N+/xc1RN5jYoq6R9Z0U8
-         G/kfNbCpUmYGhWf6wxabpOsNnhs/Ezwm31MbSr3KqyNq3xdXv7f2ObyjNT0AFcuj10gu
-         UbSWYddapSXO87B+5HWwcKwB7GGhV5yF+2+1TFf1BBSsb2UzeaqejCdgcYaWSWh9E7E+
-         7XWhActc6A/k9pzKSLzSu0ZHQw66e+iszZJs5QhxsRTWaCaxNUWTVZMNHif+rKCRiJpx
-         cg4Q==
-X-Gm-Message-State: AOJu0YxKOC2wHZ9UhlM4r/iXTGFy4eot5+qsNAkxbdOTnGXGd8Z0X+vS
-	0q/6I48UR6XFo+kTLKeFeNX5lSqwwZo+bArMgIA=
-X-Google-Smtp-Source: AGHT+IGLRoF1C1V3xSIo5Jv7tmG026oWvTJ29dQh/lwSN8IJv7p3WhV/tRlnTVz4yaIQa2wI1pk4vZgQr5AkCZhRvhE=
-X-Received: by 2002:a05:651c:2106:b0:2cc:e995:9db9 with SMTP id
- a6-20020a05651c210600b002cce9959db9mr1623428ljq.5.1704420685526; Thu, 04 Jan
- 2024 18:11:25 -0800 (PST)
+        bh=QIhc/XiXTFib4YoSd7gnfHZK2aRrIl/0V0Y6XDlyDD0=;
+        b=A7ngn/Kpp0syNeWq5/A30RF08yeoMy7svesM55ZdBtoLx+v+JwkFJaqK51O7c8aOSb
+         TQrN5gvBznkj4NPyOfwgaSOhMp5YiJkLEubInDcoview9Hgw4x1IlBT88o5cOfhTkCb2
+         Csg08XWSe1qm8CiymLZCouJCMuf0U3XalCR3O0KfTrlNfU200l6bJ8w5eshUdix0mhv7
+         CAEU/4jlJV/qSxxITgUTUm9jwOOim0T6O+UwoeblUNNTPsHPpyeoe0nJhtxH/2fH18ix
+         eBvRigIn91BZEnagrsEWg07gzDaAi10x4RK0cciWZ9aVAkcuvxCDTQ8d5LbPf4zqQUMz
+         q2Aw==
+X-Gm-Message-State: AOJu0Yx1UMoeCybFwxuYGmRyGzqmAKu1EW/SLuECEQAMg9mmcTx2UqHf
+	c/OXEPbEViHPZn9on7SlwQeK+rwmzGlUjPkof/M=
+X-Google-Smtp-Source: AGHT+IHZ/vZn6VylOFCLQfKmmztIP/YvCY8H1OYGyActwuYIw30o6YoGNPqiYAt1sMSVmyCWicnxPUMCOWnh7Z6Ucl4=
+X-Received: by 2002:a50:a6d0:0:b0:556:e2b7:c0d9 with SMTP id
+ f16-20020a50a6d0000000b00556e2b7c0d9mr1949673edc.2.1704420846473; Thu, 04 Jan
+ 2024 18:14:06 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
- <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
-In-Reply-To: <CAHp75VfdCHnPovC+LJyVsh=SGTLXDoDowd+0z+0J-wDF2_yjCQ@mail.gmail.com>
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-4-Wenhua.Lin@unisoc.com>
+ <CAHp75VcUU-FUYJKN40dzMbe5KmmAR7--0JV00qdgnbNwHqFjQg@mail.gmail.com>
+In-Reply-To: <CAHp75VcUU-FUYJKN40dzMbe5KmmAR7--0JV00qdgnbNwHqFjQg@mail.gmail.com>
 From: wenhua lin <wenhua.lin1994@gmail.com>
-Date: Fri, 5 Jan 2024 10:11:14 +0800
-Message-ID: <CAB9BWhc0WyvMMudKcpuOw3=hqiWrC4e47fri6ywqYojULHnAdQ@mail.gmail.com>
-Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+Date: Fri, 5 Jan 2024 10:13:55 +0800
+Message-ID: <CAB9BWhdN2V7B8vOqrGr_Gy1q3iu93X27dTvqa2RwnwMQwtotag@mail.gmail.com>
+Subject: Re: [PATCH V3 3/4] gpio: eic-sprd: Modify the calculation method of
+ eic number
 To: Andy Shevchenko <andy.shevchenko@gmail.com>
 Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
 	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
@@ -76,26 +77,25 @@ Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 4, 2024 at 9:00=E2=80=AFPM Andy Shevchenko
+On Thu, Jan 4, 2024 at 9:01=E2=80=AFPM Andy Shevchenko
 <andy.shevchenko@gmail.com> wrote:
 >
 > On Thu, Jan 4, 2024 at 4:43=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com>=
  wrote:
 > >
-> > The eic debounce does not have a clock of rtc_1k in the sleep state,
-> > but the eic debounce will be used to wake up the system, therefore the
-> > clock of rtc_1k needs to be kept open.
+> > When the soc changes, the corresponding gpio-eic-sprd.c
 >
-> ...
->
-> > +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
->
-> BIT(15) ?
+> SoC
 >
 
-Yes, writing 1 to bit15 of the register can ensure that the clock of
-rtc_1k remains normally on.
+Thank you very much for your review.
+I will fix this issue in patch v4.
 
+> > code needs to be modified, and the corresponding
+> > Document must also be modified, which is quite troublesome.
+> > To avoid modifying the driver file, the number of eics
+> > is automatically calculated by matching dts nodes.
+>
 > --
 > With Best Regards,
 > Andy Shevchenko
