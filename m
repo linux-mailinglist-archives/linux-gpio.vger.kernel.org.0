@@ -1,118 +1,124 @@
-Return-Path: <linux-gpio+bounces-2045-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2046-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC1DD824D6B
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 04:26:20 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EFBB82506A
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 10:01:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07B68286B3A
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 03:26:19 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9DA5E281108
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Jan 2024 09:00:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66C9029B4;
-	Fri,  5 Jan 2024 03:26:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 759C0225A1;
+	Fri,  5 Jan 2024 08:59:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6QfD3df"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="az7ZvYP2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f51.google.com (mail-oa1-f51.google.com [209.85.160.51])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D80944405;
-	Fri,  5 Jan 2024 03:26:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oa1-f51.google.com with SMTP id 586e51a60fabf-20451bc39b1so608673fac.1;
-        Thu, 04 Jan 2024 19:26:10 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CE8D241F4
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Jan 2024 08:59:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-467a7a376d5so346093137.1
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Jan 2024 00:59:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704425170; x=1705029970; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OfrqhYTGUJ9pcqbluJqareOb2HurY1Vh3HHdZ5Gd8c0=;
-        b=i6QfD3dfYgdXj5XHFzVF8QRjQXE4L4lzxsrHzCG0Hc9uw1XFo7lorwMLNy4tyDw61d
-         +oDsJzwEvCo2341tC0PizZWV/C8PD1HTbszXXaNOOEjhFHzbFGG8nWnpctfyTktnRZQX
-         eQK2XTZ77tFp/PxXVQDTovm0mpIGM78y03c067Dah1lP85jBDp2/6jZLUR0eANosubag
-         cKI6HSkQIMwixYRYzfx6YNicEQMM1oGJ+47oaVaB0dTdU77ywvVkVgLSAigwcSJVRPdF
-         16ROd3m2DP+Cx7RptoRc2d6FI9IkcbzLYIvE+kxcxufExYm0iyX7zh+pPJFOWreRjdBs
-         /6/g==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704445147; x=1705049947; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Yaq0wFGJm8RBV+TNY81vMbYgzuWUak1jB6WJa6TSMnQ=;
+        b=az7ZvYP2AqFm8WC5a/i6WK4vd/jVH4rkDJaR/qhPM/nfWBib5uRmO5JLM2YQfVECZr
+         Xie47TZxvsKei8xzx7c04/oWpGfdhRJZZa9Mf/ViXRIGE654KmqGkzyLdIe8G97dKc0N
+         zDfGp6UPaiuqZzNJHx5H7qJ0JTImSZFV6ZmwD0OK+9LBQPFYdbypTq1QyI/UNAzaiDJo
+         wn1APuD2Bi3uh9ujv0c/vMTFF2qBzcB/ETT6Q1Bsi7CyhR9Nfgyxu7huTMCtc3JRs085
+         A7takSKm7ozCh2/6u9iPKW5sh3EnX1J5W9A+sMoFuRqJG4EesiB0qppsw1jw2XvKSwc/
+         48zA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704425170; x=1705029970;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OfrqhYTGUJ9pcqbluJqareOb2HurY1Vh3HHdZ5Gd8c0=;
-        b=cGPrwCzsisauRw4iydind4qgJ3u/BqA7Oc7R+QgLwsnQ+ZHrStIkXIrYUJX87GgZ98
-         gCFd8fB0mmxoodjjCckgeOpbKtzpaxf06jqH/lvlv25c1fhtEIgbGecC2u+Q00pu+ELL
-         hDsXDNakyrhn2S8unGtw5KeG/RotzME9tvpeVu+/5AUU2cwQLHuZQB87UwuLqE978tX1
-         LN7ITLsi//MRIVcgRBDmyJTX4MCIfrw2Mh2iNsJIR4mCoWfl5UYOYKyjzmiO+CYWNZC1
-         bKeUON+0aDG2qpZyxoDLzDQx1dPh2tl/kUknmxMWYJ1hjdG+xjKtuK6dFPY6yVt5G7A3
-         otqw==
-X-Gm-Message-State: AOJu0Yxm0ELv8ahrsSOdzkUv3Dh2HBNyqY8Qz7KbHAIdCuZh69SNXxdv
-	ZyHfb80cwhVGH4tS3WaZQClfvIJ08+bXRnelWf+v6CNo
-X-Google-Smtp-Source: AGHT+IEJJdh/Qjsp0GDBwgvwTgMsU4RRRkXQT0YqPoCz7PTSerEiTpOkQVUbvDyrq/rpi27sQXlA1pLvR2wjF/+1f9U=
-X-Received: by 2002:a05:6870:36d5:b0:204:c0:5db3 with SMTP id
- u21-20020a05687036d500b0020400c05db3mr1418682oak.13.1704425169809; Thu, 04
- Jan 2024 19:26:09 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704445147; x=1705049947;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Yaq0wFGJm8RBV+TNY81vMbYgzuWUak1jB6WJa6TSMnQ=;
+        b=NWLnT55z48g0kYlhrnqb01EP7d119Jb3gtb4Zrx7Rj60ETj8I2V6UHDWuKurKf6RSM
+         Iz0GNAwLYHfhSuoEUyHLR5uSzBaoAqp2McBNvpwumcmnbBBk8LfnLoZIC1f5KeYbvO9J
+         rMH+YFRY6VFU3LzKn/QjPYyFbVcDnrO036R/BJyenT3hmRQUwtFJ69YIdKM7RqE5+//c
+         L2sHuAy6Rjw31Ojv3Gofvtf8ZL7zWOoDu/KWKwvunMBHtfHTg33B8ew2Y953pNrMtxox
+         5000sQ75ez5Tl2diB2/S+dmBvv5VSEaJ9j4N1/ML+bratAClMi7RzgBsd4tHwlKK0fV8
+         cfFg==
+X-Gm-Message-State: AOJu0YwzY4p/TnybqGj4NTHCFQoKHtOCCRaiSBTHJlZfAnNVD+s3ljrR
+	jsr4pNGA/UGd1xAwLNc61iww7mJPLsaf49SIMqCrE6PuozCx9Q==
+X-Google-Smtp-Source: AGHT+IFE10GUfhH4msnA+jhNiHZxIXfWsCedv/eABwd0IuqFWT8nQfak7uq3oYrPam3evyx53/bz2ndfRIQxIVIlJek=
+X-Received: by 2002:a05:6102:6688:b0:467:17ca:bef3 with SMTP id
+ gw8-20020a056102668800b0046717cabef3mr1826365vsb.8.1704445147002; Fri, 05 Jan
+ 2024 00:59:07 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Fri, 5 Jan 2024 11:25:32 +0800
-Message-ID: <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
-Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+References: <20240104135058.46703-1-brgl@bgdev.pl>
+In-Reply-To: <20240104135058.46703-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 5 Jan 2024 09:58:56 +0100
+Message-ID: <CAMRc=Mecrk9Jd_TPNAqTdy4sEpS4tCWOF2f9V5jHi_JAC8vv-A@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] core: remove buggy flags sanitization from line-config
+To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, 4 Jan 2024 at 10:43, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
+On Thu, Jan 4, 2024 at 2:51=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
 >
-> The eic debounce does not have a clock of rtc_1k in the sleep state,
-> but the eic debounce will be used to wake up the system, therefore the
-> clock of rtc_1k needs to be kept open.
-
-It seems that this issue is not in the latest SoCs. I would suggest
-not changing for the time being.
-
-Thanks,
-Chunyan
-
-
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> We try to drop potentially set output flags from line config if edge
+> detection is enabled but we use the library enum instead of the one from
+> the uAPI. In any case, we should actually loudly complain if user tries
+> to use the output mode with edge-detection (like we do currently) so just
+> remove offending lines entirely.
+>
+> Reported-by: Anne Bezemer <j.a.bezemer@opensourcepartners.nl>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
->  drivers/gpio/gpio-eic-sprd.c | 2 ++
->  1 file changed, 2 insertions(+)
+>  lib/line-config.c | 3 ---
+>  1 file changed, 3 deletions(-)
 >
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index be7f2fa5aa7b..bdcb3510a208 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -24,6 +24,7 @@
->  #define SPRD_EIC_DBNC_IC               0x24
->  #define SPRD_EIC_DBNC_TRIG             0x28
->  #define SPRD_EIC_DBNC_CTRL0            0x40
-> +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
->
->  #define SPRD_EIC_LATCH_INTEN           0x0
->  #define SPRD_EIC_LATCH_INTRAW          0x4
-> @@ -223,6 +224,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *chip, unsigned int offset,
->         u32 value = readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
->
->         value |= (debounce / 1000) & SPRD_EIC_DBNC_MASK;
-> +       value |= SPRD_EIC_DBNC_FORCE_CLK;
->         writel_relaxed(value, base + reg);
->
->         return 0;
+> diff --git a/lib/line-config.c b/lib/line-config.c
+> index 2749a2a..9302c1b 100644
+> --- a/lib/line-config.c
+> +++ b/lib/line-config.c
+> @@ -381,18 +381,15 @@ static uint64_t make_kernel_flags(struct gpiod_line=
+_settings *settings)
+>         case GPIOD_LINE_EDGE_FALLING:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+>                 break;
+>         case GPIOD_LINE_EDGE_RISING:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_RISING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+>                 break;
+>         case GPIOD_LINE_EDGE_BOTH:
+>                 flags |=3D (GPIO_V2_LINE_FLAG_EDGE_FALLING |
+>                           GPIO_V2_LINE_FLAG_EDGE_RISING |
+>                           GPIO_V2_LINE_FLAG_INPUT);
+> -               flags &=3D ~GPIOD_LINE_DIRECTION_OUTPUT;
+>                 break;
+>         default:
+>                 break;
 > --
-> 2.17.1
+> 2.40.1
 >
+
+Patch applied.
+
+Bart
 
