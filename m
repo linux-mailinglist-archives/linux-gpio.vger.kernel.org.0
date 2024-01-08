@@ -1,125 +1,247 @@
-Return-Path: <linux-gpio+bounces-2058-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2059-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3285B827315
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 16:29:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 528718273DA
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 16:40:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB37B1F25732
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 15:29:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B39DB1F22DB7
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 15:40:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35AA552F86;
-	Mon,  8 Jan 2024 15:28:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BF3553816;
+	Mon,  8 Jan 2024 15:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dDp+wKIx"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JwKUZj7o"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A192552F69;
-	Mon,  8 Jan 2024 15:28:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 408EgTQW004108;
-	Mon, 8 Jan 2024 15:28:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-type; s=qcppdkim1; bh=Rk3s+ZKkG8f4jny9WLfJ
-	mdwaQs4xH0BELyDFpvnE3sU=; b=dDp+wKIxWSd2jKzkzxZ4iHtEfq081Q5iCXgK
-	syaqIriMcqJSmrKiyodmFZPa9ufF2pawQ496DQT8CXbrFnxNrRiqCPzCujl9DPPp
-	4V7YklgCWWnf2NIl31+4gKeO1yeyuj35fsSg9EI+4DxwWthRNidf9IXd6hJNX6Eu
-	33Rsldgnqqn1hfDfp1VnBdO9KfeH53/JCvl1aTRuqTVH7MtkPKAIoyomz2f3R50G
-	rvvZt5KLpuMWJiw/WFbrgxo2LsL9pncWwqnzkznjarqrBBPkrfaGUk7OODbUOAvn
-	c4MGI3nxhicZOy+RsAqfFFtpm6vmOYrmot5HHIbpawLyPO3Yiw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vg97b1ad8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Jan 2024 15:28:12 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408FSBGf012691
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 8 Jan 2024 15:28:11 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Mon, 8 Jan 2024 07:28:09 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
-Subject: [PATCH v11 4/4] pinctrl: qcom: Use qcom_scm_io_rmw() function
-Date: Mon, 8 Jan 2024 20:57:34 +0530
-Message-ID: <1704727654-13999-5-git-send-email-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
-References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89B694C3A0
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Jan 2024 15:39:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4b756f2aec8so492450e0c.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Jan 2024 07:39:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704728393; x=1705333193; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=OOJbSi5rNTjMHJMF5lMEiPd+GXhzy+vNHdpBCiGEhzo=;
+        b=JwKUZj7oWgdMXLSKxW16NP93FDntTQXSMfSXfehzkgOQ5DWkLpb464jT9E9MiUWRVf
+         LTO/5dfd4OzHhL5A4po/zfn6XXcUrqBZ1fxCRu+rUHSu5GzikhVd4EBq6ndsRcjyvWAR
+         suyrQFaK6i+6aITUDtb+KPzxA5MM7h1DVL3oifC+AB3NkQEwIerHhto5qin4yY65WWoX
+         8pQ04Tl9DaR9oXeIVyqQxdEr3jcBaZFXcCIMVoxnnw2MkTig3X8c/x/fFOWpez1+iPQP
+         4Dv+mRXNwx1raZNwz7tmG7KDj8e6TMA9owmFehOBXlvTqh2edt+qnBQtGLJTtHCdNn+8
+         oL3A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704728393; x=1705333193;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=OOJbSi5rNTjMHJMF5lMEiPd+GXhzy+vNHdpBCiGEhzo=;
+        b=Du1ZhPD6TVuCm62LKR9euFa/8CIqj2SB3ZyYuJ7x/+xNeXPTixKWElm9sC69Yz5b5P
+         LR+I7DoASRctD2GGueGB5kMzg8iB6o6bSSXFge9XyRGatjv/EGjXK4EvC1JPbjzSrqMI
+         2h1xJIJTO55PpEXQy2zvoPrLg5i+veRGxhPe4If0VwCo8FGRaUDi/1WAAWIkrwP/3atY
+         9W4KRvY6hR2MoOz5CRswgv5zBnA1c8Cramv0X5b4ztw++z035GZViW5ara61qucHcTm9
+         tqVtTXKM4osUGTQNELWNSAVtVHAT++/m+Vp77m5xJlGjKRYl2Uo2ZyigiQuXEZSTSRlp
+         VuAA==
+X-Gm-Message-State: AOJu0YzLYAwDh4lctiBXyi+x+dEhjcJyKwtWW0b5o+eWYIbkIQdofQmm
+	Yc5nCtpSqFfj6He9VHu0j7Jxs8M+cMVrnA7h3HgmWe6wIfP5EQ==
+X-Google-Smtp-Source: AGHT+IEXzfxEmWO3/tWR9nmj4EUSphBVdtQt7Noz+NC5+wWfuyb2uKGTlK89MCeD6645lTIuyBAXX+gEKP8BJcLiGic=
+X-Received: by 2002:a05:6122:3a16:b0:4b7:17ae:747d with SMTP id
+ fp22-20020a0561223a1600b004b717ae747dmr1208222vkb.22.1704728393280; Mon, 08
+ Jan 2024 07:39:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: 9rSUidQQ7DWNtP-cs_OWqNNuSAqKj_Hd
-X-Proofpoint-ORIG-GUID: 9rSUidQQ7DWNtP-cs_OWqNNuSAqKj_Hd
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 bulkscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=748 suspectscore=0
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401080132
+References: <20240102155949.73434-1-brgl@bgdev.pl> <CGME20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747@eucas1p1.samsung.com>
+ <20240102155949.73434-4-brgl@bgdev.pl> <32c76177-83c1-48c5-8198-b7347b83d5db@samsung.com>
+In-Reply-To: <32c76177-83c1-48c5-8198-b7347b83d5db@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 8 Jan 2024 16:39:42 +0100
+Message-ID: <CAMRc=MfAbgApC5nXjqvyRi9k_Zx9N_n8g-d5sGO-WR4mHn=LBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] gpiolib: pin GPIO devices in place during
+ descriptor lookup
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Use qcom_scm_io_rmw() exported function in pinctrl-msm
-driver.
+On Mon, Jan 8, 2024 at 2:03=E2=80=AFPM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
+> On 02.01.2024 16:59, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > There's time between when we locate the relevant descriptor during
+> > lookup and when we actually take the reference to its parent GPIO
+> > device where - if the GPIO device in question is removed - we'll end up
+> > with a dangling pointer to freed memory. Make sure devices cannot be
+> > removed until we hold a new reference to the device.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> This patch landed in linux-next as commit db660b9a9f86 ("gpiolib: pin
+> GPIO devices in place during descriptor lookup"). Unfortunately it
+> introduces a following lock-dep warning:
+>
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> WARNING: possible recursive locking detected
+> 6.7.0-rc7-00062-gdb660b9a9f86 #7819 Not tainted
+> --------------------------------------------
+> kworker/u4:2/27 is trying to acquire lock:
+> c13f4e1c (gpio_devices_sem){++++}-{3:3}, at: gpio_device_find+0x30/0x94
+>
+> but task is already holding lock:
+> c13f4e1c (gpio_devices_sem){++++}-{3:3}, at:
+> gpiod_find_and_request+0x44/0x594
+>
+> other info that might help us debug this:
+>   Possible unsafe locking scenario:
+>
+>         CPU0
+>         ----
+>    lock(gpio_devices_sem);
+>    lock(gpio_devices_sem);
+>
+>   *** DEADLOCK ***
+>
+>   May be due to missing lock nesting notation
+>
+> 4 locks held by kworker/u4:2/27:
+>   #0: c1c06ca8 ((wq_completion)events_unbound){+.+.}-{0:0}, at:
+> process_one_work+0x148/0x608
+>   #1: e093df20 ((work_completion)(&entry->work)){+.+.}-{0:0}, at:
+> process_one_work+0x148/0x608
+>   #2: c1f3048c (&dev->mutex){....}-{3:3}, at:
+> __driver_attach_async_helper+0x38/0xec
+>   #3: c13f4e1c (gpio_devices_sem){++++}-{3:3}, at:
+> gpiod_find_and_request+0x44/0x594
+>
+> stack backtrace:
+> CPU: 0 PID: 27 Comm: kworker/u4:2 Not tainted
+> 6.7.0-rc7-00062-gdb660b9a9f86 #7819
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> Workqueue: events_unbound async_run_entry_fn
+>   unwind_backtrace from show_stack+0x10/0x14
+>   show_stack from dump_stack_lvl+0x58/0x70
+>   dump_stack_lvl from __lock_acquire+0x1300/0x2984
+>   __lock_acquire from lock_acquire+0x130/0x37c
+>   lock_acquire from down_read+0x44/0x224
+>   down_read from gpio_device_find+0x30/0x94
+>   gpio_device_find from of_get_named_gpiod_flags+0xa4/0x3a8
+>   of_get_named_gpiod_flags from of_find_gpio+0x80/0x168
+>   of_find_gpio from gpiod_find_and_request+0x120/0x594
+>   gpiod_find_and_request from gpiod_get_optional+0x54/0x90
+>   gpiod_get_optional from reg_fixed_voltage_probe+0x200/0x400
+>   reg_fixed_voltage_probe from platform_probe+0x5c/0xb8
+>   platform_probe from really_probe+0xe0/0x400
+>   really_probe from __driver_probe_device+0x9c/0x1f0
+>   __driver_probe_device from driver_probe_device+0x30/0xc0
+>   driver_probe_device from __driver_attach_async_helper+0x54/0xec
+>   __driver_attach_async_helper from async_run_entry_fn+0x40/0x154
+>   async_run_entry_fn from process_one_work+0x204/0x608
+>   process_one_work from worker_thread+0x1e0/0x498
+>   worker_thread from kthread+0x104/0x138
+>   kthread from ret_from_fork+0x14/0x28
+> Exception stack(0xe093dfb0 to 0xe093dff8)
+> ...
+>
+>
+> Taking gpio_devices_sem more than once for reading is safe, but it looks
+> that it needs some lock-dep annotations to to make it happy and avoid
+> the above warning.
+>
+>
+> > ---
+> >   drivers/gpio/gpiolib.c | 40 +++++++++++++++++++++++-----------------
+> >   1 file changed, 23 insertions(+), 17 deletions(-)
+> >
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index 4c93cf73a826..be57f8d6aeae 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -4134,27 +4134,33 @@ static struct gpio_desc *gpiod_find_and_request=
+(struct device *consumer,
+> >       struct gpio_desc *desc;
+> >       int ret;
+> >
+> > -     desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, &fla=
+gs, &lookupflags);
+> > -     if (gpiod_not_found(desc) && platform_lookup_allowed) {
+> > +     scoped_guard(rwsem_read, &gpio_devices_sem) {
+> > +             desc =3D gpiod_find_by_fwnode(fwnode, consumer, con_id, i=
+dx,
+> > +                                         &flags, &lookupflags);
+> > +             if (gpiod_not_found(desc) && platform_lookup_allowed) {
+> > +                     /*
+> > +                      * Either we are not using DT or ACPI, or their l=
+ookup
+> > +                      * did not return a result. In that case, use pla=
+tform
+> > +                      * lookup as a fallback.
+> > +                      */
+> > +                     dev_dbg(consumer,
+> > +                             "using lookup tables for GPIO lookup\n");
+> > +                     desc =3D gpiod_find(consumer, con_id, idx, &looku=
+pflags);
+> > +             }
+> > +
+> > +             if (IS_ERR(desc)) {
+> > +                     dev_dbg(consumer, "No GPIO consumer %s found\n",
+> > +                             con_id);
+> > +                     return desc;
+> > +             }
+> > +
+> >               /*
+> > -              * Either we are not using DT or ACPI, or their lookup di=
+d not
+> > -              * return a result. In that case, use platform lookup as =
+a
+> > -              * fallback.
+> > +              * If a connection label was passed use that, else attemp=
+t to
+> > +              * use the device name as label
+> >                */
+> > -             dev_dbg(consumer, "using lookup tables for GPIO lookup\n"=
+);
+> > -             desc =3D gpiod_find(consumer, con_id, idx, &lookupflags);
+> > +             ret =3D gpiod_request(desc, label);
+> >       }
+> >
+> > -     if (IS_ERR(desc)) {
+> > -             dev_dbg(consumer, "No GPIO consumer %s found\n", con_id);
+> > -             return desc;
+> > -     }
+> > -
+> > -     /*
+> > -      * If a connection label was passed use that, else attempt to use
+> > -      * the device name as label
+> > -      */
+> > -     ret =3D gpiod_request(desc, label);
+> >       if (ret) {
+> >               if (!(ret =3D=3D -EBUSY && flags & GPIOD_FLAGS_BIT_NONEXC=
+LUSIVE))
+> >                       return ERR_PTR(ret);
+>
+> Best regards
+> --
+> Marek Szyprowski, PhD
+> Samsung R&D Institute Poland
+>
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/qcom/pinctrl-msm.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Thanks for the report. I think it may have come too late in the
+release cycle as it has the potential to break a lot of things. I will
+back it out of my for-next branch. I'll resend it for v6.9.
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
-index aeaf0d1958f5..1bd5c8c43fcd 100644
---- a/drivers/pinctrl/qcom/pinctrl-msm.c
-+++ b/drivers/pinctrl/qcom/pinctrl-msm.c
-@@ -1082,22 +1082,20 @@ static int msm_gpio_irq_set_type(struct irq_data *d, unsigned int type)
- 	if (g->intr_target_width)
- 		intr_target_mask = GENMASK(g->intr_target_width - 1, 0);
- 
-+	intr_target_mask <<= g->intr_target_bit;
- 	if (pctrl->intr_target_use_scm) {
- 		u32 addr = pctrl->phys_base[0] + g->intr_target_reg;
- 		int ret;
- 
--		qcom_scm_io_readl(addr, &val);
--		val &= ~(intr_target_mask << g->intr_target_bit);
--		val |= g->intr_target_kpss_val << g->intr_target_bit;
--
--		ret = qcom_scm_io_writel(addr, val);
-+		val = g->intr_target_kpss_val << g->intr_target_bit;
-+		ret = qcom_scm_io_rmw(addr, intr_target_mask, val);
- 		if (ret)
- 			dev_err(pctrl->dev,
- 				"Failed routing %lu interrupt to Apps proc",
- 				d->hwirq);
- 	} else {
- 		val = msm_readl_intr_target(pctrl, g);
--		val &= ~(intr_target_mask << g->intr_target_bit);
-+		val &= ~intr_target_mask;
- 		val |= g->intr_target_kpss_val << g->intr_target_bit;
- 		msm_writel_intr_target(val, pctrl, g);
- 	}
--- 
-2.7.4
-
+Bart
 
