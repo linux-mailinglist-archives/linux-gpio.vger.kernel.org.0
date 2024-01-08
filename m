@@ -1,268 +1,173 @@
-Return-Path: <linux-gpio+bounces-2053-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2054-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E048826F5D
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 14:12:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9792A827309
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 16:28:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18235283CD7
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 13:12:03 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C98228141F
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 15:28:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C9724174D;
-	Mon,  8 Jan 2024 13:11:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E060D4C63C;
+	Mon,  8 Jan 2024 15:28:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ABRGqq0B"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MyHYK5TC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAF6141239
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Jan 2024 13:11:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240108130316euoutp018cf5cfd3d47867df45bf85bf10b2972b~oYOUyGIYH1543515435euoutp01g
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Jan 2024 13:03:16 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240108130316euoutp018cf5cfd3d47867df45bf85bf10b2972b~oYOUyGIYH1543515435euoutp01g
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1704718996;
-	bh=eXxygB5VtinReaPJyzoDX8KSOlubAkZdY8fkZSHh7G4=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ABRGqq0Bln+9rRp5g8UyaYrm2sPPj+xhxisWYEvD0RYqCwW5pgmHF81Smhfw2BNOk
-	 o+c6ljyS14jgqK0hsLh5p1sZ8c0MQOAsJ4psXU2j3UbKRqioopUVGF062a75tkPL3i
-	 c1EgOgQFj4+h/qPZFddotWl7F1nWjHV0917LSreI=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240108130316eucas1p1460f768b858e064c887d5849f456fa6a~oYOUsWbjp1863118631eucas1p1I;
-	Mon,  8 Jan 2024 13:03:16 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id 0D.BA.09814.492FB956; Mon,  8
-	Jan 2024 13:03:16 +0000 (GMT)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747~oYOUTAFo90118801188eucas1p1J;
-	Mon,  8 Jan 2024 13:03:15 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240108130315eusmtrp23e475d76d87d117afdc27144d9c1c368~oYOUSd2x31328213282eusmtrp2g;
-	Mon,  8 Jan 2024 13:03:15 +0000 (GMT)
-X-AuditID: cbfec7f4-727ff70000002656-36-659bf29439a8
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id BB.19.10702.392FB956; Mon,  8
-	Jan 2024 13:03:15 +0000 (GMT)
-Received: from [106.210.134.192] (unknown [106.210.134.192]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20240108130315eusmtip291024e888628b6dea488a23f7a8202fe~oYOTqqipy0764607646eusmtip2Z;
-	Mon,  8 Jan 2024 13:03:15 +0000 (GMT)
-Message-ID: <32c76177-83c1-48c5-8198-b7347b83d5db@samsung.com>
-Date: Mon, 8 Jan 2024 14:03:15 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2775951C21;
+	Mon,  8 Jan 2024 15:28:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4089cFQ7008037;
+	Mon, 8 Jan 2024 15:28:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=CYB+yZ7CYnJ3JgARwyARaz8EHaN6Gp5CvcbnUwoEwwA=; b=My
+	HYK5TCDIy+Jkz2sieVdLV5IngFTKAfzSaD1kHtI1pZJu3GFqPg9c4eNbV1Q1LBx7
+	wJgXgnOP27JDBpKyxMSTxGlkRDCypf7g7jqB6RuT/a/kot0ViuT1Ufii7dgFTjm6
+	p3oYTp2mQtPl8CIvnqZg3ohKPEHPlB/ocIVcssyh8YBBb5BeJStv3ZkVc5SXdVJV
+	ze5MYkHVLecP+HSTZGjAZjgxPls35vPfiIKE9MEf87vKMa3f7gaNU0bMeeMgS9us
+	oIzDKOhwi47IzTwuCRS3J3Ng2LP4jBFkHNoeMkLiZfZOeHdjJ7PImHZLFCnycTQT
+	KrF9H/Sb+jndeGiIbJCA==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgch50yts-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Jan 2024 15:27:59 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 408FRw80020765
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 8 Jan 2024 15:27:58 GMT
+Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
+ nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 8 Jan 2024 07:27:56 -0800
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, Mukesh Ojha <quic_mojha@quicinc.com>
+Subject: [PATCH v11 0/4] Misc SCM driver changes
+Date: Mon, 8 Jan 2024 20:57:30 +0530
+Message-ID: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
+X-Mailer: git-send-email 2.7.4
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 3/3] gpiolib: pin GPIO devices in place during
- descriptor lookup
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
-	<linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz
-	Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Language: en-US
-From: Marek Szyprowski <m.szyprowski@samsung.com>
-In-Reply-To: <20240102155949.73434-4-brgl@bgdev.pl>
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupmleLIzCtJLcpLzFFi42LZduzned0pn2anGjRPErRY8W0Nk8WuB9vY
-	LKb8Wc5ksXn+H0aLy7vmsDmweiy+dpvV4861PWwenzfJBTBHcdmkpOZklqUW6dslcGXcvHmN
-	teCydsWSly9YGhh7VLoYOTkkBEwkTjSuZuxi5OIQEljBKHF03kMWCOcLo8TtidOZIJzPjBK/
-	Lrxhhmk52/Ifqmo5o8TGI19YIZyPjBL9DYvYQap4BewkDu3oZQKxWQRUJHbcvcUGEReUODnz
-	CQuILSogL3H/1gywemGBSImOg0vA6kUEgiW+PL0BVs8sUCLx/f82RghbXOLWk/lgNWwChhJd
-	b7vAajgFjCXm9B5gh6iRl2jeOpsZ5CAJgQMcEkeOfWGBONtFYvvNbewQtrDEq+NboGwZif87
-	5zNBNLQzSiz4fR/KmcAo0fD8FiNElbXEnXO/gNZxAK3QlFi/Sx8i7ChxZ/JLFpCwhACfxI23
-	ghBH8ElM2jadGSLMK9HRJgRRrSYx6/g6uLUHL1xinsCoNAspWGYheXMWkndmIexdwMiyilE8
-	tbQ4Nz212CgvtVyvODG3uDQvXS85P3cTIzC9nP53/MsOxuWvPuodYmTiYDzEKMHBrCTCKzlj
-	dqoQb0piZVVqUX58UWlOavEhRmkOFiVxXtUU+VQhgfTEktTs1NSC1CKYLBMHp1QD08rHDS2y
-	+3s41u1fIcCjqTvbM7LHUuKJ7xcte+GQJdyzOht7E/5JttVGfPG7KfA13KaS13V+1Vt1vb7i
-	iyfXvlpszVK1a5Ihw19TBX/GzxVHHrC8WPr0Hu+HmXU1J1e2zPp+9ZXt36L4uABvxUeb417r
-	v5sqtrxX1ecm97S8c2VJHzsreYq4LR+z/zjj/0m//o7es41xN9yLX7EtfThb+ebmH7473nBv
-	2ccrdXPZNkVFp/XXpzj8ma8WnPFHvY73yYXoL6zlgRJbZkms6d5vllLeU5yQqNF2cLlZ+30V
-	/5/Bu/elMP9LWM38ObMojzHjZ/3KtGgnlhvmN54GKxXbvJSsTVvS+KWQ4UfW1ElTlFiKMxIN
-	tZiLihMBmVUNgJ4DAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDIsWRmVeSWpSXmKPExsVy+t/xe7qTP81ONZjQbWCx4tsaJotdD7ax
-	WUz5s5zJYvP8P4wWl3fNYXNg9Vh87Tarx51re9g8Pm+SC2CO0rMpyi8tSVXIyC8usVWKNrQw
-	0jO0tNAzMrHUMzQ2j7UyMlXSt7NJSc3JLEst0rdL0Mu4efMaa8Fl7YolL1+wNDD2qHQxcnJI
-	CJhInG35z9LFyMUhJLCUUaKl+RgbREJG4uS0BlYIW1jiz7UuNoii94wSfTv2MIIkeAXsJA7t
-	6GUCsVkEVCR23L3FBhEXlDg58wkLiC0qIC9x/9YMdhBbWCBSouPgErB6EYFgiUV3O8HmMAuU
-	SEx6+B+sV0ggWqJ/2UZ2iLi4xK0n88Hq2QQMJbredoHVcAoYS8zpPQBVYybRtbULao68RPPW
-	2cwTGIVmITljFpJRs5C0zELSsoCRZRWjSGppcW56brGRXnFibnFpXrpecn7uJkZgNG079nPL
-	DsaVrz7qHWJk4mA8xCjBwawkwis5Y3aqEG9KYmVValF+fFFpTmrxIUZTYFhMZJYSTc4HxnNe
-	SbyhmYGpoYmZpYGppZmxkjivZ0FHopBAemJJanZqakFqEUwfEwenVAOTdhx7ndAN38hgU2dZ
-	0bM/Eg+9XVuQOUOHke99zNug1RyPNZ8ZurddEL9ZmfL559Ov5xbNdMhfkOkc9OvPo7WsStWz
-	5/MJvXUUnhY6y1Jk8oI7y6eee/X2gGdUlv8Z/kmXLgVNLr4deP/g+oPlp4/8vvuwYMtN+dmb
-	zul+upVf8FXh9Yftm1K6cpR+7dq455mVZZJLg8zqZRE3NGqnb7ls5XP9manWLcvTW/l/fmx4
-	Pm/dl/uCbOvu6lUYWRpPNf2z//SzwoXHucUK9gr7Sq/earLvuuk6cwFG7jVffi6pb9sV4DZ5
-	WtKU3LxPeV9z1/TKpXFvU4+UYSo7GLMu9sGTk491V2ilWX1PdU87GZdbPleJpTgj0VCLuag4
-	EQDWnmO4LwMAAA==
-X-CMS-MailID: 20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747
-References: <20240102155949.73434-1-brgl@bgdev.pl>
-	<20240102155949.73434-4-brgl@bgdev.pl>
-	<CGME20240108130315eucas1p1ecb6dbf60f9b796c3c678c889371a747@eucas1p1.samsung.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: dHtLPICOnwYmwbO7JDkSuNh2Uk8iuz1R
+X-Proofpoint-GUID: dHtLPICOnwYmwbO7JDkSuNh2Uk8iuz1R
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2023-12-09_02,2023-12-07_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 adultscore=0 impostorscore=0
+ phishscore=0 suspectscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
+ definitions=main-2401080132
 
-On 02.01.2024 16:59, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> There's time between when we locate the relevant descriptor during
-> lookup and when we actually take the reference to its parent GPIO
-> device where - if the GPIO device in question is removed - we'll end up
-> with a dangling pointer to freed memory. Make sure devices cannot be
-> removed until we hold a new reference to the device.
->
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+First two changes changes are needed to enable download mode on
+chipset like IPQ9574 and IPQ5332 SoCs as for these targets others
+bits in download mode registers are used for different purpose
+and earlier kernel code was mistakenly overwrite the other bits.
 
-This patch landed in linux-next as commit db660b9a9f86 ("gpiolib: pin 
-GPIO devices in place during descriptor lookup"). Unfortunately it 
-introduces a following lock-dep warning:
+First three changes(1/4-3/4) are SCM driver specific while 4/4 from
+pinctrl try to use the introduced API(1/3).
 
-============================================
-WARNING: possible recursive locking detected
-6.7.0-rc7-00062-gdb660b9a9f86 #7819 Not tainted
---------------------------------------------
-kworker/u4:2/27 is trying to acquire lock:
-c13f4e1c (gpio_devices_sem){++++}-{3:3}, at: gpio_device_find+0x30/0x94
+Changes from v10:
+ - Rebased on linux-next tag 20240108
 
-but task is already holding lock:
-c13f4e1c (gpio_devices_sem){++++}-{3:3}, at: 
-gpiod_find_and_request+0x44/0x594
+Changes from v9: https://lore.kernel.org/lkml/1698648967-974-1-git-send-email-quic_mojha@quicinc.com/
+ - Added 3/4 new patch.
+ - commit subject modification.
 
-other info that might help us debug this:
-  Possible unsafe locking scenario:
+Change from v8: https://lore.kernel.org/lkml/1698235506-16993-1-git-send-email-quic_mojha@quicinc.com/
+ - Introduce enum for dload mode constants as per suggestion from [Elliot].
+ - Rebased on linux-next.
 
-        CPU0
-        ----
-   lock(gpio_devices_sem);
-   lock(gpio_devices_sem);
+Changes from v7: https://lore.kernel.org/lkml/1696440338-12561-1-git-send-email-quic_mojha@quicinc.com/
+ - Rebased it on next-20231025.
+ - Added reviewed-by tag and take care of comment made about
+   commit text should be in imperative mode.
+ - Modified the name of the API to qcom_scm_io_rmw() as per suggestion
+   made by [Dmitry]
+ - Moved spinlock inside qcom_scm structure.
+ - Corrected the patch order as per subsystem SCM first then pinctrl.
 
-  *** DEADLOCK ***
+Change from minidump-v5(13/17-15/17):https://lore.kernel.org/lkml/1694429639-21484-1-git-send-email-quic_mojha@quicinc.com/ - Removed mistakenly added macros.
+   https://lore.kernel.org/lkml/9da888dc-401a-4cbb-b616-b4654fa79e35@quicinc.com/
+ - Added Acked-by tag from Linus.w to 2/3.
+Change from minidump-v5(13/17-15/17):https://lore.kernel.org/lkml/1694429639-21484-1-git-send-email-quic_mojha@quicinc.com/
+ - Removed mistakenly added macros.
+   https://lore.kernel.org/lkml/9da888dc-401a-4cbb-b616-b4654fa79e35@quicinc.com/
+ - Added Acked-by tag from Linus.w to 2/3.
 
-  May be due to missing lock nesting notation
+Changes in v6: https://lore.kernel.org/lkml/1680076012-10785-1-git-send-email-quic_mojha@quicinc.com/
+ - Rebased it on latest tag available on linux-next
+ - Added missed Poovendhan sign-off on 15/17 and tested-by tag from
+   Kathiravan. Thanks to him for testing and reminding me of missing sign-off.
+ - Addressed comments made on dload mode patch v6 version
 
-4 locks held by kworker/u4:2/27:
-  #0: c1c06ca8 ((wq_completion)events_unbound){+.+.}-{0:0}, at: 
-process_one_work+0x148/0x608
-  #1: e093df20 ((work_completion)(&entry->work)){+.+.}-{0:0}, at: 
-process_one_work+0x148/0x608
-  #2: c1f3048c (&dev->mutex){....}-{3:3}, at: 
-__driver_attach_async_helper+0x38/0xec
-  #3: c13f4e1c (gpio_devices_sem){++++}-{3:3}, at: 
-gpiod_find_and_request+0x44/0x594
+Changes in v5: https://lore.kernel.org/lkml/1680017869-22421-1-git-send-email-quic_mojha@quicinc.com/
+  - Tried to fix the issue reported by kernel test robot
+    https://lore.kernel.org/lkml/202303280535.acb66sQT-lkp@intel.com/
 
-stack backtrace:
-CPU: 0 PID: 27 Comm: kworker/u4:2 Not tainted 
-6.7.0-rc7-00062-gdb660b9a9f86 #7819
-Hardware name: Samsung Exynos (Flattened Device Tree)
-Workqueue: events_unbound async_run_entry_fn
-  unwind_backtrace from show_stack+0x10/0x14
-  show_stack from dump_stack_lvl+0x58/0x70
-  dump_stack_lvl from __lock_acquire+0x1300/0x2984
-  __lock_acquire from lock_acquire+0x130/0x37c
-  lock_acquire from down_read+0x44/0x224
-  down_read from gpio_device_find+0x30/0x94
-  gpio_device_find from of_get_named_gpiod_flags+0xa4/0x3a8
-  of_get_named_gpiod_flags from of_find_gpio+0x80/0x168
-  of_find_gpio from gpiod_find_and_request+0x120/0x594
-  gpiod_find_and_request from gpiod_get_optional+0x54/0x90
-  gpiod_get_optional from reg_fixed_voltage_probe+0x200/0x400
-  reg_fixed_voltage_probe from platform_probe+0x5c/0xb8
-  platform_probe from really_probe+0xe0/0x400
-  really_probe from __driver_probe_device+0x9c/0x1f0
-  __driver_probe_device from driver_probe_device+0x30/0xc0
-  driver_probe_device from __driver_attach_async_helper+0x54/0xec
-  __driver_attach_async_helper from async_run_entry_fn+0x40/0x154
-  async_run_entry_fn from process_one_work+0x204/0x608
-  process_one_work from worker_thread+0x1e0/0x498
-  worker_thread from kthread+0x104/0x138
-  kthread from ret_from_fork+0x14/0x28
-Exception stack(0xe093dfb0 to 0xe093dff8)
-...
+  - Applied some of the improvement suggested by [Bjorn.andersson]
 
+    . Dropped 'both' instead support full,mini or mini,full for setting download
+    mode to collect both minidump and full dump.
 
-Taking gpio_devices_sem more than once for reading is safe, but it looks 
-that it needs some lock-dep annotations to to make it happy and avoid 
-the above warning.
+    . logging improvement.
 
+Changes in v4: https://lore.kernel.org/lkml/1679935281-18445-1-git-send-email-quic_mojha@quicinc.com/
+  - val should be shifted within the function [srinivas.kandagatla]
+    i.e new = (old & ~mask) | (val << ffs(mask) - 1);
+  - Added Acked-by [linus.walleij] on pinctrl change.
 
-> ---
->   drivers/gpio/gpiolib.c | 40 +++++++++++++++++++++++-----------------
->   1 file changed, 23 insertions(+), 17 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 4c93cf73a826..be57f8d6aeae 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4134,27 +4134,33 @@ static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
->   	struct gpio_desc *desc;
->   	int ret;
->   
-> -	desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx, &flags, &lookupflags);
-> -	if (gpiod_not_found(desc) && platform_lookup_allowed) {
-> +	scoped_guard(rwsem_read, &gpio_devices_sem) {
-> +		desc = gpiod_find_by_fwnode(fwnode, consumer, con_id, idx,
-> +					    &flags, &lookupflags);
-> +		if (gpiod_not_found(desc) && platform_lookup_allowed) {
-> +			/*
-> +			 * Either we are not using DT or ACPI, or their lookup
-> +			 * did not return a result. In that case, use platform
-> +			 * lookup as a fallback.
-> +			 */
-> +			dev_dbg(consumer,
-> +				"using lookup tables for GPIO lookup\n");
-> +			desc = gpiod_find(consumer, con_id, idx, &lookupflags);
-> +		}
-> +
-> +		if (IS_ERR(desc)) {
-> +			dev_dbg(consumer, "No GPIO consumer %s found\n",
-> +				con_id);
-> +			return desc;
-> +		}
-> +
->   		/*
-> -		 * Either we are not using DT or ACPI, or their lookup did not
-> -		 * return a result. In that case, use platform lookup as a
-> -		 * fallback.
-> +		 * If a connection label was passed use that, else attempt to
-> +		 * use the device name as label
->   		 */
-> -		dev_dbg(consumer, "using lookup tables for GPIO lookup\n");
-> -		desc = gpiod_find(consumer, con_id, idx, &lookupflags);
-> +		ret = gpiod_request(desc, label);
->   	}
->   
-> -	if (IS_ERR(desc)) {
-> -		dev_dbg(consumer, "No GPIO consumer %s found\n", con_id);
-> -		return desc;
-> -	}
-> -
-> -	/*
-> -	 * If a connection label was passed use that, else attempt to use
-> -	 * the device name as label
-> -	 */
-> -	ret = gpiod_request(desc, label);
->   	if (ret) {
->   		if (!(ret == -EBUSY && flags & GPIOD_FLAGS_BIT_NONEXCLUSIVE))
->   			return ERR_PTR(ret);
+Changes in v3 : https://lore.kernel.org/lkml/1679070482-8391-1-git-send-email-quic_mojha@quicinc.com/
+ - Removed [1] from the series and sent as a separate patch[2], although this series
+   should be applied on top [2].
+  [1] https://lore.kernel.org/lkml/1677664555-30191-2-git-send-email-quic_mojha@quicinc.com/
+  [2] https://lore.kernel.org/lkml/1678979666-551-1-git-send-email-quic_mojha@quicinc.com/
+ - Introduce new exported symbol on suggestion from [srinivas.kandagatla]
+ - Use the symbol from drivers/pinctrl/qcom/pinctrl-msm.c.
+ - Addressed comment given by [dmitry.baryshkov]
+ - Converted non-standard Originally-by to Signed-off-by.
 
-Best regards
+Changes in v2: https://lore.kernel.org/lkml/1677664555-30191-1-git-send-email-quic_mojha@quicinc.com/
+ - Addressed comment made by [bjorn]
+ - Added download mask.
+ - Passed download mode as parameter
+ - Accept human accepatable download mode string.
+ - enable = !!dload_mode
+ - Shifted module param callback to somewhere down in
+   the file so that it no longer need to know the
+   prototype of qcom_scm_set_download_mode()
+ - updated commit text.
+
+Mukesh Ojha (4):
+  firmware: qcom: scm: provide a read-modify-write function
+  firmware: qcom: scm: Modify only the download bits in TCSR register
+  firmware: qcom: scm: Rework dload mode availability check
+  pinctrl: qcom: Use qcom_scm_io_rmw() function
+
+ drivers/firmware/qcom/qcom_scm.c       | 50 ++++++++++++++++++++++++++++------
+ drivers/pinctrl/qcom/pinctrl-msm.c     | 10 +++----
+ include/linux/firmware/qcom/qcom_scm.h |  1 +
+ 3 files changed, 47 insertions(+), 14 deletions(-)
+
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.7.4
 
 
