@@ -1,98 +1,128 @@
-Return-Path: <linux-gpio+bounces-2049-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2050-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5BAB82689C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 08:33:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 701FB8268B3
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 08:37:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5DC71C219DB
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 07:33:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0F81B281FFC
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 07:37:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 330A2883C;
-	Mon,  8 Jan 2024 07:33:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2F7E8BFA;
+	Mon,  8 Jan 2024 07:37:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ll3ys4zK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WXJYvnte"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f68.google.com (mail-ed1-f68.google.com [209.85.208.68])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9089479
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Jan 2024 07:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1704699205; x=1705304005; i=wahrenst@gmx.net;
-	bh=KHU7GBjumZOwn/wTnI2elU57I6vWMfj/6wt4HfDkcQs=;
-	h=X-UI-Sender-Class:Date:Subject:From:To:References:In-Reply-To;
-	b=ll3ys4zKJSW2l4YtP7x+hzOgQGby91iRsGKnJsD+XgRg4w/fdAR/iyvvPb0jjtoh
-	 ZWXCyI2HLzirO4QsjnwyNirv2yX2L1/Q3WmSmmPb2HkLhXfRffcP11gP+VU7bIcVi
-	 0CHoikO7DCnqQxZY1lbwGSY8bj58bhtsU5djI94UWQCZiYNwT4fANBX3MuXfjXb/x
-	 oUCGD8aIeBYhspahXEIAZeWsGXpAj5qa/PGcYbEH69mgprW4FKOspGz9OFXe5ES9h
-	 WfyMj5arke4RWeTEE2bOtin4AEFz7vaX4uaRUWiJ4UOerRqAB3bcn5PTiWpexRg6v
-	 IDP56YC/NdwDpwjeqg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N0oBx-1r1VrM1O69-00wpJJ for
- <linux-gpio@vger.kernel.org>; Mon, 08 Jan 2024 08:33:25 +0100
-Message-ID: <ac3e2cad-ea35-4d23-8b40-551569ade7e2@gmx.net>
-Date: Mon, 8 Jan 2024 08:33:24 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BABD88BEB;
+	Mon,  8 Jan 2024 07:37:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f68.google.com with SMTP id 4fb4d7f45d1cf-55760f84177so175996a12.0;
+        Sun, 07 Jan 2024 23:37:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1704699421; x=1705304221; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NMUTVEWLD9rAe8ABai7E5sFz8lZUsa+4VnMsezRlEsE=;
+        b=WXJYvntedVLtcTZjTSmSo6ia3HF8J4LHK0Y1NhM7WaApTuwAKI26EdLdJ4lZcK1R9a
+         vyKE0h+VjXANayJTuoTIy08xFkrn0lHr+3shIJviE20BsBfB77fpzvZ94kTLsf0S59g1
+         LPGRnj0jhZyQqPSjEWFSvJ1FGCHDF3LJeAUUu/EbClFePapo8kZvZcS3zpzuU/NGbhdO
+         gCV0aPtWh2fy6jplfZPobUKsp063UuCdTKLCeZL4r4NFnwgDKaIGBhUgqUBorqH29jmy
+         4WFwH6u5bXqcirmSaaA9mhnLJlwWjycaeRDvzmsubpjgRaayWVCIKf8p7IPbYOBZI9QB
+         46xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704699421; x=1705304221;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NMUTVEWLD9rAe8ABai7E5sFz8lZUsa+4VnMsezRlEsE=;
+        b=duijXvkTeJaoWdwHRK7TMAMATOe3BKj6q7C5Pnz04vcj1ynB0fv83sPLmhl1uLImfb
+         j7nt9Vb/OuND1jorbS49f1yMH5Bw88AyV+G6lSXL1F3BmdCzFlh3iMF2BeML7hwNSk5p
+         B7odEmxM/wT2rYB/mld0T+g41wSqOSkk2SoWek+h+BRuNW96jc074KXAuuVAeis9X4hQ
+         3zZBcIMotlbGaQkkN7XALG4QPD1zKy6U0cyEt4BRYtpe3emOco+34WZqYJO36Ha/ijPi
+         WoQvB7LIby5QpYGyGxcREVq8IGsyIzT605bdwvJpx2SyxlB7PxcLD8RDEgyl5/O0SL0Q
+         K5Yg==
+X-Gm-Message-State: AOJu0YxEsORWFHPA07GEI2OMEzkfvTRi806NP/HgDaTXdeifBWOCwn85
+	+8U2TOiZ8GJjmbBHUSUAExFy7Dg19K8llSZg9KoOzQIWtHZvAg==
+X-Google-Smtp-Source: AGHT+IHEpfi8DVMa4mVbICvPsxCEATNAA6QqZIobrWVsB/mXF83As2NP19BBj+NNBcrpRCREpsnJKxWxX3SlZXhdOrI=
+X-Received: by 2002:a50:9345:0:b0:557:1b89:4f01 with SMTP id
+ n5-20020a509345000000b005571b894f01mr3354909eda.2.1704699420800; Sun, 07 Jan
+ 2024 23:37:00 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: pinctrl: Questions regarding pinconf_ops and bcm2835
-From: Stefan Wahren <wahrenst@gmx.net>
-To: linux-gpio@vger.kernel.org
-References: <bbc667b5-366b-430f-afd5-fa8a9326d9b7@gmx.net>
-Content-Language: en-US
-In-Reply-To: <bbc667b5-366b-430f-afd5-fa8a9326d9b7@gmx.net>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-2-Wenhua.Lin@unisoc.com>
+ <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
+In-Reply-To: <CAAfSe-ty=BgDNxST7q=+0CR6pshP4LhgmEPeZLmasiS2UkTjYA@mail.gmail.com>
+From: wenhua lin <wenhua.lin1994@gmail.com>
+Date: Mon, 8 Jan 2024 15:36:49 +0800
+Message-ID: <CAB9BWhcCyJd5uYgFBEuY4kR+iPam68U6i21UUmhGX-hORH64Pg@mail.gmail.com>
+Subject: Re: [PATCH V3 1/4] gpio: eic-sprd: Keep the clock rtc_1k on
+To: Chunyan Zhang <zhang.lyra@gmail.com>
+Cc: Wenhua Lin <Wenhua.Lin@unisoc.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andy@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
+	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Xiongpeng Wu <xiongpeng.wu@unisoc.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:Q+y/p7dMstPjMevb7pvnsh7HqfCoJqAqbyWvOW0p//K7fUmjNDQ
- JgCEQqnMaRKpr9IGXGh8PmBLV8Z/8YT1urksRxb8LxiYsVq6ZAqc1341S+GoZnceThHDoqv
- sG4w5v8A942CnCAkAoC0zb3br5zWtpVWxUoMrlO7d5DR8tfhMKlaV5lPPGaqxpI8+S+q96c
- M7Mu+peTTJc3fJgAbFe0Q==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:YWaQtJPGUpA=;30kJUCF9oCLqcFU9NoFGkafAUQj
- ZmrFGT3NQ23WNnuLbe9rY5hHNruzmjk0gJVY5vz3eGMv4kgYr7fbxb5RwNT3UxBR1OmMXWJuA
- +pTbUL0Vc1PKkCLG+s990bFnY4XngYWG/PwHZkjXlFwJlRYv6Iya16f7JqUK8CoJ1U8IP1rIs
- mVw6OXsmp/ZNUPST/dVJIHcNh2e2gc2o9A9EUAjMCtxBD0fbHNdldZc5PS0n3hUMI6mK926h8
- xRr94HgmzbzJ66u/UEvD6ajSBnP8VfMiQKpvKx4BXKgodwZysW7IBfl6MENYMZroZhQTu7Y7R
- dIYFCMqNjbojkea1CZBlLx9jlTJlLB/RabZctdcgqjP/B8CZG6sDahPKvn6YBw4cVdrhM6AVR
- scK/wRvCj34ltBHhV82bw5yviqAKcuBh7nVKhIqJ9luaoNmeXLybuTILDD/aQ4YBjKTxcPWpB
- ykoAlHDc5hF1D5RMoDvk7D0jc1XMEve7aRtyikLlp5wS9fpcTJAO15/xRDmoKi9wW6BP23Muh
- vXqxk1zLdZEYbeESNFu/4u9Hkp7w2vpEChooicXTChmR6yN8AQx7nyUeb32OBLHqnjUbucc4C
- KDxgtOyFHs6bEFPTtI8Yg582km17AlNyrYATOBh+mxdpmlqW4ZsyILh7WIcWQsRqiqhbqjhta
- AU00YHAIQ1UcKOBtSN7jOKSuEXAR8aB79bEW9hP1jpUjsEmYohoay+a0jLfF0eeIZnLltNZcz
- Nyn7rtPIwBYVLJIF65rAc8Zl0ioR/FlvsMLr5vPX3OovMSvzBQstygDzLkjLKygvZjgWF+VWN
- aJ+brbIp1y7/5m10wmcx4aCNFR2aIbDHdNBG7rW/LfWk4xFrGYCuG2+QnJNPDwWycvI98wPJD
- Kva0dYxLjF5Yry40YuIF6V3fsHtRthK11qQ0bmqGtHkcWQ49ocM9z6f3tAU8tQheUA8mB+OwE
- PaYC2g==
 
-Am 03.01.24 um 13:12 schrieb Stefan Wahren:
-> Hi,
-> i recently noticed that the BCM2711 (used on Raspberry Pi 4) doesn't
-> implement pin_config_get, but this SOC is able to read back the bias
-> settings of the pins. After looking deeper into the pinconf_ops i had
-> some questions:
+On Fri, Jan 5, 2024 at 11:26=E2=80=AFAM Chunyan Zhang <zhang.lyra@gmail.com=
+> wrote:
 >
-> 1. Are there any other benefits from implementing pin_config_get
-> except of a proper debugfs output?
+> On Thu, 4 Jan 2024 at 10:43, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
+> >
+> > The eic debounce does not have a clock of rtc_1k in the sleep state,
+> > but the eic debounce will be used to wake up the system, therefore the
+> > clock of rtc_1k needs to be kept open.
 >
-> 2. Since the pin direction of BCM2835/2711 (input/output) is already
-> handled by pinmux_ops via gpio_set_direction, how should
-> pin_config_set handle PIN_CONFIG_OUTPUT_ENABLE?
->
-> 3. In case pin_config_get is implemented should the parameter
-> PIN_CONFIG_OUTPUT_ENABLE and PIN_CONFIG_OUTPUT be handled?
->
-> Best regards
+> It seems that this issue is not in the latest SoCs. I would suggest
+> not changing for the time being.
 >
 
-gentle ping
+OK, we will delete this modification on pacth v4.
+
+> Thanks,
+> Chunyan
+>
+>
+> >
+> > Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
+> > ---
+> >  drivers/gpio/gpio-eic-sprd.c | 2 ++
+> >  1 file changed, 2 insertions(+)
+> >
+> > diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.=
+c
+> > index be7f2fa5aa7b..bdcb3510a208 100644
+> > --- a/drivers/gpio/gpio-eic-sprd.c
+> > +++ b/drivers/gpio/gpio-eic-sprd.c
+> > @@ -24,6 +24,7 @@
+> >  #define SPRD_EIC_DBNC_IC               0x24
+> >  #define SPRD_EIC_DBNC_TRIG             0x28
+> >  #define SPRD_EIC_DBNC_CTRL0            0x40
+> > +#define SPRD_EIC_DBNC_FORCE_CLK                0x8000
+> >
+> >  #define SPRD_EIC_LATCH_INTEN           0x0
+> >  #define SPRD_EIC_LATCH_INTRAW          0x4
+> > @@ -223,6 +224,7 @@ static int sprd_eic_set_debounce(struct gpio_chip *=
+chip, unsigned int offset,
+> >         u32 value =3D readl_relaxed(base + reg) & ~SPRD_EIC_DBNC_MASK;
+> >
+> >         value |=3D (debounce / 1000) & SPRD_EIC_DBNC_MASK;
+> > +       value |=3D SPRD_EIC_DBNC_FORCE_CLK;
+> >         writel_relaxed(value, base + reg);
+> >
+> >         return 0;
+> > --
+> > 2.17.1
+> >
 
