@@ -1,129 +1,144 @@
-Return-Path: <linux-gpio+bounces-2051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id CBE168269E9
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 09:56:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7B943826A56
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 10:11:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E1F61F21F79
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 08:56:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB25AB21431
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Jan 2024 09:11:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE4F8BE7D;
-	Mon,  8 Jan 2024 08:56:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63506DDCD;
+	Mon,  8 Jan 2024 09:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hNRuyPD5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2VqKcYx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f54.google.com (mail-ot1-f54.google.com [209.85.210.54])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D7AA11707;
-	Mon,  8 Jan 2024 08:56:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C96A10A2C;
+	Mon,  8 Jan 2024 09:11:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f54.google.com with SMTP id 46e09a7af769-6dc00dbb560so1123321a34.3;
-        Mon, 08 Jan 2024 00:56:17 -0800 (PST)
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-555144cd330so1857581a12.2;
+        Mon, 08 Jan 2024 01:11:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704704177; x=1705308977; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=FK6vgQf4XgzGLbd5nK4twLsrJfHIEMPJn5oCiEcqiCY=;
-        b=hNRuyPD5afSzLVjCU7BgV8eELzBVMXBdjbmencBUw1s7UZwelwjP9fhFgTojEJl87g
-         dpd41toCR96JyzJN51WxdV90HbvvApDRk7G7j7U0mZBVIYT+C/tmwB219nYMiRChCFou
-         n4a4/AIQEPaAGjJUSRt56C74q8bafWsD5Ws1wAkW3GjHl4MsPgv15wUPRQgBkAnYC9wl
-         h7fy7T2aRW+EBpDK7nS9EZkVLWiAA6sWf0P+bAJrUxPbzA2DUhmNCiKGUkUy/c5RFzgR
-         AYMWtg1muMjsCVmBkrRvJcxRlrVP3qWvwGHSOVppQYLxvfXqsZgKhJiHr2kG7H/cYPR4
-         jlaw==
+        d=gmail.com; s=20230601; t=1704705104; x=1705309904; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=q+690ILLvmgoiVG3rWqnA7YdVgSm8xx8o94ASaIKF+E=;
+        b=j2VqKcYxIpZe3vpNASTNnJVf5QUE1+D0ItwoxtJPktdooj1U2TAUFnz+WxbEip+XKz
+         0DinEN6FEsbnobmYtpbX+s6o/oHusFNyeu1OX6NBSsuWU+kuIgMqOH/4KqnptPtTpvza
+         dvIgpbH/q2TbunMDVzPxQjm9U3hwcaSs5dO5EUTtCHTN2+oH7VRxZsydBDe+wFhKothC
+         b9kp1qUg///a/+MeKi3U4dUwD7KqG9srdi0+FOkzXwXjdsK8nUq59XExI1wT7DgGUryz
+         FkzdJWzty7NE6RePFjrxqMrxqOzJt+b4cJT7krKoQFC7fgikyAJrd7Fmsuxkgb2TO29n
+         hqFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704704177; x=1705308977;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=FK6vgQf4XgzGLbd5nK4twLsrJfHIEMPJn5oCiEcqiCY=;
-        b=S0WSMfvinn6FV4BzUZGyHk/dfyQm9g00OXXveFuE0/O2bSsqJOe0hl+DtBhyWuA8t1
-         UMxj4+Aisys3jET9gu5kgo5s4KM4kNR89bxLx5PqBIIr/ooAZW0NMNTtLtykAT3/gb+o
-         M9rJ0rxf03e1j2nHpgmDHPPVY/zfUO2e9Sk3dw3YVIZ8L64/gbGl2J4K309CpU7OzCZP
-         oLb9JeMBUq3v0KS/L2ySiYLa3xEdY6V6o2i+9iZYOyiA/xY3qt85YeasfuOEXFu2b2ev
-         DHw25QJudqWxaCbYPv6O4PscTfdVq3UnLdqdEZkRsv+8uT8eJcNocwFLLDa/3eUa1ThG
-         FuLA==
-X-Gm-Message-State: AOJu0YxZwvxkn9eI4Utp9WmR7j66e2RRdhdP/qivnARd3ykjTsRIyRBa
-	n6AAzpNWf/aictMGk3o8xyoVfCjjEAsIjIdLMvOQVur2UGk=
-X-Google-Smtp-Source: AGHT+IHhdPsdFsqdafNMCOhsYr+2jPnyM8QmoF+JWRUpzlchL+vrJz8en44SkrwaqnD0aVkcoqxyy4FUnvB+2MNhHwI=
-X-Received: by 2002:a05:6870:e8c5:b0:204:4d6c:e282 with SMTP id
- r5-20020a056870e8c500b002044d6ce282mr4814703oan.20.1704704177068; Mon, 08 Jan
- 2024 00:56:17 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704705104; x=1705309904;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=q+690ILLvmgoiVG3rWqnA7YdVgSm8xx8o94ASaIKF+E=;
+        b=F3AyUmrSrqrQPB+El43jpYkfgASHLjHRjT9e9AoeFyk0h8DTBgNlPBpDQ91qfIzxe4
+         lxpyx0oG9PMmUWrY7ftZcIV7oVAbMPdx/KmhSnLuRy9WmD0UgU0IhuPE6mlrXS/VI6I6
+         dEcPC4mVBLS+d2Vq5Xr1tvCbKulnwOdbUBMd7idswIAbuf3l/GyQUUyqvgiuiiEw4pKr
+         nprF4FXGXjWbvfv+LQjbzf1Jgg9yM3RwKLaoOs6W0HsGEh337N6Q/2tfjRhGPmt9fK1C
+         dLB8L4VryLzjyEUFkLaBi4A84bQoQlZ8tpKkkklHqxNxO9EQJobt2tERYFmsks9yeefD
+         FLBg==
+X-Gm-Message-State: AOJu0YxEM7zOyqB7Gt1hE5K72OVHi0MgG4gEBln8WMEtyVXUyTBxhnoi
+	gjBaIsP8Jvfl9FNJLDzKrRo=
+X-Google-Smtp-Source: AGHT+IGWg/D2gzOJy5VZ0MkQ3jSBwyisSv8a+0uDyYO+7UHcw4Ew1YjljFCQhimSw7dKm/fOaIkTrA==
+X-Received: by 2002:a17:906:f350:b0:a26:98a1:9e89 with SMTP id hg16-20020a170906f35000b00a2698a19e89mr1629990ejb.41.1704705103488;
+        Mon, 08 Jan 2024 01:11:43 -0800 (PST)
+Received: from [172.25.98.130] ([86.125.72.218])
+        by smtp.gmail.com with ESMTPSA id d26-20020a170906175a00b00a27c463fbdesm3742109eje.211.2024.01.08.01.11.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 08 Jan 2024 01:11:43 -0800 (PST)
+Message-ID: <3d44d8ec-8c31-40f4-afc4-78e5b7a9c79b@gmail.com>
+Date: Mon, 8 Jan 2024 11:11:40 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104024244.12163-1-Wenhua.Lin@unisoc.com> <20240104024244.12163-5-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240104024244.12163-5-Wenhua.Lin@unisoc.com>
-From: Chunyan Zhang <zhang.lyra@gmail.com>
-Date: Mon, 8 Jan 2024 16:55:40 +0800
-Message-ID: <CAAfSe-u39LWO6A3sALHZqW8fVyiVBuus7ncVRq1RV6mWSgB5uA@mail.gmail.com>
-Subject: Re: [PATCH V3 4/4] gpio: eic-sprd: Support 8 banks EIC controller
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Orson Zhai <orsonzhai@gmail.com>, 
-	Baolin Wang <baolin.wang@linux.alibaba.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
+ <5b63afc1-3449-4231-b0f6-2b540237d725@linaro.org>
+Content-Language: en-US
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <5b63afc1-3449-4231-b0f6-2b540237d725@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, 4 Jan 2024 at 10:43, Wenhua Lin <Wenhua.Lin@unisoc.com> wrote:
->
-> In order to solve the problem of insufficient eic,
-> it supports 8 banks of eic controller, each bank contains 8 eic.
->
-> Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
-> ---
->  drivers/gpio/gpio-eic-sprd.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-> index 1ca3c444957c..715c7d581d7f 100644
-> --- a/drivers/gpio/gpio-eic-sprd.c
-> +++ b/drivers/gpio/gpio-eic-sprd.c
-> @@ -52,10 +52,10 @@
->  #define SPRD_EIC_SYNC_DATA             0x1c
->
->  /*
-> - * The digital-chip EIC controller can support maximum 3 banks, and each bank
-> + * The digital-chip EIC controller can support maximum 8 banks, and each bank
->   * contains 8 EICs.
->   */
-> -#define SPRD_EIC_MAX_BANK              3
-> +#define SPRD_EIC_MAX_BANK              8
 
-This change seems not backward compatible.
 
-Also this is not flexible to support more SoCs which may have more
-than 8 banks (if we have this kind of SoCs in the future).
+On 12/21/23 19:45, Krzysztof Kozlowski wrote:
+> On 20/12/2023 11:48, Dumitru Ceclan wrote:
+>> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+>> which can be used in high precision, low noise single channel applications
+>> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+>> primarily for measurement of signals close to DC but also delivers
+>> outstanding performance with input bandwidths out to ~10kHz.
+>>
+>> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+>> ---
+>> V10->V11
+>>  - Fix example warning: '#gpio-cells' is a dependency of 'gpio-controller'
+>>  - Add description to #gpio-cells property
+>> V9->V10
+> 
+> None of your previous version were tested before sending, so I have
+> really doubts that this version was.
+> 
+>>  - Fix dt_binding_check type warning from adi,reference-select
+>> V8->v9
+> 
+> ...
+> 
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +# Copyright 2023 Analog Devices Inc.
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Analog Devices AD7173 ADC
+>> +
+>> +maintainers:
+>> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
+>> +
+>> +description: |
+>> +  Bindings for the Analog Devices AD717X ADC's. Datasheets for supported chips:
+> 
+> If there is going to be resend:
+> Drop "Bindings for" and instead describe shortly the hardware. Also wrap
+> above according to Linux coding style, so at 80.
+> 
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7172-2.pdf
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7173-8.pdf
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7175-2.pdf
+>> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7176-2.pdf
+>> +
+> 
+> Rest looks good, so please tell did you test it?
 
-I would suggest adding a new item like 'bank_nums' into sprd_eic_variant_data.
-
-Thanks,
-Chunyan
-
->  #define SPRD_EIC_PER_BANK_NR           8
->  #define SPRD_EIC_DATA_MASK             GENMASK(7, 0)
->  #define SPRD_EIC_BIT(x)                        ((x) & (SPRD_EIC_PER_BANK_NR - 1))
-> @@ -627,9 +627,9 @@ static int sprd_eic_probe(struct platform_device *pdev)
->
->         for (i = 0; i < SPRD_EIC_MAX_BANK; i++) {
->                 /*
-> -                * We can have maximum 3 banks EICs, and each EIC has
-> +                * We can have maximum 8 banks EICs, and each EIC has
->                  * its own base address. But some platform maybe only
-> -                * have one bank EIC, thus base[1] and base[2] can be
-> +                * have one bank EIC, thus base[1] to base[7] can be
->                  * optional.
->                  */
->                 res = platform_get_resource(pdev, IORESOURCE_MEM, i);
-> --
-> 2.17.1
->
+Yes.
 
