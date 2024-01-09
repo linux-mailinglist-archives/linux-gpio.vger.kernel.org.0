@@ -1,193 +1,134 @@
-Return-Path: <linux-gpio+bounces-2093-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2094-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7309828B56
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 18:34:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF1F2828B77
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 18:49:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 558EE28584E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 17:34:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A370C1F25CF6
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 17:49:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBE23B786;
-	Tue,  9 Jan 2024 17:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32B193BB3E;
+	Tue,  9 Jan 2024 17:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtDy9JMo"
+	dkim=pass (2048-bit key) header.d=gadgetoid.com header.i=@gadgetoid.com header.b="g9yGQEck"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f48.google.com (mail-oa1-f48.google.com [209.85.160.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9039739AEA;
-	Tue,  9 Jan 2024 17:34:17 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4607C433C7;
-	Tue,  9 Jan 2024 17:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1704821657;
-	bh=syCE0BwfVDeT7qH/cCOtSq9aFIuBR8gzEpq+znSgolk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WtDy9JMoBJ8Bqdzgh4pdgHwfeHnq/lTRlgWOjpVrsVDh9iQUpWTaCcbauLGaYfMVt
-	 PMwEzI3ItkcSQAaYRbsO2fnDxjRWVqpZ2lKto9elLBlu+RHndSsAgQTudV6zbS8G2t
-	 6pUx78AGOpsTp/Yju8lgUpLpNZngGJVCdzP6guysEzeWmlzcEgihoLbbBKBk1yYsH/
-	 NcvQ48SixJR3Kr04zgXJRJ3QazKc3AiWQo0XhMkjJRq99Jo8Tu0bLjbkUclRuFIMMI
-	 nI0N8DtwtWV4H+/0RMm5mzRLRkZeEHJgHA3T3aYzxz0vkI/QU+N6GB2ey/BucqCUEn
-	 M3UxvVa7cdXhQ==
-Date: Tue, 9 Jan 2024 17:34:11 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Drew Fustini <dfustini@baylibre.com>
-Subject: Re: [PATCH v2 3/8] riscv: dts: thead: Add TH1520 pin control nodes
-Message-ID: <20240109-boggle-frugality-03a77cab8308@spud>
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
- <20240103132852.298964-4-emil.renner.berthing@canonical.com>
- <20240108-majorette-overtly-4ec65d0a15e9@spud>
- <CAJM55Z_2zhELW3E7p94J05We17xTC2Rejs5AigNJOHCGHVr_zg@mail.gmail.com>
- <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
- <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D333B796
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 17:49:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gadgetoid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gadgetoid.com
+Received: by mail-oa1-f48.google.com with SMTP id 586e51a60fabf-203fe0e3fefso1741059fac.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 09:49:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gadgetoid.com; s=google; t=1704822575; x=1705427375; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jQUzDGBpioryhzaPBcxMXNN23RqY3pbLc7O5lTbkKrk=;
+        b=g9yGQEckp6cUpz4QKDdiw7+nVr+HMBYzIDptf1A3CvLLaj78M1VBHya+9H3B0z9ts2
+         uLrQwcrf81SwhyyrT0WKOQ8IdqjdgFpuugsbzhlF9m57MJlQLmYrmvZnncGkt+Kg4v3B
+         y/M1bwhbyjOLzmXDd6OsGAjkBuP9dQfvxEer6aAlWmKGstAh70ToRoO61BNBO3cRJz4X
+         /DbXn281jYwEJ9N02p0hvAHLKjqJ1IyvwUqQE8RDASveD6c3PSOP8UlEnCn17QyfDT4F
+         03hNi7bLJo7rSHfqo63nRZ5LpMk+SBM7N8CUrO7pohk3lDIq7zTpXqZNLRwj5DoiYEj7
+         sW3w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704822575; x=1705427375;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jQUzDGBpioryhzaPBcxMXNN23RqY3pbLc7O5lTbkKrk=;
+        b=tY/k8ja+/SufVgJr2/enYHeQUDkIHv+zZhnPfCQX3bv5n+iHw9p3HYL0MMwixUR8J0
+         IZ+j9ZcYVwjaR3YsCNqHrx9Tqotq7QuSeAcgtHBTDJhFWomxzx7Ndhn0qMJPYtlIStdX
+         2fkFWThFOIDfdGhyH20BmgaAWZ8PRMdZCW1nf/VSSh8pd4YeCFmZKHenhG5FqJHKG6Yp
+         9E82UXt+ZHcdcGj3aYeLUUtS3wfR6v64bjZ90NRgjXMAniKJhsdO0yB49pNOsyr5esJI
+         UTFs6dLRRUE+R1MIcs474BmH/b2AakyGUa0/NKTomBZkGZJL5zHGmbBB6Yf0eHIl6+vr
+         YVyg==
+X-Gm-Message-State: AOJu0YxaoqZQtqOFjrATjCetcTo0g85FoIroB7JstWl2Y7IV30qfWudL
+	4omnB/gUJMRHzbLhoY1Jq6zE8KuSjHc+VcPQbv8WNZrWMB/v4g==
+X-Google-Smtp-Source: AGHT+IHy+YBjX4jzDvmM0v/Z6VL+5F0gbgYu0TGBn//W6lJ5O04GCMQn7UeyilHAKWVPhiYqOHuSiv+gpJ+Lx1Mrr5Q=
+X-Received: by 2002:a05:6870:ae85:b0:206:6f1f:651c with SMTP id
+ uw5-20020a056870ae8500b002066f1f651cmr86646oab.39.1704822575498; Tue, 09 Jan
+ 2024 09:49:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="hJD6qYXNgkRLNOMK"
-Content-Disposition: inline
-In-Reply-To: <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
-
-
---hJD6qYXNgkRLNOMK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <CAJ8C1XMpDFFTf6W_YW5EZM4Qok+=O9oOvGudUaxh8zQ-nE2iEg@mail.gmail.com>
+ <20231231035114.GA15400@rigel> <CAJ8C1XM_+nhwNvxMh6xbMyLRexaRye9+Z5sTe6fLUte=uk1ufQ@mail.gmail.com>
+ <CAJ8C1XMx=5PLLyBTP4-3A1dEQ9FZb6drd9dP4KJN=2T66hfYzw@mail.gmail.com>
+ <20231231090226.GA45535@rigel> <20231231105039.GA53984@rigel> <CAJ8C1XODdrTcskCYbjbJxLvVUmK9Xv1edt=k6Upd2-BaA8y=rg@mail.gmail.com>
+In-Reply-To: <CAJ8C1XODdrTcskCYbjbJxLvVUmK9Xv1edt=k6Upd2-BaA8y=rg@mail.gmail.com>
+From: Phil Howard <phil@gadgetoid.com>
+Date: Tue, 9 Jan 2024 17:49:24 +0000
+Message-ID: <CA+kSVo9Sqcyh7gKu6pS1=7p6cgF=g1ZO6WY--tjzSU6H3XJTYg@mail.gmail.com>
+Subject: Re: [libgpiod] Documentation question
+To: Seamus de Mora <seamusdemora@gmail.com>
+Cc: Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 09, 2024 at 06:28:19AM -0800, Emil Renner Berthing wrote:
-> Conor Dooley wrote:
-> > On Tue, Jan 09, 2024 at 04:02:01AM -0800, Emil Renner Berthing wrote:
-> > > Conor Dooley wrote:
-> > > > On Wed, Jan 03, 2024 at 02:28:40PM +0100, Emil Renner Berthing wrot=
-e:
-> > > > > Add nodes for pin controllers on the T-Head TH1520 RISC-V SoC.
-> > > > >
-> > > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonic=
-al.com>
-> > > > > ---
-> > > > >  .../boot/dts/thead/th1520-beaglev-ahead.dts   |  4 ++++
-> > > > >  .../dts/thead/th1520-lichee-module-4a.dtsi    |  4 ++++
-> > > > >  arch/riscv/boot/dts/thead/th1520.dtsi         | 24 +++++++++++++=
-++++++
-> > > > >  3 files changed, 32 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b=
-/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > index 70e8042c8304..6c56318a8705 100644
-> > > > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > @@ -44,6 +44,10 @@ &osc_32k {
-> > > > >  	clock-frequency =3D <32768>;
-> > > > >  };
-> > > > >
-> > > > > +&aonsys_clk {
-> > > > > +	clock-frequency =3D <73728000>;
-> > > > > +};
-> > > > > +
-> > > > >  &apb_clk {
-> > > > >  	clock-frequency =3D <62500000>;
-> > > > >  };
-> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dt=
-si b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > index a802ab110429..9865925be372 100644
-> > > > > --- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > +++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > @@ -25,6 +25,10 @@ &osc_32k {
-> > > > >  	clock-frequency =3D <32768>;
-> > > > >  };
-> > > > >
-> > > > > +&aonsys_clk {
-> > > > > +	clock-frequency =3D <73728000>;
-> > > > > +};
-> > > > > +
-> > > > >  &apb_clk {
-> > > > >  	clock-frequency =3D <62500000>;
-> > > > >  };
-> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/b=
-oot/dts/thead/th1520.dtsi
-> > > > > index ba4d2c673ac8..e65a306ff575 100644
-> > > > > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > > @@ -134,6 +134,12 @@ osc_32k: 32k-oscillator {
-> > > > >  		#clock-cells =3D <0>;
-> > > > >  	};
-> > > > >
-> > > > > +	aonsys_clk: aonsys-clk {
-> > > > > +		compatible =3D "fixed-clock";
-> > > > > +		clock-output-names =3D "aonsys_clk";
-> > > > > +		#clock-cells =3D <0>;
-> > > > > +	};
-> > > >
-> > > > Did this stuff sneak into this commit accidentally?
-> > >
-> > > Not really by accident no. It turns out the clock tree has gates for =
-the bus
-> > > clock of each pinctrl block and I think it's better to add this clock
-> > > dependency to the bindings and driver up front.
+On Sun, 31 Dec 2023 at 19:40, Seamus de Mora <seamusdemora@gmail.com> wrote=
+:
+>
+> On Sun, Dec 31, 2023 at 4:50=E2=80=AFAM Kent Gibson <warthog618@gmail.com=
+> wrote:
+>
 > >
-> > Maybe if I had looked a wee bit more deeply I would've noticed that it
-> > was used there, but it's always good to mention the rationale in the
-> > commit message so that it's more obvious why you're doin it.
->=20
-> You absolutely right. I forgot to update the commit message.
->=20
-> > > Since there is not yet any clock driver the initial device tree for t=
-he TH1520
-> > > included the dummy apb_clk that two of the pinctrl blocks derive thei=
-r clock
-> > > from, but not the "aonsys" clock needed by the "always-on" pinctrl. I=
- thought
-> > > it was better to add this dummy clock with the only (so far) user of =
-it, but if
-> > > you have a better idea, let me know.
-> >
-> > No, that's fine. I was just wondering why there was an unmentioned set
-> > of clocks being added. If they're stubbed fixed clocks I dunno if it
-> > makes sense to add them to the board.dts/module.dtsi files though. Where
-> > do the initial values come from for the rates? Out of reset values or
-> > set by firmware that may vary from board to board?
->=20
-> The vendor u-boot sets the PLLs different from the reset values. For now I
-> think it's the same code for every board using the Lichee Pi 4A module (a=
-nd
-> probably also for the BeagleV Ahead), but it might still make sense to mo=
-ve the
-> freqency to the board instead of the module device tree.
+> > Oh, and you are still wanting to clarify why the GPIO uAPI/libgpiod onl=
+y
+> > deals with the GPIO subsystem?
+> > Not sure you will find anything that states that explicitly as it is
+> > minimalist Unix philosophy - do one thing well.
+> > So the GPIO uAPI only deals with the GPIO subsystem, and libgpiod only
+> > deals with the GPIO uAPI.
+>
+> No - it was something I read. I want to find it again so I can use it
+> as a reference for something I'm writing.
+> But not to worry, I'll make do without it... and it's obvious once you
+> begin using the library :)
 
-Yeah, think so. Only temporarily though, do you have a clue if anyone is
-working on the actual clock driver stuff? Seems pretty Deadge?
-https://lore.kernel.org/linux-clk/?q=3Dth1520
+Dollars to donuts it was this:
+https://lore.kernel.org/all/CAKdJ40QqZt3MbeLNZ1fuYRgaTqSJeDaDdHkQSx1-KWCW4B=
+cJPg@mail.gmail.com/T/
 
-Cheers,
-Conor.
+If I may pull a quote:
 
---hJD6qYXNgkRLNOMK
-Content-Type: application/pgp-signature; name="signature.asc"
+"No, you haven't missed anything except Unix ideology. That ideology is
+telling us that one tool for one thing, and in very featurable mode.
+That said, lingpiod is exclusively for GPIO ABI between kernel and
+user space. For PWM you need to access the PWM ABI in a way how it's
+represented by the Linux kernel. I believe there are plenty of
+libraries more or less okayish for that purpose, but I never heard
+about any official library and/or Python bindings for it."
 
------BEGIN PGP SIGNATURE-----
+>
+> > If you want an over-arching library that deals with all the possible
+> > functions of GPIO lines, like lgpio tries to, then you can always write
+> > something that sits above libgpiod and the other subsystem interfaces,
+> > though I'm not sure what advantage that would provide over treating wit=
+h
+> > each of them independently.
+>
+> No, no - nothing like that...
+>
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2DkwAKCRB4tDGHoIJi
-0pcOAPoD+P51AMazIRXDSkpKgUQM6eBblVNkqmaR1okaVmmX7wEA7wVS+pAjp9hI
-N8snAcL1efQHu26mrSkIAL4yScknnwg=
-=wI/n
------END PGP SIGNATURE-----
 
---hJD6qYXNgkRLNOMK--
+--=20
+Philip Howard
+Technology & Lifestyle Writer
+gadgetoid.com
+
+Gadgetoid gadg-et-oid [gaj-it-oid]
+
+                                     -adjective
+
+1. having the characteristics or form of a gadget; resembling a
+mechanical contrivance or device.
 
