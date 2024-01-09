@@ -1,110 +1,142 @@
-Return-Path: <linux-gpio+bounces-2097-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2098-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9F2E828D39
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 20:18:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 62F2B828E51
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 21:01:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7205E281F67
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 19:18:47 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 154F71F24F5C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 20:01:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D32273D0C1;
-	Tue,  9 Jan 2024 19:18:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DE0A3D576;
+	Tue,  9 Jan 2024 20:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hdrjNfLE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hw51Pz6r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-qv1-f53.google.com (mail-qv1-f53.google.com [209.85.219.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1721F3C694
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 19:18:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-40e5521dab6so676405e9.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 11:18:41 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12BC63D551;
+	Tue,  9 Jan 2024 20:01:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f53.google.com with SMTP id 6a1803df08f44-67f95d69115so25189636d6.1;
+        Tue, 09 Jan 2024 12:01:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704827920; x=1705432720; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6NMEsq4phHvJ7jczkNQvlaDaQNp47jP8Wsqk8+GEc0Q=;
-        b=hdrjNfLEbH46OrqGOm57z8fmMKbY7P1yRt8xurdNO26RMhxBOntkWiHvP00nHxoCcM
-         N9pnyYQ5kI1m4ucx/WRmfdVIOuDzZ7By6wIfuzOj7K0hO0sX/iSVnbYPomXY8bGEywPY
-         xwxODOpO+xsLLxBo39lwisMJYnt2+Mh4QxMs/nN/5G0W5DnTKP66qF8XDTQlJP5r16pX
-         dHtaSVD0UO/+C6dNJlD/es80pylM98EdF+ZycYS+5jrq6AaTI70g6JS8l2IAw5NeYWeY
-         CjU+s38J5r4/TP5slY/Y78DBJXAsN10Bn6iCbNpFIgShxK+Bzv/XjrGu5cR3fpamO0+R
-         Bauw==
+        d=gmail.com; s=20230601; t=1704830463; x=1705435263; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kXac4/81ga5dfpeZFySVL6do3EP7yaaUkmtReOLudXU=;
+        b=hw51Pz6rh0nYoJPLm4oAtPs2+w19h8L1LzNRvtrUS0UJ09HlI8FTIb+aakM4JxP1lu
+         UqQNN1uQanHSDns+XjN2AOaouA5RyRxW2FLlw5c+Hg3S7vynq7ZhVYzGMkpXl8i0slYb
+         oCzLhJreaC4PQ4vpopom9wiBU1XPRmxo7nCPoNUaxZ6ra18fRHt6P2R/TZUhH1/qYxTV
+         dsYHEJq1lr0l972+YYnFgBWMVMPOFbRqHngE0UzABHtT5OIyxqEUPypRpXZ+dPv7QJO0
+         l0gN2arzTW01CvDkpMGmMSFr9CJ03UR2e0f7T/toRUfCO0O1h0V80LD75eTKeg8UoJN3
+         gB6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704827920; x=1705432720;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6NMEsq4phHvJ7jczkNQvlaDaQNp47jP8Wsqk8+GEc0Q=;
-        b=EvTEtNO3zzD7a3ZAKidt46Au7Pn3moXC+ycnZWCW8PVL/37dQWhgj+Bq7W32E7SKTb
-         jO+wBBfvRM/mpSQMJH7AQ240OXI7EiTH0p2/Bk2ZAtWabdMm4S3aGAOvexrNB0tiU6IG
-         JdwibxOkVak0lNez+zTn19juX4/D2uwz/7Oxtw7fh6ssubetQOoaav53XVyr+XFaM42H
-         iSGTT6+pk5nsOGmeQuW7TpMxAanAkGyUVeGO4O7so7wGcJb+V/M+IlWaio59l5SbLqQn
-         0UtVDDXoTOb7QlD9EZxeYJENEWRjc+O/M2GZQVDcNORg1O/2gpCrJqUzsHt35Enjj+xC
-         2l4Q==
-X-Gm-Message-State: AOJu0YyAUojqodLkoBVQWDDEamrZahmGRBGgKUDmD5k6hVDzoCZy7LvQ
-	rntMu9LqZc5yOLXMJlypM5yuM1d7Q5xOiA==
-X-Google-Smtp-Source: AGHT+IHLuMH1XL6spPQGi8IfTEcGyMxwZeMnOK7MpMaOyjGAsDRqqw0T0+D/lSbm0Qwgibwe7TjFpQ==
-X-Received: by 2002:a7b:ce0d:0:b0:40e:3a6f:9b1e with SMTP id m13-20020a7bce0d000000b0040e3a6f9b1emr3420451wmc.109.1704827920227;
-        Tue, 09 Jan 2024 11:18:40 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f70b:9940:beaa:1728])
-        by smtp.gmail.com with ESMTPSA id r9-20020a05600c35c900b0040e418494absm4530342wmq.46.2024.01.09.11.18.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 11:18:39 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Maxim Devaev <mdevaev@gmail.com>,
-	Phil Howard <phil@gadgetoid.com>
-Cc: linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [libgpiod][PATCH] bindings: python: fix package installation with Makefile build
-Date: Tue,  9 Jan 2024 20:18:28 +0100
-Message-Id: <20240109191828.73100-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1704830463; x=1705435263;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kXac4/81ga5dfpeZFySVL6do3EP7yaaUkmtReOLudXU=;
+        b=hF7nqGa9VgdXgWY09sy3YUXj1uEwx0UGyb6xWokLtxSAEYwRtjw5eRz0TV2wekxG2c
+         6WhfU7BvFLK36RcXd3Dz2EdgOtHC5RropxPlmKdtsficRdZqMHNh31cCULfr17qy8IDk
+         6F5P8tfH4f14oEJ/t1oGNHDCxgTGU7cCDL0ePYQYuior6bRjOquWAugiG8XlUyHsWwtv
+         ijeM5GJzRRJTEKcdnSTskHEUC0RCuFb8BJzNQds5Gt2yfhoFqS55xti+qUqeAWqNvxbN
+         NvcPbLCUpae6m/CC17JR1VnZE5sHUFvkYK+hDo4USCgvuw24oEI5bV9Uq22satsg68nv
+         qfDA==
+X-Gm-Message-State: AOJu0YzW05KMZdQXgzD9a9St/TEkkdJxd7hTIsbRWlcL3n80xXyGSe7o
+	FaEDmR3Sg5iyDuvGojAN2YJj+1U/paLXZwrVgmE=
+X-Google-Smtp-Source: AGHT+IEzXITr4/CoEu3IVJU+4WJtAV85gLT2EYcXcWdHlmubwIf3EZDf/6e6aVBfKpGtOvNjNtEQdDpPhlKUkECWt1s=
+X-Received: by 2002:a05:6214:1304:b0:67f:4926:60c0 with SMTP id
+ pn4-20020a056214130400b0067f492660c0mr39853qvb.1.1704830462923; Tue, 09 Jan
+ 2024 12:01:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240109135952.77458-1-warthog618@gmail.com>
+In-Reply-To: <20240109135952.77458-1-warthog618@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 9 Jan 2024 22:00:26 +0200
+Message-ID: <CAHp75Ve05bAK-ehZZ7XSci5VqR18cCb=hgnbFKXwy2QPkxo=pw@mail.gmail.com>
+Subject: Re: [PATCH 0/7] Documentation: gpio: add character device userspace
+ API documentation
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	andy@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Tue, Jan 9, 2024 at 4:00=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> My new year's resolution was to improve the documentation of the
+> character device API and gpio in general, so here we are.
+>
+> Wrt the formatting and file breakdown, I've taken inspiration from
+> the userspace-api/media documentation.
+>
+> Patch 1 adds documentation for the current chardev uAPI. I've added
+> it to the userspace-api book, as that is the most obvious place a
+> reader would look for it, but have also provided links from the
+> admin-guide book where the gpio docs currently reside.
+>
+> I realise MAINTAINERS should be updated with
+> Documentation/userspace-api/gpio/, but the split out of GPIO UAPI
+> hasn't made it into gpio/for-next yet, so I was unsure of how to
+> handle that.
+>
+> Patch 2 relocates the sysfs API doc to stress its deprecation by
+> moving it to a new deprecated section, again in userspace-api but
+> with a similar section in the admin-guide. The deprecated section
+> also provides a placeholder for subsequent changes.
+>
+> Patch 3 updates the sysfs API doc to reference the chardev
+> documentation rather than gpio.h.
+>
+> Patch 4 adds documentation for the deprecated v1 version of the
+> chardev uAPI.  It is deprecated, but still useful to have, if
+> nothing else to help identify the differences between v1 and v2.
+>
+> Patch 5 capitalizes the title of the admin-guide/gpio to match
+> the other subsystems and the userspace-api book.
+>
+> Patch 6 adds a deprecation note to the gpio-mockup, as it is
+> obsoleted by the gpio-sim.
+>
+> Patch 7 moves the gpio-mockup doc into the deprecated section.
+>
+> I've got some minor updates for the kernel doc in gpio.h as well,
+> but they make sense on their own so I'll send those separately
+> keep the cross-posting to a minimum.
+>
+> I realise the only thing less exciting than writing documentation
+> is reviewing it, so my apologies and thanks in advance if you
+> have the fortitude to attempt such a scintillating endeavour.
 
-The modules are installed in the .egg directory, and therefore cannot be
-imported after that. Additionally PIP tries to remove the global gpiod
-module if it's not invoked with the --ignore-installed option.
+Thanks a lot for doing this!
 
-Specify correct --root and fix the --prefix switch.
+...
 
-Link: https://github.com/pypa/pip/issues/3063
-Suggested-by: Maxim Devaev <mdevaev@gmail.com>
-Reported-by: Maxim Devaev <mdevaev@gmail.com>
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- bindings/python/Makefile.am | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>  Documentation/userspace-api/gpio/chardev.rst  | 114 ++++++++++++++++
+>  .../userspace-api/gpio/chardev_v1.rst         | 129 ++++++++++++++++++
 
-diff --git a/bindings/python/Makefile.am b/bindings/python/Makefile.am
-index 804b214..65964c7 100644
---- a/bindings/python/Makefile.am
-+++ b/bindings/python/Makefile.am
-@@ -36,7 +36,7 @@ all-local: python-tests
- 
- install-exec-local:
- 	$(PYTHON) -m pip install dist/*.whl \
--	--prefix=$(DESTDIR)$(prefix)
-+	--ignore-installed --prefix=$(prefix) --root=$(if $(DESTDIR),$(DESTDIR),/)
- 
- SUBDIRS = gpiod
- 
--- 
-2.40.1
+Shouldn't it be better to have chardev_v2.rst along with chardev.rst
+to be a link to it?
 
+...
+
+May we actually state in the documentation that sysfs is subject to
+remove at some point?
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
