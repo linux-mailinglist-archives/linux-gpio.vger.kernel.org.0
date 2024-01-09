@@ -1,164 +1,180 @@
-Return-Path: <linux-gpio+bounces-2090-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2091-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B3948287B5
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:05:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 846B982880F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:28:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DDFCE1F248A2
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:05:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 92F1C1C242B7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:28:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9634139ACC;
-	Tue,  9 Jan 2024 14:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C665B39AC1;
+	Tue,  9 Jan 2024 14:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQN/zGMe"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="wYw0VBic"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FC5139FFD;
-	Tue,  9 Jan 2024 14:04:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d4a980fdedso27293485ad.1;
-        Tue, 09 Jan 2024 06:04:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704809074; x=1705413874; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ijQhkKPrA5WhMt4QQQ7nm21kPG9bAnEvYYwAYTNVVhY=;
-        b=OQN/zGMeZdEI8mo0ztyTz71FJ5fu97unzzNllilfsBaIk7lPUN9f+QjHayxIEvcONQ
-         Yv311s6LT2eYh10GmwWrCTilfxpp3Xql6m7KoW28qai09S3gURkbvXMyY9OuEMz5vorv
-         udXarLE9nD4oH5fvBWZzM0nifNz9c8hNK9CXLW26kDZ/kiG30qWI60vjvYPoCdQcbLXs
-         3xC/dHvuspRLgLY0El9+B2+OM64AJJongJycsmaUk6PONZ9cSfy0mhUM1TlFpcoKK2bh
-         O9QqpU7J7X+U0DZrSBzGHJH1Fk5OT10/XYq+Krjq2vjW3dkp0WAcQyvj8RPwuMXE1Sa8
-         P1jQ==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A41C939AC4
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 14:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-ot1-f71.google.com (mail-ot1-f71.google.com [209.85.210.71])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id 6D9D23F62F
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 14:28:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1704810501;
+	bh=H46EXvdjyBOKeFgyWr6G7nw/iea+GVPfzJMh//6f0l8=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=wYw0VBicWVEY80nMARto7s3zWLgiE7jqx06jsZhkwTo6yxLtRXA2u6waqR8CGnPfg
+	 w3t4jM9BBDPOkJxZLg2phYbF4w2nqcGLrCqNF2B1CedBdto8FiKGpyYOzsc1e4Skta
+	 +j/dtjDcM0H7A7om6jRJPtcVZYHx2nmWoc9QWkk5jUb1Ulu9hdThla72cj+htJDZya
+	 xPM6SqgHe+BxKnhpNftvIkAAa6My7qvGkYvXGhKtI5dvsXfwU5kEpSEKec3T/2lQkz
+	 4eUBcu1d0cTPUJlzZDvbJwW2PTeQpCXh0Vnawzxo3GPUHjvIMIqOURsabYDnWTd3WY
+	 9b63TRat0GVPA==
+Received: by mail-ot1-f71.google.com with SMTP id 46e09a7af769-6dde701a6ccso486022a34.3
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 06:28:21 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704809074; x=1705413874;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ijQhkKPrA5WhMt4QQQ7nm21kPG9bAnEvYYwAYTNVVhY=;
-        b=gvn1ScW8nCCqDCZcW2NWie5zTDIAcFdOYVVhh46tIOhRsgNDYT03qI7WsT5fzqb4gS
-         CycCk98LPqsn77h8b1M4cSrhaz2dPorMwr46zF9ZLkl0zqGPAoMhM6k0TMF8QNflCQ0g
-         NMgHDWg95MXd9OXfmUPGpT36LjJzmoYZRbTxTHK7koDlEToaTJi+GxcMD1QHW4+sYs3h
-         URn0v1f6vUFpAKC+3AsZN1Q+/6uDG2AeOCz52oztj4GacD+4k78mY/qOSWiXridvCENc
-         Xn0w3Vj3d65EV8lXV+TLFopMYcR6vg7hEH+Kij783z/efbzLfqAjT9glgL2OabSMEfHv
-         rrSA==
-X-Gm-Message-State: AOJu0Yz08ZDmP8xTm39hQAmjkOFlbgpjwLEdl5R6tE1AECzcOofsrc5j
-	zbPetuRCZu3v/V16EnPWDkchwbXIDAy60w==
-X-Google-Smtp-Source: AGHT+IF9acRiBuXtnmdP/L/n9HR/N/T4L5LgnpFxlih/9JoSewFxrm6a2SEWXR9hKKXD5TJ31tIzlA==
-X-Received: by 2002:a17:902:7804:b0:1d4:e308:d70b with SMTP id p4-20020a170902780400b001d4e308d70bmr5104104pll.92.1704809073967;
-        Tue, 09 Jan 2024 06:04:33 -0800 (PST)
-Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id jw23-20020a170903279700b001d538b6517asm1818362plb.230.2024.01.09.06.04.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:04:33 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 5/5] gpio: uapi: clarify using v2 rather than v1
-Date: Tue,  9 Jan 2024 22:02:21 +0800
-Message-Id: <20240109140221.77725-6-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
-References: <20240109140221.77725-1-warthog618@gmail.com>
+        d=1e100.net; s=20230601; t=1704810500; x=1705415300;
+        h=cc:to:subject:message-id:date:mime-version:references:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=H46EXvdjyBOKeFgyWr6G7nw/iea+GVPfzJMh//6f0l8=;
+        b=OIc4yYcFxeoz0yZG4Tg3YR3ViTSwqORwXp6jNMhI2Nm5QVkGTLi0k2LhyH6/SP07L/
+         +7WK+oyUM1kArPGYHJwSs/lEyUzZxyd6nI4ZnvE5N2RJiirGIc6I4csm4IHr5PE9JW+R
+         ePUwcpX+hGb6w/sHvO9uFjK1a/EjoWcCjsU5+J415gqhBI8vHyzTKMh51nRDmVltmSsg
+         4xCBxtQYouHoSzkeKpyn5b7DGPr6Zow0/lBfK7laOpSq3NsukTzn0RM2t8CHdOLpkiv5
+         8H+ViBwr7hSu0gvCmS6Yv0NHj7c/mDwxhXewYQPMJkcFNnGBuA713f47q9lnl7mGfEL7
+         hTxQ==
+X-Gm-Message-State: AOJu0YxXFolmCLOrd6TNqwKaPzfvq0uc94FrLn49KvKnaaC8QXBKRn9z
+	uI3uQi27AfJ7wrqfiv3kC0kp0a8kP2vUFVWgvROxxKhdBI0YgDDbKD9MmOKGCReLRfzPN2yEnvi
+	aSdh2ctD8mAsF/jFEEXV5XlXUV7fSagwZ6rcIdITqigmfczwJjsWdpnPpUKPjMA==
+X-Received: by 2002:a05:6358:418b:b0:174:ec56:4220 with SMTP id w11-20020a056358418b00b00174ec564220mr3565153rwc.21.1704810500015;
+        Tue, 09 Jan 2024 06:28:20 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHWXJDf3n8xAk97y9T0ad5uwG5IytT1BWqKuFjuM6xdYu3hwumma4StJ7ZRSYHehkU19Ir2VYgRlhfzGCyE8vA=
+X-Received: by 2002:a05:6358:418b:b0:174:ec56:4220 with SMTP id
+ w11-20020a056358418b00b00174ec564220mr3565129rwc.21.1704810499691; Tue, 09
+ Jan 2024 06:28:19 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Tue, 9 Jan 2024 06:28:19 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
+References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
+ <20240103132852.298964-4-emil.renner.berthing@canonical.com>
+ <20240108-majorette-overtly-4ec65d0a15e9@spud> <CAJM55Z_2zhELW3E7p94J05We17xTC2Rejs5AigNJOHCGHVr_zg@mail.gmail.com>
+ <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Date: Tue, 9 Jan 2024 06:28:19 -0800
+Message-ID: <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/8] riscv: dts: thead: Add TH1520 pin control nodes
+To: Conor Dooley <conor.dooley@microchip.com>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Conor Dooley <conor@kernel.org>, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Drew Fustini <dfustini@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
 
-The documentation contains notes like
- This struct is part of ABI v1 and is deprecated.
- Use struct gpio_v2_line_info instead.
+Conor Dooley wrote:
+> On Tue, Jan 09, 2024 at 04:02:01AM -0800, Emil Renner Berthing wrote:
+> > Conor Dooley wrote:
+> > > On Wed, Jan 03, 2024 at 02:28:40PM +0100, Emil Renner Berthing wrote:
+> > > > Add nodes for pin controllers on the T-Head TH1520 RISC-V SoC.
+> > > >
+> > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+> > > > ---
+> > > >  .../boot/dts/thead/th1520-beaglev-ahead.dts   |  4 ++++
+> > > >  .../dts/thead/th1520-lichee-module-4a.dtsi    |  4 ++++
+> > > >  arch/riscv/boot/dts/thead/th1520.dtsi         | 24 +++++++++++++++++++
+> > > >  3 files changed, 32 insertions(+)
+> > > >
+> > > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > index 70e8042c8304..6c56318a8705 100644
+> > > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > @@ -44,6 +44,10 @@ &osc_32k {
+> > > >  	clock-frequency = <32768>;
+> > > >  };
+> > > >
+> > > > +&aonsys_clk {
+> > > > +	clock-frequency = <73728000>;
+> > > > +};
+> > > > +
+> > > >  &apb_clk {
+> > > >  	clock-frequency = <62500000>;
+> > > >  };
+> > > > diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > index a802ab110429..9865925be372 100644
+> > > > --- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > +++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > @@ -25,6 +25,10 @@ &osc_32k {
+> > > >  	clock-frequency = <32768>;
+> > > >  };
+> > > >
+> > > > +&aonsys_clk {
+> > > > +	clock-frequency = <73728000>;
+> > > > +};
+> > > > +
+> > > >  &apb_clk {
+> > > >  	clock-frequency = <62500000>;
+> > > >  };
+> > > > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
+> > > > index ba4d2c673ac8..e65a306ff575 100644
+> > > > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> > > > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> > > > @@ -134,6 +134,12 @@ osc_32k: 32k-oscillator {
+> > > >  		#clock-cells = <0>;
+> > > >  	};
+> > > >
+> > > > +	aonsys_clk: aonsys-clk {
+> > > > +		compatible = "fixed-clock";
+> > > > +		clock-output-names = "aonsys_clk";
+> > > > +		#clock-cells = <0>;
+> > > > +	};
+> > >
+> > > Did this stuff sneak into this commit accidentally?
+> >
+> > Not really by accident no. It turns out the clock tree has gates for the bus
+> > clock of each pinctrl block and I think it's better to add this clock
+> > dependency to the bindings and driver up front.
+>
+> Maybe if I had looked a wee bit more deeply I would've noticed that it
+> was used there, but it's always good to mention the rationale in the
+> commit message so that it's more obvious why you're doin it.
 
-This could be interpreted to mean the structs can be directly
-substituted in v1 calls.  Clarify that the user should use the
-corresponding v2 ioctl() and structs.
+You absolutely right. I forgot to update the commit message.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- include/uapi/linux/gpio.h | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> > Since there is not yet any clock driver the initial device tree for the TH1520
+> > included the dummy apb_clk that two of the pinctrl blocks derive their clock
+> > from, but not the "aonsys" clock needed by the "always-on" pinctrl. I thought
+> > it was better to add this dummy clock with the only (so far) user of it, but if
+> > you have a better idea, let me know.
+>
+> No, that's fine. I was just wondering why there was an unmentioned set
+> of clocks being added. If they're stubbed fixed clocks I dunno if it
+> makes sense to add them to the board.dts/module.dtsi files though. Where
+> do the initial values come from for the rates? Out of reset values or
+> set by firmware that may vary from board to board?
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index e68a56969f36..103cd3c6c81e 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -333,7 +333,7 @@ struct gpio_v2_line_event {
-  * also be empty if the consumer doesn't set this up
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_info instead.
-+ * Use ABI v2 and &struct gpio_v2_line_info instead.
-  */
- struct gpioline_info {
- 	__u32 line_offset;
-@@ -368,7 +368,7 @@ enum {
-  * at the end of the structure on 64-bit architectures.
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_info_changed instead.
-+ * Use ABI v2 and &struct gpio_v2_line_info_changed instead.
-  */
- struct gpioline_info_changed {
- 	struct gpioline_info info;
-@@ -409,7 +409,7 @@ struct gpioline_info_changed {
-  * a valid anonymous file descriptor representing the request
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_request instead.
-+ * Use ABI v2 and &struct gpio_v2_line_request instead.
-  */
- struct gpiohandle_request {
- 	__u32 lineoffsets[GPIOHANDLES_MAX];
-@@ -431,7 +431,7 @@ struct gpiohandle_request {
-  * @padding: reserved for future use and should be zero filled
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_config instead.
-+ * Use ABI v2 and &struct gpio_v2_line_config instead.
-  */
- struct gpiohandle_config {
- 	__u32 flags;
-@@ -446,7 +446,7 @@ struct gpiohandle_config {
-  * the desired target state
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_values instead.
-+ * Use ABI v2 and &struct gpio_v2_line_values instead.
-  */
- struct gpiohandle_data {
- 	__u8 values[GPIOHANDLES_MAX];
-@@ -471,7 +471,7 @@ struct gpiohandle_data {
-  * valid anonymous file descriptor representing the request
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_request instead.
-+ * Use ABI v2 and &struct gpio_v2_line_request instead.
-  */
- struct gpioevent_request {
- 	__u32 lineoffset;
-@@ -494,7 +494,7 @@ struct gpioevent_request {
-  *  %GPIOEVENT_EVENT_FALLING_EDGE
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-- * Use &struct gpio_v2_line_event instead.
-+ * Use ABI v2 and &struct gpio_v2_line_event instead.
-  */
- struct gpioevent_data {
- 	__u64 timestamp;
--- 
-2.39.2
+The vendor u-boot sets the PLLs different from the reset values. For now I
+think it's the same code for every board using the Lichee Pi 4A module (and
+probably also for the BeagleV Ahead), but it might still make sense to move the
+freqency to the board instead of the module device tree.
 
+/Emil
 
