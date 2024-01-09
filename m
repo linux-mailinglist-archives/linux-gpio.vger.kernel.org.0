@@ -1,140 +1,197 @@
-Return-Path: <linux-gpio+bounces-2076-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2077-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FD2F82872A
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:33:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1D9FB828783
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:00:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 27B0C287540
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 13:33:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 36D7A1C20B40
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:00:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E10038F9B;
-	Tue,  9 Jan 2024 13:33:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A9DB238F8C;
+	Tue,  9 Jan 2024 14:00:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RiGfYHlC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3vbjFF3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4D8D39864
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 13:33:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-5f15a1052b3so24629607b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 05:33:28 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A33D39843;
+	Tue,  9 Jan 2024 14:00:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6d9344f30caso2073205b3a.1;
+        Tue, 09 Jan 2024 06:00:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1704807208; x=1705412008; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZHZ0iBApQGJ/aySFQyXRT8jhOYwAfsQIE1adBR/kDRU=;
-        b=RiGfYHlCEvWU51wHpuTWT17IQEeJR36/Nu7eYNExP5ns0gHsTYpTGdiFj1BIfE4+M+
-         E3XsAFtHFLGXT+PdCVtdDJtEt7Xn2lUXOipoDX02bgQPHSsFy9fZnQGdr5CioxSUXFsW
-         adjUWno+D7tpJ6Wz7PR+TixGpXobsZoU0m+Q8zHtJduxZerShcHDF6R5YPROIw1cJaVa
-         HyL1jGnTwkklOvZ6u6jMFZj8bSAMfO1FlqHHsBfbC5C39hTNm1m45FkM3B5JXoK0NLJQ
-         5wQBOi7tVWJI30C9IeSfYvnaSaqfuJCuPiyJ5tw2+lLNFGHFJkeeaXUiMgsZWuXveZQL
-         pQ3Q==
+        d=gmail.com; s=20230601; t=1704808813; x=1705413613; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=cdNOUjhcUm61EnvzTbmFie9LkXLSVC7UX8qXNfNPVYQ=;
+        b=E3vbjFF3LIJsp2H6v5P99Y7nXG6nDkfQHYfufRVVB7nAlOH7l4jz/StGSdgO4kg6pl
+         VylL/XVHG8eVCK21sLjBMoPYT64DJwbO7v0KTUjU0AhVci8h1B4snwbyZCy+fK1peNb+
+         OQhD3SQXBnGZDwczw8Yui3YSm+U81bJ2odEPP2zYfju7WlC9zU22Dy1J2Vzzbz0w6Vxr
+         VxxsRLLE3tTxhxwlhoI8OV+0QIOxo3zNVX1CWGrvaI+DY+Z44NnKqYQMNBRD+knZyLa7
+         G8kjIbBNop1WsjKCgjvAFDo7vNOlDwy3TGCgc5IC+utGJJ9hUhDtKsMAV75zSZtul01N
+         iqWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704807208; x=1705412008;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZHZ0iBApQGJ/aySFQyXRT8jhOYwAfsQIE1adBR/kDRU=;
-        b=SxqcDd1QQe/Y7m6AVas64vOG9+ni5wzy/poNddZ3f7mADL2JD/hroEJU1xKXU+baUR
-         LdPbxJ5Ae7IE4N2BXE2DUHMCmMmREzZmHnG/2gBDKLhfRVKAoryG1BaBZcwpbt5JAAMX
-         EAjjtIapEJRgVWj6IcFqgxE5/YfuRRKDI38Q6MAxn4rzxkZTAyivcn0xd5bDiajL2OsR
-         jcKI4H3vZjaCSl9VL9PPhF5dwzi1KMadCjZPDz7RjSE+K2yaEI4GTXckYyGzqgXmLTnH
-         NInnxfZqDarv0nSUCz4L0f8hQ2w+2THbib7HZ6Bd2MiYgy/4ke1OB5ghLWcl2a6k8eyW
-         vZ7Q==
-X-Gm-Message-State: AOJu0YyOk0hXO8YvCPSPCCNYCTrbyUF+fiYyJAV95J6kmGBMCcDfGk5p
-	Fev5tu5+Nkp5BbVd8GL70ZAvyp3MtuuGzGxLBRtBNkMbrbT/Jw==
-X-Google-Smtp-Source: AGHT+IF2kvCXH2qy10+fhnJEciTnWzgvRxRXt0CVFSiA4DlAEM3TuXGAlBq6gQ/t6xHZ8wfyN3WJqEYr3DY+lcBaGHE=
-X-Received: by 2002:a81:5292:0:b0:5e8:c5a1:dec6 with SMTP id
- g140-20020a815292000000b005e8c5a1dec6mr2914526ywb.103.1704807207854; Tue, 09
- Jan 2024 05:33:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704808813; x=1705413613;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=cdNOUjhcUm61EnvzTbmFie9LkXLSVC7UX8qXNfNPVYQ=;
+        b=qWVaiYDRZg7EP6CGNFgMUkB+Y8u8WogVtdzqdaerNJXrQOxhuuks8MR8Re8ThT80AY
+         jeDmGdeEh633ZngxwoFgaYR9VvQxHGS2Ro9KN29f8L+7KcBsSI99H+DZR9GXnqMIA8yy
+         ldLjHF209a2+x5XY63dJtmSMr4u3pMvr13EzJdY9KswCi9ETem/UB5V1paKF7F9emdo6
+         Mc7TnSByFx58UpV1nfzF7Dc4Bdl1p91rrkrMSewqXuq/t/BlGBkHPUxXuj/cHBdBSf8A
+         HWc6LK4oYU/e0YhGbywGFduM8l6ZVGkA+sMl7gnQqU7KtG+WlQ9R0E2nOarqU7lZqnad
+         +j6g==
+X-Gm-Message-State: AOJu0Yy+HJxoo3zrXGhax8TbHUgU4dyIkbcrLbD9Vy7wJYSK7tlK2E3N
+	RQPEUqZgmcg5+QwBCrHJMHM9rAd3Yy3mDQ==
+X-Google-Smtp-Source: AGHT+IHWFPHuyzlrV9Ll7F3SUYjrYc91iqGY6MboY+X+eSfmsqVWZmpj81pBYAsAXG7j+HDRiyvE3A==
+X-Received: by 2002:a05:6a00:2401:b0:6d9:c0a4:67eb with SMTP id z1-20020a056a00240100b006d9c0a467ebmr760230pfh.35.1704808812612;
+        Tue, 09 Jan 2024 06:00:12 -0800 (PST)
+Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d9accac5c4sm1673697pfh.35.2024.01.09.06.00.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Jan 2024 06:00:11 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org,
+	corbet@lwn.net
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/7] Documentation: gpio: add character device userspace API documentation
+Date: Tue,  9 Jan 2024 21:59:45 +0800
+Message-Id: <20240109135952.77458-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
- <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
- <CACRpkdY7fbFyNNd6GAikxC3+wk0ca8Yn_8__zkp+Q-deJeJ_LQ@mail.gmail.com> <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
-In-Reply-To: <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 9 Jan 2024 14:34:10 +0100
-Message-ID: <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
-Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write function
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: Mark Brown <broonie@kernel.org>, andersson@kernel.org, konrad.dybcio@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 9, 2024 at 2:24=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com>=
- wrote:
-> On 1/9/2024 6:44 PM, Linus Walleij wrote:
-> > On Mon, Jan 8, 2024 at 4:28=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.=
-com> wrote:
-> >
-> >> It was realized by Srinivas K. that there is a need of
-> >> read-modify-write scm exported function so that it can
-> >> be used by multiple clients.
-> >>
-> >> Let's introduce qcom_scm_io_rmw() which masks out the bits
-> >> and write the passed value to that bit-offset.
-> > (...)
-> >> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int=
- val)
-> >> +{
-> >> +       unsigned int old, new;
-> >> +       int ret;
-> >> +
-> >> +       if (!__scm)
-> >> +               return -EINVAL;
-> >> +
-> >> +       spin_lock(&__scm->lock);
-> >> +       ret =3D qcom_scm_io_readl(addr, &old);
-> >> +       if (ret)
-> >> +               goto unlock;
-> >> +
-> >> +       new =3D (old & ~mask) | (val & mask);
-> >> +
-> >> +       ret =3D qcom_scm_io_writel(addr, new);
-> >> +unlock:
-> >> +       spin_unlock(&__scm->lock);
-> >> +       return ret;
-> >> +}
-> >> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
-> >
-> > This looks a lot like you are starting to re-invent regmaps
-> > regmap_update_bits().
-> >
-> > If you are starting to realize you need more and more of
-> > regmap, why not use regmap and its functions?
->
-> I think, this discussion has happened already ..
->
-> https://lore.kernel.org/lkml/CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJ=
-eC9SDQA@mail.gmail.com/
+My new year's resolution was to improve the documentation of the
+character device API and gpio in general, so here we are.
 
-That discussion ended with:
+Wrt the formatting and file breakdown, I've taken inspiration from
+the userspace-api/media documentation.
 
-[Bjorn]
-> We'd still need qcom_scm_io_readl() and qcom_scm_io_writel() exported to
-> implement the new custom regmap implementation - and the struct
-> regmap_config needed in just pinctrl-msm alone would be larger than the
-> one function it replaces.
+Patch 1 adds documentation for the current chardev uAPI. I've added
+it to the userspace-api book, as that is the most obvious place a
+reader would look for it, but have also provided links from the
+admin-guide book where the gpio docs currently reside.
 
-When you add more and more accessors the premise starts to
-change, and it becomes more and more of a reimplementation.
+I realise MAINTAINERS should be updated with
+Documentation/userspace-api/gpio/, but the split out of GPIO UAPI
+hasn't made it into gpio/for-next yet, so I was unsure of how to
+handle that.
 
-It may be time to actually fix this.
+Patch 2 relocates the sysfs API doc to stress its deprecation by
+moving it to a new deprecated section, again in userspace-api but
+with a similar section in the admin-guide. The deprecated section
+also provides a placeholder for subsequent changes.
 
-Yours,
-Linus Walleij
+Patch 3 updates the sysfs API doc to reference the chardev
+documentation rather than gpio.h.
+
+Patch 4 adds documentation for the deprecated v1 version of the
+chardev uAPI.  It is deprecated, but still useful to have, if
+nothing else to help identify the differences between v1 and v2.
+
+Patch 5 capitalizes the title of the admin-guide/gpio to match
+the other subsystems and the userspace-api book.
+
+Patch 6 adds a deprecation note to the gpio-mockup, as it is
+obsoleted by the gpio-sim.
+
+Patch 7 moves the gpio-mockup doc into the deprecated section.
+
+I've got some minor updates for the kernel doc in gpio.h as well,
+but they make sense on their own so I'll send those separately
+keep the cross-posting to a minimum.
+
+I realise the only thing less exciting than writing documentation
+is reviewing it, so my apologies and thanks in advance if you
+have the fortitude to attempt such a scintillating endeavour.
+
+Cheers,
+Kent.
+
+Kent Gibson (7):
+  Documentation: gpio: add chardev userspace API documentation
+  Documentation: gpio: move sysfs into a deprecated section
+  Documentation: gpio: update sysfs documentation to reference new
+    chardev doc
+  Documentation: gpio: add chardev v1 userspace API documentation
+  Documentation: gpio: capitalize GPIO in index title
+  Documentation: gpio: document gpio-mockup as obsoleted by gpio-sim
+  Documentation: gpio: move gpio-mockup into deprecated section
+
+ Documentation/admin-guide/gpio/deprecated.rst |  13 ++
+ .../admin-guide/gpio/gpio-mockup.rst          |   8 ++
+ Documentation/admin-guide/gpio/index.rst      |   6 +-
+ Documentation/userspace-api/gpio/chardev.rst  | 114 ++++++++++++++++
+ .../userspace-api/gpio/chardev_v1.rst         | 129 ++++++++++++++++++
+ .../userspace-api/gpio/deprecated.rst         |  11 ++
+ .../userspace-api/gpio/error-codes.rst        |  78 +++++++++++
+ .../gpio/gpio-get-chipinfo-ioctl.rst          |  41 ++++++
+ .../gpio/gpio-get-lineevent-ioctl.rst         |  76 +++++++++++
+ .../gpio/gpio-get-linehandle-ioctl.rst        |  84 ++++++++++++
+ .../gpio/gpio-get-lineinfo-ioctl.rst          |  54 ++++++++
+ .../gpio/gpio-get-lineinfo-unwatch-ioctl.rst  |  47 +++++++
+ .../gpio/gpio-get-lineinfo-watch-ioctl.rst    |  72 ++++++++++
+ .../gpio-handle-get-line-values-ioctl.rst     |  56 ++++++++
+ .../gpio/gpio-handle-set-config-ioctl.rst     |  60 ++++++++
+ .../gpio-handle-set-line-values-ioctl.rst     |  48 +++++++
+ .../gpio/gpio-lineevent-data-read.rst         |  84 ++++++++++++
+ .../gpio/gpio-lineinfo-changed-read.rst       |  85 ++++++++++++
+ .../gpio/gpio-v2-get-line-ioctl.rst           |  99 ++++++++++++++
+ .../gpio/gpio-v2-get-lineinfo-ioctl.rst       |  50 +++++++
+ .../gpio/gpio-v2-get-lineinfo-watch-ioctl.rst |  67 +++++++++
+ .../gpio/gpio-v2-line-event-read.rst          |  83 +++++++++++
+ .../gpio/gpio-v2-line-get-values-ioctl.rst    |  51 +++++++
+ .../gpio/gpio-v2-line-set-config-ioctl.rst    |  57 ++++++++
+ .../gpio/gpio-v2-line-set-values-ioctl.rst    |  47 +++++++
+ .../gpio/gpio-v2-lineinfo-changed-read.rst    |  81 +++++++++++
+ Documentation/userspace-api/gpio/index.rst    |  18 +++
+ .../gpio/sysfs.rst                            |  10 +-
+ Documentation/userspace-api/index.rst         |   1 +
+ 29 files changed, 1621 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/deprecated.rst
+ create mode 100644 Documentation/userspace-api/gpio/chardev.rst
+ create mode 100644 Documentation/userspace-api/gpio/chardev_v1.rst
+ create mode 100644 Documentation/userspace-api/gpio/deprecated.rst
+ create mode 100644 Documentation/userspace-api/gpio/error-codes.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-chipinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-unwatch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-watch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-get-line-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-set-line-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-lineinfo-changed-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-lineinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-lineinfo-watch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-get-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-set-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-lineinfo-changed-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/index.rst
+ rename Documentation/{admin-guide => userspace-api}/gpio/sysfs.rst (94%)
+
+-- 
+2.39.2
+
 
