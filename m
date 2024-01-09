@@ -1,220 +1,193 @@
-Return-Path: <linux-gpio+bounces-2092-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2093-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A0AE828972
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 16:53:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7309828B56
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 18:34:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 11C2A2881AC
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:53:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 558EE28584E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 17:34:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC0C33A1AC;
-	Tue,  9 Jan 2024 15:51:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBBE23B786;
+	Tue,  9 Jan 2024 17:34:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YxICN8Eq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WtDy9JMo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D25513A1AB
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 15:51:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1704815502; x=1736351502;
-  h=date:from:to:cc:subject:message-id;
-  bh=82n4fR4Coz6ERki9y1xIUibPYL+jjyD52xq4Y+oqwsc=;
-  b=YxICN8EqyFvN4qHBM1CiOjQjAKzE6yd1r80eedhAB3aL1FgQOjFkwCtv
-   Hc8OsJr9srqmkxCFu76fp5wi3D283SJ11k9OuXHN3dzKeuI86rCCsGIUN
-   9OOlBEq3d/INzdD7Mk4i/9C7zz7QpEL7HJnKHU8sPBShFTIPEl1Ffybbo
-   Afa0htFl8iYNLiZljKxpwurqXuEFuxOCL5fyn+fjKEULNmDYOuw/xWj9F
-   yWmjuAaymHTo+X5IOPquiAb4MGMUowKSiLUjbHaN6Ltrc40Of18RD/Mrd
-   LSXV+Hm2gqC6EkhPsaNFv8n7+8QRa7TAwnyz3KIj1+rFV7zQPfU5aLnuG
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="16828296"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="16828296"
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Jan 2024 07:51:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10947"; a="758024969"
-X-IronPort-AV: E=Sophos;i="6.04,183,1695711600"; 
-   d="scan'208";a="758024969"
-Received: from lkp-server02.sh.intel.com (HELO b07ab15da5fe) ([10.239.97.151])
-  by orsmga006.jf.intel.com with ESMTP; 09 Jan 2024 07:51:40 -0800
-Received: from kbuild by b07ab15da5fe with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rNEO9-00060O-1x;
-	Tue, 09 Jan 2024 15:51:37 +0000
-Date: Tue, 09 Jan 2024 23:51:12 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 1979a28075470ef82472a5656ecc969f901e0d3b
-Message-ID: <202401092310.7JrUpOEL-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9039739AEA;
+	Tue,  9 Jan 2024 17:34:17 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4607C433C7;
+	Tue,  9 Jan 2024 17:34:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1704821657;
+	bh=syCE0BwfVDeT7qH/cCOtSq9aFIuBR8gzEpq+znSgolk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WtDy9JMoBJ8Bqdzgh4pdgHwfeHnq/lTRlgWOjpVrsVDh9iQUpWTaCcbauLGaYfMVt
+	 PMwEzI3ItkcSQAaYRbsO2fnDxjRWVqpZ2lKto9elLBlu+RHndSsAgQTudV6zbS8G2t
+	 6pUx78AGOpsTp/Yju8lgUpLpNZngGJVCdzP6guysEzeWmlzcEgihoLbbBKBk1yYsH/
+	 NcvQ48SixJR3Kr04zgXJRJ3QazKc3AiWQo0XhMkjJRq99Jo8Tu0bLjbkUclRuFIMMI
+	 nI0N8DtwtWV4H+/0RMm5mzRLRkZeEHJgHA3T3aYzxz0vkI/QU+N6GB2ey/BucqCUEn
+	 M3UxvVa7cdXhQ==
+Date: Tue, 9 Jan 2024 17:34:11 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Conor Dooley <conor.dooley@microchip.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Drew Fustini <dfustini@baylibre.com>
+Subject: Re: [PATCH v2 3/8] riscv: dts: thead: Add TH1520 pin control nodes
+Message-ID: <20240109-boggle-frugality-03a77cab8308@spud>
+References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
+ <20240103132852.298964-4-emil.renner.berthing@canonical.com>
+ <20240108-majorette-overtly-4ec65d0a15e9@spud>
+ <CAJM55Z_2zhELW3E7p94J05We17xTC2Rejs5AigNJOHCGHVr_zg@mail.gmail.com>
+ <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
+ <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="hJD6qYXNgkRLNOMK"
+Content-Disposition: inline
+In-Reply-To: <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 1979a28075470ef82472a5656ecc969f901e0d3b  gpiolib: replace the GPIO device mutex with a read-write semaphore
 
-elapsed time: 1445m
+--hJD6qYXNgkRLNOMK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-configs tested: 138
-configs skipped: 2
+On Tue, Jan 09, 2024 at 06:28:19AM -0800, Emil Renner Berthing wrote:
+> Conor Dooley wrote:
+> > On Tue, Jan 09, 2024 at 04:02:01AM -0800, Emil Renner Berthing wrote:
+> > > Conor Dooley wrote:
+> > > > On Wed, Jan 03, 2024 at 02:28:40PM +0100, Emil Renner Berthing wrot=
+e:
+> > > > > Add nodes for pin controllers on the T-Head TH1520 RISC-V SoC.
+> > > > >
+> > > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonic=
+al.com>
+> > > > > ---
+> > > > >  .../boot/dts/thead/th1520-beaglev-ahead.dts   |  4 ++++
+> > > > >  .../dts/thead/th1520-lichee-module-4a.dtsi    |  4 ++++
+> > > > >  arch/riscv/boot/dts/thead/th1520.dtsi         | 24 +++++++++++++=
+++++++
+> > > > >  3 files changed, 32 insertions(+)
+> > > > >
+> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b=
+/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > > index 70e8042c8304..6c56318a8705 100644
+> > > > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
+> > > > > @@ -44,6 +44,10 @@ &osc_32k {
+> > > > >  	clock-frequency =3D <32768>;
+> > > > >  };
+> > > > >
+> > > > > +&aonsys_clk {
+> > > > > +	clock-frequency =3D <73728000>;
+> > > > > +};
+> > > > > +
+> > > > >  &apb_clk {
+> > > > >  	clock-frequency =3D <62500000>;
+> > > > >  };
+> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dt=
+si b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > > index a802ab110429..9865925be372 100644
+> > > > > --- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > > +++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
+> > > > > @@ -25,6 +25,10 @@ &osc_32k {
+> > > > >  	clock-frequency =3D <32768>;
+> > > > >  };
+> > > > >
+> > > > > +&aonsys_clk {
+> > > > > +	clock-frequency =3D <73728000>;
+> > > > > +};
+> > > > > +
+> > > > >  &apb_clk {
+> > > > >  	clock-frequency =3D <62500000>;
+> > > > >  };
+> > > > > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/b=
+oot/dts/thead/th1520.dtsi
+> > > > > index ba4d2c673ac8..e65a306ff575 100644
+> > > > > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
+> > > > > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
+> > > > > @@ -134,6 +134,12 @@ osc_32k: 32k-oscillator {
+> > > > >  		#clock-cells =3D <0>;
+> > > > >  	};
+> > > > >
+> > > > > +	aonsys_clk: aonsys-clk {
+> > > > > +		compatible =3D "fixed-clock";
+> > > > > +		clock-output-names =3D "aonsys_clk";
+> > > > > +		#clock-cells =3D <0>;
+> > > > > +	};
+> > > >
+> > > > Did this stuff sneak into this commit accidentally?
+> > >
+> > > Not really by accident no. It turns out the clock tree has gates for =
+the bus
+> > > clock of each pinctrl block and I think it's better to add this clock
+> > > dependency to the bindings and driver up front.
+> >
+> > Maybe if I had looked a wee bit more deeply I would've noticed that it
+> > was used there, but it's always good to mention the rationale in the
+> > commit message so that it's more obvious why you're doin it.
+>=20
+> You absolutely right. I forgot to update the commit message.
+>=20
+> > > Since there is not yet any clock driver the initial device tree for t=
+he TH1520
+> > > included the dummy apb_clk that two of the pinctrl blocks derive thei=
+r clock
+> > > from, but not the "aonsys" clock needed by the "always-on" pinctrl. I=
+ thought
+> > > it was better to add this dummy clock with the only (so far) user of =
+it, but if
+> > > you have a better idea, let me know.
+> >
+> > No, that's fine. I was just wondering why there was an unmentioned set
+> > of clocks being added. If they're stubbed fixed clocks I dunno if it
+> > makes sense to add them to the board.dts/module.dtsi files though. Where
+> > do the initial values come from for the rates? Out of reset values or
+> > set by firmware that may vary from board to board?
+>=20
+> The vendor u-boot sets the PLLs different from the reset values. For now I
+> think it's the same code for every board using the Lichee Pi 4A module (a=
+nd
+> probably also for the BeagleV Ahead), but it might still make sense to mo=
+ve the
+> freqency to the board instead of the module device tree.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Yeah, think so. Only temporarily though, do you have a clue if anyone is
+working on the actual clock driver stuff? Seems pretty Deadge?
+https://lore.kernel.org/linux-clk/?q=3Dth1520
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240109   gcc  
-arc                   randconfig-002-20240109   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         at91_dt_defconfig   gcc  
-arm                                 defconfig   clang
-arm                           tegra_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240109   gcc  
-csky                  randconfig-002-20240109   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386                                defconfig   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240109   gcc  
-loongarch             randconfig-002-20240109   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-mips                         db1xxx_defconfig   gcc  
-mips                       lemote2f_defconfig   gcc  
-nios2                         10m50_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240109   gcc  
-nios2                 randconfig-002-20240109   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240109   gcc  
-parisc                randconfig-002-20240109   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      cm5200_defconfig   gcc  
-powerpc                     mpc83xx_defconfig   gcc  
-powerpc                 xes_mpc85xx_defconfig   gcc  
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-riscv                          rv32_defconfig   clang
-s390                             allmodconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                                defconfig   gcc  
-s390                  randconfig-001-20240109   gcc  
-s390                  randconfig-002-20240109   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                    randconfig-001-20240109   gcc  
-sh                    randconfig-002-20240109   gcc  
-sh                             sh03_defconfig   gcc  
-sh                            titan_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240109   gcc  
-sparc64               randconfig-002-20240109   gcc  
-um                               alldefconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240109   clang
-x86_64       buildonly-randconfig-002-20240109   clang
-x86_64       buildonly-randconfig-003-20240109   clang
-x86_64       buildonly-randconfig-004-20240109   clang
-x86_64       buildonly-randconfig-005-20240109   clang
-x86_64       buildonly-randconfig-006-20240109   clang
-x86_64                              defconfig   gcc  
-x86_64                                  kexec   gcc  
-x86_64                randconfig-011-20240109   clang
-x86_64                randconfig-012-20240109   clang
-x86_64                randconfig-013-20240109   clang
-x86_64                randconfig-014-20240109   clang
-x86_64                randconfig-015-20240109   clang
-x86_64                randconfig-016-20240109   clang
-x86_64                randconfig-071-20240109   clang
-x86_64                randconfig-072-20240109   clang
-x86_64                randconfig-073-20240109   clang
-x86_64                randconfig-074-20240109   clang
-x86_64                randconfig-075-20240109   clang
-x86_64                randconfig-076-20240109   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240109   gcc  
-xtensa                randconfig-002-20240109   gcc  
-xtensa                         virt_defconfig   gcc  
+Cheers,
+Conor.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--hJD6qYXNgkRLNOMK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZZ2DkwAKCRB4tDGHoIJi
+0pcOAPoD+P51AMazIRXDSkpKgUQM6eBblVNkqmaR1okaVmmX7wEA7wVS+pAjp9hI
+N8snAcL1efQHu26mrSkIAL4yScknnwg=
+=wI/n
+-----END PGP SIGNATURE-----
+
+--hJD6qYXNgkRLNOMK--
 
