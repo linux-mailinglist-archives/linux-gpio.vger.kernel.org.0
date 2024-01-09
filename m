@@ -1,192 +1,296 @@
-Return-Path: <linux-gpio+bounces-2095-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2096-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 68D33828CA1
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 19:30:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A584C828D10
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 20:05:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CCD1F1F29ECF
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 18:30:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 301671F26F3E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 19:05:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2AB43D0C6;
-	Tue,  9 Jan 2024 18:30:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6DB743D0B6;
+	Tue,  9 Jan 2024 19:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=beagleboard-org.20230601.gappssmtp.com header.i=@beagleboard-org.20230601.gappssmtp.com header.b="2N821F09"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="H0LC0X38"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 622813C684
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 18:30:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=beagleboard.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=beagleboard.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6d9b5c4f332so1599725b3a.3
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 10:30:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FF9C3D0A6
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 19:05:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-40d4f5d902dso34936355e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Jan 2024 11:05:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=beagleboard-org.20230601.gappssmtp.com; s=20230601; t=1704825025; x=1705429825; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=9wuehQIOXoKxKvR7IfGc8qPJ5fDo+dRhQ24T0MSYH2w=;
-        b=2N821F09EGeswp/UJdblxCiv7BMut/htPitEUV5Ii5NIQn+CBl2opbXWgLM90LIURS
-         jY/EwIsuHrzKuMY25CYAo8meoGIhxIdMTTdMvIiDHg5MiXHUDMivu/YrJelEmVZf2wNo
-         Zz0kTMc4GW24XkQIpAn05HSBWt0s9cKO3uHx5QrW3iFZPk+c+qY24H40ccdzROkolrwv
-         d5MsejmDQlE3onwJaM8LrQxF69zRVv9obGNxvrQS4BGt3anNms+f6cbCdsAYx0Vl6XRB
-         W9kfoDbz8su6fH7bclsEJxjr2wPIvy0gz1UNJE6xZ+lYJUmyGeOCT2GzLmI4eCnvBZH5
-         utEA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1704827117; x=1705431917; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zhF4jyFgcyCg0O1jhyIaL8gFGwc/DO+6T7JgJQErQjk=;
+        b=H0LC0X38aD5Wgjm3DxGq7jYUKpgnEHrdIaB9M9TwLUncqbcDGXV+V9k+5Jhuum2qT9
+         o//MwsLZs0US/2IZ9kvCReR2SGLBCc3fDnMMWlJbEnCISOjplhX5t1q8vZzrszqMw80Z
+         LqdtKM5ElmpjqYDVtmfqNv7jpVBDabirVgHn4zd7c2LeTHj/0DT6NIlzx+5Dpyec3rHp
+         MDNOjT8SNIGq/SXNffXFByWpZdvmrQ0xOBBHDBpjYimV1C7Ga3m/4XwdhRpIaXCgDHBq
+         gFLx9GZnerGoJEQlvLUrZsQEAIb3WOCY/USIaTb+Ow1YlxfFLYqfOO85/w8vhY+fD/Vx
+         AyPQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704825025; x=1705429825;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9wuehQIOXoKxKvR7IfGc8qPJ5fDo+dRhQ24T0MSYH2w=;
-        b=pzj1kSpCUAmyc338yothe404LfI4UT3+Wbf/rzk83qIHTnuONU65bN7d6rNICYoynJ
-         6wsyiKe0GWWT6FzYYkGOevR0ALNsNzGrERjbgodALgV+FZ0WgSipxv+1Qe0UcRtzyJ98
-         vBFQ7A71o3MIce3YgJER5/I3rdhDei1KZP95M0vR2Xiyb9Vti5RPCGdDEM5v7r9Apa5Y
-         5Sl+jxBVdPGvAUgLaq3vWGpOLGUOUHNRb0egFCnVUEACgt5R/PCztJUUCPktQEV3hjJA
-         +vkwsDSTrkjoKKrNm3aalFMxClsxEZMTa3IzeHeZzSrCWWWcnX2Yr9d4eslFILqUiAZE
-         d5rQ==
-X-Gm-Message-State: AOJu0Yw0KK4A5zdl2Elv1ZZgWPCDtcjX0T/4x6LmgMPDTuXYgOSecJxk
-	ZgEbAbOHGx9d+m3qoR/pDGwUqi/eRKnU
-X-Google-Smtp-Source: AGHT+IHMaIlxFZkyAjIjl7Fnz8/lzJ5jA7vI2S3G0WFQ6c+y6vsFBpuUI1mJKNcRCD/KUkvTSdiCsA==
-X-Received: by 2002:a05:6a00:1d8f:b0:6d9:a0da:4fbc with SMTP id z15-20020a056a001d8f00b006d9a0da4fbcmr2895967pfw.36.1704825024696;
-        Tue, 09 Jan 2024 10:30:24 -0800 (PST)
-Received: from x1 ([2601:1c2:1800:f680:6e8d:949b:d6c1:a68a])
-        by smtp.gmail.com with ESMTPSA id b3-20020a62cf03000000b006db0f35296esm1543303pfg.148.2024.01.09.10.30.23
+        d=1e100.net; s=20230601; t=1704827117; x=1705431917;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zhF4jyFgcyCg0O1jhyIaL8gFGwc/DO+6T7JgJQErQjk=;
+        b=wrlKBAuwQdROhX7pNvXtm+1fw/MG5QEkyCNy2sp7UEjuv57GJw90ADJ4JNDvT2WfHr
+         k77dyxE91SEgQ8oyHC1CDWYr2+h2rpWfiRM+nqYsYRq+0sCbsmPretvri5ZVcULz06dq
+         Q3tcjYoJ6Ig/Lsu61nXGGthG2EyZKKh4ILucu0sPLq7dued4SINKREMaxtDJZjP2B3ge
+         vd576mHeP8vl1CsClWJWlLbSc44LfSHGs1DymjqXx2wh4BGheXMpju/hWDlLJYf6UMZ+
+         5qqRv0I7rGPcyyjK/6YWkwJNKLPAGaDUtw37uBJgB6IwyFFj8QXTm2w2XBeOQaylFf+1
+         01oQ==
+X-Gm-Message-State: AOJu0YzVx+Hq5HXXiw9MjMNn6I/LPktHeawbZO66ivihJoERpab37XFi
+	x/mcDx0O5hJLKiRYpIpTifLD1Xg9HM0jEg==
+X-Google-Smtp-Source: AGHT+IEgDunyayHEsda9Q6L2F2gmaVkydXdLsBCiekAOHpKhoojijICJ7m5fqvwVosnQTQpczwhTag==
+X-Received: by 2002:a05:600c:45ce:b0:40c:2ba6:81e with SMTP id s14-20020a05600c45ce00b0040c2ba6081emr3080290wmo.121.1704827117034;
+        Tue, 09 Jan 2024 11:05:17 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f70b:9940:beaa:1728])
+        by smtp.gmail.com with ESMTPSA id jb6-20020a05600c54e600b0040e49045e0asm4380919wmb.48.2024.01.09.11.05.16
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 10:30:24 -0800 (PST)
-Date: Tue, 9 Jan 2024 10:30:22 -0800
-From: Drew Fustini <drew@beagleboard.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Emil Renner Berthing <emil.renner.berthing@canonical.com>,
-	Conor Dooley <conor.dooley@microchip.com>,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Tue, 09 Jan 2024 11:05:16 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>, Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Drew Fustini <dfustini@baylibre.com>
-Subject: Re: [PATCH v2 3/8] riscv: dts: thead: Add TH1520 pin control nodes
-Message-ID: <ZZ2QvqlWYxgfHgQX@x1>
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com>
- <20240103132852.298964-4-emil.renner.berthing@canonical.com>
- <20240108-majorette-overtly-4ec65d0a15e9@spud>
- <CAJM55Z_2zhELW3E7p94J05We17xTC2Rejs5AigNJOHCGHVr_zg@mail.gmail.com>
- <20240109-tiptoeing-twirl-ebb943e17a29@wendy>
- <CAJM55Z9Ka3hiNmgFuy01Yd0YyxL-SzS=A7S3k84=B1xABKbJhA@mail.gmail.com>
- <20240109-boggle-frugality-03a77cab8308@spud>
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: updates for v6.8-rc1
+Date: Tue,  9 Jan 2024 20:05:14 +0100
+Message-Id: <20240109190514.45830-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240109-boggle-frugality-03a77cab8308@spud>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 09, 2024 at 05:34:11PM +0000, Conor Dooley wrote:
-> On Tue, Jan 09, 2024 at 06:28:19AM -0800, Emil Renner Berthing wrote:
-> > Conor Dooley wrote:
-> > > On Tue, Jan 09, 2024 at 04:02:01AM -0800, Emil Renner Berthing wrote:
-> > > > Conor Dooley wrote:
-> > > > > On Wed, Jan 03, 2024 at 02:28:40PM +0100, Emil Renner Berthing wrote:
-> > > > > > Add nodes for pin controllers on the T-Head TH1520 RISC-V SoC.
-> > > > > >
-> > > > > > Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-> > > > > > ---
-> > > > > >  .../boot/dts/thead/th1520-beaglev-ahead.dts   |  4 ++++
-> > > > > >  .../dts/thead/th1520-lichee-module-4a.dtsi    |  4 ++++
-> > > > > >  arch/riscv/boot/dts/thead/th1520.dtsi         | 24 +++++++++++++++++++
-> > > > > >  3 files changed, 32 insertions(+)
-> > > > > >
-> > > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > > index 70e8042c8304..6c56318a8705 100644
-> > > > > > --- a/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > > +++ b/arch/riscv/boot/dts/thead/th1520-beaglev-ahead.dts
-> > > > > > @@ -44,6 +44,10 @@ &osc_32k {
-> > > > > >  	clock-frequency = <32768>;
-> > > > > >  };
-> > > > > >
-> > > > > > +&aonsys_clk {
-> > > > > > +	clock-frequency = <73728000>;
-> > > > > > +};
-> > > > > > +
-> > > > > >  &apb_clk {
-> > > > > >  	clock-frequency = <62500000>;
-> > > > > >  };
-> > > > > > diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > > index a802ab110429..9865925be372 100644
-> > > > > > --- a/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > > +++ b/arch/riscv/boot/dts/thead/th1520-lichee-module-4a.dtsi
-> > > > > > @@ -25,6 +25,10 @@ &osc_32k {
-> > > > > >  	clock-frequency = <32768>;
-> > > > > >  };
-> > > > > >
-> > > > > > +&aonsys_clk {
-> > > > > > +	clock-frequency = <73728000>;
-> > > > > > +};
-> > > > > > +
-> > > > > >  &apb_clk {
-> > > > > >  	clock-frequency = <62500000>;
-> > > > > >  };
-> > > > > > diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > > > index ba4d2c673ac8..e65a306ff575 100644
-> > > > > > --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > > > +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> > > > > > @@ -134,6 +134,12 @@ osc_32k: 32k-oscillator {
-> > > > > >  		#clock-cells = <0>;
-> > > > > >  	};
-> > > > > >
-> > > > > > +	aonsys_clk: aonsys-clk {
-> > > > > > +		compatible = "fixed-clock";
-> > > > > > +		clock-output-names = "aonsys_clk";
-> > > > > > +		#clock-cells = <0>;
-> > > > > > +	};
-> > > > >
-> > > > > Did this stuff sneak into this commit accidentally?
-> > > >
-> > > > Not really by accident no. It turns out the clock tree has gates for the bus
-> > > > clock of each pinctrl block and I think it's better to add this clock
-> > > > dependency to the bindings and driver up front.
-> > >
-> > > Maybe if I had looked a wee bit more deeply I would've noticed that it
-> > > was used there, but it's always good to mention the rationale in the
-> > > commit message so that it's more obvious why you're doin it.
-> > 
-> > You absolutely right. I forgot to update the commit message.
-> > 
-> > > > Since there is not yet any clock driver the initial device tree for the TH1520
-> > > > included the dummy apb_clk that two of the pinctrl blocks derive their clock
-> > > > from, but not the "aonsys" clock needed by the "always-on" pinctrl. I thought
-> > > > it was better to add this dummy clock with the only (so far) user of it, but if
-> > > > you have a better idea, let me know.
-> > >
-> > > No, that's fine. I was just wondering why there was an unmentioned set
-> > > of clocks being added. If they're stubbed fixed clocks I dunno if it
-> > > makes sense to add them to the board.dts/module.dtsi files though. Where
-> > > do the initial values come from for the rates? Out of reset values or
-> > > set by firmware that may vary from board to board?
-> > 
-> > The vendor u-boot sets the PLLs different from the reset values. For now I
-> > think it's the same code for every board using the Lichee Pi 4A module (and
-> > probably also for the BeagleV Ahead), but it might still make sense to move the
-> > freqency to the board instead of the module device tree.
-> 
-> Yeah, think so. Only temporarily though, do you have a clue if anyone is
-> working on the actual clock driver stuff? Seems pretty Deadge?
-> https://lore.kernel.org/linux-clk/?q=th1520
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yes, I am working on it. Jisheng passed me his work-in-progress based on
-that original patch you linked to. I've been trying to work out an issue
-with the emmc clock but it seems timely to share what I currently have.
-I will post an RFC today.
+Linus,
 
-Thanks,
-Drew
+Here's the main pull-request for this merge window from the GPIO subsystem.
+We have two new drivers, an assortment of updates and cleanups to many others,
+and first part of the big rework of the core GPIOLIB that's currently underway.
+
+Add to that some code shrink in the character device module and updates to DT
+bindings and that's pretty much it.
+
+There's a pull from Greg's branch for a new device property accessor that's
+used by one of the GPIO driver and another from Andy's Intel tree. The pinctrl
+commits in this PR have been Acked by Linus Walleij.
+
+Details are in the signed tag.
+
+Please pull,
+Bartosz Golaszewski
+
+The following changes since commit 861deac3b092f37b2c5e6871732f3e11486f7082:
+
+  Linux 6.7-rc7 (2023-12-23 16:25:56 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-updates-for-v6.8-rc1
+
+for you to fetch changes up to 1979a28075470ef82472a5656ecc969f901e0d3b:
+
+  gpiolib: replace the GPIO device mutex with a read-write semaphore (2024-01-04 10:29:16 +0100)
+
+----------------------------------------------------------------
+gpio updates for v6.8
+
+Core GPIOLIB:
+- protect the global list of GPIO devices with a read-write semaphore as
+  it is rarely modified but can be traversed by multiple readers at once
+- remove GPIO devices from the global list when they are *unregistered*
+  and not when they are *released* (which only happens when the last
+  reference is dropped) as this may lead to a successful lookup of an
+  unregistered device
+- remove the unnecessary "extra_checks" switch
+- rename functions that are called with a lock taken
+- remove duplicate includes
+
+Character device handling:
+- use locking guards to reduce the code size
+- allocate the big linereq structure using the more suitable kvzalloc()
+- redulce the size of critical sections
+- improve documentation
+- move the debounce_period_us field out of struct gpio_desc
+
+New drivers:
+- Nuvoton NPCM SGPIO driver for BMC NPCM7xx/NPCM8xx
+- Realtek DHC (Digital Home Center) SoC GPIO driver
+
+Driver improvements:
+- replace gpiochip_is_requested() with a safer alternative in the form of
+  gpiochip_dup_line_label() as the former returns a pointer to a string that
+  can be deleted
+- implement the dbg_show() callback in gpio-sim
+- improve the coding style for local variables by removing unnecessary tabs
+- use generic device properties instead of OF variants in gpio-mmio
+- use the preferred coding style for __free() in gpio-mockup
+- reuse PM ops from the gpio-tangier in gpio-elkhartlake
+- rework PM and use cleanup helpers in gpio-tangier
+- fix the EIC configuration in gpio-pmic-eic-sprd
+- remove the unneeded call to platform_set_drvdata() in gpio-sifive
+- use generic GPIO helpers for driver callbacks in gpio-dwapb
+- add clock support on certain pins of gpio-ixp4xx
+- don't use the core-specific DEBUG_GPIO switch in drivers
+- kerneldoc improvements
+
+DT bindings:
+- add bindings for the new Realtek and Nuvoton devices
+- allow gpio-ranges in gpio-dwapb
+- support GPIO hogs in gpio-rockchip
+- describe the label property in gpio-zynqmp-modepin
+
+Other:
+- header cleanups
+- forward declarations cleanups
+
+----------------------------------------------------------------
+Andrei Coardos (1):
+      gpio: sifive: remove unneeded call to platform_set_drvdata()
+
+Andy Shevchenko (4):
+      Merge patch series "Use the standard _PM_OPS() export macro in Intel Tangier GPIO driver"
+      device property: Implement device_is_big_endian()
+      gpio: mmio: Make use of device properties
+      gpio: mmio: Clean up headers
+
+Bartosz Golaszewski (30):
+      gpio: mockup: initialize a managed pointer in place
+      gpiolib: provide gpio_device_get_label()
+      Merge branch 'gpio/device_get_label_for_pinctrl' into gpio/for-next
+      gpio: sysfs: fix forward declaration of struct gpio_device
+      gpio: sim: fix the email address in MODULE_AUTHOR()
+      gpiolib: provide gpiochip_dup_line_label()
+      gpio: wm831x: use gpiochip_dup_line_label()
+      gpio: wm8994: use gpiochip_dup_line_label()
+      gpio: stmpe: use gpiochip_dup_line_label()
+      pinctrl: abx500: use gpiochip_dup_line_label()
+      pinctrl: nomadik: use gpiochip_dup_line_label()
+      pinctrl: baytrail: use gpiochip_dup_line_label()
+      pinctrl: sppctl: use gpiochip_dup_line_label()
+      gpiolib: use gpiochip_dup_line_label() in for_each helpers
+      gpiolib: remove gpiochip_is_requested()
+      Merge tag 'gpio-remove-gpiochip_is_requested-for-v6.8-rc1' into gpio/for-next
+      gpio: sim: implement the dbg_show() callback
+      gpiolib: allocate memory atomically with a spinlock held
+      gpio: xilinx: remove excess kernel doc
+      gpiolib: rename static functions that are called with the lock taken
+      gpiolib: use a mutex to protect the list of GPIO devices
+      Merge tag 'device_is_big_endian-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core into gpio/for-next
+      Merge tag 'intel-gpio-v6.8-1' of git://git.kernel.org/pub/scm/linux/kernel/git/andy/linux-gpio-intel into gpio/for-next
+      Merge tag 'v6.7-rc7' into gpio/for-next
+      gpio: tps65219: don't use CONFIG_DEBUG_GPIO
+      gpiolib: remove extra_checks
+      gpiolib: drop tabs from local variable declarations
+      gpio: sysfs: drop tabs from local variable declarations
+      gpiolib: remove the GPIO device from the list when it's unregistered
+      gpiolib: replace the GPIO device mutex with a read-write semaphore
+
+Emil Renner Berthing (2):
+      dt-bindings: gpio: dwapb: allow gpio-ranges
+      gpio: dwapb: Use generic request, free and set_config
+
+Heiko Stuebner (1):
+      dt-bindings: gpio: rockchip: add a pattern for gpio hogs
+
+Jim Liu (2):
+      dt-bindings: gpio: add NPCM sgpio driver bindings
+      gpio: nuvoton: Add Nuvoton NPCM sgpio driver
+
+Kent Gibson (9):
+      gpiolib: cdev: relocate debounce_period_us from struct gpio_desc
+      gpiolib: remove debounce_period_us from struct gpio_desc
+      gpiolib: cdev: fully adopt guard() and scoped_guard()
+      gpiolib: cdev: improve documentation of get/set values
+      gpiolib: cdev: reduce locking in gpio_desc_to_lineinfo()
+      gpiolib: cdev: include overflow.h
+      gpiolib: cdev: allocate linereq using kvzalloc()
+      gpiolib: cdev: replace locking wrappers for config_mutex with guards
+      gpiolib: cdev: replace locking wrappers for gpio_device with guards
+
+Linus Walleij (1):
+      gpio: ixp4xx: Handle clock output on pin 14 and 15
+
+Michal Simek (1):
+      dt-bindings: gpio: modepin: Describe label property
+
+Raag Jadav (4):
+      gpio: tangier: use EXPORT_NS_GPL_SIMPLE_DEV_PM_OPS() helper
+      gpio: elkhartlake: reuse pm_ops from Intel Tangier driver
+      gpio: tangier: unexport suspend/resume handles
+      gpio: tangier: simplify locking using cleanup helpers
+
+Randy Dunlap (1):
+      gpio: max730x: don't use kernel-doc marker for regular comment
+
+Rob Herring (1):
+      dt-bindings: gpio: brcmstb: drop unneeded quotes
+
+Tzuyi Chang (2):
+      dt-bindings: gpio: realtek: Add realtek,rtd-gpio
+      gpio: rtd: Add support for Realtek DHC(Digital Home Center) RTD SoCs
+
+Wang Jinchao (1):
+      gpiolib: remove duplicate inclusions
+
+Wenhua Lin (1):
+      gpio: pmic-eic-sprd: Configure the bit corresponding to the EIC through offset
+
+ .../bindings/gpio/brcm,brcmstb-gpio.yaml           |   2 +-
+ .../devicetree/bindings/gpio/nuvoton,sgpio.yaml    |  87 +++
+ .../devicetree/bindings/gpio/realtek,rtd-gpio.yaml |  69 +++
+ .../bindings/gpio/rockchip,gpio-bank.yaml          |   7 +
+ .../devicetree/bindings/gpio/snps,dw-apb-gpio.yaml |   2 +
+ .../bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml    |   3 +
+ drivers/gpio/Kconfig                               |  20 +
+ drivers/gpio/Makefile                              |   2 +
+ drivers/gpio/gpio-dwapb.c                          |  13 +-
+ drivers/gpio/gpio-elkhartlake.c                    |  14 +-
+ drivers/gpio/gpio-ixp4xx.c                         |  51 +-
+ drivers/gpio/gpio-max730x.c                        |   2 +-
+ drivers/gpio/gpio-mmio.c                           |  53 +-
+ drivers/gpio/gpio-mockup.c                         |   3 +-
+ drivers/gpio/gpio-npcm-sgpio.c                     | 619 +++++++++++++++++++
+ drivers/gpio/gpio-pmic-eic-sprd.c                  |  19 +-
+ drivers/gpio/gpio-rtd.c                            | 604 +++++++++++++++++++
+ drivers/gpio/gpio-sifive.c                         |   1 -
+ drivers/gpio/gpio-sim.c                            |  24 +-
+ drivers/gpio/gpio-stmpe.c                          |   6 +-
+ drivers/gpio/gpio-tangier.c                        |  63 +-
+ drivers/gpio/gpio-tangier.h                        |   4 +-
+ drivers/gpio/gpio-tps65219.c                       |  18 +-
+ drivers/gpio/gpio-wm831x.c                         |  14 +-
+ drivers/gpio/gpio-wm8994.c                         |  13 +-
+ drivers/gpio/gpio-xilinx.c                         |   1 -
+ drivers/gpio/gpiolib-cdev.c                        | 667 ++++++++++-----------
+ drivers/gpio/gpiolib-sysfs.c                       | 110 ++--
+ drivers/gpio/gpiolib-sysfs.h                       |  10 +-
+ drivers/gpio/gpiolib.c                             | 274 +++++----
+ drivers/gpio/gpiolib.h                             |   7 +-
+ drivers/pinctrl/intel/pinctrl-baytrail.c           |  11 +-
+ drivers/pinctrl/nomadik/pinctrl-abx500.c           |   9 +-
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c          |   6 +-
+ drivers/pinctrl/sunplus/sppctl.c                   |  10 +-
+ include/linux/gpio/driver.h                        |  43 +-
+ include/linux/property.h                           |  26 +
+ 37 files changed, 2185 insertions(+), 702 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/nuvoton,sgpio.yaml
+ create mode 100644 Documentation/devicetree/bindings/gpio/realtek,rtd-gpio.yaml
+ create mode 100644 drivers/gpio/gpio-npcm-sgpio.c
+ create mode 100644 drivers/gpio/gpio-rtd.c
 
