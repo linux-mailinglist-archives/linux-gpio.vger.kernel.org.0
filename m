@@ -1,77 +1,72 @@
-Return-Path: <linux-gpio+bounces-2084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2085-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DECD282879E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:02:45 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A7E4C8287A7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 15:03:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E2E01F216D5
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:02:45 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 574C6287DDA
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 14:03:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 264CB3986F;
-	Tue,  9 Jan 2024 14:01:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BEA839AFD;
+	Tue,  9 Jan 2024 14:02:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eFqpjVcQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QU0Hq/KU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B994E38FB7;
-	Tue,  9 Jan 2024 14:01:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA9123A1BE;
+	Tue,  9 Jan 2024 14:02:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6d9bd63ec7fso1411555b3a.2;
-        Tue, 09 Jan 2024 06:01:48 -0800 (PST)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d480c6342dso24015175ad.2;
+        Tue, 09 Jan 2024 06:02:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704808908; x=1705413708; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FC/8g7ZpWpj5XGSBITdvk8s0jNFEaS2+hXn9GTWkyls=;
-        b=eFqpjVcQc5nMDh1ei/DndWYaBYETtrbr4oYBhhImyay+qf7aBBC5efYEiOFPQuWqnP
-         hUtZiR1C50aKiwGhjMgYWn6k5rh2/9oMXRRVbusM5vr4Ix8roufWhj9kL9nepPwEoS5l
-         VWWsNsl9TpvxUu0lC9MTMBtWowUPPP2U6h/bWqZllZQPomHa4S7kD2ImGcWsu4N0Kxas
-         7fr6Kx3Pax8U8dtpy3oUQAqb1HyfDkdNEJbGIVUGju3z+5Nhtq/+aYAzgGS1wpF4lHs0
-         JM2ay59QLhOyvqW3b6RoyVEeEay2D9Qzi4z7lgYkFozAiMJ7CDEVSIGF/bQ/0FKgWPor
-         SpaQ==
+        d=gmail.com; s=20230601; t=1704808960; x=1705413760; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZeblHmwN9pMBuk+p5V39Iz6mrE8Ji3WN3I80/xgaRZA=;
+        b=QU0Hq/KUFv/58O7t7dvcp4AaD8vU8oMskuLEMo3Ob/92Yhm0mbyERtSD9Wrnzen4z9
+         4BDom1rXbyOqn4Tp1Xbl/r1410UPbhqwGYlVUicWQduyC7pGRCXbrXpExGvI6Vuqk5Mr
+         V+jfvdM/Ovmt7Kc8HodqIHM8oHf/5PGnN6a95qnH4ZO9nPa+UgGRMnDGiQ9Z4Vl2SczJ
+         4tru9Fvopbtt4o9Lmx11y9DyBrYr+3YLb0O4e7Kqv55n9k7hKekRPgOs6HOHHUfA2a2w
+         supvB9fkm5nO/A7K7aqZD3CgM5EGIsNPfGLkURv8AckPmzOTBTWzi/MeKmuTMkQnzUO9
+         SwdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704808908; x=1705413708;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FC/8g7ZpWpj5XGSBITdvk8s0jNFEaS2+hXn9GTWkyls=;
-        b=P26wPCsSF9I4OUdcoY1APmjr94HYVn1YOnKKJGz3di4NuCt7/oLus67Qk+lzFFGh4Y
-         A11gBEOvt8SV7Wq5RXF44OLlVM2mFhmwRoFBo7qA3LnqiMlzVzzqzfvbXAD7Mfh6548v
-         kD5Z1AU+UH0kTAUfXb0Mr0MMdzpLznoTpSeu6YW9aPtZV5pQu+RKsqi4S5v1cPO6FOXg
-         7aH6HYPDYPcz0++R27lhLExvBluc0u6UdrG56FSokTHFfEyK/jE3MmhNlT1At0hC5oNm
-         PaMFoink9r/rU1YcOIjytMEUfVcwhQViHzBUp6DtJu7p+wh0Ggqc4LMoCWqDJtah9aWw
-         Ak1A==
-X-Gm-Message-State: AOJu0YxoJzhNG8kF5K3A4QLJyqp9N4rfLTCSW7majKPWnNDJgKZRnstg
-	i76Lv+JW9EZFfX2Fc2xRCw5CDCajzHre8g==
-X-Google-Smtp-Source: AGHT+IEVssHtiESKXpR+knixhH3RM0dJ0WL/8knFJz8d2Ip0hq7H0EzMPLcgxXq5uGv49Ep0Qp4+pg==
-X-Received: by 2002:a05:6a21:1f25:b0:194:d82d:83cc with SMTP id ry37-20020a056a211f2500b00194d82d83ccmr2326988pzb.108.1704808907555;
-        Tue, 09 Jan 2024 06:01:47 -0800 (PST)
+        d=1e100.net; s=20230601; t=1704808960; x=1705413760;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ZeblHmwN9pMBuk+p5V39Iz6mrE8Ji3WN3I80/xgaRZA=;
+        b=n6LIlbajcNmIjx7cOGhsRqlzeBxcsINL05VXxd3m7oh+vKrozi66eANjXDDH8rULTu
+         xyRwReSALYm9VySTIAtbhr3WT2y5fZNaWPNabZfuwi+62eIe4ZbFHSbNKuvJjBVmswwb
+         98KkqWozlI0RySXILfSRmIXimgug1Drsdbct4W1v8Ci3b+6duoU+Zsn4H/nPucnScWNR
+         GBC2SL8cA4I+6a6eUw5zT3mKm03KdCJ0BITsWf7TQQxv6fJQKXF8aPdLYLPe87KJ3FgV
+         oH7kCTapkM/qPSmcIiasWFpriPojIiNd4i+nDf/XmmMtxoDpEyzqhLDt5s1A5LHn5nue
+         LOUA==
+X-Gm-Message-State: AOJu0YzQ/H9XZ1pmHr0ffX81ix4UWDwzpoMAnSc1nR/0X9xQ4swyvs2Z
+	eQbp3JGcKHIxw2l8C2s3JcP1UYkWOeQYGQ==
+X-Google-Smtp-Source: AGHT+IHBDWLORChFjXZPYBbKRCGK8Jf31h3Au9A4i9AWNdWX3Y37lUAQI77DJ7nEI2qe7E29Lh1TQQ==
+X-Received: by 2002:a17:902:b70b:b0:1d4:be53:ac54 with SMTP id d11-20020a170902b70b00b001d4be53ac54mr4782299pls.79.1704808959579;
+        Tue, 09 Jan 2024 06:02:39 -0800 (PST)
 Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id m2-20020a62f202000000b006d9accac5c4sm1673697pfh.35.2024.01.09.06.01.44
+        by smtp.gmail.com with ESMTPSA id jw23-20020a170903279700b001d538b6517asm1818362plb.230.2024.01.09.06.02.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Jan 2024 06:01:47 -0800 (PST)
+        Tue, 09 Jan 2024 06:02:39 -0800 (PST)
 From: Kent Gibson <warthog618@gmail.com>
 To: linux-kernel@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
 	brgl@bgdev.pl,
 	linus.walleij@linaro.org,
-	andy@kernel.org,
-	corbet@lwn.net
+	andy@kernel.org
 Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH 7/7] Documentation: gpio: move gpio-mockup into deprecated section
-Date: Tue,  9 Jan 2024 21:59:52 +0800
-Message-Id: <20240109135952.77458-8-warthog618@gmail.com>
+Subject: [PATCH 0/5] gpio: uapi: documentation improvements
+Date: Tue,  9 Jan 2024 22:02:16 +0800
+Message-Id: <20240109140221.77725-1-warthog618@gmail.com>
 X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240109135952.77458-1-warthog618@gmail.com>
-References: <20240109135952.77458-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -80,37 +75,27 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The gpio-mockup has been obsoleted by the gpio-sim, so relocate its
-documentation into the deprecated section of the admin-guide book.
+This is a series of minor clarifications and formatting tidy ups for
+the GPIO uAPI kernel doc.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- Documentation/admin-guide/gpio/deprecated.rst | 1 +
- Documentation/admin-guide/gpio/index.rst      | 1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+The series is intended as a companion to my character device
+uAPI documentation series, but makes sense on its own too.
 
-diff --git a/Documentation/admin-guide/gpio/deprecated.rst b/Documentation/admin-guide/gpio/deprecated.rst
-index 683d7d23e62a..8503ea2f54d5 100644
---- a/Documentation/admin-guide/gpio/deprecated.rst
-+++ b/Documentation/admin-guide/gpio/deprecated.rst
-@@ -9,4 +9,5 @@ Deprecated GPIO APIs
- 
-     Character Device Userspace API (v1) <../../userspace-api/gpio/chardev_v1>
-     Sysfs Interface <../../userspace-api/gpio/sysfs>
-+    Mockup Testing Module <gpio-mockup>
- 
-diff --git a/Documentation/admin-guide/gpio/index.rst b/Documentation/admin-guide/gpio/index.rst
-index 8489b8a3991f..573682212a56 100644
---- a/Documentation/admin-guide/gpio/index.rst
-+++ b/Documentation/admin-guide/gpio/index.rst
-@@ -9,7 +9,6 @@ GPIO
- 
-     Character Device Userspace API <../../userspace-api/gpio/chardev>
-     gpio-aggregator
--    gpio-mockup
-     gpio-sim
-     Deprecated APIs <deprecated>
- 
+The patches are self contained and trivial so not much to add here.
+
+Cheers,
+Kent.
+
+Kent Gibson (5):
+  gpio: uapi: improve description of fd fields
+  gpio: uapi: clarify hte references
+  gpio: uapi: drop trailing period from one sentence descriptions
+  gpio: uapi: document possible values of gpioevent_data.id
+  gpio: uapi: clarify using v2 rather than v1
+
+ include/uapi/linux/gpio.h | 52 ++++++++++++++++++++-------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
+
 -- 
 2.39.2
 
