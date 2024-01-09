@@ -1,171 +1,99 @@
-Return-Path: <linux-gpio+bounces-2070-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2071-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFF5B8284ED
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 12:25:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CC212828551
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 12:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5BADAB246AC
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 11:25:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 70074B23309
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 11:45:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31C67381CA;
-	Tue,  9 Jan 2024 11:23:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A0B7374C6;
+	Tue,  9 Jan 2024 11:43:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="od+aAxu1"
+	dkim=pass (1024-bit key) header.d=ucw.cz header.i=@ucw.cz header.b="fjPyJqAV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from jabberwock.ucw.cz (jabberwock.ucw.cz [46.255.230.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F7237142;
-	Tue,  9 Jan 2024 11:23:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4099xltc003856;
-	Tue, 9 Jan 2024 11:23:06 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=BUOV8m+4DEEUF6xZdv136lnIKPlCxnHVKDVFqa6I66A=; b=od
-	+aAxu1TB3wRFXEFGLOAQDtNHrrmoPg7KXrSbQMSytbLqNIC40mp7FnCn8Rqpgqhd
-	Jzo4l9NiFuXCNWUISXD411YwfkpaZe1uwre7Ij23pise/k/J6Qr87Lwmohw3fq/X
-	gtNiaL5a+lDOmKUA+qHyUn6Fv8nrGKjO26HMEajFgaunxbcPAmmBsj8nMoeVL9hS
-	T4z+ZJ2u9jJW24DiuCtzzFtaM6o13tjGCUVt3KrQciT06slFBnjx+1VrNOtG6+U0
-	itZsc0v9XcWpglMOBg9eUaw7JMkQ9D8y2mp1ZSJmrL9ePHZv6JVxBI6dSb5015cc
-	AKkxGXAtzVLgiK45NH0A==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vgr1shfkg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 09 Jan 2024 11:23:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 409BN5of031079
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 9 Jan 2024 11:23:05 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 9 Jan
- 2024 03:23:02 -0800
-Message-ID: <b4066862-3d41-3932-379a-9c6358c65962@quicinc.com>
-Date: Tue, 9 Jan 2024 16:52:58 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876E538FA3;
+	Tue,  9 Jan 2024 11:43:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ucw.cz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ucw.cz
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+	id CBE311C0050; Tue,  9 Jan 2024 12:43:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ucw.cz; s=gen1;
+	t=1704800607;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=s6dd1VUvYF8UD5YULpPstc/AaxgRZ4flqa+RhS6rPe4=;
+	b=fjPyJqAVo6xqsH5UpitWb1Zg2hUYlI652bTt41CVtHjnOxlvIZFUOW955nBNoqCaupzT/J
+	/7ciQJWdzC0+MGrRSj1H+EwRBb6XV6nkeS5IV/U9WenvEa6F4zPbPOlh8cG1GlTSgzFHk4
+	/anlSaaqHQs27A0CgPFApfpd7dZu5iE=
+Date: Tue, 9 Jan 2024 12:43:27 +0100
+From: Pavel Machek <pavel@ucw.cz>
+To: Sasha Levin <sashal@kernel.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Marcus Aram <marcus+oss@oxar.nl>,
+	Mark Herbert <mark.herbert42@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>, Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 3/6] pinctrl: amd: Mask non-wake source pins
+ with interrupt enabled at suspend
+Message-ID: <ZZ0xX2Mqx0ezfoWG@duo.ucw.cz>
+References: <20231226002725.7471-1-sashal@kernel.org>
+ <20231226002725.7471-3-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write
- function
-Content-Language: en-US
-To: Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <linux-arm-msm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>
-References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
- <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
- <6e99c4ff-a377-4385-b79c-60438e3e8735@quicinc.com>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <6e99c4ff-a377-4385-b79c-60438e3e8735@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ZnSPnutS7mcQcXXDJdevXhpS83Y09Tkw
-X-Proofpoint-GUID: ZnSPnutS7mcQcXXDJdevXhpS83Y09Tkw
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2023-12-09_01,2023-12-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
- lowpriorityscore=0 mlxscore=0 priorityscore=1501 suspectscore=0
- bulkscore=0 impostorscore=0 adultscore=0 phishscore=0 spamscore=0
- mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2311290000 definitions=main-2401090092
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KeQek5G0zUyG7eGC"
+Content-Disposition: inline
+In-Reply-To: <20231226002725.7471-3-sashal@kernel.org>
 
 
+--KeQek5G0zUyG7eGC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 1/9/2024 10:34 AM, Pavan Kondeti wrote:
-> On Mon, Jan 08, 2024 at 08:57:31PM +0530, Mukesh Ojha wrote:
->> It was realized by Srinivas K. that there is a need of
->> read-modify-write scm exported function so that it can
->> be used by multiple clients.
->>
->> Let's introduce qcom_scm_io_rmw() which masks out the bits
->> and write the passed value to that bit-offset.
->>
->> Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
->> ---
->>   drivers/firmware/qcom/qcom_scm.c       | 26 ++++++++++++++++++++++++++
->>   include/linux/firmware/qcom/qcom_scm.h |  1 +
->>   2 files changed, 27 insertions(+)
->>
->> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
->> index 520de9b5633a..25549178a30f 100644
->> --- a/drivers/firmware/qcom/qcom_scm.c
->> +++ b/drivers/firmware/qcom/qcom_scm.c
->> @@ -19,6 +19,7 @@
->>   #include <linux/of_irq.h>
->>   #include <linux/of_platform.h>
->>   #include <linux/platform_device.h>
->> +#include <linux/spinlock.h>
->>   #include <linux/reset-controller.h>
->>   #include <linux/types.h>
->>   
->> @@ -41,6 +42,8 @@ struct qcom_scm {
->>   	int scm_vote_count;
->>   
->>   	u64 dload_mode_addr;
->> +	/* Atomic context only */
->> +	spinlock_t lock;
-> 
-> IMHO, this comment can be confusing later. one might think that
-> qcom_scm_call_atomic() needs to be called with this lock, but that does
-> not seems to be the intention here.
-> 
->>   };
->>   
->>   struct qcom_scm_current_perm_info {
->> @@ -481,6 +484,28 @@ static int qcom_scm_disable_sdi(void)
->>   	return ret ? : res.result[0];
->>   }
->>   
->> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
->> +{
->> +	unsigned int old, new;
->> +	int ret;
->> +
->> +	if (!__scm)
->> +		return -EINVAL;
->> +
->> +	spin_lock(&__scm->lock);
-> 
-> So, this function can't be called from hardirq context. If that ever
-> happens, with this new spinlock (without disabling interrupts), can
-> result in deadlock.
+Hi!
 
-Ok, let's make it fully atomic with spin_lock_irqsave();
+> From: Mario Limonciello <mario.limonciello@amd.com>
+>=20
+> [ Upstream commit 2fff0b5e1a6b9c577b4dd4958902c877159c856b ]
+>=20
+> If a pin isn't marked as a wake source processing any interrupts is
+> just going to destroy battery life.  The APU may wake up from a hardware
+> sleep state to process the interrupt but not return control to the OS.
+>=20
+> Mask interrupt for all non-wake source pins at suspend. They'll be
+> re-enabled at resume.
 
--Mukesh
-> 
->> +	ret = qcom_scm_io_readl(addr, &old);
->> +	if (ret)
->> +		goto unlock;
->> +
->> +	new = (old & ~mask) | (val & mask);
->> +
->> +	ret = qcom_scm_io_writel(addr, new);
->> +unlock:
->> +	spin_unlock(&__scm->lock);
->> +	return ret;
->> +}
->> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
-> 
-> Thanks,
-> Pavan
+Not sure what is going on here, but it is queued for 6.6 and 4.14, but
+not for the kernels between them.
+
+Best regards,
+								Pavel
+--=20
+People of Russia, stop Putin before his war on Ukraine escalates.
+
+--KeQek5G0zUyG7eGC
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCZZ0xXwAKCRAw5/Bqldv6
+8o46AJ47UWWyL/XjOcQ6g0+vVK2rsBFLLwCghMnwCem9B2AE6FtzLmho8/oPrUk=
+=IPT6
+-----END PGP SIGNATURE-----
+
+--KeQek5G0zUyG7eGC--
 
