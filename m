@@ -1,35 +1,35 @@
-Return-Path: <linux-gpio+bounces-2067-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2068-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE2B5827F87
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D3782827F88
 	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 08:39:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 162AF1F24C7B
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 01A931C24517
 	for <lists+linux-gpio@lfdr.de>; Tue,  9 Jan 2024 07:39:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D9C99475;
-	Tue,  9 Jan 2024 07:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04DE89476;
+	Tue,  9 Jan 2024 07:39:31 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from SHSQR01.spreadtrum.com (mx1.unisoc.com [222.66.158.135])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE879468
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 07:39:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD62D9455
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Jan 2024 07:39:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unisoc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unisoc.com
 Received: from dlp.unisoc.com ([10.29.3.86])
-	by SHSQR01.spreadtrum.com with ESMTP id 4097d5af027629;
-	Tue, 9 Jan 2024 15:39:05 +0800 (+08)
+	by SHSQR01.spreadtrum.com with ESMTP id 4097d95D027979;
+	Tue, 9 Jan 2024 15:39:09 +0800 (+08)
 	(envelope-from Wenhua.Lin@unisoc.com)
 Received: from SHDLP.spreadtrum.com (shmbx06.spreadtrum.com [10.0.1.11])
-	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4T8N176jQJz2Qvpgg;
-	Tue,  9 Jan 2024 15:32:11 +0800 (CST)
+	by dlp.unisoc.com (SkyGuard) with ESMTPS id 4T8N1C2qB7z2Qvpgg;
+	Tue,  9 Jan 2024 15:32:15 +0800 (CST)
 Received: from xm9614pcu.spreadtrum.com (10.13.2.29) by shmbx06.spreadtrum.com
  (10.0.1.11) with Microsoft SMTP Server (TLS) id 15.0.1497.23; Tue, 9 Jan 2024
- 15:39:04 +0800
+ 15:39:08 +0800
 From: Wenhua Lin <Wenhua.Lin@unisoc.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
         Andy Shevchenko
@@ -44,9 +44,9 @@ CC: Orson Zhai <orsonzhai@gmail.com>,
         Wenhua Lin <Wenhua.Lin@unisoc.com>,
         Xiongpeng Wu
 	<xiongpeng.wu@unisoc.com>
-Subject: [PATCH V4 1/2] gpio: eic-sprd: Clear interrupt after set the interrupt type
-Date: Tue, 9 Jan 2024 15:38:48 +0800
-Message-ID: <20240109073849.10791-2-Wenhua.Lin@unisoc.com>
+Subject: [PATCH V4 2/2] gpio: eic-sprd: Optimize the calculation method of eic number
+Date: Tue, 9 Jan 2024 15:38:49 +0800
+Message-ID: <20240109073849.10791-3-Wenhua.Lin@unisoc.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
 References: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
@@ -59,153 +59,74 @@ MIME-Version: 1.0
 Content-Type: text/plain
 X-ClientProxiedBy: SHCAS03.spreadtrum.com (10.0.1.207) To
  shmbx06.spreadtrum.com (10.0.1.11)
-X-MAIL:SHSQR01.spreadtrum.com 4097d5af027629
+X-MAIL:SHSQR01.spreadtrum.com 4097d95D027979
 
-The raw interrupt status of eic maybe set before the interrupt is enabled,
-since the eic interrupt has a latch function, which would trigger the
-interrupt event once enabled it from user side. To solve this problem,
-interrupts generated before setting the interrupt trigger type are ignored.
+The num_eics is a default value, but some SoCs support more than 8.
+In order to adapt to all projects, the total number of eics is
+automatically calculated through dts.
 
-Fixes: 25518e024e3a ("gpio: Add Spreadtrum EIC driver support")
 Signed-off-by: Wenhua Lin <Wenhua.Lin@unisoc.com>
 ---
- drivers/gpio/gpio-eic-sprd.c | 32 ++++++++++++++++++++++++++++----
- 1 file changed, 28 insertions(+), 4 deletions(-)
+ drivers/gpio/gpio-eic-sprd.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/gpio/gpio-eic-sprd.c b/drivers/gpio/gpio-eic-sprd.c
-index be7f2fa5aa7b..806b88d8dfb7 100644
+index 806b88d8dfb7..2dd0e46c42ad 100644
 --- a/drivers/gpio/gpio-eic-sprd.c
 +++ b/drivers/gpio/gpio-eic-sprd.c
-@@ -330,20 +330,27 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 		switch (flow_type) {
- 		case IRQ_TYPE_LEVEL_HIGH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IC, 1);
- 			break;
- 		case IRQ_TYPE_LEVEL_LOW:
- 			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IEV, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_DBNC_IC, 1);
- 			break;
- 		case IRQ_TYPE_EDGE_RISING:
- 		case IRQ_TYPE_EDGE_FALLING:
- 		case IRQ_TYPE_EDGE_BOTH:
- 			state = sprd_eic_get(chip, offset);
--			if (state)
-+			if (state) {
- 				sprd_eic_update(chip, offset,
- 						SPRD_EIC_DBNC_IEV, 0);
--			else
-+				sprd_eic_update(chip, offset,
-+						SPRD_EIC_DBNC_IC, 1);
-+			} else {
- 				sprd_eic_update(chip, offset,
- 						SPRD_EIC_DBNC_IEV, 1);
-+				sprd_eic_update(chip, offset,
-+						SPRD_EIC_DBNC_IC, 1);
-+			}
- 			break;
- 		default:
- 			return -ENOTSUPP;
-@@ -355,20 +362,27 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 		switch (flow_type) {
- 		case IRQ_TYPE_LEVEL_HIGH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTCLR, 1);
- 			break;
- 		case IRQ_TYPE_LEVEL_LOW:
- 			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTPOL, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_LATCH_INTCLR, 1);
- 			break;
- 		case IRQ_TYPE_EDGE_RISING:
- 		case IRQ_TYPE_EDGE_FALLING:
- 		case IRQ_TYPE_EDGE_BOTH:
- 			state = sprd_eic_get(chip, offset);
--			if (state)
-+			if (state) {
- 				sprd_eic_update(chip, offset,
- 						SPRD_EIC_LATCH_INTPOL, 0);
--			else
-+				sprd_eic_update(chip, offset,
-+						SPRD_EIC_LATCH_INTCLR, 1);
-+			} else {
- 				sprd_eic_update(chip, offset,
- 						SPRD_EIC_LATCH_INTPOL, 1);
-+				sprd_eic_update(chip, offset,
-+						SPRD_EIC_LATCH_INTCLR, 1);
-+			}
- 			break;
- 		default:
- 			return -ENOTSUPP;
-@@ -382,29 +396,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_EDGE_FALLING:
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_EDGE_BOTH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_LEVEL_HIGH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_level_irq);
- 			break;
- 		case IRQ_TYPE_LEVEL_LOW:
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTMODE, 1);
- 			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTPOL, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_ASYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_level_irq);
- 			break;
- 		default:
-@@ -417,29 +436,34 @@ static int sprd_eic_irq_set_type(struct irq_data *data, unsigned int flow_type)
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_EDGE_FALLING:
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_EDGE_BOTH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_edge_irq);
- 			break;
- 		case IRQ_TYPE_LEVEL_HIGH:
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 1);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_level_irq);
- 			break;
- 		case IRQ_TYPE_LEVEL_LOW:
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTBOTH, 0);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTMODE, 1);
- 			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTPOL, 0);
-+			sprd_eic_update(chip, offset, SPRD_EIC_SYNC_INTCLR, 1);
- 			irq_set_handler_locked(data, handle_level_irq);
- 			break;
- 		default:
+@@ -108,7 +108,6 @@ static struct sprd_eic *to_sprd_eic(struct notifier_block *nb)
+ 
+ struct sprd_eic_variant_data {
+ 	enum sprd_eic_type type;
+-	u32 num_eics;
+ };
+ 
+ static const char *sprd_eic_label_name[SPRD_EIC_MAX] = {
+@@ -118,22 +117,18 @@ static const char *sprd_eic_label_name[SPRD_EIC_MAX] = {
+ 
+ static const struct sprd_eic_variant_data sc9860_eic_dbnc_data = {
+ 	.type = SPRD_EIC_DEBOUNCE,
+-	.num_eics = 8,
+ };
+ 
+ static const struct sprd_eic_variant_data sc9860_eic_latch_data = {
+ 	.type = SPRD_EIC_LATCH,
+-	.num_eics = 8,
+ };
+ 
+ static const struct sprd_eic_variant_data sc9860_eic_async_data = {
+ 	.type = SPRD_EIC_ASYNC,
+-	.num_eics = 8,
+ };
+ 
+ static const struct sprd_eic_variant_data sc9860_eic_sync_data = {
+ 	.type = SPRD_EIC_SYNC,
+-	.num_eics = 8,
+ };
+ 
+ static inline void __iomem *sprd_eic_offset_base(struct sprd_eic *sprd_eic,
+@@ -619,6 +614,7 @@ static int sprd_eic_probe(struct platform_device *pdev)
+ 	struct gpio_irq_chip *irq;
+ 	struct sprd_eic *sprd_eic;
+ 	struct resource *res;
++	u16 num_banks = 0;
+ 	int ret, i;
+ 
+ 	pdata = of_device_get_match_data(dev);
+@@ -652,10 +648,12 @@ static int sprd_eic_probe(struct platform_device *pdev)
+ 		sprd_eic->base[i] = devm_ioremap_resource(dev, res);
+ 		if (IS_ERR(sprd_eic->base[i]))
+ 			return PTR_ERR(sprd_eic->base[i]);
++
++		num_banks++;
+ 	}
+ 
+ 	sprd_eic->chip.label = sprd_eic_label_name[sprd_eic->type];
+-	sprd_eic->chip.ngpio = pdata->num_eics;
++	sprd_eic->chip.ngpio = num_banks * SPRD_EIC_PER_BANK_NR;
+ 	sprd_eic->chip.base = -1;
+ 	sprd_eic->chip.parent = dev;
+ 	sprd_eic->chip.direction_input = sprd_eic_direction_input;
 -- 
 2.17.1
 
