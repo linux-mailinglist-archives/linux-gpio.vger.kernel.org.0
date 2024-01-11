@@ -1,138 +1,112 @@
-Return-Path: <linux-gpio+bounces-2136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2137-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id B534E82B0A5
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 15:26:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B70382B0B0
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 15:31:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 472271F22E47
-	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 14:26:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CAAAD1C237F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 14:31:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 831583D0BE;
-	Thu, 11 Jan 2024 14:26:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1826482CC;
+	Thu, 11 Jan 2024 14:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="JzGLRDSw"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M1Y71Uw2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F30A3AC10;
-	Thu, 11 Jan 2024 14:26:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDD4935890
+	for <linux-gpio@vger.kernel.org>; Thu, 11 Jan 2024 14:30:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-40e5f615a32so6509445e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 11 Jan 2024 06:30:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1704983192; x=1736519192;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=u07jgQAZPh+ETepT/rWlofkLPq/+1wSCR8nHmur/QDA=;
-  b=JzGLRDSwzcVmwpNRtellzuPRao3wOdqfqm2IM6Bgej5PM+xVbJeWWjuT
-   HnrH72ezEzYKYNcUBvo4L1fuADjeqP4TWWReOzVFcFEPzylPtsPCb9+Ds
-   ms4oYpiuhZCweFlMiybmZY3WA1LVuR9rzr4eRvJh2YtXTbyoU3ax/AlP6
-   P7Pz9cH51ljMSuZenkoCeME9ygcxrFN8kC0k3aHHzDgGgvrzKAh11ks2I
-   ABaGegj+6eGSFeB/xChG38veO3dtYQvnJ7M+uf58ulO6b6AjETAswIkrE
-   80VmGl1j6XOqCMK9HRT+oXnJO1HF4FSTvpnDXvOzdKWbexejUQbQkkqiU
-   w==;
-X-IronPort-AV: E=Sophos;i="6.04,186,1695679200"; 
-   d="scan'208";a="34853706"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 11 Jan 2024 15:26:29 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 9698B280075;
-	Thu, 11 Jan 2024 15:26:29 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: bartosz.golaszewski@linaro.org, linus.walleij@linaro.org, Hector Palacios <hector.palacios@digi.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, haibo.chen@nxp.com, peng.fan@nxp.com, hector.palacios@digi.com
-Subject: Re: [PATCH 2/2] arm64: dts: imx93: specify available 'ngpios' per GPIO port
-Date: Thu, 11 Jan 2024 15:26:29 +0100
-Message-ID: <4330477.ejJDZkT8p0@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240111131904.1491496-3-hector.palacios@digi.com>
-References: <20240111131904.1491496-1-hector.palacios@digi.com> <20240111131904.1491496-3-hector.palacios@digi.com>
+        d=linaro.org; s=google; t=1704983457; x=1705588257; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=0GXqINs0a6lZWYxfctjRoUnBJCktVQXQIz0ah9jwfFM=;
+        b=M1Y71Uw2rDSVe7EiidH10WvfpJNA+4i2K2N5Oi4eZZhpTGDGIKpbsvfThjpWW2rPR/
+         fJuiOlZqVLVuir7R2m/dWN5/dpLvl55yr2fgM44329b0xoSLfCsVI/AK8VUmml4X94q4
+         hWGLshjAIXhJoUjy2Qx27/oA/UMhD65ZeMdpNGMP0/jcJlcJ6jmwxsi3HVuehgZR2Vhn
+         XdtkOno+s+zWGURfM7KjupNP4wfRs1QlI5S37UqBEI7MNyjuN2fsvge/H3SMasBvedOF
+         FGSrrsbD8rr9gEu8T7LNDpSNJg7twz0PCyAToycoDLOaUAe64LWc2udY7TWQnepvE2Bj
+         4OOg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1704983457; x=1705588257;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=0GXqINs0a6lZWYxfctjRoUnBJCktVQXQIz0ah9jwfFM=;
+        b=MZo1kWzJB87K4uPuaosPMKmhrgXL9J4VJlfEXujip920qZSNVgNs6HLB6ZpCa9U1yr
+         YOdiBFplM64gpcPPN8Y+GBA1OsDoHYlzigeTMxnQ7V++lCFYfHl54ndBRH8Wu5DArAcg
+         eXHmTsvHVIM1seE9hWW4IWdxf98aWYEcWRIqZnwT/J0ujL+48afaOfJFxXNSLSwBifnp
+         xjQaeCjhXqAwuWlrQ5Wpf59TSf46PN803nWEgyt+fPcctAcoFiYcj9v7CoWwvJZqkZyq
+         utOFYX19UCe5CYJ9hx/KONJY85aOnEutt9ikhw1WeuizmxVXioifAD2sRDy8rT8wOi8Q
+         vx+g==
+X-Gm-Message-State: AOJu0YytfYQEMw8tQ+XIgfQzvQk7KhlOzjQVqLFZPZr65JfjIE28s0Ud
+	Uos3IimNrK1Hm5ThrZN9fmy+LtHlHgh7A5QBqdZkRcIOLQE=
+X-Google-Smtp-Source: AGHT+IF3PtLmRs4r535dI58WdeoYk9xZeHh65SWWhTjBpeF6keMBzrxZPy3XbqqG5pOmhpQ3qI8kpg==
+X-Received: by 2002:a05:600c:378d:b0:40e:4907:d317 with SMTP id o13-20020a05600c378d00b0040e4907d317mr271597wmr.275.1704983457220;
+        Thu, 11 Jan 2024 06:30:57 -0800 (PST)
+Received: from localhost ([102.140.209.237])
+        by smtp.gmail.com with ESMTPSA id hn33-20020a05600ca3a100b0040e621feca9sm1107764wmb.17.2024.01.11.06.30.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 06:30:56 -0800 (PST)
+Date: Thu, 11 Jan 2024 17:30:53 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: JJLIU0@nuvoton.com
+Cc: linux-gpio@vger.kernel.org
+Subject: [bug report] gpio: nuvoton: Add Nuvoton NPCM sgpio driver
+Message-ID: <128a831f-6800-48e4-862a-d76b4dd0bb56@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Am Donnerstag, 11. Januar 2024, 14:19:04 CET schrieb Hector Palacios:
-> According to NXP HRM for i.MX93, the following GPIO pins are available:
-> - GPIO1: 16 pins (0..15)
-> - GPIO2: 30 pins (0..29)
-> - GPIO3: 32 pins (0..31)
-> - GPIO4: 30 pins (0..29)
->=20
-> Signed-off-by: Hector Palacios <hector.palacios@digi.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx93.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/freescale/imx93.dtsi
-> b/arch/arm64/boot/dts/freescale/imx93.dtsi index 34c0540276d1..7eb2cab7c7=
-49
-> 100644
-> --- a/arch/arm64/boot/dts/freescale/imx93.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx93.dtsi
-> @@ -970,6 +970,7 @@ gpio2: gpio@43810000 {
->  				 <&clk IMX93_CLK_GPIO2_GATE>;
->  			clock-names =3D "gpio", "port";
->  			gpio-ranges =3D <&iomuxc 0 4 30>;
-> +			ngpios =3D <30>;
->  		};
->=20
->  		gpio3: gpio@43820000 {
-> @@ -986,6 +987,7 @@ gpio3: gpio@43820000 {
->  			clock-names =3D "gpio", "port";
->  			gpio-ranges =3D <&iomuxc 0 84 8>, <&iomuxc 8 66=20
-18>,
->  				      <&iomuxc 26 34 2>, <&iomuxc 28 0=20
-4>;
-> +			ngpios =3D <32>;
->  		};
->=20
->  		gpio4: gpio@43830000 {
-> @@ -1001,6 +1003,7 @@ gpio4: gpio@43830000 {
->  				 <&clk IMX93_CLK_GPIO4_GATE>;
->  			clock-names =3D "gpio", "port";
->  			gpio-ranges =3D <&iomuxc 0 38 28>, <&iomuxc 28 36=20
-2>;
-> +			ngpios =3D <30>;
->  		};
->=20
->  		gpio1: gpio@47400000 {
-> @@ -1016,6 +1019,7 @@ gpio1: gpio@47400000 {
->  				 <&clk IMX93_CLK_GPIO1_GATE>;
->  			clock-names =3D "gpio", "port";
->  			gpio-ranges =3D <&iomuxc 0 92 16>;
-> +			ngpios =3D <16>;
->  		};
->=20
->  		ocotp: efuse@47510000 {
+Hello Jim Liu,
 
-This leads to warnings upon dtbs_check, e.g.
-arch/arm64/boot/dts/freescale/imx93-tqma9352-mba93xxla.dtb: gpio@43810000:=
-=20
-'ngpios' does not match any of the regexes: '^.+-hog(-[0-9]+)?$', 'pinctrl-
-[0-9]+'
-  from schema $id: http://devicetree.org/schemas/gpio/gpio-vf610.yaml#
+The patch c4f8457d17ce: "gpio: nuvoton: Add Nuvoton NPCM sgpio
+driver" from Dec 29, 2023 (linux-next), leads to the following
+(unpublishable) Smatch static checker warning:
 
-Please address this as well.
+	drivers/gpio/gpio-npcm-sgpio.c:295 npcm_sgpio_setup_clk()
+	warn: why is zero skipped 'i'
 
-Best regards,
-Alexander
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
+drivers/gpio/gpio-npcm-sgpio.c
+    283 static int npcm_sgpio_setup_clk(struct npcm_sgpio *gpio,
+    284                                 const struct npcm_clk_cfg *clk_cfg)
+    285 {
+    286         unsigned long apb_freq;
+    287         u32 val;
+    288         u8 tmp;
+    289         int i;
+    290 
+    291         apb_freq = clk_get_rate(gpio->pclk);
+    292         tmp = ioread8(gpio->base + NPCM_IOXCFG1) & ~NPCM_IOXCFG1_SFT_CLK;
+    293 
+    294         for (i = clk_cfg->cfg_opt-1; i > 0; i--) {
+                                             ^^^^^
+I believe that this should be >= 0 otherwise it seems like ->sft_clk[0]
+(which is 1024) would never be used anywhere.
 
+--> 295                 val = apb_freq / clk_cfg->sft_clk[i];
+    296                 if (NPCM_CLK_MHZ > val) {
+    297                         iowrite8(clk_cfg->clk_sel[i] | tmp,
+    298                                  gpio->base + NPCM_IOXCFG1);
+    299                         return 0;
+    300                 }
+    301         }
+    302 
+    303         return -EINVAL;
+    304 }
 
+regards,
+dan carpenter
 
