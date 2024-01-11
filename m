@@ -1,174 +1,100 @@
-Return-Path: <linux-gpio+bounces-2128-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2129-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 731B682A3BB
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jan 2024 23:00:54 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA99382A714
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 05:52:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B8CE2289C85
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Jan 2024 22:00:52 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E97951C23264
+	for <lists+linux-gpio@lfdr.de>; Thu, 11 Jan 2024 04:52:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AE4A4F5FB;
-	Wed, 10 Jan 2024 22:00:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDDE11879;
+	Thu, 11 Jan 2024 04:51:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="g2ebZWsb"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="TV4VhHxG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F042AE69;
-	Wed, 10 Jan 2024 22:00:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-783195e57c7so306591685a.2;
-        Wed, 10 Jan 2024 14:00:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1704924045; x=1705528845; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NQNHWwGHv1BR7NcjbT1UUV9pjYFn1oFVtE7FaHO24PU=;
-        b=g2ebZWsb5MOmslfKDHZ8/etQvSQAmXZvjLt3xeWhBQBP3DQMFJEUp8uyFnaU7OR2+R
-         FpbyZTCshmWR/YSp7hZyGPoGQaY2R2LJ5fQaEolgLLyMLejIsXqJ853OIEH7wttX4veW
-         GpKJ19zmJmg4O9A4SRxzhr7MGFkGh3pumFYteBgK54I6pxV6vT8P2STnU/BY9Mn48OsG
-         iqcpUefOOUE9TiqNuxcvwFXtUqX1QDjcskbnTs4myIPY8VCFDI/r7sTiCsahl6pTjNx2
-         PYGgecEIPXPEOFPyBz0gqTYw7tzlBKcFssTKP5G/D8lyBZlq/DI2gFbuYEbXu3Q9kOSr
-         BtGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1704924045; x=1705528845;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:feedback-id:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=NQNHWwGHv1BR7NcjbT1UUV9pjYFn1oFVtE7FaHO24PU=;
-        b=hFcCXo+UbwZszWLaPjord6n5X6jKNcYGXSbpQjZmNsK/XxbmDrVQzxpso7s2WBaE0w
-         nEcph2+nsCFK1vy3gSf4PZH5ZTyYcGOuIKM6lNwG78FQSgmEXSuzfj0AQcyL9XZ5/OM0
-         LaQTHeHaXQMcZVewxbsfGD3ebPohZsD+jcrivp9C1U9otKb4/uWREHJgcGLNs4toFUYd
-         FLLyupLhVpNZqNJLzug0IrV1RqmJEF9Rn0KuOY0PG83P4MDlSiOWjPTfsctHeyKxV8U8
-         /FjaiDDmUwEebDG44tTSxRRFuiPh2QJtZROusHgS1WRP4dHEPF5gMSTgaAx4gIH5lPfL
-         jFpQ==
-X-Gm-Message-State: AOJu0YwAwZSBAylYAjXBQE8kg8whsKsV3A4AnSJwyFq0G0cZ6aqJ/XTe
-	KM6lXgQtsC9IGYD2cICcTQA=
-X-Google-Smtp-Source: AGHT+IFUIrL1dAXi6ergGzOc7fEKoRe5k/hU2s+fGJog242xj+MFcIOC1U5/LPvVXeVBLEUVsF93hw==
-X-Received: by 2002:a05:6214:d65:b0:67a:a721:9e91 with SMTP id 5-20020a0562140d6500b0067aa7219e91mr134706qvs.66.1704924045288;
-        Wed, 10 Jan 2024 14:00:45 -0800 (PST)
-Received: from auth1-smtp.messagingengine.com (auth1-smtp.messagingengine.com. [66.111.4.227])
-        by smtp.gmail.com with ESMTPSA id j17-20020a0cf9d1000000b0067f678747ffsm2003463qvo.50.2024.01.10.14.00.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Jan 2024 14:00:44 -0800 (PST)
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.47])
-	by mailauth.nyi.internal (Postfix) with ESMTP id 1FCB127C005A;
-	Wed, 10 Jan 2024 17:00:44 -0500 (EST)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute6.internal (MEProxy); Wed, 10 Jan 2024 17:00:44 -0500
-X-ME-Sender: <xms:ixOfZbFtzQwDIEckOFRARRJ8970Q4bmPHJi4yPcafuxDYtLE9d_GPQ>
-    <xme:ixOfZYXWJuk4lAbzb5U2GwNnTev9TABAgyhUcNrRz9TEWvfbtIN-VY0xlj8-DPIri
-    aNVjuGmqSt-5N13sw>
-X-ME-Received: <xmr:ixOfZdIsQTrHOjU70r7dWXM7I0zVYKPrbPJxOqki3isHYB61z6EF-YL8vIA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvkedrvdeiuddgudehfecutefuodetggdotefrod
-    ftvfcurfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfgh
-    necuuegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmd
-    enucfjughrpeffhffvvefukfhfgggtuggjsehttdertddttddvnecuhfhrohhmpeeuohhq
-    uhhnucfhvghnghcuoegsohhquhhnrdhfvghnghesghhmrghilhdrtghomheqnecuggftrf
-    grthhtvghrnhephedugfduffffteeutddvheeuveelvdfhleelieevtdeguefhgeeuveei
-    udffiedvnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomh
-    epsghoqhhunhdomhgvshhmthhprghuthhhphgvrhhsohhnrghlihhthidqieelvdeghedt
-    ieegqddujeejkeehheehvddqsghoqhhunhdrfhgvnhhgpeepghhmrghilhdrtghomhesfh
-    higihmvgdrnhgrmhgv
-X-ME-Proxy: <xmx:ixOfZZEtgA4Z3ftWYEgfyaM_oBY2vXXbxtr-R9guGXK2eUJHebO-Yw>
-    <xmx:ixOfZRVxc1EWC0TvcEZ8RER8T0WzMx1R7a-XT1ue47O1jKYLvHdGvQ>
-    <xmx:ixOfZUOgAlzPludOxHkF9NCwxaDVe2dg2zjW2NRWZpX0wy-JT223IQ>
-    <xmx:jBOfZdrtvJNow290I62PRbxVtVxfpTvcsqZd9puD6NFJYfvc43CwMw>
-Feedback-ID: iad51458e:Fastmail
-Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
- 10 Jan 2024 17:00:42 -0500 (EST)
-Date: Wed, 10 Jan 2024 14:00:41 -0800
-From: Boqun Feng <boqun.feng@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Ingo Molnar <mingo@redhat.com>, Will Deacon <will@kernel.org>,
-	Waiman Long <longman@redhat.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 1/3] cleanup: provide DEFINE_LOCK_GUARD_ARGS()
-Message-ID: <ZZ8TiS9S6aRmtjna@boqun-archlinux>
-References: <20240110203215.36396-1-brgl@bgdev.pl>
- <20240110203215.36396-2-brgl@bgdev.pl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0B01856;
+	Thu, 11 Jan 2024 04:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=lAETidl+Wl8rX9fUWkjIkcQ01vBdcd3CEgjPvhm/LgI=; b=TV4VhHxGOOo0zwqPwqq0JsbLD7
+	WqpNTK3xwMcGySVFSzPbh08e4Glb5NWvfIUtm5BaNQpt7ynoAKLSzEfScTFav4HT1UHJaYNniZ7Qm
+	T90qIYbducqvA2Ppo8djHjIXxN72mhZi4wTJws9kRfPNCrSZ8oO4wD1GEzBjDLhw2IpgTcj5YU0JR
+	VFAOV71WoBjNdsIiZZ1oWWi4e3PgnlsmwqZ1ffbpPbjOtXpZTqiN8+hGrCgbP9dwUbb8FK3XNczXD
+	PFkwdQctCsaotAMRFcfVT+9k2XyHQT3wibAzazFuVQKfqVN6dwEG/BRud+jx2eNvjmaYlbUBgn1xP
+	MEnyiZfA==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rNn2N-00FrCJ-15;
+	Thu, 11 Jan 2024 04:51:27 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	kernel test robot <lkp@intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	Sean Wang <sean.wang@kernel.org>,
+	Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	linux-mediatek@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] pinctrl: mt7986: excise kernel-doc warnings
+Date: Wed, 10 Jan 2024 20:51:26 -0800
+Message-ID: <20240111045126.13768-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240110203215.36396-2-brgl@bgdev.pl>
+Content-Transfer-Encoding: 8bit
 
-On Wed, Jan 10, 2024 at 09:32:13PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> This macro allows defining lock guard with additional arguments that
-> can be passed to the locking function. This is useful for implementing
-> guards for nested locking.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  include/linux/cleanup.h | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-> index c2d09bc4f976..921db45023bb 100644
-> --- a/include/linux/cleanup.h
-> +++ b/include/linux/cleanup.h
-> @@ -246,5 +246,11 @@ __DEFINE_LOCK_GUARD_0(_name, _lock)
->  	static inline void * class_##_name##_ext##_lock_ptr(class_##_name##_t *_T) \
->  	{ return class_##_name##_lock_ptr(_T); }
->  
-> +/*
-> + * Helper for implementing guard locks with additional arguments passed to
-> + * the locking function.
-> + */
-> +#define DEFINE_LOCK_GUARD_ARGS(_name, _type, _lock, _unlock, _args...)	\
-> +DEFINE_CLASS(_name, _type, _unlock, ({ _lock; _T; }), _type _T, _args)
->  
+Fix kernel-doc warnings for enum (anonymous): the enum values are not
+documented, so don't indicate that the comment contains kernel-doc
+notation.
 
-First I think the name should really be DEFINE_GUARD_ARGS(), these
-DEFINE_LOCK_GUARD_*() functions have different meaning. Also this should
-really be a more generic case than DEFINE_GUARD(), so how about the
-following:
+pinctrl-mt7986.c:68: warning: Enum value 'GPIO_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_RT_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_RB_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_LT_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_LB_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_TR_BASE' not described in enum '(anonymous)'
+pinctrl-mt7986.c:68: warning: Enum value 'IOCFG_TL_BASE' not described in enum '(anonymous)'
 
-diff --git a/include/linux/cleanup.h b/include/linux/cleanup.h
-index c2d09bc4f976..4fcdcb478fd1 100644
---- a/include/linux/cleanup.h
-+++ b/include/linux/cleanup.h
-@@ -148,11 +148,14 @@ static inline class_##_name##_t class_##_name##ext##_constructor(_init_args) \
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202312110210.x3vxq42A-lkp@intel.com/
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Cc: Sean Wang <sean.wang@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-mediatek@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/pinctrl/mediatek/pinctrl-mt7986.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff -- a/drivers/pinctrl/mediatek/pinctrl-mt7986.c b/drivers/pinctrl/mediatek/pinctrl-mt7986.c
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7986.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7986.c
+@@ -16,7 +16,7 @@
+ 		PIN_FIELD_CALC(_s_pin, _e_pin, _i_base, _s_addr, _x_addrs, _s_bit,	\
+ 			_x_bits, 32, 0)
+ 
+-/**
++/*
+  * enum - Locking variants of the iocfg bases
   *
-  */
- 
--#define DEFINE_GUARD(_name, _type, _lock, _unlock) \
--	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T); \
-+#define DEFINE_GUARD_ARGS(_name, _type, _lock, _unlock, _args...) \
-+	DEFINE_CLASS(_name, _type, if (_T) { _unlock; }, ({ _lock; _T; }), _type _T, ##_args) \
- 	static inline void * class_##_name##_lock_ptr(class_##_name##_t *_T) \
- 	{ return *_T; }
- 
-+#define DEFINE_GUARD(_name, _type, _lock, _unlock) \
-+	DEFINE_GUARD_ARGS(_name, _type, _lock, _unlock)
-+
- #define DEFINE_GUARD_COND(_name, _ext, _condlock) \
- 	EXTEND_CLASS(_name, _ext, \
- 		     ({ void *_t = _T; if (_T && !(_condlock)) _t = NULL; _t; }), \
-
-Thoughts?
-
-Regards,
-Boqun
-
-
->  #endif /* __LINUX_GUARDS_H */
-> -- 
-> 2.40.1
-> 
+  * MT7986 have multiple bases to program pin configuration listed as the below:
 
