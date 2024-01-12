@@ -1,191 +1,139 @@
-Return-Path: <linux-gpio+bounces-2156-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2157-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8617982BF33
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 12:27:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 507A182BF3F
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 12:33:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3575286169
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 11:27:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 673A11C23BD7
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 11:33:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0B9867E7A;
-	Fri, 12 Jan 2024 11:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E841967E88;
+	Fri, 12 Jan 2024 11:33:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YLROhBCw"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SXeTaMxU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DF6067E6D
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 11:27:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4b7e4a2808bso1946837e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 03:27:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705058826; x=1705663626; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=B0F+A7h0uJ2fddBkICIfKmPm3OFo9A/LDua65bRfYzM=;
-        b=YLROhBCwkMqD4XKNtYLWNfi+3FSYuCTt74ByeqMgsz54B7Rj6Qhg8nIXYI63/mUvXB
-         JQ7f+l9nTqDXlpiG+7QaN/SUyq0cu6YcizkJlFIvWvQ2xBukl7ev0wePoJwUR3uAP0gp
-         23uNw2aq0e2pa54cO24MV/tL4aRcgdf1o5Dnq78wIuCEKpKqCRQge3GitOTOtgKCSVwI
-         XpCa34IaNvrqeILfuhQzpgaSLJTkiuLhkPiLYSPJ+WXMzoYOrNDCbvYXVM6UrtJzFNYr
-         F52J9kW+h4qfdpNDcp0LAK4pwwAr1+jA8a59nTl0TcvjLI16QQy0mCyf+bOm0/dgbTuB
-         H57g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705058826; x=1705663626;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=B0F+A7h0uJ2fddBkICIfKmPm3OFo9A/LDua65bRfYzM=;
-        b=iWZEqqV4rCIdfxiBPHcFjg6smuOM/VYcfn7ZWkL5VXY3CRrGwJGEVPM+G72o+Qmge9
-         B567hkV2w86QL5KwKeUWCPViXN7GNmhLYNDmIaHCYwiBaxqhIArs8+X7fhqXBHwTY8D9
-         yAJaraBS69id8dbgpY3NdIH3QmFTHJUR6qEGppuIxdJEvbjO+l3+rptvBAstu/zR3bE7
-         hxF9VxjoV8PPTA+uS51bsDENJ8s82peIoqQT7bc4nLyEKxEfwcOzujVhZzCtVG73zITa
-         qeGZ9Bqgn9/nrTX9im8ac6ey+CjgKnK1KCyajgmOCeLykr3dA/0A2UzmNrFVX7cBSRuz
-         gtFA==
-X-Gm-Message-State: AOJu0Yy5XkwEihSGo3FJ1AJZYhZJhUAUlzYF2MwTwUNuoFngTdeV5LNU
-	bmdg4amS7xV4eoylNlsy77/Ccho+rxRuwejfD1/0xyAD2sn9Gg==
-X-Google-Smtp-Source: AGHT+IFR7RtqUB/axiNj4YE8ZR0L7E3GoGsvUXlQJoxQucYWlxiukCK9KlJxoAGRlZO7vcBP1ULJ4gSsV4dzShS3mCw=
-X-Received: by 2002:a05:6122:1b0c:b0:4b6:ce08:cc76 with SMTP id
- er12-20020a0561221b0c00b004b6ce08cc76mr980082vkb.9.1705058826283; Fri, 12 Jan
- 2024 03:27:06 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E576D67E6D;
+	Fri, 12 Jan 2024 11:33:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rh3V5rVpVYyJoeE5KyLaPGKi+Aixv5BFq27pgZVf5UoDYPpiNjqMv8v1I1oKr6uYlqmo5Wq8ZrvAC8Vkz8Soof6XAWS9G36UvYNYEa+54iLKso6voRhJsLDr7INYTbx+eXUbb3QUXh4PqPLplZvQWIEVY8YcAI3csmPt7dyIshUDLUFgL/FDnEH4H3MJ6ZhnlRzSbjk1dUf+6Wic4brqq6+HRQVT4136uM6+VRqCH/eepDn1lfdVAH96jSW2GXiBHR356u2HUpd8AxXP1lh3U8TwR+EKyVM+f+aiqPNrPg/3ULCVFxTxzwTJHj+CQo16D+Cn28D+Rt9JFIsdOl8Akw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=i1eUKRQCJ8aMVcYJCY5+/LdtSabYaaCrSeYlLnwQZWI=;
+ b=VIg8x/2nKlNXi2iA55cbTBfUgNoa0ktxFtXDMcTWIFiU6gb+xHaGouLy6/KtrqL+ar9W45jp2luZD9H/BrlJFZ2TpwapNRnUdtksbQ8W7zlvaPT0Fo9EzMpDcmFnSnLEP6y17in15xcyZVEeYF9mCGE/sC5b8RLpnO3+7X15T6PeMeMqzUUNjaCILtO95PqM4YN1R+8+CSlzzGmmN+huJiOSztNpnl/bMm2Y0hXXPaIGnEhtUo97+EZ1dpdoRcPzW8JFd+6oFz1+mYCeFPjhdrLttn5DpA8udBs7E7q4SdBXJMVotOLAQvE/WgXU01TaEcWY9B5YJwbNhr8JcuLE+Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
+ dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
+ header.from=amd.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=i1eUKRQCJ8aMVcYJCY5+/LdtSabYaaCrSeYlLnwQZWI=;
+ b=SXeTaMxUxNr6Si6+2b1stHla9Zuf1XAqr4ArXsKv1LAmaC1d2+0PBIZm7SbmIVxzI2qUtl3AmEA1892ssEkvxidXHXEhTJxsRxCPI95xorp6StSeDYdwFo05P1IpDq6dYgLgQrYYaU1ucZ7a+Wn4rgvMa4EhyFAFsFlSyA2cpQU=
+Received: from MW4PR03CA0257.namprd03.prod.outlook.com (2603:10b6:303:b4::22)
+ by CH3PR12MB7523.namprd12.prod.outlook.com (2603:10b6:610:148::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19; Fri, 12 Jan
+ 2024 11:33:14 +0000
+Received: from CO1PEPF000044F2.namprd05.prod.outlook.com
+ (2603:10b6:303:b4:cafe::2d) by MW4PR03CA0257.outlook.office365.com
+ (2603:10b6:303:b4::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21 via Frontend
+ Transport; Fri, 12 Jan 2024 11:33:14 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CO1PEPF000044F2.mail.protection.outlook.com (10.167.241.72) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Fri, 12 Jan 2024 11:33:14 +0000
+Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 12 Jan
+ 2024 05:33:00 -0600
+From: Michal Simek <michal.simek@amd.com>
+To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
+	<michal.simek@xilinx.com>, <git@xilinx.com>
+CC: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "Shubhrajyoti
+ Datta" <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>,
+	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
+	<linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM"
+	<linux-gpio@vger.kernel.org>
+Subject: [PATCH] dt-bindings: gpio: xilinx: Fix node address in gpio
+Date: Fri, 12 Jan 2024 12:32:58 +0100
+Message-ID: <168de7084faeee0113cc7b93800cc24c49f308c7.1705059172.git.michal.simek@amd.com>
+X-Mailer: git-send-email 2.36.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <PH0PR06MB833416FBBC8543802D72FA4D86682@PH0PR06MB8334.namprd06.prod.outlook.com>
- <20240112003558.GA3310@rigel>
-In-Reply-To: <20240112003558.GA3310@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 12 Jan 2024 12:26:55 +0100
-Message-ID: <CAMRc=MfeZTynTrdQdMqqvsMYsNo5yHgo+LzuRdqYpg-oZC+f6A@mail.gmail.com>
-Subject: Re: Assign line names at runtime
-To: Kent Gibson <warthog618@gmail.com>
-Cc: "Westermann, Oliver" <Oliver.Westermann@cognex.com>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Developer-Signature: v=1; a=openpgp-sha256; l=949; i=michal.simek@amd.com; h=from:subject:message-id; bh=iyf6+DnWqsXr2UFfesndSqIWENe/7JBlcZEPsr99N+E=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtSFyql79pgFVkgvaWWYrnCk/PoKh85rl6xY0jnTnkwU2 M91R6alI5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAEzk832G+Xn2wowfr+u1hl53 ssyOfp4Xum9LOMMcDl/dS57XerecdUp99ufglXy96B/vAA==
+X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CO1PEPF000044F2:EE_|CH3PR12MB7523:EE_
+X-MS-Office365-Filtering-Correlation-Id: a137b819-1ea7-4fad-b8c8-08dc136243a1
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	1qOQW9C1a24TSLxJ8zwJQubvCGivk3MVLYwRwVdQaRByu7m32z8YjdqCvJB6ZLlW0E8YaC7ssAb7GqkpHKmes4USlD1gxDYItIJlSQtw94gFgCLluQUU9TPDYoJGJZy6fe6+4sSM8z4P3UCkOn7TpNOK3zFv5emDnD4s7MHScQ/0+gFgAz7XCkeyvTBG370fiF18GzYBhRXoXyN5BQcKS70AXSOYlw/F3QqWcEhh/NsS2BNJBHDTcs1bYqNpmXv/oNqZK/vur30hnzWdjj5hOMXFVhl/uYZAcddLnu8bigg4AcKCj7LUWrRr+NHOp72z/NPQo3VE7DNyosf/1IeVhAUnemXkmARhvNIhl0njvAjD5iXYS4jikl9JWD5WPbNivbpi24Onv38MnZQPFshvFF5tAW66i3HfBGgC7NihdLmxap2Gx8KWEHv0NQNPUpqu1QLdhvsVdga9mwLyrdqcf2Tr3bU/KXFZHV3YcoHd7XclT+KSo/B13upsreuhyMSiorXimszHl+CMt8hfte1rjecFBbhw0JZegUajvZQ0uQUHpl7xa3BUr9aROUKI53Pjtz7LmJrAk0Wvab7pqG2hpc+veEmaitm9WS1uJ6Bb8RpfCxulKex+RSwVFEU9JMlXf4n1rAnxggxJrL5gfexBh1gnIxudCyoLujA2u0X3GgU9Qy/J7+OkIgxsaMPAaSNqBm31L5/jyeuP7kOQKFkFgswF6ScIuNkK5D84AIEhi6EqQXjfK22Qcm/xSoiBdwOVV/sIYedEjbnfGsCneKV5p47J5IEGqCTGxuNZ1AX60Bg=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(396003)(346002)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(82310400011)(186009)(36840700001)(46966006)(40470700004)(40460700003)(40480700001)(26005)(82740400003)(356005)(81166007)(36756003)(36860700001)(86362001)(16526019)(336012)(426003)(4326008)(5660300002)(478600001)(47076005)(83380400001)(8936002)(44832011)(8676002)(2616005)(41300700001)(316002)(2906002)(110136005)(4744005)(54906003)(70206006)(70586007)(7416002)(36900700001)(2101003);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 11:33:14.0756
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: a137b819-1ea7-4fad-b8c8-08dc136243a1
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CO1PEPF000044F2.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7523
 
-On Fri, Jan 12, 2024 at 1:36=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> On Thu, Jan 11, 2024 at 04:52:24PM +0000, Westermann, Oliver wrote:
-> > Hey and thanks for your responses, those are actually quite insightful.
-> >
-> > What I read from that is that changing line names really has a lot of
-> > implications.
-> >
->
-> After sleeping on it, I don't think line renaming is actually such a big =
-issue.
->
-> Firstly, hot plugging means the line namespace is never going to be
-> static, even if I was tacitly assuming it was.  Turns out I don't think
-> that matters as much as I thought anyway.  We just need to make sure the
-> user is aware of it as well.
->
-> The analogy I would use is files in a filesystem, where the chip
-> corresponds to a directory and the line a file.  We aren't terribly
-> concerned that a file may be renamed while we do a find, or while
-> opening or using a file, so it should be the same for a line.
->
-> We rename a file through the directory, so it makes sense to rename the
-> line through the chip, and not require the line to be requested.
-> So we would add a new ioctl on the chip to perform the rename.
-> Could make that more general in case we ever add something else to line
-> info that isn't controlled by requesting the line, but I'm note sure the
-> additional complexity would be worth it, given how unlikely that is.
-> But I digress...
->
-> We don't inform a user with an open file that it may have been renamed
-> while open, so neither would we with the line. If it is an issue for you
-> then you can add a watch on the line info, similar to using inotify
-> on the filesystem.
->
-> The point the analogy breaks down a bit is that we allow duplicate names,
-> (I don't think anyone really wants that feature, but historically it has
-> been allowed so we're stuck with it.) but I don't think that is of any
-> consequence to this discussion.
->
+Node address doesn't match reg property which is not correct.
 
-This analogy is great and all but there's one issue with it - we're
-not dealing with a filesystem that everyone can modify. We have more
-or less agreed so far that we allow multiple readers of GPIO
-information but whenever there's any setting done, one needs to
-request the line for exclusive usage. Now we'd break that logic by
-allowing all users to arbitrarily rename GPIO lines and I don't like
-this.
+Fixes: ba96b2e7974b ("dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi gpio binding to YAML")
+Signed-off-by: Michal Simek <michal.simek@amd.com>
+---
 
-> If we did want to provide a consistent view of the line namespace, that
-> might be something the GPIO daemon provides. (conveniently handballing
-> the problem to Bart ;-)
->
-> > Kent Gibson wrote:
-> > > Alternatively, are named lines the right solution to your problem?
-> > > Is it important to you that the lines are correctly named, or are you
-> > > just using the name for the chip/offset lookup?
-> >
-> > We would really like to use named lines as they are really convinient, =
-but
-> > your question actually made me rethink my initial question. We do actua=
-lly
-> > not want to change line names, they are constant throughout the runtime=
- of
-> > a device.
-> >
-> > > If the latter perhaps roll your own pinout lookup based on the platfo=
-rm configuration?
-> >
-> > The truth might lay in between: We would prefer to use existing feature=
-s and
-> > standard interfaces instead of rolling out our own layer. But maybe it'=
-s
-> > just the initial naming that we want to move. A better solution might b=
-e to
-> > add another option to define and probe the GPIO driver at runtime: Inst=
-ead
-> > of being required to set all information in the dtb (and therefore from=
- a
-> > very low level), we might trigger the probing through modprobe and prov=
-ide
-> > the GPIO line names from userspace. I'm not sure if such an option exis=
-ts
-> > currently?
-> >
->
-> That sounds like the job of the udev rules that Bart suggested - once we =
-have
-> the ability to rename lines from userspace.
->
+ Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-It would make sense if we could get a udev event about the device
-being created, pass device properties - in this case gpio-line-names -
-to the kernel for this device and then get it bound to the driver. I
-don't think it's possible but I need to look deeper.
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+index c1060e5fcef3..d3d8a2e143ed 100644
+--- a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
++++ b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
+@@ -126,7 +126,7 @@ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+-        gpio@e000a000 {
++        gpio@a0020000 {
+             compatible = "xlnx,xps-gpio-1.00.a";
+             reg = <0xa0020000 0x10000>;
+             #gpio-cells = <2>;
+-- 
+2.36.1
 
-Bartosz
-
-> > Best regards and sorry for the quoting style, our mailservers mess with=
- your
-> > mails.
-> >
->
-> No problem with your quoting style - that looks fine to me - it was the l=
-ack
-> of line wrapping that was the issue. And your response isn't tied into
-> the email thread either, which is a bit unfortunate.
->
-> Oh, and it would be handy to prefix libgpiod specific questions with
-> [libgpiod], though in this case it has rapidly moved into kernel space
-> anyway, so no biggy - just for future reference.
->
-> Cheers,
-> Kent.
 
