@@ -1,139 +1,145 @@
-Return-Path: <linux-gpio+bounces-2157-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2158-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 507A182BF3F
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 12:33:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24EC782BF8E
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 13:03:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 673A11C23BD7
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 11:33:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A87D31F233E8
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 12:03:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E841967E88;
-	Fri, 12 Jan 2024 11:33:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46E576A02F;
+	Fri, 12 Jan 2024 12:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="SXeTaMxU"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ln8FEqWg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2060.outbound.protection.outlook.com [40.107.102.60])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E576D67E6D;
-	Fri, 12 Jan 2024 11:33:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Rh3V5rVpVYyJoeE5KyLaPGKi+Aixv5BFq27pgZVf5UoDYPpiNjqMv8v1I1oKr6uYlqmo5Wq8ZrvAC8Vkz8Soof6XAWS9G36UvYNYEa+54iLKso6voRhJsLDr7INYTbx+eXUbb3QUXh4PqPLplZvQWIEVY8YcAI3csmPt7dyIshUDLUFgL/FDnEH4H3MJ6ZhnlRzSbjk1dUf+6Wic4brqq6+HRQVT4136uM6+VRqCH/eepDn1lfdVAH96jSW2GXiBHR356u2HUpd8AxXP1lh3U8TwR+EKyVM+f+aiqPNrPg/3ULCVFxTxzwTJHj+CQo16D+Cn28D+Rt9JFIsdOl8Akw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=i1eUKRQCJ8aMVcYJCY5+/LdtSabYaaCrSeYlLnwQZWI=;
- b=VIg8x/2nKlNXi2iA55cbTBfUgNoa0ktxFtXDMcTWIFiU6gb+xHaGouLy6/KtrqL+ar9W45jp2luZD9H/BrlJFZ2TpwapNRnUdtksbQ8W7zlvaPT0Fo9EzMpDcmFnSnLEP6y17in15xcyZVEeYF9mCGE/sC5b8RLpnO3+7X15T6PeMeMqzUUNjaCILtO95PqM4YN1R+8+CSlzzGmmN+huJiOSztNpnl/bMm2Y0hXXPaIGnEhtUo97+EZ1dpdoRcPzW8JFd+6oFz1+mYCeFPjhdrLttn5DpA8udBs7E7q4SdBXJMVotOLAQvE/WgXU01TaEcWY9B5YJwbNhr8JcuLE+Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 165.204.84.17) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=amd.com;
- dmarc=pass (p=quarantine sp=quarantine pct=100) action=none
- header.from=amd.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=i1eUKRQCJ8aMVcYJCY5+/LdtSabYaaCrSeYlLnwQZWI=;
- b=SXeTaMxUxNr6Si6+2b1stHla9Zuf1XAqr4ArXsKv1LAmaC1d2+0PBIZm7SbmIVxzI2qUtl3AmEA1892ssEkvxidXHXEhTJxsRxCPI95xorp6StSeDYdwFo05P1IpDq6dYgLgQrYYaU1ucZ7a+Wn4rgvMa4EhyFAFsFlSyA2cpQU=
-Received: from MW4PR03CA0257.namprd03.prod.outlook.com (2603:10b6:303:b4::22)
- by CH3PR12MB7523.namprd12.prod.outlook.com (2603:10b6:610:148::13) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.19; Fri, 12 Jan
- 2024 11:33:14 +0000
-Received: from CO1PEPF000044F2.namprd05.prod.outlook.com
- (2603:10b6:303:b4:cafe::2d) by MW4PR03CA0257.outlook.office365.com
- (2603:10b6:303:b4::22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21 via Frontend
- Transport; Fri, 12 Jan 2024 11:33:14 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=amd.com;
-Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
- 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
- client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
-Received: from SATLEXMB04.amd.com (165.204.84.17) by
- CO1PEPF000044F2.mail.protection.outlook.com (10.167.241.72) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.7181.14 via Frontend Transport; Fri, 12 Jan 2024 11:33:14 +0000
-Received: from localhost (10.180.168.240) by SATLEXMB04.amd.com
- (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 12 Jan
- 2024 05:33:00 -0600
-From: Michal Simek <michal.simek@amd.com>
-To: <linux-kernel@vger.kernel.org>, <monstr@monstr.eu>,
-	<michal.simek@xilinx.com>, <git@xilinx.com>
-CC: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, "Shubhrajyoti
- Datta" <shubhrajyoti.datta@amd.com>, Srinivas Neeli <srinivas.neeli@amd.com>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-	<devicetree@vger.kernel.org>, "moderated list:ARM/ZYNQ ARCHITECTURE"
-	<linux-arm-kernel@lists.infradead.org>, "open list:GPIO SUBSYSTEM"
-	<linux-gpio@vger.kernel.org>
-Subject: [PATCH] dt-bindings: gpio: xilinx: Fix node address in gpio
-Date: Fri, 12 Jan 2024 12:32:58 +0100
-Message-ID: <168de7084faeee0113cc7b93800cc24c49f308c7.1705059172.git.michal.simek@amd.com>
-X-Mailer: git-send-email 2.36.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456F36A019
+	for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 12:03:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3368ae75082so4105143f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 04:03:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1705060982; x=1705665782; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=lG3DVTyul+Az7FwEZbzHHVPFfwGzXyT44hRv1Ky8tHc=;
+        b=ln8FEqWgpuFZmlHcrgfAiUWRxlJjdP8kCNskSRUQw3FH02HM3PiuZcloEvixZfyAV2
+         Tj2eUtJo8Ln5WG8HI59buQNO0HAHYyKOlEYzHE7Sh5++fnqrtoXWeku1B6+RxYSzudKo
+         ISJbT2uGFimEi5JrYIT0gragrOeXiCOGjHqZCpSPao72p8y5xapyuYBIOaF9JsmiccEk
+         LUcp2uTwUxs0AbVEgz4aeb240LMCgr0J+mC2eC3zS7eXBKiOg7pJJB1CLf+1bbi9plU2
+         OJj4ObuSAMqbuU8UbwUn+2jvZAyOWYCFXhxBUlbsuoWhXZe7LjnIjrxAz91WwuZxtlCo
+         BeOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705060982; x=1705665782;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=lG3DVTyul+Az7FwEZbzHHVPFfwGzXyT44hRv1Ky8tHc=;
+        b=Mg2/Ugft9rx812B9RL1d15wv/anD7hwHe4pu5rN28SwqzNki6YkSnn0/G1+KkWRBdt
+         nruxrezV0JuWgrEa92x0AIM0z5JQXbYKrW03hWcPwNNAEXRgQO7vPGGjUtjahmzz930R
+         iFq49SXSS46GGeInlgat/1FMrm+U1w8vhrucztAtFjfAZ1azBfRzo3+pTjG0DtnUXANV
+         +uaGF6r3iYxYOqmdxesEf+jPaO2BsWr2BdIw1RN+fxNkQEuK2UWskn1ajddUTzVeN1n4
+         jr3G9KwTMfNOaKiTQRnoEm6mj/KC3DmpSELw+Im3nDaChS5vohr+IlO5PeLrcqCxn48O
+         XsZw==
+X-Gm-Message-State: AOJu0YzJTlFqH6vUQNxBdu1Kr3FQ4cLyF+psjorelKgpWEML8p+bHXVd
+	KcoD90RlGqAkyVx2Jzlz9XUtWzv84Cs6ew==
+X-Google-Smtp-Source: AGHT+IG9YbqxbbXWb0aoWE1cupVqwWaDwdHGEEAV83TuLI+KpxMXFzcrWVakzMK6eepEejWrHfsMeg==
+X-Received: by 2002:a05:600c:601a:b0:40e:5afe:a449 with SMTP id az26-20020a05600c601a00b0040e5afea449mr702262wmb.107.1705060982505;
+        Fri, 12 Jan 2024 04:03:02 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.223.112])
+        by smtp.gmail.com with ESMTPSA id u17-20020a05600c19d100b0040e47dc2e8fsm5518239wmq.6.2024.01.12.04.03.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 12 Jan 2024 04:03:01 -0800 (PST)
+Message-ID: <92995b38-dbda-4d26-b47f-0b207127ea3d@linaro.org>
+Date: Fri, 12 Jan 2024 13:02:59 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=949; i=michal.simek@amd.com; h=from:subject:message-id; bh=iyf6+DnWqsXr2UFfesndSqIWENe/7JBlcZEPsr99N+E=; b=owGbwMvMwCR4yjP1tKYXjyLjabUkhtSFyql79pgFVkgvaWWYrnCk/PoKh85rl6xY0jnTnkwU2 M91R6alI5aFQZCJQVZMkUXa5sqZvZUzpghfPCwHM4eVCWQIAxenAEzk832G+Xn2wowfr+u1hl53 ssyOfp4Xum9LOMMcDl/dS57XerecdUp99ufglXy96B/vAA==
-X-Developer-Key: i=michal.simek@amd.com; a=openpgp; fpr=67350C9BF5CCEE9B5364356A377C7F21FE3D1F91
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SATLEXMB03.amd.com (10.181.40.144) To SATLEXMB04.amd.com
- (10.181.40.145)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F2:EE_|CH3PR12MB7523:EE_
-X-MS-Office365-Filtering-Correlation-Id: a137b819-1ea7-4fad-b8c8-08dc136243a1
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	1qOQW9C1a24TSLxJ8zwJQubvCGivk3MVLYwRwVdQaRByu7m32z8YjdqCvJB6ZLlW0E8YaC7ssAb7GqkpHKmes4USlD1gxDYItIJlSQtw94gFgCLluQUU9TPDYoJGJZy6fe6+4sSM8z4P3UCkOn7TpNOK3zFv5emDnD4s7MHScQ/0+gFgAz7XCkeyvTBG370fiF18GzYBhRXoXyN5BQcKS70AXSOYlw/F3QqWcEhh/NsS2BNJBHDTcs1bYqNpmXv/oNqZK/vur30hnzWdjj5hOMXFVhl/uYZAcddLnu8bigg4AcKCj7LUWrRr+NHOp72z/NPQo3VE7DNyosf/1IeVhAUnemXkmARhvNIhl0njvAjD5iXYS4jikl9JWD5WPbNivbpi24Onv38MnZQPFshvFF5tAW66i3HfBGgC7NihdLmxap2Gx8KWEHv0NQNPUpqu1QLdhvsVdga9mwLyrdqcf2Tr3bU/KXFZHV3YcoHd7XclT+KSo/B13upsreuhyMSiorXimszHl+CMt8hfte1rjecFBbhw0JZegUajvZQ0uQUHpl7xa3BUr9aROUKI53Pjtz7LmJrAk0Wvab7pqG2hpc+veEmaitm9WS1uJ6Bb8RpfCxulKex+RSwVFEU9JMlXf4n1rAnxggxJrL5gfexBh1gnIxudCyoLujA2u0X3GgU9Qy/J7+OkIgxsaMPAaSNqBm31L5/jyeuP7kOQKFkFgswF6ScIuNkK5D84AIEhi6EqQXjfK22Qcm/xSoiBdwOVV/sIYedEjbnfGsCneKV5p47J5IEGqCTGxuNZ1AX60Bg=
-X-Forefront-Antispam-Report:
-	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(136003)(396003)(346002)(39860400002)(230922051799003)(1800799012)(451199024)(64100799003)(82310400011)(186009)(36840700001)(46966006)(40470700004)(40460700003)(40480700001)(26005)(82740400003)(356005)(81166007)(36756003)(36860700001)(86362001)(16526019)(336012)(426003)(4326008)(5660300002)(478600001)(47076005)(83380400001)(8936002)(44832011)(8676002)(2616005)(41300700001)(316002)(2906002)(110136005)(4744005)(54906003)(70206006)(70586007)(7416002)(36900700001)(2101003);DIR:OUT;SFP:1101;
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 12 Jan 2024 11:33:14.0756
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a137b819-1ea7-4fad-b8c8-08dc136243a1
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F2.namprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB7523
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] dt-bindings: gpio: xilinx: Fix node address in gpio
+Content-Language: en-US
+To: Michal Simek <michal.simek@amd.com>, linux-kernel@vger.kernel.org,
+ monstr@monstr.eu, michal.simek@xilinx.com, git@xilinx.com
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Conor Dooley <conor+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+ Shubhrajyoti Datta <shubhrajyoti.datta@amd.com>,
+ Srinivas Neeli <srinivas.neeli@amd.com>,
+ "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+ <devicetree@vger.kernel.org>,
+ "moderated list:ARM/ZYNQ ARCHITECTURE"
+ <linux-arm-kernel@lists.infradead.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <168de7084faeee0113cc7b93800cc24c49f308c7.1705059172.git.michal.simek@amd.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <168de7084faeee0113cc7b93800cc24c49f308c7.1705059172.git.michal.simek@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Node address doesn't match reg property which is not correct.
+On 12/01/2024 12:32, Michal Simek wrote:
+> Node address doesn't match reg property which is not correct.
+> 
+> Fixes: ba96b2e7974b ("dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi gpio binding to YAML")
+> Signed-off-by: Michal Simek <michal.simek@amd.com>
+> ---
 
-Fixes: ba96b2e7974b ("dt-bindings: gpio: gpio-xilinx: Convert Xilinx axi gpio binding to YAML")
-Signed-off-by: Michal Simek <michal.simek@amd.com>
----
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
- Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-index c1060e5fcef3..d3d8a2e143ed 100644
---- a/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-+++ b/Documentation/devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml
-@@ -126,7 +126,7 @@ examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
--        gpio@e000a000 {
-+        gpio@a0020000 {
-             compatible = "xlnx,xps-gpio-1.00.a";
-             reg = <0xa0020000 0x10000>;
-             #gpio-cells = <2>;
--- 
-2.36.1
+Best regards,
+Krzysztof
 
 
