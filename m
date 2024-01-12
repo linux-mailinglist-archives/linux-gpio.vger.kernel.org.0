@@ -1,116 +1,128 @@
-Return-Path: <linux-gpio+bounces-2178-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2179-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B4C082C36C
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 17:18:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 302A882C434
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 18:06:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF100285243
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 16:18:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9DA651F21479
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 17:06:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4DA5745D6;
-	Fri, 12 Jan 2024 16:18:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D5A1B5A7;
+	Fri, 12 Jan 2024 17:06:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mp99k9yU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kKkRoJNr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
+Received: from mail-oa1-f53.google.com (mail-oa1-f53.google.com [209.85.160.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1793745D5
-	for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 16:18:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-555144cd330so8310956a12.2
-        for <linux-gpio@vger.kernel.org>; Fri, 12 Jan 2024 08:18:14 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1E717C78;
+	Fri, 12 Jan 2024 17:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oa1-f53.google.com with SMTP id 586e51a60fabf-20503dc09adso4122939fac.2;
+        Fri, 12 Jan 2024 09:06:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705076293; x=1705681093; darn=vger.kernel.org;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1705079175; x=1705683975; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=T2dQJfAo1/zdTqvwnOwcC/TXfubjKjKNcSjyJOh2kcI=;
-        b=mp99k9yUXScqu2kK0UuvrwXrZ+HIUs7taFtn+9XU82u3dlY/BmOlc2Df5k3gcjlAOD
-         jugrKANF0GjOz9VsVMBpRK1htVhU8uN1l0HGRrspE6CbK/DWg/dctnWA9i8Fo201RHdr
-         RM7cPSU5QvI4sY90itB46WCGer8ZcOwzvd1yjW1D8Q9KCEQKrpJGH8NHIEZVtfh/jdKZ
-         H/YCVqWt6jHJHXnSRbfu4ctYHmjB73nN83Xwlsgo0dE1ZxEIRmdNDSFisbhLnGL4+kxX
-         DILzZEHAZHdpYW2Rk+uRoCYcG2jrjOR5UTYR8rLxRoX9Fdwx4V4ax/tgqLKYfqKkwIvT
-         Sjzw==
+        bh=vxDmPbTUZ80+lOlOzGwr67WCJ4FJvPU58qXtdfRO14Y=;
+        b=kKkRoJNryBvbESNylrTjr9EYEcGkzSFvFwMduSgYT8/ESpx3kn63h+SlN16hQnecse
+         4a8YKxUguGWa+zKXK7RILw7p/+anwtaJMOxxF+I39ogqX9Cf4TC7HJiCUNmCkB1WuX9B
+         4NdJYpi3sgzClQi/3nQIAq9PTv8OF3YBOGOWvsJEmJ2yg107pAkPJQfh1wroRmr0dXRH
+         JmxJqSu7g8llUMs6B8immYJZHUDopr1Ydvh5l2xYsUulfwIKxVKt+rWRFnx5ZtGs8haO
+         svDKlmDiN0xITtz1RBH4FjERsObz6/+3U3lRdfK3JJVJVr6MzMFdAV7HzLkIYrRhTpgj
+         4mfA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705076293; x=1705681093;
-        h=in-reply-to:references:from:to:cc:subject:message-id:date
-         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=T2dQJfAo1/zdTqvwnOwcC/TXfubjKjKNcSjyJOh2kcI=;
-        b=ujuH1EnXA/nZEdul51WGsCbUiFy7A47ZrRIK7ghn7lg//0M+NzLHiTU1lriJkKRWoS
-         SPWIm5VyCEbojS2ipbSiPjI0ooOYzP7T4CU79ovj4xb2K6mWKWY8Gu4niomeybZnqdt3
-         dZkukCfzSOWPc+X6aD0J1YkIIl780p7zBtSHPYYG2JsxxBFkSv9kITE8NFo4/TiSidgQ
-         A2sbQJMoNV7hO1bRYAqJqz042YBtFsAwfvFRJQ3sfHrkcF+zFdXc5ULqM9JpJDLYbgOO
-         7ycW1wnhIb7uYM0HXsmOpKB1HcV52ZVel85jgHISmmHfMh8E8DCLMPuD05SRLcS8Sl9n
-         ldOQ==
-X-Gm-Message-State: AOJu0YwjDwGqa0BUbbp9zMDGPAQidn0EM84gjYSsguV0Gopyw/4UHODl
-	TyZlilKiJ0j+qYZxFnSsPDLMqDMR80DcSPT1lGqf1yIbHfU=
-X-Google-Smtp-Source: AGHT+IHC6pfFtOud2Azcety68CRmVVUmLUDUKFJnmQJPYhbFgRsYGvYr4O9EQMBL9spK9IzpNYDWbw==
-X-Received: by 2002:aa7:cd62:0:b0:555:204a:beb3 with SMTP id ca2-20020aa7cd62000000b00555204abeb3mr814181edb.59.1705076293096;
-        Fri, 12 Jan 2024 08:18:13 -0800 (PST)
-Received: from localhost ([2001:9e8:d586:b800::f39])
-        by smtp.gmail.com with ESMTPSA id et6-20020a056402378600b0055410f0d709sm1913753edb.19.2024.01.12.08.18.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 12 Jan 2024 08:18:12 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705079175; x=1705683975;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vxDmPbTUZ80+lOlOzGwr67WCJ4FJvPU58qXtdfRO14Y=;
+        b=nP8Wms2qhMbMpTrT3jwCTPZGiOSD55oBo8hwl3CHWeLZmoQoFcbToR8iXRPFQJKigx
+         fbcSTLXTatsDYHJtYaqJX90TI2MdSSrJdtBZqzlN1rAUYX9f/24fktqu8CAqw7ciQmoA
+         kVIBBRiy1+J76xUOVam6AX9MaS/FKqRdBe7u6svFL680FprDrg4mHUV/AOgTBUvMJ5RL
+         Ykt9wc0hOEsmfR0H+tFYP1pYlKFTtxE3rne8iBrJl2cm3LleT7JESPWksIuAVDWNQSsh
+         C2XGp1w7t/rtJvOwXQrTdQWnMPkjDT6EUzb+9QOYddX2tYhpXmmE+AcVSc56n9UrpuFj
+         00sA==
+X-Gm-Message-State: AOJu0YyhP26p9SwCbDIUi5pBUSS8KAJ920X4o1jdx7XoBsicBvlJtOfj
+	dr5n2iu7Gjz9Gse9nf0KG0d8v7kFSifQDXM7ggo=
+X-Google-Smtp-Source: AGHT+IHJs7Sb6cRG8FtEN2BTrbb3u51J7kM7B9co7sQh7KIPYGKioMWBlt7G2jC3jaUY9GU6LXslcm+q7S40rx3lBCA=
+X-Received: by 2002:a05:6871:413:b0:203:743e:ba22 with SMTP id
+ d19-20020a056871041300b00203743eba22mr1879464oag.89.1705079175449; Fri, 12
+ Jan 2024 09:06:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <20240112142621.13525-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240112142621.13525-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <TYCPR01MB112699FAB53E6E4647893516B866F2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYCPR01MB112699FAB53E6E4647893516B866F2@TYCPR01MB11269.jpnprd01.prod.outlook.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Fri, 12 Jan 2024 17:05:48 +0000
+Message-ID: <CA+V-a8smkiub9ACDsqxv0z8yF_iLVEXG2OHwS7iJ+tmsdmTQ6g@mail.gmail.com>
+Subject: Re: [PATCH v4 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missing
+ port pins P19 to P28
+To: Biju Das <biju.das.jz@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Jan 2024 17:18:12 +0100
-Message-Id: <CYCV3N24HKCG.1W9TO82K8QOPD@ablu-work>
-Subject: Re: [libgpiod][PATCH] README: add info about the github page
-Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Phil Howard"
- <phil@gadgetoid.com>, <linux-gpio@vger.kernel.org>, "Bartosz Golaszewski"
- <bartosz.golaszewski@linaro.org>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Kent Gibson"
- <warthog618@gmail.com>
-From: "Erik Schilling" <erik.schilling@linaro.org>
-X-Mailer: aerc 0.15.2
-References: <20240112150546.13891-1-brgl@bgdev.pl>
- <20240112152502.GA92656@rigel> <20240112154030.GA94712@rigel>
- <CAMRc=Mc0dLkjnOrM2QdVkOhnXccHv6hFu0WPEuL31hGLKkJpbw@mail.gmail.com>
-In-Reply-To: <CAMRc=Mc0dLkjnOrM2QdVkOhnXccHv6hFu0WPEuL31hGLKkJpbw@mail.gmail.com>
 
-On Fri Jan 12, 2024 at 5:07 PM CET, Bartosz Golaszewski wrote:
-> On Fri, Jan 12, 2024 at 4:40=E2=80=AFPM Kent Gibson <warthog618@gmail.com=
-> wrote:
-> >
-> > On Fri, Jan 12, 2024 at 11:25:02PM +0800, Kent Gibson wrote:
-> > > On Fri, Jan 12, 2024 at 04:05:46PM +0100, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > The github page over at https://github.com/brgl/libgpiod has been r=
-eopened
-> > > > for bug reports and discussions. Add a link and a mention to the RE=
-ADME
-> > > > file.
-> > > >
-> > >
-> > > No problem with the patch, but the github page itself seems to have
-> > > Issues and Discussions disabled.  And the Wiki might be useful too?
-> > >
-> >
-> > The Releases section could use updating - it lists the latest as v0.3
-> > from June 2017!
-> >
+Hi Biju,
+
+Thank you for the review.
+
+On Fri, Jan 12, 2024 at 2:31=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
+m> wrote:
 >
-> I don't want to do releases on github. The right place to fetch the
-> releases from is kernel.org[1] (I should add this link to README too)
-> and I don't want to duplicate release tarballs. I'm pretty sure people
-> would start fetching releases from github for distros etc.
+>
+> Hi Prabhakar,
+>
+> > -----Original Message-----
+> > From: Prabhakar <prabhakar.csengg@gmail.com>
+> > Sent: Friday, January 12, 2024 2:26 PM
+> > Subject: [PATCH v4 3/4] pinctrl: renesas: pinctrl-rzg2l: Add the missin=
+g
+> > port pins P19 to P28
+> >
+<snip>
+> >
+> > +/**
+> > + * struct rzg2l_variable_pin_cfg - pin data cfg
+> > + * @cfg: port pin configuration
+> > + * @port: port number
+> > + * @pin: port pin
+> > + */
+> > +struct rzg2l_variable_pin_cfg {
+> > +     u32 cfg:20;
+> > +     u8 port:5;
+>
+>  u32 ??
+This is done based on the feedback provided previously by Geert [0].
 
-You might want to delete the old tags from the github remote in that
-case. I think it might be a bit confusing to see v0.3 as "most recent"
-release otherwise.
+> > +     u8 pin:5;
+>
+>  u32 ??
+>
+ditto.
 
-- Erik
+[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/2023120113=
+1551.201503-3-prabhakar.mahadev-lad.rj@bp.renesas.com/#25625118
+
+Cheers,
+Prabhakar
 
