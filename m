@@ -1,176 +1,149 @@
-Return-Path: <linux-gpio+bounces-2145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2146-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12CAB82B8B4
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 01:44:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F41FB82B8E4
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 02:03:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6C56E1F23939
-	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 00:44:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8DF9DB23601
+	for <lists+linux-gpio@lfdr.de>; Fri, 12 Jan 2024 01:03:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08B05657;
-	Fri, 12 Jan 2024 00:44:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9CBEA51;
+	Fri, 12 Jan 2024 01:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="WPTU9Uwo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ru6YBIHM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2058.outbound.protection.outlook.com [40.107.22.58])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97350EA6;
-	Fri, 12 Jan 2024 00:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oDH+yUTvgUX/bYR1auPqZp/+fpkEasDSLPejw1419jgPQ97Rv9tOB4KyJy1Q1Xe32Q04dOj8Xgs9KNHwckISV2mGwkQzQcABR9tWNPpa0lYvKwvPve16MJZr7Wi8mF5Id7jJ5ZWTcL/8hbDH+QW2Uh2CU6trR+jqjFX64WKdYKYxVP7P44J95xd5MyVfSFeabZLqFAc5DLjCtdcLn9+XqPVoU5I7gBcoZi6aDdpff1SwClRlHhkFld3OtOUZ4c2EidtxT8sWJtl/vjNghhyTBdLD9IuK/kM6rfa/RSp5mLUcgcasuZUCakrTwSH4/qczsuFCk0jYV11JWwyJSIt92Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=qH1eYroDTV52Z7eusowWnJwSCTJjwrwIMWHC/rocFjs=;
- b=hBCJxr27z8r2Bgv3XrURtPxl0F5ACeZG3uxUxfzMIelbxRcjSqNv7GgVNx2DYbi0r8tBCrZz/FaYeNc27qkVLUu3iGeNkrKdMYXMDeIlBA5V8kEhkJiwdYl3omtYhdxaKa9xrBH60UVnNW8whWwDm/KVTFAEcsu5jc+nZa/7BvmYCDjczIE37ln//sqds0aqxpkAXcDQYyUzQ0Ypq5TrA4flG35xRTKOIo3xSvXyJLQfmWpAbPklDKVGSNW2urrNQPTOK9KTlgcaig5kee95J8Hp4GyKuiJ6HDJqbnegcydUa790K+dhxSgM7h0LcwNZxLkHmZKX3DZIWr0q3jqy7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qH1eYroDTV52Z7eusowWnJwSCTJjwrwIMWHC/rocFjs=;
- b=WPTU9Uwo/ghlZ2iFDJt1kC9jlcq+RPUV/I8RN1Cm4+kwMDaWzpdJQHPgxAxCZgrON1LCEpX4S+x3cVNtGMEvztfDUaTljVCxqsifa5GHhnYUcBIOxYgaNjD87R5QkvhCjRqKRLVXhQjmJJmNk4ZWCguIu1/T5JoiyHEXN6zsvXQ=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by VI1PR04MB6877.eurprd04.prod.outlook.com (2603:10a6:803:131::23) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.18; Fri, 12 Jan
- 2024 00:44:10 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7181.019; Fri, 12 Jan 2024
- 00:44:10 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Martin Kaiser <martin@kaiser.cx>, Linus Walleij
-	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] gpio: vf610: allow disabling the vf610 driver
-Thread-Topic: [PATCH] gpio: vf610: allow disabling the vf610 driver
-Thread-Index: AQHaRJ+WqP9gCRQCxEO4s+d81h4DHbDVVuJg
-Date: Fri, 12 Jan 2024 00:44:10 +0000
-Message-ID:
- <DU0PR04MB9417956F985780AD85FD733E886F2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240111150429.681567-1-martin@kaiser.cx>
-In-Reply-To: <20240111150429.681567-1-martin@kaiser.cx>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|VI1PR04MB6877:EE_
-x-ms-office365-filtering-correlation-id: 62f3b804-2fa8-43bd-a785-08dc1307977d
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- zwzm3Sv7w6uKiKzx/+ZdL89TfCglDgZoj4Ybv2A7smK0LGiWb8lPvmkldIfg8alZmcXIv2dJ75ZLHNFNjYG2BIYlaOpae9Ae0OBzwhO6HC3e8kghuP1qKsHp1LmR+oaH+82eT6gg3ohFUdZxF67FEt/pNwttISA7UQrE2v31LRvsbg/NXH2tdoHvP0eIWkSA/QsjaeV8MtNcQ0YyBkLF2tQfUwYVSy8jG93N4x5ohDp4EOg9DWJ+TAwhxeDNlRHIgyW2ud4FcxmYGWSYlr+jBWGTTyZExkygQ1EVRyj+BBH09ptevSDM6fx5jiLaPrY2pEXNKXIjS3JWJz8pgUxrwNgf2sYUNsKOeLIwaF9xuEjtM3e4Xr4hJPU3xBYE1Y+IFXcS1HV9ts0r2vot9ABBfN2YJrxEcUncBNKfnJGcWOD+fu6bTvHOCx+8fwmsna6NOc04LpN7B1fal9COCg2wvarFemZEdfLsv16iXuTFZFGHNR1YKrNBOho5i5BCi+89QwXN7uv/hK9Y1/TucTu//Xaw8gJtcUyWfSdt4KSdf7kSilxhU5w+nDQQQN7iKbanXggVZZSu75+RvDwUTGHxBmDQZsUU3Nz9G2DYRbsjS3mSrShmjM1DnaPKREs/tecd
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(346002)(136003)(366004)(376002)(39860400002)(396003)(230922051799003)(64100799003)(451199024)(186009)(1800799012)(55016003)(83380400001)(26005)(2906002)(38100700002)(66446008)(33656002)(86362001)(38070700009)(5660300002)(66476007)(66556008)(110136005)(54906003)(76116006)(71200400001)(41300700001)(52536014)(9686003)(122000001)(8936002)(8676002)(66946007)(316002)(44832011)(7696005)(64756008)(478600001)(6506007)(4326008);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?45lyMATeZi4ZR1qTe9S0Jg7mxSaQ1grtsPwmSIv7DmUuLs7fs8N6qCYEOK2d?=
- =?us-ascii?Q?qu4WvwuG+V5m4OBuORv7080uqhwUfS/8SUUkwVatUKhUunGmzcZPU13K5yY8?=
- =?us-ascii?Q?LAa7vIcedfjKhm7oby96rhN5Tic8fNoXjVZjDNuKz+C3kgM/GCFH86vrIgNj?=
- =?us-ascii?Q?SsilN6sRu0QRV18H9cyF7ABQiQBCOkj3EG39l4W8reDT98f+zRFc4L1zmlnw?=
- =?us-ascii?Q?j7ncQ9vKxVwTTnsS/xA2lKZKQQSOq42qRxTQLcZx3Nthh92MQLhkNeaPYpas?=
- =?us-ascii?Q?eexyN/dU5xFb/4M8Rplt0efPg3hGiNccDmX90LkV0Pdy2ID5vlHGUN5AhaL4?=
- =?us-ascii?Q?xfhqL+9KI3rZYYoEF0wiFVC+9plzPxNIu0CZV+AQ1NJ3B1PrWX89EzM/jG/c?=
- =?us-ascii?Q?aj+KHqDOMdoBr9ogwhePHgN8LXNmRV6jELWC8DURvB9bkDBpdMG891R6hDaj?=
- =?us-ascii?Q?OxXgkzomtwdJJDhluA7qhQfhp2RsJ0VVDOGbIKlHB4nCUyRkHv6+kC0+gOXT?=
- =?us-ascii?Q?dIbcKZnt+6jKhJN08VBL5vgheHIARxz7jGzn0vtt+SbBF8Hw1BIAJ2lMSAr7?=
- =?us-ascii?Q?Mt4r19/RQSDF5tDKksHv46U8dsvfxbwLIPDgzOngwjMixdl1TRRMkhWBiert?=
- =?us-ascii?Q?YYWnDTLrCnUwanG/xhC9590BbL4Ik/itD6UJQx6gfiGgryhJjiYAqOsnJoNl?=
- =?us-ascii?Q?IQuudhxXjOTG88MnzbLf8ejsvnUEetnB+QsCa3AyU2p4pCiwMccgrzaqL8Mx?=
- =?us-ascii?Q?+V0lyPXFwNtAeULuroi+B31sro+0TKfIn+3gbFm4qfe6uzEXUmoaXXnOfsDB?=
- =?us-ascii?Q?x+ccuLs500v1/+GL3essedJDn3SRE8nVI+esR1HX5BkKsRAgWm6a2odvN/JZ?=
- =?us-ascii?Q?hAp+K1N37Iwr7aLoxvO0OU8XvfTqr/OjkL7e0XAABS2Yx4MlMoWTPeSI6ozh?=
- =?us-ascii?Q?7zTVarHvHIqbvnxSfrklVr5ipch9S4NDi3Hp37+UWwkRg4dejZJi0dw5GjTw?=
- =?us-ascii?Q?wnZMhYOVLDGckceou3S/SxaVWbc866+9HqrT3WgcDJ5PlIExqhZUXU24fcF0?=
- =?us-ascii?Q?YXASePejLFD8E0p2cYhnI1fSn6VW3fgTmz78og9ALUks8P87K9EGOG3nTGw+?=
- =?us-ascii?Q?IV0lFJecxaHqK/roXFVGecitc4E/Zv5PjG4AGZ75YgJ5p/zHTvUZv822VCgn?=
- =?us-ascii?Q?0KlyQB8+v5TydS8O1Ra/dyjzgln5NF17+i5P+ehkFuBHRPvXkyLl7C9qWE41?=
- =?us-ascii?Q?X2xT7LWGJ5Xxa1LjQA3xltCU4KqjJJq/IRw2HIjOV3LVDHv3PkknheASma6u?=
- =?us-ascii?Q?vrK4jaqsh7Ic7+ZNSHa6uc7y9kQA46Qyjpi9BFmmbSgAne9XSf2QZvNdk+sE?=
- =?us-ascii?Q?AvCpp0/iVLSpLCorfP2gXgZLtlkaM9UqH8wJf7kp9svVY07tNYM/0k4ysx+2?=
- =?us-ascii?Q?ZorjWSmi4x1SclDEHcc9hrO3GPkdRK0LA29ylk2XuLN2Kw8ai7QdXomII7Qk?=
- =?us-ascii?Q?nmp1tT+yYLkrqLSw6kwCzasbK955EWH3zdXT516cxzJaQGd9+kcp7NNlJ1Jl?=
- =?us-ascii?Q?4JFEOi1OcKtXS3IGSp0=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5425FA3F;
+	Fri, 12 Jan 2024 01:03:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1d4a2526a7eso36039675ad.3;
+        Thu, 11 Jan 2024 17:03:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705021394; x=1705626194; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=j3XdDa+qFVErTyo59RgwEE3EAEc/YkpJSsj4wu519lQ=;
+        b=Ru6YBIHMoDsVVICzEcoGXLAbRh7sg8/c+cP0l4Cv+9MJOWe5d/gBv+FVkcYWWCAzz+
+         xyMDfKVE8hIaXGx8tjsC6Jw1zxZrd82ryzj4VaFp8pDvjozR8SSry3y8xhZspVG+GAaz
+         5cPJzjbLS+KH3vBNRqn66c9cj11jXnNINxbsOav1Ov6sST5A+xE+4uOgIBY+F/PN9kUW
+         r1xvsDusyCJmgfngnHhhFXidkvMjp32Z3jNiE+EVYcIC6dWNjrL2ITPICRtr4j3EoShC
+         jtl3G0U4DEyZrLGcB4ElJyRym+swDkurBNzxY1UGHGk64CQW84UgMQzQosiI5SSNJHGk
+         ZERQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705021394; x=1705626194;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=j3XdDa+qFVErTyo59RgwEE3EAEc/YkpJSsj4wu519lQ=;
+        b=HlsjwD7p9J9aXNX5+voR4F2eJQgJmrVoUDKrcpomUuG8yMvDEs70yXR1k3P6ES+C2T
+         AiDO2fk2JhPYPWvLJvPdcrCYwGYAs2l8qwm26RQTIaxD8LOSlja78mOcjyQbKb0JYizg
+         M3EvVuoWeR6qqX9MJbxhb87GsD3ZAxkkeu3NCJGw6W7tugSVjB+rPcj4SM1Q9XG7X6wR
+         sh9faE1KjkUfiYmR4Ahm+PLZuGHTCXRofnmMyfNodqXllQTJM+WWz9czZnoeV8i/B3uJ
+         t94CmgFQMnVn8yAn4V/lzvOeIbNM6T8f7CHKUTMWUhmgoHKBkh4VOCuMqZ6nkGXF6MnI
+         Qypg==
+X-Gm-Message-State: AOJu0YxmSHQSTvJYhVCcuuFeY9/8NGIlGIVkwbYBk9A5ZSNOCAMdKe+i
+	HiqRoIcqddCBKYupfgLM56w=
+X-Google-Smtp-Source: AGHT+IEVufCYK4XkGA+x0XxKaYdgBgJ1EHmTgS+OCBtj5Sb48/s3juO/VS4mnC9bLigBvtWJ5O3uEw==
+X-Received: by 2002:a17:902:f814:b0:1d4:35ad:41cd with SMTP id ix20-20020a170902f81400b001d435ad41cdmr137992plb.108.1705021393591;
+        Thu, 11 Jan 2024 17:03:13 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id kz15-20020a170902f9cf00b001d4bcf6cc43sm1825060plb.81.2024.01.11.17.03.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 11 Jan 2024 17:03:13 -0800 (PST)
+Date: Fri, 12 Jan 2024 09:03:07 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Vegard Nossum <vegard.nossum@oracle.com>, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+	brgl@bgdev.pl, linus.walleij@linaro.org, andy@kernel.org,
+	corbet@lwn.net
+Subject: Re: [PATCH 0/7] Documentation: gpio: add character device userspace
+ API documentation
+Message-ID: <20240112010307.GA9794@rigel>
+References: <20240109135952.77458-1-warthog618@gmail.com>
+ <CAHp75Ve05bAK-ehZZ7XSci5VqR18cCb=hgnbFKXwy2QPkxo=pw@mail.gmail.com>
+ <20240109234518.GA7839@rigel>
+ <9e33f7dc-deee-4165-bc10-ad77f38b270a@oracle.com>
+ <CAHp75Vc8UN2kyxGtV0tCF+xcRLAxg0qijTvHWXXtdTA9nY-h3w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 62f3b804-2fa8-43bd-a785-08dc1307977d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 12 Jan 2024 00:44:10.6705
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MqmsHFnBA1fgXvUDMdKYWIobZj2IjFyWubYnk9tWvVJ6F15C8ZB35EW5g493NOW7D8cH1966cpeCaQwjs/MSMA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR04MB6877
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vc8UN2kyxGtV0tCF+xcRLAxg0qijTvHWXXtdTA9nY-h3w@mail.gmail.com>
 
-Thanks Linus for Ccing me.
+On Wed, Jan 10, 2024 at 01:10:51PM +0200, Andy Shevchenko wrote:
+> On Wed, Jan 10, 2024 at 10:16 AM Vegard Nossum <vegard.nossum@oracle.com> wrote:
+> > On 10/01/2024 00:45, Kent Gibson wrote:
+> > > On Tue, Jan 09, 2024 at 10:00:26PM +0200, Andy Shevchenko wrote:
+> > >> On Tue, Jan 9, 2024 at 4:00 PM Kent Gibson <warthog618@gmail.com> wrote:
+> > >>
+> > >> May we actually state in the documentation that sysfs is subject to
+> > >> remove at some point?
+> > >
+> > > So formally define what "deprecated" means?
+> > > Is that covered in the higher level documentation somewhere?
+> > > If so I'm more than happy to provide a reference.
+> >
+> > We have a few files that may be relevant here, that I'm aware of:
+> >
+> > 1) https://docs.kernel.org/admin-guide/sysfs-rules.html
+> >
+> > documents some general assumptions that userspace can make about the
+> > stability of sysfs and its files
+> >
+> > 2) https://docs.kernel.org/admin-guide/abi.html
+> >
+> > This is the public-facing, somewhat machine-readable repository of what
+> > is supposed to be the kernel's ABI/API, including "obsolete" and
+> > "removed" interfaces.
+> >
+> > 3) Documentation/ABI/README
+> >
+> > describes the process of deprecating an interface
+>
+> Yes and GPIO currently is under obsolete section with also this:
+>
+> "This ABI is deprecated and will be removed after 2020. It is replaced
+> with the GPIO character device."
+>
+> https://docs.kernel.org/admin-guide/abi-obsolete.html#symbols-under-sys-class
+>
+> So, proposed cleanup series should probably rely on this documentation
+> among other existing descriptions of sysfs GPIO.
+>
 
-> Subject: [PATCH] gpio: vf610: allow disabling the vf610 driver
->=20
-> The vf610 gpio driver is enabled by default for all i.MX machines, withou=
-t any
-> option to disable it in a board-specific config file.
->=20
-> Most i.MX chipsets have no hardware for this driver. Change the default t=
-o
-> enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
->=20
-> Add a text description after the bool type, this makes the driver selecta=
-ble by
-> make config etc. i.MX chips other than SOC_VF610 can now enable the drive=
-r
-> from their board config.
+The sysfs doc already references the doc (sysfs-gpio) that generates the
+HTML that link points to, so not sure what to change.
+I can't include a direct reference to the HTML, AFAICT, as that HTML is
+generated using kernel-abi makefile magic so the usual doc path
+cross-references don't work - you just get the path as plain text.
 
-This will break i.MX8QM,DXL,ULP/i.MX93 boot. You could add text description
-to make it selectable, but please not drop def y. Or you need update defcon=
-fig.
+If there is some way to provide a cross-reference that generates to that
+link then I'll change it, but I don't know how.
 
-Thanks,
-Peng.
+>>> +    -  -  ``EFAULT``
 
->=20
-> Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for
-> GPIO_VF610")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
->  drivers/gpio/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig index
-> 1301cec94f12..353af1a4d0ac 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -711,7 +711,8 @@ config GPIO_UNIPHIER
->  	  Say yes here to support UniPhier GPIOs.
->=20
->  config GPIO_VF610
-> -	def_bool y
-> +	bool "VF610 GPIO support"
-> +	default y if SOC_VF610
->  	depends on ARCH_MXC
->  	select GPIOLIB_IRQCHIP
->  	help
-> --
-> 2.39.2
+> Wondering if these constants can be referenced via % and if it makes sense.
 
+That would be great and I do want to do that, particularly for the
+uAPI v1 docs that use a lot of consts rather than enums, but, AFAICT, you
+can't create cross-references for consts, you can only add formatting[1].
+And the % formatting only works in kernel-doc, in rst you have to add it
+explicitly yourself, hence the ``EFAULT`` .
+
+Cheers,
+Kent.
+[1] https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html#highlights-and-cross-references
 
