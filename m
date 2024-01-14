@@ -1,113 +1,82 @@
-Return-Path: <linux-gpio+bounces-2195-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2196-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC18D82D0E4
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 15:31:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 4270482D1ED
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 19:59:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5291C281F9A
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 14:31:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC9E3281D9F
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 18:59:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 884361FBE;
-	Sun, 14 Jan 2024 14:30:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80F0E10965;
+	Sun, 14 Jan 2024 18:59:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bhBah/QS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFnQrDFX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D13B823BD;
-	Sun, 14 Jan 2024 14:30:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a26fa294e56so819078466b.0;
-        Sun, 14 Jan 2024 06:30:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705242656; x=1705847456; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=PGgDW1TWbu/IxiNbUJKSvwDw7b9go5u/b638eBN6ezo=;
-        b=bhBah/QSA78acaw0yPLtExnhqNAiHX5WH4KbtpL5jbn5iujAK/CdZ9Z8zFPGVhcdMg
-         ImjCjeiF0LDiomd6d3ymSNLL7/cYBDsJXrKh6fSljbRDJmu1LA3h8L4XcfZHzGbJDc45
-         /kFj3na2Ie0DFjbIBniljEe76eyJCXmFrGQUsFkjqHp2E3e2+sHCJ3ZCDWqXJnZVMZQq
-         nqepg367cK1kbCKvbIUD3A6Xj6LBD3HPa3r88Kr4KydHzm4NG7tdvjKvcBuYhDvwvpSO
-         nUciuLJI2sLV+WoAcqyjRmu8BazSD+1A1iamOWgDs5tZTUQKKkeERvP9USxtWeQ0VKjn
-         HAZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705242656; x=1705847456;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PGgDW1TWbu/IxiNbUJKSvwDw7b9go5u/b638eBN6ezo=;
-        b=S1j5a4Q8bExfCAlmYKyQgzohpmfJjGxYHtr6aV7RDaEGPEJV4WbrVGZeXk8/LLhWQq
-         wF3AXhYGU8+6uuzhA9XGdsFdWP/IcHiZuha9Bls+LzrDXKPQ8J8fDUQgRO7pBtZlkSaz
-         KzR5wPRLkSuq66+0yTVP3NaQG/whhSEC9xnSZMEqqd6li6Q7JaiTGUEjNP5Cb1bOu3bY
-         FfunacZfEnUJEsC5izVZRc2EIyAPPvrqUM1a/NJqzW4gDPX/4MJXDg3BHzoHaXBNQLOk
-         XWvm9hGvc9ZhOyukuRaB9tJEsCsAGfjKt+mOBQyDcRMwnDSWTFv4TPEsk5x+O1Z21+oY
-         85yg==
-X-Gm-Message-State: AOJu0Yw83KJSXzO/bbU/WNTXsj0PbzdrzYZR81zm9weTJxUpcH+EnWoL
-	65Q6xbJrP4f7DyRl8AGkOSZGw90fOD4bM55HZNw=
-X-Google-Smtp-Source: AGHT+IFLoSu+vMFwbQVcKYlBqjuE4eeLhavD+dG3mIJpEazMtvQYHKbfpjqoGMzTclqC5OCyURmUeAkZh2FoPndb1ic=
-X-Received: by 2002:a17:906:33d0:b0:a28:c06d:2e0a with SMTP id
- w16-20020a17090633d000b00a28c06d2e0amr1968824eja.70.1705242655969; Sun, 14
- Jan 2024 06:30:55 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4072E5243;
+	Sun, 14 Jan 2024 18:59:37 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90279C433F1;
+	Sun, 14 Jan 2024 18:59:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705258777;
+	bh=qvi9nETLBaswD8m/wZDVKJ3xr98jjCZHihd1L0QIv84=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eFnQrDFXUmO30DSgcK8WhOTT/k40IuozJjOHCgBVy6z2Lza6FIkjqKklu8/WUuEZj
+	 cqXxHPYyNkJCZs+4twR3wp9MFAcgtchlLpilAuag6E958+SdslvGe80RtFaeaQB1ZN
+	 0V8tprL1Hne0hU8gxSP/FgTcHUwnE1wU3qX5TrVqsHGjui2Va12//D+BposyJasOEo
+	 VfIsMYzvQbrP3xuqiFkaxytxQJ80chYhN36R/tpw1TXukXS+nePn6umY/TxtPq51OT
+	 yPaWsud4UH8WB6SjWc26nuss+GBgWzPvHgtvoHY7sU6ikRQBS/fhfkIs7r2+Pn7SRr
+	 ONGuiaYtG4mVQ==
+Date: Sun, 14 Jan 2024 13:59:36 -0500
+From: Sasha Levin <sashal@kernel.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+	Mario Limonciello <mario.limonciello@amd.com>,
+	Marcus Aram <marcus+oss@oxar.nl>,
+	Mark Herbert <mark.herbert42@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>, Basavaraj.Natikar@amd.com,
+	Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 3/6] pinctrl: amd: Mask non-wake source pins
+ with interrupt enabled at suspend
+Message-ID: <ZaQvGNNPpgZ5VCfa@sashalap>
+References: <20231226002725.7471-1-sashal@kernel.org>
+ <20231226002725.7471-3-sashal@kernel.org>
+ <ZZ0xX2Mqx0ezfoWG@duo.ucw.cz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109140221.77725-1-warthog618@gmail.com> <ZaPrbi6GxqlfysWe@smile.fi.intel.com>
- <20240114141957.GA99741@rigel>
-In-Reply-To: <20240114141957.GA99741@rigel>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 14 Jan 2024 16:30:19 +0200
-Message-ID: <CAHp75VcdE-DfoSLOYyg5RdouBCs1QJ3AO6Ru49P_84-vTKi4DA@mail.gmail.com>
-Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <ZZ0xX2Mqx0ezfoWG@duo.ucw.cz>
 
-On Sun, Jan 14, 2024 at 4:20=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
-> On Sun, Jan 14, 2024 at 04:10:54PM +0200, Andy Shevchenko wrote:
-> > On Tue, Jan 09, 2024 at 10:02:16PM +0800, Kent Gibson wrote:
-> > > This is a series of minor clarifications and formatting tidy ups for
-> > > the GPIO uAPI kernel doc.
-> > >
-> > > The series is intended as a companion to my character device
-> > > uAPI documentation series, but makes sense on its own too.
-> > >
-> > > The patches are self contained and trivial so not much to add here.
-> >
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> >
-> > for patches starting from the second one.
-> >
-> > The first one I personally don't understand why, but I'm not a native s=
-peaker!
-> > I believe, it's correct, although the original version seems okay to me=
-.
+On Tue, Jan 09, 2024 at 12:43:27PM +0100, Pavel Machek wrote:
+>Hi!
 >
-> The problem isn't the language, unless you mean I'm explaining poorly, it
-> is the logic.  The original says "zero or negative value means error", bu=
-t
-> in case of an error the kernel does not actually set the fd.  So if the
-> user sends a request containing a positive fd they might incorrectly infe=
-r
-> that the positive fd being returned implies success.
+>> From: Mario Limonciello <mario.limonciello@amd.com>
+>>
+>> [ Upstream commit 2fff0b5e1a6b9c577b4dd4958902c877159c856b ]
+>>
+>> If a pin isn't marked as a wake source processing any interrupts is
+>> just going to destroy battery life.  The APU may wake up from a hardware
+>> sleep state to process the interrupt but not return control to the OS.
+>>
+>> Mask interrupt for all non-wake source pins at suspend. They'll be
+>> re-enabled at resume.
 >
-> The new wording is that the returned fd is only valid on success.
+>Not sure what is going on here, but it is queued for 6.6 and 4.14, but
+>not for the kernels between them.
 
-Ah, thanks for elaboration, now I understand the issue. Okay, feel
-free to extend the Rb to the first patch.
+Ack, it should have been dropped from 4.14. Thanks!
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Thanks,
+Sasha
 
