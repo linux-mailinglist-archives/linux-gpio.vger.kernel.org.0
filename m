@@ -1,107 +1,78 @@
-Return-Path: <linux-gpio+bounces-2192-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2193-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 316D182D0A5
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 13:55:35 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07A2682D0D5
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 15:11:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58FDB1C20CAC
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 12:55:34 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9F5E1F21532
+	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 14:11:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1415F2113;
-	Sun, 14 Jan 2024 12:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FcFUiW5z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA98423BD;
+	Sun, 14 Jan 2024 14:11:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-io1-f43.google.com (mail-io1-f43.google.com [209.85.166.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AC2020EE;
-	Sun, 14 Jan 2024 12:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-io1-f43.google.com with SMTP id ca18e2360f4ac-7bf2a89c273so65744839f.3;
-        Sun, 14 Jan 2024 04:55:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705236924; x=1705841724; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=BxXhDrDTWUWugV/3PD/CLnM+3ZJaWXO6/qqmveyyw2s=;
-        b=FcFUiW5zccsjxUI3rXkeUg/GI0Ir5sRHxTCDN6/V1py1FHfDyPGJUAo+Y4oV4Ltt85
-         BWoQ/X0XqJ9NYdypaHKxSHnXu8A+ZlBFDZ8kz+qnhgkwI78kLAhjxRlcmD68HRBLE1fO
-         x45PeSKsEuRVkIG7y0qPAccUGqnhzJU6xHVcC+H0s4qerDvNDilAM8syJUhtLNTq/pPc
-         VMYguCWNlvJ9y7KSMyI9CNdirC5QLt396lmyXpbe7o3LjB9ND2q6pj4y/Q5qavjC7SLH
-         UKktZ6af890HelFJNiIXRohFlJBg0q82p9Hmk9KR0fvEPgdXrHzqqWKg/wBJSvkDortM
-         ILDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705236924; x=1705841724;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=BxXhDrDTWUWugV/3PD/CLnM+3ZJaWXO6/qqmveyyw2s=;
-        b=fkAHreBaRYdbWK/UGScCuJ9SZtG7Ebsh44GLokkLB7+V253c5XGiyKA4EfEo5Lu0s0
-         l29yTx7fAFaEnqNx1J3vgwZgpwqgpRyZePP39JW11pqIkguEnPkJxceFlejiTjq5PbD/
-         PLlp2sCgMSquqTR7xY6mSqOvIeImkrlFxy9Jns4l4bV4OqyUVSWTNywIv81HCMvFXtbV
-         85yWQLmAPPomOrhc5SgcDdPQfWmCx1cl6t1or/u326yoF+ZO43JOQldrX7Lhvhw7sTVS
-         +11xl3RrMVNaqUbMiAUyy8x5q2mD1WSqa2+KTHNSu43BQQW+sMNUx53s62706ORcG7Cv
-         O19A==
-X-Gm-Message-State: AOJu0YxIS1A3E3CfoSrO/FpUKrRZz3liJjCGXyUowM9VfORnYo84wvJ9
-	Tc/BizLlyZ3qvDubq8zqhVg=
-X-Google-Smtp-Source: AGHT+IEqA+EUhfPIJP6O62E5SzB1wSRXCemRkOGSmfdzDTcwYj6XTg/mhHVe2+m8V2ZtTJT0RHz9Fw==
-X-Received: by 2002:a6b:720d:0:b0:7be:e321:764 with SMTP id n13-20020a6b720d000000b007bee3210764mr6032344ioc.24.1705236924601;
-        Sun, 14 Jan 2024 04:55:24 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id z3-20020a170903018300b001c61073b076sm5985845plg.144.2024.01.14.04.55.20
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jan 2024 04:55:24 -0800 (PST)
-Date: Sun, 14 Jan 2024 20:55:18 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-	andy@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH 0/7] Documentation: gpio: add character device userspace
- API documentation
-Message-ID: <20240114125518.GA84351@rigel>
-References: <20240109135952.77458-1-warthog618@gmail.com>
- <20240114024724.GA20870@rigel>
- <CAHp75VeN25Q+7nTM0f3MWnU99Y0MZJjxBLfMxJJhAyWcBq8W7w@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10BA623C2;
+	Sun, 14 Jan 2024 14:10:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="403230632"
+X-IronPort-AV: E=Sophos;i="6.04,194,1695711600"; 
+   d="scan'208";a="403230632"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 06:10:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10953"; a="1030418125"
+X-IronPort-AV: E=Sophos;i="6.04,194,1695711600"; 
+   d="scan'208";a="1030418125"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jan 2024 06:10:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1rP1CQ-0000000DuIc-2x0U;
+	Sun, 14 Jan 2024 16:10:54 +0200
+Date: Sun, 14 Jan 2024 16:10:54 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
+Message-ID: <ZaPrbi6GxqlfysWe@smile.fi.intel.com>
+References: <20240109140221.77725-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VeN25Q+7nTM0f3MWnU99Y0MZJjxBLfMxJJhAyWcBq8W7w@mail.gmail.com>
+In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Sun, Jan 14, 2024 at 02:01:29PM +0200, Andy Shevchenko wrote:
-> On Sun, Jan 14, 2024 at 4:47 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > On Tue, Jan 09, 2024 at 09:59:45PM +0800, Kent Gibson wrote:
-> > > My new year's resolution was to improve the documentation of the
-> > > character device API and gpio in general, so here we are.
->
-> ...
->
-> > While preparing the v2 version of this series, I'm now wondering
-> > if this should be changed to "obsolete" rather than "deprecated", to
-> > better fit with the interface lifecycle, to indicate there is an
-> > alternative, and to emphasise that it is scheduled for removal.
-> > i.e. from a userspace perspective "obsolete" is the clearer term.
-> >
-> > Is that a change worth making?
->
-> From my p.o.v. yes, as it makes it consistent with what we already
-> have in the sysfs/obsolete.
->
+On Tue, Jan 09, 2024 at 10:02:16PM +0800, Kent Gibson wrote:
+> This is a series of minor clarifications and formatting tidy ups for
+> the GPIO uAPI kernel doc.
+> 
+> The series is intended as a companion to my character device
+> uAPI documentation series, but makes sense on its own too.
+> 
+> The patches are self contained and trivial so not much to add here.
 
-Ok then, I'll incorporate it into v2.
+Reviewed-by: Andy Shevchenko <andy@kernel.org>
 
-Cheers,
-Kent.
+for patches starting from the second one.
+
+The first one I personally don't understand why, but I'm not a native speaker!
+I believe, it's correct, although the original version seems okay to me.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
