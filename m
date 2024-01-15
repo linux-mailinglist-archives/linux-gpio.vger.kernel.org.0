@@ -1,82 +1,223 @@
-Return-Path: <linux-gpio+bounces-2196-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2197-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4270482D1ED
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 19:59:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 23A9A82D2C2
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 01:49:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BC9E3281D9F
-	for <lists+linux-gpio@lfdr.de>; Sun, 14 Jan 2024 18:59:44 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7AFDA1F210AE
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 00:49:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80F0E10965;
-	Sun, 14 Jan 2024 18:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B80011374;
+	Mon, 15 Jan 2024 00:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eFnQrDFX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhkF9VAe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4072E5243;
-	Sun, 14 Jan 2024 18:59:37 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90279C433F1;
-	Sun, 14 Jan 2024 18:59:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705258777;
-	bh=qvi9nETLBaswD8m/wZDVKJ3xr98jjCZHihd1L0QIv84=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=eFnQrDFXUmO30DSgcK8WhOTT/k40IuozJjOHCgBVy6z2Lza6FIkjqKklu8/WUuEZj
-	 cqXxHPYyNkJCZs+4twR3wp9MFAcgtchlLpilAuag6E958+SdslvGe80RtFaeaQB1ZN
-	 0V8tprL1Hne0hU8gxSP/FgTcHUwnE1wU3qX5TrVqsHGjui2Va12//D+BposyJasOEo
-	 VfIsMYzvQbrP3xuqiFkaxytxQJ80chYhN36R/tpw1TXukXS+nePn6umY/TxtPq51OT
-	 yPaWsud4UH8WB6SjWc26nuss+GBgWzPvHgtvoHY7sU6ikRQBS/fhfkIs7r2+Pn7SRr
-	 ONGuiaYtG4mVQ==
-Date: Sun, 14 Jan 2024 13:59:36 -0500
-From: Sasha Levin <sashal@kernel.org>
-To: Pavel Machek <pavel@ucw.cz>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Mario Limonciello <mario.limonciello@amd.com>,
-	Marcus Aram <marcus+oss@oxar.nl>,
-	Mark Herbert <mark.herbert42@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>, Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 4.14 3/6] pinctrl: amd: Mask non-wake source pins
- with interrupt enabled at suspend
-Message-ID: <ZaQvGNNPpgZ5VCfa@sashalap>
-References: <20231226002725.7471-1-sashal@kernel.org>
- <20231226002725.7471-3-sashal@kernel.org>
- <ZZ0xX2Mqx0ezfoWG@duo.ucw.cz>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31D6A3D;
+	Mon, 15 Jan 2024 00:49:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3bb53e20a43so5867552b6e.1;
+        Sun, 14 Jan 2024 16:49:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705279745; x=1705884545; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=ihEdIVcvFw3CmEFZbZuSsEOuxkPmZ6VB5P0/0vrY06E=;
+        b=jhkF9VAep8pqrPBw/CVKTENlf8Y5CfC3GtTuL+HKwD7rWyhx0TwpCJqczsyi8rEx/N
+         +frcN9CfviXrLFbF8jA/jUiwDRIUJ3dQytQ0ZiAPMqWGngeh4Gy7eOeai4/23W1lKamu
+         g+Fm2EUz8+8oFSCK0wnucj/aqxNqAvn/Q/zi59fUMz4Ld+WitODbNNstOQS9EY7pFbGC
+         CcsbFho/2sy7SSy8ZzlkqOowVvmTZ7nvcRLuOrRHArC9iuyiHUcnzN4YBouhoKl42niB
+         nvLtBTfL/Yxc2imLqB8aIrHd1rTCDAbrCDsKhyK3TWv9h7o/yqDErsenw40eUh6WEpaz
+         +N+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705279745; x=1705884545;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=ihEdIVcvFw3CmEFZbZuSsEOuxkPmZ6VB5P0/0vrY06E=;
+        b=scvbOukW0JUp+9xxxJXOWY9zZm3gkecsgnTLC+nS9Ziyo19FqnCgPRCvj+EYVqvVeS
+         MBTXN2cNgxbXey+K2aoQnUgYf6gukfS4n3sE/+7uwAHIIEWvhe/QR19q0Z0vNNXiYr2P
+         8bRoLVIeAWtlLmN3RF3SNjCO5SIS2wTbN+MvUJqkepbwb8VRgOVvggwZ4sODyMJHclR8
+         rGvg4wjYCRrvV2Euaz56OP1uCr3Jf2I8G4/lMKv8ol0wP8J9KuY1QphkfdB9Aavh3SFT
+         IzRBZxuxaV6y2ZoT3JqU5rw/xuYBMeytF29fOlP9nlA9pvooTwnWHbnXw04v4iNrZ7IS
+         oU5A==
+X-Gm-Message-State: AOJu0YzFo2iMd9DZAaxQH8o0jAEA56EWg2M1c3bXiShLk0V/I1oIrcwA
+	yG74teJOxIWJCdccWII6mnNHEJQeSxGbpg==
+X-Google-Smtp-Source: AGHT+IHh35jDY+FMp/fNdW2QsHQVGGyVgp7SoT9bWMAv5gCdercKz+mdOZfhUxZwmnTuKIv+LZEGnQ==
+X-Received: by 2002:a05:6808:485:b0:3bd:72b3:47a3 with SMTP id z5-20020a056808048500b003bd72b347a3mr2349646oid.67.1705279745262;
+        Sun, 14 Jan 2024 16:49:05 -0800 (PST)
+Received: from rigel.home.arpa (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id 4-20020aa79204000000b006d999f4a3c0sm6538365pfo.152.2024.01.14.16.49.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jan 2024 16:49:04 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org,
+	corbet@lwn.net
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH v2 0/9] Documentation: gpio: add character device userspace API documentation
+Date: Mon, 15 Jan 2024 08:48:38 +0800
+Message-Id: <20240115004847.22369-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <ZZ0xX2Mqx0ezfoWG@duo.ucw.cz>
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 09, 2024 at 12:43:27PM +0100, Pavel Machek wrote:
->Hi!
->
->> From: Mario Limonciello <mario.limonciello@amd.com>
->>
->> [ Upstream commit 2fff0b5e1a6b9c577b4dd4958902c877159c856b ]
->>
->> If a pin isn't marked as a wake source processing any interrupts is
->> just going to destroy battery life.  The APU may wake up from a hardware
->> sleep state to process the interrupt but not return control to the OS.
->>
->> Mask interrupt for all non-wake source pins at suspend. They'll be
->> re-enabled at resume.
->
->Not sure what is going on here, but it is queued for 6.6 and 4.14, but
->not for the kernels between them.
+My new year's resolution was to improve the documentation of the
+character device API and gpio in general, so here we are.
 
-Ack, it should have been dropped from 4.14. Thanks!
+Wrt the formatting and file breakdown, I've taken inspiration from
+the userspace-api/media documentation.
+
+Patch 1 adds documentation for the current chardev uAPI. I've added
+it to the userspace-api book, as that is the most obvious place a
+reader would look for it, but have also provided links from the
+admin-guide book where the gpio docs currently reside.
+
+I realise MAINTAINERS should be updated with
+Documentation/userspace-api/gpio/, but the split out of GPIO UAPI
+hasn't made it into gpio/for-next yet, so I was unsure of how to
+handle that.
+
+Patch 2 updates the gpio-cdev ABI documentation to reference the
+chardev documentation as well as gpio.h.
+
+Patch 3 updates the sysfs-gpio ABI documentation to reference the
+gpio-cdev ABI that obsoletes it.
+
+Patch 4 relocates the sysfs API doc to stress its deprecation by
+moving it to a new obsolete section, again in userspace-api but
+with a similar section in the admin-guide. The obsolete section
+also serves as a placeholder for subsequent changes.
+
+Patch 5 updates the sysfs API doc to reference the chardev
+documentation rather than gpio.h and make use of reST formatting.
+
+Patch 6 adds documentation for the obsolete v1 version of the
+chardev uAPI.  It is obsolete, but still useful to have, if
+nothing else to help identify the differences between v1 and v2.
+
+Patch 7 capitalizes the title of the admin-guide/gpio to match
+the other subsystems and the userspace-api book.
+
+Patch 8 adds an obsolescence note to the gpio-mockup, as it is
+obsoleted by the gpio-sim.
+
+Patch 9 moves the gpio-mockup doc into the obsolete section.
+
+I've got some minor updates for the kernel doc in gpio.h as well,
+but they make sense on their own so I've sent those separately
+to keep the cross-posting to a minimum.
+
+I realise the only thing less exciting than writing documentation
+is reviewing it, so my apologies and thanks in advance if you
+have the fortitude to attempt such a scintillating endeavour.
+
+Cheers,
+Kent.
+
+Changes v1 -> v2:
+ - add Linus' review tag (patch 1)
+ - add first added kernel version for APIs, and ioctls where
+   they were added separately from the API they are part of (patch 1 and 6).
+ - add note that requesting a line in use is an error (EBUSY),
+   GPIO_v2_GET_LINE_IOCTL (patch 1), GPIO_GET_LINEEVENT_IOCTL
+   and GPIO_GET_LINEHANDLE_IOCTL (patch 6).
+ - add updating gpio-cdev interface doc to reference chardev.rst (patch 2).
+ - add updating sysfs-gpio interface doc to reference gpio-cdev (patch 3).
+ - rename deprecated section to obsolete section (patch 4, 6 and 9).
+ - rework obsolescence warning and abuse note in sysfs.rst to
+   make use of reST formatting for emphasis, rather than ALL CAPS,
+   and to note that the interface is to be removed in the future
+   (patch 5).
+ - note that the v1 API will be removed in the future (patch 6).
+
+Kent Gibson (9):
+  Documentation: gpio: add chardev userspace API documentation
+  Documentation: ABI: update gpio-cdev to reference chardev.rst
+  Documentation: ABI: update sysfs-gpio to reference gpio-cdev
+  Documentation: gpio: move sysfs into an obsolete section
+  Documentation: gpio: update sysfs documentation to reference new
+    chardev doc
+  Documentation: gpio: add chardev v1 userspace API documentation
+  Documentation: gpio: capitalize GPIO in index title
+  Documentation: gpio: document gpio-mockup as obsoleted by gpio-sim
+  Documentation: gpio: move gpio-mockup into obsolete section
+
+ Documentation/ABI/obsolete/sysfs-gpio         |   4 +-
+ Documentation/ABI/testing/gpio-cdev           |   9 +-
+ .../admin-guide/gpio/gpio-mockup.rst          |   8 ++
+ Documentation/admin-guide/gpio/index.rst      |   6 +-
+ Documentation/admin-guide/gpio/obsolete.rst   |  13 ++
+ Documentation/userspace-api/gpio/chardev.rst  | 116 ++++++++++++++++
+ .../userspace-api/gpio/chardev_v1.rst         | 131 ++++++++++++++++++
+ .../userspace-api/gpio/error-codes.rst        |  78 +++++++++++
+ .../gpio/gpio-get-chipinfo-ioctl.rst          |  41 ++++++
+ .../gpio/gpio-get-lineevent-ioctl.rst         |  78 +++++++++++
+ .../gpio/gpio-get-linehandle-ioctl.rst        |  86 ++++++++++++
+ .../gpio/gpio-get-lineinfo-ioctl.rst          |  54 ++++++++
+ .../gpio/gpio-get-lineinfo-unwatch-ioctl.rst  |  49 +++++++
+ .../gpio/gpio-get-lineinfo-watch-ioctl.rst    |  74 ++++++++++
+ .../gpio-handle-get-line-values-ioctl.rst     |  56 ++++++++
+ .../gpio/gpio-handle-set-config-ioctl.rst     |  62 +++++++++
+ .../gpio-handle-set-line-values-ioctl.rst     |  48 +++++++
+ .../gpio/gpio-lineevent-data-read.rst         |  84 +++++++++++
+ .../gpio/gpio-lineinfo-changed-read.rst       |  87 ++++++++++++
+ .../gpio/gpio-v2-get-line-ioctl.rst           | 101 ++++++++++++++
+ .../gpio/gpio-v2-get-lineinfo-ioctl.rst       |  50 +++++++
+ .../gpio/gpio-v2-get-lineinfo-watch-ioctl.rst |  67 +++++++++
+ .../gpio/gpio-v2-line-event-read.rst          |  83 +++++++++++
+ .../gpio/gpio-v2-line-get-values-ioctl.rst    |  51 +++++++
+ .../gpio/gpio-v2-line-set-config-ioctl.rst    |  57 ++++++++
+ .../gpio/gpio-v2-line-set-values-ioctl.rst    |  47 +++++++
+ .../gpio/gpio-v2-lineinfo-changed-read.rst    |  81 +++++++++++
+ Documentation/userspace-api/gpio/index.rst    |  18 +++
+ Documentation/userspace-api/gpio/obsolete.rst |  11 ++
+ .../gpio/sysfs.rst                            |  27 ++--
+ Documentation/userspace-api/index.rst         |   1 +
+ 31 files changed, 1657 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/admin-guide/gpio/obsolete.rst
+ create mode 100644 Documentation/userspace-api/gpio/chardev.rst
+ create mode 100644 Documentation/userspace-api/gpio/chardev_v1.rst
+ create mode 100644 Documentation/userspace-api/gpio/error-codes.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-chipinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-unwatch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-get-lineinfo-watch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-get-line-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-handle-set-line-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-lineevent-data-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-lineinfo-changed-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-lineinfo-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-get-lineinfo-watch-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-event-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-get-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-line-set-values-ioctl.rst
+ create mode 100644 Documentation/userspace-api/gpio/gpio-v2-lineinfo-changed-read.rst
+ create mode 100644 Documentation/userspace-api/gpio/index.rst
+ create mode 100644 Documentation/userspace-api/gpio/obsolete.rst
+ rename Documentation/{admin-guide => userspace-api}/gpio/sysfs.rst (89%)
 
 -- 
-Thanks,
-Sasha
+2.39.2
+
 
