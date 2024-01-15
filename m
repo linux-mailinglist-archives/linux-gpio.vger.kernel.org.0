@@ -1,97 +1,125 @@
-Return-Path: <linux-gpio+bounces-2208-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2209-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0148482D2EC
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 02:21:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28D9C82D2F8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 02:31:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 75CBA1F21182
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 01:20:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 938AE1C20BAA
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 01:31:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE0B515B1;
-	Mon, 15 Jan 2024 01:20:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC3F72572;
+	Mon, 15 Jan 2024 01:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bat/l75Y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nV7CMGsR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42890137C;
-	Mon, 15 Jan 2024 01:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ADFC2566;
+	Mon, 15 Jan 2024 01:30:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-55956ca6e4dso300894a12.1;
-        Sun, 14 Jan 2024 17:20:46 -0800 (PST)
+Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6daf9d5f111so6658048b3a.0;
+        Sun, 14 Jan 2024 17:30:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705281645; x=1705886445; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DSQyV00wQ85s4kXvZGL8rknI1QXxX9VbxwjY9ciBx4M=;
-        b=bat/l75Y817lhjKn+nWeRhjQst0V3tzW4X7qRRTgbjWIae+/iLAiyfXOP28cnTiepE
-         417f825AXm7ExODojvyF5mZGOhXWE5jw9P58PeYipWx51iq3+KKmlJAlf91z/4uOAiOZ
-         H53Jc7UQl9EaR/MDXBEBzeR0MWyaF7hdffw+/s/Ca6x8KFphh1iZj+Vi0Ney9GaUXmHJ
-         9bJgIah6Cj9oJb+hrt4h0YMSfOib6XJUC1yokjgdMdmKmWQr3zGTePyund3BF1Fal7ZD
-         GM028STKOHCfkUVwuGtufBtitIysNDzdMDQcsnm3DwLqH4zvBkjrXI4pSp/23we4WvjK
-         +UbQ==
+        d=gmail.com; s=20230601; t=1705282256; x=1705887056; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=1SMr9r1P9ntLQdKlqfO558DPhNCAuaDs7tWm9gTvsU4=;
+        b=nV7CMGsRHiLsiRasqE5EcNC64Jmv1LjGXyrAuIezN+CWh3YJI9dYW+oHvgw/FFcG63
+         OVgcf5xyY97EQwegiyQiG4+qgnIUaoS6aSTI4gLwdtT9dTxws99JbPakItlD1OCTaOqT
+         VuEzx6BxUwTLHxQ2MDCsFTA6j9V46UA3XK0vTK6s0XggD28ntDem7hyknhhFsFYwYbLg
+         FQVMZgJMXfAlbF1JhR/5qSSIaieXrb1W7/qWJAMvXYiC63uXkrv7s378Sre7tBC0VvBb
+         GfjrRukKObFD7vIgy8KVqiiwtyor3jQ8dz+MdqNDHbVQtzNNqRrmgldPB5Hwnxg8BB/+
+         SUQA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705281645; x=1705886445;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DSQyV00wQ85s4kXvZGL8rknI1QXxX9VbxwjY9ciBx4M=;
-        b=hbpQ2CHrqD2J6yUSdJon6k74OotC7xMiklWhkOzJkxRqBJG0dbK2aizc/UtJZQHBIx
-         hbV5s1Ta4aKAYh4iJIcI0sJd8I4Er7grQwEkqW9KL2dA7I/YTadg+8m4lTLUqy5DQzen
-         MP/L+GzcacSEBL99HyL0ttdcJaHvwWKWGWE+/E5NIBSWU0NYlJdOKvN1veVunprkkUn7
-         2WkaQgZPP9f6NvZPfHQiJ8rZUrk7df39zRPwxdmeoiiPnGgo8w2gBwkaWle8GOn6Q2mL
-         XxC6/JOncQu+cdrsmoj4P86EkOFcXTyv+SrcMfH36Qa/nLyMVFnRTZtv2VnhgEKYIvcA
-         y2dw==
-X-Gm-Message-State: AOJu0YyLdVs4mwryvvqyiiTI67JeHGxEuIPD3jhFUqUZiINGCrkyfLeH
-	aCHue6vramM12AIIevqToKWWWiK4pJGoEyh4vWU=
-X-Google-Smtp-Source: AGHT+IGEOk7rim+3D5orb8+7R2RKKnvLvUmoc3lhcz7wXUIVgZsP2NTTYJAxSiJXri0b/qrihRXqLebLWCkJSVB2D+s=
-X-Received: by 2002:a17:907:bc3:b0:a28:c8bd:2592 with SMTP id
- ez3-20020a1709070bc300b00a28c8bd2592mr3628351ejc.54.1705281645215; Sun, 14
- Jan 2024 17:20:45 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705282256; x=1705887056;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=1SMr9r1P9ntLQdKlqfO558DPhNCAuaDs7tWm9gTvsU4=;
+        b=f/aT19EwaUUnta292h7foqsedqe9vYob5Yk7F62EH/RwVdgQKVZV0eK+o7MlfBzjqt
+         0H5NfWCgamw35bJy6cI6WH9Zyp4iqHGpDcy6slHRZRSvFCNf2LmhVpnuMartTRaQFxwl
+         qZJ3ZkDfCTn3vQEIcDaEfIvI5ao//pUpeqbKin449Io8ldDf6bkomE14T1gv2cMOShFk
+         aJr0GIsE4gKeLuVruzpEg8d3NZQLAzyVnMOuPzktt8PPBxxGMAlZ9+iEXZDpoPI+sk9T
+         Sy0e05bKz4EkqVfTHoyDo4QLNyu2c0uk7/e6m2BXo3/tCBjEyiiHvx+8s5NtvKlruJP8
+         o5JA==
+X-Gm-Message-State: AOJu0YzoShXgPl1p9UIixOb0ftX5TocUZb92uMrMcXEYSGdQGwUW/4Ml
+	QsaXexf3eIuKY7r2fNiA1XM=
+X-Google-Smtp-Source: AGHT+IEUrsl4+PPW7stJomKebbDxC5gxCyEQseFCOWI63q2e9W2MLh69fxNp5sQtjdaY02sFQZ5rJA==
+X-Received: by 2002:a62:ce8d:0:b0:6da:e557:8132 with SMTP id y135-20020a62ce8d000000b006dae5578132mr4842403pfg.14.1705282256606;
+        Sun, 14 Jan 2024 17:30:56 -0800 (PST)
+Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
+        by smtp.gmail.com with ESMTPSA id k30-20020a63ba1e000000b005ac384b71cbsm6122379pgf.60.2024.01.14.17.30.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 14 Jan 2024 17:30:56 -0800 (PST)
+Date: Mon, 15 Jan 2024 09:30:51 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
+	andy@kernel.org, corbet@lwn.net
+Subject: Re: [PATCH v2 1/9] Documentation: gpio: add chardev userspace API
+ documentation
+Message-ID: <20240115013051.GA27189@rigel>
+References: <20240115004847.22369-1-warthog618@gmail.com>
+ <20240115004847.22369-2-warthog618@gmail.com>
+ <CAHp75Vc=oZK=VR6vZ+kTapq5WpySgKVjAfuO6mxcPqPfQe6VRg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115004847.22369-1-warthog618@gmail.com> <20240115004847.22369-10-warthog618@gmail.com>
-In-Reply-To: <20240115004847.22369-10-warthog618@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 15 Jan 2024 03:20:08 +0200
-Message-ID: <CAHp75VccZmEVLWkGYZGGYbsGsvfWzPs3ERiABEV1CF3+TLUcOw@mail.gmail.com>
-Subject: Re: [PATCH v2 9/9] Documentation: gpio: move gpio-mockup into
- obsolete section
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	andy@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75Vc=oZK=VR6vZ+kTapq5WpySgKVjAfuO6mxcPqPfQe6VRg@mail.gmail.com>
 
-On Mon, Jan 15, 2024 at 2:50=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Mon, Jan 15, 2024 at 03:11:07AM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 15, 2024 at 2:49 AM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > Add documentation for the GPIO character device userspace API.
+> >
+> > Added to the userspace-api book, but also provide a link from the
+> > admin-guide book, as historically the GPIO documentation has been
+> > there.
 >
-> The gpio-mockup has been obsoleted by the gpio-sim, so relocate its
-> documentation into the obsolete section of the admin-guide book.
+> ...
+>
+> > +.. note::
+> > +   Do NOT abuse userspace APIs to control hardware that has proper kernel
+> > +   drivers. There may already be a driver for your use case, and an existing
+> > +   kernel driver is sure to provide a superior solution to bitbashing
+> > +   from userspace.
+> > +
+> > +   Read Documentation/driver-api/gpio/drivers-on-gpio.rst to avoid reinventing
+> > +   kernel wheels in userspace.
+> > +
+> > +   Similarly, for multi-function lines there may be other subsystems, such as
+> > +   Documentation/spi/index.rst, Documentation/i2c/index.rst,
+> > +   Documentation/driver-api/pwm.rst, Documentation/w1/index.rst etc, that
+> > +   provide suitable drivers and APIs for your hardware.
+>
+> Very good note and would be nice to convince users to follow it:
+> https://stackoverflow.com/q/77683532/2511795
+> (OOH you might be proud it's Rust, OTOH as described above)
+>
 
-...
+Not familiar with that sensor.  And wasn't sure what they were up to or
+why, so didn't comment.  You do a good job reminding people in the
+forums, though, as above, not sure how many listen.
 
->      Character Device Userspace API (v1) <../../userspace-api/gpio/charde=
-v_v1>
->      Sysfs Interface <../../userspace-api/gpio/sysfs>
-> +    Mockup Testing Module <gpio-mockup>
+I'm language agnostic, so choose the language that suits your use case.
+You can still do stupid things in any language, though the language may
+constrain the set of stupid things you have to play with, or throw in
+some bonus ones you didn't realise you were getting (I'm looking at you
+C++).
 
-Not because of the alphabetical ordering, but
-historically/semantically shouldn't this be in between?
-(I'm fine with either way, just asking)
-
---=20
-With Best Regards,
-Andy Shevchenko
+Cheers,
+Kent.
 
