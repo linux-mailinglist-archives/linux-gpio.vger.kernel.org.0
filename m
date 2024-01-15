@@ -1,143 +1,108 @@
-Return-Path: <linux-gpio+bounces-2263-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2264-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5852882E0F9
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 20:53:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AB2C082E108
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 20:56:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CADCBB21CF7
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 19:53:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28974B21CCA
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 19:56:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9794B18E28;
-	Mon, 15 Jan 2024 19:53:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F18A418E2C;
+	Mon, 15 Jan 2024 19:56:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmlVty6C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1+TXjzr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F031318AE1;
-	Mon, 15 Jan 2024 19:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DA361798F;
+	Mon, 15 Jan 2024 19:56:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a2cea0563cbso452801766b.3;
-        Mon, 15 Jan 2024 11:52:58 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-40e586a62f7so68259225e9.2;
+        Mon, 15 Jan 2024 11:56:47 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705348377; x=1705953177; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705348605; x=1705953405; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=LiOJcOVnNa84I0LF7FtDQ1PT4mJ9d6sq/73epamT79s=;
-        b=PmlVty6CzPfdnTKxPY8HgIRq4HkYv+gJhGeggEBpXbwhGNnSwWwSJj/HYUXLym/gL0
-         81fFZfYaWobpO1qomvJzCZL0kArGQx8coydggjkh8X4xbNz64qQjTzV7q+8teyMT1JiM
-         lwiU88PY/KjabWyWPfXgfRivvfLU19cUuvMDd3ZaZwLQtrMRtyPsoE/BLBEOWOZiQQdH
-         cUwdh8dCvIgph3+iGyo4ZpSyKePKgHXGPaOGEutdV6quVNlOiSrLao3mKoTDRX1JOl0N
-         UjcXUUWxViBD6Wg+xSfcb36QW9GpbF3ReTcwIB9//xHg2ToUROjadPmkgEtxXKENojc+
-         pLag==
+        bh=9VpU6+YHkvn08adzjTfnX/FYJd9oIMlOMtpUIvBTFqE=;
+        b=l1+TXjzrwEaAtVkA9xpaTv4TV4xPhRinXvJ0Ja5eg/nbIKHRilBrTs8T96Cc2nehH9
+         nXvxaLS4bB0x3cXRa2EpDEhUjPuV4FRdARv9iEHYaaKPD1FZJKrLY8IUA/3IdmKcu0JX
+         PFgj46MxGB2VBVm+YVHhPV8z7evrmGL6G/9xJe0F/xVUdrSXwM6OI9nxyD1bIVi1Uz29
+         GzXYpgj/xJG0Yw/7XIlmfN01Lc20l5GmsX+iPDk8S+i+/xTp3OJ0YKhornWVBNXyZkJy
+         XK2VV58zNHgHyumkSKsyHRKjIGgxXhS2KMQesOG6tYoaL3XkEMiTXsVTLFll4y+8IdAZ
+         ovSQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705348377; x=1705953177;
+        d=1e100.net; s=20230601; t=1705348605; x=1705953405;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=LiOJcOVnNa84I0LF7FtDQ1PT4mJ9d6sq/73epamT79s=;
-        b=kHCYrvi0If9sdznE/cq3htEJ4HjIEclWwqgE0NH9b7aDSRncgS38oyl2xAiqLOmWTx
-         mDNyakoVGcLwo+xaaMw/t34KvS4tXg0huYOIOLLmtj2SGauc2weXuxjmz9y+vcj+GNQC
-         yOkLJtM0HwAj7BjWa7a8SE35JV99EV2muo91hFWx4QsuRzhKBUWljQz7OFDzCgM2nc4f
-         5i2bn9bazK3Zb7oxqpfMmKukDWE3QJlfuK60JRGmr35MaBWMHzkUDURrFqMwk634DoHa
-         90X3pl6YFgqGtnih28elnwR1/tw/9dSNUGV/2KvdOV578yuwZ7tfQxAuHhFMVifTIkjB
-         weAQ==
-X-Gm-Message-State: AOJu0YznQD5fBGy/HrbATP5XEnr8Tcf+fB8gWILCO6eq33wI/W9ywCuR
-	GUAaayqCKvWis98AXlDUfCmCIXjrquc9r8dgddk=
-X-Google-Smtp-Source: AGHT+IEk0k1PWQ9K9x0DxDo2CKRbYP9mI+6PRp8A8zglB+pp2PHGeJ0oZ4ZLwgOi1fu9kntLigDyjhm9Gv/+704FHLY=
-X-Received: by 2002:a17:907:10c7:b0:a2d:c839:e1e8 with SMTP id
- rv7-20020a17090710c700b00a2dc839e1e8mr1251268ejb.28.1705348377010; Mon, 15
- Jan 2024 11:52:57 -0800 (PST)
+        bh=9VpU6+YHkvn08adzjTfnX/FYJd9oIMlOMtpUIvBTFqE=;
+        b=sjVPwcUHtFcRj07mJZz+TBrW7gjQuaTwckhkVd8yQo6aNpK+hA/Lh71msTszf0TxiP
+         1j3SQJlIM/XnIdInhEKzWoe2S/K88DofxHC54OhG83ERi4s/Z+otYm4brJEnfJFDHGsV
+         DhGRN5T5u0OCRK0kdl1I6zbtoDHCXjJrrKc6LA5boFv/+Lw5ucMGttdKrYTfoGfzOIiA
+         ceR0mj7RT6AEQ2Y2OcT9lRE4LiqvoJvwHZjvq1sW8i81Jh9JwukuZtn/kwl1Jdntuai2
+         F0euL8kMWGBDeCTfcdTo1mPXu/biREN7MD8MWno3uYau/WKZjGvZJk16YuP3HomqvnQw
+         g9hQ==
+X-Gm-Message-State: AOJu0YxHgGh8KNNXgVTol+mEd21L1uQNWe+FdCSXNcWGtGXymkTGGBlN
+	Lc076mQu3w+A6kSx7vJvqtYV1/W8AS/bOdQTL9U=
+X-Google-Smtp-Source: AGHT+IG2g/dlkMceaiIBkgJJPIAHDRblBc7tqNn4N7kSwdW5ytNtvwVcSmdmsn+PEXzA0l4KSS3qI1/vQowfZ0sqVlU=
+X-Received: by 2002:a05:600c:1d95:b0:40e:6dfb:7b3f with SMTP id
+ p21-20020a05600c1d9500b0040e6dfb7b3fmr2194829wms.95.1705348605229; Mon, 15
+ Jan 2024 11:56:45 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115135416.10595-1-mitrutzceclan@gmail.com> <20240115135416.10595-3-mitrutzceclan@gmail.com>
-In-Reply-To: <20240115135416.10595-3-mitrutzceclan@gmail.com>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com> <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com>
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 15 Jan 2024 21:52:20 +0200
-Message-ID: <CAHp75VcjcgnLkQWim1AVnyeRGFwwKpaWSCvrmqdv41Lx87hMKw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] iio: adc: ad7173: add support for additional models
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Mon, 15 Jan 2024 21:56:09 +0200
+Message-ID: <CAHp75VezeBp3Umg4prvdS83WrHViyTs-hBV0SejVD2BBnGYEvg@mail.gmail.com>
+Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 15, 2024 at 3:54=E2=80=AFPM Dumitru Ceclan <mitrutzceclan@gmail=
-.com> wrote:
+On Mon, Jan 15, 2024 at 6:16=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
 >
-> Add support for Analog Devices AD7172-2, AD7175-8, AD7177-2
+> Some IOs can be needed during suspend_noirq/resume_noirq.
 
-Missing period.
+->suspend_noirq() / ->resume_noirq()
 
-...
-
-> + * AD717X family SPI ADC driver
-
-X --> x
+> So move suspend/resume callbacks to noirq.
 
 ...
 
-> + * Suported devices:
+> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x=
+_resume);
+> +static const struct dev_pm_ops pca953x_pm_ops =3D {
+> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pca953x_suspend_noirq, pca953x_resu=
+me_noirq)
+> +};
 
-Supported
-
-...
-
-> + *  AD7172-2 AD7172-4 AD7173-8 AD7175-2 AD7175-8 AD7176-2 AD7177-2
-
-Too long and no good delimiter (like comma), can you reformat this list?
-
-...
-
-> +#define AD7172_2_ID                    0x00d0
-> +#define AD7172_4_ID                    0x2050
->  #define AD7173_ID                      0x30d0
-> +#define AD7175_2_ID                    0x0cd0
-> +#define AD7175_8_ID                    0x3cd0
->  #define AD7176_ID                      0x0c90
-> +#define AD7177_ID                      0x4fd0
-
-Why not order by the ID value?
-
-...
-
-> +               //AD7177-2 has the filter values [0-6] marked as reserved
-> +               // datasheet page 58
-
-Be consistent with the type of comments. Either all C++ style or C.
-Also missing space in the first line.
-
-...
-
-> +               if (ref_sel =3D=3D AD7173_SETUP_REF_SEL_INT_REF &&
-> +                   st->info->id =3D=3D AD7172_2_ID){
-
-Missing space.
-
-> +                       fwnode_handle_put(child);
-> +                       return dev_err_probe(dev, -EINVAL, "Internal refe=
-rence is not available on ad7172-2\n");
-> +               }
-
-Not sure if Jonathan makes his series in for fwnode handle RAII.
+Please, use correct / modern macro.
 
 --=20
 With Best Regards,
