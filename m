@@ -1,109 +1,94 @@
-Return-Path: <linux-gpio+bounces-2210-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2211-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 604E182D2FE
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 02:37:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BC1D82D3D8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 06:19:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 148241C20A91
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 01:37:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 508A31F2158F
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 05:19:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0CA715C3;
-	Mon, 15 Jan 2024 01:36:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E6A23A2;
+	Mon, 15 Jan 2024 05:19:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F8wLW30S"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZLUTKLgn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EB5615A8;
-	Mon, 15 Jan 2024 01:36:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6d9b050e88cso4236430b3a.0;
-        Sun, 14 Jan 2024 17:36:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705282614; x=1705887414; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2L44BBktsfgGbx/HQrOtfP6m1NXjdR7rs7EZsZ5Jeeo=;
-        b=F8wLW30S3xYmNReOYaqIX8mWAnIcqW+7a/8c1LdNUlfmYtd80kHryZh10C3Pgh71kx
-         xiDOE/XsEonW9HYATH+ftTPjGj1d4jSkHehM0GU+zm1M4WzfobwHxa0TOyYRbXCd9geo
-         KdwCiXV6Ij9NYE72KzfrawQ+usZ4uT18qPzkmnmue1HRf7POpE1NDx+JsKnZhsvanxbw
-         micpXbUmZFo8lyGBBJralZJE+cb/pMoWDOu0eLCFT7wCgKZsQzRCOML1OJcIxzLTC3SQ
-         4pnZOr9Ir+uzX7asQMtXqK/Q9BURm5IIWhjHcK0ybi88JahvIScV6G5B+Of/ZlZjovBl
-         F62Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705282614; x=1705887414;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2L44BBktsfgGbx/HQrOtfP6m1NXjdR7rs7EZsZ5Jeeo=;
-        b=auOzLm9kzBcWeLpVAguSq6M/uZ4ogx+l4glxT3U0y5zTUmxmjUpP7+928hzRPgTCVd
-         HO1bqvQK4lBvBaJRwtBrXv+nnaUhusp+tYYXP6rMis4uGhgUbm6G86dYWXYWJXb1qKwk
-         3yO6uuY4O/uqIbz+GouKZr7Uwi9HVunoqt3aGmJeO0XsfU8W5vRENbR+p3ur5+jRt+OW
-         zFUvzcWCp/JIQZFcjqC9B8EfeL3snuHNxPtfH8RAVeWLjRSWs4clcC7DL08IWcOseObF
-         46fUoEqb4aa/O9z1Dn6m/VxkCsOOFcBvsZkTh+TjmVxaGFR5pRHPMX44UR81+Emkaozr
-         wUqA==
-X-Gm-Message-State: AOJu0Yx1d61n7bpLPSk+j5a9lyt2fZFqCcVNIdyxsktck8oISe++/Slh
-	SFfTTnwOMEG0NjyckkjCRBw=
-X-Google-Smtp-Source: AGHT+IGer0aNpFC8FvC+YpyC4QcfTIcSha2yJUFqz2+bBw8tarweyMJ7CNFKgqJMxQ0kugFA3tskqQ==
-X-Received: by 2002:a05:6a00:1995:b0:6da:c7ce:e863 with SMTP id d21-20020a056a00199500b006dac7cee863mr2132515pfl.12.1705282614495;
-        Sun, 14 Jan 2024 17:36:54 -0800 (PST)
-Received: from rigel (60-241-235-125.tpgi.com.au. [60.241.235.125])
-        by smtp.gmail.com with ESMTPSA id g4-20020a62f944000000b006daca8ecb85sm6538839pfm.139.2024.01.14.17.36.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jan 2024 17:36:54 -0800 (PST)
-Date: Mon, 15 Jan 2024 09:36:48 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-	andy@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH v2 9/9] Documentation: gpio: move gpio-mockup into
- obsolete section
-Message-ID: <20240115013648.GB27189@rigel>
-References: <20240115004847.22369-1-warthog618@gmail.com>
- <20240115004847.22369-10-warthog618@gmail.com>
- <CAHp75VccZmEVLWkGYZGGYbsGsvfWzPs3ERiABEV1CF3+TLUcOw@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB393C0B;
+	Mon, 15 Jan 2024 05:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+	Content-ID:Content-Description:In-Reply-To:References;
+	bh=D1nJEx0/AowVVAtrhWlb10WxQOmkj24eqK/IQEPifvU=; b=ZLUTKLgnJoFuTidcFqWWbGiwML
+	TeRQXVKDvLz++FA43OJdWy23J8SZhCQrEnrDgpN8YUvAW2i34oyfa9IO4cPvEDtAqsqNj0DQ8TF30
+	AH6bO0RzF5LAKTJYqSO6nY5T2ExlIrKY9m+oMfyytDXY7Z/TusWWSIElGGWMm/Fr5E5ZgW3FS4Ewl
+	G43QA6AsX5rkA3BJZq2LiLzQw1x7ihiyzXWgvmcfVmR8+g+9iR/eLyPOk8Psnx/Pl888AyBZoYMsr
+	ejZ7UqOrlRPQUjzm69wlI+T0QliFKSCZ4rmxBfdHHthYmYnzHUtzdITeQ8IVcBELRomlkNTv9zcdQ
+	caK4Ztbg==;
+Received: from [50.53.46.231] (helo=bombadil.infradead.org)
+	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
+	id 1rPFNy-007nM3-0s;
+	Mon, 15 Jan 2024 05:19:46 +0000
+From: Randy Dunlap <rdunlap@infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>,
+	John Crispin <john@phrozen.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Felix Fietkau <nbd@nbd.name>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH] gpio: EN7523: fix kernel-doc warnings
+Date: Sun, 14 Jan 2024 21:19:45 -0800
+Message-ID: <20240115051945.6173-1-rdunlap@infradead.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VccZmEVLWkGYZGGYbsGsvfWzPs3ERiABEV1CF3+TLUcOw@mail.gmail.com>
 
-On Mon, Jan 15, 2024 at 03:20:08AM +0200, Andy Shevchenko wrote:
-> On Mon, Jan 15, 2024 at 2:50 AM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > The gpio-mockup has been obsoleted by the gpio-sim, so relocate its
-> > documentation into the obsolete section of the admin-guide book.
->
-> ...
->
-> >      Character Device Userspace API (v1) <../../userspace-api/gpio/chardev_v1>
-> >      Sysfs Interface <../../userspace-api/gpio/sysfs>
-> > +    Mockup Testing Module <gpio-mockup>
->
-> Not because of the alphabetical ordering, but
-> historically/semantically shouldn't this be in between?
-> (I'm fine with either way, just asking)
->
 
-It is in order of most interest to the reader, hopefully.
-The first two are arguable, but the mockup is clearly last there.
-sysfs may actually be of more interest on average, but anyone still
-hanging on to sysfs deserves what they get.
-If the list were longer I would switch to alphabetical.
+gpio-en7523.c:22: warning: cannot understand function prototype: 'struct airoha_gpio_ctrl '
+gpio-en7523.c:27: warning: Function parameter or struct member 'dir' not described in 'airoha_gpio_ctrl'
+gpio-en7523.c:27: warning: Excess struct member 'dir0' description in 'airoha_gpio_ctrl'
+gpio-en7523.c:27: warning: Excess struct member 'dir1' description in 'airoha_gpio_ctrl'
 
-Cheers,
-Kent.
 
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: John Crispin <john@phrozen.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Felix Fietkau <nbd@nbd.name>
+Cc: linux-gpio@vger.kernel.org
+---
+ drivers/gpio/gpio-en7523.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff -- a/drivers/gpio/gpio-en7523.c b/drivers/gpio/gpio-en7523.c
+--- a/drivers/gpio/gpio-en7523.c
++++ b/drivers/gpio/gpio-en7523.c
+@@ -12,11 +12,11 @@
+ #define AIROHA_GPIO_MAX		32
+ 
+ /**
+- * airoha_gpio_ctrl - Airoha GPIO driver data
++ * struct airoha_gpio_ctrl - Airoha GPIO driver data
+  * @gc: Associated gpio_chip instance.
+  * @data: The data register.
+- * @dir0: The direction register for the lower 16 pins.
+- * @dir1: The direction register for the higher 16 pins.
++ * @dir: [0] The direction register for the lower 16 pins.
++ * [1]: The direction register for the higher 16 pins.
+  * @output: The output enable register.
+  */
+ struct airoha_gpio_ctrl {
 
