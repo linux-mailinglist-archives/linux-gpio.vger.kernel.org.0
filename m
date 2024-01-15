@@ -1,151 +1,153 @@
-Return-Path: <linux-gpio+bounces-2269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFD5582E165
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 21:14:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B5DE82E218
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 22:10:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53351B21F0A
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 20:14:12 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 48F771C221B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 21:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E03571947B;
-	Mon, 15 Jan 2024 20:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 207CA1B26E;
+	Mon, 15 Jan 2024 21:10:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eSNJhFI2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fIGAm2VI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 429D018EB2;
-	Mon, 15 Jan 2024 20:14:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a28b2e1a13fso955521366b.3;
-        Mon, 15 Jan 2024 12:14:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705349642; x=1705954442; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=w5Ok4CQAPkpysNJkJjEPQdxy0iDAuR07BorZIgMZAwk=;
-        b=eSNJhFI2HC3yags6sB4AhEGf5FSISrPystjo2EVRZjn+vsZq98eD/Nt2g67m5JQIwe
-         GEOeJCgTLZhQtczML86nPfgnf5fmHR9ly+l79DM7eS+dG6hA766mAiN/L59p1jY9vD2p
-         Uu6/NlFRZaNlg/ANmVjU1zC86MJ7wvny7uVXQB2SJIksNKUBpPEOicgDVzf4N4gsdXD1
-         dCmJpo2ekYok5tmyNJS5HrUWqQwcNy8ojcG5Q2YrsZblEXekGNhIPU7o1Esbtvd9AQaY
-         iDjaMOQQnxyvVrgqXFQtCcIaUSsuZ7tYWngNuDXkyFe/5AydaVwOE281GRDTt1uiSAHU
-         TRDQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705349642; x=1705954442;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=w5Ok4CQAPkpysNJkJjEPQdxy0iDAuR07BorZIgMZAwk=;
-        b=WKwa9KvlewsK4SgdcEgwyw6j9aUvZZYVx93UyrUmi1kh1dWjziI50XUJ2g8HnUAauW
-         2Crp1bH8MDeJdgNmV4IHKg3ZQ1Lpj7QY3yRq3+ZN2edpC/xOAsgXshhigFUztE7E23nQ
-         wIwX3E6ghOwYeAa+E2pOR4dZv1D8NO6gtUr1XXGfHU0x8Oo61qrLJjXwcRPpsT+54JTN
-         Rma9NVG03Ku1PFI5BUAjkGE25YxV0fcpO/2ROiSKdrBclxvsFYXPBvHcyeqSEKFpohGX
-         vtpr+GukD7lZ0HVWHITZ3b1taj6GK64ygjdluZS6iuCobjjonxBqSSEuJKbrpfVBJLOg
-         9UYw==
-X-Gm-Message-State: AOJu0YyUs54ibGrX9OXvSy855xVV8MhKrgmCGxcMC0PNrvYOaMgutwLt
-	WGlNG/XpTJ57I79Rx8Nlpd1A+K/Akpm/HaXSY6I=
-X-Google-Smtp-Source: AGHT+IF9hVIc0IofPq072tyoQiEbT9WWWMhwNrqZiDf3VofbR8YwcHsdBo838dWQyfyviH1gTOzEGh3uQ+XWN1I60MM=
-X-Received: by 2002:a17:906:39c6:b0:a27:bac8:1000 with SMTP id
- i6-20020a17090639c600b00a27bac81000mr2579905eje.96.1705349642324; Mon, 15 Jan
- 2024 12:14:02 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E4B1AADC;
+	Mon, 15 Jan 2024 21:10:14 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 604C1C433F1;
+	Mon, 15 Jan 2024 21:10:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705353014;
+	bh=sauC6l646yInpAfya7Ja5WE0DZA9tEWrgKDDX4tnnvg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=fIGAm2VIu4icN86mxo/htuCUowq2c+ol2GeKxtTSmteLESocU2c+lEWM9SJ35dFNC
+	 RnwNlPJRQkC4G5l4JJcQJTwkcIlC7VwWw/xgeMeiLb2olNvypioGn8t3K8EdaZx7eK
+	 +elEM+aR2Oud/B6F3l+wseLS4hcb6LWfKYr3X1rBwo9f+Wy12YeInUZKgyzyjQMcaB
+	 ZahwzEWx1Ip38MNZwXK3fJv+gCIkb7XTK9QBASleL+RHRTyXGeWriWVI2plhHGtrJC
+	 QgR4mfM1WLI9q43/pSV/PWfonEJRl9LNHgZ5szWqkgtltapmbHzbD5J2FX4LTByrQJ
+	 Gv8YO9DbVERTw==
+Message-ID: <fe3dcd70-2d32-4f5a-ad6b-121425333f53@kernel.org>
+Date: Mon, 15 Jan 2024 22:10:06 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com> <20240102-j7200-pcie-s2r-v1-14-84e55da52400@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v1-14-84e55da52400@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 15 Jan 2024 22:13:25 +0200
-Message-ID: <CAHp75VfPQz4PWdzFUU_n+R=XohBjyXM0zsjD-bUD2jmb42ds8Q@mail.gmail.com>
-Subject: Re: [PATCH 14/14] PCI: j721e: add suspend and resume support
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 1/2] gpio: vf610: add support to DT 'ngpios' property
+Content-Language: en-US
+To: Hector Palacios <hector.palacios@digi.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, robh+dt@kernel.org
+Cc: stefan@agner.ch, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ peng.fan@nxp.com, haibo.chen@nxp.com, alexander.stein@ew.tq-group.com
+References: <20240115131605.395691-1-hector.palacios@digi.com>
+ <20240115131605.395691-2-hector.palacios@digi.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240115131605.395691-2-hector.palacios@digi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Jan 15, 2024 at 6:16=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
->
-> From: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
->
-> Add suspend and resume support for rc mode.
+On 15/01/2024 14:16, Hector Palacios wrote:
+> Default to hardcoded VF610_GPIO_PER_PORT (32 pins) but allow optional
+> generic 'ngpios' property to be specified from the device tree.
 
-Same comments as for earlier patches.
-Since it's wide, please, check the whole series for the same issues
-and address them.
+You need to explain why.
 
-...
+Subject:
+Please use subject prefixes matching the subsystem. You can get them for
+example with `git log --oneline -- DIRECTORY_OR_FILE` on the directory
+your patch is touching.
 
-> +               if (pcie->reset_gpio)
+> 
+> Signed-off-by: Hector Palacios <hector.palacios@digi.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 6 ++++++
 
-Dup, why?
+Please use scripts/get_maintainers.pl to get a list of necessary people
+and lists to CC (and consider --no-git-fallback argument). It might
+happen, that command when run on an older kernel, gives you outdated
+entries. Therefore please be sure you base your patches on recent Linux
+kernel.
 
-> +                       gpiod_set_value_cansleep(pcie->reset_gpio, 0);
+Please run scripts/checkpatch.pl and fix reported warnings. Some
+warnings can be ignored, but the code here looks like it needs a fix.
+Feel free to get in touch if the warning is not clear.
 
-...
+Bindings are always separate...
 
-> +               if (pcie->reset_gpio) {
-> +                       usleep_range(100, 200);
 
-fsleep() ?
-Btw, why is it needed here, perhaps a comment?
+>  drivers/gpio/gpio-vf610.c                              | 7 ++++++-
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> index a27f92950257..ba4ebdbc5546 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-vf610.yaml
+> @@ -65,6 +65,12 @@ properties:
+>      minItems: 1
+>      maxItems: 4
+>  
+> +  ngpios:
+> +    description: The number of GPIO pins of the port
 
-> +                       gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +               }
+Skip description, this is a generic property.
 
-...
+> +    minimum: 1
+> +    maximum: 32
+> +    default: 32
 
-> +               ret =3D cdns_pcie_host_setup(rc, false);
-> +               if (ret < 0) {
-> +                       clk_disable_unprepare(pcie->refclk);
-> +                       return -ENODEV;
 
-Why is the error code being shadowed?
+Best regards,
+Krzysztof
 
-> +               }
-
-...
-
-> +#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-
-Is container_of.h included in this file?
-
-...
-
-> @@ -381,7 +383,6 @@ struct cdns_pcie_ep {
->         unsigned int            quirk_disable_flr:1;
->  };
->
-> -
->  /* Register access */
->  static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32=
- value)
->  {
-
-Stray change.
-
---=20
-With Best Regards,
-Andy Shevchenko
 
