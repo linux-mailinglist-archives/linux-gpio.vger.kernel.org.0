@@ -1,207 +1,71 @@
-Return-Path: <linux-gpio+bounces-2258-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2259-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 739D382DD75
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 17:20:49 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 583CB82DDB0
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 17:36:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 289FF1F21B2F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 16:20:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3FF81F22624
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 16:36:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D71F1A714;
-	Mon, 15 Jan 2024 16:16:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="cYFsUOgl"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E6B517BDC;
+	Mon, 15 Jan 2024 16:36:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from bmailout3.hostsharing.net (bmailout3.hostsharing.net [176.9.242.62])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CA961A282;
-	Mon, 15 Jan 2024 16:16:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B13B1C0013;
-	Mon, 15 Jan 2024 16:16:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705335391;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Xl/fBZ1aUKL0hWMZVIAmwRdTreoofQFnHKDzk938IBg=;
-	b=cYFsUOgl6y7i2QuPpsxsXWBrOBwsQ90mM3tk+a1DxY/7dFN4h/eO7KKH3s1uiLM6iQv4KK
-	04a/UkuS2hDma7uli8r7cwrd/YRBsweBdnep0Ox3XvjPj9dsvdV0+V8Dz/mBzypQ5Iqu9z
-	HB+xGlK9bIWWSpoz4LZZvDOyYWdFJ8mISjZ7AsF/+karA/IsfPBU/T0SzhQQLhz03pnaWI
-	nxu4Hd+kFzQ6zYEt+zZViZQSiFWITjkIdicyPh22QOS9CXNnLh7P6X0CKHiDvRccg7gwHC
-	Ff5Z32FMODVnAQ963/KoO/YhyuurA4DFam8aB5kK61mZElvfDZSOG5C/qh8iDg==
-From: Thomas Richard <thomas.richard@bootlin.com>
-Date: Mon, 15 Jan 2024 17:14:55 +0100
-Subject: [PATCH 14/14] PCI: j721e: add suspend and resume support
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 000C117C60
+	for <linux-gpio@vger.kernel.org>; Mon, 15 Jan 2024 16:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=wunner.de
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=h08.hostsharing.net
+Received: from h08.hostsharing.net (h08.hostsharing.net [IPv6:2a01:37:1000::53df:5f1c:0])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256
+	 client-signature RSA-PSS (4096 bits) client-digest SHA256)
+	(Client CN "*.hostsharing.net", Issuer "RapidSSL TLS RSA CA G1" (verified OK))
+	by bmailout3.hostsharing.net (Postfix) with ESMTPS id 560E2100DCEC5;
+	Mon, 15 Jan 2024 17:35:55 +0100 (CET)
+Received: by h08.hostsharing.net (Postfix, from userid 100393)
+	id E988740EC3; Mon, 15 Jan 2024 17:35:54 +0100 (CET)
+Date: Mon, 15 Jan 2024 17:35:54 +0100
+From: Lukas Wunner <lukas@wunner.de>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH] gpiolib: Fix scope-based gpio_device refcounting
+Message-ID: <20240115163554.GA4205@wunner.de>
+References: <f481d5bff884c16606cbe577e707e1c1c0e6ccb2.1705330861.git.lukas@wunner.de>
+ <CAMRc=MczKMSY48y3xC-0rah0sOP_OP1Ln1qu_QCCen504q5Xog@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240102-j7200-pcie-s2r-v1-14-84e55da52400@bootlin.com>
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
-In-Reply-To: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
- Tony Lindgren <tony@atomide.com>, 
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
- Aaro Koskinen <aaro.koskinen@iki.fi>, 
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
- Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>, 
- Lorenzo Pieralisi <lpieralisi@kernel.org>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
- Thomas Richard <thomas.richard@bootlin.com>
-X-Mailer: b4 0.12.0
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMRc=MczKMSY48y3xC-0rah0sOP_OP1Ln1qu_QCCen504q5Xog@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 
-From: Théo Lebrun <theo.lebrun@bootlin.com>
+On Mon, Jan 15, 2024 at 05:09:05PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Jan 15, 2024 at 4:05PM Lukas Wunner <lukas@wunner.de> wrote:
+> > While at it drop a superfluous trailing semicolon.
+> 
+> While not strictly needed here - I think it's better for readability
+> to have a semicolon following every statement. Any reasons for why
+> dropping it is better?
 
-Add suspend and resume support for rc mode.
+I looked at all the DEFINE_FREE definitions in Linus' current master
+and this appears to be the only one with the extraneous semicolon,
+so one reason is consistency.  Another the avoidance of the illusion
+that this is a proper C statement.
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
----
- drivers/pci/controller/cadence/pci-j721e.c    | 72 +++++++++++++++++++++++++++
- drivers/pci/controller/cadence/pcie-cadence.h |  3 +-
- 2 files changed, 74 insertions(+), 1 deletion(-)
+It's basically an empty statement so it doesn't hurt but it doesn't
+provide any value either.
 
-diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-index 477275d72257..51867a3f2499 100644
---- a/drivers/pci/controller/cadence/pci-j721e.c
-+++ b/drivers/pci/controller/cadence/pci-j721e.c
-@@ -6,6 +6,7 @@
-  * Author: Kishon Vijay Abraham I <kishon@ti.com>
-  */
- 
-+#include <linux/clk-provider.h>
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/gpio/consumer.h>
-@@ -554,6 +555,76 @@ static void j721e_pcie_remove(struct platform_device *pdev)
- 	pm_runtime_disable(dev);
- }
- 
-+#ifdef CONFIG_PM
-+static int j721e_pcie_suspend_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		if (pcie->reset_gpio)
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-+
-+		clk_disable_unprepare(pcie->refclk);
-+	}
-+
-+	cdns_pcie_disable_phy(pcie->cdns_pcie);
-+
-+	return 0;
-+}
-+
-+static int j721e_pcie_resume_noirq(struct device *dev)
-+{
-+	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-+	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-+	int ret;
-+
-+	ret = j721e_pcie_ctrl_init(pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "j721e_pcie_ctrl_init failed\n");
-+		return ret;
-+	}
-+
-+	j721e_pcie_config_link_irq(pcie);
-+
-+	/*
-+	 * This is not called explicitly in the probe, it is called by
-+	 * cdns_pcie_init_phy.
-+	 */
-+	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-+	if (ret < 0) {
-+		dev_err(dev, "cdns_pcie_enable_phy failed\n");
-+		return -ENODEV;
-+	}
-+
-+	if (pcie->mode == PCI_MODE_RC) {
-+		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-+
-+		ret = clk_prepare_enable(pcie->refclk);
-+		if (ret < 0) {
-+			dev_err(dev, "clk_prepare_enable failed\n");
-+			return -ENODEV;
-+		}
-+
-+		if (pcie->reset_gpio) {
-+			usleep_range(100, 200);
-+			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-+		}
-+
-+		ret = cdns_pcie_host_setup(rc, false);
-+		if (ret < 0) {
-+			clk_disable_unprepare(pcie->refclk);
-+			return -ENODEV;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops j721e_pcie_pm_ops = {
-+	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(j721e_pcie_suspend_noirq, j721e_pcie_resume_noirq)
-+};
-+#endif
-+
- static struct platform_driver j721e_pcie_driver = {
- 	.probe  = j721e_pcie_probe,
- 	.remove_new = j721e_pcie_remove,
-@@ -561,6 +632,7 @@ static struct platform_driver j721e_pcie_driver = {
- 		.name	= "j721e-pcie",
- 		.of_match_table = of_j721e_pcie_match,
- 		.suppress_bind_attrs = true,
-+		.pm	= pm_ptr(&j721e_pcie_pm_ops),
- 	},
- };
- builtin_platform_driver(j721e_pcie_driver);
-diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-index 3b0da889ed64..05d4b96fc71d 100644
---- a/drivers/pci/controller/cadence/pcie-cadence.h
-+++ b/drivers/pci/controller/cadence/pcie-cadence.h
-@@ -331,6 +331,8 @@ struct cdns_pcie_rc {
- 	unsigned int		quirk_detect_quiet_flag:1;
- };
- 
-+#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-+
- /**
-  * struct cdns_pcie_epf - Structure to hold info about endpoint function
-  * @epf: Info about virtual functions attached to the physical function
-@@ -381,7 +383,6 @@ struct cdns_pcie_ep {
- 	unsigned int		quirk_disable_flr:1;
- };
- 
--
- /* Register access */
- static inline void cdns_pcie_writel(struct cdns_pcie *pcie, u32 reg, u32 value)
- {
+Thanks,
 
--- 
-2.39.2
-
+Lukas
 
