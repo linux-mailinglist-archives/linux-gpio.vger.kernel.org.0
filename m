@@ -1,41 +1,41 @@
-Return-Path: <linux-gpio+bounces-2211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BC1D82D3D8
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 06:19:54 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6ABB282D3DB
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 06:21:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 508A31F2158F
-	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 05:19:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 09BC0B20DD3
+	for <lists+linux-gpio@lfdr.de>; Mon, 15 Jan 2024 05:21:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E6A23A2;
-	Mon, 15 Jan 2024 05:19:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A259223BF;
+	Mon, 15 Jan 2024 05:21:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ZLUTKLgn"
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Ne+vLaVp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDB393C0B;
-	Mon, 15 Jan 2024 05:19:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D62E20E6;
+	Mon, 15 Jan 2024 05:21:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
 	MIME-Version:Message-ID:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
 	Content-ID:Content-Description:In-Reply-To:References;
-	bh=D1nJEx0/AowVVAtrhWlb10WxQOmkj24eqK/IQEPifvU=; b=ZLUTKLgnJoFuTidcFqWWbGiwML
-	TeRQXVKDvLz++FA43OJdWy23J8SZhCQrEnrDgpN8YUvAW2i34oyfa9IO4cPvEDtAqsqNj0DQ8TF30
-	AH6bO0RzF5LAKTJYqSO6nY5T2ExlIrKY9m+oMfyytDXY7Z/TusWWSIElGGWMm/Fr5E5ZgW3FS4Ewl
-	G43QA6AsX5rkA3BJZq2LiLzQw1x7ihiyzXWgvmcfVmR8+g+9iR/eLyPOk8Psnx/Pl888AyBZoYMsr
-	ejZ7UqOrlRPQUjzm69wlI+T0QliFKSCZ4rmxBfdHHthYmYnzHUtzdITeQ8IVcBELRomlkNTv9zcdQ
-	caK4Ztbg==;
+	bh=OjPujY9C7yIfcDizEUGwzzY/IAFfDqfo9kY2VXYu5tA=; b=Ne+vLaVpzuwxD8aut76rvc+dej
+	Kg/zX+Tx2tikxB7MXjsA6LiVh0Un6gv6w1DXmoB7peuA18r8TzABTdkDg3Yvy8G65cMAuqpNOkWXn
+	kZYIt0N0/DSZOVhDZmGFAHJQ8TheFHiM3nPfCwkrDXWhGl3MlLrvv+FRw7I21FlTYpy0tYKszy2hD
+	306utSDRslEbdpdxWtuBfTUhZtS8GuRPg9fIzsa4OgFcfR6QVXehN2Wp/61WO/jilZX59o/TaOu0s
+	IAc7snEZqxoCo8hxtm+FSqV7ptZOd9ej42b/5P7V7xkCUXIdU6nEHg9UAvT/qC3ptTCLOJpHapjQv
+	oV+0/u2w==;
 Received: from [50.53.46.231] (helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtpsa (Exim 4.96 #2 (Red Hat Linux))
-	id 1rPFNy-007nM3-0s;
-	Mon, 15 Jan 2024 05:19:46 +0000
+	id 1rPFPo-007nTR-28;
+	Mon, 15 Jan 2024 05:21:40 +0000
 From: Randy Dunlap <rdunlap@infradead.org>
 To: linux-kernel@vger.kernel.org
 Cc: Randy Dunlap <rdunlap@infradead.org>,
@@ -44,9 +44,9 @@ Cc: Randy Dunlap <rdunlap@infradead.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Felix Fietkau <nbd@nbd.name>,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH] gpio: EN7523: fix kernel-doc warnings
-Date: Sun, 14 Jan 2024 21:19:45 -0800
-Message-ID: <20240115051945.6173-1-rdunlap@infradead.org>
+Subject: [PATCH v2] gpio: EN7523: fix kernel-doc warnings
+Date: Sun, 14 Jan 2024 21:21:40 -0800
+Message-ID: <20240115052140.18858-1-rdunlap@infradead.org>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -56,12 +56,13 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
+Add "struct" keyword and explain the @dir array differently to
+prevent kernel-doc warnings:
 
 gpio-en7523.c:22: warning: cannot understand function prototype: 'struct airoha_gpio_ctrl '
 gpio-en7523.c:27: warning: Function parameter or struct member 'dir' not described in 'airoha_gpio_ctrl'
 gpio-en7523.c:27: warning: Excess struct member 'dir0' description in 'airoha_gpio_ctrl'
 gpio-en7523.c:27: warning: Excess struct member 'dir1' description in 'airoha_gpio_ctrl'
-
 
 Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 Cc: John Crispin <john@phrozen.org>
@@ -70,6 +71,8 @@ Cc: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Felix Fietkau <nbd@nbd.name>
 Cc: linux-gpio@vger.kernel.org
 ---
+v2: Add commit text.
+
  drivers/gpio/gpio-en7523.c |    6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
