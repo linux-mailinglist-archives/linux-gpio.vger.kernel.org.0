@@ -1,276 +1,115 @@
-Return-Path: <linux-gpio+bounces-2283-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2284-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDB7D82F26A
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 17:30:27 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5DC5B82F411
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 19:20:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 552E8B230CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 16:30:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DACD628AB3E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 18:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 90C3B6FAE;
-	Tue, 16 Jan 2024 16:30:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 732C01CFB9;
+	Tue, 16 Jan 2024 18:19:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DsPYcpVq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBABECC;
-	Tue, 16 Jan 2024 16:30:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TDvYW53HJz67vyB;
-	Wed, 17 Jan 2024 00:27:27 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id 2F8E6140135;
-	Wed, 17 Jan 2024 00:30:05 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Tue, 16 Jan
- 2024 16:30:04 +0000
-Date: Tue, 16 Jan 2024 16:30:03 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: David Lechner <dlechner@baylibre.com>
-CC: Dumitru Ceclan <mitrutzceclan@gmail.com>, <linus.walleij@linaro.org>,
-	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
-	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
-	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
-	<hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
-Message-ID: <20240116163003.0000039d@Huawei.com>
-In-Reply-To: <CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
-	<CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BE831CFAE;
+	Tue, 16 Jan 2024 18:19:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705429182; cv=none; b=uS+fGuxlHIPzHAem07HLwlTW5dBuIWZfAAS1k6v52Dsb/V2owD8Y/ZR5Znj02N4eOByafREGSAAQeosgeYSh0qzHsRgV/Wq3mgeOdGcP+S1geyX5dwpg86Vnqp2NvLlsISVoQMKck9KUZiUsCz85F9w49RdANrjMrUSsLlKi45A=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705429182; c=relaxed/simple;
+	bh=cK0uK7R2+gEbjOCsenY8rYIQosqscpXTCp6F+qM8Pd8=;
+	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
+	 MIME-Version:Content-Type:Content-Disposition:
+	 Content-Transfer-Encoding:In-Reply-To; b=f4qqqu70PiY9s2RJIg1vFMbhOBJJrv52f+4/jsYkaxi57jZ2W7SIAMtX+XwwFcXgBljGh+5tFyOCaPUXJUCTXI8wkt/31vujlAMpGdhqPoBG0xItl0ZQ+wc8C760n3eWSnPuWHXTJnZDnNyzTXDwo4rThA2yKc47T2THVs29cKY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DsPYcpVq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4490FC433F1;
+	Tue, 16 Jan 2024 18:19:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705429181;
+	bh=cK0uK7R2+gEbjOCsenY8rYIQosqscpXTCp6F+qM8Pd8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=DsPYcpVqeSMaQVwap6TSM10XjoOPuojT6s+DQLUtOv+G5QecnwOOLG/Btd30B9sKD
+	 sPLkDVnjb3Ujys/qaKlj6P/2Q2Q976Ex1Qvf1/GH+yU1SiUnOC2LJ6MwMU6A0kkb4b
+	 laB0h0Yy1fmCV5dvcsLx+/XtcTFLtVXXPReiJfAINVpuOKuFIX3CfdDb/k7vHjTyE8
+	 EpnyMDv5x9RZhgd0oSGVD9/8ujhuWDfhz67X1nUEGE7Q2EVz0/eU202+tc6yopwHJk
+	 mlhOdTwzbhGv1kssB7mJQ3FfHQgC/qjiMsfFWtIYbEVwdvWBzJM/I/6Y3PGVRbGwm5
+	 BA2iB9BUFtu6Q==
+Date: Tue, 16 Jan 2024 12:19:39 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH 13/14] PCI: j721e: move reset GPIO to device struct
+Message-ID: <20240116181939.GA101049@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml500006.china.huawei.com (7.191.161.198) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-13-84e55da52400@bootlin.com>
 
-On Mon, 15 Jan 2024 15:53:39 -0600
-David Lechner <dlechner@baylibre.com> wrote:
+On Mon, Jan 15, 2024 at 05:14:54PM +0100, Thomas Richard wrote:
+> From: Théo Lebrun <theo.lebrun@bootlin.com>
+> 
+> Move reset GPIO to device struct, so it can be used at suspend and
+> resume stages.
 
-> On Wed, Dec 20, 2023 at 4:48=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@gma=
-il.com> wrote:
-> >
-> > The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> > which can be used in high precision, low noise single channel applicati=
-ons
-> > or higher speed multiplexed applications. The Sigma-Delta ADC is intend=
-ed
-> > primarily for measurement of signals close to DC but also delivers
-> > outstanding performance with input bandwidths out to ~10kHz.
-> >
-> > Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> > --- =20
->=20
-> Sorry for the late reply as I see this has been applied already but...
-We have plenty of time.  Rather than dropping the ad7173 from my tree,
-I'd prefer to see additional patches on top to tidy up whatever
-makes sense from David's feedback.
+s/Move/Add/ since we're not moving it from one struct to another.  (In
+subject also.)
 
->=20
-> (I've been going over the datasheets for these and other related parts
-> (AD411x) in detail today so please CC me on future updates to the
-> bindings/driver for these if you don't mind)
->=20
-> >  .../bindings/iio/adc/adi,ad7173.yaml          | 188 ++++++++++++++++++
-> >  1 file changed, 188 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad717=
-3.yaml
-> >
-> > diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml =
-b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> > new file mode 100644
-> > index 000000000000..7c8caef76528
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> > @@ -0,0 +1,188 @@
-> > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > +# Copyright 2023 Analog Devices Inc.
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Analog Devices AD7173 ADC
-> > +
-> > +maintainers:
-> > +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
-> > +
-> > +description: |
-> > +  Bindings for the Analog Devices AD717X ADC's. Datasheets for support=
-ed chips:
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheet=
-s/AD7172-2.pdf
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheet=
-s/AD7173-8.pdf
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheet=
-s/AD7175-2.pdf
-> > +    https://www.analog.com/media/en/technical-documentation/data-sheet=
-s/AD7176-2.pdf
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - adi,ad7172-2
-> > +      - adi,ad7173-8
-> > +      - adi,ad7175-2
-> > +      - adi,ad7176-2
-> > +
-> > +  reg:
-> > +    maxItems: 1
-> > +
-> > +  interrupts:
-> > +    maxItems: 1 =20
->=20
-> As discussed in v8 [1] it is not clear what signal this is. Based on
-> that discussion, I'm assuming the RDY signal, but how would bindings
-> consumers know that without a description since it is not the only
-> digital output signal of the chip? And why the ERROR signal was
-> omitted here was never addressed AFAICT.
->=20
-> [1]: https://lore.kernel.org/linux-iio/20231217135007.3e5d959a@jic23-huaw=
-ei/
+s/device struct/struct j721e_pcie/ since "device struct" could also
+refer to the "struct device", which is obviously not relevant here.
 
-I'd forgotten about that.  Adding interrupt-names would be the easiest
-way to resolve this.
+BTW, if you capitalize the PCI subject lines to match previous
+history, it will save some work when applying this series.
 
->=20
-> > +
-> > +  '#address-cells':
-> > +    const: 1
-> > +
-> > +  '#size-cells':
-> > +    const: 0
-> > +
-> > +  spi-max-frequency:
-> > +    maximum: 20000000
-> > + =20
->=20
-> According to the timing diagram in the datasheet, SCLK is high during
-> idle, so don't we need `spi-cpol: true` here?
->=20
-> Likewise, data is valid on the trailing SCLK edge, so don't we need
-> `spi-cpha: true` here?
->=20
->=20
-> > +  gpio-controller:
-> > +    description: Marks the device node as a GPIO controller.
-> > +
-> > +  "#gpio-cells":
-> > +    const: 2
-> > +    description:
-> > +      The first cell is the GPIO number and the second cell specifies
-> > +      GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
-> > +
-> > +  refin-supply:
-> > +    description: external reference supply, can be used as reference f=
-or conversion. =20
->=20
-> If I'm understanding correctly, this represents both voltage inputs
-> REF+ and REF-, correct? The datasheet says "Reference Input Negative
-> Terminal. REF=E2=88=92 can span from AVSS to AVDD1 =E2=88=92 1 V". It see=
-ms like they
-> should be separate supplies in case REF- is non-zero. Otherwise, how
-> can we know what voltage it is? (same comment applies to refin2.)
+Also rewrap commit logs to fill 75 columns and add blank lines between
+paragraphs (noticed in patch 12/14).
 
-Agreed, in this case these are directly used as references (we recently
-had another driver that could take a wide range of negative and positive
-inputs but in that case an internal reference was generated that didn't
-made it not matter exactly what was being supplied.  Not true here though!
-
->=20
-> > +
-> > +  refin2-supply:
-> > +    description: external reference supply, can be used as reference f=
-or conversion.
-> > +
-> > +  avdd-supply:
-> > +    description: avdd supply, can be used as reference for conversion.
-> > +
-> > +  avdd2-supply:
-> > +    description: avdd2 supply, used as the input to the internal volta=
-ge regulator.
-> > +
-> > +  iovdd-supply:
-> > +    description: iovdd supply, used for the chip digital interface.
-> > + =20
->=20
-> I overlooked this before, but these chips also have an optional
-> external clock input so it seems like they should have an optional
-> clocks property as well.
->=20
-> > +patternProperties:
-> > +  "^channel@[0-9a-f]$":
-> > +    type: object
-> > +    $ref: adc.yaml
-> > +    unevaluatedProperties: false
-> > +
-> > +    properties:
-> > +      reg:
-> > +        minimum: 0
-> > +        maximum: 15
-> > +
-> > +      diff-channels:
-> > +        items:
-> > +          minimum: 0
-> > +          maximum: 31
-> > +
-> > +      adi,reference-select:
-> > +        description: |
-> > +          Select the reference source to use when converting on
-> > +          the specific channel. Valid values are:
-> > +          refin      : REFIN(+)/REFIN(=E2=88=92).
-> > +          refin2     : REFIN2(+)/REFIN2(=E2=88=92)
-> > +          refout-avss: REFOUT/AVSS (Internal reference)
-> > +          avdd       : AVDD
-> > +
-> > +          External reference refin2 only available on ad7173-8.
-> > +          If not specified, internal reference used.
-> > +        $ref: /schemas/types.yaml#/definitions/string
-> > +        enum:
-> > +          - refin
-> > +          - refin2
-> > +          - refout-avss
-> > +          - avdd
-> > +        default: refout-avss
-> > +
-> > +    required:
-> > +      - reg
-> > +      - diff-channels
-> > +
-> > +required:
-> > +  - compatible
-> > +  - reg
-> > +  - interrupts =20
->=20
-> Why are interrupts required? What if the pin is not connected?
->=20
-Ah. I clearly failed to review this one closely enough.
-
-Absolutely agree that interrupts should never be required.
-No need for the driver to work if they aren't, but the binding
-shouldn't require them!
-
-Jonathan
-
-
+> @@ -54,6 +54,7 @@ struct j721e_pcie {
+>  	struct clk		*refclk;
+>  	u32			mode;
+>  	u32			num_lanes;
+> +	struct gpio_desc	*reset_gpio;
+>  	void __iomem		*user_cfg_base;
+>  	void __iomem		*intd_cfg_base;
+>  	u32			linkdown_irq_regfield;
+> @@ -359,7 +360,6 @@ static int j721e_pcie_probe(struct platform_device *pdev)
+>  	struct j721e_pcie *pcie;
+>  	struct cdns_pcie_rc *rc = NULL;
+>  	struct cdns_pcie_ep *ep = NULL;
+> -	struct gpio_desc *gpiod;
+>  	void __iomem *base;
+>  	struct clk *clk;
+>  	u32 num_lanes;
 
