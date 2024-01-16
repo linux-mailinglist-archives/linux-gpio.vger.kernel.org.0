@@ -1,112 +1,116 @@
-Return-Path: <linux-gpio+bounces-2278-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2279-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56CC782EC6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 11:00:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id D2B4682EC8E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 11:08:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61DF41C22741
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 10:00:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 03D371C22F8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 10:08:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5994134BE;
-	Tue, 16 Jan 2024 09:59:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5EC68134C0;
+	Tue, 16 Jan 2024 10:08:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cNTMmcuU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C17134A4;
-	Tue, 16 Jan 2024 09:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from dslb-188-097-211-099.188.097.pools.vodafone-ip.de ([188.97.211.99] helo=martin-debian-2.paytec.ch)
-	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <martin@kaiser.cx>)
-	id 1rPgDU-000bCp-21;
-	Tue, 16 Jan 2024 10:58:44 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Peng Fan <peng.fan@nxp.com>,
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F345E13AC0
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jan 2024 10:08:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-28be024282bso6333003a91.3
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jan 2024 02:08:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705399720; x=1706004520; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=GzojpZjDTSqNj7i7RHItvAayQhZ61n/AVntAtP2XvmM=;
+        b=cNTMmcuU+1VAGTjIdcIfgTfacQ2cMG+lXFz5kb1eYPV3KnmAvDQRJ6Uo/+I41G0Ahb
+         bnVhtwcQ/1HaALsRnrzFYgMEcQbAKQxpVY4dvwv432zpMrTRUZtifZDxrPqyBziJw/S4
+         8eJdCbaCIKYJEcBEAITr0yrr0eq8Op2RxX9qFqxSIMvedpt4vx7dpcRFyI6BgDIJIAz9
+         FtKJfL2KqZkT9NwFURIM5lwa2bDKnJdTTTKzVHEepmbCvTk+y5nGMWDydR5fvfPOEGS2
+         3cclNd/nVBtJIiTYIIQjgZyvh8zudIpILzLzr0BWLozVsY8L57/Nb5SM0ExQqf0VBk5z
+         dU+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705399720; x=1706004520;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GzojpZjDTSqNj7i7RHItvAayQhZ61n/AVntAtP2XvmM=;
+        b=R7M/rTPCns3FoudRi92ukYagYEONrQwPLQHwyePPNvRt3U/OJdKgvF3r5W5fAinzMf
+         wMj+wkodGQx0d7qNK3QZPErmd0pwaSND806EOSPLITGlavIsAJWJ/cw0qCbjpMnwHcZr
+         /u7NSACVp4u16zV8BNWWv0DGz6YOycZfbJ+kJRslDEf7PYczaIKee4v4FSUANtHAbylR
+         DUIHsv7nCBs5P0uoRQNl8R9wBkDmCZxauUshH/3jWFt214JqcHq0sx/TEsHU97+6VvRM
+         hAe570SGoHfLoIYtjO4EDIWk5JgzVwgPd7NVTOmwMUXsQMi22n393aQzQcH131l0ra8L
+         YzWQ==
+X-Gm-Message-State: AOJu0YzFx9Nqali9Z5bc1+hEEPJAtO6615tB/o9KRipHTHFjA4CnL8ux
+	ng6eK4/CgGXd1fWvGAk1zc8=
+X-Google-Smtp-Source: AGHT+IFKCUT383TMaDaDHoOq4zsbCm2wO/ftoXm0dK2djeodEFnSCJLZH9L9MZNh561P/c0u610v2g==
+X-Received: by 2002:a17:90a:c692:b0:28b:f368:9a85 with SMTP id n18-20020a17090ac69200b0028bf3689a85mr3563266pjt.92.1705399720040;
+        Tue, 16 Jan 2024 02:08:40 -0800 (PST)
+Received: from rigel (220-245-101-143.tpgi.com.au. [220.245.101.143])
+        by smtp.gmail.com with ESMTPSA id pb6-20020a17090b3c0600b0028e823f8be4sm663053pjb.36.2024.01.16.02.08.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 16 Jan 2024 02:08:39 -0800 (PST)
+Date: Tue, 16 Jan 2024 18:08:34 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Phil Howard <phil@gadgetoid.com>,
+	Erik Schilling <erik.schilling@linaro.org>,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v2] gpio: vf610: allow disabling the vf610 driver
-Date: Tue, 16 Jan 2024 10:58:45 +0100
-Message-Id: <20240116095845.47458-1-martin@kaiser.cx>
-X-Mailer: git-send-email 2.39.2
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH v2] README: mention the Linux 5.10 requirement
+ for libgpiod v2
+Message-ID: <20240116100834.GA3474@rigel>
+References: <20240116094057.10533-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240116094057.10533-1-brgl@bgdev.pl>
 
-The vf610 gpio driver is enabled by default for all i.MX machines,
-without any option to disable it in a board-specific config file.
+On Tue, Jan 16, 2024 at 10:40:57AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Major version 2 of libgpiod requires linux kernel uAPI v2 to be available.
+> This was released in Linux 5.10 so mention it in the README.
+>
+> Suggested-by: Kent Gibson <warthog618@gmail.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+> v1 -> v2:
+> - reword as suggested by Kent
+>
+>  README | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/README b/README
+> index 632aab3..6063f43 100644
+> --- a/README
+> +++ b/README
+> @@ -8,8 +8,9 @@ libgpiod
+>               character device (gpiod stands for GPIO device)
+>
+>  Since linux 4.8 the GPIO sysfs interface is deprecated. User space should use
+> -the character device instead. This library encapsulates the ioctl calls and
+> -data structures behind a straightforward API.
+> +the character device instead. Version 2 of libgpiod requires GPIO character
+> +device uAPI v2 which was first released in linux v5.10. This library
+> +encapsulates the ioctl calls and data structures behind a straightforward API.
+>
 
-Most i.MX chipsets have no hardware for this driver. Change the default
-to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+Minor nit - drop the "v" in v5.10 to be consistent with other use,
+including the 4.8 in the same paragraph?
 
-Add a text description after the bool type, this makes the driver
-selectable by make config etc. Enable the driver in arm64's default
-config and in imx_v6_v7_defconfig to support chips like i.MX7ULP,
-i.MX8QM, DXL, ULP and i.MX93.
-
-Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-Signed-off-by: Martin Kaiser <martin@kaiser.cx>
----
-v2:
- - enable the vf610 gpio driver in the defconfig files for arm_v7
-   (i.MX7ULP) and arm64 (i.MX8QM, DXL, ULP and i.MX93)
-
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
- arch/arm64/configs/defconfig         | 1 +
- drivers/gpio/Kconfig                 | 3 ++-
- 3 files changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 0a90583f9f01..3cdcb786f33f 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -208,6 +208,7 @@ CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_MXC=y
- CONFIG_GPIO_SIOX=m
-+CONFIG_GPIO_VF610=y
- CONFIG_GPIO_MAX732X=y
- CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCF857X=y
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index e6cf3e5d63c3..915c7c8fd13f 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -632,6 +632,7 @@ CONFIG_GPIO_SYSCON=y
- CONFIG_GPIO_UNIPHIER=y
- CONFIG_GPIO_VISCONTI=y
- CONFIG_GPIO_WCD934X=m
-+CONFIG_GPIO_VF610=y
- CONFIG_GPIO_XGENE=y
- CONFIG_GPIO_XGENE_SB=y
- CONFIG_GPIO_MAX732X=y
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1301cec94f12..353af1a4d0ac 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -711,7 +711,8 @@ config GPIO_UNIPHIER
- 	  Say yes here to support UniPhier GPIOs.
- 
- config GPIO_VF610
--	def_bool y
-+	bool "VF610 GPIO support"
-+	default y if SOC_VF610
- 	depends on ARCH_MXC
- 	select GPIOLIB_IRQCHIP
- 	help
--- 
-2.39.2
-
+Cheers,
+Kent.
 
