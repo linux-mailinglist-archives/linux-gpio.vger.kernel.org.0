@@ -1,141 +1,212 @@
-Return-Path: <linux-gpio+bounces-2287-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2288-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA0CB82FC08
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 23:10:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D14EA82FCE5
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 23:32:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E815C1C274DB
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 22:10:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C35C1F2892E
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 22:32:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72B621378;
-	Tue, 16 Jan 2024 20:14:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35E793D96A;
+	Tue, 16 Jan 2024 21:41:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRmc+pU0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="LOb3vEPF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ua1-f45.google.com (mail-ua1-f45.google.com [209.85.222.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A0F1D54F;
-	Tue, 16 Jan 2024 20:14:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E582235F03
+	for <linux-gpio@vger.kernel.org>; Tue, 16 Jan 2024 21:41:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705436071; cv=none; b=ETiZHlgJ6R9vIUiMt22SJYfhM5qQeCbJfbDPf2S8UdEYdoNZYlQ7y5PgP7dDqLUBL0rDyu9R04eBumuHLqnXwpjRzihwulV3xlAhMwkm8yfZcZJ2epMgwBOJqispXVXSbw4ZHPdyMkqO35fvg+hmQd0rjmChpqy2PA830eQ3f14=
+	t=1705441287; cv=none; b=szshXOmlXQzpvRQ3g+PldhCvB6rBUoP4hlK32XJhn3FGn2hvIShgViuRl+5+9+s1/5owmheAZ1AfyZ3hnZAuHVUi4dU3JK9CqXpwJs8I9cNuDubc78hA/r5oMdxtjF0DPEgn8qB2TSO/g8CRyHvP2Xh7lA7uGFPFBI4isxcQw1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705436071; c=relaxed/simple;
-	bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
+	s=arc-20240116; t=1705441287; c=relaxed/simple;
+	bh=/LJidhTBr1TIpVkob74VQJvRJ4hEMWmnye+c9nRvJu4=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=M+ToyWEbvw4LvdP15EpDUuETNrDi3+N+2mUik7YnkDv+1m5ze2PTUV6dD0Uof0hpwOx/CCYoYRPSQK6r3mMhDaNMOwx7zPDXc0lQoE5XM45AHrEIUewr2lQ0vY29au0zSGCyWZgm1zY1YhO3n8iTyaqslBKpkOkPjSnWLEBx5NY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRmc+pU0; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a28b1095064so1160063766b.2;
-        Tue, 16 Jan 2024 12:14:29 -0800 (PST)
+	 Content-Type:Content-Transfer-Encoding; b=o0BjDhBpE5PLfKj/G/Xme2dOfnVH9ElVL1vynWke6+O3EQOSRdcVOmaX2uGtVbBOxwIoAAEj8KBeCqZ9JUE+oWaqXYml0ErG2FuUdhBacPJdEeFgLfjE90upz7pWx2yncw8I4ytDAdG45KtJwGLyClxYXA0aqDRtskgmEsIP7iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=LOb3vEPF; arc=none smtp.client-ip=209.85.222.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f45.google.com with SMTP id a1e0cc1a2514c-7d2a1d0b916so203553241.0
+        for <linux-gpio@vger.kernel.org>; Tue, 16 Jan 2024 13:41:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705436068; x=1706040868; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705441284; x=1706046084; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
-        b=KRmc+pU0fMj/1YI6pi+DmkUL/KSbPWtL8RzOyulc16/OpVUPO126t2xuFks3wY6nn+
-         aZ4lEJ88NT3jE5qkXqi4+xTWbpFs3eMyDG7fuu4yNG+DRz/MUvCPu12scZiojtptb1a8
-         Za6qYqwTd5HWUjNgDggTwRrS/lxilxSi8P6zIizinKDsX1uy1R5aUf2KUPHvbiEoWnDM
-         +R1/BN4gzKd7PaEvKY1K1JGt/rNdV0cJxNglL8ruDBGlT+2Yj9KfdnjtGkbtPQdu5N3V
-         dy9oJlMFGBmc4QwCADSfzpMgHYAGL0NZPKdXvVWfB5/P5LR6SBkN/1jKL6m3fHYgX+CZ
-         Kzmw==
+        bh=ef0uuGFlu4TkR3S/PSmAQYeICoa3SoldbUHXTDWaWbk=;
+        b=LOb3vEPFzLM6fz1hE+kguHNcSWiSjFTFiWi7wZcOHdBo/Qw/DCMS3c1CjAt4uWFNKW
+         DRdeBbDxiPLN+f9WpqoA8UQs3i77Z9UnC9+zmzyVqS2tlkD60ErYYEal6BWxfwK/gI71
+         gV7guM8xaZLnYBi7426dsmnf8H2xlN2jARPoOq98Xn5174ziyrubMAjRIt9G/liYS21d
+         5aAiKs3M4QFWrlWbJ/pXa/uJTbWmabh2QAwU9/L48YlJTQ0AliOQ4/wDCBG+wOVpnW7b
+         J7T7OEuK1mhcDT6qalT/fcsddxqri2uzlud/B8ZIU9Y4g5dEz+kY9aHmGTl+DcPMwhdM
+         zQuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705436068; x=1706040868;
+        d=1e100.net; s=20230601; t=1705441284; x=1706046084;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
-        b=MJsMjuvXHuF0uaysAVslx9hENJUDj+K9b1gPChNOk0LU0SLd2nwiw+Qno7d5q/GG7S
-         Vmj15wLYXk+YifFUlsRl1Lra9sXz+ZISCqQdLLP2QRbgC0mmK9wbOZ9vYISFxDykVEfb
-         QgL+9jVrjSUYwucQ+a+QAyWOL+KvBctomF7TIlWaTHCEhJ3LMvydDXriITN+xtQ/SKWJ
-         DvCROi4C/63+iDjngLKg2i4jHe9zwpFcu/9jyyfqhHVxJUR6tf2abOJR+3XVFJookPt5
-         bFCw1OIMdgWhhBGAPcPmUuovM/3KWOCSa3000YBPmc3kfwmD2PoeBqtdqHFOQpUZt7zO
-         nXyg==
-X-Gm-Message-State: AOJu0Yw/99ebVxtJxLhCF0rEBNHUGls6e5JW9gkSNa5c4aHda5Kz7Glb
-	c+o/WbN5d9XT3kxwUhn3COdKRj0yqMWU1/fronQ=
-X-Google-Smtp-Source: AGHT+IG58HwU8rJHDRxz56XmFyk02seqYGpjo2GT2CvonR3q73elLuGZU0ltKR1+LWhhT75oTCZEYv5n8P+wdWKTdsE=
-X-Received: by 2002:a17:906:3c08:b0:a2e:9845:ae28 with SMTP id
- h8-20020a1709063c0800b00a2e9845ae28mr305082ejg.294.1705436067899; Tue, 16 Jan
- 2024 12:14:27 -0800 (PST)
+        bh=ef0uuGFlu4TkR3S/PSmAQYeICoa3SoldbUHXTDWaWbk=;
+        b=fxs+oXGlxRoTlLNjq5Gq5jpabOMWwoZgpi1/twe3K6WxEsk2VkoPCm+no6Xk3szKeF
+         I3ssL6EtDLT8oCy+LDFA4OTljBTgglx+jaiK4/uqx68/TX0mz3pGm8CurU1CqhRfrZEm
+         hcJrgKjDGFvnrgqrwDxIvt7rggoEv3HmlF9bo7O9OuR3WrrzLapb16DowvzYRJW7tYAk
+         12OOqtfF4sm6bwyYdb3C8rY62LCPTZGTsev6dQvjOnW0oEzQ8J0NnJvtufIJ1YUBQei6
+         2ohXixiiswl0xNWbHYbR+8RpTZFmhBhy8DIqGmHV9g5duUfKR4C4ExKGZatanBxc5PS1
+         QtKQ==
+X-Gm-Message-State: AOJu0YyyVk4AyShiAkBNcYsw1ZVIqNn1HZQTWnPr9SMmu9niad2uJHZv
+	rpY1goCUvCV2e2oN4Pof48tio3ZH3ymS9RGKlIYvIutswrzpxQ==
+X-Google-Smtp-Source: AGHT+IFmCZALerJPM8J0+yd5E6NTsF8sIZkFEH/Cm99GpS2xyCSz9bGTxCqGMHQSSQWncMPJb0wifoW6pfWzXgU7Iro=
+X-Received: by 2002:a05:6102:3641:b0:467:fb20:6a44 with SMTP id
+ s1-20020a056102364100b00467fb206a44mr4737690vsu.26.1705441283716; Tue, 16 Jan
+ 2024 13:41:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
- <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
- <20210117130434.663qpp6noujptdyt@pengutronix.de> <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
- <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
- <Y/YPtJK8nVBthCML@surfacebook> <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
- <5521796b-d51e-42a3-831a-7fbf75247726@gadgetoid.com> <CAHp75VfLEBw=ypFiLpd8ken5JPkW5DJey_UroV+3B6ZSaK3Jyw@mail.gmail.com>
- <CA+kSVo-yjU17Q97vN+DrpUUxCku6H309iXNDiBy9fJ3QPM8aTQ@mail.gmail.com>
-In-Reply-To: <CA+kSVo-yjU17Q97vN+DrpUUxCku6H309iXNDiBy9fJ3QPM8aTQ@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 16 Jan 2024 22:13:50 +0200
-Message-ID: <CAHp75VdNir8G+CLDd7LZhgA=j+PZuQSXLEiYPwaVEmin7=bUYQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
-To: Phil Howard <phil@gadgetoid.com>
-Cc: Nicola Di Lieto <nicola.dilieto@gmail.com>, 
-	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, 
-	Rob Herring <robh@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <20231219201102.41639-1-brgl@bgdev.pl> <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
+In-Reply-To: <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 16 Jan 2024 22:41:12 +0100
+Message-ID: <CAMRc=McueRLdFJ_p-QPKPwFJatVXOG8hyeZKniAPGDBrNo2xFg@mail.gmail.com>
+Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 16, 2024 at 4:15=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
-ote:
-> On Fri, 12 Jan 2024 at 18:32, Andy Shevchenko <andy.shevchenko@gmail.com>=
- wrote:
-> > On Fri, Jan 12, 2024 at 3:38=E2=80=AFPM Philip Howard <phil@gadgetoid.c=
-om> wrote:
-> > > On 22/02/2023 15:00, Nicola Di Lieto wrote:
-> > > > On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com=
- wrote:
-
-...
-
-> > > I'd love to know if you're still likely to look into this.
+On Tue, Jan 16, 2024 at 7:23=E2=80=AFPM Guenter Roeck <linux@roeck-us.net> =
+wrote:
+>
+> Hi,
+>
+> On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > >
-> > If you are asking me as well (since To refers to me), Cc for the new
-> > version and I might look at it. Currently I am OoO till the end of
-> > month and after that I probably will have more tasks to do, so no
-> > guarantee for this cycle, but just in case Cc and we will see.
+> > extra_checks is only used in a few places. It also depends on
+> > a non-standard DEBUG define one needs to add to the source file. The
+> > overhead of removing it should be minimal (we already use pure
+> > might_sleep() in the code anyway) so drop it.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Thanks for your reply!
+> This patch triggers (exposes) the following backtrace.
 >
-> I'm not sure I know how to "Cc for the new version," it took me about
-> an hour to generate a (hopefully) suitably formatted email response
-> to this patch. I've only just subbed to linux-pwm.
+> BUG: sleeping function called from invalid context at drivers/gpio/gpioli=
+b.c:3738
+> in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 7, name: kworker=
+/0:0
+> preempt_count: 1, expected: 0
+> RCU nest depth: 0, expected: 0
+> 3 locks held by kworker/0:0/7:
+>  #0: c181b3a4 ((wq_completion)events_freezable){+.+.}-{0:0}, at: process_=
+scheduled_works+0x23c/0x644
+>  #1: c883df28 ((work_completion)(&(&host->detect)->work)){+.+.}-{0:0}, at=
+: process_scheduled_works+0x23c/0x644
+>  #2: c24e1720 (&host->lock){-...}-{2:2}, at: sdhci_check_ro+0x14/0xd4
+> irq event stamp: 2916
+> hardirqs last  enabled at (2915): [<c0b18838>] _raw_spin_unlock_irqrestor=
+e+0x70/0x84
+> hardirqs last disabled at (2916): [<c0b1853c>] _raw_spin_lock_irqsave+0x7=
+4/0x78
+> softirqs last  enabled at (2360): [<c00098a4>] __do_softirq+0x28c/0x4b0
+> softirqs last disabled at (2347): [<c0022774>] __irq_exit_rcu+0x15c/0x1a4
+> CPU: 0 PID: 7 Comm: kworker/0:0 Tainted: G                 N 6.7.0-09928-=
+g052d534373b7 #1
+> Hardware name: Freescale i.MX25 (Device Tree Support)
+> Workqueue: events_freezable mmc_rescan
+>  unwind_backtrace from show_stack+0x10/0x18
+>  show_stack from dump_stack_lvl+0x34/0x54
+>  dump_stack_lvl from __might_resched+0x188/0x274
+>  __might_resched from gpiod_get_value_cansleep+0x14/0x60
+>  gpiod_get_value_cansleep from mmc_gpio_get_ro+0x20/0x30
 
-I use the script [1] that uses a heuristics for the Cc/To fields,
-additionally you can add --cc "Andy Shevchenko ..." at the end.
+When getting GPIO value with a spinlock taken the driver *must* use
+the non-sleeping variant of this function: gpiod_get_value(). If the
+underlying driver can sleep then the developer seriously borked. The
+API contract has always been this way so I wouldn't treat it as a
+regression.
 
+I'd start with checking if replacing this with gpiod_get_value()
+helps. Possibly even do:
 
-> But yes- my reply was cast out into the ether in the hopes that logging
-> my interest might get things moving again, or at least let me know if I
-> should try tackling it myself.
+if (in_atomic())
+    gpiod_get_value();
+else
+    gpiod_get_value_cansleep();
+
+Bartosz
+
+>  mmc_gpio_get_ro from esdhc_pltfm_get_ro+0x20/0x48
+>  esdhc_pltfm_get_ro from sdhci_check_ro+0x44/0xd4
+>  sdhci_check_ro from mmc_sd_setup_card+0x2a8/0x47c
+>  mmc_sd_setup_card from mmc_sd_init_card+0xfc/0x93c
+>  mmc_sd_init_card from mmc_attach_sd+0xd8/0x180
+>  mmc_attach_sd from mmc_rescan+0x2ac/0x30c
+>  mmc_rescan from process_scheduled_works+0x2e4/0x644
+>  process_scheduled_works from worker_thread+0x188/0x418
+>  worker_thread from kthread+0x11c/0x144
+>  kthread from ret_from_fork+0x14/0x38
 >
-> I'm moving over to libgpiod on Raspberry Pi, losing software PWM (
-> from the library I was using) in the process. I don't want to use or
-> contrive another not-invented-here solution.
-
-Totally supporting this motivation!
-
-[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.=
-sh
-
---=20
-With Best Regards,
-Andy Shevchenko
+> This is with the imx25-pdk qemu emulation when booting from mmc/sd card.
+> It isn't really surprising since sdhci_check_ro() calls the gpio code und=
+er
+> spin_lock_irqsave(). No idea how to fix that, so I won't even try.
+>
+> Bisect log attached for reference.
+>
+> Guenter
+>
+> ---
+> # bad: [052d534373b7ed33712a63d5e17b2b6cdbce84fd] Merge tag 'exfat-for-6.=
+8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
+> # good: [70d201a40823acba23899342d62bc2644051ad2e] Merge tag 'f2fs-for-6.=
+8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
+> git bisect start 'HEAD' '70d201a40823'
+> # good: [b6e1b708176846248c87318786d22465ac96dd2c] drm/xe: Remove uniniti=
+alized variable from warning
+> git bisect good b6e1b708176846248c87318786d22465ac96dd2c
+> # good: [7912a6391f3ee7eb9f9a69227a209d502679bc0c] Merge tag 'sound-6.8-r=
+c1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+> git bisect good 7912a6391f3ee7eb9f9a69227a209d502679bc0c
+> # bad: [a3cc31e75185f9b1ad8dc45eac77f8de788dc410] Merge tag 'libnvdimm-fo=
+r-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+> git bisect bad a3cc31e75185f9b1ad8dc45eac77f8de788dc410
+> # bad: [576db73424305036a6aa9e40daf7109742fbb1df] Merge tag 'gpio-updates=
+-for-v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
+> git bisect bad 576db73424305036a6aa9e40daf7109742fbb1df
+> # good: [61f4c3e6711477b8a347ca5fe89e5e6613e0a147] Merge tag 'linux-watch=
+dog-6.8-rc1' of git://www.linux-watchdog.org/linux-watchdog
+> git bisect good 61f4c3e6711477b8a347ca5fe89e5e6613e0a147
+> # good: [12b7f4ddfcb66dafed432cf4a987f5b40179c0f1] Merge tag 'device_is_b=
+ig_endian-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/=
+driver-core into gpio/for-next
+> git bisect good 12b7f4ddfcb66dafed432cf4a987f5b40179c0f1
+> # good: [ede7511e7c22c9542a699ddff9f32de74e0bb972] gpiolib: cdev: include=
+ overflow.h
+> git bisect good ede7511e7c22c9542a699ddff9f32de74e0bb972
+> # bad: [f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4] gpio: dwapb: Use generi=
+c request, free and set_config
+> git bisect bad f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4
+> # good: [7dd1871e5049bbd40ee78ac94b1678ba5caf2486] gpio: tps65219: don't =
+use CONFIG_DEBUG_GPIO
+> git bisect good 7dd1871e5049bbd40ee78ac94b1678ba5caf2486
+> # bad: [0338f6a6fb659f083eca7dd5967bb668d14707f8] gpiolib: drop tabs from=
+ local variable declarations
+> git bisect bad 0338f6a6fb659f083eca7dd5967bb668d14707f8
+> # bad: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: remove extra_c=
+hecks
+> git bisect bad 5d5dfc50e5689d5b09de4a323f84c28a6700d156
+> # first bad commit: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: r=
+emove extra_checks
 
