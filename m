@@ -1,174 +1,141 @@
-Return-Path: <linux-gpio+bounces-2286-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2287-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F48582F429
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 19:23:56 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA0CB82FC08
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 23:10:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8EF41B210CB
-	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 18:23:53 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E815C1C274DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 16 Jan 2024 22:10:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D7D91CA8C;
-	Tue, 16 Jan 2024 18:23:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A72B621378;
+	Tue, 16 Jan 2024 20:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRiiHs2n"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KRmc+pU0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FB391CD2D;
-	Tue, 16 Jan 2024 18:23:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A0F1D54F;
+	Tue, 16 Jan 2024 20:14:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705429416; cv=none; b=qKfaY/kqnwPVu5kfgfkn0Ci5FKRvrggbic9rpPKoEGe/jV3tgQl0FIgSIO09929taNDN6ov7//b9Dkg5WH56q3mzbNpWYQmgwOq2wuJttdByk+qeo4HWO4kIfh5QUlE0JpoY2C9BifHPev9YEg4cJMMcKrA0VX8myGNS8tup/bY=
+	t=1705436071; cv=none; b=ETiZHlgJ6R9vIUiMt22SJYfhM5qQeCbJfbDPf2S8UdEYdoNZYlQ7y5PgP7dDqLUBL0rDyu9R04eBumuHLqnXwpjRzihwulV3xlAhMwkm8yfZcZJ2epMgwBOJqispXVXSbw4ZHPdyMkqO35fvg+hmQd0rjmChpqy2PA830eQ3f14=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705429416; c=relaxed/simple;
-	bh=t6QZpw8tRWPxfxmxVzrShS7GSh7KnuODXeUv5G5MGUg=;
+	s=arc-20240116; t=1705436071; c=relaxed/simple;
+	bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:Sender:
-	 Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fRblRxPAoE5bU2j6MiDxi8sKFB/sVqLUwmTjnlVTzC4NjwhH2Au9Zg5quL4B4jt1stZMmOp+MJEi5Lmhp7BHaWQ0tBRfa7nGYUjIg7nRHZj9OaLNBz1w5ManLppbakNz01SxGjj0jlqWfLZ94qDoVlx1GMac+YKeD7VPpsNQJi4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lRiiHs2n; arc=none smtp.client-ip=209.85.215.177
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-5c229dabbb6so3628777a12.0;
-        Tue, 16 Jan 2024 10:23:34 -0800 (PST)
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=M+ToyWEbvw4LvdP15EpDUuETNrDi3+N+2mUik7YnkDv+1m5ze2PTUV6dD0Uof0hpwOx/CCYoYRPSQK6r3mMhDaNMOwx7zPDXc0lQoE5XM45AHrEIUewr2lQ0vY29au0zSGCyWZgm1zY1YhO3n8iTyaqslBKpkOkPjSnWLEBx5NY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KRmc+pU0; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a28b1095064so1160063766b.2;
+        Tue, 16 Jan 2024 12:14:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705429414; x=1706034214; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MD3fKbxQQQgI0U3y5wKrOkObfHPHYecniiq4Rfz4jHE=;
-        b=lRiiHs2nwWUodKra/HjfG0MdwcimjKksnl5gL2qC1eD9YRf+xcZ8C15NPdPHsbjkQT
-         j25ADmdNjxtMT33zLPV8oqKeYHNzH22kt9EvkEgAPG0AvIc1RnIA7G1+RVBvXIoJImPL
-         rX4R9CQ02gSSvvRZIFnhT/ScxVBz3HtBPzeRL36bUdnaKRlkjpoWIj+DzWJI/WdvVZTm
-         JNQEFj9SC8kkdHJ802QA8uwqNHIcdLuG6GTuILKjYdkIzH7VNyCjfUQyrRLfx2JhoBBU
-         nlVetcbVpkYcDvrF1tdzRMK4LewSnauAVyZ5ivn+i6H4hCd5Ath8ifktRmRIRWtxs8QA
-         cXUA==
+        d=gmail.com; s=20230601; t=1705436068; x=1706040868; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
+        b=KRmc+pU0fMj/1YI6pi+DmkUL/KSbPWtL8RzOyulc16/OpVUPO126t2xuFks3wY6nn+
+         aZ4lEJ88NT3jE5qkXqi4+xTWbpFs3eMyDG7fuu4yNG+DRz/MUvCPu12scZiojtptb1a8
+         Za6qYqwTd5HWUjNgDggTwRrS/lxilxSi8P6zIizinKDsX1uy1R5aUf2KUPHvbiEoWnDM
+         +R1/BN4gzKd7PaEvKY1K1JGt/rNdV0cJxNglL8ruDBGlT+2Yj9KfdnjtGkbtPQdu5N3V
+         dy9oJlMFGBmc4QwCADSfzpMgHYAGL0NZPKdXvVWfB5/P5LR6SBkN/1jKL6m3fHYgX+CZ
+         Kzmw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705429414; x=1706034214;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+        d=1e100.net; s=20230601; t=1705436068; x=1706040868;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MD3fKbxQQQgI0U3y5wKrOkObfHPHYecniiq4Rfz4jHE=;
-        b=AUdM5zrFhqzy9gS5+4lnwrJeKDRjpv7gDR4tWBUvARb0wn58wu56TXCQxwECytJri1
-         yVuyTaxlJl1qQIBzmp7e0+HwYBW63iAJWXB5R5Je4gkrBWteTfZHfrJTzw2q7iciUb6L
-         C4g48cnZxT1nS1EFr7+DgD02beUfVmK8Ob0dPAwGjWE+2WtgjRTY2aNmv32ZF4paJOdM
-         fZaIUKRxyl+qcqv/igfRjzDLk9RRklv+Xa3312St6SsjHtAqhwcQSXhziSqiZN7OdlJp
-         arFNzKb5hszoxz9RSm5DHrPVWskCDTvasvE2uDHss5wjVqRVV1oLp2GbYQcnQdvixb0n
-         nFqA==
-X-Gm-Message-State: AOJu0Yz9KCLrbIOOaiOstbzrOh0lv7XD0A/u8JPzGREX2WmdgAD9Ah1p
-	o6XIo2NofGTp/Vh9K61FMEs=
-X-Google-Smtp-Source: AGHT+IHvKGy5JSSRKLyL4xP93sojht9KV/bnqAX2PBFnMKralDeocAfXsvJYWTWi4P0g0wy+GikmEg==
-X-Received: by 2002:a17:90a:3ccb:b0:28c:3507:a89e with SMTP id k11-20020a17090a3ccb00b0028c3507a89emr4052831pjd.21.1705429414004;
-        Tue, 16 Jan 2024 10:23:34 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id pt6-20020a17090b3d0600b0028e60ceb419sm3646455pjb.1.2024.01.16.10.23.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Jan 2024 10:23:33 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Tue, 16 Jan 2024 10:23:31 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-Message-ID: <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
-References: <20231219201102.41639-1-brgl@bgdev.pl>
+        bh=gbuoZx71FH6A8ZgMSxmXVfmDtNcYNFclF4KzObTGBpY=;
+        b=MJsMjuvXHuF0uaysAVslx9hENJUDj+K9b1gPChNOk0LU0SLd2nwiw+Qno7d5q/GG7S
+         Vmj15wLYXk+YifFUlsRl1Lra9sXz+ZISCqQdLLP2QRbgC0mmK9wbOZ9vYISFxDykVEfb
+         QgL+9jVrjSUYwucQ+a+QAyWOL+KvBctomF7TIlWaTHCEhJ3LMvydDXriITN+xtQ/SKWJ
+         DvCROi4C/63+iDjngLKg2i4jHe9zwpFcu/9jyyfqhHVxJUR6tf2abOJR+3XVFJookPt5
+         bFCw1OIMdgWhhBGAPcPmUuovM/3KWOCSa3000YBPmc3kfwmD2PoeBqtdqHFOQpUZt7zO
+         nXyg==
+X-Gm-Message-State: AOJu0Yw/99ebVxtJxLhCF0rEBNHUGls6e5JW9gkSNa5c4aHda5Kz7Glb
+	c+o/WbN5d9XT3kxwUhn3COdKRj0yqMWU1/fronQ=
+X-Google-Smtp-Source: AGHT+IG58HwU8rJHDRxz56XmFyk02seqYGpjo2GT2CvonR3q73elLuGZU0ltKR1+LWhhT75oTCZEYv5n8P+wdWKTdsE=
+X-Received: by 2002:a17:906:3c08:b0:a2e:9845:ae28 with SMTP id
+ h8-20020a1709063c0800b00a2e9845ae28mr305082ejg.294.1705436067899; Tue, 16 Jan
+ 2024 12:14:27 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20231219201102.41639-1-brgl@bgdev.pl>
+References: <20201209072842.amvpwe37zvfmve3g@pengutronix.de>
+ <20201211170432.6113-1-nicola.dilieto@gmail.com> <20201211170432.6113-2-nicola.dilieto@gmail.com>
+ <20210117130434.663qpp6noujptdyt@pengutronix.de> <CACRpkdawMpuznr-XC2uvZm8PvOj-jObpnbz6iptV-Q4OFxjesw@mail.gmail.com>
+ <CA+TH9VnrsSQDUfvXk8c+q6Sx2Jc5TCN5XLYCRLtgv55-6voLWg@mail.gmail.com>
+ <Y/YPtJK8nVBthCML@surfacebook> <Y/YuJoxkz+o0Omie@einstein.dilieto.eu>
+ <5521796b-d51e-42a3-831a-7fbf75247726@gadgetoid.com> <CAHp75VfLEBw=ypFiLpd8ken5JPkW5DJey_UroV+3B6ZSaK3Jyw@mail.gmail.com>
+ <CA+kSVo-yjU17Q97vN+DrpUUxCku6H309iXNDiBy9fJ3QPM8aTQ@mail.gmail.com>
+In-Reply-To: <CA+kSVo-yjU17Q97vN+DrpUUxCku6H309iXNDiBy9fJ3QPM8aTQ@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 16 Jan 2024 22:13:50 +0200
+Message-ID: <CAHp75VdNir8G+CLDd7LZhgA=j+PZuQSXLEiYPwaVEmin7=bUYQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: pwm-gpio: New driver
+To: Phil Howard <phil@gadgetoid.com>
+Cc: Nicola Di Lieto <nicola.dilieto@gmail.com>, 
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, 
+	linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, 
+	Rob Herring <robh@kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Tue, Jan 16, 2024 at 4:15=E2=80=AFPM Phil Howard <phil@gadgetoid.com> wr=
+ote:
+> On Fri, 12 Jan 2024 at 18:32, Andy Shevchenko <andy.shevchenko@gmail.com>=
+ wrote:
+> > On Fri, Jan 12, 2024 at 3:38=E2=80=AFPM Philip Howard <phil@gadgetoid.c=
+om> wrote:
+> > > On 22/02/2023 15:00, Nicola Di Lieto wrote:
+> > > > On Wed, Feb 22, 2023 at 02:51:00PM +0200, andy.shevchenko@gmail.com=
+ wrote:
 
-On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> extra_checks is only used in a few places. It also depends on
-> a non-standard DEBUG define one needs to add to the source file. The
-> overhead of removing it should be minimal (we already use pure
-> might_sleep() in the code anyway) so drop it.
-> 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+...
 
-This patch triggers (exposes) the following backtrace.
+> > > I'd love to know if you're still likely to look into this.
+> >
+> > If you are asking me as well (since To refers to me), Cc for the new
+> > version and I might look at it. Currently I am OoO till the end of
+> > month and after that I probably will have more tasks to do, so no
+> > guarantee for this cycle, but just in case Cc and we will see.
+>
+> Thanks for your reply!
+>
+> I'm not sure I know how to "Cc for the new version," it took me about
+> an hour to generate a (hopefully) suitably formatted email response
+> to this patch. I've only just subbed to linux-pwm.
 
-BUG: sleeping function called from invalid context at drivers/gpio/gpiolib.c:3738
-in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 7, name: kworker/0:0
-preempt_count: 1, expected: 0
-RCU nest depth: 0, expected: 0
-3 locks held by kworker/0:0/7:
- #0: c181b3a4 ((wq_completion)events_freezable){+.+.}-{0:0}, at: process_scheduled_works+0x23c/0x644
- #1: c883df28 ((work_completion)(&(&host->detect)->work)){+.+.}-{0:0}, at: process_scheduled_works+0x23c/0x644
- #2: c24e1720 (&host->lock){-...}-{2:2}, at: sdhci_check_ro+0x14/0xd4
-irq event stamp: 2916
-hardirqs last  enabled at (2915): [<c0b18838>] _raw_spin_unlock_irqrestore+0x70/0x84
-hardirqs last disabled at (2916): [<c0b1853c>] _raw_spin_lock_irqsave+0x74/0x78
-softirqs last  enabled at (2360): [<c00098a4>] __do_softirq+0x28c/0x4b0
-softirqs last disabled at (2347): [<c0022774>] __irq_exit_rcu+0x15c/0x1a4
-CPU: 0 PID: 7 Comm: kworker/0:0 Tainted: G                 N 6.7.0-09928-g052d534373b7 #1
-Hardware name: Freescale i.MX25 (Device Tree Support)
-Workqueue: events_freezable mmc_rescan
- unwind_backtrace from show_stack+0x10/0x18
- show_stack from dump_stack_lvl+0x34/0x54
- dump_stack_lvl from __might_resched+0x188/0x274
- __might_resched from gpiod_get_value_cansleep+0x14/0x60
- gpiod_get_value_cansleep from mmc_gpio_get_ro+0x20/0x30
- mmc_gpio_get_ro from esdhc_pltfm_get_ro+0x20/0x48
- esdhc_pltfm_get_ro from sdhci_check_ro+0x44/0xd4
- sdhci_check_ro from mmc_sd_setup_card+0x2a8/0x47c
- mmc_sd_setup_card from mmc_sd_init_card+0xfc/0x93c
- mmc_sd_init_card from mmc_attach_sd+0xd8/0x180
- mmc_attach_sd from mmc_rescan+0x2ac/0x30c
- mmc_rescan from process_scheduled_works+0x2e4/0x644
- process_scheduled_works from worker_thread+0x188/0x418
- worker_thread from kthread+0x11c/0x144
- kthread from ret_from_fork+0x14/0x38
+I use the script [1] that uses a heuristics for the Cc/To fields,
+additionally you can add --cc "Andy Shevchenko ..." at the end.
 
-This is with the imx25-pdk qemu emulation when booting from mmc/sd card.
-It isn't really surprising since sdhci_check_ro() calls the gpio code under
-spin_lock_irqsave(). No idea how to fix that, so I won't even try.
 
-Bisect log attached for reference.
+> But yes- my reply was cast out into the ether in the hopes that logging
+> my interest might get things moving again, or at least let me know if I
+> should try tackling it myself.
+>
+> I'm moving over to libgpiod on Raspberry Pi, losing software PWM (
+> from the library I was using) in the process. I don't want to use or
+> contrive another not-invented-here solution.
 
-Guenter
+Totally supporting this motivation!
 
----
-# bad: [052d534373b7ed33712a63d5e17b2b6cdbce84fd] Merge tag 'exfat-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/linkinjeon/exfat
-# good: [70d201a40823acba23899342d62bc2644051ad2e] Merge tag 'f2fs-for-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/jaegeuk/f2fs
-git bisect start 'HEAD' '70d201a40823'
-# good: [b6e1b708176846248c87318786d22465ac96dd2c] drm/xe: Remove uninitialized variable from warning
-git bisect good b6e1b708176846248c87318786d22465ac96dd2c
-# good: [7912a6391f3ee7eb9f9a69227a209d502679bc0c] Merge tag 'sound-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
-git bisect good 7912a6391f3ee7eb9f9a69227a209d502679bc0c
-# bad: [a3cc31e75185f9b1ad8dc45eac77f8de788dc410] Merge tag 'libnvdimm-for-6.8' of git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
-git bisect bad a3cc31e75185f9b1ad8dc45eac77f8de788dc410
-# bad: [576db73424305036a6aa9e40daf7109742fbb1df] Merge tag 'gpio-updates-for-v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux
-git bisect bad 576db73424305036a6aa9e40daf7109742fbb1df
-# good: [61f4c3e6711477b8a347ca5fe89e5e6613e0a147] Merge tag 'linux-watchdog-6.8-rc1' of git://www.linux-watchdog.org/linux-watchdog
-git bisect good 61f4c3e6711477b8a347ca5fe89e5e6613e0a147
-# good: [12b7f4ddfcb66dafed432cf4a987f5b40179c0f1] Merge tag 'device_is_big_endian-6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core into gpio/for-next
-git bisect good 12b7f4ddfcb66dafed432cf4a987f5b40179c0f1
-# good: [ede7511e7c22c9542a699ddff9f32de74e0bb972] gpiolib: cdev: include overflow.h
-git bisect good ede7511e7c22c9542a699ddff9f32de74e0bb972
-# bad: [f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4] gpio: dwapb: Use generic request, free and set_config
-git bisect bad f34fd6ee1be84c6e64574e9eb58f89d32c7f98a4
-# good: [7dd1871e5049bbd40ee78ac94b1678ba5caf2486] gpio: tps65219: don't use CONFIG_DEBUG_GPIO
-git bisect good 7dd1871e5049bbd40ee78ac94b1678ba5caf2486
-# bad: [0338f6a6fb659f083eca7dd5967bb668d14707f8] gpiolib: drop tabs from local variable declarations
-git bisect bad 0338f6a6fb659f083eca7dd5967bb668d14707f8
-# bad: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: remove extra_checks
-git bisect bad 5d5dfc50e5689d5b09de4a323f84c28a6700d156
-# first bad commit: [5d5dfc50e5689d5b09de4a323f84c28a6700d156] gpiolib: remove extra_checks
+[1]: https://github.com/andy-shev/home-bin-tools/blob/master/ge2maintainer.=
+sh
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
