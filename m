@@ -1,39 +1,39 @@
-Return-Path: <linux-gpio+bounces-2314-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2315-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C156830D53
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 20:38:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF848830E24
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 21:43:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B4F62821E4
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 19:38:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 355E71F226CD
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 20:43:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37CD4249EE;
-	Wed, 17 Jan 2024 19:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 075EA250ED;
+	Wed, 17 Jan 2024 20:43:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F71A1E877;
-	Wed, 17 Jan 2024 19:38:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5433B250E6;
+	Wed, 17 Jan 2024 20:43:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705520332; cv=none; b=gG7dE7pTB29Nh7+jq1h42q/L9EXLXxix8iI9P4Oc7HGFZgBDk9qBxsKZbIGqaTOnvW7t7sB0XD/gyiWdwiEKiw5NilZTkg7GIu1uI8aR1QSgBIyiQLgjqsAkLfR0gDzP6YM9CYfVUyR4s24YlGaq/83/8XwbnREWR2bAiq2oRP8=
+	t=1705524197; cv=none; b=Qd4KW9S4lRfRKpRACvDmgfct7c7DJJtrIB9oTPELIlshWWalysL/Dzgn+QK/ZMlhbBqSqMfzxbEr6e9ggufD26AoE+QFaXh6IASo991tmCZJ9if++ww2QYRSWw99E9ccMLqT1ej486PsvIGcU1ztK9tEBJCZSNdzPqd8sjoQKIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705520332; c=relaxed/simple;
-	bh=qQ2aC4nPMxreqaxf3HfplVIIaem0J4U9g997mzbSJjk=;
+	s=arc-20240116; t=1705524197; c=relaxed/simple;
+	bh=CKIqWY6bniHgYHR52mR5xO2X/Aq6Z5AV/erKRUEjfcM=;
 	h=Received:Received:Date:From:To:Cc:Subject:Message-ID:References:
-	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=QPKi+JSRPVty+5qVA53iHTEuJEha3GPV7hqXOHxZKH6ogrNXxTinGpn6QQfKhl7nCwfKxOGK4YFZlK+dJS0Oxay5AJ+FCI6AS+lysuHLpILtIrUKUXWd7nxb92Xw4Ttr75f7rfSzhPAqaG2aUDMTKoN4Dm1OH1xPRcFvOMoIIP8=
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=pYH51PACA0898Cw8pG9/7BhjqWBjTSIW5C1eh5ut9vjH7t8+64K/fa5sMyrh89bXxD2qCOaGy+8Iwo700DAwd8Y379lcaScSFket7bvOq0ThjQ6if6QLloQUIxxNkNpjvlaezUFSlT/yMT3ykHYKHEGG1mxGjmaR9rVUmpr2+D4=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 889F111FB;
-	Wed, 17 Jan 2024 11:39:34 -0800 (PST)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6258311FB;
+	Wed, 17 Jan 2024 12:43:59 -0800 (PST)
 Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2C77F3F766;
-	Wed, 17 Jan 2024 11:38:46 -0800 (PST)
-Date: Wed, 17 Jan 2024 19:38:44 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 025B53F766;
+	Wed, 17 Jan 2024 12:43:10 -0800 (PST)
+Date: Wed, 17 Jan 2024 20:43:08 +0000
 From: Cristian Marussi <cristian.marussi@arm.com>
 To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
 Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
@@ -50,11 +50,11 @@ Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
 	AKASHI Takahiro <takahiro.akashi@linaro.org>,
 	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v2 3/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZagsxLBw3eZCpafI@pluto>
+Subject: Re: [PATCH v2 4/6] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+Message-ID: <Zag73Dj_6IT8dB00@pluto>
 References: <20240104-pinctrl-scmi-v2-0-a9bd86ab5a84@nxp.com>
- <20240104-pinctrl-scmi-v2-3-a9bd86ab5a84@nxp.com>
+ <20240104-pinctrl-scmi-v2-4-a9bd86ab5a84@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,296 +63,347 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240104-pinctrl-scmi-v2-3-a9bd86ab5a84@nxp.com>
+In-Reply-To: <20240104-pinctrl-scmi-v2-4-a9bd86ab5a84@nxp.com>
 
-On Thu, Jan 04, 2024 at 06:48:47PM +0800, Peng Fan (OSS) wrote:
-> From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>
+On Thu, Jan 04, 2024 at 06:48:48PM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> Add basic implementation of the SCMI v3.2 pincontrol protocol.
-
-Hi Peng,
-
-a few minor remarks below but this LGTM, and in my testing I could not
-find any issue/misbehaviour at the protocol layer (i.e. stressing pinctrl_ops)
-
-In general, can we stick to 80cols ? since it is how the SCMI stack is
-currently formatted and this patch introduced just few minor lomng lines
-that can be easily wrapped by moving a few params (or return types) on a
-new line....
-
-...but only when this does not render the thing unreadable of course, I
-mean just in the obvious places where it is just a matter of hitting a
-Return :D
-
+> scmi-pinctrl driver implements pinctrl driver interface and using
+> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> SCMI platform firmware, which does the changes in HW.
 > 
+
+Hi,
+
+a few remarks.
+
+> Co-developed-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
 > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> Co-developed-by: Peng Fan <peng.fan@nxp.com>
 > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-
-[nitpick]: I have a silly spelling mistakes on email from checkpatch
-
-CHECK: From:/Signed-off-by: email comments mismatch: 'From: Oleksii Moisieiev <Oleksii_Moisieiev@epam.com>' != 'Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-
 > ---
->  MAINTAINERS                           |   6 +
->  drivers/firmware/arm_scmi/Makefile    |   1 +
->  drivers/firmware/arm_scmi/driver.c    |   2 +
->  drivers/firmware/arm_scmi/pinctrl.c   | 930 ++++++++++++++++++++++++++++++++++
->  drivers/firmware/arm_scmi/protocols.h |   1 +
->  include/linux/scmi_protocol.h         |  73 +++
->  6 files changed, 1013 insertions(+)
+>  MAINTAINERS                    |   1 +
+>  drivers/pinctrl/Kconfig        |  11 +
+>  drivers/pinctrl/Makefile       |   1 +
+>  drivers/pinctrl/pinctrl-scmi.c | 524 +++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 537 insertions(+)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0275a2c58f0f..487bff0d44c0 100644
+> index 487bff0d44c0..3fe790e90834 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -21322,6 +21322,12 @@ F:	include/linux/sc[mp]i_protocol.h
->  F:	include/trace/events/scmi.h
->  F:	include/uapi/linux/virtio_scmi.h
+> @@ -21314,6 +21314,7 @@ F:	drivers/clk/clk-sc[mp]i.c
+>  F:	drivers/cpufreq/sc[mp]i-cpufreq.c
+>  F:	drivers/firmware/arm_scmi/
+>  F:	drivers/firmware/arm_scpi.c
+> +F:	drivers/pinctrl/pinctrl-scmi.c
+>  F:	drivers/pmdomain/arm/
+>  F:	drivers/powercap/arm_scmi_powercap.c
+>  F:	drivers/regulator/scmi-regulator.c
+> diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+> index 8163a5983166..27b26e428f60 100644
+> --- a/drivers/pinctrl/Kconfig
+> +++ b/drivers/pinctrl/Kconfig
+> @@ -432,6 +432,17 @@ config PINCTRL_ROCKCHIP
+>  	help
+>            This support pinctrl and GPIO driver for Rockchip SoCs.
 >  
-> +SYSTEM CONTROL MANAGEMENT INTERFACE (SCMI) PINCTRL DRIVER
-> +M:	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> +L:	linux-arm-kernel@lists.infradead.org
-> +S:	Maintained
-> +F:	drivers/firmware/arm_scmi/pinctrl.c
+> +config PINCTRL_SCMI
+> +	tristate "Pinctrl driver using SCMI protocol interface"
+> +	depends on ARM_SCMI_PROTOCOL || COMPILE_TEST
+> +	select PINMUX
+> +	select GENERIC_PINCONF
+> +	help
+> +	  This driver provides support for pinctrl which is controlled
+> +	  by firmware that implements the SCMI interface.
+> +	  It uses SCMI Message Protocol to interact with the
+> +	  firmware providing all the pinctrl controls.
 > +
-
-I've got to check this with Sudeep since giving exclusive maintainership
-of this bit could lead to troubles if the assigned maintainer becomes
-unresponsive, and it seems this is already the case indeed even before
-this thing is merged. Oleksii and EPAM will anyway maintain authorship
-in any case; I'll check with Sudeep, as said.
-
->  SYSTEM RESET/SHUTDOWN DRIVERS
->  M:	Sebastian Reichel <sre@kernel.org>
->  L:	linux-pm@vger.kernel.org
-> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
-> index a7bc4796519c..8e3874ff1544 100644
-> --- a/drivers/firmware/arm_scmi/Makefile
-> +++ b/drivers/firmware/arm_scmi/Makefile
-> @@ -11,6 +11,7 @@ scmi-transport-$(CONFIG_ARM_SCMI_HAVE_MSG) += msg.o
->  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
->  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
->  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
-> +scmi-protocols-y += pinctrl.o
->  scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
->  
->  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
-> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
-> index a12afc254afa..4c3752749105 100644
-> --- a/drivers/firmware/arm_scmi/driver.c
-> +++ b/drivers/firmware/arm_scmi/driver.c
-> @@ -3050,6 +3050,7 @@ static int __init scmi_driver_init(void)
->  	scmi_voltage_register();
->  	scmi_system_register();
->  	scmi_powercap_register();
-> +	scmi_pinctrl_register();
->  
->  	return platform_driver_register(&scmi_driver);
->  }
-> @@ -3067,6 +3068,7 @@ static void __exit scmi_driver_exit(void)
->  	scmi_voltage_unregister();
->  	scmi_system_unregister();
->  	scmi_powercap_unregister();
-> +	scmi_pinctrl_unregister();
->  
->  	scmi_transports_exit();
->  
-> diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
+>  config PINCTRL_SINGLE
+>  	tristate "One-register-per-pin type device tree based pinctrl driver"
+>  	depends on OF
+> diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+> index 1071f301cc70..ba755ed2d46c 100644
+> --- a/drivers/pinctrl/Makefile
+> +++ b/drivers/pinctrl/Makefile
+> @@ -44,6 +44,7 @@ obj-$(CONFIG_PINCTRL_PIC32)	+= pinctrl-pic32.o
+>  obj-$(CONFIG_PINCTRL_PISTACHIO)	+= pinctrl-pistachio.o
+>  obj-$(CONFIG_PINCTRL_RK805)	+= pinctrl-rk805.o
+>  obj-$(CONFIG_PINCTRL_ROCKCHIP)	+= pinctrl-rockchip.o
+> +obj-$(CONFIG_PINCTRL_SCMI)	+= pinctrl-scmi.o
+>  obj-$(CONFIG_PINCTRL_SINGLE)	+= pinctrl-single.o
+>  obj-$(CONFIG_PINCTRL_ST) 	+= pinctrl-st.o
+>  obj-$(CONFIG_PINCTRL_STMFX) 	+= pinctrl-stmfx.o
+> diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
 > new file mode 100644
-> index 000000000000..aa6e698e7b7c
+> index 000000000000..146308d27f54
 > --- /dev/null
-> +++ b/drivers/firmware/arm_scmi/pinctrl.c
-> @@ -0,0 +1,930 @@
+> +++ b/drivers/pinctrl/pinctrl-scmi.c
+> @@ -0,0 +1,524 @@
 > +// SPDX-License-Identifier: GPL-2.0
 > +/*
-> + * System Control and Management Interface (SCMI) Pinctrl Protocol
+> + * System Control and Power Interface (SCMI) Protocol based pinctrl driver
 > + *
 > + * Copyright (C) 2023 EPAM
+> + * Copyright 2023 NXP
+> + */
 
 2023-2024
 
-> + */
 > +
+> +#include <linux/device.h>
+> +#include <linux/err.h>
 > +#include <linux/module.h>
+> +#include <linux/seq_file.h>
 > +#include <linux/scmi_protocol.h>
 > +#include <linux/slab.h>
 > +
-> +#include "common.h"
-> +#include "protocols.h"
+> +#include <linux/pinctrl/machine.h>
+> +#include <linux/pinctrl/pinconf.h>
+> +#include <linux/pinctrl/pinconf-generic.h>
+> +#include <linux/pinctrl/pinctrl.h>
+> +#include <linux/pinctrl/pinmux.h>
 > +
-> +/* Updated only after ALL the mandatory features for that version are merged */
-> +#define SCMI_PROTOCOL_SUPPORTED_VERSION                0x40000
-
-Why 0x40000, this should be 0x10000 I think looking at SCMI Pinctrl on v3.2-bet3,
-BUT there are still other missing (minor) features as of now related to v3.2-bet3
-(that impacts on all protocols like NEGOTIATE_PROTOCOL) and I will add those missing
-feats in the SCMI core shortly in the upcoming weeks.
-
-So, for the moment I would set this to 0x0, and I will bump it up to 0x10000
-when the still missing v3.2-bet3 features are all in, because if not we would
-be lying here saying that we now support Pinctrl 0x10000, while instead
-something is still missing.
-
+> +#include "pinctrl-utils.h"
+> +#include "core.h"
+> +#include "pinconf.h"
 > +
-> +#define REG_TYPE_BITS GENMASK(9, 8)
-> +#define REG_CONFIG GENMASK(7, 0)
+> +#define DRV_NAME "scmi-pinctrl"
+ 
+ [snip]
+
+> +static const struct pinmux_ops pinctrl_scmi_pinmux_ops = {
+> +	.request = pinctrl_scmi_request,
+> +	.free = pinctrl_scmi_free,
+> +	.get_functions_count = pinctrl_scmi_get_functions_count,
+> +	.get_function_name = pinctrl_scmi_get_function_name,
+> +	.get_function_groups = pinctrl_scmi_get_function_groups,
+> +	.set_mux = pinctrl_scmi_func_set_mux,
+> +};
 > +
-> +#define GET_GROUPS_NR(x)	le32_get_bits((x), GENMASK(31, 16))
-> +#define GET_PINS_NR(x)		le32_get_bits((x), GENMASK(15, 0))
-> +#define GET_FUNCTIONS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
+> +static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param, u8 *type)
+> +{
+
+Same as in the previous patch, is it reasonable to use the new enum here instead
+of a generic u8 * ?
+
+> +	u8 arg = param;
 > +
-> +#define EXT_NAME_FLAG(x)	le32_get_bits((x), BIT(31))
-> +#define NUM_ELEMS(x)		le32_get_bits((x), GENMASK(15, 0))
+> +	switch (arg) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*type = SCMI_PIN_BIAS_BUS_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_DISABLE:
+> +		*type = SCMI_PIN_BIAS_DISABLE;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*type = SCMI_PIN_BIAS_HIGH_IMPEDANCE;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*type = SCMI_PIN_BIAS_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+> +		*type = SCMI_PIN_BIAS_PULL_DEFAULT;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*type = SCMI_PIN_BIAS_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		*type = SCMI_PIN_DRIVE_OPEN_DRAIN;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> +		*type = SCMI_PIN_DRIVE_OPEN_SOURCE;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		*type = SCMI_PIN_DRIVE_PUSH_PULL;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		*type = SCMI_PIN_DRIVE_STRENGTH;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_STRENGTH_UA:
+> +		*type = SCMI_PIN_DRIVE_STRENGTH;
+> +		break;
+> +	case PIN_CONFIG_INPUT_DEBOUNCE:
+> +		*type = SCMI_PIN_INPUT_DEBOUNCE;
+> +		break;
+> +	case PIN_CONFIG_INPUT_ENABLE:
+> +		*type = SCMI_PIN_INPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT:
+> +		*type = SCMI_PIN_INPUT_SCHMITT;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*type = SCMI_PIN_INPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_MODE_LOW_POWER:
+> +		*type = SCMI_PIN_LOW_POWER_MODE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT:
+> +		*type = SCMI_PIN_OUTPUT_VALUE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT_ENABLE:
+> +		*type = SCMI_PIN_OUTPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS:
+> +		*type = SCMI_PIN_OUTPUT_VALUE;
+> +		break;
+> +	case PIN_CONFIG_POWER_SOURCE:
+> +		*type = SCMI_PIN_POWER_SOURCE;
+> +		break;
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		*type = SCMI_PIN_SLEW_RATE;
+> +		break;
+> +	case SCMI_PIN_OEM_START ... SCMI_PIN_OEM_END:
+> +		*type = param;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
 > +
-> +#define REMAINING(x)		le32_get_bits((x), GENMASK(31, 16))
-> +#define RETURNED(x)		le32_get_bits((x), GENMASK(11, 0))
-
-[snip]
-
+> +	return 0;
+> +}
 > +
-> +static int scmi_pinctrl_config_get_all(const struct scmi_protocol_handle *ph,
-> +				       u32 selector,
-> +				       enum scmi_pinctrl_selector_type type,
-> +				       u16 size, u8 *config_types,
-> +				       u32 *config_values)
-
-This function is a bit odd, since you provide a pair of arrays and their
-size to fetch all the results BUT there is no way, agfter the call, to know how
-many valid results have been filled in the array, so it is a bit difficult
-to use properly (given also that 0/0 is a valid config/val pair), BUT on the
-other side I cannot see this being called from anywhere as of now, so I think
-it can be left as it is and maybe will fix in the future when needed.
-
-Another option could be to drop it, but it worked fine anyway when tested, and
-needs only a minor fix (as said above) so I would keep even though unused.
-
-Up to you. No strong opinion since it does not misbehave anyway, it is
-just awkward a bit...
-
+> +static int pinctrl_scmi_pinconf_get(struct pinctrl_dev *pctldev, unsigned int _pin,
+> +				    unsigned long *config)
 > +{
 > +	int ret;
-> +	void *iter;
-> +	struct scmi_iterator_ops ops = {
-> +		.prepare_message = iter_pinctrl_conf_get_prepare_message,
-> +		.update_state = iter_pinctrl_conf_get_update_state,
-> +		.process_response = iter_pinctrl_conf_get_process_response,
-> +	};
-> +	struct scmi_conf_get_ipriv ipriv = {
-> +		.selector = selector,
-> +		.type = type,
-> +		.all = 1,
-> +		.config_types = config_types,
-> +		.config_values = config_values,
-> +	};
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +	enum pin_config_param config_type;
+> +	u32 config_value;
+> +	u8 type;
 > +
-> +	if (!config_values || !config_types || type == FUNCTION_TYPE)
+> +	if (!config)
 > +		return -EINVAL;
 > +
-> +	ret = scmi_pinctrl_validate_id(ph, selector, type);
+> +	config_type = pinconf_to_config_param(*config);
+> +
+> +	ret = pinctrl_scmi_map_pinconf_type(config_type, &type);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +		return ret;
+> +	}
+> +
+
+Issuing a cat /sys/kernel/debug/pictrl/<scmi_dev>/pinconf-pins
+got a string of (adding some debug to print config_type):
+
+[   89.843868] scmi-pinctrl scmi_dev.12: Error map pinconf_type 22 - ret:-95
+[   89.846125] scmi-pinctrl scmi_dev.12: Error map pinconf_type 23 - ret:-95
+
+but I suppose is due to some missing matching definitions in the SCMI
+spec....just a heads up for the future.
+
+> +	ret = pinctrl_ops->config_get(pmx->ph, _pin, PIN_TYPE, type, &config_value);
 > +	if (ret)
 > +		return ret;
 > +
-> +	iter = ph->hops->iter_response_init(ph, &ops, size, PINCTRL_CONFIG_GET,
-> +					    sizeof(struct scmi_msg_conf_get),
-> +					    &ipriv);
+> +	*config = pinconf_to_config_packed(config_type, config_value);
 > +
-> +	if (IS_ERR(iter))
-> +		return PTR_ERR(iter);
-> +
-> +	return ph->hops->iter_response_run(iter);
+> +	return 0;
 > +}
+> +
+> +static int pinctrl_scmi_pinconf_set(struct pinctrl_dev *pctldev,
+> +				    unsigned int _pin,
+> +				    unsigned long *configs,
+> +				    unsigned int num_configs)
+> +{
+> +	int i, ret;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	if (!configs || !num_configs)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		ret = pinctrl_scmi_map_pinconf_type(pinconf_to_config_param(configs[i]),
+> +						    &pmx->config_type[i]);
+> +		if (ret) {
+> +			dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +			return ret;
+> +		}
+> +		pmx->config_value[i] = pinconf_to_config_argument(configs[i]);
+> +	}
+> +
 
-[snip]
+Are you sure that this pinctrl function cannot be called multiple times
+concurrently ? Because pmx->config_type/value are globally defined for
+the driver so any concurrent call will lead to corruption.
 
->  DECLARE_SCMI_REGISTER_UNREGISTER(reset);
->  DECLARE_SCMI_REGISTER_UNREGISTER(sensors);
-> diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
-> index f2f05fb42d28..d8e2bb828ee7 100644
-> --- a/include/linux/scmi_protocol.h
-> +++ b/include/linux/scmi_protocol.h
-> @@ -717,6 +717,78 @@ struct scmi_powercap_proto_ops {
->  					  u32 *power_thresh_high);
->  };
->  
-> +enum scmi_pinctrl_selector_type {
-> +	PIN_TYPE = 0,
-> +	GROUP_TYPE,
-> +	FUNCTION_TYPE,
+Moreover, you allocate those pmx->config_ arrays in probe as SZ_4K, but
+effectively how many of these are effectively used in reality ?
+
+I mean, we clearly have to address the worst case, which is 256 values by
+the SCMI spec CONFIG_SET definitions, but typically how many configs are
+going to be sent in a call ? because if it is a reasonable small values
+you could just put in on the stack here with a check for overlflow and
+a dynamic allocation to address the special case...this would also solve
+the potential concurrent calls issue described above.
+
+...but I could be missing something about Pinctrl so please explain.
+
+> +	ret = pinctrl_ops->config_set(pmx->ph, _pin, PIN_TYPE, num_configs,
+> +				      pmx->config_type,  pmx->config_value);
+> +	if (ret)
+> +		dev_err(pmx->dev, "Error parsing config %d\n", ret);
+> +
+> +	return ret;
+> +}
+> +
+> +static int pinctrl_scmi_pinconf_group_set(struct pinctrl_dev *pctldev,
+> +					  unsigned int group,
+> +					  unsigned long *configs,
+> +					  unsigned int num_configs)
+> +{
+> +	int i, ret;
+> +	struct scmi_pinctrl *pmx =  pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	if (!configs || !num_configs)
+> +		return -EINVAL;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		ret = pinctrl_scmi_map_pinconf_type(pinconf_to_config_param(configs[i]),
+> +						    &pmx->config_type[i]);
+> +		if (ret) {
+> +			dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +			return ret;
+> +		}
+> +		pmx->config_value[i] = pinconf_to_config_argument(configs[i]);
+> +	}
+> +
+> +	ret = pinctrl_ops->config_set(pmx->ph, group, GROUP_TYPE, num_configs,
+> +				      pmx->config_type, pmx->config_value);
+> +	if (ret)
+> +		dev_err(pmx->dev, "Error parsing config %d", ret);
+> +
+> +	return ret;
 > +};
 > +
-> +/**
-> + * struct scmi_pinctrl_proto_ops - represents the various operations provided
-> + * by SCMI Pinctrl Protocol
-> + *
-> + * @count_get: returns count of the registered elements in given type
-> + * @name_get: returns name by index of given type
-> + * @group_pins_get: returns the set of pins, assigned to the specified group
-> + * @function_groups_get: returns the set of groups, assigned to the specified
-> + *	function
-> + * @mux_set: set muxing function for groups of pins
-> + * @config_get: returns configuration parameter for pin or group
-> + * @config_set: sets the configuration parameter for pin or group
-> + * @pin_request: aquire pin before selecting mux setting
-> + * @pin_free: frees pin, acquired by request_pin call
-> + */
-> +struct scmi_pinctrl_proto_ops {
-> +	int (*count_get)(const struct scmi_protocol_handle *ph,
-> +			 enum scmi_pinctrl_selector_type type);
-> +	int (*name_get)(const struct scmi_protocol_handle *ph, u32 selector,
-> +			enum scmi_pinctrl_selector_type type, const char **name);
-> +	int (*group_pins_get)(const struct scmi_protocol_handle *ph, u32 selector,
-> +			      const unsigned int **pins, unsigned int *nr_pins);
-> +	int (*function_groups_get)(const struct scmi_protocol_handle *ph, u32 selector,
-> +				   unsigned int *nr_groups, const unsigned int **groups);
-> +	int (*mux_set)(const struct scmi_protocol_handle *ph, u32 selector, u32 group);
-> +	int (*config_get)(const struct scmi_protocol_handle *ph, u32 selector,
-> +			  enum scmi_pinctrl_selector_type type,
-> +			  u8 config_type, u32 *config_value);
-> +	int (*config_get_all)(const struct scmi_protocol_handle *ph,
-> +			      u32 selector,
-> +			      enum scmi_pinctrl_selector_type type, u16 size,
-> +			      u8 *config_types, u32 *config_values);
-> +	int (*config_set)(const struct scmi_protocol_handle *ph, u32 selector,
-> +			  enum scmi_pinctrl_selector_type type,
-> +			  unsigned int nr_configs,
-> +			  u8 *config_type, u32 *config_value);
-> +	int (*pin_request)(const struct scmi_protocol_handle *ph, u32 pin);
-> +	int (*pin_free)(const struct scmi_protocol_handle *ph, u32 pin);
-> +};
+> +static int pinctrl_scmi_pinconf_group_get(struct pinctrl_dev *pctldev,
+> +					  unsigned int group,
+> +					  unsigned long *config)
+> +{
+> +	int ret;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +	enum pin_config_param config_type;
+> +	u32 config_value;
+> +	u8 type;
 > +
-> +enum scmi_pinctrl_conf_type {
-> +	SCMI_PIN_NONE = 0x0,
-> +	SCMI_PIN_BIAS_BUS_HOLD = 0x1,
-> +	SCMI_PIN_BIAS_DISABLE = 0x2,
-> +	SCMI_PIN_BIAS_HIGH_IMPEDANCE = 0x3,
-> +	SCMI_PIN_BIAS_PULL_UP = 0x4,
-> +	SCMI_PIN_BIAS_PULL_DEFAULT = 0x5,
-> +	SCMI_PIN_BIAS_PULL_DOWN = 0x6,
-> +	SCMI_PIN_DRIVE_OPEN_DRAIN = 0x7,
-> +	SCMI_PIN_DRIVE_OPEN_SOURCE = 0x8,
-> +	SCMI_PIN_DRIVE_PUSH_PULL = 0x9,
-> +	SCMI_PIN_DRIVE_STRENGTH = 0xA,
-> +	SCMI_PIN_INPUT_DEBOUNCE = 0xB,
-> +	SCMI_PIN_INPUT_MODE = 0xC,
-> +	SCMI_PIN_PULL_MODE = 0xD,
-> +	SCMI_PIN_INPUT_VALUE = 0xE,
-> +	SCMI_PIN_INPUT_SCHMITT = 0xF,
-> +	SCMI_PIN_LOW_POWER_MODE = 0x10,
-> +	SCMI_PIN_OUTPUT_MODE = 0x11,
-> +	SCMI_PIN_OUTPUT_VALUE = 0x12,
-> +	SCMI_PIN_POWER_SOURCE = 0x13,
-> +	SCMI_PIN_SLEW_RATE = 0x20,
-> +	SCMI_PIN_OEM_START = 0xC0,
-> +	SCMI_PIN_OEM_END = 0xFF,
-> +};
+> +	if (!config)
+> +		return -EINVAL;
+> +
+> +	config_type = pinconf_to_config_param(*config);
+> +	ret = pinctrl_scmi_map_pinconf_type(config_type, &type);
 
-Can you move this enum above the pinctrl_proto_ops for consistency?
+You dont check ret here ?
 
-Maybe use it in the ops prototype as the type of config_type param or
-is there a reason to stick with u8 config_type even having the enum ?
-We anyway place a u32 in the message at the end, so it does not seem
-any gain in size.
+> +
+> +	ret = pinctrl_ops->config_get(pmx->ph, group, GROUP_TYPE, type, &config_value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(config_type, config_value);
+> +
+> +	return 0;
+> +}
+> +
 
 Thanks,
 Cristian
