@@ -1,118 +1,143 @@
-Return-Path: <linux-gpio+bounces-2310-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2311-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B9768308DD
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 15:56:31 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 923A4830969
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 16:15:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 37AF51F24BD8
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 14:56:31 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 998261C209DA
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 15:15:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F40CD20B38;
-	Wed, 17 Jan 2024 14:56:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47E7F21375;
+	Wed, 17 Jan 2024 15:13:24 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B6420DCB;
-	Wed, 17 Jan 2024 14:56:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C527B22329
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 15:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705503384; cv=none; b=mvjcgzCt5EzfFjDMV9DilDdoo/1YrqymycI58VW9bntskFF1WzbHfGz5pHu56Vde2F4WHF0gc8UbIGhSDN1qvF3aVnd30FOW1IGewjTrbM8LxSm9J7hcLImC5TSybsfgGF2/G/1QGYGs6+AojG5LUhc08D52aHnZJMGeagDnspg=
+	t=1705504404; cv=none; b=Ge484HAcrhRh9vDdprld9JihJpPwujPPxkshkVkFUQoUHwVLriCHISuMKfnufrUSYbFEySlkOgAAZZ1Xy1jZV+86LYw5+Hu8U/KctlKte1EQb8l3mvbCRIwAavcRCVIQz20CkxyS7bNlULOM/tdGKxKeE0VX/iOQNGDwmQOSAGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705503384; c=relaxed/simple;
-	bh=E56splDASVQAb/oV3isY/95h/YumxoYpMCoUHLwaWCc=;
-	h=Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=IoZrJyZ7aLhVA8Rggjw2bWUmva9TW7wZORK4zWZ7Gp+k2f7R1A4lvWl3/wGBFmGpC9DG+uGvmClwBJG5ae8JOliXY6x9z20NkgjQGlCZLOx3FjNHqRQYtD8l9W3W0cP9WtbyZRNtMQzmRiDxPDTGGYtRCKsTchs1H6wUa2mS8jI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr; spf=fail smtp.mailfrom=wifirst.fr; arc=none smtp.client-ip=212.27.42.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=wifirst.fr
-Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:aa1:d2f0:f6b3:db6:44c:eeef])
-	(Authenticated sender: isaias57@free.fr)
-	by smtp6-g21.free.fr (Postfix) with ESMTPSA id 4ECE77802D6;
-	Wed, 17 Jan 2024 15:56:09 +0100 (CET)
-From: Jean Thomas <jean.thomas@wifirst.fr>
-To: sean.wang@kernel.org,
-	linus.walleij@linaro.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com,
-	linux-mediatek@lists.infradead.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Jean Thomas <jean.thomas@wifirst.fr>,
-	Daniel Golle <daniel@makrotopia.org>
-Subject: [PATCH v2 2/2] pinctrl: mediatek: mt7981: add additional emmc groups
-Date: Wed, 17 Jan 2024 15:55:47 +0100
-Message-Id: <20240117145547.3354242-1-jean.thomas@wifirst.fr>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1705504404; c=relaxed/simple;
+	bh=DoPT2kPCKFf6axbElxOjPA7nhJzePbYJNHAQ65rX3aQ=;
+	h=Received:Received:Received:Message-ID:Subject:From:To:Cc:Date:
+	 In-Reply-To:References:Content-Type:Content-Transfer-Encoding:
+	 User-Agent:MIME-Version:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=II05k3WXRSGZlC/tOz6/YzS4cSBM+KzA+Jy5BaBrpZLVV/azOZrF3JH19qeeVPFS2MIVvvFtcqVf1x9TvuBeDqXEKObpQf6Hz9sqRmtRBZAkAdC3pE5pZ+NkQyCGN1ZOjAZOVk9wudZbzcKF+DdUj8R8snwbfPW06/a6/944CX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7b0-0000IN-Ew; Wed, 17 Jan 2024 16:12:50 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7ay-000UW3-1a; Wed, 17 Jan 2024 16:12:48 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rQ7ax-000C5F-36;
+	Wed, 17 Jan 2024 16:12:47 +0100
+Message-ID: <cf6440c08b8b7382e6693e18cdd29325aaea9cc9.camel@pengutronix.de>
+Subject: Re: [PATCH 11/14] phy: cadence-torrent: add suspend and resume
+ support
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: Thomas Richard <thomas.richard@bootlin.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy
+ Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, Haojian
+ Zhuang <haojian.zhuang@linaro.org>,  Vignesh R <vigneshr@ti.com>, Aaro
+ Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod
+ Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, Tom
+ Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ Krzysztof =?UTF-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,  Rob Herring
+ <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com,  thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Date: Wed, 17 Jan 2024 16:12:47 +0100
+In-Reply-To: <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+	 <20240102-j7200-pcie-s2r-v1-11-84e55da52400@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Add new emmc groups in the pinctrl driver for the
-MediaTek MT7981 SoC:
-* emmc reset, with pin 15.
-* emmc 4-bit bus-width, with pins 16 to 19, and 24 to 25.
-* emmc 8-bit bus-width, with pins 16 to 25.
+Hi Thomas,
 
-The existing emmc_45 group is kept for legacy reasons, even
-if this is the union of emmc_reset and emmc_8 groups.
+On Mo, 2024-01-15 at 17:14 +0100, Thomas Richard wrote:
+> Add suspend and resume support.
+> The alread_configured flag is cleared during suspend stage to force the
+> phy initialization during the resume stage.
+>=20
+> Based on the work of Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+>=20
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
+>  drivers/phy/cadence/phy-cadence-torrent.c | 57 +++++++++++++++++++++++++=
+++++++
+>  1 file changed, 57 insertions(+)
+>=20
+> diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cade=
+nce/phy-cadence-torrent.c
+> index 70413fca5776..31b2594e5942 100644
+> --- a/drivers/phy/cadence/phy-cadence-torrent.c
+> +++ b/drivers/phy/cadence/phy-cadence-torrent.c
+> @@ -3006,6 +3006,62 @@ static void cdns_torrent_phy_remove(struct platfor=
+m_device *pdev)
+[...]
+> +static int cdns_torrent_phy_resume_noirq(struct device *dev)
+> +{
+> +	struct cdns_torrent_phy *cdns_phy =3D dev_get_drvdata(dev);
+> +	int node =3D cdns_phy->nsubnodes;
+> +	int ret, i;
+> +
+> +	ret =3D cdns_torrent_clk(cdns_phy);
+> +	if (ret)
+> +		goto clk_cleanup;
+> +
+> +	/* Enable APB */
+> +	reset_control_deassert(cdns_phy->apb_rst);
+> +
+> +	if (cdns_phy->nsubnodes > 1) {
+> +		ret =3D cdns_torrent_phy_configure_multilink(cdns_phy);
+> +		if (ret)
+> +			goto put_lnk_rst;
+> +	}
+> +
+> +	return 0;
+> +
+> +put_lnk_rst:
+> +	for (i =3D 0; i < node; i++)
+> +		reset_control_put(cdns_phy->phys[i].lnk_rst);
 
-Signed-off-by: Jean Thomas <jean.thomas@wifirst.fr>
-Reviewed-by: Daniel Golle <daniel@makrotopia.org>
----
- drivers/pinctrl/mediatek/pinctrl-mt7981.c | 17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+What is this intended to do? I expect this to explode in _remove, where
+the=C2=A0lnk_rst are put again. Should this be:
 
-diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-index ca667ed25a4d..ef6123765885 100644
---- a/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-+++ b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
-@@ -700,6 +700,15 @@ static int mt7981_drv_vbus_pins[] = { 14, };
- static int mt7981_drv_vbus_funcs[] = { 1, };
+		reset_control_assert(cdns_phy->phys[i].lnk_rst);
 
- /* EMMC */
-+static int mt7981_emmc_reset_pins[] = { 15, };
-+static int mt7981_emmc_reset_funcs[] = { 2, };
-+
-+static int mt7981_emmc_4_pins[] = { 16, 17, 18, 19, 24, 25, };
-+static int mt7981_emmc_4_funcs[] = { 2, 2, 2, 2, 2, 2, };
-+
-+static int mt7981_emmc_8_pins[] = { 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, };
-+static int mt7981_emmc_8_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
-+
- static int mt7981_emmc_45_pins[] = { 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, };
- static int mt7981_emmc_45_funcs[] = { 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, };
+?
 
-@@ -854,6 +863,12 @@ static const struct group_desc mt7981_groups[] = {
- 	PINCTRL_PIN_GROUP("udi", mt7981_udi),
- 	/* @GPIO(14) DRV_VBUS(1) */
- 	PINCTRL_PIN_GROUP("drv_vbus", mt7981_drv_vbus),
-+	/* @GPIO(15): EMMC_RSTB(2) */
-+	PINCTRL_PIN_GROUP("emmc_reset", mt7981_emmc_reset),
-+	/* @GPIO(16,17,18,19,24,25): EMMC_DATx, EMMC_CLK, EMMC_CMD */
-+	PINCTRL_PIN_GROUP("emmc_4", mt7981_emmc_4),
-+	/* @GPIO(16,17,18,19,20,21,22,23,24,25): EMMC_DATx, EMMC_CLK, EMMC_CMD */
-+	PINCTRL_PIN_GROUP("emmc_8", mt7981_emmc_8),
- 	/* @GPIO(15,25): EMMC(2) */
- 	PINCTRL_PIN_GROUP("emmc_45", mt7981_emmc_45),
- 	/* @GPIO(16,21): SNFI(3) */
-@@ -957,7 +972,7 @@ static const char *mt7981_i2c_groups[] = { "i2c0_0", "i2c0_1", "u2_phy_i2c",
- static const char *mt7981_pcm_groups[] = { "pcm", };
- static const char *mt7981_udi_groups[] = { "udi", };
- static const char *mt7981_usb_groups[] = { "drv_vbus", };
--static const char *mt7981_flash_groups[] = { "emmc_45", "snfi", };
-+static const char *mt7981_flash_groups[] = { "emmc_reset", "emmc_4", "emmc_8", "emmc_45", "snfi", };
- static const char *mt7981_ethernet_groups[] = { "smi_mdc_mdio", "gbe_ext_mdc_mdio",
- 	"wf0_mode1", "wf0_mode3", "mt7531_int", };
- static const char *mt7981_ant_groups[] = { "ant_sel", };
---
-2.39.2
+
+regards
+Philipp
 
