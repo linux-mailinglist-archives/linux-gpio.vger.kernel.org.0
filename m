@@ -1,167 +1,161 @@
-Return-Path: <linux-gpio+bounces-2295-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2296-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 48BAE83018C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 09:52:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F13548301A1
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 09:56:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C18971F20EDE
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 08:52:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 147261C244F4
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 08:56:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B3B12B69;
-	Wed, 17 Jan 2024 08:52:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CFBD13FF6;
+	Wed, 17 Jan 2024 08:55:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uzjjQqqL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qRjASgPQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f53.google.com (mail-ua1-f53.google.com [209.85.222.53])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0763813FE4
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 08:51:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D431C156C2
+	for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 08:55:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705481520; cv=none; b=YZ8a7UwGvkw/8JMtSySpe9o67S1RL+kiem4HRe1WZH719zA2DggPYou4IABAVxII+U99J1sWEpnti7/LNHDTTWGGUGAjGyKkjoj/D6RIYpbBBPShQiDOV4ZN4epT+Zyp+15T5p6j3Nf4VR5nQ4CwugcHAmZMQxQZEMfPD7hA8So=
+	t=1705481717; cv=none; b=PJBgF5DxPKQL42JUS6lsbEyoJAeunZk4o2ZWULpWus5qUvj4ENA9a2EhTnZrkOg+TPIO+JgOD5uyCamGntJ1r/Vqi7BNxEcCiVwiPYGKaB1O0b0vjjHcXjFSdiMFaGC/3P80vAYf7P0Neldet9zidWTNELz3xzTtxv58/xuaPdw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705481520; c=relaxed/simple;
-	bh=4SwlpHGcSWP6z2rcXR2s81UgwIGytxJ8hc/Rkdcy0OI=;
+	s=arc-20240116; t=1705481717; c=relaxed/simple;
+	bh=taGcK0Bmw3uFCOTRnu8T62yiz+qod63dPi5Bu5uIxc4=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=mi++lzNGp/6GWDch6Gxz6JsiVaPSPcomufPUUJXS8e+OeFG2Jmd7OIYWN5ImDdY1tqC6nYNAc/ZsomlwATLoYhaA7lUnBR2Xjes4tEVzkHMd3gexM9H+bmy1rQRMvn5QHJbiKVuae6CqscdCet5BvqEFhK5IeNcbFbHeDLpFuKY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uzjjQqqL; arc=none smtp.client-ip=209.85.222.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f53.google.com with SMTP id a1e0cc1a2514c-7ce9defc4c2so1740408241.0
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 00:51:57 -0800 (PST)
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
+	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
+	 To:Cc:References:From:Autocrypt:In-Reply-To:Content-Type:
+	 Content-Transfer-Encoding; b=RiKkmCVzar8IEJ5Ph3b6x08GUDLGSiBw/5uEkvy4EcQVFaM+H9hSddIT5+ZyQpFN31vOk8DDSrZ/a9uEXxib/X58aoHgQ/wRpCuL0SH/wox6QHHKYhvvyM4QdAi/G0d8XWiUKGKlB7wFv3d8xF8AaJBh430UfiH8QTwlsnFsLN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qRjASgPQ; arc=none smtp.client-ip=209.85.208.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2cca5d81826so140410591fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 00:55:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705481517; x=1706086317; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Nbvt6okzEg9mCFzPVV+6Uem9oajRPBMKXyYL6WqdVzs=;
-        b=uzjjQqqLfv2JFhJ900nSVMLEUe45fuIE7mx1jqD467PJYRhbZIAhFihafdPflSs7N5
-         E7arFFOH75jJn/1VaUtD5nDY+JEAhAZRhFQcZeiYbGWu8XkQWBvZH0dmjIYZFwcFHYFD
-         VV1bUD5q2VsMZJHmnEu6ERRCNLa5yHbd7A7LkljdSiLR7Uav6enOSxiaA6wnNoJSAc9S
-         zAlx3oFSik4exwLnHUoN2tb5I7KDfSj2uvatGCBPS+lDLMmb91YDR6CLADHwA36NJnmy
-         AaB6pTnN2HW00BRzvlvG/6yeG907DhjPvixS5C/r4sCKZeMgEr4d2ZVJhjaotjvvP2Mw
-         pcQQ==
+        d=linaro.org; s=google; t=1705481713; x=1706086513; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=SbicIxEVLKASkkXjlMeyfqO175i8K5O8aNW1xewNsKA=;
+        b=qRjASgPQGYiqZFnY2bDrnpey679+CdW47Hm9dE9CM5EU7geTfMyoLgVwYRPpwUIK6Y
+         1IpJASwqJw9et2cpwdnsSdPED7xeZe69zawWpNgXogSU2njuDRryzhA1xK4kiDubNSNn
+         Et2WmKGif+pChCPZS1PpuMnE2kN/3UEMjPDGZVaKSMXgTyv1VR6kuMZgWzl/TdGc3rIo
+         EcpvYhNqo+nrQbwhJGgQ8cBBOaju6GCUViJFjMcsi42NkYfRcplst44zHBvSszY2GVtw
+         yT9B0JQEa4SDs49ux4v6BaMZrT1rB7Oelb+Uv51JPxcy4aHQofSmldEeAk8DDKYJQ4zi
+         hJhg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705481517; x=1706086317;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Nbvt6okzEg9mCFzPVV+6Uem9oajRPBMKXyYL6WqdVzs=;
-        b=HGIsAgl/qHeeyhIQaAs1UFnPCezs/ZfTIhsfv454D82zT5MXyEXrXSHEZnTPFKEqc4
-         Vy0H+yA2veeZ5pTqtUwRZFSd5aWm0wL5UjT9u66MvEw82F/DvnFPAC7fSIBY/OEDuVAN
-         hYXKuUhMnMAva0gFXApnvehtci+/UE71ygWTZlgW0odU5KVZWpNT0aNWT+LClmoIwLU7
-         RcrlaTwIK7IJAKod4IIdFkcpBH9SSQYg6XQP60yRblqs03O5FrkvFCuHlcxtXTrmgGy5
-         Fmp6JaLzZ9TrUPvawEHJrVH1UAh3d89FRnBtJCk2z1FXSUqyMZeIz+nZAA2Rx8uvFEt9
-         Cg1A==
-X-Gm-Message-State: AOJu0Yz0WAu6E9yNr+9Yn2/C9jYmpDiEfCDunYUYFAj+spxqR/Gdf+vy
-	mqoa8wSQimQhIoQ3Dyw5ResF3gbj3HmbRr95ZH0qio7W1MLlyQ==
-X-Google-Smtp-Source: AGHT+IG0TirBa98SQpIX2Hdl4lnpfCgzyQHdWiVCI1IaDb0GWmUzlC2LztTTiq3soJ5W//11rnS6g1wq5MWp1snplcg=
-X-Received: by 2002:a05:6122:1690:b0:4b6:ba77:5a9f with SMTP id
- 16-20020a056122169000b004b6ba775a9fmr3440748vkl.13.1705481516865; Wed, 17 Jan
- 2024 00:51:56 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705481713; x=1706086513;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=SbicIxEVLKASkkXjlMeyfqO175i8K5O8aNW1xewNsKA=;
+        b=MYEmWPyr2AFpK9uU8IltZgrvLNReVek2hGj1SuOaE3T6F/fO7e+xvHu3Aoe6BbLtkW
+         prY7B5Eq3PTSAtFNsD15scIParJuEq9QCMWRQZHReFTY9mm3PbAiG08RbiZuUyhGeS4w
+         Bxd8WRVRE9CYcXoA37ktd52hagPV8CUT6m7xvYf6Ynk5TMZBkui3wfgE1dM8fuwm2A0J
+         uSzPQISx/1Tifb1GFQVW2xonl4dTQKbnpS/NMrmjgAUqTZUsKzNZb9Wxywu5/5nfSLlm
+         X7MYOF4PRdOl5gvkDZvLoESldt5Q9KbFJSIdOgo0m/DKI434SiCmdm9wTs3CRoAen11Q
+         f4uQ==
+X-Gm-Message-State: AOJu0YwEg1+0rP1uQYi9DJSGNff/7P4/uSMRH0y8+9kIaleeT89RfdDE
+	VSRKGPytpcCBdvvzulQXyJQmN82V1QfpKg==
+X-Google-Smtp-Source: AGHT+IHq1eYW4RXijDxLWT00CuC+xVFu042CcQf64tNw2Om6tISkKIhe/Pmvt14wg/DlbNiHhgscIQ==
+X-Received: by 2002:a2e:9246:0:b0:2cc:5ab2:7f4f with SMTP id v6-20020a2e9246000000b002cc5ab27f4fmr4337842ljg.103.1705481712805;
+        Wed, 17 Jan 2024 00:55:12 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id ee34-20020a056402292200b00559bb6eef00sm1411734edb.85.2024.01.17.00.55.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 17 Jan 2024 00:55:12 -0800 (PST)
+Message-ID: <7b51e7b4-7a08-4a7c-a30c-17447583eff8@linaro.org>
+Date: Wed, 17 Jan 2024 09:55:09 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20231219201102.41639-1-brgl@bgdev.pl> <19dca2a9-36e1-4a6b-9b65-db4c0a163d56@roeck-us.net>
- <CAMRc=McueRLdFJ_p-QPKPwFJatVXOG8hyeZKniAPGDBrNo2xFg@mail.gmail.com> <76bd483b-e48c-4697-8cbd-05a0346090b7@roeck-us.net>
-In-Reply-To: <76bd483b-e48c-4697-8cbd-05a0346090b7@roeck-us.net>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 17 Jan 2024 09:51:45 +0100
-Message-ID: <CAMRc=McdyqDdaXv0Jb2ic8i4VkibgodAQ494ZKLhnF=pm7uabA@mail.gmail.com>
-Subject: Re: [RFC PATCH] gpiolib: remove extra_checks
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Kent Gibson <warthog618@gmail.com>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 2/3] dt-bindings: gpio: vf610: add optional 'ngpios'
+Content-Language: en-US
+To: Hector Palacios <hector.palacios@digi.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org
+Cc: andy@kernel.org, conor+dt@kernel.org, shawnguo@kernel.org,
+ s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+ linux-imx@nxp.com, stefan@agner.ch, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240117083251.53868-1-hector.palacios@digi.com>
+ <20240117083251.53868-3-hector.palacios@digi.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240117083251.53868-3-hector.palacios@digi.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 16, 2024 at 11:34=E2=80=AFPM Guenter Roeck <linux@roeck-us.net>=
- wrote:
->
-> On 1/16/24 13:41, Bartosz Golaszewski wrote:
-> > On Tue, Jan 16, 2024 at 7:23=E2=80=AFPM Guenter Roeck <linux@roeck-us.n=
-et> wrote:
-> >>
-> >> Hi,
-> >>
-> >> On Tue, Dec 19, 2023 at 09:11:02PM +0100, Bartosz Golaszewski wrote:
-> >>> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>>
-> >>> extra_checks is only used in a few places. It also depends on
-> >>> a non-standard DEBUG define one needs to add to the source file. The
-> >>> overhead of removing it should be minimal (we already use pure
-> >>> might_sleep() in the code anyway) so drop it.
-> >>>
-> >>> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >>
-> >> This patch triggers (exposes) the following backtrace.
-> >>
-> >> BUG: sleeping function called from invalid context at drivers/gpio/gpi=
-olib.c:3738
-> >> in_atomic(): 1, irqs_disabled(): 128, non_block: 0, pid: 7, name: kwor=
-ker/0:0
-> >> preempt_count: 1, expected: 0
-> >> RCU nest depth: 0, expected: 0
-> >> 3 locks held by kworker/0:0/7:
-> >>   #0: c181b3a4 ((wq_completion)events_freezable){+.+.}-{0:0}, at: proc=
-ess_scheduled_works+0x23c/0x644
-> >>   #1: c883df28 ((work_completion)(&(&host->detect)->work)){+.+.}-{0:0}=
-, at: process_scheduled_works+0x23c/0x644
-> >>   #2: c24e1720 (&host->lock){-...}-{2:2}, at: sdhci_check_ro+0x14/0xd4
-> >> irq event stamp: 2916
-> >> hardirqs last  enabled at (2915): [<c0b18838>] _raw_spin_unlock_irqres=
-tore+0x70/0x84
-> >> hardirqs last disabled at (2916): [<c0b1853c>] _raw_spin_lock_irqsave+=
-0x74/0x78
-> >> softirqs last  enabled at (2360): [<c00098a4>] __do_softirq+0x28c/0x4b=
-0
-> >> softirqs last disabled at (2347): [<c0022774>] __irq_exit_rcu+0x15c/0x=
-1a4
-> >> CPU: 0 PID: 7 Comm: kworker/0:0 Tainted: G                 N 6.7.0-099=
-28-g052d534373b7 #1
-> >> Hardware name: Freescale i.MX25 (Device Tree Support)
-> >> Workqueue: events_freezable mmc_rescan
-> >>   unwind_backtrace from show_stack+0x10/0x18
-> >>   show_stack from dump_stack_lvl+0x34/0x54
-> >>   dump_stack_lvl from __might_resched+0x188/0x274
-> >>   __might_resched from gpiod_get_value_cansleep+0x14/0x60
-> >>   gpiod_get_value_cansleep from mmc_gpio_get_ro+0x20/0x30
-> >
-> > When getting GPIO value with a spinlock taken the driver *must* use
-> > the non-sleeping variant of this function: gpiod_get_value(). If the
-> > underlying driver can sleep then the developer seriously borked. The
-> > API contract has always been this way so I wouldn't treat it as a
-> > regression.
-> >
->
-> I said
->
-> "This patch triggers (exposes) the following backtrace"
->
-> and
->
-> "It isn't really surprising since sdhci_check_ro() calls the gpio code un=
-der
->   spin_lock_irqsave().
-> "
->
-> I didn't (intend to) claim that this would be a regression. It was
-> supposed to be a report. My apologies if it came along the wrong way.
->
+On 17/01/2024 09:32, Hector Palacios wrote:
+> Some SoCs, such as i.MX93, don't have all 32 pins available
+> per port. Allow optional generic 'ngpios' property to be
+> specified from the device tree and default to 32 if the
+> property does not exist.
+> 
+> Signed-off-by: Hector Palacios <hector.palacios@digi.com>
+> ---
 
-No worries, I'm just stating that before someone wants a revert. This
-has been a bug all along in MMC code.
+This is a friendly reminder during the review process.
 
-Bartosz
+It seems my or other reviewer's previous comments were not fully
+addressed. Maybe the feedback got lost between the quotes, maybe you
+just forgot to apply it. Please go back to the previous discussion and
+either implement all requested changes or keep discussing them.
+
+Thank you.
+
+Best regards,
+Krzysztof
+
 
