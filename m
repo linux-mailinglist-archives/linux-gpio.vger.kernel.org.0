@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-2316-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2317-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06635830E40
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 21:52:46 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0618F830E4B
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 21:54:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B82721F232A1
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 20:52:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38D2C1C214B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 20:54:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D4D8250F8;
-	Wed, 17 Jan 2024 20:52:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F07825108;
+	Wed, 17 Jan 2024 20:54:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JRoZAeaX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnZBuseg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74BF925540;
-	Wed, 17 Jan 2024 20:52:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5FF250E8;
+	Wed, 17 Jan 2024 20:54:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705524760; cv=none; b=XOB3dbZQFxQnwIXieOtg+tqtcAvmxRjpz4x24OYLsOcDMZWNCSGv/8rRDcb32qHs8kOR4KgtavgbKFZAR0EuGZA4cXdPc2K9KJ2yS55OYG9DA5f2JAE2Vpk0DbbJ5pueujTLLb4FIJFavOJ+1vQtFyX8GgnMqjjV+lkC0UJpW1M=
+	t=1705524853; cv=none; b=AejrSVm9cMokZ++BNve8HMEGEht7smDbPZxXyGhLiNcB9kQJyI5Np5QpxQIzjqOkKroRbxpWJK11y9RT5kTRpjifv9lV8u4JCk+MucIiS8Z8VR0X+BRAGYu1jIY7gtccpJtiav4T1C6u+8vfVYNCAJNbdyQYumJinMsEzVUyh+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705524760; c=relaxed/simple;
-	bh=6bfMGEeSHTd0Kja+faLLkq2SnZ/etT47sRwohLN8FZo=;
+	s=arc-20240116; t=1705524853; c=relaxed/simple;
+	bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
 	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
 	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=ZHqPC7Xd14zyeSmTkT53rsrZenY1LiMvPzQpD7kOWO/3IdICvdM6eSButj8HhiWhzTbQkHUkoQhM/JSbxOxPR1mPdNjlzhbVB96eKSqm4mXvkA35/q22QEZE3JKFvzD9gzxN+f3d2ibHoeBhQCQz+L5AMPj4PvqkKk/wL82Z1aA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JRoZAeaX; arc=none smtp.client-ip=209.85.167.47
+	 Content-Type:Content-Transfer-Encoding; b=gVHfvpieTdR4UT55d5Ts8cG40w1Bh6oTMS0aGtl7R6bXejwSRGg9G2D36fI0RFxgn83H/bdhDRq1KhsMlo/1A0o//sx1Di2vSZMc8Hm7H874bG5gG0q73e5umCK0rxWch17DHdrKnTNGimyiYnN55koO7bLkD3pS4XTokkpH7W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnZBuseg; arc=none smtp.client-ip=209.85.208.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-50e766937ddso13152452e87.3;
-        Wed, 17 Jan 2024 12:52:38 -0800 (PST)
+Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-557ad92cabbso11618622a12.0;
+        Wed, 17 Jan 2024 12:54:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705524756; x=1706129556; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705524850; x=1706129650; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=B0+WY0tNWGa27ERQy4ZG2EkS39nDYHw+ks1/5FPGHiM=;
-        b=JRoZAeaXucoHvG470rGnH37DLeyoC/TZLX/mw1qeGP7Qk9PljeIUEtj6BBq5r658Mf
-         kXzfmL6ex70yu+2qswqJwyxXRl5yFYjynFCvvV+k1rfEzrwDq4LCHZUN2nbj5yZw4P6A
-         dGeMT3a0DewW7LmC4LyCfoHBhBG3o2gM1rFEbvPhSPJaDElgg34sj8eVbaiGypCC//4y
-         NFRaWzIGrxheiTkXUjHMc5Evqq3DGjkG+0NtDWkgnJs0xKTGjRI1rkoG6nHV0vt9eQ+n
-         r/p9VcJwAJ+1bNeH/wQoFKGSYxwsUIIBV9aTt2/MP++PRreBz3zegw8AcOWWT/yXIyLo
-         qxsQ==
+        bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
+        b=LnZBusegOzr09qS3GnSonh+yW8iLaFf1+Z4UpDeNe8w6oRBNOiLjIYwk7VUFWh9h9W
+         jntULaMaL6KZL173j9bUQTXsvefnKybNDsr+fTmx4cr7eYON9Oy5x5sXHitSVsjhvvkX
+         LP8oc52EpsHRvPu7GhWQqRkk9kKGXvFev1Jq60DUjUWbHvuJvR2ITfd6hxKF/LKVdEAa
+         vV/ceSEYHUpsN7tgeBriKamb7nK4qiRO19nOXRe2VoBJeGhYcbk8kDvQYnstp+pC/vgn
+         yPd3e0l56vZGg31FjPosdO/TaqLa2c/ZzuPlh0nhVXb+BQJB71KLaOs7MyA4UP3BXKbR
+         BC7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705524756; x=1706129556;
+        d=1e100.net; s=20230601; t=1705524850; x=1706129650;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=B0+WY0tNWGa27ERQy4ZG2EkS39nDYHw+ks1/5FPGHiM=;
-        b=FQelNuismrK0ow7O78IEeyqdmIiFi0sYWQeuTIrxtcekPI10sSeE8EYPIHogpLNaR9
-         l9wdOehYC7Uj9gYO6uXdij6ETYNIgoyBG1r7o0QBg1FrzB4oaaU4EyTDUb/HAX6w9j00
-         rI6m3viM6Y1Z0UEiKTvBy7dMubI3vC1rdB6rqUC1zbb3FV2f0TPB1YKVhFqm8ztqy4n6
-         QZogPNYJTYwSHBpj8GFgglCowqwixB7HkPdmVcKDsesclv1R542UQId3Nqs8+Xvb0mLB
-         k153AjFt/6GcFlo09XzOnS4Gg5CsNygaLdCrp1BA2sZCmjUwNWf3fnr/9/ZIASwQgXt9
-         /b5A==
-X-Gm-Message-State: AOJu0YydveNj34njDtWPTw/5KSN/JxRhRLJK9hX+m2b5Ac+MIUv8waZZ
-	+BJ3Mvnyi9htfl6tNPYIhEHrRBcwEthEn8iJ4IxLJiYvO5g=
-X-Google-Smtp-Source: AGHT+IERGCKjG90zqKMcjx5QoH1qXDA27BquNlg87yXazeyy+nk3QMPVJtsKoa8fI01vr4f95N6nyLncVo4M0d+ULIY=
-X-Received: by 2002:a05:6512:130c:b0:50e:e557:f1c4 with SMTP id
- x12-20020a056512130c00b0050ee557f1c4mr4760993lfu.0.1705524756375; Wed, 17 Jan
- 2024 12:52:36 -0800 (PST)
+        bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
+        b=oQ0Oiays/dgGEl/F6OogXATzw74ZnkSAqBSNqMHfk3xXlX1Yptn1eWDUVYJa/SDq8r
+         MeqY/xj6HLkABnmgZN8KiqPoSWvNE3zxxpgqSw3RIpLFd2SeueG/sBjTX5l2u2P624ov
+         tSZVKyxbh54I2KbIKYWtQrKLL4+ubXMuueD8SBzcbR5CdZhAsxD9S7Oz9i5SvDwOP6yJ
+         8IVFxB/d1oSF5DF9eRVYjDNCNADwShi6/E6a6uEOwm6ibdadfOpI/fd+/X0WPX94LuOk
+         2EqOANEWGF7bg1DKxyt8S0J3btKu1i6+omSucUGnzlAQJpbVRwt1BbG0TyvperFmoHat
+         5SdQ==
+X-Gm-Message-State: AOJu0YynAktft0yDPMLivKWRkEQkOgnXxmBSxcW1MVskuJXbjvgzMEl6
+	AkuKzIIrX7+1RhVjcGdk9xGBBUuz8x0s6BxTADE=
+X-Google-Smtp-Source: AGHT+IHu/d6LG6bzL5O6GP0Fb7oK+rmMYDeJxjv+aom8dzUkKP10RwWSxI0lzlcrH+69uH1H4AqAQZ4xROuYMS0Rpuo=
+X-Received: by 2002:a17:906:fd81:b0:a28:fb94:b773 with SMTP id
+ xa1-20020a170906fd8100b00a28fb94b773mr3225489ejb.223.1705524850520; Wed, 17
+ Jan 2024 12:54:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240117083251.53868-1-hector.palacios@digi.com> <20240117083251.53868-2-hector.palacios@digi.com>
-In-Reply-To: <20240117083251.53868-2-hector.palacios@digi.com>
+References: <20240117094453.100518-1-hector.palacios@digi.com> <20240117094453.100518-2-hector.palacios@digi.com>
+In-Reply-To: <20240117094453.100518-2-hector.palacios@digi.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 17 Jan 2024 22:51:59 +0200
-Message-ID: <CAHp75Vci=1nAvxRcbkK2SxGWGbQVbzQMTycMt8tZ5snPRTYXOg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/3] gpio: vf610: add support to DT 'ngpios' property
+Date: Wed, 17 Jan 2024 22:53:34 +0200
+Message-ID: <CAHp75VcDXPmoiS_KzGf7mRTSOTy1sj+bY4rd3eiKtMyH8-QDHQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/3] gpio: vf610: add support to DT 'ngpios' property
 To: Hector Palacios <hector.palacios@digi.com>
 Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org, 
 	krzysztof.kozlowski+dt@linaro.org, andy@kernel.org, conor+dt@kernel.org, 
@@ -87,7 +87,7 @@ Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org,
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 10:35=E2=80=AFAM Hector Palacios
+On Wed, Jan 17, 2024 at 11:46=E2=80=AFAM Hector Palacios
 <hector.palacios@digi.com> wrote:
 >
 > Some SoCs, such as i.MX93, don't have all 32 pins available
@@ -95,16 +95,7 @@ On Wed, Jan 17, 2024 at 10:35=E2=80=AFAM Hector Palacios
 > specified from the device tree and default to
 > VF610_GPIO_PER_PORT (32) if the property does not exist.
 
-...
-
-> +       ret =3D device_property_read_u32(dev, "ngpios", &ngpios);
-> +       if (ret || ngpios > VF610_GPIO_PER_PORT)
-> +               gc->ngpio =3D VF610_GPIO_PER_PORT;
-> +       else
-> +               gc->ngpio =3D (u16)ngpios;
-
-This property is being read by the GPIOLIB core. Why do you need to repeat =
-this?
+Same comment/Q as per v3.
 
 --=20
 With Best Regards,
