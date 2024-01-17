@@ -1,118 +1,203 @@
-Return-Path: <linux-gpio+bounces-2297-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2298-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20B5B8301A4
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 09:56:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 99663830299
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 10:46:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C6B631F24BF2
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 08:56:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8B2BC1C24197
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 09:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E8351B96D;
-	Wed, 17 Jan 2024 08:55:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AF2F1401A;
+	Wed, 17 Jan 2024 09:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="QUAN1Gvb"
+	dkim=pass (2048-bit key) header.d=digi.com header.i=@digi.com header.b="NYSZmRqJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from outbound-ip24a.ess.barracuda.com (outbound-ip24a.ess.barracuda.com [209.222.82.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1727413FFF
-	for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 08:55:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.170
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705481728; cv=none; b=YYyOhPI03wpx3dm6jzrmQqP8aQvim4lOlI6lnP7Lcf8+3LAcP2w8UhzUqFABCuJz4UaD6osfTln1mrbBFoTIvPazOCAf2XSqVAUdQkPMIJEqGp3qVzp99JYv3neALpnE8CVYvw/Jez75p2Cze+QLXaXZ8MiVJCICZOeWHUqJIlg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705481728; c=relaxed/simple;
-	bh=aQ+6JbM5yR6kQFalamoiBcTrOt23eDME+cRfrzz+7Wc=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=irM7T/Y8kwusmPZZl2laWyPMPkOsggVNJylTKT9CL/Jt+jbBHH722pcniU1cUZmuf6tbdmbhMjHGyqGobSDFmu3GnpU73M7F2u9SY8GKjdXr0loFFMVLatRhNMPK4ngz6ubtgFBLODonIMvDPcbVURakCe/mzZWUF4GpEQ0bGtE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=QUAN1Gvb; arc=none smtp.client-ip=209.85.221.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f170.google.com with SMTP id 71dfb90a1353d-4b756f2aebeso2615990e0c.2
-        for <linux-gpio@vger.kernel.org>; Wed, 17 Jan 2024 00:55:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705481725; x=1706086525; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aQ+6JbM5yR6kQFalamoiBcTrOt23eDME+cRfrzz+7Wc=;
-        b=QUAN1GvbgLoiyZ5l8jCF0s+Nbu2G3y4btXCUvkCaUZq8GJ8Bo3iQHzZRFflEpIBWHX
-         Jysv/JvROzYFCFFUd5GLqdVO0filnCSeebF8ZvXpuNn5cZBUHPXmaJZHRi6u+q4uvia4
-         hReb3qx716kv1X7hjxY/LjCD4rLSrSBZx117FrBRQCPNdET5k2LIck/sgylEQsHaYaB1
-         CCuVXlDcgCC3qcH4Kzmr9nTKvI0F34kfMY0X2M0CLu0ATPEc4N6yyehapQKV6sqX3oQO
-         nCGD6UMNP33hvyRkU9WDNyncFuLaxcqjmZgbRNy9BG99SJV85KML2x1RbPVkfUMuXnOl
-         3EZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705481725; x=1706086525;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aQ+6JbM5yR6kQFalamoiBcTrOt23eDME+cRfrzz+7Wc=;
-        b=tYn4EuqLPcHmf1FoSdXCe6L2ciYX9mUXMtAN0vGKHxLvkVUAZDPyzH4cOjjH457bLA
-         vQdY2nUqJgwhZnKq8T0F3iSLpNdcGroxoKSIWcwgeCfcxyadi+wBgs3Tj8Vot8RGMyeJ
-         ktrwllO3u09Te+M11s1VvLO08kqBvWZp3mhhz9TCZiD2kxYrgS9ToubjHCKWCGjBsHdP
-         NbIMH2DYhIZjKahg/gwJNViV3fu/h6dZuBCUpNdwcly8tYFZim/YGIjuEw9Jr3O2ODLo
-         pC0ugivZ3DVe9S//U99QBFdNOPPc+krWU2MhfSEcpiiS8VNE269r6m3LP0FQ266vCHVA
-         dFAQ==
-X-Gm-Message-State: AOJu0YzITIdA0a1vNSnA697cmPOQ3P6osKNjZQFrY7UwLG4wqQjzgN1y
-	UgngoVZGqvt9xe69a1k/47LMJH2tsGdYx3GQlN8kxMslj5PHUQ==
-X-Google-Smtp-Source: AGHT+IES0DFHdOM86Gfrad0yRE/gG0ns3q7IesySq/UuocXs+YchPO//dRnsduZYFjqmfBLE32KcLpvyd6w/5fK9k0I=
-X-Received: by 2002:ac5:cb45:0:b0:4b7:b264:b62a with SMTP id
- s5-20020ac5cb45000000b004b7b264b62amr3800364vkl.29.1705481724981; Wed, 17 Jan
- 2024 00:55:24 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4586814003;
+	Wed, 17 Jan 2024 09:45:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=209.222.82.206
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705484753; cv=fail; b=WY2RVhnelcETviQg91P/r0vvdyRE/NbD2jKaTWKCdfmHu5cduKMO0m1Swazd1r8+YZ1OeV2FgTIBa483npWSTDYiTS7OZ4wd8ujbvl8XIaEZ8bpo1YTWBeyKKRcabEvvup9eP/9jP9rf19yJkQvTRrVSfahu6iheFiwWRy6tdhs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705484753; c=relaxed/simple;
+	bh=hO2LHTgY2p8XEL6vV+xIomvNTsijifW6spkcKwHq9JQ=;
+	h=Received:ARC-Message-Signature:ARC-Authentication-Results:
+	 DKIM-Signature:Received:Received:From:To:Cc:Subject:Date:
+	 Message-Id:X-Mailer:Content-Transfer-Encoding:Content-Type:
+	 X-ClientProxiedBy:MIME-Version:X-MS-PublicTrafficType:
+	 X-MS-TrafficTypeDiagnostic:X-MS-Office365-Filtering-Correlation-Id:
+	 X-MS-Exchange-SenderADCheck:X-MS-Exchange-AntiSpam-Relay:
+	 X-Microsoft-Antispam:X-Microsoft-Antispam-Message-Info:
+	 X-Forefront-Antispam-Report:
+	 X-MS-Exchange-AntiSpam-MessageData-ChunkCount:
+	 X-MS-Exchange-AntiSpam-MessageData-0:X-OriginatorOrg:
+	 X-MS-Exchange-CrossTenant-Network-Message-Id:
+	 X-MS-Exchange-CrossTenant-AuthSource:
+	 X-MS-Exchange-CrossTenant-AuthAs:
+	 X-MS-Exchange-CrossTenant-OriginalArrivalTime:
+	 X-MS-Exchange-CrossTenant-FromEntityHeader:
+	 X-MS-Exchange-CrossTenant-Id:X-MS-Exchange-CrossTenant-MailboxType:
+	 X-MS-Exchange-CrossTenant-UserPrincipalName:
+	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-BESS-ID:
+	 X-BESS-VER:X-BESS-Apparent-Source-IP:X-BESS-Parts:
+	 X-BESS-Outbound-Spam-Score:X-BESS-Outbound-Spam-Report:
+	 X-BESS-Outbound-Spam-Status:X-BESS-BRTS-Status; b=Q2wPvbTzIcOCBozYR9NwdOHj2JP3+ZrRAtQ394ff8b9VJv92x1E6ZDcuOCUTnwOf3n0TiGOGK92GfXb/aeGfz7Q1oG3NVVsnOwCifqa3a62wVZRsvW1fA4gKlfRgO6rzm2Ar+tBM6naTJAiqjFnWmFzvzXjVmu/+URASAhlLS+0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=digi.com; spf=pass smtp.mailfrom=digi.com; dkim=pass (2048-bit key) header.d=digi.com header.i=@digi.com header.b=NYSZmRqJ; arc=fail smtp.client-ip=209.222.82.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=digi.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digi.com
+Received: from NAM11-BN8-obe.outbound.protection.outlook.com (mail-bn8nam11lp2168.outbound.protection.outlook.com [104.47.58.168]) by mx-outbound14-151.us-east-2a.ess.aws.cudaops.com (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO); Wed, 17 Jan 2024 09:45:31 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=n5zaZZsN8Nh9vZUIYgl3O/CI9dm9UNysnyHx04EHx0UPpEvBfkgeuKz8Sj96sPG8L0t4vcY1GCLiOlnEpvktnRjEYAIW1wlPIuCRPFUnmogFXVpqDGDKnvVVI87RzVNe7FL80H5qgV04MCwOwa5h4kc/1RiVAVAfrdor+ghHMU5yJqNdfYykOqoGkziHtxGrU4ZLZ1jUPEno9kUZlXe41eGfz9bHDQbvASjSPXKxeY8x3nbO9vS8rUWQ5D7VtXHjhTHLMajjtw2aS9Gt2SA7YGJjkcGk7zIliTkPP7HocPNWRLzSPz59aSg9I8tLmzfWyRSc8P7bEK4yJe2VvZ9wjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2j8v+CjlRHipSAZsrRzltLyARAIOOD3JMQOwC8pVBCU=;
+ b=XbZYNeavP1i9H8F+bxzorhQDC2eOw9DkftqgXieVnl9ShzTVJ7L20n6U/KuUVMbqHwCN7yEo5erU6fRxFnqlocAUBHC8oWzJgadeeQBcAMWDNNUrZzBI+CnZkE5lTH7drySId8nnzaqdkYiNhF5QjOG2EhTKBEAg1rC5SbGU2c3okQWjixiA/QqZk3DH8oiowbNlAiiDafzl9c6+LUl54bhTA2xgDVu2CpQGX3ockZeLg669zZHIGs0/H1J+dalZ2KKMYoGF8EKZAh3CrDTtyb19+ps/fE7E60v+fP8acH98rXPPAVKKq+NspzKPxZeUw22elD1xr+dhQ8m0Vgy0tQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=digi.com; dmarc=pass action=none header.from=digi.com;
+ dkim=pass header.d=digi.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digi.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2j8v+CjlRHipSAZsrRzltLyARAIOOD3JMQOwC8pVBCU=;
+ b=NYSZmRqJ5+xcuzHBHY2xlxrzQSB2C7wFX0FlPXkQixEqPWpJYqJ1dpPz+nFpl/3LFSIg3LOnq/lo7eccEUXl4GfHOPpl0PUp5MwMj0Ak98Xq73tLXhsSJAqjnYaC46ePRcA0S8/rGXiquVdzKOqT48WKCgLrFnHsR6aq0KNhToF4ORYwdDpZVvRZAD/0icqbuaga0VKPe67W2P6JpHGr/bG5wIlc+yEdi95c1fe3rqYMLQ1CtFF3BtyXoCh1pbVAeGaE2fd9D5T/zM3z4ySi+I0HgDqb41bo1R88UhHJWE+eM5rkg6eUjM/dek2jhMd58rYxApFujvLjqzOx6mQgIg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=digi.com;
+Received: from BY5PR10MB4370.namprd10.prod.outlook.com (2603:10b6:a03:20b::19)
+ by MN2PR10MB4317.namprd10.prod.outlook.com (2603:10b6:208:199::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7181.21; Wed, 17 Jan
+ 2024 09:45:28 +0000
+Received: from BY5PR10MB4370.namprd10.prod.outlook.com
+ ([fe80::283b:b934:7a82:c8c7]) by BY5PR10MB4370.namprd10.prod.outlook.com
+ ([fe80::283b:b934:7a82:c8c7%7]) with mapi id 15.20.7181.026; Wed, 17 Jan 2024
+ 09:45:27 +0000
+From: Hector Palacios <hector.palacios@digi.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org
+Cc: andy@kernel.org,
+	conor+dt@kernel.org,
+	shawnguo@kernel.org,
+	s.hauer@pengutronix.de,
+	kernel@pengutronix.de,
+	festevam@gmail.com,
+	linux-imx@nxp.com,
+	stefan@agner.ch,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	hector.palacios@digi.com
+Subject: [PATCH v4 0/3] gpio: support i.MX93 truly available GPIO pins
+Date: Wed, 17 Jan 2024 10:44:50 +0100
+Message-Id: <20240117094453.100518-1-hector.palacios@digi.com>
+X-Mailer: git-send-email 2.34.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: VI1PR06CA0108.eurprd06.prod.outlook.com
+ (2603:10a6:803:8c::37) To BY5PR10MB4370.namprd10.prod.outlook.com
+ (2603:10b6:a03:20b::19)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115111743.28512-1-brgl@bgdev.pl>
-In-Reply-To: <20240115111743.28512-1-brgl@bgdev.pl>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 17 Jan 2024 09:55:12 +0100
-Message-ID: <CAMRc=McJEbeL-Esc5=ycNnTfQc8diQ8esgNjKDiG6rKDnT1CJA@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: revert the attempt to protect the GPIO device
- list with an rwsem
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: BY5PR10MB4370:EE_|MN2PR10MB4317:EE_
+X-MS-Office365-Filtering-Correlation-Id: ebe4857b-6ff9-406d-0669-08dc17410904
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	wzK5vVtJKGNE8wyyE3gS78uzvHdv6SNd2kgXRwviTYI4PEAw05sdZX8Vn8EGd8xtKD7/IiDiZr6oZeOZ/o/jqbnWb4MY2TS22c1cR6T15bK7Ax7M2pj50SmbFLQDku1+ZulBC/vu3Kb/m5vWJrrSf7o8YlO/L8jOkooSv0Y3L3V8B7+7zhnSS6O5pr3DlCsMb8qjKnkj3GVuevX+8KUhpUs1jWlIa5LtQw/GS+y0cmUCSVufktPR9EnXA4ZYp8vZ77hojowMmC+THDuKEKb2zeNuWeZcgeo0otYkU6AIkAM/8wzhdkBtwSN+B3SC92M/ZvYESTPaRm5WtmgBKDJ2wBahiaYawtoiilH6UT4dPyoZcqqeciYlL5bWVgrbBpFuLDxJy6qj0pzd0izPkybqdWJ5Y4zJBBwjePvNxMeqWlpIZ9TI+o98U/cWZknFCOb7yNMJiif8LJeu8KCrXLD89ObqAf/ZN8l54GmSVr502C9cItr8np6b9yPm7E0MUILkZRFhiuas7nVNN+QHH8VDgG2nAI1RsFQ2csrgS5EZXrrjPoEj/+qZqQNdTyzSux+pFyU79CqMvoiemgVFgumOyoPne5F/U0M6Dbyb1CeC8wHKJ0tvd1yS1k9+cmiJPc+n
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR10MB4370.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(39850400004)(396003)(376002)(366004)(346002)(136003)(230922051799003)(64100799003)(451199024)(1800799012)(186009)(6666004)(6506007)(478600001)(52116002)(6512007)(26005)(1076003)(107886003)(2616005)(38350700005)(38100700002)(36756003)(41300700001)(44832011)(2906002)(4326008)(83380400001)(4744005)(5660300002)(316002)(66556008)(8676002)(7416002)(86362001)(66476007)(66946007)(8936002)(6486002);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?4lVojRE9sf56io6H29Jf84tY/FpVuZd8hcN1VvH+Sty2+g3LeRIe6mpou8NQ?=
+ =?us-ascii?Q?kTilIAXs6XXPXwZmGuZ5BuQvHsJg9dq3u8XeU34mvqcAAjeMJkhpmHTBVZrU?=
+ =?us-ascii?Q?UHvx71pCpc+h0kao/4lWz0Hq8gWy9Zr7N0uT0+TUEIzDvWXyl6blXwNA8Pn/?=
+ =?us-ascii?Q?L5ekG+wFN+3iV/gW5C0bN1U6rc0Z/olPZpZ5+bIgznJVuZRiwQzGC+Ie8N2X?=
+ =?us-ascii?Q?9Y2kZF5jgQntx47Kc5JNRIwJUsLBLtMAr84v7i46MYAJSi0FCQm/arOXeG99?=
+ =?us-ascii?Q?9opJRHoXsKu5OitgP7JTt5Ty1Ndsya6R1jt5w5kRiQYBKFPbSGEwuAEcrBnj?=
+ =?us-ascii?Q?4DeQReD8M2g8j7XV3ObCboYG1Sxz2HHg/rceH6TtLzMUpFfBdhkTKVPxQ4ZF?=
+ =?us-ascii?Q?WsMETOQzHjEMCt1gto3WLkhlja2qQfmoeiBBHoVqea+QqaVmcUWwBRN3OOXt?=
+ =?us-ascii?Q?BvmHra1lw4iT2LoLkY5UUVNzn/AXcyHu3bN0xF4LGLwocUt3BM9Qvs0wUW3F?=
+ =?us-ascii?Q?PdwJLG/JZtEaMUUu3EdAVbQjHtNNjRbbbJ6BYt5n5Bf6o9qdZ/0z7ABcrDSi?=
+ =?us-ascii?Q?TrJn1AzAftJQ8fFpd2OX15gsBoNfIkfArqWwlmrUgIjeQh9btMIcqzbI1ZKM?=
+ =?us-ascii?Q?Hd7zmrmwSr0zJBGii09KuXhIoOqsi+W3tJda1E4VdThMR+7BLfFzfgsPmDhs?=
+ =?us-ascii?Q?ZXoSMJ6wVPPap0DfNOrQ4EFk6iAKNmHvLPQe68uCPP3mKZnLuHmdSH9Z40Eu?=
+ =?us-ascii?Q?Q39E5bxxqzLkMQafx67sP8aBeqTFefkMIrttfdFd6C3KSG6z45/ueXyoVsha?=
+ =?us-ascii?Q?MvdoUb+aOsmMqS+cZJ16ebvY8d34huAAtgQaTZUCmC3mA5NRiadeIs5OrZAz?=
+ =?us-ascii?Q?NsTZKbKlwZ/LQbWkziPxcMfnqMist7GjlG2IX/bDrgXAjp4swPx4DAhzgdLk?=
+ =?us-ascii?Q?9TFawTwzX1b/xRBe7MuBb4YrimNQujtK1PDsiefAGeO8y8a28e4xkKaLmIr7?=
+ =?us-ascii?Q?LRjmHw+Dy1HdHwymhWY2UFQ9H5zYgx1p1KH0pzsVf5enneHjQOUu6BVvcJm3?=
+ =?us-ascii?Q?memA2nbKteZJmSkAU1dtvY6fhVDQa5OiQb0nYB8yGDdL6L1/K45y+wJAE3b4?=
+ =?us-ascii?Q?ynrOolLA6yr7zAt7O+rjbtwpjuA1xvcHwfhZkUTeNvohTELYe7kfh/FGeuHf?=
+ =?us-ascii?Q?4PPuw9dEA3eSCHBbnLDIbgx66Sq29ZLvOoS/zPPegUCNaxryj1adArFDJEWw?=
+ =?us-ascii?Q?8w49y8+lre8YRq4hfBm4dkBNdJ09cgxWmPEXpnMScK/CbWdM9BIagnvSFvwn?=
+ =?us-ascii?Q?q0CBtLnwYQzK/inQM4ktC2unRGbvoxzU6CKQBVS+Z/NTXgVo0+u4IaVMPVfk?=
+ =?us-ascii?Q?UaAhyuAFPBYMjoTSsSIonRP4cF02syPUBN9kPvBpp5Rhlb6FfPWBLfm29sUz?=
+ =?us-ascii?Q?RtR9Fy/WOPMmJUZA5QKzc4TCCcWQnuVNr0ngXw1vlH2ClCGU9AV8zSwNVv5m?=
+ =?us-ascii?Q?ATR5X3izrJyS+4xKtfPSha3uSN5EmBXbPHMdDjN5OeDLR2B9qjDg9HgJmesy?=
+ =?us-ascii?Q?Nf3W3KqT2DAa3dS65DRCvdebly2qYPbZorEFLDNo?=
+X-OriginatorOrg: digi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ebe4857b-6ff9-406d-0669-08dc17410904
+X-MS-Exchange-CrossTenant-AuthSource: BY5PR10MB4370.namprd10.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Jan 2024 09:45:27.4594
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: abb4cdb7-1b7e-483e-a143-7ebfd1184b9e
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 8KSma/+1fRHqG7Ol8hggMHdlKZQP4Fy9/I3FJDxgLmRW7lqlAluTkbEpkcX1cMNf4rs/29fWMvGsrEqPJQ+FWA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR10MB4317
+X-BESS-ID: 1705484730-103735-22813-55859-1
+X-BESS-VER: 2019.1_20240103.1634
+X-BESS-Apparent-Source-IP: 104.47.58.168
+X-BESS-Parts: H4sIAAAAAAACA4uuVkqtKFGyUioBkjpK+cVKVhaWhkBGBlAsydjAzMgkyTjRyM
+	TAODnRIM0kxcLYzCTV1NgyLdXCOFmpNhYAoFTaAEAAAAA=
+X-BESS-Outbound-Spam-Score: 0.00
+X-BESS-Outbound-Spam-Report: Code version 3.2, rules version 3.2.2.253576 [from 
+	cloudscan11-192.us-east-2a.ess.aws.cudaops.com]
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------
+	0.00 BSF_BESS_OUTBOUND      META: BESS Outbound 
+X-BESS-Outbound-Spam-Status: SCORE=0.00 using account:ESS112744 scores of KILL_LEVEL=7.0 tests=BSF_BESS_OUTBOUND
+X-BESS-BRTS-Status:1
 
-On Mon, Jan 15, 2024 at 12:17=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> This reverts commits 1979a2807547 ("gpiolib: replace the GPIO device
-> mutex with a read-write semaphore") and 65a828bab158 ("gpiolib: use
-> a mutex to protect the list of GPIO devices").
->
-> Unfortunately the legacy GPIO API that's still used in older code has to
-> translate numbers from the global GPIO numberspace to descriptors. This
-> results in a GPIO device lookup in every call to legacy functions. Some
-> of those functions - like gpio_set/get_value() - can be called from
-> atomic context so taking a sleeping lock that is an RW semaphore results
-> in an error.
->
-> We'll probably have to protect this list with SRCU.
->
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-wireless/f7b5ff1e-8f34-4d98-a7be-b8=
-26cb897dc8@moroto.mountain/
-> Fixes: 1979a2807547 ("gpiolib: replace the GPIO device mutex with a read-=
-write semaphore")
-> Fixes: 65a828bab158 ("gpiolib: use a mutex to protect the list of GPIO de=
-vices")
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
+All four GPIO ports of i.MX93 SoC show 32 pins available, but
+not every port has 32 pins.
+Add support on the GPIO driver to 'ngpios' property and set
+the truly available pins on the SoC device tree.
 
-Patch queued for fixes for this merge window.
+v4
+* Remove 'description' from 'npgio' field in bindings as it 
+  is a generic one.
 
-Bart
+v3
+* Move DT bindings to a patch of its own
+* Improve reasoning for adding support in driver
+
+v2
+* Add 'ngpios' property to DT binding for proper validation
+
+Hector Palacios (3):
+      gpio: vf610: add support to DT 'ngpios' property
+      dt-bindings: gpio: vf610: add optional 'ngpios'
+      arm64: dts: imx93: specify available 'ngpios' per GPIO port
+
+ Documentation/devicetree/bindings/gpio/gpio-vf610.yaml | 5 +++++
+ arch/arm64/boot/dts/freescale/imx93.dtsi               | 4 ++++
+ drivers/gpio/gpio-vf610.c                              | 7 ++++++-
+ 3 files changed, 15 insertions(+), 1 deletion(-)
+
+
 
