@@ -1,153 +1,102 @@
-Return-Path: <linux-gpio+bounces-2304-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC9C83054C
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 13:30:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53CDB8305F3
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 13:49:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EFE621C2413B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 12:30:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E3EEB1F261CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 12:49:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 283CC1DFFB;
-	Wed, 17 Jan 2024 12:30:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B+sLHDON"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E8A331DFFB;
+	Wed, 17 Jan 2024 12:49:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F91A323C;
-	Wed, 17 Jan 2024 12:30:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
+Received: from smtpfb1-g21.free.fr (smtpfb1-g21.free.fr [212.27.42.9])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAD0B1DFF2;
+	Wed, 17 Jan 2024 12:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.27.42.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705494638; cv=none; b=B9UxzMhyeHI08UI2yWTfC/i46TIETW8qrPYtQsZ3/Yq+ABbeV58n3IUQcZX28iBSLb0hm2Tz0iogc2NiKxJF23wQcY2ZCEZPjM7GHKM1BNhucbk4cH88aJLiv0wfEjhzliajN9waVe0WWev+VoTbVFP7arjhpd83YntPdC+WoAc=
+	t=1705495778; cv=none; b=E6TkaBfyOj2OucPdrQMDCgvfRUkoNh0o9H36ArgJT3RYFUvYDSJammDH0OiqoAxZ5XgcWv0PtFWrF9+uDZj8VFcgeULgxdSKi7EpHNCQGTpo/7aVsIjz3fJNhbTpE/RJ34FR41BeYPOjciV0KCXoAjetlJjGEh4e1dCp1koUk1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705494638; c=relaxed/simple;
-	bh=k2YP41gfhRCO6Pvy0If05vh6BGXqT8zcyYOAEPetgsU=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:
-	 Message-ID:Date:MIME-Version:User-Agent:Subject:Content-Language:
-	 To:Cc:References:From:In-Reply-To:Content-Type:
-	 Content-Transfer-Encoding; b=oNEE4/OrXWJy1Z6sZqbeM829hQcuJ7+QBGq0E0wqPj6sx4YClkONBpOA5WYfDHkKmy2qM50NE7Sun7Cpb6Z9n75+CDL8X5TM0T56IN8jSMmg0BMd8SLjLLeMEnC8T9210i0eZMfA8Nnnv2xf8aW11FCcGIiSwVvo6PsvKVXT0fU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B+sLHDON; arc=none smtp.client-ip=209.85.208.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-559b3ee02adso2009643a12.3;
-        Wed, 17 Jan 2024 04:30:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705494635; x=1706099435; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=4J0XnTedaZDRNfe7OrgwwHqKIo+SD8ns4luWlHiIYi8=;
-        b=B+sLHDON6tv6Gyp3mQZbOcaYcOkXkyLykNwFLIXcbhMt+fW9F7+FWNKahMzBSJ7b7b
-         bcEtFiXobBltkoKcC3YKe13mp/TBhIBPk4XzwxchJMZgZ1nq8nGsYUEj9IxO8Hv7Tr5P
-         fcaNW/6fRJxEpVFD40vHOwdWnCnZjGqUF8S5Nlci/gMcVx85Du6FqK5UnkX1O3ZBu4VV
-         c83JkPrPp30tq4L9DPZL6baQS1WXWYByxYMPQgpvR5FH6uuej4y11Xd3twKa/Eo8wnDA
-         b/xMSBpFZBl+3P8QZN4RNkaVO5QbqEkpkgrrZaFqc3ah6ks/wU4uuNmd2OiMrwlP+bKq
-         LlSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705494635; x=1706099435;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4J0XnTedaZDRNfe7OrgwwHqKIo+SD8ns4luWlHiIYi8=;
-        b=qCC0iLrAtgqDN4gYyn89Z0ZdS2P+sinPL5K1Knni/mDJJgwPQ2FuNeg8V8FQ2S3Xwh
-         3CNwCS8rzQMUHasNgKZTvMtx76Y7LX2RNOdgJstYcCmVnVHscR5CAgvQXpshdC4e2+uN
-         4Wp3KVkfUrEJFv5VpJ0y9EtdKu7YnQ/Fj4owTxMoBALStisVjb2xiShNBDcIOTxxXaFu
-         J6MKBOmA1SJAEFSIYuhk8Wrm+lYLcn8HfXrDz9owPhKAJVVExHXCqx2Q6Dqzx8VzYL2O
-         1zrqp54wp6dOzfAxZY7/osCGSJMzO6++HDBf8WELG1cqSJaqi59OHD2LndNZdaWzRDTL
-         wHHw==
-X-Gm-Message-State: AOJu0YxSo1L59vloxa4+iCasZXn2sBEnFl8Oc3Se7IGx6qTR86N52Ufl
-	0szXBhm/oSxqxZHwiAm0XvM=
-X-Google-Smtp-Source: AGHT+IEpphXh8E9XIoChTO0OUusrPbDVBwCCh661wALpZ8tu8wuuo1wyWOdbUGa5FZomlx++15LQrg==
-X-Received: by 2002:a17:906:480d:b0:a2e:98f4:c695 with SMTP id w13-20020a170906480d00b00a2e98f4c695mr745720ejq.81.1705494635278;
-        Wed, 17 Jan 2024 04:30:35 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id gq26-20020a170906e25a00b00a2d5dc7f4c3sm4979968ejb.223.2024.01.17.04.30.33
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 17 Jan 2024 04:30:34 -0800 (PST)
-Message-ID: <38dcb8cc-5d16-41f2-845b-5c97cb691cb7@gmail.com>
-Date: Wed, 17 Jan 2024 14:30:33 +0200
+	s=arc-20240116; t=1705495778; c=relaxed/simple;
+	bh=yAVW7ObbCfhbkCbmZjm1w55Iw1QPKOCJ27ZxRHwf7e4=;
+	h=Received:Received:From:To:Cc:Subject:Date:Message-Id:X-Mailer:
+	 MIME-Version:Content-Transfer-Encoding; b=M8uz3yosHpj8StnMgFawHPweZ4bg/Ac33WAbJwGrpDQksey6bpn/yXULcBXT4Nd9qEdQtzMJ4Kljk8DHN85wk8PRx6z3eauzfD/ih6/+7yUhKT5ACzLCjRlSNPYTCCjS6fE+CU4lHe5t7LOVxpanR9eBxze87mPQnY9Q4IhGlqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr; spf=fail smtp.mailfrom=wifirst.fr; arc=none smtp.client-ip=212.27.42.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=wifirst.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=wifirst.fr
+Received: from smtp6-g21.free.fr (smtp6-g21.free.fr [212.27.42.6])
+	by smtpfb1-g21.free.fr (Postfix) with ESMTP id 9BBFBDF8932;
+	Wed, 17 Jan 2024 13:43:16 +0100 (CET)
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:aa1:d2f0:f6b3:db6:44c:eeef])
+	(Authenticated sender: isaias57@free.fr)
+	by smtp6-g21.free.fr (Postfix) with ESMTPSA id B2AF778034D;
+	Wed, 17 Jan 2024 13:42:57 +0100 (CET)
+From: Jean Thomas <jean.thomas@wifirst.fr>
+To: sean.wang@kernel.org,
+	linus.walleij@linaro.org,
+	matthias.bgg@gmail.com,
+	angelogioacchino.delregno@collabora.com,
+	linux-mediatek@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Jean Thomas <jean.thomas@wifirst.fr>
+Subject: [PATCH 1/2] pinctrl: mediatek: mt7981: add additional uart group
+Date: Wed, 17 Jan 2024 13:42:33 +0100
+Message-Id: <20240117124234.3137050-1-jean.thomas@wifirst.fr>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
-Content-Language: en-US
-To: David Lechner <dlechner@baylibre.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
- <CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Add uart1_3 (pins 26, 27) group to the pinctrl driver for the
+MediaTek MT7981 SoC.
 
+Signed-off-by: Jean Thomas <jean.thomas@wifirst.fr>
+---
+ drivers/pinctrl/mediatek/pinctrl-mt7981.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-On 1/15/24 23:53, David Lechner wrote:
-> On Wed, Dec 20, 2023 at 4:48 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+diff --git a/drivers/pinctrl/mediatek/pinctrl-mt7981.c b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+index 7e59a4407859..ca667ed25a4d 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-mt7981.c
++++ b/drivers/pinctrl/mediatek/pinctrl-mt7981.c
+@@ -737,6 +737,9 @@ static int mt7981_uart1_1_funcs[] = { 2, 2, 2, 2, };
+ static int mt7981_uart1_2_pins[] = { 9, 10, };
+ static int mt7981_uart1_2_funcs[] = { 2, 2, };
+ 
++static int mt7981_uart1_3_pins[] = { 26, 27, };
++static int mt7981_uart1_3_funcs[] = { 2, 2, };
++
+ /* UART2 */
+ static int mt7981_uart2_1_pins[] = { 22, 23, 24, 25, };
+ static int mt7981_uart2_1_funcs[] = { 3, 3, 3, 3, };
+@@ -871,6 +874,8 @@ static const struct group_desc mt7981_groups[] = {
+ 	PINCTRL_PIN_GROUP("uart1_1", mt7981_uart1_1),
+ 	/* @GPIO(9,10): UART1(2) */
+ 	PINCTRL_PIN_GROUP("uart1_2", mt7981_uart1_2),
++	/* @GPIO(26,27): UART1(2) */
++	PINCTRL_PIN_GROUP("uart1_3", mt7981_uart1_3),
+ 	/* @GPIO(22,25): UART1(3) */
+ 	PINCTRL_PIN_GROUP("uart2_1", mt7981_uart2_1),
+ 	/* @GPIO(22,24) PTA_EXT(4) */
+@@ -933,7 +938,7 @@ static const struct group_desc mt7981_groups[] = {
+ static const char *mt7981_wa_aice_groups[] = { "wa_aice1", "wa_aice2", "wm_aice1_1",
+ 	"wa_aice3", "wm_aice1_2", };
+ static const char *mt7981_uart_groups[] = { "net_wo0_uart_txd_0", "net_wo0_uart_txd_1",
+-	"net_wo0_uart_txd_2", "uart0", "uart1_0", "uart1_1", "uart1_2", "uart2_0",
++	"net_wo0_uart_txd_2", "uart0", "uart1_0", "uart1_1", "uart1_2", "uart1_3", "uart2_0",
+ 	"uart2_0_tx_rx", "uart2_1", "wm_uart_0", "wm_aurt_1", "wm_aurt_2", };
+ static const char *mt7981_dfd_groups[] = { "dfd", "dfd_ntrst", };
+ static const char *mt7981_wdt_groups[] = { "watchdog", "watchdog1", };
+-- 
+2.39.2
 
-...
-> 
-> According to the timing diagram in the datasheet, SCLK is high during
-> idle, so don't we need `spi-cpol: true` here?
-> 
-> Likewise, data is valid on the trailing SCLK edge, so don't we need
-> `spi-cpha: true` here?
-> 
-> 
-V1 Rob Herring suggested that if device is not configurable, driver
-should set the spi mode
->> +  gpio-controller:
->> +    description: Marks the device node as a GPIO controller.
->> +
->> +  "#gpio-cells":
->> +    const: 2
->> +    description:
->> +      The first cell is the GPIO number and the second cell specifies
->> +      GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
->> +
->> +  refin-supply:
->> +    description: external reference supply, can be used as reference for conversion.
-> 
-> If I'm understanding correctly, this represents both voltage inputs
-> REF+ and REF-, correct? The datasheet says "Reference Input Negative
-> Terminal. REF− can span from AVSS to AVDD1 − 1 V". It seems like they
-> should be separate supplies in case REF- is non-zero. Otherwise, how
-> can we know what voltage it is? (same comment applies to refin2.)
-> Yes, but in that case, the value of the referenced supply should reflect
-that and be equal to (REF+)-(REF-). I'll add to the description this.
-
-...
-
->> +required:
->> +  - compatible
->> +  - reg
->> +  - interrupts
-> 
-> Why are interrupts required? What if the pin is not connected?
-> 
-From the datasheet, the reading of the conversions seem to be only
-interrupt based: "As soon as the next conversion is complete,
-the data register is updated; therefore, the period in which to
-read the conversion is limited." this paragraph suggests to me that
-interrupts are required
 
