@@ -1,162 +1,147 @@
-Return-Path: <linux-gpio+bounces-2334-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2335-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F12D831999
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 13:53:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E5838319D0
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 14:00:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 892061C22A32
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 12:53:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7C93B23351
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 13:00:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A776C241E2;
-	Thu, 18 Jan 2024 12:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4B5224B58;
+	Thu, 18 Jan 2024 13:00:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tjOehITw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="RODEh9Vg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B157250E4
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 12:53:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC4824B53
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 13:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705582406; cv=none; b=HijbZS8oE8t7/W6ZgQxih8AzdZAA7RUymFARmawy02S1nzqw6DNvHQaYCIrUfFU7DZHfTIVfhy6U9icIFnmmoOEhMe+GmuYHDG4SmzKsKvVOYq1pr705acVJyaxHjcrPsE7dka4T5iqvywbM7PZB7bOt4TH2ibh4l2onNdO9SbY=
+	t=1705582804; cv=none; b=fzLLljq+EaY4qzEehfRpRNC5PRG89inhKCfyDOoQZHNfop38gRT/Mzwbwt/JcqsljPiDYCggQBaRmyXZ2FN1o+a36pjgK+dPBWwDAWOq0hPZydtz8lSnoYVMJxABn9p+YkZWCPMm523g2GBWVZafKQpi1v8vpR7AVYpAkVeI+oE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705582406; c=relaxed/simple;
-	bh=sXJi9gg0uJsuoxrQNc/wYI76+8EiIEebZjWq19GEBsQ=;
+	s=arc-20240116; t=1705582804; c=relaxed/simple;
+	bh=7M4VaIUyYm8pE44IOXTCPDugJRBLIqoanr86Xn4yKIs=;
 	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:Received:From:
-	 To:Cc:Subject:Date:Message-Id:X-Mailer:MIME-Version:
-	 Content-Transfer-Encoding; b=U+owY2Nbe5t0iWHrDB7q+r9wCeNuvj1Iy6rwcek4Bs23UA4KprXQkbvWz+ae8V8+7vqceR/59DcaJnfdivMIo7ie3D3Bc7H5+9eMvt6UNqbeTGAmUbeujGwoqnjNni0x+I+hO1IrEqcapjtGOqkwf+q4W8MQtCeYpwZJNTEyuCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tjOehITw; arc=none smtp.client-ip=209.85.221.52
+	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
+	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
+	 Content-Type:Content-Transfer-Encoding; b=ogjHN+wR7ErGBh4L8KcVp0WfGX/51259wOo9vvAKM6v4nCN0nd+dK9JHZ05c31T92NOX4toWA/NrLNbxL+AGIFMIjULThWYFbo5Ry+ix2CuXZ7zAluwTIt12xQxB8lXMwrxQyTy+Db1tTonKOymOIWBDnxJnNd2QBW/orB74IWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=RODEh9Vg; arc=none smtp.client-ip=209.85.222.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-3368abe1093so9540819f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 04:53:23 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7cedb83200bso1753030241.0
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 05:00:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705582402; x=1706187202; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=5q/z9NBhcvbN4NnTkJ2O74o645DmNo6KC9OmwgIIYJA=;
-        b=tjOehITwkkUMbEOqLY8R8j1lBCVQTXiALlgsQvey7YRL5E5mTxVxnlomTw92nPBsgx
-         tCcwojmIZrKxJttSQQ0ZRExak8bbq/aRKKenFTCXX7Vh3OGQSFBqMi6cFXxovyw7fpHo
-         vU0vgPGisKhZlvmoNHkfXLnj3iwn2Al7ChzJCY3FwMnQzJoshWIIWxa2ESkG5gh11AYT
-         BKKPhRmt7DCeQ8DFS+hIOTbjluDL4cE/yBsrXhlgQ0uQgc6S8vLQPXj+yZfO0Se7mLPq
-         HkTgLMVU/C8iuggxJtJzS4HIp08rT03beYpEUhmozJosQW7IqFwWgXyCcgYUgPndjRPx
-         P5aA==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705582802; x=1706187602; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YbPI80yNiYQVcWLbaA0E+htnDslr+gyomLLCxgqK/9A=;
+        b=RODEh9VgKUbKarmhkWY8riLHD0mvfw761K6T1JqT6HOQbrDqNM0jB7qRzdiR1nIUyw
+         w31vlGZ5TifUZmURBbnYblehCKePsqlnVhuCe9o9sbzZLJf32LppFGgf9Xp9ng5Yd0Xz
+         OenY6DJtD/RpPkKWomwvP3HgQ6CD3qsv/CvX+EkPLCeeu3Npn4oskjIJJAuUzgrA4SzD
+         wU1LVQ9/m3esU9Ex9qkf0Wa5KP0uxEdkNs7s4ppL8UfybKp3C1CoAU4MYQ1SdgWmVKYK
+         7uTjrHwx+O+QuyJ6kBatAmJoms4gGFq55a/LSQ75ytTsIDrjBZ3lvzL2Wi2wNfb93nHn
+         yjFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705582402; x=1706187202;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=5q/z9NBhcvbN4NnTkJ2O74o645DmNo6KC9OmwgIIYJA=;
-        b=g1GHt6hMPaxzezzqwei898iX7U2VfDl2LtGCAv/KAltQm6lxWkde0gQR5e2jzH+gjr
-         TDExnf6G9VuNHkriVP5xiQhFf4ChFolrM0eaLRJstv50+PmhHHd9HteY2qNctN+ppMJC
-         ljwR/3a35XeURhusWHTaxtOElRRwytZjPqSB9vLpAGSRCaLYCauPeuMK39h31eUeq9MF
-         zCxF98kH+dxdqL/LPuFKJ32HlWt3TG+eIMYok0hnlhDYlpLksaQ4JEcOzzcxbSM0Hz14
-         qQ47OxgLuwmLAjhgWiqHaXWwxfW50YYTpFpzWQn4JqX6z85ibOzsnvF0yahe9aj03Hc3
-         lkzA==
-X-Gm-Message-State: AOJu0YyAP0VWFr9KdNmyNISZ3NYTKOX6Qi2zheH/dka/MOixHVIzDNUZ
-	Ifn7MVq2tCHQ4FetBH9zmRijthHa5SYJyzifRLu/5l70Icz/04RQ2Id9EPh2Muk6nFzCvSudMMg
-	3
-X-Google-Smtp-Source: AGHT+IGwnmGE3nnxR8C1/nowvXURA7r/ihHCdKHEl7EfNtB+UeuxK2+bbwjSImCZkeofct8bBcdovw==
-X-Received: by 2002:adf:e541:0:b0:336:8242:3803 with SMTP id z1-20020adfe541000000b0033682423803mr449563wrm.11.1705582401684;
-        Thu, 18 Jan 2024 04:53:21 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:33f:7f63:7b64:4bc1])
-        by smtp.gmail.com with ESMTPSA id i4-20020a5d5224000000b003374555d88esm4004379wra.56.2024.01.18.04.53.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 18 Jan 2024 04:53:21 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.8-rc1
-Date: Thu, 18 Jan 2024 13:53:15 +0100
-Message-Id: <20240118125315.16778-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        d=1e100.net; s=20230601; t=1705582802; x=1706187602;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YbPI80yNiYQVcWLbaA0E+htnDslr+gyomLLCxgqK/9A=;
+        b=QL2ycWiF2Yfs9zl4+yelPrtjuiZgSo7fTspLZ8LU3rEvpuIzY7OSnvWCjphKJ6GwJ0
+         PzKUnVABq0F5ixjPqFUkrP8CMC+nl2tTUGYrzU39j7c4hKtGRrH7qdQ9XPogA4MXAwsh
+         PwqkUW+azaaMWQPGmx7zXeKHGWWrCpwSCSfZlX0OgPk/cNemO6mEMI0nn9PO+HZ1u0in
+         aOc8Hx2Z2kRr3WcTTjdT1TsYV6+Y+hb2b6uqy0G50wwpkqHIQs2GbbTBa2rgzXKZGAxV
+         8Xt6tFu4LfB/Ma3O8el6UyqAtGH5dpQ54CepZZMFB5Sa2NWlrHaEtGnGQ9tVvgZmc/mi
+         lC5w==
+X-Gm-Message-State: AOJu0YymH2czCZ10kghxLGZF6AV3D7TXuliVdGiTzZTRGO8QsnaA79v6
+	E7jU9Rr3cfRMKa8Xa9d11+ErIEW5C8fyKQsHPJ+At5/EWyBg0Maip7kVgOVzsldKPCIgY7qtQ1u
+	uuSpMaA5AnfxmrRleoZIdX920laVzx9LEhPTsEQ==
+X-Google-Smtp-Source: AGHT+IFV799Pl75EVGiEihv8NguEM801LhNe7yQvY5xjGtMqBPcnTKWr82ZJvwoc7zCV0G5B1YL66F/miSdR/lsCxqk=
+X-Received: by 2002:a67:f797:0:b0:469:877d:fc1a with SMTP id
+ j23-20020a67f797000000b00469877dfc1amr681665vso.8.1705582801234; Thu, 18 Jan
+ 2024 05:00:01 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240117083251.53868-1-hector.palacios@digi.com>
+ <20240117083251.53868-2-hector.palacios@digi.com> <CAHp75Vci=1nAvxRcbkK2SxGWGbQVbzQMTycMt8tZ5snPRTYXOg@mail.gmail.com>
+ <fd5550ad-76c0-419b-aa07-a0493a57286e@digi.com> <CAHp75Vf4wXLEjmfpz6KQSCB0Jd8LNv6+SU_ikbhR_8PsJHuq-g@mail.gmail.com>
+ <CAMRc=MfAW5NDJHtZ1333-xrcCyQfft-pQF1-0Vv_ehY16agShw@mail.gmail.com> <9b370036-bf3a-49d3-99a0-5c11eaca4e6f@digi.com>
+In-Reply-To: <9b370036-bf3a-49d3-99a0-5c11eaca4e6f@digi.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 18 Jan 2024 13:59:50 +0100
+Message-ID: <CAMRc=MeJQihq3N1ZqGiKS_9JJ6c0BwXZfiY1XicBiW8mc18Oxw@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] gpio: vf610: add support to DT 'ngpios' property
+To: Hector Palacios <hector.palacios@digi.com>
+Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, linus.walleij@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, andy@kernel.org, conor+dt@kernel.org, 
+	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
+	festevam@gmail.com, linux-imx@nxp.com, stefan@agner.ch, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Thu, Jan 18, 2024 at 1:45=E2=80=AFPM Hector Palacios
+<hector.palacios@digi.com> wrote:
+>
+> On 1/18/24 13:03, Bartosz Golaszewski wrote:
+> >
+> > On Thu, Jan 18, 2024 at 10:04=E2=80=AFAM Andy Shevchenko
+> > <andy.shevchenko@gmail.com> wrote:
+> >>
+> >> On Thu, Jan 18, 2024 at 10:25=E2=80=AFAM Hector Palacios
+> >> <hector.palacios@digi.com> wrote:
+> >>> On 1/17/24 21:51, Andy Shevchenko wrote:
+> >>>>> Some SoCs, such as i.MX93, don't have all 32 pins available
+> >>>>> per port. Allow optional generic 'ngpios' property to be
+> >>>>> specified from the device tree and default to
+> >>>>> VF610_GPIO_PER_PORT (32) if the property does not exist.
+> >>
+> >> ...
+> >>
+> >>>>> +       ret =3D device_property_read_u32(dev, "ngpios", &ngpios);
+> >>>>> +       if (ret || ngpios > VF610_GPIO_PER_PORT)
+> >>>>> +               gc->ngpio =3D VF610_GPIO_PER_PORT;
+> >>>>> +       else
+> >>>>> +               gc->ngpio =3D (u16)ngpios;
+> >>>>
+> >>>> This property is being read by the GPIOLIB core. Why do you need to =
+repeat this?
+> >>>
+> >>> My apologies; I had not seen this.
+> >>> I'll use gpiochip_get_ngpios() on the next iteration.
+> >>
+> >> But still why?
+> >> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#=
+L867
+> >>
+> >> It's called for every driver.
+> >>
+> >> Maybe it's needed to be refactored to allow fallbacks? Then can the
+> >> GPIO MMIO case also be updated?
+> >>
+> >
+> > I guess it's because Hector wants to set an upper limit on the number o=
+f GPIOs?
+>
+> I think Andy is suggesting to rework the gpio-vf610 driver to use
+> bgpio_chip struct (it doesn't currently), and then I guess the 'ngpio'
+> property gets read automatically if you call bgpio_init().
 
-Linus,
+No, Andy said (and even provided a link to the code) that "ngpios" is
+read ALWAYS when a new GPIO chip is registered with the GPIO core.
+It's just that it doesn't impose any limits but that could be
+addressed with imposing an upper limit in DT bindings maybe?
 
-Please pull the following set of fixes for the upcoming RC. Apart from
-some regular driver fixes there's a relatively big revert of the locking
-changes that were introduced to GPIOLIB in this merge window. This is
-needed because it turned out that some legacy GPIO interfaces - that need
-to translate a number from the global GPIO numberspace to the address of
-the relevant descriptor, thus running a GPIO device lookup and taking the
-GPIO device list lock - are still used in old code from atomic context
-resulting in "scheduling while atomic" errors.
-
-I'll try to make the read-only part of the list access entirely lockless
-using SRCU but this will take some time so let's go back to the old global
-spinlock for now.
-
-Please pull,
-Bartosz Golaszewski
-
-The following changes since commit 576db73424305036a6aa9e40daf7109742fbb1df:
-
-  Merge tag 'gpio-updates-for-v6.8-rc1' of git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux (2024-01-12 13:35:31 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc1
-
-for you to fetch changes up to efb8235bfdbe661c460f803150b50840a73b5f03:
-
-  gpiolib: revert the attempt to protect the GPIO device list with an rwsem (2024-01-17 09:52:37 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.8-rc1
-
-- revert the changes aiming to use a read-write semaphore to protect the
-  list of GPIO devices due to calls to legacy API taking that lock from
-  atomic context in old code
-- fix inverted logic in DEFINE_FREE() for GPIO device references
-- check the return value of bgpio_init() in gpio-mlxbf3
-- fix node address in the DT bindings example for gpio-xilinx
-- fix signedness bug in gpio-rtd
-- fix kernel-doc warnings in gpio-en7523
-
-----------------------------------------------------------------
-Bartosz Golaszewski (1):
-      gpiolib: revert the attempt to protect the GPIO device list with an rwsem
-
-Dan Carpenter (1):
-      gpio: rtd: Fix signedness bug in probe
-
-Lukas Wunner (1):
-      gpiolib: Fix scope-based gpio_device refcounting
-
-Michal Simek (1):
-      dt-bindings: gpio: xilinx: Fix node address in gpio
-
-Randy Dunlap (1):
-      gpio: EN7523: fix kernel-doc warnings
-
-Su Hui (1):
-      gpio: mlxbf3: add an error code check in mlxbf3_gpio_probe
-
- .../devicetree/bindings/gpio/xlnx,gpio-xilinx.yaml |   2 +-
- drivers/gpio/gpio-en7523.c                         |   6 +-
- drivers/gpio/gpio-mlxbf3.c                         |   2 +
- drivers/gpio/gpio-rtd.c                            |  15 ++-
- drivers/gpio/gpiolib-sysfs.c                       |  45 +++----
- drivers/gpio/gpiolib-sysfs.h                       |   6 -
- drivers/gpio/gpiolib.c                             | 135 +++++++++++----------
- drivers/gpio/gpiolib.h                             |   2 -
- include/linux/gpio/driver.h                        |   2 +-
- 9 files changed, 114 insertions(+), 101 deletions(-)
+Bart
 
