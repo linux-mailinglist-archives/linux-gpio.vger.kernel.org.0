@@ -1,121 +1,194 @@
-Return-Path: <linux-gpio+bounces-2328-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2329-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A833983160E
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 10:43:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C6DC6831841
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 12:15:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BFA1B21DC6
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 09:43:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81F52289A80
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 11:15:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D833A1F95A;
-	Thu, 18 Jan 2024 09:43:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6ADA123766;
+	Thu, 18 Jan 2024 11:15:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="Es19nIjp"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XsYjRiwn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from forward500a.mail.yandex.net (forward500a.mail.yandex.net [178.154.239.80])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.93])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D57A3200A5;
-	Thu, 18 Jan 2024 09:43:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.80
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9AF12375A
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 11:15:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.93
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705571006; cv=none; b=rGcRiq/Ap6reDlw7caMUYhWonz2NBb2gbhaljS6rhMYfLBhpodrFU/oxhKIyZoT2nxohbUa66oEnMQq67gIa7HclbXHnSH61xIFCV6OQM3NR8VVpQ4Zv6P92hDnEq2k/UITHjMDqt8GdZILVu1Fqma0/LaRT2QQ0cpHVF0FlLRU=
+	t=1705576516; cv=none; b=Hz567Wy+EJ6TABCWKk7BYQOTjMIAFjUXl5MeesXSbkrxYYduwEUXkz3Dkk7qHp5euyvCPUZZWe+F2wNXwnvLPWR+oeDHOh5tVjEn1DMs+7Vl0t76LUkr5VA/rCyfoSIpa1vYogBkNSW7x2GD1cBrZcjSceSFTf0F1wHGYONxa6k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705571006; c=relaxed/simple;
-	bh=eOYgq6vBGLmYMc8CNKKKb0RzNhlbCa5ML+43wchdMZA=;
-	h=Received:Received:X-Yandex-Fwd:DKIM-Signature:Message-ID:Subject:
-	 From:To:Cc:Date:In-Reply-To:References:Content-Type:
-	 Content-Transfer-Encoding:User-Agent:MIME-Version; b=QTL9JxgW6z3tx/MK7L57XfubYZLIybjamZv0+FNyYOEFr4Y6VquFc8P1bUvrjgGFdFFCo2hNWCIFOlXqpO8pl/kdJfM0oJ9Dj798DGFihLdOE5UPLmSymiIKxG2wlIBNS63NwcrALRoG/SCVKVINK5AISCUKBldBp9Yp9deKVg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=Es19nIjp; arc=none smtp.client-ip=178.154.239.80
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
-Received: from mail-nwsmtp-smtp-production-main-18.vla.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-18.vla.yp-c.yandex.net [IPv6:2a02:6b8:c1d:5fd0:0:640:c018:0])
-	by forward500a.mail.yandex.net (Yandex) with ESMTP id A8B01616FD;
-	Thu, 18 Jan 2024 12:36:44 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-18.vla.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id baJWEC7aoCg0-7skv82tT;
-	Thu, 18 Jan 2024 12:36:42 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1705570602; bh=eOYgq6vBGLmYMc8CNKKKb0RzNhlbCa5ML+43wchdMZA=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=Es19nIjpoisIBb6MjPgosN8BBLwA3g37Sg+8/RzikHK2iJGA8I33MTMMnsCeSd95a
-	 FcvuQE7PCMCd9C0Lf3UXj5lju7/29hXhNB61xQrIV3xj6jS+j2ttUffxBAet9gIIDQ
-	 eap9ausw2GyVdWnpZfdMCuPomyP6WRpJQi/KCiZk=
-Authentication-Results: mail-nwsmtp-smtp-production-main-18.vla.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <3659cd8be443f632f44f9ad31a214a82f995ed75.camel@maquefel.me>
-Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, Thierry Reding
- <thierry.reding@gmail.com>, Mark Brown <broonie@kernel.org>, "David S.
- Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh
- Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>,  Sergey
- Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>, "Wu,
- Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>,  Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Andy
- Shevchenko <andy.shevchenko@gmail.com>
-Date: Thu, 18 Jan 2024 12:36:38 +0300
-In-Reply-To: <a54csycouodnmj6qarfel7cvgupaerl7uhrruixuy7uaekqgzw@2whufrjqunme>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-	 <a54csycouodnmj6qarfel7cvgupaerl7uhrruixuy7uaekqgzw@2whufrjqunme>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1705576516; c=relaxed/simple;
+	bh=JNypjUotroq/s2BGhFIDxcVcsk60ks6RiI5QFzts+dQ=;
+	h=DKIM-Signature:X-IronPort-AV:X-IronPort-AV:Received:X-ExtLoop1:
+	 X-IronPort-AV:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 User-Agent; b=AvDMuzzAFLO0NxgByX64/dzheUmQOcwD4RNV4qQTdehfZBkt79sk9HUD/7TmvI6Yp3+Ahu1XvW0G5Q69dXdRHRovdULwUo4h94rcu2/9q+gkiAhlofTgjWMu1iTJ19dQE5JrBoFb90eFFvZmIlJgWCSfckCKei2v9Lc+JJMEcPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XsYjRiwn; arc=none smtp.client-ip=192.55.52.93
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705576514; x=1737112514;
+  h=date:from:to:cc:subject:message-id;
+  bh=JNypjUotroq/s2BGhFIDxcVcsk60ks6RiI5QFzts+dQ=;
+  b=XsYjRiwnLT/t9oriZkNIY/bUdlpqcxM8tvFKKPqR3nJxd3DZBZBdSSDR
+   hA+UI+DyPZOCqLJG+yEBGYPffGAW6MRgkUTWjntWvqyggs5sZyiMnWi7K
+   NtqnJUAJ5oFsuUQ0G2TD+W4jq1itm6Ff7XB+Y4ObziGQbNVy1cQ0Fa8/6
+   610rdRvnlKJNz14UraKEiRbrOh/5Vu+U0q+j5NDAaOFmitg1ahAbOmwiW
+   DmkZIC/N1Sgj8OoqzdbSZGZyNelH9cjGNXTKY2JyVu9PKxZZDFvg9zEwB
+   v8M6m/X5WUmhMAns84QwuOS/L382TULwMnPB+BfU9cWdPSFKDvLz9+VUY
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10956"; a="397578170"
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="397578170"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jan 2024 03:15:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,201,1701158400"; 
+   d="scan'208";a="334184"
+Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 18 Jan 2024 03:15:13 -0800
+Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rQQMY-0002vd-2p;
+	Thu, 18 Jan 2024 11:15:10 +0000
+Date: Thu, 18 Jan 2024 19:14:24 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-current] BUILD SUCCESS
+ efb8235bfdbe661c460f803150b50840a73b5f03
+Message-ID: <202401181922.BN4OaXAE-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
 
-Hello,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-current
+branch HEAD: efb8235bfdbe661c460f803150b50840a73b5f03  gpiolib: revert the attempt to protect the GPIO device list with an rwsem
 
-On Thu, 2024-01-18 at 10:30 +0100, Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin via B4 Relay
-> wrote:
-> > No major changes since last version (v6) all changes are cometic.
->=20
-> Never saw changes described as "cometic". I guess that means "fast"
-> and
-> "high impact"?
+elapsed time: 1517m
 
-"Cosmetic" of course.
+configs tested: 103
+configs skipped: 0
 
-Well i guess it's nice that i hadn't misspelled it like "comedic"...
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
->=20
-> SCNR
-> Uwe
->=20
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240118   gcc  
+arc                   randconfig-002-20240118   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240118   clang
+arm                   randconfig-002-20240118   clang
+arm                   randconfig-003-20240118   clang
+arm                   randconfig-004-20240118   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                 randconfig-001-20240118   clang
+arm64                 randconfig-002-20240118   clang
+arm64                 randconfig-003-20240118   clang
+arm64                 randconfig-004-20240118   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240118   gcc  
+csky                  randconfig-002-20240118   gcc  
+hexagon                           allnoconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240118   clang
+hexagon               randconfig-002-20240118   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386         buildonly-randconfig-001-20240117   gcc  
+i386         buildonly-randconfig-002-20240117   gcc  
+i386         buildonly-randconfig-003-20240117   gcc  
+i386         buildonly-randconfig-004-20240117   gcc  
+i386         buildonly-randconfig-005-20240117   gcc  
+i386         buildonly-randconfig-006-20240117   gcc  
+i386                                defconfig   gcc  
+i386                  randconfig-001-20240117   gcc  
+i386                  randconfig-002-20240117   gcc  
+i386                  randconfig-003-20240117   gcc  
+i386                  randconfig-004-20240117   gcc  
+i386                  randconfig-005-20240117   gcc  
+i386                  randconfig-006-20240117   gcc  
+i386                  randconfig-011-20240117   clang
+i386                  randconfig-012-20240117   clang
+i386                  randconfig-013-20240117   clang
+i386                  randconfig-014-20240117   clang
+i386                  randconfig-015-20240117   clang
+i386                  randconfig-016-20240117   clang
+loongarch                        allmodconfig   gcc  
+loongarch             randconfig-001-20240118   gcc  
+loongarch             randconfig-002-20240118   gcc  
+m68k                             allmodconfig   gcc  
+m68k                             allyesconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                       allyesconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                 randconfig-001-20240118   gcc  
+nios2                 randconfig-002-20240118   gcc  
+openrisc                         allyesconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                randconfig-001-20240118   gcc  
+parisc                randconfig-002-20240118   gcc  
+powerpc                          allmodconfig   clang
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240118   clang
+powerpc               randconfig-002-20240118   clang
+powerpc               randconfig-003-20240118   clang
+powerpc64             randconfig-001-20240118   clang
+powerpc64             randconfig-002-20240118   clang
+powerpc64             randconfig-003-20240118   clang
+riscv                 randconfig-001-20240118   clang
+riscv                 randconfig-002-20240118   clang
+s390                             allmodconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                  randconfig-001-20240118   gcc  
+s390                  randconfig-002-20240118   gcc  
+sh                               allmodconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                    randconfig-001-20240118   gcc  
+sh                    randconfig-002-20240118   gcc  
+sparc                            allmodconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64               randconfig-001-20240118   gcc  
+sparc64               randconfig-002-20240118   gcc  
+um                               allmodconfig   clang
+um                               allyesconfig   clang
+um                    randconfig-001-20240118   clang
+um                    randconfig-002-20240118   clang
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64                              defconfig   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                randconfig-001-20240118   gcc  
+xtensa                randconfig-002-20240118   gcc  
 
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
