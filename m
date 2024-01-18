@@ -1,103 +1,82 @@
-Return-Path: <linux-gpio+bounces-2317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0618F830E4B
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 21:54:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E1A283104F
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 01:05:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 38D2C1C214B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 17 Jan 2024 20:54:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 480641C219BD
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 00:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F07825108;
-	Wed, 17 Jan 2024 20:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DB6B17D3;
+	Thu, 18 Jan 2024 00:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LnZBuseg"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gXyyTONo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5FF250E8;
-	Wed, 17 Jan 2024 20:54:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDAEBA5E;
+	Thu, 18 Jan 2024 00:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705524853; cv=none; b=AejrSVm9cMokZ++BNve8HMEGEht7smDbPZxXyGhLiNcB9kQJyI5Np5QpxQIzjqOkKroRbxpWJK11y9RT5kTRpjifv9lV8u4JCk+MucIiS8Z8VR0X+BRAGYu1jIY7gtccpJtiav4T1C6u+8vfVYNCAJNbdyQYumJinMsEzVUyh+E=
+	t=1705536309; cv=none; b=QsJq3j/DCSuLBDkEXqwv6t7udpbdIFof0uPTFgb1NdYcPPql1lg0CYyPiSobM/9viMGa2PPsxDUN0cz3LxpIHJp0tH1O6nnjYIcXxpmPPZPUb4HxJ1Hw9js6RtgEoqiyIdYVaKCyF6zwHPzFWYn0oZbNoywSdnYbqwYTa7Lr3lU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705524853; c=relaxed/simple;
-	bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
-	h=Received:DKIM-Signature:X-Google-DKIM-Signature:
-	 X-Gm-Message-State:X-Google-Smtp-Source:X-Received:MIME-Version:
-	 References:In-Reply-To:From:Date:Message-ID:Subject:To:Cc:
-	 Content-Type:Content-Transfer-Encoding; b=gVHfvpieTdR4UT55d5Ts8cG40w1Bh6oTMS0aGtl7R6bXejwSRGg9G2D36fI0RFxgn83H/bdhDRq1KhsMlo/1A0o//sx1Di2vSZMc8Hm7H874bG5gG0q73e5umCK0rxWch17DHdrKnTNGimyiYnN55koO7bLkD3pS4XTokkpH7W8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LnZBuseg; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-557ad92cabbso11618622a12.0;
-        Wed, 17 Jan 2024 12:54:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705524850; x=1706129650; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
-        b=LnZBusegOzr09qS3GnSonh+yW8iLaFf1+Z4UpDeNe8w6oRBNOiLjIYwk7VUFWh9h9W
-         jntULaMaL6KZL173j9bUQTXsvefnKybNDsr+fTmx4cr7eYON9Oy5x5sXHitSVsjhvvkX
-         LP8oc52EpsHRvPu7GhWQqRkk9kKGXvFev1Jq60DUjUWbHvuJvR2ITfd6hxKF/LKVdEAa
-         vV/ceSEYHUpsN7tgeBriKamb7nK4qiRO19nOXRe2VoBJeGhYcbk8kDvQYnstp+pC/vgn
-         yPd3e0l56vZGg31FjPosdO/TaqLa2c/ZzuPlh0nhVXb+BQJB71KLaOs7MyA4UP3BXKbR
-         BC7w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705524850; x=1706129650;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Gvb0ALIs32Uhtesp9BbYxYVqNhkSwokGRm9LkLff6DA=;
-        b=oQ0Oiays/dgGEl/F6OogXATzw74ZnkSAqBSNqMHfk3xXlX1Yptn1eWDUVYJa/SDq8r
-         MeqY/xj6HLkABnmgZN8KiqPoSWvNE3zxxpgqSw3RIpLFd2SeueG/sBjTX5l2u2P624ov
-         tSZVKyxbh54I2KbIKYWtQrKLL4+ubXMuueD8SBzcbR5CdZhAsxD9S7Oz9i5SvDwOP6yJ
-         8IVFxB/d1oSF5DF9eRVYjDNCNADwShi6/E6a6uEOwm6ibdadfOpI/fd+/X0WPX94LuOk
-         2EqOANEWGF7bg1DKxyt8S0J3btKu1i6+omSucUGnzlAQJpbVRwt1BbG0TyvperFmoHat
-         5SdQ==
-X-Gm-Message-State: AOJu0YynAktft0yDPMLivKWRkEQkOgnXxmBSxcW1MVskuJXbjvgzMEl6
-	AkuKzIIrX7+1RhVjcGdk9xGBBUuz8x0s6BxTADE=
-X-Google-Smtp-Source: AGHT+IHu/d6LG6bzL5O6GP0Fb7oK+rmMYDeJxjv+aom8dzUkKP10RwWSxI0lzlcrH+69uH1H4AqAQZ4xROuYMS0Rpuo=
-X-Received: by 2002:a17:906:fd81:b0:a28:fb94:b773 with SMTP id
- xa1-20020a170906fd8100b00a28fb94b773mr3225489ejb.223.1705524850520; Wed, 17
- Jan 2024 12:54:10 -0800 (PST)
+	s=arc-20240116; t=1705536309; c=relaxed/simple;
+	bh=srP6jc4yMDNahMJFKLxCkqIw3EDdKbmVHVa9h7QuM8s=;
+	h=Received:DKIM-Signature:Received:Subject:From:In-Reply-To:
+	 References:X-PR-Tracked-List-Id:X-PR-Tracked-Message-Id:
+	 X-PR-Tracked-Remote:X-PR-Tracked-Commit-Id:X-PR-Merge-Tree:
+	 X-PR-Merge-Refname:X-PR-Merge-Commit-Id:Message-Id:Date:To:Cc; b=n3bUe2ccLi2jha6jNRynDtavDMkdxQEu+j91DWz3lviP14MZQltGKrrX7p7DUmbK3mjKdsXjg2w/6rTT+LDAfv7SoSIZbeDjaSQ5R+1XYd4pCzOyfQx5kKq7BsJdbvav5b9wupJaoe7WlRY4xeHV/VMIW2G5swmp7lAWXsmgDY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gXyyTONo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A338CC433F1;
+	Thu, 18 Jan 2024 00:05:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705536309;
+	bh=srP6jc4yMDNahMJFKLxCkqIw3EDdKbmVHVa9h7QuM8s=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=gXyyTONo6QnW/A3YqK5O8yLgj3NeAIvFJLHqkHqJmRt+4/YDlC8Ycx/V8VB5B/1xs
+	 aO8ep45fq8bKGkcbj4XKX0J4wEVUiIs29vAUh1FPclvWJ0YDFXv3x/HdgJ6vSDZcX+
+	 esPiioegGAJdi21e4s0LQEF0+gKKgK6KBgpHwe7lsP3Jtq59fvp8Q9bbh7fWZOKMFw
+	 5Q3QzZfspWh960iiv5mFrU04qRRQeBIXtY9JMLnXrJQbD4dxTh2vSIoWNIETL8bEAt
+	 gQZe0z0umwm8lAZ5+iIFZIl3hw87e5kbz9Atp/+CrQ+VDTYfYQnrJ49B2GO9o5MKxI
+	 GkEzZ41Rem87A==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 92EF5D8C978;
+	Thu, 18 Jan 2024 00:05:09 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control changes for v6.8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdaSdLQ7_ekbAPBqyEJSN37w5dmwA0PA--GEpSqEFXDuXw@mail.gmail.com>
+References: <CACRpkdaSdLQ7_ekbAPBqyEJSN37w5dmwA0PA--GEpSqEFXDuXw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdaSdLQ7_ekbAPBqyEJSN37w5dmwA0PA--GEpSqEFXDuXw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.8-1
+X-PR-Tracked-Commit-Id: 1b09c2b8f849079220a9a9ddf961582f00bdc2c4
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: ed6c23b175471d7bdecd06b5f37a0b1057c90cce
+Message-Id: <170553630959.10877.6021127309827769815.pr-tracker-bot@kernel.org>
+Date: Thu, 18 Jan 2024 00:05:09 +0000
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240117094453.100518-1-hector.palacios@digi.com> <20240117094453.100518-2-hector.palacios@digi.com>
-In-Reply-To: <20240117094453.100518-2-hector.palacios@digi.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 17 Jan 2024 22:53:34 +0200
-Message-ID: <CAHp75VcDXPmoiS_KzGf7mRTSOTy1sj+bY4rd3eiKtMyH8-QDHQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/3] gpio: vf610: add support to DT 'ngpios' property
-To: Hector Palacios <hector.palacios@digi.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, andy@kernel.org, conor+dt@kernel.org, 
-	shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, 
-	festevam@gmail.com, linux-imx@nxp.com, stefan@agner.ch, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 17, 2024 at 11:46=E2=80=AFAM Hector Palacios
-<hector.palacios@digi.com> wrote:
->
-> Some SoCs, such as i.MX93, don't have all 32 pins available
-> per port. Allow optional generic 'ngpios' property to be
-> specified from the device tree and default to
-> VF610_GPIO_PER_PORT (32) if the property does not exist.
+The pull request you sent on Mon, 15 Jan 2024 08:51:22 +0100:
 
-Same comment/Q as per v3.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.8-1
 
---=20
-With Best Regards,
-Andy Shevchenko
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/ed6c23b175471d7bdecd06b5f37a0b1057c90cce
+
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
