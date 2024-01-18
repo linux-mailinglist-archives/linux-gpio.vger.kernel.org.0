@@ -1,175 +1,92 @@
-Return-Path: <linux-gpio+bounces-2338-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2339-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29905831D36
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 17:06:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9597F831D57
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 17:16:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D35411F24184
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 16:06:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C8EBF1C226B5
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 16:16:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D81128E07;
-	Thu, 18 Jan 2024 16:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LE5Ha2Bs"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7A1B2C1A3;
+	Thu, 18 Jan 2024 16:16:15 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4396E1DDC6;
-	Thu, 18 Jan 2024 16:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCB528DD4
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 16:16:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705593996; cv=none; b=Jxv5oqlfmyU/g9IqPS3q062VluoBjxaJAKT3asTSwoV/KMgHuPjA8iA720Dtdqc4mLqK/iHdWfOJAjxNndBoYhJxBit3i06IDbg25kd9aizcYVmbG9qXByW2oWymaTGglOEgVF7wJ2iR3Tl1yWrxV6sGTOZaSQD1dm9AT7/Qyn0=
+	t=1705594575; cv=none; b=WufS03Gkl+gWgdGJN+bHUp8MGurV4oZ3c9a9+FBpc3dTmXiC85i3pdy1OOFR2eH/JUn18eNuDqt/kA6+YuNgjUqzYWfGynv4Lxalok8CRC17tlS52twzdenKEC/yxy7zLSlND6jzapM739TONXvmoHzW2fw8g4uOMp40m+6G74s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705593996; c=relaxed/simple;
-	bh=nwQHxPOUjjJ4GuHl5raPFPdhRyG6WMAS+hUTdTAaVbc=;
-	h=Received:DKIM-Signature:Date:From:To:Cc:Subject:Message-ID:
-	 References:MIME-Version:Content-Type:Content-Disposition:
-	 In-Reply-To; b=FkWQ/wHEW861/TrLJZ/+6CJzlkNGHt4sttt3yEF4SIY5DPRLsOqdGYsrAn8mk2sw8PwXlpnHXQp3v9Z/GQaSIU7yYJhynokH+TPrjAMvO/YE8j6KzpbksSgDLYtZdZVgpCclcTtfmRIIa84zbsTlN1S0uQwxzD82/OdY+EJwq/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LE5Ha2Bs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B4A8C433C7;
-	Thu, 18 Jan 2024 16:06:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1705593996;
-	bh=nwQHxPOUjjJ4GuHl5raPFPdhRyG6WMAS+hUTdTAaVbc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LE5Ha2BsPxxze+LhYr0lZKir5QBO605DNQjCo24g0V/iwQihBexhy9Xiq1pWT2+82
-	 uTSjWJ8arM1v0+28qwRvDPTyMth8TTQCUVFlVzmElMDEZKW381K4Hj75TXe2klD2FM
-	 nIMIlSs+VAQmftzDh1Ej0gxGrxamfnatYh6NLhM3DPEm3zdjistuZWg+j5FhLhqL3B
-	 NYUJ2jDQRmg9Ue2KbJfYxJWKzZMd9YksQybou8srF0x6Iyrpa/wXajCnL5pC/CmVRs
-	 /IQEpSqrn9KpyuKGo88+F2fqOVwN7RpEiEb+0QYgUpLlVKIX4jN2bxzIPgWSgPvnPX
-	 Uhbg3mAm900eA==
-Date: Thu, 18 Jan 2024 16:06:29 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	s=arc-20240116; t=1705594575; c=relaxed/simple;
+	bh=uKYABitkPHkMBYpYoEDTqJexD8KYr1iUJcOLrzvoYoA=;
+	h=Received:From:Date:To:Cc:Subject:Message-ID:References:
+	 MIME-Version:Content-Type:Content-Disposition:In-Reply-To; b=O2VFIa4wCya+HGNaT2W124JJILVLOT2UiQdq4g9t225iSviCiidPB2+WwsPXt8V5ce9uNLsUyHp/VzQvhwrLYNOpsu7zPXAgnIIwqXP9cezut6p1Cfzanc61WY55b/7ZrrAaZfVQFOlERJzHTr+TTmJzRlOAK/zzIjkcPg0yWwY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-24-108.elisa-laajakaista.fi [88.113.24.108])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id e194e5ee-b61c-11ee-abf4-005056bdd08f;
+	Thu, 18 Jan 2024 18:16:06 +0200 (EET)
+From: andy.shevchenko@gmail.com
+Date: Thu, 18 Jan 2024 18:16:05 +0200
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com,
+	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com,
+	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org,
+	patches@opensource.cirrus.com, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v12 1/2] dt-bindings: adc: add AD7173
-Message-ID: <20240118-freebase-uptake-ec5fdf786d20@spud>
-References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
- <20240118-lunar-anthem-31bf3b9b351d@spud>
- <b96d5bfc-cc38-44c7-a88f-e7ac5e4eb71d@gmail.com>
+Subject: Re: [PATCH v7 1/6] soundwire: bus: Allow SoundWire peripherals to
+ register IRQ handlers
+Message-ID: <ZalOxVZhPkOPvkJ-@surfacebook.localdomain>
+References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
+ <20230804104602.395892-2-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="LOsWyA9HATo5sHZY"
-Content-Disposition: inline
-In-Reply-To: <b96d5bfc-cc38-44c7-a88f-e7ac5e4eb71d@gmail.com>
-
-
---LOsWyA9HATo5sHZY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20230804104602.395892-2-ckeepax@opensource.cirrus.com>
 
-On Thu, Jan 18, 2024 at 05:51:20PM +0200, Ceclan Dumitru wrote:
->=20
->=20
-> On 1/18/24 17:23, Conor Dooley wrote:
-> > On Thu, Jan 18, 2024 at 02:49:22PM +0200, Dumitru Ceclan wrote:
->=20
-> ...
->=20
-> >> +  adi,clock-select:
-> >> +    description: |
-> >> +      Select the ADC clock source. Valid values are:
-> >> +      int         : Internal oscillator
-> >> +      int-out     : Internal oscillator with output on XTAL2 pin
-> >> +      ext-clk     : External clock input on XTAL2 pin
-> >> +      xtal        : External crystal on XTAL1 and XTAL2 pins
-> >> +
-> >> +    $ref: /schemas/types.yaml#/definitions/string
-> >> +    enum:
-> >> +      - int
-> >> +      - int-out
-> >> +      - ext-clk
-> >> +      - xtal
-> >> +    default: int
-> > I am not a fan of properties like this one, that in my view reimplement
-> > things that are supported by the regular clocks properties. I've got
-> > some questions for you so I can understand whether or not this custom
-> > property is required.
-> >=20
-> > Whether or not the ext-clk or xtal is used is known based on
-> > clock-names - why is the custom property required to determine that?
+Fri, Aug 04, 2023 at 11:45:57AM +0100, Charles Keepax kirjoitti:
+> From: Lucas Tanure <tanureal@opensource.cirrus.com>
+> 
+> Currently the in-band alerts for SoundWire peripherals can only
+> be communicated to the driver through the interrupt_callback
+> function. This however is slightly inconvenient for devices that wish
+> to share IRQ handling code between SoundWire and I2C/SPI, the later
+> would normally register an IRQ handler with the IRQ subsystem. However
+> there is no reason the SoundWire in-band IRQs can not also be
+> communicated as an actual IRQ to the driver.
+> 
+> Add support for SoundWire peripherals to register a normal IRQ
+> handler to receive SoundWire in-band alerts, allowing code to be
+> shared across control buses. Note that we allow users to use both the
+> interrupt_callback and the IRQ handler, this is useful for devices
+> which must clear additional chip specific SoundWire registers that are
+> not a part of the normal IRQ flow, or the SoundWire specification.
 
-> > If neither of those clocks are present, then the internal clock would be
-> > used. Choosing to use the internal clock if an external one is provided
-> > sounds to me like a software policy decision made by the operating
-> > system.
->=20
-> If there was no int-out, sure. I considered that the choice between int
-> and int-out could be made here. So better for driver to choose int/int-ou=
-t?
+...
 
-This part of my comments was specifically about choosing between use of
-the internal clock when ext-clk or xtal are provided, which I think
-excludes the possibility of using int-out, since the XTAL2 pin is an
-input.
+> +#include <linux/irqdomain.h>
 
-There's 3 situations:
-- no external clock provided
-- ext-clk provided
-- xtal provided
+Added code doesn't use anythitg from above. 
+It can be fulfilled with a forward declaration.
 
-For the former, you know you're in that state when no "clocks" property
-is present. The latter two you can differentiate based on "clock-names".
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Choosing to use the internal clock if an external clock is provided
-seems to be a software policy decision, unless I am mistaken.
 
-> >=20
-> > Finally, if the ADC has a clock output, why can that not be represented
-> > by making the ADC a clock-controller?
-> >=20
->=20
-> Was not familiar with this/did not cross my mind. So if xtal/ext-clk is
-> present, the driver should detect it and disable the option for clock
-> output? (Common pin XTAL2)
-
-Yeah, if those clocks are provided you would not register as a clock
-controller. If there is a user of the output clock, it should have its
-own "clocks" property that references the ADC's output.
-
-Your dt-binding could also make clocks/clock-names & clock-controller
-mutually exclusive.
-
-Cheers,
-Conor.
-
---LOsWyA9HATo5sHZY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZalMhAAKCRB4tDGHoIJi
-0u1GAQDLF9wUQ+s0LZcpRfaCXxjuTn+bnIp1+ISbdg+ShIwu1QEAozUJEcnwITnj
-abuVUXJ5gSOUB5wZwS7hYPBOxPhpngA=
-=nOWF
------END PGP SIGNATURE-----
-
---LOsWyA9HATo5sHZY--
 
