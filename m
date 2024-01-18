@@ -1,159 +1,133 @@
-Return-Path: <linux-gpio+bounces-2326-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2327-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 097928315A1
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 10:21:24 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D1D98315DE
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 10:32:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD009286FBB
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 09:21:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8FEAF1C20AD5
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 09:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D674A1D523;
-	Thu, 18 Jan 2024 09:21:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0B8E1D55A;
+	Thu, 18 Jan 2024 09:32:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05DB41BC33;
-	Thu, 18 Jan 2024 09:21:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A87219E5
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 09:32:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705569676; cv=none; b=Z2/ZaKK9MAB2w+C9b5/X+fDh0HuuKlwYuKFJ4BvfDLOBR3RkNIuhVxzgq52ygub2KO0jdX4f4cYEHzMJl1/mDag9HvFct+Ll0t8KBusEC2xB7tGok5rcME1ltsqqTZGpsJ6gEBQgYWozcRFsw00To4qkSLbEPH7uEmdDjWHL8BI=
+	t=1705570327; cv=none; b=F4crYVE9WujVQeupM+j2BrSCNbXBH9AOYRnDLW4Av7i0Gl30TDByvp60eZQhUTU1dE5eF3Q/Cq68fH4bWCPmwPmUJXJKvVtkhibLphCAr6JldHYZpaii+3Bn9T8cRnjwmIKku0+9UpxWlEMO2hKDnT3pdNjhZPmErD0GTHqCwAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705569676; c=relaxed/simple;
-	bh=kNuDy3QbrcPdmFFi0m7j/Zge1439ZBqnmZlKGQqeyHE=;
-	h=Received:Received:Received:Date:From:To:CC:Subject:Message-ID:
-	 In-Reply-To:References:Organization:X-Mailer:MIME-Version:
-	 Content-Type:Content-Transfer-Encoding:X-Originating-IP:
-	 X-ClientProxiedBy; b=AdFypVv1JhMl9JHi/GyNyfKNnZOWt7WWojKylPomoGXe1YpyYdeCBZahRWr7bCsapWs0i5f15p1qbcKUZau5e65Yq//7CawqYv55rE7Jr1X2PYHF0A6zjjjlQ2bhShP75oZtsvyGfClTYymo4mth+Mu5o8jBSABKgcsMTUnziOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TFxy82Wlbz687NT;
-	Thu, 18 Jan 2024 17:18:56 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id F25DA1400CD;
-	Thu, 18 Jan 2024 17:21:10 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Thu, 18 Jan
- 2024 09:21:10 +0000
-Date: Thu, 18 Jan 2024 09:21:10 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-CC: David Lechner <dlechner@baylibre.com>, <linus.walleij@linaro.org>,
-	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Jonathan Cameron <jic23@kernel.org>, Rob Herring
-	<robh+dt@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
-	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
-	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
-	<hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	<linux-iio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v11 1/2] dt-bindings: adc: add AD7173
-Message-ID: <20240118092110.00002c44@Huawei.com>
-In-Reply-To: <cf48e196-a569-4287-93b7-b5f06c34d6f6@gmail.com>
-References: <20231220104810.3179-1-mitrutzceclan@gmail.com>
-	<CAMknhBELp3NQEHE16gHhC96bttoafQOGxx3a_dLZn9o2Ru7y9g@mail.gmail.com>
-	<20240116163003.0000039d@Huawei.com>
-	<18c239af-71ee-49d8-878e-e1770c3e2d46@gmail.com>
-	<20240117163725.00003981@Huawei.com>
-	<cf48e196-a569-4287-93b7-b5f06c34d6f6@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1705570327; c=relaxed/simple;
+	bh=x4OR2QnV/+fgMTmdwS/QmOKbvtbDOKH/eK433t7NRV0=;
+	h=Received:Received:Received:Date:From:To:Cc:Subject:Message-ID:
+	 References:MIME-Version:Content-Type:Content-Disposition:
+	 In-Reply-To:X-SA-Exim-Connect-IP:X-SA-Exim-Mail-From:
+	 X-SA-Exim-Scanned:X-PTX-Original-Recipient; b=IbItd7TZ+Jsue5aRDeKNiK7FaVhyCIdi5TMSgNv9OG6lyA9tTfNSSi85HkDvhlUhfCA9hDzv3ULuIF/AXZVp18eI9hDHN8i55C3R5HmIHKLYc8XqzvNSg2h02dcmn7N/gr570e+wuqIxNP9Nv9TDG8F1Dyn96CDpPXpP1JIoVKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOj3-0002xz-Tn; Thu, 18 Jan 2024 10:30:17 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOiy-000etK-Ax; Thu, 18 Jan 2024 10:30:12 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rQOiy-002Ifg-0Y;
+	Thu, 18 Jan 2024 10:30:12 +0100
+Date: Thu, 18 Jan 2024 10:30:11 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: nikita.shubin@maquefel.me
+Cc: Hartley Sweeten <hsweeten@visionengravers.com>, 
+	Alexander Sverdlin <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>, 
+	Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Thierry Reding <thierry.reding@gmail.com>, 
+	Mark Brown <broonie@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Miquel Raynal <miquel.raynal@bootlin.com>, 
+	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
+	Damien Le Moal <dlemoal@kernel.org>, Sergey Shtylyov <s.shtylyov@omp.ru>, 
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	Ralf Baechle <ralf@linux-mips.org>, "Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, 
+	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-clk@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, 
+	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-spi@vger.kernel.org, netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
+	linux-ide@vger.kernel.org, linux-input@vger.kernel.org, linux-sound@vger.kernel.org, 
+	Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andriy.shevchenko@intel.com>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, 
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
+Message-ID: <a54csycouodnmj6qarfel7cvgupaerl7uhrruixuy7uaekqgzw@2whufrjqunme>
+References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s7rbtueqy4vwjth4"
+Content-Disposition: inline
+In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--s7rbtueqy4vwjth4
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Thu, 18 Jan 2024 10:10:46 +0200
-Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
+Hello,
 
-> On 1/17/24 18:37, Jonathan Cameron wrote:
-> > On Wed, 17 Jan 2024 14:43:21 +0200
-> > Ceclan Dumitru <mitrutzceclan@gmail.com> wrote: =20
-> >> On 1/16/24 18:30, Jonathan Cameron wrote: =20
-> >>> On Mon, 15 Jan 2024 15:53:39 -0600
-> >>> David Lechner <dlechner@baylibre.com> wrote: =20
-> >>>> On Wed, Dec 20, 2023 at 4:48=E2=80=AFAM Dumitru Ceclan <mitrutzcecla=
-n@gmail.com> wrote:   =20
->=20
-> ...
->=20
-> >>>>> +
-> >>>>> +  refin-supply:
-> >>>>> +    description: external reference supply, can be used as referen=
-ce for conversion.     =20
-> >>>> If I'm understanding correctly, this represents both voltage inputs
-> >>>> REF+ and REF-, correct? The datasheet says "Reference Input Negative
-> >>>> Terminal. REF=E2=88=92 can span from AVSS to AVDD1 =E2=88=92 1 V". I=
-t seems like they
-> >>>> should be separate supplies in case REF- is non-zero. Otherwise, how
-> >>>> can we know what voltage it is? (same comment applies to refin2.)   =
-=20
-> >>> Agreed, in this case these are directly used as references (we recent=
-ly
-> >>> had another driver that could take a wide range of negative and posit=
-ive
-> >>> inputs but in that case an internal reference was generated that didn=
-'t
-> >>> made it not matter exactly what was being supplied.  Not true here th=
-ough!
-> >>>    =20
-> >> Wouldn't it be alright to specify that the voltage specified here shou=
-ld
-> >> be the actual difference (REF+)-(REF-)? =20
-> > How do you establish the offset to apply to single ended channels if yo=
-u don't
-> > know the value of REF- (relative to local ground)?
-> >=20
-> > So no - as the device supports single ended channels the difference isn=
-'t
-> > enough information.  It would probably be fine to do as you say if it
-> > were a device with only differential channels where all that matters is
-> > the scaling. =20
->=20
-> 	I suppose that you are referring to the first page presentation: "Cross
-> point multiplexer; 8 full differential or 16 single-ended channels". I
-> consider this to be a bit misleading as all channels are actually fully
-> differential (must select positive and negative source, AVSS is not one
-> of them).
->=20
->=20
-> 	Even more, the datasheet specifies that when using "single-ended"
-> inputs you need to select which of the pins is the common one and
-> connect it to the desired GND (be it AVSS, REF-):
->=20
-> "Because there is a cross point mux, the user can set any of the analog
-> inputs as the common pin. An example of such a scenario is to connect
-> the AIN16 pin to AVSS or to the REFOUT voltage (that is, AVSS +
-> 2.5 V)" (ad7173-8 page 27)
->=20
-> 	For me this is 100% the case that this is a fully differential ADC in
-> which the datasheet presents a way to use it single-ended. Let's say
-> that we are using EXT_REF, and REF- is non zero. If someone connects
-> AVSS to the desired common pin, the ADC will still measure correctly the
-> difference of voltage between AIN_POS and AIN_NEG and compare it to the
-> EXT_REF.
+On Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin via B4 Relay wrote:
+> No major changes since last version (v6) all changes are cometic.
 
-Thanks for the explanation. I indeed was mislead by the introduction!
-Seems that the difference in the reference inputs is sufficient for this
-device.
+Never saw changes described as "cometic". I guess that means "fast" and
+"high impact"?
 
-Jonathan
+SCNR
+Uwe
 
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
+--s7rbtueqy4vwjth4
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmWo76MACgkQj4D7WH0S
+/k5uKAf/Z0JDYxAVHNppDOc31mQ8q/h4mL5VX4NFHWitBkLRBX5sufWi6uUBbK7h
+KA9Z1DHWGNNXUXsV2IsXKsw6WcsC+Wj/g+hUfWMx2kvbnvD8JtYBl1+MJALeBVlt
+aQCy1yMPL36xcy8vSLyh63vZXUHyBaWuooRwVqOhklHSg7/rwSEwECEZZqsg748Z
+iiYmSVRjLlktw1yUtJBvlO1fXWQ41DSbyaQWaIJvbym8B5+2XXW2BTGZOg7CuDz5
+HG9KvXf2AnAEM4RAV6Oo/WKBBEq0kfQ/UBkkH85YOaXrDlNblggfMix84LyansxB
+43g95kkMn3JP3koNgEA+nk73+SCctA==
+=1qlI
+-----END PGP SIGNATURE-----
+
+--s7rbtueqy4vwjth4--
 
