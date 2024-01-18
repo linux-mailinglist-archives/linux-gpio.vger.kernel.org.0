@@ -1,433 +1,130 @@
-Return-Path: <linux-gpio+bounces-2351-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2352-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE5A88321AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 23:43:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D7FF832261
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 00:48:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7D31A285740
-	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 22:43:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9A9D6B21458
+	for <lists+linux-gpio@lfdr.de>; Thu, 18 Jan 2024 23:48:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74CC7B673;
-	Thu, 18 Jan 2024 22:43:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79D7D1EA78;
+	Thu, 18 Jan 2024 23:48:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="a8V+KQTy"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dN2nuqeD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774551EA73
-	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 22:43:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DDD1E499
+	for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 23:48:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705617783; cv=none; b=nEfO0P18XhpI9fQpkDuSboQdyl94Z8t1XIe9/nIpp2P6l1la4PkvcpEWwToaWgifLL5xWibbn044Mt1OV7DMBJCY+k5nMTQU5R3c2kEPoXk9F3ON4ZBehQIgM5WdekzrcQnPSQNaFu2QbFo1B+Y9RaB8oc06Mms9FCbs9Gw0FJM=
+	t=1705621717; cv=none; b=UQjsf6JyfDf+IKXNufR7zFN9VWW0TSS6tvCU4bxcCyRtghLC2s/Y9kQEnVoexESILkp0JgXhc7CXVG30h18fo0sGJsIT7/qHwg87jZSD6pIHCwBUU3LrXpVXX8GAJ1EreSLkQGsqNfewO2oy33+76YURwKt9cMh7HbNLxVC5qdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705617783; c=relaxed/simple;
-	bh=+1qKA2IP4vtwr2qgRdA4RfnQ7Z2Up8JMUN1h2ytfNpg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZZ0F+9PmWCrffyR+TQFe6+Q2K84JSXbspgQiygUN8PUcZ0fLhKAxwMjaY4rjGlqy1whMYwbkF0jzzjv0JLGXY7G4mMzLFtTVvkYCi7r5IVPi9FH2sFQ1X0qQYuC6D6JY9JE3bB1Yu0jDLPoDMdxHVrxe67jO4LJOWEQ0uIH03io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=a8V+KQTy; arc=none smtp.client-ip=209.85.208.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lj1-f171.google.com with SMTP id 38308e7fff4ca-2cca8eb0509so2387681fa.3
-        for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 14:43:00 -0800 (PST)
+	s=arc-20240116; t=1705621717; c=relaxed/simple;
+	bh=GBhbCyyTzevO2Raswaby/YSQR0DwljlWQG4yC7Vd3Wo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rU/DDQ/kaMoFrLRkTBWti/xLCAQ2SQ62445bNQJA3X45bSXFtbuHAovIkAJggVQW912xGGksdHhOPJzEyMU0Uu7042NMgMPc0Y5xV8yvUgpAaKhISDpcnwK2RnYHfT3benvkvZModtjfrQys070Jt319BYLokoNgqkdKAhU4bcA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dN2nuqeD; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d50d0c98c3so10655085ad.1
+        for <linux-gpio@vger.kernel.org>; Thu, 18 Jan 2024 15:48:35 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1705617778; x=1706222578; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S2OucYUMdApd6L43qg3jvqTNIxk03x2uwjfK2c63Pxo=;
-        b=a8V+KQTyfIPD1zKSZEHMOlSnj0xACASJxNCiB2mtgHaP0efm8bsanedkMQ80vu4qxI
-         bFJH7yOGD26Q+L7sQqKRSVbnWBDzvPVJ596bWFKW1y98jwpAJsgU+KQvzFB7t2AffXpH
-         GzuoP5s3kyZnLCLM7OzmtxjG6U3yxVj0RvKvGrX6iQaqX2qtgTBrARklCtrraC9ksfCO
-         Iy2/l+F5gVilBneOwz2+GZdUuSq46krD3uE5KG3mTbJjfqBE4RlinBYuxTsA/brFj0dA
-         6LTZp53gQKCJTwaaHAnWvsF/MDUqdFeEn/V0nNckTR5cDIbyQhwaiVxTorgKOxiIzl9O
-         acNA==
+        d=gmail.com; s=20230601; t=1705621715; x=1706226515; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=GBhbCyyTzevO2Raswaby/YSQR0DwljlWQG4yC7Vd3Wo=;
+        b=dN2nuqeDcwzb/eFVf1puTGrfF3EZgv3o7l8szBKmak1NcUbH5msxPx62gH0dxgmnKx
+         6lwavYwG7YSFtNpZGu/aY8H9FYyX5GyjZbZXeHiH4zcxOyXpMx1e9JPDuGWVMkkiHROM
+         5MmYqGIyxuxO2fundn+oc7wcccu45QeIst01R4hbt7fbf4SD9JELSNqNyHrN+s2xCPKW
+         XbUHY0BP1pGbXsQVnZPOrixB3c337kOqKl63L/NKySlREpWaaK4jj3PtKF1NIeEwtBDv
+         XiRv22sktXqMWlrvfBLXgzAlvk1jkGOqA0KqNKE8IwV+IuVGO4tortnK2Ymz/Dk28F7+
+         ymag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705617778; x=1706222578;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=S2OucYUMdApd6L43qg3jvqTNIxk03x2uwjfK2c63Pxo=;
-        b=g6Cvg7QJYoHHBm0AN2gEU81wvLeAma33OKM/bYDJQKFt45VrKpNn0OTHdEIe4NMTF8
-         kw4RyXhOd7zMtKy8KDBJZ2DtI/u1uiCmRNzw9VQ7eIx4cfLfpn2btLm4o+dByiQ0ijPb
-         tx8fEbM8Cjiqu3WGhK8OjSV4KJ6HcLRNiMXWqqqpstWpcTTaDYXw79AkpqnJfC4PxYoJ
-         UjanstEVky1Rw4dytQROxO9+gFEubXx8f3fpBz7uwlXdAyzcril5P/9NzI/wOT2d3iA5
-         Cgqelea8SXrFk6c92PDK7x4N7BVues48cpdEeZFi0QI6Dh9WECxraKDNl1LVMFDS5HWC
-         v3cg==
-X-Gm-Message-State: AOJu0Yx73N40mPGCfunFhc8dZaYtl74Z9PVo12FSFdw6erZyU3+AIUx6
-	LdsiIbzvEE7THmaIpV6CU0YKxhcCs8PoGJNQ6W+67bySpifUVHQeGX7nNz5u/1NC3DF5zU49Pzh
-	+p/1B4noq44GHmdMty2kcpGWyXX+O/MeQB/Vehw==
-X-Google-Smtp-Source: AGHT+IE/0Kja/Yg1yBuySMn66AdspOWr0ARCiQ3WB9sSkWlaul5RnQsnaih5GsFZXdTaueRcVpq+OSsYZeHEUE/mZ+M=
-X-Received: by 2002:a2e:888b:0:b0:2cc:e9d9:8293 with SMTP id
- k11-20020a2e888b000000b002cce9d98293mr847082lji.31.1705617778025; Thu, 18 Jan
- 2024 14:42:58 -0800 (PST)
+        d=1e100.net; s=20230601; t=1705621715; x=1706226515;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GBhbCyyTzevO2Raswaby/YSQR0DwljlWQG4yC7Vd3Wo=;
+        b=Y3AscqaeMKDqKJrle00juVb+fCM6kPfkOPDoKF4eGPR84GAJmEplHuyzGw0sg9V+rA
+         ZyZBTeONU4SKYRZyzYic0S940DKzTP9XHkEJGRNpYO5zsqSwaF1SNWGQCWUyLclUIaa9
+         VaMJcG83w6AId1MFm2q1oIPI8DtXtd73tdHn0+eyV2uoRXU0JZctWf28waBo7WMzeRsb
+         +KokFKoUfQ9CY0YH36dnpW56Sh/99KuMWTeEMlfLenbXpZwRXYqQ08p4IV5fdsfDzZ4l
+         AglyZIKDoHiJ8XaCMkB3ovwIEIZjt0XUNIBhRA3bIBPgKkD+EUKkqTjLbUvtfZ+nh24N
+         IxXA==
+X-Gm-Message-State: AOJu0Yw8iXbbbaUMQ+/larTzLj/TvmBVJvAx0/QBLtClfHENzCzIzwBH
+	gJwP580BMiqZScxhiUXT2uuodGl+SBzAh9IW12A0/bN8r4TnemVRaBCb9QHG
+X-Google-Smtp-Source: AGHT+IE7Ky1kBIjXkX1AH58oj6QUO5OCsQVqgCqTRSZ1X3AVmN1eBoXFcP5omxC4LWN+MrpFpt0OXw==
+X-Received: by 2002:a17:902:e811:b0:1d0:6ffd:6108 with SMTP id u17-20020a170902e81100b001d06ffd6108mr148399plg.42.1705621715185;
+        Thu, 18 Jan 2024 15:48:35 -0800 (PST)
+Received: from rigel (194-223-183-150.tpgi.com.au. [194.223.183.150])
+        by smtp.gmail.com with ESMTPSA id y2-20020a170902700200b001cf59ad964asm1886868plk.140.2024.01.18.15.48.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Jan 2024 15:48:34 -0800 (PST)
+Date: Fri, 19 Jan 2024 07:48:30 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: "Westermann, Oliver" <Oliver.Westermann@cognex.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	"ada@thorsis.com" <ada@thorsis.com>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: Re: Re: Assign line names at runtime
+Message-ID: <20240118234830.GA11295@rigel>
+References: <PH0PR06MB833416FBBC8543802D72FA4D86682@PH0PR06MB8334.namprd06.prod.outlook.com>
+ <20240112003558.GA3310@rigel>
+ <CAMRc=MfeZTynTrdQdMqqvsMYsNo5yHgo+LzuRdqYpg-oZC+f6A@mail.gmail.com>
+ <20240112123105.GA66782@rigel>
+ <PH0PR06MB8334079C458EF28FE056CD75866F2@PH0PR06MB8334.namprd06.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
-In-Reply-To: <20240118125001.12809-1-mitrutzceclan@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Thu, 18 Jan 2024 16:42:47 -0600
-Message-ID: <CAMknhBEmye4UvLtR_3M2VMoGOAJ7tm1Rpy7rThsojzNcpMu6vA@mail.gmail.com>
-Subject: Re: [PATCH v12 1/2] dt-bindings: adc: add AD7173
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <PH0PR06MB8334079C458EF28FE056CD75866F2@PH0PR06MB8334.namprd06.prod.outlook.com>
 
-On Thu, Jan 18, 2024 at 6:50=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@gmail=
-.com> wrote:
+On Fri, Jan 12, 2024 at 01:16:29PM +0000, Westermann, Oliver wrote:
 >
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel application=
-s
-> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
-> primarily for measurement of signals close to DC but also delivers
-> outstanding performance with input bandwidths out to ~10kHz.
 >
-> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> ---
+> On Fri, Jan 12, 2024 at 1:31 AM Kent Gibson wrote:
+> > So I'm at the point that I think we could do it, one way or another, but
+> > much less certain if we should.
+> > I would not consider it if there was an alternative.
 >
-> V11->V12
->  - Drop "binding", describe hardware in binding description
->  - Rename refin and refin2 to vref and vref2
->  - Add better description to external references to better show that the =
-voltage
->     value that needs to be specified is the difference between the positi=
-ve and
->     negative reference pins
->  - Add optional clocks properties
->  - Add optional adi,clock-select property
->  - Add option for second interrupt, error
->  - Add description to interrupts
-> V10->V11
->  - Fix example warning: '#gpio-cells' is a dependency of 'gpio-controller=
-'
->  - Add description to #gpio-cells property
-> V9->V10
->  - Fix dt_binding_check type warning from adi,reference-select
-> V8->v9
->  - Add gpio-controller and "#gpio-cells" properties
->  - Add missing avdd2 and iovdd supplies
->  - Add string type to reference-select
-> V7->V8
->  - include missing fix from V6
-> V6->V7 <no changes>
-> V5->V6
->  - Moved global required property to proper placement
-> V4 -> V5
->  - Use string enum instead of integers for "adi,reference-select"
->  - Fix conditional checking in regards to compatible
-> V3 -> V4
->  - include supply attributes
->  - add channel attribute for selecting conversion reference
-> V2 -> V3
->  - remove redundant descriptions
->  - use referenced 'bipolar' property
->  - remove newlines from example
-> V1 -> V2 <no changes>
+> I played around a bit this morning and I have a (probably hacky but) working
+> prototype which adds a GPIO_V2_SET_LINEINFO_IOCTL and currently only allows to
+> override a line name. I played around a bit and tried to break something, but
+> currently, it seems to work. But I'm also open for any alternative, so maybe
+> with some extra info, somebody has better ideas:
 >
->  .../bindings/iio/adc/adi,ad7173.yaml          | 242 ++++++++++++++++++
->  1 file changed, 242 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7173.=
-yaml
+> The hardware variants I'm dealing with could be considered accessories:
+> Extension of a base in different kind and revisions. As those, they are mostly
+> not boot critical - I can defer probing. That would also allow me to defer
+> probing up until manual probing from userspace, eg by a udev rule collecting
+> more data and providing that to the driver once all data is present.
 >
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml b/=
-Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> new file mode 100644
-> index 000000000000..4d0870cc014c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7173.yaml
-> @@ -0,0 +1,242 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +# Copyright 2023 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7173.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7173 ADC
-> +
-> +maintainers:
-> +  - Ceclan Dumitru <dumitru.ceclan@analog.com>
-> +
-> +description: |
-> +  Analog Devices AD717x ADC's:
-> +  The AD717x family offer a complete integrated Sigma-Delta ADC solution=
- which
-> +  can be used in high precision, low noise single channel applications
-> +  (Life Science measurements) or higher speed multiplexed applications
-> +  (Factory Automation PLC Input modules). The Sigma-Delta ADC is intende=
-d
-> +  primarily for measurement of signals close to DC but also delivers
-> +  outstanding performance with input bandwidths out to ~10kHz.
-> +
-> +  Datasheets for supported chips:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-AD7172-2.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-AD7173-8.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-AD7175-2.pdf
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/=
-AD7176-2.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7172-2
-> +      - adi,ad7173-8
-> +      - adi,ad7175-2
-> +      - adi,ad7176-2
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    description: |
-> +      Ready interrupt: multiplexed with SPI data out. While SPI CS is lo=
-w,
-> +      can be used to indicate the completion of a conversion.
-> +
-> +      Error: The three error bits in the status register (ADC_ERROR, CRC=
-_ERROR,
-> +      and REG_ERROR) are OR'ed, inverted, and mapped to the ERROR pin. T=
-herefore,
-> +      the ERROR pin indicates that an error has occurred.
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    items:
-> +      - const: rdy
-> +      - const: err
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  spi-max-frequency:
-> +    maximum: 20000000
-> +
-> +  gpio-controller:
-> +    description: Marks the device node as a GPIO controller.
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +    description:
-> +      The first cell is the GPIO number and the second cell specifies
-> +      GPIO flags, as defined in <dt-bindings/gpio/gpio.h>.
-> +
-> +  vref-supply:
-> +    description: |
-> +      Differential external reference supply used for conversion. The re=
-ference
-> +      voltage (Vref) specified here must be the voltage difference betwe=
-en the
-> +      REF+ and REF- pins: Vref =3D (REF+) - (REF-).
-> +
-> +  vref2-supply:
-> +    description: |
-> +      Differential external reference supply used for conversion. The re=
-ference
-> +      voltage (Vref2) specified here must be the voltage difference betw=
-een the
-> +      REF2+ and REF2- pins: Vref2 =3D (REF2+) - (REF2-).
-> +
-> +  avdd-supply:
-> +    description: avdd supply, can be used as reference for conversion.
-
-I think it would be helpful to have a description similar to
-vref-supply here. This is the voltage between AVDD and AVSS. So in
-both cases AVDD=3D5V, AVSS=3D0V and AVDD=3D+2.5V, AVSS=3D-2.5V, this supply
-should report 5V.
-
-> +
-> +  avdd2-supply:
-> +    description: avdd2 supply, used as the input to the internal voltage=
- regulator.
-
-This supply is also referenced to AVSS.
-
-> +
-> +  iovdd-supply:
-> +    description: iovdd supply, used for the chip digital interface.
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: |
-> +      Optional external clock source. Can include one clock source: exte=
-rnal
-> +      clock or external crystal.
-> +
-> +  clock-names:
-> +    enum:
-> +      - ext-clk
-> +      - xtal
-> +
-> +  adi,clock-select:
-> +    description: |
-> +      Select the ADC clock source. Valid values are:
-> +      int         : Internal oscillator
-> +      int-out     : Internal oscillator with output on XTAL2 pin
-> +      ext-clk     : External clock input on XTAL2 pin
-> +      xtal        : External crystal on XTAL1 and XTAL2 pins
-> +
-> +    $ref: /schemas/types.yaml#/definitions/string
-> +    enum:
-> +      - int
-> +      - int-out
-> +      - ext-clk
-> +      - xtal
-> +    default: int
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    type: object
-> +    $ref: adc.yaml
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 15
-> +
-> +      diff-channels:
-> +        items:
-> +          minimum: 0
-> +          maximum: 31
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on
-> +          the specific channel. Valid values are:
-> +          vref       : REF+  /REF=E2=88=92
-> +          vref2      : REF2+ /REF2=E2=88=92
-> +          refout-avss: REFOUT/AVSS (Internal reference)
-> +          avdd       : AVDD
-
-Could write this as AVDD/AVSS to be consistent with the other 3 options.
-
-(Or if this is really AVDD to 0V, we may need to reconsider some of
-our other decisions.)
-
-> +
-> +          External reference ref2 only available on ad7173-8.
-> +          If not specified, internal reference used.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        enum:
-> +          - vref
-> +          - vref2
-> +          - refout-avss
-> +          - avdd
-> +        default: refout-avss
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
-> +
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          not:
-> +            contains:
-> +              const: adi,ad7173-8
-> +    then:
-> +      properties:
-> +        vref2-supply: false
-> +      patternProperties:
-> +        "^channel@[0-9a-f]$":
-> +          properties:
-> +            adi,reference-select:
-> +              enum:
-> +                - vref
-> +                - refout-avss
-> +                - avdd
-> +
-> +unevaluatedProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      adc@0 {
-> +        compatible =3D "adi,ad7173-8";
-> +        reg =3D <0>;
-> +
-> +        #address-cells =3D <1>;
-> +        #size-cells =3D <0>;
-> +
-> +        interrupts =3D <25 IRQ_TYPE_EDGE_FALLING>;
-> +        interrupt-names =3D "rdy";
-> +        interrupt-parent =3D <&gpio>;
-> +        spi-max-frequency =3D <5000000>;
-> +        gpio-controller;
-> +        #gpio-cells =3D <2>;
-> +
-> +        vref-supply =3D <&dummy_regulator>;
-> +
-> +        channel@0 {
-> +          reg =3D <0>;
-> +          bipolar;
-> +          diff-channels =3D <0 1>;
-> +          adi,reference-select =3D "vref";
-> +        };
-> +
-> +        channel@1 {
-> +          reg =3D <1>;
-> +          diff-channels =3D <2 3>;
-> +        };
-> +
-> +        channel@2 {
-> +          reg =3D <2>;
-> +          bipolar;
-> +          diff-channels =3D <4 5>;
-> +        };
-> +
-> +        channel@3 {
-> +          reg =3D <3>;
-> +          bipolar;
-> +          diff-channels =3D <6 7>;
-> +        };
-> +
-> +        channel@4 {
-> +          reg =3D <4>;
-> +          diff-channels =3D <8 9>;
-> +          adi,reference-select =3D "avdd";
-> +        };
-> +      };
-> +    };
-> --
-> 2.42.0
+> Could e.g. an extension of the modprobe params for i2c gpiochip drivers allow to
+> provide not only bus and address, but also a list of pin names? Ideally
+> implemented on the gpiochip / i2c gpio level so this applies to all gpio drivers?
 >
+> (new attempt at manual formatting, sorry)
+>
+
+Sorry for the belated reply, but just to clarify where I am with this:
+
+This looks like an init-time problem, more so than a runtime, so you
+should pursue the init-time solutions and exhaust your options there
+before looking to solve it via the GPIO uAPI.
+
+Cheers,
+Kent.
+
+
 
