@@ -1,241 +1,221 @@
-Return-Path: <linux-gpio+bounces-2354-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2355-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87A078328D2
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 12:32:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D5688328EF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 12:36:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 775411C23A25
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 11:32:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C0BCD1C23A25
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 11:36:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36444C633;
-	Fri, 19 Jan 2024 11:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9683F4EB2D;
+	Fri, 19 Jan 2024 11:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="o6tF/fIY"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="Y7pQKDnA"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from NAM12-DM6-obe.outbound.protection.outlook.com (mail-dm6nam12on2043.outbound.protection.outlook.com [40.107.243.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB3FF4CB21;
-	Fri, 19 Jan 2024 11:32:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705663954; cv=none; b=REZYCrleSqbVojHZordLeyGwVzGGCTGY9OUyIeuhHdPgdr9l7vNv2bKKK2LG5G4znb8knN6N1Jk4uq+VKLIJpgI5rZMD5Jlo3rf9fh4lOwLf7CPYV3dfRI4aYWiM4sqpBa4dNmzuXL9J2rV7ITCBXQon+j8lOxTYwYVccAwYsUo=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705663954; c=relaxed/simple;
-	bh=94cJkGpzXv6vX96hN3F/qDrT623BbZXlhB7kP/KCPU0=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RM1f0Tx7EhqtPd0B5eu+C9aVIO8WGRaG69dv5USyG5Y/n4SQ2H3pn/LMy1pseRvSvuQQWo1uIPT6VnTtt4V/BG2zFzRIe9b7hz4GgxfQm8CCFznf62/LKp3xY0pQy7bnUGedX5fkWbTZvxy7fnZ1MZRMjdNWxa226hsxevOkGjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=o6tF/fIY; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40J6NCSU030958;
-	Fri, 19 Jan 2024 05:32:05 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=25MQFMZS3s1zoH4
-	I19/D63xOUNBz77KwvoFalDdc0a0=; b=o6tF/fIYvb7vFMsjrKz3mp2tpRdMal4
-	oo8qWqjcKtso9AGdx+aXToJbbVKtp3hkAN/lo4rIkqU++7yhk6oZYeoW9A25wRXD
-	040XZ/Mw7KZTkUoyIdr/zO/vQo/E8IGTXgEIc5Kw3CQu52d29xA8+i72RZy7Ps5u
-	1EU3af4/QMa99F1kQ8xDHZgmjuVlrD0Y9U/U1Qbv4laMAXU4wNQmi1Si4vSG3384
-	JeJSAuyPhKi1FvUVQ73kTD7URZpXA/sI63ec8ICj9LGeBlxfQEUppsHmZOjgrjkX
-	KDH8EcqxrE2zHMhOjqdKSdJGIsUbV2jq4xGjS/vQ/83ZOxU+GYv1FeA==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vkrt1gkqd-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 05:32:05 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 19 Jan
- 2024 11:32:03 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 19 Jan 2024 11:32:03 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 3734211CA;
-	Fri, 19 Jan 2024 11:32:03 +0000 (UTC)
-Date: Fri, 19 Jan 2024 11:32:03 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <andy.shevchenko@gmail.com>
-CC: <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <vkoul@kernel.org>, <lgirdwood@gmail.com>,
-        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 3/6] mfd: cs42l43: Add support for cs42l43 core driver
-Message-ID: <20240119113203.GA16899@ediswmail.ad.cirrus.com>
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-4-ckeepax@opensource.cirrus.com>
- <ZalU8r1OvqKOLHrf@surfacebook.localdomain>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F9633C470;
+	Fri, 19 Jan 2024 11:36:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.243.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1705664209; cv=fail; b=alI/GNXhzTdvpizFoMZgCg4ENz9Jh9Y9KBfZeY21ll21Y5LRY+5cB3zX8RGk2vqL7CzKht/IWHAzR1Sdcw0SOQZAeDJzlQLqQM9rLCjGzuh7jJwaxIzGSGA0eosap2NpY0RWCa5YlSR8SEsk1KECNPuWGi2xcfWcSWN9ER5T5dk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1705664209; c=relaxed/simple;
+	bh=lLzND4hbyFeh3NgBIp/0dFJh24fSVu4ObGGn9s6kuSo=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rIUOCkzalUQSy3AuQ/btASRV8TLitLErs3cBzp4pgPxcs2pNfEcGMM94h2yTK2nDkD84y5vvTvV30xca5zaeL72kAffdNoxyDHECOYJu0rt8gf56b42jS1g7UKj9lEMOsoSghDUFh2Nt1ns1LUerpjcLYELzl3qr/QBABk9LVMA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=Y7pQKDnA; arc=fail smtp.client-ip=40.107.243.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ZqLU3FNiY+WhAtQMDNlZO1okAiek1X+CKMnzobMO/ShsEZ3RAIM6IhDAFnTkiWN7tkoUHJxGBibmMGdTrWJT7G56PK/HON95YsNh1NEsLO7kyI4+843wFFoDw5aq7PICrMNPVOgURPph2mvayM3IwowsXoRRdKO2PJoGJE9Y285E7U5wwTlxfc88oqKBwaPNc6hfBGMKZYp2pvCdjPNnAruz9XIf2sLuzoQpvJU0rW9ZXRJ5qJTn7JlCJOOtf9kWOW56Tc/3lKHCTnCcCN9FN3BCS8XBhMuBRI8uEcr7yggYEOG86UWUfcgt5NVkVNN4wjvJ/Cg8SyBIaxUEC3HtMQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=XgIzSTiNQXGeI9RlE397ErPvS4TLChjNgNQP0bOjUfE=;
+ b=YM/Qa/vNq649vR4g9APbzrnqYgboZzhNVF7CO/1Q0+BhlmKFMoyZlOa+0BbSGQqagoU4UQ3pbWh8lw2eIr9D4nTaSTnYF6edRncXHSi1U2Jezfl6LBTclWK2e7AD/qdQThCmjL+SfoZYqmlvYppjFAXhQD8VB2/HJUgNATydbnKC7ckTseeNXYx53UeIrCKqXpT6QcdmDrvhmnIt4hKjlQlUWXC248DBaYkxq9tRat3Y1hu4XJV7ir8vWH6gYcUsSSnTK6ITYZcUAonwsTBpFQqQTrIcN4l+nYoNyFa09Q4mGioW3JKvn+M7o+5g+nISiXKBREfhE86jCfOez58s9g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=kernel.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=XgIzSTiNQXGeI9RlE397ErPvS4TLChjNgNQP0bOjUfE=;
+ b=Y7pQKDnAORZFaQwDcumssZzOLbY2CQM/6AYolR/xtTsMMqqUXKxZYLDjxl3B9bCTqgoXhHhXfExNu/+kWxcMbXx/fGQqneUgrOwKl7A4+ycJMn9UlTnArRIRe25CVq6dEJcJU3fj4B5fxbPGfk9shN6bV4c+9O+tITFTTBrfqOU=
+Received: from DM6PR06CA0072.namprd06.prod.outlook.com (2603:10b6:5:54::49) by
+ CY5PR12MB6576.namprd12.prod.outlook.com (2603:10b6:930:40::12) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.7202.24; Fri, 19 Jan 2024 11:36:44 +0000
+Received: from CY4PEPF0000E9D6.namprd05.prod.outlook.com
+ (2603:10b6:5:54:cafe::77) by DM6PR06CA0072.outlook.office365.com
+ (2603:10b6:5:54::49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.24 via Frontend
+ Transport; Fri, 19 Jan 2024 11:36:43 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ CY4PEPF0000E9D6.mail.protection.outlook.com (10.167.241.80) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7181.14 via Frontend Transport; Fri, 19 Jan 2024 11:36:43 +0000
+Received: from SATLEXMB03.amd.com (10.181.40.144) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Fri, 19 Jan
+ 2024 05:36:39 -0600
+Received: from xhdradheys41.xilinx.com (10.180.168.240) by SATLEXMB03.amd.com
+ (10.181.40.144) with Microsoft SMTP Server id 15.1.2507.34 via Frontend
+ Transport; Fri, 19 Jan 2024 05:36:24 -0600
+From: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+To: <dlemoal@kernel.org>, <cassel@kernel.org>, <robh+dt@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+	<linus.walleij@linaro.org>, <brgl@bgdev.pl>, <michal.simek@amd.com>,
+	<p.zabel@pengutronix.de>, <gregkh@linuxfoundation.org>,
+	<piyush.mehta@amd.com>, <mubin.sayyed@amd.com>, <radhey.shyam.pandey@amd.com>
+CC: <linux-ide@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-usb@vger.kernel.org>,
+	<git@amd.com>
+Subject: [PATCH] dt-bindings: xilinx: replace Piyush Mehta maintainership
+Date: Fri, 19 Jan 2024 17:06:21 +0530
+Message-ID: <1705664181-722937-1-git-send-email-radhey.shyam.pandey@amd.com>
+X-Mailer: git-send-email 2.1.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZalU8r1OvqKOLHrf@surfacebook.localdomain>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-GUID: flSMt1ucqoIAeIcEfECS-rqrffURSsu7
-X-Proofpoint-ORIG-GUID: flSMt1ucqoIAeIcEfECS-rqrffURSsu7
-X-Proofpoint-Spam-Reason: safe
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: CY4PEPF0000E9D6:EE_|CY5PR12MB6576:EE_
+X-MS-Office365-Filtering-Correlation-Id: 252f67c2-ed13-4abc-e7be-08dc18e2e945
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	mfznvKK7a1E7asVQkydCPxsTyRjr5pCyj6nrz+rXqsx6+rdmQ2h7pcK1VL/ZOqW5Sx82gtARMkY0lMRHiPYuPZTnrR6Uv0hDTJd6C6NAXw1xAbowID4V2gEfdsYE/kuK45vJscW3yZYoKYKsA6JI0zjoYmezPudWOIuItrDLLT6hdbfiBz4/1VMIfF7dXG0Of3Vrk/vR137RidukdovIh+p7olcNeRHtGOJLgxCZKf//zM+2dNUnZdsnHj70TAKwD/aAdr7Aa7C7+U+I1z89NKNiFD0pTL02TPqn+oDMwAxzc9aDlpCd4kppUk3kK4W/49lOSQ3mhpr28wSbnYTpjz74j3iR86Fa26ovnLVnZsGPKRqhaTeMlTE9P/oHXwMtyKdmVVsDfJdbhedXbIHMe59G03pB3AJhSub5T08Zs6DHhbG4lsDmiUxMlLVS6offg6M4o/HXVI+7X4hYf1chOBabsQNnw2riDpGizprlCCiHdSZmCEhDYvBeL+yhuJ5/B1m2lqZYudfZi2MQhuuSjwGsD9EGEBBGlwmpP/0KQ7ccaeIV0G/gRvrjY67x4d77QYMIwwE11Uq1e6aIWKVAf5hMdhy2F6CuuTkFAsPtsNghF0KcHb13fKXYSix3x5VSMpS3EQ+k2RqP+3OW3r2L82vsA57fHrtxYr2Sp47JK4TMgyd3iQh8d2cBZOt7kZfKYen5rcEtnEFJWpekHa97j7jG5aAHPPWPZRk9tKCuqziVIQ41yYUWJDt7fV6j7jc4Mqic/Md0sxwt3uGuvZOoSQ==
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(396003)(346002)(39860400002)(136003)(230922051799003)(451199024)(186009)(64100799003)(1800799012)(82310400011)(36840700001)(46966006)(40470700004)(966005)(83380400001)(41300700001)(478600001)(7049001)(82740400003)(40460700003)(40480700001)(81166007)(47076005)(36860700001)(356005)(336012)(426003)(26005)(6666004)(7416002)(86362001)(54906003)(316002)(2906002)(8676002)(4326008)(36756003)(8936002)(110136005)(70586007)(70206006)(5660300002)(2616005)(921011)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2024 11:36:43.4022
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 252f67c2-ed13-4abc-e7be-08dc18e2e945
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	CY4PEPF0000E9D6.namprd05.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY5PR12MB6576
 
-On Thu, Jan 18, 2024 at 06:42:26PM +0200, andy.shevchenko@gmail.com wrote:
-> Fri, Aug 04, 2023 at 11:45:59AM +0100, Charles Keepax kirjoitti:
-> > The CS42L43 is an audio CODEC with integrated MIPI SoundWire interface
-> > (Version 1.2.1 compliant), I2C, SPI, and I2S/TDM interfaces designed
-> > for portable applications. It provides a high dynamic range, stereo
-> > DAC for headphone output, two integrated Class D amplifiers for
-> > loudspeakers, and two ADCs for wired headset microphone input or
-> > stereo line input. PDM inputs are provided for digital microphones.
-> > 
-> > The MFD component registers and initialises the device and provides
-> > PM/system power management.
-> 
+As Piyush is leaving AMD, he handed over ahci-ceva, ZynqMP Mode Pin GPIO
+controller, Zynq UltraScale+ MPSoC and Versal reset, Xilinx SuperSpeed
+DWC3 USB SoC controller, Microchip USB5744 4-port Hub Controller and
+Xilinx udc controller maintainership duties to Mubin and Radhey.
 
-Full disclosure probably not going to fix everything here, few
-almost entirely stylistic things and the patch was like merged 4
-month ago. But happy to spin through and do a few fix ups.
+Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+---
+ Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml      | 3 ++-
+ .../devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml     | 3 ++-
+ Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml | 3 ++-
+ Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml         | 3 ++-
+ Documentation/devicetree/bindings/usb/microchip,usb5744.yaml   | 3 ++-
+ Documentation/devicetree/bindings/usb/xlnx,usb2.yaml           | 3 ++-
+ 6 files changed, 12 insertions(+), 6 deletions(-)
 
-> ...
-> 
-> > +#include <linux/err.h>
-> > +#include <linux/errno.h>
-> 
-> It seems errno is not used (as Linux kernel error codes, otherwise err.h
-> already includes necessary header).
-> 
-> Also seems array_size.h, mod_devicetable.h are missing (at least).
-> 
-> ...
+diff --git a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+index b29ce598f9aa..9952e0ef7767 100644
+--- a/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
++++ b/Documentation/devicetree/bindings/ata/ceva,ahci-1v84.yaml
+@@ -7,7 +7,8 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Ceva AHCI SATA Controller
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ description: |
+   The Ceva SATA controller mostly conforms to the AHCI interface with some
+diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+index b1fd632718d4..bb93baa88879 100644
+--- a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
++++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yaml
+@@ -12,7 +12,8 @@ description:
+   PS_MODE). Every pin can be configured as input/output.
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
+index 49db66801429..1f1b42dde94d 100644
+--- a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.yaml
+@@ -7,7 +7,8 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Zynq UltraScale+ MPSoC and Versal reset
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ description: |
+   The Zynq UltraScale+ MPSoC and Versal has several different resets.
+diff --git a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+index bb373eb025a5..00f87a558c7d 100644
+--- a/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
++++ b/Documentation/devicetree/bindings/usb/dwc3-xilinx.yaml
+@@ -7,7 +7,8 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Xilinx SuperSpeed DWC3 USB SoC controller
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+index 6d4cfd943f58..445183d9d6db 100644
+--- a/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
++++ b/Documentation/devicetree/bindings/usb/microchip,usb5744.yaml
+@@ -16,8 +16,9 @@ description:
+   USB 2.0 traffic.
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
+   - Michal Simek <michal.simek@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml b/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
+index 868dffe314bc..a7f75fe36665 100644
+--- a/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
++++ b/Documentation/devicetree/bindings/usb/xlnx,usb2.yaml
+@@ -7,7 +7,8 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Xilinx udc controller
+ 
+ maintainers:
+-  - Piyush Mehta <piyush.mehta@amd.com>
++  - Mubin Sayyed <mubin.sayyed@amd.com>
++  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+ 
+ properties:
+   compatible:
+-- 
+2.34.1
 
-Thanks for spotting these will spin through and tidy the headers
-up.
-
-> 
-> > +#if IS_ENABLED(CONFIG_OF)
-> 
-> We are trying hard to get rid of this ugly ifdefferies (ACPI as well) along
-> with respective macros that are often the PITA for CIs.
-> 
-
-Fair enough, but what is the expected alternative here? Is it now
-preferred to just always include both in the driver? That does
-come at a small cost in driver size, but it doesn't really bother
-me.
-
-> > +static const struct of_device_id cs42l43_of_match[] = {
-> > +	{ .compatible = "cirrus,cs42l43", },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(of, cs42l43_of_match);
-> > +#endif
-> > +
-> > +#if IS_ENABLED(CONFIG_ACPI)
-> > +static const struct acpi_device_id cs42l43_acpi_match[] = {
-> > +	{ "CSC4243", 0 },
-> > +	{}
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, cs42l43_acpi_match);
-> > +#endif
-> > +
-
-...
-
-> > +	cs42l43->regmap = devm_regmap_init_sdw(sdw, &cs42l43_sdw_regmap);
-> > +	if (IS_ERR(cs42l43->regmap)) {
-> > +		ret = PTR_ERR(cs42l43->regmap);
-> > +		dev_err(cs42l43->dev, "Failed to allocate regmap: %d\n", ret);
-> > +		return ret;
-> > +	}
-> 
-> Can be simplified as
-> 
-> 	cs42l43->regmap = devm_regmap_init_sdw(sdw, &cs42l43_sdw_regmap);
-> 	if (IS_ERR(cs42l43->regmap))
-> 		dev_err_probe(cs42l43->dev, PTR_ERR(cs42l43->regmap),
-> 			      "Failed to allocate regmap: %d\n", ret);
-> 
-
-Oops, yeah looks like I missed the ones in sdw and i2c, will fix
-those up.
-
-> > +#define CS42L43_RESET_DELAY			20
-> > +
-> > +#define CS42L43_SDW_ATTACH_TIMEOUT		500
-> > +#define CS42L43_SDW_DETACH_TIMEOUT		100
-> > +
-> > +#define CS42L43_MCU_POLL			5000
-> > +#define CS42L43_MCU_CMD_TIMEOUT			20000
-> 
-> > +#define CS42L43_MCU_UPDATE_TIMEOUT		500000
-> 
-> > +#define CS42L43_VDDP_DELAY			50
-> > +#define CS42L43_VDDD_DELAY			1000
-> > +
-> > +#define CS42L43_AUTOSUSPEND_TIME		250
-> 
-> Usually we use units for the macro names as suffixes...
-> E.g., _US (for microseconds).
-> 
-
-Can add those, does make it clearer.
-> ...
-> 
-> > +struct cs42l43_patch_header {
-> > +	__le16 version;
-> > +	__le16 size;
-> > +	u8 reserved;
-> > +	u8 secure;
-> 
-> Seems to me that __u8 is appropriate as patch is external to the kernel and
-> it's kinda firmware interface.
-> 
-
-Sure.
-
-> > +	irq_flags = irqd_get_trigger_type(irq_data);
-> > +	switch (irq_flags) {
-> > +	case IRQF_TRIGGER_LOW:
-> > +	case IRQF_TRIGGER_HIGH:
-> > +	case IRQF_TRIGGER_RISING:
-> > +	case IRQF_TRIGGER_FALLING:
-> > +		break;
-> > +	case IRQ_TYPE_NONE:
-> 
-> Are you sure it's a right place to interpret no type flags as a default?
-> 
-
-I mean... no... but I might need more to go on. The chip
-generates an active low IRQ by default so it seems reasonable if
-nothing is specified to assume the chip is doing what it normally
-would.
-
-> > +	default:
-> > +		irq_flags = IRQF_TRIGGER_LOW;
-> > +		break;
-> > +	}
-
-...
-
-> > +EXPORT_NS_GPL_DEV_PM_OPS(cs42l43_pm_ops, MFD_CS42L43) = {
-> > +	SET_SYSTEM_SLEEP_PM_OPS(cs42l43_suspend, cs42l43_resume)
-> > +	SET_RUNTIME_PM_OPS(cs42l43_runtime_suspend, cs42l43_runtime_resume, NULL)
-> > +};
-> 
-> Why do you need SET_*() versions of those macros? They are not supposed to be
-> used with the new macros such as EXPORT_NS_GPL_DEV_PM_OPS().
-> 
-
-Yeah fixed that up already in an earlier fixup patch.
-
-Thanks,
-Charles
 
