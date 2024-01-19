@@ -1,122 +1,129 @@
-Return-Path: <linux-gpio+bounces-2362-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2363-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2BCE832CE1
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:10:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A62A0832CEF
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:12:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C9F641C242E0
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:10:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BEA8B1C208F7
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:12:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51AD354F87;
-	Fri, 19 Jan 2024 16:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDB6854F8D;
+	Fri, 19 Jan 2024 16:12:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNY9mz2y"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT8ysod0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF4C54BF0;
-	Fri, 19 Jan 2024 16:10:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A2DD54BF9;
+	Fri, 19 Jan 2024 16:12:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705680609; cv=none; b=LDm7LaoXzyvjwpGImD+4QJ7le8iXNrP9tsYgPy7wG+Md70quFiG25h3GXddD4UgA1OhvP7TawnFSPMpX5ogZW3sZWpUnjDw9VJDx2CSm8FaULMHLiz5B0tOgHqLBHYHNcY8dUbBPueOkI0fqkQp27mbHebeefRSipUxfh2KAdCk=
+	t=1705680752; cv=none; b=pMMaR6a0ynIQbYQ+nsQYgzHUpZsWKfE8y9vNQOnv0yarjaCrwnmL3cF8SYPa8LerUdtus6Vn6gjNOaCYdpxCCO1NPp7q5kamyC9iHuTd2fl//tYC82ft9AYj9szgQVrv4coE1tSSlZiPV6+h3btZuGr4S06YYpoFmzN6P4L25nM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705680609; c=relaxed/simple;
-	bh=vrfrQmaR7zVk3WtIOmDG6fhQnohSJy5l+phLzlOEZ2E=;
+	s=arc-20240116; t=1705680752; c=relaxed/simple;
+	bh=IlCQw0cFCI/hgUc6CbQkhlHsg6WkadWZweJOVU481c8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c/dEhD0ZmhuvkTHzkoS1wohZdzts1fHf/YHU6L31g2hawGpEHIoXNrA2b3tHlcptPkZr+A0DPx74QpTPrM7EX89aY2yVRkzEmNl+SEAK7CDE4yIkhQhTmfFSPgqzA7tp1mpxwV1e6qXbFYlsAj0xi4mF9y5BxyHw0oJT3x5KDA4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bNY9mz2y; arc=none smtp.client-ip=209.85.167.53
+	 To:Cc:Content-Type; b=KKvULNF02HOzlT5Ig4qRIcPv1r3CMyumACQxHwOJom9iRrmcC5gQ71ecNBhZZuSD/Ygmh0zKi/0Isrce4S2e8Fv7kg90uVOqiuGel2imvWQKiYnUyoq5c4Q2B+BLWArvOOFdIrkfdnK0N0yRSc250KAOhEpjWGi9nOWq1JbWtHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OT8ysod0; arc=none smtp.client-ip=209.85.218.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso1184549e87.1;
-        Fri, 19 Jan 2024 08:10:07 -0800 (PST)
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a277339dcf4so107097366b.2;
+        Fri, 19 Jan 2024 08:12:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705680605; x=1706285405; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1705680749; x=1706285549; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Xe2AZJ9rG4DIKTX8/he/utaFFdUl2hwHY++4l7rMVNA=;
-        b=bNY9mz2yhuev4/zguk0T2YsXLIquxkOuuOX5LMgM2+j8aXRkLnL8B7f0wWkDtRBQKr
-         3psTOvtq2haQeXW7x/QiP8b7dr7pWfSx2x9dfaMY22NF1a7KCLxcxigGN/O+UkJAYjWP
-         44QCSsdJigZKOOM9x9aX6ouWQz8ti3GPJPDM1OnT14AMiFnBVS3vqTtrNhBNrES+1/P0
-         gxqAhtvlWvT+miFEZGC5A547HFBQAaWaWPUiyIcLQYXFiKPshJnh+gba+he6rMRhyPDA
-         3YEdtMckr8g2zHXRztIHYUfzHeMP5ayF7MQA94cY0egbdqpbK9x1RnYj7AO7vFA+H2is
-         wJ5Q==
+        bh=KqF7PI/YjS/vDZuctmZtQFkwh0hBWwr/s91VYXoNcbE=;
+        b=OT8ysod0PDewf+RRKMMYjgZLsBFVYkiH+QjbyY6uQrbHSx6ROS1i82KhB5GkdAgRGt
+         CTkN6WAJ4EH3rK4Uh6K6OffGFhvXMTnBTnWMIki8Ltr0HW7/Y6Pw5QNmzZfi8rWBUoEf
+         /V5u2OsZIZb460j+GIvEhF3cmiyBQQb2S5b7evHH1J/jRa/fOCUEs2tEWH8Xx3ccOfir
+         G0PCefXlWe4zpkf6571MrtQJgLuX6SFkNsB1IqBQnLtRcgTanC5xiNu2wO+4RET1DsoZ
+         icmjrm1zv1QaRtzI6YtP5gHMwfDpI7gJ5e97+kAgsQTljs+878YaywK74RP3vzHeK3fh
+         v/6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705680605; x=1706285405;
+        d=1e100.net; s=20230601; t=1705680749; x=1706285549;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Xe2AZJ9rG4DIKTX8/he/utaFFdUl2hwHY++4l7rMVNA=;
-        b=sIxEXF77RF10+Kz/Q1iUmWQ5DUS+C9bVqiqOa4eK1GQ3oosUethV3y9IvobkXEtYWI
-         DCFY71l5ta/+dvI1vV6NZpc2DBurNz31lf97MaceSbAZjoydRgAaNufPXptkjW7AoS8H
-         rNwlKdp3Fh2QbpEDkOQvD7dJJHoTYltPiPKPPzUtLVwYUX9fY7L/B1RRPLv7X4NuPvNw
-         FFJHWJA6aOtf66LjFYs/QP3kJrb7Tl5jfmtzq7hSB8sF63+m9wDBffM0MCbY22oIfgT7
-         qDxpcEy0TUQManLiqOGKL9SKvmb+8VE7YV0Y61rXeWBAE0eqp6fYgklABxgmQ9iKuvfA
-         v73g==
-X-Gm-Message-State: AOJu0Yw/tkca/XAwuJLZbshSYmnw2fYf2f3ug0cgfw+Nnc2pBx44YWDz
-	Au+VFzCpY7o7iOzNZITfukoUVeg5AcasIG2T7uUulREOnTCGjqJkmzmHYCzA8dzXSY0sOzZ6Qud
-	sHIuz5tfO2kKzLXzqGTXZQMIqPHM=
-X-Google-Smtp-Source: AGHT+IGe5hGb3AQxEzUByESuCQYg8t9XsnK7jKBnEML9VYgxTrUlh51XrlhoAVDfHHhRdN684YROYUuUrEhYSmYrlgU=
-X-Received: by 2002:a19:7413:0:b0:50e:d5e2:92cc with SMTP id
- v19-20020a197413000000b0050ed5e292ccmr804081lfe.81.1705680605272; Fri, 19 Jan
- 2024 08:10:05 -0800 (PST)
+        bh=KqF7PI/YjS/vDZuctmZtQFkwh0hBWwr/s91VYXoNcbE=;
+        b=PfoEnAfGMs1bEfRxjwE6PMsrSui5ms4UyEXMePL6qqVSq2R//VTvkXk6YJF1aWh0Ux
+         UtrSRXMLljdlcE9G6rVtGvUmK9nn36oHQGSfUfposgFmceRs2w75fmavqdavtRRRUrEQ
+         iGmiRmymED6RZ52JCa9SllUpW3zp//mKyZ8fPNYC90O6YIObETk2DqkAh7IYPTSFo3QQ
+         9A72qRY02yNwMMLZabPvR9kw5wRWZjGkH0D5QarQgq169BQk57Ui9eTwUkrSC8ihqITa
+         kTU0WbbqoUQimjFdsyXcJdKXDO6o6TNEyJmgFVb8xh/nv6rbR6vT+nvxGVkBIALKH18Q
+         no5Q==
+X-Gm-Message-State: AOJu0Yw4J4+EJgFHzTpwzvqQ6XuW0KYRwEN1auuSiN0ZJFevQf4LXQlP
+	1/C2TM1DGp2xWMIQ82luKTK/nsmPrQUlpZexd8wSa8xZcSbX8h7ySPBCz8wvr8KmWddrc6kptEV
+	kz0WfMC+W853L9riZk+m86gtc+DE=
+X-Google-Smtp-Source: AGHT+IEIhJ6nKz0DyJGRZxVKLi7Lvz3d5f2txRgjyzPbRrmmLxr+88CiGRKkkQVfdAmhWdjnmQAFZgM+tZkBsjOggVk=
+X-Received: by 2002:a17:907:54d:b0:a2d:5394:18fb with SMTP id
+ wk13-20020a170907054d00b00a2d539418fbmr5006ejb.109.1705680749223; Fri, 19 Jan
+ 2024 08:12:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-6-ckeepax@opensource.cirrus.com> <ZalahZkCrBm-BXwz@surfacebook.localdomain>
- <20240119114917.GB16899@ediswmail.ad.cirrus.com>
-In-Reply-To: <20240119114917.GB16899@ediswmail.ad.cirrus.com>
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com> <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+ <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
+In-Reply-To: <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 19 Jan 2024 18:09:28 +0200
-Message-ID: <CAHp75Vf0BdOj_Bcxs3L=aznUzoMptPF+tDBpOcBKOcVTH45+Hg@mail.gmail.com>
-Subject: Re: [PATCH v7 5/6] spi: cs42l43: Add SPI controller support
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, 
-	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, 
-	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Fri, 19 Jan 2024 18:11:53 +0200
+Message-ID: <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
+Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to suspend_noirq/resume_noirq
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
+	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
+	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 19, 2024 at 1:49=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-> On Thu, Jan 18, 2024 at 07:06:13PM +0200, andy.shevchenko@gmail.com wrote=
-:
+On Fri, Jan 19, 2024 at 6:08=E2=80=AFPM Thomas Richard
+<thomas.richard@bootlin.com> wrote:
+> On 1/15/24 21:02, Andy Shevchenko wrote:
+> > On Mon, Jan 15, 2024 at 6:16=E2=80=AFPM Thomas Richard
+> > <thomas.richard@bootlin.com> wrote:
 
 ...
 
-> > > +   if (is_of_node(fwnode))
-> > > +           fwnode =3D fwnode_get_named_child_node(fwnode, "spi");
+> >> +static const struct dev_pm_ops pinctrl_single_pm_ops =3D {
+> >> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
+> >> +                                     pinctrl_single_resume_noirq)
+> >> +};
 > >
-> > You can actually drop these is_of_node() tests and use another variable=
-. In
-> > ACPI there can't be child node in small letters.
+> > Use proper / modern macro.
 >
-> is_of_node feels pretty clear what the intent is, rather than
-> relying on nodes not existing etc.
->
-> > But main problem here (and in another driver where the similar is used)=
- that
-> > you bumped reference count for fwnode. I haven't seen where you drop it=
- back.
-> > Have you tested rmmod/modprobe in a loop?
->
-> Yeah it should drop the reference will add that.
+> fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
 
-Note, this will require an additional variable anyway (as in the
-infamous `x =3D realloc(x...)` mistake).
+...
+
+> >>  #endif
+> >
+> > Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
+>
+> We may have an "unused variable" warning for pinctrl_single_pm_ops if
+> CONFIG_PM is undefined (due to pm_ptr).
+
+This is coupled with the above. Fixing above will automatically make
+the right thing.
 
 --=20
 With Best Regards,
