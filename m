@@ -1,175 +1,160 @@
-Return-Path: <linux-gpio+bounces-2360-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2361-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5AE3832CB2
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:02:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C2BAB832CD8
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:08:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84E98B23A6A
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:02:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF99C1C23C17
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:08:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7BA654BFD;
-	Fri, 19 Jan 2024 16:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 195A154BFF;
+	Fri, 19 Jan 2024 16:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWlaMKLe"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="WONIpkeF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37F054BC1;
-	Fri, 19 Jan 2024 16:02:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E4D054FBB;
+	Fri, 19 Jan 2024 16:08:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705680139; cv=none; b=urIfqmDnPNbUQPP4uYmlc1x+SsawPoW8h5n69pSar2U4RW/tgYeFSGpaW5qTjQIwAMOElfT22x8ULHvrFkJXImQqxfGkGkbX1m2ZLwwipKJWeNBOBxgtx6Wa70HRxmi0DeEI5iF1XJ6RJil7Ma/oDjH0BebBWwRMqiXSjX4beiQ=
+	t=1705680505; cv=none; b=m84GWfpJcHwEXujRuBCjRCDweTB6ZwfOFPhFU8mkdCobaAL9bhbm8wXRPzZKSpoKorVyA/Q/qyNXhcvz5pELYloeRY4WtqmvVj22GCC4RnLU1tG7GAo2L/eIIj4WH1gdyd7Mb4QZpaLth2/iLt8cG5cXSWGL6qazgH2GSqNari0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705680139; c=relaxed/simple;
-	bh=pX77ipe+Gsy5sdRmPvMGCJoBu6eqr4SlhVjTSxXiRl8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tRBlKmeZk48DtcXtjZJ6CsmOGoBATAvFwMYATA+IJfqSk/FyExn8hHsPIR49XdCTLxzh/gzwBVfH492+RwUwQz7LfxMuIggeBNaf6pRYcy4So1Ci/ZqRrta92jpk10I6KBfCOFk2HlMTK+VpAx46z3TEWawDZYovnv3cOBJMzYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWlaMKLe; arc=none smtp.client-ip=209.85.218.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a298accc440so95591166b.1;
-        Fri, 19 Jan 2024 08:02:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705680136; x=1706284936; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rhJgD3zP9zngaSpIBMlj3gbLccR2tuQ/HQYsBEgXc04=;
-        b=TWlaMKLeOmzOBPqWPZw+k3qiTNUgjANq8Rj/rP5vSPqCrrcnUVsnNi1xZfZsAy8h7/
-         tABWhY0FRlCZ4tTLJPZiX8YLAdZ59IJRJzVp1QYq7cX+zy4NhjG000wUCtMjSdv41iRu
-         9i85oYUAvdmZJixI65M62Yol9dJtGijBp+HxRrujilg9hxNoTVg/HFWlzuY4NADsvuQe
-         fv6Az3T0sj6JJWae5kq0JNLmxFiQUXf0BPMv2eY/QLe6qPS/dITKXS4Uf7X8Cp3jkjOn
-         rS0LZnjGdn6Tlr0Kse659kPh5QvUBFNGLlD8S0H6gc1+pBQpYqwjg1FxePAVRYqzLU+3
-         UsEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705680136; x=1706284936;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rhJgD3zP9zngaSpIBMlj3gbLccR2tuQ/HQYsBEgXc04=;
-        b=fiac0jz6EiRA/D4QW1/LQT9AYb4YnNAayNCsTMNbUjYm4eg/p/jQkhuZ4KCjvCb2l3
-         KhxPWSH28V24hTrwtKHtxk+zQRsD4lNqhnf+Sq0Te6/KmHFRVcbvOGr73NznyMsEV6up
-         eV3mSODtq0gGrQqUjPWoOJEAkA0bIE/DVYo0ZBzZk1JqtblWDJmvBADAb1rwnAwTLk2r
-         wUAITv7WP2EpSA2q6Nk1oqM9HNZPg1O5nsGbsXplUk7Z55NLEIpUPd0tcHdzBGQ1Z6xs
-         HSBzm1u0kk90tkaHQ3m04gPk2acE6SKVYC+nGPsWMOwqoN4Hw/KA/KAUFTOOFNLv7Fhu
-         hPiQ==
-X-Gm-Message-State: AOJu0YwgN77hf1Z9/bPKRMR/Hhyy7zScxyoXzfHqN6wmgGDISP5NLOtj
-	ZOtiyfwDHj/TmpCu64V+ebbDsSFl64RCYF4UZPwYTluahih9d8Z8hhVNIaFuIWkHU4FVWP1WIqi
-	5Phsp57DNe29MVKRdtaf/w45Z8xQ=
-X-Google-Smtp-Source: AGHT+IF3+Nq/o91kf1Qzz3pAJkg83GJHPQk614/748N9uRatEUTFGG26s9DzXUBqtocFl8OSIsh8IeChhwKnrMDv1NY=
-X-Received: by 2002:a17:906:280c:b0:a2c:e148:e2d7 with SMTP id
- r12-20020a170906280c00b00a2ce148e2d7mr6539ejc.2.1705680135691; Fri, 19 Jan
- 2024 08:02:15 -0800 (PST)
+	s=arc-20240116; t=1705680505; c=relaxed/simple;
+	bh=f1NTbZpi6beXqIjw6g6+qGt7w9p6IgHNGpWIbTLSFgs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=dxh05/nLCJwSqcpsrtgTcjV5t1tgpJ2Z+v4jWFSqv3mqLaluz+1ElzPkWTkGygPW7NRayKurHATPrx9IC7MMkXx1HyHkmD1lJj/0JaMFV7lCkwtgx50LaqDpdAZxGWC9rTbkq2xbIvPBIR5GqiqhSvkQLn/v5529gjcKLHbOwT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=WONIpkeF; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 65E85240008;
+	Fri, 19 Jan 2024 16:08:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1705680495;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=/lcPvgWIm/QbVzXxcPjjQvz3cRLruCD/tBqEeHF3XX0=;
+	b=WONIpkeF6OM+U5keRwkDYZGMolP5XktgDBB6mIAe8MUTsy79HiG6aPHFRUwt+zvQnJD1yV
+	rhimS5Xv0eRylsTuhD2McG83J2YXfxvXNhUbjh/C+EXBuXMvv5+07L8LSuG0ozxWPYlwY/
+	aNSMECbf8FnizI8ADDg3l8yKMTxFLFAw5gxxCKPkDelc+OqObRloUw9fEpi35HIqKz+mBP
+	wPtcYc/iRsKufncWrvdORBHBKi/t3Zi4ATWX3EAfBtizCbIK5XiiUMupEJBg9I+eWfq8I+
+	stz/4f2GuyfGsCnAIosFOmQIF5TolDLgz4bAPmE8Q0y3roHYchplOYTQKxUDog==
+Message-ID: <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com>
+Date: Fri, 19 Jan 2024 17:08:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-4-ckeepax@opensource.cirrus.com> <ZalU8r1OvqKOLHrf@surfacebook.localdomain>
- <20240119113203.GA16899@ediswmail.ad.cirrus.com>
-In-Reply-To: <20240119113203.GA16899@ediswmail.ad.cirrus.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 19 Jan 2024 18:01:38 +0200
-Message-ID: <CAHp75Vco3+B_mcLRr7dcLx79601poLJtLt3Av6d-hAJQLYbe6Q@mail.gmail.com>
-Subject: Re: [PATCH v7 3/6] mfd: cs42l43: Add support for cs42l43 core driver
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, 
-	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, 
-	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to
+ suspend_noirq/resume_noirq
+Content-Language: en-US
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com>
+ <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Fri, Jan 19, 2024 at 1:32=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-> On Thu, Jan 18, 2024 at 06:42:26PM +0200, andy.shevchenko@gmail.com wrote=
-:
-> > Fri, Aug 04, 2023 at 11:45:59AM +0100, Charles Keepax kirjoitti:
+On 1/15/24 21:02, Andy Shevchenko wrote:
+> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>>
+>> The goal is to extend the active period of pinctrl.
+>> Some devices may need active pinctrl after suspend and/or before resume.
+>> So move suspend/resume to suspend_noirq/resume_noirq to have active
+>> pinctrl until suspend_noirq (included), and from resume_noirq
+>> (included).
+> 
+> ->...callback...()
+> (Same comment I have given for the first patch)
 
-...
+fixed
 
-> > > +#if IS_ENABLED(CONFIG_OF)
-> >
-> > We are trying hard to get rid of this ugly ifdefferies (ACPI as well) a=
-long
-> > with respective macros that are often the PITA for CIs.
->
-> Fair enough, but what is the expected alternative here? Is it now
-> preferred to just always include both in the driver? That does
-> come at a small cost in driver size, but it doesn't really bother
-> me.
+> 
+> ...
+> 
+>>         struct pcs_device *pcs;
+>>
+>> -       pcs = platform_get_drvdata(pdev);
+>> +       pcs = dev_get_drvdata(dev);
+>>         if (!pcs)
+>>                 return -EINVAL;
+> 
+> Drop dead code.
+> This should be simple one line after your change.
+> 
+>        struct pcs_device *pcs = dev_get_drvdata(dev);
+> 
 
-Yes. You may have noticed the pile of the "remove of_match_ptr()"
-patches in the past cycles...
+dead code dropped
 
-> > > +#endif
+> ...
+> 
+>>         struct pcs_device *pcs;
+>>
+>> -       pcs = platform_get_drvdata(pdev);
+>> +       pcs = dev_get_drvdata(dev);
+>>         if (!pcs)
+>>                 return -EINVAL;
+> 
+> Ditto.
+> 
+> ...
 
-...
+dead code dropped
 
-> > > +#define CS42L43_RESET_DELAY                        20
-> > > +
-> > > +#define CS42L43_SDW_ATTACH_TIMEOUT         500
-> > > +#define CS42L43_SDW_DETACH_TIMEOUT         100
-> > > +
-> > > +#define CS42L43_MCU_POLL                   5000
-> > > +#define CS42L43_MCU_CMD_TIMEOUT                    20000
-> >
-> > > +#define CS42L43_MCU_UPDATE_TIMEOUT         500000
-> >
-> > > +#define CS42L43_VDDP_DELAY                 50
-> > > +#define CS42L43_VDDD_DELAY                 1000
-> > > +
-> > > +#define CS42L43_AUTOSUSPEND_TIME           250
-> >
-> > Usually we use units for the macro names as suffixes...
-> > E.g., _US (for microseconds).
->
-> Can add those, does make it clearer.
+> 
+>> +static const struct dev_pm_ops pinctrl_single_pm_ops = {
+>> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
+>> +                                     pinctrl_single_resume_noirq)
+>> +};
+> 
+> Use proper / modern macro.
 
-This is a nit-pick, but just to let you know the standard de facto in
-several subsystems (which hold drivers of different devices). Not sure
-if MFD or others related to this driver are really bothered with this
-nuance.
+fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
 
-...
+> 
+> ...
+> 
+>>  #endif
+> 
+> Why ifdeferry is needed (esp. taking into account pm_ptr() use below)?
 
-> > > +   irq_flags =3D irqd_get_trigger_type(irq_data);
-> > > +   switch (irq_flags) {
-> > > +   case IRQF_TRIGGER_LOW:
-> > > +   case IRQF_TRIGGER_HIGH:
-> > > +   case IRQF_TRIGGER_RISING:
-> > > +   case IRQF_TRIGGER_FALLING:
-> > > +           break;
-> > > +   case IRQ_TYPE_NONE:
-> >
-> > Are you sure it's a right place to interpret no type flags as a default=
-?
->
-> I mean... no... but I might need more to go on. The chip
-> generates an active low IRQ by default so it seems reasonable if
-> nothing is specified to assume the chip is doing what it normally
-> would.
+We may have an "unused variable" warning for pinctrl_single_pm_ops if
+CONFIG_PM is undefined (due to pm_ptr).
 
-The problem is that if NONE comes here it might point to a mistake in
-the initialisation / probe code somewhere else. Please, double check
-that it's a valid case to have NONE here.
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-> > > +   default:
-> > > +           irq_flags =3D IRQF_TRIGGER_LOW;
-> > > +           break;
-> > > +   }
-
---=20
-With Best Regards,
-Andy Shevchenko
 
