@@ -1,120 +1,175 @@
-Return-Path: <linux-gpio+bounces-2359-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2360-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EC9832C86
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:50:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5AE3832CB2
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:02:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6FC93285A79
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 15:50:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 84E98B23A6A
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 16:02:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DF7A54BDA;
-	Fri, 19 Jan 2024 15:50:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B7BA654BFD;
+	Fri, 19 Jan 2024 16:02:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jAd3/erb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWlaMKLe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5BF54BCA;
-	Fri, 19 Jan 2024 15:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F37F054BC1;
+	Fri, 19 Jan 2024 16:02:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705679416; cv=none; b=uHGohhPcXngQW+2MAloMPbz29pXPC8sTrwxgBrIJx07MkKfcIBEjntxCgAyhyX6wOtQnU/LMaTiBOmmq4lLy9wC0pjDw7/n7XXbTHEPHx+7MqtMkR1OaziFqHOi5gCzmSO6NELV+2AKZvJstm/B3h4lO8czOhJzkm5BEDe4G87g=
+	t=1705680139; cv=none; b=urIfqmDnPNbUQPP4uYmlc1x+SsawPoW8h5n69pSar2U4RW/tgYeFSGpaW5qTjQIwAMOElfT22x8ULHvrFkJXImQqxfGkGkbX1m2ZLwwipKJWeNBOBxgtx6Wa70HRxmi0DeEI5iF1XJ6RJil7Ma/oDjH0BebBWwRMqiXSjX4beiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705679416; c=relaxed/simple;
-	bh=WEVXR1pA/pzCxaNHR1riPhSJRcWD8lgDhDQ+LReDBqM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=h599hiBpSFHONWN6BLMFXP8hQ0rcbpn9PpVG9x1EU6XLT9vDS2TaaPo1yTkeplopk05XJaKWXgp+hNbaf+Qs+2KSG3asEFMb9km1EqyjzUO7FLinrh18ONPn/ofCpsnJwKjoAkTiV4JOzsMKzNZJS1dpoiKGWwZJxdkatfxX/hk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jAd3/erb; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 26730C000A;
-	Fri, 19 Jan 2024 15:50:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1705679405;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=no9Zk1+Ofv930fy1IruQYBJcZcLId9qedsWBTajBqLk=;
-	b=jAd3/erbItSU8bRgfAurVO1vRfyY/x0FFjkEhN5ogLafuPpdFJlYMmw2mvONe7FjotJExF
-	BCJ0M7Lt4+ymTm4ZxxE8hUAKY/pe8tNemwOl1tSMTwHlHpwxf5NQblXa4VMrDmXoQsrNS5
-	5b/Rmf+/gXOlw2geifYAL25tJpZnR5yejCKR8gMnrQ17x0KZP6d/kMzlnHMV5f8bI4EVi7
-	dkvJwUcXwAyhIksBlz/wEdHtqMQyIg4YOvKycNYAi3OZvUi9otL4B/8Q0qUTWFa7aAlIJM
-	jJIjiN22G+zWSX/1su7DBWwGIYuS9eT9gCUYSoahyvjaAQq5ux+PvpfWVOZocw==
-Message-ID: <a4627e51-c851-4abf-a3b2-222b2b315d4e@bootlin.com>
-Date: Fri, 19 Jan 2024 16:50:00 +0100
+	s=arc-20240116; t=1705680139; c=relaxed/simple;
+	bh=pX77ipe+Gsy5sdRmPvMGCJoBu6eqr4SlhVjTSxXiRl8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tRBlKmeZk48DtcXtjZJ6CsmOGoBATAvFwMYATA+IJfqSk/FyExn8hHsPIR49XdCTLxzh/gzwBVfH492+RwUwQz7LfxMuIggeBNaf6pRYcy4So1Ci/ZqRrta92jpk10I6KBfCOFk2HlMTK+VpAx46z3TEWawDZYovnv3cOBJMzYA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWlaMKLe; arc=none smtp.client-ip=209.85.218.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a298accc440so95591166b.1;
+        Fri, 19 Jan 2024 08:02:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705680136; x=1706284936; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rhJgD3zP9zngaSpIBMlj3gbLccR2tuQ/HQYsBEgXc04=;
+        b=TWlaMKLeOmzOBPqWPZw+k3qiTNUgjANq8Rj/rP5vSPqCrrcnUVsnNi1xZfZsAy8h7/
+         tABWhY0FRlCZ4tTLJPZiX8YLAdZ59IJRJzVp1QYq7cX+zy4NhjG000wUCtMjSdv41iRu
+         9i85oYUAvdmZJixI65M62Yol9dJtGijBp+HxRrujilg9hxNoTVg/HFWlzuY4NADsvuQe
+         fv6Az3T0sj6JJWae5kq0JNLmxFiQUXf0BPMv2eY/QLe6qPS/dITKXS4Uf7X8Cp3jkjOn
+         rS0LZnjGdn6Tlr0Kse659kPh5QvUBFNGLlD8S0H6gc1+pBQpYqwjg1FxePAVRYqzLU+3
+         UsEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705680136; x=1706284936;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rhJgD3zP9zngaSpIBMlj3gbLccR2tuQ/HQYsBEgXc04=;
+        b=fiac0jz6EiRA/D4QW1/LQT9AYb4YnNAayNCsTMNbUjYm4eg/p/jQkhuZ4KCjvCb2l3
+         KhxPWSH28V24hTrwtKHtxk+zQRsD4lNqhnf+Sq0Te6/KmHFRVcbvOGr73NznyMsEV6up
+         eV3mSODtq0gGrQqUjPWoOJEAkA0bIE/DVYo0ZBzZk1JqtblWDJmvBADAb1rwnAwTLk2r
+         wUAITv7WP2EpSA2q6Nk1oqM9HNZPg1O5nsGbsXplUk7Z55NLEIpUPd0tcHdzBGQ1Z6xs
+         HSBzm1u0kk90tkaHQ3m04gPk2acE6SKVYC+nGPsWMOwqoN4Hw/KA/KAUFTOOFNLv7Fhu
+         hPiQ==
+X-Gm-Message-State: AOJu0YwgN77hf1Z9/bPKRMR/Hhyy7zScxyoXzfHqN6wmgGDISP5NLOtj
+	ZOtiyfwDHj/TmpCu64V+ebbDsSFl64RCYF4UZPwYTluahih9d8Z8hhVNIaFuIWkHU4FVWP1WIqi
+	5Phsp57DNe29MVKRdtaf/w45Z8xQ=
+X-Google-Smtp-Source: AGHT+IF3+Nq/o91kf1Qzz3pAJkg83GJHPQk614/748N9uRatEUTFGG26s9DzXUBqtocFl8OSIsh8IeChhwKnrMDv1NY=
+X-Received: by 2002:a17:906:280c:b0:a2c:e148:e2d7 with SMTP id
+ r12-20020a170906280c00b00a2ce148e2d7mr6539ejc.2.1705680135691; Fri, 19 Jan
+ 2024 08:02:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to
- suspend_noirq/resume_noirq
-Content-Language: en-US
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com>
- <CAHp75VezeBp3Umg4prvdS83WrHViyTs-hBV0SejVD2BBnGYEvg@mail.gmail.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <CAHp75VezeBp3Umg4prvdS83WrHViyTs-hBV0SejVD2BBnGYEvg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
+ <20230804104602.395892-4-ckeepax@opensource.cirrus.com> <ZalU8r1OvqKOLHrf@surfacebook.localdomain>
+ <20240119113203.GA16899@ediswmail.ad.cirrus.com>
+In-Reply-To: <20240119113203.GA16899@ediswmail.ad.cirrus.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 19 Jan 2024 18:01:38 +0200
+Message-ID: <CAHp75Vco3+B_mcLRr7dcLx79601poLJtLt3Av6d-hAJQLYbe6Q@mail.gmail.com>
+Subject: Re: [PATCH v7 3/6] mfd: cs42l43: Add support for cs42l43 core driver
+To: Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc: broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, 
+	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, 
+	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, 
+	patches@opensource.cirrus.com, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/15/24 20:56, Andy Shevchenko wrote:
-> On Mon, Jan 15, 2024 at 6:16 PM Thomas Richard
-> <thomas.richard@bootlin.com> wrote:
->>
->> Some IOs can be needed during suspend_noirq/resume_noirq.
-> 
-> ->suspend_noirq() / ->resume_noirq()
-> 
->> So move suspend/resume callbacks to noirq.
-> 
-> ...
-> 
->> -static DEFINE_SIMPLE_DEV_PM_OPS(pca953x_pm_ops, pca953x_suspend, pca953x_resume);
->> +static const struct dev_pm_ops pca953x_pm_ops = {
->> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pca953x_suspend_noirq, pca953x_resume_noirq)
->> +};
-> 
-> Please, use correct / modern macro.
-> 
+On Fri, Jan 19, 2024 at 1:32=E2=80=AFPM Charles Keepax
+<ckeepax@opensource.cirrus.com> wrote:
+> On Thu, Jan 18, 2024 at 06:42:26PM +0200, andy.shevchenko@gmail.com wrote=
+:
+> > Fri, Aug 04, 2023 at 11:45:59AM +0100, Charles Keepax kirjoitti:
 
-Hello Andy,
+...
 
-Thanks for the reviews.
+> > > +#if IS_ENABLED(CONFIG_OF)
+> >
+> > We are trying hard to get rid of this ugly ifdefferies (ACPI as well) a=
+long
+> > with respective macros that are often the PITA for CIs.
+>
+> Fair enough, but what is the expected alternative here? Is it now
+> preferred to just always include both in the driver? That does
+> come at a small cost in driver size, but it doesn't really bother
+> me.
 
-I applied your comments for the next iteration.
+Yes. You may have noticed the pile of the "remove of_match_ptr()"
+patches in the past cycles...
 
-Regards,
+> > > +#endif
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+...
 
+> > > +#define CS42L43_RESET_DELAY                        20
+> > > +
+> > > +#define CS42L43_SDW_ATTACH_TIMEOUT         500
+> > > +#define CS42L43_SDW_DETACH_TIMEOUT         100
+> > > +
+> > > +#define CS42L43_MCU_POLL                   5000
+> > > +#define CS42L43_MCU_CMD_TIMEOUT                    20000
+> >
+> > > +#define CS42L43_MCU_UPDATE_TIMEOUT         500000
+> >
+> > > +#define CS42L43_VDDP_DELAY                 50
+> > > +#define CS42L43_VDDD_DELAY                 1000
+> > > +
+> > > +#define CS42L43_AUTOSUSPEND_TIME           250
+> >
+> > Usually we use units for the macro names as suffixes...
+> > E.g., _US (for microseconds).
+>
+> Can add those, does make it clearer.
+
+This is a nit-pick, but just to let you know the standard de facto in
+several subsystems (which hold drivers of different devices). Not sure
+if MFD or others related to this driver are really bothered with this
+nuance.
+
+...
+
+> > > +   irq_flags =3D irqd_get_trigger_type(irq_data);
+> > > +   switch (irq_flags) {
+> > > +   case IRQF_TRIGGER_LOW:
+> > > +   case IRQF_TRIGGER_HIGH:
+> > > +   case IRQF_TRIGGER_RISING:
+> > > +   case IRQF_TRIGGER_FALLING:
+> > > +           break;
+> > > +   case IRQ_TYPE_NONE:
+> >
+> > Are you sure it's a right place to interpret no type flags as a default=
+?
+>
+> I mean... no... but I might need more to go on. The chip
+> generates an active low IRQ by default so it seems reasonable if
+> nothing is specified to assume the chip is doing what it normally
+> would.
+
+The problem is that if NONE comes here it might point to a mistake in
+the initialisation / probe code somewhere else. Please, double check
+that it's a valid case to have NONE here.
+
+> > > +   default:
+> > > +           irq_flags =3D IRQF_TRIGGER_LOW;
+> > > +           break;
+> > > +   }
+
+--=20
+With Best Regards,
+Andy Shevchenko
 
