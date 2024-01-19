@@ -1,260 +1,159 @@
-Return-Path: <linux-gpio+bounces-2368-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2369-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0462832E1D
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 18:25:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3B1832EC3
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 19:19:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 348CFB21F83
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 17:25:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 84CCC287036
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 18:19:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 666E155E55;
-	Fri, 19 Jan 2024 17:25:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 43E7C56454;
+	Fri, 19 Jan 2024 18:19:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gN2WSWBD"
+	dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b="r+Gv4n3N"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 831AF43ABC;
-	Fri, 19 Jan 2024 17:25:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E77D656447;
+	Fri, 19 Jan 2024 18:19:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705685126; cv=none; b=QLBGE6g4wWmOr+8uVf/E8sX8A3TcwCYe9naLyyqD+tMy5HPTcIQICcVgxoojHeb3POWIbOX8F0vA62GZeeaMKsjC5KjSzxstOflMyZeIzoCmGrog8tyk+nrp3L91u+Mn9CoUYNJoLRiCiNeiRQTrHO1Jj1ac7hALbk6OlcBA7VQ=
+	t=1705688381; cv=none; b=ZJF7WFQnb7ydQbSxRje6b9XJr8KdO7VhLEM0x7U7fDaureLDbuLOvvKUDBbXdBKrCjIpi9s1qUjrhN0qnkfZUEullTFtpy4KcpNZkwBNgr5nYbpgYrJbRx4X6We/nxOfQk+oav8V0ktczu8J1grcaRgLBYRLcB1AfSGayIWSKZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705685126; c=relaxed/simple;
-	bh=iwpLtpC3VoaXo/9dNwwAnOeyq3xO3HPbvtrcusavOkU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cZVA6pe5KWXfOb7yhFJQfVIWlouBZgd9fNTqyZGdvEItkf4Fd3i8+v3XetgocTj5RcQRZdbshffRGkPiE0qgLOjLBJk9XQG42ONNpcISCQ17yjLfXA5I+4CxgPUtmiBqeOlCSdFWVwOKD5azIBtyyzkNYy5Tvhd3gjNk2aQZQyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gN2WSWBD; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-50e7f58c5fbso1287142e87.1;
-        Fri, 19 Jan 2024 09:25:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1705685122; x=1706289922; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k2xwilmGBZvQQTbXPdBchYmIXQPAhkMfZIZcjK72Cz0=;
-        b=gN2WSWBDYtB5U7wB7DVn2BENUuIh29SYfT9KDu3qtdrsle4LZmKq0FCzKpyYCPakwc
-         ZwIGycKBwVs152WUEgyFUgT6muUekWZZcJpxqFgWFF3cnUEWlP7Hn4CJUh5+Xy/hjeMd
-         gIvcMbT4Z16QDi+5JXvWAyjwcJtFWFHsT/n4BPKhLc3ephWmW6qT+iz/fH+vt1edTWLq
-         txYBprhnZ7xGm01lfwpU4/FUXhHN/hI4Cpf0NfXKJHQXIVz7+LhINvjA1yQLkT/GObyG
-         Yfawd6Wwqd1e/V1afdXgr+x62z5kbqpIOFNwtJ6cJXFuK2geFlhZ5GZDbu2Qjzhi2x9y
-         kTjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705685122; x=1706289922;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k2xwilmGBZvQQTbXPdBchYmIXQPAhkMfZIZcjK72Cz0=;
-        b=utCZW8gXW2OxA5Qz5H5FhFLy9TZ/BFEK3zC1gMG8muUwMt9coLhTHJb91L4PRXq4Zd
-         ko+5QtYUd4vzJkR6djczhpqYOE+wUtZA8yN6t8mMz1C4M1E6m7OXMFfXyWxXx4iTrENI
-         eGrki603ZhGCVLvii5PJpRz+DB8m4UruxJH32UgVG1hM9Xz9TnobB469SFfNUsQBugbK
-         HEDd3+gW3zFTGzfGpjzSZi4zxvG62e8ODIZ0djjsoJHnLAAg/Bo+PNZZi9egKSImVUfH
-         9Q+GZY7Y0YG8nu8aAQyUxEFNUw/w11bLH5SjVHWaH/9zY+yIQnsNgypqjf37T9NA79RY
-         GZ0Q==
-X-Gm-Message-State: AOJu0YxOti3jz4Rv3x4r6v7p+baMOI5kX+uYTGBMUQEVmOGxpk8CmTQr
-	I6DcFNXIBUhQQYX9pMvMpTivAt0CrjxfYwHXKmqdDz65xR0eVo4fipxAtQO/SYiuA7SCNGAtSa2
-	OK1dNNh715sDH6dHYn9SlRxnn7c4=
-X-Google-Smtp-Source: AGHT+IF5XBmlwwuB2LVSDw9ikBo4az/a9C2r6G+L3etJbaHVu5L0DLlw90iBG9K5c+qoRpuFYDN6QuG5tfAYOseHeIE=
-X-Received: by 2002:a19:ca18:0:b0:50e:aedd:ed76 with SMTP id
- a24-20020a19ca18000000b0050eaedded76mr463lfg.131.1705685122156; Fri, 19 Jan
- 2024 09:25:22 -0800 (PST)
+	s=arc-20240116; t=1705688381; c=relaxed/simple;
+	bh=sBqFdsnrpG5B2aVYepB4f2kUIlIRBbAjsJR6pnILbSk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=tBoOG6DAJ93VdQ9u3dqz4zOJEHGzESwtKZfH8GReX5J52oRBSuyTwY1+pctjInbdOImW+2rGWToAL+IMlyKeCWzdntDhN0PkU1LXD6Wf0WFmRTVp0RdGS5cOPre4eZBpk7vEAc98k3Dzjv4L6fOU0whpgSp3FGv/7UJxeiCujvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com; spf=pass smtp.mailfrom=gmx.com; dkim=pass (2048-bit key) header.d=gmx.com header.i=erick.archer@gmx.com header.b=r+Gv4n3N; arc=none smtp.client-ip=212.227.15.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.com;
+	s=s31663417; t=1705688362; x=1706293162; i=erick.archer@gmx.com;
+	bh=sBqFdsnrpG5B2aVYepB4f2kUIlIRBbAjsJR6pnILbSk=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=r+Gv4n3N0kqDcshWjM149MnwQbnVFG+pNKS0sAe9hXZRo2ymuTbnngBxSMvBt1pQ
+	 5bDmwnP1fSyRHCg8ib12FDEtpefdJkGyKxVa5wNi4NPNSA/heEp1V8HO+yJOdJ0Fj
+	 GdOAP35qxYYlKXTsn9eR0LNvVqbdC8qXBW17B4h3cbao8L19co0SgphZ+1jmN5d2V
+	 mKh0ATMg1qXXinsxLGbeyVV1/7xSkU/jKbypkYrsrOi6ivm8PD8joRLGZhX4OjCea
+	 V7DXBpB8puodWgzmsg0QOcZWpGGhyBzbeDt0cN5f9hFru6elOGsHCRCKxKd+pJYFW
+	 Inci3UMJ3Gs7B+6Ggg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from localhost.localdomain ([79.157.194.183]) by mail.gmx.net
+ (mrgmx004 [212.227.17.184]) with ESMTPSA (Nemesis) id
+ 1MPokD-1rmfbm3wId-00MrKt; Fri, 19 Jan 2024 19:19:22 +0100
+From: Erick Archer <erick.archer@gmx.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Michal Simek <michal.simek@amd.com>,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>
+Cc: Erick Archer <erick.archer@gmx.com>,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of devm_kzalloc()
+Date: Fri, 19 Jan 2024 19:19:09 +0100
+Message-Id: <20240119181909.7079-1-erick.archer@gmx.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-7-ckeepax@opensource.cirrus.com> <Zali4qxdegY7H6eY@surfacebook.localdomain>
- <20240119165917.GC16899@ediswmail.ad.cirrus.com>
-In-Reply-To: <20240119165917.GC16899@ediswmail.ad.cirrus.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 19 Jan 2024 19:24:45 +0200
-Message-ID: <CAHp75Vd_hnnuHQxmiPTkS5GdpEf3iMik9=51x55_Xgr+7LDJ3Q@mail.gmail.com>
-Subject: Re: [PATCH v7 6/6] ASoC: cs42l43: Add support for the cs42l43
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, lee@kernel.org, robh+dt@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	linus.walleij@linaro.org, vkoul@kernel.org, lgirdwood@gmail.com, 
-	yung-chuan.liao@linux.intel.com, sanyog.r.kale@intel.com, 
-	pierre-louis.bossart@linux.intel.com, alsa-devel@alsa-project.org, 
-	patches@opensource.cirrus.com, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KENkPdNVovQVg33hH+1L5lSU0tTV7tRXp9M+P2HMwnVAPTlbIbL
+ PweBJcCplxH72i91i8mgFr5KWChN98onhXv6h0ZIbcxqjjsXvFY+rYFXe8TDQixEbV783cF
+ /JdyingxCL0j0rqQzM4f/PWAgV9PNBReQ4Rp0dGAaIBXdCzNNXwmRmJXfxfQdoHBkGFIOrG
+ A/amwTK/l8cXqaszrCxkQ==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:u/hSC2xNnJ4=;Le7EPSL310H42OZtCq1g0w7KJq0
+ OoKMQ1MPvTJ9XaGVPc6RO7TqvN1mqqhQCYYO50EJ4FEXFjfE3MUYymywEheZrOWSp68TtOj8l
+ sxzcHXsQYlXkpSVJ3c5Eq/sCul3W3oh5JDZo1aidunFmcoRg191IWxUVFuyq8W/5aN7SLpFWQ
+ +oEVidHQtnavFyNenPY7vZsjWWuA53nHJlZ9eAG3A/cpthPciVY8oZ7OMG/5BPRuB7Yss1v9y
+ xibpdriWNDM1XW/tMjLoeE5WiLC7tej6nuPi2KyKoAbBlLQrtHI3jBIlC8/9P1QLBT8na6mQU
+ 2Ctxs5pWuqBMZ8WdF27SexQXJFNPEHzVGrnPokDzMVIWxvHJpcfL97VeiwyD/1UbgVPq8uWK/
+ 8J5QHc4d0MeXU6YoRgEEz4PGAQY9ISBYNZek208dlC/T1ziH2vNcd65/1pCfXP7pcPafBywyo
+ GCsYE/41wi3vE1k+c1b9UXh9KVtC/Jj4Dbm3AS4PTGIHoQ09CwYa3NTlUlTpbOjz5tj98bO7M
+ tujTHUIJ/ybasx6GfGObe65n2R2PZYjnTCVrkcztiePLq9Zng4qZrTCZqPso94aQZFrl9dOM0
+ P4EcbYPgkQ4LzLYzxjuo/VXfNvnt2aEKHeSTJPyCtqtRidll/4oavaOJktMDOxB/t+gl7uvSM
+ dd1Vd2zzyxub9vGzUAfqdaXMBmNWiGjY0UFcc+IaqexxQ6v80fK2b2FYqhQ4cHhf5dR5Gf2pK
+ 1eecqAOArHVoUh+8SKp8/WDvvvJWIuk+MTdd4rA4cFYg3T4zXhnBUNhkCtV/kkd4tD3LLWxq5
+ v2cPlEnaJuDLwrXXeup7U87sgLSSlC6TFU36BIZTkyzEKFQveM/dRwLThoTqjTRnZQdOSnD7F
+ egc5kHoBTMeFHZ2t3WzNcm7tExe4woNci5M07XQz77SAy3kFi8493bZ679F3l5Y4PLlOurI/B
+ nxzqcpqKBUX+q1QjvniClAM2wiY=
 
-On Fri, Jan 19, 2024 at 6:59=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-> On Thu, Jan 18, 2024 at 07:41:54PM +0200, andy.shevchenko@gmail.com wrote=
-:
-> > Fri, Aug 04, 2023 at 11:46:02AM +0100, Charles Keepax kirjoitti:
+As noted in the "Deprecated Interfaces, Language Features, Attributes,
+and Conventions" documentation [1], size calculations (especially
+multiplication) should not be performed in memory allocator (or similar)
+function arguments due to the risk of them overflowing. This could lead
+to values wrapping around and a smaller allocation being made than the
+caller was expecting. Using those allocations could lead to linear
+overflows of heap memory and other misbehaviors.
 
-...
+So, use the purpose specific devm_kcalloc() function instead of the
+argument size * count in the devm_kzalloc() function.
 
-> > > +   BUILD_BUG_ON(ARRAY_SIZE(cs42l43_jack_override_modes) !=3D
-> > > +                ARRAY_SIZE(cs42l43_jack_text) - 1);
-> >
-> > Use static_assert() instead.
->
-> I am happy either way, but for my own education what is the
-> reason to prefer static_assert here, is it just to be able to use
-> =3D=3D rather than !=3D? Or is there in general a preference to use
-> static_assert, there is no obvious since BUILD_BUG_ON is being
-> deprecated?
+Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-co=
+ded-arithmetic-in-allocator-arguments [1]
+Link: https://github.com/KSPP/linux/issues/162
+Signed-off-by: Erick Archer <erick.archer@gmx.com>
+=2D--
+ drivers/pinctrl/pinctrl-zynqmp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-It's generally preferred since there are (known) issues with it:
-- it can't be put without the scope (globally);
-- it produces a lot of a noise and hard to read error report;
-- ...anything I forgot / don't know (yet) about...
+diff --git a/drivers/pinctrl/pinctrl-zynqmp.c b/drivers/pinctrl/pinctrl-zy=
+nqmp.c
+index f2be341f73e1..5c46b7d7ebcb 100644
+=2D-- a/drivers/pinctrl/pinctrl-zynqmp.c
++++ b/drivers/pinctrl/pinctrl-zynqmp.c
+@@ -562,7 +562,7 @@ static int zynqmp_pinctrl_prepare_func_groups(struct d=
+evice *dev, u32 fid,
+ 	const char **fgroups;
+ 	int ret, index, i;
 
-BUILD_BUG_ON() might be useful in some cases, but I don't see how.
+-	fgroups =3D devm_kzalloc(dev, sizeof(*fgroups) * func->ngroups, GFP_KERN=
+EL);
++	fgroups =3D devm_kcalloc(dev, func->ngroups, sizeof(*fgroups), GFP_KERNE=
+L);
+ 	if (!fgroups)
+ 		return -ENOMEM;
 
-...
+@@ -754,7 +754,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct=
+ device *dev,
+ 	if (ret)
+ 		return ret;
 
-> > > +   ret =3D cs42l43_shutter_get(priv, CS42L43_STATUS_MIC_SHUTTER_MUTE=
-_SHIFT);
-> > > +   if (ret < 0)
-> > > +           return ret;
-> > > +   else if (!ret)
-> >
-> > Reundant 'else'
-> >
-> > > +           ucontrol->value.integer.value[0] =3D ret;
-> > > +   else
-> > > +           ret =3D cs42l43_dapm_get_volsw(kcontrol, ucontrol);
-> >
-> > and why not positive check?
-> >
-> > > +   return ret;
-> >
-> > Or even simply as
-> >
-> >       if (ret > 0)
-> >               ret =3D cs42l43_dapm_get_volsw(kcontrol, ucontrol);
-> >       else if (ret =3D=3D 0)
-> >               ucontrol->value.integer.value[0] =3D ret;
-> >
-> >       return ret;
->
-> Yeah will update, that is definitely neater.
+-	funcs =3D devm_kzalloc(dev, sizeof(*funcs) * pctrl->nfuncs, GFP_KERNEL);
++	funcs =3D devm_kcalloc(dev, pctrl->nfuncs, sizeof(*funcs), GFP_KERNEL);
+ 	if (!funcs)
+ 		return -ENOMEM;
 
-Note before doing that the last one has a downside from the
+@@ -768,7 +768,7 @@ static int zynqmp_pinctrl_prepare_function_info(struct=
+ device *dev,
+ 		pctrl->ngroups +=3D funcs[i].ngroups;
+ 	}
 
-if (ret < 0)
-  return ret;
-if (ret)
-  ret =3D ...
-else
-  ...
-return ret;
+-	groups =3D devm_kzalloc(dev, sizeof(*groups) * pctrl->ngroups, GFP_KERNE=
+L);
++	groups =3D devm_kcalloc(dev, pctrl->ngroups, sizeof(*groups), GFP_KERNEL=
+);
+ 	if (!groups)
+ 		return -ENOMEM;
 
-as it assumes that there will be no additional code in between
-'if-else-if' and last 'return'. Purely a maintenance aspect, but
-still... So, think about it which one you would prefer,
+@@ -830,7 +830,7 @@ static int zynqmp_pinctrl_prepare_pin_desc(struct devi=
+ce *dev,
+ 	if (ret)
+ 		return ret;
 
-...
+-	pins =3D devm_kzalloc(dev, sizeof(*pins) * *npins, GFP_KERNEL);
++	pins =3D devm_kcalloc(dev, *npins, sizeof(*pins), GFP_KERNEL);
+ 	if (!pins)
+ 		return -ENOMEM;
 
-> > > +   while (freq > cs42l43_pll_configs[ARRAY_SIZE(cs42l43_pll_configs)=
- - 1].freq) {
-> > > +           div++;
-> > > +           freq /=3D 2;
-> > > +   }
-> >
-> > fls() / fls_long()?
->
-> Apologies but I might need a little bit more of a pointer here.
-> We need to scale freq down to under 3.072MHz and I am struggling
-> a little to see how to do that with fls.
+=2D-
+2.25.1
 
-The second argument of > operator is invariant to the loop, correct?
-So it can be written as (pseudocode)
-
- y =3D 0;
- while (x > CONST) {
-   x /=3D 2;
-   y++;
- }
-
-This is basically the open coded 'find the scale of x against CONST as
-power of 2 value'. Okay, it might be not directly fls(), but something
-along those types of bit operations (I believe something similar is
-used in spi-pxa2xx.c for calculating the divider for the Intel Quark
-case).
-
-y =3D fls(x) - fls(CONST); // roughly looks like this, needs careful checki=
-ng
-
-...
-
-> > > +   // Don't use devm as we need to get against the MFD device
-> >
-> > This is weird...
-> >
-> > > +   priv->mclk =3D clk_get_optional(cs42l43->dev, "mclk");
-> > > +   if (IS_ERR(priv->mclk)) {
-> > > +           dev_err_probe(priv->dev, PTR_ERR(priv->mclk), "Failed to =
-get mclk\n");
-> > > +           goto err_pm;
-> > > +   }
-> > > +
-> > > +   ret =3D devm_snd_soc_register_component(priv->dev, &cs42l43_compo=
-nent_drv,
-> > > +                                         cs42l43_dais, ARRAY_SIZE(cs=
-42l43_dais));
-> > > +   if (ret) {
-> > > +           dev_err_probe(priv->dev, ret, "Failed to register compone=
-nt\n");
-> > > +           goto err_clk;
-> > > +   }
-> > > +
-> > > +   pm_runtime_mark_last_busy(priv->dev);
-> > > +   pm_runtime_put_autosuspend(priv->dev);
-> > > +
-> > > +   return 0;
-> > > +
-> > > +err_clk:
-> > > +   clk_put(priv->mclk);
-> > > +err_pm:
-> > > +   pm_runtime_put_sync(priv->dev);
-> > > +
-> > > +   return ret;
-> > > +}
-> > > +
-> > > +static int cs42l43_codec_remove(struct platform_device *pdev)
-> > > +{
-> > > +   struct cs42l43_codec *priv =3D platform_get_drvdata(pdev);
-> > > +
-> > > +   clk_put(priv->mclk);
-> >
-> > You have clocks put before anything else, and your remove order is brok=
-en now.
-> >
-> > To fix this (in case you may not used devm_clk_get() call), you should =
-drop
-> > devm calls all way after the clk_get(). Do we have
-> > snd_soc_register_component()? If yes, use it to fix.
-> >
-> > I believe you never tested rmmod/modprobe in a loop.
->
-> Hmm... will need to think this through a little bit, so might take
-> a little longer on this one. But I guess this only becomes a problem
-> if you attempt to remove the driver whilst you are currently playing
-> audio, and I would expect the card tear down would stop the clock
-> running before we get here.
-
-I don't know the HW, it is up to you how to address this. The issue
-really exists and might become a hard to hunt bug (e.g., if there is
-an IRQ fired or async work which would like to access the HW with
-clock off and hang the system).
-
---=20
-With Best Regards,
-Andy Shevchenko
 
