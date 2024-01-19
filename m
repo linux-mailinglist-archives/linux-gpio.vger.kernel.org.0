@@ -1,162 +1,127 @@
-Return-Path: <linux-gpio+bounces-2356-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2357-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0648583292F
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 12:50:12 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 38B7E832943
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 12:54:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1DFA71C23552
-	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 11:50:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B51FCB23C66
+	for <lists+linux-gpio@lfdr.de>; Fri, 19 Jan 2024 11:53:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E4274EB5B;
-	Fri, 19 Jan 2024 11:50:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1DB04F203;
+	Fri, 19 Jan 2024 11:53:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="CNGj36zX"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="kmhQ8tcb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE76D4CB5C;
-	Fri, 19 Jan 2024 11:50:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 255E624B47
+	for <linux-gpio@vger.kernel.org>; Fri, 19 Jan 2024 11:53:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705665006; cv=none; b=a6IsCTr05Nt4fj4GZPNsz0vkLU2XISirFQolORKXBhsgrS+p1hnQPWn0NlTEDjzu0Ri8McKiqiz/1yDw/VlkV9XJHq3FjhPAGU+qXoOiVqdzBre4AyjSxzposclZmoRkX2YOUFRUwPPdSKoPzrYBijK27A47vcvKjbQ2PCM4SjE=
+	t=1705665223; cv=none; b=fFHNpshfhNon7Xh9fP8Z5rM+mjLqMU2JkqLb6Vxm2KfbuxZ6TlT5pz/aLSqFpFZUFHJ2/beHV2RxSmYjiqBRXiic3ddIh5yOLRjY3zqvLMvfJAy6yeKMdbdzvFJoeNgT7q9QG6GLEXYxLpBlLODWZEyLx9DtCCBl5ach0jqRX9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705665006; c=relaxed/simple;
-	bh=s9L1qJwsp4OAkf5SryxRyzJmBumOjZ70oxKuHDq5NsA=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IgcLl8onDdzo3RM+vHvFFQ++rIhMQSzCjp1rpQcKTg6wXH7YURJQNEBicnsIgg0HdaYRnsYAkMx9A4WQW7onXs0rFAx9X4OThNLS1kyJMPI8tdtaSBsG2gSgBt7sMUCJ6vE+Ciy+3TaJK/nNy48vttz7TLXAirUAL+gehdjiVDg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=CNGj36zX; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40JAUOEC006784;
-	Fri, 19 Jan 2024 05:49:19 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=7HmR5LukPFENdAY
-	Knf4Yvibno9UDj7vaugDLawgj4Rw=; b=CNGj36zXSShnUf0vSbvu+L4Eh3M/acH
-	vAwqfSbGuDdUaflB+OkBh/clU8F511tKAI1vJh6BzZgs829EmjHjj9MrbiX25WmA
-	pElomK/vEAgdm35tcl9wPHe4GDowVdLnomVz7IFUDeTym7GhnmqtOD4BMHgfZNjZ
-	qEg7gJ74QX0AFICSLNW+0TIN1/K+4NdGsd58+HJbtfzlqpWFj/QkfzCDXyLcyGE2
-	OSIssmpIUFzprG8q7ucyTVikkqXLQkpADlRA9xJUzoBE3SZuBoYVSgPDF4Zhi4IE
-	tIhriXygpoP+JOOrYqZDVx9SFJ5XZDM/+yF9je+/ToXPQcIwHdAO2jw==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vkqtn8ne8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 19 Jan 2024 05:49:19 -0600 (CST)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 19 Jan
- 2024 11:49:17 +0000
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1118.40 via Frontend Transport; Fri, 19 Jan 2024 11:49:17 +0000
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-	by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 4C11A15B9;
-	Fri, 19 Jan 2024 11:49:17 +0000 (UTC)
-Date: Fri, 19 Jan 2024 11:49:17 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <andy.shevchenko@gmail.com>
-CC: <broonie@kernel.org>, <lee@kernel.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <linus.walleij@linaro.org>, <vkoul@kernel.org>, <lgirdwood@gmail.com>,
-        <yung-chuan.liao@linux.intel.com>, <sanyog.r.kale@intel.com>,
-        <pierre-louis.bossart@linux.intel.com>, <alsa-devel@alsa-project.org>,
-        <patches@opensource.cirrus.com>, <devicetree@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v7 5/6] spi: cs42l43: Add SPI controller support
-Message-ID: <20240119114917.GB16899@ediswmail.ad.cirrus.com>
-References: <20230804104602.395892-1-ckeepax@opensource.cirrus.com>
- <20230804104602.395892-6-ckeepax@opensource.cirrus.com>
- <ZalahZkCrBm-BXwz@surfacebook.localdomain>
+	s=arc-20240116; t=1705665223; c=relaxed/simple;
+	bh=l/9ghh5sZNG50d5xIaj7ON6EVW6p2iNzyQioT697ezs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rjmSIoDCELb+Qq4WmUiF7k2uYezYr8/IIjvKSyxgM5UnWx+CRuzMwBKT1ujBOSo8SCZxjvO2vqFXSFIHbhi8Whv7qaVNGusCC3iTv2e3o1wJcI2SBpUKVGHsykaWHyuu22HqWYhCyqUTugOrhCQVVzVnYKmSsNEr1k99+7RePAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=kmhQ8tcb; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-466fb179334so191438137.1
+        for <linux-gpio@vger.kernel.org>; Fri, 19 Jan 2024 03:53:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705665220; x=1706270020; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qdyfVh6//9O93MHLA2iBuWLwQbIIxJp93yFjTXEDrOA=;
+        b=kmhQ8tcbokOmRRB+HNfrE/jb4dfO4DiWfjv9i0QuQqT/8nq6QF1yI2TN8YhLLl3ykD
+         y/jqObSlstXmLvsZcgOnUCxhGz/8MWGJm5QYnSCIAhcV1wdSuSgjl2lUcoDawPEbyEbD
+         rEB16Y06JQiXfOC2PlgI3MYSBOQPiztJYLXgHdpf+m0HnUmQs9ql8ilTEbg/D29/KbMm
+         Hr72pmolyhQ61/5Cqc3wGAk4vZwrIhya0iWOdnw5+d/L51aNdgaIYIOctdwoWNYLeF/O
+         SkXn3TCstVWHlj/+NcEmRkLHRhyw8tqF204VZO0/eF0dmxD6r2gWhM0c7lescTsX0TLH
+         y3hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705665220; x=1706270020;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=qdyfVh6//9O93MHLA2iBuWLwQbIIxJp93yFjTXEDrOA=;
+        b=wyeqGRhJNtYUfkVGHpzYEv1BWhjstyjblT7nh/yAf5HWUcn+dHTTs1at7IZeOpIBL0
+         wmCKGGxp2/aOKGEiqMExVq1+YI/3MQGSOZ7FnSKsR3UzL5+6oVPmWUJQ0BGtCJSsu1hg
+         TwUEORjB53ubTAOjrr3TYd1v3mAjqRntCEgB6gVPADteYK5sYvylTwVtNAFsw+Q1WHc+
+         5XmhpYy10VO8hQMfc55dFGH/IMW28rI0vReSoZ9oK3JfuN7vD8E34NbjXTazJuOmlq+/
+         6uoW4uaTRR5CRZ/SPGZqcwqiDqWQ/5INXviW89IoCoL1ktlLfyPyehteIy5UWs2tVQmh
+         FW8g==
+X-Gm-Message-State: AOJu0YzNrl9MRufqArV9BuFR+3DiNyWLIklQDH9pzMgBpK+VVg+0qtkZ
+	2fO3gXEJQqAUylZ+R6WPjqU09jIJt5Abrb3z0u8nBbSwu1vULBIUyuYkehBOL8VaK8BIcFSeEFT
+	DuIoNDZOQOmoAma9bZsuFRqZAt3HTy6O9fU2cWg==
+X-Google-Smtp-Source: AGHT+IHQ3U9Hg9WEo4Q/SGuPbw2OLuTsK6SdCFn3dBtBA7yPPGLxrDq5Ybq2Sbb9Q+mVkFk1I0t3rMA8IdEw0Rv+tzI=
+X-Received: by 2002:a05:6102:ac5:b0:467:c4cf:cac7 with SMTP id
+ m5-20020a0561020ac500b00467c4cfcac7mr1929825vsh.14.1705665219501; Fri, 19 Jan
+ 2024 03:53:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <ZalahZkCrBm-BXwz@surfacebook.localdomain>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-ORIG-GUID: ohyvYjG1e8LtKWvMGVOYufhV_Sssc_Ns
-X-Proofpoint-GUID: ohyvYjG1e8LtKWvMGVOYufhV_Sssc_Ns
-X-Proofpoint-Spam-Reason: safe
+References: <1705664181-722937-1-git-send-email-radhey.shyam.pandey@amd.com>
+In-Reply-To: <1705664181-722937-1-git-send-email-radhey.shyam.pandey@amd.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 19 Jan 2024 12:53:28 +0100
+Message-ID: <CAMRc=MeatMgQqase263xfsLRcSwMjx3Xwprt78igooYT-+8NaQ@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: xilinx: replace Piyush Mehta maintainership
+To: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+Cc: dlemoal@kernel.org, cassel@kernel.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linus.walleij@linaro.org, michal.simek@amd.com, p.zabel@pengutronix.de, 
+	gregkh@linuxfoundation.org, piyush.mehta@amd.com, mubin.sayyed@amd.com, 
+	linux-ide@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, git@amd.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 18, 2024 at 07:06:13PM +0200, andy.shevchenko@gmail.com wrote:
-> Fri, Aug 04, 2023 at 11:46:01AM +0100, Charles Keepax kirjoitti:
-> > +		while (buf < block) {
-> > +			const u8 *word = min(buf + sizeof(u32), block);
-> > +			int pad = (buf + sizeof(u32)) - word;
-> > +
-> > +			while (buf < word) {
-> > +				val >>= BITS_PER_BYTE;
-> > +				val |= FIELD_PREP(GENMASK(31, 24), *buf);
-> > +
-> > +				buf++;
-> > +			}
-> 
-> Is this a reinvented way of get_unaligned_*() APIs?
-> 
-> > +			val >>= pad * BITS_PER_BYTE;
-> > +
-> > +			regmap_write(regmap, CS42L43_TX_DATA, val);
-> > +		}
-> 
-> ...
-> 
-> > +			while (buf < word) {
-> > +				*buf = FIELD_GET(GENMASK(7, 0), val);
-> > +
-> > +				val >>= BITS_PER_BYTE;
-> > +				buf++;
-> > +			}
-> 
-> put_unaligned_*() ?
-> 
+On Fri, Jan 19, 2024 at 12:36=E2=80=AFPM Radhey Shyam Pandey
+<radhey.shyam.pandey@amd.com> wrote:
+>
+> As Piyush is leaving AMD, he handed over ahci-ceva, ZynqMP Mode Pin GPIO
+> controller, Zynq UltraScale+ MPSoC and Versal reset, Xilinx SuperSpeed
+> DWC3 USB SoC controller, Microchip USB5744 4-port Hub Controller and
+> Xilinx udc controller maintainership duties to Mubin and Radhey.
+>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+> ---
 
-Alas as it has been a while I have forgetten the exact context
-here and this one will take a little more time. I will try to
-find some spare time to work out if that would actual do the same
-thing, I have a vague feeling there was something here.
+[snip]
 
-> ...
-> 
-> > +	if (is_of_node(fwnode))
-> > +		fwnode = fwnode_get_named_child_node(fwnode, "spi");
-> 
-> You can actually drop these is_of_node() tests and use another variable. In
-> ACPI there can't be child node in small letters.
-> 
+> diff --git a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-mode=
+pin.yaml b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.=
+yaml
+> index b1fd632718d4..bb93baa88879 100644
+> --- a/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yam=
+l
+> +++ b/Documentation/devicetree/bindings/gpio/xlnx,zynqmp-gpio-modepin.yam=
+l
+> @@ -12,7 +12,8 @@ description:
+>    PS_MODE). Every pin can be configured as input/output.
+>
+>  maintainers:
+> -  - Piyush Mehta <piyush.mehta@amd.com>
+> +  - Mubin Sayyed <mubin.sayyed@amd.com>
+> +  - Radhey Shyam Pandey <radhey.shyam.pandey@amd.com>
+>
+>  properties:
+>    compatible:
 
-is_of_node feels pretty clear what the intent is, rather than
-relying on nodes not existing etc.
+For GPIO:
 
-> But main problem here (and in another driver where the similar is used) that
-> you bumped reference count for fwnode. I haven't seen where you drop it back.
-> Have you tested rmmod/modprobe in a loop?
-> 
+Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Yeah it should drop the reference will add that.
-
-> > +	devm_pm_runtime_enable(priv->dev);
-> 
-> No error check? Why?
-
-Happy to add one.
-
-> > +	ret = devm_spi_register_controller(priv->dev, priv->ctlr);
-> > +	if (ret) {
-> > +		pm_runtime_disable(priv->dev);
-> 
-> Ah! Are you sure you properly simulated faults when testing this code?
-
-This one has already been fixed.
-
-Thanks,
-Charles
+[snip]
 
