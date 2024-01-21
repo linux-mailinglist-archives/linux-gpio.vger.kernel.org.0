@@ -1,301 +1,97 @@
-Return-Path: <linux-gpio+bounces-2387-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2388-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F314283553F
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jan 2024 11:36:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE3A18355D8
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jan 2024 13:56:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2CFC21C21469
-	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jan 2024 10:36:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4FF521F21550
+	for <lists+linux-gpio@lfdr.de>; Sun, 21 Jan 2024 12:56:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A20837149;
-	Sun, 21 Jan 2024 10:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 709DC37156;
+	Sun, 21 Jan 2024 12:56:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="JBkIyFi4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74B5B36B00;
-	Sun, 21 Jan 2024 10:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83107364A7;
+	Sun, 21 Jan 2024 12:56:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705833346; cv=none; b=DRD3zeAHgPff7dQhWqcxEUCZaVo+FfxVcx/8+9yMBdubMHChzYHDm+hCo3znDzwrx84rXd26lABEDvxehC+wL1gV613t2TjuhbGKdnrmIIfE9vq2079y75J7Cd/uJUFK90JeYkxxcMKZ9pHZDC0t6bs04KmdTYfKXBnqU5EwTDU=
+	t=1705841795; cv=none; b=Cb3MaaEoPtbfVpqlGJHUGkmlNQADBg7zKPXde/2srC3lPsKRudSsnZC09h2sTtLQzll8PeUcxATu0lj+TdzAS0zYQKBKx6dnH2uqvLHWZBkMCxNvrifHiMyVOGS4H9PtAnoInQzPcdSUwW5FZpRK5ruNsxlUJhIVV4YgYdIbguo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705833346; c=relaxed/simple;
-	bh=Wb6M8XBxNNu/xmwdmMOGAKwII+CjP3Atro/4wU/nls8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QVuMbp6/BAY5PqiMVc+ui/jhaEc1edZD3d4Yomy+rgQ/MKvCZMsSZ3vMfCFI/ke5mEL5osolhM/M0mNoEsMEmaABs34L4foj+txV0s+bpNMPl2vUNc2CTmsTdHIczCm1zQnADP0NmQbMj/S4mZJeF0Oyw8Z3hgtX+DkQFU2KCZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; arc=none smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40L4xkGv011754;
-	Sun, 21 Jan 2024 05:35:31 -0500
-Received: from nwd2mta4.analog.com ([137.71.173.58])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 3vr8w7bgwj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Sun, 21 Jan 2024 05:35:30 -0500 (EST)
-Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
-	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 40LAZTtc059850
-	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Sun, 21 Jan 2024 05:35:29 -0500
-Received: from ASHBCASHYB5.ad.analog.com (10.64.17.133) by
- ASHBMBX9.ad.analog.com (10.64.17.10) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Sun, 21 Jan 2024 05:35:28 -0500
-Received: from ASHBMBX9.ad.analog.com (10.64.17.10) by
- ASHBCASHYB5.ad.analog.com (10.64.17.133) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.986.14; Sun, 21 Jan 2024 05:35:28 -0500
-Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx9.ad.analog.com
- (10.64.17.10) with Microsoft SMTP Server id 15.2.986.14 via Frontend
- Transport; Sun, 21 Jan 2024 05:35:28 -0500
-Received: from kim-VirtualBox.ad.analog.com (KPALLER2-L03.ad.analog.com [10.116.242.67])
-	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 40LAZAof021011;
-	Sun, 21 Jan 2024 05:35:23 -0500
-From: Kim Seer Paller <kimseer.paller@analog.com>
-To: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        "Kim
- Seer Paller" <kimseer.paller@analog.com>
-Subject: [PATCH 2/2] gpio: gpio-adg1414: New driver
-Date: Sun, 21 Jan 2024 18:35:05 +0800
-Message-ID: <20240121103505.26475-3-kimseer.paller@analog.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240121103505.26475-1-kimseer.paller@analog.com>
-References: <20240121103505.26475-1-kimseer.paller@analog.com>
+	s=arc-20240116; t=1705841795; c=relaxed/simple;
+	bh=CU8CVt0gIhATyZrqsZlQzuxnGQAXF7t8casXv8CS7Go=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RIWSyWUmlgg9eMv2Q1SlplWUuHZwb284NnQ2dYL7MmS1eUJdhqowxizuJVbwHjiJ3CvMGndeEfDJAYPkednsw5piLHl4owncGbg30pHxdNwx8mYmEk4iyyWxexdJ1N2H6fuYULVRlLQlzJCkufu/o1BwZi29Fqs2oVbX0aE2Skg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=JBkIyFi4; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1705841794; x=1737377794;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=CU8CVt0gIhATyZrqsZlQzuxnGQAXF7t8casXv8CS7Go=;
+  b=JBkIyFi4xXgSeiLUFHzyf7qCHYVmNybE3t9VIGiFODsjoVDrvaEuknL6
+   IIym4B6Op/N64Vlv5kRIs8ntkLlKZ+xyEClMBoF55RKx8bwjm1U2bVvXh
+   88lDVcjwLhFnNZz81Da9HmshFsCjycf0hYLXIc8Y9L3+w2KVFs8V2oWgk
+   o3UgeAo5JOm6JfGkpFm+6RvUZ2LEJYXLCzoa07SAFY7rKDgl9R56F2+2X
+   RVCjHM1DE/9N0Y+0Nrkd4h5Uyp+Lu15ctsCUNs5LlQnwHScCt/TZ6V+YJ
+   VS8ejrIG/NZ25G2wrXeKr2IfxkFP7kxTq1kqQeFWc7DRf4op3BgDlxSyn
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="7705119"
+X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
+   d="scan'208";a="7705119"
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 04:56:33 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10959"; a="1032341043"
+X-IronPort-AV: E=Sophos;i="6.05,209,1701158400"; 
+   d="scan'208";a="1032341043"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga006.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Jan 2024 04:56:30 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rRXND-0000000Fcqz-0jn9;
+	Sun, 21 Jan 2024 14:56:27 +0200
+Date: Sun, 21 Jan 2024 14:56:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Mario Limonciello <mario.limonciello@amd.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	"open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+	open list <linux-kernel@vger.kernel.org>,
+	linux-acpi@vger.kernel.org, stable@vger.kernel.org,
+	George Melikov <mail@gmelikov.ru>
+Subject: Re: [PATCH] gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-04
+Message-ID: <Za0UenM4CweUNZhW@smile.fi.intel.com>
+References: <20240117142942.5924-1-mario.limonciello@amd.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-X-ADIRuleOP-NewSCL: Rule Triggered
-X-Proofpoint-GUID: n7xPRH64Yqg_pLCV_UZII8v7YDAwOTKm
-X-Proofpoint-ORIG-GUID: n7xPRH64Yqg_pLCV_UZII8v7YDAwOTKm
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.997,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-01-20_06,2024-01-19_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 adultscore=0
- lowpriorityscore=0 mlxscore=0 bulkscore=0 spamscore=0 priorityscore=1501
- phishscore=0 clxscore=1015 mlxlogscore=999 malwarescore=0 suspectscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2311290000
- definitions=main-2401210082
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240117142942.5924-1-mario.limonciello@amd.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-The ADG1414 is a 9.5 Ω RON ±15 V/+12 V/±5 V iCMOS Serially-Controlled
-Octal SPST Switches
+On Wed, Jan 17, 2024 at 08:29:42AM -0600, Mario Limonciello wrote:
+> Spurious wakeups are reported on the GPD G1619-04 which
+> can be absolved by programming the GPIO to ignore wakeups.
 
-Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
----
- MAINTAINERS                 |   1 +
- drivers/gpio/Kconfig        |  10 +++
- drivers/gpio/Makefile       |   1 +
- drivers/gpio/gpio-adg1414.c | 141 ++++++++++++++++++++++++++++++++++++
- 4 files changed, 153 insertions(+)
- create mode 100644 drivers/gpio/gpio-adg1414.c
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 526145e69..254ba7ea5 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -466,6 +466,7 @@ M:	Kim Seer Paller <kimseer.paller@analog.com>
- S:	Supported
- W:	https://ez.analog.com/linux-software-drivers
- F:	Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
-+F:	drivers/gpio/gpio-adg1414.c
- 
- ADM1025 HARDWARE MONITOR DRIVER
- M:	Jean Delvare <jdelvare@suse.com>
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 1301cec94..25d467d70 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -1728,6 +1728,16 @@ config GPIO_74X164
- 	  shift registers. This driver can be used to provide access
- 	  to more GPIO outputs.
- 
-+config GPIO_ADG1414
-+	tristate "ADG1414 SPST Switch Driver"
-+	depends on SPI
-+	help
-+	  Say yes here to build support for Analog Devices ADG1414 SPST
-+	  Switch Driver
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called gpio-adg1414.
-+
- config GPIO_MAX3191X
- 	tristate "Maxim MAX3191x industrial serializer"
- 	select CRC8
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 9e40af196..9ab45d128 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -24,6 +24,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)		+= gpio-104-idi-48.o
- obj-$(CONFIG_GPIO_104_IDIO_16)		+= gpio-104-idio-16.o
- obj-$(CONFIG_GPIO_74X164)		+= gpio-74x164.o
- obj-$(CONFIG_GPIO_74XX_MMIO)		+= gpio-74xx-mmio.o
-+obj-$(CONFIG_GPIO_ADG1414)		+= gpio-adg1414.o
- obj-$(CONFIG_GPIO_ADNP)			+= gpio-adnp.o
- obj-$(CONFIG_GPIO_ADP5520)		+= gpio-adp5520.o
- obj-$(CONFIG_GPIO_AGGREGATOR)		+= gpio-aggregator.o
-diff --git a/drivers/gpio/gpio-adg1414.c b/drivers/gpio/gpio-adg1414.c
-new file mode 100644
-index 000000000..6c0830ee2
---- /dev/null
-+++ b/drivers/gpio/gpio-adg1414.c
-@@ -0,0 +1,141 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADG1414 SPST Switch Driver
-+ *
-+ * Copyright 2024 Analog Devices Inc.
-+ */
-+
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/gpio/driver.h>
-+#include <linux/spi/spi.h>
-+#include <linux/module.h>
-+#include <linux/property.h>
-+
-+#define ADG1414_MAX_DEVICES		4
-+
-+struct adg1414_state {
-+	struct spi_device		*spi;
-+	struct gpio_chip		chip;
-+	struct mutex			lock; /* protect sensor state */
-+	u32				buf;
-+
-+	__be32				tx __aligned(ARCH_DMA_MINALIGN);
-+};
-+
-+static void adg1414_set(struct gpio_chip *chip,
-+			unsigned int offset,
-+			int value)
-+{
-+	struct adg1414_state *st = gpiochip_get_data(chip);
-+	int ret;
-+
-+	struct spi_transfer xfer = {
-+		.tx_buf = &st->tx,
-+		.len = st->chip.ngpio / 8,
-+	};
-+
-+	mutex_lock(&st->lock);
-+
-+	if (value)
-+		st->buf |= BIT(offset);
-+	else
-+		st->buf &= ~BIT(offset);
-+
-+	st->tx = cpu_to_be32(st->buf << (32 - st->chip.ngpio));
-+
-+	ret = spi_sync_transfer(st->spi, &xfer, 1);
-+	if (ret)
-+		goto out;
-+
-+out:
-+	mutex_unlock(&st->lock);
-+}
-+
-+static int adg1414_get(struct gpio_chip *chip,
-+		       unsigned int offset)
-+{
-+	struct adg1414_state *st = gpiochip_get_data(chip);
-+	int value;
-+
-+	mutex_lock(&st->lock);
-+
-+	value = st->buf & BIT(offset);
-+
-+	mutex_unlock(&st->lock);
-+
-+	return value;
-+}
-+
-+static int adg1414_get_direction(struct gpio_chip *chip,
-+				 unsigned int offset)
-+{
-+	return GPIO_LINE_DIRECTION_OUT;
-+}
-+
-+static int adg1414_probe(struct spi_device *spi)
-+{
-+	struct adg1414_state *st;
-+	struct gpio_desc *reset;
-+	struct device *dev = &spi->dev;
-+	u32 num_devices;
-+	int ret;
-+
-+	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
-+	if (!st)
-+		return -ENOMEM;
-+
-+	st->spi = spi;
-+
-+	/* Use reset pin to reset the device */
-+	reset = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(reset))
-+		return dev_err_probe(dev, PTR_ERR(reset),
-+				     "Failed to get reset gpio");
-+
-+	if (reset) {
-+		fsleep(1);
-+		gpiod_set_value_cansleep(reset, 0);
-+	}
-+
-+	num_devices = 1;
-+	ret = device_property_read_u32(dev, "#daisy-chained-devices",
-+				       &num_devices);
-+	if (!ret) {
-+		if (!num_devices || num_devices > ADG1414_MAX_DEVICES)
-+			return dev_err_probe(dev, ret,
-+			       "Failed to get daisy-chained-devices property\n");
-+	}
-+
-+	st->chip.label = "adg1414";
-+	st->chip.parent = dev;
-+	st->chip.get_direction = adg1414_get_direction;
-+	st->chip.set = adg1414_set;
-+	st->chip.get = adg1414_get;
-+	st->chip.base = -1;
-+	st->chip.ngpio =  num_devices * 8;
-+	st->chip.can_sleep = true;
-+
-+	mutex_init(&st->lock);
-+
-+	return devm_gpiochip_add_data(dev, &st->chip, st);
-+}
-+
-+static const struct of_device_id adg1414_of_match[] = {
-+	{ .compatible = "adi,adg1414" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, adg1414_of_match);
-+
-+static struct spi_driver adg1414_driver = {
-+	.driver = {
-+		.name = "adg1414",
-+		.of_match_table = adg1414_of_match,
-+	},
-+	.probe = adg1414_probe,
-+};
-+module_spi_driver(adg1414_driver);
-+
-+MODULE_AUTHOR("Kim Seer Paller <kimseer.paller@analog.com>");
-+MODULE_DESCRIPTION("ADG1414 SPST Switch Driver");
-+MODULE_LICENSE("GPL");
+
 -- 
-2.34.1
+With Best Regards,
+Andy Shevchenko
+
 
 
