@@ -1,116 +1,114 @@
-Return-Path: <linux-gpio+bounces-2408-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2409-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 56209836127
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 12:22:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 061C3836234
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 12:42:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECBA41F21EE2
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 11:22:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 393191C24F5C
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 11:42:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD3A3D56C;
-	Mon, 22 Jan 2024 11:09:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B19323D0A8;
+	Mon, 22 Jan 2024 11:37:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fny94JHp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f170.google.com (mail-il1-f170.google.com [209.85.166.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDB53D555;
-	Mon, 22 Jan 2024 11:09:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 411993A1A2;
+	Mon, 22 Jan 2024 11:37:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705921749; cv=none; b=nvxORgkV0VBKatS26GFx20zPECbI2sDw+hQVfn9zqeQ9ffW9rrkZgxvt+u4GNadu5tQJ08JhlSZMjvMow/yrBd1ENXzO/c+mEZeAvyJ1HD8NZI8WwKjDcjDDEen61BWwOBVH8N0KZaF20vdrgC3xlHumzVPCBjMGloVqOQRIq3U=
+	t=1705923421; cv=none; b=JFil9ybvhFW6KgB1z++e48S0B9Cr3OXaDYpoUjTMsj0y7TwUbwgO0KTsVnyYK3lZY24mdSHvk1dYRaufs91vJ7uNFJnFdZha7LSIgeh3qu5gtvW+DtQsDDnWALTe15oBs80ziP1ImF9hMbc+amHve+WLxhbNjA+4WnG0sH5wPZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705921749; c=relaxed/simple;
-	bh=RAHCPa5LLeS2+X/yJSngT097aqPs0WTNZ+ONX6kPsPg=;
-	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=BHLd/qNB6I7OBy6wqbTFqnzJF4C9XfV1T1Q7Mw9SdcOMm06ffNf/NHMFA1O3eifRQeediWN9VZ72fzD+LPxvZTfgiUoNUlNMmJC59CHZXmz7A2zjBnblzRYpBKSx4NCw6z7tTBNwzKFuWpUYqF3xhnc1rIDT9lzqD4yOhRzTnoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.18.186.216])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TJS815ZyBz6J9gC;
-	Mon, 22 Jan 2024 19:06:09 +0800 (CST)
-Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
-	by mail.maildlp.com (Postfix) with ESMTPS id D1921140A90;
-	Mon, 22 Jan 2024 19:09:03 +0800 (CST)
-Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
- (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
- 2024 11:09:03 +0000
-Date: Mon, 22 Jan 2024 11:09:02 +0000
-From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
-To: Ceclan Dumitru <mitrutzceclan@gmail.com>
-CC: Jonathan Cameron <jic23@kernel.org>, <linus.walleij@linaro.org>,
-	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
- Clausen" <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
-	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
-	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
-	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
-	<hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, "Ceclan
- Dumitru" <dumitru.ceclan@analog.com>, <linux-iio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v12 2/2] iio: adc: ad7173: add AD7173 driver
-Message-ID: <20240122110902.00004357@Huawei.com>
-In-Reply-To: <57ea42b3-106b-4361-8d07-4e1656bf6e58@gmail.com>
-References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
-	<20240118125001.12809-2-mitrutzceclan@gmail.com>
-	<20240121155041.3fc1a85d@jic23-huawei>
-	<57ea42b3-106b-4361-8d07-4e1656bf6e58@gmail.com>
-Organization: Huawei Technologies Research and Development (UK) Ltd.
-X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
+	s=arc-20240116; t=1705923421; c=relaxed/simple;
+	bh=vlRBYdNiixxTaILLeh6MxcF3ZKQkhQilWesTZt+ciJA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iyGjFgqeISGYC+awZWrT4akxmNja53YZIgZ4YVByn1prO6MY/qvuaES9WMHnkhc/yk3sepDSz8lPzE9mwB4SD9chBltITu4EHj8rV403N2gwQb+uOFYwfjUqRwFzPzkEkv3rz0rc7y0kiiZJUk1h3hBHfZI8RUEhYEl39Lb3fv4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fny94JHp; arc=none smtp.client-ip=209.85.166.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-il1-f170.google.com with SMTP id e9e14a558f8ab-361ae51a4d9so9631155ab.1;
+        Mon, 22 Jan 2024 03:37:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1705923419; x=1706528219; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=M63RrCQAuLU2mfBJIoBlvu0cGr4uAclNR33OskO7lIQ=;
+        b=fny94JHpJmtse1c8/SKhKO3MCc5ZbebZZ+S8BXsim2xA8q6G77SK+NOpOM+B0c3mqI
+         ifbwTe5CPFK3NFXnTKgDc22Z+JUqVNOVguFr+xAp9B00mVdSFas5vKl+1oabSZsjX44g
+         8ioxGKwWPPntGMd9MywuBXeb7TLMYNaYX6uLs2Zspb5mZwsc9gq/R9fxNbbTFax/Y/V4
+         ByR3ai0DojCL8pOPvLUzzdhP5++OM+h57/RIpynI2kZAPQwq8shHS5IwrPw7M+wZ29Mo
+         mA3kZhWzA/F7APpfq2QACM/bMEdDPf3JPbnbii1oBem2CO5SbarBIFKLy4XHo7WSwlSO
+         PDsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1705923419; x=1706528219;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=M63RrCQAuLU2mfBJIoBlvu0cGr4uAclNR33OskO7lIQ=;
+        b=PX2pB38UsNrZvS8viZ57uqaMAzxkRBbZVdY9R19XMdfEVOgDYUZ/xxVvzh86rXhHB7
+         ar3FtDClu1eI0qo2YDx9EO/h1SduqdVpTy9W8TgQbq/CW6Ynqf/dUyWKSTEtKYlUfzdd
+         /ZoAeBeoA/zmriOPXqVIfNhavitunoa+d8Tc1f08y/6hEEyzu7b3d2vgrOs7JgShgdQH
+         D9Md+QENey6Ck7L4+tqJwCHAOarrxnSF3rsTJOh00U/Tjtd3VnnjNst58Fm7L064B8ri
+         +/tzLsux5iFkDSEKrbgxmnK03D/xZlGlDiNIllGEigLsPO5Lh+h0DAGVWvdgxSSqsINC
+         Fpfg==
+X-Gm-Message-State: AOJu0Yyui5Yb+m4OS8QP89fgREdBAIxWC3LOjdwg8Nv73Idh2AZAfDX9
+	5aoL4VRdPicfgyGppXsLMAxyMUj/L9pL6HKJUrMmxOaZKLyTW1bvgFDo9gty
+X-Google-Smtp-Source: AGHT+IHv0bOfcxBB9d49Mq8AXm1lpOFB86klKQEurZ4/U7A6hkBvEDw449booFlFuzB05GsdCQVn5A==
+X-Received: by 2002:a92:d05:0:b0:35f:97ca:14e6 with SMTP id 5-20020a920d05000000b0035f97ca14e6mr6486398iln.49.1705923419248;
+        Mon, 22 Jan 2024 03:36:59 -0800 (PST)
+Received: from rigel.home.arpa ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id l198-20020a633ecf000000b005cda4d88933sm8216412pga.43.2024.01.22.03.36.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 22 Jan 2024 03:36:58 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] MAINTAINERS: add Documentation/userspace-api/gpio/ to GPIO UAPI section
+Date: Mon, 22 Jan 2024 19:36:40 +0800
+Message-Id: <20240122113640.93162-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
- lhrpeml500005.china.huawei.com (7.191.163.240)
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Jan 2024 12:02:35 +0200
-Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
+Add Documentation/userspace-api/gpio/ to the GPIO UAPI section.
 
-> On 1/21/24 17:50, Jonathan Cameron wrote:
-> >> +	ret = devm_ad_sd_setup_buffer_and_trigger(dev, indio_dev);  
-> > If the error interrupt is provided either first, or as the only interrupt
-> > this is going to use the wrong one.
-> > 
-> > Probably need to have a variant of that which takes an explicit irq so that
-> > figuring out which irq is relevant becomes a driver problem rather than the
-> > library having a go based on spi->irq.  
-> 
-> Would it be acceptable to check if spi->irq interrupt number is equal to
-> fwnode_irq_get_byname(dev_fwnode(dev), "rdy")?
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-That would be a good start and probably cover most cases.
-> 
-> If not, a message could be passed that specifies either that "rdy" is
-> needed or that it must be placed first.
+Now that the UAPI split out has reached gpio/for-next it can be updated to
+include the new userspace-api documentation.
 
-If you are mandating the order, that should possibly be reflected in the binding.
-If this was hard to fix, I'd be fine with leaving for when someone runs into
-a case where they have it ordered the other way around, but given it seems simple
-to fix up probably better to just do it and avoid having to remember anything
-about it later.
+"No capes!" - Edna Mode.
 
-> 
-> 
-> Another alternative would be adding irq to ad_sigma_delta_info so a
-> driver could specify the desired interrupt to be used for conversions.
-> 
+ MAINTAINERS | 1 +
+ 1 file changed, 1 insertion(+)
 
-That works.  Make it optional so if value is 0 use spi->irq as before so
-that you don't need to modify the other drivers.
-
-
-Jonathan
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8d1052fa6a69..2d0bc0e128bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9148,6 +9148,7 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git
+ F:	Documentation/ABI/obsolete/sysfs-gpio
+ F:	Documentation/ABI/testing/gpio-cdev
++F:	Documentation/userspace-api/gpio/
+ F:	drivers/gpio/gpiolib-cdev.c
+ F:	include/uapi/linux/gpio.h
+ F:	tools/gpio/
+--
+2.39.2
 
 
