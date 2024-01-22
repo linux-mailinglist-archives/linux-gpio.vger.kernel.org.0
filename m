@@ -1,223 +1,317 @@
-Return-Path: <linux-gpio+bounces-2413-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2414-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4EAB8363B2
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 13:51:12 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05A098363D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 14:00:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AA4EB2E4B9
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 12:45:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 898D41F257B6
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 13:00:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1B0E3C6A4;
-	Mon, 22 Jan 2024 12:40:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B272C3C697;
+	Mon, 22 Jan 2024 13:00:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UzzbiyTr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rg9VKTYR"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com [209.85.167.52])
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAC403B194
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 12:40:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 179AC3C07B
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 13:00:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705927235; cv=none; b=VX34EbemQ9tcwHX7JkT8EXkmpVnoMDWWHZfEMews15Fxww2fSOMfGhGQxndrDkZmmVcK9iK38CDdQb0pN2l9/yL41G/XtJXAbWs1i/c4+oE31Ck5GwMvV00H5Xpc1z62dyf9yXIhh9Znw8szyZih3U+QFgkA25qzr0lobB6RzwY=
+	t=1705928422; cv=none; b=BrmncJMnmemw+wmexU6xTvGnPNWODExZWPPBH3woeFCPeuqBH89lOIh0sThDxf99nkZPAedsolCQUzAqiw0uWpYHgsFru7akBMJ86Vm7ISkegqXMYB378n4uJ2O6urr/U65BMpPAGlJW8yRuG88cHeGrlc5SJ1d0HoWDZt1eKXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705927235; c=relaxed/simple;
-	bh=cgGflAX7Jk/DKD8c1/qHFTxGSFNzXzHgf4fiCny/284=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WuLnLN3NcwgWnJytZIq2SllxDIGOtFzfEUsKHrc/n8g1KDYX0FFv5Njz2yXDxDokC6ohGi2QpJgqiUpw9T+CuBRk70K4pY1/Vl4Oobeq8rW+UDATQTqfzFVa3Jy/Ep84XcyJG27lXV2yllrUfRR/3o39Krn0Rus7x9rsigEU0xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UzzbiyTr; arc=none smtp.client-ip=209.85.167.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-50eaabc36bcso3193116e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 04:40:33 -0800 (PST)
+	s=arc-20240116; t=1705928422; c=relaxed/simple;
+	bh=ahGtvFaputZwuFZ8rVL034FxyRm3g+H89Syq0qpxbsg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=jNsgmYQv/U6rFYFevRUr4X8vgAZsSD/Rugn+NcE/70SPdj8TGM31z26zT/MA93GJz2cRHHllEpqPxuhKsqlFt3JklpPq0nktd/TTl07N+u3nr7WC0njaym960rVhSSqGIW+D3K7bGwF2JOKqCG8I2eOFDEenoPq8cRx6VAPtfCw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rg9VKTYR; arc=none smtp.client-ip=209.85.217.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f52.google.com with SMTP id ada2fe7eead31-4698c58c589so606754137.3
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 05:00:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705927232; x=1706532032; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=ekfPLQELwtuiCCO7YX+l1adjQj4DFXg4TFgO74oq338=;
-        b=UzzbiyTrlyYo3/bdAAOOCb/vO3OSBTrUR3r80QrRhCuBRGhc1bq2WN85g7Ofy6IgF1
-         svOAZfLTNBwnqj1+rOLz4P7o1XUtlYKtSRzO3NVF5KUUuFUEOpzxoOsJy+Y8SmePXLHH
-         WzMqtAKERgd08T5OJg8kKIjZEWhYzw4wXMrq8vcX00nGa6i94JPkdXuUj0lylinf9JAn
-         rKT/wSc0vwa1zE2dh1hiN/0ZNvR+UI8r8khQdDsvwTV2Xx+9qv3f6cfwAxRps+bkiJ30
-         nmzXwO2pyvf+lyEyfrT86O2dvKVVRqJH3zgGOUhRSpKwHq50HKy9M1kAop+DGdHiAkVq
-         UnHQ==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705928419; x=1706533219; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7UVF6VRlL7jBDtamTYbW1rZwrgsP2BU/YLQdNr3yats=;
+        b=rg9VKTYR0fJ9kjrPgCmjPl3eSyl2pK5LySdLdfyxP4+7ZXJxdzUQrZsft3WUD+8hq6
+         03Ir2yrdAicOP13jRt7JBU07/prldHRPx0VEo2oSp5wdf71v3Tv6OwnVDf6Fc70w3jYm
+         N0lcPXIQ/iP3Ejt7M+npgMNcFlYBQS3vnBAeXgY0xz6iwqjY7X2SluF91OklgM40nOR4
+         UXZ/jGa6m1llfVTLcdIutDe5IgxwNQyydsmyRzXPL0B3AYs8AvwQqaKKITDNqXJfNjgp
+         NQtMNoZFKaeXX4DDNBDZCP7ECXRjZgroxAbI9egM7+JV4b5K32Y0FLQPRzGmvp/h7jfZ
+         jP/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705927232; x=1706532032;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ekfPLQELwtuiCCO7YX+l1adjQj4DFXg4TFgO74oq338=;
-        b=dpGnSL8KUsukIcVXFzSqXTvwTIKNoGwoUmZXqXKzlvRlCgtXGYSpdo2+vTf6Y1Hv6p
-         34vcaWSDb6iX0LyGJE1aZ9CpFfpY4riorTrr4zG8WWc0FyV7lGnb0Uj4NXvKtDd4PqUR
-         YdgjMil4Ne8Eedf3TPXHikQTSp0w+TmYy+XhZRJxsMdHTrgWS92OOqSPb2f214ourdmo
-         VobC90LCrKbuevcHfaAsFimVwwIzQBy/HQEMdltOcRmgxPcDWfS5+ni4v/qgAIVaKE1V
-         5GS/mG2af6r190LWeu/HFTvjjW9GclskxmEdQemGDTOKjW2OzZeKjQ3dDMu3fQhw05CY
-         Zgyw==
-X-Gm-Message-State: AOJu0Yyut1MDeq9+1fkwfXztfT8qRTNZcgLM4D7loQHYLUdqfhyOrzmz
-	rD570B7N7lLztRyNRNAsWVdESmCM1pTvM0UOIdGxeEMhZlPT9Q27ZdheVhT5c3o=
-X-Google-Smtp-Source: AGHT+IEiFGQCnyB1ZPUgp96VxEKCkoa0z4ttz40Jl3uZYKmI1PZ+LItqGbMOR2LytoFl71tWVxsnCg==
-X-Received: by 2002:a05:6512:31c3:b0:50e:7c08:1a55 with SMTP id j3-20020a05651231c300b0050e7c081a55mr2005478lfe.18.1705927231862;
-        Mon, 22 Jan 2024 04:40:31 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id a18-20020a195f52000000b0050e70ebbaa4sm2037137lfj.186.2024.01.22.04.40.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 22 Jan 2024 04:40:31 -0800 (PST)
-Message-ID: <2e34faa9-a0ca-49f6-a268-1c01c31b041c@linaro.org>
-Date: Mon, 22 Jan 2024 13:40:28 +0100
+        d=1e100.net; s=20230601; t=1705928419; x=1706533219;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=7UVF6VRlL7jBDtamTYbW1rZwrgsP2BU/YLQdNr3yats=;
+        b=CqQ8W6rI/jX0yBxz10FthPd96A4oSSn4StYDBn41T/ZM70tjqzyWWATb8AZy4v9CP+
+         Yo/XV932LsRXfwTt3BxXG1L6HjNcLgn6JRkFwa8ed32MdLD985+peZ1ZeqJaC5RdI53Z
+         ur4rH/bav2vLTZlgdkjOIDAn6jBmRJl+4Xbpvv3xthS/FiLTdnlQpq+orZg9nZk5OGV0
+         o9H2C9CeIAyIqOs/eJEK9zdXcz++cVOyt7XStWSsfLbHERhliHS3f2zvs5jYpYHhghBp
+         ZGWjhw4cXg5SjZBBoc9BW75H4UqGxDTdLEMOokfAxe9wVtISLzlKMBAASS/i/MdMHYPX
+         pBDw==
+X-Gm-Message-State: AOJu0Ywi6+qMIIs+kICVRKd/+162yK2tcpV6k2/3BXezidmF9c8r6iPD
+	BzH1UCFVUNSUTg6RzesVdyrBI5P2WNM+ayGs6ylZNJ/9vDUqVC0PMrbVP9LlbmjLE4B6/y68snP
+	k4/7eeDQDN5Vg66brcNmkK4tnJhFaTM6c+yg08w==
+X-Google-Smtp-Source: AGHT+IHc0nWUe3FE9llG2FWpD2qTL6DIi/+E0DtCT4oL1Yx/t4nCI6zGwUTm6+wkSiMTO+Zs5jDh5S8JrYyf5lKdzk0=
+X-Received: by 2002:a67:f1d7:0:b0:467:ea78:a41a with SMTP id
+ v23-20020a67f1d7000000b00467ea78a41amr2045193vsm.30.1705928418671; Mon, 22
+ Jan 2024 05:00:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: gpio: add adg1414
-Content-Language: en-US
-To: Kim Seer Paller <kimseer.paller@analog.com>, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>
-References: <20240121103505.26475-1-kimseer.paller@analog.com>
- <20240121103505.26475-2-kimseer.paller@analog.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240121103505.26475-2-kimseer.paller@analog.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20240121103505.26475-1-kimseer.paller@analog.com> <20240121103505.26475-3-kimseer.paller@analog.com>
+In-Reply-To: <20240121103505.26475-3-kimseer.paller@analog.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 22 Jan 2024 14:00:07 +0100
+Message-ID: <CAMRc=MeGVAO8Fr4U5ai-OgEmX5gXeddLDKyRC+FQia1TH64m+Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: gpio-adg1414: New driver
+To: Kim Seer Paller <kimseer.paller@analog.com>
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 21/01/2024 11:35, Kim Seer Paller wrote:
-> The ADG1414 is a 9.5 Ω RON ±15 V/+12 V/±5 V iCMOS Serially-Controlled
+On Sun, Jan 21, 2024 at 11:35=E2=80=AFAM Kim Seer Paller
+<kimseer.paller@analog.com> wrote:
+>
+> The ADG1414 is a 9.5 =CE=A9 RON =C2=B115 V/+12 V/=C2=B15 V iCMOS Serially=
+-Controlled
 > Octal SPST Switches
-> 
+
+Switch? (singular)
+
+>
 > Signed-off-by: Kim Seer Paller <kimseer.paller@analog.com>
 > ---
->  .../bindings/gpio/gpio-adg1414.yaml           | 66 +++++++++++++++++++
->  MAINTAINERS                                   |  6 ++
->  2 files changed, 72 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml b/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
+>  MAINTAINERS                 |   1 +
+>  drivers/gpio/Kconfig        |  10 +++
+>  drivers/gpio/Makefile       |   1 +
+>  drivers/gpio/gpio-adg1414.c | 141 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 153 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-adg1414.c
+>
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 526145e69..254ba7ea5 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -466,6 +466,7 @@ M:  Kim Seer Paller <kimseer.paller@analog.com>
+>  S:     Supported
+>  W:     https://ez.analog.com/linux-software-drivers
+>  F:     Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
+> +F:     drivers/gpio/gpio-adg1414.c
+>
+>  ADM1025 HARDWARE MONITOR DRIVER
+>  M:     Jean Delvare <jdelvare@suse.com>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 1301cec94..25d467d70 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -1728,6 +1728,16 @@ config GPIO_74X164
+>           shift registers. This driver can be used to provide access
+>           to more GPIO outputs.
+>
+> +config GPIO_ADG1414
+> +       tristate "ADG1414 SPST Switch Driver"
+> +       depends on SPI
+> +       help
+> +         Say yes here to build support for Analog Devices ADG1414 SPST
+> +         Switch Driver
+> +
+> +         To compile this driver as a module, choose M here: the
+> +         module will be called gpio-adg1414.
+> +
+>  config GPIO_MAX3191X
+>         tristate "Maxim MAX3191x industrial serializer"
+>         select CRC8
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 9e40af196..9ab45d128 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -24,6 +24,7 @@ obj-$(CONFIG_GPIO_104_IDI_48)         +=3D gpio-104-idi=
+-48.o
+>  obj-$(CONFIG_GPIO_104_IDIO_16)         +=3D gpio-104-idio-16.o
+>  obj-$(CONFIG_GPIO_74X164)              +=3D gpio-74x164.o
+>  obj-$(CONFIG_GPIO_74XX_MMIO)           +=3D gpio-74xx-mmio.o
+> +obj-$(CONFIG_GPIO_ADG1414)             +=3D gpio-adg1414.o
+>  obj-$(CONFIG_GPIO_ADNP)                        +=3D gpio-adnp.o
+>  obj-$(CONFIG_GPIO_ADP5520)             +=3D gpio-adp5520.o
+>  obj-$(CONFIG_GPIO_AGGREGATOR)          +=3D gpio-aggregator.o
+> diff --git a/drivers/gpio/gpio-adg1414.c b/drivers/gpio/gpio-adg1414.c
 > new file mode 100644
-> index 000000000..24a51e79f
+> index 000000000..6c0830ee2
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-adg1414.yaml
+> +++ b/drivers/gpio/gpio-adg1414.c
+> @@ -0,0 +1,141 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * ADG1414 SPST Switch Driver
+> + *
+> + * Copyright 2024 Analog Devices Inc.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/gpio/driver.h>
+> +#include <linux/spi/spi.h>
+> +#include <linux/module.h>
 
-Filename like compatible.
+Can you keep the headers in alphabetical order please?
 
+> +#include <linux/property.h>
+> +
+> +#define ADG1414_MAX_DEVICES            4
+> +
+> +struct adg1414_state {
+> +       struct spi_device               *spi;
+> +       struct gpio_chip                chip;
+> +       struct mutex                    lock; /* protect sensor state */
 
-> @@ -0,0 +1,66 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/gpio-adg1414.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ADG1414 SPST Switch Driver
+Locking here is simple enough that you could use the SPI regmap and
+get it to do the serialization for you. And then you could possibly
+reuse the gpio-regmap abstraction and get an even smaller footprint.
 
-"Driver" as Linux driver or some hardware driver?
+> +       u32                             buf;
+> +
+> +       __be32                          tx __aligned(ARCH_DMA_MINALIGN);
+> +};
 
-> +
-> +maintainers:
-> +  - Kim Seer Paller <kimseer.paller@analog.com>
-> +
-> +description:
-> +  The ADG1414 is a 9.5 Ω RON ±15 V/+12 V/±5 V iCMOS serially-controlled
-> +  octal SPST switches.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,adg1414
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  gpio-controller: true
-> +
-> +  '#gpio-cells':
-> +    const: 2
-> +
-> +  spi-cpha: true
-> +
-> +  reset-gpios:
-> +    description: GPIO specifier that resets the device.
-
-Drop description, it's obvious. You could instead say something useful,
-like name of pin.
-
-> +    maxItems: 1
-> +
-> +  '#daisy-chained-devices':
-> +    description: The number of daisy-chained devices.
-> +    default: 1
-> +    minimum: 1
-> +    maximum: 4
-
-This needs to be added to dtschema or at least its type should be here.
+Please drop the tabs from the struct, I personally don't think they
+add to readability.
 
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - spi-cpha
+> +static void adg1414_set(struct gpio_chip *chip,
+> +                       unsigned int offset,
+> +                       int value)
+> +{
+> +       struct adg1414_state *st =3D gpiochip_get_data(chip);
+> +       int ret;
 > +
-> +allOf:
-> +  - $ref: /schemas/spi/spi-peripheral-props.yaml#
+> +       struct spi_transfer xfer =3D {
+> +               .tx_buf =3D &st->tx,
+> +               .len =3D st->chip.ngpio / 8,
+> +       };
 > +
-> +unevaluatedProperties: false
+> +       mutex_lock(&st->lock);
 > +
+> +       if (value)
+> +               st->buf |=3D BIT(offset);
+> +       else
+> +               st->buf &=3D ~BIT(offset);
+> +
+> +       st->tx =3D cpu_to_be32(st->buf << (32 - st->chip.ngpio));
+> +
+> +       ret =3D spi_sync_transfer(st->spi, &xfer, 1);
+> +       if (ret)
+> +               goto out;
+> +
+> +out:
+> +       mutex_unlock(&st->lock);
+> +}
+> +
+> +static int adg1414_get(struct gpio_chip *chip,
+> +                      unsigned int offset)
+> +{
+> +       struct adg1414_state *st =3D gpiochip_get_data(chip);
+> +       int value;
+> +
+> +       mutex_lock(&st->lock);
+> +
+> +       value =3D st->buf & BIT(offset);
+> +
+> +       mutex_unlock(&st->lock);
+> +
+> +       return value;
+> +}
+> +
+> +static int adg1414_get_direction(struct gpio_chip *chip,
+> +                                unsigned int offset)
+> +{
+> +       return GPIO_LINE_DIRECTION_OUT;
+> +}
+> +
+> +static int adg1414_probe(struct spi_device *spi)
+> +{
+> +       struct adg1414_state *st;
+> +       struct gpio_desc *reset;
+> +       struct device *dev =3D &spi->dev;
+> +       u32 num_devices;
+> +       int ret;
+> +
+> +       st =3D devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
+> +       if (!st)
+> +               return -ENOMEM;
+> +
+> +       st->spi =3D spi;
+> +
+> +       /* Use reset pin to reset the device */
+> +       reset =3D devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(reset))
+> +               return dev_err_probe(dev, PTR_ERR(reset),
+> +                                    "Failed to get reset gpio");
+> +
+> +       if (reset) {
+> +               fsleep(1);
+> +               gpiod_set_value_cansleep(reset, 0);
+> +       }
+> +
+> +       num_devices =3D 1;
+> +       ret =3D device_property_read_u32(dev, "#daisy-chained-devices",
+> +                                      &num_devices);
+> +       if (!ret) {
+> +               if (!num_devices || num_devices > ADG1414_MAX_DEVICES)
+> +                       return dev_err_probe(dev, ret,
+> +                              "Failed to get daisy-chained-devices prope=
+rty\n");
+> +       }
+> +
+> +       st->chip.label =3D "adg1414";
+> +       st->chip.parent =3D dev;
+> +       st->chip.get_direction =3D adg1414_get_direction;
+> +       st->chip.set =3D adg1414_set;
+> +       st->chip.get =3D adg1414_get;
+> +       st->chip.base =3D -1;
+> +       st->chip.ngpio =3D  num_devices * 8;
+> +       st->chip.can_sleep =3D true;
+> +
+> +       mutex_init(&st->lock);
+> +
+> +       return devm_gpiochip_add_data(dev, &st->chip, st);
+> +}
+> +
+> +static const struct of_device_id adg1414_of_match[] =3D {
+> +       { .compatible =3D "adi,adg1414" },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, adg1414_of_match);
+> +
+> +static struct spi_driver adg1414_driver =3D {
+> +       .driver =3D {
+> +               .name =3D "adg1414",
+> +               .of_match_table =3D adg1414_of_match,
+> +       },
+> +       .probe =3D adg1414_probe,
+> +};
+> +module_spi_driver(adg1414_driver);
+> +
+> +MODULE_AUTHOR("Kim Seer Paller <kimseer.paller@analog.com>");
+> +MODULE_DESCRIPTION("ADG1414 SPST Switch Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.34.1
+>
 
-
-Best regards,
-Krzysztof
-
+Bart
 
