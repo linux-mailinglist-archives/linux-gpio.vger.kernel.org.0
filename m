@@ -1,149 +1,159 @@
-Return-Path: <linux-gpio+bounces-2428-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2429-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F4748372BE
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 20:39:00 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52A93837519
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 22:15:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3444EB265C3
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 19:24:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85EA61C24DB2
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 21:15:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA8A63E486;
-	Mon, 22 Jan 2024 19:24:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CD7F47F6F;
+	Mon, 22 Jan 2024 21:15:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="BzZluO4l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1T7fwc1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87C461EEFB
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 19:24:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D4AE47F57;
+	Mon, 22 Jan 2024 21:15:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705951445; cv=none; b=HOMse6jppclEJLjYgw0r5YXlx0NCGUdtMp0hLd+26ItYrQfYXWIkzAuV4HkoQ0w6vCtP9z62k+kFbxwShUCvvkvUtS1Yb33A7BAeor+RS1mPgv7bWzslJVzMg6mTQBaFx5mg/U/0T04WrHYcelSpb+86HlIUWa5DeckXpppzcso=
+	t=1705958150; cv=none; b=X9tGT+OkIMgGrOVtcLZQez7FoCL6/Y0EIwRHD87V0MBh7TG5ghoBKrXYYkHRCm3rDuuHWHNlhn2i8wGOaEzf826IwGynadwiGKTHXlN+1Lanb0bMdJWjJIC7AStrIiNznY63xXvhdXPUa0jFoM2hfH8xzc/pLSA3/y4Frfz8+60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705951445; c=relaxed/simple;
-	bh=QZXqizCmEJkLTeschCzNI3xVQ5vAq0NNymE7vlfMk5M=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J1t0On+FHpPIRN+D9mVbRAkGOLJkFesfqgiKcfMICjPB0h+T6mye2Nf5AUEUjEYMxVFVj4qoJzAP0AnTSzrtozS4VSKALuNgpoxhYWLoxZTE77XZXuDaKjLBnn++4rhxYzyKy9gd32dows+pS0BUUj9enBl+rKSPvwTyaChTzYc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=BzZluO4l; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-6001449a2beso7193477b3.3
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 11:24:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1705951442; x=1706556242; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=OX9o7XvaEzc93ZP35IE3Ip9GAQ7HE7yiGJfHkZCdg0g=;
-        b=BzZluO4lIK/LdcgLgp2/li+1rKdlxkQwugpaFi5ksQAXrGTDiHG4bfsBBf7o875eb/
-         3O/bePWF/ndCKqNyEVyP376gv+N5qGFvtbrVk+kPNdKmkTHKn7QcoeJ5bsMvEg56O1c4
-         gwlFMfSfC1r+gmiyqIXaaxJVGJTRgKvhdMH+GPQXW0U+CAvsLO3jqbPiZGAoM5IDlq2R
-         NlioriDBYJVpjf78a7ohGisORCfvP93ZYGMoOnb98lghjBnu/ErAX3NfaK2qqq0exOLc
-         ZDxz2UuEdOc4SFVzuUG+fZzPSFwngkpnqGaQbdH/tMhJklWoTSjrdWbV4mOzBmFujkRp
-         9D0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705951442; x=1706556242;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OX9o7XvaEzc93ZP35IE3Ip9GAQ7HE7yiGJfHkZCdg0g=;
-        b=hfBmGdZyb6Ed//lQrSKaJTgUHwljiyG2nC351aBgNVqdzNBPDYiXDnH4RxhGFkjBAI
-         OWuk3BvOoPt82KHajGnsCdXon/iSR/tG6/Y4pql1NEOFE+R/2q6uuv+TJUcr63BbKVr8
-         ST2GMNlMxYx636YlwB6uL8eluCRuXbFGv7jUsMY8+4O+vCcTXFTxcaQM0vCuuIdBiTU9
-         9MNO+nd5AHDncDpSEfQh0x+nt0x3keHlannqgNFLreG41CE3BhV95axuI71yOlYw5bUh
-         V4J1XNU9w5pVnnwokSt0996MA9nobZS5IyPUrWOgWVb8kmnuBQ1fEmhBqcH8bslR7q/6
-         W14w==
-X-Gm-Message-State: AOJu0Yz7NHWQeqHeg48YFuy1V0brt2803cHBLUmQLK9N7IgQfKInMeBf
-	/KRy0x3Bn37Zpmmy9Qy2KNpS4U1BWYatOlN9oYNqmGRKfZROxvL8IKHSuLawuyAo1X/l+S2eR80
-	uaWr5sC4/NeSC+oPjISwtgXUn2Fd/pGAjcZC1CQ==
-X-Google-Smtp-Source: AGHT+IF5SDxexmpKHGEI9dgqfLSo0UyVCMcmVgjFZpXLt1QYEJaISI6Lq/9f0AauIS9Iwv3B1VQ1l+v+6uOJYpFqJW4=
-X-Received: by 2002:a0d:e883:0:b0:5ff:8420:ce7f with SMTP id
- r125-20020a0de883000000b005ff8420ce7fmr3961841ywe.49.1705951442419; Mon, 22
- Jan 2024 11:24:02 -0800 (PST)
+	s=arc-20240116; t=1705958150; c=relaxed/simple;
+	bh=+Sd1NCS7PJbxgZHkZkL/NbxvN4eZbz3phY9jzv/ht6M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QXXGsw0cMb9RlQYCvHqRizUUShLy1QBAiQsXWYyqpN+22Wx7kAFCIK23uc9FksuOeu4vUMlV6FR8y5vHHdmm7i9PTnfPs/p6PZWJK44fB5ixF2a3FpX/tJ/MDmJOMPNPXJTESikUeKAEDVgH0ohmWy+j2OloExRzBLLiIEhvA6U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1T7fwc1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 495A2C433F1;
+	Mon, 22 Jan 2024 21:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1705958149;
+	bh=+Sd1NCS7PJbxgZHkZkL/NbxvN4eZbz3phY9jzv/ht6M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=o1T7fwc1V5q7RmfJRbstGjV5dsI6E/QdKShN042B+tXDRre9tnqA+ZuJfPs+J2SFm
+	 iCGqUKlYAMnRYK2K2tD8qYZSSNlMkusWT109maWcxydt5c9Fef/9/7EsNmKeFlYK2X
+	 AUleTEbReQs8WAhNUKP56QD7yNYehvF1OpvquuxBE5Hr6NSVmwPIlEypsYFaAoEpkT
+	 3Vr7duejQVZY6IGbfDGEiN5gRTc3EzDOHIYoOTf/4dLrAQaE9fAkWt6+fyGpf2OftS
+	 0Piu6niMK4yYNzDfs/n3s+kcGfRgAaL7oNg1aJIs3ofawGbH2iUyOQGWU2ocr+GCWK
+	 o+p89ipoWno9g==
+From: Rob Herring <robh@kernel.org>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Daniel Lezcano <daniel.lezcano@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Alessandro Zummo <a.zummo@towertech.it>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-rtc@vger.kernel.org
+Subject: [PATCH] MAINTAINERS: Drop my "+dt" sub-address
+Date: Mon, 22 Jan 2024 15:15:26 -0600
+Message-ID: <20240122211528.1719994-1-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
- <8c9b157b-4698-70a3-57b7-c588998eeda7@quicinc.com> <CAA8EJprDk=HnqWJ_F5zdUKMPFPpx1RD9KN-KQP9yopP6LMh_fw@mail.gmail.com>
- <52479377-ff61-7537-e4aa-064ab4a77c03@quicinc.com>
-In-Reply-To: <52479377-ff61-7537-e4aa-064ab4a77c03@quicinc.com>
-From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
-Date: Mon, 22 Jan 2024 21:23:51 +0200
-Message-ID: <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] Remove QDF2xxx pinctrl drivers
-To: Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc: Konrad Dybcio <konrad.dybcio@linaro.org>, Bjorn Andersson <andersson@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, 
-	Will Deacon <will@kernel.org>, Marijn Suijten <marijn.suijten@somainline.org>, 
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Mon, 22 Jan 2024 at 20:44, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
->
-> On 1/22/2024 10:56 AM, Dmitry Baryshkov wrote:
-> > On Mon, 22 Jan 2024 at 19:43, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
-> >>
-> >> On 1/22/2024 4:57 AM, Konrad Dybcio wrote:
-> >>> The SoC line was never productized, remove the maintenance burden.
-> >>>
-> >>> Compile-tested only.
-> >>>
-> >>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
-> >>> ---
-> >>> Konrad Dybcio (2):
-> >>>         pinctrl: qcom: Remove QDF2xxx support
-> >>>         arm64: defconfig: Remove QDF24XX pinctrl
-> >>>
-> >>>    arch/arm64/configs/defconfig           |   1 -
-> >>>    drivers/pinctrl/qcom/Kconfig.msm       |   7 --
-> >>>    drivers/pinctrl/qcom/Makefile          |   1 -
-> >>>    drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 164 ---------------------------------
-> >>>    4 files changed, 173 deletions(-)
-> >>> ---
-> >>> base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
-> >>> change-id: 20240122-topic-qdf_cleanup_pinctrl-98e17cdb375b
-> >>>
-> >>> Best regards,
-> >>
-> >> NACK.
-> >>
-> >> This was productized, there are some out in the wild, and the platform
-> >> is still in (limited) use.
-> >>
-> >> I'd like to see support hang around for a few more years yet.
-> >
-> > The problem is that... its support is pretty strange. I can see
-> > pinctrl, ethernet and quirks for the platform in GIC-ITS and PL011
-> > drivers. Is this enough to get the platform into the useful state? I
-> > can imagine that "QCOM2430" ACPI handle was used for USB hosts on that
-> > platform, but I don't remember when we last tested DWC3 with the ACPI.
-> >
-> > So, all this boils down to the question whether mainline (or something
-> > close by, LTS for example) is actually used and tested on these
-> > devices?
->
-> Its an ACPI system, so you won't see all of the fun DTisms of a MSM chip.
->
-> The platform was fully functional upstream, and had an Ubuntu
-> certification.  I run Ubuntu on the two that I have in my office.  I
-> haven't strictly checked out mainline in a while, but I could.  I still
-> have access to the documentation.
->
-> There is a small, but active set of users including myself.  From what
-> I've seen, they've been happy with things.
+I never really implemented any filtering on the "+dt" sub-address, so
+drop it.
 
-Thanks for the information! It looks like it has a small but stable
-user base. I think we should keep it, maybe ensuring that we are able
-to test the kernel.
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml       | 2 +-
+ Documentation/devicetree/bindings/i2c/i2c-pxa.yaml          | 2 +-
+ Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml       | 2 +-
+ Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml | 2 +-
+ MAINTAINERS                                                 | 4 ++--
+ 5 files changed, 6 insertions(+), 6 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+index 9cf6137dd524..65155bb701a9 100644
+--- a/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/mrvl-gpio.yaml
+@@ -9,7 +9,7 @@ title: Marvell PXA GPIO controller
+ maintainers:
+   - Linus Walleij <linus.walleij@linaro.org>
+   - Bartosz Golaszewski <bgolaszewski@baylibre.com>
+-  - Rob Herring <robh+dt@kernel.org>
++  - Rob Herring <robh@kernel.org>
+ 
+ allOf:
+   - if:
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+index 31386a8d7684..e89ee361741e 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
++++ b/Documentation/devicetree/bindings/i2c/i2c-pxa.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: Marvell MMP I2C controller
+ 
+ maintainers:
+-  - Rob Herring <robh+dt@kernel.org>
++  - Rob Herring <robh@kernel.org>
+ 
+ allOf:
+   - $ref: /schemas/i2c/i2c-controller.yaml#
+diff --git a/Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml b/Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml
+index a16c355dcd11..fcf52d2cac9e 100644
+--- a/Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml
++++ b/Documentation/devicetree/bindings/rtc/sa1100-rtc.yaml
+@@ -12,7 +12,7 @@ allOf:
+ maintainers:
+   - Alessandro Zummo <a.zummo@towertech.it>
+   - Alexandre Belloni <alexandre.belloni@bootlin.com>
+-  - Rob Herring <robh+dt@kernel.org>
++  - Rob Herring <robh@kernel.org>
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
+index 1ee4aab695d3..fe6bc4173789 100644
+--- a/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
++++ b/Documentation/devicetree/bindings/timer/mrvl,mmp-timer.yaml
+@@ -9,7 +9,7 @@ title: Marvell MMP Timer
+ maintainers:
+   - Daniel Lezcano <daniel.lezcano@linaro.org>
+   - Thomas Gleixner <tglx@linutronix.de>
+-  - Rob Herring <robh+dt@kernel.org>
++  - Rob Herring <robh@kernel.org>
+ 
+ properties:
+   $nodename:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index eda745c0f92a..42b43337c266 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16358,7 +16358,7 @@ S:	Supported
+ F:	drivers/infiniband/ulp/opa_vnic
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE
+-M:	Rob Herring <robh+dt@kernel.org>
++M:	Rob Herring <robh@kernel.org>
+ L:	devicetree@vger.kernel.org
+ S:	Maintained
+ W:	http://www.devicetree.org/
+@@ -16374,7 +16374,7 @@ K:	of_overlay_fdt_apply
+ K:	of_overlay_remove
+ 
+ OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+-M:	Rob Herring <robh+dt@kernel.org>
++M:	Rob Herring <robh@kernel.org>
+ M:	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+ M:	Conor Dooley <conor+dt@kernel.org>
+ L:	devicetree@vger.kernel.org
 -- 
-With best wishes
-Dmitry
+2.43.0
+
 
