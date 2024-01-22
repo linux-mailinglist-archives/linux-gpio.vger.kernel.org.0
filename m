@@ -1,99 +1,116 @@
-Return-Path: <linux-gpio+bounces-2394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BD69835CEE
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 09:44:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78835835D8C
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 10:03:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E8EF1C21658
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 08:44:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2DE7528459D
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 09:03:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0235938386;
-	Mon, 22 Jan 2024 08:44:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 163A53717F;
+	Mon, 22 Jan 2024 09:03:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="GYMwIiNA"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wSblBoNJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com [209.85.217.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EB8436B10
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 08:44:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CA9B36AFF
+	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 09:03:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705913051; cv=none; b=WH6nUlGNCIlxwFWmGIfUmrXHi6TrPRzIdTVLwCFnjyFUE/5ViGyhLTVfzTgTm2XOfiUjuwyeT2R3Bo1aXbtphtZWW47X9U9zyg0J0x3bzQC82dbJpYHnBJbWfu2ZmYHEFpem1+SdTXLwicThZ2iuYQLrXlEKqxbaNyZhch6qpQQ=
+	t=1705914201; cv=none; b=Rc5gvkynrHj6s+PXQhj3/vIDbQUx/vSSBoZv2O9JbSG+odNdJG2bNP06M8E0vIG9o2t2GkAz9BSKBVXy2jeOa68x4QNEjQ8J+24Bs4X+/eu+V4XxwrxSj3WTZWcmQfckrUVqvK2ld8Q/JaE6h/vEDU9lvyJPE/mboh31Pmv4/3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705913051; c=relaxed/simple;
-	bh=6Orpfk4kCHRKM48wIGB/ppp2sheE0CmDME8PTpB+BKI=;
+	s=arc-20240116; t=1705914201; c=relaxed/simple;
+	bh=+njKJ5zGoAf/8uWsGPVwc5bDkUZxyqOXYFLHFAW/f6c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NySgzy/yD5fLmvROSpirayACDTrUmNN1MuuDDTbjKEk+uNSWrN0tkfsXpT4uAXtY/ELT+B5KvVs66Pa0t3PcF1NwnhGRmIhIor4swACgeHM+lTwY8t+aA1yx70nR2qKUioZTRt+AmRLtyHRGHPbzXBQLm97fUgTi9PrYji05qmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=GYMwIiNA; arc=none smtp.client-ip=209.85.217.54
+	 To:Cc:Content-Type; b=hUk2rpqykJsLKW2zEhinSNSyYuI4X7beYxB06G36lq3P6PugGTacy4xftm3XXY6wc1ULuvfK3FVC9tvex9I1tjGmmgzAj5/llCdFi9ndF45hsfr/LiWLXeXS4tDWhMI7m8bH482F5+/rObqLQQji+NCUdJTGHyyUxman+h6awuU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wSblBoNJ; arc=none smtp.client-ip=209.85.217.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-467ec031988so458103137.2
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 00:44:09 -0800 (PST)
+Received: by mail-vs1-f53.google.com with SMTP id ada2fe7eead31-466ec3e942bso621707137.1
+        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 01:03:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705913049; x=1706517849; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705914199; x=1706518999; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=6Orpfk4kCHRKM48wIGB/ppp2sheE0CmDME8PTpB+BKI=;
-        b=GYMwIiNAQvkOP0dn6eEhrLGrSlVfmlpIWmEbF1X1xTy22P/ApN4A8B4tXF8Zh53TeM
-         h/ZLZj+LiL7vPqCW81WJQFAKSsFTYhgX3QAHNkc/ZgnxIb7A5OyZ5xIdxItZIlYDJ9S+
-         tMedu881iHQ63p/qSps+IbM9j/jG8oTDj6bdRn1exmOAIIATd4Sg6qRT9iYpzXZM3/v3
-         fEsjZ7ej0V2HsmLwaB//szPKaUgBooTx4sAHTtJ1yW2AxGCAhcbusO2mtNGDkdGgI2WK
-         bVFGyaRRbxsRggzCzTf6NwXuxzl4WcOQwQLDI0I8xJAXGsJ/iUG06vwMHIoT5ZHc9XZ+
-         HB0A==
+        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
+        b=wSblBoNJyUW83Q/Yh72CAloigRFzMjBMMeKhkZhDx1d89IRjoJkvYwtralFbjHMP9S
+         jPjBgAZVVSU5Vk9raNUNQ4YJpKDSHWVVBuvCN/GNqmt/owdpKdWNOaciwhLtSXRgx/fa
+         U4wKy12nS23bbtMw0clkkJPRLOdgQaiROW88wf4vV2n+A80H8ZAmyGVimq5L2urIm4lB
+         PwvnG4swZ39ILrqqfesdfGpg45vb2Off8zkVkeAie+PGFiS1V/iCt0V5k2kv+omvHsP2
+         KkcK0vGhXwvPUiLlIiCCECmjUEAwx0htMeu52J38Ib34S2mghP9snj+CYavaR23bYAGc
+         RCYA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705913049; x=1706517849;
+        d=1e100.net; s=20230601; t=1705914199; x=1706518999;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=6Orpfk4kCHRKM48wIGB/ppp2sheE0CmDME8PTpB+BKI=;
-        b=RytXKK2RpHuR8MEncbEmx8naXDtPaKiP4qqXuMhZl8RDLgPbsei1VHNvIESkM1Jz9J
-         nds0YlPNGFIz+w6aEt4LXhFJ4tnVCBet0QOHZZx2/qzI1kSeO4iQitt2XbYov2BNBK5R
-         wwRQIaNFT0htZvZ06AJWTxGolw9UFeix5A2BVrJyOB7YhoGsiwsNgotPMaSf7kpGQerI
-         9zYe82quHpTouU0ywKEenwnNqJFoBb94j19sPeDIpUYPciyzNepixr1llXB0QzbvYwmv
-         9+fy2XgcY0Ahg+UBbxqYvsgRG4daA+za3DqSHJXx0gHZQbNULPNbY7WZdUDtGOfvMg6A
-         oMQA==
-X-Gm-Message-State: AOJu0Yxw7ykTdqzNwv2SFLAfvvEAwLsUOtVCfvbddt7ZodM3tagHWSkF
-	LwQ6vwgZO59qSCv2905L2giiyOvK31OILmcibqGXCg/Gyv9WoR7ANwr+n0AUlqhLd4so8X0PmWG
-	otaERrFwBZ8geXvkkpKqVijV/4+tvPuu8gYIkCA==
-X-Google-Smtp-Source: AGHT+IHnC8OABMnzxXq7v/L+d/1b3g83T0UGg9Qx3zA4qUFauCR/yg9IM8eJP2r42iRpZs8+qJcH6lLe8x6g8NJMOt8=
-X-Received: by 2002:a67:fd8c:0:b0:469:c143:3d53 with SMTP id
- k12-20020a67fd8c000000b00469c1433d53mr37187vsq.26.1705913048867; Mon, 22 Jan
- 2024 00:44:08 -0800 (PST)
+        bh=TUR27c1+iHU3ojrC4LDJ/zTx5jkFmb+9moT9azuGDlQ=;
+        b=Zcqh9NFHNuk8+Mm/SBlkGgWzEiShKOtNJgZKh2BgvT0Z+JVey4ZpkHjb+IuJuNzuMW
+         Ye0hIIwfPVbHoyZdHRaQIkD3eMUaqlgthjpHs2o+w9bLOzNiuJfpPQHaOLcyoKxUdopt
+         HBL5NbAb6PviSCVX7UtAS4fBemLfdDa7vTigHeDXzm1nSYZJrsqhXs8mfE+Qo+k5NedR
+         z7rAA3y/RK/aCfn/eHch5TYMS9s5L3zCAdiEBEVC0f/2XA+ikVlh87nPP3/W4AhdVrA5
+         OdZxSbPqeSw9kjrKOpRhau0zpex8DJ/itTVei8OlR9FiPo1sTp+i2zrtobsBj4jEKij7
+         WNmg==
+X-Gm-Message-State: AOJu0YyqT/8n3rGQeSL819dc8gA9cXNOMFkELhmA4DGwB2D1i5jMPvyC
+	voUJ3pX1IV/xAg7chVypRV4rZRZpLtu/DglRWgxc2KrMdCv/zuzwXgdqIx32Ts/cgtCYYbtX2Jx
+	OQNKnxJqjejgDNcLpxmXHjXMfllNES/Y/tCBWRQ==
+X-Google-Smtp-Source: AGHT+IF8eESa41mI3oLuxHCHoMGVzbxUohIHKsVJ3gDU5CR8DvIfOpEJ9idSlUMF5+qSgs2hZ8AeLuwh28Hnrkt8UMQ=
+X-Received: by 2002:a05:6102:2263:b0:468:1cc5:ed88 with SMTP id
+ v3-20020a056102226300b004681cc5ed88mr550502vsd.23.1705914199051; Mon, 22 Jan
+ 2024 01:03:19 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240104182034.61892-1-brgl@bgdev.pl>
-In-Reply-To: <20240104182034.61892-1-brgl@bgdev.pl>
+References: <20240109140221.77725-1-warthog618@gmail.com>
+In-Reply-To: <20240109140221.77725-1-warthog618@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Jan 2024 09:43:58 +0100
-Message-ID: <CAMRc=Mc3A-UV7x-YJUOU1zJQmDt-o5ckkbXWVM+trzesT3CaJQ@mail.gmail.com>
-Subject: Re: [PATCH] gpio: legacy: mark old interfaces as deprecated in kernel docs
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Mon, 22 Jan 2024 10:03:08 +0100
+Message-ID: <CAMRc=Mc+FseBCD8h9T8=rYUhOJ7QC4FOxH+ePULnyf_8mKJMrA@mail.gmail.com>
+Subject: Re: [PATCH 0/5] gpio: uapi: documentation improvements
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, andy@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 4, 2024 at 7:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
-wrote:
+On Tue, Jan 9, 2024 at 3:02=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
 >
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> This is a series of minor clarifications and formatting tidy ups for
+> the GPIO uAPI kernel doc.
 >
-> We've recently had someone try to use of_get_named_gpio() in new code.
-> Mark legacy interfaces as deprecated in kernel docs to avoid any
-> confusion.
+> The series is intended as a companion to my character device
+> uAPI documentation series, but makes sense on its own too.
 >
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> The patches are self contained and trivial so not much to add here.
+>
+> Cheers,
+> Kent.
+>
+> Kent Gibson (5):
+>   gpio: uapi: improve description of fd fields
+>   gpio: uapi: clarify hte references
+>   gpio: uapi: drop trailing period from one sentence descriptions
+>   gpio: uapi: document possible values of gpioevent_data.id
+>   gpio: uapi: clarify using v2 rather than v1
+>
+>  include/uapi/linux/gpio.h | 52 ++++++++++++++++++++-------------------
+>  1 file changed, 27 insertions(+), 25 deletions(-)
+>
+> --
+> 2.39.2
+>
 
-Patch applied.
+Series applied, thanks!
 
 Bart
 
