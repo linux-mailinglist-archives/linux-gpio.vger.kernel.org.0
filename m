@@ -1,119 +1,116 @@
-Return-Path: <linux-gpio+bounces-2407-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2408-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id A1B0E835FE6
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 11:43:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56209836127
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 12:22:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 321A9B26D3C
-	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 10:43:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ECBA41F21EE2
+	for <lists+linux-gpio@lfdr.de>; Mon, 22 Jan 2024 11:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663B73A1BE;
-	Mon, 22 Jan 2024 10:43:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bnCvsehv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCD3A3D56C;
+	Mon, 22 Jan 2024 11:09:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E995E208C1
-	for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 10:43:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBDB53D555;
+	Mon, 22 Jan 2024 11:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1705920190; cv=none; b=LC+YXE9lvoDYUh0aedvH4ujtTNqxfPEtgQnP/h5lldEr7pERzLw3KS1/oDJAan85UxnWHCVYpQanG9f7ypCZgtZyMgcCx6JBfnwX98zU/ZcgRsDsKOBsdq7B+G1Cq7didbG5QbiAHIeLGSbTZYm2JWaJZhe7iTHo3Xu2X3cS/Lo=
+	t=1705921749; cv=none; b=nvxORgkV0VBKatS26GFx20zPECbI2sDw+hQVfn9zqeQ9ffW9rrkZgxvt+u4GNadu5tQJ08JhlSZMjvMow/yrBd1ENXzO/c+mEZeAvyJ1HD8NZI8WwKjDcjDDEen61BWwOBVH8N0KZaF20vdrgC3xlHumzVPCBjMGloVqOQRIq3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1705920190; c=relaxed/simple;
-	bh=5oqYQROB0Kj2f8NSD92TqgIP99V4g9fCFB4CjLVyyV4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GKJhsaaDp0YSo6ICGnkJmaL5iCbjRbaNz4+SDE5QHD4ddejBVxM3BB8qkv3BM4lXHClua7tjROR5wVCB7Yy+mVujGUtSghAAwVpL0imu8L9uXsfCooJ0n9TJ4ClzbSp4r8PNDd0datgMQvSGqyy4AtZZyteaHyNDlTVbbdKkO8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bnCvsehv; arc=none smtp.client-ip=209.85.222.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7d2e022ae0cso305851241.0
-        for <linux-gpio@vger.kernel.org>; Mon, 22 Jan 2024 02:43:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1705920188; x=1706524988; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eZ55j/ic0rlHf/Ykc3pQwAhrvY4/zhXCceLbvJQAmvM=;
-        b=bnCvsehvxEoBF5LmcVhP8uirvA4ngWAmg2rnk0onf3bAuENo3HVNp5Dikn1+7QpiCw
-         dttXHjMAhsBOES80Zmavh3pXt1N1c56+DPM83Q493gTWExiFa32SUB8QtqyiiVvhaE7n
-         XTCaOlmj5ClUVnWooQyfrgv4jd4yxxz16KbS0+Bou3BFO6A0+PbLXW0F+lgb0AMKHL2u
-         muXlyGlJK6i2aYftSntivhucnD+R2K84lAFEzaJoDhVEVuXLCaGRigPLg8/stk7whaZf
-         GLKYy8+K0d5btkkcj6V9lV4DCzMtWD3y/B6LW8HhPaE4oUSw3Gc7ekLNu5xg6UAJiOQb
-         RrVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1705920188; x=1706524988;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eZ55j/ic0rlHf/Ykc3pQwAhrvY4/zhXCceLbvJQAmvM=;
-        b=m5KO3Qk3E2h331E7LH2giMXCNwkB/vna7GHDh+g+kOOU+r1IIZX4WJVgMdO5DEuutz
-         1YJqxXYzlJf6YbsXcixsSo43IpbhdVfo5FTJHbk3rQTpHguhVe+Cj54YiGVhahMIg7sG
-         waeVSGsoCk/uv+a6ajEcTYuP8gw84BD84GVSqmNPVtT2Hvd82lFHlQQUo7igfbtQgS+y
-         WrxKQym+8LT98qf/a843SYba+dLAjmWS6du9Hn2IsONk3eDbcsxyG7xYUkChzJab0Cak
-         TvwnB2rFnnFL844si3Y+XbFjJGVAFIXaq/8bwPzuMIZPS4qhwy/6WweDFOlQ4wqsN5jH
-         j/Zw==
-X-Gm-Message-State: AOJu0Yx+usRbDTjTjAWQRp3UWv5K5ZlXgNC3+JwWQCnOqK92zslayY7u
-	OfNg9AoUo5aVMmkAKKQPsXV/GPJWeCHKw0C6v60wBfkloI/3HvguhsNy2eYR4qko/iTV2iVjFnY
-	W9nNDcd/nU2mbD8Mo8ZLwYC5S/Cp3+UupQz3dYQ==
-X-Google-Smtp-Source: AGHT+IF1TIaX+t9YjEAstpv56CbaerSKTUHPfO230BN/T3RswE0B36KNdIUciwzmYxJsCxfuy7UdE7RTQ9m1WbEgsd8=
-X-Received: by 2002:a05:6122:3bd1:b0:4b6:dccf:72f1 with SMTP id
- ft17-20020a0561223bd100b004b6dccf72f1mr973391vkb.7.1705920187881; Mon, 22 Jan
- 2024 02:43:07 -0800 (PST)
+	s=arc-20240116; t=1705921749; c=relaxed/simple;
+	bh=RAHCPa5LLeS2+X/yJSngT097aqPs0WTNZ+ONX6kPsPg=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BHLd/qNB6I7OBy6wqbTFqnzJF4C9XfV1T1Q7Mw9SdcOMm06ffNf/NHMFA1O3eifRQeediWN9VZ72fzD+LPxvZTfgiUoNUlNMmJC59CHZXmz7A2zjBnblzRYpBKSx4NCw6z7tTBNwzKFuWpUYqF3xhnc1rIDT9lzqD4yOhRzTnoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.216])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4TJS815ZyBz6J9gC;
+	Mon, 22 Jan 2024 19:06:09 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1921140A90;
+	Mon, 22 Jan 2024 19:09:03 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35; Mon, 22 Jan
+ 2024 11:09:03 +0000
+Date: Mon, 22 Jan 2024 11:09:02 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Ceclan Dumitru <mitrutzceclan@gmail.com>
+CC: Jonathan Cameron <jic23@kernel.org>, <linus.walleij@linaro.org>,
+	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
+ Clausen" <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
+	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
+	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+	<hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, "Ceclan
+ Dumitru" <dumitru.ceclan@analog.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v12 2/2] iio: adc: ad7173: add AD7173 driver
+Message-ID: <20240122110902.00004357@Huawei.com>
+In-Reply-To: <57ea42b3-106b-4361-8d07-4e1656bf6e58@gmail.com>
+References: <20240118125001.12809-1-mitrutzceclan@gmail.com>
+	<20240118125001.12809-2-mitrutzceclan@gmail.com>
+	<20240121155041.3fc1a85d@jic23-huawei>
+	<57ea42b3-106b-4361-8d07-4e1656bf6e58@gmail.com>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
-In-Reply-To: <20240109073849.10791-1-Wenhua.Lin@unisoc.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 22 Jan 2024 11:42:57 +0100
-Message-ID: <CAMRc=Mf+UJN3BXBMrQxqLqRJrbmgoJ4kU_B5Mr+7MHvYt_aYvw@mail.gmail.com>
-Subject: Re: [PATCH V4 0/2] gpio: sprd: Modification of UNISOC Platform EIC Driver
-To: Wenhua Lin <Wenhua.Lin@unisoc.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Andy Shevchenko <andy@kernel.org>, 
-	Orson Zhai <orsonzhai@gmail.com>, Baolin Wang <baolin.wang@linux.alibaba.com>, 
-	Chunyan Zhang <zhang.lyra@gmail.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, wenhua lin <wenhua.lin1994@gmail.com>, 
-	Xiongpeng Wu <xiongpeng.wu@unisoc.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100005.china.huawei.com (7.191.160.25) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Tue, Jan 9, 2024 at 8:39=E2=80=AFAM Wenhua Lin <Wenhua.Lin@unisoc.com> w=
-rote:
->
-> Recently, some bugs have been discovered during use, and patch1
-> are bug fixes. Also, this patchset add optimization:
-> patch2 optimization the calculation method of eic number.
->
-> Change in V4:
->
-> -Add Fixes tag in PATCH 1/2.
-> -Change commit message in PATCH 1/2.
-> -Add clearing interrupt to debounce and latch mode in PATCH 1/2.
->
-> -Change commit message in PATCH 2/2.
-> -Delete SPRD_EIC_VAR_DATA macro in PATCH 2/2.
->
-> Wenhua Lin (2):
->   gpio: eic-sprd: Clear interrupt after set the interrupt type
->   gpio: eic-sprd: Optimize the calculation method of eic number
->
->  drivers/gpio/gpio-eic-sprd.c | 42 +++++++++++++++++++++++++++---------
->  1 file changed, 32 insertions(+), 10 deletions(-)
->
-> --
-> 2.17.1
->
->
+On Mon, 22 Jan 2024 12:02:35 +0200
+Ceclan Dumitru <mitrutzceclan@gmail.com> wrote:
 
-Applied with Acks from Chunyan.
+> On 1/21/24 17:50, Jonathan Cameron wrote:
+> >> +	ret = devm_ad_sd_setup_buffer_and_trigger(dev, indio_dev);  
+> > If the error interrupt is provided either first, or as the only interrupt
+> > this is going to use the wrong one.
+> > 
+> > Probably need to have a variant of that which takes an explicit irq so that
+> > figuring out which irq is relevant becomes a driver problem rather than the
+> > library having a go based on spi->irq.  
+> 
+> Would it be acceptable to check if spi->irq interrupt number is equal to
+> fwnode_irq_get_byname(dev_fwnode(dev), "rdy")?
 
-Bartosz
+That would be a good start and probably cover most cases.
+> 
+> If not, a message could be passed that specifies either that "rdy" is
+> needed or that it must be placed first.
+
+If you are mandating the order, that should possibly be reflected in the binding.
+If this was hard to fix, I'd be fine with leaving for when someone runs into
+a case where they have it ordered the other way around, but given it seems simple
+to fix up probably better to just do it and avoid having to remember anything
+about it later.
+
+> 
+> 
+> Another alternative would be adding irq to ad_sigma_delta_info so a
+> driver could specify the desired interrupt to be used for conversions.
+> 
+
+That works.  Make it optional so if value is 0 use spi->irq as before so
+that you don't need to modify the other drivers.
+
+
+Jonathan
+
+
 
