@@ -1,128 +1,162 @@
-Return-Path: <linux-gpio+bounces-2449-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2450-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F9218393BA
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 16:52:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B213983971F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 19:00:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1087C1F2397E
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 15:52:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63CA52852E7
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 18:00:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578CE60DCE;
-	Tue, 23 Jan 2024 15:45:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBEE581216;
+	Tue, 23 Jan 2024 18:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZeSQHkG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSyyzlYs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC060B8B;
-	Tue, 23 Jan 2024 15:45:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D5181AA8
+	for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 18:00:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706024733; cv=none; b=VDDLG2+UaNvUoCuvwZN0qeovtZcIQagB6EI2Pb2UOxjpm4NiA/jhggpFOAWsalPEyYvCvvUWT+mAr/aKiq20WKQOb9+CrGZjGQjLCt1h9s/Kx1HWqqg7G4feETTVcIk6wj3PH96JhhOOZ7bfRpA2APESlGjZ6J2bnvtGA8pMKSk=
+	t=1706032823; cv=none; b=lTY53A6TH3UG+DBW2GGOhiydrZIN72Glg5z5XqaHLyXOT8ToFzyKHfM9J5jzmFSyIn1Y3gbS2pkCH0PnDoXks4vpCprq19uWRJDVDwIGnottQRpGT9525WEKA+AonqXzIgGf+6s2Xkj584NnhnF9Mdf3laRLrqL2dNnSjyEteoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706024733; c=relaxed/simple;
-	bh=hdBYdUxOFq+kbS0ASigOqpNwC+DLJhVJWkE9MFnLlNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gfBDtEsYyPOGrly7wPLeMXP9qOBAHeQoGyj2uHl+FJmHvQl1IMmeoKpFnmNwVA8cvcg7WAeTW6jkUp9oKa5IfwcfZNufD+yjmizinWZfaCMFz+KqC3FsxqkjRzyI6o+QSKQ/Vj7m/utrO7AWv3XO+xwq4pWJN/vy9LnWbVhVIU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZeSQHkG; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso432919166b.2;
-        Tue, 23 Jan 2024 07:45:31 -0800 (PST)
+	s=arc-20240116; t=1706032823; c=relaxed/simple;
+	bh=MtJ/HqiEUxScIQTHutFj2dKX6h9i2hpJKWEAmQsLjIw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=J4pvI0Hjy41Gc1jhyqf2zeN2MNMEBQ2aZ/UmfkP5FrdGKe0exC//oEbopREusF7Ybq2/bf1ShTbAlRyZQArkbnYNCMMHMhv0tzawaVVPmnbiqhEJkYqvCUR28fV1RlxJHzlZKh+DywdQlf3YKhqbIVqVlhw3p81IzerrzdX/pIE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSyyzlYs; arc=none smtp.client-ip=209.85.208.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd04078ebeso55446601fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 10:00:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706024730; x=1706629530; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
-        b=CZeSQHkGMHeHcWoEL36DbEv7o+4X+RJNWCIdD8+W1P+K4k+jfUQ1YVoX4T0x2i+1jI
-         SEcl88ixaxRdtNvzOSkg3fZ91d2hf0jv2x+hGfB2GWS1j8hiH+SmA8WwHOXyJdHBiVHl
-         RcX/LnoWaCSCvKE7uGtvKVkU3aD47GIy3p2tP+T0VIcGHoyNGe26kBJ9Syh6vStbbIEk
-         WW7K9tgSgUtbJ7Wx+HrNLTvQbsVk+d0aFSq9KuwTo46llJ4sp+YSxbaATOiLbW7qf6yG
-         Gk05kK7UaJrRtT//vaX3TvKpw32CN5FE5Vvv/69QtQkJP/Bho6UhQFd7cqO0HbCClN4H
-         c3/A==
+        d=linaro.org; s=google; t=1706032820; x=1706637620; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
+        b=WSyyzlYsQvy0asmn23QNx/AhxlktRfpIZ4/nyEWv9tmccquD7/I/t3vVyG4qzGeZ84
+         Vi4Vg5hT+E6fwgoNZaEBS/HTqI0HykXm7dHJkFdp5kqdAZmvBk28ECHqZZh6zHYomLew
+         l6QLYPLkWfNAvj233fq5BjNKDg9p3Bt8FW2uLytHAD3Fffw/3MD7wNqpTpB/JkenPWqs
+         th6hJkuNv2douaf0kSGZhIAOsHBH6O6wV15sO26P0K6u8tB+ygqj1DUV3/qiFJ3VZj3Y
+         EKlDrfJ/ntqsFoMwO/SW+xHeU3QEzSF5pGlB7gFZ7RUIUb6s73qQD4C2p+4BlSzj7Qk6
+         wMRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706024730; x=1706629530;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
-        b=oU5DaUKU+rlzlr187XEJspN+VszFNMXpQjaESqYxqgw3O3Z5RYHlkWtJppgDP4i4XT
-         Zp59qzvVxXL6LQ5hfFQ8qOFwewq0xpyo1i7YZNyuKJdOmDVgsg+8F2swKrIraI7cK3gX
-         aay0s2KwEyVDLOBINmBl9IXTyCSZ5WGjA+9mMLPKJUKe7XBdCUc/lwC8wwxdw1Sk1wI6
-         4oku/6cEe3QN6H260UJaiH1uKsC8wKpKjImKPs0C6iLBYynhjo8u+yTeZbe64jgihIsY
-         1e60syNhxjFuVUQrrqEqNt+japK2hiIxVaBxXtl//rUOKTAUa2vNhfoAGc26XKX0tzas
-         4trQ==
-X-Gm-Message-State: AOJu0YyBq+Ov4xx9VJ+Mb8p5i0yxD86TRD7HVIjYm01Kw8Us0fJK1xL8
-	py0pmZw+dghZ7bxIDoR5BvBzjhaIe+n9El9yeDk88Whx4zxCHvcuw4tCdSovjsmyBC8/99lOo7V
-	7ZjedD0Jd/+IxHCs8wZO1uSuBYXk=
-X-Google-Smtp-Source: AGHT+IGeoKDAXQT1QtGkmzsvDd9O3U+IXSXTY2VIJASOG7mhjJxF1tXdrpBbCuSnLMpczZO5eE6k5hkSEaDy2eB9Yno=
-X-Received: by 2002:a17:906:da81:b0:a30:f04e:4bdd with SMTP id
- xh1-20020a170906da8100b00a30f04e4bddmr45448ejb.68.1706024729528; Tue, 23 Jan
- 2024 07:45:29 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706032820; x=1706637620;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
+        b=NaewP1R8UntlfjYQXln9HgNKLo66feIHhwFPWuCfSwk44+UIWtaOZYET87kWLVsopD
+         8Ef1AOtS8yclhVwJz7OEx3RBMlDMMlQu0Z3maUJR6UeLE74qjaxE07Owpi1dEOXKTioi
+         ZNxYp7dmYBAXfT1K0OuCWbLz+HND8ZUg8vsJeIJZRAgzp90TkvUv6Y44adqiWHaWVXL1
+         L+SG+HtG9SQtnTaXElMXJO1hKLxLPdiTp8RDGUm8Q/P+0xHeJfbPCQCdMy0aUMIsMblc
+         E5Bgags3ej90lF0cziH22AkTqrf10cR3BO8HjqWjjkLrpcqDAPOWpeKtjADDf9732t2a
+         kGSw==
+X-Gm-Message-State: AOJu0YwaLEmRrveH/hKIkyzqq4h//UDxTFmy6hvrN3pKKRa5YByZ/g94
+	OU4RFcVl8m2v7yu32WULlwjiFqoti61nqCmb9NhitPbf5Mz4itvtJhJNPq3L2CE=
+X-Google-Smtp-Source: AGHT+IFnEfC3oawTRwTitOxgaBUV+CKV0/WT2dwdHRRdkvC9cRcn6wvyopZjVpQbq/DqeMFnxofbKg==
+X-Received: by 2002:a05:651c:8e:b0:2cd:285f:7d39 with SMTP id 14-20020a05651c008e00b002cd285f7d39mr115795ljq.15.1706032820038;
+        Tue, 23 Jan 2024 10:00:20 -0800 (PST)
+Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
+        by smtp.gmail.com with ESMTPSA id f17-20020a05651c03d100b002cdfc29b46dsm1514699ljp.88.2024.01.23.10.00.18
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 23 Jan 2024 10:00:19 -0800 (PST)
+Message-ID: <0069beea-72d6-4a31-8f8b-282dbdd4bf94@linaro.org>
+Date: Tue, 23 Jan 2024 19:00:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123133828.141222-1-warthog618@gmail.com>
-In-Reply-To: <20240123133828.141222-1-warthog618@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 23 Jan 2024 17:44:52 +0200
-Message-ID: <CAHp75Vd1dipGkCgQBENN3rLeUO+eQfOz9uKzz86eK755smqGag@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: describe uAPI behaviour when
- hardware doesn't support requested config
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
-	andy@kernel.org, corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Remove QDF2xxx pinctrl drivers
+Content-Language: en-US
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
+ Jeffrey Hugo <quic_jhugo@quicinc.com>
+Cc: Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Marijn Suijten <marijn.suijten@somainline.org>,
+ linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+References: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
+ <8c9b157b-4698-70a3-57b7-c588998eeda7@quicinc.com>
+ <CAA8EJprDk=HnqWJ_F5zdUKMPFPpx1RD9KN-KQP9yopP6LMh_fw@mail.gmail.com>
+ <52479377-ff61-7537-e4aa-064ab4a77c03@quicinc.com>
+ <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
+From: Konrad Dybcio <konrad.dybcio@linaro.org>
+In-Reply-To: <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jan 23, 2024 at 3:39=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> The existing uAPI documentation does not adequately describe how the kern=
-el
-> handles the case where the underlying hardware or driver does not support
-> the requested configuration.
->
-> Add a Configuration Support section describing that behaviour to both the
-> v1 and v2 documentation, and better document the errors returned where th=
-e
-> requested configuration cannot be supported.
 
-...
 
-> +Bias             best effort
+On 1/22/24 20:23, Dmitry Baryshkov wrote:
+> On Mon, 22 Jan 2024 at 20:44, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
+>>
+>> On 1/22/2024 10:56 AM, Dmitry Baryshkov wrote:
+>>> On Mon, 22 Jan 2024 at 19:43, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
+>>>>
+>>>> On 1/22/2024 4:57 AM, Konrad Dybcio wrote:
+>>>>> The SoC line was never productized, remove the maintenance burden.
+>>>>>
+>>>>> Compile-tested only.
+>>>>>
+>>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
+>>>>> ---
+>>>>> Konrad Dybcio (2):
+>>>>>          pinctrl: qcom: Remove QDF2xxx support
+>>>>>          arm64: defconfig: Remove QDF24XX pinctrl
+>>>>>
+>>>>>     arch/arm64/configs/defconfig           |   1 -
+>>>>>     drivers/pinctrl/qcom/Kconfig.msm       |   7 --
+>>>>>     drivers/pinctrl/qcom/Makefile          |   1 -
+>>>>>     drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 164 ---------------------------------
+>>>>>     4 files changed, 173 deletions(-)
+>>>>> ---
+>>>>> base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
+>>>>> change-id: 20240122-topic-qdf_cleanup_pinctrl-98e17cdb375b
+>>>>>
+>>>>> Best regards,
+>>>>
+>>>> NACK.
+>>>>
+>>>> This was productized, there are some out in the wild, and the platform
+>>>> is still in (limited) use.
+>>>>
+>>>> I'd like to see support hang around for a few more years yet.
+>>>
+>>> The problem is that... its support is pretty strange. I can see
+>>> pinctrl, ethernet and quirks for the platform in GIC-ITS and PL011
+>>> drivers. Is this enough to get the platform into the useful state? I
+>>> can imagine that "QCOM2430" ACPI handle was used for USB hosts on that
+>>> platform, but I don't remember when we last tested DWC3 with the ACPI.
+>>>
+>>> So, all this boils down to the question whether mainline (or something
+>>> close by, LTS for example) is actually used and tested on these
+>>> devices?
+>>
+>> Its an ACPI system, so you won't see all of the fun DTisms of a MSM chip.
+>>
+>> The platform was fully functional upstream, and had an Ubuntu
+>> certification.  I run Ubuntu on the two that I have in my office.  I
+>> haven't strictly checked out mainline in a while, but I could.  I still
+>> have access to the documentation.
+>>
+>> There is a small, but active set of users including myself.  From what
+>> I've seen, they've been happy with things.
+> 
+> Thanks for the information! It looks like it has a small but stable
+> user base. I think we should keep it, maybe ensuring that we are able
+> to test the kernel.
 
-So, best effort means that in some cases it won't fail. It reminds me
-of the baud rate setting in serial (TermIOS). The question here is how
-does user space know that it fell in one of such cases? (In termios
-the IOCTL updates the respective fields and then user space can get
-settings to see what has actually been applied.)
+Alright, please make sure it still boots etc. then!
 
-Floating line is not good in some cases and user space really wants to
-know that and treat it as an error (if needed). Hence the above Q. I
-believe this needs to be explained in the documentation.
-
-...
-
-> +Bias             best effort
-
-Ditto.
-
-...
-
-Personally I would still do two patches per ABI version, but it's up
-to Bart what he wants to see at the end.
-
---
-With Best Regards,
-Andy Shevchenko
+Konrad
 
