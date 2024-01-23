@@ -1,141 +1,316 @@
-Return-Path: <linux-gpio+bounces-2445-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2446-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60A38838EB3
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 13:45:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6C11883904F
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 14:39:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0D315289FEE
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 12:45:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E760E1F2A9BD
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 13:39:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A82CD5EE76;
-	Tue, 23 Jan 2024 12:45:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66F575EE99;
+	Tue, 23 Jan 2024 13:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RiarLDzz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k0sernFO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BB05DF00;
-	Tue, 23 Jan 2024 12:45:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01295EE76;
+	Tue, 23 Jan 2024 13:39:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706013910; cv=none; b=k+Yzaid5PoCgn7JiwyIp6/tiXrOx3asC3Y5P/pUCPXV92mKWdDwFlUOBwNWpBbFx1k5a5x87Fkdpqq75EhMyrULIBP3fmZ4YXZ4g70ZHcyh6TXlrOs7vofdPL0kujMEN44h5vo9V4jaNla9fryTguD+WKstXe6hM3/TE9h0WK9E=
+	t=1706017144; cv=none; b=jdBbuVFNa7BOa31vWu9DenGL/yR20o/wbWO/sLGfoQJog68FtISAfX+AtkiRqCARu90J/3l6cUB0z0WU84Hp4T3WiaB0uYxgZlPMB+kF6C40WBtzx0EjdiOoHM4SkIwnZ7417WvaUNyVxHV6xQFwRs1jpvYbIw3EmFdo9Ue4EK0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706013910; c=relaxed/simple;
-	bh=m/c1lPPu1YXGObYrj+WgGUhF4RVTsLyLde300zR9Fns=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JvlT7v4oNJZkdX+HDpc7MmFP8LDHhqP7xHVAPPNs8ucsfbZQaADfb+KsmMG9/7Zk6ZBEQmSfARfDaUiL5Os/JYCI4jDarQQ6xrnljaG/19caJPCoTMeCWxhlzZBalLppDLzsqaZfMDHZKP0hfQDhyxLPfT3LmiBba+euXTA/olI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RiarLDzz; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1706017144; c=relaxed/simple;
+	bh=WBSKdUgV5cOeoZ1Fffr465L1E5/Iwt0hZoQjjcYdeug=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=rR3pTVzwyQbyI1Y+X74YaZNkhmA+ZZyc/y9BMjqvXzBOInXouIap0cQ94866b+ASDCdvaEK4A5GYdPsPX8eG9ehBP3jnPYIQZ/q850usDDFkn5ZuztKkzY/Uc5B1PutgOYs1sTdebzUZ6hlMhg6jvONvpOAQ2Wtlh2usgr+9Hjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k0sernFO; arc=none smtp.client-ip=209.85.214.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a2f22bfb4e6so439119166b.0;
-        Tue, 23 Jan 2024 04:45:08 -0800 (PST)
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1d730b6943bso9876915ad.2;
+        Tue, 23 Jan 2024 05:39:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706013907; x=1706618707; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oA1UQQc1JfCo+FECv9KYv1eo56zKsN80lRRNAWxIGh4=;
-        b=RiarLDzz4o7g+PNLVaiubC8q0cDjVGzxGUlNPJ+7/nGUmDRV6CThw7JFnB1I6XOWVE
-         TCgNCkFWlshDmfKsBjmQG70r20n8Cfk3nAAcYlkS2LxRPeHb5qmgXQ+6N4D43VOsHyLQ
-         IOzs6+DgzPleDLGn5GaxSmHLW2RKHnGnzIHG1VapQNXh0ccMs/AVNVrE64FgB36PNQv9
-         5HWW9jqhxgRpPxe6VdZwNqS9Kc8a/JRKiR2/mTWi0cH+14PLszKQUdUacN/q57buB+Ym
-         bdYOzORVpARoaA38V6RCZqB7tsL58jGbaCCJSWuOkHJEV61B1scbWmMSuCnbluE1aPj8
-         U4dQ==
+        d=gmail.com; s=20230601; t=1706017142; x=1706621942; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=JGyd1fR1SCxmdaNNcPfqGPYdWi8z44bAjGbNFrHnciI=;
+        b=k0sernFO6sgNBeAX4fos6xcL5ztr0A+RoZUi+Wx31zMfUB5z7ZOLAkrvifH3yev5an
+         ksRwTgFFdv6fN9n3J1+fq6IdESNbwwgA1aAoHM6dNE7qNVRX/asNkk7OvCQq9N6OS1Or
+         rceysNgHaTJcsSI6su3EXJ2qcQAs1h+FcyLQeuw2nVXAvEB+9htAoe9H9QaLPEMEaCvY
+         XjUxljKJcTW1MoxVpD25c8UDcwEexUZXkCSTAW1zZr7D9HEbpwgAXeyTvwyQ7pclnAcb
+         tfgo0qnlUqxNwyV8ezIdew4r6eGp8rTDptAbXvAOCyv08RMmvjKT25IySseqZH00U0qh
+         hqCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706013907; x=1706618707;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oA1UQQc1JfCo+FECv9KYv1eo56zKsN80lRRNAWxIGh4=;
-        b=XkWlQT6ZOCikwPh1ZiaXc4AWjG6WvkgiOptty1lltGF6kPMMPtmJKOhQyyEdNOMHM/
-         FJU6qXCxxWUxoZZ4bMKXtv8rETWcBszVlRb+7bMe7iXJj7a5Ve4C9G+JWuUYEtSaOwgB
-         oin5K4dMohLtDJeMhyHJny0Ct5Hy5C170d0fnC9yNQE+PkqZwlFK3KkOxL3XqFECqUD0
-         gGQz3gVp+K9l8/n76qMX0iKRKTA1eSuXTZ3TDjg6x+PTG8IvYvJ0u9eWMQMMpOH3K5cS
-         aBESTDJ3/5s5zkIkf/DyCqX4xbu6yMjtI+vqx51ayF8FO4K5xwzejarcq3u2e31hVLfi
-         MMFg==
-X-Gm-Message-State: AOJu0Yw7o+Q1/h1sslyGUJXZhsYwrVlkg8k8kexBEzQ7MuAXhoyWqhXR
-	FOcVbnZtwLysYVBARmmi38Q9OAdf5lF7o6UQmOJFgV9TrcpmRiP2Ng+VF2bN3cBlQvCXYutv8GQ
-	fTsg12AGMJuKtDeSMhuqdVsAgWVs=
-X-Google-Smtp-Source: AGHT+IGVOi9cJtPjLV8rCcZZAIqP8Of+wjWmyBE/0kgMRwdEcXgkHHcr8D02Phwnkk/tQc54fmCf7RPslpX8DcJ6cZg=
-X-Received: by 2002:a17:906:2b4d:b0:a30:cc38:f192 with SMTP id
- b13-20020a1709062b4d00b00a30cc38f192mr517708ejg.96.1706013906745; Tue, 23 Jan
- 2024 04:45:06 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706017142; x=1706621942;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=JGyd1fR1SCxmdaNNcPfqGPYdWi8z44bAjGbNFrHnciI=;
+        b=H0YJBAOmldxIc1p1O+ZRpgpOjOvsH2RPIahWxwV7x7XZfzXtL1aRPbcrBGiEU+PM//
+         ZgFFwIsTVtf2XngbORCwrgSK+8WXmmVOj4XjYSN8KWY0mfa2gsviYRCJxAvW2H4vjNLM
+         ObBiKq85zPh6Y/fdZNDMYri4sNmjAq5WpGAYROG3k2zPlNwa0UUdHlTIjaVGpFrjMhic
+         1yRKtIKFwu51SBu+aaQwvcE5D4DeLzL6O6NGBkz1K6/6b/dyZxVaw2xeVrSCLWOQ0wrj
+         GRqO7PKSu6rrmtwn40++tJ/fWnwVmTKrF4hg9NnPzTRFDC/PsHf1WvjSt/xpHY81n+6a
+         8kKg==
+X-Gm-Message-State: AOJu0Yzt034Wjr4AL2t1zTiiXbS2c9QyHNTKAE2y2WUHog0A0+FaeeS+
+	pCd4qBbmjulpQ/jNJ4jyvbE6lUgWroonoVFB2dcS4DIWGQTfreOZFPon/zAT
+X-Google-Smtp-Source: AGHT+IFbIkbS5S0VRZCs+BwFDqo+Q2c+9UqIndBlUOgUsYXQM/6F6N4Aolqxmb6zlZ0Y0aipv7ehWw==
+X-Received: by 2002:a17:903:48b:b0:1d4:be56:888b with SMTP id jj11-20020a170903048b00b001d4be56888bmr2924349plb.1.1706017141496;
+        Tue, 23 Jan 2024 05:39:01 -0800 (PST)
+Received: from rigel.home.arpa ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id h19-20020a170902f2d300b001d5f1005096sm8933818plc.55.2024.01.23.05.38.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 23 Jan 2024 05:39:00 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org,
+	andy@kernel.org,
+	corbet@lwn.net
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH] Documentation: gpio: describe uAPI behaviour when hardware doesn't support requested config
+Date: Tue, 23 Jan 2024 21:38:28 +0800
+Message-Id: <20240123133828.141222-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-2-84e55da52400@bootlin.com> <CAHp75Verff06LE0QFaDRoun=ANpGfVU1tHknvvQZd_KyzLVP5Q@mail.gmail.com>
- <223422cc-2a1c-417b-8fa1-20d3b3eb41ef@bootlin.com> <CAHp75VcaABafPh7o1TjrHW2txXRRSxjT443XJe33gfS1YD4bhA@mail.gmail.com>
- <b59067f0-fdba-40d1-bb52-9f66fd833f40@bootlin.com>
-In-Reply-To: <b59067f0-fdba-40d1-bb52-9f66fd833f40@bootlin.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 23 Jan 2024 14:44:30 +0200
-Message-ID: <CAHp75VdwwfTdYYG59DcwO=kPXmPxrkShk6VjoSQPHKDi_p=iMA@mail.gmail.com>
-Subject: Re: [PATCH 02/14] pinctrl: pinctrl-single: move suspend/resume to suspend_noirq/resume_noirq
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Jan 22, 2024 at 4:33=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 1/19/24 17:11, Andy Shevchenko wrote:
-> > On Fri, Jan 19, 2024 at 6:08=E2=80=AFPM Thomas Richard
-> > <thomas.richard@bootlin.com> wrote:
-> >> On 1/15/24 21:02, Andy Shevchenko wrote:
-> >>> On Mon, Jan 15, 2024 at 6:16=E2=80=AFPM Thomas Richard
-> >>> <thomas.richard@bootlin.com> wrote:
+The existing uAPI documentation does not adequately describe how the kernel
+handles the case where the underlying hardware or driver does not support
+the requested configuration.
 
-...
+Add a Configuration Support section describing that behaviour to both the
+v1 and v2 documentation, and better document the errors returned where the
+requested configuration cannot be supported.
 
-> >>>> +static const struct dev_pm_ops pinctrl_single_pm_ops =3D {
-> >>>> +       SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(pinctrl_single_suspend_noirq,
-> >>>> +                                     pinctrl_single_resume_noirq)
-> >>>> +};
-> >>>
-> >>> Use proper / modern macro.
-> >>
-> >> fixed, use DEFINE_NOIRQ_DEV_PM_OPS now
-> >
-> > ...
-> >
-> >>>>  #endif
-> >>>
-> >>> Why ifdeferry is needed (esp. taking into account pm_ptr() use below)=
-?
-> >>
-> >> We may have an "unused variable" warning for pinctrl_single_pm_ops if
-> >> CONFIG_PM is undefined (due to pm_ptr).
-> >
-> > This is coupled with the above. Fixing above will automatically make
-> > the right thing.
->
-> Yes you're right.
-> By the way I can use pm_sleep_ptr instead of pm_ptr.
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
 
-Yes, pm_sleep_ptr() is the correct one in this case.
+My bad for this not being part of the recently applied documentation series,
+but it didn't occur to me that this wasn't described until about the time
+that was being applied.  OTOH this patch is far smaller than a respin of
+that series would've been.
 
---=20
-With Best Regards,
-Andy Shevchenko
+I've kept it as a single patch as it is all related, even if it spans v1
+and v2.  There is also a trivial typo fix in gpio-handle-set-config-ioctl.rst
+that I noticed while I was there that in my eyes didn't warrant a separate
+patch.
+
+Cheers,
+Kent.
+
+ .../userspace-api/gpio/error-codes.rst        |  3 +-
+ .../gpio/gpio-get-lineevent-ioctl.rst         |  6 ++
+ .../gpio/gpio-get-linehandle-ioctl.rst        | 39 +++++++++++++
+ .../gpio/gpio-handle-set-config-ioctl.rst     |  5 +-
+ .../gpio/gpio-v2-get-line-ioctl.rst           | 57 ++++++++++++++++++-
+ .../gpio/gpio-v2-line-set-config-ioctl.rst    |  3 +-
+ 6 files changed, 106 insertions(+), 7 deletions(-)
+
+diff --git a/Documentation/userspace-api/gpio/error-codes.rst b/Documentation/userspace-api/gpio/error-codes.rst
+index edf01f2cf9d2..6bf2948990cd 100644
+--- a/Documentation/userspace-api/gpio/error-codes.rst
++++ b/Documentation/userspace-api/gpio/error-codes.rst
+@@ -65,7 +65,8 @@ GPIO Error Codes
+ 
+     -  - ``ENXIO``
+ 
+-       -  No device corresponding to this device special file exists.
++       -  Typically returned when a feature requiring interrupt support was
++          requested, but the line does not support interrupts.
+ 
+ .. note::
+ 
+diff --git a/Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst b/Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst
+index 7d0b932925c6..09a9254f38cf 100644
+--- a/Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-get-lineevent-ioctl.rst
+@@ -48,6 +48,12 @@ to its default state.
+ 
+ Requesting a line already in use is an error (**EBUSY**).
+ 
++Requesting edge detection on a line that does not support interrupts is an
++error (**ENXIO**).
++
++As with the :ref:`line handle<gpio-get-linehandle-config-support>`, the
++bias configuration is best effort.
++
+ Closing the ``chip_fd`` has no effect on existing line events.
+ 
+ Configuration Rules
+diff --git a/Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst b/Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst
+index c8256afe306e..9112a9d31174 100644
+--- a/Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-get-linehandle-ioctl.rst
+@@ -76,6 +76,45 @@ If no bias flags are set then the bias configuration is not changed.
+ 
+ Requesting an invalid configuration is an error (**EINVAL**).
+ 
++
++.. _gpio-get-linehandle-config-support:
++
++Configuration Support
++---------------------
++
++Where the requested configuration is not directly supported by the underlying
++hardware and driver, the kernel applies one of these approaches:
++
++ - reject the request
++ - emulate the feature in software
++ - treat the feature as best effort
++
++The approach applied depends on whether the feature can reasonably be emulated
++in software, and the impact on the hardware and userspace if the feature is not
++supported.
++The approach applied for each feature is as follows:
++
++==============   ===========
++Feature          Approach
++==============   ===========
++Bias             best effort
++Direction        reject
++Drive            emulate
++==============   ===========
++
++Bias is treated as best effort to allow userspace to apply the same
++configuration for platforms that support internal bias as those that require
++external bias.
++Worst case the line floats rather than being biased as expected.
++
++Drive is emulated by switching the line to an input when the line should not
++be driven.
++
++In all cases, the configuration reported by gpio-get-lineinfo-ioctl.rst
++is the requested configuration, not the resulting hardware configuration.
++Userspace cannot determine if a feature is supported in hardware, is
++emulated, or is best effort.
++
+ Return Value
+ ============
+ 
+diff --git a/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst b/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+index 8f1e748dccc8..d002a84681ac 100644
+--- a/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-handle-set-config-ioctl.rst
+@@ -41,12 +41,13 @@ line or introducing potential glitches.
+ 
+ The configuration applies to all requested lines.
+ 
+-The same :ref:`gpio-get-linehandle-config-rules` that apply when requesting the
++The same :ref:`gpio-get-linehandle-config-rules` and
++:ref:`gpio-get-linehandle-config-support` that apply when requesting the
+ lines also apply when updating the line configuration.
+ 
+ The motivating use case for this command is changing direction of
+ bi-directional lines between input and output, but it may be used more
+-generally move lines seamlessly from one configuration state to another.
++generally to move lines seamlessly from one configuration state to another.
+ 
+ To only change the value of output lines, use
+ gpio-handle-set-line-values-ioctl.rst.
+diff --git a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+index d76e614c8343..56b975801b6a 100644
+--- a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+@@ -74,7 +74,8 @@ If no bias flags are set then the bias configuration is not changed.
+ 
+ The edge flags, ``GPIO_V2_LINE_FLAG_EDGE_xxx``, require
+ ``GPIO_V2_LINE_FLAG_INPUT`` to be set and may be combined to detect both rising
+-and falling edges.
++and falling edges.  Requesting edge detection from a line that does not support
++it is an error (**ENXIO**).
+ 
+ Only one event clock flag, ``GPIO_V2_LINE_FLAG_EVENT_CLOCK_xxx``, may be set.
+ If none are set then the event clock defaults to ``CLOCK_MONOTONIC``.
+@@ -86,11 +87,61 @@ The :c:type:`debounce_period_us<gpio_v2_line_attribute>` attribute may only
+ be applied to lines with ``GPIO_V2_LINE_FLAG_INPUT`` set. When set, debounce
+ applies to both the values returned by gpio-v2-line-get-values-ioctl.rst and
+ the edges returned by gpio-v2-line-event-read.rst.  If not
+-supported directly by hardware, the debouncing is performed in software by the
+-kernel.
++supported directly by hardware, debouncing is emulated in software by the
++kernel.  Requesting debounce on a line that supports neither debounce in
++hardware nor interrupts, as required for software emulation, is an error
++(**ENXIO**).
+ 
+ Requesting an invalid configuration is an error (**EINVAL**).
+ 
++.. _gpio-v2-get-line-config-support:
++
++Configuration Support
++---------------------
++
++Where the requested configuration is not directly supported by the underlying
++hardware and driver, the kernel applies one of these approaches:
++
++ - reject the request
++ - emulate the feature in software
++ - treat the feature as best effort
++
++The approach applied depends on whether the feature can reasonably be emulated
++in software, and the impact on the hardware and userspace if the feature is not
++supported.
++The approach applied for each feature is as follows:
++
++==============   ===========
++Feature          Approach
++==============   ===========
++Bias             best effort
++Debounce         emulate
++Direction        reject
++Drive            emulate
++Edge Detection   reject
++==============   ===========
++
++Bias is treated as best effort to allow userspace to apply the same
++configuration for platforms that support internal bias as those that require
++external bias.
++Worst case the line floats rather than being biased as expected.
++
++Debounce is emulated by applying a filter to hardware interrupts on the line.
++An edge event is generated after an edge is detected and the line remains
++stable for the debounce period.
++The event timestamp corresponds to the end of the debounce period.
++
++Drive is emulated by switching the line to an input when the line should not
++be actively driven.
++
++Edge detection requires interrupt support, and is rejected if that is not
++supported. Emulation by polling can still be performed from userspace.
++
++In all cases, the configuration reported by gpio-v2-get-lineinfo-ioctl.rst
++is the requested configuration, not the resulting hardware configuration.
++Userspace cannot determine if a feature is supported in hardware, is
++emulated, or is best effort.
++
+ Return Value
+ ============
+ 
+diff --git a/Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst b/Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst
+index 126c2626ba6b..9b942a8a53ca 100644
+--- a/Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst
++++ b/Documentation/userspace-api/gpio/gpio-v2-line-set-config-ioctl.rst
+@@ -37,7 +37,8 @@ line or introducing potential glitches.
+ 
+ The new configuration must specify the configuration of all requested lines.
+ 
+-The same :ref:`gpio-v2-get-line-config-rules` that apply when requesting the lines
++The same :ref:`gpio-v2-get-line-config-rules` and
++:ref:`gpio-v2-get-line-config-support` that apply when requesting the lines
+ also apply when updating the line configuration.
+ 
+ The motivating use case for this command is changing direction of
+-- 
+2.39.2
+
 
