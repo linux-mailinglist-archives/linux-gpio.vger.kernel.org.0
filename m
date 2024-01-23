@@ -1,114 +1,124 @@
-Return-Path: <linux-gpio+bounces-2471-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2472-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E631E839942
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 20:12:40 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 08F1F839AA9
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 21:58:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9F4F5291219
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 19:12:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AF5A61F2ACBA
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 20:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 53522128395;
-	Tue, 23 Jan 2024 19:05:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E06953AC;
+	Tue, 23 Jan 2024 20:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T4iu9DrU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.kundenserver.de (mout.kundenserver.de [217.72.192.73])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02355128375;
-	Tue, 23 Jan 2024 19:05:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.72.192.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B42513ACC;
+	Tue, 23 Jan 2024 20:57:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706036730; cv=none; b=ohFeGCTnXQ7apDWThOCmbU35j4jihmAvhnn1h34RTOmqHKg+bmaEV7pGo+1xOjI/CgrhohW2FbIB4ej9v7G6SGbtGMmt7Kig8nYyNjzas/eWS2ljHaYje0TEx+RQF69QwvaNQlBlzBFCWIdt+vVLPsHfXSqzHAfk7mP5Rg+cKk4=
+	t=1706043480; cv=none; b=pRu8axL0szoyqUS6PSDODrHehxH6jGaGwrzahuQEAElc0ffY2VBfpE1JY1kM+GMUDgjByD2mHSb6hM5bFjqufBAWKcQMmRHob2bwcdQwzU+S49xMvaGBHv1UbQ6cbWjqzSTiC/d15pHOKm1AudU+DZ0/UyN9aV6Bu88f/9Mce+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706036730; c=relaxed/simple;
-	bh=K+POQtrUPBrvK9huteUY/chYhWLFqoQivtt56NqPe5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iN9Byko6viLCQwx5tNOYEF5cpvvYfRpkC0KVRPTRH6PcOhC8FRhnM15mTp8emZI60HP/n3o+NPGGjSONMoc6IXh3NVnZjSd1Aw16dYWs/Iv/M/b9r6HyFJqTQwarYktdyUxeMm1M7ycS5Agpr0tgy/N+sn1FB3N2nz6zTu4Z5t8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; arc=none smtp.client-ip=217.72.192.73
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1MS3rB-1reH5O269r-00TU4z; Tue, 23
- Jan 2024 20:05:13 +0100
-Date: Tue, 23 Jan 2024 20:05:11 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Message-ID: <q336uhrwuvhaf2x4fc6tneaavgugcyszgn75vzbrr4ksf7oxhi@3qcwff6nuvei>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
+	s=arc-20240116; t=1706043480; c=relaxed/simple;
+	bh=beniaoOVcxeR7gRHaBkA7uCAdkIPvUsqVHb1E+XI+bo=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=LEhH9gvah9958AvjViJ3Ln15h3D58Z8cUbBGTQuuUVZDGtMHP8q4eETKJsd3y1Cy5VlJP3x6k5p5jtFPJSyxz/qRFM0jW3knsJroNZM436zFZMRHtpRfK6Erau+f2egcnMSOk/NF/lYBwaJ2dLR2Y/LEuGihqsWJuYwywP2b+Ko=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T4iu9DrU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73C03C433C7;
+	Tue, 23 Jan 2024 20:57:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706043479;
+	bh=beniaoOVcxeR7gRHaBkA7uCAdkIPvUsqVHb1E+XI+bo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=T4iu9DrUuiqMfbn+rWnnPjIF5OPJbWwQEXfwwpWsvqQbm3K3atui4RJT7B6uuhib8
+	 8tlCyTXPYKKrBaQN/JshRYeX5/SbNHQLOKB7CWX8S4t8L2kX9EGx2Afwr/7+0mSWDl
+	 cwLlUnp71H0VE9H9xQpzDPKL4GkDf/DCyorNpXlr/0tDPNVt39B7vR5oerfqiUULeB
+	 hEzDp2h+bzGr2pToW1C5vIDY5JLkv6CQr3y0d//xa9GPRfWJfjJ0oHiIcFqWQCzGSn
+	 59cIktQNBGJxZ8g4w+yq4nxxZJB+ye7y4jYWTViOWnhpcD89EIp39OzCUc0ve7On6J
+	 Ni5i1pgxVqZJQ==
+Date: Tue, 23 Jan 2024 14:57:58 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="bsyluouxdqi3s7n6"
-Content-Disposition: inline
-In-Reply-To: <20240123180818.3994-1-mario.limonciello@amd.com>
-X-Provags-ID: V03:K1:Gm5kXVdpfIXtk/gCwj1eOdDhwOzgaN8U8D5zrISYj85b3E54iZy
- bMOBRdYRu6GRvORY/NEe/imBtmKYd1IklLyoBy35vvyzOlC/EowijU6rbpKPmJLcZyTaKr6
- po8C4aA4sBY4mJEYUJ5TnZ8IPhKH0eZL0++bjz6DnJMJ97fz4j2DfUkDbhyt8QcvfwZg47o
- aEFTf/FWayI0v3pTHDM1g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:mYY3OSjtAOc=;R/bgZE0U+xSL5JoVr42K9OMX1hh
- +2Y2WiSRdMlsHXqjzIlcSMZG1cQtkaherMHk0HQZV9/W/t5c7a1ozfpIPoowRWa8bh8IF3Sd1
- YwZlr1iHECa6uHCXdkFfSS3riR4nBJRmXynbevtf6GdyvldoAehNBSp3qzC63IEc7GtKznNZP
- TxityFSNtz7wc5KaSsdnrn1Wmb1CD8viNy7YLrMbucuy8XFFChqvHa6pkAhPNpDwKwSpShfYt
- YJzzNRVC2+cvU3sqUuPjPsOvknZHlrUWiBWPAZuztbkHGifP6FhdOrq8ZEXIBEt/zhJWf3SRW
- SfMlQMcj0kdC7IrSH1n1G7kQZ0JermjzRAy9MoDMQUaCSHCf6O3G/QfgRfB21EP8WT5izevDe
- VzSHU1jUbZbCJ2KdXZfVpPfViFZhe5Tvg4Nc3M3SOCHQHJFFfv550EplI9get9XBnNtyEGVFp
- DQYlTO02FtgbH9sQhVWLWhkf5VGGQIYvkgim0tVipKZ2MDcuFIXUwrWgUMtGjYvH/cduGR1o7
- zuwMTihsU2HjLXL8PrqTtRKnGA7LETaA2DkHB0gaBlQ8KXtC0GF1SdL4f0wWzOMYKKHTGV4Eo
- nQ7gePvlLAs4yUyStQ9yqezAg6bPJVCT4s4orcSu08N7rKFmww8kukZ8YqPCTcJNqF00SWIbx
- tI7buIn8r9wH6lzhb21g5nUWxUse1K/D5nl8kULDZNLTYFOonaC6dR861wPlKjC5sHLfsQJny
- OzAA8jaSpf5qPwTJL4tCRE+5/ULZA/YXKcXYap9Dr7TZY76xVYsVJle3Xqt7LsR+TWY+Hcoai
- haOHwREKoaDfL+MofTF9x6LsjDZbSeKjzU00jUTCSHHwlBRo2SV0v9rRvH/2E2rFbJy8B9G4s
- JjAkaV063OCv3Hg==
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Stephen Boyd <sboyd@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-mips@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, devicetree@vger.kernel.org, 
+ linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <20240123-mbly-clk-v3-3-392b010b8281@bootlin.com>
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-3-392b010b8281@bootlin.com>
+Message-Id: <170604347681.1901901.3923700915063893929.robh@kernel.org>
+Subject: Re: [PATCH v3 03/17] dt-bindings: pinctrl: allow pin controller
+ device without unit address
 
 
---bsyluouxdqi3s7n6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, 23 Jan 2024 19:46:48 +0100, Théo Lebrun wrote:
+> Allow a pin controller device to have no address, therefore no unit
+> address.
+> 
+> The previous $nodename was enforcing a unit address, but
+> scripts/dtc/checks.c enforced that names with unit addresses have reg
+> or ranges:
+> 
+>    Warning (unit_address_vs_reg): .../pinctrl@0: node has a unit
+>    name, but no reg or ranges property
+> 
+> Fix pinctrl.yaml to adopt a (pinctrl|pinmux)(-[a-z]+)? node name when
+> neither reg nor ranges are required. Use [a-z]+ to avoid conflicts with
+> pinctrl-consumer.yaml.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/pinctrl.yaml | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
+> 
 
-On 24/01/23 12:08PM, Mario Limonciello wrote:
-> This should fix the GPIO controller failing to work after commit
-> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
-> ```
-> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
-> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
-> ```
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-I have just applied this on top of 6.8-rc1 and the error in dmesg went
-away, so from my perspective this fix looks good.
+yamllint warnings/errors:
+./Documentation/devicetree/bindings/pinctrl/pinctrl.yaml:45:8: [warning] wrong indentation: expected 8 but found 7 (indentation)
+./Documentation/devicetree/bindings/pinctrl/pinctrl.yaml:47:8: [warning] wrong indentation: expected 8 but found 7 (indentation)
 
-Tested-by: Christian Heusel <christian@heusel.eu>
+dtschema/dtc warnings/errors:
 
---bsyluouxdqi3s7n6
-Content-Type: application/pgp-signature; name="signature.asc"
+doc reference errors (make refcheckdocs):
 
------BEGIN PGP SIGNATURE-----
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240123-mbly-clk-v3-3-392b010b8281@bootlin.com
 
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmWwDecACgkQwEfU8yi1
-JYVBDg/8CSAC9XQWg61EgRJl3sUloUO1V+grtvVxy+q9LbmgwplE7FghQbZBp0Vf
-1cC52D4oGczxJ7Qr5+A/79na9AbdqNecfe/FIiz1V0e9jWyUd05Gcb7jzcspNrGA
-K+Vqel4Ut/inGXXqbMxIPfD5oWTRquQ42gYyijHFJDXAm2N1upUHz7Gay5kWhx+b
-EFvnSOnlxpkWdPM2l6fIIhZd24RfpYyWj7/lGCsII795YvMLfYyqQ0o0LA+LLrOZ
-qipuT+ZPZfpVLsxjpj3cGTWV65RYpestNXiFhsr0zSi3HHOKGSoBvI86i9i5lOgy
-wDuDuSr4MhEd5FPNoqBp2jKL94YI6qu4pockUOom92q+I2kdjEMGOk2VtZBPkoW9
-wNsCcqGgXbbRB7FN745a7Q78A6yEFxd4W+irbTRyFm26LFSys/6sOIwjodxLkSf3
-RvaIVXgnwsHTtP/K5OTf92SBsAbmHDDXAS/Vqv+LSZyy2qs3DIf/pijMLq7QahTf
-knhNdMjDNxRLmD2Gvr4Be6Go3Q6lzU9OSmkhzfrAa3Rktsai+7R55jWUVahfD84e
-c49u6KUKJ0mls8m1E2ggQPLL+kxjiZqLYzaHIpVmGCNqGIR0fm5As7wMnZXqv3iU
-IUHABPX6Y+sBlCLCyPFyTnPfrKGCKw6LBq+CoZout8KK5XJCD+c=
-=ydZH
------END PGP SIGNATURE-----
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
 
---bsyluouxdqi3s7n6--
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
