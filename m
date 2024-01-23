@@ -1,162 +1,154 @@
-Return-Path: <linux-gpio+bounces-2450-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2451-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B213983971F
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 19:00:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B406D839744
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 19:08:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 63CA52852E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 18:00:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3D7BE1F2C04B
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 18:08:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBEE581216;
-	Tue, 23 Jan 2024 18:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E5181AC5;
+	Tue, 23 Jan 2024 18:08:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WSyyzlYs"
+	dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b="svlwFg8+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com [209.85.208.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM10-DM6-obe.outbound.protection.outlook.com (mail-dm6nam10on2056.outbound.protection.outlook.com [40.107.93.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D5181AA8
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 18:00:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.175
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706032823; cv=none; b=lTY53A6TH3UG+DBW2GGOhiydrZIN72Glg5z5XqaHLyXOT8ToFzyKHfM9J5jzmFSyIn1Y3gbS2pkCH0PnDoXks4vpCprq19uWRJDVDwIGnottQRpGT9525WEKA+AonqXzIgGf+6s2Xkj584NnhnF9Mdf3laRLrqL2dNnSjyEteoE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706032823; c=relaxed/simple;
-	bh=MtJ/HqiEUxScIQTHutFj2dKX6h9i2hpJKWEAmQsLjIw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=J4pvI0Hjy41Gc1jhyqf2zeN2MNMEBQ2aZ/UmfkP5FrdGKe0exC//oEbopREusF7Ybq2/bf1ShTbAlRyZQArkbnYNCMMHMhv0tzawaVVPmnbiqhEJkYqvCUR28fV1RlxJHzlZKh+DywdQlf3YKhqbIVqVlhw3p81IzerrzdX/pIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WSyyzlYs; arc=none smtp.client-ip=209.85.208.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f175.google.com with SMTP id 38308e7fff4ca-2cd04078ebeso55446601fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 10:00:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706032820; x=1706637620; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
-        b=WSyyzlYsQvy0asmn23QNx/AhxlktRfpIZ4/nyEWv9tmccquD7/I/t3vVyG4qzGeZ84
-         Vi4Vg5hT+E6fwgoNZaEBS/HTqI0HykXm7dHJkFdp5kqdAZmvBk28ECHqZZh6zHYomLew
-         l6QLYPLkWfNAvj233fq5BjNKDg9p3Bt8FW2uLytHAD3Fffw/3MD7wNqpTpB/JkenPWqs
-         th6hJkuNv2douaf0kSGZhIAOsHBH6O6wV15sO26P0K6u8tB+ygqj1DUV3/qiFJ3VZj3Y
-         EKlDrfJ/ntqsFoMwO/SW+xHeU3QEzSF5pGlB7gFZ7RUIUb6s73qQD4C2p+4BlSzj7Qk6
-         wMRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706032820; x=1706637620;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=TnoRqNG9BylPXm1qN1DFm/eBxnmuuTJ523N0hc6cFDs=;
-        b=NaewP1R8UntlfjYQXln9HgNKLo66feIHhwFPWuCfSwk44+UIWtaOZYET87kWLVsopD
-         8Ef1AOtS8yclhVwJz7OEx3RBMlDMMlQu0Z3maUJR6UeLE74qjaxE07Owpi1dEOXKTioi
-         ZNxYp7dmYBAXfT1K0OuCWbLz+HND8ZUg8vsJeIJZRAgzp90TkvUv6Y44adqiWHaWVXL1
-         L+SG+HtG9SQtnTaXElMXJO1hKLxLPdiTp8RDGUm8Q/P+0xHeJfbPCQCdMy0aUMIsMblc
-         E5Bgags3ej90lF0cziH22AkTqrf10cR3BO8HjqWjjkLrpcqDAPOWpeKtjADDf9732t2a
-         kGSw==
-X-Gm-Message-State: AOJu0YwaLEmRrveH/hKIkyzqq4h//UDxTFmy6hvrN3pKKRa5YByZ/g94
-	OU4RFcVl8m2v7yu32WULlwjiFqoti61nqCmb9NhitPbf5Mz4itvtJhJNPq3L2CE=
-X-Google-Smtp-Source: AGHT+IFnEfC3oawTRwTitOxgaBUV+CKV0/WT2dwdHRRdkvC9cRcn6wvyopZjVpQbq/DqeMFnxofbKg==
-X-Received: by 2002:a05:651c:8e:b0:2cd:285f:7d39 with SMTP id 14-20020a05651c008e00b002cd285f7d39mr115795ljq.15.1706032820038;
-        Tue, 23 Jan 2024 10:00:20 -0800 (PST)
-Received: from [172.30.205.123] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id f17-20020a05651c03d100b002cdfc29b46dsm1514699ljp.88.2024.01.23.10.00.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 10:00:19 -0800 (PST)
-Message-ID: <0069beea-72d6-4a31-8f8b-282dbdd4bf94@linaro.org>
-Date: Tue, 23 Jan 2024 19:00:18 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 756697FBB5;
+	Tue, 23 Jan 2024 18:08:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.93.56
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706033318; cv=fail; b=iSDDacvoIUlU/0hx6FPG3A6cl/3volRcO7yIP/uqv1xgIfx2YGTOLnSXUjhqtJeum1N2O1Eg9rNz5IMjPeFhsut1Phxf+HBSCuRWWx4aIqu7GLeEpaWQu7NSarphlQWMAUQaXOlUqtL5Jc3mkkkFKfC1pV0IUx5am7akJcSomPY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706033318; c=relaxed/simple;
+	bh=NLOuwtKuhC4fa3RVhUSOnomdFmVSlHfwSUhjMLfdIzc=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=P5L6m1zDjeXBvLcyxuiqtup+lqMG6+ygD8e+gN5/omc8K/lk3I4y9I4OVoiCPuS3att+bM8YvcNFVtaI4Y6qgevS2fn6BZrSOT5v/7Rk9uV3MoFNZBcpITOTCtwWy3nhArFQ0Z/EKT3FZnSOlKWEN/Dq0NUXwWbTrKMh76KYa5I=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com; spf=fail smtp.mailfrom=amd.com; dkim=pass (1024-bit key) header.d=amd.com header.i=@amd.com header.b=svlwFg8+; arc=fail smtp.client-ip=40.107.93.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amd.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=amd.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=i0eOVNOuDds/2Z3n9DOa2HzI2ILjjFv/JZ0OywiTWcysUjgyyy6lV+g02YJqW7B/pI0Or9Tq69vM77dfeYygHuINirKMY1dHTuMZHGAjru7yRUdNSZpURBoIupjwqa4uUy7l9sjVD4R175iCv5wfxQq5e20u/Vloo7SQ/3kJfRTC6O42hjMn5tZ8guWFhDoiN8PEzdHfaJKj5XJ+pyNOHM5aCAu96w1LaZgeoaRSsbUJQydhPflu1UAwjXLsoQzZgSUnuiClqcu7C1aSsqWF8OD2Il/GWg8V3y7udHG8fjE3Fi6HRU9Pfq/HPtAP9DJjqawNM+FC/XCHPYxvG/F6BQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=1ayDa2qqNziYlYaI9YhclQ8YK5YfbJRfijee90xOYVc=;
+ b=V9Hw3nKl4iwrgMvF1yQl+mpFv6NVZHAnlVFB4ZjUOB7PvfM+eUdel+a2hbrts+ehqchUPLKRBzuam1fUQ2KYYXgLjCoRSfwwMSZ+bWB2AJ0m5LHJquQp8cS05O2qbOn2xB6UYPDBLCs6pyw9d9eVk8/r01BWGLpCOfDmRsqvdlWy3yvzRDHMjJbk3m7j9Ren9owedc1USfULDdnE9OiZjbKZ1MEpGRB7KBeEhE0+PUGI1boApbApMB+N3ZVBEn5ynjeuqJqEtx82dAFbMzU9Dv3vH5BgI7gOydeW5TR7OJ66B+AqBFh+H3/f1W7hArNEdtxqtcz/LzM0/glKVtovgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=linaro.org smtp.mailfrom=amd.com; dmarc=pass
+ (p=quarantine sp=quarantine pct=100) action=none header.from=amd.com;
+ dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amd.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1ayDa2qqNziYlYaI9YhclQ8YK5YfbJRfijee90xOYVc=;
+ b=svlwFg8+ydDWQL/7l+zI5tv3J0dDq3PbudFio00fSP0/GbP7tkeEnXb1XXDhq0/U1n4lYMkInBv/Win1j61366CC9sKeuBK5ORkp6P4LGP2dx1SM7LV2WbPtow7P9d+KLW/6XfeJh6Erj+KurmdUGG11l7RUddvl1gA7NiSFByM=
+Received: from BLAPR03CA0077.namprd03.prod.outlook.com (2603:10b6:208:329::22)
+ by CH0PR12MB8488.namprd12.prod.outlook.com (2603:10b6:610:18d::18) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7202.34; Tue, 23 Jan
+ 2024 18:08:34 +0000
+Received: from MN1PEPF0000F0E4.namprd04.prod.outlook.com
+ (2603:10b6:208:329:cafe::f2) by BLAPR03CA0077.outlook.office365.com
+ (2603:10b6:208:329::22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7228.22 via Frontend
+ Transport; Tue, 23 Jan 2024 18:08:33 +0000
+X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; dkim=none (message not signed)
+ header.d=none;dmarc=pass action=none header.from=amd.com;
+Received-SPF: Pass (protection.outlook.com: domain of amd.com designates
+ 165.204.84.17 as permitted sender) receiver=protection.outlook.com;
+ client-ip=165.204.84.17; helo=SATLEXMB04.amd.com; pr=C
+Received: from SATLEXMB04.amd.com (165.204.84.17) by
+ MN1PEPF0000F0E4.mail.protection.outlook.com (10.167.242.42) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.7202.16 via Frontend Transport; Tue, 23 Jan 2024 18:08:33 +0000
+Received: from AUS-P9-MLIMONCI.amd.com (10.180.168.240) by SATLEXMB04.amd.com
+ (10.181.40.145) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.34; Tue, 23 Jan
+ 2024 12:08:33 -0600
+From: Mario Limonciello <mario.limonciello@amd.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K
+	<Shyam-sundar.S-k@amd.com>, "Rafael J . Wysocki"
+	<rafael.j.wysocki@intel.com>, "open list:PIN CONTROL SUBSYSTEM"
+	<linux-gpio@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>,
+	"Mario Limonciello" <mario.limonciello@amd.com>, "Rafael J . Wysocki"
+	<rafael@kernel.org>, Christian Heusel <christian@heusel.eu>
+Subject: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
+Date: Tue, 23 Jan 2024 12:08:18 -0600
+Message-ID: <20240123180818.3994-1-mario.limonciello@amd.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 0/2] Remove QDF2xxx pinctrl drivers
-Content-Language: en-US
-To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
- Jeffrey Hugo <quic_jhugo@quicinc.com>
-Cc: Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Marijn Suijten <marijn.suijten@somainline.org>,
- linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-References: <20240122-topic-qdf_cleanup_pinctrl-v1-0-0c619ea25091@linaro.org>
- <8c9b157b-4698-70a3-57b7-c588998eeda7@quicinc.com>
- <CAA8EJprDk=HnqWJ_F5zdUKMPFPpx1RD9KN-KQP9yopP6LMh_fw@mail.gmail.com>
- <52479377-ff61-7537-e4aa-064ab4a77c03@quicinc.com>
- <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <CAA8EJpr2g=b8+M9r20KJoK+VVTabgctvB9eLmwivmi5qgBddFQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SATLEXMB04.amd.com (10.181.40.145) To SATLEXMB04.amd.com
+ (10.181.40.145)
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MN1PEPF0000F0E4:EE_|CH0PR12MB8488:EE_
+X-MS-Office365-Filtering-Correlation-Id: 31680c0f-d2ad-4328-e412-08dc1c3e5039
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	8CRPbGZuIB8yLeHogdgDo734i+bIG+pdRM/hOXTmCceNzbyyGpCoHLarKnn71m8JWn2yNrFIvDMz6BvU2YZOCqHQPjLNpae3vFIKowV2vwMkhdM9o2OePE9isoKvXXgVip9M8ikdnaOKyDoAgq5XD7SkpUZqBpqL52rIXHoK/aM+ksTcM8544rdiiO8dhMeD+3T+1eWaTRGfFOg6EyuDQu00k3284HYtx2AA0POPciRa2oci0Surkv0Ms1fGfvYIxGqdZveOuJFtZSWCBDq18giLiu+7LGr3hJaFJLSgBupkzYhPQXYlqIlx2RoL1iBRgKNRviv7eW4BIQspsqfmGoutxg/v5crWByQItumESYUhHGzl5Seixc/oxOI/h8XaS2OD9rqvJ9N07QhBGzZvf1nGnpuQo/BOdnom0QKBsvpghdydO5KnSKsDeZE+m4++NC9TQRnGHk8IsVmWK96hpyGs3vnG/g9/QyWWVOCehFa51uF5AVF4wyT727/k+QnlMBHRKDtaj/1e/Q59qZd9r7WD+dIVzSwaaHx/WDUfe1AlP3uP9oY20tJy+UEu0wLaP5AhFsYTIEzStMvp46b5+qcTBioNRupzB7jBofeQ7X044LdVCukKk9e+/n5cya0A1X337HUIbb8b6ylD2Z1m45CQ7TXq37z2R3VNNTWCg1rwltS6V6eFWLd6Te+e6JFBTKcvtjRY4QcsWZ6LZdFW23ucC/sPtBMh0Q7PZXCwoxP7+LgdS3gKQwYlVEzmy/ww94s489K4xYvkGfhORMJ52mwYX2uYkHFu3QLyHauWvMc=
+X-Forefront-Antispam-Report:
+	CIP:165.204.84.17;CTRY:US;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:SATLEXMB04.amd.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230031)(4636009)(376002)(346002)(136003)(39860400002)(396003)(230922051799003)(451199024)(82310400011)(1800799012)(186009)(64100799003)(40470700004)(36840700001)(46966006)(336012)(6666004)(16526019)(1076003)(26005)(82740400003)(426003)(7696005)(2616005)(2906002)(5660300002)(83380400001)(478600001)(47076005)(36860700001)(44832011)(41300700001)(6916009)(8676002)(70206006)(4326008)(316002)(70586007)(966005)(54906003)(8936002)(81166007)(36756003)(86362001)(356005)(40480700001)(40460700003)(36900700001);DIR:OUT;SFP:1101;
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Jan 2024 18:08:33.8820
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31680c0f-d2ad-4328-e412-08dc1c3e5039
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB04.amd.com]
+X-MS-Exchange-CrossTenant-AuthSource:
+	MN1PEPF0000F0E4.namprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH0PR12MB8488
 
+On some systems the interrupt is shared between GPIO controller
+and ACPI SCI. When the interrupt is shared with the ACPI SCI the
+flags need to be identical.
 
+This should fix the GPIO controller failing to work after commit
+7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
+```
+[    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
+[    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
+```
 
-On 1/22/24 20:23, Dmitry Baryshkov wrote:
-> On Mon, 22 Jan 2024 at 20:44, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
->>
->> On 1/22/2024 10:56 AM, Dmitry Baryshkov wrote:
->>> On Mon, 22 Jan 2024 at 19:43, Jeffrey Hugo <quic_jhugo@quicinc.com> wrote:
->>>>
->>>> On 1/22/2024 4:57 AM, Konrad Dybcio wrote:
->>>>> The SoC line was never productized, remove the maintenance burden.
->>>>>
->>>>> Compile-tested only.
->>>>>
->>>>> Signed-off-by: Konrad Dybcio <konrad.dybcio@linaro.org>
->>>>> ---
->>>>> Konrad Dybcio (2):
->>>>>          pinctrl: qcom: Remove QDF2xxx support
->>>>>          arm64: defconfig: Remove QDF24XX pinctrl
->>>>>
->>>>>     arch/arm64/configs/defconfig           |   1 -
->>>>>     drivers/pinctrl/qcom/Kconfig.msm       |   7 --
->>>>>     drivers/pinctrl/qcom/Makefile          |   1 -
->>>>>     drivers/pinctrl/qcom/pinctrl-qdf2xxx.c | 164 ---------------------------------
->>>>>     4 files changed, 173 deletions(-)
->>>>> ---
->>>>> base-commit: 319fbd8fc6d339e0a1c7b067eed870c518a13a02
->>>>> change-id: 20240122-topic-qdf_cleanup_pinctrl-98e17cdb375b
->>>>>
->>>>> Best regards,
->>>>
->>>> NACK.
->>>>
->>>> This was productized, there are some out in the wild, and the platform
->>>> is still in (limited) use.
->>>>
->>>> I'd like to see support hang around for a few more years yet.
->>>
->>> The problem is that... its support is pretty strange. I can see
->>> pinctrl, ethernet and quirks for the platform in GIC-ITS and PL011
->>> drivers. Is this enough to get the platform into the useful state? I
->>> can imagine that "QCOM2430" ACPI handle was used for USB hosts on that
->>> platform, but I don't remember when we last tested DWC3 with the ACPI.
->>>
->>> So, all this boils down to the question whether mainline (or something
->>> close by, LTS for example) is actually used and tested on these
->>> devices?
->>
->> Its an ACPI system, so you won't see all of the fun DTisms of a MSM chip.
->>
->> The platform was fully functional upstream, and had an Ubuntu
->> certification.  I run Ubuntu on the two that I have in my office.  I
->> haven't strictly checked out mainline in a while, but I could.  I still
->> have access to the documentation.
->>
->> There is a small, but active set of users including myself.  From what
->> I've seen, they've been happy with things.
-> 
-> Thanks for the information! It looks like it has a small but stable
-> user base. I think we should keep it, maybe ensuring that we are able
-> to test the kernel.
+Cc: Rafael J. Wysocki <rafael@kernel.org>
+Reported-by: Christian Heusel <christian@heusel.eu>
+Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
+Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
+Link: https://lore.kernel.org/linux-acpi/CAJZ5v0iRqUXeuKmC_+dAJtDBLWQ3x15n4gRH48y7MEaLoXF+UA@mail.gmail.com/T/#mc5506014141b61e472b24e095889535a04458083
+Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+---
+ drivers/pinctrl/pinctrl-amd.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alright, please make sure it still boots etc. then!
+diff --git a/drivers/pinctrl/pinctrl-amd.c b/drivers/pinctrl/pinctrl-amd.c
+index ca4a247c2cd1..6a33b584976c 100644
+--- a/drivers/pinctrl/pinctrl-amd.c
++++ b/drivers/pinctrl/pinctrl-amd.c
+@@ -1162,7 +1162,7 @@ static int amd_gpio_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	ret = devm_request_irq(&pdev->dev, gpio_dev->irq, amd_gpio_irq_handler,
+-			       IRQF_SHARED, KBUILD_MODNAME, gpio_dev);
++			       IRQF_SHARED | IRQF_ONESHOT, KBUILD_MODNAME, gpio_dev);
+ 	if (ret)
+ 		goto out2;
+ 
+-- 
+2.34.1
 
-Konrad
 
