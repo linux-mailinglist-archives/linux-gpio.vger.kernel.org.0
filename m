@@ -1,213 +1,128 @@
-Return-Path: <linux-gpio+bounces-2448-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2449-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8BC38391C7
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 15:54:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F9218393BA
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 16:52:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AAB9B22528
-	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 14:54:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1087C1F2397E
+	for <lists+linux-gpio@lfdr.de>; Tue, 23 Jan 2024 15:52:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A43F5C5FB;
-	Tue, 23 Jan 2024 14:54:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578CE60DCE;
+	Tue, 23 Jan 2024 15:45:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hUEh1ErO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CZeSQHkG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 121081C14
-	for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 14:54:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83FC060B8B;
+	Tue, 23 Jan 2024 15:45:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706021683; cv=none; b=LJLiLNNvg/amr5ulX0wHPashPlxtXhotIHemX+LhF2pZiOu8TZECDp/v8Im5kBdixlLwqfuhYR09YGh52+MDFNeGCIIHcF4xbfvj3Ybb4+sPGQnWZYwh68xkVrVQwA20nAEqKSyS4fwMosbROpsO74oCgVbqCdoxmqXCcdTYycc=
+	t=1706024733; cv=none; b=VDDLG2+UaNvUoCuvwZN0qeovtZcIQagB6EI2Pb2UOxjpm4NiA/jhggpFOAWsalPEyYvCvvUWT+mAr/aKiq20WKQOb9+CrGZjGQjLCt1h9s/Kx1HWqqg7G4feETTVcIk6wj3PH96JhhOOZ7bfRpA2APESlGjZ6J2bnvtGA8pMKSk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706021683; c=relaxed/simple;
-	bh=lja2dUdC2w3E6UbTaeLQlMWmrK6xkIUZW0is/jmxisA=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kdbazYy6FVyzwAJOZVO3qSB/lj+WO6xblPqPfzkgLynXwvkCqV/zcC+Dm4OlpzuzB1iY5f7hwJr0efgWEJXXuc3qsAZm+Zsbt9hDbu701JKMMK/aiVtJrb6s8b7sibdjLxHL+bx0WvlWBD9RIf9RjUfrcwY4AdCx0TLdhIxPzpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hUEh1ErO; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706021681; x=1737557681;
-  h=date:from:to:cc:subject:message-id;
-  bh=lja2dUdC2w3E6UbTaeLQlMWmrK6xkIUZW0is/jmxisA=;
-  b=hUEh1ErOMy4Cw3syWyNQNlsd/JQaJfwnY8bHtU63G86FPtnu08v+LnV9
-   ZWaYOIqaiHjViRH5UfQJugxcc5g9jSB+O2NwDOh0g80HbQRFffRJXAO2o
-   GjexFldOPpBEDHW0U6vI+CQtb6IgqxzMauItpt6he2v+Uih2UI8qs7rUo
-   /OoOizaf+Mha3A3ompyE3rG4H2BxTsxQzdmIVePb6vdDKTgGfW2n/LVc4
-   0HAn11EsS3PTICkbzBzS290phFUkl+sdSpu6DDhwj1TPO8gxEZZHXyhzU
-   6NH2PmmfGfqtr9xVOYi1RojmPAGK+gIqHaE12JAemI9eDjVkQRXDoAADX
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="405298566"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="405298566"
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2024 06:54:40 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10962"; a="856352339"
-X-IronPort-AV: E=Sophos;i="6.05,214,1701158400"; 
-   d="scan'208";a="856352339"
-Received: from lkp-server01.sh.intel.com (HELO 961aaaa5b03c) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 23 Jan 2024 06:54:22 -0800
-Received: from kbuild by 961aaaa5b03c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rSIAN-0007Uh-3C;
-	Tue, 23 Jan 2024 14:54:19 +0000
-Date: Tue, 23 Jan 2024 22:53:34 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 3473765920eaa4e7d71a0e4869937d2117bb0398
-Message-ID: <202401232232.RXvjaxtX-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1706024733; c=relaxed/simple;
+	bh=hdBYdUxOFq+kbS0ASigOqpNwC+DLJhVJWkE9MFnLlNM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=gfBDtEsYyPOGrly7wPLeMXP9qOBAHeQoGyj2uHl+FJmHvQl1IMmeoKpFnmNwVA8cvcg7WAeTW6jkUp9oKa5IfwcfZNufD+yjmizinWZfaCMFz+KqC3FsxqkjRzyI6o+QSKQ/Vj7m/utrO7AWv3XO+xwq4pWJN/vy9LnWbVhVIU0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CZeSQHkG; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2f79e79f0cso432919166b.2;
+        Tue, 23 Jan 2024 07:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706024730; x=1706629530; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
+        b=CZeSQHkGMHeHcWoEL36DbEv7o+4X+RJNWCIdD8+W1P+K4k+jfUQ1YVoX4T0x2i+1jI
+         SEcl88ixaxRdtNvzOSkg3fZ91d2hf0jv2x+hGfB2GWS1j8hiH+SmA8WwHOXyJdHBiVHl
+         RcX/LnoWaCSCvKE7uGtvKVkU3aD47GIy3p2tP+T0VIcGHoyNGe26kBJ9Syh6vStbbIEk
+         WW7K9tgSgUtbJ7Wx+HrNLTvQbsVk+d0aFSq9KuwTo46llJ4sp+YSxbaATOiLbW7qf6yG
+         Gk05kK7UaJrRtT//vaX3TvKpw32CN5FE5Vvv/69QtQkJP/Bho6UhQFd7cqO0HbCClN4H
+         c3/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706024730; x=1706629530;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jtlKdxisJ1H4nXUQnaiF3tGiczuUPAFtsLVHqqe+6VI=;
+        b=oU5DaUKU+rlzlr187XEJspN+VszFNMXpQjaESqYxqgw3O3Z5RYHlkWtJppgDP4i4XT
+         Zp59qzvVxXL6LQ5hfFQ8qOFwewq0xpyo1i7YZNyuKJdOmDVgsg+8F2swKrIraI7cK3gX
+         aay0s2KwEyVDLOBINmBl9IXTyCSZ5WGjA+9mMLPKJUKe7XBdCUc/lwC8wwxdw1Sk1wI6
+         4oku/6cEe3QN6H260UJaiH1uKsC8wKpKjImKPs0C6iLBYynhjo8u+yTeZbe64jgihIsY
+         1e60syNhxjFuVUQrrqEqNt+japK2hiIxVaBxXtl//rUOKTAUa2vNhfoAGc26XKX0tzas
+         4trQ==
+X-Gm-Message-State: AOJu0YyBq+Ov4xx9VJ+Mb8p5i0yxD86TRD7HVIjYm01Kw8Us0fJK1xL8
+	py0pmZw+dghZ7bxIDoR5BvBzjhaIe+n9El9yeDk88Whx4zxCHvcuw4tCdSovjsmyBC8/99lOo7V
+	7ZjedD0Jd/+IxHCs8wZO1uSuBYXk=
+X-Google-Smtp-Source: AGHT+IGeoKDAXQT1QtGkmzsvDd9O3U+IXSXTY2VIJASOG7mhjJxF1tXdrpBbCuSnLMpczZO5eE6k5hkSEaDy2eB9Yno=
+X-Received: by 2002:a17:906:da81:b0:a30:f04e:4bdd with SMTP id
+ xh1-20020a170906da8100b00a30f04e4bddmr45448ejb.68.1706024729528; Tue, 23 Jan
+ 2024 07:45:29 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+References: <20240123133828.141222-1-warthog618@gmail.com>
+In-Reply-To: <20240123133828.141222-1-warthog618@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Tue, 23 Jan 2024 17:44:52 +0200
+Message-ID: <CAHp75Vd1dipGkCgQBENN3rLeUO+eQfOz9uKzz86eK755smqGag@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: describe uAPI behaviour when
+ hardware doesn't support requested config
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	andy@kernel.org, corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 3473765920eaa4e7d71a0e4869937d2117bb0398  MAINTAINERS: add Documentation/userspace-api/gpio/ to GPIO UAPI section
+On Tue, Jan 23, 2024 at 3:39=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> The existing uAPI documentation does not adequately describe how the kern=
+el
+> handles the case where the underlying hardware or driver does not support
+> the requested configuration.
+>
+> Add a Configuration Support section describing that behaviour to both the
+> v1 and v2 documentation, and better document the errors returned where th=
+e
+> requested configuration cannot be supported.
 
-elapsed time: 1530m
+...
 
-configs tested: 123
-configs skipped: 1
+> +Bias             best effort
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+So, best effort means that in some cases it won't fail. It reminds me
+of the baud rate setting in serial (TermIOS). The question here is how
+does user space know that it fell in one of such cases? (In termios
+the IOCTL updates the respective fields and then user space can get
+settings to see what has actually been applied.)
 
-tested configs:
-alpha                            alldefconfig   gcc  
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240123   gcc  
-arc                   randconfig-002-20240123   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                         axm55xx_defconfig   gcc  
-arm                                 defconfig   clang
-arm                         lpc18xx_defconfig   gcc  
-arm                            mps2_defconfig   gcc  
-arm                       multi_v4t_defconfig   gcc  
-arm                         orion5x_defconfig   clang
-arm                   randconfig-001-20240123   gcc  
-arm                   randconfig-002-20240123   gcc  
-arm                   randconfig-003-20240123   gcc  
-arm                   randconfig-004-20240123   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240123   gcc  
-arm64                 randconfig-002-20240123   gcc  
-arm64                 randconfig-003-20240123   gcc  
-arm64                 randconfig-004-20240123   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240123   gcc  
-csky                  randconfig-002-20240123   gcc  
-hexagon                           allnoconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240123   clang
-hexagon               randconfig-002-20240123   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240122   clang
-i386         buildonly-randconfig-002-20240122   clang
-i386         buildonly-randconfig-003-20240122   clang
-i386         buildonly-randconfig-004-20240122   clang
-i386         buildonly-randconfig-005-20240122   clang
-i386         buildonly-randconfig-006-20240122   clang
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240122   clang
-i386                  randconfig-002-20240122   clang
-i386                  randconfig-003-20240122   clang
-i386                  randconfig-004-20240122   clang
-i386                  randconfig-005-20240122   clang
-i386                  randconfig-006-20240122   clang
-i386                  randconfig-011-20240122   gcc  
-i386                  randconfig-012-20240122   gcc  
-i386                  randconfig-013-20240122   gcc  
-i386                  randconfig-014-20240122   gcc  
-i386                  randconfig-015-20240122   gcc  
-i386                  randconfig-016-20240122   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch             randconfig-001-20240123   gcc  
-loongarch             randconfig-002-20240123   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                       allyesconfig   gcc  
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                 randconfig-001-20240123   gcc  
-nios2                 randconfig-002-20240123   gcc  
-openrisc                         allyesconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                randconfig-001-20240123   gcc  
-parisc                randconfig-002-20240123   gcc  
-powerpc                          allmodconfig   clang
-powerpc                          allyesconfig   clang
-powerpc               randconfig-001-20240123   gcc  
-powerpc               randconfig-002-20240123   gcc  
-powerpc               randconfig-003-20240123   gcc  
-powerpc64             randconfig-001-20240123   gcc  
-powerpc64             randconfig-002-20240123   gcc  
-powerpc64             randconfig-003-20240123   gcc  
-riscv                            allmodconfig   gcc  
-riscv                            allyesconfig   gcc  
-riscv                 randconfig-001-20240123   gcc  
-riscv                 randconfig-002-20240123   gcc  
-s390                             allmodconfig   gcc  
-s390                             allyesconfig   gcc  
-s390                  randconfig-001-20240123   clang
-s390                  randconfig-002-20240123   clang
-sh                               allmodconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                    randconfig-001-20240123   gcc  
-sh                    randconfig-002-20240123   gcc  
-sparc                            allmodconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64               randconfig-001-20240123   gcc  
-sparc64               randconfig-002-20240123   gcc  
-um                               allmodconfig   clang
-um                               allyesconfig   clang
-um                    randconfig-001-20240123   gcc  
-um                    randconfig-002-20240123   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240123   gcc  
-x86_64       buildonly-randconfig-002-20240123   gcc  
-x86_64       buildonly-randconfig-003-20240123   gcc  
-x86_64       buildonly-randconfig-004-20240123   gcc  
-x86_64       buildonly-randconfig-005-20240123   gcc  
-x86_64       buildonly-randconfig-006-20240123   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240123   clang
-x86_64                randconfig-002-20240123   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                randconfig-001-20240123   gcc  
-xtensa                randconfig-002-20240123   gcc  
+Floating line is not good in some cases and user space really wants to
+know that and treat it as an error (if needed). Hence the above Q. I
+believe this needs to be explained in the documentation.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+...
+
+> +Bias             best effort
+
+Ditto.
+
+...
+
+Personally I would still do two patches per ABI version, but it's up
+to Bart what he wants to see at the end.
+
+--
+With Best Regards,
+Andy Shevchenko
 
