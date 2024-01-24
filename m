@@ -1,114 +1,186 @@
-Return-Path: <linux-gpio+bounces-2514-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2515-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5753783AE30
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 17:18:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7461A83AE8B
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 17:41:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0D4BA1F2531D
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 16:18:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 157821F24D1C
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 16:41:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA0D07E764;
-	Wed, 24 Jan 2024 16:17:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AFDB7E588;
+	Wed, 24 Jan 2024 16:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AwEsD74k"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="lS8FFpRi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E5717E562
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 16:17:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E97B7E574;
+	Wed, 24 Jan 2024 16:41:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706113053; cv=none; b=Tp9kHc7N/D5ZRX5zsacBVOn+fhOSFw8wvJUQiZMgSPKxcC3P3zwFhoJi+ktON+ugyBNOh5CW193OxjvJGw5Mbtnlj2WMAdFX+oZiE1Xu0Yix3Y3s2nGTta/Y0Fxoru/46hV7NxzJuUUn2kvp38s5Tx/0aYeH+Ye4SELfZV6mtKA=
+	t=1706114497; cv=none; b=Yc5QHySiFQIBkT2ybpg4EL0Q9B8PeYNmThF/iEXmm7WbC99fqg2T3LcP8uutLKQCW1BjTQMh7r6kHt3Zn7up8/Ua3s8FX8RrHYEqgniHrIe+Oqz+DlqU58mvRFCh6+XXy7nqepUzyPXXVmw1+Fyy6IGniMwpQbqAdfVXKkBIGhk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706113053; c=relaxed/simple;
-	bh=VAsb6eqfeLYmu0jkFcyOCz0ft3WU1lhaOoQGrRSaFgo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ZIEG0ELwErmYaAoIVn5LRT72gKjQpAlqGykiS3FTJyJ7mbJ8z52XXteKfzGdW0sDtVtYSrwxHau+EhU4KUn8SVg1D91J8Z6XLSSQYgM9JkE+sbZNuTEa36Zh83CpVF8GN07nNyKUm4hFCjhBtbM/fDf6h9HgKLd+9xk+RdUcLMU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AwEsD74k; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3392b045e0aso3795348f8f.2
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 08:17:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706113048; x=1706717848; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jO5aQGUKaS/fQM2T1bnOFpERKUWDVkmi7oXuFEYw4zk=;
-        b=AwEsD74kl7eG/nzhJfyNqM3SEWFfdh2UxWGFoL/pk8bvOs6f8OCnMoNAzgRfm1dEh7
-         NHwlGzyiSGOCD8Sqe5XVHDAKoMT0ffB62Xprmd5NuAlf2DQt96gIvR+UhMkDffKgth7U
-         yLgBmU4ZsjVxc200Z2HowsMrd1XkLFSm1B7jRJbweRl9dlcSezeAl0o64MiYrPCBzYYj
-         uiCPR7NSXZDAxdXY0jUHbCqw1Yr0aOv3oguHmukZZaSGGmBcPiRLKpit7WdIp5Alzo3x
-         3EjITa53LVfB4Bb6hEDtCvwa3zvXZHQA2XlnoSt5xkxvEAuDUDydvvE4Cbklpqoqa+0r
-         9yxw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706113048; x=1706717848;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jO5aQGUKaS/fQM2T1bnOFpERKUWDVkmi7oXuFEYw4zk=;
-        b=NapHXMEBMy9ySBuMuEQahwRTiKxYwoGPPnVMPF3dql7g5bIWi93KTqu+01Z8ui2fHj
-         0+8Kdaox++LfGaZRQd9uhVNElCcpp7aEoccPgTI8cLDvLS6T03iZzf8SbugnXDQKLRXj
-         JabI7NFKsBZcC13KkLBVgA+ESpqxxR55KqHsjuoDMS/fIC9iGszoble2IC8OiDZZxL2H
-         UgR8np7jNjdgvPECTczsZ2a/QK7wI8csPw0iPN0p/llvBXfL/Oj5Pq66vRX5IxRZlEAs
-         9KM23fnfRgwZqEN5Y33zacaXugNtDZg0sjWDXDl1+XvJJ6xTEN/h562Vd1MKCXF0Wnwg
-         huSg==
-X-Gm-Message-State: AOJu0Yz7bs5nitNLR0mDL3BDb6+xb7YFQhN085FonPfhqZSN2/mCGxE2
-	HBEe7yYbOIBf6o9pMiZVTcaJL4EiX2UA/RC84JMvdE0RI/p3+GsUAdWZ5B3zSyY=
-X-Google-Smtp-Source: AGHT+IGGN2cmVGtzO+EblLJMs22ucaqzXyOuBysf4VltLySs2AOpjH5IouqQDI6L7STaLhSzNaUe1A==
-X-Received: by 2002:a05:6000:104c:b0:337:d649:da70 with SMTP id c12-20020a056000104c00b00337d649da70mr679971wrx.138.1706113048439;
-        Wed, 24 Jan 2024 08:17:28 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e737:cf8b:25f7:e0ad])
-        by smtp.gmail.com with ESMTPSA id m17-20020a056000009100b0033928aadde1sm2764761wrx.48.2024.01.24.08.17.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 08:17:27 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: cdev: remove leftover function pointer typedefs
-Date: Wed, 24 Jan 2024 17:17:25 +0100
-Message-Id: <20240124161725.79582-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1706114497; c=relaxed/simple;
+	bh=anBY5LZpeci3/wwVJvSlL4EaTE/KIEe/eqaQRWD5f5c=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=DsY7J8eHVh9KKCLjeNf/oXuh5rRJ5x+Fgjhc/N7IwZRjem4nyraCLvLJ2hgTaZW0+xULLMeBNLWz52axo0hwda1wuAxf8Bvo0ibjlyUPYWYEy3JaOmzqZuc/6lC9KGtqZToCW+aDh8QqgVUURy4kt/J1U7sav4SNA/7Ccb5hZnM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=lS8FFpRi; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 053401BF207;
+	Wed, 24 Jan 2024 16:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706114486;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=2sbgQDOdjhJguWPGsjuBJKz9cflIxIP+NbSXK5IhSsQ=;
+	b=lS8FFpRiRKmzHycbzO96gb3T87gkVQPpEpapke6XAvErYEXv3tWmRzVyAPKxO+xfIp6IWn
+	N+3nKmQ/NHgunx8Bs7GEDc6QdiKEu61yZ7t6+OWTai6Oxz5ACh231AorLWlxOSMmBzwd18
+	4gMWqq9VV4yxP4TtPoEIxM9nZgN/FJuOe+Jg5CpGXID6qVm6sDmDVsHNIOenfhO33gpcOp
+	PgeQhbLu/MvXHLhg3FJoe+t/X2da1tH/LeCpQdlIiIL9iuXQnkiejCRHiU1OG4m4+Lt+qH
+	8ahkb/x/hnOtVc9sQvklPUVSwD1+yEGGDPrhxTcsqsOhe00g7LJVbpNfkNUhCA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 24 Jan 2024 17:41:25 +0100
+Message-Id: <CYN33YJ10HYS.2YDXB158LFZPL@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 08/17] clk: eyeq5: add platform driver
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Gregory
+ CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>
+X-Mailer: aerc 0.15.2
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-8-392b010b8281@bootlin.com>
+ <127fd51b-cd64-4e00-99d6-7be9b79f2dcc@linaro.org>
+In-Reply-To: <127fd51b-cd64-4e00-99d6-7be9b79f2dcc@linaro.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello,
 
-The locking wrappers were replaces with lock guards. These typedefs are
-no longer needed.
+On Wed Jan 24, 2024 at 8:05 AM CET, Krzysztof Kozlowski wrote:
+> On 23/01/2024 19:46, Th=C3=A9o Lebrun wrote:
+> > Add the Mobileye EyeQ5 clock controller driver. It might grow to add
+> > support for other platforms from Mobileye.
+> >=20
+> > It handles 10 read-only PLLs derived from the main crystal on board. It
+> > exposes a table-based divider clock used for OSPI. Other platform
+> > clocks are not configurable and therefore kept as fixed-factor
+> > devicetree nodes.
+> >=20
+> > Two PLLs are required early on and are therefore registered at
+> > of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
+> > UARTs.
+> >=20
+>
+>
+> > +#define OLB_PCSR1_RESET				BIT(0)
+> > +#define OLB_PCSR1_SSGC_DIV			GENMASK(4, 1)
+> > +/* Spread amplitude (% =3D 0.1 * SPREAD[4:0]) */
+> > +#define OLB_PCSR1_SPREAD			GENMASK(9, 5)
+> > +#define OLB_PCSR1_DIS_SSCG			BIT(10)
+> > +/* Down-spread or center-spread */
+> > +#define OLB_PCSR1_DOWN_SPREAD			BIT(11)
+> > +#define OLB_PCSR1_FRAC_IN			GENMASK(31, 12)
+> > +
+> > +static struct clk_hw_onecell_data *eq5c_clk_data;
+> > +static struct regmap *eq5c_olb;
+>
+> Drop these two. No file-scope regmaps for drivers. Use private container
+> structures.
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib-cdev.c | 5 -----
- 1 file changed, 5 deletions(-)
+I wouldn't know how to handle the two steps then. Two clocks and the clk
+provider are registered at of_clk_init() using CLK_OF_DECLARE_DRIVER().
+The rest is at platform device probe. Without a static, there are no
+way to pass the struct clk_hw_onecell_data from one to the other.
 
-diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-index 2a88736629ef..34d6712fa07c 100644
---- a/drivers/gpio/gpiolib-cdev.c
-+++ b/drivers/gpio/gpiolib-cdev.c
-@@ -61,11 +61,6 @@ static_assert(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
-  * interface to gpiolib GPIOs via ioctl()s.
-  */
- 
--typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
--typedef long (*ioctl_fn)(struct file *, unsigned int, unsigned long);
--typedef ssize_t (*read_fn)(struct file *, char __user *,
--			   size_t count, loff_t *);
--
- /*
-  * GPIO line handle management
-  */
--- 
-2.40.1
+I've looked at all clock drivers that do CLK_OF_DECLARE_DRIVER() and
+register a platform driver.
 
+ - The following use a static variable:
+   drivers/clk/axis/clk-artpec6.c
+   drivers/clk/clk-aspeed.c
+   drivers/clk/clk-ast2600.c
+   drivers/clk/clk-eyeq5.c
+   drivers/clk/clk-gemini.c
+   drivers/clk/clk-milbeaut.c
+   drivers/clk/mediatek/clk-mt2701.c
+   drivers/clk/mediatek/clk-mt6797.c
+   drivers/clk/mediatek/clk-mt8173-infracfg.c
+   drivers/clk/nxp/clk-lpc18xx-creg.c
+   drivers/clk/ralink/clk-mt7621.c
+   drivers/clk/ralink/clk-mtmips.c
+   drivers/clk/sunxi/clk-mod0.c
+   drivers/clk/axis/clk-artpec6.c
+
+ - Those two declare different clock providers at init and probe:
+   drivers/clk/ralink/clk-mt7621.c
+   drivers/clk/sunxi/clk-mod0.c
+
+ - It doesn't register new clocks at probe (only resets) so no need to
+   share variables.
+   drivers/clk/ralink/clk-mtmips.c
+
+>
+> ...
+>
+> > +static void __init eq5c_init(struct device_node *np)
+> > +{
+> > +	struct device_node *parent_np =3D of_get_parent(np);
+> > +	int i, ret;
+> > +
+> > +	eq5c_clk_data =3D kzalloc(struct_size(eq5c_clk_data, hws, EQ5C_NB_CLK=
+S),
+> > +				GFP_KERNEL);
+> > +	if (!eq5c_clk_data) {
+> > +		ret =3D -ENOMEM;
+> > +		goto err;
+> > +	}
+> > +
+> > +	eq5c_clk_data->num =3D EQ5C_NB_CLKS;
+> > +
+> > +	/*
+> > +	 * Mark all clocks as deferred. We register some now and others at
+> > +	 * platform device probe.
+> > +	 */
+> > +	for (i =3D 0; i < EQ5C_NB_CLKS; i++)
+> > +		eq5c_clk_data->hws[i] =3D ERR_PTR(-EPROBE_DEFER);
+> > +
+> > +	/*
+> > +	 * Currently, if OLB is not available, we log an error, fail init the=
+n
+>
+> How it could be not available? Only with broken initcall ordering. Fix
+> your initcall ordering and then simplify all this weird code.
+
+of_syscon_register() and regmap_init_mmio() lists many reasons for
+it to not be available. Am I missing something?
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
