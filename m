@@ -1,133 +1,206 @@
-Return-Path: <linux-gpio+bounces-2498-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2500-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 04E7B83A735
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 11:51:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BACBA83A74E
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 11:55:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AF70E287BD7
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 10:51:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3F8DFB2B0E3
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 10:54:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AA51199D9;
-	Wed, 24 Jan 2024 10:51:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ar9IaweC"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3AFDF1A726;
+	Wed, 24 Jan 2024 10:54:38 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F19A199BA
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 10:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768B7199D9
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 10:54:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706093482; cv=none; b=Yx11S8FP/Zs+Mi83Jyb7T88K9eHYFGyC/P0ZMKspzzaTkN5OSdWiK0SK9F2bOWwFzuRSIFx5wnrJD8KrjFuTCXjXIRVWp9xrW/sJ37DABP2AuhdFbeVlnTEu27ZjlSTh0eUsJVkGiMI9FQD73AZLFkyRAP6DE+CoMPYhXbFChzU=
+	t=1706093678; cv=none; b=YEIl8fFRTxFeW1Sq1bFwqbx185guZDv80UENSS4J8JLXI/jJwvRRxx7cZmtrrzf9FbXAiCT7gf6sguEl1PgO1ztbg28PWVmiUliSqwfEk8Z0CASUv0bqWIidFy0kGa56ihVZHP3h/BdR9svsCFoDdXIsJ8SUdjIxMjokippuBKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706093482; c=relaxed/simple;
-	bh=y2mKgCBO/IasKUf12gCdlm3RmJfsATRiGLH9QuUpX74=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=t23Z2ogsAB6c/ATuUCH2j+JMA7GPE9xL9ACSM0+ecVzVR1MiG4LlT1frhsfDtGXX+IhmlFAeKKDB5DnxprqpFr3ZchYoi/dQsuBZlphrpOBCZaKANFMRtD45W/xxdW64KwIFC2hsA1lmWBnOwg23ub8RYLcP6xQYwpDRKkRPlYs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ar9IaweC; arc=none smtp.client-ip=209.85.215.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-5cf2d73a183so4438791a12.1
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 02:51:21 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706093481; x=1706698281; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=B/YrDVtlopTHbb+7k4lJBjqdzisG/MvwFJRJKCqq/yY=;
-        b=ar9IaweCF1SRKEWskneigTt/EoBW9aua+bx/HOH9HdBi5qCmTf/PUJlzefGW+DmJgu
-         sqeND1AHfYKIe/Tje2ehh0Cn2R/hO5i7WbPRUF/jp1CQEWX3nbTA1qm957Kw7Pkd5yzm
-         UbZ18HPo/FRbFpOqBgNMFwsXw34WqK65VlGMpWFkyx63bunUeuGgUdg6SaoLFhpabX0Q
-         b5Icu/Kogu8Ue+YAB58wYJlEDRzC68aTl5Ssqpm100PX2nfecfSNNbAt8NPFYs6lLp17
-         GPqXtIdPKx4B8sk1/ezonE2132XeApWxAZEuk6n0cZAVDXscncFFhC49/uVwWq+5DOVS
-         j1uQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706093481; x=1706698281;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B/YrDVtlopTHbb+7k4lJBjqdzisG/MvwFJRJKCqq/yY=;
-        b=ib3TAiPuObJKd2fllILyk7Pfn9f19YrichMqilXumCz0JG0wf+rm4W6+3oFdPeHzh3
-         GMSiguMhmYQRNVW9ctDDjrVF1zxI1VRssjepG3TfuNWBNhzSFN3mGGuO2/TL2lydILMF
-         1ha9aGPzHtYxQYCC4sZwZrNdHur2p6B1ronJqCZM48roDdM+c5kk1vRhz18YzkvtUlq0
-         Bp7auY1oaXFJkDoQbeTGu3Udtpq9kbtiFLdBj2fMN1CJrsrRG1Lcqo7xt2P/Euo37Lip
-         h4rC/SxKDelSY2YBEOxehzM1kefRzCCKWpRjS2syzFjXgSty3XoaohVu3hWARjtCLpdJ
-         QX7w==
-X-Gm-Message-State: AOJu0YzqBBX2dwrlRv97CTxeYzolsUit1IuGrr958xL9bGDVzq4JX6B1
-	MRv0aXJ4O0fcC5FlLsuF9IQI0fNnaq2w1HhLYVTeKbtermBvcVSI
-X-Google-Smtp-Source: AGHT+IFw4s5Q1vJRMSJB0lI/4fravjGV4IpkI9XKe01Gvblx8BL+uaHzFtLrlsW+P74dsYRP/o8AtQ==
-X-Received: by 2002:a17:90a:c48:b0:290:331a:dc0 with SMTP id u8-20020a17090a0c4800b00290331a0dc0mr1458022pje.17.1706093480571;
-        Wed, 24 Jan 2024 02:51:20 -0800 (PST)
-Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id ee6-20020a17090afc4600b002868abc0e6dsm13402306pjb.11.2024.01.24.02.51.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 02:51:20 -0800 (PST)
-Date: Wed, 24 Jan 2024 18:51:15 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	=?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
-Subject: Re: [PATCH] gpio: improve the API contract for setting direction
-Message-ID: <20240124105115.GB63670@rigel>
-References: <20240124101803.23580-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1706093678; c=relaxed/simple;
+	bh=lKdiVruIzPpYmtbsDhdv0Tfge2qMRNvAnOAyUZusIqI=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ni5sIgtCEVfAhUw1QBTxPJZNOBoBz2TR+lO5a0JnbyfV+ST1KzvXEfzFRTVwZU+ja7w97n2BACeRKUOlrTnwghLEL97JPJ2NNl3AdqI8T3Dc01/D8NYA3/x6nrsgbjuaKIYWjJBybapqVSbWVXrpSKafwhXxjxkaMQnP9vjm8wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSatc-00013p-UF; Wed, 24 Jan 2024 11:54:16 +0100
+Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSatb-0022P4-5Z; Wed, 24 Jan 2024 11:54:15 +0100
+Received: from pza by lupine with local (Exim 4.96)
+	(envelope-from <p.zabel@pengutronix.de>)
+	id 1rSatb-00086H-0J;
+	Wed, 24 Jan 2024 11:54:15 +0100
+Message-ID: <82bde47d48ec2962d69d9e4edde6d6d96fcbbd65.camel@pengutronix.de>
+Subject: Re: [PATCH v3 09/17] reset: eyeq5: add platform driver
+From: Philipp Zabel <p.zabel@pengutronix.de>
+To: =?ISO-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>, Gregory
+ CLEMENT <gregory.clement@bootlin.com>, Michael Turquette
+ <mturquette@baylibre.com>,  Stephen Boyd <sboyd@kernel.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Linus Walleij
+ <linus.walleij@linaro.org>,  =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni
+ <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+  linux-gpio@vger.kernel.org
+Date: Wed, 24 Jan 2024 11:54:14 +0100
+In-Reply-To: <20240123-mbly-clk-v3-9-392b010b8281@bootlin.com>
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+	 <20240123-mbly-clk-v3-9-392b010b8281@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240124101803.23580-1-brgl@bgdev.pl>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-On Wed, Jan 24, 2024 at 11:18:03AM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> If a GPIO driver returns a positive integer from one of the direction
-> setter callbacks, we'll end up propagating it to user-space. Whether we
-> should sanitize the values returned by callbacks is a different question
-> but let's first improve the documentation and fortify the contract with
-> GPIO providers.
->
-> Reported-by: José Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  include/linux/gpio/driver.h | 10 ++++++----
->  1 file changed, 6 insertions(+), 4 deletions(-)
->
-> diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-> index 9a5c6c76e653..c1c516b8a880 100644
-> --- a/include/linux/gpio/driver.h
-> +++ b/include/linux/gpio/driver.h
-> @@ -335,10 +335,12 @@ struct gpio_irq_chip {
->   *	(same as GPIO_LINE_DIRECTION_OUT / GPIO_LINE_DIRECTION_IN),
->   *	or negative error. It is recommended to always implement this
->   *	function, even on input-only or output-only gpio chips.
-> - * @direction_input: configures signal "offset" as input, or returns error
-> - *	This can be omitted on input-only or output-only gpio chips.
-> - * @direction_output: configures signal "offset" as output, or returns error
-> - *	This can be omitted on input-only or output-only gpio chips.
-> + * @direction_input: configures signal "offset" as input, or returns a negative
-> + *	error number. This can be omitted on input-only or output-only gpio
-> + *	chips.
-> + * @direction_output: configures signal "offset" as output, or returns
-> + *	a negative error number. This can be omitted on input-only or
-> + *	output-only gpio chips.
->   * @get: returns value for signal "offset", 0=low, 1=high, or negative error
->   * @get_multiple: reads values for multiple signals defined by "mask" and
->   *	stores them in "bits", returns 0 on success or negative error
+On Di, 2024-01-23 at 19:46 +0100, Th=C3=A9o Lebrun wrote:
+[...]
+> diff --git a/drivers/reset/reset-eyeq5.c b/drivers/reset/reset-eyeq5.c
+> new file mode 100644
+> index 000000000000..2217e42e140b
+> --- /dev/null
+> +++ b/drivers/reset/reset-eyeq5.c
+> @@ -0,0 +1,383 @@
+[...]
 
-Also specify 0 on success, as per @get_multiple?
+> +static int eq5r_assert(struct reset_controller_dev *rcdev, unsigned long=
+ id)
+> +{
+> +	struct eq5r_private *priv =3D dev_get_drvdata(rcdev->dev);
 
-It would be good to revise the documentation for all the ops, but this
-is a start.
+rcdev is contained in priv, you can just use container_of instead of
+chasing pointers around.
 
-Cheers,
-Kent.
+> +	u32 offset =3D id & GENMASK(7, 0);
+> +	u32 domain =3D id >> 8;
+> +	int ret;
+> +
+> +	if (WARN_ON(domain >=3D EQ5R_DOMAIN_COUNT))
+> +		return -EINVAL;
+
+Reset controls with domain >=3D EQ5R_DOMAIN_COUNT are already weeded out
+during request by of_xlate, so this check is not necessary.
+
+> +	dev_dbg(rcdev->dev, "%u-%u: assert request\n", domain, offset);
+> +
+> +	mutex_lock(&priv->mutexes[domain]);
+> +	_eq5r_assert(priv, domain, offset);
+> +	ret =3D _eq5r_busy_wait(priv, rcdev->dev, domain, offset, true);
+> +	mutex_unlock(&priv->mutexes[domain]);
+> +
+> +	return ret;
+
+Consider using guard(mutex)(&priv->mutexes[domain]) from
+linux/cleanup.h to automatically unlock on return.
+
+[...]
+> +static int eq5r_reset(struct reset_controller_dev *rcdev, unsigned long =
+id)
+
+Is this used by anything? If unused, I'd prefer this not to be
+implemented. If it is used, is no delay required between assert and
+deassert by any consumer?
+
+> +{
+> +	struct device *dev =3D rcdev->dev;
+> +	struct eq5r_private *priv =3D dev_get_drvdata(dev);
+> +	u32 offset =3D id & GENMASK(7, 0);
+> +	u32 domain =3D id >> 8;
+> +	int ret;
+> +
+> +	if (WARN_ON(domain >=3D EQ5R_DOMAIN_COUNT))
+> +		return -EINVAL;
+> +
+> +	dev_dbg(dev, "%u-%u: reset request\n", domain, offset);
+> +
+> +	mutex_lock(&priv->mutexes[domain]);
+> +
+> +	_eq5r_assert(priv, domain, offset);
+> +	ret =3D _eq5r_busy_wait(priv, dev, domain, offset, true);
+> +	if (ret) /* don't let an error disappear silently */
+> +		dev_warn(dev, "%u-%u: reset assert failed: %d\n",
+> +			 domain, offset, ret);
+
+Why not return the error though?
+
+> +	_eq5r_deassert(priv, domain, offset);
+> +	ret =3D _eq5r_busy_wait(priv, dev, domain, offset, false);
+> +
+> +	mutex_unlock(&priv->mutexes[domain]);
+> +
+> +	return ret;
+> +}
+[...]
+> +static int eq5r_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *np =3D dev->of_node;
+> +	struct device_node *parent_np =3D of_get_parent(np);
+> +	struct eq5r_private *priv;
+> +	int ret, i;
+> +
+> +	priv =3D kzalloc(sizeof(*priv), GFP_KERNEL);
+
+Using devm_kzalloc() avoids leaking this on error return or driver
+unbind.
+
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	dev_set_drvdata(dev, priv);
+> +
+> +	priv->olb =3D ERR_PTR(-ENODEV);
+> +	if (parent_np) {
+> +		priv->olb =3D syscon_node_to_regmap(parent_np);
+> +		of_node_put(parent_np);
+> +	}
+> +	if (IS_ERR(priv->olb))
+> +		return PTR_ERR(priv->olb);
+> +
+> +	for (i =3D 0; i < EQ5R_DOMAIN_COUNT; i++)
+> +		mutex_init(&priv->mutexes[i]);
+> +
+> +	priv->rcdev.ops =3D &eq5r_ops;
+> +	priv->rcdev.owner =3D THIS_MODULE;
+> +	priv->rcdev.dev =3D dev;
+> +	priv->rcdev.of_node =3D np;
+> +	priv->rcdev.of_reset_n_cells =3D 2;
+> +	priv->rcdev.of_xlate =3D eq5r_of_xlate;
+> +
+> +	priv->rcdev.nr_resets =3D 0;
+> +	for (i =3D 0; i < EQ5R_DOMAIN_COUNT; i++)
+> +		priv->rcdev.nr_resets +=3D __builtin_popcount(eq5r_valid_masks[i]);
+> +
+> +	ret =3D reset_controller_register(&priv->rcdev);
+
+Similarly, use devm_reset_controller_register() or disable driver
+unbind with suppress_bind_attrs.
+
+regards
+Philipp
+
 
