@@ -1,78 +1,79 @@
-Return-Path: <linux-gpio+bounces-2496-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2497-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2299D83A687
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 11:18:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3325C83A6F8
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 11:39:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8FA49B25EF9
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 10:18:14 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 664721C21B63
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 10:39:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F032618C19;
-	Wed, 24 Jan 2024 10:18:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 41863FBFD;
+	Wed, 24 Jan 2024 10:39:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JEd+Q3io"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OkCLexIz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E32DB18C05
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 10:18:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F0611946F
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 10:39:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706091488; cv=none; b=R8As510eT1G2M/+G7qhP7EvNHRbE8/F1rZ3I5MUbuvrOhA9b8Q1FXGSkoGs1bmHORkqesD130MrZDLkItQIbdG+LAa3v5vh/Zi4w5kuANp/cSmIg9CxSBOUxzuYfIF+pmzmfDDmQfuxst0LWokMZ5VZsa81PxbPorEN9/BIRKxo=
+	t=1706092776; cv=none; b=jo9wNU1xjV/RGV+eJpDtyqrJyUS5kbK8p7P5YVqUQiHYBobFtNS8zR5NgF8u/DyNZcGCswPfIHOawYuYi+t2TIyKwezH5yoOPpiO7fw98U/8A22uWyFOEn2ShDADB390w3lDzmuzMr/xFSRKpRaR6Eh0GwOivNuU2c5D2tQzsxc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706091488; c=relaxed/simple;
-	bh=61yF3inICmlm/ykxX91sgup1JyxWymkd08CgnqZUo84=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=FVi1XxGUGam97oS36c50SXgPgO+f12wCD7j4QC/gmuaB3PnFo48lmIN3/6NwIYbs/3PZbRmtUOfOJWiHzxdM4crCwuKvanOkGCTaqua4nH2dxx3FxRxnvYd99U6QVSxJiTgQwggVWV1U0sHSh+l5kF/kjB9U/iVb8otIFes6+dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JEd+Q3io; arc=none smtp.client-ip=209.85.221.49
+	s=arc-20240116; t=1706092776; c=relaxed/simple;
+	bh=734NMMquywIKI4BZ+lmSPRYZ25SD+kXbHf5rFmBTH8M=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=qNNfn8NNmLWEU6qmCuMTI4NhvzTGhSpKIXlOMvMDcUZJ/Mdxx8j2Is503zfP7BYTajAxsK7lGwlJhMC4Xa2WLVK56Ae32uzit47LA76v8fg/fBYCkNVIIShggH5emvu8wn1mNltj4n27GSPNNdHKqWeJgz/8lo4l1/e2v0y/ZDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OkCLexIz; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-33922d2cb92so4684106f8f.1
-        for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 02:18:06 -0800 (PST)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40eac352733so34331005e9.0
+        for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 02:39:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706091485; x=1706696285; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706092772; x=1706697572; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=24t+GKRohivdD9M6HU7DNDIl/pod3q4HJA/0ZcbBkQk=;
-        b=JEd+Q3ioYDWxGxjxEvRsU5VF1otSmAd5NEKMX6N8q4riUJilOmg8ICgoLdXztF/u6T
-         RDbv0+hvIqmPrIDj6T/CzwscejcVCiWJmLIEVzlIOU4NjQ6fZz+3gn/qe1zmmf7bjuZS
-         WaC5LbX8qSyV6ZVEXtOPNeMAWEERt5RvHRA7QE6PuY32RqJCr/beMaKEtOZCzPgUsT32
-         rsUoFTT++IcUt/4HMhUAPi/Kd4sVjRDle4gLtl6JEKTb4eWw4NB1NPVZBsg3cAzjvd3t
-         6+dBagn2Bmith6siiYmkmAHGOc56DJMe3hokb7MwLhD17JlOlC0o2VSoeZjJMeM3Se95
-         nPMw==
+        bh=+cvLraffpvdBBPkKRdEK9rD8rp5r6BkQHWumf8zgppk=;
+        b=OkCLexIzHal/BzwKQxszWzUvXutFkQVrIJtLKB1tSxQMc3JDcjWZJ6WNHjKCt83bkZ
+         msY7Yt5SPNZ1S8ijPhU/IWp4WWVLUTANVLLuHxN5xUnjk8uIHuOfNjoPfzxI5WJWwIXR
+         JogOGwp1mB/EhC+jgq98hp84yapDkR3kqbO1pEWIV8iD6h7fTwxR4051eEP+NYg+B1AO
+         dBF02kOVSuAG+/1I0cYNQuvutediiR3wGH/6qeNyQ88oetqhud+na+bkXt7ebsE0JVeC
+         Ch4X0GoaH5QReLDoWxB4oRuhnJc3SNoTZcUij955nKJYANPRzQuSLCtKwRZalJPJZPrR
+         gHqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706091485; x=1706696285;
+        d=1e100.net; s=20230601; t=1706092772; x=1706697572;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=24t+GKRohivdD9M6HU7DNDIl/pod3q4HJA/0ZcbBkQk=;
-        b=um8gK1aNIxxuFk8YIsxGFwAXv4qMLOHCDw750LRnMKM6g5hrvE3g/ifYa9LUxYsz0c
-         hGlatC8pkYxkQnRfQR/9v89+XcUSpfrBS8flyVqemy9qLbCyMDOQY8VAMJLAovz0TqzE
-         9Jeo82iVUtTPdvReXjnbsQER+ThTNkcRu2TZyIfeILEyjnnOhsMr58WZz9A75ibl+zgC
-         PgqAkFdGy9L1NAQPYFBKZxbYSd6+dVXG/5S5AWCXTSYz7HLmja768SENlwaXjjprqVAd
-         Ffe2nmGnW7i2cIbor7KB1qBEp7wJT/rR1U79ix8AgSWyrHAENJmDL+zF8rRLJ1lYnXH7
-         +yTA==
-X-Gm-Message-State: AOJu0Yx1x+YAh71oiTBrap+aoahODAvpq5jz7up4oeoTaGDQpFt4C3c0
-	9InUYUidfIdZ74Scm056OIdUbs/PzmZdyjvG1//5TB1gaUWtEm0BgQRyMDbs+AE=
-X-Google-Smtp-Source: AGHT+IF4HooIIzUkl4PmavjRKA6XsPDhTsbeNuVLTwZ8316Cklr4cZmAd+vZETl8nBN4fmPy+eclVw==
-X-Received: by 2002:a5d:67c3:0:b0:337:c0b9:ea0d with SMTP id n3-20020a5d67c3000000b00337c0b9ea0dmr223350wrw.41.1706091485021;
-        Wed, 24 Jan 2024 02:18:05 -0800 (PST)
+        bh=+cvLraffpvdBBPkKRdEK9rD8rp5r6BkQHWumf8zgppk=;
+        b=tcee2pB50SO7pvUNdonN74OcSCqMiMFCvXJXyR61CXk94IdmFwrO55WuE+NL9oGzDX
+         zyyBGbL8FGF4r9flPGrQeW2uaBZW4CkxkERv2jHVvvSbxi/nzEywzg3jNRcz8cRoVH9f
+         hxxwU+vUbwG6hzEoaM0E8N44iCpVgnisWj6fsB4JQlxpHaKgH92bz+Znq7nfO3zY3zg7
+         PrIyHEeZR9yOVnrz8cACWJJRwTG8EE2yJVzHDtq1kxDOYEze5SAWPc0fcfTqNqYUis35
+         x0SUys+CDLHGRpwAhlZa0fQdlxqfxFYO0PVvdxjyxLe+XbJ3tV/1oRv4Cz/uevuSsMtb
+         cQDA==
+X-Gm-Message-State: AOJu0YwA6UHHrbUeNazpeb3ywu/wGTqQmA0TrqBXIPEE8OomgtXE6+3L
+	aA7JxN+IOHkedelQej79NH1EYoMSZSpWUSBLMF+WcmtBhxul7Xq9Cp92FdsoT7w=
+X-Google-Smtp-Source: AGHT+IEmjeMQj3GXvoG2Xyg9K7zz58LyzTHWGQi49EtGvzzW7DSeheD3HgPlFPlbZpDuEKZFy1K+yA==
+X-Received: by 2002:a05:600c:3d94:b0:40e:4ec1:ad2c with SMTP id bi20-20020a05600c3d9400b0040e4ec1ad2cmr929998wmb.52.1706092772036;
+        Wed, 24 Jan 2024 02:39:32 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:e737:cf8b:25f7:e0ad])
-        by smtp.gmail.com with ESMTPSA id cg13-20020a5d5ccd000000b0033927ccc725sm11046427wrb.50.2024.01.24.02.18.04
+        by smtp.gmail.com with ESMTPSA id b16-20020a05600c4e1000b0040ec66021a7sm1446141wmq.1.2024.01.24.02.39.31
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 02:18:04 -0800 (PST)
+        Wed, 24 Jan 2024 02:39:31 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>
+	Kent Gibson <warthog618@gmail.com>,
+	Phil Howard <phil@gadgetoid.com>
 Cc: linux-gpio@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	=?UTF-8?q?Jos=C3=A9=20Guilherme=20de=20Castro=20Rodrigues?= <joseguilhermebh@hotmail.com>
-Subject: [PATCH] gpio: improve the API contract for setting direction
-Date: Wed, 24 Jan 2024 11:18:03 +0100
-Message-Id: <20240124101803.23580-1-brgl@bgdev.pl>
+Subject: [libgpiod][PATCH] core: ignore positive values returned by the GPIO_V2_GET_LINE ioctl()
+Date: Wed, 24 Jan 2024 11:39:29 +0100
+Message-Id: <20240124103929.66545-1-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -85,39 +86,34 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-If a GPIO driver returns a positive integer from one of the direction
-setter callbacks, we'll end up propagating it to user-space. Whether we
-should sanitize the values returned by callbacks is a different question
-but let's first improve the documentation and fortify the contract with
-GPIO providers.
+If the kernel GPIO driver (erroneously) returns a positive value from one
+of its callbacks, it may end up being propagated to user space as
+a positive value returned by the call to ioctl(). Let's treat all
+non-zero values as errors as GPIO uAPI ioctl()s are not expected to ever
+return positive values. This should be addressed in the kernel but will
+remain a problem on older or unpatched versions so we need to sanitize it
+in user-space too.
 
 Reported-by: José Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
+Fixes: b7ba732e6a93 ("treewide: libgpiod v2 implementation")
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- include/linux/gpio/driver.h | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+ lib/chip.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 9a5c6c76e653..c1c516b8a880 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -335,10 +335,12 @@ struct gpio_irq_chip {
-  *	(same as GPIO_LINE_DIRECTION_OUT / GPIO_LINE_DIRECTION_IN),
-  *	or negative error. It is recommended to always implement this
-  *	function, even on input-only or output-only gpio chips.
-- * @direction_input: configures signal "offset" as input, or returns error
-- *	This can be omitted on input-only or output-only gpio chips.
-- * @direction_output: configures signal "offset" as output, or returns error
-- *	This can be omitted on input-only or output-only gpio chips.
-+ * @direction_input: configures signal "offset" as input, or returns a negative
-+ *	error number. This can be omitted on input-only or output-only gpio
-+ *	chips.
-+ * @direction_output: configures signal "offset" as output, or returns
-+ *	a negative error number. This can be omitted on input-only or
-+ *	output-only gpio chips.
-  * @get: returns value for signal "offset", 0=low, 1=high, or negative error
-  * @get_multiple: reads values for multiple signals defined by "mask" and
-  *	stores them in "bits", returns 0 on success or negative error
+diff --git a/lib/chip.c b/lib/chip.c
+index 7c05e53..7bf40c6 100644
+--- a/lib/chip.c
++++ b/lib/chip.c
+@@ -239,7 +239,7 @@ gpiod_chip_request_lines(struct gpiod_chip *chip,
+ 		return NULL;
+ 
+ 	ret = ioctl(chip->fd, GPIO_V2_GET_LINE_IOCTL, &uapi_req);
+-	if (ret < 0)
++	if (ret)
+ 		return NULL;
+ 
+ 	request = gpiod_line_request_from_uapi(&uapi_req, info.name);
 -- 
 2.40.1
 
