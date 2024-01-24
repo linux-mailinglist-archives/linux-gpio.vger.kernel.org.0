@@ -1,31 +1,31 @@
-Return-Path: <linux-gpio+bounces-2534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2536-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 83BA383B372
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 21:59:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6878183B37A
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 22:00:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3C40428618F
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 20:59:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EB1FFB23A69
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 21:00:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9B8C71350FE;
-	Wed, 24 Jan 2024 20:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 007B0135A69;
+	Wed, 24 Jan 2024 20:59:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E9A31350CF;
-	Wed, 24 Jan 2024 20:59:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531C8135406;
+	Wed, 24 Jan 2024 20:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706129971; cv=none; b=uAAxHPhw+RfsZYlI3v5cHHLE6gVXP8Iaw6/mYZCROfvkkDzhMp+uKr0ep61JFZrcLanmcKL9VueTAPfPjl9bYEesCXoUHqQwfagcYOwGaCZcv3lk3BnhOK+66dAm5c9f8NXlSWl8h5k10MC7pfgR8V6BXsD/slVlkQimo30IRrY=
+	t=1706129973; cv=none; b=Y3iN56QNPpKuZsKmgRnhb8X9jRWs2U3S06ONkpoqbNKAUu8LEgjo7V5Q3e0VmuskfSZTgQ0PxSxPatRwObnWg5V2qu0IM5ifsG5yOq7tjJdp8MdV0jqpKWX37ihYNMTusdolttRmcXK3Cm0IuRzgqJgB23p+UND/1cWTGs6f0Tg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706129971; c=relaxed/simple;
-	bh=vdwlVXOvqU/TDeD5gJUt9sEEFVyptDTtGD4h21A3ijU=;
+	s=arc-20240116; t=1706129973; c=relaxed/simple;
+	bh=G8A2V4leR/bypbOm6+EMWi8fEQbxiOfb61B5puKDZGs=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YhJ3e3MS6rzm6tnK/55zA1Ozc/xYga+86hpiQtktIDboWJNmuSdidCCKunIO6NBPx7uYVEWSdBzFAk2zy1UBzj/hPA8KE9olI3jAfw8SvG2TaOc6JRhCnuEt4+AoNHlvQwh33J9i/AZr9H0w3iIxUzx1iUNuWWqtzkk9Yr3w0XI=
+	 MIME-Version; b=DMBospBLfxKos8W8Ai88KjKYAbT4bKtt4zZ3bMSjJr6KEIOEMgsGgVwQLV1SNS0tOMhogIfmw5HkHZiDc32uincDMHunqaKbPPAQtijYOerd0n2h42AMNLux12E5ovOCbCSo0wl7NOI+RzD/GC0rNiBgnRQWhAtLzKBjbsNsQHg=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
@@ -33,8 +33,8 @@ Received: from dslb-188-097-042-032.188.097.pools.vodafone-ip.de ([188.97.42.32]
 	by akranes.kaiser.cx with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
 	(Exim 4.96)
 	(envelope-from <martin@kaiser.cx>)
-	id 1rSkL3-000SPR-02;
-	Wed, 24 Jan 2024 21:59:13 +0100
+	id 1rSkL3-000SPR-34;
+	Wed, 24 Jan 2024 21:59:14 +0100
 From: Martin Kaiser <martin@kaiser.cx>
 To: Shawn Guo <shawnguo@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -45,9 +45,9 @@ Cc: Peng Fan <peng.fan@nxp.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
 	Martin Kaiser <martin@kaiser.cx>
-Subject: [PATCH v4 3/4] ARM: imx_v6_v7_defconfig: enable the vf610 gpio driver
-Date: Wed, 24 Jan 2024 21:58:59 +0100
-Message-Id: <20240124205900.14791-4-martin@kaiser.cx>
+Subject: [PATCH v4 4/4] arm64: defconfig: enable the vf610 gpio driver
+Date: Wed, 24 Jan 2024 21:59:00 +0100
+Message-Id: <20240124205900.14791-5-martin@kaiser.cx>
 X-Mailer: git-send-email 2.39.2
 In-Reply-To: <20240124205900.14791-1-martin@kaiser.cx>
 References: <20240124205900.14791-1-martin@kaiser.cx>
@@ -59,8 +59,8 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The vf610 gpio driver is used in i.MX7ULP chips (Cortex A7, ARMv7-A
-architecture). Enable it in imx_v6_v7_defconfig.
+The vf610 gpio driver is used in i.MX8QM, DXL, ULP and i.MX93 chips.
+Enable it in arm64 defconfig.
 
 (vf610 gpio used to be enabled by default for all i.MX chips. This was
 changed recently as most i.MX chips don't need this driver.)
@@ -73,21 +73,21 @@ v4:
 v3:
  - split the changes into three patches
 
- arch/arm/configs/imx_v6_v7_defconfig | 1 +
+ arch/arm64/configs/defconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/configs/imx_v6_v7_defconfig b/arch/arm/configs/imx_v6_v7_defconfig
-index 0a90583f9f01..3cdcb786f33f 100644
---- a/arch/arm/configs/imx_v6_v7_defconfig
-+++ b/arch/arm/configs/imx_v6_v7_defconfig
-@@ -208,6 +208,7 @@ CONFIG_PINCTRL_IMX8MQ=y
- CONFIG_GPIO_SYSFS=y
- CONFIG_GPIO_MXC=y
- CONFIG_GPIO_SIOX=m
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index e6cf3e5d63c3..915c7c8fd13f 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -632,6 +632,7 @@ CONFIG_GPIO_SYSCON=y
+ CONFIG_GPIO_UNIPHIER=y
+ CONFIG_GPIO_VISCONTI=y
+ CONFIG_GPIO_WCD934X=m
 +CONFIG_GPIO_VF610=y
+ CONFIG_GPIO_XGENE=y
+ CONFIG_GPIO_XGENE_SB=y
  CONFIG_GPIO_MAX732X=y
- CONFIG_GPIO_PCA953X=y
- CONFIG_GPIO_PCF857X=y
 -- 
 2.39.2
 
