@@ -1,148 +1,108 @@
-Return-Path: <linux-gpio+bounces-2475-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2476-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 96D83839D97
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 01:19:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBFE7839F30
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 03:33:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CFF951C213D6
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 00:18:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6D948B27FAB
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 02:33:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F4E2636;
-	Wed, 24 Jan 2024 00:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F970469D;
+	Wed, 24 Jan 2024 02:33:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aFnBGaXx"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="D7j5D5XD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F524620;
-	Wed, 24 Jan 2024 00:18:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D824402;
+	Wed, 24 Jan 2024 02:33:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706055534; cv=none; b=YVLssh9o0tCGaoKByf6PDRNLWeJjuOGhvACRb+LxhaZlqsXIHv6jKOUawVxXhjmDB58vKkycFKaMA0rpClvYSvMwKIziczYr13QTMPKcc6CXAe8ooF6tXlBEP3ucBxdBx8w7/U37nB5Yrl9J2JYqq1Zqf/odyNgRcglEFPHbUZA=
+	t=1706063620; cv=none; b=GqHOU52vhvXdwKZ44kvyQ2OEpl3qj+dnbHED6vczKX+oqJbH8kNoF/LdnBBH8LW1h1syHVWFmWtJd1bQl8E5+Zvq/2I4UAyufAGVshr2PYzWDTfMjpFvMJyliIQoNnweQOf9MMoKEl6TI1i8P8NniKhs0P9oMBL8efSYMZIqjo8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706055534; c=relaxed/simple;
-	bh=wkjbYBnZAVGO6KJw1u24lT10qLDDTdAcPI1R+p6epdI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gwFWi+wgV7T2s4czldQiSVX3c/So2epS6iI/wG6HUwBKEHZv761f5q/77SxCmk5+v5OvX1y1W/k+HLxcv/n93BLUPiZtWDHwY93E/LWII+ZqT3M5tcebLnYsXouXbUJBNzdNZDkwSSJD6mdTPU8MFcqCqtSWMv9E8MsSH46XUyE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aFnBGaXx; arc=none smtp.client-ip=209.85.210.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-6ddf1e88e51so3708931a34.0;
-        Tue, 23 Jan 2024 16:18:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706055531; x=1706660331; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2odH5pLJYN3YATGCXEp5FH96z/xY+LW/aIByzzRMUEA=;
-        b=aFnBGaXxDmyzJNjjnr3mR3sMKU3/BXbtrjcxQBlT5I2ulvsZmswRAiPBVl6PjmtBVj
-         TS0/bK+yCTpnGKSqpJiNerE3kQT0Lfs4GC6+bOygt+swN7NNltxnKClCu0pvrrwQYHU7
-         LTnjjTT5ayhoqWWvNZTfO27jkazEnbhjHycsxcnDMwQR9BtejJw8ldLqShfQMNk5vX1k
-         WfsD4I+c1zZ1p2qmfoqxOZCyJdbcSmBY/R/9Ac9ph1OWKcZtGet5qLzNYQBzNdCmEDuv
-         vI2rqO0fonVIcyqxiF8b6WP+hCxMyEEUGxl6LF2KDmOCEBEZU5s4llY6Fvy9rn20JUds
-         93PA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706055531; x=1706660331;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=2odH5pLJYN3YATGCXEp5FH96z/xY+LW/aIByzzRMUEA=;
-        b=DU1Zw2Ce7ffyIqoVTdmBLTIoFwR96TMt5N48OGPp6Vg46wcYnZzkwMfr5x5gySGrBN
-         5Tu2cc+yxt862MKEdY1NVphSoAdp07opbIf/qiNu6CkbLvESbCxLwifi4luqGXSfUHHi
-         x82bnCQwFGKLLNyR3BL2WnMJwYj2QFuL/FJPdcwE3o9EXT4cm0x0N/4cS1NWDbGzPJMC
-         SR6QlXlhLPKS3vY+ngw+Gx7rsXUp7Xk0VnJQE5zDRyK/glg3hu87GU/6X9FhKUyqRd5y
-         Rp1OuBoSf2KpH7u4ugME+vQ9SiwtTyG33j3CPxIwpVLgxCe+wiUNtZ9Hk7/uD54H2ZLg
-         AHhw==
-X-Gm-Message-State: AOJu0YzOTkFmDpexsO/orm3P/7qwZQurpYcUObpsRc/38jfVgIHZobNV
-	agIbvvZjHrU4JbbBJkSG6fCEmjzy4/JEU0SiG+XMskZnlON7yIse
-X-Google-Smtp-Source: AGHT+IEyNHX43xDPAsYsJ4lkRre9gkAYQutyj6do9zeXlnpbSp2srE0pxVivxAxebptDJWoap1RNlw==
-X-Received: by 2002:a05:6830:1d66:b0:6da:46fb:76c with SMTP id l6-20020a0568301d6600b006da46fb076cmr787128oti.8.1706055531647;
-        Tue, 23 Jan 2024 16:18:51 -0800 (PST)
-Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id h20-20020a62b414000000b006d9a9727a8esm12652661pfn.178.2024.01.23.16.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 23 Jan 2024 16:18:51 -0800 (PST)
-Date: Wed, 24 Jan 2024 08:18:45 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org,
-	andy@kernel.org, corbet@lwn.net
-Subject: Re: [PATCH] Documentation: gpio: describe uAPI behaviour when
- hardware doesn't support requested config
-Message-ID: <20240124001845.GA4578@rigel>
-References: <20240123133828.141222-1-warthog618@gmail.com>
- <CAHp75Vd1dipGkCgQBENN3rLeUO+eQfOz9uKzz86eK755smqGag@mail.gmail.com>
+	s=arc-20240116; t=1706063620; c=relaxed/simple;
+	bh=FL+pr4dyrSEYYZj9+gnRMdPMX6n5TMwj+txbGf5lE3k=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=cfUN1TeK0z+0nzC2lXwuYMQbSvmZIS3WBtasPvMHptZHVe00B05edCvb2uxPIxHxB6+x9TSvMZlUeJiJzwWOUeIuv0uKwIWe2Sy9ZKmE2MBwAUHhd3cILY0+EYh+rVJzXeOiY7RzV7WTAAJITNMwVEv3oSzpdAcbqSXhfQyym8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=D7j5D5XD; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40O0UEln027872;
+	Wed, 24 Jan 2024 02:33:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version:content-type; s=
+	qcppdkim1; bh=aphJM1OrJDGrU1DnpiZruNE4xg1uwTRC5GcBTmn2ics=; b=D7
+	j5D5XDfF4EphNhepoVoyF770hUDe8mF4pJu4sjpHqOpdvYHHd4OKvw2seVONMwIC
+	+xjg0goZJTpXHMQrVfN1m62dWdA4WxPU8L0MoMMttwWn4pLUXwZRbniY3M2ANLoR
+	uB2RJ8D/vfXpoS5aHr8xImsQVwq/4or6cRJNUFo+kmWyU6o6iktH2bs2OekxutcF
+	AgLD0oxDML6r2w030ZHwF6SgmzmWdIZRhdNJsbgfdXEkzVc3CWUWUBpIWxMHVgYr
+	sT34gfxMvp4txQS0O+wa47/ER7gfK4qHlNwZ/cqI6WmffImqRY2NBtHl6Y2vA98a
+	CmsKovJjYfULnvWj+gEQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtmhrgjm9-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 02:33:35 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40O2XYJs011207
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 24 Jan 2024 02:33:34 GMT
+Received: from tengfan2-gv.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 23 Jan 2024 18:33:28 -0800
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>, Tengfei Fan <quic_tengfan@quicinc.com>
+Subject: [PATCH 0/2] dt-bindings: pinctrl: qcom: update SM4450 pinctrl
+Date: Wed, 24 Jan 2024 10:33:03 +0800
+Message-ID: <20240124023305.15755-1-quic_tengfan@quicinc.com>
+X-Mailer: git-send-email 2.17.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75Vd1dipGkCgQBENN3rLeUO+eQfOz9uKzz86eK755smqGag@mail.gmail.com>
+Content-Type: text/plain
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: Fgf2iqPYXS4AYbjbYEOdY6RkATjjAogC
+X-Proofpoint-ORIG-GUID: Fgf2iqPYXS4AYbjbYEOdY6RkATjjAogC
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-23_15,2024-01-23_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 suspectscore=0 clxscore=1011 impostorscore=0 phishscore=0
+ mlxscore=0 bulkscore=0 malwarescore=0 mlxlogscore=681 spamscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401240018
 
-On Tue, Jan 23, 2024 at 05:44:52PM +0200, Andy Shevchenko wrote:
-> On Tue, Jan 23, 2024 at 3:39 PM Kent Gibson <warthog618@gmail.com> wrote:
-> >
-> > The existing uAPI documentation does not adequately describe how the kernel
-> > handles the case where the underlying hardware or driver does not support
-> > the requested configuration.
-> >
-> > Add a Configuration Support section describing that behaviour to both the
-> > v1 and v2 documentation, and better document the errors returned where the
-> > requested configuration cannot be supported.
->
-> ...
->
-> > +Bias             best effort
->
+Fix the wrong compatible name and consolidate functions in SM4450
+pinctrl dt-bindings document.
 
-This documents the behaviour of the uAPI as it stands, so is your
-problem with the documentation or the uAPI?
+Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+---
 
-> So, best effort means that in some cases it won't fail. It reminds me
-> of the baud rate setting in serial (TermIOS). The question here is how
-> does user space know that it fell in one of such cases? (In termios
-> the IOCTL updates the respective fields and then user space can get
-> settings to see what has actually been applied.)
->
+Tengfei Fan (2):
+  dt-bindings: pinctrl: qcom: modify the wrong compatible name
+  dt-bindings: pinctrl: qcom: consolidate functions
 
-Best effort means it will try, but if it fails it will continue
-regardless.  So the configuration is advisory, not strictly required.
+ .../bindings/pinctrl/qcom,sm4450-tlmm.yaml    | 53 +++++++------------
+ 1 file changed, 18 insertions(+), 35 deletions(-)
 
-As stated in the docs, userspace cannot currently tell, at least not via
-the uAPI.
 
-> Floating line is not good in some cases and user space really wants to
-> know that and treat it as an error (if needed). Hence the above Q. I
-> believe this needs to be explained in the documentation.
->
+base-commit: 774551425799cb5bbac94e1768fd69eec4f78dd4
+-- 
+2.17.1
 
-Indeed, and I think it is explained in the documentation - worst case it
-will float.  And you wont know.  That is the way it is.
-
-This originally came about as setting bias is entangled with
-setting direction in gpiod_direction_input(), and it is best effort
-there.  The reasoning stated in the doc is what I recall from
-conversations at the time.
-
-Adding bias support was the first bit of kernel code I wrote so I wasn't
-about to go refactoring the guts of gpiolib - though if I were to do it
-now I probably would.
-
-If you consider the current behaviour to be a bug then we can change
-that behaviour, e.g. clearing the bias setting in the line info (bascially
-the desc flags) if setting fails.
-But if it is baked into the ABI then we need to extend the uAPI,
-e.g. with a flag requesting that the bias config be mandatory.
-
-Cheers,
-Kent.
 
