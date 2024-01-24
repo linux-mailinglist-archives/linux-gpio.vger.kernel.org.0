@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-2486-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2487-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC24F83A23F
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 07:47:40 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07AC683A252
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 07:52:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A00891C21CF3
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 06:47:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1BB6283866
+	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 06:52:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 370ED12E6C;
-	Wed, 24 Jan 2024 06:47:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57635134CD;
+	Wed, 24 Jan 2024 06:52:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="o3S4nofp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYD0KPFi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ACFFBF4
-	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 06:47:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C724101C8
+	for <linux-gpio@vger.kernel.org>; Wed, 24 Jan 2024 06:52:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706078852; cv=none; b=rX2lj/f1UgCQaO4NmZcZTBiO1deON6htMjuI8+Bvdo8LSEcEPDv4he65YNbFs2Q3ZJHr6TvHmOVuMF2JGnq8EYrTn+xxkpDGbng46DbjZOlq7WdeTleyBKjq13L51rGYBMTfbkPxKcaYOlfkag+7CnHnRqqt/+yah7+5dWREW6w=
+	t=1706079130; cv=none; b=cR/UfIgV3JGWuuknbSuHAQRkTISAG+Xt1ThlA6pvMCxx4gR5YcPeOPTdICA9U9zXlYVb6MCYMooOKk+NSIZw7RtKu9SUVwnImpAIjAgjOH56D7e+Zp7c+wxho+kNGCVVcXxOofzVL8CrpR2Rd+3Is6FUfLDwwGLoNQhysnDMYhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706078852; c=relaxed/simple;
-	bh=Lis+aSAdnxM6IAppkYXlAK4me1DnAo7FLALCzgN72UY=;
+	s=arc-20240116; t=1706079130; c=relaxed/simple;
+	bh=fbcNgoaW5AtsCKiIRocGR0JJrdRpBvKO6oa2/KimtJc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fup+av6cbK/LqM1OrfAt0ZfEwmMxXdTocQGY0phHvv4HOCmd8bchK2SzVk2sVAL/967tj8CzkuztbZrbpMOS0QrnYomwBOoz7UG7wNrNL+ITuomrCru665UOwKY2F0F8uaEEkwSkXZ6z/2BFLLCYaUcrwQDkGS9zTt08HkVWLB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=o3S4nofp; arc=none smtp.client-ip=209.85.128.53
+	 In-Reply-To:Content-Type; b=fkafFfjDEUQ1SSgaXulLmLXdQ3a2jeBn54L/tSNPPgJxk9SN8+3UQvvUMYqYtu6mwr4k5k/Tw0+zfdvkJobVPkC7B4jX6F1SK8OrVme/y7gTR7WiplduhebzVtNqmas/3SE8lwdmv7QVnkNtXgZ9HKpvHnBmqOQqu5LlAy1eWeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nYD0KPFi; arc=none smtp.client-ip=209.85.128.48
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40eac352733so32418315e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 22:47:30 -0800 (PST)
+Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-40eacb4bfa0so31469305e9.1
+        for <linux-gpio@vger.kernel.org>; Tue, 23 Jan 2024 22:52:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706078849; x=1706683649; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706079126; x=1706683926; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=uaAhQto6zy8ij0/KAXnujV6MOnc0qY0OTN5nolEKh5E=;
-        b=o3S4nofp19cZ6qxYArxpr1MTJnh9TIC3tha03k3zKPWulhyO2RcIfliMYvrZz4rE3g
-         Dyba1Hguai89w3vpSaUeP80AhvakpfxXIMIxS8Vtth/AZqqiSPScR0TJSyrDWnhkYD9i
-         3+ea+EqIUDcG5j1UzYtgzUj0bCxC+uMFfJ6UlJvNj4PSqQ92zNxxsCNlGdx/OFRPLaf+
-         53bp2F/Ou39sDYU5Xon7o1uEmYSgmJrJIxLgutwT+OHGQ/KN3gEOxLfP35dPjzoUg1s/
-         G8EAWg+/D7xsj9PoDioDZGpm5c+7tCR4KDba0JgMrKrIE/GCKlx3jZWPz1P2XZqWz3zP
-         4WYw==
+        bh=m74+99Y8P5Itfjfvbm1uPEhPEBJZOphBOYmIxYIstNg=;
+        b=nYD0KPFiNsDWD7KXKuDtfBAus/MQdthkEEi8r8P2nKQp9n/cwdUpuC2F5ST3EoX46j
+         +w8q1dC31tFUdEPl+P9cD1hsHPAOgsJi30olTYsNWWEJwjlXT3EA1tq36GH+d798CGxL
+         7qVS4uvsFimjuZUPGQZPIsYeSBquiIik4vHXeye5KNLW8BjHIe1PVAzx7IWe08HZXmEy
+         uQ4ccVVDDFMhc/9Qq3xIH+ETSaFK54a/EW0lgJwFhVrdCZMtLOIZPN6vOGa/g2met16+
+         +N/YCy4msfHSY/eMbkqEcOLw7bzWbAh0G0StNLg9+F6VzFVn+Aa9Pbut4L1aem1L6BBP
+         MoCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706078849; x=1706683649;
+        d=1e100.net; s=20230601; t=1706079126; x=1706683926;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=uaAhQto6zy8ij0/KAXnujV6MOnc0qY0OTN5nolEKh5E=;
-        b=XHZosw4yGVv5vFk7/3fZNlQoXFErYlS/NZ8hAXPrgoxCTw4E11ygdebLsraWD5ZVmT
-         h6yNkj9Ruq3ydDCL6SXGdUMTMSXCAbxHGx9zL8ZNz9zG2mHv8+AdFsMlfTfrrqt4lEtS
-         o+wi+QafSbzI8F6u0/koBfQ/Y5yEQB8FRmb346mfo9vu2ivfHIWGNdo77B6Tn4bW+iIU
-         RaGCvzd1HxX3cmnHY0We9hxC2X8sol3nV4QL4vPqeXiMvr4Wa2cDD3r6/uO95doKHOaK
-         Cy32PiGExprZAyq+xQLlc/ZSM9LMVu2Z4lI51W6R+WMMAatjfyvYO/8iIftryaRA2suH
-         Ikyw==
-X-Gm-Message-State: AOJu0YwSiu5q2vWy5IihLWK6uwFfksX//c9AZ0C2Y2qfueL0b/KR3MDK
-	MiQUqKHgf8d3KINJADhQZB1aamlAL+vHW3YN8rerDsLFX9s7ir/ibjUREwuZJg0=
-X-Google-Smtp-Source: AGHT+IFC5nQ4i/fx4/5I3hHV3KFa5JWvBIiIha6ERtsQBA2I47Dg7K1HHUsmpmD84aqtcfEfzC8fTw==
-X-Received: by 2002:a05:600c:3b82:b0:40e:8f3e:871a with SMTP id n2-20020a05600c3b8200b0040e8f3e871amr736264wms.89.1706078848722;
-        Tue, 23 Jan 2024 22:47:28 -0800 (PST)
+        bh=m74+99Y8P5Itfjfvbm1uPEhPEBJZOphBOYmIxYIstNg=;
+        b=hIBKNFsVNEnEqwY90VNKLHAlKORrMfXshgX8YsbBHf/3CNMSa9zny1FkE+ApTMK+co
+         VJe2TxwPglYrWH3NxsSFYPkboIhcVdwsZlyG0GeEI45M2PYY/xUOhXLAzVyCPFQlK5u+
+         RLbUs04NG55ld10OBDVbVNPOBlS+jN8ivx5fwXWNZX9tpvC8dKi84Wk6RRL7K64U6N0O
+         rwdknyY0HAEfVfdo4TwxXZUD6ePyVBR7XGBdxmvLCsQBldvnYHMi3gpyHaQ99QGoh61T
+         1cP/4XGslCvcaPflmc+8CuwX3wm/2B6cm6Kd0+N0yeozlJENY/m5lW6J3doFdGGXKvIM
+         Ig9g==
+X-Gm-Message-State: AOJu0YxDIGbKri6eFD3e+Qfi9Qh9ZA4Kt5SsGshEBqlVbKronZCexsAY
+	61zcBqGBg7wEHJYaHCxx7UCwRQR1CrddVsUenQC/uspjbNUHcEi1MW3uW1dWiDc=
+X-Google-Smtp-Source: AGHT+IGgxSNx8FSG6/K3KYYLM71szF15TB/tkGYteydN82qLiwRLAlf9mMXtbn5QmUYnnTfWgIRGkQ==
+X-Received: by 2002:a05:600c:2d92:b0:40e:8cc2:7492 with SMTP id i18-20020a05600c2d9200b0040e8cc27492mr755365wmg.80.1706079126604;
+        Tue, 23 Jan 2024 22:52:06 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id x16-20020adfcc10000000b00337b47ae539sm7695109wrh.42.2024.01.23.22.47.27
+        by smtp.gmail.com with ESMTPSA id bg42-20020a05600c3caa00b0040e3733a32bsm48113330wmb.41.2024.01.23.22.52.04
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jan 2024 22:47:28 -0800 (PST)
-Message-ID: <7530e393-515a-4288-b21e-a4a813e24cc3@linaro.org>
-Date: Wed, 24 Jan 2024 07:47:26 +0100
+        Tue, 23 Jan 2024 22:52:06 -0800 (PST)
+Message-ID: <2ba5d4ec-1019-4919-9137-c1c52e20e638@linaro.org>
+Date: Wed, 24 Jan 2024 07:52:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,8 +75,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 06/17] dt-bindings: reset: mobileye,eyeq5-reset: add
- bindings
+Subject: Re: [PATCH v3 07/17] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl:
+ add bindings
 Content-Language: en-US
 To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
  Gregory CLEMENT <gregory.clement@bootlin.com>,
@@ -93,7 +93,7 @@ Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
 References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-6-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-7-392b010b8281@bootlin.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -139,21 +139,107 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240123-mbly-clk-v3-6-392b010b8281@bootlin.com>
+In-Reply-To: <20240123-mbly-clk-v3-7-392b010b8281@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 On 23/01/2024 19:46, Théo Lebrun wrote:
-> Add DT-Schema bindings for the EyeQ5 reset controller.
+> Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
 > 
 > Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 > ---
->  .../bindings/reset/mobileye,eyeq5-reset.yaml       | 32 ++++++++++++++++++++++
+>  .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 77 ++++++++++++++++++++++
 >  MAINTAINERS                                        |  1 +
->  2 files changed, 33 insertions(+)
+>  2 files changed, 78 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..db62919053b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml
+> @@ -0,0 +1,77 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/mobileye,eyeq5-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Mobileye EyeQ5 pin controller
+> +
+> +description:
+> +  The EyeQ5 pin controller handles a pin bank. It is custom to this platform,
+> +  its registers live in a shared region called OLB.
+> +  There are two pin banks on the platform, each having a specific compatible.
+> +  Pins and groups are bijective.
 
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+I don't see much improvements here.
+
+> +
+> +maintainers:
+> +  - Grégory Clement <gregory.clement@bootlin.com>
+> +  - Théo Lebrun <theo.lebrun@bootlin.com>
+> +  - Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - mobileye,eyeq5-a-pinctrl
+> +      - mobileye,eyeq5-b-pinctrl> +
+> +  "#pinctrl-cells":
+> +    const: 1
+> +
+> +required:
+> +  - compatible
+> +  - "#pinctrl-cells"
+
+required: block goes after all properties and patternproperties.
+
+> +
+> +patternProperties:
+> +  "-pins?$":
+> +    type: object
+> +    description: Pin muxing configuration.
+> +    $ref: pinmux-node.yaml#
+> +    additionalProperties: false
+> +    properties:
+> +      pins: true
+> +      function: true
+> +      bias-disable: true
+> +      bias-pull-down: true
+> +      bias-pull-up: true
+> +      drive-strength: true
+> +    required:
+> +      - pins
+> +      - function
+> +
+> +allOf:
+> +  - $ref: pinctrl.yaml#
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mobileye,eyeq5-a-pinctrl
+> +    then:
+> +      patternProperties:
+> +        "-pins?$":
+> +          properties:
+> +            function:
+> +              enum: [gpio, timer0, timer1, timer2, timer5, uart0, uart1, can0,
+> +                     can1, spi0, spi1, refclk0]
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: mobileye,eyeq5-b-pinctrl
+> +    then:
+> +      patternProperties:
+> +        "-pins?$":
+> +          properties:
+> +            function:
+> +              enum: [gpio, timer3, timer4, timer6, uart2, can2, spi2, spi3,
+> +                     mclk0]
+> +
+
 
 Best regards,
 Krzysztof
