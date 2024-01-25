@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-2543-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2544-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 51DD783B68B
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 02:27:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BA6F83B6B1
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 02:37:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0ADA92854B2
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 01:27:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E7171C21BDA
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 01:37:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1AE01388;
-	Thu, 25 Jan 2024 01:27:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A3221C17;
+	Thu, 25 Jan 2024 01:36:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="M3n2k0u5"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="Wus4cQzp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48C4763AC;
-	Thu, 25 Jan 2024 01:27:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FD89111AD;
+	Thu, 25 Jan 2024 01:36:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706146039; cv=none; b=IHKTEeaNZH2OZm87aWaHKbnblLmawKrZZ7oIvaSaTim577mDMZfPar/oCqvN42ScvqLhhEKGCkmZeJwQcKnoO11TrBqQE+26lD2RIzIRgpSx908KRiJzdi7U+WdWt/TV2HhGymDH3jGpubQ3/vpMFYbTCQnzbnfwxkRj0Xq7ViA=
+	t=1706146564; cv=none; b=S6qXEHFeS+IbXzsBJnIRwySBvrkl30D/je1D+4Nf58uxrxkyZbKpZq7dCxTX4idedsHCBcdzCLGQK46L81V5/RiOEiWCd4JtGyXR+Hj2LqJUCAhgGkkZ2FLmI9ZVs8N1Ps9FPZsxUxiulfCrycxjMi8oh3DlTsLy2xXgWwdZmco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706146039; c=relaxed/simple;
-	bh=fzIVD4+iNeDKu+naiK4AJN3iIhQwGewaGbZ+jAqOuc4=;
+	s=arc-20240116; t=1706146564; c=relaxed/simple;
+	bh=mmwtViixHPyN0IeRkwXKJl9Ty56hou9fwhbuIGk8JK4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rhCsSMrNzyZOgG4ygJJvMsc8NLusfRpY8869fCQpCWb6zqN7J3CpAHiE9i3F1F8HpgcWWjbvU0jJ9dWUFPb3WlstKLzj+vNlWkhRF0ifWPa+XzVdGrggtSNJXd9i0wS8M6i5PLBogGfkdkz8IH7CP7a7nBDUmCQ0MdfvhViLwyQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=M3n2k0u5; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=i3cSk4DWJDE/uPgIa5mnCCgmOlSJNXAFXAvO/AxMjufj3l3D9zds8BJQNgdHy+4FSSCK3bP+GvXONcd95/fL8uXf2fvRGQ7pBtHCb9ksRgYgX1g4SdTPNw2EB6hUKR/2GZaB1qiZcVpRVUQy58Go/VOv0Wkle2D9V1LsNCcVNhw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=Wus4cQzp; arc=none smtp.client-ip=205.220.168.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P1GW5P019607;
-	Thu, 25 Jan 2024 01:27:14 GMT
+Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P1XhJC013398;
+	Thu, 25 Jan 2024 01:35:59 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=pkKzpIJivU24Gq/A7L0jMdVZQ+GADmmmF/yu2uWfFUA=; b=M3
-	n2k0u5xZvmlGeSoUZIrYiG+++9/WPLk+DCCB/dRBZjsNr8GWDeYmBQn1oy5Hb1UM
-	mrVc5ElDff+LIv1zrYRQIK+Z+irTy1UEzxbX4SRZMitgNKoobbUASw8nWOh2ieCG
-	uxJ9ax4G+NRkMAgOZSz7d6sn2FXRZ5Nt7FUFKC+pYUsDs5zcPKRNceORoLHZmCPF
-	1TrOIC0YoUMR40meTrwvT9DmvczgD2yIM9BeqXS5k89SaZ3tlZmibuqOfSmOTeIY
-	+DjgifZSTKD9/dZCVOe6Vre03CBujujowq+AQ6PumhH9x5r0TqWXKkrYYDF1l57x
-	vzEodvhI41QTW2NaSigA==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vu1cchtb1-1
+	qcppdkim1; bh=D5cxF8vGv2q3m04Eh8Yk7meNcjCOLYUj1AOW87Wzu/I=; b=Wu
+	s4cQzpHH2ZVCjL+eemlkP8JTS3b3nsxdqLXriic3NGCbWTzmAlMSvs4OcnL5LuaA
+	1ro9dycornLMoFB/oCBe+U8NZon8eTUjtKgFbc0ZP35LXxM8AKtjlwx8SasfzgM9
+	PCphXtr6UtkXPdYBsYfzf2PmrnHzVGuQ/sKM2xkGOr2uD86gY80G2bUMDEdcdP4e
+	GKUPdIY01fy7dmD5Qj/epmZqai0J+VrCy5WjMA3NXnhvReN4kbkrhfBhUJqEZf9V
+	IpJjrCvy++aS7k5sNIXJOBlGwpza8f9dUBPF0g4q0+BL4tJKJ9vt/U3D4TjotRem
+	jk6CcUKQcuZCB3ld8YrQ==
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vtykwa3p5-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 01:27:14 +0000 (GMT)
+	Thu, 25 Jan 2024 01:35:58 +0000 (GMT)
 Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P1RDNg007259
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P1ZwNf028039
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 01:27:13 GMT
+	Thu, 25 Jan 2024 01:35:58 GMT
 Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
  (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
- 2024 17:27:07 -0800
-Message-ID: <dbd47da6-9b25-4d24-9934-98b9d895b1ac@quicinc.com>
-Date: Thu, 25 Jan 2024 09:27:05 +0800
+ 2024 17:35:52 -0800
+Message-ID: <02b8c633-0e49-47a1-8e72-a4d988801d18@quicinc.com>
+Date: Thu, 25 Jan 2024 09:35:50 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,9 +67,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: modify the wrong
  compatible name
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Dmitry Baryshkov
-	<dmitry.baryshkov@linaro.org>
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
         <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
@@ -78,54 +76,92 @@ CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
         <kernel@quicinc.com>
 References: <20240124023305.15755-1-quic_tengfan@quicinc.com>
  <20240124023305.15755-2-quic_tengfan@quicinc.com>
- <88e8cffb-024d-4f4d-ba1f-e0be9ee85e31@linaro.org>
- <CAA8EJpqXS97FXoTwiLaSeHHEDOeBFRPRbCNR6WF-ArDm22tu-Q@mail.gmail.com>
- <8b730cb5-871f-47b8-9abd-d8f39d3b8ec6@linaro.org>
+ <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+ <67e17efa-df15-45f0-9a13-873cbd8f7507@quicinc.com>
+ <CAA8EJprqPg_TJAwm4CyoJH9_uspueVJTgpwYZ-mPykPcrU8BBA@mail.gmail.com>
 From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <8b730cb5-871f-47b8-9abd-d8f39d3b8ec6@linaro.org>
+In-Reply-To: <CAA8EJprqPg_TJAwm4CyoJH9_uspueVJTgpwYZ-mPykPcrU8BBA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
  nalasex01a.na.qualcomm.com (10.47.209.196)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: ImFp93GK5c4dEVdrcmrKmyyX92TPoneh
-X-Proofpoint-GUID: ImFp93GK5c4dEVdrcmrKmyyX92TPoneh
+X-Proofpoint-GUID: T-EouPyxdUBCnC4ZE1TGH4uwHPrkc8j8
+X-Proofpoint-ORIG-GUID: T-EouPyxdUBCnC4ZE1TGH4uwHPrkc8j8
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-01-24_12,2024-01-24_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=921
- clxscore=1011 malwarescore=0 adultscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 lowpriorityscore=0 impostorscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401190000 definitions=main-2401250008
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ adultscore=0 bulkscore=0 phishscore=0 mlxscore=0 malwarescore=0
+ clxscore=1015 mlxlogscore=999 suspectscore=0 impostorscore=0
+ lowpriorityscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2401190000 definitions=main-2401250010
 
 
 
-On 1/24/2024 4:46 PM, Krzysztof Kozlowski wrote:
-> On 24/01/2024 09:07, Dmitry Baryshkov wrote:
->> On Wed, 24 Jan 2024 at 08:38, Krzysztof Kozlowski
->> <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>> On 24/01/2024 03:33, Tengfei Fan wrote:
+On 1/25/2024 9:20 AM, Dmitry Baryshkov wrote:
+> On Thu, 25 Jan 2024 at 03:18, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>
+>>
+>>
+>> On 1/24/2024 11:33 AM, Dmitry Baryshkov wrote:
+>>> On Wed, 24 Jan 2024 at 04:33, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>>>
 >>>> Use right compatible name "qcom,sm4450-tlmm" instead of
 >>>> "qcom,sm4450-pinctrl".
+>>>>
+>>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>>>> ---
+>>>>    Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> index bb08ca5a1509..bb675c8ec220 100644
+>>>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>>>> @@ -17,7 +17,7 @@ allOf:
+>>>>
+>>>>    properties:
+>>>>      compatible:
+>>>> -    const: qcom,sm4450-pinctrl
+>>>> +    const: qcom,sm4450-tlmm
 >>>
->>> Why do you claim this one is right and other is wrong? Provide
->>> arguments. To me the compatible looks correct.
+>>> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+>>>
+>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 >>
->> Yeah, but the driver (and the dtsi) use -tlmm
+>> Thanks Dmitry. I will inside this "Fixes" tage into commit message in
+>> the next patch series.
 > 
-> Are they merged? If so, it would be the argument for the commit msg.
-> Just provide some rationale why this is done this way, not the other
-> (fixing driver and DTS).
-> 
-> Best regards,
-> Krzysztof
-> 
+> No need to, unless there are other changes to the patches. Such
+> trailers are picked up automatically.
 
-This commit message is causing some confusion. I will update this commit 
-messge for just provide retionale why is this patch needed.
+Thank you for the heads-up.
+
+> 
+>>
+>>>
+>>>
+>>>>
+>>>>      reg:
+>>>>        maxItems: 1
+>>>> --
+>>>> 2.17.1
+>>>>
+>>>>
+>>>
+>>>
+>>> --
+>>> With best wishes
+>>> Dmitry
+>>
+>> --
+>> Thx and BRs,
+>> Tengfei Fan
+> 
+> 
+> 
 
 -- 
 Thx and BRs,
