@@ -1,171 +1,98 @@
-Return-Path: <linux-gpio+bounces-2579-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2580-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D44A83C4C7
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 15:34:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 059D383C4F8
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 15:39:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EA8E2290FD4
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 14:34:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8325A2934D8
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 14:38:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 188756E2B9;
-	Thu, 25 Jan 2024 14:34:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E189B6E2BE;
+	Thu, 25 Jan 2024 14:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="S3i9JLAF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQmgCNjI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7E06340E;
-	Thu, 25 Jan 2024 14:34:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4EB4F218
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 14:38:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193263; cv=none; b=WxAK+zfgQ9/7kUfb1UAiPxLR4L110H7X9Fyr6bB7cykK7DDYKFit4l5T4EpGS5HdIKldePBNfM7pG9nxrgo5d8xIjKeAqAGV/60Q2A+Yo0DAXBLJMHVpGw+gXPV7/3n80/UOW0tbuy7DA2e/o3kOtXnEd9XWjyvtUq7a3qbF8yM=
+	t=1706193533; cv=none; b=Pjtv3OaECkaMAfSAlavHp+FOVGpXzgmOb0MeWlovORiFF9MY6R51KR9T2+wdtixa96ichvcIJJJNHG5XgjZl6dWinuaM5XoN7WY9O9GSYXBizX5/BSbx7SX0N81FRi9KieADed39IxHqsCJAOrF/ob9XBsG79HJNValNxtWQKvU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193263; c=relaxed/simple;
-	bh=sjdoDcDKRSkLx4UDwlfMTbTX9nBFU/s/iUda1EdkDKI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=qJIJSZZUEJHZTY8VFpnEjAk5ckf87uk87Gjro66U01/dzO+ooA6SJuEE8F+sRaef1WiAf1SJBViT+n0SBygWbQ8tdEI1m9eee1u2PUaR4MCQ30kyPEFvHGO4uDpOsXuwy0UCTOywWfVlsLZt4D+AeZoxqN1c7cy54C7sGMkKgiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=S3i9JLAF; arc=none smtp.client-ip=198.47.19.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 40PEXsZn003349;
-	Thu, 25 Jan 2024 08:33:54 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1706193234;
-	bh=D3et9L4RHHyPosS3VDVQzoYncrvITyHk1dVQbc6iud8=;
-	h=Date:Subject:To:CC:References:From:In-Reply-To;
-	b=S3i9JLAFv/yOUIvqQltF0KZwma/RCvGqNExNYIpZXMRkFerkygu+XtgdcXNRAe/E+
-	 wMDR0ducWngXiGpABRGbxXH4nLQRLmbwhH60TRobQknis7fiOEVs5mHMh84B029fzV
-	 47V1e2KNcoFTOsmivniaScYuG/FFSc8Dt+hDFr9k=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-	by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 40PEXsPY129184
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Thu, 25 Jan 2024 08:33:54 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Thu, 25
- Jan 2024 08:33:54 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Thu, 25 Jan 2024 08:33:54 -0600
-Received: from [10.249.42.149] ([10.249.42.149])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 40PEXr4k008480;
-	Thu, 25 Jan 2024 08:33:53 -0600
-Message-ID: <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
-Date: Thu, 25 Jan 2024 08:33:53 -0600
+	s=arc-20240116; t=1706193533; c=relaxed/simple;
+	bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bwkIcUWobfsAn8pGnXttiQPuxecxIuwN2X4tODix9kEszYW/LlQFP8FnUjXKWa4oth7kiRbaR0EBrAAli7NFqoXAuMhzPhjGBL9HCaBwLd5CiSvtrcLVLeWieVuTXSUn6Dai0LUk5sZH2c9DV+3BxhEvpj3DUnTMn8wA8R5bH+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQmgCNjI; arc=none smtp.client-ip=209.85.219.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-db3a09e96daso5990965276.3
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 06:38:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706193531; x=1706798331; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
+        b=ZQmgCNjItwrWkpLqu/9tkza101j5FyrFzg1D76k2VfYoO5xA1fUZnzgGqroEXdltPZ
+         YhYxQqfiJJ9E7XvLtwlNZ8oX8v8TxUZomhDxoA5xzuavoxsfJxyaH8PluvwFgtQKldon
+         dJ/z/2FFreit+sN0wXUKi3k/QRmlVeN/7Ihj5ukzRHAnXEzOeU2/YwLZ2jrFgWYO0XW7
+         x6i4ZduKfoYKtQDhcIPL0rcszaPSwR2f92ei5Y44KEitcNz5Vj8ckfmHEPjzYQAd7g4R
+         xwXWvwZbmZs9LD/folaBQDcY3ZSRZ4/CgOwmdryvcOfNoVlOUQCzhIwMTJKCwuosvpn5
+         xXHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706193531; x=1706798331;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
+        b=QRmSbMWml/Zcr6ib8V/9qpeEUUuw+X578i9vhCU1ZiulQaPdZpDQld5J22Bk8gaNuW
+         XIVmXEOoO7n00rmuhuVuAwGSqxVoqa2nYKAKoZHcEkcucx15BDfSctoCf8x0UaA4R9l0
+         IXS9/n4AdCV7VhI9DFY0tO91ztq2ifx7/EOetIYIiNBli1YLl3I8QVhRXccdwULDIdK4
+         QCJxoIGMmwdgmq+uSeIkoH5wqUVF92jfpc6C8dBKMw7ghXblcJCBlMKsSqjIvjht/5HX
+         Ah0xKRJeog9apJB+hLGvq25FQPj4AdFCw7KwoGGRF5mnQdv285+znfBUQwWJBT8/X7IK
+         8iDA==
+X-Gm-Message-State: AOJu0YwyZdpuI3vqGovU8GIw0crZvt5ny7+I1cF8s3TQRdeMF9xnUpnp
+	gePU1pp+YVpLQ7mqEX8JCam9EtTybpi8aSqQK2Y/ook3pULOyxijI0sojJdQnqmwlQjZKkWzW6z
+	SQzcicijdI/uwSyM8S+ScWYC2K9Vh+bcRQga39InEgD3cr8JR
+X-Google-Smtp-Source: AGHT+IFEWOxAQaxmYmMzQ+eU4VlPwsEAGXj5ix940GFvBS4O5lccUY+lbStMqVk40d1DzfaU3/ZUeXkenQqLU16Cv5k=
+X-Received: by 2002:a25:acd7:0:b0:dc2:4dd0:207c with SMTP id
+ x23-20020a25acd7000000b00dc24dd0207cmr737847ybd.75.1706193531271; Thu, 25 Jan
+ 2024 06:38:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB system
- controller
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Rob Herring <robh@kernel.org>
-CC: Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Michael Turquette
-	<mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley
-	<conor+dt@kernel.org>,
-        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-        Linus
- Walleij <linus.walleij@linaro.org>,
-        =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
-	<rafal@milecki.pl>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Vladimir
- Kondratiev <vladimir.kondratiev@mobileye.com>,
-        <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni
-	<thomas.petazzoni@bootlin.com>,
-        Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-        <linux-gpio@vger.kernel.org>
-References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
- <20240124151405.GA930997-robh@kernel.org>
- <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
- <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
-Content-Language: en-US
-From: Andrew Davis <afd@ti.com>
-In-Reply-To: <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de> <c57f631ef5167554a30d627320dca617cd5ef210.1706182805.git.u.kleine-koenig@pengutronix.de>
+In-Reply-To: <c57f631ef5167554a30d627320dca617cd5ef210.1706182805.git.u.kleine-koenig@pengutronix.de>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 25 Jan 2024 15:38:39 +0100
+Message-ID: <CACRpkdZ2f-3srhW6hNxBLpPPRGTGC3RWMo+TSqU1YV4A4vjh+A@mail.gmail.com>
+Subject: Re: [PATCH v5 103/111] gpio: mvebu: Make use of devm_pwmchip_alloc() function
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	kernel@pengutronix.de
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 1/25/24 5:01 AM, Théo Lebrun wrote:
-> Hello,
-> 
-> On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
->> On 24/01/2024 16:14, Rob Herring wrote:
->>>> +
->>>> +      pinctrl-b {
->>>> +        compatible = "mobileye,eyeq5-b-pinctrl";
->>>> +        #pinctrl-cells = <1>;
->>>> +      };
->>>> +    };
->>>
->>> This can all be simplified to:
->>>
->>> system-controller@e00000 {
->>>      compatible = "mobileye,eyeq5-olb", "syscon";
->>>      reg = <0xe00000 0x400>;
->>>      #reset-cells = <2>;
->>>      #clock-cells = <1>;
->>>      clocks = <&xtal>;
->>>      clock-names = "ref";
->>>
->>>      pins { ... };
->>> };
->>>
->>> There is no need for sub nodes unless you have reusable blocks or each
->>> block has its own resources in DT.
->>
->> Yes, however I believe there should be resources here: each subnode
->> should get its address space. This is a bit tied to implementation,
->> which currently assumes "everyone can fiddle with everything" in this block.
->>
->> Theo, can you draw memory map?
-> 
-> It would be a mess. I've counted things up. The first 147 registers are
-> used in this 0x400 block. There are 31 individual blocks, with 7
-> registers unused (holes to align next block).
-> 
-> Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
-> accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
-> stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
-> 
-> Some will never get used from Linux, others might. Maybe a moderate
-> approach would be to create ressources for major blocks and make it
-> evolve organically, without imposing that all uses lead to a new
-> ressource creation.
-> 
+On Thu, Jan 25, 2024 at 1:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-That is usually how nodes are added to DT. If you modeled this
-system-controller space as a "simple-bus" instead of a "syscon"
-device, you could add nodes as you implement them. Rather than
-all at once as you have to by treating this space as one large
-blob device.
+> This prepares the pwm sub-driver to further changes of the pwm core
+> outlined in the commit introducing devm_pwmchip_alloc(). There is no
+> intended semantical change and the driver should behave as before.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
 
-Andrew
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> Thanks,
-> 
-> --
-> Théo Lebrun, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
-> 
+Yours,
+Linus Walleij
 
