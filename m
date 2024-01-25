@@ -1,124 +1,148 @@
-Return-Path: <linux-gpio+bounces-2540-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2541-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92E0983B5AD
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 00:43:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87D4A83B67A
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 02:18:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C55531C22FC6
-	for <lists+linux-gpio@lfdr.de>; Wed, 24 Jan 2024 23:43:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FF5E28391A
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 01:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4A5A136662;
-	Wed, 24 Jan 2024 23:43:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE1E136F;
+	Thu, 25 Jan 2024 01:18:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OKK2Ly/F"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QmUObi/E"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DFDF12C532;
-	Wed, 24 Jan 2024 23:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB59F7E1;
+	Thu, 25 Jan 2024 01:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706139808; cv=none; b=vAO/gTL513G5uhPsaeM3iagtL3rEcwGEJF2PcoLKt1lpS7qSQ91q9bzS3Vnn2a2rE3iafblqVYaKoZl17tecgvhEQd1b4IzV2AYqSX3beQGdrCykry5G8V/GHp8APM3w6RrewuNdG1KwyDiR+FwmlR8QwCm/4cZhXwMNjHe7vrM=
+	t=1706145530; cv=none; b=TEEnT/Zyl5apFFXFjQJr+vmskj21+i5FZ38K6LwApmAcJJp/gsVPGYKwLcc8UJUP5FinvgKghGvHhLyAuG1H8GUhb1DIaLZ02PDzm/yNjkek64Ttz7uglfM3D3EZTCnLKolmr0Z+EOpA7vXfwPM1xoiawNwOnOe8VOFGNOXgp/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706139808; c=relaxed/simple;
-	bh=if5QS5IfjE1IbQtSKovEiuWi9YTgJzwes/evFLxc5dY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jVntC7P5OdB58COe8qC7af+fxQgnPbvbGOhSl6kerYVVhjHso5KcBc2ZvL4tPIxPRJmJGTtf3vH3LoC4l86PPmpbcK2gm3TARzQEO+TTtqwB4kKQLTd0GURn1SASXFMePvhcDrMgygPTdpDnzvf5jvGQ7BYzKfnDpcRIUqiUhqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OKK2Ly/F; arc=none smtp.client-ip=209.85.210.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddc1fad6ddso720364b3a.0;
-        Wed, 24 Jan 2024 15:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706139806; x=1706744606; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=vK1IoSzjLAgX/p1hW4bNuWN0808a305i1v4S27+aWDY=;
-        b=OKK2Ly/FoEAzAmzq/OJ7jzKanrL/PRhhuHRDMe7TCe2HbtXEfsXvlGmDw1U3n3Bg2s
-         ijRO7cdvGfQ44xLkbys1FZp+JYwDW+qR2ffXQdx6WT3q33op8TC8Xhqch1C6kXpf6psS
-         5T308dcpmVy+XeDmdGVkAzLgXLcHtnDX2DBe2yoHroGp4Yd8maUtJTN113imo6e1DKZJ
-         BFqI08D2awo4dZuv7kugW0mgwS630k0tk7FTySJYVwIDgZOBVmXEDOcvCPRMm8e0Oy3J
-         fYtcQ/rvmkiiwE2Ifb2u65LTUlLccX+J2OUk4TtRRplZBhWkkRvDENB+xRk8PTy5ZGxE
-         ynhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706139806; x=1706744606;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vK1IoSzjLAgX/p1hW4bNuWN0808a305i1v4S27+aWDY=;
-        b=mqiWO+/AKkvdIjKOLmk+KIpE5CLkO22Es3MFtdtZsUrNLku4aadlgzCbfgs52DbV30
-         tQapMDB20l+F2/1AatyygSm9lYGza3cUKEd5tszNxj3AvR0FhwTog7j40EIAtQHJ27Cv
-         yN2fkmKnQ/SpZ3k5WIHRPgZ7FRQG3MTM2ExcUbqe3tdX5MkWaKkqhQl/effZUm/iQsCI
-         Je5A/WxrT5Lyk7dxzjVcji9aZwGyXy/oNI8JLJ6kGSBOYGu6Y3eHojP6XmxFUeGRJifB
-         1CcPz5OxRel3AwWVlmGNTficppjRqdMmUymrJ+VpdH+WG6hUSNiGJso9sN78Vd65OB71
-         aUmA==
-X-Gm-Message-State: AOJu0YzoJeDJkCxXASS14w30VDJBIE4f3msZH6V6HlhxsmfdDIIVdwZH
-	nsLD/8UD5iNB7Xm3DCJ+FUd+RM6FA6GUErqtUN11mHyWt6BBdXic
-X-Google-Smtp-Source: AGHT+IFuZzz3VFfngSyBQV5oOOt6tsi6t+7ssiSyEG41SSztVGAFL1dVYOMRkmSTAFz9IsdeXIg9/Q==
-X-Received: by 2002:a05:6a00:c87:b0:6dd:8110:2109 with SMTP id a7-20020a056a000c8700b006dd81102109mr3028pfv.41.1706139806415;
-        Wed, 24 Jan 2024 15:43:26 -0800 (PST)
-Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id r11-20020a056a00216b00b006dbce4a2136sm9006188pff.142.2024.01.24.15.43.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 24 Jan 2024 15:43:26 -0800 (PST)
-Date: Thu, 25 Jan 2024 07:43:16 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH] gpio: cdev: remove leftover function pointer typedefs
-Message-ID: <20240124234316.GA6255@rigel>
-References: <20240124161725.79582-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1706145530; c=relaxed/simple;
+	bh=wbqMyu7oZpMxsXU0lkcnp8wE0Oln4aYOrHTkE3a28Io=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=tOwVWkz7a/x2qsLBpRFiGF1401iTHlNuUWBZauc9hape3m5oeKXn+7bUSjRq3r6cn6S7m56TdNddefvYmJMrPpRHqqTumpgJDmw6Ni2Jp0l01OTFUIdn2Mp7seMPDopFYmCKgxas8x9+ODOw+wu8CQ/rnR7PHZBsCeQa6PXmoSw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QmUObi/E; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P00VXD001043;
+	Thu, 25 Jan 2024 01:18:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=HULk81uGrHcbYZWqBcEZRPGhmCUUJzUvPIETw8bfYLY=; b=Qm
+	UObi/EiAuHIhT9iENN27QSuHtCG/f4oIP3ALU+71mKN+U+1u1XyGGcE/TP/8sPBf
+	/82MD+o2gOMl4R9rXK4ORJUMkixLXTPzJTF/5ioVMHh5SPJrKX8zR9yheswC9aRI
+	MEJDoy37JKvhTpt1WjnsychNe89nG+cnszlwrpEpgItI8S6QjBpDAgX6ohBZ+HPC
+	XiWGVRkLuEGj94lt5zVhOFquskoba0gVwA/D6OGi0B4NetxtDD4DJtSMXUvTwD78
+	49drJVJ8+rkGds5vMIX5S231RaqNV1KXIvkC8Szg1uSeFlegFLiJ0pHDTENIbcrc
+	I+0vDrldX6Rf5T8RQnPA==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3vuavn8ac7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:18:43 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 40P1Igfk031425
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 25 Jan 2024 01:18:42 GMT
+Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
+ (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 24 Jan
+ 2024 17:18:36 -0800
+Message-ID: <67e17efa-df15-45f0-9a13-873cbd8f7507@quicinc.com>
+Date: Thu, 25 Jan 2024 09:18:34 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124161725.79582-1-brgl@bgdev.pl>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom: modify the wrong
+ compatible name
+To: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+CC: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kernel@quicinc.com>
+References: <20240124023305.15755-1-quic_tengfan@quicinc.com>
+ <20240124023305.15755-2-quic_tengfan@quicinc.com>
+ <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+From: Tengfei Fan <quic_tengfan@quicinc.com>
+In-Reply-To: <CAA8EJpqkDcqjn-8HrK7=rRe49ycDY6fbNDCKKQOeUpa_EDjFtw@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: yC4lhn_mPc80TI_yf8zCcZLUopZk2TdI
+X-Proofpoint-ORIG-GUID: yC4lhn_mPc80TI_yf8zCcZLUopZk2TdI
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-01-24_12,2024-01-24_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ clxscore=1015 priorityscore=1501 mlxscore=0 bulkscore=0 malwarescore=0
+ mlxlogscore=906 impostorscore=0 phishscore=0 adultscore=0 suspectscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401190000 definitions=main-2401250008
 
-On Wed, Jan 24, 2024 at 05:17:25PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->
-> The locking wrappers were replaces with lock guards. These typedefs are
-> no longer needed.
->
 
-replaced
 
-Given that,
+On 1/24/2024 11:33 AM, Dmitry Baryshkov wrote:
+> On Wed, 24 Jan 2024 at 04:33, Tengfei Fan <quic_tengfan@quicinc.com> wrote:
+>>
+>> Use right compatible name "qcom,sm4450-tlmm" instead of
+>> "qcom,sm4450-pinctrl".
+>>
+>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+>> ---
+>>   Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> index bb08ca5a1509..bb675c8ec220 100644
+>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+>> @@ -17,7 +17,7 @@ allOf:
+>>
+>>   properties:
+>>     compatible:
+>> -    const: qcom,sm4450-pinctrl
+>> +    const: qcom,sm4450-tlmm
+> 
+> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+> 
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
-Reviewed-by: Kent Gibson <warthog618@gmail.com>
+Thanks Dmitry. I will inside this "Fixes" tage into commit message in 
+the next patch series.
 
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpiolib-cdev.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> index 2a88736629ef..34d6712fa07c 100644
-> --- a/drivers/gpio/gpiolib-cdev.c
-> +++ b/drivers/gpio/gpiolib-cdev.c
-> @@ -61,11 +61,6 @@ static_assert(IS_ALIGNED(sizeof(struct gpio_v2_line_values), 8));
->   * interface to gpiolib GPIOs via ioctl()s.
->   */
->
-> -typedef __poll_t (*poll_fn)(struct file *, struct poll_table_struct *);
-> -typedef long (*ioctl_fn)(struct file *, unsigned int, unsigned long);
-> -typedef ssize_t (*read_fn)(struct file *, char __user *,
-> -			   size_t count, loff_t *);
-> -
->  /*
->   * GPIO line handle management
->   */
+> 
+> 
+>>
+>>     reg:
+>>       maxItems: 1
+>> --
+>> 2.17.1
+>>
+>>
+> 
+> 
 > --
-> 2.40.1
->
+> With best wishes
+> Dmitry
+
+-- 
+Thx and BRs,
+Tengfei Fan
 
