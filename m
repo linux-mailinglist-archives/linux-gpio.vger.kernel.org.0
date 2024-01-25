@@ -1,145 +1,111 @@
-Return-Path: <linux-gpio+bounces-2573-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2576-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FD0F83C219
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 13:11:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5276883C2B8
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 13:46:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 638FE1C22A29
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 12:11:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 094801F21A45
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 12:46:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B30EE3EA62;
-	Thu, 25 Jan 2024 12:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C2C448790;
+	Thu, 25 Jan 2024 12:46:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SgvE75x7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDC2345025
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 12:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DD78482CD
+	for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 12:45:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706184666; cv=none; b=UbAx8QMWKMEAAM6e5vLMtiZw7CIr7DYmXqvZsRH6Tpuppi+w28lenUiA/1Kre13PsAjR2nbZ/8FZ/YBHtk8FNR8DWDutlLFAEcbLqjl2Y3AFoKBe2bHqJzezV1wVGH8ZUlnO70W+rPP/PvZkccDvynE9slbSXWUGN9J1R2CZ6l0=
+	t=1706186760; cv=none; b=hcD13/OgfFGtgj4Pg31sI8UVwHlPO8++AhkLoIkLU3Uh5x2eNaC8/8l7mJYVXCT6M7+cbRhKORjkJ3O3+ee8DZLx/cb5xKivdQlP/dyLMr99zuOeuV4P3zbFQNWNR7sLa+WgeEeyoHj/BnElXAwujPFHo0kDGmdJxCCen6181iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706184666; c=relaxed/simple;
-	bh=XVNtllv3/agHO1euaKNS93tCXeA+kBs0Qnq+p0BRlR0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KPrCd6dPsWUOOd0r5AIqDWFyVz0ORrBRgnFA8qlHDf5fELvcDkYnF+Jdv838bc8tre/aR4xBjo691mh8+tBdB0C9UHav763SG2dbMih4F5aMQ6jeJ4NIZwXWYhYfC9dbk6iTtfBbj+juhoxQbQf1upKYCgWFm4bmPlKDUEBaOhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZR-0004dh-4h; Thu, 25 Jan 2024 13:11:01 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZP-002HVL-Py; Thu, 25 Jan 2024 13:10:59 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rSyZP-007n53-2L;
-	Thu, 25 Jan 2024 13:10:59 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-pwm@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH v5 103/111] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-Date: Thu, 25 Jan 2024 13:10:05 +0100
-Message-ID:  <c57f631ef5167554a30d627320dca617cd5ef210.1706182805.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1706186760; c=relaxed/simple;
+	bh=49W0snOy5jjm6ntb/jsZVJJPo3PZ3D8XwFcPnQfgHNk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=br5h5IGAm+qsZopGHMjCsCHS4QbBw1Fd1B9Z133X4Ynmr0wtiFrbMNzwzJnOfXN2a5fkE7n3rsX69iyrvjpivpFgukF2HS45HwZwydx5Mtu1O21LCUiaju9tPHjQreUtw442wXmAgoInXarC5d5FX+5GygmbW3fMtdot927Zlac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SgvE75x7; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1d51ba18e1bso61007545ad.0
+        for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 04:45:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706186758; x=1706791558; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=49W0snOy5jjm6ntb/jsZVJJPo3PZ3D8XwFcPnQfgHNk=;
+        b=SgvE75x7/I8FSBnoamgaPjtWCMuuWqpXOPqfzHXD74arx9/KzHLOkmhAxonxfPxMXK
+         qE8RnXGiOcops5q23u2/EOkYhUkdbQwZMX47D6t5g5vjXOcXj9SJmGcXqO8wJ++HFNl1
+         VNxot8g/kmXuxFQBdgVh90Bf+VJFydhRJZns91GPQuJYOvGDeKRwWCG2ZpDkQ+432q6R
+         ri2bQsYJYDylru5+LK4sfBOjMlyffNKfe1eS3LIsPO3q8wqkn8aO6BuF04LT7mpkf9FN
+         asfHFK7WrZTUGX+xp87J0AYxiZ3HlRDLcrIbkleHO6gs+6zUmoB7W4L0o53e+hBUuEnQ
+         ALZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706186758; x=1706791558;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=49W0snOy5jjm6ntb/jsZVJJPo3PZ3D8XwFcPnQfgHNk=;
+        b=qL/0f28C1MVuz2qteDPKlf6tvBy6jOuVm9Y6p9zoM5JizpmL742qUfS+52kTyu/vXN
+         vTLCHeo4MqspVXh+o2VZU8ISeT/CAHbeiyjPlmg8EzhLAHsH3AvN80PIUIDqyoCpzjLv
+         Z7oKL+2HBAxOoWrlxh8i00IU8KBjN8IeZamA3lVCutqhcEFkZFB7bOUMyvP7I8VUdEjn
+         QNviwlYxFw6/5Ekua9U0yNEkCtaxAZknEkHEMYQfGU7+TENjGp0rbJ55CMTjmVhOqYzt
+         N0xZ9q34mzBDLSlCysadtt/PYWw0KoIbpxHEly7STipScPG8ism63LXDpSwvHEsxud3B
+         NCpQ==
+X-Gm-Message-State: AOJu0YwOie1h89ectHfWE9xtkVm9QMcbytNCvexjmOMmWJWY7xQlflXL
+	+9EHExuH03AQAV/82mvUkcLtgfUP/3zfM1+NE7l+RSpBaE0+1z/z
+X-Google-Smtp-Source: AGHT+IGidti0MMdwaFF96qyKMnO3X1U+tWMUHDGOUm50LNvxwot8k1+210kxo1LyAzuHoW3QRWKbZw==
+X-Received: by 2002:a17:902:edd7:b0:1d7:4a08:351e with SMTP id q23-20020a170902edd700b001d74a08351emr940408plk.67.1706186758506;
+        Thu, 25 Jan 2024 04:45:58 -0800 (PST)
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id r18-20020a170902be1200b001d73ac054a0sm7728146pls.33.2024.01.25.04.45.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 25 Jan 2024 04:45:58 -0800 (PST)
+Date: Thu, 25 Jan 2024 20:45:53 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	=?iso-8859-1?Q?Jos=E9?= Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
+Subject: Re: [libgpiod][PATCH v2] core: check for positive values returned by
+ calls to ioctl()
+Message-ID: <20240125124553.GA99216@rigel>
+References: <20240125080629.21161-1-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2207; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=XVNtllv3/agHO1euaKNS93tCXeA+kBs0Qnq+p0BRlR0=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBlsk+ziE5ykHdExP8+Gt+ZAyQo7gGrjzGAK3bi0 DpMH5wd4TyJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCZbJPswAKCRCPgPtYfRL+ TsQZB/414JR3WIuwraL0yw+a4d6Vz7SnSUyr3byOJi5fuqwDJc5OJXIwwthvMZ5ymn21VrHwUO8 Xgq1ZTPO/8sLcmJL123Kq61XV5T19itWpGtq8IaHrXggQl2hWQpf0IQvtlFpXdfJ4XPjXESnscx ErAP7uuGVzdUdLL15bq7GY3QIj26Ivno2AUUZGCv3eBFnu+0SI0nFDQECBRVKpEqN8l1ZaV0Io6 spYPoZ3c8cv4c1KjMXRAcQHytX+ridp9xYCUrFkT/NPpbAZ3yXbSaFaTwj9tqhLfQAMLQXjUs9m 41QA8IQSniN7443ohLtHpylhffnj4FSux8f3lGZkuEk6viJR
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+In-Reply-To: <20240125080629.21161-1-brgl@bgdev.pl>
 
-This prepares the pwm sub-driver to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+On Thu, Jan 25, 2024 at 09:06:29AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> If the kernel GPIO driver (erroneously) returns a positive value from one
+> of its callbacks, it may end up being propagated to user space as
+> a positive value returned by the call to ioctl(). Let's treat all
+> non-zero values as errors as GPIO uAPI ioctl()s are not expected to ever
+> return positive values.
+>
+> To that end let's create a wrapper around the libc's ioctl() that checks
+> the return value and sets errno to EBADE (Invalid exchange) if it's
+> greater than 0.
+>
+> This should be addressed in the kernel but will remain a problem on older
+> or unpatched versions so we need to sanitize it in user-space too.
+>
+> Reported-by: José Guilherme de Castro Rodrigues <joseguilhermebh@hotmail.com>
+> Fixes: b7ba732e6a93 ("treewide: libgpiod v2 implementation")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Signed-off-by: Uwe Kleine-KÃ¶nig <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-mvebu.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index a13f3c18ccd4..8cfd3a89c018 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -99,7 +99,6 @@ struct mvebu_pwm {
- 	u32			 offset;
- 	unsigned long		 clk_rate;
- 	struct gpio_desc	*gpiod;
--	struct pwm_chip		 chip;
- 	spinlock_t		 lock;
- 	struct mvebu_gpio_chip	*mvchip;
- 
-@@ -615,7 +614,7 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
-  */
- static struct mvebu_pwm *to_mvebu_pwm(struct pwm_chip *chip)
- {
--	return container_of(chip, struct mvebu_pwm, chip);
-+	return pwmchip_get_drvdata(chip);
- }
- 
- static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -789,6 +788,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- {
- 	struct device *dev = &pdev->dev;
- 	struct mvebu_pwm *mvpwm;
-+	struct pwm_chip *chip;
- 	void __iomem *base;
- 	u32 offset;
- 	u32 set;
-@@ -813,9 +813,11 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	if (IS_ERR(mvchip->clk))
- 		return PTR_ERR(mvchip->clk);
- 
--	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
--	if (!mvpwm)
--		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(dev, mvchip->chip.ngpio, sizeof(*mvpwm));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	mvpwm = to_mvebu_pwm(chip);
-+
- 	mvchip->mvpwm = mvpwm;
- 	mvpwm->mvchip = mvchip;
- 	mvpwm->offset = offset;
-@@ -868,13 +870,11 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
--	mvpwm->chip.dev = dev;
--	mvpwm->chip.ops = &mvebu_pwm_ops;
--	mvpwm->chip.npwm = mvchip->chip.ngpio;
-+	chip->ops = &mvebu_pwm_ops;
- 
- 	spin_lock_init(&mvpwm->lock);
- 
--	return devm_pwmchip_add(dev, &mvpwm->chip);
-+	return devm_pwmchip_add(dev, chip);
- }
- 
- #ifdef CONFIG_DEBUG_FS
--- 
-2.43.0
-
+Reviewed-by: Kent Gibson <warthog618@gmail.com>
 
