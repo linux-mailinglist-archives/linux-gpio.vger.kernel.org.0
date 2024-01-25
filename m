@@ -1,98 +1,163 @@
-Return-Path: <linux-gpio+bounces-2580-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2581-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 059D383C4F8
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 15:39:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 425D783C540
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 15:50:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8325A2934D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 14:38:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E44DD294F33
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 14:50:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E189B6E2BE;
-	Thu, 25 Jan 2024 14:38:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4058F6E2DB;
+	Thu, 25 Jan 2024 14:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZQmgCNjI"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U5Hu1h05"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4EB4F218
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 14:38:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4361B6E2C9;
+	Thu, 25 Jan 2024 14:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706193533; cv=none; b=Pjtv3OaECkaMAfSAlavHp+FOVGpXzgmOb0MeWlovORiFF9MY6R51KR9T2+wdtixa96ichvcIJJJNHG5XgjZl6dWinuaM5XoN7WY9O9GSYXBizX5/BSbx7SX0N81FRi9KieADed39IxHqsCJAOrF/ob9XBsG79HJNValNxtWQKvU=
+	t=1706194209; cv=none; b=MuC8fZn+9BSKARWZSFeJOLYN3hTD6+It8CzOWOBEThoiPe4Cl7dKSrCrqRAFH9GOgyIszeMtyIP+xFBHVPKYKlSqDfkWKmwlEw8/l5U7KM6HXUkN1HMKH1+b0Ue13J0IBGaAMbgl4sOqWoasy0mIGW2OKZvUFHBHT33jMxfzo88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706193533; c=relaxed/simple;
-	bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bwkIcUWobfsAn8pGnXttiQPuxecxIuwN2X4tODix9kEszYW/LlQFP8FnUjXKWa4oth7kiRbaR0EBrAAli7NFqoXAuMhzPhjGBL9HCaBwLd5CiSvtrcLVLeWieVuTXSUn6Dai0LUk5sZH2c9DV+3BxhEvpj3DUnTMn8wA8R5bH+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZQmgCNjI; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-db3a09e96daso5990965276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 06:38:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706193531; x=1706798331; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
-        b=ZQmgCNjItwrWkpLqu/9tkza101j5FyrFzg1D76k2VfYoO5xA1fUZnzgGqroEXdltPZ
-         YhYxQqfiJJ9E7XvLtwlNZ8oX8v8TxUZomhDxoA5xzuavoxsfJxyaH8PluvwFgtQKldon
-         dJ/z/2FFreit+sN0wXUKi3k/QRmlVeN/7Ihj5ukzRHAnXEzOeU2/YwLZ2jrFgWYO0XW7
-         x6i4ZduKfoYKtQDhcIPL0rcszaPSwR2f92ei5Y44KEitcNz5Vj8ckfmHEPjzYQAd7g4R
-         xwXWvwZbmZs9LD/folaBQDcY3ZSRZ4/CgOwmdryvcOfNoVlOUQCzhIwMTJKCwuosvpn5
-         xXHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706193531; x=1706798331;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gcL4ZykrvdtZDWTE2yY4JbplggfrsFuT/sM61rEdzmM=;
-        b=QRmSbMWml/Zcr6ib8V/9qpeEUUuw+X578i9vhCU1ZiulQaPdZpDQld5J22Bk8gaNuW
-         XIVmXEOoO7n00rmuhuVuAwGSqxVoqa2nYKAKoZHcEkcucx15BDfSctoCf8x0UaA4R9l0
-         IXS9/n4AdCV7VhI9DFY0tO91ztq2ifx7/EOetIYIiNBli1YLl3I8QVhRXccdwULDIdK4
-         QCJxoIGMmwdgmq+uSeIkoH5wqUVF92jfpc6C8dBKMw7ghXblcJCBlMKsSqjIvjht/5HX
-         Ah0xKRJeog9apJB+hLGvq25FQPj4AdFCw7KwoGGRF5mnQdv285+znfBUQwWJBT8/X7IK
-         8iDA==
-X-Gm-Message-State: AOJu0YwyZdpuI3vqGovU8GIw0crZvt5ny7+I1cF8s3TQRdeMF9xnUpnp
-	gePU1pp+YVpLQ7mqEX8JCam9EtTybpi8aSqQK2Y/ook3pULOyxijI0sojJdQnqmwlQjZKkWzW6z
-	SQzcicijdI/uwSyM8S+ScWYC2K9Vh+bcRQga39InEgD3cr8JR
-X-Google-Smtp-Source: AGHT+IFEWOxAQaxmYmMzQ+eU4VlPwsEAGXj5ix940GFvBS4O5lccUY+lbStMqVk40d1DzfaU3/ZUeXkenQqLU16Cv5k=
-X-Received: by 2002:a25:acd7:0:b0:dc2:4dd0:207c with SMTP id
- x23-20020a25acd7000000b00dc24dd0207cmr737847ybd.75.1706193531271; Thu, 25 Jan
- 2024 06:38:51 -0800 (PST)
+	s=arc-20240116; t=1706194209; c=relaxed/simple;
+	bh=ACVtmX3llcZ3tfvcSAXupWV1km9UBIPngejcwrfKSZw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=F38cE/aH6we6VGVzyxxuIgTb01MDsSBM+kp1Nvsw5LudtNDwBRsopV4WBWv+Fu5RgRoF6z5CyXgGIrHRlqIvotOXgt/44sdkFs+jLrQQOfBnu5tIQCY/NvvXAm35b8s6O8M2ctXlGwDEyRWwuKckUw2gICCXQlQelEGXhIsmMxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U5Hu1h05; arc=none smtp.client-ip=217.70.183.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 2AD8FC0012;
+	Thu, 25 Jan 2024 14:49:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706194197;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ogOpwZQkYRG5dXU2wj0R+7adxXD9kVYWvL6LdD2YosI=;
+	b=U5Hu1h05YgVVy1e9XMnsulE1q6eJD310wXJhpRMNMwlLSol4EJtmHk20pcaA/6GXAy+cns
+	Ih+ju0KTLmRTBmbN/+GLZTEOThbUoBnz8FPEou7lEZWxSQ2WOBWO0ZN9hW6o9HwvxQ/S+H
+	lQ2hmT7xQRD+EyLadkeDKfs7XTlxpyRNFu+wdoez24nABWRm2QJxwjXncD64DBssybAfog
+	pDfudljBPu+vedfEYfsVkf1lvLfDWOIx+IVdPh6CunfyLZ57xp7wkOrvufRaEMCCg1FGjt
+	x/+tCF7sWN3l7+y6c0kQBANgFaVwAEPGat1sWGjelxiC5snpNzZ/+EhbM4IS3g==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <cover.1706182805.git.u.kleine-koenig@pengutronix.de> <c57f631ef5167554a30d627320dca617cd5ef210.1706182805.git.u.kleine-koenig@pengutronix.de>
-In-Reply-To: <c57f631ef5167554a30d627320dca617cd5ef210.1706182805.git.u.kleine-koenig@pengutronix.de>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 25 Jan 2024 15:38:39 +0100
-Message-ID: <CACRpkdZ2f-3srhW6hNxBLpPPRGTGC3RWMo+TSqU1YV4A4vjh+A@mail.gmail.com>
-Subject: Re: [PATCH v5 103/111] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	kernel@pengutronix.de
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 25 Jan 2024 15:49:55 +0100
+Message-Id: <CYNVD4U0M5OS.LQ2MAKOL0LAP@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB
+ system controller
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+To: "Andrew Davis" <afd@ti.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Rob Herring" <robh@kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
+ <20240124151405.GA930997-robh@kernel.org>
+ <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
+ <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
+ <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
+In-Reply-To: <9a5f017c-530c-482b-9cbf-a07281e92589@ti.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Thu, Jan 25, 2024 at 1:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
+Hello,
 
-> This prepares the pwm sub-driver to further changes of the pwm core
-> outlined in the commit introducing devm_pwmchip_alloc(). There is no
-> intended semantical change and the driver should behave as before.
+On Thu Jan 25, 2024 at 3:33 PM CET, Andrew Davis wrote:
+> On 1/25/24 5:01 AM, Th=C3=A9o Lebrun wrote:
+> > Hello,
+> >=20
+> > On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
+> >> On 24/01/2024 16:14, Rob Herring wrote:
+> >>>> +
+> >>>> +      pinctrl-b {
+> >>>> +        compatible =3D "mobileye,eyeq5-b-pinctrl";
+> >>>> +        #pinctrl-cells =3D <1>;
+> >>>> +      };
+> >>>> +    };
+> >>>
+> >>> This can all be simplified to:
+> >>>
+> >>> system-controller@e00000 {
+> >>>      compatible =3D "mobileye,eyeq5-olb", "syscon";
+> >>>      reg =3D <0xe00000 0x400>;
+> >>>      #reset-cells =3D <2>;
+> >>>      #clock-cells =3D <1>;
+> >>>      clocks =3D <&xtal>;
+> >>>      clock-names =3D "ref";
+> >>>
+> >>>      pins { ... };
+> >>> };
+> >>>
+> >>> There is no need for sub nodes unless you have reusable blocks or eac=
+h
+> >>> block has its own resources in DT.
+> >>
+> >> Yes, however I believe there should be resources here: each subnode
+> >> should get its address space. This is a bit tied to implementation,
+> >> which currently assumes "everyone can fiddle with everything" in this =
+block.
+> >>
+> >> Theo, can you draw memory map?
+> >=20
+> > It would be a mess. I've counted things up. The first 147 registers are
+> > used in this 0x400 block. There are 31 individual blocks, with 7
+> > registers unused (holes to align next block).
+> >=20
+> > Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
+> > accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
+> > stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
+> >=20
+> > Some will never get used from Linux, others might. Maybe a moderate
+> > approach would be to create ressources for major blocks and make it
+> > evolve organically, without imposing that all uses lead to a new
+> > ressource creation.
+> >=20
 >
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
+> That is usually how nodes are added to DT. If you modeled this
+> system-controller space as a "simple-bus" instead of a "syscon"
+> device, you could add nodes as you implement them. Rather than
+> all at once as you have to by treating this space as one large
+> blob device.
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+I see where you are coming from, but in our case modeling our DT node as
+a simple-bus would be lying about the hardware behind. There is no such
+underlying bus. Let's try to keep the devicetree an abstraction
+describing the hardware.
 
-Yours,
-Linus Walleij
+Also, we are having conflicts because multiple such child nodes are
+being added at the same time as the base node. Once this initial series
+is out (meaning dt-bindings for the OLB will exist) we'll be able to
+add new nodes or ressources on a whim.
+
+Have you got an opinion on the approach described in this email?
+https://lore.kernel.org/lkml/CYNRCGYA1PJ2.FYENLB4SRJWH@bootlin.com/
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
