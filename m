@@ -1,116 +1,113 @@
-Return-Path: <linux-gpio+bounces-2565-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2567-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87D7C83BEEB
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 11:33:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41B9D83BF1F
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 11:41:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29CD41C236F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 10:33:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 12ABAB2B2D5
+	for <lists+linux-gpio@lfdr.de>; Thu, 25 Jan 2024 10:39:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC3F22099;
-	Thu, 25 Jan 2024 10:33:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E87D1CD04;
+	Thu, 25 Jan 2024 10:39:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="IPpq4xLv"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="b3+gBlDX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA1D22303
-	for <linux-gpio@vger.kernel.org>; Thu, 25 Jan 2024 10:33:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A348F1CAB8;
+	Thu, 25 Jan 2024 10:39:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706178806; cv=none; b=Yzvo01IEamsIFAc7l/Ey7UAK2ML81vYc5bHDZSkj7iRRdGouRVE/nvRGTuz2zXOwnW1nktz67t7jTxUs7sKDuRduFVxKlG5VLXhT/zMo/PVwzsR3QAkY/LffnWLH07FTAee1QQsiRXvHwTnZW8xg4GPUpmMh3chnx7a4Bk/CfHQ=
+	t=1706179159; cv=none; b=RUvvQYOo2KgmhylRY7RXnVGHopFy/1d7KK+OSjrOBNc0TLemP/ipamn5AzLO382tVxAcJmAAn9zv+wuB8KKUNORjlKM9/e6Yzp/wClVuP3DS6krJvdjSo5n6H8NArCkEF7P+cMxdURsSlGg8bj4+zBX70PbPY/7mEVdt+6d/Tvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706178806; c=relaxed/simple;
-	bh=Lb+75PxGk5ZSSmxpqdnwWt4mQ9hIV0Xdh2tvTk3aRk8=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=kOQpbFw46pDqD//OIg9EHNqJmbK+jrlpQJwVzgGJli8JVgNXBpPl7RqwopkpZkFelcYe/y7P2Q9EzW66Xmp6HodIkkhCO33zWfbtOYkITDboTPe71pQMeqAk8aWhs/tSYI4bCV8mZxZwFxjAcrUgC/WdmZ7d9jT+FXLLPI2TraI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=IPpq4xLv; arc=none smtp.client-ip=67.231.152.168
+	s=arc-20240116; t=1706179159; c=relaxed/simple;
+	bh=1SIXC4wWYaFLAPwdkKFjp65vXY1gVmwuEvMvTcck4G0=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qpvytln082bMY8U5uzSQ8gB8in8GzHKnfbRRCsi0tYH7JY5c3faWp/G5fwHYNshaNodrXDYFuGfywSQPrAb9q+UVQkJuiyRx7lZYj6vWZReE8AzbS+X62KPpajgcc0HMlnbPlKR0ot6XfBS+G9pH19cRh8NdcR3PyWd4MjuHcT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=b3+gBlDX; arc=none smtp.client-ip=67.231.149.25
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P7paSw014010;
-	Thu, 25 Jan 2024 04:33:23 -0600
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40P5AAgS030847;
+	Thu, 25 Jan 2024 04:38:57 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=uS7VtLE2le/Y/2kJjsEOrWV+3WlfX4zzNadAV/IYz7I=; b=
-	IPpq4xLvbqAMhRRKL4Kjou9cUQV9KtFcrarImi+biU9LAqiSB4mIua71qWGmpwKx
-	ChSXlICQV1AaPzdHlTB8rMiu21iHYhiRl+YftRfQa0kPAYSzk4y2W0lc4QsswYZ3
-	5+uSogmczcteaV4AuTmG6hniFGHQ8pFzL6Mgn/STVhIsNwzsErdD6sLhN/KHHqcm
-	x9CsU2K27f/9otlG+r3UN3XfDSC2qCuh+rHdIHRLe6ycCKgMU85TtknCgAia/M38
-	pWPAa4GKWuuuJ03Wwmq067GO0oR39kquB3BC5tIsNgnBNGR6f00Q7lvMpH0Ip3b8
-	ESRyQSXEGHCnRdOn8zZjlA==
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=H+pywFxcGO3YzfU
+	rAAIpNM2vOQO6zCM1bhi8m27y6OI=; b=b3+gBlDXeNI33HTb3T7utPWf75UcvTs
+	ZcP/BhOpa3V4+/1KG2aJyhJmonJrkg58ulrc3GIVe4IVnfvBgY+Lox1KAI5JisQZ
+	3b8JM2obfJM4NwlhRimVpm5BIoKJwxQ8WkYJbiWHrReD3jNTTwvK53q4/to2Qrsq
+	ixXzNZmnJ0tBc4agwBubW1bNhaNmJACR47haBNshaI4PnGrKytTXJGGT7aHEnwcq
+	y7UamTq69F0kQ+sPr/N7LOuKbnexmfPuOe9AwibpexoZATYkP67Q7C/b1PTV1G+k
+	mm+nux6AVYhCUDatO6NJuqJP/k/tOfKBSSFfQEKidf2uiaZ2ktIvQ8g==
 Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmf9t2rd-1
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3vtmfhj3tc-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 25 Jan 2024 04:33:23 -0600 (CST)
+	Thu, 25 Jan 2024 04:38:57 -0600 (CST)
 Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex02.ad.cirrus.com
  (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Thu, 25 Jan
- 2024 10:33:21 +0000
+ 2024 10:38:55 +0000
 Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
  ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40 via Frontend Transport; Thu, 25 Jan 2024 10:33:21 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id D2459820248;
-	Thu, 25 Jan 2024 10:33:21 +0000 (UTC)
+ 15.2.1118.40 via Frontend Transport; Thu, 25 Jan 2024 10:38:55 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 21112820246;
+	Thu, 25 Jan 2024 10:38:55 +0000 (UTC)
+Date: Thu, 25 Jan 2024 10:38:54 +0000
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <linus.walleij@linaro.org>
-CC: <andy.shevchenko@gmail.com>, <patches@opensource.cirrus.com>,
-        <linux-gpio@vger.kernel.org>
-Subject: [PATCH v2 3/3] pinctrl: cs42l43: Use str_high_low
-Date: Thu, 25 Jan 2024 10:33:21 +0000
-Message-ID: <20240125103321.2622277-3-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.30.2
-In-Reply-To: <20240125103321.2622277-1-ckeepax@opensource.cirrus.com>
-References: <20240125103321.2622277-1-ckeepax@opensource.cirrus.com>
+To: Rob Herring <robh@kernel.org>
+CC: Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Linus Walleij
+	<linus.walleij@linaro.org>,
+        Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>,
+        Conor Dooley <conor+dt@kernel.org>,
+        "Avi
+ Fishman" <avifishman70@gmail.com>,
+        Tomer Maimon <tmaimon77@gmail.com>,
+        "Tali
+ Perry" <tali.perry1@gmail.com>,
+        Patrick Venture <venture@google.com>, "Nancy
+ Yuen" <yuenn@google.com>,
+        Benjamin Fair <benjaminfair@google.com>,
+        Jonathan
+ =?iso-8859-1?Q?Neusch=E4fer?= <j.neuschaefer@gmx.net>,
+        <patches@opensource.cirrus.com>, <alsa-devel@alsa-project.org>,
+        <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <openbmc@lists.ozlabs.org>
+Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: Unify "input-debounce" schema
+Message-ID: <ZbI6PrrQsVDIjt69@ediswmail9.ad.cirrus.com>
+References: <20240124190106.1540585-1-robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: 9pINfeT0kO5b8GWqptmNpi9bC3CbaETb
-X-Proofpoint-ORIG-GUID: 9pINfeT0kO5b8GWqptmNpi9bC3CbaETb
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240124190106.1540585-1-robh@kernel.org>
+X-Proofpoint-ORIG-GUID: 8iYiuE_6G63A78QKjJlEqxQHoZze71Jp
+X-Proofpoint-GUID: 8iYiuE_6G63A78QKjJlEqxQHoZze71Jp
 X-Proofpoint-Spam-Reason: safe
 
-Use str_high_low rather than open coding.
+On Wed, Jan 24, 2024 at 01:01:04PM -0600, Rob Herring wrote:
+> nuvoton,npcm845-pinctrl defines the common "input-debounce" property as
+> an array rather than an scalar. Update the common definition to expand
+> it to an uint32-array, and update all the users of the property with
+> array constraints.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/cirrus,madera.yaml   | 3 ++-
 
-Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-
-Changes since v1:
- - Added commit message
+Reviewed-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 
 Thanks,
 Charles
-
- drivers/pinctrl/cirrus/pinctrl-cs42l43.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-index ac3df58bbe951..628b60ccc2b07 100644
---- a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-+++ b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
-@@ -490,7 +490,7 @@ static void cs42l43_gpio_set(struct gpio_chip *chip, unsigned int offset, int va
- 	int ret;
- 
- 	dev_dbg(priv->dev, "Setting gpio%d to %s\n",
--		offset + 1, value ? "high" : "low");
-+		offset + 1, str_high_low(value));
- 
- 	ret = pm_runtime_resume_and_get(priv->dev);
- 	if (ret) {
--- 
-2.30.2
-
 
