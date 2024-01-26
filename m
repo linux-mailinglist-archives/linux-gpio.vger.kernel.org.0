@@ -1,225 +1,174 @@
-Return-Path: <linux-gpio+bounces-2603-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2604-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3840083D9C7
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:56:33 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EFCC83D9D3
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:59:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5BAD11C21F8B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 11:56:32 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86288B2B6A9
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 11:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C5617BCC;
-	Fri, 26 Jan 2024 11:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2321518626;
+	Fri, 26 Jan 2024 11:57:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E4i8Of7c"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="L03Nu2Tq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 484081B961
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 11:56:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497B61A731
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 11:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706270185; cv=none; b=m7QjjyFBOXogY0w9DA1nvyfJFDy07DvkM5JqnjK17ilSvaaf8jI1dA9vlvM3ujQwOpO30Q0iit1R0ERmh0uQmALmhmpkT7dt1vfJwptPiL5RZ82F/tMc6IOwWCOQAogeBnPxs6wq3S7yhIzrU4Pe2UkS4c1WW85rh04z8vENP3s=
+	t=1706270276; cv=none; b=ddZ+aKSHMUTxQMly6UL76KvyhARpY2stPxtKvNxCMILWeawFlfy0Vwjd+ODi8wOyqc+RmkODQNYeEoKX0kw03k+ehTRnBjRmeanUL6sCDrtgWGucVCf/CUPzfcyOWDuUQCGwD34Cs3Pjo9GqrIFOlqn8xmdoxchLx/FBPBPewk0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706270185; c=relaxed/simple;
-	bh=RmGbAEvyMyBmZPV9rMtVayM5gvBAINtVmRS710SV+sM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mLYA8dkvfLG9h8RQpyN/amjnqEYs7F3F9s4KWCSmsCtOlL4VycuWGL0Y5qVlSCIlYJ/esCN26mNY5NREbHGPdc6ol6fXIhQIwps3ZgWML4c10zprTKu/vpE5s3/5W/0tLsUa0Ylkg/TDndoTfv87bg4Pxkbljv4uh2nAghh0WI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E4i8Of7c; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-40ed252edd7so10751555e9.0
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 03:56:24 -0800 (PST)
+	s=arc-20240116; t=1706270276; c=relaxed/simple;
+	bh=fww9EB7dHTt266qwXpxXlSuJ7F6luyRDgiG70yImJ/g=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QD4rKIHAISJ+rZxThS0rrYck43CXb36QbrCUZrfsOa0kmBupdbsnuUCdYQuDdXIGZ9+kSeQrqF/MByDbVmHV0FEMvqFNlcmDv2z0xLT8t17Pw1IfxwkifxYwqhfeQpoNlwLNaOfYAPw73YcFYGyMCrwWkWQuGbo36Vfkc+qcnxc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=L03Nu2Tq; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-337cf4ac600so308434f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 03:57:55 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706270182; x=1706874982; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=DO5Cw99+U4E+0Nt0Wph/a1bGBWtbN/z5sxXuqQozhd8=;
-        b=E4i8Of7cpOA7zx9jqf89I9uAa1fdpjBU/e5zqku8N7CEnUWrepwJJsthyWVkXFWNLB
-         1lccH3QzM4z3onDLTQMWKhbDDvtVb8iEfrVnkic2eC1jWc9fsMXdSRy7zLoxMluiYg+0
-         mxEHN9Rx3W9jGOJYqf0l+nlOi3/UKoxHs5rNpQ+0tzfJ+Xi2MWCmeZoWCH+giIun3+u4
-         xZex1Zp1HysV8HsCmmxW2ypDHUEKpH+7tnFXwdisQlbLPgQWjpNxcIIYm44fKkwIKBBL
-         7Rdol7PBjJWsLfwrJLuSQH37jbOQVi9e5au48st2e1XIKWS3fM6eq+c7zFDTpx8dpDJp
-         Wj5g==
+        d=9elements.com; s=google; t=1706270273; x=1706875073; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=6igzwQypdxPSe5LiU4uAuaHmPYLT8/p0hJRSsz2288A=;
+        b=L03Nu2TqrDfKunvmkedqLYo36Khot4vBn0yMINlhwvf2DW3AkYCLiGjr9MhHThM/at
+         Z34K2d9kbmfoQ74FxtIltK8zPpMHcIf4nfWq6ZZ56RBy6fltLquqMSictYTVlMvfF7mv
+         3HpsyeIHVulVbFkFQo6MWBlilzTUN5znFe19350v1GsnWUYKszigzI1d4W1ItGOSJnyP
+         BsccWyFBn8yhUHMQXdWQ7h+22f3+6+Nk9EbxgWV7lZ7OVLzpQc2IlSJ3SKM1qUfvRBKC
+         pZR1QbM7OysDVvHWv+ngOFZkK9zaBmH0fHWNNpKxyDpYyOdubMkm3u+6kkF2wUXOPMQy
+         5aBQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706270182; x=1706874982;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DO5Cw99+U4E+0Nt0Wph/a1bGBWtbN/z5sxXuqQozhd8=;
-        b=awTH4/hfO9oDq/jWyn7MBl66yCSX5YieTT7iJ+9rC0M9TaUva3rvMwN46I1NnPSDcw
-         btJXY3KxbcaxlywqltEGT0iVvxYlgHY7LoVA0ALUw8y4zNkrjdSjb//K2pgOEzxyR4Wt
-         7RmkKypyfNGxVMtio35Tdh4FFeZ+C24hkdaboiToIabmyowcVlAfP/dNvI8nrYGDGyab
-         Xq4Er18TC5ULyXO7/YOj71sMXLW9cEsQSx96ivuhBF3oR8SqHhGRPUzTVNqbhmmOpLa9
-         zUnq81FNMJJ3W9g/bGoAfZAcB1TojRuVIG9RjTm34J1EZktaduyPvVj7lHGnh9MQgFUj
-         SUGg==
-X-Gm-Message-State: AOJu0Yy2FMHY8pGcAypnleNMvtlQmS0dVLelEgX+Swtd7RJR4fzLwBOt
-	S5aur2U3EntiSusorwgyaGXeD2Uw3hbJM73aXui4QNwcG6FT6u280js2hz+qqYk=
-X-Google-Smtp-Source: AGHT+IHmdKLzey2QUAfoaZyCALkG/ipXSmR5+Ufuq+v1N1QQdVg3ypQp3xdsFV2v37UQKEtWI2DvjA==
-X-Received: by 2002:a05:600c:5191:b0:40e:8799:7348 with SMTP id fa17-20020a05600c519100b0040e87997348mr596666wmb.68.1706270182598;
-        Fri, 26 Jan 2024 03:56:22 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.215.66])
-        by smtp.gmail.com with ESMTPSA id vo1-20020a170907a80100b00a2c11a438a8sm556451ejc.25.2024.01.26.03.56.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 26 Jan 2024 03:56:21 -0800 (PST)
-Message-ID: <3e8dfaf3-85a4-42bf-829c-4835f3de2d35@linaro.org>
-Date: Fri, 26 Jan 2024 12:56:19 +0100
+        d=1e100.net; s=20230601; t=1706270273; x=1706875073;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=6igzwQypdxPSe5LiU4uAuaHmPYLT8/p0hJRSsz2288A=;
+        b=nw+JoHX7z/tSsLMpRMB3PQUO4B3wCneSRzJJwax9XtV6hP1eJo5JXJye3UTDn3JbHM
+         aEpdZQRWTksHGlFa3R9BApEQj2EQTqvbqooQmJ/QvJudoYDRThKCFGH7/Zcr+vPcVwHC
+         j2oLuVqkXKObrYZt/qytWilkJU3LVgsMiy8vJuTsEVvbnkxwzIOuY8j8+N4MP7bA/EIC
+         9/ytez77YX15chzywnfUG44CQlR0jErso9yW80gOF+5YvnopwESBsH4ZWTY494VWtLYX
+         cXeoz2WrPDbSEKkzt3ojXHHkRcxAAFmPXCR6K3MnA1XBGvdmk4k1oLPlmjBJJkeYHhs5
+         L+ww==
+X-Gm-Message-State: AOJu0YySmXKCH/jw9wIF0A6iterpplWEvKb6A3pIeWYKzh64Cv7frfPT
+	Wz/FyjeyWmTNt/7Z98JIZYufZENt8iSolGFyC91Tb+wvPGUeewfG46UAI5R0cLM=
+X-Google-Smtp-Source: AGHT+IH/g7DbFsBW/D5Q0U6E+tjhovnYwoTtkSRKVmze6lMSQku+rRgaWgmlm+VXvHeX7yyey18UCA==
+X-Received: by 2002:a1c:7506:0:b0:40e:86eb:9e7e with SMTP id o6-20020a1c7506000000b0040e86eb9e7emr823322wmc.142.1706270273511;
+        Fri, 26 Jan 2024 03:57:53 -0800 (PST)
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id bd19-20020a05600c1f1300b0040ed1d6ce7csm1682149wmb.46.2024.01.26.03.57.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 03:57:53 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: mazziesaccount@gmail.com,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
+Date: Fri, 26 Jan 2024 17:27:48 +0530
+Message-ID: <20240126115748.1491642-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 08/17] clk: eyeq5: add platform driver
-Content-Language: en-US
-To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
- Gregory CLEMENT <gregory.clement@bootlin.com>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
- linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
-References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-8-392b010b8281@bootlin.com>
- <127fd51b-cd64-4e00-99d6-7be9b79f2dcc@linaro.org>
- <CYN33YJ10HYS.2YDXB158LFZPL@bootlin.com>
- <001993b9-ea0c-49c3-a4e5-4cea10c54082@linaro.org>
- <CYNRLZ2XTOGY.3ANWB33IDCN2W@bootlin.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <CYNRLZ2XTOGY.3ANWB33IDCN2W@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25/01/2024 12:53, Théo Lebrun wrote:
-> Hi,
-> 
-> On Thu Jan 25, 2024 at 8:46 AM CET, Krzysztof Kozlowski wrote:
->> On 24/01/2024 17:41, Théo Lebrun wrote:
->>> Hello,
->>>
->>> On Wed Jan 24, 2024 at 8:05 AM CET, Krzysztof Kozlowski wrote:
->>>> On 23/01/2024 19:46, Théo Lebrun wrote:
->>>>> Add the Mobileye EyeQ5 clock controller driver. It might grow to add
->>>>> support for other platforms from Mobileye.
->>>>>
->>>>> It handles 10 read-only PLLs derived from the main crystal on board. It
->>>>> exposes a table-based divider clock used for OSPI. Other platform
->>>>> clocks are not configurable and therefore kept as fixed-factor
->>>>> devicetree nodes.
->>>>>
->>>>> Two PLLs are required early on and are therefore registered at
->>>>> of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
->>>>> UARTs.
->>>>>
->>>>
->>>>
->>>>> +#define OLB_PCSR1_RESET				BIT(0)
->>>>> +#define OLB_PCSR1_SSGC_DIV			GENMASK(4, 1)
->>>>> +/* Spread amplitude (% = 0.1 * SPREAD[4:0]) */
->>>>> +#define OLB_PCSR1_SPREAD			GENMASK(9, 5)
->>>>> +#define OLB_PCSR1_DIS_SSCG			BIT(10)
->>>>> +/* Down-spread or center-spread */
->>>>> +#define OLB_PCSR1_DOWN_SPREAD			BIT(11)
->>>>> +#define OLB_PCSR1_FRAC_IN			GENMASK(31, 12)
->>>>> +
->>>>> +static struct clk_hw_onecell_data *eq5c_clk_data;
->>>>> +static struct regmap *eq5c_olb;
->>>>
->>>> Drop these two. No file-scope regmaps for drivers. Use private container
->>>> structures.
->>>
->>> I wouldn't know how to handle the two steps then. Two clocks and the clk
->>> provider are registered at of_clk_init() using CLK_OF_DECLARE_DRIVER().
->>
->> Right, if some clocks have to be early, CLK_OF_DECLARE_DRIVER needs
->> static ones. But your commit subject says it is a platform driver and
->> all other pieces of this code is rather incompatible with this approach.
-> 
-> That is my bad on the commit subject. What do you refer to by "all other
-> pieces of this code is rather incompatible with this approach"?
+Update maxItems to 60 for gpio-reserved-ranges.
+Add input-enable property.
+Rearrange allOf
+Update example.
 
-That you depend on syscon.
+TEST=Run below command make sure there is no error.
+make DT_CHECKER_FLAGS=-m dt_binding_check
 
-If it was regular MMIO block in SoC space, then no problem.
-If you depend on anything else providing you regmap, then any initcall
-ordering is fragile and error-prone. Avoid.
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+---
+ .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 28 +++++++++++++++----
+ 1 file changed, 23 insertions(+), 5 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+index 7f30ec2f1e54..89ce0cb68834 100644
+--- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+@@ -45,7 +45,8 @@ properties:
+     maxItems: 1
+ 
+   gpio-reserved-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 60
+ 
+   vdd-supply:
+     description:
+@@ -85,6 +86,8 @@ patternProperties:
+ 
+       bias-disable: true
+ 
++      input-enable: true
++
+       output-high: true
+ 
+       output-low: true
+@@ -101,6 +104,9 @@ patternProperties:
+ 
+     additionalProperties: false
+ 
++allOf:
++  - $ref: pinctrl.yaml#
++
+ required:
+   - compatible
+   - reg
+@@ -112,9 +118,6 @@ required:
+ 
+ additionalProperties: false
+ 
+-allOf:
+-  - $ref: pinctrl.yaml#
+-
+ examples:
+   - |
+     #include <dt-bindings/interrupt-controller/arm-gic.h>
+@@ -133,6 +136,21 @@ examples:
+         interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+         interrupt-controller;
+         vdd-supply = <&p3v3>;
+-        gpio-reserved-ranges = <5 1>;
++        gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
++
++        pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
++        pinctrl-names = "default";
++        U62160_pins: cfg-pins {
++                        pins = "gp03", "gp16", "gp20", "gp50", "gp51";
++                        function = "gpio";
++                        input-enable;
++                        bias-pull-up;
++        };
++        U62160_ipins: icfg-pins {
++                        pins = "gp04", "gp17", "gp21", "gp52", "gp53";
++                        function = "gpio";
++                        input-enable;
++                        bias-pull-up;
++        };
+       };
+     };
 
-> 
-> I've tried to minimise the use of static variables. Therefore as soon as
-> the probe is started, we switch to the usual way of using a private
-> struct that contains our info.
-> 
->>
->> Do not use CLK_OF_DECLARE_DRIVER for cases where you have dependencies
->> because it forces you to manually order initcalls, which is exactly what
->> we do not want.
-> 
-> What should I be using? I got confirmation from Stephen that this
-> mixture of CLK_OF_DECLARE_DRIVER() + platform driver is what I should
-> be using as review in my V1.
-> 
-> https://lore.kernel.org/lkml/fa32e6fae168e10d42051b89197855e9.sboyd@kernel.org/
-
-I see. In such case I believe it is error on relying on syscon.
-
-Best regards,
-Krzysztof
+base-commit: ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7
+-- 
+2.42.0
 
 
