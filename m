@@ -1,215 +1,125 @@
-Return-Path: <linux-gpio+bounces-2606-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2607-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2E3C983DA2C
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:28:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1992583DA3D
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:34:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99F081F26A66
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:28:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD7351F27045
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:34:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86BB119452;
-	Fri, 26 Jan 2024 12:28:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1334014288;
+	Fri, 26 Jan 2024 12:34:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h8HtAbQy"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eiFrHeEP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307B119470;
-	Fri, 26 Jan 2024 12:28:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412D1B803
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 12:34:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706272123; cv=none; b=b6Ru7UBa+pmmw1E2rJV7bGyxnW80fr2+mIQG/pIVQ0FImSPQ+Sfjj6emfV42M4vshS6WLyjd6/bk7mKlby+cQ7+8ecOBuEPeOu4o2uCuPneAgbVjCw/2ypfaEc8swtgAvs6S3BN0/yIXZwrbHADTBVQKWN0b3KnznnZfIEJ0NwI=
+	t=1706272452; cv=none; b=YsVGJ2wxM2aUTAYwPHcY3Xt1B2/HUNG7yzYa6meWQ510cAAnsdN9SabncyeAO0NOLN3XpqKh5qmo1ic2hmsWBA3FS8BlN+XVMaaOxztkiumrFzZphqbM7vSN4RqkSzn+V0FVs99nUCuE76xx4SILRrfA211mkNbSH8BB09tRENQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706272123; c=relaxed/simple;
-	bh=Vj6ORDePH3R/SCmy1j34iKAMXNxYlW+3uZo0XKEH6zw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
-	 References:In-Reply-To; b=X4HeJIntarT5VGT8sVcH0QPtHNEc5OUWwdb73mhbVv7XezHaauAXrIyn7VwO/R5I0OsYG2stUFWylttCdBdqygT73IiD80KeihGXveyrJ1ztlKuR5fVmGvFZ02fWkznuriwrLCxpbICcfUGk7En0q/EymviaMmB50oIzYxRBbPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h8HtAbQy; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 5BA21240005;
-	Fri, 26 Jan 2024 12:28:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1706272111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=1sT5spjLeLixo4sBJ2a2pVOX888Y+rV9WQeRdJoVXTc=;
-	b=h8HtAbQyNTlxFbbz/RYzo39FybIHEds28Y39Hr7ZKTDH9cwjRUA9zG5aVdjXzFOek7LtUj
-	J3PRKO/21ruNpjj3y8SJGloMCY89cQcVd8qYYh6j6NWeXiC9kQa4gq4KjYzXDsepXLBPR4
-	D2xpjRYw1HEmIVCXD21F4azYovgAMa28k3grOxIKHeLj+QIDqZ9IZy1mZ56yz6JHNcTxI8
-	fx0xlaWMXwRB94ZxfFVX0oZBdkOwiwP5QOwqR1Bz7ENobrRpzxBYXo4otuRWjoo7acks1a
-	nmPvAHTU7XQM1l2Kwa1HgEkEkg7iX0RDwHIoaUdoOGF+rSMcmeJ0PwxYwf1hGw==
+	s=arc-20240116; t=1706272452; c=relaxed/simple;
+	bh=3IjwAENZiSvBgm1+TCTIKPp17huEQPjULECpXRVLdSc=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K4DDMgmj0uL/NG+oEnrFj6pnXUKSZf21fzStaf4pTxOSWmPor2frM25QJIQc4l6VipEr3pMG4j4W7R42llqjG16x7MUbGz0eCcQP5WrSrOdUXz/bIzJcdMooY+aW3kFWqxrcsFXPrLRsjEMmH9K+9Hr+3Whxmx+gXDDNEbU9048=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eiFrHeEP; arc=none smtp.client-ip=209.85.221.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-337cf4eabc9so383659f8f.3
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 04:34:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706272449; x=1706877249; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
+        b=eiFrHeEPeB4U5+ny/rkEvtJM4LBFbqLfOC5LuaxQfuNi5v2QKZGv0Xy4SWM/r9BnYw
+         gv94sH9edUypjJ+f9jW4+jas4cIq+Qx/Z18z+eh+HctXP139WjkJ0uLeFIabetQ9yMU6
+         HEDWHEE3afiV9+oqZGjXTHPOyGqcopnHewgSlTldjdvsBbJzlm1QJXp+xsm/lJRUwLbA
+         v+a/IfkOmSbI/zr816qFmu6dDn/9n6XKapBcbyIV8j2TQ+w0vv40FqgFQM7PTMsQKQmG
+         qlsMwHx8E1r4rL8HqB2DPB989vLx+ckRxJ2P3pTTg7LMVOjn62Ut6j0b843yCoORwVZ2
+         nihw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706272449; x=1706877249;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
+        b=QLY1qwGoI9N/Sql+qOFUyLCzEGULPuFVNPmquzW+FpKpd8aPjKSw97N+Om1DOcsdLs
+         fwvSc9murdYmW9yPKqp1cZrGCI7mfR6aBFHCxBxa9EGGLDNs/cJqIEiy71kXsL/3GHPC
+         eqPm9ugs+Gvl8LiuTGapDwMkBRIwY+aujJwIfC5HKIBppb+kotNOUSqZjP3/AycUzhGP
+         c0/zeFlZw0FWeIIkZUycP/ZuniUehJxVIgHyIIRZx5943utiDiyj8vx+eMwuxIQpId/R
+         GqHJBIwyh9e5GA+fAbvcSgjYs/80ypBAcoQv/IOtW2GfKxWfNwYF2698612L7DumFGCU
+         SgZA==
+X-Gm-Message-State: AOJu0YwDQAO33oBeZdr4N1PmFQ3Rubwaczw7XY4AHp9DKM1NLWaT0dHe
+	jSgsOvtDUbiXEdfFkBeZOiSTFcxsio5rnfq8gAIyo4lOCiRwhwaTV3h7qXCJCxJeKm0naRUsUla
+	u
+X-Google-Smtp-Source: AGHT+IGSi+euc5CvULgroSe+CYz/TOquvGv3zNUeHmiSkBBOJFVWHUdT7kDMryUMGp6vjyPeh2/Qxw==
+X-Received: by 2002:a05:600c:3d18:b0:40e:e66e:956c with SMTP id bh24-20020a05600c3d1800b0040ee66e956cmr243328wmb.159.1706272448465;
+        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5168:e401:d707:9e79])
+        by smtp.gmail.com with ESMTPSA id t18-20020adfe112000000b0033ade19da41sm426985wrz.76.2024.01.26.04.34.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: fixes for v6.8-rc2
+Date: Fri, 26 Jan 2024 13:34:05 +0100
+Message-Id: <20240126123405.35367-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 26 Jan 2024 13:28:29 +0100
-Message-Id: <CYOMZE0XIEIR.7Q1BDZCKX1E@bootlin.com>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB
- system controller
-Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Krzysztof
- Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
- "Linus Walleij" <linus.walleij@linaro.org>,
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
- <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
- <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
-X-Mailer: aerc 0.15.2
-References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
- <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
- <20240124151405.GA930997-robh@kernel.org>
- <CYN43TSPPPZ5.1VUA1CH95D8KJ@bootlin.com>
- <CYN4D0Z6600X.20W9VWX4BGNXX@bootlin.com>
- <CAL_JsqKHPdmafDvKCHZTNNzRAzq2Y34b2dqUXQD6WpE7z2k-jA@mail.gmail.com>
- <CYNRCGYA1PJ2.FYENLB4SRJWH@bootlin.com>
- <8054e01d-0a1e-45b6-b62a-25303e8f4593@linaro.org>
-In-Reply-To: <8054e01d-0a1e-45b6-b62a-25303e8f4593@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hello,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-On Fri Jan 26, 2024 at 12:52 PM CET, Krzysztof Kozlowski wrote:
-> On 25/01/2024 12:40, Th=C3=A9o Lebrun wrote:
-> > Hello,
-> >=20
-> > On Wed Jan 24, 2024 at 8:22 PM CET, Rob Herring wrote:
-> >> On Wed, Jan 24, 2024 at 11:40=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun=
-@bootlin.com> wrote:
-> >>> On Wed Jan 24, 2024 at 6:28 PM CET, Th=C3=A9o Lebrun wrote:
-> >>>> On Wed Jan 24, 2024 at 4:14 PM CET, Rob Herring wrote:
-> >>>>> On Tue, Jan 23, 2024 at 07:46:49PM +0100, Th=C3=A9o Lebrun wrote:
-> >=20
-> > [...]
-> >=20
-> >>>>>> +      };
-> >>>>>> +
-> >>>>>> +      pinctrl-b {
-> >>>>>> +        compatible =3D "mobileye,eyeq5-b-pinctrl";
-> >>>>>> +        #pinctrl-cells =3D <1>;
-> >>>>>> +      };
-> >>>>>> +    };
-> >>>>>
-> >>>>> This can all be simplified to:
-> >>>>>
-> >>>>> system-controller@e00000 {
-> >>>>>     compatible =3D "mobileye,eyeq5-olb", "syscon";
-> >>>>>     reg =3D <0xe00000 0x400>;
-> >>>>>     #reset-cells =3D <2>;
-> >>>>>     #clock-cells =3D <1>;
-> >>>>>     clocks =3D <&xtal>;
-> >>>>>     clock-names =3D "ref";
-> >>>>>
-> >>>>>     pins { ... };
-> >>>>> };
-> >>>>>
-> >>>>> There is no need for sub nodes unless you have reusable blocks or e=
-ach
-> >>>>> block has its own resources in DT.
-> >>>>
-> >>>> That is right, and it does simplify the devicetree as you have shown=
-.
-> >>>> However, the split nodes gives the following advantages:
-> >>>>
-> >>>>  - Devicetree-wise, it allows for one alias per function.
-> >>>>    `clocks =3D <&clocks EQ5C_PLL_CPU>` is surely more intuitive
-> >>>>    than `clocks =3D <&olb EQ5C_PLL_CPU>;`. Same for reset.
-> >>
-> >> clocks: resets: pinctrl: system-controller@e00000 {
-> >>
-> >>>>
-> >>>>  - It means an MFD driver must be implemented, adding between 100 to=
- 200
-> >>>>    lines of boilerplate code to the kernel.
-> >>
-> >> From a binding perspective, not my problem... That's Linux details
-> >> defining the binding. What about u-boot, BSD, future versions of Linux
-> >> with different structure?
-> >>
-> >> I don't think an MFD is required here. A driver should be able to be
-> >> both clock and reset provider. That's pretty common. pinctrl less so.
-> >=20
-> > @Rob & @Krzysztof: following Krzysztof's question about the memory map
-> > and adding ressources to the system-controller, I was wondering if the
-> > following approach would be more suitable:
->
-> More or less (missing ranges, unit addresses, lower-case hex etc).
+Linus,
 
-Yeah the details are not really on point, it was only a proposal
-highlighting a different way of dealing with the current situation.
-Looks like it is suitable to you.
-
-> > 	olb: system-controller@e00000 {
-> > 		compatible =3D "mobileye,eyeq5-olb", "syscon", "simple-mfd";
-> > 		reg =3D <0 0xe00000 0x0 0x400>;
-> > 		#address-cells =3D <1>;
-> > 		#size-cells =3D <1>;
-> >=20
-> > 		clocks: clock-controller {
-> > 			compatible =3D "mobileye,eyeq5-clk";
-> > 			reg =3D <0x02c 0x7C>;
-> > 			#clock-cells =3D <1>;
-> > 			clocks =3D <&xtal>;
-> > 			clock-names =3D "ref";
-> > 		};
-> >=20
-> > 		reset: reset-controller {
-> > 			compatible =3D "mobileye,eyeq5-reset";
-> > 			reg =3D <0x004 0x08>, <0x120 0x04>, <0x200 0x34>;
-> > 			reg-names =3D "d0", "d2", "d1";
-> > 			#reset-cells =3D <2>;
-> > 		};
-> >=20
-> > 		pinctrl0: pinctrl-a {
-> > 			compatible =3D "mobileye,eyeq5-a-pinctrl";
-> > 			reg =3D <0x0B0 0x30>;
-> > 		};
-> >=20
-> > 		pinctrl1: pinctrl-b {
-> > 			compatible =3D "mobileye,eyeq5-b-pinctrl";
-> > 			reg =3D <0x0B0 0x30>;
->
-> Duplicate reg?
-
-Yes, the mapping is intertwined. Else it could be three ressources per
-pinctrl. Just really small ones.
-
- - 0xB0 mapping   A
- - 0xB4 mapping   B
- - 0xB8
- - 0xBC
- - 0xC0 pull-down A
- - 0xC4 pull-up   A
- - 0xC8 pull-down B
- - 0xCC pull-up   B
- - 0xD0 drive-strength lo A
- - 0xD4 drive-strength hi A
- - 0xD8 drive-strength lo B
- - 0xDC drive-strength hi B
-
-0xB8 is unrelated (I2C speed & SPI CS). 0xBC is a hole.
+Please pull the following GPIO driver fixes for the next RC.
 
 Thanks,
+Bartosz
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+
+  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc2
+
+for you to fetch changes up to 84aef4ed59705585d629e81d633a83b7d416f5fb:
+
+  gpio: eic-sprd: Clear interrupt after set the interrupt type (2024-01-22 11:38:08 +0100)
+
+----------------------------------------------------------------
+gpio fixes for v6.8-rc2
+
+- add a quirk to GPIO ACPI handling to ignore touchpad wakeups
+  on GPD G1619-04
+- clear interrupt status bits (that may have been set before enabling
+  the interrupts) after setting the interrupt type in gpio-eic-sprd
+
+----------------------------------------------------------------
+Mario Limonciello (1):
+      gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-04
+
+Wenhua Lin (1):
+      gpio: eic-sprd: Clear interrupt after set the interrupt type
+
+ drivers/gpio/gpio-eic-sprd.c | 32 ++++++++++++++++++++++++++++----
+ drivers/gpio/gpiolib-acpi.c  | 14 ++++++++++++++
+ 2 files changed, 42 insertions(+), 4 deletions(-)
 
