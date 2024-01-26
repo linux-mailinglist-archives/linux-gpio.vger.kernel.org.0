@@ -1,111 +1,215 @@
-Return-Path: <linux-gpio+bounces-2605-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2606-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E95A83DA22
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:27:56 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E3C983DA2C
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:28:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D33DB23EE8
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:27:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99F081F26A66
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:28:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02CC18EB2;
-	Fri, 26 Jan 2024 12:27:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86BB119452;
+	Fri, 26 Jan 2024 12:28:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="js/pC6R3"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="h8HtAbQy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105761803E;
-	Fri, 26 Jan 2024 12:27:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307B119470;
+	Fri, 26 Jan 2024 12:28:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706272057; cv=none; b=ADSHvOfaSjWEQsELqflbd9Obq1s8z6f5OtpMejVr4Y6wkM59TixGEEIX8VEqY7hu7Ad2JElnl79iHOY2swIokEO6mKxj6aNOkLbFlryZqSbC8gtza5Gu3p0rI0kT3bhRy7DuoklaIkRLK1jsNAdvJrLfKlLJGjE2gppPeV9152w=
+	t=1706272123; cv=none; b=b6Ru7UBa+pmmw1E2rJV7bGyxnW80fr2+mIQG/pIVQ0FImSPQ+Sfjj6emfV42M4vshS6WLyjd6/bk7mKlby+cQ7+8ecOBuEPeOu4o2uCuPneAgbVjCw/2ypfaEc8swtgAvs6S3BN0/yIXZwrbHADTBVQKWN0b3KnznnZfIEJ0NwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706272057; c=relaxed/simple;
-	bh=KA05afh1+3sfbcKyDuyuFL2hqhLhvNewNqmQTsDO5T0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=U9CfEF6nu0UH7Feuchs2BDfi92RJGDXW7A0MOvdidLTe3IMZY7ntiAt5uwOS+Av1S9P0jjF5Tv+ejRdX4+zz7aDutZIrob4wBNPb8pVVAB1Wbptrmszv4Vnn+3YjKvz1iDKu5JeZB8K29luqGRIlUX/Q+I/6zQkaCfHJRQjH2mc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=js/pC6R3; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id 0CF4823298;
-	Fri, 26 Jan 2024 13:27:24 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1706272044;
-	bh=WEvYxyv4AaxaAKscG9gxq+rXAKFPX6EAGGEoH3y++zM=; h=From:To:Subject;
-	b=js/pC6R3Lh09GKBK4dceP/e9RsD2Sn/ctdz/R8jUego37LSKkS6YQaoau0XCNO7EG
-	 r62Xq+mG7vtm7t+EPGa5OTgn883EEUIa0aNJoO31RS3p42F56cPEACyMQiJVys6WcE
-	 UL1+y0gPaDJLApEKEfyh6H20lDJigb29bQqeeYYDkB+uel3QwlOgQZW0X1IC2J7A60
-	 lVA86dO2di3zhPkkKugDJjQNJ4wbKnuFPWnbE2+t22KzM+yxZPy1MvBXSVpLoP0Izn
-	 6b4ehYZNQBCLstWvoSNrTMBIwv041Cb4jt7VyWp/Nh3HwkdnZxLKEFi5+jBz91244b
-	 jQh5il7YEmyCg==
-Date: Fri, 26 Jan 2024 13:27:19 +0100
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Martin Kaiser <martin@kaiser.cx>
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] gpio: vf610: allow disabling the vf610 driver
-Message-ID: <20240126122719.GA13659@francesco-nb>
-References: <20240124205900.14791-1-martin@kaiser.cx>
- <20240124205900.14791-2-martin@kaiser.cx>
+	s=arc-20240116; t=1706272123; c=relaxed/simple;
+	bh=Vj6ORDePH3R/SCmy1j34iKAMXNxYlW+3uZo0XKEH6zw=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=X4HeJIntarT5VGT8sVcH0QPtHNEc5OUWwdb73mhbVv7XezHaauAXrIyn7VwO/R5I0OsYG2stUFWylttCdBdqygT73IiD80KeihGXveyrJ1ztlKuR5fVmGvFZ02fWkznuriwrLCxpbICcfUGk7En0q/EymviaMmB50oIzYxRBbPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=h8HtAbQy; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 5BA21240005;
+	Fri, 26 Jan 2024 12:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706272111;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1sT5spjLeLixo4sBJ2a2pVOX888Y+rV9WQeRdJoVXTc=;
+	b=h8HtAbQyNTlxFbbz/RYzo39FybIHEds28Y39Hr7ZKTDH9cwjRUA9zG5aVdjXzFOek7LtUj
+	J3PRKO/21ruNpjj3y8SJGloMCY89cQcVd8qYYh6j6NWeXiC9kQa4gq4KjYzXDsepXLBPR4
+	D2xpjRYw1HEmIVCXD21F4azYovgAMa28k3grOxIKHeLj+QIDqZ9IZy1mZ56yz6JHNcTxI8
+	fx0xlaWMXwRB94ZxfFVX0oZBdkOwiwP5QOwqR1Bz7ENobrRpzxBYXo4otuRWjoo7acks1a
+	nmPvAHTU7XQM1l2Kwa1HgEkEkg7iX0RDwHIoaUdoOGF+rSMcmeJ0PwxYwf1hGw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240124205900.14791-2-martin@kaiser.cx>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 26 Jan 2024 13:28:29 +0100
+Message-Id: <CYOMZE0XIEIR.7Q1BDZCKX1E@bootlin.com>
+To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
+ <robh@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB
+ system controller
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
+ <20240124151405.GA930997-robh@kernel.org>
+ <CYN43TSPPPZ5.1VUA1CH95D8KJ@bootlin.com>
+ <CYN4D0Z6600X.20W9VWX4BGNXX@bootlin.com>
+ <CAL_JsqKHPdmafDvKCHZTNNzRAzq2Y34b2dqUXQD6WpE7z2k-jA@mail.gmail.com>
+ <CYNRCGYA1PJ2.FYENLB4SRJWH@bootlin.com>
+ <8054e01d-0a1e-45b6-b62a-25303e8f4593@linaro.org>
+In-Reply-To: <8054e01d-0a1e-45b6-b62a-25303e8f4593@linaro.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Jan 24, 2024 at 09:58:57PM +0100, Martin Kaiser wrote:
-> The vf610 gpio driver is enabled by default for all i.MX machines,
-> without any option to disable it in a board-specific config file.
-> 
-> Most i.MX chipsets have no hardware for this driver. Change the default
-> to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
-> 
-> Add a text description after the bool type, this makes the driver
-> selectable by make config etc.
-> 
-> Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> ---
-> v4:
->  - add a new patch to enable COMPILE_TEST
-> 
-> v3:
->  - split the changes into three patches
-> 
-> v2:
->  - enable the vf610 gpio driver in the defconfig files for arm_v7
->    (i.MX7ULP) and arm64 (i.MX8QM, DXL, ULP and i.MX93)
-> 
->  drivers/gpio/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> index 1301cec94f12..353af1a4d0ac 100644
-> --- a/drivers/gpio/Kconfig
-> +++ b/drivers/gpio/Kconfig
-> @@ -711,7 +711,8 @@ config GPIO_UNIPHIER
->  	  Say yes here to support UniPhier GPIOs.
->  
->  config GPIO_VF610
-> -	def_bool y
-> +	bool "VF610 GPIO support"
-> +	default y if SOC_VF610
+Hello,
 
-any reason for having this default y for SOC_VF610, but not for the
-other SOC that uses the same variant (i.MX7ULP, ... ?).
+On Fri Jan 26, 2024 at 12:52 PM CET, Krzysztof Kozlowski wrote:
+> On 25/01/2024 12:40, Th=C3=A9o Lebrun wrote:
+> > Hello,
+> >=20
+> > On Wed Jan 24, 2024 at 8:22 PM CET, Rob Herring wrote:
+> >> On Wed, Jan 24, 2024 at 11:40=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun=
+@bootlin.com> wrote:
+> >>> On Wed Jan 24, 2024 at 6:28 PM CET, Th=C3=A9o Lebrun wrote:
+> >>>> On Wed Jan 24, 2024 at 4:14 PM CET, Rob Herring wrote:
+> >>>>> On Tue, Jan 23, 2024 at 07:46:49PM +0100, Th=C3=A9o Lebrun wrote:
+> >=20
+> > [...]
+> >=20
+> >>>>>> +      };
+> >>>>>> +
+> >>>>>> +      pinctrl-b {
+> >>>>>> +        compatible =3D "mobileye,eyeq5-b-pinctrl";
+> >>>>>> +        #pinctrl-cells =3D <1>;
+> >>>>>> +      };
+> >>>>>> +    };
+> >>>>>
+> >>>>> This can all be simplified to:
+> >>>>>
+> >>>>> system-controller@e00000 {
+> >>>>>     compatible =3D "mobileye,eyeq5-olb", "syscon";
+> >>>>>     reg =3D <0xe00000 0x400>;
+> >>>>>     #reset-cells =3D <2>;
+> >>>>>     #clock-cells =3D <1>;
+> >>>>>     clocks =3D <&xtal>;
+> >>>>>     clock-names =3D "ref";
+> >>>>>
+> >>>>>     pins { ... };
+> >>>>> };
+> >>>>>
+> >>>>> There is no need for sub nodes unless you have reusable blocks or e=
+ach
+> >>>>> block has its own resources in DT.
+> >>>>
+> >>>> That is right, and it does simplify the devicetree as you have shown=
+.
+> >>>> However, the split nodes gives the following advantages:
+> >>>>
+> >>>>  - Devicetree-wise, it allows for one alias per function.
+> >>>>    `clocks =3D <&clocks EQ5C_PLL_CPU>` is surely more intuitive
+> >>>>    than `clocks =3D <&olb EQ5C_PLL_CPU>;`. Same for reset.
+> >>
+> >> clocks: resets: pinctrl: system-controller@e00000 {
+> >>
+> >>>>
+> >>>>  - It means an MFD driver must be implemented, adding between 100 to=
+ 200
+> >>>>    lines of boilerplate code to the kernel.
+> >>
+> >> From a binding perspective, not my problem... That's Linux details
+> >> defining the binding. What about u-boot, BSD, future versions of Linux
+> >> with different structure?
+> >>
+> >> I don't think an MFD is required here. A driver should be able to be
+> >> both clock and reset provider. That's pretty common. pinctrl less so.
+> >=20
+> > @Rob & @Krzysztof: following Krzysztof's question about the memory map
+> > and adding ressources to the system-controller, I was wondering if the
+> > following approach would be more suitable:
+>
+> More or less (missing ranges, unit addresses, lower-case hex etc).
 
-Francesco
+Yeah the details are not really on point, it was only a proposal
+highlighting a different way of dealing with the current situation.
+Looks like it is suitable to you.
 
+> > 	olb: system-controller@e00000 {
+> > 		compatible =3D "mobileye,eyeq5-olb", "syscon", "simple-mfd";
+> > 		reg =3D <0 0xe00000 0x0 0x400>;
+> > 		#address-cells =3D <1>;
+> > 		#size-cells =3D <1>;
+> >=20
+> > 		clocks: clock-controller {
+> > 			compatible =3D "mobileye,eyeq5-clk";
+> > 			reg =3D <0x02c 0x7C>;
+> > 			#clock-cells =3D <1>;
+> > 			clocks =3D <&xtal>;
+> > 			clock-names =3D "ref";
+> > 		};
+> >=20
+> > 		reset: reset-controller {
+> > 			compatible =3D "mobileye,eyeq5-reset";
+> > 			reg =3D <0x004 0x08>, <0x120 0x04>, <0x200 0x34>;
+> > 			reg-names =3D "d0", "d2", "d1";
+> > 			#reset-cells =3D <2>;
+> > 		};
+> >=20
+> > 		pinctrl0: pinctrl-a {
+> > 			compatible =3D "mobileye,eyeq5-a-pinctrl";
+> > 			reg =3D <0x0B0 0x30>;
+> > 		};
+> >=20
+> > 		pinctrl1: pinctrl-b {
+> > 			compatible =3D "mobileye,eyeq5-b-pinctrl";
+> > 			reg =3D <0x0B0 0x30>;
+>
+> Duplicate reg?
+
+Yes, the mapping is intertwined. Else it could be three ressources per
+pinctrl. Just really small ones.
+
+ - 0xB0 mapping   A
+ - 0xB4 mapping   B
+ - 0xB8
+ - 0xBC
+ - 0xC0 pull-down A
+ - 0xC4 pull-up   A
+ - 0xC8 pull-down B
+ - 0xCC pull-up   B
+ - 0xD0 drive-strength lo A
+ - 0xD4 drive-strength hi A
+ - 0xD8 drive-strength lo B
+ - 0xDC drive-strength hi B
+
+0xB8 is unrelated (I2C speed & SPI CS). 0xBC is a hole.
+
+Thanks,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
