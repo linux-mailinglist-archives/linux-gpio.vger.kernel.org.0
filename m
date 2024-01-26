@@ -1,125 +1,159 @@
-Return-Path: <linux-gpio+bounces-2607-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1992583DA3D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:34:39 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 04A7A83DC26
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 15:37:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD7351F27045
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:34:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B06CB281749
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 14:37:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1334014288;
-	Fri, 26 Jan 2024 12:34:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58F391BF53;
+	Fri, 26 Jan 2024 14:37:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="eiFrHeEP"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jYJ+UGbM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C412D1B803
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 12:34:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54D01CD07;
+	Fri, 26 Jan 2024 14:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706272452; cv=none; b=YsVGJ2wxM2aUTAYwPHcY3Xt1B2/HUNG7yzYa6meWQ510cAAnsdN9SabncyeAO0NOLN3XpqKh5qmo1ic2hmsWBA3FS8BlN+XVMaaOxztkiumrFzZphqbM7vSN4RqkSzn+V0FVs99nUCuE76xx4SILRrfA211mkNbSH8BB09tRENQ=
+	t=1706279863; cv=none; b=Ozq8UEVlYUZFZabQ+tSn1Q62C6lFNo3zGeVzlR2fLm1ZJFZkt+enfPmIzvd8On4GrRvXnYgN9nEAB8SbhCwZP3hb7MuUzysBDNtvyS/0upVH4W1yHVU0EnQ+Q/thq02gMU7MV0uBuFAOsCP4vnhftA6H9MzxFCIFRhu8/S7N7pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706272452; c=relaxed/simple;
-	bh=3IjwAENZiSvBgm1+TCTIKPp17huEQPjULECpXRVLdSc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=K4DDMgmj0uL/NG+oEnrFj6pnXUKSZf21fzStaf4pTxOSWmPor2frM25QJIQc4l6VipEr3pMG4j4W7R42llqjG16x7MUbGz0eCcQP5WrSrOdUXz/bIzJcdMooY+aW3kFWqxrcsFXPrLRsjEMmH9K+9Hr+3Whxmx+gXDDNEbU9048=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=eiFrHeEP; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-337cf4eabc9so383659f8f.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 04:34:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706272449; x=1706877249; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
-        b=eiFrHeEPeB4U5+ny/rkEvtJM4LBFbqLfOC5LuaxQfuNi5v2QKZGv0Xy4SWM/r9BnYw
-         gv94sH9edUypjJ+f9jW4+jas4cIq+Qx/Z18z+eh+HctXP139WjkJ0uLeFIabetQ9yMU6
-         HEDWHEE3afiV9+oqZGjXTHPOyGqcopnHewgSlTldjdvsBbJzlm1QJXp+xsm/lJRUwLbA
-         v+a/IfkOmSbI/zr816qFmu6dDn/9n6XKapBcbyIV8j2TQ+w0vv40FqgFQM7PTMsQKQmG
-         qlsMwHx8E1r4rL8HqB2DPB989vLx+ckRxJ2P3pTTg7LMVOjn62Ut6j0b843yCoORwVZ2
-         nihw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706272449; x=1706877249;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=0soW0v5yVfsW4Bsvs0S98TR5cuZkvArabmQNCI3ohqs=;
-        b=QLY1qwGoI9N/Sql+qOFUyLCzEGULPuFVNPmquzW+FpKpd8aPjKSw97N+Om1DOcsdLs
-         fwvSc9murdYmW9yPKqp1cZrGCI7mfR6aBFHCxBxa9EGGLDNs/cJqIEiy71kXsL/3GHPC
-         eqPm9ugs+Gvl8LiuTGapDwMkBRIwY+aujJwIfC5HKIBppb+kotNOUSqZjP3/AycUzhGP
-         c0/zeFlZw0FWeIIkZUycP/ZuniUehJxVIgHyIIRZx5943utiDiyj8vx+eMwuxIQpId/R
-         GqHJBIwyh9e5GA+fAbvcSgjYs/80ypBAcoQv/IOtW2GfKxWfNwYF2698612L7DumFGCU
-         SgZA==
-X-Gm-Message-State: AOJu0YwDQAO33oBeZdr4N1PmFQ3Rubwaczw7XY4AHp9DKM1NLWaT0dHe
-	jSgsOvtDUbiXEdfFkBeZOiSTFcxsio5rnfq8gAIyo4lOCiRwhwaTV3h7qXCJCxJeKm0naRUsUla
-	u
-X-Google-Smtp-Source: AGHT+IGSi+euc5CvULgroSe+CYz/TOquvGv3zNUeHmiSkBBOJFVWHUdT7kDMryUMGp6vjyPeh2/Qxw==
-X-Received: by 2002:a05:600c:3d18:b0:40e:e66e:956c with SMTP id bh24-20020a05600c3d1800b0040ee66e956cmr243328wmb.159.1706272448465;
-        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:5168:e401:d707:9e79])
-        by smtp.gmail.com with ESMTPSA id t18-20020adfe112000000b0033ade19da41sm426985wrz.76.2024.01.26.04.34.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 04:34:08 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.8-rc2
-Date: Fri, 26 Jan 2024 13:34:05 +0100
-Message-Id: <20240126123405.35367-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1706279863; c=relaxed/simple;
+	bh=xgBJPPCeFx6F8RvuJZb3CDZIbr5zJcVGTJYWir/0iIY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PtZHDb8awaOPUmsyum+NuRw91odl5U5e7zn9DTT2rciTigcoqt7pPYt5z3YCr3v5L1ngVdCc+6ZeoQjAV6DWLqWOvz5DZR8UenBFVZXsMaNElMCe1ycIJqHge4PVKbkwp0vgmVKgiHDGH5SgLDZQiKM9A/YyA0wMEIdk3ZgKsPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jYJ+UGbM; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A5F94000C;
+	Fri, 26 Jan 2024 14:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1706279851;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=62/qYpK4+YlKzbTb8Bu4FQMVmVipXLL21WAgCC0RYzA=;
+	b=jYJ+UGbML212yaitjT4mp/B0Uhj+CdJw4jD57IsqiYRIgwE1hfwmCP4ECofgfoBbqQnNM1
+	e5uVAXyA5/zPYjCo9OvZwSdnBssk0iN6GMJX+eWzY2rE2ctgKmhw9xAwV5f+86HVqVGSnY
+	NoIlCcSt5qwkRpmaPKkO78NxWwWIP8nRtDmqwyGY/y5YhHSNYsmLZPyqOuo841+KBD4ys/
+	3h94YI4MafeM0g6YI+/sN6zd2r5qGVHN48dh1XVQ2ebTqiP7bvyrtsyiXGFiE798lcgEDM
+	vNhrh6WJx/tIpjPMgqDkRa7oXoJUA1g3LymgdRex25VzqieDKKrJy4xV8WqVJw==
+From: Thomas Richard <thomas.richard@bootlin.com>
+Subject: [PATCH v2 00/15] Add suspend to ram support for PCIe on J7200
+Date: Fri, 26 Jan 2024 15:36:42 +0100
+Message-Id: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAHrDs2UC/3WNTQ6CMBBGr0K6dsy00iCuvIdh0ZZRxmhLOoRoC
+ He3sHf5vp+8RQllJlGXalGZZhZOsYA5VCoMLj4IuC+sDJoaNRp4NgYRxsAEYjJQ8Nq1TUsn26h
+ y8k4IfHYxDNvt7WSivBVjpjt/dtOtKzywTCl/d/Gst/SvY9aAcK7J2t7ZMsGrT2l6cTyG9Fbdu
+ q4/Q9ZwwccAAAA=
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+ Tony Lindgren <tony@atomide.com>, 
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
+ Aaro Koskinen <aaro.koskinen@iki.fi>, 
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
+ Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, 
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>, 
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com, 
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com, 
+ Thomas Richard <thomas.richard@bootlin.com>
+X-Mailer: b4 0.12.0
+X-GND-Sasl: thomas.richard@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
 
-Linus,
+In RC mode, the reset pin for endpoints is managed by a gpio expander on a
+i2c bus. This pin shall be managed in suspend_noirq() and resume_noirq().
+The suspend/resume has been moved to suspend_noirq()/resume_noirq() for
+pca953x (expander) and pinctrl-single.
 
-Please pull the following GPIO driver fixes for the next RC.
+To do i2c accesses during suspend_noirq/resume_noirq, we need to force the
+wakeup of the i2c controller (which is autosuspended) during suspend
+callback. 
+It's the only way to wakeup the controller if it's autosuspended, as
+runtime pm is disabled in suspend_noirq and resume_noirq.
 
-Thanks,
-Bartosz
+The main change in this v2 is the add of mux_chip_resume() function in the
+mux core.
+This function restores the state of mux-chip using cached state. It's used
+by mmio driver in the resume_noirq() callback.
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+---
+Changes in v2:
+- all: fix commits messages.
+- all: use DEFINE_NOIRQ_DEV_PM_OPS and pm_sleep_ptr macros.
+- all: remove useless #ifdef CONFIG_PM.
+- pinctrl-single: drop dead code
+- mux: add mux_chip_resume() function in mux core.
+- mmio: resume sequence is now a call to mux_chip_resume().
+- phy-cadence-torrent: fix typo in resume sequence (reset_control_assert()
+  instead of reset_control_put()).
+- phy-cadence-torrent: use PHY instead of phy.
+- pci-j721e: do not shadow cdns_pcie_host_setup return code in resume
+  sequence.
+- pci-j721e: drop dead code.
+- Link to v1: https://lore.kernel.org/r/20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+---
+Thomas Richard (11):
+      gpio: pca953x: move suspend()/resume() to suspend_noirq()/resume_noirq()
+      pinctrl: pinctrl-single: move suspend()/resume() callbacks to noirq
+      i2c: omap: wakeup the controller during suspend() callback
+      mux: add mux_chip_resume() function
+      phy: ti: phy-j721e-wiz: make wiz_clock_init callable multiple times
+      phy: ti: phy-j721e-wiz: add resume support
+      phy: cadence-torrent: extract calls to clk_get from cdns_torrent_clk
+      phy: cadence-torrent: register resets even if the phy is already configured
+      phy: cadence-torrent: add already_configured to struct cdns_torrent_phy
+      phy: cadence-torrent: remove noop_ops phy operations
+      phy: cadence-torrent: add suspend and resume support
 
-are available in the Git repository at:
+Théo Lebrun (4):
+      mux: mmio: add resume support
+      PCI: cadence: add resume support to cdns_pcie_host_setup()
+      PCI: j721e: add reset GPIO to struct j721e_pcie
+      PCI: j721e: add suspend and resume support
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc2
+ drivers/gpio/gpio-pca953x.c                        |   7 +-
+ drivers/i2c/busses/i2c-omap.c                      |  14 +++
+ drivers/mux/core.c                                 |  27 +++++
+ drivers/mux/mmio.c                                 |  12 ++
+ drivers/pci/controller/cadence/pci-j721e.c         |  93 ++++++++++++++--
+ drivers/pci/controller/cadence/pcie-cadence-host.c |  49 +++++----
+ drivers/pci/controller/cadence/pcie-cadence-plat.c |   2 +-
+ drivers/pci/controller/cadence/pcie-cadence.h      |   4 +-
+ drivers/phy/cadence/phy-cadence-torrent.c          | 122 +++++++++++++++------
+ drivers/phy/ti/phy-j721e-wiz.c                     |  95 ++++++++++++----
+ drivers/pinctrl/pinctrl-single.c                   |  28 ++---
+ include/linux/mux/driver.h                         |   1 +
+ 12 files changed, 343 insertions(+), 111 deletions(-)
+---
+base-commit: 00ff0f9ce40db8e64fe16c424a965fd7ab769c42
+change-id: 20240102-j7200-pcie-s2r-ecb1a979e357
 
-for you to fetch changes up to 84aef4ed59705585d629e81d633a83b7d416f5fb:
+Best regards,
+-- 
+Thomas Richard <thomas.richard@bootlin.com>
 
-  gpio: eic-sprd: Clear interrupt after set the interrupt type (2024-01-22 11:38:08 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.8-rc2
-
-- add a quirk to GPIO ACPI handling to ignore touchpad wakeups
-  on GPD G1619-04
-- clear interrupt status bits (that may have been set before enabling
-  the interrupts) after setting the interrupt type in gpio-eic-sprd
-
-----------------------------------------------------------------
-Mario Limonciello (1):
-      gpiolib: acpi: Ignore touchpad wakeup on GPD G1619-04
-
-Wenhua Lin (1):
-      gpio: eic-sprd: Clear interrupt after set the interrupt type
-
- drivers/gpio/gpio-eic-sprd.c | 32 ++++++++++++++++++++++++++++----
- drivers/gpio/gpiolib-acpi.c  | 14 ++++++++++++++
- 2 files changed, 42 insertions(+), 4 deletions(-)
 
