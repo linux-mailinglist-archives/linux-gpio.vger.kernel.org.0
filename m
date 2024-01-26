@@ -1,196 +1,110 @@
-Return-Path: <linux-gpio+bounces-2634-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2635-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24A583E091
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 18:40:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 747C183E1D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 19:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C8861F25379
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 17:40:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A5821F286AF
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 18:45:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D5BC1E49F;
-	Fri, 26 Jan 2024 17:40:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6CE0022F19;
+	Fri, 26 Jan 2024 18:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="IcJNPb/3"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=ecbiz253.inmotionhosting.com header.i=@ecbiz253.inmotionhosting.com header.b="zk2bh1YQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+Received: from se4m-iad1.servconfig.com (se4m-iad1.servconfig.com [199.250.217.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0751EB49
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 17:40:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 512C822319
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 18:41:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=199.250.217.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706290808; cv=none; b=txAG1Jyjy4RP57JlgNNjf3/koQK2ElNfH0zxWoUVivhYpD70DPnGnI8Uv14S87Z5onqqE8cPIg4Vfa5Uvo0AU1Ha0qa0DiR/pvejRwa2QlasWZCP/dxY1/gQW/jYSM27L/dtCTVpF3FqPMs0X59BOBKxONI5aTXPN5+rORji9NE=
+	t=1706294521; cv=none; b=auulOvmnwD6rMW2KGX2FBqcACSnm1kzeSuCs1DOmXgyHWMgd7aImzgURIU9l/FEO9jAPGdYPWd1EJrAWBGSwRb8Cy4JCNxNFgnzURyr/iyKG7rBbe6Nv2BLwkwC9U5J8cGzMGRMkRVWMTN0PARQMr2DkM2H8s+E8jlyXYaQ21N0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706290808; c=relaxed/simple;
-	bh=etkUkQID+RoEF8SVcQ9cI9acfrhrNZve9VwZxkRC9sk=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=TTQfW4SO9RD9bQsjqz1Zw6z7k6hVCpV1Q46zRXq0lN0hr8PDv17o81d70Galf/QveOjpT1uar8uQrfWiO39imbwl63iyEctN7aM74jdII5py2Mrb0zlremlnYC6CJTKaho7ZIOe+FcTbnDYROCW+xhB5d29omqry0QHkraUXI4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=IcJNPb/3; arc=none smtp.client-ip=134.134.136.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706290806; x=1737826806;
-  h=date:from:to:cc:subject:message-id;
-  bh=etkUkQID+RoEF8SVcQ9cI9acfrhrNZve9VwZxkRC9sk=;
-  b=IcJNPb/3JXsD5FSoG+LKJfm3FLdf5/sB5YP1/xzgbDmnad5oN3Nn7AiL
-   Nvt00Q27cIBiVLD5GMIfRDfsQlF+RecDiGqNt9Jx/z6WLOyHqa87LPAx3
-   oP45vkUq6x69+BjwiE+My4ehzNJqTOPaAxAXdRag3OsYoXvQ5oSBDD6Gq
-   Vjr5YYV1HuRU2FZEf96iOE10QGFyG3IK5Qi+K1WMoZMBE36lE5THWJu8E
-   FY4G61ahCcxGBKKVntNykYt4LTswNGcN2S1KaNhEctjRnqv9X7PAF2p5A
-   cBRoC65BQBcxxqYccu44m/LeqP+siUmgrm6YdDVYxGY06g720kfnZVQog
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10964"; a="406260275"
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="406260275"
-Received: from fmviesa003.fm.intel.com ([10.60.135.143])
-  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Jan 2024 09:40:06 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,216,1701158400"; 
-   d="scan'208";a="2723928"
-Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
-  by fmviesa003.fm.intel.com with ESMTP; 26 Jan 2024 09:40:05 -0800
-Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rTQBO-0001FS-27;
-	Fri, 26 Jan 2024 17:40:02 +0000
-Date: Sat, 27 Jan 2024 01:39:16 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+	s=arc-20240116; t=1706294521; c=relaxed/simple;
+	bh=aXrvnzwsRKXdLHFUt4fxIvqsOSfnURKL9ZyR9Q5oXeg=;
+	h=To:Subject:Date:From:Cc:Message-ID:MIME-Version:Content-Type; b=CtCfJFIlbMPfvwvrMDIrV/E5al4yFaCFSbUO6k5DDJGcGou4W1QN2lwMt1TNdiwZEVd+3cIT60WAdIO20pw5zg1UiGmjTLX6/k5bfkNEuEyajBPebvkK2TEJ+V4BO7UcRIXHHJXM7KoCBksnOvbythtFhOmaC7H/ABYoig0y5/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tamimilaw.com; spf=none smtp.mailfrom=ecbiz253.inmotionhosting.com; dkim=fail (0-bit key) header.d=ecbiz253.inmotionhosting.com header.i=@ecbiz253.inmotionhosting.com header.b=zk2bh1YQ reason="key not found in DNS"; arc=none smtp.client-ip=199.250.217.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tamimilaw.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ecbiz253.inmotionhosting.com
+Received: from ecbiz253.inmotionhosting.com ([199.250.205.15])
+	by se4-iad1.servconfig.com with esmtps (TLSv1.2:AES128-GCM-SHA256:128)
+	(Exim 4.92)
+	(envelope-from <reemas6@ecbiz253.inmotionhosting.com>)
+	id 1rTQT6-0006HT-B4
+	for linux-gpio@vger.kernel.org; Fri, 26 Jan 2024 12:58:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=ecbiz253.inmotionhosting.com; s=default; h=Content-Type:MIME-Version:
+	Message-ID:Cc:From:Date:Subject:To:Sender:Reply-To:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=vjEyx1j3dTsri9B0kM9kwdjEjrVWl1VQJR+nS5TKXWI=; b=zk2bh1YQ22hHOvb2UNmLme2mX8
+	7ZDgEueqAPXUSNlcf4Dyq7A55IjlTLCCC98Ym/ZSJetXZ7vkDMW4yv/7zuaSAKtkFLy9mcO2ZOeQs
+	69I9uNH4vjk5KEKlfsG8Y/A6XpKh0DRX7HuBOfyMAEWzGXivwow+sNqcVCa1XLg/FHKRT668pNyB7
+	lj1/rDh6LjnKVM/8Qv5vZmIC8inqnNa68AAZoe7Z99kvR4mZ5mC8p+aRBN7AIfPKqmNd6dmOq46DM
+	pMo1SyhDDav7jbBfJU919kkTevhJNLMOj1spEARiXM/Ea7KpvIOGZ0Lk95t0/24XHq8x52plSBXmH
+	M68UY49w==;
+Received: from reemas6 by ecbiz253.inmotionhosting.com with local (Exim 4.96.2)
+	(envelope-from <reemas6@ecbiz253.inmotionhosting.com>)
+	id 1rTQT4-008dbw-2W;
+	Fri, 26 Jan 2024 12:58:18 -0500
+To: info@tamimilaw.com
+Subject: Tamimi Law Firm
+X-PHP-Script: www.tamimilaw.com/index.php for 185.107.44.168
+X-PHP-Originating-Script: 2938:class-phpmailer.php
+Date: Fri, 26 Jan 2024 17:58:18 +0000
+From: OccurbMer <info@tamimilaw.com>
 Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 42969726a19f796f0e731ec74347fd8a0e4e91a2
-Message-ID: <202401270114.01JekAMk-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+Message-ID: <3d45201ab4ae7cbedf3c2f24cc0a592a@www.tamimilaw.com>
+X-Mailer: PHPMailer 5.2.27 (https://github.com/PHPMailer/PHPMailer)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+X-Get-Message-Sender-Via: ecbiz253.inmotionhosting.com: authenticated_id: reemas6/from_h
+X-Authenticated-Sender: ecbiz253.inmotionhosting.com: info@tamimilaw.com
+X-SpamExperts-Domain: ecbiz253.inmotionhosting.com
+X-SpamExperts-Username: 199.250.205.15
+Authentication-Results: servconfig.com; auth=pass smtp.auth=199.250.205.15@ecbiz253.inmotionhosting.com
+X-SpamExperts-Outgoing-Class: unsure
+X-SpamExperts-Outgoing-Evidence: Combined (0.66)
+X-Recommended-Action: accept
+X-Filter-ID: Pt3MvcO5N4iKaDQ5O6lkdGlMVN6RH8bjRMzItlySaT/RH/7bc/b5Oo0fjLQ5L+rhPUtbdvnXkggZ
+ 3YnVId/Y5jcf0yeVQAvfjHznO7+bT5xvu48jqvX3i7VOwLTfG0q4t8C9mOBdONdnsxgsk1D2pw/C
+ h5SE4jAyhe1COeASyU8EbSs2yDUkVjY8Gik7OcQb4ld5rdi2ZxohSIq+dqifZprsKA7X1nD8+cqo
+ UNcP01YLxDWqmOeXOj8DjjetIA9A8zFdWkqyD3N+8l+vr11MivoGl6x5IEQu/7SNwo15lcr8yJXD
+ iv0qLE/y9YTLv2XrmY1AHeFZNir+/NqRxzrlkPstpxGjcedzW/hPrHm5wRPr/tZuGMih5UwiCxDF
+ tk8Z9UuKK2wtu8CG6m9SfMMg0ONwxuyQxxpFBZS72lACfRLGYP/Zj29Dpz4JZGFu9hfzncPlxpSF
+ tW2+oi0GqiLOQS307bRSOTAjS/4s6XDTkbgFL6LLI2ptPx1Qxcwni1QIyPobftl8Awtx4/lo0c+3
+ bus1RR69zBST2NQJbDysaFJoMMMh30z0ou3Uma6ICBqoxjDwtoDi7Rk3B768Y3DGMaa5zn3o6MtK
+ 8pf0hPbAkeCZME8HeiOTBXPmeRcbGamAcxw3qqhc+N6cuEg4XWh5Fph5tXd8LJL2bPGkjWrU0LPh
+ ASa5Hu8mDNKcMzFqCD5cTs2u2+bDHHstma/GGxUqy2LvAuZiee2RvYPUH2waSBeeeE7TKukYxKs+
+ 3/uihh4Y0bRbmskEhysblbPkZqqEaqntKr6+crm+rffkaQ6ZgOj00PT1ItsoA8WRq+3RHbl/rw06
+ R6bxmsiw7FImj0yCe4LUAj1reKtuJ/PKbNBhf49EP9o1UyIjjwY0VbJ/qtEALXbO3e6RwWzSgi+P
+ BXowMTt3CeLe/bdxen3q6y2erDIVPbW872D0fvf0zQF3V2+2fqb5R4VemuUI6bcEARsm0LmB3IEc
+ R2wC1GXioB5iI+G0rIpjO6/1LqHA1UlOUbsqK/JdWvgd2/FibEdMM0JnxoJD+y1p9j5ikksc3sAo
+ UyXoxvK5SPrMTWfoSOFwJgH2A39oZd3PTZd2algiH7tb/A0PmPzVYF4AmWsqzkcxSSj7TaDqKw3e
+ DGcjFdLc9KlD
+X-Report-Abuse-To: spam@se1-lax1.servconfig.com
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 42969726a19f796f0e731ec74347fd8a0e4e91a2  Documentation: gpio: describe uAPI behaviour for unsupported config
+From: OccurbMer <linux-gpio@vger.kernel.org>
+Subject: tamimilaw.com
 
-elapsed time: 1891m
+Mobile Number:
+83528817324
 
-configs tested: 107
-configs skipped: 3
-
-The following configs have been built successfully.
-More configs may be tested in the coming days.
-
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240127   gcc  
-arc                   randconfig-002-20240127   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   gcc  
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240127   gcc  
-arm                   randconfig-002-20240127   gcc  
-arm                   randconfig-003-20240127   gcc  
-arm                   randconfig-004-20240127   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                                defconfig   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   clang
-i386                              allnoconfig   clang
-i386                             allyesconfig   clang
-i386         buildonly-randconfig-001-20240125   gcc  
-i386         buildonly-randconfig-002-20240125   gcc  
-i386         buildonly-randconfig-003-20240125   gcc  
-i386         buildonly-randconfig-004-20240125   gcc  
-i386         buildonly-randconfig-005-20240125   gcc  
-i386         buildonly-randconfig-006-20240125   gcc  
-i386                                defconfig   gcc  
-i386                  randconfig-001-20240125   gcc  
-i386                  randconfig-002-20240125   gcc  
-i386                  randconfig-003-20240125   gcc  
-i386                  randconfig-004-20240125   gcc  
-i386                  randconfig-005-20240125   gcc  
-i386                  randconfig-006-20240125   gcc  
-i386                  randconfig-011-20240125   clang
-i386                  randconfig-012-20240125   clang
-i386                  randconfig-013-20240125   clang
-i386                  randconfig-014-20240125   clang
-i386                  randconfig-015-20240125   clang
-i386                  randconfig-016-20240125   clang
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   clang
-mips                             allyesconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   clang
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-riscv                            allmodconfig   gcc  
-riscv                             allnoconfig   clang
-riscv                            allyesconfig   gcc  
-riscv                               defconfig   gcc  
-s390                              allnoconfig   gcc  
-s390                                defconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                                  defconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                             defconfig   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   clang
-um                                  defconfig   gcc  
-um                             i386_defconfig   gcc  
-um                           x86_64_defconfig   gcc  
-x86_64                            allnoconfig   gcc  
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240127   gcc  
-x86_64       buildonly-randconfig-002-20240127   gcc  
-x86_64       buildonly-randconfig-003-20240127   gcc  
-x86_64       buildonly-randconfig-004-20240127   gcc  
-x86_64       buildonly-randconfig-005-20240127   gcc  
-x86_64       buildonly-randconfig-006-20240127   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240127   clang
-x86_64                randconfig-002-20240127   clang
-x86_64                randconfig-003-20240127   clang
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
+Message Body:
+Beloved, your love is the symphony of my life. 
+Whenever you find some free time, could you please visit my page using this link: https://tinyurl.com/yqgk6238 I've uploaded some fresh photos and updates from recent events there. It would be wonderful to catch up and share our experiences.
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+This e-mail was sent from Tamimi Law Firm.
+
 
