@@ -1,310 +1,201 @@
-Return-Path: <linux-gpio+bounces-2591-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D21C083D92D
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:18:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1034283D9A1
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:51:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7BFD3B307C4
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 10:57:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91DD51F24413
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 11:51:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 469D614F64;
-	Fri, 26 Jan 2024 10:56:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E978B14015;
+	Fri, 26 Jan 2024 11:51:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G3y0vTya"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from andre.telenet-ops.be (andre.telenet-ops.be [195.130.132.53])
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC55F13FED
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 10:56:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B6B6175AE
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 11:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706266615; cv=none; b=MzLpNMKK3Pz/Kerc85XydC9FT7GFl2h8WqWNTaV7onCRIZdtpDMqlpwkMeoNDseDNc7YTWJlYsUgO8Bke0nuEjNYOlqpWiizdCXpi/yXP1k8HCf+zJbV0Ak+d7ZDpwgVGdglJctxK0OWdioEtbglLY+m07/a3ht9z+Y9BeXqG5Q=
+	t=1706269890; cv=none; b=T5nay6ND1w+a9vLuaXJiLL1dXKx5EcCEM0qa4gqy/q1gTfmFtwQ1hxWxcP3a+Vae/n4z/h23PSzdAzXnWsJ/TURfJGlO4Em0TQ35j0FguWuC6Q0ZYo1Ma033VN4uXB7IWA7PfTAxEaAC7/pR+99tHlalMAg9VBleZ4ksCPW6TGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706266615; c=relaxed/simple;
-	bh=Zf8NWOrDXkAHvWRVwb+qL8k1bUAAd2J3jd99PP4js8o=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MljqqQmoDPSis/35mz87QpOUwBiuV7N/wjpcis6SPVABd6CN8Vbz/eXPlkioXujAfVEY2DhqSG8dhMZn0b4xPj9c4SrRFJtbaUHabFdwrjddcikt8d4rYvzJw7UPP80qhKx9iXphWZa/QDC/D4waxKwTeaXpxALySXyHA42fZ8k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:8d64:ae04:ce87:de06])
-	by andre.telenet-ops.be with bizsmtp
-	id fNwn2B00F1AdMdB01NwnVF; Fri, 26 Jan 2024 11:56:47 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rTJsL-00GWgr-9D;
-	Fri, 26 Jan 2024 11:56:47 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rTJh0-00G5TM-6g;
-	Fri, 26 Jan 2024 11:44:14 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	Cong Dang <cong.dang.xn@renesas.com>,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 08/14] pinctrl: renesas: r8a779h0: Add HSCIF pins, groups, functions
-Date: Fri, 26 Jan 2024 11:44:06 +0100
-Message-Id: <27577af0042928e4b673a2774c68a14c4ea7c157.1706264667.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <cover.1706264667.git.geert+renesas@glider.be>
-References: <cover.1706264667.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1706269890; c=relaxed/simple;
+	bh=OtD6qtzg55sWzM5Z8Rb+7F4VnGdyNRhHaoa+dKRUkVg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s2zYRIsH6GsOau5ZKlZ7KBbq252Asp/eWtULnXi2osTX/CXLXaGC/S7ZPPEd/+dEmDJRJtuK48hKnoBDbB/TDQuFFzfV44qoAIrcB0PzBgUwpkQuV7Yzwxj6UahY7iO1e2K7NeTt2XG0cMaGUj1Gta0isk49rpSgRyDsSeYw92A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G3y0vTya; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-55a356f8440so425501a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 03:51:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1706269887; x=1706874687; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=RO2vy9Gohf4fesVKOSGHEr8L+y5rrbvowDx96zw2txI=;
+        b=G3y0vTyad9eY74vZMWtz7BihfGIZe1YJg6QI5Ey9eaCnpG5KeHUtX5FJnZEMUqSioA
+         dAKRz0T4K4fsPVlq2Ng/hCJHEup/kpkkZ/uthCTs9VfeZxEVE7x2Y5neMA/A98N/EtVM
+         nKY6x+QvjBh2bYjDVCJGcmvBhs2LEueSlIPqbUdJWk140rxcrcQE+QHL/bXHZFAiWZRp
+         SiXIkmGh9dlCnwL6f5sksgcpOMyCHFmilZyntyYjG0yj7ZfSOR09WLSAGCQ2CFNZY1aP
+         ieIXWfxzWfxzU6UdTDUsVjLu4qBMfHQ2VNW418Y8NYP82kIPNI0yePkRHTMEgl+7oVYA
+         myXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706269887; x=1706874687;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=RO2vy9Gohf4fesVKOSGHEr8L+y5rrbvowDx96zw2txI=;
+        b=KsKKzaNMpRA3bDuneMb38Xpuwce1bTi5VsPiicdy02q1yedNm/UdBKTLvqrzIkxwGw
+         tcf1RiuXx3Pthrw6uKytvRKFwSIk2wDy3pCTUDEWwBB/0IPSk173izb0fWrt2S8MmqGs
+         3E9GEUpaHoFQ1t2owEYLiK0tYHu2Ygt0YKunus5kG7fb7TMhBlwwWW/LmgUZI9RRqc50
+         EFPpByKo24SAqcWPHq0feR3zfmkncb6IIUUoboXKh+CmYMvJOk4vCBStQx6z+MLD5E7c
+         w9eor/V7hpaRlo364Iclp3WyGUUvrATz9wWrcHFPNdpnzuMaVky412mUEWRo8HksJhiW
+         cefA==
+X-Gm-Message-State: AOJu0Ywun8TyA4sei5zEwGPCQGvViWZQOT4UhDaUYpib+dzQEZp8gfAe
+	EF2ZIOuC8UHcUOuaHIEnlSuJrVXZy6ZSVu2L3EyMYcIBAWzFDU5mMYr7ubkzcng=
+X-Google-Smtp-Source: AGHT+IF9IhXflvx/W5B3Po+MJ3rAwfJ8wZiq7vbmid2/bAXymV9jEMmCULgsLH6q+PDyMhOrjEbSIg==
+X-Received: by 2002:a17:906:5a87:b0:a31:7af3:f46f with SMTP id l7-20020a1709065a8700b00a317af3f46fmr1085152ejq.77.1706269887267;
+        Fri, 26 Jan 2024 03:51:27 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.215.66])
+        by smtp.gmail.com with ESMTPSA id vh5-20020a170907d38500b00a3517d26918sm840ejc.107.2024.01.26.03.51.24
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 26 Jan 2024 03:51:26 -0800 (PST)
+Message-ID: <48edb603-3d45-45ed-be25-31fd8a5b69f1@linaro.org>
+Date: Fri, 26 Jan 2024 12:51:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 04/17] dt-bindings: soc: mobileye: add EyeQ5 OLB system
+ controller
+Content-Language: en-US
+To: =?UTF-8?Q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>,
+ Rob Herring <robh@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+ Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
+ <sboyd@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+ Linus Walleij <linus.walleij@linaro.org>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
+ <rafal@milecki.pl>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
+References: <20240123-mbly-clk-v3-0-392b010b8281@bootlin.com>
+ <20240123-mbly-clk-v3-4-392b010b8281@bootlin.com>
+ <20240124151405.GA930997-robh@kernel.org>
+ <dd7e723d-3c4c-4edf-afc2-51db9a074efa@linaro.org>
+ <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CYNQHXOZ73YR.3QODFI2X08KC6@bootlin.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Cong Dang <cong.dang.xn@renesas.com>
+On 25/01/2024 12:01, Théo Lebrun wrote:
+> Hello,
+> 
+> On Thu Jan 25, 2024 at 8:51 AM CET, Krzysztof Kozlowski wrote:
+>> On 24/01/2024 16:14, Rob Herring wrote:
+>>>> +
+>>>> +      pinctrl-b {
+>>>> +        compatible = "mobileye,eyeq5-b-pinctrl";
+>>>> +        #pinctrl-cells = <1>;
+>>>> +      };
+>>>> +    };
+>>>
+>>> This can all be simplified to:
+>>>
+>>> system-controller@e00000 {
+>>>     compatible = "mobileye,eyeq5-olb", "syscon";
+>>>     reg = <0xe00000 0x400>;
+>>>     #reset-cells = <2>;
+>>>     #clock-cells = <1>;
+>>>     clocks = <&xtal>;
+>>>     clock-names = "ref";
+>>>
+>>>     pins { ... };
+>>> };
+>>>
+>>> There is no need for sub nodes unless you have reusable blocks or each 
+>>> block has its own resources in DT.
+>>
+>> Yes, however I believe there should be resources here: each subnode
+>> should get its address space. This is a bit tied to implementation,
+>> which currently assumes "everyone can fiddle with everything" in this block.
+>>
+>> Theo, can you draw memory map?
+> 
+> It would be a mess. I've counted things up. The first 147 registers are
+> used in this 0x400 block. There are 31 individual blocks, with 7
+> registers unused (holes to align next block).
 
-Add pins, groups and functions for the High Speed Serial Communication
-Interfaces with FIFO (HSCIF) on the Renesas R-Car V4M (R8A779H0) SoC.
+Holes are not really a problem.
 
-Signed-off-by: Cong Dang <cong.dang.xn@renesas.com>
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Changes compared to the BSP:
-  - Move SCIF_CLK pins/groups/functions into a separate patch.
----
- drivers/pinctrl/renesas/pfc-r8a779h0.c | 192 +++++++++++++++++++++++++
- 1 file changed, 192 insertions(+)
+> 
+> Functions are reset, clocks, LBIST, MBIST, DDR control, GPIO,
+> accelerator control, CPU entrypoint, PDTrace, IRQs, chip info & ID
+> stuff, control registers for PCIe / eMMC / Eth / SGMII / DMA / etc.
 
-diff --git a/drivers/pinctrl/renesas/pfc-r8a779h0.c b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-index c7c3e68ca77abf4a..6203f78869d6306d 100644
---- a/drivers/pinctrl/renesas/pfc-r8a779h0.c
-+++ b/drivers/pinctrl/renesas/pfc-r8a779h0.c
-@@ -1425,6 +1425,144 @@ static const unsigned int avb2_avtp_match_mux[] = {
- 	AVB2_AVTP_MATCH_MARK,
- };
- 
-+/* - HSCIF0 ----------------------------------------------------------------- */
-+static const unsigned int hscif0_data_pins[] = {
-+	/* HRX0, HTX0 */
-+	RCAR_GP_PIN(1, 16), RCAR_GP_PIN(1, 12),
-+};
-+static const unsigned int hscif0_data_mux[] = {
-+	HRX0_MARK, HTX0_MARK,
-+};
-+static const unsigned int hscif0_clk_pins[] = {
-+	/* HSCK0 */
-+	RCAR_GP_PIN(1, 15),
-+};
-+static const unsigned int hscif0_clk_mux[] = {
-+	HSCK0_MARK,
-+};
-+static const unsigned int hscif0_ctrl_pins[] = {
-+	/* HRTS0_N, HCTS0_N */
-+	RCAR_GP_PIN(1, 14), RCAR_GP_PIN(1, 13),
-+};
-+static const unsigned int hscif0_ctrl_mux[] = {
-+	HRTS0_N_MARK, HCTS0_N_MARK,
-+};
-+
-+/* - HSCIF1_A ----------------------------------------------------------------- */
-+static const unsigned int hscif1_data_a_pins[] = {
-+	/* HRX1_A, HTX1_A */
-+	RCAR_GP_PIN(0, 15), RCAR_GP_PIN(0, 14),
-+};
-+static const unsigned int hscif1_data_a_mux[] = {
-+	HRX1_A_MARK, HTX1_A_MARK,
-+};
-+static const unsigned int hscif1_clk_a_pins[] = {
-+	/* HSCK1_A */
-+	RCAR_GP_PIN(0, 18),
-+};
-+static const unsigned int hscif1_clk_a_mux[] = {
-+	HSCK1_A_MARK,
-+};
-+static const unsigned int hscif1_ctrl_a_pins[] = {
-+	/* HRTS1_N_A, HCTS1_N_A */
-+	RCAR_GP_PIN(0, 17), RCAR_GP_PIN(0, 16),
-+};
-+static const unsigned int hscif1_ctrl_a_mux[] = {
-+	HRTS1_N_A_MARK, HCTS1_N_A_MARK,
-+};
-+
-+/* - HSCIF1_B ---------------------------------------------------------------- */
-+static const unsigned int hscif1_data_b_pins[] = {
-+	/* HRX1_B, HTX1_B */
-+	RCAR_GP_PIN(1, 7), RCAR_GP_PIN(1, 6),
-+};
-+static const unsigned int hscif1_data_b_mux[] = {
-+	HRX1_B_MARK, HTX1_B_MARK,
-+};
-+static const unsigned int hscif1_clk_b_pins[] = {
-+	/* HSCK1_B */
-+	RCAR_GP_PIN(1, 10),
-+};
-+static const unsigned int hscif1_clk_b_mux[] = {
-+	HSCK1_B_MARK,
-+};
-+static const unsigned int hscif1_ctrl_b_pins[] = {
-+	/* HRTS1_N_B, HCTS1_N_B */
-+	RCAR_GP_PIN(1, 9), RCAR_GP_PIN(1, 8),
-+};
-+static const unsigned int hscif1_ctrl_b_mux[] = {
-+	HRTS1_N_B_MARK, HCTS1_N_B_MARK,
-+};
-+
-+/* - HSCIF2 ----------------------------------------------------------------- */
-+static const unsigned int hscif2_data_pins[] = {
-+	/* HRX2, HTX2 */
-+	RCAR_GP_PIN(4, 8), RCAR_GP_PIN(4, 9),
-+};
-+static const unsigned int hscif2_data_mux[] = {
-+	HRX2_MARK, HTX2_MARK,
-+};
-+static const unsigned int hscif2_clk_pins[] = {
-+	/* HSCK2 */
-+	RCAR_GP_PIN(4, 13),
-+};
-+static const unsigned int hscif2_clk_mux[] = {
-+	HSCK2_MARK,
-+};
-+static const unsigned int hscif2_ctrl_pins[] = {
-+	/* HRTS2_N, HCTS2_N */
-+	RCAR_GP_PIN(4, 10), RCAR_GP_PIN(4, 12),
-+};
-+static const unsigned int hscif2_ctrl_mux[] = {
-+	HRTS2_N_MARK, HCTS2_N_MARK,
-+};
-+
-+/* - HSCIF3_A ----------------------------------------------------------------- */
-+static const unsigned int hscif3_data_a_pins[] = {
-+	/* HRX3_A, HTX3_A */
-+	RCAR_GP_PIN(1, 24), RCAR_GP_PIN(1, 28),
-+};
-+static const unsigned int hscif3_data_a_mux[] = {
-+	HRX3_A_MARK, HTX3_A_MARK,
-+};
-+static const unsigned int hscif3_clk_a_pins[] = {
-+	/* HSCK3_A */
-+	RCAR_GP_PIN(1, 25),
-+};
-+static const unsigned int hscif3_clk_a_mux[] = {
-+	HSCK3_A_MARK,
-+};
-+static const unsigned int hscif3_ctrl_a_pins[] = {
-+	/* HRTS3_N_A, HCTS3_N_A */
-+	RCAR_GP_PIN(1, 26), RCAR_GP_PIN(1, 27),
-+};
-+static const unsigned int hscif3_ctrl_a_mux[] = {
-+	HRTS3_N_A_MARK, HCTS3_N_A_MARK,
-+};
-+
-+/* - HSCIF3_B ----------------------------------------------------------------- */
-+static const unsigned int hscif3_data_b_pins[] = {
-+	/* HRX3_B, HTX3_B */
-+	RCAR_GP_PIN(1, 4), RCAR_GP_PIN(1, 0),
-+};
-+static const unsigned int hscif3_data_b_mux[] = {
-+	HRX3_B_MARK, HTX3_B_MARK,
-+};
-+static const unsigned int hscif3_clk_b_pins[] = {
-+	/* HSCK3_B */
-+	RCAR_GP_PIN(1, 3),
-+};
-+static const unsigned int hscif3_clk_b_mux[] = {
-+	HSCK3_B_MARK,
-+};
-+static const unsigned int hscif3_ctrl_b_pins[] = {
-+	/* HRTS3_N_B, HCTS3_N_B */
-+	RCAR_GP_PIN(1, 2), RCAR_GP_PIN(1, 1),
-+};
-+static const unsigned int hscif3_ctrl_b_mux[] = {
-+	HRTS3_N_B_MARK, HCTS3_N_B_MARK,
-+};
-+
- /* - MMC -------------------------------------------------------------------- */
- static const unsigned int mmc_data_pins[] = {
- 	/* MMC_SD_D[0:3], MMC_D[4:7] */
-@@ -1690,6 +1828,25 @@ static const struct sh_pfc_pin_group pinmux_groups[] = {
- 	SH_PFC_PIN_GROUP(avb2_avtp_capture),
- 	SH_PFC_PIN_GROUP(avb2_avtp_match),
- 
-+	SH_PFC_PIN_GROUP(hscif0_data),
-+	SH_PFC_PIN_GROUP(hscif0_clk),
-+	SH_PFC_PIN_GROUP(hscif0_ctrl),
-+	SH_PFC_PIN_GROUP(hscif1_data_a),
-+	SH_PFC_PIN_GROUP(hscif1_clk_a),
-+	SH_PFC_PIN_GROUP(hscif1_ctrl_a),
-+	SH_PFC_PIN_GROUP(hscif1_data_b),
-+	SH_PFC_PIN_GROUP(hscif1_clk_b),
-+	SH_PFC_PIN_GROUP(hscif1_ctrl_b),
-+	SH_PFC_PIN_GROUP(hscif2_data),
-+	SH_PFC_PIN_GROUP(hscif2_clk),
-+	SH_PFC_PIN_GROUP(hscif2_ctrl),
-+	SH_PFC_PIN_GROUP(hscif3_data_a),
-+	SH_PFC_PIN_GROUP(hscif3_clk_a),
-+	SH_PFC_PIN_GROUP(hscif3_ctrl_a),
-+	SH_PFC_PIN_GROUP(hscif3_data_b),
-+	SH_PFC_PIN_GROUP(hscif3_clk_b),
-+	SH_PFC_PIN_GROUP(hscif3_ctrl_b),
-+
- 	BUS_DATA_PIN_GROUP(mmc_data, 1),
- 	BUS_DATA_PIN_GROUP(mmc_data, 4),
- 	BUS_DATA_PIN_GROUP(mmc_data, 8),
-@@ -1763,6 +1920,36 @@ static const char * const avb2_groups[] = {
- 	"avb2_avtp_match",
- };
- 
-+static const char * const hscif0_groups[] = {
-+	"hscif0_data",
-+	"hscif0_clk",
-+	"hscif0_ctrl",
-+};
-+
-+static const char * const hscif1_groups[] = {
-+	"hscif1_data_a",
-+	"hscif1_clk_a",
-+	"hscif1_ctrl_a",
-+	"hscif1_data_b",
-+	"hscif1_clk_b",
-+	"hscif1_ctrl_b",
-+};
-+
-+static const char * const hscif2_groups[] = {
-+	"hscif2_data",
-+	"hscif2_clk",
-+	"hscif2_ctrl",
-+};
-+
-+static const char * const hscif3_groups[] = {
-+	"hscif3_data_a",
-+	"hscif3_clk_a",
-+	"hscif3_ctrl_a",
-+	"hscif3_data_b",
-+	"hscif3_clk_b",
-+	"hscif3_ctrl_b",
-+};
-+
- static const char * const mmc_groups[] = {
- 	"mmc_data1",
- 	"mmc_data4",
-@@ -1828,6 +2015,11 @@ static const struct sh_pfc_function pinmux_functions[] = {
- 	SH_PFC_FUNCTION(avb1),
- 	SH_PFC_FUNCTION(avb2),
- 
-+	SH_PFC_FUNCTION(hscif0),
-+	SH_PFC_FUNCTION(hscif1),
-+	SH_PFC_FUNCTION(hscif2),
-+	SH_PFC_FUNCTION(hscif3),
-+
- 	SH_PFC_FUNCTION(mmc),
- 
- 	SH_PFC_FUNCTION(qspi0),
--- 
-2.34.1
+So they are within separate blocks or not?
+
+
+
+Best regards,
+Krzysztof
 
 
