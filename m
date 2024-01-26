@@ -1,75 +1,63 @@
-Return-Path: <linux-gpio+bounces-2627-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2626-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8ACE983DE0C
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 16:53:42 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFF3283DD41
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 16:17:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 45F79288B69
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 15:53:41 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F4C31F2688B
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 15:17:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEA191CFBC;
-	Fri, 26 Jan 2024 15:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82CC1CD3B;
+	Fri, 26 Jan 2024 15:17:25 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.jmckenzie.com (mail.jmckenzie.com [67.227.153.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 274A11D524
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 15:53:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.227.153.222
+Received: from blakemooney.com (unknown [216.51.214.139])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5CA1CF83
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 15:17:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.51.214.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706284417; cv=none; b=SHzs6A+rBrn6TIsPPJDd/VdZ1Axm6JveIJEtzXVaVGGn2hDvP9XELM+m9lkbNo3fyi9PZWKSaE3FemXy4TelMFc/Y7QD3d10RvHMbMbROOB3/x5jw7BSgjC+amM8MAk3VVQvIbX3mNZZe+EwW+Y2GhvGvqfameHiEuqS/PXGMUM=
+	t=1706282245; cv=none; b=J9CClMqOeWkNt3KVACJGRZ60526UW5arJLjHNIHQEtgqVFBowVmNDmNwLF3Q6D/RHKFJ6A/hCTNiPVUB1stRPecm/17XEjHD8teooKdh/uTGnBop/6oZew8WNJlxgaQRqvdBQZw+szjp6IzdOkcOs1zx7QEO3wz4GbEhqSArx7w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706284417; c=relaxed/simple;
-	bh=82IPevBKhAVTzMxp8pMOkgtIo/+Nh1aTyRtsgHICHrM=;
-	h=Message-ID:From:To:Date:Subject; b=cjVa3sIY2RN/inzgByJYh+K/hJ6jEKZpokKZEg47soQE4SLFFE49GdCpLKLx5TzjoY0pYAlvtSW+iMhdyVG5cWO8EPM8dCTfqMDe45EV7m+T0LLEHsq7ALMCYsHMrkJ3iR1GB7HxwuNiiGhqRwYllifiJETcQFW3ZSWrATPiW34=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=permerror (bad message/signature format); arc=none smtp.client-ip=67.227.153.222
-Message-ID: <638418514996209761@mail.jmckenzie.com>
-From: "System Administrator"@web.codeaurora.org
+	s=arc-20240116; t=1706282245; c=relaxed/simple;
+	bh=geJQuLs8G0sZ2HvXuJQvZjhZHaM3qf+Tauh3zyYDDRQ=;
+	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=KST9clFxYVxtLG9yc7CZQnZuDkiYFuehR8xl7LXBqR/v+bBb+6rPX7p2/CNk7zN8Ifuwp2aIjAywie5XQQEZ3va39pld9z7zDwgs2RUmTQB1pBZVCmSNZ1Bz++8EhBPqcxhFlzrGyz/uASUC5GqGMeuEbc05iSCSTSPLWTvBOns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blakemooney.com; spf=none smtp.mailfrom=blakemooney.com; arc=none smtp.client-ip=216.51.214.139
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blakemooney.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blakemooney.com
+Received: by webserver5.mpanetwork.com (Postfix, from userid 10129)
+	id 5F72FC47D8; Fri, 26 Jan 2024 09:09:40 -0600 (CST)
 To: linux-gpio@vger.kernel.org
-Date: Fri, 26 Jan 2024 07:38:19 -0700
-Subject: Delivery Failure
-X-SmarterMail-MessageType: Bounce
+Subject: Copy of: Making Time for Us
+X-PHP-Originating-Script: 10129:phpmailer.php
+Date: Fri, 26 Jan 2024 09:09:40 -0600
+From: Southern Iowa Baseball <emailme@blakemooney.com>
+Reply-to: ineniaTify <linux-gpio@vger.kernel.org>
+Message-ID: <d6b40bb604ed1a63a28b696a071cb6b7@southerniowabaseball.com>
+X-Priority: 3
+X-Mailer: PHPMailer 5.2
+ (http://code.google.com/a/apache-extras.org/p/phpmailer/)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-
-
-Could not deliver message to the following recipient(s):
-
-Failed Recipient: whoy1981@gmail.com
-Reason: Remote host said: 550 5.7.1 [67.227.153.222] Messages missing a valid Message-ID header are not
-5.7.1 accepted. For more information, go to
-5.7.1  https://support.google.com/mail/?p=RfcMessageNonCompliant and review
-5.7.1 RFC 5322 specifications. k17-20020a05620a07f100b00783d8960971si849271qkk.70 - gsmtp
-
-Failed Recipient: john@jmckenzie.com
-Reason: Remote host said: 550 5.7.1 [67.227.153.222] Messages missing a valid Message-ID header are not
-5.7.1 accepted. For more information, go to
-5.7.1  https://support.google.com/mail/?p=RfcMessageNonCompliant and review
-5.7.1 RFC 5322 specifications. f24-20020a05622a1a1800b00429af70f902si1419479qtb.799 - gsmtp
-
-
-   -- The header and top 20 lines of the message follows --
-
-Received: from V4C5RU (atpweb.org [67.227.153.222]) by mail.jmckenzie.com with SMTP;
-   Fri, 26 Jan 2024 07:38:02 -0800
 MIME-Version: 1.0
-From: linux-gpio@vger.kernel.org
-To: bhoy@yellowstonerailroads.com
-Date: 26 Jan 2024 07:38:02 -0800
-Subject: email from website
-Content-Type: text/html; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+X-PPP-Message-ID: <20240126150940.2783.4506@webserver5.mpanetwork.com>
+X-PPP-Vhost: southerniowabaseball.com
 
-FROM:Pynczing<br /><br /> =0D=0AMy heart beats with an ache for your embrace.=
- =0D=0AIf you get a chance, might you visit my page using this link: https://tinyurl.com/yn3z9lep=
- I've shared some recent photos and updates from recent events there. It=
- would be fantastic to catch up and share our experiences.<br /><br />Phone:=
- 85548448695
+This is a copy of the following message you sent to Southern Iowa Baseball via Southern Iowa Baseball
 
+This is an enquiry email via http://southerniowabaseball.com/ from:
+ineniaTify <linux-gpio@vger.kernel.org>
 
+ 
+My love, you're the muse for all my thoughts. 
+Should you have a spare moment, would you kindly take a look at my page via this link: https://tinyurl.com/ymdpvgdp I've shared some fresh photos and updates from recent events there. It would be wonderful to catch up and share our experiences.
 
 
