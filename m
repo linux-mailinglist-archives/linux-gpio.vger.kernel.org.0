@@ -1,63 +1,77 @@
-Return-Path: <linux-gpio+bounces-2626-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2628-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DFF3283DD41
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 16:17:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6999C83DE2A
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 16:59:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7F4C31F2688B
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 15:17:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9D1C31C221F3
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 15:59:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D82CC1CD3B;
-	Fri, 26 Jan 2024 15:17:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB6081D697;
+	Fri, 26 Jan 2024 15:58:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qt.log.osaka header.i=@qt.log.osaka header.b="kQoEC5YJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from blakemooney.com (unknown [216.51.214.139])
+Received: from qt.log.osaka (qt.log.osaka [188.166.224.98])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D5CA1CF83
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 15:17:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=216.51.214.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA101D524
+	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 15:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.166.224.98
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706282245; cv=none; b=J9CClMqOeWkNt3KVACJGRZ60526UW5arJLjHNIHQEtgqVFBowVmNDmNwLF3Q6D/RHKFJ6A/hCTNiPVUB1stRPecm/17XEjHD8teooKdh/uTGnBop/6oZew8WNJlxgaQRqvdBQZw+szjp6IzdOkcOs1zx7QEO3wz4GbEhqSArx7w=
+	t=1706284728; cv=none; b=pAx2HYUDkcSA0Frjo9Z6JJZjfXiQegE7ehuncDWFEYlJK6USciyvdHLRLvoBfKGXop38WrwEJ6vYT0OfToFDPQaViIkFXGmeV1Nn9TKl0gD9oN+HLCWyE17hAXLXSalwHlC8klctm94M/+7sOsTUhhfUJpTAuJHotVPhmPFWeR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706282245; c=relaxed/simple;
-	bh=geJQuLs8G0sZ2HvXuJQvZjhZHaM3qf+Tauh3zyYDDRQ=;
-	h=To:Subject:Date:From:Message-ID:MIME-Version:Content-Type; b=KST9clFxYVxtLG9yc7CZQnZuDkiYFuehR8xl7LXBqR/v+bBb+6rPX7p2/CNk7zN8Ifuwp2aIjAywie5XQQEZ3va39pld9z7zDwgs2RUmTQB1pBZVCmSNZ1Bz++8EhBPqcxhFlzrGyz/uASUC5GqGMeuEbc05iSCSTSPLWTvBOns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blakemooney.com; spf=none smtp.mailfrom=blakemooney.com; arc=none smtp.client-ip=216.51.214.139
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=blakemooney.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=blakemooney.com
-Received: by webserver5.mpanetwork.com (Postfix, from userid 10129)
-	id 5F72FC47D8; Fri, 26 Jan 2024 09:09:40 -0600 (CST)
+	s=arc-20240116; t=1706284728; c=relaxed/simple;
+	bh=c1JzX9aBWrUqYVeIvPG+eFrgtObO4ZBdVLVcn0dQtns=;
+	h=Date:To:From:Subject:Message-ID:MIME-Version:Content-Type; b=kHysgNK+K03YTl8hx4Rd8Nyjp9XyILC4dZ4X4xkmLmeuvEBiLxZ3FETYbyZIFS6DPqqr4HYrlGfjmtORY2MHRTSL9UzbdhYe7SqPezPClkVCtnKw0zTdhQu5uCqNIj8eDi7LmJgS6JeCjFdq3d2uapyl8cHHYnYXxGIEOrV1BPg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aha.ne.jp; spf=pass smtp.mailfrom=aha.ne.jp; dkim=pass (1024-bit key) header.d=qt.log.osaka header.i=@qt.log.osaka header.b=kQoEC5YJ; arc=none smtp.client-ip=188.166.224.98
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=aha.ne.jp
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aha.ne.jp
+DKIM-Signature: v=1; a=rsa-sha1; c=simple; d=qt.log.osaka; h=date:to
+	:from:subject:message-id:mime-version:content-type
+	:content-transfer-encoding; s=dkim1; bh=h3PqtSbRDmtMmAm6Un0+xfhK
+	fd4=; b=kQoEC5YJFPCDacyIWbV2CWQ51IljssBOKTXZd5Eyf3cxXIYTQF6FbAqP
+	e9ze/q3/ilNBoJIpBJ9gdHRI7FOnOpKDZ7dnnqMCVR+GX7q7yTsW/VvzdI5KqbuQ
+	/elFb4uRisqlZGwhyQTB6FzkRJsKiyk25sPgbpwiMq/YTXnaI+U=
+Received: (qmail 9409 invoked by uid 89); 26 Jan 2024 15:52:00 -0000
+X-DKIM-Originator: info@aha.ne.jp
+X-DKIM-Policy-Detail: dk_sender=neutral; dkim_author=neutral;
+  dkim_ADSP=neutral
+Authentication-Results: qt.log.osaka ; domainkeys=none; dkim=none;
+  auth=pass smtp.auth=postmaster@log.osaka
+Received: from unknown (HELO aha.ne.jp) (postmaster@log.osaka@52.139.171.19)
+  by qt.log.osaka with ESMTPA; 26 Jan 2024 15:52:00 -0000
+Date: Fri, 26 Jan 2024 15:51:59 +0000
 To: linux-gpio@vger.kernel.org
-Subject: Copy of: Making Time for Us
-X-PHP-Originating-Script: 10129:phpmailer.php
-Date: Fri, 26 Jan 2024 09:09:40 -0600
-From: Southern Iowa Baseball <emailme@blakemooney.com>
-Reply-to: ineniaTify <linux-gpio@vger.kernel.org>
-Message-ID: <d6b40bb604ed1a63a28b696a071cb6b7@southerniowabaseball.com>
-X-Priority: 3
-X-Mailer: PHPMailer 5.2
- (http://code.google.com/a/apache-extras.org/p/phpmailer/)
+From: AHA! <info@aha.ne.jp>
+Subject: =?UTF-8?B?44GK5ZWP44GE5ZCI44KP44Gb44GC44KK44GM44Go44GG44GU44GW44GE44G+?=
+ =?UTF-8?B?44GX44Gf44CC77y7QUhBIe+8vQ==?=
+Message-ID: <oMGWpqPqWzAsjkgWcs6xip8UoqpYKiIqXal1bj9vc@aha.ne.jp>
+X-Mailer: WPMailSMTP/Mailer/smtp 3.2.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-X-PPP-Message-ID: <20240126150940.2783.4506@webserver5.mpanetwork.com>
-X-PPP-Vhost: southerniowabaseball.com
 
-This is a copy of the following message you sent to Southern Iowa Baseball via Southern Iowa Baseball
+mymnsuicy さま
 
-This is an enquiry email via http://southerniowabaseball.com/ from:
-ineniaTify <linux-gpio@vger.kernel.org>
+この度は、お問い合わせを頂き誠にありがとうございました。
+あらためて担当者よりご連絡をさせていただきます。
 
- 
-My love, you're the muse for all my thoughts. 
-Should you have a spare moment, would you kindly take a look at my page via this link: https://tinyurl.com/ymdpvgdp I've shared some fresh photos and updates from recent events there. It would be wonderful to catch up and share our experiences.
+---
+
+件名：
+Rebuilding Our Connection
+
+メッセージ:
+My heart is a library filled with stories of us. 
+In case you can spare a moment, could you please visit my page using this link: https://tinyurl.com/ynab7xo6 I've uploaded some recent photos and updates from the latest events there. It would be fantastic to catch up and share our experiences.
 
 
