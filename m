@@ -1,174 +1,111 @@
-Return-Path: <linux-gpio+bounces-2604-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2605-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EFCC83D9D3
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:59:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E95A83DA22
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 13:27:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 86288B2B6A9
-	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 11:58:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 5D33DB23EE8
+	for <lists+linux-gpio@lfdr.de>; Fri, 26 Jan 2024 12:27:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2321518626;
-	Fri, 26 Jan 2024 11:57:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C02CC18EB2;
+	Fri, 26 Jan 2024 12:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="L03Nu2Tq"
+	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="js/pC6R3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 497B61A731
-	for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 11:57:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 105761803E;
+	Fri, 26 Jan 2024 12:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706270276; cv=none; b=ddZ+aKSHMUTxQMly6UL76KvyhARpY2stPxtKvNxCMILWeawFlfy0Vwjd+ODi8wOyqc+RmkODQNYeEoKX0kw03k+ehTRnBjRmeanUL6sCDrtgWGucVCf/CUPzfcyOWDuUQCGwD34Cs3Pjo9GqrIFOlqn8xmdoxchLx/FBPBPewk0=
+	t=1706272057; cv=none; b=ADSHvOfaSjWEQsELqflbd9Obq1s8z6f5OtpMejVr4Y6wkM59TixGEEIX8VEqY7hu7Ad2JElnl79iHOY2swIokEO6mKxj6aNOkLbFlryZqSbC8gtza5Gu3p0rI0kT3bhRy7DuoklaIkRLK1jsNAdvJrLfKlLJGjE2gppPeV9152w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706270276; c=relaxed/simple;
-	bh=fww9EB7dHTt266qwXpxXlSuJ7F6luyRDgiG70yImJ/g=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=QD4rKIHAISJ+rZxThS0rrYck43CXb36QbrCUZrfsOa0kmBupdbsnuUCdYQuDdXIGZ9+kSeQrqF/MByDbVmHV0FEMvqFNlcmDv2z0xLT8t17Pw1IfxwkifxYwqhfeQpoNlwLNaOfYAPw73YcFYGyMCrwWkWQuGbo36Vfkc+qcnxc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=L03Nu2Tq; arc=none smtp.client-ip=209.85.221.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-337cf4ac600so308434f8f.3
-        for <linux-gpio@vger.kernel.org>; Fri, 26 Jan 2024 03:57:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706270273; x=1706875073; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6igzwQypdxPSe5LiU4uAuaHmPYLT8/p0hJRSsz2288A=;
-        b=L03Nu2TqrDfKunvmkedqLYo36Khot4vBn0yMINlhwvf2DW3AkYCLiGjr9MhHThM/at
-         Z34K2d9kbmfoQ74FxtIltK8zPpMHcIf4nfWq6ZZ56RBy6fltLquqMSictYTVlMvfF7mv
-         3HpsyeIHVulVbFkFQo6MWBlilzTUN5znFe19350v1GsnWUYKszigzI1d4W1ItGOSJnyP
-         BsccWyFBn8yhUHMQXdWQ7h+22f3+6+Nk9EbxgWV7lZ7OVLzpQc2IlSJ3SKM1qUfvRBKC
-         pZR1QbM7OysDVvHWv+ngOFZkK9zaBmH0fHWNNpKxyDpYyOdubMkm3u+6kkF2wUXOPMQy
-         5aBQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706270273; x=1706875073;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6igzwQypdxPSe5LiU4uAuaHmPYLT8/p0hJRSsz2288A=;
-        b=nw+JoHX7z/tSsLMpRMB3PQUO4B3wCneSRzJJwax9XtV6hP1eJo5JXJye3UTDn3JbHM
-         aEpdZQRWTksHGlFa3R9BApEQj2EQTqvbqooQmJ/QvJudoYDRThKCFGH7/Zcr+vPcVwHC
-         j2oLuVqkXKObrYZt/qytWilkJU3LVgsMiy8vJuTsEVvbnkxwzIOuY8j8+N4MP7bA/EIC
-         9/ytez77YX15chzywnfUG44CQlR0jErso9yW80gOF+5YvnopwESBsH4ZWTY494VWtLYX
-         cXeoz2WrPDbSEKkzt3ojXHHkRcxAAFmPXCR6K3MnA1XBGvdmk4k1oLPlmjBJJkeYHhs5
-         L+ww==
-X-Gm-Message-State: AOJu0YySmXKCH/jw9wIF0A6iterpplWEvKb6A3pIeWYKzh64Cv7frfPT
-	Wz/FyjeyWmTNt/7Z98JIZYufZENt8iSolGFyC91Tb+wvPGUeewfG46UAI5R0cLM=
-X-Google-Smtp-Source: AGHT+IH/g7DbFsBW/D5Q0U6E+tjhovnYwoTtkSRKVmze6lMSQku+rRgaWgmlm+VXvHeX7yyey18UCA==
-X-Received: by 2002:a1c:7506:0:b0:40e:86eb:9e7e with SMTP id o6-20020a1c7506000000b0040e86eb9e7emr823322wmc.142.1706270273511;
-        Fri, 26 Jan 2024 03:57:53 -0800 (PST)
-Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
-        by smtp.gmail.com with ESMTPSA id bd19-20020a05600c1f1300b0040ed1d6ce7csm1682149wmb.46.2024.01.26.03.57.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jan 2024 03:57:53 -0800 (PST)
-From: Naresh Solanki <naresh.solanki@9elements.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: mazziesaccount@gmail.com,
-	Naresh Solanki <naresh.solanki@9elements.com>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
-Date: Fri, 26 Jan 2024 17:27:48 +0530
-Message-ID: <20240126115748.1491642-1-naresh.solanki@9elements.com>
-X-Mailer: git-send-email 2.42.0
+	s=arc-20240116; t=1706272057; c=relaxed/simple;
+	bh=KA05afh1+3sfbcKyDuyuFL2hqhLhvNewNqmQTsDO5T0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=U9CfEF6nu0UH7Feuchs2BDfi92RJGDXW7A0MOvdidLTe3IMZY7ntiAt5uwOS+Av1S9P0jjF5Tv+ejRdX4+zz7aDutZIrob4wBNPb8pVVAB1Wbptrmszv4Vnn+3YjKvz1iDKu5JeZB8K29luqGRIlUX/Q+I/6zQkaCfHJRQjH2mc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=js/pC6R3; arc=none smtp.client-ip=217.194.8.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
+Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
+	by mail11.truemail.it (Postfix) with ESMTPA id 0CF4823298;
+	Fri, 26 Jan 2024 13:27:24 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
+	s=default; t=1706272044;
+	bh=WEvYxyv4AaxaAKscG9gxq+rXAKFPX6EAGGEoH3y++zM=; h=From:To:Subject;
+	b=js/pC6R3Lh09GKBK4dceP/e9RsD2Sn/ctdz/R8jUego37LSKkS6YQaoau0XCNO7EG
+	 r62Xq+mG7vtm7t+EPGa5OTgn883EEUIa0aNJoO31RS3p42F56cPEACyMQiJVys6WcE
+	 UL1+y0gPaDJLApEKEfyh6H20lDJigb29bQqeeYYDkB+uel3QwlOgQZW0X1IC2J7A60
+	 lVA86dO2di3zhPkkKugDJjQNJ4wbKnuFPWnbE2+t22KzM+yxZPy1MvBXSVpLoP0Izn
+	 6b4ehYZNQBCLstWvoSNrTMBIwv041Cb4jt7VyWp/Nh3HwkdnZxLKEFi5+jBz91244b
+	 jQh5il7YEmyCg==
+Date: Fri, 26 Jan 2024 13:27:19 +0100
+From: Francesco Dolcini <francesco@dolcini.it>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 1/4] gpio: vf610: allow disabling the vf610 driver
+Message-ID: <20240126122719.GA13659@francesco-nb>
+References: <20240124205900.14791-1-martin@kaiser.cx>
+ <20240124205900.14791-2-martin@kaiser.cx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124205900.14791-2-martin@kaiser.cx>
 
-Update maxItems to 60 for gpio-reserved-ranges.
-Add input-enable property.
-Rearrange allOf
-Update example.
+On Wed, Jan 24, 2024 at 09:58:57PM +0100, Martin Kaiser wrote:
+> The vf610 gpio driver is enabled by default for all i.MX machines,
+> without any option to disable it in a board-specific config file.
+> 
+> Most i.MX chipsets have no hardware for this driver. Change the default
+> to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+> 
+> Add a text description after the bool type, this makes the driver
+> selectable by make config etc.
+> 
+> Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
+> ---
+> v4:
+>  - add a new patch to enable COMPILE_TEST
+> 
+> v3:
+>  - split the changes into three patches
+> 
+> v2:
+>  - enable the vf610 gpio driver in the defconfig files for arm_v7
+>    (i.MX7ULP) and arm64 (i.MX8QM, DXL, ULP and i.MX93)
+> 
+>  drivers/gpio/Kconfig | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 1301cec94f12..353af1a4d0ac 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -711,7 +711,8 @@ config GPIO_UNIPHIER
+>  	  Say yes here to support UniPhier GPIOs.
+>  
+>  config GPIO_VF610
+> -	def_bool y
+> +	bool "VF610 GPIO support"
+> +	default y if SOC_VF610
 
-TEST=Run below command make sure there is no error.
-make DT_CHECKER_FLAGS=-m dt_binding_check
+any reason for having this default y for SOC_VF610, but not for the
+other SOC that uses the same variant (i.MX7ULP, ... ?).
 
-Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
----
- .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 28 +++++++++++++++----
- 1 file changed, 23 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-index 7f30ec2f1e54..89ce0cb68834 100644
---- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-@@ -45,7 +45,8 @@ properties:
-     maxItems: 1
- 
-   gpio-reserved-ranges:
--    maxItems: 1
-+    minItems: 1
-+    maxItems: 60
- 
-   vdd-supply:
-     description:
-@@ -85,6 +86,8 @@ patternProperties:
- 
-       bias-disable: true
- 
-+      input-enable: true
-+
-       output-high: true
- 
-       output-low: true
-@@ -101,6 +104,9 @@ patternProperties:
- 
-     additionalProperties: false
- 
-+allOf:
-+  - $ref: pinctrl.yaml#
-+
- required:
-   - compatible
-   - reg
-@@ -112,9 +118,6 @@ required:
- 
- additionalProperties: false
- 
--allOf:
--  - $ref: pinctrl.yaml#
--
- examples:
-   - |
-     #include <dt-bindings/interrupt-controller/arm-gic.h>
-@@ -133,6 +136,21 @@ examples:
-         interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-         interrupt-controller;
-         vdd-supply = <&p3v3>;
--        gpio-reserved-ranges = <5 1>;
-+        gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
-+
-+        pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
-+        pinctrl-names = "default";
-+        U62160_pins: cfg-pins {
-+                        pins = "gp03", "gp16", "gp20", "gp50", "gp51";
-+                        function = "gpio";
-+                        input-enable;
-+                        bias-pull-up;
-+        };
-+        U62160_ipins: icfg-pins {
-+                        pins = "gp04", "gp17", "gp21", "gp52", "gp53";
-+                        function = "gpio";
-+                        input-enable;
-+                        bias-pull-up;
-+        };
-       };
-     };
-
-base-commit: ecb1b8288dc7ccbdcb3b9df005fa1c0e0c0388a7
--- 
-2.42.0
+Francesco
 
 
