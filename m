@@ -1,102 +1,128 @@
-Return-Path: <linux-gpio+bounces-2658-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2659-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A17883F173
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:02:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id ED03983F1C8
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:22:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 854E6B226A9
-	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jan 2024 23:02:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AAD8E281E96
+	for <lists+linux-gpio@lfdr.de>; Sat, 27 Jan 2024 23:22:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 664611F95F;
-	Sat, 27 Jan 2024 23:02:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6323C2032F;
+	Sat, 27 Jan 2024 23:22:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LL5J5/am"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PECYXxUK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.65])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B550E1F946
-	for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 23:02:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94EA3200B2;
+	Sat, 27 Jan 2024 23:22:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.65
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706396568; cv=none; b=rDHT9S9vwbpPQ37a5y5toM/3Reu1qc2Td4ktKqi7qek+nK4o8Q+gUOs74HX34b6XdwJywI0aB/OycLOx66nCsQwS5KKYqoHOFPREHSFFNUfNKtMIDXc52zgj9f6Vt778Jq/w6ob45EpMK5dKyKgsZ6hHHcJNwH22e+Ca/bmPke4=
+	t=1706397731; cv=none; b=ECIQAPSH3cRJ457OKMrhTzzBuaD2fLMqsRryespTBnCSaamhJvkLhnIBsAzHwwHQc3B1cHAAICwUEHhzG8LqARPQpTGTfG09gB8wLf6oeFvfBrq44cI+cjQg7p/QZPFrWCvk1tj3AkCBz+NV0i/Su1wlm+M36GebQnbAU6jiQjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706396568; c=relaxed/simple;
-	bh=OI/DYxsJSWBx+d25tKtsRfVL4GAUVdxqmdpn8lShZf4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RmuZgAha+iG68SaRhJO1Vj2qUI305wMjhnvKsy4Py/iyBWDGmil92WbxvdJmlGmaOu/INmCwz2DL05UR6rQoiQD8jtjP+s8mm9bjUFovwjMLM6KPy+ejh5m4eVU7NXTv4a5Bsk5Ev2NhloJykpMgjUd9JRxILDL6J01srJwi9sk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LL5J5/am; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-602ab446cd8so16106487b3.1
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 15:02:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706396565; x=1707001365; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OI/DYxsJSWBx+d25tKtsRfVL4GAUVdxqmdpn8lShZf4=;
-        b=LL5J5/amWFJyixSoJ4X2157faCEDESiXfEqGXLzuJt4ntBLdTnR8KGnquBI5J+zLHf
-         RWghWMasiJqaD7N3H11e8rTymFRe0B154vMispUPO3t9fMyCtf17XZKph10kFok4QVRu
-         cVc6qLoMJaYrflGi73rh9yDKdyrqBnIg2c025wURB5TpupoCXv/6ckkfS0SQ2GJOIL1v
-         8oe9zCXmLy6Cx66UKAjaPEmvu/AjfXWJhmNySjrU0yizVfxwgyaZJebW7ELoZbc6Yct+
-         fuBhxDTqCmYO4U2kMS7gsWJjX6FIUTd8T9uMkSV/i0mBiA8+8LY9V7GUsB3l5My+L9Nt
-         R0AA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706396565; x=1707001365;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=OI/DYxsJSWBx+d25tKtsRfVL4GAUVdxqmdpn8lShZf4=;
-        b=p3l+I30X00hzhMPvQVyxx7QfQicec22ExyXg0v+QF1b6kQdawE6v+WxeUvwgYRoruQ
-         sAewKRcIC6fd+aFD9kOYtZudkzDyZR63tQ3TVUDYwBCTE8hfh77bgOn8BzhJob7SeDFW
-         Mpzh7L4Vcqi15tB/0PgGZBwWp69/SngefX/dBiCSR1c/IyPMBmb+GcBjVX2FgQjVJ6bQ
-         FhowdC42Wf71is6Dh0yiNMho003vcMy/DrCl/4pLGPMQcRdfK5LG/uJnx+xUhck+bUbd
-         wbAo0J1kJt/ZLzO911xmDf0mNoWN/adBe8ZxbExHI40GT6rFxsZ8+VoLQml/9zaxKU+q
-         zwAw==
-X-Gm-Message-State: AOJu0YyiUh0SdGice6H82XumSTZTq5BhxhdB9NTtfssjGOIGdxa1Kbwd
-	rmoFW5LWdp/pd7EXWrOgkQIerZColE1i8xL2gRTqH36l7XSb/vsr9tx6rqjDKm3ppmVJa5Chw4+
-	QoHTU/cvik2p8sPRlQnHwSTaVZ3nA7W7LxjjbkQ==
-X-Google-Smtp-Source: AGHT+IGyjw9LIiDDoT2S5tGsoR6J36rkT7VTljb52lUEVS87VMLK8vJpNqzNYIdeGvFGjm5XifyDw3lPWoEfckgnn6c=
-X-Received: by 2002:a81:a709:0:b0:5ff:6173:e98e with SMTP id
- e9-20020a81a709000000b005ff6173e98emr1920073ywh.63.1706396565671; Sat, 27 Jan
- 2024 15:02:45 -0800 (PST)
+	s=arc-20240116; t=1706397731; c=relaxed/simple;
+	bh=20qSAAIqanWUeEOfYpQXU7bnnPuWMMlDWr5ybRYLvzo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZW378zbVJunMXn8YbelKm/sb5+YlU/ZO5BtcCXB30hf84VBDWta5cZF2/P0bvbdEHJgDp7Kh19m6nmjB/oGwbWQxDA4TGwYATSupBbiUVVvkAXRac3VyDV8XozhxprcZ5YxPzio7FXI8c/E6T0CodhHRTGXNJN125ZReCwJSL5Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PECYXxUK; arc=none smtp.client-ip=134.134.136.65
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706397729; x=1737933729;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=20qSAAIqanWUeEOfYpQXU7bnnPuWMMlDWr5ybRYLvzo=;
+  b=PECYXxUKimwctJMUSxn2oNaTsDaFQnryeJf3nSE1+SWx8OmXk95JiicM
+   QO6fbNdXayDjxi0sDYVPH055L0t2zRVU0ORBu73/rO/SoQSOBY2RNqUPY
+   2xf9TRUqbpEgB85zbaTY9kITm8qaiSZoJUCFrrJ+/aEFfi1zjTEk1sb9X
+   F4E5EYO27+J67ivbNpy02uOy3epSoDs5x1e6zH5ABVuTRgUGdopqfPgtj
+   CVKOrukBqnzVg21aw9+aEBn+XDunrMrIWEhuVuVXvCmK66k5xtFKw6cCP
+   qrEzeNU0kh4eoFUb41WKdlLhPY9mB9I0sAjcuM1OQkcADnLx1oxtCvFdI
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10966"; a="406440981"
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="406440981"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orsmga103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Jan 2024 15:22:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,220,1701158400"; 
+   d="scan'208";a="35779710"
+Received: from lkp-server01.sh.intel.com (HELO 370188f8dc87) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 27 Jan 2024 15:22:05 -0800
+Received: from kbuild by 370188f8dc87 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rTrzu-0002rC-3C;
+	Sat, 27 Jan 2024 23:22:02 +0000
+Date: Sun, 28 Jan 2024 07:21:10 +0800
+From: kernel test robot <lkp@intel.com>
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ychuang3@nuvoton.com,
+	schung@nuvoton.com
+Subject: Re: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
+ driver
+Message-ID: <202401280700.5ewaEUFG-lkp@intel.com>
+References: <20240123080637.1902578-5-ychuang570808@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240103132852.298964-1-emil.renner.berthing@canonical.com> <20240103132852.298964-3-emil.renner.berthing@canonical.com>
-In-Reply-To: <20240103132852.298964-3-emil.renner.berthing@canonical.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 00:02:34 +0100
-Message-ID: <CACRpkdZhzC_4ZFV6cpA5=tHfzyv+NjFBoFC3=jenS2x0-0DZmg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/8] pinctrl: Add driver for the T-Head TH1520 SoC
-To: Emil Renner Berthing <emil.renner.berthing@canonical.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-riscv@lists.infradead.org, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Jisheng Zhang <jszhang@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
-	Drew Fustini <dfustini@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240123080637.1902578-5-ychuang570808@gmail.com>
 
-On Wed, Jan 3, 2024 at 2:29=E2=80=AFPM Emil Renner Berthing
-<emil.renner.berthing@canonical.com> wrote:
+Hi Jacky,
 
-> Add pinctrl driver for the T-Head TH1520 RISC-V SoC.
->
-> Signed-off-by: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+kernel test robot noticed the following build warnings:
 
-This driver looks mostly fine but I am waiting for the bindings
-to be hashed out.
+[auto build test WARNING on linusw-pinctrl/devel]
+[also build test WARNING on linusw-pinctrl/for-next robh/for-next pza/reset/next linus/master v6.8-rc1 next-20240125]
+[cannot apply to pza/imx-drm/next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Yours,
-Linus Walleij
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Huang/dt-bindings-reset-Add-syscon-to-nuvoton-ma35d1-system-management-node/20240123-161939
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20240123080637.1902578-5-ychuang570808%40gmail.com
+patch subject: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+config: x86_64-randconfig-122-20240128 (https://download.01.org/0day-ci/archive/20240128/202401280700.5ewaEUFG-lkp@intel.com/config)
+compiler: gcc-7 (Ubuntu 7.5.0-6ubuntu2) 7.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240128/202401280700.5ewaEUFG-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202401280700.5ewaEUFG-lkp@intel.com/
+
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pinctrl/nuvoton/pinctrl-ma35.c:287:25: sparse: sparse: symbol 'ma35_pmx_ops' was not declared. Should it be static?
+   drivers/pinctrl/nuvoton/pinctrl-ma35.c: note: in included file (through include/linux/mmzone.h, include/linux/gfp.h, include/linux/xarray.h, ...):
+   include/linux/page-flags.h:242:46: sparse: sparse: self-comparison always evaluates to false
+
+vim +/ma35_pmx_ops +287 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+
+   286	
+ > 287	const struct pinmux_ops ma35_pmx_ops = {
+   288		.get_functions_count = ma35_pinmux_get_func_count,
+   289		.get_function_name = ma35_pinmux_get_func_name,
+   290		.get_function_groups = ma35_pinmux_get_func_groups,
+   291		.set_mux = ma35_pinmux_set_mux,
+   292		.strict = true,
+   293	};
+   294	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
