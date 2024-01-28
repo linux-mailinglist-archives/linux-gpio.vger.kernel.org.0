@@ -1,105 +1,108 @@
-Return-Path: <linux-gpio+bounces-2669-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2670-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 50EED83F273
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 01:16:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 130DF83F27A
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 01:18:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DAE328609D
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:16:23 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F2D7B22AA9
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:18:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAAB1378;
-	Sun, 28 Jan 2024 00:16:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73E0F817;
+	Sun, 28 Jan 2024 00:18:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFL0NTA1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="JPsBH+Bc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C734D1113
-	for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 00:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6A4D7EF
+	for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 00:18:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706400979; cv=none; b=de5txnL6/JX4to8gyXl7cgjqZawURevul0eXsjmL88kV8NtXEPWY79ksu/rUDEDhtX76Hz6pyixo7XhB6b3yIhvDxgZGLZafKssrN/DS9Wd5bzyO8DgdDAm6hNVz2xxOMJDz0OMbAHPq/IbMBQnsi4ehAn+Dl7Bvq/uYNYujOvc=
+	t=1706401088; cv=none; b=kBJWWZnqNEugm3TDXfESgSRzXCElhFWCql085W4e4fgVnJIITM1A7m8tq1WWNf+xvg5pxZ9LMbTNwiLoXK04rmbE79DEo1QQCsYWeVVNWTZMexYlnEOtzBpNwBP3aoKRtgev+io/GbJK0yT3wHl/2vjR64U2fNG6LeWX+IDGueg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706400979; c=relaxed/simple;
-	bh=j+JxCkxm7sKq7EUWqxAMAVKkQ0zzFi+vxNp56Qbb27o=;
+	s=arc-20240116; t=1706401088; c=relaxed/simple;
+	bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=b8YR0CAMXO9K/6+dd/d/WKZZUiflYocNetOAnDARSD/gFo0OEwAKrKz27ki+8FKoKHHCTto0I/GQ5rAuRqOY5MCyBrikw7TTj2NcxszTU3+4flk7ZP5F00JoO1bPa5Gdi6cNl/VGj/LEplJTA2mpXDen+yj0f47u7HTnai0oI1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AFL0NTA1; arc=none smtp.client-ip=209.85.128.172
+	 To:Cc:Content-Type; b=g8x7xYcLwcUH8dlNRIlzJE8uulVG0Xs/Ef1dlbmh9sJ92iFCPNQTbHrlMcrg0zwZNOZ5CMxTNU1gIrZggsxKqcgHDOXA+x+efEYZjLrYiecYL7KWuQ7GbSiiKco9EnbgWIdujIDHYxeDzSCTPIWyV/cLk5nIRK0vVGEWq+9dd6Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=JPsBH+Bc; arc=none smtp.client-ip=209.85.128.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5ff88cbbcceso17825617b3.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 16:16:17 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-602cab8d7c9so17411827b3.0
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 16:18:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706400977; x=1707005777; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706401085; x=1707005885; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
-        b=AFL0NTA1DcxII6tzf8OKwD8eQuaqZOXbqNBkeFpjC94ELa3nmLoaatR15sI/Mzr2eb
-         b5MMlQfpa4wpMrR/8AOFnIRUfnBSIPZNM3HkLXAuXELy4O34rwotfvCPjvVRIIy98dHk
-         vV9k+Whu1pOIO+vzTmcRYscG7UdswUfT2B8ZZ7aC3gwYvDX6AYQWGvAeGkRt7UXngvw/
-         9rhaH++3FWa66SvYq7dkd4SGwvnsHvebrM7ecRjuryQV3vY6+7G9N7NEzy+uGZJNZ2QS
-         BkmHvorTcAxKoK/1FKDnISHrYQXMSJZgiB/sTKxR1NF8EF8+PFuCAc7jeZSO8SNJgiQM
-         ME4Q==
+        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
+        b=JPsBH+Bc4/47Z68FUI6jiqsHxV1njVROINNaI1NehFG1rl3cqvLilZP4eGMPS5umSo
+         UIcXlJ787OJVMZBI9tDkRKkY+e7Jn5HQp3cngQrfkT75uNBbC86BgjSxdO64znnEJaXP
+         6S5XI6DfmAaM5gnUPz2VUpXeCY8ohE8HGISUaUddTCWvo9ewy+xfN6jzKsiI2v+wKZm2
+         OZ0x1FlKBMDUQKDsL2EWFQWT7kk78gSjYXH9UitPp2JwLpZWZ18MGLaRhUuI+QWNNCKU
+         Khbroirwv+pfui/m21yKITAxx3qEFoCMk4zNBvAhnxldFwdUH/5GsuJILsJaOiVULiSp
+         ztNQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706400977; x=1707005777;
+        d=1e100.net; s=20230601; t=1706401085; x=1707005885;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
-        b=kUFdlkipjfAnR4ibcp9gkOysjZKehdF4bTaHdmCDUGv/ycPKgTQwpv3lYncPEG9hIu
-         UCP7YzA5m/J5dWsSpVaZv1qeNPLg4vgjYJsRw0D1D8FDGlkzhKK+3tG0mEymB0iX//rB
-         3qcx9V3SKNlbH60o78qlRvnAqBRAraIOul5KC0PUNzbZ1ccgvo3KI3y1gSFiDR5OrLVv
-         JWmvmoX4Ki+6Ul538A7Vg+b+eMq9nZN9UTESWUOj6FC4J0TCgry+urfMtfEUaSTb/odd
-         dny0ZTQ4i9nnxbpCyPXw7d8+qOKKLx50x5a+bLMCSzufLc6FRqprKuSmEJk9aKMjhHVY
-         iMSQ==
-X-Gm-Message-State: AOJu0YwbaJHtxZrfXAcvRE9WwSS8LqdY72EEC7hGu4YrCAjTiHGz9WOr
-	UDwHmmEShW2dofPvErY7XYsXytnVnL7ij8ivzUxsXQrFn2Fqu5USZTZcTkHZ3pat5ngQkToN7ff
-	GUijmBlyar6EK2fpBhzYf/H49ZSyJGfAjKzmfdw==
-X-Google-Smtp-Source: AGHT+IGwmGgY1ob0uH5QlnJBFG56d3EExCZTVCMfztOEBi1dd1S0zZOOU4ZeO4Sz3B1u3wcOKCmKCWeNC8YM5Hl5v7c=
-X-Received: by 2002:a0d:f4c3:0:b0:5d7:2c6b:623 with SMTP id
- d186-20020a0df4c3000000b005d72c6b0623mr2487594ywf.39.1706400976785; Sat, 27
- Jan 2024 16:16:16 -0800 (PST)
+        bh=j5U43ZFbCsJb6lHwAcl1F4qcbBRnNSRS/V/qvHROetk=;
+        b=oHQilh7IiImGrhTq0pW3uxKS3Y0jBTjw/ftcUyWFs8thia6YmLs89euEtvnsWnTa3b
+         /OPU0t/B4Ul1YBN3mYwbcJuS+htup0vsAiJSgfm2WRbcPdV9IxXdyhgP4hREI8d4EsUU
+         O/w8A+h3cMmyI5ttMmhx66Mai7SAg0V+p3TzvTRI2yeDff1JHt1msNpi7QUh+HkFw2b4
+         DVVl0m9OpCBWhaqh4nMJNGAtpYlV9JZbADNZIydpRF9YbJQNYlnsJikYTDKh63f/14aj
+         7+xhH2uxY/7LXRJFh6zLBDOgHWjpYlbs9gPfHRF6sSMAsyEaykQ/z7siAvX++rkT5p0E
+         eHRQ==
+X-Gm-Message-State: AOJu0Ywck/Dblfin+qz6jkp/JsZzYOXjGwRN/at6xYEhKaYvmdfHcgUk
+	c1kLx0VGwYaPKxsBHDbNWipxNZEUH2/y3Yz25wlRtugdz/oaTLLf6TXjuwFkXsxlNtkrpWsBtp6
+	iG3t3kZCNNRRsXJul2X7EjSEJByNYrib+z7fSbA==
+X-Google-Smtp-Source: AGHT+IH8cZ3Ct9kEcx0+uVZJo7csWTgzm3s0Y94pW37sweJX/O3Hp57cxCEs9DZdU0aHUa91xmfqMSQTphzmO4zwC2k=
+X-Received: by 2002:a81:a784:0:b0:5ff:95a8:953 with SMTP id
+ e126-20020a81a784000000b005ff95a80953mr1717410ywh.75.1706401085482; Sat, 27
+ Jan 2024 16:18:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com> <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
-In-Reply-To: <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
+References: <20240119181909.7079-1-erick.archer@gmx.com>
+In-Reply-To: <20240119181909.7079-1-erick.archer@gmx.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 01:16:05 +0100
-Message-ID: <CACRpkdaoBgcYToh2Za9k6gek=MX5Q1YZEoy+MrE-oL3t0UhJpg@mail.gmail.com>
-Subject: Re: [PATCH NOT APPLY v3 6/6] pinctrl: scmi: implement pinctrl_scmi_imx_dt_node_to_map
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
+Date: Sun, 28 Jan 2024 01:17:54 +0100
+Message-ID: <CACRpkdaDyF-ujRfsKWvbXrs695yTStpmFm=QovU1bnONyOCn9g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-zynqmp: Use devm_kcalloc() instead of devm_kzalloc()
+To: Erick Archer <erick.archer@gmx.com>
+Cc: Michal Simek <michal.simek@amd.com>, "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Peng,
+On Fri, Jan 19, 2024 at 7:19=E2=80=AFPM Erick Archer <erick.archer@gmx.com>=
+ wrote:
 
-thanks for your patch!
+> As noted in the "Deprecated Interfaces, Language Features, Attributes,
+> and Conventions" documentation [1], size calculations (especially
+> multiplication) should not be performed in memory allocator (or similar)
+> function arguments due to the risk of them overflowing. This could lead
+> to values wrapping around and a smaller allocation being made than the
+> caller was expecting. Using those allocations could lead to linear
+> overflows of heap memory and other misbehaviors.
+>
+> So, use the purpose specific devm_kcalloc() function instead of the
+> argument size * count in the devm_kzalloc() function.
+>
+> Link: https://www.kernel.org/doc/html/next/process/deprecated.html#open-c=
+oded-arithmetic-in-allocator-arguments [1]
+> Link: https://github.com/KSPP/linux/issues/162
+> Signed-off-by: Erick Archer <erick.archer@gmx.com>
 
-On Sun, Jan 21, 2024 at 11:18=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
-om> wrote:
-
-> -obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o
-> +obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o pinctrl-scmi-imx.o
-
-I think you should probably create a sub-Kconfig option for this file.
+Patch applied!
 
 Yours,
 Linus Walleij
