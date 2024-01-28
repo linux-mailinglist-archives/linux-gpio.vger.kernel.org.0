@@ -1,122 +1,105 @@
-Return-Path: <linux-gpio+bounces-2668-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2669-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 959C083F270
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 01:13:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50EED83F273
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 01:16:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1D862B233D4
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:13:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0DAE328609D
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 00:16:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A07EC7;
-	Sun, 28 Jan 2024 00:13:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FAAB1378;
+	Sun, 28 Jan 2024 00:16:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Knd4iKg1"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFL0NTA1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3E17645
-	for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 00:13:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C734D1113
+	for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 00:16:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706400783; cv=none; b=nrZ7c0A+JWQ6KgFNeJEceKGhLD3mHVYztD0dc1gt8feG7n6F/pfovlpkeM+8fkeSPG4G9UdmObjJfYXuPKGrBXs8Lu3XfbqAwbs1wnOE3xtDJzWcICQBc+/DSZcZLZA/WswrOWaOx3+E/bbyoi6jAkWXVyDCYP/3/eYlgGE510A=
+	t=1706400979; cv=none; b=de5txnL6/JX4to8gyXl7cgjqZawURevul0eXsjmL88kV8NtXEPWY79ksu/rUDEDhtX76Hz6pyixo7XhB6b3yIhvDxgZGLZafKssrN/DS9Wd5bzyO8DgdDAm6hNVz2xxOMJDz0OMbAHPq/IbMBQnsi4ehAn+Dl7Bvq/uYNYujOvc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706400783; c=relaxed/simple;
-	bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
+	s=arc-20240116; t=1706400979; c=relaxed/simple;
+	bh=j+JxCkxm7sKq7EUWqxAMAVKkQ0zzFi+vxNp56Qbb27o=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=inUxsmIKKnpgGrXM2rpSbarASeCRHWamtFmYn14NZgRhelD4vdbmxnehCsVQ5GOMuy0NFToquRpXKyXDOp01FoUbwvAgsoYQFeLqdWjHgi+4vnp7lVB7/yU83dcwrj2mLTw0TV+TO3asviawYzhJmNeYTRCcTFiRl9fWGLm/cIQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Knd4iKg1; arc=none smtp.client-ip=209.85.128.177
+	 To:Cc:Content-Type; b=b8YR0CAMXO9K/6+dd/d/WKZZUiflYocNetOAnDARSD/gFo0OEwAKrKz27ki+8FKoKHHCTto0I/GQ5rAuRqOY5MCyBrikw7TTj2NcxszTU3+4flk7ZP5F00JoO1bPa5Gdi6cNl/VGj/LEplJTA2mpXDen+yj0f47u7HTnai0oI1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AFL0NTA1; arc=none smtp.client-ip=209.85.128.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-5ff7a8b5e61so15216027b3.2
-        for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 16:13:01 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-5ff88cbbcceso17825617b3.2
+        for <linux-gpio@vger.kernel.org>; Sat, 27 Jan 2024 16:16:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706400781; x=1707005581; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706400977; x=1707005777; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
-        b=Knd4iKg18Z4f0c8GB15trf0zkYf10XvmbfR5oXYzrrhmQUjpmU9uoDvHZvi3hWtwUy
-         pallI8zTdUyh0weWLu1Gfuer47d+3tUawW4tJjSrfmOBJ4asFkkNwGp1Gz2EAPtcS1LL
-         x5goR1nqRi6Ib+VCLFygbtkPW3Tqao/24HSqOOrLerpHgX9LrebCCLT3IzfntwHLSf/l
-         5OaJ+ZMj6QUT8rjl4XuTnEX9B3oe9trxxKOzpFCejA/2s/x3+TNkpjvDiS5kjl0PQt9y
-         d8nCeUyjIPsnwz5gh5leGsrloqmj4Uhpfy16wAUhrvrdWelLB9/4ua7VfTzuB/2tYMoJ
-         5CIg==
+        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
+        b=AFL0NTA1DcxII6tzf8OKwD8eQuaqZOXbqNBkeFpjC94ELa3nmLoaatR15sI/Mzr2eb
+         b5MMlQfpa4wpMrR/8AOFnIRUfnBSIPZNM3HkLXAuXELy4O34rwotfvCPjvVRIIy98dHk
+         vV9k+Whu1pOIO+vzTmcRYscG7UdswUfT2B8ZZ7aC3gwYvDX6AYQWGvAeGkRt7UXngvw/
+         9rhaH++3FWa66SvYq7dkd4SGwvnsHvebrM7ecRjuryQV3vY6+7G9N7NEzy+uGZJNZ2QS
+         BkmHvorTcAxKoK/1FKDnISHrYQXMSJZgiB/sTKxR1NF8EF8+PFuCAc7jeZSO8SNJgiQM
+         ME4Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706400781; x=1707005581;
+        d=1e100.net; s=20230601; t=1706400977; x=1707005777;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=s382zJRyJ6x/m0CqRGyW8m+O+mRKPthrymTT1vXT0ds=;
-        b=xAUnU8KHP2Sk7Mw7f+f1XK1rObsR1CJihdg/EwN+E5oj6vb4ZtreB61VdQq/fGJ0qj
-         X2ZQ+4pEC3w+f6T+sXyTJ5xaWRFTyPE+CzhQw+sKmzaCAWA5VWGmpumCZYfn283bV0nG
-         s35CJaXo0vCMm6gYGu56uDOtaQuhYY+MSfP6WSailKuIRWQK0bADFECVZPePHTUfH1cO
-         /yucKUMQDhPvGC5DA1lSCRVyBH7qDOMF7vG2kRZ6IPmZfqrYQHnQq0WemeLWMoJMMSit
-         JaZnlYT3nsf+5EC+ayfQ7znkLFO2fHCayFdum4cCIC5EbWHEAzKEo8mJfe2I00bz1KKB
-         GN1Q==
-X-Gm-Message-State: AOJu0YwT6zrr4GBg/Vf1xhB33qfhBZ6HdVvBdho55yiLEojyTrBtl/2T
-	MwWer2O7Qd+tXLVAMAsJnvUFdGTRgRiNfv6U8MaHZFDFrbQzARwqt3P/ds2qmKsFwX6oWGICmSZ
-	sxnr/0xOOiJ4Pczac/4MIX4BmMB+EJBbxtnsmEA==
-X-Google-Smtp-Source: AGHT+IEZVSZUzzjxzZn0Av2/7INObuTua3Mia5HKhwhoo7tJ2m/wqcv1w98aBP4XbcXGiLtyHqQ0OWN/g5UmL4382Eg=
-X-Received: by 2002:a81:4426:0:b0:602:c9ad:f979 with SMTP id
- r38-20020a814426000000b00602c9adf979mr1944880ywa.75.1706400780839; Sat, 27
- Jan 2024 16:13:00 -0800 (PST)
+        bh=Okg1vO1j4FYoqrEXhHbzMFKSp7IGpxrooy4PaFetwPE=;
+        b=kUFdlkipjfAnR4ibcp9gkOysjZKehdF4bTaHdmCDUGv/ycPKgTQwpv3lYncPEG9hIu
+         UCP7YzA5m/J5dWsSpVaZv1qeNPLg4vgjYJsRw0D1D8FDGlkzhKK+3tG0mEymB0iX//rB
+         3qcx9V3SKNlbH60o78qlRvnAqBRAraIOul5KC0PUNzbZ1ccgvo3KI3y1gSFiDR5OrLVv
+         JWmvmoX4Ki+6Ul538A7Vg+b+eMq9nZN9UTESWUOj6FC4J0TCgry+urfMtfEUaSTb/odd
+         dny0ZTQ4i9nnxbpCyPXw7d8+qOKKLx50x5a+bLMCSzufLc6FRqprKuSmEJk9aKMjhHVY
+         iMSQ==
+X-Gm-Message-State: AOJu0YwbaJHtxZrfXAcvRE9WwSS8LqdY72EEC7hGu4YrCAjTiHGz9WOr
+	UDwHmmEShW2dofPvErY7XYsXytnVnL7ij8ivzUxsXQrFn2Fqu5USZTZcTkHZ3pat5ngQkToN7ff
+	GUijmBlyar6EK2fpBhzYf/H49ZSyJGfAjKzmfdw==
+X-Google-Smtp-Source: AGHT+IGwmGgY1ob0uH5QlnJBFG56d3EExCZTVCMfztOEBi1dd1S0zZOOU4ZeO4Sz3B1u3wcOKCmKCWeNC8YM5Hl5v7c=
+X-Received: by 2002:a0d:f4c3:0:b0:5d7:2c6b:623 with SMTP id
+ d186-20020a0df4c3000000b005d72c6b0623mr2487594ywf.39.1706400976785; Sat, 27
+ Jan 2024 16:16:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
- <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com> <20240116074333.GO5185@atomide.com>
- <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
-In-Reply-To: <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
+References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com> <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
+In-Reply-To: <20240121-pinctrl-scmi-v3-6-8d94ba79dca8@nxp.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 01:12:50 +0100
-Message-ID: <CACRpkdYUVbFoDq91uLbUy8twtG_AiD+CY2+nqzCyHV7ZyBC3sA@mail.gmail.com>
-Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to suspend_noirq/resume_noirq
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Tony Lindgren <tony@atomide.com>, Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
-	Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>, 
-	Aaro Koskinen <aaro.koskinen@iki.fi>, Janusz Krzysztofik <jmkrzyszt@gmail.com>, 
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
-	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Tom Joseph <tjoseph@cadence.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
-	=?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, 
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-omap@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
-	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, 
-	thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+Date: Sun, 28 Jan 2024 01:16:05 +0100
+Message-ID: <CACRpkdaoBgcYToh2Za9k6gek=MX5Q1YZEoy+MrE-oL3t0UhJpg@mail.gmail.com>
+Subject: Re: [PATCH NOT APPLY v3 6/6] pinctrl: scmi: implement pinctrl_scmi_imx_dt_node_to_map
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
+	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 19, 2024 at 6:01=E2=80=AFPM Thomas Richard
-<thomas.richard@bootlin.com> wrote:
-> On 1/16/24 08:43, Tony Lindgren wrote:
-> > * Thomas Richard <thomas.richard@bootlin.com> [240115 16:16]:
-> >> Some IOs can be needed during suspend_noirq/resume_noirq.
-> >> So move suspend/resume callbacks to noirq.
-> >
-> > So have you checked that the pca953x_save_context() and restore works
-> > this way? There's i2c traffic and regulators may sleep.. I wonder if
-> > you instead just need to leave gpio-pca953x enabled in some cases
-> > instead?
-> >
->
-> Yes I tested it, and it works (with my setup).
-> But this patch may have an impact for other people.
-> How could I leave it enabled in some cases ?
+Hi Peng,
 
-I guess you could define both pca953x_suspend() and
-pca953x_suspend_noirq() and selectively bail out on one
-path on some systems?
+thanks for your patch!
 
-Worst case using if (of_machine_is_compatible("my,machine"))...
+On Sun, Jan 21, 2024 at 11:18=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.c=
+om> wrote:
+
+> -obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o
+> +obj-$(CONFIG_PINCTRL_SCMI)     +=3D pinctrl-scmi.o pinctrl-scmi-imx.o
+
+I think you should probably create a sub-Kconfig option for this file.
 
 Yours,
 Linus Walleij
