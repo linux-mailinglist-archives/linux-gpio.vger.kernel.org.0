@@ -1,127 +1,144 @@
-Return-Path: <linux-gpio+bounces-2682-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2683-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A1E883F62B
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 16:50:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C7F783F83A
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 17:52:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6059E1C20BCB
-	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 15:50:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BCDF428AF0F
+	for <lists+linux-gpio@lfdr.de>; Sun, 28 Jan 2024 16:52:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 30F462561A;
-	Sun, 28 Jan 2024 15:49:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35BBC1E872;
+	Sun, 28 Jan 2024 16:37:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YloWInVu"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="GLcfozVL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5298E2DF7D
-	for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 15:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8D122D058;
+	Sun, 28 Jan 2024 16:37:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706456997; cv=none; b=PWTI0b3ijLs9sP7TzJgX1X7y1yOwBlKhka3fB/fM8VAehlFl0xEX6cg9DDBEgznpGjSaNNQ3REW1ZqhE0QDHSMGS9bCYZWhtKnBzNO5onzb88HfvO6F/f3anRpR1q5BJxx5ZoI2NtOzmv7z7LgyZjUYheVENOaGcBt8tM3XwQxI=
+	t=1706459834; cv=none; b=gjbJz2gj6p974oohde1jLy6C9l69pR5o7HCgPzd2EC3pl+50wr1c1+qxW/Z8m06DGhMsTdm48oZr6MHTRarOs9RV819d+LMlrCVckSrH9JcFtol+QD7llf4b0t/b264urI2vcNkU79ll2Lzafu1+0NMBHSHqF9TMSpi51XaXGBM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706456997; c=relaxed/simple;
-	bh=b9YOMazdycLIyx8go7JhQ7ohEA+spjOnKg86jFJ9vGQ=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DBShFxAJE2xFpT6HhjWb2RkHnMJEQiIWPM1PeqoReonzK3dI7SyBFV8aw0x+eqFL/V9Y3PLsaJrsUPj2CA2B3ruyPPF3GL8vqg8soNQYTWcUcXzobF2rp6PqlswJW5oU0QjSyhgmMBWXUjj+8E5UjjxHSRYHmS2otysCgF19j00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YloWInVu; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dbed0710c74so2135184276.1
-        for <linux-gpio@vger.kernel.org>; Sun, 28 Jan 2024 07:49:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706456994; x=1707061794; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gi0ytb2PS1JbjjM4o7VAyC0Cey5FRxMI0Z/urzxWn1E=;
-        b=YloWInVurMqV0uCP9OF2WZNs+Lp9fsWC3kSNTxALfD0J9liZih1XGjw1uPN3XfGg2r
-         xFQMeqtqe+Puv1tMzkLlLCfeTKfo1T55aKnkAPh88YcHXvpuXkEYzdgjfCfQLbfs33E9
-         oD0EH+NkzXAFJqYp0rZMYUoNUrkXRUfIilxBata0rd0rjZqiJXpelc4lqFtatYawa9vI
-         qXbUCBZxNa2ppRWaQGAm5uGHcA1brGS7SM5lR5+uVl/JWL7noyPB/A6g4QZbtXetk2Xm
-         TtTxO+LnHqHxDBhepxRN4qv1w015fTTmf2TTGOmMgSjatFifay+uD8O/4AreQqxJ8U5q
-         F6hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706456994; x=1707061794;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=gi0ytb2PS1JbjjM4o7VAyC0Cey5FRxMI0Z/urzxWn1E=;
-        b=VtVh9E30B/hN+5NojRGWCvyJsoRUvDpNr2ZY90BjW4YStGdggPPSK0IyvHCy93G10m
-         C4G9yGJApDKlYecCZbvks2xMGQCbxp3RqKD9EKrjc0hwliNlKOQlR9cW35M8KNgFRDyL
-         nZi2VikVP51QS0juVZ0ske3FgSjtFIfgnRc/WvrBgcPXQIalE1EAexfriwRoqsjVbSXF
-         pr/a6H8gUmbw0qh6EcevuzUshZisXuT0TD8UBHCOFp4G1epCqBNVumMD8FqEeD69OBOF
-         KlsjNSrxlTOrejwywUOgN/Wt3D9tlJPqdh3U8SA63oQsqJe9WBc1qbBhhrhRMmOx/jBa
-         pXwQ==
-X-Gm-Message-State: AOJu0YyfwA4fUyU/WaWHyqIGOeiHfUI9T4cmeuHOc4HceeDkut4PETGV
-	qKuzjcX2HFXJTdoKv3ZFA3CtzN0jc8y1JQLeU3yeNF3fC8KczHjL+CS8ZBnImdl7QT4sofArqWP
-	9mo2WhsEqAuldfwG28LUjSWZxm2VBRf44DQNw1w==
-X-Google-Smtp-Source: AGHT+IGJWMQydQjjqGuMPg05Ai+wt32rzyv2gomooaD3rn4+LJmjeir6ImCczZPw+dWTd7x/1YV5YVnQnyEGpklyaLY=
-X-Received: by 2002:a05:6902:2808:b0:dbd:ac60:bcd4 with SMTP id
- ed8-20020a056902280800b00dbdac60bcd4mr3313016ybb.75.1706456994245; Sun, 28
- Jan 2024 07:49:54 -0800 (PST)
+	s=arc-20240116; t=1706459834; c=relaxed/simple;
+	bh=vId3B+QvfngqoZ+2btJiUDpbq0U3lHTXMGcNkXBYDu4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=lV1oPIV1OCF9dk186R40fcinBEdCrDQBFM+i3zBEZVHiQaCS/J/M1sJwlxBgCvJLVQFfwEJ7jlmPeU8VrtXD/+Avotm0oUUyHW3/Ae9VOiNXkJUYR0BHoMIQTamB3x5k5rsa48pn5+noGIAn5pOhWwtIDTGX/Z75PO64/2D4bB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=GLcfozVL; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1706459822; x=1707064622; i=wahrenst@gmx.net;
+	bh=vId3B+QvfngqoZ+2btJiUDpbq0U3lHTXMGcNkXBYDu4=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=GLcfozVLoFgQ/bvWQnvq9KCM1ZT7MxaMkvZ397B5zYwrXXyVSFikgQdh9gzMW6iI
+	 6DUWq33GXY+y3lq9xOvV2rDCL6KhDQq7ZdjfHGPZCtA1Y2JNkTyR0gHkgcVsViD0v
+	 ieoFa/bfhWpTa1zmzDjQ5hxr74fSnoHuoBcYABuchAxjZsydibJRiXf10NQPJa4U0
+	 dk5IC1TR3xdsQuxlFl/Wz173ZvANZDS+ggNAAWg4zLhAfZqq2rReiJ5uTGZBN3a8V
+	 KqU1tQ7Ms++0P+h0VzRxYuQB0SrVMSCVU4KJuqbABOgxQdSt7K5adR40B47/7cwiX
+	 K92okKbWQnoVnG4MxA==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mj8qd-1qpao70kBp-00fDN7; Sun, 28
+ Jan 2024 17:37:02 +0100
+From: Stefan Wahren <wahrenst@gmx.net>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: andy.shevchenko@gmail.com,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Philip Howard <phil@gadgetoid.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V3 0/2] pwm: Add GPIO PWM driver
+Date: Sun, 28 Jan 2024 17:36:28 +0100
+Message-Id: <20240128163630.104725-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240123080637.1902578-1-ychuang570808@gmail.com> <20240123080637.1902578-5-ychuang570808@gmail.com>
-In-Reply-To: <20240123080637.1902578-5-ychuang570808@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 28 Jan 2024 16:49:42 +0100
-Message-ID: <CACRpkdYi-y9zWAR71rQOtKVJOuGgE4n8Q47YXZW=Pt345UWDkw@mail.gmail.com>
-Subject: Re: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
-To: Jacky Huang <ychuang570808@gmail.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	p.zabel@pengutronix.de, j.neuschaefer@gmx.net, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	ychuang3@nuvoton.com, schung@nuvoton.com
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:PYEzXqihChMvToHzO80yaxYNH9PrYgE5vfDVXNQTHNcFH6RJBr0
+ HXKrs6wZKYdIaH40vbepjgId7GDKBLDOjfBOORDJFt4cKlR85vPhuXZpZfW7SXrIturNa8e
+ asnHZMUtklKhqb2bI0LYAuBwocuLMGP3CouMDgSrRFFASmeuQFRGIqL9730sjEO+5KZYwK4
+ dPLcjVhpFpZWCGzB5KOpw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:W1I+2xf9EnQ=;WN/f+CwUjnQeq37W1DuuUe7tJa6
+ 07YiLJBgbzQVH+AwFDwzutyU36tvyfCiEtFEOQIAM9oO3llETu61ZGu8oXm+PiVa69XRU8VGB
+ PwAoidAI6W0gDQj78aTVndxmbgxclSeEoDfweptDkLEiDxYtTeTDaLUZDKoXykl7j0w2NtBS2
+ rolIb+3sEfA9TAiykrpf8G+tjcJgKhmegNhhoOcYXLSTsbYMqOkmk4hgh/KeDfZtBAjxDICAR
+ RVL1p8VbrLNjQAlByRXRtmaFVEf+TuJJEtHxzxEx0sUmqUtIaOJ4GUK0Nwv718fw6DcktS5eb
+ FpvdyL6oHGP67LotUOTxt9q2AjzUrESmf0qR5wwFq+24ReGa6VKZDEAfyWcnG5LnqgW0JTJdY
+ 25qbNNOWY3DG7vpjiz0xAWGNkPm+8r8dhBRR9dwguBICF7OZpfSXe/0qBJZwQF+Zxwq5IBfWq
+ qnq4awpzwQ9QIhFgqEPAJjwBJKsaUvghOl+2bwMM/oCQthgaEmvTYdAIKu/qI4SMZEhJnzM/X
+ LzA4149W18yr4S/Iy5ydJXgdzBl70HLc7+FTQj93yXQK3VQSkpqZR2lJ83FRHwwZBV4wxcTwF
+ fZDrgAqOZPPy0v0Sj3Q1nfycjgfhGS795+LapqDb2YIZI9rWI/x9PjPHZlith9ThvxU9BeTcq
+ AwQbspHZFqGvoVoifteJwrOAdScocoa5UVmDTRJDHxVdBK7ge1cYwQQDT5DCcQuiDBt+amST2
+ 5xmjAsXKbbzNj5C+E4PmpB1YEnFEKC5ZCVYtqLUldNgSzTpSos66OcDUJsVmf4OXRuDrl/Swe
+ TXhBoY8/uB+9X6X9y0GMaulSQU1hZLhRERfJ7Oa0VkKYZwDVJOojr3Mp7g58PhomRzZA4H/3P
+ B/QH4mpWHvcXyU3sanjqqLBYIIl0gmsDPwQ1EldM7HoJL+K6+uw6sSxlrpQrBTYSsBpUL02PD
+ 2vTZyZqivtK3xA395G4QTxOHNmA=
 
-Hi Jacky,
+Add a software PWM which toggles a GPIO from a high-resolution timer.
 
-thanks for your patch!
+Recent discussions in the Raspberry Pi community revealt that a lot
+of users still use MMIO userspace tools for GPIO access. One argument
+for this approach is the lack of a GPIO PWM kernel driver. So this
+series tries to fill this gap.
 
-this caught my eye:
+This continues the work of Vincent Whitchurch [1], which is easier
+to read and more consequent by rejecting sleeping GPIOs than Nicola's
+approach [2].
 
-On Tue, Jan 23, 2024 at 9:06=E2=80=AFAM Jacky Huang <ychuang570808@gmail.co=
-m> wrote:
+The work has been tested on a Raspberry Pi 3 B+ and a cheap logic
+analyzer.
 
-> From: Jacky Huang <ychuang3@nuvoton.com>
->
-> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
-> add support for ma35d1 pinctrl.
->
-> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-(...)
+V3:
+ - rebase on top of v6.8-pwm-next
+ - cherry-pick improvements from Nicola's series
+ - try to address Uwe's, Linus' and Andy's comments
+ - try to avoid GPIO glitches during probe
+ - fix pwm_gpio_remove()
+ - some code clean up's and comments
 
-> +       if (ma35_pinconf_get_power_source(npctl, pin) =3D=3D MVOLT_1800) =
-{
-> +               for (i =3D 0; i < sizeof(ds_1800mv_tbl) / sizeof(u32); i+=
-+) {
+V2:
+ - Rename gpio to gpios in binding
+ - Calculate next expiry from expected current expiry rather than "now"
+ - Only change configuration after current period ends
+ - Implement get_state()
+ - Add error message for probe failures
+ - Stop PWM before unregister
 
-Isn't this equivalent to:
+[1] - https://lore.kernel.org/all/20200915135445.al75xmjxudj2rgcp@axis.com=
+/T/
+[2] - https://lore.kernel.org/all/20201205214353.xapax46tt5snzd2v@einstein=
+.dilieto.eu/
 
-for (i =3D 0; i < ARRAY_SIZE(ds_1800mv_tbl; i++) {
+Nicola Di Lieto (1):
+  dt-bindings: pwm: Add pwm-gpio
 
-> +                       if (ds_1800mv_tbl[i] =3D=3D strength)
-> +                               ds_val =3D i;
-> +               }
-> +       } else {
-> +               for (i =3D 0; i < sizeof(ds_3300mv_tbl) / sizeof(u32); i+=
-+) {
+Vincent Whitchurch (1):
+  pwm: Add GPIO PWM driver
 
-Dito
+ .../devicetree/bindings/pwm/pwm-gpio.yaml     |  42 ++++
+ drivers/pwm/Kconfig                           |  11 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-gpio.c                        | 221 ++++++++++++++++++
+ 4 files changed, 275 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-gpio.yaml
+ create mode 100644 drivers/pwm/pwm-gpio.c
 
-Perhaps more cases, pls check!
+=2D-
+2.34.1
 
-Yours,
-Linus Walleij
 
