@@ -1,132 +1,126 @@
-Return-Path: <linux-gpio+bounces-2712-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2713-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF864841526
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 22:26:52 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 124E9841573
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 23:16:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5C941C232B2
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 21:26:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E448C1C245D1
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 22:16:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2133C157E97;
-	Mon, 29 Jan 2024 21:26:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B0AFC159586;
+	Mon, 29 Jan 2024 22:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MQZAohOc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from akranes.kaiser.cx (akranes.kaiser.cx [152.53.16.207])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8FED4CB24;
-	Mon, 29 Jan 2024 21:26:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=152.53.16.207
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BCEC15956E;
+	Mon, 29 Jan 2024 22:16:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706563608; cv=none; b=kQoAiigHH/W41bk+n2kwUeAFJ7Sjtx694nm/H36mEqhNTUS+A/S9LUvArmJU4tsdNEB9cNNO88F+bVzHkwMMnHg9LDLnX88HhL0yPFCP++MAtVN9cUdpjGl/KZ3bRKLz7u+3lzHT+paYRV+/1oyttYsJoFep+gi3O7GqUdnXeGs=
+	t=1706566609; cv=none; b=Dp/o3WP4xVKLrVHQPyl1Q7xdnmfp7B3898QDaJ0Aaikb5mKHHi7MAWQ7VsnGLlZHIeA1TUlhLkhvQtYcBtKb/SFm/G3v10XsN/uMVoTMMGzRFuUTC4+IcE7MpZ0l1SIN7i/5Pg2BH5jwpiA8oKb5RZjT8vK87vrS6Ahs88AZrW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706563608; c=relaxed/simple;
-	bh=t66fD1xG9ic8vzKSKwKoS55kq9k4luC0lr5RlT1LbJU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cxLSLA9oAyZEtgXE/5O0FDnugyGuYgNT3BHFWke+LFuBOPgYDd+Of2fZppdtI4lDHz+ne7iNxtIxf7j9vtqxBb3ZeDjjZFZPwW/P9UpRzNaSctGXSPoQcFaI13T0nZU2ihgOToY5TNtIxRvc285ZaSKM2yc/VXVYHsin0HK87vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx; spf=pass smtp.mailfrom=kaiser.cx; arc=none smtp.client-ip=152.53.16.207
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kaiser.cx
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kaiser.cx
-Received: from martin by akranes.kaiser.cx with local (Exim 4.96)
-	(envelope-from <martin@akranes.kaiser.cx>)
-	id 1rUZ8y-000pa2-30;
-	Mon, 29 Jan 2024 22:26:16 +0100
-Date: Mon, 29 Jan 2024 22:26:16 +0100
-From: Martin Kaiser <martin@kaiser.cx>
-To: Francesco Dolcini <francesco@dolcini.it>
-Cc: Shawn Guo <shawnguo@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
-	Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 1/4] gpio: vf610: allow disabling the vf610 driver
-Message-ID: <ZbgX-HGjM5fdftCG@v2202401214221251712.nicesrv.de>
-References: <20240124205900.14791-1-martin@kaiser.cx>
- <20240124205900.14791-2-martin@kaiser.cx>
- <20240126122719.GA13659@francesco-nb>
+	s=arc-20240116; t=1706566609; c=relaxed/simple;
+	bh=fWlUMRgvqVY95h4dXufWc8ddniO0qcwX7UwmN7CzrKY=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To; b=qTrGaDsxABPRYBO77pCXAtCPHM9LiRnp8/RMBRZjGQcXkjyK0I6K6+gMyBPHyb3A/BKmpH7C4iNrIkZ6XTwIuU7LKmJrmkRs2brY+mU+RK8XerSUYzNfGDXdikbWlUNC0tEFUwDm/9VG6vfMgg0Bs5lTBJpLu6M1MAnThlOBjgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MQZAohOc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A644C433F1;
+	Mon, 29 Jan 2024 22:16:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706566608;
+	bh=fWlUMRgvqVY95h4dXufWc8ddniO0qcwX7UwmN7CzrKY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:From;
+	b=MQZAohOc8Dgk2cjX6jvaB2a8InqsFsEgUpwwpZU2S7fbZRA0vBXW6WQSwHknPL5pw
+	 Db8Yfblz+iPuvPB/SJoPzIfMgTJVjPMp80BU6HK9ZWiykjcov7UibFqd9OAb/hbzTo
+	 02w2rI+/oZM/9FvV4tFg8DgNOGIo438LRESCHy+xdUfXgegDc4FK6gwqbOM1S1KUfk
+	 93rCTIQMZz7MV4r01diHmg33R/SlkevQOAMb86W1RWwkaeO63dCQN5tCYK1C+q17z/
+	 GuvYkKdEKIKG/PsskcufS7cJyHu5gt6cbRS3bxgctjjxpKbilNfvy8YnhfdMXizSJf
+	 Dz3Pdr5WXM7sA==
+Date: Mon, 29 Jan 2024 16:16:47 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Tom Joseph <tjoseph@cadence.com>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v2 13/15] PCI: cadence: add resume support to
+ cdns_pcie_host_setup()
+Message-ID: <20240129221647.GA477676@bhelgaas>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240126122719.GA13659@francesco-nb>
-Sender: "Martin Kaiser,,," <martin@akranes.kaiser.cx>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240126214336.GA453589@bhelgaas>
 
-Thus wrote Francesco Dolcini (francesco@dolcini.it):
+On Fri, Jan 26, 2024 at 03:43:39PM -0600, Bjorn Helgaas wrote:
+> In subject, capitalize "Add ..." to follow historical convention.
+> Also the other driver/pci/ patches.
+> 
+> On Fri, Jan 26, 2024 at 03:36:55PM +0100, Thomas Richard wrote:
+> > From: Théo Lebrun <theo.lebrun@bootlin.com>
+> > 
+> > That function mixes probe structure init and hardware config.
+> > The whole hardware config part must be done at resume after a suspend to
+> > ram.
+> > We therefore pass it a boolean flag determining if we are at probe or at
+> > resume.
+> ...
 
-> On Wed, Jan 24, 2024 at 09:58:57PM +0100, Martin Kaiser wrote:
-> > The vf610 gpio driver is enabled by default for all i.MX machines,
-> > without any option to disable it in a board-specific config file.
+> This is pretty similar but slightly different from the DWC pattern:
+> 
+>   imx6_pcie_probe
+>     ... do structure init ...
+>     if (RC)
+>       dw_pcie_host_init
+> 	pp->ops->init
+> 	  imx6_pcie_host_init
+> 
+>   imx6_pcie_resume_noirq
+>     imx6_pcie_host_init
+> 
+>   j721e_pcie_probe
+>     j721e_pcie_ctrl_init
+>     if (RC)
+>       cdns_pcie_host_setup(true)
+> 
+>   j721e_pcie_resume_noirq
+>     j721e_pcie_ctrl_init
+>     if (RC)
+>       cdns_pcie_host_setup(false)
+> 
+> It'd be super nice to have them the same.  Passing in a "probe" flag
+> works but seems a little harder to read in cdns_pcie_host_setup() and
+> you have to keep track of what it means in the callers.
 
-> > Most i.MX chipsets have no hardware for this driver. Change the default
-> > to enable GPIO_VF610 for SOC_VF610 and disable it otherwise.
+Maybe a better way to say this is that this patch uses the "probe"
+flag to select the behavior of cdns_pcie_host_setup(), and I think it
+would be nicer to split those two behaviors into separate functions.
 
-> > Add a text description after the bool type, this makes the driver
-> > selectable by make config etc.
-
-> > Fixes: 30a35c07d9e9 ("gpio: vf610: drop the SOC_VF610 dependency for GPIO_VF610")
-> > Signed-off-by: Martin Kaiser <martin@kaiser.cx>
-> > ---
-> > v4:
-> >  - add a new patch to enable COMPILE_TEST
-
-> > v3:
-> >  - split the changes into three patches
-
-> > v2:
-> >  - enable the vf610 gpio driver in the defconfig files for arm_v7
-> >    (i.MX7ULP) and arm64 (i.MX8QM, DXL, ULP and i.MX93)
-
-> >  drivers/gpio/Kconfig | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-
-> > diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-> > index 1301cec94f12..353af1a4d0ac 100644
-> > --- a/drivers/gpio/Kconfig
-> > +++ b/drivers/gpio/Kconfig
-> > @@ -711,7 +711,8 @@ config GPIO_UNIPHIER
-> >  	  Say yes here to support UniPhier GPIOs.
-
-> >  config GPIO_VF610
-> > -	def_bool y
-> > +	bool "VF610 GPIO support"
-> > +	default y if SOC_VF610
-
-> any reason for having this default y for SOC_VF610, but not for the
-> other SOC that uses the same variant (i.MX7ULP, ... ?).
-
-Ok, it's probably not as consistent as it could be.
-
-It seems that there are three categories
-
-* Vybrid SoCs
-
-According to the reference manual, they all have the gpio-vf610 hardware.
-Defaulting to y for SOC_VF610 makes sense. It's now possible to disable the
-driver if a board doesn't need it.
-
-There's a bunch of defconfigs, not sure which ones would have to enable
-gpio-vf610 if it weren't on by default.
-
-* imx7ulp
-
-The devicetrees show that all imx7ulp have gpio-vf610 hardware. You're right,
-we should use the same approach, i.e.
-   default y if SOC_IMX7ULP
-and get rid of the imx_v6_v7_defconfig change.
-
-* imx8, imx9
-
-For arm64, there are no SOC_... defines and there's only one defconfig. The
-devicetrees don't show clearly which chip has gpio-vf610. We're on the safe
-side if we enable gpio-vf610 in defconfig.
-
-Does this make sense?
-
-   Martin
+Bjorn
 
