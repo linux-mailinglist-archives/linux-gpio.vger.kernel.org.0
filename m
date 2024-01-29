@@ -1,94 +1,71 @@
-Return-Path: <linux-gpio+bounces-2706-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2707-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B71688407A5
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 14:57:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2D5B840A0B
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 16:32:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A25E41C204FC
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 13:57:25 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E5B5A1C22567
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 15:32:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27D7266B24;
-	Mon, 29 Jan 2024 13:56:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E9CB9155A46;
+	Mon, 29 Jan 2024 15:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UPdF4R/4"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="lFesfq20"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F11965BBC;
-	Mon, 29 Jan 2024 13:56:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 329E915442F
+	for <linux-gpio@vger.kernel.org>; Mon, 29 Jan 2024 15:31:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706536591; cv=none; b=QprtkRb3e9ZQ8u0sKCeEJqEZwgnxN0iiDgPD+XYiqNl9kVXU1hpxVY2To8W2wAerIlSTonAIGiZ5d0i1cXX9KK7dwjOifZS/kGdSFGI107YdmnjvB2B6qrZsb/dT4265kg9xwoVtpFtv2M65CL+JQLeJHM6LyGJg0y8YA3AfPFQ=
+	t=1706542303; cv=none; b=kA0PjM4nLwwpw72gPLME2Q4M7i4WCZW014bmcw7wF8d8GyNB7FG36vnzek6DLewdXVGwg4BkW9dAJIWzuHub0CdGYy6oaOIsSmDaAfdpM7euUecFzXn1kFyC/7WUGZKpXzfGnuJ5IW0SWR0U+nbSMDgLTogCTD2Zf/oIPPKSEuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706536591; c=relaxed/simple;
-	bh=FGSEzWn1LxVZjMRgXwDQ9AesgqJ5I8CYMNMEr12U7U8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ao9lcxjSoCDnqksUnkiwu0Qc6tBuu8lHwxUpECVQsUXZm69/BjCC/aXHGU9guS0Bcbxkn77hB4AGQm84t5M23Jc0SpOGIdU7odJhugwvimycHYCnlO33ngu1s9ygmM50k3UBr1o2oVOPNmPqFjHgUoRXsjXKH/XnJ6CPdp4vZmQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UPdF4R/4; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33ae3cc8a6aso1439272f8f.2;
-        Mon, 29 Jan 2024 05:56:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706536588; x=1707141388; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WclvSvESBcB1ccyxeqjrdGj+frspJc0esD0QtgwrkCo=;
-        b=UPdF4R/4HpA0gTA5h7cj7VbUvWgfDWse7bQ3LQ9tIRNuF4M8u5mMelc5FlsZhZipH1
-         jzrOf2dBLibSfYiV1iwNCJTYVJ7SvnyFpFnC8oDTXxtmqDNAaeJkL8TIrAkCvlOWb3Rc
-         k2f++sgdECqMthvxKaBRZQy/wPzPhqMwKWLWpDMMsdpCZEliTT7ncJT1Chk8UgExMR1V
-         H+DGNpoYS7kEQuZAge5sPH4iI/Yg0Flwc3KZ9I3Jy7rvEWtNKKM6JNagRy5VwhfqjWE5
-         fJ22P2aWtnIZFGJtqLk+3j1R+0LWQkzsoVHMG45o17LHZZIVijLfZV+vd1yugUC2VYII
-         TRmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706536588; x=1707141388;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=WclvSvESBcB1ccyxeqjrdGj+frspJc0esD0QtgwrkCo=;
-        b=nXUOOPoplC0BNmwaHyjFbN5RUPqNlEPceFmsuPyMkxcEXLvFxs/53wk3jf+C1wrLba
-         aSwQ4H2obu4hmUXaxi1LUz1Yd8b8g0hFmpYjnunuUUmkT5FR1SBK4bAyoOMhPP/GzMKl
-         6TndNIImjXyHO+DMCkhFhw2y3qT1ZKXX9d7aXa1rF/N+6icd9MhiXEof5cEFJouQ0jns
-         BR7cnHffoAesYACi8j/BasagO1BO5ECcmdxjan3h8mayd7DEHZ7uNg7GHiEg8yXQxpQ3
-         5I2km9KTF6NtddoTxScC2ALLcWmkMKpKeTn4ORARzNj3GJ2HctCjo9rDFx4EmwgNoAwJ
-         5Tcw==
-X-Gm-Message-State: AOJu0YypyoHlK9YpVF98iMqi7WNURn+CEfqTz8cIOxTGPxiPuWCobA/v
-	Iq7kyEPl/AHSOe/61iWxWcYc6ddFfLdeAYf2wC3Eb7d3pUAkJS18
-X-Google-Smtp-Source: AGHT+IE/VmvDYsDUatlkAcbfvFN0EbwPx+JdGJuMYr0hmxp2wA6wVVhbilb4HSjUJXPxhVsTUXxUyA==
-X-Received: by 2002:a5d:6da3:0:b0:33a:ed3b:3739 with SMTP id u3-20020a5d6da3000000b0033aed3b3739mr2973996wrs.30.1706536588205;
-        Mon, 29 Jan 2024 05:56:28 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:5616:a18c:ea50:2995])
-        by smtp.gmail.com with ESMTPSA id bh5-20020a05600005c500b0033aed46956csm3058057wrb.80.2024.01.29.05.56.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 29 Jan 2024 05:56:27 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Biju Das <biju.das.jz@bp.renesas.com>,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH v6 4/4] riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
-Date: Mon, 29 Jan 2024 13:55:56 +0000
-Message-Id: <20240129135556.63466-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+	s=arc-20240116; t=1706542303; c=relaxed/simple;
+	bh=o51BgwUINRLb2Rh+uyAByfTYdtuxveCXUtLdizACuZ0=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=IIeLIosiqY1zmmTW4cqmMhNZTHwDm3POtAWy/OCUs6GlAIomp5a4FO0Npc61C9rt4d1Ea2U4w+mQPew+G1sfSsx2Wwnh6iIcW9aXqkJLS/Y7tVT3CSoA0tsF0EYry5x6oUFv+XsosX3/yvHzOxaOhfvxCWptgjYqFSz5DSOPbTE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=lFesfq20; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 40T5fMu7006968;
+	Mon, 29 Jan 2024 09:31:40 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=A
+	iNcgNsNR3ED+F23emoqO04WwmuVLFwXwovIMe3YjKE=; b=lFesfq20Nu6u5js6j
+	fRKM7HWR+2VO19Mby6aQJlmgzcWugDIITvUm+QQatO8/LuyQFHn336Q3RaoQkBkT
+	c6lCVztmuu4fsluLMG6xeNWpiUSTxVKGSk5JD3qkt+gKafsq4joEltiGQ7CvjtQ0
+	zt4AY84PzFglEcM6gVI9uUjPd9i21jZz+6G1tD+kOQwwvSoKJi/g8E4azuonknGt
+	aBsWP+3unWh/NVWTl6oD/WZCdkdvqiG1ocQOe4fSi3PYDpnGLWZj5llbxvork5tL
+	/7ibDRvoQon8+jEpiJrtq3oVJMFZNfCRc2H9Sai/iF+GVFNI6SAL2CF1ePpF9vgA
+	Z/Rig==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3vvy4nt7v4-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 29 Jan 2024 09:31:40 -0600 (CST)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 29 Jan
+ 2024 15:31:38 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40 via Frontend Transport; Mon, 29 Jan 2024 15:31:38 +0000
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 6AA2A820242;
+	Mon, 29 Jan 2024 15:31:38 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <linus.walleij@linaro.org>
+CC: <andy.shevchenko@gmail.com>, <patches@opensource.cirrus.com>,
+        <linux-gpio@vger.kernel.org>
+Subject: [PATCH v3 1/3] pinctrl: cs42l43: Tidy up header includes
+Date: Mon, 29 Jan 2024 15:31:36 +0000
+Message-ID: <20240129153138.3221604-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -96,33 +73,52 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: owQgeG-M_7b7AjB3KwIZPRTCe0967HlU
+X-Proofpoint-GUID: owQgeG-M_7b7AjB3KwIZPRTCe0967HlU
+X-Proofpoint-Spam-Reason: safe
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Fixup a couple of incorrect header includes.
 
-On RZ/Five we have additional pins compared to the RZ/G2UL SoC so update
-the gpio-ranges property in RZ/Five SoC DTSI.
-
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Suggested-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
 ---
- arch/riscv/boot/dts/renesas/r9a07g043f.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
 
-diff --git a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-index d2272a0bfb61..aa3b1d2b999d 100644
---- a/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-+++ b/arch/riscv/boot/dts/renesas/r9a07g043f.dtsi
-@@ -46,6 +46,10 @@ cpu0_intc: interrupt-controller {
- 	};
- };
+No changes since v2.
+
+Thanks,
+Charles
+
+ drivers/pinctrl/cirrus/pinctrl-cs42l43.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
+index 012b0a3bad5a..24e21d1e0d06 100644
+--- a/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
++++ b/drivers/pinctrl/cirrus/pinctrl-cs42l43.c
+@@ -5,10 +5,10 @@
+ // Copyright (c) 2023 Cirrus Logic, Inc. and
+ //                    Cirrus Logic International Semiconductor Ltd.
  
-+&pinctrl {
-+	gpio-ranges = <&pinctrl 0 0 232>;
-+};
-+
- &soc {
- 	dma-noncoherent;
- 	interrupt-parent = <&plic>;
++#include <linux/array_size.h>
+ #include <linux/bits.h>
+ #include <linux/build_bug.h>
+ #include <linux/err.h>
+-#include <linux/errno.h>
+ #include <linux/gpio/driver.h>
+ #include <linux/mfd/cs42l43.h>
+ #include <linux/mfd/cs42l43-regs.h>
+@@ -17,7 +17,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/regmap.h>
+-#include <linux/string_helpers.h>
++#include <linux/string_choices.h>
+ 
+ #include <linux/pinctrl/consumer.h>
+ #include <linux/pinctrl/pinctrl.h>
 -- 
-2.34.1
+2.30.2
 
 
