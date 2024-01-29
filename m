@@ -1,82 +1,76 @@
-Return-Path: <linux-gpio+bounces-2691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2692-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7462D83FFCE
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 09:16:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A16D83FFFC
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 09:26:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C99F2B2113D
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 08:16:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CAD98B22233
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 08:25:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D8952F6C;
-	Mon, 29 Jan 2024 08:16:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXFHZndS"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3D5B537E8;
+	Mon, 29 Jan 2024 08:25:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D156AFC1E;
-	Mon, 29 Jan 2024 08:16:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5945553E01;
+	Mon, 29 Jan 2024 08:25:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706516177; cv=none; b=eYNXfBFEOXTvHDcphD0Idgzhe3cmsq0ZdCX+trAuRRfAdi+toUe4lwkhZA3FpOqbek21QqmTB1UmB+YadPq7WX/KCGELaMDRyurS1htaR9q3zkAU8xnb0QiUjHr5Q6NCVFeRn4cccSvzKpRLF1wvYTpg32TkLiZeczZ4TVAfilU=
+	t=1706516752; cv=none; b=HyK+Ulk5TiygJppaerGMNzHJ+2/A+Ha3OxMT6o5GVswRAyhrOgh/S0HcQfgCrscLoFPLBTeVwMDyeLm4UAjmdN7woKrsLee71xCDEpE3UD9QA+V3qLPnnSBJ4SH6Bx3IZRnwomhCY9sVODkobi3RqwYBrXz3pJJAJpDoRprXVjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706516177; c=relaxed/simple;
-	bh=jFq6CQO9eMcsqJNLoTyOaRKicc+pCL4ISPcZG7GRp1U=;
+	s=arc-20240116; t=1706516752; c=relaxed/simple;
+	bh=q1gYYgdvPMV7TyEEJ8sN3MbDG/IkDzJ19sdzRd6Dl2M=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JvsSOugODvt09evKW45ZVstBn+z3SKQ5ceck8K8yzZORrLnpBrraubEmy9JnT/hUr/L+YmV+PMmRr9NYgPyOMyH3EHMG9Lk3jDNDiOZ5i20heXrTrrGY/se//QIfc4Mv+7ArEFPlH8rWWEEab2AKqwNnk/nWmTyewWNIfikQjZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXFHZndS; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=mhu2/gYkYqd1sqGk+AUIaCjPwGkwaWlWIzVuBmRMdpl5dvPq4zfp8F7PgtNbNNkRuPrkjGTOTY5oIvxzEFQOY+/ouKA4FIAg2/5Qd7AGrv26S3UW8FdRq24Jtd+sPNVGpZ867wGLe5zqKJlMvVq48kmPxBRZy8t+Ssx/SHwBfi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4b7fc7642fcso340797e0c.0;
-        Mon, 29 Jan 2024 00:16:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706516174; x=1707120974; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/OL962hsrazE62p7R/jJW2A1J29P+0IWGTWAVOKd3dc=;
-        b=MXFHZndSOTqGhp/9kDYBFlzd98hV4Dfee8lxBS5KV64dToev0O7UKr8wXk/WbNNh8X
-         ZAw4RHlLHowE925ko6IHzq5zQZ8NjIJ7LT/KfurqVOIfGoWsUVar3AxphGj9AgzI4Xlr
-         2Ry37zZW2QtYH1Wd/CplNjrEqh74L4Biy8sRG3SdOfen17p8sBF1tjfdOU9Sm6CE3aMn
-         hHhvpdbh+DU3zvUuA2MA4UksZftTgYjhWFU/W/Zd81p3JC066DnbpBut9agv1/bp9sdQ
-         supa/e87LFFJlPFNoqr5/kFNOmL6dWDhGL/FHQwgEKGp4ICKVgZX/9UIFs6t6XIUr7dH
-         JlEg==
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-602ab446cd8so23294597b3.1;
+        Mon, 29 Jan 2024 00:25:50 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706516174; x=1707120974;
+        d=1e100.net; s=20230601; t=1706516749; x=1707121549;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/OL962hsrazE62p7R/jJW2A1J29P+0IWGTWAVOKd3dc=;
-        b=ZucXktoLourPE34pKHCtRomsUq2q7mU+HDUr9w1a2l8I2bpllmtC7n9RbwMtC9n/Ce
-         Ei10Uk2MwCL4HyGWMqIwayFqN/iH9fsMTCTrgt5Oo5xnhXr5vjSxQtglufheLoGrCD+C
-         fReUTIiJFieTM3gjCfJ+lTTmwpeVDqsNaFkPn0F2f/FboI9G+cwr+6xkoXWtkHwkrhrh
-         kV28xj4roYnJQ+V5bUpY+uV5PemKJUYoEGOxvvTc9lUyj/lyGVP0W0gg7SQmViqAFtNQ
-         7Vxusn8FIqw2a1nQLnJrdbFct4J5f4+tHRH3AKCmEFsux0dpThfw52mIWpcW90txvLuu
-         zQTg==
-X-Gm-Message-State: AOJu0YwR3946pQbIJOMDJ6240YvaivNnQL17mopH0dBOX+xme+DE4ZN/
-	pGBdQ3mcmHKS+/x3IDq7/IM385Q0Eto6P/MvVixJDIr3F/HGwqyOD0v6Ap3xfla9FtMjkx9LzAE
-	5+/wbSNCB1m4rswInmeKjHlPQPYI=
-X-Google-Smtp-Source: AGHT+IFVLswNDcWZYfO3yzzAlQv+TtXRezQ/W4fDx0M03rR10TDzekL3bjX7/Ul6Vk7QpTK9ppe6q4oY0+U+lD94G6U=
-X-Received: by 2002:a05:6122:2528:b0:4bd:5799:2c09 with SMTP id
- cl40-20020a056122252800b004bd57992c09mr1524815vkb.5.1706516174654; Mon, 29
- Jan 2024 00:16:14 -0800 (PST)
+        bh=Qnxd1+UMtflAeTNDn68oCiHgIyPBn7p4OxcQPfoNqMU=;
+        b=QezAcRnUy5ur0Nrmm2KIEo+KbsbyHMpviD+ZqL+B9g0Ld8zV7UV0DVh1O4rnNuiNrj
+         b3sWMVqBABeGj2qVvqqEZD5UnjdEBl8ZFzMSOWs0AtMF18v4IApMtJijNwW/j1TYNwmn
+         1/dFc8WCcNDZbW6olaaujJ56OlnHlbOyHx7sUbf4SP4ObuZtO7DQMYL6kMx42Ijx8YSR
+         VxaLX4Wi/EcsWJsYFu4K2OXUjT4gLePFae6TlDjRfJTTfl39LIrQysBsZJx/lKkxLWmp
+         wzpbafJ1I9GCPivIh2m5GOF4h0mOZubOY4y6sTDeDbHwqXCPEX+I8Fu61dJMwWol8rwf
+         7JlQ==
+X-Gm-Message-State: AOJu0Yw2X5PGeW7ziogVVqkTo1T/SKfjJa3/OYxqxiRpjFlSWfYNGsHg
+	OUG3LXE1hjj+jvHHfzyZMzeCvlJsXGA6riQU2mCjJurUB4oKSCI0cyHUX2sjH7Y=
+X-Google-Smtp-Source: AGHT+IHt2FmPfFVJVznJxUnbieijcR7PqiKiojtoj9hmaXt1H3lzWCLb/jXnHgeQs9w+ybZi9rzqaw==
+X-Received: by 2002:a81:431b:0:b0:5e7:ae43:e90f with SMTP id q27-20020a81431b000000b005e7ae43e90fmr3071006ywa.3.1706516749098;
+        Mon, 29 Jan 2024 00:25:49 -0800 (PST)
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
+        by smtp.gmail.com with ESMTPSA id v4-20020a81a544000000b005ff9a21d042sm2305094ywg.46.2024.01.29.00.25.48
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 29 Jan 2024 00:25:48 -0800 (PST)
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-602ab446cd8so23294537b3.1;
+        Mon, 29 Jan 2024 00:25:48 -0800 (PST)
+X-Received: by 2002:a05:690c:338f:b0:5ff:b07c:3b72 with SMTP id
+ fl15-20020a05690c338f00b005ffb07c3b72mr3540193ywb.62.1706516748639; Mon, 29
+ Jan 2024 00:25:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Mon, 29 Jan 2024 08:15:48 +0000
-Message-ID: <CA+V-a8t4v2CxZWrLRKBinS5fyG-_FzDFz5zA=mgcrNutJABr5g@mail.gmail.com>
+References: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <CA+V-a8t4v2CxZWrLRKBinS5fyG-_FzDFz5zA=mgcrNutJABr5g@mail.gmail.com>
+In-Reply-To: <CA+V-a8t4v2CxZWrLRKBinS5fyG-_FzDFz5zA=mgcrNutJABr5g@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 29 Jan 2024 09:25:37 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdWKvJRFP+zOeWPALbYwAf7Z_UW879q1aLXyFwXqaJp9GA@mail.gmail.com>
+Message-ID: <CAMuHMdWKvJRFP+zOeWPALbYwAf7Z_UW879q1aLXyFwXqaJp9GA@mail.gmail.com>
 Subject: Re: [PATCH v5 0/4] Add missing port pins for RZ/Five SoC
-To: Geert Uytterhoeven <geert+renesas@glider.be>
+To: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
 Cc: Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
 	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -88,61 +82,54 @@ Cc: Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+Hi Prabhakar,
 
-On Mon, Jan 15, 2024 at 1:08=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
->
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Hi All,
->
-> This patch series intends to incorporate the absent port pins P19 to P28,
-> which are exclusively available on the RZ/Five SoC.
->
-> Cheers,
-> Prabhakar
->
-> v4 -> v5:
-> * Made struct rzg2l_variable_pin_cfg variables u32
-> * Updated PIN_CFG_PIN_MAP_MASK macro to use GENMASK_ULL() as reported
->   by kernel test robot.
->
-> v3 -> v4:
-> * Rebased the changes on top Claudiu's patches
-> * patch 1/4 is new patch for using FIELD_PREP_CONST/FIELD_GET as
->   suggested by Geert
-> * patch 2/4 adjusted the code again using FIELD_PREP_CONST/FIELD_GET
-> * patch 3/4 fixed rzg2l_pinctrl_get_variable_pin_cfg() as pointed by Geer=
+On Mon, Jan 29, 2024 at 9:16=E2=80=AFAM Lad, Prabhakar
+<prabhakar.csengg@gmail.com> wrote:
+> On Mon, Jan 15, 2024 at 1:08=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > This patch series intends to incorporate the absent port pins P19 to P2=
+8,
+> > which are exclusively available on the RZ/Five SoC.
+> >
+> > Cheers,
+> > Prabhakar
+> >
+> > v4 -> v5:
+> > * Made struct rzg2l_variable_pin_cfg variables u32
+> > * Updated PIN_CFG_PIN_MAP_MASK macro to use GENMASK_ULL() as reported
+> >   by kernel test robot.
+
+> > Lad Prabhakar (4):
+> >   pinctrl: renesas: rzg2l: Improve code for readability
+> >   pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
+> >     macro
+> >   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
+> >   riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
+> >
+> >  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
+> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 284 +++++++++++++++++---
+> >  2 files changed, 248 insertions(+), 40 deletions(-)
+> >
+> With recent changes to pinctrl-rzg2l.c this patch series (patch #2)
+> does not apply cleanly anymore. Shall I resend it?
+
+Yes please. That would save me from resolving the conflict when
+I get to this series.
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
 t
-> * patch 4/4 is unchanged
-> * patches 1-3 have been boot tested on g2l family
->
-> v2->v3:
-> * Fixed build warnings for m68k as reported by Kernel test robot.
->
-> RFC -> v2:
-> * Fixed review comments pointed by Geert & Biju
->
-> RFC:
-> Link: https://lore.kernel.org/lkml/20230630120433.49529-3-prabhakar.mahad=
-ev-lad.rj@bp.renesas.com/T/
->
->
-> Lad Prabhakar (4):
->   pinctrl: renesas: rzg2l: Improve code for readability
->   pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
->     macro
->   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
->   riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
->
->  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
->  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 284 +++++++++++++++++---
->  2 files changed, 248 insertions(+), 40 deletions(-)
->
-With recent changes to pinctrl-rzg2l.c this patch series (patch #2)
-does not apply cleanly anymore. Shall I resend it?
-
-Cheers,
-Prabhakar
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
