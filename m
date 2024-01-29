@@ -1,143 +1,148 @@
-Return-Path: <linux-gpio+bounces-2690-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2691-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3825A83FC08
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 03:10:11 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7462D83FFCE
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 09:16:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAF141F22DA0
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 02:10:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C99F2B2113D
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 08:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C11E4DF69;
-	Mon, 29 Jan 2024 02:10:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 89D8952F6C;
+	Mon, 29 Jan 2024 08:16:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6JDWFOS"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MXFHZndS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36089DF46;
-	Mon, 29 Jan 2024 02:10:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D156AFC1E;
+	Mon, 29 Jan 2024 08:16:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706494204; cv=none; b=aQWNiACggOyt/KuUdRXIj9vcISG8dfPWtX2YRxlF7jgXpNNnyOyqspO6UvVGf+YaWoAI9jO9mQIaFErX3I2lDPsd3bFGJpkxkmupaMvorn71Xy7K57Ntrd5Jr8RjcKgZJBUziDS+iHxXtAU58OvuhpatItjXWEtgHHYi5Nagk1g=
+	t=1706516177; cv=none; b=eYNXfBFEOXTvHDcphD0Idgzhe3cmsq0ZdCX+trAuRRfAdi+toUe4lwkhZA3FpOqbek21QqmTB1UmB+YadPq7WX/KCGELaMDRyurS1htaR9q3zkAU8xnb0QiUjHr5Q6NCVFeRn4cccSvzKpRLF1wvYTpg32TkLiZeczZ4TVAfilU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706494204; c=relaxed/simple;
-	bh=k7tqqEHDQfhpdfeqK4PWeV1VnbOffVVRA0WzcBwzj3U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o9C4UoqtEkD/qEHmXLN7726NDZeC92/SX6wf//BI/VsXVJnM9inhVbC2gF1sVESSwIylIdMzZ8fi3BZqxhp2o7LUUrvXUChx4miea/4zQFicqtc42Xy3MkdlfHiAixR0cBNyLTRxYK9USAGzXgkfwIfz1BEHAtUGyvs6GLGepFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6JDWFOS; arc=none smtp.client-ip=209.85.216.42
+	s=arc-20240116; t=1706516177; c=relaxed/simple;
+	bh=jFq6CQO9eMcsqJNLoTyOaRKicc+pCL4ISPcZG7GRp1U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JvsSOugODvt09evKW45ZVstBn+z3SKQ5ceck8K8yzZORrLnpBrraubEmy9JnT/hUr/L+YmV+PMmRr9NYgPyOMyH3EHMG9Lk3jDNDiOZ5i20heXrTrrGY/se//QIfc4Mv+7ArEFPlH8rWWEEab2AKqwNnk/nWmTyewWNIfikQjZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MXFHZndS; arc=none smtp.client-ip=209.85.221.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2903498ae21so1137399a91.1;
-        Sun, 28 Jan 2024 18:10:02 -0800 (PST)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4b7fc7642fcso340797e0c.0;
+        Mon, 29 Jan 2024 00:16:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706494202; x=1707099002; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3mjiGLCZC5rtVXIMAirs+5VBtB3jcIfSuBZ8wAgAJ6E=;
-        b=P6JDWFOSVNrv/s1PReyeNrj4GOBBmSGqQbug+mWUUJDgsKOLcE2of18hs10wSRwKMZ
-         Ypspof71spA3AOHfkB6COkUQHlJYRYV2fKh03uSdKx5vEX2So643HAPZJINXcVJpwuME
-         FX/fdcUTY8EmSj0ncdP85k7uv4nvGjZMXMmB2HRREX3XRYUlzqCpaFF3lH11zvc/+9LL
-         e84PowPcuW2Okr6XyIBjmMhWsfbn9FCQmjJCU+RyBqxYvJ2XtyGYUCqNCcrHQDjRaxr7
-         F1wDYeS1EWnINeu8+FolwlpyjgdtJN7SGZs1kFaPITVKmQ7RYsqZ4pMCWX2aNs2ai0Yf
-         L+4A==
+        d=gmail.com; s=20230601; t=1706516174; x=1707120974; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/OL962hsrazE62p7R/jJW2A1J29P+0IWGTWAVOKd3dc=;
+        b=MXFHZndSOTqGhp/9kDYBFlzd98hV4Dfee8lxBS5KV64dToev0O7UKr8wXk/WbNNh8X
+         ZAw4RHlLHowE925ko6IHzq5zQZ8NjIJ7LT/KfurqVOIfGoWsUVar3AxphGj9AgzI4Xlr
+         2Ry37zZW2QtYH1Wd/CplNjrEqh74L4Biy8sRG3SdOfen17p8sBF1tjfdOU9Sm6CE3aMn
+         hHhvpdbh+DU3zvUuA2MA4UksZftTgYjhWFU/W/Zd81p3JC066DnbpBut9agv1/bp9sdQ
+         supa/e87LFFJlPFNoqr5/kFNOmL6dWDhGL/FHQwgEKGp4ICKVgZX/9UIFs6t6XIUr7dH
+         JlEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706494202; x=1707099002;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3mjiGLCZC5rtVXIMAirs+5VBtB3jcIfSuBZ8wAgAJ6E=;
-        b=cpvf+I7dOO5bu7hYLCcmncaOeCS/Z0th3cRZW6B/uGrIE9Yb/EgmjFoCSzly0gN1+p
-         yp//3xxl48w0bz+1C24/1PIMXSIYdkC0P8iTEwRZSvt1CpSLvpgptarT9i80sUA3E5nG
-         c7WYud5F4vFl2sL7jskRPcssHyuRz0JoPzhQVhKCXiAiG+/rhuQ1HO47oeAE7yN2NFrY
-         v5fKjj1PnmePlxL8fdKkYS0p09nk9l/XuXPPEnSwY+B37Dv0L7sxXQRwvcfuouYBPWJc
-         bMHj4o/z6ro78u4JX4YRJcduW6a/yVLHTHFxB/UMSH6UBx6VRFWeNCs8iFjOOKjYo33T
-         ZjCA==
-X-Gm-Message-State: AOJu0YyoQp9z+VIGY58faYgTxCvopPOLUHM0vV/PDOR8zBVuOac2z8CJ
-	7IX5B4QTZzz5+ulbA8QQ4g0Cgx374R8rDj4PdPHyoqMEfRacpHqK
-X-Google-Smtp-Source: AGHT+IFvYo4Wt9EQYFDVRWdym6JuhCaS5Rmf9f2vKpfy2AU8wdOaJh9BcGLUl6hgG6/NTMed3ZU44g==
-X-Received: by 2002:a17:90a:7f92:b0:293:bf6a:feae with SMTP id m18-20020a17090a7f9200b00293bf6afeaemr1246707pjl.18.1706494202319;
-        Sun, 28 Jan 2024 18:10:02 -0800 (PST)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id g8-20020a17090a7d0800b0028bcc2a47e9sm6871980pjl.38.2024.01.28.18.10.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Jan 2024 18:10:01 -0800 (PST)
-Message-ID: <1aff21ed-c185-4d23-8260-fa182a592d15@gmail.com>
-Date: Mon, 29 Jan 2024 10:09:57 +0800
+        d=1e100.net; s=20230601; t=1706516174; x=1707120974;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=/OL962hsrazE62p7R/jJW2A1J29P+0IWGTWAVOKd3dc=;
+        b=ZucXktoLourPE34pKHCtRomsUq2q7mU+HDUr9w1a2l8I2bpllmtC7n9RbwMtC9n/Ce
+         Ei10Uk2MwCL4HyGWMqIwayFqN/iH9fsMTCTrgt5Oo5xnhXr5vjSxQtglufheLoGrCD+C
+         fReUTIiJFieTM3gjCfJ+lTTmwpeVDqsNaFkPn0F2f/FboI9G+cwr+6xkoXWtkHwkrhrh
+         kV28xj4roYnJQ+V5bUpY+uV5PemKJUYoEGOxvvTc9lUyj/lyGVP0W0gg7SQmViqAFtNQ
+         7Vxusn8FIqw2a1nQLnJrdbFct4J5f4+tHRH3AKCmEFsux0dpThfw52mIWpcW90txvLuu
+         zQTg==
+X-Gm-Message-State: AOJu0YwR3946pQbIJOMDJ6240YvaivNnQL17mopH0dBOX+xme+DE4ZN/
+	pGBdQ3mcmHKS+/x3IDq7/IM385Q0Eto6P/MvVixJDIr3F/HGwqyOD0v6Ap3xfla9FtMjkx9LzAE
+	5+/wbSNCB1m4rswInmeKjHlPQPYI=
+X-Google-Smtp-Source: AGHT+IFVLswNDcWZYfO3yzzAlQv+TtXRezQ/W4fDx0M03rR10TDzekL3bjX7/Ul6Vk7QpTK9ppe6q4oY0+U+lD94G6U=
+X-Received: by 2002:a05:6122:2528:b0:4bd:5799:2c09 with SMTP id
+ cl40-20020a056122252800b004bd57992c09mr1524815vkb.5.1706516174654; Mon, 29
+ Jan 2024 00:16:14 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
- driver
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240123080637.1902578-1-ychuang570808@gmail.com>
- <20240123080637.1902578-5-ychuang570808@gmail.com>
- <CACRpkdYi-y9zWAR71rQOtKVJOuGgE4n8Q47YXZW=Pt345UWDkw@mail.gmail.com>
-From: Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <CACRpkdYi-y9zWAR71rQOtKVJOuGgE4n8Q47YXZW=Pt345UWDkw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+References: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+In-Reply-To: <20240115130817.88456-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Mon, 29 Jan 2024 08:15:48 +0000
+Message-ID: <CA+V-a8t4v2CxZWrLRKBinS5fyG-_FzDFz5zA=mgcrNutJABr5g@mail.gmail.com>
+Subject: Re: [PATCH v5 0/4] Add missing port pins for RZ/Five SoC
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Dear Linus,
+Hi Geert,
 
-Thanks for your review.
-
-
-On 2024/1/28 下午 11:49, Linus Walleij wrote:
-> Hi Jacky,
+On Mon, Jan 15, 2024 at 1:08=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
+om> wrote:
 >
-> thanks for your patch!
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 >
-> this caught my eye:
+> Hi All,
 >
-> On Tue, Jan 23, 2024 at 9:06 AM Jacky Huang <ychuang570808@gmail.com> wrote:
+> This patch series intends to incorporate the absent port pins P19 to P28,
+> which are exclusively available on the RZ/Five SoC.
 >
->> From: Jacky Huang <ychuang3@nuvoton.com>
->>
->> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
->> add support for ma35d1 pinctrl.
->>
->> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-> (...)
+> Cheers,
+> Prabhakar
 >
->> +       if (ma35_pinconf_get_power_source(npctl, pin) == MVOLT_1800) {
->> +               for (i = 0; i < sizeof(ds_1800mv_tbl) / sizeof(u32); i++) {
-> Isn't this equivalent to:
+> v4 -> v5:
+> * Made struct rzg2l_variable_pin_cfg variables u32
+> * Updated PIN_CFG_PIN_MAP_MASK macro to use GENMASK_ULL() as reported
+>   by kernel test robot.
 >
-> for (i = 0; i < ARRAY_SIZE(ds_1800mv_tbl; i++) {
+> v3 -> v4:
+> * Rebased the changes on top Claudiu's patches
+> * patch 1/4 is new patch for using FIELD_PREP_CONST/FIELD_GET as
+>   suggested by Geert
+> * patch 2/4 adjusted the code again using FIELD_PREP_CONST/FIELD_GET
+> * patch 3/4 fixed rzg2l_pinctrl_get_variable_pin_cfg() as pointed by Geer=
+t
+> * patch 4/4 is unchanged
+> * patches 1-3 have been boot tested on g2l family
 >
->> +                       if (ds_1800mv_tbl[i] == strength)
->> +                               ds_val = i;
->> +               }
->> +       } else {
->> +               for (i = 0; i < sizeof(ds_3300mv_tbl) / sizeof(u32); i++) {
-> Dito
+> v2->v3:
+> * Fixed build warnings for m68k as reported by Kernel test robot.
 >
-> Perhaps more cases, pls check!
+> RFC -> v2:
+> * Fixed review comments pointed by Geert & Biju
 >
-> Yours,
-> Linus Walleij
+> RFC:
+> Link: https://lore.kernel.org/lkml/20230630120433.49529-3-prabhakar.mahad=
+ev-lad.rj@bp.renesas.com/T/
+>
+>
+> Lad Prabhakar (4):
+>   pinctrl: renesas: rzg2l: Improve code for readability
+>   pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK()
+>     macro
+>   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
+>   riscv: dts: renesas: r9a07g043f: Update gpio-ranges property
+>
+>  arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 284 +++++++++++++++++---
+>  2 files changed, 248 insertions(+), 40 deletions(-)
+>
+With recent changes to pinctrl-rzg2l.c this patch series (patch #2)
+does not apply cleanly anymore. Shall I resend it?
 
-
-Yes, I will use ARRAY_SIZE instead.
-
-
-Best Regards,
-Jacky Huang
-
-
+Cheers,
+Prabhakar
 
