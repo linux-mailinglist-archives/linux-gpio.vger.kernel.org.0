@@ -1,122 +1,100 @@
-Return-Path: <linux-gpio+bounces-2710-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2711-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D036840B07
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 17:13:46 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21439840B98
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 17:34:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD68228D784
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 16:13:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D0585284A48
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 16:34:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7036D155A58;
-	Mon, 29 Jan 2024 16:13:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E96E159582;
+	Mon, 29 Jan 2024 16:30:52 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0B50155A44;
-	Mon, 29 Jan 2024 16:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA2415956D;
+	Mon, 29 Jan 2024 16:30:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706544805; cv=none; b=ZZtjXtRZL+u3eEfnOYpNxPs2M03CdocG6yuwNwl3h8qGfzXVMSTP8KJ3EMWA7ozD12ldvj3PkKw2B/1LDx/f/g9seeL4SXnpBExZFcYyIeZoy4kY3Janh6EUXo6O1DDXDlnpL78EH1QynQe5/0YvuuSSUXhRt+LKrxL6ZiKWivU=
+	t=1706545852; cv=none; b=dv/jj1WY1+0Q6DI+oHEyFO2N2E1a8qrAnip93s7JBYfTnw+CJy02JlmaQvi4nBrE+KN1yxXNSCdJAa9ayfwPuQ8NyNknlZP2TuQpBPhWr/BN1vp/C8oJomSVmT+qRhSNht3xiXYTAA4f9YX6sR7DOUY2brGSXL0+cuEZMWPWSeE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706544805; c=relaxed/simple;
-	bh=iBuWSo0zZ0zhs3nszLVS5iO2TT7tnyzjI6i6+b4CDGs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Qbgl5BxzuCAfmoMUVCmmQsecE3akCw0CXF6sC2xWltj2WQJPwHjH5DFZ2MKHxJ7nOAY7iJkpTLGzVTR7dON0QYf/doXsWzN3VzFNOpD+XtFGJN6ldUBCi4kEIKMAbuUyclNx1w24yI2Pk1qkZ+KVBzsWVbg6nkezS2nrSNLZf5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6933a46efso506968276.0;
-        Mon, 29 Jan 2024 08:13:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706544801; x=1707149601;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=M34SovAVKIxJ85Xs2siD2UjRmVaUICuFPeB7G+JCjO0=;
-        b=U5FlurnfJr/7jEx+GmeSxjMpOuAGJpCMxBYvD+9KQDoKYVrXYQ5gHiaHpq32hOAr5O
-         RCAv9fdiiMuiPB6GU/mICSNkzKYT8Nl9orNs4z+7guao8s613r76LYYyt9ieEETBnFYf
-         5tAV9qfKDPrs18zORD2HjBaJyViBwhDXI47bWz/jnchxMmPz7ua3N9ploWKUhLTVW/4w
-         89VG6HH/Sc3qduN4qBvdCxQF4ZtmTmcnZv3GGlwi7TFy9juJuHn3WUFh0g860HwEicNR
-         DCps1WS3gvNnvTzrpOsV+ckOJ3WJqbWiFolq6ZxplZ5+iGMKFxjqIqU11q9GxLYpgGEl
-         AlSw==
-X-Gm-Message-State: AOJu0YzgPQRnyCxoiLKfFZEqkTPG12yVyGznBcdwQAMgfiaJw4eEZta+
-	5xUYhWlfvsR8d2Z8SmYpaXYLVuZwQO81+vgdA1bbGxNkDYdzPrnS8z7huXj1hO0=
-X-Google-Smtp-Source: AGHT+IHqA6CC3cQ+KmLzxCROgIdBf2cOfh+NJFawnRG0HhfD8zqHmnkna+802LAlVf+2t12PiG97GA==
-X-Received: by 2002:a25:8c8c:0:b0:dc2:1743:be55 with SMTP id m12-20020a258c8c000000b00dc21743be55mr2587882ybl.112.1706544801520;
-        Mon, 29 Jan 2024 08:13:21 -0800 (PST)
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com. [209.85.128.169])
-        by smtp.gmail.com with ESMTPSA id p65-20020a252944000000b00dbed7110107sm2341708ybp.12.2024.01.29.08.13.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 29 Jan 2024 08:13:21 -0800 (PST)
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6001449a2beso19300957b3.3;
-        Mon, 29 Jan 2024 08:13:21 -0800 (PST)
-X-Received: by 2002:a05:690c:3603:b0:5ff:83f7:57e7 with SMTP id
- ft3-20020a05690c360300b005ff83f757e7mr4614143ywb.31.1706544801029; Mon, 29
- Jan 2024 08:13:21 -0800 (PST)
+	s=arc-20240116; t=1706545852; c=relaxed/simple;
+	bh=W6TMqRtC+7055PVNc/k+MoT8M6gVLJlYB+nOkTGTGBE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kZLV/jwypAnlWnIwyo1rB/V4RWgCDrWGVUx6EnIhxphpsbIfj6CHOb63gfxyJSTvpqvYGBttjl5ERr08+ltWP17gARWiAmF50GfSkKw9XLSLgFXzs9DWvQT00fPpjpj9i8eYd2iha4IJZeaL5GTM+Y5R8V2pxQSmq6o9/4y5eQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2A95ADA7;
+	Mon, 29 Jan 2024 08:31:33 -0800 (PST)
+Received: from bogus (unknown [10.57.78.35])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C67DC3F738;
+	Mon, 29 Jan 2024 08:30:45 -0800 (PST)
+Date: Mon, 29 Jan 2024 16:30:43 +0000
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Peng Fan <peng.fan@oss.nxp.com>
+Cc: Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <20240129163043.if5jj4kyacqfe2n5@bogus>
+References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com>
+ <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240115153453.99226-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240115153453.99226-1-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 29 Jan 2024 17:13:09 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXrLmBOFg-9soCYD+hAcW9hXCbtM5NkLb1Pa2SJ6bxSyg@mail.gmail.com>
-Message-ID: <CAMuHMdXrLmBOFg-9soCYD+hAcW9hXCbtM5NkLb1Pa2SJ6bxSyg@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Fix locking in rzg2l_dt_subnode_to_map()
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	dan.carpenter@linaro.org, Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
 
-On Mon, Jan 15, 2024 at 4:35=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Mon, Jan 29, 2024 at 08:36:50PM +0800, Peng Fan wrote:
+> Hi Sudeep, Cristian
+> 
+> Would you pick up patch 1-4?
+
+I will for v6.9 sometime.
+
+> And for i.MX95 OEM extenstion, do you have any suggestions?
+> I have two points:
+> 1. use vendor compatible. This would also benefit when supporting vendor
+> protocol.
+
+May be, but that was never on plate for standard protocols. So I don't
+like that approach either.
+
+> 2. Introduce a property saying supporting-generic-pinconf
 >
-> Commit d3aaa7203a17 ("pinctrl: renesas: rzg2l: Add pin configuration
-> support for pinmux groups") introduced the possibility to parse pin
-> configuration for pinmux groups. It did that by calling
-> rzg2l_map_add_config() at the end of rzg2l_dt_subnode_to_map() and
-> jumping to the remove_group label in case rzg2l_map_add_config() failed.
-> But if that happens, the mutex will already be unlocked, thus this it wil=
-l
-> lead to double mutex unlock operation. To fix this move the
-> rzg2l_map_add_config() call just after all the name argument is ready and
-> before the mutex is locked. There is no harm in doing this, as this only
-> parses the data from device tree that will be further processed by
-> pinctrl core code.
+
+I am not sure what you mean by that. But that doesn't sound right especial
+in context of SCMI. So I would say no.
+
+> How do you think?
 >
-> Fixes: d3aaa7203a17 ("pinctrl: renesas: rzg2l: Add pin configuration supp=
-ort for pinmux groups")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
 
-Closes: https://lore.kernel.org/all/f8c3a3a0-7c48-4e40-8af0-ed4e9d9b049f@mo=
-roto.mountain
+I don't have any other suggestions than fix your driver to use the pinmux
+properly with features in the upstream pinmux subsystem.
 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.9.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+-- 
+Regards,
+Sudeep
 
