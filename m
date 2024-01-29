@@ -1,73 +1,73 @@
-Return-Path: <linux-gpio+bounces-2689-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2690-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6306483FBFD
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 03:05:38 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3825A83FC08
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 03:10:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BD45D1F22C05
-	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 02:05:37 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAF141F22DA0
+	for <lists+linux-gpio@lfdr.de>; Mon, 29 Jan 2024 02:10:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 038AADF57;
-	Mon, 29 Jan 2024 02:05:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C11E4DF69;
+	Mon, 29 Jan 2024 02:10:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0//VCh7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P6JDWFOS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DAAEDDDD;
-	Mon, 29 Jan 2024 02:05:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36089DF46;
+	Mon, 29 Jan 2024 02:10:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706493930; cv=none; b=pVMucsS8JtnmyYNniexEc08KoZ5BuPhs4Yn8O++gUridHMmpbgNMcXnp+0QEGvFwrbXNjWY+1EIiu2VywyiRC3qZO+j4BlhoFAcghrtEvCI13HFGHxTgU2mkBGQlXBDuBM4wjAeZmrjfq910DHiPdzZNZWNS9HctNgUqGTzpFIs=
+	t=1706494204; cv=none; b=aQWNiACggOyt/KuUdRXIj9vcISG8dfPWtX2YRxlF7jgXpNNnyOyqspO6UvVGf+YaWoAI9jO9mQIaFErX3I2lDPsd3bFGJpkxkmupaMvorn71Xy7K57Ntrd5Jr8RjcKgZJBUziDS+iHxXtAU58OvuhpatItjXWEtgHHYi5Nagk1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706493930; c=relaxed/simple;
-	bh=R9OJHUY1pL3jg/qz4OiURdNfKiH8z3++M3YuB9lE10U=;
+	s=arc-20240116; t=1706494204; c=relaxed/simple;
+	bh=k7tqqEHDQfhpdfeqK4PWeV1VnbOffVVRA0WzcBwzj3U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IVv3kWh0qSUWR6btModP5InBYQJd4nLFqMXhmF2IPOgSUKZxDT4m9+QIKjZIsdr1yxUMtpUBiBwCSuDOyPGcj2meiifPaUX70wavbqV6f5hpELHlQgbr3EtCb9Oav54IejzNES0d02rcmAeqmjw6JiIFAi/fIM4PWGjIdqRC/0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0//VCh7; arc=none smtp.client-ip=209.85.210.179
+	 In-Reply-To:Content-Type; b=o9C4UoqtEkD/qEHmXLN7726NDZeC92/SX6wf//BI/VsXVJnM9inhVbC2gF1sVESSwIylIdMzZ8fi3BZqxhp2o7LUUrvXUChx4miea/4zQFicqtc42Xy3MkdlfHiAixR0cBNyLTRxYK9USAGzXgkfwIfz1BEHAtUGyvs6GLGepFs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P6JDWFOS; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6ddc0c02593so875932b3a.3;
-        Sun, 28 Jan 2024 18:05:28 -0800 (PST)
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2903498ae21so1137399a91.1;
+        Sun, 28 Jan 2024 18:10:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706493928; x=1707098728; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=gmail.com; s=20230601; t=1706494202; x=1707099002; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=I5cMX6p2wc2NF5P2CX7hgg0fQbhesHCjjIv0biNyFak=;
-        b=d0//VCh7AdfN68gL/Q1RxVS7CRkzIe64D/eMX3AaEfjjWKfs4mp0hRra0uxmODKRFL
-         azKfXFPNcRwqq14jcc+tlhnlILXH9/BlGnwoYhVV/ZbvKbv7GpA2TzkKw7Sg2EnMXtHI
-         8/DPMRk2zQ6krClyiCb/+xTORv568BbNz3au/InOlNMFfIUbtB5Um7SOyDjNqXtyiyPA
-         aiGhsP4LbJ7X2qSqqDfaP/rBE9JQqkj28IxP9ANlwQ93M4t+KLhs/MeYRIvzuxhBcmAA
-         2SVKCzHVQ5GaX84VCF9/WWkERqpQaAG82CiK9op4gxvV4Ay3s2sLcy83UTXGhlLoZ8uR
-         5uJQ==
+        bh=3mjiGLCZC5rtVXIMAirs+5VBtB3jcIfSuBZ8wAgAJ6E=;
+        b=P6JDWFOSVNrv/s1PReyeNrj4GOBBmSGqQbug+mWUUJDgsKOLcE2of18hs10wSRwKMZ
+         Ypspof71spA3AOHfkB6COkUQHlJYRYV2fKh03uSdKx5vEX2So643HAPZJINXcVJpwuME
+         FX/fdcUTY8EmSj0ncdP85k7uv4nvGjZMXMmB2HRREX3XRYUlzqCpaFF3lH11zvc/+9LL
+         e84PowPcuW2Okr6XyIBjmMhWsfbn9FCQmjJCU+RyBqxYvJ2XtyGYUCqNCcrHQDjRaxr7
+         F1wDYeS1EWnINeu8+FolwlpyjgdtJN7SGZs1kFaPITVKmQ7RYsqZ4pMCWX2aNs2ai0Yf
+         L+4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706493928; x=1707098728;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1706494202; x=1707099002;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=I5cMX6p2wc2NF5P2CX7hgg0fQbhesHCjjIv0biNyFak=;
-        b=ZqdWF4pErU87GAIjQLpd9ctZJGJqhdD7Wv7iLewKz129BpXqGHjBgIUqUqlHw6O0uL
-         jWi1tO4YgkgViJpId0vM8RmJs3vficMBzVhevdZJG/e7rO49nM/VMg6YcKPEXiprxbXl
-         N+Guu6/RvZf6FhH4EhK8rVbBXwsRG5wzAgUeFqNGl32SCOVLExTWv8mKRqPHw5lLeLeJ
-         jluOxzTE6jPHvfXV9EPlspY1RXZOZ7fac/Iv1BeD52klvqeF2CizBOSmgzVDgNoe2iDT
-         E5kYqSvUPYfP5+INsKChS4tvNz4azx8rqw9h68MOm+KhuOPJU7nO45XIwms3/ikITnJr
-         /v7g==
-X-Gm-Message-State: AOJu0Yxv0G8Y8tBdMBaO9jLyMeYd9XV7yVoOPEG1ALMKJnVWDwMwsAjj
-	DBY58+MEXFfQUA6qFC2Zz66UPkjGFw7wEp9yQvkzGOegg81eQ7rb
-X-Google-Smtp-Source: AGHT+IEsRbK1r0WadtVwyzw9Qs758YoooTlrrYn/rJWPx1nZkHl2Sd2JqGkKJ2SsF32jRVKWPVecKQ==
-X-Received: by 2002:a05:6a00:d42:b0:6dd:800f:87f6 with SMTP id n2-20020a056a000d4200b006dd800f87f6mr1319406pfv.27.1706493928277;
-        Sun, 28 Jan 2024 18:05:28 -0800 (PST)
+        bh=3mjiGLCZC5rtVXIMAirs+5VBtB3jcIfSuBZ8wAgAJ6E=;
+        b=cpvf+I7dOO5bu7hYLCcmncaOeCS/Z0th3cRZW6B/uGrIE9Yb/EgmjFoCSzly0gN1+p
+         yp//3xxl48w0bz+1C24/1PIMXSIYdkC0P8iTEwRZSvt1CpSLvpgptarT9i80sUA3E5nG
+         c7WYud5F4vFl2sL7jskRPcssHyuRz0JoPzhQVhKCXiAiG+/rhuQ1HO47oeAE7yN2NFrY
+         v5fKjj1PnmePlxL8fdKkYS0p09nk9l/XuXPPEnSwY+B37Dv0L7sxXQRwvcfuouYBPWJc
+         bMHj4o/z6ro78u4JX4YRJcduW6a/yVLHTHFxB/UMSH6UBx6VRFWeNCs8iFjOOKjYo33T
+         ZjCA==
+X-Gm-Message-State: AOJu0YyoQp9z+VIGY58faYgTxCvopPOLUHM0vV/PDOR8zBVuOac2z8CJ
+	7IX5B4QTZzz5+ulbA8QQ4g0Cgx374R8rDj4PdPHyoqMEfRacpHqK
+X-Google-Smtp-Source: AGHT+IFvYo4Wt9EQYFDVRWdym6JuhCaS5Rmf9f2vKpfy2AU8wdOaJh9BcGLUl6hgG6/NTMed3ZU44g==
+X-Received: by 2002:a17:90a:7f92:b0:293:bf6a:feae with SMTP id m18-20020a17090a7f9200b00293bf6afeaemr1246707pjl.18.1706494202319;
+        Sun, 28 Jan 2024 18:10:02 -0800 (PST)
 Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id k144-20020a628496000000b006dddd046e54sm4950581pfd.206.2024.01.28.18.05.25
+        by smtp.gmail.com with ESMTPSA id g8-20020a17090a7d0800b0028bcc2a47e9sm6871980pjl.38.2024.01.28.18.10.00
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 28 Jan 2024 18:05:27 -0800 (PST)
-Message-ID: <ce7912c3-ee63-4f3c-a15a-cf32cb8be44e@gmail.com>
-Date: Mon, 29 Jan 2024 10:05:24 +0800
+        Sun, 28 Jan 2024 18:10:01 -0800 (PST)
+Message-ID: <1aff21ed-c185-4d23-8260-fa182a592d15@gmail.com>
+Date: Mon, 29 Jan 2024 10:09:57 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,218 +77,67 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v3 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
  driver
-To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
- linus.walleij@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  ychuang3@nuvoton.com, schung@nuvoton.com
 References: <20240123080637.1902578-1-ychuang570808@gmail.com>
  <20240123080637.1902578-5-ychuang570808@gmail.com>
- <a2a4bb76-0e6a-425d-bfb8-e1a844b44274@wanadoo.fr>
-Content-Language: en-US
+ <CACRpkdYi-y9zWAR71rQOtKVJOuGgE4n8Q47YXZW=Pt345UWDkw@mail.gmail.com>
 From: Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <a2a4bb76-0e6a-425d-bfb8-e1a844b44274@wanadoo.fr>
+In-Reply-To: <CACRpkdYi-y9zWAR71rQOtKVJOuGgE4n8Q47YXZW=Pt345UWDkw@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-
-Dear Christophe,
+Dear Linus,
 
 Thanks for your review.
 
-In the next version, I will follow your suggestion and replace all instances
-of devm_kzalloc() mentioned here with the use of devm_kcalloc().
 
-
-Best Regards,
-Jacky Huang
-
-
-On 2024/1/28 下午 03:52, Christophe JAILLET wrote:
-> Le 23/01/2024 à 09:06, Jacky Huang a écrit :
+On 2024/1/28 下午 11:49, Linus Walleij wrote:
+> Hi Jacky,
+>
+> thanks for your patch!
+>
+> this caught my eye:
+>
+> On Tue, Jan 23, 2024 at 9:06 AM Jacky Huang <ychuang570808@gmail.com> wrote:
+>
 >> From: Jacky Huang <ychuang3@nuvoton.com>
 >>
 >> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
 >> add support for ma35d1 pinctrl.
 >>
 >> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
->> ---
+> (...)
 >
-> Hi,
+>> +       if (ma35_pinconf_get_power_source(npctl, pin) == MVOLT_1800) {
+>> +               for (i = 0; i < sizeof(ds_1800mv_tbl) / sizeof(u32); i++) {
+> Isn't this equivalent to:
 >
-> Should there be a v4, a few nits below.
+> for (i = 0; i < ARRAY_SIZE(ds_1800mv_tbl; i++) {
 >
-> CJ
+>> +                       if (ds_1800mv_tbl[i] == strength)
+>> +                               ds_val = i;
+>> +               }
+>> +       } else {
+>> +               for (i = 0; i < sizeof(ds_3300mv_tbl) / sizeof(u32); i++) {
+> Dito
 >
->> +static int ma35_pinctrl_dt_node_to_map_func(struct pinctrl_dev 
->> *pctldev,
->> +                        struct device_node *np,
->> +                        struct pinctrl_map **map,
->> +                        unsigned int *num_maps)
->> +{
->> +    struct ma35_pinctrl *npctl = pinctrl_dev_get_drvdata(pctldev);
->> +    struct ma35_pin_group *grp;
->> +    struct pinctrl_map *new_map;
->> +    struct device_node *parent;
->> +    int map_num = 1;
->> +    int i;
->> +
->> +    /*
->> +     * first find the group of this node and check if we need create
->> +     * config maps for pins
->> +     */
->> +    grp = ma35_pinctrl_find_group_by_name(npctl, np->name);
->> +    if (!grp) {
->> +        dev_err(npctl->dev, "unable to find group for node %s\n", 
->> np->name);
->> +        return -EINVAL;
->> +    }
->> +
->> +    map_num += grp->npins;
->> +    new_map = devm_kzalloc(pctldev->dev, sizeof(*new_map) * map_num, 
->> GFP_KERNEL);
+> Perhaps more cases, pls check!
 >
-> devm_kcalloc()?
->
->> +    if (!new_map)
->> +        return -ENOMEM;
->> +
->> +    *map = new_map;
->> +    *num_maps = map_num;
->> +    /* create mux map */
->> +    parent = of_get_parent(np);
->> +    if (!parent) {
->> +        devm_kfree(pctldev->dev, new_map);
->> +        return -EINVAL;
->> +    }
->> +
->> +    new_map[0].type = PIN_MAP_TYPE_MUX_GROUP;
->> +    new_map[0].data.mux.function = parent->name;
->> +    new_map[0].data.mux.group = np->name;
->> +    of_node_put(parent);
->> +
->> +    new_map++;
->> +    for (i = 0; i < grp->npins; i++) {
->> +        new_map[i].type = PIN_MAP_TYPE_CONFIGS_PIN;
->> +        new_map[i].data.configs.group_or_pin = pin_get_name(pctldev, 
->> grp->pins[i]);
->> +        new_map[i].data.configs.configs = grp->settings[i].configs;
->> +        new_map[i].data.configs.num_configs = 
->> grp->settings[i].nconfigs;
->> +    }
->> +    dev_dbg(pctldev->dev, "maps: function %s group %s num %d\n",
->> +        (*map)->data.mux.function, (*map)->data.mux.group, map_num);
->> +
->> +    return 0;
->> +}
->
-> ...
->
->> +static int ma35_pinctrl_parse_groups(struct device_node *np, struct 
->> ma35_pin_group *grp,
->> +                     struct ma35_pinctrl *npctl, u32 index)
->> +{
->> +    unsigned long *configs;
->> +    unsigned int nconfigs;
->> +    struct ma35_pin_setting *pin;
->> +    const __be32 *list;
->> +    int i, j, size, ret;
->> +
->> +    dev_dbg(npctl->dev, "group(%d): %s\n", index, np->name);
->> +
->> +    grp->name = np->name;
->> +
->> +    ret = pinconf_generic_parse_dt_config(np, NULL, &configs, 
->> &nconfigs);
->> +    if (ret)
->> +        return ret;
->> +
->> +    /*
->> +     * the binding format is nuvoton,pins = <bank pin-mfp 
->> pin-function>,
->> +     * do sanity check and calculate pins number
->> +     */
->> +    list = of_get_property(np, "nuvoton,pins", &size);
->> +    size /= sizeof(*list);
->> +    if (!size || size % 3) {
->> +        dev_err(npctl->dev, "wrong setting!\n");
->> +        return -EINVAL;
->> +    }
->> +    grp->npins = size / 3;
->> +
->> +    grp->pins = devm_kzalloc(npctl->dev, grp->npins * 
->> sizeof(*grp->pins), GFP_KERNEL);
->
-> devm_kcalloc()?
->
->> +    if (!grp->pins)
->> +        return -ENOMEM;
->> +
->> +    grp->settings = devm_kzalloc(npctl->dev, grp->npins * 
->> sizeof(*grp->settings), GFP_KERNEL);
->
-> devm_kcalloc()?
->
->> +    if (!grp->settings)
->> +        return -ENOMEM;
->> +
->> +    pin = grp->settings;
->> +
->> +    for (i = 0, j = 0; i < size; i += 3, j++) {
->> +        pin->offset = be32_to_cpu(*list++) * 
->> MA35_MFP_REG_SZ_PER_BANK + MA35_MFP_REG_BASE;
->> +        pin->shift = (be32_to_cpu(*list++) * MA35_MFP_BITS_PER_PORT) 
->> % 32;
->> +        pin->muxval = be32_to_cpu(*list++);
->> +        pin->configs = configs;
->> +        pin->nconfigs = nconfigs;
->> +        grp->pins[j] = npctl->info->get_pin_num(pin->offset, 
->> pin->shift);
->> +        pin++;
->> +    }
->> +    return 0;
->> +}
->> +
->> +static int ma35_pinctrl_parse_functions(struct device_node *np, 
->> struct ma35_pinctrl *npctl,
->> +                    u32 index)
->> +{
->> +    struct device_node *child;
->> +    struct ma35_pin_func *func;
->> +    struct ma35_pin_group *grp;
->> +    static u32 grp_index;
->> +    u32 ret, i = 0;
->> +
->> +    dev_dbg(npctl->dev, "parse function(%d): %s\n", index, np->name);
->> +
->> +    func = &npctl->functions[index];
->> +    func->name = np->name;
->> +    func->ngroups = of_get_child_count(np);
->> +
->> +    if (func->ngroups <= 0)
->> +        return 0;
->> +
->> +    func->groups = devm_kzalloc(npctl->dev, func->ngroups * 
->> sizeof(char *), GFP_KERNEL);
->
-> devm_kcalloc()?
->
->> +    if (!func->groups)
->> +        return -ENOMEM;
->> +
->> +    for_each_child_of_node(np, child) {
->> +        func->groups[i] = child->name;
->> +        grp = &npctl->groups[grp_index++];
->> +        ret = ma35_pinctrl_parse_groups(child, grp, npctl, i++);
->> +        if (ret) {
->> +            of_node_put(child);
->> +            return ret;
->> +        }
->> +    }
->> +    return 0;
->> +}
->
+> Yours,
+> Linus Walleij
+
+
+Yes, I will use ARRAY_SIZE instead.
+
+
+Best Regards,
+Jacky Huang
+
 
 
