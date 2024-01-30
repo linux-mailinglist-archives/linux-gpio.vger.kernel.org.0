@@ -1,122 +1,212 @@
-Return-Path: <linux-gpio+bounces-2737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A320F842507
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:35:59 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 72B4B842546
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:49:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EA9128913F
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:35:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F3FC01F26F82
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E407A41A83;
-	Tue, 30 Jan 2024 12:35:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88DEF6A358;
+	Tue, 30 Jan 2024 12:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Z6bu652y"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qaOmb9tX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6691967E80
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:35:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A74B6A02C
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:48:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706618155; cv=none; b=VlPIr3SHItSXh1i0S8B4YqYHluNwU4oMB4n7LTKn6t7mA002owwB2/5+8vGTukJATfjOuQ4cZkFeAAeKCVYsNFkU+njzL36Lb/lNXGzga2xC/xS8qjwy2PQ/jIyaIEd6kKvVNCtQTYvk1PNyJWaFKrG8rwSdA+JpVvSQpRRi2Dg=
+	t=1706618924; cv=none; b=R7nbumYP1F33jCCp2wRyfRA61Hv3A2RrlIkJ9grnnXkSvStemRb/PtTNjWRufYTLpDqnn07Pe+YPj3/6oLuHuixLUo5G02HCNtibMqLDrd59I9UMYX3oQIKPinQaezejAHAFouMhMxAMTAnslqLhQAxy8jat4cOpU849+j6CMck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706618155; c=relaxed/simple;
-	bh=Jm2FDGHXPVRHJOF8piPCWJ0CqfEu1McE3XNfHaO8bUU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KpmSdJk8LdpwwMVKLLN5LjBpm8CAO/u1PcybFvjAAgBF1IcFQVQ5qZx/Li9mkRB5dwb34JfIR5ZbR0Xs1G2ROxKfj4p8iqMitLzMrVhxb7X05S0Q8eQSUl3SqzE1ij6n1HNRirPsKvp4tgMF0Yj5YhfCGz/BZw1GDD2EFYPgvAQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Z6bu652y; arc=none smtp.client-ip=209.85.215.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5ceb3fe708eso2266403a12.3
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:35:54 -0800 (PST)
+	s=arc-20240116; t=1706618924; c=relaxed/simple;
+	bh=DLFEpbi+GIN0OR0cK3hZ14rudiYt5ObrbPYx2m7fJd4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=EXSx99Iy3Tbr+wHwqoZK+X+Rt9L2O9/QURGMLhRhWtAMQcIWzV32xPr6tFsLst3S+oxiQIokzSGU+Tc+SzimEsITy1aKqrfatjM6cIOLI71+EpCFvPdJyUixJKZUFYLDMJEqYpBIqU6Izp8jA03+GvB8HbuDaBpUgiXttL3S55w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qaOmb9tX; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33aeb088324so1566390f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:48:41 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706618154; x=1707222954; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=Jm2FDGHXPVRHJOF8piPCWJ0CqfEu1McE3XNfHaO8bUU=;
-        b=Z6bu652yHBhhXOTfT6Wvz5u6tJn6ZambO1VRxlZ13o218Fq6+nJ/hDO52WkGU11AIS
-         T+1it4IkayEjltyHJQJVh/XVrhDAAQVw8HVs/pgYISClpBexfktEVhxa2XsgiD93EGHK
-         KRN4s5aAVdroOMIywhHpAeZ3z7eYeb45A3zgTrSnE/IbD8LJW6U0ous2b5HL7O2+CbZv
-         SWniBDS4xzvjG6E7av5cDN2e/DJ9hrhnCl3/7Bg3RH+kQ9oZcr82Z5W2u0jWEtSShO/t
-         3rO5QbWTqsGGw8BpBzBkb/bfqmuxmPOHcOZ410817QCyeTQVF3WdouR5CFgoZiyO4Syc
-         iV4g==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706618920; x=1707223720; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=TM4N++qzpiBwfwnB5WEJqzKPWkBeyUp9jsBDFdQRjYg=;
+        b=qaOmb9tXMf4O7cEtwEMXbfKoepF0oZh1DbL0KfJC+cQAgjL848+qgktxl0HQwTIWP4
+         wk9mXt8DrobDSfTmx1AhYbCdZZQuTGJIkjFEeMYbSPuJQMARxwHrWyoNM9AWgMLvqjLy
+         B20jdL9hw4inyR+TnfizLmB16+GhseB7O7cYR3aDvWXYadj0ySHzUVIKZY8tJt6Ovef+
+         73HNYKrfsz2hQc2fKBcGl5t/LhgTFsSxK0VUOY2DfnqiDDsHTOBbFfcmAuH4jRrdheyH
+         ntfegrc3JSWzwahfeBf3ZIdMOceD7FBkTzmr0m4JJ/4u8y/onRCw44V6GdKxqV/5GeEw
+         fLkw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706618154; x=1707222954;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1706618920; x=1707223720;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=Jm2FDGHXPVRHJOF8piPCWJ0CqfEu1McE3XNfHaO8bUU=;
-        b=qGFRl4psweX0DnQFaw99QNYPSVLv3duguGrE68FXJXkrQf/NAFg11mHsV5CWV1h8YU
-         EoqXMUM8R3WCQ93Kc/L79F4jpkr+cGeMlHnbyqA9VbA+HdZ5xN3dDYeqxT8tR/9NSs+b
-         BbrtWnVpq4mDPlUVjlfOTAWOKFbiRX/Nua3mSSDQv4q+MUKkSHsyqzRumYVVWTY3SHwr
-         u1+Hp7vaGrsc0HfmICpQf0icFiIA3gtr41HkfMUcfZ2enitV30XzEnDOjYQBJbEF0Lud
-         Q9P3rpJtdCebF72zdmhexE0QE1fAv0qZsQ99d/zsC4frCMeRKBPjH4jeTkqeJlsVu7nt
-         cHDA==
-X-Gm-Message-State: AOJu0YyCTU7Xa+L3xmxQ/Q0EDHWkVkVJFtS0K2Id9Eyb1+iuy+SHAXWR
-	k4q9SbagUHcZDwWyg5OUYAThwkBDq/8pyW9XoZUbDbsPzE/PCYaFSq6vLSMwo8bwYMxc9jTUdL+
-	HGIVt0jwZKCtfcBmwWd9Wc10afXPSjet4CWK2zw==
-X-Google-Smtp-Source: AGHT+IGTntxKoODjjTYzwLT4wkEHukDXHu/Nu8uelZIezqzzyxOclRiJPwjXhhWa15k0cE0hIoEazKVknNcv9YOqK+Y=
-X-Received: by 2002:a17:90a:ac0d:b0:294:1261:6412 with SMTP id
- o13-20020a17090aac0d00b0029412616412mr5245189pjq.9.1706618153744; Tue, 30 Jan
- 2024 04:35:53 -0800 (PST)
+        bh=TM4N++qzpiBwfwnB5WEJqzKPWkBeyUp9jsBDFdQRjYg=;
+        b=MXTwk2ySm5e+IQe4cB04VUIBaZLoXboDSTi74u2bJrTC6vM8YMZTw8eAa7dzF582RB
+         zjbMbmCqEu4j+6aAyElJk8dpBperCaRNRvaSGnV5cNRLG/H6jA1KbaKkODP919dZqTtM
+         ILs1VRzS9UCcP1LwFUzLHOXaj7xhXOFZZg5zU8m41xsaQLaDsl+W9tDIj9jF+SoBo8Ha
+         7FI01HTYBLSY0wcS+bLng0Ptam4DJrrYAtzr0gRgnVYIw3tp7T/J1H1JqdGOY+uUNSX2
+         hLel4IoyhwQbPXXoHMKWj3GDtddL6isMk0+q+WCdSV8t5SWoCI+N3KYmyRTFFDkaBd8V
+         yFIQ==
+X-Gm-Message-State: AOJu0YwvcyVJhj+rHjZtdjJh7BXm9/cSwlcLj6X9GGjtatSmPmPfTx9U
+	aTQSBZVcEMGOgLX9D/Djmc2OUHb9C9a8/aGAK3hChzIHSzU/Aa7AS/Vqel3np0s=
+X-Google-Smtp-Source: AGHT+IGO70GsGHeRexHE8nfdAlfLgxsHDIxmA01skOEoiTnCjs5tHuM59Ijq0XoMi3EySQsHBRHoGw==
+X-Received: by 2002:a5d:47c4:0:b0:33a:f50c:d4e5 with SMTP id o4-20020a5d47c4000000b0033af50cd4e5mr3747756wrc.49.1706618919516;
+        Tue, 30 Jan 2024 04:48:39 -0800 (PST)
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:abc8:f77e:abeb:129c])
+        by smtp.gmail.com with ESMTPSA id en8-20020a056000420800b0033940016d6esm6625337wrb.93.2024.01.30.04.48.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Jan 2024 04:48:39 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 00/22] gpio: rework locking and object life-time control
+Date: Tue, 30 Jan 2024 13:48:06 +0100
+Message-Id: <20240130124828.14678-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130120807.460335-1-naresh.solanki@9elements.com>
- <b305291e-199d-4a0b-b24e-09910f1eed37@linaro.org> <CABqG17in2+0eHMRBvyunWKizgSBpYPq+CGsMO7FQo13pApPvaw@mail.gmail.com>
- <021f3f6f-0aa9-41c2-a220-b1e6efad2880@linaro.org>
-In-Reply-To: <021f3f6f-0aa9-41c2-a220-b1e6efad2880@linaro.org>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Tue, 30 Jan 2024 18:05:43 +0530
-Message-ID: <CABqG17jKri5DL4mTpf-DqueyW28rFk_XpxF3M1gauxYEBvMv-A@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, mazziesaccount@gmail.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hi Krzysztof,
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+This has been brewing for some time now but is finally ready to send out
+for review. This series relies on SRCU a lot so I'm Cc'ing Paul.
 
-On Tue, 30 Jan 2024 at 18:01, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 30/01/2024 13:26, Naresh Solanki wrote:
-> > Hi Krzysztof,
-> >
-> > On Tue, 30 Jan 2024 at 17:49, Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> On 30/01/2024 13:08, Naresh Solanki wrote:
-> >>> Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
-> >>> reserved ranges.
-> >>> Add input-enable property to allow configuring a pin as input.
-> >>> Rearrange allOf
-> >>
-> >> Why?
-> > allOf is aligned with other implementations.
->
-> Which ones? example-schema and other implementations have it in
-> different place. If you align some parts of the code, please align to
-> match the correct code, not other incorrect. How to find it?
-> example-schema is the reference, recent commits are also sometimes good
-> indication.
-Yes your right. Will align with example-schema. Thanks.
+This is a big rework of locking in GPIOLIB. The current serialization is
+pretty much useless. There is one big spinlock (gpio_lock) that "protects"
+both the GPIO device list, GPIO descriptor access and who knows what else.
 
-Regards,
-Naresh
->
-> Best regards,
-> Krzysztof
->
+I'm putting "protects" in quotes as in several places the lock is
+taken, released whenever a sleeping function is called and re-taken
+without any regards for the "protected" state that may have changed.
+
+First a little background on what we're dealing with in GPIOLIB. We have
+consumer API functions that can be called from any context explicitly
+(get/set value, set direction) as well as many others which will get
+called in atomic context implicitly (e.g. set config called in certain
+situations from gpiod_direction_output()).
+
+On the other side: we have GPIO provider drivers whose callbacks may or
+may not sleep depending on the underlying protocol but they're called
+from the same code paths.
+
+This makes any attempts at serialization quite complex. We typically
+cannot use sleeping locks - we may be called from atomic - but we also
+often cannot use spinlocks - provider callbacks may sleep. Moreover: we
+have close ties with the interrupt and pinctrl subsystems, often either
+calling into them or getting called from them. They use their own locking
+schemes which are at odds with ours (pinctrl uses mutexes, the interrupt
+subsystem can call GPIO helpers with spinlock taken).
+
+There is also another significant issue: the GPIO device object contains
+a pointer to gpio_chip which is the implementation of the GPIO provider.
+This object can be removed at any point - as GPIOLIB officially supports
+hotplugging with all the dynamic expanders that we provide drivers for -
+and leave the GPIO API callbacks with a suddenly NULL pointer. This is
+a problem that allowed user-space processes to easily crash the kernel
+until we patched it with a read-write semaphore in the user-space facing
+code (but the problem still exists for in-kernel users). This was
+recognized before as evidenced by the implementation of validate_desc()
+but without proper serialization, simple checking for a NULL pointer is
+pointless and we do need a generic solution for that issue as well.
+
+If we want to get it right - the more lockless we go, the better. This is
+why SRCU seems to be the right candidate for the mechanism to use. In fact
+it's the only mechanism we can use for our read-only critical sections to
+be called from atomic and process contexts as well as be able to call
+driver callbacks that may sleep (for the latter case).
+
+We're going to use it in three places: to protect the global list of GPIO
+devices, to ensure consistency when dereferencing the chip pointer in GPIO
+device struct and finally to ensure that users can access GPIO descriptors
+and always see a consistent state.
+
+We do NOT serialize all API callbacks. This means that provider callbacks
+may be called simultaneously and GPIO drivers need to provide their own
+locking if needed. This is on purpose. First: we only support exclusive
+GPIO usage[1] so there's no risk of two drivers getting in each other's
+way over the same GPIO. Second: with this series, we ensure enough
+consistency to limit the chance of drivers or user-space users crashing
+the kernel. With additional improvements in handling the flags field in
+GPIO descriptors there's very little to gain, while bitbanging drivers
+may care about the increased performance of going lockless.
+
+This series brings in one somewhat significant functional change for
+in-kernel users, namely: GPIO API calls, for which the underlying GPIO
+chip is gone, will no longer return 0 and emit a log message but instead
+will return -ENODEV.
+
+I tested the series with libgpiod tests, ran it on some x86 and aarch64
+boards and tested some corner cases with user-space command-line tools.
+
+Thanks,
+Bartosz
+
+[1] - This is not technically true. We do provide the
+GPIOD_FLAGS_BIT_NONEXCLUSIVE flag. However this is just another piece of
+technical debt. This is a hack provided for a single use-case in the
+regulator framework which got out of control and is now used in many
+places that should have never touched it. It's utterly broken and doesn't
+even provide any contract as to what a "shared GPIO" is. I would argue
+that it's the next thing we should address by providing "reference counted
+GPIO enable", not just a flag allowing to request the same GPIO twice
+and then allow two drivers to fight over who toggles it as is the case
+now. For now, let's just treat users of GPIOD_FLAGS_BIT_NONEXCLUSIVE like
+they're consciously and deliberately choosing to risk undefined behavior.
+
+Bartosz Golaszewski (22):
+  gpio: protect the list of GPIO devices with SRCU
+  gpio: of: assign and read the hog pointer atomically
+  gpio: remove unused logging helpers
+  gpio: provide and use gpiod_get_label()
+  gpio: don't set label from irq helpers
+  gpio: add SRCU infrastructure to struct gpio_desc
+  gpio: protect the descriptor label with SRCU
+  gpio: sysfs: use gpio_device_find() to iterate over existing devices
+  gpio: remove gpio_lock
+  gpio: reinforce desc->flags handling
+  gpio: remove unneeded code from gpio_device_get_desc()
+  gpio: sysfs: extend the critical section for unregistering sysfs
+    devices
+  gpio: sysfs: pass the GPIO device - not chip - to sysfs callbacks
+  gpio: cdev: replace gpiochip_get_desc() with gpio_device_get_desc()
+  gpio: cdev: don't access gdev->chip if it's not needed
+  gpio: reduce the functionality of validate_desc()
+  gpio: remove unnecessary checks from gpiod_to_chip()
+  gpio: add the can_sleep flag to struct gpio_device
+  gpio: add SRCU infrastructure to struct gpio_device
+  gpio: protect the pointer to gpio_chip in gpio_device with SRCU
+  gpio: remove the RW semaphore from the GPIO device
+  gpio: mark unsafe gpio_chip manipulators as deprecated
+
+ drivers/gpio/gpiolib-cdev.c  |  82 ++--
+ drivers/gpio/gpiolib-of.c    |   4 +-
+ drivers/gpio/gpiolib-sysfs.c | 155 +++++---
+ drivers/gpio/gpiolib.c       | 735 +++++++++++++++++++----------------
+ drivers/gpio/gpiolib.h       |  84 ++--
+ 5 files changed, 595 insertions(+), 465 deletions(-)
+
+-- 
+2.40.1
+
 
