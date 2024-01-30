@@ -1,77 +1,83 @@
-Return-Path: <linux-gpio+bounces-2729-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2730-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 46C3D84218D
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 11:39:42 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 933438421FA
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 11:53:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D9F701F28391
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 10:39:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B221287361
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 10:53:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51F3566B47;
-	Tue, 30 Jan 2024 10:38:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F260465BC3;
+	Tue, 30 Jan 2024 10:53:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKsKcLpy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DC666B37;
-	Tue, 30 Jan 2024 10:38:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C84664A0;
+	Tue, 30 Jan 2024 10:53:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706611100; cv=none; b=RSYN8pGB9LrsSi0olYW1mdop17RlOaWHbecRXBxQHcufPImD3hbSqCFvAYVEJeo0joQnmCbLrYn/5w3TqDe90kJFa/6ZAJq8xbdYyn3JWyYRJySYD8/1PaC+oVC1B0PZYWxUKhEnzPiXf/tAS2GykvKYKw2QQkuPlpaXwM1FiPI=
+	t=1706612007; cv=none; b=Pot0yoJVVYQJd4bHGCNyk6a1opeocJ/lcIqY9+CNZMIdk/EFfjijvSrMvBscRwrAMpyO8B0PdrZ/KIdV822mXqxzzFVyaKLh4z7AGhrk3q7jx8HMlJaEKKY7nXEnSeEgIZdkVU0lO5wkQWCKCxHf53DoRpeFPH+RDbMNgovGg10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706611100; c=relaxed/simple;
-	bh=5GVG/YudD3lGuYjQTHRm380lEHKoO7ZK02daD3tJQ0g=;
+	s=arc-20240116; t=1706612007; c=relaxed/simple;
+	bh=OnuVYsvU2WNhZcmPss9Ip918LCpNRJoRqA6UpHf/Lc0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gBVqxRCRwJwL470p/cEnpOsLpTxSORKhcLljuX9/Vt+uqnnwUf621PK7ZEzv5D2V8NG1D22xY8XsHtQRZiIbJD2QUoacPs1kygliCL8o2Gy5lixKDC2fL9nokL8NLFag0XKcUb1LU/pHhMCNZ5meqPaZHjJtjM3QCIui5iHBRTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	 To:Cc:Content-Type; b=uM/OB4boZpeVkR1+lWB/ZPvA8Zxfil3XE6S0BmzYJ9mxJ+KuD9GxJ4QiVUvpZFBf2yfYf5zCdgc6J4kgVRH8gpKp96joo1+gk4wmdtDAkZrFccP6YqEnrOzpfpEi/L4d+KY4umccCac6nfadYiijicSemgESZmf8Y5hk7iRTpkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKsKcLpy; arc=none smtp.client-ip=209.85.222.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-600273605a9so38450647b3.1;
-        Tue, 30 Jan 2024 02:38:18 -0800 (PST)
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57b9so947889241.3;
+        Tue, 30 Jan 2024 02:53:25 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706612005; x=1707216805; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
+        b=JKsKcLpyVjRLi+cLAItKbpp09kKZ63HI4B4voAHYrNGiQNbO4+yLm/Ko3KD024geeo
+         0NlUenOPodSSBOPZyRu1Kw1MGZlKoHAJzzT028QbdklVOFZz25Exl78feGyxHidIgFll
+         PQk3pDDFUIbCJ42Qro0TEPooX9RZDvU5WPYF6/9b//bnBdPwwmiNSU7KR5Ck1VCYXAfU
+         aZ5KKPdusYGrUgSmLROymYvyQc0383CMQOUscimjH6RQxmA1SMnVs8z90arEQXE/f8si
+         x6ijFlNcrsUwOe2sp/Y0AJRwqdu1JpoEJGjD7zbDNs7RWtQseDmr1cVgggRM8cQgoGsh
+         gXZg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706611097; x=1707215897;
+        d=1e100.net; s=20230601; t=1706612005; x=1707216805;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=W+UdOqZZwrPnQ0aumW9u93q+aeRPCvN7vS4/TIye6aw=;
-        b=XuZwLKKKYpuDXBxlc/puT4RmdBrFR8FU/aiBAAZ38Fp7trYNO7uDw11CGHXb6VV61z
-         DYh18DyUqXBOv3GFskKo0GPx1o+EubAKzY9hCoio+YYC63qvSITxr/fsmTeBGtoBJI2i
-         ZLlO+QY0knCAINMrixUh7/xG3fnpY4ms4+wkfqI4As4MX17RqglihDsF4YCf1UpC7fgR
-         PFrTL91rmmAiuco6vkYLZ0pDCNAgy9rSOOdHWKk/YYtWeEXsAHAmkMiK+naqU+ypm8Lr
-         qwjrAr+XA5xuwkkzJOZG4doUTezvmusH7IGfz+iAIlVl+l3ZadtRmIlfglJcJTwvAx0J
-         oOgQ==
-X-Gm-Message-State: AOJu0Yz7aWOpBiFlQxYLgjG5l0AwZja0LubjkGNL2yJN9aIdnmmmbaR6
-	9BxPwy4KHhB0kYRbir+Zyvba8TGtJuXFv9HPQbOETI4duWeL+gJsyqRW9IKVcps=
-X-Google-Smtp-Source: AGHT+IFSJ/NTqlDOyp+dJ+Ybz90hN761OecxgpYrZbf6/Ot5fJ/1YdiN5/cIXhGM34ZkhVEb7l3dXg==
-X-Received: by 2002:a81:4815:0:b0:5f6:fdb0:ae76 with SMTP id v21-20020a814815000000b005f6fdb0ae76mr6902040ywa.37.1706611097346;
-        Tue, 30 Jan 2024 02:38:17 -0800 (PST)
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com. [209.85.128.177])
-        by smtp.gmail.com with ESMTPSA id p70-20020a0de649000000b005ff913889dbsm3120791ywe.50.2024.01.30.02.38.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 30 Jan 2024 02:38:17 -0800 (PST)
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-600273605a9so38450507b3.1;
-        Tue, 30 Jan 2024 02:38:17 -0800 (PST)
-X-Received: by 2002:a81:e244:0:b0:5ff:5e94:277b with SMTP id
- z4-20020a81e244000000b005ff5e94277bmr6676192ywl.45.1706611096838; Tue, 30 Jan
- 2024 02:38:16 -0800 (PST)
+        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
+        b=DEwe9PvajgiSvjqYpWcpT5pZDe2oMOz0IiCvSmNW1hS/EcaI9vnv+n076c77+E6kcy
+         qbyU8uFo9W6hyjDUp7Jr4XMER5FxuRf4VTiZ5E+IZWFJ71KEezgcTcdjEwqpOw+iIq8q
+         s9pJun/CJcb5sjdqldPsEVaxW5Uh7mCxh8kfY02F5dtAjC9cJCn+CT3f9kpKuckDdXNI
+         j//hRdsERZw55AYK0Nq9Aq+eHCTeIBAc9Y8BMXWMzvEwsLtfAGtztskfEQDzQnZykcqq
+         PGxRYmKgvZ/jcNmCUXdnS0BWeIjoVN0xBDIJFK79R+jnEn3DnpjUbVzGUIEdKTEVnZW6
+         V5eg==
+X-Gm-Message-State: AOJu0YyUSVvbcDNLURi6JPdI2yCRo+7e4j3cc4GGY/Wm43RDuT6U7GVg
+	X01HrMEzHbVSF2wVpoodhkdpqMs/LBZSiI+9EzrTGwaAbU6ejSfhyAAg83x4z3eUpi+HLGo2yzL
+	+MvaAzn7DlJFVX7VwLqmX7GhrjZw+3Ab+
+X-Google-Smtp-Source: AGHT+IHgpOYGVwZC7jGnAQ5quTRMCHeTj6rwn160Ts+Wqt1/jnYyj4K3u3HJFVo+yEseFc6FkttQlfm/AvfFuGOWpDg=
+X-Received: by 2002:a05:6122:d28:b0:4b6:c49a:174a with SMTP id
+ az40-20020a0561220d2800b004b6c49a174amr3593381vkb.14.1706612004892; Tue, 30
+ Jan 2024 02:53:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240129135556.63466-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240129135556.63466-5-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 30 Jan 2024 11:38:05 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdUiiQpw5UH8s748oqaH5BuFqDy=feWxdsEPJ4jaHRzkyA@mail.gmail.com>
-Message-ID: <CAMuHMdUiiQpw5UH8s748oqaH5BuFqDy=feWxdsEPJ4jaHRzkyA@mail.gmail.com>
-Subject: Re: [PATCH v6 4/4] riscv: dts: renesas: r9a07g043f: Update
- gpio-ranges property
-To: Prabhakar <prabhakar.csengg@gmail.com>
+References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240129135556.63466-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
+In-Reply-To: <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
+From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
+Date: Tue, 30 Jan 2024 10:52:54 +0000
+Message-ID: <CA+V-a8ux+AfF4rTmfr448Gp_=_M2TczsZ5_j2afk9qRFs3ePGQ@mail.gmail.com>
+Subject: Re: [PATCH v6 1/4] pinctrl: renesas: rzg2l: Improve code for readability
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
 	Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -83,30 +89,87 @@ Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+HI Geert,
+
+Thank you for the review.
+
+On Tue, Jan 30, 2024 at 10:35=E2=80=AFAM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
 >
-> On RZ/Five we have additional pins compared to the RZ/G2UL SoC so update
-> the gpio-ranges property in RZ/Five SoC DTSI.
+> Hi Prabhakar,
 >
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
+.com> wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > As the RZ/G2L pinctrl driver is extensively utilized by numerous SoCs a=
+nd
+> > has experienced substantial growth, enhance code readability by
+> > incorporating FIELD_PREP_CONST/FIELD_GET macros wherever necessary.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> i.e. will queue in renesas-pinctrl for v6.9.
+>
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+>
+> > @@ -90,14 +93,18 @@
+> >   * (b * 8) and f is the pin configuration capabilities supported.
+> >   */
+> >  #define RZG2L_SINGLE_PIN               BIT(31)
+> > +#define RZG2L_SINGLE_PIN_INDEX_MASK    GENMASK(30, 24)
+> > +#define RZG2L_SINGLE_PIN_BITS_MASK     GENMASK(22, 20)
+> > +
+> >  #define RZG2L_SINGLE_PIN_PACK(p, b, f) (RZG2L_SINGLE_PIN | \
+> > -                                        ((p) << 24) | ((b) << 20) | (f=
+))
+> > -#define RZG2L_SINGLE_PIN_GET_BIT(x)    (((x) & GENMASK(22, 20)) >> 20)
+> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
+PIN_INDEX_MASK, (p)) | \
+> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
+PIN_BITS_MASK, (b)) | \
+> > +                                        FIELD_PREP_CONST(PIN_CFG_MASK,=
+ (f)))
+> >
+> > -#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & GENMASK(19, 0)=
+)
+> > +#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & PIN_CFG_MASK)
+>
+> Do you mind if I drop RZG2L_PIN_CFG_TO_CAPS() and replace its two
+> users by FIELD_GET(PIN_CFG_MASK, *pin_data) while applying?
+>
+Fine by me.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.10, as this has a hard
-dependency on the pin control patches.
+Cheers,
+Prabhakar
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+> >  #define RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg)      ((cfg) & RZG2L_SINGLE_P=
+IN ? \
+> > -                                               (((cfg) & GENMASK(30, 2=
+4)) >> 24) : \
+> > -                                               (((cfg) & GENMASK(26, 2=
+0)) >> 20))
+> > +                                                FIELD_GET(RZG2L_SINGLE=
+_PIN_INDEX_MASK, (cfg)) : \
+> > +                                                FIELD_GET(PIN_CFG_PIN_=
+REG_MASK, (cfg)))
+> >
+> >  #define P(off)                 (0x0000 + (off))
+> >  #define PM(off)                        (0x0100 + (off) * 2)
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
 
