@@ -1,177 +1,164 @@
-Return-Path: <linux-gpio+bounces-2735-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2736-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 758408424E2
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:27:11 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3301E8424F6
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:31:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B2C4288314
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:27:10 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BB9391F26E06
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:31:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83FF667E99;
-	Tue, 30 Jan 2024 12:27:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D29D26A00D;
+	Tue, 30 Jan 2024 12:31:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="dEYyiex9"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oCoCCTXv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
+Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3F6267E7E
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:27:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075AC41A91
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:31:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706617624; cv=none; b=TFQfjmgomeNVkNepYPlUyW0axBwEMUtJmlR7WcALqcTeMLPMr1hsUZ7GXrj/ywC38wdWavERXyaK8hIzrJnpf0fdSpSJWkdqBPr7fPQ8vhT0g/O3Zb4OyjRpKOOIrMf12RHJp2D9G9+qqz64d8CxvqQB/p/Dj3Zp3rb4zzatx7A=
+	t=1706617902; cv=none; b=AKSJlwNePNYgbJBk8WVJb3KM+SWd0/VCEVu2kO0zEKhnIlNcd6d1Vb/l4oz+EjBL2izIzxdGr8SydCfFthob6+hxXtQcVsBjJhb+GHSUDRH1X7r9BihWiQJZjqKe9MJ6UoCIhysUkEIUJN5J9KyfHZpgpP7OKdmF+XKxgOg79DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706617624; c=relaxed/simple;
-	bh=GGdqrxBG/Y3kLs+G2Ip6CA1IfInjv/UEkQbeiGuRPmY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gbRw4G+LRvR/Pko73qRXXRS3ztPBcGseeLF4LjsKn2zunZYDE/5oYQN/KrTF5jbR+bZeOwKkzq+FqCxk/FrzsGawxmtSJDnFXxybn4itlKzle8MPQWCIR6PJsVPDLQhrCK62ZJ126K6/ptiKIitpccFLzmrAKA3/cirO/IUWsnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=dEYyiex9; arc=none smtp.client-ip=209.85.216.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-295c67ab2ccso111252a91.1
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:27:02 -0800 (PST)
+	s=arc-20240116; t=1706617902; c=relaxed/simple;
+	bh=mxdUU1CF2v3l4RRY2Mhy++oHyImsF+xN0NaEsypry4M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZPHbJGLsRu4J6wZXxpPmJBCWaywFCxEoOIEziHnCkgB+txN4sJBCL157oSTdnAJFlfyGEYLPYWROBSuVy3rpLdpmW7rGuDZzqd4eYE/mJ9OD/qTuyiKLDwAXML1nfCIE5NTZXrAYN/4nZooXkXRUKlMUadAxwfDeP5MPVrGKHYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=oCoCCTXv; arc=none smtp.client-ip=209.85.218.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a350bfcc621so421879666b.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:31:40 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=9elements.com; s=google; t=1706617622; x=1707222422; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=6Cg42jMmh8yB78v9tW9O2QrPA3XJnOTs63T0IGlo0Ag=;
-        b=dEYyiex9KVkCRIISxp56fZ7qsiGAsbWAM3c9kMYiIj7u+/IF7KA8r38EmN3iVfBbJ1
-         5bqsRPln0o+4eP9Yx2K9c+pH4f1FmVwTHaC/WNFI9o13V6ZuoI+t3Dc8t0keMKomq0NW
-         elzL2Fv4d9IL37hhCS2xdzA5xAzqJ3o187aRmHUNy44WqURUG4XpIFEZO4t9Rga1Wgb7
-         m08AN5Jq0neQ+FUQ+ov/gNe3RX2IkNaIg6JYwTsu6bVNZox6gBPIDnfX4J7ILqckdKq6
-         WrwZATuVXJkALTbITzxHSOZJOZvzpG9Oe8+Wn0GRVXL4Ssil37tuehnUn7EFq7P/uLvc
-         r6lg==
+        d=linaro.org; s=google; t=1706617899; x=1707222699; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QAnrNLVLFOTYMykh3jYjbXCRI01GIesumi9M52SBcRE=;
+        b=oCoCCTXvW6KKaT++KacK0m9LQ3mmOpBVbX4e3x0sLi05PsexAU9988F0E3wS+oOB5P
+         GWnTe5+j0AcxF6l5JrAb30UebuYdGQq5bAcf5sdL9auEvkUBU3rn96W8i/39iyTNOQo7
+         sPuVfnk0Ky6O4vF9V487qZtb5vemlSVfDFhITLqKBwMV+zH8MphZDEZ8Uz6VMw3FYKuc
+         NGsxSRC2+F+3i+QvUKuj03GfCK6MUAKpVEZXo/Zej1OBclit3nIvr1UCiH5QIb+Jiyjy
+         oXu/mV7UgdDV6gCThAM9Y0OsKlvOwfiEYVH5rqP3w5PMPnVVETtrErQZK3ftqSpGQ56W
+         Dh/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706617622; x=1707222422;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6Cg42jMmh8yB78v9tW9O2QrPA3XJnOTs63T0IGlo0Ag=;
-        b=hsGwyRpGV+3C2XtOtgP66vYE+IpcGOBop98OfozlsX7E4GZdHElIQWWAgHNJoF+UaL
-         RfcWkbJUPcKq4L6x3tA2UV72iPLZ527f0nhQYC457emPcru/e+1bLsbvIJrjO5NdMMY8
-         uUA4fhgm32GgQ5I5I6iIUDU1D/rJv5TfGkAqknbPRpB4dTIPtbcP3i4kVIWPQ1iELJpo
-         ynGJ7IuF86ZmlxTNhc0PaRnPC3DEm6TKA96CRdrmm0P8UJdqnZw/AWyjaBzqaaRPDCUy
-         Yt6YELHF8dXa4AsiEI6CSKOdoop28QsISJMZaYhYlo8Tuk4x5x/2FS1cVZl+ZoLVsVNu
-         h7aw==
-X-Gm-Message-State: AOJu0YwDd94razZo8B20yMnfChes5EK9nR+LLJTao436dCiaBgTkEjWj
-	mGZNQS4LwEh5At90pdKfNZ+jYNDfh5S6gU67nNNnQXXQvAJmxHhMeoA2HO/N3dYqcaLI+U5iKY+
-	KaBRzA/S0dVog9K4so04SF/NaliNQk7JXtnpQMQ==
-X-Google-Smtp-Source: AGHT+IHAMTQklNebRk9oHCShAru7ITmaKw01qzstitEzo2Fy4hiAPRN/fIH2bhyjVs2CepvG4itNBb0nwlQ3okFa80w=
-X-Received: by 2002:a17:90a:f2d1:b0:293:f46e:a354 with SMTP id
- gt17-20020a17090af2d100b00293f46ea354mr3843800pjb.3.1706617622223; Tue, 30
- Jan 2024 04:27:02 -0800 (PST)
+        d=1e100.net; s=20230601; t=1706617899; x=1707222699;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=QAnrNLVLFOTYMykh3jYjbXCRI01GIesumi9M52SBcRE=;
+        b=CiXVqoQAydjIdNtJ4wU9Y9Oj4THedgmxQ0DPMsyjauMW48NGrje383PLKMwH1Sn5n/
+         b6YUbwfFVMvZWSpbTekjWODSfrQt/yxRR+xCqN/vHajONcnyM2dQQjidpDEeatQnfBel
+         grSjCcVQimt/behxk0dwQ5PXIMv7XOXh7AGqxfTQWuOnj1+Y3hL9P3VVtLtlOEjcQnBB
+         1sRYIN+0YH9KKJUQLac2imQXPPzyLsAj7Oj1ftvUgBGRWR2niF3efsqgepoVL+tzQG4q
+         LvED4mLLt9NFcd+J2MRV2BkOOjO6UQyrc7yWUnvnGUijq8cqjH6PSHdu/o2beobcb555
+         xF4g==
+X-Gm-Message-State: AOJu0Yy6II+bjZBBXrgmOaO0dqUFAbDQZQmcQd6DuvxJlRYGIP9Rkohk
+	8ManiRll9NgnaxnBkLclu7Su518RuAK7TPOGh5gN2rGuM1GG03FS6NHIkEfZryo=
+X-Google-Smtp-Source: AGHT+IEqgGeFzDhHkdk4fKghgmKr+f3lbOk2kxZzAkqkrbuYbePVncsJclMTKdU9c1PhBMM/KQW0dQ==
+X-Received: by 2002:a17:906:684c:b0:a35:a4ca:111b with SMTP id a12-20020a170906684c00b00a35a4ca111bmr4397193ejs.33.1706617899205;
+        Tue, 30 Jan 2024 04:31:39 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCV5/BOpjZqqKhKXvjozVn4KaojKMZ7wBixeFxFZ+kmEUo7s3RNdgM17GcukSYTLU0HkzDcNzEltVnnDqtOTneNZGHHh1Ny52NFvvAg+Ddrz++Y42K/CjOaZddr7Acq3Xk0yZLd4lgYzVGrhJ8GPDnrdtR/1fnigvEov03ESQs6xJOfylqKU67Alpj2HvAvpuUxNlbU8Z+Owt0pluv5V1PCKnxTCEpAnJEZC5W2wA7SP/bZnpt4DzbNglsbQtrqQ+EnvsSZKtWEKFl5+JtLrY483aUFlsD4fKPlhqSuP4VlcM2VtrE/RX0O8BhpgsO3TthbhbVnWSCH0pdaNXlWhmjjXZ0ON8Q2cvxRF
+Received: from [192.168.1.20] ([178.197.222.62])
+        by smtp.gmail.com with ESMTPSA id vg10-20020a170907d30a00b00a3522154450sm4408147ejc.12.2024.01.30.04.31.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 30 Jan 2024 04:31:38 -0800 (PST)
+Message-ID: <021f3f6f-0aa9-41c2-a220-b1e6efad2880@linaro.org>
+Date: Tue, 30 Jan 2024 13:31:37 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130120807.460335-1-naresh.solanki@9elements.com> <b305291e-199d-4a0b-b24e-09910f1eed37@linaro.org>
-In-Reply-To: <b305291e-199d-4a0b-b24e-09910f1eed37@linaro.org>
-From: Naresh Solanki <naresh.solanki@9elements.com>
-Date: Tue, 30 Jan 2024 17:56:51 +0530
-Message-ID: <CABqG17in2+0eHMRBvyunWKizgSBpYPq+CGsMO7FQo13pApPvaw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Patrick Rudolph <patrick.rudolph@9elements.com>, mazziesaccount@gmail.com, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Language: en-US
+To: Naresh Solanki <naresh.solanki@9elements.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring
+ <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Patrick Rudolph <patrick.rudolph@9elements.com>, mazziesaccount@gmail.com,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240130120807.460335-1-naresh.solanki@9elements.com>
+ <b305291e-199d-4a0b-b24e-09910f1eed37@linaro.org>
+ <CABqG17in2+0eHMRBvyunWKizgSBpYPq+CGsMO7FQo13pApPvaw@mail.gmail.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <CABqG17in2+0eHMRBvyunWKizgSBpYPq+CGsMO7FQo13pApPvaw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Krzysztof,
+On 30/01/2024 13:26, Naresh Solanki wrote:
+> Hi Krzysztof,
+> 
+> On Tue, 30 Jan 2024 at 17:49, Krzysztof Kozlowski
+> <krzysztof.kozlowski@linaro.org> wrote:
+>>
+>> On 30/01/2024 13:08, Naresh Solanki wrote:
+>>> Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
+>>> reserved ranges.
+>>> Add input-enable property to allow configuring a pin as input.
+>>> Rearrange allOf
+>>
+>> Why?
+> allOf is aligned with other implementations.
 
-On Tue, 30 Jan 2024 at 17:49, Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 30/01/2024 13:08, Naresh Solanki wrote:
-> > Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
-> > reserved ranges.
-> > Add input-enable property to allow configuring a pin as input.
-> > Rearrange allOf
->
-> Why?
-allOf is aligned with other implementations.
->
-> > Update example.
-> >
-> > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> > ---
-> >  .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 28 +++++++++++++++----
-> >  1 file changed, 23 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > index 7f30ec2f1e54..89ce0cb68834 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> > @@ -45,7 +45,8 @@ properties:
-> >      maxItems: 1
-> >
-> >    gpio-reserved-ranges:
-> > -    maxItems: 1
-> > +    minItems: 1
-> > +    maxItems: 60
-> >
-> >    vdd-supply:
-> >      description:
-> > @@ -85,6 +86,8 @@ patternProperties:
-> >
-> >        bias-disable: true
-> >
-> > +      input-enable: true
-> > +
-> >        output-high: true
-> >
-> >        output-low: true
-> > @@ -101,6 +104,9 @@ patternProperties:
-> >
-> >      additionalProperties: false
-> >
-> > +allOf:
-> > +  - $ref: pinctrl.yaml#
-> > +
->
-> That's not a correct placement.
-ok. Will remove this specific change.
->
-> >  required:
-> >    - compatible
-> >    - reg
-> > @@ -112,9 +118,6 @@ required:
-> >
-> >  additionalProperties: false
-> >
-> > -allOf:
-> > -  - $ref: pinctrl.yaml#
-> > -
-> >  examples:
-> >    - |
-> >      #include <dt-bindings/interrupt-controller/arm-gic.h>
-> > @@ -133,6 +136,21 @@ examples:
-> >          interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> >          interrupt-controller;
-> >          vdd-supply = <&p3v3>;
-> > -        gpio-reserved-ranges = <5 1>;
-> > +        gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
-> > +
-> > +        pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
-> > +        pinctrl-names = "default";
-> > +        U62160_pins: cfg-pins {
-> > +                        pins = "gp03", "gp16", "gp20", "gp50", "gp51";
->
-> Your indentation is totally broken.
-sorry I missed checking on this before sending the patch for review. will fix
-it to use two space for indentation.
+Which ones? example-schema and other implementations have it in
+different place. If you align some parts of the code, please align to
+match the correct code, not other incorrect. How to find it?
+example-schema is the reference, recent commits are also sometimes good
+indication.
 
-Regards,
-Naresh
->
->
-> Best regards,
-> Krzysztof
->
+Best regards,
+Krzysztof
+
 
