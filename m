@@ -1,175 +1,471 @@
-Return-Path: <linux-gpio+bounces-2730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 933438421FA
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 11:53:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3FC00842231
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:05:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4B221287361
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 10:53:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64AA91C25225
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 11:05:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F260465BC3;
-	Tue, 30 Jan 2024 10:53:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4754B65BD4;
+	Tue, 30 Jan 2024 11:04:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JKsKcLpy"
+	dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b="WBygx/4t"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from gimli.kloenk.de (gimli.kloenk.de [49.12.72.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35C84664A0;
-	Tue, 30 Jan 2024 10:53:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD6A664D5;
+	Tue, 30 Jan 2024 11:04:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=49.12.72.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706612007; cv=none; b=Pot0yoJVVYQJd4bHGCNyk6a1opeocJ/lcIqY9+CNZMIdk/EFfjijvSrMvBscRwrAMpyO8B0PdrZ/KIdV822mXqxzzFVyaKLh4z7AGhrk3q7jx8HMlJaEKKY7nXEnSeEgIZdkVU0lO5wkQWCKCxHf53DoRpeFPH+RDbMNgovGg10=
+	t=1706612692; cv=none; b=o9c4RzQmjlyOIYAg7Esx1DbcCJYU6zLCZB69kF1l2T3lrXZE2YH5Vf0shzsNQN0NOXJM+DnCn/5N26u96DtBbS2RfWV1mLle/CI0cyS9KMiYL0jLk+AjfCwGHL7EvRvuBLqkhAriUvx9AjZ++dVNdbrEVsEOGpXVt0QoXotpZJk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706612007; c=relaxed/simple;
-	bh=OnuVYsvU2WNhZcmPss9Ip918LCpNRJoRqA6UpHf/Lc0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uM/OB4boZpeVkR1+lWB/ZPvA8Zxfil3XE6S0BmzYJ9mxJ+KuD9GxJ4QiVUvpZFBf2yfYf5zCdgc6J4kgVRH8gpKp96joo1+gk4wmdtDAkZrFccP6YqEnrOzpfpEi/L4d+KY4umccCac6nfadYiijicSemgESZmf8Y5hk7iRTpkE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JKsKcLpy; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5bbbe57b9so947889241.3;
-        Tue, 30 Jan 2024 02:53:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706612005; x=1707216805; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
-        b=JKsKcLpyVjRLi+cLAItKbpp09kKZ63HI4B4voAHYrNGiQNbO4+yLm/Ko3KD024geeo
-         0NlUenOPodSSBOPZyRu1Kw1MGZlKoHAJzzT028QbdklVOFZz25Exl78feGyxHidIgFll
-         PQk3pDDFUIbCJ42Qro0TEPooX9RZDvU5WPYF6/9b//bnBdPwwmiNSU7KR5Ck1VCYXAfU
-         aZ5KKPdusYGrUgSmLROymYvyQc0383CMQOUscimjH6RQxmA1SMnVs8z90arEQXE/f8si
-         x6ijFlNcrsUwOe2sp/Y0AJRwqdu1JpoEJGjD7zbDNs7RWtQseDmr1cVgggRM8cQgoGsh
-         gXZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706612005; x=1707216805;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=t2Wgc2ClmelSiswazxUWS0iU6q84Ug0M/jBpx2lzDSQ=;
-        b=DEwe9PvajgiSvjqYpWcpT5pZDe2oMOz0IiCvSmNW1hS/EcaI9vnv+n076c77+E6kcy
-         qbyU8uFo9W6hyjDUp7Jr4XMER5FxuRf4VTiZ5E+IZWFJ71KEezgcTcdjEwqpOw+iIq8q
-         s9pJun/CJcb5sjdqldPsEVaxW5Uh7mCxh8kfY02F5dtAjC9cJCn+CT3f9kpKuckDdXNI
-         j//hRdsERZw55AYK0Nq9Aq+eHCTeIBAc9Y8BMXWMzvEwsLtfAGtztskfEQDzQnZykcqq
-         PGxRYmKgvZ/jcNmCUXdnS0BWeIjoVN0xBDIJFK79R+jnEn3DnpjUbVzGUIEdKTEVnZW6
-         V5eg==
-X-Gm-Message-State: AOJu0YyUSVvbcDNLURi6JPdI2yCRo+7e4j3cc4GGY/Wm43RDuT6U7GVg
-	X01HrMEzHbVSF2wVpoodhkdpqMs/LBZSiI+9EzrTGwaAbU6ejSfhyAAg83x4z3eUpi+HLGo2yzL
-	+MvaAzn7DlJFVX7VwLqmX7GhrjZw+3Ab+
-X-Google-Smtp-Source: AGHT+IHgpOYGVwZC7jGnAQ5quTRMCHeTj6rwn160Ts+Wqt1/jnYyj4K3u3HJFVo+yEseFc6FkttQlfm/AvfFuGOWpDg=
-X-Received: by 2002:a05:6122:d28:b0:4b6:c49a:174a with SMTP id
- az40-20020a0561220d2800b004b6c49a174amr3593381vkb.14.1706612004892; Tue, 30
- Jan 2024 02:53:24 -0800 (PST)
+	s=arc-20240116; t=1706612692; c=relaxed/simple;
+	bh=xAazWK1TBwRgBwPDjmqMpw58fFQdD/vhCbBzfIdNgnE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=pskkLEUE+V1UCbeOMwiiuGFD0d0aAPfxgrD4V+BLAjHqaFy08lRapPtLdbwxwMYZAV03LlJtRj75jgUKzUmiIENyibtLDKEuc0tfkP9BLRfI3M9yIJ6W2rcdOdwE4DomO1hKkWOmIQU4zSVpC6WVRIEXFURvC0vXCed5u4fKLbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de; spf=pass smtp.mailfrom=kloenk.de; dkim=pass (1024-bit key) header.d=kloenk.de header.i=@kloenk.de header.b=WBygx/4t; arc=none smtp.client-ip=49.12.72.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=kloenk.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kloenk.de
+From: Finn Behrens <me@kloenk.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kloenk.de; s=mail;
+	t=1706612151; bh=xJvrGE3xhE9lJyWcs/KsWV4ng9+Xpu8qmEntGeVtCtY=;
+	h=From:To:Cc:Subject:Date;
+	b=WBygx/4txnwJhHvnKKVa6OueTkZF5GvGMEK8HV51MM3ePQvHF2KMV+017p22Gmo37
+	 47ZPb1m0UUzGpV8rfnmYXqioRHAe3Y64Bd2RWtjrOSzXCF4m17kkXTV6Jfpc5bQfSY
+	 ipg6uAPjwC5yEJo4uoLcTW90J1EKyW1kHENL8c3E=
+To: Thierry Reding <thierry.reding@gmail.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Finn Behrens <me@kloenk.de>,
+	Heisath <jannis@imserv.org>,
+	Yureka Lilian <yuka@yuka.dev>
+Subject: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
+Date: Tue, 30 Jan 2024 11:55:13 +0100
+Message-ID: <20240130105515.30258-1-me@kloenk.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240129135556.63466-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240129135556.63466-2-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
-In-Reply-To: <CAMuHMdWbPooCMqyKjTh+uJgAqh=az0+DOQAJYKQ7cuBrxyV1-w@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Tue, 30 Jan 2024 10:52:54 +0000
-Message-ID: <CA+V-a8ux+AfF4rTmfr448Gp_=_M2TczsZ5_j2afk9qRFs3ePGQ@mail.gmail.com>
-Subject: Re: [PATCH v6 1/4] pinctrl: renesas: rzg2l: Improve code for readability
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Biju Das <biju.das.jz@bp.renesas.com>, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-HI Geert,
+Removes the hardcoded timer assignment of timers to pwm controllers.
+This allows to use more than one pwm per gpio bank.
 
-Thank you for the review.
+Original patch with chip_data interface by Heisath <jannis@imserv.org>
 
-On Tue, Jan 30, 2024 at 10:35=E2=80=AFAM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Mon, Jan 29, 2024 at 2:56=E2=80=AFPM Prabhakar <prabhakar.csengg@gmail=
-.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > As the RZ/G2L pinctrl driver is extensively utilized by numerous SoCs a=
-nd
-> > has experienced substantial growth, enhance code readability by
-> > incorporating FIELD_PREP_CONST/FIELD_GET macros wherever necessary.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> i.e. will queue in renesas-pinctrl for v6.9.
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
->
-> > @@ -90,14 +93,18 @@
-> >   * (b * 8) and f is the pin configuration capabilities supported.
-> >   */
-> >  #define RZG2L_SINGLE_PIN               BIT(31)
-> > +#define RZG2L_SINGLE_PIN_INDEX_MASK    GENMASK(30, 24)
-> > +#define RZG2L_SINGLE_PIN_BITS_MASK     GENMASK(22, 20)
-> > +
-> >  #define RZG2L_SINGLE_PIN_PACK(p, b, f) (RZG2L_SINGLE_PIN | \
-> > -                                        ((p) << 24) | ((b) << 20) | (f=
-))
-> > -#define RZG2L_SINGLE_PIN_GET_BIT(x)    (((x) & GENMASK(22, 20)) >> 20)
-> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
-PIN_INDEX_MASK, (p)) | \
-> > +                                        FIELD_PREP_CONST(RZG2L_SINGLE_=
-PIN_BITS_MASK, (b)) | \
-> > +                                        FIELD_PREP_CONST(PIN_CFG_MASK,=
- (f)))
-> >
-> > -#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & GENMASK(19, 0)=
-)
-> > +#define RZG2L_PIN_CFG_TO_CAPS(cfg)             ((cfg) & PIN_CFG_MASK)
->
-> Do you mind if I drop RZG2L_PIN_CFG_TO_CAPS() and replace its two
-> users by FIELD_GET(PIN_CFG_MASK, *pin_data) while applying?
->
-Fine by me.
+Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
+Co-developed-by: Yureka Lilian <yuka@yuka.dev>
+Signed-off-by: Yureka Lilian <yuka@yuka.dev>
+Signed-off-by: Finn Behrens <me@kloenk.de>
+---
+ drivers/gpio/gpio-mvebu.c | 223 ++++++++++++++++++++++++--------------
+ 1 file changed, 139 insertions(+), 84 deletions(-)
 
-Cheers,
-Prabhakar
+diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+index a13f3c18ccd4..303ea3be0b69 100644
+--- a/drivers/gpio/gpio-mvebu.c
++++ b/drivers/gpio/gpio-mvebu.c
+@@ -94,21 +94,43 @@
+ 
+ #define MVEBU_MAX_GPIO_PER_BANK		32
+ 
+-struct mvebu_pwm {
++enum mvebu_pwm_ctrl {
++	MVEBU_PWM_CTRL_SET_A = 0,
++	MVEBU_PWM_CTRL_SET_B,
++	MVEBU_PWM_CTRL_MAX
++};
++
++struct mvebu_pwmchip {
+ 	struct regmap		*regs;
+ 	u32			 offset;
+ 	unsigned long		 clk_rate;
+-	struct gpio_desc	*gpiod;
+-	struct pwm_chip		 chip;
+ 	spinlock_t		 lock;
+-	struct mvebu_gpio_chip	*mvchip;
++	bool			 in_use;
+ 
+ 	/* Used to preserve GPIO/PWM registers across suspend/resume */
+-	u32			 blink_select;
+ 	u32			 blink_on_duration;
+ 	u32			 blink_off_duration;
+ };
+ 
++struct mvebu_pwm_chip_drv {
++	enum mvebu_pwm_ctrl	 ctrl;
++	struct gpio_desc	*gpiod;
++	bool			 master;
++};
++
++struct mvebu_pwm {
++	struct pwm_chip		 chip;
++	struct mvebu_gpio_chip	*mvchip;
++	struct mvebu_pwmchip	 controller;
++	enum mvebu_pwm_ctrl	 default_controller;
++
++	/* Used to preserve GPIO/PWM registers across suspend/resume */
++	u32				 blink_select;
++	struct mvebu_pwm_chip_drv	 drv[];
++};
++
++static struct mvebu_pwmchip  *mvebu_pwm_list[MVEBU_PWM_CTRL_MAX];
++
+ struct mvebu_gpio_chip {
+ 	struct gpio_chip   chip;
+ 	struct regmap     *regs;
+@@ -285,12 +307,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_chip *mvchip, u32 val)
+  * Functions returning offsets of individual registers for a given
+  * PWM controller.
+  */
+-static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mvpwm)
++static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwmchip *mvpwm)
+ {
+ 	return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
+ }
+ 
+-static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwm *mvpwm)
++static unsigned int mvebu_pwmreg_blink_off_duration(struct mvebu_pwmchip *mvpwm)
+ {
+ 	return mvpwm->offset + PWM_BLINK_OFF_DURATION_OFF;
+ }
+@@ -623,39 +645,71 @@ static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+ 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
+ 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
+ 	struct gpio_desc *desc;
++	enum mvebu_pwm_ctrl id;
+ 	unsigned long flags;
+ 	int ret = 0;
++	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
+ 
+-	spin_lock_irqsave(&mvpwm->lock, flags);
++	spin_lock_irqsave(&mvpwm->controller.lock, flags);
+ 
+-	if (mvpwm->gpiod) {
++	if (drv->gpiod || (mvchip->blink_en_reg & BIT(pwm->hwpwm))) {
+ 		ret = -EBUSY;
+-	} else {
+-		desc = gpiochip_request_own_desc(&mvchip->chip,
+-						 pwm->hwpwm, "mvebu-pwm",
+-						 GPIO_ACTIVE_HIGH,
+-						 GPIOD_OUT_LOW);
+-		if (IS_ERR(desc)) {
+-			ret = PTR_ERR(desc);
+-			goto out;
+-		}
++		goto out;
++	}
++
++	desc = gpiochip_request_own_desc(&mvchip->chip,
++					 pwm->hwpwm, "mvebu-pwm",
++					 GPIO_ACTIVE_HIGH,
++					 GPIOD_OUT_LOW);
++	if (IS_ERR(desc)) {
++		ret = PTR_ERR(desc);
++		goto out;
++	}
+ 
+-		mvpwm->gpiod = desc;
++	ret = gpiod_direction_output(desc, 0);
++	if (ret) {
++		gpiochip_free_own_desc(desc);
++		goto out;
+ 	}
++
++	for (id = MVEBU_PWM_CTRL_SET_A; id < MVEBU_PWM_CTRL_MAX; id++) {
++		if (!mvebu_pwm_list[id]->in_use) {
++			drv->ctrl = id;
++			drv->master = true;
++			mvebu_pwm_list[id]->in_use = true;
++			break;
++		}
++	}
++
++	if (!drv->master)
++		drv->ctrl = mvpwm->default_controller;
++
++	regmap_update_bits(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
++			   BIT(pwm->hwpwm), drv->ctrl ? BIT(pwm->hwpwm) : 0);
++
++	drv->gpiod = desc;
++
++	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
++		    &mvpwm->blink_select);
+ out:
+-	spin_unlock_irqrestore(&mvpwm->lock, flags);
++	spin_unlock_irqrestore(&mvpwm->controller.lock, flags);
+ 	return ret;
+ }
+ 
+ static void mvebu_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+ {
+ 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
++	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
+ 	unsigned long flags;
+ 
+-	spin_lock_irqsave(&mvpwm->lock, flags);
+-	gpiochip_free_own_desc(mvpwm->gpiod);
+-	mvpwm->gpiod = NULL;
+-	spin_unlock_irqrestore(&mvpwm->lock, flags);
++	spin_lock_irqsave(&mvpwm->controller.lock, flags);
++	if (drv->master)
++		mvebu_pwm_list[drv->ctrl]->in_use = false;
++
++	gpiochip_free_own_desc(drv->gpiod);
++	memset(drv, 0, sizeof(struct mvebu_pwm_chip_drv));
++
++	spin_unlock_irqrestore(&mvpwm->controller.lock, flags);
+ }
+ 
+ static int mvebu_pwm_get_state(struct pwm_chip *chip,
+@@ -665,28 +719,35 @@ static int mvebu_pwm_get_state(struct pwm_chip *chip,
+ 
+ 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
+ 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
++	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
++	struct mvebu_pwmchip *controller;
+ 	unsigned long long val;
+ 	unsigned long flags;
+ 	u32 u;
+ 
+-	spin_lock_irqsave(&mvpwm->lock, flags);
++	if (drv->gpiod)
++		controller = mvebu_pwm_list[drv->ctrl];
++	else
++		controller = &mvpwm->controller;
++
++	spin_lock_irqsave(&controller->lock, flags);
+ 
+-	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), &u);
++	regmap_read(controller->regs, mvebu_pwmreg_blink_on_duration(controller), &u);
+ 	/* Hardware treats zero as 2^32. See mvebu_pwm_apply(). */
+ 	if (u > 0)
+ 		val = u;
+ 	else
+ 		val = UINT_MAX + 1ULL;
+ 	state->duty_cycle = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC,
+-			mvpwm->clk_rate);
++			controller->clk_rate);
+ 
+-	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), &u);
++	regmap_read(controller->regs, mvebu_pwmreg_blink_off_duration(controller), &u);
+ 	/* period = on + off duration */
+ 	if (u > 0)
+ 		val += u;
+ 	else
+ 		val += UINT_MAX + 1ULL;
+-	state->period = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, mvpwm->clk_rate);
++	state->period = DIV_ROUND_UP_ULL(val * NSEC_PER_SEC, controller->clk_rate);
+ 
+ 	regmap_read(mvchip->regs, GPIO_BLINK_EN_OFF + mvchip->offset, &u);
+ 	if (u)
+@@ -694,7 +755,7 @@ static int mvebu_pwm_get_state(struct pwm_chip *chip,
+ 	else
+ 		state->enabled = false;
+ 
+-	spin_unlock_irqrestore(&mvpwm->lock, flags);
++	spin_unlock_irqrestore(&controller->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -703,6 +764,8 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   const struct pwm_state *state)
+ {
+ 	struct mvebu_pwm *mvpwm = to_mvebu_pwm(chip);
++	struct mvebu_pwm_chip_drv *drv = &mvpwm->drv[pwm->hwpwm];
++	struct mvebu_pwmchip *controller;
+ 	struct mvebu_gpio_chip *mvchip = mvpwm->mvchip;
+ 	unsigned long long val;
+ 	unsigned long flags;
+@@ -711,7 +774,11 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (state->polarity != PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
+ 
+-	val = (unsigned long long) mvpwm->clk_rate * state->duty_cycle;
++	if (drv->gpiod)
++		controller = mvebu_pwm_list[drv->ctrl];
++	else
++		controller = &mvpwm->controller;
++	val = (unsigned long long) controller->clk_rate * state->duty_cycle;
+ 	do_div(val, NSEC_PER_SEC);
+ 	if (val > UINT_MAX + 1ULL)
+ 		return -EINVAL;
+@@ -726,7 +793,7 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		on = 1;
+ 
+-	val = (unsigned long long) mvpwm->clk_rate * state->period;
++	val = (unsigned long long) controller->clk_rate * state->period;
+ 	do_div(val, NSEC_PER_SEC);
+ 	val -= on;
+ 	if (val > UINT_MAX + 1ULL)
+@@ -738,16 +805,16 @@ static int mvebu_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	else
+ 		off = 1;
+ 
+-	spin_lock_irqsave(&mvpwm->lock, flags);
++	spin_lock_irqsave(&controller->lock, flags);
+ 
+-	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm), on);
+-	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm), off);
++	regmap_write(controller->regs, mvebu_pwmreg_blink_on_duration(controller), on);
++	regmap_write(controller->regs, mvebu_pwmreg_blink_off_duration(controller), off);
+ 	if (state->enabled)
+ 		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 1);
+ 	else
+ 		mvebu_gpio_blink(&mvchip->chip, pwm->hwpwm, 0);
+ 
+-	spin_unlock_irqrestore(&mvpwm->lock, flags);
++	spin_unlock_irqrestore(&controller->lock, flags);
+ 
+ 	return 0;
+ }
+@@ -762,25 +829,27 @@ static const struct pwm_ops mvebu_pwm_ops = {
+ static void __maybe_unused mvebu_pwm_suspend(struct mvebu_gpio_chip *mvchip)
+ {
+ 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
++	struct mvebu_pwmchip *controller = &mvpwm->controller;
+ 
+ 	regmap_read(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
+ 		    &mvpwm->blink_select);
+-	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm),
+-		    &mvpwm->blink_on_duration);
+-	regmap_read(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm),
+-		    &mvpwm->blink_off_duration);
++	regmap_read(controller->regs, mvebu_pwmreg_blink_on_duration(controller),
++		    &controller->blink_on_duration);
++	regmap_read(controller->regs, mvebu_pwmreg_blink_off_duration(controller),
++		    &controller->blink_off_duration);
+ }
+ 
+ static void __maybe_unused mvebu_pwm_resume(struct mvebu_gpio_chip *mvchip)
+ {
+ 	struct mvebu_pwm *mvpwm = mvchip->mvpwm;
++	struct mvebu_pwmchip *controller = &mvpwm->controller;
+ 
+ 	regmap_write(mvchip->regs, GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset,
+ 		     mvpwm->blink_select);
+-	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_on_duration(mvpwm),
+-		     mvpwm->blink_on_duration);
+-	regmap_write(mvpwm->regs, mvebu_pwmreg_blink_off_duration(mvpwm),
+-		     mvpwm->blink_off_duration);
++	regmap_write(controller->regs, mvebu_pwmreg_blink_on_duration(controller),
++		     controller->blink_on_duration);
++	regmap_write(controller->regs, mvebu_pwmreg_blink_off_duration(controller),
++		     controller->blink_off_duration);
+ }
+ 
+ static int mvebu_pwm_probe(struct platform_device *pdev,
+@@ -792,6 +861,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	void __iomem *base;
+ 	u32 offset;
+ 	u32 set;
++	enum mvebu_pwm_ctrl ctrl_set;
+ 
+ 	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
+ 		int ret = of_property_read_u32(dev->of_node,
+@@ -813,57 +883,39 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	if (IS_ERR(mvchip->clk))
+ 		return PTR_ERR(mvchip->clk);
+ 
+-	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
++	mvpwm = devm_kzalloc(dev, struct_size(mvpwm, drv, mvchip->chip.ngpio), GFP_KERNEL);
+ 	if (!mvpwm)
+ 		return -ENOMEM;
+ 	mvchip->mvpwm = mvpwm;
+ 	mvpwm->mvchip = mvchip;
+-	mvpwm->offset = offset;
+ 
+-	if (mvchip->soc_variant == MVEBU_GPIO_SOC_VARIANT_A8K) {
+-		mvpwm->regs = mvchip->regs;
++	base = devm_platform_ioremap_resource_byname(pdev, "pwm");
++	if (IS_ERR(base))
++		return PTR_ERR(base);
++	mvpwm->controller.regs = devm_regmap_init_mmio(&pdev->dev, base,
++						       &mvebu_gpio_regmap_config);
++	if (IS_ERR(mvpwm->controller.regs))
++		return PTR_ERR(mvpwm->controller.regs);
+ 
+-		switch (mvchip->offset) {
+-		case AP80X_GPIO0_OFF_A8K:
+-		case CP11X_GPIO0_OFF_A8K:
+-			/* Blink counter A */
+-			set = 0;
+-			break;
+-		case CP11X_GPIO1_OFF_A8K:
+-			/* Blink counter B */
+-			set = U32_MAX;
+-			mvpwm->offset += PWM_BLINK_COUNTER_B_OFF;
+-			break;
+-		default:
+-			return -EINVAL;
+-		}
++	/*
++	 * User set A for lines of GPIO chip with id 0, B for GPIO chip
++	 * with id 1. Don't allow further GPIO chips to be used for PWM.
++	 */
++	if (id == 0) {
++		set = 0;
++		ctrl_set = MVEBU_PWM_CTRL_SET_A;
++	} else if (id == 1) {
++		set = U32_MAX;
++		ctrl_set = MVEBU_PWM_CTRL_SET_B;
+ 	} else {
+-		base = devm_platform_ioremap_resource_byname(pdev, "pwm");
+-		if (IS_ERR(base))
+-			return PTR_ERR(base);
+-
+-		mvpwm->regs = devm_regmap_init_mmio(&pdev->dev, base,
+-						    &mvebu_gpio_regmap_config);
+-		if (IS_ERR(mvpwm->regs))
+-			return PTR_ERR(mvpwm->regs);
+-
+-		/*
+-		 * Use set A for lines of GPIO chip with id 0, B for GPIO chip
+-		 * with id 1. Don't allow further GPIO chips to be used for PWM.
+-		 */
+-		if (id == 0)
+-			set = 0;
+-		else if (id == 1)
+-			set = U32_MAX;
+-		else
+-			return -EINVAL;
++		return -EINVAL;
+ 	}
+ 
+ 	regmap_write(mvchip->regs,
+ 		     GPIO_BLINK_CNT_SELECT_OFF + mvchip->offset, set);
+ 
+-	mvpwm->clk_rate = clk_get_rate(mvchip->clk);
+-	if (!mvpwm->clk_rate) {
++	mvpwm->controller.clk_rate = clk_get_rate(mvchip->clk);
++	if (!mvpwm->controller.clk_rate) {
+ 		dev_err(dev, "failed to get clock rate\n");
+ 		return -EINVAL;
+ 	}
+@@ -872,7 +924,10 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
+ 	mvpwm->chip.ops = &mvebu_pwm_ops;
+ 	mvpwm->chip.npwm = mvchip->chip.ngpio;
+ 
+-	spin_lock_init(&mvpwm->lock);
++	spin_lock_init(&mvpwm->controller.lock);
++
++	mvpwm->default_controller = ctrl_set;
++	mvebu_pwm_list[ctrl_set] = &mvpwm->controller;
+ 
+ 	return devm_pwmchip_add(dev, &mvpwm->chip);
+ }
+-- 
+2.43.0
 
-> >  #define RZG2L_PIN_CFG_TO_PORT_OFFSET(cfg)      ((cfg) & RZG2L_SINGLE_P=
-IN ? \
-> > -                                               (((cfg) & GENMASK(30, 2=
-4)) >> 24) : \
-> > -                                               (((cfg) & GENMASK(26, 2=
-0)) >> 20))
-> > +                                                FIELD_GET(RZG2L_SINGLE=
-_PIN_INDEX_MASK, (cfg)) : \
-> > +                                                FIELD_GET(PIN_CFG_PIN_=
-REG_MASK, (cfg)))
-> >
-> >  #define P(off)                 (0x0000 + (off))
-> >  #define PM(off)                        (0x0100 + (off) * 2)
->
-> Gr{oetje,eeting}s,
->
->                         Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
-8k.org
->
-> In personal conversations with technical people, I call myself a hacker. =
-But
-> when I'm talking to journalists I just say "programmer" or something like=
- that.
->                                 -- Linus Torvalds
 
