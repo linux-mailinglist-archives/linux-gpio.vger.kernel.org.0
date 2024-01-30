@@ -1,71 +1,71 @@
-Return-Path: <linux-gpio+bounces-2746-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2747-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62BCD842555
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:50:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC9C5842558
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 13:50:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 18E8128C135
-	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:50:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 64CAD28D2DB
+	for <lists+linux-gpio@lfdr.de>; Tue, 30 Jan 2024 12:50:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADAAF74E25;
-	Tue, 30 Jan 2024 12:48:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F43C7691D;
+	Tue, 30 Jan 2024 12:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="SElsLa6t"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="tPLyzPgQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C52866A32C
-	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:48:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0896EB5C
+	for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 12:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706618930; cv=none; b=snORlXXN2Jurxrd+a7eCPNkm4XopgPJgfnYNdc0r8Xo0wk+Ti1MFA38arzcBLuUFd8ooXyF8i7jagqs3i9gjxfrrEWg+psHVTpaPa1trZ7Y0EVKR4gdkpdIHtNpsWvyWjXQzgVlon3JhAEaschP5a0uSgvntGllQFk808789R14=
+	t=1706618932; cv=none; b=ZDxyz/Cs8CH2xX0eCyuMW1pY9z3zEfSAFU8QJhMKfVu4DJfmPEXRbzczpLXg2ztyfDOyMabAJoyboCztSk2at3JPDtfzG7GUAeZI1XcZSmrzWLAiWCOJH0hCwGy6zyAHizYApqSe3yp1xD8LpvYrGRMTrTXvmzp/LWA5uZ1Vmd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706618930; c=relaxed/simple;
-	bh=p2h7HZnOPsK5/BAPlWhXykE++wUlNbvr66TKp9HVCxY=;
+	s=arc-20240116; t=1706618932; c=relaxed/simple;
+	bh=BNtVyzlbq0uwapLaX8o85oJ3dO6Q73tcdDKAhhv7pSw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=us14YVfc/ptY44V590yT9Kn/qxeXvdT0rUhQvrM6c4BjFyC+EOceZ2Z39Tu7bmlvkVYJTehhu/nzqo/1LW5EMLrQ+E/9rwKyONURivWwfICWZXeo07aAQe+h48noMJrU+leKccnsUc9bXt6qyIfPRIA9ATUG3KBXW6IP3Ei3AkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=SElsLa6t; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=VLRM9FF2AbCggoJqVdKzHA8WukJb1GaDtREKJ3G5RQ/fqClQlMj5JU5v4JtESviCNVhCKFjkzwT7D9WR5e7AFkGPq8XH4SsER3WQzqhjH9e8/gMfxiLB9Bsj67knithRZ8iAXOnDmC/z96FiIpbF3B9IzlQAFa3z8sHJpN4Kjt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=tPLyzPgQ; arc=none smtp.client-ip=209.85.221.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-40e80046264so48546725e9.0
-        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:48:48 -0800 (PST)
+Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-33af2823edbso1060980f8f.0
+        for <linux-gpio@vger.kernel.org>; Tue, 30 Jan 2024 04:48:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706618927; x=1707223727; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706618928; x=1707223728; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hx4dI/SeySHXD1hWEoudVUeXvciOCRh+p3Pv4t1b4q0=;
-        b=SElsLa6tGjLu4tFZFz2HcD9w48STiHv+MGPwdGPNo0jjRzTPAtSJpvI0PFCTg2sPJu
-         4OWkDyOniubX9QdtSaNLvFohJrxRPh9clCEDugYy1NUev6WFUtN94VcoSXPr7B0+sE0u
-         lAb4rCQWiq1W4xZkrliZvFiqsmyUUQ0o0AdM8jRQ7G+KX222aNFQyKjhfcxod72Dopz+
-         hLNtw8Kqg5vofb5C3nKL27EhidJrAuupe2eewAtPdBRjA7JARb+9kttQNSZHCV8xxnSA
-         4Q9Vq2AM7H8lHQ9TkDnk2toiukVakvI/VJXkn/1mgXpWkrQavcx3KJN+AvGhaeGSD0xm
-         wiNw==
+        bh=feMhfXaEPN8Zs00X3ZpBtoUh/909WQ4xnuGNbxmTCyw=;
+        b=tPLyzPgQkyNNhVV2bPyYzPc/P+1ncgs8TWDydyjlXCZgO8KYhFt83eVk0sPRTZPhPB
+         zmTuvoHnU7NhZdBBN6i3FqtwWJq2nIonPHY/yXa66FZKC0D0BscO+vLb4TaTPor2/Tqe
+         JUJa7ogihRyWHXdVTgAuS+HKGHKCalZJV8/2ob3xiB6rOEckPnBPJC10gPBuAcnAUqGg
+         s5m3sIdi4mqK1qnTsMxMckwyduiCV+lxdmd1FT1FNPiTTIYBefc4+nwIjFJZhFLmno7z
+         aX0XJg91oYAbHy6MYZuxJOo304HHbpUGJujN44UGDHtp8F4C04F0e44xg7EEQf8r7Nfb
+         UOAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706618927; x=1707223727;
+        d=1e100.net; s=20230601; t=1706618928; x=1707223728;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hx4dI/SeySHXD1hWEoudVUeXvciOCRh+p3Pv4t1b4q0=;
-        b=N/OmrTIoCeOjdkHAO6pr0vK1lF8yaMSHzzSRnQ8Cx1cK1DD+jCgWE1A+bZpX82MJkc
-         bQ8BY5YTTH1VtwVsgNnHILRr1QKVcatsAk4OS5EABbE+C4FJ9oQGjBVYzUcGF1vo9YoT
-         emGTW1eiS+d0JnvwnsT5IY5m3QJ6/NBLB3cCX1/oKhImFMxc0iEp59sVuWMnQ6tKD4uW
-         RtS8MHDHTbmy2volFI3s2jg53N8T5SENARJYCt+aHEoqqtLgHsusV+1GAwy1vAp8eogO
-         mcN+JjCvfs+B1XWrU5V0Ptk6mSH+Zpk5e0unJnyn+NzVnDwwuiYk7PioSzsSCBnQ7DO0
-         x48Q==
-X-Gm-Message-State: AOJu0YwgGzvyWEO5Dmkni76SYO2AVAotvkiz4V/kTZIut0ZikwnslwsZ
-	tXg6/cTM7Jmg2XuCVOojmUoYwD1fOa2coCC11Z0u5O3PVZc/Jqc6AkHi46SavkY=
-X-Google-Smtp-Source: AGHT+IFbwYsTFa4MdWk0nmHyqp7UelTYlEJ3oybMy3DdKTBOhBBa+wLk/yf6UBDYgr3WGRmPLJZUBQ==
-X-Received: by 2002:a5d:4e87:0:b0:33a:fcfc:d5d3 with SMTP id e7-20020a5d4e87000000b0033afcfcd5d3mr852608wru.2.1706618927092;
+        bh=feMhfXaEPN8Zs00X3ZpBtoUh/909WQ4xnuGNbxmTCyw=;
+        b=wLv4VouNSbOXyUiyJqzGxZjq0w/3rjjepFQXh+zoC4aJJxmxFBXIfsN2TffofRPGGY
+         0NQVOa4tIuxuY1tBDG9orlyZTeYUYxuGhLI/h9EHnrv76Kd2xszwmCBXSFCXal6SvzRn
+         X1HEWBcGScyOOmmbZH4/LbUznozHmRwETmu7j8t+K2Fs5K2vkFXk1AOliPSxY9/wawse
+         Ay7B7Nv9zmvQCntDqHBW8T6OfNb0r9GvY7HNYAhmhOZphulI3ZHwAfx5T/g/tlDjpKgp
+         bkgSpcA6ADEjIFA1oj3D79UCGKyhy2aex3zF1wl6xFDG64bCCP+jmh+toefVthwKyHkR
+         K4HA==
+X-Gm-Message-State: AOJu0YyoIDBhYduqZOoM9vpXpKhXEOVdrAjaAT5mQZ4HgWVlIp2e/RLJ
+	6YHhtVZA1sgc+rfHk9V9q5+KE9N40XbvsjiMxAxyJ3ubU210B8RGeEpSO8Kd4is=
+X-Google-Smtp-Source: AGHT+IFfxr08hcgk5f25pc2vXH0zRWUPzaCz2ixOuA3VbferCu5gBgGEboP1swpspq/O+WspJhkxrw==
+X-Received: by 2002:a05:6000:2a6:b0:337:bb0f:3702 with SMTP id l6-20020a05600002a600b00337bb0f3702mr5786745wry.35.1706618927968;
         Tue, 30 Jan 2024 04:48:47 -0800 (PST)
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:abc8:f77e:abeb:129c])
-        by smtp.gmail.com with ESMTPSA id en8-20020a056000420800b0033940016d6esm6625337wrb.93.2024.01.30.04.48.46
+        by smtp.gmail.com with ESMTPSA id en8-20020a056000420800b0033940016d6esm6625337wrb.93.2024.01.30.04.48.47
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Jan 2024 04:48:46 -0800 (PST)
+        Tue, 30 Jan 2024 04:48:47 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>,
@@ -77,9 +77,9 @@ To: Linus Walleij <linus.walleij@linaro.org>,
 Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH 08/22] gpio: sysfs: use gpio_device_find() to iterate over existing devices
-Date: Tue, 30 Jan 2024 13:48:14 +0100
-Message-Id: <20240130124828.14678-9-brgl@bgdev.pl>
+Subject: [PATCH 09/22] gpio: remove gpio_lock
+Date: Tue, 30 Jan 2024 13:48:15 +0100
+Message-Id: <20240130124828.14678-10-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240130124828.14678-1-brgl@bgdev.pl>
 References: <20240130124828.14678-1-brgl@bgdev.pl>
@@ -93,102 +93,346 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-With the list of GPIO devices now protected with SRCU we can use
-gpio_device_find() to traverse it from sysfs.
+The "multi-function" gpio_lock is pretty much useless with how it's used
+in GPIOLIB currently. Because many GPIO API calls can be called from all
+contexts but may also call into sleeping driver callbacks, there are
+many places with utterly broken workarounds like yielding the lock to
+call a possibly sleeping function and then re-acquiring it again without
+taking into account that the protected state may have changed.
+
+It was also used to protect several unrelated things: like individual
+descriptors AND the GPIO device list. We now serialize access to these
+two with SRCU and so can finally remove the spinlock.
+
+There is of course the question of consistency of lockless access to
+GPIO descriptors. Because we only support exclusive access to GPIOs
+(officially anyway, I'm looking at you broken
+GPIOD_FLAGS_BIT_NONEXCLUSIVE bit...) and the API contract with providers
+does not guarantee serialization, it's enough to ensure we cannot
+accidentally dereference an invalid pointer and that the state we present
+to both users and providers remains consistent. To achieve that: read the
+flags field atomically except for a few special cases. Read their current
+value before executing callback code and use this value for any subsequent
+logic. Modifying the flags depends on the particular use-case and can
+differ. For instance: when requesting a GPIO, we need to set the
+REQUESTED bit immediately so that the next user trying to request the
+same line sees -EBUSY.
+
+While at it: the allocations that used GFP_ATOMIC until this point can
+now switch to GFP_KERNEL.
 
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 ---
- drivers/gpio/gpiolib-sysfs.c | 41 ++++++++++++++++--------------------
- drivers/gpio/gpiolib.c       |  2 +-
- drivers/gpio/gpiolib.h       |  1 -
- 3 files changed, 19 insertions(+), 25 deletions(-)
+ drivers/gpio/gpiolib-cdev.c  |  18 +++---
+ drivers/gpio/gpiolib-sysfs.c |  17 ++----
+ drivers/gpio/gpiolib.c       | 106 +++++++++++------------------------
+ drivers/gpio/gpiolib.h       |   2 -
+ 4 files changed, 46 insertions(+), 97 deletions(-)
 
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 75f4912339a6..3588aaf90e45 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -2302,18 +2302,16 @@ static void gpio_desc_to_lineinfo(struct gpio_desc *desc,
+ 	memset(info, 0, sizeof(*info));
+ 	info->offset = gpio_chip_hwgpio(desc);
+ 
+-	scoped_guard(spinlock_irqsave, &gpio_lock) {
+-		if (desc->name)
+-			strscpy(info->name, desc->name, sizeof(info->name));
++	if (desc->name)
++		strscpy(info->name, desc->name, sizeof(info->name));
+ 
+-		scoped_guard(srcu, &desc->srcu) {
+-			label = gpiod_get_label(desc);
+-			if (label)
+-				strscpy(info->consumer, label,
+-					sizeof(info->consumer));
+-		}
++	dflags = READ_ONCE(desc->flags);
+ 
+-		dflags = READ_ONCE(desc->flags);
++	scoped_guard(srcu, &desc->srcu) {
++		label = gpiod_get_label(desc);
++		if (label && test_bit(FLAG_REQUESTED, &dflags))
++			strscpy(info->consumer, label,
++				sizeof(info->consumer));
+ 	}
+ 
+ 	/*
 diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 6bf5332136e5..3c3b8559cff5 100644
+index 3c3b8559cff5..1cc707685f87 100644
 --- a/drivers/gpio/gpiolib-sysfs.c
 +++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -790,11 +790,24 @@ void gpiochip_sysfs_unregister(struct gpio_device *gdev)
+@@ -563,7 +563,6 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	struct gpio_device *gdev;
+ 	struct gpiod_data *data;
+ 	struct gpio_chip *chip;
+-	unsigned long flags;
+ 	struct device *dev;
+ 	int status, offset;
+ 
+@@ -578,6 +577,9 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 		return -EINVAL;
  	}
- }
  
-+static int gpiofind_sysfs_register(struct gpio_chip *gc, void *data)
-+{
-+	struct gpio_device *gdev = gc->gpiodev;
-+	int ret;
++	if (!test_and_set_bit(FLAG_EXPORT, &desc->flags))
++		return -EPERM;
 +
-+	if (gdev->mockdev)
-+		return 0;
-+
-+	ret = gpiochip_sysfs_register(gdev);
-+	if (ret)
-+		chip_err(gc, "failed to register the sysfs entry: %d\n", ret);
-+
-+	return 0;
-+}
-+
- static int __init gpiolib_sysfs_init(void)
- {
--	int		status;
--	unsigned long	flags;
--	struct gpio_device *gdev;
-+	int status;
+ 	gdev = desc->gdev;
+ 	chip = gdev->chip;
  
- 	status = class_register(&gpio_class);
- 	if (status < 0)
-@@ -806,26 +819,8 @@ static int __init gpiolib_sysfs_init(void)
- 	 * We run before arch_initcall() so chip->dev nodes can have
- 	 * registered, and so arch_initcall() can always gpiod_export().
- 	 */
+@@ -589,18 +591,11 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 		goto err_unlock;
+ 	}
+ 
 -	spin_lock_irqsave(&gpio_lock, flags);
--	list_for_each_entry(gdev, &gpio_devices, list) {
--		if (gdev->mockdev)
--			continue;
-+	gpio_device_find(NULL, gpiofind_sysfs_register);
- 
--		/*
--		 * TODO we yield gpio_lock here because
--		 * gpiochip_sysfs_register() acquires a mutex. This is unsafe
--		 * and needs to be fixed.
--		 *
--		 * Also it would be nice to use gpio_device_find() here so we
--		 * can keep gpio_chips local to gpiolib.c, but the yield of
--		 * gpio_lock prevents us from doing this.
--		 */
+-	if (!test_bit(FLAG_REQUESTED, &desc->flags) ||
+-	     test_bit(FLAG_EXPORT, &desc->flags)) {
 -		spin_unlock_irqrestore(&gpio_lock, flags);
--		status = gpiochip_sysfs_register(gdev);
--		spin_lock_irqsave(&gpio_lock, flags);
--	}
+-		gpiod_dbg(desc, "%s: unavailable (requested=%d, exported=%d)\n",
+-				__func__,
+-				test_bit(FLAG_REQUESTED, &desc->flags),
+-				test_bit(FLAG_EXPORT, &desc->flags));
++	if (!test_bit(FLAG_REQUESTED, &desc->flags)) {
++		gpiod_dbg(desc, "%s: unavailable (not requested)\n", __func__);
+ 		status = -EPERM;
+ 		goto err_unlock;
+ 	}
 -	spin_unlock_irqrestore(&gpio_lock, flags);
--
--	return status;
-+	return 0;
+ 
+ 	data = kzalloc(sizeof(*data), GFP_KERNEL);
+ 	if (!data) {
+@@ -628,7 +623,6 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 		goto err_free_data;
+ 	}
+ 
+-	set_bit(FLAG_EXPORT, &desc->flags);
+ 	mutex_unlock(&sysfs_lock);
+ 	return 0;
+ 
+@@ -636,6 +630,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
+ 	kfree(data);
+ err_unlock:
+ 	mutex_unlock(&sysfs_lock);
++	clear_bit(FLAG_EXPORT, &desc->flags);
+ 	gpiod_dbg(desc, "%s: status %d\n", __func__, status);
+ 	return status;
  }
- postcore_initcall(gpiolib_sysfs_init);
 diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 93b80f3e9fe2..87d05134384e 100644
+index 87d05134384e..2a7439db7392 100644
 --- a/drivers/gpio/gpiolib.c
 +++ b/drivers/gpio/gpiolib.c
-@@ -85,7 +85,7 @@ DEFINE_SPINLOCK(gpio_lock);
+@@ -76,12 +76,6 @@ static struct bus_type gpio_bus_type = {
+  */
+ #define FASTPATH_NGPIO CONFIG_GPIOLIB_FASTPATH_LIMIT
+ 
+-/* gpio_lock prevents conflicts during gpio_desc[] table updates.
+- * While any GPIO is requested, its gpio_chip is not removable;
+- * each GPIO's "requested" flag serves as a lock and refcount.
+- */
+-DEFINE_SPINLOCK(gpio_lock);
+-
  static DEFINE_MUTEX(gpio_lookup_lock);
  static LIST_HEAD(gpio_lookup_list);
  
--LIST_HEAD(gpio_devices);
-+static LIST_HEAD(gpio_devices);
- /* Protects the GPIO device list against concurrent modifications. */
- static DEFINE_MUTEX(gpio_devices_lock);
- /* Ensures coherence during read-only accesses to the list of GPIO devices. */
+@@ -123,8 +117,7 @@ static int desc_set_label(struct gpio_desc *desc, const char *label)
+ 	const char *new = NULL, *old;
+ 
+ 	if (label) {
+-		/* FIXME: make this GFP_KERNEL once the spinlock is out. */
+-		new = kstrdup_const(label, GFP_ATOMIC);
++		new = kstrdup_const(label, GFP_KERNEL);
+ 		if (!new)
+ 			return -ENOMEM;
+ 	}
+@@ -1085,7 +1078,6 @@ EXPORT_SYMBOL_GPL(gpiochip_add_data_with_key);
+ void gpiochip_remove(struct gpio_chip *gc)
+ {
+ 	struct gpio_device *gdev = gc->gpiodev;
+-	unsigned long flags;
+ 	unsigned int i;
+ 
+ 	down_write(&gdev->sem);
+@@ -1106,12 +1098,10 @@ void gpiochip_remove(struct gpio_chip *gc)
+ 	 */
+ 	gpiochip_set_data(gc, NULL);
+ 
+-	spin_lock_irqsave(&gpio_lock, flags);
+ 	for (i = 0; i < gdev->ngpio; i++) {
+ 		if (test_bit(FLAG_REQUESTED, &gdev->descs[i].flags))
+ 			break;
+ 	}
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+ 
+ 	if (i != gdev->ngpio)
+ 		dev_crit(&gdev->dev,
+@@ -2218,62 +2208,43 @@ EXPORT_SYMBOL_GPL(gpiochip_remove_pin_ranges);
+ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ {
+ 	struct gpio_chip *gc = desc->gdev->chip;
+-	unsigned long flags;
+ 	unsigned int offset;
+ 	int ret;
+ 
++	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
++		return -EBUSY;
++
+ 	if (label) {
+ 		label = kstrdup_const(label, GFP_KERNEL);
+ 		if (!label)
+ 			return -ENOMEM;
+ 	}
+ 
+-	spin_lock_irqsave(&gpio_lock, flags);
+-
+ 	/* NOTE:  gpio_request() can be called in early boot,
+ 	 * before IRQs are enabled, for non-sleeping (SOC) GPIOs.
+ 	 */
+ 
+-	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags)) {
+-		ret = -EBUSY;
+-		goto out_free_unlock;
+-	}
+-
+ 	if (gc->request) {
+-		/* gc->request may sleep */
+-		spin_unlock_irqrestore(&gpio_lock, flags);
+ 		offset = gpio_chip_hwgpio(desc);
+ 		if (gpiochip_line_is_valid(gc, offset))
+ 			ret = gc->request(gc, offset);
+ 		else
+ 			ret = -EINVAL;
+-		spin_lock_irqsave(&gpio_lock, flags);
++		if (ret)
++			goto out_clear_bit;
++	}
+ 
+-		if (ret) {
+-			desc_set_label(desc, NULL);
+-			clear_bit(FLAG_REQUESTED, &desc->flags);
+-			goto out_free_unlock;
+-		}
+-	}
+-	if (gc->get_direction) {
+-		/* gc->get_direction may sleep */
+-		spin_unlock_irqrestore(&gpio_lock, flags);
++	if (gc->get_direction)
+ 		gpiod_get_direction(desc);
+-		spin_lock_irqsave(&gpio_lock, flags);
+-	}
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+ 
+ 	ret = desc_set_label(desc, label ? : "?");
+-	if (ret) {
+-		clear_bit(FLAG_REQUESTED, &desc->flags);
+-		return ret;
+-	}
++	if (ret)
++		goto out_clear_bit;
+ 
+ 	return 0;
+ 
+-out_free_unlock:
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+-	kfree_const(label);
++out_clear_bit:
++	clear_bit(FLAG_REQUESTED, &desc->flags);
+ 	return ret;
+ }
+ 
+@@ -2343,35 +2314,32 @@ static bool gpiod_free_commit(struct gpio_desc *desc)
+ 
+ 	might_sleep();
+ 
+-	spin_lock_irqsave(&gpio_lock, flags);
+-
+ 	gc = desc->gdev->chip;
+-	if (gc && test_bit(FLAG_REQUESTED, &desc->flags)) {
+-		if (gc->free) {
+-			spin_unlock_irqrestore(&gpio_lock, flags);
+-			might_sleep_if(gc->can_sleep);
++	flags = READ_ONCE(desc->flags);
++
++	if (gc && test_bit(FLAG_REQUESTED, &flags)) {
++		if (gc->free)
+ 			gc->free(gc, gpio_chip_hwgpio(desc));
+-			spin_lock_irqsave(&gpio_lock, flags);
+-		}
+-		clear_bit(FLAG_ACTIVE_LOW, &desc->flags);
+-		clear_bit(FLAG_REQUESTED, &desc->flags);
+-		clear_bit(FLAG_OPEN_DRAIN, &desc->flags);
+-		clear_bit(FLAG_OPEN_SOURCE, &desc->flags);
+-		clear_bit(FLAG_PULL_UP, &desc->flags);
+-		clear_bit(FLAG_PULL_DOWN, &desc->flags);
+-		clear_bit(FLAG_BIAS_DISABLE, &desc->flags);
+-		clear_bit(FLAG_EDGE_RISING, &desc->flags);
+-		clear_bit(FLAG_EDGE_FALLING, &desc->flags);
+-		clear_bit(FLAG_IS_HOGGED, &desc->flags);
++
++		clear_bit(FLAG_ACTIVE_LOW, &flags);
++		clear_bit(FLAG_REQUESTED, &flags);
++		clear_bit(FLAG_OPEN_DRAIN, &flags);
++		clear_bit(FLAG_OPEN_SOURCE, &flags);
++		clear_bit(FLAG_PULL_UP, &flags);
++		clear_bit(FLAG_PULL_DOWN, &flags);
++		clear_bit(FLAG_BIAS_DISABLE, &flags);
++		clear_bit(FLAG_EDGE_RISING, &flags);
++		clear_bit(FLAG_EDGE_FALLING, &flags);
++		clear_bit(FLAG_IS_HOGGED, &flags);
+ #ifdef CONFIG_OF_DYNAMIC
+ 		WRITE_ONCE(desc->hog, NULL);
+ #endif
+ 		ret = true;
+-	}
++		desc_set_label(desc, NULL);
++		WRITE_ONCE(desc->flags, flags);
+ 
+-	spin_unlock_irqrestore(&gpio_lock, flags);
+-	desc_set_label(desc, NULL);
+-	gpiod_line_state_notify(desc, GPIOLINE_CHANGED_RELEASED);
++		gpiod_line_state_notify(desc, GPIOLINE_CHANGED_RELEASED);
++	}
+ 
+ 	return ret;
+ }
+@@ -2413,22 +2381,12 @@ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)
+ 	if (IS_ERR(desc))
+ 		return NULL;
+ 
+-	guard(spinlock_irqsave)(&gpio_lock);
+-
+ 	if (!test_bit(FLAG_REQUESTED, &desc->flags))
+ 		return NULL;
+ 
+ 	guard(srcu)(&desc->srcu);
+ 
+-	/*
+-	 * FIXME: Once we mark gpiod_direction_input/output() and
+-	 * gpiod_get_direction() with might_sleep(), we'll be able to protect
+-	 * the GPIO descriptors with mutex (while value setting operations will
+-	 * become lockless).
+-	 *
+-	 * Until this happens, this allocation needs to be atomic.
+-	 */
+-	label = kstrdup(gpiod_get_label(desc), GFP_ATOMIC);
++	label = kstrdup(gpiod_get_label(desc), GFP_KERNEL);
+ 	if (!label)
+ 		return ERR_PTR(-ENOMEM);
+ 
 diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index d2e73eea9e92..2bf3f9e13ae4 100644
+index 2bf3f9e13ae4..9b7afe87f1bd 100644
 --- a/drivers/gpio/gpiolib.h
 +++ b/drivers/gpio/gpiolib.h
-@@ -136,7 +136,6 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+@@ -135,8 +135,6 @@ int gpiod_set_array_value_complex(bool raw, bool can_sleep,
+ 
  int gpiod_set_transitory(struct gpio_desc *desc, bool transitory);
  
- extern spinlock_t gpio_lock;
--extern struct list_head gpio_devices;
- 
+-extern spinlock_t gpio_lock;
+-
  void gpiod_line_state_notify(struct gpio_desc *desc, unsigned long action);
  
+ /**
 -- 
 2.40.1
 
