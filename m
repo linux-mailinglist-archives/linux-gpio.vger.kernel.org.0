@@ -1,219 +1,443 @@
-Return-Path: <linux-gpio+bounces-2768-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D09E18433C6
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 03:26:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1568384347D
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 04:34:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2F071C21218
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 02:26:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 786F61F26A08
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 03:34:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CEF2364D9;
-	Wed, 31 Jan 2024 02:21:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 663C51079B;
+	Wed, 31 Jan 2024 03:34:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WYGjuM9b"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jIwfn7SF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6509738DD1;
-	Wed, 31 Jan 2024 02:21:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DCDAE574
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 03:34:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706667702; cv=none; b=uK575rY4KxcxeEK1Fkfs8BjmsvqYNzcEldL5Jaoa4i73wYImk+0rI4miOBb8H4mbkSLmeTkIb4gATFI77pfQz1M+eBGMBSHVBoGqTZlKY3BRC0z2DaK5MrN/sPo5PXTCIYddrlQXU7sqWCiBQXG0lmPNGqREP9dMmYAGaHLJUyE=
+	t=1706672063; cv=none; b=iPwZsZC981Ti1l/j1zbrj3zYzTYIT2baO/YRu5UIkshccfKoetWul6mIMHk8XzCX6Z+dzwxCq5VywX2YspjU8VTyIvmjT0MS3hsPvq64tczqf8XBV+dSPaqnOMkxlKRCdeqn2z78lxIRNGPOdOUTmbf47jATqZf08cFg0TPqN3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706667702; c=relaxed/simple;
-	bh=th37S7Dg+8O94IslOUsTpOj05UGTSRkRzwjkJffUsj8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jP2HUmFY1bWXk33wS7opjjCtK8HhhroYuwSMDgm2GqVT1QH3PIeLYav/D6NhAo6fubDhKFD8LbRoAvAIr+zCNwlazN9zwAZW7BopRH9av9JnOBoRgQM2jZiQQSbreX+UnBqqdat0bbuIyqhH3cIq5+5du6TWN3BcSTLoaqPmKuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WYGjuM9b; arc=none smtp.client-ip=192.198.163.10
+	s=arc-20240116; t=1706672063; c=relaxed/simple;
+	bh=1pA0z4l0FWR03cS6VVl9urQIgKBvymvog5MGp4cKWC0=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=UG4hxTuXyubOkTS4zIC/T5qPcEe4AGGMj/+XVMyiNV1rsWzVnveMDwEJk1v+ziYR7hd3B04MOjKJXFQLTlZK50Vr6cjRlDnhd+Mvtamw7PO6u467XbMyJ14t3gxMPao90ntYygA57QKQHByXOM0szHlu6spp+J1B2KGvFbWk5rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jIwfn7SF; arc=none smtp.client-ip=192.198.163.8
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706667700; x=1738203700;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=th37S7Dg+8O94IslOUsTpOj05UGTSRkRzwjkJffUsj8=;
-  b=WYGjuM9bIsDYoFvgBTaG0wfihZrGbxdGlt44yVQoC03ZmsO/0S4a/vXF
-   pmy7ud56dxWtRqlMviap26pKuo7gw/D8Lbli1jZsCL5kknmrM3i4CzWiM
-   VSUqbH1CaholEUFU4oeK4S4UsyGeVqOtJEPWZggPoc/82exgz6EzO9aWO
-   cCHPXCcdFjksMnQ0TihiSdrkw9OFr18Niht0ecUcDC2QgO11Sy07aL5Wt
-   QBpOeRDsBAKAKskLOiKO++bHadG89X9Ehbvum0fhfXsKOfm2MgQ+7tctg
-   6BwC8/mozptwTzCedI/dpjYKFNODbvMn/Tgm2HnrEqYqtA5njOhP5cmKi
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10849216"
+  t=1706672060; x=1738208060;
+  h=date:from:to:cc:subject:message-id;
+  bh=1pA0z4l0FWR03cS6VVl9urQIgKBvymvog5MGp4cKWC0=;
+  b=jIwfn7SFkiens3dI+5TEd8lAN/T/Mnswewq6bRg48IOLMGqM1RCD9THT
+   PoSC71hP6syquSDfOTlssQ6xcipT82jncieCd8xPCFHDMTtMUrH0grpYp
+   utXPT9uYbDl9d6C7T0FSrhdq4CF17hPqGkw4WUCkf0SaPSmr5dADEQC3R
+   2OqDLmBWWawR/wWKzfjR/OFiGlGAcWoNs6NkiRNHRtqrszYqYYIlw3a9N
+   R/HGaGHOnbU7HYCxNYrY5nyvmOhpntWRbvI5cDpHdgieLz9tbyZqsPDGy
+   ylRiBOpiZpeMohT2xUYetYOX8MT9fLTjPbjGIUy8bE42nWvTzHUku99qD
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="17005544"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="10849216"
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 18:21:39 -0800
+   d="scan'208";a="17005544"
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Jan 2024 19:32:53 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="822407291"
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="1119482083"
 X-IronPort-AV: E=Sophos;i="6.05,231,1701158400"; 
-   d="scan'208";a="822407291"
+   d="scan'208";a="1119482083"
 Received: from lkp-server02.sh.intel.com (HELO 59f4f4cd5935) ([10.239.97.151])
-  by orsmga001.jf.intel.com with ESMTP; 30 Jan 2024 18:21:36 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 30 Jan 2024 19:32:51 -0800
 Received: from kbuild by 59f4f4cd5935 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rV0EF-00013k-2v;
-	Wed, 31 Jan 2024 02:21:32 +0000
-Date: Wed, 31 Jan 2024 10:20:40 +0800
+	id 1rV1Ki-000168-2I;
+	Wed, 31 Jan 2024 03:32:30 +0000
+Date: Wed, 31 Jan 2024 11:31:19 +0800
 From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa-dev@sang-engineering.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH 20/22] gpio: protect the pointer to gpio_chip in
- gpio_device with SRCU
-Message-ID: <202401311050.YNdm98Hv-lkp@intel.com>
-References: <20240130124828.14678-21-brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-gpio:b4/descriptors-wireless] BUILD REGRESSION
+ 99b6016595e9254167434ef82f4c2ed88d986452
+Message-ID: <202401311116.LxdSD0ku-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130124828.14678-21-brgl@bgdev.pl>
 
-Hi Bartosz,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-wireless
+branch HEAD: 99b6016595e9254167434ef82f4c2ed88d986452  wifi: cw1200: Convert to GPIO descriptors
 
-kernel test robot noticed the following build warnings:
+Error/Warning reports:
 
-[auto build test WARNING on brgl/gpio/for-next]
-[also build test WARNING on linus/master v6.8-rc2 next-20240130]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+https://lore.kernel.org/oe-kbuild-all/202401310616.wpvZVBlf-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202401310721.pDBU6qLV-lkp@intel.com
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewski/gpio-protect-the-list-of-GPIO-devices-with-SRCU/20240130-205537
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-patch link:    https://lore.kernel.org/r/20240130124828.14678-21-brgl%40bgdev.pl
-patch subject: [PATCH 20/22] gpio: protect the pointer to gpio_chip in gpio_device with SRCU
-config: x86_64-randconfig-122-20240131 (https://download.01.org/0day-ci/archive/20240131/202401311050.YNdm98Hv-lkp@intel.com/config)
-compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240131/202401311050.YNdm98Hv-lkp@intel.com/reproduce)
+Error/Warning: (recently discovered and may have been fixed)
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202401311050.YNdm98Hv-lkp@intel.com/
+drivers/net/wireless/ath/ath9k/hw.c:2731:2: error: must use 'struct' tag to refer to type 'gpio_desc'
+drivers/net/wireless/ath/ath9k/hw.c:2731:9: error: unknown type name 'gpio_desc'; use 'struct' keyword to refer to the type
+drivers/net/wireless/ath/ath9k/hw.c:2734:10: error: no member named 'gpiods' in 'struct ath_hw'
+drivers/net/wireless/ath/ath9k/hw.c:2734:15: error: 'struct ath_hw' has no member named 'gpiods'
+drivers/net/wireless/ath/ath9k/hw.c:2738:15: error: assignment to 'int *' from incompatible pointer type 'struct gpio_desc *' [-Werror=incompatible-pointer-types]
+drivers/net/wireless/ath/ath9k/hw.c:2747:33: error: passing argument 1 of 'gpiod_set_consumer_name' from incompatible pointer type [-Werror=incompatible-pointer-types]
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/gpio/gpiolib.c:444:22: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:444:22: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:444:22: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:1103:9: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:1103:9: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:1103:9: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:1182:22: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:1182:22: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:1182:22: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:2970:14: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:2970:14: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:2970:14: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:3004:22: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:3004:22: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:3004:22: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:3585:14: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:3585:14: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:3585:14: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:4772:14: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:4772:14: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:4772:14: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c:4846:14: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.c:4846:14: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.c:4846:14: sparse:    struct gpio_chip *
-   drivers/gpio/gpiolib.c: note: in included file:
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
->> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in comparison expression (different address spaces):
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __rcu *
-   drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+Error/Warning ids grouped by kconfigs:
 
-vim +444 drivers/gpio/gpiolib.c
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- arc-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- arc-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- arm-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- arm-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- csky-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- loongarch-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- loongarch-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- loongarch-defconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- m68k-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- m68k-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- microblaze-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- microblaze-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- mips-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- nios2-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- nios2-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- openrisc-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- parisc-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- parisc-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- riscv-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- riscv-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- sh-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- sh-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- sparc-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+|-- sparc64-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+`-- sparc64-allyesconfig
+    |-- drivers-net-wireless-ath-ath9k-hw.c:error:assignment-to-int-from-incompatible-pointer-type-struct-gpio_desc
+    |-- drivers-net-wireless-ath-ath9k-hw.c:error:passing-argument-of-gpiod_set_consumer_name-from-incompatible-pointer-type
+    |-- drivers-net-wireless-ath-ath9k-hw.c:error:struct-ath_hw-has-no-member-named-gpiods
+    `-- drivers-net-wireless-ath-ath9k-hw.c:error:unknown-type-name-gpio_desc-use-struct-keyword-to-refer-to-the-type
+clang_recent_errors
+|-- arm64-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- arm64-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- hexagon-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- hexagon-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- i386-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- i386-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- powerpc-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- powerpc-allyesconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+|-- x86_64-allmodconfig
+|   |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+|   `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
+`-- x86_64-allyesconfig
+    |-- drivers-net-wireless-ath-ath9k-hw.c:error:must-use-struct-tag-to-refer-to-type-gpio_desc
+    `-- drivers-net-wireless-ath-ath9k-hw.c:error:no-member-named-gpiods-in-struct-ath_hw
 
-   422	
-   423	/*
-   424	 * Convert a GPIO name to its descriptor
-   425	 * Note that there is no guarantee that GPIO names are globally unique!
-   426	 * Hence this function will return, if it exists, a reference to the first GPIO
-   427	 * line found that matches the given name.
-   428	 */
-   429	static struct gpio_desc *gpio_name_to_desc(const char * const name)
-   430	{
-   431		struct gpio_device *gdev;
-   432		struct gpio_desc *desc;
-   433		struct gpio_chip *gc;
-   434	
-   435		if (!name)
-   436			return NULL;
-   437	
-   438		guard(srcu)(&gpio_devices_srcu);
-   439	
-   440		list_for_each_entry_srcu(gdev, &gpio_devices, list,
-   441					 srcu_read_lock_held(&gpio_devices_srcu)) {
-   442			guard(srcu)(&gdev->srcu);
-   443	
- > 444			gc = rcu_dereference(gdev->chip);
-   445			if (!gc)
-   446				continue;
-   447	
-   448			for_each_gpio_desc(gc, desc) {
-   449				if (desc->name && !strcmp(desc->name, name))
-   450					return desc;
-   451			}
-   452		}
-   453	
-   454		return NULL;
-   455	}
-   456	
+elapsed time: 736m
+
+configs tested: 179
+configs skipped: 3
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                        nsim_700_defconfig   gcc  
+arc                 nsimosci_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240131   gcc  
+arc                   randconfig-002-20240131   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   gcc  
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                          ep93xx_defconfig   clang
+arm                      integrator_defconfig   gcc  
+arm                            mmp2_defconfig   clang
+arm                        multi_v5_defconfig   clang
+arm                       netwinder_defconfig   clang
+arm                   randconfig-001-20240131   clang
+arm                   randconfig-002-20240131   clang
+arm                   randconfig-003-20240131   clang
+arm                   randconfig-004-20240131   clang
+arm                        spear6xx_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240131   clang
+arm64                 randconfig-002-20240131   clang
+arm64                 randconfig-003-20240131   clang
+arm64                 randconfig-004-20240131   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240131   gcc  
+csky                  randconfig-002-20240131   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240131   clang
+hexagon               randconfig-002-20240131   clang
+i386                             allmodconfig   clang
+i386                              allnoconfig   clang
+i386                             allyesconfig   clang
+i386                                defconfig   gcc  
+i386                  randconfig-011-20240131   gcc  
+i386                  randconfig-012-20240131   gcc  
+i386                  randconfig-013-20240131   gcc  
+i386                  randconfig-014-20240131   gcc  
+i386                  randconfig-015-20240131   gcc  
+i386                  randconfig-016-20240131   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240131   gcc  
+loongarch             randconfig-002-20240131   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   clang
+mips                             allyesconfig   gcc  
+mips                        bcm47xx_defconfig   gcc  
+mips                           ip27_defconfig   gcc  
+mips                     loongson1b_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240131   gcc  
+nios2                 randconfig-002-20240131   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240131   gcc  
+parisc                randconfig-002-20240131   gcc  
+parisc64                            defconfig   gcc  
+powerpc                     akebono_defconfig   clang
+powerpc                          allmodconfig   clang
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                     kmeter1_defconfig   clang
+powerpc                   lite5200b_defconfig   clang
+powerpc               mpc834x_itxgp_defconfig   clang
+powerpc                      ppc44x_defconfig   clang
+powerpc               randconfig-001-20240131   clang
+powerpc               randconfig-002-20240131   clang
+powerpc               randconfig-003-20240131   clang
+powerpc64             randconfig-001-20240131   clang
+powerpc64             randconfig-002-20240131   clang
+powerpc64             randconfig-003-20240131   clang
+riscv                            allmodconfig   gcc  
+riscv                             allnoconfig   clang
+riscv                            allyesconfig   gcc  
+riscv                               defconfig   gcc  
+riscv                 randconfig-001-20240131   clang
+riscv                 randconfig-002-20240131   clang
+s390                             allmodconfig   gcc  
+s390                              allnoconfig   gcc  
+s390                             allyesconfig   gcc  
+s390                                defconfig   gcc  
+s390                  randconfig-001-20240131   gcc  
+s390                  randconfig-002-20240131   gcc  
+sh                               alldefconfig   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240131   gcc  
+sh                    randconfig-002-20240131   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240131   gcc  
+sparc64               randconfig-002-20240131   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   clang
+um                                  defconfig   gcc  
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240131   clang
+um                    randconfig-002-20240131   clang
+um                           x86_64_defconfig   gcc  
+x86_64                            allnoconfig   gcc  
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240131   clang
+x86_64       buildonly-randconfig-002-20240131   clang
+x86_64       buildonly-randconfig-003-20240131   clang
+x86_64       buildonly-randconfig-004-20240131   clang
+x86_64       buildonly-randconfig-005-20240131   clang
+x86_64       buildonly-randconfig-006-20240131   clang
+x86_64                              defconfig   gcc  
+x86_64                                  kexec   gcc  
+x86_64                randconfig-001-20240131   gcc  
+x86_64                randconfig-002-20240131   gcc  
+x86_64                randconfig-003-20240131   gcc  
+x86_64                randconfig-004-20240131   gcc  
+x86_64                randconfig-005-20240131   gcc  
+x86_64                randconfig-006-20240131   gcc  
+x86_64                randconfig-011-20240131   clang
+x86_64                randconfig-012-20240131   clang
+x86_64                randconfig-013-20240131   clang
+x86_64                randconfig-014-20240131   clang
+x86_64                randconfig-015-20240131   clang
+x86_64                randconfig-016-20240131   clang
+x86_64                randconfig-071-20240131   clang
+x86_64                randconfig-072-20240131   clang
+x86_64                randconfig-073-20240131   clang
+x86_64                randconfig-074-20240131   clang
+x86_64                randconfig-075-20240131   clang
+x86_64                randconfig-076-20240131   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                  cadence_csp_defconfig   gcc  
+xtensa                randconfig-001-20240131   gcc  
+xtensa                randconfig-002-20240131   gcc  
 
 -- 
 0-DAY CI Kernel Test Service
