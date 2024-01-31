@@ -1,82 +1,82 @@
-Return-Path: <linux-gpio+bounces-2834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 361ED844867
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:06:43 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC1EE844872
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:09:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DC9BC1F27125
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:06:42 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6125B22FA0
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:09:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BB623F8F6;
-	Wed, 31 Jan 2024 20:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12E233EA76;
+	Wed, 31 Jan 2024 20:09:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="y6YnjW53"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bK1cfyt6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B15BD3715E
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:06:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 532C73EA8F
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:09:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706731598; cv=none; b=lqGddAm9OfPMRb7MNS/FI5EF9MOkqloH7O0A6vWDeXF2+rr9pZGZKEPd678UXTHjQUkII62pa+mjPCS9CMwek9ZzXr+v29Npp66o4jt/U3K417LhVU4wHkvJ/Ug18QuzaHblHndLvq13oyIj+1HrhQY/EMdr5ZHEHRQRcYKQRMk=
+	t=1706731777; cv=none; b=JlUzYY0CMcgcmw2+DH9W/fX4ZKT3yt8LVBwPMcgu8gsXfP86kqegT+MpqxaaBRWmAqV8EpWAmtHGisM+gwWUb7nTC5DuUjZBmtvSkIIEj5H7t1OuPOkZLOIKvxX9A94Z2lDlEIthGrLSxqVD1BvwBVKAAiGV9P4nPhA4h6rF9Vw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706731598; c=relaxed/simple;
-	bh=8ItXQIkQttPChHbaKqcIBbqwcZ1KdszXLl9Uwy7Sr4k=;
+	s=arc-20240116; t=1706731777; c=relaxed/simple;
+	bh=JLs3ujfSuCNHk+r9kdTZgZWtpODoYZr4k8z7pON1yvs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CLebwsnmnYPvMNn12cJCq7HX+NGxmjnLGCuvovfLhk7Kw5J1FfGOpckMHEaH8bNcakL0VGpeqrPZLYCyhKvs8m5/ZH8kVekJjLEZMVQ4JRPpOaYbhlakjkWeLe11HGwRuk+noXv0uKZfsoJmnr8yZdY99QmWJBXiePQcBT2dTYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=y6YnjW53; arc=none smtp.client-ip=209.85.128.171
+	 To:Cc:Content-Type; b=EebbpQZ9w3VoBB+Pq+zgX8bYPidehuGU4aAlbQyWP0ZbhLO3Tn1oUwu4ASpYxhHWWzrU5taAI4IUzaEsf2BlKVioDR2MXfDWBQpifQ9flIIuigJrKdY/pqzCQt3WaWnVqOQr3mR9MKewHZdN7Eu2HkAV95kZ349Ne6yq7l9tXuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bK1cfyt6; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-5edfcba97e3so1790747b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:06:36 -0800 (PST)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-60406da718aso1932957b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:09:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706731595; x=1707336395; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706731775; x=1707336575; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8ItXQIkQttPChHbaKqcIBbqwcZ1KdszXLl9Uwy7Sr4k=;
-        b=y6YnjW53LxyMfQFJSdY6lwbVIPX8uJZCen3WCanqeHm9XtrlY/JHfMaSLQRyV0hmhj
-         cfwtQFLakcGPcItrY/P4QdrvCy6nV+2hvZPmbW1XvMdRwvHiGpglPIf6rjqmjy0BAQNH
-         YHMOSfEdxiw9uiDIumByzImNeOaYMAj81G+Z3IVXZY7uilOlQuVtHrpkzogn9Y8BnI8s
-         1b6f6jcglShVfr+2jVN56SotC6iYouf8ieqIeenURnxb6U9n3cF+jTXBciqzKT7azxyF
-         J2tKo5nnSFm46JRQ+47eKdXoBmHk16KGsgBJsM134WHgxZqSXAzIQk4WD9O4fbk28Q2D
-         gHdw==
+        bh=JLs3ujfSuCNHk+r9kdTZgZWtpODoYZr4k8z7pON1yvs=;
+        b=bK1cfyt6tYlf+j0o+Y7hyr2YFD+Hh5ghGyUg/DFZVQNalDf45++avXVLDg1MvaFLwZ
+         xYNuJfEF3uaI6TypnVMudQREDL565kIgHR030mem2aXkNAMYVi+6nOPMKL0cd4WV+Yxn
+         X7hOjjdqmz5ISGznMdOlcKrobnQQkPv8ca4MCK8OkbzHOMaQX2pzkzb9A2z1AX3hcW37
+         0QbOrpW230E8IUFSIDjsUaLjly3eNNvdXem6bFuuX34IMtRZ2sJo+zVP0jk6d0rkMhZD
+         0LZdel/bJMwLTmYL2OyKYH5Ol0YDxJshYLTivMUklEueI7HLiH2se51yWzRNpRrWEjpX
+         yM5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706731595; x=1707336395;
+        d=1e100.net; s=20230601; t=1706731775; x=1707336575;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8ItXQIkQttPChHbaKqcIBbqwcZ1KdszXLl9Uwy7Sr4k=;
-        b=kxxE2TxS7zPmdd4HZfHUSY8ZlvYpJxqg6dhSB1egu7kM1dGIMJKGLxBS2zDaR8CTbf
-         KQzTMfVu9YqpWyUIg1CAfVb/R3cUz5um9+D/weCg5Aabh+DNPvyKpKy+Xgml/L0RtSPZ
-         RuAve5Mdh+xJm4lvELdfObwJNsdikx1cgJnixHexqhLODwrAHB/rXSQfFSX3leL3c8+G
-         wqCoqG0l1gMykI+AHb0R4mcaZPLT6VJWeF644yR6+hRwvXzXLhLHjoi5OVReOxkPAo1D
-         zb2kDyd8kBA3k0kroqByi2s2f7viStcGoRZIlJmFDQZJ0jR7ssxYsNS5VHbHwDlbiKp4
-         xKcQ==
-X-Gm-Message-State: AOJu0Yz97QMBuB9IeQOv6N0PwOzkRU9RWVW47Yni+HoVEl8FojvQBSIw
-	TvsYZM8mySTaq4aBkIsgqgb08c9AjTvXx1aD/myRO6DWYr1DSWK9GnFSOeayHIkuvBoiF31ePuD
-	nIKl4BVfhOsnmwI6AP45Vjo9grWscHDsPJoenUw==
-X-Google-Smtp-Source: AGHT+IFOT1HXlFCXtHspX3UTVDTXTIGkWZx8hpYXw/Zb6yKcZalkw99EB7yeSJu6GX8s06md6Sc0WbZcI6LX4o5msBs=
-X-Received: by 2002:a81:bb52:0:b0:5fb:c044:f087 with SMTP id
- a18-20020a81bb52000000b005fbc044f087mr2423659ywl.35.1706731595576; Wed, 31
- Jan 2024 12:06:35 -0800 (PST)
+        bh=JLs3ujfSuCNHk+r9kdTZgZWtpODoYZr4k8z7pON1yvs=;
+        b=TWFHmzZgVsi+3kCUFnK5sI+01vtsf/FFyldclK0/4BIBAMD5a8G3hienKMTTOp9nkz
+         vr6z3Z9HsgvayH9k4TM9yWk6DkR2uwH+HR5QaOTvGRn4MkJv/ZSZzUHhKtYrMCNWrcd6
+         zMGTfHvMLZJNW62mfKjzbPtlb547yg4Td0uuKFr0/b3swYPMWVHKlMdZ+0kvJ+d3Qm+I
+         vcBe0My/QK6qQmprXmHshBBmLphYfVJ7wBfgS+mntFzpEkJGvnKekmaFJdyMzb4sWgGq
+         p7OrVCaZhyo+gecx7AA7FRgWIve/1aE0BB9zyeYDIpWux4kMBFll5VENSgWRIpqLLZ3w
+         NC0A==
+X-Gm-Message-State: AOJu0YwjsaOaSwTX2QzpEXTws8QfrwagBkPsRozjJwJw8kzm6o8EuTTK
+	u4+2ulggNv5ndX7oYt3izTiaaD3hTMe2PxRJeG8CBLTb5QYfijYpf9ekYbkOtvOKQk3EPJOxmwA
+	4oHQWVw+zrH12JIAQwk1D9ddvoszYqbTEQAa2Tw==
+X-Google-Smtp-Source: AGHT+IHWnRWPZWUvckvTX2Kui2FJv6wnHuN+ojzYWuMk02uVMcMflWeT2nzXAw/o466JxX0lyAaCJOmenvbPvIVF1/0=
+X-Received: by 2002:a0d:c286:0:b0:5f7:5054:19da with SMTP id
+ e128-20020a0dc286000000b005f7505419damr2622544ywd.46.1706731775231; Wed, 31
+ Jan 2024 12:09:35 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-13-brgl@bgdev.pl>
-In-Reply-To: <20240130124828.14678-13-brgl@bgdev.pl>
+References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-14-brgl@bgdev.pl>
+In-Reply-To: <20240130124828.14678-14-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 21:06:24 +0100
-Message-ID: <CACRpkda2dgK1hWdFRJh7N3qER1q-+Hfmng_Kiap1PNYQ-edcEA@mail.gmail.com>
-Subject: Re: [PATCH 12/22] gpio: sysfs: extend the critical section for
- unregistering sysfs devices
+Date: Wed, 31 Jan 2024 21:09:24 +0100
+Message-ID: <CACRpkdas5k-MEdfOOuq3g-wACO=U1YKm4b3Qab6-QAHPG408BA@mail.gmail.com>
+Subject: Re: [PATCH 13/22] gpio: sysfs: pass the GPIO device - not chip - to
+ sysfs callbacks
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
@@ -91,16 +91,14 @@ On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> Checking the gdev->mockdev pointer for NULL must be part of the critical
-> section.
+> We're working towards protecting the chip pointer in struct gpio_device
+> with SRCU. In order to use it in sysfs callbacks we must pass the pointer
+> to the GPIO device that wraps the chip instead of the address of the
+> chip itself as the user data.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-(Unrelated: I don't quite understand why it has to be a member of the
-gpio_device if mockdev/sysfs isn't enabled, something for us to fix
-another day.)
 
 Yours,
 Linus Walleij
