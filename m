@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-2781-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2782-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5563984391A
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 09:32:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DB16084392A
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 09:35:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B4B98B25E7E
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 08:32:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6A0511F2A0B4
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 08:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA6A453E3D;
-	Wed, 31 Jan 2024 08:32:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97D2138DEA;
+	Wed, 31 Jan 2024 08:35:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VJ9j0a/T"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="r4r+TztO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A234204B
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 08:32:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B29D760BB6
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 08:34:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706689929; cv=none; b=niNiYgnC07TgSryS6VciJVKp95qfOF3AMueKUovYiVjAuYoIi7aWAdjtRjvCzHfT0xLF48q/9G20urnWS5bObIt+tBqIcEUX03s8QGMRRiqFGD2UZhfefsk8oi4zzVKES7DxOvKvGYmHTAjVmH0Hr4+JxiSH2lT6UD1bZRkclxM=
+	t=1706690101; cv=none; b=JQzyeXOfaLf6chz6y/jpdjxrakpYdHuxeJK4jSO+1HjaChHjpfdowQ2P7aM3sMFjB4gXzemcEKEYZztnKvG+FuhO26iwDXt5QPEO5iTtFhr2kw0PBZ3I98iDG+p1oA0C43dao37NV4D4lWZrvPsCdfCOeI/wDFOfePySfCpTA0E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706689929; c=relaxed/simple;
-	bh=uW2qWG9f4i8dbiyjx/KoeHEpStHxMUg4GXRKzOVY26Q=;
+	s=arc-20240116; t=1706690101; c=relaxed/simple;
+	bh=PrY4WzNIJbCovvb984PFUCOR4gdyFVhWaow4/mF7UKg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KseBwgBMmCkUfKXG0X/7efN/w71QjiddP+V1BXn2wCwVbFn3k3K5FAwpF/nBJMXG/uMtMn89xP3XTQbeRjCb8+WePozuxbo6jbDl0stUp5J/6POTXMdWCfPhN4lcEvWJ393+BqME/jw9/86nEG9cw2MDTwqHSshJKqXhOToQzN4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VJ9j0a/T; arc=none smtp.client-ip=209.85.218.42
+	 In-Reply-To:Content-Type; b=LJ9/gUZQEoD5MqcWEwH0IrWeBVr/s2IagXm3ihsvF1Zc/2WSf5mwS3JRaDDP9QV53hC9oXlhBxjR23vap6OE9Q1gmW2lGJbuPJ3FIIHCAqJDyTKBAEBOWdHsFQP0oaNOkNQc2nDy68HUT+8rVvL8TNvj/G1FR71ePoBynss2jac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=r4r+TztO; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a3510d79ae9so553618966b.0
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 00:32:07 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-55ef011e934so4234555a12.3
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 00:34:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706689926; x=1707294726; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706690098; x=1707294898; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=hKqI+ex6kcefYsSc13l7kLpM/i1M6RfFSyL6Vm7tWxU=;
-        b=VJ9j0a/T1xNiD/kIBapBtVnHZynt7aIdqnkyYNKllPxkuGQF7FXV1YuH/ACmBPOk+A
-         mpuDVAdpIirDfX6UXlw6N7mXHdxJBKmZAIhHsGQhkX4BS/lyULzn+xvaqSvK5nOXAcFd
-         SnMhesdWlt+J8RTBVAl5BIboUXKyUJGRTXQYlgT9M6klJ4taGr+BhxFwpRZWWhgb2BQE
-         CQ+U4RuvkASa62z02hTGLuBN3+k3PkTRCC/X6So2DrxM+1IV8aGr6b2HWfyblha6iOn6
-         2UZLFFmU+PDBfdvj/ZM/SHpIf47L/DOdL4zYylqCVEDJv+vpLuC3XWw7zp29FS29bK//
-         9Eww==
+        bh=LlC6IKVQ1yRmrP5iUErlPGYOVXTRisa0xVDs/+U4q/E=;
+        b=r4r+TztOvmFbxxypW40cX0h66wBa7Nix1pn0O0UiIB69m298zDmoZrVZliQeDAqQGO
+         HV1dL+hqn5+KykK0tM95zZDgbk99+n8xHIutdqGbfgZvXubSK9L4yrEX73rst+6R4vOU
+         t0n6pmL66nXZdjPvw9slARS6GxvoCBogSh8XzKAPd9Ui+lhu9ZVmqHlWbWfoW6Xy1Fm5
+         j+3tybkiiFGUUky9xfBL6zGY5noaQqaCFk0MGsbsWjxIdnxUsP06pIj/Y50TXU1BUmJI
+         PZg7DWZE+Re4Due+5vi6+vVm7DiY+v1p4HnC5n418o3UwnGa3RXv9bfyTKIgiK8egNH3
+         71Xw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706689926; x=1707294726;
+        d=1e100.net; s=20230601; t=1706690098; x=1707294898;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=hKqI+ex6kcefYsSc13l7kLpM/i1M6RfFSyL6Vm7tWxU=;
-        b=KxwSIdCpJVYHZ/U2SNNcZ+VuOiY1zSCpvrXq5eJjQnPVsZbmKaVIFnwHcCF5AP8zRm
-         Aut+I3rMYNU7W72vWGUt64N0LMmwfRHA6l70nev4ZfqEcxDSpzNFv8nvXoH8uZDsK0rE
-         nF/D0glHVqx8t9HxeCYvw7wqhqwElr2q1yZZvGq3qkwHEsD/CkE8X00K5xg6QRdhQodM
-         Tu25cnfJQodGEbGGjo/88MzFNmUD9N1s4ofdmcLkqC9d6r62CY0t3NmzJ8jycfYvQ3Ce
-         I4weouVxsd7TNR3V92LwUKjQ9PURLLK4sUnLSkgOJ7nQlmCFl3+IojgQ9VMotQUeTIq7
-         5n2w==
-X-Gm-Message-State: AOJu0Yxb8hJMbDH06dDehJyMyp8wS0Lp5Xnlo3ahFolb3h3e8PydVpIK
-	fmrJmx/y6v+j3d8/4INMi4kJuYJAn4co72pALiC6gOnJ3kBhRZ+u551YVjWS73s=
-X-Google-Smtp-Source: AGHT+IFwIdjNb2fXwv4JhM+chfZh206ZDHeUAv0mOI3XqXYqDj0+8KPriicjL4LSfixqTqt/TAeN5w==
-X-Received: by 2002:a17:906:28cd:b0:a36:600d:8911 with SMTP id p13-20020a17090628cd00b00a36600d8911mr565720ejd.10.1706689925683;
-        Wed, 31 Jan 2024 00:32:05 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCWvEnQ0I6KVpTKGVxXiAJkhJ/m9JcbKiiwVjBDe1jMuIJXVkIwsySjB4CyuZO4OYj8dgVUdqG9guadmgpDAE4ojOrvss3JdC8jNPjs5CpaZFMyRScDyy8JKnWoOy/vk53AjTpO6VBY2xI0ETiWnhdJTxmmLJGeVM65Luia3uZ7PdrTAz62D2SWcdnbQYNY7WPO4I1M8aKf/vG7T9MvhAYHkmb/NDw8oraI5wclzIZ0CJayvcfmS4G15ZTwJvUqbz5i/o4tEbJep8Uo41jSiYXCDNCi+Pvwg+io+fr5c9Lyi3nuUAmos7rxiNeluTJ97gdrjvLjko0JV0BoK1sWWtedYDDGdnIv40beE
+        bh=LlC6IKVQ1yRmrP5iUErlPGYOVXTRisa0xVDs/+U4q/E=;
+        b=TU34Qx35e1asj4FNu77+Oil0blhKsAldjJJXyWMtOxG6rSfRbQTLeQTOK6DgWsG3T6
+         ueqom4juEzkeVHeT9u+pNHqSL0W7dw2WJxC5CUffIfwdEhIomCIkQm05119G/JPiNKqP
+         4+JYpCl9BxL7XaVlGTLwXD0yh6k350yczI+w52XcHoSlhYA8ioZlcaqS4BpkzXNMyQGv
+         ch4jXnl4yN2HFiJ+3buQCBE1zbJPwJDna8BM9TXnsHXX4HmTn7QlxD4W8g4/MLOO4t+W
+         dPFAB1DGnkZ6bFqkLUnowHjoEPPpxZaGpfpsHR+c6YtVnIdjYhY41jPnlHfkie/frjbd
+         fTXw==
+X-Gm-Message-State: AOJu0YyL5eumkS5QefmAhc9gfmAeof66iuSvHP0PowG1JYMnwdqt4ne4
+	Atso27bMuXXA0orp3MNHdBQOTq6eAjQNTPka87M0kCjTG8fq1G2aIkEjrwd0vWY=
+X-Google-Smtp-Source: AGHT+IHVBVzs8B5ZZkUzum3M6vrWPsI6KOFprHue7XSrJOxF/0z4HsiJQi7mc45TvQFOoZiAWwiGJA==
+X-Received: by 2002:a17:906:c7c2:b0:a30:4618:80a0 with SMTP id dc2-20020a170906c7c200b00a30461880a0mr584484ejb.33.1706690097871;
+        Wed, 31 Jan 2024 00:34:57 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVKjDsjHoqmBPPc4Wq+7GVuVCw/osGKy4HQF2L5IC9Kh8xUC0XoyZvEfhLtpIvRDYyfE+VYsGQhDK9+K2Rtj391jR22Sap+L92gDZ3DQBCJGEZ6eSaOlVyVjuLFBp84sf0J0nT3AlKJe4JXwHNr5JRdvYV6kg4APivsupWVSNA3O+tzcfVAqW6OmiXtbW7lnHhk9Qc67xa7OUaTxz2/SlYkkkZdRd5cnDp1iqNAYvxloebdHwE5PP09ndreeQtmLQ4IjMpM9a4yNh408EqglnNmr5TSNkQH4X1fJJZBSK6dqi0gwPJXIFCXUvmZOat1SbXJRcOBMjywD+j6BPQnKDHouPA2R4+ZX/ypIyjYfaxeeDWCDkhBt8AGZn9aPcLKbO+D0ayqaEGtm57pqYzkgw==
 Received: from [192.168.1.20] ([178.197.222.62])
-        by smtp.gmail.com with ESMTPSA id vb1-20020a170907d04100b00a34c07816e3sm5919866ejc.73.2024.01.31.00.32.03
+        by smtp.gmail.com with ESMTPSA id d5-20020a1709064c4500b00a3677eee12bsm315719ejw.182.2024.01.31.00.34.55
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 31 Jan 2024 00:32:04 -0800 (PST)
-Message-ID: <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
-Date: Wed, 31 Jan 2024 09:32:02 +0100
+        Wed, 31 Jan 2024 00:34:56 -0800 (PST)
+Message-ID: <6fb7286c-8669-4f99-9bb7-3ef8dfa229c2@linaro.org>
+Date: Wed, 31 Jan 2024 09:34:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,16 +76,18 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
+Subject: Re: [PATCH v2 2/2] dt-bindings: pinctrl: qcom: consolidate functions
+ to match with driver
 Content-Language: en-US
-To: Naresh Solanki <naresh.solanki@9elements.com>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Patrick Rudolph <patrick.rudolph@9elements.com>
-Cc: mazziesaccount@gmail.com, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240130125602.568719-1-naresh.solanki@9elements.com>
+To: Tengfei Fan <quic_tengfan@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
+References: <20240129092512.23602-1-quic_tengfan@quicinc.com>
+ <20240129092512.23602-3-quic_tengfan@quicinc.com>
+ <aa870f52-d956-4c3e-82a4-980a32f5f698@linaro.org>
+ <8a3866ee-d70b-419c-bde4-7bf55415402e@quicinc.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -131,99 +133,39 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240130125602.568719-1-naresh.solanki@9elements.com>
+In-Reply-To: <8a3866ee-d70b-419c-bde4-7bf55415402e@quicinc.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 30/01/2024 13:56, Naresh Solanki wrote:
-> Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
-
-Subject: everything can be a fix and everything is update. Write
-something useful.
-
-> reserved ranges.
-> Add input-enable property to allow configuring a pin as input.
-> Update example & fix alignment.
+On 31/01/2024 09:24, Tengfei Fan wrote:
 > 
-> Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
-> ---
->  .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 38 ++++++++++++++-----
->  1 file changed, 28 insertions(+), 10 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> index 7f30ec2f1e54..90dda5d3cc55 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
-> @@ -45,7 +45,8 @@ properties:
->      maxItems: 1
->  
->    gpio-reserved-ranges:
-> -    maxItems: 1
-> +    minItems: 1
-> +    maxItems: 60
->  
->    vdd-supply:
->      description:
-> @@ -85,6 +86,8 @@ patternProperties:
->  
->        bias-disable: true
->  
-> +      input-enable: true
-> +
->        output-high: true
->  
->        output-low: true
-> @@ -125,14 +128,29 @@ examples:
->        #size-cells = <0>;
->  
->        pinctrl@20 {
-> -        compatible = "cypress,cy8c9520";
-> -        reg = <0x20>;
-> -        gpio-controller;
-> -        #gpio-cells = <2>;
-> -        #interrupt-cells = <2>;
-> -        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> -        interrupt-controller;
-> -        vdd-supply = <&p3v3>;
-> -        gpio-reserved-ranges = <5 1>;
-> +          compatible = "cypress,cy8c9520";
+> On 1/29/2024 7:24 PM, Krzysztof Kozlowski wrote:
+>> On 29/01/2024 10:25, Tengfei Fan wrote:
+>>> Consolidate functions to match with SM4450 pinctrl driver, because
+>>> consolidate functions are being used in SM4450 pinctrl driver.
+>>
+>> It's very difficult to see what changed from the diff, so please explain
+>> brieflyl changes here.
+>>
+>> What is that "consolidate functions" that you use in the driver?
+>>
+>> Best regards,
+>> Krzysztof
+>>
+> 
+> please help to comfirm that the following description as commit message 
+> whether it covers your concerns:
+> 
+> Pin alternative functions are consolidated(like: atest_char, phase_flag, 
+> qdss_gpio etc.) in SM4450 pinctrl driver while they are still split in 
+> DeviceTree binding file. SM4450 pinctrl function is broken if current 
+> binding doc is followed. Update SM4450 pinctrl DeviceTree binding doc to 
+> align with driver.
 
-I don't understand why you change from correct indentation to mixed one
-(2 and 4 spaces). It does not make sense.
-
-
-> +          reg = <0x20>;
-> +          gpio-controller;
-> +          #gpio-cells = <2>;
-> +          #interrupt-cells = <2>;
-> +          interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-> +          interrupt-controller;
-> +          vdd-supply = <&p3v3>;
-> +          gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
-> +
-> +          pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
-> +          pinctrl-names = "default";
-
-Missing blank line.
-
-> +          U62160_pins: cfg-pins {
-> +              pins = "gp03", "gp16", "gp20", "gp50", "gp51";
-> +              function = "gpio";
-> +              input-enable;
-> +              bias-pull-up;
-> +          };
-
-Missing blank line.
-
-
-> +          U62160_ipins: icfg-pins {
-> +              pins = "gp04", "gp17", "gp21", "gp52", "gp53";
-> +              function = "gpio";
-> +              input-enable;
-> +              bias-pull-up;
-> +          };
->        };
->      };
+Please list the functions which are being removed and added. I usually
+do not expect such commit msg, but this is an exception: diff is tricky
+to parse.
 
 Best regards,
 Krzysztof
