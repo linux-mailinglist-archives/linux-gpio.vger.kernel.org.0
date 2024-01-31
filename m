@@ -1,149 +1,115 @@
-Return-Path: <linux-gpio+bounces-2847-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2848-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36091844900
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:35:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F11D84491F
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:45:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B2BD21F2276B
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:35:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE977290701
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:45:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF4B11BC49;
-	Wed, 31 Jan 2024 20:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CF238DDA;
+	Wed, 31 Jan 2024 20:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hMAsZ8uK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VO2ox0YB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AC8B1F188
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B5D38382
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:44:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706733335; cv=none; b=UsXtnik6Ax3JylzdR7J6hjpmQXGsYhfUudeHyILrrLjM4HDdlaDJySdw5XyqP6pFLnYfa6L301b7Wl63Kb6vj5SJ8ABTiOKhLw2xcHduM0mkBENLW080J59xXIXcqBQ2uFa9TbTxdFFuJxlspb/LYzWPLaf+XF7DcN7MlsUIgFQ=
+	t=1706733896; cv=none; b=Qsrdl9Nc8+oiRR32v8fS49S2HznasLrr/vW2dxi3mOUm8HHIlOAa8sKIZCo8aWgJeEHxiBKn2PwOQYW81PclP0lBEAuAZTAZu8V+Fwq0s25OLng6l4AazQf/QRGTqPODEw/T/ywH2/JmkK2fIkH7NQHZNSsmEWbZWurswtLFoeI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706733335; c=relaxed/simple;
-	bh=4gg8MbtxuOETWbvcXiewSjW4cU46Po/YgSI564WePkc=;
+	s=arc-20240116; t=1706733896; c=relaxed/simple;
+	bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=SQVDCfE9Z9hVGhY1IOkP6dFKG+xlRd4v9/bAxJOhMKI2tu0NU4FajVksSHUZrPXiqkrNU/gNjaDEZOnKJZpG99hYuiSSCotiZA8qvUjdm2aE32WbfXpN2STGYbR1GbNA6SzH0SkkjitGa0cnhi3/hd71obqQJu2/GoJaphE9ayw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hMAsZ8uK; arc=none smtp.client-ip=209.85.219.180
+	 To:Cc:Content-Type; b=kR0aAijMBT51gInXlSNOaKhbYywP0z1EucQOoP69qRACH8M9eCbsFkxTK7b9nbLtQ6fRWf2q8hd9K/Vg4pPWEBDu7YDvf27l2Cv6Q4CxmKmKyoUX7K6aWaWBLAdkiL29QIcDk6gD4AQl/E66hAcEaJWiDcVZY5Aul6MJ0bXNRBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VO2ox0YB; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dc6c3902a98so132383276.1
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:35:33 -0800 (PST)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6040fe8ba39so2395367b3.2
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:44:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706733333; x=1707338133; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706733893; x=1707338693; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=hMfiUtPGMigs+21v9CDoWEN6MSzp/nh2CeG2gULaMUI=;
-        b=hMAsZ8uKkL8vao/AhE9ePytRcSf6il4JautAGzPkr7Szti/By/qaK+VHWsvdLRkO8+
-         MABkeru4f2M2KyDnjr+46lXhGENLdHPN8k6yZBcvF9gweBCcv9u2veaj7lpi9+vWpAvg
-         dUZnlWod9ZsjIyZehRAUYmCjzLBdXTnFk3Vh1Abml5fToMv4HRQIp5WdJnfM8vEhVDJK
-         //A5I7XdcX/F7Xet6Wv79T3868HUySBczb5kIt106NqQUkU6KsSBLJBtYhxaXAX1646c
-         A2cJdpdR0/H57GZKM3/aTsfbuAbY6k8T+imp4CHDb6KOj16dXlBp1M5nygOIpOXnEmOV
-         OjSA==
+        bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
+        b=VO2ox0YBjiSG31RTVbeDI2z1IFZxNfm318i+xgL9o0l6lV1eQuIHpPdz7DgUERgFkq
+         JesaQHiT+pdJ00vk7VIA9ZYSn7Ddetwo5NCyYLT4Oc3dTpAM4wnBHW2CnR4lBQmbeqc/
+         Pp7G4hh1vNQSdUpAT0CpGcW09XxpiyqDwWZHkWXXh9mNCqkjfpOybDmPGqaLIv8qggiD
+         k8g22wwpuCPKkqgA61s9zFOzazpMAIUG5JImyfkl34cfbt0foudlH+sOLcS74K9hTgau
+         riDWmSyla8hspJQr6jB6S/rSpfvN/CxX7f0exXsHdlD4PcttPowt4MwhZOZ9Gz0Av2Rj
+         xk0w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706733333; x=1707338133;
+        d=1e100.net; s=20230601; t=1706733893; x=1707338693;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=hMfiUtPGMigs+21v9CDoWEN6MSzp/nh2CeG2gULaMUI=;
-        b=iuQv50F1ClHOG3UX+NZEnVvfnk+URjoI73ibWxl/+VdufB2DxQ03s9n7h3bsi5Nj8K
-         UKQ1Pnd9lCHFfvpOj4/VCTbquXy9xw+NNGfW3liUFEyqJ5YE4p0Jri2ttgx/TVUvAh17
-         x/pHyoOVvslIl7dQdlDvk8ISCZVRuYRKUaLRYUFt3k8b7zL8C3Pkj7vZEtktmD2IDJd+
-         0b8SpEyeJ/5s1ryGF0aP6R32bZoW50RrHE6F8AvWHExWmT2EPa0UqsaE83ikQDe0R2et
-         vwwc1+lRuSzeIc6C+Q9w5RhXEnE9jk17k74gongl8vW66WJo+P/dRcFH99MtiySdBUXA
-         dlvw==
-X-Gm-Message-State: AOJu0YxsrTuKSSv5Utj37a3OUoozO7H+KBQoAAAOasn36NzPaorGTgJ3
-	0SUCYB2yiHGpqASzGVZNhDI0qWGhkmletstk/VCgDyOLAZ3CsHMyVoeeGp13uft+3aaNmsWq2AV
-	bLnTrSU3rBxbWc8z0oT037bQZmGyEBJzv6QEO+g==
-X-Google-Smtp-Source: AGHT+IEqJ9sBaBkXpIaCG+AofpCmulz/CZSXwInm0MfNy+ZLOymRBzmQmyfpCyJag/wOVEVDYnjEaZEc+ygMXSysPNA=
-X-Received: by 2002:a25:bdcb:0:b0:dc6:4b0a:7b35 with SMTP id
- g11-20020a25bdcb000000b00dc64b0a7b35mr266792ybk.12.1706733332939; Wed, 31 Jan
- 2024 12:35:32 -0800 (PST)
+        bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
+        b=lyA1nb+84B0NxeWf+yYflmXj3pqgB36UPNuHSaiZ7X/i+P7QfnRz8xkQrrP4xkKUda
+         Q4xNAWUQghuTwfJt/n7jbAA4w833qMnIPCkCkOynGOpvX19tWpCp+wN76YueNklJdAFL
+         jkiGayPg+FGtcsW6Hmo7CW+o/EeJhc6Ds2A04EkhrIGqcerO4dTX0J3OQXm4ESkJQ+8X
+         h9xzk1KN4BZRJ6molVwiwk+sgB5IY3ftgZrAEUt7ssw9ENDVXKK4h8KtUGCkV7OCBRPN
+         uIQiQTKZ9dg4NXp2G0cD8GHk9ZRz6FJvh/Q21/tmBy17bmkxl+g0BmwyWxJWDLTP0NpF
+         ytBw==
+X-Gm-Message-State: AOJu0YyGz42iogXLd9j9iT3FKAkQ+KqTLTuiCOxPu9V14E3HO0HRFl9m
+	HkrQhMXxwVtxoYfxF8i+hgcx+XNA0kWsCawWZgwbd6q+J2ak4K8GwOVmDc8/S836ilNV/Y3wM/A
+	FPte9Ksqpc/AW6kmnNmKcp7InLdvKObqHwEfQuQ==
+X-Google-Smtp-Source: AGHT+IHS/WgJih0pA4PCi6jtXXi0NvvqNNRcB0nvYJUMQTqgkNEy0vEgAEVs0YIeJ1unhWTazFjP4rw+Sm0vCsAVTlU=
+X-Received: by 2002:a81:4950:0:b0:603:fd67:a5aa with SMTP id
+ w77-20020a814950000000b00603fd67a5aamr1871650ywa.19.1706733893289; Wed, 31
+ Jan 2024 12:44:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-11-brgl@bgdev.pl>
- <CACRpkdZyaqwbxvsLtXPHSX=6jyFPYSxA9n+qWakdhGKmo+L9fw@mail.gmail.com>
-In-Reply-To: <CACRpkdZyaqwbxvsLtXPHSX=6jyFPYSxA9n+qWakdhGKmo+L9fw@mail.gmail.com>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+In-Reply-To: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 21:35:21 +0100
-Message-ID: <CACRpkdZ9M=SapefrMX24=H5xGG91FNMN5TS63n3GdpegS_JAZQ@mail.gmail.com>
-Subject: Re: [PATCH 10/22] gpio: reinforce desc->flags handling
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Date: Wed, 31 Jan 2024 21:44:42 +0100
+Message-ID: <CACRpkdb+aWL-NU36dF6urL3T9gUROQX=9-L7aUC=+GM8x+bArA@mail.gmail.com>
+Subject: Re: [PATCH v4 00/18] Add support for Mobileye EyeQ5 system controller
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jan 31, 2024 at 9:01=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
-> On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
->
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > We now removed the gpio_lock spinlock and modified the places
-> > previously protected by it to handle desc->flags access in a consistent
-> > way. Let's improve other places that were previously unprotected by
-> > reading the flags field of gpio_desc once and using the stored value fo=
-r
-> > logic consistency. If we need to modify the field, let's also write it
-> > back once with a consistent value resulting from the function's logic.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> (...)
->
-> I have a trouble with this one:
->
-> gpiochip_find_base_unlocked()
-> > +       unsigned long flags;
-> (...)
-> > +       flags =3D READ_ONCE(desc->flags);
-> (...)
-> > +       if (test_bit(FLAG_OPEN_DRAIN, &flags) &&
-> > +           test_bit(FLAG_IS_OUT, &flags))
-> >                 return 0;
-> (...)
-> > +       assign_bit(FLAG_IS_OUT, &flags, !ret);
-> > +       WRITE_ONCE(desc->flags, flags);
->
-> I unerstand the atomicity of each operation here, but ... if what you wan=
-t
-> to protect is modifications from other CPUs, how do we know that another
-> CPU isn't coming in and reading and modifying and assigning
-> another flag inbetween these operations while the value is only
-> stored in the CPU-local flags variable?
->
-> Same with gpiod_direction_output().
->
-> To me it seems like maybe you need to actually protect the desc->flags
-> with the SRCU struct in these cases? (and not only use it for the
-> label protection then).
->
-> An alternative is maybe to rewrite the code with test_and_set().
->
-> But as you say it is currently unprotected, I just wonder if this really
-> adds any protection.
+Hi Theo,
 
-After re-reading the cover letter I'm fine with this, but I still wonder
-if it buys us anything.
+thanks for your patches!
 
-Maybe some words looped back from the
-commit message that we are not really protecting the callbacks
-because access is [predominantly] exclusive?
+A *new* MIPS platform, not every day I see this!
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On Wed, Jan 31, 2024 at 5:27=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
+
+> Pin control is about controlling bias, drive strength and muxing. The
+> latter allows two functions per pin; the first function is always GPIO
+> while the second one is pin-dependent. There exists two banks, each
+> handled in a separate driver instance. Each pin maps to one pin group.
+> That makes pin & group indexes the same, simplifying logic.
+
+Can the three pin control patches be merged separately? (It looks like.)
+
+That would make my job easier when we ge there.
+
+I will try to look closer at each patch!
 
 Yours,
 Linus Walleij
