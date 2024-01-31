@@ -1,106 +1,291 @@
-Return-Path: <linux-gpio+bounces-2786-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2787-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DEF48843A2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 10:06:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DF545843A47
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 10:08:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1CEF01C27B25
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 09:06:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0FAD21C21081
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 09:08:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 75C426EB65;
-	Wed, 31 Jan 2024 09:00:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8597A7AE7E;
+	Wed, 31 Jan 2024 09:02:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q+Fa4+xk"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0YhYvzCx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77F8657DD
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 09:00:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716A166B4C
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 09:02:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706691619; cv=none; b=Oy2neyGRdaa11LhHbVC5JO6UMjG1xL/IdtDT6oC+8fVOnPe8ka2Q7/5sZo0bhepE7n0Rz4KfKqZdiJ2c3bMTHII3I+BKYn5h0BeNAluU8JR6YStBfTq/hChLxZGCzvseAySkNMyzXctSLKhZJskkOH34U58eoLKh4F6KBRvHkO0=
+	t=1706691775; cv=none; b=ikMPgpA8B815+k7wUeSgT75oQQxVNqep+0970JWDACImOTifG3ybwjBI7MRXvsSoH0DSsLfc3iAaClPIlOGo/I6XeRcVvVbHVTMBDg/4ERrrKsZ45gzGLqJSzjW1gp1Ho8IQReeV+Zx4bcBqEMJCHEWSaG1aTvSMhSMsnB5yb64=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706691619; c=relaxed/simple;
-	bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
+	s=arc-20240116; t=1706691775; c=relaxed/simple;
+	bh=4ube494DxN77EoNRTkC5bj/EFomeKNhiGAdr5fHNlZU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WE09jEDJMvddECEHROJXDizZJVviDQrQypgHRkG0A/aWf97DoIVewP89bOFOGzCbqDyc5V7WpAM7augJNUQBzDBNwSBX26eVm4BJ9EQrWtb6do1diXeOuTg4r+LYIAyFclWAiBvnQsVQRwbHdfXq8hrfUdvOYI7zAnPGoW+kRYk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Q+Fa4+xk; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-604059403e9so7788437b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 01:00:17 -0800 (PST)
+	 To:Cc:Content-Type; b=CTmurbaLnZhQ58YaXpC4IR7lagkZYuw+I3+WZgxH8DsliQ38Wmwcxfx19dMjsi3dJSoeZcJa/CGelaq8TcTQdqLqIHGITaWh7Y/cmzxuB3+WAhqcuNyaG8NJbIMfJ6QjJmq+m1IKJnfcCxxLczsdRcYhJQaMxeU2WAWs5AIXJFU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0YhYvzCx; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-46b1419ad06so395571137.1
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 01:02:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706691616; x=1707296416; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706691772; x=1707296572; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
-        b=Q+Fa4+xknqGuZ1jER6gHM0aX/zbkOIh0YiJ+8zfTalq208itEMP9X2/C53ym14Owmn
-         qcfYTBF1sSYpBR1fcivEyZVD2k4QoDWK8mJAgGiNkUNmxdg88wz1l3tvSJy0uW8T3uq+
-         L2yB/lpLwjGc48eD9ExRg9UMnbZfJqydDoTLHyRB5L6MUI5QVNgNO6/VFOs4qdU5Hlyo
-         VUGZeOC7GnOaLcJRQdlR/Pm5LcgH2LcE8KGlXGhzO+bBYtz9KUl1cy2gjtWkjC3LHyrO
-         brGFTg1rsnZQiSgoNlOejRqpLExbszszXpoBd/lQW0R4INJrrWK9gMflsOe6I0s0/DSI
-         vwyA==
+        bh=WHIn5iEEeJ3rw/RfxswFaDoxGXKGctXGF45XOL5dY2I=;
+        b=0YhYvzCxYAnZGH1eqQz4qiNWSZlL2gW7qKhOKpDohLlwsr6+quAg5ELxjHsQ4V2JOG
+         AT0k17poXYzb9/fhZs8t1rCmg0vmDb0CiTDj9zVpGZdLC/leBy3Lvm69HmJCWibYic1B
+         IQVCZLQxvDv19u7chU4gwADJBgRLP3FdxjdpuAKOoOzRfV8altkjc//RJluxdDmeMbg4
+         OKZw0+TidVtx64GOsdOjDFcRIqBwBlj8mRlrmyY3E134/OUht6pssbGiKO08mvXkiiOu
+         molLZ9gAaR4HfMynE7TQvwWP6IaJszrO5rZa71VjwlvpBk1ZNxsAZvOAEJUiy28IDxyI
+         zE4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706691616; x=1707296416;
+        d=1e100.net; s=20230601; t=1706691772; x=1707296572;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=4P30cDZJoK8lB7gKvnrdCDa1fyR371TkfVJY5FVRBso=;
-        b=iozoa7meTGzsbKAVJRl+xmNA4cTDrAfEHqziM9815ox7YQ377jpNBsKx7JK9Wz43ke
-         GFpwUqRouRdq3VVoynZ0efKsaSeLhJBIVipqTOyzAX1dUfMNTnW4wZUJSrcXAI2ek6LO
-         wW3Di3jrk4C2yYXNGUHJZFsSDpgAHZVtU/mqGL8A96Rcx7cgypUMqVX5l8PXaUrVRbKR
-         XA3DW1iKb6wHU/LF8gQd9TE3DsVsPpUiJ+w3eyh1x0gUTxA+EDQjNKeMJY+NTIGTEmGv
-         2g4yOTut6e42kh5fW+iSoJLEu9oComBgsgeA99L1/1+mI8d1EwTC3sKy9nhGqwaBlRSB
-         3yMw==
-X-Gm-Message-State: AOJu0YyGRIWM05AyWiw9AL+ijHWUL+1jNWW62aDmBGFXwkvDgsbzPy8z
-	KO6xEOP7eoJqTMwsQGb3JYt+mZnTheVyFJqPBIDUZYLUuGL9Fu/QValdIOOhmDcF0TRcZEhJXiW
-	7z3MrqqJ/QzTXAB5mInj4HbkLaynjsJ39oU3dJJtINcTYbLrR
-X-Google-Smtp-Source: AGHT+IEvB7JEzDy/bd9wdN/APqpYnJcD2om3sihib43VyDrw9Rp4bAVf9j6uDJjuR1z5asPY3/CLOdSDCQOVGQayMGA=
-X-Received: by 2002:a0d:eb16:0:b0:603:fd33:8b81 with SMTP id
- u22-20020a0deb16000000b00603fd338b81mr708880ywe.21.1706691616679; Wed, 31 Jan
- 2024 01:00:16 -0800 (PST)
+        bh=WHIn5iEEeJ3rw/RfxswFaDoxGXKGctXGF45XOL5dY2I=;
+        b=oQGUL8K1UGNBBiyqF3f0Es3RhZadQWUR76pLq1RaewNKXm//8Fl2O3Sj83raYAc8UQ
+         BWmKtEaIbtc8trlORjF6HWr9ND1IHePQ793RRvvu3bhMxf+2xeb5HYmVmCwB4t9dRCx1
+         nATJiBcpPcgj7brDcU7XRmcaPy7WzRqMLcNO065M+9Zks6gu5UIEcoysMOwX1NRW1503
+         UxY8B+x5OI9gSkKD3pp+fWpjkMjmjtOXLrmHFeYwNdLXZEwmU7GbRMtC0CPgTIzotklM
+         XrzbNq59WrAZ5QJNRTGLvpbMIkTDF0QzuMdtP3J1IlAn+5qlErzWQr4ul/kIl8HQQonR
+         sCNA==
+X-Gm-Message-State: AOJu0YyWX/xzrOe+ctcRy/PIj/2ZT34EJKmCXSnQP6WHHrOO1O4NueCW
+	VhjMArSvqFbSQl9gG7akAYXKsVQTcasBL1cLxd8qqwwqn4mgZWFtjQwlRRlqsFPm+6k9Qn/wjTy
+	89MpllM6EzqyS7UEJcO7hvE4VbHeYWRDaa0gzQg==
+X-Google-Smtp-Source: AGHT+IHwfAAjqdqROm25j35JKJFRD2vF9Pt57pirLSUCe4FZ2jlrKokE/urkjVy/LFDj01VwH0GsmB66CaZJuy1zsg0=
+X-Received: by 2002:a05:6102:3b91:b0:46b:6936:bdcf with SMTP id
+ z17-20020a0561023b9100b0046b6936bdcfmr1780735vsu.28.1706691772117; Wed, 31
+ Jan 2024 01:02:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240125081601.118051-1-krzysztof.kozlowski@linaro.org>
- <CAMRc=MesG1nYSxx0osmQEEXCvs-6B4s4=TFYW5wD8pOXpV+OcQ@mail.gmail.com> <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
-In-Reply-To: <a3d24e7d-404e-4c02-99a2-8838ee7028c9@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 10:00:05 +0100
-Message-ID: <CACRpkdaus1oRCiafiJjqTkARcKBuxvNfeqDrve7ZdG4UqnNX5A@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Peter Rosin <peda@axentia.se>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
-	Philipp Zabel <p.zabel@pengutronix.de>
+References: <20240130124828.14678-21-brgl@bgdev.pl> <202401311050.YNdm98Hv-lkp@intel.com>
+In-Reply-To: <202401311050.YNdm98Hv-lkp@intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 31 Jan 2024 10:02:40 +0100
+Message-ID: <CAMRc=Me0y-P4zTu_nCPpdF8hX_7rqri1AG1zCU6sO9tbJXbneQ@mail.gmail.com>
+Subject: Re: [PATCH 20/22] gpio: protect the pointer to gpio_chip in
+ gpio_device with SRCU
+To: "Paul E . McKenney" <paulmck@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Wolfram Sang <wsa-dev@sang-engineering.com>, oe-kbuild-all@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 25, 2024 at 9:59=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-
-> [Bart]
-> > Why is this needed? Users of gpio/driver.h should select GPIOLIB.
+On Wed, Jan 31, 2024 at 3:21=E2=80=AFAM kernel test robot <lkp@intel.com> w=
+rote:
 >
-> The third patch shows you the user which will not select GPIOLIB. Why?
-> Because there is no hard dependency between one core framework (RESET)
-> on other core framework (GPIOLIB).
+> Hi Bartosz,
 >
-> The first two patches are added for the same purpose, even though there
-> is no need currently.
+> kernel test robot noticed the following build warnings:
+>
+> [auto build test WARNING on brgl/gpio/for-next]
+> [also build test WARNING on linus/master v6.8-rc2 next-20240130]
+> [If your patch is applied to the wrong git tree, kindly drop us a note.
+> And when submitting patch, we suggest to use '--base' as documented in
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
+i/gpio-protect-the-list-of-GPIO-devices-with-SRCU/20240130-205537
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gp=
+io/for-next
+> patch link:    https://lore.kernel.org/r/20240130124828.14678-21-brgl%40b=
+gdev.pl
+> patch subject: [PATCH 20/22] gpio: protect the pointer to gpio_chip in gp=
+io_device with SRCU
+> config: x86_64-randconfig-122-20240131 (https://download.01.org/0day-ci/a=
+rchive/20240131/202401311050.YNdm98Hv-lkp@intel.com/config)
+> compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+> reproduce (this is a W=3D1 build): (https://download.01.org/0day-ci/archi=
+ve/20240131/202401311050.YNdm98Hv-lkp@intel.com/reproduce)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Closes: https://lore.kernel.org/oe-kbuild-all/202401311050.YNdm98Hv-lkp=
+@intel.com/
+>
+> sparse warnings: (new ones prefixed by >>)
+> >> drivers/gpio/gpiolib.c:444:22: sparse: sparse: incompatible types in c=
+omparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:444:22: sparse:    struct gpio_chip [noderef] _=
+_rcu *
+>    drivers/gpio/gpiolib.c:444:22: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:1103:9: sparse: sparse: incompatible types in c=
+omparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:1103:9: sparse:    struct gpio_chip [noderef] _=
+_rcu *
+>    drivers/gpio/gpiolib.c:1103:9: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:1182:22: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:1182:22: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:1182:22: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:2970:14: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:2970:14: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:2970:14: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:3004:22: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:3004:22: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:3004:22: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:3585:14: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:3585:14: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:3585:14: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:4772:14: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:4772:14: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:4772:14: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c:4846:14: sparse: sparse: incompatible types in =
+comparison expression (different address spaces):
+>    drivers/gpio/gpiolib.c:4846:14: sparse:    struct gpio_chip [noderef] =
+__rcu *
+>    drivers/gpio/gpiolib.c:4846:14: sparse:    struct gpio_chip *
+>    drivers/gpio/gpiolib.c: note: in included file:
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+> >> drivers/gpio/gpiolib.h:202:1: sparse: sparse: incompatible types in co=
+mparison expression (different address spaces):
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip [noderef] __=
+rcu *
+>    drivers/gpio/gpiolib.h:202:1: sparse:    struct gpio_chip *
+>
+> vim +444 drivers/gpio/gpiolib.c
+>
+>    422
+>    423  /*
+>    424   * Convert a GPIO name to its descriptor
+>    425   * Note that there is no guarantee that GPIO names are globally u=
+nique!
+>    426   * Hence this function will return, if it exists, a reference to =
+the first GPIO
+>    427   * line found that matches the given name.
+>    428   */
+>    429  static struct gpio_desc *gpio_name_to_desc(const char * const nam=
+e)
+>    430  {
+>    431          struct gpio_device *gdev;
+>    432          struct gpio_desc *desc;
+>    433          struct gpio_chip *gc;
+>    434
+>    435          if (!name)
+>    436                  return NULL;
+>    437
+>    438          guard(srcu)(&gpio_devices_srcu);
+>    439
+>    440          list_for_each_entry_srcu(gdev, &gpio_devices, list,
+>    441                                   srcu_read_lock_held(&gpio_device=
+s_srcu)) {
+>    442                  guard(srcu)(&gdev->srcu);
+>    443
+>  > 444                  gc =3D rcu_dereference(gdev->chip);
+>    445                  if (!gc)
+>    446                          continue;
+>    447
+>    448                  for_each_gpio_desc(gc, desc) {
+>    449                          if (desc->name && !strcmp(desc->name, nam=
+e))
+>    450                                  return desc;
+>    451                  }
+>    452          }
+>    453
+>    454          return NULL;
+>    455  }
+>    456
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
 
-That reset driver implementing a GPIO chip has not been reviewed by the
-GPIO maintainers so I looked up the patch and replied, we have
-review comments.
+Paul,
 
-Yours,
-Linus Walleij
+Should I care about these warnings? They seem to be emitted for a lot
+of RCU code already upstream. I'm not even sure how I'd go about
+addressing them honestly.
+
+Bart
 
