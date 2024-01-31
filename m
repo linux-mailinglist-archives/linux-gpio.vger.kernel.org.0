@@ -1,81 +1,81 @@
-Return-Path: <linux-gpio+bounces-2848-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2849-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F11D84491F
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:45:02 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63CE984493E
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 21:56:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE977290701
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:45:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 967801C21CAE
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:56:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40CF238DDA;
-	Wed, 31 Jan 2024 20:44:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B798038DD2;
+	Wed, 31 Jan 2024 20:56:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VO2ox0YB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G1+wMIIJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59B5D38382
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:44:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EAC38DD4
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 20:56:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706733896; cv=none; b=Qsrdl9Nc8+oiRR32v8fS49S2HznasLrr/vW2dxi3mOUm8HHIlOAa8sKIZCo8aWgJeEHxiBKn2PwOQYW81PclP0lBEAuAZTAZu8V+Fwq0s25OLng6l4AazQf/QRGTqPODEw/T/ywH2/JmkK2fIkH7NQHZNSsmEWbZWurswtLFoeI=
+	t=1706734568; cv=none; b=dhbPIrihzQPODu2Xd13SotZGiy5Ztaa0gCdOnOlVGN7LfQ7X/CFSvsjh6Ckr0BNFw18oiJ/eQf26qd6rIfoQXZf0QPwAoeVrFvJTE7shlO5Ahp2omO8ur1mgY/auh1ysAKA1aqNvpzFl4RIeDVU01e20W/hmS1cMxBtj2bxrnug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706733896; c=relaxed/simple;
-	bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
+	s=arc-20240116; t=1706734568; c=relaxed/simple;
+	bh=SN8BqaoqK4IhvOPgDP2RdQxe6JgLeGUnxbb+hDI6eKI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kR0aAijMBT51gInXlSNOaKhbYywP0z1EucQOoP69qRACH8M9eCbsFkxTK7b9nbLtQ6fRWf2q8hd9K/Vg4pPWEBDu7YDvf27l2Cv6Q4CxmKmKyoUX7K6aWaWBLAdkiL29QIcDk6gD4AQl/E66hAcEaJWiDcVZY5Aul6MJ0bXNRBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VO2ox0YB; arc=none smtp.client-ip=209.85.128.177
+	 To:Cc:Content-Type; b=c+/o6h1wrRATxJ/DConUHvounqlbkHJoQy8HHjfnloc7LulaAAKAIIMC9EcYjxuhqY2hMLJlGkZUO9kPPSPFF3t6N8IQy+aQTZdfk0FHrErlh4LsMGXVURXdrZBEK5srMu04S/93VubBdud0MHt76kDjn3MFytDS1hXBuwwJdWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=G1+wMIIJ; arc=none smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6040fe8ba39so2395367b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:44:54 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60406302a5eso2393747b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 12:56:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706733893; x=1707338693; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706734564; x=1707339364; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
-        b=VO2ox0YBjiSG31RTVbeDI2z1IFZxNfm318i+xgL9o0l6lV1eQuIHpPdz7DgUERgFkq
-         JesaQHiT+pdJ00vk7VIA9ZYSn7Ddetwo5NCyYLT4Oc3dTpAM4wnBHW2CnR4lBQmbeqc/
-         Pp7G4hh1vNQSdUpAT0CpGcW09XxpiyqDwWZHkWXXh9mNCqkjfpOybDmPGqaLIv8qggiD
-         k8g22wwpuCPKkqgA61s9zFOzazpMAIUG5JImyfkl34cfbt0foudlH+sOLcS74K9hTgau
-         riDWmSyla8hspJQr6jB6S/rSpfvN/CxX7f0exXsHdlD4PcttPowt4MwhZOZ9Gz0Av2Rj
-         xk0w==
+        bh=F7hyd0uUWhkbaFe/33mIS/9rt+Zgy9D3j/1s4opCgVA=;
+        b=G1+wMIIJIU7EHJ6Og+6RLOHz5Oq7bJJZzdngxPfE+D+l1rbrZneMFjhsnQoVe6n4wW
+         BqReeI164HGr4joyYJblNT/2NmchMOS9jhi7lRivQ+fFlykiPKAaYGPL4rydmf58NQSd
+         HhmnQGOWFvraor9flr7N/7lMLfsfBF5+8hpYuwfp9NS+9TBErT3q+nXa2rNtr59oqm00
+         1NoRvK35Jgy4zs6mxK088X5ZaIQ7pczl6Sy/qeriJsAPBIK7yHd8WVt9DqHFZ94mzr27
+         ituI3qc+cwZGzWzqS12A0SybqPK42F6IzoyxLbPNOoenFy+r8b8uBxrFM2I+E29HAZgC
+         kYqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706733893; x=1707338693;
+        d=1e100.net; s=20230601; t=1706734564; x=1707339364;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+Aepf8sdCd8G//RlCha5XYDrJRIchvN1hEFdOszOu6g=;
-        b=lyA1nb+84B0NxeWf+yYflmXj3pqgB36UPNuHSaiZ7X/i+P7QfnRz8xkQrrP4xkKUda
-         Q4xNAWUQghuTwfJt/n7jbAA4w833qMnIPCkCkOynGOpvX19tWpCp+wN76YueNklJdAFL
-         jkiGayPg+FGtcsW6Hmo7CW+o/EeJhc6Ds2A04EkhrIGqcerO4dTX0J3OQXm4ESkJQ+8X
-         h9xzk1KN4BZRJ6molVwiwk+sgB5IY3ftgZrAEUt7ssw9ENDVXKK4h8KtUGCkV7OCBRPN
-         uIQiQTKZ9dg4NXp2G0cD8GHk9ZRz6FJvh/Q21/tmBy17bmkxl+g0BmwyWxJWDLTP0NpF
-         ytBw==
-X-Gm-Message-State: AOJu0YyGz42iogXLd9j9iT3FKAkQ+KqTLTuiCOxPu9V14E3HO0HRFl9m
-	HkrQhMXxwVtxoYfxF8i+hgcx+XNA0kWsCawWZgwbd6q+J2ak4K8GwOVmDc8/S836ilNV/Y3wM/A
-	FPte9Ksqpc/AW6kmnNmKcp7InLdvKObqHwEfQuQ==
-X-Google-Smtp-Source: AGHT+IHS/WgJih0pA4PCi6jtXXi0NvvqNNRcB0nvYJUMQTqgkNEy0vEgAEVs0YIeJ1unhWTazFjP4rw+Sm0vCsAVTlU=
-X-Received: by 2002:a81:4950:0:b0:603:fd67:a5aa with SMTP id
- w77-20020a814950000000b00603fd67a5aamr1871650ywa.19.1706733893289; Wed, 31
- Jan 2024 12:44:53 -0800 (PST)
+        bh=F7hyd0uUWhkbaFe/33mIS/9rt+Zgy9D3j/1s4opCgVA=;
+        b=bE3oTiGVDj6G8NYUWXeA5WMBR6pdGqUREM4IHa2O07umBbIhWR3izhC60FkdWZKyFH
+         VjNIyv2tVLvQd8Q+RWdyUrUIDsukAS/A9rWsNPCpXSmWZwTelHphit5HwmVcWw9+5Pu1
+         G/V4F5h8ii8KE81hgbqiar5GXVcK21f1Vz9b70bOxWAjO/5DAGYiGoHgKRzvUyEVSkys
+         gvxFbui/USataIIXdtqtNio4YBFpYEEVUPfL257qXZNA6HhyEG5O013tOBQt8wVaC3rm
+         9wCHRufA2HmyfYbFd1DEkUIOfkNyDjM6jDsfH+GHbV/YDEu0dDq2KEKAgbG0DtgNn8TN
+         7sqQ==
+X-Gm-Message-State: AOJu0YxP1goYdH1dWxfSdZTUqMmnaU96dLQgJVga0xlenUFqtWllnuoQ
+	JpMbe1Mjvxp9XFH6qjYkfxLaPY2K70LelS7NkJ3xTuDt4uqTMXteneTxZi6mgJVqAbZxCMvJbXF
+	0vVQOMjh+fQqgbQVAk9s54MAX40hGPHXJ4gfTAw==
+X-Google-Smtp-Source: AGHT+IFJ/1xZgCSwoaduRMuAwfRIZptre9CM/jzrBsxgmGVbsa52bCGEib3ffEWOgkTlCCPbnjv9iZn0wOW7R+22/YA=
+X-Received: by 2002:a81:6c97:0:b0:5ff:956d:8b7f with SMTP id
+ h145-20020a816c97000000b005ff956d8b7fmr2745745ywc.10.1706734564562; Wed, 31
+ Jan 2024 12:56:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
-In-Reply-To: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com> <20240131-mbly-clk-v4-10-bcd00510d6a0@bootlin.com>
+In-Reply-To: <20240131-mbly-clk-v4-10-bcd00510d6a0@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 21:44:42 +0100
-Message-ID: <CACRpkdb+aWL-NU36dF6urL3T9gUROQX=9-L7aUC=+GM8x+bArA@mail.gmail.com>
-Subject: Re: [PATCH v4 00/18] Add support for Mobileye EyeQ5 system controller
+Date: Wed, 31 Jan 2024 21:55:52 +0100
+Message-ID: <CACRpkdZvj2E1zfSU1RGY2+_6sCCYxu=pbQ0yv+-bmTLGzEyFwg@mail.gmail.com>
+Subject: Re: [PATCH v4 10/18] pinctrl: eyeq5: add platform driver
 To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
 Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
 	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
@@ -92,24 +92,71 @@ Content-Transfer-Encoding: quoted-printable
 
 Hi Theo,
 
-thanks for your patches!
-
-A *new* MIPS platform, not every day I see this!
+thanks for your patch!
 
 On Wed, Jan 31, 2024 at 5:27=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
 in.com> wrote:
 
-> Pin control is about controlling bias, drive strength and muxing. The
-> latter allows two functions per pin; the first function is always GPIO
-> while the second one is pin-dependent. There exists two banks, each
-> handled in a separate driver instance. Each pin maps to one pin group.
-> That makes pin & group indexes the same, simplifying logic.
+> Add the Mobileye EyeQ5 pin controller driver. It might grow to add later
+> support of other platforms from Mobileye. It belongs to a syscon region
+> called OLB.
+>
+> Existing pins and their function live statically in the driver code
+> rather than in the devicetree, see compatible match data.
+>
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
-Can the three pin control patches be merged separately? (It looks like.)
+The driver looks very nice and is using all standard features, I'm pretty s=
+ure
+we can merge this soon.
 
-That would make my job easier when we ge there.
+> +static void eq5p_update_bits(const struct eq5p_pinctrl *pctrl,
+> +                            enum eq5p_bank bank, enum eq5p_regs reg,
+> +                            u32 mask, u32 val)
+> +{
+> +       void __iomem *ptr =3D pctrl->base + eq5p_regs[bank][reg];
+> +
+> +       writel((readl(ptr) & ~mask) | (val & mask), ptr);
+> +}
 
-I will try to look closer at each patch!
+This is in practice a reimplementation of regmap MMIO.
+
+Can't you just use regmap MMIO to access the banks then...?
+
+Maybe it doesn't add much here. I'm not sure.
+
+> +static bool eq5p_readl_bit(const struct eq5p_pinctrl *pctrl,
+
+eq5p_test_bit() maybe? that describes better what the
+function does.
+
+> +                          enum eq5p_bank bank, enum eq5p_regs reg, int b=
+it)
+> +{
+> +       u32 val =3D readl(pctrl->base + eq5p_regs[bank][reg]);
+> +
+> +       return (val & BIT(bit)) !=3D 0;
+> +}
+
+Maybe add a check for bit > 31?
+
+> +static int eq5p_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
+> +                                      unsigned int selector,
+> +                                      const unsigned int **pins,
+> +                                      unsigned int *num_pins)
+> +{
+> +       *pins =3D &pctldev->desc->pins[selector].number;
+> +       *num_pins =3D 1;
+> +       return 0;
+> +}
+
+One pin per group, also known as the "qualcomm trick".
+
+(It's fine.)
+
+> +       mask =3D 0b11 << offset;
+
+That's pretty nonstandard but it's quite readable so let's keep it!
 
 Yours,
 Linus Walleij
