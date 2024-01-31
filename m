@@ -1,82 +1,81 @@
-Return-Path: <linux-gpio+bounces-2830-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2831-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2558E844836
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:43:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0F606844846
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 20:51:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D57F628EDCE
-	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 19:43:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBA7328C0B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 31 Jan 2024 19:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BDA853FB0D;
-	Wed, 31 Jan 2024 19:43:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC4193EA8A;
+	Wed, 31 Jan 2024 19:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LIcyY7Z4"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T/dFGNq0"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A50533EA72
-	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 19:43:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10923E49D
+	for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 19:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706730188; cv=none; b=kQfH/vJ0Ttu8vl20v+zKOe+scprXbQm7yV8669gd0b3DKmLfMzdA8gI525r4OaTM3giSB2Sq+5etDNGMSKQZVyF7jEd2yz+JYIr2Nt59M15hGVAYP3jiGVb6/J89slEpMuAwKTJGp1/LPQlVO1Zw+OapM6SG0Jh/b+R+j1t74UM=
+	t=1706730688; cv=none; b=FT5saKFaRwXjxQoSfTaThBhrARp4xE5GGyjlVL/87qOC0NeZR6viG6qQ3/f4ZNZZZ07rUM56NDpsfJrMcJSJ/P1XC0bi79qSgBjtflQpJEuWeVJ164qIspNZOAjToVSs/EFpar4Az9vZ5SxyNTibQcTmpjFBjoeVkqB2oE5HiZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706730188; c=relaxed/simple;
-	bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
+	s=arc-20240116; t=1706730688; c=relaxed/simple;
+	bh=8ZnEORlLbsizKlPFacpTEd7KUr01nxGRz1weMm3NKU4=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CzmFIf1roj8qRvgeVJ08PryjdmolbzHaFxk4AJPJiQ9E7PoHPrK7maceSe+LnCdbdLB37UWycDiBBUDBgr9+rvUMxR66am4Jl3PkZEkVjJ+VwbvdJ9ohMXIUmF+p9138+wp+Z3EW/NaTabNTxHsdGmL8Vss27z0YuStW57d0DQs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LIcyY7Z4; arc=none smtp.client-ip=209.85.128.177
+	 To:Cc:Content-Type; b=D8I9F7keTSFL25oSCN6tBqr//1KI2bYrEpbcgtxvXs6GFdRXCdGjjg9nReGFJ/q9Pg+kYiVVPr3lOc8p3jyMIZ2eCSGhCevknsed/vb8KFEJDvmSsWqlsbPPgBXE+CymWnUIfWzMjW4Rh5PAaVQ/UpHyZ4Zj/hcjV8tdW5dVCp8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=T/dFGNq0; arc=none smtp.client-ip=209.85.128.180
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6002317a427so1194047b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 11:43:05 -0800 (PST)
+Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-603fd31f5c2so11683427b3.0
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 11:51:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706730184; x=1707334984; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1706730686; x=1707335486; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
-        b=LIcyY7Z4JAonoXYcKTcEcdwcvTlh8lJffcT+NJs9VnuJiK8WaVRkDYji7C1SmHz1Dl
-         SJOgCGV3kZDTBHsCMLYBanv63QrXIK6tNsIy15Dbae8K0baedqcGRI4G8v/NLh7qtWKk
-         pN8vDLsRqC7lMjscShrbTTpUxVrdSpzjj7i0VxXsnIMzJ8vpHZ30J+uFlDv6blmMY70N
-         Dznc8f05/WvYZc7DrBRFCqi5aQzi/JnC4kdd32jWPEW2bj4dTrvVsVP0UiSoy4jI3VUz
-         RIuc88yiiYcT/VNI71y8OnavUl63P1PFPxKHty0wrbQtkyTsGFfUvYvKOgXH2bZ7vfxR
-         RmAA==
+        bh=OZWFUz0qVhfYcOd6k65WaS5iTo9NPz5WXjPmrZMzV94=;
+        b=T/dFGNq0WcdpJ8au0TejcD/HB7cCpK/wY7Hh9ihq3CYW/CeF/VEzqE0hnh82x/775/
+         ve/FgS+ZFl5lqOSDbsJ9xHiAy8SjOF08IbmH4kML/Fi/9b972bjVhj3Ir9P78jlRlqwB
+         LqFXt8gBcH24MLVofYOhHWQuM9GnkYJCXkiPEvlm7dfTz5PEunlEZxR+e9MKczcIgvzI
+         pigD8UXOES3mkzgR69IuikmtiL14yAkMa814mPQgJX2PqP4mIRu3C8POd1oVBLTtA40M
+         nDQSPMHczkEF/ZYP2X5dJBmHxLpyOZ1DmbutK5EImqdEPOXGH8lETAwqLeVQgqH05Ixm
+         rR3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706730184; x=1707334984;
+        d=1e100.net; s=20230601; t=1706730686; x=1707335486;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=5LurfDzDMlU/+e4WHlA9quWo6BsFXeuGeJjyZPZVAOA=;
-        b=WE+9JQZPryesByFMlBlMIKDGZBwaN1wKHLhXpT6AG/5kg48jNyNsGaBBtI3AnV2S+L
-         GeWyuE1ZrQImFWiPZEns4AdyofQ/mvuvOLTx92rNI35wL4nP/+Q2VGWkdTq6q+Rfh6tO
-         xANuWSueemhXPkMCblBlntKoqr3uKVmYl0TZZF8yWiifm4O02fD6TT8iZuvNXrcEqMbn
-         e/CD3iKJ2EXMUO1+6E+KioZP2bc7Qy1DYwuQpynMGUHO851BKTm5IYHOmEDKtetjPNNu
-         c9ZSr4jb36SaGJjzfHxVmd1zezTPFhDVoCNuKrw7Zd7DH6ub3GDTDloB/d7U235pFK1O
-         AlgQ==
-X-Gm-Message-State: AOJu0YzUiWpWEiTXfMRaiHxiKrC0zxt4ATVe9BWEQaC+vpiruZd3ytZK
-	/0FBLhwQ5dWokk7YS7NXS3itNWbHW2Ipw/loxrvfle0Esgc5ULVv5cKJEZHtZV8XKjvfAde4erp
-	Y1BUJIz0dbCBWUNPJTd6F5XpUmeDIhhTJvEvDSg==
-X-Google-Smtp-Source: AGHT+IFNchrTJN/laRoFT/serLUkj7SLPdu4ZsP2h1VQRwyjVfP96PoaTsrUDUW7Vv3PJ2nUnCiNh4c8poZyV3/bdYY=
-X-Received: by 2002:a81:9103:0:b0:5ff:4b02:73b9 with SMTP id
- i3-20020a819103000000b005ff4b0273b9mr2679922ywg.21.1706730184634; Wed, 31 Jan
- 2024 11:43:04 -0800 (PST)
+        bh=OZWFUz0qVhfYcOd6k65WaS5iTo9NPz5WXjPmrZMzV94=;
+        b=Hd9uASBuC4lq4eBOonjypmwAuqlZBAXta5ONZbOeFKJ0vqgvQIJujRpzalXFoQqjm8
+         XFX6Jb4WmSfoSxVomdTGea+18PDV+jgB/QHbRyddBttBgeh9/HosN6FHafSKMLBLgBy6
+         UpSxp0vfGkv30Xaq72Bon41rpWbZmEZaj5dH5giABv0QjCPyF3gaBntygRIvL23KIx3T
+         hHrgEhi5CXdBcN/Kur8Kariq1TwQNaAem3kYywdILh86gYv2nzISJqTj5KDkxiy7hBca
+         NEdEoxikmLDO2Z9Dqs2l/02P6mammnDh8eHOXcSsztJ2YVWlWMcz6sVEd2pRSgMqz7tK
+         GNmw==
+X-Gm-Message-State: AOJu0YyRdc7LU2esF2wpqaIKzESKK6aOqh4EM7LnDYFw6ySMZ8izcGUe
+	g8yYkZTojZu2YnCe16Kzb5wSMg+srhcgxmlq1Dg23dHcr4PUptxbv4bcDUiSQEqSaMJjfExilAM
+	IgsxqR+techauuYpmUoFgPKoy5JOo3qeu3q7dEA==
+X-Google-Smtp-Source: AGHT+IGs/NmCuCnWWnRTFZmUjiYjl0D9360SAO7l1FGiKCPViEqEv3tl91ectKTgOG2KW8co04hic15sCAz9DuoRn/A=
+X-Received: by 2002:a81:a0c3:0:b0:604:fd3:e656 with SMTP id
+ x186-20020a81a0c3000000b006040fd3e656mr1407309ywg.19.1706730685631; Wed, 31
+ Jan 2024 11:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-9-brgl@bgdev.pl>
-In-Reply-To: <20240130124828.14678-9-brgl@bgdev.pl>
+References: <20240130124828.14678-1-brgl@bgdev.pl> <20240130124828.14678-10-brgl@bgdev.pl>
+In-Reply-To: <20240130124828.14678-10-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 31 Jan 2024 20:42:53 +0100
-Message-ID: <CACRpkdah4My-nArTpnhV3sovT9SaUZJjrMaXmm67MFfrhcW6qQ@mail.gmail.com>
-Subject: Re: [PATCH 08/22] gpio: sysfs: use gpio_device_find() to iterate over
- existing devices
+Date: Wed, 31 Jan 2024 20:51:14 +0100
+Message-ID: <CACRpkdY8v2x6VzRnEV6baa4_XLGLm0BOe6Nj6wzjujHxqEDHVA@mail.gmail.com>
+Subject: Re: [PATCH 09/22] gpio: remove gpio_lock
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
 	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
@@ -91,13 +90,71 @@ On Tue, Jan 30, 2024 at 1:48=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
 
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> With the list of GPIO devices now protected with SRCU we can use
-> gpio_device_find() to traverse it from sysfs.
+> The "multi-function" gpio_lock is pretty much useless with how it's used
+> in GPIOLIB currently. Because many GPIO API calls can be called from all
+> contexts but may also call into sleeping driver callbacks, there are
+> many places with utterly broken workarounds like yielding the lock to
+> call a possibly sleeping function and then re-acquiring it again without
+> taking into account that the protected state may have changed.
+>
+> It was also used to protect several unrelated things: like individual
+> descriptors AND the GPIO device list. We now serialize access to these
+> two with SRCU and so can finally remove the spinlock.
+>
+> There is of course the question of consistency of lockless access to
+> GPIO descriptors. Because we only support exclusive access to GPIOs
+> (officially anyway, I'm looking at you broken
+> GPIOD_FLAGS_BIT_NONEXCLUSIVE bit...) and the API contract with providers
+> does not guarantee serialization, it's enough to ensure we cannot
+> accidentally dereference an invalid pointer and that the state we present
+> to both users and providers remains consistent. To achieve that: read the
+> flags field atomically except for a few special cases. Read their current
+> value before executing callback code and use this value for any subsequen=
+t
+> logic. Modifying the flags depends on the particular use-case and can
+> differ. For instance: when requesting a GPIO, we need to set the
+> REQUESTED bit immediately so that the next user trying to request the
+> same line sees -EBUSY.
+>
+> While at it: the allocations that used GFP_ATOMIC until this point can
+> now switch to GFP_KERNEL.
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This is beautiful. And you can make the list private too.
+Neat!
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+(I'm sorry about NONEXCLUSIVE, let's see what we can do about it...)
+
+> @@ -578,6 +577,9 @@ int gpiod_export(struct gpio_desc *desc, bool directi=
+on_may_change)
+>                 return -EINVAL;
+>         }
+>
+> +       if (!test_and_set_bit(FLAG_EXPORT, &desc->flags))
+> +               return -EPERM;
+
+This exit early split off from the big if() below (which is good) is
+a new thing right? Maybe mention this in the commit message?
+
+> -/* gpio_lock prevents conflicts during gpio_desc[] table updates.
+> - * While any GPIO is requested, its gpio_chip is not removable;
+> - * each GPIO's "requested" flag serves as a lock and refcount.
+> - */
+> -DEFINE_SPINLOCK(gpio_lock);
+
+GOOD RIDDANCE.
+
+> -               /* FIXME: make this GFP_KERNEL once the spinlock is out. =
+*/
+> -               new =3D kstrdup_const(label, GFP_ATOMIC);
+> +               new =3D kstrdup_const(label, GFP_KERNEL);
+
+And all of this is neat as well.
+
+Someone might complain about splitting that in a separate patch,
+but not me because I don't care so much about such processy
+things. (The patchset is already split enough as it is.)
 
 Yours,
 Linus Walleij
