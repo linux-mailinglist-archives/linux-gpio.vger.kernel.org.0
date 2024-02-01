@@ -1,129 +1,88 @@
-Return-Path: <linux-gpio+bounces-2872-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2873-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A970B8456C9
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 13:04:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EDF984572D
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 13:16:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DEE41F26BBD
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 12:04:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D1D9A1F22F1F
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 12:16:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D5515F30D;
-	Thu,  1 Feb 2024 12:03:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJkbIrqw"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C8E15DBA3;
+	Thu,  1 Feb 2024 12:16:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from laurent.telenet-ops.be (laurent.telenet-ops.be [195.130.137.89])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405FA15DBDB;
-	Thu,  1 Feb 2024 12:03:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F4115D5CF
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Feb 2024 12:16:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.137.89
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706789012; cv=none; b=M9uLDjHtrk1viMbmhn8v2hJ98gPpfSSa3ViLhuPPrGi3U2zg3BjvzzAI8Egl8ZPwvVJSTTWEmojKZ5sTkrYnYmdBwGBu3NoG8YWAw725E2r9OV5MnZzD2zpa/G/Ws7oXzT6vYMRvEeQuQDIi1gBLn4/Q+HqS4M3Ur+A1ip7JFm8=
+	t=1706789805; cv=none; b=Tq+Ej2Z2Ge4kPXtMv17te2V7B+V1faNqkEneJ1GFpfczlRf6DCYpfE/YC54r19z+yTxPTeO1kHpvl1mHoEvQFt7gc6jLMvu0kYO5KH61Qe4i/uTXUz+VqsR4xM1KgFMUiejgqzUBEo9QXbPKjXpE6+jZo1r363Bv54WcRLDFEQ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706789012; c=relaxed/simple;
-	bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jghUdXMq5apFU1KJdjOSXrIvvLRSOVBoDBEC3lk79g/2DpdQ1lAq8tV5aErm8Bfo/c4AmzZnIIPhFyf0zSLPRpPEnfN3eFvIWptHU7R4sKpCPN8wNi0E9kFRJwBcQ+f3J3UFq/2W5QYRDIm5ag+ntIMCXf2k1uLVDA8+CwsNSyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJkbIrqw; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1706789010; x=1738325010;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
-  b=aJkbIrqwVXj/FiKd2A1sE6hQ73o2PHm33kmqbC8gZ9xvZTzSmISXnJql
-   dAKFnJoqVHfb0vD+Pn4CXeKWt3Tv6Rlv9PPJ6Kl9WzaGS7dXiR1QAxwxx
-   JaCS4Hqe98aY1HxqVhdnkNhaggyrnclJJer9RuM1MVa7NHSeW+QOdCTUw
-   iN57H9zyAtNkrRJ5l0cocTNyAcxl/CGa2t6DQxoLNxHIksgpvT8Gxlax3
-   TlkymFZ5IlDRMCOWZzFtNb6jIBhHCJU/+HUYATty/+O6/kprKYl/el6Hj
-   la8/xhSebEY93Ru3WCgFQvhWN1gtPK+uMxob799hA6UC7358oF4B0lDe4
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10630044"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="10630044"
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="912106710"
-X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
-   d="scan'208";a="912106710"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:27 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rVVMt-00000000os0-1uN7;
-	Thu, 01 Feb 2024 13:36:31 +0200
-Date: Thu, 1 Feb 2024 13:36:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Cc: linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
-	radim.pavlik@tbs-biometrics.com, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pinctrl: mcp23s08: Check only GPIOs which have
- interrupts enabled
-Message-ID: <ZbuCP4rN_DEsH-Un@smile.fi.intel.com>
-References: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
+	s=arc-20240116; t=1706789805; c=relaxed/simple;
+	bh=iDcOhlS9DEIejgMVn7Ql51OGWkh+At93I4C8xzVPOlY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mNEYiZsHxXNluTG8lz1u2GYtEA6mRp5wPxX5Rso2M8CNzu8sOYcvqKi/x+9F45vJZlsjXlEWaYaVPH809IjiUviEq5JYFqo8LRNb3E8LoC6hevN0whP4DVvPSqNYlNCEojY14G4OpgABQ8GgOJBLl3yh8C+14gw+vigRzEyIGf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.137.89
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:88f0:c83b:bafa:cdc3])
+	by laurent.telenet-ops.be with bizsmtp
+	id hoGb2B0044efzLr01oGbzM; Thu, 01 Feb 2024 13:16:35 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rVVyo-00Gut3-1P;
+	Thu, 01 Feb 2024 13:16:35 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rVVzf-00ARk1-04;
+	Thu, 01 Feb 2024 13:16:35 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] dt-bindings: gpio: renesas,rcar-gpio: Add r8a779h0 support
+Date: Thu,  1 Feb 2024 13:16:33 +0100
+Message-Id: <c5681eb5d28641d9b51ac2066b56b52d23defd85.1706789728.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Jan 30, 2024 at 09:37:10AM +0200, Arturas Moskvinas wrote:
-> GPINTEN register contains information about GPIOs with enabled
-> interrupts no need to check other GPIOs for changes.
+Document support for GPIO controller blocks in the Renesas R-Car V4M
+(R8A779H0) SoC.
 
-...
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-> +	if (mcp_read(mcp, MCP_GPINTEN, &gpinten))
-> +		goto unlock;
-
-> +	enabled_interrupts = gpinten;
-
-Move this line to be...
-
-...
-
-> -	for (i = 0; i < mcp->chip.ngpio; i++) {
-> -		/* We must check all of the inputs on the chip,
-> -		 * otherwise we may not notice a change on >=2 pins.
-
-...just here (w/o any blank line in between).
-
-> +	for_each_set_bit(i, &enabled_interrupts, mcp->chip.ngpio) {
-
-...
-
-> +		/* We must check all of the inputs with enabled interrupts
-> +		 * on the chip, otherwise we may not notice a change
-> +		 * on >=2 pins.
-
-Missing space after =. But better to spell in proper English, i.e.
-"...great than or equal to 2 pins."
-
->  		 *
->  		 * On at least the mcp23s17, INTCAP is only updated
-
-/*
- * Use proper multi-line
- * comment style as depicted
- * in this example.
- */
-
+diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+index aa424e2b95f87a51..cc7a950a6030999e 100644
+--- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
++++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+@@ -53,6 +53,7 @@ properties:
+               - renesas,gpio-r8a779a0     # R-Car V3U
+               - renesas,gpio-r8a779f0     # R-Car S4-8
+               - renesas,gpio-r8a779g0     # R-Car V4H
++              - renesas,gpio-r8a779h0     # R-Car V4M
+           - const: renesas,rcar-gen4-gpio # R-Car Gen4
+ 
+   reg:
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.34.1
 
 
