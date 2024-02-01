@@ -1,135 +1,116 @@
-Return-Path: <linux-gpio+bounces-2882-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2883-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06969845E17
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 18:06:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D343845E90
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 18:32:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28CE5B333F2
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 16:48:16 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8AA9B3111A
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 17:32:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC144C6C;
-	Thu,  1 Feb 2024 16:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D211649D1;
+	Thu,  1 Feb 2024 17:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OPcGNwzL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f68EvTjv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98DB94A2A
-	for <linux-gpio@vger.kernel.org>; Thu,  1 Feb 2024 16:48:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE8B63CAF;
+	Thu,  1 Feb 2024 17:31:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706806086; cv=none; b=djV8wnyUbIy2DrM0g4rMfvD/wrwBysEVim69Qa2tQKgqWqbdCiWfmwTu4Nuwvl4y7Az/BzOqenBWib1IGBiWfHlM0IFQEyh4S3CQd6v0E+gdnyCseUOqs9c6QrIJVF/pUFGuTJ3/CW3IsD8Ae7N8kNcq3v210Q0Ioj6XHBVIE4c=
+	t=1706808702; cv=none; b=RbZVOjtgviVRyOSH6SA2HcjnTuzFxPH9uehYhYFLlf32uvstww7EtgO188JtzLRurlzSl6NHiOmGKSvwKowql7c8g1bb4lEpps0fshtDk/EPqjrU90bGwEtJ7DXo0LzFFr/EtB8l4RhVOhMLsvW1Sk4cBdaKhmEkdmhgTUmfiKE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706806086; c=relaxed/simple;
-	bh=SEGEdx+dqT+/Ew8JKhflR6LHqrtX2JQ7vsb63ovQuTk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bT5VqoeZWFZNyunCXjJ3gLkgtL2PF9MqReHeC159iR9kXD208GVYOO3CBHjRJ+St/RxKHSjDIdf+SGxJcrsia9ab7DHqvb/UfiQsMi63v1ASyBFy+6H7ZujEzEEKCwG92djQnS6olJ286l95yzEb4bhjWkEvEJJW47XeT3gRZ+g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OPcGNwzL; arc=none smtp.client-ip=209.85.128.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-604191522daso11506227b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 01 Feb 2024 08:48:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706806083; x=1707410883; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A7fik1J0VW0e/Mqa8n8TwB+QOmKZHZ7Id4mjBLFxQY8=;
-        b=OPcGNwzL11qz+3B2RvanL72RqurfjxcvWMZ9yTzfvrJsX8KqbpXXeA+iYXRc3VebLY
-         nn+Ap/IQC7xbXHi0rrvrQXyrP0H4ciLnjd/lgRuhhpc+dY0WVQZqrQx4xHeS329/qISh
-         28K6M5A8APN4g3/xB+M//HDyIk6jySW/aUZ6/X2RNhhaPyPhvF4KZvttxtkv2WTc9mgU
-         UP9Aky3gqI6kPPkOL2xdor2QaXqhOcpRwe4b8ABerLs1TrAQvLlhHYbpdAJa0bGVCzNu
-         U+bBXu4/bB95KIkwtfC+zVUy9NKK2V//pHqJSNJK7h0GI//rCuDEZxdGfMTW5Rv9WBcb
-         6NUQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706806083; x=1707410883;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A7fik1J0VW0e/Mqa8n8TwB+QOmKZHZ7Id4mjBLFxQY8=;
-        b=b/MUzyFmYtbqcdo20sQ1aZheUycq6o8Xa9FH3wf2hzO7kN8Q+3pqysoiZxUO+9Bnu5
-         pqKqTDOeVzTOA81KrB+okdmJ0brwvxw0/KTKhJF4UqQqu1Ozwtgrc+MMLsR3mZS2yvYJ
-         PhH3OSBW8d71eKMdOKfBXxlFWbIE3KqrBh8Ds8yqiUHceIxIGvPIMxwM5BlOIsXESnae
-         3BegzFxZhJzXTRaXiEFCNNI1jZS1XUkB1KTVsfNfcy5iS9Eamjcx1qBl+iq87n/D3DT+
-         ZW5SzyE2geFmhPPFlYrGknsgUxg5tzloHweg5g4tbmO0wcwN7PGg/jYqoG7ioSoeCNyh
-         08ng==
-X-Gm-Message-State: AOJu0YzcVRg38uxv4OuqAziY/aJPriQJSQrMcTkh2IbnDyHfCDXJkfNu
-	L+KUCaUm42wpDXdfSTFFo0Zlvr1rh6QXZMeg9PMHJISFeqmmOlU04XRvpLIL/gJzn3Nu3cL5Y4t
-	UnV2LydTexVMCG2om+pxMe4cxj2+C2Yx88ZHxSQ==
-X-Google-Smtp-Source: AGHT+IG+SmfjRaQH7El4HH0vjqrdEODfpaYOF7D3+sS8NkQHEjWCndUfnYiQf8SoO624jsugJerkjDJUp44CWBy3d2Y=
-X-Received: by 2002:a81:c545:0:b0:5ff:a52b:55ac with SMTP id
- o5-20020a81c545000000b005ffa52b55acmr4910993ywj.34.1706806083247; Thu, 01 Feb
- 2024 08:48:03 -0800 (PST)
+	s=arc-20240116; t=1706808702; c=relaxed/simple;
+	bh=WTfAV8E5tolH0Cpe7AFR3fPsSu2YVvD36XVmkg+Huyw=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=VniJFCfBIm3dW+SfdVo9H/eksbMesRL7DgaUOJ5Y5+BIL3bK7P/HCqatOjWCbQAYtxYh37VDCW9k5pbYO4RJTAv04fw1f4IZbCbYnp1qluXMlIeXxEEl78M3I2XQw0zzUvcUuLR5C3O8EcxTZOjSbKItDkDMtMFdxOF38yrNCaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f68EvTjv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1E6C433F1;
+	Thu,  1 Feb 2024 17:31:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706808702;
+	bh=WTfAV8E5tolH0Cpe7AFR3fPsSu2YVvD36XVmkg+Huyw=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=f68EvTjvzkRDBiGk/cyjJViHIOhudiBr8virxWTmT3rlcbchaOfPKFGKjSS0z7SNj
+	 Txvcf/9xarLbFTwgWrI0DnP5DuasXVh9q4tjsz2MrBC0/Co9ZKeJE7rRnCCxOBCcr+
+	 us5bNql9Y/LV1wrMdZxGziiQqzFmu+MMXGhjAqqRVsV2Y0p1ZmQM0xPkAkPGqmeiwR
+	 KpU7pYRY8AXXpHIR0CeaV6NghmQy8aFlCASVM78xpuoESWdkNEHQvmZQFTSEgewooC
+	 NhFMI0Z4JLJO1cw2y4rzXCtrPuhQfQ6Iy/YznI+KqrCKSRpR0bWI6+NFWAd1coZI8E
+	 tXvexldZe2Svg==
+Date: Thu, 01 Feb 2024 11:31:41 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
- <20240131-mbly-clk-v4-10-bcd00510d6a0@bootlin.com> <CACRpkdZvj2E1zfSU1RGY2+_6sCCYxu=pbQ0yv+-bmTLGzEyFwg@mail.gmail.com>
- <CYTO3C0G7083.1TVFK6PN35G1B@bootlin.com>
-In-Reply-To: <CYTO3C0G7083.1TVFK6PN35G1B@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 1 Feb 2024 17:47:52 +0100
-Message-ID: <CACRpkdYaVPWKATRec4Ta9mQatsjtt5Fexb-enXFEjGSxAt12tg@mail.gmail.com>
-Subject: Re: [PATCH v4 10/18] pinctrl: eyeq5: add platform driver
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+From: Rob Herring <robh@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
+ Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
+ Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+In-Reply-To: <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
+References: <cover.1706802756.git.geert+renesas@glider.be>
+ <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
+Message-Id: <170680870030.996964.6959185693674664805.robh@kernel.org>
+Subject: Re: [PATCH 1/2] regulator: dt-bindings: gpio-regulator: Fix
+ {gpios-,}states limits
 
-On Thu, Feb 1, 2024 at 11:24=E2=80=AFAM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
 
-> > Can't you just use regmap MMIO to access the banks then...?
-> >
-> > Maybe it doesn't add much here. I'm not sure.
->
-> Indeed, I went the minimalist route. You tell me if you'd prefer an MMIO
-> regmap.
+On Thu, 01 Feb 2024 16:58:41 +0100, Geert Uytterhoeven wrote:
+> make dtbs_check:
+> 
+>     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vccq-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states' were unexpected)
+> 	    from schema $id: http://devicetree.org/schemas/regulator/gpio-regulator.yaml#
+> 
+> The number of items in "gpios-states" must match the number of items in
+> "gpios", so their limits should be identical.
+> 
+> The number of items in "states" must lie within the range from zero up
+> to 2^{number of gpios}.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> The second issue did not cause any dtbs_check errors?
+> ---
+>  .../devicetree/bindings/regulator/gpio-regulator.yaml         | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
-I'm not sure, because it might be that it adds more overhead than
-it saves and then it is pointless.
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
 
-> I've not seen any helper to get a regmap based on a resource, targeting
-> by name. Is the expected procedure to acquire the resource then create
-> a regmap config then call devm_regmap_init_mmio()?
+yamllint warnings/errors:
 
-No... haven't seen such a thing.
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml: properties:states:minItems: 0 is less than the minimum of 1
+	hint: An array property has at least 1 item or is not present
+	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
 
-> > > +                          enum eq5p_bank bank, enum eq5p_regs reg, i=
-nt bit)
-> > > +{
-> > > +       u32 val =3D readl(pctrl->base + eq5p_regs[bank][reg]);
-> > > +
-> > > +       return (val & BIT(bit)) !=3D 0;
-> > > +}
-> >
-> > Maybe add a check for bit > 31?
->
-> Will do. I like that sort of defensive programming. What behavior would
-> you expect?
->  - WARN_ON(bit > 31) and return false?
->  - Just return false?
->  - Something else?
+doc reference errors (make refcheckdocs):
 
-Your pick is as good as mine :D
-I let the author choose what to do there.
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be
 
-Yours,
-Linus Walleij
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
+
 
