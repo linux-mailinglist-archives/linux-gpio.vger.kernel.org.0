@@ -1,183 +1,204 @@
-Return-Path: <linux-gpio+bounces-2853-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2854-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3DA858451D3
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 08:14:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D511845244
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 08:58:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 630C91C22D27
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 07:14:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD4931F290F2
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 07:58:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B13651586DE;
-	Thu,  1 Feb 2024 07:14:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3988D158D68;
+	Thu,  1 Feb 2024 07:57:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="fjZpz5F5"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="JWruZrxB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2049.outbound.protection.outlook.com [40.107.21.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f169.google.com (mail-vk1-f169.google.com [209.85.221.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EB0D157E90;
-	Thu,  1 Feb 2024 07:14:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.49
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706771663; cv=fail; b=WQcb6woy4xud0tQrGaQKWatI9lSckJpsF7Z7AsCNXoC0Xw5/HE5flp9bCm8znj+a16Gzut/CPNjmYdwgEca+D1ok0sPBCMD9MTifSv0nboTC6R/KrDZK6MfODBWxaunn89oqyQdDixMruiDTEoKipDYiOOVdXArIrBZzXyXQXpQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706771663; c=relaxed/simple;
-	bh=aXT/+wd/6KkMDWWlJGc+K75yvCANB/5zwvjaIBMXsI4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=UrMQDZJBrpBCSn8PIGF5i2TCE5Dn/H01behKYUBDLo3akS0KMPPdrl77GF7Mi0ZanC08GH1g5yqXcwMJm/MI7tBxCOVIr8fBOP4zqR3iY8MlT6ly0Ef9kRas21FbKzLmwprrnoCSrQturd6CQryPzb34I/IrdWaeuGqJF1e23ZE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=fjZpz5F5; arc=fail smtp.client-ip=40.107.21.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=YwUo3FYezNC+/xGdp0dMN7PeoK8wgqubDslWb33k9gGtMCHbz2X9haRu9KJz68UeCESVNbOOH6z/WmEAZu/HhcJNzZm2qEtSSudFCy1CoPqp84BOShJfxhEip9/WGIMC6LWqvO7CwlsmUhbAiQty7k/6pktjYUfZDXUhlWkHf96GdqHWAfMdF1X8SG8c02C4hIteMPHbC8xX1EzuxKRJ9xG7ZHBlbIw2DZatHg/GVdeWtUnh4qPSj5odbK4/uWOrKWSSmWZz+MR3kd/zhAe6IvT9t/1I/QrLkjBm8fy4K3dMtebhzYujUWtlsu2MleL4x39SFwzApVQx1LbDiGQhiQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=aXT/+wd/6KkMDWWlJGc+K75yvCANB/5zwvjaIBMXsI4=;
- b=DeqaFtJlRe4LOqUM33sd4c5/brH69At52OZX4t//fs+Pu/df2bezC8OiD3IlEifRsxBZUGZLeA/Ef4ZKWT/LvdReJpQn3HrQVNU5+sDOTAudZIjEFLIcz5abTGnWVy1JmbSaYJyM21iwQHibZiKURbCnz9sDvTVogpk1WQXEANlF9jPzCgzSSACiLJ67NehdwBaq3ARh+U8lolT6fMC+SBJz+8vjWjGTZbaP5DBy9nHxt41kFuOIQCfvxMOlCk3NikGIl3PtlslhyeixPYw7/6N96uZVu7YGxm4hxajIeY9LSNcagNtzKf/4hqPG2yHGgbs2Lx07zEfjZBps5nFk3Q==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aXT/+wd/6KkMDWWlJGc+K75yvCANB/5zwvjaIBMXsI4=;
- b=fjZpz5F5d/UXHqFHlgOe7ZrBNYxnycnYUFb25viUG8x54+ObfqBk34bkwu7pQ47SDrO0DwsMPTtxz73Ge9shwzicjbgHcegQiBcTl8B8A5bGNyJ8jBVs3kjyPWlLcHOSh3srn7ccD2LcZwcFeaqz7+ghp1mvgVSA0RlHyMv8kGI=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DU0PR04MB9323.eurprd04.prod.outlook.com (2603:10a6:10:356::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7249.23; Thu, 1 Feb
- 2024 07:14:17 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::c499:8cef:9bb1:ced6%3]) with mapi id 15.20.7249.023; Thu, 1 Feb 2024
- 07:14:17 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Linus Walleij <linus.walleij@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>, "souvik.chakravarty@arm.com"
-	<Souvik.Chakravarty@arm.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn
- Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix
- Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: RE: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHaTFMXfSW/KLMkFECgD1P261LWWrDwxwIAgAAQxgCABEqJkA==
-Date: Thu, 1 Feb 2024 07:14:17 +0000
-Message-ID:
- <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com>
- <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
- <CACRpkdYV=qYQ9qDUWYTLDAV1niay30gYH5S=zjfi31GpeY5o-A@mail.gmail.com>
-In-Reply-To:
- <CACRpkdYV=qYQ9qDUWYTLDAV1niay30gYH5S=zjfi31GpeY5o-A@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DU0PR04MB9323:EE_
-x-ms-office365-filtering-correlation-id: 152d5977-d42d-4acf-112e-08dc22f56721
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- YyJhSGKZg0ThTnYM7z+V5gXHucEhflPB+iCKvp9W8OBIkV/SiKi7jF1jndhXR5IGCpVvtD/umA5j1aDfK/dV1mwvCrl3RUVEI+kzppgXcARH7Q+w+F8CFGGR8PdAHCtA/kA6akae14L9KlqqExru9NmBg5EdwL2uDJdOxEuSocqkzU8xpCCyeayqjstJAAT8Xslj3uDWeb5UobrIvhkKjfrAFEzMis8HDnzNMUsm40wlAZhzD4JvY0gTjmmRzt6bgjMqlKF9chrF7YcYSJYzfwAicmdKwR2IIy/9WjXK8tWZA+tv3jSrFxfopThjtLAz/VC895hs3r4uot0Rz/0HNs9kuPQTEy9zZW29cMVIP+QzNBEWeODWHGovpRDF5o197dcJJhKODykOp9V3pG5FlDSsG0hJOd+VK4vm2LTUTEuKCLapGbxM0ArdCd0lRgkvjM6FP71DF6jPpIRoBZx3rz02X+C9Q1BrAOMTFzVeVQtilEz5TVRkOwlvNnLsthO4IdyEgdAVVJznX+dQLtadLd8goPnazG8q+h9iidkHcC4rwfXPkopL3LvYm1JD6xuqdV1kkXwksg8b00an6gTuagvPme1zsgdWMxcSwRQdJ1ag9JXNZNzh/2ma0f9njLyE
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(396003)(376002)(136003)(39860400002)(346002)(366004)(230922051799003)(1800799012)(186009)(451199024)(64100799003)(54906003)(52536014)(4326008)(44832011)(8936002)(8676002)(110136005)(33656002)(66946007)(2906002)(5660300002)(7416002)(86362001)(64756008)(76116006)(66446008)(66476007)(66556008)(38070700009)(316002)(122000001)(38100700002)(9686003)(478600001)(6506007)(71200400001)(53546011)(7696005)(83380400001)(26005)(41300700001)(55016003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?utf-8?B?YjVVa1FBWllSKzEwaStXZWVMQUNKdXVPWnlDaHJNd0R1WDFreElNY09INVVh?=
- =?utf-8?B?dTZrY1VqQUhEOEtsaUozQWhVdjZkQ0ZUanVFSUhiakwyS3A4eVA0Z0t4cHNy?=
- =?utf-8?B?WjJ3OFIyUWt2bXRPUTRVaUJNQ0M5ZCtVZ3JncUxDT09zbllkeXVnSnFtUWZ1?=
- =?utf-8?B?QldsYW5NNGlEOWFOTStOZHQyeks5b3pGT1FOdDMxVzJia2c4emY1V0F2VWZL?=
- =?utf-8?B?REw2Z3FEOEpZSkJyMzdRVHZNVHg0ZEw1MWZSUHltR2NTcU5Jbk9UY1p2Y3pH?=
- =?utf-8?B?STkrYkNXMG5DbE90VjA0WUMyOVdnSHB0c2tnVG5DdThibHc5OFY3SWlSamFD?=
- =?utf-8?B?ZmZ4aWdZRTZXQ0w0WUVpNzJMOHkvN3IwSjNycjRuZndmSURhK3ZIcWViUFRE?=
- =?utf-8?B?eVdiKzQ4Y0t6UHpKek9EUE1OV2pIREc4dkU4bGhjRHZQZk5aSnNvQ1hXM0ln?=
- =?utf-8?B?NkF6dDlPY003akNxV0ZMQ1lpOGtKSFNmN3JHWFlzc0t1elNpTTl4MFMzOHA5?=
- =?utf-8?B?b0ZmS0VaSUc1N0FNZEs3SnhFdm9aZ1BCbzQvRVpwQlJtbkhNdGNEOVQ4ZVpy?=
- =?utf-8?B?WEZNVURtaThMUHRyYTB4cE1jN2oyazczTmZXNVYvVnMrTGFRMkZzaENaM2xT?=
- =?utf-8?B?bysyMnlwd3RwL0RFNjRCK01sTWxPMHpuWEFYTEh6RkpHUkxzQW9XbG5ER3BM?=
- =?utf-8?B?REIwOXRjbzhEd0hFcWNnWmUya085UGNwSnRSMzV1cWRvdTE0MzFoS0VUajVY?=
- =?utf-8?B?NlVPc080N2tIaHhtd2tWdWdZREpsME1VdU1jSXBMaWo4USttWWJqeDBIczdG?=
- =?utf-8?B?QlhQei9yMFRLZGJTUHRmZXBHb015WlppY2ZSNHdxWCtTdVplazNEZnM0UUhy?=
- =?utf-8?B?amtKR1ZVQVJVU3NJcTQvZENWRkVteHdrSmt6aWhMRnFNMmJZdlFOVWFJNkMz?=
- =?utf-8?B?U1dwSEJEaGoyWm9HV21ESFg2M1lpVGV2SXV4RlNqUEtCL3VQU295S1hvY1p3?=
- =?utf-8?B?ajRqK3IvV0JlSHlEYnNjRHhsR1lrRU5ZMmpkVzlqaVFWbCtGWXdmRG5qdU1q?=
- =?utf-8?B?dEtGV1pxL0xkWGhtMXBHTFZ3am5oTmFFTzZoWFdvODY5aFlnZUM0T29OK3JP?=
- =?utf-8?B?MGxObjUvZW0xc0QzZ0dzanM2SDJlZGhwMk54bi91NlNBb0tuR0ZzQU44QXV5?=
- =?utf-8?B?TVNuYmtxNkhybmdCZFZGOC8zMEFFYktQNUlJeW1UK0lYWGc2bkgrT3gzRTA5?=
- =?utf-8?B?ekNZL3ZhM0hwSlV3U1VnSmZDQTdKa0ZIdkQ0Tm5CTUhxVE5UVEpQYW43TUVq?=
- =?utf-8?B?dGppeDg3YXE3ZGwxc1lQbEZDcDdkWGhNVGpYeGp3RHphSEZmK0FtZis2Z3F5?=
- =?utf-8?B?bzQxQ0dGL1dLdmdYcXAwTWV2OWFBdU03S0VscHNLaW5ZdFlWTzFuTHBVYmVD?=
- =?utf-8?B?ei9nQ3hEc1VEL2dwYlJrZE5oaTVOWmJ0d3VFQzJtS3BYWkxVOU0wbjl5ODBQ?=
- =?utf-8?B?aTJsWk1jRFRUOEpZODRTQURlTGtITFdiNThueEc3VnhDbUp4MDNOeXdFclRQ?=
- =?utf-8?B?bVgrUDc5V2Q5cEJyUVlPK20vL3hyelI2Y24vUjRyL09XZXp4NTRoMFZhUCtZ?=
- =?utf-8?B?bkVoOUJIZWlUKzJuU1dwVHlkNWpSdzJHSVYxQTJGZHJ0dm5BaEp3NndrVUVK?=
- =?utf-8?B?RWE0RWtSd0hJUjJYWW81bFkwajNYSko2MVZtd2Mxd2hFU0w0VTRhWE1ES0pN?=
- =?utf-8?B?MDBmYjEzN0JxN1dhT256VDUwbk9IZlU3TENxNzFIaWVnTkdyZ3BrVndXV0Uz?=
- =?utf-8?B?byswZjQ2d3J5WHRxa3I4MExFQzd3Q0hmMGxpOEMvYkRUS0N5VlRCNEpIVjBG?=
- =?utf-8?B?N21ML2kzbzl0NGxicDgrSnRVK3g3WkJWd2NpUngxQUhDWExueFZWQTNnWFZY?=
- =?utf-8?B?QVVPZzRYU3pRRUIvSC8yekdyaUtXVEcraEx1aTM0V2ZPa1I5eXFmTXJySXhq?=
- =?utf-8?B?d2dmczJrT09VQ2tUcVVDWlpuY0wrWEVqSEJQNjdKZm1qcHhiZVJET2xySmlw?=
- =?utf-8?B?VXA0eFFxK3ZNMCtiakdJbThrbXc3LzFYWi9ISGVaVUNoNnFrdjJuaEhrK21w?=
- =?utf-8?Q?fJEc=3D?=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18C3D85C7D
+	for <linux-gpio@vger.kernel.org>; Thu,  1 Feb 2024 07:57:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.169
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1706774278; cv=none; b=Y9VS51pND6vLCwQboxnHn1TOb3EBVb4rUxM1zpeJsSz45uluAJ3YX7Q6Uj46fbdteHllkc9s7hckookx7zOEonGWYvCXqODy9eMdJWTZde41Lw7Nnhh4tAnVSmfN/hFnWbGohNhf+Cxc3dS9s38HMqQUfXj5cFfcIhNcV19QEQc=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1706774278; c=relaxed/simple;
+	bh=zHgx1yxPEtJn6I5ZMjqwRi/auLuBLlrirM0lCJZ4obU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=AfRaym1Y5/ES776BKOog5c8liuocduo7plhMXHX1ZfBMHIzl7pXdP4LpO7kxig3C+qXKXk5KpnzB7xslsVsKBK/uTGvH9uMkzPzOwZ80PEEtrvMbjayYLiTVuH1x0r4Hvssb2m9aBgEhoGP5J6tmjCnr0DDcC/VK8F5T07CA7pQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=JWruZrxB; arc=none smtp.client-ip=209.85.221.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f169.google.com with SMTP id 71dfb90a1353d-4bfffed970bso138964e0c.3
+        for <linux-gpio@vger.kernel.org>; Wed, 31 Jan 2024 23:57:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706774275; x=1707379075; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IOd+Adh4tMnpIBR501+yaSVTpr2C2rl5IPddMYlorWw=;
+        b=JWruZrxBZeA9MRLQiFMeaa1KRiAmqDox6ZPonicquYK96F/cBLC/duL+GVje21+JF9
+         KNM/68HvzZ3fTMkbIbiFKK2Jwyq6BCtAdM1HbS7/X7zRa/zkDnGR64LiqFD/0+F2FTU0
+         QRy6fj6DPh+52TgOtAkyYcZvBIdYNo79AsMJrqXTzUAodMPixr7za1Bx8SAI3FadV8CT
+         ZjM1EGqUDGdvPM+WwrD2j2Df2B3yaACKHiNJU38Du/7At7Y9k1qhr8rd7arCrkxwZRz/
+         ZYZZ4rnULbgkoXKgth+IiXctKq3ZK+uz/M9PWuQXk/Rpg7+whX9FhWB2lO+QYssPLz4W
+         FfCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706774275; x=1707379075;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=IOd+Adh4tMnpIBR501+yaSVTpr2C2rl5IPddMYlorWw=;
+        b=hMtJ9KdOWgeO53NF0CMD749FFIr8NRxtmJ/z6Y/ZXOIsorpsUm+yy+hyp2fa3F0uw5
+         OYLQFry7E+6mzlcpWgzoJc2lZDxogszhTJc9ekv26K5cT5/r8VmSmwmbmMcsm4CKVSEM
+         5R83RsXPOhxnTRmUh8xaGj84Qda2iwUqWmLaGfbgTp5tnhK3dkamoRe0QCsqlWXQ0skf
+         FqOqZqjWRyI4BlTy0kFvfssfN6WLg+BYZIwditf4LdgafFzNaP2flosn+F8Y/4L+f9XL
+         axt9yMxUdk7L11KgNThPhoF2YDuc2kEaDA6caNgOeSKRrqylreevA6BmP5sOMgD3iQ06
+         RVJw==
+X-Gm-Message-State: AOJu0Yw5UOzFm5qx7/qhnzDI2lGoJmJLupWnutXPzOpngOysSKK2fD7k
+	0jojv45wHGJeuUQg8ILLMa9hciLBQiX3vGqYAOe3rLU70IywaWZScq3mTwkcWLCXNOMJ9pRI9sO
+	Mb5YNHsUzTlvBQ68FznjL0StGWVeHBjk+LTJ0FA==
+X-Google-Smtp-Source: AGHT+IHBEAlHhTj2gP6eGsaWQjwt4taQ94hYG+agdoXKRJW3+84Zo2FhNUORU0nJaxJzcAij0bWpM0hK7sfu3CDKYW4=
+X-Received: by 2002:a05:6122:280b:b0:4b6:bfae:3285 with SMTP id
+ en11-20020a056122280b00b004b6bfae3285mr3894123vkb.4.1706774274886; Wed, 31
+ Jan 2024 23:57:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 152d5977-d42d-4acf-112e-08dc22f56721
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Feb 2024 07:14:17.1836
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wINOwaan4PZ6ySY0NECwrMvipOr51prWvyxEmgQjVwj2+pBbAGFp+uvhLvrkocLkCmmRUE9m23hqWpAKInL4SA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU0PR04MB9323
+References: <20240130124828.14678-21-brgl@bgdev.pl> <3ab71aad-757f-4d5e-ac09-fdad75238fa3@moroto.mountain>
+In-Reply-To: <3ab71aad-757f-4d5e-ac09-fdad75238fa3@moroto.mountain>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 1 Feb 2024 08:57:44 +0100
+Message-ID: <CAMRc=Mdi3DqHsri7Da3xPisC1FyOOwZoYra75qhAWvuneD16Vw@mail.gmail.com>
+Subject: Re: [PATCH 20/22] gpio: protect the pointer to gpio_chip in
+ gpio_device with SRCU
+To: Dan Carpenter <dan.carpenter@linaro.org>
+Cc: oe-kbuild@lists.linux.dev, Linus Walleij <linus.walleij@linaro.org>, 
+	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Wolfram Sang <wsa-dev@sang-engineering.com>, lkp@intel.com, oe-kbuild-all@lists.linux.dev, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDAvNl0gZmlybXdhcmU6IGFybV9zY21pOiBBZGQgU0NN
-SSB2My4yIHBpbmNvbnRyb2wNCj4gcHJvdG9jb2wgYmFzaWMgc3VwcG9ydA0KPiANCj4gT24gTW9u
-LCBKYW4gMjksIDIwMjQgYXQgMTozN+KAr1BNIFBlbmcgRmFuIDxwZW5nLmZhbkBvc3MubnhwLmNv
-bT4gd3JvdGU6DQo+IA0KPiA+IEFuZCBmb3IgaS5NWDk1IE9FTSBleHRlbnN0aW9uLCBkbyB5b3Ug
-aGF2ZSBhbnkgc3VnZ2VzdGlvbnM/DQo+ID4gSSBoYXZlIHR3byBwb2ludHM6DQo+ID4gMS4gdXNl
-IHZlbmRvciBjb21wYXRpYmxlLiBUaGlzIHdvdWxkIGFsc28gYmVuZWZpdCB3aGVuIHN1cHBvcnRp
-bmcNCj4gPiB2ZW5kb3IgcHJvdG9jb2wuDQo+ID4gMi4gSW50cm9kdWNlIGEgcHJvcGVydHkgc2F5
-aW5nIHN1cHBvcnRpbmctZ2VuZXJpYy1waW5jb25mDQo+ID4NCj4gPiBIb3cgZG8geW91IHRoaW5r
-Pw0KPiANCj4gV2hpbGUgSSBkb24ndCBrbm93IGhvdyBPRU0gZXh0ZW5zaW9ucyB0byBTQ01JIHdl
-cmUgZGVzaWduZWQsIHRoZSBwaW4NCj4gY29udHJvbCBzdWJzeXN0ZW0gaGFzIHRoZSBwaGlsb3Nv
-cGh5IHRoYXQgZXh0ZW5zaW9ucyBhcmUgZm9yIG1pbm9yIGZyaW5nZQ0KPiBzdHVmZiwgc3VjaCBh
-cyBhIHBpbiBjb25maWcgb3B0aW9uIHRoYXQgbm8gb3RoZXIgc2lsaWNvbiBpcyB1c2luZyBhbmQg
-dGh1cyBoYXZlDQo+IG5vIHVzZSBmb3IgYW55b25lIGVsc2UuIFdlbGwgdGhhdCBpcyBhY3R1YWxs
-eSBhbGwgdGhlIGN1c3RvbSBleHRlbnNpb25zIHdlDQo+IGhhdmUuDQo+IChUaGlzIG5vdGlvbiBp
-cyBldmVuIGNhcnJpZWQgb3ZlciB0byBTQ01JIHBpbmN0cmwuKQ0KPiANCj4gVGhlIGkuTVg5NSBP
-RU0gZXh0ZW5zaW9uIGlzIHJlYWxseSBvZGQgdG8gbWUsIGl0IGxvb2tzIGxpa2UgYQ0KPiByZWlt
-cGxlbWVudGF0aW9uIG9mIHRoZSBjb3JlIGFzcGVjdHMgb2YgU0NNSSBwaW4gY29udHJvbCwgYW5k
-IGxvb2tzIG11Y2gNCj4gbW9yZSBsaWtlIHRoZSBvbGQgaS5NWCBkcml2ZXJzIHRoYW4gbGlrZSB0
-aGUgU0NNSSBkcml2ZXIuDQoNCmkuTVggU0NNSSBwaW4gcHJvdG9jb2wgY29uZiBzZXR0aW5ncyBm
-b2xsb3dzIG5vbi1TQ01JIHBpbiBjb25mIHNldHRpbmdzLg0KDQo+IA0KPiBCdXQgSSBzdXJlIGNh
-bm5vdCBzcGVhayBvZiB3aGF0IGlzIGFsbG93ZWQgaW4gU0NNSSBPRU0gZXh0ZW5zaW9ucyBvciBu
-b3QuDQoNCisgU1BFQyBvd25lciwgU291dmlrLiBBbnkgY29tbWVudHM/DQoNClRoYW5rcywNClBl
-bmcuDQoNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQo=
+On Thu, Feb 1, 2024 at 6:03=E2=80=AFAM Dan Carpenter <dan.carpenter@linaro.=
+org> wrote:
+>
+> Hi Bartosz,
+>
+> kernel test robot noticed the following build warnings:
+>
+> https://git-scm.com/docs/git-format-patch#_base_tree_information]
+>
+> url:    https://github.com/intel-lab-lkp/linux/commits/Bartosz-Golaszewsk=
+i/gpio-protect-the-list-of-GPIO-devices-with-SRCU/20240130-205537
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gp=
+io/for-next
+> patch link:    https://lore.kernel.org/r/20240130124828.14678-21-brgl%40b=
+gdev.pl
+> patch subject: [PATCH 20/22] gpio: protect the pointer to gpio_chip in gp=
+io_device with SRCU
+> config: i386-randconfig-141-20240131 (https://download.01.org/0day-ci/arc=
+hive/20240201/202402010641.idtEaO24-lkp@intel.com/config)
+> compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009=
+708b4367171ccdbf4b5905cb6a803753fe18)
+>
+> If you fix the issue in a separate patch/commit (i.e. not just a new vers=
+ion of
+> the same patch/commit), kindly add following tags
+> | Reported-by: kernel test robot <lkp@intel.com>
+> | Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
+> | Closes: https://lore.kernel.org/r/202402010641.idtEaO24-lkp@intel.com/
+>
+> New smatch warnings:
+> drivers/gpio/gpiolib.c:4776 gpiolib_dbg_show() error: we previously assum=
+ed 'gc' could be null (see line 4773)
+>
+>
+> vim +/gc +4776 drivers/gpio/gpiolib.c
+>
+> fdeb8e1547cb9d Linus Walleij       2016-02-10  4762  static void gpiolib_=
+dbg_show(struct seq_file *s, struct gpio_device *gdev)
+> d2876d08d86f22 David Brownell      2008-02-04  4763  {
+> 0338f6a6fb659f Bartosz Golaszewski 2023-12-21  4764     bool active_low, =
+is_irq, is_out;
+> 0338f6a6fb659f Bartosz Golaszewski 2023-12-21  4765     unsigned int gpio=
+ =3D gdev->base;
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4766     struct gpio_desc =
+*desc;
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4767     struct gpio_chip =
+*gc;
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4768     int value;
+> d2876d08d86f22 David Brownell      2008-02-04  4769
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4770     guard(srcu)(&gdev=
+->srcu);
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4771
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4772     gc =3D rcu_derefe=
+rence(gdev->chip);
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30 @4773     if (!gc)
+>                                                             ^^^
+> The patch adds a NULL check
+>
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4774             seq_puts(=
+s, "Underlying GPIO chip is gone\n");
+> 2796d5332f8ac8 Bartosz Golaszewski 2024-01-30  4775
+> 3de69ae1c407da Andy Shevchenko     2022-04-08 @4776     for_each_gpio_des=
+c(gc, desc) {
+>                                                                          =
+  ^^
+> But this dereference isn't checked...  Probably it should return after
+> the seq_puts().
+>
+
+Of course it should. Thanks. I fixed it for v2.
+
+Bart
+
+> bedc56b1695b27 Bartosz Golaszewski 2024-01-30  4777             guard(src=
+u)(&desc->srcu);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4778             if (test_=
+bit(FLAG_REQUESTED, &desc->flags)) {
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4779                     g=
+piod_get_direction(desc);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4780                     i=
+s_out =3D test_bit(FLAG_IS_OUT, &desc->flags);
+> 234c52097ce416 Andy Shevchenko     2022-04-08  4781                     v=
+alue =3D gpio_chip_get_value(gc, desc);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4782                     i=
+s_irq =3D test_bit(FLAG_USED_AS_IRQ, &desc->flags);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4783                     a=
+ctive_low =3D test_bit(FLAG_ACTIVE_LOW, &desc->flags);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4784                     s=
+eq_printf(s, " gpio-%-3d (%-20.20s|%-20.20s) %s %s %s%s\n",
+> 32648f473c7f46 Bartosz Golaszewski 2024-01-30  4785                      =
+          gpio, desc->name ?: "", gpiod_get_label(desc),
+> d2876d08d86f22 David Brownell      2008-02-04  4786                      =
+          is_out ? "out" : "in ",
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4787                      =
+          value >=3D 0 ? (value ? "hi" : "lo") : "?  ",
+> 90fd227029a25b Linus Walleij       2018-10-01  4788                      =
+          is_irq ? "IRQ " : "",
+> 90fd227029a25b Linus Walleij       2018-10-01  4789                      =
+          active_low ? "ACTIVE LOW" : "");
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4790             } else if=
+ (desc->name) {
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4791                     s=
+eq_printf(s, " gpio-%-3d (%-20.20s)\n", gpio, desc->name);
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4792             }
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4793
+> 3de69ae1c407da Andy Shevchenko     2022-04-08  4794             gpio++;
+> d2876d08d86f22 David Brownell      2008-02-04  4795     }
+> d2876d08d86f22 David Brownell      2008-02-04  4796  }
+>
+> --
+> 0-DAY CI Kernel Test Service
+> https://github.com/intel/lkp-tests/wiki
+>
 
