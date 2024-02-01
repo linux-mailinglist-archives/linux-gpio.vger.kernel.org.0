@@ -1,63 +1,55 @@
-Return-Path: <linux-gpio+bounces-2886-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2887-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 687668461C0
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 21:06:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A29058461F2
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 21:28:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C15BB21EAA
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 20:06:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3ACE31F25432
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 20:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62D7285628;
-	Thu,  1 Feb 2024 20:06:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB8A285638;
+	Thu,  1 Feb 2024 20:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IIJMkO1J"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06F874176B;
-	Thu,  1 Feb 2024 20:06:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A184741757;
+	Thu,  1 Feb 2024 20:28:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706817967; cv=none; b=Ra4tfbIn2BMLse8xrthG6hQhmsvSNug6g8OuPEQx/ICbQst42fB1fNB2JEviy4F41hQi7FAuJvj7FCdnFz1K2E5QoiybqVNZ+Yd1dG8chxZIWosKNLZ5WyPFso0cMOQtDygoDSQe/PThYNue+6CoMUwMHxn4HVTLHyMt0OZHy9A=
+	t=1706819286; cv=none; b=VyNoBmITVGcKfu7sO8ZNGr/Hv9uzPWZll6LT5YEbQmxq6CIKH8cmYuS715XJTEPk+eNgE/uCuNIpn//CWfLUcMcaRflyqmaneyJiC7hyTzT2UIVPMlvhz6vFYZAuw8YrLbpjHphw/ecUFNpbRZaKA/5jscCzWSwUyuVQJz1GNp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706817967; c=relaxed/simple;
-	bh=gkH8/pxKYHSTaCK13vrWJcmjWEK0Tt9tmbvF+BfSfLw=;
+	s=arc-20240116; t=1706819286; c=relaxed/simple;
+	bh=6tQl1zhGsp0AgvX70rMJRGvBvIqwnJBiyuHx0oqxYaE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tMS9BOOjkUq0OtikXeBiMolfkOYpUDGAK6WMe8LcOHKsNsphDOOXqLFgycnyLxta+/56BnvfGZP/amQ20XE/R4sAni+otE8BUnW5N2CExJVH89wf7U/BT66zCQYNwYJL8TU1lM08l0AON1FtlngjYXB+DCVpYGNUHPYdRmJoypE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-3bbc649c275so794329b6e.0;
-        Thu, 01 Feb 2024 12:06:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706817963; x=1707422763;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rW2ZDwtdk3kDeJBYbJGjBGq8DnNTgVshHb5YupyHpEo=;
-        b=iOwDAh4IP8nsFtl5RywPoX3dtUPjXL+u93ssiqcGmMI73gdM8dVXyIhSuk19xQaoeI
-         F67n316Jvx7sfC4FsvlzN7c5xc5leMKB+D5B0uq3t6F78fnNwoPJCyI4mgJ2x0Qqoooq
-         TLMnq1+raz+aYCcIPYL2TkKkfw1yj2RFCL5KgguiL5HdBFgivBxZauUUg4Fs/SRFqtOJ
-         aFa3UWHzrsqIYS/dehGmLU9oAdA66JlB9ubD1fi/9jSkYUJWmQgN/DV2zNU69XAaK+CA
-         fcvqBrpYGJyWcQxQE3MRWgq8BjSoPjEQ+GJerUzrUbkBvn9C5SBqLLw8aX7b9sSuBdHA
-         0x9Q==
-X-Gm-Message-State: AOJu0YyeHr8BcE/OOMh2dhZxOqA0YqO9ZU83weZZGh3dVzkaseNOa5Lf
-	gHYxGo+RpPVeizRyxSY2BDj1By+PhaU5nNwFjR/DYbFJmQAEsKyKIRw5l/ycoIU=
-X-Google-Smtp-Source: AGHT+IGPYWyOZXU6pjRuWu7Y8OLEFwEQsafle/0m1Yib5u4+HtJQxv1ndATrEmcdxgZIzjieSp3Kug==
-X-Received: by 2002:a05:6808:3990:b0:3bf:bbda:9db9 with SMTP id gq16-20020a056808399000b003bfbbda9db9mr332790oib.15.1706817963118;
-        Thu, 01 Feb 2024 12:06:03 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCXTgb8PWYor/xrkzQ82rqj1tAoKuG9KZ4ujo+eeiAA2SiYo3zOnGYjz5QbctNS9rdUqFMPbducf3tCO7x5WwVfAcer4JUvTJZ5t2Ez4Nz330lpiBbJJ42WyJlmqKhHBC0sclCaQO+1Ev5l2aeDhrN5vlZyd9HiZ8A0/PpedZa0rLRGmjyc=
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
-        by smtp.gmail.com with ESMTPSA id n23-20020a25d617000000b00dc6e30b77b3sm59093ybg.55.2024.02.01.12.06.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 01 Feb 2024 12:06:02 -0800 (PST)
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso1050906276.1;
-        Thu, 01 Feb 2024 12:06:02 -0800 (PST)
-X-Received: by 2002:a25:9346:0:b0:dc2:2979:fcd5 with SMTP id
- g6-20020a259346000000b00dc22979fcd5mr118750ybo.28.1706817962160; Thu, 01 Feb
- 2024 12:06:02 -0800 (PST)
+	 To:Cc:Content-Type; b=igXqn8WA/Pwg/NN3vFYIUuNKRV+jz+yz4I/DD6l4eaDyok6oTSDOFbIpPm6f4xPI0ZacQmHYMIKJJmYdxjOOGkcnQujG1s9WbTRdW7FF8cHEom1xrn+9w8UO/4ypEaQkjZzOUfi6WZfj3gCBzgmh0DvNRIIflYcCYG89RvW42Qo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IIJMkO1J; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F2DAC43390;
+	Thu,  1 Feb 2024 20:28:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706819286;
+	bh=6tQl1zhGsp0AgvX70rMJRGvBvIqwnJBiyuHx0oqxYaE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=IIJMkO1J3qdAPjFhp9NFki9KSlBkApSyUSBg45R/fcuaWq73OzP1TH9B8K5FUawqf
+	 Rkzv2wgOCzW3QvLifgZbRXygzzKOpSksvllb1VuIiRz7/QFL+R2yjPcrKsWJaENzaT
+	 nHRtCzBCuEUwPKjaNzN1clTWw1SQE5Ae7GwK0YGjwaw+ehqdacgDw2Vmz6xWvKxdC6
+	 lygVypeBrNqxw2bvfJdNcjQjW6lgS2d9TRP5x8sXrW4tK5pQ16wM+a55D9uBJE9f2d
+	 mRztGU5U4Y5ccLcYw0NKuaNtRaMTkDe2aokda0J7tBPo8UaSzXm8scxRpsJgv2CiIT
+	 T4KPV34zXQKYw==
+Received: by mail-lf1-f52.google.com with SMTP id 2adb3069b0e04-51032e62171so1833015e87.3;
+        Thu, 01 Feb 2024 12:28:05 -0800 (PST)
+X-Gm-Message-State: AOJu0YxsYbzpqZVxV5wIw+jLSXewPe0jJe3PwYEgNKA1pcB9BTrg/g2r
+	t4hoZlvgbwp/IzN7YWy+d0N4JTFYL+dr82Kbiy8x845LzjSvSzxqjlexMmycxUjZPE83bSpaB5B
+	4CTa10vEUmTFNGD2AYSpenm2BJw==
+X-Google-Smtp-Source: AGHT+IGubbR1peMhLtT66Pzyv9QrdRtRk+md5AJfiADamBjLRFZ5ehOkkmE54chgLrptc6wpZNg4V4OLUaNoG8q4XTE=
+X-Received: by 2002:a19:f81a:0:b0:511:2eba:fc5d with SMTP id
+ a26-20020a19f81a000000b005112ebafc5dmr41863lff.34.1706819284230; Thu, 01 Feb
+ 2024 12:28:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,86 +57,88 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <cover.1706802756.git.geert+renesas@glider.be> <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
- <170680870030.996964.6959185693674664805.robh@kernel.org>
-In-Reply-To: <170680870030.996964.6959185693674664805.robh@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 1 Feb 2024 21:05:49 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWfovGkvrk4coitFgDTuHS_fQcvFb8kJj-1AWtUgkAYgg@mail.gmail.com>
-Message-ID: <CAMuHMdWfovGkvrk4coitFgDTuHS_fQcvFb8kJj-1AWtUgkAYgg@mail.gmail.com>
+ <170680870030.996964.6959185693674664805.robh@kernel.org> <CAMuHMdWfovGkvrk4coitFgDTuHS_fQcvFb8kJj-1AWtUgkAYgg@mail.gmail.com>
+In-Reply-To: <CAMuHMdWfovGkvrk4coitFgDTuHS_fQcvFb8kJj-1AWtUgkAYgg@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 1 Feb 2024 14:27:51 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqKhoBE2fMcB37wsxtXa+BdbeTRDfD=jpRTgAJ8nBR1foQ@mail.gmail.com>
+Message-ID: <CAL_JsqKhoBE2fMcB37wsxtXa+BdbeTRDfD=jpRTgAJ8nBR1foQ@mail.gmail.com>
 Subject: Re: [PATCH 1/2] regulator: dt-bindings: gpio-regulator: Fix
  {gpios-,}states limits
-To: Rob Herring <robh@kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
 Cc: Marek Szyprowski <m.szyprowski@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, 
-	Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
 	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hi Rob The Robot ;-)
-
-On Thu, Feb 1, 2024 at 6:31=E2=80=AFPM Rob Herring <robh@kernel.org> wrote:
-> On Thu, 01 Feb 2024 16:58:41 +0100, Geert Uytterhoeven wrote:
-> > make dtbs_check:
-> >
-> >     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vcc=
-q-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states' w=
-ere unexpected)
-> >           from schema $id: http://devicetree.org/schemas/regulator/gpio=
--regulator.yaml#
-> >
-> > The number of items in "gpios-states" must match the number of items in
-> > "gpios", so their limits should be identical.
-> >
-> > The number of items in "states" must lie within the range from zero up
-> > to 2^{number of gpios}.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > The second issue did not cause any dtbs_check errors?
-> > ---
-> >  .../devicetree/bindings/regulator/gpio-regulator.yaml         | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> >
+On Thu, Feb 1, 2024 at 2:06=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
 >
-> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check'
-> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> Hi Rob The Robot ;-)
+
+:)
+
+> On Thu, Feb 1, 2024 at 6:31=E2=80=AFPM Rob Herring <robh@kernel.org> wrot=
+e:
+> > On Thu, 01 Feb 2024 16:58:41 +0100, Geert Uytterhoeven wrote:
+> > > make dtbs_check:
+> > >
+> > >     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-v=
+ccq-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states'=
+ were unexpected)
+> > >           from schema $id: http://devicetree.org/schemas/regulator/gp=
+io-regulator.yaml#
+> > >
+> > > The number of items in "gpios-states" must match the number of items =
+in
+> > > "gpios", so their limits should be identical.
+> > >
+> > > The number of items in "states" must lie within the range from zero u=
+p
+> > > to 2^{number of gpios}.
+> > >
+> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > > ---
+> > > The second issue did not cause any dtbs_check errors?
+> > > ---
+> > >  .../devicetree/bindings/regulator/gpio-regulator.yaml         | 4 ++=
++-
+> > >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > >
+> >
+> > My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_chec=
+k'
+> > on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> >
+> > yamllint warnings/errors:
+> >
+> > dtschema/dtc warnings/errors:
+> > /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings=
+/regulator/gpio-regulator.yaml: properties:states:minItems: 0 is less than =
+the minimum of 1
+> >         hint: An array property has at least 1 item or is not present
+> >         from schema $id: http://devicetree.org/meta-schemas/keywords.ya=
+ml#
 >
-> yamllint warnings/errors:
+> Oops, I changed this from 1 to 0 _after_ running dt_binding_check, so
+> I'm totally to blame for this.
 >
-> dtschema/dtc warnings/errors:
-> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/r=
-egulator/gpio-regulator.yaml: properties:states:minItems: 0 is less than th=
-e minimum of 1
->         hint: An array property has at least 1 item or is not present
->         from schema $id: http://devicetree.org/meta-schemas/keywords.yaml=
-#
+> The description says:
+>
+>     If there are no states in the "states" array, use a fixed regulator i=
+nstead.
+>
+> which I misinterpreted as "states can be empty", especially as the
+> driver does seem to support that?
+>
+> I guess 1 is the proper minimum?
 
-Oops, I changed this from 1 to 0 _after_ running dt_binding_check, so
-I'm totally to blame for this.
+Yes. While JSON can for example have "foo: []", that's not really
+defined for DT given we store no type info. An empty property is a
+boolean.
 
-The description says:
-
-    If there are no states in the "states" array, use a fixed regulator ins=
-tead.
-
-which I misinterpreted as "states can be empty", especially as the
-driver does seem to support that?
-
-I guess 1 is the proper minimum?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Rob
 
