@@ -1,131 +1,129 @@
-Return-Path: <linux-gpio+bounces-2871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D48BB84562D
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 12:24:25 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A970B8456C9
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 13:04:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 115501C22266
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 11:24:25 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5DEE41F26BBD
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 12:04:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4395915CD6C;
-	Thu,  1 Feb 2024 11:24:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D5515F30D;
+	Thu,  1 Feb 2024 12:03:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aJkbIrqw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DEDA15CD52;
-	Thu,  1 Feb 2024 11:24:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 405FA15DBDB;
+	Thu,  1 Feb 2024 12:03:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706786657; cv=none; b=jzltFvIyEjrfPg7wZ1UvX/060Rrfox0IuC/ntZ07/Af1nuis4lYRKzzY77dZ82Yb/wwVDMxqshk8bHML1iA3LDErVwL7skpTumgmNwMRsUpHn54Ddrdyzxv3hsIh56CofX7EFwDD+okx0MDwXxsLmosWmThJHYpsS9Qb7ty643s=
+	t=1706789012; cv=none; b=M9uLDjHtrk1viMbmhn8v2hJ98gPpfSSa3ViLhuPPrGi3U2zg3BjvzzAI8Egl8ZPwvVJSTTWEmojKZ5sTkrYnYmdBwGBu3NoG8YWAw725E2r9OV5MnZzD2zpa/G/Ws7oXzT6vYMRvEeQuQDIi1gBLn4/Q+HqS4M3Ur+A1ip7JFm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706786657; c=relaxed/simple;
-	bh=uZUoJTXUOtGTmSyrM1RM4G9rWHINL+HQGMIgwpk5Gdk=;
+	s=arc-20240116; t=1706789012; c=relaxed/simple;
+	bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=B+CwVJY5XUuG/bHGjcvtw7LceCq7zqI6dgi30ALwO8xt43Xjm+ed68fmHGjuNHe/V1LyZUtJYnnAypK7FVI1cyYywUYKJPxobMG9ZMLNjeQINGooqb15RIX4h/TvgZIQHt0XVzsDLDiU3wUUb1h2bX2Uag1XLETY3RRJmyT2nUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9273FDA7;
-	Thu,  1 Feb 2024 03:24:56 -0800 (PST)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D0C5F3F762;
-	Thu,  1 Feb 2024 03:19:41 -0800 (PST)
-Date: Thu, 1 Feb 2024 11:19:30 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	"souvik.chakravarty@arm.com" <Souvik.Chakravarty@arm.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <Zbt-QkWhz5d9P-v6@pluto>
-References: <20240121-pinctrl-scmi-v3-0-8d94ba79dca8@nxp.com>
- <f88d07ef-83b2-4d14-976a-6dbbd71e036f@oss.nxp.com>
- <CACRpkdYV=qYQ9qDUWYTLDAV1niay30gYH5S=zjfi31GpeY5o-A@mail.gmail.com>
- <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jghUdXMq5apFU1KJdjOSXrIvvLRSOVBoDBEC3lk79g/2DpdQ1lAq8tV5aErm8Bfo/c4AmzZnIIPhFyf0zSLPRpPEnfN3eFvIWptHU7R4sKpCPN8wNi0E9kFRJwBcQ+f3J3UFq/2W5QYRDIm5ag+ntIMCXf2k1uLVDA8+CwsNSyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aJkbIrqw; arc=none smtp.client-ip=192.198.163.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1706789010; x=1738325010;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2SUmf9R/YYigzJmyWuD8soVbsph5ihQXY0L6ZAEW93E=;
+  b=aJkbIrqwVXj/FiKd2A1sE6hQ73o2PHm33kmqbC8gZ9xvZTzSmISXnJql
+   dAKFnJoqVHfb0vD+Pn4CXeKWt3Tv6Rlv9PPJ6Kl9WzaGS7dXiR1QAxwxx
+   JaCS4Hqe98aY1HxqVhdnkNhaggyrnclJJer9RuM1MVa7NHSeW+QOdCTUw
+   iN57H9zyAtNkrRJ5l0cocTNyAcxl/CGa2t6DQxoLNxHIksgpvT8Gxlax3
+   TlkymFZ5IlDRMCOWZzFtNb6jIBhHCJU/+HUYATty/+O6/kprKYl/el6Hj
+   la8/xhSebEY93Ru3WCgFQvhWN1gtPK+uMxob799hA6UC7358oF4B0lDe4
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="10630044"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="10630044"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10969"; a="912106710"
+X-IronPort-AV: E=Sophos;i="6.05,234,1701158400"; 
+   d="scan'208";a="912106710"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by orsmga004.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Feb 2024 04:03:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rVVMt-00000000os0-1uN7;
+	Thu, 01 Feb 2024 13:36:31 +0200
+Date: Thu, 1 Feb 2024 13:36:31 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Cc: linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
+	radim.pavlik@tbs-biometrics.com, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pinctrl: mcp23s08: Check only GPIOs which have
+ interrupts enabled
+Message-ID: <ZbuCP4rN_DEsH-Un@smile.fi.intel.com>
+References: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <DU0PR04MB9417A9074C5DC49AE689E65288432@DU0PR04MB9417.eurprd04.prod.outlook.com>
+In-Reply-To: <20240130073710.10110-1-arturas.moskvinas@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 01, 2024 at 07:14:17AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH v3 0/6] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> > protocol basic support
-> > 
+On Tue, Jan 30, 2024 at 09:37:10AM +0200, Arturas Moskvinas wrote:
+> GPINTEN register contains information about GPIOs with enabled
+> interrupts no need to check other GPIOs for changes.
 
-Hi Peng,
+...
 
-> > On Mon, Jan 29, 2024 at 1:37 PM Peng Fan <peng.fan@oss.nxp.com> wrote:
-> > 
-> > > And for i.MX95 OEM extenstion, do you have any suggestions?
-> > > I have two points:
-> > > 1. use vendor compatible. This would also benefit when supporting
-> > > vendor protocol.
-> > > 2. Introduce a property saying supporting-generic-pinconf
-> > >
-> > > How do you think?
-> > 
-> > While I don't know how OEM extensions to SCMI were designed, the pin
-> > control subsystem has the philosophy that extensions are for minor fringe
-> > stuff, such as a pin config option that no other silicon is using and thus have
-> > no use for anyone else. Well that is actually all the custom extensions we
-> > have.
-> > (This notion is even carried over to SCMI pinctrl.)
-> > 
-> > The i.MX95 OEM extension is really odd to me, it looks like a
-> > reimplementation of the core aspects of SCMI pin control, and looks much
-> > more like the old i.MX drivers than like the SCMI driver.
-> 
-> i.MX SCMI pin protocol conf settings follows non-SCMI pin conf settings.
-> 
+> +	if (mcp_read(mcp, MCP_GPINTEN, &gpinten))
+> +		goto unlock;
 
-It is not just a matter of using custom SCMI OEM types, it is the whole
-layout/definitions of the i.MX pin/groups/funcs DT bindings that deviates from
-the generic DT bindings layout as handled and expected by the Linux Pinctrl
-subsystem (AFAIU), while the SCMI Pinctrl driver as it stands in this series,
-was conceived, designed and implemented originally by Oleksii to just use the
-generic existing Pinctrl DT bindings; as a consequence, in your i.MX extensions,
-you had to add a dedicated i.MX DT parser to interpret the protocol@19 DT snippet
-in a completely different way, to try to stick your custom solution on top of
-the generic one.
+> +	enabled_interrupts = gpinten;
 
-Thanks,
-Cristian
+Move this line to be...
 
-> > 
-> > But I sure cannot speak of what is allowed in SCMI OEM extensions or not.
-> 
-> + SPEC owner, Souvik. Any comments?
-> 
-> Thanks,
-> Peng.
-> 
-> > 
-> > Yours,
-> > Linus Walleij
+...
+
+> -	for (i = 0; i < mcp->chip.ngpio; i++) {
+> -		/* We must check all of the inputs on the chip,
+> -		 * otherwise we may not notice a change on >=2 pins.
+
+...just here (w/o any blank line in between).
+
+> +	for_each_set_bit(i, &enabled_interrupts, mcp->chip.ngpio) {
+
+...
+
+> +		/* We must check all of the inputs with enabled interrupts
+> +		 * on the chip, otherwise we may not notice a change
+> +		 * on >=2 pins.
+
+Missing space after =. But better to spell in proper English, i.e.
+"...great than or equal to 2 pins."
+
+>  		 *
+>  		 * On at least the mcp23s17, INTCAP is only updated
+
+/*
+ * Use proper multi-line
+ * comment style as depicted
+ * in this example.
+ */
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
