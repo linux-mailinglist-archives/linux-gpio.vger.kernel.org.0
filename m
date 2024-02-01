@@ -1,116 +1,118 @@
-Return-Path: <linux-gpio+bounces-2883-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2884-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7D343845E90
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 18:32:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEA86845FA7
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 19:15:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D8AA9B3111A
-	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 17:32:13 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5E6A41F2C766
+	for <lists+linux-gpio@lfdr.de>; Thu,  1 Feb 2024 18:15:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10D211649D1;
-	Thu,  1 Feb 2024 17:31:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDFFB7C6E6;
+	Thu,  1 Feb 2024 18:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f68EvTjv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lOX6dULC"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDE8B63CAF;
-	Thu,  1 Feb 2024 17:31:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A29AD74281;
+	Thu,  1 Feb 2024 18:13:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706808702; cv=none; b=RbZVOjtgviVRyOSH6SA2HcjnTuzFxPH9uehYhYFLlf32uvstww7EtgO188JtzLRurlzSl6NHiOmGKSvwKowql7c8g1bb4lEpps0fshtDk/EPqjrU90bGwEtJ7DXo0LzFFr/EtB8l4RhVOhMLsvW1Sk4cBdaKhmEkdmhgTUmfiKE=
+	t=1706811211; cv=none; b=Q8lBIGSpmPc5gWpw+nY2jaQG3ERVZ62E+obxRLJv81B1vd58nsEgF7AraTXNa6sSyrCDEap+PnFjjODFrxuRFDRYZMUQ1UmFh+XeGHXBus7qAY9m6hUmZqORtKo0EIU0cmvpUpbtdNx8tqC1A0VXy8WVpPxofRnWQG7xuvNKWWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706808702; c=relaxed/simple;
-	bh=WTfAV8E5tolH0Cpe7AFR3fPsSu2YVvD36XVmkg+Huyw=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=VniJFCfBIm3dW+SfdVo9H/eksbMesRL7DgaUOJ5Y5+BIL3bK7P/HCqatOjWCbQAYtxYh37VDCW9k5pbYO4RJTAv04fw1f4IZbCbYnp1qluXMlIeXxEEl78M3I2XQw0zzUvcUuLR5C3O8EcxTZOjSbKItDkDMtMFdxOF38yrNCaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f68EvTjv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C1E6C433F1;
-	Thu,  1 Feb 2024 17:31:42 +0000 (UTC)
+	s=arc-20240116; t=1706811211; c=relaxed/simple;
+	bh=DIvVA7Y1qv9I31Mtzl3bdvI3w9k60qDKC26dLLuvmhk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=d+5rEkkRnmIDc83wlUjgBQhRIma5uCdl+EIzVeNzS9Ted3u0DX1FwTBIlzZdna7MQNW1Bdm/pJuWl6iiwJiPAmIG2E47gJxTHwY+XpmwL3YSrbXFIDykADfNwukq4rTd07gu9pwsOmpVj7TQ8PZyCMKTuEPIkeFcj94ECMSiDV8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lOX6dULC; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26098C433F1;
+	Thu,  1 Feb 2024 18:13:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706808702;
-	bh=WTfAV8E5tolH0Cpe7AFR3fPsSu2YVvD36XVmkg+Huyw=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=f68EvTjvzkRDBiGk/cyjJViHIOhudiBr8virxWTmT3rlcbchaOfPKFGKjSS0z7SNj
-	 Txvcf/9xarLbFTwgWrI0DnP5DuasXVh9q4tjsz2MrBC0/Co9ZKeJE7rRnCCxOBCcr+
-	 us5bNql9Y/LV1wrMdZxGziiQqzFmu+MMXGhjAqqRVsV2Y0p1ZmQM0xPkAkPGqmeiwR
-	 KpU7pYRY8AXXpHIR0CeaV6NghmQy8aFlCASVM78xpuoESWdkNEHQvmZQFTSEgewooC
-	 NhFMI0Z4JLJO1cw2y4rzXCtrPuhQfQ6Iy/YznI+KqrCKSRpR0bWI6+NFWAd1coZI8E
-	 tXvexldZe2Svg==
-Date: Thu, 01 Feb 2024 11:31:41 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=k20201202; t=1706811211;
+	bh=DIvVA7Y1qv9I31Mtzl3bdvI3w9k60qDKC26dLLuvmhk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lOX6dULC/321IeZkeKWHpTv26SktGyKgBdfz3FOKqOenD0pMfechaHOuMMRXkncW+
+	 wgH5rgBgeUsjoF+9/ZZ8KB2/1KtRFbZb5+j/3mLJ2b9dSEWM7lMqea5EB09O1sLsLt
+	 V3OpjvQVhddvkKLqW/FaIaVkE7eBN///7FEg91SzUSQgwhCkKY29zvsrcfkjkUlXy1
+	 YXv3ZiBbyB4207vPcy/QQlnvURKD4/aWVVmPaLHs8TCmSvObYzhqrTDItjK54HjpFd
+	 UlzvuOBr+cuWYmZCv5wMEWhkIBEc7Xfz8FS/ZHkWs3XkwQ/zbbHBg8Y5QoH1Nwry+R
+	 WNQbUNJDE0VOw==
+Date: Thu, 1 Feb 2024 18:13:26 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: gpio: renesas,rcar-gpio: Add r8a779h0
+ support
+Message-ID: <20240201-skipper-qualifier-0b762fe5a67e@spud>
+References: <c5681eb5d28641d9b51ac2066b56b52d23defd85.1706789728.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Marek Szyprowski <m.szyprowski@samsung.com>, 
- Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, 
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
- Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-In-Reply-To: <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
-References: <cover.1706802756.git.geert+renesas@glider.be>
- <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
-Message-Id: <170680870030.996964.6959185693674664805.robh@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: dt-bindings: gpio-regulator: Fix
- {gpios-,}states limits
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zY7GGhXCbwC8GTGb"
+Content-Disposition: inline
+In-Reply-To: <c5681eb5d28641d9b51ac2066b56b52d23defd85.1706789728.git.geert+renesas@glider.be>
 
 
-On Thu, 01 Feb 2024 16:58:41 +0100, Geert Uytterhoeven wrote:
-> make dtbs_check:
-> 
->     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vccq-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states' were unexpected)
-> 	    from schema $id: http://devicetree.org/schemas/regulator/gpio-regulator.yaml#
-> 
-> The number of items in "gpios-states" must match the number of items in
-> "gpios", so their limits should be identical.
-> 
-> The number of items in "states" must lie within the range from zero up
-> to 2^{number of gpios}.
-> 
+--zY7GGhXCbwC8GTGb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Feb 01, 2024 at 01:16:33PM +0100, Geert Uytterhoeven wrote:
+> Document support for GPIO controller blocks in the Renesas R-Car V4M
+> (R8A779H0) SoC.
+>=20
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
 > ---
-> The second issue did not cause any dtbs_check errors?
-> ---
->  .../devicetree/bindings/regulator/gpio-regulator.yaml         | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
+>  Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yam=
+l b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> index aa424e2b95f87a51..cc7a950a6030999e 100644
+> --- a/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> +++ b/Documentation/devicetree/bindings/gpio/renesas,rcar-gpio.yaml
+> @@ -53,6 +53,7 @@ properties:
+>                - renesas,gpio-r8a779a0     # R-Car V3U
+>                - renesas,gpio-r8a779f0     # R-Car S4-8
+>                - renesas,gpio-r8a779g0     # R-Car V4H
+> +              - renesas,gpio-r8a779h0     # R-Car V4M
+>            - const: renesas,rcar-gen4-gpio # R-Car Gen4
+> =20
+>    reg:
+> --=20
+> 2.34.1
+>=20
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+--zY7GGhXCbwC8GTGb
+Content-Type: application/pgp-signature; name="signature.asc"
 
-yamllint warnings/errors:
+-----BEGIN PGP SIGNATURE-----
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/regulator/gpio-regulator.yaml: properties:states:minItems: 0 is less than the minimum of 1
-	hint: An array property has at least 1 item or is not present
-	from schema $id: http://devicetree.org/meta-schemas/keywords.yaml#
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZbvfRgAKCRB4tDGHoIJi
+0pAcAP9zmpNoMGsGcjl1mI2zWkMiwNlXgq1k6ptNlpUf6OXN0AD/WtNFo8wEZCLV
+Hz+rm1GXaD7BESv/IE1qUqluSAxN5wg=
+=ewOu
+-----END PGP SIGNATURE-----
 
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--zY7GGhXCbwC8GTGb--
 
