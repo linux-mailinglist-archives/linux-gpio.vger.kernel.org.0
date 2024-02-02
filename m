@@ -1,326 +1,190 @@
-Return-Path: <linux-gpio+bounces-2894-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2895-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1977846EB1
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 12:10:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D01068470D7
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 14:08:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6944D28BFD0
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 11:10:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F403C1C268AE
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 13:08:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D0A513BEB6;
-	Fri,  2 Feb 2024 11:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E51D210F;
+	Fri,  2 Feb 2024 13:08:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="QUOlqvZQ"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AxK0s7W2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609ED7995B;
-	Fri,  2 Feb 2024 11:09:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DDD115A8
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Feb 2024 13:08:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706872194; cv=none; b=eECn4chf4oMu37ZUkav2hppLc/qHzvdPnA7Hah0ICwYkemEZT5PiWDejOTTmvpIsKuRJ31mB3dFUIp+GGB1JBz6NtKW3YnVu13gQzf9kVJyFEykO/RsxaHNdXmGohbRSMu+2OP/+Y33ZDACAEufS1Un5j04kDJLjhzmaLXM2jgo=
+	t=1706879295; cv=none; b=MyDkbls70uAmNCe7gwhsibT/IxU2vSXoX1eX+1uwmu5IOL1xGlzFgVdFVr50SoeYVwwZmw5T9pVgA6scOGlt2M/oJW4rwyXJb8jZLmCUSjeZw0oBMMGHS4C0nlcQXIU5LHyou6sLYT32Tce9fhOwrYN6XnVD0yPiG1cEneD8j6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706872194; c=relaxed/simple;
-	bh=7RSfjVJnAk8+WEXi3R3d+FgrzOABbK5C0ntKdtIcJy0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=rIXq/znovk1fNxgD5afZ5k9CAAg44Z+rMcjqgG5H+LvBm7CY+oEXW8JPgPWV7kzi0G7PDxANv+fTFo/c7bBVeHxMuVj1mGdkhySjgqt6Cr/EROhaSavTQHVqRNEYIDDLt7utwZeRquufarP75yjfMeDq5Xi9yt6h9VqzI60kHKs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=QUOlqvZQ; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4129sJxQ017314;
-	Fri, 2 Feb 2024 11:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=MWydaXpVR/aMqgvOr5qu+uOGLmEkcs3+0SnXK2+q8hc=; b=QU
-	OlqvZQVy8wLKq11uiIzbgYlIv8iCKzt0IIZpE3HjFNHz08Mhx+LqBZzU3+Ks/sNX
-	/C8H38Mru7AB4EPzV7bNRzQk134K3YBtheLVKfIyzf0ECQkxd3UktBlpNmSMhnCV
-	AudIWkmyeN4pJprP+HxUqmm0u//TqhdJ4sYPYVm0LfxyG6uWG1slRuSrmqXIquPP
-	g7wUgknncLSL/PHDQEcTAQaBujYr0E8NkwvXDxVe6am/DGuKZPkafkfezX785JL+
-	Q7qclST2wc3Vmkrc5FD554b0F4G/NIUeW4fiCzR8ByJjkRp+IF2zELmoT303Uy3R
-	Bc8N+Ss6m4lQ/hW+6xnw==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w0pwm1679-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 02 Feb 2024 11:09:47 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 412B9krt019050
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 2 Feb 2024 11:09:46 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Fri, 2 Feb
- 2024 03:09:41 -0800
-Message-ID: <dcf7f712-18e0-4983-9a5a-f851f1c921d7@quicinc.com>
-Date: Fri, 2 Feb 2024 19:09:39 +0800
+	s=arc-20240116; t=1706879295; c=relaxed/simple;
+	bh=SuAH+sLE4yMjt/0E/pLSGR1zOGo5Qkdq0L6rjQDWWy8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=C2OyiBUm0ilV3jwFnuAS/6gDc+M0nRIs5yDgh6bB1pOFw91btoWk3FAqHGDJOrjS3xr43cuWU7cwYhR+9/iViroXfYbjskUVAly1KFSQObJS3+GszRmdXkKFn9pId7qTY78PPC/+nw8MK3y+40zpQjFXYcULPBqBYUp33lEj/hg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AxK0s7W2; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-40ef6da20feso4462085e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Feb 2024 05:08:13 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1706879292; x=1707484092; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hmXDrvKKf3NDkcneDs13uRED22XHzQGSUVI2kT54Qbk=;
+        b=AxK0s7W2V0M5BZ6DOee7vnOwqtZ3Hl10NfPKfLMroyij/ZI9tzk1P1nRqFVxRAX9MP
+         74q077DcVj60djvZnZ2y3VmTVzMT+dnLcn4LK0VNVeW81ibJaJobLvRM5ldEh9dpC2t+
+         pcF+BEW+5xg4Vrj0KCiXk+ocFT3Mia2khUvXMEGMYX81k/ho+7tAEqwMworwIqk18ByE
+         tkRYJYaULH0+NQJ1mTDzzBprE+K+lFaWHKRssdptBEfB4zEY016dTdjfROH+J7b3AxmN
+         ZcPTXG/i9VPYuhe0maZkIV2RqaKaAYHo845bnzI9oS7JzeXw69DAzhe7O8dARt8t7XpR
+         6oNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1706879292; x=1707484092;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hmXDrvKKf3NDkcneDs13uRED22XHzQGSUVI2kT54Qbk=;
+        b=LtWn2F3+I3P4+qeQs06dmuGUTiS7TejtOQ5fK4yYDPLYEIw2fYNT9xeMzem9GBPn3J
+         RYHoPEIn7Z34UfPsE+8PuL/3fbWSvakyj5qNpE1XqF9fQhkhayLHZF2OjmRhgFkSzhKx
+         3BC3ZFZ9sz3HlCXKVdh0mm8Zy62B+xPUX1mkpY7/qAplBPNMwlgDM1hv22pJ3fPua9eK
+         /5cFkr6K1RSJS+7+ewaAr8Bke/yUy5+yVppvAnq7DOP6qjcaXJ+jfGi0mdmtEfCv92TC
+         TrG0KtEaVrTGkeRiCwUY4sPAl49TV0GqoeerSjozxG7dOjl6DfNSBgO/1fN0l1ccrtWx
+         Gbyw==
+X-Gm-Message-State: AOJu0YyOE1H02u57mP3OpwEoSOuUA7x0T6WwxprwIarkw1RlegOv/9lv
+	ROkIqLnxXH16gx9nvV6PPZMfocVprqB3rai9tNFUQzqcOqycZL0qdKto7bgvSMo=
+X-Google-Smtp-Source: AGHT+IFyd009s7fIo/MhpcphBp5UsSBjFk677Bt7GAdyTvnfbKP+wXKp1+6TWYJAgidky/q2PnlKNA==
+X-Received: by 2002:a05:600c:3595:b0:40f:c5c9:17cb with SMTP id p21-20020a05600c359500b0040fc5c917cbmr1795622wmq.17.1706879291591;
+        Fri, 02 Feb 2024 05:08:11 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCVjJ6EAGOLSsylyE6NJTNzCEWjO+3R4Oqd8XzCPZBdi5J7u+KChJAV+QoxevsPd3nCPj5Y1y/Vg4D5G9RjJGWxKcrpU3orLZvcXSSTVi1nIBuR5o1R6b5fUKrhXqQjuNFloK4t6ubstouilcW/lHLXpQCbpB0L7khBEqp1eKipCgA==
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:9e2f:25f4:4dc8:d42d])
+        by smtp.gmail.com with ESMTPSA id v16-20020a05600c471000b0040fb30f17e8sm7464354wmo.38.2024.02.02.05.08.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Feb 2024 05:08:11 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Robert Thomas <rob.thomas@raspberrypi.com>
+Subject: [libgpiod][PATCH] bindings: python: fix __repr__() implementations
+Date: Fri,  2 Feb 2024 14:08:06 +0100
+Message-Id: <20240202130806.36334-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] pinctrl: Add lock to ensure the state atomization
-Content-Language: en-US
-To: <andersson@kernel.org>, <linus.walleij@linaro.org>
-CC: <kernel@quicinc.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20240202105854.26446-1-quic_aiquny@quicinc.com>
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <20240202105854.26446-1-quic_aiquny@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: sd1lTtdMlcYlMsxLjtyXfQq-wPBP_YUG
-X-Proofpoint-ORIG-GUID: sd1lTtdMlcYlMsxLjtyXfQq-wPBP_YUG
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-02_05,2024-01-31_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 phishscore=0 priorityscore=1501 malwarescore=0
- clxscore=1015 bulkscore=0 adultscore=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402020081
+Content-Transfer-Encoding: 8bit
 
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+The __repr__() function should - if possible - return a valid Python
+expression that can be used to instantiate a new object when evaluated.
 
-On 2/2/2024 6:58 PM, Maria Yu wrote:
-> Currently pinctrl_select_state is an export symbol and don't have
-> effective re-entrance protect design. During async probing of devices
-> it's possible to end up in pinctrl_select_state() from multiple
-> contexts simultaneously, so make it thread safe.
-> More over, when the real racy happened, the system frequently have
-> printk message like:
->    "not freeing pin xx (xxx) as part of deactivating group xxx - it is
-> already used for some other setting".
-> Finally the system crashed after the flood log.
-> Add per pinctrl lock to ensure the old state and new state transition
-> atomization.
-> Also move dev error print message outside the region with interrupts
-> disabled.
-> Use scoped guard to simplify the lock protection needed code.
-> 
-> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
-> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
-> ---
-forget to add change log here:
-v4-v3 changed:
-#include <linux/cleanup.h> is removed because of rebase.
-others is same to v3.
->   drivers/pinctrl/core.c | 143 +++++++++++++++++++++--------------------
->   drivers/pinctrl/core.h |   2 +
->   2 files changed, 75 insertions(+), 70 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index ee56856cb80c..1f7d001d4c1e 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -1061,6 +1061,7 @@ static struct pinctrl *create_pinctrl(struct device *dev,
->   	p->dev = dev;
->   	INIT_LIST_HEAD(&p->states);
->   	INIT_LIST_HEAD(&p->dt_maps);
-> +	spin_lock_init(&p->lock);
->   
->   	ret = pinctrl_dt_to_map(p, pctldev);
->   	if (ret < 0) {
-> @@ -1257,93 +1258,95 @@ static void pinctrl_link_add(struct pinctrl_dev *pctldev,
->   static int pinctrl_commit_state(struct pinctrl *p, struct pinctrl_state *state)
->   {
->   	struct pinctrl_setting *setting, *setting2;
-> -	struct pinctrl_state *old_state = READ_ONCE(p->state);
-> +	struct pinctrl_state *old_state;
->   	int ret;
->   
-> -	if (old_state) {
-> -		/*
-> -		 * For each pinmux setting in the old state, forget SW's record
-> -		 * of mux owner for that pingroup. Any pingroups which are
-> -		 * still owned by the new state will be re-acquired by the call
-> -		 * to pinmux_enable_setting() in the loop below.
-> -		 */
-> -		list_for_each_entry(setting, &old_state->settings, node) {
-> -			if (setting->type != PIN_MAP_TYPE_MUX_GROUP)
-> -				continue;
-> -			pinmux_disable_setting(setting);
-> +	scoped_guard(spinlock_irqsave, &p->lock) {
-> +		old_state = p->state;
-> +		if (old_state) {
-> +			/*
-> +			 * For each pinmux setting in the old state, forget SW's record
-> +			 * of mux owner for that pingroup. Any pingroups which are
-> +			 * still owned by the new state will be re-acquired by the call
-> +			 * to pinmux_enable_setting() in the loop below.
-> +			 */
-> +			list_for_each_entry(setting, &old_state->settings, node) {
-> +				if (setting->type != PIN_MAP_TYPE_MUX_GROUP)
-> +					continue;
-> +				pinmux_disable_setting(setting);
-> +			}
->   		}
-> -	}
-> -
-> -	p->state = NULL;
->   
-> -	/* Apply all the settings for the new state - pinmux first */
-> -	list_for_each_entry(setting, &state->settings, node) {
-> -		switch (setting->type) {
-> -		case PIN_MAP_TYPE_MUX_GROUP:
-> -			ret = pinmux_enable_setting(setting);
-> -			break;
-> -		case PIN_MAP_TYPE_CONFIGS_PIN:
-> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
-> -			ret = 0;
-> -			break;
-> -		default:
-> -			ret = -EINVAL;
-> -			break;
-> -		}
-> +		p->state = NULL;
->   
-> -		if (ret < 0)
-> -			goto unapply_new_state;
-> +		/* Apply all the settings for the new state - pinmux first */
-> +		list_for_each_entry(setting, &state->settings, node) {
-> +			switch (setting->type) {
-> +			case PIN_MAP_TYPE_MUX_GROUP:
-> +				ret = pinmux_enable_setting(setting);
-> +				break;
-> +			case PIN_MAP_TYPE_CONFIGS_PIN:
-> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
-> +				ret = 0;
-> +				break;
-> +			default:
-> +				ret = -EINVAL;
-> +				break;
-> +			}
->   
-> -		/* Do not link hogs (circular dependency) */
-> -		if (p != setting->pctldev->p)
-> -			pinctrl_link_add(setting->pctldev, p->dev);
-> -	}
-> +			if (ret < 0)
-> +				goto unapply_new_state;
->   
-> -	/* Apply all the settings for the new state - pinconf after */
-> -	list_for_each_entry(setting, &state->settings, node) {
-> -		switch (setting->type) {
-> -		case PIN_MAP_TYPE_MUX_GROUP:
-> -			ret = 0;
-> -			break;
-> -		case PIN_MAP_TYPE_CONFIGS_PIN:
-> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
-> -			ret = pinconf_apply_setting(setting);
-> -			break;
-> -		default:
-> -			ret = -EINVAL;
-> -			break;
-> +			/* Do not link hogs (circular dependency) */
-> +			if (p != setting->pctldev->p)
-> +				pinctrl_link_add(setting->pctldev, p->dev);
->   		}
->   
-> -		if (ret < 0) {
-> -			goto unapply_new_state;
-> -		}
-> +		/* Apply all the settings for the new state - pinconf after */
-> +		list_for_each_entry(setting, &state->settings, node) {
-> +			switch (setting->type) {
-> +			case PIN_MAP_TYPE_MUX_GROUP:
-> +				ret = 0;
-> +				break;
-> +			case PIN_MAP_TYPE_CONFIGS_PIN:
-> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
-> +				ret = pinconf_apply_setting(setting);
-> +				break;
-> +			default:
-> +				ret = -EINVAL;
-> +				break;
-> +			}
->   
-> -		/* Do not link hogs (circular dependency) */
-> -		if (p != setting->pctldev->p)
-> -			pinctrl_link_add(setting->pctldev, p->dev);
-> -	}
-> +			if (ret < 0)
-> +				goto unapply_new_state;
->   
-> -	p->state = state;
-> +			/* Do not link hogs (circular dependency) */
-> +			if (p != setting->pctldev->p)
-> +				pinctrl_link_add(setting->pctldev, p->dev);
-> +		}
->   
-> -	return 0;
-> +		p->state = state;
-> +
-> +		return 0;
->   
->   unapply_new_state:
-> -	dev_err(p->dev, "Error applying setting, reverse things back\n");
->   
-> -	list_for_each_entry(setting2, &state->settings, node) {
-> -		if (&setting2->node == &setting->node)
-> -			break;
-> -		/*
-> -		 * All we can do here is pinmux_disable_setting.
-> -		 * That means that some pins are muxed differently now
-> -		 * than they were before applying the setting (We can't
-> -		 * "unmux a pin"!), but it's not a big deal since the pins
-> -		 * are free to be muxed by another apply_setting.
-> -		 */
-> -		if (setting2->type == PIN_MAP_TYPE_MUX_GROUP)
-> -			pinmux_disable_setting(setting2);
-> +		list_for_each_entry(setting2, &state->settings, node) {
-> +			if (&setting2->node == &setting->node)
-> +				break;
-> +			/*
-> +			 * All we can do here is pinmux_disable_setting.
-> +			 * That means that some pins are muxed differently now
-> +			 * than they were before applying the setting (We can't
-> +			 * "unmux a pin"!), but it's not a big deal since the pins
-> +			 * are free to be muxed by another apply_setting.
-> +			 */
-> +			if (setting2->type == PIN_MAP_TYPE_MUX_GROUP)
-> +				pinmux_disable_setting(setting2);
-> +		}
->   	}
->   
-> +	dev_err(p->dev, "Error applying setting, reverse things back\n");
->   	/* There's no infinite recursive loop here because p->state is NULL */
->   	if (old_state)
->   		pinctrl_select_state(p, old_state);
-> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> index 837fd5bd903d..6844edd38b4a 100644
-> --- a/drivers/pinctrl/core.h
-> +++ b/drivers/pinctrl/core.h
-> @@ -12,6 +12,7 @@
->   #include <linux/list.h>
->   #include <linux/mutex.h>
->   #include <linux/radix-tree.h>
-> +#include <linux/spinlock.h>
->   #include <linux/types.h>
->   
->   #include <linux/pinctrl/machine.h>
-> @@ -91,6 +92,7 @@ struct pinctrl {
->   	struct pinctrl_state *state;
->   	struct list_head dt_maps;
->   	struct kref users;
-> +	spinlock_t lock;
->   };
->   
->   /**
-> 
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+LineSettings.__repr__() is missing comas between arguments. Both Chip and
+LineSettings also don't prefix the returned string with 'gpiod.'. Fix
+both functions and add more test cases - including actually using the
+strings returned by __repr__() to create new objects and compare their
+contents.
 
+Reported-by: Robert Thomas <rob.thomas@raspberrypi.com>
+Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+---
+ bindings/python/gpiod/chip.py                | 2 +-
+ bindings/python/gpiod/line_settings.py       | 2 +-
+ bindings/python/tests/tests_chip.py          | 5 ++++-
+ bindings/python/tests/tests_line_settings.py | 9 ++++++---
+ 4 files changed, 12 insertions(+), 6 deletions(-)
+
+diff --git a/bindings/python/gpiod/chip.py b/bindings/python/gpiod/chip.py
+index b3d8e61..19c62cd 100644
+--- a/bindings/python/gpiod/chip.py
++++ b/bindings/python/gpiod/chip.py
+@@ -333,7 +333,7 @@ class Chip:
+         if not self._chip:
+             return "<Chip CLOSED>"
+ 
+-        return 'Chip("{}")'.format(self.path)
++        return 'gpiod.Chip("{}")'.format(self.path)
+ 
+     def __str__(self) -> str:
+         """
+diff --git a/bindings/python/gpiod/line_settings.py b/bindings/python/gpiod/line_settings.py
+index 458fd81..41712cc 100644
+--- a/bindings/python/gpiod/line_settings.py
++++ b/bindings/python/gpiod/line_settings.py
+@@ -27,7 +27,7 @@ class LineSettings:
+     # __repr__ generated by @dataclass uses repr for enum members resulting in
+     # an unusable representation as those are of the form: <NAME: $value>
+     def __repr__(self):
+-        return "LineSettings(direction={}, edge_detection={} bias={} drive={} active_low={} debounce_period={} event_clock={} output_value={})".format(
++        return "gpiod.LineSettings(direction={}, edge_detection={}, bias={}, drive={}, active_low={}, debounce_period={}, event_clock={}, output_value={})".format(
+             str(self.direction),
+             str(self.edge_detection),
+             str(self.bias),
+diff --git a/bindings/python/tests/tests_chip.py b/bindings/python/tests/tests_chip.py
+index 8db4cdb..bd4ae34 100644
+--- a/bindings/python/tests/tests_chip.py
++++ b/bindings/python/tests/tests_chip.py
+@@ -202,7 +202,10 @@ class StringRepresentation(TestCase):
+         self.sim = None
+ 
+     def test_repr(self):
+-        self.assertEqual(repr(self.chip), 'Chip("{}")'.format(self.sim.dev_path))
++        self.assertEqual(repr(self.chip), 'gpiod.Chip("{}")'.format(self.sim.dev_path))
++
++        cmp = eval(repr(self.chip))
++        self.assertEqual(self.chip.path, cmp.path)
+ 
+     def test_str(self):
+         info = self.chip.get_info()
+diff --git a/bindings/python/tests/tests_line_settings.py b/bindings/python/tests/tests_line_settings.py
+index 36dda6d..c6ca720 100644
+--- a/bindings/python/tests/tests_line_settings.py
++++ b/bindings/python/tests/tests_line_settings.py
+@@ -1,10 +1,10 @@
+ # SPDX-License-Identifier: LGPL-2.1-or-later
+ # SPDX-FileCopyrightText: 2022 Bartosz Golaszewski <brgl@bgdev.pl>
+ 
++import datetime
+ import gpiod
+ 
+ from . import gpiosim
+-from datetime import timedelta
+ from gpiod.line import Direction, Edge, Bias, Drive, Value, Clock
+ from unittest import TestCase
+ 
+@@ -47,7 +47,7 @@ class LineSettingsAttributes(TestCase):
+         settings.direction = Direction.INPUT
+         settings.edge_detection = Edge.BOTH
+         settings.bias = Bias.DISABLED
+-        settings.debounce_period = timedelta(microseconds=3000)
++        settings.debounce_period = datetime.timedelta(microseconds=3000)
+         settings.event_clock = Clock.HTE
+ 
+         self.assertEqual(settings.direction, Direction.INPUT)
+@@ -69,9 +69,12 @@ class LineSettingsStringRepresentation(TestCase):
+     def test_repr(self):
+         self.assertEqual(
+             repr(self.settings),
+-            "LineSettings(direction=Direction.OUTPUT, edge_detection=Edge.NONE bias=Bias.AS_IS drive=Drive.OPEN_SOURCE active_low=True debounce_period=datetime.timedelta(0) event_clock=Clock.MONOTONIC output_value=Value.INACTIVE)",
++            "gpiod.LineSettings(direction=Direction.OUTPUT, edge_detection=Edge.NONE, bias=Bias.AS_IS, drive=Drive.OPEN_SOURCE, active_low=True, debounce_period=datetime.timedelta(0), event_clock=Clock.MONOTONIC, output_value=Value.INACTIVE)",
+         )
+ 
++        cmp = eval(repr(self.settings))
++        self.assertEqual(self.settings, cmp)
++
+     def test_str(self):
+         self.assertEqual(
+             str(self.settings),
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+2.40.1
+
 
