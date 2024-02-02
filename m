@@ -1,184 +1,96 @@
-Return-Path: <linux-gpio+bounces-2900-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2901-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17B8784766B
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 18:43:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 293268479F1
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 20:52:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 752661F224E3
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 17:43:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6607B24EDE
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 19:52:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F71E14C5AB;
-	Fri,  2 Feb 2024 17:41:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E478062B;
+	Fri,  2 Feb 2024 19:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Qdj16sLU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WqgI7VGz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D52814C58C
-	for <linux-gpio@vger.kernel.org>; Fri,  2 Feb 2024 17:41:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 16F9A8060B;
+	Fri,  2 Feb 2024 19:52:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706895706; cv=none; b=LGP8K9Ne4zN6pcLSiiOmYdDhEKWSNiQ7roqk1HgmlgD1h9TwckmzegA8r/+FffxOMH9rYH9/f6ebgY5nqvSaHGhPLzd5RddSo2KYXMiZSV9wBPGDbqmoMdjIDjtP1pMSeuIbI5Jmve0sx3WhIhQS3IJxvAFc5N+zO0U2q6+bqiw=
+	t=1706903562; cv=none; b=QVVzyGe8wiy6POzIQtmkz7cJxqDuU106m1I77a5bHuKfy9FxJQs4Qsebu9InLi1awrbbG48lViXgM6Wacpjbg2skGcjrLgYH09SM2PLTJWpPgh0qVutYZLuSUxidIG4v4mR7KcDeQaeWot3IWQTs7SXOmyEAcLkG5weK9PULZKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706895706; c=relaxed/simple;
-	bh=eu87qWyaCqCwnJ2sVE3adNP4GW3OSLM7PQC7Mv20M54=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uYfvMF1Dg3rlCxCsVlQ03l5pqDmR5iSUQermdcehvrX6dXCaclntIwDEu6hip8x+e45nEe+uPC1vRPQa89Hn3+N1ucj1EX0S+/89LA1NWn0AFMMXiWhwiO43l7WDEuFKSE6ZaSbH9z9NHRUMpaG9qDEz3dsvB8Sn2UuLaqMT4XA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Qdj16sLU; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6041c7aa418so19993357b3.3
-        for <linux-gpio@vger.kernel.org>; Fri, 02 Feb 2024 09:41:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1706895703; x=1707500503; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lxj2OxF2tKrpIUq+UtFX2EYPlsFE5Q6qUnNhW/MIt3w=;
-        b=Qdj16sLU9H9ljl2jwX+fQhhDY5X6JydV/fCOGN55bQ48i1rfSACdGkMq0JYNdjiJfZ
-         yFGiA4KW3TggLF1zmqCOduCfCb21KjTXzJQ/kCNYljgypWP/fGyaROE5WS4Sp611MWqY
-         q+6OKpCd0JBKsL+kTi7ffthXUOEQ6gfkgIiqHp4NuoVymSEMYV3jW1xFNNdooBI6Vs8r
-         HnI43k2yUpR1yWYraRULZPTV2e85cytSjWXSUfqITGrJ75hK7h0Gh8QebGOujOjXEUhM
-         wFZvUUU6lOO2dmEkPQKCelJL0k71LPvtx8cqUx0j3QGh7xlgboXu6vI3xt/6bi2Wfaba
-         3GUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706895703; x=1707500503;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lxj2OxF2tKrpIUq+UtFX2EYPlsFE5Q6qUnNhW/MIt3w=;
-        b=bs7XB77ZgHQD86Ha+3eJl8/yM2pPYxD8ptZTg73d1JymZ6nOrwbIvoItHmSqaJNGn/
-         0nw0k0HlATrc0K/OLQY3I7DcLmRUwL9EQMpRyIKv7PWyVtp4gCZbuCLDt0Pnailf2PVj
-         k4FeaDva0YsGuHYu5ctTEco0YruzrESGHVNWBiozRhGtHOSx2HdPVsyGkS2/0jdufZPg
-         nHYH2/ogdbiP/YoecyMqJdzL5Yw1SAJjrX+X9THwSOwJR9QuwGPjePUc95Vbssty8og3
-         s561p31exrAyKfqTirTnx4aYW0FOdkttHyexQOONx5ZJJH0RIqZ3LnvcMSZG1MPeY9cr
-         RELw==
-X-Gm-Message-State: AOJu0YzIcBdIze1SCYI1m8AqC6WOxoU+fOcXfC36adrNhw8veYUVsB8p
-	0AKbl7F1Yg8V9UTW7riUtsX1+F/lU4piZV3MTMcnT5fM5XJ/q4Uu7weQFjGAYgmd67YqLqPvl1r
-	lLIqYhjksJ0lnzqAESkvpBeEWJ7MfN6+IIWiM/1YMkSRyxMAAaKI=
-X-Google-Smtp-Source: AGHT+IFk5DGrKzY72GiycyDtvkLTtkXrC8wEY0Si65aRZsHdPgrlzM1jRrbOkIKcKHGqdVylJVKAGka3odlCQXOIhNM=
-X-Received: by 2002:a0d:d8d2:0:b0:5ff:53db:6b71 with SMTP id
- a201-20020a0dd8d2000000b005ff53db6b71mr9197451ywe.26.1706895703473; Fri, 02
- Feb 2024 09:41:43 -0800 (PST)
+	s=arc-20240116; t=1706903562; c=relaxed/simple;
+	bh=NAW4yo/gyTsP/aDVFL1AKzWX4VS5afMpBgisLsIzRkw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ARXiJ2HZnaP5LEP8ywhyyo4hQ4TnIbkLLGgWwLMTcduUjEBn4UwCxjnCGu+djn+uFLcVBF5wp+yiKhzgdv9/obzs1KlFnW2NaMYfMDRl4CPpVq5zGa9a8tYbNTp/Dhx2+wn1FQ0yjlbQcpaQW1fA6vMpgJcT8nt9hLnW7rpKA0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WqgI7VGz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A34A3C433C7;
+	Fri,  2 Feb 2024 19:52:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1706903561;
+	bh=NAW4yo/gyTsP/aDVFL1AKzWX4VS5afMpBgisLsIzRkw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=WqgI7VGzDc1EHE4RPDCHV/OyWZsm8JXYzPROSDrkLtkWdbei8RzMvhASvMJ6Cg24w
+	 sIZ3t0uoENEzkZJAIpDkQyLMQNbe2PL2B6OzyJ90Kn8ExWXHNoLstZ4hUXpi+nrg9y
+	 j8QgZtWw7l/h178yr/QF3WleoVL4rYWHuS0r6hfjLIVZDLgTNzWMAY9KtmEd8+bLty
+	 biIVmYXNOQSUQaxFSIUz/6bgPNeiCuhhjwPqfJoQ1I0Arp36eBpuc6olf2sjiognM4
+	 RSbiYipy+2z4k+exFBLvlZ1dmIVmZ3wnFVanQm4ke/dwOvwF7NyuSg0qVZIj/1wlPZ
+	 GBzZHDyZgbTxQ==
+Date: Fri, 2 Feb 2024 13:52:39 -0600
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 03/18] dt-bindings: pinctrl: allow pin controller
+ device without unit address
+Message-ID: <20240202195239.GA854204-robh@kernel.org>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-3-bcd00510d6a0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1706802756.git.geert+renesas@glider.be> <ffb1eb1d747dce00b2c09d7af9357cd43284d1c4.1706802756.git.geert+renesas@glider.be>
-In-Reply-To: <ffb1eb1d747dce00b2c09d7af9357cd43284d1c4.1706802756.git.geert+renesas@glider.be>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 2 Feb 2024 18:41:31 +0100
-Message-ID: <CACRpkdaBBFjtgoUhhK8-X28BK=2NCyRS2NiYvVEZFAsQiNZH9g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] regulator: gpio: Correct default GPIO state to LOW
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240131-mbly-clk-v4-3-bcd00510d6a0@bootlin.com>
 
-On Thu, Feb 1, 2024 at 4:58=E2=80=AFPM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Wed, Jan 31, 2024 at 05:26:16PM +0100, Théo Lebrun wrote:
+> Allow a pin controller device to have no address, therefore no unit
+> address.
+> 
+> The previous $nodename was enforcing a unit address, but
+> scripts/dtc/checks.c enforced that names with unit addresses have reg
+> or ranges:
+> 
+>    Warning (unit_address_vs_reg): .../pinctrl@0: node has a unit
+>    name, but no reg or ranges property
+> 
+> Fix pinctrl.yaml to adopt a (pinctrl|pinmux)(-[a-z]+)? node name when
+> neither reg nor ranges are required. Use [a-z]+ to avoid conflicts with
+> pinctrl-consumer.yaml.
 
-> According to the GPIO regulator DT bindings[1], the default GPIO state
-> is LOW.  However, the driver defaults to HIGH.
->
-> Before the conversion to descriptors in commit d6cd33ad71029a3f
-> ("regulator: gpio: Convert to use descriptors"), the default state used
-> by the driver was rather ill-defined, too:
->   - If the "gpio-states" property was missing or empty, the default was
->     low, matching the bindings.
->   - If the "gpio-states" property was present, the default for missing
->     entries was the value of the last present entry.
->
-> Fix this by making the driver adhere to the DT bindings, i.e. default to
-> LOW.
->
-> [1] Documentation/devicetree/bindings/regulator/gpio-regulator.yaml
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+You can drop this patch now.
 
-It's closer to the spec, but Mark's pick, anyway:
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-
-But on the subject, the bindings say this:
-
-+  gpios-states:
-+    description: |
-+      On operating systems, that don't support reading back gpio values in
-+      output mode (most notably linux), this array provides the state of G=
-PIO
-+      pins set when requesting them from the gpio controller. Systems, tha=
-t are
-+      capable of preserving state when requesting the lines, are free to i=
-gnore
-+      this property.
-
-Actually, Linux can read back the value just fine in output mode,
-so what about just ignoring the property and update the document
-to stop saying that about Linux?
-
-See drivers/gpiolib.c:
-
-static int gpio_chip_get_value(struct gpio_chip *gc, const struct
-gpio_desc *desc)
-{
-        return gc->get ? gc->get(gc, gpio_chip_hwgpio(desc)) : -EIO;
-}
-
-static int gpiod_get_raw_value_commit(const struct gpio_desc *desc)
-{
-        struct gpio_chip *gc;
-        int value;
-
-        gc =3D desc->gdev->chip;
-        value =3D gpio_chip_get_value(gc, desc);
-        value =3D value < 0 ? value : !!value;
-        trace_gpio_value(desc_to_gpio(desc), 1, value);
-        return value;
-}
-
-int gpiod_get_value(const struct gpio_desc *desc)
-{
-        int value;
-
-        VALIDATE_DESC(desc);
-        /* Should be using gpiod_get_value_cansleep() */
-        WARN_ON(desc->gdev->chip->can_sleep);
-
-        value =3D gpiod_get_raw_value_commit(desc);
-        if (value < 0)
-                return value;
-
-        if (test_bit(FLAG_ACTIVE_LOW, &desc->flags))
-                value =3D !value;
-
-        return value;
-}
-
-None of this path excludes lines in output mode...
-
-If individual drivers don't support it, it's either because:
-
-1. The driver is buggy (such as not implementing .get()
-  and should be fixed.
-
-2. The hardware is actually incapable of reading the
-  value in output mode.
-
-3. Reading the value hardware register is bogus when the
-  line is in output mode.
-
-All these are driver issues and have nothing to do with Linux per se.
-
-Yours,
-Linus Walleij
+Rob
 
