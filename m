@@ -1,129 +1,193 @@
-Return-Path: <linux-gpio+bounces-2890-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2891-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6FAF2846E1E
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 11:40:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DFF32846E53
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 11:53:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 937571C24AED
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 10:40:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D3C831C26191
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 10:53:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329C312B159;
-	Fri,  2 Feb 2024 10:40:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525C113B7B4;
+	Fri,  2 Feb 2024 10:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOeCWLTy"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="PUlIxPO/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-pj1-f43.google.com (mail-pj1-f43.google.com [209.85.216.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8112628B;
-	Fri,  2 Feb 2024 10:40:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A8BC13DB8E
+	for <linux-gpio@vger.kernel.org>; Fri,  2 Feb 2024 10:52:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706870430; cv=none; b=XJh9D5LSmqx2Dnqr470Nx/4IhIAZu1SEeUt/xratEel49upENg9yZCQOYYsSq2hT/YNrt+Xe65xugk73Dd5XAoZutP5a5zLkhTKS8EoyUhUhfqgVHzkht+8NcTEGLPKg9BKKF2/rMtv4KB9egxjfUfYXj7np8UMkFXQvAaWCGRg=
+	t=1706871176; cv=none; b=sy1VIb7sYiUvNvHQyyTDHwdJsVGBTi7kTcopc7OwvnmYLw6tYijXJtIr38jg5LnIaZINMYtVeuEKEPzFUniBYnjuPjcGDueMPkR2dMRjOUdJYBr3yM36AZmYWVUbZgETFA/wP8XrDQgwzWdA8YFb28Vqqu0mi/lOMWPx+Pv+L4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706870430; c=relaxed/simple;
-	bh=TLymezzE5+r0wlZC85xmYHZmI6YZpMuucXlhRm0pcTY=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=F/JINvj5hcjfS1gAdAwv6di4xGoPc/MfjcniGTMzG1iKuQ8YQ+yGez8/S+DsWWe2fcCDzr/8mKIMPhDQmQPor3kAUexnVbmzA5j0o+TbxJB2sPrRIuPjTwpPh4y7eqxFoA8sS+cx6XqQS74Cn2DjbLjGMKkzqcIF5j/cN94KcMQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOeCWLTy; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a359446b57dso248794266b.3;
-        Fri, 02 Feb 2024 02:40:27 -0800 (PST)
+	s=arc-20240116; t=1706871176; c=relaxed/simple;
+	bh=7UJeNk8SiED9yCAZG/fAWeHMgxw0oDG/V8oLEX03H2s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fHSdbjC49PRJ+Qdmyfo41CwUCGCZlVm4PRIj76Kq1vgHua1O1/oJb7dRkPnp/q6kEk5iBJ1Sb9Mk6UmV+9zToabfMjFd/YndnohF7d2lLjsMYcPuyMZ+myNz/JZ310OkpZIqKep2s5DQ6OWpkmPKgEsTU5Br5geGIVNs1vMyfFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=PUlIxPO/; arc=none smtp.client-ip=209.85.216.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+Received: by mail-pj1-f43.google.com with SMTP id 98e67ed59e1d1-29026523507so1556383a91.0
+        for <linux-gpio@vger.kernel.org>; Fri, 02 Feb 2024 02:52:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1706870426; x=1707475226; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=yr18VgKkUR0Z6xA+Bp01IdzSAv15CAC3JbNxjaal7xE=;
-        b=fOeCWLTytEfYLS5v1YJWd+ZVymGQ7FW08cJ1DffK/09AUn34WOfFnfgVGHJ4fHLpJN
-         ZcjoyTviGQdtB9/Q9RDIieFscRJQnxI1zBKK8Yj94DtPWMfK7ziCK4LdsRmCc800b54V
-         dNtAhbVVF3fAAIQRMDEdBz2aot5+aXFMOrGozNC/MmUonL6KIBpqfIaMsjKmm5s4qgni
-         Y7u0mnvhA01IjC6nJ3qllbLf4gJPZ4Vum0G4uYn//lce39vduxPYBoyW6v3E9t5E5iGm
-         m8gjI7ZzahUgrkPT6Mupu8gUMOYdaIFcnqU/ffBjqoXUBe8pyARp4NvpjkOs6Nrg9xZp
-         Zo8Q==
+        d=9elements.com; s=google; t=1706871174; x=1707475974; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=kOP4h2DtrQ3eGd2gjxHPsKG03MfGRQ7P7hCdzTURGhs=;
+        b=PUlIxPO/b2maTrliN1Azs6RvKUdrpjtW251kDqmEApuvaKETnnz0hcUX7V0JN2zyQl
+         Lnxlol8EtyE2VxE8TTyDTr9WVvLZMTV5fLB9FQrjQ9+CK9dHCbXCEIJ9DqGodmsZVPsv
+         n/z3bGkSGLjg2e0B6X/sA4oI8kPSGEBb60V3mhG2L8G+iJxb2Owvc0NN/fcoCijNqaCA
+         T0JormCeZWt0K5XO1wyHBWneFQD/5fRPuLC2GAjSGtOYno/EkFo4feZfDP4gYNFD1uNc
+         sTNt2Lvlo+CAoy/a8u/0isu0a5H9mX3Xdl+0SBFXuzyRMc0EDQUag0Rduj+VPSneJy3a
+         VH/A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706870426; x=1707475226;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :cc:to:subject:from:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=yr18VgKkUR0Z6xA+Bp01IdzSAv15CAC3JbNxjaal7xE=;
-        b=G2iSR5aZ5qk/LHnx/nmv2fiSN5ah581D61FsirSC7JhNFPsCeeqqIlg8eNZWypyus2
-         8pvpyL64D1Zl0WyrlC+baHS+2YMnFVKpmSyghmnKkNFRv2B2grjq03tv//k4Xz8rUzF2
-         vs0gkN1bodD3wEpJC29b1Wcx9XExbju7ts6OMEYpU2AS6Z+KljjZiJkPjJqDXZuAkB9j
-         ayUICwcI7ACWIiurAWmO3c+aaQlXnmjY0f0mxMABnHtVbwmGh6OVCJudZG9l8g1at94q
-         1qz5nhaIzMEjlsHzIA4D1YJWWSV7QwSQqnPHj01HfUH/B//tSY9WtTPO3QOzSEEEw6eF
-         O50A==
-X-Gm-Message-State: AOJu0YyYNJn656ESNoB0YsJBWgi0FWrt0OFmIezj8wn9UcRt6BcXqgNV
-	vqLew3AuuBHL1zzHhpb2au+KZ+DbGhrPpQ10/DSlC1qNOfZiXoBL
-X-Google-Smtp-Source: AGHT+IES3tCk3jxs0f3dtCVujdQihB3Cb/dce9FqfXLgDJYCUO6WQa6kZawzBG6V58Qd4NgHObwTrQ==
-X-Received: by 2002:a17:906:3b8e:b0:a35:9cf0:56d4 with SMTP id u14-20020a1709063b8e00b00a359cf056d4mr3995076ejf.30.1706870426176;
-        Fri, 02 Feb 2024 02:40:26 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUrmf6/v+Xa22VMbRqu6wSX1b6ijQWy9+2d8Xa5a3K+X3iJVkwzB+5zIAQXNGGuZ5E5UFGMJ7Q1Dh/QNeQ63qRHwfiyw9jwMY8OHcYK/R6yOn7wvrXzLCFKoqsAZj2UoJDqKeVG6hvyjB6Ws0ZZv53cl+fY0ZdLXYsqVfdShBFmcVxWbrqeUMfyZ6p+E9WceIHEd4pgUbCiGmQe34PuiWOWwW64RXGNxxk3GfZCCCA9PvFcZLkR0QrVXDNQoYYoMFuk4Edo59wnJ4JOGHfRwS7bBtcE7evMek8oNdgBY0ILQ1ugKAtK856CGhw5iuPhbluweg==
-Received: from [192.168.3.110] ([86.38.153.11])
-        by smtp.gmail.com with ESMTPSA id vk7-20020a170907cbc700b00a371a1b40c1sm256385ejc.23.2024.02.02.02.40.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 02:40:25 -0800 (PST)
-Message-ID: <cc1572a4-f2e4-4f26-a505-09db5dcdfdfa@gmail.com>
-Date: Fri, 2 Feb 2024 12:40:23 +0200
+        d=1e100.net; s=20230601; t=1706871174; x=1707475974;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=kOP4h2DtrQ3eGd2gjxHPsKG03MfGRQ7P7hCdzTURGhs=;
+        b=nH1gX2tpgMfSX3kaZsSSF+vT/CHUQPbJzKzfhnfL9uQ/46PXg6QtL3v2PUdWV2NKFq
+         oK2tvMLGwOmSiR/E1zl1aE8zNZyKxJ8zBZ3Xwx56wL800xR6KeHJx5B8w8GGa49UGnWq
+         j/MxXNOOxhRonRM8wd2yCkvBpmktZBPNxXsAoOEvHP4iWVj5CkUdTFNWoEPU2iMbACUm
+         JMQ5sUYBkpKUIDnLGfbo/yL6IbKrhEZeD8BFj6uFjoeVMz7xjMF+Ye5yeUmENa0lCqU3
+         xWZhbDE6Peq0SfVk+wnp+J6EgGXX+KiMGtoJKBRpFJhF12gUmjWF+luPtaJWV7H5uoa5
+         QwAA==
+X-Gm-Message-State: AOJu0YxexXocU4Vm8gNGY4nyoyy4qqp0785grt6oSjqWPnF8BFizNIJW
+	HGXn2dkg3zyETRJKIOj27pbxrytnPkp945crHOSvk/eGtmSoKAOULpbTwDvBBQrQ/WO+JXro41s
+	0Ym7CtGid6T4tE9AI+oqCkDergk/moRRY+c7nqg==
+X-Google-Smtp-Source: AGHT+IEkJP0L3xT2bwErOuiu7V5owciTi/CRmQ50HIFOTE/E57jyLi7R3nqwVwCvKwYNtUGvE3yoO5rSIUwKLuNyRLo=
+X-Received: by 2002:a17:90a:4591:b0:28c:8eaa:e5e3 with SMTP id
+ v17-20020a17090a459100b0028c8eaae5e3mr8264623pjg.17.1706871173799; Fri, 02
+ Feb 2024 02:52:53 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Subject: Re: [PATCH v2] pinctrl: mcp23s08: Check only GPIOs which have
- interrupts enabled
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com,
- akaessens@gmail.com, thomas.preston@codethink.co.uk,
- preid@electromag.com.au, u.kleine-koenig@pengutronix.de,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240201141406.32484-2-arturas.moskvinas@gmail.com>
- <ZburBq7ZJhK_X_t0@smile.fi.intel.com>
-Content-Language: en-US
-In-Reply-To: <ZburBq7ZJhK_X_t0@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240130125602.568719-1-naresh.solanki@9elements.com> <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
+In-Reply-To: <52f1e76e-0953-4625-94ae-2208600f5729@linaro.org>
+From: Naresh Solanki <naresh.solanki@9elements.com>
+Date: Fri, 2 Feb 2024 16:22:43 +0530
+Message-ID: <CABqG17j5io7S=U6oHktwWjBxaVRnEryWvX7yD9bVAV5cr2ueKg@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: pinctrl: cy8x95x0: Minor fix & update
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Patrick Rudolph <patrick.rudolph@9elements.com>, mazziesaccount@gmail.com, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
+Hi Krzysztof,
 
-On 2/1/24 16:30, Andy Shevchenko wrote:
-> On Thu, Feb 01, 2024 at 04:14:07PM +0200, Arturas Moskvinas wrote:
->> GPINTEN register contains information about GPIOs with enabled
->> interrupts no need to check other GPIOs for changes.
->>
->> Signed-off-by: Arturas Moskvinas<arturas.moskvinas@gmail.com>
->> ---
-> You forgot to add a changelog here, but no need to resend, just you can respond
-> to the email since it's not a big issue in this case.
-Ack.
->> +	if (mcp_read(mcp, MCP_GPINTEN, &gpinten))
->> +		goto unlock;
-> Do all hw variants have this register available?
-> Esp. I2C part, wouldn't it be problematic (exception with NACK on the bus)?
-According to specification sheets MCP(s0)17 [1] page 19, MCP(s0)18 [2] 
-page 19, MCP(s0)08 [3] page 11 - all supported expanders have that 
-register also that register needs to be used [4] to mask/unmask 
-interrupts on given GPIO, without it - expander won't even fire an 
-interrupt. I tested on MCP23018 I2C expander though but module itself is 
-not treating that expander differently for interrupt handling purposes.
+On Wed, 31 Jan 2024 at 14:02, Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> On 30/01/2024 13:56, Naresh Solanki wrote:
+> > Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
+>
+> Subject: everything can be a fix and everything is update. Write
+> something useful.
+Sure. Will update as:
+dt-bindings: pinctrl: cy8x95x0: Update gpio-reserved-ranges
 
-Do you want that information to be added as part of commit message or 
-information in the mailing thread will be enough?
+>
+> > reserved ranges.
+> > Add input-enable property to allow configuring a pin as input.
+> > Update example & fix alignment.
+> >
+> > Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+> > ---
+> >  .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 38 ++++++++++++++-----
+> >  1 file changed, 28 insertions(+), 10 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> > index 7f30ec2f1e54..90dda5d3cc55 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+> > @@ -45,7 +45,8 @@ properties:
+> >      maxItems: 1
+> >
+> >    gpio-reserved-ranges:
+> > -    maxItems: 1
+> > +    minItems: 1
+> > +    maxItems: 60
+> >
+> >    vdd-supply:
+> >      description:
+> > @@ -85,6 +86,8 @@ patternProperties:
+> >
+> >        bias-disable: true
+> >
+> > +      input-enable: true
+> > +
+> >        output-high: true
+> >
+> >        output-low: true
+> > @@ -125,14 +128,29 @@ examples:
+> >        #size-cells = <0>;
+> >
+> >        pinctrl@20 {
+> > -        compatible = "cypress,cy8c9520";
+> > -        reg = <0x20>;
+> > -        gpio-controller;
+> > -        #gpio-cells = <2>;
+> > -        #interrupt-cells = <2>;
+> > -        interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > -        interrupt-controller;
+> > -        vdd-supply = <&p3v3>;
+> > -        gpio-reserved-ranges = <5 1>;
+> > +          compatible = "cypress,cy8c9520";
+>
+> I don't understand why you change from correct indentation to mixed one
+> (2 and 4 spaces). It does not make sense.
+Yes indentation is missed. I'll correct to 2 space in next patch revision
+>
+>
+> > +          reg = <0x20>;
+> > +          gpio-controller;
+> > +          #gpio-cells = <2>;
+> > +          #interrupt-cells = <2>;
+> > +          interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+> > +          interrupt-controller;
+> > +          vdd-supply = <&p3v3>;
+> > +          gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
+> > +
+> > +          pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
+> > +          pinctrl-names = "default";
+>
+> Missing blank line.
+Will fix in next revision.
+>
+> > +          U62160_pins: cfg-pins {
+> > +              pins = "gp03", "gp16", "gp20", "gp50", "gp51";
+> > +              function = "gpio";
+> > +              input-enable;
+> > +              bias-pull-up;
+> > +          };
+>
+> Missing blank line.
+Will fix in next revision.
 
-[1] 
-https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23017-Data-Sheet-DS20001952.pdf
-[2] 
-https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf
-[3] 
-https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23008-MCP23S08-Data-Sheet-DS20001919.pdf
-[4] 
-https://elixir.bootlin.com/linux/v6.7/source/drivers/pinctrl/pinctrl-mcp23s08.c#L473
-
-Arturas Moskvinas
+Regards,
+Naresh
+>
+>
+> > +          U62160_ipins: icfg-pins {
+> > +              pins = "gp04", "gp17", "gp21", "gp52", "gp53";
+> > +              function = "gpio";
+> > +              input-enable;
+> > +              bias-pull-up;
+> > +          };
+> >        };
+> >      };
+>
+> Best regards,
+> Krzysztof
+>
 
