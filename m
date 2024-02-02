@@ -1,86 +1,92 @@
-Return-Path: <linux-gpio+bounces-2903-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2904-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF10D847A7D
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 21:26:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7ADFF847C38
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 23:24:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7C0192857BA
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 20:26:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 37F6E28705C
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 22:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C17B58173B;
-	Fri,  2 Feb 2024 20:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6629126F03;
+	Fri,  2 Feb 2024 22:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lvuEFcSe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="phyAE+Ko"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C64681733;
-	Fri,  2 Feb 2024 20:25:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A4588063B;
+	Fri,  2 Feb 2024 22:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706905548; cv=none; b=I1QoxcTiDZhm+ORtRQXku5KNDUYiHGtKRpdbgqKXrt8fFhuGtwMXVWBYkUxmFPoGdZll3LYHsFSBOwOb+YNhsJK//+4ZMo+DmhkzREHXhrgtJaof0GgLB17kKbNQJG3Uy0zHyL6qSIZA7o9RsWFRvEkwkFWGjOHxVjpJRH7wFdg=
+	t=1706912642; cv=none; b=MgD8d3VpVfnWbtFg4RK0c99+QX2I7mp2GyiRSXi3q5fcjh4UYgiwZMAuxQnEHBK7vMxKemTcxHQLLk3Vwk/Drz28ZWvDMBtLF/PpDU7S2vph3Nq1q5xKmPn9HW11g8rgZB1jmi6UCDvq7BL8vMcXF/s/mkkdxz8OnsoxJu1hMwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706905548; c=relaxed/simple;
-	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Zj8383eBWKrCo+NO0PmgDftdC0Ip/YBjiYDjDP2WsWdeXMFXoSocYJnp+t+7FsiRBMSl7L4VhsXnf7juLJf5YO12GRL7h2QdaILKSH/ET9KUh6wUCXdeDXA4JPVcApB1MIjaA9EdmTUHctkQMnUUsapSJX7nXTi/CeS/7f01xHM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lvuEFcSe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C772DC433C7;
-	Fri,  2 Feb 2024 20:25:47 +0000 (UTC)
+	s=arc-20240116; t=1706912642; c=relaxed/simple;
+	bh=C/CYJZBG3i/DIyUhlBjJCtToyWXY31JklYyQfK4p5Xs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=f0UPkSfh8v02CgbG75zNIwZCelimhWIclDClzkL0QZz1FTObYlv1Ga/+M0hDEoRTvYQ2rcbUPdlLntRO7Ub6Y42gchdyRQu95junMX8o0QdUu4HoycJj3JpuljOR/D4kAvZeqyX9HzjqkhWQCde1ing1CGCKOKbmk0+fP4Z30oY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=phyAE+Ko; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E239CC433C7;
+	Fri,  2 Feb 2024 22:24:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1706905548;
-	bh=MxAY5Cr9y7y/S5/XsNbAVU3wBhUsOla7ylwsneRNvHU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=lvuEFcSerMoxvaB1n89J940CgGMD9ZbGWrbU5KHXB6NaJQ+jZzmgg2xhE9x/GjOob
-	 ihGS6Vqnv6/EqSbFnw8SKz7ZQyLX6BJELWJToO9XiyvIRCsO47pIv5+pWZSCCAWY0W
-	 t96J4AvkyDEvPNsKwScqxJPYxhl0/fb6utAk9cG3k5uN/FNCmyRDk1gXh5EgDayATn
-	 mzagtP0dFT+hiuPFwlAI5Pb67If5tkeaA9TiC8BtQRlQuQaOrz1Y3Zsw9VuY2Iigdt
-	 c9OX+vyRmSWl0JFYs2FrR/OAh52So3r8ORVoMRu9RQr44jo5qZaVSOkXNj/er6FET6
-	 HT/0b2o2GF1LA==
-Date: Fri, 2 Feb 2024 14:25:45 -0600
+	s=k20201202; t=1706912642;
+	bh=C/CYJZBG3i/DIyUhlBjJCtToyWXY31JklYyQfK4p5Xs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=phyAE+Kofe/7UiVFZUcD3ltS/LmIs3A68MWwhjqrVZGbJ/BXGEBVNyL98dvGQDz4y
+	 +zc1YSzsKRhRGvwA2fSVuSnUfza67EQ/bM4vjOVjdbvGvc4PMpW6IMhoOsQ2F4yxgs
+	 0AypCAp87Uut8mlZgd+7ai+pIsISB90aCx9eRg+lqCZEt0x3VsfmNF+lMOlwxWUP8f
+	 VW6DUlE2V/5Usqcc7G5LlO/TD8hvXssfOW+1WiZuvvTjTe8jIuc45hZylFOnxh9iC3
+	 d0fmPTp2SKTCXvMjgN3SGIfnj/Y/DgYhAJAG+ppJh0IC7Rtt/U4LKxeZ9TH3Af0FhY
+	 qpGlKO0Eii4lw==
 From: Rob Herring <robh@kernel.org>
-To: Michal Simek <michal.simek@amd.com>
-Cc: linux-kernel@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, michal.simek@xilinx.com,
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Sungbo Eo <mans0n@gorani.run>,
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>,
-	monstr@monstr.eu, git@xilinx.com,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH] dt-bindings: gpio: gpio-pca9570: Add label property
-Message-ID: <170690554482.1072178.3894093393921778859.robh@kernel.org>
-References: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Petazzoni <thomas.petazzoni@free-electrons.com>,
+	Andrew Lunn <andrew@lunn.ch>
+Cc: linux-pwm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH] dt-bindings: gpio: mvebu: Fix "unevaluatedProperties" to be false
+Date: Fri,  2 Feb 2024 16:23:51 -0600
+Message-ID: <20240202222352.1652745-1-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a8396308c995959349fd40e61199853a9b711ece.1706783050.git.michal.simek@amd.com>
+Content-Transfer-Encoding: 8bit
 
+Schemas need "unevaluatedProperties" or "additionalProperties" to be
+false in order to disallow undefined properties. Only common or
+otherwise incomplete schemas should allow undefined properties.
 
-On Thu, 01 Feb 2024 11:24:20 +0100, Michal Simek wrote:
-> Add a label property to allow a custom name to be used for identifying
-> a device on the board. This is useful when multiple devices are present on
-> the same board. Similar change was done by commit ffae65fb1ae4
-> ("dt-bindings: spi: spi-cadence: Add label property") or by commit
-> a53faa6bfa3b ("dt-bindings: hwmon: ina2xx: Add label property").
-> 
-> Signed-off-by: Michal Simek <michal.simek@amd.com>
-> ---
-> 
->  Documentation/devicetree/bindings/gpio/gpio-pca9570.yaml | 3 +++
->  1 file changed, 3 insertions(+)
-> 
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Acked-by: Rob Herring <robh@kernel.org>
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+index f1bd1e6b2e1f..33d4e4716516 100644
+--- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
++++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
+@@ -115,7 +115,7 @@ allOf:
+       required:
+         - reg
+ 
+-unevaluatedProperties: true
++unevaluatedProperties: false
+ 
+ examples:
+   - |
+-- 
+2.43.0
 
 
