@@ -1,140 +1,129 @@
-Return-Path: <linux-gpio+bounces-2889-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2890-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C878E846A68
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 09:18:03 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6FAF2846E1E
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 11:40:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 071321C230DD
-	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 08:18:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 937571C24AED
+	for <lists+linux-gpio@lfdr.de>; Fri,  2 Feb 2024 10:40:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC5C117C98;
-	Fri,  2 Feb 2024 08:11:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 329C312B159;
+	Fri,  2 Feb 2024 10:40:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOeCWLTy"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10B0047F55;
-	Fri,  2 Feb 2024 08:11:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8112628B;
+	Fri,  2 Feb 2024 10:40:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1706861476; cv=none; b=ucUAyLFjpddUrqWXTpH9hPDzz4+Jtgu+8/jQcjzD85fkR6UE2DqIorZRvVu7VzJfV0Nay8J7SGZ/d4Zb7e84oB380o5XKz5gAZw89ObuqeeYqujqPEnmaAl6CR7HYcw9WwE+ssNDyQHLwJgHFpSAa2225+rmbn2BrnrTvYfcjrk=
+	t=1706870430; cv=none; b=XJh9D5LSmqx2Dnqr470Nx/4IhIAZu1SEeUt/xratEel49upENg9yZCQOYYsSq2hT/YNrt+Xe65xugk73Dd5XAoZutP5a5zLkhTKS8EoyUhUhfqgVHzkht+8NcTEGLPKg9BKKF2/rMtv4KB9egxjfUfYXj7np8UMkFXQvAaWCGRg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1706861476; c=relaxed/simple;
-	bh=o3wPyRXEPoSF+U7A/RsmBapsWEQBn3I78JpEMkHDxPY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=a6PjeuzoNwWr76aKwWzOObKoIgzzD38qeWj2m+J5OdSu6kal2HOpEMeonr2sSRYwQd6aVSUR1h0kNaZ1a4LX2ea3RWXJGIIIDNKNKiYsrDufnRQXRUi8bpSMss1xiU4xLlB9oh6t/6E0ZsqFSeeFV3vyeu+cZuGf5w8mN0pnBVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+	s=arc-20240116; t=1706870430; c=relaxed/simple;
+	bh=TLymezzE5+r0wlZC85xmYHZmI6YZpMuucXlhRm0pcTY=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=F/JINvj5hcjfS1gAdAwv6di4xGoPc/MfjcniGTMzG1iKuQ8YQ+yGez8/S+DsWWe2fcCDzr/8mKIMPhDQmQPor3kAUexnVbmzA5j0o+TbxJB2sPrRIuPjTwpPh4y7eqxFoA8sS+cx6XqQS74Cn2DjbLjGMKkzqcIF5j/cN94KcMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fOeCWLTy; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6040e7ebf33so4126617b3.0;
-        Fri, 02 Feb 2024 00:11:13 -0800 (PST)
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a359446b57dso248794266b.3;
+        Fri, 02 Feb 2024 02:40:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1706870426; x=1707475226; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=yr18VgKkUR0Z6xA+Bp01IdzSAv15CAC3JbNxjaal7xE=;
+        b=fOeCWLTytEfYLS5v1YJWd+ZVymGQ7FW08cJ1DffK/09AUn34WOfFnfgVGHJ4fHLpJN
+         ZcjoyTviGQdtB9/Q9RDIieFscRJQnxI1zBKK8Yj94DtPWMfK7ziCK4LdsRmCc800b54V
+         dNtAhbVVF3fAAIQRMDEdBz2aot5+aXFMOrGozNC/MmUonL6KIBpqfIaMsjKmm5s4qgni
+         Y7u0mnvhA01IjC6nJ3qllbLf4gJPZ4Vum0G4uYn//lce39vduxPYBoyW6v3E9t5E5iGm
+         m8gjI7ZzahUgrkPT6Mupu8gUMOYdaIFcnqU/ffBjqoXUBe8pyARp4NvpjkOs6Nrg9xZp
+         Zo8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1706861472; x=1707466272;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y7OoK/n68hP5aJbuOodgIidDfY/+GTLZ17QcyZGeA8I=;
-        b=WNjoF3ItnQ/pK7SQ+3P28mLJvATSXret2Yr1J4RotqzUlkEOO4ELsiO1wHseaWCHPi
-         uQ4JOClapmdySrK/tT0rK3bUeh6vkbwnlPRheUzSoFRvZxwbGKYiABNLiZSmvMHqb6M3
-         n1MN2ir/gjoE2SS6Vm50Xk2CZlnmQba2do1PhqdT7Z59vghlPnhkS78uPWuCt7WYgIWY
-         FBVuOQHjORoTdpPWwzB+864lVBK8te/aKJhVRHrwk88RDfPiq+t7nD23ZWlhN7bMsibg
-         Kax1O/PhcF3f7XrxcNn4If94xhiTfp+N3hX4EJMwho/4tUQSEj0xeDhBfYVW1bQlV7Tf
-         5P0g==
-X-Gm-Message-State: AOJu0YzTalJ+qThFV9y9H9lIVYKVbDUInAE9gpfmCyRqSQ3HLmZ9kcLi
-	zd9pdutbhwcxh0u+urB/2y05HNV98pkjyUIW28e+fCFcyreTsHtfhkB6lWXNRy4=
-X-Google-Smtp-Source: AGHT+IGa+FAvaaF/PkZN0J/RKo4mtyCQu74u3vuXy4ZmvjsePaqRE7Jl/L2qf7Jmss5gQDr67tXy1Q==
-X-Received: by 2002:a81:4f82:0:b0:5ff:a961:d91c with SMTP id d124-20020a814f82000000b005ffa961d91cmr1185104ywb.1.1706861472604;
-        Fri, 02 Feb 2024 00:11:12 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCUiHaMF4Jaj27UNM58du4HOo+4B68M/GvAuRaak/j5L7UP5/ugzK5FwpXguA7HGfLHE4JI+EWyHoOIwhyYwNTSUqE048BX59Kopf2E9/MQH1r54odQwsd5k7JhwCdXtX8xgmZ0AApbA3ZL3SUjNFD0Z7JpJSto/5JzQ7cEU4hJQWMM4nIc=
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id cd18-20020a05690c089200b005ff98d9a7b8sm302728ywb.19.2024.02.02.00.11.12
+        d=1e100.net; s=20230601; t=1706870426; x=1707475226;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:subject:from:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=yr18VgKkUR0Z6xA+Bp01IdzSAv15CAC3JbNxjaal7xE=;
+        b=G2iSR5aZ5qk/LHnx/nmv2fiSN5ah581D61FsirSC7JhNFPsCeeqqIlg8eNZWypyus2
+         8pvpyL64D1Zl0WyrlC+baHS+2YMnFVKpmSyghmnKkNFRv2B2grjq03tv//k4Xz8rUzF2
+         vs0gkN1bodD3wEpJC29b1Wcx9XExbju7ts6OMEYpU2AS6Z+KljjZiJkPjJqDXZuAkB9j
+         ayUICwcI7ACWIiurAWmO3c+aaQlXnmjY0f0mxMABnHtVbwmGh6OVCJudZG9l8g1at94q
+         1qz5nhaIzMEjlsHzIA4D1YJWWSV7QwSQqnPHj01HfUH/B//tSY9WtTPO3QOzSEEEw6eF
+         O50A==
+X-Gm-Message-State: AOJu0YyYNJn656ESNoB0YsJBWgi0FWrt0OFmIezj8wn9UcRt6BcXqgNV
+	vqLew3AuuBHL1zzHhpb2au+KZ+DbGhrPpQ10/DSlC1qNOfZiXoBL
+X-Google-Smtp-Source: AGHT+IES3tCk3jxs0f3dtCVujdQihB3Cb/dce9FqfXLgDJYCUO6WQa6kZawzBG6V58Qd4NgHObwTrQ==
+X-Received: by 2002:a17:906:3b8e:b0:a35:9cf0:56d4 with SMTP id u14-20020a1709063b8e00b00a359cf056d4mr3995076ejf.30.1706870426176;
+        Fri, 02 Feb 2024 02:40:26 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUrmf6/v+Xa22VMbRqu6wSX1b6ijQWy9+2d8Xa5a3K+X3iJVkwzB+5zIAQXNGGuZ5E5UFGMJ7Q1Dh/QNeQ63qRHwfiyw9jwMY8OHcYK/R6yOn7wvrXzLCFKoqsAZj2UoJDqKeVG6hvyjB6Ws0ZZv53cl+fY0ZdLXYsqVfdShBFmcVxWbrqeUMfyZ6p+E9WceIHEd4pgUbCiGmQe34PuiWOWwW64RXGNxxk3GfZCCCA9PvFcZLkR0QrVXDNQoYYoMFuk4Edo59wnJ4JOGHfRwS7bBtcE7evMek8oNdgBY0ILQ1ugKAtK856CGhw5iuPhbluweg==
+Received: from [192.168.3.110] ([86.38.153.11])
+        by smtp.gmail.com with ESMTPSA id vk7-20020a170907cbc700b00a371a1b40c1sm256385ejc.23.2024.02.02.02.40.24
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 02 Feb 2024 00:11:12 -0800 (PST)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc6cbe1ac75so393784276.1;
-        Fri, 02 Feb 2024 00:11:12 -0800 (PST)
-X-Received: by 2002:a05:6902:2489:b0:dc2:23b1:eaef with SMTP id
- ds9-20020a056902248900b00dc223b1eaefmr1451206ybb.18.1706861472161; Fri, 02
- Feb 2024 00:11:12 -0800 (PST)
+        Fri, 02 Feb 2024 02:40:25 -0800 (PST)
+Message-ID: <cc1572a4-f2e4-4f26-a505-09db5dcdfdfa@gmail.com>
+Date: Fri, 2 Feb 2024 12:40:23 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1706802756.git.geert+renesas@glider.be> <b20aab137058c02ab5af9aaa1280729a02c6ea49.1706802756.git.geert+renesas@glider.be>
- <20240201221151.GA1562458-robh@kernel.org>
-In-Reply-To: <20240201221151.GA1562458-robh@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 2 Feb 2024 09:11:00 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWmVs2m3bX=21Ocw8y=8WDJfFy2dami3aC9Kj-4PokDEQ@mail.gmail.com>
-Message-ID: <CAMuHMdWmVs2m3bX=21Ocw8y=8WDJfFy2dami3aC9Kj-4PokDEQ@mail.gmail.com>
-Subject: Re: [PATCH 1/2] regulator: dt-bindings: gpio-regulator: Fix
- {gpios-,}states limits
-To: Rob Herring <robh@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Subject: Re: [PATCH v2] pinctrl: mcp23s08: Check only GPIOs which have
+ interrupts enabled
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com,
+ akaessens@gmail.com, thomas.preston@codethink.co.uk,
+ preid@electromag.com.au, u.kleine-koenig@pengutronix.de,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240201141406.32484-2-arturas.moskvinas@gmail.com>
+ <ZburBq7ZJhK_X_t0@smile.fi.intel.com>
+Content-Language: en-US
+In-Reply-To: <ZburBq7ZJhK_X_t0@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Rob,
 
-On Thu, Feb 1, 2024 at 11:11=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
-> On Thu, Feb 01, 2024 at 04:58:41PM +0100, Geert Uytterhoeven wrote:
-> > make dtbs_check:
-> >
-> >     arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vcc=
-q-sdhi0: Unevaluated properties are not allowed ('gpios-states', 'states' w=
-ere unexpected)
-> >           from schema $id: http://devicetree.org/schemas/regulator/gpio=
--regulator.yaml#
->
-> Unevaluated properties warning here is not interesting. If a property
-> fails validation, then it is considered unevaluated. It's that warning
-> which is interesting:
->
-> arch/arm64/boot/dts/renesas/r8a77951-salvator-xs.dtb: regulator-vccq-sdhi=
-0: gpios-states:0: [1] is too short
->         from schema $id: http://devicetree.org/schemas/regulator/gpio-reg=
-ulator.yaml#
+On 2/1/24 16:30, Andy Shevchenko wrote:
+> On Thu, Feb 01, 2024 at 04:14:07PM +0200, Arturas Moskvinas wrote:
+>> GPINTEN register contains information about GPIOs with enabled
+>> interrupts no need to check other GPIOs for changes.
+>>
+>> Signed-off-by: Arturas Moskvinas<arturas.moskvinas@gmail.com>
+>> ---
+> You forgot to add a changelog here, but no need to resend, just you can respond
+> to the email since it's not a big issue in this case.
+Ack.
+>> +	if (mcp_read(mcp, MCP_GPINTEN, &gpinten))
+>> +		goto unlock;
+> Do all hw variants have this register available?
+> Esp. I2C part, wouldn't it be problematic (exception with NACK on the bus)?
+According to specification sheets MCP(s0)17 [1] page 19, MCP(s0)18 [2] 
+page 19, MCP(s0)08 [3] page 11 - all supported expanders have that 
+register also that register needs to be used [4] to mask/unmask 
+interrupts on given GPIO, without it - expander won't even fire an 
+interrupt. I tested on MCP23018 I2C expander though but module itself is 
+not treating that expander differently for interrupt handling purposes.
 
-Oops (again, I'm afraid my mind is already living at FOSDEM ;-),
-I copy-'n-pasted the wrong message...
+Do you want that information to be added as part of commit message or 
+information in the mailing thread will be enough?
 
-> > The number of items in "gpios-states" must match the number of items in
-> > "gpios", so their limits should be identical.
-> >
-> > The number of items in "states" must lie within the range from zero up
-> > to 2^{number of gpios}.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > The second issue did not cause any dtbs_check errors?
->
-> I'm not seeing 'states' fail, but it looks like you did? Is that the
-> issue you mean? Looks like in the matrix case, we're now setting
-> minItems if unspecified.
+[1] 
+https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23017-Data-Sheet-DS20001952.pdf
+[2] 
+https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23018-Data-Sheet-DS20002103.pdf
+[3] 
+https://ww1.microchip.com/downloads/aemDocuments/documents/APID/ProductDocuments/DataSheets/MCP23008-MCP23S08-Data-Sheet-DS20001919.pdf
+[4] 
+https://elixir.bootlin.com/linux/v6.7/source/drivers/pinctrl/pinctrl-mcp23s08.c#L473
 
-No, I did not see states fail, only gpios-states.
-Hence "the second issue did not cause errors".
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Arturas Moskvinas
 
