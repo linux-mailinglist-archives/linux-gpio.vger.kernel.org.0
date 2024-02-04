@@ -1,129 +1,140 @@
-Return-Path: <linux-gpio+bounces-2910-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2911-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0EFA1848EDE
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 16:21:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C05CE848F44
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 17:29:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0F68284CBC
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 15:21:41 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B6A6283ABF
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 16:29:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A418C225A9;
-	Sun,  4 Feb 2024 15:21:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E119422F00;
+	Sun,  4 Feb 2024 16:29:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b="AQKEizc1"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=marliere.net header.i=@marliere.net header.b="oQtL5POX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.kundenserver.de (mout.kundenserver.de [212.227.17.10])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oo1-f45.google.com (mail-oo1-f45.google.com [209.85.161.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9744E1E503;
-	Sun,  4 Feb 2024 15:21:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42A7322EEA;
+	Sun,  4 Feb 2024 16:29:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707060094; cv=none; b=UOiwn3uVs7RShE8+IAtA9L5SKPkgngml8MEX7EJu+VNvYSjYGJ1JTBqi3EiFTkqQxpCUghBroezeI74Hrllzbb3uLYg733bw/bch7zRQBbHkVHd8Vs2Qr6QMNP18CYKF8SUbudmEx8Q2XrjAYa82ylyNxuTVlfq5uA12W41loWo=
+	t=1707064157; cv=none; b=fUzBqZptbxUVwLfcepCkk+cg3ZkHPh1nsQbj8H/QlL3NrsABBqYUS8BaYmEYxio0gNgPvvsvo0wzHYWIbUpLupaFQVEr9i6fkVFP/u7ei362GGZE5lpuT9ggw7zfTy1kadH0olIwX0daB/8x2T4yeLN2dTZT4bM+bJU87rcOekw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707060094; c=relaxed/simple;
-	bh=qEq0hF+Gj60txzWb/+hgTp/WuE8H1Lq9zbgXK7pJOVs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qkJO1A8kgtPgFfJ7ri+msUhz0+P59NMfyz4P5tedm8p1+KBfwPpwYUm039L9x58QyYPCARcs7V3NUNHn4p9JeUhYCpSWrHt1rzTrXbX0tznhW/wIvBRVF52lsUiRG9NRbmxBp8ay9vRXamxDyYIgvrA4ww4ohRkL2KSEX/O/Www=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu; spf=pass smtp.mailfrom=heusel.eu; dkim=pass (2048-bit key) header.d=heusel.eu header.i=christian@heusel.eu header.b=AQKEizc1; arc=none smtp.client-ip=212.227.17.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=heusel.eu
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=heusel.eu
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=heusel.eu;
-	s=s1-ionos; t=1707060069; x=1707664869; i=christian@heusel.eu;
-	bh=qEq0hF+Gj60txzWb/+hgTp/WuE8H1Lq9zbgXK7pJOVs=;
-	h=X-UI-Sender-Class:Date:From:To:Cc:Subject:References:
-	 In-Reply-To;
-	b=AQKEizc1nhOK45EH9TleAAGHfwGEMkVa8Lkn4D4dDAzuCd4YuV3KmEk+quS1SjPV
-	 zLmHPpAmNJIKcPp2EaW6NeTwvIgjQ3JBoQrvhocwn2MJvZb6kWx2LyeC+ExqSajBh
-	 6PBzWkCG6+vUzihqSvNhVK2rcQ3dwl/zEBO17nTyqnvikstDrXZg9+zJ+c3h9SnA6
-	 Ong2AZ7Hb160xEKUSg3jhavO6egc0PgFhcv3cuYnts1rUOKQejTX+ADshMVT6DDaq
-	 KQK0PE0yOLPrPOdHej9pEpbrN+neKsIEwFBcaRmVnwrAsZ/zoTYCi6P4mafvpekV/
-	 EgJ8sLb/16X9bAaHzw==
-X-UI-Sender-Class: 55c96926-9e95-11ee-ae09-1f7a4046a0f6
-Received: from localhost ([141.70.80.5]) by mrelayeu.kundenserver.de (mreue109
- [212.227.15.183]) with ESMTPSA (Nemesis) id 1McY0J-1qtjaK0Rfp-00d0jc; Sun, 04
- Feb 2024 16:21:09 +0100
-Date: Sun, 4 Feb 2024 16:21:06 +0100
-From: Christian Heusel <christian@heusel.eu>
-To: Mario Limonciello <mario.limonciello@amd.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Basavaraj Natikar <Basavaraj.Natikar@amd.com>, Shyam Sundar S K <Shyam-sundar.S-k@amd.com>, 
-	"Rafael J . Wysocki" <rafael.j.wysocki@intel.com>, "open list:PIN CONTROL SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	open list <linux-kernel@vger.kernel.org>, "Rafael J . Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH] pinctrl: amd: Add IRQF_ONESHOT to the interrupt request
-Message-ID: <x5cvyptbvaaadmbbhrza6jb65d5i4djmpqfkdpg7aj2z77jhkz@kofpufdqgm2m>
-References: <20240123180818.3994-1-mario.limonciello@amd.com>
+	s=arc-20240116; t=1707064157; c=relaxed/simple;
+	bh=7Aa3vHYQq1Cas6qCMgssrF4OfAvkTLYL4PbhRMnJOpM=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=q0lPojIYvnQIQ1WZJADxOKIkDf95OzyMr91Szye5xwKVIxUis7HEn0P2AlIXMraBDRN4w2pUaalU9WmJ6jWF97+ITPQykLkQpAyRtlsez7IQrDg5Mgm1i65vFPaOBLiZOUtAGinZYZX9YWGc6AFB3sYGTYwKQSgDqmzuOjaN2ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net; spf=pass smtp.mailfrom=gmail.com; dkim=fail (0-bit key) header.d=marliere.net header.i=@marliere.net header.b=oQtL5POX reason="key not found in DNS"; arc=none smtp.client-ip=209.85.161.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=marliere.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f45.google.com with SMTP id 006d021491bc7-595aa5b1fe0so2523402eaf.2;
+        Sun, 04 Feb 2024 08:29:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707064154; x=1707668954;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:dkim-signature:from:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wkEWH6gvNpDijd7cA4NPnUTuDEXBhNQ1QH3JdnlFRIg=;
+        b=RLnPwXRTyxpB3TaONGBZtZvZJ6OC/FKf4QuO+PEw9SNJE3zvQnHnmS1nfcX2OOsi2U
+         02bBvmhTf/b0XGpViPYwUPAwVm2MNmTJvO28gGOhGZTO5vJ2zzTMF59NMkpPufyfaH93
+         ENS/+BzG2BT9XzPANLznFISHAcRSOPHHa0bqES2uafDHJfsBEvezKiuo4gZh3myDpRkB
+         GHXW4DM3ey8PH9T3KXzyXp/ukz91dmLX+IFdCpbmJNx/K68jKTNlGtDBnAS+Um07wA0k
+         gwix75JfD4RKnMTIZkjs0qOocv5083+SwQ20dZc9QJnmMzql2Jos5w9ldLVLpAOQxkd6
+         jYPQ==
+X-Gm-Message-State: AOJu0YwgR84dM79QKjmQgVeU9rM2nG6L2YUSej8lGEwcMvELT2wZ+lLJ
+	CKodDuEH7L+p83z/ISBfPXRoVyoTWJWhKRYmMJ7WZfkR2ZvML3lTVj3beciHsOi22Q==
+X-Google-Smtp-Source: AGHT+IFDd/2hkl8QGVjFRhHVZTK6ORjYHDAKtWp7a58YWgyhQvTjSfM3ja8SuDBFix4LeKYkEzYskQ==
+X-Received: by 2002:a05:6358:7e13:b0:178:778a:30e1 with SMTP id o19-20020a0563587e1300b00178778a30e1mr16107803rwm.11.1707064154123;
+        Sun, 04 Feb 2024 08:29:14 -0800 (PST)
+X-Forwarded-Encrypted: i=0; AJvYcCUrYVc2ig8vzFUVeWoc6V4P/bVaX7DS/UP63Ko5rlj/MrCPLREYUbp7wugUcViWySfIxUIOU8aPGdyrRji8q8Gt9SxNfvntKg4i2PsWz1hsPJeo0Ixl1l4/QoB+Ub3Jo5glUXI+OwXSAYlx6rbWpvQUBMqkGBlmUA==
+Received: from mail.marliere.net ([24.199.118.162])
+        by smtp.gmail.com with ESMTPSA id g3-20020aa79dc3000000b006e02eb7fb05sm2359374pfq.160.2024.02.04.08.29.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 Feb 2024 08:29:13 -0800 (PST)
+From: "Ricardo B. Marliere" <ricardo@marliere.net>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marliere.net;
+	s=2023; t=1707064151;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wkEWH6gvNpDijd7cA4NPnUTuDEXBhNQ1QH3JdnlFRIg=;
+	b=oQtL5POX6P4wsS9sk+vECFOCc1zVsFHanQzNpYbPLrASGnrcid4tCmdexHx2sYu5I924Kf
+	+rqLpOvdq0jTqEKIUByuHHwE7uA3MoTnIEYIF18mR4R0xNkcUbLqqVZw6ObQfxO14GENQm
+	gBr3CY2pnhuz2NBvdD0ENQOAfxO65o7sYii3IAfUW4fmAoP563gNjPxcZdFApGosp926aT
+	z4GIQMLaBicp0jBXjTVeLYgKPFt3OI4c8Sx6KV+fv+rugGhfBIwC7B1ZNG51q6GQ31i+tS
+	XFfkU+lSi4fjNSQVv3b1P/ectK7hoB/V9cfrWtr0wdBBgKG+GAk8WkkqNRpKvw==
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=ricardo@marliere.net smtp.mailfrom=ricardo@marliere.net
+Date: Sun, 04 Feb 2024 13:29:42 -0300
+Subject: [PATCH] gpio: gpiolib: make gpio_bus_type const
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="y4azmvpmfn76pvnt"
-Content-Disposition: inline
-In-Reply-To: <20240123180818.3994-1-mario.limonciello@amd.com>
-X-Provags-ID: V03:K1:uVLbiXNdFw85cEFv/1AoaWjJFrBzJpd9zuI9LEHS3gJnSdTKC0s
- BP8dWP2+PmdMMl0cQc3FNStqsKNCvZ4CL6Q1IMSAqMIvJ0NRt69pEoIX3CPCoY4mDKWmWFX
- 2PK7tNvhn7WUojEaY25fqE1RFeNbV+uEEixq6Qkwg4rnN5VbJLFB7lAdjezDC7oBBsC0fT5
- i+vV4Ju7Ov5lmmy1sCWGw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:2alwNBgJgvM=;cvnORCtelnKyIcc+TYuaYiQJO7l
- 63qzTMMV164/TFIbtsvWTSloWCc/BAGGvX3mi5ei/ylrKOPwHaFJHvU4c+frzzx5FdWkUg7eG
- Mu0G1TzyClk2h+BK+370jyXnZC0gqDvwnTz7o1tBrfySd7xtaEneyia+RAMQf383lVMyrBuSJ
- oWOxJ01EErOfSnXxmN6Bst2S1LchiJwlD6W/YiXeydsTqKMYHVCKjjsj7dtO3/1UuIGQHqSy2
- OsIDW1jaxDoOR/eYNJW5B5qz+qHDllnsdm+8k5XfraZpLJtBWzFltBDlH+J7zh0a4bpLOtADC
- jPzqjhxUaK8MFCOnQIMiM7EIrspL2rdERRYsbK+MbZ+ABa9CabRinWzDCZQSlACdMa/sZwgK3
- FHcuyEGnWzXLFOlP09pDIJIcTkgb5i6QaEyif2HY6J1DczOuVbAAK1bGzVTTylVYkXHRFJFLc
- aQ+io7yHn9cCtFek21nYFbgd3soIYyrDAixwNoIttRnS7bxt8rpXtl9HDptOAwoHaD0gqBmbQ
- wKJy93rJsHUWMZVgIJJ/iizfe7UvNiOZyZV0OT0uSIGyZUG5+WK5E/6lgt2h6PfAEJ8gCgTej
- pnNkxybJT+XZ1N2M2Raz9KcokyXP2xay4AVLQEc4pl4LPhbWe71FjvkUOFG9aQaftXrSHkTwu
- hMUrvOVfrhwrEgqTYb5z94Ons2YIitU3rAsFjzI/z9OyDx4dHkE08PBLwdlT9rgdI/7NGAA75
- aC/zC1PxKWygwgnXmx7qUbdAFwK1NKCx4dnBDgbn6WUx7vZhxCfTrM=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240204-bus_cleanup-gpio-v1-1-82d91b4ee1de@marliere.net>
+X-B4-Tracking: v=1; b=H4sIAHW7v2UC/x3MQQqAIBBA0avErBPMjKKrRMRUkw2EimIE0t2Tl
+ m/xf4ZIgSnCWGUIdHNkZwuauoLtRGtI8F4MSiotldRiTXHZLkKbvDCeneh6Ihz2VmGHUDIf6OD
+ nX07z+34nU20CYgAAAA==
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+ "Ricardo B. Marliere" <ricardo@marliere.net>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1075; i=ricardo@marliere.net;
+ h=from:subject:message-id; bh=7Aa3vHYQq1Cas6qCMgssrF4OfAvkTLYL4PbhRMnJOpM=;
+ b=owEBbQKS/ZANAwAKAckLinxjhlimAcsmYgBlv7t262tpxtjoDfiGTQJSHx4/rnZhb6DFY3+It
+ uP1aECE3ZeJAjMEAAEKAB0WIQQDCo6eQk7jwGVXh+HJC4p8Y4ZYpgUCZb+7dgAKCRDJC4p8Y4ZY
+ pkf2D/9SUPLxQHC4Wa76gTRLTGHSDdWvDnfklXGa3QPBrZwKCUooTXmdeAmFsB5IVTMvYWwEFtm
+ VqEp94xV2R3yDrXaChSnrTtO5UkWGRxI2DGHLpt2+wM3bbDegPWHso2hArkbK1xyIok0FVEil8G
+ 7VvhQf9Yoeom7etDEW4QPbUEJ41W9gUPs0clWRVWrpBl5iAcDqd4DrXNaEWG9MCA2GhxjXu7imk
+ LKe2xxRuPsWjxIECqfNoctz8n9PIH9iGhv5YKbXDelUaWJ3GMa449RqGWxsm1Knjb+XoZxNts40
+ 14X3WDae1Jy0qGqHii5GAdG/x2C7QqOuXQaCW59Tdobv7u8oY8PzDVQa+GDk8PIVmpdqC6KJPHl
+ vGNX7RmPqdP3mRSq5mg0c+HGiCNYLcls7/mipdFp59NKIuqUxuJaSztMfKXyR7q9tcaJXEhtmPL
+ Ae4ctUQ37QK6smHQGYqyiR1kSuQabtBwGLaYTmi4p3nm5HEucCa7381BL4ZdpHpqEPQs68lpZV6
+ 9iXV+JqnRhX4K96g5N3p3jWzmMXfPBSDz79pc1+K1Czswfej+oBYK04Aw7rnJBaDOn/bWuT38U+
+ W9b1LWnXOrcqGPzS7mw5L5xgzvvRP5J8YTEFYjS9K0o+88ZSifj6n+ESy/i+tSbjAr4JfpCZqVt
+ /6xNfXm02LIcQvg==
+X-Developer-Key: i=ricardo@marliere.net; a=openpgp;
+ fpr=030A8E9E424EE3C0655787E1C90B8A7C638658A6
 
+Now that the driver core can properly handle constant struct bus_type,
+move the gpio_bus_type variable to be a constant structure as well,
+placing it into read-only memory which can not be modified at runtime.
 
---y4azmvpmfn76pvnt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On 24/01/23 12:08PM, Mario Limonciello wrote:
-> This should fix the GPIO controller failing to work after commit
-> 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI").
-> ```
-> [    0.417335] genirq: Flags mismatch irq 9. 00000088 (pinctrl_amd) vs. 00002080 (acpi)
-> [    0.420073] amd_gpio: probe of AMDI0030:00 failed with error -16
-> ```
-> Closes: https://bugzilla.kernel.org/show_bug.cgi?id=218407
-> Fixes: 7a36b901a6eb ("ACPI: OSL: Use a threaded interrupt handler for SCI")
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index d50a786f8176..24d046268a01 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -63,7 +63,7 @@ static int gpio_bus_match(struct device *dev, struct device_driver *drv)
+ 	return 1;
+ }
+ 
+-static struct bus_type gpio_bus_type = {
++static const struct bus_type gpio_bus_type = {
+ 	.name = "gpio",
+ 	.match = gpio_bus_match,
+ };
 
-Just a friendly poke regarding this patch as the bug is still present in
-rc3.
+---
+base-commit: 3eac8bbed22e940ac1645a884f221bef408f675c
+change-id: 20240204-bus_cleanup-gpio-57eea8d32a5a
 
-Cheers,
-chris
+Best regards,
+-- 
+Ricardo B. Marliere <ricardo@marliere.net>
 
---y4azmvpmfn76pvnt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEb3ea3iR6a4oPcswTwEfU8yi1JYUFAmW/q2IACgkQwEfU8yi1
-JYVDXA/+II2HQqgg1/xf39S3NLNIHrRXx5dAsrRjx2BPMF/aA5PkSIlD5tTQws+P
-lrKKmetScNWOtrMRhtpr2Bxm0IJ+b1ScWMondhbYfwt3owe03AtRuKE9NjHq2I1v
-1S3fDp3JAZ68Jfh0Z6+vreR2XKIaAOH4k6lIfPq857uYt69sjk7VlUQ3lii8TDi7
-7MeVcjqo/Nu2VD/qwW/GhXdmqVzAs9eS68SO9z5NnvnqtKyhWUlwxMGpTbdsdM+5
-gZKOW0rutYSgm3g3rfHF/qQqVILpGsJkWr50bs8UXIVA644I4l53nPHMi4ZogbvV
-DGbzvSXGi3KieKH3FvG+UIi72BwiUxVUYWyVBRPsP9ZBO9S+RTl/9AispVZ+fUzg
-x+bCpBub4osjLVKvNC0Z/GIAzOnRew9nMS9bDY8RTZKq8L86BhW00LT0K0dAzcBQ
-oG4qsSElq1GwQFhr3x6chrzn+VxxYj5HKYsUoPzS5oHwP3oa0y2BVy2kD8AgJXcH
-HFW1cUF8YE2+TUyrDJfC8v+3WSRWhOCvx1o02Q/FBtgQ3LBKUzQX3RK/1+K4Op0H
-HYdqZX7JIonVXtaM81PST11tNp8uW+GhKHACK4jeBHHbjciNLqlyxVMU/IOggloE
-RQWYnceulJ150CT4DXnlNtIEUDWnmIWPrkxaZv/Q0PtoVIEo6kE=
-=onNw
------END PGP SIGNATURE-----
-
---y4azmvpmfn76pvnt--
 
