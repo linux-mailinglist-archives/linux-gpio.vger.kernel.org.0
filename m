@@ -1,127 +1,106 @@
-Return-Path: <linux-gpio+bounces-2916-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2917-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73434848F86
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 18:04:09 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 090BE848FE1
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 19:19:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C3D82828D6
-	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 17:04:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BB9B1C21251
+	for <lists+linux-gpio@lfdr.de>; Sun,  4 Feb 2024 18:19:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BFF241E5;
-	Sun,  4 Feb 2024 17:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CE5824A0A;
+	Sun,  4 Feb 2024 18:19:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g1hUHdEU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9861E887
-	for <linux-gpio@vger.kernel.org>; Sun,  4 Feb 2024 17:04:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DD824A00
+	for <linux-gpio@vger.kernel.org>; Sun,  4 Feb 2024 18:18:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707066243; cv=none; b=ZESDPWWmFhnzDgoSBmMgRKd7kCpKsT7iKFzkNtxdqiK0T7EXhpoCsMPpnIKTd++YeUb4y0wH+oTubygrvvOl0v18quYh0KYoJN8q+28pHAEqsD4iMGCvgcnUSzFUTJNfw6m6UUuHBiJ+qzxzrM5NgujpKOQuzFzYHhtwRrrbmlY=
+	t=1707070740; cv=none; b=s2MiYUdV+6W548E3OdvWua0IZPzb5VYJ0bTCYM5pimoG3f+2Q2PWykqAVsmlGJb2C/PCprWDT3GiOfuC88/N2Mi7ziFWSEIkFGgxfQ+y4puabQTl55fEc6hJApWqHgqR2kct909zupXvLv7YEddPjimPF+AOyvJQVjgQ+/R5Qcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707066243; c=relaxed/simple;
-	bh=Hc9tUiOGoKDix4zY3uj/vZxzd566MMLdtIeaQ+DJ8F0=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tNgUp1jTu3ppv4OqGLjyh85xtqEyKfex8jef5xMgiZsMUITyFSvkt24IKFmQIILviZoY5wM+LB0X1/AcfVrGeg46H1qLc58+FjXcr4beSmxIdI+FXalHQGgO+EgVgiGAL6r3TGzZeDeKaIJrpzu0s8pyo70yErCVCG7yO39Joko=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-30.elisa-laajakaista.fi [88.113.26.30])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 61aa5fc3-c37f-11ee-b3cf-005056bd6ce9;
-	Sun, 04 Feb 2024 19:03:58 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Sun, 4 Feb 2024 19:03:56 +0200
-To: Nikita Shubin <nikita.shubin@maquefel.me>
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Lukasz Majewski <lukma@denx.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Ralf Baechle <ralf@linux-mips.org>,
-	"Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Andy Shevchenko <andriy.shevchenko@intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Andrew Lunn <andrew@lunn.ch>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
-Message-ID: <Zb_DfISgoNyTKWMp@surfacebook.localdomain>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+	s=arc-20240116; t=1707070740; c=relaxed/simple;
+	bh=3w00XsqZZNEJgfTVb0Mw/wkTith+nLWiGUTMx8Ahb8Q=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bhJ4eCy17KBpIyyN1sLFk3nYXoITYz+DqXiRXdZDEciVa/JP7nGJ+A9KqO9t1vKuSJulVQ6iMDcnp1mmCmKTz5odQrQJWfQnHfRH6hZ9qGOY8QG7RPucT+Jb5lAqBm4NGzOL6kxpTzCJk8P+k4QIUFjbu4G+6bbKipmcLY0oHCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g1hUHdEU; arc=none smtp.client-ip=209.85.128.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60417488f07so39518257b3.1
+        for <linux-gpio@vger.kernel.org>; Sun, 04 Feb 2024 10:18:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707070738; x=1707675538; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=3w00XsqZZNEJgfTVb0Mw/wkTith+nLWiGUTMx8Ahb8Q=;
+        b=g1hUHdEUrYrhiMomvYkGATJ8IhocW6cOUqUjGrnkTwgj1otzyd0Psn0QeIQ/Cqo9pX
+         hQ0af42fVxe8Ph+qUQ2sDrl/LAeleXiZ7l4hmFfVMbTB05dRCWqwFOe4vDG6iVdIR0ew
+         iRQHAdbTHnvngTLDemQO3lRFYEOet6PTvs8iwp6qYSOw7dkDk7D1OE0m6/aUxoTIu4Em
+         KC4IpqV/TusfXjnghdj01YfFzA7BM/qJ1FpwbeR0ojci4D2NbACjJZPoh63jV+A3ILr9
+         yjBGgNoMXAtM8ccZm0yzHDw+DB0Fyq+nXiZXfjIdlG4AaJN6V1HwzLneyEkMtLJCpZid
+         lQKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707070738; x=1707675538;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3w00XsqZZNEJgfTVb0Mw/wkTith+nLWiGUTMx8Ahb8Q=;
+        b=hdfZBhGM0CYlV5L9wy5Gyp3ePyzbGK0NMIWy4mvHM/WxRTWWY2lsrfhKimacbVWWa1
+         R6RL8bIm4OmS32fj16D6k0SXNhyF8B3LRWfSy+qnaYzT2VThupqbucwvlt3yCI6OAGry
+         RJBnHfB0swT7Ib+WvOwNaMxjCfVO/zHTLld88k+dQ1hgkEsMVJUCi3mO70AXm1njEt6c
+         KlMQz1eHDap2SPF1yyQerYc5p6KpiTIzOe8c8gpwovhF7uXHr+cvr/r2oCwkphuVG7P2
+         oKJvchKQpGidPZInJjB4zp00diKP2ElufwrkzI+UioitffA/iT1hUKVHDBBah3mux9ih
+         ilhg==
+X-Gm-Message-State: AOJu0YxgvKaA5DvQmaw+zit9dK6Bhw4FtvLvuYiH+kxaqXSnOfsacdQZ
+	UmZA0Y4B4/LgaZ2N/1UbvL7+6IiLbxRYtWhqPYK0q6rLTgLM7l8TW02tZEn+1RJnhRv8hnB7Q4a
+	SEoYf1E215J4GZMuPBjZ+TXjA0diAsI3wqHNbog==
+X-Google-Smtp-Source: AGHT+IHlIEaGaeAMWab7/L3E0/tkffip020QFwU575qHSmmvDyGp5Zk55jezREUcVn3JVEng+6jrgXNRvKQDrd38TRk=
+X-Received: by 2002:a81:4422:0:b0:5ff:91d8:42b0 with SMTP id
+ r34-20020a814422000000b005ff91d842b0mr10758935ywa.46.1707070738137; Sun, 04
+ Feb 2024 10:18:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
+References: <cover.1706802756.git.geert+renesas@glider.be> <ffb1eb1d747dce00b2c09d7af9357cd43284d1c4.1706802756.git.geert+renesas@glider.be>
+ <CACRpkdaBBFjtgoUhhK8-X28BK=2NCyRS2NiYvVEZFAsQiNZH9g@mail.gmail.com> <d41b0858-df3f-4002-8a51-aaf91bf3a659@sirena.org.uk>
+In-Reply-To: <d41b0858-df3f-4002-8a51-aaf91bf3a659@sirena.org.uk>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 4 Feb 2024 19:18:46 +0100
+Message-ID: <CACRpkdbquEYe4mtfFikaQSFjEsQMqY5tPbOSTCSB9MPqx2OOLQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] regulator: gpio: Correct default GPIO state to LOW
+To: Mark Brown <broonie@kernel.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Liam Girdwood <lgirdwood@gmail.com>, 
+	Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, devicetree@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin kirjoitti:
-> The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
-> 
-> No major changes since last version (v6) all changes are cometic.
-> 
-> Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
-> 
-> - ARM: ep93xx: add regmap aux_dev
-> - clk: ep93xx: add DT support for Cirrus EP93xx
-> 
-> Following patches require attention from Vinod Koul:
-> 
-> - dma: cirrus: Convert to DT for Cirrus EP93xx
-> - dma: cirrus: remove platform code
-> 
-> Following patches are dropped:
-> - dt-bindings: wdt: Add ts72xx (pulled requested by Wim Van Sebroeck)
-> 
-> Big Thanks to Andy Shevchenko once again.
+On Sat, Feb 3, 2024 at 1:23=E2=80=AFAM Mark Brown <broonie@kernel.org> wrot=
+e:
+> On Fri, Feb 02, 2024 at 06:41:31PM +0100, Linus Walleij wrote:
+>
+> > Actually, Linux can read back the value just fine in output mode,
+> > so what about just ignoring the property and update the document
+> > to stop saying that about Linux?
+>
+> IIRC that was there because historically the gpiolib documentation
+> said that this was unsupported (though the code never actually prevented
+> you trying I think?) and will have made it's way through the DT
+> conversion and refactoring of the bindings.
 
-You're welcome!
+I have this gut feeling too but I can't find it!
 
-I have a few minor comments, I believe if you send a new version it will be
-final (at least from my p.o.v.).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Yours,
+Linus Walleij
 
