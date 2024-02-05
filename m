@@ -1,65 +1,65 @@
-Return-Path: <linux-gpio+bounces-2984-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2985-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72828849C68
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 14:58:01 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 53FC3849C6F
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 14:59:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A3CE01C23415
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 13:58:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 10541283A97
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 13:59:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 335E22110E;
-	Mon,  5 Feb 2024 13:57:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DABD021370;
+	Mon,  5 Feb 2024 13:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Nlky1Mnz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qn7t9+5s"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68FCB22EED;
-	Mon,  5 Feb 2024 13:57:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2953228E02;
+	Mon,  5 Feb 2024 13:59:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707141475; cv=none; b=H033hRgWIZvQbagPULw0kf4eOGzTYB8hkjgB6ro5x3sj7KNJ7+Ak5GK0XkRQ2bQBGBZMv/ZTvQpf+VDanxLit7gdrjo5JG6lW+NYOG6zkj6TMZR+XLX81i2QSEmgGGl6t/oPcluyONRoYqPo4Nffw0lS5/Wa0hIf7Ud5MNzvoxg=
+	t=1707141547; cv=none; b=drAhZKNP/vdFyy+o/LozT80Rsrk7yyjfrn56d3nI37oJ9gatk49E5GxK7l0XXAlFcdwMuaTr/B4paGTEeYmaGcAy++yUBxTjRA3F29bGyIy83R7fRBlHM/d0FbxdSzOvHaf553zyCqqAlURea5t9NOJyOSmBw7rvoPpcmd0TaUM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707141475; c=relaxed/simple;
-	bh=ZM3+zW05SrsrlyVmd5gMKWjkps4zlzbvlNsuTpZ3HaA=;
+	s=arc-20240116; t=1707141547; c=relaxed/simple;
+	bh=llpern0uzcyBnrR5NzXwJ1ZpD/vnGIM8UsrKVex+JBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cM2H/TYP+m7TAIyGVCT7+xFLqgTfrb6gDlIzPwoFZlXRgjB7WUNy8x7EF/X/vhuIiTd4tBkVaWbuBB9zJPJsplHTYVSk5JVqhGYhTmmj4A5JcHybIAH/KLErM0n6XiWeObQe3pLRdf0tkxpWwcj8IYtQsipjX0Efryxy3ljNkZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Nlky1Mnz; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=KsjpR/qm63MiZ55HA8r3iy1ML1RgeNfbvb0pjN5GoH7liizau6/uc0050WGwCSqJ2t53rmgdWZqv0b+bIkgVLt7nCfL6vhzWiclVfV58+IxL0Ko7CzGwOvQlJMBxbeaVyaOwtN3p+1HOhn+KmS8m7J5eEY1ABW6H1rm2SZDDA84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qn7t9+5s; arc=none smtp.client-ip=198.175.65.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707141473; x=1738677473;
+  t=1707141546; x=1738677546;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=ZM3+zW05SrsrlyVmd5gMKWjkps4zlzbvlNsuTpZ3HaA=;
-  b=Nlky1Mnz2i2qpyZNYri3V8r8tmmE11ux5QSnTWfAJFTWxr7AtPYVJSu/
-   dFCgcwej7QFLBEYJt8XR5xVXtxQfA+cLojB6qscnnqrDvwjzoXpFHOkB3
-   qDqb8h8FYYDFN7/qZ6yhE9QfTIBAhr1bxwE3o9KgSy1LFHa/f3AkZU8KL
-   xWahGQQCMFXjVb5Zb6svaBo/tFDqJNh1QDymiHRpn1rOmGKMwoBrxLIoM
-   UVq4qbW1R7+xzQ+cTpOiWODc99QbRPUk/S5ky+Ox0jmWMsxNRlcC00d1+
-   GNanDjXl+69ucVAw7lZ8zW2bng8xmZxojRJkivRSzSasUdLKjy9DiDFZV
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="432250"
+  bh=llpern0uzcyBnrR5NzXwJ1ZpD/vnGIM8UsrKVex+JBs=;
+  b=Qn7t9+5sPnHDRMjLwR7XZaHtrr9KyHekbnXmKAuvo8QylqQZ98xcv1kc
+   aDbYqaHSLxWhHdKnGGTX7ot44JZk/bz43FNBd4LcQcDm9dKbgUadHLxnP
+   6l6ShFDWuFbCbkdMg43WVLoTcL2ms8zXewXzlaY1A76I50iiU7rT8GQte
+   lGNKdZXNLl+exn9EqKqw7iDzGRH7brH/tB6SyRxg7lOKZrytuWw6d5ylA
+   rK5uf551Ha2wm1LiORdybOk1nN3etqj3gtHO3ofJyTjeekfuIkMA64Kfw
+   L4inv12d4BSqNsm+aGJvGrxKp1hpZ+ZaDvdgQsfpNb4A5Zsf41n9x778i
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="432413"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="432250"
+   d="scan'208";a="432413"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:57:52 -0800
+  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:59:05 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909301405"
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909301590"
 X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
-   d="scan'208";a="909301405"
+   d="scan'208";a="909301590"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:57:49 -0800
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 05:59:02 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rWzTm-000000025yW-19ng;
-	Mon, 05 Feb 2024 15:57:46 +0200
-Date: Mon, 5 Feb 2024 15:57:45 +0200
+	id 1rWzUy-000000025zL-0Les;
+	Mon, 05 Feb 2024 15:59:00 +0200
+Date: Mon, 5 Feb 2024 15:58:59 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Linus Walleij <linus.walleij@linaro.org>,
@@ -69,13 +69,17 @@ Cc: Linus Walleij <linus.walleij@linaro.org>,
 	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 06/23] gpio: add SRCU infrastructure to struct
- gpio_desc
-Message-ID: <ZcDpWf7u3bW34Y8s@smile.fi.intel.com>
+Subject: Re: [PATCH v2 08/23] gpio: sysfs: use gpio_device_find() to iterate
+ over existing devices
+Message-ID: <ZcDpo__BIF2Bf8CC@smile.fi.intel.com>
 References: <20240205093418.39755-1-brgl@bgdev.pl>
- <20240205093418.39755-7-brgl@bgdev.pl>
- <ZcDRuRCT9xE48cYi@smile.fi.intel.com>
- <CAMRc=Mc5=p7tp0r8-MYiHRJ1yXDJLW2Uvm5C1CyoGBAcesdZug@mail.gmail.com>
+ <20240205093418.39755-9-brgl@bgdev.pl>
+ <ZcDSKYqFHSUZb2Qx@smile.fi.intel.com>
+ <CAMRc=Mfh5CcftXUStGOXvUF-s3aNxnaNM0sDt72LKrBfttqitQ@mail.gmail.com>
+ <ZcDkvOrlSRkmYIk_@smile.fi.intel.com>
+ <CAMRc=MeiXLZ4q8MH5h_wX1rBz9-YVK6UKUdCu2nTb6+uNHGXPQ@mail.gmail.com>
+ <ZcDm3ZrW1dQQAroY@smile.fi.intel.com>
+ <CAMRc=Me+ETGfgjgQV+SSZenLW5MeNLVSrFKBhs707FDEqEHFJw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -85,28 +89,61 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mc5=p7tp0r8-MYiHRJ1yXDJLW2Uvm5C1CyoGBAcesdZug@mail.gmail.com>
+In-Reply-To: <CAMRc=Me+ETGfgjgQV+SSZenLW5MeNLVSrFKBhs707FDEqEHFJw@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 05, 2024 at 02:54:08PM +0100, Bartosz Golaszewski wrote:
-> On Mon, Feb 5, 2024 at 2:48 PM Andy Shevchenko
+On Mon, Feb 05, 2024 at 02:50:18PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Feb 5, 2024 at 2:47 PM Andy Shevchenko
 > <andriy.shevchenko@linux.intel.com> wrote:
-> > On Mon, Feb 05, 2024 at 10:34:01AM +0100, Bartosz Golaszewski wrote:
+> > On Mon, Feb 05, 2024 at 02:39:40PM +0100, Bartosz Golaszewski wrote:
+> > > On Mon, Feb 5, 2024 at 2:38 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Feb 05, 2024 at 02:19:10PM +0100, Bartosz Golaszewski wrote:
+> > > > > On Mon, Feb 5, 2024 at 1:36 PM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Mon, Feb 05, 2024 at 10:34:03AM +0100, Bartosz Golaszewski wrote:
 
 ...
 
-> > > +                     for (j = 0; j < i; j++)
-> > > +                             cleanup_srcu_struct(&desc->srcu);
+> > > > > > > +static int gpiofind_sysfs_register(struct gpio_chip *gc, void *data)
+> > > > > > > +{
+> > > > > > > +     struct gpio_device *gdev = gc->gpiodev;
+> > > > > > > +     int ret;
+> > > > > > > +
+> > > > > > > +     if (gdev->mockdev)
+> > > > > > > +             return 0;
+> > > > > > > +
+> > > > > > > +     ret = gpiochip_sysfs_register(gdev);
+> > > > > > > +     if (ret)
+> > > > > > > +             chip_err(gc, "failed to register the sysfs entry: %d\n", ret);
+> > > > > >
+> > > > > > > +     return 0;
+> > > > > >
+> > > > > > ???
+> > > >
+> > > > What the point of function to be int if you effectively ignore this by always
+> > > > returning 0?
+> > >
+> > > Because the signature of the callback expects an int to be returned?
 > >
-> > What does this loop mean?
+> > But why do you return 0 instead of ret?
+> >
 > 
-> I open-coded it because I want to store the value of i to go back and
-> destroy the SRCU structs on failure.
+> Because we don't want to *find* a device really. We just want to
+> iterate over all of them and call a callback. Any value other than 0
+> will be interpreted as a match. Besides: failure to register one GPIO
+> sysfs entry shouldn't maybe cause a failure for all subsequent
+> devices?
 
-Where/how is j being used?
+To me it's not obvious, hence I would like to see a comment before return 0.
 
-> > > +                     goto err_remove_of_chip;
-> > > +             }
+> > > > > Not sure what the ... and ??? mean? The commit message should have
+> > > > > read "... traverse it from gpiofind_sysfs_register()" I agree but the
+> > > > > latter?
+> > > >
+> > > > I didn't realize this may not be obvious :-(.
+> > > >
+> > > > > > > +}
 
 -- 
 With Best Regards,
