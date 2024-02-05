@@ -1,96 +1,135 @@
-Return-Path: <linux-gpio+bounces-2930-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2931-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DACA849421
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 08:00:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 530B0849433
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 08:09:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 505A61F23C13
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 07:00:09 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0864C284421
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 07:09:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CB47C8DD;
-	Mon,  5 Feb 2024 07:00:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 044B7C2D0;
+	Mon,  5 Feb 2024 07:08:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="tH36ZgQu"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="WQvenkna"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47115C133;
-	Mon,  5 Feb 2024 06:59:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46387111BC;
+	Mon,  5 Feb 2024 07:08:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707116400; cv=none; b=HxGlW41j6Gn+uUyD06o3Uwa+AUWRf9Uk5uGcfg5fTqjzZOTffbygLrRRKvPH+Hl+wTO9paGeXyw3erhG2rRWkOkLW4RjDG1DleUyy7GctS/uv8xlTzbzD0dTBfe+29sFqbyRk7vnFypwGHdFc4HeHJQzobGRs0zZNqKvvrV41Ys=
+	t=1707116932; cv=none; b=twXrQ5z2ncEbhNQkn5QHDfyL1hmPU43l1nQJa9EMXvM1wRLwxwNTYTy4IbkyVY0s9kpnofmTD7yAbmGbvBulQo+EWHy6nxtvOSyc5lXy90dpdAhwfZDsEbf06cwBcISAsBAL/BNVxp0BP0KjaiER8Zxi9vtXoBHLStOr030Ss7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707116400; c=relaxed/simple;
-	bh=zt0C46DodJBw5mMiz+hdsd1ggKvdZL8FZ+OjMed37Rk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oSOaa94oOx/C4iuMWjIHLgH79pacR2wabZ/CbSlU8zTGY+iT4WqzdISN8uYvfC//6QH1k978l9Nwou6b87t690k8/+c5+gdIZJom7LYssHxAjA7PJjE/dkHuCF+eUL39P3AlsvhPn+v6StOmDvzUamVAnF5VSr6+TDAIndjVdgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=tH36ZgQu; arc=none smtp.client-ip=74.50.62.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
-Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
-	by mail5.25mail.st (Postfix) with ESMTPSA id 3015060461;
-	Mon,  5 Feb 2024 06:58:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
-	s=25mailst; t=1707116398;
-	bh=zt0C46DodJBw5mMiz+hdsd1ggKvdZL8FZ+OjMed37Rk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tH36ZgQuTy82CmmwbwrfaK6mcnilerxyth/pAfkT84LOG4s04CTqsIidYWsJCJTc1
-	 apeqTj9Ms8UG356uohWBjDVKt31g8C9hKjXd7dhaVjMRHC3ertJwBG9ydwEbnNDt8e
-	 CQhDuXlo0wPxJWJJd/UVIVCM/J0Tfktzoh6ampZMQQ9nv5xQRb1TblzH3KgH3RF5Ip
-	 M9zqc2fCDXTlZz5Skz7zQs2Jo9X7tgWF6JXlp++gtHN6gZPY6N0Ae2TkQjZSqoYlHl
-	 uGD7cs673Ujl6skOSecx0oIAZe6gCl8kskqZ5oA6cQj2GxY8GYx4dc+Pmezp51aRAF
-	 Y4Wr2WQsVmz/A==
-Date: Mon, 5 Feb 2024 08:58:48 +0200
-From: Tony Lindgren <tony@atomide.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Tom Joseph <tjoseph@cadence.com>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v2 01/15] gpio: pca953x: move suspend()/resume() to
- suspend_noirq()/resume_noirq()
-Message-ID: <20240205065848.GC5185@atomide.com>
-References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
- <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+	s=arc-20240116; t=1707116932; c=relaxed/simple;
+	bh=5D6PtR3PJDZbVWih7S47g7THCBU4Tdd43oQC93fiPz8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rItyCPrxqLR3ea8RKI6VmKmfEUBCCRuLMHMdsLFWvrCG1rcWFFaLE9KmNwlgOmH3H4om7e6RBrxI7Pk9TXSvVHxUnJPuNhqBckJLLoLutEuQZhKcL86diuo2b0Zi2HrT6NHlnFmmpO/lkrhrX7kiuTx4lSzxYs76cD2Yb87GHpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=WQvenkna; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1707116916; x=1707721716; i=wahrenst@gmx.net;
+	bh=5D6PtR3PJDZbVWih7S47g7THCBU4Tdd43oQC93fiPz8=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=WQvenknafKo3CcXWBx0dsgNVjWyqHdjdRKNjWkeG8+F9vOgvfXOqNgD9zl8/S5xW
+	 qtM3qL0zPj/KvP94PqYxie7STbgb40oaFBwTFCvwKWzfGfSmXmaenmkYjRtB4kF8E
+	 eupSxKu4t40mN8VsUkTSYrAV+S2RkjhV1BJ+vVuHtWOIXR33papx5EEHeccb2AHux
+	 FQGNHBAscswuAJfV0Nv9iMg7DRu81V+4pPkPSFt1gYPeS+1c2jumEUVMU365NUJf6
+	 YiSTpGNCxYDJFxH1tmfIJ2cegfm4CC58GvxwG/dyTI5mixz/d5m8UTSNt/R9NX2OR
+	 ZpvBNFDIRhe+VxMERg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MFsUp-1roG9z1eF5-00HKm8; Mon, 05
+ Feb 2024 08:08:36 +0100
+Message-ID: <a074ed96-ca5e-4b6c-9d9f-b13385d60cc6@gmx.net>
+Date: Mon, 5 Feb 2024 08:08:35 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v2-1-8e4f7d228ec2@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 0/2] pwm: Add GPIO PWM driver
+To: Dhruva Gole <d-gole@ti.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+ Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-doc@vger.kernel.org
+References: <20240204220851.4783-1-wahrenst@gmx.net>
+ <20240205055514.rox6yd2eenhsngva@dhruva>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <20240205055514.rox6yd2eenhsngva@dhruva>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:WHZhsobmTrrWP/5xMIm81jeJJO6MCzdgFLH0Ivd2cn2MPrTRd7v
+ D5zlbAyhGfc1Ht5zsYFNkZljXrngWCxY3O9G8FcOhOeKQeOmAp7hz0bDs4OtqWnbi5/Fr4p
+ rutjaYEKxCbEGy8igrOIrl2LC+HdEWBGDCss/sLp90wXWQFWxwI/KbSvDMvZKEvxOTtt3hK
+ 9I6b0QtF13RNAFNd+47sg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:pbrHxWqgucI=;3xkW4gYjLZ2bqxvcBySP1SbCLat
+ BSpdDgF5GsO48TyCPP3cvG5VmpSmLxHDgS7+VsVV1gxkMhN8vEAY95l4Gi5YGYYhwtxubcx3s
+ bqkMW/0iFpl4dvvhSQo+WANWknaP5X2w8uRUbjls0tXBYptbL6OPNLSXj0wNJFKhrhZVphw/0
+ BnQPM5uM8w1aO19whPQmhfErVDs2C09dokwpbMbE3ePYHfebSK1Iv6XSeccAMhY2S1KpKg6js
+ vS/xOZ7cOJ7JrjiEurOkM8/fRJnqaok+vtON+DtuSPr+2ixrePC3kla6j++BEbc0OehnAxXRK
+ HXq2TSiMmO2mmPSx3475COXaEXkZeO0egqsK+w8iIAM+s7X20H7f1PBuBuMg9VtVo1s/XIRjJ
+ ZsL8JuVyv5wBU2izFojON788vvWe+hBYpft44wAiWItq6XQBMlpZSLUmXQUK9IDzZANYf1FqP
+ r/KazvuvcZcGSWjlZ6oxPjVx4rS9X33Ckrd+1JA91Vej+ANtx0ckjvrEn9VnwJtxrqUpvSBVY
+ /Ms34AT2ZrCKYgIpVVSIu744qeMquthSErUnCVN/w/KPDeXsybXvf/YeHho7Yp4pJ7JLMkJEY
+ cE5ZCbpYj8VLgOI4VUDbRotfxkFKQA0uC4VOnkFbANMuSpyZgrDsyfELSQ1vEk0Q38N0Z6g8s
+ zPWGoYpPjIHvkIdVHVY+sN7v7YURwvngoJkX5Ylzfe3KOPzdcVAzkVUHZsvf3ziahTGW+pzvG
+ 4LPxaTbAFAp2Xymem0Xc/iIkLTBdQX5pGVu0Gdp3si0p9VI2ctBf6ZARU3ydeRJB/yu3to99/
+ DXxDsqSncEogJ9qVlYJrBn6tB+/1Eqxa/nM++IxIjRZVw=
 
-* Thomas Richard <thomas.richard@bootlin.com> [240126 14:37]:
-> Some IOs can be needed during suspend_noirq()/resume_noirq().
-> So move suspend()/resume() to noirq.
+Hi Dhruva,
 
-Hmm so what happened to the earlier i2c transfer at noirq level comments
-from me and Linus W here? It seems the cover letter mentions it but I
-don't see the related changes in this patch?
+Am 05.02.24 um 06:55 schrieb Dhruva Gole:
+> Hi,
+>
+> On Feb 04, 2024 at 23:08:49 +0100, Stefan Wahren wrote:
+>> Add a software PWM which toggles a GPIO from a high-resolution timer.
+>>
+>> Recent discussions in the Raspberry Pi community revealt that a lot
+>> of users still use MMIO userspace tools for GPIO access. One argument
+>> for this approach is the lack of a GPIO PWM kernel driver. So this
+>> series tries to fill this gap.
+>>
+>> This continues the work of Vincent Whitchurch [1], which is easier
+>> to read and more consequent by rejecting sleeping GPIOs than Nicola's
+>> approach [2].
+>>
+>> The work has been tested on a Raspberry Pi 3 B+ and a cheap logic
+>> analyzer.
+> I recently came across this series and I have to say that it will sure b=
+e
+> a nice to have feature to be able to use any GPIO as a PWM.
+>
+> However, just a minor suggestion is that we should make sure it's well
+> documented how to actually use this. It would be much appreciated if you
+> could include some basic documentation of a few sysfs commands or any
+> userspace library that you used to test what you've mentioned above.
+i used the PWM sysfs for testing and this PWM driver doesn't change
+anything on this well known interface.
 
-Regards,
+Sorry, i don't understand what needs to be documented additionally?
+>
+> Maybe add another patch for this page?
+> https://docs.kernel.org/driver-api/pwm.html#using-pwms-with-the-sysfs-in=
+terface
+>
+> This will ensure people know about this feature and will actually be
+> able to use it.
+>
 
-Tony
 
