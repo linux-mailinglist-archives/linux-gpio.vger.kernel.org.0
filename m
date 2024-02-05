@@ -1,119 +1,106 @@
-Return-Path: <linux-gpio+bounces-2939-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2940-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D91F284962B
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 10:16:22 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D106A84963A
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 10:19:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8831B1F243A2
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 09:16:22 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18BE21C20D69
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 09:19:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39A6A125A5;
-	Mon,  5 Feb 2024 09:16:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BBE5125A4;
+	Mon,  5 Feb 2024 09:18:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Bp59tLgr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3656125A6
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Feb 2024 09:16:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DEC0D12B8C
+	for <linux-gpio@vger.kernel.org>; Mon,  5 Feb 2024 09:18:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707124571; cv=none; b=X8fKUkKhEiAnaWna7xjYI4aUEJoHZGPhs7GVSia0vxxpA6+kXNcXVc7A4NyjFpMz+wRzZn5+jnvKhJuao55ZVoivLtg/bT5sUuRsj83HOjM409kZkF6e8tmAk/vzi6/QHFvVz4xACbUjYaEiOTuG43sjHofEjGsiMZwlfNNChjQ=
+	t=1707124735; cv=none; b=NKVeL3JWWXQ2/z4bafMaPTsKHIH5DbZqZijQYi2OMfXZW9UQhJzIs1tLiFNzbWOoWa3KScv8S+Fxvp+CPnNHho9kakeLCofiDTtgclygxkuo7htxMaGTQOSxOz2VUDZkUNTQ7QPoX4x2pPg4/4kHO4kgZjoQeRwXzpBX6w2Hroo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707124571; c=relaxed/simple;
-	bh=IxpHtcbA09VFc1PalsDZWPfLzIghz12+9ze3N8X96gQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s5ZR+xjEuMYYLkJ4Fz6gS6ZAMgNC0MH+GxIh8C5FUhfnQ/jx7yp4A1lEDgBQFMr6ptPQXAXDX8+dd/KwTqJBhd7jrJmhrGhyqwOaaEtJUnF0wqkaqj813a7Mo25fHlaZIsTehZ2ph6tZwQ11Q1Q0eDF1utrP04mClhgkC7wPNQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWv55-0000Xx-Af; Mon, 05 Feb 2024 10:15:59 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWv54-004bOw-G4; Mon, 05 Feb 2024 10:15:58 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rWv54-00FKq6-1H;
-	Mon, 05 Feb 2024 10:15:58 +0100
-Date: Mon, 5 Feb 2024 10:15:58 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com, 
-	Angelo Compagnucci <angelo.compagnucci@gmail.com>, Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Nicola Di Lieto <nicola.dilieto@gmail.com>
-Subject: Re: [PATCH V4 1/2] dt-bindings: pwm: Add pwm-gpio
-Message-ID: <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
-References: <20240204220851.4783-1-wahrenst@gmx.net>
- <20240204220851.4783-2-wahrenst@gmx.net>
+	s=arc-20240116; t=1707124735; c=relaxed/simple;
+	bh=fQaQOVm2b9yEQiuCvFYJ31jOuiYeFKbhN4BAw5IvDXQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MkH0MSPSJ9v06lsUY3twXWXhqDhvayj5AzgyA81nXEDxS45dlQ/34pZoSsQ1NnsIR5Vu2RTmOYLKeZhKEhu6SKOZUUK8PKTP9o5AN5K375K2efvr5I7bWJapbu9+9VChiMcd8lvY19zmVshqFqfzWaRg+n6Kg7N1+s6K7XtooxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Bp59tLgr; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d6275d7d4dso1728786241.2
+        for <linux-gpio@vger.kernel.org>; Mon, 05 Feb 2024 01:18:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707124731; x=1707729531; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fQaQOVm2b9yEQiuCvFYJ31jOuiYeFKbhN4BAw5IvDXQ=;
+        b=Bp59tLgr0iYbBZ/f2dPuG6jQsNSMNNcfMpNqXvXGWgyFFs6YrV6bcSoA9cY23kt4pm
+         RRJkgnvPIaxytmyztoSCk//3XASwXOYlulY0rwHqh5LqZW6q7XyqT5oxFCM2V8avlOrc
+         aw0FAwZVJYMFQdKMuuuj267IosZhe5JQDAyVg8Z8weMJef/6ARKl7T04W0j2YpgpzkMv
+         vce/wkPxowNje2rk2+d2vJf0Zitap+fT7Yb+vuLkSnegv1wsXMbNh+YKCudkz08wU3jK
+         wZRszhWFSiGQRlS2isLUAUAOPYb6JQ5C4SNQOokqHm/918kY1QfaV2BWd38bvG2JUrYV
+         gAPw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707124731; x=1707729531;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=fQaQOVm2b9yEQiuCvFYJ31jOuiYeFKbhN4BAw5IvDXQ=;
+        b=XDC1r/JaZp0sCrnToSJAuAYupPT08IUN9gL7JWih5tkQ+x50R8JNk/oOrnjmyXJ9o+
+         wzZsruWfFFnidP1NWBCz8JjWgnxRrJLV2tvrxN7po4au45ABLSYTKCRTjjsHpE2RzEC1
+         +OZUCsnVlCRkV91MKIerfR8r7ZHvJKqzP70hEO84FC3rrRaPloVeAZ40Ph+JjJ9e84Tq
+         OrjndKxHszcA+s36NMHUQzAGLybRBKFsN9Q5Grlg3YgL8tjoOTlWbNza/8RVSV8vH91Y
+         sem0M/og6shkwDFYpjVr954eLVTzeYX43RdNt8FzCrhxWkIxRsZbWJpGxRVYxHq+zKyO
+         LgAg==
+X-Gm-Message-State: AOJu0Yzgo8Z1ePhxUfnaeUqQ/O4Q0ccGfim+OxF4a0Q3H1tmOa77IJJU
+	/zPRru/52Zxa5XYfF0ndE92xv1Q4XOu9LFa2x6ERvOI70WFSG0WjPhGMcFn3Ww5qRBv0Kyyyf3u
+	d2rOmc+NWj2GPHBwUKsCN00Xxp0E8HeuwwlgjEA==
+X-Google-Smtp-Source: AGHT+IFQlHLs7JxdGmHm+gfw2JvelvjFsVpyT1WLFbb8053GL8UeJl55FMgMu2r1iKWVpqX6sqB8FZ+mkYeuC0KF+sM=
+X-Received: by 2002:a67:fb98:0:b0:46d:30b0:af9f with SMTP id
+ n24-20020a67fb98000000b0046d30b0af9fmr1086673vsr.9.1707124731656; Mon, 05 Feb
+ 2024 01:18:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="rcnd4re5dzypugcp"
-Content-Disposition: inline
-In-Reply-To: <20240204220851.4783-2-wahrenst@gmx.net>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---rcnd4re5dzypugcp
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
+References: <20240202130806.36334-1-brgl@bgdev.pl>
+In-Reply-To: <20240202130806.36334-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 5 Feb 2024 10:18:40 +0100
+Message-ID: <CAMRc=McqAnYOOuH_dG7CZfty==r1avfyaPWK+oLiTHs3yn0YEg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH] bindings: python: fix __repr__() implementations
+To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>
+Cc: linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Robert Thomas <rob.thomas@raspberrypi.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Fri, Feb 2, 2024 at 2:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl> =
+wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> The __repr__() function should - if possible - return a valid Python
+> expression that can be used to instantiate a new object when evaluated.
+>
+> LineSettings.__repr__() is missing comas between arguments. Both Chip and
+> LineSettings also don't prefix the returned string with 'gpiod.'. Fix
+> both functions and add more test cases - including actually using the
+> strings returned by __repr__() to create new objects and compare their
+> contents.
+>
+> Reported-by: Robert Thomas <rob.thomas@raspberrypi.com>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-On Sun, Feb 04, 2024 at 11:08:50PM +0100, Stefan Wahren wrote:
-> +  "#pwm-cells":
-> +    const: 3
-> +
-> +  gpios:
-> +    description:
-> +      GPIO to be modulated
-> +    maxItems: 1
+Patch applied.
 
-Given that we have 3 PWM cells (so there is an u32 that specifies the
-pwm_chip's line number) it would be obvious to allow several GPIOs. But
-I guess we can extend this easily if and when the need arises.
-
-Otherwise I'm happy with this patch.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---rcnd4re5dzypugcp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXAp00ACgkQj4D7WH0S
-/k6piAf9GadB2hhVdUycy5/DYs9wGmQnpDOpBQfyxEnYkOX+lh2U3Z4SoL7PO0rB
-AJmVKKFsnzbIjscQCtGJS38ymvhsMnho01i/pXeeI2OHc18EgFmZHcQoXzRvrgoT
-FprH3YeXdkWuSiWBZVr45QF1exy6ODtPJfiWq1lsZZC0gtNg3egB9q3GLvOb8Fic
-QWkCHgeJbDKovhW3HbPAQCIWdMDDz2qYSVCbJgzVfDl3KaaALV1+weLb5WtsetTT
-PDv5ia1jakS7GrDaTb+yIUzbmvsztIxTo20L9IIRrIibdHeE2qVc3OGZAK5nBT+L
-sBYFySX+iIncfMiybdiBbE+HoXPCJw==
-=exGd
------END PGP SIGNATURE-----
-
---rcnd4re5dzypugcp--
+Bart
 
