@@ -1,147 +1,92 @@
-Return-Path: <linux-gpio+bounces-2989-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2990-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B10D7849C9E
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 15:08:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D23FC84A06D
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 18:19:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E39761C24E66
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 14:08:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 888C8281E63
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 17:19:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F93024219;
-	Mon,  5 Feb 2024 14:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2511D40C1B;
+	Mon,  5 Feb 2024 17:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="y8ojhYe9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjLMnhnS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0011A210E2
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Feb 2024 14:08:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C681344C66;
+	Mon,  5 Feb 2024 17:19:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707142092; cv=none; b=asU4UcLnWIs3MKaWIP/bBCD7/sfPZg+MjcksgOtYhH24yyJuf198NwjXypI0mMG3tLiKnbYMSGI1E2dntLOaavTW2OPY140R3mCFXomazaip837DnlfmCy64WHvFZJ5dujQbc+gG/oQiHn8mCX7hO3VvV5SJtbeUzOSZQW5ZjvI=
+	t=1707153558; cv=none; b=YUiT9bPOSM4itGqreOvtF2EtFpuOxZSesIg1A0rPou1RRQRcrs9K5+wWFsbizZdN1oE9X+j1l+WxQDPX9GvYLO9elQLfdqv23ecDg77siYJsJK2/b5FrAYXznnHWwOfL2WLG5lrEXevjOH/mYrkyaBTW1mLL30DDT/kMouFA7YM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707142092; c=relaxed/simple;
-	bh=LGS2xq+8pfU94MZROrWBItjD7BFDPFXaXa75pK1svlc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KJXvkuJltEQzI79mb2QoHB40+BMBpzPC//rRWzoVnFNmpyHChHoBptyJHx+NEWA8zlrpwE/+AcebCm7LHS+MdGCbF9MO8O1pbVFzlpjYAG7rM/AMgIL1xX41y3538fPJ2AUBmzraAB7dLAYt3WK3wd+65Y0/exQZv4d9yNpaBmw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=y8ojhYe9; arc=none smtp.client-ip=209.85.222.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7ce603b9051so2166919241.2
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Feb 2024 06:08:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707142090; x=1707746890; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dFQEy4nON+QsNXZ1HJDqeBEBWT/NbjQF7n/123X17hc=;
-        b=y8ojhYe9zj5UUkpt2I77r6xHsS+Shcey5fzW1wrhkuOeGXT7smNCzMkxQ4/TAgPOOb
-         WG3fOJyK1vm3moqn6PFxm1O8CWAah1WV/X3GP3x8EmKvWDpytEzESstUS+fIfoJjAwTi
-         cMxD5bmxk9crrKQWLgNHvsCQGYBT30J7HfLR2+Cl08aMmaSK2KMSaxKmDhyXeG1qakjT
-         KGQWjY+aJX2Unfp8azcJXe/bNtDQmdPC8t57z5REQ6ajOKGqrqlMibFtmhvF6fyyNMVa
-         X3OcXd7NLryhjJVd/gfi9jETOhKzNz8PrwznI+UuJCspIcF+tqsvNEd2So3RO3hCfAWT
-         UTRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707142090; x=1707746890;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=dFQEy4nON+QsNXZ1HJDqeBEBWT/NbjQF7n/123X17hc=;
-        b=NVhglTvQhUtt7/34/BZQz+WCJ3Fddxr7/C0c41UeJ4tqm/54/b0suxqrsPFi3SM04/
-         c4lphcyUXflK8M6eOtj2hfQcQqsQu385E3FcKGP7xsQ1Cs/3M601Ngj07rD/r0zd//T5
-         7ZwCjnQn74AeDh4Y6OU3A5xFys94gjkKTLvspAfbC1ThMboMcH6Z0Zpc8WrhrFcdEC/i
-         fyuloyKHTaBs0XQmNXe8apgQxs7Bw8+mOTKo4pXD1PG4dfVhU11zDbLSFyJ2+V7OqQW4
-         r22BR1PtLsei77gBCRBtVgjNtqSFJTMSqSyEQWiR11VdwRfkqZX6/mMXNpENLiyz/ZzD
-         v4cA==
-X-Gm-Message-State: AOJu0YyfMMiHC0QDg5qPsY/P/NagwHxTxhjE3f6fYCkboMBuFmD8QY3I
-	J6vTfoSNT1BP5C3q14cBTIMjtqzcHi7O6tiLpPTo6afL5aqnnOiV2AbrjwOR7zzaYlXheS8iCKm
-	EtnkNs6zl69T7l+Gh+MlwgaO4Vj36hOr0JcvULw==
-X-Google-Smtp-Source: AGHT+IHIoP4VPwclrEm8SFO/pI0RfNbwe9mHqdzQ1e70oorq/YISptztec5RaCq5ic+k1tVYLHnfGg+gvLZwzonIzpI=
-X-Received: by 2002:a05:6122:4b02:b0:4c0:3c09:6f34 with SMTP id
- fc2-20020a0561224b0200b004c03c096f34mr692795vkb.2.1707142089866; Mon, 05 Feb
- 2024 06:08:09 -0800 (PST)
+	s=arc-20240116; t=1707153558; c=relaxed/simple;
+	bh=I/dPQVxNsqI+9sYP9jfmmTlxuMjd/mdTPS+ppBlP91k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s302S1tHwKk9mm+gMv0U1lIshUaZtkOIkuxWCBrHcWLNJl59MWhS6HDo/0qp3dRm6IeCNycsjR7nFXK97GmG8J6gV4nZXy9B/xkaCLj4IXxKym7Lla8Eyc1CbElGBPHdY0nx+vGh6jBao1wz7DFHgLujiquDiBxAh+qXsOLS+UI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjLMnhnS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CBD8C433F1;
+	Mon,  5 Feb 2024 17:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707153558;
+	bh=I/dPQVxNsqI+9sYP9jfmmTlxuMjd/mdTPS+ppBlP91k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gjLMnhnS6bLqj5NEb2kdZC1z8lR4VQEnrshyp+MlHCJjA9yFuBHRtW3ApRELIL5Vq
+	 D1QlzYPuzqErllQIS+pbu5Fak5hAKAyUuf9S8xTCw90/v2nRz4eXBVHT760hftISK5
+	 hG6xlJ/mLI0206EygnzvudqY+8M47NFCv7JpN1RNSz/CbMn5SrkIQ00wEP7406MdQE
+	 TSuHLhB5i1JeyqdjlSQkp3+wa/+1pGKx3xQvjjmyK3Kc1u1j+A5plAEZwsVviM2Qbe
+	 mGIjWSyPOrdcW+kpHLypq/JrTs2jdf5VBd+Ec7VXO5f2JkH9u4jEMOjW71JtZPUSJz
+	 kkZzWmjmM/rQA==
+Date: Mon, 5 Feb 2024 17:19:15 +0000
+From: Rob Herring <robh@kernel.org>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: linux-gpio@vger.kernel.org,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Rob Herring <robh+dt@kernel.org>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-mips@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>,
+	devicetree@vger.kernel.org,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	Michael Turquette <mturquette@baylibre.com>
+Subject: Re: [PATCH v4 06/18] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl:
+ add bindings
+Message-ID: <170715355367.3639066.15524146689406248436.robh@kernel.org>
+References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
+ <20240131-mbly-clk-v4-6-bcd00510d6a0@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240205093418.39755-1-brgl@bgdev.pl> <20240205093418.39755-7-brgl@bgdev.pl>
- <ZcDRuRCT9xE48cYi@smile.fi.intel.com> <CAMRc=Mc5=p7tp0r8-MYiHRJ1yXDJLW2Uvm5C1CyoGBAcesdZug@mail.gmail.com>
- <ZcDpWf7u3bW34Y8s@smile.fi.intel.com> <CAMRc=Mf740MJEg5fkAZaeL5yZAvVpJvjJ3zWcn-gWqS6_ue1mA@mail.gmail.com>
- <ZcDreg9pXqFX8zwa@smile.fi.intel.com>
-In-Reply-To: <ZcDreg9pXqFX8zwa@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 5 Feb 2024 15:07:59 +0100
-Message-ID: <CAMRc=Mets9QLRpeaEDs=L+W3i7JD-7uZ-AU+OPGzmhsELK95vw@mail.gmail.com>
-Subject: Re: [PATCH v2 06/23] gpio: add SRCU infrastructure to struct gpio_desc
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240131-mbly-clk-v4-6-bcd00510d6a0@bootlin.com>
 
-On Mon, Feb 5, 2024 at 3:06=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> On Mon, Feb 05, 2024 at 06:04:23AM -0800, Bartosz Golaszewski wrote:
-> > On Mon, 5 Feb 2024 14:57:45 +0100, Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> said:
-> > > On Mon, Feb 05, 2024 at 02:54:08PM +0100, Bartosz Golaszewski wrote:
-> > >> On Mon, Feb 5, 2024 at 2:48=E2=80=AFPM Andy Shevchenko
-> > >> <andriy.shevchenko@linux.intel.com> wrote:
-> > >> > On Mon, Feb 05, 2024 at 10:34:01AM +0100, Bartosz Golaszewski wrot=
-e:
->
-> ...
->
-> > >> > > +                     for (j =3D 0; j < i; j++)
-> > >> > > +                             cleanup_srcu_struct(&desc->srcu);
-> > >> >
-> > >> > What does this loop mean?
-> > >>
-> > >> I open-coded it because I want to store the value of i to go back an=
-d
-> > >> destroy the SRCU structs on failure.
-> > >
-> > > Where/how is j being used?
-> > >
-> >
-> > In this bit:
->
-> I am sorry, but I don't see how...
->
-> >         for (i =3D 0; i < gc->ngpio; i++) {
-> >                 struct gpio_desc *desc =3D &gdev->descs[i];
-> >
-> >                 ret =3D init_srcu_struct(&desc->srcu);
-> >                 if (ret) {
-> >                         for (j =3D 0; j < i; j++)
-> >                                 cleanup_srcu_struct(&desc->srcu);
->
-> So, you call the same several times, why?
 
-Ah, now I feel stupid. You're right of course, I'll fix it.
+On Wed, 31 Jan 2024 17:26:19 +0100, Théo Lebrun wrote:
+> Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
+> 
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++++++++++++++
+>  MAINTAINERS                                        |   1 +
+>  2 files changed, 243 insertions(+)
+> 
 
-Bart
+Reviewed-by: Rob Herring <robh@kernel.org>
 
->
-> >                         goto err_remove_of_chip;
-> >                 }
->
-> > >> > > +                     goto err_remove_of_chip;
-> > >> > > +             }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
 
