@@ -1,105 +1,70 @@
-Return-Path: <linux-gpio+bounces-3005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2997-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B014784A3B0
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 20:27:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D16EB84A38B
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 20:22:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 34119B23C44
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 19:27:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8650B1F221DF
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 19:22:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AEFE7E567;
-	Mon,  5 Feb 2024 19:03:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CBED17A72F;
+	Mon,  5 Feb 2024 19:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nZeY8L8V"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yolxqp//"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7962839F4;
-	Mon,  5 Feb 2024 19:03:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BE377F28;
+	Mon,  5 Feb 2024 19:03:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707159806; cv=none; b=bXYhPYbZbOXFVapDxkZ7t07K8H9GmXyoyMaMxS0yfY1769GC4n+bKVlpL5mx5w+AFLIs5C5CGJedrs4Z9HH+otw2FqNy3xlTNWwjTxeDel4NlVVRgwqEknl1Di+AmFi4AoWKYfKidmSXDr1JAIEFbyexiPeW1XjUR78pltujZFM=
+	t=1707159801; cv=none; b=cVHNs1kav5uuHae52UpfMsDs8K7aG0263GPu8uNXiKVrCTYmTm04nqHDhP10xcmf6F4QHNSgbWvPu/vRjhpDetDOk5wACvbsXJdPB2aVvEJsvuykGX8IA393B5YMv6a9KH969pHcn9sPI7tNPGVV/53wwG0hl6GwTQ1xCR4Vd8s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707159806; c=relaxed/simple;
-	bh=FEzg+G2fknYhQYjKuxgdWtNV8zO/Hs0+/47sEWBzFaI=;
+	s=arc-20240116; t=1707159801; c=relaxed/simple;
+	bh=XOREM53K6Y8lg+gfOY8PATZMT6V5AF0JLY8nmGpzfj4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NVKpSxF1ekC3Si2i+WlPNEnOyRYowrCaHKUUzBzZe0YJ2NGQOYc+7hdVr6dvwWa8U9YNQU1U+H15rD9Kct5LDj+fOv+GeYo755tz0tPmend04sV0sJ/+CylzuFkGUHe1DuKoAryjIQTJZbpDmFRMj0fqMoq7pbzN9bk08XitrJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nZeY8L8V; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09365C43609;
-	Mon,  5 Feb 2024 19:03:25 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Joq16WFUZIvjxrAbQ7jne8P9EefFBRMAG3/QZ0MoLzWgcT59ZkGqVrdFtUChNcc9h58AJ7fmmE32nhsfqt7aoUzQIJZlwP11Pw25m9+rl09Qv9FX+BAC0Z4T+huSDanTNsiCcqrt5UhzltNKLkT77QQmABFrrO6M//Guz6WIiR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yolxqp//; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08713C43399;
+	Mon,  5 Feb 2024 19:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1707159806;
-	bh=FEzg+G2fknYhQYjKuxgdWtNV8zO/Hs0+/47sEWBzFaI=;
+	s=korg; t=1707159801;
+	bh=XOREM53K6Y8lg+gfOY8PATZMT6V5AF0JLY8nmGpzfj4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nZeY8L8VhwKndr2qqfjFClkReL35Gi5giwK71R8HwzkkEnoI+nNUtms/7v6NvtUh/
-	 sIuZ1mQZvevdH6kYGVA+WOxSmS2vjK5EHDNKQP8q3wm4RRv+GcxwTSKPDBaHfFFcON
-	 eNRhqQHdPP0sWXdc4QO5EpdU9C9sdGhQRB2INXi8=
-Date: Mon, 5 Feb 2024 04:43:49 -0800
+	b=yolxqp//2GMwwDqc/WImdSIX0v7IjtjfhNhH3QFvMmemCpQhiKd6tAm5N/UArC3Kk
+	 /cSE+2pJquDMq1A2jNCgEYQXHJQPGrlAXr8PfYZnmD0f/MeSGx3Zb6c8q+Uc2Qm5eO
+	 FRKqQ+UIzvXhA7tL8mcK4FFzeEryIaIydhBFB2F0=
+Date: Mon, 5 Feb 2024 04:47:37 -0800
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "Ricardo B. Marliere" <ricardo@marliere.net>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+To: "Ricardo B. Marliere" <ricardo@marliere.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] gpio: gpiolib: make gpio_bus_type const
-Message-ID: <2024020545-sloppy-book-9b17@gregkh>
+Message-ID: <2024020532-shrivel-phrase-c093@gregkh>
 References: <20240204-bus_cleanup-gpio-v1-1-82d91b4ee1de@marliere.net>
- <CAMRc=MdSApjK2b66LxLE9XZufvT-+SThuqjdr+yG-hsKEb4sVw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdSApjK2b66LxLE9XZufvT-+SThuqjdr+yG-hsKEb4sVw@mail.gmail.com>
+In-Reply-To: <20240204-bus_cleanup-gpio-v1-1-82d91b4ee1de@marliere.net>
 
-On Sun, Feb 04, 2024 at 07:34:43PM +0100, Bartosz Golaszewski wrote:
-> On Sun, Feb 4, 2024 at 5:29 PM Ricardo B. Marliere <ricardo@marliere.net> wrote:
-> >
-> > Now that the driver core can properly handle constant struct bus_type,
-> > move the gpio_bus_type variable to be a constant structure as well,
-> > placing it into read-only memory which can not be modified at runtime.
-> >
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
-> > ---
-> >  drivers/gpio/gpiolib.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> > index d50a786f8176..24d046268a01 100644
-> > --- a/drivers/gpio/gpiolib.c
-> > +++ b/drivers/gpio/gpiolib.c
-> > @@ -63,7 +63,7 @@ static int gpio_bus_match(struct device *dev, struct device_driver *drv)
-> >         return 1;
-> >  }
-> >
-> > -static struct bus_type gpio_bus_type = {
-> > +static const struct bus_type gpio_bus_type = {
-> >         .name = "gpio",
-> >         .match = gpio_bus_match,
-> >  };
-> >
-> > ---
-> > base-commit: 3eac8bbed22e940ac1645a884f221bef408f675c
-> > change-id: 20240204-bus_cleanup-gpio-57eea8d32a5a
-> >
-> > Best regards,
-> > --
-> > Ricardo B. Marliere <ricardo@marliere.net>
-> >
+On Sun, Feb 04, 2024 at 01:29:42PM -0300, Ricardo B. Marliere wrote:
+> Now that the driver core can properly handle constant struct bus_type,
+> move the gpio_bus_type variable to be a constant structure as well,
+> placing it into read-only memory which can not be modified at runtime.
 > 
-> Ha! Does the same work now for struct device_type?
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Suggested-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Ricardo B. Marliere <ricardo@marliere.net>
 
-Very much so, please feel free to do so, that's next on my list of
-things to do for the tree.
-
-greg k-h
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
