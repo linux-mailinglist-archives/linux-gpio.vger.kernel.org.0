@@ -1,121 +1,119 @@
-Return-Path: <linux-gpio+bounces-2968-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2971-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11C5A84996E
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 13:00:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FE35849A8B
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 13:39:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A52BB1F23311
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 12:00:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C312B1C21947
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 12:39:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935B4199B9;
-	Mon,  5 Feb 2024 11:59:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 301E72C877;
+	Mon,  5 Feb 2024 12:36:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="VX2X4zNz"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="GemHoD06"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8EF199B0;
-	Mon,  5 Feb 2024 11:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83B5A1CABD;
+	Mon,  5 Feb 2024 12:36:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707134343; cv=none; b=AbqIAEfYrzOMhBecIhyHrKGlf7NIVUVVt1FHxyS+e6DnczFFYWt6jbCCD6MDB6rg8T9j0nmNYgD1ldbLdKWK8ykoeuYOGkyP4ODx22fXKHM9iXZYBg8IdBn2NVZmF2nPFdCGeYIorkePBZmejwM0G0IwU/ZYaMDMBZQlFcQ6Q+w=
+	t=1707136606; cv=none; b=C9dU/pUeAobrZmJackk1T21vGlMIbJMqwrvrU7w4y8152so/ogaYlbjEngEsp5bG4DcnFPH2hZrxredDe5HS7XWc7U18i+/gDkrPGaFqjeMofuSwAOa+r4w9ANgXCVxCy/a9A5/jIh8HoOwzkMkevziUk8KQ5WiSr015wGRLPUA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707134343; c=relaxed/simple;
-	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pRKnFqbU/70K2NhXbgoB0ItDR6VG8cg/mwomJVx8sPYPrljyI44PbdItH5Y7nVGlw9IQNy69/Q7NQ+mf6iEpzgOruQnqqV1e3bgPokazFNOGPX5mYrXSy8Nu1+zyY5gPpOzjMPzzR+QiU4fofiQB8TnmmndfHdzU3uNYoGx9kS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=VX2X4zNz; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707134331; x=1707739131; i=wahrenst@gmx.net;
-	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=VX2X4zNzxjHACElSe6clchMA+vG4hC3DJomR17PKChv5zesf/E2nN7hOxMoNM71h
-	 cK2RGgISnI/LncBapSJ26pB4r6Hxq2qPBUV/dc7DiCuH4/xgTd56iWpTpugmvtLaP
-	 vyJyMcsVFaJBqd03o9zZf1mixtS6cyn0Tz4dk7fY9sfjL2ImUVNPOdONg9kUiQsAw
-	 fh6qV/E7QFRUcJPKwnqOkm+MhFt5QeJq09bmzIpXh/tPH80wjOQTeY37KsC1JMbit
-	 hvWGDQhThY9StaT4++c/ZcybZk3aq7PW/XEv7qlU3AUCSBFcVKTaWSGfCuCbCjf4o
-	 TGtSyQoC5/slVuVXZQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1r2JhK28tl-00e8vu; Mon, 05
- Feb 2024 12:58:51 +0100
-Message-ID: <e92b9ff8-5486-47bc-828e-c19a7a251d4b@gmx.net>
-Date: Mon, 5 Feb 2024 12:58:50 +0100
+	s=arc-20240116; t=1707136606; c=relaxed/simple;
+	bh=ENgpbAtrqID8ovJNk+F/h+zg1txNrGQPaTzLXnkwiLQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=g6UKTF3AOLbwgWRjmXGsnYD07ylDk2TOOYfkFW+iUj2WmEccdcwMRPmQMo355U7+rhwd8b6ymjELQ/bUsj/6scJKkx07Be/yx7BQjLKnZjF8qgrqJaWJlKUk4QaynjsqudICNBxR8BbDOgoOU/piTTyupXKvFkxQy0PSJeUwMEI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=GemHoD06; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707136604; x=1738672604;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ENgpbAtrqID8ovJNk+F/h+zg1txNrGQPaTzLXnkwiLQ=;
+  b=GemHoD06K1eA1j4Adi7cIcvvVcGEej9YgMBrxZVsMLyxepWqHfKocaTC
+   Xe7y465ZRskszFjS1eqxU2ki9M6KFK2W1wN5x/dxYSn67hbQEqPrIAtGx
+   DPDAqHxdwvNHyVpDGCsowz2L2RUwRD8F8Amv/dOJ0Mm4gVGmiAuusOmLU
+   yousYO8P+2Ux6mt+C/sBbO+YwWWmGiX8eokuebN4JEcBs3LFkJ6clOyAM
+   vGtvqRdm5tgtEWbROaeNkxAroTt+bf6SL5GB0wydyQvvF5YilSMiDrT+s
+   T4DCopdGwNlyIRugPPsOJHO1AUN3V9sH2g+vQYACPXca/2OKPyUMHgWtW
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="11883224"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="11883224"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10974"; a="909285677"
+X-IronPort-AV: E=Sophos;i="6.05,245,1701158400"; 
+   d="scan'208";a="909285677"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Feb 2024 04:36:40 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rWxw1-000000023v6-3Rmk;
+	Mon, 05 Feb 2024 14:18:49 +0200
+Date: Mon, 5 Feb 2024 14:18:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2 08/23] gpio: sysfs: use gpio_device_find() to iterate
+ over existing devices
+Message-ID: <ZcDSKYqFHSUZb2Qx@smile.fi.intel.com>
+References: <20240205093418.39755-1-brgl@bgdev.pl>
+ <20240205093418.39755-9-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH V4 1/2] dt-bindings: pwm: Add pwm-gpio
-Content-Language: en-US
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
- Angelo Compagnucci <angelo.compagnucci@gmail.com>,
- Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
- Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
- Nicola Di Lieto <nicola.dilieto@gmail.com>
-References: <20240204220851.4783-1-wahrenst@gmx.net>
- <20240204220851.4783-2-wahrenst@gmx.net>
- <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:IFddr63wFDUAJh89cO1UJ213DGxFVUXLhZqHmgs7pMwEiyuqhYf
- WtbY/dNldTz5gEHQg49JlJBh3DlcDp7v9dRdd4h7UiPIEyuvl47a+uZhdL4Ngm3VegbxzsJ
- 0Re0gV37SiOnSLj5o6pW5KxpL6nTLurNb/2a1+nkJ549HQSvf9BPUlpqDTcMz+Py/pMnst0
- ytP7Z9N4vg4FfO+Jltmsg==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QYLDAQqhya8=;lR/yaYFQgc5bUxt7YOQURUH3wTh
- ScAGBARXwgIJgFPgYCH8vXPePAifhy0/S3j5zqiObM5eIVfmkgbes6GE0I+PFxiX23hpCSh5i
- Ees0Plhyxg9KknZG4QZdVYoXYp/Q0AKrcy8eGxww6JVXAP4GMANwxwcRA30m64U/3IHBHQ/yo
- eHmVKcb40ztiBq60tJzl3nDeEoNHSIum2foRMxAHm8d0JyWnX2iN2JmTkTl5O/mJTOcynS2+Y
- fCA9/WELgekZmXmNfMbpBB/1qtPrT6D47XO+VEKwa20GY+BwziLWjxrvadmHWobQ1JPzNebIX
- ZmhZF+ty9/X/rsl1FS9Rv2+PVIS0Q+NBC/0TajYlF1dcMP483VcaqJ4XGb2LJseAM5NLDG55B
- Uar2U6lrmur45ix5VS+N0xkJXrCoKodgkNTuc8i5UY7W3+onodhwtT5hUKGUzv0wPGnN8XF28
- XBXMKlzjWHY98sviB+lbH5LF5nu7zUlHDV/1W0RIcUbqQBIeFlcrfO6ghiWUcdyT+6OHwjINw
- lRlLJQRwGp99ftl1GEaXX/oqUzqVuOoJNbf1s+5FxuM8B6CypfJo247X4kcGsUk159j3l6dmu
- Az/tZG8+Gn38PD9h8qD5VF4y/COlM1HHfMzDNZwrTsubtwPiCvMr3d5tPyfHsL3PwC86nmE5+
- 8AsWg/em0n/7DhI6hIingUTaWu0gvyp+gIegJUble2+VNM3z75iQL7hCeOozBhEHPGLIteVW5
- LKN04YReRAbMe82Hu38bO2F300pdnJSNh9Em1OFX0LbRx8AL2YjywGiVzHVYsWrVi9sF2Co+2
- +z0hoZwi/8gZHSTT7BJTeGZggr8Fv3I/Icvs99hM6bKXw=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240205093418.39755-9-brgl@bgdev.pl>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Uwe,
+On Mon, Feb 05, 2024 at 10:34:03AM +0100, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> 
+> With the list of GPIO devices now protected with SRCU we can use
+> gpio_device_find() to traverse it from sysfs.
 
-Am 05.02.24 um 10:15 schrieb Uwe Kleine-K=C3=B6nig:
-> Hello,
->
-> On Sun, Feb 04, 2024 at 11:08:50PM +0100, Stefan Wahren wrote:
->> +  "#pwm-cells":
->> +    const: 3
->> +
->> +  gpios:
->> +    description:
->> +      GPIO to be modulated
->> +    maxItems: 1
-> Given that we have 3 PWM cells (so there is an u32 that specifies the
-> pwm_chip's line number) it would be obvious to allow several GPIOs. But
-> I guess we can extend this easily if and when the need arises.
-yes this is a limitation in order to keep it simple.
+...
 
-Regards
->
-> Otherwise I'm happy with this patch.
->
-> Best regards
-> Uwe
->
+> +static int gpiofind_sysfs_register(struct gpio_chip *gc, void *data)
+> +{
+> +	struct gpio_device *gdev = gc->gpiodev;
+> +	int ret;
+> +
+> +	if (gdev->mockdev)
+> +		return 0;
+> +
+> +	ret = gpiochip_sysfs_register(gdev);
+> +	if (ret)
+> +		chip_err(gc, "failed to register the sysfs entry: %d\n", ret);
+
+> +	return 0;
+
+???
+
+> +}
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
