@@ -1,128 +1,121 @@
-Return-Path: <linux-gpio+bounces-2967-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-2968-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3EF68497AB
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 11:22:51 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 11C5A84996E
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 13:00:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A25CBB2224B
-	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 10:22:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A52BB1F23311
+	for <lists+linux-gpio@lfdr.de>; Mon,  5 Feb 2024 12:00:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E76EA168D0;
-	Mon,  5 Feb 2024 10:22:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 935B4199B9;
+	Mon,  5 Feb 2024 11:59:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pXBbcU1t"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="VX2X4zNz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384E0168B9
-	for <linux-gpio@vger.kernel.org>; Mon,  5 Feb 2024 10:22:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8EF199B0;
+	Mon,  5 Feb 2024 11:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707128554; cv=none; b=DNuYeX5n9RWX5aDKx62CEy9FvLYdYSg+X0B7/MuYQbF2Kk8e/1TcN5rEl0Gd8jrVYFphhN8oJ8m0l8ttVKecBRCbcPr+tPQ4uXiL/PRuFHZZaPqo/12hVwk3W1kYYIJcqEUnArxlcojGxG4T5wc5YQN/jeeZc245zXwe+NwFmoE=
+	t=1707134343; cv=none; b=AbqIAEfYrzOMhBecIhyHrKGlf7NIVUVVt1FHxyS+e6DnczFFYWt6jbCCD6MDB6rg8T9j0nmNYgD1ldbLdKWK8ykoeuYOGkyP4ODx22fXKHM9iXZYBg8IdBn2NVZmF2nPFdCGeYIorkePBZmejwM0G0IwU/ZYaMDMBZQlFcQ6Q+w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707128554; c=relaxed/simple;
-	bh=XQFHQAy3ghz/oY8YrhiC5FeoWgHjjSFto3B6DYb1uTc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=dtpRSGJizgf2U7aCbi+3cm7koEpLH/1LiNO1MAdOnrpC+oCnDnEytZaHGKlWBBvON2xmoaBs+qjPzqmEY+zefDp1ev2awkivX3X0Jv2vC5952PXtseQ+PyIkAkqfDVgExehNGO591kFYClmIBExRtMplrpNw2oZgKWRbSiQYkv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pXBbcU1t; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-337cc8e72f5so3142449f8f.1
-        for <linux-gpio@vger.kernel.org>; Mon, 05 Feb 2024 02:22:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707128551; x=1707733351; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Nh3ag7/b079PDR25gLSSEiCZjsjzGkwvuNbtbymbZQU=;
-        b=pXBbcU1t/iYrCUWh4sZVKalWP9hCcJ3ssI1ljAG0BUTVnT9MHDymwJhWwFlitPbp03
-         R17rXCBcB5GXGeS7JDEEBkAXtzBAYlFlcwIII3XG+/9WtoJkuMFJ4WVZnyhcfR8rrOwD
-         DEhrzPInLEfnq/xIp4btGeHqK8hzwcPrEs1j1abNU1kY4JDwD0GJBJ+LuxdQWaXKP8Vp
-         sUe133n1wS+vnlYBG+6BhDxzoHT9tee5/GzqY2ekXKEpgxyBc6s1krCUmn1eYXzNa3co
-         osq2x9+S9tMmAQFrXO9TSGH+iDwaniAwKeYuoqOWlDu5WyDgbAiBqBj0klZL8sJpsxDe
-         HBpg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707128551; x=1707733351;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Nh3ag7/b079PDR25gLSSEiCZjsjzGkwvuNbtbymbZQU=;
-        b=OLgELZpzfvOJbfbY8Ku2w6mrebomtYwk4szv7x1xxQF0EGxVlwPtBonvM8wod04dA4
-         w+Xi+mjR7dQSTkzV8+ZC1FiU2B2xjjwBBJ9B3CIr0PhntsQrr1VeXXnBg3M+CbeuA5M1
-         p6ErzubxJM7P6guSL8JzY6Bo1xhlRip0HVsSCZ5lUvpMgQhXkjeDmFFs9sFM+67qqk9E
-         XGvXtEq2NHA1NJHzcjVyX3eiCCz2hctzZ+LjCFnIj9hcBdOihVNZkH9cQMIpBKaS1Wj7
-         Yh3cayB8eyg1ywvdcAPRpSK61k2lR8HxCPvUYOnokf2Wc7LqkZA2bk6Qlik74sNv6w/L
-         IArw==
-X-Gm-Message-State: AOJu0Yxxne8//s9ebUwfrQIf1F10AcPcdG7bHtLnwkpv+yQfxhLuue1k
-	FY+vFykiQbpFnZgKZ/GYChjuWt6MwuNUz1qZkT4EzYVn26ejId7opxyVAU0asAY=
-X-Google-Smtp-Source: AGHT+IEWTkkzFApDuOQaRlyxx+mqNV7F77qhWxhdcVAS21O2eADNQV04LXT9BAXP63xdqM3pU1aCTA==
-X-Received: by 2002:a05:6000:128c:b0:33b:38ce:9e13 with SMTP id f12-20020a056000128c00b0033b38ce9e13mr2184212wrx.41.1707128551408;
-        Mon, 05 Feb 2024 02:22:31 -0800 (PST)
-X-Forwarded-Encrypted: i=0; AJvYcCVorJWZf/Rvh+vcTsNO3vi+G8XRadLeKdvf7sqiWpW+/xL2+VyyEaXmuh+spSb0imLes4frjJkHSJORhs/rpAzc1y4kZPkTi50H07SrwwZ08XBGpj1d3Dcs6S1RlaCcgoFgsl/y8wUbe3MIgPU=
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:d929:10db:5b5c:b49d])
-        by smtp.gmail.com with ESMTPSA id z11-20020a5d4c8b000000b0033b3d726d41sm1657392wrs.104.2024.02.05.02.22.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 05 Feb 2024 02:22:31 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: remove GPIO device from the list unconditionally in error path
-Date: Mon,  5 Feb 2024 11:22:29 +0100
-Message-Id: <20240205102229.42460-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1707134343; c=relaxed/simple;
+	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pRKnFqbU/70K2NhXbgoB0ItDR6VG8cg/mwomJVx8sPYPrljyI44PbdItH5Y7nVGlw9IQNy69/Q7NQ+mf6iEpzgOruQnqqV1e3bgPokazFNOGPX5mYrXSy8Nu1+zyY5gPpOzjMPzzR+QiU4fofiQB8TnmmndfHdzU3uNYoGx9kS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=VX2X4zNz; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1707134331; x=1707739131; i=wahrenst@gmx.net;
+	bh=f/UbavRhjoaVvbmskvWAMvejHYVscy5mA/b9KLY3Y7s=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=VX2X4zNzxjHACElSe6clchMA+vG4hC3DJomR17PKChv5zesf/E2nN7hOxMoNM71h
+	 cK2RGgISnI/LncBapSJ26pB4r6Hxq2qPBUV/dc7DiCuH4/xgTd56iWpTpugmvtLaP
+	 vyJyMcsVFaJBqd03o9zZf1mixtS6cyn0Tz4dk7fY9sfjL2ImUVNPOdONg9kUiQsAw
+	 fh6qV/E7QFRUcJPKwnqOkm+MhFt5QeJq09bmzIpXh/tPH80wjOQTeY37KsC1JMbit
+	 hvWGDQhThY9StaT4++c/ZcybZk3aq7PW/XEv7qlU3AUCSBFcVKTaWSGfCuCbCjf4o
+	 TGtSyQoC5/slVuVXZQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mi2O1-1r2JhK28tl-00e8vu; Mon, 05
+ Feb 2024 12:58:51 +0100
+Message-ID: <e92b9ff8-5486-47bc-828e-c19a7a251d4b@gmx.net>
+Date: Mon, 5 Feb 2024 12:58:50 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 1/2] dt-bindings: pwm: Add pwm-gpio
+Content-Language: en-US
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, andy.shevchenko@gmail.com,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+ Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+ Nicola Di Lieto <nicola.dilieto@gmail.com>
+References: <20240204220851.4783-1-wahrenst@gmx.net>
+ <20240204220851.4783-2-wahrenst@gmx.net>
+ <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <zxzck6nm2xxakobwj4mk4x3vrz76c7dmlwgplhhunuzr25oeok@lc3kngblfmnz>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:IFddr63wFDUAJh89cO1UJ213DGxFVUXLhZqHmgs7pMwEiyuqhYf
+ WtbY/dNldTz5gEHQg49JlJBh3DlcDp7v9dRdd4h7UiPIEyuvl47a+uZhdL4Ngm3VegbxzsJ
+ 0Re0gV37SiOnSLj5o6pW5KxpL6nTLurNb/2a1+nkJ549HQSvf9BPUlpqDTcMz+Py/pMnst0
+ ytP7Z9N4vg4FfO+Jltmsg==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:QYLDAQqhya8=;lR/yaYFQgc5bUxt7YOQURUH3wTh
+ ScAGBARXwgIJgFPgYCH8vXPePAifhy0/S3j5zqiObM5eIVfmkgbes6GE0I+PFxiX23hpCSh5i
+ Ees0Plhyxg9KknZG4QZdVYoXYp/Q0AKrcy8eGxww6JVXAP4GMANwxwcRA30m64U/3IHBHQ/yo
+ eHmVKcb40ztiBq60tJzl3nDeEoNHSIum2foRMxAHm8d0JyWnX2iN2JmTkTl5O/mJTOcynS2+Y
+ fCA9/WELgekZmXmNfMbpBB/1qtPrT6D47XO+VEKwa20GY+BwziLWjxrvadmHWobQ1JPzNebIX
+ ZmhZF+ty9/X/rsl1FS9Rv2+PVIS0Q+NBC/0TajYlF1dcMP483VcaqJ4XGb2LJseAM5NLDG55B
+ Uar2U6lrmur45ix5VS+N0xkJXrCoKodgkNTuc8i5UY7W3+onodhwtT5hUKGUzv0wPGnN8XF28
+ XBXMKlzjWHY98sviB+lbH5LF5nu7zUlHDV/1W0RIcUbqQBIeFlcrfO6ghiWUcdyT+6OHwjINw
+ lRlLJQRwGp99ftl1GEaXX/oqUzqVuOoJNbf1s+5FxuM8B6CypfJo247X4kcGsUk159j3l6dmu
+ Az/tZG8+Gn38PD9h8qD5VF4y/COlM1HHfMzDNZwrTsubtwPiCvMr3d5tPyfHsL3PwC86nmE5+
+ 8AsWg/em0n/7DhI6hIingUTaWu0gvyp+gIegJUble2+VNM3z75iQL7hCeOozBhEHPGLIteVW5
+ LKN04YReRAbMe82Hu38bO2F300pdnJSNh9Em1OFX0LbRx8AL2YjywGiVzHVYsWrVi9sF2Co+2
+ +z0hoZwi/8gZHSTT7BJTeGZggr8Fv3I/Icvs99hM6bKXw=
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hi Uwe,
 
-Since commit 48e1b4d369cf ("gpiolib: remove the GPIO device from the list
-when it's unregistered") we remove the GPIO device entry from the global
-list (used to order devices by their GPIO ranges) when unregistering the
-chip, not when releasing the device. It will not happen when the last
-reference is put anymore. This means, we need to remove it in error path
-in gpiochip_add_data_with_key() unconditionally, without checking if the
-device's .release() callback is set.
+Am 05.02.24 um 10:15 schrieb Uwe Kleine-K=C3=B6nig:
+> Hello,
+>
+> On Sun, Feb 04, 2024 at 11:08:50PM +0100, Stefan Wahren wrote:
+>> +  "#pwm-cells":
+>> +    const: 3
+>> +
+>> +  gpios:
+>> +    description:
+>> +      GPIO to be modulated
+>> +    maxItems: 1
+> Given that we have 3 PWM cells (so there is an u32 that specifies the
+> pwm_chip's line number) it would be obvious to allow several GPIOs. But
+> I guess we can extend this easily if and when the need arises.
+yes this is a limitation in order to keep it simple.
 
-Fixes: 48e1b4d369cf ("gpiolib: remove the GPIO device from the list when it's unregistered")
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index d50a786f8176..d52b340562ce 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1005,15 +1005,15 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- err_free_gpiochip_mask:
- 	gpiochip_remove_pin_ranges(gc);
- 	gpiochip_free_valid_mask(gc);
-+err_remove_from_list:
-+	spin_lock_irqsave(&gpio_lock, flags);
-+	list_del(&gdev->list);
-+	spin_unlock_irqrestore(&gpio_lock, flags);
- 	if (gdev->dev.release) {
- 		/* release() has been registered by gpiochip_setup_dev() */
- 		gpio_device_put(gdev);
- 		goto err_print_message;
- 	}
--err_remove_from_list:
--	spin_lock_irqsave(&gpio_lock, flags);
--	list_del(&gdev->list);
--	spin_unlock_irqrestore(&gpio_lock, flags);
- err_free_label:
- 	kfree_const(gdev->label);
- err_free_descs:
--- 
-2.40.1
+Regards
+>
+> Otherwise I'm happy with this patch.
+>
+> Best regards
+> Uwe
+>
 
 
