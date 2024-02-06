@@ -1,149 +1,87 @@
-Return-Path: <linux-gpio+bounces-3030-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3031-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6A95484B6D2
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:46:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A585184B6E8
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:51:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AB7F1F2418F
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:46:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D7BFC1C23909
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:51:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0D05131734;
-	Tue,  6 Feb 2024 13:43:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jL3lm+sP"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE41C13174E;
+	Tue,  6 Feb 2024 13:51:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49C341332AB;
-	Tue,  6 Feb 2024 13:43:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D58B913174D;
+	Tue,  6 Feb 2024 13:51:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707227030; cv=none; b=oclCoFOdSvjOJv/rIalQi2MyFC0Q5refBjspivECCMTJLr0sKURGwKe6uyh0HcNzPUnkuioRbStSnHaRmQO0G/hiFvhme/TxJ3EfPINTCJuHG8NnjZG7YN+fK/rNWlVD2VLKwmJ48Q189wMu8mdM9HDSgKE9Jh47mlIkhwwlcE4=
+	t=1707227487; cv=none; b=er/8c+lbuaPGIIpZFFS/CGSvsrgIeb/D4VhWkLKz6zfmXX5pRnTHJW8pUiwh12fYLiwd4KXORuB6KGWXZlDPDZ5Fji5RdXIbNOOj6nKGj1/79xAKKe9St9KIwsloT1EBN4Crh8Zg/pcpNBtkEn0lIRyvG6/6l8wck4cBzTGw/CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707227030; c=relaxed/simple;
-	bh=SUxMOCdGao8f0FWMz+0RjWwJi349adzOCQHtfuEpjss=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FSK7Aa/pTvBOowE8X6gDY7x3syGNWRtLKj5Rwt3DXr3jHpqGOKcl+chbWyT6SVaOZ+ORDLK1TuVDH3dad3rave3l6nH2GWWXuYLUQc2FOdX5HfNSTPh1fpuBxT/eA3ybPJPC5JN0VToORQh8TwH4sct+K4+X+fI8nJ1xpTXSUrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jL3lm+sP; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707227029; x=1738763029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=SUxMOCdGao8f0FWMz+0RjWwJi349adzOCQHtfuEpjss=;
-  b=jL3lm+sPfsMHMMBadxpL9MGys9vNbkFCuXiiZz2YVvyKgSsKvSknyyQv
-   S5b3II2RAHMTZWlcr3RmJHKL40T0msGGbQfoxc4NUhU+PYhhhbU5fsW4I
-   U8FX3TeoEyZVuC+652bkZw53Mds7HTNowxdvzrvCeJyhdkfUhPPU1Whaq
-   DRDptd/i/nj4b3H29hU45xvKNWcVybSOQFFyDg/hPlrFhVYQRRTzUjEOy
-   156gcmT0Uom0cx9NyGEA7yx2taZXfmaW2tW2TxwpkzCUTZC7PV03bAQwD
-   JCyzSFK0X5Xe9RYDcleOUcktxd48lYBaRYuveLJNVFs3k7zAjEzcKVMx3
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="1015677"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="1015677"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:43:48 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="909638751"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="909638751"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:43:45 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rXLji-00000002LvW-3KDt;
-	Tue, 06 Feb 2024 15:43:42 +0200
-Date: Tue, 6 Feb 2024 15:43:42 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
+	s=arc-20240116; t=1707227487; c=relaxed/simple;
+	bh=4hFXo6GghKhwF4jp9hW+4rR/T0iXvv9b2LAtlSkLt2Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kgXkrBgxFg83BXFHc9C/o4ggQr7j8NkUANBOyeccTwFMrqrI5qt5PDoBI4x6VsDa/yKIYmaPCUcyd/12J+rc30gel0Ut40c2s2Lax8f0gejLKqk1Kpk7D79vBsIieXP6VaBFZk1Qf+7HWHF+4KaDnlxJXKb2juAlzINOHEZXiaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
+X-IronPort-AV: E=Sophos;i="6.05,247,1701097200"; 
+   d="scan'208";a="193057608"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Feb 2024 22:51:21 +0900
+Received: from localhost.localdomain (unknown [10.226.92.237])
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 16EF6420FAA2;
+	Tue,  6 Feb 2024 22:51:18 +0900 (JST)
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 21/23] gpio: protect the pointer to gpio_chip in
- gpio_device with SRCU
-Message-ID: <ZcI3jkga8yfI6Nx8@smile.fi.intel.com>
-References: <20240205093418.39755-1-brgl@bgdev.pl>
- <20240205093418.39755-22-brgl@bgdev.pl>
- <ZcDVNA6Id7Bmckt0@smile.fi.intel.com>
- <CAMRc=MdoGQZKM37kk=j6NpdkUUjDvs3-8YeiZVQO2EpPHRZ7Uw@mail.gmail.com>
- <ZcIlEEgHn5AaTEyz@smile.fi.intel.com>
- <CAMRc=Mcq2UgS4EcVAOghQzFq_jXA83rGMse+pxa5ieK8MXZm-w@mail.gmail.com>
- <ZcIwiU4UNbcoa8Km@smile.fi.intel.com>
- <CAMRc=MdRwCqn-A3Wdk8kaYDY6NAO5fC3wy0gxWsFQcPwoH9dvw@mail.gmail.com>
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>
+Subject: [PATCH v2 0/3] RZ/G2L pinctrl trivial changes
+Date: Tue,  6 Feb 2024 13:51:12 +0000
+Message-Id: <20240206135115.151218-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdRwCqn-A3Wdk8kaYDY6NAO5fC3wy0gxWsFQcPwoH9dvw@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Feb 06, 2024 at 02:23:35PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Feb 6, 2024 at 2:13 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Feb 06, 2024 at 01:57:39PM +0100, Bartosz Golaszewski wrote:
-> > > On Tue, Feb 6, 2024 at 1:24 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Mon, Feb 05, 2024 at 08:36:39PM +0100, Bartosz Golaszewski wrote:
-> > > > > On Mon, Feb 5, 2024 at 1:31 PM Andy Shevchenko
-> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+The first patch in this series for configuring GPIO interrupt as input
+mode. Also if the bootloader sets gpio interrupt pin as function,
+override it as gpio.
 
-...
+The second and third patch is satisfy the prerequisite for IA55 tint
+registers(ie, pin will be always in gpioint mode)
 
-> > > > > > >  int gpiod_get_direction(struct gpio_desc *desc)
-> > > > > > >  {
-> > > > > > > -     struct gpio_chip *gc;
-> > > > > > >       unsigned long flags;
-> > > > > > >       unsigned int offset;
-> > > > > > >       int ret;
-> > > > > > >
-> > > > > > > -     gc = gpiod_to_chip(desc);
-> > > > > > > +     if (!desc)
-> > > > > > > +             /* Sane default is INPUT. */
-> > > > > > > +             return 1;
-> > > > > >
-> > > > > > Hmm... I can't imagine how this value may anyhow be used / useful.
-> > > > >
-> > > > > What else would you return for an optional (NULL) GPIO?
-> > > >
-> > > > An error. If somebody asks for direction of the non-existing GPIO, there is no
-> > > > (valid) answer for that.
-> >
-> > > All other functions return 0 for desc == NULL to accommodate
-> > > gpiod_get_optional(). I think we should stay consistent here.
-> >
-> > The way you proposed is inconsistent, i.e. you may not return any direction
-> > for the unknown / non-existing GPIO. You speculate it will be 1, I may consider
-> > that in my (hypothetical for now) case it should be 0.
-> >
-> > Just don't make all bananas to be oranges. It won't work.
-> 
-> I don't have a strong conviction here. May make it an error as well.
-> It's still inconsistent though - calling gpiod_direction_output(NULL);
-> will return 0 and then you get an error when you do
-> gpiod_get_direction(NULL). I don't have a good solution though.
+Currently on irq_disable(), we are disabling gpio interrupt enable(ISEL).
+That means the pin is just gpio input and not gpio input interrupt any
+more. So, move configuring ISEL in rzg2l_gpio_child_to_parent_hwirq()/
+rzg2l_gpio_irq_domain_free() so that pin will be gpioint always even
+during irq_disable().
 
-Yes, and this is the best what we can have. Because the real code may rely on
-the returned value and they should be really aware on the returned values in
-some cases.
+v1->v2:
+ * Added as series by adding patch#2 and #3.
+ * Replaced u32->u64 for pin_data
+ * Added rzg2l_gpio_free() for error path for bitmap_find_free_region().
+ * rzg2l_gpio_free() called during rzg2l_gpio_irq_domain_free().
+
+Biju Das (3):
+  pinctrl: renesas: rzg2l: Configure interrupt input mode
+  pinctrl: renesas: rzg2l: Simplify rzg2l_gpio_irq_{en,dis}able
+  pinctrl: renesas: rzg2l: Avoid configuring ISEL in
+    gpio_irq_{en,dis}able
+
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 77 ++++++++++++++++---------
+ 1 file changed, 50 insertions(+), 27 deletions(-)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.25.1
 
 
