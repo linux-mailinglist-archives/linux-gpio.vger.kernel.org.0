@@ -1,137 +1,145 @@
-Return-Path: <linux-gpio+bounces-3028-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3029-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AD6B84B61C
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:14:04 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF3A084B63F
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:23:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F3AE7B2844A
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:14:01 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AF1228242E
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:23:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 772C1130E32;
-	Tue,  6 Feb 2024 13:13:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40F56130AF2;
+	Tue,  6 Feb 2024 13:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nwcXWzzV"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="keOSbC89"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909E41DA3F;
-	Tue,  6 Feb 2024 13:13:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E78312EBD6
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Feb 2024 13:23:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707225234; cv=none; b=sSDH5WL8UrF1LZdQHMAjWodCsGlPkO3ECtSlWsI6+6Sj91RkSQODIG08mJ4cZPtxfiRJioObWGYDJnI7xlVj7ghjHWB+lE+xAEUUG5AgzQVrgmak/B0nv02dyEkSxrPNP/OXoY6g7N7Ovflb3wkPTtMGW5PDDGP7m7WPrDFN0U8=
+	t=1707225829; cv=none; b=m5oA5j5yO7oTUdxovsml8+imDErP7rQWJAOq+VChTVovfDbe42xU1W4PIT8Xy+gW/pWN8qR6LmqZldD8mBsTF6jwvjD98joCp8YE/85RtZ3yWkGGqqeDz0Q/yWXSiNAVY2NZju40eMujfrhO+zZ1GWtsWcLgNILvEEiexjPWVL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707225234; c=relaxed/simple;
-	bh=JyZh+adA1uVkYt9vxH+nUWXV8/wcgCYlgQumPyvaH5A=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=psM1Hq77mU/Q6tBIwlPVVvqNc5u3zm8ldqzd2ObPHqpz3WhXOAIicUgX07DLkVf2sK0TJ4xe8krFyd3LIPmpMhqRz5WpRt21MxiModhmensGfoBPWyKVYH5KB6b99d/UrYHEBTkXXKzdpWJF+dE+nwbjRIyec8k7eGArvXkFaP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nwcXWzzV; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707225232; x=1738761232;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=JyZh+adA1uVkYt9vxH+nUWXV8/wcgCYlgQumPyvaH5A=;
-  b=nwcXWzzVMCE3oaTOkIzMV60ELzdZYRmdyoxtTKo17/kc5sKXUqALvxFR
-   4h4rSsBmz5IAVtKwe5TzNGYKgCg9S03ez4t/aEn5U0C7t8Z5CS2S92/Qv
-   fE+EqR1vqDt4J6gYdm0L+oQRmA1LYIfjl2X/FwqOnhAtjgAfsCj/2s02f
-   yZ87NjNKPOeUqyxoNOqIWcSrXK/mOgHSfw+LGMsW2LXBqIryxnQfuGPHI
-   7LmrZQ5zyDPYuDXwddugHTTGGw+oOKVFl8UODefO+uDz3Qf5fngvptzm3
-   +W3wMzszniWCUVs3M1sGlxX2TRvu4KfxITJJXDUHlo0LIUntfIHbfJ0ee
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="26188121"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="26188121"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:13:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10975"; a="909633156"
-X-IronPort-AV: E=Sophos;i="6.05,247,1701158400"; 
-   d="scan'208";a="909633156"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Feb 2024 05:13:49 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rXLGk-00000002LYh-0Zwm;
-	Tue, 06 Feb 2024 15:13:46 +0200
-Date: Tue, 6 Feb 2024 15:13:45 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v2 21/23] gpio: protect the pointer to gpio_chip in
- gpio_device with SRCU
-Message-ID: <ZcIwiU4UNbcoa8Km@smile.fi.intel.com>
-References: <20240205093418.39755-1-brgl@bgdev.pl>
- <20240205093418.39755-22-brgl@bgdev.pl>
- <ZcDVNA6Id7Bmckt0@smile.fi.intel.com>
- <CAMRc=MdoGQZKM37kk=j6NpdkUUjDvs3-8YeiZVQO2EpPHRZ7Uw@mail.gmail.com>
- <ZcIlEEgHn5AaTEyz@smile.fi.intel.com>
- <CAMRc=Mcq2UgS4EcVAOghQzFq_jXA83rGMse+pxa5ieK8MXZm-w@mail.gmail.com>
+	s=arc-20240116; t=1707225829; c=relaxed/simple;
+	bh=C7dF9Kb/M7oo++UGWBOq24DK/bRowbcDwdnj5Bd6lDo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Ptx8C2Yu1HUXpVS3A5BLPCJzJIfgoTtJbGb5gNueq7pQJmn7J9Scs2awc69hMWXuv3fcP4RFrZQsJVvDyLIxJfedoRtotth1EYvsZfXDERT8D4k2Clgj2p8x08i3VNmhKXeM+XKKK7uQxt9JItUkFmLAW51uApl5H76r4Ou+6n0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=keOSbC89; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d60ee03b54so1808259241.2
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Feb 2024 05:23:47 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707225826; x=1707830626; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Rw/8aAJbgg9bRKID3FMilIWSyurBwHhJJPiR7i3XuPc=;
+        b=keOSbC8900wIbgqj4IsNcYOyo2/7pVWcIaRMU1pxnUIAaEbn8oPUbr+UAKR3MbOUSx
+         xud7k7DD/lrLQJSg6em9R7YYl7qzh6SUdAO/Pa4s7XnLsLAdRX+R67WdV6AfqhU9t120
+         LYn9FAEpUKlaz1870PbXBbRt4Ut/gP4exql9TxAqphuUfkgS4qF8tpiPPt81A9aWJESB
+         Rh7iCPAuiiE6wKa5yj0r9+r5ZUfD0lSH8myaRLN9QSgBgowkxET52w4zCg9o3ma4O2P7
+         /w85I5VBbQkM6EQkZrIKm40QbPEhM2GXRq9PHzCkByrQYQxBSqfK3jVLBicAunakwkBT
+         wFRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707225826; x=1707830626;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Rw/8aAJbgg9bRKID3FMilIWSyurBwHhJJPiR7i3XuPc=;
+        b=o/w/gqoDrwhicBx3sXPW/Ki1jyTt7j6Pr9ijxKxH4yQs8cE+oNzbpmn45Z03cLJDGT
+         i2xYBUYdy/SFSiNkxVjtBRGyo6+3f6XiSMDlIBcpfWKL7c7FkJT3GQ44gq9QxPDKDu8F
+         IqW4iwsBjo4dOuLLBnR+1sGK+mZ35KNP0geobcbb5AmMtU5TblAiepT6ZIrlBv936ZLO
+         r/9Nt42VgY4kfpm3VbK9edLpc/aI7wJOS19DLs5ZVgFTR8kUA2Kozz61F1PHdTicDLHH
+         k1oUhIgrW9WwzOMF7f/WkYlnthSGjG2y19z/MOeAdCxw65xP+HRKdNnQI3p0zoTfWVQb
+         c0Lg==
+X-Gm-Message-State: AOJu0Yyn3gdQAY6hV/BO8fvsca0eEewk16cT1CTzdc4kkx+wrvjgM6NN
+	OimDsptnX9bTSQ1URcmLb1a65vEL57RGetJv8bCJOINk6pHgY7nnl/1XYHYFCg+GRlZXbEQ5MJX
+	iJww7IbP8z5uxYaOW6Ekw2VLxnCV7q8eRL7A+Kg==
+X-Google-Smtp-Source: AGHT+IHNmuuPif+DbG4ec+dIMXyJEbT7VOcbI/So+yhHKgmIF6Yqto0JmwGC6Q+Vw4w6zffGtyU3CZcthFKRTXXPi8k=
+X-Received: by 2002:a05:6102:55a7:b0:46d:2500:b3f5 with SMTP id
+ dc39-20020a05610255a700b0046d2500b3f5mr3133776vsb.35.1707225826548; Tue, 06
+ Feb 2024 05:23:46 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mcq2UgS4EcVAOghQzFq_jXA83rGMse+pxa5ieK8MXZm-w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240205093418.39755-1-brgl@bgdev.pl> <20240205093418.39755-22-brgl@bgdev.pl>
+ <ZcDVNA6Id7Bmckt0@smile.fi.intel.com> <CAMRc=MdoGQZKM37kk=j6NpdkUUjDvs3-8YeiZVQO2EpPHRZ7Uw@mail.gmail.com>
+ <ZcIlEEgHn5AaTEyz@smile.fi.intel.com> <CAMRc=Mcq2UgS4EcVAOghQzFq_jXA83rGMse+pxa5ieK8MXZm-w@mail.gmail.com>
+ <ZcIwiU4UNbcoa8Km@smile.fi.intel.com>
+In-Reply-To: <ZcIwiU4UNbcoa8Km@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 6 Feb 2024 14:23:35 +0100
+Message-ID: <CAMRc=MdRwCqn-A3Wdk8kaYDY6NAO5fC3wy0gxWsFQcPwoH9dvw@mail.gmail.com>
+Subject: Re: [PATCH v2 21/23] gpio: protect the pointer to gpio_chip in
+ gpio_device with SRCU
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 06, 2024 at 01:57:39PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Feb 6, 2024 at 1:24 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Mon, Feb 05, 2024 at 08:36:39PM +0100, Bartosz Golaszewski wrote:
-> > > On Mon, Feb 5, 2024 at 1:31 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > ...
-> >
-> > > >
-> > > > >  int gpiod_get_direction(struct gpio_desc *desc)
-> > > > >  {
-> > > > > -     struct gpio_chip *gc;
-> > > > >       unsigned long flags;
-> > > > >       unsigned int offset;
-> > > > >       int ret;
-> > > > >
-> > > > > -     gc = gpiod_to_chip(desc);
-> > > > > +     if (!desc)
-> > > > > +             /* Sane default is INPUT. */
-> > > > > +             return 1;
-> > > >
-> > > > Hmm... I can't imagine how this value may anyhow be used / useful.
+On Tue, Feb 6, 2024 at 2:13=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Tue, Feb 06, 2024 at 01:57:39PM +0100, Bartosz Golaszewski wrote:
+> > On Tue, Feb 6, 2024 at 1:24=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
 > > >
-> > > What else would you return for an optional (NULL) GPIO?
-> >
-> > An error. If somebody asks for direction of the non-existing GPIO, there is no
-> > (valid) answer for that.
+> > > On Mon, Feb 05, 2024 at 08:36:39PM +0100, Bartosz Golaszewski wrote:
+> > > > On Mon, Feb 5, 2024 at 1:31=E2=80=AFPM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > ...
+> > >
+> > > > >
+> > > > > >  int gpiod_get_direction(struct gpio_desc *desc)
+> > > > > >  {
+> > > > > > -     struct gpio_chip *gc;
+> > > > > >       unsigned long flags;
+> > > > > >       unsigned int offset;
+> > > > > >       int ret;
+> > > > > >
+> > > > > > -     gc =3D gpiod_to_chip(desc);
+> > > > > > +     if (!desc)
+> > > > > > +             /* Sane default is INPUT. */
+> > > > > > +             return 1;
+> > > > >
+> > > > > Hmm... I can't imagine how this value may anyhow be used / useful=
+.
+> > > >
+> > > > What else would you return for an optional (NULL) GPIO?
+> > >
+> > > An error. If somebody asks for direction of the non-existing GPIO, th=
+ere is no
+> > > (valid) answer for that.
+>
+> > All other functions return 0 for desc =3D=3D NULL to accommodate
+> > gpiod_get_optional(). I think we should stay consistent here.
+>
+> The way you proposed is inconsistent, i.e. you may not return any directi=
+on
+> for the unknown / non-existing GPIO. You speculate it will be 1, I may co=
+nsider
+> that in my (hypothetical for now) case it should be 0.
+>
+> Just don't make all bananas to be oranges. It won't work.
+>
 
-> All other functions return 0 for desc == NULL to accommodate
-> gpiod_get_optional(). I think we should stay consistent here.
+I don't have a strong conviction here. May make it an error as well.
+It's still inconsistent though - calling gpiod_direction_output(NULL);
+will return 0 and then you get an error when you do
+gpiod_get_direction(NULL). I don't have a good solution though.
 
-The way you proposed is inconsistent, i.e. you may not return any direction
-for the unknown / non-existing GPIO. You speculate it will be 1, I may consider
-that in my (hypothetical for now) case it should be 0.
-
-Just don't make all bananas to be oranges. It won't work.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
