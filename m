@@ -1,134 +1,154 @@
-Return-Path: <linux-gpio+bounces-3020-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3021-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B0F684B231
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 11:13:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id CD3DC84B36A
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 12:26:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 580A9287DA7
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 10:13:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F29361C24271
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 11:26:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22E6E12E1DE;
-	Tue,  6 Feb 2024 10:13:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60D8F12FF63;
+	Tue,  6 Feb 2024 11:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BI/CKhos"
+	dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b="Qz184yDn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCBE012EBF3;
-	Tue,  6 Feb 2024 10:13:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643A212EBF0
+	for <linux-gpio@vger.kernel.org>; Tue,  6 Feb 2024 11:25:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707214389; cv=none; b=Al/mBOcCrFtcRO2Yn7ankCcVyKa2M2cnA3TFRcTxgRn462QAJLEFKEefUylzoPopF85WLe59wpo3MQRYSer72UIMvh8amDZ89dq3cJ7ksVPqHnF4QRz1Ao3YJOoKonRHWsrhsIeU4yZtKCUiGBQGJ2H+j8/SR3EYYaBOQEdjFNA=
+	t=1707218709; cv=none; b=FiwbnZSr03rPGdzvDIAkp00g+Y7X5B6zadV61tWNasN3oZKEG6k4ssEjoB9eXbGNhfKAtD9vqHDqHOXZoEqlrdSMhGy/su4lQfLkXTgzx4xbi9gLjBM2wmDm3GoMcS7f+sOPV+2ifqK0kaRUjvb3dADHBjIZtWNH2QQwcPt8F9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707214389; c=relaxed/simple;
-	bh=kqMo2mkEaV1uSbwgI1g5KgAxopmIWmq8uQN0eHbaI8w=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=omxOCiFTQqLL+VCokffkhp7Bpjt4JK15xVtflO4y2NOh27xOMYWYAyIkV0gHX1OHexoP3B2UofriRAWVvFwxF0MtBbcAzPW7o8efE0fnHinEsH9T1+4rscg92C4Gob2+HstwALKZ9lHXkIbwFV06nQcVtXQ/u6B3x9y0aRAWGWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BI/CKhos; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id A5B5D40013;
-	Tue,  6 Feb 2024 10:13:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707214384;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=wYHYy9wM/XJWCBvUKP+eSh79QSZHlIijB5K8Zu/UezQ=;
-	b=BI/CKhosTgEXVhWpl9iV4qjDtB08F2u86pXekaGVKk/DX5TY/qjmViVpsZYKTnUacdHRFs
-	V0b227hFwI1b/xXybq7zJnTda5BsN83Rg6VZHfj8VyQn4rNaxTsih/FclM6YwQlSjQsXuJ
-	3Jcwn8nQiqonmxlq3sDevEAxVf9g9Zh32F0DK4XSB13EyXJWLL0KmC+/G4LoQswtO6DWeS
-	PReLv+IivCNS0ImjtBh2p0rK6N1p4ifPfpNLmFuTIMaT/T+JzACQa03UrMcp+R271jlBc5
-	wSXx2Vt+8kDG2YeULq2yKE6jO+pMeRPIBUfBOefZWFYTbOEvJIHBESvKeREZ4g==
+	s=arc-20240116; t=1707218709; c=relaxed/simple;
+	bh=D5rY55ZVWa2j3iyWooQtIR56A7LxQVE5Z7VzvJRN4f4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=S7yHiowlr/G7bAB/lNJLsyxlvyiVWts0OJvaSlXp9CvwRI8IJ7uDU+Se4W1SNp96UGIiLr58Nmj2Wj7IBFUkWIpfi5yVvU76ZLesTomK1g269HjIhy6NKOJMyToYHjwu3OR5u403R7Wew+5Xo5tWyOFtcu/ayTXGo2RnYsM8vpQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com; spf=pass smtp.mailfrom=9elements.com; dkim=pass (2048-bit key) header.d=9elements.com header.i=@9elements.com header.b=Qz184yDn; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=9elements.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=9elements.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-40ff13d2628so910135e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 06 Feb 2024 03:25:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=9elements.com; s=google; t=1707218705; x=1707823505; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=tdUPrvm3uK6fsu9NtDUXaLyCVRtgeDGLH0MFBS15pl0=;
+        b=Qz184yDn2eb7d+kEZpFTGcWBYlF+vp14/pHeB//KJb0cmEmY2OMOspAJH5V/KLYtj+
+         07cGfoRhZjD2SZtcD3xileqKGioTkdSotQwEKgdJ4Y0Q85SEoyi/G1LyEkyjbxubtnTF
+         h2QOZ1K+YMXqpIQT9pyQycg34g4OKi6rYzZLGWrbvGClgwJtmPgDDjjTKsesrIlbwSdA
+         6b47mWZebLQI9UKwN//zpmGwVMevooC1s/chjylvC+ltQgCKYdHd9MWH5u6CSeWawX8y
+         Shd3tBM7pI+zB8QTY/bDEViKYX31ue4wONiEGLuvs/MGK0fwQkmc/4EOYmzEqt+4VUn2
+         mErw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707218705; x=1707823505;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=tdUPrvm3uK6fsu9NtDUXaLyCVRtgeDGLH0MFBS15pl0=;
+        b=TCUVoc2o99KIdO//tjGOhesJd+tAt4kMO2qDm9kZPg61X+5Ehu4gUptw5moxr/Ze0+
+         Pu2q3p/SZEtrZE0tGS3ajoKOxlzfHCNKHu8wXz/xUuv6Z5GuTkpTJYG1FILBok6oojDr
+         +eYPkLS/Bn1ibAOvgHjMKib6rG1XYKRihPrKycShmL2aLHZJWcD8q5WXFrSHj+mWjyjU
+         EmxcP/sDQit7Y+vtyjaT6I5F6b7nByWgNuaYV2FijUiTVW3SmI7vkgyadEZwSDeK9xmZ
+         7i8uBqCBvNzJzidGtVWha7hOiKwWFwTe6clywxT9GnH4HL8zN/RHgBdfbHgFgK33Wpz/
+         1xuw==
+X-Gm-Message-State: AOJu0Yw5SL8EytuiCxZZ8arYHBHAj1pVzuLRTNUjazmgFdb/FlqLrOFp
+	9u2oWGucW6RiEoS3eAXtVLWGQNWZ/19LfbIi+lMmQv/4kiNF8tIk5UnGC3Yw2MQ=
+X-Google-Smtp-Source: AGHT+IHAfLd1SsZ3eD1799NyVZHe7CLAsRsTG1bGXZeAQhXx338yJxeK9+8buYf+hpejikQwSQS3rQ==
+X-Received: by 2002:a05:600c:5491:b0:40e:5933:e2c2 with SMTP id iv17-20020a05600c549100b0040e5933e2c2mr1560002wmb.19.1707218705549;
+        Tue, 06 Feb 2024 03:25:05 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVxFLdsCp31yGWcmf7bnv5ZnLkRhC0gMfcFF8fPTMsYMYojULrN7KLTt6zygmzBRYB+KRDoXItvc8Jr/ZC61GgiTcVCNjUlbpCp166JkYZhLZWQlwPWzAr/bLUneFUjQ/QMcW/shiWgqWDZ77OrES3PTrNrCqnxSdYqwphNfYKOdoNlJDgc/9YCUseOqZjiNLbRBaCABklZLDL2Z6FWajnZ2CXSev3k3JTvIM+9ivw2A89A2gsJRiasjuHiCs8tvWTwQYfF6RTEKWbubEwE/Xojk/kg+wGcAa6EOH6ww8YGBVT9kBUuMeWBkMiKenH4yRY0VPfcSfLArRnqd+rcFtjjqi64XRBO/tOoyH6Sag==
+Received: from stroh80.sec.9e.network (ip-078-094-000-051.um19.pools.vodafone-ip.de. [78.94.0.51])
+        by smtp.gmail.com with ESMTPSA id r12-20020a05600c458c00b0040efd192a95sm1725010wmo.1.2024.02.06.03.25.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Feb 2024 03:25:05 -0800 (PST)
+From: Naresh Solanki <naresh.solanki@9elements.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Patrick Rudolph <patrick.rudolph@9elements.com>
+Cc: mazziesaccount@gmail.com,
+	Naresh Solanki <naresh.solanki@9elements.com>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v4] dt-bindings: pinctrl: cy8c95x0: Update gpio-reserved-ranges
+Date: Tue,  6 Feb 2024 16:55:01 +0530
+Message-ID: <20240206112501.715042-1-naresh.solanki@9elements.com>
+X-Mailer: git-send-email 2.42.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Tue, 06 Feb 2024 11:13:03 +0100
-Message-Id: <CYXWZOJ7KLIC.27XVZMBQASH9O@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v4 04/18] dt-bindings: clock: mobileye,eyeq5-clk: add
- bindings
-Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
- <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
-To: "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Gregory
- CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
- <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
- <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>
-X-Mailer: aerc 0.15.2
-References: <20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com>
- <20240131-mbly-clk-v4-4-bcd00510d6a0@bootlin.com>
- <f6e5b748-17c4-4de1-be42-f79155be21cb@linaro.org>
- <CYTOEGEI34JQ.36CF09LNJFQHS@bootlin.com>
- <4e9ce766-602f-4b75-8c25-48da4d22051e@linaro.org>
-In-Reply-To: <4e9ce766-602f-4b75-8c25-48da4d22051e@linaro.org>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Update maxItems to 60 for gpio-reserved-ranges to allow multiple gpio
+reserved ranges.
+Add input-enable property to allow configuring a pin as input.
+Also update example.
 
-On Thu Feb 1, 2024 at 12:00 PM CET, Krzysztof Kozlowski wrote:
-> On 01/02/2024 11:38, Th=C3=A9o Lebrun wrote:
-> > Hello,
-> >=20
-> > On Thu Feb 1, 2024 at 9:58 AM CET, Krzysztof Kozlowski wrote:
-> >> On 31/01/2024 17:26, Th=C3=A9o Lebrun wrote:
-> >>> Add DT schema bindings for the EyeQ5 clock controller driver.
-> >>>
-> >>> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> >>> ---
-> >>
-> >> No changelog, tags ignored, I scrolled through first two pages of cove=
-r
-> >> letter and also no changelog.
-> >=20
-> > In this case we fit into the "If a tag was not added on purpose". Sorry
-> > the changelog was not explicit enough. In my mind it fits into the
-> > first bullet point of the cover letter changelog:
-> >=20
-> >> - Have the three drivers access MMIO directly rather than through the
-> >>   syscon & regmap.
->
-> ... which I might not even connect to binding patches. I see only one
-> entry regarding bindings in your changelog, so I find it not much
-> informative.
->
-> For the future, please state that you ignore tags for given reason.
->
-> >=20
-> > That change means important changes to the dt-bindings to adapt to this
-> > new behavior. In particular we now have reg and reg-names properties
-> > that got added and made required.
-> >=20
-> > I wanted to have your review on that and did not want to tag the patch
-> > as already reviewed.
->
-> Makes sense, but how can I know it? Other people often ignore the tags,
-> so safe assumption is that it happened here as well.
+Signed-off-by: Naresh Solanki <naresh.solanki@9elements.com>
+---
+ .../bindings/pinctrl/cypress,cy8c95x0.yaml    | 24 +++++++++++++++++--
+ 1 file changed, 22 insertions(+), 2 deletions(-)
 
-I'm prepping a new revision. Should I be taking your previous
-Reviewed-By tags in? You sent them for the previous revision, do the
-changes in this V4 look good to you?
+diff --git a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+index 7f30ec2f1e54..700ac86c26b6 100644
+--- a/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
++++ b/Documentation/devicetree/bindings/pinctrl/cypress,cy8c95x0.yaml
+@@ -45,7 +45,8 @@ properties:
+     maxItems: 1
+ 
+   gpio-reserved-ranges:
+-    maxItems: 1
++    minItems: 1
++    maxItems: 60
+ 
+   vdd-supply:
+     description:
+@@ -85,6 +86,8 @@ patternProperties:
+ 
+       bias-disable: true
+ 
++      input-enable: true
++
+       output-high: true
+ 
+       output-low: true
+@@ -133,6 +136,23 @@ examples:
+         interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
+         interrupt-controller;
+         vdd-supply = <&p3v3>;
+-        gpio-reserved-ranges = <5 1>;
++        gpio-reserved-ranges = <1 2>, <6 1>, <10 1>, <15 1>;
++
++        pinctrl-0 = <&U62160_pins>, <&U62160_ipins>;
++        pinctrl-names = "default";
++
++        U62160_pins: cfg-pins {
++          pins = "gp03", "gp16", "gp20", "gp50", "gp51";
++          function = "gpio";
++          input-enable;
++          bias-pull-up;
++        };
++
++        U62160_ipins: icfg-pins {
++          pins = "gp04", "gp17", "gp21", "gp52", "gp53";
++          function = "gpio";
++          input-enable;
++          bias-pull-up;
++        };
+       };
+     };
 
-Thanks Krzysztof,
+base-commit: 99bd3cb0d12e85d5114425353552121ec8f93adc
+-- 
+2.42.0
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
 
