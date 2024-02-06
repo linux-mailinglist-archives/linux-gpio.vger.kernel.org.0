@@ -1,131 +1,79 @@
-Return-Path: <linux-gpio+bounces-3017-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3018-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D256584ADAF
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 05:43:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E1EB84AFD7
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 09:23:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C5965B21D55
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 04:43:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E5CA0B2300A
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 08:23:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E0BF779DB8;
-	Tue,  6 Feb 2024 04:43:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A6212B141;
+	Tue,  6 Feb 2024 08:23:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tDAgollU"
+	dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b="JDKYdE8Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E8677F12;
-	Tue,  6 Feb 2024 04:43:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
+Received: from mail-177131.yeah.net (mail-177131.yeah.net [123.58.177.131])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1CF912A179;
+	Tue,  6 Feb 2024 08:23:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=123.58.177.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707194616; cv=none; b=J4NvqqEeeahDeJucPh6KOfAt7PGDVeL1YX/Rkk62IULWGVEtebfhFgWtGW9I7N7kKtEL4Oyv1RYOmjaBLSKB16lnNxutyQUSX5MyQrGtErz/2eRoyK3/4GD/aI/yUe/cY7Xhpwszh064bvp1R523Qtb6umQdF/T6WyXEjYORKpk=
+	t=1707207822; cv=none; b=meaioaZLKjjrjtdVlIZP/8lR6eZsTINcXQ87C3NNUfFDgrwJR8gcVjAscExRU+wvMCJwoAo8Jlq9MxVCtvSdMtLB8vJzlsEvS6avE6l3rPRRjBfEx8YowEuTFw4UJU8OEMPrghLjaSWD3WCCHlifftWV8hYUsiFIe7KWz4PgzZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707194616; c=relaxed/simple;
-	bh=LS1KrxtP59Fb91vkMh5NAIuixfILIL/8DogIfqJBR0c=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=s1T3F9NmqxivkHDd+y2Ht7rawOfyhEuvdzh4kBWFK5FzzMrqGQwf0RfxE1IO/9Z9aIZJ/psaVONxApqM5IUz+++EYvHc3aS8wh6IUSsQtzXEWo21WhWMVtwr4wejSfcpHntCWpkpwd3aXihw8uRVoAIX+gPMGF+3nSeoAy54qBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=tDAgollU; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 4164hPNa025424;
-	Mon, 5 Feb 2024 22:43:25 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707194605;
-	bh=P9Brm4oSTXiiBclrcVJ3PCSaz+EcMSnBjpIYP2cMhlY=;
-	h=From:To:CC:Subject:Date:In-Reply-To:References;
-	b=tDAgollU6CsHtb4OxsYg0ES60kT+RcAsaOHdLrRpb+gF/84CrpJHRnOMlpCs+xMpk
-	 2SJTKTYnhY2OC5g4xxEzZLq97yaRC9vwTXUylzMbUcIBR+Q6kiVpyb8IblmPOUTk/2
-	 xO0cIHwNiiWF17VjHcM2GAPiAdJJdmwy7BW6Q3DI=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 4164hPMw003726
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Mon, 5 Feb 2024 22:43:25 -0600
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Mon, 5
- Feb 2024 22:43:25 -0600
-Received: from lelvsmtp6.itg.ti.com (10.180.75.249) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Mon, 5 Feb 2024 22:43:25 -0600
-Received: from uda0132425.dhcp.ti.com (uda0132425.dhcp.ti.com [172.24.227.94])
-	by lelvsmtp6.itg.ti.com (8.15.2/8.15.2) with ESMTP id 4164hJQx117444;
-	Mon, 5 Feb 2024 22:43:20 -0600
-From: Vignesh Raghavendra <vigneshr@ti.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring
-	<robh+dt@kernel.org>,
-        Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>,
-        Conor Dooley <conor+dt@kernel.org>, Tony
- Lindgren <tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>, Nishanth Menon <nm@ti.com>,
-        Tero Kristo <kristo@kernel.org>,
-        Thomas Richard
-	<thomas.richard@bootlin.com>
-CC: Vignesh Raghavendra <vigneshr@ti.com>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
-        <thomas.petazzoni@bootlin.com>, <gregory.clement@bootlin.com>,
-        <theo.lebrun@bootlin.com>, <u-kumar1@ti.com>
-Subject: Re: (subset)[PATCH 0/3] pinctrl: pinctrl-single: fix suspend/resume on j7200
-Date: Tue, 6 Feb 2024 10:13:03 +0530
-Message-ID: <170719349987.2245010.13900750309896394285.b4-ty@ti.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
-References: <20231128-j7200-pinctrl-s2r-v1-0-704e7dc24460@bootlin.com>
+	s=arc-20240116; t=1707207822; c=relaxed/simple;
+	bh=zpYE8+x9stgG1+lU/ZYoU7oTimGeEsPVSAaV95caQ2w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=gRC8zFNkQntHevyYd3FioR5iob8bDj8Wv2pURuPAgNUdBAlXQz0osgVn57IYpJyUhy91/l3elet36gg2vGglAHqMzPHTEEgEGkD++Qx0Gsm9BMO9qWzjAxMz0qqTW5QMQyicSpEzyKcrEzr5HKYBUBFtI/+EhhDaHas8lZXxNkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net; spf=pass smtp.mailfrom=yeah.net; dkim=pass (1024-bit key) header.d=yeah.net header.i=@yeah.net header.b=JDKYdE8Z; arc=none smtp.client-ip=123.58.177.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yeah.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yeah.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yeah.net;
+	s=s110527; h=Date:From:Subject:Message-ID:MIME-Version:
+	Content-Type; bh=qUrsdUuxZU1UTyCYFyAMr+JUj6smaNTsmYy71PgQWEo=;
+	b=JDKYdE8Z/XcQ4G5lgOwcAEc7YgBvX/DV/I3AUHRtFUFaPMrU7V++hd8S30bq4C
+	ouEq2BpX+Fja/r+tHOKE68TCmanVc/Ry5KkaHASC+VyXXavE7pwbAUxHEhjb00y/
+	Gi4zqtquYKQDxou+d2KliE56pcTHgezHzwdW1SQGopKyc=
+Received: from dragon (unknown [183.213.196.254])
+	by smtp1 (Coremail) with SMTP id ClUQrADHz9K06cFlt238Ag--.15896S3;
+	Tue, 06 Feb 2024 16:11:33 +0800 (CST)
+Date: Tue, 6 Feb 2024 16:11:32 +0800
+From: Shawn Guo <shawnguo2@yeah.net>
+To: Martin Kaiser <martin@kaiser.cx>
+Cc: Shawn Guo <shawnguo@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>, Peng Fan <peng.fan@nxp.com>,
+	Andrew Lunn <andrew@lunn.ch>, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] ARM: imx_v6_v7_defconfig: enable the vf610 gpio
+ driver
+Message-ID: <ZcHptCbteajfAWL7@dragon>
+References: <20240124205900.14791-1-martin@kaiser.cx>
+ <20240124205900.14791-4-martin@kaiser.cx>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240124205900.14791-4-martin@kaiser.cx>
+X-CM-TRANSID:ClUQrADHz9K06cFlt238Ag--.15896S3
+X-Coremail-Antispam: 1Uf129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UbIYCTnIWIevJa73UjIFyTuYvjxUwl1vDUUUU
+X-CM-SenderInfo: pvkd40hjxrjqh1hdxhhqhw/1tbiDwZ8ZVnxccG7egABsI
 
-Hi Thomas Richard,
-
-On Tue, 28 Nov 2023 16:34:58 +0100, Thomas Richard wrote:
-> On j7200, during suspend to ram the SoC is powered-off. So the pinctrl
-> contexts are lost.
-> The flag PCS_CONTEXT_LOSS_OFF shall be set to restore the pinctrl
-> contexts.
+On Wed, Jan 24, 2024 at 09:58:59PM +0100, Martin Kaiser wrote:
+> The vf610 gpio driver is used in i.MX7ULP chips (Cortex A7, ARMv7-A
+> architecture). Enable it in imx_v6_v7_defconfig.
 > 
-> A new compatible (ti,j7200-padconf) was created to enable this flag only
-> for j7200.
+> (vf610 gpio used to be enabled by default for all i.MX chips. This was
+> changed recently as most i.MX chips don't need this driver.)
 > 
-> [...]
+> Signed-off-by: Martin Kaiser <martin@kaiser.cx>
 
-I have applied the following to branch ti-k3-dts-next on [1].
-Thank you!
-
-[3/3] arm64: dts: ti: k3-j7200: use ti,j7200-padconf compatible
-      commit: 4eb42afed5d488c4707be5362e8e0f0771f5218e
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent up the chain during
-the next merge window (or sooner if it is a relevant bug fix), however if
-problems are discovered then the patch may be dropped or reverted.
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/ti/linux.git
---
-Vignesh
+Applied, thanks!
 
 
