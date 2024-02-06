@@ -1,39 +1,38 @@
-Return-Path: <linux-gpio+bounces-3033-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3034-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4992984B6EC
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:51:51 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B63B84B6F8
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 14:53:55 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F0C1A1F24516
-	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:51:50 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 783F928141A
+	for <lists+linux-gpio@lfdr.de>; Tue,  6 Feb 2024 13:53:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 617B413175D;
-	Tue,  6 Feb 2024 13:51:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7BA4D13172C;
+	Tue,  6 Feb 2024 13:53:27 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E53B3131749;
-	Tue,  6 Feb 2024 13:51:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D809131740;
+	Tue,  6 Feb 2024 13:53:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707227490; cv=none; b=f5AaebpGTTr7qKorrt7Bg7vMlYfhZvGHRil8e1wjsyg+1bINA4yw4zYmuzZ+xe7JqNPmcuST9aE0HgpAxweSGsaX9FhL+ir8peV0oQo/g+nnRv3tMont4uiktOhFfrZ0r6GQ3CjqDz0W6uvtKtKf0R8QqyfkZSKK5qleHYKfl0Q=
+	t=1707227607; cv=none; b=aNdVH7iCp3RolraGhO8pF/B//BbyZZpnjQRM2J8XvOjczTf03rm03wyPpZaRcpxLpbYfKLJIYzA6awRUT+OWYaL0qYqFMQoesG8kqM6afbjJcnvb7aJ2G9mG5+IhiwN5BmlwZA2l6E4eERC8r95itw38WOMUqWkKb5g8RLbehGk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707227490; c=relaxed/simple;
-	bh=gtLKIzacJzTv3Cp16d7ixtHYPrM7F/YW/CHd5zJCBIA=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=de1mCZs4wvuITlS3aFztqCtAkDU4e+V4MXFBXmp0rqWh1M3zyrggZgaho2is6eDsaL2HIPOPXyZZ8Q1OBxibGDvIcDaMNso52DKmPEYmFSOJWZWWewCAaKcIxni/9x0FgzejS6TIwb5fuWljcB19tkN6CQAlBMEaK92o1LKRQbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1707227607; c=relaxed/simple;
+	bh=o7/n2RYTmpw9Kf5AtPk2HA0Ouly65ZPh8HrpIe0kPno=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QuyfCtoFbZp0fdaOaMSM+C9J7OIq3V8IsQ0kt6guXSoPx/PLF0w7XVOcOl/c9yBbX2N4f5NAeq1B24d/CC8+njUlqURCdwVnvgwe2t6skZwjjYlZHU892Ns7bQhyLzFYmYqh5yS/TZDcSr78KP2LTClcJlTZCtjo+JrNo8UiKnk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 X-IronPort-AV: E=Sophos;i="6.05,247,1701097200"; 
-   d="scan'208";a="193057618"
-Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 06 Feb 2024 22:51:27 +0900
+   d="scan'208";a="196969713"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie6.idc.renesas.com with ESMTP; 06 Feb 2024 22:53:23 +0900
 Received: from localhost.localdomain (unknown [10.226.92.237])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id C48C7420FAA2;
-	Tue,  6 Feb 2024 22:51:24 +0900 (JST)
+	by relmlir5.idc.renesas.com (Postfix) with ESMTP id ECFC94000AA0;
+	Tue,  6 Feb 2024 22:53:20 +0900 (JST)
 From: Biju Das <biju.das.jz@bp.renesas.com>
 To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Biju Das <biju.das.jz@bp.renesas.com>,
@@ -42,12 +41,10 @@ Cc: Biju Das <biju.das.jz@bp.renesas.com>,
 	linux-gpio@vger.kernel.org,
 	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
 	Biju Das <biju.das.au@gmail.com>
-Subject: [PATCH v2 2/3] pinctrl: renesas: rzg2l: Simplify rzg2l_gpio_irq_{en,dis}able
-Date: Tue,  6 Feb 2024 13:51:14 +0000
-Message-Id: <20240206135115.151218-3-biju.das.jz@bp.renesas.com>
+Subject: [PATCH v2 3/3] pinctrl: renesas: rzg2l: Avoid configuring ISEL in gpio_irq_{en,dis}able
+Date: Tue,  6 Feb 2024 13:53:18 +0000
+Message-Id: <20240206135318.165426-1-biju.das.jz@bp.renesas.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240206135115.151218-1-biju.das.jz@bp.renesas.com>
-References: <20240206135115.151218-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,94 +53,63 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Simplify rzg2l_gpio_irq_{en,dis}able by adding a helper function
-rzg2l_gpio_irq_endisable().
+Currently on irq_disable(), we are disabling gpio interrupt enable(ISEL).
+That means the pin is just gpio input and not gpio input interrupt any
+more. So, move configuring ISEL in rzg2l_gpio_child_to_parent_hwirq()/
+rzg2l_gpio_irq_domain_free() so that pin will be gpioint always even
+during irq_disable().
 
 Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
 v2:
- * New patch
+ * New patch.
 ---
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 40 ++++++++++---------------
- 1 file changed, 16 insertions(+), 24 deletions(-)
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 03725a3c6703..d400dcb048fc 100644
+index d400dcb048fc..4f979b7081c5 100644
 --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
 +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -1809,11 +1809,9 @@ static int rzg2l_gpio_get_gpioint(unsigned int virq, struct rzg2l_pinctrl *pctrl
- 	return gpioint;
- }
- 
--static void rzg2l_gpio_irq_disable(struct irq_data *d)
-+static void rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
-+				     unsigned int hwirq, bool enable)
+@@ -1836,22 +1836,18 @@ static void rzg2l_gpio_irq_endisable(struct rzg2l_pinctrl *pctrl,
+ static void rzg2l_gpio_irq_disable(struct irq_data *d)
  {
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
 -	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
--	unsigned int hwirq = irqd_to_hwirq(d);
- 	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[hwirq];
- 	u64 *pin_data = pin_desc->drv_data;
- 	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
-@@ -1821,8 +1819,6 @@ static void rzg2l_gpio_irq_disable(struct irq_data *d)
- 	unsigned long flags;
- 	void __iomem *addr;
+ 	unsigned int hwirq = irqd_to_hwirq(d);
  
--	irq_chip_disable_parent(d);
--
- 	addr = pctrl->base + ISEL(off);
- 	if (bit >= 4) {
- 		bit -= 4;
-@@ -1830,9 +1826,21 @@ static void rzg2l_gpio_irq_disable(struct irq_data *d)
- 	}
- 
- 	spin_lock_irqsave(&pctrl->lock, flags);
--	writel(readl(addr) & ~BIT(bit * 8), addr);
-+	if (enable)
-+		writel(readl(addr) | BIT(bit * 8), addr);
-+	else
-+		writel(readl(addr) & ~BIT(bit * 8), addr);
- 	spin_unlock_irqrestore(&pctrl->lock, flags);
-+}
- 
-+static void rzg2l_gpio_irq_disable(struct irq_data *d)
-+{
-+	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-+	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
-+	unsigned int hwirq = irqd_to_hwirq(d);
-+
-+	irq_chip_disable_parent(d);
-+	rzg2l_gpio_irq_endisable(pctrl, hwirq, false);
+ 	irq_chip_disable_parent(d);
+-	rzg2l_gpio_irq_endisable(pctrl, hwirq, false);
  	gpiochip_disable_irq(gc, hwirq);
  }
  
-@@ -1841,25 +1849,9 @@ static void rzg2l_gpio_irq_enable(struct irq_data *d)
+ static void rzg2l_gpio_irq_enable(struct irq_data *d)
+ {
  	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
+-	struct rzg2l_pinctrl *pctrl = container_of(gc, struct rzg2l_pinctrl, gpio_chip);
  	unsigned int hwirq = irqd_to_hwirq(d);
--	const struct pinctrl_pin_desc *pin_desc = &pctrl->desc.pins[hwirq];
--	u64 *pin_data = pin_desc->drv_data;
--	u32 off = RZG2L_PIN_CFG_TO_PORT_OFFSET(*pin_data);
--	u8 bit = RZG2L_PIN_ID_TO_PIN(hwirq);
--	unsigned long flags;
--	void __iomem *addr;
  
  	gpiochip_enable_irq(gc, hwirq);
--
--	addr = pctrl->base + ISEL(off);
--	if (bit >= 4) {
--		bit -= 4;
--		addr += 4;
--	}
--
--	spin_lock_irqsave(&pctrl->lock, flags);
--	writel(readl(addr) | BIT(bit * 8), addr);
--	spin_unlock_irqrestore(&pctrl->lock, flags);
--
-+	rzg2l_gpio_irq_endisable(pctrl, hwirq, true);
+-	rzg2l_gpio_irq_endisable(pctrl, hwirq, true);
  	irq_chip_enable_parent(d);
  }
  
+@@ -1933,6 +1929,7 @@ static int rzg2l_gpio_child_to_parent_hwirq(struct gpio_chip *gc,
+ 		goto err;
+ 	}
+ 
++	rzg2l_gpio_irq_endisable(pctrl, child, true);
+ 	pctrl->hwirq[irq] = child;
+ 	irq += RZG2L_TINT_IRQ_START_INDEX;
+ 
+@@ -1976,6 +1973,7 @@ static void rzg2l_gpio_irq_domain_free(struct irq_domain *domain, unsigned int v
+ 
+ 		for (i = 0; i < RZG2L_TINT_MAX_INTERRUPT; i++) {
+ 			if (pctrl->hwirq[i] == hwirq) {
++				rzg2l_gpio_irq_endisable(pctrl, hwirq, false);
+ 				rzg2l_gpio_free(gc, hwirq);
+ 				spin_lock_irqsave(&pctrl->bitmap_lock, flags);
+ 				bitmap_release_region(pctrl->tint_slot, i, get_order(1));
 -- 
 2.25.1
 
