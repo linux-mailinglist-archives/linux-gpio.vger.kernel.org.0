@@ -1,125 +1,128 @@
-Return-Path: <linux-gpio+bounces-3054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79FB984C9A3
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 12:34:17 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A1A1B84CA99
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 13:20:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35C18287332
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:34:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5413A1F26E5C
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 12:20:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B0F1AADD;
-	Wed,  7 Feb 2024 11:34:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C77C25A0F3;
+	Wed,  7 Feb 2024 12:19:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AjgtkgoM"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fCFXyLqJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1096AA0
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 11:34:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 656B759B73
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 12:19:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707305651; cv=none; b=RnZy6i+115RIXAlxbowEzcnKS6wzcmikCZteWdPP+nlTo17t5wP+NL2lGz9Q3N5oUGpdEitTr7lhmmK7jfdTf2kbOZLl5EqgU2fB+RKC414NzMvk5OVS5fyEV2ZybrE8lF+TwagYWesWKMFaOwh2swWuy4QDtnIbhmjd6TukOFk=
+	t=1707308391; cv=none; b=M1rLg7/3XCg/LLMqmlPqjqK6j/xysbMmSdyMpBfNFmM95rzhwPucJte9EVhh6nnoSFTsGDK/a6KVp0FJSBASz48RHVSh1Akd4LULDx80LaNFIiLBH36KwbQcGMzR2XI0rXn2Pgc3afIMoncYBjCOIQ+p3+CW4K74GSKTSpcHhqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707305651; c=relaxed/simple;
-	bh=r6AnrnUfvq1RjuHOgagltLP0FpYOAHTZyanpafyCLhU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gThg6XLUvtgGxOrY2CDdYBqoslTltoU0d8KvTy5iXWgU/wvnarOzH9ZUhjruzKkUD+6EWv+G6eKBU4ig6Y6SWmO/GWPsxJhCswT/xoEmOIn5MZegiz2yoNzr8ALEcYu0WCBw/kykeBBAXNIC2q1euf6dyvDJpBxxSKZp1ZOFxJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AjgtkgoM; arc=none smtp.client-ip=212.227.17.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1707305638; x=1707910438; i=wahrenst@gmx.net;
-	bh=r6AnrnUfvq1RjuHOgagltLP0FpYOAHTZyanpafyCLhU=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=AjgtkgoMSNksoJxHJwFbRFN8WZzAiG9a8VF3Rbj8ga+HHkXLSn5QE/dWjF0B47nq
-	 7qB83nmpJuoNG7Cz+H/5twclg3jHjE6PIW31Tw9JTBpmiihVawzj1qde0v5SYJz+u
-	 1/0TzATP6eXWFj4pGq3CAk0c8fx1ZAA/isvioYZSixAOZQRlpO0GXjZ4+ekMd/seJ
-	 rEDvLEJ3zg3SadGsKcvJyHDqeFoxXI9Lu/gn2+fkqAv4RIFHann1blGClAzVU0HbN
-	 SBQ+iq3A4JVwYq5gLBO6g+Fot42EnwMw0CQONJirGtgSE6G25xMYHE28p8G7t5pMn
-	 +c3KPHYt1lpofWnmrg==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mr9Bu-1rCLvU1BR8-00oIWe; Wed, 07
- Feb 2024 12:33:58 +0100
-Message-ID: <1709f26f-0486-4856-8b2d-ba5e6fd492e2@gmx.net>
-Date: Wed, 7 Feb 2024 12:33:55 +0100
+	s=arc-20240116; t=1707308391; c=relaxed/simple;
+	bh=lGAcMND2NaDdmDU9b141DrAfpaiW5UmgS8bsTQ/HMhY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uUkMXYGx+GfW/Ydl1+IOWNEk0a3zgR/8urLHq/U1SpIcaNSlialZ2PEZDY6Ixip+5PaZ0baW7HPPj8kxokJP6Z2XdC897D4HeVHiB8km3b6zAZxzcDW35V4mD5k6GMwtmuMuKOUkt1B7apG9QBMuV/4aQYC8/zV561XLGDFgEKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fCFXyLqJ; arc=none smtp.client-ip=209.85.221.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4c02dfa01a8so216529e0c.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Feb 2024 04:19:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707308388; x=1707913188; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NEPUwWtoIq4EHAceeg/KJzDbLqtV6kKvWuN/Pm0FSrQ=;
+        b=fCFXyLqJbXzGZIT988peHJyVmc6Qe4Pnuk9kYAl6+RXSbX91XtTblayHJidwX1AFoo
+         0i5nHfSPWLLhxn44aInQuLtO+HkzIQRnPnVEbn37N6Md/Qs/lDotvuYRIgqQyb2N5NAn
+         emkdOa1vRcBwy91C43hENlGEB5wgJdm8FBXnv1/mzPRLZC5Odha6Jk3TxH9y0F1aM5y3
+         szqAgyni1UwhVyd4AlvC3ZNwWl/A5+wOwmGF9Tt8pTz1Ngcr5DOQeyWEpBGjb9Z7bAga
+         NvPBGzhI9x1d0Q4JpibsEjwuY9eSEk/CBf1F3sxmHsuZobVE4j56RpfzJ2l9leAbRBLW
+         IFEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707308388; x=1707913188;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=NEPUwWtoIq4EHAceeg/KJzDbLqtV6kKvWuN/Pm0FSrQ=;
+        b=TyB0388d6AMEz1La499Jej9gF11+C+yJyw5/umfzxZYUaACYRH13UXZVAyZCjcugD8
+         2mFZX4RHL3jF+iQ9suvPEnj5F1XiT3nptUXsYFLoGE3Ylqt87VbrpcXMzs4ozUcqzh+n
+         n2tbnL6SVWvxlM7O69P9L7AEksyVCzNAk37Ugw2YRMbFxf1G7nWBC+qY01Uj8w5zf7fS
+         B4s7XLo6SdTxpr9kF9M0lESeD9tXerJB4xYB8LuWfsEsUAXO/3K9mm3z2W1e7zgNqTRx
+         Szq0IuTAjbsaewp8njlGEXJ3UHGWB1Zj+tSX2CY/Z+4DKL8+qKpTQoxHKB6dlEhFpzjw
+         fQBg==
+X-Gm-Message-State: AOJu0YxZHvUwLqAaAc3KNPcGktGj6WSlUySNBxBKtPP6IsB7EpxeleEl
+	b+w4vrPWQrStmI3V0iwQ91HuA7GNdxNmBfwsRRm7ZY4h+jiOEcVj1+OB9nUZaAFyY69QVUrWnS9
+	2VwrtSu5L6TLMDLsP/lsQ4lyFT2FNER+m919UDA==
+X-Google-Smtp-Source: AGHT+IGn7YFHyXZ8ClynY1G1aKTCs/KL7ktljkC1ocYeF/oqDMUfq0IduSYo2+RYfwQpVbIezMdJ8iVYR0bQgyd/Fvc=
+X-Received: by 2002:a67:cd95:0:b0:46d:2fcd:3522 with SMTP id
+ r21-20020a67cd95000000b0046d2fcd3522mr1973497vsl.22.1707308388173; Wed, 07
+ Feb 2024 04:19:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] pinctrl: bcm2835: Implement pin_conf_get
-To: Linus Walleij <linus.walleij@linaro.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>
-Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
-References: <20240204165852.166157-1-wahrenst@gmx.net>
- <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
-Content-Language: en-US
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240201162758.50733-1-brgl@bgdev.pl> <CACRpkdbAw5NfSr8GSNiQhOzSi-tERyn=-ZroLfF-FRbsW2JviQ@mail.gmail.com>
+ <2024020732-duchess-husband-8b1b@gregkh>
+In-Reply-To: <2024020732-duchess-husband-8b1b@gregkh>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 7 Feb 2024 13:19:37 +0100
+Message-ID: <CAMRc=MeWD-4xx9Y=P3ajO37XJAsBrZ2TyqNeCE8vkxXW1yXWVQ@mail.gmail.com>
+Subject: Re: [PATCH] gpio: set device type for GPIO chips
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DapiP7m9qNJq8HxbAUPpa8HYxLblt+68v53udYBjGTkG6csPvau
- V0qAz9dNwJTXesywDpC9q21T7FJ9diz+eQgHaJ33zaIeeWKGy6Ku21xPXZcXuIJQCQ/s7Wo
- WrP5B3r5T2rMc8ehMJ5Bml24WStW6mDKt8Y5Hm9Uoat/WOWcW5oKI8I6U9GYaNIIOfukw5z
- 7StqLnRk53akANEsuFZkw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:n0I+g6B+S9s=;YENi5n1hs/URtFnML1KTdNZav7y
- Gj6aN7LWJ1EUBNhsewEox+glbrUFOP6ai3bUFBrgsqvce7ZlR/f3XnbLzS1A3t2zt1Re1AoBr
- oXQ7lmc9tr6JXa9PPWUH1ZMXAXmgQcibOmY+kFmrpB/lA6WKVk+3IzkU2zT4bx+/9ht+9APIE
- 1s7kdm0UmehV3rMPBLqPlBEpAT+yLwpnzKzO7o496ooUi9qI5sPs07Mfa58MbM+htI+ysqF2u
- v4LrNPpgohDycOkss7xzMa48DIAxwxB3v5H8+B4nRaLAaEzgbw6YpkrIaJhs10bLIQOtDS1Ub
- ryN9V9ruLUU3mwKpP/PXj0p27qwhKi4cD4EOjZvBuZG3Ux7OZFHbg7VZl3fJDzx6YzgVF+QeF
- fnEEmN323d0WtrGLdSUfZNcbEsdBmbKA63OLyzK7cyQKKO3V6W/aM7xH0eDeRPyuk0+jBJlwI
- AAtXq2J+DqiK++mp5kjbYUOC6BYXwJayvZAVw/5LFOZxzJABSkl9n0/r5w8qeNem6catygReu
- Tp9bDE/mdllogYiHmMJZdfQ33Ieu8KzLw8il6/R9X7lkMX41O9TRwpLVkdpQIbPL0J9tkVEQe
- Tuyij/VAaNb/oJFwIQC2zJDm+L811nN9DSMsIiAcrVYLj8TDnI3k9G/OUbVZDrT+YSojWhr0C
- hsy3hekMUaqiyyPEEo+GYP8A9DwkV9A/hNqVqz+ImZLah0KuWAnN+SuyXANaj2nQDsM/dmUmb
- XesYTfwVMe8uqcFZnoeEvv6J82tTOhBCIez5HAWDFtD4qjbj2JGqTeEZxOgTP7OPiepu3Dbqd
- C90YEFugNB0MUcer5gkk+v48ePNwx0wpHd0jxAhPDA/LY=
 
-Hi Linus,
-
-Am 07.02.24 um 11:56 schrieb Linus Walleij:
-> On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> =
-wrote:
+On Wed, Feb 7, 2024 at 11:49=E2=80=AFAM Greg KH <gregkh@linuxfoundation.org=
+> wrote:
 >
->> For years, the Raspberry Pi users relied on userspace programs to read
->> the pin configuration. In the meantime, it has become apparent that thi=
-s
->> approach has reached its limits for various reasons.
->>
->> This patch series now attempts to improve the debugging possibilities o=
-n
->> the kernel side in order to reduce the dependency on these userspace
->> programs.
->>
->> Stefan Wahren (2):
->>    pinctrl: bcm2835: Implement bcm2835_pinconf_get
->>    pinctrl: bcm2835: Implement bcm2711_pinconf_get
-> I don't see any problems with this, can I just apply the patches or do y=
-ou
-> want to first resend them as non-RFC?
-since the second patch hasn't been tested with BCM7211, it would be nice
-to get a feedback from Florian or someone else with this hardware?
-
-Best regards
+> On Wed, Feb 07, 2024 at 11:45:39AM +0100, Linus Walleij wrote:
+> > On Thu, Feb 1, 2024 at 5:28=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.=
+pl> wrote:
+> >
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > It's useful to have the device type information for those sub-devices
+> > > that are actually GPIO chips registered with GPIOLIB. While at it: us=
+e
+> > > the device type struct to setup the release callback which is the
+> > > preferred way to use the device API.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > (...=3D
+> > > +static struct device_type gpio_dev_type =3D {
 >
-> Yours,
-> Linus Walleij
+> Can you make this structure const please?
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
+I have, there's a v2 on the list already.
+
+Thanks
+Bart
+
+> > > +       .name =3D "gpio_chip",
+> > > +       .release =3D gpiodev_release,
+> > > +};
+> > > +       gdev->dev.type =3D &gpio_dev_type;
+> > >         gdev->dev.bus =3D &gpio_bus_type;
+> > >         gdev->dev.parent =3D gc->parent;
+> >
+> > Looks good to me (TM) but we should run this by Greg so he get the chan=
+ce
+> > to chime in, I doubt he will see it on LKML.
+>
+> Yes thanks, I wouldn't have caught it...
+>
+> greg k-h
 
