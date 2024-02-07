@@ -1,106 +1,107 @@
-Return-Path: <linux-gpio+bounces-3052-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3053-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 108F884C904
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:54:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BD9884C90A
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:56:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C052E287883
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 10:54:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07715B243F5
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 10:56:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B806717559;
-	Wed,  7 Feb 2024 10:54:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A325171B4;
+	Wed,  7 Feb 2024 10:56:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HDO9i16d"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XCG3tJA9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3FF17BBD
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 10:54:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE0B17BBD
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 10:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707303294; cv=none; b=rreR9hxT/zJBFJRveuCiSw1goYBqEs/kF35wB/5gWSVn0MD2VSvXwLrl/wZF6n/Z1xn+poYFOBq9qWZz5t1gk0shPdDcoJgGtqnXwvqSmgR7UuS7jYzyzHB7DKQRTeF7625za5/PYB06z7+CVEajATiwwGSUM0OT19ez6wWX2LY=
+	t=1707303393; cv=none; b=PoOSpoUWtWkMPPWftWTJKtEqxoGtWuafUMg2u/7fdrCNKxB7hoG61wRK9SaPGRyyf6cEDn1EWifIL4QXRQktUCwdZc0wUdZ1CAyVYx8nMxCLR0rHk4I+ho+ipTbJNF2ba9Hg9w9SquEtfT3AdOsSlXYsN+BlWIDej3R2ZgJnqSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707303294; c=relaxed/simple;
-	bh=AqRyfre6hpYKrbdFfgct1DMOhUQC1J51jmJyfuq2n8I=;
+	s=arc-20240116; t=1707303393; c=relaxed/simple;
+	bh=4AUeUAJBjmhNgP3HSPGmFNNt9I00EF32i67Ieskzmwk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=r4TdH1+C7aYHeFOnlVKVa3MhU3y3hVpl8VWKzILovm4o8WROGElvpscKqfiars+cd1Z9zDXmvdIgwZSqwldxpY3LatNV7bgBLboZ0jMo6CKbYTeQrSy4y9rIHc740EENxwc8QqG70Lc29UaZeM8DRDo4ypr5yz0yjxz/ynUBiwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HDO9i16d; arc=none smtp.client-ip=209.85.219.169
+	 To:Cc:Content-Type; b=P9wzZiLCjgHbpa9MZ7Qp1lnmYxaZBK9O7w2se796KSHrVo79f3e9fjulgVOwUD6g3jwBRMtDqylG4abZY6SN4cna7+IvWwl+B1a0OMb8xc1M2z7+W8ZcVYS3mn2dI+/ubAH2sJyMAMKBN0ayv5kZLPboawlrIPUtGQyU1ESFqPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XCG3tJA9; arc=none smtp.client-ip=209.85.128.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dc730e5d88cso379600276.2
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Feb 2024 02:54:52 -0800 (PST)
+Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60482b91650so5239287b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Feb 2024 02:56:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707303292; x=1707908092; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1707303391; x=1707908191; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=AqRyfre6hpYKrbdFfgct1DMOhUQC1J51jmJyfuq2n8I=;
-        b=HDO9i16dkADSVvq6bn0Sbo+lrGoZqVgEmDyNnddeI8nc1hnZq+Ja3AMz9KQ3uYYhLz
-         /dccogs4m04hXV8h8p3iFRjmnsa5oOrDLB7agajpybVu09VFCRMSyGM5GEzQAz4jkTEa
-         X3Xn8Wu7VTXOR+alvwQIax07jdzy/X8V3P/4U9aoIQtQafuPuqtviS2tHCs8dTP4MCaD
-         0BlbgxAiNQYneX9QIZqfqVoVNV1aVZYGWgO1zIV8s5aoXVjGqJrhrzaXYnRgKY2xIN8/
-         fOrvWwnvq9iDaWDiPfqqjPR6e/CWaSymQpokA6dJcZqFEjHkdip85CsKVqK/BVgO10nX
-         2GWA==
+        bh=GfNMu9yYQSlt+ahy6TCysrTzsaeAnaZUTlIsY0hJS40=;
+        b=XCG3tJA9y2E7XCL1CSeeV8hMQp5sOmiYkrNIOVSXVZDRj8dAFRJV0BD5lgjsgRPEX9
+         JxMKuXyJc25n0YreUx1f0p6waWCPdajSW+e1qjzroeRiqetf452a/VQcTLUP7pE0dNap
+         Z6U8J8Q9obaw4RK46ZC2FB57z6PrrfSp1VVaVztiv7jggK6TNHhFhe5fWkdLlX9FXvgg
+         37Q5XuJ9KYrU5JNLyuRqPzy7aHcXAiAtI1foQTluBbybsUZ+Of+mIqAKcArQi8MsHob3
+         +h5/CKuaMVpxugH61tYDMHKm/7EH5oub7lsNEZI9qkT0eZbrtsjJcp8HD2TEZnlRoBcA
+         HYvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707303292; x=1707908092;
+        d=1e100.net; s=20230601; t=1707303391; x=1707908191;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=AqRyfre6hpYKrbdFfgct1DMOhUQC1J51jmJyfuq2n8I=;
-        b=F7Rs6D1cqwVPO6e6KqL7LHiz6cFgt9RYeJufua36a1cNcpWBQ/NnNxFM2l+9r+odbw
-         UsAlZ/pTIzSTshHCQkiK/mUpV1UyQOyOpL1zQznPJsH6Nd8QaClAnzHfuALnL98Bh/H/
-         1G6XNsPUVKYUIiH3wX28LMacJ7cBEWcaMenbMTnb2bXNfncG35xSmCJUKyfRfX49CbmS
-         018iNmHw5M/XFu1xkdEF0uHCvWHpZsUB0szjPUON+SvzAI4rez6ecCiXRTNshduSfTkv
-         qXjU9gTegHMXuwSPIshZBbDynPkOIFgsoUU8+8qD4y0mdWzqsE/Xej6/LOY0Zu9U30F/
-         E18Q==
-X-Gm-Message-State: AOJu0YwzHK7EnUcmrggpaedrO49TwQtAycER+TJOMl93cN5+DG8IoBAO
-	F5iA6jpGx6rIWthl+pE4SoaQVI/xfzHCgytdLr56TUpEYXIIuUU8KHU9WmWk0h+Ye/wZi2ZL3YB
-	X8sW2BRfGwvvIlhP0PhJxpDBdx6sZlsSVbJZatA==
-X-Google-Smtp-Source: AGHT+IGDflkHEVBa03b1Bfl72mpon3cdcyEI04qMZquBPzXoVaoldzCLxrdhfuAGz48oB/DXRZc65MMbqgc8o/+1+XU=
-X-Received: by 2002:a25:2d14:0:b0:dc2:3818:f36e with SMTP id
- t20-20020a252d14000000b00dc23818f36emr4815404ybt.18.1707303291509; Wed, 07
- Feb 2024 02:54:51 -0800 (PST)
+        bh=GfNMu9yYQSlt+ahy6TCysrTzsaeAnaZUTlIsY0hJS40=;
+        b=gIqcg94ofsZnA1uzN7KfZ7A4z3S2mOfRETB5VFy63kMrVAVzKBV0zbgUUc50Yboh/K
+         Mg1J1JbrW8VAPiAdooCJ358z9z3a0Tvz5fs6B/3k5CyMKlaerosSEyz/VAqzVzpkCuUI
+         /uxfCQKnkWfpp4NaAxvu4hwDOXhk8kmEGE6FOGbLVMTmTQKNvZNqzDswcO4LKXkZo0O3
+         H6FAtdRoh8nMehJ99/SUdikWt+T/od6SPO9Y45qShBfWHLN03evzevuNHCaIbKXfBEVc
+         UB92dCMaxBxLEkqNVEE/4fkjoni0/W7xKzRCk6lWZUjkRZUz0o8LGi2Czcda6PjhzLKu
+         afew==
+X-Forwarded-Encrypted: i=1; AJvYcCWfPJSZLXcVwdLvqCkteiqDNMbZnwgn+9U08+8w7jbKUmpid9lO3Thk5pXJvj+51Ze3HPUnpyTRiyp87548Zt4+CNXNeVQFsyl4Sg==
+X-Gm-Message-State: AOJu0YxY18Owxn0SOP+QGBpk8fbJRhKMJkln9wJzPXyiTPcpm0c3KSRS
+	3XUDRLzzQoWdzb40757R/Dbo2I8TqzX/UD2WH6SBd+kE+HKj4I783b/M/YMkDjpnnQ0JLLc0bk7
+	k0tYdNy15jklY3gkFwMVRPNNoCm7pRJb0oYF2VA==
+X-Google-Smtp-Source: AGHT+IFYqMCYPn30DzA5X1yyV6nUvOn7dJG7d+KrM0BNAkB8R6aaJvb19ZZnCvQ6dPfrTVPDb72s/4WKJeWSOslKRQI=
+X-Received: by 2002:a81:a8c3:0:b0:5ef:463c:8eea with SMTP id
+ f186-20020a81a8c3000000b005ef463c8eeamr4311058ywh.20.1707303391239; Wed, 07
+ Feb 2024 02:56:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240202223454.1667383-1-robh@kernel.org>
-In-Reply-To: <20240202223454.1667383-1-robh@kernel.org>
+References: <20240204165852.166157-1-wahrenst@gmx.net>
+In-Reply-To: <20240204165852.166157-1-wahrenst@gmx.net>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 7 Feb 2024 11:55:04 +0100
-Message-ID: <CACRpkdb+Z8oxBa7kibHdob1qk1eVKiSm1MaY+bF442d=ztdmdA@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: nvidia,tegra234-pinmux: Restructure
- common schema
-To: Rob Herring <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Wed, 7 Feb 2024 11:56:44 +0100
+Message-ID: <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
+Subject: Re: [PATCH RFC 0/2] pinctrl: bcm2835: Implement pin_conf_get
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 2, 2024 at 11:35=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
+On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> wro=
+te:
 
-> The structure of the NVIDIA Tegra234 common pinmux schema doesn't work
-> for restricting properties because a child node schema can't be extended
-> with additional properties from another schema defining the same child
-> node. The 2 child node schemas are evaluated independently as the
-> schemas are not recursively combined in any way.
+> For years, the Raspberry Pi users relied on userspace programs to read
+> the pin configuration. In the meantime, it has become apparent that this
+> approach has reached its limits for various reasons.
 >
-> As the common schema is almost all the child node schema anyways, just
-> remove the parent node from the common schema. Then add 'reg' and adjust
-> the $ref's in the users of the common schema.
+> This patch series now attempts to improve the debugging possibilities on
+> the kernel side in order to reduce the dependency on these userspace
+> programs.
 >
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Stefan Wahren (2):
+>   pinctrl: bcm2835: Implement bcm2835_pinconf_get
+>   pinctrl: bcm2835: Implement bcm2711_pinconf_get
 
-Patch applied!
+I don't see any problems with this, can I just apply the patches or do you
+want to first resend them as non-RFC?
 
 Yours,
 Linus Walleij
