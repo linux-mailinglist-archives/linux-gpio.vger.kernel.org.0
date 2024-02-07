@@ -1,108 +1,125 @@
-Return-Path: <linux-gpio+bounces-3053-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3054-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BD9884C90A
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:56:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79FB984C9A3
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 12:34:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 07715B243F5
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 10:56:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 35C18287332
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:34:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A325171B4;
-	Wed,  7 Feb 2024 10:56:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91B0F1AADD;
+	Wed,  7 Feb 2024 11:34:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XCG3tJA9"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AjgtkgoM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f171.google.com (mail-yw1-f171.google.com [209.85.128.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AE0B17BBD
-	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 10:56:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC1096AA0
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 11:34:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707303393; cv=none; b=PoOSpoUWtWkMPPWftWTJKtEqxoGtWuafUMg2u/7fdrCNKxB7hoG61wRK9SaPGRyyf6cEDn1EWifIL4QXRQktUCwdZc0wUdZ1CAyVYx8nMxCLR0rHk4I+ho+ipTbJNF2ba9Hg9w9SquEtfT3AdOsSlXYsN+BlWIDej3R2ZgJnqSE=
+	t=1707305651; cv=none; b=RnZy6i+115RIXAlxbowEzcnKS6wzcmikCZteWdPP+nlTo17t5wP+NL2lGz9Q3N5oUGpdEitTr7lhmmK7jfdTf2kbOZLl5EqgU2fB+RKC414NzMvk5OVS5fyEV2ZybrE8lF+TwagYWesWKMFaOwh2swWuy4QDtnIbhmjd6TukOFk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707303393; c=relaxed/simple;
-	bh=4AUeUAJBjmhNgP3HSPGmFNNt9I00EF32i67Ieskzmwk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P9wzZiLCjgHbpa9MZ7Qp1lnmYxaZBK9O7w2se796KSHrVo79f3e9fjulgVOwUD6g3jwBRMtDqylG4abZY6SN4cna7+IvWwl+B1a0OMb8xc1M2z7+W8ZcVYS3mn2dI+/ubAH2sJyMAMKBN0ayv5kZLPboawlrIPUtGQyU1ESFqPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XCG3tJA9; arc=none smtp.client-ip=209.85.128.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f171.google.com with SMTP id 00721157ae682-60482b91650so5239287b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 07 Feb 2024 02:56:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707303391; x=1707908191; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=GfNMu9yYQSlt+ahy6TCysrTzsaeAnaZUTlIsY0hJS40=;
-        b=XCG3tJA9y2E7XCL1CSeeV8hMQp5sOmiYkrNIOVSXVZDRj8dAFRJV0BD5lgjsgRPEX9
-         JxMKuXyJc25n0YreUx1f0p6waWCPdajSW+e1qjzroeRiqetf452a/VQcTLUP7pE0dNap
-         Z6U8J8Q9obaw4RK46ZC2FB57z6PrrfSp1VVaVztiv7jggK6TNHhFhe5fWkdLlX9FXvgg
-         37Q5XuJ9KYrU5JNLyuRqPzy7aHcXAiAtI1foQTluBbybsUZ+Of+mIqAKcArQi8MsHob3
-         +h5/CKuaMVpxugH61tYDMHKm/7EH5oub7lsNEZI9qkT0eZbrtsjJcp8HD2TEZnlRoBcA
-         HYvg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707303391; x=1707908191;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=GfNMu9yYQSlt+ahy6TCysrTzsaeAnaZUTlIsY0hJS40=;
-        b=gIqcg94ofsZnA1uzN7KfZ7A4z3S2mOfRETB5VFy63kMrVAVzKBV0zbgUUc50Yboh/K
-         Mg1J1JbrW8VAPiAdooCJ358z9z3a0Tvz5fs6B/3k5CyMKlaerosSEyz/VAqzVzpkCuUI
-         /uxfCQKnkWfpp4NaAxvu4hwDOXhk8kmEGE6FOGbLVMTmTQKNvZNqzDswcO4LKXkZo0O3
-         H6FAtdRoh8nMehJ99/SUdikWt+T/od6SPO9Y45qShBfWHLN03evzevuNHCaIbKXfBEVc
-         UB92dCMaxBxLEkqNVEE/4fkjoni0/W7xKzRCk6lWZUjkRZUz0o8LGi2Czcda6PjhzLKu
-         afew==
-X-Forwarded-Encrypted: i=1; AJvYcCWfPJSZLXcVwdLvqCkteiqDNMbZnwgn+9U08+8w7jbKUmpid9lO3Thk5pXJvj+51Ze3HPUnpyTRiyp87548Zt4+CNXNeVQFsyl4Sg==
-X-Gm-Message-State: AOJu0YxY18Owxn0SOP+QGBpk8fbJRhKMJkln9wJzPXyiTPcpm0c3KSRS
-	3XUDRLzzQoWdzb40757R/Dbo2I8TqzX/UD2WH6SBd+kE+HKj4I783b/M/YMkDjpnnQ0JLLc0bk7
-	k0tYdNy15jklY3gkFwMVRPNNoCm7pRJb0oYF2VA==
-X-Google-Smtp-Source: AGHT+IFYqMCYPn30DzA5X1yyV6nUvOn7dJG7d+KrM0BNAkB8R6aaJvb19ZZnCvQ6dPfrTVPDb72s/4WKJeWSOslKRQI=
-X-Received: by 2002:a81:a8c3:0:b0:5ef:463c:8eea with SMTP id
- f186-20020a81a8c3000000b005ef463c8eeamr4311058ywh.20.1707303391239; Wed, 07
- Feb 2024 02:56:31 -0800 (PST)
+	s=arc-20240116; t=1707305651; c=relaxed/simple;
+	bh=r6AnrnUfvq1RjuHOgagltLP0FpYOAHTZyanpafyCLhU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gThg6XLUvtgGxOrY2CDdYBqoslTltoU0d8KvTy5iXWgU/wvnarOzH9ZUhjruzKkUD+6EWv+G6eKBU4ig6Y6SWmO/GWPsxJhCswT/xoEmOIn5MZegiz2yoNzr8ALEcYu0WCBw/kykeBBAXNIC2q1euf6dyvDJpBxxSKZp1ZOFxJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AjgtkgoM; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1707305638; x=1707910438; i=wahrenst@gmx.net;
+	bh=r6AnrnUfvq1RjuHOgagltLP0FpYOAHTZyanpafyCLhU=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=AjgtkgoMSNksoJxHJwFbRFN8WZzAiG9a8VF3Rbj8ga+HHkXLSn5QE/dWjF0B47nq
+	 7qB83nmpJuoNG7Cz+H/5twclg3jHjE6PIW31Tw9JTBpmiihVawzj1qde0v5SYJz+u
+	 1/0TzATP6eXWFj4pGq3CAk0c8fx1ZAA/isvioYZSixAOZQRlpO0GXjZ4+ekMd/seJ
+	 rEDvLEJ3zg3SadGsKcvJyHDqeFoxXI9Lu/gn2+fkqAv4RIFHann1blGClAzVU0HbN
+	 SBQ+iq3A4JVwYq5gLBO6g+Fot42EnwMw0CQONJirGtgSE6G25xMYHE28p8G7t5pMn
+	 +c3KPHYt1lpofWnmrg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1Mr9Bu-1rCLvU1BR8-00oIWe; Wed, 07
+ Feb 2024 12:33:58 +0100
+Message-ID: <1709f26f-0486-4856-8b2d-ba5e6fd492e2@gmx.net>
+Date: Wed, 7 Feb 2024 12:33:55 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240204165852.166157-1-wahrenst@gmx.net>
-In-Reply-To: <20240204165852.166157-1-wahrenst@gmx.net>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 7 Feb 2024 11:56:44 +0100
-Message-ID: <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH RFC 0/2] pinctrl: bcm2835: Implement pin_conf_get
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Florian Fainelli <florian.fainelli@broadcom.com>
+Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+References: <20240204165852.166157-1-wahrenst@gmx.net>
+ <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
+Content-Language: en-US
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:DapiP7m9qNJq8HxbAUPpa8HYxLblt+68v53udYBjGTkG6csPvau
+ V0qAz9dNwJTXesywDpC9q21T7FJ9diz+eQgHaJ33zaIeeWKGy6Ku21xPXZcXuIJQCQ/s7Wo
+ WrP5B3r5T2rMc8ehMJ5Bml24WStW6mDKt8Y5Hm9Uoat/WOWcW5oKI8I6U9GYaNIIOfukw5z
+ 7StqLnRk53akANEsuFZkw==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:n0I+g6B+S9s=;YENi5n1hs/URtFnML1KTdNZav7y
+ Gj6aN7LWJ1EUBNhsewEox+glbrUFOP6ai3bUFBrgsqvce7ZlR/f3XnbLzS1A3t2zt1Re1AoBr
+ oXQ7lmc9tr6JXa9PPWUH1ZMXAXmgQcibOmY+kFmrpB/lA6WKVk+3IzkU2zT4bx+/9ht+9APIE
+ 1s7kdm0UmehV3rMPBLqPlBEpAT+yLwpnzKzO7o496ooUi9qI5sPs07Mfa58MbM+htI+ysqF2u
+ v4LrNPpgohDycOkss7xzMa48DIAxwxB3v5H8+B4nRaLAaEzgbw6YpkrIaJhs10bLIQOtDS1Ub
+ ryN9V9ruLUU3mwKpP/PXj0p27qwhKi4cD4EOjZvBuZG3Ux7OZFHbg7VZl3fJDzx6YzgVF+QeF
+ fnEEmN323d0WtrGLdSUfZNcbEsdBmbKA63OLyzK7cyQKKO3V6W/aM7xH0eDeRPyuk0+jBJlwI
+ AAtXq2J+DqiK++mp5kjbYUOC6BYXwJayvZAVw/5LFOZxzJABSkl9n0/r5w8qeNem6catygReu
+ Tp9bDE/mdllogYiHmMJZdfQ33Ieu8KzLw8il6/R9X7lkMX41O9TRwpLVkdpQIbPL0J9tkVEQe
+ Tuyij/VAaNb/oJFwIQC2zJDm+L811nN9DSMsIiAcrVYLj8TDnI3k9G/OUbVZDrT+YSojWhr0C
+ hsy3hekMUaqiyyPEEo+GYP8A9DwkV9A/hNqVqz+ImZLah0KuWAnN+SuyXANaj2nQDsM/dmUmb
+ XesYTfwVMe8uqcFZnoeEvv6J82tTOhBCIez5HAWDFtD4qjbj2JGqTeEZxOgTP7OPiepu3Dbqd
+ C90YEFugNB0MUcer5gkk+v48ePNwx0wpHd0jxAhPDA/LY=
 
-On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> wro=
-te:
+Hi Linus,
 
-> For years, the Raspberry Pi users relied on userspace programs to read
-> the pin configuration. In the meantime, it has become apparent that this
-> approach has reached its limits for various reasons.
+Am 07.02.24 um 11:56 schrieb Linus Walleij:
+> On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> =
+wrote:
 >
-> This patch series now attempts to improve the debugging possibilities on
-> the kernel side in order to reduce the dependency on these userspace
-> programs.
+>> For years, the Raspberry Pi users relied on userspace programs to read
+>> the pin configuration. In the meantime, it has become apparent that thi=
+s
+>> approach has reached its limits for various reasons.
+>>
+>> This patch series now attempts to improve the debugging possibilities o=
+n
+>> the kernel side in order to reduce the dependency on these userspace
+>> programs.
+>>
+>> Stefan Wahren (2):
+>>    pinctrl: bcm2835: Implement bcm2835_pinconf_get
+>>    pinctrl: bcm2835: Implement bcm2711_pinconf_get
+> I don't see any problems with this, can I just apply the patches or do y=
+ou
+> want to first resend them as non-RFC?
+since the second patch hasn't been tested with BCM7211, it would be nice
+to get a feedback from Florian or someone else with this hardware?
+
+Best regards
 >
-> Stefan Wahren (2):
->   pinctrl: bcm2835: Implement bcm2835_pinconf_get
->   pinctrl: bcm2835: Implement bcm2711_pinconf_get
+> Yours,
+> Linus Walleij
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-I don't see any problems with this, can I just apply the patches or do you
-want to first resend them as non-RFC?
-
-Yours,
-Linus Walleij
 
