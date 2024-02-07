@@ -1,105 +1,114 @@
-Return-Path: <linux-gpio+bounces-3050-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3051-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C1C7C84C8F7
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:51:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E73184C8FB
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 11:51:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 731A81F2423A
-	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 10:51:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3E9B51F25DAB
+	for <lists+linux-gpio@lfdr.de>; Wed,  7 Feb 2024 10:51:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C50A171AD;
-	Wed,  7 Feb 2024 10:50:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E97171B6;
+	Wed,  7 Feb 2024 10:51:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E/lnjGSJ"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OUgE4MMp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f48.google.com (mail-ej1-f48.google.com [209.85.218.48])
+Received: from mail-yw1-f178.google.com (mail-yw1-f178.google.com [209.85.128.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 802F314A9F;
-	Wed,  7 Feb 2024 10:50:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E90E4175A6
+	for <linux-gpio@vger.kernel.org>; Wed,  7 Feb 2024 10:51:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707303059; cv=none; b=ReBdTo1Tp7O/CfzMKKX00O7iRTlobt9sNG1gNHcdrWfnaXFF3dpgYWwXQcjba6PKfnJBv/k0+/WwteyhtDT3Yl1pkvH0xNUhQRtavPHIQvFlx0sVdmUlfAs9DgoEyyYsT7NxV9+R4qTVfxLyguRvwg0cmexeqxq4eBu1xzQfhV4=
+	t=1707303079; cv=none; b=rI5kfc5Lnld4suSpN+OG8RC+Q1vybxGivoEx1VWQaD+mZg4fHUaFkU1kxNV+PGvP2L18OqMUyYLMLPOBAf02dZ3BtuHypL4JM5XYysgvaPUExG+xxwksST/M4Pj9QisQuKlo9BDw3gkDtVGGO99oSYSZJrqvIabiKhsQM0324Xk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707303059; c=relaxed/simple;
-	bh=NRKAhvvx7ipTSFAI46idp0Ld9WXXVjH+rnutwv8ffzc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=degKTG1aLlGlmEQnUqldcB540jW9ng1Rul1ZPSPXgwj1ptPQ26fFXqUEZRTQIDRxyrphOAlTGJAoEQMBBiSY0CXGUtp1h6gLoTPCGKEW14T36lg0cSaDvI783yizu+pHsP1EoXg2i2UQqNntZeg+4QUKWZPCyXOvHzoOexsrBQY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E/lnjGSJ; arc=none smtp.client-ip=209.85.218.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f48.google.com with SMTP id a640c23a62f3a-a383016f428so51324966b.2;
-        Wed, 07 Feb 2024 02:50:57 -0800 (PST)
+	s=arc-20240116; t=1707303079; c=relaxed/simple;
+	bh=B1XlVHojLLasAfoIWAsxe6ObOEeItQD1Hm73mZXbzls=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=W7884kKiXUuqFLUKypT7jzSxN5VJcUdDFuc7p+zH0EEzINT7MuZWiZQdETRkw0C1Yzlo/O2uqjaev88A9GnZTCI62u8qmEVjIJxwRx1lRZxMRpJpWoA/6SGttf01NJmg55aRZ4qncmfEQgmHp2Vk3w9g5sIOSkZuKinIFvbeNns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=OUgE4MMp; arc=none smtp.client-ip=209.85.128.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yw1-f178.google.com with SMTP id 00721157ae682-60406f4e1d0so4539017b3.1
+        for <linux-gpio@vger.kernel.org>; Wed, 07 Feb 2024 02:51:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707303056; x=1707907856; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=v3RmONeN1aWOfGtsR0Ww5qsPyB7Fzz/W0DvQ1KxYknQ=;
-        b=E/lnjGSJt76C+QEQbxmm+xwxYat3K1vKSZBh3rxrmE2FNLa3Po1eXpbc4fWwE30mqF
-         jgn0yEY4NUikP4g4ywKjnC5WEyqo/A+Y+4B5KueOlKHpNfnkkMyagN5mV9eGjKLjd0uO
-         UgXdmT92FrKGyjtknHzLmyLhFd3FrD4/5CIRDD8IMZX4/OcpTdR34SdmLq+GTuZ6ZbX2
-         2AloLvapVRDeofi9RPnQhz+b2pOzNox19VYXAUURm1+NVgqIqGQNVPJZzJFlD0a3BM7p
-         GOtL3I979/PeL5l6pTZ/Q74Nt54xjBXXBjH/uQj3eus3IAmV70sm4m0LCvugOmaPxjkQ
-         N4CQ==
+        d=linaro.org; s=google; t=1707303077; x=1707907877; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zsgl1js8sdc7s9A+KRDmi3P2Sf5UWIXz1ucHF4fn3yo=;
+        b=OUgE4MMpdifYgsFHfDR9t4lqRRvMBKMKqgii9KQnv39yj11jn6K7EWoof67C1Kqul7
+         GiDjd01OyRUwJOeF2GYQE14OvFRNgJe/mmnIMIlcMFvHT3i3oQU/8zQDCnYhIRbMefpU
+         R2qWYU/ii1U+npKL37OjhA4txWm29QYcrYM5kbPoBmd4kyXPByPVK1Y4KWFPL57AjoGc
+         gy11JusqJeImju2O3DLRWYUKcNlgCMF04i+BlKprKCytRAHB3cdhXXOhvjzDL2YrkQO7
+         mmmyDKvaZ9jOEzrSf+DAOqvWWggfq3CyRi87RBiNkWMIEVWUQ8qlF1RhfoGirfEJw3ju
+         pd5Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707303056; x=1707907856;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=v3RmONeN1aWOfGtsR0Ww5qsPyB7Fzz/W0DvQ1KxYknQ=;
-        b=tk7w7Ioh+WoTy75LPpa2961aiq/QeQE12020gkgEDsNXzzoxwcL4sU8m5ITzD3YnGR
-         G/8WhDSNwkGPH8GPqycr6vEsy2xah24DsIBWfHir62nBq8qdCccKJ9ARj17x5QBBlzdm
-         C+w5WXuUngQakiWEeYgWegvWVJuw1/zYhG8omxkJXh/ss993igzPkwWDMSoWtU5X67lq
-         R/aGFbQHtnDRmbghxOLfwUU+MIeqAFj5XTKGOpBi1Czl7JDOxCGWY6G5NA6hkuwF3D+p
-         ud3VSbyAO4oPdOxZz+8z0NOQf5S4SFVkIT7KFuWgKqhx+zxVqwvEGLysbNo/Dwt6d2qD
-         euUg==
-X-Forwarded-Encrypted: i=1; AJvYcCUctbnQnC79CqRuPxaQT90gS2iQLV8GjGoUwDPmje3yTuvSDqptK2rbZujIiYOysTfEeeEuUkYvZUJ3EyUXcKJs4DxQ0Lg0GW+kN3WA0ykgVjTaubC06DFR3iqPGpcM3gcpb6njfjk/CQ==
-X-Gm-Message-State: AOJu0Yz3gVbGqEYnTyvBdRpaQBk257cua1EOFG//hJONG+6uB3GVmYDm
-	j0mK8rqZ66BsQY74wH1i4XMsoadYE2DyFVbagly9QWR0o31jqFRFkyCcz/sF344=
-X-Google-Smtp-Source: AGHT+IGrHQ4Ui8Xm/HTFLN9s8F76B1TcVewU0Ndl0+KkjzPxt4GxduUdssKCe6aiw7H7DO4tXx2V6w==
-X-Received: by 2002:a17:907:9197:b0:a38:c07:7d51 with SMTP id bp23-20020a170907919700b00a380c077d51mr3820777ejb.59.1707303055484;
-        Wed, 07 Feb 2024 02:50:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXAN0HywYSFmAn9SSnww0M967qD9WTRDtEZgy+zMjMvlextyFsTop1Mao9C9tu21Mde/XAs/JbotcCQ1IOdMW+agjnk9tCPB2J6HM6eV6c+ZPs35CkS74EhshaBMyAmRwF97DdyJjitj3pclSF015DFIZzTwZMv4pN+P5QYRoi7El+iIeoAd4Nqk9ZgZpgGf6+sHm8rAv4LqRTTHYFksB6wVb9cdVLxjOPEFLK4SLZX4VlYhSdG+rAwm8IiTqPDGcZv2M9l0ziE2O1cbpc6YQUEoBV8LRYuN8k+odthVuuKPEJkXUVoUqUrYac8CvcV0Fb3BYMxS7YaaQ8lAroNmapR4OemXpyGfxgQ6QdzlDRu
-Received: from [192.168.3.110] ([86.38.52.161])
-        by smtp.gmail.com with ESMTPSA id h9-20020a17090619c900b00a35ed4fd4cesm619443ejd.115.2024.02.07.02.50.52
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 07 Feb 2024 02:50:54 -0800 (PST)
-Message-ID: <0dab8d77-ea4e-4cea-99dd-2ffe7c9051d5@gmail.com>
-Date: Wed, 7 Feb 2024 12:50:51 +0200
+        d=1e100.net; s=20230601; t=1707303077; x=1707907877;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zsgl1js8sdc7s9A+KRDmi3P2Sf5UWIXz1ucHF4fn3yo=;
+        b=Q9MCFHzkgXo1jScII4pl7svxPcoZW9RqO1MX4VTO4h7AIT1fuCFe78i0aE+qnTyOQJ
+         RoH/LeTdo+CDXUC27Ns2XutSfXSFP+3abHZIW2wg8EviJg0Dpcv8rM1J5DqkhSqowpuy
+         v6zxXTdFrWr7+FgLLRs4CanUhFPHkzmTq3hrcW5U+DIQ8C9M2ZP9iE/oNC1TF5trnjwx
+         meL2kFjGF9WDrxIJ7qhEs+pRUOfZohQvU62+QL7EuIm/Lhr9pb/iLBmlEbripSStFhZu
+         vPLaaAiYZfzlFxlIMbTII7IY9qrN0TRIaNW5nmjO8PU2pB0SdYJcRMmqnPFdSF7VjkoA
+         5xlQ==
+X-Gm-Message-State: AOJu0YwgtpQxIGq+eTLLuWPS/13yGN1S18sBBjUufhY5K1xxdZxfBSmP
+	dbaOWMyyrnAp+gcDm+fZVIirbMkOMMEyKx/uqZb7XaFBrhgrNjOmY9iz4jl/+/UkT5VlXcLT1Z/
+	sztiLypLz6pZp7NoTVeREB3BgcWa4taixWhzyQA==
+X-Google-Smtp-Source: AGHT+IHf4kWxGCgC7QO0GQY35mQOn1MkRO0ngJpqcZ5PyTIrE9gtDbtBPUNd1xmk5zPB94GYf6h2CoHwXv8UHIe13NU=
+X-Received: by 2002:a81:99c8:0:b0:602:b697:dc60 with SMTP id
+ q191-20020a8199c8000000b00602b697dc60mr3517588ywg.50.1707303076901; Wed, 07
+ Feb 2024 02:51:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: mcp23s08: Check only GPIOs which have
- interrupts enabled
-Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linus.walleij@linaro.org, biju.das.jz@bp.renesas.com,
- akaessens@gmail.com, thomas.preston@codethink.co.uk,
- preid@electromag.com.au, u.kleine-koenig@pengutronix.de,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- arturas.moskvinas@gmail.com
-References: <ZcDpDaclAXEa5ETN@smile.fi.intel.com>
-From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-In-Reply-To: <ZcDpDaclAXEa5ETN@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+References: <20240202105854.26446-1-quic_aiquny@quicinc.com>
+In-Reply-To: <20240202105854.26446-1-quic_aiquny@quicinc.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 7 Feb 2024 11:51:30 +0100
+Message-ID: <CACRpkdZM96tji2OCXHPd9iXE1kU5u1TGsuPhB0YLbHG=LXAiqg@mail.gmail.com>
+Subject: Re: [PATCH v4] pinctrl: Add lock to ensure the state atomization
+To: Maria Yu <quic_aiquny@quicinc.com>
+Cc: andersson@kernel.org, kernel@quicinc.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/5/24 15:56, Andy Shevchenko wrote:
->> Do you want that information to be added as part of commit message or
->> information in the mailing thread will be enough?
-> Up to maintainers. I'm fine with this email. If Linus uses b4 to generate
-> a Link tag to this discussion it will be enough (in my opinion).
+On Fri, Feb 2, 2024 at 11:59=E2=80=AFAM Maria Yu <quic_aiquny@quicinc.com> =
+wrote:
 
-Is there anything left for me to update/change? Or we're waiting for 
-other reviewers and/or Linus to chime in?
+> Currently pinctrl_select_state is an export symbol and don't have
+> effective re-entrance protect design. During async probing of devices
+> it's possible to end up in pinctrl_select_state() from multiple
+> contexts simultaneously, so make it thread safe.
+> More over, when the real racy happened, the system frequently have
+> printk message like:
+>   "not freeing pin xx (xxx) as part of deactivating group xxx - it is
+> already used for some other setting".
+> Finally the system crashed after the flood log.
+> Add per pinctrl lock to ensure the old state and new state transition
+> atomization.
+> Also move dev error print message outside the region with interrupts
+> disabled.
+> Use scoped guard to simplify the lock protection needed code.
+>
+> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration"=
+)
+> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
 
-Arturas Moskvinas
+Thank you for rebasing!
+
+Patch applied now, so we get some shakeout in linux-next and can
+make sure it works for everyone.
+
+Yours,
+Linus Walleij
 
