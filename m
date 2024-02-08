@@ -1,126 +1,126 @@
-Return-Path: <linux-gpio+bounces-3118-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 824C984E2A3
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 14:57:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9481084E466
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 16:52:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 08F211F2962E
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 13:57:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 317F91F23D8F
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 15:52:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EDFED7AE79;
-	Thu,  8 Feb 2024 13:56:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7093E7CF3E;
+	Thu,  8 Feb 2024 15:52:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="OlGpaNXd"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="bSe9PK47"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9F9E78B4D
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Feb 2024 13:56:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25B677CF23;
+	Thu,  8 Feb 2024 15:52:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707400609; cv=none; b=lqqIjKkMzXo7djAv/9ea6sMr1CX0gtY2w8lgzBPO4hbgH/bVsmYoTuy4Z89rZmi8RNbS6ZhtLxZ5WMtVg/lUkWTi4Z8FyUo8kuqHpjgaDZj/PC1mHlv88tnR5SJe35mKLvd16kIz4QLWmg6n+FhdYCpDmnXagHT4MYZjEilKJ+w=
+	t=1707407552; cv=none; b=aLlgxfBfv9Q9k4Izdqzf5bSJbCEewUilQjqcOR+T/65IflVlr47DFHwoqVpIEY2UYftC41VWH6w9N5beuYocaVR3w5hMxH26XzdAZsN3nHs1Zll703F6lpmCiRIu53YfGdh5esOYV8M530uNSWqt04P7Ggw1j60ovtt7cUO2SrY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707400609; c=relaxed/simple;
-	bh=skYPuQdWO1AkU9+D3o2QVU63HV6l2bXIQp429kPeKd4=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=Djadnwu68IlTd5WunfqJ3T1C1HoaJu3tLNTzaAjxfjxH7s1ODEa/zz+YNdBQsjpVjsGrm76TMfYphbasQHrHQO3boNJV3L+jBfMDCvmjuMFdsfSZo2UdBrNLQnkngMsTQ7EhXMNfeAmpvpXAQLHG/yY3cY7nJGSEuwQwfWNS4+o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=OlGpaNXd; arc=none smtp.client-ip=209.85.128.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-4100826df08so15969635e9.2
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Feb 2024 05:56:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707400606; x=1708005406; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rf3iXA7Keo5roFQt9T7Mh68I9zCAVJX3CMHwvuW41nQ=;
-        b=OlGpaNXdVnXcShr3ygBO8XdtaedFddpHg2wdL5N9a6ViwCwNoZaBL7Ci0XFMQ4cLfw
-         iCwDSU3sqOT3aquBU6jA/ZoWLL1BJyqCG1ai1f7XuO+Tjpm2JyZOJlQAhYKdc2VhIK1M
-         7EXdT3wdEQLC9ubPowquuIu80DgdnenQ2881a/UcAne0OncPqwDIe8sPBGfJHdnnBkty
-         bKhAgmxsUBE4tuycsEJgS78C/RvOMqY21B52+VFlX7joJIsr1sPcCdAgC9utSVX8VuCm
-         oKU86XNdAhdxxkk031J3lxQDJVEiLycKiNMT9D4c4TRN91ZupcOzvboFlfn06PUT74dF
-         zMqw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707400606; x=1708005406;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=rf3iXA7Keo5roFQt9T7Mh68I9zCAVJX3CMHwvuW41nQ=;
-        b=TqkI2jsXMsamhug+N0gPrLLWmLvRtHrqnQ6FAJw9Vdr4usdycJqan+NWUPkG4mCW6V
-         SoXzXvuj4Hl5Fvr3N80Hm0+R/tpRqhSbPrMh2t3JCjEr8rNMwGXdSxmZOnUWUyESWdSF
-         d80FDCv8tfjtbdHPLc3nE4nDgBdjusgHtx9zGCKG/cnvKzbD7SncEgj9D+ZWQbhlw0jK
-         ZFs3sHGmPQgAmlrY09+IVpTWmj2lQouDukqkESrlU5G3M7eYZdmI54y6Ip+ZrjbZZJZH
-         /+j8XczJog45FmRZWj+zR5rKoCp8+z76l+XtIWDU/Mx/aVx3v06FLEXOWU3I6BxCAhUg
-         phLQ==
-X-Gm-Message-State: AOJu0Yw06B4YwTCQTw6IcqGcijTjvMDxL6R3VCiDJB/nkT8uXVXazRs2
-	OkbdijIIYPlQHMok0i1UKrPf+wahLeWegqa//tozb3OVuwC7O8+LpLoKHhmO6pY=
-X-Google-Smtp-Source: AGHT+IEcOnvELKJtX5OGb3t3vy/9XXEJM6nu2Rc21S/gEbrD5i68oGlfkWJQvZO3eeO3gcnw3ew4gw==
-X-Received: by 2002:a05:600c:1c07:b0:410:273:c648 with SMTP id j7-20020a05600c1c0700b004100273c648mr4686357wms.0.1707400606091;
-        Thu, 08 Feb 2024 05:56:46 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVP0VByxBmRXSwDRSjyNM/KONaFZfUmmVOz7EZHhT6QUZkySORR45gVDt/4Xh8qnxTS81pdQsKeVPWNx/+bTAopRQJCNOyk8B/T/Eq6DVR3Z1vdJ1VRqkqMkRuU2hzNRqy16PrszPwQzYQ6MF0+pqBfWluY9vMoTxDKkw+dFnyMBitXm/Wx5VpQKsS+97+b4r9rpxXozKVNBTR8We6fklJkdSRjAap1VbukmhcLLgiwOhGdKJLJWZCxC6C/O8anIf8OD2OlzaLN13Ew2c9WGkKYBs6omzEdJ1Hart/dTPS8hTvmV/8fimZ9pq+ZIYVShHpxVFspEP0dDYreLgJX8p2oVMv5RPEDlzjDpn4FhuSedi0S9+asPn4mDqAlHdf0tsXMrPqOLiDcSpgLPp933DHymXXn2FuWQ89fDw==
-Received: from claudiu-X670E-Pro-RS.. ([82.78.167.45])
-        by smtp.gmail.com with ESMTPSA id iv6-20020a05600c548600b0040ef3ae26cdsm1703058wmb.37.2024.02.08.05.56.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 Feb 2024 05:56:45 -0800 (PST)
-From: Claudiu <claudiu.beznea@tuxon.dev>
-X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
-To: geert+renesas@glider.be,
-	magnus.damm@gmail.com,
-	robh@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	linus.walleij@linaro.org
-Cc: linux-renesas-soc@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	claudiu.beznea@tuxon.dev,
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH 2/2] arm64: dts: renesas: r9a08g045: add PSCI support
-Date: Thu,  8 Feb 2024 15:56:29 +0200
-Message-Id: <20240208135629.2840932-3-claudiu.beznea.uj@bp.renesas.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240208135629.2840932-1-claudiu.beznea.uj@bp.renesas.com>
-References: <20240208135629.2840932-1-claudiu.beznea.uj@bp.renesas.com>
+	s=arc-20240116; t=1707407552; c=relaxed/simple;
+	bh=8wAkocgzW4T8kfmPqArrycrun16teDyWi7a3ZHxhggs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d4r3IvoVaD5Uh0zzGfDJRaP0rZUO8RpOUSpkQodxYd+Jo52+Q0ZiQ4WxfqijQ2nsm2tO7TBjbAi7CN7FtCq3cc3V4gUx1Qe5MAm7BnfaR9i3FSoqNPTOY5wHhi1ndajBTKjQ88ZIfOt8BkdhF47bVrW+BNwJYp2Dpch+rnVz2Rw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=bSe9PK47; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id B13ED1BF20A;
+	Thu,  8 Feb 2024 15:52:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707407547;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9B0wVUjPxEv2QBY9FiBPeeaEoehsJ57DXumqRBJ/n6U=;
+	b=bSe9PK47gxI5Clu47C1OkB0hXrB4/Yfweuei1EH2vhYWYd3laL6W+TiYxCyyvTkw7aMyFY
+	2hZMMYKlSvj+uw71BKP+ZjuHyon9VbbyCJMhjpeE3UfPF4Odtm6B8OTTi5Y2XGDKBeWOot
+	IvyCXhQZHbTyL9Bdg+Hfq9jc6pB5YXz5+L0iV+bH5as0slbejB4i7wlbPQC73R/5CiRor0
+	Nz08kVh+TUDv0mPCpgThMEyPuqx3ZevOHu6WaCgexl1xV6DeGRqQ1vgEg9esdEaKScr7Dl
+	DQg3zvx1T8ri0oglXQHSOwSndU/GYFTcHS8QR3AGbEARe5DJAV7bGCZOMjWyjg==
+Message-ID: <8228b76f-ce15-4335-8a09-08d0d57974b1@bootlin.com>
+Date: Thu, 8 Feb 2024 16:52:24 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 02/15] pinctrl: pinctrl-single: move suspend()/resume()
+ callbacks to noirq
+To: Andi Shyti <andi.shyti@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v2-0-8e4f7d228ec2@bootlin.com>
+ <20240102-j7200-pcie-s2r-v2-2-8e4f7d228ec2@bootlin.com>
+ <CACRpkdYBnQ6xh2yNsnvquTOq5r7NeDhot6To9myfuNbonKcgzQ@mail.gmail.com>
+ <6hyubhrho6xbki6yxtmqedylc2gpeyj4yu5gtrjrq4nsthcr7g@elfukmqeve2a>
+Content-Language: en-US
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <6hyubhrho6xbki6yxtmqedylc2gpeyj4yu5gtrjrq4nsthcr7g@elfukmqeve2a>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 1/29/24 23:49, Andi Shyti wrote:
+> Hi Linus,
+> 
+> On Sat, Jan 27, 2024 at 11:31:11PM +0100, Linus Walleij wrote:
+>> On Fri, Jan 26, 2024 at 3:37 PM Thomas Richard
+>> <thomas.richard@bootlin.com> wrote:
+>>
+>>> The goal is to extend the active period of pinctrl.
+>>> Some devices may need active pinctrl after suspend() and/or before
+>>> resume().
+>>> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
+>>> have active pinctrl until suspend_noirq() (included), and from
+>>> resume_noirq() (included).
+>>>
+>>> The deprecated API has been removed to use the new one (dev_pm_ops struct).
+>>>
+>>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>>
+>> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>>
+>> Do you want to merge this as a series or is this something I
+>> should just apply?
+> 
+> there is still a comment from me pending.
 
-Add PSCI support to enable the suspend/resume with the help of TF-A.
+Hi Andi,
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r9a08g045.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+Based on your comment, for the next iteration, I will move the cleanup
+in a dedicated patch.
 
-diff --git a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-index dfee878c0f49..19bbcae01d80 100644
---- a/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r9a08g045.dtsi
-@@ -42,6 +42,11 @@ extal_clk: extal-clk {
- 		clock-frequency = <0>;
- 	};
- 
-+	psci {
-+		compatible = "arm,psci-1.0", "arm,psci-0.2";
-+		method = "smc";
-+	};
-+
- 	soc: soc {
- 		compatible = "simple-bus";
- 		interrupt-parent = <&gic>;
+@Linus, you can apply pinctrl patches once everything is ok for you.
+
+Regards,
+
 -- 
-2.39.2
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
