@@ -1,204 +1,452 @@
-Return-Path: <linux-gpio+bounces-3062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 478D384DAF4
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 09:05:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBBD084DCC6
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 10:25:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B920B23850
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 08:05:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFFE71C25366
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 09:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C1069E00;
-	Thu,  8 Feb 2024 08:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8041A6D1B3;
+	Thu,  8 Feb 2024 09:21:55 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from esa1.ltts.com (unknown [118.185.121.105])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9696A330
-	for <linux-gpio@vger.kernel.org>; Thu,  8 Feb 2024 08:05:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556046DCED;
+	Thu,  8 Feb 2024 09:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707379511; cv=none; b=h9BIbSmIvXQtf8PVUkacQzcAeSbmBjvI+zwt9BV85TIy/ufgYGYEUWnrkq6lYgPOxeu1+pRla1DrR8hw2hrnJgF3mEW2KJbCdWJZ5ZzNQdAi6o3Bk6Noq29+5aQDTTdmmKT7NhEJ3OwmwyWsGkUTScW6nU+rYflMXAOuWU6914k=
+	t=1707384115; cv=none; b=A1viz9Mz2mJ/FtkHcofFTz9o+SZVwuuzEhw/T4IxOD+oRFjzG8S2GDsEX94hy73JR68cm9nHn93quKo5DG+YI1SUxhzqvWw39hGVhVDWXjkEqO/xTCFGriXBVKmwEG+JpLJGRSqnhlct0Wa1G0UCtsUwBunkm+95SvIH+GniTTY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707379511; c=relaxed/simple;
-	bh=XVKk8mNNyH2W2TKyOl5UrYU3KaPEK8JC6mLhXHUYDbU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OKGUdF1TbvqOF9IHt7I+vcG4Qvlie8CeBlLDU7SJnz+1h6DrD6W+DC3Cg7PJ0cVASIm21FxfeiwdiKtZEsSsVWyHPmSWQkXJuieq/zFECjqr9qWCwXpp3i6VPf2GdiENyw9fiGkfjJlWLBMHvErJLCnW68SaBVK52L4fk5zc4Ck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXzP7-0008V1-CL; Thu, 08 Feb 2024 09:05:05 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXzP6-005Amy-Bf; Thu, 08 Feb 2024 09:05:04 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1rXzP6-000D8b-0o;
-	Thu, 08 Feb 2024 09:05:04 +0100
-Date: Thu, 8 Feb 2024 09:05:04 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Finn Behrens <me@kloenk.de>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Heisath <jannis@imserv.org>, 
-	Yureka Lilian <yuka@yuka.dev>
-Subject: Re: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
-Message-ID: <6chccjdn3yidi7rodcledxx7czt3adjxvaeeneii5ghfiw4oc3@t5qtmnlasvlo>
-References: <20240130105515.30258-1-me@kloenk.de>
+	s=arc-20240116; t=1707384115; c=relaxed/simple;
+	bh=rFrBvRxg3IAIv84bm1JhciARDNjXksoQOePpjbMgLmE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jXnSEe3PtEaEyGqGtgSOAh1+l/P63mkon/RO4VJb9HVTCAFDaYhmK0Un3wtnslNXgyHkryEMRUb07XPqqmOviZBCzavWtMBLQGfSQxL+VpCsJ0VxhHHeRktAY0MWdyTOIVIB9+c6gPSh1rxwn1irEVqqCIsr1Y8hlClzMDjD5O4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: VPBNrUF72foBSI5+MMtdn/LXbpd6h2A6PGCzKCnS0LhxQpltjfKM1lZ3Vh/NA6W54fHKKnD+Gv
+ DSlvIjHy0WHw==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:51:49 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v1 12/13] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+Date: Thu,  8 Feb 2024 14:51:34 +0530
+Message-Id: <20240208092134.1207267-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="365ufzjbjxz7grxt"
-Content-Disposition: inline
-In-Reply-To: <20240130105515.30258-1-me@kloenk.de>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 
+From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 
---365ufzjbjxz7grxt
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they
+have significant functional overlap.
+TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+dedicated device functions.
 
-Hello,
+Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+---
+ drivers/pinctrl/pinctrl-tps6594.c | 287 +++++++++++++++++++++++++-----
+ 1 file changed, 246 insertions(+), 41 deletions(-)
 
-On Tue, Jan 30, 2024 at 11:55:13AM +0100, Finn Behrens wrote:
-> Removes the hardcoded timer assignment of timers to pwm controllers.
-> This allows to use more than one pwm per gpio bank.
->=20
-> Original patch with chip_data interface by Heisath <jannis@imserv.org>
->=20
-> Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
-> Co-developed-by: Yureka Lilian <yuka@yuka.dev>
-> Signed-off-by: Yureka Lilian <yuka@yuka.dev>
-> Signed-off-by: Finn Behrens <me@kloenk.de>
+diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
+index 66985e54b..5da21aa14 100644
+--- a/drivers/pinctrl/pinctrl-tps6594.c
++++ b/drivers/pinctrl/pinctrl-tps6594.c
+@@ -14,8 +14,6 @@
+ 
+ #include <linux/mfd/tps6594.h>
+ 
+-#define TPS6594_PINCTRL_PINS_NB 11
+-
+ #define TPS6594_PINCTRL_GPIO_FUNCTION 0
+ #define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
+ #define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
+@@ -40,17 +38,40 @@
+ #define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
+ #define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
+ 
++/* TPS65224 pin muxval */
++#define TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 1
++#define TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
++#define TPS65224_PINCTRL_VMON1_FUNCTION 1
++#define TPS65224_PINCTRL_VMON2_FUNCTION 1
++#define TPS65224_PINCTRL_WKUP_FUNCTION 1
++#define TPS65224_PINCTRL_NSLEEP2_FUNCTION 2
++#define TPS65224_PINCTRL_NSLEEP1_FUNCTION 2
++#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION 2
++#define TPS65224_PINCTRL_NERR_MCU_FUNCTION 2
++#define TPS65224_PINCTRL_NINT_FUNCTION 3
++#define TPS65224_PINCTRL_TRIG_WDOG_FUNCTION 3
++#define TPS65224_PINCTRL_PB_FUNCTION 3
++#define TPS65224_PINCTRL_ADC_IN_FUNCTION 3
++
++/* TPS65224 Special muxval for recalcitrant pins */
++#define TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5 1
++#define TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5 4
++#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5 3
++
+ #define TPS6594_OFFSET_GPIO_SEL 5
+ 
+-#define FUNCTION(fname, v)									\
++#define TPS65224_NGPIO_PER_REG 6
++#define TPS6594_NGPIO_PER_REG  8
++
++#define FUNCTION(dev_name, fname, v)							\
+ {											\
+ 	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
+-					tps6594_##fname##_func_group_names,		\
+-					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
++					dev_name##_##fname##_func_group_names,		\
++					ARRAY_SIZE(dev_name##_##fname##_func_group_names)),\
+ 	.muxval = v,									\
+ }
+ 
+-static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
++static const struct pinctrl_pin_desc tps6594_pins[] = {
+ 	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
+ 	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
+ 	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
+@@ -143,30 +164,127 @@ static const char *const tps6594_syncclkin_func_group_names[] = {
+ 	"GPIO9",
+ };
+ 
++static const struct pinctrl_pin_desc tps65224_pins[] = {
++	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
++	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
++	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
++};
++
++static const char *const tps65224_gpio_func_group_names[] = {
++	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_sda_i2c2_sdo_spi_func_group_names[] = {
++	"GPIO0",
++};
++
++static const char *const tps65224_nsleep2_func_group_names[] = {
++	"GPIO0", "GPIO5",
++};
++
++static const char *const tps65224_nint_func_group_names[] = {
++	"GPIO0",
++};
++
++static const char *const tps65224_scl_i2c2_cs_spi_func_group_names[] = {
++	"GPIO1",
++};
++
++static const char *const tps65224_nsleep1_func_group_names[] = {
++	"GPIO1", "GPIO2", "GPIO3",
++};
++
++static const char *const tps65224_trig_wdog_func_group_names[] = {
++	"GPIO1",
++};
++
++static const char *const tps65224_vmon1_func_group_names[] = {
++	"GPIO2",
++};
++
++static const char *const tps65224_pb_func_group_names[] = {
++	"GPIO2",
++};
++
++static const char *const tps65224_vmon2_func_group_names[] = {
++	"GPIO3",
++};
++
++static const char *const tps65224_adc_in_func_group_names[] = {
++	"GPIO3", "GPIO4",
++};
++
++static const char *const tps65224_wkup_func_group_names[] = {
++	"GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_syncclkin_func_group_names[] = {
++	"GPIO4", "GPIO5",
++};
++
++static const char *const tps65224_nerr_mcu_func_group_names[] = {
++	"GPIO5",
++};
++
+ struct tps6594_pinctrl_function {
+ 	struct pinfunction pinfunction;
+ 	u8 muxval;
+ };
+ 
++struct muxval_remap {
++	unsigned int group;
++	u8 muxval;
++	u8 remap;
++};
++
++struct muxval_remap tps65224_muxval_remap[] = {
++	{5, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5},
++	{5, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5},
++	{5, TPS65224_PINCTRL_NSLEEP2_FUNCTION, TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5},
++};
++
++struct muxval_remap tps6594_muxval_remap[] = {
++	{8, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8},
++	{8, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8},
++	{9, TPS6594_PINCTRL_CLK32KOUT_FUNCTION, TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9},
++};
++
+ static const struct tps6594_pinctrl_function pinctrl_functions[] = {
+-	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
+-	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
+-	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
+-	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
+-	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
+-	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
+-	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
+-	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
+-	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
+-	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
+-	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
+-	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
+-	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
+-	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
+-	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
+-	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
+-	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
+-	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
++	FUNCTION(tps6594, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
++	FUNCTION(tps6594, nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
++	FUNCTION(tps6594, nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
++	FUNCTION(tps6594, wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
++	FUNCTION(tps6594, wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
++	FUNCTION(tps6594, scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
++	FUNCTION(tps6594, nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
++	FUNCTION(tps6594, trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
++	FUNCTION(tps6594, sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
++	FUNCTION(tps6594, clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
++	FUNCTION(tps6594, nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
++	FUNCTION(tps6594, sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
++	FUNCTION(tps6594, sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
++	FUNCTION(tps6594, nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
++	FUNCTION(tps6594, syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
++	FUNCTION(tps6594, disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
++	FUNCTION(tps6594, pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
++	FUNCTION(tps6594, syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
++};
++
++static const struct tps6594_pinctrl_function tps65224_pinctrl_functions[] = {
++	FUNCTION(tps65224, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
++	FUNCTION(tps65224, sda_i2c2_sdo_spi, TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
++	FUNCTION(tps65224, nsleep2, TPS65224_PINCTRL_NSLEEP2_FUNCTION),
++	FUNCTION(tps65224, nint, TPS65224_PINCTRL_NINT_FUNCTION),
++	FUNCTION(tps65224, scl_i2c2_cs_spi, TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
++	FUNCTION(tps65224, nsleep1, TPS65224_PINCTRL_NSLEEP1_FUNCTION),
++	FUNCTION(tps65224, trig_wdog, TPS65224_PINCTRL_TRIG_WDOG_FUNCTION),
++	FUNCTION(tps65224, vmon1, TPS65224_PINCTRL_VMON1_FUNCTION),
++	FUNCTION(tps65224, pb, TPS65224_PINCTRL_PB_FUNCTION),
++	FUNCTION(tps65224, vmon2, TPS65224_PINCTRL_VMON2_FUNCTION),
++	FUNCTION(tps65224, adc_in, TPS65224_PINCTRL_ADC_IN_FUNCTION),
++	FUNCTION(tps65224, wkup, TPS65224_PINCTRL_WKUP_FUNCTION),
++	FUNCTION(tps65224, syncclkin, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION),
++	FUNCTION(tps65224, nerr_mcu, TPS65224_PINCTRL_NERR_MCU_FUNCTION),
+ };
+ 
+ struct tps6594_pinctrl {
+@@ -201,7 +319,21 @@ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
+ 
+ static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
+ {
+-	return ARRAY_SIZE(pinctrl_functions);
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	int func_cnt = 0;
++
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		func_cnt = ARRAY_SIZE(tps65224_pinctrl_functions);
++		break;
++	case TPS6594:
++		func_cnt = ARRAY_SIZE(pinctrl_functions);
++		break;
++	default:
++		break;
++	}
++
++	return func_cnt;
+ }
+ 
+ static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
+@@ -229,10 +361,26 @@ static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
+ 			   u8 muxval)
+ {
+ 	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
++	u8 mux_sel_mask = 0;
++
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		mux_sel_mask = TPS65224_MASK_GPIO_SEL;
++		/* GPIO6 has a different mask in TPS65224*/
++		if (pin == 5)
++			mux_sel_mask = TPS65224_MASK_GPIO_SEL_GPIO6;
++		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
++		break;
++	case TPS6594:
++		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
++		break;
++	default:
++		break;
++	}
+ 
+ 	return regmap_update_bits(pinctrl->tps->regmap,
+ 				  TPS6594_REG_GPIOX_CONF(pin),
+-				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
++				  mux_sel_mask, mux_sel_val);
+ }
+ 
+ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
+@@ -240,16 +388,28 @@ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
+ {
+ 	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
+ 	u8 muxval = pinctrl->funcs[function].muxval;
++	unsigned int remap_cnt = 0;
++	struct muxval_remap *remap;
+ 
+ 	/* Some pins don't have the same muxval for the same function... */
+-	if (group == 8) {
+-		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
+-			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
+-		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
+-			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
+-	} else if (group == 9) {
+-		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
+-			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		remap = tps65224_muxval_remap;
++		remap_cnt = ARRAY_SIZE(tps65224_muxval_remap);
++		break;
++	case TPS6594:
++		remap = tps6594_muxval_remap;
++		remap_cnt = ARRAY_SIZE(tps6594_muxval_remap);
++		break;
++	default:
++		break;
++	}
++
++	for (unsigned int i = 0; i < remap_cnt; i++) {
++		if (group == remap[i].group && muxval == remap[i].muxval) {
++			muxval = remap[i].remap;
++			break;
++		}
+ 	}
+ 
+ 	return tps6594_pmx_set(pinctrl, group, muxval);
+@@ -276,7 +436,21 @@ static const struct pinmux_ops tps6594_pmx_ops = {
+ 
+ static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
+ {
+-	return ARRAY_SIZE(tps6594_pins);
++	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
++	int num_pins = 0;
++
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		num_pins = ARRAY_SIZE(tps65224_pins);
++		break;
++	case TPS6594:
++		num_pins = ARRAY_SIZE(tps6594_pins);
++		break;
++	default:
++		break;
++	}
++
++	return num_pins;
+ }
+ 
+ static int tps6594_group_pins(struct pinctrl_dev *pctldev,
+@@ -320,8 +494,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	pctrl_desc->name = dev_name(dev);
+ 	pctrl_desc->owner = THIS_MODULE;
+-	pctrl_desc->pins = tps6594_pins;
+-	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
++	switch (tps->chip_id) {
++	case TPS65224:
++		pctrl_desc->pins = tps65224_pins;
++		pctrl_desc->npins = ARRAY_SIZE(tps65224_pins);
++		break;
++	case TPS6594:
++		pctrl_desc->pins = tps6594_pins;
++		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
++		break;
++	default:
++		break;
++	}
+ 	pctrl_desc->pctlops = &tps6594_pctrl_ops;
+ 	pctrl_desc->pmxops = &tps6594_pmx_ops;
+ 
+@@ -329,8 +513,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pinctrl)
+ 		return -ENOMEM;
+ 	pinctrl->tps = dev_get_drvdata(dev->parent);
+-	pinctrl->funcs = pinctrl_functions;
+-	pinctrl->pins = tps6594_pins;
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		pinctrl->funcs = tps65224_pinctrl_functions;
++		pinctrl->pins = tps65224_pins;
++		break;
++	case TPS6594:
++		pinctrl->funcs = pinctrl_functions;
++		pinctrl->pins = tps6594_pins;
++		break;
++	default:
++		break;
++	}
+ 	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
+ 	if (IS_ERR(pinctrl->pctl_dev))
+ 		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
+@@ -338,8 +532,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	config.parent = tps->dev;
+ 	config.regmap = tps->regmap;
+-	config.ngpio = TPS6594_PINCTRL_PINS_NB;
+-	config.ngpio_per_reg = 8;
++	switch (pinctrl->tps->chip_id) {
++	case TPS65224:
++		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
++		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
++		break;
++	case TPS6594:
++		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
++		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
++		break;
++	default:
++		break;
++	}
+ 	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
+ 	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
+ 	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
+@@ -369,5 +573,6 @@ static struct platform_driver tps6594_pinctrl_driver = {
+ module_platform_driver(tps6594_pinctrl_driver);
+ 
+ MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
++MODULE_AUTHOR("Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>");
+ MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
+ MODULE_LICENSE("GPL");
+-- 
+2.25.1
 
-I find this patch hard to understand and I hope it's more complicated
-than it could be. I wonder if it would be beneficial to split this patch
-in two. In the first patch just introduce the new structures with all
-the necessary renaming and only in the second patch implement the added
-flexibility.
-
-Some more details below.
-
->  drivers/gpio/gpio-mvebu.c | 223 ++++++++++++++++++++++++--------------
->  1 file changed, 139 insertions(+), 84 deletions(-)
->=20
-> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-> index a13f3c18ccd4..303ea3be0b69 100644
-> --- a/drivers/gpio/gpio-mvebu.c
-> +++ b/drivers/gpio/gpio-mvebu.c
-> @@ -94,21 +94,43 @@
-> =20
->  #define MVEBU_MAX_GPIO_PER_BANK		32
-> =20
-> -struct mvebu_pwm {
-> +enum mvebu_pwm_ctrl {
-> +	MVEBU_PWM_CTRL_SET_A =3D 0,
-> +	MVEBU_PWM_CTRL_SET_B,
-> +	MVEBU_PWM_CTRL_MAX
-> +};
-> +
-> +struct mvebu_pwmchip {
->  	struct regmap		*regs;
->  	u32			 offset;
->  	unsigned long		 clk_rate;
-> -	struct gpio_desc	*gpiod;
-> -	struct pwm_chip		 chip;
->  	spinlock_t		 lock;
-> -	struct mvebu_gpio_chip	*mvchip;
-> +	bool			 in_use;
-> =20
->  	/* Used to preserve GPIO/PWM registers across suspend/resume */
-> -	u32			 blink_select;
->  	u32			 blink_on_duration;
->  	u32			 blink_off_duration;
->  };
-> =20
-> +struct mvebu_pwm_chip_drv {
-> +	enum mvebu_pwm_ctrl	 ctrl;
-> +	struct gpio_desc	*gpiod;
-> +	bool			 master;
-> +};
-> +
-> +struct mvebu_pwm {
-> +	struct pwm_chip		 chip;
-> +	struct mvebu_gpio_chip	*mvchip;
-> +	struct mvebu_pwmchip	 controller;
-> +	enum mvebu_pwm_ctrl	 default_controller;
-> +
-> +	/* Used to preserve GPIO/PWM registers across suspend/resume */
-> +	u32				 blink_select;
-> +	struct mvebu_pwm_chip_drv	 drv[];
-> +};
-
-So we have three different structures related to pwm. Some highlevel
-description (in a comment or at least the commit log) about how the
-hardware works and which struct describes what would be helpful. I gave
-up after 15 min of reading this patch and trying to understand it.
-
-> +static struct mvebu_pwmchip  *mvebu_pwm_list[MVEBU_PWM_CTRL_MAX];
-
-Huh, a static variable. Does that mean we can only have one mvebu_gpio
-device?
-
-> +
->  struct mvebu_gpio_chip {
->  	struct gpio_chip   chip;
->  	struct regmap     *regs;
-> @@ -285,12 +307,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_chip =
-*mvchip, u32 val)
->   * Functions returning offsets of individual registers for a given
->   * PWM controller.
->   */
-> -static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mvp=
-wm)
-> +static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwmchip =
-*mvpwm)
-
-I'm a fan of picking always the same variable name for the same thing
-and different names for different things. "mvpwm" is used for variables
-of type struct mvebu_pwmchip and struct mvebu_pwm.
-
->  {
->  	return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
->  }
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
-
---365ufzjbjxz7grxt
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXEiy8ACgkQj4D7WH0S
-/k5ugQf+OkUaqWRhVyLcaDS6bt0BlPaDfFGG5XGSJ4EFd2g0a3kSQbzJvbwuUw8T
-RfNfNV0jsjfD0M9IHAcCMwTQqK84zBkVJjcj3YtWnp0g0jeGJR8p7EfGBuLFVIBD
-4X+ERnlo6fXwvXGC+y9APhR8254LRo76Jg6Me8RtI+5L8VuTVtBbm1s3M7chM81N
-Ki/4lGRZfUhLQ0nRcaJ3Z82dcfqW6taaNwH7/tYLJ/QJ2x1aelxu8FwnBCjg/sRe
-JlLn+todDMLP2c0Am2y6lxRiCQVwPmo0pRBBkKpQ2ML3uxyMRaO0BZKc2UxL9MGC
-9s//pu6e7mtNE/5Kc4tokjAcxqNF4w==
-=lVsG
------END PGP SIGNATURE-----
-
---365ufzjbjxz7grxt--
 
