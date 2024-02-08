@@ -1,452 +1,107 @@
-Return-Path: <linux-gpio+bounces-3063-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3064-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBBD084DCC6
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 10:25:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1EC9A84DD11
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 10:36:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DFFE71C25366
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 09:25:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 50DA11C2688C
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 09:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8041A6D1B3;
-	Thu,  8 Feb 2024 09:21:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D55FA6BFBF;
+	Thu,  8 Feb 2024 09:35:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="AmjBv5z/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa1.ltts.com (unknown [118.185.121.105])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 556046DCED;
-	Thu,  8 Feb 2024 09:21:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6975B6BFB2
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Feb 2024 09:35:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707384115; cv=none; b=A1viz9Mz2mJ/FtkHcofFTz9o+SZVwuuzEhw/T4IxOD+oRFjzG8S2GDsEX94hy73JR68cm9nHn93quKo5DG+YI1SUxhzqvWw39hGVhVDWXjkEqO/xTCFGriXBVKmwEG+JpLJGRSqnhlct0Wa1G0UCtsUwBunkm+95SvIH+GniTTY=
+	t=1707384935; cv=none; b=lAKekYO+hDTXcjRd1YUOVwF8HMv4u/D1Xuxwub+PbR4miRZRK3PMXBWWWHdISuJFH9Yjipwhnx69o4gDkZaM+61wH89qBz/qAUBcUYoLNuz4Shw2/eg/aKECn981Ku3girikOB6GPeD/Q/Eub75c6QUQr9q4uq0WfnJ+gVdhuYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707384115; c=relaxed/simple;
-	bh=rFrBvRxg3IAIv84bm1JhciARDNjXksoQOePpjbMgLmE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jXnSEe3PtEaEyGqGtgSOAh1+l/P63mkon/RO4VJb9HVTCAFDaYhmK0Un3wtnslNXgyHkryEMRUb07XPqqmOviZBCzavWtMBLQGfSQxL+VpCsJ0VxhHHeRktAY0MWdyTOIVIB9+c6gPSh1rxwn1irEVqqCIsr1Y8hlClzMDjD5O4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: VPBNrUF72foBSI5+MMtdn/LXbpd6h2A6PGCzKCnS0LhxQpltjfKM1lZ3Vh/NA6W54fHKKnD+Gv
- DSlvIjHy0WHw==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa1.ltts.com with ESMTP; 08 Feb 2024 14:51:49 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v1 12/13] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-Date: Thu,  8 Feb 2024 14:51:34 +0530
-Message-Id: <20240208092134.1207267-1-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1707384935; c=relaxed/simple;
+	bh=2Ef4MXQbcx6AIgkMzRdLe/6b60bd/1WlTCA2XekqYpw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ERH9YZDzwv8oDF44Jvoq/Yh2LQoCQROm8j0yQ7Vqd+06Nm2hZgvIUlSlDx70yo/x5zF1gFZPCOS4Fz5XPvt6k9osU94yIuIapPtOlduRBoPiHscr6MpgEebLv9s4njL14uQd8aDLwKom7jhaKveZwzyzL6ly9FJfUSDr7vj+Le8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=AmjBv5z/; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d5c7443956so722098241.0
+        for <linux-gpio@vger.kernel.org>; Thu, 08 Feb 2024 01:35:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707384931; x=1707989731; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2Ef4MXQbcx6AIgkMzRdLe/6b60bd/1WlTCA2XekqYpw=;
+        b=AmjBv5z/J2X+E3sIQrawqjN+1OY+sA0/+V1vtISKCGUa0zgnvTYcVAaqGxQatwL2cw
+         JfdQJHMccNMv6Lgb8CSEkI7H7o8AIKrDhFK4fA+qPWpMpwNfYT+Miu/KHDjdlZgUTaNY
+         7gYwaw/k4TltASFpW1h4DPqESZ7mqbuCp+POWaL9VcM4i+7FuT7y7NQs2nfr2iZEH2UT
+         h28/+qBmcA/uHUufUazXdWsPLaiGjMHAFrzpICMRnumdI8+A2rqDHqqtU0gk7KcdyYOm
+         dPKjMsidFnyRLpqCdS3F85CeTJ1NqrSBKSWesQ8Lmlf8GaMxDvrCaQ7oOsfygZR7epPI
+         /UZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707384931; x=1707989731;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2Ef4MXQbcx6AIgkMzRdLe/6b60bd/1WlTCA2XekqYpw=;
+        b=V+yQpOlblGO8XF/BdSs5EyDIhjOMYmu9YIVtKKlb2Yo/iDqvj0rIIpweWLxoCUtuh8
+         hxWBSo2fiBXgpVUWwk6fJlgGXPwngsfEf7O9PNRdlhVoMgeUO789q9IVpnR7hB4PMa1G
+         hZneyY/yu1mC0+yyK3IoW54Wd/YsTOUF9SwYz62l/AUuMzg96VWv/JF7jA0Fi+Lc/HRv
+         GlDUJEhpR6XN+EIKwLvLch3MMG8Ih8e1e8+jogAFSqbzROEvWtDgmn3/u/NCceLtgk23
+         +EKkNv1197crnCf33oxJl/1Vd7+s4WO0HaI5BYLTNCgpWR5gfEu5ePyzVM0lcNNEx+KJ
+         tGiQ==
+X-Gm-Message-State: AOJu0Yx9as/2W8/2Anaon6XkNoDGEmZriATP7oXOHPRtbWQRu8wK4m6O
+	cQAcunH/NitNYJlnQnuHIUqOPtVB+udVN9JQgDVtrctEG0uqPJo6Rjxc94fS6gHO1+qHXnHdiuc
+	8pKsGD/d7cRkZCIlXcdyxveTlAIYB/REFbpGY5Q==
+X-Google-Smtp-Source: AGHT+IGHYkhsqhK7jdquWbdRQFNxSjng3mgHAtet6uTK6szct7lKLlpp/s4hG5ha+PgzbQ8FiACiKfNtBKdrQtsQi4s=
+X-Received: by 2002:a05:6102:2f3:b0:46d:3a99:7f0 with SMTP id
+ j19-20020a05610202f300b0046d3a9907f0mr6053745vsj.2.1707384931130; Thu, 08 Feb
+ 2024 01:35:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240205102229.42460-1-brgl@bgdev.pl>
+In-Reply-To: <20240205102229.42460-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 8 Feb 2024 10:35:20 +0100
+Message-ID: <CAMRc=MdzQ9hTo8fG09T4EZDNP9-idTYELoA2uHZYGf=OfxLtFg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: remove GPIO device from the list unconditionally in
+ error path
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+On Mon, Feb 5, 2024 at 11:22=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> Since commit 48e1b4d369cf ("gpiolib: remove the GPIO device from the list
+> when it's unregistered") we remove the GPIO device entry from the global
+> list (used to order devices by their GPIO ranges) when unregistering the
+> chip, not when releasing the device. It will not happen when the last
+> reference is put anymore. This means, we need to remove it in error path
+> in gpiochip_add_data_with_key() unconditionally, without checking if the
+> device's .release() callback is set.
+>
+> Fixes: 48e1b4d369cf ("gpiolib: remove the GPIO device from the list when =
+it's unregistered")
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they
-have significant functional overlap.
-TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-dedicated device functions.
+Queued for fixes.
 
-Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
----
- drivers/pinctrl/pinctrl-tps6594.c | 287 +++++++++++++++++++++++++-----
- 1 file changed, 246 insertions(+), 41 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-tps6594.c b/drivers/pinctrl/pinctrl-tps6594.c
-index 66985e54b..5da21aa14 100644
---- a/drivers/pinctrl/pinctrl-tps6594.c
-+++ b/drivers/pinctrl/pinctrl-tps6594.c
-@@ -14,8 +14,6 @@
- 
- #include <linux/mfd/tps6594.h>
- 
--#define TPS6594_PINCTRL_PINS_NB 11
--
- #define TPS6594_PINCTRL_GPIO_FUNCTION 0
- #define TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
- #define TPS6594_PINCTRL_TRIG_WDOG_FUNCTION 1
-@@ -40,17 +38,40 @@
- #define TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8 3
- #define TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9 3
- 
-+/* TPS65224 pin muxval */
-+#define TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON1_FUNCTION 1
-+#define TPS65224_PINCTRL_VMON2_FUNCTION 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION 1
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION 2
-+#define TPS65224_PINCTRL_NSLEEP1_FUNCTION 2
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION 2
-+#define TPS65224_PINCTRL_NERR_MCU_FUNCTION 2
-+#define TPS65224_PINCTRL_NINT_FUNCTION 3
-+#define TPS65224_PINCTRL_TRIG_WDOG_FUNCTION 3
-+#define TPS65224_PINCTRL_PB_FUNCTION 3
-+#define TPS65224_PINCTRL_ADC_IN_FUNCTION 3
-+
-+/* TPS65224 Special muxval for recalcitrant pins */
-+#define TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5 1
-+#define TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5 4
-+#define TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5 3
-+
- #define TPS6594_OFFSET_GPIO_SEL 5
- 
--#define FUNCTION(fname, v)									\
-+#define TPS65224_NGPIO_PER_REG 6
-+#define TPS6594_NGPIO_PER_REG  8
-+
-+#define FUNCTION(dev_name, fname, v)							\
- {											\
- 	.pinfunction = PINCTRL_PINFUNCTION(#fname,					\
--					tps6594_##fname##_func_group_names,		\
--					ARRAY_SIZE(tps6594_##fname##_func_group_names)),\
-+					dev_name##_##fname##_func_group_names,		\
-+					ARRAY_SIZE(dev_name##_##fname##_func_group_names)),\
- 	.muxval = v,									\
- }
- 
--static const struct pinctrl_pin_desc tps6594_pins[TPS6594_PINCTRL_PINS_NB] = {
-+static const struct pinctrl_pin_desc tps6594_pins[] = {
- 	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
- 	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
- 	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-@@ -143,30 +164,127 @@ static const char *const tps6594_syncclkin_func_group_names[] = {
- 	"GPIO9",
- };
- 
-+static const struct pinctrl_pin_desc tps65224_pins[] = {
-+	PINCTRL_PIN(0, "GPIO0"),   PINCTRL_PIN(1, "GPIO1"),
-+	PINCTRL_PIN(2, "GPIO2"),   PINCTRL_PIN(3, "GPIO3"),
-+	PINCTRL_PIN(4, "GPIO4"),   PINCTRL_PIN(5, "GPIO5"),
-+};
-+
-+static const char *const tps65224_gpio_func_group_names[] = {
-+	"GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_sda_i2c2_sdo_spi_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_nsleep2_func_group_names[] = {
-+	"GPIO0", "GPIO5",
-+};
-+
-+static const char *const tps65224_nint_func_group_names[] = {
-+	"GPIO0",
-+};
-+
-+static const char *const tps65224_scl_i2c2_cs_spi_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_nsleep1_func_group_names[] = {
-+	"GPIO1", "GPIO2", "GPIO3",
-+};
-+
-+static const char *const tps65224_trig_wdog_func_group_names[] = {
-+	"GPIO1",
-+};
-+
-+static const char *const tps65224_vmon1_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_pb_func_group_names[] = {
-+	"GPIO2",
-+};
-+
-+static const char *const tps65224_vmon2_func_group_names[] = {
-+	"GPIO3",
-+};
-+
-+static const char *const tps65224_adc_in_func_group_names[] = {
-+	"GPIO3", "GPIO4",
-+};
-+
-+static const char *const tps65224_wkup_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_syncclkin_func_group_names[] = {
-+	"GPIO4", "GPIO5",
-+};
-+
-+static const char *const tps65224_nerr_mcu_func_group_names[] = {
-+	"GPIO5",
-+};
-+
- struct tps6594_pinctrl_function {
- 	struct pinfunction pinfunction;
- 	u8 muxval;
- };
- 
-+struct muxval_remap {
-+	unsigned int group;
-+	u8 muxval;
-+	u8 remap;
-+};
-+
-+struct muxval_remap tps65224_muxval_remap[] = {
-+	{5, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS65224_PINCTRL_WKUP_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION_GPIO5},
-+	{5, TPS65224_PINCTRL_NSLEEP2_FUNCTION, TPS65224_PINCTRL_NSLEEP2_FUNCTION_GPIO5},
-+};
-+
-+struct muxval_remap tps6594_muxval_remap[] = {
-+	{8, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8},
-+	{8, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8},
-+	{9, TPS6594_PINCTRL_CLK32KOUT_FUNCTION, TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9},
-+};
-+
- static const struct tps6594_pinctrl_function pinctrl_functions[] = {
--	FUNCTION(gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
--	FUNCTION(nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
--	FUNCTION(nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
--	FUNCTION(wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
--	FUNCTION(wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
--	FUNCTION(scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
--	FUNCTION(nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
--	FUNCTION(trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
--	FUNCTION(sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
--	FUNCTION(clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
--	FUNCTION(nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
--	FUNCTION(sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
--	FUNCTION(sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
--	FUNCTION(nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
--	FUNCTION(syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
--	FUNCTION(disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
--	FUNCTION(pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
--	FUNCTION(syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps6594, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps6594, nsleep1, TPS6594_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps6594, nsleep2, TPS6594_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps6594, wkup1, TPS6594_PINCTRL_WKUP1_FUNCTION),
-+	FUNCTION(tps6594, wkup2, TPS6594_PINCTRL_WKUP2_FUNCTION),
-+	FUNCTION(tps6594, scl_i2c2_cs_spi, TPS6594_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps6594, nrstout_soc, TPS6594_PINCTRL_NRSTOUT_SOC_FUNCTION),
-+	FUNCTION(tps6594, trig_wdog, TPS6594_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps6594, sda_i2c2_sdo_spi, TPS6594_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps6594, clk32kout, TPS6594_PINCTRL_CLK32KOUT_FUNCTION),
-+	FUNCTION(tps6594, nerr_soc, TPS6594_PINCTRL_NERR_SOC_FUNCTION),
-+	FUNCTION(tps6594, sclk_spmi, TPS6594_PINCTRL_SCLK_SPMI_FUNCTION),
-+	FUNCTION(tps6594, sdata_spmi, TPS6594_PINCTRL_SDATA_SPMI_FUNCTION),
-+	FUNCTION(tps6594, nerr_mcu, TPS6594_PINCTRL_NERR_MCU_FUNCTION),
-+	FUNCTION(tps6594, syncclkout, TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION),
-+	FUNCTION(tps6594, disable_wdog, TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION),
-+	FUNCTION(tps6594, pdog, TPS6594_PINCTRL_PDOG_FUNCTION),
-+	FUNCTION(tps6594, syncclkin, TPS6594_PINCTRL_SYNCCLKIN_FUNCTION),
-+};
-+
-+static const struct tps6594_pinctrl_function tps65224_pinctrl_functions[] = {
-+	FUNCTION(tps65224, gpio, TPS6594_PINCTRL_GPIO_FUNCTION),
-+	FUNCTION(tps65224, sda_i2c2_sdo_spi, TPS65224_PINCTRL_SDA_I2C2_SDO_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep2, TPS65224_PINCTRL_NSLEEP2_FUNCTION),
-+	FUNCTION(tps65224, nint, TPS65224_PINCTRL_NINT_FUNCTION),
-+	FUNCTION(tps65224, scl_i2c2_cs_spi, TPS65224_PINCTRL_SCL_I2C2_CS_SPI_FUNCTION),
-+	FUNCTION(tps65224, nsleep1, TPS65224_PINCTRL_NSLEEP1_FUNCTION),
-+	FUNCTION(tps65224, trig_wdog, TPS65224_PINCTRL_TRIG_WDOG_FUNCTION),
-+	FUNCTION(tps65224, vmon1, TPS65224_PINCTRL_VMON1_FUNCTION),
-+	FUNCTION(tps65224, pb, TPS65224_PINCTRL_PB_FUNCTION),
-+	FUNCTION(tps65224, vmon2, TPS65224_PINCTRL_VMON2_FUNCTION),
-+	FUNCTION(tps65224, adc_in, TPS65224_PINCTRL_ADC_IN_FUNCTION),
-+	FUNCTION(tps65224, wkup, TPS65224_PINCTRL_WKUP_FUNCTION),
-+	FUNCTION(tps65224, syncclkin, TPS65224_PINCTRL_SYNCCLKIN_FUNCTION),
-+	FUNCTION(tps65224, nerr_mcu, TPS65224_PINCTRL_NERR_MCU_FUNCTION),
- };
- 
- struct tps6594_pinctrl {
-@@ -201,7 +319,21 @@ static int tps6594_gpio_regmap_xlate(struct gpio_regmap *gpio,
- 
- static int tps6594_pmx_func_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(pinctrl_functions);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int func_cnt = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		func_cnt = ARRAY_SIZE(tps65224_pinctrl_functions);
-+		break;
-+	case TPS6594:
-+		func_cnt = ARRAY_SIZE(pinctrl_functions);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return func_cnt;
- }
- 
- static const char *tps6594_pmx_func_name(struct pinctrl_dev *pctldev,
-@@ -229,10 +361,26 @@ static int tps6594_pmx_set(struct tps6594_pinctrl *pinctrl, unsigned int pin,
- 			   u8 muxval)
- {
- 	u8 mux_sel_val = muxval << TPS6594_OFFSET_GPIO_SEL;
-+	u8 mux_sel_mask = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		mux_sel_mask = TPS65224_MASK_GPIO_SEL;
-+		/* GPIO6 has a different mask in TPS65224*/
-+		if (pin == 5)
-+			mux_sel_mask = TPS65224_MASK_GPIO_SEL_GPIO6;
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	case TPS6594:
-+		mux_sel_mask = TPS6594_MASK_GPIO_SEL;
-+		break;
-+	default:
-+		break;
-+	}
- 
- 	return regmap_update_bits(pinctrl->tps->regmap,
- 				  TPS6594_REG_GPIOX_CONF(pin),
--				  TPS6594_MASK_GPIO_SEL, mux_sel_val);
-+				  mux_sel_mask, mux_sel_val);
- }
- 
- static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
-@@ -240,16 +388,28 @@ static int tps6594_pmx_set_mux(struct pinctrl_dev *pctldev,
- {
- 	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
- 	u8 muxval = pinctrl->funcs[function].muxval;
-+	unsigned int remap_cnt = 0;
-+	struct muxval_remap *remap;
- 
- 	/* Some pins don't have the same muxval for the same function... */
--	if (group == 8) {
--		if (muxval == TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION)
--			muxval = TPS6594_PINCTRL_DISABLE_WDOG_FUNCTION_GPIO8;
--		else if (muxval == TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_SYNCCLKOUT_FUNCTION_GPIO8;
--	} else if (group == 9) {
--		if (muxval == TPS6594_PINCTRL_CLK32KOUT_FUNCTION)
--			muxval = TPS6594_PINCTRL_CLK32KOUT_FUNCTION_GPIO9;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		remap = tps65224_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps65224_muxval_remap);
-+		break;
-+	case TPS6594:
-+		remap = tps6594_muxval_remap;
-+		remap_cnt = ARRAY_SIZE(tps6594_muxval_remap);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	for (unsigned int i = 0; i < remap_cnt; i++) {
-+		if (group == remap[i].group && muxval == remap[i].muxval) {
-+			muxval = remap[i].remap;
-+			break;
-+		}
- 	}
- 
- 	return tps6594_pmx_set(pinctrl, group, muxval);
-@@ -276,7 +436,21 @@ static const struct pinmux_ops tps6594_pmx_ops = {
- 
- static int tps6594_groups_cnt(struct pinctrl_dev *pctldev)
- {
--	return ARRAY_SIZE(tps6594_pins);
-+	struct tps6594_pinctrl *pinctrl = pinctrl_dev_get_drvdata(pctldev);
-+	int num_pins = 0;
-+
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		num_pins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		num_pins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	return num_pins;
- }
- 
- static int tps6594_group_pins(struct pinctrl_dev *pctldev,
-@@ -320,8 +494,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	pctrl_desc->name = dev_name(dev);
- 	pctrl_desc->owner = THIS_MODULE;
--	pctrl_desc->pins = tps6594_pins;
--	pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+	switch (tps->chip_id) {
-+	case TPS65224:
-+		pctrl_desc->pins = tps65224_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps65224_pins);
-+		break;
-+	case TPS6594:
-+		pctrl_desc->pins = tps6594_pins;
-+		pctrl_desc->npins = ARRAY_SIZE(tps6594_pins);
-+		break;
-+	default:
-+		break;
-+	}
- 	pctrl_desc->pctlops = &tps6594_pctrl_ops;
- 	pctrl_desc->pmxops = &tps6594_pmx_ops;
- 
-@@ -329,8 +513,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 	if (!pinctrl)
- 		return -ENOMEM;
- 	pinctrl->tps = dev_get_drvdata(dev->parent);
--	pinctrl->funcs = pinctrl_functions;
--	pinctrl->pins = tps6594_pins;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		pinctrl->funcs = tps65224_pinctrl_functions;
-+		pinctrl->pins = tps65224_pins;
-+		break;
-+	case TPS6594:
-+		pinctrl->funcs = pinctrl_functions;
-+		pinctrl->pins = tps6594_pins;
-+		break;
-+	default:
-+		break;
-+	}
- 	pinctrl->pctl_dev = devm_pinctrl_register(dev, pctrl_desc, pinctrl);
- 	if (IS_ERR(pinctrl->pctl_dev))
- 		return dev_err_probe(dev, PTR_ERR(pinctrl->pctl_dev),
-@@ -338,8 +532,18 @@ static int tps6594_pinctrl_probe(struct platform_device *pdev)
- 
- 	config.parent = tps->dev;
- 	config.regmap = tps->regmap;
--	config.ngpio = TPS6594_PINCTRL_PINS_NB;
--	config.ngpio_per_reg = 8;
-+	switch (pinctrl->tps->chip_id) {
-+	case TPS65224:
-+		config.ngpio = ARRAY_SIZE(tps65224_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS65224_NGPIO_PER_REG;
-+		break;
-+	case TPS6594:
-+		config.ngpio = ARRAY_SIZE(tps6594_gpio_func_group_names);
-+		config.ngpio_per_reg = TPS6594_NGPIO_PER_REG;
-+		break;
-+	default:
-+		break;
-+	}
- 	config.reg_dat_base = TPS6594_REG_GPIO_IN_1;
- 	config.reg_set_base = TPS6594_REG_GPIO_OUT_1;
- 	config.reg_dir_out_base = TPS6594_REG_GPIOX_CONF(0);
-@@ -369,5 +573,6 @@ static struct platform_driver tps6594_pinctrl_driver = {
- module_platform_driver(tps6594_pinctrl_driver);
- 
- MODULE_AUTHOR("Esteban Blanc <eblanc@baylibre.com>");
-+MODULE_AUTHOR("Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>");
- MODULE_DESCRIPTION("TPS6594 pinctrl and GPIO driver");
- MODULE_LICENSE("GPL");
--- 
-2.25.1
-
+Bart
 
