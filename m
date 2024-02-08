@@ -1,132 +1,204 @@
-Return-Path: <linux-gpio+bounces-3061-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3062-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F1BA84DAB3
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 08:31:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 478D384DAF4
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 09:05:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DD897B23CD6
-	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 07:31:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B920B23850
+	for <lists+linux-gpio@lfdr.de>; Thu,  8 Feb 2024 08:05:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D7A96930E;
-	Thu,  8 Feb 2024 07:31:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="dRLt9hr/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3C1069E00;
+	Thu,  8 Feb 2024 08:05:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D25C67A0F;
-	Thu,  8 Feb 2024 07:31:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9696A330
+	for <linux-gpio@vger.kernel.org>; Thu,  8 Feb 2024 08:05:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707377493; cv=none; b=NGADtznBzbzVOfq/6KswFBPF+CsN103LSl1tJfy0BIr7lRsp5Qb9iLHAqkRm0op7KaUdYmdu/xcLWfQQkPuL7KA/2Cbc17qsoIBlDEdjJqsWKTeao79PgZY2lgd56QArsoEBQIDqwkXg5OK+KkykEeqSX45oPlsA/PaC8WTECsc=
+	t=1707379511; cv=none; b=h9BIbSmIvXQtf8PVUkacQzcAeSbmBjvI+zwt9BV85TIy/ufgYGYEUWnrkq6lYgPOxeu1+pRla1DrR8hw2hrnJgF3mEW2KJbCdWJZ5ZzNQdAi6o3Bk6Noq29+5aQDTTdmmKT7NhEJ3OwmwyWsGkUTScW6nU+rYflMXAOuWU6914k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707377493; c=relaxed/simple;
-	bh=SNhkKnZ7sr8GDFAjdsVQk/H/wcAOE3G/rN1aQC5b0dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VQTM8wjQMcxj9DLjtV40+ONtU5ZQwjcULfU7mVqz9kChvgvsmcEWVeIXu1yRxq9UDspLKoDuwd3IuaEuFXZCMD23YtYIupDsJ+9Rm/Y8c6lgOkvtkGyGAYCk2t15s5DJSfMwCs/tIo+ZGhOICZTIDY8J+yRdKudu2gNShAVGK+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=dRLt9hr/; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41860Bac027492;
-	Thu, 8 Feb 2024 07:31:26 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=lzbz1GNhahpMkNP7h5Kr7JjPzEoxKQtweREGWC1/SkI=; b=dR
-	Lt9hr/Y7IGmbQO8ifGuJr+PGXoa56JHkFBG1CZwuR7I0RD3fCZOYEQP6MWhdfUgf
-	EqAEZKJs6ShghWTBYT3uk9vAt6b3OyHsqvjFKgHpwDeZnwQ9cNcz0SYu4HIy5cgX
-	VkcHQtm3k3+DTJ8bEgh8jraWoBIPv/TE8XdzctqPDHEdg3EAirvV6ttCvvEJQVOi
-	90s9f/q2pt2EpK0acS70y7eahmFLj1N7LLTP+/zDYQGKX7u0rvlxhy6tI1J7LK4O
-	FzMOMIOG4ZTtEmJFzan9XWp88Ix5ooCvhNdAWDG70td4Fp55FX2kMqJTyaBqUXqy
-	MlhPKlKfxPbrmYZ2Sp2Q==
-Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3w4frwse51-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 08 Feb 2024 07:31:26 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 4187VPXE017903
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 8 Feb 2024 07:31:25 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Wed, 7 Feb
- 2024 23:31:20 -0800
-Message-ID: <84de6e73-31a1-4ae2-afe1-71e9947a22c0@quicinc.com>
-Date: Thu, 8 Feb 2024 15:31:18 +0800
+	s=arc-20240116; t=1707379511; c=relaxed/simple;
+	bh=XVKk8mNNyH2W2TKyOl5UrYU3KaPEK8JC6mLhXHUYDbU=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKGUdF1TbvqOF9IHt7I+vcG4Qvlie8CeBlLDU7SJnz+1h6DrD6W+DC3Cg7PJ0cVASIm21FxfeiwdiKtZEsSsVWyHPmSWQkXJuieq/zFECjqr9qWCwXpp3i6VPf2GdiENyw9fiGkfjJlWLBMHvErJLCnW68SaBVK52L4fk5zc4Ck=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXzP7-0008V1-CL; Thu, 08 Feb 2024 09:05:05 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXzP6-005Amy-Bf; Thu, 08 Feb 2024 09:05:04 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1rXzP6-000D8b-0o;
+	Thu, 08 Feb 2024 09:05:04 +0100
+Date: Thu, 8 Feb 2024 09:05:04 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Finn Behrens <me@kloenk.de>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Heisath <jannis@imserv.org>, 
+	Yureka Lilian <yuka@yuka.dev>
+Subject: Re: [PATCH] gpio-mvebu: no hardcoded timer assignment for pwm
+Message-ID: <6chccjdn3yidi7rodcledxx7czt3adjxvaeeneii5ghfiw4oc3@t5qtmnlasvlo>
+References: <20240130105515.30258-1-me@kloenk.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] pinctrl: Add lock to ensure the state atomization
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>
-CC: <andersson@kernel.org>, <kernel@quicinc.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20240202105854.26446-1-quic_aiquny@quicinc.com>
- <CACRpkdZM96tji2OCXHPd9iXE1kU5u1TGsuPhB0YLbHG=LXAiqg@mail.gmail.com>
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <CACRpkdZM96tji2OCXHPd9iXE1kU5u1TGsuPhB0YLbHG=LXAiqg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 0OuElrODJEJaWKo016xQk7bkhnlT5F_3
-X-Proofpoint-GUID: 0OuElrODJEJaWKo016xQk7bkhnlT5F_3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-08_01,2024-02-07_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 spamscore=0 suspectscore=0 bulkscore=0 phishscore=0
- clxscore=1015 lowpriorityscore=0 mlxlogscore=826 adultscore=0
- priorityscore=1501 mlxscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2401310000 definitions=main-2402080038
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="365ufzjbjxz7grxt"
+Content-Disposition: inline
+In-Reply-To: <20240130105515.30258-1-me@kloenk.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
 
+--365ufzjbjxz7grxt
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 2/7/2024 6:51 PM, Linus Walleij wrote:
-> On Fri, Feb 2, 2024 at 11:59 AM Maria Yu <quic_aiquny@quicinc.com> wrote:
-> 
->> Currently pinctrl_select_state is an export symbol and don't have
->> effective re-entrance protect design. During async probing of devices
->> it's possible to end up in pinctrl_select_state() from multiple
->> contexts simultaneously, so make it thread safe.
->> More over, when the real racy happened, the system frequently have
->> printk message like:
->>    "not freeing pin xx (xxx) as part of deactivating group xxx - it is
->> already used for some other setting".
->> Finally the system crashed after the flood log.
->> Add per pinctrl lock to ensure the old state and new state transition
->> atomization.
->> Also move dev error print message outside the region with interrupts
->> disabled.
->> Use scoped guard to simplify the lock protection needed code.
->>
->> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
->> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
-> 
-> Thank you for rebasing!
-> 
-> Patch applied now, so we get some shakeout in linux-next and can
-> make sure it works for everyone.
-Feel free to add me into any thread related. Also I will try to pay 
-attention from the email list.
+Hello,
 
-:)
-> 
-> Yours,
-> Linus Walleij
+On Tue, Jan 30, 2024 at 11:55:13AM +0100, Finn Behrens wrote:
+> Removes the hardcoded timer assignment of timers to pwm controllers.
+> This allows to use more than one pwm per gpio bank.
+>=20
+> Original patch with chip_data interface by Heisath <jannis@imserv.org>
+>=20
+> Link: https://wiki.kobol.io/helios4/pwm/#patch-requirement
+> Co-developed-by: Yureka Lilian <yuka@yuka.dev>
+> Signed-off-by: Yureka Lilian <yuka@yuka.dev>
+> Signed-off-by: Finn Behrens <me@kloenk.de>
 
--- 
-Thx and BRs,
-Aiqun(Maria) Yu
+I find this patch hard to understand and I hope it's more complicated
+than it could be. I wonder if it would be beneficial to split this patch
+in two. In the first patch just introduce the new structures with all
+the necessary renaming and only in the second patch implement the added
+flexibility.
+
+Some more details below.
+
+>  drivers/gpio/gpio-mvebu.c | 223 ++++++++++++++++++++++++--------------
+>  1 file changed, 139 insertions(+), 84 deletions(-)
+>=20
+> diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
+> index a13f3c18ccd4..303ea3be0b69 100644
+> --- a/drivers/gpio/gpio-mvebu.c
+> +++ b/drivers/gpio/gpio-mvebu.c
+> @@ -94,21 +94,43 @@
+> =20
+>  #define MVEBU_MAX_GPIO_PER_BANK		32
+> =20
+> -struct mvebu_pwm {
+> +enum mvebu_pwm_ctrl {
+> +	MVEBU_PWM_CTRL_SET_A =3D 0,
+> +	MVEBU_PWM_CTRL_SET_B,
+> +	MVEBU_PWM_CTRL_MAX
+> +};
+> +
+> +struct mvebu_pwmchip {
+>  	struct regmap		*regs;
+>  	u32			 offset;
+>  	unsigned long		 clk_rate;
+> -	struct gpio_desc	*gpiod;
+> -	struct pwm_chip		 chip;
+>  	spinlock_t		 lock;
+> -	struct mvebu_gpio_chip	*mvchip;
+> +	bool			 in_use;
+> =20
+>  	/* Used to preserve GPIO/PWM registers across suspend/resume */
+> -	u32			 blink_select;
+>  	u32			 blink_on_duration;
+>  	u32			 blink_off_duration;
+>  };
+> =20
+> +struct mvebu_pwm_chip_drv {
+> +	enum mvebu_pwm_ctrl	 ctrl;
+> +	struct gpio_desc	*gpiod;
+> +	bool			 master;
+> +};
+> +
+> +struct mvebu_pwm {
+> +	struct pwm_chip		 chip;
+> +	struct mvebu_gpio_chip	*mvchip;
+> +	struct mvebu_pwmchip	 controller;
+> +	enum mvebu_pwm_ctrl	 default_controller;
+> +
+> +	/* Used to preserve GPIO/PWM registers across suspend/resume */
+> +	u32				 blink_select;
+> +	struct mvebu_pwm_chip_drv	 drv[];
+> +};
+
+So we have three different structures related to pwm. Some highlevel
+description (in a comment or at least the commit log) about how the
+hardware works and which struct describes what would be helpful. I gave
+up after 15 min of reading this patch and trying to understand it.
+
+> +static struct mvebu_pwmchip  *mvebu_pwm_list[MVEBU_PWM_CTRL_MAX];
+
+Huh, a static variable. Does that mean we can only have one mvebu_gpio
+device?
+
+> +
+>  struct mvebu_gpio_chip {
+>  	struct gpio_chip   chip;
+>  	struct regmap     *regs;
+> @@ -285,12 +307,12 @@ mvebu_gpio_write_level_mask(struct mvebu_gpio_chip =
+*mvchip, u32 val)
+>   * Functions returning offsets of individual registers for a given
+>   * PWM controller.
+>   */
+> -static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwm *mvp=
+wm)
+> +static unsigned int mvebu_pwmreg_blink_on_duration(struct mvebu_pwmchip =
+*mvpwm)
+
+I'm a fan of picking always the same variable name for the same thing
+and different names for different things. "mvpwm" is used for variables
+of type struct mvebu_pwmchip and struct mvebu_pwm.
+
+>  {
+>  	return mvpwm->offset + PWM_BLINK_ON_DURATION_OFF;
+>  }
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--365ufzjbjxz7grxt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXEiy8ACgkQj4D7WH0S
+/k5ugQf+OkUaqWRhVyLcaDS6bt0BlPaDfFGG5XGSJ4EFd2g0a3kSQbzJvbwuUw8T
+RfNfNV0jsjfD0M9IHAcCMwTQqK84zBkVJjcj3YtWnp0g0jeGJR8p7EfGBuLFVIBD
+4X+ERnlo6fXwvXGC+y9APhR8254LRo76Jg6Me8RtI+5L8VuTVtBbm1s3M7chM81N
+Ki/4lGRZfUhLQ0nRcaJ3Z82dcfqW6taaNwH7/tYLJ/QJ2x1aelxu8FwnBCjg/sRe
+JlLn+todDMLP2c0Am2y6lxRiCQVwPmo0pRBBkKpQ2ML3uxyMRaO0BZKc2UxL9MGC
+9s//pu6e7mtNE/5Kc4tokjAcxqNF4w==
+=lVsG
+-----END PGP SIGNATURE-----
+
+--365ufzjbjxz7grxt--
 
