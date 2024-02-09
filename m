@@ -1,115 +1,104 @@
-Return-Path: <linux-gpio+bounces-3158-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3159-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3619384FA57
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 17:58:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4333384FAB8
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 18:12:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68F661C24DBF
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 16:58:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id CEAA9B26DF3
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 17:12:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BA188287F;
-	Fri,  9 Feb 2024 16:55:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7CC737BB0C;
+	Fri,  9 Feb 2024 17:11:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FqXkuT5d"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gauss.telenet-ops.be (gauss.telenet-ops.be [195.130.132.49])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD6A881AD5
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Feb 2024 16:55:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DCCB7BAF4;
+	Fri,  9 Feb 2024 17:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707497733; cv=none; b=u5Usf210BhVzo9jZ7gQqOMx2sgp/Kz7e2BXDtvkadzcENI7mcHYzALX05hVpJo+XgeLAk1Nmv9zj1UZfXxptHYF0Bu4HKC8SBlex1IUVW6g3g0nwEj0LSrI9juJh6oj8Mz3sXwzJKziZ0AG7ARIh6lus0XW4Nse6MRonvHxvcd0=
+	t=1707498713; cv=none; b=N4h7oylOfSB01ImkfAJrWeoK4spQm9BdTco6Rz802YtZoEsMwuwyq7esH+qzByKYhNNgG+NMzBUR5tQ1f7ILRhatt2+iIu0hQnV1JzjDq1N5xyu88MDnPVwtjJM9OYmwvsxqeDtp1welQqdTi8dkCq62jOWP0IuwAPhVejQLrfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707497733; c=relaxed/simple;
-	bh=x1le34vOMVl/IlIT2r3MCIDdNdMV7yRThEmSiBmvv3k=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=j8c8txzpe3/BgUkCDKC0sxcfjLcJSqYjLdOwnZ+AaY4MG6a6iVxzkMU8netDJyoQpUGdvkH2n+gAFL7TManRDhzYUEMmYO35g9TkeDOuz727HixkvQ5LvFN01h9y54C6UHwGDqUc14rmPfDZzac3/YC2v8wKiwF44MNfVsw5Sj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
-Received: from michel.telenet-ops.be (michel.telenet-ops.be [IPv6:2a02:1800:110:4::f00:18])
-	by gauss.telenet-ops.be (Postfix) with ESMTPS id 4TWg2n41FGz4x0gS
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Feb 2024 17:55:29 +0100 (CET)
-Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:55fd:ff17:c1c8:954d])
-	by michel.telenet-ops.be with bizsmtp
-	id l4vN2B00D4RKXn6064vNE1; Fri, 09 Feb 2024 17:55:22 +0100
-Received: from rox.of.borg ([192.168.97.57])
-	by ramsan.of.borg with esmtp (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rYU9m-0008H1-46;
-	Fri, 09 Feb 2024 17:55:22 +0100
-Received: from geert by rox.of.borg with local (Exim 4.95)
-	(envelope-from <geert@linux-m68k.org>)
-	id 1rYU9q-0061HK-AI;
-	Fri, 09 Feb 2024 17:55:22 +0100
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [GIT PULL] pinctrl: renesas: Updates for v6.9
-Date: Fri,  9 Feb 2024 17:55:21 +0100
-Message-Id: <cover.1707497084.git.geert+renesas@glider.be>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1707498713; c=relaxed/simple;
+	bh=TVN6AoYDGpCY0AXJRKxcSKPo6wonZIAnszqeZBEPtsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=YzFnf2eiiP1d98ZIIddbtDJwxBoF1fWV3vGRYLh7PPVdlpSpMtd6E29ayPk7tStUGi9+vttVmIggpVN654JXwXak7q7sBNCKvgsa3KXhA5VzaRsbnjywKENYaAomEOcfmfZkUnoBBZxuGyiwNHaBQBNpvzqNChTmGK1M2fyKwUk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FqXkuT5d; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DF6EC433C7;
+	Fri,  9 Feb 2024 17:11:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707498712;
+	bh=TVN6AoYDGpCY0AXJRKxcSKPo6wonZIAnszqeZBEPtsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=FqXkuT5dLtmYHu/v3UHeZUzV4WjT53HNAiOawRTeMtzG6azLfeWzEW7XsfymG2JL2
+	 aKIyQLmcDtx4Fq8K63tQd/Ja1ZEqeChBOEQbpm+kmz3IROErjVb1LpLaTpQDGKpMhb
+	 jVeoj0gJRWhsQRQm59iOPpoYxfCcRDPlW6WgbOBLRJyyDR50pJ2chsii9r/z/ntENO
+	 CkrL0CltgfB2pPAh75sWDxdeJgPDyZRFL4JsVaEuy3b0NiXP72SYXsBonXB6qw8Qgx
+	 a/kOWeyslVe9CBIB8yYbrQV0c/XJCIZO+5JZZcdfnynfxvhJC1bDRqpyiwC9Wx6+wz
+	 CebN7Sc4EXnbQ==
+Date: Fri, 9 Feb 2024 17:11:46 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
+Message-ID: <20240209-blitz-fidgety-78469aa80d6d@spud>
+References: <20240208105343.1212902-1-bhargav.r@ltts.com>
+ <20240208105343.1212902-4-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="dna+SjxlSwr7Px85"
+Content-Disposition: inline
+In-Reply-To: <20240208105343.1212902-4-bhargav.r@ltts.com>
 
-	Hi Linus,
 
-The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd33d:
+--dna+SjxlSwr7Px85
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-  Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
+On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
+> TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+> regulators, it includes additional features like GPIOs, watchdog, ESMs
+> (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
+> managing the state of the device.
 
-are available in the Git repository at:
+> TPS6594 and TPS65224 have significant functional overlap.
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.9-tag1
+What does "significant functional overlap" mean? Does one implement a
+compatible subset of the other? I assume the answer is no, given there
+seems to be some core looking registers at different addresses.
 
-for you to fetch changes up to fea58424e2523376ece6f734479e63061e17ad7f:
+Thanks,
+Conor.
 
-  pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28 (2024-01-31 14:50:44 +0100)
 
-----------------------------------------------------------------
-pinctrl: renesas: Updates for v6.9
+--dna+SjxlSwr7Px85
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  - Add pin groups for SCIF_CLK2 on R-Car V4H,
-  - Add support for port pins P19 to P28 on RZ/Five,
-  - Miscellaneous fixes and improvements.
+-----BEGIN PGP SIGNATURE-----
 
-Thanks for pulling!
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcZc0gAKCRB4tDGHoIJi
+0lB3AP96KY07xT0eqyhknqStgg/xJs8nbUytoWWoPJdth7LwjgD/UXf7lbRiCCMR
+E23eyu80aZqV2GBn/8cTKrtsQEdECQA=
+=EYha
+-----END PGP SIGNATURE-----
 
-----------------------------------------------------------------
-Claudiu Beznea (1):
-      pinctrl: renesas: rzg2l: Fix locking in rzg2l_dt_subnode_to_map()
-
-Geert Uytterhoeven (2):
-      pinctrl: renesas: r8a779g0: Add missing SCIF_CLK2 pin group/function
-      pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
-
-Lad Prabhakar (3):
-      pinctrl: renesas: rzg2l: Improve code for readability
-      pinctrl: renesas: rzg2l: Include pinmap in RZG2L_GPIO_PORT_PACK() macro
-      pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28
-
- arch/riscv/boot/dts/renesas/r9a07g043f.dtsi |   4 +
- drivers/pinctrl/renesas/core.c              |   4 +-
- drivers/pinctrl/renesas/pfc-r8a779g0.c      |  14 ++
- drivers/pinctrl/renesas/pinctrl-rzg2l.c     | 307 +++++++++++++++++++++++-----
- 4 files changed, 276 insertions(+), 53 deletions(-)
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+--dna+SjxlSwr7Px85--
 
