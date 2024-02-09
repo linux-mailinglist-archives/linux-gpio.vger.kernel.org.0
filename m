@@ -1,373 +1,278 @@
-Return-Path: <linux-gpio+bounces-3134-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3135-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id D9A5084F170
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 09:37:28 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C627884F306
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 11:13:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 40700B261B0
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 08:37:26 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D84EB28F7B
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 10:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1BAE65BD5;
-	Fri,  9 Feb 2024 08:37:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C6C67E96;
+	Fri,  9 Feb 2024 10:13:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b="SAyVll43"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dOoNfV7h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.tq-group.com (mx1.tq-group.com [93.104.207.81])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29A9C523B;
-	Fri,  9 Feb 2024 08:37:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.104.207.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9A7367E89
+	for <linux-gpio@vger.kernel.org>; Fri,  9 Feb 2024 10:13:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707467829; cv=none; b=rG5hns45k8lhUWFpaIFSok7A6E3Biwq71WSQ0+W/QJ5WUZ1bV0kgNUjbOWq2kx9sPYQ+UcBDTsIfVg0hE5OtwlzlGK45ZTsMJzAfImcSeDVQXY0gZpHyyJV7qNyaNbHOYcDdgD6I+qFLeBg+p56fRru0JHs+W2nffoXBLiEr7z8=
+	t=1707473605; cv=none; b=s6YmhStT2SVYY3KBdy9u7/tKyrkT8YANlrruyBMV+bqcpQEGrBdrlOpgYN9v5kSUARcjNa1UVhEN8d1ijK9l64s3mcCIDZDnlUkgtbXvuFg6u5GKVYg3lYuUErvOGIq7c9o8YSjKMkJzP/ruWTDzHq7lhGeRCsc/VneeDDhaAL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707467829; c=relaxed/simple;
-	bh=Oh0SoSjI5VGJ7QZhqJzBYomJfQSHUKNku+PlPGCbYMc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mvKOHajZWxo7HL8c75kBIL7gZ8/yWn3Ojnu7t1AF8WYGo3Ok0Nev2+eForNUUI4twqi8RT7i3+vM+UbSNfOctmHViMX+LHam2h9Gqfe+EHeQkwb2Mxou40rKZWtX9zjmC5VMH9uirQvQozig3xqfclMIKfr67+QsHTLg3LgBzog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com; spf=pass smtp.mailfrom=ew.tq-group.com; dkim=pass (2048-bit key) header.d=tq-group.com header.i=@tq-group.com header.b=SAyVll43; arc=none smtp.client-ip=93.104.207.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ew.tq-group.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ew.tq-group.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=tq-group.com; i=@tq-group.com; q=dns/txt; s=key1;
-  t=1707467825; x=1739003825;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=HMejX3VOvtM/mNvTQc+8XsLkkiURtYyo0DALDxqQj/s=;
-  b=SAyVll43sRhw4ewwoaa1aDQWS3ut3HYEnAOc/80VdgpsqwnD8SGkpEDD
-   Fba0FnopHN+BbVDrIKxY+CkrqavjfmbWCd1+BvVkRSsLvdJJJc6WSqAas
-   nImE6KUpRwMz32bSMX/Do1E7VYLOEyh5x2YdH6KcEzQokiLWUoh+4I9BC
-   +WHBghx1cFh+MPFq8N2SO+sDZA3IGOFi/W6YKmlqzhNHpupxG2GJHwXdC
-   DUxTJ2TVkAjAzEUyXePTFsQc3l/q+7PHTu588q5j63mhBC28n2Seabcqu
-   5Aettc+/qCBuapU0uQZ1WLF1EMGU0MY6s9Rwh4ZDbtRw5ZTA1eyQjubBD
-   A==;
-X-IronPort-AV: E=Sophos;i="6.05,256,1701126000"; 
-   d="scan'208";a="35329826"
-Received: from vtuxmail01.tq-net.de ([10.115.0.20])
-  by mx1.tq-group.com with ESMTP; 09 Feb 2024 09:37:02 +0100
-Received: from steina-w.localnet (steina-w.tq-net.de [10.123.53.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by vtuxmail01.tq-net.de (Postfix) with ESMTPSA id 80AEF280075;
-	Fri,  9 Feb 2024 09:37:02 +0100 (CET)
-From: Alexander Stein <alexander.stein@ew.tq-group.com>
-To: andersson@kernel.org, linus.walleij@linaro.org, Maria Yu <quic_aiquny@quicinc.com>
-Cc: Maria Yu <quic_aiquny@quicinc.com>, kernel@quicinc.com, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH v4] pinctrl: Add lock to ensure the state atomization
-Date: Fri, 09 Feb 2024 09:37:03 +0100
-Message-ID: <8376074.NyiUUSuA9g@steina-w>
-Organization: TQ-Systems GmbH
-In-Reply-To: <20240202105854.26446-1-quic_aiquny@quicinc.com>
-References: <20240202105854.26446-1-quic_aiquny@quicinc.com>
+	s=arc-20240116; t=1707473605; c=relaxed/simple;
+	bh=tthmtcMKbnDxulBxFRWzWNGQQTIX09+UrPlGvFxG3Pg=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=iyxT33yxYVwKFCs8Cpwm0hIe344j/tL3wY9r+c12aPni5Z/8Xixam7meOS6xU1DMrkLabrHiz7db4gZ2Rzq6cV83H6NN/6nc78mj25UHymf8ojoJ1smDcMlOUWT4DC/KCi8fm1fEafi3uTK9Lxyql29NDT5WI3FDiCvGaoyFXT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dOoNfV7h; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707473603; x=1739009603;
+  h=date:from:to:cc:subject:message-id;
+  bh=tthmtcMKbnDxulBxFRWzWNGQQTIX09+UrPlGvFxG3Pg=;
+  b=dOoNfV7hRh9sQR1uKz230GEONzWbQBRn/boqNPgjht6V6BugMxDhoD+9
+   Si/xMhSqUNtkot5Jc4uPupD21nD1GFMLo8F23L7bVIax0KqcZsFk+cGm5
+   x86Tu/Qkf0yILMiKvp65AfTBJ2RhvYSYMahgGwtcV4pZVC1+vK4G2RRBm
+   V7h25Yjs+SZGwa+ZlB9RNmqn5IoXu33hhA9CJjwrd7XUIinLvcdEUJn7C
+   0MyYLwze7YJsd49zAQyIR0FoBifJO2O0B0y4fXgVwo15d9FzWVB+8dQMK
+   lur2OIljO85Dr9UdfRvPaWKasqoqHMrhLg4rVJSqFsfhIz3CzrZ9c0P+T
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10978"; a="1540343"
+X-IronPort-AV: E=Sophos;i="6.05,256,1701158400"; 
+   d="scan'208";a="1540343"
+Received: from fmviesa002.fm.intel.com ([10.60.135.142])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Feb 2024 02:13:22 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.05,256,1701158400"; 
+   d="scan'208";a="25136459"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by fmviesa002.fm.intel.com with ESMTP; 09 Feb 2024 02:13:20 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rYNsk-0004be-1T;
+	Fri, 09 Feb 2024 10:13:18 +0000
+Date: Fri, 09 Feb 2024 18:12:56 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ aab5c6f200238ac45001bec3d5494fff8438a8dc
+Message-ID: <202402091853.psvcpaPm-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
 
-Am Freitag, 2. Februar 2024, 11:58:54 CET schrieb Maria Yu:
-> Currently pinctrl_select_state is an export symbol and don't have
-> effective re-entrance protect design. During async probing of devices
-> it's possible to end up in pinctrl_select_state() from multiple
-> contexts simultaneously, so make it thread safe.
-> More over, when the real racy happened, the system frequently have
-> printk message like:
->   "not freeing pin xx (xxx) as part of deactivating group xxx - it is
-> already used for some other setting".
-> Finally the system crashed after the flood log.
-> Add per pinctrl lock to ensure the old state and new state transition
-> atomization.
-> Also move dev error print message outside the region with interrupts
-> disabled.
-> Use scoped guard to simplify the lock protection needed code.
->=20
-> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
-> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
-> ---
->  drivers/pinctrl/core.c | 143 +++++++++++++++++++++--------------------
->  drivers/pinctrl/core.h |   2 +
->  2 files changed, 75 insertions(+), 70 deletions(-)
->=20
-> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
-> index ee56856cb80c..1f7d001d4c1e 100644
-> --- a/drivers/pinctrl/core.c
-> +++ b/drivers/pinctrl/core.c
-> @@ -1061,6 +1061,7 @@ static struct pinctrl *create_pinctrl(struct device
-> *dev, p->dev =3D dev;
->  	INIT_LIST_HEAD(&p->states);
->  	INIT_LIST_HEAD(&p->dt_maps);
-> +	spin_lock_init(&p->lock);
->=20
->  	ret =3D pinctrl_dt_to_map(p, pctldev);
->  	if (ret < 0) {
-> @@ -1257,93 +1258,95 @@ static void pinctrl_link_add(struct pinctrl_dev
-> *pctldev, static int pinctrl_commit_state(struct pinctrl *p, struct
-> pinctrl_state *state) {
->  	struct pinctrl_setting *setting, *setting2;
-> -	struct pinctrl_state *old_state =3D READ_ONCE(p->state);
-> +	struct pinctrl_state *old_state;
->  	int ret;
->=20
-> -	if (old_state) {
-> -		/*
-> -		 * For each pinmux setting in the old state, forget SW's=20
-record
-> -		 * of mux owner for that pingroup. Any pingroups which are
-> -		 * still owned by the new state will be re-acquired by the=20
-call
-> -		 * to pinmux_enable_setting() in the loop below.
-> -		 */
-> -		list_for_each_entry(setting, &old_state->settings, node) {
-> -			if (setting->type !=3D PIN_MAP_TYPE_MUX_GROUP)
-> -				continue;
-> -			pinmux_disable_setting(setting);
-> +	scoped_guard(spinlock_irqsave, &p->lock) {
-> +		old_state =3D p->state;
-> +		if (old_state) {
-> +			/*
-> +			 * For each pinmux setting in the old state,=20
-forget SW's record
-> +			 * of mux owner for that pingroup. Any pingroups=20
-which are
-> +			 * still owned by the new state will be re-
-acquired by the call
-> +			 * to pinmux_enable_setting() in the loop below.
-> +			 */
-> +			list_for_each_entry(setting, &old_state-
->settings, node) {
-> +				if (setting->type !=3D=20
-PIN_MAP_TYPE_MUX_GROUP)
-> +					continue;
-> +				pinmux_disable_setting(setting);
-> +			}
->  		}
-> -	}
-> -
-> -	p->state =3D NULL;
->=20
-> -	/* Apply all the settings for the new state - pinmux first */
-> -	list_for_each_entry(setting, &state->settings, node) {
-> -		switch (setting->type) {
-> -		case PIN_MAP_TYPE_MUX_GROUP:
-> -			ret =3D pinmux_enable_setting(setting);
-> -			break;
-> -		case PIN_MAP_TYPE_CONFIGS_PIN:
-> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
-> -			ret =3D 0;
-> -			break;
-> -		default:
-> -			ret =3D -EINVAL;
-> -			break;
-> -		}
-> +		p->state =3D NULL;
->=20
-> -		if (ret < 0)
-> -			goto unapply_new_state;
-> +		/* Apply all the settings for the new state - pinmux first=20
-*/
-> +		list_for_each_entry(setting, &state->settings, node) {
-> +			switch (setting->type) {
-> +			case PIN_MAP_TYPE_MUX_GROUP:
-> +				ret =3D pinmux_enable_setting(setting);
-> +				break;
-> +			case PIN_MAP_TYPE_CONFIGS_PIN:
-> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
-> +				ret =3D 0;
-> +				break;
-> +			default:
-> +				ret =3D -EINVAL;
-> +				break;
-> +			}
->=20
-> -		/* Do not link hogs (circular dependency) */
-> -		if (p !=3D setting->pctldev->p)
-> -			pinctrl_link_add(setting->pctldev, p->dev);
-> -	}
-> +			if (ret < 0)
-> +				goto unapply_new_state;
->=20
-> -	/* Apply all the settings for the new state - pinconf after */
-> -	list_for_each_entry(setting, &state->settings, node) {
-> -		switch (setting->type) {
-> -		case PIN_MAP_TYPE_MUX_GROUP:
-> -			ret =3D 0;
-> -			break;
-> -		case PIN_MAP_TYPE_CONFIGS_PIN:
-> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
-> -			ret =3D pinconf_apply_setting(setting);
-> -			break;
-> -		default:
-> -			ret =3D -EINVAL;
-> -			break;
-> +			/* Do not link hogs (circular dependency) */
-> +			if (p !=3D setting->pctldev->p)
-> +				pinctrl_link_add(setting->pctldev, p-
->dev);
->  		}
->=20
-> -		if (ret < 0) {
-> -			goto unapply_new_state;
-> -		}
-> +		/* Apply all the settings for the new state - pinconf=20
-after */
-> +		list_for_each_entry(setting, &state->settings, node) {
-> +			switch (setting->type) {
-> +			case PIN_MAP_TYPE_MUX_GROUP:
-> +				ret =3D 0;
-> +				break;
-> +			case PIN_MAP_TYPE_CONFIGS_PIN:
-> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
-> +				ret =3D pinconf_apply_setting(setting);
-> +				break;
-> +			default:
-> +				ret =3D -EINVAL;
-> +				break;
-> +			}
->=20
-> -		/* Do not link hogs (circular dependency) */
-> -		if (p !=3D setting->pctldev->p)
-> -			pinctrl_link_add(setting->pctldev, p->dev);
-> -	}
-> +			if (ret < 0)
-> +				goto unapply_new_state;
->=20
-> -	p->state =3D state;
-> +			/* Do not link hogs (circular dependency) */
-> +			if (p !=3D setting->pctldev->p)
-> +				pinctrl_link_add(setting->pctldev, p-
->dev);
-> +		}
->=20
-> -	return 0;
-> +		p->state =3D state;
-> +
-> +		return 0;
->=20
->  unapply_new_state:
-> -	dev_err(p->dev, "Error applying setting, reverse things back\n");
->=20
-> -	list_for_each_entry(setting2, &state->settings, node) {
-> -		if (&setting2->node =3D=3D &setting->node)
-> -			break;
-> -		/*
-> -		 * All we can do here is pinmux_disable_setting.
-> -		 * That means that some pins are muxed differently now
-> -		 * than they were before applying the setting (We can't
-> -		 * "unmux a pin"!), but it's not a big deal since the pins
-> -		 * are free to be muxed by another apply_setting.
-> -		 */
-> -		if (setting2->type =3D=3D PIN_MAP_TYPE_MUX_GROUP)
-> -			pinmux_disable_setting(setting2);
-> +		list_for_each_entry(setting2, &state->settings, node) {
-> +			if (&setting2->node =3D=3D &setting->node)
-> +				break;
-> +			/*
-> +			 * All we can do here is pinmux_disable_setting.
-> +			 * That means that some pins are muxed=20
-differently now
-> +			 * than they were before applying the setting=20
-(We can't
-> +			 * "unmux a pin"!), but it's not a big deal=20
-since the pins
-> +			 * are free to be muxed by another=20
-apply_setting.
-> +			 */
-> +			if (setting2->type =3D=3D PIN_MAP_TYPE_MUX_GROUP)
-> +				pinmux_disable_setting(setting2);
-> +		}
->  	}
->=20
-> +	dev_err(p->dev, "Error applying setting, reverse things back\n");
->  	/* There's no infinite recursive loop here because p->state is NULL=20
-*/
->  	if (old_state)
->  		pinctrl_select_state(p, old_state);
-> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
-> index 837fd5bd903d..6844edd38b4a 100644
-> --- a/drivers/pinctrl/core.h
-> +++ b/drivers/pinctrl/core.h
-> @@ -12,6 +12,7 @@
->  #include <linux/list.h>
->  #include <linux/mutex.h>
->  #include <linux/radix-tree.h>
-> +#include <linux/spinlock.h>
->  #include <linux/types.h>
->=20
->  #include <linux/pinctrl/machine.h>
-> @@ -91,6 +92,7 @@ struct pinctrl {
->  	struct pinctrl_state *state;
->  	struct list_head dt_maps;
->  	struct kref users;
-> +	spinlock_t lock;
->  };
->=20
->  /**
->=20
-> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: aab5c6f200238ac45001bec3d5494fff8438a8dc  gpio: set device type for GPIO chips
 
-This breaks pinctrl-imx on imx8qxp:
+elapsed time: 1463m
 
-[    1.170727] imx8qxp-pinctrl system-controller:pinctrl: initialized IMX=20
-pinctrl driver
-[    1.283968] BUG: sleeping function called from invalid context at kernel/
-locking/mutex.c:283
-[    1.292089] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 70,=20
-name: kworker/u16:4
-[    1.300341] preempt_count: 1, expected: 0
-[    1.304337] RCU nest depth: 0, expected: 0
-[    1.308423] CPU: 2 PID: 70 Comm: kworker/u16:4 Not tainted 6.8.0-rc3-
-next-20240209+ #2267 0b2aeebc4d64f1aef3abdd5fede2a9b5162eb867
-[    1.320148] Hardware name: TQ-Systems i.MX8QXP TQMa8XQP on MBa8Xx (DT)
-[    1.326667] Workqueue: events_unbound deferred_probe_work_func
-[    1.332486] Call trace:
-[    1.334918]  dump_backtrace+0x90/0x10c
-[    1.338653]  show_stack+0x14/0x1c
-[    1.341954]  dump_stack_lvl+0x6c/0x80
-[    1.345603]  dump_stack+0x14/0x1c
-[    1.348904]  __might_resched+0x108/0x160
-[    1.352813]  __might_sleep+0x58/0xb0
-[    1.356375]  mutex_lock+0x20/0x74
-[    1.359676]  imx_scu_call_rpc+0x44/0x2e8
-[    1.363586]  imx_pinconf_set_scu+0x84/0x150
-[    1.367756]  imx_pinconf_set+0x48/0x7c
-[    1.371491]  pinconf_apply_setting+0x90/0x110
-[    1.375835]  pinctrl_commit_state+0xcc/0x28c
-[    1.380092]  pinctrl_select_state+0x18/0x28
-[    1.384262]  pinctrl_bind_pins+0x1e4/0x26c
-[    1.388345]  really_probe+0x60/0x3e0
-[    1.391907]  __driver_probe_device+0x84/0x198
-[    1.396251]  driver_probe_device+0x38/0x150
-[    1.400421]  __device_attach_driver+0xcc/0x194
-[    1.404851]  bus_for_each_drv+0x80/0xdc
-[    1.408674]  __device_attach+0x9c/0x1d0
-[    1.412496]  device_initial_probe+0x10/0x18
-[    1.416666]  bus_probe_device+0xa4/0xa8
-[    1.420489]  deferred_probe_work_func+0x9c/0xe8
-[    1.425006]  process_one_work+0x14c/0x40c
-[    1.429002]  worker_thread+0x304/0x414
-[    1.432738]  kthread+0xf4/0x100
-[    1.435866]  ret_from_fork+0x10/0x20
+configs tested: 189
+configs skipped: 3
 
-With this commit pin_config_set callbacks need to be atomic suddenly which =
-is=20
-a no-go for any device attached to i2c or spi and in this case IPC RPC.
-Once reverted systems start normally again.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Best regards,
-Alexander
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240209   gcc  
+arc                   randconfig-002-20240209   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                            hisi_defconfig   gcc  
+arm                        multi_v7_defconfig   gcc  
+arm                   randconfig-001-20240209   clang
+arm                   randconfig-002-20240209   gcc  
+arm                   randconfig-003-20240209   gcc  
+arm                   randconfig-004-20240209   gcc  
+arm                    vt8500_v6_v7_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240209   clang
+arm64                 randconfig-002-20240209   clang
+arm64                 randconfig-003-20240209   clang
+arm64                 randconfig-004-20240209   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240209   gcc  
+csky                  randconfig-002-20240209   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240209   clang
+hexagon               randconfig-002-20240209   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240208   gcc  
+i386         buildonly-randconfig-002-20240208   clang
+i386         buildonly-randconfig-003-20240208   gcc  
+i386         buildonly-randconfig-003-20240209   gcc  
+i386         buildonly-randconfig-004-20240208   gcc  
+i386         buildonly-randconfig-005-20240208   gcc  
+i386         buildonly-randconfig-006-20240208   gcc  
+i386         buildonly-randconfig-006-20240209   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240208   gcc  
+i386                  randconfig-002-20240208   gcc  
+i386                  randconfig-002-20240209   gcc  
+i386                  randconfig-003-20240208   gcc  
+i386                  randconfig-004-20240208   clang
+i386                  randconfig-005-20240208   gcc  
+i386                  randconfig-006-20240208   gcc  
+i386                  randconfig-006-20240209   gcc  
+i386                  randconfig-011-20240208   clang
+i386                  randconfig-011-20240209   gcc  
+i386                  randconfig-012-20240208   clang
+i386                  randconfig-012-20240209   gcc  
+i386                  randconfig-013-20240208   clang
+i386                  randconfig-014-20240208   clang
+i386                  randconfig-014-20240209   gcc  
+i386                  randconfig-015-20240208   clang
+i386                  randconfig-015-20240209   gcc  
+i386                  randconfig-016-20240208   gcc  
+i386                  randconfig-016-20240209   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240209   gcc  
+loongarch             randconfig-002-20240209   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          amiga_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+m68k                        mvme147_defconfig   gcc  
+m68k                            q40_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240209   gcc  
+nios2                 randconfig-002-20240209   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240209   gcc  
+parisc                randconfig-002-20240209   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                     ep8248e_defconfig   gcc  
+powerpc                  iss476-smp_defconfig   gcc  
+powerpc               randconfig-001-20240209   clang
+powerpc               randconfig-002-20240209   clang
+powerpc               randconfig-003-20240209   gcc  
+powerpc64             randconfig-001-20240209   clang
+powerpc64             randconfig-002-20240209   clang
+powerpc64             randconfig-003-20240209   clang
+riscv                            alldefconfig   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240209   clang
+riscv                 randconfig-002-20240209   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240209   gcc  
+s390                  randconfig-002-20240209   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240209   gcc  
+sh                    randconfig-002-20240209   gcc  
+sh                           se7722_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                       sparc64_defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240209   gcc  
+sparc64               randconfig-002-20240209   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                    randconfig-001-20240209   gcc  
+um                    randconfig-002-20240209   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240209   gcc  
+x86_64       buildonly-randconfig-002-20240209   gcc  
+x86_64       buildonly-randconfig-003-20240209   clang
+x86_64       buildonly-randconfig-004-20240209   gcc  
+x86_64       buildonly-randconfig-005-20240209   clang
+x86_64       buildonly-randconfig-006-20240209   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240209   clang
+x86_64                randconfig-002-20240209   gcc  
+x86_64                randconfig-003-20240209   gcc  
+x86_64                randconfig-004-20240209   clang
+x86_64                randconfig-005-20240209   gcc  
+x86_64                randconfig-006-20240209   gcc  
+x86_64                randconfig-011-20240209   clang
+x86_64                randconfig-012-20240209   clang
+x86_64                randconfig-013-20240209   gcc  
+x86_64                randconfig-014-20240209   clang
+x86_64                randconfig-015-20240209   gcc  
+x86_64                randconfig-016-20240209   clang
+x86_64                randconfig-071-20240209   gcc  
+x86_64                randconfig-072-20240209   clang
+x86_64                randconfig-073-20240209   clang
+x86_64                randconfig-074-20240209   gcc  
+x86_64                randconfig-075-20240209   gcc  
+x86_64                randconfig-076-20240209   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240209   gcc  
 
-=2D-=20
-TQ-Systems GmbH | M=FChlstra=DFe 2, Gut Delling | 82229 Seefeld, Germany
-Amtsgericht M=FCnchen, HRB 105018
-Gesch=E4ftsf=FChrer: Detlef Schneider, R=FCdiger Stahl, Stefan Schneider
-http://www.tq-group.com/
-
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
