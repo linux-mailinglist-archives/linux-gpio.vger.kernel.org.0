@@ -1,74 +1,52 @@
-Return-Path: <linux-gpio+bounces-3132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F14C84F009
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 06:55:03 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C978784F0F7
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 08:45:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5467F1C24C3E
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 05:55:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6797A1F25E48
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 07:45:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DBD957301;
-	Fri,  9 Feb 2024 05:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A690B65BAD;
+	Fri,  9 Feb 2024 07:44:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="cy/0XMGb"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HL/3DDgq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACB856B94
-	for <linux-gpio@vger.kernel.org>; Fri,  9 Feb 2024 05:54:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A578464AB0;
+	Fri,  9 Feb 2024 07:44:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707458096; cv=none; b=MPig86g5yOJ801iZJf6vT3rn0D3qoZisLrSYlbdSarz9Y1deRcFcDIG4SGrzm5WD3bQzZzIHYA6PrNCqqOpitmXS5o8c2OrycrtA0I+4FTtdq6ONRFquKCub6M+3VqbFbDT5X0I9KCD8VM6RYRxmfrujrwTl+Ma1oJ1V5T8NvaE=
+	t=1707464696; cv=none; b=qqRWTKV++JMM/PqbGIcwP+Oj5BpDTEmsA3QsKF1/H4RdOjuTxqhHm4i4maJzXLr9ST/vLvDlcJN6gs4DAdfZT94pUe56h67WGky6PdOq1u4Dq/Un3oKZje9lbIj5O5X1vKYOV1isSoc4/xH6G9dtqR9zLOUS6ivu9a4j1kssLvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707458096; c=relaxed/simple;
-	bh=6O8nnoLFzLnwrH6TEG7OKKLM/CWovHK2pvgd9GTlM+o=;
+	s=arc-20240116; t=1707464696; c=relaxed/simple;
+	bh=6/pY/D/QQEUjxYA0ri1gHUZDiS7C10pDYQcPTYirTgg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kDCiN3JV/Q1A+m7pzo9pDRkqwL5eg3TL6UJ8iOqr9+F6LrmljRgAI43TAIHuj3YCX1r09p1NWQq43edrgTUfg0sB5puCB+pPnKYvUx5Rzb70pv5BqeZKZYDLAEBrj8KTccZtfnJGHzg+DZe4qJ7dVsmJ+oxML+/OtFlak1GfMgU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=cy/0XMGb; arc=none smtp.client-ip=209.85.221.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33b65881bd0so76592f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 08 Feb 2024 21:54:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1707458092; x=1708062892; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=NHy3VGid497O23zJdu4K5s/J5uKQU2yHP46MdF54AZI=;
-        b=cy/0XMGbR1xqhphlo5YTxJ73BcLObnVTw5shjcV1fGZnCWhWfO+Mbjjw0mDXld/aHY
-         SkpekrfFD7Zr0U0nfZohZC7cIwYd43lDZrZ849xIS2q7Nd1oWdgXpuhdZC8U9wJtC2mb
-         mFmr9tI6NZtykrZ0sUEka+HLRvO1UI90e3KJ8UTdTbJU37QlVXbI9jFKOXYC5daGmk3P
-         dWZRN7LO9P4hekAc5FvJ5ASCzeaIzOZJ5umesvFVQ4amsgnZgZfh3HvRXMBcodlsHDH4
-         sfk3U++xCFe97PE3XswrHjaFEvEF0WUfp853eFx6BQ+/owSLTX1h2OpK7ZJlO78dXeqy
-         7iSQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707458092; x=1708062892;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=NHy3VGid497O23zJdu4K5s/J5uKQU2yHP46MdF54AZI=;
-        b=aN2OKiJ3wVJl9ByDX1yeb3pnmwqC+dVRJY+9FtVngj9yK1czDTrqrRIBXqxrk2cMZh
-         /caSzaqc2+kQY3MY3Ff1rkO/76JM6TRS/Wr6aOtk9oLtxHoMXZVg9rskTYNKFJz6ScQJ
-         GHXW3Y466GYjBzBSjWVYuxnDZgjrAQ+9PuaDSQjhPo9SowmRjq4fDNNLVRoT9jue5btn
-         ScWZlpjUcvaS9+isUr786lh3GO9RtKtx3rMpdXnFiO5uS2pDeFdIiHWExVo5TWWg7CXY
-         PY/DKgJCvoqVzfJrSMvW14M9EscV51bd9jo91D7kVAYKityygqoa6JEJqwlSgN19PreW
-         RCtA==
-X-Gm-Message-State: AOJu0Yw9WfdSlAY7Zi2MDHVkdRNcqtDVqzxjmKOKZWXKr4VDJcyvDnvs
-	zbpf0tdSHLekMjqTAWG13gkhOp+InPNzQq5U2Zka6ITH39Gg2xewQ5cKp46vkIQ=
-X-Google-Smtp-Source: AGHT+IEuUxs9lAPfJ/sLN4UiG4fjRtUUI244mYYOE5/0j1dk6EM85cWi7PJgaar6+vsAy8WACWYalA==
-X-Received: by 2002:a5d:610e:0:b0:33b:6073:335 with SMTP id v14-20020a5d610e000000b0033b60730335mr308406wrt.55.1707458092359;
-        Thu, 08 Feb 2024 21:54:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCX1LTGYuUHSatTm8Me5EcYa9WUXtVNfzARxigi860VQ5Rq7gIsMBnx0vA+gwoeJNxbCkKIxdaGe+FscX6cDei8pfhGg7XfsgCIywQVrSdywbTCUMDb2xrxHYGGLzCMRAzUg1LIIqcfEAlw4XSWGsOOr+w0R69BTgdEIymGST8Y23aGlmGpqevfwINrzDxfUTaqepBaglGKG2wBO5Z52fgsiVfghIrsb4OewvS19Hw3QqhzB3tGlu7Uw8jbL7F8zBPM5oW3iYhDp9PD6uCSvddmB2gOpNEi/KZdixLLOAAcsKdg3A47oYlXExfiV8z03wsUNQZsYy/2vLJn5pMgpLNUjIGeIDY9NPC5GXjc5Pwy8pPiE3Kj2ijYLa46VzwO+DccNT791McPS9Bwo5XrnpI/QJCExCGFDYmPGmA==
-Received: from [192.168.50.4] ([82.78.167.124])
-        by smtp.gmail.com with ESMTPSA id bv28-20020a0560001f1c00b0033b4335dce5sm921517wrb.85.2024.02.08.21.54.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 08 Feb 2024 21:54:52 -0800 (PST)
-Message-ID: <b16a15fb-bf7b-42db-a54b-795caac8a3f1@tuxon.dev>
-Date: Fri, 9 Feb 2024 07:54:49 +0200
+	 In-Reply-To:Content-Type; b=i3QMaLpbkORPvp6+bPwo8qOjzZNAJwRMj7Ej3AoxO4bwy1M/imL7PHuTN4anqhfOPsiLZKITtCWrQEh7iu98rcEWRjz/Iji8PjT6EV6q+PLHpYTAGvrvj5M8AabCFPifYq1/72Bh/tuPjlRtjBi272YCuVmkSRuSacISAUkYkf0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HL/3DDgq; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 7E24360005;
+	Fri,  9 Feb 2024 07:44:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1707464684;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=G/yGVB4S9XN8g+AahJ4UZsgKIptGOzEicK0dEzXmeqk=;
+	b=HL/3DDgqSUW2klhjMqzXqFo7d0LD8T34GKYdq81YEKyfDizBqYpkX52LFNRh01hZJS8Fsf
+	lR8gcJtio9GhiFtcV/qaUaiK3gTh7xmD0LzKhHKE/kt58Qj7GXSD5YUzVwkOIGNBT7QfLH
+	MipYb28nCPctAC/gwP31mBynW2l4eSaIJz1xOhAeEzQN2H0wP9h4BbnGs0vvVFgbAnNkjQ
+	5wEBdtxtaKZ1DDo7jr8AuQ9ogx7G1jLcMQCHkbTi+rRT7cYsoghyxBaUeaOx+R6YL4oUto
+	/8h9N1v0LXUuYd2cUb1TCZeJ0iVAFiXXqCNVau0M5jAJm1QI/geiGugZ6mnnoA==
+Message-ID: <68d4a1bb-5b40-47fe-a117-647d77009b43@bootlin.com>
+Date: Fri, 9 Feb 2024 08:44:39 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,85 +54,76 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] pinctrl: renesas: rzg2l: Add suspend/resume support
+Subject: Re: [PATCH 01/14] gpio: pca953x: move suspend/resume to
+ suspend_noirq/resume_noirq
 Content-Language: en-US
-To: geert+renesas@glider.be, magnus.damm@gmail.com, robh@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- linus.walleij@linaro.org
-Cc: linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240208135629.2840932-1-claudiu.beznea.uj@bp.renesas.com>
- <20240208135629.2840932-2-claudiu.beznea.uj@bp.renesas.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <20240208135629.2840932-2-claudiu.beznea.uj@bp.renesas.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Tony Lindgren <tony@atomide.com>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andy@kernel.org>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>, Tom Joseph <tjoseph@cadence.com>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v1-0-84e55da52400@bootlin.com>
+ <20240102-j7200-pcie-s2r-v1-1-84e55da52400@bootlin.com>
+ <20240116074333.GO5185@atomide.com>
+ <31c42f08-7d5e-4b91-87e9-bfc7e2cfdefe@bootlin.com>
+ <CACRpkdYUVbFoDq91uLbUy8twtG_AiD+CY2+nqzCyHV7ZyBC3sA@mail.gmail.com>
+ <95032042-787e-494a-bad9-81b62653de52@bootlin.com>
+ <CACRpkdY2wiw1zH8FsEv7S1FW044PBSXpLPqanF5yyH1R4oteEA@mail.gmail.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <CACRpkdY2wiw1zH8FsEv7S1FW044PBSXpLPqanF5yyH1R4oteEA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-
-
-On 08.02.2024 15:56, Claudiu wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On 2/8/24 22:29, Linus Walleij wrote:
+> On Thu, Feb 8, 2024 at 5:19 PM Thomas Richard
+> <thomas.richard@bootlin.com> wrote:
+>> On 1/28/24 01:12, Linus Walleij wrote:
 > 
-> pinctrl-rzg2l driver is used on RZ/G3S which support deep sleep states
-> where power to most of the SoC components is turned off.
+>>> I guess you could define both pca953x_suspend() and
+>>> pca953x_suspend_noirq() and selectively bail out on one
+>>> path on some systems?
+>>
+>> Yes.
+>>
+>> What do you think if I use a property like for example "ti,pm-noirq" to
+>> select the right path ?
+>> Is a property relevant for this use case ?
 > 
-> For this add suspend/resume support. This involves saving and restoring
-> configured registers along with disabling clock in case there is no pin
-> configured as wakeup sources.
+> That's a Linux-specific property and that's useless for other operating
+> systems and not normally allowed. PM noirq is just some Linux thing.
 > 
-> To save/restore registers 2 caches were allocated: one for GPIO pins and
-> one for dedicated pins.
+> *FIRST* we should check if putting the callbacks to noirq is fine with
+> other systems too, and I don't see why not. Perhaps we need to even
+> merge it if we don't get any test results.
 > 
-> On suspend path the pin controller registers are saved and if none of the
-> pins are configured as wakeup sources the pinctrl clock is disabled.
-> Otherwise it remains on.
-> 
-> On resume path the configuration is done as follows:
-> 1/ setup PFCs by writing to registers on pin based accesses
-> 2/ setup GPIOs by writing to registers on port based accesses and
->    following configuration steps specified in hardware manual
-> 3/ setup dedicated pins by writing to registers on port based accesses
-> 4/ setup interrupts.
-> 
-> Because interrupt signals are routed to IA55 interrupt controller and
-> IA55 interrupt controller resumes before pin controller, patch restores
-> also the configured interrupts just after pin settings are restored to
-> avoid invalid interrupts while resuming.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
-[ ... ]
+> If it doesn't work we can think of other options.
 
->  
-> +/**
-> + * struct rzg2l_pinctrl_reg_cache - register cache structure (to be used in suspend/resume)
-> + * @p: P registers cache
-> + * @pm: PM registers cache
-> + * @pmc: PMC registers cache
-> + * @pfc: PFC registers cache
-> + * @iolh: IOLH registers cache
-> + * @ien: IEN registers cache
-> + * @sd_ch: SD_CH registers cache
-> + * @eth_poc: ET_POC registers cache
-> + * @eth_mode: ETH_MODE register cache
-> + * @qspi: QSPI registers cache
-> + */
-> +struct rzg2l_pinctrl_reg_cache {
-> +	u8	*p;
-> +	u16	*pm;
-> +	u8	*pmc;
-> +	u32	*pfc;
-> +	u32	*iolh[2];
-> +	u32	*ien[2];
+I think all systems using a i2c controller which uses autosuspend should
+be impacted.
+I guess a patch (like I did in this series for i2c-omap [1]) should be
+applied for all i2c controller which use autosuspend.
 
+[1]
+https://lore.kernel.org/all/hqnxyffdsiqz5t43bexcqrwmynpjubxbzjchjaagxecso75dc7@y7lznovxg3go/
 
-> +	u32	sd_ch[2];
-> +	u32	eth_poc[2];
-> +	u32	eth_mode;
-> +	u32	qspi;
+Regards,
 
-I missed it, u8 should be enough for these.
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-[ ... ]
 
