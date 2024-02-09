@@ -1,106 +1,79 @@
-Return-Path: <linux-gpio+bounces-3160-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3161-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62C9E84FB1E
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 18:35:43 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 830DC84FC39
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 19:46:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 041551F26112
-	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 17:35:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7EF6B1C2144F
+	for <lists+linux-gpio@lfdr.de>; Fri,  9 Feb 2024 18:46:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B8A37EF00;
-	Fri,  9 Feb 2024 17:35:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3457484A3D;
+	Fri,  9 Feb 2024 18:46:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A+TGZY+V"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cT8WlMVX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fllv0016.ext.ti.com (fllv0016.ext.ti.com [198.47.19.142])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4232853398;
-	Fri,  9 Feb 2024 17:35:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.142
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E650E84A27;
+	Fri,  9 Feb 2024 18:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707500135; cv=none; b=rF/lJQXP8zRD03MFkpBBJ02GXdGWDo7mSj1bwqLjdSL/OVSWKnefqygoTHaTvvBrVIy3eUsR2Op2RKPC57eFrAofBn/SVWwyn4odXeIL4c6SNay5jAXBohCx4rwkHwNGSn7aHeYRfk1kYdBWowsGQ3z7OW3OMILGRlK/SX0ahOU=
+	t=1707504383; cv=none; b=s2WviY8/zySbgAtlb1cvJ4bBYIdqJa2p8zwq6+FAf1KE+txoyyhN3BOPBdWmOJEG2HddBXsoPT8I1uVL7WMqAn+7JS2SIrIB7iyJIV3xDALZC/5rM2fFZnNFRrF/zNyiUT8Yy4oA0Vw0mWSwyOkOrCTwfyaFFxagp/FXy8SAFdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707500135; c=relaxed/simple;
-	bh=L7LVF0xgSx/tkSIKccTfmZ8enVLgMwrvXD7JYedesak=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LSGzCtGT33ZA8aO+8E2B77Wu1l95sAOQQGbvqiIU/RkYwaPOUEb3+TNdLCi4IZb9LhZe+Yg3bsvMxsJbUSB8raXwdrZ+boRmT8iqeN2ftof70J2nGkgG5oUOdL+Cin0ph+lxkYXUGQHXcwkEmgL1Ev0yK2mI/pPEyhs3ScArPIk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A+TGZY+V; arc=none smtp.client-ip=198.47.19.142
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-	by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id 419HZI1Z110129;
-	Fri, 9 Feb 2024 11:35:18 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1707500118;
-	bh=u1wp8/LboIEGg7Ak8EZDY4zBL+bnAzpumV/bqdbzzrc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=A+TGZY+V93KJK+E+iweZnKfY4drbX/7o2P35KJmiSVbg6Z7ktF6bvCyd66ZW6SHoW
-	 9+TEQ8cDbVic2UxSWAaz6WK0SgyDWzb7BXPiok+Lx4rDjVtQT5t45IE7h3nf7B+OvC
-	 ajH55OpUOu2aFsugWwn/fy9AghFy/+eIy0ciBzec=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-	by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 419HZIcC010482
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 9 Feb 2024 11:35:18 -0600
-Received: from DLEE105.ent.ti.com (157.170.170.35) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 9
- Feb 2024 11:35:17 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DLEE105.ent.ti.com
- (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 9 Feb 2024 11:35:17 -0600
-Received: from localhost (uda0133052.dhcp.ti.com [128.247.81.232])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 419HZHa6069048;
-	Fri, 9 Feb 2024 11:35:17 -0600
-Date: Fri, 9 Feb 2024 11:35:17 -0600
-From: Nishanth Menon <nm@ti.com>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>
-CC: <linux-kernel@vger.kernel.org>, <m.nirmaladevi@ltts.com>, <lee@kernel.org>,
-        <robh+dt@kernel.org>, <krzysztof.kozlowski+dt@linaro.org>,
-        <conor+dt@kernel.org>, <jpanis@baylibre.com>,
-        <devicetree@vger.kernel.org>, <arnd@arndb.de>,
-        <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>,
-        <broonie@kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-        <vigneshr@ti.com>, <kristo@kernel.org>
-Subject: Re: [RESEND PATCH v1 01/13] mfd: tps6594: Add register definitions
- for TI TPS65224 PMIC
-Message-ID: <20240209173517.i67qttasxjum7oek@strum>
-References: <20240208105343.1212902-1-bhargav.r@ltts.com>
- <20240208105343.1212902-2-bhargav.r@ltts.com>
+	s=arc-20240116; t=1707504383; c=relaxed/simple;
+	bh=wRgjzBfywx9qvPxiNdlgxQ8FPrnTeFUAP3ziQu6coWY=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=bm4OXTJg6ysgGhzV+YOeb4UTbEDIBu+04p/sAY9TZPuJwGD3JiO7j1JBdhAafOCOuVu0xAsMbFlnrwhzYTuiq4oElpRPz9QjbFAiknDgs6QafuMNiM3aHELUPMMgph5qGIOsVbKE0tOta+6e5if0xQ/KlJ4YuXvjYqzRqP5kqrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cT8WlMVX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id BF64AC433B1;
+	Fri,  9 Feb 2024 18:46:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707504382;
+	bh=wRgjzBfywx9qvPxiNdlgxQ8FPrnTeFUAP3ziQu6coWY=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=cT8WlMVXivbsyYb/F+pC0rnGm/mpNQIoOsqnmQ8FMoyTbuqDpw6DbxYW48RaFw/2e
+	 ix3xyFeSGVDTWnb+oGJmiaVOESQDApJ+0TR3984py6B5lHS8NzivhoCvOPXZJOkEM2
+	 Cke4CL78c//cbPBvD7ssE66SQvi7tp3/2SUK9+XLZTsMVF7SHAu1YcUXm+pLvVRcsM
+	 lfSbS+KB5aaBF5guse/3pheDUjhFhWBrPiKc+sHljP7V64a/FyUuQzqZ9IXqIteNw0
+	 2x+GdGzEx3eEQMDEKTOLrL93c1Lr5mX21puwPT/RHM517FSUqiMBscB3lFxRKK+tFL
+	 bgoxqvLMqXuYg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id AB5D7E2F2FC;
+	Fri,  9 Feb 2024 18:46:22 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.8-rc4
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240209123117.25215-1-brgl@bgdev.pl>
+References: <20240209123117.25215-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240209123117.25215-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc4
+X-PR-Tracked-Commit-Id: 2526dffc6d65cffa32b88556bd68e4e72e889a55
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 4a8e4b3c2741a46c7c03c1726a124a750ba06905
+Message-Id: <170750438269.872.15150127355951360813.pr-tracker-bot@kernel.org>
+Date: Fri, 09 Feb 2024 18:46:22 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240208105343.1212902-2-bhargav.r@ltts.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-On 16:23-20240208, Bhargav Raviprakash wrote:
-> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> 
-> Extend TPS6594 PMIC register and field definitions to support TPS65224
-> power management IC.
-> 
-> TPS65224 is software compatible to TPS6594 and can re-use many of the
-> same definitions, new definitions are added to support additional
-> controls available on TPS65224.
-> 
-> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+The pull request you sent on Fri,  9 Feb 2024 13:31:17 +0100:
 
-You've got to Sign-off as part of recommendations read [1]
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc4
 
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/4a8e4b3c2741a46c7c03c1726a124a750ba06905
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/process/submitting-patches.rst#n451
+Thank you!
+
 -- 
-Regards,
-Nishanth Menon
-Key (0xDDB5849D1736249D) / Fingerprint: F8A2 8693 54EB 8232 17A3  1A34 DDB5 849D 1736 249D
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
