@@ -1,69 +1,69 @@
-Return-Path: <linux-gpio+bounces-3164-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3165-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 504B68502F8
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 08:10:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B9D678502FB
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 08:10:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BFFCD1F24431
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 07:10:15 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2ED8E1F242B5
+	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 07:10:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2DF033CDF;
-	Sat, 10 Feb 2024 07:09:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98FF529424;
+	Sat, 10 Feb 2024 07:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ncUZbEt4"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BHBbMjYP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFCBA2555B
-	for <linux-gpio@vger.kernel.org>; Sat, 10 Feb 2024 07:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DADC2B9CA
+	for <linux-gpio@vger.kernel.org>; Sat, 10 Feb 2024 07:09:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707548984; cv=none; b=AZkea+QRig/3iHJXZd0S+ZtDe1KrXT2hbUhVxbcuhi98W1QsUHiq2VFkxoUKn17xRDU4gxgkA6sLH+is06S5jZHv+l2DK8UmO1K9bWZbe/nughrCkVzSAjbr4jCre5x316zw6+eDLROoQdbh8j8EYOkN1HoN+xzdjJ+ckfAWctU=
+	t=1707548985; cv=none; b=FMvbwpGfwqkpVnOQ1FpsUQVYcizjn4BF4EXc2hVMjJExwEE2uX5TwLkk+TZM1Y2Y5j6CdwjK1JmxBIml2QZSeBZ5PXTZomoZQuuVedVohMTQTkuIBlwdfOE89zbltyqU06yhVK9Uhhs6JDh4vOybMA4WjcEtlVvsG4uiVsT4pk4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707548984; c=relaxed/simple;
-	bh=WXij6tQJVWGfA0jVq1TwtVWpf8MLUZF7maDtetHyCq8=;
+	s=arc-20240116; t=1707548985; c=relaxed/simple;
+	bh=gPaBS0oQVJX1UXa+pMAzOknoNywuSAjjRI9YDTj0/xk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=N0wINQOZDv9QaPXGmJ9P+tEBEdfJijH7+Hjn1qSjMXfFuO0mQ0lpQoyXAgRX75zHfwI/OrIvaGzLXXka3YmbvcRoH6vaEfwQMW+1HzNjyy6+qGTxLU7XrkoWrsID8s+6EiOm/foMCW7mMXfdQlW8b/auzH2drYo5KL7sAC1896w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=ncUZbEt4; arc=none smtp.client-ip=209.85.210.180
+	 MIME-Version; b=mDFyBGw+DcfZg7T2Em11asIKnA8JUbkF/arELlQl2lvBrGlk7hyPZ1663eT6jm2G18sWR+RZ046KzcAJXl98tiutYCIX/mOZ0wayfCBM/2owXgnOWWbW5lICqW/CsnkUSvwQNyV+axW5yDqcjkw722+ehRb0cakokaY2OzmKAeY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BHBbMjYP; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e0a25bb226so401236b3a.3
-        for <linux-gpio@vger.kernel.org>; Fri, 09 Feb 2024 23:09:41 -0800 (PST)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1d918008b99so13127425ad.3
+        for <linux-gpio@vger.kernel.org>; Fri, 09 Feb 2024 23:09:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707548981; x=1708153781; darn=vger.kernel.org;
+        d=chromium.org; s=google; t=1707548983; x=1708153783; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=q+i5FQpJgQZM9grJNtVDZ+U7TB243p9ucbtyKq1qJsw=;
-        b=ncUZbEt4RjEMhyWQ/qi54rYwzgQG+iBLYaLTjLTBugzcZVXaAN5z/Rpncyh3TX3O+Q
-         LFMQc0L1Jpr+FaLKQrZ5e3CFeNAGiIbZkq2xKpegEd9LBvZGDyMuMYyCT0M9ewWzNhKo
-         CoV/UI1iN6oLOfEO5c6GiG1wVK3KCMOAImUIY=
+        bh=o84QHSqn+ObMNs1MLh+nj630dEtvLSjAJedEuzESKd8=;
+        b=BHBbMjYPKEFlgeJHbV5ap6HI5KNG+EKrdD1Wa+1KDF41YcPxxSB7DOclm+OwpyFUN9
+         uDqKnenXFCJJ+I8cmJbAMl0UhgPlL1RzwArbElHlA0AfFlUpK81FSBYJ/mVC96efB3vy
+         w3ByCcFHMRrTHiUA+4a0gwL+excBDgBUSvMpg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707548981; x=1708153781;
+        d=1e100.net; s=20230601; t=1707548983; x=1708153783;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=q+i5FQpJgQZM9grJNtVDZ+U7TB243p9ucbtyKq1qJsw=;
-        b=QEMv2mShf/DKNJxxfsyYqy3T5tv4x9NEj0hxqEniVEoJrloXn9Kk3tx8ObklRe03Oo
-         fPX0Qo0Y1nZh0gGB2Fy0Sn3BYJioHbsoCyNAWs0U5lsClm0foIoYPfbBP96ZRtqM1ROJ
-         zNzuVojfcFQUL1PXEDsEFMtA0k4vdTLtVb5PWgnRYW/N/LDb+9xHSWUH9AmWkB31yUB/
-         zFeDdIKEMoyQUJtt6FMouBIV93ol+kTaIGZKHFDUU3iK+nBvOxGUfhDu9vPGh+L8/vot
-         TCSS1AnygXXl2SPP05YFsz+YYqkxJlzPbkXDpwDjHMJO+yH87NGTI+nQFhqJL1iG8x63
-         OXkA==
-X-Gm-Message-State: AOJu0Yx0eb2RLRyCC+LdNwu1M3UXBvI9VnBhAPa+6MMe/+dSJ4nww6nG
-	hY96/lOUucvG70dA2qign+B/6iO5R5UX9OitmSF6xvHZKpSNUnuGEHGmc7KX9Q==
-X-Google-Smtp-Source: AGHT+IGJpsGseEF23OonuLcKGtLB9bLVO6H9DZbcYv6zzMtyY1WMMmBxT79RXg/o+l1OjBFEjT7+5g==
-X-Received: by 2002:a05:6a00:990:b0:6e0:6c89:e30b with SMTP id u16-20020a056a00099000b006e06c89e30bmr2062527pfg.19.1707548981026;
-        Fri, 09 Feb 2024 23:09:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXfaOQFPe2ptrEFchii8p8d5wFLx6aGOVBzgPCXZjXz6vMArnzaBrz54ebBSrY7Rc7Zb7W2VUAj9BdKIpE0W9dkz5cxBOzIBdQ4QU0l/WvK0O7VjhRWZMwqOXXJ5ykMFpmTSqgratP/faTwzXpvQwn39FSfIVAhwQwraGaTVviZc4cp5j3/BD5CdKGz4B69dvTKZDYXQVUFxLlqnjUvGKFk/DOrZ2zHtEL4xejpVDpzr3Dej3ggRlW+HoqkdCsWPepKV9T+nn9nGOIx4uY7HkdsNGhKIBRFHvFYOERt3EAfj1LY3bkRx0U41mzkKYcK1byjGEHYtEjLSBA3XWVqiZEGmSVaJTnW7QekqO11p2FvukW0hU6g6S8g5ev5eGJBl644kRvLYhHhmgIt237GF/RFZeOSkp6lJLy6lhPpBTyHf9wAeXRDf4/GfAKkUsAuhXX6e5pxcnu723SER6nLBovy4WVE9TkC2SLLkdafuZ/oWR/6aqc7YxZlFlDXXfwdiEzrdLr2sP1bzMCNmf2WF+hM6HhJXzB0gz/8ZcEMMipVJH9k
+        bh=o84QHSqn+ObMNs1MLh+nj630dEtvLSjAJedEuzESKd8=;
+        b=Om3w27F2kKDYlNeuGmD90ptwVtuBEYkfob7m3MT/6Wuun8CYrI1IYnf2ZE5v+7cSul
+         nPQODOB1lpc2PCKkIu6rUtJfVm/99eC6hqH36tfoepa6KIwwmTYU2JrtAe5SzAwux/Aj
+         5BIiG/C/CvdOW+nDS2ea5jcBEn+jYjRZ+9yX8MC6cTf2mR7bv3xeD9LsRFr1n0EffToX
+         P2LLtnJUboj3LFg5TtVMMGMY8VfOJzzzqwi6HzG2vI9b04gspyRvYv59qG1ODeDU9djH
+         zy+z/M+5pComNUA+HDwDaOMLXSmxpVt7+NFXlD+t8DLmmIQPPBXRtFHVIPWiHZtnGnPU
+         HaUQ==
+X-Gm-Message-State: AOJu0YzMdEsm2RURaYiT+5IJ/uCLEHehlCzYwDOo38jneJKxdxk3h0/t
+	VBUUMQFuRjFht8Lkdhb7KQopQkSRvAL1/XW39wA2JJgRCdlOZZDUJevAjsfQgg==
+X-Google-Smtp-Source: AGHT+IHQqPyQHPEDIlCHc7C1mC3g8p62zaSNCMkmWlBGHZZZW1BGkyGvlV2yTQuTXgKLPHa+ekutbw==
+X-Received: by 2002:a17:90a:9b89:b0:296:111b:9f54 with SMTP id g9-20020a17090a9b8900b00296111b9f54mr804884pjp.19.1707548982684;
+        Fri, 09 Feb 2024 23:09:42 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUZvkpINzfgQ79HHlVYtLDFq1tpexnzLkHo5LRNFPbTvlqmQn54F9Mwd4587ls60RSzNQHZUAfL/GfLqhDQ0LGkkfy1w/Zp4ydvD/im29I8IJRiAbr8fTRNMBd+EmSIpoOGgsNVxLHfuR+JQ5UO9UYe6NEallKgWwjKgAf0NrRPbvILevlY/iuAVnlwX0QpqJ5B6DCCk5WSdWbD46OV7cTzJDdhwNzC37HEXY9Ce+rIAZWozg6k+9aHP7kHptVEKa3CfcLoU5SuDiF+sGzCemr9VpyrScYnpqoMWsGxZlYPexj5hRwrYP2UdVX57fCmdeGEWH7R7q1jPCD+NK/80TtWguEKO7t8BY4t2JgVIxPNl2/oBdyhDqFh2H16xj7Ord01E3pFFx2qbGQqDcVv/6/Mz5vPOmeDwzoZ2ZMMCxc2u4X7U6D8Kg==
 Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
-        by smtp.gmail.com with UTF8SMTPSA id z16-20020aa78890000000b006dff3ca9e26sm1635066pfe.102.2024.02.09.23.09.39
+        by smtp.gmail.com with UTF8SMTPSA id r8-20020a17090ad40800b002967bc2c852sm2903295pju.43.2024.02.09.23.09.41
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 09 Feb 2024 23:09:40 -0800 (PST)
+        Fri, 09 Feb 2024 23:09:42 -0800 (PST)
 From: Stephen Boyd <swboyd@chromium.org>
 To: chrome-platform@lists.linux.dev
 Cc: linux-kernel@vger.kernel.org,
@@ -75,16 +75,12 @@ Cc: linux-kernel@vger.kernel.org,
 	Pin-yen Lin <treapking@chromium.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lee Jones <lee@kernel.org>,
 	Benson Leung <bleung@chromium.org>,
 	Guenter Roeck <groeck@chromium.org>,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH 01/22] dt-bindings: gpio: Add binding for ChromeOS EC GPIO controller
-Date: Fri,  9 Feb 2024 23:09:12 -0800
-Message-ID: <20240210070934.2549994-2-swboyd@chromium.org>
+Subject: [PATCH 02/22] gpio: Add ChromeOS EC GPIO driver
+Date: Fri,  9 Feb 2024 23:09:13 -0800
+Message-ID: <20240210070934.2549994-3-swboyd@chromium.org>
 X-Mailer: git-send-email 2.43.0.687.g38aa6559b0-goog
 In-Reply-To: <20240210070934.2549994-1-swboyd@chromium.org>
 References: <20240210070934.2549994-1-swboyd@chromium.org>
@@ -99,97 +95,281 @@ Content-Transfer-Encoding: 8bit
 The ChromeOS embedded controller (EC) supports setting the state of
 GPIOs when the system is unlocked, and getting the state of GPIOs in all
 cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
-expander. Add a binding to describe these GPIOs in DT so that other
-devices described in DT can read the GPIOs on the EC.
+expander. Add a driver to get and set the GPIOs on the EC through the
+host command interface.
 
 Cc: Linus Walleij <linus.walleij@linaro.org>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
-Cc: Conor Dooley <conor+dt@kernel.org>
-Cc: Lee Jones <lee@kernel.org>
 Cc: Benson Leung <bleung@chromium.org>
 Cc: Guenter Roeck <groeck@chromium.org>
 Cc: <linux-gpio@vger.kernel.org>
-Cc: <devicetree@vger.kernel.org>
 Cc: <chrome-platform@lists.linux.dev>
 Cc: Pin-yen Lin <treapking@chromium.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- .../bindings/gpio/google,cros-ec-gpio.yaml    | 49 +++++++++++++++++++
- .../bindings/mfd/google,cros-ec.yaml          |  3 ++
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gpio/google,cros-ec-gpio.yaml
+ drivers/gpio/Kconfig        |  10 ++
+ drivers/gpio/Makefile       |   1 +
+ drivers/gpio/gpio-cros-ec.c | 218 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 229 insertions(+)
+ create mode 100644 drivers/gpio/gpio-cros-ec.c
 
-diff --git a/Documentation/devicetree/bindings/gpio/google,cros-ec-gpio.yaml b/Documentation/devicetree/bindings/gpio/google,cros-ec-gpio.yaml
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index b3a133ed31ee..62b0ae25a727 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -1220,6 +1220,16 @@ config GPIO_BD9571MWV
+ 	  This driver can also be built as a module. If so, the module
+ 	  will be called gpio-bd9571mwv.
+ 
++config GPIO_CROS_EC
++	tristate "ChromeOS EC GPIO support"
++	depends on CROS_EC
++	help
++	  GPIO driver for exposing GPIOs on the ChromeOS Embedded
++	  Controller.
++
++	  This driver can also be built as a module. If so, the module
++	  will be called gpio-cros-ec.
++
+ config GPIO_CRYSTAL_COVE
+ 	tristate "GPIO support for Crystal Cove PMIC"
+ 	depends on (X86 || COMPILE_TEST) && INTEL_SOC_PMIC
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index eb73b5d633eb..2e66410c1da6 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -46,6 +46,7 @@ obj-$(CONFIG_GPIO_BT8XX)		+= gpio-bt8xx.o
+ obj-$(CONFIG_GPIO_CADENCE)		+= gpio-cadence.o
+ obj-$(CONFIG_GPIO_CLPS711X)		+= gpio-clps711x.o
+ obj-$(CONFIG_GPIO_SNPS_CREG)		+= gpio-creg-snps.o
++obj-$(CONFIG_GPIO_CROS_EC)		+= gpio-cros-ec.o
+ obj-$(CONFIG_GPIO_CRYSTAL_COVE)		+= gpio-crystalcove.o
+ obj-$(CONFIG_GPIO_CS5535)		+= gpio-cs5535.o
+ obj-$(CONFIG_GPIO_DA9052)		+= gpio-da9052.o
+diff --git a/drivers/gpio/gpio-cros-ec.c b/drivers/gpio/gpio-cros-ec.c
 new file mode 100644
-index 000000000000..a9f1d7784070
+index 000000000000..0d35558304bf
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/google,cros-ec-gpio.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/gpio/google,cros-ec-gpio.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/gpio/gpio-cros-ec.c
+@@ -0,0 +1,218 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Copyright 2024 Google LLC
++ *
++ * This driver provides the ability to control GPIOs on the Chrome OS EC.
++ * There isn't any direction control, and setting values on GPIOs is only
++ * possible when the system is unlocked.
++ */
 +
-+title: GPIOs controlled by ChromeOS EC
++#include <linux/bitops.h>
++#include <linux/errno.h>
++#include <linux/gpio/driver.h>
++#include <linux/init.h>
++#include <linux/kernel.h>
++#include <linux/mod_devicetable.h>
++#include <linux/module.h>
++#include <linux/platform_data/cros_ec_commands.h>
++#include <linux/platform_data/cros_ec_proto.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
 +
-+maintainers:
-+  - Stephen Boyd <swboyd@chromium.org>
++/* Setting gpios is only supported when the system is unlocked */
++static void cros_ec_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
++{
++	const char *name = gc->names[gpio];
++	struct cros_ec_device *cros_ec = gpiochip_get_data(gc);
++	struct ec_params_gpio_set params = {
++		.val = val,
++	};
++	int ret;
++	ssize_t copied;
 +
-+description:
-+  Google's ChromeOS EC has a gpio controller inside the Embedded Controller
-+  (EC) and controlled via a host-command interface. The node for this
-+  device should be under a cros-ec node like google,cros-ec-spi.
++	copied = strscpy(params.name, name, sizeof(params.name));
++	if (copied < 0)
++		return;
 +
-+properties:
-+  compatible:
-+    const: google,cros-ec-gpio
++	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_GPIO_SET, &params,
++			  sizeof(params), NULL, 0);
++	if (ret < 0)
++		dev_err(gc->parent, "error setting gpio%d (%s) on EC: %d\n", gpio, name, ret);
++}
 +
-+  '#gpio-cells':
-+    const: 2
++static int cros_ec_gpio_get(struct gpio_chip *gc, unsigned int gpio)
++{
++	const char *name = gc->names[gpio];
++	struct cros_ec_device *cros_ec = gpiochip_get_data(gc);
++	struct ec_params_gpio_get params;
++	struct ec_response_gpio_get response;
++	int ret;
++	ssize_t copied;
 +
-+  gpio-controller: true
++	copied = strscpy(params.name, name, sizeof(params.name));
++	if (copied < 0)
++		return -EINVAL;
 +
-+required:
-+  - compatible
-+  - '#gpio-cells'
-+  - gpio-controller
++	ret = cros_ec_cmd(cros_ec, 0, EC_CMD_GPIO_GET, &params,
++			  sizeof(params), &response, sizeof(response));
++	if (ret < 0) {
++		dev_err(gc->parent, "error getting gpio%d (%s) on EC: %d\n", gpio, name, ret);
++		return ret;
++	}
 +
-+additionalProperties: false
++	return response.val;
++}
 +
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++#define CROS_EC_GPIO_INPUT         BIT(8)
++#define CROS_EC_GPIO_OUTPUT        BIT(9)
 +
-+      cros-ec@0 {
-+        compatible = "google,cros-ec-spi";
-+        reg = <0>;
-+        interrupts = <101 0>;
-+        gpio {
-+          compatible = "google,cros-ec-gpio";
-+          gpio-controller;
-+          #gpio-cells = <2>;
-+        };
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-index e1ca4f297c6d..ded396b28fba 100644
---- a/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-+++ b/Documentation/devicetree/bindings/mfd/google,cros-ec.yaml
-@@ -93,6 +93,9 @@ properties:
-   '#size-cells':
-     const: 0
- 
-+  gpio:
-+    $ref: /schemas/gpio/google,cros-ec-gpio.yaml#
++static int cros_ec_gpio_get_direction(struct gpio_chip *gc, unsigned int gpio)
++{
++	const char *name = gc->names[gpio];
++	struct cros_ec_device *cros_ec = gpiochip_get_data(gc);
++	struct ec_params_gpio_get_v1 params = {
++		.subcmd = EC_GPIO_GET_INFO,
++		.get_info.index = gpio,
++	};
++	struct ec_response_gpio_get_v1 response;
++	int ret;
 +
-   typec:
-     $ref: /schemas/chrome/google,cros-ec-typec.yaml#
- 
++	ret = cros_ec_cmd(cros_ec, 1, EC_CMD_GPIO_GET, &params,
++			  sizeof(params), &response, sizeof(response));
++	if (ret < 0) {
++		dev_err(gc->parent, "error getting direction of gpio%d (%s) on EC: %d\n", gpio, name, ret);
++		return ret;
++	}
++
++	if (response.get_info.flags & CROS_EC_GPIO_INPUT)
++		return GPIO_LINE_DIRECTION_IN;
++
++	if (response.get_info.flags & CROS_EC_GPIO_OUTPUT)
++		return GPIO_LINE_DIRECTION_OUT;
++
++	return -EINVAL;
++}
++
++static int cros_ec_gpio_request(struct gpio_chip *chip, unsigned gpio_pin)
++{
++	if (gpio_pin < chip->ngpio)
++		return 0;
++
++	return -EINVAL;
++}
++
++/* Query EC for all gpio line names */
++static int cros_ec_gpio_init_names(struct cros_ec_device *cros_ec, struct gpio_chip *gc)
++{
++	struct ec_params_gpio_get_v1 params = {
++		.subcmd = EC_GPIO_GET_INFO,
++	};
++	struct ec_response_gpio_get_v1 response;
++	int ret, i;
++	/* EC may not NUL terminate */
++	size_t name_len = sizeof(response.get_info.name) + 1;
++	ssize_t copied;
++	const char **names;
++	char *str;
++
++	names = devm_kcalloc(gc->parent, gc->ngpio, sizeof(*names), GFP_KERNEL);
++	if (!names)
++		return -ENOMEM;
++	gc->names = names;
++
++	str = devm_kcalloc(gc->parent, gc->ngpio, name_len, GFP_KERNEL);
++	if (!str)
++		return -ENOMEM;
++
++	/* Get gpio line names one at a time */
++	for (i = 0; i < gc->ngpio; i++) {
++		params.get_info.index = i;
++		ret = cros_ec_cmd(cros_ec, 1, EC_CMD_GPIO_GET, &params,
++				  sizeof(params), &response, sizeof(response));
++		if (ret < 0) {
++			dev_err_probe(gc->parent, ret, "error getting gpio%d info\n", i);
++			return ret;
++		}
++
++		names[i] = str;
++		copied = strscpy(str, response.get_info.name, name_len);
++		if (copied < 0)
++			return copied;
++
++		str += copied + 1;
++	}
++
++	return 0;
++}
++
++/* Query EC for number of gpios */
++static int cros_ec_gpio_ngpios(struct cros_ec_device *cros_ec)
++{
++	struct ec_params_gpio_get_v1 params = {
++		.subcmd = EC_GPIO_GET_COUNT,
++	};
++	struct ec_response_gpio_get_v1 response;
++	int ret;
++
++	ret = cros_ec_cmd(cros_ec, 1, EC_CMD_GPIO_GET, &params,
++			  sizeof(params), &response, sizeof(response));
++	if (ret < 0)
++		return ret;
++
++	return response.get_count.val;
++}
++
++static int cros_ec_gpio_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct cros_ec_device *cros_ec = dev_get_drvdata(dev->parent);
++	struct gpio_chip *gc;
++	int ngpios;
++	int ret;
++
++	ngpios = cros_ec_gpio_ngpios(cros_ec);
++	if (ngpios < 0) {
++		dev_err_probe(dev, ngpios, "error getting gpio count\n");
++		return ngpios;
++	}
++
++	gc = devm_kzalloc(&pdev->dev, sizeof(*gc), GFP_KERNEL);
++	if (!gc)
++		return -ENOMEM;
++
++	gc->ngpio = ngpios;
++	gc->parent = dev;
++	ret = cros_ec_gpio_init_names(cros_ec, gc);
++	if (ret)
++		return ret;
++
++	gc->can_sleep = true;
++	gc->label = dev_name(dev);
++	gc->base = -1;
++	gc->set = cros_ec_gpio_set;
++	gc->get = cros_ec_gpio_get;
++	gc->get_direction = cros_ec_gpio_get_direction;
++	gc->request = cros_ec_gpio_request;
++
++	return devm_gpiochip_add_data(&pdev->dev, gc, cros_ec);
++}
++
++#ifdef CONFIG_OF
++static const struct of_device_id cros_ec_gpio_of_match[] = {
++	{ .compatible = "google,cros-ec-gpio" },
++	{}
++};
++MODULE_DEVICE_TABLE(of, cros_ec_gpio_of_match);
++#endif
++
++static struct platform_driver cros_ec_gpio_driver = {
++	.probe = cros_ec_gpio_probe,
++	.driver = {
++		.name = "cros-ec-gpio",
++		.of_match_table = of_match_ptr(cros_ec_gpio_of_match),
++	},
++};
++module_platform_driver(cros_ec_gpio_driver);
++
++MODULE_DESCRIPTION("ChromeOS EC GPIO Driver");
++MODULE_LICENSE("GPL");
 -- 
 https://chromeos.dev
 
