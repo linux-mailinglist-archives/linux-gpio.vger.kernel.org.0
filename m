@@ -1,314 +1,151 @@
-Return-Path: <linux-gpio+bounces-3170-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3171-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5AFF08504CB
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 15:53:32 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 52AE08507B7
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 05:20:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E816D1F22009
-	for <lists+linux-gpio@lfdr.de>; Sat, 10 Feb 2024 14:53:31 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 014AB2842C2
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 04:20:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BC0355798;
-	Sat, 10 Feb 2024 14:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C401510953;
+	Sun, 11 Feb 2024 04:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="j5BAvtn0"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WhuREhkN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.55.52.88])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71A7720B29
-	for <linux-gpio@vger.kernel.org>; Sat, 10 Feb 2024 14:53:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F936FBF5;
+	Sun, 11 Feb 2024 04:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.55.52.88
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707576806; cv=none; b=Q8np9+6hW3Ch1johXMBSvVgyEMzwBJDgfrg6lq8FBJW1L+gXRUbeUAS4cTqK2SWTObHbcUCDyrx0/udccJgTJCC29yXH2C226EavmxD3Q+XSQo1/gv4J20nIR4qMc/xiMzMUur/BoZ/FUr7UPTBkjMA1fKlbtc/+iA7wHOsp/0I=
+	t=1707625193; cv=none; b=mLFvrHnQd3S3OKmh/Fz9qsGkds1gqeeN/7Z6l8NeDR0EbFJ8DSNltCQnJG25t3Oe5SKEp06RXo0vLy26u1kJdSHUW+NOqEh8zFvA4zS96Vb+UayExAax+/P6OCS29bCtJmm7Hoo5TAVwjfkPJqpft31h79uQAz8b9tdJoclX45M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707576806; c=relaxed/simple;
-	bh=VEovzUx41gCVHGOzBFzHX1u5DN7klZqTa1RM1ISqNmU=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=kXy/29aJn3Anxqo1GJd+/g0dYPQ4uRc5ade+PdR52lkCdD1B6aBQLQkJisp0vX00C2lnNymn9zqDdqLCT0rzn5j4uXP1DuZcmLKx7kep35GhMQVfMjVZ0+CEiRmPpDsd7zWlEnKEXdx1JATSGQo+wrT1Ds7rWnfULW6PG7aMv9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=j5BAvtn0; arc=none smtp.client-ip=192.198.163.11
+	s=arc-20240116; t=1707625193; c=relaxed/simple;
+	bh=HuE/qn9uO4Mak3wb7u3vZhiBv+6UYRAGaV1V4lIuL0U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGEipj57WH0Bmh8zF4sndzAHjvIi6XRvYW06sFyOFEi7cMtlOcUeqajel3JZ9PVl7n80qPOX109CH1/02F1I4en5zaL2tXMsPd08/dZmHknZNa7rVQyp9dz/e1XikFlguJXWyIsmrplwHFt+UpZC7E+wOGyJD/ZCGMv5xPKAnFc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WhuREhkN; arc=none smtp.client-ip=192.55.52.88
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707576804; x=1739112804;
-  h=date:from:to:cc:subject:message-id;
-  bh=VEovzUx41gCVHGOzBFzHX1u5DN7klZqTa1RM1ISqNmU=;
-  b=j5BAvtn0mzkKfYL+pghvHyPXAms+ScP+XDr40HSES28uosoBBCMqGyZI
-   hbrJCAc2jAbBmJNP8m6peEQqnTS95FvUchd4KynQHGTc3gxwWtMfJQam6
-   oo4Wo2bTyeChEjsWf28QpIVxfJjZ3JuGu9rI8imT4h8/z66n0Ro05T0HO
-   uM0vsjOiQGe3RKuyE1cUNF3fPUidquFKX3vQyT997QCQfWvs2pSYqhRBN
-   LUT833jWTpbU711ViaYmyePuvrVPPDrM9odZ9+Whi0Rf81zPzpLjdSsyT
-   VC+5GDy7hH8NY49uXplSw/XMGCiahp6cDgrGS4vWTBhurvhMCnmM0cxOT
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10980"; a="12210404"
-X-IronPort-AV: E=Sophos;i="6.05,259,1701158400"; 
-   d="scan'208";a="12210404"
-Received: from orviesa001.jf.intel.com ([10.64.159.141])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2024 06:53:24 -0800
+  t=1707625190; x=1739161190;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=HuE/qn9uO4Mak3wb7u3vZhiBv+6UYRAGaV1V4lIuL0U=;
+  b=WhuREhkNtB2O6qHGVR+E46PamqHHfzu3HOwyCJXxlgtf0XuvF+pAWrk1
+   4nglJiL8u9bkE2uE40rsYrKwR+FoiBpGULVneQw3rZcKjmMgWlDTDesxp
+   dLyhmAVdWIM/9c9ngf1TE27wA761FUH7JbJbdDup20oqM4tOQzPjees5e
+   mbBcD3zw50HN6v6ooo6T42SAExyma8IboSUovy6oXC3eON6Y8RsiPRP/o
+   BQy0c4kOnNkz+KPQJsa3VBokZYHKq1XF6YXiwk1Kusi1hMnWljG+43TUL
+   te03d5tW5Ypzy9sk7RoLZBY4GdWpO4cvz08mqy5NjP4IuRYHabOq+OGoA
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10980"; a="436747867"
+X-IronPort-AV: E=Sophos;i="6.05,260,1701158400"; 
+   d="scan'208";a="436747867"
+Received: from fmviesa006.fm.intel.com ([10.60.135.146])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 10 Feb 2024 20:19:49 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.05,259,1701158400"; 
-   d="scan'208";a="39627453"
+X-IronPort-AV: E=Sophos;i="6.05,260,1701158400"; 
+   d="scan'208";a="2588419"
 Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
-  by orviesa001.jf.intel.com with ESMTP; 10 Feb 2024 06:53:23 -0800
+  by fmviesa006.fm.intel.com with ESMTP; 10 Feb 2024 20:19:46 -0800
 Received: from kbuild by 01f0647817ea with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1rYojI-0005ki-05;
-	Sat, 10 Feb 2024 14:53:20 +0000
-Date: Sat, 10 Feb 2024 22:52:20 +0800
+	id 1rZ1Jg-0006Jc-0q;
+	Sun, 11 Feb 2024 04:19:44 +0000
+Date: Sun, 11 Feb 2024 12:19:20 +0800
 From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:devel] BUILD SUCCESS
- 2c0aafdf4a7c9e6381bcaa7d8aa2e90e42b028d7
-Message-ID: <202402102219.zla8oF85-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: oe-kbuild-all@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, ychuang3@nuvoton.com,
+	schung@nuvoton.com
+Subject: Re: [PATCH v4 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
+ driver
+Message-ID: <202402111204.to88Twuu-lkp@intel.com>
+References: <20240206025223.35147-5-ychuang570808@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240206025223.35147-5-ychuang570808@gmail.com>
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-branch HEAD: 2c0aafdf4a7c9e6381bcaa7d8aa2e90e42b028d7  pinctrl: mcp23s08: Check only GPIOs which have interrupts enabled
+Hi Jacky,
 
-elapsed time: 1445m
+kernel test robot noticed the following build errors:
 
-configs tested: 227
-configs skipped: 3
+[auto build test ERROR on linusw-pinctrl/devel]
+[also build test ERROR on linusw-pinctrl/for-next robh/for-next linus/master v6.8-rc3 next-20240209]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+url:    https://github.com/intel-lab-lkp/linux/commits/Jacky-Huang/dt-bindings-reset-Add-syscon-to-nuvoton-ma35d1-system-management-node/20240206-105502
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+patch link:    https://lore.kernel.org/r/20240206025223.35147-5-ychuang570808%40gmail.com
+patch subject: [PATCH v4 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+config: powerpc-randconfig-r122-20240208 (https://download.01.org/0day-ci/archive/20240211/202402111204.to88Twuu-lkp@intel.com/config)
+compiler: clang version 14.0.6 (https://github.com/llvm/llvm-project.git f28c006a5895fc0e329fe15fead81e37457cb1d1)
+reproduce: (https://download.01.org/0day-ci/archive/20240211/202402111204.to88Twuu-lkp@intel.com/reproduce)
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240210   gcc  
-arc                   randconfig-002-20240210   gcc  
-arc                    vdk_hs38_smp_defconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                            dove_defconfig   gcc  
-arm                      jornada720_defconfig   clang
-arm                         lpc32xx_defconfig   clang
-arm                             mxs_defconfig   clang
-arm                   randconfig-001-20240210   gcc  
-arm                   randconfig-002-20240210   gcc  
-arm                   randconfig-003-20240210   gcc  
-arm                   randconfig-004-20240210   gcc  
-arm                        shmobile_defconfig   gcc  
-arm                         socfpga_defconfig   gcc  
-arm                           stm32_defconfig   gcc  
-arm64                            alldefconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-002-20240210   gcc  
-arm64                 randconfig-003-20240210   gcc  
-arm64                 randconfig-004-20240210   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240210   gcc  
-csky                  randconfig-002-20240210   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240209   clang
-i386         buildonly-randconfig-001-20240210   clang
-i386         buildonly-randconfig-002-20240209   clang
-i386         buildonly-randconfig-002-20240210   gcc  
-i386         buildonly-randconfig-003-20240209   gcc  
-i386         buildonly-randconfig-003-20240210   clang
-i386         buildonly-randconfig-004-20240209   clang
-i386         buildonly-randconfig-004-20240210   clang
-i386         buildonly-randconfig-005-20240209   clang
-i386         buildonly-randconfig-005-20240210   clang
-i386         buildonly-randconfig-006-20240209   gcc  
-i386         buildonly-randconfig-006-20240210   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240209   clang
-i386                  randconfig-001-20240210   gcc  
-i386                  randconfig-002-20240209   gcc  
-i386                  randconfig-002-20240210   gcc  
-i386                  randconfig-003-20240209   clang
-i386                  randconfig-003-20240210   clang
-i386                  randconfig-004-20240209   clang
-i386                  randconfig-004-20240210   clang
-i386                  randconfig-005-20240209   clang
-i386                  randconfig-005-20240210   gcc  
-i386                  randconfig-006-20240209   gcc  
-i386                  randconfig-006-20240210   gcc  
-i386                  randconfig-011-20240209   gcc  
-i386                  randconfig-011-20240210   clang
-i386                  randconfig-012-20240209   gcc  
-i386                  randconfig-012-20240210   clang
-i386                  randconfig-013-20240209   clang
-i386                  randconfig-013-20240210   clang
-i386                  randconfig-014-20240209   gcc  
-i386                  randconfig-014-20240210   gcc  
-i386                  randconfig-015-20240209   gcc  
-i386                  randconfig-015-20240210   gcc  
-i386                  randconfig-016-20240209   gcc  
-i386                  randconfig-016-20240210   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240210   gcc  
-loongarch             randconfig-002-20240210   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                          hp300_defconfig   gcc  
-m68k                       m5275evb_defconfig   gcc  
-m68k                        m5307c3_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                     loongson2k_defconfig   gcc  
-mips                           xway_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240210   gcc  
-nios2                 randconfig-002-20240210   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240210   gcc  
-parisc                randconfig-002-20240210   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                      bamboo_defconfig   clang
-powerpc                      cm5200_defconfig   clang
-powerpc               mpc834x_itxgp_defconfig   clang
-powerpc                 mpc836x_rdk_defconfig   clang
-powerpc                      obs600_defconfig   clang
-powerpc                      ppc6xx_defconfig   gcc  
-powerpc               randconfig-001-20240210   gcc  
-powerpc               randconfig-003-20240210   gcc  
-powerpc                         wii_defconfig   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240210   gcc  
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                          debug_defconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240210   gcc  
-s390                  randconfig-002-20240210   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                            hp6xx_defconfig   gcc  
-sh                    randconfig-001-20240210   gcc  
-sh                    randconfig-002-20240210   gcc  
-sh                           se7343_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240210   gcc  
-sparc64               randconfig-002-20240210   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                    randconfig-001-20240210   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240209   gcc  
-x86_64       buildonly-randconfig-001-20240210   gcc  
-x86_64       buildonly-randconfig-002-20240209   gcc  
-x86_64       buildonly-randconfig-002-20240210   gcc  
-x86_64       buildonly-randconfig-003-20240209   clang
-x86_64       buildonly-randconfig-003-20240210   gcc  
-x86_64       buildonly-randconfig-004-20240209   gcc  
-x86_64       buildonly-randconfig-004-20240210   clang
-x86_64       buildonly-randconfig-005-20240209   clang
-x86_64       buildonly-randconfig-005-20240210   clang
-x86_64       buildonly-randconfig-006-20240209   gcc  
-x86_64       buildonly-randconfig-006-20240210   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240209   clang
-x86_64                randconfig-001-20240210   clang
-x86_64                randconfig-002-20240209   gcc  
-x86_64                randconfig-002-20240210   clang
-x86_64                randconfig-003-20240209   gcc  
-x86_64                randconfig-003-20240210   gcc  
-x86_64                randconfig-004-20240209   clang
-x86_64                randconfig-004-20240210   clang
-x86_64                randconfig-005-20240209   gcc  
-x86_64                randconfig-005-20240210   clang
-x86_64                randconfig-006-20240209   gcc  
-x86_64                randconfig-006-20240210   gcc  
-x86_64                randconfig-011-20240209   clang
-x86_64                randconfig-011-20240210   gcc  
-x86_64                randconfig-012-20240209   clang
-x86_64                randconfig-012-20240210   clang
-x86_64                randconfig-013-20240209   gcc  
-x86_64                randconfig-013-20240210   clang
-x86_64                randconfig-014-20240209   clang
-x86_64                randconfig-014-20240210   clang
-x86_64                randconfig-015-20240209   gcc  
-x86_64                randconfig-015-20240210   gcc  
-x86_64                randconfig-016-20240209   clang
-x86_64                randconfig-016-20240210   clang
-x86_64                randconfig-071-20240209   gcc  
-x86_64                randconfig-071-20240210   gcc  
-x86_64                randconfig-072-20240209   clang
-x86_64                randconfig-072-20240210   gcc  
-x86_64                randconfig-073-20240209   clang
-x86_64                randconfig-073-20240210   clang
-x86_64                randconfig-074-20240209   gcc  
-x86_64                randconfig-074-20240210   gcc  
-x86_64                randconfig-075-20240209   gcc  
-x86_64                randconfig-075-20240210   clang
-x86_64                randconfig-076-20240209   clang
-x86_64                randconfig-076-20240210   clang
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                           alldefconfig   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                randconfig-001-20240210   gcc  
-xtensa                randconfig-002-20240210   gcc  
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202402111204.to88Twuu-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   In file included from drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:14:
+   drivers/pinctrl/nuvoton/pinctrl-ma35.h:46:31: warning: declaration of 'struct platform_device' will not be visible outside of this function [-Wvisibility]
+   int ma35_pinctrl_probe(struct platform_device *pdev, const struct ma35_pinctrl_soc_info *info);
+                                 ^
+   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:1770:40: warning: declaration of 'struct platform_device' will not be visible outside of this function [-Wvisibility]
+   static int ma35d1_pinctrl_probe(struct platform_device *pdev)
+                                          ^
+   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:1772:28: error: incompatible pointer types passing 'struct platform_device *' to parameter of type 'struct platform_device *' [-Werror,-Wincompatible-pointer-types]
+           return ma35_pinctrl_probe(pdev, &ma35d1_pinctrl_info);
+                                     ^~~~
+   drivers/pinctrl/nuvoton/pinctrl-ma35.h:46:48: note: passing argument to parameter 'pdev' here
+   int ma35_pinctrl_probe(struct platform_device *pdev, const struct ma35_pinctrl_soc_info *info);
+                                                  ^
+   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:1780:31: error: variable has incomplete type 'struct platform_driver'
+   static struct platform_driver ma35d1_pinctrl_driver = {
+                                 ^
+   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:1780:15: note: forward declaration of 'struct platform_driver'
+   static struct platform_driver ma35d1_pinctrl_driver = {
+                 ^
+>> drivers/pinctrl/nuvoton/pinctrl-ma35d1.c:1791:9: error: implicit declaration of function 'platform_driver_register' is invalid in C99 [-Werror,-Wimplicit-function-declaration]
+           return platform_driver_register(&ma35d1_pinctrl_driver);
+                  ^
+   2 warnings and 3 errors generated.
+
+Kconfig warnings: (for reference only)
+   WARNING: unmet direct dependencies detected for ADB_CUDA
+   Depends on [n]: MACINTOSH_DRIVERS [=n] && (ADB [=n] || PPC_PMAC [=y]) && !PPC_PMAC64 [=n]
+   Selected by [y]:
+   - PPC_PMAC [=y] && PPC_BOOK3S [=y] && CPU_BIG_ENDIAN [=y] && POWER_RESET [=y] && PPC32 [=y]
+
+
+vim +/platform_driver_register +1791 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
+
+  1788	
+  1789	static int __init ma35d1_pinctrl_init(void)
+  1790	{
+> 1791		return platform_driver_register(&ma35d1_pinctrl_driver);
+  1792	}
+  1793	arch_initcall(ma35d1_pinctrl_init);
+  1794	
 
 -- 
 0-DAY CI Kernel Test Service
