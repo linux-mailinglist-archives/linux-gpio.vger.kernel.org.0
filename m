@@ -1,105 +1,117 @@
-Return-Path: <linux-gpio+bounces-3174-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3175-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3E1B850A62
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 17:59:00 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D33F0850C20
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 00:13:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F0C71C217CA
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 16:58:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 071032819A9
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 23:13:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C546E5C5EC;
-	Sun, 11 Feb 2024 16:58:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A531E171D8;
+	Sun, 11 Feb 2024 23:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M2SEjAIH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JgxC2R3h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BFD833F1;
-	Sun, 11 Feb 2024 16:58:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20642171A0;
+	Sun, 11 Feb 2024 23:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707670734; cv=none; b=I2PqAeQ+QNI8sL6ib4iunFmgZrTkV7hqIFGKw+dLwIq1uEalv5t3kNqhXDa8+dZ7sh95dhFvIyJRlcSuF6T21FJ83RWj+jd9Y5wLKqE5fsTy5K34hjKWVhuT/k5tKk7T6JiSK4iRMGqmun0EOJ6oXtoRH3RfUERMW9VmUxMofd8=
+	t=1707693208; cv=none; b=WBAuQLXis32Gmx7tRHg6VS2I3WzSzZHzL7WH0+tW1ZcJO+ftXEKpMjZupj85o9VRRHFYjqyO9aG00aWFC3CrtEpFJ3soBjYvya/SyhK6LFae3viwDlrpvtp2/v0ApYwjFlMcHvEX4jr15gLt3kd26zr1Qw4heMWVqBNsndBbiQ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707670734; c=relaxed/simple;
-	bh=YXwX3qIj9IXEein8cZqNNXLpJGP3xPTFPjqAclsRIlY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=j82ClW4b7FmYfjlyzQsvakR+aHtinYWNheUnMaierRQdrcaWXQSNCenMJHHDAOhp58506p2ReDmomBydf44tyN4Qh2xedO0T8W0vJ4ybimTTxbJ00OBa0bYB6wjJfuADxIe2f4CpPQENtPn1moQUIka87yUwzi7lMC+4I6DFG1w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M2SEjAIH; arc=none smtp.client-ip=209.85.218.50
+	s=arc-20240116; t=1707693208; c=relaxed/simple;
+	bh=xo36J8fOakG6knpNeZV8/mzbGVFedPF8ijEDpOEf72s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XTB9unHKY9EvXyL+R6vf9k8TcDSJ39m9Vnq2sbENtg+oW9eNuVk/ckCG3x7SDH8VBRiM6nEKYqQL2juk/01v6jfdsbZDcRtd4t+NS029A8YvLxzfbn2OCUFr36b2w6It3VgGElblVCcEJj1pEt5B/40Ch0+q9BXBIjeZKto76Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JgxC2R3h; arc=none smtp.client-ip=209.85.215.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a2a17f3217aso314386566b.2;
-        Sun, 11 Feb 2024 08:58:52 -0800 (PST)
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2055156a12.3;
+        Sun, 11 Feb 2024 15:13:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707670731; x=1708275531; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=YXwX3qIj9IXEein8cZqNNXLpJGP3xPTFPjqAclsRIlY=;
-        b=M2SEjAIHNnoDqbIGq5pPua9qcQRUoFOqA9cLC302ktnOKVXVNSF9s+kfnEbG0FQjQc
-         vsYtHMNIRr+n+HQ5XZvoi1bZnya9tc+aufhnjUy04LziFGsRzs368LCHkmimT/PwHHx1
-         CPo/uRCSxADj4ZGgWRw8AHH1yfMONS5YAp4HecwuAuw581EWXSFk3viqyjy+ZgSuJ7Oz
-         +EzzfU/QBeW3rqJnUt9TeBU3uXFwmNTzSe6a5epyr275mwO0yKTEDgVBP/5lX9tpfGjq
-         UqE/ztMUygGrj82qN14RjxBAY+5/QLTGcqNqQLdHXR87WeT+VZ9ApMhF3GHE40DDyf0w
-         MTJA==
+        d=gmail.com; s=20230601; t=1707693206; x=1708298006; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=xo36J8fOakG6knpNeZV8/mzbGVFedPF8ijEDpOEf72s=;
+        b=JgxC2R3hueZDHJbOxoEuuASfd5pe5iirvkuCXACdjKDNEPIum37YiG1io+l9fH+Mvz
+         J77L2XdHHFVTHeC5DVWSuWx4jsL4DJ+HtEqCynqKdF/6NRcpCVZFaN2rUtTnr0RhVX32
+         yD9iNU2dvMrVrfcBUaCYTSuUgHw+AMtmj9E9FjUpDRcYe5Jh+kxEWYP9PNgAnYXop1Jl
+         F9ikaawaQmhfRUpFs2VyZUTDn4Z+EtIWFc2qqSqKGqXM8D05O1bA9IxzB1gKMiXMUdZI
+         +kqBMHoyagiv+aeEhn9heJ9qAWiL4j5M3bTIj5IoeKbwzxiaJBDlNnw2yNKluLSMpdet
+         ndlQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707670731; x=1708275531;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=YXwX3qIj9IXEein8cZqNNXLpJGP3xPTFPjqAclsRIlY=;
-        b=UYAtAKM0HABltflZeJgnzhyQayIpkLbw9SVK8ZMAXjTPThpPsvzVZd68rJcfANCe5U
-         vUmPRuH7v7YvzAEapk/9BshvTbKwBJi8aF51DUnvOF+UfIyIOXhpN8ZxkeVAmqEr3C7q
-         zfj5X2Em3VAW1/ej9bHInDuloFbUfBs8wO0rSMvNplOdDB1YZ28pJy84UsLpqLhDwivt
-         4EfhxNX3TgPUp5cW8hk26J3sQ+JKECAf5X/xNh2pj3YT4PTmjKRrwBpSDdXs8oZcSav3
-         EkKAST03HicxuY/2I/bX5uFVFfDZmMl73Ez7rf4SZpzFUOpan/wWRwR7eph9AbZdidR1
-         zrRA==
-X-Forwarded-Encrypted: i=1; AJvYcCVypTWMxq9WgWdBidtip1syAes1guPhK6Kik33IzsWafdB3g7l/s9TuXSvhFhbIlasbuvrIWZTDQbLkTi1A05yDUrafLFXFOqijcg==
-X-Gm-Message-State: AOJu0YxIDtZcsd8pYI1hGRDqVwPBIOhYhqM6r5gUb6iyYnkeZnJKpgKe
-	z7zDFUErQKBy1+5HZJddebJfrIcC/MgRFYD0600ML5yWrW7aOHqxeT9gnhQ1S55ZjabTBy1wVeV
-	W0My3rMxq8+LRIRVpMuiP5n8tVE0=
-X-Google-Smtp-Source: AGHT+IFlAsnpP9rTRy9NAATEAF0McKA1QqY4wBmsbYgs+oj1tLcdfgXTHqlIlP3iH63MMa73jt8OWBJ0uavGR10KHpg=
-X-Received: by 2002:a17:906:d8c2:b0:a3c:8875:3e46 with SMTP id
- re2-20020a170906d8c200b00a3c88753e46mr911864ejb.7.1707670731152; Sun, 11 Feb
- 2024 08:58:51 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707693206; x=1708298006;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=xo36J8fOakG6knpNeZV8/mzbGVFedPF8ijEDpOEf72s=;
+        b=pCP4qBMjkkVJ3h0koEEnm50CYGOOxA+h7XG0kpcv+SMr7LRDMUK0d3dNPsJWKo8zYQ
+         nEpOylFdFyFSbIEUzgFoQq1DWjPeeF6IzTtl7vcXoWcm4GtLbr4RyD6g+fv4AYj3nhjx
+         PoOljuWYlTL3muvIXwmfPXm1xOu6GjHcldo9GAbe54vTrfngSofJyxlN1C5fY4i9Hd1F
+         J0IN+RGUitCSk4oAsbX//ixzIUeMIW9HPMjtpS+fZSAuK5G5UaAM1yPnEOcvtVu10XkK
+         73SbxuSjK9WbQMTBND3+/1MCqUHW8nGKsc6R06o0GUoTkGWVlNPCCGC6Tc4rwca7HXaj
+         pM2Q==
+X-Gm-Message-State: AOJu0YyqI9H2vYLW7Mcz00sf0ds1FVLNZIX0bOueNUMPoSCP3dmRhrg6
+	Etdq9WCNejocpVzFt8YJFnE21iDNFzquGfEMMwktAfMkdLFgHlCQ0vtpUAzt
+X-Google-Smtp-Source: AGHT+IFJB7u7GBig2yjHLhYLgy0Et2ZOVa+6freH6tpfiY3NWud7Q9tkbVEXq4I9V542ozOQtnp5ag==
+X-Received: by 2002:a05:6a21:150c:b0:19c:9418:c396 with SMTP id nq12-20020a056a21150c00b0019c9418c396mr9012529pzb.31.1707693206175;
+        Sun, 11 Feb 2024 15:13:26 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWRMLniCuV7IK/HC741OJMM6skLyxVJ7uAatLpihFlwBF5sM1zz+OttMQNeQVApPTIJjVpns0xBthygEBShkOuPv1040TJxPNNuEi0KzuBiAdD8EoHWWVyRfT7FHxm/Lq6mrPIVj5SggS7tCFKrMRicaTEsYPuQ/KQ11MiCGe/daojbNCE=
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id a21-20020a056a000c9500b006e03927d123sm4227082pfv.202.2024.02.11.15.13.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 11 Feb 2024 15:13:25 -0800 (PST)
+Date: Mon, 12 Feb 2024 07:13:21 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
+	linus.walleij@linaro.org, andy@kernel.org
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+Message-ID: <20240211231321.GA4748@rigel>
+References: <20240211101421.166779-1-warthog618@gmail.com>
+ <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240211101421.166779-1-warthog618@gmail.com>
-In-Reply-To: <20240211101421.166779-1-warthog618@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sun, 11 Feb 2024 18:58:14 +0200
-Message-ID: <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl, 
-	linus.walleij@linaro.org, andy@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
 
-On Sun, Feb 11, 2024 at 12:14=E2=80=AFPM Kent Gibson <warthog618@gmail.com>=
- wrote:
+On Sun, Feb 11, 2024 at 06:58:14PM +0200, Andy Shevchenko wrote:
+> On Sun, Feb 11, 2024 at 12:14 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > The documentation for default_values mentions high/low which can be
+> > confusing, particularly when the ACTIVE_LOW flag is set.
+> >
+> > Replace high/low with active/inactive to clarify that the values are
+> > logical not physical.
+> >
+> > Similarly, clarify the interpretation of values in struct gpiohandle_data.
 >
-> The documentation for default_values mentions high/low which can be
-> confusing, particularly when the ACTIVE_LOW flag is set.
+> I'm not against this particular change, but I want the entire GPIO
+> documentation to be aligned in the terminology aspect. Is this the
+> case after this patch? I.o.w. have we replaced all leftovers?
 >
-> Replace high/low with active/inactive to clarify that the values are
-> logical not physical.
->
-> Similarly, clarify the interpretation of values in struct gpiohandle_data=
-.
 
-I'm not against this particular change, but I want the entire GPIO
-documentation to be aligned in the terminology aspect. Is this the
-case after this patch? I.o.w. have we replaced all leftovers?
+Agreed. Those are the last remnants of the low/high terminolgy that I am
+aware of, certainly the last in gpio.h.
 
---=20
-With Best Regards,
-Andy Shevchenko
+Having a closer look to double check...
+
+Ah - it is still used in Documentation/userspace-api/gpio/sysfs.rst -
+not somewhere I go very often.
+Would you like that updated in a separate patch?
+
+Cheers,
+Kent.
 
