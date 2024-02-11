@@ -1,140 +1,174 @@
-Return-Path: <linux-gpio+bounces-3172-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3173-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40A3185089A
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 11:15:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA0F4850961
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 14:26:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32A7BB221D2
-	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 10:15:00 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 81045283BDB
+	for <lists+linux-gpio@lfdr.de>; Sun, 11 Feb 2024 13:26:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E050E59B68;
-	Sun, 11 Feb 2024 10:14:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA9675B5AA;
+	Sun, 11 Feb 2024 13:26:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QV1O5a4E"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tovtWCiI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pg1-f171.google.com (mail-pg1-f171.google.com [209.85.215.171])
+Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D56459B40;
-	Sun, 11 Feb 2024 10:14:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F0C15A4C7
+	for <linux-gpio@vger.kernel.org>; Sun, 11 Feb 2024 13:26:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707646493; cv=none; b=a/+48eJ7OSdmvf8iYKadASmv6jzftN8n4n+LieMJF3y8trUh0gwWrfuqEUWblqqR1OT2lSdHCCWiq0xk00mppp/ZHqz9leJle9DPYLMWXk5JF6YooBZQlP1sgtB2rFmgDKvG6vp/Ah+UAFIjkFarJS+IKxVjgWPN6S2itBrl5iQ=
+	t=1707658000; cv=none; b=RhGhkw1OC4kFSgBNFS9dYbcv7GBk7xzQkhf69M0r3gdablytRbc2l7bn6amX34HUq4gG5eQxAJj4phWklDUHUN4JBHxrZghgyf91cdMvv/gVOu7x/qE+QPuUqBmFQG/leVQLLY/Ti8N4u3n6IK0HMfwId9IYqnxvnpB7s5XkLsM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707646493; c=relaxed/simple;
-	bh=5HxlEksVyEjp5vwu1YWeFpsI9Pu5L4mnVbXPjNxQXSI=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QHu89p+9oFFO8J4BdK6Wpcte9RwrithoxbHlJ0lXQYR9UexI05iFWAqIyTuMY/FSNENCuLeNoZx0RBjWHmmTq3qXMIajr2FLtpbgwi5qlpYB30UPUX0Xzh63ozmnHg9JlhkwmfzSOksB2EFTnH0WdvntvMjzx89NDsz4YqVwN6E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QV1O5a4E; arc=none smtp.client-ip=209.85.215.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f171.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso1766550a12.3;
-        Sun, 11 Feb 2024 02:14:52 -0800 (PST)
+	s=arc-20240116; t=1707658000; c=relaxed/simple;
+	bh=FjS7shovD5LOW6BT11KewGOSXb3ZkciiNn0s91FqGvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=X7kPaJmOBUzttOUM9vEKeYgyFAp+UUrbBvPBmXkjtP1bPEF4A8FhK2PsjTDqMdkFXQQSUes8kSIj66WoWahYXzI6bwikpNVQmEXa9ZgaE6FughqSn4gFnNzr0o5AMfllwckIPZEnQ4CS7Z/gETddC5Pm92d3vasfWtmCxI6GZTI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tovtWCiI; arc=none smtp.client-ip=209.85.128.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-410ad88f70dso6297855e9.2
+        for <linux-gpio@vger.kernel.org>; Sun, 11 Feb 2024 05:26:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707646491; x=1708251291; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Blc6hLuk1jJGYRb9CW+5BR8z1UC6d8gl1Uq+cUruLp8=;
-        b=QV1O5a4Ee4SIW2+j2kVK5kliRGFZgJj7b8IG8qqsqp+zPZlaleGSqk2++vlsDcNbpF
-         qVyYC4LE5kABA69JU0mxbBw+YPlVNOI7A3ufNq0E4m2SSAZlq4yU28YGkEKcSa0ktrR3
-         3qq8ZKX9XW2Mqpwp9ssHPGVlNMGxb86gnbwlGyPaCuSZtsr9OsQRgEtCqB2uJ9I0+JAO
-         WRysEhP44/KCYop8K8eDH/le4GQuFSDf8J3Oe2dyLa8baFHxUE0MyaeVJK3VE8fTvms5
-         zvsZ1+XKiXv6LleeOgEjCJPDqsBCB+9L9u8zYk6d3+cubGB5OYgQ1fpyE/kjrMzrO3lm
-         w9AA==
+        d=linaro.org; s=google; t=1707657997; x=1708262797; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=xPxJ93+8KK95I02oJbouz0NonAQApt5QRGNRPQGNo0k=;
+        b=tovtWCiIlnNnwpB7C3NSuFiV+k7iFxiUFxIJRNPVU8HYGWW8LF+mveSHliRxrYXw31
+         N9QebS0oSJKtzM5wTu93TZP7Bm7yychyGdStdaGAYt2awUi6YmrSJRx9PDFHapGiLaCx
+         IB484w8mjnah2WeWq2OhgeMw35gu6Za+U6TOimJ5F3NLWWeI32ZPKjtE36TG3/RQmCOl
+         5r21Lby2IdIpi35leYf4pDSCtMc0zEcGQRj/Sav7vX6J75EEAKzYNujSFDm4QjdfaGVR
+         hP+60fILxhL9NXL4J0NS3/EkhLA1ebUwBMAjBf1Tpzm7FUJ1tz/d8bBQgxD3LCzw8nC+
+         hl+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707646491; x=1708251291;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Blc6hLuk1jJGYRb9CW+5BR8z1UC6d8gl1Uq+cUruLp8=;
-        b=nMGSNgLdzo0O5Iu8ZJl/3NDeq7y1STWDcA92qJgbM4oXnbC1mjuiuUcilYQ3zsYIiS
-         lV4TbYAVFlTMHN1IHeM34g5whYhKFrpX8J3GZZ9x1CWVDLX61w5BDq4/3E0gRlDwTvhF
-         l0mrH74wFOsvGbAp8klYb20PlzbzJ+vCjTLpH1NYvpI/OVe3IVN0gPzuYSKqBY1U/RHJ
-         vxq52Pr4oi4dWsdBzpDCJNR7WZXVcI1Esa2GRN+BrQGWTBMcdiPYM1RXp68/+HNwYB9S
-         DTjh5eYVFXGUst1s6+B2C3At3lP01iEgLmS93LY/po5qsHiJlzJghibhtPeUW+/aY2zw
-         Hp9g==
-X-Forwarded-Encrypted: i=1; AJvYcCUlmE55MLUyYLnd+Bb335Qbsuqga9wrnEejHwEMKfhAifRGLs8uiTrTyN2BQN3hH9rPjFY0zaH+5ADmJfZuCBAKfW8gHRJdM0USLg==
-X-Gm-Message-State: AOJu0YwQrVPHI9Z16UcJwbnHg1OImC8F8Id+6IZAJARZUFvZ+MRNcIZf
-	xJy7kHO/GlKy35M6snwfi1ANX8vGpVgBT4s6aIIPVl4o15uOD+OioYWlw1VE
-X-Google-Smtp-Source: AGHT+IEKbH4BiX5HkwywENkildjj28TRbPnYV/wqK6VmGDwBHihdVYOJ5Ixai7bSDMkeiwIy7a6Ofw==
-X-Received: by 2002:a05:6a21:9188:b0:19e:8b31:f1ae with SMTP id tp8-20020a056a21918800b0019e8b31f1aemr6804727pzb.29.1707646491257;
-        Sun, 11 Feb 2024 02:14:51 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWCx+RIFOebjwfywA0OkLnpAhcJ1BFPAb+3VGchp0s+0NSim3fyKZKJFc1Lu7pxbyc87ffxWxRHPw+utCuqmQh41uKn1/o/siHifU9XMiAvmnEYVd6XsBhyiel4yjYMpyLXMA4V3i2t/xYMYOWmIIkj9Wqi/7KC5TljkqcF8+pmVOWzA0g=
-Received: from rigel.home.arpa ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id y23-20020aa78557000000b006e09ec69d7dsm3184009pfn.98.2024.02.11.02.14.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 11 Feb 2024 02:14:50 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl,
-	linus.walleij@linaro.org,
-	andy@kernel.org
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [PATCH] gpio: uapi: clarify default_values being logical
-Date: Sun, 11 Feb 2024 18:14:21 +0800
-Message-Id: <20240211101421.166779-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        d=1e100.net; s=20230601; t=1707657997; x=1708262797;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xPxJ93+8KK95I02oJbouz0NonAQApt5QRGNRPQGNo0k=;
+        b=syXx3vCWo2HbEp5GcTVLjI+I1SLvYEawSMA8GgiRej93iCOtHEXy3YxLXg5cv/Hqfu
+         kYUuvYebInWTfzNoGXbwYznwjmh4Mxhs0eaA5LFOFx7GlflIautgfGapOW9V+yK1/VXj
+         xmJaaDOi3d3ABgpC/jiKuPJN7qNV93e65sI2Rax81NwI86keSaLPdFlt4ltzjhpq/0dy
+         jCwbrL8+xobwnyGT831pQmCO+aSK9q5VAegt2ZSGB330p5uBsksaT/xNyufZDzSQkOjw
+         BLXjfxYuV8bQN9DfAJ2no4H7FvvmTAyRCGMlAVtHeY5+g6V/zLVtKZNq1vi9NyajHLGb
+         xHLw==
+X-Gm-Message-State: AOJu0YzVU2/b2jU1FGpBhL93MteyOmOBSh+V3SDPxntclhGshTbAvAU3
+	pZBhzyy3DxydTR47JkSQadbm5pMSBpMn7C/Os+246SwKHAV9zNHgCCjQTsu63rQ=
+X-Google-Smtp-Source: AGHT+IHSuP9KfPsmFMyKD6O+HI2IJr0O7fuSFaE+bYaU9fWG0+7VNib1QkzMDMEJCx0ZKWDpn5N+cw==
+X-Received: by 2002:a05:600c:a385:b0:40e:f9f4:eeb3 with SMTP id hn5-20020a05600ca38500b0040ef9f4eeb3mr3875760wmb.39.1707657996904;
+        Sun, 11 Feb 2024 05:26:36 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUuWZLRlQlD4S4QjUZ9pVJ9XReAJWPED191j8STFihW6pAK544LmDhapzOb7lBUL//zT0k8e3k8SrKCfh7G9PEUocSGjshk/Fkn14ccsogenOTA6oYB4zblwbALpzEleOGtjWNGShmBUsFJjsMoEE+PNIo2tD6FhaoxUw+if+RxXbikzjX0FuKvAkVim+czBc52ni9I/pRROJ+iRR4+8iaExJoWQrpbc8sWTDB9on1siQWKnAzUZcavVkd7ke0LiMG/vvAGzBIMV3nfndIQEKNLHX8upfvuU4SITjQIrCe4HKSXOQbUXKBJ7aA7GAbcoICV/aP5hhVf7YUj+dqDAb9v3zQbhrtp5kW0HqbR0w51NMdtF8N3nDIb+gtMQW7dxtqAcTTvuFBnaS9ZLjCo+iBvDS3N9N1tqwdJbjg/KPzVLMmtzkUwKfAVXJ08Se9d6eBp8Ng/wSTIWCQ7VVfDQJQ8jaNLiRgHDmZUn2f0bcoiBnfIP13FGnkjJ6KQpbvWajUeSXN3isIjZQrNnmttSF/CwdIGkCgQhB8rNedbs7Jiq17pQ1cUl3uAyUKn7tf+9gZqkQQa92Sc152HZnm9ZkaJ7HDK
+Received: from [192.168.1.20] ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id o12-20020a05600c378c00b00410c95ea9b3sm841333wmr.1.2024.02.11.05.26.34
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 11 Feb 2024 05:26:36 -0800 (PST)
+Message-ID: <a6ce4811-2a3d-4df6-aad3-9942a1bcfedd@linaro.org>
+Date: Sun, 11 Feb 2024 14:26:33 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/22] dt-bindings: gpio: Add binding for ChromeOS EC GPIO
+ controller
+To: Stephen Boyd <swboyd@chromium.org>, chrome-platform@lists.linux.dev
+Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+ linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
+ Pin-yen Lin <treapking@chromium.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+ Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>,
+ linux-gpio@vger.kernel.org
+References: <20240210070934.2549994-1-swboyd@chromium.org>
+ <20240210070934.2549994-2-swboyd@chromium.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240210070934.2549994-2-swboyd@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-The documentation for default_values mentions high/low which can be
-confusing, particularly when the ACTIVE_LOW flag is set.
+On 10/02/2024 08:09, Stephen Boyd wrote:
+> The ChromeOS embedded controller (EC) supports setting the state of
+> GPIOs when the system is unlocked, and getting the state of GPIOs in all
+> cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
+> expander. Add a binding to describe these GPIOs in DT so that other
+> devices described in DT can read the GPIOs on the EC.
 
-Replace high/low with active/inactive to clarify that the values are
-logical not physical.
+...
 
-Similarly, clarify the interpretation of values in struct gpiohandle_data.
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      cros-ec@0 {
+> +        compatible = "google,cros-ec-spi";
+> +        reg = <0>;
+> +        interrupts = <101 0>;
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
----
- include/uapi/linux/gpio.h | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+This is should be proper define but then are you sure interrupt is type
+NONE? Does not look right.
 
-diff --git a/include/uapi/linux/gpio.h b/include/uapi/linux/gpio.h
-index 103cd3c6c81e..f7cb8ae87df7 100644
---- a/include/uapi/linux/gpio.h
-+++ b/include/uapi/linux/gpio.h
-@@ -399,8 +399,8 @@ struct gpioline_info_changed {
-  * a batch of input or output lines, but they must all have the same
-  * characteristics, i.e. all inputs or all outputs, all active low etc
-  * @default_values: if the %GPIOHANDLE_REQUEST_OUTPUT is set for a requested
-- * line, this specifies the default output value, should be 0 (low) or
-- * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
-+ * line, this specifies the default output value, should be 0 (inactive) or
-+ * 1 (active).  Anything other than 0 or 1 will be interpreted as active.
-  * @consumer_label: a desired consumer label for the selected GPIO line(s)
-  * such as "my-bitbanged-relay"
-  * @lines: number of lines requested in this request, i.e. the number of
-@@ -426,8 +426,8 @@ struct gpiohandle_request {
-  * %GPIOHANDLE_REQUEST_OUTPUT, %GPIOHANDLE_REQUEST_ACTIVE_LOW etc, added
-  * together
-  * @default_values: if the %GPIOHANDLE_REQUEST_OUTPUT is set in flags,
-- * this specifies the default output value, should be 0 (low) or
-- * 1 (high), anything else than 0 or 1 will be interpreted as 1 (high)
-+ * this specifies the default output value, should be 0 (inactive) or
-+ * 1 (active).  Anything other than 0 or 1 will be interpreted as active.
-  * @padding: reserved for future use and should be zero filled
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-@@ -443,7 +443,8 @@ struct gpiohandle_config {
-  * struct gpiohandle_data - Information of values on a GPIO handle
-  * @values: when getting the state of lines this contains the current
-  * state of a line, when setting the state of lines these should contain
-- * the desired target state
-+ * the desired target state.  States are 0 (inactive) or 1 (active).
-+ * When setting, anything other than 0 or 1 will be interpreted as active.
-  *
-  * Note: This struct is part of ABI v1 and is deprecated.
-  * Use ABI v2 and &struct gpio_v2_line_values instead.
--- 
-2.39.2
+Best regards,
+Krzysztof
 
 
