@@ -1,85 +1,89 @@
-Return-Path: <linux-gpio+bounces-3185-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3186-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8CADB85101E
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 10:56:26 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C031851023
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 10:57:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04E11B23F63
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 09:56:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D0E3B248FC
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 09:57:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 574D417BBA;
-	Mon, 12 Feb 2024 09:56:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DBFB617BBE;
+	Mon, 12 Feb 2024 09:57:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HxzFoaJ5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M48HCUmx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+Received: from mail-pj1-f41.google.com (mail-pj1-f41.google.com [209.85.216.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B96D617BBF;
-	Mon, 12 Feb 2024 09:56:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A3A18032;
+	Mon, 12 Feb 2024 09:57:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707731775; cv=none; b=AHjBrEMCKPmw+PnirpPABFePFSuIs/rjAtwW0xZbZcYylI1TPA57eAMc5tt1bDjtnVEYaL2R/76xaks1a5ZRl6ryQnUWLBndn+DK/MdZg2lpa423Y0bzhiqVoHZOTbE/l0cw+PHqzNSP4RQXOK+cU0aCz36ZjfeJqfY6NeItHiM=
+	t=1707731850; cv=none; b=r8kFkkv6eNUqJe1p4W8AvcBzLJmpRK0Tkii7RdI8VRh54rBHtDjLJSQIzSQs9STM3NnMIFi375osVpbXcS4+hRu9KAcumMito+f6d/s0+/eYehCu7umeY2ejcFLqOSuEbG8k68MaAS6JFDK2Kv2luh0QtaJKddar7TQ1UNXdOiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707731775; c=relaxed/simple;
-	bh=4URAa8tDZu7P3ReVqHurG8lKELL2zN0zp5fd9VP/koM=;
+	s=arc-20240116; t=1707731850; c=relaxed/simple;
+	bh=eCqmbyMfVAA3HHq0HEwZ9UD08bLCGHfxEbdDbk7eRwg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=A/u1aCvHpJwy3xOgTZIK7RP/FBn2ggOjRZo+VSCBWVtg0aGOzY0SpbShXfahoW7F4+Nzjs5sMc4HZPMd4oZwMwZE2Uhqc9z6QfU4HzdeljixEXmqFBPn+uEdbe9VHYKSTKceL2jVeQCjPIXwp0Nj3+zda3ynRvWzUw1A7i2ewkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HxzFoaJ5; arc=none smtp.client-ip=209.85.210.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=aQe4Xg/DQ6jNbP/8xJNKJaxWOexw49nr5JTduUsiXzXG8Row+SReWPqz29tGxQ0ezx016YAEZk1vuuwSyrdcH0g0o+1e5dwX1OEhBv5rjZ+SNY6ma8UI5IkQ4qNCF5jbdJvjzUMJmB2rEk9vfcdGkwlivr7+kEIzSkCtYoINR/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=M48HCUmx; arc=none smtp.client-ip=209.85.216.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e09493eb8eso1652786b3a.1;
-        Mon, 12 Feb 2024 01:56:13 -0800 (PST)
+Received: by mail-pj1-f41.google.com with SMTP id 98e67ed59e1d1-29041136f73so1651018a91.0;
+        Mon, 12 Feb 2024 01:57:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1707731773; x=1708336573; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707731848; x=1708336648; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=W+BiwsPbDFRSmYf6/6OJCieBnG9Z8IZz/ZyHdMzvHIs=;
-        b=HxzFoaJ50LOubUzJfGDla/kjH8/HrMx8y45ciRGy1NaCm6nAkbOo0gQMD3/srtWyH5
-         EDDb5+3rY7TlPzCyjtzQ7t/+LuIYVud+g84mtFsSEhbNBbTgymQTP1H1FSRoR1Xhj9YK
-         iCQZ/Ql73V1xL41cBQ6ejSJ5myHHGKSGlv6dacrwN6z9+i5XSjDl4n3EiHvKpFNUukUn
-         ANaWfCpB1E1DzfJTUtGYhkqy8ZkEDGerIuGJUJG01YErelVck0BWqzOalj2O6Mmmc95r
-         DyM6jNuU6TLTJwq7wsFQdWmZRGUFsxjoS3Qz4G94MxSUNVvMmKqvSiMZaT+b37uMgHtb
-         acSA==
+        bh=oyhOHugUVAx4B66zNESjQuh6m2gkAlYGfoBW+8fBdik=;
+        b=M48HCUmx4jH7JA8oEdMpCBUqJIHCTXYR/jRL2yRq5IQ+oClIuCSyiASL94YNSKyHjW
+         kZAkMqtslKkdmRWtd2v9P6VEMhqdS/RjnYu5o9cxHqYK5Ji0GbclyV7p25++NHbitBJY
+         kDbR7NvvguQId6v1niCHa0/hgH16wFSUYFNzK9rkpsb08FNq17ovqaR7PTl82+qglR0k
+         3h80o6W5uPe0aAGC1g8q8Ivwo6Mc0u3Ss2lIdAfzqq1eHEYI9Ij0kxWOpcwwSLE0YpwF
+         rIjeYy3dVRVJysHOlioFaWaNKPsZ2U1rejJoDDdNBy/b5JRZbmyl9QJ4Vqm0phMwls48
+         G9Ag==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707731773; x=1708336573;
+        d=1e100.net; s=20230601; t=1707731848; x=1708336648;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=W+BiwsPbDFRSmYf6/6OJCieBnG9Z8IZz/ZyHdMzvHIs=;
-        b=gUklk5w1GQvTL9ZTSFfq2GWBZs2/HGh/A9jLhhrsM1D+dRm465E2v+oSMWc0eVK4+M
-         sriSe20V1Im+TSPq56bGTKaHDPeV4S+knrnAkDul7od0sH0iL5HkQ7l2xkgHH1sBv9+/
-         sNNVzHAiIJSZOFhSgYlm6Ec0D0QX0PYMZzbNSTUnB6oQnqxeAbmbivuitscX6xTTh5Tp
-         3RFvZUOmENoTgad/lsI5JxNBhAliediqb2CXbv5BhYl2cIWHI7l5UdBvpV/sX4jGIIRB
-         G6x5k91W/ooZdhp/LsfKWnd6SeDFVpLcfbCW+pggP391wK3HdanklBm3zTjKdWvEKIHF
-         yi+g==
-X-Forwarded-Encrypted: i=1; AJvYcCXCANxSTrbEa5gKfmF/J/x4nYmwFIx9/rnkrlhk4dlSHNgpRZhjJpGvt6eGaYN2IBOT+aJR4XiEOnzO2drTEBuTkSdLTSLHoNpfLA==
-X-Gm-Message-State: AOJu0YwgD/CFfNsBOtThtj4UwD8vuGaoguNJCAnWmg5pzbBtTLynm8sS
-	LGuL4LRbsCh91xmi/CO4WL6Q6Dk+m45juXT2MG/LE4BtalI7nFaVy2BE4yRf
-X-Google-Smtp-Source: AGHT+IH5O61DmcDR/98uJMYb9gs4Y8BvkvPWclgfLBn+ehxQch5lEBhEBe+YwJrFNRNoPKe1BJboNg==
-X-Received: by 2002:a05:6a00:92a2:b0:6e0:50cb:5f0a with SMTP id jw34-20020a056a0092a200b006e050cb5f0amr11465909pfb.12.1707731773028;
-        Mon, 12 Feb 2024 01:56:13 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWQlIXlL2mBR9r0KtkHfX+mjJeuF8G+k6S1FmCtkYri+u4cKy0Yt+s2fCgVgH/l81rH0oo0kCL465POvvFQkVbroWpTyHM2cv0lHExVC+zoiwPAHT8UaV2k7FUFUkNUZ0h9aV0kFyICW2XF+F5RDVMIsqpUtbEOl4yW2zsjSg+vmTJSK5c=
+        bh=oyhOHugUVAx4B66zNESjQuh6m2gkAlYGfoBW+8fBdik=;
+        b=WHhetCrayu75wQOd3KavARSUNnJnITCyisF/v8HzZ2Q6sVvwdthx4RRFTJaqRl9ycq
+         j093i3NRoOIl19Um2j7IQgIZZUEgFOQVKDjH9yL3yKV+I3vTnVDTCZH6f7g2dyxYgkrU
+         GMToUxEiV+EoHNu3nHgyySlVTXbkjsYOxb+Emyb2n6V0Wybc9DU5ibxHHQTniIzI2FJi
+         /an+eAX8p7v24hz/1Kc3ukVW5+CIwOWZXaYZbtqa3XmQsfVGbi6iNuUqOqS2agAQNjlE
+         +WisPolaXt4IG5rXCNxktVGu6CpRiIrFLoC+PsIQ/hl3GFU1Xmg0eDJUns+DNiAkAG/1
+         rj+g==
+X-Gm-Message-State: AOJu0YyADs6hiFLXBpESd8VlEUSk42lC/0onZwIaCDASC9Lohqc4020X
+	FmaEqeZFqVUocWEnKjqWzwa2LU7SS8zA2sMzvPKW1PELhMFgD58r
+X-Google-Smtp-Source: AGHT+IEgnRvYJL1OfbeRML3L344/GxTTB1Q8Pkgg6QOkelFQtjr8RKhStioejs5S2m67u5dtr6o6JA==
+X-Received: by 2002:a17:90b:4009:b0:295:ade7:cdf2 with SMTP id ie9-20020a17090b400900b00295ade7cdf2mr3070418pjb.13.1707731848509;
+        Mon, 12 Feb 2024 01:57:28 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU1SmWRDClNQ9LXUj4w/Ehvs7aJrWFeaQRiJab+GrNE0rr0sdisXVFN2DPl5LG4KL0d6QFUSyPxVpuc2emQCo1Y6L6XXwxHfjxJHsU3vuxLPjOeW1u7B/DsYvUBgIRGlZ1elRUrkFohETMrhKASYwL0sRPUMZv5i3lUaLRjl1ZNsbiDOYakeD4k9mkKmaiA7hk3IyJ1WcqcR0n9Ode7Nn1zLZwT0/zIJl+njiZgjYnnFjI2cuQoJjVVujHt0qxfxB/ufvjia+gwSJFurl0ANtmNFBUfRQRDr6xaMcKqIbAquxSMnSEzeLWpX+2gi31rCg++m4b+oZc8rJNve05L
 Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id x7-20020a626307000000b006e0938f7c57sm5378682pfb.121.2024.02.12.01.56.10
+        by smtp.gmail.com with ESMTPSA id d5-20020a17090ac24500b002971390d19csm97492pjx.1.2024.02.12.01.57.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 01:56:12 -0800 (PST)
-Date: Mon, 12 Feb 2024 17:56:07 +0800
+        Mon, 12 Feb 2024 01:57:28 -0800 (PST)
+Date: Mon, 12 Feb 2024 17:57:22 +0800
 From: Kent Gibson <warthog618@gmail.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, brgl@bgdev.pl,
-	linus.walleij@linaro.org, andy@kernel.org
-Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
-Message-ID: <20240212095607.GA388487@rigel>
-References: <20240211101421.166779-1-warthog618@gmail.com>
- <CAHp75VeSLvrxMOARDBHBJ5VGVR-Jv-7saxjJiN-NOPMyTwit3Q@mail.gmail.com>
- <20240211231321.GA4748@rigel>
- <CAHp75VddjcLaRqugKuk+eejYx_0AHVL4SjYcdh7zUKDj8SpcQw@mail.gmail.com>
- <CAHp75VcjsVasfaZe25fWzzV-5vv7m7O0-v4j=pcvtWQGKtY5BQ@mail.gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v3 23/24] gpio: remove the RW semaphore from the GPIO
+ device
+Message-ID: <20240212095722.GB388487@rigel>
+References: <20240208095920.8035-1-brgl@bgdev.pl>
+ <20240208095920.8035-24-brgl@bgdev.pl>
+ <20240210053730.GA187163@rigel>
+ <CAMRc=Mcq2Obf58=iLHpm5B2_KkHCqRevFWupbBuKmNs_BV6i2g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,88 +93,51 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHp75VcjsVasfaZe25fWzzV-5vv7m7O0-v4j=pcvtWQGKtY5BQ@mail.gmail.com>
+In-Reply-To: <CAMRc=Mcq2Obf58=iLHpm5B2_KkHCqRevFWupbBuKmNs_BV6i2g@mail.gmail.com>
 
-On Mon, Feb 12, 2024 at 11:44:02AM +0200, Andy Shevchenko wrote:
-> On Mon, Feb 12, 2024 at 11:28 AM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
+On Mon, Feb 12, 2024 at 10:53:07AM +0100, Bartosz Golaszewski wrote:
+> On Sat, Feb 10, 2024 at 6:37 AM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > On Mon, Feb 12, 2024 at 1:13 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > > On Sun, Feb 11, 2024 at 06:58:14PM +0200, Andy Shevchenko wrote:
-> > > > On Sun, Feb 11, 2024 at 12:14 PM Kent Gibson <warthog618@gmail.com> wrote:
-> > > > >
-> > > > > The documentation for default_values mentions high/low which can be
-> > > > > confusing, particularly when the ACTIVE_LOW flag is set.
-> > > > >
-> > > > > Replace high/low with active/inactive to clarify that the values are
-> > > > > logical not physical.
-> > > > >
-> > > > > Similarly, clarify the interpretation of values in struct gpiohandle_data.
-> > > >
-> > > > I'm not against this particular change, but I want the entire GPIO
-> > > > documentation to be aligned in the terminology aspect. Is this the
-> > > > case after this patch? I.o.w. have we replaced all leftovers?
+> > On Thu, Feb 08, 2024 at 10:59:19AM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > >
-> > > Agreed. Those are the last remnants of the low/high terminolgy that I am
-> > > aware of, certainly the last in gpio.h.
+> > > With all accesses to gdev->chip being protected with SRCU, we can now
+> > > remove the RW-semaphore specific to the character device which
+> > > fullfilled the same role up to this point.
 > > >
-> > > Having a closer look to double check...
-> > >
-> > > Ah - it is still used in Documentation/userspace-api/gpio/sysfs.rst -
-> > > not somewhere I go very often.
-> > > Would you like that updated in a separate patch?
 > >
-> > Yes, please. For this one
-> > Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > fulfilled
+> >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > > ---
+> > >  drivers/gpio/gpiolib-cdev.c | 1 -
+> > >  drivers/gpio/gpiolib.c      | 4 ----
+> > >  drivers/gpio/gpiolib.h      | 5 -----
+> > >  3 files changed, 10 deletions(-)
+> > >
+> > > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+> > > index ccdeed013f6b..9323b357df43 100644
+> > > --- a/drivers/gpio/gpiolib-cdev.c
+> > > +++ b/drivers/gpio/gpiolib-cdev.c
+> > > @@ -24,7 +24,6 @@
+> > >  #include <linux/pinctrl/consumer.h>
+> > >  #include <linux/poll.h>
+> > >  #include <linux/rbtree.h>
+> > > -#include <linux/rwsem.h>
+> > >  #include <linux/seq_file.h>
+> > >  #include <linux/spinlock.h>
+> > >  #include <linux/timekeeping.h>
+> >
+> > Shouldn't this be part of the rwsem -> srcu switch in the previous
+> > patch?
+> >
 >
-> Also
-> "The values are boolean, zero for low, nonzero for high."
-> https://docs.kernel.org/driver-api/gpio/consumer.html
->
-> And there as well
-> "With this, all the gpiod_set_(array)_value_xxx() functions interpret
-> the parameter "value" as "asserted" ("1") or "de-asserted" ("0")."
-> So, should we use asserted-deasserted?
->
->
-> On https://docs.kernel.org/driver-api/gpio/
-> "get
-> returns value for signal "offset", 0=low, 1=high, or negative error
->
-> ...
->
-> reg_set
-> output set register (out=high) for generic GPIO
->
-> reg_clr
-> output clear register (out=low) for generic GPIO"
-> (Not sure about the last two, though)
->
-> https://docs.kernel.org/driver-api/gpio/intro.html
-> "Output values are writable (high=1, low=0)."
->
->
-> A-ha, here is the section about this:
-> https://docs.kernel.org/driver-api/gpio/intro.html#active-high-and-active-low.
->
->
-> On https://docs.kernel.org/driver-api/gpio/drivers-on-gpio.html
-> "ledtrig-gpio: drivers/leds/trigger/ledtrig-gpio.c will provide a LED
-> trigger, i.e. a LED will turn on/off in response to a GPIO line going
-> high or low (and that LED may in turn use the leds-gpio as per
-> above)."
->
-> So, can you re-read all of it for high/low asserted/deasserted,
-> active/inactive and amend accordingly?
+> That other patch was already huge. I figured this should be separate.
 >
 
-Well that got out of control quickly - I was only considering userspace
-documentation, not internals nor code comments.
-
-So, no, not today.  Looks like you've got the internals covered though.
+To be clear, I mean just this header removal, not the whole patch.
 
 Cheers,
 Kent.
-
-
 
