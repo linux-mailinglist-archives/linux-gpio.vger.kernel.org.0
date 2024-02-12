@@ -1,277 +1,142 @@
-Return-Path: <linux-gpio+bounces-3204-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3205-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05100851600
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 14:53:44 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 48335851611
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 14:57:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 29EF61C22EC3
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 13:53:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 048BD28375F
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 13:57:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B44E74D9E7;
-	Mon, 12 Feb 2024 13:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="FEuE7F60"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D1C1446C6;
+	Mon, 12 Feb 2024 13:47:13 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com [209.85.128.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85FD9487A7;
-	Mon, 12 Feb 2024 13:44:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BAC93BB3D
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 13:47:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707745490; cv=none; b=ShYyvrxGXnEPzX+ndFtlxXFbWIlynLBMmov7yhnfwI/Xlws1sJ5CFYkmD3X8JV88lqS06WG+VjLyM42ilf9ZX4bxyYxUMMIb8zVe1LDBIE66puAPeqIZ7RhEFX6PRHqHRt19dwSJkBLYqO92ypcEnq34aOD087g6+mj3kJb27iI=
+	t=1707745633; cv=none; b=ke9nHLZKZsdOhOn5E0WsWyLKJQ8Jl2V5p9HwVRWJAjR2Fel1LINWjUjZkIDqUc59tvmb51HXlAgiPpmuUPuEPvH5NEk1MABMY4/U3/aQJU6bzpsNkM+PfJHE6QV0A2JWuv0UitjCdpk051YhOx70/cEKhl9Z5sMk7EapxAGqGnM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707745490; c=relaxed/simple;
-	bh=AOujWblAL/Eb3SoFX/DXZmLu4by42Gj1/JOw1DWfuS8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fySjpcaL2IxQt05lXlmeghC7zT53+XBxvoj4/Z5pJTHBLrJftkSs89IUs35S4qzMfI9SO7rCOt6qo4WQKMCsQlsKCHyLm86qNqyTI7d29iv+UKRbI3uOJyRfuUkDT9XxJsLMHNw3Lpw+opET5zXdXadCGYDaAbXIldD53C4lCMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=FEuE7F60; arc=none smtp.client-ip=217.70.183.199
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E59C7FF80D;
-	Mon, 12 Feb 2024 13:44:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1707745485;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ntwnUlVjSIXSSPhME4Hzl2L0UVU1UFUtEinrPzePqbc=;
-	b=FEuE7F60GbzlKRHPPJBWauRvqMcuSgV8RV3aIUMUmQyFbdDZBR6GhUc1Icb5cwl4iLA6Wa
-	sG+z4mYAo0SPRU5zatybX2y2De23/gGgNld179CWO46ltbv4YBcOiNVkD07Kjs/i1vCi64
-	mCzPyQZ3KTYcb4UHvLPAsjb7t9GEemSpU7ctBusSKKeC80/u86AdcQ/QbhmdQD/uANZGn3
-	5vlQswfP609J3hRyVVzBonv0Mz9u/WM6jZr6LOm2mKuwN60aCMbe6qXIMqiNgAxJiC1Lup
-	gWZjBn5LqwmE0Fvw9Y3GwX/eNkVvvvk1uuQHaTO++nmygxsej7TK4RnFOQn2KA==
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Mon, 12 Feb 2024 14:44:44 +0100
-Subject: [PATCH v6 13/13] MIPS: mobileye: eyeq5: add pinctrl node & pinmux
- function nodes
+	s=arc-20240116; t=1707745633; c=relaxed/simple;
+	bh=RGkr11hWeCH8ktVRWcJAAy84DDkaSllct91oH2zTWYU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eItLxpLHYYLwkt792WuhrjCPNQxS4BrBTvRfkMuYbU2HHb222Zu1OUY+ROOF4AFDrKLPMKdtFjINIjEuB0x9oktWg80LtgsMc0NePFoDKD4xTUe66ONlXRhIGWJORPBVNUdjd+epjW/A/lLtRzZO7s3EW/ztChlD4t+VpS6GbXE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6002317a427so28301237b3.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 05:47:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707745630; x=1708350430;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cgE/7Bolpc5DQgjiV9Z2vvz/dGX2ZXmxJww8YU1AHsY=;
+        b=he71D+TuLb3TYpdAOJhuiZKz1j/we1x/g86RuqgJ34emeEBqKsgC7QXNyFDD3F8bS0
+         XNFtU9XFp+pUi6vhL1N9l6mqwsQNgAhaoxbWJut8jxEhS7H59+/QSOHWJb+hjZW82clo
+         V2AvkKHwp93hyN+hPrYrT0N0wj6rHuX351ojoV1qqFuFpaC15BKw3ufUY99UO7kMSQhg
+         bUjWKzNLWwj0qCQwAdbPStiBSP2oudP1Otj3pgwER+xFccycr3rPua6vSGvXF6YOUUNe
+         a5V8VbhGCZDnN2hhKm3NeZw6nRrb4G+2U9Fl49yASsBaGjHyJGUJfW9E8sha8zv5y4ke
+         J4ZQ==
+X-Gm-Message-State: AOJu0YxVQKKjpMyj0RehIDtXFZKc6reFsoJKyq8WNb2A0avTlmJZs4mr
+	f7VSf4U0Eyi2Rb6+32NzuFj/AnZQ4ajKYvgXlZsd5t7keWk/9dkPCcQfznKdeRk=
+X-Google-Smtp-Source: AGHT+IEKBasaUobPFN0/fB6dAToCioVFtNRCoFrneyo5iqLONsNA+4g205E9fCqSSYeebIRbOYdYDQ==
+X-Received: by 2002:a81:5281:0:b0:604:9167:ccf2 with SMTP id g123-20020a815281000000b006049167ccf2mr5222332ywb.42.1707745630080;
+        Mon, 12 Feb 2024 05:47:10 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW0vCTfQBxjUmbCgqOyXumltCyy3ytFklZ2usAb+k+2HW3pLYJnGnqnDt8HlN1ulgYYIbwxN61WbLz8JEk3lYT0ZUYfKBTFyfvmpQ==
+Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
+        by smtp.gmail.com with ESMTPSA id t125-20020a815f83000000b006048e2331fcsm1192554ywb.91.2024.02.12.05.47.08
+        for <linux-gpio@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 12 Feb 2024 05:47:09 -0800 (PST)
+Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc74435c428so3003408276.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 05:47:08 -0800 (PST)
+X-Received: by 2002:a25:8412:0:b0:dcb:d8d1:2d59 with SMTP id
+ u18-20020a258412000000b00dcbd8d12d59mr284195ybk.38.1707745628182; Mon, 12 Feb
+ 2024 05:47:08 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240212-mbly-clk-v6-13-c46fa1f93839@bootlin.com>
-References: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com>
-In-Reply-To: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com>
-To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: b4 0.12.4
-X-GND-Sasl: theo.lebrun@bootlin.com
+References: <39fe95cb-aa83-4b8b-8cab-63947a726754@gmx.net> <CACRpkdax5HaGoW+uZzt0v2Bx+1sPErYRZh7FWQixd0AFFTeiwA@mail.gmail.com>
+In-Reply-To: <CACRpkdax5HaGoW+uZzt0v2Bx+1sPErYRZh7FWQixd0AFFTeiwA@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 12 Feb 2024 14:46:56 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdUCR5DxBW9yxqukq50FRpSsYnP=Lj20QKJtAo7hz=5yUA@mail.gmail.com>
+Message-ID: <CAMuHMdUCR5DxBW9yxqukq50FRpSsYnP=Lj20QKJtAo7hz=5yUA@mail.gmail.com>
+Subject: Re: WARNING: fs/proc/generic.c:173 __xlate_proc_name
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stefan Wahren <wahrenst@gmx.net>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Pins on this platform have two functions: GPIO or something-else. We
-create function nodes for each something-else based on functions.
+Hi Linus,
 
-UART nodes are present in the platform devicetree. Add pinctrl to them
-now that the pin controller is supported.
+On Mon, Feb 12, 2024 at 2:35=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+> looping in Geert becaus I think he wants to look into this!
 
-Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
----
- arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi | 125 ++++++++++++++++++++++++++++
- arch/mips/boot/dts/mobileye/eyeq5.dtsi      |  13 +++
- 2 files changed, 138 insertions(+)
+Oh no ;-)
 
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-new file mode 100644
-index 000000000000..42acda13e57a
---- /dev/null
-+++ b/arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi
-@@ -0,0 +1,125 @@
-+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+
-+/*
-+ * Default pin configuration for Mobileye EyeQ5 boards. We mostly create one
-+ * pin configuration node per function.
-+ */
-+
-+&pinctrl {
-+	timer0_pins: timer0-pins {
-+		function = "timer0";
-+		pins = "PA0", "PA1";
-+	};
-+	timer1_pins: timer1-pins {
-+		function = "timer1";
-+		pins = "PA2", "PA3";
-+	};
-+	timer2_pins: timer2-pins {
-+		function = "timer2";
-+		pins = "PA4", "PA5";
-+	};
-+	pps0_pins: pps0-pin {
-+		function = "timer2";
-+		pins = "PA4";
-+	};
-+	pps1_pins: pps1-pin {
-+		function = "timer2";
-+		pins = "PA5";
-+	};
-+	timer5_ext_pins: timer5-ext-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7", "PA8", "PA9";
-+	};
-+	timer5_ext_input_pins: timer5-ext-input-pins {
-+		function = "timer5";
-+		pins = "PA6", "PA7";
-+	};
-+	timer5_ext_incap_a_pins: timer5-ext-incap-a-pin {
-+		function = "timer5";
-+		pins = "PA6";
-+	};
-+	timer5_ext_incap_b_pins: timer5-ext-incap-b-pin {
-+		function = "timer5";
-+		pins = "PA7";
-+	};
-+	can0_pins: can0-pins {
-+		function = "can0";
-+		pins = "PA14", "PA15";
-+	};
-+	can1_pins: can1-pins {
-+		function = "can1";
-+		pins = "PA16", "PA17";
-+	};
-+	uart0_pins: uart0-pins {
-+		function = "uart0";
-+		pins = "PA10", "PA11";
-+	};
-+	uart1_pins: uart1-pins {
-+		function = "uart1";
-+		pins = "PA12", "PA13";
-+	};
-+	spi0_pins: spi0-pins {
-+		function = "spi0";
-+		pins = "PA18", "PA19", "PA20", "PA21", "PA22";
-+	};
-+	spi1_pins: spi1-pins {
-+		function = "spi1";
-+		pins = "PA23", "PA24", "PA25", "PA26", "PA27";
-+	};
-+	spi1_slave_pins: spi1-slave-pins {
-+		function = "spi1";
-+		pins = "PA24", "PA25", "PA26";
-+	};
-+	refclk0_pins: refclk0-pin {
-+		function = "refclk0";
-+		pins = "PA28";
-+	};
-+	timer3_pins: timer3-pins {
-+		function = "timer3";
-+		pins = "PB0", "PB1";
-+	};
-+	timer4_pins: timer4-pins {
-+		function = "timer4";
-+		pins = "PB2", "PB3";
-+	};
-+	timer6_ext_pins: timer6-ext-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5", "PB6", "PB7";
-+	};
-+	timer6_ext_input_pins: timer6-ext-input-pins {
-+		function = "timer6";
-+		pins = "PB4", "PB5";
-+	};
-+	timer6_ext_incap_a_pins: timer6-ext-incap-a-pin {
-+		function = "timer6";
-+		pins = "PB4";
-+	};
-+	timer6_ext_incap_b_pins: timer6-ext-incap-b-pin {
-+		function = "timer6";
-+		pins = "PB5";
-+	};
-+	can2_pins: can2-pins {
-+		function = "can2";
-+		pins = "PB10", "PB11";
-+	};
-+	uart2_pins: uart2-pins {
-+		function = "uart2";
-+		pins = "PB8", "PB9";
-+	};
-+	spi2_pins: spi2-pins {
-+		function = "spi2";
-+		pins = "PB12", "PB13", "PB14", "PB15", "PB16";
-+	};
-+	spi3_pins: spi3-pins {
-+		function = "spi3";
-+		pins = "PB17", "PB18", "PB19", "PB20", "PB21";
-+	};
-+	spi3_slave_pins: spi3-slave-pins {
-+		function = "spi3";
-+		pins = "PB18", "PB19", "PB20";
-+	};
-+	mclk0_pins: mclk0-pin {
-+		function = "mclk0";
-+		pins = "PB22";
-+	};
-+};
-diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 76935f237ab5..8d4f65ec912d 100644
---- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-+++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -79,6 +79,8 @@ uart0: serial@800000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 10>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart0_pins>;
- 		};
- 
- 		uart1: serial@900000 {
-@@ -90,6 +92,8 @@ uart1: serial@900000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 11>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart1_pins>;
- 		};
- 
- 		uart2: serial@a00000 {
-@@ -101,6 +105,8 @@ uart2: serial@a00000 {
- 			clocks  = <&uart_clk>, <&occ_periph>;
- 			clock-names = "uartclk", "apb_pclk";
- 			resets = <&reset 0 12>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&uart2_pins>;
- 		};
- 
- 		olb: system-controller@e00000 {
-@@ -125,6 +131,11 @@ clocks: clock-controller@e0002c {
- 				clocks = <&xtal>;
- 				clock-names = "ref";
- 			};
-+
-+			pinctrl: pinctrl@e000b0 {
-+				compatible = "mobileye,eyeq5-pinctrl";
-+				reg = <0x0b0 0x30>;
-+			};
- 		};
- 
- 		gic: interrupt-controller@140000 {
-@@ -149,3 +160,5 @@ timer {
- 		};
- 	};
- };
-+
-+#include "eyeq5-pins.dtsi"
+> On Sat, Feb 10, 2024 at 11:06=E2=80=AFAM Stefan Wahren <wahrenst@gmx.net>=
+ wrote:
+> > we are using libgpiod-2.0.1 with Linux 6.1.49 on our Tarragon hardware
+> > platform. Recently we implemented an application which waits for GPIO
+> > interrupts and we were able to trigger a warning by naming the owner of
+> > the GPIO as "R1/S1":
+> >
+> > WARNING: CPU: 0 PID: 429 at fs/proc/generic.c:173
+> > __xlate_proc_name+0x78/0x98 name 'R1/S1'
+> > CPU: 0 PID: 429 Comm: cb_tarragon_dri Not tainted
+> > 6.1.49-00019-g9dbc76303a17 #147
+> > Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+> > unwind_backtrace from show_stack+0x10/0x14
+> > show_stack from dump_stack_lvl+0x24/0x2c
+> > dump_stack_lvl from __warn+0x74/0xbc
+> > __warn from warn_slowpath_fmt+0xc8/0x120
+> > warn_slowpath_fmt from __xlate_proc_name+0x78/0x98
+> > __xlate_proc_name from __proc_create+0x3c/0x284
+> > __proc_create from _proc_mkdir+0x2c/0x70
+> > _proc_mkdir from proc_mkdir_data+0x10/0x18
+> > proc_mkdir_data from register_handler_proc+0xc8/0x118
+> > register_handler_proc from __setup_irq+0x554/0x664
+> > __setup_irq from request_threaded_irq+0xac/0x13c
+> > request_threaded_irq from edge_detector_setup+0xc0/0x1f8
+> > edge_detector_setup from linereq_create+0x30c/0x384
+> > linereq_create from vfs_ioctl+0x20/0x38
+> > vfs_ioctl from sys_ioctl+0xbc/0x8b0
+> > sys_ioctl from ret_fast_syscall+0x0/0x54
+> > Exception stack(0xe0b61fa8 to 0xe0b61ff0)
+> > 1fa0:                   01b019b8 01a9f428 0000000d c250b407 beeae888
+> > beeae880
+> > 1fc0: 01b019b8 01a9f428 01af7e40 00000036 beeaeb88 beeaeb80 beeaeb58
+> > beeaeb60
+> > 1fe0: 00000036 beeae868 b6a88569 b6a01ae6
+> > ---[ end trace 0000000000000000 ]---
+> >
+> > I'm not sure where this should be fixed.
 
--- 
-2.43.0
+Any names ending up in sysfs cannot contain a slash?
 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
