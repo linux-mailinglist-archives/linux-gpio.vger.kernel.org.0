@@ -1,135 +1,101 @@
-Return-Path: <linux-gpio+bounces-3183-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3184-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E307C85100F
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 10:53:29 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8FE5F851019
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 10:55:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4F4A3B212EC
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 09:53:27 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 420961F23B6B
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 09:55:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70EF217BBA;
-	Mon, 12 Feb 2024 09:53:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 154B717BBE;
+	Mon, 12 Feb 2024 09:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="nqQMA9iQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9ZD9ecT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08015680
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 09:53:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D40018036;
+	Mon, 12 Feb 2024 09:55:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707731601; cv=none; b=OY7ydpPlVILJ2tjmEAOkFx7JMLXIGhrdWhFcQS3xVBuRdSpPcfIlU2R4r2AilMcwicNsxep4oFltzhYsLnA0qFwV8byezON6f+mOVskCwAqztoFw0e4vbcW4PaRjJTLe95Yqa2x0qvHlLX0gVGkSGjflTO3epGqIKW+COwU/XNM=
+	t=1707731732; cv=none; b=F1KspBZ1z30G7eBbQI6xxwZpzRqFMvwVIB5KOTMtrsNvi+/sy3C5T/lZdncBRjso0KdG6YrZ3P7aJGke9dvgCgMBddI2iE94nUV2FDes4szjrmBvvfWbB3c/EjsFNaI/tPdc8ssg0qdgrE2++udb1trww8/hu8YlrgkI+IIUooU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707731601; c=relaxed/simple;
-	bh=nus13uP2h13TaLzuZyHgqMURDq86XtXlluSv6CHhhHI=;
+	s=arc-20240116; t=1707731732; c=relaxed/simple;
+	bh=uQq4CbKJxGMQSgFVkzKkkQfK2+8jYuus2rLp3fv1zug=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AuEniu0Om1+SYBvbRl7FQRdDQnVzLw956prc38LZTMZmy1KjjS+7/s1WRrO6Z9TayqiAKIYGAhQ+/eQ3uAAT5OGznFJTsuqZsYRssrBNBO88P7sSkZ32Ikx2O7EzjtRn3yz/XBNrrsomIARlfVNbg8raoGzHoQtr0nob/orWV4c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=nqQMA9iQ; arc=none smtp.client-ip=209.85.217.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-46d2ef81f32so248470137.2
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 01:53:19 -0800 (PST)
+	 To:Cc:Content-Type; b=Zzdl6arReAJexobZVbSOogb+lJSq9ajKO7DsWyrFfTKApjhRzNInkG0lW4ii2FO8AJ/LZurvwzx1jiW8PlZWFx99XtZz/2eJlFtfRGK8S+P/vmy4eOb0LchQcddaLiN8GdvLSRlVMeM3kMqTaxyKf1oAY2jsRSegueiu5l4VhHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9ZD9ecT; arc=none smtp.client-ip=209.85.218.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3cc2f9621aso39952566b.1;
+        Mon, 12 Feb 2024 01:55:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707731598; x=1708336398; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1707731729; x=1708336529; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=WfkulGaUinwmqh3cPnf9KWHBA6cCTkzaIyl9HsKgL4Y=;
-        b=nqQMA9iQbgpCuoPr2KTOY2v7mRsXYOrznYXAaYmvpb0p7VsHciDGqvUVNeBTfmChof
-         1pfYtCwfhvsGNz89MRfR1Z8GE0YGjgtV8oa5m09Bp+cR04kCR/kXxxThPnhLDB7sSEqZ
-         QoymQrIl9baTgF+sXt9axMdm3ypEpixbFI5deWo1/7QXoUFCKfBcCnYTDap5mAIrIXcI
-         jn5PZ49EAMBAfMH11VpiFPH+RCShZ1XWUbFbZ2LCnZHoHDI6d+6B1kUy4LR0ItbSOtNO
-         agAShNzipSP/54jDevDGvTxdpTKPCWHl2JDEsA1FRjQ41gVmZj5G5oqpTmOF4R/KMF8+
-         NlSQ==
+        bh=uQq4CbKJxGMQSgFVkzKkkQfK2+8jYuus2rLp3fv1zug=;
+        b=P9ZD9ecTGiBJ7MCB8CEJ7Uts8qZGZ4ZmCQtRCxoUeqsO71U04f5VNuZHWamWWP/vVS
+         K5S5qWZt7JpeE/tneLyeHlCQN07TykoSKaaZHzHQpGObNXhjdxWgWyD7/x96wSz1vthP
+         2/YqPn2dF6i/n31cEmEYx/s0NlfURQ4A9U4ES+6m8QPDZTC86WJgHizPPI5qRK5v1BIw
+         0hmaGTi8U23JgFRVm9MQ2zor9/MJdx+QipU013dwQAbE9yZcOtGwP3kQV7NEKuVw7R4x
+         S9YR4Krmh7lEmV75k6caXrhV8P0jo/NlJr388YQjbZ9ixyV2HIccCSsXpA6hObiak2/a
+         NGkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707731598; x=1708336398;
+        d=1e100.net; s=20230601; t=1707731729; x=1708336529;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=WfkulGaUinwmqh3cPnf9KWHBA6cCTkzaIyl9HsKgL4Y=;
-        b=Twn+VcO2lF+S83I1ysE24EMxJvwoo+zKPfQZF5eQQi5l7KGWFjyZf6sXChbnXzvSr+
-         mOxj3V4HPezQBmmMhkBmgQAauL74/tM382ARXfZTneYbHBCVwdWTcKQDEIUJalXG8AM/
-         SEw9j4WThDw4VnJNiUwjIFqJ+e0nDwrnEiXTD1J6IfNnMyK1eWanIKLYzfomZYQ44G3D
-         n8DEoMR9Ds6p3jH1oZb0EUyrq22hZqxQtA3mJwA49svoPeUuzpVnl1GWiOpF8zFuq7Xa
-         3z9K5sYb/ysLtgoDd52BFexIATbt22iKVUWGdmEbyVRqk5DEfb7vL5m6h2HoaDGbxgdo
-         w5Pw==
-X-Gm-Message-State: AOJu0YwypXGvEMg3vg7bBzEorWkghqJ+xUKh4MVnK1vvrL9usMkIDzny
-	MoLicHXLZoee4EKjU/mLPKtf5tssR6KKOrRbmb5JArEIzW0BXqpP7TF2csvpUY+364h8j+WjBWt
-	tj9zuEWv9E7Gc0CBgVRKnTyLRPxkyR8xst/5pBx+hmda4CAJ5
-X-Google-Smtp-Source: AGHT+IG1PxIbzBo55spJqG87YjfeoT4Cwbz4KWAVswGzf6HdwI6mHeO65JSPby/65G2WRjVlweDFXZanwE6gae9WTvs=
-X-Received: by 2002:a05:6102:3709:b0:46d:2500:b3f5 with SMTP id
- s9-20020a056102370900b0046d2500b3f5mr3314313vst.35.1707731598486; Mon, 12 Feb
- 2024 01:53:18 -0800 (PST)
+        bh=uQq4CbKJxGMQSgFVkzKkkQfK2+8jYuus2rLp3fv1zug=;
+        b=v+Z8il64U1ytqjqqGlZwYkAQiWV3mxb+fx/ofW3038KFPNId+Nj0gmrDnGj9IROw4l
+         O11hDoBKE14htKI1iLjj1xhbYRDrCMnqr5pBXiH+o9DoKo+H2fM7KyPlgOcIVB8399Tj
+         hDh/ZcgytpN5lAV0NwxHdChEgFzWEY7cYyHVNZ3xf9QsizajDJwiqnnioD0cOby4VlvH
+         J29AD65EYN+WRO8U8Ltl2qVHC0FJBuJFlfhufMko8rWA71SYcoVdxtlRTlvaVMr+t4w6
+         TxlksYhxx9A3B2THsTIi1NMuRV8IhfO2o6S2ReAUoO0crMQmj+vUn7iuFj20mjhLfqH+
+         lvZw==
+X-Forwarded-Encrypted: i=1; AJvYcCXZV5tW6Olc8hG10cMRX6otD4c6mknb1SS31BhRw27fITtNQitv4N/jWlozVg/nVrw338lwXSqItMD2N3NTJvnM/u+t/wSCiQfci0isT/O+ea/+IOC9KrxGrLPBehIskYLgzZNLsg==
+X-Gm-Message-State: AOJu0YwYW3SA13zqLfjtapmjy0LcbUiM935rOKtzoOjp/0pjJRVr1yrr
+	rydq4gDtDkmXbcFXH4WpBB0QpRr1g7PSdhe6eRGzvPc8asl207kL+deDhv38/BbDQBd6vIBJpl+
+	F2Hhq9J1gc/mGNojtpsiwrDH05VY=
+X-Google-Smtp-Source: AGHT+IECAT/cXgpg8e5MpXFQXkt5GjHL2TMJTma0M0sqlzPQC4ZKAqwAO1dm0i4lzBQbQya00Eo2SAIeCbW5h+vbo5U=
+X-Received: by 2002:a17:906:6849:b0:a3c:c8de:7a66 with SMTP id
+ a9-20020a170906684900b00a3cc8de7a66mr684151ejs.13.1707731728539; Mon, 12 Feb
+ 2024 01:55:28 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208095920.8035-1-brgl@bgdev.pl> <20240208095920.8035-24-brgl@bgdev.pl>
- <20240210053730.GA187163@rigel>
-In-Reply-To: <20240210053730.GA187163@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 12 Feb 2024 10:53:07 +0100
-Message-ID: <CAMRc=Mcq2Obf58=iLHpm5B2_KkHCqRevFWupbBuKmNs_BV6i2g@mail.gmail.com>
-Subject: Re: [PATCH v3 23/24] gpio: remove the RW semaphore from the GPIO device
+References: <20240212093420.381575-1-warthog618@gmail.com>
+In-Reply-To: <20240212093420.381575-1-warthog618@gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 12 Feb 2024 11:54:52 +0200
+Message-ID: <CAHp75VezERVckBBuMV0SSTVQjz_UAJ3jUFv1N+ZLYn3va7aMgA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: clarify sysfs line values are logical
 To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, brgl@bgdev.pl, linus.walleij@linaro.org, 
+	andy@kernel.org, corbet@lwn.net
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Feb 10, 2024 at 6:37=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On Mon, Feb 12, 2024 at 11:34=E2=80=AFAM Kent Gibson <warthog618@gmail.com>=
+ wrote:
 >
-> On Thu, Feb 08, 2024 at 10:59:19AM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > With all accesses to gdev->chip being protected with SRCU, we can now
-> > remove the RW-semaphore specific to the character device which
-> > fullfilled the same role up to this point.
-> >
->
-> fulfilled
->
-> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> > ---
-> >  drivers/gpio/gpiolib-cdev.c | 1 -
-> >  drivers/gpio/gpiolib.c      | 4 ----
-> >  drivers/gpio/gpiolib.h      | 5 -----
-> >  3 files changed, 10 deletions(-)
-> >
-> > diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
-> > index ccdeed013f6b..9323b357df43 100644
-> > --- a/drivers/gpio/gpiolib-cdev.c
-> > +++ b/drivers/gpio/gpiolib-cdev.c
-> > @@ -24,7 +24,6 @@
-> >  #include <linux/pinctrl/consumer.h>
-> >  #include <linux/poll.h>
-> >  #include <linux/rbtree.h>
-> > -#include <linux/rwsem.h>
-> >  #include <linux/seq_file.h>
-> >  #include <linux/spinlock.h>
-> >  #include <linux/timekeeping.h>
->
-> Shouldn't this be part of the rwsem -> srcu switch in the previous
-> patch?
->
+> Clarify that line values are logical, not physical, by replacing high/low
+> terminology with active/inactive.
 
-That other patch was already huge. I figured this should be separate.
+For this
+Reviewed-by: Andy Shevchenko <amdy.shevchenko@gmail.com>
 
-Bart
+But as I said there are much more...
 
-> Other than those nits, FWIW the series looks good to me.
->
-> Cheers,
-> Kent.
+--=20
+With Best Regards,
+Andy Shevchenko
 
