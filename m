@@ -1,109 +1,162 @@
-Return-Path: <linux-gpio+bounces-3206-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3207-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABA20851699
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 15:10:27 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id A19D88516C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 15:15:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D13A81C2143F
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 14:10:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C5F741C23610
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 14:15:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 439083F9C9;
-	Mon, 12 Feb 2024 14:04:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 080C23CF61;
+	Mon, 12 Feb 2024 14:11:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="L2JNuybY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 657473EA8B;
-	Mon, 12 Feb 2024 14:03:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E05D73D0A7
+	for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 14:11:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707746640; cv=none; b=UnzThGyqwdpHP8+RsZXb3Ga2Bc2Eqpd0bCgoJwBbDh3iwNMiKCpZ0qqA1czslw034lcXwZLwiThIFs0Mc+1x4tEYSo8oaRLKMVp86C3kwk2lSMtp21rcamlop05n8AsGdr2OoRayeOPkduRnRdW6uvCLr/EKSkx08jWvn77HJKA=
+	t=1707747117; cv=none; b=Tm71UHuevzLoVre+olM/pV8xnR7b9EyK/Q//pRMGGgmn0QaMn9TIUgKX9pHE3BXCoEIBGmxekDIhy6RaTd0X/JO7aeI9lyCE1cuX4v5F6gkyWuo61qPPsYc9VCIzWRA3fa3Gu8wapGwMQqirgQxscGP1iPOU9Kt7ERWr6kNdlcY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707746640; c=relaxed/simple;
-	bh=H/JiaCmNWv0EjZSg6nEGx1vCnFpm+C1tngX5CVtRbpY=;
+	s=arc-20240116; t=1707747117; c=relaxed/simple;
+	bh=bacCSiP3K6iWljBhFbG2us+oZG+NPc1uWB6ejgp3MpY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Lmxhc1DzuzXKlBTCSFnGQel3CdgIeH/5RTGMJhyQKdlOFIxrFO5oiYtTQp2akbirTXoo35M6U0jZm6eGA1mnCI1pG/3qHCFzWVcKTyJbc4uSt12xAk5GERNj0k8meIj7019R3jvFetSfWOui/MMKuW6SyqGMDS61ULcZ3x9MU/U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.161.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-59a99ef8c7fso903841eaf.0;
-        Mon, 12 Feb 2024 06:03:57 -0800 (PST)
+	 To:Cc:Content-Type; b=Kknvq4hf5D3CUPclVTAD+AUvt4B9AELkiL0oMUEdnHQ+rqmZ0Qq3NWrIkpqNnR/ysgtS9cQjU9sVRrvAqqYe+HABaAtobbuxzTfI3sHHgZpYS03ikOsfklHs45ruYLKfdkt38FRaq3bEu5523tcJF6CbNvObW6lFai+fkP1Y5OU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=L2JNuybY; arc=none smtp.client-ip=209.85.161.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-59883168a83so1045693eaf.2
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 06:11:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707747115; x=1708351915; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O7saV+8Gn54+hmqDZSFiqf48BnX0D8VPbhZkhU13pOo=;
+        b=L2JNuybYWoZlA20P3y66rdu77x5HhKSRn+QT74CTu3MVZWdJZzDM8PQsNFoOQR/Bzu
+         xBErC5fg5/38LlJeSGhGl3pK6KUEHt51SCvTLx7tZr4k76x8Sto/wVlgtjzBlUzasuY/
+         kY8pVHr2aYQCV3MyI7ThG3izuqxzexuIdjapIF1meE/bK0DDM/6juJ9o3jV7gFyWpHjF
+         Wng+AKbohCYdhF0hPDhCuTdbDSWJYa9tWDGYf+aGjDIW1/o6p+LQ/LQrqD32lr6vR+Tc
+         fOWsr3KW/S8sy55ajSik7IMNIKxPIfbx3Fw4DGWsCk7POeZIh2z2O+CAEkXYqJw3Mlsj
+         CtFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707746636; x=1708351436;
+        d=1e100.net; s=20230601; t=1707747115; x=1708351915;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SH48FpNzIrh1irMaMafbrbeG1GqtnZpMpdefiQFlYzo=;
-        b=oWN6pnp4r4czomoKMVaS3ugHELDOqI5N8OX3JNVKLIjztQJCqPEuq3Jook3FbSz+uf
-         vcMgNV5RpguC+ObIShLCMoOzSyxlppAENkIC7MUDJyb/zGWj716aJcvglfTE57J/sgpw
-         G6sa5I+WiH/GOUR9+bGGIuaqT76jwMLRDDVvQ5UDNbn5ZJmnXB2zSIWZpVDCfEQQOgYz
-         mPcCqakn2NRVXKaqesnZMg0dUJueYEeOaQR/i+HvqOP8fpncMZ9LkPNZAPUw0DsJjrcc
-         4x7daRXAee2VqnJoKHaLEJTkELNZ1exTE/u62e1Mcgp6VMfJXMcLGJRMUlK0ySC5ZMzb
-         oO4w==
-X-Forwarded-Encrypted: i=1; AJvYcCWV7WH+Fk9o2Uttn1XECEo7Vil2ZPkfGfbhTyIMe/9WUYNTgi8E2DpA6W+TQgbVgWhpcPh+RVCAtBaa1LI41BtAEb6PmNecQlRqTx77uZHevWtGbZFcAdIBe7djajqXS/Pg9bf9tly90KicmPHO4E2rXl1jmSsBwFp1bEGnbz3adjJ6Tp8AjhOsyYkAuHRNiX9GI75PdowisIvAUZ76VGf/aCaIbBqBEg==
-X-Gm-Message-State: AOJu0Yy0KFKVcKeZGT9jNgWEh7aNRdJymVGWRJRD1jA9Rknq1sGFcpjS
-	Oi0ne8xVZQA4ITG//LhFFzSgA0Pb0Tqcg67bt/sKXkbk/zd4V6j5YW0arugFBM8=
-X-Google-Smtp-Source: AGHT+IFnP9k38r05lhUVn+K41SOG2mMb7rBFSoguX5NIklTY8am5/XpsYjU62F2UIWFQ91VR9G7yuQ==
-X-Received: by 2002:a05:6358:7f08:b0:17a:cfb0:828a with SMTP id p8-20020a0563587f0800b0017acfb0828amr7130490rwn.19.1707746635943;
-        Mon, 12 Feb 2024 06:03:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXZpxbIUv5LN0Ik/lc+aGjQkWt/AchNS838pMBO5RU36u36p/Pa5MW9AcSf9j9I8gPCmo3E7v411L9vytczJxrTI7anXxo6bZtJyfWahWQIwNj2tuPjHQApPc1XoQ1ZU0L6QtK9tarT6DHvQxBTFuk7UZDCJkrOp4OB/tX3lngVKGHoW53m5ko7l97Is/27x3aM1JlxEWdfqHu3N1ogTEla6uha7rAR/g==
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com. [209.85.219.174])
-        by smtp.gmail.com with ESMTPSA id n12-20020a81af0c000000b006077a4ff35csm18424ywh.93.2024.02.12.06.03.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 06:03:55 -0800 (PST)
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dc6dcd9124bso2886473276.1;
-        Mon, 12 Feb 2024 06:03:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUsaT3nOo7ZdUY+uo8rLPdXw2B15YV+GThlfM7/wTxmXvvsPzZqnimR+8JaHLt7GUdFeQfyQVt1S6EH3guDVFMsOeWAnS0hYIDdyyL6NBh9CQHefOY+R06KYiCr1r6chz4SVKjSa1ruJSLTvIYK8Uh5JaEMgF3VkJxN8t1dEtFvaWv35Pgs4eYLf9yO4eOLs2wRHPpzEdaDldBoepVnFAfKKJNS79q4pg==
-X-Received: by 2002:a25:2fcc:0:b0:dbd:7491:368f with SMTP id
- v195-20020a252fcc000000b00dbd7491368fmr5193777ybv.7.1707746635632; Mon, 12
- Feb 2024 06:03:55 -0800 (PST)
+        bh=O7saV+8Gn54+hmqDZSFiqf48BnX0D8VPbhZkhU13pOo=;
+        b=Dmw7ApuWrFpVk5DE/GeQERSXXuJKMcFplfoAmvHi1XSIQpFuneHqZ+0PxEGH9sg+D+
+         /HOlpVdtUbCuoCQuVqUeMfNHhW8Ctc0dVi7wIl7+GW2c8EqFrXrUbEo9t4V4+OEPosfD
+         xm7ENr0586q4O4K3RdHBa+Xz0wf5d3pQunHetUqHEJpZ3GQXBm46MBVE/++5vel7dhFM
+         L8UeOOKRxcg+5DAcRuKXGFH5VHp7IEArkr31yk2LLzcEYnpN5PRbXTkSnZuYS+TiSqnk
+         4G9CXNjwB8JRKSlLelNeBNx1QCpv+eL+Qr8HJHMHtT/h7UIYHe/YlXOFhnULmvZ7Fgqa
+         88Bg==
+X-Gm-Message-State: AOJu0Ywkz67mhmfBHfxq1NppSHll2MMrvoYsPz7zCe94iVB0oqEnR2O1
+	iSgLqlXSThjUal+UR2YQG8JRJZdgx3KmQIeJfJtTwJm+zwWe/G9khxMkFB015Bvz2fY+Y6RGBkr
+	bhbswcIjHeYo/0a7vhuKVDDv1X9to9zu93LYEGdrMyecz11jyWsg=
+X-Google-Smtp-Source: AGHT+IFqM6qPfkeLwuG/pFbZq4GFhU2ACIwTdqsYI8NhTSxNzP40uGXTgM6oqcvGePMAP48qeC8siZaek6qMwdjxkhw=
+X-Received: by 2002:a05:6820:c0f:b0:59d:4a67:cebc with SMTP id
+ eh15-20020a0568200c0f00b0059d4a67cebcmr3270172oob.8.1707747114905; Mon, 12
+ Feb 2024 06:11:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208135629.2840932-1-claudiu.beznea.uj@bp.renesas.com> <20240208135629.2840932-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240208135629.2840932-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 Feb 2024 15:03:44 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWVz8ybzA+WAfc88-8jeQ3oO=VL9QBuQdqLDSQW1SN44Q@mail.gmail.com>
-Message-ID: <CAMuHMdWVz8ybzA+WAfc88-8jeQ3oO=VL9QBuQdqLDSQW1SN44Q@mail.gmail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: renesas: r9a08g045: add PSCI support
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: magnus.damm@gmail.com, robh@kernel.org, krzysztof.kozlowski+dt@linaro.org, 
-	conor+dt@kernel.org, linus.walleij@linaro.org, 
-	linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+References: <39fe95cb-aa83-4b8b-8cab-63947a726754@gmx.net> <CACRpkdax5HaGoW+uZzt0v2Bx+1sPErYRZh7FWQixd0AFFTeiwA@mail.gmail.com>
+ <CAMuHMdUCR5DxBW9yxqukq50FRpSsYnP=Lj20QKJtAo7hz=5yUA@mail.gmail.com>
+In-Reply-To: <CAMuHMdUCR5DxBW9yxqukq50FRpSsYnP=Lj20QKJtAo7hz=5yUA@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Mon, 12 Feb 2024 15:11:43 +0100
+Message-ID: <CAMRc=McSdtnqLWrRHoi=6bAuUWfvGqnB+B9FavDDrMfH2vbCkw@mail.gmail.com>
+Subject: Re: WARNING: fs/proc/generic.c:173 __xlate_proc_name
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stefan Wahren <wahrenst@gmx.net>, 
+	Kent Gibson <warthog618@gmail.com>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 9, 2024 at 1:16=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> w=
-rote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+On Mon, Feb 12, 2024 at 2:47=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
 >
-> Add PSCI support to enable the suspend/resume with the help of TF-A.
+> Hi Linus,
 >
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> On Mon, Feb 12, 2024 at 2:35=E2=80=AFPM Linus Walleij <linus.walleij@lina=
+ro.org> wrote:
+> > looping in Geert becaus I think he wants to look into this!
+>
+> Oh no ;-)
+>
+> > On Sat, Feb 10, 2024 at 11:06=E2=80=AFAM Stefan Wahren <wahrenst@gmx.ne=
+t> wrote:
+> > > we are using libgpiod-2.0.1 with Linux 6.1.49 on our Tarragon hardwar=
+e
+> > > platform. Recently we implemented an application which waits for GPIO
+> > > interrupts and we were able to trigger a warning by naming the owner =
+of
+> > > the GPIO as "R1/S1":
+> > >
+> > > WARNING: CPU: 0 PID: 429 at fs/proc/generic.c:173
+> > > __xlate_proc_name+0x78/0x98 name 'R1/S1'
+> > > CPU: 0 PID: 429 Comm: cb_tarragon_dri Not tainted
+> > > 6.1.49-00019-g9dbc76303a17 #147
+> > > Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+> > > unwind_backtrace from show_stack+0x10/0x14
+> > > show_stack from dump_stack_lvl+0x24/0x2c
+> > > dump_stack_lvl from __warn+0x74/0xbc
+> > > __warn from warn_slowpath_fmt+0xc8/0x120
+> > > warn_slowpath_fmt from __xlate_proc_name+0x78/0x98
+> > > __xlate_proc_name from __proc_create+0x3c/0x284
+> > > __proc_create from _proc_mkdir+0x2c/0x70
+> > > _proc_mkdir from proc_mkdir_data+0x10/0x18
+> > > proc_mkdir_data from register_handler_proc+0xc8/0x118
+> > > register_handler_proc from __setup_irq+0x554/0x664
+> > > __setup_irq from request_threaded_irq+0xac/0x13c
+> > > request_threaded_irq from edge_detector_setup+0xc0/0x1f8
+> > > edge_detector_setup from linereq_create+0x30c/0x384
+> > > linereq_create from vfs_ioctl+0x20/0x38
+> > > vfs_ioctl from sys_ioctl+0xbc/0x8b0
+> > > sys_ioctl from ret_fast_syscall+0x0/0x54
+> > > Exception stack(0xe0b61fa8 to 0xe0b61ff0)
+> > > 1fa0:                   01b019b8 01a9f428 0000000d c250b407 beeae888
+> > > beeae880
+> > > 1fc0: 01b019b8 01a9f428 01af7e40 00000036 beeaeb88 beeaeb80 beeaeb58
+> > > beeaeb60
+> > > 1fe0: 00000036 beeae868 b6a88569 b6a01ae6
+> > > ---[ end trace 0000000000000000 ]---
+> > >
+> > > I'm not sure where this should be fixed.
+>
+> Any names ending up in sysfs cannot contain a slash?
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-devel for v6.9.
+It's actually procfs. Every irq has an entry under /proc/irq/xyz/
+containing a directory named after the name of the interrupt. In this
+case the path of the directory would have been /proc/irq/xyz/R1/S1 but
+of course this wouldn't work. Should we replace every `/` in GPIO line
+names with `:` for interrupts?
 
-Gr{oetje,eeting}s,
+Bart
 
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+>
+> Gr{oetje,eeting}s,
+>
+>                         Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m6=
+8k.org
+>
+> In personal conversations with technical people, I call myself a hacker. =
+But
+> when I'm talking to journalists I just say "programmer" or something like=
+ that.
+>                                 -- Linus Torvalds
 
