@@ -1,128 +1,110 @@
-Return-Path: <linux-gpio+bounces-3217-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3219-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E504851D70
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 19:58:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A051C851D9D
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 20:11:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E956A285C07
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 18:58:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ADAC11C2177C
+	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 19:11:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62C6045018;
-	Mon, 12 Feb 2024 18:58:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 399D646549;
+	Mon, 12 Feb 2024 19:11:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b="am4SrgKM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp47.i.mail.ru (smtp47.i.mail.ru [95.163.41.85])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFD283FE44;
-	Mon, 12 Feb 2024 18:58:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF63F3EA78;
+	Mon, 12 Feb 2024 19:10:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.163.41.85
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707764326; cv=none; b=Xaz/Did+qQ3h7Mz5LYeNT0Xj1iFukSPxXnw2h291xa7PYytHM0ONje5jY3K1Q4z8hy8bih31HyPM1VjLT+e6b9fSBEW+7pU1BDtZK3cbL9EIv4/fzKnB2rFvTemesRpk7ti9vcYvvaBFraKt1OauVgTWvoVXcgRPS+1gMuRlU4g=
+	t=1707765064; cv=none; b=b/1a03YvwpaeJ2PUDmPRiPVYa0jUsTLurV+V+I8WkEoB4MbA+DmD2Hv0L+eZ09nbfysbd3slEcA6QKQSckEyxFvCXDTslBVmT7eoZw2ppyrOTaRfGDiu6/5dV75yTsLBzIDPzw8X+7xU5B/WAkCZD0nuaxPD+kCjKyv99EbJLmI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707764326; c=relaxed/simple;
-	bh=plrXdSzX2cXpZ6Di178taVe+HVkNMfViZlH5AuPB9gw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sHZzx0/r4+d1CbXoJlYqAmseMejhkiF8ndgLgn28+T4sbqHAG+Jd4B2S2hx1PtjAOQfhDjH8iHTkg+BvvK5SGku6HFloHC3X5Xxc1MD8lWLK6JCyLQwgaQ5fRyCvaVZxNJUKiLR0jAYpQT0vTiAF24jBSzzUrgl3NxzmUCrMyFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6077dabae03so2187097b3.0;
-        Mon, 12 Feb 2024 10:58:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707764322; x=1708369122;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qE+rpTjs9eBLf5jPsgmKdz9gvYpfD1G97Uge2T8CuAg=;
-        b=VMaf6bd4KepF/cXQf29FqX2Fw1h1fkMMXx+AC4Wxexwz4+RJqq7GUu1hCj70fU3RqC
-         mk6DhB54Wf0TWS7NwLkZGPk4CfBzWexauLC2Wulc+VP9BVzX6m3OPMMau3BTC3BAtzQA
-         9IJh+mZWgniq1sbBtCrFb7h2rr3nQeWiKcs5AmNgqBWF3EM9ayH4rl/0+6ZAs93ps2mE
-         GPyFJakXoLV4kP2salXvtCgKjpxczZdyRP3vllern2mpF8YIUboBTg0GeA6HKmV7hsgC
-         yi1+qkVMQR9LzdnefPP9MGLcbQ+zMl8tT4IfSGckqjaFrYmnfAhciIYLUBOsPZVV72wF
-         U93A==
-X-Forwarded-Encrypted: i=1; AJvYcCVqynwbveKO5JoB8HHIqcGjK9/RlPsjtzt98DdPZAF0f49mF85vBCXrN0wyQhCpG3K1ChDn7XmZP7DH8NrGiooXjD9hDP4m328xlz6pPbKnFpsT8bP3pHqgVlrR8O0hHEY+Ug5Px0FSG2V7VNMA
-X-Gm-Message-State: AOJu0YyQAErF1hKq2jfre4joB8fzWVxKAOKdCQiP2UrmuUhv3lmR0tsc
-	NY+P9MVo5X5UEe+BkNSeinMRTPouwfyD8vzR5s994xxwp1IlIS768HT5+2Thfao=
-X-Google-Smtp-Source: AGHT+IE/KA6hlTT3UE43aWYdG8wLx/tQf+t7LHUylcs8UOnvWa/3ZWPZ6szZm6OZv/NZ3kbLuXWj9w==
-X-Received: by 2002:a0d:ce02:0:b0:5ff:981a:2aa5 with SMTP id q2-20020a0dce02000000b005ff981a2aa5mr5839259ywd.46.1707764322137;
-        Mon, 12 Feb 2024 10:58:42 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUgJIiYGVWLILDR69mnTNX2DsYrB+xRgm7fL0TtxKubengPRQ1z8CWtgYFcfcnh+b64M9KbNzzm6ANoI6mQi+Xz462ka9O7XXJUYsqV3DYNjLkZKDl4ionreR2PZXix5WdU0O5z5bZSYi5OXteK
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com. [209.85.219.178])
-        by smtp.gmail.com with ESMTPSA id m126-20020a0dca84000000b005fffb25df43sm1290040ywd.22.2024.02.12.10.58.41
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 12 Feb 2024 10:58:41 -0800 (PST)
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso3583491276.3;
-        Mon, 12 Feb 2024 10:58:41 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXthf6eyw9O9dYBurqTzQZMCimM2PHKHEV17JA0wJCoMGi680C/5FUv7jQIH/tjdGWSPY9F6qgfneMj2ynm3r9NvmShjgGpNiR5FN8/H8pXJPuSv5AkV5+Ewu0WXG+YatfRdo7/qkA8gGWb12KP
-X-Received: by 2002:a5b:4d:0:b0:dc7:5cb3:256a with SMTP id e13-20020a5b004d000000b00dc75cb3256amr5340489ybp.42.1707764321673;
- Mon, 12 Feb 2024 10:58:41 -0800 (PST)
+	s=arc-20240116; t=1707765064; c=relaxed/simple;
+	bh=pufIjUalkJOUuQI62GHNy6tzjDh11aWkPFy25ZLPkFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tcOvKY+6U8Lv3BiYsDskue/SXnoY/GdpBTv1n1nvWfuOxYLqKqpjhPzScngTqPcu7JUu2HpecipxVIzuVZuIT/cFKDcXFrPlCSFoDhFmu2/iRw6q/OqREA3U4ckWfnrkKQVTJMQ68NmsZXkCsRHky16ETQeCJKCJaChvn4r0fN4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com; spf=pass smtp.mailfrom=jiaxyga.com; dkim=pass (1024-bit key) header.d=jiaxyga.com header.i=@jiaxyga.com header.b=am4SrgKM; arc=none smtp.client-ip=95.163.41.85
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jiaxyga.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=jiaxyga.com
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=jiaxyga.com
+	; s=mailru; h=Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:
+	Cc:To:From:From:Sender:Reply-To:To:Cc:Content-Type:Content-Transfer-Encoding:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive:
+	X-Cloud-Ids:Disposition-Notification-To;
+	bh=iA8Wl86EoCHuOnRPeH06uMKkPJEBJBHggtb9rh5PkDk=; t=1707765059; x=1707855059; 
+	b=am4SrgKMucsMThX9flRVPLmqOKl188woWGZyi4cyFYL1U1R+6onpkdKhUzzhHR5tSUmuI6sInMC
+	Gt7+2IkcfUvpOh6HB7j5Uy4KuMY8tfgF0sOqAnzocCo8hR5vbVRpaCWRZ3jc5ukjzoNPNlxOpGHeL
+	mygwZNhOnhjerd9Lido=;
+Received: by smtp47.i.mail.ru with esmtpa (envelope-from <danila@jiaxyga.com>)
+	id 1rZbhY-00000006gZh-2skK; Mon, 12 Feb 2024 22:10:49 +0300
+From: Danila Tikhonov <danila@jiaxyga.com>
+To: andersson@kernel.org,
+	konrad.dybcio@linaro.org,
+	linus.walleij@linaro.org,
+	robh@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	vkoul@kernel.org
+Cc: linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Danila Tikhonov <danila@jiaxyga.com>
+Subject: [PATCH 0/2] pinctrl: qcom: Add SM8475 support
+Date: Mon, 12 Feb 2024 22:10:44 +0300
+Message-ID: <20240212191046.77013-1-danila@jiaxyga.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240206135115.151218-1-biju.das.jz@bp.renesas.com>
- <20240206135115.151218-3-biju.das.jz@bp.renesas.com> <CAMuHMdWwHwZcGj9Efuqp-vnAh0Dy9br7RScOjpsL5zcCKFcbhw@mail.gmail.com>
- <CADT+UeB4PL+gfiV=x2RO0U9hTDtrr3fT+8039w9eCZM8HvWc-g@mail.gmail.com>
-In-Reply-To: <CADT+UeB4PL+gfiV=x2RO0U9hTDtrr3fT+8039w9eCZM8HvWc-g@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 12 Feb 2024 19:58:29 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVpN+ntXVw4+7p-r8HpQATvcHahKsYBHEcrFi7BUeehTg@mail.gmail.com>
-Message-ID: <CAMuHMdVpN+ntXVw4+7p-r8HpQATvcHahKsYBHEcrFi7BUeehTg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] pinctrl: renesas: rzg2l: Simplify rzg2l_gpio_irq_{en,dis}able
-To: Biju Das <biju.das.au@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Authentication-Results: smtp47.i.mail.ru; auth=pass smtp.auth=danila@jiaxyga.com smtp.mailfrom=danila@jiaxyga.com
+X-Mailru-Src: smtp
+X-7564579A: B8F34718100C35BD
+X-77F55803: 4F1203BC0FB41BD96201AD55A1C8F7DBA68A15D1D35E5CC5CF7D7F77DA5535F2182A05F5380850404BAAE315F9C669162EB5D77EF37489D1A8A3064AB119E1FDE51B3825F593DFF20C8629FDE0E8EB2A
+X-7FA49CB5: FF5795518A3D127A4AD6D5ED66289B5278DA827A17800CE7BCC85671EC7A750CEA1F7E6F0F101C67BD4B6F7A4D31EC0BCC500DACC3FED6E28638F802B75D45FF8AA50765F790063702DFA59B3C994360EA1F7E6F0F101C6723150C8DA25C47586E58E00D9D99D84E1BDDB23E98D2D38B73AB1701401CD8718E4E89096DE07AD7FA8D73926623C3E3AA32EDAE551AB609A471835C12D1D9774AD6D5ED66289B5278DA827A17800CE73CD73D99384BA5CA9FA2833FD35BB23D2EF20D2F80756B5F868A13BD56FB6657A471835C12D1D977725E5C173C3A84C3A367EA73E0D98AAD117882F4460429728AD0CFFFB425014E868A13BD56FB6657D81D268191BDAD3DC09775C1D3CA48CFFFA21EE48555ABE0BA3038C0950A5D36C8A9BA7A39EFB766D91E3A1F190DE8FDBA3038C0950A5D36D5E8D9A59859A8B6922E583744E2C36876E601842F6C81A1F004C906525384303E02D724532EE2C3F43C7A68FF6260569E8FC8737B5C2249957A4DEDD2346B42E827F84554CEF50127C277FBC8AE2E8BA83251EDC214901ED5E8D9A59859A8B690A324785FE7B950089D37D7C0E48F6C5571747095F342E88FB05168BE4CE3AF
+X-87b9d050: 1
+X-C1DE0DAB: 0D63561A33F958A558C1EF4E60FD35075002B1117B3ED696EC0DA9C4757FAEBFAD0703CEB2EF9A27823CB91A9FED034534781492E4B8EEADC3194D76C41E9723C79554A2A72441328621D336A7BC284946AD531847A6065A535571D14F44ED41
+X-C8649E89: 1C3962B70DF3F0ADE00A9FD3E00BEEDF77DD89D51EBB7742D3581295AF09D3DF87807E0823442EA2ED31085941D9CD0AF7F820E7B07EA4CFD41107F383D4208A08443702DC345A5AE3975F14A4B398A39D1AEA5FA8D32351673DC415E80A8BD9233AFEF422F2DFF9F6B0B1ADEAF281FA5D44EE695255846BFD7CDB12671657C842BF32D1DA1046D202C26D483E81D6BE72B480F99247062FEE42F474E8A1C6FD34D382445848F2F3
+X-D57D3AED: 3ZO7eAau8CL7WIMRKs4sN3D3tLDjz0dLbV79QFUyzQ2Ujvy7cMT6pYYqY16iZVKkSc3dCLJ7zSJH7+u4VD18S7Vl4ZUrpaVfd2+vE6kuoey4m4VkSEu530nj6fImhcD4MUrOEAnl0W826KZ9Q+tr5ycPtXkTV4k65bRjmOUUP8cvGozZ33TWg5HZplvhhXbhDGzqmQDTd6OAevLeAnq3Ra9uf7zvY2zzsIhlcp/Y7m53TZgf2aB4JOg4gkr2biojbL9S8ysBdXiSGYHknyUbxBfnTB+P1lvX
+X-Mailru-Sender: 9EB879F2C80682A09F26F806C7394981983862166B642228ED188C5D0CCD93D4A95D4247FF2147493A3B37D2368DB9712C62728BC403A049225EC17F3711B6CF1A6F2E8989E84EC137BFB0221605B344978139F6FA5A77F05FEEDEB644C299C0ED14614B50AE0675
+X-Mras: Ok
 
-Hi Biju,
+After comparing waipio (taro) and cape pinctrl in downstream, I found that
+these are the only differences. Let's just add this as it shouldn't cause
+issues on the SM8450 instead of writing a separate driver.
 
-On Mon, Feb 12, 2024 at 6:03=E2=80=AFPM Biju Das <biju.das.au@gmail.com> wr=
-ote:
-> On Mon, Feb 12, 2024 at 3:53=E2=80=AFPM Geert Uytterhoeven <geert@linux-m=
-68k.org> wrote:
-> > On Tue, Feb 6, 2024 at 2:51=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas=
-.com> wrote:
-> > > Simplify rzg2l_gpio_irq_{en,dis}able by adding a helper function
-> > > rzg2l_gpio_irq_endisable().
-> > >
-> > > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > > ---
-> > > v2:
-> > >  * New patch
-> >
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> >
-> > Note that this conflicts with Prabhakar's "[PATCH 2/5]
-> > irqchip/renesas-rzg2l: Add support for RZ/Five SoC"
-> > https://lore.kernel.org/all/20240129151618.90922-3-prabhakar.mahadev-la=
-d.rj@bp.renesas.com
->
-> Do you mean patch [1] conflicts with the above as it is irqchip related?
-> [1]
-> https://lore.kernel.org/all/20240212113712.71878-6-biju.das.jz@bp.renesas=
-.com/
+To: Bjorn Andersson <andersson@kernel.org>
+To: Konrad Dybcio <konrad.dybcio@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
 
-Oops, you're right.
-I've been seeing too many patches today...
+Danila Tikhonov (2):
+  dt-bindings: pinctrl: qcom,sm8450-tlmm: Add compatible for SM8475
+  pinctrl: qcom: sm8450: Add pll_clk to pin group 98 for SM8475
 
-Gr{oetje,eeting}s,
+ .../devicetree/bindings/pinctrl/qcom,sm8450-tlmm.yaml      | 7 ++++++-
+ drivers/pinctrl/qcom/pinctrl-sm8450.c                      | 4 ++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
 
-                        Geert
+-- 
+2.43.0
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
