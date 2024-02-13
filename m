@@ -1,145 +1,121 @@
-Return-Path: <linux-gpio+bounces-3231-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3232-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 738AD852D30
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 10:57:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id D65A7852D86
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 11:10:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 290291F290E3
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 09:57:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 150DA1C22530
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 10:10:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 704F9224FA;
-	Tue, 13 Feb 2024 09:56:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0875224DE;
+	Tue, 13 Feb 2024 10:10:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b="tHSpq6lL"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="bDqkAJ/A"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from forward500b.mail.yandex.net (forward500b.mail.yandex.net [178.154.239.144])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD0924B23;
-	Tue, 13 Feb 2024 09:56:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.144
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A213224E6
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 10:10:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707818186; cv=none; b=QI7nBdzTdNc4W0bA9jmM5hHsnvmhg/HKtoT/6Mk+y/tZUirFBIeCclB//pfVQ611ADmfF7v6xH9FzT8c58o77YDIlvvwYWCrkLXTnt6FAZ74wFdfDMe8h/q/aE3diqXcuKWLcwh26l9aMUT/sBRi8udWRZEXGW67LNluUaYk9tM=
+	t=1707819018; cv=none; b=nAUDr0QTrrCkhWj4ddBgpCkKO9eGzY9ti3Qo64tSHwGgncGDU4rUoBtiTPYrCuDunHk/H1MZiOXq/yeNHbIH4MUproaFTkrR9qbrRfO2qJQ7BXKgb6Hk92vTWRPF5VJq6VE6JYWacLKtJsLprhW6MDrLtzsEQfk8gB8sCjETdeQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707818186; c=relaxed/simple;
-	bh=BNSX9WQo4fdZixPgrChnndimSE1LeUip7SbHQG3EiRk=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=lnVHOfnO/tsUVI4Dqx9fzVPhFcYxDlxJLDe7xuZgHe1Ld7yh54uLGNwD6EeINwBugvtkNZw1W36Tt2BL9uErg9apphFAj82+QqqWfQ50RFTi9oTJYxTD/7iT7t31xoNP/L1/fI9zk6scWUsKoD/hRAkc1QDXr2UYPgfZ6FdX6Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me; spf=pass smtp.mailfrom=maquefel.me; dkim=pass (1024-bit key) header.d=maquefel.me header.i=@maquefel.me header.b=tHSpq6lL; arc=none smtp.client-ip=178.154.239.144
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=maquefel.me
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=maquefel.me
-Received: from mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net [IPv6:2a02:6b8:c12:3019:0:640:a0d4:0])
-	by forward500b.mail.yandex.net (Yandex) with ESMTPS id 9CCD561154;
-	Tue, 13 Feb 2024 12:48:16 +0300 (MSK)
-Received: by mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id Amja449YvOs0-Ohe7AJJt;
-	Tue, 13 Feb 2024 12:48:14 +0300
-X-Yandex-Fwd: 1
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=maquefel.me; s=mail;
-	t=1707817694; bh=BNSX9WQo4fdZixPgrChnndimSE1LeUip7SbHQG3EiRk=;
-	h=References:Date:In-Reply-To:Cc:To:From:Subject:Message-ID;
-	b=tHSpq6lLbJRzMUl5S+AQdH+yFWqgLs5dAvYesqMe255xcZfmaDSgVPRqcA1r0bzrw
-	 TkfIPDSLR62NkdUlPI+s/lCQcEhokM08txNkwukmx6USimZGbDh66EHaLNxEHxEu27
-	 3BeQU0snEq2nQPzdmEknsfQ0A1hkYVGjcAylct3Y=
-Authentication-Results: mail-nwsmtp-smtp-production-main-91.myt.yp-c.yandex.net; dkim=pass header.i=@maquefel.me
-Message-ID: <84444657b86c7a25ea2e6031ea85978917f33342.camel@maquefel.me>
-Subject: Re: [PATCH v7 00/39] ep93xx device tree conversion
-From: Nikita Shubin <nikita.shubin@maquefel.me>
-To: andy.shevchenko@gmail.com, Vinod Koul <vkoul@kernel.org>, Stephen Boyd
-	 <sboyd@kernel.org>
-Cc: Hartley Sweeten <hsweeten@visionengravers.com>, Alexander Sverdlin
- <alexander.sverdlin@gmail.com>, Russell King <linux@armlinux.org.uk>,
- Lukasz Majewski <lukma@denx.de>, Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>, Stephen Boyd
- <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring
- <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
- Vinod Koul <vkoul@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>,
- Guenter Roeck <linux@roeck-us.net>, Thierry Reding
- <thierry.reding@gmail.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <u.kleine-koenig@pengutronix.de>, Mark Brown <broonie@kernel.org>, "David
- S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub
- Kicinski <kuba@kernel.org>,  Paolo Abeni <pabeni@redhat.com>, Miquel Raynal
- <miquel.raynal@bootlin.com>, Richard Weinberger <richard@nod.at>, Vignesh
- Raghavendra <vigneshr@ti.com>, Damien Le Moal <dlemoal@kernel.org>, Sergey
- Shtylyov <s.shtylyov@omp.ru>, Dmitry Torokhov <dmitry.torokhov@gmail.com>,
- Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Ralf Baechle <ralf@linux-mips.org>,  "Wu,
- Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>, Olof Johansson
- <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
- linux-pm@vger.kernel.org,  devicetree@vger.kernel.org,
- dmaengine@vger.kernel.org,  linux-watchdog@vger.kernel.org,
- linux-pwm@vger.kernel.org,  linux-spi@vger.kernel.org,
- netdev@vger.kernel.org, linux-mtd@lists.infradead.org, 
- linux-ide@vger.kernel.org, linux-input@vger.kernel.org, 
- linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko
- <andriy.shevchenko@intel.com>, Bartosz Golaszewski
- <bartosz.golaszewski@linaro.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Andy Shevchenko
- <andriy.shevchenko@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>
-Date: Tue, 13 Feb 2024 12:48:11 +0300
-In-Reply-To: <Zb_DfISgoNyTKWMp@surfacebook.localdomain>
-References: <20240118-ep93xx-v7-0-d953846ae771@maquefel.me>
-	 <Zb_DfISgoNyTKWMp@surfacebook.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.48.4 
+	s=arc-20240116; t=1707819018; c=relaxed/simple;
+	bh=V9cYulzfYb7FqDqY0/zGsr+wR7nxlESe3HrJDyaeXPM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LX9oObPTEXQ/UjAf2NrYgfBbofuIEBFfCyHo9cRlWJgCi8yrpcIXJRpXo6tlHyWCGMPRHQX0vGmIdoII3QYWMaVS3/sM3GMR4jYG0AKxvLNcvS6RYTmthV6YJzfgvZvEcx1DXVDwOIPgJ6uqAkAX7icgekgzzVIN+emZ9i5Jx/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=bDqkAJ/A; arc=none smtp.client-ip=209.85.221.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-33b4e6972f6so2206531f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 02:10:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707819015; x=1708423815; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=44veiaBqGMc5lNCdO5QoQ2ouGyAA43jz0m7IM734+yA=;
+        b=bDqkAJ/AsLSjrUQYQ/6OacG8zS2NzmUaf9MZR+iwixyJipGF4pE9bqXDYiuZvvrlEe
+         Nvh3/Dy29yPGUFbQlF1pa/xz6x/eJrgN3AinExf2GK05/21Ah9rrQ15VsmV1qqqaY5mH
+         41VD90OVwA3OzAOfJriec228hOZqtabAyp8qOiqJDezCyoMacgU7xE2G9uwrCBmy630m
+         TbfA/JVzrY2eQqVE+Gj1YXlUfD7QfMnCNQjh1GgOybiX/EIDPpcunOgVyZLTkZYT3Ky3
+         rqHnSuVW6JpDCpz6kLhtY/eNfqdm5TChO6afqlenObRU3CAt/kpJujxViuSHOh4nnLKh
+         E7VA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707819015; x=1708423815;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=44veiaBqGMc5lNCdO5QoQ2ouGyAA43jz0m7IM734+yA=;
+        b=KZl8z03WdbAquqjisG4HUAhhYKn+OHOkVyjdGiBHh1PCTXMbaiWiKm1iNRPJA5atyv
+         hwcGrlvMnPwKMO0qtNiIS8PYXbrDiosANdoFMKmXGPsNAH593EidaHk7qc0EFM91Pslg
+         XCDcR2/5Lq22D0QD8T6rrkb9rvQeIpOTu/nyrU0yWMTp6ihaL3IzfvHG5TKViAHXClVZ
+         Qma4o32rjiIbbqwvG5AEiaX71VQvatl3t5dWS0+qGHo3HnZRlset2t3F23zH+foKK6mB
+         e5Rq5dD+8L1RWsInWZYKAnp4PfNkId2zKn3G4xgtSTGS48RFgxroN+IHF0I6q7c87KW1
+         M3QA==
+X-Forwarded-Encrypted: i=1; AJvYcCWnA8yijo+CMj8hD+6bhJHETv3YuORM9wc+V5nAtwdkqAW/YOONBjEewDpvMruxRLkMfBe8I/Kjz0/eDR4MokZP6kjsivW24NS6Ag==
+X-Gm-Message-State: AOJu0YwYt3u5fN/LB7V/uaGd6vRGpCa3h/QRzJq+kTISsLjRwIDJmwAn
+	vlupwvdvVMpDFKTc1QJT0FfYxODzHxWFUlRxevS/oFADE3OiZsOgclDnK26hRzc=
+X-Google-Smtp-Source: AGHT+IF48kMd4o6kuMj09jog6IyBi+Fpq6HfXZ4TbeQ6YQ97bupfm6zbfhP0q4ah5kEaehBaGLLu3g==
+X-Received: by 2002:adf:f848:0:b0:33c:def5:1802 with SMTP id d8-20020adff848000000b0033cdef51802mr480082wrq.6.1707819015226;
+        Tue, 13 Feb 2024 02:10:15 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCV8nfdwr1JotIHXrpC1l20SNFZhNapHegZmkgo0W02sYWECeFAPSysM4xhrVCDGsVj36bD3gaPGz2PhaeeGyEZP6ns/cgTrrP/mKZK+TLjBREevGCmfy5hHYluDfV9VpFVGSpNATd5Be3/+es3EvZazOY/d1uupCG7kV9BvM5kCuPWbLb/3Uu2ucFRZl3sSzD2nDiWigZjpQMBq03NfO4W2JUk=
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f634:2e37:58a9:242a])
+        by smtp.gmail.com with ESMTPSA id dd18-20020a0560001e9200b0033b3d28ef1fsm9075805wrb.65.2024.02.13.02.10.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 02:10:14 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [GIT PULL] gpio: immutable branch with GPIO stubs for the reset subsystem
+Date: Tue, 13 Feb 2024 11:10:00 +0100
+Message-Id: <20240213101000.16700-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Sun, 2024-02-04 at 19:03 +0200, andy.shevchenko@gmail.com wrote:
-> Thu, Jan 18, 2024 at 11:20:43AM +0300, Nikita Shubin kirjoitti:
-> > The goal is to recieve ACKs for all patches in series to merge it
-> > via Arnd branch.
-> >=20
-> > No major changes since last version (v6) all changes are cometic.
-> >=20
-> > Following patches require attention from Stephen Boyd, as they were
-> > converted to aux_dev as suggested:
-> >=20
-> > - ARM: ep93xx: add regmap aux_dev
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> >=20
-> > Following patches require attention from Vinod Koul:
-> >=20
-> > - dma: cirrus: Convert to DT for Cirrus EP93xx
-> > - dma: cirrus: remove platform code
-> >=20
-> > Following patches are dropped:
-> > - dt-bindings: wdt: Add ts72xx (pulled requested by Wim Van
-> > Sebroeck)
-> >=20
-> > Big Thanks to Andy Shevchenko once again.
->=20
-> You're welcome!
->=20
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Thank you Andy!
+Philipp,
 
-> I have a few minor comments, I believe if you send a new version it
-> will be
-> final (at least from my p.o.v.).
->=20
+Please pull the following changes from the GPIO tree to accommodate
+Krzysztof's reset-gpios patch series.
 
-Still waiting for some comment from Stephen Boyd and Vinod Koul on:
+Thanks,
+Bartosz
 
-- ARM: ep93xx: add regmap aux_dev
-- clk: ep93xx: add DT support for Cirrus EP93xx
+The following changes since commit 841c35169323cd833294798e58b9bf63fa4fa1de:
 
-- dma: cirrus: Convert to DT for Cirrus EP93xx
-- dma: cirrus: remove platform code
+  Linux 6.8-rc4 (2024-02-11 12:18:13 -0800)
 
+are available in the Git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-driver-h-stubs-for-v6.8-rc5
 
+for you to fetch changes up to 2df8aa3cad407044f2febdbbdf220c6dae839c79:
 
+  gpiolib: add gpio_device_get_label() stub for !GPIOLIB (2024-02-13 11:02:53 +0100)
 
+----------------------------------------------------------------
+Add missing stubs for new GPIO functions
+
+----------------------------------------------------------------
+Krzysztof Kozlowski (3):
+      gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
+      gpiolib: add gpio_device_get_base() stub for !GPIOLIB
+      gpiolib: add gpio_device_get_label() stub for !GPIOLIB
+
+ include/linux/gpio/driver.h | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
