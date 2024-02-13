@@ -1,181 +1,112 @@
-Return-Path: <linux-gpio+bounces-3246-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3247-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7AFB853D11
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 22:25:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 056FF853D28
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 22:30:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 878D11F28B71
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 21:25:02 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A4E541F28D4E
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 21:30:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2BCB62819;
-	Tue, 13 Feb 2024 21:16:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDD8C61669;
+	Tue, 13 Feb 2024 21:29:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYjotN8B"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HLBdByLU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f172.google.com (mail-yb1-f172.google.com [209.85.219.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AAF9F62807;
-	Tue, 13 Feb 2024 21:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01E5962143
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 21:29:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707858997; cv=none; b=piBk7CNhRY0PDt/onrtgLstd9GmSmey6zqmocOfqS6vayiTSeQI6CnDrawsR3dmUNgojjPQ5AiPEdZcwKE++8nmfav6/wkuVIlQxnmqvwF6NvlyyQJV+C+QWJMaJaXw1bI1WAdCpiU7SqQaxTEfZOQWodHQK8cqbg/3z1Ic1FxU=
+	t=1707859798; cv=none; b=EUCLBC9bKT6Xuu27sMLkZ1jhQ9YnN58R+++1+0QdVbuy+cgL/jpdyofgGNYVKPbzIG3KsNLGsiKSFFZuTf9FivtYRyNniAb08frSJRKeRc6jRk/jKVotAPl07eshLJTnkV0+EQwjCSvWQGqoOAgnSItmcXLhnjV1ju/0tHG3n2k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707858997; c=relaxed/simple;
-	bh=zDKhA64ioM9k5pqN+62pwEEnbtSLyu6ONrO3J1sfrbY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=m8cIsowVPkoBhuSDBdRUjjVKOpPGP58LJNr3IEU3Yt7GoL9a/wPzDrx2CZftCg9KSwGof6ZYbSgiBIBJn1hLasrpj9I0yeSVtR1VRqeGLUC4DwvG2TMm8XgCp1fAqmHc3T0TbblMtebX2qrnKF3aH7DaDVNlnMWkNoxeWeOA/jg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYjotN8B; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F299DC433C7;
-	Tue, 13 Feb 2024 21:16:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1707858997;
-	bh=zDKhA64ioM9k5pqN+62pwEEnbtSLyu6ONrO3J1sfrbY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QYjotN8BKSn1n4vhKp8wGMbnWZZHynYaLNNynbcu9tsPrJ/uWYW23Wb97x46SVfx6
-	 p+VMv9qxj3TNhJbYtNBmHK1+31zQf1TbWxJUeqMBLz3mcWfNSDt4I6tNdIpRLmfqoi
-	 x0dst/jIYbftsUPahQ0dFO62hkXUqB2znVutv1GB/m+rEanVivasSz80sj/+b9DmYX
-	 /wnYmturKmh8TdRNYkILwYqfGgUX7DEkRZWN/A+N9p0kMpzlPPeBQeMXJPzr5gGvHl
-	 UFXRabHGO4Ic9KMVJMDLJp1PnSmbwwZGVtDD+sNg3DJWNNUPV11bhIwl6DA7jnVYUc
-	 rzb3EkucHNabw==
-Date: Tue, 13 Feb 2024 21:16:31 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: Re: [PATCH v3 07/24] gpio: protect the descriptor label with SRCU
-Message-ID: <2ab076da-a4ea-46d5-874e-854a7d6efb69@sirena.org.uk>
-References: <20240208095920.8035-1-brgl@bgdev.pl>
- <20240208095920.8035-8-brgl@bgdev.pl>
+	s=arc-20240116; t=1707859798; c=relaxed/simple;
+	bh=o1itvEeV8LvxyIcYXdwYU40slMynHwwlOpApN5Ly8Kg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=PJiyfXRzB1NNfPINCL/zZF0DX20zNzhIqK1v8MnKsslrGZnEfLf/z2b9Y+n/9YbY1ePXuUrqYOV0eVArhPDLBgcBxvoIw2kR0x43Y+jVr6a3GfOryynKcAt3hncrdbdlV7O0GavuxtzUc29eVNGeHOpH4BoJitZDQdyubFqIr/I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=HLBdByLU; arc=none smtp.client-ip=209.85.219.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f172.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso1087837276.1
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 13:29:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1707859796; x=1708464596; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o1itvEeV8LvxyIcYXdwYU40slMynHwwlOpApN5Ly8Kg=;
+        b=HLBdByLUVfJKKCP+rBlx1VzhmanWNu3IYFi0/UxjnAzX9AQFRHv4rjNrt0Sl2gVUtw
+         hC7xWWesP2hKpaVh6lmbLxUWxkCkRe8TxDN7pRjVJCROuXyfvuX6v5gAZQkdfQ+X10jU
+         SDBRDMjeQxz4nF40gqBCD8ldm2r8hVpsu9hsNYQnOaQckkwYQtPzlLeD7y7ggXdzyJ0p
+         n5X3wZ4997ZZGuSgNDIohQ9SWiPN9WtYjtsGOtBADseqHSaIQXRpyMsEOzWM3IKfTNi7
+         ochLIqyNztOF+YFkBPdnt6WJbbnCvy9x42fCLuq7yzcUE5B6uzd44FG0bXUKR1nDwJ0E
+         zSZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707859796; x=1708464596;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=o1itvEeV8LvxyIcYXdwYU40slMynHwwlOpApN5Ly8Kg=;
+        b=b47HR4BTfyT2KFkCIek4QMBTGIYbgp8RmEgTcQNypiod10mXJipZp55IZSxB09NeST
+         IGb8TvNwNus+qPz3GECoQfgXir+jOqBsvDAhLr3caQi+SyoWYF5hi9AooQsYz23ZYDBp
+         dxfPEav8m8P3qlnGL8yuCIBDDts1nyTCIEpRbdq05L2hwjaJ0i2q1xqq/bCl1/5Q7/fq
+         3Wr1Qmy8yHvpLSSBaSXo0qQCPGX46NMblZWQB5lHaPEgzU+Y59uhBgXm7Zt8VsrU69YX
+         gmMvuzKyptkGHrYsnnacRspOhUURfiy1ZAETlA0L+YXvMVPGJxriB3Dc+1Rckv90M3f+
+         usKg==
+X-Forwarded-Encrypted: i=1; AJvYcCUF9rkiU6E3ukJfTgbbRPdgHYq6pHsTmqBcwZMrp8ChjB2BvUqxv6H7vPcxsLuUeB5C5XPuZkjLPEtKiqgMbG/glY/JNj1pa/Pc1Q==
+X-Gm-Message-State: AOJu0YyDLU+b690Qt3lIefBwnDomU/O0RrHWDollmEbNCPGKxOiNT0H/
+	Us7HXZObbwAyeJhS47AJf+6C6J3RpwShMjy80t/GWFADEeSdjWcLweaJtrNmtYasBKqB8kci7pB
+	q10Lvp2UDliMx9JvQ37uDoCPJfK1v9jy16DX2KA==
+X-Google-Smtp-Source: AGHT+IE6Hn4KEA1CCZ5bUfGs/Lvut+AenGj0UJMnAqTB0xOfHh21zeTj0SjsLn4VnQD+guWwO3Cv2/0eNjCGw69OW40=
+X-Received: by 2002:a05:6902:2082:b0:dc6:4062:1341 with SMTP id
+ di2-20020a056902208200b00dc640621341mr509698ybb.16.1707859796006; Tue, 13 Feb
+ 2024 13:29:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hx/I//qx/IsDQLMA"
-Content-Disposition: inline
-In-Reply-To: <20240208095920.8035-8-brgl@bgdev.pl>
-X-Cookie: In specially marked packages only.
-
-
---hx/I//qx/IsDQLMA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240213093108.13922-1-brgl@bgdev.pl> <20240213093108.13922-2-brgl@bgdev.pl>
+In-Reply-To: <20240213093108.13922-2-brgl@bgdev.pl>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 13 Feb 2024 22:29:45 +0100
+Message-ID: <CACRpkdY5fVNJBhVDrCb0cbrsWAKAZBkCACUgSjWGoHqtnaJJtQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] gpio: take the SRCU read lock in gpiod_hog()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
+	Geert Uytterhoeven <geert+renesas@glider.be>, "Paul E . McKenney" <paulmck@kernel.org>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <oliver.sang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 08, 2024 at 10:59:03AM +0100, Bartosz Golaszewski wrote:
+On Tue, Feb 13, 2024 at 10:31=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
+
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
->=20
-> In order to ensure that the label is not freed while it's being
-> accessed, let's protect it with SRCU and synchronize it everytime it's
-> changed.
+>
+> gpiod_hog() may be called without the gpio_device SRCU read lock taken
+> so we need to do it here as well. It's alright if someone else is
+> already holding the lock as SRCU read critical sections can be nested.
+>
+> Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_devi=
+ce with SRCU")
+> Reported-by: kernel test robot <oliver.sang@intel.com>
+> Closes: https://lore.kernel.org/oe-lkp/202402122234.d85cca9b-lkp@intel.co=
+m
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-This patch, which is now in -next as 1f2bcb8c8ccd, appears to cause a
-boot regression on imx8mp-verdin-nonwifi-dahlia with arm64 defconfig.
-We die with an invalid pointer dereference after registering the GPIOs:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-[    1.973513] gpio gpiochip3: Static allocation of GPIO base is deprecated=
-, use dynamic allocation.
-[    1.982467] Unable to handle kernel NULL pointer dereference at virtual =
-address 0000000000000078
+Looking at the CLASS() stuff I see this is definitely the way to go
+with the code now that we face massive scaling. Nice work.
 
-=2E..
-
-[    2.161467] Call trace:
-[    2.163915]  check_init_srcu_struct+0x1c/0xa0
-[    2.168284]  synchronize_srcu+0x1c/0x100
-[    2.172216]  gpiod_request_commit+0xec/0x1e0
-[    2.176496]  gpiochip_request_own_desc+0x58/0x124
-[    2.181205]  gpiod_hog+0x74/0x140
-[    2.184529]  of_gpiochip_add+0x208/0x370
-[    2.188456]  gpiochip_add_data_with_key+0x720/0xf14
-
-and a bisect appears to converge smoothly onto this commit.  None of my
-other platforms (including the i.MX8MP EVK with the same SoC in it) are
-showing similar issues, I've not checked the CI systems and haven't done
-any investigation beyond checking that the commit does look like it
-could plausibly be related to the symptom.
-
-You can see a full boot log at:
-
-   https://lava.sirena.org.uk/scheduler/job/579038
-
-bisect log:
-
-git bisect start
-# good: [7b17b1384cd6454c4ea2744c8e8a06de0d27b5b3] Merge branch 'for-linux-=
-next-fixes' of git://anongit.freedesktop.org/drm/drm-misc
-git bisect good 7b17b1384cd6454c4ea2744c8e8a06de0d27b5b3
-# bad: [46d4e2eb58e14c8935fa0e27d16d4c62ef82849a] Add linux-next specific f=
-iles for 20240213
-git bisect bad 46d4e2eb58e14c8935fa0e27d16d4c62ef82849a
-# good: [f85363faaa040a9b9ac6502464a8b1ed7f711eab] Merge branch 'master' of=
- git://git.kernel.org/pub/scm/linux/kernel/git/bluetooth/bluetooth-next.git
-git bisect good f85363faaa040a9b9ac6502464a8b1ed7f711eab
-# good: [0ca88723ff14aa0a28d31772ef330f3eef97cba1] Merge branch 'next' of g=
-it://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git
-git bisect good 0ca88723ff14aa0a28d31772ef330f3eef97cba1
-# good: [c9545b54561efbedfe184a97dd07b4cdd8176146] Merge branch 'usb-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/usb.git
-git bisect good c9545b54561efbedfe184a97dd07b4cdd8176146
-# good: [4e22a2de97fb3b37e241058a4f9b91f3245590ea] Merge branch 'for-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git
-git bisect good 4e22a2de97fb3b37e241058a4f9b91f3245590ea
-# bad: [903a65bcdcda676e86b1504f909c6565b1bd9df2] Merge branch 'pwm/for-nex=
-t' of git://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git
-git bisect bad 903a65bcdcda676e86b1504f909c6565b1bd9df2
-# good: [a3468cca30fe896b58f9f7b3bb5484f079010a12] Merge branch 'for-next' =
-of git://git.kernel.org/pub/scm/linux/kernel/git/remoteproc/linux.git
-git bisect good a3468cca30fe896b58f9f7b3bb5484f079010a12
-# bad: [7fe595b3c3cf3f9b8f21fce72f1f48a2cb41522e] gpio: don't dereference g=
-dev->chip in gpiochip_setup_dev()
-git bisect bad 7fe595b3c3cf3f9b8f21fce72f1f48a2cb41522e
-# good: [f57595788244a838deec2d3be375291327cbc035] gpio: vf610: allow disab=
-ling the vf610 driver
-git bisect good f57595788244a838deec2d3be375291327cbc035
-# good: [ccfb6ff4f6c0574e01fb16934fb60a46285c5f3f] gpio: don't set label fr=
-om irq helpers
-git bisect good ccfb6ff4f6c0574e01fb16934fb60a46285c5f3f
-# bad: [b6f87adbacfab9001d08e56ac869e1c75734633d] gpio: remove unneeded cod=
-e from gpio_device_get_desc()
-git bisect bad b6f87adbacfab9001d08e56ac869e1c75734633d
-# bad: [2a9101e875bc3aa6423b559e0ea43b2077f3be87] gpio: sysfs: use gpio_dev=
-ice_find() to iterate over existing devices
-git bisect bad 2a9101e875bc3aa6423b559e0ea43b2077f3be87
-# bad: [1f2bcb8c8ccdf9dc2e46f7986e1e22408506a6d6] gpio: protect the descrip=
-tor label with SRCU
-git bisect bad 1f2bcb8c8ccdf9dc2e46f7986e1e22408506a6d6
-# good: [be711caa87c5c81d5dc00b244cac3a0b775adb18] gpio: add SRCU infrastru=
-cture to struct gpio_desc
-git bisect good be711caa87c5c81d5dc00b244cac3a0b775adb18
-# first bad commit: [1f2bcb8c8ccdf9dc2e46f7986e1e22408506a6d6] gpio: protec=
-t the descriptor label with SRCU
-
---hx/I//qx/IsDQLMA
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXL3C8ACgkQJNaLcl1U
-h9A33gf/a2HntqcvzKA2Zfjsu+PvShEl3wuajDAUtGzuthiF8lMiT1XFJQA9b+a3
-YiXcA44uBIPsEb4i2vVG/BaSHrPJ81YPjCmGmNVwL/46nvp42X0y6i+KM9v+b3sx
-+4eAN5ChJ3MJCkkeABIUmQQn5Kte3+oQpTktv+GaUijuIT7K2GuEWRcXS3HTJK1c
-2w4DT7ceEKAfW+XKhJoFxVSXIS3hqFDgdLuYRTunT5pxEOZGrdnI5e6L90DvPRJM
-PGkdTZqph6o2rHf5UoSHpD3+Ud9n98dZiwcwahFb8wQdKdDXjcLezTPKvN+3Vu1+
-HWl5FdEDOHC5yaS5UxS1Stbr4qsUhQ==
-=D/G+
------END PGP SIGNATURE-----
-
---hx/I//qx/IsDQLMA--
+Yours,
+Linus Walleij
 
