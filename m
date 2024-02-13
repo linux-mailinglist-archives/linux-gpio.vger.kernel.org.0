@@ -1,106 +1,109 @@
-Return-Path: <linux-gpio+bounces-3226-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3227-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27658852B5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 09:41:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D853852C3C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 10:31:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 297301C20FFD
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 08:41:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1334B21D3C
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 09:31:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33C2818657;
-	Tue, 13 Feb 2024 08:41:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07E582231C;
+	Tue, 13 Feb 2024 09:31:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KsoJaUqa"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="2ux5irU2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78F9C1C687
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 08:41:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 077362208B
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 09:31:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707813699; cv=none; b=dWshMdwsMZLKjBSk3uGUWzeXh0J4Bc5vjWbT/HKXlmgDHrMJ8gXgnsEdsXdMmCeyWEQr1DEBU9II6J7J+PzVZKEcgtTe7qw1Dtdzt3JkLLBuqMWGu/gLtd3oypepWRxpLXMQ2D2M310iSE/Nm27e2ygfUuEBUJ+fE4mcsJOvQoE=
+	t=1707816674; cv=none; b=Kow7FT10fv43I1gjGpYzf81m7+NF2ayod10yJ1EIfIl3Vbel61L/96m1UFLbn3rMQmK1rmXkvYyzIu1uT4+HCFMTAd8YCKs3ID55SX/5yiTEdOvbgnwKQQW7M6XEDeS2OY0FwXRpYGsGOTV9KDiU3wVwJM34hx05sZlkzcGZPe4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707813699; c=relaxed/simple;
-	bh=9uhudulvDJG4m9EcgkknojfOiH3FujMKVl+tWWHEuFg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NsGd9HXkqOT7KhE4ID/FKFf3mO4wD/xeS0zXuvguOjSNcV9C1voW5lYk06eH3vh7JGvXb2D6vAjM/qmmch0FqWppk7rxC4YGGH4zxlP2npaygUF0T4sN5LqD8W/TEADcXQ4LjiQLpAIuX7tjB4xMkAfoOcueU/+0zyBTB8wRJQ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KsoJaUqa; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dccb1421bdeso257553276.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 00:41:37 -0800 (PST)
+	s=arc-20240116; t=1707816674; c=relaxed/simple;
+	bh=34ghv65tX01VnUZyJ9HjaQTEN9as/t/Pt7zLckOf0g8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=G3PqRYRy0DLnEUYFwgCtkx3HBAvaCFVbHA0jHbof2wdhtKRO+q2ssWkEeFukB6fc1FTzBiwbI5HBQzbZ70mE5xXAlxgRBLSLFJ6ozj1qQ19lU7kMuxWVcI0jxSmDEq5BypiDD7O6ar7s0+NzdntnWrF8nauvA4AG21Qf71B6pHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=2ux5irU2; arc=none smtp.client-ip=209.85.221.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33cd57b7eabso277410f8f.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 01:31:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1707813696; x=1708418496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=oIl2YYUnyEY/a7RRLxMgV4bhxVuKGpynPy5FdYIsxRQ=;
-        b=KsoJaUqaQn4VFpZ2xJ9HGoq7VLEIlHVtipU+ifw7Gtnl40gv3fojyTByVPLUoMCAvP
-         Q+ZM5VugB3sJJP4R5upd0wOxXYMySU1xuGqXYZVfGXBJOPA3bfjg1zto+WjomlEoZOqG
-         IE/ADQ3+Oa1CJ82fOFeY1ChBe+261tAVE36UslzaC5zEcG3MwysYUb29Z+oZHg2kPwex
-         q2mM63JfaImBfKpXD/+zF9cKsbAgik69THjQ7idMZbNdfB+ligyr6U59KCs7wIoAe8/0
-         4EOdvsH9/33Ef12x3SeaWM0NPVOerfI4BtX2KS5t1o9qYFm3g9SJpHsObSuXi29sAwIH
-         cBng==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707816671; x=1708421471; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=XO2K1jFKhfKBm39xDO4kMzNEQW0DrH5Tam/IhQbNI0g=;
+        b=2ux5irU2OzIGmy6A+4QdgV6NL5nC1ntPufxOQog2qx41Xpsh/AnD+CwEqizSD1Tu1B
+         cJLO7ackFqKqDAG6Xxt7KJ/eE4wuQ/yg0qaqqUFP18fGnCbfR7r5HNY/2KJueHCZDCWV
+         V8mSeogS1JQJ+IXKpaAFvDzUMCVSiCt9Lmi1bCprQQenagU9zVZyZjY0gSJ7DgTwhfZY
+         5Z6HvCUezekwlbAYWeGerFX6hkgOkp+Wt9EZG8uTrqsNBDKNKr+S7fDCKjqyii8OXTD8
+         3kk2Sg3WPw+yB4dMt0lE4sSR1DDXJ/HHBruQ8neuliQgmX0/SRfQd+3RjjR9UquN2VxU
+         +HRw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707813696; x=1708418496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=oIl2YYUnyEY/a7RRLxMgV4bhxVuKGpynPy5FdYIsxRQ=;
-        b=ZYg660BSBz77Pny0Tv12PSnYT3E1ZqGhDoU4yJyNtHW5ONHtJQ5YFXoVkdCiswpT3F
-         os9P4zALNxIoXTHE9JZOUL6wSEQwcz0bLo79mmYJq7mgX6BNg/NFTpNDF8fiVSMFNoVq
-         oQmfCNx8H23yIhmRudNPSqFS21bzm6WPFbnYiyvG1UO1xTMRjBnaQIpCw67+6ct36A0h
-         YW33zYzT7iix8FEX6JWVUiga1+NtpmyVZYzawrWhRcIz5xSTWMoTW2lqSIDb5VRTwfJ8
-         kg5CEA/R+Kw1SQ/SO/PCH+DOPAI2vJt18r+1VS/R0iSCQEjO5930gqASmFLF8K/5nxPq
-         iOuA==
-X-Gm-Message-State: AOJu0YyNhIgN/1aAwu4HN6JCckxmJg02GsENIoOtRrzmMZ5YvIJVHjcG
-	lmrQZyBh1ntEjK0rRjxYG8K9MUqvf0QPF+Ezg/4b0jn622NtAV5m3vGoUMbNbupXHkHH15kbUQv
-	94GGUhmOXk/QL5Pe4FLElXiNUEjS4ZXV1TpW2JA==
-X-Google-Smtp-Source: AGHT+IGmBbVUw/R4L65+ko+wdqy1yKkPtgHVB1a9qElNgf0fPME2rl8vO8DuK3Ffkb7aOY8RYBckJlNiPOUsh/Qysuc=
-X-Received: by 2002:a25:ac8e:0:b0:dc7:32ea:c89f with SMTP id
- x14-20020a25ac8e000000b00dc732eac89fmr9187773ybi.15.1707813696527; Tue, 13
- Feb 2024 00:41:36 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707816671; x=1708421471;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=XO2K1jFKhfKBm39xDO4kMzNEQW0DrH5Tam/IhQbNI0g=;
+        b=pKcJrZbClxVAAOazoo6A/+7ChVtxjhGKkEbernujsJP8vaaX28zJ3/8EESkcZO91TZ
+         cXWUukBbxQjLvQlGOI/zvarYNBXxte5Dti5xJbuDJEqy+MMtAheLrrepvN0UUgs4QNYL
+         L4NUa5Tg0/3+OSy3WPeuBd6Ho6lv3oFXUsgMu1wC5nLuXne/BNZ+83YgyWfkPVL/hPjD
+         LXpj6D1zGik1NR1vDbXQW01kem4Co5beV3Lfz2ZD6u9TKOKj1ncBxGgstIGlInyJKD1o
+         h9ZyQIuwdDB3uCA2lut5bi/2ETL7s8j93T/TRtLvGYXYivZ7IY09rRWZFGQXmgUUGkzx
+         OETQ==
+X-Gm-Message-State: AOJu0YzV7NhyaUKCynRZNJa6NW1ZHifoE6Tu2JIsoO6xY1qzIfMgYhwe
+	m68/AuU1iVcKF+NKfBrPNalfuvKyWxwytPzJFOvLgi7M17DmFd6p0Hf19Wlf1Wg=
+X-Google-Smtp-Source: AGHT+IGa8HG0pjhyJFF0NNhKEiWnY7s09LgDrEFjD9McGCysp+GPat0YeIIq5taZ0wqc8AS2LPdoQw==
+X-Received: by 2002:adf:ef4c:0:b0:33b:4aeb:82f0 with SMTP id c12-20020adfef4c000000b0033b4aeb82f0mr6678179wrp.49.1707816671160;
+        Tue, 13 Feb 2024 01:31:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCW9YFy+pSQkDsUJRsKwWplxwHNE6vtS9EZMiQtxiKDwYCLt2+Rij8l2aCNWY0MuonMv1nguXi8LyS/9uz1FVmDOcOsZMeStpOulk6DP+aUeqUMCdHWi7Ko6nfYBT/2QMJqGGExOxd8cLJNhlt7UMp1ERBTnBzUxMctnJpYSI22KpehFJ/wZJiWzRh1mJrQWNConmKDE9nBseZGD6w9O5F2g7WCBgsidLTd6VrzDPvj9F6lZS1XZbXzbYeh5wzVdRWCCn5wBjpUMdUxrbA3zZiq5+PPaZLkhGB6Cvw9yGcrIaNgdu9l3Lwq2lJG7MHFHDy3vxo5NfM5r
+Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:f634:2e37:58a9:242a])
+        by smtp.gmail.com with ESMTPSA id p16-20020adfcc90000000b0033b2497fdaesm8980897wrj.95.2024.02.13.01.31.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 13 Feb 2024 01:31:10 -0800 (PST)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Alex Elder <elder@linaro.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	"Paul E . McKenney" <paulmck@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: [PATCH 0/3] gpio: fix SRCU bugs
+Date: Tue, 13 Feb 2024 10:31:05 +0100
+Message-Id: <20240213093108.13922-1-brgl@bgdev.pl>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1707497084.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1707497084.git.geert+renesas@glider.be>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 13 Feb 2024 09:41:25 +0100
-Message-ID: <CACRpkdZGYUX3MYKV7Pfhi5KJvKEfW0yhSLn7VGHEAfTz3CHT2A@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.9
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Fri, Feb 9, 2024 at 5:55=E2=80=AFPM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-> The following changes since commit 6613476e225e090cc9aad49be7fa504e290dd3=
-3d:
->
->   Linux 6.8-rc1 (2024-01-21 14:11:32 -0800)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-for-v6.9-tag1
->
-> for you to fetch changes up to fea58424e2523376ece6f734479e63061e17ad7f:
->
->   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28 (=
-2024-01-31 14:50:44 +0100)
+Here are three fixes to some bugs in recent SRCU changes. The first one fixes
+an actual race condition. The other two just make lockdep happy.
 
-Pulled in to my devel branch, thanks!
+Bartosz Golaszewski (3):
+  gpio: take the SRCU read lock in gpiod_hog()
+  gpio: cdev: use correct pointer accessors with SRCU
+  gpio: use rcu_dereference_protected() to make lockdep happy
 
-Yours,
-Linus Walleij
+ drivers/gpio/gpiolib-cdev.c | 25 ++++++++++++-------------
+ drivers/gpio/gpiolib.c      | 23 +++++++++++++++--------
+ drivers/gpio/gpiolib.h      |  4 +++-
+ 3 files changed, 30 insertions(+), 22 deletions(-)
+
+-- 
+2.40.1
+
 
