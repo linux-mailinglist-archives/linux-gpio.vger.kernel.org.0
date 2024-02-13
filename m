@@ -1,144 +1,165 @@
-Return-Path: <linux-gpio+bounces-3242-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3243-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E09D585336A
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 15:43:20 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9BA6985345D
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 16:13:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3BAD4B23FF0
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 14:43:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9E05DB2A7CF
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 15:11:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85F3C57884;
-	Tue, 13 Feb 2024 14:43:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D753357884;
+	Tue, 13 Feb 2024 15:06:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="QW+u9o2N"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wqDTEDyU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [134.134.136.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oa1-f41.google.com (mail-oa1-f41.google.com [209.85.160.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E0B5647F;
-	Tue, 13 Feb 2024 14:43:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=134.134.136.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E43A25FDD4
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 15:06:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707835383; cv=none; b=gxbWFSTrR8crvSTZwhb8sp1ZBunLx2f1oDeybS9dzWVm3iQTcS2gHgzlextWIK/GI1VSM6T60McXL3BXnoEJuSeFutpfPfa9HVWcOTwYHGjfkDmfk74N/GDibc/08YlP9mVaHq0tEtUVHJn1WWV9E49tHZj2p8CLy+0KF/7VSQc=
+	t=1707836765; cv=none; b=ouFJZkSOSAhd2IvE0rPNV+aMbEHNhmJsRSoAlX6ZcD2ewosAKTnPAN3/hqykFZNy5NRVUTuXm4CT5t2v0NFpIpST1e/iu/uFGrfPCBrzlDIKYispjg2GuvBlPcSiDzRlFD0fSjM+9kjwAFajSDMMYEfE62FEzxiyD7iz8HcOX/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707835383; c=relaxed/simple;
-	bh=hBY4Przzr9r9vbICCXsAtnHmOm199MIsVifivtT0k6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FbwPAhpf2RSgBlnyBXQDLvDH1QdSMGR/yFaUbjLuk1yga/B3384OzEwDUMfBtKxTr6vwiFL0Z6x3BhGAa5eNlEGMcWu9OVHSQA5d1LB0dfaVpgvPcbuYavIbURjaOjJjMetqjS/UlZQqjWQpTARibnFdbthS3ATd63llpKUTyAs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=QW+u9o2N; arc=none smtp.client-ip=134.134.136.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1707835381; x=1739371381;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=hBY4Przzr9r9vbICCXsAtnHmOm199MIsVifivtT0k6g=;
-  b=QW+u9o2NCmFpJbLt4TDLq9mpaR3AMrmzj+XHYdU654K+pC1FS4lCDuLA
-   Z9wVETTsqK0FLb23/11xfnP3bXmylNDBdLuYl/IFnKdGwwc5JThTgHp+1
-   FcdLVTNSrOUUHSG6HoHXObt6JVs3oviKBYmRvqRz1G8QTMeiSjbOAC8pj
-   f40ksGlF0QaXUg9KggAsc1F6pkIWBau4a544ihyVr9n3WbwUDZwqsD/5/
-   DXF7/qPaJL1hQ0o4snvxR8i/haVPY0Q0yLtP20JoqYUs32rB6l9qBgI8g
-   aAjRO29tAStQW7ARZ0B0+eDiUwWs8ePo2OR/3eWtOqDBj5n8EipEGZyIa
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="396278108"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="396278108"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:43:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="911802315"
-X-IronPort-AV: E=Sophos;i="6.06,157,1705392000"; 
-   d="scan'208";a="911802315"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2024 06:42:57 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rZtzq-00000004F4c-15OT;
-	Tue, 13 Feb 2024 16:42:54 +0200
-Date: Tue, 13 Feb 2024 16:42:53 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH] gpio: initialize descriptor SRCU structure before adding
- OF-based chips
-Message-ID: <Zct_7YcJk5-sg2pT@smile.fi.intel.com>
-References: <20240212213920.49796-1-brgl@bgdev.pl>
+	s=arc-20240116; t=1707836765; c=relaxed/simple;
+	bh=fbF1PvlbWN3zD8U5fpR4FOV0dObiDAn6q6ytupi4qzE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=qP/JHmWOhyRMvAfRZrUm9qeoN/BjvmFH28Y7HfKNYwSINHTwe0pE13txyVfy/pw3f5/J+Pv0+PYxm5X82ZHUBks32tzshG6hz/3Hp6Wz8M5bjOQj4PzufyPyKjxG6Nju3cAmLMN2OSAL4Jawm2iKkhW60DjeaBMtI5RWNoFycN8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wqDTEDyU; arc=none smtp.client-ip=209.85.160.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-oa1-f41.google.com with SMTP id 586e51a60fabf-2193ccbb885so1730469fac.2
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 07:06:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707836763; x=1708441563; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2ApEu/3sIgnPz+WuXL0PiSYq9FhzP3cQXV7R+bXp+jI=;
+        b=wqDTEDyUE8oCDpS6e5+TBDLrtgBN7jsZ9kFRfNkHAzBtH7xqiHe5PaenGn2rbyCU/b
+         //v0HkoAESaUHEEv6a2dODbdHquEkm5CPwQSuF0qS6agB+SNMtfhcV1rsyEthHnD0gTW
+         14+KoeG7zuEXpkwQCkrnuEolK5qaIYgFX1LRjSbIesVs+gTvbBDKWkizZb/qaD0ZT96z
+         XjK6/roKG7/kQnnWzbrB/jSbBACBSzJ8m0iya7FL08fSSk0kdLXC7/tTPpGZeYTey2d9
+         es5LAesrwWZ4cHe9znrD5Iw8XTnXIeLanGSsQ2ET1ySNPsJp63Wj6YqgCDDE9Z4VfObV
+         SY/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707836763; x=1708441563;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2ApEu/3sIgnPz+WuXL0PiSYq9FhzP3cQXV7R+bXp+jI=;
+        b=FBhRytOHCst+PYwA8hGJiCA/Mxw2N86RG5oVhJBUfLDMEJtew2iFDUG+0oAsX6ru8l
+         H58lCIm1WB3rGmeq4HAq/sk/nPvOeNWgEiUcqj86LV//R1NUDxUMgz9up6zP9e8+DEMs
+         Y3GVGfdMkA2mWlDPjLmHNnSADOiG/g1WM0j+qv6GZAkc2iaVSv2sdNXpB9i5W1jtkLKp
+         fBGUiKsfZgAEIyA24aUV8qGn0zwP6ciUW5BI/MN0GsXFAC16ZKAD8oeZGjOr48Mgsglc
+         tXZdSBJIdbiSPlLq+ptOYNr5/uMNSRPS2Ma6TtWLUPKGgX8slr9/q5MpUTI4TTPrIwnK
+         0xsg==
+X-Gm-Message-State: AOJu0YyTuXzi3gshGQBRHABXo7LxigettXlSQDfb/+v+fRi+l+/ZtdQ+
+	TzIYjcZPmATrcrLCXGnWH7fbhwLk4nai9udC7FFloD2/W6vLFDKOxFhtk94Lvn/AX9px4G+FB/J
+	Dqpk4eq7sWx7cFXm2YGeT06zY+qs38ljikRuyDA==
+X-Google-Smtp-Source: AGHT+IH++eu0yEteTnpJEBWZLuftuwuAi2WUJWHv6bizQcozGEbb7E3tLosD5iBoAdkxx8BtnXc5qmaF7ZVKdEk+5DA=
+X-Received: by 2002:a05:6871:80f:b0:218:55c9:bb20 with SMTP id
+ q15-20020a056871080f00b0021855c9bb20mr11649920oap.21.1707836762423; Tue, 13
+ Feb 2024 07:06:02 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240212213920.49796-1-brgl@bgdev.pl>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240212213920.49796-1-brgl@bgdev.pl> <Zct_7YcJk5-sg2pT@smile.fi.intel.com>
+In-Reply-To: <Zct_7YcJk5-sg2pT@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 13 Feb 2024 16:05:51 +0100
+Message-ID: <CAMRc=Md40TPhTq7jwWQz8HmCJEZc4ixmjqhVjbcNzo1e6zwHNg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: initialize descriptor SRCU structure before adding
+ OF-based chips
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 12, 2024 at 10:39:20PM +0100, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> 
-> In certain situations we may end up taking the GPIO descriptor SRCU read
-> lock in of_gpiochip_add() before the SRCU struct is initialized. Move
-> the initialization before the call to of_gpiochip_add().
+On Tue, Feb 13, 2024 at 3:43=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Mon, Feb 12, 2024 at 10:39:20PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > In certain situations we may end up taking the GPIO descriptor SRCU rea=
+d
+> > lock in of_gpiochip_add() before the SRCU struct is initialized. Move
+> > the initialization before the call to of_gpiochip_add().
+>
+> ...
+>
+> This is a bit unclear why you moved to that place and how it had been tes=
+ted.
+>
 
-...
+I didn't move it, I just added SRCU before it. It can be triggered by
+a simple hog from DT. The link leads to a crash report.
 
-This is a bit unclear why you moved to that place and how it had been tested.
+> > @@ -991,10 +991,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *g=
+c, void *data,
+> >       if (ret)
+> >               goto err_cleanup_gdev_srcu;
+> >
+> > -     ret =3D of_gpiochip_add(gc);
+> > -     if (ret)
+> > -             goto err_free_gpiochip_mask;
+> > -
+> >       for (i =3D 0; i < gc->ngpio; i++) {
+> >               struct gpio_desc *desc =3D &gdev->descs[i];
+> >
+>
+> >               if (ret) {
+> >                       for (j =3D 0; j < i; j++)
+> >                               cleanup_srcu_struct(&gdev->descs[j].srcu)=
+;
+> > -                     goto err_remove_of_chip;
+> > +                     goto err_free_gpiochip_mask;
+> >               }
+> >
+> >               if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
+>
+> >               }
+> >       }
+> >
+> > -     ret =3D gpiochip_add_pin_ranges(gc);
+> > +     ret =3D of_gpiochip_add(gc);
+> >       if (ret)
+> >               goto err_cleanup_desc_srcu;
+> >
+> > +     ret =3D gpiochip_add_pin_ranges(gc);
+> > +     if (ret)
+> > +             goto err_remove_of_chip;
+> > +
+> >       acpi_gpiochip_add(gc);
+>
+> My logic tells me that if you need to call gpiochip_add_pin_ranges() befo=
+re
+> calling of_gpiochip_add(). It won't collide right now, but allows to clea=
+nup
+> further (with the gpio-ranges parser be generalized for fwnodes and be mo=
+ved
+> to gpiolib.c from gpiolib-of.c).
+>
 
-> @@ -991,10 +991,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
->  	if (ret)
->  		goto err_cleanup_gdev_srcu;
->  
-> -	ret = of_gpiochip_add(gc);
-> -	if (ret)
-> -		goto err_free_gpiochip_mask;
-> -
->  	for (i = 0; i < gc->ngpio; i++) {
->  		struct gpio_desc *desc = &gdev->descs[i];
->  
+But it was already called before gpiochip_add_pin_ranges() so it's
+material for another patch.
 
->  		if (ret) {
->  			for (j = 0; j < i; j++)
->  				cleanup_srcu_struct(&gdev->descs[j].srcu);
-> -			goto err_remove_of_chip;
-> +			goto err_free_gpiochip_mask;
->  		}
->  
->  		if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
+Bart
 
->  		}
->  	}
->  
-> -	ret = gpiochip_add_pin_ranges(gc);
-> +	ret = of_gpiochip_add(gc);
->  	if (ret)
->  		goto err_cleanup_desc_srcu;
->  
-> +	ret = gpiochip_add_pin_ranges(gc);
-> +	if (ret)
-> +		goto err_remove_of_chip;
-> +
->  	acpi_gpiochip_add(gc);
-
-My logic tells me that if you need to call gpiochip_add_pin_ranges() before
-calling of_gpiochip_add(). It won't collide right now, but allows to cleanup
-further (with the gpio-ranges parser be generalized for fwnodes and be moved
-to gpiolib.c from gpiolib-of.c).
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
