@@ -1,136 +1,167 @@
-Return-Path: <linux-gpio+bounces-3224-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3225-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87344852A94
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 09:11:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0701E852B3F
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 09:32:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A60E81C21892
-	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 08:11:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 59170B212A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 08:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 186CF179A6;
-	Tue, 13 Feb 2024 08:11:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A09F1400A;
+	Tue, 13 Feb 2024 08:31:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZwWm49vI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="bnvGbFPo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 439E31865B
-	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 08:11:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1941420DE7
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 08:31:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707811865; cv=none; b=roSl4cgPxYAOtWXEGn1P6nOwDMN0Hycgt3PBcBalnygZydmP7/lcciaKYIq7cSvaq6i717IngISj5EJDkWuXNfgMLn560Nz1TDeTc/CysKdSlR+3PHIBZB4Awr+wQqoCXu0JnuzjarYljFrfbCLeBnJ6HMLOJMT8FI4mjL7uOMY=
+	t=1707813114; cv=none; b=VfthJ613sECo9pvU3GsYPJqBicyx7sgectEGBur3q+8QhHZVM9tI1XLgBFZiVDQwtaGOtSjoUmRBuatT0EThrfHMt6C2pd+zyv8r6QJVep5VcgIlMtcmTW46R/J/MOD2gdw18SqhgJJ7yQtbYnKgWtbIJrSeHmkeDjpMPQd7s50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707811865; c=relaxed/simple;
-	bh=wSCAQBdMfTC+3MndVZbkwv4BtZJdwtzZ+Uis1k9VN7Y=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=jHntsamIG870ysHED7daDuW2GMm1XKKRwfGfizSH3akevdppeyuP8ma2MNl3OfQiKfCgBHDa0B6igwZFjxnoF4IH1S1IV7fKdAwY1YWd19gkUXTxbSaY0X5I9xqDu5HbpuqnVPCM8iqo2ayu7vhzvnyfR1AjkMg5kQX33C/P8GQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZwWm49vI; arc=none smtp.client-ip=209.85.222.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d5c2502ea2so1678924241.1
-        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 00:11:03 -0800 (PST)
+	s=arc-20240116; t=1707813114; c=relaxed/simple;
+	bh=LyBIaArFIcO2x6uNyD6g6ihvCa/mFgvkSZZsFZNh2cI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n8ZDRtU0/bcDCEYlWbEmal/W4HRL6SQ2ePBAmbznr3hPe1SlgUx52LcQMNGZ5v3XifqvtFW4isHJTFBQCko69xptHcgvT0rW6LdSkC+EHIS+ICRllvbAX+9iL6PNe9D4e0PZpTDJU5NpmLvCiwuj+Fl2Iq2Sb6AnfnlyrB5o2KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=bnvGbFPo; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-4114e0a2978so9558105e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 00:31:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707811863; x=1708416663; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vyx00npWeFsll5nwI/taY+6s7E/z5NPem7hxp9luVYI=;
-        b=ZwWm49vIZS8z4ksySmHSXfVicTDTwBRgL2MO12IdFYCBn1If+SJBNLQvrLDoR/MjcQ
-         5rMYm0Z8ZVUqgkvKhzMMOJafD4WJ2+6VFEpkqaPpOR8b23zZR2mJVC+Xk2RKT/8O4WQA
-         tISIWG6jVAt2WBeDmVBboCs3Yg96GX0kJEfyyNbaQzkKlzVYGGuKI97TMddh6nEvboDv
-         VbiUMqTLcrtUA3RTRWP60i2zLtCgdwEKODfEnNLRzaqIiGbblvxHQFOY6/MxJRX0GP4V
-         pwCMkBk4vN3PrsuMVKQoFqn2alU1opzoW+dAcasd6umzt9f6XLybT5na+RZuVErknwji
-         5YTw==
+        d=linaro.org; s=google; t=1707813111; x=1708417911; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=Dde3EbS6VWJqvGKjav4KSnBK0JRdRxmSb9vh6mKuzWo=;
+        b=bnvGbFPo7iB+nx1Eb/95nPeSE3ayr8srjZktKvRC86q0tWdZEywKdxqFcB4jQ+Vu79
+         T5V6tQJPTp9GNW/hTyuZsEZhSbYLnLJgLWbIPG6ap9OXPOITJ/srDMFNZo+jIVeCnoI1
+         L+rA11zb1ArrgR8SP6vRCNtruNTOh0lNOnBhla2cQLytmmBVr5boIMxAMJtPWuXhHDO0
+         IzhXQbuKTLOf0jo0ziZWq1CpwM1nQB32WiYpRX0gQbJTmC/kKTiPWgLeYh+wmWUAXh4v
+         UIXxJ71pnhJncc+ERN0njD4S+lwcyxzmVkWAnBVooVe5ZZ7Q0FUIh7RRxg5BOCDhZXFo
+         RpAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707811863; x=1708416663;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vyx00npWeFsll5nwI/taY+6s7E/z5NPem7hxp9luVYI=;
-        b=ROZDxtcG2q5Rthh4cVkgZNv6zSswLaoT9eJ8DLJMzw1+dKkKw1S8V6kcxmkbQ6gzOL
-         rs1AhVur2ycPBE9TnnS50LWgD/8PVt75PIyyO4t6Jw1UWkwc8GHBUSYkqeHWpK/tEt9N
-         eoTGHKTRoNS5cnIjP6IxCjV1d7MHPzxP6SWjMJOdDc9KaQoWFdNikg25Sr8dFqlEoGk/
-         cgZvJdZvR5Y8rgqTLEj0P1ZjvlwFi/TGJK5JFPSyqrpBOmCAYtx0hVOxOHxdKQBQvCYG
-         tieG9fN1Z6J5Ns9x91yAs/UkLLC5nV2sCCIYwEshkan4hmSyOE2gOLLI+EEa8rkjPPfW
-         rPLw==
-X-Gm-Message-State: AOJu0Yz0wVwaXHmSZhgtBiGaFD9uCaEbSP3qxtOvie3z17WvUm5pOKIo
-	XxhKyWmB6estoWN/YhfxgWnfxA9VG1gb6OBUxAVvDAmM/G65MBg7cQ/S5uBwqBNwymqFN6TJv5m
-	ZaRjJVCjmKewtAPwr6yKdp6pqyRJSyB+bO4P1Eg==
-X-Google-Smtp-Source: AGHT+IGr0rY+BYn3KFPOnwH21/cIEVqFi5fSMMU1bOGVy5YdyOfJaSi6Db4qCj8odk6BvfgVKZLys2G4N+i1W6bMMBY=
-X-Received: by 2002:a1f:dd84:0:b0:4c0:3cb3:446f with SMTP id
- u126-20020a1fdd84000000b004c03cb3446fmr5048576vkg.4.1707811863050; Tue, 13
- Feb 2024 00:11:03 -0800 (PST)
+        d=1e100.net; s=20230601; t=1707813111; x=1708417911;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dde3EbS6VWJqvGKjav4KSnBK0JRdRxmSb9vh6mKuzWo=;
+        b=BYyVIwhl6ceosYW2SIEdn9dQpdPiA+1PZG1t8JiTaNd8Gk6yYTy/Bx8EzcU+V/Yn7M
+         MH4I5M6YvPt3ejeFt+vy60QbiS/NkWFo7+D0m6PNq6MAI3oGQjMes5b/kYSZZoyFvrZo
+         fKoRuXtGm65mVjOXdobTj0eqJl90ZUjb/s8iSrdlI2o1cBJMYUf0cx+vncFozCLAszk+
+         HRj+nzfrkd0pDOYm4ReiiwUTUctyBbaC1FVqZbxK9yG2ILIROJzSpUjXkwtUmOWuKu9e
+         Pggo1BPklEfXbzMmzglxQEFNg3YQAB49jpIEUhR/xjl83k9LcooVgPnAzwqEVlmgf5fx
+         RH9Q==
+X-Forwarded-Encrypted: i=1; AJvYcCWqmQZStrUggBBINQAcDJDuVXA7CslWMnOitKonEc5wB5VmAL7fcdcExe2zN2w6QAl6+mMBFHSQAZOJ9YMJfwc9gms7BguVeARDPw==
+X-Gm-Message-State: AOJu0Yxix7YWZv11MTmMNQRgqrSvl0LYw31UINrlw9x0orh2jx74B0I3
+	IiKzbI/f5nQuCBHtAHdUus572jyewicrRp/KaKa5xQ9VTdGzx9I3hPSturkkyt8=
+X-Google-Smtp-Source: AGHT+IHpvUw/qDTTMCNzLOjJTulKDkhaY2ngH6JlcBNuwoR0OBe3hQ8tB56KDVOclzwa4Zlj+2IXEQ==
+X-Received: by 2002:a05:600c:1c91:b0:410:218d:8a21 with SMTP id k17-20020a05600c1c9100b00410218d8a21mr8254548wms.20.1707813111421;
+        Tue, 13 Feb 2024 00:31:51 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCULwES8tzyOa95T8WU12zOZkyS3mQOXSGaWVgro+ADdbnq5f1aL0M1/J44JxMPh7turmFZrXD/svj6Pp5Z08dpdb/vOZATOAoMpboQScgU++dE6tnn4namSgb/tDxGNdWYM0dfcxgEReBWqRxR1POSko7DRvxfLoUV8e/mBA8q0VcDjm/e8S8BNMLO3KQhu09ep1p1VZU0c0Ocqh8/1sdIjC2u2hgLa7ByDfVlVMhETYlJFDMrIuFgwSAFcPcwEjd0c5QXjWvS7GPWjkK5+/mUtHpsMyBNKt4UUBfE9EKgN4DRJmV8bn42XgrKVAnweeKn3lOO3Ntf6GqeNMncioWqnHWPNaKEO1sBJQtFCfji6z5WjNTcvnftUqclG4PTB+19IMaS1ksECHVI=
+Received: from [192.168.1.20] ([178.197.223.6])
+        by smtp.gmail.com with ESMTPSA id e12-20020a05600c4e4c00b00411c9c0ede4sm308961wmq.7.2024.02.13.00.31.50
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 13 Feb 2024 00:31:51 -0800 (PST)
+Message-ID: <72ab2968-5e35-41c1-a689-6353a1d43b82@linaro.org>
+Date: Tue, 13 Feb 2024 09:31:49 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240208095920.8035-23-brgl@bgdev.pl> <202402122234.d85cca9b-lkp@intel.com>
- <CAMRc=McrFqa-nS3L0qGZ+eCff79jWrEZLmg-OJiNw6+FQ44i+Q@mail.gmail.com>
-In-Reply-To: <CAMRc=McrFqa-nS3L0qGZ+eCff79jWrEZLmg-OJiNw6+FQ44i+Q@mail.gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 13 Feb 2024 09:10:52 +0100
-Message-ID: <CAMRc=McLsY47oAk3GWp0Cecb=+fEtRKjJ_L3kyKkxYkEnwME7A@mail.gmail.com>
-Subject: Re: [PATCH v3 22/24] gpio: protect the pointer to gpio_chip in
- gpio_device with SRCU
-To: "Paul E . McKenney" <paulmck@kernel.org>
-Cc: oe-lkp@lists.linux.dev, lkp@intel.com, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <oliver.sang@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 2/2] pinctrl: qcom: sm8450: Add pll_clk to pin group 98
+ for SM8475
+Content-Language: en-US
+To: Danila Tikhonov <danila@jiaxyga.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, vkoul@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240212191046.77013-1-danila@jiaxyga.com>
+ <20240212191046.77013-3-danila@jiaxyga.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240212191046.77013-3-danila@jiaxyga.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, Feb 12, 2024 at 10:20=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
->
+On 12/02/2024 20:10, Danila Tikhonov wrote:
+> Add pll_clk to pin group 98 for compatibility with SM8475.
 
-[snip]
+I don't understand this. What compatibility? Is it valid on SM8450? Ifi
+so, then this would be fix. If not, then you just introduced incorrect
+group for SM8450 and called it compatibility.
 
-> >
-> >
-> > [   76.432519][    T1] gpiochip_find_base_unlocked: found new base at 5=
-12
-> > [   76.434591][    T1]
-> > [   76.435240][    T1] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > [   76.436545][    T1] WARNING: suspicious RCU usage
-> > [   76.437813][    T1] 6.8.0-rc1-00050-gc21131f83abc #1 Tainted: G     =
-            N
-> > [   76.439873][    T1] -----------------------------
-> > [   76.441158][    T1] drivers/gpio/gpiolib.c:219 suspicious rcu_derefe=
-rence_check() usage!
-> > [   76.443364][    T1]
+> 
+> Signed-off-by: Danila Tikhonov <danila@jiaxyga.com>
+> ---
+>  drivers/pinctrl/qcom/pinctrl-sm8450.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pinctrl/qcom/pinctrl-sm8450.c b/drivers/pinctrl/qcom/pinctrl-sm8450.c
+> index 617286711695..45ac8e72c1c7 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-sm8450.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-sm8450.c
+> @@ -957,7 +957,7 @@ static const char * const pll_bist_groups[] = {
+>  };
+>  
+>  static const char * const pll_clk_groups[] = {
+> -	"gpio107",
+> +	"gpio98", "gpio107",
 
-[snip]
 
->
-> Paul,
->
-> Could you help me out here? It seems that lockdep complains (with
-> "suspicious RCU usage") whenever an RCU-protected pointer is passed to
-> rcu_dereference() but is not actually dereferenced later - in which
-> case switching to rcu_access_pointer() helps. But in the case of the
-> of_unittests() it also emits the same warning for
-> gpiod_direction_input() where gdev->chip is fetched with
-> rcu_dereference() using CLASS(gpio_chip_guard) and later actually
-> dereferenced by calling guard.gc->...
->
-> Any hints as to what I'm doing wrong?
->
-> Thanks,
-> Bartosz
+Best regards,
+Krzysztof
 
-Seems like these can be silenced with rcu_dereference_protected() so
-I'll use it for now.
-
-Bart
 
