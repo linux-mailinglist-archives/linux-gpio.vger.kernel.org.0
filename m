@@ -1,166 +1,124 @@
-Return-Path: <linux-gpio+bounces-3222-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3223-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F24D5851FBE
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 22:39:36 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B75748527A2
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 04:04:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 654151F23138
-	for <lists+linux-gpio@lfdr.de>; Mon, 12 Feb 2024 21:39:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BCCD7B2240D
+	for <lists+linux-gpio@lfdr.de>; Tue, 13 Feb 2024 03:04:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B29B44CE0F;
-	Mon, 12 Feb 2024 21:39:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 153B08BFC;
+	Tue, 13 Feb 2024 03:04:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DmUYmnow"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PCTVKcVV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A9FA4CB5C
-	for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 21:39:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A7D88BEB
+	for <linux-gpio@vger.kernel.org>; Tue, 13 Feb 2024 03:04:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707773968; cv=none; b=WAqQvjQmZacv6tWl+h7NKuCxxGSsL6OLYi3jjIvjtTXsF9s5Hf5kwqR9LlPfu8D8AdApXfh3kPlMqa6ofyaMIyoHfD2D4fhWYpLpUUj+5+6TeEHiYrnWe7kf4pqwmGdc8Fip1oduBeX08NEdbeDGdps3muKe8SijE1iIX3X09nM=
+	t=1707793456; cv=none; b=IcNNUiB/PNVlr3TPsU2Y2xuMNHx6qJWqCwCH0i2zV3rADZqIiMfGwhXRWOij0bODLB1x3tPYLyaVaO/QpwnSfayPy1l03fPr2YJ3zlbhs2sjtabbR3Hjig1dYW4YLtbUC885WKBNCVPoCV3FSgr18eRxNzPd1dDt3kU+4kjAFpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707773968; c=relaxed/simple;
-	bh=N3/kikCT/ViKRnsMui+U9/gXaw82x3G8rndyMWY3axE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PeaaYPnNU6CnN3gipEwCQt8XL6SgU0eUD6P7BN928SYA8Oy9IpLsJ9RWdXbkQwV80how7nSRffwtoY1wQ4wiUa57Tzuv+CmmPx1SCCW+6sYf2/pvQHpsG2sCYMrVInzJRg44sIBPqKCuuNwZFRru73DrBJ4AG9A1M5PC984zFTQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DmUYmnow; arc=none smtp.client-ip=209.85.221.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-33b401fd72bso2451874f8f.3
-        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 13:39:25 -0800 (PST)
+	s=arc-20240116; t=1707793456; c=relaxed/simple;
+	bh=9lHURotUlCuVLR7gp+x8RxXYFBrpBUZ842wEydhtyOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dMikTjnc4WylmJPHR8Ee2i93Vf10c/gAlK1uS3xWEG7LHhmo+lzxUZ+t0qeQ7ixtW7tJGzchNHldGD8+QhdEPEHemVwzpyBQYwYNhk63VNr9ilPOHn3EOFdXGLCcbEXrnvRLklCBomleshIquwqtkI6MUcSqwAYESu1o3x/li20=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PCTVKcVV; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-5cddfe0cb64so339830a12.0
+        for <linux-gpio@vger.kernel.org>; Mon, 12 Feb 2024 19:04:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707773964; x=1708378764; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ex+oKN9tSPmg7cHAF6KW1k5mHWCdEfz2WwiKUWwTXNo=;
-        b=DmUYmnowvlmWQTK16hezBbQJYk90+mR8g4nVecNqMak2BbTmKKktbBmqTV/U1wAuaR
-         nVPK+Kt1dRuK5AcKD1uMe97cPeLgFnX9DC21k1XmMf7xOUH9uSr4exqePjN1y7UfEgaN
-         9ldJie6dIsepUlApNHf2VcSLWHeM/MVfLGUE4qsDzn1UwubBWXd5I5w2vtlJw9RBHqe8
-         ipd6NpiHKlmdvgAf1oCfH5/UjZIKzUAsTdZJWQYU/fCPZsmPhtrdzkeYAG3sTPLVgrEy
-         6rSakmyPWkaWc94TuEysGCPfZ9ZfGdKxWyxkcB93R5ROJjsmgXzCySIp4pnlo9zxfVsP
-         ij1Q==
+        d=gmail.com; s=20230601; t=1707793455; x=1708398255; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Ije+LoRsi5iy2jy7/vJJnoc0piyfSPsPlghXR51BEcU=;
+        b=PCTVKcVVyeexS/g0Ln/L8OujabUMwbFl635hCAeagncalmSnZ0p451569O7z3z+5Xy
+         1Vj8xvjfrpoutK9JrmdHfoR3KCJHSzg8NUl15TY8VAc+i7B2O9aOcXystpDs1BZH5Wsq
+         e4mOOgx/1tF0E2HRDlOw9rcK3ys/7d6GNGK6VlfMtao2smdOEtRl2ZyPkfX9jPoMKmh8
+         JEMg2F47Mlqoymdae8tcAUXTd/071jHN3kHF7HeYqJ+TIUJPcAR8ssYmR124flxjimEm
+         b8imHYyO0KRCCYY/Ee8GFy2Vm3dNqzi6mgawujMVTRvwxeFHQ2bTNhwU3z6UhDM0Ws5u
+         s8ew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707773964; x=1708378764;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ex+oKN9tSPmg7cHAF6KW1k5mHWCdEfz2WwiKUWwTXNo=;
-        b=lbFbj0eUkcXgbnqoUHZv0ttJGm1ygAYCEGjBHX35ibemMLKSV41dR9hmfPrubHJpOX
-         iYIfAc1M1a6hup42vwlk9iRZWswzozBZbBQqaKuBJV8ef97x5lrF1BsmrJlH6Auuu9he
-         WUIDrUBFdS403Ox+2Qp0xf8RJ3M2P5CFlDxFVX90zvOp4lXHUZZmCv0zhVcACq1QujNl
-         MUhC7uwpmmryfarT7vUcli/BIt1WHV7/q5LRqp666MJsZQYuaGliIhnTMShRWbOWGHaE
-         Fh92ZAKdOPFbxHlEc/ejGOnYBkAaRHGRLYmMd/5xeDTZzTgAiEE3ExClU42wNxOukGkW
-         NFog==
-X-Gm-Message-State: AOJu0YzDC7C8T+cmhQs8MtGvsTuATMd8XAJrmmBlbEMWL95diaQppoqP
-	DGNq2pO+5mcrs3eZ4+ulMRPlBfibPkn+VfgdlEYO+4dFY7mkuLKUa7NoHc2xK+A=
-X-Google-Smtp-Source: AGHT+IGfhwxLT8Vk9nOPKN82YJ7lRjNzIYy/6NFrGqYkUXIjQMu7mfZ3RmqADRi467Voah4oS3AEMg==
-X-Received: by 2002:adf:fa89:0:b0:33b:1aa1:4859 with SMTP id h9-20020adffa89000000b0033b1aa14859mr5532501wrr.25.1707773963604;
-        Mon, 12 Feb 2024 13:39:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWVObmwKxPpP3wOlRvgKDIfG7AsKKOS08XKPkQTHLXQz5zYMCfLuHYPfRqnFrOZyPEvq4l+ohKUHWdqxvracpdMWzset61MSOnZAokRmpZDGYODUDhkr87emdvI3IT7mtdptcWRNhp8cJYuDGn0rXvTD3gaG9Lk/zl11arf7IRLDMqI/BIMRnOqDIsRt57QKK/BePfY3HvkcKzmvxG8VB5gIWA3S/LkwuXWfgUqs5f4R5I2ChcfQH9Kt9VogbyrULBtehgBy5o2Pz1687xaqIMDxa6olO2ZcZUqBLJkrw+EeKxuG3AxjTIuw0dmY7crNtRKSTE/gF4UZ2GJYDbNSODt5uR0akb4
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:3ff8:aa1d:f441:5fbd])
-        by smtp.gmail.com with ESMTPSA id f14-20020a056000128e00b0033b50e0d493sm7776702wrx.59.2024.02.12.13.39.22
+        d=1e100.net; s=20230601; t=1707793455; x=1708398255;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Ije+LoRsi5iy2jy7/vJJnoc0piyfSPsPlghXR51BEcU=;
+        b=bxFowxEnO8Pve5j8KJ1I13UTc691xMCh4jXAGvm46hCkgb0DpJ0iVQU5eMHe/ZD5Wn
+         LlnVJ0rFSKsxsjaQjhs/A/FxSOGi4pe3KL+U7LmlUV50D1yKCg8GyUPXz4BQGLDhOoaF
+         BI3eMMFb5YSOBml7AxKzTbEQ6sieB264hy+xzLPJJjKuSRF5IWbmR/nLbOcQyqDbapVz
+         UhMkgQfnxDD7aOEcAvp+BMx005TsGbsc2c02PB/64bne5eWbZZeAwKaszuBDkVZlmF6V
+         yhOEaJRFVo3qX7yJR+DCQmTVdnkUa6yb9p0zUThUUkxOV93bXzAuwJJGDsBPbQa1dIQi
+         7p8A==
+X-Forwarded-Encrypted: i=1; AJvYcCUzEPgwDL0jyIBGrFnGawqLYYfTPeevb7dmg0kLdCFXRZdybAjm/Gr70u37kl9ExzwX6Tsw/uhDPEJyHAkSFDZF4CyaAp/Vhl9RRA==
+X-Gm-Message-State: AOJu0YwfViDn4W/eX7BaRQewIM/vcuPK+paaE2l9qMvtPAi/pK7u27e+
+	fv4K3Y2NWg0iEogu9bavy2dbdj/Kq0PQ0hzRcpfy0r83AeES97vi
+X-Google-Smtp-Source: AGHT+IGU/kOmzjl7sCh1yY3LTNpwUhbcKSC2TR+f67a5w0epil35H9hWa0uHux+/OMXSm29rOLvSzA==
+X-Received: by 2002:a05:6a20:9f4b:b0:19e:b9ba:1a6a with SMTP id ml11-20020a056a209f4b00b0019eb9ba1a6amr6590116pzb.49.1707793454672;
+        Mon, 12 Feb 2024 19:04:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVy0H0fV+UpN5MWBGUE28rnOiz7rhTBf65vLdnk1IwPLmNS+XAgeamtNruoJuiXjO6cfnUCBiz+poDmFCgD8tGPUVF6M4DBfc+nH0HvaoTr6NCGuEVJAh1YO6lcK3gHm5onYJMMQjM+/kOYz3H0QMnIDUJOZJav
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id kq8-20020a170903284800b001d7610fdb7csm1018593plb.226.2024.02.12.19.04.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 12 Feb 2024 13:39:23 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Alex Elder <elder@linaro.org>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	"Paul E . McKenney" <paulmck@kernel.org>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	kernel test robot <lkp@intel.com>
-Subject: [PATCH] gpio: initialize descriptor SRCU structure before adding OF-based chips
-Date: Mon, 12 Feb 2024 22:39:20 +0100
-Message-Id: <20240212213920.49796-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+        Mon, 12 Feb 2024 19:04:14 -0800 (PST)
+Date: Tue, 13 Feb 2024 11:04:09 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Stefan Wahren <wahrenst@gmx.net>,
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Subject: Re: WARNING: fs/proc/generic.c:173 __xlate_proc_name
+Message-ID: <20240213030409.GA35527@rigel>
+References: <39fe95cb-aa83-4b8b-8cab-63947a726754@gmx.net>
+ <CACRpkdax5HaGoW+uZzt0v2Bx+1sPErYRZh7FWQixd0AFFTeiwA@mail.gmail.com>
+ <CAMuHMdUCR5DxBW9yxqukq50FRpSsYnP=Lj20QKJtAo7hz=5yUA@mail.gmail.com>
+ <CAMRc=McSdtnqLWrRHoi=6bAuUWfvGqnB+B9FavDDrMfH2vbCkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McSdtnqLWrRHoi=6bAuUWfvGqnB+B9FavDDrMfH2vbCkw@mail.gmail.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+On Mon, Feb 12, 2024 at 03:11:43PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Feb 12, 2024 at 2:47 PM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 
-In certain situations we may end up taking the GPIO descriptor SRCU read
-lock in of_gpiochip_add() before the SRCU struct is initialized. Move
-the initialization before the call to of_gpiochip_add().
+...
 
-Fixes: be711caa87c5 ("gpio: add SRCU infrastructure to struct gpio_desc")
-Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-lkp/202402122228.e607a080-lkp@intel.com
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpiolib.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+> > > >
+> > > > I'm not sure where this should be fixed.
+> >
+> > Any names ending up in sysfs cannot contain a slash?
+>
+> It's actually procfs. Every irq has an entry under /proc/irq/xyz/
+> containing a directory named after the name of the interrupt. In this
+> case the path of the directory would have been /proc/irq/xyz/R1/S1 but
+> of course this wouldn't work. Should we replace every `/` in GPIO line
+> names with `:` for interrupts?
+>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 82811d9a4477..f5434e559382 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -991,10 +991,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	if (ret)
- 		goto err_cleanup_gdev_srcu;
- 
--	ret = of_gpiochip_add(gc);
--	if (ret)
--		goto err_free_gpiochip_mask;
--
- 	for (i = 0; i < gc->ngpio; i++) {
- 		struct gpio_desc *desc = &gdev->descs[i];
- 
-@@ -1002,7 +998,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		if (ret) {
- 			for (j = 0; j < i; j++)
- 				cleanup_srcu_struct(&gdev->descs[j].srcu);
--			goto err_remove_of_chip;
-+			goto err_free_gpiochip_mask;
- 		}
- 
- 		if (gc->get_direction && gpiochip_line_is_valid(gc, i)) {
-@@ -1014,10 +1010,14 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 		}
- 	}
- 
--	ret = gpiochip_add_pin_ranges(gc);
-+	ret = of_gpiochip_add(gc);
- 	if (ret)
- 		goto err_cleanup_desc_srcu;
- 
-+	ret = gpiochip_add_pin_ranges(gc);
-+	if (ret)
-+		goto err_remove_of_chip;
-+
- 	acpi_gpiochip_add(gc);
- 
- 	machine_gpiochip_add(gc);
-@@ -1055,12 +1055,12 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	gpiochip_irqchip_free_valid_mask(gc);
- err_remove_acpi_chip:
- 	acpi_gpiochip_remove(gc);
--err_cleanup_desc_srcu:
--	for (i = 0; i < gdev->ngpio; i++)
--		cleanup_srcu_struct(&gdev->descs[i].srcu);
- err_remove_of_chip:
- 	gpiochip_free_hogs(gc);
- 	of_gpiochip_remove(gc);
-+err_cleanup_desc_srcu:
-+	for (i = 0; i < gdev->ngpio; i++)
-+		cleanup_srcu_struct(&gdev->descs[i].srcu);
- err_free_gpiochip_mask:
- 	gpiochip_remove_pin_ranges(gc);
- 	gpiochip_free_valid_mask(gc);
--- 
-2.40.1
+Agreed that the consumer label (not the GPIO name, btw), needs to be
+sanitized before being used to create the procfs path, what I am uncertain
+about is whether that should be performed in cdev, irq or even procfs.
+If cdev then I would also like to see irq document that the devname cannot
+contain slashes - it currently only states:
 
+ *	@devname: An ascii name for the claiming device
+
+Sanitizing with ":" works for me.
+
+Cheers,
+Kent.
 
