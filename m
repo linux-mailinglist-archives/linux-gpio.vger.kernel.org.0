@@ -1,272 +1,333 @@
-Return-Path: <linux-gpio+bounces-3275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 207F285477D
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 11:45:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E10FD85479A
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 11:55:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 845D21F2189A
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:45:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 11D2E1C2746A
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:55:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B77B17C9E;
-	Wed, 14 Feb 2024 10:45:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32DEF18AEE;
+	Wed, 14 Feb 2024 10:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="aqzg1vpt"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="YQXsoZJ2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69ED51A58B
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 10:45:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5336199A7
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 10:55:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707907514; cv=none; b=bwO7vmjJLbxMqRYt0z+kTWfcBBCcx912/CoyOFpxbfwvxzPVS38ZRcMQ8y8ck93vrrAPaMN77Zs4LKxkOoaTFthFu1tNU0s0Nk31bmK65x8H+LD/kD449SVben/AenLsZonklt8u3xDe2i4/cy80ZrlgBBjiCnNkUdwz68UTCSI=
+	t=1707908153; cv=none; b=Phzs93SzbCFG2IwLtU+B7aM20PxvjYSmJoYtzhd9tfKWA8FjVsSWIXHbnsglpPfN2h19Hw+OAk14q+iuiroxHFJ7ghLWr89Vhb//dWZQ7oi6XU4hOXibzALYIAFMKK/yfo2Fn5lnwshAWbp6xmZM8mX6vClvd6gf4uHegqtp5kk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707907514; c=relaxed/simple;
-	bh=WdQFa2ePJ6/QoxeNCFbUr5gtPyRyjF5Kjt+3Q2HEPXA=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Ro/7sTAZSOPOadU1sbVqH2ZTCTAD5kUD4/pqdSRH6NxDPu7nlr4LjY0yxEQmZ0WKopcAG6nXEdc5RID9d8/ME5esdX6ynFEJCmdEkQ9+ysYpqjGp0ogSoKHx3jPXDr9OdiEhzd2WkONJL7bnDLA7da6SW8D8v0r5hTRhlqpkk/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=aqzg1vpt; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-411d3c75026so7893285e9.0
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 02:45:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707907509; x=1708512309; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=C/5fTN37ykfJWG/a6PN4F37MkWi8mM5N7iPK0vS9DcU=;
-        b=aqzg1vpt1bp5KpyAs6KgEAZiD/M2hENKQKIKI7Jwms3tKr4tysr3k5qGYOB47wlmN9
-         MCw2u5FtVczRvg85f293CYF0fr7A0+rXLDuy6SRmb+sDv1xFi0ZLKxW6DDCjTp9X5Jzq
-         9M6PUOsDQ/gxMP/XJoJDdMELSI/6vxCNHuB7g7an9ceI5GoOHv4Z0M6iK6OHMUmusE4b
-         WetrvSus+vcsmiJWNRXGMLOEesa9gt23oFc1pIDki3yqYY/qZsU1dKYtBOcNyO5gzLZk
-         ttE+005wG/m620GfqYhZtA9rlqWhBbg4BqZGxEMwGMkiFfGTfgX+MlwkYzA9WrmoDXSC
-         SQMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707907509; x=1708512309;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=C/5fTN37ykfJWG/a6PN4F37MkWi8mM5N7iPK0vS9DcU=;
-        b=IF4OB4tKXhALr7JsSYkBNx+PqMU0h569Z4/KpOraarpEdiVQS07H7ID8wIAd6hqldW
-         dAM4t0C4rNMtH1S3P6e4LIKp99n1fo122QlxKVL79+WinfKT4IfyFT7rXUikjjBcWpxl
-         bOjLv/qsz6VIrpHiQ8dRYb/hKd5b++lfMBYTUiejPRpbL7hImQD0oVmy8kJjDOkbdZZR
-         UHSk4TV9HgimsQ+wYhQ9p3m8tcyYXwYznh0tqenXDikUXa/aTjr1UHGY+Pjl7mB0/woW
-         HR7AcfgBuVoecP3vWjxfUkujaRnSxi+3/upn9x8pMw6uWglRqQYrEcmsMDq/IeVy8Dwv
-         DKuw==
-X-Gm-Message-State: AOJu0Yx58Xr3GIIHns5+0nsmDdYjjFiIa0/JA4EkCYUXyJy1moCB76vW
-	jTr6XHEkneWQJgTvAeUQWzZ7l8zqsVPG8Qn6xAFmKPmxVJy7MqzYoUtxIm1Apj4=
-X-Google-Smtp-Source: AGHT+IGiKEvsl9augwO+cMFc4o0rMudVgy8PYQw0HqO3klGgmCZH48BaRj0Cukr0QQgUs3yQI7rmgg==
-X-Received: by 2002:a05:600c:474f:b0:411:ddc2:28b2 with SMTP id w15-20020a05600c474f00b00411ddc228b2mr1639794wmo.27.1707907509268;
-        Wed, 14 Feb 2024 02:45:09 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:cfee:a5b6:1f9b:9c9b])
-        by smtp.gmail.com with ESMTPSA id q25-20020a7bce99000000b00411e1574f7fsm1528662wmj.44.2024.02.14.02.45.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 02:45:08 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [PATCH] gpio: sim: add lockdep asserts
-Date: Wed, 14 Feb 2024 11:45:06 +0100
-Message-Id: <20240214104506.16771-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1707908153; c=relaxed/simple;
+	bh=7owfjwNaoMM4H1w+/FDmhz4feTVPq0ofum49P014E60=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Hubpk63Hthjrae1o7W1s2YV+kuC+Uqx+UY3Wbi/zqx8U5xiOgfQkLHDUCr2SUTCLUIHnUksNO3MNZYkM99e/S6/eH6jsTjsQMRc3Ju9egER8xjMHxCnrRvEG+Ux3i6wb2LJ+2qh+vPwI9ZXZXw/uCkmhToXcmzbWxjip2hfgViQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=YQXsoZJ2; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1707908151; x=1739444151;
+  h=date:from:to:cc:subject:message-id;
+  bh=7owfjwNaoMM4H1w+/FDmhz4feTVPq0ofum49P014E60=;
+  b=YQXsoZJ2/2MFvWbb8OPRAl7a9p0kagOqHIXI2uR4tnCLzvlhg4xwbe8f
+   heMaRGRevz9JORegtdLN11m4Xa18E9Yb1WxHjm/D18DOfcoG3pwPQK/Sa
+   DDT8p1OleVPolOB1eRJCaOBpFGY5crl/iE5AeIjlixZiUkKV2wJdFJXp4
+   QaAtTz1NG5fiXjPfpVN5cSKCN7YopWe0W0PHJEWTGN7ffJH3WCrPB9qGG
+   HJbmm5O7Nd/xUIwXM/dkz88Q8ecIIVAx6w9LzprzEkIMnIkYuVULdP8kW
+   GtkZ2ErNxLfqVXA+XPo41xc6iqwKyKB8iHtWFF+OYMQw3/RaL5lY7oW7s
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10982"; a="13334990"
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="13334990"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2024 02:55:50 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,159,1705392000"; 
+   d="scan'208";a="3476737"
+Received: from lkp-server01.sh.intel.com (HELO 01f0647817ea) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 14 Feb 2024 02:55:49 -0800
+Received: from kbuild by 01f0647817ea with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1raCvZ-0008h3-3C;
+	Wed, 14 Feb 2024 10:55:45 +0000
+Date: Wed, 14 Feb 2024 18:54:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/driver-h-stubs] BUILD SUCCESS
+ 2df8aa3cad407044f2febdbbdf220c6dae839c79
+Message-ID: <202402141847.wNKk8roq-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/driver-h-stubs
+branch HEAD: 2df8aa3cad407044f2febdbbdf220c6dae839c79  gpiolib: add gpio_device_get_label() stub for !GPIOLIB
 
-We have three functions in gpio-sim that are called with the device lock
-already held. We use the "_unlocked" suffix in their names to indicate
-that. This has proven to be confusing though as the naming convention in
-the kernel varies between using "_locked" or "_unlocked" for this
-purpose. Naming convention also doesn't enforce anything. Let's remove
-the suffix and add lockdep annotation at the top of these functions.
+elapsed time: 1452m
 
-This makes it clear the function requires a lock to be held (and which
-one specifically!) as well as results in a warning if it's not the case.
-The only place where the information is lost is the place where the
-function is called but the caller doesn't care about that information
-anyway.
+configs tested: 244
+configs skipped: 3
 
-Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
----
- drivers/gpio/gpio-sim.c | 41 ++++++++++++++++++++++++-----------------
- 1 file changed, 24 insertions(+), 17 deletions(-)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
-index c4106e37e6db..db42dc5616e4 100644
---- a/drivers/gpio/gpio-sim.c
-+++ b/drivers/gpio/gpio-sim.c
-@@ -22,6 +22,7 @@
- #include <linux/irq_sim.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-+#include <linux/lockdep.h>
- #include <linux/minmax.h>
- #include <linux/mod_devicetable.h>
- #include <linux/module.h>
-@@ -697,8 +698,10 @@ static struct gpio_sim_device *gpio_sim_hog_get_device(struct gpio_sim_hog *hog)
- 	return gpio_sim_line_get_device(line);
- }
- 
--static bool gpio_sim_device_is_live_unlocked(struct gpio_sim_device *dev)
-+static bool gpio_sim_device_is_live(struct gpio_sim_device *dev)
- {
-+	lockdep_assert_held(&dev->lock);
-+
- 	return !!dev->pdev;
- }
- 
-@@ -737,7 +740,7 @@ gpio_sim_device_config_live_show(struct config_item *item, char *page)
- 	bool live;
- 
- 	scoped_guard(mutex, &dev->lock)
--		live = gpio_sim_device_is_live_unlocked(dev);
-+		live = gpio_sim_device_is_live(dev);
- 
- 	return sprintf(page, "%c\n", live ? '1' : '0');
- }
-@@ -926,7 +929,7 @@ static bool gpio_sim_bank_labels_non_unique(struct gpio_sim_device *dev)
- 	return false;
- }
- 
--static int gpio_sim_device_activate_unlocked(struct gpio_sim_device *dev)
-+static int gpio_sim_device_activate(struct gpio_sim_device *dev)
- {
- 	struct platform_device_info pdevinfo;
- 	struct fwnode_handle *swnode;
-@@ -934,6 +937,8 @@ static int gpio_sim_device_activate_unlocked(struct gpio_sim_device *dev)
- 	struct gpio_sim_bank *bank;
- 	int ret;
- 
-+	lockdep_assert_held(&dev->lock);
-+
- 	if (list_empty(&dev->bank_list))
- 		return -ENODATA;
- 
-@@ -998,10 +1003,12 @@ static int gpio_sim_device_activate_unlocked(struct gpio_sim_device *dev)
- 	return 0;
- }
- 
--static void gpio_sim_device_deactivate_unlocked(struct gpio_sim_device *dev)
-+static void gpio_sim_device_deactivate(struct gpio_sim_device *dev)
- {
- 	struct fwnode_handle *swnode;
- 
-+	lockdep_assert_held(&dev->lock);
-+
- 	swnode = dev_fwnode(&dev->pdev->dev);
- 	platform_device_unregister(dev->pdev);
- 	gpio_sim_remove_hogs(dev);
-@@ -1023,12 +1030,12 @@ gpio_sim_device_config_live_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (live == gpio_sim_device_is_live_unlocked(dev))
-+	if (live == gpio_sim_device_is_live(dev))
- 		ret = -EPERM;
- 	else if (live)
--		ret = gpio_sim_device_activate_unlocked(dev);
-+		ret = gpio_sim_device_activate(dev);
- 	else
--		gpio_sim_device_deactivate_unlocked(dev);
-+		gpio_sim_device_deactivate(dev);
- 
- 	return ret ?: count;
- }
-@@ -1069,7 +1076,7 @@ static ssize_t gpio_sim_bank_config_chip_name_show(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return device_for_each_child(&dev->pdev->dev, &ctx,
- 					     gpio_sim_emit_chip_name);
- 
-@@ -1098,7 +1105,7 @@ static ssize_t gpio_sim_bank_config_label_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return -EBUSY;
- 
- 	trimmed = gpio_sim_strdup_trimmed(page, count);
-@@ -1142,7 +1149,7 @@ gpio_sim_bank_config_num_lines_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return -EBUSY;
- 
- 	bank->num_lines = num_lines;
-@@ -1179,7 +1186,7 @@ static ssize_t gpio_sim_line_config_name_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return -EBUSY;
- 
- 	trimmed = gpio_sim_strdup_trimmed(page, count);
-@@ -1219,7 +1226,7 @@ static ssize_t gpio_sim_hog_config_name_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return -EBUSY;
- 
- 	trimmed = gpio_sim_strdup_trimmed(page, count);
-@@ -1274,7 +1281,7 @@ gpio_sim_hog_config_direction_store(struct config_item *item,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return -EBUSY;
- 
- 	if (sysfs_streq(page, "input"))
-@@ -1392,7 +1399,7 @@ gpio_sim_bank_config_make_line_group(struct config_group *group,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return ERR_PTR(-EBUSY);
- 
- 	line = kzalloc(sizeof(*line), GFP_KERNEL);
-@@ -1445,7 +1452,7 @@ gpio_sim_device_config_make_bank_group(struct config_group *group,
- 
- 	guard(mutex)(&dev->lock);
- 
--	if (gpio_sim_device_is_live_unlocked(dev))
-+	if (gpio_sim_device_is_live(dev))
- 		return ERR_PTR(-EBUSY);
- 
- 	bank = kzalloc(sizeof(*bank), GFP_KERNEL);
-@@ -1467,8 +1474,8 @@ static void gpio_sim_device_config_group_release(struct config_item *item)
- 	struct gpio_sim_device *dev = to_gpio_sim_device(item);
- 
- 	scoped_guard(mutex, &dev->lock) {
--		if (gpio_sim_device_is_live_unlocked(dev))
--			gpio_sim_device_deactivate_unlocked(dev);
-+		if (gpio_sim_device_is_live(dev))
-+			gpio_sim_device_deactivate(dev);
- 	}
- 
- 	mutex_destroy(&dev->lock);
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     nsimosci_hs_defconfig   gcc  
+arc                   randconfig-001-20240213   gcc  
+arc                   randconfig-001-20240214   gcc  
+arc                   randconfig-002-20240213   gcc  
+arc                   randconfig-002-20240214   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                   randconfig-001-20240213   gcc  
+arm                   randconfig-001-20240214   clang
+arm                   randconfig-002-20240213   gcc  
+arm                   randconfig-002-20240214   gcc  
+arm                   randconfig-003-20240213   gcc  
+arm                   randconfig-003-20240214   clang
+arm                   randconfig-004-20240213   clang
+arm                   randconfig-004-20240214   clang
+arm                    vt8500_v6_v7_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240213   gcc  
+arm64                 randconfig-001-20240214   clang
+arm64                 randconfig-002-20240213   gcc  
+arm64                 randconfig-002-20240214   clang
+arm64                 randconfig-003-20240213   gcc  
+arm64                 randconfig-003-20240214   gcc  
+arm64                 randconfig-004-20240213   gcc  
+arm64                 randconfig-004-20240214   clang
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240213   gcc  
+csky                  randconfig-001-20240214   gcc  
+csky                  randconfig-002-20240213   gcc  
+csky                  randconfig-002-20240214   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240213   clang
+hexagon               randconfig-001-20240214   clang
+hexagon               randconfig-002-20240213   clang
+hexagon               randconfig-002-20240214   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240213   clang
+i386         buildonly-randconfig-001-20240214   clang
+i386         buildonly-randconfig-002-20240213   gcc  
+i386         buildonly-randconfig-002-20240214   clang
+i386         buildonly-randconfig-003-20240213   gcc  
+i386         buildonly-randconfig-003-20240214   clang
+i386         buildonly-randconfig-004-20240213   clang
+i386         buildonly-randconfig-005-20240213   gcc  
+i386         buildonly-randconfig-006-20240213   clang
+i386         buildonly-randconfig-006-20240214   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240213   clang
+i386                  randconfig-001-20240214   clang
+i386                  randconfig-002-20240213   gcc  
+i386                  randconfig-002-20240214   clang
+i386                  randconfig-003-20240213   gcc  
+i386                  randconfig-003-20240214   clang
+i386                  randconfig-004-20240213   clang
+i386                  randconfig-005-20240213   gcc  
+i386                  randconfig-005-20240214   clang
+i386                  randconfig-006-20240213   gcc  
+i386                  randconfig-011-20240213   clang
+i386                  randconfig-011-20240214   clang
+i386                  randconfig-012-20240213   gcc  
+i386                  randconfig-013-20240213   gcc  
+i386                  randconfig-014-20240213   gcc  
+i386                  randconfig-015-20240213   gcc  
+i386                  randconfig-015-20240214   clang
+i386                  randconfig-016-20240213   gcc  
+i386                  randconfig-016-20240214   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240213   gcc  
+loongarch             randconfig-001-20240214   gcc  
+loongarch             randconfig-002-20240213   gcc  
+loongarch             randconfig-002-20240214   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                          ath79_defconfig   gcc  
+mips                         bigsur_defconfig   gcc  
+mips                  decstation_64_defconfig   gcc  
+mips                      pic32mzda_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240213   gcc  
+nios2                 randconfig-001-20240214   gcc  
+nios2                 randconfig-002-20240213   gcc  
+nios2                 randconfig-002-20240214   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240213   gcc  
+parisc                randconfig-001-20240214   gcc  
+parisc                randconfig-002-20240213   gcc  
+parisc                randconfig-002-20240214   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                        icon_defconfig   gcc  
+powerpc                      ppc6xx_defconfig   gcc  
+powerpc               randconfig-001-20240213   clang
+powerpc               randconfig-001-20240214   clang
+powerpc               randconfig-002-20240213   gcc  
+powerpc               randconfig-002-20240214   clang
+powerpc               randconfig-003-20240213   gcc  
+powerpc               randconfig-003-20240214   clang
+powerpc                     tqm8560_defconfig   gcc  
+powerpc                      walnut_defconfig   gcc  
+powerpc64             randconfig-001-20240213   gcc  
+powerpc64             randconfig-001-20240214   clang
+powerpc64             randconfig-002-20240213   gcc  
+powerpc64             randconfig-002-20240214   clang
+powerpc64             randconfig-003-20240213   clang
+powerpc64             randconfig-003-20240214   clang
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240213   gcc  
+riscv                 randconfig-001-20240214   clang
+riscv                 randconfig-002-20240213   gcc  
+riscv                 randconfig-002-20240214   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240213   gcc  
+s390                  randconfig-001-20240214   clang
+s390                  randconfig-002-20240213   clang
+s390                  randconfig-002-20240214   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                ecovec24-romimage_defconfig   gcc  
+sh                         ecovec24_defconfig   gcc  
+sh                    randconfig-001-20240213   gcc  
+sh                    randconfig-001-20240214   gcc  
+sh                    randconfig-002-20240213   gcc  
+sh                    randconfig-002-20240214   gcc  
+sh                          rsk7201_defconfig   gcc  
+sh                          rsk7203_defconfig   gcc  
+sh                          sdk7780_defconfig   gcc  
+sh                           se7705_defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                           se7724_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc                       sparc64_defconfig   gcc  
+sparc64                          alldefconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240213   gcc  
+sparc64               randconfig-001-20240214   gcc  
+sparc64               randconfig-002-20240213   gcc  
+sparc64               randconfig-002-20240214   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                    randconfig-001-20240213   clang
+um                    randconfig-001-20240214   clang
+um                    randconfig-002-20240213   gcc  
+um                    randconfig-002-20240214   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240214   gcc  
+x86_64       buildonly-randconfig-002-20240214   clang
+x86_64       buildonly-randconfig-003-20240214   gcc  
+x86_64       buildonly-randconfig-004-20240214   gcc  
+x86_64       buildonly-randconfig-005-20240214   gcc  
+x86_64       buildonly-randconfig-006-20240214   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240214   clang
+x86_64                randconfig-002-20240214   gcc  
+x86_64                randconfig-003-20240214   clang
+x86_64                randconfig-004-20240214   gcc  
+x86_64                randconfig-005-20240214   clang
+x86_64                randconfig-006-20240214   clang
+x86_64                randconfig-011-20240214   clang
+x86_64                randconfig-012-20240214   clang
+x86_64                randconfig-013-20240214   gcc  
+x86_64                randconfig-014-20240214   gcc  
+x86_64                randconfig-015-20240214   clang
+x86_64                randconfig-016-20240214   clang
+x86_64                randconfig-071-20240214   gcc  
+x86_64                randconfig-072-20240214   clang
+x86_64                randconfig-073-20240214   gcc  
+x86_64                randconfig-074-20240214   clang
+x86_64                randconfig-075-20240214   clang
+x86_64                randconfig-076-20240214   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240213   gcc  
+xtensa                randconfig-001-20240214   gcc  
+xtensa                randconfig-002-20240213   gcc  
+xtensa                randconfig-002-20240214   gcc  
+xtensa                         virt_defconfig   gcc  
+
 -- 
-2.40.1
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
