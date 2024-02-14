@@ -1,146 +1,100 @@
-Return-Path: <linux-gpio+bounces-3265-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3267-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17E13854618
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:35:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F005B854632
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:36:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BDEDE1F2DD73
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:35:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACFC9292F10
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:36:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0387418638;
-	Wed, 14 Feb 2024 09:34:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B02014004;
+	Wed, 14 Feb 2024 09:35:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k9eS6af2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D5131B959
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 09:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5013612E5C
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 09:35:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903291; cv=none; b=RsFpFKkxNRi/My2PrQpQEdgvXsRKqy+Ak7az5j+1F+AJ3SQRJW2EuNZ9DJtg/6LoMun1n7Qm+Sj7MD3AXnbLRum7Qhj5Dxt+wO8oDY5RTXSWp3AkE3KvGx311RZBm6wpT+b1m0kYJbXUsJ1lfDmqqGmIkA61HTuTTxxr2hUeKTY=
+	t=1707903353; cv=none; b=Rtodx9m3GJwveT3I4pYFI8zi44h3speWpTWVjnxyc3cmuVR3B6JRVsAS6CVKNw66wDA+OIBFvYfnfNiXfhFUGmK/JoB/PkrotdFiSLW9l3eCaxUyZQBGaiEIoKb54yyeis+tPanFk/4PegOhEAZScYRrhI1wouOC7gi/Jn0VIAE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903291; c=relaxed/simple;
-	bh=W5Wp/YX5ZNL5lRXSmQet2h8oEA52+3pGK0CF32hVD4A=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=cbUAjonRtRR1sMvCIn22qWMhM+kY/+T3SflXAJFrnN8qGQajYKcUKI5bPtO2RU6WkA26n2/EUMeEqGiS5wygiRo5aU7tQObq11XnA16daD2ORM51bL2tcF6KuNusKPfOl1abis3jOxaGRzQuqUGwYgMnodmfNoXLcUNZiXGoQPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBfA-0006CQ-Ba; Wed, 14 Feb 2024 10:34:44 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf7-000fIB-09; Wed, 14 Feb 2024 10:34:41 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raBf6-004YA3-2z;
-	Wed, 14 Feb 2024 10:34:40 +0100
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-pwm@vger.kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	kernel@pengutronix.de
-Subject: [PATCH v6 151/164] gpio: mvebu: Make use of devm_pwmchip_alloc() function
-Date: Wed, 14 Feb 2024 10:33:18 +0100
-Message-ID:  <2edc3adbb2c40b76b3b3dac82de82f3036bec1d5.1707900770.git.u.kleine-koenig@pengutronix.de>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+	s=arc-20240116; t=1707903353; c=relaxed/simple;
+	bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f85JQPvESLcpZIRBwIyD+1KahGeuH/Vp/omkf0ujETTXZy0s04UDg+iUNAfG6dWYMJBkYmvouj6l03ALwHrFO0BQDgOfbywIuRCXmHE9jx4CD6dRHeQe4+UCCtGrkDaIlbaVtiIJ+g7vwXRmjL8+GNQCw4SAflaQMHqoO7sarf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k9eS6af2; arc=none smtp.client-ip=209.85.222.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d698a8d93cso866791241.3
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 01:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707903349; x=1708508149; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+        b=k9eS6af2Le1UDrnWN4cY+JAmQ33DtPRzd55GR+pIeNMrDCv8z7vHyfwaqnTqbIc0Xf
+         wO6pDEbGuortCX1plRHEb/tnavCZlIa2wCtfa1zkS731DYHWpSnC/fkcQbsq3vrQoWYI
+         zCnh16Nsf7idk0olqb1AVOJ9iTv0imxvD3+no9uByAT7aYqdkMlvfaaCOvOuVLJhSc4x
+         YTqhJ0jCz24Ry5SBC0N/LPxtgx4ZrSv/WrSmu48up0CO34tsqavzN7YQPQrbQmlP3If+
+         j4QynBK4lm2GY0qXYou6WH/VW0qkUoep9rZXQMOgcQ2jFGz7BkXIiayiTj16wqAnfOyW
+         +nsA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707903349; x=1708508149;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
+        b=w9dKoUBVhdfCl0fwJbsz+kd425160lQ2UR8T6uMgZw6RpM+LdDR35fIFc1h+Gm3peo
+         SEsoO2v9RDfdFXRqUEbX4iofUh51XVzfxJQC9HolgjL2Nj1Hapboq3BT7hHfkGSTF7bD
+         plGmZpxoCy41skMvhZ1LjEwavWmi/HdVI5El+zWipvfQbhKhstJZkePcRYonEOZK0LF8
+         ZDBHCNG+zoOcp9TWPlWnKTrIKZ0M4b5GWjtzklijkrbaV96VpKnQb1EBMhL5MrD77x5v
+         pZOnd0F3anO/yARbaLjP+Do2myiZn65IwuVkxFMTBVjNqvT4ZVq8R2jdZRw8kfA1ISe2
+         S/tw==
+X-Forwarded-Encrypted: i=1; AJvYcCWZ48mTDrAwLKO49GgbemMyN8zAQz/LkLhvJLa/k0E5TaU4ME2DMcCXLUjT4mSMkZZNxWQbbcNsPAGbW/hSZ50rY4e3GxORul2NeA==
+X-Gm-Message-State: AOJu0YyHLQV6L0xKDdPBrg3BfOlysZtnyvhXlKuOXMj7Ucc3ChB8kzdn
+	e6aSxMl+tOsfDxno+nnK6ThFAIOliuc5vPdiRJ1TOVYhJR79/oJQxXi8OdFcwhJnMk+fB+opQpq
+	nCtwdZ3x85y+mPDkAOLvxoK75nCGdKFpIE4Z9lQ==
+X-Google-Smtp-Source: AGHT+IEOxg1ObHX8j5ADuwz4SaSKeY0U/wXSXneGYVCIWIk2eqRKhLL0UkhWDS2Bv0MsNKDNNk02uHpLn4FhpW05EPE=
+X-Received: by 2002:a05:6102:2746:b0:46e:d0cd:428d with SMTP id
+ p6-20020a056102274600b0046ed0cd428dmr1931571vsu.33.1707903349246; Wed, 14 Feb
+ 2024 01:35:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2259; i=u.kleine-koenig@pengutronix.de; h=from:subject:message-id; bh=W5Wp/YX5ZNL5lRXSmQet2h8oEA52+3pGK0CF32hVD4A=; b=owGbwMvMwMXY3/A7olbonx/jabUkhtQzHT8sJr/jnz9/Y5/1ke3xDfqcZbrpxj16T1VDFyz/7 iCXtWh9J6MxCwMjF4OsmCKLfeOaTKsqucjOtf8uwwxiZQKZwsDFKQATuW7E/k9bN29+MtdPo5RF 6vrZYUfLljq8TIytVryReuPtq218LqwL2ILYWie4zObqTuWfHGLUw/P/zrp6pTVCP54Yv11x9vg 8V5fTfh69iZf++ic4vK+XlF9341Hhfe6FqexLnbNqeT5/uBewt+RDd+NzA0enyteWS7oc9mu9ms xsPmflKY3bxxJ6T2TZ2Wh4Tbq/98DhYi5lXcsEr+9WP3Qr2k/LlxsXRIiVMVadOGMTX7H3zeuLf 73r94pfDBR1y/b95PZqR6j/3QR19lL7P2bmCap7082mz/Rn8Om6/js21OzjMe397xl7nTSrZljL 2Oq+zmrtaN07s+5OyYmHJZVOTYpRtzOfSYu8srpQLCEDAA==
-X-Developer-Key: i=u.kleine-koenig@pengutronix.de; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+References: <20240213141222.382457-1-warthog618@gmail.com>
+In-Reply-To: <20240213141222.382457-1-warthog618@gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 14 Feb 2024 10:35:38 +0100
+Message-ID: <CAMRc=MdmfHLyy0UrfC21UMxFa8CTySOx8LCEg0Nt+Z9tb8mRSQ@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: consistent use of logical line value terminology
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linus.walleij@linaro.org, andy@kernel.org, 
+	corbet@lwn.net
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This prepares the pwm sub-driver to further changes of the pwm core
-outlined in the commit introducing devm_pwmchip_alloc(). There is no
-intended semantical change and the driver should behave as before.
+On Tue, Feb 13, 2024 at 3:12=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> Consistently use active/inactive to describe logical line values, rather
+> than high/low, which is used for physical values, or asserted/de-asserted
+> which is awkward.
+>
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
+> ---
 
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
----
- drivers/gpio/gpio-mvebu.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+Applied, thanks!
 
-diff --git a/drivers/gpio/gpio-mvebu.c b/drivers/gpio/gpio-mvebu.c
-index a13f3c18ccd4..8cfd3a89c018 100644
---- a/drivers/gpio/gpio-mvebu.c
-+++ b/drivers/gpio/gpio-mvebu.c
-@@ -99,7 +99,6 @@ struct mvebu_pwm {
- 	u32			 offset;
- 	unsigned long		 clk_rate;
- 	struct gpio_desc	*gpiod;
--	struct pwm_chip		 chip;
- 	spinlock_t		 lock;
- 	struct mvebu_gpio_chip	*mvchip;
- 
-@@ -615,7 +614,7 @@ static const struct regmap_config mvebu_gpio_regmap_config = {
-  */
- static struct mvebu_pwm *to_mvebu_pwm(struct pwm_chip *chip)
- {
--	return container_of(chip, struct mvebu_pwm, chip);
-+	return pwmchip_get_drvdata(chip);
- }
- 
- static int mvebu_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -789,6 +788,7 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- {
- 	struct device *dev = &pdev->dev;
- 	struct mvebu_pwm *mvpwm;
-+	struct pwm_chip *chip;
- 	void __iomem *base;
- 	u32 offset;
- 	u32 set;
-@@ -813,9 +813,11 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 	if (IS_ERR(mvchip->clk))
- 		return PTR_ERR(mvchip->clk);
- 
--	mvpwm = devm_kzalloc(dev, sizeof(struct mvebu_pwm), GFP_KERNEL);
--	if (!mvpwm)
--		return -ENOMEM;
-+	chip = devm_pwmchip_alloc(dev, mvchip->chip.ngpio, sizeof(*mvpwm));
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+	mvpwm = to_mvebu_pwm(chip);
-+
- 	mvchip->mvpwm = mvpwm;
- 	mvpwm->mvchip = mvchip;
- 	mvpwm->offset = offset;
-@@ -868,13 +870,11 @@ static int mvebu_pwm_probe(struct platform_device *pdev,
- 		return -EINVAL;
- 	}
- 
--	mvpwm->chip.dev = dev;
--	mvpwm->chip.ops = &mvebu_pwm_ops;
--	mvpwm->chip.npwm = mvchip->chip.ngpio;
-+	chip->ops = &mvebu_pwm_ops;
- 
- 	spin_lock_init(&mvpwm->lock);
- 
--	return devm_pwmchip_add(dev, &mvpwm->chip);
-+	return devm_pwmchip_add(dev, chip);
- }
- 
- #ifdef CONFIG_DEBUG_FS
--- 
-2.43.0
-
+Bart
 
