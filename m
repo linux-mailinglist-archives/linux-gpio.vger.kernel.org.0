@@ -1,121 +1,150 @@
-Return-Path: <linux-gpio+bounces-3314-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3315-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78D7E854F5D
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 18:05:20 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD19385504F
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 18:30:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB11F1C22FB1
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 17:05:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 525A11F247B0
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 17:30:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B6960867;
-	Wed, 14 Feb 2024 17:04:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCFC85926;
+	Wed, 14 Feb 2024 17:26:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F0F60EE9
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 17:04:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C27D83A1E
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 17:26:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707930270; cv=none; b=Lc7Pol9y4hY2Wg04X79LqYXASIMepfaxmF+siPRBj+/VHoW9w/EJ+wwYguNA+z5SsDV2jI/sgAoaIuQIR2QvLpCcqBhG3oOFFks+Y0V4OE/axziua+AXYDVZC21ASjBiRxTwC/Sry8AP8VWNdQTKyWfFgPGaA6Rg0mA5dSQu0mU=
+	t=1707931577; cv=none; b=s6hwzR3zVX5O+HdQKeSlxDqSBbJpV90k/gSuCseeaJHRlHBVY6kCIMRj5SmdGPHFgWgRFR7d4eq5/pFBnZsLUkNdE0rfHpb/HDBeoQcerKXnM94WTi8iHvZqBHokvQKEk1/IKAw79QFC+LE5iSSoqoumgxB7mEzt+4exY+DanXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707930270; c=relaxed/simple;
-	bh=wCX+HSUsgVhoSVER6tbzhPegan6QMTSr09rwLcmEo6g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jmt68lzl91uhv9Vgzfn/c11GywX/lJiRs7y9Ikv525DbJZ9WoT/nG9HN+UwAaJy5/X80mBIPw//ZLpR2RmYJrFtFY8kMPNwHqM7DPzznTYqCac5mRzSVGYws7BGHQeEbwT5YYk/gJqiy+UJ86xIlqRvltUP9MD7wWK9zh9j3Hi8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgG-0004d4-9q; Wed, 14 Feb 2024 18:04:20 +0100
-Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgE-000j6s-PC; Wed, 14 Feb 2024 18:04:18 +0100
-Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
-	(envelope-from <ukl@pengutronix.de>)
-	id 1raIgE-004rCh-2C;
-	Wed, 14 Feb 2024 18:04:18 +0100
-Date: Wed, 14 Feb 2024 18:04:18 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, kernel@pengutronix.de, 
-	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc()
- function
-Message-ID: <56rydkozta2nl3jsxaitcno5gdygrvvkjhmbtji7vh7pf2vqpk@7znvz5qwtkvu>
-References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
- <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
- <Zcy2GbkjX7N6buB9@smile.fi.intel.com>
- <asyro4yemnlljhyjxk7dxzzo3nlhqxq7hg5vk7lirx6gtknqsh@4jd42jhr6bkp>
- <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
+	s=arc-20240116; t=1707931577; c=relaxed/simple;
+	bh=ZR999QFWhlwj9sKHPcpMJZ/et7mMOxmwea2xvciFQIA=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
+	 MIME-Version:Content-Type; b=Y1RoEDzCtcHtIE6oNw1m+gMRblbhAlcXgBEcAoq1GcAKwoojDKdQKthj0/hu9kF0KXpOjg+UO+iRXb5a/FfnslT9Oe0bATXcbEd/WDes+7yYKeKho3IJK4tC5SdpZAEFKPvbVKvIVAPA1PFDtWoLo4p/YSyqAiZ1G2bvjnYtw7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e0cc8d740cso14300b3a.3
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 09:26:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1707931576; x=1708536376;
+        h=content-transfer-encoding:mime-version:message-id:date:references
+         :in-reply-to:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=sfbN9O+KSahrVus1iQChDGWhup0O3IlmcoxDUZEy1yg=;
+        b=LtxGb5xuGLKRO0no2IPhxIKNKux0AFDKIV/2ErBERiXpbcUfHHYILMeDcBsoXcwAvG
+         j3JALQh8PDmrWKiYDqyS3m4qMNgT3OnDOpR29jVLgQ23KjF+a0yAZe5ofFf4gNqKme0T
+         bnqJJVTTBVAw+UMtsmrYwXL+aXONww6WzpOK7kA0HOMLWXa5b6SQ6B2Ppgx3Z0rexS9s
+         O1tdQdG4B/VclB5ZHzPju1V1SAez04VdFcRPbtJJzv+4KN57Y9kLHUsThWCOMXUCZBVy
+         vhDC9GWh4R/KB1e07MUHbnA1vOLs4713p91Y95WxBrkTiyK4oi+douCOUo4oUdjAUllb
+         C15Q==
+X-Forwarded-Encrypted: i=1; AJvYcCV3YFraQsgS7aBN5pBxckpDZFq1J3i51w7XRAkVzu1Iufp0lia69JpWsqFL0LVqJKuB8as4Y2X9UsiPRLljqTTQ5m8gQgPgHC39fw==
+X-Gm-Message-State: AOJu0Yz8ds7marw/4Ou+SRsUrbJK7TO13VBsSrNAi1qDWCmGyCuFLpgx
+	kcpu/FQOhCbo+dgijWA7TO+EF3ab6YOr2G+Bmp5Mafw/fe+ZxdGIVjhriQ0+rdQ=
+X-Google-Smtp-Source: AGHT+IEkFlKlG9gHgg2wzSvoNAPS5Zw/ktf2OAya/unVNoKw8naljYOACbtnXrXICCJfzELhiJY0rg==
+X-Received: by 2002:aa7:9804:0:b0:6e0:4059:f420 with SMTP id e4-20020aa79804000000b006e04059f420mr2887975pfl.17.1707931574240;
+        Wed, 14 Feb 2024 09:26:14 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUwyH1bLgA5qBX1E7dX91URD4FYPUKmb98cON51ONK278Bgr0eCnGJwptBzBaV9kwVbG2ZeJNuDUrp3H16Pc7tRlbKt7n/gLq5V/XbGaXpJFGxYnJRcN7J9cBpoiE/TefwKO1jx9clCMgdsiYGmivKaNFH72uokn5nGFMr8dpSrmXTspWH0oq/l2yTddVhqiVF43kYOT87ZmQEFCMi0pB+FMi9lFlbnOGrt8d1g0qYlbhoN1PMSSPSHdHUP9xvqYKUg2vZlBIf3QFRjNyaIcMrY6/P7sQddPFlvflupOKhKdIDalQiblJQN74OIvgmjZljzxZMgODXuDo0A7/wLi2ulAK6t2fsbmCDWYfiyskex/q32KrtGe7uThgBkLeMpvAJ4dc+rE6Jdko6G1DssfudEdqVGD6A5RTNlTv65bDDgNaaKZgTu98rUHsT7cNe0ETJvXPErYIK5zdLjJpimoz+yBeLXK8q8noDVK7Ni38Y2Oei0Agto+ewch5bf2XxDPXIqSotjZN6IcjVaG4RC6VT4lABFD2yMXoL51RsxQuiflRAvg4AaRZ13tID9YWBGdTbMBvGvCgMfvSFAWfZWHCi/
+Received: from localhost (71-212-63-227.tukw.qwest.net. [71.212.63.227])
+        by smtp.gmail.com with ESMTPSA id y26-20020aa793da000000b006e04c3b3b5asm9738938pff.175.2024.02.14.09.26.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 09:26:13 -0800 (PST)
+From: Kevin Hilman <khilman@kernel.org>
+To: Conor Dooley <conor@kernel.org>, Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: arnd@arndb.de, broonie@kernel.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+ jpanis@baylibre.com, kristo@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ lee@kernel.org, lgirdwood@gmail.com, linus.walleij@linaro.org,
+ linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, nm@ti.com,
+ robh+dt@kernel.org, vigneshr@ti.com
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
+In-Reply-To: <20240214-galley-dweller-1e9872229d80@spud>
+References: <20240209-blitz-fidgety-78469aa80d6d@spud>
+ <20240214093106.86483-1-bhargav.r@ltts.com>
+ <20240214-galley-dweller-1e9872229d80@spud>
+Date: Wed, 14 Feb 2024 09:26:13 -0800
+Message-ID: <7hil2r5556.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m5g6gkqfw7vsyz6v"
-Content-Disposition: inline
-In-Reply-To: <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
-
-
---m5g6gkqfw7vsyz6v
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 06:09:47PM +0200, Andy Shevchenko wrote:
-> On Wed, Feb 14, 2024 at 6:01=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Wed, Feb 14, 2024 at 02:46:17PM +0200, Andy Shevchenko wrote:
->=20
-> > (i.e. I didn't add your Reviewed-by tag because I didn't capitalize
-> > pwm).
->=20
-> Are you expecting me to bikeshed?! :-)
-> Please, add it there.
+Conor Dooley <conor@kernel.org> writes:
 
-No, not expecting it, but taking the possibility into account :-)
-And I prefer being told that I'm over-cautious and should add it over
-being told to have made a wrong assumption and should drop it.
+> On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
+>> Hi Conor,
+>>=20
+>> On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
+>> > On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
+>> > > TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+>> > > regulators, it includes additional features like GPIOs, watchdog, ES=
+Ms
+>> > > (Error Signal Monitor), and PFSM (Pre-configurable Finite State Mach=
+ine)
+>> > > managing the state of the device.
+>> >=20
+>> > > TPS6594 and TPS65224 have significant functional overlap.
+>> >=20
+>> > What does "significant functional overlap" mean? Does one implement a
+>> > compatible subset of the other? I assume the answer is no, given there
+>> > seems to be some core looking registers at different addresses.
+>>=20
+>> The intention behind =E2=80=9Csignificant functional overlap=E2=80=9D wa=
+s meant to
+>> indicate a lot of the features between TPS6594 and TPS65224 overlap,
+>> while there are some features specific to TPS65224.
+>> There is compatibility between the PMIC register maps, I2C, PFSM,
+>> and other drivers even though there are some core registers at
+>> different addresses.
+>>=20
+>> Would it be more appropriate to say the 2 devices are compatible and have
+>> sufficient feature overlap rather than significant functional overlap?
+>
+> If core registers are at different addresses, then it is unlikely that
+> these devices are compatible.
 
-Best regards
-Uwe
+That's not necessarily true.  Hardware designers can sometimes be
+creative. :)
 
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
-   |
-Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+> In this context, compatible means that existing software intended for
+> the 6594 would run without modification on the 65224, although maybe
+> only supporting a subset of features.  If that's not the case, then
+> the devices are not compatible.
 
---m5g6gkqfw7vsyz6v
-Content-Type: application/pgp-signature; name="signature.asc"
+Compatible is a fuzzy term... so we need to get into the gray area.
 
------BEGIN PGP SIGNATURE-----
+What's going on here is that this new part is derivative in many
+signifcant (but not all) ways from an existing similar part.  When
+writing drivers for new, derivative parts, there's always a choice
+between 1) extending the existing driver (using a new compatible string
+& match table for the diffs) or 2) creating a new driver which will have
+a bunch of duplicated code.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXM8pEACgkQj4D7WH0S
-/k6HXgf/eIC0sD9rIJkIlPWCyb3ThKDg2BNS036wLhgnQPeBRwvDj6P/S5LtqurR
-W8RJavLSaWeYeUQHlc5P4iipGJ8TFyTfAWhi/jjuXXkE/CqImbR0njw836ctuA2j
-n2/p4p2Ag9fOD1I2N5xPFnytICRay2P6uWt65LLLPfdR8TW+jxPUZVXgXTUM0fA1
-fA/DEFQU5fBbINQvIVQcxd3HwOlDd2uDt220FcAlesKS8xj8YaJ7xzv/AIP0ja0+
-kbVrGB6Pq1JmQsis4OwWqCHhvI/dOzkJz9BCILtnnm4V5+f8aifEpIOGXkK6md8U
-cEhTHR0OaRbWVQm1aGZIZxerQ+GkUw==
-=WKaD
------END PGP SIGNATURE-----
+The first verion of this series[1] took the 2nd approach, but due to the
+significant functional (and feature) overlap, the recommendation was
+instead to take the "reuse" path to avoid signficant amounts of
+duplicated code.
 
---m5g6gkqfw7vsyz6v--
+Of course, it's possible that while going down the "reuse" path, there
+may be a point where creating a separate driver for some aspects might
+make sense, but that needs to be justified.  Based on a quick glance of
+what I see in this series so far (I have not done a detailed review),
+the differences with the new device look to me like they can be handled
+with chip-specific data in a match table.
+
+Kevin
+
+[1] https://lore.kernel.org/lkml/20231026133226.290040-1-sirisha.gairuboina=
+@Ltts.com/
 
