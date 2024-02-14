@@ -1,100 +1,123 @@
-Return-Path: <linux-gpio+bounces-3267-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3268-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id F005B854632
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:36:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CC46585463C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 10:38:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ACFC9292F10
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:36:36 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 87CB8281464
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:38:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5B02014004;
-	Wed, 14 Feb 2024 09:35:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3DA1413AD8;
+	Wed, 14 Feb 2024 09:38:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="k9eS6af2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7zqyhsq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5013612E5C
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 09:35:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7DCA134A0;
+	Wed, 14 Feb 2024 09:38:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707903353; cv=none; b=Rtodx9m3GJwveT3I4pYFI8zi44h3speWpTWVjnxyc3cmuVR3B6JRVsAS6CVKNw66wDA+OIBFvYfnfNiXfhFUGmK/JoB/PkrotdFiSLW9l3eCaxUyZQBGaiEIoKb54yyeis+tPanFk/4PegOhEAZScYRrhI1wouOC7gi/Jn0VIAE=
+	t=1707903519; cv=none; b=LOrf8FVbRUEno7IvOOxKm/3s1ajVzmlceLvQuWE/mIgqt/emjCp5HrRutz9qnPyOVJv3NViraqGEXFRnrKYHS7LFuouXmrL4/SiTJEN5Ax4Pu9kwvl/N5D2fT9PxQgpRPDHZwE2otN5sJlYZN6MVYJsRVWRcaTVtrd1WDj/Bod8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707903353; c=relaxed/simple;
-	bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f85JQPvESLcpZIRBwIyD+1KahGeuH/Vp/omkf0ujETTXZy0s04UDg+iUNAfG6dWYMJBkYmvouj6l03ALwHrFO0BQDgOfbywIuRCXmHE9jx4CD6dRHeQe4+UCCtGrkDaIlbaVtiIJ+g7vwXRmjL8+GNQCw4SAflaQMHqoO7sarf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=k9eS6af2; arc=none smtp.client-ip=209.85.222.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d698a8d93cso866791241.3
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 01:35:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707903349; x=1708508149; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
-        b=k9eS6af2Le1UDrnWN4cY+JAmQ33DtPRzd55GR+pIeNMrDCv8z7vHyfwaqnTqbIc0Xf
-         wO6pDEbGuortCX1plRHEb/tnavCZlIa2wCtfa1zkS731DYHWpSnC/fkcQbsq3vrQoWYI
-         zCnh16Nsf7idk0olqb1AVOJ9iTv0imxvD3+no9uByAT7aYqdkMlvfaaCOvOuVLJhSc4x
-         YTqhJ0jCz24Ry5SBC0N/LPxtgx4ZrSv/WrSmu48up0CO34tsqavzN7YQPQrbQmlP3If+
-         j4QynBK4lm2GY0qXYou6WH/VW0qkUoep9rZXQMOgcQ2jFGz7BkXIiayiTj16wqAnfOyW
-         +nsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707903349; x=1708508149;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FxGJAH83UTrQJFawuwOkZhQNDaql6s20rG59BXEIoT0=;
-        b=w9dKoUBVhdfCl0fwJbsz+kd425160lQ2UR8T6uMgZw6RpM+LdDR35fIFc1h+Gm3peo
-         SEsoO2v9RDfdFXRqUEbX4iofUh51XVzfxJQC9HolgjL2Nj1Hapboq3BT7hHfkGSTF7bD
-         plGmZpxoCy41skMvhZ1LjEwavWmi/HdVI5El+zWipvfQbhKhstJZkePcRYonEOZK0LF8
-         ZDBHCNG+zoOcp9TWPlWnKTrIKZ0M4b5GWjtzklijkrbaV96VpKnQb1EBMhL5MrD77x5v
-         pZOnd0F3anO/yARbaLjP+Do2myiZn65IwuVkxFMTBVjNqvT4ZVq8R2jdZRw8kfA1ISe2
-         S/tw==
-X-Forwarded-Encrypted: i=1; AJvYcCWZ48mTDrAwLKO49GgbemMyN8zAQz/LkLhvJLa/k0E5TaU4ME2DMcCXLUjT4mSMkZZNxWQbbcNsPAGbW/hSZ50rY4e3GxORul2NeA==
-X-Gm-Message-State: AOJu0YyHLQV6L0xKDdPBrg3BfOlysZtnyvhXlKuOXMj7Ucc3ChB8kzdn
-	e6aSxMl+tOsfDxno+nnK6ThFAIOliuc5vPdiRJ1TOVYhJR79/oJQxXi8OdFcwhJnMk+fB+opQpq
-	nCtwdZ3x85y+mPDkAOLvxoK75nCGdKFpIE4Z9lQ==
-X-Google-Smtp-Source: AGHT+IEOxg1ObHX8j5ADuwz4SaSKeY0U/wXSXneGYVCIWIk2eqRKhLL0UkhWDS2Bv0MsNKDNNk02uHpLn4FhpW05EPE=
-X-Received: by 2002:a05:6102:2746:b0:46e:d0cd:428d with SMTP id
- p6-20020a056102274600b0046ed0cd428dmr1931571vsu.33.1707903349246; Wed, 14 Feb
- 2024 01:35:49 -0800 (PST)
+	s=arc-20240116; t=1707903519; c=relaxed/simple;
+	bh=dz5V4kR1LuJbVIZ4dAGFdi8A2apYcjn87QSy+rVXNsA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nnBe06B61FHLQPYxgte4q4zNoSzCArWLX713RXFkmeFCyC9hXVT763STn1AGLd9sRh1BcAgenBPVXjWjdzig6j6fKEk5FSbOJjkQS9uchyvBK7ECfxa7ZA+L2mz0ersXD0EpqDWLTckk5HqQw98gYRBCRz1/XnsZrYvL9sbaxRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7zqyhsq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFFB1C433F1;
+	Wed, 14 Feb 2024 09:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1707903518;
+	bh=dz5V4kR1LuJbVIZ4dAGFdi8A2apYcjn87QSy+rVXNsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B7zqyhsqWntTU0ZYqNqy+uJY0/kpfKgSqfIQgafxHQxLHh/aG4BMvKgKKSEyHKvVQ
+	 nN3yua93J85s9bPWXEt48LUbWYNpPCbdHcGSA2ttpnUbsCWllg+dbGTeDKqUxkRhcf
+	 DF0Jeyb3ibQCgsqx+F6hfsN4DB0aF+pr9lRdNtq3xH8pbwzzFZ3IMgD2HGkQsF90wD
+	 FLFwvGjxZ4A8vJY0BBzkkgh8VPmXKb6D4STEqB+VRZvUapu3Xg8V03swFWwtPNRoNz
+	 qS9kkvardxBYPALbHcUkYv/2CGiD42d4SSmPCWAawQCYo2MniV0Ykx2yGVdxHu+Pi0
+	 AjUFtD2gJ3U7w==
+Date: Wed, 14 Feb 2024 09:38:32 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: arnd@arndb.de, broonie@kernel.org, conor+dt@kernel.org,
+	devicetree@vger.kernel.org, gregkh@linuxfoundation.org,
+	jpanis@baylibre.com, kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org, lee@kernel.org,
+	lgirdwood@gmail.com, linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, nm@ti.com,
+	robh+dt@kernel.org, vigneshr@ti.com
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
+Message-ID: <20240214-galley-dweller-1e9872229d80@spud>
+References: <20240209-blitz-fidgety-78469aa80d6d@spud>
+ <20240214093106.86483-1-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240213141222.382457-1-warthog618@gmail.com>
-In-Reply-To: <20240213141222.382457-1-warthog618@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 14 Feb 2024 10:35:38 +0100
-Message-ID: <CAMRc=MdmfHLyy0UrfC21UMxFa8CTySOx8LCEg0Nt+Z9tb8mRSQ@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: consistent use of logical line value terminology
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linus.walleij@linaro.org, andy@kernel.org, 
-	corbet@lwn.net
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="EFq+e2HVA4/N0Ifh"
+Content-Disposition: inline
+In-Reply-To: <20240214093106.86483-1-bhargav.r@ltts.com>
+
+
+--EFq+e2HVA4/N0Ifh
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 13, 2024 at 3:12=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
-wrote:
->
-> Consistently use active/inactive to describe logical line values, rather
-> than high/low, which is used for physical values, or asserted/de-asserted
-> which is awkward.
->
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
+On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
+> Hi Conor,
+>=20
+> On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
+> > On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
+> > > TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+> > > regulators, it includes additional features like GPIOs, watchdog, ESMs
+> > > (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machi=
+ne)
+> > > managing the state of the device.
+> >=20
+> > > TPS6594 and TPS65224 have significant functional overlap.
+> >=20
+> > What does "significant functional overlap" mean? Does one implement a
+> > compatible subset of the other? I assume the answer is no, given there
+> > seems to be some core looking registers at different addresses.
+>=20
+> The intention behind =E2=80=9Csignificant functional overlap=E2=80=9D was=
+ meant to
+> indicate a lot of the features between TPS6594 and TPS65224 overlap,
+> while there are some features specific to TPS65224.
+> There is compatibility between the PMIC register maps, I2C, PFSM,
+> and other drivers even though there are some core registers at
+> different addresses.
+>=20
+> Would it be more appropriate to say the 2 devices are compatible and have
+> sufficient feature overlap rather than significant functional overlap?
 
-Applied, thanks!
+If core registers are at different addresses, then it is unlikely that
+these devices are compatible. In this context, compatible means that
+existing software intended for the 6594 would run without modification
+on the 65224, although maybe only supporting a subset of features.
+If that's not the case, then the devices are not compatible.
 
-Bart
+--EFq+e2HVA4/N0Ifh
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZcyKGAAKCRB4tDGHoIJi
+0kAGAQCCU0bkl+s+BdL+d40Qr/mkOI5Ie4yq/1oBg7aALwQ3RwEAx4O9b5/Q5bbk
+UfmurbkwjbQMV4Ls0UIFvMC7Mi8rxA8=
+=byM7
+-----END PGP SIGNATURE-----
+
+--EFq+e2HVA4/N0Ifh--
 
