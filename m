@@ -1,114 +1,121 @@
-Return-Path: <linux-gpio+bounces-3313-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3314-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75EC6854F6B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 18:07:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D7E854F5D
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 18:05:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 713FAB2B6D0
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 17:04:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AB11F1C22FB1
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 17:05:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE3156024D;
-	Wed, 14 Feb 2024 17:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73B6960867;
+	Wed, 14 Feb 2024 17:04:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f176.google.com (mail-pf1-f176.google.com [209.85.210.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079356087B
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 17:04:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F0F60EE9
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 17:04:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707930254; cv=none; b=GuAspZRaOCEGi+tQTo48Md7ITCMLopgKsWjmNeGVwe24gWU5Hz0R7XiFVOWe4MXSqOIS/wqLD9Dy9bkJLAjQuIRwC2y8wzKPQlvr64N5GH+3MxGrRqfM5aIpdw7CiE32ywDww7hpHOdBpziwG3D0YWJfKE+akyolN7bOzqEZvpA=
+	t=1707930270; cv=none; b=Lc7Pol9y4hY2Wg04X79LqYXASIMepfaxmF+siPRBj+/VHoW9w/EJ+wwYguNA+z5SsDV2jI/sgAoaIuQIR2QvLpCcqBhG3oOFFks+Y0V4OE/axziua+AXYDVZC21ASjBiRxTwC/Sry8AP8VWNdQTKyWfFgPGaA6Rg0mA5dSQu0mU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707930254; c=relaxed/simple;
-	bh=d+4di5zjnt67CQW+DmH0gAWSNPbmb8WmycElMAQJIW0=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=nJWteegN+ZMDwusRS/OqB4UwBdVeq29N85WImKRWak8oViiO7nMv7NFHFEOgNmG4h8Yi4+aaqFekiA7a7WX/aPp8wiWQvJRiQ5SdS846Z5bya4kkFMbn9DvQ4j0IigOZVwIWTHbursT3ILF3mkgxJHrDisXtcbEvxhrQuidwuZk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=pass smtp.mailfrom=baylibre.com; arc=none smtp.client-ip=209.85.210.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-pf1-f176.google.com with SMTP id d2e1a72fcca58-6da4a923b1bso2038550b3a.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 09:04:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707930252; x=1708535052;
-        h=mime-version:message-id:date:references:in-reply-to:subject:cc:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=/rNhav+7L2/K8KIa8PybW7vaELkvxb4l6BfkxMKSsrw=;
-        b=uJzTIRRETwQrP6MLI4zKrg5gYwMZfDh5vGLPKiSZ4weZdyaoMIN+0mx/Y0Ix9gqr7H
-         dX8QoY+z6/q8bGC+s0ueTcEzWwzfOCjAd4ACxX+sAyap+WPgGbb7uNag6hFmsALnU52o
-         uRabFCR/iuw6Sl11LqXht+3+g+BG1kMsBWzIfcQ8MrxW+5bSSsyLu1MGqupCG86F3x2z
-         KBfz6RtblssmTrhjltF2MWYK00+jbBqn9a9iVBODrTkLU5XfnDsnjdlnQrVR9YZgSnDZ
-         qXP5zJnJzB9nGC5G+BQWYgUyA+slA9pV4jxp9+XVcvsvAa3GKrwAcKyJz/O5Ik81RhqX
-         Gh8g==
-X-Forwarded-Encrypted: i=1; AJvYcCV7jAMFnrF9r7FuH456yHQLZ2bG4vyroCjrvLkvVqrypn+AIiJTotp1f7i5PBDhKHchqsyDFAXj4woCiHh18iRWQAbIXlyLVuYNhQ==
-X-Gm-Message-State: AOJu0YwTRBzoLUfhF1EHiJBRacko4hgj1TnUPmYbKtYUxBjZxXAFYdNp
-	pKkMJIqovzY9g61y+DpPunq7lpiRhz2XNMEEYdehodYzldxsLEvKCrdqoEf+bFM=
-X-Google-Smtp-Source: AGHT+IFsv4N1m6Boc7Pwj7tvZOfnK773MPq2SjotlEj2cK62z5QH3wAcvbwi5jo/bYE2q6zQdf8oJA==
-X-Received: by 2002:a05:6a00:2d88:b0:6de:209c:3228 with SMTP id fb8-20020a056a002d8800b006de209c3228mr3775946pfb.6.1707930252034;
-        Wed, 14 Feb 2024 09:04:12 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWJVqfd3ZBC3+g61zbA6HBTnD5Z9te/X4KeI6sQ3exqNSyqiArKAuV6RrMShSBtA7aE+oEE1FeJ8XFiq7yuOqrwNh80fODw/mufUf254/czZyN6qcrvx7uhUT1Lary/1zGH8Lm79yKixhIlavYRfe+oDsyc+lkvDu3vtlWJpM6xVdvX6QCw2ATiy0FG/0CcjhetkWPk5tRSlnlL3NqpWcJqbOE1sY4tgb5TUr5btH2/pGmbTwy/ogx3S9VsVZLJkrsMGur4v0HqIc55SETLCGuzL0Xd57gfO6hcdmVs6K+vw1kXkE/82qDaOSDx3yweNe8iL9zt/MUAhk2UMhMnEGBv9senfEpuq3PKl7imMLZLJ02u9KOMY3GcGsJxzVeyrqJfPML99O7gP0VfAp/dKj4ESnPNbT6F54FSF8Wdtt0EN4UzgI54T8QMEVol5fnDVxRw+PQL2C7ejrAaFXbQ+th792TGBxTsSX0Xszvj56mg0EfeB/uW9JrN+f4Ibc5q8mqGUCwFvzjP/YGcEghaQRPbp7pKmO++FrLs/AlM4PXSwMZJiyfgAxLW07kXbSMoWgkd6sZ5aqvq9g==
-Received: from localhost (71-212-63-227.tukw.qwest.net. [71.212.63.227])
-        by smtp.gmail.com with ESMTPSA id r19-20020aa78b93000000b006e02cdad499sm9842044pfd.99.2024.02.14.09.04.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 09:04:10 -0800 (PST)
-From: Kevin Hilman <khilman@kernel.org>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- jpanis@baylibre.com, devicetree@vger.kernel.org, arnd@arndb.de,
- gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
- linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
- kristo@kernel.org, Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: Re: [RESEND PATCH v1 04/13] mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-In-Reply-To: <20240208105343.1212902-5-bhargav.r@ltts.com>
-References: <20240208105343.1212902-1-bhargav.r@ltts.com>
- <20240208105343.1212902-5-bhargav.r@ltts.com>
-Date: Wed, 14 Feb 2024 09:04:10 -0800
-Message-ID: <7hplwz565x.fsf@baylibre.com>
+	s=arc-20240116; t=1707930270; c=relaxed/simple;
+	bh=wCX+HSUsgVhoSVER6tbzhPegan6QMTSr09rwLcmEo6g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=jmt68lzl91uhv9Vgzfn/c11GywX/lJiRs7y9Ikv525DbJZ9WoT/nG9HN+UwAaJy5/X80mBIPw//ZLpR2RmYJrFtFY8kMPNwHqM7DPzznTYqCac5mRzSVGYws7BGHQeEbwT5YYk/gJqiy+UJ86xIlqRvltUP9MD7wWK9zh9j3Hi8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raIgG-0004d4-9q; Wed, 14 Feb 2024 18:04:20 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raIgE-000j6s-PC; Wed, 14 Feb 2024 18:04:18 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raIgE-004rCh-2C;
+	Wed, 14 Feb 2024 18:04:18 +0100
+Date: Wed, 14 Feb 2024 18:04:18 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andy@kernel.org>, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	platform-driver-x86@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, kernel@pengutronix.de, 
+	Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <56rydkozta2nl3jsxaitcno5gdygrvvkjhmbtji7vh7pf2vqpk@7znvz5qwtkvu>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+ <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
+ <Zcy2GbkjX7N6buB9@smile.fi.intel.com>
+ <asyro4yemnlljhyjxk7dxzzo3nlhqxq7hg5vk7lirx6gtknqsh@4jd42jhr6bkp>
+ <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="m5g6gkqfw7vsyz6v"
+Content-Disposition: inline
+In-Reply-To: <CAHp75VffQUet_ZiE4-e-DzjzxMoNM8L=0WQiommi=hc1Hr9sxg@mail.gmail.com>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
 
-Hello,
 
-Bhargav Raviprakash <bhargav.r@ltts.com> writes:
+--m5g6gkqfw7vsyz6v
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Add support for TPS65224 PMIC in TPS6594's I2C driver which has
-> significant functional overlap.
->
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+On Wed, Feb 14, 2024 at 06:09:47PM +0200, Andy Shevchenko wrote:
+> On Wed, Feb 14, 2024 at 6:01=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Wed, Feb 14, 2024 at 02:46:17PM +0200, Andy Shevchenko wrote:
+>=20
+> > (i.e. I didn't add your Reviewed-by tag because I didn't capitalize
+> > pwm).
+>=20
+> Are you expecting me to bikeshed?! :-)
+> Please, add it there.
 
-Thanks for the patch adding TPS65224 support
+No, not expecting it, but taking the possibility into account :-)
+And I prefer being told that I'm over-cautious and should add it over
+being told to have made a wrong assumption and should drop it.
 
-[...]
+Best regards
+Uwe
 
-> @@ -216,15 +217,18 @@ static int tps6594_i2c_probe(struct i2c_client *client)
->  	tps->reg = client->addr;
->  	tps->irq = client->irq;
->  
-> -	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
-> -	if (IS_ERR(tps->regmap))
-> -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
-> -
->  	match = of_match_device(tps6594_i2c_of_match_table, dev);
->  	if (!match)
->  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
->  	tps->chip_id = (unsigned long)match->data;
->  
-> +	if (tps->chip_id == TPS65224)
-> +		tps6594_i2c_regmap_config.volatile_table = &tps65224_volatile_table;
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
+   |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
-minor nit: for chip-specific differnces like this, rather than do this
-kind of "if" check here to update the regmap_config, instead use the
-compatible match data have a separate i2c_regmap_config match table for
-tps65224.
+--m5g6gkqfw7vsyz6v
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Kevin
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXM8pEACgkQj4D7WH0S
+/k6HXgf/eIC0sD9rIJkIlPWCyb3ThKDg2BNS036wLhgnQPeBRwvDj6P/S5LtqurR
+W8RJavLSaWeYeUQHlc5P4iipGJ8TFyTfAWhi/jjuXXkE/CqImbR0njw836ctuA2j
+n2/p4p2Ag9fOD1I2N5xPFnytICRay2P6uWt65LLLPfdR8TW+jxPUZVXgXTUM0fA1
+fA/DEFQU5fBbINQvIVQcxd3HwOlDd2uDt220FcAlesKS8xj8YaJ7xzv/AIP0ja0+
+kbVrGB6Pq1JmQsis4OwWqCHhvI/dOzkJz9BCILtnnm4V5+f8aifEpIOGXkK6md8U
+cEhTHR0OaRbWVQm1aGZIZxerQ+GkUw==
+=WKaD
+-----END PGP SIGNATURE-----
+
+--m5g6gkqfw7vsyz6v--
 
