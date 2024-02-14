@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-3256-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3257-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C18485442B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:44:50 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B1DC85442C
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 09:44:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5835A28937B
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 08:44:49 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0C460B24F4F
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 08:44:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 16FA679EF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84CB4AD4B;
 	Wed, 14 Feb 2024 08:44:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jenTWXeo"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="K2kq0q/W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 700955CBD
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 08:44:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989D96FAD
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 08:44:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707900267; cv=none; b=Ef3d+EHPYkKJH9dZm1PaFcC9pGbM6UwruEWpa3ecahxmy2LXC3+m1jNOKyaYX1EmqQ6UqoobmR7GGnngVubH/fVrI9kFk+GM4AG7rbFRUl7YuPReYAayJbBurlKAZBUTWFXS/kZUP6kCgJCPvHYN0TEbZngFKIiRDErJ4QdJ0k0=
+	t=1707900268; cv=none; b=TrLBFj9ph5V8g7qb8QcAYZL8rPiX46TDqDXGhTfUbB+atb9HqQ8zS8eNbLsQ32lE5z1ITd1hy6n/4ZdXYx5+SlW0c2IE/TnVlm5AVzueBqvzafvyocvHybgRL9mFywPJlcY4XsbzPWNAXQk0QiBoKQ0y8iKFXjSEdnVLWZwRomI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707900267; c=relaxed/simple;
-	bh=vke7f3mLqY80iPgnYphdJxXUsg/yewlt1JSSwQTi6Cg=;
+	s=arc-20240116; t=1707900268; c=relaxed/simple;
+	bh=eHN5AciwJywXX0m6TsYOtY6ESMLvZ8fD9s43NIeL+yo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=LK3MouA7TMK/Mruooldci89CVlRjTPZ6ttE0hzGdRZ80Md6CdAJiF9ZHP75HltdAzRmZtNu6NEEcjXjtPuBPpn4YFWdk7x0xWSOsazfSeBOxw67UVVmkFZjaximXQtPT8aWkbn7TEZUq8yDhoCwHUmWNv1Ij4xlVxG8CoMpXpOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jenTWXeo; arc=none smtp.client-ip=209.85.221.48
+	 MIME-Version; b=rWCvHZ5Z0LHuvfZB57fYpcvb+CVDialjBCTr+Rj3rF3FjKoAU3IvlQ8OyulPwZ6JPnIE4o7TCc/dq0uD1ZvaR3lBuBJvnWVJD930JsPAgBtt27gIW5oB16U1UaQQ6nCdvyF7aahFBrRfA0nvjXn3N8AVSukj/wUpNBPCOqLzPLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=K2kq0q/W; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-33cd57b7eabso909080f8f.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 00:44:25 -0800 (PST)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-411e698e679so2807425e9.1
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 00:44:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707900264; x=1708505064; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707900265; x=1708505065; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=rFhXojJ7DlXYIGKFbQSUazUJNMfgGXQm2JYyxUYo77w=;
-        b=jenTWXeo4DV9oaCUaaRKp2pzLkc+cHEacyh+YR7k9vSvAkYxVTCsEzfKTudo17CyHk
-         B8f9shbC8/4/4L8KrzwMFQ8txCwXR05zy67Dv7BQ/vnReROPyys3Hr62erj7kdNDPIfZ
-         MNxEvS8OreD95VxRgSTOqtgEiV69xMEEgTb5gKqvtGobY0izqorqdNMuA6Iwu14ZzJbL
-         LOlmvGGdEc5svoV3VETX66XRa+PMjn6CZW8ZqqAVxykjjg16H1esDpBQgL6yn8UJpp1k
-         24AyIOrLY9DvJdnlZPmnx4TjRUcD5OkwLASF9LZI/ew1ACo80tLBNcbk6095pWGEe2XI
-         Bx6w==
+        bh=LlRaYTHTwVLuz49BQFz01SyvMwXYPLiItdhT/I/i6Zw=;
+        b=K2kq0q/WYe599EKhJ1soeKgfSsfd+AT0WcsN1LJYcq3UlkkXMBoNgvW7PZoO7aIkDn
+         OPPFkdIoKWp5ltH+1gHwbraYREKuExRfgx/R5o5pB1GFbOtxK1pQp/VmqjeU+/BpGqCe
+         VCfb1YAlsetONNJDjNOCpBJJM67yaliuMKPhy1ED+7r0yhxb6w823ozrm4dsHPo5HOI+
+         9Z9px+cpTASePhg9Srvh+VXJ2wcFwzrAMMuXsMPPj5NCDNI1VKH5L4Espr9Dmc/GyB0W
+         9IahnMSFIxqds925LuyJMPI+5OW05L5px4b8yujZcRrxtAZ/2xGF3Euj0TKRTNXbU3Vc
+         ioCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707900264; x=1708505064;
+        d=1e100.net; s=20230601; t=1707900265; x=1708505065;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=rFhXojJ7DlXYIGKFbQSUazUJNMfgGXQm2JYyxUYo77w=;
-        b=c/4FsJ40CUIhMA26MZhRNnXtnAQkrlA7AbeN4tDcnlT/CvcRuGoLvDPAjF0YDsffGV
-         Lr5Mi2GTySEi9bbsJTqeyYrOFs0UktszOUXv+GN2gpCPKHJ9d4FRKwhyuq4srwIwHQyN
-         eR+7WHj4J8dSuHSQFJ5WbxSyWPNbpip3NW5CWAKqSxV2XoaWIolwGEUiP5jBVYGt89oZ
-         afP9MPhwHGhsx6x0H21uY8ll8CfaFAIT5UodWiyj9HlZfJumxkf/3ijQf0zfe4PYNgq2
-         1UufdjCqCp/KEf58mhNVkEcYsNNU6WD9j3PpeqyRrqqgwG9GoyPpALl0XNwf+jV2sD8G
-         jMAg==
-X-Gm-Message-State: AOJu0YwleiBVBlxn7AFOa5QgY4m/7LGK4cWSkBZhlB4rrY4TdFba+c5+
-	09CdM9z6dHEdHsE9g3FbFBzm2NM/d5iDkvBSW0tzi1lm4tGnb930AauPnsHrCmQ=
-X-Google-Smtp-Source: AGHT+IFxVOr2z8lh02p1KypI83zJK641TmMZKxXM0gQR0S7z8ej1eJxPwM4bGrmcDVHicTcjK0kCgQ==
-X-Received: by 2002:adf:f3c5:0:b0:33c:cfc5:5ff1 with SMTP id g5-20020adff3c5000000b0033ccfc55ff1mr1185222wrp.65.1707900263847;
-        Wed, 14 Feb 2024 00:44:23 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUdJ4z9AjPLf2LNcKSfUHNX/4gUscA5BP0k1QLWWNrl4ulc4N73hAaTqVofvZt6sKOB1BXOp39wp7SKvB0yt8pt6aFxV+Y3ztAMSHp89eA8tzlPacuKog7KxkLe2kIIn3leLdMfNrToRVM8w5xp4cqMZq4ow7l7cyC6TtBKB2uL9DoRLmG2VwMHSOuyW36eEsdoM3sgUMAE9io4i7h7Mzoh2zmVz3D1ZRJYZI/HARByZoM+ZJdC3e3tZB3NaCSnusFYiiOuhMCXBl7gLIQp/gZ1y7XCZswK/dbRxCBCCKS7ULEVT3b1d/kDGvqH5XeUPfx1zzLrD7hejdDOcdSGw3TvwoTnrKFdN3vX1EmKtsqOI0aQdiwRN5f2S6ClCH+0fC290UK8gKuBjMxlMVSsgsTCGxVb8mQ13IfCeIA7
+        bh=LlRaYTHTwVLuz49BQFz01SyvMwXYPLiItdhT/I/i6Zw=;
+        b=CoouxXgqxfhMqNkE2ZRKBT9TfKFgOKRCbgUTMzeCIaOJXsa3vsHlVCXXD99VGPN+1+
+         3SKVyQZNEmNg9FyHQNGr32o5gvpkITW+lwdPg3xgmMu/pzLFrNQDATihSkAajjlijCPE
+         U6NJUW+Z6s6iR7L82IGAJydvB4QDCGN3qje4B9kgR51j/JeMg31eUP+sN93uhCU2OmWJ
+         0CfPGtSt6aokyDPvrN3Yh48VvCwPet4YXjEi5PKTlzieFrh+6Gd8qw34G8vGJL6CnRmd
+         R+irrdFfY9Jh6izyeRZeaWH/Cym6z9LCWvjEEWNZKaSDScJ5oF3j1pQIebXTUZpJ5IdJ
+         aIUA==
+X-Gm-Message-State: AOJu0YyQF5i2uicaws26z53Z8zLPX+UdKv5ne0zXQiSZ55PD2ot5FUw/
+	eW50fEnmtIcPUPEkagMNd2phUjdUu15W4Y8LM8Q8tCkT2Kz5UckorEi1yR4xsnE=
+X-Google-Smtp-Source: AGHT+IE9Y0aDThi0m9FCFrZ2H0WgSTwbVQ87NKAxgxch35L/9BGa6QjKFs3y3Iq6+Fc5CS5VDIsL4w==
+X-Received: by 2002:adf:f045:0:b0:33c:dda0:769f with SMTP id t5-20020adff045000000b0033cdda0769fmr1309649wro.31.1707900264940;
+        Wed, 14 Feb 2024 00:44:24 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWdI49F1wLkvPpe1eeM7hCZ9ooqpYJNUeF9/P4R+2xyjXh+U97RIFK1/yqqldvbX443WJz0H3+whFgrPSpbpnN7qKl0/xvCX9MWRexo9LttF3GNs+3mmjpB3N2rrNQ+KevxVfruRtikGlPzl5Wm/EYEJlFGgpiVc9iIVp/TRhvNAF+v0Tz5fjmdMuIEoQCMSgdd7PTLIVEkQq8G1GSKzDeQTHPS3OdVH3xMN6VNMMbHBMQZV8bYrsKZQT2t9PbzVjIUBBtA1Bma/uOrNOlXeNlqmlSZEoYeqM4LfnV60YkhGA+Jwe9kVjsjHcsTwNIEqL48fAiWt1YTpgGZFzWnmTFMf+aD/kcrQUo/cc2VWDzXFmoWWybfDmxkOtlv4/AnJln5EUiYQu9WUutWu1z+TxtTi4mqjp1c99uaSGwO
 Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:cfee:a5b6:1f9b:9c9b])
-        by smtp.gmail.com with ESMTPSA id fa1-20020a056000258100b0033b79d385f6sm9494731wrb.47.2024.02.14.00.44.22
+        by smtp.gmail.com with ESMTPSA id fa1-20020a056000258100b0033b79d385f6sm9494731wrb.47.2024.02.14.00.44.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 14 Feb 2024 00:44:23 -0800 (PST)
+        Wed, 14 Feb 2024 00:44:24 -0800 (PST)
 From: Bartosz Golaszewski <brgl@bgdev.pl>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Kent Gibson <warthog618@gmail.com>,
@@ -81,9 +81,9 @@ Cc: linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	kernel test robot <oliver.sang@intel.com>
-Subject: [PATCH v2 1/4] gpio: take the SRCU read lock in gpiod_hog()
-Date: Wed, 14 Feb 2024 09:44:16 +0100
-Message-Id: <20240214084419.6194-2-brgl@bgdev.pl>
+Subject: [PATCH v2 2/4] gpio: cdev: use correct pointer accessors with SRCU
+Date: Wed, 14 Feb 2024 09:44:17 +0100
+Message-Id: <20240214084419.6194-3-brgl@bgdev.pl>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <20240214084419.6194-1-brgl@bgdev.pl>
 References: <20240214084419.6194-1-brgl@bgdev.pl>
@@ -97,9 +97,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-gpiod_hog() may be called without the gpio_device SRCU read lock taken
-so we need to do it here as well. It's alright if someone else is
-already holding the lock as SRCU read critical sections can be nested.
+We never dereference the chip pointer in character device code so we can
+use the lighter rcu_access_pointer() helper. This also makes lockep
+happier as it no longer complains about suspicious rcu_dereference()
+usage.
 
 Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_device with SRCU")
 Reported-by: kernel test robot <oliver.sang@intel.com>
@@ -107,45 +108,122 @@ Closes: https://lore.kernel.org/oe-lkp/202402122234.d85cca9b-lkp@intel.com
 Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/gpio/gpiolib.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+ drivers/gpio/gpiolib-cdev.c | 25 ++++++++++++-------------
+ 1 file changed, 12 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index f5434e559382..439d32d5aa38 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4492,24 +4492,27 @@ EXPORT_SYMBOL_GPL(gpiod_get_index_optional);
- int gpiod_hog(struct gpio_desc *desc, const char *name,
- 	      unsigned long lflags, enum gpiod_flags dflags)
- {
--	struct gpio_chip *gc;
-+	struct gpio_device *gdev = desc->gdev;
- 	struct gpio_desc *local_desc;
- 	int hwnum;
- 	int ret;
+diff --git a/drivers/gpio/gpiolib-cdev.c b/drivers/gpio/gpiolib-cdev.c
+index 9323b357df43..85037fa4925e 100644
+--- a/drivers/gpio/gpiolib-cdev.c
++++ b/drivers/gpio/gpiolib-cdev.c
+@@ -206,7 +206,7 @@ static long linehandle_ioctl(struct file *file, unsigned int cmd,
  
-+	CLASS(gpio_chip_guard, guard)(desc);
-+	if (!guard.gc)
-+		return -ENODEV;
-+
- 	if (test_and_set_bit(FLAG_IS_HOGGED, &desc->flags))
- 		return 0;
+ 	guard(srcu)(&lh->gdev->srcu);
  
--	gc = gpiod_to_chip(desc);
- 	hwnum = gpio_chip_hwgpio(desc);
+-	if (!rcu_dereference(lh->gdev->chip))
++	if (!rcu_access_pointer(lh->gdev->chip))
+ 		return -ENODEV;
  
--	local_desc = gpiochip_request_own_desc(gc, hwnum, name,
-+	local_desc = gpiochip_request_own_desc(guard.gc, hwnum, name,
- 					       lflags, dflags);
- 	if (IS_ERR(local_desc)) {
- 		clear_bit(FLAG_IS_HOGGED, &desc->flags);
- 		ret = PTR_ERR(local_desc);
- 		pr_err("requesting hog GPIO %s (chip %s, offset %d) failed, %d\n",
--		       name, gc->label, hwnum, ret);
-+		       name, gdev->label, hwnum, ret);
- 		return ret;
- 	}
+ 	switch (cmd) {
+@@ -1521,7 +1521,7 @@ static long linereq_ioctl(struct file *file, unsigned int cmd,
  
+ 	guard(srcu)(&lr->gdev->srcu);
+ 
+-	if (!rcu_dereference(lr->gdev->chip))
++	if (!rcu_access_pointer(lr->gdev->chip))
+ 		return -ENODEV;
+ 
+ 	switch (cmd) {
+@@ -1552,7 +1552,7 @@ static __poll_t linereq_poll(struct file *file,
+ 
+ 	guard(srcu)(&lr->gdev->srcu);
+ 
+-	if (!rcu_dereference(lr->gdev->chip))
++	if (!rcu_access_pointer(lr->gdev->chip))
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &lr->wait, wait);
+@@ -1574,7 +1574,7 @@ static ssize_t linereq_read(struct file *file, char __user *buf,
+ 
+ 	guard(srcu)(&lr->gdev->srcu);
+ 
+-	if (!rcu_dereference(lr->gdev->chip))
++	if (!rcu_access_pointer(lr->gdev->chip))
+ 		return -ENODEV;
+ 
+ 	if (count < sizeof(le))
+@@ -1875,7 +1875,7 @@ static __poll_t lineevent_poll(struct file *file,
+ 
+ 	guard(srcu)(&le->gdev->srcu);
+ 
+-	if (!rcu_dereference(le->gdev->chip))
++	if (!rcu_access_pointer(le->gdev->chip))
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &le->wait, wait);
+@@ -1913,7 +1913,7 @@ static ssize_t lineevent_read(struct file *file, char __user *buf,
+ 
+ 	guard(srcu)(&le->gdev->srcu);
+ 
+-	if (!rcu_dereference(le->gdev->chip))
++	if (!rcu_access_pointer(le->gdev->chip))
+ 		return -ENODEV;
+ 
+ 	/*
+@@ -1996,7 +1996,7 @@ static long lineevent_ioctl(struct file *file, unsigned int cmd,
+ 
+ 	guard(srcu)(&le->gdev->srcu);
+ 
+-	if (!rcu_dereference(le->gdev->chip))
++	if (!rcu_access_pointer(le->gdev->chip))
+ 		return -ENODEV;
+ 
+ 	/*
+@@ -2510,7 +2510,7 @@ static long gpio_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	guard(srcu)(&gdev->srcu);
+ 
+ 	/* We fail any subsequent ioctl():s when the chip is gone */
+-	if (!rcu_dereference(gdev->chip))
++	if (!rcu_access_pointer(gdev->chip))
+ 		return -ENODEV;
+ 
+ 	/* Fill in the struct and pass to userspace */
+@@ -2595,7 +2595,7 @@ static __poll_t lineinfo_watch_poll(struct file *file,
+ 
+ 	guard(srcu)(&cdev->gdev->srcu);
+ 
+-	if (!rcu_dereference(cdev->gdev->chip))
++	if (!rcu_access_pointer(cdev->gdev->chip))
+ 		return EPOLLHUP | EPOLLERR;
+ 
+ 	poll_wait(file, &cdev->wait, pollt);
+@@ -2618,7 +2618,7 @@ static ssize_t lineinfo_watch_read(struct file *file, char __user *buf,
+ 
+ 	guard(srcu)(&cdev->gdev->srcu);
+ 
+-	if (!rcu_dereference(cdev->gdev->chip))
++	if (!rcu_access_pointer(cdev->gdev->chip))
+ 		return -ENODEV;
+ 
+ #ifndef CONFIG_GPIO_CDEV_V1
+@@ -2696,7 +2696,7 @@ static int gpio_chrdev_open(struct inode *inode, struct file *file)
+ 	guard(srcu)(&gdev->srcu);
+ 
+ 	/* Fail on open if the backing gpiochip is gone */
+-	if (!rcu_dereference(gdev->chip))
++	if (!rcu_access_pointer(gdev->chip))
+ 		return -ENODEV;
+ 
+ 	cdev = kzalloc(sizeof(*cdev), GFP_KERNEL);
+@@ -2796,8 +2796,7 @@ int gpiolib_cdev_register(struct gpio_device *gdev, dev_t devt)
+ 
+ 	guard(srcu)(&gdev->srcu);
+ 
+-	gc = rcu_dereference(gdev->chip);
+-	if (!gc)
++	if (!rcu_access_pointer(gdev->chip))
+ 		return -ENODEV;
+ 
+ 	chip_dbg(gc, "added GPIO chardev (%d:%d)\n", MAJOR(devt), gdev->id);
 -- 
 2.40.1
 
