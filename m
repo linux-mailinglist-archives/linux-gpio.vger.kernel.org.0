@@ -1,126 +1,138 @@
-Return-Path: <linux-gpio+bounces-3285-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3286-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7CB6854A61
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 14:22:57 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31F10854D15
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 16:40:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5B60728E776
-	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 13:22:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7CD32851B9
+	for <lists+linux-gpio@lfdr.de>; Wed, 14 Feb 2024 15:40:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9E0054BFC;
-	Wed, 14 Feb 2024 13:22:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="pRFGKv/B"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C89CE5D493;
+	Wed, 14 Feb 2024 15:40:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D8CA54BE7
-	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 13:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6BF15D480
+	for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 15:40:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707916951; cv=none; b=aHSAOi+E6j/QOdri/TsTwZytryxZjQxFsbLwzonPMS4yV+e4tzurANDZ8duHhqnn5A3Hx7OF7JTjL1fV4UWUi3qaebe6A+ronk0u+ZyJTOYD4phfBzXf9sP8fUrv/dcfWR50gbti+GSsI1SazCIU6dDL+kN7Vit9Q67kyHNPn3Y=
+	t=1707925209; cv=none; b=M4hlXNTU2ytI3pO/ZOUgUNU4js8AmDC64VFoxmVrxQKI/+CkUiyQi6WE7c0v3LmEnpvXtzS2VnCm+K6QRtKLJZsBtFc6WUxfNgsXrLPDoSOt62bqhEznJma/F/KnDbwg6d+HraSGkshBfusBKObU/tWmpfWH4VY/4wBQrnAeXRc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707916951; c=relaxed/simple;
-	bh=JIIHujTmuNmPvcv5WrQT88yXfMgmxMBanVLER3dOT8c=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ja/+fZANUAI8n3Fkwy+7LEJG5tlEpSrnTyjKBdGxl2+9q9BgR4LJVZtlXKkX/sRjwnU+O7JBApyAqyBqCAkO4r2XSTun3xjCn+JkHrlvkvpQQSGL1LLaXCkk1IgTgu4URO6nwMircu73UtWbBCcnPOrSqN72IGkFfEoGgqN58xM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=pRFGKv/B; arc=none smtp.client-ip=209.85.222.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7d5fce59261so3134434241.3
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 05:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707916949; x=1708521749; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mjBEKrgeEwXWHoh08s3OWJBUnSrSJdPA6Ijs0tf9KrU=;
-        b=pRFGKv/BYk4sEjL78sHr60Or1CfUcbg0xhbn62q8GDSEr/v5O5ZzrfODmKMrX+AZTi
-         eSnh51HSjSjAEmRNO1rKVFgtIQZ8a7DS9NWWx7FQDPrvLt2DFs2C01RFtQjkf2I4BDug
-         ttT5pjY/F04llJnUs55u2b+qEdHZui+cBqZEv4yKfMbzsRxC+HLJBBpADQIXGjLVw/P8
-         //VYoW3IMmQDgphY049e+RiiIpaEKkqMHZV3vFS6U7yBET+c3Nu1D+pooWMYXkJpmwC6
-         h7MWM5nncT0hC/4qrPO3IU9q0YONuuCvrtvH51BO1r3kBNTlCTsvm3HVQB9AUWkxsSgH
-         DMxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707916949; x=1708521749;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mjBEKrgeEwXWHoh08s3OWJBUnSrSJdPA6Ijs0tf9KrU=;
-        b=Rzh1ptBxq9F9dpX0gAzPnc4bJ+JgX/RMucOFnOhRxBpitYUiBXBgjjPlA+1SmQTVwW
-         Pw7cgQw63Y246J2YlH7HXFkT5Np4IBOgu6gFQHovaDWazZUBJfdqA1q8DvPt2OnSstjy
-         Jn2gcTIRX3TJxLzHVbMqxTqJz5uwXb1a7RCxTetXFFnN6l/L8le3NEgWlIjHBkr20q2u
-         NBCcRTNyK4hlVggJ7gCZ2fW9bOBxrmh9UDHOVjNba9yIWgSSb9um2deZh7tlVqFTkyw0
-         wC6d3uAqQ2yl9U/PhMjJid9Ilihjokh2ecR53u8aY524jcjD31zSyrUC5dnOhvo5BRMF
-         MvNA==
-X-Forwarded-Encrypted: i=1; AJvYcCVZuzRTKoZDS5kODPOcMx5m8iJNMysQpZWQJktBOxNdZspPe1fwSLtVfyjLi0NkElO3ne0BfH/kqtbWKV+BngkZ74QLoJIY+DxJNA==
-X-Gm-Message-State: AOJu0YzWnDoXaehTD/sWy+jyXTiJ3QnfOgeeXdZ09Hdathx5GkGlA6Q9
-	Ctf4YPEoWl38jxLjpAAWBr8eNwbdi/S0AJ1NgxtQrc5fUnrN4INyPUX8WKVB55eNY6M5ztsajYV
-	4M78Um94leofXom3gJp+JZD0wVwBsojaXQyODHw==
-X-Google-Smtp-Source: AGHT+IEFGq1RRcXIagmX2nBK9C31e7Sglnc1k31By4l7faAODo93O6gnyZPFsYIDmKxmovbracfFaZpE2jFQTyt49iE=
-X-Received: by 2002:a67:f61a:0:b0:46e:d8b5:a186 with SMTP id
- k26-20020a67f61a000000b0046ed8b5a186mr2554485vso.11.1707916948940; Wed, 14
- Feb 2024 05:22:28 -0800 (PST)
+	s=arc-20240116; t=1707925209; c=relaxed/simple;
+	bh=IJtX05QW0nQKRcPnm3iLNiCzyKEnHL7imlVUc5FCkQM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tG+nHpmiBW2lWjZWGkByOviOU7UKfz4J39vajaeWZwYUHPjYXjPYbKwhBtoKuibJDYQQOqvTx8gEfyXe2fiYuqdLEqI/o4+QQGMqbozCUydytVfeDC75Ctxkx6gsrPNZfrLWDA2htvKrCnkrMCoVhEftcfRdBa3Ix33UhWgxK/8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
+Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
+	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+	(Exim 4.92)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHMY-0002r6-Qc; Wed, 14 Feb 2024 16:39:54 +0100
+Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
+	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.94.2)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHMX-000iZF-Ji; Wed, 14 Feb 2024 16:39:53 +0100
+Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.96)
+	(envelope-from <ukl@pengutronix.de>)
+	id 1raHMX-004ljH-1g;
+	Wed, 14 Feb 2024 16:39:53 +0100
+Date: Wed, 14 Feb 2024 16:39:53 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>, 
+	Andy Shevchenko <andy@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Hans de Goede <hdegoede@redhat.com>, Ilpo =?utf-8?B?SsOkcnZpbmVu?= <ilpo.jarvinen@linux.intel.com>, 
+	linux-pwm@vger.kernel.org
+Cc: linux-gpio@vger.kernel.org, kernel@pengutronix.de, 
+	platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 067/164] pwm: lpss-*: Make use of devm_pwmchip_alloc()
+ function
+Message-ID: <hxw7ux7itwwjxibabdsvv6aeqwy5g3ukulga4yopedcsyzzx2c@luxwe252wi67>
+References: <cover.1707900770.git.u.kleine-koenig@pengutronix.de>
+ <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214084419.6194-1-brgl@bgdev.pl> <4c629a0b-95ff-4ad6-af04-61b25d437f89@sirena.org.uk>
-In-Reply-To: <4c629a0b-95ff-4ad6-af04-61b25d437f89@sirena.org.uk>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 14 Feb 2024 14:22:17 +0100
-Message-ID: <CAMRc=MejLVegawqZWiG5bhEA5pusvbW-OOrT-ij9h4GZDMgf2A@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: fix SRCU bugs
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	"Paul E . McKenney" <paulmck@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
-	Wolfram Sang <wsa@the-dreams.de>, Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="4uu6npquqlmcaxxi"
+Content-Disposition: inline
+In-Reply-To: <b567ab5dd992e361eb884fa6c2cac11be9c7dde3.1707900770.git.u.kleine-koenig@pengutronix.de>
+X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+
+
+--4uu6npquqlmcaxxi
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 2:17=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> On Wed, Feb 14, 2024 at 09:44:15AM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Here are four fixes to some bugs in recent SRCU changes. The first one =
-fixes
-> > an actual race condition. The other three just make lockdep happy.
->
-> This doesn't fix the issue I reported yesterday when applied on top of
-> today's next:
->
->    https://lava.sirena.org.uk/scheduler/job/585469
->
-> [    1.995518] Unable to handle kernel NULL pointer dereference at virtua=
-l address 0000000000000078
->
-> ...
->
-> [    2.176162] Call trace:
-> [    2.178610]  check_init_srcu_struct+0x1c/0xa0
-> [    2.182974]  synchronize_srcu+0x1c/0x100
-> [    2.186904]  gpiod_request_commit+0xec/0x1e0
-> [    2.191183]  gpiochip_request_own_desc+0x58/0x124
-> [    2.195894]  gpiod_hog+0x114/0x1b4
-> [    2.199305]  of_gpiochip_add+0x208/0x370
-> [    2.203232]  gpiochip_add_data_with_key+0x71c/0xf10
-> [    2.208117]  devm_gpiochip_add_data_with_key+0x30/0x7c
-> [    2.213261]  mxc_gpio_probe+0x208/0x4b0
+Hello,
 
-No, the fix for this issue is in my tree as commit ba5c5effe02c
-("gpio: initialize descriptor SRCU structure before adding OF-based
-chips"). These are mostly fixes for lockdep warnings.
+On Wed, Feb 14, 2024 at 10:31:54AM +0100, Uwe Kleine-K=F6nig wrote:
+> @@ -256,9 +257,10 @@ struct pwm_lpss_chip *devm_pwm_lpss_probe(struct dev=
+ice *dev, void __iomem *base
+>  	if (WARN_ON(info->npwm > LPSS_MAX_PWMS))
+>  		return ERR_PTR(-ENODEV);
+> =20
+> -	lpwm =3D devm_kzalloc(dev, sizeof(*lpwm), GFP_KERNEL);
+> -	if (!lpwm)
+> +	chip =3D devm_pwmchip_alloc(dev, info->npwm, sizeof(*lpwm));
+> +	if (!chip)
+>  		return ERR_PTR(-ENOMEM);
 
-Bart
+while adapting the patch for Andy's feedback I noticed this being wrong,
+devm_pwmchip_alloc() returns an error pointer and not NULL on failure.
+I'll squash the following change into the commit:
+
+diff --git a/drivers/pwm/pwm-lpss.c b/drivers/pwm/pwm-lpss.c
+index 3247b420b67a..867e2bc8c601 100644
+--- a/drivers/pwm/pwm-lpss.c
++++ b/drivers/pwm/pwm-lpss.c
+@@ -258,8 +258,8 @@ struct pwm_chip *devm_pwm_lpss_probe(struct device *dev=
+, void __iomem *base,
+ 		return ERR_PTR(-ENODEV);
+=20
+ 	chip =3D devm_pwmchip_alloc(dev, info->npwm, sizeof(*lpwm));
+-	if (!chip)
+-		return ERR_PTR(-ENOMEM);
++	if (IS_ERR(chip))
++		return chip;
+ 	lpwm =3D to_lpwm(chip);
+=20
+ 	lpwm->regs =3D base;
+
+Best regards
+Uwe
+
+--=20
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | https://www.pengutronix.de/ |
+
+--4uu6npquqlmcaxxi
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmXM3sgACgkQj4D7WH0S
+/k6FEAf/WJitLmiyFH9mVDvuHkRvEHuk4HsFnvpbkfUfEPhHbZuwZ9vlBzV9jktB
+Y/9q2HuFvlHWFUJGeL2HsXvDNyzCt3pLMy2jLBrIKgx0Gzr0pKQITRk2t4QTSmnw
+yjGYIA5lg7MGAT5MllxF8Cfh3+YlTdDmLjSSoukgFmicjQ22y0nx4V9g5+9PS2az
+c/EKU3Oc066slUwFJxIwFI/vqHECpfXK3ijatZU4XHVpmRTXRc3beX3bV2aGpRRL
+37b8b9xiqlkNfOuX9MSGiXwM973JwufUV6NQwqGf/Obm9D3xx8RIblcZzd2DbH89
+dPql5W1S5c+c6ZVocb5MSPJKKwdp/g==
+=Mu9B
+-----END PGP SIGNATURE-----
+
+--4uu6npquqlmcaxxi--
 
