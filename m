@@ -1,125 +1,125 @@
-Return-Path: <linux-gpio+bounces-3327-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3328-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 09186855BC7
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 08:43:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B5CE855BC8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 08:43:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 90FA81F29E8E
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 07:43:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7B7F71C21D79
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 07:43:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96FC5101CE;
-	Thu, 15 Feb 2024 07:42:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0700CB677;
+	Thu, 15 Feb 2024 07:43:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="V7+8B+sz"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NULNKYuk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA2E64A
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 07:42:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61342DF5C
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 07:43:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707982978; cv=none; b=n42Z1dNHEs8BY9lzvdstYT9uY7kG4yO59yWuvNOny41j7ETDxEHIz5T7kwfTJSfyUQ2IQ1J3IBEESQalgTIGfwJ/9odTz6Kd2m4bfaRbJ5E5vqm4N5r7XTptG/e0wjtnJ/1amOYrqNYLsej1BIGVPz1tM3fdiXkce5f6xC6PxUw=
+	t=1707983006; cv=none; b=fSdQ2pv1F8D8L9cN4LE3rRVVQ5ToJU2LKSgIC89+SbX6eKYAg0xG1sImfDRuNGKKuREzr4CxFJ5k0QzMQwOJKUovD3c4vbuGO1Y1IaDzCDjeHE7ovAU/AeerwiIo6uxlJ0oIETka7Dl3uiVD6+lGTJSN3Y+9xl8IkXecxwKIqC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707982978; c=relaxed/simple;
-	bh=7ATovh8Zrf+AwZ4JzRRGlxF09Y1ihfaCoTBUGRElC5o=;
+	s=arc-20240116; t=1707983006; c=relaxed/simple;
+	bh=1GC9VqIWhiSRxtUcWVADNEdH2G76UGuZGDCpIDa4tcU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=csae8C0YGuhhTbixsNHSIA00ckPXcAAO42Dr0HmmOjg8mToPkOcUPQIVr3xKmXSCZtwBQoxDqwjAc0BDfLtW7prY9g2oHEkooCKpTSWMe5ffyZJ1UXd5ALMXbQ7TQJpH0xAYhHGTAarSdsIzSchTwDtha1YRBebMkXUPKMqwIjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=V7+8B+sz; arc=none smtp.client-ip=209.85.222.52
+	 To:Cc:Content-Type; b=KvqWsAeliEvbcxnHD4efOQbXpVw6rWz3pwMf/saX+tBkniM7kE4P2LmGOqGMGherAldhmP3QPv88zy1SYdyS5sjDmDXfuEoPRUBXIeluJY/xWXCMp8k2h1zP147JkdxmQVjoBmdr5x2LOmY5qKpMeYfJxrbDPGQvsKqXG16LXYQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NULNKYuk; arc=none smtp.client-ip=209.85.221.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d6024b181bso180744241.2
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 23:42:55 -0800 (PST)
+Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4c0232861afso193116e0c.1
+        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 23:43:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707982974; x=1708587774; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1707983004; x=1708587804; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=m3gVXOoEIsBekobrNYILlo8Y5CWblU12NL0RUb1vlGw=;
-        b=V7+8B+szq5a/CqDzoO2AESzjfnYpBoOnGWJXiEhPfZDVQ0gs8YdIo7xmEJDI7KQCcf
-         jeKlbM86BkFXbs7mdzCJFsujQ7HuwCYPitRDl37ztiFc6+0rMfw1GBU71nQKaTKPUl6y
-         PdgadwkS+znM89ZhZIwWeLdWSi5lyxAWeP40bSd6vNKf8tK/g6JjVNz0Th0hjA/PUKxR
-         qz+Oc8Lo3fkmyNMI+2YZGPg0pqK27qV6Lflgl+cpdQL/6qz7ZQzTJEp+0LpZnnv3o+oi
-         4llbRVGX6n8CjA2z125QRi8G93NYnSSkSF7z3d7kW2kNuQ75LM20D2POI696MkqLREVj
-         ET1w==
+        bh=EMzjwIO6yG2evoOg4dltVs3/JJncrUwa/CfXUItLCKs=;
+        b=NULNKYukre9M8E3MmFZ1KqHAv2iw79LyPmUzhkzQ8DJnsNgaYbXtwyFBDf6YCMBeMm
+         CD2+mCfFIveu75aquXTsCSY1/tB+eJuNIOeBO/HKr0QAHd8oF44fo4zonrSQQhGFN8CE
+         RK+GMZ3mhFUtTmW8xDKsPssawecWnDdfUgBPGPuBgUMpKhW2gMJ9lldHsonxFQUcrlxW
+         WtubDWFhK0ZgerQCIbeuBWg1hYoXCkP2TTgT/oj7nwcg1ezEgrxxu/RSOEfw5A62QRt+
+         JvMQ5Kca/hx9YKIl9S/o+/KB39B41OEit5zxQ1ozZz/jYK/BK3NnrC4GkZGlr1OFb+0R
+         Pelw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707982974; x=1708587774;
+        d=1e100.net; s=20230601; t=1707983004; x=1708587804;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=m3gVXOoEIsBekobrNYILlo8Y5CWblU12NL0RUb1vlGw=;
-        b=gbd/UccM6FXPyu0JSYDeLvG0ADDJeGP/SQy8UbPGcF6vW/ENMvNcW6xLetQz9smioo
-         0atORh9gli80t7KSzacWXYgSDKFRo2QlhGxskSaaEHS9JHD0CbW3Gms4DHtvLRlEg/0q
-         s8c0jtznpiiU+WE92/x3UWXHJ9tVBeRct9A2Z+KessyJE0AKKWIOSkf7FVuXl03yNK/V
-         2p/Iy2+9V6o+40FC7MEYVKEK9L032J3cqBJ5TtkyrLKwj7KVy0LXajwCMFYYWgXynr0j
-         wXbkxReeA9kzhz6dri95TjPZEKIgwJ+Q+iwb92uA/53AxyxSro8qMf4dj8Ud7OimU8zj
-         us6w==
-X-Gm-Message-State: AOJu0YydEhASaX0ltJJm75mpMJ1K0E/JXIaCRUUNR9EizPnvcbFcMAtm
-	KdRYd9rsipJ9zrwNLxBL2m2Ok8yAtHcRosynZ5KMLi1J893f4gWGxPGtgkJSLIZJKvYiB5aE7WC
-	g/nb2PGup9Of4pW6yOtE5tyUb9elIBRMYsYdOlg==
-X-Google-Smtp-Source: AGHT+IFAlRhKqIPfjRV7uMjuMrLjenZLw85BDQYZzQiiiKcQEWhjQrfyP3Pz1uxk1YHe2aHokf1HB+xX/1qJrqagbxA=
-X-Received: by 2002:a1f:dd02:0:b0:4c0:1937:d29d with SMTP id
- u2-20020a1fdd02000000b004c01937d29dmr910895vkg.6.1707982974572; Wed, 14 Feb
- 2024 23:42:54 -0800 (PST)
+        bh=EMzjwIO6yG2evoOg4dltVs3/JJncrUwa/CfXUItLCKs=;
+        b=g0uv/ohw8SIM/7JMKS+FwO61zhGmJ6fXtqTT85Y8HYbOAFm0YX29glwxrIM3sMk2f2
+         mF73MqcZmYO8xfHUevohu4SoVbGy9fKmcClyXuNt+0xsCGqxQxqScHa6XQ5q3lOGwF24
+         Q08y7rU/7dIH0oXeuRwk9fz40ysDmEokHxCqsGBJGJwwnO3DUcqWBTpl2vhm+0MD8WAx
+         AZ+xlRwZmbG6MS+bmt1mDW7VuHYRCfCxAA4MPqFKbAJRvbtRYIcvN+Q28Qom8rJppv18
+         Q9PvN0NU/qpLYKeWy6bZDZm4HNKVSLhnh/lkGYgeH0gMNOANzpcVO8IakS5KO2UG1C82
+         Ep+A==
+X-Gm-Message-State: AOJu0Ywqz/eO1QdrMmbnfA0SbCbF3rDK6fs04Bv/kNvZzZmAFNxXOfiH
+	h41bZpyzQcJBc3+55bTc15QqS/xm1HP2WWCn441QivrxCrSRM9ndKiVPM1768z9dV2nYV0Rvgoq
+	BB1OQUIVehBFDslfyznOhS/DNveyzN7CoUNN/1g==
+X-Google-Smtp-Source: AGHT+IG0H1Tagebz+SK8qM5qdu5e0CshYF9JMzD7Xda9FigfxB+aBABQyZg4L3nmpjZvrdJHid2ZlQeosmbnF1rZyuY=
+X-Received: by 2002:a1f:ccc4:0:b0:4c0:23bd:1f0d with SMTP id
+ c187-20020a1fccc4000000b004c023bd1f0dmr666750vkg.15.1707983004377; Wed, 14
+ Feb 2024 23:43:24 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214085248.6534-1-brgl@bgdev.pl>
-In-Reply-To: <20240214085248.6534-1-brgl@bgdev.pl>
+References: <20240214084419.6194-1-brgl@bgdev.pl>
+In-Reply-To: <20240214084419.6194-1-brgl@bgdev.pl>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 15 Feb 2024 08:42:43 +0100
-Message-ID: <CAMRc=Mcn_vGBy0h6ZmiD922JUYRuXDSPSn19Wk5RRyFrU+31Fw@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sysfs: fix inverted pointer logic
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+Date: Thu, 15 Feb 2024 08:43:13 +0100
+Message-ID: <CAMRc=McYPmic91NtRpbS5fn2UC4SG9Pw1JUANZ0ffNCYLOww+A@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] gpio: fix SRCU bugs
+To: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Wolfram Sang <wsa@the-dreams.de>, Mark Brown <broonie@kernel.org>, 
 	Dan Carpenter <dan.carpenter@linaro.org>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 9:52=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+On Wed, Feb 14, 2024 at 9:44=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
  wrote:
 >
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> The logic is inverted, we want to return if the chip *IS* NULL.
+> Here are four fixes to some bugs in recent SRCU changes. The first one fi=
+xes
+> an actual race condition. The other three just make lockdep happy.
 >
-> Fixes: d83cee3d2bb1 ("gpio: protect the pointer to gpio_chip in gpio_devi=
-ce with SRCU")
-> Reported-by: Dan Carpenter <dan.carpenter@linaro.org>
-> Closes: https://lore.kernel.org/linux-gpio/15671341-0b29-40e0-b487-0a4cdc=
-414d8e@moroto.mountain/
-> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> ---
->  drivers/gpio/gpiolib-sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v1 -> v2:
+> - use srcu_dereference() instead of rcu_dereference_protected() as
+>   advised by Paul
+> - add a patch using rcu_dereference_check(..., 1) in deprecated
+>   interfaces that return the address of the RCU-protected chip structure
+>   to external users (who shouldn't use it anyway but well...)
+> - pick up review tags for patches 1/4 and 2/4
 >
-> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-> index 6285fa5afbb1..e4a6df2b317d 100644
-> --- a/drivers/gpio/gpiolib-sysfs.c
-> +++ b/drivers/gpio/gpiolib-sysfs.c
-> @@ -801,7 +801,7 @@ void gpiochip_sysfs_unregister(struct gpio_device *gd=
-ev)
->         guard(srcu)(&gdev->srcu);
+> Bartosz Golaszewski (4):
+>   gpio: take the SRCU read lock in gpiod_hog()
+>   gpio: cdev: use correct pointer accessors with SRCU
+>   gpio: use srcu_dereference() with SRCU-protected pointers
+>   gpio: don't let lockdep complain about inherently dangerous RCU usage
 >
->         chip =3D rcu_dereference(gdev->chip);
-> -       if (chip)
-> +       if (!chip)
->                 return;
+>  drivers/gpio/gpiolib-cdev.c  | 25 ++++++++++++-------------
+>  drivers/gpio/gpiolib-sysfs.c |  5 +++--
+>  drivers/gpio/gpiolib.c       | 32 ++++++++++++++++++--------------
+>  drivers/gpio/gpiolib.h       |  3 ++-
+>  4 files changed, 35 insertions(+), 30 deletions(-)
 >
->         /* unregister gpiod class devices owned by sysfs */
 > --
 > 2.40.1
 >
 
-Patch applied.
+Series queued.
 
 Bart
 
