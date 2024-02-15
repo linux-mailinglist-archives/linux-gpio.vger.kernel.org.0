@@ -1,71 +1,72 @@
-Return-Path: <linux-gpio+bounces-3344-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3345-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BAF8A856370
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 13:41:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DA37F856373
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 13:41:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC55D1C2355B
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 12:41:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 18A9F1C23329
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 12:41:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA3912D755;
-	Thu, 15 Feb 2024 12:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6A5C12DD8F;
+	Thu, 15 Feb 2024 12:41:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="Z6Il3Pvm"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="jk5EEVfh"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A0D12AACB
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0E6E12D74F
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 12:41:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708000892; cv=none; b=O3BDC6opNkFVQZ5zWViBkEmG5UClO0EoV0qPy8yvdpQeW8R+bVkp1FLP+zNrR2aM7O3KlnnmVkFtiaEQ9SgnEeEbvNDqmd4ZjiOEszxW/DaAhyYELvSLKhxsV6790sc3foFCZiEbcUmJdhhphuXnddKoMRMpd9LJ/Ss0q2EMYo4=
+	t=1708000893; cv=none; b=NzHHv4hJM1+M6EoRMo0Q7BzSn/Y69KYqFkz29Jut+6byYORMH0Td+5pDg3eEigFdsoEnlsx7i+xH3YGKlt2z7tCBINyMDa7MDpBHIbbxznTcDQlUoIXfMFJEUw8mfXm0zFylSaM+5vnzJEGJ0c16Y1OYGK76qbgpudwIRlkeESw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708000892; c=relaxed/simple;
-	bh=SFCpTXqbRdAXHUBBAzzxnjc1Az5f8TRxLKC/k3F4vy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Nj+ZkpQgqy16x6vlY1WwqsDzrHxS/9Tnp1BYG4SYcjUNjhgglZoEbXgZVErMC3k72W6f3hXS8t75SddJs+5PcVeEy7eknZcfQ9Qc/EdjuEEnOCryawCzLgEpzY1Uq/juJNoQh0o+ekrUmlIKY0cHc0vaIY3kKdlSlkZ2yieOHVI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=Z6Il3Pvm; arc=none smtp.client-ip=209.85.221.50
+	s=arc-20240116; t=1708000893; c=relaxed/simple;
+	bh=gHnyFq4f1pDYyCf0BWfNJKuDKgh/PzyoaOwfFn6k2Rk=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=CpwhvIcAeoKYvrQ1cjBrp7n8s7jXijIumyb/Gboej0I/G88zvcZW9a5n5xSM6fm6VuwJY6SJ1fLtiVlg4OQyTnbbUbnBHGR0T6qpHdAhOdVHwoN5qJ+auyUJkOimQlnNG+uiYLOHvtvluSuqo9r73IQ88iR516/d3PGaQVGeAE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=jk5EEVfh; arc=none smtp.client-ip=209.85.128.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-3394bec856fso1155370f8f.0
-        for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 04:41:29 -0800 (PST)
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-40efcb37373so6324235e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 04:41:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1708000887; x=1708605687; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MYnY7O04/x9zyqYEQqnNz4jRAg4FTDodHzcngEZrlFo=;
-        b=Z6Il3PvmGKjrj3wv2OGK0Btonvz44YqMK1xp0TWb1xoWkhQa65XoKbxfGc4xOYO934
-         m/LVFeHzpbYBPYTIuFYf/8H8oppIxnMTCOCUqF3/VNU10RvBjuhGKZmn9d3xD/kJ/T3k
-         I/gVZwS8+kxruNjiZoCV8tvZ7DesMssZk3jW8JGuJ/IMIKDgfMTKIfHvosBNnVmBNS2D
-         pPq+3LkSVikRTX1WRBGG2YFsPdSaiIKpYJTwRo02sgky/Jiqh5noDQLoEbtH+tOSVmuB
-         fjM1KETp6+a/8+zIm3EnfvVvMY6n/749k/Tb0QivGn7pV/UritF3nK7xZ6zRHyfZekwV
-         wLaw==
+        d=tuxon.dev; s=google; t=1708000890; x=1708605690; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dfSE0heYPzlfo04ucdVX3fOnYjllc+qDYIJqJxlkX8U=;
+        b=jk5EEVfhjoVO2j4mPq4QK7/ydyYUzQiUiVGl4rF982HSBW3uv+BFU/JOx3c0HOBHIb
+         kg19ZhqTBctVmBbV73BV6qwmhQIdnXV1ZiwrBAfpWe7al+O9ck+lNk5tOahDHRukAv2N
+         WAHuepMhHyh6v3g0t/M3pqdljCEcfK4PelDlWPlHVfVL/QKUATDfHlvoGGhrqJwDlHZW
+         h0q//NptmR6fZ8alb0Udsw4zWVr2gR+jdY2SYLdNgVBE5kkjfTLdbi1sXP9MhPnpuy71
+         yHEbPNcLoUGCvGIA9P6AHt3hx1nfB8H65vwvlUoJ60/vVw/7M+AnCFD8faPOEp2bBAU9
+         P/0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708000887; x=1708605687;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=MYnY7O04/x9zyqYEQqnNz4jRAg4FTDodHzcngEZrlFo=;
-        b=EBGauh9+HKz9oUzmwrvNAmL7BVEDcZ/Tx+xIl+cCk4y+8pWtFmKipetgAzQfay1DWU
-         gpt5D0OQpOWWR9Hd2BuFEvoIT2NKP/uXhb1w+WHoM4V5mBHBJ+GVzkJ1ivCx3dtlC5mW
-         TmCb/An4R6m4KU2S9Eml0yy01WPrA0DQN3vIM01dY5nVG0mmkd4DlA+k9sRRXOU7duX7
-         k2O+GSXPlsQeKc34GSAX1V2J+S1wyPxvfQapkIu2y9EYQgGkDdiL5ev1T4zpwElI7uAG
-         8xq4cwL4TIZuS3uyFcOzglDTFU19MyaEMY0D/5dAftW/Psw0O5f+g5XPzvn7d2+FtRKW
-         7obw==
-X-Forwarded-Encrypted: i=1; AJvYcCWOSSy05+XOcLoBcXQmpqb2H44h3IiZrSUQWQCb4iiQ0Mbh+6nCyfu67GPNThilLADXdYUMz83XJKZFmD092eWaObaKnYbtAyxnqA==
-X-Gm-Message-State: AOJu0Yy843EXRlQlmVxFwaqD/p87jQev4H6AzTM3IWd7AtZnhAcZz8Ot
-	vaqrtuWouYfdtmRPqmCdjqgNCXKeK67mdoK1PDyGVki4/kkBbvMJE/YRQZyi7lRNxdQQG3F4EWM
-	B
-X-Google-Smtp-Source: AGHT+IGIGdB7TdXBD9OIkOScp9kvODa/Rio5A+z65NM6bDSmto8L+H13OukSXkPCKyay8Fdy8bJ5IA==
-X-Received: by 2002:a5d:5591:0:b0:33c:f627:3bef with SMTP id i17-20020a5d5591000000b0033cf6273befmr1304211wrv.25.1708000887580;
-        Thu, 15 Feb 2024 04:41:27 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708000890; x=1708605690;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dfSE0heYPzlfo04ucdVX3fOnYjllc+qDYIJqJxlkX8U=;
+        b=i6RO5fSph083VUwuPJ+1YxhF2Kwu22+q0rH0zE//MjjC203vItGTvyhTYPY8l+1x2K
+         0d1UhEhy2hKOzdO7T02g1NwVLDm9jasVBMUOUxWYzvo3PktmQvgPj/JvwrUBDlb1yOCv
+         1XD29MsalYKAt3K4exhOdSz42GdPcseAhk8qVtJ2d2hkOig0Uyreunn53mbrsg/9sMsA
+         9ypytdCRSaef/UQ6jOD44SIIe8Gi68CPJ8wehTC5Omc1j8eElqLVA0hgj3XyaF9OYbHM
+         NcpzyMCVCsY5/XsCXbcg0e9ndzObgmse0t8lZp13JNXeBCWDZijafBEYXTUVnBRCD9Rc
+         U/6g==
+X-Forwarded-Encrypted: i=1; AJvYcCUaqwaZ7yvuMADvAJ7ywN8bciQ7Y1E2NylkiWG2O/ZoH1Z7lKFEpHgfieSoBWLNkposnZhpu9wqjTREPA3bX2xNmUJT0AjXkM/RXQ==
+X-Gm-Message-State: AOJu0YyprecMo2WfeMnqABqFm2ViA1zXqxthskJR0tRk0shqUzmN76Na
+	rLtY7io9coTed2re3iw6ip5IT9MLaIaypU48bFzYTW5TEwQBo5cjOi14fv8Sls4=
+X-Google-Smtp-Source: AGHT+IGikOwkuOPFBTsMbTZdEAAonvNOhcu6PDAwcbmJos4zHQ93Q6qK8wgIe3B2ezllABgdj7icJQ==
+X-Received: by 2002:a05:600c:43c3:b0:40f:dd4a:11f5 with SMTP id f3-20020a05600c43c300b0040fdd4a11f5mr1497192wmn.34.1708000889857;
+        Thu, 15 Feb 2024 04:41:29 -0800 (PST)
 Received: from claudiu-X670E-Pro-RS.. ([82.78.167.20])
-        by smtp.gmail.com with ESMTPSA id n16-20020a5d51d0000000b0033cefb84b16sm1674931wrv.52.2024.02.15.04.41.26
+        by smtp.gmail.com with ESMTPSA id n16-20020a5d51d0000000b0033cefb84b16sm1674931wrv.52.2024.02.15.04.41.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 15 Feb 2024 04:41:26 -0800 (PST)
+        Thu, 15 Feb 2024 04:41:28 -0800 (PST)
 From: Claudiu <claudiu.beznea@tuxon.dev>
 X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
 To: geert+renesas@glider.be,
@@ -75,10 +76,12 @@ Cc: linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	claudiu.beznea@tuxon.dev,
 	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Subject: [PATCH v2 0/2] pinctrl: renesas: rzg2l: Add suspend to RAM support
-Date: Thu, 15 Feb 2024 14:41:10 +0200
-Message-Id: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH v2 1/2] pinctrl: renesas: Select CONFIG_IRQ_DOMAIN_HIERARCHY for pinctrl-rzg2l
+Date: Thu, 15 Feb 2024 14:41:11 +0200
+Message-Id: <20240215124112.2259103-2-claudiu.beznea.uj@bp.renesas.com>
 X-Mailer: git-send-email 2.39.2
+In-Reply-To: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com>
+References: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,30 +92,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-Hi,
+The pinctrl-rzg2l driver uses APIs that are defined only if
+CONFIG_IRQ_DOMAIN_HIERARCHY=y (irq_chip_*_parent() APIs). On the ARCH_RZG2L
+CONFIG_IRQ_DOMAIN_HIERARCHY is selected anyway, e.g., by the
+CONFIG_ARM_GIC_V3. Even so, make it explicit at the driver level for a
+clearer view of the dependencies.
 
-Series adds suspend to RAM support for rzg2l pinctrl driver.
-
-It is expected that patches will go through Geert's tree.
-
-Thank you,
-Claudiu Beznea
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
 
 Changes in v2:
-- dropped patch "arm64: dts: renesas: r9a08g045: add PSCI support"
-  as it was integrated
-- added "pinctrl: renesas: Select CONFIG_IRQ_DOMAIN_HIERARCHY for
-  pinctrl-rzg2l"
-- addressed review comments
+- this patch is introduced in v2
 
-Claudiu Beznea (2):
-  pinctrl: renesas: Select CONFIG_IRQ_DOMAIN_HIERARCHY for pinctrl-rzg2l
-  pinctrl: renesas: rzg2l: Add suspend/resume support
+ drivers/pinctrl/renesas/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
- drivers/pinctrl/renesas/Kconfig         |   1 +
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 408 +++++++++++++++++++++++-
- 2 files changed, 405 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/pinctrl/renesas/Kconfig b/drivers/pinctrl/renesas/Kconfig
+index c8d519ca53eb..a1e57939e54b 100644
+--- a/drivers/pinctrl/renesas/Kconfig
++++ b/drivers/pinctrl/renesas/Kconfig
+@@ -190,6 +190,7 @@ config PINCTRL_RZG2L
+ 	select GENERIC_PINCTRL_GROUPS
+ 	select GENERIC_PINMUX_FUNCTIONS
+ 	select GENERIC_PINCONF
++	select IRQ_DOMAIN_HIERARCHY
+ 	help
+ 	  This selects GPIO and pinctrl driver for Renesas RZ/{G2L,G2UL,V2L}
+ 	  platforms.
 -- 
 2.39.2
 
