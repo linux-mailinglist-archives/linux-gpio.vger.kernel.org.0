@@ -1,95 +1,106 @@
-Return-Path: <linux-gpio+bounces-3378-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3379-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id B1752856A82
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 18:06:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7511856FB2
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 23:00:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AE7251C2460D
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 17:06:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 73567B21920
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 22:00:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 764DB136667;
-	Thu, 15 Feb 2024 17:06:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1DC91419A4;
+	Thu, 15 Feb 2024 22:00:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uuL2/XHj"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="HyDbZN/X"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24BE912DD9A;
-	Thu, 15 Feb 2024 17:06:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17091419AA
+	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 22:00:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708016768; cv=none; b=sMdwbwRRrkLiCwdc2V03yNNxaw7ULy0pKaE6wUutmuDsSXufX5k762saOG1WP5J57W7hvZDCYn3gicEbbkFmspml5uMO73JJVPCJ9END1hEpBlIaOdxHtFALjA7tCUKuuz8y1vwc7GB3uFTQ+LBf6GuwMJczfHj11kf0UZJBVRM=
+	t=1708034428; cv=none; b=qTctiGKALTCtLUZ6aTILqjGA6gIMuC2mpUd7zXqkwtek9h1I8y5J6cUjLEtXf4ApYQndInG+BWlGnKymeApfF4+bFMknVO2XpXfKkfRe2HWQjpQ2B2bQm9zZ04EDzTHJK9o1DnBLoPvEiHVNrLCcyV8zdAVH0+VCOQK5H7IkbEs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708016768; c=relaxed/simple;
-	bh=nq34IP6sfpD54hsEtrN2j/P+4DNp6g4tkl0Jwz9sTNw=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To; b=BeFUc+99OUCTTP/0rnar5a65dcjfEEf4LHMFRHzrr7HfAF0Htf0gLGbsd7zqZDyjX50pq8SfA45elWnwq/CXlqKO8g6Wi401EXElm0HcJsreFe8ZxICpRR0Mya0f3u5xhOgpSMP4EzkExCvcPenpYlOhKziy6QdNDszqd87P6UA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uuL2/XHj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B88AC433C7;
-	Thu, 15 Feb 2024 17:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708016767;
-	bh=nq34IP6sfpD54hsEtrN2j/P+4DNp6g4tkl0Jwz9sTNw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:From;
-	b=uuL2/XHjxDow0CBItd3NuPU14AW2Kvom1K9Wr9j5a43WNbnXKxS6qLs96rgU+lH1b
-	 vYmgKOnPyo1KlOXrOx2rf3woeVDCKAsWKmnttNrVV1Jo5T14L2WXDu0TYPazgiMNVX
-	 cIiQLkeo7lUq7u6QEcgmVUUWkN5Q6F98aLQbtxVr+xFE8r53AynGns+s0Rvq/VRrCm
-	 lw1l5c5W3akEl8k39a6ztwOy3nsGhR9j0EGi6CvA2qt07+VBbt037uX3kPZl3GvY6b
-	 DgKqCyFiw7gPCIV1YPCq3qdxrZsWswZb4+cXHIXesWd2nQ6lOD/p1N93dMixc3IBUq
-	 WGDLgvYo1uQWA==
-Date: Thu, 15 Feb 2024 11:06:05 -0600
-From: Bjorn Helgaas <helgaas@kernel.org>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v3 00/18] Add suspend to ram support for PCIe on J7200
-Message-ID: <20240215170605.GA1294576@bhelgaas>
+	s=arc-20240116; t=1708034428; c=relaxed/simple;
+	bh=m0ottLDJAZHNYRCNzmWiH7yuWIWrCPNNHSBS/QgSsrU=;
+	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=f1TNe1QHHM4ZQt3gI/Sb1DgkFfPKwVSgZyzJCqQEtSe0dRqC7BMVdoLDXmejUrwjOCSlInFTZRvilhK26d83EWwjC8YbSP/W74RvNp0KBh2usok/4+SA757eeXc3sh9p1aojL2j6Er/+3aSh2ES38zqF4SvIGcgsvrmP99ThVUM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=HyDbZN/X; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d09cf00214so2052131fa.0
+        for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 14:00:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google; t=1708034425; x=1708639225; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=BDDVrcRz/Ycf8cdbcrLManVLDT9HHxZVyCSEzgV1aZM=;
+        b=HyDbZN/Xw4oA6Sx7qtsjudlHesEnNSdi20hEmcRel0UhNt9L0Ae+0WUwXc0Wdf0Wbu
+         PkRASewXAfF4nr1PwwTlL7KCLL4kCQgN+drlmL/GKEG1OmbZ3qZoEBrejWsdKQOecbCU
+         wg0btfy/R7uIhLvsgrcTQJ/2ynkqLAOwKxvic=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708034425; x=1708639225;
+        h=cc:to:subject:message-id:date:user-agent:from:references
+         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BDDVrcRz/Ycf8cdbcrLManVLDT9HHxZVyCSEzgV1aZM=;
+        b=gY/YXUa8mV09IRnogj9jL/UDeUCA0SUuZnCZrPMwhRBtg0hIkdiz93HwcDYRDn98+V
+         jjaSE0Fzuoh9BroulDKjg2FyPVqykK6GXA5ysOFR7tWA0LlDyPXKWn0WO3590tptAb/R
+         45rHVJFQP4tB0s6O601hyztFNtKw2Akcown2jq6yRTc8KfvaouZcD9yeehzPSJ2cCWHG
+         XWi3lhe6Xistk7qPzF6Axh6qwMi8TTokSWmGeksE4HzU5LOPBUkkuCVvc0GCYZ3aKJMI
+         TTxU+wQhh6f+2pqCsT2r0bOgWaOJrTZbnUT8kne6xIFc5uA9qRO+ivxHGn9nCbwtUUY1
+         sicQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcvJr+lVKGQ7JzriJX5wWLjzsewdehBkk6liigoctqxx/jq7OMOg7v7ee9mJr8aFYv+5H+bhYtPLe0OqAvcv8HMJ+d+isBzbw6bQ==
+X-Gm-Message-State: AOJu0Yw3p6Q8aKjWjw009hP/OrwWN+L1OW/l99zTWpWaok3wWmyS13K1
+	AlfxNia2Cqv+PxmPPN7q+ftWxlKFlvtEpJSvtvW4mb3Wbte7dgkQbuDpKLoNN+FiwKICjkTmmro
+	ikxam8GXmucYIG5tPzw7T1zyV7b8cs24GeT3h
+X-Google-Smtp-Source: AGHT+IHZsX1oCvcJlSf5XfTcHW/43KxOJRGh8S4YaM6TXMZR2b4sKxAd9QenLzmlOUm+lpukKlbDAdnYnvVvVUmkqm4=
+X-Received: by 2002:a2e:a98f:0:b0:2d0:c490:affe with SMTP id
+ x15-20020a2ea98f000000b002d0c490affemr2710448ljq.19.1708034424733; Thu, 15
+ Feb 2024 14:00:24 -0800 (PST)
+Received: from 753933720722 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 15 Feb 2024 14:00:24 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+In-Reply-To: <20240215140638.GA4162082-robh@kernel.org>
+References: <20240210070934.2549994-1-swboyd@chromium.org> <20240210070934.2549994-2-swboyd@chromium.org>
+ <20240215140638.GA4162082-robh@kernel.org>
+From: Stephen Boyd <swboyd@chromium.org>
+User-Agent: alot/0.10
+Date: Thu, 15 Feb 2024 14:00:24 -0800
+Message-ID: <CAE-0n51R307Tg7p9=GNFfUB2tE0o5JWBNpU=rX_HUe9ydSXW7A@mail.gmail.com>
+Subject: Re: [PATCH 01/22] dt-bindings: gpio: Add binding for ChromeOS EC GPIO controller
+To: Rob Herring <robh@kernel.org>
+Cc: chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
+	patches@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, 
+	Douglas Anderson <dianders@chromium.org>, Pin-yen Lin <treapking@chromium.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>, 
+	Guenter Roeck <groeck@chromium.org>, linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, Feb 15, 2024 at 04:17:45PM +0100, Thomas Richard wrote:
-> This add suspend to ram support for the PCIe (RC mode) on J7200 platform.
+Quoting Rob Herring (2024-02-15 06:06:38)
+> On Fri, Feb 09, 2024 at 11:09:12PM -0800, Stephen Boyd wrote:
+> > +
+> > +description:
+> > +  Google's ChromeOS EC has a gpio controller inside the Embedded Controller
+> > +  (EC) and controlled via a host-command interface. The node for this
+> > +  device should be under a cros-ec node like google,cros-ec-spi.
+>
+> Why do we need a child node here?
+>
 
->       PCI: cadence: extract link setup sequence from cdns_pcie_host_setup()
->       PCI: cadence: set cdns_pcie_host_init() global
->       PCI: j721e: add reset GPIO to struct j721e_pcie
->       PCI: j721e: add suspend and resume support
-
-The drivers/pci/ subject line pattern is:
-
-  PCI: <driver>: <Capitalized verb>
-
-e.g.,
-
-  PCI: cadence: Extract link setup sequence from cdns_pcie_host_setup()
+When in Rome... but I get your point. I will work on moving #gpio-cells
+and gpio-controller into the cros-ec binding and populating some child
+device from the mfd driver.
 
