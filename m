@@ -1,121 +1,107 @@
-Return-Path: <linux-gpio+bounces-3325-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86097855864
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 01:45:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBF04855894
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 02:07:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B94D21C222EF
-	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 00:45:04 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8922B1F29DF8
+	for <lists+linux-gpio@lfdr.de>; Thu, 15 Feb 2024 01:07:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2D961109;
-	Thu, 15 Feb 2024 00:44:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEFB9EDF;
+	Thu, 15 Feb 2024 01:07:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Rpg3YnKi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qxd4qvJk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2EF8ECF
-	for <linux-gpio@vger.kernel.org>; Thu, 15 Feb 2024 00:44:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54868EC7;
+	Thu, 15 Feb 2024 01:07:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1707957897; cv=none; b=TW38zI4ogIByNg34kLhNMR8bvQ+7pCd67asKjg2OR0Mb5ykwqFMrn5m+pKFsHAlyCQNSNEHpHisMZHdQ86sst8yB424tazXWqQ1Qu3DC9eA3jbLhJ9y25TP7G9+cAoqjH2EGrp5qYESXYY2+bVmPDK+1sBfBSzGPyqwN0cFK9dw=
+	t=1707959260; cv=none; b=vGpHuNssSOAJnkhgg/hcJZjrjlKanz8XIzlskcyp6W1q+AmbGHmLhJYTc/Fm/fySp0YD/r60Ot2nGByjdYYljtK70znycVu2UC4ASE0yAqrLnHlieECmURQ2yDGQ2ZPco/kjbbwAaLbcpxtb+IF3QZJHBi9BkhI6mPtEf5UnIVY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1707957897; c=relaxed/simple;
-	bh=wP/opWg4NPPj3Q1TJjBcRMLyLYuk3vBq7WguCOVgHEk=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ADjzzsxa8UQysgsjR8pycBiAtfhjTeH95hYA+sR8SmlspWrMtZZTqUJMabJoFhpJuKnfNfttn4sB543QsWDFuu38IWFB6wXNsPbHDrCztKm7rIa+NHH/IS2BWf40FDE5AT5sY6zzzGqGe0/+/ukLOxJUEGojq4eAqNurTn6o1x4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Rpg3YnKi; arc=none smtp.client-ip=209.85.167.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-51181d8f52fso410263e87.3
-        for <linux-gpio@vger.kernel.org>; Wed, 14 Feb 2024 16:44:55 -0800 (PST)
+	s=arc-20240116; t=1707959260; c=relaxed/simple;
+	bh=3Z47SJOfrj8RNjScGe+RKC3+DdRXLGJtAIa0MG6SDa0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rwc2Ap3eirKbf/vyX5OHyn2zRtdLZ5uMJEokw+imaDrPfpGsAQeUQjg3faBjd1zyN+jrcRQUEf5ONNsL/TFd41j2PhgDv1Dh94Yd11poyWTbKUV9jDrFiUnz6PRLakRdtsCY+8ePcCN2owY3UpX8ixKkuI6jsoYmCjEFp9bwvTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qxd4qvJk; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-6e09493eb8eso1151832b3a.1;
+        Wed, 14 Feb 2024 17:07:39 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1707957894; x=1708562694; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=ZK7IS77/W7TToczCQpY2GYKtvK4AuoqqptX1LvYKQRA=;
-        b=Rpg3YnKikda5gYTI6t8tbb4u9HLoOhCMrJam+9AqefCcRhKc5xaqBssE9mqyS/zg4/
-         GwRGAq3O4XcrcMMpxkOH5C5NO+gZ//wiak4RQxfiGSCWTev1ibSgBbhbq7hmXPUT+2eu
-         Z5c7DbL3lslmiGnvieKcjWmJZexhgLZxb1zTM=
+        d=gmail.com; s=20230601; t=1707959258; x=1708564058; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=3Z47SJOfrj8RNjScGe+RKC3+DdRXLGJtAIa0MG6SDa0=;
+        b=Qxd4qvJkCPHg3mhxSl7zkYQUCbRr+7y7NRNC1KcME8Zm4r7AuOeOFrxOMk7rnMH/Rb
+         wd4pD/+mwzX1ii2quIU3CyIqLjX17XdWchf3TpL89EyJ62L6BidM+0vkNNjlA2IRsUbL
+         5XnlCEKAjd6RyRXGRa78SqyyJDSKtlTDbZEoegZcMriBy6+3e1DzFVzSOW6y0LwHz7Fu
+         JkxHW6DEhImdxaQy6qdSpWqh6DrigolgUPq1JOM+J0ccJ+FR/CZh3SDuu00TANR0g36i
+         4cfTGhInSucdWELusizotawNKmZIU12C/SnNMukGMqlMnQEPElkaa9oHT7ojzOOcaCR7
+         JBgQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1707957894; x=1708562694;
-        h=cc:to:subject:message-id:date:user-agent:from:references
-         :in-reply-to:mime-version:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1707959258; x=1708564058;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ZK7IS77/W7TToczCQpY2GYKtvK4AuoqqptX1LvYKQRA=;
-        b=oMc7DQ2CbQiEa4foDUk4NQmf6oZbRa9+vbuTAMYuSvIToGR8od+7RMVpW0eznp0OHG
-         6dO4RvH8XnR2ODGhKXyfWB5YDiH/GLN1NSreCXAwfLr3byipQGNHMLToYw3WBQibllYf
-         NIf6nSZHnMXF+iBVgrC4KvcW0NO8uKZGROP4A8AKDdpfS+fo4QZ0/GLWGqjHQKDUTt/e
-         8EgSV6Dia69qJwTuUPDlhpO3p+KC3zGpmpW1r0nMZOnAcAv2qtZxkPOhwYvu4UulnjVN
-         Z/vmpMPiNaUce0x6B3ZQqf47xMnQT6BfcG+pUvCyGEqHbTnkj95kckVsIvOFNsbaJupO
-         2J+g==
-X-Forwarded-Encrypted: i=1; AJvYcCUbwmKnXi1xgeHLbqeKET9k0V8g/udvR3hMDEEmvVETFhjc2wBCNlYMJ3OEUjpubYSVoVsSZ5V9nqy0OOZmOkRcui7RP0PNPhezoA==
-X-Gm-Message-State: AOJu0Yw+5AoArJVrkjn1SMlTZRdb1FhX2UAc0IxVVad4vcdCXALC5Eeq
-	zKXSutTebJf9UjmQXFaYwVairW39kzsBvNv26CDtaInTtiuwKUdR4XQUiTHHKbZWIiS/vyAo9Pw
-	/FxsttP+z2QS3ZGWQROileKDEdz6PfJElU3Wf
-X-Google-Smtp-Source: AGHT+IGKsNObiv5/sSxZv6aITBScisJn3oLmwBXS+yX42z/wkWCduLTcJnTn4E24I+pmYo583/8HG2h1y512aeNzcHg=
-X-Received: by 2002:a05:6512:3487:b0:511:5c98:acd2 with SMTP id
- v7-20020a056512348700b005115c98acd2mr193884lfr.37.1707957893979; Wed, 14 Feb
- 2024 16:44:53 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 14 Feb 2024 16:44:53 -0800
+        bh=3Z47SJOfrj8RNjScGe+RKC3+DdRXLGJtAIa0MG6SDa0=;
+        b=KNcqBKN0XBTr/T0ukP3cXgYeXBtA0SYvAZxeHvneT4EJeP7M+N3pcb4TK7tkYlTdKa
+         NdnPfywuAAUMHL7UCZawtacG/9qxEUOSO7FU98LGU2xOYPvTP5rY6N+/fH34g7QOz+W2
+         RgSWwkqTS4Ap9Ki7giTG+2grMdCmRn4hJQGWLAz+pLz8Bgsn4+EsjJahi5HAVWe0I5AU
+         r6t7NObiddU1sd8w89BvTmDC3nKa/Wq5B0Zbm7rDFTWzCjCcGN63hjg3Kq63Xj/NXhXn
+         YO6GhjrFrwY6XxZnU6SpfhCIVU66j0LwDBugX4SxOTyvlDmXeLs3fD52IHNNIqVtBVxs
+         sStA==
+X-Forwarded-Encrypted: i=1; AJvYcCWPBUMx7yzxqBljMQYyWJdq2TxGYynSwjgZrTPWTlZ/lfPxLDnZxailUOgTXGShL5RtLqgPoBshxrkZPZjdGd0lbgYWqP4mDGjRhA==
+X-Gm-Message-State: AOJu0YwRMvleKG7wKAFZGHzSC6ZjRi/shvy5scSxz4fMHYfJ0fSwaNdG
+	Ofk8pAb65iX4DkCH6x6sxDVxOTvMxeObNP/4Q+N2ZDNlGtnqCHd8
+X-Google-Smtp-Source: AGHT+IGZT2g7/RQXZKKgTw/ldmr45xi0KO+228vH2wkjRRfEdEZMtlQBBax0p6vfNaEt6oObKBTFIA==
+X-Received: by 2002:a05:6a21:2d87:b0:19c:6620:483c with SMTP id ty7-20020a056a212d8700b0019c6620483cmr329862pzb.23.1707959258486;
+        Wed, 14 Feb 2024 17:07:38 -0800 (PST)
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id l7-20020a056a00140700b006e037ce7cb8sm90759pfu.0.2024.02.14.17.07.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 14 Feb 2024 17:07:38 -0800 (PST)
+Date: Thu, 15 Feb 2024 09:07:33 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: brgl@bgdev.pl
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linus.walleij@linaro.org, andy@kernel.org
+Subject: Re: [PATCH] gpio: uapi: clarify default_values being logical
+Message-ID: <20240215010733.GA30995@rigel>
+References: <20240211101421.166779-1-warthog618@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <a6ce4811-2a3d-4df6-aad3-9942a1bcfedd@linaro.org>
-References: <20240210070934.2549994-1-swboyd@chromium.org> <20240210070934.2549994-2-swboyd@chromium.org>
- <a6ce4811-2a3d-4df6-aad3-9942a1bcfedd@linaro.org>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Wed, 14 Feb 2024 16:44:53 -0800
-Message-ID: <CAE-0n50Ms_QcscgGrFe55O-j5j+GA+GvvDmp=Qo60bcSD9VxUQ@mail.gmail.com>
-Subject: Re: [PATCH 01/22] dt-bindings: gpio: Add binding for ChromeOS EC GPIO controller
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, chrome-platform@lists.linux.dev
-Cc: linux-kernel@vger.kernel.org, patches@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, 
-	Pin-yen Lin <treapking@chromium.org>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240211101421.166779-1-warthog618@gmail.com>
 
-Quoting Krzysztof Kozlowski (2024-02-11 05:26:33)
-> On 10/02/2024 08:09, Stephen Boyd wrote:
-> > The ChromeOS embedded controller (EC) supports setting the state of
-> > GPIOs when the system is unlocked, and getting the state of GPIOs in all
-> > cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
-> > expander. Add a binding to describe these GPIOs in DT so that other
-> > devices described in DT can read the GPIOs on the EC.
+On Sun, Feb 11, 2024 at 06:14:21PM +0800, Kent Gibson wrote:
+> The documentation for default_values mentions high/low which can be
+> confusing, particularly when the ACTIVE_LOW flag is set.
 >
-> ...
+> Replace high/low with active/inactive to clarify that the values are
+> logical not physical.
 >
-> > +
-> > +additionalProperties: false
-> > +
-> > +examples:
-> > +  - |
-> > +    spi {
-> > +      #address-cells = <1>;
-> > +      #size-cells = <0>;
-> > +
-> > +      cros-ec@0 {
-> > +        compatible = "google,cros-ec-spi";
-> > +        reg = <0>;
-> > +        interrupts = <101 0>;
+> Similarly, clarify the interpretation of values in struct gpiohandle_data.
 >
-> This is should be proper define but then are you sure interrupt is type
-> NONE? Does not look right.
->
+> Signed-off-by: Kent Gibson <warthog618@gmail.com>
 
-I copied this from cros-ec-typec.yaml so I'll have to fix them all!
+Just checking where we are at with this patch, given you've merged the
+two documentation patches that followed on from it.
+
+I realize you have bigger fish to fry at the moment, so sorry for any
+distraction, but I just want to ensure there isn't something you are
+expecting from me or it hasn't fallen through the cracks.
+
+Cheers,
+Kent.
 
