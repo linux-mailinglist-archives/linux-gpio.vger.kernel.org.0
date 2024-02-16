@@ -1,120 +1,109 @@
-Return-Path: <linux-gpio+bounces-3397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EF05857B2B
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 12:09:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15DC1857B30
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 12:09:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEA9B1F219D4
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:09:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A6F212877D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:09:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F68E5813B;
-	Fri, 16 Feb 2024 11:08:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D01D58AA9;
+	Fri, 16 Feb 2024 11:09:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="uRLKV7C1"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pu19fIin"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay9-d.mail.gandi.net (relay9-d.mail.gandi.net [217.70.183.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CCE58203
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 11:08:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37501535DD;
+	Fri, 16 Feb 2024 11:09:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708081715; cv=none; b=bSrUwa8ut3Qk3s1I2Y5A5LH85xi/xSJwlY34ng/QXA8uuC9pLt5W9GbyzGiFEbvLtERDu+XHp/iGGec1HUh4shWs/2Ga0wck6T7vMw1BXjUT+tsV0ImBYraBy76m2Po1n2mbY4FnPEIWsWARj5AmkXdIwq15BLpPOzj2XidG8ok=
+	t=1708081764; cv=none; b=mIOrDdBt3xsLQaj31Rksv0VA1uBRpUnnR1gvlbNGVLjOE1wz2Olyykb5qoyHvzrqTyp+4JWPdGm/AP1FHJpGhthkruZu37x9PfK4njsTpnUn5+QSPuVKTvj0f3mcEmG0Pvx+SPR+LWqT8MHrw8l257LO8VpzDuOgdo7aTLfmffw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708081715; c=relaxed/simple;
-	bh=OprIDaPfMCHTrZGtzB7FNvr1ioR2TZWLJ6gWaxHzNCU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Gt/1Hk0wklxH40j2ql1ACvco2YIteVaMK4kaCV8dEpVLbBbc464JGqyscy4xJF1avJcAi5xzt5xSMbQC92igWglKVtBFzhP0U7GPu3wziY2X4chLT4ggRZphlyQ+VT7joB8pDf8beFWBp6bxj8CHITB4kMbRqLnWzIhYkSniLR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=uRLKV7C1; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-412393ea2a0so3978575e9.2
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 03:08:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708081710; x=1708686510; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=EszBtn+jIheCOSLeYTHssTg9bKih2RCDj7mGXuxi30s=;
-        b=uRLKV7C1tka+OPOtcefryDzYiwY8AZV/WjgELsxghjlQC+daxEERptABks3qUFTjbg
-         MYJ+yY+jTRb0zi4wjco6i9Kb0GL3hPgbKSFy+QcQaygmZTEBHtxlI39BQ4K5748eYmy4
-         s5Aru84a9GpwNe4QjK7F0zKB2hfxhdXzK66h2aXY4yjOEUSFXratBWJO+GcX+umkO7Nv
-         jRtF6g6SaECsgAt6ne5ypBEXqosu1pVz2JE4LBEvr7wTPATdvhpCcU1SU9pjBLZ0QKGy
-         E8TJSCRRq+EnpdNeiexxNN2taIPAyXbiOg6MUegAnJ0QN/A9EbWz+MQkEHoVmIwKI8LZ
-         D9eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708081710; x=1708686510;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=EszBtn+jIheCOSLeYTHssTg9bKih2RCDj7mGXuxi30s=;
-        b=mW2rJBDb9nLKN4IJkhAucce6mX7RSn7kGy1MzKs0oLQPFF5PWS+m5aXxAJF/05ZoRz
-         OQtMc0pbxr2BNvcVMqXFBp5yyffS7N8tcDsVi3vd8UFWURebktxxVGqCFvPHk2F/2VrA
-         u9gKN5UpOs9DZ8ai9mh0OtyQi5T3Qadvm1FTFVi0eTmbRzhtgIquf58wdsX+MNnuB353
-         FYxcLSq/99XdxAcMRV6Gggz/yrYFxr8ktGqWNlIzcaYDmWIg4fs82xuKSZQuToTccEob
-         rBJMkzbqXlv73EyL3aswkHSXR+T2FgD3vzHqoGLv9WXQ3/IZYS93RvduUqy8H4rZpRbW
-         sxLQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUsDRYX3eRQO4xsA5wwSscrLeeH6pgsH2mHSwDIHeEyBPA6/1SG1fKG50rTv8pwUGvhT110TSdPJ+renm9rRcOJefnZr71JEq/XOA==
-X-Gm-Message-State: AOJu0Ywy7EA4S4cbUXRo9tUgHiy/bN6kBlrhLtiYK3yRhJzwWKwLozF9
-	ELFNsrU+BWd7jCIHRZXN1G56epVuLq3ApSB9fn8v5X60uBpna1+H04M9hledOiQ=
-X-Google-Smtp-Source: AGHT+IGL3+BGpCfUXj33fuIZnvOkJJ7Z9V9jcvb5acLLTv95N8YEYsCPGLn9NsotNVH3Oj0dvrdDZA==
-X-Received: by 2002:a05:600c:4588:b0:411:e0f0:7a71 with SMTP id r8-20020a05600c458800b00411e0f07a71mr3655646wmo.33.1708081710360;
-        Fri, 16 Feb 2024 03:08:30 -0800 (PST)
-Received: from brgl-uxlite.home ([2a01:cb1d:334:ac00:7758:12d:16:5f19])
-        by smtp.gmail.com with ESMTPSA id fc13-20020a05600c524d00b00412157dc70bsm2033110wmb.30.2024.02.16.03.08.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Feb 2024 03:08:30 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.8-rc5
-Date: Fri, 16 Feb 2024 12:08:27 +0100
-Message-Id: <20240216110827.16793-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1708081764; c=relaxed/simple;
+	bh=VoIm7bG7xdxeX1Ve84YA5mgH1w68YbeyVDn/kcEb2Ns=;
+	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
+	 References:In-Reply-To; b=L1KetItU0In3bjJ9P56MH/J+Eljapb8yABLYD7ebsKJFXLfwJHKu2s4diUeum693Erq/0arlDlgN7lxBub/TpZ0dLSBpfyd3uXt0Faml8Copqbg+4b0zdXf6vK+QpdAVFbiNNgiOhdiBbtn3+fFZmlxjwCin5ytUrt9rp6cyo0o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pu19fIin; arc=none smtp.client-ip=217.70.183.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C1D3EFF807;
+	Fri, 16 Feb 2024 11:09:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708081759;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VoIm7bG7xdxeX1Ve84YA5mgH1w68YbeyVDn/kcEb2Ns=;
+	b=pu19fIindWoyvl+UGjcMcq0t+6LJjVczMtqO7ZZb4KGzFo4HYYZa89THhOrO2/5B+ftg7b
+	YjSeimNZDgnx7EQscGzkSBZcYAS6+CezQS8UgDZiuHuaOnObzJBP20rocAZNF8IomgpHA2
+	Av5ymPoGLmO4ztX+HCX1kn3h9Bkg26z1b6omSa6oJlDiQafr7OX2mSBONtWifEX8frY17p
+	yHiYMKESalbmWEcskaoL+yv2hXLk6GWqU3RsrzopcgLnCFiBa/mEPgJD5GaD1mHTQtatb7
+	VRK1dcwRCRGRgUVjrrMGy7jr3GNvaLoGb1imMlWSxUCstw1pmHELoBGOiNulnA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 16 Feb 2024 12:09:17 +0100
+Message-Id: <CZ6GG6OQUJTX.2OM5TC9YLOAXV@bootlin.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v3 18/18] PCI: j721e: add suspend and resume support
+Cc: "Linus Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski"
+ <brgl@bgdev.pl>, "Andy Shevchenko" <andy@kernel.org>, "Tony Lindgren"
+ <tony@atomide.com>, "Haojian Zhuang" <haojian.zhuang@linaro.org>, "Vignesh
+ R" <vigneshr@ti.com>, "Aaro Koskinen" <aaro.koskinen@iki.fi>, "Janusz
+ Krzysztofik" <jmkrzyszt@gmail.com>, "Andi Shyti" <andi.shyti@kernel.org>,
+ "Peter Rosin" <peda@axentia.se>, "Vinod Koul" <vkoul@kernel.org>, "Kishon
+ Vijay Abraham I" <kishon@kernel.org>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Lorenzo Pieralisi" <lpieralisi@kernel.org>,
+ =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>, "Rob Herring"
+ <robh@kernel.org>, "Bjorn Helgaas" <bhelgaas@google.com>,
+ <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+ <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+ <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+ <thomas.petazzoni@bootlin.com>, <u-kumar1@ti.com>
+To: "Siddharth Vadapalli" <s-vadapalli@ti.com>, "Thomas Richard"
+ <thomas.richard@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
+ <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
+In-Reply-To: <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Hello,
 
-Linus,
+On Fri Feb 16, 2024 at 11:48 AM CET, Siddharth Vadapalli wrote:
+> On 24/02/15 04:18PM, Thomas Richard wrote:
+> > From: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> >=20
+> > Add suspend and resume support. Only the rc mode is supported.
+> >=20
+> > During the suspend stage PERST# is asserted, then deasserted during the
+> > resume stage.
+>
+> Wouldn't this imply that the Endpoint device will be reset and therefore
+> lose context? Or is it expected that the driver corresponding to the
+> Endpoint Function in Linux will restore the state on resume, post reset?
 
-Please pull the following fixes from the GPIO tree for the next RC.
+This does imply exactly that. Endpoint driver must be able to restore
+context anyway, as system-wide suspend could mean lost power to PCI RC
+controller (eg suspend-to-RAM) or PCI rails (dependent on hardware).
 
 Thanks,
-Bartosz
 
-The following changes since commit 841c35169323cd833294798e58b9bf63fa4fa1de:
-
-  Linux 6.8-rc4 (2024-02-11 12:18:13 -0800)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc5
-
-for you to fetch changes up to 2df8aa3cad407044f2febdbbdf220c6dae839c79:
-
-  gpiolib: add gpio_device_get_label() stub for !GPIOLIB (2024-02-13 11:02:53 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.8-rc5
-
-- add missing stubs for functions that are not built with GPIOLIB disabled
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (3):
-      gpiolib: add gpiod_to_gpio_device() stub for !GPIOLIB
-      gpiolib: add gpio_device_get_base() stub for !GPIOLIB
-      gpiolib: add gpio_device_get_label() stub for !GPIOLIB
-
- include/linux/gpio/driver.h | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
