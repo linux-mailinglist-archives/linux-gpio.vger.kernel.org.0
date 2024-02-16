@@ -1,175 +1,115 @@
-Return-Path: <linux-gpio+bounces-3388-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3389-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A44B857903
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:39:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0936D857A39
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:25:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 04B4A1F25487
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 09:39:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B086D1F23B1C
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:25:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36B421BC3F;
-	Fri, 16 Feb 2024 09:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8237E25542;
+	Fri, 16 Feb 2024 10:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BnB709Va"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wyQ9a418"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f180.google.com (mail-lj1-f180.google.com [209.85.208.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22AC01CF8D;
-	Fri, 16 Feb 2024 09:38:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75207224DD
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 10:25:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708076332; cv=none; b=fKpE5tdr98yayKp1YwtQU3n/AcO9RyoO5AJVVFvqKzgdvGjVcS1wkiQVtd5quFQsgJHUeBT0PZK6JD/9+HGDtH3G0KWRG6hG+HnSe+Xim//4uqPBBYkbMSstPycq8uplh8yW4Crb8UbzeVgEcTkktGroA3EkgYe88USNQFmZW8s=
+	t=1708079103; cv=none; b=fP94LfTVgvkWCx/8cqOGHIBV2y++QCPz11hBpDdGk/xwVzdKAdUP25C/P+3iz81JO0m0hh83ZlOP7exNcHDke77aLXV0EK82aZVkYlHDCw+rCbC4hHnapNkFJlln/nK1kXp2BzlqAlmZU/W4te9K8rTurTHur3tOG4dlxLnfBsQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708076332; c=relaxed/simple;
-	bh=BI7W8ax5vDQ9g4imMHP9uQdZchATZ8kJHQ4HB2NFSEk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BBebHXLiJ0rwAjTJk4Vli/fK9MBOB74KPVB+avLSuloYx5RDZAhF0HlvGNtBoJZTVx3uWWXhecU4ayGtSxeM/DBAf4oh3F3uG0E+jmOCTH67G91m3YNslOb5QFkA+Rbx9IXxaV7zgscMbjRwkI0qrBL756ah7NPTPwXDvaEsPt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=BnB709Va; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G9c4mh039207;
-	Fri, 16 Feb 2024 03:38:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708076284;
-	bh=6XOEg8zy1Ye8mh1OrIsHQBS2ropjPUF/TdSRHdzFTPs=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=BnB709Vai88haM0St4nI4UMag9wWITE+Pc+ukqHFPxnMaKm9y9IOqa2MIblOfcn6s
-	 usVFAeDzo2ZrDW+ESAw5g2yr3H8ixoXg+7lLLMxbJQmW6TVaOTogyPZNx6zt79/HCO
-	 DXd2aphzfTeJsAZcmmYEZb6JTW1dbl8+PXBobaI4=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G9c4rx051568
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 16 Feb 2024 03:38:04 -0600
-Received: from DFLE100.ent.ti.com (10.64.6.21) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- Feb 2024 03:38:04 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 Feb 2024 03:38:04 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G9c3ha054061;
-	Fri, 16 Feb 2024 03:38:04 -0600
-Date: Fri, 16 Feb 2024 15:08:02 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
-	<tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Vignesh R
-	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik
-	<jmkrzyszt@gmail.com>,
-        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
-	<peda@axentia.se>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
-        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
-        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3 16/18] PCI: cadence: set cdns_pcie_host_init() global
-Message-ID: <fd7315fe-bb3d-444d-a5d3-9f91dc88f105@ti.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-16-5c2e4a3fac1f@bootlin.com>
+	s=arc-20240116; t=1708079103; c=relaxed/simple;
+	bh=RdNpeE3d+oW3k9ivrv9Mt8CvCnEdyMVqc1Bql/ZN4PY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eZglw1tBSUvqs6ZfLjazJePdb6dBFUovU1WTpaDBbwX2xjIgn3Bpa4/P91km3zzyaH2niE9TAvTsOcLKlsdQP22NV3GIU611zhM/AvVFxPoit4PULtFml6DjZPaXWboEeQudYQGJ336nGzhSo4UGSUi21AIlMDmBFWjsQx3o6+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=wyQ9a418; arc=none smtp.client-ip=209.85.208.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lj1-f180.google.com with SMTP id 38308e7fff4ca-2d208d0b282so20611641fa.0
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 02:25:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708079099; x=1708683899; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=9uwpxzD7wxs4tMFhIUi84X6jUwWhqp/NQm+0nfPH8IA=;
+        b=wyQ9a418g3CohbFDjygafaUoTgmJDWSDeV9qgCfE9x8+oSyXJcZf7m1g91Nn8ch1Ip
+         X6stMmSo+9/0PHIpU38v2l3eqb6BAmwIzuNfgN1Mc/VGYVLaoDkbP3fHXEaEW/G9xTzo
+         eY9F17RgD1c/lBqLjkhO6UOwHwWzuy27RIQR7VP8KuRrb1mibLf2T7Oqbo+cz9Rkmcec
+         cXhHMfub5KbnnVdWEtB+2zanjTE5d0L+urEL1Ejuy6uflW4LA20bbosBBdtOFYFx3WUz
+         lWZPTKlUmx47/2UhgXonq2cTPiB4nwFFywf1kIQxSWTUxlYh4Mi/cQq1hmC977T4G9uq
+         tlDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708079099; x=1708683899;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=9uwpxzD7wxs4tMFhIUi84X6jUwWhqp/NQm+0nfPH8IA=;
+        b=Ham+mgkUzes2rFIIublo9zdCbO2LOWlpYKAb3v07921+zYczmqAsy98d6o8P5FNYvw
+         TL5BLO6jlQln23dXGl7mS1nhm5oarLi+FJXxtx7z8qCBTEPRR8woRYoDBPD7plpcI+M1
+         Z7NscUxfvpdxVjZ/x9iD97rnNn575bqYsFPqc/vZHue4mOaThQG0jRTwwyMbae3XKvCD
+         rqzGONFKZAML3ljbazI9G4EpN0SvD5XjsPoZ+n1PNwvK57MZ52aQ3Q4vE5A+lFALJ9s2
+         mqnrCU4dzSj3LJrzf9HydgZOYV/OOBhDBpHaIqsg772AXyCuMjGPDkhhTAtVUHUH/2H1
+         GaUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUFF/insphB5ZYWTGvz0m9dMlKgoYL6AedGx8xVC0s9gijKjmDzwyH0tJZt/abYHlIKhO5xkPXazJbbXmJO9Wo47wnuUnyRwbdDqw==
+X-Gm-Message-State: AOJu0YxRaTx6tHj4SAT1ZUkYi3ExC3twB1zIO8TlVkaOlYckqoZeZddk
+	lptPA8pwD4TX37a8w+g0MdOW7l150Q6gTwZQbuHMJ0aoBACEOrj1DLLKmv9/09YqU8DFJkYkNt4
+	H
+X-Google-Smtp-Source: AGHT+IGoZm/xp1G/OD/8Sl4FoiC95cUmkntuMFrDr7Qmfp/kfCwUeNUTxLGICD5tmQBANj3SLO1Z1Q==
+X-Received: by 2002:a17:906:7196:b0:a3c:7fcc:3967 with SMTP id h22-20020a170906719600b00a3c7fcc3967mr3430139ejk.40.1708079078897;
+        Fri, 16 Feb 2024 02:24:38 -0800 (PST)
+Received: from krzk-bin.. ([78.10.207.130])
+        by smtp.gmail.com with ESMTPSA id hw12-20020a170907a0cc00b00a3d5d8ff745sm1438580ejc.144.2024.02.16.02.24.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 16 Feb 2024 02:24:38 -0800 (PST)
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+To: Bjorn Andersson <andersson@kernel.org>,
+	Konrad Dybcio <konrad.dybcio@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
+	linux-arm-msm@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: stable@vger.kernel.org
+Subject: [PATCH] pinctrl: qcom: sm8650-lpass-lpi: correct Kconfig name
+Date: Fri, 16 Feb 2024 11:24:35 +0100
+Message-Id: <20240216102435.89867-1-krzysztof.kozlowski@linaro.org>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-16-5c2e4a3fac1f@bootlin.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 
-On 24/02/15 04:18PM, Thomas Richard wrote:
-> During the resume sequence of the host, cdns_pcie_host_init() needs to be
-> called, so set it global.
-> 
-> The dev function parameter is removed, as it isn't used.
-> 
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+Use proper model name in SM8650 LPASS pin controller Kconfig entry.
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
+Cc: <stable@vger.kernel.org>
+Fixes: c4e47673853f ("pinctrl: qcom: sm8650-lpass-lpi: add SM8650 LPASS")
+Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+---
+ drivers/pinctrl/qcom/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Regards,
-Siddharth.
+diff --git a/drivers/pinctrl/qcom/Kconfig b/drivers/pinctrl/qcom/Kconfig
+index e0f2829c15d6..24619e80b2cc 100644
+--- a/drivers/pinctrl/qcom/Kconfig
++++ b/drivers/pinctrl/qcom/Kconfig
+@@ -125,7 +125,7 @@ config PINCTRL_SM8550_LPASS_LPI
+ 	  platform.
+ 
+ config PINCTRL_SM8650_LPASS_LPI
+-	tristate "Qualcomm Technologies Inc SM8550 LPASS LPI pin controller driver"
++	tristate "Qualcomm Technologies Inc SM8650 LPASS LPI pin controller driver"
+ 	depends on ARM64 || COMPILE_TEST
+ 	depends on PINCTRL_LPASS_LPI
+ 	help
+-- 
+2.34.1
 
-> ---
->  drivers/pci/controller/cadence/pcie-cadence-host.c | 5 ++---
->  drivers/pci/controller/cadence/pcie-cadence.h      | 6 ++++++
->  2 files changed, 8 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> index 93d9922730af..8af95e9da7ce 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
-> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
-> @@ -485,8 +485,7 @@ static int cdns_pcie_host_init_address_translation(struct cdns_pcie_rc *rc)
->  	return cdns_pcie_host_map_dma_ranges(rc);
->  }
->  
-> -static int cdns_pcie_host_init(struct device *dev,
-> -			       struct cdns_pcie_rc *rc)
-> +int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
->  {
->  	int err;
->  
-> @@ -564,7 +563,7 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
->  		rc->avail_ib_bar[bar] = true;
->  
-> -	ret = cdns_pcie_host_init(dev, rc);
-> +	ret = cdns_pcie_host_init(rc);
->  	if (ret)
->  		return ret;
->  
-> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
-> index 4c687aeb810e..d55dfd173f22 100644
-> --- a/drivers/pci/controller/cadence/pcie-cadence.h
-> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
-> @@ -516,6 +516,7 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
->  
->  #ifdef CONFIG_PCIE_CADENCE_HOST
->  int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
-> +int cdns_pcie_host_init(struct cdns_pcie_rc *rc);
->  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
->  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
->  			       int where);
-> @@ -525,6 +526,11 @@ static inline int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
->  	return 0;
->  }
->  
-> +static inline int cdns_pcie_host_init(struct cdns_pcie_rc *rc)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
->  {
->  	return 0;
-> 
-> -- 
-> 2.39.2
-> 
-> 
 
