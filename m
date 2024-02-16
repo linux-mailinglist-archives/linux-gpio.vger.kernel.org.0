@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-3409-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3410-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3EF0857E33
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:56:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 37965857E39
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:56:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AC42C283AF2
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 13:56:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E3470283CF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 13:56:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EE1B712CD91;
-	Fri, 16 Feb 2024 13:56:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8CD312C7E9;
+	Fri, 16 Feb 2024 13:56:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YxN39ZrK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZbU7pXtM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2D3512C531
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 13:56:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7F8D12BEA5
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 13:56:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708091765; cv=none; b=HXWKgMtFcrU5HDQVWz17/uNRRDxU9qbJTikcywCHnbPpnUB4V6JyB3wr+AyS7tOHeB8KLLJn0uSNSkdvwROpwmKy2A2xvrNJXr3GMwdQxyuY3YKtP2GvTMIQ7o687ih75gjaXQSgBqvE4zGgxZ/ahJZr9AdE1n/5KVusCH2uNr8=
+	t=1708091787; cv=none; b=B5NMDrsM/lmpopAkSeSZeT6a9MJcYDKjq7eLP30GyUybHKWAeJKJAWw1p6NihiIqA61JU6Ne1BBwme9AewdeQX89W9nCuy5Ca9aD5u5CMU6nrcGLQgIZmtgyvG2vpRQ499QpKc35X95SPzC2jbv1C0VJlQbSettRa9O/DVYaY6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708091765; c=relaxed/simple;
-	bh=HH+tpzai7oJ2DremXUqDYhyOQtLpOjkgJ3mafJf+8bQ=;
+	s=arc-20240116; t=1708091787; c=relaxed/simple;
+	bh=5RmI4IEp4Goh1bTgymsT7lUz8vgYhCy6KcB5Y7BA5sA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=TiYaX/iwYaAdliEMacKitY6GB9MQIOQqrEXTK7xdqRJge/BYWez9G+rj4smMORqx2mgXtJ8zM2Mth94AzS/ajL+li805I6+g2zxR7mDzZMu9A4SSAowUA6OYOniK+EaS3vqa10SHP0DE2ulAD0hWcKNYTvmYLeJTMSdCL4owAsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YxN39ZrK; arc=none smtp.client-ip=209.85.167.41
+	 In-Reply-To:Content-Type; b=eJfRQKNoRgCJTg+Uzgakjvsu96ZqSnD5xMI+rqCSYRlHSkni6fCaga8jY5GbVgQOc94hbjw0t5IamW3HM1kPM5ZHYcVGXC3nb+zwEscT3t+E8iYLLg0I8mWBnjIDitfzHfaJRLR6RBrXSQOq1aU6hZ1HQ+SF4bmUXS3k573g7os=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZbU7pXtM; arc=none smtp.client-ip=209.85.208.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-51178bbb5d9so932560e87.2
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 05:56:03 -0800 (PST)
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-563c403719cso1705586a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 05:56:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708091762; x=1708696562; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708091784; x=1708696584; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=Sx+N6arR97QWfJcz5eTsFgWwMeNE/57mdj7f2gyCg9E=;
-        b=YxN39ZrKVYJkLkG+UBMzxEy14Wvs9gU1m9QtZzEdnpo0IALg/zhW8re/AekqQRz5rk
-         hVgZSVCnWgD2mvRlsLe4vg330K3wK0WWXxxMsbaEatNZ8ZrG2IdktC+sukTed+OQTUi1
-         yCVmb87TCYf+ajAQSoSowTrOieLRYI3+bunMmIhpDnFhiobI3OQjy5R9YjUfaVnSi5/z
-         gUBUXxY5dWHOS3uTfSAwfvgFLZ5GsOGJFVyaR3+DJaR2+JqMd9bms/CagajuH1ezp+F2
-         uxAxUKvUDPlCWlxr4Qule42+EeRllCnxnFID6GpSdYC0kxya3FU9Qm52sQFQMG7SF+F4
-         WBdg==
+        bh=mUXYgAIe0stjf/tT87f+iI1UC/+ORo23MBKCKiPj4Ek=;
+        b=ZbU7pXtMem83kPwI7WMMypR8NrCQWh8VkPc0yHFhbAOocR+YCbd1Ma5gfREFVFnyXF
+         L8koTtReF3I89wUH73IV1gGz3PYb6dPmPWxjNr9XkPltxhwUN+3KP+zwYt26okl3AYIQ
+         VGcDXV9YFJ+QsYpPG2Z+P4GOToN6vPZb+Qm0j8Tb6hlqkMowfL4F7I2Z9qFBenZTogF9
+         hnru3XT7jm38uvWCas7lI5aFs84gpJLfxB6GLWN34eS/GoJv5K7ay7MgwWS7iUSIuo3g
+         6lsLb4m1WORjUSovQ9hmPyzuMUO0OVgQzzjCInPSllF7ukB/tx2Q3ZOW5vqZwI7dOX3Y
+         oEGw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708091762; x=1708696562;
+        d=1e100.net; s=20230601; t=1708091784; x=1708696584;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:to
          :content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Sx+N6arR97QWfJcz5eTsFgWwMeNE/57mdj7f2gyCg9E=;
-        b=FGWAaQh1PC3ppUTevrbzxZjyiuuKAU2PigsESQRK6eEvM0h4ve5vIrIhp0OSjXgBro
-         /H63PmlAvEg5qIz99IQkTI1C6vvnJWNEa26TF6UnEppd+AYApbJfq43mnx/c/o91DpU9
-         D09TG5kckAfo8fdQHwzT9IdRzoux0nZHVkOhqzsGUGsvcebZNC/0eCXjZQ1MFJ/zNItJ
-         A8Hs+dBKHIcLk/vMQje29J9BNDIUf8vnIzgtCcAOwlFxING4yG3ebV5+F5WyjOBctT3+
-         4KGJgeVyGHDbbbGUDT3fY78nhZ4v3/bLDrTXvDPK07VcRXZj1kvX15bF2q7ufuNZkPpR
-         1+AQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWxfGYkHb6DgyQQxKEY/uN5q+4bzAVg6uGPk/rglrbuI49mIVbTj5RRCNe+rjty888IRLEayRuAxnEjfDxYoUXF4LlM6Kch+hYHew==
-X-Gm-Message-State: AOJu0YwzdgRYJkAvkxwn3L93mS5fz0ZtMycmU2DZK+wTUvfWx311gsAo
-	MX9sdomyOO3bao0OGAo63FXjwiIA+7J9ZbzoFLYDkNQtvRNwI6vdQ90qCGHBZB8=
-X-Google-Smtp-Source: AGHT+IEREGsZFv/c3ANUUBXrwqpzBGK1tnvv9RJ/EJpxn2KABM5uyQq2ul44xSimUFdQVGK0Ic4JyQ==
-X-Received: by 2002:ac2:4301:0:b0:511:4c68:f3d0 with SMTP id l1-20020ac24301000000b005114c68f3d0mr3728689lfh.23.1708091761765;
-        Fri, 16 Feb 2024 05:56:01 -0800 (PST)
+        bh=mUXYgAIe0stjf/tT87f+iI1UC/+ORo23MBKCKiPj4Ek=;
+        b=A14pWZWzSQ3Y5FrN/P0YRNprEKjcumlC5t42p2tulKaaDJOhe9eEf+8Vvg6hzSYzyH
+         O6D0PXoDiXkHFeXYfuJ9ATrZ5ntHNog+1go9fgWFbFaxhb0xlNbGj7BQNhYEUre3BPf9
+         /Mg/lE6EFGlhGpQkkQsKb/6Mnv99ENmYHSIwyCc2hnw/7tro7nnpGPX7/YnvilSgVo0H
+         ye+qVaYeocCORkYd6GKCwf3orwQd4ZHjoQLT/8MbjfwZnT9G8MLFk/M8/oOohMmF4U+0
+         IgxfxoAWeJ7yQRPgUx9QfPczVll53LScoYbqFfK5thulJGOKs9YRUoy+B+3T4xjesUoQ
+         y1mQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUMTamL9OpD68rzLBScz25nkQJ9oEhGVJxo+iLlonxFIXYXINtDvBi7lpIX66TMluFxOYTjmIFhpVcQOUoLnJKzb3a+jcDb4+cgpw==
+X-Gm-Message-State: AOJu0YzHyaYb12K50kxbwgi0RunfZ5fKKg2n0o9PpG6kIuxeEZAOUSXl
+	eWh5pT78k/GaK+I0u3Yl9DSdOTpxwY45uwYnj5vvXkHA34i0liwEdP2SylwJ+Cg=
+X-Google-Smtp-Source: AGHT+IFw1apcnDJqq54rOtL+ZYElfOGT/aFW+lw0ZtKBGyT0Y3NCy7HO8PFgcvnX8LrQnk3I2zjDgg==
+X-Received: by 2002:aa7:d6cb:0:b0:564:4bc:492e with SMTP id x11-20020aa7d6cb000000b0056404bc492emr812754edr.22.1708091784187;
+        Fri, 16 Feb 2024 05:56:24 -0800 (PST)
 Received: from [192.168.192.135] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id u20-20020aa7d894000000b00563a6c9fd71sm1124edq.16.2024.02.16.05.55.59
+        by smtp.gmail.com with ESMTPSA id u20-20020aa7d894000000b00563a6c9fd71sm1124edq.16.2024.02.16.05.56.21
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 05:56:01 -0800 (PST)
-Message-ID: <488cc7dc-f45a-4c9e-b572-e4a6b3202e3e@linaro.org>
-Date: Fri, 16 Feb 2024 14:55:58 +0100
+        Fri, 16 Feb 2024 05:56:23 -0800 (PST)
+Message-ID: <84adc2ac-db49-4358-a079-6991c6770a73@linaro.org>
+Date: Fri, 16 Feb 2024 14:56:21 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -138,25 +138,8 @@ On 16.02.2024 14:52, Krzysztof Kozlowski wrote:
 > 
 > Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 > ---
->  drivers/gpio/gpiolib-of.c              |  2 +-
->  drivers/interconnect/core.c            |  4 ++--
->  drivers/interconnect/qcom/icc-common.c |  3 ++-
->  drivers/interconnect/qcom/icc-common.h |  3 ++-
->  drivers/interconnect/samsung/exynos.c  |  2 +-
->  drivers/memory/tegra/mc.c              |  2 +-
->  drivers/memory/tegra/tegra124-emc.c    |  2 +-
->  drivers/memory/tegra/tegra124.c        |  2 +-
->  drivers/memory/tegra/tegra186-emc.c    |  2 +-
->  drivers/memory/tegra/tegra20-emc.c     |  2 +-
->  drivers/memory/tegra/tegra20.c         |  2 +-
->  drivers/memory/tegra/tegra30-emc.c     |  2 +-
->  drivers/memory/tegra/tegra30.c         |  2 +-
->  include/linux/interconnect-provider.h  | 11 ++++++-----
->  include/soc/tegra/mc.h                 |  7 ++++---
 
-Ended up being a bit wider than just icc..
-
-Looks sane apart from that
+Acked-by: Konrad Dybcio <konrad.dybcio@linaro.org>
 
 Konrad
 
