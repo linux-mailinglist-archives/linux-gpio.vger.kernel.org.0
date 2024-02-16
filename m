@@ -1,266 +1,210 @@
-Return-Path: <linux-gpio+bounces-3386-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3387-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9E877857898
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:12:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C49258578E7
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:35:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A118E1C20E27
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 09:12:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46F572849ED
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 09:35:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291B019BBA;
-	Fri, 16 Feb 2024 09:12:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B45561BC2F;
+	Fri, 16 Feb 2024 09:34:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9wQM7+7"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="dBUWI9sq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113AB1B94D
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 09:12:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C0A7EF;
+	Fri, 16 Feb 2024 09:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708074749; cv=none; b=kZcsDjviobbG6SRoDbS0e8/4xyoQOzbGurAGS+xjeIVYuBz2+V95etpglAoKNPM4BaJZdrtS4byfF4lBPdtFHhX4dJxW3y7uS66V2tw5K66SqsAOgrIHZL2CZXpB/KS6DBX8TSEziBWXhF4gdVpSXRchS9TRszz5pqkncztJnHU=
+	t=1708076095; cv=none; b=hLH/ABOxypgObomPyzthKgO8l+VS4NZeuOqzSslCRV7HcSlpC/N6Inrp1wMLZ0cZl+9nYvVDHEcA6G2maDtRdCOsviFHokWd9ono/+OGd7OZiqqFsLLroNEcaw3fcSrGBjrBjyJEGHCCufqcY8O5jUtdE7z862YotWenwrMUVsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708074749; c=relaxed/simple;
-	bh=mPNx22ooWPx/8ai/db0+Sb4ohLOL0GPN49osAu0moBE=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=CTQuVdMGrPT0QQvp/kvCWU/3S1mETu8XLPoj75LUNvIi79djmGqdicFge9mHiymHxWGZ59Wqeh/3ZND7LEtR7otwcTwBCSzoxL2L4FGmQdoEDeyn8tBngVg1LSuItQbNG/3Xs+Bz3X+W4xaBOqb1aMkZXxO3j24jCVs6cwhI9dY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9wQM7+7; arc=none smtp.client-ip=192.198.163.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708074748; x=1739610748;
-  h=date:from:to:cc:subject:message-id;
-  bh=mPNx22ooWPx/8ai/db0+Sb4ohLOL0GPN49osAu0moBE=;
-  b=l9wQM7+7T0jS9teMxYOXSQoITBHHZjCF4bb97pcw7j8NITW/Xq5hDvAc
-   yToFpOH8jBTerfflp8Hav/JMYMtfg/28wKMrF4y70i8M6eUky5xrfKqzv
-   gmPKRXOtuSLboHB62Rm8WcLXEuZz526nPoHrL/igvLDBDnbSJMSLm8Ndv
-   7oZSKDCuZQLwVcAmuBcmw3bBIJyZfvedCjh0fg7WRSWkXvC8eHKJRYJAS
-   WxlnbBG1nETaI+RbAL+F+wKItDvi2zjHaCRs4oeFPf6GVYjpmJqLEZ1WE
-   rzDSAeGa225T9LopW/a4U5R/4EHWL6u6VZDRNvn5VKDFp+s4yxauNN6vn
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="13590199"
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="13590199"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:12:26 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
-   d="scan'208";a="34578814"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 16 Feb 2024 01:12:25 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rauGd-00017s-00;
-	Fri, 16 Feb 2024 09:12:23 +0000
-Date: Fri, 16 Feb 2024 17:12:04 +0800
-From: kernel test robot <lkp@intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [brgl:gpio/for-next] BUILD SUCCESS
- 8ff0d55ba3fb56b69e40c50ff030a77c27a072ca
-Message-ID: <202402161701.kmcHsAyH-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1708076095; c=relaxed/simple;
+	bh=1YBMhyXg6FfqZDDTNlBB8NV7CO4pFTFpO0iIm3Yk2Ew=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UIGWPv8RANfEEyctCvNrvHOMg3JdgL2lKX45dzIVZI0ukv4Temy6R+k2Fyq6Rbuef3M631C41wIyYaI8Hed05Pr9ibGu/RsUPwKyFhuJT0h2O8mI2vE2E9zeKijWID8xXlkd3r/7ap++2Zz6UwpYyasXbT0tdqSKelLPZd9bpac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=dBUWI9sq; arc=none smtp.client-ip=198.47.23.248
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41G9YDeq060094;
+	Fri, 16 Feb 2024 03:34:13 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708076053;
+	bh=vKwAOmyTIKWOUkF+ltd/wXRNBHA5NjPfXEM/pH4HgCE=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=dBUWI9sql6TnlUIEOGFAg4vS8BWuS/JbhwS9gC86EL1cddmuNSFGe21Sbp3oVpOUP
+	 guWZf54EVOiiV7PHE/3ylqvfDNUbduYWyeri/qgOwP1hrmJr4N9Wh83De+L3D/jKfk
+	 gwQR04D2czoTUO9EfIQm7q2LFvd15n95Q8GRlAZQ=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41G9YDLg057428
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 16 Feb 2024 03:34:13 -0600
+Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ Feb 2024 03:34:12 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 Feb 2024 03:34:12 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41G9YB1G048944;
+	Fri, 16 Feb 2024 03:34:12 -0600
+Date: Fri, 16 Feb 2024 15:04:11 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
+	<tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Vignesh R
+	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik
+	<jmkrzyszt@gmail.com>,
+        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
+	<peda@axentia.se>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
+        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3 15/18] PCI: cadence: extract link setup sequence from
+ cdns_pcie_host_setup()
+Message-ID: <72300ba5-1db2-4bbb-a797-d1b547001ddb@ti.com>
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-15-5c2e4a3fac1f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v3-15-5c2e4a3fac1f@bootlin.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
-branch HEAD: 8ff0d55ba3fb56b69e40c50ff030a77c27a072ca  gpio: uapi: clarify default_values being logical
+On 24/02/15 04:18PM, Thomas Richard wrote:
+> The function cdns_pcie_host_setup() mixes probe structure and link setup.
+> 
+> The link setup must be done during the resume sequence. So extract it from
+> cdns_pcie_host_setup() and create a dedicated function.
+> 
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-elapsed time: 1447m
+LGTM.
 
-configs tested: 177
-configs skipped: 3
+Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+Regards,
+Siddharth.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                                 defconfig   gcc  
-arc                   randconfig-001-20240216   gcc  
-arc                   randconfig-002-20240216   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                          collie_defconfig   gcc  
-arm                                 defconfig   clang
-arm                   randconfig-001-20240216   clang
-arm                   randconfig-002-20240216   clang
-arm                   randconfig-003-20240216   gcc  
-arm                   randconfig-004-20240216   gcc  
-arm                        realview_defconfig   clang
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240216   clang
-arm64                 randconfig-002-20240216   gcc  
-arm64                 randconfig-003-20240216   clang
-arm64                 randconfig-004-20240216   gcc  
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240216   gcc  
-csky                  randconfig-002-20240216   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240216   clang
-hexagon               randconfig-002-20240216   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386         buildonly-randconfig-001-20240215   clang
-i386         buildonly-randconfig-002-20240215   clang
-i386         buildonly-randconfig-003-20240215   clang
-i386         buildonly-randconfig-004-20240215   clang
-i386         buildonly-randconfig-005-20240215   clang
-i386         buildonly-randconfig-006-20240215   clang
-i386                                defconfig   clang
-i386                  randconfig-001-20240215   gcc  
-i386                  randconfig-002-20240215   gcc  
-i386                  randconfig-003-20240215   clang
-i386                  randconfig-004-20240215   gcc  
-i386                  randconfig-005-20240215   gcc  
-i386                  randconfig-006-20240215   gcc  
-i386                  randconfig-011-20240215   clang
-i386                  randconfig-012-20240215   clang
-i386                  randconfig-013-20240215   gcc  
-i386                  randconfig-014-20240215   gcc  
-i386                  randconfig-015-20240215   clang
-i386                  randconfig-016-20240215   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240216   gcc  
-loongarch             randconfig-002-20240216   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                       lemote2f_defconfig   gcc  
-mips                  maltasmvp_eva_defconfig   gcc  
-mips                        maltaup_defconfig   clang
-mips                           mtx1_defconfig   clang
-mips                        qi_lb60_defconfig   clang
-mips                          rb532_defconfig   clang
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240216   gcc  
-nios2                 randconfig-002-20240216   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240216   gcc  
-parisc                randconfig-002-20240216   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                 canyonlands_defconfig   clang
-powerpc                        cell_defconfig   gcc  
-powerpc                       ppc64_defconfig   clang
-powerpc               randconfig-001-20240216   clang
-powerpc               randconfig-002-20240216   clang
-powerpc               randconfig-003-20240216   clang
-powerpc64             randconfig-001-20240216   clang
-powerpc64             randconfig-002-20240216   clang
-powerpc64             randconfig-003-20240216   gcc  
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240216   gcc  
-riscv                 randconfig-002-20240216   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240216   gcc  
-s390                  randconfig-002-20240216   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                 kfr2r09-romimage_defconfig   gcc  
-sh                          landisk_defconfig   gcc  
-sh                    randconfig-001-20240216   gcc  
-sh                    randconfig-002-20240216   gcc  
-sh                           se7751_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                               defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240216   gcc  
-sparc64               randconfig-002-20240216   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                    randconfig-001-20240216   gcc  
-um                    randconfig-002-20240216   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240216   clang
-x86_64       buildonly-randconfig-002-20240216   clang
-x86_64       buildonly-randconfig-003-20240216   clang
-x86_64       buildonly-randconfig-004-20240216   clang
-x86_64       buildonly-randconfig-005-20240216   gcc  
-x86_64       buildonly-randconfig-006-20240216   clang
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240216   gcc  
-x86_64                randconfig-002-20240216   clang
-x86_64                randconfig-003-20240216   gcc  
-x86_64                randconfig-004-20240216   gcc  
-x86_64                randconfig-005-20240216   gcc  
-x86_64                randconfig-006-20240216   clang
-x86_64                randconfig-011-20240216   gcc  
-x86_64                randconfig-012-20240216   gcc  
-x86_64                randconfig-013-20240216   clang
-x86_64                randconfig-014-20240216   gcc  
-x86_64                randconfig-015-20240216   clang
-x86_64                randconfig-016-20240216   clang
-x86_64                randconfig-071-20240216   clang
-x86_64                randconfig-072-20240216   clang
-x86_64                randconfig-073-20240216   gcc  
-x86_64                randconfig-074-20240216   gcc  
-x86_64                randconfig-075-20240216   clang
-x86_64                randconfig-076-20240216   gcc  
-x86_64                          rhel-8.3-rust   clang
-xtensa                            allnoconfig   gcc  
-xtensa                  audio_kc705_defconfig   gcc  
-xtensa                randconfig-001-20240216   gcc  
-xtensa                randconfig-002-20240216   gcc  
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> ---
+>  drivers/pci/controller/cadence/pcie-cadence-host.c | 39 ++++++++++++++--------
+>  drivers/pci/controller/cadence/pcie-cadence.h      |  6 ++++
+>  2 files changed, 32 insertions(+), 13 deletions(-)
+> 
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence-host.c b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> index 5b14f7ee3c79..93d9922730af 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence-host.c
+> +++ b/drivers/pci/controller/cadence/pcie-cadence-host.c
+> @@ -497,6 +497,30 @@ static int cdns_pcie_host_init(struct device *dev,
+>  	return cdns_pcie_host_init_address_translation(rc);
+>  }
+>  
+> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+> +{
+> +	struct cdns_pcie *pcie = &rc->pcie;
+> +	struct device *dev = rc->pcie.dev;
+> +	int ret;
+> +
+> +	if (rc->quirk_detect_quiet_flag)
+> +		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> +
+> +	cdns_pcie_host_enable_ptm_response(pcie);
+> +
+> +	ret = cdns_pcie_start_link(pcie);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to start link\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = cdns_pcie_host_start_link(rc);
+> +	if (ret)
+> +		dev_dbg(dev, "PCIe link never came up\n");
+> +
+> +	return 0;
+> +}
+> +
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	struct device *dev = rc->pcie.dev;
+> @@ -533,20 +557,9 @@ int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  		return PTR_ERR(rc->cfg_base);
+>  	rc->cfg_res = res;
+>  
+> -	if (rc->quirk_detect_quiet_flag)
+> -		cdns_pcie_detect_quiet_min_delay_set(&rc->pcie);
+> -
+> -	cdns_pcie_host_enable_ptm_response(pcie);
+> -
+> -	ret = cdns_pcie_start_link(pcie);
+> -	if (ret) {
+> -		dev_err(dev, "Failed to start link\n");
+> -		return ret;
+> -	}
+> -
+> -	ret = cdns_pcie_host_start_link(rc);
+> +	ret = cdns_pcie_host_link_setup(rc);
+>  	if (ret)
+> -		dev_dbg(dev, "PCIe link never came up\n");
+> +		return ret;
+>  
+>  	for (bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
+>  		rc->avail_ib_bar[bar] = true;
+> diff --git a/drivers/pci/controller/cadence/pcie-cadence.h b/drivers/pci/controller/cadence/pcie-cadence.h
+> index 373cb50fcd15..4c687aeb810e 100644
+> --- a/drivers/pci/controller/cadence/pcie-cadence.h
+> +++ b/drivers/pci/controller/cadence/pcie-cadence.h
+> @@ -515,10 +515,16 @@ static inline bool cdns_pcie_link_up(struct cdns_pcie *pcie)
+>  }
+>  
+>  #ifdef CONFIG_PCIE_CADENCE_HOST
+> +int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc);
+>  int cdns_pcie_host_setup(struct cdns_pcie_rc *rc);
+>  void __iomem *cdns_pci_map_bus(struct pci_bus *bus, unsigned int devfn,
+>  			       int where);
+>  #else
+> +static inline int cdns_pcie_host_link_setup(struct cdns_pcie_rc *rc)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int cdns_pcie_host_setup(struct cdns_pcie_rc *rc)
+>  {
+>  	return 0;
+> 
+> -- 
+> 2.39.2
+> 
+> 
 
