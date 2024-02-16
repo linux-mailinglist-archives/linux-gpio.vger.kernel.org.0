@@ -1,184 +1,266 @@
-Return-Path: <linux-gpio+bounces-3385-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3386-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B92285788A
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:08:29 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9E877857898
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:12:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A2898B238B5
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 09:08:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A118E1C20E27
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 09:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 227DF1B815;
-	Fri, 16 Feb 2024 09:08:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 291B019BBA;
+	Fri, 16 Feb 2024 09:12:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="utrj9bXM"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="l9wQM7+7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774371B968
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 09:08:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 113AB1B94D
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 09:12:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708074491; cv=none; b=h0rTtgXVGBSfGiPFjg8ciaz6sDae2mpVjLQ3SUWS2RUSlL9fVF2zGviIzmcrsH1Z0mDmxA99glO6HqBMDK14XZBjVmAupn8vJROCup+iRyzz5IFySAcYadkwvblJdaKSZxiXK8neC2niVgZlneysPu2F2B7BeI+qLuYDLUKEbiU=
+	t=1708074749; cv=none; b=kZcsDjviobbG6SRoDbS0e8/4xyoQOzbGurAGS+xjeIVYuBz2+V95etpglAoKNPM4BaJZdrtS4byfF4lBPdtFHhX4dJxW3y7uS66V2tw5K66SqsAOgrIHZL2CZXpB/KS6DBX8TSEziBWXhF4gdVpSXRchS9TRszz5pqkncztJnHU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708074491; c=relaxed/simple;
-	bh=oERm1l0ziZ/kArGwE/f98QL6u0Kyjehs1eDEGtkoX7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=O/0gd/ZjZHX5AvfZeaxOFrv53HEKka+/M0vso9T50I0/BYY0ZV+vB/0B/d+AwQQr9MWN19GZpcDWwqNClsm25udNqhaT546YyrelxZHGao5X9AEODDBWxCcabd9uovcCGOgaqk5yvycaGiR0KK2gKS+FMXMDtdn280RQqnVrWFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=utrj9bXM; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-51147d0abd1so2036531e87.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 01:08:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708074487; x=1708679287; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vA2DFFOFzcRyvxqcYVpsnM/x9YtF8fmooWYl5oGtBh0=;
-        b=utrj9bXMWNTLmIHcWDp4HIIw5cG8kY06kJr2XYOXj+cCQZSaqIjzqNJS7wEiunOOXX
-         LmPtqaVzBkAxwk3Z3LjiihgJ9YN1kItnHOob2Zl66XNYoRe2gq4TZ5IL4r5xCEAZY6/9
-         0IPmNvdANqW5mYYVCV9qJL4TA0jxo727u0qxT980HOJ54t98PPxdRjcla7TdiKdmaNmr
-         +vySs4pDylfG8wfscXJm0Gu9Z8HM2UN0lmBap/SGbWRfy1uoOkMBqgX18h9en+9bTzbw
-         h7sCMLziSvc1yhmNwko25+anmLK07i2ZBPNiQlOBtjWMV5se24jomPuHn5sUJ9O/xLW2
-         kB6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708074487; x=1708679287;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vA2DFFOFzcRyvxqcYVpsnM/x9YtF8fmooWYl5oGtBh0=;
-        b=V9atAyNd6aC9m6IqiyIacGxUadtDrxID5RqcNaOh9xtbnul5Tkd79MgxYSjau31wQ3
-         CXaeChMwwfwxf56ldhl/l1tvil/m6U0r5BLxj/Ldm6g2qZ3snVZ22Y0WwQKCjStcPpZ6
-         iJF0HEHpr/JkGbEW/WEuBgUelPKVOXHnj+NHDGe7lopJXrBbv6lqvKzhRtyAFMaUNbUe
-         wwEPI1f/sBLSO1rP5VZoZOZC39Mx8vyiFW3lGM38tMpN7g004Lnr5nvxd1Nd52mQnZBj
-         DSbnCJULmN3w5MEIiJEdUYA5JTHkIUrbA/3D3J60YfUKANEOJiX7xOhD5QHu+ky2i/Z0
-         ueaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWfOQp3C0lKD7Baj926kjB87sFvZhT3dm67KxItgmdMD6O9bUzEnUAcli2F6eObZdpZlX+TsYbimbnhYh0Di67ASzMVaTmn94FbEg==
-X-Gm-Message-State: AOJu0YzY1XGZWruVzPBC9a7SqQeJDykcvliViKocbMJ4gY3m7t2IjIq3
-	bJ6HxBtc/3krYElNQh6w3j015o6AWlXumFu6T7CsQozde3ucE4oLusDYxnQbVeA=
-X-Google-Smtp-Source: AGHT+IGi+3vhNJtCp1mYtRx80UFnIA/8ta458vq75nKmQ6whOzZbmMoMt+v97FMnmJ6t/dByVPfZDw==
-X-Received: by 2002:a05:6512:124f:b0:512:8d8f:db7a with SMTP id fb15-20020a056512124f00b005128d8fdb7amr2294792lfb.65.1708074487376;
-        Fri, 16 Feb 2024 01:08:07 -0800 (PST)
-Received: from [192.168.1.70] ([84.102.31.43])
-        by smtp.gmail.com with ESMTPSA id f11-20020a0565123b0b00b005128ae41781sm462170lfv.253.2024.02.16.01.08.04
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 01:08:06 -0800 (PST)
-Message-ID: <e13627e2-9d8f-437d-afe4-d8bfcade2f6a@baylibre.com>
-Date: Fri, 16 Feb 2024 10:08:03 +0100
+	s=arc-20240116; t=1708074749; c=relaxed/simple;
+	bh=mPNx22ooWPx/8ai/db0+Sb4ohLOL0GPN49osAu0moBE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=CTQuVdMGrPT0QQvp/kvCWU/3S1mETu8XLPoj75LUNvIi79djmGqdicFge9mHiymHxWGZ59Wqeh/3ZND7LEtR7otwcTwBCSzoxL2L4FGmQdoEDeyn8tBngVg1LSuItQbNG/3Xs+Bz3X+W4xaBOqb1aMkZXxO3j24jCVs6cwhI9dY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=l9wQM7+7; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708074748; x=1739610748;
+  h=date:from:to:cc:subject:message-id;
+  bh=mPNx22ooWPx/8ai/db0+Sb4ohLOL0GPN49osAu0moBE=;
+  b=l9wQM7+7T0jS9teMxYOXSQoITBHHZjCF4bb97pcw7j8NITW/Xq5hDvAc
+   yToFpOH8jBTerfflp8Hav/JMYMtfg/28wKMrF4y70i8M6eUky5xrfKqzv
+   gmPKRXOtuSLboHB62Rm8WcLXEuZz526nPoHrL/igvLDBDnbSJMSLm8Ndv
+   7oZSKDCuZQLwVcAmuBcmw3bBIJyZfvedCjh0fg7WRSWkXvC8eHKJRYJAS
+   WxlnbBG1nETaI+RbAL+F+wKItDvi2zjHaCRs4oeFPf6GVYjpmJqLEZ1WE
+   rzDSAeGa225T9LopW/a4U5R/4EHWL6u6VZDRNvn5VKDFp+s4yxauNN6vn
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="13590199"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="13590199"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 01:12:26 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="34578814"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 16 Feb 2024 01:12:25 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rauGd-00017s-00;
+	Fri, 16 Feb 2024 09:12:23 +0000
+Date: Fri, 16 Feb 2024 17:12:04 +0800
+From: kernel test robot <lkp@intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [brgl:gpio/for-next] BUILD SUCCESS
+ 8ff0d55ba3fb56b69e40c50ff030a77c27a072ca
+Message-ID: <202402161701.kmcHsAyH-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
- TPS65224 PMIC
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>, Kevin Hilman <khilman@kernel.org>
-Cc: Bhargav Raviprakash <bhargav.r@ltts.com>, arnd@arndb.de,
- broonie@kernel.org, conor+dt@kernel.org, devicetree@vger.kernel.org,
- gregkh@linuxfoundation.org, kristo@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, lee@kernel.org, lgirdwood@gmail.com,
- linus.walleij@linaro.org, linux-arm-kernel@lists.infradead.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- m.nirmaladevi@ltts.com, nm@ti.com, robh+dt@kernel.org, vigneshr@ti.com
-References: <20240209-blitz-fidgety-78469aa80d6d@spud>
- <20240214093106.86483-1-bhargav.r@ltts.com>
- <20240214-galley-dweller-1e9872229d80@spud> <7hil2r5556.fsf@baylibre.com>
- <20240214-depraved-unfunded-3f0b3d6bf3e2@spud>
-From: Julien Panis <jpanis@baylibre.com>
-In-Reply-To: <20240214-depraved-unfunded-3f0b3d6bf3e2@spud>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
 
-On 2/14/24 18:45, Conor Dooley wrote:
-> On Wed, Feb 14, 2024 at 09:26:13AM -0800, Kevin Hilman wrote:
->> Conor Dooley <conor@kernel.org> writes:
->>> On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
->>>> On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
->>>>> On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash wrote:
->>>>>> TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
->>>>>> regulators, it includes additional features like GPIOs, watchdog, ESMs
->>>>>> (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
->>>>>> managing the state of the device.
->>>>>> TPS6594 and TPS65224 have significant functional overlap.
->>>>> What does "significant functional overlap" mean? Does one implement a
->>>>> compatible subset of the other? I assume the answer is no, given there
->>>>> seems to be some core looking registers at different addresses.
->>>> The intention behind “significant functional overlap” was meant to
->>>> indicate a lot of the features between TPS6594 and TPS65224 overlap,
->>>> while there are some features specific to TPS65224.
->>>> There is compatibility between the PMIC register maps, I2C, PFSM,
->>>> and other drivers even though there are some core registers at
->>>> different addresses.
->>>>
->>>> Would it be more appropriate to say the 2 devices are compatible and have
->>>> sufficient feature overlap rather than significant functional overlap?
->>> If core registers are at different addresses, then it is unlikely that
->>> these devices are compatible.
->> That's not necessarily true.  Hardware designers can sometimes be
->> creative. :)
-> Hence "unlikely" in my mail :)
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+branch HEAD: 8ff0d55ba3fb56b69e40c50ff030a77c27a072ca  gpio: uapi: clarify default_values being logical
 
-For tps6594 and tps65224, some core registers are at different adresses
-indeed, but the code is the same for both MFD I2C/SPI entry points. As an
-example, the way CRC is enabled is exactly the same, even if the bit that
-must be set belongs to different registers. tps65224 has more resources and
-it's as if HW designers had had to re-organize the way bits are distributed
-among the registers (due to a lack of space, so to speak).
+elapsed time: 1447m
 
-That said, if we consider that these devices are not compatible, what does it
-imply concretely for the next version ? Does that mean that:
-1) Only a new binding must be created, even if MFD drivers and most of child
-drivers will be re-used ? (then the binding would simply be duplicated, but
-the drivers would not)
-2) A new binding and new MFD drivers must be created, even if most of child
-drivers will be re-used ? (then the binding and MFD drivers would simply be
-duplicated, but the child drivers would not)
-3) A new binding and new drivers (MFD and child devices) must be created ?
-4) Anything else ?
+configs tested: 177
+configs skipped: 3
 
-@Conor: I understand that it's not your problem. Anybody can answer, I just
-try to make things clear for the next version. :)
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Julien
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240216   gcc  
+arc                   randconfig-002-20240216   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240216   clang
+arm                   randconfig-002-20240216   clang
+arm                   randconfig-003-20240216   gcc  
+arm                   randconfig-004-20240216   gcc  
+arm                        realview_defconfig   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240216   clang
+arm64                 randconfig-002-20240216   gcc  
+arm64                 randconfig-003-20240216   clang
+arm64                 randconfig-004-20240216   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240216   gcc  
+csky                  randconfig-002-20240216   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240216   clang
+hexagon               randconfig-002-20240216   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386         buildonly-randconfig-001-20240215   clang
+i386         buildonly-randconfig-002-20240215   clang
+i386         buildonly-randconfig-003-20240215   clang
+i386         buildonly-randconfig-004-20240215   clang
+i386         buildonly-randconfig-005-20240215   clang
+i386         buildonly-randconfig-006-20240215   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240215   gcc  
+i386                  randconfig-002-20240215   gcc  
+i386                  randconfig-003-20240215   clang
+i386                  randconfig-004-20240215   gcc  
+i386                  randconfig-005-20240215   gcc  
+i386                  randconfig-006-20240215   gcc  
+i386                  randconfig-011-20240215   clang
+i386                  randconfig-012-20240215   clang
+i386                  randconfig-013-20240215   gcc  
+i386                  randconfig-014-20240215   gcc  
+i386                  randconfig-015-20240215   clang
+i386                  randconfig-016-20240215   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240216   gcc  
+loongarch             randconfig-002-20240216   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                  cavium_octeon_defconfig   gcc  
+mips                       lemote2f_defconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                        maltaup_defconfig   clang
+mips                           mtx1_defconfig   clang
+mips                        qi_lb60_defconfig   clang
+mips                          rb532_defconfig   clang
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240216   gcc  
+nios2                 randconfig-002-20240216   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240216   gcc  
+parisc                randconfig-002-20240216   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                 canyonlands_defconfig   clang
+powerpc                        cell_defconfig   gcc  
+powerpc                       ppc64_defconfig   clang
+powerpc               randconfig-001-20240216   clang
+powerpc               randconfig-002-20240216   clang
+powerpc               randconfig-003-20240216   clang
+powerpc64             randconfig-001-20240216   clang
+powerpc64             randconfig-002-20240216   clang
+powerpc64             randconfig-003-20240216   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240216   gcc  
+riscv                 randconfig-002-20240216   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240216   gcc  
+s390                  randconfig-002-20240216   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                 kfr2r09-romimage_defconfig   gcc  
+sh                          landisk_defconfig   gcc  
+sh                    randconfig-001-20240216   gcc  
+sh                    randconfig-002-20240216   gcc  
+sh                           se7751_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240216   gcc  
+sparc64               randconfig-002-20240216   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                    randconfig-001-20240216   gcc  
+um                    randconfig-002-20240216   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240216   clang
+x86_64       buildonly-randconfig-002-20240216   clang
+x86_64       buildonly-randconfig-003-20240216   clang
+x86_64       buildonly-randconfig-004-20240216   clang
+x86_64       buildonly-randconfig-005-20240216   gcc  
+x86_64       buildonly-randconfig-006-20240216   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240216   gcc  
+x86_64                randconfig-002-20240216   clang
+x86_64                randconfig-003-20240216   gcc  
+x86_64                randconfig-004-20240216   gcc  
+x86_64                randconfig-005-20240216   gcc  
+x86_64                randconfig-006-20240216   clang
+x86_64                randconfig-011-20240216   gcc  
+x86_64                randconfig-012-20240216   gcc  
+x86_64                randconfig-013-20240216   clang
+x86_64                randconfig-014-20240216   gcc  
+x86_64                randconfig-015-20240216   clang
+x86_64                randconfig-016-20240216   clang
+x86_64                randconfig-071-20240216   clang
+x86_64                randconfig-072-20240216   clang
+x86_64                randconfig-073-20240216   gcc  
+x86_64                randconfig-074-20240216   gcc  
+x86_64                randconfig-075-20240216   clang
+x86_64                randconfig-076-20240216   gcc  
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                  audio_kc705_defconfig   gcc  
+xtensa                randconfig-001-20240216   gcc  
+xtensa                randconfig-002-20240216   gcc  
 
->
->>> In this context, compatible means that existing software intended for
->>> the 6594 would run without modification on the 65224, although maybe
->>> only supporting a subset of features.  If that's not the case, then
->>> the devices are not compatible.
->> Compatible is a fuzzy term... so we need to get into the gray area.
->>
->> What's going on here is that this new part is derivative in many
->> signifcant (but not all) ways from an existing similar part.  When
->> writing drivers for new, derivative parts, there's always a choice
->> between 1) extending the existing driver (using a new compatible string
->> & match table for the diffs) or 2) creating a new driver which will have
->> a bunch of duplicated code.
->>
->> The first verion of this series[1] took the 2nd approach, but due to the
->> significant functional (and feature) overlap, the recommendation was
->> instead to take the "reuse" path to avoid signficant amounts of
->> duplicated code.
->>
->> Of course, it's possible that while going down the "reuse" path, there
->> may be a point where creating a separate driver for some aspects might
->> make sense, but that needs to be justified.  Based on a quick glance of
->> what I see in this series so far (I have not done a detailed review),
->> the differences with the new device look to me like they can be handled
->> with chip-specific data in a match table.
-> This is all nice information, but not really relevant here - this is a
-> binding patch, not a driver one & the conversation stemmed from me
-> making sure that a fallback compatible was not suitable. Whether or not
-> there are multiple drivers or not is someone else's problem!
->
-> Thanks,
-> Conor.
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
