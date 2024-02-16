@@ -1,162 +1,120 @@
-Return-Path: <linux-gpio+bounces-3393-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3394-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B361857A92
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:46:55 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CB4C857AA3
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:49:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 32AFF2852A5
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:46:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23B511F24B29
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:49:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A783535AF;
-	Fri, 16 Feb 2024 10:46:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC38537E9;
+	Fri, 16 Feb 2024 10:48:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XYQcs0ay"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H7s8TSq/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2E574EB46;
-	Fri, 16 Feb 2024 10:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E110535BB;
+	Fri, 16 Feb 2024 10:48:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708080408; cv=none; b=qqzfmydUhTugs5u79gnxJzz4LFVz7aGkH5sqHhVJW7oHGLV+xZtPHZ4gzr61H330Hj+Nx6WkwH72TZLIkZ4ESWsgCjZMwia85XfT8NSdhOu4iv7pk94FNXnJMpl20n4OBz5qapUs2UZCMO3+fUopLWsRso3d7DKpc7ltUaWnbOc=
+	t=1708080538; cv=none; b=ACttQBqHmJ6C2pobJUj1JeHe7ug+yXTYFr2qS1jBUEDouXzYzK8/ZWqDgEa8H00qZpnn4JqpB6VZM2wpko9LBo6boMlnZqTL0ct+mH6cUwC4hbftgci/Z584MxTC5TOuRPDHNEYdGIWUDx3fYP4s6uTGB0q3qAWmOm0TRHTiGT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708080408; c=relaxed/simple;
-	bh=zO/aYULRDd5g66VH3wDZFlrX3sUYi1N5HOHVoHCRZV4=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=h8QYr2I2RQXXiBnfA0OqiMVKhnz37+QjX87vDxktpowNB1+j/k/SHMGXTw5iscL1dPDT3A9wGgSllMNJeb6jJxF2YsaNueBdoyzvSDBN/1413ulvOHSyxVB0xtZ0GQeDfQGIRTCjVt1iobSUQTpZ61BI3f7cwOaf37LtRKXYJ+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XYQcs0ay; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DBFFB40010;
-	Fri, 16 Feb 2024 10:46:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708080398;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pOFZYp9L0rsUmowBF6zr/rLZrw3lql63KQCsfDEtWYw=;
-	b=XYQcs0ayxwkHosheDGS+xMf4VR7v/mXreOiEjH5x5j54nNfito6uMSJ3ZQsQ1GFcOHosrk
-	sk56mZqniap2andZ4ef8ZJW6MczWT3QdoADxEcPswfadR0K2fhCmXm2jewctoz3F8q7ofP
-	+5FM0XeU/uuT84AM+aS3UG5xif8zvLwyVtZ/Rfud6akypxVtvTNHU7zw1N/ENVeBozcljT
-	YElJRis/88Ap6dTbQi8/jp+cw1YwaIMUSmbE5DVKzh/EZOV6o6//X6SE2tMK3iATbi5yej
-	lKHE6RtCfgvCRny0FxT2A9QbxLRhalrdHpYliiK/TZC5dIpuYvJFgdgd4l0/bw==
+	s=arc-20240116; t=1708080538; c=relaxed/simple;
+	bh=bSQjI5oIAeosqTym3AFvRxCY5213clKyJoH9whfcyjk=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FfOqjfmwcfHQlZbm52OZvR3GtDyb2nXGBtvhcXOtJ3EnN0cG7bn6Cv8iUrCfpLCx5DqUjxBBb0yHFVa5cafUldfRfkeEjIbz/fVn5NVFqmZebgz2IihN8laxKpu2hG5xjKM3ZYP9mBMres7BsZaHbnpZZFuYiVmKnwSYKywQsP4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H7s8TSq/; arc=none smtp.client-ip=198.47.23.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41GAmR9B056970;
+	Fri, 16 Feb 2024 04:48:27 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1708080507;
+	bh=wBeXLUFC5b4/8RGzmyvF89yYPd110y8htQLDdX2WYTc=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=H7s8TSq/72OiEAd3rL2BUZa9KNNyAB7Wr+7vrd0Mo1gM6SSozbZDMkhsVVnB649xU
+	 AQ1kVHY38XBAREf1YPaI6jqt0jNuzg1bIqCtGX7rJo3Mr9eLWMGUPDmgecIYB6MLES
+	 Sz0EVyu19IuvkIeSFdvq3ht/39IJUFW8kOKph+kU=
+Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41GAmR5L129001
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Fri, 16 Feb 2024 04:48:27 -0600
+Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
+ Feb 2024 04:48:27 -0600
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
+ (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Fri, 16 Feb 2024 04:48:27 -0600
+Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41GAmQcT020589;
+	Fri, 16 Feb 2024 04:48:27 -0600
+Date: Fri, 16 Feb 2024 16:18:26 +0530
+From: Siddharth Vadapalli <s-vadapalli@ti.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
+	<tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Vignesh R
+	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik
+	<jmkrzyszt@gmail.com>,
+        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
+	<peda@axentia.se>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
+        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
+Subject: Re: [PATCH v3 18/18] PCI: j721e: add suspend and resume support
+Message-ID: <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Fri, 16 Feb 2024 11:46:36 +0100
-Message-Id: <CZ6FYTJD4L6Q.171I9ZOL1S965@bootlin.com>
-Subject: Re: [PATCH 19/23] gpio: nomadik: grab optional reset control and
- deassert it at probe
-Cc: <linux-gpio@vger.kernel.org>, <devicetree@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
- <linux-mips@vger.kernel.org>, "Gregory CLEMENT"
- <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
-To: "Philipp Zabel" <p.zabel@pengutronix.de>, "Linus Walleij"
- <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob
- Herring" <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.15.2
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
- <20240214-mbly-gpio-v1-19-f88c0ccf372b@bootlin.com>
- <d51dbac55d3677031bfab8bfe959f7b556b1c373.camel@pengutronix.de>
-In-Reply-To: <d51dbac55d3677031bfab8bfe959f7b556b1c373.camel@pengutronix.de>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-Hello,
+On 24/02/15 04:18PM, Thomas Richard wrote:
+> From: Théo Lebrun <theo.lebrun@bootlin.com>
+> 
+> Add suspend and resume support. Only the rc mode is supported.
+> 
+> During the suspend stage PERST# is asserted, then deasserted during the
+> resume stage.
 
-On Thu Feb 15, 2024 at 11:19 AM CET, Philipp Zabel wrote:
-> On Mi, 2024-02-14 at 17:24 +0100, Th=C3=A9o Lebrun wrote:
-> > Fetch a reference to the optional shared reset control and deassert it
-> > if it exists.
-> >=20
-> > Optional because not all platforms that use this driver have a reset
-> > attached to the reset block. Shared because some platforms that use the
-> > reset (at least Mobileye EyeQ5) share the reset across banks.
-> >=20
-> > Do not keep a reference to the reset control as it is not needed
-> > afterwards; the driver does not handle suspend, does not use runtime PM
-> > and does not register a remove callback.
->
-> I suppose you don't care that the reset is only ever deasserted once
-> and never asserted again on this hardware, but for shared reset
-> controls the expectation is that deassert/assert calls are balanced:
->
-> https://docs.kernel.org/driver-api/reset.html?highlight=3Dbalanced#assert=
-ion-and-deassertion
->
-> So maybe this warrants a comment in the code. Or do you mean to
-> suppress unbind via suppress_bind_attrs to explain away any missing
-> cleanup?
+Wouldn't this imply that the Endpoint device will be reset and therefore
+lose context? Or is it expected that the driver corresponding to the
+Endpoint Function in Linux will restore the state on resume, post reset?
 
-Those resets are shared only across GPIO banks which have no reason to
-be unbind-able. I'll add a comment and disable unbind.
-
-> > The operation is done in nmk_gpio_populate_chip(). This function is
-> > called by either gpio-nomadik or pinctrl-nomadik, whoever comes first.
-> > This is here for historic reasons and could probably be removed now; it
-> > seems gpio-ranges enforces the ordering to be pinctrl-first. It is not
-> > the topic of the present patch however.
-> >=20
-> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> > ---
-> >  drivers/gpio/gpio-nomadik.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >=20
-> > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-> > index 21bb6d6363fc..b623c093b54d 100644
-> > --- a/drivers/gpio/gpio-nomadik.c
-> > +++ b/drivers/gpio/gpio-nomadik.c
-> > @@ -513,12 +513,14 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(stru=
-ct device_node *np,
-> >  {
-> >  	struct nmk_gpio_chip *nmk_chip;
-> >  	struct platform_device *gpio_pdev;
-> > +	struct reset_control *reset;
-> >  	struct gpio_chip *chip;
-> >  	struct resource *res;
-> >  	struct clk *clk;
-> >  	void __iomem *base;
-> >  	uintptr_t flags;
-> >  	u32 id, ngpio;
-> > +	int ret;
-> > =20
-> >  	gpio_pdev =3D of_find_device_by_node(np);
-> >  	if (!gpio_pdev) {
-> > @@ -576,6 +578,19 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struc=
-t device_node *np,
-> >  	clk_prepare(clk);
-> >  	nmk_chip->clk =3D clk;
-> > =20
-> > +	reset =3D devm_reset_control_get_optional_shared(&gpio_pdev->dev, NUL=
-L);
-> > +	if (IS_ERR(reset)) {
-> > +		dev_err(&pdev->dev, "failed getting reset control: %ld\n",
-> > +			PTR_ERR(reset));
-> > +		return ERR_CAST(reset);
->
-> Consider using dev_err_probe() here.
-
-Makes sense, will do so for next revision.
-
-Thanks for the review Philipp,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Regards,
+Siddharth.
 
