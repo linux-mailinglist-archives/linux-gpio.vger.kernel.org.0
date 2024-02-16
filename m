@@ -1,189 +1,183 @@
-Return-Path: <linux-gpio+bounces-3400-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3401-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 03AFB857BB3
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 12:31:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 15344857C0B
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 12:48:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B084E280F9E
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:31:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46E21282AA5
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:48:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CC3B553E24;
-	Fri, 16 Feb 2024 11:31:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D98177F2D;
+	Fri, 16 Feb 2024 11:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Li7BNrv4"
+	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="WQTqAlQE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1E6177A0F;
-	Fri, 16 Feb 2024 11:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7F553385;
+	Fri, 16 Feb 2024 11:48:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708083069; cv=none; b=oezQtxR0uD9jH3JvskO0g/NdQmdBYAN29IXuBQnMxHlVv+qSqpA22LhYKH5MgRFOPlOF6Il6dCwXTOnmC2KEpVEVSvk8EerCW0CAiisR/OchWYLEiaQC04HyZLc6IbyO42lQrTTts7AapyGW5YpMQe/RByo3W3l2yZaSQcOC8dY=
+	t=1708084093; cv=none; b=Y9XDmXgFMzPch6/teZo6cJXqwkzwwNJdD+FRGBwWf31QMUO52PYTsgIcmD6LlFLpAvCE+q/JmtmWg4/Eb0vPFx1do/4jZe8TLPJth92xd2SxQX/C3vZ9gwkikq3h1g9+w9d7waWk/KPyCgVur5FXCYed2gQq7chnVS8iCM1zrrk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708083069; c=relaxed/simple;
-	bh=TJamkMeETVXAU6QkC7A8Ognn1K46paOc5DcsQ8n28aw=;
-	h=Content-Type:Mime-Version:Date:Message-Id:To:Cc:Subject:From:
-	 References:In-Reply-To; b=XzmrKjQRZOec6rh2gb7oBdGCxZ38GWR2zMLQ2SIde2jwNqNCs8uzNKGNo2Edk3zJdJPcP7KMA1Qu9oc73atmjQ0+hZ9ZS2Odz76Wb9F7oxTarZa3+jVHDEhzc363mvWWEfznw0AFQPsVx1mA4DxtBVfY1h/omUq5R20vyNZimXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Li7BNrv4; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3d0d26182dso206566966b.1;
-        Fri, 16 Feb 2024 03:31:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708083066; x=1708687866; darn=vger.kernel.org;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=CeAZhE7j4dRyX+kzFFWa3n1YxsCqKudIIvx3LQHUXoE=;
-        b=Li7BNrv4q2VI1du3vLMHylWl+JrA2qipZETw4SN4+vUVBuNPKSjd5z6/lNiR7wheSv
-         iO5qUaI2J7kr4hmtwe8j8OkuuJGtv3tLEFj5SFWioRpD87ZA1clL04MS3TdGNAqONT3d
-         pYCPOIGg4pRCAkmAb0YYu4VVzy5OnOuoFvfRXOFxvFhWs6IIu0ZRETsMvGatD2TO5WVm
-         EV0y5U+5oM2BIKR5BBy4GOa0p5pKiD+8zEozt9i6zgvYhJcZhB/fE6uw29W1+ChmVqSS
-         9RwAlIF5sXrMf3+9AjhkPhTxGIC+rOq52q5xkdcTojQTj+3pPJ4Qc5JWrwfwRHzEWfry
-         urlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708083066; x=1708687866;
-        h=in-reply-to:references:from:subject:cc:to:message-id:date
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=CeAZhE7j4dRyX+kzFFWa3n1YxsCqKudIIvx3LQHUXoE=;
-        b=HB4uwJy2GXndECz0I5tr6hWmOGszGILrMRVQvvddr3SlEoVo88S+ONhqldcXRcWrD/
-         PpQwpu/RhiZGgdjVn6qhuHINrHcd3GajlD4Yn7PyrACG1q/SB1OaNGsBxmdLz+7dT5rw
-         CwBuWFB9x833vKQy+wclCdZjse1crIBA7tUBU0+XVmtM73WuyA7wnfIKOmurxdrew4jg
-         28oQwn92UNnxWILAdF+89dvbIKRUJhHJAMVbigCVNJgNm+6yBWoV0DgtV3U0QouS6svl
-         jUbaJ8CKiow3nOVcn2br9qTp6LJxiIEbnCRO+qe/kbxzyLqk1br23eec0YAvRPsjdzOR
-         CtWg==
-X-Forwarded-Encrypted: i=1; AJvYcCWmtOjIKyEoPepZk5Th/qwGodhpfIaHIvqUXNXUSZafs26h/Eju4Xmzxep9kWIZ8SXiFMYnHpQ7jXlCpPhBD1xwR77HU1aegOlljShBrgQ4EFvpt2TMWQytq18nE7BFoyjxmhXjMZa2FLN5RiqJq0++3M0BUNZRfLdWesCZokCorhavWVJ76AFQGpWdz4xUtfHtx3ozyNdflu0wGjIRW2BVZ2qyhbqzY2pPLupo7Q5sInLOKhHJTRapC4hiYE7RFqhKrbHU4Jh+xMm89ejTI72yr29KusSFqhdno3hJTWE6gtFy2jhOzxi+7ct/ITKnlR/2FVagnoqIWZr9oB0fEtLdMHFftUkyHsMqd3qpF8Z6yaDEfrHBegWRbGI=
-X-Gm-Message-State: AOJu0YySID0z82NQ5rnZS7KVunKsbfhiRr/4cV0TIGR/CVwvf2RfkHdP
-	/ruX/beMCmxrvfWMVVvO2if7sSHazbvFZH9mArmmWE5VmT7bueM3
-X-Google-Smtp-Source: AGHT+IGXWz97gD5gN+VSAVL7iY1zPTDMUokWZgtmUOJLcJDV64j1IaqQ0abnS0651OrxU9XfbwlwlQ==
-X-Received: by 2002:a17:906:11cc:b0:a3d:2cd0:c17a with SMTP id o12-20020a17090611cc00b00a3d2cd0c17amr3351354eja.58.1708083065855;
-        Fri, 16 Feb 2024 03:31:05 -0800 (PST)
-Received: from localhost (p200300e41f147f00f22f74fffe1f3a53.dip0.t-ipconnect.de. [2003:e4:1f14:7f00:f22f:74ff:fe1f:3a53])
-        by smtp.gmail.com with ESMTPSA id ts4-20020a170907c5c400b00a3df003b6a9sm242282ejc.119.2024.02.16.03.31.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 16 Feb 2024 03:31:05 -0800 (PST)
-Content-Type: multipart/signed;
- boundary=b7223a00e4ef0df93c47d9276017bbb483a03ab38a891db7b003e5591ffa;
- micalg=pgp-sha256; protocol="application/pgp-signature"
+	s=arc-20240116; t=1708084093; c=relaxed/simple;
+	bh=RiaiDgSABZOcY6xfBFk/iAiLxZ+7gb0T/+DUHtFP25g=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VpeKrSeI0Bu7dXy6rzGRxz/sMFOD8dsfyuwLWWrX8m21P5cWGDCopEz0QuwBSk+TJYYGfGPPHRw2/kN7uFj3oX+ziYps20SjjUQCziiZj2pODMVEOt/94ZfxNwaMIX3X8Ulg7Fj94NnawsD+ZBbTzcLI5+gtHxcyE5QIPH0mVj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=WQTqAlQE; arc=none smtp.client-ip=68.232.153.233
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
+  t=1708084090; x=1739620090;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=RiaiDgSABZOcY6xfBFk/iAiLxZ+7gb0T/+DUHtFP25g=;
+  b=WQTqAlQEW+vo71ubVNBKO7T6r0mbmcLgymPTGor5b4CYLM1ynHkPh6ZD
+   dEH0kBhYU64o55jLc7blHYpBAolg8YN04tSFPJODaGwlpOCqaP5gULbW2
+   G4h/HiXFV4jTklOQ7g2znkeJo+ktCNaNeCOiT2w2+MkuOORWmSa3KS7zl
+   NSellpPwNTRzOLYjYKeBv+HuDahWB4952oISuKBi9+3LPR5zKGQzxUpJ1
+   IbX5dROgs1MLwx81NTsDQ5wPo9Zu3nimoqKGHIeiz1rKEjAYvIlSx09eV
+   9Zi3zf6HxW7lDAFpkh36GWeEfecX7Jxpe5847ohjE2jprBjkh2jXT24rO
+   Q==;
+X-CSE-ConnectionGUID: VVL1m307SNuw0/i+Vt/wLA==
+X-CSE-MsgGUID: BLowQz8ZQJmWsAp3y5gI3w==
+X-IronPort-AV: E=Sophos;i="6.06,164,1705388400"; 
+   d="asc'?scan'208";a="17827216"
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
+  by esa1.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 16 Feb 2024 04:48:07 -0700
+Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
+ chn-vm-ex01.mchp-main.com (10.10.85.143) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2507.35; Fri, 16 Feb 2024 04:47:47 -0700
+Received: from wendy (10.10.85.11) by chn-vm-ex04.mchp-main.com (10.10.85.152)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.35 via Frontend
+ Transport; Fri, 16 Feb 2024 04:47:44 -0700
+Date: Fri, 16 Feb 2024 11:47:03 +0000
+From: Conor Dooley <conor.dooley@microchip.com>
+To: Julien Panis <jpanis@baylibre.com>
+CC: Conor Dooley <conor@kernel.org>, Kevin Hilman <khilman@kernel.org>,
+	Bhargav Raviprakash <bhargav.r@ltts.com>, <arnd@arndb.de>,
+	<broonie@kernel.org>, <conor+dt@kernel.org>, <devicetree@vger.kernel.org>,
+	<gregkh@linuxfoundation.org>, <kristo@kernel.org>,
+	<krzysztof.kozlowski+dt@linaro.org>, <lee@kernel.org>, <lgirdwood@gmail.com>,
+	<linus.walleij@linaro.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<m.nirmaladevi@ltts.com>, <nm@ti.com>, <robh+dt@kernel.org>,
+	<vigneshr@ti.com>
+Subject: Re: [RESEND PATCH v1 03/13] dt-bindings: mfd: ti,tps6594: Add TI
+ TPS65224 PMIC
+Message-ID: <20240216-chimp-endowment-e4c241e8e466@wendy>
+References: <20240209-blitz-fidgety-78469aa80d6d@spud>
+ <20240214093106.86483-1-bhargav.r@ltts.com>
+ <20240214-galley-dweller-1e9872229d80@spud>
+ <7hil2r5556.fsf@baylibre.com>
+ <20240214-depraved-unfunded-3f0b3d6bf3e2@spud>
+ <e13627e2-9d8f-437d-afe4-d8bfcade2f6a@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Date: Fri, 16 Feb 2024 12:31:03 +0100
-Message-Id: <CZ6GWUQ73SSL.6HP29PU9Q7R@gmail.com>
-To: "Mark Hasemeyer" <markhas@chromium.org>, "LKML"
- <linux-kernel@vger.kernel.org>
-Cc: "AngeloGioacchino Del Regno" <angelogioacchino.delregno@collabora.com>,
- "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>, "Rob Herring"
- <robh@kernel.org>, "Konrad Dybcio" <konrad.dybcio@linaro.org>, "Sudeep
- Holla" <sudeep.holla@arm.com>, "Andy Shevchenko"
- <andriy.shevchenko@intel.com>, "Raul Rangel" <rrangel@chromium.org>,
- "Tzung-Bi Shih" <tzungbi@kernel.org>, "AKASHI Takahiro"
- <takahiro.akashi@linaro.org>, "Alexandre TORGUE" <alexandre.torgue@st.com>,
- "Alim Akhtar" <alim.akhtar@samsung.com>, "Andre Przywara"
- <andre.przywara@arm.com>, "Andrew Morton" <akpm@linux-foundation.org>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>, "Baoquan He"
- <bhe@redhat.com>, "Bartosz Golaszewski" <brgl@bgdev.pl>, "Benson Leung"
- <bleung@chromium.org>, "Bhanu Prakash Maiya" <bhanumaiya@chromium.org>,
- "Bjorn Andersson" <andersson@kernel.org>, "Chen-Yu Tsai"
- <wenst@chromium.org>, "Conor Dooley" <conor+dt@kernel.org>, "Daniel Scally"
- <djrscally@gmail.com>, "David Gow" <davidgow@google.com>, "Enric Balletbo i
- Serra" <eballetbo@gmail.com>, "Frank Rowand" <frowand.list@gmail.com>,
- "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>, "Guenter Roeck"
- <groeck@chromium.org>, "Heikki Krogerus" <heikki.krogerus@linux.intel.com>,
- "Heiko Stuebner" <heiko@sntech.de>, "Jonathan Hunter"
- <jonathanh@nvidia.com>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Lee Jones" <lee@kernel.org>, "Len
- Brown" <lenb@kernel.org>, "Linus Walleij" <linus.walleij@linaro.org>,
- "Manivannan Sadhasivam" <mani@kernel.org>, "Mark Brown"
- <broonie@kernel.org>, "Matthias Brugger" <matthias.bgg@gmail.com>, "Michal
- Simek" <michal.simek@amd.com>, "Mika Westerberg"
- <mika.westerberg@linux.intel.com>, "Nick Hawkins" <nick.hawkins@hpe.com>,
- "Prashant Malani" <pmalani@chromium.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Rob Barnes" <robbarnes@google.com>, "Rob Herring"
- <robh+dt@kernel.org>, "Sakari Ailus" <sakari.ailus@linux.intel.com>,
- "Stephen Boyd" <swboyd@chromium.org>, "Takashi Iwai" <tiwai@suse.de>, "Tony
- Lindgren" <tony@atomide.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
- <u.kleine-koenig@pengutronix.de>, "Wolfram Sang" <wsa@kernel.org>,
- <chrome-platform@lists.linux.dev>, <cros-qcom-dts-watchers@chromium.org>,
- <devicetree@vger.kernel.org>, <linux-acpi@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-arm-msm@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-i2c@vger.kernel.org>,
- <linux-mediatek@lists.infradead.org>, <linux-rockchip@lists.infradead.org>,
- <linux-samsung-soc@vger.kernel.org>, <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v3 00/24] Improve IRQ wake capability reporting and
- update the cros_ec driver to use it
-From: "Thierry Reding" <thierry.reding@gmail.com>
-X-Mailer: aerc 0.16.0-1-0-g560d6168f0ed-dirty
-References: <20231226192149.1830592-1-markhas@chromium.org>
-In-Reply-To: <20231226192149.1830592-1-markhas@chromium.org>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="zk2oXzKpSp9IbgEb"
+Content-Disposition: inline
+In-Reply-To: <e13627e2-9d8f-437d-afe4-d8bfcade2f6a@baylibre.com>
 
---b7223a00e4ef0df93c47d9276017bbb483a03ab38a891db7b003e5591ffa
-Mime-Version: 1.0
+--zk2oXzKpSp9IbgEb
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
 
-On Tue Dec 26, 2023 at 8:21 PM CET, Mark Hasemeyer wrote:
-> Currently the cros_ec driver assumes that its associated interrupt is
-> wake capable. This is an incorrect assumption as some Chromebooks use a
-> separate wake pin, while others overload the interrupt for wake and IO.
-> This patch train updates the driver to query the underlying ACPI/DT data
-> to determine whether or not the IRQ should be enabled for wake.
->
-> Both the device tree and ACPI systems have methods for reporting IRQ
-> wake capability. In device tree based systems, a node can advertise
-> itself as a 'wakeup-source'. In ACPI based systems, GpioInt and
-> Interrupt resource descriptors can use the 'SharedAndWake' or
-> 'ExclusiveAndWake' share types.
->
-> Some logic is added to the platform, ACPI, and DT subsystems to more
-> easily pipe wakeirq information up to the driver.
->
-> Changes in v3:
-> -Rebase on linux-next
-> -See each patch for patch specific changes
->
-> Changes in v2:
-> -Rebase on linux-next
-> -Add cover letter
-> -See each patch for patch specific changes
->
-> Mark Hasemeyer (24):
-[...]
->   ARM: dts: tegra: Enable cros-ec-spi as wake source
-[...]
->   arm64: dts: tegra: Enable cros-ec-spi as wake source
-[...]
+On Fri, Feb 16, 2024 at 10:08:03AM +0100, Julien Panis wrote:
+> On 2/14/24 18:45, Conor Dooley wrote:
+> > On Wed, Feb 14, 2024 at 09:26:13AM -0800, Kevin Hilman wrote:
+> > > Conor Dooley <conor@kernel.org> writes:
+> > > > On Wed, Feb 14, 2024 at 03:01:06PM +0530, Bhargav Raviprakash wrote:
+> > > > > On Fri 2/9/2024 10:41 PM, Conor Dooley wrote:
+> > > > > > On Thu, Feb 08, 2024 at 04:23:33PM +0530, Bhargav Raviprakash w=
+rote:
+> > > > > > > TPS65224 is a Power Management IC with 4 Buck regulators and =
+3 LDO
+> > > > > > > regulators, it includes additional features like GPIOs, watch=
+dog, ESMs
+> > > > > > > (Error Signal Monitor), and PFSM (Pre-configurable Finite Sta=
+te Machine)
+> > > > > > > managing the state of the device.
+> > > > > > > TPS6594 and TPS65224 have significant functional overlap.
+> > > > > > What does "significant functional overlap" mean? Does one imple=
+ment a
+> > > > > > compatible subset of the other? I assume the answer is no, give=
+n there
+> > > > > > seems to be some core looking registers at different addresses.
+> > > > > The intention behind =E2=80=9Csignificant functional overlap=E2=
+=80=9D was meant to
+> > > > > indicate a lot of the features between TPS6594 and TPS65224 overl=
+ap,
+> > > > > while there are some features specific to TPS65224.
+> > > > > There is compatibility between the PMIC register maps, I2C, PFSM,
+> > > > > and other drivers even though there are some core registers at
+> > > > > different addresses.
+> > > > >=20
+> > > > > Would it be more appropriate to say the 2 devices are compatible =
+and have
+> > > > > sufficient feature overlap rather than significant functional ove=
+rlap?
+> > > > If core registers are at different addresses, then it is unlikely t=
+hat
+> > > > these devices are compatible.
+> > > That's not necessarily true.  Hardware designers can sometimes be
+> > > creative. :)
+> > Hence "unlikely" in my mail :)
+>=20
+> For tps6594 and tps65224, some core registers are at different adresses
+> indeed, but the code is the same for both MFD I2C/SPI entry points. As an
+> example, the way CRC is enabled is exactly the same, even if the bit that
+> must be set belongs to different registers. tps65224 has more resources a=
+nd
+> it's as if HW designers had had to re-organize the way bits are distribut=
+ed
+> among the registers (due to a lack of space, so to speak).
+>=20
+> That said, if we consider that these devices are not compatible, what doe=
+s it
+> imply concretely for the next version ? Does that mean that:
+> 1) Only a new binding must be created, even if MFD drivers and most of ch=
+ild
+> drivers will be re-used ? (then the binding would simply be duplicated, b=
+ut
+> the drivers would not)
+> 2) A new binding and new MFD drivers must be created, even if most of chi=
+ld
+> drivers will be re-used ? (then the binding and MFD drivers would simply =
+be
+> duplicated, but the child drivers would not)
+> 3) A new binding and new drivers (MFD and child devices) must be created ?
+> 4) Anything else ?
 
-Both patches applied, thanks.
+If they're not compatible the next version of this patch does not need
+to change, so option 4 I guess.
 
-Thierry
 
---b7223a00e4ef0df93c47d9276017bbb483a03ab38a891db7b003e5591ffa
+
+--zk2oXzKpSp9IbgEb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAmXPR3kACgkQ3SOs138+
-s6FXyA//QEgOaLPJMLtFwzEUNlO0/8MF3SAbMW7kCkEt3S3OMXQ3wtyOeIC3nlyN
-zwxSqhOzC1I/qdbqdnc5ejbrPWB/9d6ohPyc45vT19QAS79mc9nB2ZQm3AoVlPaA
-HGQhrtMEx6KRBu+GjS9Sz9YQjBftSWl/kr8oAwXOs6wtg2m06tfm00LF3bVFLQEu
-aTZ1Jal4+fIpK0OK/yz/yhczCMQCbVnKBClkwuoKQWJpxh7z/xYCY2Gm50VD4sN7
-F60KcEQzW8DfY5dGd1eT9oY7UqqA+yoRDGNN7KNYYurFPoEL6jZqvSts1J26pp4u
-MjFQS2jY6bjbQFR0RRUwwjPRRmUXRcGpW3qHN/+ajof0pXgRa/rWnthIB2boTs4Q
-uApu3k81kwLXVgZZh9YRXCwcYf8sgMo7Qj849I8e5vRi/MuL6jwKyU7P8SwRrWRd
-xIY0v+EKupY6iDvxPApV4b5Mw8gyxbRO6Kcm5Ep7Z8DBCeCr+g3iZFHVUXpG3vll
-PjwZW9bC+U9kcn/W5qoJrdKqGFAsaqks7fzWoIBIX5rVNbNSNZpG7Dwi/EeNUmak
-T5tJqIr3VbtsNd0ni6f42Efs9z/m0vsUKL6H5mGZoX3oTGXvzO91XF2gfFMEqOO9
-8cxE1rJREy1F73S7VZWOE46nyNPlsD6qm5+fApxvV3eKGRO5wfU=
-=fOyD
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZc9LNwAKCRB4tDGHoIJi
+0pedAPwIn8EzGb7CK85veeqxTab48XHAJBFZX5GiGXdXq9JL9AD/Uz/cmlDaU22C
+5UOMmufi3WxQg2fkU46lxarbGj0MvgQ=
+=vBKa
 -----END PGP SIGNATURE-----
 
---b7223a00e4ef0df93c47d9276017bbb483a03ab38a891db7b003e5591ffa--
+--zk2oXzKpSp9IbgEb--
 
