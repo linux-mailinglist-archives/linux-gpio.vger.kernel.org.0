@@ -1,122 +1,111 @@
-Return-Path: <linux-gpio+bounces-3405-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 403B5857D87
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:20:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40698857D8F
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:21:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 292931C218F1
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 13:20:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F170F282D44
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 13:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E79D1129A88;
-	Fri, 16 Feb 2024 13:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDFBC1292F2;
+	Fri, 16 Feb 2024 13:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="zHkbhh+P"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="D5B7Hw53"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CCFA77F25
-	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 13:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BFE266D4
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 13:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708089605; cv=none; b=oyHTFcjAH0bmXXqYyvW5jxCDhFQoivXYGue8+GZY2hcBznPhkx/C3XDlcMqsqbZCKj+DaTSLTdDH3gdYtb58DbiRBoQ+SYKeNKYL7pTC9IghLtr53Wpr/gbSeIBq28jLXP/WxvXryOLpFaEJh09J4wVyY0k6/zzgPAogGhsB9jA=
+	t=1708089675; cv=none; b=ZXF1l3vUp62seaxGkY0MVWTwfBPIn6AUzQwsJOYpoG1asVS7fYE+HZXksbWk1tV1x6FhbDBiP32/xhjFTV0QhFnfaVlfgB7grNLZjZjjLiCLISQvOxlgJ8a+/P3Uhr9tDIn31A/IbogDJAZuFkUF3wQPgBNeYPhppVckMlttLos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708089605; c=relaxed/simple;
-	bh=oIiDRMEbbLxh2NMVvXuVZOzfsezcwPFoldYPdeq/AbQ=;
+	s=arc-20240116; t=1708089675; c=relaxed/simple;
+	bh=udSul/eRgtJRJ6ARIbkr4NL1MgBVE7MGsgqQqJxfgPQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Vn415DE+fOjKh5lkRa28l8csVyNrg85eNXKOiyCFUXiS6yFAjtZEGLHYAzX1rwmpSRC++kH4ILyPo0a3JIBO84Wl0XXJQV/AeUion4qGdK60GezOlnkuIPjctZyrTxkHmu3agvLqwj7WkdLNJLLoA7auVegZXerqyJyuOJGRSvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=zHkbhh+P; arc=none smtp.client-ip=209.85.217.49
+	 To:Cc:Content-Type; b=bcoliYso8LTB4MPBUUXloyTObCbabPGQtKq/FIEbI0PIztXdbO+saSJ9Rs4JvRUCb67ll+UAnjQzg4vghKrnJawTdYlJY9pIxOMzv8/UMr+2gmQ/YbJVZ7lyME8pjo07cNYCUS1UzZsIh76VTkwGlYOYfrYLlJ0HGbeZ+00bz+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=D5B7Hw53; arc=none smtp.client-ip=209.85.221.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f49.google.com with SMTP id ada2fe7eead31-46d2635b15eso1889109137.1
-        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 05:20:03 -0800 (PST)
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4affeacaff9so274758e0c.3
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 05:21:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708089602; x=1708694402; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708089673; x=1708694473; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=VfGxcPxgpqvVu7pn9g9q/ypersVX9C8Adoc2SdohQL4=;
-        b=zHkbhh+PxlpcfEpGA2fhij607y2yi6ZYT2CCdrFMRkNfJm47GoJ2nbfAyiLxjPRgBJ
-         snNNnKi+OZHSD2ASWPy7dEGeOuDNeH4vkxko8kFxW+MRy9K9S56amYxaP9n/yi3sED4O
-         A6/uRrsRsXaUfzZMJcCbALsjKCtGVwF1OEwGO4/3tGvPXLg2s2rV0jqpBJZMIZeUwrBW
-         PCc3GD6TmeaHGwvGOLVBtOpv0QEx6bD2dNkpLwPulRjh+wA6y0UuS5OEnaCuSXtmjCoi
-         53Klbi/xaUfcq7DOR6dLmGD0D61CZbgkUaEbpf3d77iA1vAe/vT4kUwqhUaxfPZiuDRA
-         uu5A==
+        bh=udSul/eRgtJRJ6ARIbkr4NL1MgBVE7MGsgqQqJxfgPQ=;
+        b=D5B7Hw532AoRkHriohZsnR4IMiOIUAhHjtXgwZuz/OGSpug3sPxDMwt0zCJQ73De9/
+         3ZzyAjTphlZh01tivRvDu490p9jK5s1z3gV/3esaABUqeEqebcFvRAr6dJBgCkgDDSI2
+         VlnG+a70e1m/E1fxhA1NVoL13AJtaIncnWuxRvter5Nv7BvFL68MTmS5dfQ+R5oysXdB
+         AOKHSthxdmpLZfFfjAGI2PXkpoPnVS4fD+GLNcWzME5JC50LfvlF1PlXRQuPTTFxiYPF
+         PzT0rlfg9UO0T+4f5UyZDoXMDJgf/Z9EpIvpelf2xzm47aS1Hu3fO2NtqCXus/fDBAik
+         tnXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708089602; x=1708694402;
+        d=1e100.net; s=20230601; t=1708089673; x=1708694473;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=VfGxcPxgpqvVu7pn9g9q/ypersVX9C8Adoc2SdohQL4=;
-        b=mcciUWy+6YyTNF3FxPPkl2qkNbj5HX4F7f1gNVMuV0VRmnGPeZpl1Z7V1WEaWB0X56
-         o+HojUioHPMpfn9UmeEE3HHB1c/0DM+j6ppsFrKe2ToJlgsOj4kMC3iskxpy6YnEULmF
-         5b5ejgNsXsb7l48hKMFydoTXV/g03pohjrCoqbfcIAzrkUF8iTuaQb6XFSLqHliUWBGQ
-         V+Ug1IpfDzW/YJBnEsGE8BxA9KNT9wjgGN+f+dIOuON21Vf+jrgbwo75SNTpNBZ/OdG7
-         cMPvo2vZHkk1c5magUnIUnx+bW9gLTO0MVltD0tqOltqYXvUf3uoHO3j0MHoltADmFrR
-         yo2g==
-X-Forwarded-Encrypted: i=1; AJvYcCVdNTlqy2QY2HOhr42RienPYhh6pq/NJE9KsGh+eAEOQydtJA5+kCrHFEdwQ4nuZ9jf/y759ObQWeo3opaaamgnvyRP44lLDR+BFw==
-X-Gm-Message-State: AOJu0YxCouMnp2EZsqFMf9ysTY5tghGpmpBahl3TpZKxOmy511eo1qYJ
-	b2ops8qo9x6GKIAD1BAkFed4giNiZgHLOJmx/w4lQKWU0ZwNOo2TaUZSad5pSpThB+Z8c/M9AMm
-	Q3Jnjebr1gtMbfOp1bAt9STzjNcZKNZXhTNu6Gw==
-X-Google-Smtp-Source: AGHT+IGK2SB9sektHQUi+tLu8JuF/SmQ8r9soL0NJ+fvMufwT1z+n3PbFC/Fn3sCcuqvpQxVdiQ36d1juc/A8lTJTH4=
-X-Received: by 2002:a05:6102:236d:b0:46e:ba66:f40e with SMTP id
- o13-20020a056102236d00b0046eba66f40emr3677342vsa.10.1708089602382; Fri, 16
- Feb 2024 05:20:02 -0800 (PST)
+        bh=udSul/eRgtJRJ6ARIbkr4NL1MgBVE7MGsgqQqJxfgPQ=;
+        b=PlH8GUoBZqMWAsgHsaSHLUSKickzBHWDv/icuLDcRwy+TKh211s2KIJwXH3qXDzO62
+         hObnZXhdp6CQrOMoLkbxJTMYLWhHrxS65uQpzNoZMTInuxZrHnOB8qDHkjeFNb0nY9KE
+         9cG9bvs0gLj7zRlRhRmJIno6Kuk5vX6cucI1SQQ5ovmbV5jCusgmZGPaDh5xgrB0fRj8
+         pe+60uq7McsWrA6vB4Qrd8qLl6nfd1eZFc2sKsyuIhPWbzK8WuhRvXslc1h+jCMmWU5z
+         b0K5iDQFmKC943p0utNGbjPiJbYQT2qYI8Xyz3RoUm8lK3/M4W1Bb5p6fg/71EGvCY4h
+         eehA==
+X-Forwarded-Encrypted: i=1; AJvYcCXe0NZYrLwQjGfJeRiEms2ZZ2uCLkGhisCcuIWpjmWJcuQhrV5w+5aBk4TQegbr4l92B1yZ+NY4gfxDDzAckl3YY7xz8+QJNPxHxw==
+X-Gm-Message-State: AOJu0YwPIIa/Z3yswUQAef7+edw4K9W27Mj/impWvNzYswKGC4Wz4n9E
+	vnKLCENpi1hFW90GdvzgiPbNDdg6my6lkqDHYy2WOOhii9qeH43paz175hYWs42tPxi9cHLei+E
+	XxUgpmm41Umn5O11RgT2bxf3iFLYyujQ/2yVVBQ==
+X-Google-Smtp-Source: AGHT+IE6Rs+3kC/mGaITISiSLYMyE7rbdrnqU0kK14bpT+3x+Kt63SJ4/IF4wI+sIkYlYdvl/LaSiYLL/7AvNsnJzIQ=
+X-Received: by 2002:a1f:e043:0:b0:4c0:5e95:b9f3 with SMTP id
+ x64-20020a1fe043000000b004c05e95b9f3mr4382436vkg.5.1708089673107; Fri, 16 Feb
+ 2024 05:21:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240216125959.3766309-1-arnd@kernel.org>
-In-Reply-To: <20240216125959.3766309-1-arnd@kernel.org>
+References: <CGME20240216105945eucas1p15af2e143fe2090cd33fabb91ff012571@eucas1p1.samsung.com>
+ <20240216105930.16265-1-brgl@bgdev.pl> <1542ef65-508b-45be-ad5c-63ad124cb1a2@samsung.com>
+In-Reply-To: <1542ef65-508b-45be-ad5c-63ad124cb1a2@samsung.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 16 Feb 2024 14:19:51 +0100
-Message-ID: <CAMRc=MdBbzff5BppY4Hjwfi=SnmYopnFxg1AX4QsGt3Y+-g60Q@mail.gmail.com>
-Subject: Re: [PATCH] gpio: cdev: avoid uninitialized variable dereference
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Arnd Bergmann <arnd@arndb.de>, Kent Gibson <warthog618@gmail.com>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Fri, 16 Feb 2024 14:21:02 +0100
+Message-ID: <CAMRc=MdCYp=EPe2Koh4NKvKTUWYZn7TRNKXVG39RLYxRxEsiAw@mail.gmail.com>
+Subject: Re: [PATCH] gpio: cdev: fix a NULL-pointer dereference with DEBUG enabled
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 16, 2024 at 2:00=E2=80=AFPM Arnd Bergmann <arnd@kernel.org> wro=
-te:
+On Fri, Feb 16, 2024 at 1:35=E2=80=AFPM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
 >
-> From: Arnd Bergmann <arnd@arndb.de>
->
-> The 'gc' variable is never set before it gets printed:
->
-> drivers/gpio/gpiolib-cdev.c:2802:11: error: variable 'gc' is uninitialize=
-d when used here [-Werror,-Wuninitialized]
->  2802 |         chip_dbg(gc, "added GPIO chardev (%d:%d)\n", MAJOR(devt),=
- gdev->id);
->       |                  ^~
-> drivers/gpio/gpiolib.h:277:11: note: expanded from macro 'chip_dbg'
->   277 |         dev_dbg(&gc->gpiodev->dev, "(%s): " fmt, gc->label, ##__V=
-A_ARGS__)
->       |                  ^~
->
-> Use dev_dbg() directly.
->
-> Fixes: 8574b5b47610 ("gpio: cdev: use correct pointer accessors with SRCU=
-")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+> On 16.02.2024 11:59, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> >
+> > We are actually passing the gc pointer to chip_dbg() so we have to
+> > srcu_dereference() it.
+> >
+> > Fixes: 8574b5b47610 ("gpio: cdev: use correct pointer accessors with SR=
+CU")
+> > Reported-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > Closes: https://lore.kernel.org/lkml/179caa10-5f86-4707-8bb0-fe1b316326=
+d6@samsung.com/
+> > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Hi Arnd,
+Thanks, patch applied.
 
-I seem to have beat you to it[1] and my patch doesn't change the log
-message so I'll apply it instead of this one.
+Bart
 
-Thanks,
-Bartosz
-
-[1] https://lore.kernel.org/linux-gpio/1542ef65-508b-45be-ad5c-63ad124cb1a2=
-@samsung.com/T/#t
+[snip]
 
