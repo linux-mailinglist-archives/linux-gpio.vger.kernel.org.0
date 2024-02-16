@@ -1,141 +1,166 @@
-Return-Path: <linux-gpio+bounces-3421-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3422-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79DB3858540
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 19:32:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82AFA85855C
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 19:39:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 318832823F8
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 18:32:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0F6041F257DA
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 18:39:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 879C7135412;
-	Fri, 16 Feb 2024 18:31:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39F8C134756;
+	Fri, 16 Feb 2024 18:39:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTNUD52m"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P3igEePE"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C67741C65;
-	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5EC812FB18;
+	Fri, 16 Feb 2024 18:39:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708108306; cv=none; b=bllmPxcUeAqatn5E3eIE/mY66WbCrncmwFbTGt/4awAiibPynb5iWKACfwzjloqK82yGE+Tto//6mLsNqpGDlWs1Ozlf9bghnOGYgaTZIyzxzAhVbtiszw67sJZnQQ+hyYKl4nwE/bKL3Q87scdsxsYdTAgc0fWwWASBh0eYFJs=
+	t=1708108757; cv=none; b=N3CQah54tOtbBkgEEpmcVX6os8A7/6OVGNkN5vzbWDJq/vDYYNycTy2hk10wPs53Hh5PO04QmhXlcGgU4OWGrulqfB/E27SzTSF84fz4/oAK4ypSy/NmKvD9LAnGoWsnBEZhGBiZaxzr868btLKKq82ObsqUVnUi+x/w+4gC/TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708108306; c=relaxed/simple;
-	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
+	s=arc-20240116; t=1708108757; c=relaxed/simple;
+	bh=c52Bjk2RQnn7DIN2AN3Dt13KP2BKtoclcR7LSa6bwgE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fU/PikZsBP6SN/8k1zfecuPBrOZh6HDaR1Mp6VaIlk+UPZkKWREdDV9Gd7Ll4XjV7ijTUxx8WW9lcYubG3YQtbCsu9LfQEupwiT71r+48/dkB5uZfa4HqVb1KeMkrAvPKAbZtsnp70l8FiyYISwSPDcdNgr/zd0SKaxuoE7XPlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTNUD52m; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2258DC433C7;
-	Fri, 16 Feb 2024 18:31:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mvSFSnL8ghRMaPF9S80X/yTBB6ZBIaLREwirBHXwbaOQ42gP9GNnw/qOhPvJl8LFtmXnY9lZidqkGOAyt7HolhYw3lty+GpWGECiMlrFWANvcEQKCNOvHCU+bt5d70P7hTqdF3aGUkpdtan4LDNmsSWkq8AemM7hkMusOJZb+Xw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P3igEePE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE102C433F1;
+	Fri, 16 Feb 2024 18:39:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708108305;
-	bh=s9cIRkFaKtrccc7vtLJUttfg3iWmA2GqRjx0bO9OYd8=;
+	s=k20201202; t=1708108756;
+	bh=c52Bjk2RQnn7DIN2AN3Dt13KP2BKtoclcR7LSa6bwgE=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qTNUD52mWWrTFRVL3RFKZTQ4HXBrw8mY1wPxDEkLg0PSOKnV39juO/H8ICq31kwH1
-	 IKxlawS6VlNOP3EW5QmnyXC00lx0TOGC9L+oPwAtz5dEERDVKGzPv+DUX0GwJhugfn
-	 HYMD/ZHG093YVDxSZ32Nj0tYMiZ9FXqU4TEvO4fW0pkvtLnb6Ryot5KRpWJlRGX0IF
-	 RWipJUTEm+YTfUsNsbTkeG2MOXfNF7kCb4Mnfw4JPpPavXsmQBJlgC4DYgD6+pCCJ2
-	 3SSIdurWIBj6174ERkqXYqAIOW7ThXrBXUOEZhB59qqV6HGwRgNW+040qtsUIQ97BW
-	 74KhpymgE4BJg==
-Date: Fri, 16 Feb 2024 12:31:43 -0600
+	b=P3igEePEy1/PnswfNRWUu+JU7dPo6agq07TwhdbIMZqb7HTGvrfAHN0bZ0mx7pIm6
+	 g+6ojphnhIrXU6rG3tJTPQ3smk4UPoAuhjSV2ZblYRfh6L+EZlQ7wvyzvtM6NE2Rh+
+	 KaWcMyUoA13HOqD/KOLXACONwvaaU6dbUdE6+nb6J2zn5M19HnhDRKwuwej7ZIr2E4
+	 mJuktNaCneKE2AuDh9V+YQQwBu2jNRb8epndhA0vghGllgf7QVvbwODZLNJ0nfixcb
+	 MG5NYM7ptJXaM8mzKlWznplyHTwIe2I1Low0Y71J4A+dvT+3byreoujfIHzXluUpqP
+	 nEqD9/fQwQ4DQ==
+Date: Fri, 16 Feb 2024 12:39:14 -0600
 From: Bjorn Andersson <andersson@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Mukesh Ojha <quic_mojha@quicinc.com>, Mark Brown <broonie@kernel.org>, 
-	konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+Cc: konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
+	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
 Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write
  function
-Message-ID: <6lmxlfopjzxbvn5oe6uha2ppdjderuymgq3h3gz2suyb5i2vs6@mpadw4b37s5t>
+Message-ID: <jyfpwd3jiwwqgbap3vk7uzhumqaj2rt2udiakink7rgxk4k5le@hqclapr7wizu>
 References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
  <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
- <CACRpkdY7fbFyNNd6GAikxC3+wk0ca8Yn_8__zkp+Q-deJeJ_LQ@mail.gmail.com>
- <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
- <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
+In-Reply-To: <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
 
-On Tue, Jan 09, 2024 at 02:34:10PM +0100, Linus Walleij wrote:
-> On Tue, Jan 9, 2024 at 2:24 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> > On 1/9/2024 6:44 PM, Linus Walleij wrote:
-> > > On Mon, Jan 8, 2024 at 4:28 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
-> > >
-> > >> It was realized by Srinivas K. that there is a need of
-> > >> read-modify-write scm exported function so that it can
-> > >> be used by multiple clients.
-> > >>
-> > >> Let's introduce qcom_scm_io_rmw() which masks out the bits
-> > >> and write the passed value to that bit-offset.
-> > > (...)
-> > >> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
-> > >> +{
-> > >> +       unsigned int old, new;
-> > >> +       int ret;
-> > >> +
-> > >> +       if (!__scm)
-> > >> +               return -EINVAL;
-> > >> +
-> > >> +       spin_lock(&__scm->lock);
-> > >> +       ret = qcom_scm_io_readl(addr, &old);
-> > >> +       if (ret)
-> > >> +               goto unlock;
-> > >> +
-> > >> +       new = (old & ~mask) | (val & mask);
-> > >> +
-> > >> +       ret = qcom_scm_io_writel(addr, new);
-> > >> +unlock:
-> > >> +       spin_unlock(&__scm->lock);
-> > >> +       return ret;
-> > >> +}
-> > >> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
-> > >
-> > > This looks a lot like you are starting to re-invent regmaps
-> > > regmap_update_bits().
-> > >
-> > > If you are starting to realize you need more and more of
-> > > regmap, why not use regmap and its functions?
-> >
-> > I think, this discussion has happened already ..
-> >
-> > https://lore.kernel.org/lkml/CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJeC9SDQA@mail.gmail.com/
-> 
-> That discussion ended with:
-> 
-> [Bjorn]
-> > We'd still need qcom_scm_io_readl() and qcom_scm_io_writel() exported to
-> > implement the new custom regmap implementation - and the struct
-> > regmap_config needed in just pinctrl-msm alone would be larger than the
-> > one function it replaces.
-> 
-> When you add more and more accessors the premise starts to
-> change, and it becomes more and more of a reimplementation.
-> 
-> It may be time to actually fix this.
-> 
+On Mon, Jan 08, 2024 at 08:57:31PM +0530, Mukesh Ojha wrote:
+> It was realized by Srinivas K. that there is a need of
 
-Thought I had replied to this already, did we discuss this previously as
-well?
+"need" is a strong word for this functionality, unless there's some use
+case that I'm missing.
 
-My concern with expressing this as a regmap is that from the provider's
-point of view, the regmap would span the entire 32-bit address space.
-I'm guessing that there's something on the other side limiting what
-subregions are actually accessible for each platform/firmware
-configuration, but I'm not convinced that regmap a good abstraction...
+> read-modify-write scm exported function so that it can
+> be used by multiple clients.
+> 
+> Let's introduce qcom_scm_io_rmw() which masks out the bits
+> and write the passed value to that bit-offset.
+> 
+> Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
+> ---
+>  drivers/firmware/qcom/qcom_scm.c       | 26 ++++++++++++++++++++++++++
+>  include/linux/firmware/qcom/qcom_scm.h |  1 +
+>  2 files changed, 27 insertions(+)
+> 
+> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+> index 520de9b5633a..25549178a30f 100644
+> --- a/drivers/firmware/qcom/qcom_scm.c
+> +++ b/drivers/firmware/qcom/qcom_scm.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/spinlock.h>
+>  #include <linux/reset-controller.h>
+>  #include <linux/types.h>
+>  
+> @@ -41,6 +42,8 @@ struct qcom_scm {
+>  	int scm_vote_count;
+>  
+>  	u64 dload_mode_addr;
+> +	/* Atomic context only */
+> +	spinlock_t lock;
+>  };
+>  
+>  struct qcom_scm_current_perm_info {
+> @@ -481,6 +484,28 @@ static int qcom_scm_disable_sdi(void)
+>  	return ret ? : res.result[0];
+>  }
+>  
+> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
+> +{
+> +	unsigned int old, new;
+> +	int ret;
+> +
+> +	if (!__scm)
+> +		return -EINVAL;
+> +
+> +	spin_lock(&__scm->lock);
+
+Please express that this lock is just for create mutual exclusion
+between rmw operations, nothing else.
+
+Also please make a statement why this is desirable and/or needed.
 
 Regards,
 Bjorn
 
-> Yours,
-> Linus Walleij
+> +	ret = qcom_scm_io_readl(addr, &old);
+> +	if (ret)
+> +		goto unlock;
+> +
+> +	new = (old & ~mask) | (val & mask);
+> +
+> +	ret = qcom_scm_io_writel(addr, new);
+> +unlock:
+> +	spin_unlock(&__scm->lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
+> +
+>  static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>  {
+>  	struct qcom_scm_desc desc = {
+> @@ -1824,6 +1849,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>  		return ret;
+>  
+>  	mutex_init(&scm->scm_bw_lock);
+> +	spin_lock_init(&scm->lock);
+>  
+>  	scm->path = devm_of_icc_get(&pdev->dev, NULL);
+>  	if (IS_ERR(scm->path))
+> diff --git a/include/linux/firmware/qcom/qcom_scm.h b/include/linux/firmware/qcom/qcom_scm.h
+> index ccaf28846054..3a8bb2e603b3 100644
+> --- a/include/linux/firmware/qcom/qcom_scm.h
+> +++ b/include/linux/firmware/qcom/qcom_scm.h
+> @@ -82,6 +82,7 @@ bool qcom_scm_pas_supported(u32 peripheral);
+>  
+>  int qcom_scm_io_readl(phys_addr_t addr, unsigned int *val);
+>  int qcom_scm_io_writel(phys_addr_t addr, unsigned int val);
+> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val);
+>  
+>  bool qcom_scm_restore_sec_cfg_available(void);
+>  int qcom_scm_restore_sec_cfg(u32 device_id, u32 spare);
+> -- 
+> 2.7.4
+> 
 
