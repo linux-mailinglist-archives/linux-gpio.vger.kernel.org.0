@@ -1,120 +1,178 @@
-Return-Path: <linux-gpio+bounces-3394-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3395-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CB4C857AA3
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:49:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFFBB857AA9
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 11:50:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 23B511F24B29
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:49:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D4E071C2262B
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 10:50:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7EC38537E9;
-	Fri, 16 Feb 2024 10:48:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2B905380D;
+	Fri, 16 Feb 2024 10:50:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="H7s8TSq/"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Vo0mxgEz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0142.ext.ti.com (lelv0142.ext.ti.com [198.47.23.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E110535BB;
-	Fri, 16 Feb 2024 10:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC446537E0
+	for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 10:50:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708080538; cv=none; b=ACttQBqHmJ6C2pobJUj1JeHe7ug+yXTYFr2qS1jBUEDouXzYzK8/ZWqDgEa8H00qZpnn4JqpB6VZM2wpko9LBo6boMlnZqTL0ct+mH6cUwC4hbftgci/Z584MxTC5TOuRPDHNEYdGIWUDx3fYP4s6uTGB0q3qAWmOm0TRHTiGT0=
+	t=1708080641; cv=none; b=JtQZoxoSJ6WWPa9/GsGz8k6qkjg93PrTxkSmUVlJsj8y2/ogt319lAQb9bVTRse6glEDTNhaUbPdcWVFZ1h3Wp3JHvwAH2qAMBX1+bvifEfKa/3yN+1OF3n2XSCm5/CJiIKwN/xIOe6eJDVYbGBP6QHI4yleYePAted8MPNPVok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708080538; c=relaxed/simple;
-	bh=bSQjI5oIAeosqTym3AFvRxCY5213clKyJoH9whfcyjk=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=FfOqjfmwcfHQlZbm52OZvR3GtDyb2nXGBtvhcXOtJ3EnN0cG7bn6Cv8iUrCfpLCx5DqUjxBBb0yHFVa5cafUldfRfkeEjIbz/fVn5NVFqmZebgz2IihN8laxKpu2hG5xjKM3ZYP9mBMres7BsZaHbnpZZFuYiVmKnwSYKywQsP4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=H7s8TSq/; arc=none smtp.client-ip=198.47.23.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-	by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id 41GAmR9B056970;
-	Fri, 16 Feb 2024 04:48:27 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1708080507;
-	bh=wBeXLUFC5b4/8RGzmyvF89yYPd110y8htQLDdX2WYTc=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=H7s8TSq/72OiEAd3rL2BUZa9KNNyAB7Wr+7vrd0Mo1gM6SSozbZDMkhsVVnB649xU
-	 AQ1kVHY38XBAREf1YPaI6jqt0jNuzg1bIqCtGX7rJo3Mr9eLWMGUPDmgecIYB6MLES
-	 Sz0EVyu19IuvkIeSFdvq3ht/39IJUFW8kOKph+kU=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 41GAmR5L129001
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Fri, 16 Feb 2024 04:48:27 -0600
-Received: from DFLE114.ent.ti.com (10.64.6.35) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Fri, 16
- Feb 2024 04:48:27 -0600
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE114.ent.ti.com
- (10.64.6.35) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Fri, 16 Feb 2024 04:48:27 -0600
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 41GAmQcT020589;
-	Fri, 16 Feb 2024 04:48:27 -0600
-Date: Fri, 16 Feb 2024 16:18:26 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
-	<tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Vignesh R
-	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik
-	<jmkrzyszt@gmail.com>,
-        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
-	<peda@axentia.se>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
-        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
-        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v3 18/18] PCI: j721e: add suspend and resume support
-Message-ID: <aa791703-81d8-420c-ba35-c8fd08bc3f07@ti.com>
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
+	s=arc-20240116; t=1708080641; c=relaxed/simple;
+	bh=iuium0xatJZLq1wGFl7Ka8XoxKFyhPbxq36vCpwU22U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TxPX7HLNN3EloHd/U+h2uOIQbpZlZYaACLt/tx52jNtfi91/5RbF3iYeS9rgjbk5A1eF2Pl5eg4C9hQWW84WO9APqb3ZaiAchFsahCgl7gPmF/J9QTanYJ7ewcaQ2w/IrVnTefrhD9PQlmS3I3fxRkpcGSzJbLgpm9gQ1s/lr+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Vo0mxgEz; arc=none smtp.client-ip=209.85.217.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-46fbed56edcso664413137.0
+        for <linux-gpio@vger.kernel.org>; Fri, 16 Feb 2024 02:50:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708080639; x=1708685439; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hR8N/L+JFBz8997qhtwpSbHWqZ61GB+2vmJxDW19Bro=;
+        b=Vo0mxgEzq0EV/uLu4bKhABYUb6egwFbGoBuMqKUa2wyznc8Kt1AGHovxPlHeSFGTCw
+         or4sE2sl68k7faU0AkC2E7//zAIcak6dMRuRdYOt6s7pHDMPui22/mCaYiNgCfUyfLO4
+         Jb/leYnqso8QZVPlhuGwFtvNmuoan34Tde9hhWcNrgDsIDLVjCK8loSDY1Dd5y46kjJx
+         Rk2aWd6HEYP+4qUgT04Ooz3fJrVqdKqX0JBIEq3glikMBeU+BQ4PgSTEHovzmJ1pQpS8
+         oX9bT/WDrbWKfFxLrIZyZA0wEojuPyzftoXoMwmmPbSZunhUO1tkvTvKBSHUbOh882Ro
+         RiSA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708080639; x=1708685439;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=hR8N/L+JFBz8997qhtwpSbHWqZ61GB+2vmJxDW19Bro=;
+        b=fTtEeUtkuPYCXHcl/bLv9/y35PTuEjL1yUczVyUhiYZ3ubHuIoCfiDJDAggq4Pepf0
+         zfRbxT5Z+/S78bvJQr8kt2BUb8g0gPkKuBbPPot0M4vKCLou4TzbGRiaExSuDVzsvElO
+         a8bWRKDwOEzNH03lUiGNMtvTFcssKQt+0P9rxqshf7X8bdbfNlW69IKqUr43CJ2rjVWD
+         UnRyJVWrDCyVS/mIrV+tKyJV5vHT8La6kXfP8WF4l0i7aFQ9HAfHLgDx6Cvao++2ai7M
+         wBLlOcf5roz9FhOooZWQ7g6hUBfV1Z/fk+Ptbz1h/rtPwvevIOps3GqMUHAltrrfXmTd
+         tD8A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6Q67DOdIUHnNKVV79w4NRdArV59/SwKsJj6nwHe4WAoY5AvJx1oQ0QJ7VK0nOVIMs/fus01yKCJ+erlLsc1p8V/pxj5YcnRl9tg==
+X-Gm-Message-State: AOJu0YzyL6cwq+p84IC8WE9CoWkS8b4mBv8z6GhH0/cHzyNxfFotrsE2
+	dDQJLOBYqKCYK+ZbnqDbonGSMXGzrT4D+lCE7mNzXvxoMftKPdCbAqGCT5Cpl46cxB1zHHdpHjn
+	msBxKE2BHx6u33YFrQ4WlkFe44jdo4Mbo2oh8vA==
+X-Google-Smtp-Source: AGHT+IH0CMRnKInCHVDfBbtVQkt3Hq6Z7d0SdbEWn0kM/VW3EJFIp/Wyu9U+w+t0et4c2Lp9jHwWdNniXv34cWqsdpQ=
+X-Received: by 2002:a05:6102:a4c:b0:46d:263a:31ae with SMTP id
+ i12-20020a0561020a4c00b0046d263a31aemr4432834vss.1.1708080638794; Fri, 16 Feb
+ 2024 02:50:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v3-18-5c2e4a3fac1f@bootlin.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20240214084419.6194-1-brgl@bgdev.pl> <CGME20240216103104eucas1p1fac9b939d4af1648d222963fbef59645@eucas1p1.samsung.com>
+ <20240214084419.6194-3-brgl@bgdev.pl> <179caa10-5f86-4707-8bb0-fe1b316326d6@samsung.com>
+In-Reply-To: <179caa10-5f86-4707-8bb0-fe1b316326d6@samsung.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 16 Feb 2024 11:50:27 +0100
+Message-ID: <CAMRc=McQkywJOM23SpLp1-c_zwV1HiOL_JLoQWPi96FqWKqoxA@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] gpio: cdev: use correct pointer accessors with SRCU
+To: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	Alex Elder <elder@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	"Paul E . McKenney" <paulmck@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Wolfram Sang <wsa@the-dreams.de>, Mark Brown <broonie@kernel.org>, 
+	Dan Carpenter <dan.carpenter@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, kernel test robot <oliver.sang@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 24/02/15 04:18PM, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
-> 
-> Add suspend and resume support. Only the rc mode is supported.
-> 
-> During the suspend stage PERST# is asserted, then deasserted during the
-> resume stage.
+On Fri, Feb 16, 2024 at 11:31=E2=80=AFAM Marek Szyprowski
+<m.szyprowski@samsung.com> wrote:
+>
 
-Wouldn't this imply that the Endpoint device will be reset and therefore
-lose context? Or is it expected that the driver corresponding to the
-Endpoint Function in Linux will restore the state on resume, post reset?
+[snip]
 
-Regards,
-Siddharth.
+>
+> Here 'gc' is left uninitialized and nukes if GPIO DEBUGs are enabled.
+> Here is an example (captured on today's linux-next):
+>
+> 8<--- cut here ---
+> Unable to handle kernel NULL pointer dereference at virtual address
+> 00000000 when read
+> [00000000] *pgd=3D00000000
+> Internal error: Oops: 5 [#1] PREEMPT SMP ARM
+> Modules linked in:
+> CPU: 1 PID: 1 Comm: swapper/0 Not tainted 6.8.0-rc4-next-20240216 #8096
+> Hardware name: Samsung Exynos (Flattened Device Tree)
+> PC is at gpiolib_cdev_register+0xd4/0x170
+> LR is at chainhash_table+0x784/0x20000
+> pc : [<c05dbe54>]    lr : [<c18bb74c>]    psr: 20000013
+> ...
+> Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment none
+> Control: 10c5387d  Table: 4000404a  DAC: 00000051
+> Register r0 information: non-slab/vmalloc memory
+> Register r1 information: NULL pointer
+> Register r2 information: non-paged memory
+> Register r3 information: non-paged memory
+> Register r4 information: slab kmalloc-1k start c1e5f800 pointer offset 0
+> size 1024
+> Register r5 information: NULL pointer
+> Register r6 information: non-paged memory
+> Register r7 information: slab kmalloc-1k start c1e5f800 pointer offset
+> 952 size 1024
+> Register r8 information: NULL pointer
+> Register r9 information: slab kmalloc-1k start c1e5f800 pointer offset
+> 960 size 1024
+> Register r10 information: non-paged memory
+> Register r11 information: non-slab/vmalloc memory
+> Register r12 information: NULL pointer
+> Process swapper/0 (pid: 1, stack limit =3D 0x(ptrval))
+> Stack: (0xf082db90 to 0xf082e000)
+> ...
+>   gpiolib_cdev_register from gpiochip_setup_dev+0x44/0xb0
+>   gpiochip_setup_dev from gpiochip_add_data_with_key+0x9ac/0xaac
+>   gpiochip_add_data_with_key from devm_gpiochip_add_data_with_key+0x20/0x=
+5c
+>   devm_gpiochip_add_data_with_key from samsung_pinctrl_probe+0x938/0xb18
+>   samsung_pinctrl_probe from platform_probe+0x5c/0xb8
+>   platform_probe from really_probe+0xe0/0x400
+>   really_probe from __driver_probe_device+0x9c/0x1f4
+>   __driver_probe_device from driver_probe_device+0x30/0xc0
+>   driver_probe_device from __device_attach_driver+0xa8/0x120
+>   __device_attach_driver from bus_for_each_drv+0x80/0xcc
+>   bus_for_each_drv from __device_attach+0xac/0x1fc
+>   __device_attach from bus_probe_device+0x8c/0x90
+>   bus_probe_device from device_add+0x5d4/0x7fc
+>   device_add from of_platform_device_create_pdata+0x94/0xc4
+>   of_platform_device_create_pdata from of_platform_bus_create+0x1f8/0x4c0
+>   of_platform_bus_create from of_platform_bus_create+0x268/0x4c0
+>   of_platform_bus_create from of_platform_populate+0x80/0x110
+>   of_platform_populate from of_platform_default_populate_init+0xd4/0xec
+>   of_platform_default_populate_init from do_one_initcall+0x64/0x2fc
+>   do_one_initcall from kernel_init_freeable+0x1c4/0x228
+>   kernel_init_freeable from kernel_init+0x1c/0x12c
+>   kernel_init from ret_from_fork+0x14/0x28
+> Exception stack(0xf082dfb0 to 0xf082dff8)
+> ...
+> ---[ end trace 0000000000000000 ]---
+> Kernel panic - not syncing: Attempted to kill init! exitcode=3D0x0000000b
+> ---[ end Kernel panic - not syncing: Attempted to kill init!
+> exitcode=3D0x0000000b ]---
+>
+>
+> Probably the easiest way to fix this issue is to replace chip_dbg with
+> the following dev_dbg() call:
+>
+> dev_dbg(&gdev->dev, "(%s): added GPIO chardev (%d:%d)\n", gdev->label,
+> MAJOR(devt), gdev->id);
+>
+
+Thanks for the report. Surprisingly there are no warnings about that
+with GCC. The best way is to use srcu_dereference() here and keep the
+same log message. Patch is on the way.
+
+Bart
 
