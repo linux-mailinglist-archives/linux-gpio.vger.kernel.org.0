@@ -1,140 +1,119 @@
-Return-Path: <linux-gpio+bounces-3412-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3413-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 77915857E8D
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 15:04:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8608D857FD4
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 15:56:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AA3781C209BB
-	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:04:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 261561F23103
+	for <lists+linux-gpio@lfdr.de>; Fri, 16 Feb 2024 14:56:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D09B12C558;
-	Fri, 16 Feb 2024 14:04:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="d1gMyEQx";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="CYUGZ/nj"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A39912F366;
+	Fri, 16 Feb 2024 14:56:34 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fout8-smtp.messagingengine.com (fout8-smtp.messagingengine.com [103.168.172.151])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6494D12C54A;
-	Fri, 16 Feb 2024 14:04:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18D312EBE2;
+	Fri, 16 Feb 2024 14:56:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708092279; cv=none; b=TjM5R6ukrR2xLfn+GMKbNzalRAUXqSBA/Ud7bRrzurTuKSVR/ZOp9NjgHqXaVEEOshZ1ye5dnQAXiAuA+rZgqpNF6AIkroYojE5Wn37GhiOLzmuJqEKA38cRZnhyZptlmAllOlAuHvQY3MueYlfheFB2xx783h5IdsUsPkJI4zc=
+	t=1708095394; cv=none; b=BTN3RffHfCrQ2EGSUjnklWFc2YGKNFJQPij/TeGSF2FXmJhNcSRi7hEZMkTaeLH1tNV5d7jbHqIBDMz1MKoV/igfYNrBcQJzmvfpPH688xVtA2UaDd2+GhZ10zaHDJYBVLQzyWhDovlNEMdWnRXHFgcfrCBbYfpEhr9vEnw4djY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708092279; c=relaxed/simple;
-	bh=JKmsLs59jO5nqdFavx3u4/IOXJSpBQJ3cSSgM+LlTx0=;
-	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
-	 Subject:Content-Type; b=qxLrwPPpXFpqdRPcTpPO4DTV4Xlnar94rCFRtH9sQS0fpxk1dg1SB75Rf5lvSlYGAGbMBi/PwhQtM0NyhY/KP2z5h40cxpAvC6JDQ8N/xw0NfFeeXTKYAHO2Xw4XvpJLsYx7HBNgM/8UA6/7WpwcVFqNIysK/Tcf9iN+YIVXgS8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=d1gMyEQx; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=CYUGZ/nj; arc=none smtp.client-ip=103.168.172.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
-Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
-	by mailfout.nyi.internal (Postfix) with ESMTP id 1C7CC13800CB;
-	Fri, 16 Feb 2024 09:04:36 -0500 (EST)
-Received: from imap51 ([10.202.2.101])
-  by compute5.internal (MEProxy); Fri, 16 Feb 2024 09:04:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
-	:cc:content-transfer-encoding:content-type:content-type:date
-	:date:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to; s=fm3; t=1708092276;
-	 x=1708178676; bh=xFinwvZsrlvUGjNZQPKThE+p8vedvK1faZDi1/Ymc0w=; b=
-	d1gMyEQxtRotjYkrw8mdHJ8KXrjzwEl/mdKBBRxPEUcUHwccIXLQH9Z26S5jaIOJ
-	r8TFhJrjXEGR0469jU44PG+bKttR1gJ+kS9Gu7gL8nDdUcdYR7RP/iCXf3B2zoyd
-	7uFgp4MdeG/rT6sBXCgAL5XtzfCtKQ2gr9RaZj2lw5nlqAnJAGUMYJTPSxqbQXjS
-	bvNR1eGuWLQCxUDVzLNEFDjF+Db2tfB0RY6J6XFPskHKxJfXm7fS/fbNeiarYtaq
-	vRU1Xg6Mu6OvK4m8p6HTAlkSQjxasDGoYYvBOJHZP96KvJhUoPAEiSVKF8QVujCS
-	u6QpsRV2b1N4S3M0q6SBxw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	messagingengine.com; h=cc:cc:content-transfer-encoding
-	:content-type:content-type:date:date:feedback-id:feedback-id
-	:from:from:in-reply-to:in-reply-to:message-id:mime-version
-	:references:reply-to:subject:subject:to:to:x-me-proxy:x-me-proxy
-	:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; t=1708092276; x=
-	1708178676; bh=xFinwvZsrlvUGjNZQPKThE+p8vedvK1faZDi1/Ymc0w=; b=C
-	YUGZ/njD8YfSpEDvhvTXVQ9OorBdHGWJa+FVOTRsh/D+vls5IyyQWdy/A0TD3oUV
-	Xd4MIjnYzJ0v/NHNjLZja+vvlDV/GC+B30xJoNJmfjTOwJG4vy+KHchuanIU75gJ
-	zvBhLjsJYPKYsFodxfl1dW5nqwWmg8OZCsmnPR8UPVfKm+BNtSp5X59jrQ1I83TE
-	bL+GRJLYVqe5pZDFl/z8DQUqHRwbYlKYE78KrEzACzaxEi0gYEP71ttWlDmvQd6v
-	7e6VHB8v24dpaf6oYgd5P3tl/7Kh+PCq9pxzJh/U/RdhhrgIpGxf8fpritAtR+qb
-	1cxkxnLKhzV7d0cVPFguw==
-X-ME-Sender: <xms:c2vPZTGXQbZ5Mz8SIxdotjtNZTliLREJZQBUFU494y4CNqzoG4YJYg>
-    <xme:c2vPZQWC5a6ds-Uhqw_rPQMQjUwyYFzESuV4Ud9YHxOF1Sm6rvBbIAMC6UqQ90dOH
-    8L4bmG3wrvr0yQoKeQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledrvddvgdeitdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvvefutgfgsehtqhertderreejnecuhfhrohhmpedftehr
-    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
-    htvghrnhepgeefjeehvdelvdffieejieejiedvvdfhleeivdelveehjeelteegudektdfg
-    jeevnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
-    hrnhgusegrrhhnuggsrdguvg
-X-ME-Proxy: <xmx:c2vPZVIyhdRQ_DGL3RlOiIH_wQgfh2nol4zSHPH8VYDYUCCo4_J81g>
-    <xmx:c2vPZRGFZ-zHxiliB3-rzjUXa3tGx-IsQPyrBFNVnLLzvxas_SoP7w>
-    <xmx:c2vPZZWykE9YcS1cjbYuh1MCmrKUELYUggTGkw0ZrL_UXVdbbk2FTw>
-    <xmx:dGvPZYGX9-9kTPXpv7uYgrEaM_qu3fRrVxhHAdN9udtO0hQYgNMstQ>
-Feedback-ID: i56a14606:Fastmail
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-	id 16E8AB60093; Fri, 16 Feb 2024 09:04:35 -0500 (EST)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.11.0-alpha0-144-ge5821d614e-fm-20240125.002-ge5821d61
+	s=arc-20240116; t=1708095394; c=relaxed/simple;
+	bh=uU5ex5sFczwr9eLJc4HYmer9AHvonlJknY9TibazMSk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FUEe5ST1VJg4fNKoBAp9hW+UNHz6mh/ILDm8ly25s8QtbesQpdUlMCPUMKRE9TQdORJWzRPu7FJbrC1UAAHSejuCG4CEUiYJ08FU5mygOulagfHLmJGQDI3r78tULoz7Sj5N8INlKwLgxP1xNFiib4C7am9YRlk01clEeElTsHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="2336760"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="2336760"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 06:56:32 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10985"; a="912372670"
+X-IronPort-AV: E=Sophos;i="6.06,164,1705392000"; 
+   d="scan'208";a="912372670"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Feb 2024 06:56:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy@kernel.org>)
+	id 1razdW-000000054ij-1AX9;
+	Fri, 16 Feb 2024 16:56:22 +0200
+Date: Fri, 16 Feb 2024 16:56:22 +0200
+From: Andy Shevchenko <andy@kernel.org>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v3 08/18] phy: ti: phy-j721e-wiz: split wiz_clock_init()
+ function
+Message-ID: <Zc93lnpGK8PGKbb-@smile.fi.intel.com>
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-8-5c2e4a3fac1f@bootlin.com>
+ <Zc4xJtLl3zo_YrBC@smile.fi.intel.com>
+ <Zc76d4B4hjTC3xum@matsya>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-Id: <14ab7b63-b2c0-41e3-8104-da5515b379be@app.fastmail.com>
-In-Reply-To: 
- <CAMRc=MdBbzff5BppY4Hjwfi=SnmYopnFxg1AX4QsGt3Y+-g60Q@mail.gmail.com>
-References: <20240216125959.3766309-1-arnd@kernel.org>
- <CAMRc=MdBbzff5BppY4Hjwfi=SnmYopnFxg1AX4QsGt3Y+-g60Q@mail.gmail.com>
-Date: Fri, 16 Feb 2024 15:04:14 +0100
-From: "Arnd Bergmann" <arnd@arndb.de>
-To: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Arnd Bergmann" <arnd@kernel.org>
-Cc: "Linus Walleij" <linus.walleij@linaro.org>,
- "Paul E. McKenney" <paulmck@kernel.org>,
- "Kent Gibson" <warthog618@gmail.com>,
- "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
- "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: cdev: avoid uninitialized variable dereference
-Content-Type: text/plain;charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Zc76d4B4hjTC3xum@matsya>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 16, 2024, at 14:19, Bartosz Golaszewski wrote:
-> On Fri, Feb 16, 2024 at 2:00=E2=80=AFPM Arnd Bergmann <arnd@kernel.org=
-> wrote:
->>
->> From: Arnd Bergmann <arnd@arndb.de>
->>
->> The 'gc' variable is never set before it gets printed:
->>
->> drivers/gpio/gpiolib-cdev.c:2802:11: error: variable 'gc' is uninitia=
-lized when used here [-Werror,-Wuninitialized]
->>  2802 |         chip_dbg(gc, "added GPIO chardev (%d:%d)\n", MAJOR(de=
-vt), gdev->id);
->>       |                  ^~
->> drivers/gpio/gpiolib.h:277:11: note: expanded from macro 'chip_dbg'
->>   277 |         dev_dbg(&gc->gpiodev->dev, "(%s): " fmt, gc->label, #=
-#__VA_ARGS__)
->>       |                  ^~
->>
->> Use dev_dbg() directly.
->>
->> Fixes: 8574b5b47610 ("gpio: cdev: use correct pointer accessors with =
-SRCU")
->> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
->> ---
->
-> I seem to have beat you to it[1] and my patch doesn't change the log
-> message so I'll apply it instead of this one.
+On Fri, Feb 16, 2024 at 11:32:31AM +0530, Vinod Koul wrote:
+> On 15-02-24, 17:43, Andy Shevchenko wrote:
+> > On Thu, Feb 15, 2024 at 04:17:53PM +0100, Thomas Richard wrote:
 
-Ok, thanks. I thought about doing this, but could not
-figure out which of the RCU primitives to use.
+...
 
-     Arnd
+> > (Side note, as this can be done later)
+> > 
+> > >  	if (rate >= 100000000)
+> > 
+> > > +		if (rate >= 100000000)
+> > 
+> > > +	if (rate >= 100000000)
+> > 
+> > I would make local definition and use it, we may get the global one as there
+> > are users.
+> > 
+> > #define HZ_PER_GHZ	1000000000UL
+> 
+> Better to define as:
+> #define HZ_PER_GHZ 1 * GIGA
+
+(with parentheses)
+
+Maybe here, but when it appears in units.h it will be defined as I wrote
+to be aligned with the rest of definitions.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
