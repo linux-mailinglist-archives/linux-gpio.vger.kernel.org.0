@@ -1,830 +1,203 @@
-Return-Path: <linux-gpio+bounces-3423-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3425-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E1A858E5F
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Feb 2024 10:40:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 70FCD85901C
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Feb 2024 15:31:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AAA0F1C2107C
-	for <lists+linux-gpio@lfdr.de>; Sat, 17 Feb 2024 09:40:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D7F85B21293
+	for <lists+linux-gpio@lfdr.de>; Sat, 17 Feb 2024 14:31:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F091D547;
-	Sat, 17 Feb 2024 09:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 302BB7BB0A;
+	Sat, 17 Feb 2024 14:31:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xRYQdL/O"
+	dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b="IbSwpNi3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0064b401.pphosted.com (mx0b-0064b401.pphosted.com [205.220.178.238])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AC551D554
-	for <linux-gpio@vger.kernel.org>; Sat, 17 Feb 2024 09:39:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708162794; cv=none; b=UqJ6CXmAUqFe/hnn7ynYGq+aEgBuSQjH7ytVZk1vtwfHcr+f3iJ/DneSBH6H+Kq9ikvndx7NsMxaK0E0800dbEIMzYmAt4s7OammdhDkwG8OqYMq6hI0Zmn+/yii2tFgo9Xwh3CwAq7MD3xxccays/YG1c1PJBRYTgLSwzbhUBU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708162794; c=relaxed/simple;
-	bh=btt416lNx8UE4nyrEYO/2Cbobxq9AiMs/pLN7K+3eYc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=GxjyLAAwcKNKYp2sJz1eZIp6BQt2C/aRS5kaBfPhoQC0es/HEaN9PHHfLQBWNdjRSEOEQ7+U2Sm41lqKbCewi4aDghQUne8NYPzwKmSmgJ7wLw3tuvlPZyaHd66miLRTkRlQ5hm+yujDXcVHzmJEa51kxbXRIgsyff8n2bODWs4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=xRYQdL/O; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a36126ee41eso378285966b.2
-        for <linux-gpio@vger.kernel.org>; Sat, 17 Feb 2024 01:39:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708162781; x=1708767581; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=X75RlHDlmi5XCIOWvGc6BMu59jRgO14yvUgaoxgEH+c=;
-        b=xRYQdL/O5gnWZrAa33b1EcRhLVTpusuRO/OyPFeGonSMATtLQTu8U47GB3VgG/Uq2o
-         fGP6lnkZ028ErlXhweqlQSQYuSOMwjGbhBgyQ2bo48Wm/Rka9LX6A05heakBn56l7VXF
-         nkkxqtiYr7fFSsNJ/3WVIGg8qoHzuGXusv2gChvsdLzAwVmgy9lkJpcRMFW3XOqWCqxq
-         uzbs2HYINmist6G50Y4uHXjccumkDKSQ5cVFkp8zpS1vCPcWYDuRYSkgRMFSKwEESBNU
-         L+jao38kElvA9eauWHUUBDrc2RlJjK/Tv4o32+QfL4K0M7jOb+Ci0aWgbCaSVDoIwJv9
-         jOXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708162781; x=1708767581;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=X75RlHDlmi5XCIOWvGc6BMu59jRgO14yvUgaoxgEH+c=;
-        b=gJITiZIDJeLzEWAAZ1J9S5vfOIuVg36M6b+yqQSf4BgHVAXoMMkjum9F5nu6TC9Yll
-         lqqcgPdRKevWoN7fbRwUppJ0VYwgtVT/xfUhyNakcH04XE7oQURtHAGm4GaPT8CUYniF
-         rXLFIQeKCiHlz/f8i3RZsAwV6EPJ5hNbL8zItfVt4MVDWsSzwkuXKdnvbS5+k7Pa5pks
-         XchpNH5fLBEB/0Z2Q27AnRPzT6eJL8fivDVikQyG5Q4aqcf0DRDGhONPD6ErYrcfjuLr
-         DlpMOFY0uXV1A1YD7B0gGsDbVk9jJRqxBv9hYM86SSv5G8IT7zge2BaD+Bc8XOnqBcAz
-         br2A==
-X-Forwarded-Encrypted: i=1; AJvYcCWuRrhxMD6FJoOmPNAVreOgTU6MqYeFt4oUe1Xv9bKU42jwwcKq7lr1Zu7bfFGtvYecZp6aZRFhUO9MBcDp+c5U9NDbQo5ySZKKyA==
-X-Gm-Message-State: AOJu0Yzu4v7z54eHOeqAhZv7qPh96/hcufLJ1yHNmExB27AlMo9YNK/L
-	sB+jOrvdMzi1a8Q+vGT+Yo/VMM8fRkAJTVaNWs9PwUVan/mWLrK/JtmvfUgpdEk=
-X-Google-Smtp-Source: AGHT+IEzkjPFuVfn8DWdUX4zamD0M9/nG+w/NggF3hD3S/inITRTlG1ZGNvYnl9Tc1SdVCj8EdTREg==
-X-Received: by 2002:a17:906:da09:b0:a3d:eaf9:6404 with SMTP id fi9-20020a170906da0900b00a3deaf96404mr2751348ejb.57.1708162781090;
-        Sat, 17 Feb 2024 01:39:41 -0800 (PST)
-Received: from krzk-bin.. ([78.10.207.130])
-        by smtp.gmail.com with ESMTPSA id vg8-20020a170907d30800b00a3d70dc4337sm821145ejc.102.2024.02.17.01.39.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Feb 2024 01:39:40 -0800 (PST)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Chun-Kuang Hu <chunkuang.hu@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-phy@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	linux-amlogic@lists.infradead.org,
-	netdev@vger.kernel.org,
-	dri-devel@lists.freedesktop.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-rockchip@lists.infradead.org,
-	linux-samsung-soc@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com,
-	linux-tegra@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] phy: constify of_phandle_args in xlate
-Date: Sat, 17 Feb 2024 10:39:37 +0100
-Message-Id: <20240217093937.58234-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A88E241C63;
+	Sat, 17 Feb 2024 14:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.178.238
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708180283; cv=fail; b=Inz9sF7vyV3+51aEER7wG/3OKTigi6vmRYlQrEaW6JG304cHzErZ9HUkkKFYXK4wqzAn5r6W3lwFrgS4rBBqmySMMVbDJ4aZbXtP6YHOInYK8+fcykCjI1Do5zu7F/euPiEHLFGbPVJT6RScijhLMOGXLBXjQ07I5xfqhbu7Xxs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708180283; c=relaxed/simple;
+	bh=knB5Wr0EdvldGQRBN5rgKEiI3upQjgeFbpoodzisEAA=;
+	h=From:To:Subject:Date:Message-Id:Content-Type:MIME-Version; b=d2nQSPuKfHBeBKLhB19NWY83qhpxWJaql7DqulEXp6R1uVgHFU8KWIHGfJP/qMa+rltnUYNus8Br5dJoqYS44fZQuHqQPBMc4fa7vdJWG+9Sm/t+kvOWQty+fjiDfZ70OP6uGVXV6b3xIresXrM35vJozPayhFbpeH6PRx5XPJ0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com; spf=pass smtp.mailfrom=windriver.com; dkim=pass (2048-bit key) header.d=windriver.com header.i=@windriver.com header.b=IbSwpNi3; arc=fail smtp.client-ip=205.220.178.238
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=windriver.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=windriver.com
+Received: from pps.filterd (m0250812.ppops.net [127.0.0.1])
+	by mx0a-0064b401.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41HDfIU4002150;
+	Sat, 17 Feb 2024 13:53:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=windriver.com;
+	 h=from:to:subject:date:message-id:content-transfer-encoding
+	:content-type:mime-version; s=PPS06212021; bh=mF0XP3Dq9AaRaDfxaQ
+	QVmxh6UnzuW/dbeRBhpf7Ent4=; b=IbSwpNi3yOsrKhgsHzQLKxODoGdYk5Mb/6
+	euKAt8n9XXio2vmLqU5ofDJImud7uPcnh89YnioSQJP9dRCymzXYdXjNPesMXJMu
+	04wm015B+txHr3CjIAiWTHmHUdaH/2uThev+fwLFwPz3FTNDf+TPRCuesym6hy1b
+	aXOrJ/iX8h06S5yBmYhowcIt23dXSFe7Z3CLNqOFn2+SCOTkD20vKVbDDMPLmK1K
+	SaQ38emeTCygd8ZA34VPN6gJujuDK78a+HPbZdKlROHWaujDV8PbXZ3F5SvrgsK8
+	LJeRJ8F/n+F9GEKoJ4odB57JkEo+WE4u2wPqM18PF7MecsvQxH1w==
+Received: from nam11-dm6-obe.outbound.protection.outlook.com (mail-dm6nam11lp2168.outbound.protection.outlook.com [104.47.57.168])
+	by mx0a-0064b401.pphosted.com (PPS) with ESMTPS id 3waks68a5j-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Sat, 17 Feb 2024 13:53:16 +0000 (GMT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=JuNkqiYVyM1pkcCka8TBpYyF01mydrhwQKkUONVpJiNggvcteSI3yyyJZNGbaigd6AgDxhgC6Iz1ng3oO2hwwVtfn7YNuEStyej9am/sRV9MhZ+9JKnLmkG2xHopohqs4WBFeBz3iCAeX1z/TdezMoxJKu7iEB1hKQTrG5QrIJxppbChg2AIx0jV3jfNoJxQilpQEK8v52LngZEGv4b0kdPDdllYVaZjALuw7bXIgRims5ofBEdeRsZ3bD8FBC+p2lmPSqi9GZOLG/qxT8Ek44sQbzshwwU6QwHblbcCRcb0M6WXbQafeTdd8vLL4KyKt/XI/KZ3bT8qae4x+4glYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=mF0XP3Dq9AaRaDfxaQQVmxh6UnzuW/dbeRBhpf7Ent4=;
+ b=ea5huz+F2XXTfqiBm2vpxJNc+XOxeGABmsNeGu4nOwk6hyvmPu9qLlS68KOqOiGKuyibGYRYrGahILeNUNEPmDGRI+3EWavSDzoXTU31BZxO9H2J982duXgyTvBxFoSO0+n5AwQKQUDXm5Sgk9jCPA2+82BwgzsYZxTx1FTc8HFVA2YJiWYvlkUP9atHODc0R+JoOPagJ7vYV3t17XjuX2ijUTHe6djcM2WiQSs37T+LMNr5exvaqcjg/P/363EeoZNJEqpeg5dc2seHH2/8V80SiopU1YzwN+sxNZJSImxqz4rhKAW23/1SW4rY5BuRvh0QtIC3y7+TJN/P1Kzrzg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=windriver.com; dmarc=pass action=none
+ header.from=windriver.com; dkim=pass header.d=windriver.com; arc=none
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com (2603:10b6:303:197::8)
+ by PH8PR11MB8063.namprd11.prod.outlook.com (2603:10b6:510:252::15) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.31; Sat, 17 Feb
+ 2024 13:53:12 +0000
+Received: from MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::9c74:bf8d:9e30:b9be]) by MW5PR11MB5764.namprd11.prod.outlook.com
+ ([fe80::9c74:bf8d:9e30:b9be%4]) with mapi id 15.20.7292.027; Sat, 17 Feb 2024
+ 13:53:12 +0000
+From: Xiaolei Wang <xiaolei.wang@windriver.com>
+To: linus.walleij@linaro.org, brgl@bgdev.pl, andriy.shevchenko@linux.intel.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [linux-next][PATCH 1/1] gpio: Delete excess allocated label memory
+Date: Sat, 17 Feb 2024 21:52:55 +0800
+Message-Id: <20240217135255.1128716-1-xiaolei.wang@windriver.com>
+X-Mailer: git-send-email 2.25.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2P153CA0016.APCP153.PROD.OUTLOOK.COM
+ (2603:1096:4:140::17) To MW5PR11MB5764.namprd11.prod.outlook.com
+ (2603:10b6:303:197::8)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MW5PR11MB5764:EE_|PH8PR11MB8063:EE_
+X-MS-Office365-Filtering-Correlation-Id: 001229f1-52b6-4720-ebf6-08dc2fbfc7d4
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: 
+	XXkhOsTdFeBLmgqbMNy12eAroeiRadBFau0Va9Kv2cHSM12e2oEML6U/dgPBqDvekZlTtT6qq7lqGRhGp+iqcJ8/QgsLoh1rAoGQ7mMjjC3oGPUyxvRKZnunTR9Q1se96hXxHHHeDa4w1BQbeIBhGyEyKcZhqKepQm04y7a3v5dFywZIwwVOcdbJyb80ERgHrGxOnVRqvERpdbVbos/ha/hTnMaHVYEFf+cIVSIaVHlk2d8M2+URCxpnyHEw7VxOwRaG7N17s9OLrSyT40K2aNP2p9aBoKVgz1ixOsRjTD133fcDnUkPBfI2wdIyZKcP3UcqVZ2q9mhIqoS+SXP8mhX1MOXPGYX8XVrlhIuKvU/reyoerq2s3Ke1tNTrVVJIHrSxlpQ/2dw/K4et4NOY8vCPFthvQbFFa4SRZjAOpUYNdw3cHQov7ziSrE0v9tWPAzIPTZJWJTGWnabVgCOlHGGFeDlUEh9uezJiwe6tFfrVZXwv1q/V4KhlmYHZ9kqNO6nInlD4tZpQbLPiZV3TE0M3N1bR0hw79borTV6n4bEjjUjHh2jSykoY+3YSmV+DULUMoeOgIOMS5/KV5j6k7dqWw/7rWD/5cruT7Ct7582u7ffAZK45Mlp9dgo/nROt
+X-Forefront-Antispam-Report: 
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MW5PR11MB5764.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376002)(366004)(396003)(39850400004)(346002)(136003)(230922051799003)(1800799012)(186009)(64100799003)(451199024)(36756003)(86362001)(316002)(2906002)(6512007)(6486002)(8936002)(66946007)(38100700002)(1076003)(66556008)(66476007)(6506007)(41300700001)(8676002)(83380400001)(6666004)(38350700005)(5660300002)(52116002)(478600001)(44832011)(26005)(2616005);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0: 
+	=?us-ascii?Q?XDBBUxVHhNxhVAump27ku61Hcgz6Q4/RKlB9wUHclQvh3R85BcMp922UZr7P?=
+ =?us-ascii?Q?XbmvfhBh/W9aVcFskko3QnLe5Fa5XBqNQqsajRYxMFp+zEFuPDOUWS/qB2xt?=
+ =?us-ascii?Q?oqJKvCDQOrpFameOPT2y/eCWPrdHUp4Bc8lT2URRyN2V+g2VqfWfGzK9RUgF?=
+ =?us-ascii?Q?D9k77O1usERA2v4mm2HXSNXotRZ7t55AWUJByZt6SHDHKXE5zgHynxlpGKvA?=
+ =?us-ascii?Q?5mCj0Gdu6tAZP9YAd05iBgdXHqD1JrC6iqbht22pUUXjUPJaWsyUKhKFHU9r?=
+ =?us-ascii?Q?s4ng6kevkj3csQl+vRaEUIQtEkyNRlzTlcYrNuhMaLZU6eSvuPntqu/jBdsx?=
+ =?us-ascii?Q?O0sB4JBDp+mTLDixz/ySVp3/VmqWl73XB+45+9lKqWGV7seC+I99cF7E3Eb6?=
+ =?us-ascii?Q?V6Ngytfbros855yUJWtx+lXhLgfhs1BMzcilXub73yhMx1WetNAgZigx7jLW?=
+ =?us-ascii?Q?5DOcRP3qi20a+HiNucMavxumnwFQwLaAkF1DWm/qPEE8lVAXeDj+j9sshara?=
+ =?us-ascii?Q?n4OJSZsISE0g52d7YQ0/owhxsMSuDPKvMBgoj17RcsXqFHh7eUQq3oFfXRey?=
+ =?us-ascii?Q?i0lcU1HUHlFuH7AWNGA+6hp9glmNpLuEIUbl29n2EhfSHQLDvg7mOY69LHyn?=
+ =?us-ascii?Q?kOusXbkmthYs6859aCPgvN1df3yi7JZTNRnoQ1vuoR6iY0vIhTfNRXH3KCOY?=
+ =?us-ascii?Q?5RfTiQXcSl6Y31RGjZbosuN3Zv0Zl0eSkWmvSndRbL8R1VUav8544UdeEEH+?=
+ =?us-ascii?Q?40gQ3hAMVdoKniM02s0gtKi5QItxmFbxMXqNY+Er5u0RMOumJEzqAdwpkASX?=
+ =?us-ascii?Q?vqsH6gEMEkB0G5gOcbl6+Y/bKBwTXUx5Xinfebp8kFVQGwVmqNtEs/7tJ3S8?=
+ =?us-ascii?Q?Ew3syPOxt+T/yAxTIsKZy9yl93DBUr/Cl9Z7DPOBon4gAQBNXA8gLTU3ei3w?=
+ =?us-ascii?Q?sZZfjnU/puODKW8oLSKAv/wXa9SEigH1Rw3EVBY0JYCSaee5PswWZFW/3nUY?=
+ =?us-ascii?Q?CQzmg+EBaGCe07+LPZq2+MgnM5jmk4R7QZSNhDEnPvj8G3dHrl6fRBtPhdDX?=
+ =?us-ascii?Q?D3/4Boh2LsokCF+pmuhtnZE6q+siq8amglIntamdO/ZsKd9zacXVrjdv/QxM?=
+ =?us-ascii?Q?eYRKdu934EKNdylyRc39HTBlsycxZtlS1ij/Q9nZJ++JcCgwpVUQXO5vurmC?=
+ =?us-ascii?Q?95Ew4ITBqex5kXqo/zG6UMgikDFP4lW3ZsP5X/G1aYJ+W+qOA7RXu3kPlWpT?=
+ =?us-ascii?Q?BCacQ5z1L6djOlihPAN08PnEplsfuFt0vt08v/l09TV8atqrRl6nYHqpW2y3?=
+ =?us-ascii?Q?uI/8VWQykBEkDpIw38vJ6/RSnYH6KqVYk5topael1srpp1ERHryJ74tPGK+z?=
+ =?us-ascii?Q?wZwUkVov/curEhhnoFc5rEh3RMXgeW3ouLvn2bXQl6EpqNm9W0W1yfMuwKWr?=
+ =?us-ascii?Q?MNIdAK2LzHaEaFMCKRZE/lva3RFunT4RNxhKURpiyP0smS1gNPOPTqgmKP9i?=
+ =?us-ascii?Q?Tf+E8sVHNxP3T+tP3RylfAvyMJ/6oYh64dKe1P8pUmRNxBw542UgwcZc0ydV?=
+ =?us-ascii?Q?MxHPV14N8uiAxwYbNfj9lphI9XtoyK89UxkQiN29jU6+V+V9RyiDzBeU7w2A?=
+ =?us-ascii?Q?fA=3D=3D?=
+X-OriginatorOrg: windriver.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 001229f1-52b6-4720-ebf6-08dc2fbfc7d4
+X-MS-Exchange-CrossTenant-AuthSource: MW5PR11MB5764.namprd11.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 17 Feb 2024 13:53:12.3010
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 8ddb2873-a1ad-4a18-ae4e-4644631433be
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: F9YQbjTru80Oq74popuy1e2gN/hiiX2kbLGNWxb5Vm2S09i+K7bIv80vyMrGIDu+usqkD6gPVXr+gvM2wrw419U+WODEjoBI1bcPLPmF/ks=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR11MB8063
+X-Proofpoint-ORIG-GUID: JolyDotmc4MYXIp8SC1m92R6vD2hlTSE
+X-Proofpoint-GUID: JolyDotmc4MYXIp8SC1m92R6vD2hlTSE
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-02-17_10,2024-02-16_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ impostorscore=0 clxscore=1011 phishscore=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 lowpriorityscore=0 adultscore=0 bulkscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2401310000 definitions=main-2402170112
 
-The xlate callbacks are supposed to translate of_phandle_args to proper
-provider without modifying the of_phandle_args.  Make the argument
-pointer to const for code safety and readability.
+The changes in commit 1f2bcb8c8ccd ("gpio: protect the
+descriptor label with SRCU"), desc_set_label has already
+allocated memory space for the label, so there is no need
+to allocate it again. otherwise memory leaks will be
+introduced.
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+unreferenced object 0xffff0000c3e4d0c0 (size 32):
+  comm "kworker/u16:4", pid 60, jiffies 4294894555
+  hex dump (first 32 bytes):
+    72 65 67 75 6c 61 74 6f 72 2d 63 61 6e 32 2d 73  regulator-can2-s
+    74 62 79 00 00 00 ff ff ff ff ff ff eb db ff ff  tby.............
+  backtrace (crc 2c3a0350):
+    [<00000000e93c5cf4>] kmemleak_alloc+0x34/0x40
+    [<0000000097a2657f>] __kmalloc_node_track_caller+0x2c4/0x524
+    [<000000000dd1c057>] kstrdup+0x4c/0x98
+    [<00000000b513a96a>] kstrdup_const+0x34/0x40
+    [<000000008a7f0feb>] gpiod_request_commit+0xdc/0x358
+    [<00000000fc71ad64>] gpiod_request+0xd8/0x204
+    [<00000000fa24b091>] gpiod_find_and_request+0x170/0x780
+    [<0000000086ecf92d>] gpiod_get_index+0x70/0xe0
+    [<000000004aef97f9>] gpiod_get_optional+0x18/0x30
+    [<00000000312f1b25>] reg_fixed_voltage_probe+0x58c/0xad8
+    [<00000000e6f47635>] platform_probe+0xc4/0x198
+    [<00000000cf78fbdb>] really_probe+0x204/0x5a8
+    [<00000000e28d05ec>] __driver_probe_device+0x158/0x2c4
+    [<00000000e4fe452b>] driver_probe_device+0x60/0x18c
+    [<00000000479fcf5d>] __device_attach_driver+0x168/0x208
+    [<000000007d389f38>] bus_for_each_drv+0x104/0x190
+
+Fixes: 1f2bcb8c8ccd ("gpio: protect the descriptor label with SRCU")
+Signed-off-by: Xiaolei Wang <xiaolei.wang@windriver.com>
 ---
- drivers/phy/allwinner/phy-sun4i-usb.c              |  2 +-
- drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c     |  2 +-
- drivers/phy/broadcom/phy-bcm-sr-pcie.c             |  2 +-
- drivers/phy/broadcom/phy-bcm-sr-usb.c              |  2 +-
- drivers/phy/broadcom/phy-bcm63xx-usbh.c            |  2 +-
- drivers/phy/broadcom/phy-brcm-usb.c                |  2 +-
- drivers/phy/freescale/phy-fsl-imx8qm-lvds-phy.c    |  2 +-
- drivers/phy/freescale/phy-fsl-lynx-28g.c           |  2 +-
- drivers/phy/hisilicon/phy-histb-combphy.c          |  2 +-
- drivers/phy/intel/phy-intel-lgm-combo.c            |  2 +-
- drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c        |  2 +-
- drivers/phy/marvell/phy-armada375-usb2.c           |  2 +-
- drivers/phy/marvell/phy-armada38x-comphy.c         |  2 +-
- drivers/phy/marvell/phy-berlin-sata.c              |  2 +-
- drivers/phy/marvell/phy-mvebu-a3700-comphy.c       |  2 +-
- drivers/phy/marvell/phy-mvebu-cp110-comphy.c       |  2 +-
- drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c        |  2 +-
- drivers/phy/mediatek/phy-mtk-tphy.c                |  2 +-
- drivers/phy/mediatek/phy-mtk-xsphy.c               |  2 +-
- drivers/phy/microchip/lan966x_serdes.c             |  2 +-
- drivers/phy/microchip/sparx5_serdes.c              |  2 +-
- drivers/phy/mscc/phy-ocelot-serdes.c               |  2 +-
- drivers/phy/phy-core.c                             |  8 ++++----
- drivers/phy/phy-xgene.c                            |  2 +-
- drivers/phy/qualcomm/phy-qcom-qmp-combo.c          |  2 +-
- drivers/phy/ralink/phy-mt7621-pci.c                |  2 +-
- drivers/phy/renesas/phy-rcar-gen2.c                |  2 +-
- drivers/phy/renesas/phy-rcar-gen3-usb2.c           |  2 +-
- drivers/phy/renesas/r8a779f0-ether-serdes.c        |  2 +-
- drivers/phy/rockchip/phy-rockchip-naneng-combphy.c |  2 +-
- drivers/phy/rockchip/phy-rockchip-pcie.c           |  2 +-
- drivers/phy/samsung/phy-exynos-mipi-video.c        |  2 +-
- drivers/phy/samsung/phy-exynos5-usbdrd.c           |  2 +-
- drivers/phy/samsung/phy-samsung-usb2.c             |  2 +-
- drivers/phy/socionext/phy-uniphier-usb2.c          |  2 +-
- drivers/phy/st/phy-miphy28lp.c                     |  2 +-
- drivers/phy/st/phy-spear1310-miphy.c               |  2 +-
- drivers/phy/st/phy-spear1340-miphy.c               |  2 +-
- drivers/phy/st/phy-stm32-usbphyc.c                 |  2 +-
- drivers/phy/tegra/xusb.c                           |  2 +-
- drivers/phy/ti/phy-am654-serdes.c                  |  2 +-
- drivers/phy/ti/phy-da8xx-usb.c                     |  2 +-
- drivers/phy/ti/phy-gmii-sel.c                      |  2 +-
- drivers/phy/xilinx/phy-zynqmp.c                    |  2 +-
- drivers/pinctrl/tegra/pinctrl-tegra-xusb.c         |  2 +-
- include/linux/phy/phy.h                            | 14 +++++++-------
- 46 files changed, 55 insertions(+), 55 deletions(-)
+ drivers/gpio/gpiolib.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-diff --git a/drivers/phy/allwinner/phy-sun4i-usb.c b/drivers/phy/allwinner/phy-sun4i-usb.c
-index e53a9a9317bc..b0f19e950601 100644
---- a/drivers/phy/allwinner/phy-sun4i-usb.c
-+++ b/drivers/phy/allwinner/phy-sun4i-usb.c
-@@ -683,7 +683,7 @@ static int sun4i_usb_phy0_vbus_notify(struct notifier_block *nb,
- }
- 
- static struct phy *sun4i_usb_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct sun4i_usb_phy_data *data = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-index 2712c4bd549d..5468831d6ab9 100644
---- a/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-+++ b/drivers/phy/amlogic/phy-meson-g12a-usb3-pcie.c
-@@ -350,7 +350,7 @@ static int phy_g12a_usb3_pcie_exit(struct phy *phy)
- }
- 
- static struct phy *phy_g12a_usb3_pcie_xlate(struct device *dev,
--					    struct of_phandle_args *args)
-+					    const struct of_phandle_args *args)
- {
- 	struct phy_g12a_usb3_pcie_priv *priv = dev_get_drvdata(dev);
- 	unsigned int mode;
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-pcie.c b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
-index 8a4aadf166cf..ff9b3862bf7a 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-pcie.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-pcie.c
-@@ -195,7 +195,7 @@ static const struct phy_ops sr_paxc_phy_ops = {
- };
- 
- static struct phy *sr_pcie_phy_xlate(struct device *dev,
--				     struct of_phandle_args *args)
-+				     const struct of_phandle_args *args)
- {
- 	struct sr_pcie_phy_core *core;
- 	int phy_idx;
-diff --git a/drivers/phy/broadcom/phy-bcm-sr-usb.c b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-index b0bd18a5df87..6bcfe83609c8 100644
---- a/drivers/phy/broadcom/phy-bcm-sr-usb.c
-+++ b/drivers/phy/broadcom/phy-bcm-sr-usb.c
-@@ -209,7 +209,7 @@ static const struct phy_ops sr_phy_ops = {
- };
- 
- static struct phy *bcm_usb_phy_xlate(struct device *dev,
--				     struct of_phandle_args *args)
-+				     const struct of_phandle_args *args)
- {
- 	struct bcm_usb_phy_cfg *phy_cfg;
- 	int phy_idx;
-diff --git a/drivers/phy/broadcom/phy-bcm63xx-usbh.c b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-index f8183dea774b..647644de041b 100644
---- a/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-+++ b/drivers/phy/broadcom/phy-bcm63xx-usbh.c
-@@ -366,7 +366,7 @@ static const struct phy_ops bcm63xx_usbh_phy_ops = {
- };
- 
- static struct phy *bcm63xx_usbh_phy_xlate(struct device *dev,
--					  struct of_phandle_args *args)
-+					  const struct of_phandle_args *args)
- {
- 	struct bcm63xx_usbh_phy *usbh = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/broadcom/phy-brcm-usb.c b/drivers/phy/broadcom/phy-brcm-usb.c
-index a16f0b58eb74..ad2eec095601 100644
---- a/drivers/phy/broadcom/phy-brcm-usb.c
-+++ b/drivers/phy/broadcom/phy-brcm-usb.c
-@@ -175,7 +175,7 @@ static const struct phy_ops brcm_usb_phy_ops = {
- };
- 
- static struct phy *brcm_usb_phy_xlate(struct device *dev,
--				      struct of_phandle_args *args)
-+				      const struct of_phandle_args *args)
- {
- 	struct brcm_usb_phy_data *data = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/freescale/phy-fsl-imx8qm-lvds-phy.c b/drivers/phy/freescale/phy-fsl-imx8qm-lvds-phy.c
-index 0ae052df3765..38388dd04bdc 100644
---- a/drivers/phy/freescale/phy-fsl-imx8qm-lvds-phy.c
-+++ b/drivers/phy/freescale/phy-fsl-imx8qm-lvds-phy.c
-@@ -294,7 +294,7 @@ static int mixel_lvds_phy_reset(struct device *dev)
- }
- 
- static struct phy *mixel_lvds_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct mixel_lvds_phy_priv *priv = dev_get_drvdata(dev);
- 	unsigned int phy_id;
-diff --git a/drivers/phy/freescale/phy-fsl-lynx-28g.c b/drivers/phy/freescale/phy-fsl-lynx-28g.c
-index e2187767ce00..b86da8e9daa4 100644
---- a/drivers/phy/freescale/phy-fsl-lynx-28g.c
-+++ b/drivers/phy/freescale/phy-fsl-lynx-28g.c
-@@ -556,7 +556,7 @@ static void lynx_28g_lane_read_configuration(struct lynx_28g_lane *lane)
- }
- 
- static struct phy *lynx_28g_xlate(struct device *dev,
--				  struct of_phandle_args *args)
-+				  const struct of_phandle_args *args)
- {
- 	struct lynx_28g_priv *priv = dev_get_drvdata(dev);
- 	int idx = args->args[0];
-diff --git a/drivers/phy/hisilicon/phy-histb-combphy.c b/drivers/phy/hisilicon/phy-histb-combphy.c
-index c44588fd5a53..7436dcae3981 100644
---- a/drivers/phy/hisilicon/phy-histb-combphy.c
-+++ b/drivers/phy/hisilicon/phy-histb-combphy.c
-@@ -163,7 +163,7 @@ static const struct phy_ops histb_combphy_ops = {
- };
- 
- static struct phy *histb_combphy_xlate(struct device *dev,
--				       struct of_phandle_args *args)
-+				       const struct of_phandle_args *args)
- {
- 	struct histb_combphy_priv *priv = dev_get_drvdata(dev);
- 	struct histb_combphy_mode *mode = &priv->mode;
-diff --git a/drivers/phy/intel/phy-intel-lgm-combo.c b/drivers/phy/intel/phy-intel-lgm-combo.c
-index d32e267c0001..f8e3054a9e59 100644
---- a/drivers/phy/intel/phy-intel-lgm-combo.c
-+++ b/drivers/phy/intel/phy-intel-lgm-combo.c
-@@ -508,7 +508,7 @@ static const struct phy_ops intel_cbphy_ops = {
- };
- 
- static struct phy *intel_cbphy_xlate(struct device *dev,
--				     struct of_phandle_args *args)
-+				     const struct of_phandle_args *args)
- {
- 	struct intel_combo_phy *cbphy = dev_get_drvdata(dev);
- 	u32 iphy_id;
-diff --git a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-index ef93bf2cba10..406a87c8b759 100644
---- a/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-+++ b/drivers/phy/lantiq/phy-lantiq-vrx200-pcie.c
-@@ -358,7 +358,7 @@ static const struct phy_ops ltq_vrx200_pcie_phy_ops = {
- };
- 
- static struct phy *ltq_vrx200_pcie_phy_xlate(struct device *dev,
--					     struct of_phandle_args *args)
-+					     const struct of_phandle_args *args)
- {
- 	struct ltq_vrx200_pcie_phy_priv *priv = dev_get_drvdata(dev);
- 	unsigned int mode;
-diff --git a/drivers/phy/marvell/phy-armada375-usb2.c b/drivers/phy/marvell/phy-armada375-usb2.c
-index b141e3cd8a94..3731f9b25655 100644
---- a/drivers/phy/marvell/phy-armada375-usb2.c
-+++ b/drivers/phy/marvell/phy-armada375-usb2.c
-@@ -61,7 +61,7 @@ static const struct phy_ops armada375_usb_phy_ops = {
-  * USB3 case it still optional and we use ENODEV.
-  */
- static struct phy *armada375_usb_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct armada375_cluster_phy *cluster_phy = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/marvell/phy-armada38x-comphy.c b/drivers/phy/marvell/phy-armada38x-comphy.c
-index d3259984ee8e..5063361b0120 100644
---- a/drivers/phy/marvell/phy-armada38x-comphy.c
-+++ b/drivers/phy/marvell/phy-armada38x-comphy.c
-@@ -160,7 +160,7 @@ static const struct phy_ops a38x_comphy_ops = {
- };
- 
- static struct phy *a38x_comphy_xlate(struct device *dev,
--				     struct of_phandle_args *args)
-+				     const struct of_phandle_args *args)
- {
- 	struct a38x_comphy_lane *lane;
- 	struct phy *phy;
-diff --git a/drivers/phy/marvell/phy-berlin-sata.c b/drivers/phy/marvell/phy-berlin-sata.c
-index f972d78372ea..c90e2867900c 100644
---- a/drivers/phy/marvell/phy-berlin-sata.c
-+++ b/drivers/phy/marvell/phy-berlin-sata.c
-@@ -155,7 +155,7 @@ static int phy_berlin_sata_power_off(struct phy *phy)
- }
- 
- static struct phy *phy_berlin_sata_phy_xlate(struct device *dev,
--					     struct of_phandle_args *args)
-+					     const struct of_phandle_args *args)
- {
- 	struct phy_berlin_priv *priv = dev_get_drvdata(dev);
- 	int i;
-diff --git a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-index 24c3371e2bb2..41162d7228c9 100644
---- a/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-a3700-comphy.c
-@@ -1213,7 +1213,7 @@ static const struct phy_ops mvebu_a3700_comphy_ops = {
- };
- 
- static struct phy *mvebu_a3700_comphy_xlate(struct device *dev,
--					    struct of_phandle_args *args)
-+					    const struct of_phandle_args *args)
- {
- 	struct mvebu_a3700_comphy_lane *lane;
- 	unsigned int port;
-diff --git a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-index b0dd13366598..da5e8f405749 100644
---- a/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-+++ b/drivers/phy/marvell/phy-mvebu-cp110-comphy.c
-@@ -917,7 +917,7 @@ static const struct phy_ops mvebu_comphy_ops = {
- };
- 
- static struct phy *mvebu_comphy_xlate(struct device *dev,
--				      struct of_phandle_args *args)
-+				      const struct of_phandle_args *args)
- {
- 	struct mvebu_comphy_lane *lane;
- 	struct phy *phy;
-diff --git a/drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c b/drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c
-index 972c129185f7..058e1d926630 100644
---- a/drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c
-+++ b/drivers/phy/mediatek/phy-mtk-mipi-csi-0-5.c
-@@ -165,7 +165,7 @@ static int mtk_mipi_phy_power_off(struct phy *phy)
- }
- 
- static struct phy *mtk_mipi_cdphy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct mtk_mipi_cdphy_port *priv = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/mediatek/phy-mtk-tphy.c b/drivers/phy/mediatek/phy-mtk-tphy.c
-index a4746f6cb8a1..25b86bbb9cec 100644
---- a/drivers/phy/mediatek/phy-mtk-tphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-tphy.c
-@@ -1467,7 +1467,7 @@ static int mtk_phy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
- }
- 
- static struct phy *mtk_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct mtk_tphy *tphy = dev_get_drvdata(dev);
- 	struct mtk_phy_instance *instance = NULL;
-diff --git a/drivers/phy/mediatek/phy-mtk-xsphy.c b/drivers/phy/mediatek/phy-mtk-xsphy.c
-index b222fbbd71d1..064fd0941727 100644
---- a/drivers/phy/mediatek/phy-mtk-xsphy.c
-+++ b/drivers/phy/mediatek/phy-mtk-xsphy.c
-@@ -378,7 +378,7 @@ static int mtk_phy_set_mode(struct phy *phy, enum phy_mode mode, int submode)
- }
- 
- static struct phy *mtk_phy_xlate(struct device *dev,
--				 struct of_phandle_args *args)
-+				 const struct of_phandle_args *args)
- {
- 	struct mtk_xsphy *xsphy = dev_get_drvdata(dev);
- 	struct xsphy_instance *inst = NULL;
-diff --git a/drivers/phy/microchip/lan966x_serdes.c b/drivers/phy/microchip/lan966x_serdes.c
-index b5ac2b7995e7..835e369cdfc5 100644
---- a/drivers/phy/microchip/lan966x_serdes.c
-+++ b/drivers/phy/microchip/lan966x_serdes.c
-@@ -518,7 +518,7 @@ static const struct phy_ops serdes_ops = {
- };
- 
- static struct phy *serdes_simple_xlate(struct device *dev,
--				       struct of_phandle_args *args)
-+				       const struct of_phandle_args *args)
- {
- 	struct serdes_ctrl *ctrl = dev_get_drvdata(dev);
- 	unsigned int port, idx, i;
-diff --git a/drivers/phy/microchip/sparx5_serdes.c b/drivers/phy/microchip/sparx5_serdes.c
-index 01bd5ea620c5..7cb85029fab3 100644
---- a/drivers/phy/microchip/sparx5_serdes.c
-+++ b/drivers/phy/microchip/sparx5_serdes.c
-@@ -2509,7 +2509,7 @@ static struct sparx5_serdes_io_resource sparx5_serdes_iomap[] =  {
- 
- /* Client lookup function, uses serdes index */
- static struct phy *sparx5_serdes_xlate(struct device *dev,
--				     struct of_phandle_args *args)
-+				     const struct of_phandle_args *args)
- {
- 	struct sparx5_serdes_private *priv = dev_get_drvdata(dev);
- 	int idx;
-diff --git a/drivers/phy/mscc/phy-ocelot-serdes.c b/drivers/phy/mscc/phy-ocelot-serdes.c
-index d9443e865a78..1cd1b5db2ad7 100644
---- a/drivers/phy/mscc/phy-ocelot-serdes.c
-+++ b/drivers/phy/mscc/phy-ocelot-serdes.c
-@@ -441,7 +441,7 @@ static const struct phy_ops serdes_ops = {
- };
- 
- static struct phy *serdes_simple_xlate(struct device *dev,
--				       struct of_phandle_args *args)
-+				       const struct of_phandle_args *args)
- {
- 	struct serdes_ctrl *ctrl = dev_get_drvdata(dev);
- 	unsigned int port, idx, i;
-diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
-index 2e8b07eb637a..c5c8d70bc853 100644
---- a/drivers/phy/phy-core.c
-+++ b/drivers/phy/phy-core.c
-@@ -747,8 +747,8 @@ EXPORT_SYMBOL_GPL(devm_phy_put);
-  * should provide a custom of_xlate function that reads the *args* and returns
-  * the appropriate phy.
-  */
--struct phy *of_phy_simple_xlate(struct device *dev, struct of_phandle_args
--	*args)
-+struct phy *of_phy_simple_xlate(struct device *dev,
-+				const struct of_phandle_args *args)
- {
- 	struct phy *phy;
- 	struct class_dev_iter iter;
-@@ -1142,7 +1142,7 @@ EXPORT_SYMBOL_GPL(devm_phy_destroy);
- struct phy_provider *__of_phy_provider_register(struct device *dev,
- 	struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args))
-+				 const struct of_phandle_args *args))
- {
- 	struct phy_provider *phy_provider;
- 
-@@ -1205,7 +1205,7 @@ EXPORT_SYMBOL_GPL(__of_phy_provider_register);
- struct phy_provider *__devm_of_phy_provider_register(struct device *dev,
- 	struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args))
-+				 const struct of_phandle_args *args))
- {
- 	struct phy_provider **ptr, *phy_provider;
- 
-diff --git a/drivers/phy/phy-xgene.c b/drivers/phy/phy-xgene.c
-index 1f0f908323f0..5007dc7a357c 100644
---- a/drivers/phy/phy-xgene.c
-+++ b/drivers/phy/phy-xgene.c
-@@ -1611,7 +1611,7 @@ static const struct phy_ops xgene_phy_ops = {
- };
- 
- static struct phy *xgene_phy_xlate(struct device *dev,
--				   struct of_phandle_args *args)
-+				   const struct of_phandle_args *args)
- {
- 	struct xgene_phy_ctx *ctx = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-index b6908a03da58..546d3c6bee32 100644
---- a/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-+++ b/drivers/phy/qualcomm/phy-qcom-qmp-combo.c
-@@ -3454,7 +3454,7 @@ static int qmp_combo_parse_dt(struct qmp_combo *qmp)
- 	return 0;
- }
- 
--static struct phy *qmp_combo_phy_xlate(struct device *dev, struct of_phandle_args *args)
-+static struct phy *qmp_combo_phy_xlate(struct device *dev, const struct of_phandle_args *args)
- {
- 	struct qmp_combo *qmp = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/ralink/phy-mt7621-pci.c b/drivers/phy/ralink/phy-mt7621-pci.c
-index 2f876f158e1d..a591ad95347c 100644
---- a/drivers/phy/ralink/phy-mt7621-pci.c
-+++ b/drivers/phy/ralink/phy-mt7621-pci.c
-@@ -263,7 +263,7 @@ static const struct phy_ops mt7621_pci_phy_ops = {
- };
- 
- static struct phy *mt7621_pcie_phy_of_xlate(struct device *dev,
--					    struct of_phandle_args *args)
-+					    const struct of_phandle_args *args)
- {
- 	struct mt7621_pci_phy *mt7621_phy = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/renesas/phy-rcar-gen2.c b/drivers/phy/renesas/phy-rcar-gen2.c
-index 507435af2656..c0221e7258c0 100644
---- a/drivers/phy/renesas/phy-rcar-gen2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen2.c
-@@ -306,7 +306,7 @@ static const struct of_device_id rcar_gen2_phy_match_table[] = {
- MODULE_DEVICE_TABLE(of, rcar_gen2_phy_match_table);
- 
- static struct phy *rcar_gen2_phy_xlate(struct device *dev,
--				       struct of_phandle_args *args)
-+				       const struct of_phandle_args *args)
- {
- 	struct rcar_gen2_phy_driver *drv;
- 	struct device_node *np = args->np;
-diff --git a/drivers/phy/renesas/phy-rcar-gen3-usb2.c b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-index 6387c0d34c55..fbab6ac0f0d1 100644
---- a/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-+++ b/drivers/phy/renesas/phy-rcar-gen3-usb2.c
-@@ -608,7 +608,7 @@ static const unsigned int rcar_gen3_phy_cable[] = {
- };
- 
- static struct phy *rcar_gen3_phy_usb2_xlate(struct device *dev,
--					    struct of_phandle_args *args)
-+					    const struct of_phandle_args *args)
- {
- 	struct rcar_gen3_chan *ch = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/renesas/r8a779f0-ether-serdes.c b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-index fc6e398fa3bf..f1f1da4a0b1f 100644
---- a/drivers/phy/renesas/r8a779f0-ether-serdes.c
-+++ b/drivers/phy/renesas/r8a779f0-ether-serdes.c
-@@ -334,7 +334,7 @@ static const struct phy_ops r8a779f0_eth_serdes_ops = {
- };
- 
- static struct phy *r8a779f0_eth_serdes_xlate(struct device *dev,
--					     struct of_phandle_args *args)
-+					     const struct of_phandle_args *args)
- {
- 	struct r8a779f0_eth_serdes_drv_data *dd = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-index 5de5e2e97ffa..76b9cf417591 100644
---- a/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-+++ b/drivers/phy/rockchip/phy-rockchip-naneng-combphy.c
-@@ -251,7 +251,7 @@ static const struct phy_ops rochchip_combphy_ops = {
- 	.owner = THIS_MODULE,
- };
- 
--static struct phy *rockchip_combphy_xlate(struct device *dev, struct of_phandle_args *args)
-+static struct phy *rockchip_combphy_xlate(struct device *dev, const struct of_phandle_args *args)
- {
- 	struct rockchip_combphy_priv *priv = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/rockchip/phy-rockchip-pcie.c b/drivers/phy/rockchip/phy-rockchip-pcie.c
-index 1bbd6be2a584..51cc5ece0e63 100644
---- a/drivers/phy/rockchip/phy-rockchip-pcie.c
-+++ b/drivers/phy/rockchip/phy-rockchip-pcie.c
-@@ -82,7 +82,7 @@ static struct rockchip_pcie_phy *to_pcie_phy(struct phy_pcie_instance *inst)
- }
- 
- static struct phy *rockchip_pcie_phy_of_xlate(struct device *dev,
--					      struct of_phandle_args *args)
-+					      const struct of_phandle_args *args)
- {
- 	struct rockchip_pcie_phy *rk_phy = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/samsung/phy-exynos-mipi-video.c b/drivers/phy/samsung/phy-exynos-mipi-video.c
-index 592d8067e848..f6756a609a9a 100644
---- a/drivers/phy/samsung/phy-exynos-mipi-video.c
-+++ b/drivers/phy/samsung/phy-exynos-mipi-video.c
-@@ -274,7 +274,7 @@ static int exynos_mipi_video_phy_power_off(struct phy *phy)
- }
- 
- static struct phy *exynos_mipi_video_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct exynos_mipi_video_phy *state = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/samsung/phy-exynos5-usbdrd.c b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-index 3f310b28bfff..04171eed5b16 100644
---- a/drivers/phy/samsung/phy-exynos5-usbdrd.c
-+++ b/drivers/phy/samsung/phy-exynos5-usbdrd.c
-@@ -715,7 +715,7 @@ static int exynos5420_usbdrd_phy_calibrate(struct exynos5_usbdrd_phy *phy_drd)
- }
- 
- static struct phy *exynos5_usbdrd_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct exynos5_usbdrd_phy *phy_drd = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/samsung/phy-samsung-usb2.c b/drivers/phy/samsung/phy-samsung-usb2.c
-index 68a174eca0ba..9de744cd6f39 100644
---- a/drivers/phy/samsung/phy-samsung-usb2.c
-+++ b/drivers/phy/samsung/phy-samsung-usb2.c
-@@ -87,7 +87,7 @@ static const struct phy_ops samsung_usb2_phy_ops = {
- };
- 
- static struct phy *samsung_usb2_phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct samsung_usb2_phy_driver *drv;
- 
-diff --git a/drivers/phy/socionext/phy-uniphier-usb2.c b/drivers/phy/socionext/phy-uniphier-usb2.c
-index 3f2086ed4fe4..21c201717d95 100644
---- a/drivers/phy/socionext/phy-uniphier-usb2.c
-+++ b/drivers/phy/socionext/phy-uniphier-usb2.c
-@@ -81,7 +81,7 @@ static int uniphier_u2phy_init(struct phy *phy)
- }
- 
- static struct phy *uniphier_u2phy_xlate(struct device *dev,
--					struct of_phandle_args *args)
-+					const struct of_phandle_args *args)
- {
- 	struct uniphier_u2phy_priv *priv = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/st/phy-miphy28lp.c b/drivers/phy/st/phy-miphy28lp.c
-index e30305b77f0d..063fc38788ed 100644
---- a/drivers/phy/st/phy-miphy28lp.c
-+++ b/drivers/phy/st/phy-miphy28lp.c
-@@ -1074,7 +1074,7 @@ static int miphy28lp_get_addr(struct miphy28lp_phy *miphy_phy)
- }
- 
- static struct phy *miphy28lp_xlate(struct device *dev,
--				   struct of_phandle_args *args)
-+				   const struct of_phandle_args *args)
- {
- 	struct miphy28lp_dev *miphy_dev = dev_get_drvdata(dev);
- 	struct miphy28lp_phy *miphy_phy = NULL;
-diff --git a/drivers/phy/st/phy-spear1310-miphy.c b/drivers/phy/st/phy-spear1310-miphy.c
-index 35a9831b5161..c661ab63505f 100644
---- a/drivers/phy/st/phy-spear1310-miphy.c
-+++ b/drivers/phy/st/phy-spear1310-miphy.c
-@@ -183,7 +183,7 @@ static const struct phy_ops spear1310_miphy_ops = {
- };
- 
- static struct phy *spear1310_miphy_xlate(struct device *dev,
--					 struct of_phandle_args *args)
-+					 const struct of_phandle_args *args)
- {
- 	struct spear1310_miphy_priv *priv = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/st/phy-spear1340-miphy.c b/drivers/phy/st/phy-spear1340-miphy.c
-index 34a1cf21015f..85a60d64ebb7 100644
---- a/drivers/phy/st/phy-spear1340-miphy.c
-+++ b/drivers/phy/st/phy-spear1340-miphy.c
-@@ -220,7 +220,7 @@ static SIMPLE_DEV_PM_OPS(spear1340_miphy_pm_ops, spear1340_miphy_suspend,
- 			 spear1340_miphy_resume);
- 
- static struct phy *spear1340_miphy_xlate(struct device *dev,
--					 struct of_phandle_args *args)
-+					 const struct of_phandle_args *args)
- {
- 	struct spear1340_miphy_priv *priv = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/st/phy-stm32-usbphyc.c b/drivers/phy/st/phy-stm32-usbphyc.c
-index d5e7e44000b5..9dbe60dcf319 100644
---- a/drivers/phy/st/phy-stm32-usbphyc.c
-+++ b/drivers/phy/st/phy-stm32-usbphyc.c
-@@ -574,7 +574,7 @@ static void stm32_usbphyc_switch_setup(struct stm32_usbphyc *usbphyc,
- }
- 
- static struct phy *stm32_usbphyc_of_xlate(struct device *dev,
--					  struct of_phandle_args *args)
-+					  const struct of_phandle_args *args)
- {
- 	struct stm32_usbphyc *usbphyc = dev_get_drvdata(dev);
- 	struct stm32_usbphyc_phy *usbphyc_phy = NULL;
-diff --git a/drivers/phy/tegra/xusb.c b/drivers/phy/tegra/xusb.c
-index 142ebe0247cc..0dc86a7740e3 100644
---- a/drivers/phy/tegra/xusb.c
-+++ b/drivers/phy/tegra/xusb.c
-@@ -22,7 +22,7 @@
- #include "xusb.h"
- 
- static struct phy *tegra_xusb_pad_of_xlate(struct device *dev,
--					   struct of_phandle_args *args)
-+					   const struct of_phandle_args *args)
- {
- 	struct tegra_xusb_pad *pad = dev_get_drvdata(dev);
- 	struct phy *phy = NULL;
-diff --git a/drivers/phy/ti/phy-am654-serdes.c b/drivers/phy/ti/phy-am654-serdes.c
-index 3f1d43e8b7ad..8b3b937de624 100644
---- a/drivers/phy/ti/phy-am654-serdes.c
-+++ b/drivers/phy/ti/phy-am654-serdes.c
-@@ -495,7 +495,7 @@ static void serdes_am654_release(struct phy *x)
- }
- 
- static struct phy *serdes_am654_xlate(struct device *dev,
--				      struct of_phandle_args *args)
-+				      const struct of_phandle_args *args)
- {
- 	struct serdes_am654 *am654_phy;
- 	struct phy *phy;
-diff --git a/drivers/phy/ti/phy-da8xx-usb.c b/drivers/phy/ti/phy-da8xx-usb.c
-index b7a9ef3f4654..0fe577f0d6c1 100644
---- a/drivers/phy/ti/phy-da8xx-usb.c
-+++ b/drivers/phy/ti/phy-da8xx-usb.c
-@@ -119,7 +119,7 @@ static const struct phy_ops da8xx_usb20_phy_ops = {
- };
- 
- static struct phy *da8xx_usb_phy_of_xlate(struct device *dev,
--					 struct of_phandle_args *args)
-+					 const struct of_phandle_args *args)
- {
- 	struct da8xx_usb_phy *d_phy = dev_get_drvdata(dev);
- 
-diff --git a/drivers/phy/ti/phy-gmii-sel.c b/drivers/phy/ti/phy-gmii-sel.c
-index 81dd1c3449d9..b30bf740e2e0 100644
---- a/drivers/phy/ti/phy-gmii-sel.c
-+++ b/drivers/phy/ti/phy-gmii-sel.c
-@@ -297,7 +297,7 @@ static const struct phy_ops phy_gmii_sel_ops = {
- };
- 
- static struct phy *phy_gmii_sel_of_xlate(struct device *dev,
--					 struct of_phandle_args *args)
-+					 const struct of_phandle_args *args)
- {
- 	struct phy_gmii_sel_priv *priv = dev_get_drvdata(dev);
- 	int phy_id = args->args[0];
-diff --git a/drivers/phy/xilinx/phy-zynqmp.c b/drivers/phy/xilinx/phy-zynqmp.c
-index 2559c6594cea..f72c5257d712 100644
---- a/drivers/phy/xilinx/phy-zynqmp.c
-+++ b/drivers/phy/xilinx/phy-zynqmp.c
-@@ -768,7 +768,7 @@ static const unsigned int icm_matrix[NUM_LANES][CONTROLLERS_PER_LANE] = {
- 
- /* Translate OF phandle and args to PHY instance. */
- static struct phy *xpsgtr_xlate(struct device *dev,
--				struct of_phandle_args *args)
-+				const struct of_phandle_args *args)
- {
- 	struct xpsgtr_dev *gtr_dev = dev_get_drvdata(dev);
- 	struct xpsgtr_phy *gtr_phy;
-diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-index 7641848be4de..96ef57a7d385 100644
---- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-+++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
-@@ -685,7 +685,7 @@ static const struct phy_ops sata_phy_ops = {
- };
- 
- static struct phy *tegra_xusb_padctl_xlate(struct device *dev,
--					   struct of_phandle_args *args)
-+					   const struct of_phandle_args *args)
- {
- 	struct tegra_xusb_padctl *padctl = dev_get_drvdata(dev);
- 	unsigned int index = args->args[0];
-diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
-index aa76609ba258..03cd5bae92d3 100644
---- a/include/linux/phy/phy.h
-+++ b/include/linux/phy/phy.h
-@@ -181,7 +181,7 @@ struct phy_provider {
- 	struct module		*owner;
- 	struct list_head	list;
- 	struct phy * (*of_xlate)(struct device *dev,
--		struct of_phandle_args *args);
-+				 const struct of_phandle_args *args);
- };
- 
- /**
-@@ -272,7 +272,7 @@ void phy_put(struct device *dev, struct phy *phy);
- void devm_phy_put(struct device *dev, struct phy *phy);
- struct phy *of_phy_get(struct device_node *np, const char *con_id);
- struct phy *of_phy_simple_xlate(struct device *dev,
--	struct of_phandle_args *args);
-+				const struct of_phandle_args *args);
- struct phy *phy_create(struct device *dev, struct device_node *node,
- 		       const struct phy_ops *ops);
- struct phy *devm_phy_create(struct device *dev, struct device_node *node,
-@@ -282,11 +282,11 @@ void devm_phy_destroy(struct device *dev, struct phy *phy);
- struct phy_provider *__of_phy_provider_register(struct device *dev,
- 	struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args));
-+				 const struct of_phandle_args *args));
- struct phy_provider *__devm_of_phy_provider_register(struct device *dev,
- 	struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args));
-+				 const struct of_phandle_args *args));
- void of_phy_provider_unregister(struct phy_provider *phy_provider);
- void devm_of_phy_provider_unregister(struct device *dev,
- 	struct phy_provider *phy_provider);
-@@ -500,7 +500,7 @@ static inline struct phy *of_phy_get(struct device_node *np, const char *con_id)
- }
- 
- static inline struct phy *of_phy_simple_xlate(struct device *dev,
--	struct of_phandle_args *args)
-+					      const struct of_phandle_args *args)
- {
- 	return ERR_PTR(-ENOSYS);
- }
-@@ -530,7 +530,7 @@ static inline void devm_phy_destroy(struct device *dev, struct phy *phy)
- static inline struct phy_provider *__of_phy_provider_register(
- 	struct device *dev, struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args))
-+				 const struct of_phandle_args *args))
- {
- 	return ERR_PTR(-ENOSYS);
- }
-@@ -538,7 +538,7 @@ static inline struct phy_provider *__of_phy_provider_register(
- static inline struct phy_provider *__devm_of_phy_provider_register(struct device
- 	*dev, struct device_node *children, struct module *owner,
- 	struct phy * (*of_xlate)(struct device *dev,
--				 struct of_phandle_args *args))
-+				 const struct of_phandle_args *args))
- {
- 	return ERR_PTR(-ENOSYS);
- }
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 02be0ba1a402..32191547dece 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -2250,12 +2250,6 @@ static int gpiod_request_commit(struct gpio_desc *desc, const char *label)
+ 	if (test_and_set_bit(FLAG_REQUESTED, &desc->flags))
+ 		return -EBUSY;
+ 
+-	if (label) {
+-		label = kstrdup_const(label, GFP_KERNEL);
+-		if (!label)
+-			return -ENOMEM;
+-	}
+-
+ 	/* NOTE:  gpio_request() can be called in early boot,
+ 	 * before IRQs are enabled, for non-sleeping (SOC) GPIOs.
+ 	 */
 -- 
-2.34.1
+2.25.1
 
 
