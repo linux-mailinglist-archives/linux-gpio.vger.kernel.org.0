@@ -1,70 +1,70 @@
-Return-Path: <linux-gpio+bounces-3444-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3445-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF28685A76D
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 16:34:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5941385A7B8
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 16:44:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A191281F4A
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:34:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AB185B20BBC
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:44:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073C338DF1;
-	Mon, 19 Feb 2024 15:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8433939FF8;
+	Mon, 19 Feb 2024 15:44:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="m7vj9A4f"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X4tEdKw3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com [209.85.210.52])
+Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85C093AC08
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 15:34:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7E05381CE
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 15:44:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708356856; cv=none; b=D+LDa6uQ2Vp9+DXP1Jtx2L3KoWPxVaGikg7ApLTzcT6WBLUD5jt0nYzBnR16+Fb4T3ANr5t8Hi1gFTiq3dWkz0sq8WLtt5E6WBC5la06/T2sVb3Gl554NBlE/5jyRIDQQsx2SJz+a/HrWJA+g0SlDNqcwVS2V1Az8cf1/+dJ8tQ=
+	t=1708357475; cv=none; b=dsmrWdvq/6q5PhCg9ptn2yKv2bpaHrxx3oYmZMRWsE/ihrmIKXnqnP2yBGHxwUeTXS1fYIL2w0/X8Q97l+XaXOajT82DTRND0ElpyeAWVg3yQdZs57pNm2aVPazRcx022mZYeHYfBX3TGBR1KBNGs8hdmaHxJFCtyM40kcpi8Wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708356856; c=relaxed/simple;
-	bh=OFg9oqTwcZyyxLA+PL9UVn1Rcz+N4HoQ9s8zDEcli2A=;
+	s=arc-20240116; t=1708357475; c=relaxed/simple;
+	bh=scapKyQRwA19QJoXyDPy0Su1Y5BbkWzjljaaLXpiXXg=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KVFm6XDQTfXuCsNXfjJpFhdTt0r3k/k3ojPkXwMd+5rsiSuyNKTWa+wNhePXdh7BIv3aNFb3X1uTxar5PeYv6+wQlbfnV0Ubjhg3gbi+hYSysWey8hNeY5d43kGgGoNNX3bF7SgEpMY0hGRRv/8BYQ3jSF3O7CECEm0v95ByLHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=m7vj9A4f; arc=none smtp.client-ip=209.85.210.52
+	 To:Cc:Content-Type; b=CFQIEtGGLGlqQ0ss/8MybjDFzT47hqpzs8eIYQoYvvof6BYoKir2Ik8MkwMUp0iBmpgblvjdnG447dGXNWM+N73u2Uo3BKULwnI4M8mkM1K8HK9gReWYs8K8eRBlJbMTarnEPIVJy1I8Z7B7gURRUgziz8Pn5YQ2phHv+BF3w6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X4tEdKw3; arc=none smtp.client-ip=209.85.222.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ot1-f52.google.com with SMTP id 46e09a7af769-6e2df04c812so2604952a34.3
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 07:34:07 -0800 (PST)
+Received: by mail-ua1-f43.google.com with SMTP id a1e0cc1a2514c-7d6a85586e3so2014883241.2
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 07:44:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708356846; x=1708961646; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708357473; x=1708962273; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=IvVPolj8oeG4AKFrK8d+pLPilaj1PpVh47xpBNRxg+w=;
-        b=m7vj9A4f5LEzjmiSmDA/WYeQCusxwYIQiuPFw5YyE7Zsjs1qW5UoGBphfd/0GbHN7x
-         beNs5yZ9h2EVHeAfxQLvUn7cqQvZuMWq9aEjZe4a0ojsXnvjxVzdn4XwPKUxatoR25bo
-         CRqnlACzqTcmZANl0jr/CnK0S0gI7EflsuCP6LindZOlboJHu/cHTvMH6FlCHqT3qNTG
-         2DEdDC7VY1mN7rXlrTIZgvdWUEnXTzx5Rj31bjNyiPSzpIh+9jxmumangJTvPwWAyBsY
-         NZuiruElBb13g0vl4AM6T3nHDGhrTSxwWT+rSiQPImMOe44BUU+EIXhFPUg1k4R7D6vp
-         spFA==
+        bh=ZD/EM3SyhaILUHJgKgYH13JzV9F9I9A7ZoCf0KZhH9M=;
+        b=X4tEdKw3zgChjbs7FYEQhueR+CG+alJQ1fBTOjk7mS5PnSc+sA4tk/6oKch+YhDd1h
+         Rt5wHZw4mcrSS13qQU7UyWvvYBPCQ7qcxmxVObviCiSmIpDdtMouH6WiV9Un1vCSliDo
+         O3s4s3J7cjjnO5kTJeJJBqHFrx6viUFAl+BMiGuvt5bqz+hmvA85tT9IlNNeGE7b1mmn
+         aKTvcfVYPxOdhWl6EaYZW1QZ73IQjQQ5sXOAZrdMgZu9a+58vPPbPSFIBW++RTT4LErl
+         gZopxM7B33iunfoleUO+fzFKWCImrGHbQurfvznCQhD4Vpi9KQrgiLPl23vStx7syPL/
+         ABLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708356846; x=1708961646;
+        d=1e100.net; s=20230601; t=1708357473; x=1708962273;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=IvVPolj8oeG4AKFrK8d+pLPilaj1PpVh47xpBNRxg+w=;
-        b=Xc0tWRLhi1f8zr9CPBGV6v3BDN8kFWoBeUNFUId20QBri0f2KqwEVaRT7dZNSqT7j3
-         W/ngc/kknWCUGPJS/YlvEOSTuZrCqBHJxnqN0Zk4EhW+KFR/XBjNHKP+IHW+j2O2/sx4
-         wwkZsm2XyD7PcuMYYj+/JbZS9D6Ys/mAwPT4W2LXhhrJ/7cNV0wVENw9VVFJ0Jdr1CIi
-         4EMdXdjkKZ2dzxZVjcLigAe/7pnMULtSyCT/LIUXooOZSCCvyqP6be0wV0+D6ZQhqnj4
-         Ir1cdkIEyC+u70IuF1iN9N05SV/RrLPZQLa9uW2Mb9rAyHonNszgekTPp82Dq0iubuye
-         Ljnw==
-X-Forwarded-Encrypted: i=1; AJvYcCU9WNpid2885oAE2RFTOx5uMlVmelKsubQK3i/KJ6Zw+IXTHQyYor0m1ty7LszWXo4hrztVFWETkGAc94oOFXyT3yBX/o63NpCh/w==
-X-Gm-Message-State: AOJu0Yz+7yAozjYdppAEpFk2Ak8QynuTFP1vp4GJZ2yBsHQbyvhXP8WU
-	BOMjUbPo/SDcpXIZyJKdmENVzebhldhzMOrSfMKg4EQkNKWjaYpifkym53RsJ8CV3psYbSDqt7/
-	SA46zYnOngWyfiPJ84FznEeegibeFzDDV8A70Qg==
-X-Google-Smtp-Source: AGHT+IH6wgFWgrzdMctoV3icDI335MC/CdaUuFj+nGvrkX8vJ7pjFLlj1xEDLlkiBRM39lL8enM+OZmAUPyDNuGbujs=
-X-Received: by 2002:a05:6870:d24b:b0:21f:a33:e48f with SMTP id
- h11-20020a056870d24b00b0021f0a33e48fmr444912oac.11.1708356846558; Mon, 19 Feb
- 2024 07:34:06 -0800 (PST)
+        bh=ZD/EM3SyhaILUHJgKgYH13JzV9F9I9A7ZoCf0KZhH9M=;
+        b=eDpavE3UQFMJyok/Q0DY6rFMxTUhR/qB9kuDQLnIvu3PWzPBKDHZ/RJEKFIBokYLx5
+         qDTEcxPc34Qn1D9Js5FKIqKgWg5CZkspvL1ncxsNDNZiNfpwCR9NyF2yytOaY5XRSIuk
+         8Zt0fq6rQqUBh+YpQU8k/iJfS/lfBehDe+VkTwDvLOry1smQsN+mEzPPw1LMNYiy2zyX
+         kszuUHNyIX89SN+a2gfuLPDekMuRb9jKFjad28MHEkLWnGKDi27Lo1LJfsCjVzm/qxMl
+         xVrkARGT7FI/nSV48GGC9IVZw2EhjF6F9Nil02C4l39iAS1vomPq7zXNJWetRR3mG31z
+         NKsw==
+X-Forwarded-Encrypted: i=1; AJvYcCXmGji4vVP5spc0jkB9r8axsP6i2s4kBoaXTjPB+1MW+s1i7al8X5nTCAe/HTAV/ac3ae7nlpfsnHO28TQA/S4uEEetPWxNT7yE9g==
+X-Gm-Message-State: AOJu0YxHx9frQbI/jtG3pZFmgb7xuwovqEkgwQnqWTChePDo0z6eOQx4
+	ozQwpshx8s8LrzQ4EhlDzBXjq5jiIOUKOCmMNkVYVZ/LQKKLQzf61V+n0CcXEzcCJJezlYfE0hx
+	Lz0omVZXypG7encUhhkCJlpkDNN7IaxhuV33pJQ==
+X-Google-Smtp-Source: AGHT+IHcxeUZmxVYxUCGPtgB71dVPhAzF5DX1jSu8thYPPJY2f3JUx8PESy61uq6Kvu9hlkEpogZD227xE24GoTJoBg=
+X-Received: by 2002:a05:6102:3679:b0:470:574e:9766 with SMTP id
+ bg25-20020a056102367900b00470574e9766mr2196509vsb.12.1708357471314; Mon, 19
+ Feb 2024 07:44:31 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -72,52 +72,81 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
- <20240214-mbly-gpio-v1-5-f88c0ccf372b@bootlin.com> <e031566a85ae0da0ee71dffba5d87c6414ef83e1.camel@pengutronix.de>
-In-Reply-To: <e031566a85ae0da0ee71dffba5d87c6414ef83e1.camel@pengutronix.de>
+In-Reply-To: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 19 Feb 2024 16:33:55 +0100
-Message-ID: <CAMRc=Me-oEx9S0w=XhwC4MzV9uzV0o0HnWBfNSstcqg5jpXyZg@mail.gmail.com>
-Subject: Re: [PATCH 05/23] gpio: nomadik: extract GPIO platform driver from drivers/pinctrl/nomadik/
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
+Date: Mon, 19 Feb 2024 16:44:20 +0100
+Message-ID: <CAMRc=MfLXCDXBiKKuEPZRjNoNiFN+gvhu+GjZkZ1SQuF1s4=UQ@mail.gmail.com>
+Subject: Re: [PATCH 00/23] Rework Nomadik GPIO to add Mobileye EyeQ5 support
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, 
-	Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
 	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
 	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 15, 2024 at 11:03=E2=80=AFAM Philipp Zabel <p.zabel@pengutronix=
-.de> wrote:
+On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
 >
-> On Mi, 2024-02-14 at 17:23 +0100, Th=C3=A9o Lebrun wrote:
-> [...]
-> > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-> > new file mode 100644
-> > index 000000000000..e39477e1a58f
-> > --- /dev/null
-> > +++ b/drivers/gpio/gpio-nomadik.c
-> > @@ -0,0 +1,660 @@
-> [...]
-> > +static int nmk_gpio_probe(struct platform_device *dev)
-> > +{
-> [...]
-> > +     ret =3D gpiochip_add_data(chip, nmk_chip);
+> Hi,
 >
-> Use devm_gpiochip_add_data() to cleanup on unbind, before nmk_chip goes
-> away. Or make the driver un-unbindable via suppress_bind_attrs. In that
-> case you could drop devm_ prefixes everywhere for consistency.
+> This patch series reworks the Nomadik GPIO driver to bring it up to date
+> to current kernel standards. We then add Mobileye EyeQ5 support that
+> uses the same IP block but with limited functionality. We also add
+> features required by our newly supported platform:
+>
+>  - Dynamic GPIO ID allocation;
+>  - Make clock optional;
+>  - Shared IRQ (usecase: EyeQ5 has two banks using the same IRQ);
+>  - Handle variadic GPIO counts (usecase: EyeQ5 has <32 GPIOs per bank);
+>  - Grab optional reset at probe (usecase: EyeQ5 has a reset available).
+>
+> This GPIO platform driver was previously declared & registered inside
+> drivers/pinctrl/nomadik/pinctrl-nomadik.c, side-by-side with the
+> pinctrl driver. Both are tightly integrated, mostly for muxing reasons.
+> Now that gpio-nomadik is used for another platform, we loosen the
+> relationship. The behavior should not change on already supported
+> hardware but I do not have Nomadik hardware to test for that.
 >
 
-No! Why? What about error paths in probe() where you want to undo everythin=
-g?
+I hope Linus can leave his Tested-by under this series then.
+
+> We have some dependencies, kept neatly to the end. Those are:
+> - The base platform support series from Gr=C3=A9gory [1]. This relates to=
+ the
+>   last four patches (20 thru 23), ie defconfig and devicetree.
+> - The OLB syscon support series [0]. It provides reset and pinctrl nodes
+>   inside the devicetree. This relates to the last two patches (22 and
+>   23), ie resets and gpio-ranges DT props. GPIO works fine without it
+>   if patches 22 and 23 are dropped.
+>
+> This has been tested on the EyeQ5 hardware, with the two parent series
+> applied. It also works fine without the OLB syscon series when our last
+> two patches are removed. It has been built on both Arm defconfigs that
+> rely on pinctrl-nomadik: nhk8815_defconfig and u8500_defconfig. I don't
+> have any Nomadik hardware to test though.
+>
+> Have a nice day,
+> Th=C3=A9o
+>
+
+Are you targeting the GPIO branch with this or pinctrl? I guess GPIO
+so I'll need Linus' Acks under the pinctrl patches.
+
+> [0]: https://lore.kernel.org/lkml/20240212-mbly-clk-v6-0-c46fa1f93839@boo=
+tlin.com/
+> [1]: https://lore.kernel.org/lkml/20240205153503.574468-1-gregory.clement=
+@bootlin.com/
+
+Please advise the relevant maintainers that they should provide an
+immutable branch for these series once they're queued in their
+respective trees.
 
 Bart
 
-> regards
-> Philipp
+[snip]
 
