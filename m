@@ -1,120 +1,123 @@
-Return-Path: <linux-gpio+bounces-3440-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3441-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 94D0A85A667
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:51:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE99D85A697
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:56:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C772F1C21179
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 14:51:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93A932816D8
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 14:56:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B175376E5;
-	Mon, 19 Feb 2024 14:51:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C8C637708;
+	Mon, 19 Feb 2024 14:55:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RffIvzM7"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="DQrOLR+8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225D72E419
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 14:51:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BFB73C498;
+	Mon, 19 Feb 2024 14:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354272; cv=none; b=qlFL/7aECv9P68xIcQyp49OQwhHqQjbj4VBxF+Wh3fqnO9MmXI+F6XHqPOiyPHkMp1LzgsrKIbTzxuwEfSpS7bic1TDsNj8BZX3W4EwsAn0gMVr8pDM4BTwECH2K4c0V43RPgVOYbSN4TCIGXTvVjPuETDqR+9IrpGr82ttqUsg=
+	t=1708354512; cv=none; b=jNapdEJcLoe8HZ56BttbMPzHLq9r7l4VlHE+dSrvNZ8nR1vSU4otUH05p6ErdHP7t2I/qA/bD3qzAegAK+j4DfEZNZ4may4UG8e8S4lY8V9lTn8DoHxYkS6W2Xl3wMiLvOeckI7jN4Fg6ft4CskbcAbDAdUt9k4x8UAUeW0XlFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354272; c=relaxed/simple;
-	bh=VwezCsSQ9DJibqG86kh85HBeHbyDtKdujvrran4hZNM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UVjR7gPvtchnpxqVkRNh42bqevw2lvEz3SD2+DIn5AA8Fn3oIb/cyzSR8xP0Zb0LsPV/JMtGs2/hvm3eIdQsBResoJqj8kHY7SkheZWcuygMnR7WhoYVLbGFbd2s4iUpoqmaoq43GX3749rwuoFK0zw4plPFvkLIWz4bRTLvzxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RffIvzM7; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6082d35b690so10362247b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 06:51:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708354270; x=1708959070; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3uK6DW6wRUhapLpjMNPru+6tefOfW563KnlrWQg8HD0=;
-        b=RffIvzM7PIwXi9fO8mlQ+5JFl2XbP5ps9CIz/aUfK8dlhJ61+Q9RwP+ed5eJuAZUgJ
-         51fWgahW3RrD+oHxFe/ppW8sXxMxqfPnBij2H26VozgvYvdf5koHKpJ26GB6JAbuDZKv
-         OkxkCaDQPLW3kLZoLKwccZlYm6bNyrM5o+nPpG4+VS4uvHm8O2CM4opBnEuOtsAju48c
-         O5r6wwW7w+lBlV/+Zv9M5x7frAXvN66nu7X7n3IPIbS93dIP7cHaMddDd+PsbG7meqTG
-         1VU6XpNNoXSsGkKYFUK0cvIxwz01jaUr22PuNbE0NevqmISz0leS/k8H7uTQUTwaVeeu
-         24yQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708354270; x=1708959070;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3uK6DW6wRUhapLpjMNPru+6tefOfW563KnlrWQg8HD0=;
-        b=s7z4Z5UqE1xNmfiuc63QafRPF1ySQJ70apxBPAjADoIJ/zHAGBX1610T+ICFjBKxDA
-         enwFzR+lFhjvhoPILVTUVZZFcDLTf9PPdSFw3BL/eAaHDobmJY3FPqyj7YdRU4vaxVfX
-         BQuFUr7LotK2lRBsh6CLbRl8rSX0MaGF2aBnQlSKGHE3oYDEvJcMVZXA7Ed98HppiQRl
-         9atUikSOZ5xKRQbKDZQhnKAuVee2Zfy1zOlLsEVzQL0fmkLlyV23HxA0L9UH99dy0d4y
-         kC5J0Omnm3UzM2fBzcG/Oxnnv0CqmOyYM3CeouSxVt5L2deDO4fqyJZxJBU28OiNg12j
-         cZ/A==
-X-Forwarded-Encrypted: i=1; AJvYcCWpx01jP0Xa161g0bc/hirecIEAjguW23bM1OyCEUDlZkR1UY5uwLDykSt4BIbNSqiqBVC0BNRmVh35JVAt9iKMfR5037vfeNAogQ==
-X-Gm-Message-State: AOJu0Yyh+8Gs5IIbH7Pn6dsmf8e8KrBYUoTjIhgy7N8ALdknOLgtzBtR
-	13tYIJkjjNiUrwpijfB9ozrMIp/PRhk7ZgQofE5pA/6Pzui6VUHV2nFEJcJ6lwue3vrtcrroRTE
-	MbdcZb5/mqxQDzRA1zoU6CgBotmP9HLZGBkikpQ==
-X-Google-Smtp-Source: AGHT+IH9w/3fXcqUPbXBgmVF6w9lg4F5v6yvEb8r8rQEhAiFOFvfENIsHmXjey93as80w0DTDmBiAuNLdD8NfwPl304=
-X-Received: by 2002:a81:ae05:0:b0:608:5b8:ac3 with SMTP id m5-20020a81ae05000000b0060805b80ac3mr7651706ywh.18.1708354270183;
- Mon, 19 Feb 2024 06:51:10 -0800 (PST)
+	s=arc-20240116; t=1708354512; c=relaxed/simple;
+	bh=HfxplOuL4q2xzVZw2TcJFzzqRvoMGhVC0FGr2EalnFk=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=Unf5x23o891Jexzu68TLpUPK0XbPbeWWieGcndx0BSckvgMA2Nom//TXXLGKtNBaHuJcfwZvV1ZDEPP1Jt4GA0Hf1Uks35Fxi5IKTEoYa67sx87jH23YwpMC4UXi4PEp/2uIrjIJY8O9PEXLB9kcIuRPNtYwIeV9Jjs2HTdK8pU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=DQrOLR+8; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 010D64000D;
+	Mon, 19 Feb 2024 14:55:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708354507;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=lC1i1N0UNT/0y8QCJSxQOgeE4oJ6ZMsxZMZkpa3P++M=;
+	b=DQrOLR+8qm0bY5slL6AB6BEDjk5hcfQb6M/P+U/Yz4hAszxWqXlg7zof7bpVXHb6qdKWTw
+	6pfod3Ipext1BnHghowE0GYoMePMiFejmBxRovogdYzKujHPwRJTvaYD4GiMPuznwvlM5d
+	pMcNd+J3Wioq1qwLUEzVT7jK2i3EnL+7NCruF52BF1DyUMdPAcVo5Qcq0QI5DjLxMEEvKN
+	BEfpk6D7byjJwG/neMbHlQIBSnc4srjB+vBb4puI2KRovGSUl7jQL0gw+WP+C9GOxUJTmS
+	7Goniy3e24fzWP/GB2WPy1IT4jvkCxPUgtgtXZGZTXn/TH1g9AW4/UbqdWVcdg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com> <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
-In-Reply-To: <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 19 Feb 2024 15:50:59 +0100
-Message-ID: <CACRpkdawXwae7GKf4zOfVUJPLgLOeEX-8w5fbnr8O6FXuZHuaw@mail.gmail.com>
-Subject: Re: [PATCH 02/23] dt-bindings: gpio: nomadik: add optional ngpios property
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Feb 2024 15:55:06 +0100
+Message-Id: <CZ954Q11FWMI.39QMRYTRZAO1C@bootlin.com>
+Subject: Re: [PATCH 02/23] dt-bindings: gpio: nomadik: add optional ngpios
+ property
+Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Philipp Zabel" <p.zabel@pengutronix.de>, "Thomas Bogendoerfer"
+ <tsbogend@alpha.franken.de>, <linux-gpio@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <linux-mips@vger.kernel.org>,
+ "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>
+To: "Linus Walleij" <linus.walleij@linaro.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
+ <20240214-mbly-gpio-v1-2-f88c0ccf372b@bootlin.com>
+ <CACRpkdawXwae7GKf4zOfVUJPLgLOeEX-8w5fbnr8O6FXuZHuaw@mail.gmail.com>
+In-Reply-To: <CACRpkdawXwae7GKf4zOfVUJPLgLOeEX-8w5fbnr8O6FXuZHuaw@mail.gmail.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+Hello,
 
-> This GPIO controller can support a lesser number of GPIOs than 32.
-> Express that in devicetree using an optional, generic property.
+On Mon Feb 19, 2024 at 3:50 PM CET, Linus Walleij wrote:
+> On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boo=
+tlin.com> wrote:
 >
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> ---
->  Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml | 4 ++++
->  1 file changed, 4 insertions(+)
+> > This GPIO controller can support a lesser number of GPIOs than 32.
+> > Express that in devicetree using an optional, generic property.
+> >
+> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yam=
+l b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+> > index a999908173d2..bbd23daed229 100644
+> > --- a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+> > +++ b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
+> > @@ -50,6 +50,10 @@ properties:
+> >    gpio-ranges:
+> >      maxItems: 1
+> >
+> > +  ngpios:
+> > +    minimum: 0
+> > +    maximum: 32
 >
-> diff --git a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml =
-b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-> index a999908173d2..bbd23daed229 100644
-> --- a/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/gpio/st,nomadik-gpio.yaml
-> @@ -50,6 +50,10 @@ properties:
->    gpio-ranges:
->      maxItems: 1
->
-> +  ngpios:
-> +    minimum: 0
-> +    maximum: 32
+> I can't help but wonder what good is ngpios =3D <0>; but OK.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-I can't help but wonder what good is ngpios =3D <0>; but OK.
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+A min value is required, else it is equal to the max. There was no
+reason to pick anything bigger than zero.
 
-Yours,
-Linus Walleij
+I'll admit it is not a setup I have tested so the driver might have
+issues with the ngpios=3D=3D0 edge-case. Of course I do not expect anyone
+to care.
+
+Regards,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
