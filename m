@@ -1,103 +1,136 @@
-Return-Path: <linux-gpio+bounces-3442-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3443-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3128985A69E
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:56:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93CA685A755
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 16:27:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D878F1F2204F
-	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 14:56:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C60C01C21692
+	for <lists+linux-gpio@lfdr.de>; Mon, 19 Feb 2024 15:27:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6316738FA6;
-	Mon, 19 Feb 2024 14:55:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A552D383A3;
+	Mon, 19 Feb 2024 15:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="inQcANvX"
+	dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b="OM3d6rri"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-relay-internal-1.canonical.com (smtp-relay-internal-1.canonical.com [185.125.188.123])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 390B4381B9
-	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 14:55:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4B3721115
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 15:27:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.188.123
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708354523; cv=none; b=jG9yJZMeUUJTUDeYpnPSAR0h9tpZy5xGhMrQUuoE122voWYTzUeAbluT+2+ky2GCxUk/pb6lyWvV3VO7b6iaaxFBhrA320laNXginmECaJh1HdvFCA7AmKyrEEMnmbcBh820AmqsThYRh9tsZVkjSEZDpVt+IBJIBFTCMo8sbyA=
+	t=1708356441; cv=none; b=mLT5m9CxfZVMjaENHeTwDlGdmivTO5rrN5nBUzHK+cYntM+04PS4nEEzpp87gyVGu2UQDTYmU9aZojMNYUtu2J/hDfHVmB+tO+Is3+Bc8pTKQw8j6bObBsVdIkyV1G+qHQQrE5SEEW0+g1pu24vrk8lE82S2vrsq8Z7kCgC2yYM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708354523; c=relaxed/simple;
-	bh=qH5wXiM3i78ypS1cE2GuObYzdJP6nTn9QLDwtM+E/gc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XFRhkQ88hXxH989Try04puB9z1H0OzEtYF66suv+OAnnuOWDzKwfzfFZtGwNoKdCDgLQZXHsre1bgCuRH1HfvZjE1+gNETizNKp6imtuRBXCsQTeLsPiBPN/Pw5+X/lUGQSgUFhtblngYSwGRdt075KIacuES8vb+F8G/M84Ii0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=inQcANvX; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-6084165494eso6357287b3.1
-        for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 06:55:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708354519; x=1708959319; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qH5wXiM3i78ypS1cE2GuObYzdJP6nTn9QLDwtM+E/gc=;
-        b=inQcANvXPuCuqHnryjl/iYJk9U8YX74QKTNoRgcSh/w3cNzWxiLg/phOgd7Tfz8l+M
-         VSOksR+Auug9hFDV0A0XSvsSlwoMB/9AftArn1ydHjsET4v8TKc90WV1CGo3lRbuO2CM
-         8zPFN2Atu7tW6mPt7Pn0W4PK9UYx+j8hQG4N424F79htcSecCIoTnBle/mWx/TvWB68F
-         KN6ilw43mTQ+X9kulN3QOdJwdMVKjcf2w8PbOhRiN1gjez0fcrku3gpTKuQUOKyAJJYL
-         V12Wzw3rmoOuVbBwGpZRAdu7wRE9znCPzDM+JSFW6NaUqySFNJp51p+S0Rjr5Z7iVruP
-         KLNw==
+	s=arc-20240116; t=1708356441; c=relaxed/simple;
+	bh=djGmhPOvcq9/W1rxe5JJwBiih+Q1MkZoP16CGSmuCPA=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=GlE+9vzWkUch7TT2qTTSz5nZUKNcP3kGI5LNzi4EbigXk6xGAOgOH7i0+d5mpGT6SHTK5xlyygtUg/h+aDxX3faDvnQQGDd+96OzUq6iwdw8nQwqm39OBAHgN8ukZuIogqUtOtVLiwaW87leb6AAcDPraWinEXQvqBLhtxOD2Q8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com; spf=pass smtp.mailfrom=canonical.com; dkim=pass (2048-bit key) header.d=canonical.com header.i=@canonical.com header.b=OM3d6rri; arc=none smtp.client-ip=185.125.188.123
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=canonical.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=canonical.com
+Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id B00B740C72
+	for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 15:27:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=canonical.com;
+	s=20210705; t=1708356430;
+	bh=z13zQfen5PSic1cbaLHezaNJrnjHHexIGsaUa4HOjMU=;
+	h=From:In-Reply-To:References:Mime-Version:Date:Message-ID:Subject:
+	 To:Cc:Content-Type;
+	b=OM3d6rri8VznFPhNITT04nJy9SSdy23B9Bw6/NfYq1r0zBWBvS1kfhlItIXgndH8u
+	 sUM1pi1s65X5/rgPDXTzQZiYjhUMDCkAQ2GI6Wo9ZEX+N52aVSOJunJUMC4hTUtN8c
+	 nKBjLOHnpMkI/VwADxgRDaLlNdqbjDaYHhCXicPbr7tXN8by7ewmgdEVYMC6ELc11r
+	 yHIvYKD7izVqAwYSfGEA85c4AaZIAb3RzE8IyP7KYojLa4NG7nBk0AdA0nxF1g6V4J
+	 fZLCExL83m0wZarbZRnDHwWgHJ2V03FxrN4Q+fHr/fTLI4Bbk5PwBzkdZLkbtsDGpL
+	 4xKOh2C++ZIcA==
+Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-42c41b01022so59746221cf.3
+        for <linux-gpio@vger.kernel.org>; Mon, 19 Feb 2024 07:27:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708354519; x=1708959319;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=qH5wXiM3i78ypS1cE2GuObYzdJP6nTn9QLDwtM+E/gc=;
-        b=QGJ4EWl3oov2qxuhuyt1fZHAzwjOpiY9DoJhWElQRtHLCpyUR1lghSJsfcAte7Tp2v
-         t6ZU1NTH4bedM2tBTh+PPsWPOEL3aZ2PAxuZUa/9LCvjJgm5UdaFHnYLBrDYDjqu6iDG
-         ysurjl9JPbgBbFKXEC3Bsw+aSjuKHDx3t8KaRCE7l4x4BJ1IKFfKzVwG+PZxtkB33yiQ
-         wcntKuCTWbzfp+7a8ay0y+Ncp/3S3b6pRJ98M2NppbgqrAiqcfuFxCIyidJxJobGPfGO
-         aKO14rsblpR04Z93Ml7MX0rBK0L5zkfnZCe6glDRsMwOWKR9By1epk/TPa1E+oBxa1gw
-         sBdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVZfec/2HyF1i8Qc2JNG6vP1xeAkLTk6l0wrhOEgE8ALgMZg/NgyctOWBgBg7V1gzFavhYLWDXM2sREXOQuTUd8x8vKPOE9nN3PfQ==
-X-Gm-Message-State: AOJu0YxJjlG3OmzzbELn6bOEdIcWnNdk03og0vnwToT5QkR1xiQ7g7mG
-	23rJTIQ80DWzaoqr1bbhMd3B7ldjVddNoFHdLknYF7w1UyKg+VNpNjRO2fUAx3vsVkMFfFEzwea
-	9wieBuRPQgGqZ6b6tXbQ8CKulz8ZW0Tif1lwP0A==
-X-Google-Smtp-Source: AGHT+IFltO6KkjBY25OUgoFC/Kmxadk8ahvUfaezI8PdV+xriL2Xe4U881DZubLOYqtDNDNARjLCAVm5NBCSj2rOXnE=
-X-Received: by 2002:a05:690c:a8c:b0:607:a8d9:c29e with SMTP id
- ci12-20020a05690c0a8c00b00607a8d9c29emr13974595ywb.33.1708354519351; Mon, 19
- Feb 2024 06:55:19 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708356429; x=1708961229;
+        h=content-transfer-encoding:cc:to:subject:message-id:date
+         :mime-version:references:in-reply-to:from:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z13zQfen5PSic1cbaLHezaNJrnjHHexIGsaUa4HOjMU=;
+        b=a7lTqMTv4ffuqls8CRFFB2akJbB6TEcaXH0QmHUiIE6xRi5SJWOhwMFFjWTEFpXUv+
+         BKEd7StgjgQoaHbjrVneDYvCMlc4adVSfNAR6JpInDkRT7jxU/hTPMzkKmKTYyR+PDk6
+         cFaPgd0KWN+rsq1HcC2zxl5spoIcOqKhq7KTZgbsgtayW5Y8b/ASAGwR6bkqo2XJQmYN
+         HNOY+mEbV+bLN6IyfptxuVphuUKHuib1kh3WmZW5gJbqKuzs3UOoa6dopccq+2fescEd
+         x1BVSABwsEKBEzzcIOlW83VvYh71ZTa0NFnjn6VUEllDWWvfhOSlberwyU4EEM4fROCE
+         Jb+Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXCd48EBWieI5n49BHW9IsersdhUC1FkdURFjZOXMaDHyHIo1MrDAo89jMG4lafZ6K5o/Eobzet6tnPL0uiaEn2+/C/fATr/kimoQ==
+X-Gm-Message-State: AOJu0Yw4fm7xIx1h1vRwTU+DDdwq5jzSun+LiFiRdmJWWTwSeBa57XPN
+	zQY2pVPfRfKkWyPtJsgyWkfp7g3aOP/livCqKJeBTbI54W3UU4RD6IE+NH6yjI22ETozbGWzMqV
+	z2p356ZxDbOcbxaX7wRGHoop3w0MUaV42nnANgWI9aeUio5XdujhBGWq+Ay/UnDRy/5jSsy3KM9
+	OvsHQYsgDnbR0m5GCrB+pIvafE1M8c9+/kg0M4AgdIxP/990cWNw==
+X-Received: by 2002:ac8:5f4b:0:b0:42c:51fb:4dd3 with SMTP id y11-20020ac85f4b000000b0042c51fb4dd3mr15231532qta.3.1708356429571;
+        Mon, 19 Feb 2024 07:27:09 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHfOvuXhXroNvyMuh8cslUW24quliLM3pW8Lnp0rVnhqXxT2/Q9A4igAn3xd8RWbT/DgE7Dv8c0GASdgeP08PI=
+X-Received: by 2002:ac8:5f4b:0:b0:42c:51fb:4dd3 with SMTP id
+ y11-20020ac85f4b000000b0042c51fb4dd3mr15231513qta.3.1708356429216; Mon, 19
+ Feb 2024 07:27:09 -0800 (PST)
+Received: from 348282803490 named unknown by gmailapi.google.com with
+ HTTPREST; Mon, 19 Feb 2024 07:27:08 -0800
+From: Emil Renner Berthing <emil.renner.berthing@canonical.com>
+In-Reply-To: <CACRpkdbkfWByoo+i57rr3w7QCyCgbiTbP6e_kT3ZNkiSeYUEoQ@mail.gmail.com>
+References: <ZdC_g3U4l0CJIWzh@xhacker> <CAJM55Z-t9e8L2_iFfdbCDpOzi7UxQao6-L6VU_W9OGBciJ46bA@mail.gmail.com>
+ <CACRpkdbkfWByoo+i57rr3w7QCyCgbiTbP6e_kT3ZNkiSeYUEoQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com> <20240214-mbly-gpio-v1-4-f88c0ccf372b@bootlin.com>
-In-Reply-To: <20240214-mbly-gpio-v1-4-f88c0ccf372b@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 19 Feb 2024 15:55:08 +0100
-Message-ID: <CACRpkdZ5v4GUJtrOV4U4bhvKC+RZFXk8LZdyN1cbxmm5mxcLuQ@mail.gmail.com>
-Subject: Re: [PATCH 04/23] dt-bindings: gpio: nomadik: add optional reset property
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Mime-Version: 1.0
+Date: Mon, 19 Feb 2024 07:27:08 -0800
+Message-ID: <CAJM55Z_EDuWQAsXmJaOE8QRxFB=GvGvEFzQcaHdu=8mPHDJFGw@mail.gmail.com>
+Subject: Re: commit f34fd6ee1be8 breaks current dwapb gpio DT users
+To: Linus Walleij <linus.walleij@linaro.org>, 
+	Emil Renner Berthing <emil.renner.berthing@canonical.com>
+Cc: Jisheng Zhang <jszhang@kernel.org>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
-
-> Add optional reset device-tree property to the Nomadik GPIO controller.
+Linus Walleij wrote:
+> On Sat, Feb 17, 2024 at 6:44=E2=80=AFPM Emil Renner Berthing
+> <emil.renner.berthing@canonical.com> wrote:
 >
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -2042,6 +2042,11 @@ EXPORT_SYMBOL_GPL(gpiochip_generic_free);
+> >  int gpiochip_generic_config(struct gpio_chip *gc, unsigned int offset,
+> >                             unsigned long config)
+> >  {
+> > +#ifdef CONFIG_PINCTRL
+>
+> Please do this:
+>
+> if (IS_ENABLED(CONFIG_PINCTRL) && list_empty(&gc->gpiodev->pin_ranges))
+> ...
+>
+> The ifdef is so ugly.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+I agree, but I'm not sure it will work in this case since the pin_ranges
+member is only there when CONFIG_PINCTRL=3Dy. That would also explain why
+gpiochip_generic_request() and gpiochip_generic_free() use ifdefs.
 
-Yours,
-Linus Walleij
+>
+> > +       if (list_empty(&gc->gpiodev->pin_ranges))
+> > +               return -ENOTSUPP;
+> > +#endif
+>
+> That looks like a reasonable fix, I try to wrap my head around if it
+> would affect
+> any users but can't figure it out, we have to test.
+>
+> Can you please send it as a proper patch? With the above fixed:
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+
+Will do, thanks!
+
+/Emil
 
