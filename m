@@ -1,66 +1,64 @@
-Return-Path: <linux-gpio+bounces-3509-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3510-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93F5985BD4C
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:37:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEEA585BD5A
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:40:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1C9D2B21ED7
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:37:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 02B571C22D39
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:40:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25A996A337;
-	Tue, 20 Feb 2024 13:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 255406A33F;
+	Tue, 20 Feb 2024 13:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="K7wiOtjR"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D0wVH8Zx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay4-d.mail.gandi.net (relay4-d.mail.gandi.net [217.70.183.196])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFB3269D0B;
-	Tue, 20 Feb 2024 13:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.196
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DE384C60;
+	Tue, 20 Feb 2024 13:39:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436229; cv=none; b=dMcpikVZ2VZjDNNCXL2j8U3FLhy8dXcRxV4CW6YeB+WperkG0mWAO/q33AGivCFKZOtVLleZutKVBou+pvVOafJqOZbz2j7IXSNgsC+7RqIc/svW7NaVmgd55dLXvpDVdy3E5cceQCiQ9+hu7XZCIUIHDq20kJG3DnDKkMjiNcs=
+	t=1708436399; cv=none; b=sT6n54azLk5rQuURgA8PyR1VIW8iRE//RDEMoIAEfV55s4I/Vlsfs3zouF/2gS+kx9Ia3+3lGpBnRYvKAzjSK+SRBUhxnUb6R1YLpwjMmr4u/Falqj2uIo2nG1bxlAAe3QsZB5V4ltTKyHqlR4hlnUurIVcSAem22FJgWhjj8Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436229; c=relaxed/simple;
-	bh=8pyWLegVqBLuGiX9D3EQNf/dKDuFEepE0jrXaB9ywGA=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=J7UnBePJnNKiEYAYMAnooBsK17aGKhCK49qbGlfd1kERevSS+E9HErM2tGUP8Yb0Udrfp7Iwp837RC6Ap0PnK1cGM9zCiB8BD0ooBgG6p8jDMhP+z1d7a5RI2Vwr4qMHu9rl9yHZKbtGbsSLd5odhjKaOj59FReFOAzw1OG1cNk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=K7wiOtjR; arc=none smtp.client-ip=217.70.183.196
+	s=arc-20240116; t=1708436399; c=relaxed/simple;
+	bh=maUOB1I/kGF7pxO+VAjAEbO4lZcaywIU34qr1xonNlU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=l0IMDBQv6nIZbI1FIpsSp2FQyVf80i4yQHkfMroHCz3lAmrfin4viRvoxSuiPTuJ/P7e+boJQf9r7NlNy+UUP+QQHrO0TjFh59AqIOEybXjEVEjRDiTQwvBhzwpCi99oMvrKvkBxfk6S0un534QnX0S1wHrsNbiluwmj7j2EEdM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D0wVH8Zx; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DBDC0E000A;
-	Tue, 20 Feb 2024 13:36:58 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPA id D42FF20004;
+	Tue, 20 Feb 2024 13:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708436219;
+	t=1708436395;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=lmJhNa6Pj+YXDCxepZDS/382SAKzEEjdpms57STtfOk=;
-	b=K7wiOtjRIaT1+CE4MNIdZSF3Z78QuqUf+XMm9968VrTMHxfeTT2Cyjils/3Qq0scGqWzPP
-	hYPKoUUFBkGnXvOzaiWV70SKY52gQnNf1TEml31cHuo+a/MmEkcRAIXtHjtXD5/ZJWXZM4
-	NHJUzC7644g7O6BYu2wNsX1d5ULyNMJoP0uFwkHSxQuTusCtXVNDkx5XbihDDLZOxSEFr7
-	cyUyllKdR5wmRlLip8pg38hjl0ZpPFhVdfEO6xTG0Chxfsow3aljqBvT0TjkyknCxlTxiI
-	ISMn32efHQeSFvIuJENafzjqroKlGAogyU4UaLvcU3x2ZYerPWUk0UVpvYFyGA==
-Date: Tue, 20 Feb 2024 14:36:57 +0100
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=JR5bxG1GSyiF5ERk11qYZtMLEqsuYC3EasEln4G35iQ=;
+	b=D0wVH8ZxwoErTe+VqwqvA29q5zZjYHP66v8cKgfbdKh70MIQBuqFMtf1xTc9Bcyf9i+wT5
+	vFvkzyHA8FdGvsppHWxBjlVYwDEFbOvEV/Ew3H68t4aVwwVbECf0uGX/c1RrMkGId8aL3U
+	YNkEkee0IPomt0KwmWaPdTPign4o/Ds85GxDvmAW88LTWiWY8Ye1UJHyR2GEsJ+S034PjA
+	+1dIqXA5f3yKos+E54FvA5r/DSe9XV3msVL2TiqAqFNfK8K3KAm9eH1bmHjZAN/3uq0b7u
+	ZcQCZ0FPn9DermON9GYt9tW+fjnKm0G1bkoTrzUPc6w4UnNdNvyW8wWK0RuHIA==
 From: Herve Codina <herve.codina@bootlin.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Saravana Kannan <saravanak@google.com>, Linus Walleij
- <linus.walleij@linaro.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones
- <lee@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 0/2] leds: gpio: Add devlink between the leds-gpio
- device and the gpio used.
-Message-ID: <20240220143657.78c2d3f9@bootlin.com>
-In-Reply-To: <CAMRc=McjoC5iWWOwX2_3XG-e3W6Tb1Zp6jub71ArHsod6UhNug@mail.gmail.com>
-References: <20240220111111.133826-1-herve.codina@bootlin.com>
-	<CAMRc=McjoC5iWWOwX2_3XG-e3W6Tb1Zp6jub71ArHsod6UhNug@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.38; x86_64-redhat-linux-gnu)
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Pavel Machek <pavel@ucw.cz>,
+	Lee Jones <lee@kernel.org>
+Cc: Saravana Kannan <saravanak@google.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-leds@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Herve Codina <herve.codina@bootlin.com>
+Subject: [PATCH RESEND 0/2] leds: gpio: Add devlink between the leds-gpio device and the gpio used.
+Date: Tue, 20 Feb 2024 14:39:47 +0100
+Message-ID: <20240220133950.138452-1-herve.codina@bootlin.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,48 +69,35 @@ Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-GND-Sasl: herve.codina@bootlin.com
 
-Hi Bartosz,
+Hi,
 
-On Tue, 20 Feb 2024 12:40:17 +0100
-Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+Note: Resent this series with Saravana added in Cc.
 
-> On Tue, Feb 20, 2024 at 12:11 PM Herve Codina <herve.codina@bootlin.com> wrote:
-> >
-> > Hi,
-> >
-> > When a gpio used by the leds-gpio device is removed, the leds-gpio
-> > device continues to use this gpio. Also, when the gpio is back, the
-> > leds-gpio still uses the old removed gpio.
-> >
-> > A consumer/supplier relationship is missing between the leds-gpio device
-> > (consumer) and the gpio used (supplier).
-> >
-> > This series adds an addionnal devlink between this two device.
-> > With this link when the gpio is removed, the leds-gpio device is also
-> > removed.
-> >
-> > Best regards,
-> > Hervé Codina
-> >
-> > Herve Codina (2):
-> >   gpiolib: Introduce gpiod_device_add_link()
-> >   leds: gpio: Add devlinks between the gpio consumed and the gpio leds
-> >     device
-> >
-> >  drivers/gpio/gpiolib.c        | 32 ++++++++++++++++++++++++++++++++
-> >  drivers/leds/leds-gpio.c      | 15 +++++++++++++++
-> >  include/linux/gpio/consumer.h |  5 +++++
-> >  3 files changed, 52 insertions(+)
-> >
-> > --
-> > 2.43.0
-> >  
-> 
-> You should probably Cc Saravana on anything devlink related.
-> 
+When a gpio used by the leds-gpio device is removed, the leds-gpio
+device continues to use this gpio. Also, when the gpio is back, the
+leds-gpio still uses the old removed gpio.
 
-Sure, I am going to resend the whole series adding Saravana.
+A consumer/supplier relationship is missing between the leds-gpio device
+(consumer) and the gpio used (supplier).
 
-Regards,
-Hervé
+This series adds an addionnal devlink between this two device.
+With this link when the gpio is removed, the leds-gpio device is also
+removed.
+
+Best regards,
+Hervé Codina
+
+Herve Codina (2):
+  gpiolib: Introduce gpiod_device_add_link()
+  leds: gpio: Add devlinks between the gpio consumed and the gpio leds
+    device
+
+ drivers/gpio/gpiolib.c        | 32 ++++++++++++++++++++++++++++++++
+ drivers/leds/leds-gpio.c      | 15 +++++++++++++++
+ include/linux/gpio/consumer.h |  5 +++++
+ 3 files changed, 52 insertions(+)
+
+-- 
+2.43.0
+
 
