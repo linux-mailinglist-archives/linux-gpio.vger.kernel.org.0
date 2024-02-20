@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-3513-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3514-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4F55285BD6E
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:42:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A93685BD7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:47:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8775B224D0
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:42:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 995531C22EFB
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:47:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D3A6A8DC;
-	Tue, 20 Feb 2024 13:42:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1AD0D6A346;
+	Tue, 20 Feb 2024 13:47:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vtGGFpgf"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wYTRKQXs"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476B76A340
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 13:41:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BE9E69DFF
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 13:47:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436520; cv=none; b=BQuh3OXls4ffsL82GSC4S8X0CqZSMpoxmswQiChEuLPqCue9HflNjyNSKlIihluV9RRRis8zkR3ABsPvruvCQrsItJiN5VQRD0tkn/nftqpyLyF918NGDErikEAMrNxirBPkaTicOhXS/nOtnZQsHKa/fjITaKf1mKbpyYKbtkw=
+	t=1708436840; cv=none; b=bMQv78l+740PJEfH+TYZFb6IQK1OepO2Q6ZD+Sx48nSvmYPxZowP8F/tX8fcVBKblSqlotLCH/FV0jGLOzkf7EbpZjdvIjORtD91fH54iC2PC5sJK14MaHosx2iBfjTPz0UrwpUmWUc934vSwEKlqJpK14mlDI0kDU4a1+XqisY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436520; c=relaxed/simple;
-	bh=QQBscvCfbaDRlzqcyAKjfFFH/xl7hw7boMX/xj5Gdk4=;
+	s=arc-20240116; t=1708436840; c=relaxed/simple;
+	bh=mE0j+Qrke2cddcGFIvvUiBvzrErWLU7t4wERqe0Rprc=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RMu8QRNnwCNYw1FY1WRqmF0XYOyJ0fRMZNhbA4a4B/FwmsvJ6QwghYB0cewresjoST1a7HfGap+HAU9m23Bguq+8+lbzmlYPLXW/rXLXOaEPvX+3DxswJpkJW8USRbqDZUgzGpEUxMyb1XxVo+4N6N3t39QfdWuXKecPr0Ar6r0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vtGGFpgf; arc=none smtp.client-ip=209.85.222.52
+	 To:Cc:Content-Type; b=OaJWZB5u1iG8o/ooKDAl+J0JpTL/l14tSTfKhLFHawWx3ga2FwHDYQ2QKlLY2YJGJh5wlLcBWavVJL5eXEfNtnyXBWvjPfGaC5Sii3kRMIl47pUf67deNuVG9HYgPrXa3Orqw5LbhSU3a3q0epoAfezCTTdcHaGcCNUaPU200ZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wYTRKQXs; arc=none smtp.client-ip=209.85.222.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d2a67daa25so3316208241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 05:41:51 -0800 (PST)
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d5c514944fso2870896241.1
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 05:47:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708436509; x=1709041309; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708436838; x=1709041638; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xP/TK90neT8X21AtRisPl7685j0CAZc0zErZJvKoQI4=;
-        b=vtGGFpgfoQEbBi4YvkwAKlT3/xI0GglK0CG5yXQRrAmagwEdk7vW6JL7qnCJV4xGgK
-         X4OxjISO+00dIkd9CcIh+K7UvoX89aaC/O1bL7rlLGuB7ORKAFJABKZbbRfScs+QoOFo
-         M3K2RszlnSEEyYP+DSF6w4EvSN0zuR/+7go6mHi86NPbjOFOiU6IZ52O093dS7vgYd+J
-         zm06VuYHOQZALEzWtW6ezEJblrci9ih12UYVAXM4WcBo+4d0dobWHt82T/kzlZn7ByQ1
-         ft9eUHlK2fQ+MfNqivMKcAJ/ewigYgKA5yP4sVrZepnIZd92AhZnAmoLkDlL9S+gS0k8
-         xbIg==
+        bh=xOKKbkQWU7AKt3SSuiELRArPG+65DzkCYGNRa8cvu24=;
+        b=wYTRKQXsnOUrQOG+3MeYA8V9dXihvdD66W7wPJLmR8WMvtvhFTVWMP0qTjLdeuFaE0
+         3H/Lt+el78P3WtRC7JRmRq4cpiNNFiPU6x+25j3ule9lJa/nMNvEF6l9VGzl/28bSq4c
+         dfMNRyeQS4vHZQDZJV9D+Kp2/r6U+XLj4QvaP1zHhi4Yz3tkN/hihiNI9Xhv5q3Jejvu
+         L4ykgGQkZQb2lvAMoZGh0BJC+5/HAQcVcLr+WippT3R5Vl43YE0FynkCNvfwDek9sXM7
+         X3M6M7lziiRZVwy7cJNPwHJ68JrfqgTxR+OvHgQcJwARjNLs20357sUX5pNRLhkKIczj
+         /1gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708436509; x=1709041309;
+        d=1e100.net; s=20230601; t=1708436838; x=1709041638;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xP/TK90neT8X21AtRisPl7685j0CAZc0zErZJvKoQI4=;
-        b=hnjLwgGBsTV9twCAPNQlna4Ut+vmI0D4uDJOOau2mgZQSWW6euOyPKV1T1e+TNsWsT
-         c0P51LydaYxVOHCDcTEVOD1/PlE4xJJpNmxEcMwv+Ss3oX31QRkMC/nAd6j5oW/dcmXs
-         uGMWPnllkgbUy0QuKWAQUeaQ1afwd1Al4e3fg9IWELvhNrovjuD9MEKzxhYYzPB6Nz8B
-         iS0/Xm2iTabz+io3zfx4wcAG0RS9cLlT0dFSQRDuQNdBToT3bK9+ypLoUOMMg+CetFad
-         4hc/1vSlEh4ne/whp15W4iAu3BcZlT8x35IwitSYC+uIWgpaD/mLEON5alpzuGhbRS4s
-         y7tA==
-X-Forwarded-Encrypted: i=1; AJvYcCXGtHdMg+xegyhGK1Y6V7rlMaii7BYXEI/fZJa5MmZqcX40cwYKwLwXq7NcbaIxxWkbcXLoA82zNMonYfkEGciUVWf6/fdUG4RFwA==
-X-Gm-Message-State: AOJu0YyANvmjbLwgKs0ID1jcFfWVnva/Lbdl1X627b7iYZtVZUo6H6UO
-	CzmhBcduTmvk3Ys/TQfZhJO9K8NS9ouB41wHJ+ouI1L7AKJupQAEaQy0Xwz+J6R3Nck0qzJl7Aw
-	xz1n7AFXhhBAj5DnQtZIddJUSICNifEHNXRo8lw==
-X-Google-Smtp-Source: AGHT+IEBVqrGCcl71zhl8y7obE4covazgnsV45hChAyMiiWzAb7U3Rn+DCURtJ9DVwFtq4joCvmggniLbawJuIySIJw=
-X-Received: by 2002:a67:ad19:0:b0:470:4aad:7aa4 with SMTP id
- t25-20020a67ad19000000b004704aad7aa4mr5837008vsl.8.1708436509617; Tue, 20 Feb
- 2024 05:41:49 -0800 (PST)
+        bh=xOKKbkQWU7AKt3SSuiELRArPG+65DzkCYGNRa8cvu24=;
+        b=vabNVa4j2d2mEIUJri016IfHUjauAsRdVST8hMf+ZiXdCnYtDYkvrayAnOkOtmOJGK
+         3zgZbzmq2Him9HvmATyzn8fF36pP1un6Ts0SbXkamEHHfTjY/ennEyIoBlobXpdH2pDT
+         zrPsA07TpVmfb1+QhWMb7rmko7kbEi4cbuvR+dQPHnEDj2XXw0ihlTRvOa+5TWeGew8c
+         vjVYKjbVBC0pSYm5X27aZ5IjE/mdVv+1jUGcPaqFggTPlnjaXcNSHBXEgyyqQUssoP3Y
+         I5oW29+y4TF5YRLx1c0R50hJLdHDZ+8roTdOcAg/NEdBd8hWBLtnc2yfX8pLIrjI6lzZ
+         Vu+g==
+X-Forwarded-Encrypted: i=1; AJvYcCWv8Fr7GSvmkixvxEY6rc1s4dunjBwttHOL7i/6BZDoq7AH80T9c8smB5MDJAiFX95sTbj0e2W0VkTYaXyQkv2Eq678lGOGfa7QXw==
+X-Gm-Message-State: AOJu0Yw0P7eNH/W0o0xSYNA0doPA0g80Vw3KPY2Lowjhg/siF4xttZb4
+	eaZe+97d6vJ7gLvPs+LkFC7tyiBrY2f48NjxCLCTctefiWx6q6p/BfNfe2TIX2atn+jiSItomRL
+	4fDRppSwuu96X9/plWQkTZ9Ky3JwzLHHu/aEp9Q==
+X-Google-Smtp-Source: AGHT+IGLCernra2jUl0A5+U2XB+a/z0FjsKHUQpK3wonJZJuh3Ofef/exclTOHmsAoggIscjPYbwp2F278HDfRp749E=
+X-Received: by 2002:a67:fa93:0:b0:470:5cbc:4f4c with SMTP id
+ f19-20020a67fa93000000b004705cbc4f4cmr3232337vsq.16.1708436836995; Tue, 20
+ Feb 2024 05:47:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
-In-Reply-To: <20240220111019.133697-1-herve.codina@bootlin.com>
+References: <20240220111019.133697-1-herve.codina@bootlin.com> <20240220111019.133697-2-herve.codina@bootlin.com>
+In-Reply-To: <20240220111019.133697-2-herve.codina@bootlin.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 20 Feb 2024 14:41:38 +0100
-Message-ID: <CAMRc=MfpudtuwMEexJdWwhJ3sdbTn4fhpwQvGKOHSPE6+6k4jQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio chip removal
+Date: Tue, 20 Feb 2024 14:47:06 +0100
+Message-ID: <CAMRc=MdFuJGm2AUq45SkR8SpNDg-4Qe58fc7+ow0Oy+==aACnA@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpiolib: call gcdev_unregister() sooner in the
+ removal operations
 To: Herve Codina <herve.codina@bootlin.com>
 Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
@@ -87,10 +88,8 @@ Content-Transfer-Encoding: quoted-printable
 On Tue, Feb 20, 2024 at 12:10=E2=80=AFPM Herve Codina <herve.codina@bootlin=
 .com> wrote:
 >
-> Hi,
->
-> When a gpio chip device is removed while some related gpio are used by
-> the user-space (gpiomon for instance), the following warning can appear:
+> When gpio chip device is removed while some related gpio are used by the
+> user-space, the following warning can appear:
 >   remove_proc_entry: removing non-empty directory 'irq/233', leaking at l=
 east 'gpiomon'
 >   WARNING: CPU: 2 PID: 72 at fs/proc/generic.c:717 remove_proc_entry+0x19=
@@ -106,35 +105,54 @@ east 'gpiomon'
 >     gpiochip_remove+0x48/0x100
 >   ...
 >
-> Indeed, even if the gpio removal is notified to the gpio-cdev, the
-> IRQ used is not released when it should be.
+> Indeed, the gpio cdev uses an IRQ but this IRQ is not released
+> (irq_free() call) before the call to gpiochip_irqchip_remove().
 >
-> This series calls the gpio removal notifier sooner in the removal
-> process in order to give a chance to a notifier function to release
-> the IRQ before releasing the IRQ mapping and adds the needed
-> operations to release the IRQ in the gpio cdev notifier function.
+> In order to give a chance to the gpio dev driver to release this
+> irq before removing the IRQ mapping, notify the cdev driver about
+> the gpio device removal before the gpiochip_irqchip_remove() call.
 >
-> Best regards,
-> Herv=C3=A9 Codina
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> ---
+>  drivers/gpio/gpiolib.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 >
-> Herve Codina (2):
->   gpiolib: call gcdev_unregister() sooner in the removal operations
->   gpiolib: cdev: release IRQs when the gpio chip device is removed
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 8b3a0f45b574..079181b9daa8 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1051,6 +1051,13 @@ void gpiochip_remove(struct gpio_chip *gc)
 >
->  drivers/gpio/gpiolib-cdev.c | 33 ++++++++++++++++++++++-----------
->  drivers/gpio/gpiolib.c      |  8 +++++++-
->  2 files changed, 29 insertions(+), 12 deletions(-)
->
-> --
-> 2.43.0
->
+>         /* FIXME: should the legacy sysfs handling be moved to gpio_devic=
+e? */
+>         gpiochip_sysfs_unregister(gdev);
+> +
+> +       /*
+> +        * Tell gcdev that the device is removing. If any gpio resources =
+are in
+> +        * use (irqs for instance), it's time for gcdev to release them.
+> +        */
+> +       gcdev_unregister(gdev);
+> +
+>         gpiochip_free_hogs(gc);
+>         /* Numb the device, cancelling all outstanding operations */
+>         gdev->chip =3D NULL;
+> @@ -1085,7 +1092,6 @@ void gpiochip_remove(struct gpio_chip *gc)
+>          * be removed, else it will be dangling until the last user is
+>          * gone.
+>          */
+> -       gcdev_unregister(gdev);
+>         up_write(&gdev->sem);
 
-Thanks for taking a stab at it. I saw this issue some time ago, tried
-to fix it directly in interrupt procfs code[1], got yelled at by
-Thomas Gleixner for 20 or so emails and eventually forgot about it.
-Nice to see someone tackle it again.
+Please rebase it on top of the for-next branch of the GPIO tree. We've
+had some significant rework recently, we no longer even have this
+semaphore.
 
 Bart
 
-[1] https://lore.kernel.org/lkml/20230814093621.23209-1-brgl@bgdev.pl/
+>         gpio_device_put(gdev);
+>  }
+> --
+> 2.43.0
+>
 
