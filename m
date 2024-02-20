@@ -1,117 +1,197 @@
-Return-Path: <linux-gpio+bounces-3527-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3528-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 798AC85C460
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 20:11:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8A2E85C61F
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 21:54:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 02E0A1F25120
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 19:11:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E54D283DEF
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 20:54:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 742DA135416;
-	Tue, 20 Feb 2024 19:10:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9829E151CC8;
+	Tue, 20 Feb 2024 20:54:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="STAoQTDO"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="P2HhyoOz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A66412838D;
-	Tue, 20 Feb 2024 19:10:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988781509AE
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 20:54:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708456244; cv=none; b=bdBFCtNObWt5c9Gel4/nIOvf6TGJ8kOzkVbLj/rCvT8C5U6G3GsLAgeZutSZm/gIGVO1bh5Ft4lS4PijyYdRwWM7gWwPcRtf51t+BQK7OEAxHCKV2hthNbLF9l7Y+a+9IiQ9hMYkrpfaTBw/LBgNvQKxNz/wfAwGq7rGWSmN784=
+	t=1708462466; cv=none; b=T0wz5wSEs2B9JcegFX0TokQOUfenYWEYfKjtc6jjW66wmR/tYKWyshWn40cbuCmvzJoIvMMytAeTXsT+lAiV8Bj7ozwksnSKHb0mLDaT/8EC0YJDFHL/5Zz33EmhjA6IDXzr4HfqjeZmvdQpHlpd0ssePQmI4QPfvH+4OTjP0tY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708456244; c=relaxed/simple;
-	bh=EFe3zrWR0LWM1ZcyrsqjHTnnESZFaVS5VCYSop5F4Uc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mHUYN2HbadX2c+VtS8Rt9TipR34oYZgI9IN6dnvwBbbLsnvwWwiSHlKrfeSSTLYo+fD9F23SAyTBNSF3LxX/i8S7BNhVU7icdjFucfAgn0JfroeCeeuR0zz7ywkkH/bvm1gt+oqNhWJVfNXxQyRBusl1eO2+NxGdhKEFiVFjoPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=STAoQTDO; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00A23C433C7;
-	Tue, 20 Feb 2024 19:10:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708456243;
-	bh=EFe3zrWR0LWM1ZcyrsqjHTnnESZFaVS5VCYSop5F4Uc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=STAoQTDOpl9BLSR1MZMUXajWDDxXaE72uD0vlU/+O/v1Jm3Y+5jz2QdLWDNQmovnI
-	 Rz0JrLOjKJrUw6ux+KxWzOTkp9MrOqj2VhuUEt6TQdMvb6InRbptZWHzKrOS/KKNzk
-	 bg/qJ2s1qSexFpZCJFUZno3h0TrwnU9mawV6a6IeuKtYiWsT0ntYGbdg3MiSvRVE76
-	 OwMWaGbbXkiAPmlwdNngC9AF1mR5YAeHiaTJeLXBfDw4Wo005H26gTXIn7K2R1lylG
-	 A0z5HqW9BUXFVKcRwXLkqe2T5MMoQDj0CIVJgNVLlGzWqdtiW/PfTs+W/1GhTUBy62
-	 hXXLnqPVa8zGg==
-Date: Tue, 20 Feb 2024 19:10:37 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Alex Soo <yuklin.soo@starfivetech.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Hal Feng <hal.feng@starfivetech.com>,
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
-	Jianlong Huang <jianlong.huang@starfivetech.com>,
-	Emil Renner Berthing <kernel@esmil.dk>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [RFC PATCH v2 1/6] dt-bindings: pinctrl: starfive: Add JH8100
- pinctrl
-Message-ID: <20240220-bottling-reverence-e0ee08f48ccc@spud>
-References: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
- <20240220064246.467216-2-yuklin.soo@starfivetech.com>
- <1a11cee2-2ef1-4ce0-8cc1-63c6cc97863f@linaro.org>
+	s=arc-20240116; t=1708462466; c=relaxed/simple;
+	bh=Yi0rtUqZLJm2S6u03a6Dmkff761MDSWQIxTDSQNuYdE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hvCwlixradsKhttoXMNBtxPnVRoZEp2obzIcpdHiRK/Ap6S7/Uw2JIObk/bqTBnEP3WRfb9kkLw3ghCl2WnRXkn4dOUs9qMJncXI9NrQuIHxfmPbiE+7fi2d4kq1EEBAondXzCcYAzyRYJUlg1OH4NlEwTiwjw/H2+Z13deP7nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=P2HhyoOz; arc=none smtp.client-ip=209.85.167.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-511ac32fe38so9073558e87.1
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 12:54:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708462462; x=1709067262; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jyh9FR/LCnL9UHf/YvsJlGBxSygyQQc/DzYerA/eUFA=;
+        b=P2HhyoOzqDJnE/Y9Kp4LbRwJniYfxSYfnuKrMCkUjU7WJTvr9S+LS+/wJSUhqRXiFB
+         Tt6YhgakC0FwtiO38IQF7jExcdNUwVBRtbi4o5moscJax1HnT1tybfnc4AUIy5JSSMnQ
+         C4BZ/uIkIWXgKkVI4fJi5D5RbI4INhnU8nZK3EFyzOmwqWYcTmPghry8dzdS+YJmW4+N
+         3M7VwYawEO+u5oiBoC2ev0ouFnIWeBGt+fb0/wBqzT/Po4RjNOf9KqVt6P8jX4gN0Ioj
+         W/vuoi8SeoF6B9G6A3r1ig0HtoFALXKogb3OvOnI2poUqkdVPDwv42gkK1p8GW2YngVI
+         yQjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708462462; x=1709067262;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=jyh9FR/LCnL9UHf/YvsJlGBxSygyQQc/DzYerA/eUFA=;
+        b=T3Tmh/vCWrEHWDWQs838fC0K4lKQC2yCXmxtnA7c27kYQ8TgMdgCImPNFZjAQxSinH
+         ozmh+nbkvWHx8x0dLOUvuDI3Rov5V+FrdaAPCavyfX9HSLIhqBQhRhyDyBIfS/F+Fm5b
+         dFMwlLj6Fy4Mz13k5uzL/sKpY7DZE1KSTg3x6haL7Acd8+F+SzCjP053eFZv6DTzK/wA
+         eoDees4F18lVm+5KGt61vYO7tcSqlrfJ6Bf7tnUuVuaItFxPtPQTfFcjI2cG5YibgQKW
+         ghapBe0fVQLo5rGZIaYJ2SiHcYxbIp5sBrIak3aooT3V3F2S3F4z8NoBcTw+gBav73yb
+         YuEg==
+X-Forwarded-Encrypted: i=1; AJvYcCUXIjjfpqMVUZhapxI5AzfWy6KxYyQfOmVkZMa04a446XnhpyYrvuxDmIvonspC0CiKtCE9jYDVW7FqLcbuEyw7ExgKyXjqRbAtnA==
+X-Gm-Message-State: AOJu0Yy9+WrIiM/5Qmf+VXHsvm64LBD8otkCMmmQAdNraiqyfdBqkRWb
+	7toimKVFqDGGB4YBvTIj6cMglR035HuNZlhAwRdVQ1AozDle7AnsyuE8WtN2YtiXN9MRhrnHd5h
+	u67IrwX71EGrwLeGQtN5RU+lY7NKjt5Txhd2ZFw==
+X-Google-Smtp-Source: AGHT+IHZqlcVgt+ktb4ViHXtjGE0NSdsEiIKRla1wDkZQzzWbmG1Zgv7ZNzPVhE7Wq2SOamQcI56TcuJ7km+1hUpqHA=
+X-Received: by 2002:a05:6512:1321:b0:512:bd65:860a with SMTP id
+ x33-20020a056512132100b00512bd65860amr5309051lfu.5.1708462462005; Tue, 20 Feb
+ 2024 12:54:22 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tADB2NrbVw9jbyhp"
-Content-Disposition: inline
-In-Reply-To: <1a11cee2-2ef1-4ce0-8cc1-63c6cc97863f@linaro.org>
-
-
---tADB2NrbVw9jbyhp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+In-Reply-To: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+From: David Lechner <dlechner@baylibre.com>
+Date: Tue, 20 Feb 2024 14:54:10 -0600
+Message-ID: <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
+Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
+	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
+	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Michael Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
+	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
+	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
+	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
+	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 20, 2024 at 09:11:43AM +0100, Krzysztof Kozlowski wrote:
-> On 20/02/2024 07:42, Alex Soo wrote:
-> > Add documentation and header file for JH8100 pinctrl driver.
-> >=20
-> > Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
-> > ---
->=20
->=20
-> RFC? Why isn't this patch ready for review?
+On Tue, Feb 20, 2024 at 3:43=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@gmail=
+.com> wrote:
+>
 
-The TL;DR is that Emil and I didn't want to apply the dts patches to
-support a platform that hadn't actually been taped out yet.=20
-For an SoC in that state, at least the bindings for, clock and pinctrl
-could be subject to changes before tapeou. I think putting RFC on those
-patches is a good idea, but of course the rationale should be mentioned.
+...
 
-Cheers,
-Conor.
+> +
+> +  avdd-supply:
+> +    description: Avdd supply, can be used as reference for conversion.
+> +                 This supply is referenced to AVSS, voltage specified he=
+re
+> +                 represens (AVDD - AVSS).
 
---tADB2NrbVw9jbyhp
-Content-Type: application/pgp-signature; name="signature.asc"
+The datasheets call this AVDD1, not AVDD. Would be nice to use the
+correct name to avoid ambiguity.
 
------BEGIN PGP SIGNATURE-----
+Also check spelling `represents` above and below.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdT5LQAKCRB4tDGHoIJi
-0q4/AP9aepRkgGMwUZFmvYfa5PLBEmZ95b0tJEUr42AOOQptlQEAvcfTGWd32hy5
-EqoPPciZYk30PuQQ68mEvIHOaYAqnwE=
-=gvQL
------END PGP SIGNATURE-----
+> +
+> +  avdd2-supply:
+> +    description: Avdd2 supply, used as the input to the internal voltage=
+ regulator.
+> +                 This supply is referenced to AVSS, voltage specified he=
+re
+> +                 represens (AVDD2 - AVSS).
+> +
+> +  iovdd-supply:
+> +    description: iovdd supply, used for the chip digital interface.
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: |
 
---tADB2NrbVw9jbyhp--
+Don't need `|` here.
+
+> +      Optional external clock source. Can include one clock source: exte=
+rnal
+> +      clock or external crystal.
+> +
+> +  clock-names:
+> +    enum:
+> +      - ext-clk
+> +      - xtal
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+> +patternProperties:
+> +  "^channel@[0-9a-f]$":
+> +    type: object
+> +    $ref: adc.yaml
+> +    unevaluatedProperties: false
+> +
+> +    properties:
+> +      reg:
+> +        minimum: 0
+> +        maximum: 15
+
+Parts ending in -2 only have four channels.
+
+> +
+> +      diff-channels:
+> +        items:
+> +          minimum: 0
+> +          maximum: 31
+> +
+
+Are we missing `bipolar: true` here? (since we have
+unevaluatedProperties: false)
+
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on
+> +          the specific channel. Valid values are:
+> +          vref       : REF+  /REF=E2=88=92
+> +          vref2      : REF2+ /REF2=E2=88=92
+> +          refout-avss: REFOUT/AVSS (Internal reference)
+> +          avdd       : AVDD  /AVSS
+> +
+> +          External reference ref2 only available on ad7173-8.
+> +          If not specified, internal reference used.
+> +        $ref: /schemas/types.yaml#/definitions/string
+> +        enum:
+> +          - vref
+> +          - vref2
+> +          - refout-avss
+> +          - avdd
+> +        default: refout-avss
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+Aren't the various power supplies supposed to be required?
+
+- avdd-supply
+- avdd2-supply
+- iovdd-supply
 
