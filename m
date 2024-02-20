@@ -1,136 +1,140 @@
-Return-Path: <linux-gpio+bounces-3512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3513-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C7B585BD5F
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:40:22 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F55285BD6E
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 14:42:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7F6CE1C22C79
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:40:21 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8775B224D0
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 13:42:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38ED24C60;
-	Tue, 20 Feb 2024 13:40:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26D3A6A8DC;
+	Tue, 20 Feb 2024 13:42:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="dyt63mmK"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vtGGFpgf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f52.google.com (mail-ua1-f52.google.com [209.85.222.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88FB36A346;
-	Tue, 20 Feb 2024 13:40:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 476B76A340
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 13:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708436403; cv=none; b=VSK07IHiJvkG3EwkAOiKyYfWLJIU3oVXENnTrSuuqnGyvH8xb5CHKQV2yMg+C7WHAEHL9HK1r4hm7/xw0e0kK8Pidk663BGqZfid8RMN2c8k9BZlKCNdj2vn0AD3zxifk5M4RY0QcTEOZ7PNvjFKd0efZQMhq07JhOhbzYS4VA4=
+	t=1708436520; cv=none; b=BQuh3OXls4ffsL82GSC4S8X0CqZSMpoxmswQiChEuLPqCue9HflNjyNSKlIihluV9RRRis8zkR3ABsPvruvCQrsItJiN5VQRD0tkn/nftqpyLyF918NGDErikEAMrNxirBPkaTicOhXS/nOtnZQsHKa/fjITaKf1mKbpyYKbtkw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708436403; c=relaxed/simple;
-	bh=G5QNoctspJ1RDquSBWI4re9ufm9ecSTNMxVtKdOzPC4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kTEdHGNLrci+3WCJtSAUntTpKKK1PhPzTSNaPyrDNdeM748XjCAIwAgRERnjjaS1xTDldCxkcAlREB0sawgy2Ft6DwahT4BeR9qX1hMMtrvdkzoKrWQ7UP/HFlVYmKcsXDjQPhrTO/3CEpFXpkelliZY92s2rXG9RZkFxvtt1W4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=dyt63mmK; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPA id 8916820011;
-	Tue, 20 Feb 2024 13:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708436399;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=THtvQDT+qQLPub8vG8YsD0SpllI5xUKHDkxR4GFPKUc=;
-	b=dyt63mmKnd2Z/+FblfX5f/mKstSpdWCixUiXcAjswnNreAWHDLHGYt1BaRFxvUsnHTUags
-	LHksF5XcBusLoE7jcn/YsTyiDylHsblQwVWca+QnQqYxbYMtfMQ3iUVA/PaSOHoCnrblaY
-	9lEBlNzIBfv/IVHWRnmOhb/tkpg24xeTV6WQsBVXPzKWgCezLNisM5qWLkjFTkqlXuhSnr
-	q+2beu/laXjyXqEpjbFcCKUQKdBZNiF44J1CtIARcJEjdlOx3ujuLa6/tDWpPjNJraWGPm
-	s0n3u9GGXPLDdUFAggMkENlqWakT4Kz0Vl6RxV1KpId6CWR6CzDp5EeR3hak9A==
-From: Herve Codina <herve.codina@bootlin.com>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>
-Cc: Saravana Kannan <saravanak@google.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-leds@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Herve Codina <herve.codina@bootlin.com>
-Subject: [PATCH RESEND 2/2] leds: gpio: Add devlinks between the gpio consumed and the gpio leds device
-Date: Tue, 20 Feb 2024 14:39:49 +0100
-Message-ID: <20240220133950.138452-3-herve.codina@bootlin.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240220133950.138452-1-herve.codina@bootlin.com>
-References: <20240220133950.138452-1-herve.codina@bootlin.com>
+	s=arc-20240116; t=1708436520; c=relaxed/simple;
+	bh=QQBscvCfbaDRlzqcyAKjfFFH/xl7hw7boMX/xj5Gdk4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=RMu8QRNnwCNYw1FY1WRqmF0XYOyJ0fRMZNhbA4a4B/FwmsvJ6QwghYB0cewresjoST1a7HfGap+HAU9m23Bguq+8+lbzmlYPLXW/rXLXOaEPvX+3DxswJpkJW8USRbqDZUgzGpEUxMyb1XxVo+4N6N3t39QfdWuXKecPr0Ar6r0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vtGGFpgf; arc=none smtp.client-ip=209.85.222.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f52.google.com with SMTP id a1e0cc1a2514c-7d2a67daa25so3316208241.0
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 05:41:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708436509; x=1709041309; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xP/TK90neT8X21AtRisPl7685j0CAZc0zErZJvKoQI4=;
+        b=vtGGFpgfoQEbBi4YvkwAKlT3/xI0GglK0CG5yXQRrAmagwEdk7vW6JL7qnCJV4xGgK
+         X4OxjISO+00dIkd9CcIh+K7UvoX89aaC/O1bL7rlLGuB7ORKAFJABKZbbRfScs+QoOFo
+         M3K2RszlnSEEyYP+DSF6w4EvSN0zuR/+7go6mHi86NPbjOFOiU6IZ52O093dS7vgYd+J
+         zm06VuYHOQZALEzWtW6ezEJblrci9ih12UYVAXM4WcBo+4d0dobWHt82T/kzlZn7ByQ1
+         ft9eUHlK2fQ+MfNqivMKcAJ/ewigYgKA5yP4sVrZepnIZd92AhZnAmoLkDlL9S+gS0k8
+         xbIg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708436509; x=1709041309;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=xP/TK90neT8X21AtRisPl7685j0CAZc0zErZJvKoQI4=;
+        b=hnjLwgGBsTV9twCAPNQlna4Ut+vmI0D4uDJOOau2mgZQSWW6euOyPKV1T1e+TNsWsT
+         c0P51LydaYxVOHCDcTEVOD1/PlE4xJJpNmxEcMwv+Ss3oX31QRkMC/nAd6j5oW/dcmXs
+         uGMWPnllkgbUy0QuKWAQUeaQ1afwd1Al4e3fg9IWELvhNrovjuD9MEKzxhYYzPB6Nz8B
+         iS0/Xm2iTabz+io3zfx4wcAG0RS9cLlT0dFSQRDuQNdBToT3bK9+ypLoUOMMg+CetFad
+         4hc/1vSlEh4ne/whp15W4iAu3BcZlT8x35IwitSYC+uIWgpaD/mLEON5alpzuGhbRS4s
+         y7tA==
+X-Forwarded-Encrypted: i=1; AJvYcCXGtHdMg+xegyhGK1Y6V7rlMaii7BYXEI/fZJa5MmZqcX40cwYKwLwXq7NcbaIxxWkbcXLoA82zNMonYfkEGciUVWf6/fdUG4RFwA==
+X-Gm-Message-State: AOJu0YyANvmjbLwgKs0ID1jcFfWVnva/Lbdl1X627b7iYZtVZUo6H6UO
+	CzmhBcduTmvk3Ys/TQfZhJO9K8NS9ouB41wHJ+ouI1L7AKJupQAEaQy0Xwz+J6R3Nck0qzJl7Aw
+	xz1n7AFXhhBAj5DnQtZIddJUSICNifEHNXRo8lw==
+X-Google-Smtp-Source: AGHT+IEBVqrGCcl71zhl8y7obE4covazgnsV45hChAyMiiWzAb7U3Rn+DCURtJ9DVwFtq4joCvmggniLbawJuIySIJw=
+X-Received: by 2002:a67:ad19:0:b0:470:4aad:7aa4 with SMTP id
+ t25-20020a67ad19000000b004704aad7aa4mr5837008vsl.8.1708436509617; Tue, 20 Feb
+ 2024 05:41:49 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+References: <20240220111019.133697-1-herve.codina@bootlin.com>
+In-Reply-To: <20240220111019.133697-1-herve.codina@bootlin.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 20 Feb 2024 14:41:38 +0100
+Message-ID: <CAMRc=MfpudtuwMEexJdWwhJ3sdbTn4fhpwQvGKOHSPE6+6k4jQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio chip removal
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Luca Ceresoli <luca.ceresoli@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-When a gpio is removed, the gpio leds consumer need to be removed first.
-This dependency consumer/supplier can be described by devlink links.
-In case of device-tree, even if some devlinks are created due to the
-presence of gpio phandles in the gpio leds children, these links do not
-help in removing the gpio leds device (i.e. the real consumer) before
-the consumed gpio.
-We can reach cases where the gpio are no more present and the gpio leds
-driver continue to have leds using these gpio.
-Further more, when the gpio come back, the gpio leds still use the old
-removed one.
+On Tue, Feb 20, 2024 at 12:10=E2=80=AFPM Herve Codina <herve.codina@bootlin=
+.com> wrote:
+>
+> Hi,
+>
+> When a gpio chip device is removed while some related gpio are used by
+> the user-space (gpiomon for instance), the following warning can appear:
+>   remove_proc_entry: removing non-empty directory 'irq/233', leaking at l=
+east 'gpiomon'
+>   WARNING: CPU: 2 PID: 72 at fs/proc/generic.c:717 remove_proc_entry+0x19=
+0/0x19c
+>   ...
+>   Call trace:
+>     remove_proc_entry+0x190/0x19c
+>     unregister_irq_proc+0xd0/0x104
+>     free_desc+0x4c/0xc4
+>     irq_free_descs+0x6c/0x90
+>     irq_dispose_mapping+0x104/0x14c
+>     gpiochip_irqchip_remove+0xcc/0x1a4
+>     gpiochip_remove+0x48/0x100
+>   ...
+>
+> Indeed, even if the gpio removal is notified to the gpio-cdev, the
+> IRQ used is not released when it should be.
+>
+> This series calls the gpio removal notifier sooner in the removal
+> process in order to give a chance to a notifier function to release
+> the IRQ before releasing the IRQ mapping and adds the needed
+> operations to release the IRQ in the gpio cdev notifier function.
+>
+> Best regards,
+> Herv=C3=A9 Codina
+>
+> Herve Codina (2):
+>   gpiolib: call gcdev_unregister() sooner in the removal operations
+>   gpiolib: cdev: release IRQs when the gpio chip device is removed
+>
+>  drivers/gpio/gpiolib-cdev.c | 33 ++++++++++++++++++++++-----------
+>  drivers/gpio/gpiolib.c      |  8 +++++++-
+>  2 files changed, 29 insertions(+), 12 deletions(-)
+>
+> --
+> 2.43.0
+>
 
-Indeed, the gpio are consumed by the parent of the consumer used in the
-devlink creation due to phandles. A link is missing between the gpio and
-the real gpio consumer, the gpio leds device itself.
+Thanks for taking a stab at it. I saw this issue some time ago, tried
+to fix it directly in interrupt procfs code[1], got yelled at by
+Thomas Gleixner for 20 or so emails and eventually forgot about it.
+Nice to see someone tackle it again.
 
-Use the newly introduced gpiod_device_add_link() to create this
-missing link between the gpio leds devices and the gpios.
-With that done, if a gpio is removed, the gpio leds is removed and the
-resources are correctly released.
+Bart
 
-Signed-off-by: Herve Codina <herve.codina@bootlin.com>
----
- drivers/leds/leds-gpio.c | 15 +++++++++++++++
- 1 file changed, 15 insertions(+)
-
-diff --git a/drivers/leds/leds-gpio.c b/drivers/leds/leds-gpio.c
-index 83fcd7b6afff..b3ec8ecbe5da 100644
---- a/drivers/leds/leds-gpio.c
-+++ b/drivers/leds/leds-gpio.c
-@@ -150,6 +150,7 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
- {
- 	struct fwnode_handle *child;
- 	struct gpio_leds_priv *priv;
-+	struct device_link *link;
- 	int count, ret;
- 
- 	count = device_get_child_node_count(dev);
-@@ -197,6 +198,20 @@ static struct gpio_leds_priv *gpio_leds_create(struct device *dev)
- 		/* Set gpiod label to match the corresponding LED name. */
- 		gpiod_set_consumer_name(led_dat->gpiod,
- 					led_dat->cdev.dev->kobj.name);
-+
-+		/*
-+		 * Create a link between the GPIO and the gpio-leds device.
-+		 * This allow to have a relationship between the gpio used and
-+		 * the gpio-leds device in order to automatically remove the
-+		 * gpio-leds device (consumer) when a GPIO (supplier) is removed.
-+		 */
-+		link = gpiod_device_add_link(dev, led_dat->gpiod,
-+					     DL_FLAG_AUTOREMOVE_CONSUMER);
-+		if (IS_ERR(link)) {
-+			fwnode_handle_put(child);
-+			return ERR_CAST(link);
-+		}
-+
- 		priv->num_leds++;
- 	}
- 
--- 
-2.43.0
-
+[1] https://lore.kernel.org/lkml/20230814093621.23209-1-brgl@bgdev.pl/
 
