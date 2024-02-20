@@ -1,184 +1,181 @@
-Return-Path: <linux-gpio+bounces-3490-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3491-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DE2085B8B5
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 11:14:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D862185B938
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 11:38:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D793A284E87
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 10:13:56 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DDA7BB23A54
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 10:38:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABFF4612C4;
-	Tue, 20 Feb 2024 10:11:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BBB3626B2;
+	Tue, 20 Feb 2024 10:38:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="nv9a/AUQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fpb50nH8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDD8B41A80;
-	Tue, 20 Feb 2024 10:11:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 333E83F8DA;
+	Tue, 20 Feb 2024 10:38:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708423905; cv=none; b=mMDMYfgj0gRvtxloqcAe2fgHqbncKH+YDBeF3PeZzultoCKoABRlVqsaL60rBBIo8A4JiuhgAS2qRvg3XMlA5wYrHf2vLiEie0/RsctfiUuqNdj1wJe2agFH5FewF2bnQrs/odjOj/cWiykDMcllINAK3QLS4p67f1UTd4Df+x4=
+	t=1708425511; cv=none; b=iMMspE33Ne5Xh2u4dSOM3nHGuuKfnrdpRNN3UIBKthkzNnE23jMybcJcEDSjw4FATux9LbkyiYVmJbKxyVCxEHD2dUy6BSY+uvrD0QuePsiRPIxM7LC/LuYkW7Fz+W/B0vOl5VmVEHUyBCEPYZ5pMZRhlJ4UGa1VybbwOIi7DVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708423905; c=relaxed/simple;
-	bh=4fR3RvvX25uhwy7hcoCiq63kjKy7ETnyYtzhSQgIwQQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ZEdsG9OoxgVcMmumy3df6cnLoScDkyZRyAC7URhSHpMtBN7Tp+Aa3AGZpR3hr7Pi8TS0UXnG7I3xW8Jxl/lNgxpKRR/RPJxvWY4HZ0E1eyneoiFcLvzbwFXUgRWK4b2xbf5d/3XsebBHEotB2bye3rWdDonwCS8+ySGa/kiUxd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=nv9a/AUQ; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41K4Nw9V004019;
-	Tue, 20 Feb 2024 10:11:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=/kGHPCXOUhT1b+kLQoJcMoS7pcHpOsfun4Cr9Uh9Xmc=; b=nv
-	9a/AUQMvRnn255bi9Vv8Kft8pJ0XEWtaut5o5HED/dgsOoy6s1pmTwLTA1OMK0HM
-	mnboG9RjEdyi31S8i61SCiZhVzIhIUYyW2G0jmjKbP0Io/2oUBM702zPdMYk/z0x
-	Vyr2xxv5UFsSsTZXUWIPNnOaYDDlRdADChIswDhJrl7A8xRjELjBeL7U0XvdTVma
-	iH4WLq67VktgXYXnP9UbLpbuPyERnJm7jxqK2akbjjZRrMOJ1IZ0jvL4rUdYRLFf
-	CzUWcDJ1a5lhM25B7v38uE3r4wfJzvED3JUXy6WyJnUuZAuKA2a8Hrr6Fzi84Bis
-	s8v67IWIoepGE8zgmJ9A==
-Received: from nasanppmta02.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wcn15rmu8-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 10:11:32 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41KABWho015374
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 10:11:32 GMT
-Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 20 Feb
- 2024 02:11:29 -0800
-Message-ID: <b56c871e-619b-f8bb-f149-fb9b22f8a79d@quicinc.com>
-Date: Tue, 20 Feb 2024 15:41:26 +0530
+	s=arc-20240116; t=1708425511; c=relaxed/simple;
+	bh=85QlOFu2YhSQ9TMT5qDulDBsbqMYoTEK5apqI6RUa/k=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=FKkfHzshe6+2gxGKYzEhK1xjiLeiixIzhr4GTyi3INvPqEjye6sXZ+Rcqix+G3AdX3DfiSRtSvzComAHZ3UtPfqCMCIpVHz89wtk8x7csSu92LRZq7Od9EvxapozhjNTvv2BfNdn/tG3Fiw+qecv3xOBU7NiGvO16PuKQJNcCiI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Fpb50nH8; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a26fa294e56so835168866b.0;
+        Tue, 20 Feb 2024 02:38:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1708425507; x=1709030307; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=T1XtqId6iHlaoYYjxliVTuVP5w5azb5xdx241ndbj1o=;
+        b=Fpb50nH8BtsY60f7ZyV8Jy4gTRQzZ10Amt6axP7K8Vhc92GBWvZQJPZr4ouKem9unR
+         Z1puR3z8j4zvUQNc2HAncAolYrO7eDpOsWE97w6g5K43GibjjZvfueM41aZMKQSvZeg+
+         hyPZv8u0uXmE4obN68gpq+nxSXirr9InI9CwfSJfGzzpM++fc6E2HpZffimkUwPXRmnS
+         fDHnWzepCPdFC+x7gn0ofXNoH4Q3OvTAgia/cRnGFNqXE0b15lmLNYUVcOfhohK/qcKJ
+         mV+Q3fCKHbUsGHU/ArHZZSus3Nr+f/6uVVCl3TBqMSArbfIZwoGYCz97axAJYoA0oLPz
+         f3nw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708425507; x=1709030307;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=T1XtqId6iHlaoYYjxliVTuVP5w5azb5xdx241ndbj1o=;
+        b=ZK0vZoxCavS3Asmvrlz5XZ/NGO3JGNa7eddAF8zuQ2LDh3GRcrGte9nNNUzbPEfc16
+         Smujg12qkwP5QQDknP5BnwBFdRRel/35ln6V8xFMbqVWzmZGjKjmddS2WeFAUTJwCMZS
+         P89AAPgqNKpAreE+QJOl9CTTH/lk71WLAtUqyeaaW8zIwVnkx6DdeUZp29WWmohXh78Q
+         GBWD7uGnC9uIZxA36eJEmsFb2DNEPvJM3Frv8muEjg7aQec9hG2uxWLypFahf6lDlAXc
+         HOIUH1bd67rKdmxIllNsAhC5UFjtwRPHDutP0Bt3Cqq0VZHy0BIhzW1WWg0iBD9ReXgJ
+         m8EA==
+X-Forwarded-Encrypted: i=1; AJvYcCUisET57+Lv6vO2lIsqz10RzqnPxXQ5yT4CYBAvF1/jLLkkIjSKdgea7OwUUEyCURx/w1XKvJ1f9HIIUZEDaiB2fbykvpR1m3QRsN0aZY/lq1gkVZ2oYVS7mgYJXl13QqphXR2kgyR3uJwsvdTHo2PSjSOT2sWfnt52lJTiLD9N2VxDVgMzTN/CHKfEPPL72RdSCXocFb4zLploOnocdfg=
+X-Gm-Message-State: AOJu0Yx47nS2u6xn8HNGOODca2LfvsAsJo6HHOiI7Yr15Kp1OViBtpOm
+	9csBePo2OTrdUAaz2AeGbKN20pPnlXKfsZDiZF7hH7TCYOeJj8a2
+X-Google-Smtp-Source: AGHT+IGzDT+/gIS4cp1zwvn8P+xfh9QBWAauqBrx/h9SQaNyFq6J4r0lVXHGOwF970Cnf6Z3YnrsvQ==
+X-Received: by 2002:a17:906:fa19:b0:a3e:f83d:f8a0 with SMTP id lo25-20020a170906fa1900b00a3ef83df8a0mr1293951ejb.52.1708425507113;
+        Tue, 20 Feb 2024 02:38:27 -0800 (PST)
+Received: from ?IPv6:2001:a61:3456:4e01:6ae:b55a:bd1d:57fc? ([2001:a61:3456:4e01:6ae:b55a:bd1d:57fc])
+        by smtp.gmail.com with ESMTPSA id g23-20020a17090670d700b00a3d80d7f986sm3796152ejk.82.2024.02.20.02.38.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 02:38:26 -0800 (PST)
+Message-ID: <6af326b1bf24faea652b4549ff5db24b96ee80c5.camel@gmail.com>
+Subject: Re: [PATCH v13 3/3] iio: adc: ad7173: add AD7173 driver
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Jonathan
+ Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>,  Michael Walle <michael@walle.cc>, Andy Shevchenko
+ <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,  ChiaEn Wu
+ <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
+ <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
+ Dumitru <dumitru.ceclan@analog.com>,  linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-kernel@vger.kernel.org
+Date: Tue, 20 Feb 2024 11:38:25 +0100
+In-Reply-To: <20240220094344.17556-3-mitrutzceclan@gmail.com>
+References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+	 <20240220094344.17556-3-mitrutzceclan@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.3 (3.50.3-1.fc39) 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v11 1/4] firmware: qcom: scm: provide a read-modify-write
- function
-Content-Language: en-US
-To: Bjorn Andersson <andersson@kernel.org>,
-        Linus Walleij
-	<linus.walleij@linaro.org>
-CC: Mark Brown <broonie@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>
-References: <1704727654-13999-1-git-send-email-quic_mojha@quicinc.com>
- <1704727654-13999-2-git-send-email-quic_mojha@quicinc.com>
- <CACRpkdY7fbFyNNd6GAikxC3+wk0ca8Yn_8__zkp+Q-deJeJ_LQ@mail.gmail.com>
- <3a17f36a-04bf-04f2-7a22-82b76977b325@quicinc.com>
- <CACRpkdbnj3W3k=snTx3iadHWU+RNv9GY4B3O4K0hu8TY+DrK=Q@mail.gmail.com>
- <6lmxlfopjzxbvn5oe6uha2ppdjderuymgq3h3gz2suyb5i2vs6@mpadw4b37s5t>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <6lmxlfopjzxbvn5oe6uha2ppdjderuymgq3h3gz2suyb5i2vs6@mpadw4b37s5t>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: D3SoTYIZC-4s_saOcdRgFyLJ_gHyZYy9
-X-Proofpoint-GUID: D3SoTYIZC-4s_saOcdRgFyLJ_gHyZYy9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_06,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- phishscore=0 suspectscore=0 bulkscore=0 adultscore=0 spamscore=0
- mlxscore=0 lowpriorityscore=0 mlxlogscore=999 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200071
 
+On Tue, 2024-02-20 at 11:43 +0200, Dumitru Ceclan wrote:
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel
+> applications or higher speed multiplexed applications. The Sigma-Delta
+> ADC is intended primarily for measurement of signals close to DC but also
+> delivers outstanding performance with input bandwidths out to ~10kHz.
+>=20
+> Reviewed-by: Andy Shevchenko <andy@kernel.org> # for changes up until V12
+> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+> ---
+>=20
 
+Hi Dumitru,
 
-On 2/17/2024 12:01 AM, Bjorn Andersson wrote:
-> On Tue, Jan 09, 2024 at 02:34:10PM +0100, Linus Walleij wrote:
->> On Tue, Jan 9, 2024 at 2:24 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->>> On 1/9/2024 6:44 PM, Linus Walleij wrote:
->>>> On Mon, Jan 8, 2024 at 4:28 PM Mukesh Ojha <quic_mojha@quicinc.com> wrote:
->>>>
->>>>> It was realized by Srinivas K. that there is a need of
->>>>> read-modify-write scm exported function so that it can
->>>>> be used by multiple clients.
->>>>>
->>>>> Let's introduce qcom_scm_io_rmw() which masks out the bits
->>>>> and write the passed value to that bit-offset.
->>>> (...)
->>>>> +int qcom_scm_io_rmw(phys_addr_t addr, unsigned int mask, unsigned int val)
->>>>> +{
->>>>> +       unsigned int old, new;
->>>>> +       int ret;
->>>>> +
->>>>> +       if (!__scm)
->>>>> +               return -EINVAL;
->>>>> +
->>>>> +       spin_lock(&__scm->lock);
->>>>> +       ret = qcom_scm_io_readl(addr, &old);
->>>>> +       if (ret)
->>>>> +               goto unlock;
->>>>> +
->>>>> +       new = (old & ~mask) | (val & mask);
->>>>> +
->>>>> +       ret = qcom_scm_io_writel(addr, new);
->>>>> +unlock:
->>>>> +       spin_unlock(&__scm->lock);
->>>>> +       return ret;
->>>>> +}
->>>>> +EXPORT_SYMBOL_GPL(qcom_scm_io_rmw);
->>>>
->>>> This looks a lot like you are starting to re-invent regmaps
->>>> regmap_update_bits().
->>>>
->>>> If you are starting to realize you need more and more of
->>>> regmap, why not use regmap and its functions?
->>>
->>> I think, this discussion has happened already ..
->>>
->>> https://lore.kernel.org/lkml/CACRpkdb95V5GC81w8fiuLfx_V1DtWYpO33FOfMnArpJeC9SDQA@mail.gmail.com/
->>
->> That discussion ended with:
->>
->> [Bjorn]
->>> We'd still need qcom_scm_io_readl() and qcom_scm_io_writel() exported to
->>> implement the new custom regmap implementation - and the struct
->>> regmap_config needed in just pinctrl-msm alone would be larger than the
->>> one function it replaces.
->>
->> When you add more and more accessors the premise starts to
->> change, and it becomes more and more of a reimplementation.
->>
->> It may be time to actually fix this.
->>
-> 
-> Thought I had replied to this already, did we discuss this previously as
-> well?
-> 
-> My concern with expressing this as a regmap is that from the provider's
-> point of view, the regmap would span the entire 32-bit address space.
-> I'm guessing that there's something on the other side limiting what
-> subregions are actually accessible for each platform/firmware
-> configuration, but I'm not convinced that regmap a good abstraction...
+Just a couple of things... With those addressed:
 
-To add more to it, in current series, we are just accessing single 
-register for read/write and using regmap for this looks overkill to
-me.
+Reviewed-by: Nuno Sa <nuno.sa@analog.com>
 
--Mukesh
-> 
-> Regards,
-> Bjorn
-> 
->> Yours,
->> Linus Walleij
+...
+
+>=20
+> +static int ad7173_disable_all(struct ad_sigma_delta *sd)
+> +{
+> +	struct ad7173_state *st =3D ad_sigma_delta_to_ad7173(sd);
+> +	int ret;
+> +	int i;
+> +
+> +	for (i =3D 0; i < st->num_channels; i++) {
+> +		ret =3D ad_sd_write_reg(sd, AD7173_REG_CH(i), 2, 0);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static struct ad_sigma_delta_info ad7173_sigma_delta_info =3D {
+> +	.set_channel =3D ad7173_set_channel,
+> +	.append_status =3D ad7173_append_status,
+> +	.disable_all =3D ad7173_disable_all,
+> +	.set_mode =3D ad7173_set_mode,
+> +	.has_registers =3D true,
+> +	.addr_shift =3D 0,
+> +	.read_mask =3D BIT(6),
+> +	.status_ch_mask =3D GENMASK(3, 0),
+> +	.data_reg =3D AD7173_REG_DATA,
+> +	.irq_flags =3D IRQF_TRIGGER_FALLING,
+
+You need to rebase on the current testing (or maybe Jonathan can fix it if =
+this get's
+applied in this version). Basically, I would drop the above .irq_flags assi=
+gment. The
+lib will now check if you gave the trigger over Firmware (like device tree)=
+ and use
+it. And that#s how we should set the IRQ trigger type. I did not removed th=
+e variable
+just for backward compatibility [1].
+
+...
+
+> +};
+>=20
+> +	indio_dev->name =3D st->info->name;
+> +	indio_dev->modes =3D INDIO_DIRECT_MODE;
+> +	indio_dev->info =3D &ad7173_info;
+> +
+> +	spi->mode =3D SPI_MODE_3;
+> +
+
+I don't think we need the above. We should just enforce it to SPI_CPOL| SPI=
+_CPHA in
+the bindings [2].
+
+[1]: https://lore.kernel.org/linux-iio/20240117-dev_sigma_delta_no_irq_flag=
+s-v1-2-db39261592cf@analog.com/
+[2]: https://elixir.bootlin.com/linux/latest/source/Documentation/devicetre=
+e/bindings/iio/imu/adi,adis16475.yaml#L45
+
+- Nuno S=C3=A1
+>=20
 
