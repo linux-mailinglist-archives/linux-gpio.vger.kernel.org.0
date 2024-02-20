@@ -1,75 +1,74 @@
-Return-Path: <linux-gpio+bounces-3481-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3482-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BF1685B519
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 09:27:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 900A085B522
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 09:28:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B0F701C219C4
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 08:27:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9A48E1C20D7C
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 08:28:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F04D5D470;
-	Tue, 20 Feb 2024 08:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60B15C903;
+	Tue, 20 Feb 2024 08:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYcly3aB"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="g8DDGgBH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B1D5D74F
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 08:27:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02F9A5C8F3
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 08:28:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708417632; cv=none; b=fBJEzKAMQDbpblEneA1MolPeSN8ptYjCA0Hb8q85W1htEzCJZ1eL0Gym6I85r3RgQfwMyxWHpiiz8a1AYrDhmwN8o0Kfl8s7uxy3UK2CFRxzr2bMXyLzSFWS07bp5ZZ15DaBoWvJxMpvcAqZCXSwb1l1VFfzwvX6JsGhYotwwRI=
+	t=1708417725; cv=none; b=mBXYvBqFCsJYPnV4wlgKqnCVPoSZc6rWm5UKYACXQB88Z3Ga3I7GQWk2wm3korQTcj7n1p/tTtm38/5SYflLtXzFqU9ofRJOxXQlILf8aFMIMFCf0NCcDjXWhfAvgSPs+Lqtq59GQqdgDd2bbrMJh2ewQAvSLQLUxKRM3mWfiAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708417632; c=relaxed/simple;
-	bh=kwcWngYqyX5CbSpe4MupYrA/JAKRDuxWBT615swjwHM=;
+	s=arc-20240116; t=1708417725; c=relaxed/simple;
+	bh=EzBYJYexz/R7qydxMo7SSbDoihFTE9YS3BlAvcA9ylQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fOIfZ+CF67rNf3eEKHuLBAHvJKh8CvS7UrYd0039jun8uom79g0DYlD1yhbDi8HjD3i5wy008fShMUuXGFeVqGccmw2ESNzsu84AVGoxyhae8bkEGxgDS70cr1oPbBqp3jU6F9imoT52XGBBWsNL964fBcpw18FAddFlO78lfzg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=nYcly3aB; arc=none smtp.client-ip=209.85.128.48
+	 In-Reply-To:Content-Type; b=TLdWdL2Ls32vjzSwv2MP+JIZ3vc+irI1yHzWHvTqgOUdv7MeE/ZZFmc0Kp34hCqxx3455xvBcgoNQRHcWnEqIqbn9wzp39DHe+um0lZQ1fxKAVZM7ZeKgJYBQgGf4p3ZMF7cnpUycZaMyuSXP2t5PIJt0y2H6btNtaMaXsP8f1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=g8DDGgBH; arc=none smtp.client-ip=209.85.128.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-4126d65ace3so3970165e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 00:27:08 -0800 (PST)
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4126cff604bso4694785e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 00:28:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708417627; x=1709022427; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708417722; x=1709022522; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=LCw/wGGBwxZAIXwywrBdVg7Trl9xRXaC7aK5zxfjDws=;
-        b=nYcly3aBH0K/vrx7HF9O7lJfunCx9Bgn0Eawoo+V5HD7LphNlj3Z4owq8qxkU6Zbjd
-         nlGmcuiUVjGVxWZKTDKH27c+puAlwVY91mZiircWCKXAkwMXUhveIAvPNjzplDjd59Rt
-         6EfFk/tjlmblCR/ai9HUqbkaseNAgp4buavsV1NeaCs0WSBjdypLxbEP0ZnzKs8rn3yb
-         09fF27R3xvJOs62Wf5VWirV8zSrGwWKZkub6WOKsft+Z7T1YNgsu8qZB4y+vgZIxA9b0
-         ZBC5vTPD023jCN2uc5gaYEF6i2P+7juEXRI6w2t+HuT6xpjsvnxqV0TxPW6VzizwmOqn
-         S/xQ==
+        bh=9MLCi0s2a8fWThVWbSeoCMwkrcUJx51WlIXcaXYg5fk=;
+        b=g8DDGgBHXhvtqMmUwTK8WjJPD6DMOsKsHzylGoDMEynNJFJbCUI8Au95tlutHoQ+fY
+         2bnSmtTjmKv6Cx/kPk4sNjwIg1cnhFqei/tdhDTOQVjl2zx/1cdechqj0cZIHbHWiOXu
+         6l4YkN6fe7AbNavO30uQ4dQoBC8U9uaPMldpoxc9N357MtumCTJcRMzMNgj9EVYpCqPI
+         8ahQ5+cD9xiZW209LVmO5WAu5E4aNnxYbfPRtYbpJAVuNpvNZU+QOubSPtBC/jrh/3DI
+         9raKGMOFbgVbVpUwomnEcZ/82bXjfzCq52ZgUEMZVWMveIWw8axcQNOCNyQZ7Voyj0MP
+         4gbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708417627; x=1709022427;
+        d=1e100.net; s=20230601; t=1708417722; x=1709022522;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=LCw/wGGBwxZAIXwywrBdVg7Trl9xRXaC7aK5zxfjDws=;
-        b=viobm7OTAHq60LC/PS5b0DPPeSkvr84GUj008AwXbqTfp5QKAw+R9BnA8fl4CYi120
-         2B5/CerZtCQrvEcCuFMMke2AwN80HHyaTRvHsGg3wk4YEKh8RcOWEzXkiN/9ai8d58Ak
-         dwO9m9eYtpbdzWu9TE1psPEhiX0sAlr9I4oAyoYgzk2b2TvM32kjgQLJLwp0N8gMWSJS
-         27TrTIBh1jDZKEKo+hSWAMmnDYqp3lw8wgpSfscu0bas3KuV/tjdqQYaaaF2zU0uq7YD
-         0eVSkSK/TZKc2DUXFgIQ58niRxKrToEDqfbeGS+jVWi6oTExsbztmIs7tvZESr1nExIp
-         UOgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVFFmHxMr437Qtwa7N65uXruI2qWb5AZXjgpNwaTxK4/4zh7tpQVfFDeSFJf5ZS7Lnyp2BNODBlBlyQZHZgNK11QT8yyrz5LIIfRQ==
-X-Gm-Message-State: AOJu0YxisQxMETD4ZFEZhOlL+vmq9d+n62fDzfHxw9Nyc+u8X0bJVOt7
-	xQy4ai/CD+0r7M07aneST4W+ffvPYSZC8+TF1/OlAo7sz55Erme0sppwUsmzpIJ9tI4rJ0As7yE
-	D
-X-Google-Smtp-Source: AGHT+IFLatSTu/8dGMzCnlY3MTdcpukk01QKrrwl3trfyFtOAOWoWPm/yG26D7CvwzgAsqlMNx2bDw==
-X-Received: by 2002:a05:600c:5490:b0:412:1f3f:db39 with SMTP id iv16-20020a05600c549000b004121f3fdb39mr10357045wmb.32.1708417627567;
-        Tue, 20 Feb 2024 00:27:07 -0800 (PST)
+        bh=9MLCi0s2a8fWThVWbSeoCMwkrcUJx51WlIXcaXYg5fk=;
+        b=qF5AqgEAR2+S+8To8YRq/63ALlvMipPofuK43xgWbrkAlDSRpS7IO7uYAedic+Lmln
+         PHGGapCK/ZcQGmeNCMfzdodcZjQzN+LKBzlqlUmj05yn5lW3WrpwlnkrWJhX/GyzclgI
+         PEpy2yKZ6mjjMsC640aPZ4uJMcJTRBq5vEiZcmwx2V9rFZxEevyXJLmtFvG3/j/htS31
+         DM2TwIzq5RMXmfbTdMVWTEaW+KTQZQHcNWm1FfIBQ/KAXTNJpaswH0s1nQ24a6l49ORq
+         ulQdkFsRjrZZUTTH38vkUuXP+gks+DV5OJptppIEdgg/1VNUQzg6DRWuJVLQQkxzwFet
+         5bzA==
+X-Forwarded-Encrypted: i=1; AJvYcCUSS4ni5/VsGJ/Obg21xdx4/LprDHUJhxeppWinP159nRbOr1JNla8JbsAiIL2L373vlwtw15z4UqQ5fCCq/N+bPL3A2hQ0vfZfhw==
+X-Gm-Message-State: AOJu0YxfQARfzxz02WaTSntD48Se+VMqlgAGcWFpbLt4tFwYNbOgBreZ
+	Zqv/YnDfbCuEQJ8wDNhh0WNW4+eATnGYHDV7wt0x5rVph9Z8ELVRoaDFYGLK7DA=
+X-Google-Smtp-Source: AGHT+IGo74P7nUZYWJ+oeJU9HEqF/cs2IsJIyQfohwej4deJHSLY1vQ6vvoY9GE2up63pJfNilKt2w==
+X-Received: by 2002:a05:600c:4f96:b0:411:e7d5:cc5 with SMTP id n22-20020a05600c4f9600b00411e7d50cc5mr9420809wmq.4.1708417722242;
+        Tue, 20 Feb 2024 00:28:42 -0800 (PST)
 Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id ay23-20020a05600c1e1700b004125ff0b572sm8943595wmb.8.2024.02.20.00.27.06
+        by smtp.gmail.com with ESMTPSA id ay23-20020a05600c1e1700b004125ff0b572sm8943595wmb.8.2024.02.20.00.28.40
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 00:27:07 -0800 (PST)
-Message-ID: <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
-Date: Tue, 20 Feb 2024 09:27:05 +0100
+        Tue, 20 Feb 2024 00:28:41 -0800 (PST)
+Message-ID: <b40f5b2d-d41f-47fa-8aae-30290e0d2737@linaro.org>
+Date: Tue, 20 Feb 2024 09:28:40 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -77,15 +76,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Aspeed binding to YAML schema
+Subject: Re: [PATCH v5 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
+ driver
 Content-Language: en-US
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, linus.walleij@linaro.org,
- brgl@bgdev.pl
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, joel@jms.id.au, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <20240220052918.742793-1-andrew@codeconstruct.com.au>
+To: Jacky Huang <ychuang570808@gmail.com>, linus.walleij@linaro.org,
+ robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ p.zabel@pengutronix.de, j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ychuang3@nuvoton.com, schung@nuvoton.com
+References: <20240220004159.1580108-1-ychuang570808@gmail.com>
+ <20240220004159.1580108-5-ychuang570808@gmail.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -131,109 +132,30 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240220052918.742793-1-andrew@codeconstruct.com.au>
+In-Reply-To: <20240220004159.1580108-5-ychuang570808@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 20/02/2024 06:29, Andrew Jeffery wrote:
-> Squash warnings such as:
+On 20/02/2024 01:41, Jacky Huang wrote:
+> From: Jacky Huang <ychuang3@nuvoton.com>
 > 
-
-Missing subject prefix: aspeed,ast2400-gpio
-
-
-> ```
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
-> ```
+> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
+> add support for ma35d1 pinctrl.
 > 
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-
-Thank you for your patch. There is something to discuss/improve.
-
-
+> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
 > ---
->  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 64 +++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 -----------
->  2 files changed, 64 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> new file mode 100644
-> index 000000000000..353c7620013f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> @@ -0,0 +1,64 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Aspeed GPIO controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
-> +
-> +allOf:
-> +  - $ref: /schemas/gpio/gpio.yaml#
+>  drivers/pinctrl/nuvoton/Kconfig          |   19 +
+>  drivers/pinctrl/nuvoton/Makefile         |    2 +
+>  drivers/pinctrl/nuvoton/pinctrl-ma35.c   | 1211 +++++++++++++++
+>  drivers/pinctrl/nuvoton/pinctrl-ma35.h   |   51 +
+>  drivers/pinctrl/nuvoton/pinctrl-ma35d1.c | 1797 ++++++++++++++++++++++
+>  5 files changed, 3080 insertions(+)
+>  create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+>  create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
+>  create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
 
-From where did you take it? None of the bindings have such code. Start
-from recent bindings in given category when writing new ones.
-
-Please drop it.
-
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2600-gpio
-> +    then:
-> +      required:
-> +        - ngpios
-
-Please put entire allOf: after required: block. That's the convention
-when it has something more than $ref, because we still want the most
-important parts at the top of the file.
-
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2400-gpio
-> +      - aspeed,ast2500-gpio
-> +      - aspeed,ast2600-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: The clock to use for debounce timings
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-
-ngpios with some constraints
-
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +unevaluatedProperties: false
-
-Instead additionalProperties: false.
-
+Driver cannot depend on DTS, so please reorganize patchset so DTS is not
+in the middle or even split the DTS to separate patchset.
 
 Best regards,
 Krzysztof
