@@ -1,395 +1,230 @@
-Return-Path: <linux-gpio+bounces-3467-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3471-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D1DC85B2BE
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 07:13:31 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A6FC85B346
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 07:58:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D11B41F24A2B
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 06:13:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E0D4D281881
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 06:58:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2702E5812F;
-	Tue, 20 Feb 2024 06:13:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="TMAm/7KN"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 185625A0E5;
+	Tue, 20 Feb 2024 06:58:06 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2090.outbound.protection.partner.outlook.cn [139.219.17.90])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19BCA57877;
-	Tue, 20 Feb 2024 06:13:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708409604; cv=none; b=STTU9j48lUXSJHtI9mv2TwWLU6hYMkcvjBmd2i/E3rMMCFbY3AemgqVLqOfWniBcnrwq5Y7exTRmcz76Clvk9xzsQxexNngDPDjZHfnqeHLqYLrN/yijkBKFRn5CPoxjdLZkrlE5rZD6GsC+cp70CEA4hFEBhMMHbJFpiD1bdpc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708409604; c=relaxed/simple;
-	bh=bVvP4nUoFxGKAU87ioUGH9WYX+2u+K4yKOSpAZp4stI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=QYS2APxz9u7aCErY+IzCouaj6cwgk2B/JHoMlJVwTBlqVsz+ozJuAWfzHp8sYWjrby59wSPjeTXAIAaG+qiigHOb5npALukDL8W7FyxciokVDEJ3VON1Qmx7xua4ZH6SqIDCPAnUuNIuVH5siuqZKuPFtBrt8RIjAgM/PFrouuY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=TMAm/7KN; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279869.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41K3bEkH007697;
-	Tue, 20 Feb 2024 06:13:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=+K8wihPyJh/1HH1qwBrcS0bEcm0ngNnzBWoX2h74ycQ=; b=TM
-	Am/7KNO6WtphHBH+kf8HfS4f3eQhxcB3s+160806Ofba4EGhC1CwVXtI3PDCNLYR
-	CJS785HIpjs00n5qOvyL5E7E5RpNwEZbWUEsEKXdI9iYqzmE9D7jaenRzeN3TyGZ
-	utfUOaKkN/or7ltIMog0+hM8Iz3Yfqn3t5AzpAho56pPLWj9HRqVW9ChxQWn58MG
-	LjAVwfTS9mmL9J0BziBEQyQSr9lWlk6bU5hDn5IT40ooPS/2NVCfcACgzJXKd/ic
-	9mL9gbyMmWs1aqF14rwxLy9vUj5TC8T93QMMPxGg+BenUpvVoG3S2dczeks1Rb9l
-	2TOBj7hVeOUGorXPcdgA==
-Received: from nasanppmta05.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wc54b2053-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 06:13:16 +0000 (GMT)
-Received: from nasanex01a.na.qualcomm.com (nasanex01a.na.qualcomm.com [10.52.223.231])
-	by NASANPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41K6DEh7002541
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 20 Feb 2024 06:13:14 GMT
-Received: from [10.239.132.150] (10.80.80.8) by nasanex01a.na.qualcomm.com
- (10.52.223.231) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 19 Feb
- 2024 22:13:09 -0800
-Message-ID: <400fa03c-bc08-4c32-a1ef-57f227493061@quicinc.com>
-Date: Tue, 20 Feb 2024 14:13:06 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6556B56B74;
+	Tue, 20 Feb 2024 06:58:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=139.219.17.90
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708412285; cv=fail; b=aX9Z8awNQxrVZR56TjRBLDhyEhRb6zggNJf5V0wmmH0+qGedwk74+h7kPrS3t4iRZ6Qvg01AwCagXVFst3fFvl9AC6Igzkz7NQ5sslJtyZl3Qfu17J2TzfxdTRubIQikHg+GamfXilBHn5EZI7uOnrR6ooJMBPtj3Rei8wnau6I=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708412285; c=relaxed/simple;
+	bh=eMHSZ961nLkrD8qwRFGle46FCzfkfbYwv7pNklaGgKg=;
+	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=px7z/XwAs3W9dALqjkbpNFwRDeznjOqOJ3G4QcKzFScngZmoQ9KaqNN3cxZCRGC88NGF0/E3TpA38QWogiEi6c7kMhD5eAuYuryv96r9ahhVitsZT1kkYmgbC3ne6RX7n1qKYc9zm+rzWr4T1dthkzvjRliPsitSnE6vxYs25BM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.90
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=starfivetech.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=starfivetech.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=X9ZrIZJZgSkDR8kNzLMDCQE813kmWHHkgvysqKvap2FzMAdUubxQyVudk0lRTpG7gSakCdvsvtQVc+AZSGzmnHfBILkmAFMQBqjPH3ctjTyVRaRqtHn2ADODlHjT6YTWleYQVPsPwMTo7JFx0kF0LU58dVF61vmn1u7bZnRp5eyC7tmV6vw93dGnnQspTHlDbMXU2liNUHkBGJvRXcmu44K6HTOQM+XryYzHre+pB9OCgUO5WM4DwiH8bqS+p9WASYjFTVUiOhOhMOP9Cn6s+OomueGgAu2bBHzef6huXMsj0CCw/csDXJj1pLGHfWRLdRJ3NQGDsqlNjFjd5/Ip1w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PNay858DEqOto1OV6uEx+DFqa4hargxwgIGRAUUBh7M=;
+ b=YwJm9im6sLnvQ38+jAlpI6hp0IpFFyfHyAmqAslSwBcyj1xM7pLXG8VHpccVTSQivH5faTtwjPBK52Au+NxxhuA7ECgOTdZpKSOU8fHemuPZe6qO8ausZONM0r5ZYIi3eYRbhXOsIBQaANVKMaZvDuz/vo5NLMbUJzhzuIDCOmcdFfvALMhfIWgf4x4YCx0pHwFswp9Addy59JYou44H1k+aYsZF7/+XKWmfs84iEijMmVXvfFJdFI6AvFzQEyuZ7+eA2cEqQGBgL0+iG1kg8ZvAgFmIDuUnuszELzBIjwp5PlDpLjA6PZix7jxHzlflcj1ReKwcxKG/0VvCH+weHA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=starfivetech.com;
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9) by ZQ0PR01MB1239.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1c::11) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7270.47; Tue, 20 Feb
+ 2024 06:42:58 +0000
+Received: from ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ ([fe80::9d68:58f1:62cc:f1d3]) by
+ ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn ([fe80::9d68:58f1:62cc:f1d3%4])
+ with mapi id 15.20.7270.047; Tue, 20 Feb 2024 06:42:58 +0000
+From: Alex Soo <yuklin.soo@starfivetech.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Hal Feng <hal.feng@starfivetech.com>,
+	Ley Foon Tan <leyfoon.tan@starfivetech.com>,
+	Jianlong Huang <jianlong.huang@starfivetech.com>,
+	Emil Renner Berthing <kernel@esmil.dk>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Drew Fustini <drew@beagleboard.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-riscv@lists.infradead.org,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Alex Soo <yuklin.soo@starfivetech.com>
+Subject: [RFC PATCH v2 0/6] Add Pinctrl driver for Starfive JH8100 SoC 
+Date: Tue, 20 Feb 2024 14:42:40 +0800
+Message-ID: <20240220064246.467216-1-yuklin.soo@starfivetech.com>
+X-Mailer: git-send-email 2.43.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: BJXPR01CA0055.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c211:12::22) To ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:1b::9)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] pinctrl: Add lock to ensure the state atomization
-Content-Language: en-US
-To: Alexander Stein <alexander.stein@ew.tq-group.com>, <andersson@kernel.org>,
-        <linus.walleij@linaro.org>
-CC: <kernel@quicinc.com>, <linux-gpio@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-arm-msm@vger.kernel.org>
-References: <20240202105854.26446-1-quic_aiquny@quicinc.com>
- <8376074.NyiUUSuA9g@steina-w>
-From: "Aiqun Yu (Maria)" <quic_aiquny@quicinc.com>
-In-Reply-To: <8376074.NyiUUSuA9g@steina-w>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01a.na.qualcomm.com (10.52.223.231)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: pPL-wpZ0FI_3irS_3sF_oQkGeUAuyUWO
-X-Proofpoint-ORIG-GUID: pPL-wpZ0FI_3irS_3sF_oQkGeUAuyUWO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-20_05,2024-02-19_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 clxscore=1011 malwarescore=0 spamscore=0 mlxscore=0
- suspectscore=0 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- bulkscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2401310000 definitions=main-2402200043
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: ZQ0PR01MB1302:EE_|ZQ0PR01MB1239:EE_
+X-MS-Office365-Filtering-Correlation-Id: 99166286-12d1-4211-5891-08dc31df2cba
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	9bkdC+0U+SPSjCr9fq4BH2VANAODssPv5ELSrgTWF/tqj1D5bhHAF6Kos/tTI8JffaL6Htkr7NyqOIpgY+bL4kCbUw1QIkpsq6XEbtpKPx+T3I6cYHpxZF1T6EMeBBqkHfle1++GGb0Wtols0Ur00U3UTjM+30Mk8YdYxGOa+/lLECsuINBRL6KkV3+Xv5ks9O9O8lo6SwIX/i4dn6b/fcihxWoQ2ooW4Dkf1D4rzfaOR2iGDS0zdIvOhqFBlQNET1jUxH/KPa3GR+3tPRadPGu3XeFe0PxWSSaWYpbAcFytjn7weCdKQQHtFR18TgtAfOdiKaYvecNODNHrXURDldWhcfeHFcKtLiucnULVwzqoRokCVDchLyM23Km8txaye081DZS+AePSOP/cxWOtv0ojWm0V9CVQmeTibwdo7/zFWnLq94OUJwDBGHzKEV4s26IA8YyNW8G9Kmjb1qCPQ0fpZQDKaRP1TlM/pPDa4JZ9pv9tTCE3RCoYkCFKFX0RtGELDbrTO7hknB+8HeG3+8BxNsEZjW5X+R+abOAOPsULTbjd+hpHTwCD/ETZt+NHM0rCnZyaArtSEblG72bk4w==
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230031)(38350700005)(921011);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?ca6zGGuZIlXy3TW1P8qgDvPm7sgMrMFzaqffgaZlOjwLc0Ky4CAsyImBHmod?=
+ =?us-ascii?Q?WTp5pBmBXm/vgxJUfb7huPR1fMAd2npJTIJ/Uir2hQ7fDOYAF5fNU3rJObcF?=
+ =?us-ascii?Q?D49JwJ2xVOW9rf4rAf7AS1FIDjtt/TLxqDwYoVRfJqGRo82PYOLd1xck4OUC?=
+ =?us-ascii?Q?tNLWxopw52Hqk7/1Lsfdv9ThC2YOjA1o2a4tB9FJSwRSoKEXr1aUoVeiAvNR?=
+ =?us-ascii?Q?hbS2y4meTTKbIyuXY33CzCTiYjz5L9wer3WnUwwfgVBTqpAt9jJ6U+rLO5M5?=
+ =?us-ascii?Q?1zdLHI9AnjE+0cleCT37yx1GAi2uMA0wDPKg7oJHLRoHgn6Ei+1ZND5NsSG4?=
+ =?us-ascii?Q?GT5+G1hxV5a192W4+uKLXW3HFxAsrqg/NLegYkIZi9ARQLC1K4KJ9bUsJxpV?=
+ =?us-ascii?Q?S3B4YarsUY9/3ciNdgQtdixnf7dKteXvgHXxLwfEEQZWr0sxhLU1aHdLjrSo?=
+ =?us-ascii?Q?J5CqOmpA06UTD1FnMLOjne7PVjvzkfVrfOV2jg6ycdgHWRRioHQwN4r6/Qk9?=
+ =?us-ascii?Q?RP3EYDZVfDCEiiPqZ/FLwp3a3y3xqEH/2wuCNS3rfFTZzaAYFF1sKG7PiNkI?=
+ =?us-ascii?Q?MkKhesaOA6flL9Wx+xEJAqBSUa/KmP2i4ZuussbINbXyoMO/sKDMg6hzNq0a?=
+ =?us-ascii?Q?FIi1Uz7TdoE8VoBL3TDjU3clrkFVn1u2SwK4XHTq9iltMsTbfeY9YNFRg+n5?=
+ =?us-ascii?Q?5bG3IwETQTx4yAMDlXu+wzXfGaFtfzdhNyoXeMkUi+J+H4P5uVFxZj0UCdwJ?=
+ =?us-ascii?Q?5IlYML2S4L6om/fhJIkyQZYa81CFEdWGQALnDCu4VVSEoSVmsCAMofDttkqn?=
+ =?us-ascii?Q?eYCCTdOQnm4bQxTAZyHpcKt3wagYmO6navLePsPOBUINwxUPi+8j5zGQPa0E?=
+ =?us-ascii?Q?9cY0gmcqjfLmGOQ/jaoSwXY/ZxbANSDYKo8Onw//cfcxL5/4kElM2tK+Oj/P?=
+ =?us-ascii?Q?+X5kH+J8Mp4/B3qEmUqdHwUpRcqEhAHQmWEw72Mfj+C9FW4owwApn6k0oXu7?=
+ =?us-ascii?Q?SsYOb/sItL8xZK5l6bT03VT3xqIjt5BilhdKlIjsc2/Fo8xExOmJnkOvS4wj?=
+ =?us-ascii?Q?rIEPBXlsxPcSlRoojhutQTSrWHWoreFroKMgtzF0GO5kFjfsiPjL2bWn95jB?=
+ =?us-ascii?Q?Pu/9+GpIWzG3y9H/uhdbq7mFzl28jWzGl1ZBQyT3kd722o+38RafRVqimzbw?=
+ =?us-ascii?Q?Kc06yLAbIx7ZXk1wisfuJpojuyrZWm5ZqMn0QkJyky2gEvvUHuJQAn1p4FTs?=
+ =?us-ascii?Q?qOqZQc8a3aqIlxLf5jftpL9Tx8b8ygSKkTb4mkPUiOGPks0aJFg6J6RbneEU?=
+ =?us-ascii?Q?cv2DC3YfetH7GIE9XZ8NIGSZ/ijyN4FhGMc3WJchH1pz3jhg5+wxAgU6UHTc?=
+ =?us-ascii?Q?cql43lkppYGivm/kRj+Q7n/pixyfcfnode7v5Tqt+MWE+WM3+6ChBExnJJvj?=
+ =?us-ascii?Q?3l79/2C6Ca4Fg1q4bCYf9/WBjHbkyjnIYrcCgIERrJJ0pEmdi2NU/Eq14dQS?=
+ =?us-ascii?Q?q2QVSF7jQo+24aND01V41krLtr+KnCbk7jm4XLtMsIhw+POsIg4sYKZHEXME?=
+ =?us-ascii?Q?9gO8xHFzTdu7x0nVMxc4EfGXNzalvwiTSWbDwFKACAiWq+aoK6Ddf6fBtKvc?=
+ =?us-ascii?Q?jQ=3D=3D?=
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99166286-12d1-4211-5891-08dc31df2cba
+X-MS-Exchange-CrossTenant-AuthSource: ZQ0PR01MB1302.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Feb 2024 06:42:57.9794
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: 6dHUIpVLF8ZDtuBjTARuNuNo72vb4+yQp1K3DMQfCXOY9iVs+SNQu3/LeOvyxlFlYSxqu93eqkV4qA3V1LEEP4eRpWHTZWo0K6yjDVxudqg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ0PR01MB1239
 
+Starfive JH8100 SoC consists of 4 pinctrl domains - sys_east,
+sys_west, sys_gmac, and aon. This patch series adds pinctrl
+drivers for these 4 pinctrl domains and this patch series is
+depending on the JH8100 base patch series in [1] and [2].
+The relevant dt-binding documentation for each pinctrl domain has
+been updated accordingly.
 
+[1] https://lore.kernel.org/lkml/20231201121410.95298-1-jeeheng.sia@starfivetech.com/
+[2] https://lore.kernel.org/lkml/20231206115000.295825-1-jeeheng.sia@starfivetech.com/
 
-On 2/9/2024 4:37 PM, Alexander Stein wrote:
-> Am Freitag, 2. Februar 2024, 11:58:54 CET schrieb Maria Yu:
->> Currently pinctrl_select_state is an export symbol and don't have
->> effective re-entrance protect design. During async probing of devices
->> it's possible to end up in pinctrl_select_state() from multiple
->> contexts simultaneously, so make it thread safe.
->> More over, when the real racy happened, the system frequently have
->> printk message like:
->>    "not freeing pin xx (xxx) as part of deactivating group xxx - it is
->> already used for some other setting".
->> Finally the system crashed after the flood log.
->> Add per pinctrl lock to ensure the old state and new state transition
->> atomization.
->> Also move dev error print message outside the region with interrupts
->> disabled.
->> Use scoped guard to simplify the lock protection needed code.
->>
->> Fixes: 4198a9b57106 ("pinctrl: avoid reload of p state in list iteration")
->> Signed-off-by: Maria Yu <quic_aiquny@quicinc.com>
->> ---
->>   drivers/pinctrl/core.c | 143 +++++++++++++++++++++--------------------
->>   drivers/pinctrl/core.h |   2 +
->>   2 files changed, 75 insertions(+), 70 deletions(-)
->>
->> diff --git a/drivers/pinctrl/core.c b/drivers/pinctrl/core.c
->> index ee56856cb80c..1f7d001d4c1e 100644
->> --- a/drivers/pinctrl/core.c
->> +++ b/drivers/pinctrl/core.c
->> @@ -1061,6 +1061,7 @@ static struct pinctrl *create_pinctrl(struct device
->> *dev, p->dev = dev;
->>   	INIT_LIST_HEAD(&p->states);
->>   	INIT_LIST_HEAD(&p->dt_maps);
->> +	spin_lock_init(&p->lock);
->>
->>   	ret = pinctrl_dt_to_map(p, pctldev);
->>   	if (ret < 0) {
->> @@ -1257,93 +1258,95 @@ static void pinctrl_link_add(struct pinctrl_dev
->> *pctldev, static int pinctrl_commit_state(struct pinctrl *p, struct
->> pinctrl_state *state) {
->>   	struct pinctrl_setting *setting, *setting2;
->> -	struct pinctrl_state *old_state = READ_ONCE(p->state);
->> +	struct pinctrl_state *old_state;
->>   	int ret;
->>
->> -	if (old_state) {
->> -		/*
->> -		 * For each pinmux setting in the old state, forget SW's
-> record
->> -		 * of mux owner for that pingroup. Any pingroups which are
->> -		 * still owned by the new state will be re-acquired by the
-> call
->> -		 * to pinmux_enable_setting() in the loop below.
->> -		 */
->> -		list_for_each_entry(setting, &old_state->settings, node) {
->> -			if (setting->type != PIN_MAP_TYPE_MUX_GROUP)
->> -				continue;
->> -			pinmux_disable_setting(setting);
->> +	scoped_guard(spinlock_irqsave, &p->lock) {
->> +		old_state = p->state;
->> +		if (old_state) {
->> +			/*
->> +			 * For each pinmux setting in the old state,
-> forget SW's record
->> +			 * of mux owner for that pingroup. Any pingroups
-> which are
->> +			 * still owned by the new state will be re-
-> acquired by the call
->> +			 * to pinmux_enable_setting() in the loop below.
->> +			 */
->> +			list_for_each_entry(setting, &old_state-
->> settings, node) {
->> +				if (setting->type !=
-> PIN_MAP_TYPE_MUX_GROUP)
+---
 
->> +					continue;
->> +				pinmux_disable_setting(setting);
->> +			}
->>   		}
->> -	}
->> -
->> -	p->state = NULL;
->>
->> -	/* Apply all the settings for the new state - pinmux first */
->> -	list_for_each_entry(setting, &state->settings, node) {
->> -		switch (setting->type) {
->> -		case PIN_MAP_TYPE_MUX_GROUP:
->> -			ret = pinmux_enable_setting(setting);
->> -			break;
->> -		case PIN_MAP_TYPE_CONFIGS_PIN:
->> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
->> -			ret = 0;
->> -			break;
->> -		default:
->> -			ret = -EINVAL;
->> -			break;
->> -		}
->> +		p->state = NULL;
->>
->> -		if (ret < 0)
->> -			goto unapply_new_state;
->> +		/* Apply all the settings for the new state - pinmux first
-> */
->> +		list_for_each_entry(setting, &state->settings, node) {
->> +			switch (setting->type) {
->> +			case PIN_MAP_TYPE_MUX_GROUP:
->> +				ret = pinmux_enable_setting(setting);
->> +				break;
->> +			case PIN_MAP_TYPE_CONFIGS_PIN:
->> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
->> +				ret = 0;
->> +				break;
->> +			default:
->> +				ret = -EINVAL;
->> +				break;
->> +			}
->>
->> -		/* Do not link hogs (circular dependency) */
->> -		if (p != setting->pctldev->p)
->> -			pinctrl_link_add(setting->pctldev, p->dev);
->> -	}
->> +			if (ret < 0)
->> +				goto unapply_new_state;
->>
->> -	/* Apply all the settings for the new state - pinconf after */
->> -	list_for_each_entry(setting, &state->settings, node) {
->> -		switch (setting->type) {
->> -		case PIN_MAP_TYPE_MUX_GROUP:
->> -			ret = 0;
->> -			break;
->> -		case PIN_MAP_TYPE_CONFIGS_PIN:
->> -		case PIN_MAP_TYPE_CONFIGS_GROUP:
->> -			ret = pinconf_apply_setting(setting);
->> -			break;
->> -		default:
->> -			ret = -EINVAL;
->> -			break;
->> +			/* Do not link hogs (circular dependency) */
->> +			if (p != setting->pctldev->p)
->> +				pinctrl_link_add(setting->pctldev, p-
->> dev);
->>   		}
->>
->> -		if (ret < 0) {
->> -			goto unapply_new_state;
->> -		}
->> +		/* Apply all the settings for the new state - pinconf
-> after */
->> +		list_for_each_entry(setting, &state->settings, node) {
->> +			switch (setting->type) {
->> +			case PIN_MAP_TYPE_MUX_GROUP:
->> +				ret = 0;
->> +				break;
->> +			case PIN_MAP_TYPE_CONFIGS_PIN:
->> +			case PIN_MAP_TYPE_CONFIGS_GROUP:
->> +				ret = pinconf_apply_setting(setting);
->> +				break;
->> +			default:
->> +				ret = -EINVAL;
->> +				break;
->> +			}
->>
->> -		/* Do not link hogs (circular dependency) */
->> -		if (p != setting->pctldev->p)
->> -			pinctrl_link_add(setting->pctldev, p->dev);
->> -	}
->> +			if (ret < 0)
->> +				goto unapply_new_state;
->>
->> -	p->state = state;
->> +			/* Do not link hogs (circular dependency) */
->> +			if (p != setting->pctldev->p)
->> +				pinctrl_link_add(setting->pctldev, p-
->> dev);
->> +		}
->>
->> -	return 0;
->> +		p->state = state;
->> +
->> +		return 0;
->>
->>   unapply_new_state:
->> -	dev_err(p->dev, "Error applying setting, reverse things back\n");
->>
->> -	list_for_each_entry(setting2, &state->settings, node) {
->> -		if (&setting2->node == &setting->node)
->> -			break;
->> -		/*
->> -		 * All we can do here is pinmux_disable_setting.
->> -		 * That means that some pins are muxed differently now
->> -		 * than they were before applying the setting (We can't
->> -		 * "unmux a pin"!), but it's not a big deal since the pins
->> -		 * are free to be muxed by another apply_setting.
->> -		 */
->> -		if (setting2->type == PIN_MAP_TYPE_MUX_GROUP)
->> -			pinmux_disable_setting(setting2);
->> +		list_for_each_entry(setting2, &state->settings, node) {
->> +			if (&setting2->node == &setting->node)
->> +				break;
->> +			/*
->> +			 * All we can do here is pinmux_disable_setting.
->> +			 * That means that some pins are muxed
-> differently now
->> +			 * than they were before applying the setting
-> (We can't
->> +			 * "unmux a pin"!), but it's not a big deal
-> since the pins
->> +			 * are free to be muxed by another
-> apply_setting.
->> +			 */
->> +			if (setting2->type == PIN_MAP_TYPE_MUX_GROUP)
->> +				pinmux_disable_setting(setting2);
->> +		}
->>   	}
->>
->> +	dev_err(p->dev, "Error applying setting, reverse things back\n");
->>   	/* There's no infinite recursive loop here because p->state is NULL
-> */
->>   	if (old_state)
->>   		pinctrl_select_state(p, old_state);
->> diff --git a/drivers/pinctrl/core.h b/drivers/pinctrl/core.h
->> index 837fd5bd903d..6844edd38b4a 100644
->> --- a/drivers/pinctrl/core.h
->> +++ b/drivers/pinctrl/core.h
->> @@ -12,6 +12,7 @@
->>   #include <linux/list.h>
->>   #include <linux/mutex.h>
->>   #include <linux/radix-tree.h>
->> +#include <linux/spinlock.h>
->>   #include <linux/types.h>
->>
->>   #include <linux/pinctrl/machine.h>
->> @@ -91,6 +92,7 @@ struct pinctrl {
->>   	struct pinctrl_state *state;
->>   	struct list_head dt_maps;
->>   	struct kref users;
->> +	spinlock_t lock;
->>   };
->>
->>   /**
->>
->> base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
-> 
-> This breaks pinctrl-imx on imx8qxp:
-> 
-> [    1.170727] imx8qxp-pinctrl system-controller:pinctrl: initialized IMX
-> pinctrl driver
-> [    1.283968] BUG: sleeping function called from invalid context at kernel/
-> locking/mutex.c:283
-> [    1.292089] in_atomic(): 1, irqs_disabled(): 1, non_block: 0, pid: 70,
-> name: kworker/u16:4
-> [    1.300341] preempt_count: 1, expected: 0
-> [    1.304337] RCU nest depth: 0, expected: 0
-> [    1.308423] CPU: 2 PID: 70 Comm: kworker/u16:4 Not tainted 6.8.0-rc3-
-> next-20240209+ #2267 0b2aeebc4d64f1aef3abdd5fede2a9b5162eb867
-> [    1.320148] Hardware name: TQ-Systems i.MX8QXP TQMa8XQP on MBa8Xx (DT)
-> [    1.326667] Workqueue: events_unbound deferred_probe_work_func
-> [    1.332486] Call trace:
-> [    1.334918]  dump_backtrace+0x90/0x10c
-> [    1.338653]  show_stack+0x14/0x1c
-> [    1.341954]  dump_stack_lvl+0x6c/0x80
-> [    1.345603]  dump_stack+0x14/0x1c
-> [    1.348904]  __might_resched+0x108/0x160
-> [    1.352813]  __might_sleep+0x58/0xb0
-> [    1.356375]  mutex_lock+0x20/0x74
-> [    1.359676]  imx_scu_call_rpc+0x44/0x2e8
-> [    1.363586]  imx_pinconf_set_scu+0x84/0x150
-> [    1.367756]  imx_pinconf_set+0x48/0x7c
-> [    1.371491]  pinconf_apply_setting+0x90/0x110
-> [    1.375835]  pinctrl_commit_state+0xcc/0x28c
-> [    1.380092]  pinctrl_select_state+0x18/0x28
-> [    1.384262]  pinctrl_bind_pins+0x1e4/0x26c
-> [    1.388345]  really_probe+0x60/0x3e0
-> [    1.391907]  __driver_probe_device+0x84/0x198
-> [    1.396251]  driver_probe_device+0x38/0x150
-> [    1.400421]  __device_attach_driver+0xcc/0x194
-> [    1.404851]  bus_for_each_drv+0x80/0xdc
-> [    1.408674]  __device_attach+0x9c/0x1d0
-> [    1.412496]  device_initial_probe+0x10/0x18
-> [    1.416666]  bus_probe_device+0xa4/0xa8
-> [    1.420489]  deferred_probe_work_func+0x9c/0xe8
-> [    1.425006]  process_one_work+0x14c/0x40c
-> [    1.429002]  worker_thread+0x304/0x414
-> [    1.432738]  kthread+0xf4/0x100
-> [    1.435866]  ret_from_fork+0x10/0x20
-> 
-> With this commit pin_config_set callbacks need to be atomic suddenly which is
-> a no-go for any device attached to i2c or spi and in this case IPC RPC.
-> Once reverted systems start normally again.
-Thanks for the info. It is a valid scenario of your report. I will also 
-re-visit this.
-> 
-> Best regards,
-> Alexander
-> 
+Changes in v2:
+- Add "(always-on)" to document title to clarify acronym AON.
+- Replace "drive-strength" by "drive-strength-microamp".
+- Update "slew-rate" property in sys-east, sys-west, and aon document.
+- remove redundant "bindings" from commit subject and message.
+- Change regular expression "-[0-9]+$"  to "-grp$" to standardize client
+  node names to end with suffix "-grp" instead of "-<numerical _number>".
+- Use 4 spaces indentation for DTS examples.
+- Update DTS examples in sys-east, sys-west, and aon document with client
+  driver pinmuxing.
+- Remove redundant syscon and gmac macros from dt-binding header file.
+- Remove redundant register macros from dt-binding header file.
+- Add "wakeup-gpios" and "wakeup-source" to aon document.
+- Add "gpio-line-names" to sys-east and sys-west document.
+- Update the description of syscon register usage in each document.
+- Update sys-gmac and aon document with information of GMAC voltage.
+  reference syscon and GMAC pad syscon.
+- Fix the pinctrl device nodes compatible string too long issue.
+- Move all common codes from subdrivers to the main driver.
+- Change the commit log to "add main and sys_east driver" to indicate
+  the commit of both main and sys-east driver.
+- Turn pin_to_hwirq macro to a static inline function to hide gpio
+  internal detail, and also, for easier code readability.
+- Change "JH8100_PADCFG_BIAS" to "JH8100_PADCFG_BIAS_MASK".
+- Change "#define JH8100_PADCFG_DS_4MA   BIT(1)" to
+  #define JH8100_PADCFG_DS_4MA   (1U << 1)".
+- Replace "jh8100_gpio_request" by "pinctrl_gpio_request".
+- Replace "jh8100_gpio_free" by "pinctrl_gpio_free".
+- Replace "jh8100_gpio_set_config" by "gpiochip_generic_config".
+- Use irq_print_chip function to display irqchip name to user space.
+- Use girq to represent GPIO interrupt controller.
+- Update code to ensure wakeup-gpios is always an input line.
+- Remove the jh8100_gpio_add_pin_ranges function and use gpio-ranges
+  in device tree to provide information for GPIO core to add pin range
+  for each pinctrl.
+- Change "StarFive GPIO chip registered" to "StarFive JH8100 GPIO chip
+  registered".
+
+---
+Alex Soo (6):
+  dt-bindings: pinctrl: starfive: Add JH8100 pinctrl
+  pinctrl: starfive: jh8100: add main and sys_east driver
+  pinctrl: starfive: jh8100: add pinctrl driver for sys_west domain
+  pinctrl: starfive: jh8100: add pinctrl driver for sys_gmac domain
+  pinctrl: starfive: jh8100: add pinctrl driver for AON domain
+  riscv: dts: starfive: jh8100: add pinctrl device tree nodes
+
+ .../pinctrl/starfive,jh8100-aon-pinctrl.yaml  |  261 ++++
+ .../starfive,jh8100-sys-east-pinctrl.yaml     |  223 ++++
+ .../starfive,jh8100-sys-gmac-pinctrl.yaml     |  163 +++
+ .../starfive,jh8100-sys-west-pinctrl.yaml     |  220 +++
+ MAINTAINERS                                   |    7 +
+ arch/riscv/boot/dts/starfive/jh8100-evb.dts   |    5 +
+ arch/riscv/boot/dts/starfive/jh8100-pinfunc.h |  418 ++++++
+ arch/riscv/boot/dts/starfive/jh8100.dtsi      |   47 +
+ drivers/pinctrl/starfive/Kconfig              |   59 +
+ drivers/pinctrl/starfive/Makefile             |    6 +
+ .../starfive/pinctrl-starfive-jh8100-aon.c    |  154 +++
+ .../pinctrl-starfive-jh8100-sys-east.c        |  224 ++++
+ .../pinctrl-starfive-jh8100-sys-gmac.c        |   93 ++
+ .../pinctrl-starfive-jh8100-sys-west.c        |  168 +++
+ .../starfive/pinctrl-starfive-jh8100.c        | 1181 +++++++++++++++++
+ .../starfive/pinctrl-starfive-jh8100.h        |  105 ++
+ .../pinctrl/starfive,jh8100-pinctrl.h         |  103 ++
+ 17 files changed, 3437 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-aon-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-east-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-gmac-pinctrl.yaml
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/starfive,jh8100-sys-west-pinctrl.yaml
+ create mode 100644 arch/riscv/boot/dts/starfive/jh8100-pinfunc.h
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-aon.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-east.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-gmac.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100-sys-west.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.c
+ create mode 100644 drivers/pinctrl/starfive/pinctrl-starfive-jh8100.h
+ create mode 100644 include/dt-bindings/pinctrl/starfive,jh8100-pinctrl.h
 
 -- 
-Thx and BRs,
-Aiqun(Maria) Yu
+2.43.0
+
 
