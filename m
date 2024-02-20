@@ -1,197 +1,151 @@
-Return-Path: <linux-gpio+bounces-3528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E8A2E85C61F
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 21:54:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A384985CBE8
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 00:17:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9E54D283DEF
-	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 20:54:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5A2BE1F22FAF
+	for <lists+linux-gpio@lfdr.de>; Tue, 20 Feb 2024 23:17:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9829E151CC8;
-	Tue, 20 Feb 2024 20:54:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C7F3A76C99;
+	Tue, 20 Feb 2024 23:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="P2HhyoOz"
+	dkim=pass (1024-bit key) header.d=scanivalve.onmicrosoft.com header.i=@scanivalve.onmicrosoft.com header.b="JsWBNUYn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from NAM11-CO1-obe.outbound.protection.outlook.com (mail-co1nam11on2103.outbound.protection.outlook.com [40.107.220.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 988781509AE
-	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 20:54:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708462466; cv=none; b=T0wz5wSEs2B9JcegFX0TokQOUfenYWEYfKjtc6jjW66wmR/tYKWyshWn40cbuCmvzJoIvMMytAeTXsT+lAiV8Bj7ozwksnSKHb0mLDaT/8EC0YJDFHL/5Zz33EmhjA6IDXzr4HfqjeZmvdQpHlpd0ssePQmI4QPfvH+4OTjP0tY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708462466; c=relaxed/simple;
-	bh=Yi0rtUqZLJm2S6u03a6Dmkff761MDSWQIxTDSQNuYdE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hvCwlixradsKhttoXMNBtxPnVRoZEp2obzIcpdHiRK/Ap6S7/Uw2JIObk/bqTBnEP3WRfb9kkLw3ghCl2WnRXkn4dOUs9qMJncXI9NrQuIHxfmPbiE+7fi2d4kq1EEBAondXzCcYAzyRYJUlg1OH4NlEwTiwjw/H2+Z13deP7nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=P2HhyoOz; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-511ac32fe38so9073558e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 12:54:23 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B82915445C
+	for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 23:17:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.220.103
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708471052; cv=fail; b=Oc8jbXh71oSzgtUVygqbIshl4gXIiuY8eVTZl2EK+g7cD5R5wsf3h92tK/8DXfNDJnqXi5h9zu+36XZ2dSGkonakvqVj02a2YESeoCWXUnu07NIB+Scbp4ZrKecjCAVSO9ScX1u7YZa2M/gkqu0JGQeeahQplbb98Y6yScFryBs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708471052; c=relaxed/simple;
+	bh=X5UrvPqPaj0qKswSNQS/W1M0z5IJ/lE5WjHJNsBJHRc=;
+	h=From:To:Subject:Date:Message-ID:Content-Type:MIME-Version; b=VSuUvIsbQykXueBab+T74bFnn1uxv3IF+U92B0IPgDXoI8KVpl6w6CgXlRrdu+k0gzEpJrnyKa1FvN8lGDcladvbK8scZQhRcf9pVn3PL09Nw+IAVIqmnz1t41WGH/R5yLPDil2UDr8k1GD+raVpg88YMstvpmH1AQ0NeskZgrA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=scanivalve.com; spf=pass smtp.mailfrom=scanivalve.com; dkim=pass (1024-bit key) header.d=scanivalve.onmicrosoft.com header.i=@scanivalve.onmicrosoft.com header.b=JsWBNUYn; arc=fail smtp.client-ip=40.107.220.103
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=scanivalve.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=scanivalve.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=PQJgE07apxOYygnHX64eGBpSZS/kgwu/jJIkeJ9/nVJ8NufcvFCQZoMjc0WSAb5CL8JTqNAxVz57vtPgYfm4xhSMlzu1uTksj5bVJH/Dy74uTReDq9tFsJaDsR1HK+lottHJPFSDCYvsfKQEMQzyn79yR5MqWtFXCEuwaxoZyL+D2paNURiJW6pOljEcnerQiGC2okOu50uZYHrU3Dk8xgjXFvNE0cNLyFwSB3jYoueq/2pDIcpM/4gJL7qxhZXluE6/KWkAnxj3hmUaecL0PHM9Ym+v+K1SvXZ9bHjUNhsZy4xsfWUB7m2k0aa40fARMUCiTgAUFwl7uIAkp72N7w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=5JDcF0E5cH99lMnkGV9niCzC4W2KmEOr267KZdb+uxA=;
+ b=B8Yzo59JY+oEjLh/XKm6zaUi0UMFsPOekp/KI2bxxWAqOVcLVe/QOxjntLfPh+BD4Iwa1m9u9TY0BuF9NPOQ8Za4wwlI6alUYH1B7IC6mMTQypw0p0HMwZ7KM++I+PPBYMXjxJogHLsTMYl9YIpxgJJiSzhjiDMqvUQ11/mujOPuYaNyuTN7GQHtRtBzY+UUuy/Ndtt6BicPUJ8GMJsRYvuh41t10rvCYgeaSkelvZOetin64685zxkH531I2X0OxZcmy/D/dntipsxNiARcX7orltPaG6FgU8zv3SaeCsLKhThgzgtwS7D4ewepobJCdjkbfibqGEnT2cdUQkycLA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=scanivalve.com; dmarc=pass action=none
+ header.from=scanivalve.com; dkim=pass header.d=scanivalve.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708462462; x=1709067262; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jyh9FR/LCnL9UHf/YvsJlGBxSygyQQc/DzYerA/eUFA=;
-        b=P2HhyoOzqDJnE/Y9Kp4LbRwJniYfxSYfnuKrMCkUjU7WJTvr9S+LS+/wJSUhqRXiFB
-         Tt6YhgakC0FwtiO38IQF7jExcdNUwVBRtbi4o5moscJax1HnT1tybfnc4AUIy5JSSMnQ
-         C4BZ/uIkIWXgKkVI4fJi5D5RbI4INhnU8nZK3EFyzOmwqWYcTmPghry8dzdS+YJmW4+N
-         3M7VwYawEO+u5oiBoC2ev0ouFnIWeBGt+fb0/wBqzT/Po4RjNOf9KqVt6P8jX4gN0Ioj
-         W/vuoi8SeoF6B9G6A3r1ig0HtoFALXKogb3OvOnI2poUqkdVPDwv42gkK1p8GW2YngVI
-         yQjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708462462; x=1709067262;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jyh9FR/LCnL9UHf/YvsJlGBxSygyQQc/DzYerA/eUFA=;
-        b=T3Tmh/vCWrEHWDWQs838fC0K4lKQC2yCXmxtnA7c27kYQ8TgMdgCImPNFZjAQxSinH
-         ozmh+nbkvWHx8x0dLOUvuDI3Rov5V+FrdaAPCavyfX9HSLIhqBQhRhyDyBIfS/F+Fm5b
-         dFMwlLj6Fy4Mz13k5uzL/sKpY7DZE1KSTg3x6haL7Acd8+F+SzCjP053eFZv6DTzK/wA
-         eoDees4F18lVm+5KGt61vYO7tcSqlrfJ6Bf7tnUuVuaItFxPtPQTfFcjI2cG5YibgQKW
-         ghapBe0fVQLo5rGZIaYJ2SiHcYxbIp5sBrIak3aooT3V3F2S3F4z8NoBcTw+gBav73yb
-         YuEg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXIjjfpqMVUZhapxI5AzfWy6KxYyQfOmVkZMa04a446XnhpyYrvuxDmIvonspC0CiKtCE9jYDVW7FqLcbuEyw7ExgKyXjqRbAtnA==
-X-Gm-Message-State: AOJu0Yy9+WrIiM/5Qmf+VXHsvm64LBD8otkCMmmQAdNraiqyfdBqkRWb
-	7toimKVFqDGGB4YBvTIj6cMglR035HuNZlhAwRdVQ1AozDle7AnsyuE8WtN2YtiXN9MRhrnHd5h
-	u67IrwX71EGrwLeGQtN5RU+lY7NKjt5Txhd2ZFw==
-X-Google-Smtp-Source: AGHT+IHZqlcVgt+ktb4ViHXtjGE0NSdsEiIKRla1wDkZQzzWbmG1Zgv7ZNzPVhE7Wq2SOamQcI56TcuJ7km+1hUpqHA=
-X-Received: by 2002:a05:6512:1321:b0:512:bd65:860a with SMTP id
- x33-20020a056512132100b00512bd65860amr5309051lfu.5.1708462462005; Tue, 20 Feb
- 2024 12:54:22 -0800 (PST)
+ d=scanivalve.onmicrosoft.com; s=selector2-scanivalve-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=5JDcF0E5cH99lMnkGV9niCzC4W2KmEOr267KZdb+uxA=;
+ b=JsWBNUYnedGKE29JzmVpxCqbU6N50tGmwdUtuis5JmU0QkxJD4RY+OLUliwmPmm8925EdDFlqe5Iq8jf/1nVdyk4Y0KnioNMmWl1qzP/rTSeQPlkm8YNOtvmxwMxM6DVJxwjrTnn9/8UrSzV6fwXtj4m7pMVb5bz4c+bKFkMVaU=
+Received: from MWHPR1301MB2208.namprd13.prod.outlook.com
+ (2603:10b6:301:2e::17) by BY3PR13MB4771.namprd13.prod.outlook.com
+ (2603:10b6:a03:367::14) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.39; Tue, 20 Feb
+ 2024 23:17:27 +0000
+Received: from MWHPR1301MB2208.namprd13.prod.outlook.com
+ ([fe80::7025:7204:d379:26be]) by MWHPR1301MB2208.namprd13.prod.outlook.com
+ ([fe80::7025:7204:d379:26be%3]) with mapi id 15.20.7292.029; Tue, 20 Feb 2024
+ 23:17:27 +0000
+From: Jeremy Mattfeld <jmattfeld@scanivalve.com>
+To: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+Subject: sparse GPIO bindings for mux-controller
+Thread-Topic: sparse GPIO bindings for mux-controller
+Thread-Index: AdpkUPHWT0vZg0Z/RgyLu5AaJtInxQ==
+Date: Tue, 20 Feb 2024 23:17:27 +0000
+Message-ID:
+ <MWHPR1301MB2208CCD810C484F0C269D048C6502@MWHPR1301MB2208.namprd13.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=scanivalve.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: MWHPR1301MB2208:EE_|BY3PR13MB4771:EE_
+x-ms-office365-filtering-correlation-id: 7f65e1b2-64e9-4098-df14-08dc326a1ad4
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ G/oUldx0RD45e6qHDPwq4c9IyGY0cZd2cdAMpYcpTG+rQ9sKzuFgvcz2qyCPInx+YnamkyyXv+9m8v4jr02/iTRxQz/gqbek7m0uxVIBl7RJStpe51tcWdS3dhABVXq+FNH0EEweHcJdlWZ4S4K2SCAO7N/e01uTKBlvKjJlLNJgjjiBtjGMtsBE7/zz0RlsB5IMBJgBQOVJw1iSweFm8rnbsEk3DsROdRlANIYzvmkcRrmYjNghI0f6lzOMSc10pogwxLIwlqAJH2oKR1tXyLvk/j/AVDT/K42LLHCbdBYTF/9sNpt8hS607sLxXD31v8pDmBzgslDcxyZJl4eDivLVAbPIWrSpZ2VkNNIW8rFijvyGacpr/BHoFf9+ryB0XJM34HjKjHWM3o06BWb6DUz8GiC3G6FwXNIbLBGocX3BynIC8nYHPwxsrgcIxlBA68JrhISPYMO/bN20rS++mYCXqqJoUYbPGNDb9GvZcGhsYTz1kMm3w16Vy7ahgvRuCbXLA7zOpLbZQVwx6Auf0mz8x0Ztow8dQXNlzyLgk82jy72sIQ5LQct10w5H+gwEdd2SEPMRgIh2bTSmOhki/5zEcf9eCyH/6IdzWF3u+LnGcVWQ/z6ncqtOBh2hhbpt
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR1301MB2208.namprd13.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?FlAGj8x+V6d2TKRuncYmFCF8NBdY1BjA7rvIyX+l6Is1x3qxm6xymImf6rfN?=
+ =?us-ascii?Q?/70cqYA+l0CM4NzXWfWH+wQZ1HWCq1kXqhojMtsaeMbFXOG4ex3Y+EkQE/+L?=
+ =?us-ascii?Q?yfe9o1Cf6Tnaa/mymtlDc0nyGD8WNlHadmopm8EGs+QJ2vnU83iEWG5Fn7ZQ?=
+ =?us-ascii?Q?gGjmhOFwfFnZR8r5JlEDwRqWGrGPlEaMROmDRYu/15QDo4Iunut4KyNgJSEA?=
+ =?us-ascii?Q?bBju2dwDxiL5SArnfH14hrpJi2F94oGytNgN7FnCyX+dyn+1qXiJznpInGHA?=
+ =?us-ascii?Q?yaMhIY9fdPbD/LBkA5BQQuFt1vqfckxQSUel6pCRco1Xi3gQ0DKltvSs/Nk6?=
+ =?us-ascii?Q?zcwKzmSXmsdGOc6zszrJJmVyQeIztOC0hA/mhd7+kGNUl1J/IWdRuX1F1g5K?=
+ =?us-ascii?Q?OhjhTNX+uxgb+ZqoVg43pmocdVZzi+cL5Yyg666TE5RlWdoKO7XpExOYaPrK?=
+ =?us-ascii?Q?xVAjqfY1dJoMWcuaSDACWpbvJP7aEWmXK3R6IjU8cN7r6ETxD6uagqJ5nQVp?=
+ =?us-ascii?Q?dTcu7TMY5XgoH++ZzFn/93OeO9T30hB5lQDIQA+Crs1DstSjA0F4VZVsFYXY?=
+ =?us-ascii?Q?em5qnzGOlcoNZMqUWiZVeslD2b1c4O1lo2795CIIrMU1YreoTNpcuryG0Y5A?=
+ =?us-ascii?Q?X7lRZWKYo/b+yQ89W3zRm5b7ouo7j35KjAVmWvce2ayrPFtKDxz5mDSnk0Ol?=
+ =?us-ascii?Q?FNUfc9qje/2aZO6nt/8EcyWohLgftw9Lci1MXP5p7qk0mGTI3Q50P4vAiPSt?=
+ =?us-ascii?Q?5zNfRG2+fQwRNtvO+8l0wd+qOfT/KZ62EA+nhqiFWM39ja9FeR7lpKKKKzgx?=
+ =?us-ascii?Q?0nXqPLEUvSsDcl/UfEedmcAFEfsJ1fUzNm31TjYLsug7WN9Z3xbnCQElrJlC?=
+ =?us-ascii?Q?6nOaUs/VpqgfyBmJZb0H5s0IgSaKUmhM4st2FWSR85LwOJnpsMXrPQ6PA92H?=
+ =?us-ascii?Q?n6IS41WKw0xNgB//mPXQATC7C8jBYXfi3JHUmd+e5/rRntfc6TOAiARyAiJM?=
+ =?us-ascii?Q?thqwrdW5xDuL5BGY5ruJD6wjV/GAtvnJ9TMSiwxI4SJink19Uq6Mutnc55mz?=
+ =?us-ascii?Q?l7920YMf9nLihy9vrECBOA+H79gPjk75zcHOl1xR2q2t+Urg6jreujF//Zpd?=
+ =?us-ascii?Q?T8Lq3OSd68WHIrj5PQ2+IBnIZIphPiVIaVraOhrifE4eYEHcDE/2Sj7YnXU+?=
+ =?us-ascii?Q?xlky3g7vAr68msryUCiXOvVeM2HXFzeudX1EZQ2nuMm2f/eC3gA5Ri5+8Vwi?=
+ =?us-ascii?Q?udMR96DTQBy4LAqf2jpRvUMALQoSAAu1A3R5+TrEsyLHYgRynOyUlZXFUkkk?=
+ =?us-ascii?Q?3Nrh6uGLDAZwRugHXcgMi/TGR7xnmdppvI0ht56J4u+/KcN9HvEZYkCRoOvR?=
+ =?us-ascii?Q?EUYGP7x6KGhXyCMcPsvGu3kfFmd0X7A9pAFVPn28fy7Ahcg9Zrn34Nykt0r2?=
+ =?us-ascii?Q?OGGfiKi9ctcwTfsiCU2svmViroGkMhXAvH9rPOQjeJLCDfZuw2d/9cRwA8K5?=
+ =?us-ascii?Q?zy+VoM7ksa1FzR0zJHy9OEKpzTSiQsRCBsueUZJ3DhwOH3g/SYQ5tOEVJTcZ?=
+ =?us-ascii?Q?utGsmgpeNFiaGFDDwdaHAdRdDryw+y3EDlBtpIJM?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
-In-Reply-To: <20240220094344.17556-1-mitrutzceclan@gmail.com>
-From: David Lechner <dlechner@baylibre.com>
-Date: Tue, 20 Feb 2024 14:54:10 -0600
-Message-ID: <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
-Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, Ceclan Dumitru <dumitru.ceclan@analog.com>, 
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: scanivalve.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: MWHPR1301MB2208.namprd13.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7f65e1b2-64e9-4098-df14-08dc326a1ad4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Feb 2024 23:17:27.7767
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 86940f44-8cce-440c-9d35-85b42cdf1753
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: spOkMXdWnumtHmmwfn3Ox/OdCiM3nlBA7TxQ9zYv/OA4tbJdP8Zw4Y5KNjzUgRt6fhdz3pfGvqDX0bVxmmDf3APoLTj+xOFQo03GPy3pyJo=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR13MB4771
 
-On Tue, Feb 20, 2024 at 3:43=E2=80=AFAM Dumitru Ceclan <mitrutzceclan@gmail=
-.com> wrote:
->
+I am trying to use the gpio-mux and spi-mux drivers to control chip select =
+signals to an array of ADC's.  I am able to get the mux-controller to work =
+only if the array of GPIO's are a contiguous block of GPIO's on the same pe=
+ripheral node (e.g. gpio port on SOC).  The docs for the DT bindings do not=
+ seem to state any such limitation.  Would it be possible or useful to allo=
+w the gpio-mux to set GPIO pins in sparse arrays?  I have a hardware use ca=
+se where this would be convenient but maybe it is not advisable or clean?  =
+Any feedback would be appreciated.
 
-...
+e.g. for a 16-way controller:
+	mux-gpios =3D <&gpio1 0>,<&gpio1 1>,<&gpio1 4>,<&gpio2 12>;
 
-> +
-> +  avdd-supply:
-> +    description: Avdd supply, can be used as reference for conversion.
-> +                 This supply is referenced to AVSS, voltage specified he=
-re
-> +                 represens (AVDD - AVSS).
+Jeremy Mattfeld
+Software Engineer
+jmattfeld@scanivalve.com
+1722 N Madson Street=20
+Liberty Lake, WA, 99019
 
-The datasheets call this AVDD1, not AVDD. Would be nice to use the
-correct name to avoid ambiguity.
 
-Also check spelling `represents` above and below.
 
-> +
-> +  avdd2-supply:
-> +    description: Avdd2 supply, used as the input to the internal voltage=
- regulator.
-> +                 This supply is referenced to AVSS, voltage specified he=
-re
-> +                 represens (AVDD2 - AVSS).
-> +
-> +  iovdd-supply:
-> +    description: iovdd supply, used for the chip digital interface.
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: |
 
-Don't need `|` here.
-
-> +      Optional external clock source. Can include one clock source: exte=
-rnal
-> +      clock or external crystal.
-> +
-> +  clock-names:
-> +    enum:
-> +      - ext-clk
-> +      - xtal
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +patternProperties:
-> +  "^channel@[0-9a-f]$":
-> +    type: object
-> +    $ref: adc.yaml
-> +    unevaluatedProperties: false
-> +
-> +    properties:
-> +      reg:
-> +        minimum: 0
-> +        maximum: 15
-
-Parts ending in -2 only have four channels.
-
-> +
-> +      diff-channels:
-> +        items:
-> +          minimum: 0
-> +          maximum: 31
-> +
-
-Are we missing `bipolar: true` here? (since we have
-unevaluatedProperties: false)
-
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on
-> +          the specific channel. Valid values are:
-> +          vref       : REF+  /REF=E2=88=92
-> +          vref2      : REF2+ /REF2=E2=88=92
-> +          refout-avss: REFOUT/AVSS (Internal reference)
-> +          avdd       : AVDD  /AVSS
-> +
-> +          External reference ref2 only available on ad7173-8.
-> +          If not specified, internal reference used.
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        enum:
-> +          - vref
-> +          - vref2
-> +          - refout-avss
-> +          - avdd
-> +        default: refout-avss
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-Aren't the various power supplies supposed to be required?
-
-- avdd-supply
-- avdd2-supply
-- iovdd-supply
 
