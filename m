@@ -1,119 +1,226 @@
-Return-Path: <linux-gpio+bounces-3551-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3552-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC7F585D74A
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 12:42:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A680085D890
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:00:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 19A161C21FE5
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 11:42:39 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 339EF1F24228
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 13:00:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4343745977;
-	Wed, 21 Feb 2024 11:41:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3C726995E;
+	Wed, 21 Feb 2024 12:59:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SzfQHP+W"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from metis.whiteo.stw.pengutronix.de (metis.whiteo.stw.pengutronix.de [185.203.201.7])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EBFA45976
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 11:41:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.203.201.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8545D69954;
+	Wed, 21 Feb 2024 12:59:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708515675; cv=none; b=SxQJXNk1p4DBHgrwG60OYJ4gk4UbwQ2Wg1O/9HmsH5HbM6y4fEaJqdUVY0L+z9/k2BoN778h8RwDqYe79pIJ1TRE92xrHdShj9r6Ze7ibyZEo5hYHW2iBNliH6U3bUWUDFpDfue7Lc866iGaY7AdlTA5e7T5/P0ee8D+jHlCrHQ=
+	t=1708520397; cv=none; b=F+AGQOI76+6VoaHeP16V5sd7qdGY/pMx75jTTW7oeR5Kq+d4UHsf122bRxeBfpvmxm4plyLByh+5qqFgl0C803prUJ9by0rnXiQN8ugNDpcrW446+8YuysynvnkhZmrEWdHN64nO6Z5xUmlGm/mXcN/qwjHwi0VU04SB9qF6H7U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708515675; c=relaxed/simple;
-	bh=N88ZAVmfemoKev6jlYmIQMcDug/YAdpNBEedT/wfwl8=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qSmngCALk5Xn9TzJ4ehZu5GnZtqH0S3vU5qCDl/Kx+qswWrm9Xs4Xv3iGvPbXaJBGCyADNhSgDIGS5HT/kdXYTUhmjF8QwRbuQHU0xqQB3VSYWPmyYGxGQoE4e2kn+p/yECgm9L4AlQEdicmFVEh50y8jA9W7eM/Rco/y1MCGyI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.201.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=pengutronix.de
-Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
-	by metis.whiteo.stw.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-	(Exim 4.92)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyI-0002lV-Sp; Wed, 21 Feb 2024 12:41:06 +0100
-Received: from [2a0a:edc0:0:900:1d::4e] (helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.94.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyE-0021v1-Of; Wed, 21 Feb 2024 12:41:02 +0100
-Received: from pza by lupine with local (Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1rckyE-00061g-2E;
-	Wed, 21 Feb 2024 12:41:02 +0100
-Message-ID: <f2e3d662e92b76e43b89a3c99669c3dadb2176b5.camel@pengutronix.de>
-Subject: Re: [PATCH 05/23] gpio: nomadik: extract GPIO platform driver from
- drivers/pinctrl/nomadik/
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: =?ISO-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>, Linus Walleij
- <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, Thomas Petazzoni
- <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Date: Wed, 21 Feb 2024 12:41:02 +0100
-In-Reply-To: <CAMRc=Me-oEx9S0w=XhwC4MzV9uzV0o0HnWBfNSstcqg5jpXyZg@mail.gmail.com>
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
-	 <20240214-mbly-gpio-v1-5-f88c0ccf372b@bootlin.com>
-	 <e031566a85ae0da0ee71dffba5d87c6414ef83e1.camel@pengutronix.de>
-	 <CAMRc=Me-oEx9S0w=XhwC4MzV9uzV0o0HnWBfNSstcqg5jpXyZg@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1708520397; c=relaxed/simple;
+	bh=UBb18O7g9AQlT2JjRa2K4NJFLtvBpq0fe/ACOZCx/2k=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=SXLMme61xpXAYmyKTPDyYEMJ6TFXfVo1uLDnx1KgSZXkGNWrg7Cxf8WMvLjYe2fSkpVTmd2jMhia4aUCvQmKv+bus/J1tTmVV1cRNAPwVCVia0ARqpIqIBNLx6h4/PIIZnmPgRJMHR1i2rlBvuzNHWuircE4qMHWufV1MlcSnhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SzfQHP+W; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708520397; x=1740056397;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=UBb18O7g9AQlT2JjRa2K4NJFLtvBpq0fe/ACOZCx/2k=;
+  b=SzfQHP+WfDcBfv2ow97y3qPsbUN5rqkveCixI0Pz3qFqjvygXc44Gwhq
+   y93+tCesj8crnwGmYmF0egOQgjMlkYNd5v9YMpRphhAsJy3ayOxQSy/js
+   N0qjKgoAR2trQ0zJbkFc0RkVaIPLiulYun+zXUsWKdVSXI1IgX17p7KMC
+   OZhqqc/+c78VzX/LwHTxJvwr2mMgXbooMWImS9NMQqBpS7XGc4qsI6CfF
+   0fZFY7WS764fNv61RzE9PQ8qSVWT8DLh21wqF+rktObE+Wzr4PWrI5lTM
+   n8/mnq84IVkJ05evbwGKLMGITj1Z7FQgB2PX8ZVRxRlCCqKJBz1F619cp
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="25141149"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="25141149"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 04:59:56 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10990"; a="936643205"
+X-IronPort-AV: E=Sophos;i="6.06,175,1705392000"; 
+   d="scan'208";a="936643205"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 04:59:52 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rcmCT-00000006LtU-2IrW;
+	Wed, 21 Feb 2024 14:59:49 +0200
+Date: Wed, 21 Feb 2024 14:59:49 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+Message-ID: <ZdXzxY3-g7oY00Mq@smile.fi.intel.com>
+References: <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+ <CAMRc=Mekf9Rek3_G2ttQY+yBvWM3+P4RAWVOQH99eajn38F+og@mail.gmail.com>
+ <ZPWcTMPiu4MSq+F7@smile.fi.intel.com>
+ <CAMRc=MfZv70FXHyNw4yK90NL5-jjAJa6qbKc6SV2ZwbaJkKQqg@mail.gmail.com>
+ <ZPWmDL6QJJMNi2qa@smile.fi.intel.com>
+ <CAMRc=Mc0JgPUEpaes7WcbkMu5JyrpLW8N1+bM-+OJaB+pPX4ew@mail.gmail.com>
+ <ZPWr3dRP5C1GSY9F@smile.fi.intel.com>
+ <CAMRc=Mfae+=HPPWzsG8bgK2CGOGY9GPkS5VZcwLyr_yY8A_y2g@mail.gmail.com>
+ <ZPWxbfHNOqAnkR09@smile.fi.intel.com>
+ <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.whiteo.stw.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hi Bartosz,
+On Tue, Feb 20, 2024 at 05:46:27PM -0800, Saravana Kannan wrote:
+> On Mon, Sep 4, 2023 at 3:29 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Mon, Sep 04, 2023 at 12:12:44PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 4, 2023 at 12:05 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Sep 04, 2023 at 11:47:54AM +0200, Bartosz Golaszewski wrote:
+> > > > > On Mon, Sep 4, 2023 at 11:40 AM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Mon, Sep 04, 2023 at 11:22:32AM +0200, Bartosz Golaszewski wrote:
+> > > > > > > On Mon, Sep 4, 2023 at 10:59 AM Andy Shevchenko
+> > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > On Sat, Sep 02, 2023 at 04:40:05PM +0200, Bartosz Golaszewski wrote:
+> > > > > > > > > On Fri, Sep 1, 2023 at 11:10 PM Andy Shevchenko
+> > > > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > > > On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golaszewski wrote:
 
-On Mo, 2024-02-19 at 16:33 +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 15, 2024 at 11:03=E2=80=AFAM Philipp Zabel <p.zabel@pengutron=
-ix.de> wrote:
-> >=20
-> > On Mi, 2024-02-14 at 17:23 +0100, Th=C3=A9o Lebrun wrote:
-> > [...]
-> > > diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.=
-c
-> > > new file mode 100644
-> > > index 000000000000..e39477e1a58f
-> > > --- /dev/null
-> > > +++ b/drivers/gpio/gpio-nomadik.c
-> > > @@ -0,0 +1,660 @@
-> > [...]
-> > > +static int nmk_gpio_probe(struct platform_device *dev)
-> > > +{
-> > [...]
-> > > +     ret =3D gpiochip_add_data(chip, nmk_chip);
-> >=20
-> > Use devm_gpiochip_add_data() to cleanup on unbind, before nmk_chip goes
-> > away. Or make the driver un-unbindable via suppress_bind_attrs. In that
-> > case you could drop devm_ prefixes everywhere for consistency.
-> >=20
->=20
-> No! Why? What about error paths in probe() where you want to undo everyth=
-ing?
+...
 
-Brain fog moment. I was triggered by the mixture of devm_ and non-devm_
-calls and jumped to the wrong conclusion.
+> > > > > > > > > > > -     /* Used by sysfs and configfs callbacks. */
+> > > > > > > > > > > -     dev_set_drvdata(&gc->gpiodev->dev, chip);
+> > > > > > > > > > > +     /* Used by sysfs callbacks. */
+> > > > > > > > > > > +     dev_set_drvdata(swnode->dev, chip);
+> > > > > > > > > >
+> > > > > > > > > > dev pointer of firmware node is solely for dev links. Is it the case here?
+> > > > > > > > > > Seems to me you luckily abuse it.
+> > > > > > > > >
+> > > > > > > > > I don't think so. If anything we have a helper in the form of
+> > > > > > > > > get_dev_from_fwnode() but it takes reference to the device while we
+> > > > > > > > > don't need it - we know it'll be there because we created it.
+> > > > > > > > >
+> > > > > > > > > This information (struct device of the GPIO device) can also be
+> > > > > > > > > retrieved by iterating over the device children of the top platform
+> > > > > > > > > device and comparing their fwnodes against the one we got passed down
+> > > > > > > > > from probe() but it's just so many extra steps.
+> > > > > > > > >
+> > > > > > > > > Or we can have a getter in gpio/driver.h for that but I don't want to
+> > > > > > > > > expose another interface is we can simply use the fwnode.
+> > > > > > > >
+> 
+> Sorry for being late to the party.
 
-Yes, keeping devm_ for error cleanup is of course correct, and with
-suppress_bind_attrs it'd even be ok to use non-devm_
-gpiochip_add_data(), as long as there can be no error return
-afterwards.
+You decided to make a blast from the past due to the last patches from me? :-)
 
-regards
-Philipp
+> > > > > > > > dev pointer in the fwnode strictly speaking is optional. No-one, except
+> > > > > > > > its solely user, should rely on it (its presence and lifetime).
+> > > > > > >
+> > > > > > > Where is this documented? Because just by a quick glance into
+> > > > > > > drivers/base/core.c I can tell that if a device has an fwnode then
+> > > > > > > fwnode->dev gets assigned when the device is created and cleared when
+> > > > > > > it's removed (note: note even attached to driver, just
+> > > > > > > created/removed). Seems like pretty reliable behavior to me.
+> > > > > >
+> > > > > > Yes, and even that member in fwnode is a hack in my opinion. We should not mix
+> > > > > > layers and the idea in the future to get rid of the fwnode_handle to be
+> > > > > > _embedded_ into struct device. It should be separate entity, and device
+> > > > > > instance may use it as a linked list. Currently we have a few problems because
+> > > > > > of the this design mistake.
+> > > > >
+> > > > > I don't see how this would work if fwnodes can exist before struct
+> > > > > device is even created.
+> > > >
+> > > > That's whole idea behind swnodes. They (ideally) should be created _before_
+> > > > any other object they are being used with. This is how it works today.
+> > >
+> > > Yes, this is what I meant: if fwnodes can be created before struct
+> > > device (as it is now) and their life-time is separated then how could
+> > > you possibly make the fwnode part of struct device?
+> > >
+> > > > And doing swnode->dev = ... contradicts a lot: layering, lifetime objects, etc.
+> 
+> I understand what you are trying to say about layering, but there are
+> no lifetime violations here.
+
+There is. Software node is not firmware node, their lifetime is the same or
+wider than the respective device (often, they are statically defined without
+any device in mind).
+
+> > > No it doesn't. We have the software node - the template for the
+> > > device. It can only be populated with a single device entry.
+> >
+> > Which is wrong assumption. Software nodes (and firmware nodes) in general
+> > can be shared. Which device pointer you want to add there?
+> 
+> I don't think this is any harder to handle than how a device's
+> secondary fwnode is handled in set_primary_fwnode(). For secondary
+> fwnodes, you just WARN and overwrite it and move on.
+
+The whole concept of a single linked list with limitation to up to two
+nodes and being the part of the struct fwnode_handle itself appears to
+be problematic. We have a lot of tricks here and there instead of properly
+having a list head in the struct device without any limitations in number
+of nodes with a priority based on the appearance in the list.
+
+For the details you may ask USB DWC3 developers and related to that.
+
+> > Which one should be next when one of the devices is gone?
+> 
+> Similar to how set_primary_fwnode() handles deletion (NULL), you can
+> handle the same for when a device is removed. You can check the parent
+> or the bus for another device with the same fwnode and set it.
+
+> > No, simply no. Do not use it!
+> 
+> Using fwnode_handle->dev is no different than searching a bus for a
+> device which has dev->fwnode match the fwnode you are looking for.
+> 
+> In both cases, you are just going to get the first device that was
+> added. It's completely pointless to force searching a bus to find the
+> device with a specific fwnode.
+> 
+> In the special cases where one fwnode has multiple devices, no generic
+> code is going to always handle the device search correctly. The
+> framework adding those devices probably knows what's the right thing
+> to do based on which of the N devices with the same fwnode they are
+> trying to find.
+> 
+> I understand it's not great, but blindly saying "search the bus" isn't
+> really improving anything here and just makes things unnecessarily
+> inefficient.
+
+Is there any _good_ documentation for devlinks and all that fields in the
+struct fwnode? Why should we use that without any understanding of the
+purposes of that field. We, as device property developers, hadn't introduced
+that field and never required it. It's an alien to device properties APIs.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
