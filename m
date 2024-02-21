@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-3571-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3572-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id EBB9D85E29C
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 17:06:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id C4BC285E2A5
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 17:08:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7482CB2246F
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 16:06:46 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 79A9D1F25713
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 16:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54FEE81748;
-	Wed, 21 Feb 2024 16:05:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BEE281213;
+	Wed, 21 Feb 2024 16:08:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="jB2y2QNw"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="pTK8jozu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E5E81742;
-	Wed, 21 Feb 2024 16:05:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 693217CF0F;
+	Wed, 21 Feb 2024 16:08:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708531521; cv=none; b=E3IZV/llhIAWrPUm7EfcOBK1yxzQJfarfSR1wm9usgOkiL0WsauLbN7pjST/6i65dXe4BF5zl4/900YZWhsIEc2b1+LWhrW+TZcsRXrQsCqdzHi6ZqcPMB+elPZ3xySbw9Vt5c2DsH47zmSQAErYXmjlPH2FkLZOIycBMwpE3Uo=
+	t=1708531725; cv=none; b=L6gckjtGF/gPJrGToby9VZZqlJ3ftZUEpHEk5LAyGroMUChc4SEOHK+vd5GgAZEctE9bqWsoUeTS+/k+m5or0zL3oK5iy63DwhkpWk0AQTEr0hwfcrzAFXgNUC491JFa1IZ7PL1tnykZ9i7lDYZL7naWtzjrvTJbbVDv6RDZaDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708531521; c=relaxed/simple;
-	bh=4osHeqTpGZbNF+WwFOeN/1hOUN/aK+g+cz/1SRJB+9E=;
-	h=Mime-Version:Content-Type:Date:Message-Id:From:Subject:Cc:To:
-	 References:In-Reply-To; b=NdmFB497uoovKSCJN8K+jeSGbkBmpRtHwOjhz/+fcE5d34v32RZCL0O1wLfOjGIFrSDqNjEVLWZ4bJDs8xM2gOKeX1nVl7Kv4u9LG98PJqBV2Fr1yjMUBQ49gHTKDYmFRDBC/DmL6Yvmt7/K+FhpsO5mOYakmugOT9SEYp2izlg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=jB2y2QNw; arc=none smtp.client-ip=217.70.183.198
+	s=arc-20240116; t=1708531725; c=relaxed/simple;
+	bh=agprbSGbPZoCczSp1znYQDm8799YwPtnW91lWAItujs=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=aWCktr9xKenW+qd/MGpP3uXqIpMCB+8pb947m+JoOWBw2r9dJ9XFVN0krswwSNQrFWCpl/TUQy7ORMYpG/7fg6HsxIJDvLxpfDw14jFtxi0877Dwm1W7iysv4KqsWwljVZM5G0ZmYhHHWLQ0cZdnTUHHLvvcsRvwlXh0QDnFz+s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=pTK8jozu; arc=none smtp.client-ip=217.70.183.200
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id DAA2EC0013;
-	Wed, 21 Feb 2024 16:05:15 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 4DC042000E;
+	Wed, 21 Feb 2024 16:08:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708531516;
+	t=1708531721;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=KMfvDi1Z7NgcdHnP3iiFwTVbi7e7yWaAr0kgZz77890=;
-	b=jB2y2QNwjiyNS83wMYPNJMm+XgYPGyoUtT68qdAcfISdumDjJnAr5ntNT7dGwok2HL4NFj
-	12GzGwCkAwWNFq+EbRQvj5zbXIGTQq7s2RzdCCfyaAOuibep9mEJpmFn5v5vlNzpf3Z8rX
-	eWIh/K0nbUoWeTtZEm78NCgOVVzVPizrG2HQfW6I6HkiEpRLVrhScpd4/Ekg24F9nMTrGF
-	vbsV+08topQMABL2LlP90n4ytitLV4/ihLVQx2w7plXfvhUON02JXjxPmNpf+tZb+TYUPk
-	ZBs/cLF51a/rLam1ul/DfP0K+LmrRBXD7lUdgN8+UchNJJmbyAadX9gR4LDYbA==
+	bh=agprbSGbPZoCczSp1znYQDm8799YwPtnW91lWAItujs=;
+	b=pTK8jozu8k4/WDxcqFSdFKy72Usic303GcMiSwr16cFPMLB4CKL+kvRqhMFRfQo20IP6fZ
+	2ndTzp11Lb7NnUbXTjPeRhb0M91Ac1ooojzwkzLBam7yCAbuuM00hravHyre2SQGe8MDYx
+	9hE6/hKfkS03iSNnDUZWl8v6D0oq93X7HAf2K/ma1dKUY9ocLQgfcOOjjxR1QTxYPk01DZ
+	eaLTkDn6on9itqPDS9x4WV85Ihm8dH71JsOo6ZXxGIppwx+pbPrM0wEkX+nQt2+AjTgBuT
+	dG8xIa35ZuCAV9Lchrb/RjhQ5hoNN7AcCXqyRiuj2Da/Q7fgps/2SxZRlArYeA==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -53,61 +53,55 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Wed, 21 Feb 2024 17:05:15 +0100
-Message-Id: <CZAVVISSTXS3.1ZTSEY6PV6LOT@bootlin.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH 13/23] gpio: nomadik: fix offset bug in nmk_pmx_set()
-Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring"
+Date: Wed, 21 Feb 2024 17:08:40 +0100
+Message-Id: <CZAVY4NPY4H6.1KJI4UPRUM21C@bootlin.com>
+Subject: Re: [PATCH v6 05/13] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl:
+ add bindings
+Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
  <robh+dt@kernel.org>, "Krzysztof Kozlowski"
  <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Philipp Zabel" <p.zabel@pengutronix.de>, "Thomas Bogendoerfer"
- <tsbogend@alpha.franken.de>, <linux-gpio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-mips@vger.kernel.org>,
- "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, <linux-mips@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, "Thomas Petazzoni"
  <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>, "Rob Herring"
+ <robh@kernel.org>
 To: "Linus Walleij" <linus.walleij@linaro.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
 X-Mailer: aerc 0.15.2
-References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
- <20240214-mbly-gpio-v1-13-f88c0ccf372b@bootlin.com>
- <CACRpkdbq_QxdftNGOv3+-SpfrV_qPTB-m-atdY0hCE_s8DK64A@mail.gmail.com>
-In-Reply-To: <CACRpkdbq_QxdftNGOv3+-SpfrV_qPTB-m-atdY0hCE_s8DK64A@mail.gmail.com>
+References: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com>
+ <20240212-mbly-clk-v6-5-c46fa1f93839@bootlin.com>
+ <CACRpkdYNe=2w10uB1mUgs2Lgg1TRiSF=bOa45OH5Lcz6+G6FEg@mail.gmail.com>
+In-Reply-To: <CACRpkdYNe=2w10uB1mUgs2Lgg1TRiSF=bOa45OH5Lcz6+G6FEg@mail.gmail.com>
 X-GND-Sasl: theo.lebrun@bootlin.com
 
 Hello,
 
-On Mon Feb 19, 2024 at 10:56 PM CET, Linus Walleij wrote:
-> On Wed, Feb 14, 2024 at 5:24=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boo=
+On Wed Feb 21, 2024 at 2:38 PM CET, Linus Walleij wrote:
+> On Mon, Feb 12, 2024 at 2:44=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boo=
 tlin.com> wrote:
 >
-> > Previously, the statement looked like:
+> > Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
 > >
-> >     slpm[x] &=3D ~BIT(g->pins[i]);
-> >
-> > Where:
-> >  - slpm is a unsigned int pointer;
-> >  - g->pins[i] is a pin number which can grow to more than 32.
-> >
-> > The expected shift amount is a pin bank offset.
-> >
-> > This bug does not occur on every group or pin: the altsetting must be
-> > NMK_GPIO_ALT_C and the pin must be 32 or above. It is possible that it
-> > occurred. For example, in pinctrl-nomadik-db8500.c, pin group i2c3_c_2
-> > has the right altsetting and has pins 229 and 230.
-> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
 > > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 >
-> Ah good catch!
 > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> I this something I could just apply as a fix or are there
-> dependencies on other patches?
+> I tried to just apply the pin control patches to the pin control tree, bu=
+t I
+> can't because of all collisions in MAINTAINERS.
+>
+> If you move all MAINTAINERS business to the SoC-wide patch I can
+> apply the pin control stuff directly, but maybe you wanna keep the
+> series together and merge on an all-or-nothing basis?
 
-There are dependencies. As Bartosz and you asked, I'll try my best to
-avoid them and move this patch up in the series, with an appropriate
-Fixes: trailer (to the initial driver commit I believe).
+I'm all in for making the series slimmer over time. MAINTAINERS changes
+will be moved.
 
 Thanks,
 
@@ -115,4 +109,7 @@ Thanks,
 Th=C3=A9o Lebrun, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
+
+------------------------------------------------------------------------
+
 
