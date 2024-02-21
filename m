@@ -1,116 +1,190 @@
-Return-Path: <linux-gpio+bounces-3557-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3558-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0927A85DB40
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:38:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 052FC85DB75
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:41:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 80334B248CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 13:38:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B02B21F2245D
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 13:41:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B61833D96B;
-	Wed, 21 Feb 2024 13:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 341ED7993E;
+	Wed, 21 Feb 2024 13:41:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="mN4Anb93"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Qcj4zsH+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f170.google.com (mail-yb1-f170.google.com [209.85.219.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBBFC69953
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 13:38:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BABA78B4A;
+	Wed, 21 Feb 2024 13:41:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708522719; cv=none; b=UVefALSWuyqyDXWrmGgWTcKKS9cQILxhaiED1oLrFytkqoAhT5HsxZfceXTkJQfRRxHVlcG3WkN9lEzA8GtbS1NzU6LjrZAmo0IJyO8jacj9G4vEyPFggqEiJU05RfapNxOUjJIZt2XGWKlp8glgdkUvJ45W+bytDv6sXLKXR3M=
+	t=1708522894; cv=none; b=ChIDo3Mpu/YRiFbw7F6oc2gSnv9i+h/k5+xRfLyb6mV3uV7Dj7ARA27fKyZZPYf5f7y7t0qTD3MYEujNRra4VKPPgqLrq5iAwPyu5r1ZTjLMocKdEme4zobMMNQbhs6kbppf00ZA1rsxWu1SmTyzhQ3wZJ5VQZbQhzX2AwfQjQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708522719; c=relaxed/simple;
-	bh=ph2UbQgsrbuCfnh/AmINSm2tHoGX/U8LJgWyPisUXjU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=M4DE1Paa0nX4lTy52+s/rvu6BPtGdngHTttkXcgveTDkV+xHjEDKinsfpi3xbc7WvdCKdStus+W2AwPiErGU5MLjBBc+R6G4vY/9MrHeTLI5oPrcGyEFsVSgolp5pwQiLrwrPS7k2UAvePTRz4Q0v/i3LDlqvjWnZ+3UheOlV4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=mN4Anb93; arc=none smtp.client-ip=209.85.219.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f170.google.com with SMTP id 3f1490d57ef6-dc6d24737d7so5974062276.0
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 05:38:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708522717; x=1709127517; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ph2UbQgsrbuCfnh/AmINSm2tHoGX/U8LJgWyPisUXjU=;
-        b=mN4Anb93TyOuMCHkH2B+0+jOratxIs0faqE6FYvN2AK5/qA5eyJ8A6bVX7hLpyztas
-         KjwwFNlqUA1CILCqeQ2CmYGSbvod0HAccRXn6sWolw9/m1uXyvaSoz/m60xzep9zFmeu
-         Jub4BYZvfiYqjcD1/6YRWOph5pW2T3T9Id0DdtmZx+QC1MW9r6bo+ov/veqB6PMLIWmB
-         mP+LhIHiWKLuRaee6rXky7yYrQuMvR+RKOV8X2x4h3FQ+PjNGsfRKhkRpaPEtoZPaIIN
-         caH1RmeYoXp2DMICeE1O6C/2fQM85uhJt6gtj2A+LPdCHhOMsGT6RTFRK7bny04CohjX
-         CAEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708522717; x=1709127517;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ph2UbQgsrbuCfnh/AmINSm2tHoGX/U8LJgWyPisUXjU=;
-        b=BvTpH+d0iT0Yc93X4HxJgOp1R+/PihYsfDHifKAROfOtYBgySHYxlmljtEvk6yCtvd
-         /VATAQWIRRAHRhDgGZzvDZ4VxGUQbtaRbE9fYmQzNnn2IzCSSRbMG17PoX1xRrWhM8TR
-         Rxe9ykSQwpkUknSI7PCyD8V0O8fNCQpohs/5Js3lzUlYhGlB95s8DLbzAq+RV0nPcdF/
-         rA6ftXXKNfnAyDfdRxKAmaMbQ6TI93GkDYUA15PQbeiqpG+EgTKH71LO0Abds7XEx+6J
-         /ZD2S1MDR+38dWWWms8iaipuBvxiLE3z+kBj2LZoUX9WVhKydpPWQfXzbgGykTsdW32Y
-         DOuA==
-X-Forwarded-Encrypted: i=1; AJvYcCXoH+/0l8dfe2kOhHUigt2yuw19qDtJTh9ei7udu9ia2Q4JMMdFAagjXuEVo7SJAh3EBp8diH5uZJUjk7zpQvuqQ09N5etqe1DRDw==
-X-Gm-Message-State: AOJu0YxrjpwinqT/QUEv/k7OyTmTejf3B8EPFBv7CGD3QX9J61ix3R2i
-	YTj/OsWy2+aTfnYIyI3eUoIOG5x66mOMQkbcyu89YIN4kxd43hs7O6dXm0E9kl8Ygr99HjMqSH2
-	AmPYSnUDiycGYOObdYDHqXLqSPZL+4MzetmIolg==
-X-Google-Smtp-Source: AGHT+IF2OkLRDdLse8vRcitJs8gTndLo8D9Y6JeTVVYt2QhVtGqFzHLke4WYR6iZMGxv/F5qvwz1XhINpDDxRT+71EA=
-X-Received: by 2002:a25:ab06:0:b0:dc2:2e01:4ff0 with SMTP id
- u6-20020a25ab06000000b00dc22e014ff0mr15988542ybi.45.1708522716910; Wed, 21
- Feb 2024 05:38:36 -0800 (PST)
+	s=arc-20240116; t=1708522894; c=relaxed/simple;
+	bh=5W72ftqe+QlgdRvNBAPvGYPV4VKvtGrjgGhD5Xkh/Ws=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pXbCWasUKAYptvSl6NAF6ilnRycKlwHm7NUKLChE8/urEDrvE1a1mv3BrUT2Q3ceWQrRP3Yfan8PFQmHP2rvc8sWRXDJLzg5zEAfgT1xVIqz+g2x2IIvvIl6ITQ645v6qiqCxgz63whF67vF69iDR2n0GcQeA4cZXIdACXHoHO0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Qcj4zsH+; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id E46DD40009;
+	Wed, 21 Feb 2024 13:41:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708522883;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=HChv7AMFaSV60Wh6fSWATnd6gL2rY85Q3tCAwMqY42A=;
+	b=Qcj4zsH+5m4yg0nj/CeFRq48awmMTU4BMthbaywS1PL69ZM6N8LSIp0O0Sgf6Rs20z+THm
+	+d7AZmPS7tfde1Zu39+eYBeJ5ZN0GODxigMjV8NaO3vVWRfzd1wqotTv7b2awrqFFtSl++
+	sCEusvP5+z6apuRg+dTZxq1xwpFtDjBi986kTruWgM17X1Jj9OubWE1M/dwBEhqHxzr3T6
+	NoOeFGeKAPZf6Hn9XtVFkEEwfL5wxITnqbUqc02IiF8H35zdd0Rx0bMzE/lS8rVr8DyNa+
+	p07Ld9yyRXcyRY5FS3OZbpK01KpWHiIV2t6hkZEZ/SJlCdsJaXi/2gkC4OK9MA==
+Message-ID: <113b7f2e-1313-4ebf-a403-e5fcae8f01ca@bootlin.com>
+Date: Wed, 21 Feb 2024 14:41:12 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com> <20240212-mbly-clk-v6-5-c46fa1f93839@bootlin.com>
-In-Reply-To: <20240212-mbly-clk-v6-5-c46fa1f93839@bootlin.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 14:38:25 +0100
-Message-ID: <CACRpkdYNe=2w10uB1mUgs2Lgg1TRiSF=bOa45OH5Lcz6+G6FEg@mail.gmail.com>
-Subject: Re: [PATCH v6 05/13] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl:
- add bindings
-To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, 
-	Philipp Zabel <p.zabel@pengutronix.de>, 
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, 
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
-	Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 14/18] phy: cadence-torrent: add suspend and resume
+ support
+Content-Language: en-US
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+ Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+ <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
+ Tony Lindgren <tony@atomide.com>, Haojian Zhuang
+ <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-14-5c2e4a3fac1f@bootlin.com>
+ <c105bfa8567f9e76731f2b018f4ca3176357204d.camel@pengutronix.de>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <c105bfa8567f9e76731f2b018f4ca3176357204d.camel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-On Mon, Feb 12, 2024 at 2:44=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
-in.com> wrote:
+On 2/21/24 14:09, Philipp Zabel wrote:
+> On Do, 2024-02-15 at 16:17 +0100, Thomas Richard wrote:
+>> Add suspend and resume support.
+>>
+>> The already_configured flag is cleared during the suspend stage to force
+>> the PHY initialization during the resume stage.
+>>
+>> Based on the work of Théo Lebrun <theo.lebrun@bootlin.com>
+>>
+>> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+>> ---
+>>  drivers/phy/cadence/phy-cadence-torrent.c | 54 +++++++++++++++++++++++++++++++
+>>  1 file changed, 54 insertions(+)
+>>
+>> diff --git a/drivers/phy/cadence/phy-cadence-torrent.c b/drivers/phy/cadence/phy-cadence-torrent.c
+>> index 52cadca4c07b..f8945a11e7ca 100644
+>> --- a/drivers/phy/cadence/phy-cadence-torrent.c
+>> +++ b/drivers/phy/cadence/phy-cadence-torrent.c
+>> @@ -3005,6 +3005,59 @@ static void cdns_torrent_phy_remove(struct platform_device *pdev)
+>>  	cdns_torrent_clk_cleanup(cdns_phy);
+>>  }
+>>  
+>> +static int cdns_torrent_phy_suspend_noirq(struct device *dev)
+>> +{
+>> +	struct cdns_torrent_phy *cdns_phy = dev_get_drvdata(dev);
+>> +	int i;
+>> +
+>> +	reset_control_assert(cdns_phy->phy_rst);
+>> +	reset_control_assert(cdns_phy->apb_rst);
+>> +	for (i = 0; i < cdns_phy->nsubnodes; i++)
+>> +		reset_control_assert(cdns_phy->phys[i].lnk_rst);
+>> +
+>> +	if (cdns_phy->already_configured)
+>> +		cdns_phy->already_configured = 0;
+>> +	else
+>> +		clk_disable_unprepare(cdns_phy->clk);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int cdns_torrent_phy_resume_noirq(struct device *dev)
+>> +{
+>> +	struct cdns_torrent_phy *cdns_phy = dev_get_drvdata(dev);
+>> +	int node = cdns_phy->nsubnodes;
+>> +	int ret, i;
+>> +
+>> +	ret = cdns_torrent_clk(cdns_phy);
+>> +	if (ret)
+>> +		goto clk_cleanup;
+>> +
+>> +	/* Enable APB */
+>> +	reset_control_deassert(cdns_phy->apb_rst);
+>> +
+>> +	if (cdns_phy->nsubnodes > 1) {
+>> +		ret = cdns_torrent_phy_configure_multilink(cdns_phy);
+>> +		if (ret)
+>> +			goto put_lnk_rst;
+>> +	}
+>> +
+>> +	return 0;
+>> +
+>> +put_lnk_rst:
+>> +	for (i = 0; i < node; i++)
+>> +		reset_control_assert(cdns_phy->phys[i].lnk_rst);
+> 
+> The same cleanup is found in probe. Would it be cleaner to move this
+> into cdns_torrent_phy_configure_multilink() instead of duplicating it
+> here?
 
-> Add dt-schema type bindings for the Mobileye EyeQ5 pin controller.
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+Hello Philipp,
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Yes I could, but from my point of view, it would not be cleaner.
+This cleanup is called from many places in the probe:
+-
+https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-cadence-torrent.c#L2948
+-
+https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-cadence-torrent.c#L2954
+-
+https://elixir.bootlin.com/linux/v6.8-rc5/source/drivers/phy/cadence/phy-cadence-torrent.c#L2960
 
-I tried to just apply the pin control patches to the pin control tree, but =
-I
-can't because of all collisions in MAINTAINERS.
+If I add this cleanup in cdns_torrent_phy_configure_multilink(), yes I
+could remove it from cdns_torrent_phy_resume_noirq(), but I should keep
+it in the probe. And I should modify the probe to jump to clk_cleanup if
+cdns_torrent_phy_configure_multilink() fails.
 
-If you move all MAINTAINERS business to the SoC-wide patch I can
-apply the pin control stuff directly, but maybe you wanna keep the
-series together and merge on an all-or-nothing basis?
+> 
+>> +	reset_control_assert(cdns_phy->apb_rst);
+>> +	clk_disable_unprepare(cdns_phy->clk);
+>> +clk_cleanup:
+>> +	cdns_torrent_clk_cleanup(cdns_phy);
+> 
+> This calls of_clk_del_provider(), seems misplaced here.
 
-Yours,
-Linus Walleij
+Yes you're right, it's called in cdns_torrent_phy_remove().
+So I should not call it in the resume callback, this will cause some
+issues during the remove.
+
+Regards,
+
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
