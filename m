@@ -1,110 +1,114 @@
-Return-Path: <linux-gpio+bounces-3593-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3594-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE76E85E746
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 20:29:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B724785E751
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 20:31:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7318EB22706
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 19:28:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0AA6C1F251A9
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 19:31:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFD8885C7A;
-	Wed, 21 Feb 2024 19:28:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3BC5E86136;
+	Wed, 21 Feb 2024 19:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mqOjbfKL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c7+GTiCd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF7A583A06;
-	Wed, 21 Feb 2024 19:28:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8471E85C58
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 19:31:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708543733; cv=none; b=N4VMuWzQRxvRdFMsC9jfTaQaPtOjruP0dK3Gq7zeOlLUjPcHANI9kkPrF66vUybhSxEF2npH7FoV1I5sWRafTB5T3G1alszhiMBtF9TO1BscIduoo/QP1Ndn02RjPMJbAT7I9aw4R1gftcZzyvcd3FACzesoOd/+s6lDZTSU7MM=
+	t=1708543910; cv=none; b=OFInHoJQMAN1s6pSrInYdsR1MvQX6H0sKeIGMBRsLMda2IcKWtf3wMwoxG3Fx5hMPecq8PYMISPLvYUxV7QnTJrMGbfjg8hfo4IBr3X5wo1SPsiYnZdvhuNIHqkB0NJHYP9RZv7AhuGslcDqB9/zmWYD9yag/S/xWLebZ2Zcu4o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708543733; c=relaxed/simple;
-	bh=OCG/9QBJk/VuCn1UQ4bcO6gfWP+ArN9q7qEDy/bgmow=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=gWw8uI9xDiBwvf2C6axxe3hJB81gGhqPlJRFn8E2oT6xh4/5GKxrh/CbjPbW8jz11MHXZgRdsiSfgQRnmeVQtYMmza6GUfjkjC1ibVzMbTl/ogp9V6tR+mQqnwNaCwV1TCUWd+UIvXdEuA5KMHZkE3LGU46r1xey9ihRBgCIem4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mqOjbfKL; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708543732; x=1740079732;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=OCG/9QBJk/VuCn1UQ4bcO6gfWP+ArN9q7qEDy/bgmow=;
-  b=mqOjbfKLNkbdgFwQRMWRUbN7hDvGe1od73w7rVzLiMP1GaxO7gGrRVsH
-   ix+y3Z6mDz7AtzDb7CWXKHUZEMMYJ6aGQHgivSZuvteOIQ5/+NWeFM2p+
-   QnHFa5tkHrAPcnWXlWoXYTtI2IqfsYYXfkpWDs9DhZ9Q++ktoeyoVO/KM
-   LPtwoKBLtpE+HC6mxk90uU77fT8nO3+FGNfdNXc1s0Md28pbIlfv8yX4u
-   r5Zp1yQGVtI09xSzoMtzikd/nNama2K5eIRPzlt88j+MHsZkbd6BOy9ii
-   BwAoJzt+xHdkJ5Cjqg+v2cGxG9cO/Pl5oe2Ys2sDsDgq8oytfsY/s7AHn
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25191396"
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="25191396"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Feb 2024 11:28:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="936692316"
-X-IronPort-AV: E=Sophos;i="6.06,176,1705392000"; 
-   d="scan'208";a="936692316"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 21 Feb 2024 11:28:49 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id DC92D2A0; Wed, 21 Feb 2024 21:28:47 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/1] gpiolib: Fix the error path order in gpiochip_add_data_with_key()
-Date: Wed, 21 Feb 2024 21:28:46 +0200
-Message-ID: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	s=arc-20240116; t=1708543910; c=relaxed/simple;
+	bh=cK2/COg8bX/QO3/+g2BnMI+IJZZQdraLUne32V/1SOM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XucOGSt3rke0FH7jMeJFp5FDyaqhYLtyDfOpERVZ+qLS+ufYiftzTUeVnBtDpJLfRQBJmjnBmv6WvI2eQmjfYxdXJoaKFwyc7Eu5OFmt6C+/H+b0Fwn5/6T876cZDItE4CSF/d4QKwxVooYwavNBwgpiCtx4Wsz5kFIOXAhBb44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=c7+GTiCd; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dc25e12cc63so132545276.0
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 11:31:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1708543907; x=1709148707; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=cK2/COg8bX/QO3/+g2BnMI+IJZZQdraLUne32V/1SOM=;
+        b=c7+GTiCdRWKQvnxt41SKtNDVgLOv0fa4s//w3bo9Cp4g905uUMkc9wJKqQieY/rdEc
+         5CObeHnNzKn0TniFY2H/3vkWRu9SX4TF5KXmyjCD53SAJFvHkhykAbVsSxpKlhn/XUqE
+         Q+8u0CUuE/9YNVMPlaUi9d4sfmYPSgDSRvR6nrgMAajhBQ2KZfgRALB9jBvDlVco/KRS
+         77x2hs+fNJDj+VqWnTb/q6A1ZdGue3djNpqHfz+FC9e9dOtiFbVCjO8PaWS2Q/acEdHj
+         SxgT6AkuY4de8pFkTG9ZpX5P58LBCDKQi5iv0j5rNTTLFjk5fuvJzu7Ew3ljgM4p3kkP
+         kqGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708543907; x=1709148707;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=cK2/COg8bX/QO3/+g2BnMI+IJZZQdraLUne32V/1SOM=;
+        b=Gliyw8y7wLQN/4M/hdMOB1TfoRgK+/1znZgERG5UuOGoS7V8qqbfCCgxQyJgIHdxkv
+         ZswNEyVaX1uUWmp5usWZlUB7hlgEzY3zx1EyfV9WQHXDpS+ofMhqHzPDIyWVxFjZ3UVJ
+         t9uVZhla4CobHAsa7cEBidRW3O+dVTx9IyT1UqB8yqTY8dPub6W10LPOJtIlI7gIR09/
+         iHQpOpLLN+A3iw1aYvmWRA1ldfwCT3lwMbx7b7kuivkBNKX97V07kx3tdZoulMgvx9bU
+         nhuGDrNtBkgu1/ASa/9qmQtEvSwc0SwBN8r9yBbpiykm/iAqzRBJwokiGmdeJmXdkj0o
+         yOIA==
+X-Forwarded-Encrypted: i=1; AJvYcCWVca/QoENsQseonPnHrK7UpiMVxi9SUzKlbJgnqnNoW0YWzXk8tCViYSCfga3Hz14lIR+Y4g7so3jETUvHb5lG9g20IgBl9AjdQQ==
+X-Gm-Message-State: AOJu0YxltSJqFDCVOodCPXvN/IN+oM/oO4Uybf2FQGwWsL7/XwMvz/Xw
+	slg3R5MumF4p86yYDByYm4sp+JFgcJwnO5Z5WcD/7hYGUgR0fAy//proOQYsnvbK8SO5JqXcDMJ
+	oW1/FQ7ts943i9aEz1HcGLOmbCucnCTykO6qGiQ==
+X-Google-Smtp-Source: AGHT+IFcNRrRbBuX5wsB2mLMJqV3vUMnApqNCuxOwYg8cuZgXEc7ou5NmxS57HKKyJVhHK/1bsLXCWFiYfB9DCqFvWU=
+X-Received: by 2002:a05:6902:20d:b0:dc7:45e4:46f8 with SMTP id
+ j13-20020a056902020d00b00dc745e446f8mr92660ybs.6.1708543907471; Wed, 21 Feb
+ 2024 11:31:47 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240214-mbly-gpio-v1-0-f88c0ccf372b@bootlin.com>
+ <20240214-mbly-gpio-v1-5-f88c0ccf372b@bootlin.com> <CACRpkdaSMJBFrmbTu+C1Ls8HkLH4FZsAQ6t7dC76+sVTXXHEyw@mail.gmail.com>
+ <CZAW6UTMON6K.34LW7FDGNO1XC@bootlin.com>
+In-Reply-To: <CZAW6UTMON6K.34LW7FDGNO1XC@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 21 Feb 2024 20:31:35 +0100
+Message-ID: <CACRpkdZPU2EuBjTA3_ZQN=apSSpUYg0sOZoskSnttkVBixAnhw@mail.gmail.com>
+Subject: Re: [PATCH 05/23] gpio: nomadik: extract GPIO platform driver from drivers/pinctrl/nomadik/
+To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mips@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-After shuffling the code, error path wasn't updated correctly.
-Fix it here.
+On Wed, Feb 21, 2024 at 5:20=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bootl=
+in.com> wrote:
 
-Fixes: ba5c5effe02c ("gpio: initialize descriptor SRCU structure before adding OF-based chips")
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > Could you add:
+> >
+> > default PINCTRL_NOMADIK
+> >
+> > so it is turned on by default when we have that, since they are jitted =
+together
+> > so closely.
+>
+> Would that bring something more than what is currently present? I've set
+> PINCTRL_NOMADIK to select GPIO_NOMADIK.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 4b4812bbcafd..1706edb3ee3f 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1056,6 +1056,7 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	gpiochip_irqchip_free_valid_mask(gc);
- err_remove_acpi_chip:
- 	acpi_gpiochip_remove(gc);
-+	gpiochip_remove_pin_ranges(gc);
- err_remove_of_chip:
- 	gpiochip_free_hogs(gc);
- 	of_gpiochip_remove(gc);
-@@ -1063,7 +1064,6 @@ int gpiochip_add_data_with_key(struct gpio_chip *gc, void *data,
- 	for (i = 0; i < gdev->ngpio; i++)
- 		cleanup_srcu_struct(&gdev->descs[i].srcu);
- err_free_gpiochip_mask:
--	gpiochip_remove_pin_ranges(gc);
- 	gpiochip_free_valid_mask(gc);
- err_cleanup_gdev_srcu:
- 	cleanup_srcu_struct(&gdev->srcu);
--- 
-2.43.0.rc1.1.gbec44491f096
+I missed that!
 
+OK no problem, all works fine.
+
+Yours,
+Linus Walleij
 
