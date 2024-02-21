@@ -1,96 +1,161 @@
-Return-Path: <linux-gpio+bounces-3542-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3543-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC4A485D1F8
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 09:02:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BD6A85D294
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 09:29:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 54AE91F272CF
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 08:02:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0638F2848CA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 08:29:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80A893B79F;
-	Wed, 21 Feb 2024 08:02:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE2D3C48C;
+	Wed, 21 Feb 2024 08:29:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iFZe0RjD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQ9zVwE6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f178.google.com (mail-yb1-f178.google.com [209.85.219.178])
+Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3B6C3B2AD
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 08:02:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D963C06A;
+	Wed, 21 Feb 2024 08:29:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708502553; cv=none; b=fuA/uYWBsiMajVExwJ3NELvBY3JjS7ThXgLvz0JFFE+ua8i/NqrSQp4bY3kJNa2Ux54FTRbP6lk9Iw6kg42Kqktey9pPQs0kEWySsrGP3CC8sEXdHqLUMRB+Ld2a77zkWBU8pm1h2iPqjU/+oUFoQpOl9s94uro4Y+Hrm5spjqA=
+	t=1708504176; cv=none; b=E7H/aolvyu/ICSQq+nzo6TQbjO6/DLrp0riGZATgfjlXkov1EfK6DA5sVKiQZFIYiJdmeYskCs5fJmUf5EUGIau9+xDMD1984lvqu7u3pkQK8B1e7h41sO9pKQyXP2zaJwzt0SLPw/F4c2F1vzwp8OO0hjoyXVtdU2q2bbUJ1C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708502553; c=relaxed/simple;
-	bh=aXXA5wE26iTBRgLyo53Ck7qjjGy0Lh1LoQcMiP5/WfU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Hb023m95VvS7CN/4ydd1VM4JniER5jmRI9TgqDw3++j47wybNnlSY965BftkBlBG9jhT2d4/+ik1UkVGRCGBnkkxtZ0MAkgthcM/M6H2t2M0bjHfm77LFtfwvqE2Gp6fLGCt6I80hRbSwSZi+Y6BeC1P0IpkvPE/7CoZEpmBhu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iFZe0RjD; arc=none smtp.client-ip=209.85.219.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f178.google.com with SMTP id 3f1490d57ef6-dcbc00f6c04so4956148276.3
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 00:02:31 -0800 (PST)
+	s=arc-20240116; t=1708504176; c=relaxed/simple;
+	bh=l+USiKsOoo5GxfeqF2OVgrwbmx7XziXEEcxHQXx9izU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GLEpRM6L8m2EIs+mi7AzlmcGIsIPDRDB8u51OGXI96H8ljvGYZtTOorIu78eypLHXGGl3mMxaNdUqeUeKCPXgySsFZOp7NoOTml3BZGfLQoeeIxkJ0gCjVxsBGLVjYoWl8HObGFdnQ6QSrWiJug+gFjJe2nJd9rdCAZ0LZBmJlY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQ9zVwE6; arc=none smtp.client-ip=209.85.218.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3f48422fb6so35170966b.3;
+        Wed, 21 Feb 2024 00:29:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708502551; x=1709107351; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aXXA5wE26iTBRgLyo53Ck7qjjGy0Lh1LoQcMiP5/WfU=;
-        b=iFZe0RjDQq4TVfAohbPAfQ75xKk89Jd/kVLBFE7te7L16Ntf8eeYOZci3MFBzHkPEk
-         RewbvvZvEy6GymdjNtoFf9egfZzYwtZ3S7eGyu8PIovtd/Kqn0Kt6zAnz2EYpbB5Pxbd
-         Jln1HbYCaWPVYdGirv/DX696ROtg1c1R3dtVvJ1lZsvxiVRh3wnVByJpS/u4IPOTP4mk
-         RFdlxfTbLSUmmbTxO+MCNk6CbK5bR5CBynkcdylldOOA3u0zrkg3IRIET4VUK6rMFG4B
-         qTdCyHViyy0W/+6YDJ45d8+HgvfkSI9xq2oS8ObuFZkdr3bgBreSEY2XpG+pLYoKx+XT
-         +raA==
+        d=gmail.com; s=20230601; t=1708504173; x=1709108973; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=7ijo+X2EXC9W1Fu/WCqYIZ+xP706TUOFUSratEaFrdE=;
+        b=BQ9zVwE6ihXl6BHGh9G5g7Dd0DGRlIOJw4YRjJQbiktGjbwI6muX7SA7nSDgJamLdR
+         hFlLLRGyIFmTOS/wp8B2FgVRrs6ZVLsJr/HbdpqL/qcY6SoZLYEfUpvuEeFjWdVe7x/j
+         sjWD32rEAjMPA2rvllUt8y0ykfmij1hqyAos4cLt0vYr8VRAKer1srFAWXYnvH1tvXAw
+         xjFaGSabsENWyKU0wJej2LKbnKdXe/m5NYmP/OH77uHKYpUdzXPN5lArVdW53139FK1q
+         nAYd3K0dfrmg/RQy5Fa42eNl9gItUONhiLs2kcdXTpjz8/o6959k/7ZesFkf2Bb0ss4S
+         k+kg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708502551; x=1709107351;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=aXXA5wE26iTBRgLyo53Ck7qjjGy0Lh1LoQcMiP5/WfU=;
-        b=RQ4JxAtLiQnlPbpUAyHC0jkNVvYbiRAVuiXiLd0gKNVtkHSh/xqM8zOy/3wuJq6PEW
-         DnCjM0PWzX9x56hJMm7wfmjaViLzYXsSaBSsLU7HEt8/0vfO2WPpZGgLwIDS91b+argA
-         DtGl036KZLwssKJkuakJgvB1RlkifjPPPWLnFnImYFn3XzasK8qhaFLbs6OzZhpoIlWf
-         lfDl4FNiFB5Fex8VQsO75rpuhYtgyrAv1CCT7Jc8IfW9XUCB9lG814/XUNHnvtUwGI/k
-         3e6NO1GxmVuEgBLwBr/GSX2IPoe0Ev8G6hEh2GRBliiozoRH+03wAy6xhqV0AuBZUpbZ
-         RX/g==
-X-Gm-Message-State: AOJu0YwTlkE+r/JgfqCF5UPZuTHsNfm7+3dsMUad5XfUFN2fAK/ddTap
-	hAF+Rh/scFTYGBzZgjnZhuf9x3V3qewPoLITpYRq99xvHMEFuEK37KBFLelzO3CvOVs/wz8Oe8E
-	mxWoURbiP5LQgnMeL6O98N4eejBy+u2XOrLVrIUGeku+CLJG9
-X-Google-Smtp-Source: AGHT+IHOu+lEk3QXT3JPTa9WAsERKwUgQjv1LIaXMHSgtFqbEMujQEjxOsq8X15+TTcbYj3Qf/+ogQASWM3tqrhXQ7E=
-X-Received: by 2002:a25:d08e:0:b0:dcb:d94e:be49 with SMTP id
- h136-20020a25d08e000000b00dcbd94ebe49mr16023927ybg.57.1708502550856; Wed, 21
- Feb 2024 00:02:30 -0800 (PST)
+        d=1e100.net; s=20230601; t=1708504173; x=1709108973;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=7ijo+X2EXC9W1Fu/WCqYIZ+xP706TUOFUSratEaFrdE=;
+        b=hLjw1Pv53MaZWbA4ZuI5GCvBBi9qJLkjKaP+ATPBOmwdX55Uo+0iUWQGAqtwHNZptw
+         gPCBwn1jk6EyTVOA9VkjY1pljh/LAr5lElH7KHgwoHNUKaICA7jsJyMuwnHm4AGWceEJ
+         g6TM1Y0vFW7ZH+dTVmkk5gCcBbqC2Dj/gHKpd2npVo74oTsGyqxXWPHHXQSt/e+Ip/87
+         q6yBiLOj9l3jgmR6r3JrISTHboIw92ZcOFqyd5hIGrsJefjVQ6Rf6p4TvnIB2YLXQuU5
+         PsHD06ZRYv35BSMV5zE8erFYhnASH++Qz+N4KrBWBKECO0N4EmGDYgcczoVW08ACV2r/
+         6rGQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU2W5M02O+HB97/0jj76IvBzTMJjrFvConMQdA6PwjiwhQ/Voo+VynZQmxEUOaeyZ73Gn7pitkw8+mUvdGxbemjtsdLZ/niHcAk9IoeaIZ2IZJx/SOsqVSl5i10g7OWOFukL5MjPVqRzJM2ZnLPSecdhQb2XyU0esxZ8xU0t56QhYE9pGFp/JdF1+SM4bYxZqv8BQU+8SwMbiouh72idJM=
+X-Gm-Message-State: AOJu0YwzbIK+p76oal+XXsbRhGSOAuyFu+nBhLQNARWXGTRGMjzfCo4x
+	9rcWTmgI5qBsgwS/uLVLFcyHeSbQV4gAqx/bNNWJQyfI3KKo9qcg
+X-Google-Smtp-Source: AGHT+IEByevySHGOYsiHoumsPUFFKnbfOL/epOfhCWUPHg6vKAN8y5PnWG9rjYr66ZXMDSQ2WnecRQ==
+X-Received: by 2002:a17:906:1358:b0:a3f:4b10:134 with SMTP id x24-20020a170906135800b00a3f4b100134mr377542ejb.72.1708504172834;
+        Wed, 21 Feb 2024 00:29:32 -0800 (PST)
+Received: from [172.25.98.130] ([5.2.194.157])
+        by smtp.gmail.com with ESMTPSA id un8-20020a170907cb8800b00a3df7003552sm4711384ejc.32.2024.02.21.00.29.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 00:29:32 -0800 (PST)
+Message-ID: <0fa819d1-2a0f-4243-8e5f-a098528278c3@gmail.com>
+Date: Wed, 21 Feb 2024 10:29:30 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220232328.1881707-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240220232328.1881707-1-andy.shevchenko@gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 09:02:19 +0100
-Message-ID: <CACRpkdb6PSe=nJU+MFq28UX2qMiDGOGGZEJAP4QDFAteorwmGA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mmio: Support 64-bit BE access
-To: andy.shevchenko@gmail.com
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
+To: David Lechner <dlechner@baylibre.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+ Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
+ Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
+ ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
+ =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
+ Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
+ Hugo Villeneuve <hvilleneuve@dimonoff.com>,
+ Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+ <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
+Content-Language: en-US
+From: Ceclan Dumitru <mitrutzceclan@gmail.com>
+In-Reply-To: <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Feb 21, 2024 at 12:23=E2=80=AFAM <andy.shevchenko@gmail.com> wrote:
 
-> Use ioread64be()/iowrite64be() for 64-bit BE access.
->
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 
-Obviously correct, thanks for fixing this!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+On 2/20/24 22:54, David Lechner wrote:
+> On Tue, Feb 20, 2024 at 3:43 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
 
-Yours,
-Linus Walleij
+...
+
+>> +  clocks:
+>> +    maxItems: 1
+>> +    description: |
+> 
+> Don't need `|` here.
+> 
+The description contains ": ". Without '|' yaml syntax considers the
+whole string before ':' as another attribute
+
+>> +      Optional external clock source. Can include one clock source: external
+>> +      clock or external crystal.
+>> +
+
+...
+
+>> +
+>> +      diff-channels:
+>> +        items:
+>> +          minimum: 0
+>> +          maximum: 31
+>> +
+> 
+> Are we missing `bipolar: true` here? (since we have
+> unevaluatedProperties: false)
+> 
+
+No, since we are referencing the adc schema "$ref: adc.yaml"
+Which contains:
+"""
+  bipolar:
+
+    $ref: /schemas/types.yaml#/definitions/flag
+
+    description: If provided, the channel is to be used in bipolar mode.
+"""
+
+
+...
+
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+> 
+> Aren't the various power supplies supposed to be required?
+> 
+> - avdd-supply
+> - avdd2-supply
+> - iovdd-supply
+
+From my point of view, if someone uses a single supply (avdd == avdd2 ==
+iovdd), and uses only the internal reference then the supplies should
+not necessarily be required.
 
