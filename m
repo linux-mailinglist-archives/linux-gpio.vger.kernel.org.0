@@ -1,171 +1,214 @@
-Return-Path: <linux-gpio+bounces-3535-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3536-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6E78085CDA2
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 02:59:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F0F785CE2C
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 03:42:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id DB4CBB22120
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 01:59:35 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21405282B07
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 02:42:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 997EF6FAE;
-	Wed, 21 Feb 2024 01:59:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD8828382;
+	Wed, 21 Feb 2024 02:41:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="b3LiKBLX"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Y5grKhT/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBA5C5666
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 01:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF402B9C6;
+	Wed, 21 Feb 2024 02:41:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708480765; cv=none; b=YhmTixNTjEZDrNCMNy7kqXsleeTlxxNoRBDguj2fUZFNjkrLh9/jAq0lw4liKS/Wbg4RsNbRfl+uAEHw8rlEICNlY10maadSWi9JpsMiNkCbwZlhiqId1Rq2AXgXmeznT+QMOcZS1oHZzzgT0y+tqXnV9aTFSHo2/AeggaYacGc=
+	t=1708483303; cv=none; b=kZNWUPPgymEYaIlarNhpKBy3RqyBeBscCmZKVOg8kYJE/mHZvpFhbVI898Hsnu95hTvNzkaOVYzqytEje0FcMpF/MkxvFC9E523JnxUvt8EbmmnI6jrqFD9UzANzNuGF8gCgiBOYaGLf6PMq0HJfZWR/nBeqFiJOs6FeZA2Jo54=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708480765; c=relaxed/simple;
-	bh=Yy/8YwI1NXHNFY4dyp+Ak0PqgCVjvM91BpGs203MyMM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oaeeOP/g/Ft6C4xXZ/5mdGFyQnfhxq7B9QRMT5qLRWMBXARUb8O/hQL/0GiiCDwQ+c7o2OO2pdEeOvmtWTP5iOEagBvm2Mn9GLMbRWyHFb6IKCyORaHs5xr00sGuph/AWP/Z7V054ULWfUBNfbggDDj4ZW4XC/wjolp63qL2lxM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=b3LiKBLX; arc=none smtp.client-ip=209.85.214.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1d94323d547so45435285ad.3
-        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 17:59:23 -0800 (PST)
+	s=arc-20240116; t=1708483303; c=relaxed/simple;
+	bh=uNsZHg2GHYvf4LqOn/3+x3c6GRm6+b8jtP7o1Z0qWsc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=qf3fzbECRQRUGwqsmNZqdGbeSgyTxJSQR5IOmFVNCDYMOtyDIvrzJn1/JzCTUVGPU3F8TgLH7EPUz0ibcZNaJtE4DEx2LkM80E6LHGMbJDJ66Xec9sxvJ7V46LE66+s0altf5CzUKU6ANXCkT5HDwCL7T1SAUVfp12Ntm/bT10M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Y5grKhT/; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Received: from [192.168.68.112] (ppp14-2-85-8.adl-apt-pir-bras31.tpg.internode.on.net [14.2.85.8])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5459D20184;
+	Wed, 21 Feb 2024 10:41:36 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708480763; x=1709085563; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mhVd93tz1AXwUEn+kfLstiE+RXrMZSMseSHUIcWvQmI=;
-        b=b3LiKBLXvNiUpzQDbyi64eqC/a6YswpAASv42iFVhf8q4tPATJUxBSbGcKgxH4ttWD
-         6koVDFjzjBCkosoQ0RBZVwP8v0xXAL/oTCX8BS/ezURFLFXMdtKy0pxxIeiwrrGP35r9
-         OyD1Gt5aNdvI38kXSXV8JQkl31Qy00/PkL0W4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708480763; x=1709085563;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mhVd93tz1AXwUEn+kfLstiE+RXrMZSMseSHUIcWvQmI=;
-        b=XhMUM3cA8H0t+EXueGHZjIvaUMAnws4RnrY62ElGnYan6nRoa0Md35VbJqehGQ8WyH
-         pr+EzjMTEkxfM08yGMYxSZtZxBYnY3BP/CP1Irz/7EmGtFM/rr/C15QbfLne+iSTozge
-         Fr/BLwvUO9rB6MUSC7V5BjzFoW1gbNo+OAvMzjZSBvPFsNaXLUZPD/VVsXvtV0rLZX75
-         SOKR7godUZlS8s1GJDR8a34HFUJF7M7/nA/ibHga+xJvbYbgdd3RdEcRf7Ljvb0VvpD2
-         866A8hWWpBSERCl+ULeb8pZpVpKbzXkonrQ2C7HYoePYecAkZ0Qi+TUwjkEUaTcqViRJ
-         f1wg==
-X-Forwarded-Encrypted: i=1; AJvYcCUXmt6Oeg4g8F6LOEgJ1Sqr2B/bNq7EpdLswnZXGCnx8wCY+BpitZN5kkAMFT0v/ulpDJV9Diw7MB7BeiZrbc8HvNFIkAEmEFm12Q==
-X-Gm-Message-State: AOJu0YwCacrsBvP6smYES2X9SxVkU1SM5G7Mgfpn7GGDFeF8QwXhPuBM
-	rn4KS63MaIuPQFig4viHOW9pYDN6XHNzWuiCiG3hGJRZRMgzbqKrEebXSSpVqw==
-X-Google-Smtp-Source: AGHT+IEVghrs6OTtT15OvGzhJzUuN8xWMbAKOn5u3u4aHZ8RPX6YQRHSxH1BHaJmaFKEDlN52VLlkg==
-X-Received: by 2002:a17:902:ea06:b0:1dc:30f2:6864 with SMTP id s6-20020a170902ea0600b001dc30f26864mr199733plg.23.1708480763218;
-        Tue, 20 Feb 2024 17:59:23 -0800 (PST)
-Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
-        by smtp.gmail.com with UTF8SMTPSA id p3-20020a170902c70300b001db86c48221sm6908476plp.22.2024.02.20.17.59.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 17:59:22 -0800 (PST)
-From: Stephen Boyd <swboyd@chromium.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
-	linux-gpio@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-Date: Tue, 20 Feb 2024 17:59:18 -0800
-Message-ID: <20240221015920.676063-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+	d=codeconstruct.com.au; s=2022a; t=1708483298;
+	bh=i30tH1Ja0ZXVCudrf3PesBOg0hw/OSVcL1FWavEO4jI=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=Y5grKhT/tF0diY/VUxBXx4FN3msX2l1/VU2VbGaHBcbd95wusYTx58qbginFcaWdC
+	 G9cvzahU/eRJnSi6osDKRYFrAgAGnCqUHoCfoobsO+r84qs3yR5ae63XvzRafVmhpY
+	 ic5NC87lLFT9fBZdfjBdlm5x17brSbH/nwTK6ru92fbsLItwtUNnFWbINuXBZdjZFK
+	 NWIwXZ/u8LSYweLwt9pKUG4hss4zUQ5eRaeAmke/68G6g+ZY5kit/9AViBQpS4HEtX
+	 d35pjRJ7BQNFDkkTxxOXI85htwDkNLsqVP1LTtfLjLSg+OD/BMLpjfzvmayjQs0rpb
+	 9Pper7XHXuqZg==
+Message-ID: <18dfd5f2eff5049fa5e3a098490dc601cf146f96.camel@codeconstruct.com.au>
+Subject: Re: [PATCH] dt-bindings: gpio: Convert Aspeed binding to YAML schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linus.walleij@linaro.org, brgl@bgdev.pl
+Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+ conor+dt@kernel.org,  joel@jms.id.au, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
+ linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org
+Date: Wed, 21 Feb 2024 13:11:35 +1030
+In-Reply-To: <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
+References: <20240220052918.742793-1-andrew@codeconstruct.com.au>
+	 <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-This devm API takes a consumer device as an argument to setup the devm
-action, but throws it away when calling further into gpiolib. This leads
-to odd debug messages like this:
+Hi Krzysztof, thanks for the feedback.
 
- (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
+On Tue, 2024-02-20 at 09:27 +0100, Krzysztof Kozlowski wrote:
+> > On 20/02/2024 06:29, Andrew Jeffery wrote:
+> > > > Squash warnings such as:
+> > > >=20
+> >=20
+> > Missing subject prefix: aspeed,ast2400-gpio
+> >=20
+> >=20
+> > > > ```
+> > > > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/ap=
+b@1e600000/gpio@1e780000: failed to match any schema with compatible: ['asp=
+eed,ast2400-gpio']
+> > > > ```
+> > > >=20
+> > > > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> >=20
+> > Thank you for your patch. There is something to discuss/improve.
+> >=20
+> >=20
+> > > > ---
+> > > >  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 64 +++++++++++++++=
+++++
+> > > >  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 -----------
+> > > >  2 files changed, 64 insertions(+), 39 deletions(-)
+> > > >  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,a=
+st2400-gpio.yaml
+> > > >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-asp=
+eed.txt
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-=
+gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..353c7620013f
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.ya=
+ml
+> > > > @@ -0,0 +1,64 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Aspeed GPIO controller
+> > > > +
+> > > > +maintainers:
+> > > > +  - Andrew Jeffery <andrew@codeconstruct.com.au>
+> > > > +
+> > > > +allOf:
+> > > > +  - $ref: /schemas/gpio/gpio.yaml#
+> >=20
+> > From where did you take it? None of the bindings have such code. Start
+> > from recent bindings in given category when writing new ones.
 
-Let's pass the consumer device down, by directly calling what
-fwnode_gpiod_get_index() calls but pass the device used for devm. This
-changes the message to look like this instead:
+I didn't take it from anywhere so much as try to apply some reasoning
+via the commentary in the example at [1]. Maybe I could have fought
+that approach by contrasting what I wrote to a wider set of existing
+binding documents (I did look at some and obviously didn't find
+anything similar).
 
- gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
+Anyway reflecting on the misunderstanding, is the ref unnecessary
+because the gpio binding sets `select: true`[2] and so is applied to
+the node regardless?
 
-Note that callers of fwnode_gpiod_get_index() will still see the NULL
-device pointer debug message, but there's not much we can do about that
-because the API doesn't take a struct device.
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
+e/Documentation/devicetree/bindings/example-schema.yaml?h=3Dv6.7#n238
+[2]: https://github.com/devicetree-org/dt-schema/blob/v2023.11/dtschema/sch=
+emas/gpio/gpio.yaml#L12
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- drivers/gpio/gpiolib-devres.c |  2 +-
- drivers/gpio/gpiolib.c        | 14 +++++++-------
- drivers/gpio/gpiolib.h        |  8 ++++++++
- 3 files changed, 16 insertions(+), 8 deletions(-)
+> >=20
+> > Please drop it.
 
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index fe9ce6b19f15..4987e62dcb3d 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -158,7 +158,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
- 
--	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
-+	desc = gpiod_find_and_request(dev, fwnode, con_id, index, flags, label, false);
- 	if (IS_ERR(desc)) {
- 		devres_free(dr);
- 		return desc;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 44c8f5743a24..c6667a887ecb 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4133,13 +4133,13 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	return desc;
- }
- 
--static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
--						struct fwnode_handle *fwnode,
--						const char *con_id,
--						unsigned int idx,
--						enum gpiod_flags flags,
--						const char *label,
--						bool platform_lookup_allowed)
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed)
- {
- 	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 	struct gpio_desc *desc;
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index a4a2520b5f31..c6e5fb9aa212 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -202,6 +202,14 @@ static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
- 	return ret;
- }
- 
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed);
-+
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 		unsigned long lflags, enum gpiod_flags dflags);
- int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
+Ack.
 
-base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
--- 
-https://chromeos.dev
+> >=20
+> > > > +  - if:
+> > > > +      properties:
+> > > > +        compatible:
+> > > > +          contains:
+> > > > +            const: aspeed,ast2600-gpio
+> > > > +    then:
+> > > > +      required:
+> > > > +        - ngpios
+> >=20
+> > Please put entire allOf: after required: block. That's the convention
+> > when it has something more than $ref, because we still want the most
+> > important parts at the top of the file.
+
+Ack.
+
+> >=20
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    enum:
+> > > > +      - aspeed,ast2400-gpio
+> > > > +      - aspeed,ast2500-gpio
+> > > > +      - aspeed,ast2600-gpio
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  clocks:
+> > > > +    maxItems: 1
+> > > > +    description: The clock to use for debounce timings
+> > > > +
+> > > > +  interrupts:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  interrupt-controller: true
+> > > > +
+> > > > +  "#interrupt-cells":
+> > > > +    const: 2
+> > > > +
+> >=20
+> > ngpios with some constraints
+
+Is this just with regard to the constraints I have under allOf above?
+Or something further (constrain the values of ngpios for the various
+controllers across the Aspeed SoCs)?
+
+Maybe I'll look at some more of the existing bindings for this as
+well...
+
+> >=20
+> > > > +required:
+> > > > +  - compatible
+> > > > +  - reg
+> > > > +  - interrupts
+> > > > +  - interrupt-controller
+> > > > +  - "#gpio-cells"
+> > > > +  - gpio-controller
+> > > > +
+> > > > +unevaluatedProperties: false
+> >=20
+> > Instead additionalProperties: false.
+
+Ack - this is the same misunderstanding as the gpio schema ref
+discussed above.
+
+Andrew
 
 
