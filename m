@@ -1,214 +1,222 @@
-Return-Path: <linux-gpio+bounces-3536-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3537-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F0F785CE2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 03:42:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2183785CEBB
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 04:29:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 21405282B07
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 02:42:04 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CAA8B283FA6
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 03:29:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FD8828382;
-	Wed, 21 Feb 2024 02:41:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FB8423C9;
+	Wed, 21 Feb 2024 03:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="Y5grKhT/"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PgixYFoW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f54.google.com (mail-ed1-f54.google.com [209.85.208.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF402B9C6;
-	Wed, 21 Feb 2024 02:41:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3DE46383BF
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 03:28:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708483303; cv=none; b=kZNWUPPgymEYaIlarNhpKBy3RqyBeBscCmZKVOg8kYJE/mHZvpFhbVI898Hsnu95hTvNzkaOVYzqytEje0FcMpF/MkxvFC9E523JnxUvt8EbmmnI6jrqFD9UzANzNuGF8gCgiBOYaGLf6PMq0HJfZWR/nBeqFiJOs6FeZA2Jo54=
+	t=1708486141; cv=none; b=I7WzSErnr95UmtcgFaijf3Rw7UDcXUC3NA2HGLuGboozI+UmqBvV4e7tL0rM8ngg5mfwEkdmSuPB+FQhlrYHWxXP7dtCxf45y8puVmYHMiQtA3YqAUf8vh4GlJuZz9SqiOdpcPWuI3gxeOwY6TKg03/+sc5AKxmhZLuowiRJP7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708483303; c=relaxed/simple;
-	bh=uNsZHg2GHYvf4LqOn/3+x3c6GRm6+b8jtP7o1Z0qWsc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=qf3fzbECRQRUGwqsmNZqdGbeSgyTxJSQR5IOmFVNCDYMOtyDIvrzJn1/JzCTUVGPU3F8TgLH7EPUz0ibcZNaJtE4DEx2LkM80E6LHGMbJDJ66Xec9sxvJ7V46LE66+s0altf5CzUKU6ANXCkT5HDwCL7T1SAUVfp12Ntm/bT10M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=Y5grKhT/; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Received: from [192.168.68.112] (ppp14-2-85-8.adl-apt-pir-bras31.tpg.internode.on.net [14.2.85.8])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 5459D20184;
-	Wed, 21 Feb 2024 10:41:36 +0800 (AWST)
+	s=arc-20240116; t=1708486141; c=relaxed/simple;
+	bh=8L2dGpIc3ljEGSOLfjoGTy/I1LJM45Njm1zFexTYNtg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ooomNZr8WSAdFaQPDobueDOdyAjAPNAYrgvbCk8GUPANnZBcJlAgdJI/fFLuNjyHIwFuJzSv3K/InIp2O05qDkMMSZzanvRzlW/s1y6BkS0WmpKm/d2Q28TQOKGfcF33aa7f0OewV9c7w4hd5/G4WmEzjFcXwjYug6dc2V0aEOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=PgixYFoW; arc=none smtp.client-ip=209.85.208.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ed1-f54.google.com with SMTP id 4fb4d7f45d1cf-564e4477b7cso4305a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 19:28:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1708483298;
-	bh=i30tH1Ja0ZXVCudrf3PesBOg0hw/OSVcL1FWavEO4jI=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=Y5grKhT/tF0diY/VUxBXx4FN3msX2l1/VU2VbGaHBcbd95wusYTx58qbginFcaWdC
-	 G9cvzahU/eRJnSi6osDKRYFrAgAGnCqUHoCfoobsO+r84qs3yR5ae63XvzRafVmhpY
-	 ic5NC87lLFT9fBZdfjBdlm5x17brSbH/nwTK6ru92fbsLItwtUNnFWbINuXBZdjZFK
-	 NWIwXZ/u8LSYweLwt9pKUG4hss4zUQ5eRaeAmke/68G6g+ZY5kit/9AViBQpS4HEtX
-	 d35pjRJ7BQNFDkkTxxOXI85htwDkNLsqVP1LTtfLjLSg+OD/BMLpjfzvmayjQs0rpb
-	 9Pper7XHXuqZg==
-Message-ID: <18dfd5f2eff5049fa5e3a098490dc601cf146f96.camel@codeconstruct.com.au>
-Subject: Re: [PATCH] dt-bindings: gpio: Convert Aspeed binding to YAML schema
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linus.walleij@linaro.org, brgl@bgdev.pl
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org,  joel@jms.id.au, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org,  linux-arm-kernel@lists.infradead.org,
- linux-aspeed@lists.ozlabs.org,  linux-kernel@vger.kernel.org
-Date: Wed, 21 Feb 2024 13:11:35 +1030
-In-Reply-To: <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
-References: <20240220052918.742793-1-andrew@codeconstruct.com.au>
-	 <0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+        d=google.com; s=20230601; t=1708486137; x=1709090937; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XND0hrjLvkaDKF9iKN16jiOmI7TBD8Aik+JgMD/1rzI=;
+        b=PgixYFoWFaIBr0IDZuYMhqL9VMxBkoiRck4LGdIYWsAGjPU98J1N6o2olKzT4Dz98y
+         YrKxOGw+Ayqi98dVia9GB9/ZvqwbwX1XB+l2FjXdTL/iQaYoe3TNVz1yVIWF5El3dlmK
+         fjVUa5F27U4c9zOJuWtJBQVEA3l6C9amEMpdGXQM+AvcGvbw0rAjE0IZT7/msYk+y9j0
+         rTmKemKFsZt58SNouDF/qeFD5qI8qScg54AiiLDv/SAe/Ht/yZpIBgnyXEJJWdxcNsSW
+         KmABLp7dp8KQOidlruz/UF4HcmADlx/2HEIqvpTk9E+5f6kl8Xt59s7QwroqB6X5dfEN
+         ofOA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708486137; x=1709090937;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XND0hrjLvkaDKF9iKN16jiOmI7TBD8Aik+JgMD/1rzI=;
+        b=hstDtXwYyHcevtLKcHn43nDO7oLIPLat92cIhmPWpKF0mp4m4SRnv3zuwcPRRZESrK
+         Wj7iML/M8WaCQH4k5QyM90ktENNqZO4ExIWkCWDCURcUT27ws2EhCyou9D5O6u19l5ZO
+         cUGfMFivgMl+PWb7fEt+s5t3Mw/oBW1ATSrZZgLHfPJXAmSNQU+lZ466BftSZENfnJNL
+         H79GBzXL7lQWzMJQeHHTuMjlVmqfpHBs/xwHkh801Z3Sgc3FEwzAgWVMDArh8PJVGD2p
+         5qKTfJSvApubEDxXwOrLGrJ/a652iL/M+9ZwYNqA8QvpPfZIPotSpYBfEQ6xM2oS2oTA
+         ch/g==
+X-Forwarded-Encrypted: i=1; AJvYcCWe+BhQ/4AldImhsn3OTUJBiJQ9FXGf3yYX4l7Owpo9q25JpH8x7/sxingzwx+U5mbHYTcraPdI1lILG+SSgnAPuaguO5CIQqp8JA==
+X-Gm-Message-State: AOJu0Yym9nstr/bm0b2IVUHeQfZPecLAATaPlTtC1/pO6cUWQ1kOpi1n
+	UlYy/jjmHmq4vo4E9oeHwfVmcdUeoq4vKADPMXaFhKc1XmZllx2SLXJ9L/q4vzxQhAtbyqxQ/L2
+	WGEtRkDJgrVklHI5QPgN4obWZZpNgtJ9UBOYq
+X-Google-Smtp-Source: AGHT+IGfWL7RMBbEtxsuxJolP5nR/pYTW9TY7Jcb9aIRNa1bro5mSAVswt9hCLNyH3IfBS3VEy0AZHWVlRoPJ323AR0=
+X-Received: by 2002:a50:d5d9:0:b0:563:f48f:a5bc with SMTP id
+ g25-20020a50d5d9000000b00563f48fa5bcmr45004edj.5.1708486137390; Tue, 20 Feb
+ 2024 19:28:57 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240220133950.138452-1-herve.codina@bootlin.com>
+ <CAMRc=MfWPEOHeNvAwra-JxHZBFMrQbP+273zbFLDZfxi7fx8Yg@mail.gmail.com>
+ <20240220155347.693e46e1@bootlin.com> <CAMRc=MeSgCOLZvFOXF4eQOp=bTz38K5Krzuy9r569-jnDx1zFA@mail.gmail.com>
+ <20240220164730.03412479@bootlin.com>
+In-Reply-To: <20240220164730.03412479@bootlin.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Tue, 20 Feb 2024 19:28:17 -0800
+Message-ID: <CAGETcx_=g1dCH=YMUkc7VquUmLs=bNZMspUxH+V49uhcV0Bx2w@mail.gmail.com>
+Subject: Re: [PATCH RESEND 0/2] leds: gpio: Add devlink between the leds-gpio
+ device and the gpio used.
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, Pavel Machek <pavel@ucw.cz>, 
+	Lee Jones <lee@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-leds@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Krzysztof, thanks for the feedback.
+On Tue, Feb 20, 2024 at 7:47=E2=80=AFAM Herve Codina <herve.codina@bootlin.=
+com> wrote:
+>
+> Hi Bartosz,
+>
+> On Tue, 20 Feb 2024 16:30:11 +0100
+> Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+>
+> > On Tue, Feb 20, 2024 at 3:53=E2=80=AFPM Herve Codina <herve.codina@boot=
+lin.com> wrote:
+> > >
+> > > On Tue, 20 Feb 2024 15:19:57 +0100
+> > > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> > >
+> > > > On Tue, Feb 20, 2024 at 2:39=E2=80=AFPM Herve Codina <herve.codina@=
+bootlin.com> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > Note: Resent this series with Saravana added in Cc.
+> > > > >
+> > > > > When a gpio used by the leds-gpio device is removed, the leds-gpi=
+o
+> > > > > device continues to use this gpio. Also, when the gpio is back, t=
+he
+> > > > > leds-gpio still uses the old removed gpio.
+> > > > >
+> > > > > A consumer/supplier relationship is missing between the leds-gpio=
+ device
+> > > > > (consumer) and the gpio used (supplier).
+> > > > >
+> > > > > This series adds an addionnal devlink between this two device.
+> > > > > With this link when the gpio is removed, the leds-gpio device is =
+also
+> > > > > removed.
+> > > > >
+> > > > > Best regards,
+> > > > > Herv=C3=A9 Codina
+> > > > >
+> > > > > Herve Codina (2):
+> > > > >   gpiolib: Introduce gpiod_device_add_link()
+> > > > >   leds: gpio: Add devlinks between the gpio consumed and the gpio=
+ leds
+> > > > >     device
+> > > > >
+> > > > >  drivers/gpio/gpiolib.c        | 32 +++++++++++++++++++++++++++++=
++++
+> > > > >  drivers/leds/leds-gpio.c      | 15 +++++++++++++++
+> > > > >  include/linux/gpio/consumer.h |  5 +++++
+> > > > >  3 files changed, 52 insertions(+)
+> > > > >
+> > > > > --
+> > > > > 2.43.0
+> > > > >
+> > > >
+> > > > Can you add some more context here in the form of DT snippets that
+> > > > lead to this being needed?
+> > >
+> > > / {
+> > >         leds-dock {
+> > >                 compatible =3D "gpio-leds";
+> > >
+> > >                 led-5 {
+> > >                         label =3D "dock:alarm:red";
+> > >                         gpios =3D <&tca6424_dock_2 12 GPIO_ACTIVE_HIG=
+H>;
+> > >                 };
+> >
+> > Do I understand correctly that the devlink is created between "led-5"
+> > and "tca6424_dock_2" but actually should also be created between
+> > "leds-dock" and "tca6424_dock_2"?
+> >
+>
+> Yes, that's my understanding too.
 
-On Tue, 2024-02-20 at 09:27 +0100, Krzysztof Kozlowski wrote:
-> > On 20/02/2024 06:29, Andrew Jeffery wrote:
-> > > > Squash warnings such as:
-> > > >=20
-> >=20
-> > Missing subject prefix: aspeed,ast2400-gpio
-> >=20
-> >=20
-> > > > ```
-> > > > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/ap=
-b@1e600000/gpio@1e780000: failed to match any schema with compatible: ['asp=
-eed,ast2400-gpio']
-> > > > ```
-> > > >=20
-> > > > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> >=20
-> > Thank you for your patch. There is something to discuss/improve.
-> >=20
-> >=20
-> > > > ---
-> > > >  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 64 +++++++++++++++=
-++++
-> > > >  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 -----------
-> > > >  2 files changed, 64 insertions(+), 39 deletions(-)
-> > > >  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,a=
-st2400-gpio.yaml
-> > > >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-asp=
-eed.txt
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-=
-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> > > > new file mode 100644
-> > > > index 000000000000..353c7620013f
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.ya=
-ml
-> > > > @@ -0,0 +1,64 @@
-> > > > +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> > > > +%YAML 1.2
-> > > > +---
-> > > > +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
-> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > > > +
-> > > > +title: Aspeed GPIO controller
-> > > > +
-> > > > +maintainers:
-> > > > +  - Andrew Jeffery <andrew@codeconstruct.com.au>
-> > > > +
-> > > > +allOf:
-> > > > +  - $ref: /schemas/gpio/gpio.yaml#
-> >=20
-> > From where did you take it? None of the bindings have such code. Start
-> > from recent bindings in given category when writing new ones.
+I'm replying here instead of the RESEND because here's where the
+context and example are provided.
 
-I didn't take it from anywhere so much as try to apply some reasoning
-via the commentary in the example at [1]. Maybe I could have fought
-that approach by contrasting what I wrote to a wider set of existing
-binding documents (I did look at some and obviously didn't find
-anything similar).
+I quickly poked into the gpio-leds driver. Please correct me if I'm
+misunderstanding anything.
 
-Anyway reflecting on the misunderstanding, is the ref unnecessary
-because the gpio binding sets `select: true`[2] and so is applied to
-the node regardless?
+It looks like led-5 will be added as a class device. But the
+dev->fwnode is not set before it's added because it uses
+device_create_with_groups(). So, fw_devlink doesn't create a link
+between led-5 and tca6424_dock_2 unless tca6424_dock_2 is added after
+led-5. Which coincidentally seems to be the case here. Might want to
+explicitly create the device in gpio-leds driver.
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tre=
-e/Documentation/devicetree/bindings/example-schema.yaml?h=3Dv6.7#n238
-[2]: https://github.com/devicetree-org/dt-schema/blob/v2023.11/dtschema/sch=
-emas/gpio/gpio.yaml#L12
+The issue you are trying to fix is a generic issue that I'd like to
+fix in a generic fashion. It's one of my TODOs which I've mentioned
+before in conferences/emails to LKML: device links framework has a
+bunch of gaps when it comes to class devices. I've been thinking about
+it for a while, but it needs a lot more work and testing. I'll roll in
+this case when I deal with it in a generic fashion. But here's the
+general idea of things that need to be addressed:
 
-> >=20
-> > Please drop it.
+1. "Managed" device links allow having a class device as a supplier,
+but that'll mean the consumer will never probe.
+2. What if a class device is a consumer and the supplier isn't ready.
+What does it mean for the class device to be added? Is it available
+for use? Probably not. Can we do something here that'll be useful for
+the class implementation?
+3. What if the supplier and consumer are class devices, when does the
+consumer class device become "available" (do we check the suppliers of
+the supplier?)?
+4. What happens if the supplier of a class device gets removed? Do we
+notify the class so it can do the right thing? Do we force unbind the
+first ancestor that's on a bus? (your case).
+5. What if a supplier class device is removed, should we unbind the
+consumer (if it's a bus device)?
 
-Ack.
+I'm currently working on a patch to break dependency cycles. Once
+that's in, the next TODO item I work on is going to be this or clock
+framework sync_state() support.
 
-> >=20
-> > > > +  - if:
-> > > > +      properties:
-> > > > +        compatible:
-> > > > +          contains:
-> > > > +            const: aspeed,ast2600-gpio
-> > > > +    then:
-> > > > +      required:
-> > > > +        - ngpios
-> >=20
-> > Please put entire allOf: after required: block. That's the convention
-> > when it has something more than $ref, because we still want the most
-> > important parts at the top of the file.
+So, I'd recommend waiting this out if it's not urgent.
 
-Ack.
+Heh, here's my commit on my local repo from a year ago when I touched
+on this and realised the scope of the work.
 
-> >=20
-> > > > +
-> > > > +properties:
-> > > > +  compatible:
-> > > > +    enum:
-> > > > +      - aspeed,ast2400-gpio
-> > > > +      - aspeed,ast2500-gpio
-> > > > +      - aspeed,ast2600-gpio
-> > > > +
-> > > > +  reg:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  clocks:
-> > > > +    maxItems: 1
-> > > > +    description: The clock to use for debounce timings
-> > > > +
-> > > > +  interrupts:
-> > > > +    maxItems: 1
-> > > > +
-> > > > +  interrupt-controller: true
-> > > > +
-> > > > +  "#interrupt-cells":
-> > > > +    const: 2
-> > > > +
-> >=20
-> > ngpios with some constraints
+commit 7dcaad52e569209104408f3e472fde4ef8cd5585 (class-devlinks-v1)
+Author: Saravana Kannan <saravanak@google.com>
+Date:   Mon Feb 13 13:40:43 2023 -0800
 
-Is this just with regard to the constraints I have under allOf above?
-Or something further (constrain the values of ngpios for the various
-controllers across the Aspeed SoCs)?
+    add class support to device links
 
-Maybe I'll look at some more of the existing bindings for this as
-well...
 
-> >=20
-> > > > +required:
-> > > > +  - compatible
-> > > > +  - reg
-> > > > +  - interrupts
-> > > > +  - interrupt-controller
-> > > > +  - "#gpio-cells"
-> > > > +  - gpio-controller
-> > > > +
-> > > > +unevaluatedProperties: false
-> >=20
-> > Instead additionalProperties: false.
-
-Ack - this is the same misunderstanding as the gpio schema ref
-discussed above.
-
-Andrew
-
+Thanks,
+Saravana
 
