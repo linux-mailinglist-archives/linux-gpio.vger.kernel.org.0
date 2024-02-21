@@ -1,116 +1,113 @@
-Return-Path: <linux-gpio+bounces-3549-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3550-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9E3385D65B
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 12:02:43 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97ED485D690
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 12:14:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5E10C284795
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 11:02:42 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4D5331F21E6E
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 11:14:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8A3B3F8E4;
-	Wed, 21 Feb 2024 11:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XN2ZfXNc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 545033F8E4;
+	Wed, 21 Feb 2024 11:14:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C17A33A1A2;
-	Wed, 21 Feb 2024 11:01:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 969D33D0AD
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 11:14:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708513315; cv=none; b=I31353WXohwBCUo+xZdNscnt+/BGhPM8DE+Jn90YGOi1aKYhUhd2/b6zGt0m7xrKi5O3XYhydmBM2Z5UFjIj//7RWVrLePNcTWoQ/64fEaNrmx4MkduTahu3ohaqECyiCrr3Ob1GoVBuyDXDm4lw5YvujdBrwrK+9dLXQ/1jJF8=
+	t=1708514047; cv=none; b=VX+M/05ZN8DI1s6+l3x1HlOQF1C6SiB4eTFMYfDrfa+wbGcwejHqRGc0Mhw0TvBOgQ2gvYLc1ryHNzlTs9hKGUMt8dhe42kVfzcoEJkPLRp9Iv/EsQnJ1pyingQZXRKPmYGGAWucemLpc8Jr0M0aXlC5+ZeiGiL+CKpJOq2AGdM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708513315; c=relaxed/simple;
-	bh=dRk415UzsgzDNWkIDPhHwFDgyKW9PXo6eI6QQRKIUbg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=M804e3JIL34nYtaYaY7GeNbOVM59BeGtZLykSNIQ/lyVxZuodRd6xpuqFWkjYiA50/Xom8Lex6c0PLUL9OdhzjXe8Su/CvpmoiIzODFhcfTWFuymZSwQSrHDqjEKa7JvHOvWTrjFNvcm+80ttFL7aVZgUXeWG1Sfp/ijjC8p+ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XN2ZfXNc; arc=none smtp.client-ip=217.70.183.201
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 441241BF209;
-	Wed, 21 Feb 2024 11:01:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708513307;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vInAPH5p+e8119+v06ulfZ5lvJvXTu8ss9P3JzvQTHY=;
-	b=XN2ZfXNc0o0/ZL9aDDvYuX0tX/X+cAUOjEyPjjYOeuCHaYl1rlDr1Zo2s5XyriovJpzcap
-	5ZjBJwOO30nd09Epax4Smr0EKKs2MnvZ6Q3CHnOyYM6NwMgAUWRW4U6CmpYsOp6wOCBm6e
-	Y4luy+dNbIH4qMXu7QFPc4ol2jaCvPTZ9WhoCrLsokTohJ569FN6n4JNHtW33M7bro/a6F
-	PKuVY4qRveAwriMN481ITaN546VAyU3LywwhyzfSs6aURNBCIxVNE/C/trMpsclq4Q7hAZ
-	Jc3HcZu+GwQDdXz9UFfQrUzBF5NmVJHPQyOh6pylNe/TMxTyGPghV8PG2xYDpA==
-Message-ID: <a2c3c5b9-79a3-4793-892c-b1ab79b71c7d@bootlin.com>
-Date: Wed, 21 Feb 2024 12:01:43 +0100
+	s=arc-20240116; t=1708514047; c=relaxed/simple;
+	bh=YUnl1mkBfjxZmXre7Pa2U9gjwjHs/Z4R0+N7NlwnAKA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JdbNXx6ZdCVfEwO/tSQED5518RTM4Jem7rNanW1+kWggL/1AtSIfCgnFKt0p+n+bdZZ6eypuxkmq3honcwrMzfdfiUN69bNurSE+lw+QJ1l/bOaUCd8bh+5QKVeWpTkeVQUzlp0LfiS640Yo4Gl8MJQbXKfLFZaHh38IUd5AG9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:5450:2f24:6e58:231d])
+	by xavier.telenet-ops.be with bizsmtp
+	id pnE12B00C59vpg201nE1im; Wed, 21 Feb 2024 12:14:02 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rckXw-001FUp-Sv;
+	Wed, 21 Feb 2024 12:14:01 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rckY5-00BmHN-67;
+	Wed, 21 Feb 2024 12:14:01 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm
+Date: Wed, 21 Feb 2024 12:13:59 +0100
+Message-Id: <6238a78e32fa21f0c795406b6cba7bce7af92577.1708513940.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
- suspend() and resume() callbacks
-Content-Language: en-US
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
- <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
- <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
- <Zc96dSff5Y-dufrJ@smile.fi.intel.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <Zc96dSff5Y-dufrJ@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+Content-Transfer-Encoding: 8bit
 
-On 2/16/24 16:08, Andy Shevchenko wrote:
-> On Fri, Feb 16, 2024 at 08:59:47AM +0100, Thomas Richard wrote:
->> On 2/15/24 16:27, Andy Shevchenko wrote:
->>> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
->>>> No need to check the pointer returned by platform_get_drvdata(), as
->>>> platform_set_drvdata() is called during the probe.
->>>
->>> This patch should go _after_ the next one, otherwise the commit message doesn't
->>> tell full story and the code change bring a potential regression.
->>
->> Hello Andy,
->>
->> I'm ok to move this patch after the next one.
->> But for my understanding, could you explain me why changing the order is
->> important in this case ?
-> 
-> Old PM calls obviously can be called in different circumstances and these
-> checks are important.
-> 
-> Just squash these two patches to avoid additional churn and we are done.
+The conversion to DEFINE_NOIRQ_DEV_PM_OPS() lost the ability of the
+compiler to optimize away the struct dev_pm_ops object when it is not
+needed.
 
-You mean invert the order instead of squash.
+Fix this by replacing the use of pm_sleep_ptr() by a custom wrapper.
 
+Fixes: 727eb02eb753375e ("pinctrl: renesas: Switch to use DEFINE_NOIRQ_DEV_PM_OPS() helper")
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+To be queued in renesas-pinctrl for v6.9.
+
+Alternatively, one could add a unified definition:
+
+    #define pm_psci_sleep_ptr(_ptr)        PTR_IF(IS_ENABLED(CONFIG_PM_SLEEP) && \
+					  IS_ENABLED(CONFIG_ARM_PSCI_FW), (_ptr))
+
+Since there are already separate sections for CONFIG_ARM_PSCI_FW enabled
+vs. disabled, I split in two and simplified the definition.
+---
+ drivers/pinctrl/renesas/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
+index 78331d7f7cca9d8c..96d6040a8871419b 100644
+--- a/drivers/pinctrl/renesas/core.c
++++ b/drivers/pinctrl/renesas/core.c
+@@ -737,10 +737,12 @@ static int sh_pfc_resume_noirq(struct device *dev)
+ 		sh_pfc_walk_regs(pfc, sh_pfc_restore_reg);
+ 	return 0;
+ }
++#define pm_psci_sleep_ptr(_ptr)	pm_sleep_ptr(_ptr)
+ #else
+ static int sh_pfc_suspend_init(struct sh_pfc *pfc) { return 0; }
+ static int sh_pfc_suspend_noirq(struct device *dev) { return 0; }
+ static int sh_pfc_resume_noirq(struct device *dev) { return 0; }
++#define pm_psci_sleep_ptr(_ptr)	PTR_IF(false, (_ptr))
+ #endif	/* CONFIG_ARM_PSCI_FW */
+ 
+ static DEFINE_NOIRQ_DEV_PM_OPS(sh_pfc_pm, sh_pfc_suspend_noirq, sh_pfc_resume_noirq);
+@@ -1423,7 +1425,7 @@ static struct platform_driver sh_pfc_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.of_match_table = of_match_ptr(sh_pfc_of_table),
+-		.pm	= pm_sleep_ptr(&sh_pfc_pm),
++		.pm	= pm_psci_sleep_ptr(&sh_pfc_pm),
+ 	},
+ };
+ 
 -- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+2.34.1
 
 
