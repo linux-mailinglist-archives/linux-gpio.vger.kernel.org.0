@@ -1,130 +1,141 @@
-Return-Path: <linux-gpio+bounces-3564-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3565-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7161785DE99
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 15:20:08 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 344AA85DECA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 15:22:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 136141F246DC
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:20:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 578CA1C23C89
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:22:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A3B57CF27;
-	Wed, 21 Feb 2024 14:19:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BH3RU58z"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 521FB76C99;
+	Wed, 21 Feb 2024 14:22:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yw1-f175.google.com (mail-yw1-f175.google.com [209.85.128.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4A69D38;
-	Wed, 21 Feb 2024 14:19:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E8A7BB11;
+	Wed, 21 Feb 2024 14:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525173; cv=none; b=s7ySvEIystER1Exlmf7nlxhO7zqogkvTYkVF0bXduOEv8q4nYgDjljihpuZanuvIAwqVUCfQlmHxhIRarxBnOYSHJdOKeXtO+kJIpvWBVpuNemFezceCgjN7g+Fa3HZdg4W1OHZf3rxW3ilWasLWFIUbTg0lWvZdxRhIQpnWA9c=
+	t=1708525322; cv=none; b=dnJ/4zHw/02uSacXyKGRwJIIQGVsRIXGR4xV/JA/+DIM+AeJS0bm6zRgWCDtxwtqefjz/wxWQRUGbWJPnjxDwESBd5DM9y38Vc6W1vUV3YhrxZr5GA7dxwSWJeVhHcgur58wIb/+iTOpht3l8+SuR6iZRWqNjleFeoezDm2agE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525173; c=relaxed/simple;
-	bh=7wFKTVlWizL57RttcaVLGrwRB1DayJIhODEBnM4Uul8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qu53vKhUD7q0rP+F1rk6XZ9xzUEhDWZe0P+BPAIjW8RDbUKJHHg8B5vOHfBxrgOZX9V4sxqLct62hRmO3ew40ndCdtnGz9UjD0IcMFapzU7PZmYgLpwQ9PAyZJKZ3jdDIpByagp2ZSPxoGcptHAi8gdMprfh32D0dJrZf2TSBXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BH3RU58z; arc=none smtp.client-ip=217.70.183.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 334A660005;
-	Wed, 21 Feb 2024 14:19:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1708525167;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=djgIwKG8h1E1vBHOq7Yx/ZY0Ehwdq+Fa2OAPhHy5Bg0=;
-	b=BH3RU58z7cr7I5bVawgKgfnYC5GysBok+JTGHq7LVbJ85EirfpHA2o2XLzRR+7UrXVwEfR
-	/wZa6tcSK+DMxgMWmUsnNDaOR0N1r8YgkoRdYceug+1Yk4JmUTFRDvRCA3/cymZ9XpUHr/
-	vd1WaoQ4pQTMeRzCHOJKwuvBlu9/+rOifdvv6q5fqfzwFEr1d5o71iFGgd3kc3AOzFnAO1
-	A1snWfe4kw4sZl4URubjBTzCzQTc4uqweCPYbYIuoPmUagYG9LKMcqiXTtnvElDi8wKgo0
-	I0H6nXBonAHEME2N7LD4uGH31cYGjo3LmMOeUpuFAYUSps2nLsFC7ihsE8gNUA==
-Message-ID: <b0220b02-5058-42ec-ba06-251caa4813dc@bootlin.com>
-Date: Wed, 21 Feb 2024 15:19:14 +0100
+	s=arc-20240116; t=1708525322; c=relaxed/simple;
+	bh=tbyIxQREtNsFl1chxmmOOxgq+9kmqvxm0SE09qbdS3U=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=CY3Oglk4B7hwI14DKRQMz8czfp+JKKIMTiaDZVmjpuuZs70aXWX9li3RmEb6GXTAwL0lJzVCwzn13ZWc4s+IksGCWdxII5qaszDprfTZ3YQnDcNJxzMl4AKRcU8lSNHAlxqEVdyXlgMXHaRCeU+Rt0fN3ukIs9aObGq01hYvBJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-yw1-f175.google.com with SMTP id 00721157ae682-60893d33269so183937b3.1;
+        Wed, 21 Feb 2024 06:22:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708525318; x=1709130118;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=1d06i49LL9s1ZMGyde7w44zWXOkIzOdUii8V8sAQFpI=;
+        b=NTRx488gZvLGLnd/od895OIil+ZBy1TC0mNLeM4izgnD5Hs1uas2t+ayuEIVMdzbJZ
+         Q2GEpA4ezz1XYTVLu9IIMW5vkRJnNbxRGYXLKLgJN00dOG6/MCB2ilYnfhLasEr61YhH
+         hB76nVtGtlwI6uKTM+6ilPALO+BJzS6dGIVj6B+uKxeKQEysLAsvSqce1km1KersM33f
+         3cun18oNMKnxRCEoxDMOKT2SHOSUdouV2+7pjYCKrmq72pynsefzooCaZnyeYVfIR7iP
+         gtNJ5KRRIlI/U7ZS3ACHZCYai1Qi+QalM7CkIIq1A3V6ALmI1aQEBVHbpy7t8fjTYi7S
+         W6IQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXUc5+ivMr1yhMWDfbUwexHhY+Q97SFo6mN9C3a9m/DbcEopgIUpbOcmWcE0NKUSCxIJRbjIHeqKaCRRiDrgQy/NzHM8qOUdBV6JwIruFWvZF7sW54kaIkInoa27IwfqaYEpcXcfoyINU9yUxWWQnBiBGjGUnbwuQxnDYZxbsyJBdauvgOQ5foxpal9
+X-Gm-Message-State: AOJu0YxuNqm6GRnEcLu1mwCwrM+fowxrFY3kd22SLZgVSwrthlZsKmWh
+	4wvxsMOwJOWwYEfXcUtYJ2dGEWaamsSfNmcTFdUgSfg7oMmxXDji8DM4Lar+3AU=
+X-Google-Smtp-Source: AGHT+IEOXOIwfrVvLYMLiVSmayIuAMz+72BSqjQLMFmTQMawKKL2HeLttcbTR5CJP7/8ts4S8FgGdQ==
+X-Received: by 2002:a0d:d685:0:b0:5ff:790d:62a with SMTP id y127-20020a0dd685000000b005ff790d062amr18310762ywd.5.1708525318664;
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com. [209.85.219.179])
+        by smtp.gmail.com with ESMTPSA id c129-20020a0dc187000000b00607ecc4212csm2614164ywd.80.2024.02.21.06.21.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso6800358276.1;
+        Wed, 21 Feb 2024 06:21:58 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCWaE0v0rOSdBTWnYXAdEAxUKJDD0RgobQnLkao4qzilJU6q9/pax/SMMq2nrFvSbTOOd+O8V+uA6dfarue84E25nhASHwD1kpwFl2BwOFYL1PZmRpgAU6v+cjA9fL4N258BZZpH9DtVd/PINz2jpTGuMeRGPAf/mcWt/BZXmZevfHJ8T0odyT6qEHGP
+X-Received: by 2002:a5b:445:0:b0:dc2:48af:bf17 with SMTP id
+ s5-20020a5b0445000000b00dc248afbf17mr14910452ybp.62.1708525318012; Wed, 21
+ Feb 2024 06:21:58 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
- suspend() and resume() callbacks
-Content-Language: en-US
-To: Andy Shevchenko <andy@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
- Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
-References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
- <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
- <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
- <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
- <Zc96dSff5Y-dufrJ@smile.fi.intel.com>
- <a2c3c5b9-79a3-4793-892c-b1ab79b71c7d@bootlin.com>
- <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com>
+ <20240215124112.2259103-2-claudiu.beznea.uj@bp.renesas.com> <CAMuHMdVi5vN5JSf9TAbdyrNa8_7eM=RajH8Mm=Qxhj5chWcK9A@mail.gmail.com>
+In-Reply-To: <CAMuHMdVi5vN5JSf9TAbdyrNa8_7eM=RajH8Mm=Qxhj5chWcK9A@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 21 Feb 2024 15:21:45 +0100
+X-Gmail-Original-Message-ID: <CAMuHMdU7jFzkX7dozKYnhp5RUPr4-1tG0Eba1he+t3nskagZMg@mail.gmail.com>
+Message-ID: <CAMuHMdU7jFzkX7dozKYnhp5RUPr4-1tG0Eba1he+t3nskagZMg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pinctrl: renesas: Select CONFIG_IRQ_DOMAIN_HIERARCHY
+ for pinctrl-rzg2l
+To: Claudiu <claudiu.beznea@tuxon.dev>
+Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 2/21/24 14:13, Andy Shevchenko wrote:
-> On Wed, Feb 21, 2024 at 12:01:43PM +0100, Thomas Richard wrote:
->> On 2/16/24 16:08, Andy Shevchenko wrote:
->>> On Fri, Feb 16, 2024 at 08:59:47AM +0100, Thomas Richard wrote:
->>>> On 2/15/24 16:27, Andy Shevchenko wrote:
->>>>> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
->>>>>> No need to check the pointer returned by platform_get_drvdata(), as
->>>>>> platform_set_drvdata() is called during the probe.
->>>>>
->>>>> This patch should go _after_ the next one, otherwise the commit message doesn't
->>>>> tell full story and the code change bring a potential regression.
->>>>
->>>> Hello Andy,
->>>>
->>>> I'm ok to move this patch after the next one.
->>>> But for my understanding, could you explain me why changing the order is
->>>> important in this case ?
->>>
->>> Old PM calls obviously can be called in different circumstances and these
->>> checks are important.
->>>
->>> Just squash these two patches to avoid additional churn and we are done.
->>
->> You mean invert the order instead of squash.
-> 
-> Either would work, but see how much churn in terms of changing just changed
-> lines it adds.
+On Wed, Feb 21, 2024 at 3:13=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> On Thu, Feb 15, 2024 at 1:41=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev=
+> wrote:
+> > From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+> >
+> > The pinctrl-rzg2l driver uses APIs that are defined only if
+> > CONFIG_IRQ_DOMAIN_HIERARCHY=3Dy (irq_chip_*_parent() APIs). On the ARCH=
+_RZG2L
+> > CONFIG_IRQ_DOMAIN_HIERARCHY is selected anyway, e.g., by the
+> > CONFIG_ARM_GIC_V3. Even so, make it explicit at the driver level for a
+> > clearer view of the dependencies.
+> >
+> > Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+>
+> Thanks for your patch!
+>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+>
+> Compile-testing on m68k reveals that you also need
+>
+>     select GPIOLIB_IRQCHIP
 
-OK thanks.
+FTR:
 
-I'll squash the two patches. And I'll add a comment which explains that
-I dropped some dead code.
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function =E2=80=98rzg2l_gpio_fr=
+ee=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:1472:30: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 1472 |  virq =3D irq_find_mapping(chip->irq.domain, offset);
+      |                              ^~
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function
+=E2=80=98rzg2l_gpio_populate_parent_fwspec=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:1953:23: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 1953 |  fwspec->fwnode =3D chip->irq.parent_domain->fwnode;
+      |                       ^~
+drivers/pinctrl/renesas/pinctrl-rzg2l.c: In function =E2=80=98rzg2l_gpio_re=
+gister=E2=80=99:
+drivers/pinctrl/renesas/pinctrl-rzg2l.c:2057:14: error: =E2=80=98struct
+gpio_chip=E2=80=99 has no member named =E2=80=98irq=E2=80=99
+ 2057 |  girq =3D &chip->irq;
+      |              ^~
 
-Regards,
+Gr{oetje,eeting}s,
 
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+                        Geert
 
+--=20
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
