@@ -1,110 +1,127 @@
-Return-Path: <linux-gpio+bounces-3600-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D068E85EB36
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 22:46:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id CA3D985EB5A
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 22:51:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 53A76B27668
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 21:46:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 68590B226A2
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 21:51:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A43086158;
-	Wed, 21 Feb 2024 21:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01EAC1272A9;
+	Wed, 21 Feb 2024 21:51:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZmgKXD4Q"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="w6LolOgQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0EC9128816
-	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 21:46:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F7172574F
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 21:51:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708551970; cv=none; b=RSS/0+LzdtsIP3C24ZaJHMMiKvZN4yICusjRFfxHOMXjcpSKwJWKmPbB3xMYG0/jqTWu9O83vRlBmeuVVEQF3vQWCaixmpIKxL5V/nlzuwLAzqXKRztNdSRM9Y3o6ljLw0nIqis1dz7x8X9y9m3geOMQek/OTisAr1T/XrDW09E=
+	t=1708552287; cv=none; b=LZEvyJHh57Qkncakg5Pkcb0+uVuEXkQ6CI65nTV9lrqVs0oulEK4RNGLbYAghqk2DX9JkeWe/qc1wJ2yUGkD9DfJzlzBbIdhOSqEBZhv9135LoLW0tMxCrmlElogymOLCOye1R4dThJLyOpVwa0Eh2hbFwHjCKIP2sLsHt+iVFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708551970; c=relaxed/simple;
-	bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
+	s=arc-20240116; t=1708552287; c=relaxed/simple;
+	bh=+z7mNzNxlJ/8k9LaMUX5Z/36a7oWxQduTdbpVjbTwXo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=NMrLaKx5eDBwsI/5AJ5OCxNRpjW3j49GKYks3mOK4SsB1nM0KHtJFckbMOlvFVnqcUUwr6w6rfWEZGe1cDv4mX+Y9GVB01hsbibHpXLjNIoO9T5eh+dJxUMeHrKT4KNRVQcOTNqIR7PiSfRmzpjq2dzRkVf+yo+x352D6zTQ8ps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZmgKXD4Q; arc=none smtp.client-ip=209.85.128.179
+	 To:Cc:Content-Type; b=GzZ5BuDh8ut0K6FARsu0zxEljdyO8GkgPzzUbEDWIFPUSRmfoPd9qobTGf0HXXdsGIiGhKAeDcjrZEGR5adya6pu6NGzX2QAzQIO4cVPuUGLnl+MjtZ5DN3ONmULwSHgZh3FEIX4KvEHcsvetlp8pY/tPljb8by2laN/jaLD8hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=w6LolOgQ; arc=none smtp.client-ip=209.85.128.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-607f8482b88so55755977b3.0
-        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 13:46:08 -0800 (PST)
+Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-6079d44b02bso52050797b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 13:51:25 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708551968; x=1709156768; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708552285; x=1709157085; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
-        b=ZmgKXD4QqBpUGTTOaClU1KEg7SESooeNJvUqz50ldEDb4DMDj07do5q5ckq6e76baV
-         iH9JC9m2Li2u9fAg06XwUavptLrozxORGEzzgfD7YUb+v31o6VCO83OO/K/Bi4K48sLj
-         Egyd4CB0D5zQ7oYdy8RhbR+5G2oOGDW89oFHNPJXeaEgJJxAqzmkuITnTFLyIlRGwzfA
-         RahxWx6l0DBmwHAifjfNhlqUIPWj3zX2bpwVghKKPzkQFag7VcK+iMcDEsRN/nBpHbN8
-         VunW2vcpAnHmZJCTdIfW6RBmI/EmU6yEc0GzHH8Jt45IBZhaEGr0qCVsXxjSga/Ic11M
-         njnQ==
+        bh=0yHRJigbA+0gNb0mcx+skQZzaB/lwBVYR+HxKRzHC0s=;
+        b=w6LolOgQ/OTyCZq5SvGRCqqt4cEgLJ0zQIDlhq0GhKzGgjcD8IblnuiAycFzV0jGi9
+         7fDDGph7izOYZC1W95md+OGRY/712kvo4pMWu2zeHofBa7FgFzsaab9+aZQdtsE5ycz6
+         XH8n+XApKIN5l+mN/hfyFAiskdnUxRS6iM2qSDrCVG3blmQCmjU+f0odT+aG4mrp/dtT
+         XA7T0spIvS4BwCsTXtwnhkrUAzYSnfmikE68pm5CVDmeHrYE0nycljSP33Gg9ensPys2
+         VPW+xkwab/IfcR97yTN1whkdUqPjECuQgWSTcHkENtZI4tNZieeIRJ54/puqjxDIe5J2
+         4Rpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708551968; x=1709156768;
+        d=1e100.net; s=20230601; t=1708552285; x=1709157085;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ApJiKKxB8Nyth68y0DtWmEyhbZzJmJ7hb4rk78a9X3k=;
-        b=xL8Z9vZ9bVGVR4/BJJ2SRg4GJDxy0wgezKC2R6lW/1wEgqik4xtGilHQ+2Y5glU7bD
-         qcm/e4Pb7kktX37iS/HMiLMJ+0DBIgnnSoEv752TmYpu+SJ+afHlIEFsA7RuaD/Pea9G
-         sZdbknht9+aOSCpSAVUuTAGUlA9itmXsjL6sMa1QVz/M91Ts1seNlxuA7JppU1sHvqtb
-         88u+GiHN/vYLXJWAk/BIucXr2vDYdHed3m4ZvSU2ibvzUUUsakqvpUI7+zppNjLqvXHI
-         hIkbaWQXWNLwNPxfyaOwJoHGyFBB5BsFrHTuW65q5sIe75MsMAMla9OgY2QycezVV/R4
-         JoDg==
-X-Forwarded-Encrypted: i=1; AJvYcCWB8Xv3U2Z5znpy9cYRkeXsBdpzK8OPel1ilIf4vYqM1fe241Oz+gmswDaFjbC43FDUocvUPUC4Guzv4dJa0Fg1z3nP9spihdLMgQ==
-X-Gm-Message-State: AOJu0Yw/skIfeMA0aLP595C2YzzSftWgl9eWPLtxziGntXle3e9iQvIv
-	S8wmon5q7p7EwHqaqiQLUoVSRDIEesOcqPDPKgXgH4hho1aKjmjlJ+1aHOMZfU2OsjbBLctFTxc
-	BZFvf8wRT3pJV2XKH+j2qtLDxbom+1xAktj8T+w==
-X-Google-Smtp-Source: AGHT+IG35FL34FRkreasSN16iQ0A7ZizHlYBrbzNgWJgEIvCTWPg+r3aAeiuFzNZX9nNiJhrUEFDNT+VQtzT44Ma+pc=
-X-Received: by 2002:a05:690c:82e:b0:604:b08c:348d with SMTP id
- by14-20020a05690c082e00b00604b08c348dmr17415466ywb.1.1708551967845; Wed, 21
- Feb 2024 13:46:07 -0800 (PST)
+        bh=0yHRJigbA+0gNb0mcx+skQZzaB/lwBVYR+HxKRzHC0s=;
+        b=Q4Uh44K/69ZU7SFIV0pPIjO4aOx2dTz/KGwYItnyE/pTbwKi/FWg6f1MKW8+J5JjQb
+         rRw8NcAewD3m1xxMfOv+52B9dNdbfOPKLO7g1oWdf/Ue3RA6CUnfjsfowjGSI2CbKIjQ
+         89IZp/Gg6l0ME4Q/lK+xmzKjzWr9bQlFNn/3XC5U4xR5OhbIhUu+mKRkWotKKmj+AL02
+         b5e3WWhT9xud7nUOQwRuzP0yNeq/4pGIAn/roAtuMQLbYtvQCs3iVLe0dbjlqrlnmQXR
+         d6HHi/ny7Vwqndw+yGGysjUaB7gLhlTEo251EujbA5sA+flJnwECcm1JO/wC7knlANwf
+         QEzQ==
+X-Gm-Message-State: AOJu0YyWjBlBH+Iuma0T/B3MRyf2FCBdmMXEAn8wHbkOGCGY8wyeThNr
+	jDbD7tgqs3eclEY9R/zg2owx37BmoK7dxv/ZOAlwEdnPm2n32x4+DQR6SKb4Zbni0l0MA5t7T5t
+	BUT5QrZxvG5hSDB4VDeJL6UNE+V4TQjti6AB47Q==
+X-Google-Smtp-Source: AGHT+IGS7/XhSREfIQd1AJ1hlUeiLQ0xU3Bcsk5t7ld4ZD3DAXeiBx+CuQ7aZnepHSydUKXYwYjmxyaU+MJBRil5yZg=
+X-Received: by 2002:a05:690c:82e:b0:5ff:b07c:adb4 with SMTP id
+ by14-20020a05690c082e00b005ffb07cadb4mr15829487ywb.45.1708552285238; Wed, 21
+ Feb 2024 13:51:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214084419.6194-1-brgl@bgdev.pl> <4a08c610-c249-4b56-b09c-09e1fd07f723@paulmck-laptop>
- <CAMRc=McXr_3OD6Uf+PKD-wLQfJKJSWes3fh_ZD9fnrPyF9GoSQ@mail.gmail.com>
-In-Reply-To: <CAMRc=McXr_3OD6Uf+PKD-wLQfJKJSWes3fh_ZD9fnrPyF9GoSQ@mail.gmail.com>
+References: <20240215083328.11464-1-brgl@bgdev.pl>
+In-Reply-To: <20240215083328.11464-1-brgl@bgdev.pl>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 21 Feb 2024 22:45:56 +0100
-Message-ID: <CACRpkdZd0FVSee-PbNdW8+fmkvV802jS45xLk4Of8-+WseiZxg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/4] gpio: fix SRCU bugs
+Date: Wed, 21 Feb 2024 22:51:14 +0100
+Message-ID: <CACRpkdYhWk1dHeDHOf+6LM8gZ5Oh--6mpeeA7wskDFYZ-2cmJw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: provide for_each_gpio()
 To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: paulmck@kernel.org, Kent Gibson <warthog618@gmail.com>, Alex Elder <elder@linaro.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Wolfram Sang <wsa@the-dreams.de>, 
-	Mark Brown <broonie@kernel.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 8:08=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+Hi Bartosz,
+
+On Thu, Feb 15, 2024 at 9:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
  wrote:
 
-> Unfortunately, it's hard to fix 15 years of technical debt. :(
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We only provide iterators for requested GPIOs to provider drivers. In
+> order to allow them to display debug information about all GPIOs, let's
+> provide a variant for iterating over all GPIOs.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+(...)
 
-If it's any consolation I didn't create this one technical debt on purpose.
+> +/**
+> + * for_each_gpio - Iterates over all GPIOs for given chip.
 
-The actual mistake creating it goes something like: /dev/gpiochipN files ar=
-e
-nice and we can clean up after a file handle is closed or terminated,
-I wonder why people insist on using sysfs for so many things.
+Does this really intuitively fit with other functions named for_each_XXX()?
 
-All the file semantics of handles going away by being used etc, that's
-why sysfs is good. I was too inexperienced to understand that, or I would
-have paid more attention...
+> + * @_chip: Chip to iterate over.
+> + * @_i: Loop counter.
+> + * @_label: Place to store the address of the label if the GPIO is reque=
+sted.
+> + *          Set to NULL for unused GPIOs.
+> + */
+> +#define for_each_gpio(_chip, _i, _label) \
+> +       for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
+> +            *_data.i < _chip->ngpio; \
+> +            (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NULL) =
+\
+> +               if (IS_ERR(*_data.label =3D \
+> +                       gpiochip_dup_line_label(_chip, *_data.i))) {} \
+> +               else
 
-Yet I think we ended up in a reasonable place.
+I would call it for_each_line_label() or something. I try to avoid using
+"gpio" in function names as well because of ambiguity, I could also go
+with for_each_hwgpio_label() I suppose.
+
+With some more reasonable name:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
 Yours,
 Linus Walleij
