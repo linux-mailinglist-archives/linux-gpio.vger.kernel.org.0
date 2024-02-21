@@ -1,128 +1,117 @@
-Return-Path: <linux-gpio+bounces-3532-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3533-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB80F85CD1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 01:52:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5586C85CD29
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 01:56:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ECB3E1C22295
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 00:52:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05FA82830EA
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 00:56:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B71187469;
-	Wed, 21 Feb 2024 00:51:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5AB1C20;
+	Wed, 21 Feb 2024 00:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J7USTkxr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rjc63krm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C0C6FBE;
-	Wed, 21 Feb 2024 00:51:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351821851;
+	Wed, 21 Feb 2024 00:55:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708476710; cv=none; b=G70z3ExGM1bX0n3PrvQdG5q5XOjBH+tCTJhD5F6pblwnYaFthvXbXqDFbmfOc4ErIuebnPpblipHtoeiTPbYFkRm/WzojMJUn/h29dhkvplk2fj0Tpw05s5wczgwWNTu8N41GjZODl6mdCyds9Q79NW5Si8l6djHHphkjR+MbvQ=
+	t=1708476961; cv=none; b=PGNhD6xrywqJ75jost0R6GSdNF50Szk/nYJrO73SxJTv8bPB4GIz74KbJx3dHOqsePshNyNgJscgEIFO/qhr42cKTMW242ahHcmLeaDkLIQh7Nyx1rE7T91I+YmMExgspj7Aps4bg+ccR+voiyA5J4Q4xg37Ywk70BtbSTCurkI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708476710; c=relaxed/simple;
-	bh=MieXVm22ma551iVFmKtgUAOJPGMkvDbr5o0lgBA3X8M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fmfl4VOaLuYtYH6ZHqr11iDUSSrchBmA1gfxyWaC1G/78AcX/rn6IAfe3dGzyShgCsDW34IQJbwvHGTv4sNHWl3vz+diygWcA5LM6gAqEUaw4zPGP5tWJhvJOWCAQw9kTZZ/EiZyq0XpFm6eMIoL8ElaWOYtFMJuLsTxIeNET0w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J7USTkxr; arc=none smtp.client-ip=209.85.214.172
+	s=arc-20240116; t=1708476961; c=relaxed/simple;
+	bh=h59A0nTdMaS4QknwwTF1iUgQxO7ZN7Hhiedyja68IoA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=i5fEOKnL2ihBzGrHo29k6+a/Fg5fcYWBzgoSzgSEnZEJtDYKSL3Ru1xxof25H6+vrf8EsjqfQDy5+6IAp46BkHQ+8r1cnZ+M5cgDM6mfY6GS6Dv9QYRq8M21cljECZlF5zmMCoy9nYBEKfM5X8yqegtccJfDo5lbJqbGtigM7TE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rjc63krm; arc=none smtp.client-ip=209.85.167.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1d8da50bffaso30966745ad.2;
-        Tue, 20 Feb 2024 16:51:48 -0800 (PST)
+Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c1593b82acso1488101b6e.0;
+        Tue, 20 Feb 2024 16:55:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708476708; x=1709081508; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=B0SlzYf9q4r5oo3cnCmgPLBf9yL53UG8nb29+3uRtXs=;
-        b=J7USTkxr/V0zCXI/6QuqmR4yBLA7UTlue+U6jYfCGfz8FOTFbXnN5ddjTflQL98o7n
-         Ej24WbK7Q9mxP0IFjgmFAyAkjtjLFkuVK71IrQE459mBQur1Vsc8pA9Qn3ujZLmVt6QQ
-         OMEdn8dP64qTXbHakZRRqU8m4Feyv5txGSnwnohsnjEnWL6DMo86V5z+E2+6WMPaIhQP
-         PWg5b6+G6n1O5dXCwZd67ulI2UTTr4O/ps2fvv/Jf/IY+nkeknXXqfxph0k0TuGe+wqT
-         Ms5w6J5NWjwap0/xqQif8vVuqX9php8F0vHDzyxCA8pOL3z1WqSFoLzgOrwHNPgTd6iA
-         cLeA==
+        d=gmail.com; s=20230601; t=1708476959; x=1709081759; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=xbjrdBYSMSwTJFCNzhO+Z2LsLT583lrbV5fyqTeY+XA=;
+        b=Rjc63krmidw/Yyq/Br1y2IuNlURYOajSGAi3FtH05P67g58mvw/vBnK59SHIIpHLUJ
+         5tihZzaTRY6qzLhL4nmNFpt6UHZvVsGx0dT92IS387nJrKZ6bUe5vjYj0un5OM5OyfBk
+         3BrSrDpxC3l/utJ+hrcA9DQTtwRXytzdac9VMiKOG3z5d0wDKtL9rWKQqvcP08B1G/bm
+         apgHGKxwDt6tz7t63pbvdAdZURVrNjz/AcKRcNrSWv2E6nCQMlEjJi4QdtFWPlHG0iQx
+         JQvxG5z5wrXGbKru6mtGmC6kd7iPQNPZsE5pU0vo4+7eooY2QCLMSWCfu/GhXymmhLL5
+         tRVg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708476708; x=1709081508;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=B0SlzYf9q4r5oo3cnCmgPLBf9yL53UG8nb29+3uRtXs=;
-        b=i3pBjz1FA/sBxcf1yzegSxFIvIn1buj/T9XvERJHlfPzkDM4fYFGsaJ1HfKKgYMkNP
-         cLNfI/mUciMml1KzgobsrnrgF+HJXOQKOc+kxBge/eWzfsTM3vjD7vieUHqAnHuuRoqR
-         LAFdJNYJqDTFkJetwIyjbE71e5SL/yioKpfaUIuQAsU5CgX5MOedb8VrYzlCK3x5Ua6a
-         AK9VUZmiD252Bn/1XKe4G2cVR5uXr4KnErkpV0Lix9t+i6+f3dTmruOXv1eHXV3FiAhe
-         99g4p/p0ryu8annH1e9D01a+cLYkLRU6E6cChDKO2IDPeZYG6ECOx29XpkJdK1cyGqJ/
-         OlFg==
-X-Forwarded-Encrypted: i=1; AJvYcCVrrmtvuayv/ZL0aE/89lZ7lSt1dU7F/WHKnB3sInL2bL2/hJmKbRna7Ir0W6hh1PH+fVPGjDEjZZxYidODH7SqViFtf4ztXSSTXBlPxsHIhZjGVt/TRygiEuJ967Jbq4CJcY8Prxj9+HWnLudlq2AANyI6nUm6P9CdNVrYjnMNUfvy++c=
-X-Gm-Message-State: AOJu0YxWbAZUSm1pbFSI8Ch3VzUZHP/5LHWAmzBnUrhS7/ya12o1ys1n
-	ww0lu9gx0JOwhZJPfvny44U5yG3ONhJ61hZnoEzaKuRVP49ZBweF
-X-Google-Smtp-Source: AGHT+IHpWBNu8g6t7YfE+qIGbFSW1RZzQSg9X2TrRyMpgRBhzWoeu63O8KOYi+IXdOVYZh0DRmDQOg==
-X-Received: by 2002:a17:902:c084:b0:1dc:20f2:77bb with SMTP id j4-20020a170902c08400b001dc20f277bbmr2027961pld.29.1708476708315;
-        Tue, 20 Feb 2024 16:51:48 -0800 (PST)
-Received: from [172.19.1.47] (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
-        by smtp.gmail.com with ESMTPSA id w16-20020a1709029a9000b001db7ee44ff9sm6790232plp.263.2024.02.20.16.51.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Feb 2024 16:51:47 -0800 (PST)
-Message-ID: <9c0f9285-4418-4ae9-9f72-ea74bfcf92cc@gmail.com>
-Date: Wed, 21 Feb 2024 08:51:43 +0800
+        d=1e100.net; s=20230601; t=1708476959; x=1709081759;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xbjrdBYSMSwTJFCNzhO+Z2LsLT583lrbV5fyqTeY+XA=;
+        b=rSMpCWk/T2Df0mF+iP87ALLE4dLeOtLlQA+UFOYGPCvB12OBkNaVHqqxA7xbjYQfpS
+         yiXS+BAT0j//HxDpl+3hPxpo+VPYP7gAt3bJA+85avYG2h2Gw3Wp4jBFl8tELEs5F/hx
+         8e5YAGlO3WMCw8x38njCFG1Y7UF+lkcSY7+GgphSQZ+y6nymmN4jVk1qjW5Yj/6ET+rI
+         T4JgqF2BOLy+Jpx04euEcq0Bsl6x5o/++kCsn0nb73O45ZequVWlOkEKflcc/iRA3/Q+
+         xRj/JBMml5tHe5qAWGpgA6WcuQDkIpaD+b3KGnZ0x4uHRtQAfAj5rD5GKJefayBpdB3k
+         QZNg==
+X-Forwarded-Encrypted: i=1; AJvYcCXOQmPdOcxJ31490t9e48Z8LBkJLnipA66MszAbvOdv1NT7fkCYshK+TDhQLdo3NBfMgAUmlyIf/a+mgAVbCMIzVQ3Mi23V2eI4ZX143TQJpcrxVRcLSxZYadW+6aDHxW0JRBnlUg9Fpg==
+X-Gm-Message-State: AOJu0Yzy9/y3jf186xI/ecZqnMeqqjIKz1Omfgqc2mseTqguohrrprlt
+	x+DVJq/tHa3suZobDWJ7rckXysaNe4WIVn+LDXpHIZKNtiKRcBEo
+X-Google-Smtp-Source: AGHT+IFlU7LrKI7VOyrfBior6ztLkrCMZihaVPFxiVnZL5Rgokt2/ol7hhYNSt0YU93vVPl35sWq6A==
+X-Received: by 2002:a05:6808:1987:b0:3c1:67e5:90fb with SMTP id bj7-20020a056808198700b003c167e590fbmr3312383oib.50.1708476959196;
+        Tue, 20 Feb 2024 16:55:59 -0800 (PST)
+Received: from rigel ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id i4-20020a62c104000000b006de050cf904sm7508723pfg.22.2024.02.20.16.55.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Feb 2024 16:55:58 -0800 (PST)
+Date: Wed, 21 Feb 2024 08:55:53 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Luca Ceresoli <luca.ceresoli@bootlin.com>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip
+ device is removed
+Message-ID: <20240221005553.GA41819@rigel>
+References: <20240220111019.133697-1-herve.codina@bootlin.com>
+ <20240220111019.133697-3-herve.codina@bootlin.com>
+ <20240220142959.GA244726@rigel>
+ <20240220192657.3dd9480c@bootlin.com>
+ <20240221002555.GA3311@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO
- driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- linus.walleij@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- p.zabel@pengutronix.de, j.neuschaefer@gmx.net
-Cc: linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ychuang3@nuvoton.com, schung@nuvoton.com
-References: <20240220004159.1580108-1-ychuang570808@gmail.com>
- <20240220004159.1580108-5-ychuang570808@gmail.com>
- <b40f5b2d-d41f-47fa-8aae-30290e0d2737@linaro.org>
-Content-Language: en-US
-From: Jacky Huang <ychuang570808@gmail.com>
-In-Reply-To: <b40f5b2d-d41f-47fa-8aae-30290e0d2737@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240221002555.GA3311@rigel>
 
-Dear Krzysztof,
-
-
-On 2024/2/20 下午 04:28, Krzysztof Kozlowski wrote:
-> On 20/02/2024 01:41, Jacky Huang wrote:
->> From: Jacky Huang <ychuang3@nuvoton.com>
->>
->> Add common pinctrl and GPIO driver for Nuvoton MA35 series SoC, and
->> add support for ma35d1 pinctrl.
->>
->> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
->> ---
->>   drivers/pinctrl/nuvoton/Kconfig          |   19 +
->>   drivers/pinctrl/nuvoton/Makefile         |    2 +
->>   drivers/pinctrl/nuvoton/pinctrl-ma35.c   | 1211 +++++++++++++++
->>   drivers/pinctrl/nuvoton/pinctrl-ma35.h   |   51 +
->>   drivers/pinctrl/nuvoton/pinctrl-ma35d1.c | 1797 ++++++++++++++++++++++
->>   5 files changed, 3080 insertions(+)
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
->>   create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
-> Driver cannot depend on DTS, so please reorganize patchset so DTS is not
-> in the middle or even split the DTS to separate patchset.
+On Wed, Feb 21, 2024 at 08:25:55AM +0800, Kent Gibson wrote:
+> On Tue, Feb 20, 2024 at 07:26:57PM +0100, Herve Codina wrote:
+> > Hi Kent,
+> >
+> >
+> > I probably missed something but I don't see this use after free.
+> > Can you give me some details/pointers ?
+> >
 >
-> Best regards,
-> Krzysztof
+> What is to prevent userspace releasing the request and freeing the
+> linereq while you use it?  The use after free is anywhere that is
+> possible.
 >
 
-Thank you for your explanation. In the next version, I will adjust the 
-order and move the DTS to the end of this patchset. Best Regards, Jacky 
-Huang
+To answer my own question - the notifier call chain itself will prevent
+that - linereq_free() will get blocked on the notifier chain semaphore
+until the notifier call returns. So there is no use after free problem.
+
+My bad - sorry for the added confusion.
+
+Cheers,
+Kent.
 
