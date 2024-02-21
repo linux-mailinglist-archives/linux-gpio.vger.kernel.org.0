@@ -1,117 +1,267 @@
-Return-Path: <linux-gpio+bounces-3533-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3534-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5586C85CD29
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 01:56:08 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 307B285CD8A
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 02:47:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 05FA82830EA
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 00:56:07 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D56F32854DB
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 01:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CD5AB1C20;
-	Wed, 21 Feb 2024 00:56:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 76561443E;
+	Wed, 21 Feb 2024 01:47:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rjc63krm"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cbXmoQFN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com [209.85.167.173])
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 351821851;
-	Wed, 21 Feb 2024 00:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925133FE0
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 01:47:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708476961; cv=none; b=PGNhD6xrywqJ75jost0R6GSdNF50Szk/nYJrO73SxJTv8bPB4GIz74KbJx3dHOqsePshNyNgJscgEIFO/qhr42cKTMW242ahHcmLeaDkLIQh7Nyx1rE7T91I+YmMExgspj7Aps4bg+ccR+voiyA5J4Q4xg37Ywk70BtbSTCurkI=
+	t=1708480026; cv=none; b=GjryQ2jKzW1WbnAyCanASogvwBpG5HDvYJLB0YLl4M2EEiLOI4XU3xh0z87MuJ+qbtJmKmTd1r4igDZ/wz9Nyqv1SFyv1yTatl3ieZFASY3C9kYpFP8aLRk3S/z+4C0aBzH4ehJnHxNuFts0kiGej6mrSXnEYYXwZjHq3qhwEoo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708476961; c=relaxed/simple;
-	bh=h59A0nTdMaS4QknwwTF1iUgQxO7ZN7Hhiedyja68IoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=i5fEOKnL2ihBzGrHo29k6+a/Fg5fcYWBzgoSzgSEnZEJtDYKSL3Ru1xxof25H6+vrf8EsjqfQDy5+6IAp46BkHQ+8r1cnZ+M5cgDM6mfY6GS6Dv9QYRq8M21cljECZlF5zmMCoy9nYBEKfM5X8yqegtccJfDo5lbJqbGtigM7TE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rjc63krm; arc=none smtp.client-ip=209.85.167.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oi1-f173.google.com with SMTP id 5614622812f47-3c1593b82acso1488101b6e.0;
-        Tue, 20 Feb 2024 16:55:59 -0800 (PST)
+	s=arc-20240116; t=1708480026; c=relaxed/simple;
+	bh=iUEglDd0IusnsHYdDg0SbXUSjK8oaW8VjqNhWNenHi4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VGqqPOHQlZHim4PwVLrgSIxKL5BTAY0A5vkTCGnkX/a4XjRZ3RtBThvdkiKOV6+5biZabHVM5RYlekLQJSdU8eQF1hgg9jXSfga7jY+SNWRAK7QyQiGGtqY8gZbYN7OqZSwTSflIXEZb4K2bGLdvQo8zAt3RJZkRvNTV1nliIg0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cbXmoQFN; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-42db1baff53so86081cf.0
+        for <linux-gpio@vger.kernel.org>; Tue, 20 Feb 2024 17:47:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708476959; x=1709081759; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=xbjrdBYSMSwTJFCNzhO+Z2LsLT583lrbV5fyqTeY+XA=;
-        b=Rjc63krmidw/Yyq/Br1y2IuNlURYOajSGAi3FtH05P67g58mvw/vBnK59SHIIpHLUJ
-         5tihZzaTRY6qzLhL4nmNFpt6UHZvVsGx0dT92IS387nJrKZ6bUe5vjYj0un5OM5OyfBk
-         3BrSrDpxC3l/utJ+hrcA9DQTtwRXytzdac9VMiKOG3z5d0wDKtL9rWKQqvcP08B1G/bm
-         apgHGKxwDt6tz7t63pbvdAdZURVrNjz/AcKRcNrSWv2E6nCQMlEjJi4QdtFWPlHG0iQx
-         JQvxG5z5wrXGbKru6mtGmC6kd7iPQNPZsE5pU0vo4+7eooY2QCLMSWCfu/GhXymmhLL5
-         tRVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708476959; x=1709081759;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=google.com; s=20230601; t=1708480023; x=1709084823; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xbjrdBYSMSwTJFCNzhO+Z2LsLT583lrbV5fyqTeY+XA=;
-        b=rSMpCWk/T2Df0mF+iP87ALLE4dLeOtLlQA+UFOYGPCvB12OBkNaVHqqxA7xbjYQfpS
-         yiXS+BAT0j//HxDpl+3hPxpo+VPYP7gAt3bJA+85avYG2h2Gw3Wp4jBFl8tELEs5F/hx
-         8e5YAGlO3WMCw8x38njCFG1Y7UF+lkcSY7+GgphSQZ+y6nymmN4jVk1qjW5Yj/6ET+rI
-         T4JgqF2BOLy+Jpx04euEcq0Bsl6x5o/++kCsn0nb73O45ZequVWlOkEKflcc/iRA3/Q+
-         xRj/JBMml5tHe5qAWGpgA6WcuQDkIpaD+b3KGnZ0x4uHRtQAfAj5rD5GKJefayBpdB3k
-         QZNg==
-X-Forwarded-Encrypted: i=1; AJvYcCXOQmPdOcxJ31490t9e48Z8LBkJLnipA66MszAbvOdv1NT7fkCYshK+TDhQLdo3NBfMgAUmlyIf/a+mgAVbCMIzVQ3Mi23V2eI4ZX143TQJpcrxVRcLSxZYadW+6aDHxW0JRBnlUg9Fpg==
-X-Gm-Message-State: AOJu0Yzy9/y3jf186xI/ecZqnMeqqjIKz1Omfgqc2mseTqguohrrprlt
-	x+DVJq/tHa3suZobDWJ7rckXysaNe4WIVn+LDXpHIZKNtiKRcBEo
-X-Google-Smtp-Source: AGHT+IFlU7LrKI7VOyrfBior6ztLkrCMZihaVPFxiVnZL5Rgokt2/ol7hhYNSt0YU93vVPl35sWq6A==
-X-Received: by 2002:a05:6808:1987:b0:3c1:67e5:90fb with SMTP id bj7-20020a056808198700b003c167e590fbmr3312383oib.50.1708476959196;
-        Tue, 20 Feb 2024 16:55:59 -0800 (PST)
-Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id i4-20020a62c104000000b006de050cf904sm7508723pfg.22.2024.02.20.16.55.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Feb 2024 16:55:58 -0800 (PST)
-Date: Wed, 21 Feb 2024 08:55:53 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip
- device is removed
-Message-ID: <20240221005553.GA41819@rigel>
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
- <20240220111019.133697-3-herve.codina@bootlin.com>
- <20240220142959.GA244726@rigel>
- <20240220192657.3dd9480c@bootlin.com>
- <20240221002555.GA3311@rigel>
+        bh=PMzkgKLHF3yCOXDrFqm4rm+9bW0f0+sEV83/usFGaoc=;
+        b=cbXmoQFNUipOs2V5lqNhhahs/M3t7apGXw/JpDXF1/qQOh2zG05MZT63HGj3v0eQS+
+         OH4jSIrhhC9MzDh+7BymiPc8zdWJhb+9TvcAAA4r8ka681MNBBr5M5KEUC9P/87yTrzu
+         kGea3iaWhNnwv0gL7+iSH7zWEigMwXiidzZHIL8AS4XuXpOW1pad0IOoMQP9u/9Rs/8G
+         tkYSos5yaf+mOcXe0RKY2YLZhAGEkm4bLPfXOT1kIXnB+aK3inJs/EGqnsl0MVYl1k2B
+         PgVZOubBgZ3yHGR3GVNlOgS7lbXbU/sRxPU7SilKAT0LQJtraaXjphPk7a3guRAjxuDj
+         Ss+w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708480023; x=1709084823;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PMzkgKLHF3yCOXDrFqm4rm+9bW0f0+sEV83/usFGaoc=;
+        b=Wn1qas2Y6gI4gDlUMZeE8tMIYl9gL2zgZ+VNJXRhSoCKmRya4ylNgkk3Uwy5KP5p2l
+         n5jKTWm+uxX5qPe+C+UBI13L+Ma9MDgJieS5QaADJ0w2H9PIKxz1D5YOHdFgMWeCGhKU
+         ZI/7C97PVcRk+p7ezKXYTPFwJLHSbVRvSBMCWJcMvjEXggE4LeWfGWIKMOaB1yDG83HM
+         qa/WBN1crRNeXvWfeQZ//7BdOsEOXAV2I86o5NigyiN2M3IB7ERreH2ksTfmO73odH5k
+         dMRvqw/MKtI0L5visXFUGPTi3k0afSbOHmZpwbI5i5Tsd4scMdqJY1sfB8eCS2jyVjjh
+         ZSXg==
+X-Forwarded-Encrypted: i=1; AJvYcCW81k8rxJIbE57DQw0FV9spRujLerQ92U4kYK0lbNQ6UjRchI0SFM6e7kmn6rnXwzy0OSZqxw2fUC+GAFbM3UpfV5BDMYxMDLoa7Q==
+X-Gm-Message-State: AOJu0YzVH2uJeSA2ebAu1Fllo3xNbWl8Oo+c5bDjy48gvA6cj8SUg5l0
+	qk9YUVvFB6jrsMxc2BYCTPI2kRuEm68at5apnjkFf+ZpbgNlMT26o8qGXEnLJ9YeWVu0XnQt2C4
+	acg8YbnN7Km6wV2AepyfFaZFLcq7IaFzvV8JF
+X-Google-Smtp-Source: AGHT+IGJDM0SJLzYNC7YRvw8M4u1KIXektOQ+aav00QS8YrONP0N83zrf2dUgYknTBFMt3qpmkG7ZMukLFbh7yilv+M=
+X-Received: by 2002:ac8:5c16:0:b0:42d:ff6e:12c9 with SMTP id
+ i22-20020ac85c16000000b0042dff6e12c9mr160959qti.4.1708480023254; Tue, 20 Feb
+ 2024 17:47:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240221002555.GA3311@rigel>
+References: <20230901183240.102701-1-brgl@bgdev.pl> <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+ <CAMRc=Mekf9Rek3_G2ttQY+yBvWM3+P4RAWVOQH99eajn38F+og@mail.gmail.com>
+ <ZPWcTMPiu4MSq+F7@smile.fi.intel.com> <CAMRc=MfZv70FXHyNw4yK90NL5-jjAJa6qbKc6SV2ZwbaJkKQqg@mail.gmail.com>
+ <ZPWmDL6QJJMNi2qa@smile.fi.intel.com> <CAMRc=Mc0JgPUEpaes7WcbkMu5JyrpLW8N1+bM-+OJaB+pPX4ew@mail.gmail.com>
+ <ZPWr3dRP5C1GSY9F@smile.fi.intel.com> <CAMRc=Mfae+=HPPWzsG8bgK2CGOGY9GPkS5VZcwLyr_yY8A_y2g@mail.gmail.com>
+ <ZPWxbfHNOqAnkR09@smile.fi.intel.com>
+In-Reply-To: <ZPWxbfHNOqAnkR09@smile.fi.intel.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Tue, 20 Feb 2024 17:46:27 -0800
+Message-ID: <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 08:25:55AM +0800, Kent Gibson wrote:
-> On Tue, Feb 20, 2024 at 07:26:57PM +0100, Herve Codina wrote:
-> > Hi Kent,
-> >
-> >
-> > I probably missed something but I don't see this use after free.
-> > Can you give me some details/pointers ?
-> >
+On Mon, Sep 4, 2023 at 3:29=E2=80=AFAM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> What is to prevent userspace releasing the request and freeing the
-> linereq while you use it?  The use after free is anywhere that is
-> possible.
+> On Mon, Sep 04, 2023 at 12:12:44PM +0200, Bartosz Golaszewski wrote:
+> > On Mon, Sep 4, 2023 at 12:05=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > > On Mon, Sep 04, 2023 at 11:47:54AM +0200, Bartosz Golaszewski wrote:
+> > > > On Mon, Sep 4, 2023 at 11:40=E2=80=AFAM Andy Shevchenko
+> > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > On Mon, Sep 04, 2023 at 11:22:32AM +0200, Bartosz Golaszewski wro=
+te:
+> > > > > > On Mon, Sep 4, 2023 at 10:59=E2=80=AFAM Andy Shevchenko
+> > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > On Sat, Sep 02, 2023 at 04:40:05PM +0200, Bartosz Golaszewski=
+ wrote:
+> > > > > > > > On Fri, Sep 1, 2023 at 11:10=E2=80=AFPM Andy Shevchenko
+> > > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > > On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golasze=
+wski wrote:
 >
+> ...
+>
+> > > > > > > > > > -     /* Used by sysfs and configfs callbacks. */
+> > > > > > > > > > -     dev_set_drvdata(&gc->gpiodev->dev, chip);
+> > > > > > > > > > +     /* Used by sysfs callbacks. */
+> > > > > > > > > > +     dev_set_drvdata(swnode->dev, chip);
+> > > > > > > > >
+> > > > > > > > > dev pointer of firmware node is solely for dev links. Is =
+it the case here?
+> > > > > > > > > Seems to me you luckily abuse it.
+> > > > > > > >
+> > > > > > > > I don't think so. If anything we have a helper in the form =
+of
+> > > > > > > > get_dev_from_fwnode() but it takes reference to the device =
+while we
+> > > > > > > > don't need it - we know it'll be there because we created i=
+t.
+> > > > > > > >
+> > > > > > > > This information (struct device of the GPIO device) can als=
+o be
+> > > > > > > > retrieved by iterating over the device children of the top =
+platform
+> > > > > > > > device and comparing their fwnodes against the one we got p=
+assed down
+> > > > > > > > from probe() but it's just so many extra steps.
+> > > > > > > >
+> > > > > > > > Or we can have a getter in gpio/driver.h for that but I don=
+'t want to
+> > > > > > > > expose another interface is we can simply use the fwnode.
+> > > > > > >
 
-To answer my own question - the notifier call chain itself will prevent
-that - linereq_free() will get blocked on the notifier chain semaphore
-until the notifier call returns. So there is no use after free problem.
+Sorry for being late to the party.
 
-My bad - sorry for the added confusion.
+> > > > > > > dev pointer in the fwnode strictly speaking is optional. No-o=
+ne, except
+> > > > > > > its solely user, should rely on it (its presence and lifetime=
+).
+> > > > > >
+> > > > > > Where is this documented? Because just by a quick glance into
+> > > > > > drivers/base/core.c I can tell that if a device has an fwnode t=
+hen
+> > > > > > fwnode->dev gets assigned when the device is created and cleare=
+d when
+> > > > > > it's removed (note: note even attached to driver, just
+> > > > > > created/removed). Seems like pretty reliable behavior to me.
+> > > > >
+> > > > > Yes, and even that member in fwnode is a hack in my opinion. We s=
+hould not mix
+> > > > > layers and the idea in the future to get rid of the fwnode_handle=
+ to be
+> > > > > _embedded_ into struct device. It should be separate entity, and =
+device
+> > > > > instance may use it as a linked list. Currently we have a few pro=
+blems because
+> > > > > of the this design mistake.
+> > > >
+> > > > I don't see how this would work if fwnodes can exist before struct
+> > > > device is even created.
+> > >
+> > > That's whole idea behind swnodes. They (ideally) should be created _b=
+efore_
+> > > any other object they are being used with. This is how it works today=
+.
+> >
+> > Yes, this is what I meant: if fwnodes can be created before struct
+> > device (as it is now) and their life-time is separated then how could
+> > you possibly make the fwnode part of struct device?
+> >
+> > > And doing swnode->dev =3D ... contradicts a lot: layering, lifetime o=
+bjects, etc.
 
-Cheers,
-Kent.
+I understand what you are trying to say about layering, but there are
+no lifetime violations here.
+
+> >
+> > No it doesn't. We have the software node - the template for the
+> > device. It can only be populated with a single device entry.
+>
+> Which is wrong assumption. Software nodes (and firmware nodes) in general
+> can be shared. Which device pointer you want to add there?
+
+I don't think this is any harder to handle than how a device's
+secondary fwnode is handled in set_primary_fwnode(). For secondary
+fwnodes, you just WARN and overwrite it and move on.
+
+> Which one
+> should be next when one of the devices is gone?
+
+Similar to how set_primary_fwnode() handles deletion (NULL), you can
+handle the same for when a device is removed. You can check the parent
+or the bus for another device with the same fwnode and set it.
+
+> No, simply no. Do not use it!
+
+Using fwnode_handle->dev is no different than searching a bus for a
+device which has dev->fwnode match the fwnode you are looking for.
+
+In both cases, you are just going to get the first device that was
+added. It's completely pointless to force searching a bus to find the
+device with a specific fwnode.
+
+In the special cases where one fwnode has multiple devices, no generic
+code is going to always handle the device search correctly. The
+framework adding those devices probably knows what's the right thing
+to do based on which of the N devices with the same fwnode they are
+trying to find.
+
+I understand it's not great, but blindly saying "search the bus" isn't
+really improving anything here and just makes things unnecessarily
+inefficient.
+
+-Saravana
+
+>
+> > Once it's done, I don't see why you wouldn't want to assign this device=
+ to
+> > its corresponding software node. Provided locking is in place etc.
+> >
+> > > > They - after all - represent the actual
+> > > > physical device hierarchy which may or may not be populated at
+> > > > run-time depending on many factors.
+> > >
+> > > No. This is a mistaken assumption.
+> >
+> > How so?
+>
+> See above.
+>
+> > > > Once populated, being able to retrieve the software representation =
+of
+> > > > the device (struct device) from the node from which it was populate=
+d
+> > > > sounds like a reasonable thing to do. What are those problems and a=
+re
+> > > > they even linked to this issue?
+> > > >
+> > > > > The get_dev_from_fwnode() is used only in devlink and I want to k=
+eep it that way.
+> > > > > Nobody else should use it, really.
+> > > >
+> > > > I don't care all that much, I can get the device from the children =
+of
+> > > > the platform device. Still comparing fwnodes, though this time the
+> > > > other way around.
+> > >
+> > > Fine, but do not use dev pointer from fwnode, esp. software node.
+> >
+> > I will do it but I'd like to clarify the above at some point.
+>
+> The relationship between device instance(s) and firmware node instance(s)
+> is m:n, where each of them can be from 0 to ... x or y.
+>
+> There is no unique mapping between two.
 
