@@ -1,140 +1,130 @@
-Return-Path: <linux-gpio+bounces-3563-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3564-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5134185DE78
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 15:18:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7161785DE99
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 15:20:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C70131F246E2
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:18:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 136141F246DC
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 14:20:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93EB369D29;
-	Wed, 21 Feb 2024 14:18:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A3B57CF27;
+	Wed, 21 Feb 2024 14:19:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="BH3RU58z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay3-d.mail.gandi.net (relay3-d.mail.gandi.net [217.70.183.195])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB4F63D981;
-	Wed, 21 Feb 2024 14:18:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4A69D38;
+	Wed, 21 Feb 2024 14:19:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708525115; cv=none; b=M5TpDptOk+6D3hKGV/WiYhSO+djrUQL+BP4JYu8DGHLpvcDo25glW4SYGRlokm3KysXa9QjTS4d8qNN/jP+3jBrrsgFHJr5VvxfRJVkXCi54u/xXf8xGfZJ804qJVvvqkDDOOrz/IuCTCznpMp/7s52E4nSxcWjYdaytByE+XDc=
+	t=1708525173; cv=none; b=s7ySvEIystER1Exlmf7nlxhO7zqogkvTYkVF0bXduOEv8q4nYgDjljihpuZanuvIAwqVUCfQlmHxhIRarxBnOYSHJdOKeXtO+kJIpvWBVpuNemFezceCgjN7g+Fa3HZdg4W1OHZf3rxW3ilWasLWFIUbTg0lWvZdxRhIQpnWA9c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708525115; c=relaxed/simple;
-	bh=hFnaWpt2J44fWSGAXSUbaxkRbOCTlYWOL+3hH2Mpin8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fI7XjqgpaUsbnQ1hZX997yqqqPkMMr3sQeQSbnhbklE8VJrcmsVrcsHIAHDY5yKmI3eapvRO84Eq/Jv3n20qFlHzut0VMX8+StZagsi/UaFlqttj5ltfZxCPdf/zcOHUgvmla/vO/sLIPzpmuZQVzvAmPejWTBFI2uqb5czAUxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6002317a427so55664857b3.2;
-        Wed, 21 Feb 2024 06:18:33 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708525112; x=1709129912;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=12g2lyoIyLhB142LFaLUwjI1mZtgaY41ezqOHNni8bA=;
-        b=r20m3AXxqKj6i8zUAUo7KjPtgThF81BFRkRelSznvQywyCKugOzuejdDKadUMNt83c
-         f7B4sLQx1ky9k8LJre3kE92VEJFe9AbhvFvH4AbR1zxBCLi25jggeQhIiA15yStPqeC9
-         Twv20Vd5ByEjgvLHfeKofp5oP6ev3DoAMZsSe5GPhvkAEULlEzAc33mX+4Eb8hbMMZSb
-         YJ5YbVC/NGj/QqATkf9SBrdkrfIDzKBdcYKZFiP0szMGMwzkAnCxqxj3gsA7Oitw0bh6
-         9E3hDYtVinHf34DgeaGbo0tH8M2aeWeXCH2mGv6YYZGj7PNhQ8FegJmuRjpHGtLYJK6B
-         R5Qw==
-X-Forwarded-Encrypted: i=1; AJvYcCXJZQ0tnM6mgBT5cnR1NgbdAWUB+0B/aMR/4hd6vzSJo1qS4NNJD2E3DRNP9ZneyNE1yHAK01CuFMT3QVyYp+xL7xrHx7LB1ItPUUtVVCL+cOqGiiLh3exMN8h9VTPdfHDPo2QhV2CSfp6Lit7L29zjhaXnnVFHIi/arurumSC8utvXujFd/1MqYLzC
-X-Gm-Message-State: AOJu0YzIWYEezh66LTYTMqJdOPzs8lc4j49o64+vlJsmDid5gZ5eGyhq
-	+JHWzbhr9MBBZelHzX+j/E5dlwjWwRs2K0DYf/ekkIVbTWb55mGXhAZFbEFd7GU=
-X-Google-Smtp-Source: AGHT+IEp5UB2oREq9FrW/7qNtAlJ913YDd5xC5jnQuOwn2ZpoylDXLMYQUmptRODLNaNPD8LDI1OWw==
-X-Received: by 2002:a81:a0d7:0:b0:608:5af9:b486 with SMTP id x206-20020a81a0d7000000b006085af9b486mr5490613ywg.11.1708525111845;
-        Wed, 21 Feb 2024 06:18:31 -0800 (PST)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id y79-20020a81a152000000b006079055cc56sm2607587ywg.78.2024.02.21.06.18.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 06:18:31 -0800 (PST)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dcc4de7d901so5924368276.0;
-        Wed, 21 Feb 2024 06:18:31 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVocVu5PknUozIpsWFnKaeLnzON1VXDPAwPYfhwFcexFHGApVC6x43t9f023GEarJW1Y44kErdWMFHcc8KcB2d1YjGNEUj3KpV0rRT96E2j/df8z+MiE27C8aDq58hsy0eNM9GRePHYVR7+RK8M/0ZM+Rqad1LTmQU4Q+bQFfF6kdlLyfaD4ccMYkg0
-X-Received: by 2002:a25:2bc2:0:b0:dc2:4f34:c964 with SMTP id
- r185-20020a252bc2000000b00dc24f34c964mr16422317ybr.23.1708525111140; Wed, 21
- Feb 2024 06:18:31 -0800 (PST)
+	s=arc-20240116; t=1708525173; c=relaxed/simple;
+	bh=7wFKTVlWizL57RttcaVLGrwRB1DayJIhODEBnM4Uul8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Qu53vKhUD7q0rP+F1rk6XZ9xzUEhDWZe0P+BPAIjW8RDbUKJHHg8B5vOHfBxrgOZX9V4sxqLct62hRmO3ew40ndCdtnGz9UjD0IcMFapzU7PZmYgLpwQ9PAyZJKZ3jdDIpByagp2ZSPxoGcptHAi8gdMprfh32D0dJrZf2TSBXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=BH3RU58z; arc=none smtp.client-ip=217.70.183.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 334A660005;
+	Wed, 21 Feb 2024 14:19:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1708525167;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=djgIwKG8h1E1vBHOq7Yx/ZY0Ehwdq+Fa2OAPhHy5Bg0=;
+	b=BH3RU58z7cr7I5bVawgKgfnYC5GysBok+JTGHq7LVbJ85EirfpHA2o2XLzRR+7UrXVwEfR
+	/wZa6tcSK+DMxgMWmUsnNDaOR0N1r8YgkoRdYceug+1Yk4JmUTFRDvRCA3/cymZ9XpUHr/
+	vd1WaoQ4pQTMeRzCHOJKwuvBlu9/+rOifdvv6q5fqfzwFEr1d5o71iFGgd3kc3AOzFnAO1
+	A1snWfe4kw4sZl4URubjBTzCzQTc4uqweCPYbYIuoPmUagYG9LKMcqiXTtnvElDi8wKgo0
+	I0H6nXBonAHEME2N7LD4uGH31cYGjo3LmMOeUpuFAYUSps2nLsFC7ihsE8gNUA==
+Message-ID: <b0220b02-5058-42ec-ba06-251caa4813dc@bootlin.com>
+Date: Wed, 21 Feb 2024 15:19:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240215124112.2259103-1-claudiu.beznea.uj@bp.renesas.com> <20240215124112.2259103-3-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240215124112.2259103-3-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 21 Feb 2024 15:18:19 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdXenTZWS5NsOS_rwXp5+4K6zK3cv8z7ev46Sp4nTLTMMQ@mail.gmail.com>
-Message-ID: <CAMuHMdXenTZWS5NsOS_rwXp5+4K6zK3cv8z7ev46Sp4nTLTMMQ@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] pinctrl: renesas: rzg2l: Add suspend/resume support
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 02/18] pinctrl: pinctrl-single: remove dead code in
+ suspend() and resume() callbacks
+Content-Language: en-US
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Tony Lindgren <tony@atomide.com>,
+ Haojian Zhuang <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
+ Aaro Koskinen <aaro.koskinen@iki.fi>,
+ Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+ Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
+ Philipp Zabel <p.zabel@pengutronix.de>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>,
+ =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
+ Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+ linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+ theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v3-0-5c2e4a3fac1f@bootlin.com>
+ <20240102-j7200-pcie-s2r-v3-2-5c2e4a3fac1f@bootlin.com>
+ <Zc4tedAhqYX3bQcw@smile.fi.intel.com>
+ <78add459-a96a-46c6-83ff-e2657d4d3db4@bootlin.com>
+ <Zc96dSff5Y-dufrJ@smile.fi.intel.com>
+ <a2c3c5b9-79a3-4793-892c-b1ab79b71c7d@bootlin.com>
+ <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
+From: Thomas Richard <thomas.richard@bootlin.com>
+In-Reply-To: <ZdX28EJ9LtDWfVmH@smile.fi.intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-GND-Sasl: thomas.richard@bootlin.com
 
-Hi Claudiu,
+On 2/21/24 14:13, Andy Shevchenko wrote:
+> On Wed, Feb 21, 2024 at 12:01:43PM +0100, Thomas Richard wrote:
+>> On 2/16/24 16:08, Andy Shevchenko wrote:
+>>> On Fri, Feb 16, 2024 at 08:59:47AM +0100, Thomas Richard wrote:
+>>>> On 2/15/24 16:27, Andy Shevchenko wrote:
+>>>>> On Thu, Feb 15, 2024 at 04:17:47PM +0100, Thomas Richard wrote:
+>>>>>> No need to check the pointer returned by platform_get_drvdata(), as
+>>>>>> platform_set_drvdata() is called during the probe.
+>>>>>
+>>>>> This patch should go _after_ the next one, otherwise the commit message doesn't
+>>>>> tell full story and the code change bring a potential regression.
+>>>>
+>>>> Hello Andy,
+>>>>
+>>>> I'm ok to move this patch after the next one.
+>>>> But for my understanding, could you explain me why changing the order is
+>>>> important in this case ?
+>>>
+>>> Old PM calls obviously can be called in different circumstances and these
+>>> checks are important.
+>>>
+>>> Just squash these two patches to avoid additional churn and we are done.
+>>
+>> You mean invert the order instead of squash.
+> 
+> Either would work, but see how much churn in terms of changing just changed
+> lines it adds.
 
-On Thu, Feb 15, 2024 at 1:41=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> pinctrl-rzg2l driver is used on RZ/G3S which support deep sleep states
-> where power to most of the SoC components is turned off.
->
-> For this add suspend/resume support. This involves saving and restoring
-> configured registers along with disabling clock in case there is no pin
-> configured as wakeup sources.
->
-> To save/restore registers 2 caches were allocated: one for GPIO pins and
-> one for dedicated pins.
->
-> On suspend path the pin controller registers are saved and if none of the
-> pins are configured as wakeup sources the pinctrl clock is disabled.
-> Otherwise it remains on.
->
-> On resume path the configuration is done as follows:
-> 1/ setup PFCs by writing to registers on pin based accesses
-> 2/ setup GPIOs by writing to registers on port based accesses and
->    following configuration steps specified in hardware manual
-> 3/ setup dedicated pins by writing to registers on port based accesses
-> 4/ setup interrupts.
->
-> Because interrupt signals are routed to IA55 interrupt controller and
-> IA55 interrupt controller resumes before pin controller, patch restores
-> also the configured interrupts just after pin settings are restored to
-> avoid invalid interrupts while resuming.
->
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - use u8 for sd_ch, eth_poc, eth_mode, qspi members of
->   struct rzg2l_pinctrl_reg_cache and readb()/writeb() where necessary
-> - s/wakeup_source/wakeup_path/g
-> - call device_set_wakeup_path() on suspend
-> - call irq_chip_set_wake_parent() on rzg2l_gpio_irq_set_wake()
+OK thanks.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.9.
+I'll squash the two patches. And I'll add a comment which explains that
+I dropped some dead code.
 
-Gr{oetje,eeting}s,
+Regards,
 
-                        Geert
+-- 
+Thomas Richard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
