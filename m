@@ -1,161 +1,281 @@
-Return-Path: <linux-gpio+bounces-3543-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3544-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4BD6A85D294
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 09:29:50 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56C6785D3B7
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 10:34:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0638F2848CA
-	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 08:29:49 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7A0901C222C4
+	for <lists+linux-gpio@lfdr.de>; Wed, 21 Feb 2024 09:34:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BE2D3C48C;
-	Wed, 21 Feb 2024 08:29:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2F59D3CF40;
+	Wed, 21 Feb 2024 09:34:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BQ9zVwE6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VRrAG5jz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f44.google.com (mail-ej1-f44.google.com [209.85.218.44])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7D963C06A;
-	Wed, 21 Feb 2024 08:29:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 075D73D3B4
+	for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 09:34:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708504176; cv=none; b=E7H/aolvyu/ICSQq+nzo6TQbjO6/DLrp0riGZATgfjlXkov1EfK6DA5sVKiQZFIYiJdmeYskCs5fJmUf5EUGIau9+xDMD1984lvqu7u3pkQK8B1e7h41sO9pKQyXP2zaJwzt0SLPw/F4c2F1vzwp8OO0hjoyXVtdU2q2bbUJ1C4=
+	t=1708508058; cv=none; b=SPAObART87aO0AnAchCZw45Ewg4F9+iCeu1xvqOHkBDzGvW0w75ljIayqoHljZQ7MQPP+KKKQs3Vy8aOH65oJqcQNWsDpWiJ08p94i+cxytySMIzX2hiuPqniSQ8ZSePYIt6uuEq1W1Vriaag6vx+RPCe3sAJo+cDsC3605JqII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708504176; c=relaxed/simple;
-	bh=l+USiKsOoo5GxfeqF2OVgrwbmx7XziXEEcxHQXx9izU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GLEpRM6L8m2EIs+mi7AzlmcGIsIPDRDB8u51OGXI96H8ljvGYZtTOorIu78eypLHXGGl3mMxaNdUqeUeKCPXgySsFZOp7NoOTml3BZGfLQoeeIxkJ0gCjVxsBGLVjYoWl8HObGFdnQ6QSrWiJug+gFjJe2nJd9rdCAZ0LZBmJlY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BQ9zVwE6; arc=none smtp.client-ip=209.85.218.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f44.google.com with SMTP id a640c23a62f3a-a3f48422fb6so35170966b.3;
-        Wed, 21 Feb 2024 00:29:34 -0800 (PST)
+	s=arc-20240116; t=1708508058; c=relaxed/simple;
+	bh=s9Xdj47z241ebdldl2LEE4WRvzWSsprOa0nwjY4SQKQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=mugn9/cdK1UT9690gBv3S9+d+6BlA/tnxloRsJUfqjuu2GtlsqXgR6H16JLL1n7ciPB7sg16AAt45DAUaE2wNPNke64kUk8Qw/hpZuqR1YPcDc/x58g7Id7g3jCJr5kkzWz6cFSQ4eRxXIYfaabpdDYKikzWiKbce6zA1LsOUAM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VRrAG5jz; arc=none smtp.client-ip=209.85.221.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-4cb031cd5deso626737e0c.1
+        for <linux-gpio@vger.kernel.org>; Wed, 21 Feb 2024 01:34:16 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708504173; x=1709108973; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7ijo+X2EXC9W1Fu/WCqYIZ+xP706TUOFUSratEaFrdE=;
-        b=BQ9zVwE6ihXl6BHGh9G5g7Dd0DGRlIOJw4YRjJQbiktGjbwI6muX7SA7nSDgJamLdR
-         hFlLLRGyIFmTOS/wp8B2FgVRrs6ZVLsJr/HbdpqL/qcY6SoZLYEfUpvuEeFjWdVe7x/j
-         sjWD32rEAjMPA2rvllUt8y0ykfmij1hqyAos4cLt0vYr8VRAKer1srFAWXYnvH1tvXAw
-         xjFaGSabsENWyKU0wJej2LKbnKdXe/m5NYmP/OH77uHKYpUdzXPN5lArVdW53139FK1q
-         nAYd3K0dfrmg/RQy5Fa42eNl9gItUONhiLs2kcdXTpjz8/o6959k/7ZesFkf2Bb0ss4S
-         k+kg==
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708508056; x=1709112856; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KUQzuNSpvAHZAkbJV7vuuzKawy3SshhIEJCuEXtwJJs=;
+        b=VRrAG5jzGaOFfhAmm+lYdjnobCopFJC6cMJjlgJH7A22IszrOG0TmJRLhzIM/fEki6
+         K9ujwH/CKfGGE4/YK0yIbck26xVkk12CkWdq3NamtcT4ONJ3DlH9srtgXnhAKW9Z8xUD
+         UrX+L/B8vXNfFCP1orvWCAtAe3+PGjFlmRT7Nj+BsNsdimiXc4EVxOnxsXMB8dUOeTqm
+         t/+GXJ0FIJrwXnGmQMVWfUI4Xi7JtrQ335ZibcAGwYRxQjtiNU1kqR8AL4CPm8sv0JJy
+         r4bc12F30kyPkCKbyfl/MMYIMOHKrAHYlmlI9LqkW8lk6xCbvr+daupaWItcz/tqTMF7
+         Or+w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708504173; x=1709108973;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=7ijo+X2EXC9W1Fu/WCqYIZ+xP706TUOFUSratEaFrdE=;
-        b=hLjw1Pv53MaZWbA4ZuI5GCvBBi9qJLkjKaP+ATPBOmwdX55Uo+0iUWQGAqtwHNZptw
-         gPCBwn1jk6EyTVOA9VkjY1pljh/LAr5lElH7KHgwoHNUKaICA7jsJyMuwnHm4AGWceEJ
-         g6TM1Y0vFW7ZH+dTVmkk5gCcBbqC2Dj/gHKpd2npVo74oTsGyqxXWPHHXQSt/e+Ip/87
-         q6yBiLOj9l3jgmR6r3JrISTHboIw92ZcOFqyd5hIGrsJefjVQ6Rf6p4TvnIB2YLXQuU5
-         PsHD06ZRYv35BSMV5zE8erFYhnASH++Qz+N4KrBWBKECO0N4EmGDYgcczoVW08ACV2r/
-         6rGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU2W5M02O+HB97/0jj76IvBzTMJjrFvConMQdA6PwjiwhQ/Voo+VynZQmxEUOaeyZ73Gn7pitkw8+mUvdGxbemjtsdLZ/niHcAk9IoeaIZ2IZJx/SOsqVSl5i10g7OWOFukL5MjPVqRzJM2ZnLPSecdhQb2XyU0esxZ8xU0t56QhYE9pGFp/JdF1+SM4bYxZqv8BQU+8SwMbiouh72idJM=
-X-Gm-Message-State: AOJu0YwzbIK+p76oal+XXsbRhGSOAuyFu+nBhLQNARWXGTRGMjzfCo4x
-	9rcWTmgI5qBsgwS/uLVLFcyHeSbQV4gAqx/bNNWJQyfI3KKo9qcg
-X-Google-Smtp-Source: AGHT+IEByevySHGOYsiHoumsPUFFKnbfOL/epOfhCWUPHg6vKAN8y5PnWG9rjYr66ZXMDSQ2WnecRQ==
-X-Received: by 2002:a17:906:1358:b0:a3f:4b10:134 with SMTP id x24-20020a170906135800b00a3f4b100134mr377542ejb.72.1708504172834;
-        Wed, 21 Feb 2024 00:29:32 -0800 (PST)
-Received: from [172.25.98.130] ([5.2.194.157])
-        by smtp.gmail.com with ESMTPSA id un8-20020a170907cb8800b00a3df7003552sm4711384ejc.32.2024.02.21.00.29.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 21 Feb 2024 00:29:32 -0800 (PST)
-Message-ID: <0fa819d1-2a0f-4243-8e5f-a098528278c3@gmail.com>
-Date: Wed, 21 Feb 2024 10:29:30 +0200
+        d=1e100.net; s=20230601; t=1708508056; x=1709112856;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KUQzuNSpvAHZAkbJV7vuuzKawy3SshhIEJCuEXtwJJs=;
+        b=PP2wq5OBpiVzf71OACj4R4v/c0iFtQNbmmpZbKDIPgGZxSNCbCcVpgBWsq7iipqRlk
+         tE+VvDuEjMWcqhneL2Je4/8e0rQn4/nA785aIRXuz+4OGWrADMgmng/owCSSzc2zqkpT
+         pUnHjlkNMBfMnDkCDSrtxcam9YvKkjrTcE5yvu829BQVI608ETOgE1J/KW2cuP1G1DjR
+         NLpI/N4YK7SQRczRKvqSZczi2ff4P6IYaPNBeTwL7lZC/wRcOWZH6h4punFPe/qTkHNn
+         axXhMcbBAXaKLag4LtckDlEHqJdAyNkAGz6fVUdnD3F1ywlphozVW/WzaRmBHdUrwkkO
+         litQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXqLfWf7ss5AH0ErBvbbR+5jUZSmZU7wPqTLzAPHue/Rz8yX7e5K0s0v9Y7mxs60MJGFs0sfLcyJmao+P/95BGAO4M1FPHyT36ybw==
+X-Gm-Message-State: AOJu0YyQBIjioF9azZPf/zsL/vk95Pf9KeMkEgMl7rckPsHvYTYUbiL6
+	+XZCM2oC+6zAe0tLWs9ur+A08E9NtjHc343xi/4z7+QwN2lJnKIMKTmcj6k9jQOrhvfnjsjsl4i
+	InjsAqiVpKiI84xddTOJUaZ3owCt9heX3NSNE0Q==
+X-Google-Smtp-Source: AGHT+IFDpkqz8w/wFwZZ1cXovCfniRVC/FS0s4CKKdJyP7MidrETpVlVLioXGD9qWjpEYr6G2g9FR61LMOXhUaWncFM=
+X-Received: by 2002:a1f:4c84:0:b0:4c0:3116:e909 with SMTP id
+ z126-20020a1f4c84000000b004c03116e909mr14379475vka.7.1708508055448; Wed, 21
+ Feb 2024 01:34:15 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
-To: David Lechner <dlechner@baylibre.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
- Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>,
- Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>,
- ChiaEn Wu <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>,
- =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>,
- Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>,
- Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
- <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
-Content-Language: en-US
-From: Ceclan Dumitru <mitrutzceclan@gmail.com>
-In-Reply-To: <CAMknhBEZ7Y1Yx=wJGnfvYWGKPLas3pbCyY+sN8vrBzdkYO-A4w@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20230901183240.102701-1-brgl@bgdev.pl> <ZPJTT/l9fX1lhu6O@smile.fi.intel.com>
+ <CAMRc=Mekf9Rek3_G2ttQY+yBvWM3+P4RAWVOQH99eajn38F+og@mail.gmail.com>
+ <ZPWcTMPiu4MSq+F7@smile.fi.intel.com> <CAMRc=MfZv70FXHyNw4yK90NL5-jjAJa6qbKc6SV2ZwbaJkKQqg@mail.gmail.com>
+ <ZPWmDL6QJJMNi2qa@smile.fi.intel.com> <CAMRc=Mc0JgPUEpaes7WcbkMu5JyrpLW8N1+bM-+OJaB+pPX4ew@mail.gmail.com>
+ <ZPWr3dRP5C1GSY9F@smile.fi.intel.com> <CAMRc=Mfae+=HPPWzsG8bgK2CGOGY9GPkS5VZcwLyr_yY8A_y2g@mail.gmail.com>
+ <ZPWxbfHNOqAnkR09@smile.fi.intel.com> <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
+In-Reply-To: <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 21 Feb 2024 10:34:04 +0100
+Message-ID: <CAMRc=Mfsw9MGCxnZO+zWfcsFoeA6XHCpZ95eS7-vK4cvwJt-9Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+To: Saravana Kannan <saravanak@google.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Feb 21, 2024 at 2:47=E2=80=AFAM Saravana Kannan <saravanak@google.c=
+om> wrote:
+>
+> On Mon, Sep 4, 2023 at 3:29=E2=80=AFAM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > On Mon, Sep 04, 2023 at 12:12:44PM +0200, Bartosz Golaszewski wrote:
+> > > On Mon, Sep 4, 2023 at 12:05=E2=80=AFPM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > On Mon, Sep 04, 2023 at 11:47:54AM +0200, Bartosz Golaszewski wrote=
+:
+> > > > > On Mon, Sep 4, 2023 at 11:40=E2=80=AFAM Andy Shevchenko
+> > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > On Mon, Sep 04, 2023 at 11:22:32AM +0200, Bartosz Golaszewski w=
+rote:
+> > > > > > > On Mon, Sep 4, 2023 at 10:59=E2=80=AFAM Andy Shevchenko
+> > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > On Sat, Sep 02, 2023 at 04:40:05PM +0200, Bartosz Golaszews=
+ki wrote:
+> > > > > > > > > On Fri, Sep 1, 2023 at 11:10=E2=80=AFPM Andy Shevchenko
+> > > > > > > > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > > > > > > > > On Fri, Sep 01, 2023 at 08:32:40PM +0200, Bartosz Golas=
+zewski wrote:
+> >
+> > ...
+> >
+> > > > > > > > > > > -     /* Used by sysfs and configfs callbacks. */
+> > > > > > > > > > > -     dev_set_drvdata(&gc->gpiodev->dev, chip);
+> > > > > > > > > > > +     /* Used by sysfs callbacks. */
+> > > > > > > > > > > +     dev_set_drvdata(swnode->dev, chip);
+> > > > > > > > > >
+> > > > > > > > > > dev pointer of firmware node is solely for dev links. I=
+s it the case here?
+> > > > > > > > > > Seems to me you luckily abuse it.
+> > > > > > > > >
+> > > > > > > > > I don't think so. If anything we have a helper in the for=
+m of
+> > > > > > > > > get_dev_from_fwnode() but it takes reference to the devic=
+e while we
+> > > > > > > > > don't need it - we know it'll be there because we created=
+ it.
+> > > > > > > > >
+> > > > > > > > > This information (struct device of the GPIO device) can a=
+lso be
+> > > > > > > > > retrieved by iterating over the device children of the to=
+p platform
+> > > > > > > > > device and comparing their fwnodes against the one we got=
+ passed down
+> > > > > > > > > from probe() but it's just so many extra steps.
+> > > > > > > > >
+> > > > > > > > > Or we can have a getter in gpio/driver.h for that but I d=
+on't want to
+> > > > > > > > > expose another interface is we can simply use the fwnode.
+> > > > > > > >
+>
+> Sorry for being late to the party.
+>
+> > > > > > > > dev pointer in the fwnode strictly speaking is optional. No=
+-one, except
+> > > > > > > > its solely user, should rely on it (its presence and lifeti=
+me).
+> > > > > > >
+> > > > > > > Where is this documented? Because just by a quick glance into
+> > > > > > > drivers/base/core.c I can tell that if a device has an fwnode=
+ then
+> > > > > > > fwnode->dev gets assigned when the device is created and clea=
+red when
+> > > > > > > it's removed (note: note even attached to driver, just
+> > > > > > > created/removed). Seems like pretty reliable behavior to me.
+> > > > > >
+> > > > > > Yes, and even that member in fwnode is a hack in my opinion. We=
+ should not mix
+> > > > > > layers and the idea in the future to get rid of the fwnode_hand=
+le to be
+> > > > > > _embedded_ into struct device. It should be separate entity, an=
+d device
+> > > > > > instance may use it as a linked list. Currently we have a few p=
+roblems because
+> > > > > > of the this design mistake.
+> > > > >
+> > > > > I don't see how this would work if fwnodes can exist before struc=
+t
+> > > > > device is even created.
+> > > >
+> > > > That's whole idea behind swnodes. They (ideally) should be created =
+_before_
+> > > > any other object they are being used with. This is how it works tod=
+ay.
+> > >
+> > > Yes, this is what I meant: if fwnodes can be created before struct
+> > > device (as it is now) and their life-time is separated then how could
+> > > you possibly make the fwnode part of struct device?
+> > >
+> > > > And doing swnode->dev =3D ... contradicts a lot: layering, lifetime=
+ objects, etc.
+>
+> I understand what you are trying to say about layering, but there are
+> no lifetime violations here.
+>
+> > >
+> > > No it doesn't. We have the software node - the template for the
+> > > device. It can only be populated with a single device entry.
+> >
+> > Which is wrong assumption. Software nodes (and firmware nodes) in gener=
+al
+> > can be shared. Which device pointer you want to add there?
+>
+> I don't think this is any harder to handle than how a device's
+> secondary fwnode is handled in set_primary_fwnode(). For secondary
+> fwnodes, you just WARN and overwrite it and move on.
+>
+> > Which one
+> > should be next when one of the devices is gone?
+>
+> Similar to how set_primary_fwnode() handles deletion (NULL), you can
+> handle the same for when a device is removed. You can check the parent
+> or the bus for another device with the same fwnode and set it.
+>
+> > No, simply no. Do not use it!
+>
+> Using fwnode_handle->dev is no different than searching a bus for a
+> device which has dev->fwnode match the fwnode you are looking for.
+>
+> In both cases, you are just going to get the first device that was
+> added. It's completely pointless to force searching a bus to find the
+> device with a specific fwnode.
+>
+> In the special cases where one fwnode has multiple devices, no generic
+> code is going to always handle the device search correctly. The
+> framework adding those devices probably knows what's the right thing
+> to do based on which of the N devices with the same fwnode they are
+> trying to find.
+>
+> I understand it's not great, but blindly saying "search the bus" isn't
+> really improving anything here and just makes things unnecessarily
+> inefficient.
+>
+> -Saravana
 
+Thanks for the input. I've since moved to using device_find_child()
+but will keep it in mind for the future.
 
-On 2/20/24 22:54, David Lechner wrote:
-> On Tue, Feb 20, 2024 at 3:43 AM Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+Bart
 
-...
-
->> +  clocks:
->> +    maxItems: 1
->> +    description: |
-> 
-> Don't need `|` here.
-> 
-The description contains ": ". Without '|' yaml syntax considers the
-whole string before ':' as another attribute
-
->> +      Optional external clock source. Can include one clock source: external
->> +      clock or external crystal.
->> +
-
-...
-
->> +
->> +      diff-channels:
->> +        items:
->> +          minimum: 0
->> +          maximum: 31
->> +
-> 
-> Are we missing `bipolar: true` here? (since we have
-> unevaluatedProperties: false)
-> 
-
-No, since we are referencing the adc schema "$ref: adc.yaml"
-Which contains:
-"""
-  bipolar:
-
-    $ref: /schemas/types.yaml#/definitions/flag
-
-    description: If provided, the channel is to be used in bipolar mode.
-"""
-
-
-...
-
->> +
->> +required:
->> +  - compatible
->> +  - reg
-> 
-> Aren't the various power supplies supposed to be required?
-> 
-> - avdd-supply
-> - avdd2-supply
-> - iovdd-supply
-
-From my point of view, if someone uses a single supply (avdd == avdd2 ==
-iovdd), and uses only the internal reference then the supplies should
-not necessarily be required.
+>
+> >
+> > > Once it's done, I don't see why you wouldn't want to assign this devi=
+ce to
+> > > its corresponding software node. Provided locking is in place etc.
+> > >
+> > > > > They - after all - represent the actual
+> > > > > physical device hierarchy which may or may not be populated at
+> > > > > run-time depending on many factors.
+> > > >
+> > > > No. This is a mistaken assumption.
+> > >
+> > > How so?
+> >
+> > See above.
+> >
+> > > > > Once populated, being able to retrieve the software representatio=
+n of
+> > > > > the device (struct device) from the node from which it was popula=
+ted
+> > > > > sounds like a reasonable thing to do. What are those problems and=
+ are
+> > > > > they even linked to this issue?
+> > > > >
+> > > > > > The get_dev_from_fwnode() is used only in devlink and I want to=
+ keep it that way.
+> > > > > > Nobody else should use it, really.
+> > > > >
+> > > > > I don't care all that much, I can get the device from the childre=
+n of
+> > > > > the platform device. Still comparing fwnodes, though this time th=
+e
+> > > > > other way around.
+> > > >
+> > > > Fine, but do not use dev pointer from fwnode, esp. software node.
+> > >
+> > > I will do it but I'd like to clarify the above at some point.
+> >
+> > The relationship between device instance(s) and firmware node instance(=
+s)
+> > is m:n, where each of them can be from 0 to ... x or y.
+> >
+> > There is no unique mapping between two.
 
