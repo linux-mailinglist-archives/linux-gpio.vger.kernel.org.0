@@ -1,70 +1,172 @@
-Return-Path: <linux-gpio+bounces-3618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2567F85F162
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 07:15:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4FA7F85F2FA
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 09:31:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id AA4E9B24415
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 06:15:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B82283E8A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 08:31:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E19B1642B;
-	Thu, 22 Feb 2024 06:14:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 087CF22EFB;
+	Thu, 22 Feb 2024 08:31:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6NykOUw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MWq3E3jU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E7717C6E;
-	Thu, 22 Feb 2024 06:14:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151AB241E3
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 08:31:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708582489; cv=none; b=uX/L7UXhAX83v5xJ4pVgvO2C810iihD3+56cyHDkAQXKIG3wlbYe6/tfhB8a0OMk/xbC7G3rqqeK14L29sacsH57VjpLsv3GTog1Szk13IohsVCVDiWY8eYYsgmfxNF/iyJUFBG1M72CVYjiBYhJ/BjwvCvptd2cKea9/yHsjNM=
+	t=1708590672; cv=none; b=L/RYXHp5Zt+Uki6/TZSCu0Hj8BJyZwQtiQKSQapZmngcMqVSnahTkdI32Gfp2mM/2jHKnJxbuvvGRMx1/wbuhFBFpEsz9t5WMRNLoDTOTkwEC3Urs6Hu8rdmtXqnbjkyzjpHn35x8gSnCdN/GmC/89d1e003WoGSTW5IRnubu1U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708582489; c=relaxed/simple;
-	bh=5dOdh89xbTpGiN1hZGzRTTkv0J+9WeqduNt0cub0PXo=;
-	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
-	 Subject:From:Cc:To:Date; b=TY/j29rYOGtTDouUSlWpX4O6OhhbgiOZZzCsc86nM7tdzVXgute+FRWsEHBiCyRC4SFb+GYUkQb2SmEqMutF7t6h72DtUxIzaI+y3QuznLHL+PnN/lvyGWdroAd3sQrRiKHE3VTbLGPeMatca/Uv6lh2AtgzHAdpMm9Aa+EcsBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6NykOUw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98F95C433C7;
-	Thu, 22 Feb 2024 06:14:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708582488;
-	bh=5dOdh89xbTpGiN1hZGzRTTkv0J+9WeqduNt0cub0PXo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=T6NykOUwd7U0d6BQEUSKMhOihPLd7hQ4W/DTBS3U4uxl7gsfCop4U8lErSon2YKC8
-	 XiAwFvDglFF4Fy1POnk8aEC+U/+CZ3Z1VXrgKSbqdbWextOVikp7oc0ATh7VQHzxt9
-	 VpIMO02VX6GvM4wKc5dYWf2ydnQs/vOP221mT+qBNYrIeIOFsayCpYaXXUJ9r8/uAA
-	 uQhbLv5rYQRYq1J6xiaTjpLL/YFZ/9fYQ7Xvd3/3O9JOBwIovvdJuCrkcbvipQjISP
-	 5mHgnjGB5TQlH/cAsiltvmVcps8O+mYCdWJjphLzO22kFarilD6K1dLO8lBWidTtUq
-	 6o1n4PjqJbMog==
-Message-ID: <a392c79e10fc382e57bf4735005c7bf4.sboyd@kernel.org>
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1708590672; c=relaxed/simple;
+	bh=cYs24B+jpboAdkYkeMVBrxhk7csmYQxiPXi3PgJL7mc=;
+	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eoBGcGBClz40mCp+TIoz5IrBb8yQuCzxOw6RCZIxLA0dq+EzA1o8eGq1gL1NoV4W0ocDfVdMr3fVHc5PPhE5ZIZyiE7/VPoNZXgqICL3O5oNREFocJwCF1ct/IZg1EvXoWgvUU5tmjOZIZc/yPMlqSACfJOJlEsuxd2/ou4zy8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MWq3E3jU; arc=none smtp.client-ip=209.85.217.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4704c69a3d9so1073036137.2
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 00:31:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708590670; x=1709195470; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=p8jL3uYkTm+LNVdYsIt/Et/UrQilxmVNJ1Wadk+RFaQ=;
+        b=MWq3E3jUheJHoAE7sAmDuaHV8+1c6cJSNZUViMXmLi0kstvlyFY3oUzG8MBfNOQwvf
+         oVoZSkiwNfEoTg3zkd4SAWfQdN2Swcaa/XFvjRqCuqjanozf1GQWWz96MURRQ10Ibf16
+         mJQgopnEpt2IujhQDIYdHsM5GJNKVBvLLivfiXDO7F8bYKT9d9LCTUbzL3BzLVRKFfuG
+         dcLIHhSVqXDMUi/eRjVLwGYrBjGsYvA9Prq40Y5/FvGDmp8gqZMr7HR1Kxge+JWZ1TDv
+         YOVJF3zo/f387X2kMx/lCVvI3ex8KZ/sLi90qvPX1JlDX10N/O/R/bLGbvECwoC9Opuv
+         sWBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708590670; x=1709195470;
+        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=p8jL3uYkTm+LNVdYsIt/Et/UrQilxmVNJ1Wadk+RFaQ=;
+        b=tqbiXMdZccyJAGlKfKDuH35iz79rKW5h6AMzvTnzV/C3g0rsdvnwv5gbhTcHaQo6FV
+         g4WYDTdB9co0rqNn2tMXRUcvfaKxGtQzWjwGJ2xIBDwP8ZFUbFa9IVZ6VWKCSg3cL7lM
+         bxibIG2bivqlssgj/DQguOgw+WP+lK587PK1T0v1kLwqNKvftwjzjp/Qr26Es3Ch8oNu
+         pbGAkpD4nDDUJyr236DiikmQeL8rq7/pxUYOU/s8zDXxDomke98tMqTVCf06dfagE6hv
+         3CRZsYnn4Wwtx1JE7GE/h0dm8/0lJKmXcDNVMMCE9ySTwEpngT+LnDQJcAkVqAbB2ECV
+         bzJw==
+X-Forwarded-Encrypted: i=1; AJvYcCW9cQEUApA1YWfa0ZT2+tfjZfIzze55M61WsZxKnNZ0mo0AGay44sijTExo5Jemzv5dvH8vgCztCmR0fvuzAJcKnWfzLSIv1HG/bQ==
+X-Gm-Message-State: AOJu0YyhE7qG5o0TDh64juDL2VEkYgXPVSF8nQN8tqH20vw0+OpT1M0o
+	xCXfQ4romGdNjoPHp69RWcIfROjiO+4rf8n3pLcVdNoTFiRM7xwqagHobdWA3Sbqj18A/6iKNw7
+	Y3MruVDKhbg9DHgSOSlany8069nmhGq+HCuTKFRjJO44ou2Bu
+X-Google-Smtp-Source: AGHT+IGlxAS+aeUhOv2Zd1f0luaBKqEE7591Sd+BPz9t0c5sIaDqZ5by2IaT44MkWcHBupOV01eqRQBkigZ25d0ToJE=
+X-Received: by 2002:a67:fbcb:0:b0:470:3ece:b438 with SMTP id
+ o11-20020a67fbcb000000b004703eceb438mr11731172vsr.1.1708590669772; Thu, 22
+ Feb 2024 00:31:09 -0800 (PST)
+Received: from 969154062570 named unknown by gmailapi.google.com with
+ HTTPREST; Thu, 22 Feb 2024 00:31:09 -0800
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+In-Reply-To: <20240222010530.GA11949@rigel>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20240221-mbly-clk-v7-4-31d4ce3630c3@bootlin.com>
-References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com> <20240221-mbly-clk-v7-4-31d4ce3630c3@bootlin.com>
-Subject: Re: [PATCH v7 04/14] dt-bindings: reset: mobileye,eyeq5-reset: add bindings
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Conor Dooley <conor+dt@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
-Date: Wed, 21 Feb 2024 22:14:46 -0800
-User-Agent: alot/0.10
+References: <20240220111019.133697-1-herve.codina@bootlin.com>
+ <20240220111019.133697-3-herve.codina@bootlin.com> <20240220142959.GA244726@rigel>
+ <20240222005744.GA3603@rigel> <20240222010530.GA11949@rigel>
+Date: Thu, 22 Feb 2024 00:31:08 -0800
+Message-ID: <CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip device
+ is removed
+To: Kent Gibson <warthog618@gmail.com>
+Cc: Herve Codina <herve.codina@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>
+Content-Type: text/plain; charset="UTF-8"
 
-Quoting Th=C3=A9o Lebrun (2024-02-21 10:22:12)
-> Add DT-Schema bindings for the EyeQ5 reset controller.
->=20
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-> ---
+On Thu, 22 Feb 2024 02:05:30 +0100, Kent Gibson <warthog618@gmail.com> said:
+> On Thu, Feb 22, 2024 at 08:57:44AM +0800, Kent Gibson wrote:
+>> On Tue, Feb 20, 2024 at 10:29:59PM +0800, Kent Gibson wrote:
+>> > On Tue, Feb 20, 2024 at 12:10:18PM +0100, Herve Codina wrote:
+>>
+>> ...
+>>
+>> > >  }
+>> > >
+>> > > +static int linereq_unregistered_notify(struct notifier_block *nb,
+>> > > +				       unsigned long action, void *data)
+>> > > +{
+>> > > +	struct linereq *lr = container_of(nb, struct linereq,
+>> > > +					  device_unregistered_nb);
+>> > > +	int i;
+>> > > +
+>> > > +	for (i = 0; i < lr->num_lines; i++) {
+>> > > +		if (lr->lines[i].desc)
+>> > > +			edge_detector_stop(&lr->lines[i]);
+>> > > +	}
+>> > > +
+>> >
+>> > Firstly, the re-ordering in the previous patch creates a race,
+>> > as the NULLing of the gdev->chip serves to numb the cdev ioctls, so
+>> > there is now a window between the notifier being called and that numbing,
+>> > during which userspace may call linereq_set_config() and re-request
+>> > the irq.
+>> >
+>> > There is also a race here with linereq_set_config().  That can be prevented
+>> > by holding the lr->config_mutex - assuming the notifier is not being called
+>> > from atomic context.
+>> >
+>>
+>> It occurs to me that the fixed reordering in patch 1 would place
+>> the notifier call AFTER the NULLing of the ioctls, so there will no longer
+>> be any chance of a race with linereq_set_config() - so holding the
+>> config_mutex semaphore is not necessary.
+>>
+>
+> NULLing -> numbing
+>
+> The gdev->chip is NULLed, so the ioctls are numbed.
+> And I need to let the coffee soak in before sending.
+>
+>> In which case this patch is fine - it is only patch 1 that requires
+>> updating.
+>>
+>> Cheers,
+>> Kent.
+>
 
-Applied to clk-next
+The fix for the user-space issue may be more-or-less correct but the problem is
+deeper and this won't fix it for in-kernel users.
+
+Herve: please consider the following DT snippet:
+
+	gpio0 {
+		compatible = "foo";
+
+		gpio-controller;
+		#gpio-cells = <2>;
+		interrupt-controller;
+		#interrupt-cells = <1>;
+		ngpios = <8>;
+	};
+
+	consumer {
+		compatible = "bar";
+
+		interrupts-extended = <&gpio0 0>;
+	};
+
+If you unbind the "gpio0" device after the consumer requested the interrupt,
+you'll get the same splat. And device links will not help you here (on that
+note: Saravana: is there anything we could do about it? Have you even
+considered making the irqchip subsystem use the driver model in any way? Is it
+even feasible?).
+
+I would prefer this to be fixed at a lower lever than the GPIOLIB character
+device.
+
+Bartosz
 
