@@ -1,76 +1,76 @@
-Return-Path: <linux-gpio+bounces-3653-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3654-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F77485FC3B
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 16:23:22 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32F6185FC45
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 16:25:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C634728ABF3
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 15:23:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A18DA1F262BA
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 15:25:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A8BF14D434;
-	Thu, 22 Feb 2024 15:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 109F314C5AA;
+	Thu, 22 Feb 2024 15:24:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J9NSiHAY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZCZchb6Q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AA3B14C5AF;
-	Thu, 22 Feb 2024 15:23:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEDDE1474AC;
+	Thu, 22 Feb 2024 15:24:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708615395; cv=none; b=B3/dQym++IkhRaVYap6WAvNNx2D3A2sgIVb+FJ1ArFpQu6sYp8pt+dDwt+Q2+6cYBqeLBTX71U+6F9jfZOw2oUQgZZUnmXR9MGFnXTws1O6S63QhawbBdbSHgMuLG1sneus5ZbScQW8MdK2z4wPtroYzXJfWB8DNqs0P0YxYBZ8=
+	t=1708615496; cv=none; b=XmpYMV4PboRlktWkYtkJ/subzUXHsTmF6PQtswI9TjEdV9qeJVRA+t3+KgniTUpQReTf/28Fesr6CpYSBDbCLnhOD1sIP3DWnbRhJ7gVnymrMQPXAmFxupT/xYuOUMd2GxCo2XYjZSxg8xaAR9/nwyy/im8zbXDxsvE3lGwm+Vg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708615395; c=relaxed/simple;
-	bh=+ZN8UG6yOE1/Kkd3lW/LjDTmZSDVEFOJ3z0ODzVRDng=;
+	s=arc-20240116; t=1708615496; c=relaxed/simple;
+	bh=PIuBPcgaPYP64DROgSWdjJBcFxfi8DMAGUUPjPDY8KU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8kEG1FHYu+TyTn3BsWv7SWTu3dEyj7pVoSPE76dmqHRu6Me7HYYlAZjeboap6X26CEFMtOflpx7uvIB5N8bOSsSUU2C89wjAYNgobUsJIt1xxn6r3A0TM+IaoHMfrGiUqh4IzDyxVioPnpldrZwq1FdLIJNOe2fyeH0fk23Y1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=J9NSiHAY; arc=none smtp.client-ip=209.85.210.169
+	 In-Reply-To:Content-Type; b=uLvclCvy+teZbDuR69K9PzkpJjnrj8a3zo1m/ueY5+XliOpxWIoTV7P9UAHg1Sh9mbiT+GOQQTO2zZ902zKZx/RLicWUECMCWRy4hLvuBOnQRcIOov62u7rAQ49iYLGIT8NdzDOpLUwjIrRTfdgC2RCiepZ+4YKm3zSjoJsxEE0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZCZchb6Q; arc=none smtp.client-ip=209.85.210.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e45bd5014dso2192782b3a.1;
-        Thu, 22 Feb 2024 07:23:12 -0800 (PST)
+Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-6e3ffafa708so5249118b3a.1;
+        Thu, 22 Feb 2024 07:24:54 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708615392; x=1709220192; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1708615494; x=1709220294; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=18aJgkLrhUb7en6e+9IVDc7Sm8XASVYQ/8bIVIOkYlw=;
-        b=J9NSiHAYWpjTK04Xn4Yq3CFxhJXY2TDEjpwNGVVGbc4ii28EFf19vT6quM+YNrzhIp
-         LNvdxfEBpVuk3LyIYJIDq0cTH7PpYTsC/IqYMgMVKEOU07UiY1VEM0h7NHXrbpsqkM22
-         sXmvoJij4zaXQ7WscmlnJbaDBspHG8EbAtwj712xqC36wPOkPhp+9dz+yuRX3oHvuAT7
-         IYkfz8n/uviREwVnbkSPBy3aoZPhYxVFKC8vfDBdF8dF+fG/d+y0Yosj9saBxXoJdSMU
-         TkjDhp39EsKTJYJXrbW0aRvrHlYlmZPqiQXZe7QsnUTM45M5kypr+N7l5oneTiHT1U9w
-         gskQ==
+        bh=aXQfNeMLkgL8vNtlootrbSOlal3IIy+GDwI0MRVyyC8=;
+        b=ZCZchb6QwRsqlA09Bjp8kQCk+ufUG9+Q7TP+ksBUC0Kj6UY0+RrrL6qTRtBX+Fx9Vc
+         Jo4h+SnoKgOGzbVNdWhc4BRBO8oCmuGzVxCuDS9qUcar8pyAtPkB3H/kWL+zq7XDJNr7
+         Ubf7doBX338beOpmN5XxDuK/A1QLtWmrXaQ8iGAxJ7xg1dwwO5oUGa6jjmJJWBT3dTnq
+         mQm0mB3VwhFPUul/8StkxCjT0ABL/uaDjNFoADJGlb6K6xdVdLF49pCa1lr3KrVR/qBo
+         a0ZbqCsDz6EcjUFqSqlwoBXJHBlfkgfLWAIJcMwjfUwKa+vroPbppbmlEpmw87glennm
+         pVYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708615392; x=1709220192;
+        d=1e100.net; s=20230601; t=1708615494; x=1709220294;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :sender:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=18aJgkLrhUb7en6e+9IVDc7Sm8XASVYQ/8bIVIOkYlw=;
-        b=PTyKoDjQbRBZgAdkxKs3Dh/RH5t1ggI/8kC1Wxfy+m0bDv2VlpGrQrcf7QsE1sCcP9
-         A5xq+8YYLqgxQDR+hKvQv9QcViWDwE7t8vjPXUDKCS8Bvh/IvSX2ZNyl6mITshUT+CXy
-         2v83rkmsNjEnkOkdEyBZnHX6OjD2i6J9S4Zvw9cHK4u7BDIwyJsRR1C5ZidB23EENM49
-         K675wNJrYjF/VQtLPZ3x2O5GzFf94g8+EegVt89sRm25wFOP28O+Mq3wJbE9foMoNZ54
-         EZvOAMBTueEsv4g27p5YKv3ef4+ZGMaIsiOSZG48K/6fr3LNQRkpmXcZ+d3ciQ/Fs6zQ
-         +WwQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXMVEeD2H3AkzR+W2MMqxiDKFc+mcFGIl51uQI+BLCxZ3toOdEbTP9dCUgV0RLLZHQpnfe5lw79aFJkv3lffYqr2jJUF0hbZFKq0oOSQAcqYXKP+n6CzQKsoW7pDCOcqNP0RW5ELzRehrFM3y+Yqo0DeKamFzyIyyo76fKAFb6yu0SZ+ILDYZROVqwKzY+leLqBL4GoizwfkJPWdyiVXCZyuR/36Ok4ZQ6kj7a9PH5kZuqVbjd+fYSMkfn6iU+z
-X-Gm-Message-State: AOJu0YwCzoV9cbuJ9t0vuexRX1JRkhNz5W3rx91I8ufFGCGKqlmycEzK
-	OLm+S6KD44dcgdg3h6Jj5lg/CUztlM5fuEBHX5y6Q+gcXuB/dS9R
-X-Google-Smtp-Source: AGHT+IFgO7x6qc0DEEnZN42M8DGEgpD5a4mxPzQSd1CZmh4j5qF92F7sS0zFuKoONna795EqP51M4g==
-X-Received: by 2002:aa7:91d1:0:b0:6e0:4e7e:ef57 with SMTP id z17-20020aa791d1000000b006e04e7eef57mr19247160pfa.32.1708615392201;
-        Thu, 22 Feb 2024 07:23:12 -0800 (PST)
+        bh=aXQfNeMLkgL8vNtlootrbSOlal3IIy+GDwI0MRVyyC8=;
+        b=mjZRZ1rm6sX8lW1twirzsCUuvdksgdvha3oAS56wcaN8jkDMd+4Ep2fOKKJmNymhR7
+         Cwp0YN3hMAvvr7dhXFGSb13phLNCUQ/SMAGp1hOVePaIKhsGqf5xknxl7yShkqT30dPW
+         xqHmnXMk6ZVz2ROmsaVtcQS/37RwM4Y1yPk3KNoovcWI4HBSZUrINfalTmKvjmQyBUnv
+         od2JDeKnGRU/pvGF1r0abZB1bjkCULxvpRCtr7MHmdQrWg57cGU/Ct3E7MeLM6b0nBNw
+         OAYhJr9D1Llk0vjMzr1hdhgykxTdvR1YlEEtQvfA7SuLU4YvwFoIR9vyJuoQbZ8WdKcV
+         /mFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXy6q+uzbA7a8luup9CwrG1D6svzy0fpZuazU46T9/EAyA3arogiQ+stuibvKE8W5KNSD6jSRYYIyRz76cj8FlqU+lFMIHWDO9wWCOQSPRdJZ/Tm4FJicrv0kuXr30XOEEh7EVGP/WBqLawEd3ikugg0ojifP8qRdhaDcW05Mp+6i7n8s3+3mnRpEnHzRfNgRkyxK/jE01uj+KYXRzv3s5iNTFqQlAHUsaIL5CkOqMyMiXo01jC/KIVuewL
+X-Gm-Message-State: AOJu0YwuQ1l4i0ecFOJ7mDz64dl3hDth0ch1mmqkG9XvOPF8xrvWWPem
+	9VB/3/DvkPY03Sq+kUIET2FVYLTi8NORE1WqvChLvn4wWeuSjCpo
+X-Google-Smtp-Source: AGHT+IFOCTi3dMlzjGviA7Kz3InAm5islYUdD+oRHJxhgo5nOUg6H4x7H8pBurwv2VMO/+nCHiFKIQ==
+X-Received: by 2002:a05:6a21:3994:b0:19c:a4d3:2041 with SMTP id ad20-20020a056a21399400b0019ca4d32041mr31039509pzc.42.1708615494137;
+        Thu, 22 Feb 2024 07:24:54 -0800 (PST)
 Received: from ?IPV6:2600:1700:e321:62f0:329c:23ff:fee3:9d7c? ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b2-20020aa78ec2000000b006e4d2cbcac8sm998069pfr.94.2024.02.22.07.23.09
+        by smtp.gmail.com with ESMTPSA id b2-20020aa78ec2000000b006e4d2cbcac8sm998069pfr.94.2024.02.22.07.24.52
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 07:23:11 -0800 (PST)
+        Thu, 22 Feb 2024 07:24:53 -0800 (PST)
 Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <a336a642-838c-48e9-aea3-703fd0d017bc@roeck-us.net>
-Date: Thu, 22 Feb 2024 07:23:08 -0800
+Message-ID: <4a545c16-7518-49d2-b158-7fcabe3508c5@roeck-us.net>
+Date: Thu, 22 Feb 2024 07:24:52 -0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,37 +78,30 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] devm-helpers: Add resource managed version of debugfs
- directory create function
+Subject: Re: [PATCH 1/2] devm-helpers: Add resource managed version of mutex
+ init
 Content-Language: en-US
 To: =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
  linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
  Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
- Pankaj Gupta <pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Dave Jiang <dave.jiang@intel.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Bamvor Jian Zhang <bamv2005@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Douglas Anderson <dianders@chromium.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, Oded Gabbay
+ <ogabbay@kernel.org>, =?UTF-8?Q?Thomas_Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>,
  Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
  Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
  David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- James Seo <james@equiv.tech>, Jean Delvare <jdelvare@suse.com>,
- linux-crypto@vger.kernel.org, linux-cxl@vger.kernel.org,
- linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
- linux-hwmon@vger.kernel.org
+ Aleksandr Mezin <mezin.alexander@gmail.com>, Jean Delvare
+ <jdelvare@suse.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones
+ <lee@kernel.org>, Sebastian Reichel <sre@kernel.org>,
+ Matthias Brugger <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-gpio@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 References: <20240222145838.12916-1-kabel@kernel.org>
- <20240222145838.12916-2-kabel@kernel.org>
 From: Guenter Roeck <linux@roeck-us.net>
 Autocrypt: addr=linux@roeck-us.net; keydata=
  xsFNBE6H1WcBEACu6jIcw5kZ5dGeJ7E7B2uweQR/4FGxH10/H1O1+ApmcQ9i87XdZQiB9cpN
@@ -153,401 +146,354 @@ Autocrypt: addr=linux@roeck-us.net; keydata=
  WkRwrSuCn7UG+qVWZeKEsFKFOkynOs3pVbcbq1pxbhk3TRWCGRU5JolI4ohy/7JV1TVbjiDI
  HP/aVnm6NC8of26P40Pg8EdAhajZnHHjA7FrJXsy3cyIGqvg9os4rNkUWmrCfLLsZDHD8FnU
  mDW4+i+XlNFUPUYMrIKi9joBhu18ssf5i5Q=
-In-Reply-To: <20240222145838.12916-2-kabel@kernel.org>
+In-Reply-To: <20240222145838.12916-1-kabel@kernel.org>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
 On 2/22/24 06:58, Marek Behún wrote:
-> A few drivers register a devm action to remove a debugfs directory,
-> implementing a one-liner function that calls debufs_remove_recursive().
-> Help drivers avoid this repeated implementations by adding managed
-> version of debugfs directory create function.
+> A few drivers are doing resource-managed mutex initialization by
+> implementing ad-hoc one-liner mutex dropping functions and using them
+> with devm_add_action_or_reset(). Help drivers avoid these repeated
+> one-liners by adding managed version of mutex initialization.
 > 
-> Use the new function devm_debugfs_create_dir() in the following
-> drivers:
->    drivers/crypto/caam/ctrl.c
->    drivers/gpu/drm/bridge/ti-sn65dsi86.c
->    drivers/hwmon/hp-wmi-sensors.c
->    drivers/hwmon/mr75203.c
->    drivers/hwmon/pmbus/pmbus_core.c
-> 
-> Also use the action function devm_debugfs_dir_recursive_drop() in
-> drivers
->    drivers/cxl/mem.c
->    drivers/gpio/gpio-mockup.c
+> Use the new function devm_mutex_init() in the following drivers:
+>    drivers/gpio/gpio-pisosr.c
+>    drivers/gpio/gpio-sim.c
+>    drivers/gpu/drm/xe/xe_hwmon.c
+>    drivers/hwmon/nzxt-smart2.c
+>    drivers/leds/leds-is31fl319x.c
+>    drivers/power/supply/mt6370-charger.c
+>    drivers/power/supply/rt9467-charger.c
 > 
 > Signed-off-by: Marek Behún <kabel@kernel.org>
 > ---
->   drivers/crypto/caam/ctrl.c            | 16 +++------
->   drivers/cxl/mem.c                     |  9 ++---
->   drivers/gpio/gpio-mockup.c            | 11 ++----
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++------
->   drivers/hwmon/hp-wmi-sensors.c        | 15 ++-------
->   drivers/hwmon/mr75203.c               | 15 +++------
->   drivers/hwmon/pmbus/pmbus_core.c      | 16 +++------
->   include/linux/devm-helpers.h          | 48 +++++++++++++++++++++++++++
->   8 files changed, 72 insertions(+), 71 deletions(-)
+>   drivers/gpio/gpio-pisosr.c            |  9 ++-----
+>   drivers/gpio/gpio-sim.c               | 12 ++--------
+>   drivers/gpu/drm/xe/xe_hwmon.c         | 11 ++-------
+>   drivers/hwmon/nzxt-smart2.c           |  9 ++-----
+>   drivers/leds/leds-is31fl319x.c        |  9 ++-----
+>   drivers/power/supply/mt6370-charger.c | 11 +--------
+>   drivers/power/supply/rt9467-charger.c | 34 ++++-----------------------
+>   include/linux/devm-helpers.h          | 32 +++++++++++++++++++++++++
+>   8 files changed, 47 insertions(+), 80 deletions(-)
 > 
-> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-> index bdf367f3f679..ea3ed9a17f1a 100644
-> --- a/drivers/crypto/caam/ctrl.c
-> +++ b/drivers/crypto/caam/ctrl.c
+> diff --git a/drivers/gpio/gpio-pisosr.c b/drivers/gpio/gpio-pisosr.c
+> index e3013e778e15..dddbf37e855f 100644
+> --- a/drivers/gpio/gpio-pisosr.c
+> +++ b/drivers/gpio/gpio-pisosr.c
 > @@ -7,6 +7,7 @@
->    */
->   
->   #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/of_address.h>
->   #include <linux/of_irq.h>
->   #include <linux/platform_device.h>
-> @@ -604,11 +605,6 @@ static int init_clocks(struct device *dev, const struct caam_imx_data *data)
->   	return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
->   }
->   
-> -static void caam_remove_debugfs(void *root)
-> -{
-> -	debugfs_remove_recursive(root);
-> -}
-> -
->   #ifdef CONFIG_FSL_MC_BUS
->   static bool check_version(struct fsl_mc_version *mc_version, u32 major,
->   			  u32 minor, u32 revision)
-> @@ -1058,13 +1054,9 @@ static int caam_probe(struct platform_device *pdev)
->   	ctrlpriv->era = caam_get_era(perfmon);
->   	ctrlpriv->domain = iommu_get_domain_for_dev(dev);
->   
-> -	dfs_root = debugfs_create_dir(dev_name(dev), NULL);
-> -	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> -		ret = devm_add_action_or_reset(dev, caam_remove_debugfs,
-> -					       dfs_root);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	dfs_root = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(dfs_root))
-> +		return PTR_ERR(dfs_root);
->   
->   	caam_debugfs_init(ctrlpriv, perfmon, dfs_root);
->   
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index c5c9d8e0d88d..4b38514887a4 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -2,6 +2,7 @@
->   /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->   #include <linux/debugfs.h>
->   #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/module.h>
->   #include <linux/pci.h>
->   
-> @@ -30,11 +31,6 @@ static void enable_suspend(void *data)
->   	cxl_mem_active_dec();
->   }
->   
-> -static void remove_debugfs(void *dentry)
-> -{
-> -	debugfs_remove_recursive(dentry);
-> -}
-> -
->   static int cxl_mem_dpa_show(struct seq_file *file, void *data)
->   {
->   	struct device *dev = file->private;
-> @@ -138,7 +134,8 @@ static int cxl_mem_probe(struct device *dev)
->   		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
->   				    &cxl_poison_clear_fops);
->   
-> -	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-> +	rc = devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> +				      dentry);
->   	if (rc)
->   		return rc;
->   
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 455eecf6380e..adbe0fe09490 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -12,6 +12,7 @@
->   #include <linux/cleanup.h>
->   #include <linux/debugfs.h>
->   #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/gpio/driver.h>
->   #include <linux/interrupt.h>
->   #include <linux/irq.h>
-> @@ -390,13 +391,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
->   	}
->   }
->   
-> -static void gpio_mockup_debugfs_cleanup(void *data)
-> -{
-> -	struct gpio_mockup_chip *chip = data;
-> -
-> -	debugfs_remove_recursive(chip->dbg_dir);
-> -}
-> -
->   static void gpio_mockup_dispose_mappings(void *data)
->   {
->   	struct gpio_mockup_chip *chip = data;
-> @@ -480,7 +474,8 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->   
->   	gpio_mockup_debugfs_setup(dev, chip);
->   
-> -	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
-> +	return devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> +					chip->dbg_dir);
->   }
->   
->   static const struct of_device_id gpio_mockup_of_match[] = {
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 62cc3893dca5..ad0ed2459394 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -10,6 +10,7 @@
->   #include <linux/bits.h>
->   #include <linux/clk.h>
->   #include <linux/debugfs.h>
+>   #include <linux/bitmap.h>
+>   #include <linux/bitops.h>
+>   #include <linux/delay.h>
 > +#include <linux/devm-helpers.h>
 >   #include <linux/gpio/consumer.h>
 >   #include <linux/gpio/driver.h>
->   #include <linux/i2c.h>
-> @@ -427,18 +428,12 @@ static int status_show(struct seq_file *s, void *data)
->   
->   DEFINE_SHOW_ATTRIBUTE(status);
->   
-> -static void ti_sn65dsi86_debugfs_remove(void *data)
-> -{
-> -	debugfs_remove_recursive(data);
-> -}
-> -
->   static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
->   {
->   	struct device *dev = pdata->dev;
->   	struct dentry *debugfs;
-> -	int ret;
->   
-> -	debugfs = debugfs_create_dir(dev_name(dev), NULL);
-> +	debugfs = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
->   
->   	/*
->   	 * We might get an error back if debugfs wasn't enabled in the kernel
-> @@ -447,10 +442,6 @@ static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
->   	if (IS_ERR_OR_NULL(debugfs))
->   		return;
->   
-> -	ret = devm_add_action_or_reset(dev, ti_sn65dsi86_debugfs_remove, debugfs);
-> -	if (ret)
-> -		return;
-> -
->   	debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
->   }
->   
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-> index b5325d0e72b9..2a7c33763ce8 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -23,6 +23,7 @@
->   
->   #include <linux/acpi.h>
->   #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/hwmon.h>
->   #include <linux/jiffies.h>
->   #include <linux/mutex.h>
-> @@ -1304,12 +1305,6 @@ static int current_reading_show(struct seq_file *seqf, void *ignored)
->   }
->   DEFINE_SHOW_ATTRIBUTE(current_reading);
->   
-> -/* hp_wmi_devm_debugfs_remove - devm callback for debugfs cleanup */
-> -static void hp_wmi_devm_debugfs_remove(void *res)
-> -{
-> -	debugfs_remove_recursive(res);
-> -}
-> -
->   /* hp_wmi_debugfs_init - create and populate debugfs directory tree */
->   static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
->   				struct hp_wmi_platform_events *pevents,
-> @@ -1320,21 +1315,15 @@ static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
->   	struct dentry *debugfs;
->   	struct dentry *entries;
->   	struct dentry *dir;
-> -	int err;
->   	u8 i;
->   
->   	/* dev_name() gives a not-very-friendly GUID for WMI devices. */
->   	scnprintf(buf, sizeof(buf), "hp-wmi-sensors-%u", dev->id);
->   
-> -	debugfs = debugfs_create_dir(buf, NULL);
-> +	debugfs = devm_debugfs_create_dir(dev, buf, NULL);
->   	if (IS_ERR(debugfs))
->   		return;
->   
-> -	err = devm_add_action_or_reset(dev, hp_wmi_devm_debugfs_remove,
-> -				       debugfs);
-> -	if (err)
-> -		return;
-> -
->   	entries = debugfs_create_dir("sensor", debugfs);
->   
->   	for (i = 0; i < icount; i++, info++) {
-> diff --git a/drivers/hwmon/mr75203.c b/drivers/hwmon/mr75203.c
-> index 50a8b9c3f94d..50f348fca108 100644
-> --- a/drivers/hwmon/mr75203.c
-> +++ b/drivers/hwmon/mr75203.c
-> @@ -10,6 +10,7 @@
->   #include <linux/bits.h>
->   #include <linux/clk.h>
->   #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->   #include <linux/hwmon.h>
->   #include <linux/kstrtox.h>
 >   #include <linux/module.h>
-> @@ -216,17 +217,11 @@ static const struct file_operations pvt_ts_coeff_j_fops = {
->   	.llseek = default_llseek,
+> @@ -116,11 +117,6 @@ static const struct gpio_chip template_chip = {
+>   	.can_sleep		= true,
 >   };
 >   
-> -static void devm_pvt_ts_dbgfs_remove(void *data)
+> -static void pisosr_mutex_destroy(void *lock)
 > -{
-> -	struct pvt_device *pvt = (struct pvt_device *)data;
-> -
-> -	debugfs_remove_recursive(pvt->dbgfs_dir);
-> -	pvt->dbgfs_dir = NULL;
+> -	mutex_destroy(lock);
 > -}
 > -
->   static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
+>   static int pisosr_gpio_probe(struct spi_device *spi)
 >   {
-> -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-> +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(pvt->dbgfs_dir))
-> +		return PTR_ERR(pvt->dbgfs_dir);
+>   	struct device *dev = &spi->dev;
+> @@ -147,8 +143,7 @@ static int pisosr_gpio_probe(struct spi_device *spi)
+>   		return dev_err_probe(dev, PTR_ERR(gpio->load_gpio),
+>   				     "Unable to allocate load GPIO\n");
 >   
->   	debugfs_create_u32("ts_coeff_h", 0644, pvt->dbgfs_dir,
->   			   &pvt->ts_coeff.h);
-> @@ -237,7 +232,7 @@ static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->   	debugfs_create_file("ts_coeff_j", 0644, pvt->dbgfs_dir, pvt,
->   			    &pvt_ts_coeff_j_fops);
+> -	mutex_init(&gpio->lock);
+> -	ret = devm_add_action_or_reset(dev, pisosr_mutex_destroy, &gpio->lock);
+> +	ret = devm_mutex_init(dev, &gpio->lock);
+>   	if (ret)
+>   		return ret;
 >   
-> -	return devm_add_action_or_reset(dev, devm_pvt_ts_dbgfs_remove, pvt);
-> +	return 0;
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index c4106e37e6db..fcfcaa4efe70 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -12,6 +12,7 @@
+>   #include <linux/completion.h>
+>   #include <linux/configfs.h>
+>   #include <linux/device.h>
+> +#include <linux/devm-helpers.h>
+>   #include <linux/err.h>
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/gpio/driver.h>
+> @@ -307,13 +308,6 @@ static ssize_t gpio_sim_sysfs_pull_store(struct device *dev,
+>   	return len;
 >   }
 >   
->   static umode_t pvt_is_visible(const void *data, enum hwmon_sensor_types type,
-> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> index 1363d9f89181..e0f956a21125 100644
-> --- a/drivers/hwmon/pmbus/pmbus_core.c
-> +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> @@ -7,6 +7,7 @@
+> -static void gpio_sim_mutex_destroy(void *data)
+> -{
+> -	struct mutex *lock = data;
+> -
+> -	mutex_destroy(lock);
+> -}
+> -
+>   static void gpio_sim_put_device(void *data)
+>   {
+>   	struct device *dev = data;
+> @@ -457,9 +451,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *swnode, struct device *dev)
+>   	if (ret)
+>   		return ret;
+>   
+> -	mutex_init(&chip->lock);
+> -	ret = devm_add_action_or_reset(dev, gpio_sim_mutex_destroy,
+> -				       &chip->lock);
+> +	ret = devm_mutex_init(dev, &chip->lock);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/gpu/drm/xe/xe_hwmon.c b/drivers/gpu/drm/xe/xe_hwmon.c
+> index 174ed2185481..bb88ae1c196c 100644
+> --- a/drivers/gpu/drm/xe/xe_hwmon.c
+> +++ b/drivers/gpu/drm/xe/xe_hwmon.c
+> @@ -3,6 +3,7 @@
+>    * Copyright © 2023 Intel Corporation
 >    */
 >   
->   #include <linux/debugfs.h>
 > +#include <linux/devm-helpers.h>
->   #include <linux/kernel.h>
->   #include <linux/math64.h>
->   #include <linux/module.h>
-> @@ -3336,13 +3337,6 @@ static const struct file_operations pmbus_debugfs_ops_mfr = {
->   	.open = simple_open,
->   };
+>   #include <linux/hwmon-sysfs.h>
+>   #include <linux/hwmon.h>
+>   #include <linux/types.h>
+> @@ -729,13 +730,6 @@ xe_hwmon_get_preregistration_info(struct xe_device *xe)
+>   		xe_hwmon_energy_get(hwmon, &energy);
+>   }
 >   
-> -static void pmbus_remove_debugfs(void *data)
+> -static void xe_hwmon_mutex_destroy(void *arg)
 > -{
-> -	struct dentry *entry = data;
+> -	struct xe_hwmon *hwmon = arg;
 > -
-> -	debugfs_remove_recursive(entry);
+> -	mutex_destroy(&hwmon->hwmon_lock);
 > -}
 > -
->   static int pmbus_init_debugfs(struct i2c_client *client,
->   			      struct pmbus_data *data)
+>   void xe_hwmon_register(struct xe_device *xe)
 >   {
-> @@ -3357,8 +3351,9 @@ static int pmbus_init_debugfs(struct i2c_client *client,
->   	 * Create the debugfs directory for this device. Use the hwmon device
->   	 * name to avoid conflicts (hwmon numbers are globally unique).
->   	 */
-> -	data->debugfs = debugfs_create_dir(dev_name(data->hwmon_dev),
-> -					   pmbus_debugfs_dir);
-> +	data->debugfs = devm_debugfs_create_dir(data->dev,
-> +						dev_name(data->hwmon_dev),
-> +						pmbus_debugfs_dir);
->   	if (IS_ERR_OR_NULL(data->debugfs)) {
->   		data->debugfs = NULL;
->   		return -ENODEV;
-> @@ -3542,8 +3537,7 @@ static int pmbus_init_debugfs(struct i2c_client *client,
->   		}
->   	}
+>   	struct device *dev = xe->drm.dev;
+> @@ -751,8 +745,7 @@ void xe_hwmon_register(struct xe_device *xe)
 >   
-> -	return devm_add_action_or_reset(data->dev,
-> -					pmbus_remove_debugfs, data->debugfs);
-> +	return 0;
+>   	xe->hwmon = hwmon;
+>   
+> -	mutex_init(&hwmon->hwmon_lock);
+> -	if (devm_add_action_or_reset(dev, xe_hwmon_mutex_destroy, hwmon))
+> +	if (devm_mutex_init(dev, &hwmon->hwmon_lock))
+>   		return;
+>   
+>   	/* primary GT to access device level properties */
+> diff --git a/drivers/hwmon/nzxt-smart2.c b/drivers/hwmon/nzxt-smart2.c
+> index 7aa586eb74be..00bc89607673 100644
+> --- a/drivers/hwmon/nzxt-smart2.c
+> +++ b/drivers/hwmon/nzxt-smart2.c
+> @@ -5,6 +5,7 @@
+>    * Copyright (c) 2021 Aleksandr Mezin
+>    */
+>   
+> +#include <linux/devm-helpers.h>
+>   #include <linux/hid.h>
+>   #include <linux/hwmon.h>
+>   #include <linux/math.h>
+> @@ -721,11 +722,6 @@ static int __maybe_unused nzxt_smart2_hid_reset_resume(struct hid_device *hdev)
+>   	return init_device(drvdata, drvdata->update_interval);
 >   }
->   #else
->   static int pmbus_init_debugfs(struct i2c_client *client,
+>   
+> -static void mutex_fini(void *lock)
+> -{
+> -	mutex_destroy(lock);
+> -}
+> -
+>   static int nzxt_smart2_hid_probe(struct hid_device *hdev,
+>   				 const struct hid_device_id *id)
+>   {
+> @@ -741,8 +737,7 @@ static int nzxt_smart2_hid_probe(struct hid_device *hdev,
+>   
+>   	init_waitqueue_head(&drvdata->wq);
+>   
+> -	mutex_init(&drvdata->mutex);
+> -	ret = devm_add_action_or_reset(&hdev->dev, mutex_fini, &drvdata->mutex);
+> +	ret = devm_mutex_init(&hdev->dev, &drvdata->mutex);
+>   	if (ret)
+>   		return ret;
+>   
+> diff --git a/drivers/leds/leds-is31fl319x.c b/drivers/leds/leds-is31fl319x.c
+> index 66c65741202e..e9d7cf6a386c 100644
+> --- a/drivers/leds/leds-is31fl319x.c
+> +++ b/drivers/leds/leds-is31fl319x.c
+> @@ -8,6 +8,7 @@
+>    * effect LEDs.
+>    */
+>   
+> +#include <linux/devm-helpers.h>
+>   #include <linux/err.h>
+>   #include <linux/i2c.h>
+>   #include <linux/leds.h>
+> @@ -495,11 +496,6 @@ static inline int is31fl3196_db_to_gain(u32 dezibel)
+>   	return dezibel / IS31FL3196_AUDIO_GAIN_DB_STEP;
+>   }
+>   
+> -static void is31f1319x_mutex_destroy(void *lock)
+> -{
+> -	mutex_destroy(lock);
+> -}
+> -
+>   static int is31fl319x_probe(struct i2c_client *client)
+>   {
+>   	struct is31fl319x_chip *is31;
+> @@ -515,8 +511,7 @@ static int is31fl319x_probe(struct i2c_client *client)
+>   	if (!is31)
+>   		return -ENOMEM;
+>   
+> -	mutex_init(&is31->lock);
+> -	err = devm_add_action_or_reset(dev, is31f1319x_mutex_destroy, &is31->lock);
+> +	err = devm_mutex_init(dev, &is31->lock);
+>   	if (err)
+>   		return err;
+>   
+> diff --git a/drivers/power/supply/mt6370-charger.c b/drivers/power/supply/mt6370-charger.c
+> index e24fce087d80..fa0517d0352d 100644
+> --- a/drivers/power/supply/mt6370-charger.c
+> +++ b/drivers/power/supply/mt6370-charger.c
+> @@ -766,13 +766,6 @@ static int mt6370_chg_init_psy(struct mt6370_priv *priv)
+>   	return PTR_ERR_OR_ZERO(priv->psy);
+>   }
+>   
+> -static void mt6370_chg_destroy_attach_lock(void *data)
+> -{
+> -	struct mutex *attach_lock = data;
+> -
+> -	mutex_destroy(attach_lock);
+> -}
+> -
+>   static void mt6370_chg_destroy_wq(void *data)
+>   {
+>   	struct workqueue_struct *wq = data;
+> @@ -900,9 +893,7 @@ static int mt6370_chg_probe(struct platform_device *pdev)
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to init psy\n");
+>   
+> -	mutex_init(&priv->attach_lock);
+> -	ret = devm_add_action_or_reset(dev, mt6370_chg_destroy_attach_lock,
+> -				       &priv->attach_lock);
+> +	ret = devm_mutex_init(dev, &priv->attach_lock);
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to init attach lock\n");
+>   
+> diff --git a/drivers/power/supply/rt9467-charger.c b/drivers/power/supply/rt9467-charger.c
+> index fdfdc83ab045..84f07c22077f 100644
+> --- a/drivers/power/supply/rt9467-charger.c
+> +++ b/drivers/power/supply/rt9467-charger.c
+> @@ -10,6 +10,7 @@
+>   #include <linux/bitfield.h>
+>   #include <linux/completion.h>
+>   #include <linux/delay.h>
+> +#include <linux/devm-helpers.h>
+>   #include <linux/gpio/consumer.h>
+>   #include <linux/i2c.h>
+>   #include <linux/interrupt.h>
+> @@ -1149,27 +1150,6 @@ static int rt9467_reset_chip(struct rt9467_chg_data *data)
+>   	return regmap_field_write(data->rm_field[F_RST], 1);
+>   }
+>   
+> -static void rt9467_chg_destroy_adc_lock(void *data)
+> -{
+> -	struct mutex *adc_lock = data;
+> -
+> -	mutex_destroy(adc_lock);
+> -}
+> -
+> -static void rt9467_chg_destroy_attach_lock(void *data)
+> -{
+> -	struct mutex *attach_lock = data;
+> -
+> -	mutex_destroy(attach_lock);
+> -}
+> -
+> -static void rt9467_chg_destroy_ichg_ieoc_lock(void *data)
+> -{
+> -	struct mutex *ichg_ieoc_lock = data;
+> -
+> -	mutex_destroy(ichg_ieoc_lock);
+> -}
+> -
+>   static void rt9467_chg_complete_aicl_done(void *data)
+>   {
+>   	struct completion *aicl_done = data;
+> @@ -1222,21 +1202,15 @@ static int rt9467_charger_probe(struct i2c_client *i2c)
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to add irq chip\n");
+>   
+> -	mutex_init(&data->adc_lock);
+> -	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_adc_lock,
+> -				       &data->adc_lock);
+> +	ret = devm_mutex_init(dev, &data->adc_lock);
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to init ADC lock\n");
+>   
+> -	mutex_init(&data->attach_lock);
+> -	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_attach_lock,
+> -				       &data->attach_lock);
+> +	ret = devm_mutex_init(dev, &data->attach_lock);
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to init attach lock\n");
+>   
+> -	mutex_init(&data->ichg_ieoc_lock);
+> -	ret = devm_add_action_or_reset(dev, rt9467_chg_destroy_ichg_ieoc_lock,
+> -				       &data->ichg_ieoc_lock);
+> +	ret = devm_mutex_init(dev, &data->ichg_ieoc_lock);
+>   	if (ret)
+>   		return dev_err_probe(dev, ret, "Failed to init ICHG/IEOC lock\n");
+>   
 > diff --git a/include/linux/devm-helpers.h b/include/linux/devm-helpers.h
-> index 70640fb96117..39d743175ec4 100644
+> index 74891802200d..70640fb96117 100644
 > --- a/include/linux/devm-helpers.h
 > +++ b/include/linux/devm-helpers.h
-> @@ -23,6 +23,7 @@
->    * already ran.
+> @@ -24,6 +24,8 @@
 >    */
 >   
-> +#include <linux/debugfs.h>
 >   #include <linux/device.h>
->   #include <linux/kconfig.h>
->   #include <linux/mutex.h>
-> @@ -108,4 +109,51 @@ static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
->   		return 0;
+> +#include <linux/kconfig.h>
+> +#include <linux/mutex.h>
+>   #include <linux/workqueue.h>
+>   
+>   static inline void devm_delayed_work_drop(void *res)
+> @@ -76,4 +78,34 @@ static inline int devm_work_autocancel(struct device *dev,
+>   	return devm_add_action(dev, devm_work_drop, w);
 >   }
 >   
-> +static inline void devm_debugfs_dir_recursive_drop(void *res)
+> +static inline void devm_mutex_drop(void *res)
 > +{
-> +	debugfs_remove_recursive(res);
+> +	mutex_destroy(res);
 > +}
 > +
 > +/**
-> + * devm_debugfs_create_dir - Resource managed debugfs directory creation
-> + * @dev:	Device which lifetime the directory is bound to
-> + * @name:	a pointer to a string containing the name of the directory to
-> + *		create
-> + * @parent:	a pointer to the parent dentry for this file.  This should be a
-> + *		directory dentry if set.  If this parameter is NULL, then the
-> + *		directory will be created in the root of the debugfs filesystem.
+> + * devm_mutex_init - Resource managed mutex initialization
+> + * @dev:	Device which lifetime mutex is bound to
+> + * @lock:	Mutex to be initialized (and automatically destroyed)
 > + *
-> + * Create a debugfs directory which is automatically recursively removed when
-> + * the driver is detached. A few drivers create debugfs directories which they
-> + * want removed before driver is detached.
-> + * devm_debugfs_create_dir() can be used to omit the explicit
-> + * debugfs_remove_recursive() call when driver is detached.
+> + * Initialize mutex which is automatically destroyed when driver is detached.
+> + * A few drivers initialize mutexes which they want destroyed before driver is
+> + * detached, for debugging purposes.
+> + * devm_mutex_init() can be used to omit the explicit mutex_destroy() call when
+> + * driver is detached.
 > + */
-> +static inline struct dentry *
-> +devm_debugfs_create_dir(struct device *dev, const char *name,
-> +			struct dentry *parent)
+> +static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
 > +{
-> +	struct dentry *dentry;
-> +
-> +	dentry = debugfs_create_dir(name, parent);
-> +	if (IS_ERR(dentry))
-> +		return dentry;
+> +	mutex_init(lock);
 > +
 > +	/*
-> +	 * debugfs_remove_recursive() is an empty function if CONFIG_DEBUG_FS is
-> +	 * disabled. No need to register an action in that case.
+> +	 * mutex_destroy() is an empty function if CONFIG_DEBUG_MUTEXES is
+> +	 * disabled. No need to allocate an action in that case.
 > +	 */
-> +	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
+> +	if (IS_ENABLED(CONFIG_DEBUG_MUTEXES))
+> +		return devm_add_action_or_reset(dev, devm_mutex_drop, lock);
+> +	else
 
+else after return is unnecessary.
 
-This conditional seems unnecessary since in that case debugfs_create_dir()
-would return -ENODEV, and the code below would never be executed to start with.
-
-Guenter
-
-> +		int err;
-> +
-> +		err = devm_add_action_or_reset(dev,
-> +					       devm_debugfs_dir_recursive_drop,
-> +					       dentry);
-> +		if (err < 0)
-> +			return ERR_PTR(err);
-> +	}
-> +
-> +	return dentry;
+> +		return 0;
 > +}
 > +
 >   #endif
