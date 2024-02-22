@@ -1,172 +1,146 @@
-Return-Path: <linux-gpio+bounces-3619-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3620-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4FA7F85F2FA
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 09:31:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 235D585F35A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 09:45:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F0B82283E8A
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 08:31:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 28D6BB2361B
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 08:45:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 087CF22EFB;
-	Thu, 22 Feb 2024 08:31:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="MWq3E3jU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D3CB536AEB;
+	Thu, 22 Feb 2024 08:44:32 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa1.ltts.com (unknown [118.185.121.105])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 151AB241E3
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 08:31:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B972C36AED;
+	Thu, 22 Feb 2024 08:44:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=118.185.121.105
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708590672; cv=none; b=L/RYXHp5Zt+Uki6/TZSCu0Hj8BJyZwQtiQKSQapZmngcMqVSnahTkdI32Gfp2mM/2jHKnJxbuvvGRMx1/wbuhFBFpEsz9t5WMRNLoDTOTkwEC3Urs6Hu8rdmtXqnbjkyzjpHn35x8gSnCdN/GmC/89d1e003WoGSTW5IRnubu1U=
+	t=1708591472; cv=none; b=RJD8yOC/3wcUnLQyn9UHt0SiQXcJTB29AIuBhZb5rDaDMqfT2yNiARxX54ZGhceTCeN3tKm6KFXCeEtTA4Jeukt/18sA9nMc6eWC4nhU8mE1CwVnbF6yJjZeTGN5J5mvF2fhSzHpFxD2nN7kC5dl6L+2YVO/koBIoMQVxK6z1b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708590672; c=relaxed/simple;
-	bh=cYs24B+jpboAdkYkeMVBrxhk7csmYQxiPXi3PgJL7mc=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=eoBGcGBClz40mCp+TIoz5IrBb8yQuCzxOw6RCZIxLA0dq+EzA1o8eGq1gL1NoV4W0ocDfVdMr3fVHc5PPhE5ZIZyiE7/VPoNZXgqICL3O5oNREFocJwCF1ct/IZg1EvXoWgvUU5tmjOZIZc/yPMlqSACfJOJlEsuxd2/ou4zy8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=MWq3E3jU; arc=none smtp.client-ip=209.85.217.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vs1-f47.google.com with SMTP id ada2fe7eead31-4704c69a3d9so1073036137.2
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 00:31:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708590670; x=1709195470; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=p8jL3uYkTm+LNVdYsIt/Et/UrQilxmVNJ1Wadk+RFaQ=;
-        b=MWq3E3jUheJHoAE7sAmDuaHV8+1c6cJSNZUViMXmLi0kstvlyFY3oUzG8MBfNOQwvf
-         oVoZSkiwNfEoTg3zkd4SAWfQdN2Swcaa/XFvjRqCuqjanozf1GQWWz96MURRQ10Ibf16
-         mJQgopnEpt2IujhQDIYdHsM5GJNKVBvLLivfiXDO7F8bYKT9d9LCTUbzL3BzLVRKFfuG
-         dcLIHhSVqXDMUi/eRjVLwGYrBjGsYvA9Prq40Y5/FvGDmp8gqZMr7HR1Kxge+JWZ1TDv
-         YOVJF3zo/f387X2kMx/lCVvI3ex8KZ/sLi90qvPX1JlDX10N/O/R/bLGbvECwoC9Opuv
-         sWBg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708590670; x=1709195470;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=p8jL3uYkTm+LNVdYsIt/Et/UrQilxmVNJ1Wadk+RFaQ=;
-        b=tqbiXMdZccyJAGlKfKDuH35iz79rKW5h6AMzvTnzV/C3g0rsdvnwv5gbhTcHaQo6FV
-         g4WYDTdB9co0rqNn2tMXRUcvfaKxGtQzWjwGJ2xIBDwP8ZFUbFa9IVZ6VWKCSg3cL7lM
-         bxibIG2bivqlssgj/DQguOgw+WP+lK587PK1T0v1kLwqNKvftwjzjp/Qr26Es3Ch8oNu
-         pbGAkpD4nDDUJyr236DiikmQeL8rq7/pxUYOU/s8zDXxDomke98tMqTVCf06dfagE6hv
-         3CRZsYnn4Wwtx1JE7GE/h0dm8/0lJKmXcDNVMMCE9ySTwEpngT+LnDQJcAkVqAbB2ECV
-         bzJw==
-X-Forwarded-Encrypted: i=1; AJvYcCW9cQEUApA1YWfa0ZT2+tfjZfIzze55M61WsZxKnNZ0mo0AGay44sijTExo5Jemzv5dvH8vgCztCmR0fvuzAJcKnWfzLSIv1HG/bQ==
-X-Gm-Message-State: AOJu0YyhE7qG5o0TDh64juDL2VEkYgXPVSF8nQN8tqH20vw0+OpT1M0o
-	xCXfQ4romGdNjoPHp69RWcIfROjiO+4rf8n3pLcVdNoTFiRM7xwqagHobdWA3Sbqj18A/6iKNw7
-	Y3MruVDKhbg9DHgSOSlany8069nmhGq+HCuTKFRjJO44ou2Bu
-X-Google-Smtp-Source: AGHT+IGlxAS+aeUhOv2Zd1f0luaBKqEE7591Sd+BPz9t0c5sIaDqZ5by2IaT44MkWcHBupOV01eqRQBkigZ25d0ToJE=
-X-Received: by 2002:a67:fbcb:0:b0:470:3ece:b438 with SMTP id
- o11-20020a67fbcb000000b004703eceb438mr11731172vsr.1.1708590669772; Thu, 22
- Feb 2024 00:31:09 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Thu, 22 Feb 2024 00:31:09 -0800
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <20240222010530.GA11949@rigel>
+	s=arc-20240116; t=1708591472; c=relaxed/simple;
+	bh=aAHuEmErw6Xhwk48sQ2yXHjadNeRu84HgxsVgDkNpw8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=fE47ufrJJUTIh4R9MDGg3u/XdThXcFGRpYLZvfugiglYBvm1rhV9PDPfMh0wxkXTdO8ggHiNg4ThIiV4lI6SwKWx4zeKGtd4Qw71jmFMrla6YwoXaidbbMQ4oWc2uDYmnniC+HaHCaCMmcBALnnp/dKAz54ZC+XTZiuVHrv9SZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=118.185.121.105
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: xSdWhlzWQNfyCNiMvHcoX/EBWrRv49Ekw2KBJdYXwzUq61c2mhFMhdOSy0AV+QXomotupaWb7v
+ LPe0QjzGuR8w==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa1.ltts.com with ESMTP; 22 Feb 2024 14:13:16 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: khilman@kernel.org
+Cc: arnd@arndb.de,
+	bhargav.r@ltts.com,
+	broonie@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	jpanis@baylibre.com,
+	kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	m.nirmaladevi@ltts.com,
+	nm@ti.com,
+	robh+dt@kernel.org,
+	vigneshr@ti.com
+Subject: Re: [RESEND PATCH v1 05/13] mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+Date: Thu, 22 Feb 2024 14:13:09 +0530
+Message-Id: <20240222084309.6008-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <7hcysy6ho6.fsf@baylibre.com>
+References: <7hcysy6ho6.fsf@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
- <20240220111019.133697-3-herve.codina@bootlin.com> <20240220142959.GA244726@rigel>
- <20240222005744.GA3603@rigel> <20240222010530.GA11949@rigel>
-Date: Thu, 22 Feb 2024 00:31:08 -0800
-Message-ID: <CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip device
- is removed
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Herve Codina <herve.codina@bootlin.com>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Saravana Kannan <saravanak@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On Thu, 22 Feb 2024 02:05:30 +0100, Kent Gibson <warthog618@gmail.com> said:
-> On Thu, Feb 22, 2024 at 08:57:44AM +0800, Kent Gibson wrote:
->> On Tue, Feb 20, 2024 at 10:29:59PM +0800, Kent Gibson wrote:
->> > On Tue, Feb 20, 2024 at 12:10:18PM +0100, Herve Codina wrote:
->>
->> ...
->>
->> > >  }
->> > >
->> > > +static int linereq_unregistered_notify(struct notifier_block *nb,
->> > > +				       unsigned long action, void *data)
->> > > +{
->> > > +	struct linereq *lr = container_of(nb, struct linereq,
->> > > +					  device_unregistered_nb);
->> > > +	int i;
->> > > +
->> > > +	for (i = 0; i < lr->num_lines; i++) {
->> > > +		if (lr->lines[i].desc)
->> > > +			edge_detector_stop(&lr->lines[i]);
->> > > +	}
->> > > +
->> >
->> > Firstly, the re-ordering in the previous patch creates a race,
->> > as the NULLing of the gdev->chip serves to numb the cdev ioctls, so
->> > there is now a window between the notifier being called and that numbing,
->> > during which userspace may call linereq_set_config() and re-request
->> > the irq.
->> >
->> > There is also a race here with linereq_set_config().  That can be prevented
->> > by holding the lr->config_mutex - assuming the notifier is not being called
->> > from atomic context.
->> >
->>
->> It occurs to me that the fixed reordering in patch 1 would place
->> the notifier call AFTER the NULLing of the ioctls, so there will no longer
->> be any chance of a race with linereq_set_config() - so holding the
->> config_mutex semaphore is not necessary.
->>
->
-> NULLing -> numbing
->
-> The gdev->chip is NULLed, so the ioctls are numbed.
-> And I need to let the coffee soak in before sending.
->
->> In which case this patch is fine - it is only patch 1 that requires
->> updating.
->>
->> Cheers,
->> Kent.
->
+Hello Kevin,
+On Wed, 14 Feb 2024 10:10:17 -0800, Kevin wrote:
+> Bhargav Raviprakash <bhargav.r@ltts.com> writes:
+> 
+> > Add support for TPS65224 PMIC in the TPS6594 driver as they share
+> > significant functional overlap.
+> >
+> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > ---
+> >  drivers/mfd/tps6594-spi.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
+> > index 5afb1736f..7ec66d31b 100644
+> > --- a/drivers/mfd/tps6594-spi.c
+> > +++ b/drivers/mfd/tps6594-spi.c
+> > @@ -1,6 +1,6 @@
+> >  // SPDX-License-Identifier: GPL-2.0
+> >  /*
+> > - * SPI access driver for TI TPS6594/TPS6593/LP8764 PMICs
+> > + * SPI access driver for TI TPS65224/TPS6594/TPS6593/LP8764 PMICs
+> >   *
+> >   * Copyright (C) 2023 BayLibre Incorporated - https://www.baylibre.com/
+> >   */
+> > @@ -66,7 +66,7 @@ static int tps6594_spi_reg_write(void *context, unsigned int reg, unsigned int v
+> >  	return spi_write(spi, buf, count);
+> >  }
+> >  
+> > -static const struct regmap_config tps6594_spi_regmap_config = {
+> > +static struct regmap_config tps6594_spi_regmap_config = {
+> >  	.reg_bits = 16,
+> >  	.val_bits = 8,
+> >  	.max_register = TPS6594_REG_DWD_FAIL_CNT_REG,
+> > @@ -81,6 +81,7 @@ static const struct of_device_id tps6594_spi_of_match_table[] = {
+> >  	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
+> >  	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
+> >  	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
+> > +	{ .compatible = "ti,tps65224-q1", .data = (void *)TPS65224, },
+> >  	{}
+> >  };
+> >  MODULE_DEVICE_TABLE(of, tps6594_spi_of_match_table);
+> > @@ -101,15 +102,18 @@ static int tps6594_spi_probe(struct spi_device *spi)
+> >  	tps->reg = spi_get_chipselect(spi, 0);
+> >  	tps->irq = spi->irq;
+> >  
+> > -	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
+> > -	if (IS_ERR(tps->regmap))
+> > -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
+> > -
+> >  	match = of_match_device(tps6594_spi_of_match_table, dev);
+> >  	if (!match)
+> >  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
+> >  	tps->chip_id = (unsigned long)match->data;
+> >  
+> > +	if (tps->chip_id == TPS65224)
+> > +		tps6594_spi_regmap_config.volatile_table = &tps65224_volatile_table;
+> 
+> Similar to my comment on the i2c series, but to be more specific:
+> 
+> Rather than use the .data pointer in the of_match_table as simply a
+> chip_id, instead make that into a struct that can contain chip-specific
+> values/pointers etc, and then each compatible can have a custom struct
+> (if needed.)
+> 
+> This way, at probe/match time, all the chip-specific data is setup using
+> that struct, so that at runtime, there doesn't need to be any "if
+> (chip_id)" checking.
+> 
+> Kevin
 
-The fix for the user-space issue may be more-or-less correct but the problem is
-deeper and this won't fix it for in-kernel users.
+Thanks for the feedback!
+We will implement the same in the next version.
 
-Herve: please consider the following DT snippet:
-
-	gpio0 {
-		compatible = "foo";
-
-		gpio-controller;
-		#gpio-cells = <2>;
-		interrupt-controller;
-		#interrupt-cells = <1>;
-		ngpios = <8>;
-	};
-
-	consumer {
-		compatible = "bar";
-
-		interrupts-extended = <&gpio0 0>;
-	};
-
-If you unbind the "gpio0" device after the consumer requested the interrupt,
-you'll get the same splat. And device links will not help you here (on that
-note: Saravana: is there anything we could do about it? Have you even
-considered making the irqchip subsystem use the driver model in any way? Is it
-even feasible?).
-
-I would prefer this to be fixed at a lower lever than the GPIOLIB character
-device.
-
-Bartosz
+Regards,
+Bhargav
 
