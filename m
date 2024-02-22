@@ -1,142 +1,193 @@
-Return-Path: <linux-gpio+bounces-3612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A4F785EE69
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 02:05:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40B4185F085
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 05:47:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 643001C215ED
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 01:05:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACFA31F23D71
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 04:47:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91E0C111AA;
-	Thu, 22 Feb 2024 01:05:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2FD51842;
+	Thu, 22 Feb 2024 04:47:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JfikvTaB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUZxXtRv"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ACAC362;
-	Thu, 22 Feb 2024 01:05:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C4110E6;
+	Thu, 22 Feb 2024 04:47:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708563938; cv=none; b=gy7Yc4rR0mkwDrbcZm+XF3kBKCsYvq2YczcI9x7fpYteJKzNV8gYhk61ZFqbsR2GX6wCyEBZRnGWrU18oEt4qKsc5mGL9mfvePdJ1R2J/nddisUtGayjZiqCUyc151PaJ3cHXQq+m2zhbp6/Jp+Z+38WHphoIoB4ovA99R1cykI=
+	t=1708577267; cv=none; b=rRQxPVuyxySzOI6I0M0UPR6R5gGKn/F55E8+VkuCTup/wygYR//c40OGOv5opj1tHy4a33PD0zOFEUR/2txjGkGQSz6x/gP0Oakwm2+7NL6SFuAJd9vveW5eP6zgbKubYJdJEQmoa3yT7JhKRN1son/Zr6ZD4kC3xS1m0OyZ8Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708563938; c=relaxed/simple;
-	bh=oVwvNABBYQwg8ch1Migh1pBvGqfufD05wV+UJaVQcMs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TQGtNJzRBZIv8mkWKmPZWja2S3qgXWSMqH4r4saA5l5QI/Mzhzowi+DWoz74UuA0IHoPgz9qE6vB8EIlXmzk2xh5mBrs5XvygH/Ip08aVKwVstjWi8xi7RrJ8mnS2pk+RTWJb4WrrYnCTV3qPrS6EzyPzdHKHSaO25/aaHOPM1U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JfikvTaB; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1708577267; c=relaxed/simple;
+	bh=UeNo7Treptz3RUyiQTbwwLEw6a+8/F6tea3I16MzUxc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Eq7i1Vs0oSj939y8P+cOK2G7ULyDICHwzkJFYduktA0X4UiIBjBmtVY7VKdFNSFp6HbsbOGhZcoERgSkgP0m+tUmJHaAuYBUzl9csCpPsizqw+3HyzKX919NjYrwkGdjHYkTfc0kogVaOlPN1Hv/R2P80xjuFBEsXWxUdAnsz8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gUZxXtRv; arc=none smtp.client-ip=209.85.161.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1d746856d85so48420595ad.0;
-        Wed, 21 Feb 2024 17:05:36 -0800 (PST)
+Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-595aa5b1fe0so4864510eaf.2;
+        Wed, 21 Feb 2024 20:47:45 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708563936; x=1709168736; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=l/kZGWidKQHDeiGOirXOw/MofqnSEIzxtMp9arYvsBI=;
-        b=JfikvTaBbDdpORSJTkHHFg1J/YudbcHSas8bS/TzvXnBphgXkmiXzMwA8Z7v4w8ux3
-         Z4f5C8GmYbZbEX/5FIR2vdEc9WmRkY1W2UWV53IqM2O9x7udAq/95WSiCWfklCAssXAr
-         5x+9pFZIFfsd0ft1cjKGZi8dKZY4fFjAJPw4dHDxDq70OmwfOmkrNFEv5FdOv7h2G/hf
-         pHu7UuzTdy/9s7OV5mSn9CxNEY4jP5P5rCrCToud/MRZt0gltGKg05X+h2lgONnD9hkc
-         igUjFT1w7geFHMdDnn7U5IIfR+q0b2x143as3VCBCBPw2FuoRyDzMZel8aavNd4m1+eN
-         7HbQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708563936; x=1709168736;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1708577264; x=1709182064; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=l/kZGWidKQHDeiGOirXOw/MofqnSEIzxtMp9arYvsBI=;
-        b=jRLKtByOOKDPqD2N583gtL6Iq9jcF+H7mQQBroGSZWBbLLx06bx0xcDqcgf8257spE
-         a8bJDl6mZk/WfJ1efyxnplH535tJBJ24k+MYNMwGpMq1nGzO5b1hhw3aulpN7wYLi49K
-         hhQsaZJiCzTAFjg1kvF+uaPadc4j9KP5Mc7vTCQVxRezq4BU6UWRBt+OBtGgu7Siby3R
-         +a/o9OCtH5x364fpfMGBtAc6juM7TqGkDzuIrX32v42ESZvQxhHX8Rbbte0kjsj6NUsc
-         xJaJRRzqUEY8YsDX7j1GkFXFnBptNNUQSJahGjTmFn0oh/3qFOpKmPZPWjnHSOY7n7mi
-         V2JQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWdLOfS7mS8S2YlYPRT/YaJF5KPNikCJR6F0mbTjH3XD14mWLhn9HLyzmRRAaoYqkcs3cGgpFZZq+eLbbISYzG5SjPEtLIpN3t7kAKByxBcGwAcUaUtyzT/2uS0FHRDCZBAwr4h3HGoqg==
-X-Gm-Message-State: AOJu0YyAdQSFoyaJtPigpZiGbo11FE9FETz5IfT4IDqiXH6P4TJRp2RF
-	br4dMKx906KTNMiJ4lt3QLIuu1VMZbhDWwNMzboA2q4Wz73h/B4fGeS23phN
-X-Google-Smtp-Source: AGHT+IE6f+V0neO5f8BH6R4TDq0lyTu6zajB+MVmEOa+stdrRoMJ/qawhHeR7I+keI6fAMiDV6xA6g==
-X-Received: by 2002:a17:902:b20a:b0:1d9:a647:5579 with SMTP id t10-20020a170902b20a00b001d9a6475579mr16599279plr.1.1708563936147;
-        Wed, 21 Feb 2024 17:05:36 -0800 (PST)
-Received: from rigel ([220.235.35.85])
-        by smtp.gmail.com with ESMTPSA id k5-20020a170902e90500b001db7599aba0sm8749027pld.24.2024.02.21.17.05.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 21 Feb 2024 17:05:35 -0800 (PST)
-Date: Thu, 22 Feb 2024 09:05:30 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Luca Ceresoli <luca.ceresoli@bootlin.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip
- device is removed
-Message-ID: <20240222010530.GA11949@rigel>
-References: <20240220111019.133697-1-herve.codina@bootlin.com>
- <20240220111019.133697-3-herve.codina@bootlin.com>
- <20240220142959.GA244726@rigel>
- <20240222005744.GA3603@rigel>
+        bh=+0AD0YCnQqqjpDGFWW9RzaHFEvNTNgA3R308dgKQBK0=;
+        b=gUZxXtRvgbVGvAOidc1qfrexj0Ae8g9f98Iu64/LILGAGg1sMxYIi+atw6rFFLuMcm
+         FeGJ/d7hMeiIT9KJMX3gyvEuBoPv/Tmasx+2GaaPQUiIFufReOATGRBslaudGTt8g02W
+         IWm6UVT1dPsdHsRi7BEU/faBKIlQBgbgfVUX1cOqqhFfZiuIaD5lyJUIbAabSFJGBk9z
+         ZfzCeLfWq1eRNYtmfO9ws1zHkUJwgtiNsUWCqu3ja3TqRiqe2cOjl1ceVfB4bxRTkZit
+         A3Y9NVqZuIN04tefs/DY70EvGt2QyBsa9OaAH614Y14au08XuyPn4to54zdW9OZRnnkV
+         chig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708577264; x=1709182064;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=+0AD0YCnQqqjpDGFWW9RzaHFEvNTNgA3R308dgKQBK0=;
+        b=a99jMzKZ/ACwKNak0idrkenFZbu9gzxuhBk1SAXwLqFcNNBgaFSerrTEGtYQH7wULl
+         qYAbFYoIFOKLBQX/gH1X43TjS0xlL1IScAp+032/6KKWPUMie+gEc11eNyDna1cczIi+
+         kfmHr0Y+cm37wLZKlYHAxdUwLg/J9xHKmDdfDihpjqZp/dymkZBFvU8Z+v+4yWfOgw+p
+         hoPNJWo2OYFDoWBhE6mqhgj4fAgnT9/COILObn+SkRw86Xf/PMfev+xXSTX1JbB9RaJN
+         Jg25gdGkTfRYp6t2bQxOA6fubOhJ7mDmGI73xDRmYu2OWnKQTlKrFS/nOwAAT0GXDTvI
+         EErw==
+X-Forwarded-Encrypted: i=1; AJvYcCU4UcVGiNTd6D7zZZyQL+rQqtsyeokuKsBUn0h7LFeYsid85bX4fkSG+dIueIKZEyZTQy0380/CEstudOY4h/PL3OgwCH1NOYm1R2hveThL3UX+Gq8zSGSjjx2T/d0KA31j9NCj1/+88qhDC6YRVnpzxOK/Y4nvBJY3rRyQjA==
+X-Gm-Message-State: AOJu0YxlF9MbMYaDIzhK8aPUEbCPL2aAbNtxOpVjdgwW/BcN5YMQslC3
+	JE4WQowVvJpVZoYRGBnAZpyE5QS9MksxnOMalpCwc40XdJmiq4CqZ2BanH7LeFid2KahQ2zoDAO
+	0+YZulUhO3gGVH0TbsrV+DmVcUNLGfcuk
+X-Google-Smtp-Source: AGHT+IFT4RsENCibuAcCOiaUsVyVQ3wUtPOaylT8Cu8LEgQ8tuVRqR0bf6JV5jnLIMhZ0nuBWenDTxAl3yi1UozFGBE=
+X-Received: by 2002:a05:6358:5919:b0:176:cf18:d0bb with SMTP id
+ g25-20020a056358591900b00176cf18d0bbmr21288902rwf.13.1708577264582; Wed, 21
+ Feb 2024 20:47:44 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240222005744.GA3603@rigel>
+References: <20240131042509.4034723-1-jcmvbkbc@gmail.com>
+In-Reply-To: <20240131042509.4034723-1-jcmvbkbc@gmail.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Date: Wed, 21 Feb 2024 20:47:33 -0800
+Message-ID: <CAMo8BfLXW1tYG9bNQZciBC+NSS+1debXLSYkjNOQe200+aWFEg@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: tools: drop overridden CFLAGS from MAKEOVERRIDES
+To: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
+	linux-gpio@vger.kernel.org
+Cc: Jiri Olsa <jolsa@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
+	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 08:57:44AM +0800, Kent Gibson wrote:
-> On Tue, Feb 20, 2024 at 10:29:59PM +0800, Kent Gibson wrote:
-> > On Tue, Feb 20, 2024 at 12:10:18PM +0100, Herve Codina wrote:
+Ping?
+
+On Tue, Jan 30, 2024 at 8:25=E2=80=AFPM Max Filippov <jcmvbkbc@gmail.com> w=
+rote:
 >
-> ...
+> Some Makefiles under tools/ use the 'override CFLAGS +=3D ...' construct
+> to add a few required options to CFLAGS passed by the user.
+> Unfortunately that only works when user passes CFLAGS as an environment
+> variable, i.e.
+>   CFLAGS=3D... make ...
+> and not in case when CFLAGS are passed as make command line arguments:
+>   make ... CFLAGS=3D...
+> It happens because in the latter case CFLAGS=3D... is recorded in the mak=
+e
+> variable MAKEOVERRIDES and this variable is passed in its original form
+> to all $(MAKE) subcommands, taking precedence over modified CFLAGS value
+> passed in the environment variable. E.g. this causes build failure for
+> gpio and iio tools when the build is run with user CFLAGS because of
+> missing _GNU_SOURCE definition needed for the asprintf().
 >
-> > >  }
-> > >
-> > > +static int linereq_unregistered_notify(struct notifier_block *nb,
-> > > +				       unsigned long action, void *data)
-> > > +{
-> > > +	struct linereq *lr = container_of(nb, struct linereq,
-> > > +					  device_unregistered_nb);
-> > > +	int i;
-> > > +
-> > > +	for (i = 0; i < lr->num_lines; i++) {
-> > > +		if (lr->lines[i].desc)
-> > > +			edge_detector_stop(&lr->lines[i]);
-> > > +	}
-> > > +
-> >
-> > Firstly, the re-ordering in the previous patch creates a race,
-> > as the NULLing of the gdev->chip serves to numb the cdev ioctls, so
-> > there is now a window between the notifier being called and that numbing,
-> > during which userspace may call linereq_set_config() and re-request
-> > the irq.
-> >
-> > There is also a race here with linereq_set_config().  That can be prevented
-> > by holding the lr->config_mutex - assuming the notifier is not being called
-> > from atomic context.
-> >
+> One way to fix it is by removing overridden variables from the
+> MAKEOVERRIDES. Add macro 'drop-var-from-overrides' that removes a
+> definition of a variable passed to it from the MAKEOVERRIDES and use it
+> to fix CFLAGS passing for tools/gpio and tools/iio.
 >
-> It occurs to me that the fixed reordering in patch 1 would place
-> the notifier call AFTER the NULLing of the ioctls, so there will no longer
-> be any chance of a race with linereq_set_config() - so holding the
-> config_mutex semaphore is not necessary.
+> This implementation tries to be precise in string processing and handle
+> variables with embedded spaces and backslashes correctly. To achieve
+> that it replaces every '\\' sequence with '\-' to make sure that every
+> '\' in the resulting string is an escape character. It then replaces
+> every '\ ' sequence with '\_' to turn string values with embedded spaces
+> into single words. After filtering the overridden variable definition
+> out of the resulting string these two transformations are reversed.
+>
+> Cc: stable@vger.kernel.org
+> Fixes: 4ccc98a48958 ("tools gpio: Allow overriding CFLAGS")
+> Fixes: 572974610273 ("tools iio: Override CFLAGS assignments")
+> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+> ---
+> Changes v1->v2:
+> - make drop-var-from-overrides-code work correctly with arbitrary
+>   variables, including thoses ending with '\'.
+>
+>  tools/gpio/Makefile            | 1 +
+>  tools/iio/Makefile             | 1 +
+>  tools/scripts/Makefile.include | 9 +++++++++
+>  3 files changed, 11 insertions(+)
+>
+> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
+> index d29c9c49e251..46fc38d51639 100644
+> --- a/tools/gpio/Makefile
+> +++ b/tools/gpio/Makefile
+> @@ -24,6 +24,7 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
+))
+>  all: $(ALL_PROGRAMS)
+>
+>  export srctree OUTPUT CC LD CFLAGS
+> +$(call drop-var-from-overrides,CFLAGS)
+>  include $(srctree)/tools/build/Makefile.include
+>
+>  #
+> diff --git a/tools/iio/Makefile b/tools/iio/Makefile
+> index fa720f062229..04307588dd3f 100644
+> --- a/tools/iio/Makefile
+> +++ b/tools/iio/Makefile
+> @@ -20,6 +20,7 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
+))
+>  all: $(ALL_PROGRAMS)
+>
+>  export srctree OUTPUT CC LD CFLAGS
+> +$(call drop-var-from-overrides,CFLAGS)
+>  include $(srctree)/tools/build/Makefile.include
+>
+>  #
+> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
+ude
+> index 6fba29f3222d..0f68b95cf55c 100644
+> --- a/tools/scripts/Makefile.include
+> +++ b/tools/scripts/Makefile.include
+> @@ -51,6 +51,15 @@ define allow-override
+>      $(eval $(1) =3D $(2)))
+>  endef
+>
+> +# When a Makefile overrides a variable and exports it for the nested $(M=
+AKE)
+> +# invocations to use its modified value, it must remove that variable de=
+finition
+> +# from the MAKEOVERRIDES variable, otherwise the original definition fro=
+m the
+> +# MAKEOVERRIDES takes precedence over the exported value.
+> +drop-var-from-overrides =3D $(eval $(drop-var-from-overrides-code))
+> +define drop-var-from-overrides-code
+> +MAKEOVERRIDES :=3D $(subst \-,\\,$(subst \_,\ ,$(filter-out $(1)=3D%,$(s=
+ubst \ ,\_,$(subst \\,\-,$(MAKEOVERRIDES))))))
+> +endef
+> +
+>  ifneq ($(LLVM),)
+>  ifneq ($(filter %/,$(LLVM)),)
+>  LLVM_PREFIX :=3D $(LLVM)
+> --
+> 2.39.2
 >
 
-NULLing -> numbing
 
-The gdev->chip is NULLed, so the ioctls are numbed.
-And I need to let the coffee soak in before sending.
-
-> In which case this patch is fine - it is only patch 1 that requires
-> updating.
->
-> Cheers,
-> Kent.
+--=20
+Thanks.
+-- Max
 
