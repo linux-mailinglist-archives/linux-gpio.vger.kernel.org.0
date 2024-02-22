@@ -1,280 +1,192 @@
-Return-Path: <linux-gpio+bounces-3663-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3664-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A74A986018C
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 19:37:12 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1A2F8601B4
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 19:41:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B9EE1F219AF
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 18:37:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9A0B628723D
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 18:41:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5DC7E6E614;
-	Thu, 22 Feb 2024 18:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F0E3A1448F3;
+	Thu, 22 Feb 2024 18:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MAwqtGXb"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="g83gJR89"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 644776E5E0;
-	Thu, 22 Feb 2024 18:25:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=198.175.65.12
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708626328; cv=fail; b=nqGQWTuZw1EZ91nyU2G8fYe31HQIJPv0hNte5EH+z6pfGM0eiaLAZP/9/T5qU7hrJ/ZUiQaM1JTzqm/7unlJz6UZZ7YERCsdbJJcizkoOUxuL3boEGfQJYamTxmTyhzuFce0rCdg/IeWStl3nj2+EMlt4tmL/spjXAbNt3ykXO4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708626328; c=relaxed/simple;
-	bh=8UUIspyAgn5j8fNakp1RxbdKJ5ATqjMjB+ggWGl7vn4=;
-	h=Date:From:To:CC:Subject:Message-ID:References:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=oxwEjaGLWhLQCuka4s2sTZ7qYtQbHeFujyJtGrhzri3gqMYLfCsWyRvieCnRJXNQAcVFaFtTW9M2U89R9mJeAnkT1eeq95QeiSZy7nBrcXrU2fdUVYtEq7gKTXzqRVq2gVs/4IMbGdxN98WQTTbAT3sII/zvt3aJ/QH7fuuZHIE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MAwqtGXb; arc=fail smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708626326; x=1740162326;
-  h=date:from:to:cc:subject:message-id:references:
-   content-transfer-encoding:in-reply-to:mime-version;
-  bh=8UUIspyAgn5j8fNakp1RxbdKJ5ATqjMjB+ggWGl7vn4=;
-  b=MAwqtGXbIOrHiPQ2/Hyjjvbxx9sMH7Qt3snId/PhDqVbJDqjzghFtz1R
-   Ly2BHGKPT9EOe2DFNxZhWKmoW43tEHjYQlqEfkK4vVBmib2WXxaCB1/di
-   NFjfunrD7nmFFG4R+v7/xEWdMvlFg71YwtXd+hC/GH3brQDnbqrZ6xAv2
-   hWTI9mKWAozuPVlm0SV1SK7X8yqnbe/ONVDcF1OOCC+T560xaQfWD9B/j
-   oglR5eSvsjDXYXvVxNPa+DkKBPo3nyHK7d4D461njJMlRDIz8eTPPrR7F
-   82iKe80zpVj3ZA6w84bnxARj6NRPyb4ZkVcg9EAiNrQykyc7nBnTSw1sC
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="14296748"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="14296748"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 10:25:25 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="936886383"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="936886383"
-Received: from fmsmsx603.amr.corp.intel.com ([10.18.126.83])
-  by fmsmga001.fm.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 22 Feb 2024 10:25:23 -0800
-Received: from fmsmsx611.amr.corp.intel.com (10.18.126.91) by
- fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:25:23 -0800
-Received: from fmsmsx610.amr.corp.intel.com (10.18.126.90) by
- fmsmsx611.amr.corp.intel.com (10.18.126.91) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:25:23 -0800
-Received: from fmsedg602.ED.cps.intel.com (10.1.192.136) by
- fmsmsx610.amr.corp.intel.com (10.18.126.90) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35 via Frontend Transport; Thu, 22 Feb 2024 10:25:23 -0800
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (104.47.74.41) by
- edgegateway.intel.com (192.55.55.71) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.35; Thu, 22 Feb 2024 10:25:22 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ecNKO6WblxC6ZQ450jjmI9GYqS3x5k71v2qMvswXvRnHBOa+BxG3fcR5WLQmHiQ185VaFWjW+ierELphwyB3yymd3LmeCiibMD6UJ4riJcNY++i+miNTJFLrOFMmSdlBjcrNitisUcVfhUVriTHlMQu7Xt2s9ht9ecu1xR/7fNYVHWIHs0fOP6y6EuWMew3Y9k4cnZ2RFNvgGx7H6/bPXeF2R3Q1dJyoZO/GhVdDCxevXikuT9ttmPRLKsAImOks0qV4rcmaS2RBaisIp8+kfUi5i1t1GhFjs3pacADvup1RJyHMph2w/q/OPny35tWD2v39dcMmaRKYKA94LtxiKQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=KjjJXsfMIkZY6ac5jHReYiUCFki8bbMyEcX5EkqI/LA=;
- b=aYV+FEtt9qDvrOwxrO1hac6NTuSgSG9gPO0d42Vp9aaJjw/qpeyDF4KzhW92tugsAM9VlRRnVEQV8HSMkq9NJj62CdRzF1QPAbH/mCrA+i6t5Bz15Z9d+uyLFfkFy05V7W+HAGv4D3VD2w+DmKMN6/faNjgUmCF6GPVnuSiNdihyfjx5sos6P9qUvz+SNp8waX//VD/cwXSFERJv3hdZYZbOk30EsX2BM+so8MnNYJc+6Ouaq7YnXmr0xtfXfXC1D53WLuwQPLX8rmxhJqvZ1jAuRPGQ1nMnfysw9XtXXGeP/o4VxNHddF/popDFkOHAwcHV2SE3Vd6Y6fPo+QHeSA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com (2603:10b6:510:256::6)
- by DS7PR11MB6104.namprd11.prod.outlook.com (2603:10b6:8:9f::7) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.7339.10; Thu, 22 Feb 2024 18:25:19 +0000
-Received: from PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::da43:97f6:814c:4dc]) by PH8PR11MB8107.namprd11.prod.outlook.com
- ([fe80::da43:97f6:814c:4dc%7]) with mapi id 15.20.7316.018; Thu, 22 Feb 2024
- 18:25:19 +0000
-Date: Thu, 22 Feb 2024 10:25:15 -0800
-From: Dan Williams <dan.j.williams@intel.com>
-To: Dan Williams <dan.j.williams@intel.com>, Dave Jiang
-	<dave.jiang@intel.com>, Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
-	<linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, "Matti
- Vaittinen" <mazziesaccount@gmail.com>
-CC: Horia =?utf-8?Q?Geant=C4=83?= <horia.geanta@nxp.com>, Pankaj Gupta
-	<pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>,
-	Davidlohr Bueso <dave@stgolabs.net>, Jonathan Cameron
-	<jonathan.cameron@huawei.com>, Alison Schofield <alison.schofield@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>, Dan
- Williams <dan.j.williams@intel.com>, Bamvor Jian Zhang <bamv2005@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>, "Bartosz Golaszewski"
-	<brgl@bgdev.pl>, Douglas Anderson <dianders@chromium.org>, Andrzej Hajda
-	<andrzej.hajda@intel.com>, Neil Armstrong <neil.armstrong@linaro.org>, Robert
- Foss <rfoss@kernel.org>, "Laurent Pinchart"
-	<Laurent.pinchart@ideasonboard.com>, Jonas Karlman <jonas@kwiboo.se>, Jernej
- Skrabec <jernej.skrabec@gmail.com>, "Maarten Lankhorst"
-	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
-	Daniel Vetter <daniel@ffwll.ch>, James Seo <james@equiv.tech>, Jean Delvare
-	<jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
-	<linux-crypto@vger.kernel.org>, <linux-cxl@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-	<linux-hwmon@vger.kernel.org>
-Subject: Re: [PATCH 2/2] devm-helpers: Add resource managed version of
- debugfs directory create function
-Message-ID: <65d7918b358a5_1ee3129432@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-References: <20240222145838.12916-1-kabel@kernel.org>
- <20240222145838.12916-2-kabel@kernel.org>
- <23c50406-7ebd-4cc3-a978-1b8a5fc71ff0@intel.com>
- <65d78e55844c1_1ee312946a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <65d78e55844c1_1ee312946a@dwillia2-mobl3.amr.corp.intel.com.notmuch>
-X-ClientProxiedBy: MW4PR03CA0182.namprd03.prod.outlook.com
- (2603:10b6:303:b8::7) To PH8PR11MB8107.namprd11.prod.outlook.com
- (2603:10b6:510:256::6)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54DEA1448E4
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 18:33:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708626803; cv=none; b=YjN8ynp1eg3qyYaJno/yBVQs2KR4nV3tT1Ot/noEakwK9A1HIeONPEfpkwto1C1Lg1vm9pN0/p6/YzRsqQxH9XtpB95IxUuE3ft10TxEUUpO7pBxbfrMYhEYHMbxcPfp0Owj2fc59mR51gzz1RkyQNZAv/Y/1iMOvD/xFcmiaIo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708626803; c=relaxed/simple;
+	bh=XSQAUK/U55m0KLayh5Wo5le7Vj1aHM53DbCd9IqoMdU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=teXSBf7iuVOEwbTEghPwiU5xPAeBKQ5UeRzOCfOSBHrDT/QO5OUzrIg0fZtBllo9OJEjt4dWGgw9tpLG4cI0skDqu1P2HgDUh4+CnHP3Vtn4+RY62/9pgDO6EDGqayGqTEJv6JsBj6i6XmlRu4049H3BzS6OYNHHohKbPida+8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=g83gJR89; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1708626800;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=IDF5rof44gEIb9jX4TIDVAFNvDzRBoYmWa48QZ9r6nQ=;
+	b=g83gJR897ZwJ8rUK8X1YTLxVGhoTuOhG56I2tSszT+J9GWM2FdvaR++WIq28LNW0Hy2egM
+	kaGysJ/uG6CthGSsm8gZUa4h8CJyi+sFVtoPDIiZsyRZGNXX3kSvJBtPE4aaUj3CYTVTDe
+	ji2b+4QZJvKMaFNGY4HLkK3kUzHtaog=
+Received: from mail-ej1-f71.google.com (mail-ej1-f71.google.com
+ [209.85.218.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-300-wHYD67TnMhC3L2JVnM_m0w-1; Thu, 22 Feb 2024 13:33:18 -0500
+X-MC-Unique: wHYD67TnMhC3L2JVnM_m0w-1
+Received: by mail-ej1-f71.google.com with SMTP id a640c23a62f3a-a2f1d0c3389so3702266b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 10:33:18 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708626798; x=1709231598;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=IDF5rof44gEIb9jX4TIDVAFNvDzRBoYmWa48QZ9r6nQ=;
+        b=aVzpLW6Pvk6FsQCk3KO1JnVitzSs9G8TC8ZkzXHZXnQAiToo/aZ/MmnoIEtNyYOXg2
+         1hW03mKNOpkmdSICNt+MtxkV9RlDpZdw7bHPcILyAcUqpFhWFQ380EuE2ZQBicBNyxCH
+         ZbH6P3snINGDTlHx4lm8tHuIPmHsRZg9btab+W2NcmoHCAWY5IiMRTlLfDBlJC7BftJL
+         VXVD1XEeRB+1GEYsRx7IGey+yuGWiOpWgz1CItx+oEHI8uN9Et21Qa8o0A7VF7lba3+1
+         lzBXkUs4MWGORSg0BijqFlRlYn6kBjf5A5Mw1gUznOnZldkdj9zUI//DV1u7cORsQK8d
+         WD9g==
+X-Forwarded-Encrypted: i=1; AJvYcCVne6XRfuE0rygMD2rtS/ouBIjmILKfl/fpkF1anoEF6U/oTH3Qt2qXBzgTk9bI1SxfmDMWKNzHYEJbjWlUkJjX4yFsMHyzs2p9CQ==
+X-Gm-Message-State: AOJu0YxTXTyXPLcoZ+Dy3drjGJLMNsF7D9Gkmi8pzekDsvUGYxF7zxYt
+	QaUmieI95u2UYpF/uZM6ojjtgRzgCgReivfCXtSUuIK0PP880Y8KR53R04XrpCor5ZFxPu3ag7Y
+	/Z/xuiqryI9v+OgkXR0GQy3X8Hx20IO3lR8bTnQ9c4ZO5pl0ONrNrVqYrwCE=
+X-Received: by 2002:a17:906:3b52:b0:a3f:1ec7:8765 with SMTP id h18-20020a1709063b5200b00a3f1ec78765mr4781459ejf.8.1708626797726;
+        Thu, 22 Feb 2024 10:33:17 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IHy6MVM+yU0ergPm1eOLv+jCkZxkYnKmu7DqTz49UohXBGjHmSJ/pKffRukeXLaaXuaiUR+Cg==
+X-Received: by 2002:a17:906:3b52:b0:a3f:1ec7:8765 with SMTP id h18-20020a1709063b5200b00a3f1ec78765mr4781437ejf.8.1708626797348;
+        Thu, 22 Feb 2024 10:33:17 -0800 (PST)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id lu16-20020a170906fad000b00a3d5efc65e0sm4854658ejb.91.2024.02.22.10.33.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Feb 2024 10:33:16 -0800 (PST)
+Message-ID: <7013bf9e-2663-4613-ae61-61872e81355b@redhat.com>
+Date: Thu, 22 Feb 2024 19:33:15 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH8PR11MB8107:EE_|DS7PR11MB6104:EE_
-X-MS-Office365-Filtering-Correlation-Id: ebc1b1a1-73a9-4663-5eb9-08dc33d39fdd
-X-LD-Processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: n9RfIVe3VG4RJrtlpl9uWvnhgxOGzAIDNQvakFnwzHFNoF4/bLBpjjqUUS10Z00bXIslUb2tj394bwbQQcPh9DJ2Cdb1AAF3SuasbJ39zQFOo9eeX8gP6Wb2qAgL9aLq+SZP7O8UKqeyVRwfWY6OHX9sWMmAcKHdcUcz97ICT6WMWz1O/B6Mu2uLpkSMZz2dIgPoj7t9NGKrLsUE2LwptFrQZ6lBGYWLZZqRpzQ8Ry3FxN9U3QbjwYu8Ilbrwj91RjpHRLBZ4vZuV3YneNzjWUl58n5dXqkT1XK3+a6UJulJV+E9qRY1InPvv06jMsHxe6rjx1LqIXv9gk5TWNrI4ai4gysJaDdEWWA0RngL35pkJ9OjFl4aCY61DinnYPovipslgldVB+MIpY9TGsCiTr3vty9j2gT21coawzLhU8lkGLJrmhL8y6+SvgHayYsQM3l4o1KOEuQgzPTaN/9k95kWwRxCC24UcF+nvwsPZ8f2of4terE1nX8uk7Dmo4yB3g5JKr2AbhzrVTto9dReXFtqswMA+/I03ck9bsPMkPI=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH8PR11MB8107.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?iso-8859-1?Q?jc0CMwJ+viTns2sPchYhwb5l9f+KZ86qER28p6uC4ri9MI9D5A1f/TJ+hy?=
- =?iso-8859-1?Q?HE+oKNMqqWUVg4ZKjKa4QJY08Nc9xZCzoXcsUV6Vs3bINxO61hR227vMFL?=
- =?iso-8859-1?Q?G75foFHovO5TMcRC1YB+zPolu9f/xjFy087OjjTWG/GRcaEQO+saCZkNgX?=
- =?iso-8859-1?Q?oOcWgSEVWFP9mruRDvx+8jmJ/Vum7rtXX4hQgptNdw9qtxbz3OP+aZf88g?=
- =?iso-8859-1?Q?2Dz/LJ81sz/LtXziAz2iElkSGf9AQ7QkTa20IKvuvCn1ikxtSDrdxUmzj+?=
- =?iso-8859-1?Q?MkXOZIXtSerg/0/RVMCYxY7cHfgn1BQqXdvVZf7GLHFxbYf+69HU2mM2uJ?=
- =?iso-8859-1?Q?6w1bPg46dq3gJhmHyXjZiahEG9wJnLYehkhH7VD6dGtF6WIdJRKbTr0fVD?=
- =?iso-8859-1?Q?MPaC6pezJTuumJd80XKVEUqVarFgQm8D1NFVTXyepteewgHZztqh+QeVJF?=
- =?iso-8859-1?Q?3jPjYVTF59PBDcqNqfvDlMXqDf2hxGhsLs40rgUQ/PuDqF7KTWjASn+BJJ?=
- =?iso-8859-1?Q?qIgpmqDRf/m2f7Egr9zZEi9z6BxWi/fVKBB4BhDr7EzaISrTNyd68uDK8x?=
- =?iso-8859-1?Q?MfG9cSwKF3v9BqiXu0qVjoq6PvbfKUKl8ffLA+s5ss13exPNCuUE2wqUrW?=
- =?iso-8859-1?Q?LZXocgJ6KSKDd9cSJjzDxSXF4AeZulU10JaFnGQHTb9+O+5SlwmqtPzwj1?=
- =?iso-8859-1?Q?BXD44iXqfN0hqDEu6TKiqibaZ1ZUb5YSFmf8CJN1y2zMq92C/KdcjjKC4w?=
- =?iso-8859-1?Q?PNtjRd+XvUUe0r/lYdfILS+lRsnUgGyBNo+XIz4ZmpJvLDHPBtorgC2lFu?=
- =?iso-8859-1?Q?XN8WHv738r8crxxM2Q78x2915CR4oS0Vzxa45CPVUD2HXUl9isk/0hAett?=
- =?iso-8859-1?Q?ZhNotQWg+BQf9ppJuliwckrUnBZfVwlIOkevKIMdb+R+3vRoG1LkJqHLNS?=
- =?iso-8859-1?Q?T2QxZN0Np7cEbt0PYnZqj7Xh/vWxr1FkRfJe1C7El83mZMuVr2k3wZp71Z?=
- =?iso-8859-1?Q?acUJuvo46qKV+D92xmbw6VsXoo7SaFebOkKdmGi+bs+FBy1xVCfB+VL/6R?=
- =?iso-8859-1?Q?UsqdAQDvmXPIHULWObode34RWL0wfNSdoKXthD29hEVms/F/z42+W5UzkK?=
- =?iso-8859-1?Q?ZAioeN6NyHElJS3dBJagWq3KOWOKKCVuJSkZXnBcu6Ahb9cpfUZAyYZytz?=
- =?iso-8859-1?Q?DPpx8xmR2rmJ6sHTMmvDoZduwqeGwyQGmHHk8dollkXC1aPkTI2+3g4kdc?=
- =?iso-8859-1?Q?o00ozapbKZyM61UIN5tbDGhV1BFCLuwICh75nxPWqvpl3J8+FPjHt79I8s?=
- =?iso-8859-1?Q?WQDJvkSflS9HiAZwfQDHHHEOy3ECKRasBowHZMBxTqbrCms4ZoBT7lCrMR?=
- =?iso-8859-1?Q?HJpRONd7ippNFV7l/TFSoEkGbMPlV+fP0IAxsXmpaLGMtYqJ9isudaRd0G?=
- =?iso-8859-1?Q?eI23RFGoqPFxpcXq+86MYYk8ibL8Cr3Lq1miwqWhOOj0RWwRJURh4hPnIL?=
- =?iso-8859-1?Q?BXIBdJSZkfy6hTwpz2kiBzK6EHmsJjs0h8PAFu4u1MEjM/rSTGPcKtAF1r?=
- =?iso-8859-1?Q?Ialx03UgzVhFXp/o15MDue3XB8cgmbPgoxX2XDhVgLDIdvsnVBI7adDNXu?=
- =?iso-8859-1?Q?Kg8D3hyEOO/5eTHlwpT/cc/OBq9dSLGEKHyDTwOOAuAmUEXPOkG5hHWQ?=
- =?iso-8859-1?Q?=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: ebc1b1a1-73a9-4663-5eb9-08dc33d39fdd
-X-MS-Exchange-CrossTenant-AuthSource: PH8PR11MB8107.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 22 Feb 2024 18:25:19.4517
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: uYig7fF1jS41Pb9D8C+d1C0dFe4oyfod4zlkmGHfmSzRd9zod1kX2UECHpt76B4AAPfj0wSjrE8uWxozfB9x+HmnMwDqZo9hlPc/qzuM2vs=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS7PR11MB6104
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] devm-helpers: Add resource managed version of mutex
+ init
+To: Matthew Auld <matthew.auld@intel.com>, =?UTF-8?Q?Marek_Beh=C3=BAn?=
+ <kabel@kernel.org>, linux-kernel@vger.kernel.org,
+ Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>,
+ Lucas De Marchi <lucas.demarchi@intel.com>, Oded Gabbay
+ <ogabbay@kernel.org>, =?UTF-8?Q?Thomas_Hellstr=C3=B6m?=
+ <thomas.hellstrom@linux.intel.com>,
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
+ David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
+ Aleksandr Mezin <mezin.alexander@gmail.com>, Jean Delvare
+ <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>,
+ Pavel Machek <pavel@ucw.cz>, Lee Jones <lee@kernel.org>,
+ Sebastian Reichel <sre@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+ linux-gpio@vger.kernel.org, intel-xe@lists.freedesktop.org,
+ dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
+ linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+References: <20240222145838.12916-1-kabel@kernel.org>
+ <03e62bcf-137c-4947-8f34-0cbfcba92a30@intel.com>
+Content-Language: en-US, nl
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <03e62bcf-137c-4947-8f34-0cbfcba92a30@intel.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Dan Williams wrote:
-> Dave Jiang wrote:
-> > 
-> > 
-> > On 2/22/24 7:58 AM, Marek Beh�n wrote:
-> > > A few drivers register a devm action to remove a debugfs directory,
-> > > implementing a one-liner function that calls debufs_remove_recursive().
-> > > Help drivers avoid this repeated implementations by adding managed
-> > > version of debugfs directory create function.
-> > > 
-> > > Use the new function devm_debugfs_create_dir() in the following
-> > > drivers:
-> > >   drivers/crypto/caam/ctrl.c
-> > >   drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> > >   drivers/hwmon/hp-wmi-sensors.c
-> > >   drivers/hwmon/mr75203.c
-> > >   drivers/hwmon/pmbus/pmbus_core.c
-> > > 
-> > > Also use the action function devm_debugfs_dir_recursive_drop() in
-> > > drivers
-> > >   drivers/cxl/mem.c
-> > >   drivers/gpio/gpio-mockup.c
-> > > 
-> > > Signed-off-by: Marek Beh�n <kabel@kernel.org>
-> > > ---
-> > >  drivers/crypto/caam/ctrl.c            | 16 +++------
-> > >  drivers/cxl/mem.c                     |  9 ++---
-> > >  drivers/gpio/gpio-mockup.c            | 11 ++----
-> > >  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++------
-> > >  drivers/hwmon/hp-wmi-sensors.c        | 15 ++-------
-> > >  drivers/hwmon/mr75203.c               | 15 +++------
-> > >  drivers/hwmon/pmbus/pmbus_core.c      | 16 +++------
-> > >  include/linux/devm-helpers.h          | 48 +++++++++++++++++++++++++++
-> > >  8 files changed, 72 insertions(+), 71 deletions(-)
-> > > 
-[..]
-> > diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-> > index 5303d6942b88..b6f13ba87927 100644
-> > --- a/drivers/cxl/cxlmem.h
-> > +++ b/drivers/cxl/cxlmem.h
-> > @@ -859,6 +859,5 @@ struct cxl_hdm {
-> >  };
-> >  
-> >  struct seq_file;
-> > -struct dentry *cxl_debugfs_create_dir(const char *dir);
-> >  void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
-> >  #endif /* __CXL_MEM_H__ */
-> > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > index c5c9d8e0d88d..494abe7a54c5 100644
-> > --- a/drivers/cxl/mem.c
-> > +++ b/drivers/cxl/mem.c
-> > @@ -4,6 +4,7 @@
-> >  #include <linux/device.h>
-> >  #include <linux/module.h>
-> >  #include <linux/pci.h>
-> > +#include <linux/devm-helpers.h>
-> >  
-> >  #include "cxlmem.h"
-> >  #include "cxlpci.h"
-> > @@ -30,11 +31,6 @@ static void enable_suspend(void *data)
-> >  	cxl_mem_active_dec();
-> >  }
-> >  
-> > -static void remove_debugfs(void *dentry)
-> > -{
-> > -	debugfs_remove_recursive(dentry);
-> > -}
-> > -
-> >  static int cxl_mem_dpa_show(struct seq_file *file, void *data)
-> >  {
-> >  	struct device *dev = file->private;
-> > @@ -128,7 +124,10 @@ static int cxl_mem_probe(struct device *dev)
-> >  	if (work_pending(&cxlmd->detach_work))
-> >  		return -EBUSY;
-> >  
-> > -	dentry = cxl_debugfs_create_dir(dev_name(dev));
-> > +	dentry = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> > +	if (IS_ERR(dentry))
-> > +		return PTR_ERR(dentry);
-> > +
+Hi,
+
+On 2/22/24 17:44, Matthew Auld wrote:
+> On 22/02/2024 14:58, Marek Behún wrote:
+>> A few drivers are doing resource-managed mutex initialization by
+>> implementing ad-hoc one-liner mutex dropping functions and using them
+>> with devm_add_action_or_reset(). Help drivers avoid these repeated
+>> one-liners by adding managed version of mutex initialization.
+
+<snip>
+
+>> index 74891802200d..70640fb96117 100644
+>> --- a/include/linux/devm-helpers.h
+>> +++ b/include/linux/devm-helpers.h
+>> @@ -24,6 +24,8 @@
+>>    */
+>>     #include <linux/device.h>
+>> +#include <linux/kconfig.h>
+>> +#include <linux/mutex.h>
+>>   #include <linux/workqueue.h>
+>>     static inline void devm_delayed_work_drop(void *res)
+>> @@ -76,4 +78,34 @@ static inline int devm_work_autocancel(struct device *dev,
+>>       return devm_add_action(dev, devm_work_drop, w);
+>>   }
+>>   +static inline void devm_mutex_drop(void *res)
+>> +{
+>> +    mutex_destroy(res);
+>> +}
+>> +
+>> +/**
+>> + * devm_mutex_init - Resource managed mutex initialization
+>> + * @dev:    Device which lifetime mutex is bound to
+>> + * @lock:    Mutex to be initialized (and automatically destroyed)
+>> + *
+>> + * Initialize mutex which is automatically destroyed when driver is detached.
+>> + * A few drivers initialize mutexes which they want destroyed before driver is
+>> + * detached, for debugging purposes.
+>> + * devm_mutex_init() can be used to omit the explicit mutex_destroy() call when
+>> + * driver is detached.
+>> + */
+>> +static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
+>> +{
+>> +    mutex_init(lock);
 > 
-> No that loses the "cxl" prefix.
+> Do you know if this this needs __always_inline? The static lockdep key in mutex_init() should be
+> different for each caller class. See c21f11d182c2 ("drm: fix drmm_mutex_init()").
 
-So, to be clear, I do see the benefit of removing the
-devm_add_action_or_reset() call altogether, but that work is a bit
-deeper and should not be tied with all these other cleanups. So I think
-from the CXL perspective, please drop these CXL changes out of this
-patch. Follow up with a standalone patch, or leave it to drivers/cxl/
-folks to create that deeper cleanup.
+That is a very good point. I believe that this should mirror mutex_init() and
+the actual static inline function should be __devm_mutex_init() which takes
+the key as extra argument (and calls __mutex_init()) and then make
+devm_mutex_init() itself a macro mirroring the mutex_init() macro.
+
+Regards,
+
+Hans
+
+
+
+
+
+
+> 
+>> +
+>> +    /*
+>> +     * mutex_destroy() is an empty function if CONFIG_DEBUG_MUTEXES is
+>> +     * disabled. No need to allocate an action in that case.
+>> +     */
+>> +    if (IS_ENABLED(CONFIG_DEBUG_MUTEXES))
+>> +        return devm_add_action_or_reset(dev, devm_mutex_drop, lock);
+>> +    else
+>> +        return 0;
+>> +}
+>> +
+>>   #endif
+> 
+
 
