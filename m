@@ -1,151 +1,257 @@
-Return-Path: <linux-gpio+bounces-3667-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3668-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D8C28604FC
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 22:42:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC7E786071F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 00:52:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ADAB11F2331F
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 21:42:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 48F7C2846C1
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 23:52:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84E9D73F2D;
-	Thu, 22 Feb 2024 21:42:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 73BB413BAE0;
+	Thu, 22 Feb 2024 23:51:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="G9chThIT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AA3F73F34
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 21:42:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93935199AD
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 23:51:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708638143; cv=none; b=E6CVKT+7d7Wg+XRU4XSd/BRDdGgRvqUuPGR8Ekuuw6/4d4t88Y/KfZf5roevL0gV98sdxb9pjS2kNSEY25qi8wgGhwbAvw4ERA2yreXlaetwLVyM1e2qUu4CMEf/btGAEU3BIrnrtjDBfsqn5bhxFBZ0bSgBMRXbsbsE5LtTi7U=
+	t=1708645917; cv=none; b=TeV4Co6tKwglm5U18eHGG1b3nzHR9TN4baJtJoAGVX7x6K1wIxmU3NJOBA50oVcXNLgoTVXjaTZBFzmADOradIP8B15d4Xz5jUU5kqK7Rx2YbN5EY/wcgfSiOAuXnUwtkO/0pqY90cqDUU+yG5ExdGC3iw9GsWSmKTJidjGfg58=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708638143; c=relaxed/simple;
-	bh=3qH6a911hvLZnHJF5DoZ8K6rR8//RgNHgPFdiHBY9tk=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HQMmeRVxdDeCinwCIaMrLVxxs22s//1MCzwGWFWgrsvnygDmvdUQio5akm9Ug2gQp/vDFfoQwB6DupIh+YxuyYhPfp1tt2/si+LihH3XOgv+Q9AwUeqnVsjhYu5DugrDK6xlFA63IXT7EQuxe4/jqxRVfKSOF5k/kESZp/i88R4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 3c868ecd-d1cb-11ee-b3cf-005056bd6ce9;
-	Thu, 22 Feb 2024 23:42:13 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Thu, 22 Feb 2024 23:42:11 +0200
-To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-	Matti Vaittinen <mazziesaccount@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Lucas De Marchi <lucas.demarchi@intel.com>,
-	Oded Gabbay <ogabbay@kernel.org>,
-	Thomas =?iso-8859-1?Q?Hellstr=F6m?= <thomas.hellstrom@linux.intel.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
-	Aleksandr Mezin <mezin.alexander@gmail.com>,
-	Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, Pavel Machek <pavel@ucw.cz>,
-	Lee Jones <lee@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-gpio@vger.kernel.org, intel-xe@lists.freedesktop.org,
-	dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org,
-	linux-leds@vger.kernel.org, linux-pm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	George Stark <gnstark@salutedevices.com>
-Subject: Re: [PATCH 1/2] devm-helpers: Add resource managed version of mutex
- init
-Message-ID: <Zde_s8iecR2ArKjC@surfacebook.localdomain>
-References: <20240222145838.12916-1-kabel@kernel.org>
+	s=arc-20240116; t=1708645917; c=relaxed/simple;
+	bh=/wHGiiuPEih+Dl1DSbuFdBlrYyz4M3oticJERwW5nCU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kwOaPFsGI8AZ/J2unCGUaVDbF5nBLmFKMvY2rTW8HaH39ErXlEvAgHm7Gu84kdRCz2EPqsE39/ASFh3elDyJWXXZRk6M4HdzI3R4+VVHqtyWZO46dFHagmPRbnfUfh3ZzDfpn7mOjSIcAP2bbed+NCh97IKIb2P/EvAiPn0MQ7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=G9chThIT; arc=none smtp.client-ip=209.85.160.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-42e0b1b11bbso31451cf.0
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 15:51:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1708645914; x=1709250714; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mVOy0PwhnBKY+4KzN/4pkuX8/YBWUL2pDvveZN+SjoI=;
+        b=G9chThIT/Y2Zg923Jah7ISL6MTQfKSPHIGS8WAAUu88KKfuzKlhnLIPWfU5/9v3Loi
+         BOqhKkpyiZnhd6xS2TMndq4d3v91WQ1DoWQh0JXtyxAj5KJnxSWD2AT7Lu1AT1l1lxyf
+         KY0gd5CzFSJi1+z1KQP9jtYlPGdH+5f2d8AKq9UEYK7HQbaRgPPd9IQ86XwdrlheHK26
+         Vmob9eB7uYNU3+qzycA6xKOCYGRFK9C032/MHfG0WZj+tBaR00a3vontxCNKqhq9SRx6
+         rqSTWslXF8Kj6LLebRwkH/Qet1CJlcrKt4A1f6XC6cn6bfF1Avr10R08T+EBDsMKcAEc
+         aeVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708645914; x=1709250714;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=mVOy0PwhnBKY+4KzN/4pkuX8/YBWUL2pDvveZN+SjoI=;
+        b=CZ0rwzHsSsFhwIUKvhazYwEiBNrrkSoZ84lIO6OOg+MjYSgrEM9G3QPgjvC1V6D3o+
+         yhJfClZgkjFmPgd2jvmcL8qrPO1HCXrCmNYwzYdirEFzZSsKwpyWbtZOGXMn537pBdCF
+         8OxF5TliKMN136wua3wH8199Bbs5i1S3gjKjclTNtJsk5LEgcvaOCgvupoiMol2gL0P7
+         05CsRwqzjDS8LI4uCwSnudZa5FRp9yyyQhf5oOuaB8u2CX102dF5uz4Cd3k4+DGX5RW/
+         shsG4O4Ft2R4OB5HZhJ5okAGAVErTHG0FvG7wFneJqUSgJIQoQRZviO3AVjPTFwCCmeX
+         RUbw==
+X-Forwarded-Encrypted: i=1; AJvYcCW/OEboucffjrt0vpHOPFfwWO4Zm5EAs5A84xza6yYa9qBN6RSmGYTCHpgHO5I7NtyzADjHDghw2pZguwVdfG1wNAza+TKjCR9LgA==
+X-Gm-Message-State: AOJu0YwxdcAcvaVWxzlx9rT4Cr+j8luzQPQq8dh6ujElYLUXwaa9KWb8
+	nK/71vaSyTPZR+40EQNI/tToqWxib+ax64w1LWQGy4aGsryd55WGSQBiTfEcxyFHTR45tX51FrV
+	3puKafvs5+JvD5RDPV6rp9BSrL+M0F8bnVebf
+X-Google-Smtp-Source: AGHT+IGSx9IqL62y1LNBY7s+dmpCEtqTu2O+jgsJsFv46ojLa1Dsip1JzYkOGamsGRfmVVJM30+X6ptu5wefZ3VTfAA=
+X-Received: by 2002:a05:622a:181d:b0:42e:377e:8c07 with SMTP id
+ t29-20020a05622a181d00b0042e377e8c07mr854859qtc.11.1708645914096; Thu, 22 Feb
+ 2024 15:51:54 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240222145838.12916-1-kabel@kernel.org>
+References: <20240220111019.133697-1-herve.codina@bootlin.com>
+ <20240220111019.133697-3-herve.codina@bootlin.com> <20240220142959.GA244726@rigel>
+ <20240222005744.GA3603@rigel> <20240222010530.GA11949@rigel>
+ <CAMRc=MdCm4UXMkzvG17Vd=6ajE+feihgYc66qUNTTKXhN0--dA@mail.gmail.com>
+ <20240222123615.2cbada98@bootlin.com> <CAMRc=McTkVPD-1_5vvPcM2Q15=w+ocki2xTmvQzU-o395A930w@mail.gmail.com>
+In-Reply-To: <CAMRc=McTkVPD-1_5vvPcM2Q15=w+ocki2xTmvQzU-o395A930w@mail.gmail.com>
+From: Saravana Kannan <saravanak@google.com>
+Date: Thu, 22 Feb 2024 15:51:15 -0800
+Message-ID: <CAGETcx_j4613QjHgX5AJ96Ux6MJSxxhT7DL36yzNv1JCsoxTAA@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpiolib: cdev: release IRQs when the gpio chip device
+ is removed
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Herve Codina <herve.codina@bootlin.com>, Kent Gibson <warthog618@gmail.com>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Thu, Feb 22, 2024 at 03:58:37PM +0100, Marek Behún kirjoitti:
-> A few drivers are doing resource-managed mutex initialization by
-> implementing ad-hoc one-liner mutex dropping functions and using them
-> with devm_add_action_or_reset(). Help drivers avoid these repeated
-> one-liners by adding managed version of mutex initialization.
-> 
-> Use the new function devm_mutex_init() in the following drivers:
->   drivers/gpio/gpio-pisosr.c
->   drivers/gpio/gpio-sim.c
->   drivers/gpu/drm/xe/xe_hwmon.c
->   drivers/hwmon/nzxt-smart2.c
->   drivers/leds/leds-is31fl319x.c
->   drivers/power/supply/mt6370-charger.c
->   drivers/power/supply/rt9467-charger.c
+On Thu, Feb 22, 2024 at 4:21=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+>
+> On Thu, Feb 22, 2024 at 12:36=E2=80=AFPM Herve Codina <herve.codina@bootl=
+in.com> wrote:
+> >
+> > Hi Bartosz,
+> >
+> > On Thu, 22 Feb 2024 00:31:08 -0800
+> > Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+> >
+> > > On Thu, 22 Feb 2024 02:05:30 +0100, Kent Gibson <warthog618@gmail.com=
+> said:
+> > > > On Thu, Feb 22, 2024 at 08:57:44AM +0800, Kent Gibson wrote:
+> > > >> On Tue, Feb 20, 2024 at 10:29:59PM +0800, Kent Gibson wrote:
+> > > >> > On Tue, Feb 20, 2024 at 12:10:18PM +0100, Herve Codina wrote:
+> > > >>
+> > > >> ...
+> > > >>
+> > > >> > >  }
+> > > >> > >
+> > > >> > > +static int linereq_unregistered_notify(struct notifier_block =
+*nb,
+> > > >> > > +                                     unsigned long action, vo=
+id *data)
+> > > >> > > +{
+> > > >> > > +      struct linereq *lr =3D container_of(nb, struct linereq,
+> > > >> > > +                                        device_unregistered_n=
+b);
+> > > >> > > +      int i;
+> > > >> > > +
+> > > >> > > +      for (i =3D 0; i < lr->num_lines; i++) {
+> > > >> > > +              if (lr->lines[i].desc)
+> > > >> > > +                      edge_detector_stop(&lr->lines[i]);
+> > > >> > > +      }
+> > > >> > > +
+> > > >> >
+> > > >> > Firstly, the re-ordering in the previous patch creates a race,
+> > > >> > as the NULLing of the gdev->chip serves to numb the cdev ioctls,=
+ so
+> > > >> > there is now a window between the notifier being called and that=
+ numbing,
+> > > >> > during which userspace may call linereq_set_config() and re-requ=
+est
+> > > >> > the irq.
+> > > >> >
+> > > >> > There is also a race here with linereq_set_config().  That can b=
+e prevented
+> > > >> > by holding the lr->config_mutex - assuming the notifier is not b=
+eing called
+> > > >> > from atomic context.
+> > > >> >
+> > > >>
+> > > >> It occurs to me that the fixed reordering in patch 1 would place
+> > > >> the notifier call AFTER the NULLing of the ioctls, so there will n=
+o longer
+> > > >> be any chance of a race with linereq_set_config() - so holding the
+> > > >> config_mutex semaphore is not necessary.
+> > > >>
+> > > >
+> > > > NULLing -> numbing
+> > > >
+> > > > The gdev->chip is NULLed, so the ioctls are numbed.
+> > > > And I need to let the coffee soak in before sending.
+> > > >
+> > > >> In which case this patch is fine - it is only patch 1 that require=
+s
+> > > >> updating.
+> > > >>
+> > > >> Cheers,
+> > > >> Kent.
+> > > >
+> > >
+> > > The fix for the user-space issue may be more-or-less correct but the =
+problem is
+> > > deeper and this won't fix it for in-kernel users.
+> > >
+> > > Herve: please consider the following DT snippet:
+> > >
+> > >       gpio0 {
+> > >               compatible =3D "foo";
+> > >
+> > >               gpio-controller;
+> > >               #gpio-cells =3D <2>;
+> > >               interrupt-controller;
+> > >               #interrupt-cells =3D <1>;
+> > >               ngpios =3D <8>;
+> > >       };
+> > >
+> > >       consumer {
+> > >               compatible =3D "bar";
+> > >
+> > >               interrupts-extended =3D <&gpio0 0>;
+> > >       };
+> > >
+> > > If you unbind the "gpio0" device after the consumer requested the int=
+errupt,
+> > > you'll get the same splat. And device links will not help you here (o=
+n that
+> > > note: Saravana: is there anything we could do about it? Have you even
+> > > considered making the irqchip subsystem use the driver model in any w=
+ay? Is it
+> > > even feasible?).
 
-Pardon me, but why?
+I did add support to irqchip to use the driver model. See
+IRQCHIP_PLATFORM_DRIVER_BEGIN() and uses of it.  So this makes sure
+the probe ordering is correct.
 
-https://lore.kernel.org/linux-leds/20231214173614.2820929-1-gnstark@salutedevices.com/
+But when I added that support, there was some pushback on making the
+modules removable[1]. But that's why you'll see that the
+IRQCHIP_PLATFORM_DRIVER_BEGIN() macro set .suppress_bind_attrs =3D true.
 
-Can you cooperate, folks, instead of doing something independently?
+Do you have a way to unregister an interrupt controller in your
+example? If so, how do you unregister it? It shouldn't be too hard to
+extend those macros to add removal support. We could add a
+IRQCHIP_MATCH2() that also takes in an exit() function op that gets
+called on device unbind.
 
+[1] - https://lore.kernel.org/lkml/86sghas7so.wl-maz@kernel.org/#t
 
-> --- a/include/linux/devm-helpers.h
-> +++ b/include/linux/devm-helpers.h
-> @@ -24,6 +24,8 @@
->   */
->  
->  #include <linux/device.h>
-> +#include <linux/kconfig.h>
-> +#include <linux/mutex.h>
->  #include <linux/workqueue.h>
->  
->  static inline void devm_delayed_work_drop(void *res)
-> @@ -76,4 +78,34 @@ static inline int devm_work_autocancel(struct device *dev,
->  	return devm_add_action(dev, devm_work_drop, w);
->  }
->  
-> +static inline void devm_mutex_drop(void *res)
-> +{
-> +	mutex_destroy(res);
-> +}
-> +
-> +/**
-> + * devm_mutex_init - Resource managed mutex initialization
-> + * @dev:	Device which lifetime mutex is bound to
-> + * @lock:	Mutex to be initialized (and automatically destroyed)
-> + *
-> + * Initialize mutex which is automatically destroyed when driver is detached.
-> + * A few drivers initialize mutexes which they want destroyed before driver is
-> + * detached, for debugging purposes.
-> + * devm_mutex_init() can be used to omit the explicit mutex_destroy() call when
-> + * driver is detached.
-> + */
-> +static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
-> +{
-> +	mutex_init(lock);
-> +
-> +	/*
-> +	 * mutex_destroy() is an empty function if CONFIG_DEBUG_MUTEXES is
-> +	 * disabled. No need to allocate an action in that case.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_DEBUG_MUTEXES))
-> +		return devm_add_action_or_reset(dev, devm_mutex_drop, lock);
-> +	else
-> +		return 0;
-> +}
+> > >
+> > > I would prefer this to be fixed at a lower lever than the GPIOLIB cha=
+racter
+> > > device.
+> >
+> > I think this use case is covered.
+> > When the consumer device related to the consumer DT node is added, a
+> > consumer/supplier relationship is created:
+> > parse_interrupts() parses the 'interrups-extended' property
+> >   https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.=
+c#L1316
+> > and so, of_link_to_phandle() creates the consumer/supplier link.
+> >   https://elixir.bootlin.com/linux/v6.8-rc1/source/drivers/of/property.=
+c#L1316
+> >
+> > We that link present, if the supplier is removed, the consumer is remov=
+ed
+> > before.
+> > The consumer should release the interrupt during its remove process (i.=
+e
+> > explicit in its .remove() or explicit because of a devm_*() call).
+> >
+> > At least, it is my understanding.
+>
+> Well, then it doesn't work, because I literally just tried it before
+> sending my previous email.
 
-Cc: George Stark <gnstark@salutedevices.com>
+For your gpio0 device, can you see why __device_release_driver()
+doesn't end up calling device_links_unbind_consumers()?
 
--- 
-With Best Regards,
-Andy Shevchenko
+Also, can you look at
+/sys/class/devlink/<bus:gpio0-devicename>--<consumer device name>
+folders and see what the status file says before you try to unbind the
+gpio0 device? It should say "active".
 
+> Please try it yourself, you'll see.
+>
+> Also: an interrupt controller may not even have a device consuming its
+> DT node (see IRQCHIP_DECLARE()), what happens then?
 
+Yeah, we are screwed in those cases. Ideally we are rejecting all
+submissions for irqchip drivers that use IRQCHIP_DECLARE().
+
+-Saravana
 
