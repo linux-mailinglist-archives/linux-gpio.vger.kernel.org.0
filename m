@@ -1,153 +1,232 @@
-Return-Path: <linux-gpio+bounces-3665-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3666-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD1BC860350
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 20:55:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD42986044E
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 22:05:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD11E1C247B6
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 19:55:47 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 93973287BAC
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 21:05:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60A696AFAB;
-	Thu, 22 Feb 2024 19:55:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C61E77175E;
+	Thu, 22 Feb 2024 21:05:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="dMhLdZCo"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RJIQd7gE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47D814B828
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 19:55:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27D110A05
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 21:05:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708631742; cv=none; b=Flvz4lTRpqYCMneXLVWUMZVgbAFDsbe1fkVQGW1+sPRVPAD4SZJb7U0euYxgtR5AlJ/CZwM36K8PTvs7JJD+9jEruJqAJMMCWE4UZoR8YYwCF0BLfVrWcgwfZQas1ukENqAvU4ox8AzsD/LAL5POiusYXocxRNDgNJj87suO0V8=
+	t=1708635906; cv=none; b=RGbZpuq4KvLEc9Rp1BDl/h1MhmHmP0Gprws+XLJ4/+v+/NH7yorZ8hm5D5t5Nm3AR/dlNPNIIwD8zV6ZuglX9VP2bCaEj8Lb7s6S/JI5IYcPW0C7R/3zfkVpjExv/+y9DCOq5lssbKhrcgtn8rbdFejkFE95A4vHXag5P/BkBRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708631742; c=relaxed/simple;
-	bh=Xj8O+DPx4wU2UfJYi69n5ttyXQyRDoWMxk1LCwlpI8E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RimT5r5ideMGTtkApd87Ez0OPuWe2qgFBWDUNxPlxC3FovQAk4fcGv+lv3tLKdrWvMVC4yzo+44cqacYd3bwc7NRYKzhlKuweR8+miBshslHTcHF2W+SQ2kU1BZybhBtOI/7eKBFSXfnDIcj3RJHaD5NRe059zfqArHn2bWHfvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=dMhLdZCo; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=jhVW
-	YIYPS+WQc6qJONpuGdYkkC+vizXSWdkxmtKR2Zw=; b=dMhLdZCo1B8/rATCc2vu
-	mLNgJZko4QxGxAqBAHcqm1HMnlSyh3p6MujX/axkL2zz8dOKBqbrKaSsWZzlK2/1
-	lLOLt6chZwcranpAh2zMDdV6DcIHwWDRDhnPfEYVSMYcEKJaZjkHmRGpV9Qo2k1q
-	QAtgFkfbF3TTzNf1+9Uer1VUghhsvMhMPxCrjVcRcSDZwqTSfYA3QG+cI/UmCweK
-	rGJuAkiEyQyyIGAdDDDUn2aHixyNcPeHL+JOW4FjSeYjpFHe5ZHN8iUbSqKQbe8A
-	Nd+ANcb1k4G1B8J5XWOa6OJ10OnuAYQKf3vyh+MsQFvWm4QblGP6iD2T9nu1PTRC
-	zQ==
-Received: (qmail 4086918 invoked from network); 22 Feb 2024 20:55:30 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 22 Feb 2024 20:55:30 +0100
-X-UD-Smtp-Session: l3s3148p1@iyNN0/0R+OQujnsZ
-Date: Thu, 22 Feb 2024 20:55:29 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
-Message-ID: <ZdemsdGQE0RtilCd@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Rob Herring <robh@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
-	linux-sound@vger.kernel.org
-References: <20240222174343.3482354-2-robh@kernel.org>
+	s=arc-20240116; t=1708635906; c=relaxed/simple;
+	bh=qWboPcsYBrUMQIjIcq2mgfAimqYzG211IQCByTAF4W4=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=XdaRgessrcpKLbV64527lJIiXW8DnqadAkdYTetHXn+RrGi9taOeVXn7InZn5/BP0NwNL8MyuhNfkvwv1mhAP1LxmErlR7X9SW1xzsVreA0b9UsY5un3sKWRe0ShZkkpKutxmhh/zyYRUQvHR7+RN97hcgrodiCiJTlm12T0LmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RJIQd7gE; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708635905; x=1740171905;
+  h=date:from:to:cc:subject:message-id;
+  bh=qWboPcsYBrUMQIjIcq2mgfAimqYzG211IQCByTAF4W4=;
+  b=RJIQd7gE9lqvuwdkpCbPJvIQTVtJ7b++ouww++KgtHFxpUxJy20qb3Zm
+   8ohHmzFlb769iGQpZoGmqCcct/i/GZFKwJn4oYAnzQ0pX3au2X8P9aB0D
+   OgPI7a3DnZX0zxbxWDE7pTD1d+IAq71DGmdV1ctdObOIWVHoj7XqzY/1A
+   i+FEmyahQd0rsfWCIiSqZMDlxgNn4rog0L1n5A4Z7pS0iR/dB2Xsp6iae
+   oetXk5JLpSRsVw/p3lIuDTSprG1a+XK168xihrKd05j0Jd6JhrYl+BUWB
+   fvUovOUkevE6onfhrkrl8m8ZKNdcT129fnk2YBE4MGDfi2SwUyLiRPIUD
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="13455487"
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="13455487"
+Received: from orviesa005.jf.intel.com ([10.64.159.145])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 13:05:04 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
+   d="scan'208";a="10346321"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa005.jf.intel.com with ESMTP; 22 Feb 2024 13:02:53 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rdGDD-0006hu-2a;
+	Thu, 22 Feb 2024 21:02:39 +0000
+Date: Fri, 23 Feb 2024 05:01:29 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:devel] BUILD SUCCESS
+ 47847b9bcdb13c2da1829323a66651ef63047b77
+Message-ID: <202402230526.YrW3H5Rk-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="xwbnszeJhFgpzihu"
-Content-Disposition: inline
-In-Reply-To: <20240222174343.3482354-2-robh@kernel.org>
 
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
+branch HEAD: 47847b9bcdb13c2da1829323a66651ef63047b77  pinctrl: qcom: sm8650-lpass-lpi: correct Kconfig name
 
---xwbnszeJhFgpzihu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+elapsed time: 1334m
 
-On Thu, Feb 22, 2024 at 10:43:42AM -0700, Rob Herring wrote:
-> Everything in i2c.txt is covered by schemas/i2c/i2c-controller.yaml in
-> dtschema project, so remove i2c.txt and update links to it in the tree.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
+configs tested: 143
+configs skipped: 3
 
-Differences to i2c.txt:
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-* In the schema, "clock-frequency" has a minimum of 1kHz and a maximum
-  of 3MHz. Why? The specs do not say anything about a minimum freq and
-  fastest speed mentioned in the docs is 5Mhz (Ultra fast mode).
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240222   gcc  
+arc                   randconfig-002-20240222   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                     am200epdkit_defconfig   gcc  
+arm                                 defconfig   clang
+arm                        multi_v7_defconfig   gcc  
+arm                       omap2plus_defconfig   gcc  
+arm                   randconfig-001-20240222   gcc  
+arm                   randconfig-002-20240222   gcc  
+arm                           tegra_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-002-20240222   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240222   gcc  
+csky                  randconfig-002-20240222   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-002-20240222   clang
+i386         buildonly-randconfig-003-20240222   clang
+i386         buildonly-randconfig-005-20240222   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240222   clang
+i386                  randconfig-002-20240222   clang
+i386                  randconfig-004-20240222   clang
+i386                  randconfig-006-20240222   clang
+i386                  randconfig-012-20240222   clang
+i386                  randconfig-015-20240222   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240222   gcc  
+loongarch             randconfig-002-20240222   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          multi_defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+microblaze                       alldefconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                      pic32mzda_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240222   gcc  
+nios2                 randconfig-002-20240222   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240222   gcc  
+parisc                randconfig-002-20240222   gcc  
+parisc64                            defconfig   gcc  
+powerpc                    adder875_defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                        cell_defconfig   gcc  
+powerpc64             randconfig-003-20240222   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-002-20240222   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240222   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240222   gcc  
+sh                    randconfig-002-20240222   gcc  
+sh                          rsk7264_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240222   gcc  
+sparc64               randconfig-002-20240222   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-003-20240222   gcc  
+x86_64       buildonly-randconfig-005-20240222   gcc  
+x86_64       buildonly-randconfig-006-20240222   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-005-20240222   gcc  
+x86_64                randconfig-006-20240222   gcc  
+x86_64                randconfig-012-20240222   gcc  
+x86_64                randconfig-014-20240222   gcc  
+x86_64                randconfig-074-20240222   gcc  
+x86_64                randconfig-075-20240222   gcc  
+x86_64                randconfig-076-20240222   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240222   gcc  
+xtensa                randconfig-002-20240222   gcc  
+xtensa                    xip_kc705_defconfig   gcc  
 
-* new binding "i2c-scl-clk-low-timeout-us" has a description which I do
-  not understand. What is a waiting state?
-
-* new binding "no-detect" is broken. At the least, it should be named
-  something like "bus-fully-described" and then the OS can decide to
-  leave out auto-detection mechanisms. If you are interested in the
-  latter, you can simply disable class based instantiation on the host
-  controller. No need to describe this in DT.
-
-> Wolfram, you can take it or I can.
-
-Once we are done, I guess it is better if you take it.
-
-Thanks for the work,
-
-   Wolfram
-
-
---xwbnszeJhFgpzihu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXXprEACgkQFA3kzBSg
-Kba7Ng//f2uJIbUxhVqaRPb6cEvRbSMkgp3fOuy7aYo9Chftjp+DCOgB+z/d29DB
-4q9Hsd4mNQAHMYKPeieoE/wm6PC7fQQqw/F4mczeiKY+XS1PpFwSXjS3flVBPYOW
-UeUYPRZCvWFck7FCOUF9XK2qR/88V1pSDzw5kHf8+CABuFX2RSjyVmiXFbdSV1qf
-/I4DfO2M40MkAVGkKIwJcaCBuk6QMjGrJqw+qWYnYmAWsltiWgdy/pOt1Ge03ieM
-CinXc9GP6Jg4eDUcpWLETd3ehz9uV40IPugp7fXJxIR38V0Pxbz1G9BUbPjPCj28
-Mp3lm3o/60TE68NXU0DEN75PpVz/M/zkv9cx0UJucMDFplec/4BH38TzTsNlAPWV
-R5Sh6wD4y6MgfkxqTVEeEaQibH7JTSYK5PwWmR8MNyGk1YN5+avCk2YbUxs618wJ
-jauxhbeZNDQ+XWplirsMKB0lrWbV75OxiJ4sGljcpy16MfXaMfP7J7HG+18GOuS1
-wD0qBTKzSVrClGu79/LwV90OieqSpAJuEbex5Ls4wNV5/VJUj7t4PH2rOPDZRxc4
-nlOpJ5SYSgWwOnGYVgh6wDr6QFCmZGZpQbQlxlezaRkwhQZKmA87/jM+ZkFt8Rwc
-3d5oj6TIiOFWfkl3zdbl9/voX7DTTY3ku/KgG5OvEPy9nl120C0=
-=o5Lw
------END PGP SIGNATURE-----
-
---xwbnszeJhFgpzihu--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
