@@ -1,127 +1,133 @@
-Return-Path: <linux-gpio+bounces-3644-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EFC385FA04
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:40:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B2CA985FA06
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:40:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 446EA287C39
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:40:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5EADF285CE7
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:40:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2644A134CC7;
-	Thu, 22 Feb 2024 13:40:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8139F132C23;
+	Thu, 22 Feb 2024 13:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="BfBuqgXr"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mC93pHeV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E50F12FF73
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 13:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E162136AE9;
+	Thu, 22 Feb 2024 13:40:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708609218; cv=none; b=NcbWmDLaz5GudOMLd1ssKnDmf+cyNF0ekx50gLpBd7IrBpBLCpAly8A6HfrCXyOBrSAy3WK3J/FFeQ7kXluc+Bvc//CyOomrIXqDEJYUxX9PTe2uwvooKYcUGTb9RhmS1oK0Nbjx8b+YbcZ3FGI2G/nW2248CkrYW3uQVUBltpE=
+	t=1708609229; cv=none; b=stEV3qdUA4GbjVEdVrK+dSa2YCIA8ZRRy7bRnlWRcs8EkcKd3M/o6yqJPD0Uv0yGRNeSSexIfW3kVr1v+qFPuelxlwctOkgFIMT/jp8UMlPU+b8xddeWMRTVXqnAZDBV2BpWa6WhVUhLFFxC5il7sy9CkG2X2DWWIRYNKb5HyTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708609218; c=relaxed/simple;
-	bh=1gr/hTtT30U8SATEDa5hLfWyfBkXEGCfW3iCRwmw8KU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AE5PQ+ZSr/jdiyWt2nhhthU6JUTTMnRRNM5pgwFD7HaGzMEI7OJXNgZsznuZoJLYw8E5LhEEYgtyenN4w6zk1Bf4JvPLtez0MkfZOy6ITPJHLxvuk1EKmlRdp3lFUi+Hc1Jr5BTlgoHLOms2pyK9ltDTFMZtZ3OzYKtVlOJC5RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=BfBuqgXr; arc=none smtp.client-ip=209.85.222.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7cedcea89a0so4931038241.1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 05:40:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708609216; x=1709214016; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=k4lcxM687g4sT2DyqtyUvURf+hO4FhryWh0WzvdoRs8=;
-        b=BfBuqgXrd30eK6kgvi4SIkaTKYwbVVuoFNySzkebWRHuRIP6gvzXXkfljt5sPXV9Kr
-         WVZOgOUoCr5fJ9dcQoxaJ530dlpKn9AQk8VDeffZg35fG5MVHGYTfdSTBsTC2gvSXwju
-         3TcV0kQVMC2ItsE876E28Ke0wolp3aPq0bs0sPQEDxu7lWHyzpq9WmKeFcRM5zZEYJTH
-         0ugseXJ7xGFWTul4Nj8RynCgLUiHEFno60m6ouBOII7N52P0BdAUDawvT+Z1xo3ds8RS
-         Jq+o++W/nkIJ4eaaZloRr8MqyHELQO3vyPqmvseBt7m3Kcf9cfGFGDnalbQXuku3FXyK
-         UmZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708609216; x=1709214016;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=k4lcxM687g4sT2DyqtyUvURf+hO4FhryWh0WzvdoRs8=;
-        b=S8K0yV7axBXOdzHjA6Z0AwIWACkMemMujCG8gwwYMOp5sRSDcYIgWNZQv0UIbrbDEO
-         W+PexITuzBqk2JCe6bU7UWebyQbin2fDuREOogmeXUQ3GP79I5ZzPYfBrFowR57zvF34
-         x78NYTC5AOUqefpkqYc+iYbIRNLHR7NpkynGoLZv/xi/En7t9VRoUqmk6AIlOX8BVXJ5
-         YbnXVlphIbZ2n4uJRVG0RutSBZd8DhaRhMaqUr4QHiLlTcCgaMLNfdFHfbXSQheYYYBV
-         OmPQl0exfy9V1Yc/BVQRuy3JGSGrTGe4Drlelnh6H5p+95vlEx75S1dcwcqT41hIkSd2
-         c40Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWJGYjAd937Q+5APIUAv9PJEFxxJtt3hqo0TUiMqqRUFkHabndyk7sMGFXNN1YCk3ieo5TNx1YKii5G1H9SjgN+sFXSFyKrZksu1w==
-X-Gm-Message-State: AOJu0YwdIgz34trx3UyuMhBAWZCG8GCF6GOQLw0/6SAeV1Gd9zsjevhe
-	C43WAQO1zj6cEDCnQfomgb0LzkznKw7xD1t22B7+3XBt+hCZLkOS4CyFvBRp+K3TXAd5FDZAHH2
-	WmDZcasj62B9lbrisNl8kiZPyQFbsSpOc4gfr1w==
-X-Google-Smtp-Source: AGHT+IEu9gPXjyI9syhzevM9mu6FCSlxGCfJyDizNzwUMmTn5FtrV0Surfngl1XNH0/9WzxJVdJGneAnfE8IGJvDf7E=
-X-Received: by 2002:a67:ec0a:0:b0:470:4dd8:b18 with SMTP id
- d10-20020a67ec0a000000b004704dd80b18mr11774606vso.19.1708609216601; Thu, 22
- Feb 2024 05:40:16 -0800 (PST)
+	s=arc-20240116; t=1708609229; c=relaxed/simple;
+	bh=fnEOeglpT4EQ+0f9qaoZpPrCDD+FKG2ThNnpRREPMx4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Qxyzu59ezVwuNXiB04WuJQISGLCyzSZdOOAxZbXduqRCtCdDszl5/fEoFdN1JSXdK+3RN5LT9rSMX+IFEp89C2G6iAWr4/M2HpPJ2/ybiYQhYrkcYZ2I7AHyBzk6nGVoX9Z+AWZzAhmMp1t1oIQJDwtxAwY66dOcn5y/BKOw+dE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mC93pHeV; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708609228; x=1740145228;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=fnEOeglpT4EQ+0f9qaoZpPrCDD+FKG2ThNnpRREPMx4=;
+  b=mC93pHeV+XxYnDBIRZE5ufrNQQhMRD2ShW6YceYkporDLhdIJnVW1RSt
+   s+g+ApUzwETlxyxMM87QLSJVvZkxrX1Bmwc+UtRcmLaTqEGp14ZJ63xgz
+   ijebvyzEYtbymMUdcVH0KxY6WTIZvu2Ar6azzW6/s/eswdHNahEKr8vkF
+   5LiAjEGJhUxMOoZIJc0SR4Acw8ptq96EHq+OF5JYrJhGMK9SDN+cVz1F4
+   dgBjCEAjCchugcJMkV9GizF5sJRlLXsGzqSyfaZ3VXxch60uEbzcR5J0a
+   76ZyTgK7kYXyNIXIGUNFDq5c1Tz0tUnzXyl302bSG8LlgZod18F5a8nzT
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25295216"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="25295216"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:40:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913528071"
+X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
+   d="scan'208";a="913528071"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:40:25 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rd9JH-00000006dk6-0xbi;
+	Thu, 22 Feb 2024 15:40:23 +0200
+Date: Thu, 22 Feb 2024 15:40:22 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate cleanup for-loop in
+ gpiochip_add_data_with_key()
+Message-ID: <ZddOxiq_28v9995p@smile.fi.intel.com>
+References: <20240221193647.13777-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=McECxKW+uS7fQyGtYVfcSZQaAJZFi+s+wNMoRiHxef0zw@mail.gmail.com>
+ <ZddL7L24RXoqR7sN@smile.fi.intel.com>
+ <CAMRc=Md6d19hhySFti+vSLV9pfyzuHNUDmHN_XYV73uCWDAY7w@mail.gmail.com>
+ <ZddOcJrYEANc2B2Y@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221193647.13777-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=McECxKW+uS7fQyGtYVfcSZQaAJZFi+s+wNMoRiHxef0zw@mail.gmail.com>
- <ZddL7L24RXoqR7sN@smile.fi.intel.com> <CAMRc=Md6d19hhySFti+vSLV9pfyzuHNUDmHN_XYV73uCWDAY7w@mail.gmail.com>
- <ZddOcJrYEANc2B2Y@smile.fi.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 In-Reply-To: <ZddOcJrYEANc2B2Y@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 Feb 2024 14:40:05 +0100
-Message-ID: <CAMRc=MdABvY8dC+UBpkoLiHc881UFKv0VAQsCUhqnxn3f5LKRQ@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate cleanup for-loop in gpiochip_add_data_with_key()
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 22, 2024 at 2:39=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
+On Thu, Feb 22, 2024 at 03:38:56PM +0200, Andy Shevchenko wrote:
 > On Thu, Feb 22, 2024 at 02:30:03PM +0100, Bartosz Golaszewski wrote:
-> > On Thu, Feb 22, 2024 at 2:28=E2=80=AFPM Andy Shevchenko
+> > On Thu, Feb 22, 2024 at 2:28 PM Andy Shevchenko
 > > <andriy.shevchenko@linux.intel.com> wrote:
 > > > On Thu, Feb 22, 2024 at 10:48:00AM +0100, Bartosz Golaszewski wrote:
-> > > > On Wed, Feb 21, 2024 at 8:36=E2=80=AFPM Andy Shevchenko
+> > > > On Wed, Feb 21, 2024 at 8:36 PM Andy Shevchenko
 > > > > <andriy.shevchenko@linux.intel.com> wrote:
->
-> ...
->
+
+...
+
 > > > > > +       while (desc_index--)
 > > > >
 > > > > What about gdev->descs[0]?
 > > >
 > > > What about it? :-)
 > > >
-> > > for (i =3D i - 1; i >=3D 0; i--)
-> > > while (--i >=3D 0)
+> > > for (i = i - 1; i >= 0; i--)
+> > > while (--i >= 0)
 > > > while (i--)
 > > >
 > > > are all equivalents.
 > > >
 > > > The difference is what the value will i get _after_ the loop.
-> >
+> > 
 > > Ugh of course. But the first one is more readable given I got tricked
 > > by variant #3 at a quick glance but the for loop says out loud what it
 > > does.
->
+> 
 > I disagree. `while (i--)` is very well known cleanup pattern.
 > Less letters to parse, easier to understand.
->
 
-Whatever, I don't have a strong opinion, just rebase it and resend.
+$ git grep -n 'while (i--)' | wc -l
+298
+$ git grep -n 'while (--i >= 0)' | wc -l
+246
+$ git grep -n 'for (--i; i >= 0; i--)' | wc -l
+29
+$ git grep -n 'for (i = i - 1; i >= 0; i--)' | wc -l
+17
 
-Bart
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
