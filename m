@@ -1,619 +1,316 @@
-Return-Path: <linux-gpio+bounces-3659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEDAC85FF3E
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 18:24:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6716685FFEB
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 18:45:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7076E1F27AE6
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 17:24:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 995541C25F73
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 17:45:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8793E15531B;
-	Thu, 22 Feb 2024 17:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2807156961;
+	Thu, 22 Feb 2024 17:44:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nEFHN8BO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RhPuhD8h"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE7CC1552EA;
-	Thu, 22 Feb 2024 17:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C7191534F8;
+	Thu, 22 Feb 2024 17:44:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708622630; cv=none; b=iEjrU3FcxtwO+K15DNxLEYfO2GMYF4ak0P2p0f3f75rqv05NF3KbdOSjDo7L18+0qSHRirR6/o9NA3tdLKy3Hr+MY6Nrq19wCYRzG9Z8DXrb75Qwm5+JLlk+bST9+vUsk+6jHp/mQ0iMAtDw9WL5p8KDFlOgxb8FTAYjYjUesRs=
+	t=1708623897; cv=none; b=I76gDHnLL5M3s6aK76RsQPCSpfN8bfrcdBdO1W5tkd5pDZb+HJ9hhcKsVOZSBWnA/BJXZ2gselq4iMHZJJBYsmV5oriJmQHPjww5nBg2/Z6loDf4+E0QzNp6ljzEKh86UvyP6TnprdYLNsf8i6Bv9346X/OWobWx/Px/QYce+9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708622630; c=relaxed/simple;
-	bh=pQmt1bX8Uzb1bH1jYxtzxQi5Sz4GwyGXkJpyqV5S4C8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DQj2TNbCyobMWg0STADJ7ekZGFXZ1F+nrJmHMZZqLpZlE9h9HlaewJKeQ5ThicPD0Or83vOa+fGF4P4JIvv8yLRDLKV9C4nkMb016vSNlQ+uCTp5hS//yuGpPIBHyez7UK7FSn8/ILZ08HeFz48nsl6ExaLvI/+axSbMl4yyYro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nEFHN8BO; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708622627; x=1740158627;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=pQmt1bX8Uzb1bH1jYxtzxQi5Sz4GwyGXkJpyqV5S4C8=;
-  b=nEFHN8BOEZ2haxlCrUmyPk2so/NS10216hbeK0elRzJ7ThiAwABdRc1B
-   lQMNGWHcaINyIcj5qj4mP+8YYDub0DOpDvKQIBrZaVV3WvlMX2WMOw/Tm
-   SgnWqN0G9R52l436MMyMkfcrBYQ2+WhafXss2BSdo/hYkjSKMvrd/mkRe
-   nAQFuReES688hv1l3B8u+VmpRNBc3xU3HELG8P2u0Fzp4PS1nUD+L1WCx
-   2VGX18cbwwrHtL4r9en9ZgxrE5YQAB3JVzQFGXO8bFiuMhAXyrzGw5rjT
-   9j86IjJh4MeWOuiJFM02VRyNYfkqJFMFJKHgffxn2sRIbMG/oWoGGPble
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10992"; a="20304119"
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="20304119"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 09:23:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,179,1705392000"; 
-   d="scan'208";a="36388668"
-Received: from djiang5-mobl3.amr.corp.intel.com (HELO [10.246.114.198]) ([10.246.114.198])
-  by orviesa002-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 09:23:41 -0800
-Message-ID: <23c50406-7ebd-4cc3-a978-1b8a5fc71ff0@intel.com>
-Date: Thu, 22 Feb 2024 10:23:38 -0700
+	s=arc-20240116; t=1708623897; c=relaxed/simple;
+	bh=7BNl0V7JZ8ZTvufEz+lXYL9lojiWbKA/DEhMbabZlLo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DuG5EwkAp/lR7+rVt1wmw9GghqMjFWYR/jiDrmY9D5bIo4TFhjv06r1OjyW/pXko2a3e/bilZhl2QFJ5i1/OOF3huE2zqdQ1ZNN5ZT/4zgTI1YaJnhFnEpnudZAi0401Cs0zsLYV6CHAnV8jgAN+v8ViXcVYqSlMvocpdOfYoMw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RhPuhD8h; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98844C433C7;
+	Thu, 22 Feb 2024 17:44:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708623897;
+	bh=7BNl0V7JZ8ZTvufEz+lXYL9lojiWbKA/DEhMbabZlLo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=RhPuhD8hNzl4pDDmJJaR9Z7BJhNWOlZjOsKhFiA64srC8v6z8YYIfy7R4+vzXS1Sz
+	 Ph4pAm1bTtt3yhZKNBh5ZqfmI5Zjh1UsoXhQPgIsrgvRQSkvh34EDsSNRbfzosV13q
+	 Im3QGBJXoPyGWTg2MQ/u5jERtY3+aMzNdvKajsfqal9EDskAZbVOHBpbwsDaPxUedy
+	 BJqNm/uO8MSmHEC7JL8tQ02rRJCOktX/XPDvQsApcSoJ6jvvVmKXwZ+hXcBKyt3wAW
+	 +adsFhYtBAA2Y8HAbsTVnebSqS/tL7QCf4VneCErtuNwuSHI8f44bJB9ImnjfpQn+b
+	 10SJr0PvNMPeA==
+From: Rob Herring <robh@kernel.org>
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-i2c@vger.kernel.org,
+	linux-tegra@vger.kernel.org,
+	linux-i3c@lists.infradead.org,
+	linux-sound@vger.kernel.org
+Subject: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
+Date: Thu, 22 Feb 2024 10:43:42 -0700
+Message-ID: <20240222174343.3482354-2-robh@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] devm-helpers: Add resource managed version of debugfs
- directory create function
-Content-Language: en-US
-To: =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>,
- linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
- Matti Vaittinen <mazziesaccount@gmail.com>
-Cc: =?UTF-8?Q?Horia_Geant=C4=83?= <horia.geanta@nxp.com>,
- Pankaj Gupta <pankaj.gupta@nxp.com>, Gaurav Jain <gaurav.jain@nxp.com>,
- Herbert Xu <herbert@gondor.apana.org.au>,
- "David S. Miller" <davem@davemloft.net>, Davidlohr Bueso
- <dave@stgolabs.net>, Jonathan Cameron <jonathan.cameron@huawei.com>,
- Alison Schofield <alison.schofield@intel.com>,
- Vishal Verma <vishal.l.verma@intel.com>, Ira Weiny <ira.weiny@intel.com>,
- Dan Williams <dan.j.williams@intel.com>,
- Bamvor Jian Zhang <bamv2005@gmail.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Douglas Anderson <dianders@chromium.org>,
- Andrzej Hajda <andrzej.hajda@intel.com>,
- Neil Armstrong <neil.armstrong@linaro.org>, Robert Foss <rfoss@kernel.org>,
- Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
- Jonas Karlman <jonas@kwiboo.se>, Jernej Skrabec <jernej.skrabec@gmail.com>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>,
- James Seo <james@equiv.tech>, Jean Delvare <jdelvare@suse.com>,
- Guenter Roeck <linux@roeck-us.net>, linux-crypto@vger.kernel.org,
- linux-cxl@vger.kernel.org, linux-gpio@vger.kernel.org,
- dri-devel@lists.freedesktop.org, linux-hwmon@vger.kernel.org
-References: <20240222145838.12916-1-kabel@kernel.org>
- <20240222145838.12916-2-kabel@kernel.org>
-From: Dave Jiang <dave.jiang@intel.com>
-In-Reply-To: <20240222145838.12916-2-kabel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
+Everything in i2c.txt is covered by schemas/i2c/i2c-controller.yaml in
+dtschema project, so remove i2c.txt and update links to it in the tree.
 
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+Wolfram, you can take it or I can.
 
-On 2/22/24 7:58 AM, Marek Behún wrote:
-> A few drivers register a devm action to remove a debugfs directory,
-> implementing a one-liner function that calls debufs_remove_recursive().
-> Help drivers avoid this repeated implementations by adding managed
-> version of debugfs directory create function.
-> 
-> Use the new function devm_debugfs_create_dir() in the following
-> drivers:
->   drivers/crypto/caam/ctrl.c
->   drivers/gpu/drm/bridge/ti-sn65dsi86.c
->   drivers/hwmon/hp-wmi-sensors.c
->   drivers/hwmon/mr75203.c
->   drivers/hwmon/pmbus/pmbus_core.c
-> 
-> Also use the action function devm_debugfs_dir_recursive_drop() in
-> drivers
->   drivers/cxl/mem.c
->   drivers/gpio/gpio-mockup.c
-> 
-> Signed-off-by: Marek Behún <kabel@kernel.org>
-> ---
->  drivers/crypto/caam/ctrl.c            | 16 +++------
->  drivers/cxl/mem.c                     |  9 ++---
->  drivers/gpio/gpio-mockup.c            | 11 ++----
->  drivers/gpu/drm/bridge/ti-sn65dsi86.c | 13 ++------
->  drivers/hwmon/hp-wmi-sensors.c        | 15 ++-------
->  drivers/hwmon/mr75203.c               | 15 +++------
->  drivers/hwmon/pmbus/pmbus_core.c      | 16 +++------
->  include/linux/devm-helpers.h          | 48 +++++++++++++++++++++++++++
->  8 files changed, 72 insertions(+), 71 deletions(-)
-> 
-> diff --git a/drivers/crypto/caam/ctrl.c b/drivers/crypto/caam/ctrl.c
-> index bdf367f3f679..ea3ed9a17f1a 100644
-> --- a/drivers/crypto/caam/ctrl.c
-> +++ b/drivers/crypto/caam/ctrl.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/of_address.h>
->  #include <linux/of_irq.h>
->  #include <linux/platform_device.h>
-> @@ -604,11 +605,6 @@ static int init_clocks(struct device *dev, const struct caam_imx_data *data)
->  	return devm_add_action_or_reset(dev, disable_clocks, ctrlpriv);
->  }
->  
-> -static void caam_remove_debugfs(void *root)
-> -{
-> -	debugfs_remove_recursive(root);
-> -}
-> -
->  #ifdef CONFIG_FSL_MC_BUS
->  static bool check_version(struct fsl_mc_version *mc_version, u32 major,
->  			  u32 minor, u32 revision)
-> @@ -1058,13 +1054,9 @@ static int caam_probe(struct platform_device *pdev)
->  	ctrlpriv->era = caam_get_era(perfmon);
->  	ctrlpriv->domain = iommu_get_domain_for_dev(dev);
->  
-> -	dfs_root = debugfs_create_dir(dev_name(dev), NULL);
-> -	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> -		ret = devm_add_action_or_reset(dev, caam_remove_debugfs,
-> -					       dfs_root);
-> -		if (ret)
-> -			return ret;
-> -	}
-> +	dfs_root = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(dfs_root))
-> +		return PTR_ERR(dfs_root);
->  
->  	caam_debugfs_init(ctrlpriv, perfmon, dfs_root);
->  
-> diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> index c5c9d8e0d88d..4b38514887a4 100644
-> --- a/drivers/cxl/mem.c
-> +++ b/drivers/cxl/mem.c
-> @@ -2,6 +2,7 @@
->  /* Copyright(c) 2022 Intel Corporation. All rights reserved. */
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/module.h>
->  #include <linux/pci.h>
->  
-> @@ -30,11 +31,6 @@ static void enable_suspend(void *data)
->  	cxl_mem_active_dec();
->  }
->  
-> -static void remove_debugfs(void *dentry)
-> -{
-> -	debugfs_remove_recursive(dentry);
-> -}
-> -
->  static int cxl_mem_dpa_show(struct seq_file *file, void *data)
->  {
->  	struct device *dev = file->private;
-> @@ -138,7 +134,8 @@ static int cxl_mem_probe(struct device *dev)
->  		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
->  				    &cxl_poison_clear_fops);
->  
-> -	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
-> +	rc = devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> +				      dentry);
+ .../bindings/gpio/gateworks,pld-gpio.txt      |   3 +-
+ Documentation/devicetree/bindings/i2c/i2c.txt | 151 ------------------
+ .../i2c/nvidia,tegra186-bpmp-i2c.yaml         |   3 +-
+ .../devicetree/bindings/i3c/i3c.yaml          |   2 +-
+ .../devicetree/bindings/sound/cs4341.txt      |   2 +-
+ MAINTAINERS                                   |   1 -
+ 6 files changed, 4 insertions(+), 158 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/i2c/i2c.txt
 
-This is probably the better fix for cxl:
-
-diff --git a/drivers/cxl/core/core.h b/drivers/cxl/core/core.h
-index 3b64fb1b9ed0..3258427af032 100644
---- a/drivers/cxl/core/core.h
-+++ b/drivers/cxl/core/core.h
-@@ -57,7 +57,6 @@ int cxl_send_cmd(struct cxl_memdev *cxlmd, struct cxl_send_command __user *s);
- void __iomem *devm_cxl_iomap_block(struct device *dev, resource_size_t addr,
- 				   resource_size_t length);
+diff --git a/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt b/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
+index 6e81f8b755c5..d543fd1b8b23 100644
+--- a/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
++++ b/Documentation/devicetree/bindings/gpio/gateworks,pld-gpio.txt
+@@ -1,7 +1,6 @@
+ Gateworks PLD GPIO controller bindings
  
--struct dentry *cxl_debugfs_create_dir(const char *dir);
- int cxl_dpa_set_mode(struct cxl_endpoint_decoder *cxled,
- 		     enum cxl_decoder_mode mode);
- int cxl_dpa_alloc(struct cxl_endpoint_decoder *cxled, unsigned long long size);
-diff --git a/drivers/cxl/core/mbox.c b/drivers/cxl/core/mbox.c
-index 27166a411705..5c2db4791b8b 100644
---- a/drivers/cxl/core/mbox.c
-+++ b/drivers/cxl/core/mbox.c
-@@ -1402,7 +1402,7 @@ void __init cxl_mbox_init(void)
- {
- 	struct dentry *mbox_debugfs;
+-The GPIO controller should be a child node on an I2C bus,
+-see: i2c/i2c.txt for details.
++The GPIO controller should be a child node on an I2C bus.
  
--	mbox_debugfs = cxl_debugfs_create_dir("mbox");
-+	mbox_debugfs = debugfs_create_dir("mbox", NULL);
- 	debugfs_create_bool("raw_allow_all", 0600, mbox_debugfs,
- 			    &cxl_raw_allow_all);
- }
-diff --git a/drivers/cxl/core/port.c b/drivers/cxl/core/port.c
-index e59d9d37aa65..82c6a1c6aff4 100644
---- a/drivers/cxl/core/port.c
-+++ b/drivers/cxl/core/port.c
-@@ -10,6 +10,7 @@
- #include <linux/slab.h>
- #include <linux/idr.h>
- #include <linux/node.h>
-+#include <linux/devm-helpers.h>
- #include <cxlmem.h>
- #include <cxlpci.h>
- #include <cxl.h>
-@@ -2207,13 +2208,7 @@ struct bus_type cxl_bus_type = {
- };
- EXPORT_SYMBOL_NS_GPL(cxl_bus_type, CXL);
- 
--static struct dentry *cxl_debugfs;
+ Required properties:
+ - compatible: Should be "gateworks,pld-gpio"
+diff --git a/Documentation/devicetree/bindings/i2c/i2c.txt b/Documentation/devicetree/bindings/i2c/i2c.txt
+deleted file mode 100644
+index fc3dd7ec0445..000000000000
+--- a/Documentation/devicetree/bindings/i2c/i2c.txt
++++ /dev/null
+@@ -1,151 +0,0 @@
+-Generic device tree bindings for I2C busses
+-===========================================
 -
--struct dentry *cxl_debugfs_create_dir(const char *dir)
--{
--	return debugfs_create_dir(dir, cxl_debugfs);
--}
--EXPORT_SYMBOL_NS_GPL(cxl_debugfs_create_dir, CXL);
-+struct dentry *cxl_debugfs;
- 
- static __init int cxl_core_init(void)
- {
-diff --git a/drivers/cxl/cxl.h b/drivers/cxl/cxl.h
-index b6017c0c57b4..ca8399b24955 100644
---- a/drivers/cxl/cxl.h
-+++ b/drivers/cxl/cxl.h
-@@ -880,6 +880,8 @@ void cxl_switch_parse_cdat(struct cxl_port *port);
- int cxl_endpoint_get_perf_coordinates(struct cxl_port *port,
- 				      struct access_coordinate *coord);
- 
-+extern struct dentry *cxl_debugfs;
-+
- /*
-  * Unit test builds overrides this to __weak, find the 'strong' version
-  * of these symbols in tools/testing/cxl/.
-diff --git a/drivers/cxl/cxlmem.h b/drivers/cxl/cxlmem.h
-index 5303d6942b88..b6f13ba87927 100644
---- a/drivers/cxl/cxlmem.h
-+++ b/drivers/cxl/cxlmem.h
-@@ -859,6 +859,5 @@ struct cxl_hdm {
- };
- 
- struct seq_file;
--struct dentry *cxl_debugfs_create_dir(const char *dir);
- void cxl_dpa_debug(struct seq_file *file, struct cxl_dev_state *cxlds);
- #endif /* __CXL_MEM_H__ */
-diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-index c5c9d8e0d88d..494abe7a54c5 100644
---- a/drivers/cxl/mem.c
-+++ b/drivers/cxl/mem.c
-@@ -4,6 +4,7 @@
- #include <linux/device.h>
- #include <linux/module.h>
- #include <linux/pci.h>
-+#include <linux/devm-helpers.h>
- 
- #include "cxlmem.h"
- #include "cxlpci.h"
-@@ -30,11 +31,6 @@ static void enable_suspend(void *data)
- 	cxl_mem_active_dec();
- }
- 
--static void remove_debugfs(void *dentry)
--{
--	debugfs_remove_recursive(dentry);
--}
+-This document describes generic bindings which can be used to describe I2C
+-busses and their child devices in a device tree.
 -
- static int cxl_mem_dpa_show(struct seq_file *file, void *data)
- {
- 	struct device *dev = file->private;
-@@ -128,7 +124,10 @@ static int cxl_mem_probe(struct device *dev)
- 	if (work_pending(&cxlmd->detach_work))
- 		return -EBUSY;
- 
--	dentry = cxl_debugfs_create_dir(dev_name(dev));
-+	dentry = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-+	if (IS_ERR(dentry))
-+		return PTR_ERR(dentry);
-+
- 	debugfs_create_devm_seqfile(dev, "dpamem", dentry, cxl_mem_dpa_show);
- 
- 	if (test_bit(CXL_POISON_ENABLED_INJECT, mds->poison.enabled_cmds))
-@@ -138,10 +137,6 @@ static int cxl_mem_probe(struct device *dev)
- 		debugfs_create_file("clear_poison", 0200, dentry, cxlmd,
- 				    &cxl_poison_clear_fops);
- 
--	rc = devm_add_action_or_reset(dev, remove_debugfs, dentry);
--	if (rc)
--		return rc;
+-Required properties (per bus)
+------------------------------
 -
- 	rc = devm_cxl_enumerate_ports(cxlmd);
- 	if (rc)
- 		return rc;
+-- #address-cells  - should be <1>. Read more about addresses below.
+-- #size-cells     - should be <0>.
+-- compatible      - name of I2C bus controller
+-
+-For other required properties e.g. to describe register sets,
+-clocks, etc. check the binding documentation of the specific driver.
+-
+-The cells properties above define that an address of children of an I2C bus
+-are described by a single value.
+-
+-Optional properties (per bus)
+------------------------------
+-
+-These properties may not be supported by all drivers. However, if a driver
+-wants to support one of the below features, it should adapt these bindings.
+-
+-- clock-frequency
+-	frequency of bus clock in Hz.
+-
+-- i2c-bus
+-	For I2C adapters that have child nodes that are a mixture of both I2C
+-	devices and non-I2C devices, the 'i2c-bus' subnode can be used for
+-	populating I2C devices. If the 'i2c-bus' subnode is present, only
+-	subnodes of this will be considered as I2C slaves. The properties,
+-	'#address-cells' and '#size-cells' must be defined under this subnode
+-	if present.
+-
+-- i2c-scl-falling-time-ns
+-	Number of nanoseconds the SCL signal takes to fall; t(f) in the I2C
+-	specification.
+-
+-- i2c-scl-internal-delay-ns
+-	Number of nanoseconds the IP core additionally needs to setup SCL.
+-
+-- i2c-scl-rising-time-ns
+-	Number of nanoseconds the SCL signal takes to rise; t(r) in the I2C
+-	specification.
+-
+-- i2c-sda-falling-time-ns
+-	Number of nanoseconds the SDA signal takes to fall; t(f) in the I2C
+-	specification.
+-
+-- i2c-analog-filter
+-	Enable analog filter for i2c lines.
+-
+-- i2c-digital-filter
+-	Enable digital filter for i2c lines.
+-
+-- i2c-digital-filter-width-ns
+-	Width of spikes which can be filtered by digital filter
+-	(i2c-digital-filter). This width is specified in nanoseconds.
+-
+-- i2c-analog-filter-cutoff-frequency
+-	Frequency that the analog filter (i2c-analog-filter) uses to distinguish
+-	which signal to filter. Signal with higher frequency than specified will
+-	be filtered out. Only lower frequency will pass (this is applicable to
+-	a low-pass analog filter). Typical value should be above the normal
+-	i2c bus clock frequency (clock-frequency).
+-	Specified in Hz.
+-
+-- multi-master
+-	states that there is another master active on this bus. The OS can use
+-	this information to adapt power management to keep the arbitration awake
+-	all the time, for example. Can not be combined with 'single-master'.
+-
+-- pinctrl
+-	add extra pinctrl to configure SCL/SDA pins to GPIO function for bus
+-	recovery, call it "gpio" or "recovery" (deprecated) state
+-
+-- scl-gpios
+-	specify the gpio related to SCL pin. Used for GPIO bus recovery.
+-
+-- sda-gpios
+-	specify the gpio related to SDA pin. Optional for GPIO bus recovery.
+-
+-- single-master
+-	states that there is no other master active on this bus. The OS can use
+-	this information to detect a stalled bus more reliably, for example.
+-	Can not be combined with 'multi-master'.
+-
+-- smbus
+-	states that additional SMBus restrictions and features apply to this bus.
+-	An example of feature is SMBusHostNotify. Examples of restrictions are
+-	more reserved addresses and timeout definitions.
+-
+-- smbus-alert
+-	states that the optional SMBus-Alert feature apply to this bus.
+-
+-- mctp-controller
+-	indicates that the system is accessible via this bus as an endpoint for
+-	MCTP over I2C transport.
+-
+-Required properties (per child device)
+---------------------------------------
+-
+-- compatible
+-	name of I2C slave device
+-
+-- reg
+-	One or many I2C slave addresses. These are usually a 7 bit addresses.
+-	However, flags can be attached to an address. I2C_TEN_BIT_ADDRESS is
+-	used to mark a 10 bit address. It is needed to avoid the ambiguity
+-	between e.g. a 7 bit address of 0x50 and a 10 bit address of 0x050
+-	which, in theory, can be on the same bus.
+-	Another flag is I2C_OWN_SLAVE_ADDRESS to mark addresses on which we
+-	listen to be devices ourselves.
+-
+-Optional properties (per child device)
+---------------------------------------
+-
+-These properties may not be supported by all drivers. However, if a driver
+-wants to support one of the below features, it should adapt these bindings.
+-
+-- host-notify
+-	device uses SMBus host notify protocol instead of interrupt line.
+-
+-- interrupts
+-	interrupts used by the device.
+-
+-- interrupt-names
+-	"irq", "wakeup" and "smbus_alert" names are recognized by I2C core,
+-	other names are	left to individual drivers.
+-
+-- reg-names
+-	Names of map programmable addresses.
+-	It can contain any map needing another address than default one.
+-
+-- wakeup-source
+-	device can be used as a wakeup source.
+-
+-Binding may contain optional "interrupts" property, describing interrupts
+-used by the device. I2C core will assign "irq" interrupt (or the very first
+-interrupt if not using interrupt names) as primary interrupt for the slave.
+-
+-Alternatively, devices supporting SMBus Host Notify, and connected to
+-adapters that support this feature, may use "host-notify" property. I2C
+-core will create a virtual interrupt for Host Notify and assign it as
+-primary interrupt for the slave.
+-
+-Also, if device is marked as a wakeup source, I2C core will set up "wakeup"
+-interrupt for the device. If "wakeup" interrupt name is not present in the
+-binding, then primary interrupt will be used as wakeup interrupt.
+diff --git a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.yaml b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.yaml
+index b8319dcf3d8a..8676335e9e94 100644
+--- a/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/nvidia,tegra186-bpmp-i2c.yaml
+@@ -21,8 +21,7 @@ description: |
+   See ../firmware/nvidia,tegra186-bpmp.yaml for details of the BPMP
+   binding.
+ 
+-  This node represents an I2C controller. See ../i2c/i2c.txt for details
+-  of the core I2C binding.
++  This node represents an I2C controller.
+ 
+ properties:
+   compatible:
+diff --git a/Documentation/devicetree/bindings/i3c/i3c.yaml b/Documentation/devicetree/bindings/i3c/i3c.yaml
+index c816e295d565..87cadbcdc61c 100644
+--- a/Documentation/devicetree/bindings/i3c/i3c.yaml
++++ b/Documentation/devicetree/bindings/i3c/i3c.yaml
+@@ -71,7 +71,7 @@ patternProperties:
+     description: |
+       I2C child, should be named: <device-type>@<i2c-address>
+ 
+-      All properties described in Documentation/devicetree/bindings/i2c/i2c.txt
++      All properties described in dtschema schemas/i2c/i2c-controller.yaml
+       are valid here, except the reg property whose content is changed.
+ 
+     properties:
+diff --git a/Documentation/devicetree/bindings/sound/cs4341.txt b/Documentation/devicetree/bindings/sound/cs4341.txt
+index 12b4aa8ef0db..c1d5c8ad1a36 100644
+--- a/Documentation/devicetree/bindings/sound/cs4341.txt
++++ b/Documentation/devicetree/bindings/sound/cs4341.txt
+@@ -9,7 +9,7 @@ Required properties:
+           number for SPI.
+ 
+ For required properties on I2C-bus, please consult
+-Documentation/devicetree/bindings/i2c/i2c.txt
++dtschema schemas/i2c/i2c-controller.yaml
+ For required properties on SPI-bus, please consult
+ Documentation/devicetree/bindings/spi/spi-bus.txt
+ 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 45c6c13b4edf..50a906eb8dfd 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10074,7 +10074,6 @@ S:	Maintained
+ W:	https://i2c.wiki.kernel.org/
+ Q:	https://patchwork.ozlabs.org/project/linux-i2c/list/
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
+-F:	Documentation/devicetree/bindings/i2c/i2c.txt
+ F:	Documentation/i2c/
+ F:	drivers/i2c/*
+ F:	include/dt-bindings/i2c/i2c.h
+-- 
+2.43.0
 
-
-
->  	if (rc)
->  		return rc;
->  
-> diff --git a/drivers/gpio/gpio-mockup.c b/drivers/gpio/gpio-mockup.c
-> index 455eecf6380e..adbe0fe09490 100644
-> --- a/drivers/gpio/gpio-mockup.c
-> +++ b/drivers/gpio/gpio-mockup.c
-> @@ -12,6 +12,7 @@
->  #include <linux/cleanup.h>
->  #include <linux/debugfs.h>
->  #include <linux/device.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/interrupt.h>
->  #include <linux/irq.h>
-> @@ -390,13 +391,6 @@ static void gpio_mockup_debugfs_setup(struct device *dev,
->  	}
->  }
->  
-> -static void gpio_mockup_debugfs_cleanup(void *data)
-> -{
-> -	struct gpio_mockup_chip *chip = data;
-> -
-> -	debugfs_remove_recursive(chip->dbg_dir);
-> -}
-> -
->  static void gpio_mockup_dispose_mappings(void *data)
->  {
->  	struct gpio_mockup_chip *chip = data;
-> @@ -480,7 +474,8 @@ static int gpio_mockup_probe(struct platform_device *pdev)
->  
->  	gpio_mockup_debugfs_setup(dev, chip);
->  
-> -	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
-> +	return devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
-> +					chip->dbg_dir);
->  }
->  
->  static const struct of_device_id gpio_mockup_of_match[] = {
-> diff --git a/drivers/gpu/drm/bridge/ti-sn65dsi86.c b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> index 62cc3893dca5..ad0ed2459394 100644
-> --- a/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> +++ b/drivers/gpu/drm/bridge/ti-sn65dsi86.c
-> @@ -10,6 +10,7 @@
->  #include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/i2c.h>
-> @@ -427,18 +428,12 @@ static int status_show(struct seq_file *s, void *data)
->  
->  DEFINE_SHOW_ATTRIBUTE(status);
->  
-> -static void ti_sn65dsi86_debugfs_remove(void *data)
-> -{
-> -	debugfs_remove_recursive(data);
-> -}
-> -
->  static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
->  {
->  	struct device *dev = pdata->dev;
->  	struct dentry *debugfs;
-> -	int ret;
->  
-> -	debugfs = debugfs_create_dir(dev_name(dev), NULL);
-> +	debugfs = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
->  
->  	/*
->  	 * We might get an error back if debugfs wasn't enabled in the kernel
-> @@ -447,10 +442,6 @@ static void ti_sn65dsi86_debugfs_init(struct ti_sn65dsi86 *pdata)
->  	if (IS_ERR_OR_NULL(debugfs))
->  		return;
->  
-> -	ret = devm_add_action_or_reset(dev, ti_sn65dsi86_debugfs_remove, debugfs);
-> -	if (ret)
-> -		return;
-> -
->  	debugfs_create_file("status", 0600, debugfs, pdata, &status_fops);
->  }
->  
-> diff --git a/drivers/hwmon/hp-wmi-sensors.c b/drivers/hwmon/hp-wmi-sensors.c
-> index b5325d0e72b9..2a7c33763ce8 100644
-> --- a/drivers/hwmon/hp-wmi-sensors.c
-> +++ b/drivers/hwmon/hp-wmi-sensors.c
-> @@ -23,6 +23,7 @@
->  
->  #include <linux/acpi.h>
->  #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/hwmon.h>
->  #include <linux/jiffies.h>
->  #include <linux/mutex.h>
-> @@ -1304,12 +1305,6 @@ static int current_reading_show(struct seq_file *seqf, void *ignored)
->  }
->  DEFINE_SHOW_ATTRIBUTE(current_reading);
->  
-> -/* hp_wmi_devm_debugfs_remove - devm callback for debugfs cleanup */
-> -static void hp_wmi_devm_debugfs_remove(void *res)
-> -{
-> -	debugfs_remove_recursive(res);
-> -}
-> -
->  /* hp_wmi_debugfs_init - create and populate debugfs directory tree */
->  static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
->  				struct hp_wmi_platform_events *pevents,
-> @@ -1320,21 +1315,15 @@ static void hp_wmi_debugfs_init(struct device *dev, struct hp_wmi_info *info,
->  	struct dentry *debugfs;
->  	struct dentry *entries;
->  	struct dentry *dir;
-> -	int err;
->  	u8 i;
->  
->  	/* dev_name() gives a not-very-friendly GUID for WMI devices. */
->  	scnprintf(buf, sizeof(buf), "hp-wmi-sensors-%u", dev->id);
->  
-> -	debugfs = debugfs_create_dir(buf, NULL);
-> +	debugfs = devm_debugfs_create_dir(dev, buf, NULL);
->  	if (IS_ERR(debugfs))
->  		return;
->  
-> -	err = devm_add_action_or_reset(dev, hp_wmi_devm_debugfs_remove,
-> -				       debugfs);
-> -	if (err)
-> -		return;
-> -
->  	entries = debugfs_create_dir("sensor", debugfs);
->  
->  	for (i = 0; i < icount; i++, info++) {
-> diff --git a/drivers/hwmon/mr75203.c b/drivers/hwmon/mr75203.c
-> index 50a8b9c3f94d..50f348fca108 100644
-> --- a/drivers/hwmon/mr75203.c
-> +++ b/drivers/hwmon/mr75203.c
-> @@ -10,6 +10,7 @@
->  #include <linux/bits.h>
->  #include <linux/clk.h>
->  #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/hwmon.h>
->  #include <linux/kstrtox.h>
->  #include <linux/module.h>
-> @@ -216,17 +217,11 @@ static const struct file_operations pvt_ts_coeff_j_fops = {
->  	.llseek = default_llseek,
->  };
->  
-> -static void devm_pvt_ts_dbgfs_remove(void *data)
-> -{
-> -	struct pvt_device *pvt = (struct pvt_device *)data;
-> -
-> -	debugfs_remove_recursive(pvt->dbgfs_dir);
-> -	pvt->dbgfs_dir = NULL;
-> -}
-> -
->  static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->  {
-> -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
-> +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
-> +	if (IS_ERR(pvt->dbgfs_dir))
-> +		return PTR_ERR(pvt->dbgfs_dir);
->  
->  	debugfs_create_u32("ts_coeff_h", 0644, pvt->dbgfs_dir,
->  			   &pvt->ts_coeff.h);
-> @@ -237,7 +232,7 @@ static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->  	debugfs_create_file("ts_coeff_j", 0644, pvt->dbgfs_dir, pvt,
->  			    &pvt_ts_coeff_j_fops);
->  
-> -	return devm_add_action_or_reset(dev, devm_pvt_ts_dbgfs_remove, pvt);
-> +	return 0;
->  }
->  
->  static umode_t pvt_is_visible(const void *data, enum hwmon_sensor_types type,
-> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> index 1363d9f89181..e0f956a21125 100644
-> --- a/drivers/hwmon/pmbus/pmbus_core.c
-> +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> @@ -7,6 +7,7 @@
->   */
->  
->  #include <linux/debugfs.h>
-> +#include <linux/devm-helpers.h>
->  #include <linux/kernel.h>
->  #include <linux/math64.h>
->  #include <linux/module.h>
-> @@ -3336,13 +3337,6 @@ static const struct file_operations pmbus_debugfs_ops_mfr = {
->  	.open = simple_open,
->  };
->  
-> -static void pmbus_remove_debugfs(void *data)
-> -{
-> -	struct dentry *entry = data;
-> -
-> -	debugfs_remove_recursive(entry);
-> -}
-> -
->  static int pmbus_init_debugfs(struct i2c_client *client,
->  			      struct pmbus_data *data)
->  {
-> @@ -3357,8 +3351,9 @@ static int pmbus_init_debugfs(struct i2c_client *client,
->  	 * Create the debugfs directory for this device. Use the hwmon device
->  	 * name to avoid conflicts (hwmon numbers are globally unique).
->  	 */
-> -	data->debugfs = debugfs_create_dir(dev_name(data->hwmon_dev),
-> -					   pmbus_debugfs_dir);
-> +	data->debugfs = devm_debugfs_create_dir(data->dev,
-> +						dev_name(data->hwmon_dev),
-> +						pmbus_debugfs_dir);
->  	if (IS_ERR_OR_NULL(data->debugfs)) {
->  		data->debugfs = NULL;
->  		return -ENODEV;
-> @@ -3542,8 +3537,7 @@ static int pmbus_init_debugfs(struct i2c_client *client,
->  		}
->  	}
->  
-> -	return devm_add_action_or_reset(data->dev,
-> -					pmbus_remove_debugfs, data->debugfs);
-> +	return 0;
->  }
->  #else
->  static int pmbus_init_debugfs(struct i2c_client *client,
-> diff --git a/include/linux/devm-helpers.h b/include/linux/devm-helpers.h
-> index 70640fb96117..39d743175ec4 100644
-> --- a/include/linux/devm-helpers.h
-> +++ b/include/linux/devm-helpers.h
-> @@ -23,6 +23,7 @@
->   * already ran.
->   */
->  
-> +#include <linux/debugfs.h>
->  #include <linux/device.h>
->  #include <linux/kconfig.h>
->  #include <linux/mutex.h>
-> @@ -108,4 +109,51 @@ static inline int devm_mutex_init(struct device *dev, struct mutex *lock)
->  		return 0;
->  }
->  
-> +static inline void devm_debugfs_dir_recursive_drop(void *res)
-> +{
-> +	debugfs_remove_recursive(res);
-> +}
-> +
-> +/**
-> + * devm_debugfs_create_dir - Resource managed debugfs directory creation
-> + * @dev:	Device which lifetime the directory is bound to
-> + * @name:	a pointer to a string containing the name of the directory to
-> + *		create
-> + * @parent:	a pointer to the parent dentry for this file.  This should be a
-> + *		directory dentry if set.  If this parameter is NULL, then the
-> + *		directory will be created in the root of the debugfs filesystem.
-> + *
-> + * Create a debugfs directory which is automatically recursively removed when
-> + * the driver is detached. A few drivers create debugfs directories which they
-> + * want removed before driver is detached.
-> + * devm_debugfs_create_dir() can be used to omit the explicit
-> + * debugfs_remove_recursive() call when driver is detached.
-> + */
-> +static inline struct dentry *
-> +devm_debugfs_create_dir(struct device *dev, const char *name,
-> +			struct dentry *parent)
-> +{
-> +	struct dentry *dentry;
-> +
-> +	dentry = debugfs_create_dir(name, parent);
-> +	if (IS_ERR(dentry))
-> +		return dentry;
-> +
-> +	/*
-> +	 * debugfs_remove_recursive() is an empty function if CONFIG_DEBUG_FS is
-> +	 * disabled. No need to register an action in that case.
-> +	 */
-> +	if (IS_ENABLED(CONFIG_DEBUG_FS)) {
-> +		int err;
-> +
-> +		err = devm_add_action_or_reset(dev,
-> +					       devm_debugfs_dir_recursive_drop,
-> +					       dentry);
-> +		if (err < 0)
-> +			return ERR_PTR(err);
-> +	}
-> +
-> +	return dentry;
-> +}
-> +
->  #endif
 
