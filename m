@@ -1,193 +1,310 @@
-Return-Path: <linux-gpio+bounces-3613-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3614-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 40B4185F085
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 05:47:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 79AC785F0AC
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 06:06:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id ACFA31F23D71
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 04:47:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 042531F23FC9
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 05:06:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2FD51842;
-	Thu, 22 Feb 2024 04:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gUZxXtRv"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4553D566A;
+	Thu, 22 Feb 2024 05:06:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f49.google.com (mail-oo1-f49.google.com [209.85.161.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2C4110E6;
-	Thu, 22 Feb 2024 04:47:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507855680
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 05:06:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708577267; cv=none; b=rRQxPVuyxySzOI6I0M0UPR6R5gGKn/F55E8+VkuCTup/wygYR//c40OGOv5opj1tHy4a33PD0zOFEUR/2txjGkGQSz6x/gP0Oakwm2+7NL6SFuAJd9vveW5eP6zgbKubYJdJEQmoa3yT7JhKRN1son/Zr6ZD4kC3xS1m0OyZ8Do=
+	t=1708578378; cv=none; b=qoBaVJFN/04w4ZxtddSPd/1rdCZx+PhZWs/qMTK9bERKdNca+vQmiOU0jYOVHr3waOmWUnTwcQKM55zrF9MU2pEDTYAk2+rrGeEfA/2lqe/nLKmZy+1HnTzl23UpVDYfSSYcBtkgz9MZVVI5odQLaJH7wdvmRDNO3IQ4bzffOKI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708577267; c=relaxed/simple;
-	bh=UeNo7Treptz3RUyiQTbwwLEw6a+8/F6tea3I16MzUxc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Eq7i1Vs0oSj939y8P+cOK2G7ULyDICHwzkJFYduktA0X4UiIBjBmtVY7VKdFNSFp6HbsbOGhZcoERgSkgP0m+tUmJHaAuYBUzl9csCpPsizqw+3HyzKX919NjYrwkGdjHYkTfc0kogVaOlPN1Hv/R2P80xjuFBEsXWxUdAnsz8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gUZxXtRv; arc=none smtp.client-ip=209.85.161.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-oo1-f49.google.com with SMTP id 006d021491bc7-595aa5b1fe0so4864510eaf.2;
-        Wed, 21 Feb 2024 20:47:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708577264; x=1709182064; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=+0AD0YCnQqqjpDGFWW9RzaHFEvNTNgA3R308dgKQBK0=;
-        b=gUZxXtRvgbVGvAOidc1qfrexj0Ae8g9f98Iu64/LILGAGg1sMxYIi+atw6rFFLuMcm
-         FeGJ/d7hMeiIT9KJMX3gyvEuBoPv/Tmasx+2GaaPQUiIFufReOATGRBslaudGTt8g02W
-         IWm6UVT1dPsdHsRi7BEU/faBKIlQBgbgfVUX1cOqqhFfZiuIaD5lyJUIbAabSFJGBk9z
-         ZfzCeLfWq1eRNYtmfO9ws1zHkUJwgtiNsUWCqu3ja3TqRiqe2cOjl1ceVfB4bxRTkZit
-         A3Y9NVqZuIN04tefs/DY70EvGt2QyBsa9OaAH614Y14au08XuyPn4to54zdW9OZRnnkV
-         chig==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708577264; x=1709182064;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=+0AD0YCnQqqjpDGFWW9RzaHFEvNTNgA3R308dgKQBK0=;
-        b=a99jMzKZ/ACwKNak0idrkenFZbu9gzxuhBk1SAXwLqFcNNBgaFSerrTEGtYQH7wULl
-         qYAbFYoIFOKLBQX/gH1X43TjS0xlL1IScAp+032/6KKWPUMie+gEc11eNyDna1cczIi+
-         kfmHr0Y+cm37wLZKlYHAxdUwLg/J9xHKmDdfDihpjqZp/dymkZBFvU8Z+v+4yWfOgw+p
-         hoPNJWo2OYFDoWBhE6mqhgj4fAgnT9/COILObn+SkRw86Xf/PMfev+xXSTX1JbB9RaJN
-         Jg25gdGkTfRYp6t2bQxOA6fubOhJ7mDmGI73xDRmYu2OWnKQTlKrFS/nOwAAT0GXDTvI
-         EErw==
-X-Forwarded-Encrypted: i=1; AJvYcCU4UcVGiNTd6D7zZZyQL+rQqtsyeokuKsBUn0h7LFeYsid85bX4fkSG+dIueIKZEyZTQy0380/CEstudOY4h/PL3OgwCH1NOYm1R2hveThL3UX+Gq8zSGSjjx2T/d0KA31j9NCj1/+88qhDC6YRVnpzxOK/Y4nvBJY3rRyQjA==
-X-Gm-Message-State: AOJu0YxlF9MbMYaDIzhK8aPUEbCPL2aAbNtxOpVjdgwW/BcN5YMQslC3
-	JE4WQowVvJpVZoYRGBnAZpyE5QS9MksxnOMalpCwc40XdJmiq4CqZ2BanH7LeFid2KahQ2zoDAO
-	0+YZulUhO3gGVH0TbsrV+DmVcUNLGfcuk
-X-Google-Smtp-Source: AGHT+IFT4RsENCibuAcCOiaUsVyVQ3wUtPOaylT8Cu8LEgQ8tuVRqR0bf6JV5jnLIMhZ0nuBWenDTxAl3yi1UozFGBE=
-X-Received: by 2002:a05:6358:5919:b0:176:cf18:d0bb with SMTP id
- g25-20020a056358591900b00176cf18d0bbmr21288902rwf.13.1708577264582; Wed, 21
- Feb 2024 20:47:44 -0800 (PST)
+	s=arc-20240116; t=1708578378; c=relaxed/simple;
+	bh=alxK2KaxgdWsvowDAx8OiT6EkAp1UFnFvDiyNjnUzPQ=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=KAknyy8fN5kta6oxJplfW4Ty4+JeiuWkpDUk5D5HjY4U5Uqsxl+fKWPZ0a8UIqauWAYr5U3eRr3htGG7qmS5Nv1zs+5cojO0mlmKMeG+L3TUXA2vG/dUcQq4P3gXLjAPThOThQU3zwRgSzs4eKt1Boa+86Umz0VqI6PGRXVxQrM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
+	id 195bf9dd-d140-11ee-b972-005056bdfda7;
+	Thu, 22 Feb 2024 07:06:13 +0200 (EET)
+From: andy.shevchenko@gmail.com
+Date: Thu, 22 Feb 2024 07:06:12 +0200
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v7 07/14] clk: eyeq5: add platform driver, and init
+ routine at of_clk_init()
+Message-ID: <ZdbWRFyq42XFdp9E@surfacebook.localdomain>
+References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
+ <20240221-mbly-clk-v7-7-31d4ce3630c3@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240131042509.4034723-1-jcmvbkbc@gmail.com>
-In-Reply-To: <20240131042509.4034723-1-jcmvbkbc@gmail.com>
-From: Max Filippov <jcmvbkbc@gmail.com>
-Date: Wed, 21 Feb 2024 20:47:33 -0800
-Message-ID: <CAMo8BfLXW1tYG9bNQZciBC+NSS+1debXLSYkjNOQe200+aWFEg@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: tools: drop overridden CFLAGS from MAKEOVERRIDES
-To: linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Cc: Jiri Olsa <jolsa@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>, 
-	Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240221-mbly-clk-v7-7-31d4ce3630c3@bootlin.com>
 
-Ping?
+Wed, Feb 21, 2024 at 07:22:15PM +0100, Théo Lebrun kirjoitti:
+> Add the Mobileye EyeQ5 clock controller driver. It might grow to add
+> support for other platforms from Mobileye.
+> 
+> It handles 10 read-only PLLs derived from the main crystal on board. It
+> exposes a table-based divider clock used for OSPI. Other platform
+> clocks are not configurable and therefore kept as fixed-factor
+> devicetree nodes.
+> 
+> Two PLLs are required early on and are therefore registered at
+> of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
+> UARTs.
 
-On Tue, Jan 30, 2024 at 8:25=E2=80=AFPM Max Filippov <jcmvbkbc@gmail.com> w=
-rote:
->
-> Some Makefiles under tools/ use the 'override CFLAGS +=3D ...' construct
-> to add a few required options to CFLAGS passed by the user.
-> Unfortunately that only works when user passes CFLAGS as an environment
-> variable, i.e.
->   CFLAGS=3D... make ...
-> and not in case when CFLAGS are passed as make command line arguments:
->   make ... CFLAGS=3D...
-> It happens because in the latter case CFLAGS=3D... is recorded in the mak=
-e
-> variable MAKEOVERRIDES and this variable is passed in its original form
-> to all $(MAKE) subcommands, taking precedence over modified CFLAGS value
-> passed in the environment variable. E.g. this causes build failure for
-> gpio and iio tools when the build is run with user CFLAGS because of
-> missing _GNU_SOURCE definition needed for the asprintf().
->
-> One way to fix it is by removing overridden variables from the
-> MAKEOVERRIDES. Add macro 'drop-var-from-overrides' that removes a
-> definition of a variable passed to it from the MAKEOVERRIDES and use it
-> to fix CFLAGS passing for tools/gpio and tools/iio.
->
-> This implementation tries to be precise in string processing and handle
-> variables with embedded spaces and backslashes correctly. To achieve
-> that it replaces every '\\' sequence with '\-' to make sure that every
-> '\' in the resulting string is an escape character. It then replaces
-> every '\ ' sequence with '\_' to turn string values with embedded spaces
-> into single words. After filtering the overridden variable definition
-> out of the resulting string these two transformations are reversed.
->
-> Cc: stable@vger.kernel.org
-> Fixes: 4ccc98a48958 ("tools gpio: Allow overriding CFLAGS")
-> Fixes: 572974610273 ("tools iio: Override CFLAGS assignments")
-> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
-> ---
-> Changes v1->v2:
-> - make drop-var-from-overrides-code work correctly with arbitrary
->   variables, including thoses ending with '\'.
->
->  tools/gpio/Makefile            | 1 +
->  tools/iio/Makefile             | 1 +
->  tools/scripts/Makefile.include | 9 +++++++++
->  3 files changed, 11 insertions(+)
->
-> diff --git a/tools/gpio/Makefile b/tools/gpio/Makefile
-> index d29c9c49e251..46fc38d51639 100644
-> --- a/tools/gpio/Makefile
-> +++ b/tools/gpio/Makefile
-> @@ -24,6 +24,7 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
-))
->  all: $(ALL_PROGRAMS)
->
->  export srctree OUTPUT CC LD CFLAGS
-> +$(call drop-var-from-overrides,CFLAGS)
->  include $(srctree)/tools/build/Makefile.include
->
->  #
-> diff --git a/tools/iio/Makefile b/tools/iio/Makefile
-> index fa720f062229..04307588dd3f 100644
-> --- a/tools/iio/Makefile
-> +++ b/tools/iio/Makefile
-> @@ -20,6 +20,7 @@ ALL_PROGRAMS :=3D $(patsubst %,$(OUTPUT)%,$(ALL_TARGETS=
-))
->  all: $(ALL_PROGRAMS)
->
->  export srctree OUTPUT CC LD CFLAGS
-> +$(call drop-var-from-overrides,CFLAGS)
->  include $(srctree)/tools/build/Makefile.include
->
->  #
-> diff --git a/tools/scripts/Makefile.include b/tools/scripts/Makefile.incl=
-ude
-> index 6fba29f3222d..0f68b95cf55c 100644
-> --- a/tools/scripts/Makefile.include
-> +++ b/tools/scripts/Makefile.include
-> @@ -51,6 +51,15 @@ define allow-override
->      $(eval $(1) =3D $(2)))
->  endef
->
-> +# When a Makefile overrides a variable and exports it for the nested $(M=
-AKE)
-> +# invocations to use its modified value, it must remove that variable de=
-finition
-> +# from the MAKEOVERRIDES variable, otherwise the original definition fro=
-m the
-> +# MAKEOVERRIDES takes precedence over the exported value.
-> +drop-var-from-overrides =3D $(eval $(drop-var-from-overrides-code))
-> +define drop-var-from-overrides-code
-> +MAKEOVERRIDES :=3D $(subst \-,\\,$(subst \_,\ ,$(filter-out $(1)=3D%,$(s=
-ubst \ ,\_,$(subst \\,\-,$(MAKEOVERRIDES))))))
-> +endef
+...
+
+> +config COMMON_CLK_EYEQ5
+> +	bool "Clock driver for the Mobileye EyeQ5 platform"
+
+> +	depends on OF
+
+Is this functional dependency? For compilation it seems you don't need it, also see below.
+
+> +	depends on MACH_EYEQ5 || COMPILE_TEST
+> +	default MACH_EYEQ5
+> +	help
+> +		This driver provides the clocks found on the Mobileye EyeQ5 SoC. Its
+> +		registers live in a shared register region called OLB. It provides 10
+> +		read-only PLLs derived from the main crystal clock which must be constant
+> +		and one divider clock based on one PLL.
+
+Wrong indentation, have you run checkpatch?
+
+...
+
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/mod_devicetable.h>
+
+> +#include <linux/of_address.h>
+
+Misused header. Also see below.
+
+> +#include <linux/platform_device.h>
+
+You have semi-random list of inclusions. Please, follow the IWUY principle.
+
+Here I see _at least_ missing
+array_size.h
+err.h
+io.h
+slab.h
+types.h
+
+ 
+...
+
+> +static int eq5c_pll_parse_registers(u32 r0, u32 r1, unsigned long *mult,
+> +				    unsigned long *div, unsigned long *acc)
+> +{
+> +	if (r0 & PCSR0_BYPASS) {
+> +		*mult = 1;
+> +		*div = 1;
+> +		*acc = 0;
+> +		return 0;
+> +	}
 > +
->  ifneq ($(LLVM),)
->  ifneq ($(filter %/,$(LLVM)),)
->  LLVM_PREFIX :=3D $(LLVM)
-> --
-> 2.39.2
->
+> +	if (!(r0 & PCSR0_PLL_LOCKED))
+> +		return -EINVAL;
+> +
+> +	*mult = FIELD_GET(PCSR0_INTIN, r0);
+> +	*div = FIELD_GET(PCSR0_REF_DIV, r0);
+> +	if (r0 & PCSR0_FOUTPOSTDIV_EN)
+
+> +		*div *= FIELD_GET(PCSR0_POST_DIV1, r0) *
+> +			FIELD_GET(PCSR0_POST_DIV2, r0);
+
+One line?
+
+> +	/* Fractional mode, in 2^20 (0x100000) parts. */
+> +	if (r0 & PCSR0_DSM_EN) {
+> +		*div *= 0x100000;
+> +		*mult = *mult * 0x100000 + FIELD_GET(PCSR1_FRAC_IN, r1);
+> +	}
+> +
+> +	if (!*mult || !*div)
+> +		return -EINVAL;
+> +
+> +	/* Spread spectrum. */
+> +	if (!(r1 & (PCSR1_RESET | PCSR1_DIS_SSCG))) {
+> +		/*
+> +		 * Spread is 1/1000 parts of frequency, accuracy is half of
+> +		 * that. To get accuracy, convert to ppb (parts per billion).
+> +		 */
+> +		u32 spread = FIELD_GET(PCSR1_SPREAD, r1);
+
+Missing blank line.
+
+> +		*acc = spread * 500000;
+> +		if (r1 & PCSR1_DOWN_SPREAD) {
+> +			/*
+> +			 * Downspreading: the central frequency is half a
+> +			 * spread lower.
+> +			 */
+> +			*mult *= 2000 - spread;
+> +			*div *= 2000;
+> +		}
+> +	} else {
+> +		*acc = 0;
+> +	}
+> +
+> +	return 0;
+> +}
+
+Looking at this function what I would do is to replace mul/div pair by
+respective struct uXX_fract, add something like
+
+#define mult_fract(fract, ...)		\
+	...
+
+and replace those
+
+	*mult/*div *= ...
+
+with
+
+	mult_fract(fract, 2000);
+
+etc.
+
+...
+
+> +static int eq5c_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct device_node *np = dev->of_node;
+> +	void __iomem *base_plls, *base_ospi;
+> +	struct clk_hw *hw;
+> +	int i;
+
+> +	if (IS_ERR(eq5c_clk_data))
+> +		return PTR_ERR(eq5c_clk_data);
+> +	else if (!eq5c_clk_data)
+> +		return -EINVAL;
+
+Besides unneeded 'else', why so complicated? Can't you choose one: either NULL
+or error pointer for the invalid state?
+
+> +	base_plls = devm_platform_ioremap_resource_byname(pdev, "plls");
+> +	base_ospi = devm_platform_ioremap_resource_byname(pdev, "ospi");
+
+> +	if (!base_plls || !base_ospi)
+> +		return -ENODEV;
+
+Huh?! Are they not an error pointers and never be NULL?
+
+> +	for (i = 0; i < ARRAY_SIZE(eq5c_plls); i++) {
+> +		const struct eq5c_pll *pll = &eq5c_plls[i];
+> +		unsigned long mult, div, acc;
+> +		u32 r0, r1;
+> +		int ret;
+> +
+> +		r0 = readl(base_plls + pll->reg);
+> +		r1 = readl(base_plls + pll->reg + sizeof(r0));
+> +
+> +		ret = eq5c_pll_parse_registers(r0, r1, &mult, &div, &acc);
+> +		if (ret) {
+> +			dev_warn(dev, "failed parsing state of %s\n", pll->name);
+> +			continue;
+> +		}
+> +
+> +		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(dev, np,
+> +				pll->name, "ref", 0, mult, div, acc);
+> +		eq5c_clk_data->hws[pll->index] = hw;
+
+Why do you feel the data with errorneous one (in some cases)? It's quite
+unusual pattern.
+
+> +		if (IS_ERR(hw)) {
+> +			dev_err(dev, "failed registering %s: %ld\n",
+> +				pll->name, PTR_ERR(hw));
+> +		}
+
+Besides unnecessity of {} can't you unify the output format by using
+dev_err_probe() in all error messages in ->probe()?
+
+> +	}
+> +
+> +	hw = clk_hw_register_divider_table_parent_hw(dev, EQ5C_OSPI_DIV_CLK_NAME,
+> +			eq5c_clk_data->hws[EQ5C_PLL_PER], 0,
+> +			base_ospi, 0, EQ5C_OSPI_DIV_WIDTH, 0,
+> +			eq5c_ospi_div_table, NULL);
+
+> +	eq5c_clk_data->hws[EQ5C_DIV_OSPI] = hw;
+
+Same as above.
+
+> +	if (IS_ERR(hw)) {
+> +		dev_err(dev, "failed registering %s: %ld\n",
+> +			EQ5C_OSPI_DIV_CLK_NAME, PTR_ERR(hw));
+> +	}
+
+Same as above.
+
+> +	return 0;
+> +}
+
+...
+
+> +static struct platform_driver eq5c_driver = {
+> +	.probe = eq5c_probe,
+> +	.driver = {
+> +		.name = "clk-eyeq5",
+> +		.of_match_table = eq5c_match_table,
+> +	},
+> +};
+
+> +
+
+Redundant blank line.
+
+> +builtin_platform_driver(eq5c_driver);
+
+...
+
+> +	index_plls = of_property_match_string(np, "reg-names", "plls");
+> +	index_ospi = of_property_match_string(np, "reg-names", "ospi");
+> +	if (index_plls < 0 || index_ospi < 0) {
+> +		ret = -ENODEV;
+
+Why error codes are shadowed?
+
+> +		goto err;
+> +	}
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---=20
-Thanks.
--- Max
 
