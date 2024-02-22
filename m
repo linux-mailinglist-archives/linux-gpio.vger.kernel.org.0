@@ -1,310 +1,74 @@
-Return-Path: <linux-gpio+bounces-3614-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3615-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 79AC785F0AC
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 06:06:24 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id D246785F14A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 07:12:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 042531F23FC9
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 05:06:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 62C44B239DD
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 06:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4553D566A;
-	Thu, 22 Feb 2024 05:06:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF2616439;
+	Thu, 22 Feb 2024 06:12:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kB/tSz2+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 507855680
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 05:06:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5DE14A96;
+	Thu, 22 Feb 2024 06:12:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708578378; cv=none; b=qoBaVJFN/04w4ZxtddSPd/1rdCZx+PhZWs/qMTK9bERKdNca+vQmiOU0jYOVHr3waOmWUnTwcQKM55zrF9MU2pEDTYAk2+rrGeEfA/2lqe/nLKmZy+1HnTzl23UpVDYfSSYcBtkgz9MZVVI5odQLaJH7wdvmRDNO3IQ4bzffOKI=
+	t=1708582368; cv=none; b=grPUCswCwsRE/nFf4ZXWw5gKws4gNKq/IAKLX1Xm57tS9Jn4VxOo4IyTYN0p5lu48f3Pny8nHcwp4oX9e6xQjkRcvdrvNl3MXIfedJQygbkPzGKIyZ4gSVLcDAKQNnJtsPzVvsDguf64xSuERzBvFfIiOthRAJlj6qQkcoyStjw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708578378; c=relaxed/simple;
-	bh=alxK2KaxgdWsvowDAx8OiT6EkAp1UFnFvDiyNjnUzPQ=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KAknyy8fN5kta6oxJplfW4Ty4+JeiuWkpDUk5D5HjY4U5Uqsxl+fKWPZ0a8UIqauWAYr5U3eRr3htGG7qmS5Nv1zs+5cojO0mlmKMeG+L3TUXA2vG/dUcQq4P3gXLjAPThOThQU3zwRgSzs4eKt1Boa+86Umz0VqI6PGRXVxQrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 195bf9dd-d140-11ee-b972-005056bdfda7;
-	Thu, 22 Feb 2024 07:06:13 +0200 (EET)
-From: andy.shevchenko@gmail.com
-Date: Thu, 22 Feb 2024 07:06:12 +0200
-To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v7 07/14] clk: eyeq5: add platform driver, and init
- routine at of_clk_init()
-Message-ID: <ZdbWRFyq42XFdp9E@surfacebook.localdomain>
-References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com>
- <20240221-mbly-clk-v7-7-31d4ce3630c3@bootlin.com>
+	s=arc-20240116; t=1708582368; c=relaxed/simple;
+	bh=AMZ9L9h77qL2qKSyUaf9Y7pkPFgHKjt6oguMDxLm5/s=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=k0AIQxo8VK7Ui3yznLDPuhY862RmGVjRA3Uss3S92ztjpylH8OE3taVKiL/Bbvob9jM0KVsvgYnmylv2EKPKcO4Qpr1kP4DngVWrxrkQXZC5kNfsdqdLYnMIyulF/0SQoY77X7w7oYYdp+Vutwj6URL7QuzB57mzNSOF5nK6p1w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kB/tSz2+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3342FC433C7;
+	Thu, 22 Feb 2024 06:12:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708582368;
+	bh=AMZ9L9h77qL2qKSyUaf9Y7pkPFgHKjt6oguMDxLm5/s=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=kB/tSz2+DwGggX08LhXeIHcG0PebeGdf9oeSQXvQ/Wz/LW/bcRG1GoJFbqkr01dQl
+	 aD4W3uau/rFWoUj91xTlnYvR6TsBqDG9xKb//rSoCmTCmC07N2Da8WLDLhsvlE46gA
+	 5/liaHzWjof3RrnWn9ZvzlGuQAqYs4IbmzrHf+K6MFNHzvDPPNRZBVL1f9ACiSa4C7
+	 Gvh0QX5z/wClAATiH02u7F1SZcyMobKlEFS9wwg7FmSWAX5qGLinrFYAX5QZObZupo
+	 5IYPzyBa9FelXtBkUZD/XPNorXVzrOHbCRBBn24PtGnqbDKE4DCv1tfudjhNLJvpd6
+	 GFw/l8i4TUsSA==
+Message-ID: <5b2d83e343fa218c791d468a863a6c65.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240221-mbly-clk-v7-7-31d4ce3630c3@bootlin.com>
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20240221-mbly-clk-v7-1-31d4ce3630c3@bootlin.com>
+References: <20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com> <20240221-mbly-clk-v7-1-31d4ce3630c3@bootlin.com>
+Subject: Re: [PATCH v7 01/14] clk: fixed-factor: add optional accuracy support
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+To: Conor Dooley <conor+dt@kernel.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Michael Turquette <mturquette@baylibre.com>, Philipp Zabel <p.zabel@pengutronix.de>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Rob Herring <robh+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Date: Wed, 21 Feb 2024 22:12:46 -0800
+User-Agent: alot/0.10
 
-Wed, Feb 21, 2024 at 07:22:15PM +0100, Théo Lebrun kirjoitti:
-> Add the Mobileye EyeQ5 clock controller driver. It might grow to add
-> support for other platforms from Mobileye.
-> 
-> It handles 10 read-only PLLs derived from the main crystal on board. It
-> exposes a table-based divider clock used for OSPI. Other platform
-> clocks are not configurable and therefore kept as fixed-factor
-> devicetree nodes.
-> 
-> Two PLLs are required early on and are therefore registered at
-> of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
-> UARTs.
+Quoting Th=C3=A9o Lebrun (2024-02-21 10:22:09)
+> Fixed factor clock reports the parent clock accuracy. Add flags and acc
+> fields to `struct clk_fixed_factor` to support setting a fixed
+> accuracy. The default if no flag is set is not changed: use the parent
+> clock accuracy.
+>=20
+> Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> ---
 
-...
+Applied to clk-next
 
-> +config COMMON_CLK_EYEQ5
-> +	bool "Clock driver for the Mobileye EyeQ5 platform"
-
-> +	depends on OF
-
-Is this functional dependency? For compilation it seems you don't need it, also see below.
-
-> +	depends on MACH_EYEQ5 || COMPILE_TEST
-> +	default MACH_EYEQ5
-> +	help
-> +		This driver provides the clocks found on the Mobileye EyeQ5 SoC. Its
-> +		registers live in a shared register region called OLB. It provides 10
-> +		read-only PLLs derived from the main crystal clock which must be constant
-> +		and one divider clock based on one PLL.
-
-Wrong indentation, have you run checkpatch?
-
-...
-
-> +#include <linux/bitfield.h>
-> +#include <linux/bits.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/mod_devicetable.h>
-
-> +#include <linux/of_address.h>
-
-Misused header. Also see below.
-
-> +#include <linux/platform_device.h>
-
-You have semi-random list of inclusions. Please, follow the IWUY principle.
-
-Here I see _at least_ missing
-array_size.h
-err.h
-io.h
-slab.h
-types.h
-
- 
-...
-
-> +static int eq5c_pll_parse_registers(u32 r0, u32 r1, unsigned long *mult,
-> +				    unsigned long *div, unsigned long *acc)
-> +{
-> +	if (r0 & PCSR0_BYPASS) {
-> +		*mult = 1;
-> +		*div = 1;
-> +		*acc = 0;
-> +		return 0;
-> +	}
-> +
-> +	if (!(r0 & PCSR0_PLL_LOCKED))
-> +		return -EINVAL;
-> +
-> +	*mult = FIELD_GET(PCSR0_INTIN, r0);
-> +	*div = FIELD_GET(PCSR0_REF_DIV, r0);
-> +	if (r0 & PCSR0_FOUTPOSTDIV_EN)
-
-> +		*div *= FIELD_GET(PCSR0_POST_DIV1, r0) *
-> +			FIELD_GET(PCSR0_POST_DIV2, r0);
-
-One line?
-
-> +	/* Fractional mode, in 2^20 (0x100000) parts. */
-> +	if (r0 & PCSR0_DSM_EN) {
-> +		*div *= 0x100000;
-> +		*mult = *mult * 0x100000 + FIELD_GET(PCSR1_FRAC_IN, r1);
-> +	}
-> +
-> +	if (!*mult || !*div)
-> +		return -EINVAL;
-> +
-> +	/* Spread spectrum. */
-> +	if (!(r1 & (PCSR1_RESET | PCSR1_DIS_SSCG))) {
-> +		/*
-> +		 * Spread is 1/1000 parts of frequency, accuracy is half of
-> +		 * that. To get accuracy, convert to ppb (parts per billion).
-> +		 */
-> +		u32 spread = FIELD_GET(PCSR1_SPREAD, r1);
-
-Missing blank line.
-
-> +		*acc = spread * 500000;
-> +		if (r1 & PCSR1_DOWN_SPREAD) {
-> +			/*
-> +			 * Downspreading: the central frequency is half a
-> +			 * spread lower.
-> +			 */
-> +			*mult *= 2000 - spread;
-> +			*div *= 2000;
-> +		}
-> +	} else {
-> +		*acc = 0;
-> +	}
-> +
-> +	return 0;
-> +}
-
-Looking at this function what I would do is to replace mul/div pair by
-respective struct uXX_fract, add something like
-
-#define mult_fract(fract, ...)		\
-	...
-
-and replace those
-
-	*mult/*div *= ...
-
-with
-
-	mult_fract(fract, 2000);
-
-etc.
-
-...
-
-> +static int eq5c_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct device_node *np = dev->of_node;
-> +	void __iomem *base_plls, *base_ospi;
-> +	struct clk_hw *hw;
-> +	int i;
-
-> +	if (IS_ERR(eq5c_clk_data))
-> +		return PTR_ERR(eq5c_clk_data);
-> +	else if (!eq5c_clk_data)
-> +		return -EINVAL;
-
-Besides unneeded 'else', why so complicated? Can't you choose one: either NULL
-or error pointer for the invalid state?
-
-> +	base_plls = devm_platform_ioremap_resource_byname(pdev, "plls");
-> +	base_ospi = devm_platform_ioremap_resource_byname(pdev, "ospi");
-
-> +	if (!base_plls || !base_ospi)
-> +		return -ENODEV;
-
-Huh?! Are they not an error pointers and never be NULL?
-
-> +	for (i = 0; i < ARRAY_SIZE(eq5c_plls); i++) {
-> +		const struct eq5c_pll *pll = &eq5c_plls[i];
-> +		unsigned long mult, div, acc;
-> +		u32 r0, r1;
-> +		int ret;
-> +
-> +		r0 = readl(base_plls + pll->reg);
-> +		r1 = readl(base_plls + pll->reg + sizeof(r0));
-> +
-> +		ret = eq5c_pll_parse_registers(r0, r1, &mult, &div, &acc);
-> +		if (ret) {
-> +			dev_warn(dev, "failed parsing state of %s\n", pll->name);
-> +			continue;
-> +		}
-> +
-> +		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(dev, np,
-> +				pll->name, "ref", 0, mult, div, acc);
-> +		eq5c_clk_data->hws[pll->index] = hw;
-
-Why do you feel the data with errorneous one (in some cases)? It's quite
-unusual pattern.
-
-> +		if (IS_ERR(hw)) {
-> +			dev_err(dev, "failed registering %s: %ld\n",
-> +				pll->name, PTR_ERR(hw));
-> +		}
-
-Besides unnecessity of {} can't you unify the output format by using
-dev_err_probe() in all error messages in ->probe()?
-
-> +	}
-> +
-> +	hw = clk_hw_register_divider_table_parent_hw(dev, EQ5C_OSPI_DIV_CLK_NAME,
-> +			eq5c_clk_data->hws[EQ5C_PLL_PER], 0,
-> +			base_ospi, 0, EQ5C_OSPI_DIV_WIDTH, 0,
-> +			eq5c_ospi_div_table, NULL);
-
-> +	eq5c_clk_data->hws[EQ5C_DIV_OSPI] = hw;
-
-Same as above.
-
-> +	if (IS_ERR(hw)) {
-> +		dev_err(dev, "failed registering %s: %ld\n",
-> +			EQ5C_OSPI_DIV_CLK_NAME, PTR_ERR(hw));
-> +	}
-
-Same as above.
-
-> +	return 0;
-> +}
-
-...
-
-> +static struct platform_driver eq5c_driver = {
-> +	.probe = eq5c_probe,
-> +	.driver = {
-> +		.name = "clk-eyeq5",
-> +		.of_match_table = eq5c_match_table,
-> +	},
-> +};
-
-> +
-
-Redundant blank line.
-
-> +builtin_platform_driver(eq5c_driver);
-
-...
-
-> +	index_plls = of_property_match_string(np, "reg-names", "plls");
-> +	index_ospi = of_property_match_string(np, "reg-names", "ospi");
-> +	if (index_plls < 0 || index_ospi < 0) {
-> +		ret = -ENODEV;
-
-Why error codes are shadowed?
-
-> +		goto err;
-> +	}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Please consider adding a test.
 
