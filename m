@@ -1,95 +1,156 @@
-Return-Path: <linux-gpio+bounces-3622-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD4D185F3F1
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 10:07:25 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 680EF85F419
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 10:18:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4CB461F2139F
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 09:07:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1DEFD28607A
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 09:18:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F3AC36AED;
-	Thu, 22 Feb 2024 09:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C081137157;
+	Thu, 22 Feb 2024 09:18:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="y70OeTvl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lCsAR24j"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com [209.85.221.180])
+Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A97420DDC
-	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 09:07:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF0E36B04
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 09:18:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708592841; cv=none; b=V4nh++kKYl0iboM9FA9SRY1OAYhHNn/N7BcuCwDo3sMJ8v3GHhSS8XB9/I763BlF/auh3OigdJe76rQJDDenR0B2br09S6Q7572oR34O1mH4CYFcbCVXtquGG6B1vqNaOmk9MKGzLu04CjaFhcwSIZ4dPoomn05cy/Nl1JjzKPw=
+	t=1708593496; cv=none; b=Wbi+7ZHAbs6qdkWdwDSf0pYbqelb5kbaIg0crFZAwqmjccEzamUuuJKcL9cwM/b/SMKToExBOipJSNk3JEhkK3xfIxR2DKXmU6wAFHv6Q7+XgWqNzUZZ0l+SAfrXusQA4G0MEAl0LUhxCrkDW/BwWqwcJoqh9z/w8V+JUa3uZxQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708592841; c=relaxed/simple;
-	bh=0ivX57rX4D6yQirT/8PQLMD0kbXDO3CjM8WXX9zJugs=;
+	s=arc-20240116; t=1708593496; c=relaxed/simple;
+	bh=EIBbEaHH8Til6Jl0+D6A+1JtkwrtcChmSx41xyhtVfY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Grs5rtOD/q5D0eJN0H1Hx5butj7nCAwg6fypSu6SN8CMRznJg3JMAOQylC5gk8eo8a69Cso0oWnsrhEklntfFlRR6OSzFyUhU549ug3sGmhi041iCOZCX3BcRd0ovNMBMPMS6f6imj52Xc6TcrHcK4xatK3V6ZbChsdiuvhKHeo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=y70OeTvl; arc=none smtp.client-ip=209.85.221.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f180.google.com with SMTP id 71dfb90a1353d-4cb26623d8dso787667e0c.1
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 01:07:19 -0800 (PST)
+	 To:Cc:Content-Type; b=MTTpCrTjCkWkes9+NQug1XZtOvV36RgV30jCrhEl9VQYz1WzbeiGN/c5seJZflhpIfrXmT/7nsOSZEc86WFxxKY0g0559A4tblG7IBDMvvIl0oTcQHi04jV55NW5W0V45SpvlFW2QfFzG3ImxLQjjSTwvO6S3HD3M2TWHkepHs8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lCsAR24j; arc=none smtp.client-ip=209.85.219.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcdb210cb6aso8469933276.2
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 01:18:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708592838; x=1709197638; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1708593494; x=1709198294; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0ivX57rX4D6yQirT/8PQLMD0kbXDO3CjM8WXX9zJugs=;
-        b=y70OeTvlobdNShQOP0URGKThzG7SAILy19sYZI3vYxrZtmyEV53Ik93D8XeOYOAu2j
-         zz6ibkEuuBp9gAyK7eHi8neRaE3Uoq/6fLYWHXuhkDUfrC3rDc8wjvvIfXyFbhQ3zml1
-         UAErxSivKYt0DTgPO3dzXEWiDwM0Z/GiJvF+zHG2NH6ktoWjoRnODlNGypg+okOhnWVP
-         80xzWEuYDj3ht1fyjlws7D3G4hXZENjbVRFWAWdqCuKUNmfLtBud9X//Mocme2YgQEYh
-         DZu76VCTIMZIIp9Ox0VN5lQewcC0sTyP3J6/ed+hQFs9UH7bZD3yzanNUXYVzuXtjPEv
-         XXOw==
+        bh=Zf0GvqiGKwsxdGr5MLlrNiGPPZcjorBz4WljGWr0BmM=;
+        b=lCsAR24j3gmOL9W7zrVPpTjJo8HM82+MSxbLv3oHq6l0co4+8km5eDa4JajeYbz8+o
+         QoWd6+e9OX+sk8nWHFru3saE8FV7hlhp1oFVTSOn8JBBqE9Eby0faxIINKc/g/nDsqJB
+         WvJmRwrd8pkYAFoW0RLsj08BIT8w/BWnaH5NdlPOgXHgQKufARvdzFNWfdyWf/WT2NDQ
+         B6/pDjiiblouR/PHARuwu344tcNhfo2FSsFUrQY3wmTHwhdm6Di5ayBircrNmy9lW7rJ
+         gz3s4QJxaGjCYzywWd19GSy8XEBCWc1mpCJFe9xnegPiMLAZzYepLIYh3jNC9aySpmrG
+         IwXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708592838; x=1709197638;
+        d=1e100.net; s=20230601; t=1708593494; x=1709198294;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0ivX57rX4D6yQirT/8PQLMD0kbXDO3CjM8WXX9zJugs=;
-        b=uNNmJJVw3p09lSr7WnCzacR/GZP4BhLdyBSTUzz1Ks4X6LVuu7lovu7fRiu4B54MAa
-         cugyWCaZlxnu60HGoTjKGBpvFQhX2lsTpTgFQQIDyYegnfhwG2I1a/n5ZP9gmJlxdUF1
-         3VHEE1g16dUaKtjSVwt2Td0qwUbDjc9S871QN4TT9Ph4sy1qGWB2kOit4cSeODwTOE+P
-         Vj0YXpKsJ0K5pMnHE/F0gDKCITuocWSQ2lgk9AbwgY339CK4uFDrcF0/VzWpyy+9onkm
-         A9ySuy3GQz2L6cIOQOZnvOC5OFXZ+Lr/UBJ8Gpn6C0wP0lnvYmliO0CYKH3tTrNPomDU
-         M2nw==
-X-Gm-Message-State: AOJu0YzTxUXXYmXSmfKe4QDNjJhGRKN8GgdkocwwWvqJiWTVtXXRZWOi
-	yXS2UB7YzEEjHWJB2MCCXLyYRfWuQkBiGSEcpT6lBVKyI/loUEV1tWXB/7zVxdAGjr4MtcvYQ6e
-	DHO2RVER5Nyf3knbMP1ecSxcVOgScRobNXvucHfL/SHn2FEDS
-X-Google-Smtp-Source: AGHT+IEzNIzKomd5sSPDpfbxWEG7uTeLUWfG3kKODuO1/Xi5ch980Lu/eOzY6is24+DoB2nnNLrbbKdcQHKLcvZgz6A=
-X-Received: by 2002:a1f:dbc2:0:b0:4c8:ee1:5a0b with SMTP id
- s185-20020a1fdbc2000000b004c80ee15a0bmr10447535vkg.15.1708592838437; Thu, 22
- Feb 2024 01:07:18 -0800 (PST)
+        bh=Zf0GvqiGKwsxdGr5MLlrNiGPPZcjorBz4WljGWr0BmM=;
+        b=fR9qkNmaddUX/lfnDCPaBMF5W5YJBiwf8JSlg3ZGeDXyDsUse7poVwT5tq4jRcdAWw
+         irBvn0aJoDdCy4NxZRfx/2fcppM3YnGu7yt1hz9W/hRYTy8UkWUizEBZe4ywAD70zrDq
+         pcaOZGtuZ0wPbrjcSmmK6q2Cy42ip0lkMamDIcXpKaDFVszP43lxGX6wGrFIFVQM6Z69
+         zIcKSVb7fTjT6g+iQ3/XY50UgVxD+MOjJs53gGlFGgmG3XKGzrDSd3oscrWvDq1wst3y
+         ZYgoUxGQZfdXWuoKaCXTIDY8cj1b1kK+THiqqy1RVjLCvOVeQU+Umgkh3woYO6RVHO1+
+         uhXw==
+X-Gm-Message-State: AOJu0YxYAtKmFzoqPFGrJQ5MBwFjRER0zqbr27dnNtKlghEfHufkmFKt
+	2KE16ru9KUAfa1+NlHrrBe9QEnFKoo3DMmoXjOkvZnah/8I/XmMCvdeaoNtikvzvmYpyvbSd21W
+	dPorgccgDo6ktxg1DvsGU+hYgxHwxC8xNuynu7g==
+X-Google-Smtp-Source: AGHT+IFDUJMPgyEKMQ2W8yb4K8Tiwnl8R7OYnKyeSVHKufvC5yLEX/76lzSyIfIbfIYUBmWOk2lNcVaWz3rSIWGRjow=
+X-Received: by 2002:a25:2614:0:b0:dcd:aa92:ecae with SMTP id
+ m20-20020a252614000000b00dcdaa92ecaemr1559714ybm.63.1708593493867; Thu, 22
+ Feb 2024 01:18:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220232328.1881707-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240220232328.1881707-1-andy.shevchenko@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 22 Feb 2024 10:07:07 +0100
-Message-ID: <CAMRc=MeDE_PpmzGrJhfmXZJo180X3uM5uvrcEf1D-7RHmo8ezg@mail.gmail.com>
-Subject: Re: [PATCH v1 1/1] gpio: mmio: Support 64-bit BE access
-To: andy.shevchenko@gmail.com
+References: <20240215083328.11464-1-brgl@bgdev.pl> <CACRpkdYhWk1dHeDHOf+6LM8gZ5Oh--6mpeeA7wskDFYZ-2cmJw@mail.gmail.com>
+ <CAMRc=Me5xHEG5K1SwCKLuVri37a4X-HCbwav2Bu3dVgmWERj_A@mail.gmail.com>
+In-Reply-To: <CAMRc=Me5xHEG5K1SwCKLuVri37a4X-HCbwav2Bu3dVgmWERj_A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 22 Feb 2024 10:18:02 +0100
+Message-ID: <CACRpkdadDXE6a+oLDnYsvzQjpfLR5qQdcqos+y23Nb8PodzG_g@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: provide for_each_gpio()
+To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Linus Walleij <linus.walleij@linaro.org>
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 12:23=E2=80=AFAM <andy.shevchenko@gmail.com> wrote:
+On Thu, Feb 22, 2024 at 9:48=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Wed, Feb 21, 2024 at 10:51=E2=80=AFPM Linus Walleij <linus.walleij@lin=
+aro.org> wrote:
+> >
+> > Hi Bartosz,
+> >
+> > On Thu, Feb 15, 2024 at 9:33=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev=
+.pl> wrote:
+> >
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > We only provide iterators for requested GPIOs to provider drivers. In
+> > > order to allow them to display debug information about all GPIOs, let=
+'s
+> > > provide a variant for iterating over all GPIOs.
+> > >
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > (...)
+> >
+> > > +/**
+> > > + * for_each_gpio - Iterates over all GPIOs for given chip.
+> >
+> > Does this really intuitively fit with other functions named for_each_XX=
+X()?
+> >
+> > > + * @_chip: Chip to iterate over.
+> > > + * @_i: Loop counter.
+> > > + * @_label: Place to store the address of the label if the GPIO is r=
+equested.
+> > > + *          Set to NULL for unused GPIOs.
+> > > + */
+> > > +#define for_each_gpio(_chip, _i, _label) \
+> > > +       for (CLASS(_gpiochip_for_each_data, _data)(&_label, &_i); \
+> > > +            *_data.i < _chip->ngpio; \
+> > > +            (*_data.i)++, kfree(*(_data.label)), *_data.label =3D NU=
+LL) \
+> > > +               if (IS_ERR(*_data.label =3D \
+> > > +                       gpiochip_dup_line_label(_chip, *_data.i))) {}=
+ \
+> > > +               else
+> >
+> > I would call it for_each_line_label() or something. I try to avoid usin=
+g
+> > "gpio" in function names as well because of ambiguity, I could also go
+> > with for_each_hwgpio_label() I suppose.
 >
-> Use ioread64be()/iowrite64be() for 64-bit BE access.
+> The problem is: this doesn't iterate over labels. It really goes
+> through all offsets and if there's no consumer then the label is NULL
+> (I should have said that in the kerneldoc).
 >
-> Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> ---
+> >
+> > With some more reasonable name:
+>
+> Does for_each_hwgpio() make more sense?
 
-Applied, thanks!
+It's better it reflects the usage, but isn't the usage to conditionally
+extract the label (or NULL) for each hwgpio?
 
-Bart
+What I'm after is if there is a risk that someone think this is a generic
+iterator for hwgpios which would be confusing.
+
+At the same time
+for_each_hwgpio_attempt_extract_label() is a bit long I guess.
+
+I don't wanna bikeshed too much so go with for_each_hwgpio() if
+you don't immediately see anything better.
+
+Yours,
+Linus Walleij
 
