@@ -1,75 +1,75 @@
-Return-Path: <linux-gpio+bounces-3637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3638-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7423A85F9AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:25:35 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8400E85F9C6
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:28:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5D291C2293F
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:25:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3FB0F288ED4
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:28:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E34A9133296;
-	Thu, 22 Feb 2024 13:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32476133296;
+	Thu, 22 Feb 2024 13:28:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="haKE58fD"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="MkHGNN0P"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 307C53F9ED;
-	Thu, 22 Feb 2024 13:25:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3DB3C480;
+	Thu, 22 Feb 2024 13:28:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708608330; cv=none; b=msIs0GjM89Bm8k1nkTgkcQ8qkbzjlCYyqwn52mUxzoFAfF6gsJd7eeLtvAzcc+SpD9Nf9qVaAvCRwrxr9atpVSLDzfj37xOaRGIL+f5BbB6dpqWL0aVPV/xep/AcVVGAWK7talpHXDOX1f3QRXfVcpIkTD3pWa8n1VF8Q5hI0U8=
+	t=1708608499; cv=none; b=EaM0DfO72G4lZR5bd1x8RDIZVi11KWmkJ48c2NT5azSKfk6BPWaEMUE06lx3xJEG0SIN93werxRkNKYsGwoVGfWMKNHeluBhD/1B/jV5GAFxknESxvY+mEDQLSrWWseZ2vhJWfVWoiaV+FgzN4vrabfxjZTJ3QEVWqlqytQXTac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708608330; c=relaxed/simple;
-	bh=9SfBk/e/iZIBUTSrdS5oEKXroNAoDwLwvm5z+Wgn6RA=;
+	s=arc-20240116; t=1708608499; c=relaxed/simple;
+	bh=ohqUpTZp0VUFM3NLMJysG88wyIHXct6Re9hKbvWxPqk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KBIlWX7QHKbBGYsMplWrPMQ+cyY711L7EnwCad/ozwkKO5FkYJwIj6kb6oKviplec/0unnOROxc9N4xIvhXRG0lhc86GjFQc8gWnKVpYNTimM2/YE4MbJvmq3QWm9V2LH2Z8sjNToR4gcJt66APam5Jrge+KRFI4sWiMQfDbykw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=haKE58fD; arc=none smtp.client-ip=198.175.65.9
+	 Content-Type:Content-Disposition:In-Reply-To; b=fEDtuJNtc4wYu/seoaBji0v7CGuL7zdK6flJoXW19dRZnEE3PzpFM49doyDUkzp2esbVvU0K5pFXKelp6PkAPOPlF1Fj/VP1u1QcEFExOSFxwAHYu18m0yHkMaw++IUrc7OVadmPMCUEVa7zIpZSsq5MNaa06oT20XP+vfivHCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=MkHGNN0P; arc=none smtp.client-ip=198.175.65.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708608329; x=1740144329;
+  t=1708608497; x=1740144497;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:content-transfer-encoding:in-reply-to;
-  bh=9SfBk/e/iZIBUTSrdS5oEKXroNAoDwLwvm5z+Wgn6RA=;
-  b=haKE58fD7Lm+ADvbgbzT5VA7p0tRNZQ0UxyyzUUNVKLwbh74YCC//iO3
-   ANgf3To+Q/wIA16UVHgzx93oyIq+bmjkmlVQiOCWQaQ1vuThCviijlS3A
-   ar+NAAM+a9sx0tGAAtkNhVSKg7zEUTCqIUZLSRABA1anOqFHTQzH/maa2
-   l8C6x21Y9mk8izTHHsUY3avzhE28zdSDYJkdxcqp/LhFW2nzEvxcPMJ4Y
-   k6BIkn4/JRaH+tVyrYP2kIX01oG2fr+9P5ocgNctSJyYhpptc59pEen1R
-   X7gPdzvhEnQH0AgzYrQ75YasIkyzPqrvHKcuQGSHi0o3rH/sr9a0fKDOU
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25292383"
+  bh=ohqUpTZp0VUFM3NLMJysG88wyIHXct6Re9hKbvWxPqk=;
+  b=MkHGNN0PkykLhcq1Qi3h00KEGbzwsZ8W2/Q0bCFCq6OZoSUc5bmAYjxl
+   WYSqNG1zYYbrsDjG/Nn5p8/JnTLxIwQ3MUFPFjxvJzl9JcJeJJlVMFgij
+   XGLWOhmKHqxOM37f/9WBU83UORuff+RAd2Hc9bCDefDQte8+jgs5MHwNo
+   B/Vk/UPhheaT7BAbliJde87oj2Vjg+ExcVfm/UFDR24XrdmU7+ju6RSrQ
+   Uh7LSNv5BJxaxuea0+jxtH9XP6fhsK9bpyLeIuoTjNM9E7cuy5+2LrMqC
+   pyAYr8h4cMUGPyZL0iyeuZxwbjGdbUEcKir6fdcCjR/63m7LbIVEQ9Xxa
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25292899"
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="25292383"
+   d="scan'208";a="25292899"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:25:28 -0800
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:28:17 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913524175"
+X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913524931"
 X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="913524175"
+   d="scan'208";a="913524931"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:25:26 -0800
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:28:15 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rd94m-00000006dYX-1rc5;
-	Thu, 22 Feb 2024 15:25:24 +0200
-Date: Thu, 22 Feb 2024 15:25:24 +0200
+	id 1rd97V-00000006dai-0UYH;
+	Thu, 22 Feb 2024 15:28:13 +0200
+Date: Thu, 22 Feb 2024 15:28:12 +0200
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 To: Bartosz Golaszewski <brgl@bgdev.pl>
 Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
 	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in
+Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate cleanup for-loop in
  gpiochip_add_data_with_key()
-Message-ID: <ZddLRAqxFr7v3Zqs@smile.fi.intel.com>
-References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+Message-ID: <ZddL7L24RXoqR7sN@smile.fi.intel.com>
+References: <20240221193647.13777-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=McECxKW+uS7fQyGtYVfcSZQaAJZFi+s+wNMoRiHxef0zw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,38 +79,41 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+In-Reply-To: <CAMRc=McECxKW+uS7fQyGtYVfcSZQaAJZFi+s+wNMoRiHxef0zw@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 22, 2024 at 10:37:06AM +0100, Bartosz Golaszewski wrote:
-> On Wed, Feb 21, 2024 at 8:28 PM Andy Shevchenko
+On Thu, Feb 22, 2024 at 10:48:00AM +0100, Bartosz Golaszewski wrote:
+> On Wed, Feb 21, 2024 at 8:36 PM Andy Shevchenko
 > <andriy.shevchenko@linux.intel.com> wrote:
 > >
-> > After shuffling the code, error path wasn't updated correctly.
-> > Fix it here.
+> > There is no need to repeat for-loop twice in the error path in
+> > gpiochip_add_data_with_key(). Deduplicate it. While at it,
+> > rename loop variable to be more specific and avoid ambguity.
+> >
+> > It also properly unwinds the SRCU, i.e. in reversed order of allocating.
 
-> >         gpiochip_irqchip_free_valid_mask(gc);
-> >  err_remove_acpi_chip:
-> >         acpi_gpiochip_remove(gc);
-> > +       gpiochip_remove_pin_ranges(gc);
-> >  err_remove_of_chip:
-> >         gpiochip_free_hogs(gc);
-> >         of_gpiochip_remove(gc);
+...
+
+> This doesn't apply on top of gpio/for-next, I think it depends on one
+> of your earlier patches?
+
+Yes, on the fix with error path.
+
+...
+
+> > +       while (desc_index--)
 > 
-> This undoes machine_gpiochip_add() and I think it also needs to be
-> moved before acpi_gpiochip_remove().
+> What about gdev->descs[0]?
 
-You mean it should be like
+What about it? :-)
 
-       gpiochip_irqchip_free_valid_mask(gc);
-       gpiochip_free_hogs(gc);
-err_remove_acpi_chip:
-       acpi_gpiochip_remove(gc);
-       gpiochip_remove_pin_ranges(gc);
-err_remove_of_chip:
-       of_gpiochip_remove(gc);
+for (i = i - 1; i >= 0; i--)
+while (--i >= 0)
+while (i--)
 
-?
+are all equivalents.
+
+The difference is what the value will i get _after_ the loop.
 
 -- 
 With Best Regards,
