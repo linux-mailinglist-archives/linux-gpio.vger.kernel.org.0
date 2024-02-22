@@ -1,122 +1,132 @@
-Return-Path: <linux-gpio+bounces-3642-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3643-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6B67C85F9FE
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:39:10 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9CBD285FA01
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 14:39:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0CDF5B2254F
-	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:39:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4FE1B288630
+	for <lists+linux-gpio@lfdr.de>; Thu, 22 Feb 2024 13:39:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23D06134CC2;
-	Thu, 22 Feb 2024 13:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB707134CC2;
+	Thu, 22 Feb 2024 13:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="D0N/jtdN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dh2PNbIT"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B9E5133296;
-	Thu, 22 Feb 2024 13:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 399C112FB02
+	for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 13:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708609142; cv=none; b=RjIZgTbkFxAc6f3XCW+iEvMPE3WOLN3ZYarY63F3RPcLxrRidIQP5PavxKvAySOFXJ+JsK4fQ/cpZrWkH1E+YQ+grXbnOx3AO2oCwL41KUsT3wzZofwku42LbNF2y7NFgE1KxHOyX2k1ETirXbEwvzb5xSG8ci3yBPbno0dS7Wo=
+	t=1708609181; cv=none; b=XpRETgR0vZ2Yvds6iN91rbFPtcht++PbD55F5QyO/V4gmhhZYk90LcIVf7oDl4oOAwYmaSRctiELLfSyaeh3C4ovJ61Thwgodr+F0hEMqZmC/rNj8oe1tdiLgGR42rSo3mowl6cx5dgXR7IWoOvia3Q9Ph7lZnZbbgIqTbOHqww=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708609142; c=relaxed/simple;
-	bh=VDI69W9BEPBXTrDEQxaH2glTMR00W37uK2EAbFcjDpw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AzIdhHc9+7VDSWAERiVzTxxE9FQle1flAPDivBHVxPVD/5ErWCPM4nEmi2jC5/cHoMAwROJpdm1h5C/9sTcf1AVXK+IuPSU34aNzoQdF49NBFihTCwyOrksEpMWC2lbGEX3Mz9WafLwOP9RYOSVadEH8hzjndfl1XKIH9dnIKrE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=D0N/jtdN; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1708609141; x=1740145141;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=VDI69W9BEPBXTrDEQxaH2glTMR00W37uK2EAbFcjDpw=;
-  b=D0N/jtdNsoUEow9cmcxWQWWtfNs+6AIKi5A7ciCc7p0naF5/vkzIhzUY
-   kwWZOYnWKJva0jkGfl5IlEakZRzWTf8i0P28f0weX1zWPsbnccl6z21mQ
-   +WPjXvsiwU/GO7dUio4S1CbEjiOx5OzM71umXbMbsGR+/ES6lBeAas3ml
-   OuSXPlgOPiYiJq7BucyxZzIrOGESGlpAEMUN3acQbScaKtd6+pEK5/Whc
-   b7c5TghB/fDukuDJqd6GkdDpWkq0reIZ8SKm2p/jzM9Z82HggDMq79v8q
-   JBElAyysh2UKIJmfgbFk2tFkbyGm049EPjAyl8oJJ6rFwFJb1dbxyLAUr
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="25294783"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="25294783"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:39:01 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10991"; a="913527400"
-X-IronPort-AV: E=Sophos;i="6.06,177,1705392000"; 
-   d="scan'208";a="913527400"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Feb 2024 05:38:59 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rd9Hs-00000006dj0-2vOb;
-	Thu, 22 Feb 2024 15:38:56 +0200
-Date: Thu, 22 Feb 2024 15:38:56 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] gpiolib: Deduplicate cleanup for-loop in
- gpiochip_add_data_with_key()
-Message-ID: <ZddOcJrYEANc2B2Y@smile.fi.intel.com>
-References: <20240221193647.13777-1-andriy.shevchenko@linux.intel.com>
- <CAMRc=McECxKW+uS7fQyGtYVfcSZQaAJZFi+s+wNMoRiHxef0zw@mail.gmail.com>
- <ZddL7L24RXoqR7sN@smile.fi.intel.com>
- <CAMRc=Md6d19hhySFti+vSLV9pfyzuHNUDmHN_XYV73uCWDAY7w@mail.gmail.com>
+	s=arc-20240116; t=1708609181; c=relaxed/simple;
+	bh=oaWLKIrohEVVRK2LX/y7Gl/HoUox13AjUtmbGu+WWps=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sflX0puuBrFitAlBrzaRCXbM4C5aUma43XE24lwtIhRK6BMBS16zgh8nTCBWc5NSNop7/ByoviNPFJOrwWroz3GP7rD652Qu2aQ6z3MRpVJQnJq37cCDW+T2gmVaNIXmUqJVOwyIZo4axObA3no/q1DnmYZMym9VSeDbdXIRsMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dh2PNbIT; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7d698a8d93cso5405747241.3
+        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 05:39:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708609179; x=1709213979; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ot075bt4dL2yU2q8AQheh13hrjTH3TbPeTjQMwROOT0=;
+        b=dh2PNbITvOlCh9aX19lIYLO9JAk/axqVeyXFXO++DyiUUG5ulm6vNcfJGJ1PNIbm9p
+         uaKM0Ey9ix0u0D5zYzawaOBbIPhuhMFrYlb1wx2j9uPUuAgii9W4bVK4NmaUGQv9F8Wz
+         b2khnGKllKl54ti2b5vIRPgP0it6+TsBOucMvtLhZLHprCaEhP8+xWkpvzcI7fRL/3+g
+         0+ZrIbyY/iw1jwh5q9Dmmc1VWIafZwGP6tSk9Xk2b+m7egI3iUhuZeAvgZ9SDXt3afnY
+         05rtubUVOetijS8auoxAv/fOwROh4zhQNLAuknufdeffqkSa3ZaAzpC3TqJBPY5xGJBa
+         rrzQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708609179; x=1709213979;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ot075bt4dL2yU2q8AQheh13hrjTH3TbPeTjQMwROOT0=;
+        b=jf8P1lPXR/EVCbawmNBnfcT5QXhO5S3dKAkhR3m36mh40ivIIrAT7lGct815LzoilM
+         qCyRlWzp0M3TalGIvHTQDueDnJD900RCBOV6t3HzFXp3OaRR4PzhS1Q0RQFoXMMpXQZ0
+         O91R0AJy971CzQrar4bTFj32IPp8WpQLBalqrOGsW/X6dzYHZrBISYhH1kDYb3kIQYuE
+         GYmWyj4NMBnfOXCln1yeQzUU1H5zdQ8RKWYzZHoVfGlNzPC7SRBpJfD+aIRTnsCDcNTO
+         KN9hqC2CK3ypCRPLgaSMH6TR8gs3vvlW8Tc0wAQ3iI7KGtHg0+TNCPZ6xqZwW+eJmRJy
+         Uf0Q==
+X-Forwarded-Encrypted: i=1; AJvYcCUl7eoaAIPq8bcsY0BZej9gU7C8pMcg8Js1PuMG8lV5Q1TTNOJbNAdrKBloRFj08L6SjPT2YgcjI6ZfOhZREU1b9/dEsVpMqGm9ZA==
+X-Gm-Message-State: AOJu0YzyxTYZV5IcKa0bj8EG9g3jW58H0YGO1MBoVIsc2NOI+o4YV7R1
+	+P/P8jDLplRd/Nc3CFIfzXaONqUy2S1MNjGA/qTSdFgk1KqOx9QrEDKw5FpOUjlbXGeuae/YYmR
+	knmNlAZs7GjCGITlhTXnLr7IXhy1lTi8g30NOfmWcr9nCJ4fI
+X-Google-Smtp-Source: AGHT+IFZtozQgLnZSq/aH8P23J7/6o8CVysT8RBQdne/QMOV9qfinq79EPXNSg0bnQRk8ybAJeKCRCfKp2wiRCw5cxc=
+X-Received: by 2002:a05:6102:1989:b0:470:5648:7070 with SMTP id
+ jm9-20020a056102198900b0047056487070mr10593189vsb.21.1708609179138; Thu, 22
+ Feb 2024 05:39:39 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md6d19hhySFti+vSLV9pfyzuHNUDmHN_XYV73uCWDAY7w@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com> <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com>
+In-Reply-To: <ZddOKTP73ja6ejTc@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 22 Feb 2024 14:39:28 +0100
+Message-ID: <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in gpiochip_add_data_with_key()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 22, 2024 at 02:30:03PM +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 22, 2024 at 2:28 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Feb 22, 2024 at 10:48:00AM +0100, Bartosz Golaszewski wrote:
-> > > On Wed, Feb 21, 2024 at 8:36 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-
-...
-
-> > > > +       while (desc_index--)
+On Thu, Feb 22, 2024 at 2:37=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Feb 22, 2024 at 05:33:59AM -0800, Bartosz Golaszewski wrote:
+> > On Thu, 22 Feb 2024 14:25:24 +0100, Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> said:
+> > > On Thu, Feb 22, 2024 at 10:37:06AM +0100, Bartosz Golaszewski wrote:
+> > >> On Wed, Feb 21, 2024 at 8:28=E2=80=AFPM Andy Shevchenko
+> > >> <andriy.shevchenko@linux.intel.com> wrote:
+> > >> >
+> > >> > After shuffling the code, error path wasn't updated correctly.
+> > >> > Fix it here.
+> > >> >         gpiochip_irqchip_free_valid_mask(gc);
+> > >> >  err_remove_acpi_chip:
+> > >> >         acpi_gpiochip_remove(gc);
+> > >> > +       gpiochip_remove_pin_ranges(gc);
+> > >> >  err_remove_of_chip:
+> > >> >         gpiochip_free_hogs(gc);
+> > >> >         of_gpiochip_remove(gc);
+> > >>
+> > >> This undoes machine_gpiochip_add() and I think it also needs to be
+> > >> moved before acpi_gpiochip_remove().
 > > >
-> > > What about gdev->descs[0]?
-> >
-> > What about it? :-)
-> >
-> > for (i = i - 1; i >= 0; i--)
-> > while (--i >= 0)
-> > while (i--)
-> >
-> > are all equivalents.
-> >
-> > The difference is what the value will i get _after_ the loop.
-> 
-> Ugh of course. But the first one is more readable given I got tricked
-> by variant #3 at a quick glance but the for loop says out loud what it
-> does.
+> > > You mean it should be like
+> > >
+> > >        gpiochip_irqchip_free_valid_mask(gc);
+>
+> > >        gpiochip_free_hogs(gc);
+>
+> But should it be here...
+>
+> > > err_remove_acpi_chip:
+>
+> ...or here?
+>
+> I'm sorry I really need more (morning) coffee, maybe you can simply updat=
+e
+> yourself or submit a correct fix?
 
-I disagree. `while (i--)` is very well known cleanup pattern.
-Less letters to parse, easier to understand.
+Ok, I'll apply this and send a fix on top of it.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
