@@ -1,93 +1,110 @@
-Return-Path: <linux-gpio+bounces-3705-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3706-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C10FE861151
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 13:16:13 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 19D45861174
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 13:27:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7DE60286549
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 12:16:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BEC0F1F2237F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 12:27:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C5E2A7B3FB;
-	Fri, 23 Feb 2024 12:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEA177BAE6;
+	Fri, 23 Feb 2024 12:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwAAV5G0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iZSQ/HTX"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 694D75C90C;
-	Fri, 23 Feb 2024 12:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F7FE7AE78;
+	Fri, 23 Feb 2024 12:26:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708690564; cv=none; b=FVE5LOxGkozSS8G1bjL1zpWdyLLMpu4teT7RGtw+U4m549lJVnCJt740e/JMyiEV+CuzldpvV2+JGYn15JMvrntuCCc6mS1CEm352HopHiTNNJiR7lo0e/Nxi0/40MCsmmgVG9q6pfmzkQ1XqwtzeaoeH6uxdD/CrCXkxaDgWys=
+	t=1708691213; cv=none; b=OdrTM2kuD2TxOriE+0KUooVEZoTh59RjIDk+IGLQcP9eIXzfyWuY4yUuXLEakiGuzUr+wTWzqAaGnCRiSV7TmfmsZFZukSIwLfq48DEJsdxlYPu0Og0AAMMh+NUW9uXoG5hHTC6G1/QzwNfERVlC7bhGQoWVD719r/brFM4edNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708690564; c=relaxed/simple;
-	bh=JCFDC8egWyXQb7HABdNFJAfvo0AUNIyjCWnepDQI21c=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=CKtNHIMj9xNxddcNQ4oHyJlR3Q4GVE5xdoaLOsfUnJGAEyc8T6ohTBNwqj5p2DnhODOyxCFz0ymCb5T12+qMDE/Y+hN93lSB4XUwkRCDjCV7KPT8DBEgn7r+vr94bwDkbH5+q7FWRHvYJbPQAzXmVuB5XhKoJVWQ2bRl74RthWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwAAV5G0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02934C433C7;
-	Fri, 23 Feb 2024 12:15:57 +0000 (UTC)
+	s=arc-20240116; t=1708691213; c=relaxed/simple;
+	bh=m//cWAePIv4cTZDYri/URPe8qx3PAjrr8Fa4bEJ/jYw=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tDvMr1CYg2iRmhgQQJpJsM7baarWswrpTbR6W3u+K6Wacdi2TzHaVghlyC9Z1/HfeS9LHCAthrqIyHcLbUmaqe/SgimNuz5CkyF/7axPgoN7gJag7W6F9365gyE8+q9yvVxL/23TJ3WEYVjJgJt0jmkjNeO6NzRjjJxIlWTpWIM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iZSQ/HTX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BB87C433C7;
+	Fri, 23 Feb 2024 12:26:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708690563;
-	bh=JCFDC8egWyXQb7HABdNFJAfvo0AUNIyjCWnepDQI21c=;
-	h=From:To:In-Reply-To:References:Subject:Date:From;
-	b=iwAAV5G0xRLinAtkNwS/UDub21NcNA/YD1kSoIhSJS+aJCIHz/rumU3D1Lenn5wnk
-	 HkGxD26tSsFekC+CXQG5DAxyM5Nzw7ypVnkoX0qMWTFo45T7vyZh1ulJdmcw6I6vSI
-	 UJ6q6aPRVM14waxuS1UmjG5fRjGbU95J8syQO6PWLp28QwLU5RigoqYeGbzTnehotR
-	 OZnD6ewlC3ECto1MNL2V+wyAZ3smxhQ8ivngTmijPejLtLKy0AU+B7T3E2jt7ju1IV
-	 UjCjpAXG60xgL49D4fBUMAYJ90iueYRNijtk1m0BQrN7+M/KilrjgPT1EIM/oblm0X
-	 /pGqEA5bFmyQw==
-From: Vinod Koul <vkoul@kernel.org>
-To: Kishon Vijay Abraham I <kishon@kernel.org>, 
- Chun-Kuang Hu <chunkuang.hu@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Jonathan Hunter <jonathanh@nvidia.com>, 
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>, 
- Linus Walleij <linus.walleij@linaro.org>, linux-phy@lists.infradead.org, 
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
- linux-kernel@vger.kernel.org, linux-amlogic@lists.infradead.org, 
- netdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-mediatek@lists.infradead.org, linux-arm-msm@vger.kernel.org, 
- linux-renesas-soc@vger.kernel.org, linux-rockchip@lists.infradead.org, 
- linux-samsung-soc@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-tegra@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240217093937.58234-1-krzysztof.kozlowski@linaro.org>
-References: <20240217093937.58234-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] phy: constify of_phandle_args in xlate
-Message-Id: <170869055762.530534.10335046810476136989.b4-ty@kernel.org>
-Date: Fri, 23 Feb 2024 17:45:57 +0530
+	s=k20201202; t=1708691212;
+	bh=m//cWAePIv4cTZDYri/URPe8qx3PAjrr8Fa4bEJ/jYw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=iZSQ/HTX2hNdNLIy3vkQ2Mhcy7B3AcZ4GJzTIslwj7FQ9QGqb8MtlDta23N9Vwe3y
+	 lrts2nTwptGS/hOtaF7+eA6l3i8xvLLu6d2mb9F1zdiv+n1cHntDc/nedbnOWYAeuB
+	 01Ncv/gZk50JdISyyt5DYanwA69wt70ASDNE7D21By/0wkVq8FBhYVnPDaioShYGTT
+	 ln5E16eNjwSVj0tLN6ftkdewOjFQZiPXKGfRPY3lmXnP/RZL27ltagxjwOgUiJUg0D
+	 SOg1MY5nYbXlOq/NQKd0Zr7V5psWedQv0i0fHhCIfcRvzKR9DryEmp+ZWCkAftnTkP
+	 jlPDUqkd21I/w==
+Date: Fri, 23 Feb 2024 13:26:41 +0100
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: andy.shevchenko@gmail.com, George Stark <gnstark@salutedevices.com>
+Cc: linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Matti
+ Vaittinen <mazziesaccount@gmail.com>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Lucas De
+ Marchi <lucas.demarchi@intel.com>, Oded Gabbay <ogabbay@kernel.org>, Thomas
+ =?UTF-8?B?SGVsbHN0csO2bQ==?= <thomas.hellstrom@linux.intel.com>, Maarten
+ Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard
+ <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, David Airlie
+ <airlied@gmail.com>, Daniel Vetter <daniel@ffwll.ch>, Aleksandr Mezin
+ <mezin.alexander@gmail.com>, Jean Delvare <jdelvare@suse.com>, Guenter
+ Roeck <linux@roeck-us.net>, Pavel Machek <pavel@ucw.cz>, Lee Jones
+ <lee@kernel.org>, Sebastian Reichel <sre@kernel.org>, Matthias Brugger
+ <matthias.bgg@gmail.com>, AngeloGioacchino Del Regno
+ <angelogioacchino.delregno@collabora.com>, linux-gpio@vger.kernel.org,
+ intel-xe@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+ linux-hwmon@vger.kernel.org, linux-leds@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH 1/2] devm-helpers: Add resource managed version of mutex
+ init
+Message-ID: <20240223132641.3e2ba16c@dellmb>
+In-Reply-To: <Zde_s8iecR2ArKjC@surfacebook.localdomain>
+References: <20240222145838.12916-1-kabel@kernel.org>
+	<Zde_s8iecR2ArKjC@surfacebook.localdomain>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.12.3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
+On Thu, 22 Feb 2024 23:42:11 +0200
+andy.shevchenko@gmail.com wrote:
 
-On Sat, 17 Feb 2024 10:39:37 +0100, Krzysztof Kozlowski wrote:
-> The xlate callbacks are supposed to translate of_phandle_args to proper
-> provider without modifying the of_phandle_args.  Make the argument
-> pointer to const for code safety and readability.
-> 
-> 
+> Thu, Feb 22, 2024 at 03:58:37PM +0100, Marek Beh=C3=BAn kirjoitti:
+> > A few drivers are doing resource-managed mutex initialization by
+> > implementing ad-hoc one-liner mutex dropping functions and using them
+> > with devm_add_action_or_reset(). Help drivers avoid these repeated
+> > one-liners by adding managed version of mutex initialization.
+> >=20
+> > Use the new function devm_mutex_init() in the following drivers:
+> >   drivers/gpio/gpio-pisosr.c
+> >   drivers/gpio/gpio-sim.c
+> >   drivers/gpu/drm/xe/xe_hwmon.c
+> >   drivers/hwmon/nzxt-smart2.c
+> >   drivers/leds/leds-is31fl319x.c
+> >   drivers/power/supply/mt6370-charger.c
+> >   drivers/power/supply/rt9467-charger.c =20
+>=20
+> Pardon me, but why?
+>=20
+> https://lore.kernel.org/linux-leds/20231214173614.2820929-1-gnstark@salut=
+edevices.com/
+>=20
+> Can you cooperate, folks, instead of doing something independently?
 
-Applied, thanks!
+Thanks Andy for pointing to George's patch series.
 
-[1/1] phy: constify of_phandle_args in xlate
-      commit: 00ca8a15dafa990d391abc37f2b8256ddf909b35
+I can drop the mutex_init() part and add just the debugfs part.
 
-Best regards,
--- 
-~Vinod
-
-
+Marek
 
