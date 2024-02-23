@@ -1,128 +1,120 @@
-Return-Path: <linux-gpio+bounces-3716-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3717-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 820B5861460
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 15:45:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id F1FCC8614DE
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 15:55:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 237521F24ADB
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 14:45:10 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F7BD1C20F1D
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 14:55:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B17A8225DE;
-	Fri, 23 Feb 2024 14:43:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF5526E600;
+	Fri, 23 Feb 2024 14:55:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJPJf7Ly"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Qjq69VVG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AECD06FBD;
-	Fri, 23 Feb 2024 14:43:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFB7D2E412;
+	Fri, 23 Feb 2024 14:54:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708699409; cv=none; b=akyLwywmAZNelv9kaYytZTTm4BClgIkDF1EE79HMedYBeo7HdR9zavCnlHszOGVyvzTBdzDREpXOw6ZQi3oBmdivEewUrtDHFnhrJWTXuQeEtYqqrwrrKo4XjCSg5CWg5C05C0MSTqhKKrNEVd+MBnraOZsQ4ZeSu1OE4mjbSwc=
+	t=1708700101; cv=none; b=XKdy50ZNyas/rMnfLDTrO/K+28GSdqWagYUKFT+/SM88VKZge3US1WM3CdT5bg9+cwc6zeIrFWZkNFtMuQbjl+cSrlN7tQpKQCrGL4jXxXuVYWJYWH9oR7i8XIZ8FrgjNWu9gYLRiIBmZooKjSQOXsPDREoL0dhQK2glBVw23gU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708699409; c=relaxed/simple;
-	bh=DEMIQOvydhZ/VpnCranobldgWGcw+Pq5Nukc/1RDlVc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y2C9tZwVy7f/yIGSMW4jYErnTacdmdsMlt93jhK29d8pNZQD9E8Eyz7K0l6ZP/cb1deQvXZAHM5upDzutRo6vaWH5MOmE9K4IunT5E6Xf6MuTGy/ESQPZ6j22xy9DyHNNrp3FvHmblRp9Dfe0Eh2qxEMsXP0rZ+qwS0LYW1uEtY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJPJf7Ly; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5643eccad0bso1373194a12.1;
-        Fri, 23 Feb 2024 06:43:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708699406; x=1709304206; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IRQuvAZAPsUv3dwxMyD+E+7cfGvNoyt2/LH5pgsTUnE=;
-        b=cJPJf7LyBc8vjzfhUn8A/vr1Gv6jGe9Wct57Z5HhdTzzsODeAJOXCBPQsLFUMurlrB
-         OJnuNDaYJCI9yXc7J/g+bCw2WGtZp9jk6BQy9drQsAXo8hgAtLVotjbez2J3+nkAxBmo
-         rs8gfQWOe8ynrspIMA/P2KZQ7BAvFO35C4oBE78LtLbOxmt3kbuFK03Kq7cWpDcQLUIf
-         mldC5E4hG0oIkobAoL/7iHHpHM94yUMCEQGpRNvdAOX2EXN2A3MD3x4r3urPAqVCo/sf
-         w5ArcWzU8oKFaIUZRwu5Fuf8WzNi3ifATTmgYHaLmvagmWMtKCof0LezCniTVo3jZAiJ
-         6O/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708699406; x=1709304206;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IRQuvAZAPsUv3dwxMyD+E+7cfGvNoyt2/LH5pgsTUnE=;
-        b=bqBgl16jc1bMjyWpGONnVSlZ0HUNIRXQdjKSqB+g8ruCeuXmpHytq/Y9nopRctJkvV
-         xKsqT4G3OOfH8ikb4FgOKskLfzUhUjawh3ywnd45TDv49fxVWdJH1+0MRQp/jLEFSsvn
-         LpsjD34dU6kInoBKHhz2ELireInWOFrfxpJAeUANvw5K4KiAjrr0Lq3KxNqN8Vid2qMt
-         VTtaNrCXjmhc41OS9hrpxr2pBO4qwC5SYLwgjK1joJiYkifei9Y8baqnnM5+iHoBERRT
-         K6NXjoGHqyI/1Uwk23lPzSdGvtu1YkJSQjPym9z8DU0gH/OdJyfSiZMYxvMTIkXMKgQE
-         JF3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWe0UFflyxrGNqc3t5XUVCNhCEH50VUEoTZ77GdGkz9xFb8x1zr9qvoVJYtN19f5MZRqHyvfz75xxwk/kLIArwsAOErpdoNneU6H/Hvu4/rkGaPNrN/RAEY84CgxOuk8NtnVZdPHM/MnROWtla7C0SUSBOXmYmaeeSM4XF4z4FPm31T2swKLDgUmrIseArPGm5hqpzrLS4yRIbJdrXnFq0=
-X-Gm-Message-State: AOJu0YyCXw48KKsv9bAi0qEVhdMrUCU4HlNKPTCSHUP/ChWD7wX3Gxpk
-	Qjig6X3o7b5mKO/Ae5+fy5LZS4rWUD7tZ9wAUylTIoalOCEAw1yLbnF2KSnINwmNpGxJsj01kcM
-	cfF4fgXnT/jMqi7eldklHYpXCi0w=
-X-Google-Smtp-Source: AGHT+IGiHiAkfrKtroFs848fr9GZTa3NoU86QtnnJ6tiFG1Z8p16HIHWpUfwHXBT5/jFD1kjrOBJqL8PGK2y1xsRPQM=
-X-Received: by 2002:a17:906:1310:b0:a3d:a63f:2db0 with SMTP id
- w16-20020a170906131000b00a3da63f2db0mr19511ejb.28.1708699405892; Fri, 23 Feb
- 2024 06:43:25 -0800 (PST)
+	s=arc-20240116; t=1708700101; c=relaxed/simple;
+	bh=016ptIL+36Fqn6wZg527d8XvKapiTDOVTK62tuSAE4A=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Z4m8VoVEZFeK2X01SnocDq+75dqCuWqEXOo69PIjQvwCYruxzMR7FEYh8Em84mQRPqvgClHGexeTlfhpLpLO8fbHV9lcWIsEw42GT4TpsUYVbOHRMhQ8OuvbpRHUHVY2e1DPZSAiOKTURSwDxRkYIbfGjVPvTqPW4uhMRYuJ8Tc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Qjq69VVG; arc=none smtp.client-ip=192.198.163.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1708700100; x=1740236100;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=016ptIL+36Fqn6wZg527d8XvKapiTDOVTK62tuSAE4A=;
+  b=Qjq69VVG1fF92RVCB2tBEbcu6H8ns9eWeyOOXp8d9LCHXBJ9yPHXVgME
+   elBMhIrP/1mwfqFgKsQh4FD1wRfoBbS1uJ5Srbz4vzruWyQ5mQNb48s4O
+   FTd9ZgDfA7/r5nWfCgpaNTQF3ABHTKkodVndXiNr96Wl2cPHt3KC33Jfm
+   5ldBGIxdLwAwqMnmyKpJBCB8Drc0GobP63S0LYtGbxBPcYKRTN8kn10C/
+   wguHCdhnD2+cPfJkxA8Yq2lLnjOF6cdhKxp6UPCsPfrtoRkuOq1Zsa0U1
+   v3iy9E2DOYvTNevsEM3kp3QDCF9DMTg2qnrP2XRiPgpxr2CcElU6VCuc7
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="3524538"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="3524538"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 06:54:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10993"; a="913748193"
+X-IronPort-AV: E=Sophos;i="6.06,180,1705392000"; 
+   d="scan'208";a="913748193"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Feb 2024 06:54:57 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rdWww-00000006vZO-1jiF;
+	Fri, 23 Feb 2024 16:54:54 +0200
+Date: Fri, 23 Feb 2024 16:54:54 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Saravana Kannan <saravanak@google.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Android Kernel Team <kernel-team@android.com>
+Subject: Re: [PATCH] gpio: sim: don't fiddle with GPIOLIB private members
+Message-ID: <ZdixvgZaW0-95zc8@smile.fi.intel.com>
+References: <ZPWcTMPiu4MSq+F7@smile.fi.intel.com>
+ <CAMRc=MfZv70FXHyNw4yK90NL5-jjAJa6qbKc6SV2ZwbaJkKQqg@mail.gmail.com>
+ <ZPWmDL6QJJMNi2qa@smile.fi.intel.com>
+ <CAMRc=Mc0JgPUEpaes7WcbkMu5JyrpLW8N1+bM-+OJaB+pPX4ew@mail.gmail.com>
+ <ZPWr3dRP5C1GSY9F@smile.fi.intel.com>
+ <CAMRc=Mfae+=HPPWzsG8bgK2CGOGY9GPkS5VZcwLyr_yY8A_y2g@mail.gmail.com>
+ <ZPWxbfHNOqAnkR09@smile.fi.intel.com>
+ <CAGETcx9wERf-R4=r_jBYpYgGHSxS=-xx_ydeVWZdGUvEWTQwzg@mail.gmail.com>
+ <ZdXzxY3-g7oY00Mq@smile.fi.intel.com>
+ <CAGETcx92GgwBpd58dLgquLFxqXiHK5QHGK3Rhkd9pC_4p7Ra6w@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223133758.9787-1-mitrutzceclan@gmail.com> <20240223133758.9787-2-mitrutzceclan@gmail.com>
-In-Reply-To: <20240223133758.9787-2-mitrutzceclan@gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 23 Feb 2024 16:42:50 +0200
-Message-ID: <CAHp75VekP4fJPxcZeQVXypDDrQT1i9CtesN2R4TtiYxxpQr44A@mail.gmail.com>
-Subject: Re: [PATCH v15 2/3] iio: adc: ad_sigma_delta: Add optional irq selection
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org, 
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, 
-	Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, 
-	Niklas Schnelle <schnelle@linux.ibm.com>, =?UTF-8?Q?Leonard_G=C3=B6hrs?= <l.goehrs@pengutronix.de>, 
-	Mike Looijmans <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, 
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, 
-	Ceclan Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAGETcx92GgwBpd58dLgquLFxqXiHK5QHGK3Rhkd9pC_4p7Ra6w@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, Feb 23, 2024 at 3:38=E2=80=AFPM Dumitru Ceclan <mitrutzceclan@gmail=
-.com> wrote:
->
-> Add optional irq_num attribute to ad_sigma_delta_info structure for
-> selecting the used interrupt line for ADC's conversion completion.
+On Thu, Feb 22, 2024 at 05:01:04PM -0800, Saravana Kannan wrote:
+> On Wed, Feb 21, 2024 at 4:59 AM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Tue, Feb 20, 2024 at 05:46:27PM -0800, Saravana Kannan wrote:
 
 ...
 
->   * @data_reg: Address of the data register, if 0 the default address of =
-0x3 will
->   *   be used.
->   * @irq_flags: flags for the interrupt used by the triggered buffer
-> + * @irq_line: IRQ for reading conversions. If 0, spi->irq will be used
->   * @num_slots: Number of sequencer slots
+> > Is there any _good_ documentation for devlinks and all that fields in the
+> > struct fwnode? Why should we use that without any understanding of the
+> > purposes of that field. We, as device property developers, hadn't introduced
+> > that field and never required it. It's an alien to device properties APIs.
+> 
+> If I add some inline documentation for these fields, will you be more
+> open to letting people use this as a way to look up devices? I'm happy
+> to do that for you.
 
-Now kernel doc order is unaligned with the real member order.
-Moreover, have you checked with `pahole`?
+I consider documentation patches to be always welcome. But it doesn't mean
+we allow to use that fields in device property APIs without a very good
+justification.
 
->  struct ad_sigma_delta_info {
-> @@ -60,6 +61,7 @@ struct ad_sigma_delta_info {
->         unsigned int data_reg;
->         unsigned long irq_flags;
->         unsigned int num_slots;
-> +       int irq_line;
->  };
-
-But no need to resend, it's minor and Jonathan can probably amend this
-whilst applying.
-
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-
---=20
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
