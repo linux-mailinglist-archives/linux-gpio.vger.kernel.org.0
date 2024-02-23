@@ -1,119 +1,126 @@
-Return-Path: <linux-gpio+bounces-3722-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3723-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF7ED86199F
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 18:30:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E72C7861BD7
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 19:37:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E06BD1C218D0
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 17:30:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EEA8A1C2199A
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 18:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91CF71448CB;
-	Fri, 23 Feb 2024 17:25:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 74C7B86151;
+	Fri, 23 Feb 2024 18:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b="zZMJ2HuC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CkjhOTvS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa.microchip.iphmx.com (esa.microchip.iphmx.com [68.232.153.233])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9C413A867;
-	Fri, 23 Feb 2024 17:25:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=68.232.153.233
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E11D6142623;
+	Fri, 23 Feb 2024 18:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708709158; cv=none; b=VbF45MLiVFJG10iifuYdMTyf7nJDVrKnDVgpSIdi+lyb6vCQhoXNIFGOJ46veRiV6vhV8Sblvm2NvDT8rlq17he6dHwH5sI98Nq5YybXugtp2laVRB9C7HeR1/yIrJXCUIP3wX6Y2BGODwRton+KZXRjFYXuo6J+prJ74BblAog=
+	t=1708713445; cv=none; b=NrMsLq9P16Rc9XNVUt1xdyXFc+XrDZ0VDnX0czhHXVbrubgjua7WdXZq6LREPH0XSZIMLJ3gDQZhn5UxIfgPPCBpMCjRQDNKXg8AEEo46K2aPU0e/kkDuRX67Y0T6bCXkYp+QIB/qTs0fldF1DW3e23RIiepnL8pyAYf0EtX018=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708709158; c=relaxed/simple;
-	bh=g91B3meQdr4oVLlRU/qSl9oUcfHnjcbSkMBCurrIdyQ=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=L/8BQ6R5DvZzKQVvil7IIeMPQWf6Mi0dTVwA+eJxCsWSUWLJuffoOHFo9BRJANaKpJ4fUmLah7rgjAeeY89CBihpEYN47VOlMnw+xabeGu5bS5SYaJFyVHaWuBWxWT3W4684/vNljDuoUiF+a07od6vqVYtwxaLZMFIV12zQRuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com; spf=pass smtp.mailfrom=microchip.com; dkim=pass (2048-bit key) header.d=microchip.com header.i=@microchip.com header.b=zZMJ2HuC; arc=none smtp.client-ip=68.232.153.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=microchip.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=microchip.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=microchip.com; i=@microchip.com; q=dns/txt; s=mchp;
-  t=1708709157; x=1740245157;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=g91B3meQdr4oVLlRU/qSl9oUcfHnjcbSkMBCurrIdyQ=;
-  b=zZMJ2HuC1AQQASXst/7oYQn0ccrlHR4RQ8a7BUWq62cFnaCu6wnif2rj
-   u/sUxhE6vlH24M3mYYLu6J1TOFDzR3XCtjYOJjAkoGl/vJKP+/v70Bo5b
-   muWnjJtMcammzMrYNSeYn2AH6QH/zeBWnWi3xtkNzXwEBYpXD90+y1Zct
-   81E5BnQY16d24g8oh6ZUcoRHMjLOyGJ519PrXWl7nfXYSRQZush3OVS4V
-   327L/+t0eEWNpH0q6vnqIJeW3fNTYxIKhhWaywbcR7CDtQH2f7m4uAz0G
-   4DuM6GV1RgfXroZ8iVa3EQKrJDuOlBaG1x8NGNykqOAXAK1DBxaaTsgXp
-   Q==;
-X-CSE-ConnectionGUID: yqAR4j5MT/u3WWYb46nLgA==
-X-CSE-MsgGUID: RU5l/ePiSym6AdW8F3g4+w==
-X-IronPort-AV: E=Sophos;i="6.06,180,1705388400"; 
-   d="scan'208";a="247481346"
-X-Amp-Result: SKIPPED(no attachment in message)
-Received: from unknown (HELO email.microchip.com) ([170.129.1.10])
-  by esa5.microchip.iphmx.com with ESMTP/TLS/ECDHE-RSA-AES128-GCM-SHA256; 23 Feb 2024 10:25:55 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex03.mchp-main.com (10.10.85.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Fri, 23 Feb 2024 10:25:39 -0700
-Received: from che-lt-i67070.microchip.com (10.10.85.11) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server id
- 15.1.2507.35 via Frontend Transport; Fri, 23 Feb 2024 10:25:35 -0700
-From: Varshini Rajendran <varshini.rajendran@microchip.com>
-To: <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-	<krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-	<nicolas.ferre@microchip.com>, <alexandre.belloni@bootlin.com>,
-	<claudiu.beznea@tuxon.dev>, <linux-gpio@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <varshini.rajendran@microchip.com>, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Subject: [PATCH v4 09/39] dt-bindings: pinctrl: at91: add sam9x7
-Date: Fri, 23 Feb 2024 22:55:31 +0530
-Message-ID: <20240223172531.671993-1-varshini.rajendran@microchip.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
+	s=arc-20240116; t=1708713445; c=relaxed/simple;
+	bh=nWLj7BswiRY+Rv2cQNEaNmMcKyLWVAT8jPEEecfQQOc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RvZ2VNgq1mpIXqn0W5sTF3d9hGMG0u6isV03L/ptBd4FTrxJuNrmKG3E3l4Ol8jNR+1G6C+80B1rgPFSATyWkSRQ8umeBSeALai1LAb1E91MVZ1/2qtBJbNz8CKUpFH2ybe6ispkDIUKyVtreXgLPOBKm2XuI3UYuxN3Clprh+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CkjhOTvS; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30104C433C7;
+	Fri, 23 Feb 2024 18:37:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708713443;
+	bh=nWLj7BswiRY+Rv2cQNEaNmMcKyLWVAT8jPEEecfQQOc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CkjhOTvSBBf++VXQIYhFfweJ1MPu1fJ8pYKf7Of9FAZKLi6vxAdFNuojDYg2kioip
+	 /eOCLer7fG5l32WN78LkS98D/IIvzjIg6qYQavHo0s18bhCdnk5PkOW6KqDB2736sk
+	 FM78BVLa8xWb8QHZGFdbEBDTbfSo2zriYWnHTNYiW2g93wKsMO9c92du7fBiGNYlAn
+	 2wquJEcDctO2onWb5+lvUjeaZFHfRyYw0R/K0HYLsy2gc2C9Svd5ZTl/X2OqALHL65
+	 ANT5O9oWg57X/IolK/f9m+CTdhwikjmXEZXDPWlAhs6eG6Boq7gkAbSGY1T6wtfKft
+	 wyCWn6TIrzOOA==
+Date: Fri, 23 Feb 2024 18:37:12 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org
+Subject: Re: [PATCH v2 04/14] dt-bindings: mfd: ti,tps6594: Add TI TPS65224
+ PMIC
+Message-ID: <20240223-amenity-amaze-771541e8c9af@spud>
+References: <20240223093701.66034-1-bhargav.r@ltts.com>
+ <20240223093701.66034-5-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="m+6VddC4kf/ZkgtO"
+Content-Disposition: inline
+In-Reply-To: <20240223093701.66034-5-bhargav.r@ltts.com>
 
-Add device tree binding for SAM9X7 pin controller.
 
-Signed-off-by: Varshini Rajendran <varshini.rajendran@microchip.com>
-Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
-Changes in v4:
-- Updated Acked-by tag
----
- .../devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt          | 2 ++
- 1 file changed, 2 insertions(+)
+--m+6VddC4kf/ZkgtO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-index e8abbdad7b5d..0aa1a53012d6 100644
---- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pinctrl.txt
-@@ -20,6 +20,7 @@ such as pull-up, multi drive, etc.
- Required properties for iomux controller:
- - compatible: "atmel,at91rm9200-pinctrl" or "atmel,at91sam9x5-pinctrl"
- 		or "atmel,sama5d3-pinctrl" or "microchip,sam9x60-pinctrl"
-+		or "microchip,sam9x7-pinctrl", "microchip,sam9x60-pinctrl"
- - atmel,mux-mask: array of mask (periph per bank) to describe if a pin can be
-   configured in this periph mode. All the periph and bank need to be describe.
- 
-@@ -120,6 +121,7 @@ Some requirements for using atmel,at91rm9200-pinctrl binding:
- For each bank the required properties are:
- - compatible: "atmel,at91sam9x5-gpio" or "atmel,at91rm9200-gpio" or
-   "microchip,sam9x60-gpio"
-+  or "microchip,sam9x7-gpio", "microchip,sam9x60-gpio", "atmel,at91rm9200-gpio"
- - reg: physical base address and length of the controller's registers
- - interrupts: interrupt outputs from the controller
- - interrupt-controller: marks the device node as an interrupt controller
--- 
-2.25.1
+On Fri, Feb 23, 2024 at 03:06:51PM +0530, Bhargav Raviprakash wrote:
+> TPS65224 is a Power Management IC with 4 Buck regulators and 3 LDO
+> regulators, it includes additional features like GPIOs, watchdog, ESMs
+> (Error Signal Monitor), and PFSM (Pre-configurable Finite State Machine)
+> managing the state of the device.
+>=20
+> In addition TPS65224 has support for 12-bit ADC and does not have RTC
+> unlike TPS6594.
+>=20
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 
+Acked-by: Conor Dooley <conor.dooley@microchip.com>
+
+Cheers,
+Conor.
+
+> ---
+>  Documentation/devicetree/bindings/mfd/ti,tps6594.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml b/Docu=
+mentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> index 9d43376be..6341b6070 100644
+> --- a/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> +++ b/Documentation/devicetree/bindings/mfd/ti,tps6594.yaml
+> @@ -21,6 +21,7 @@ properties:
+>        - ti,lp8764-q1
+>        - ti,tps6593-q1
+>        - ti,tps6594-q1
+> +      - ti,tps65224-q1
+> =20
+>    reg:
+>      description: I2C slave address or SPI chip select number.
+> --=20
+> 2.25.1
+>=20
+
+--m+6VddC4kf/ZkgtO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdjl2AAKCRB4tDGHoIJi
+0tdzAQDrQK1Yfxs9DB42UTfX+yD9AkqCKl8eikfMYszRN8mbuwD/UGFsz0wfdaHM
+VB1hlmSMcvqWdZ6R+7SLQGN3+Mz7rAA=
+=HB/n
+-----END PGP SIGNATURE-----
+
+--m+6VddC4kf/ZkgtO--
 
