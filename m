@@ -1,121 +1,167 @@
-Return-Path: <linux-gpio+bounces-3724-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3725-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE11D861BDF
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 19:39:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28259861FDD
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 23:34:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BE231F28B94
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 18:39:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D8036288181
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 22:34:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5D9907D413;
-	Fri, 23 Feb 2024 18:39:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7365A1419B3;
+	Fri, 23 Feb 2024 22:34:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KmXLdPF1"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="WNubgYoW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1212D79E1;
-	Fri, 23 Feb 2024 18:39:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E22E208A2
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 22:34:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708713550; cv=none; b=oN11wqWV+7xh1HjlQOcUhOCcGSnYzDsmfWMLeI0NxtckB6tTfuQ2jovvdeQ86I+4behlHmidHwRUhAlEhFqMKnW7gSTchCt40MDOxCTueP5nmuHBz9xmWfX8M6uGTk4cell9fB3HjbWlCSQBFOeaVtsNEecFo3soVH1byUPDh+E=
+	t=1708727672; cv=none; b=DL2tw6ouplwNusZNmkRV5cHDhc3vZm9sSLL9T2y/Tt6CVlpzl/ksHoeqlHJ+JScKtyiRJWOR5Q9lxq00ZgTMelky0utg1SjSuwsgc45guHOn8PNOC7NuV22+CmzAKGBmNF2qdOO1TgAZ6sgTvNUBiC1cl10p9AfdiB5UqKG46ls=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708713550; c=relaxed/simple;
-	bh=QDS/QxStd3bhILl9B7Zw7Z+1WM5UW/bFXxfJUPfdC28=;
+	s=arc-20240116; t=1708727672; c=relaxed/simple;
+	bh=OjImI9nqJ8TO8TDyZt96kFcK0C88oOP70tesV0S+yBY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=D9gycRyjqdtgkK3PFf1mCefMk753zC9rbcLc4gV4bJYRe+mgnj0qFmuaeWjBhBn2yHX1T0DMpgks7n0XqgxI6HD6E5n7ZAx3qXDnh8FAy2Zq2Kl69XoRDbaTJcQUB2jxnLkJQ7hRokvCCOz3FRaW6n/ULVSg0EdeUHDP4y2TlTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KmXLdPF1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 239DDC433C7;
-	Fri, 23 Feb 2024 18:39:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708713549;
-	bh=QDS/QxStd3bhILl9B7Zw7Z+1WM5UW/bFXxfJUPfdC28=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KmXLdPF139JNdqBsbwivVNXxXpI8O4IIPi6oD0xfiNSYq44zT0Rz8ubUFARKtApGf
-	 q3pSXcAxybYkgEr13duA3JtvjKzdoYqObTgdoS+H6XbnEQcBkA5octcdFmZy53XgRT
-	 KSVo3ij20soSJdLjoMpPTiH+yeK1S6pTwpTpX5WNv7JDnATb70MayFu4SMQ6Y/+FhO
-	 odMh//gkqAQcP1SOIWRVLK0/YbTWOeZbqheIw85hPvGRMMRxPHPhfy2/e3dTJi7tzG
-	 o05+WaPfGsaOp7aq1n3FwTJHYoFtLofRBOra+WrRS3oDfjANP9eQXwJJxyOMMVYKcD
-	 EuIoyXOARrJ1g==
-Date: Fri, 23 Feb 2024 18:39:02 +0000
-From: Conor Dooley <conor@kernel.org>
-To: "Ceclan, Dumitru" <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
-	linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=j6/7yBvM9Y5hS/vUO6OH5pg7MlmTkoWl4k0ML46YR8z9zzMb3KzdaxfZGAw65U61EFq4XqjqUHMHoSPXDN+IVVNgoKOq+9EqLOL3DZ2CesLzV8+yuauysbSrjFrJV4CnrrxO58q8gVBR3DUm5i5ON9xknfcgqSzgrh/RunjEVCQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=WNubgYoW; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=2Wfh
+	FQ80HGIyU4EysZndPKnOpYN/Nd/vyMAbdv2H1oE=; b=WNubgYoWQFi11xP0oDRe
+	z/4cvJH7rLAtEdS7XwEDVqmGY3B/gf0rxuPUCi8SUmKE5NbqOBWwE3iLQxBm9z/Y
+	GEhlSWf36eGtjPd7KjFexqs64aymQbsRPCwOZcBC/7+QRUd4K/1mIjQ6nEUMx9JP
+	AeZM/fNoXKdT96q0u3GhKaPjI1i7SzrnuBKBsjMY7PuqTkzMIFucYW2sTxJNgjBh
+	kSBN6dzu658AL9eQEIOvM/8tXMt79XIyRdZtZrZXHw1xf+F5Z9tYhCEkfE1IKoFx
+	RAyhlfXSm1iJv2YG1wkKEE87gA9pf/lj9V9PaSZ4GoezXe+222K7unYyAizoWy0i
+	lg==
+Received: (qmail 380856 invoked from network); 23 Feb 2024 23:34:20 +0100
+Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 23 Feb 2024 23:34:20 +0100
+X-UD-Smtp-Session: l3s3148p1@CUgsKRQS0JEujnsZ
+Date: Fri, 23 Feb 2024 23:34:19 +0100
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Michael Walle <michael@walle.cc>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>,
-	Niklas Schnelle <schnelle@linux.ibm.com>,
-	Leonard =?iso-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>,
-	Mike Looijmans <mike.looijmans@topic.nl>,
-	Haibo Chen <haibo.chen@nxp.com>,
-	Hugo Villeneuve <hvilleneuve@dimonoff.com>,
-	David Lechner <dlechner@baylibre.com>,
-	Ceclan Dumitru <dumitru.ceclan@analog.com>,
-	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v14 1/3] dt-bindings: adc: add AD7173
-Message-ID: <20240223-verbally-morbidly-fba33804a8b4@spud>
-References: <20240222110817.29670-1-mitrutzceclan@gmail.com>
- <20240222-defeat-nearly-f83f8b920f51@spud>
- <f2fe30fb-3dd6-4190-8ca1-fc579a06f452@gmail.com>
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
+Message-ID: <Zdkda5jf072mENvK@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+	Rob Herring <robh@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
+	linux-sound@vger.kernel.org
+References: <20240222174343.3482354-2-robh@kernel.org>
+ <ZdemsdGQE0RtilCd@shikoro>
+ <CAL_JsqKpn6jqktRLQUx7HMrJG0PZeiOZ=hQnHpZK6AHcM22CLQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="x+fXBT8W8px1vHb6"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fF2R2D/X283ptnYJ"
 Content-Disposition: inline
-In-Reply-To: <f2fe30fb-3dd6-4190-8ca1-fc579a06f452@gmail.com>
+In-Reply-To: <CAL_JsqKpn6jqktRLQUx7HMrJG0PZeiOZ=hQnHpZK6AHcM22CLQ@mail.gmail.com>
 
 
---x+fXBT8W8px1vHb6
+--fF2R2D/X283ptnYJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 11:12:21AM +0200, Ceclan, Dumitru wrote:
-> On 22/02/2024 17:50, Conor Dooley wrote:
-> > On Thu, Feb 22, 2024 at 01:07:41PM +0200, Dumitru Ceclan wrote:
->=20
->=20
-> >> V13->V14
-> >=20
-> > I gave you an R-b tag on v13, conditional on the descriptions.
-> > Why didn't you take it? The only other relevant change is the added
-> > restriction on channel reg. Is that the reason you didn't take or was
-> > there smething else.
-> >=20
->=20
-> Just that change. Should I consider that change minor enough to include
-> a previous R-b tag?
+Hi Rob,
 
-Yah, you coulda.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > * In the schema, "clock-frequency" has a minimum of 1kHz and a maximum
+> >   of 3MHz. Why? The specs do not say anything about a minimum freq and
+> >   fastest speed mentioned in the docs is 5Mhz (Ultra fast mode).
+>=20
+> IIRC, the high speed mode originally topped out at 3MHz. I guess
+> that's been revised.
 
-Cheers,
-Conor.
+Hs-mode has a max of 3.4MHz...
 
---x+fXBT8W8px1vHb6
+>=20
+> We can drop the minimum.
+
+=2E.. but I see you changed min/max now to 1/5000000. That's what I would
+have suggested as well.
+
+
+> > * new binding "i2c-scl-clk-low-timeout-us" has a description which I do
+> >   not understand. What is a waiting state?
+>=20
+> Shrug. May have to look at the MPC h/w that uses the property.
+
+I will also have another look. My gut feeling is that the binding is
+okay, only the description might need an update.
+
+> >
+> > * new binding "no-detect" is broken. At the least, it should be named
+> >   something like "bus-fully-described" and then the OS can decide to
+> >   leave out auto-detection mechanisms. If you are interested in the
+> >   latter, you can simply disable class based instantiation on the host
+> >   controller. No need to describe this in DT.
+>=20
+> I've reverted the property now.
+
+Cool, thanks!
+
+Kind regards,
+
+   Wolfram
+
+
+--fF2R2D/X283ptnYJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZdjmRgAKCRB4tDGHoIJi
-0osAAQCHLJqEVz4+C/Eko08gRV6zbAXQVRSTDKtb5n7XHZPOkwEA48QgDHs5hj3c
-xHN2Bkw9otRKHyj0He3Vaqqmqm+h5gE=
-=ghJ2
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXZHWcACgkQFA3kzBSg
+KbYzig//S6LN1IJcbov4tQYqc0ld204PZ2cFEc0wE9p1z2ACiq71IoYiaESHLfjF
+8BndHnuZnCc4LsHNTnDVquUsM54mxypBiXdnBvmmKCrJUlnpDrwlVmRi1yQ0VuFP
+V2/zW4mOesb56puXSfua8Hsyp9M2qEGyjwJSdMMEozyQcBkLausobHQKbphvFhc6
+OAjp1HJvGb9kjrYRGpH6dbDPrk6efXcwKy3n63//ILBcmSloVfFbWgn8n3j7nk1I
+0EDdgRx4MDdz0leMRTlROjl7VtF+EdWeZ0OqIuZPGNxTuk5xXa3XII0bT9+tOBCA
+/c4eLMLua8keQnLJanHxIpcVYv982KNjJMfOaIOI6u0F7UsV6ZRLEQbmzuYE9QpG
+2mK37DgB4b8V85n6HwpXzZaiqOnzEFIJ70ZEDPkVhtEfcNjz5etDvwWomgiotfKO
+QajwbDm9F3R4FcO3EA8WgDR/dDv8cqCXjOfgFyUV9jjbbeDO5rVUMBGLoLSlv1+D
+ysOnVR1JSK6d4wtN6gbCMnzK6aAQPmgdZWq09P5sarNEfGJ3tv6ztUdcfDkoKsiJ
+xfRUrch+VMkrIMbshoICqlRyjtOPMSNpme1eClzMQgd6CDi0mBXJC6fWPmLYV6kS
+Spc1IA87hY7oYQH5LXdd0PwZs/2ulfzTdJ/m90bdPzfIifiVxn4=
+=ITPf
 -----END PGP SIGNATURE-----
 
---x+fXBT8W8px1vHb6--
+--fF2R2D/X283ptnYJ--
 
