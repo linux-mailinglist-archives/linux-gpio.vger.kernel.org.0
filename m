@@ -1,175 +1,231 @@
-Return-Path: <linux-gpio+bounces-3676-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3677-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78C9E860AFE
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 07:53:04 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 39148860B25
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:08:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 96BD61C224FA
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 06:53:03 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 88424B23068
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 07:08:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 77B3012E45;
-	Fri, 23 Feb 2024 06:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E84212E4E;
+	Fri, 23 Feb 2024 07:07:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Lc40NOQw"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="DXXe1wLX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR02-AM0-obe.outbound.protection.outlook.com (mail-am0eur02on2052.outbound.protection.outlook.com [40.107.247.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD7AE12B84
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 06:52:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708671178; cv=none; b=YJNPghKPUnIfC9DVeBKGMgDyoAHInC7g2OJPx5xzW4iLiybB/PVlxqzCthskWB/b1w9cC/4SALlcvw5/xuPgmu72VnqoQFimU2n212NmvDDtf2uiiAQZBjsvMlmo9KVeambtln9Wjm1tDoez2MZQqXxbR0EJxaHa/gqiGhube78=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708671178; c=relaxed/simple;
-	bh=LIf7/UyiE55q8WBoINf1R7JpFbQ0n7ltteZEC2U4/sU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CLU1yJMXv2yNPnijh1zsbLQIEXlo7zA104Li7NAW/KNM6YstyJ4wMBvcAQFCtSXlzW8mtoUB2foP0al0ntd3L9Z843fmZJGSa3cOExiQNcHI+z+4WBOWVtxJA6Szp8DdkkKK0nflW3wlIEqf284nkm7GB/mvEML3FprC54EIMxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=Lc40NOQw; arc=none smtp.client-ip=209.85.210.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e45d0c9676so25587b3a.0
-        for <linux-gpio@vger.kernel.org>; Thu, 22 Feb 2024 22:52:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1708671176; x=1709275976; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=4gjzC9xBa8ids+ZwVlsrtDEaW20Z5hUGx3X+FKF8NKY=;
-        b=Lc40NOQwHbtFQq8tE74Wk8JUd52KLsfq1BMS4+Xu3o4KaDnTDg8qsjy1QxZUacd0ig
-         mfurb6Tr0BJrECKFVXhKO2WIRMmfaYFsYII2ouyIDllGh2XbnW9B8xvM+K3Gk2sF1Dw6
-         MqIVQ83FCX/53MMwym13+hyVgkCcSfHW8Pths=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708671176; x=1709275976;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=4gjzC9xBa8ids+ZwVlsrtDEaW20Z5hUGx3X+FKF8NKY=;
-        b=fAwGXh5zk5sqE7+wy/2f7xNyO87Hjf0Q/QFk0Adunz9QxOJhnsKzhZ6bQ6zN8IXkvV
-         kHTzlXWZYE0IjNjmru6aZEeE0eBBfHctuGvPKlJPnvv7PuzfM+HmPGCepbUfcJSBBf5n
-         FCqnNj6n5o1L9bqT5WBK2PpapzUNK2qLBVIrO9/ZD58LR/au5g8RNbJdWJOwhhrZv/Bt
-         k1k769iMzdwOsSm3lZPVpPM3y6xPGD0uatGWJ/RrlRGROYnYf0JIVf1DQd4vZH7IA9Jy
-         XUqlW+wQxL9hq+vTTcyWtuSneOgYMwJKZKjC7aXaFtNT8hQPdzej7HCRJaKHWOjxWGu/
-         r1iw==
-X-Forwarded-Encrypted: i=1; AJvYcCXFyRVOutFb+z17Dd1kGAA1gHw2D50Q4yCxX7SJk+12f3rcRWvFKX0aMeqh44WD2YztjRyPJcAHEPBMQg+zxNF1WcXfM60avdd0tw==
-X-Gm-Message-State: AOJu0YwUvInyLe9h4GvaXriAscmawA1RzBOeBEMwp25/98LhfQG0Bz6O
-	BWhYKgu1xz0tyILHxIIiJngA54Jt0MQJSjrhLwIeruXTmItRHwXnb/C06DpV3Q==
-X-Google-Smtp-Source: AGHT+IHlR5+CoNwE9VM1shWvRZnE7a1WH2TFVG3mmZ38R/O/bus+HV20LdXYzOWaJPORoTFS8y80qw==
-X-Received: by 2002:a05:6a20:c90d:b0:1a0:85ed:4769 with SMTP id gx13-20020a056a20c90d00b001a085ed4769mr1660947pzb.11.1708671176002;
-        Thu, 22 Feb 2024 22:52:56 -0800 (PST)
-Received: from localhost (175.199.125.34.bc.googleusercontent.com. [34.125.199.175])
-        by smtp.gmail.com with UTF8SMTPSA id i5-20020a639d05000000b005dc4829d0e1sm11651599pgd.85.2024.02.22.22.52.55
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 22 Feb 2024 22:52:55 -0800 (PST)
-From: Stephen Boyd <swboyd@chromium.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14407BA2B;
+	Fri, 23 Feb 2024 07:07:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.247.52
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708672075; cv=fail; b=ff0QVhkmtDj/s0rdSsyXoTPW1/9zgIUhMenerbXqyY4Rr83youq5PuJmrfNY0Lvtt6JqKH1M4PBuQ3+uANsqZAGSSb0054jGx2fUzY9cnA45Cv1AFlZP7WTCKMq4bU0cSheFi0cR6tKuidmXZ1zxXKNFBPStWb4U3NZXxiuKR34=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708672075; c=relaxed/simple;
+	bh=8Bv0oK8F6aroOKnuNLzRXudE9KfmulfcYJtoc+wxGSU=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=TL9Se3lfy0qGVJ/aPePHi8Q3fuE/bQi0pE5dTPu0n+i6I9PHVlWVi+hYN+PUe8uFBn0rsURPxRXtklVIzbihFhMbdR+ZKyyIp6JF0nFvk8axxnKboVpF0HGsgyPTqf14wyJR8g5uA1nAZ7XL3EN8kW+30hjh9HRpUW/KUSQ+0yM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=DXXe1wLX; arc=fail smtp.client-ip=40.107.247.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jaYUZPklmxM426S03e5rp+fdy5+U9nlCd3hmx5E8K1iaQyGvhRTUcGKNYTGDZh6Q+/e8wC8NsS3n/xdsGoKboGBoXXKQSC403RNvZGq4oKi8VxmCK/ghCxTX+KOWQpymX5TYFE6NWh4nsTYZu0BFE76yUpsX0reKDog8JxpxM0WWNW+i8KYU1gNI7ZuSByv5RaKLhGaLgje37vuqJ2wC1nNI/kJr13//ZMzRHO8ZT8/ja1173vax5Jow0x77t849S7xiaP4xJ+zXyUGdnC87OIDX5cTRVfA7OeEcDOgMXfxttIkNw/fWwNkH7Tqk1LQ38QcKQrohjtHbwey/jp9bLg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2IULnDMdSt6WJwg+Taf/HHBWqcec6eoVyfZLSyNxiOU=;
+ b=W0l5ojqYZYfr+0ne9s22Ovl4X6u9b8G+JeLsgkuHyYA+NXIMcjC9AbgxuCTl0LiilUmLrR6Q23n/pBZaxosJmJhMKfPkYHntvEjLHwLRhwRXDWVlaUxk8X5m8j4IV1gG+CROFdUi0cxv11tfKN2acDlk7NNos/jQ+xgJ20uRXvZ7i+YbByU7kwNxn1XT4Ng+AgQccA6dqwlADGYLNT471Gh9T6TYkSAReRl8fnxBzGfJksUySIsy2QrgcH/+f3CUCERJu7hqw1Z0HmppmyaTvzNPZW+pn8aFcuAPugj5GMoTSzAC1TDKsONLKs31/wcl8JxW5W9kxnfWT3XPDa82Bw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2IULnDMdSt6WJwg+Taf/HHBWqcec6eoVyfZLSyNxiOU=;
+ b=DXXe1wLXTQWEAevCge0OFVCaBXxemN7ElIgSm14HRWTVERWMTiCabLZG8fy2xf5McRPjDwQOJsHGve63YfBbU/nIR6eH1JstVcCoBUoOk18OmFAV3R7tKm3nLPbXr+bL9cXOtUDwlO8BTbM8MQAH+f80/zmS6vHCJEER0wbofrE=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by AM8PR04MB8051.eurprd04.prod.outlook.com (2603:10a6:20b:241::17) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7292.37; Fri, 23 Feb
+ 2024 07:07:49 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::4ac3:3559:4200:38e1]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::4ac3:3559:4200:38e1%4]) with mapi id 15.20.7292.036; Fri, 23 Feb 2024
+ 07:07:49 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: sudeep.holla@arm.com,
+	cristian.marussi@arm.com,
+	linus.walleij@linaro.org
 Cc: linux-kernel@vger.kernel.org,
-	patches@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: [PATCH v2] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-Date: Thu, 22 Feb 2024 22:52:53 -0800
-Message-ID: <20240223065254.3795204-1-swboyd@chromium.org>
-X-Mailer: git-send-email 2.44.0.rc0.258.g7320e95886-goog
+	aisheng.dong@nxp.com,
+	nitin.garg_3@nxp.com,
+	ranjani.vaidyanathan@nxp.com,
+	ye.li@nxp.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] pinctrl: scmi: support i.MX OEM pin configuration type
+Date: Fri, 23 Feb 2024 15:15:57 +0800
+Message-Id: <20240223071557.2681316-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR01CA0005.apcprd01.prod.exchangelabs.com
+ (2603:1096:4:191::23) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AM8PR04MB8051:EE_
+X-MS-Office365-Filtering-Correlation-Id: 36d3bb90-ad0e-4a7e-800c-08dc343e250a
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	UiXob72qTnPXIxNQiZbiMMxVSu9diUm3BDxeg20LOpQGs2aCDvNS7wnIoZoNADbL1HfkEcg8tLAdctK4f/N7DJO+um0rZQR9SPJv4dkREJTfFpFJydqAxMXDJpfkASxYb08wXwj4hynF7e+Qyq90J1a7O406VLR5aDm4dL1kHwlumNFunSHEJrS2ljO+TcGpUUjJj74zB01o44wq0G/cGX0PyGkcLfJfrkBxNBAmiUCM2xRIBOi0NInhPKB7OX56wmdCIQXie0NG1QxEfanQk7gP4h7N/FeMlIly/9YCm+erPkjSEbbSzoJC/RduMze4zq+mEUFi38CYIqmCaJA9TBdr9aLWFGn9ou/fVy89ICgpRwddQv65KlTG3DDOetOHlg493nLyVl/j7ptsjRKpbTjHDa1Bb10mfMKjZdlyvJ+PhfnxvvDv0nSU5PyLOAsPdHt2zCfPdmjczVSWBQtUw6K0ATzlhS9X+bO1JhJGD6vemXP5lfYuJTL8dXnfaxPc1Q6jW4aOl+0jNR3i4ZZOqiCbhl7J16zGCmTIJp47eXTlX0KIl7p87uE+6GyUUVzLYXeBSBQu98oLw+Hvf7TejM69MAsgat9Q3KY6VU+8Yi4=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+OM36pD3QbzyHYZ3IznLtTdoGKE/bmdSBqyMgwnhnWyjx3huragDPd8vRoo8?=
+ =?us-ascii?Q?fGKvfJxlKIudKtdRUtES6Lbvl6V78En4L1DVhhLBdn8qn9XmKoxRMt1llurJ?=
+ =?us-ascii?Q?LtoMlulsuAF5jaMndFjMEc7zxMJGvuUkFSQMTf0xewbrySgNeVAcakbEVqOr?=
+ =?us-ascii?Q?RxXsuDOckDnNgaVuhmCUkiNNroj39frVwGFFTizoqFeD0BGBz5sCS8ffxwzg?=
+ =?us-ascii?Q?FhQENgnTkqcsqAYf4sSViuR7Vm7VfovVHYO3x6tkySuKYKHfY+jEuL0tchcJ?=
+ =?us-ascii?Q?XeZbMQAWZJnKkk3f+v44AEqHISJxTmS4hhMTYT60ihQ87m5NJurYcTFX28mJ?=
+ =?us-ascii?Q?1rlvl6kcmRffQ1Qy7RbGBAa0Q4x+X4UKpTqHyMotHX8AR5lwOi8QFCm46zKc?=
+ =?us-ascii?Q?to9a/uqQtqWUOQlY5KHUgMaebXPfLy5IMiXiFQW7/j4osECFQ14sGSDhAP/I?=
+ =?us-ascii?Q?YFrYCbrmqw3dz9Q0I6IDn5vRz3ZrQfhurykzu7GtMfGmPNrarQgPoYdZmlmU?=
+ =?us-ascii?Q?Rb4CV/tokipVc7PHzGm6y39yUgju6u5bGLJkXXQEFK0Op5DJRwvU0hBR0V6g?=
+ =?us-ascii?Q?ljDKYkTB7+KwH3OSggeN6Lh4jCkuulThp9ad3BD2spLq1TqaCi5XLeHFE7uW?=
+ =?us-ascii?Q?E1+4bdr6gEg2PTwCxGnomak5dvsRCj+RP7h1xXs4lic+knXQO9omNw1utiaQ?=
+ =?us-ascii?Q?kfxi27oxnmFX01gh48JvT+yBQTe1xDu61klIZcQAAJvUmCEPeARV8sIj+SYR?=
+ =?us-ascii?Q?q3ewgCBCM+/H28XELk88YEvH2m1/to+QwSIfygnUzZlAUu80HNJwTKyXVlJ4?=
+ =?us-ascii?Q?G0L3SyiYRRfvXBcUD8r9IdbIfr0uDfZyxsmZtGh2f/8boTF5ycMhFcbs8Xfy?=
+ =?us-ascii?Q?gI/hfWoAn1pxUQ+5cj/RKC9aT+cOC6EQoEIutorkAlJR2hXnBhXWXMhuDg0V?=
+ =?us-ascii?Q?+hrRUGvmbJH35ePyy7AlnVt4zeYDiYDXFXDNRZ1NoS8fw+AX9zE3qT/uqeRo?=
+ =?us-ascii?Q?y1vSUycXtLJ3CAOqJiQOwr50N7WSHddTICteVjicizACKmJl/po7UQjQM3OL?=
+ =?us-ascii?Q?fVrMyiYUBhDfNLBxo7HPKEXPM32T+3ffzYXTtja5Spbwu0aswbIuHLEWgLD8?=
+ =?us-ascii?Q?iOYrf6McbfZ5p+rahINo+a/ntfJh5pzeu8vb4PWahkzKJZ+wV5erpn087QnB?=
+ =?us-ascii?Q?E1AqnrjwMlCb1uJ/Mgwrqh/0hSyrsVfODbQxRGJ8onY9geQVlyPIhMBkAxn2?=
+ =?us-ascii?Q?BIwmvxt6lwyS/3qkUnehcRB5rTKdAV4SYEMu67ERa25zbYbPuA7pYmpZ78oK?=
+ =?us-ascii?Q?uh6illPd8EKx3XpZZ9rxr+1xNZANB5PNdK3o+T4dQWdgIWkl8EjeL7P6ryeA?=
+ =?us-ascii?Q?Rq+IHVtmFCXwkiYacsdn3JU69pE4R9v+9S5agQs0ZW/29SJKnVd6h+yVNb2P?=
+ =?us-ascii?Q?xwQm++n18sqZVxa4khe4uQolg49eeK+OMIf40Rg4Rj1g6hxwu0KdKAtPxpET?=
+ =?us-ascii?Q?cOmVGB9OYxIWHlit1f9LaTgHwtnb9u/gxsuFXpiMfYVKksJ92BFiQ3WmC1n2?=
+ =?us-ascii?Q?1gTdHQlGFVQjgfg7MfRvwDG80DfPUV9Zw51Z7jGy?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 36d3bb90-ad0e-4a7e-800c-08dc343e250a
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 23 Feb 2024 07:07:49.7566
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: FqEXUMXVUeEeM+ioSX0fP+Gd8i1KEpO6ampx3TrLeBkVgnqc0XZSOusoA0TMEI4QZJFykdwI8YUwq1GAYufqqw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM8PR04MB8051
 
-This devm API takes a consumer device as an argument to setup the devm
-action, but throws it away when calling further into gpiolib. This leads
-to odd debug messages like this:
+From: Peng Fan <peng.fan@nxp.com>
 
- (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
+i.MX95 System Manager FW supports SCMI PINCTRL protocol, but uses
+OEM Pin Configuration type, so extend the driver to support custom
+params.
 
-Let's pass the consumer device down, by directly calling what
-fwnode_gpiod_get_index() calls but pass the device used for devm. This
-changes the message to look like this instead:
-
- gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)' GPIO lookup
-
-Note that callers of fwnode_gpiod_get_index() will still see the NULL
-device pointer debug message, but there's not much we can do about that
-because the API doesn't take a struct device.
-
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
 ---
 
-Changes from v1 (https://lore.kernel.org/r/20240221015920.676063-1-swboyd@chromium.org):
- * Rebased onto gpio/for-next
+V1:
+ Based on https://lore.kernel.org/all/20240223-pinctrl-scmi-v4-0-10eb5a379274@nxp.com/
+ This is an reimplementation for supporting i.MX95 OEM settings.
+ With this patch, the dts will be like:
 
- drivers/gpio/gpiolib-devres.c |  2 +-
- drivers/gpio/gpiolib.c        | 14 +++++++-------
- drivers/gpio/gpiolib.h        |  8 ++++++++
- 3 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib-devres.c b/drivers/gpio/gpiolib-devres.c
-index fe9ce6b19f15..4987e62dcb3d 100644
---- a/drivers/gpio/gpiolib-devres.c
-+++ b/drivers/gpio/gpiolib-devres.c
-@@ -158,7 +158,7 @@ struct gpio_desc *devm_fwnode_gpiod_get_index(struct device *dev,
- 	if (!dr)
- 		return ERR_PTR(-ENOMEM);
- 
--	desc = fwnode_gpiod_get_index(fwnode, con_id, index, flags, label);
-+	desc = gpiod_find_and_request(dev, fwnode, con_id, index, flags, label, false);
- 	if (IS_ERR(desc)) {
- 		devres_free(dr);
- 		return desc;
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 3c22920bd201..cff4ac2403a5 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4187,13 +4187,13 @@ static struct gpio_desc *gpiod_find_by_fwnode(struct fwnode_handle *fwnode,
- 	return desc;
- }
- 
--static struct gpio_desc *gpiod_find_and_request(struct device *consumer,
--						struct fwnode_handle *fwnode,
--						const char *con_id,
--						unsigned int idx,
--						enum gpiod_flags flags,
--						const char *label,
--						bool platform_lookup_allowed)
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed)
- {
- 	unsigned long lookupflags = GPIO_LOOKUP_FLAGS_DEFAULT;
- 	/*
-diff --git a/drivers/gpio/gpiolib.h b/drivers/gpio/gpiolib.h
-index ada36aa0f81a..f67d5991ab1c 100644
---- a/drivers/gpio/gpiolib.h
-+++ b/drivers/gpio/gpiolib.h
-@@ -223,6 +223,14 @@ static inline int gpiod_request_user(struct gpio_desc *desc, const char *label)
- 	return ret;
- }
- 
-+struct gpio_desc *gpiod_find_and_request(struct device *consumer,
-+					 struct fwnode_handle *fwnode,
-+					 const char *con_id,
-+					 unsigned int idx,
-+					 enum gpiod_flags flags,
-+					 const char *label,
-+					 bool platform_lookup_allowed);
++#define IMX95_PAD_SD1_CLK__USDHC1_CLK(val)	\
++	sd1clk {				\
++		pins = "sd1clk";		\
++		imx,func-id = <0>;		\
++		imx,pin-conf = <val>;		\
++	}
+  ....
 +
- int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
- 		unsigned long lflags, enum gpiod_flags dflags);
- int gpio_set_debounce_timeout(struct gpio_desc *desc, unsigned int debounce);
++	pinctrl_usdhc1: usdhc1grp {
++		IMX95_PAD_SD1_CLK__USDHC1_CLK(0x158e);
++		IMX95_PAD_SD1_CMD__USDHC1_CMD(0x138e);
+ ....
++	};
 
-base-commit: 36e44186e0badfda499b65d4462c49783bf92314
+ drivers/pinctrl/pinctrl-scmi.c | 10 ++++++++++
+ drivers/pinctrl/pinctrl-scmi.h | 15 +++++++++++++++
+ 2 files changed, 25 insertions(+)
+ create mode 100644 drivers/pinctrl/pinctrl-scmi.h
+
+diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scmi.c
+index f2fef3fb85ae..e58f1aaf9963 100644
+--- a/drivers/pinctrl/pinctrl-scmi.c
++++ b/drivers/pinctrl/pinctrl-scmi.c
+@@ -19,6 +19,7 @@
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ 
++#include "pinctrl-scmi.h"
+ #include "pinctrl-utils.h"
+ #include "core.h"
+ #include "pinconf.h"
+@@ -472,6 +473,13 @@ static const struct pinconf_ops pinctrl_scmi_pinconf_ops = {
+ 	.pin_config_config_dbg_show = pinconf_generic_dump_config,
+ };
+ 
++static const struct pinconf_generic_params pinctrl_scmi_oem_dt_params[] = {
++	{"imx,func-id", IMX_SCMI_PIN_MUX, -1},
++	{"imx,daisy-id", IMX_SCMI_PIN_DAISY_ID, -1},
++	{"imx,daisy-conf", IMX_SCMI_PIN_DAISY_CFG, -1},
++	{"imx,pin-conf", IMX_SCMI_PIN_CONF, -1},
++};
++
+ static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+ 				 unsigned int *nr_pins,
+ 				 const struct pinctrl_pin_desc **pins)
+@@ -548,6 +556,8 @@ static int scmi_pinctrl_probe(struct scmi_device *sdev)
+ 	pmx->pctl_desc.pctlops = &pinctrl_scmi_pinctrl_ops;
+ 	pmx->pctl_desc.pmxops = &pinctrl_scmi_pinmux_ops;
+ 	pmx->pctl_desc.confops = &pinctrl_scmi_pinconf_ops;
++	pmx->pctl_desc.custom_params = pinctrl_scmi_oem_dt_params;
++	pmx->pctl_desc.num_custom_params = ARRAY_SIZE(pinctrl_scmi_oem_dt_params);
+ 
+ 	ret = pinctrl_scmi_get_pins(pmx, &pmx->pctl_desc.npins,
+ 				    &pmx->pctl_desc.pins);
+diff --git a/drivers/pinctrl/pinctrl-scmi.h b/drivers/pinctrl/pinctrl-scmi.h
+new file mode 100644
+index 000000000000..fcc61bc19c98
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-scmi.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright 2024 NXP
++ */
++
++#ifndef __DRIVERS_PINCTRL_SCMI_H
++#define __DRIVERS_PINCTRL_SCMI_H
++
++/* OEM VENDOR Pin Configuration Type */
++#define IMX_SCMI_PIN_MUX	192
++#define IMX_SCMI_PIN_CONF	193
++#define IMX_SCMI_PIN_DAISY_ID	194
++#define IMX_SCMI_PIN_DAISY_CFG	195
++
++#endif /* __DRIVERS_PINCTRL_SCMI_H */
 -- 
-https://chromeos.dev
+2.37.1
 
 
