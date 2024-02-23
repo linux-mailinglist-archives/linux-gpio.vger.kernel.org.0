@@ -1,117 +1,106 @@
-Return-Path: <linux-gpio+bounces-3678-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3679-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id DE5F1860CE0
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:34:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4C001860CF3
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:36:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BE191C24B78
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:34:14 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E6FB1281FB9
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:36:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E3A9B1A702;
-	Fri, 23 Feb 2024 08:28:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hspgkU4V"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A04F336AF3;
+	Fri, 23 Feb 2024 08:34:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f182.google.com (mail-yb1-f182.google.com [209.85.219.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C7518E1A
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 08:28:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.182
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 554E919474;
+	Fri, 23 Feb 2024 08:34:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708676906; cv=none; b=PkSBXHt/S2XIPtD8af2D1sc8uzLQi10nNGff8BBG8fdO3y+borVJF7HBuDoQNdTXs13ipCuftPo11O48VKhr7saPRYiGyeogZqn9DxBaT0SHTk24Vcr+WXqqxGDSaJPQcGxMUeV15iLiCMokSVl+YblPatBmz5oIbr5la9MFc0M=
+	t=1708677252; cv=none; b=YVT9CR/pCie/fpC8mIYgieQGm/AnyMtae4I4iyuKVAmJnTenBTdFCNaQhdgcMvGzt8WBmsIXvzSpJ5GbP53BaMUeK1cT7CFA2PaxElijocHiM26+RNQc/H5mSv9X/Fjcm8j/zPYa+WPZ7jyDXC+M2P5cS9OQduGbnGQsEKGor5M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708676906; c=relaxed/simple;
-	bh=8AiynCpe9xm6kQcOTCDN5hH0DOETixPNQfpGOskMMBI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J15o0ytTdwMaoK8FQK1E83a8G1neMxpEPM6D5Kq8vdJB4IJhgGLlXcv8iPEG2re9vGp6PL1DPgXIhIxgqX4gwS+A/SRXlYkfUAKwaywpxJSBW4HXhTkYVSh3HHe0ekW4wzmX93wX0u6FXuSe9iUJPlxI01a9HbLcupLZkFFSlR8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hspgkU4V; arc=none smtp.client-ip=209.85.219.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f182.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso111243276.0
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 00:28:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708676904; x=1709281704; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8AiynCpe9xm6kQcOTCDN5hH0DOETixPNQfpGOskMMBI=;
-        b=hspgkU4VuOYaCAYPBmvVF/+2R5JyzbNB2B/GRCJWBySrNNcG9uQ/mZQ/Oh7kpaFp8X
-         qPAxk4/A39k38ZhDtIbMoh2kByr/fcOQKvqqJfZzb867K8L0olDNFw71V0UAeP3aUxvp
-         aKXbmTeibIXNwTdIxJPzGDzt7M+L3lk+5STrThAdgXWVcJv62Wz96p2+3qg2tYCRK0X0
-         kbGA+w+b+2xbwsrgDZ/IFW1KjuLV3b9G2ZPoGNLsOrHFZdAAKuL8sL+yw4xvidIMk/Dz
-         UVPh21EP1q0ldgz56cbHLbWI5U+/yxHmkJmpF2g9d4U+dybUOlefuJO8K/HcouBSh2h6
-         R5rQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708676904; x=1709281704;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8AiynCpe9xm6kQcOTCDN5hH0DOETixPNQfpGOskMMBI=;
-        b=o5VC4ez+Dxg5HEVQOfYU5mUHKwFvMkYpCRxwR6M75VvywOmwIU7XJkZ9jQ2TjKd8Je
-         kWBgLQq7gcDhtxeY4H3YoMnb6WbhQOTgTZ6K4x5wqZn4uww24sLIlNoOopoKH83rsxhH
-         tHz2S9pjiB9iQBE0808aHOeo3qCJsjQQ2s2lwR/oML+BVhXo1nxK6f/HJfjWYQxn13GS
-         03KD5CcrRei/q+uY98EjVYqJPKEoEZrLV+hi/VCxfNJFBqaVaXQvc4gZEvKkUyFKYa9A
-         4wxqbLH6Tse9LL6+tFZ2i8t77zs4UueBW9ukDU/Z6IA4sl8LC5eBdJKOrcW1yPJ+ion6
-         n7mg==
-X-Forwarded-Encrypted: i=1; AJvYcCVjvCOTLV78nnENnPBe9FqDEzE6PTmgoTCnt8GuGd8foiX6Xy8whXt9RRFE+cYbiior9sBqszem2D2Gf6htoSmNKvzvil1TjGdmdA==
-X-Gm-Message-State: AOJu0YwH+Q+SrfDTuGsdzH9hPP90MX8GAdB1efZp5JKp3DKB+LGpCfZw
-	jJoo7nF9M1r8/evnvPBLvOhOUdHRSBY0aaaMt49e0k2RoZybm2XYC1TYKwgxtvw7e83XYqjeL6G
-	TV0dMlb1V64rumBT3CpkYAh5RtT9Yhj8mw3CAGA==
-X-Google-Smtp-Source: AGHT+IFZmfPy2te5fRsS6uPQOwURXMnZozqqnqYceFRPogHaB094n6NaUZkzBM6xsJv0mbIN5skNvcuRImnUSaccFbQ=
-X-Received: by 2002:a25:5f4b:0:b0:dcc:b69c:12e1 with SMTP id
- h11-20020a255f4b000000b00dccb69c12e1mr1538778ybm.59.1708676904144; Fri, 23
- Feb 2024 00:28:24 -0800 (PST)
+	s=arc-20240116; t=1708677252; c=relaxed/simple;
+	bh=/lW7ZmoooOy9fLc7q9dtxDneE+FqEHXGAYdnAzZbiw4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=T2ae4CLH3edxoYwsWd+AW0s3Ufz/8mpZSaz8hARVI32AA/Vgdo7R5yViGoZWOjmcEE3yx10+08HpN81zFccwSn+vad7whF1xCc/Lhxk7T/GT5TQ3V9DC7J9lZS14Iy+Zfs8FJTyZ9u+lJ8zjSX3hGSn60xI1Sv99NxdN8AwD86I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E439C15DB;
+	Fri, 23 Feb 2024 00:34:46 -0800 (PST)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 050E83F73F;
+	Fri, 23 Feb 2024 00:34:05 -0800 (PST)
+Date: Fri, 23 Feb 2024 08:33:55 +0000
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v4 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZdhYc90uy7yuYrx2@pluto>
+References: <20240223-pinctrl-scmi-v4-0-10eb5a379274@nxp.com>
+ <20240223-pinctrl-scmi-v4-3-10eb5a379274@nxp.com>
+ <CACRpkdZLuWwecacBAimT=Vj67dGabzBH-7aaqzoyj1B1sY6o_A@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-pinctrl-scmi-v4-0-10eb5a379274@nxp.com> <20240223-pinctrl-scmi-v4-3-10eb5a379274@nxp.com>
-In-Reply-To: <20240223-pinctrl-scmi-v4-3-10eb5a379274@nxp.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 23 Feb 2024 09:28:12 +0100
-Message-ID: <CACRpkdZLuWwecacBAimT=Vj67dGabzBH-7aaqzoyj1B1sY6o_A@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi <cristian.marussi@arm.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZLuWwecacBAimT=Vj67dGabzBH-7aaqzoyj1B1sY6o_A@mail.gmail.com>
 
-On Fri, Feb 23, 2024 at 2:08=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.nxp.co=
-m> wrote:
+On Fri, Feb 23, 2024 at 09:28:12AM +0100, Linus Walleij wrote:
+> On Fri, Feb 23, 2024 at 2:08 AM Peng Fan (OSS) <peng.fan@oss.nxp.com> wrote:
+> 
+> > From: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> >
+> > Add basic implementation of the SCMI v3.2 pincontrol protocol.
+> >
+> > Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+> > Tested-by: Cristian Marussi <cristian.marussi@arm.com>
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> > Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> > Co-developed-by: Peng Fan <peng.fan@nxp.com>
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> 
+> This looks ripe for merging for me, there are clearly dependencies in the SCMI
+> firmware tree so I can't apply this to the pin control tree, but if
+> someone creates
+> an immutable branch from the SCMI firmware repo (based off v6.8-rc1 or so)
+> I'm happy to also pull the branch into pin control.
+> 
 
-> From: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
->
-> Add basic implementation of the SCMI v3.2 pincontrol protocol.
->
-> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
-> Tested-by: Cristian Marussi <cristian.marussi@arm.com>
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-> Co-developed-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+Well, AFAIK there is another upcoming change in the v3.2 SCMI spec and
+I am not sure if this series accounts for it...indeed the v3.2 -bet4 was
+still pending fr feedback AFAIK (and I doubt latest changes are in since
+they have been discussed like yesterday...)....but I maybe wrong, I will
+chase for the final spec and look into this to verify if it is
+compliant...
 
-This looks ripe for merging for me, there are clearly dependencies in the S=
-CMI
-firmware tree so I can't apply this to the pin control tree, but if
-someone creates
-an immutable branch from the SCMI firmware repo (based off v6.8-rc1 or so)
-I'm happy to also pull the branch into pin control.
+Anyway, given the particularly long history of changes in PINCTRL v3.2
+SCMI I would wait to have the final spec officially frozen at this
+point before merging....
 
-Yours,
-Linus Walleij
+Thanks,
+Cristian
+
 
