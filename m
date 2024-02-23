@@ -1,64 +1,54 @@
-Return-Path: <linux-gpio+bounces-3691-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3704-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FFD4860E29
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 10:38:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 573C286105F
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 12:28:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1BE411F21EB7
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:38:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CD1B3285843
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 11:28:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E3895D486;
-	Fri, 23 Feb 2024 09:37:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 556B376907;
+	Fri, 23 Feb 2024 11:28:57 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa2.ltts.com (unknown [14.140.155.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from xavier.telenet-ops.be (xavier.telenet-ops.be [195.130.132.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9889E5CDDB;
-	Fri, 23 Feb 2024 09:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE02A76048
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 11:28:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.130.132.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708681075; cv=none; b=HqCIZAeVkuYAgPOUcyNnqpZ31e0tDC65+Kf2jPzbqkkobvUy3szIWwS06LROs96bHlwtQTvxjP5fIR/0Ix8NsHU3jaepTIFpXNGwcwaWWW4yWjBxhtmnr09SNPkhhcXOBCL1FKopwGUOVaeWmp0/GFycYibsHsFlAm35f7rQIVs=
+	t=1708687737; cv=none; b=g0U+7VydEgxcyb+J/PSfMKy2MJArPuYJyxm4Xehp9+QZEpH1MHb7hq7PfH/+knk9rtdtg6vj4Okixa+2idSTXSrxwDa7uyXwas08xdL1krE2aSMbSAXn5+m/wx7RWxYoCriMee6jUV+Env6LYYPgwTPqXHZOnbsbrVDkKtigY74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708681075; c=relaxed/simple;
-	bh=kgd5rZlmo0eQ4+URWAldLJfV0Lypdy0Upba1rC9o8CM=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=DpAbl3GMbhGeghU42T3MtzqlUTJoVk3qjmLm8PvlXY5gp62AKRuisJd7PISVSQjNlxd+2tcJgQovBMGX3ZHUerluAPhAu8HahuIE8oKQBoH519E92dl7tt849z4IO4VuAO86zasYUPOXGpi8ULsFEAxsJbFeryWh3PCf2H5OL9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: HJlgWVKI0KCo1CJ2mGuQdt5yc8kWdw0FGGTxbx7eGNcQ22h+XVSKSuSU4F3P+cXp6RVgSNgE8w
- ytBdNf9xw/Sg==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 23 Feb 2024 15:07:21 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jpanis@baylibre.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v2 14/14] arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P dts
-Date: Fri, 23 Feb 2024 15:07:01 +0530
-Message-Id: <20240223093701.66034-15-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240223093701.66034-1-bhargav.r@ltts.com>
-References: <20240223093701.66034-1-bhargav.r@ltts.com>
+	s=arc-20240116; t=1708687737; c=relaxed/simple;
+	bh=f+I/J3nCeKRlXlFmKEP/28Cmq0HpHZNcbX7hsQ2/BfE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=aJ8PI4RruNG2uyxfv17JQGvNQAr8eAJ2fmAUVKlwzN5bAqKLxHikRESKb93+bqRecHUvy7K69+031vi7lEOhqIZNT0AcQOBVd5yWL6VvchGLMCpp9uwMo5bz0fxgrK4gccSX+vvBF3csPbAochey+uqWJWoVsWYBg8OvHsN+U5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be; spf=none smtp.mailfrom=linux-m68k.org; arc=none smtp.client-ip=195.130.132.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=glider.be
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux-m68k.org
+Received: from ramsan.of.borg ([IPv6:2a02:1810:ac12:ed40:6f61:ab26:80d6:d9d4])
+	by xavier.telenet-ops.be with bizsmtp
+	id qbUr2B0082itsqh01bUrs4; Fri, 23 Feb 2024 12:28:51 +0100
+Received: from rox.of.borg ([192.168.97.57])
+	by ramsan.of.borg with esmtp (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rdTjO-001P4I-QE;
+	Fri, 23 Feb 2024 12:28:51 +0100
+Received: from geert by rox.of.borg with local (Exim 4.95)
+	(envelope-from <geert@linux-m68k.org>)
+	id 1rdTjX-00D0Vn-4x;
+	Fri, 23 Feb 2024 12:28:51 +0100
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org,
+	linux-renesas-soc@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [GIT PULL] pinctrl: renesas: Updates for v6.9 (take two)
+Date: Fri, 23 Feb 2024 12:28:50 +0100
+Message-Id: <cover.1708687406.git.geert+renesas@glider.be>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -67,142 +57,76 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Add support for TPS65224 PMIC in device tree of AM62P EVM. Adds
-regulator configuration, pinmux configurations and pmic device nodes.
+	Hi Linus,
 
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
----
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 95 +++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+The following changes since commit fea58424e2523376ece6f734479e63061e17ad7f:
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 1773c05f7..5d8e4321b 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -112,6 +112,16 @@ vddshv_sdio: regulator-3 {
- 		bootph-all;
- 	};
- 
-+	vcc_3v3_main: regulator-4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_main";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vmain_pd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -580,6 +590,12 @@ &main_uart1 {
- &mcu_pmx0 {
- 	bootph-all;
- 
-+	pmic_irq_pins_default: pmic-irq-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (B10) MCU_GPIO0_0 */
-+		>;
-+	};
-+
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
- 			AM62PX_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
-@@ -589,6 +605,13 @@ AM62PX_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
- 		>;
- 		bootph-all;
- 	};
-+
-+	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x04c, PIN_INPUT, 0) /* (A13) WKUP_I2C0_SCL */
-+			AM62PX_MCU_IOPAD(0x050, PIN_INPUT, 0) /* (C11) WKUP_I2C0_SDA */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -599,6 +622,78 @@ &wkup_uart0 {
- 	bootph-all;
- };
- 
-+&wkup_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wkup_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	tps65224: pmic@48 {
-+		compatible = "ti,tps65224-q1";
-+		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+		interrupt-parent = <&mcu_gpio0>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		ti,primary-pmic;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		buck12-supply = <&vcc_3v3_main>;
-+		buck3-supply = <&vcc_3v3_main>;
-+		buck4-supply = <&vcc_3v3_main>;
-+
-+		ldo1-supply = <&vcc_3v3_main>;
-+		ldo2-supply = <&vcc_3v3_main>;
-+		ldo3-supply = <&vcc1v8_sys>;
-+
-+		regulators {
-+			vcc_core: buck12 {
-+				regulator-name = "vcc_core_buck12";
-+				regulator-min-microvolt = <715000>;
-+				regulator-max-microvolt = <895000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v8_sys: buck3 {
-+				regulator-name = "vcc1v8_sys_buck3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v1: buck4 {
-+				regulator-name = "vcc1v1_buck4";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdda1v8: ldo1 {
-+				regulator-name = "vdda1v8_ldo1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			dvdd3v3: ldo2 {
-+				regulator-name = "dvdd3v3_ldo2";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_0v85: ldo3 {
-+				regulator-name = "vcc_0v85_ldo3";
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- /* mcu_gpio0 and mcu_gpio_intr are reserved for mcu firmware usage */
- &mcu_gpio0 {
- 	status = "reserved";
--- 
-2.25.1
+  pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28 (2024-01-31 14:50:44 +0100)
 
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git tags/renesas-pinctrl-for-v6.9-tag2
+
+for you to fetch changes up to a6f06b909fee72c679c565adfa7f080f9595e336:
+
+  pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm (2024-02-21 16:34:33 +0100)
+
+----------------------------------------------------------------
+pinctrl: renesas: Updates for v6.9 (take two)
+
+  - Add support for the R-Car V4M (R8A779H0) SoC,
+  - Add support for suspend/resume on the RZ/G2L family,
+  - Miscellaneous fixes and improvements.
+
+Thanks for pulling!
+
+----------------------------------------------------------------
+Biju Das (3):
+      pinctrl: renesas: rzg2l: Configure interrupt input mode
+      pinctrl: renesas: rzg2l: Simplify rzg2l_gpio_irq_{en,dis}able()
+      pinctrl: renesas: rzg2l: Avoid configuring ISEL in gpio_irq_{en,dis}able*(
+
+Claudiu Beznea (2):
+      pinctrl: renesas: rzg2l: Select GPIOLIB_IRQCHIP and IRQ_DOMAIN_HIERARCHY
+      pinctrl: renesas: rzg2l: Add suspend/resume support
+
+Cong Dang (13):
+      pinctrl: renesas: Initial R8A779H0 (R-Car V4M) PFC support
+      pinctrl: renesas: r8a779h0: Add Ethernet AVB pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add SD/MMC pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add QSPI pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add SCIF pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add SCIF_CLK pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add HSCIF pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add I2C pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add MSIOF pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add PWM/TPU pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add CANFD pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add PCIe pins, groups, functions
+      pinctrl: renesas: r8a779h0: Add Audio pins, groups, functions
+
+Geert Uytterhoeven (2):
+      dt-bindings: pinctrl: renesas,pfc: Document R-Car V4M support
+      pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm
+
+ .../devicetree/bindings/pinctrl/renesas,pfc.yaml   |    1 +
+ drivers/pinctrl/renesas/Kconfig                    |    7 +
+ drivers/pinctrl/renesas/Makefile                   |    1 +
+ drivers/pinctrl/renesas/core.c                     |   10 +-
+ drivers/pinctrl/renesas/pfc-r8a779h0.c             | 3967 ++++++++++++++++++++
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c            |  485 ++-
+ drivers/pinctrl/renesas/sh_pfc.h                   |    1 +
+ 7 files changed, 4440 insertions(+), 32 deletions(-)
+ create mode 100644 drivers/pinctrl/renesas/pfc-r8a779h0.c
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
