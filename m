@@ -1,116 +1,109 @@
-Return-Path: <linux-gpio+bounces-3680-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3681-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E525E860CF9
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:37:41 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id E3BB1860D40
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:53:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 98E402855E2
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:37:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46910285DE5
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:53:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB4D018E12;
-	Fri, 23 Feb 2024 08:35:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57B622F19;
+	Fri, 23 Feb 2024 08:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tMZInjpm"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PXuVHDv7"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f180.google.com (mail-yb1-f180.google.com [209.85.219.180])
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E041D17BB7
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 08:35:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE841F93F
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 08:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708677347; cv=none; b=GILSw0upiESES1IX7b27YG+knlBuBmBkNn0FW3/k8Ad8wwiz0KxW99UeExNjBXwmBTxQA8D/ZpJauigp/ruUIh8ooLQAncFKPHbAoudSgk14gWYndp3Z4PiN8GxmOVf/Ebi63hNN3hVX/RuKrd9olQx3Qc0VFKD5hFE26TfIxyw=
+	t=1708678376; cv=none; b=AuZT3AP6/HZHwWxrkRmS6629p0P5Dt3DPvrdA/zOBUtrd2KtZVIx/WuJL15gee2WDh8fTnVS6/taQatvBU9757u6FrjWjGlahZ373XnfW7fm2jtdieueyBjRt5pBzc/BxZ8wZ+MgHOccp0RiJpVW49LQuPShr4aoNoimrqArXzA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708677347; c=relaxed/simple;
-	bh=BDJzrankMyMZocCjXVCHMyuvOlOLvr1YP5o6PLfU+ng=;
+	s=arc-20240116; t=1708678376; c=relaxed/simple;
+	bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N9QmgTe1gsAaAUwMbllkLQ14QMCG8l+JtLUMfXdHCbIWZcG73yVgopHvHgtDsj+LO0FhwNrUPW3rlpKXOzkz+pUf7JnDfShMRwaeATDHEJORvRm2ovP0Rdi59iWC0z3uL+8KRItp3SWFzeyMxib17A8aBEWxqwijx2+vMqjsKCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=tMZInjpm; arc=none smtp.client-ip=209.85.219.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f180.google.com with SMTP id 3f1490d57ef6-dcd94fb9e4dso605745276.2
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 00:35:45 -0800 (PST)
+	 To:Cc:Content-Type; b=rDoJgN0fkBFqbag/nxXofBqVWY7O+m+VZpVv8EKnKEXAWkqt9EQ5CoNfC5viZ5mun0QCDXARNC1+BU9VzTCplGldNXMHNqShdZzUAbImACGD8FFTesLkAyf/OKvuqZsoNMjOS+CF1n5pGHUE3asl4JgfsyMHWRtDUI/WovzyWGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PXuVHDv7; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d130979108so295768241.1
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 00:52:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708677345; x=1709282145; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708678372; x=1709283172; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BDJzrankMyMZocCjXVCHMyuvOlOLvr1YP5o6PLfU+ng=;
-        b=tMZInjpmvJaLXfTZUAyBYdoUEgLN6Gv4iM1TlgdiLl86hAZ4i06pu9+VpRILXkyTd0
-         ePOdUzghIovQD69xdxbTNooHA/QbYtr80BBmZgDDiJRz7AJplv7G4+tSdQiIxRh59+hc
-         Hl4pbQtC4rBGbFMiuh9hNxYP7lcLLUiEBX3Wxri99LXxSGD8I/Nxp0RecK6zYWRGTl/P
-         Zb7akIT46GajWyNfawR+LIDRXr0PRTna7Uzt2ig5w+PIsnwqrPnYWfsJgXG2rRPHfHLB
-         IRz1JMVnqQXlx1vxHkBtyj/nQFAhcVk8pCopOEo7vqw2lKd+cBF01eMTRkN39l99y/Cc
-         JSpA==
+        bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
+        b=PXuVHDv7ttgoKljLtHg1q5B2kI53x9Zt8MkfSZNgfj6OagxkIH7wVgo3VUcvrXwatM
+         sjvFhCwKWNOyfwUwYJXnu+De/hhwogYjJy+/gWDRG22UBOrW4OtfKXE/9jzH1Acaj4TW
+         6TnUAYytwkWn2U87LsfvlnpKqD6fBn8Dyl5NUe2F8nDoARgFIBK64H8qyV2m+n6BEAuT
+         OtzjQRDsodZT1NO81BFBu17T4AX6pTAIebzAKUQ78JUaJQ6QT90XbGHJwfGsU7pOfSWq
+         OMQ4labVFxydeatcxAvpo0eU8eLYzlWJ26W+gPJacFaq59GL6Zrft23gdjXO9PoGhqPI
+         Licg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708677345; x=1709282145;
+        d=1e100.net; s=20230601; t=1708678372; x=1709283172;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BDJzrankMyMZocCjXVCHMyuvOlOLvr1YP5o6PLfU+ng=;
-        b=Qes/Zt4PiAibyTXl99PCw4NTj7BFenkTIDeRJn8JQ89KDZCS/2hvZWeEN/qBs1/QIp
-         QOXq7eIoPULnZrlIvbMXxLV22oAC3OqOEzqhAwhTZ8uVIyOaAh6txZHuGWXotYnVeSiq
-         VxoWnHyQBDXfY3O989IOhkZGMwlLEOegUCQxjv9if+301UONpdshml7Zd9cKhSmeZUcz
-         KaQD+RLWBf39UeXZuVHaJr3jwwipXd242fJ1Y2q5U4Esr3nfWAn+yd/P9pfl+CzMamk+
-         C7+cElmoNUO7Mutw3y8sWji0OiZ1kjM7VmFJRPF67Mjntl/C/UFZd7lVcNUMg+1XtwV8
-         v5ew==
-X-Forwarded-Encrypted: i=1; AJvYcCVwCDgzWg0ncYm+6WnxJXaMy3LS93C8Zcs4WUD2IeB6YFfOlid202IVVd5m6SlS3TwIJWPVNSxg42NyYZzLB6jRfrCEjByZKaCj1w==
-X-Gm-Message-State: AOJu0YxBoNh+e6fPr6UaWF+7IQtw2pzuhCMjSNowK7Cm4DufBwbOAblX
-	wzXIyHj4hVe9OJtv3C4A5AukwQmi9hQuyNcUu+kdzo9BXu6i1YRBpOZA37eesHc4XuBb+6NshJe
-	EG3L6lszkIFENLJrVik+rl5Fi5hL7WayL87aXNA==
-X-Google-Smtp-Source: AGHT+IGOlBpYdtZ4/p5L/TR0zjPYT869hfBVTynTZpUrGGbxeGr51rjvskBAzAxe2aQoNBXBzWL75316K2e/O2MrnOI=
-X-Received: by 2002:a25:2045:0:b0:dcc:ec02:38b0 with SMTP id
- g66-20020a252045000000b00dccec0238b0mr1342720ybg.64.1708677344960; Fri, 23
- Feb 2024 00:35:44 -0800 (PST)
+        bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
+        b=PfA8ILx1CGXvBSXl90Rj7C45DADL4ewRW2i0LVbeFNPTiujVD3Qkq+uF6HfpjsGUz7
+         zOGCuljbhZS31x8k6UxT5v38/iSH8O7nYXk8PmfEdl7ZXdH9I7FR2s1SSRHEEWUjjPwP
+         bPfmiDe5ibJsyf7fFAsbreYO9BNkgAGFGq0I4uGaMFdewqwafJPkwNpcDJVXN7E5PmaK
+         DKcaUBHxCwnCkNTXZYTwhJBWAlG7hxEupfm0ydGkLhAsJlM6oJltFmbKlrMS0CvuJeag
+         NQzmyQ28pSOQKHARTW/a65mfeNhfEVy/dRL5xZxXkdJBgNpo8MeW2yPZtJriS6Ad9xwD
+         q1gw==
+X-Gm-Message-State: AOJu0YyalqoFDNL0023+BA8GCdEgJ1Z+i6Ds5viIfwhewlF8Rn0Oyuav
+	kDrh5Reg9ACaSNwjOhWHfizx7KCqgKhxJDVmBm71DlMqnql6r/tIDmGKH9quCTIsR0rCXziQ4aY
+	CetDN0ZfoglTGryULwplSJ+FE+nIlBqK6hCDtDg==
+X-Google-Smtp-Source: AGHT+IGaNMTtSVEdubH2GbnyG0AR5Hk5HfywbHtxHiKnvps0Jai1ymSs8LeNhk2vr7Lhe8k1UI9Z3510AGzVnVThweE=
+X-Received: by 2002:a67:b649:0:b0:470:498e:7e67 with SMTP id
+ e9-20020a67b649000000b00470498e7e67mr1328030vsm.19.1708678372633; Fri, 23 Feb
+ 2024 00:52:52 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223-pinctrl-scmi-v4-0-10eb5a379274@nxp.com>
- <20240223-pinctrl-scmi-v4-3-10eb5a379274@nxp.com> <CACRpkdZLuWwecacBAimT=Vj67dGabzBH-7aaqzoyj1B1sY6o_A@mail.gmail.com>
- <ZdhYc90uy7yuYrx2@pluto>
-In-Reply-To: <ZdhYc90uy7yuYrx2@pluto>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 23 Feb 2024 09:35:33 +0100
-Message-ID: <CACRpkdYZuHh4JuwwgUEeVR_0jG1DPtj212AMOgnaxWdkT_sowg@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, Sudeep Holla <sudeep.holla@arm.com>, 
-	Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Shawn Guo <shawnguo@kernel.org>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, NXP Linux Team <linux-imx@nxp.com>, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org, 
-	AKASHI Takahiro <takahiro.akashi@linaro.org>, Peng Fan <peng.fan@nxp.com>
+References: <20240214104506.16771-1-brgl@bgdev.pl>
+In-Reply-To: <20240214104506.16771-1-brgl@bgdev.pl>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 23 Feb 2024 09:52:41 +0100
+Message-ID: <CAMRc=McYim_fkvatZTSzXa04-=7OQ73PjMVh951uR_engoE94A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: add lockdep asserts
+To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 9:34=E2=80=AFAM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
-
-> Well, AFAIK there is another upcoming change in the v3.2 SCMI spec and
-> I am not sure if this series accounts for it...indeed the v3.2 -bet4 was
-> still pending fr feedback AFAIK (and I doubt latest changes are in since
-> they have been discussed like yesterday...)....but I maybe wrong, I will
-> chase for the final spec and look into this to verify if it is
-> compliant...
+On Wed, Feb 14, 2024 at 11:45=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
+> wrote:
 >
-> Anyway, given the particularly long history of changes in PINCTRL v3.2
-> SCMI I would wait to have the final spec officially frozen at this
-> point before merging....
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+>
+> We have three functions in gpio-sim that are called with the device lock
+> already held. We use the "_unlocked" suffix in their names to indicate
+> that. This has proven to be confusing though as the naming convention in
+> the kernel varies between using "_locked" or "_unlocked" for this
+> purpose. Naming convention also doesn't enforce anything. Let's remove
+> the suffix and add lockdep annotation at the top of these functions.
+>
+> This makes it clear the function requires a lock to be held (and which
+> one specifically!) as well as results in a warning if it's not the case.
+> The only place where the information is lost is the place where the
+> function is called but the caller doesn't care about that information
+> anyway.
+>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
 
-OK fair enough, I hold my horses!
+Patch queued for next.
 
-Maybe we should mark the series as pending spec or something.
-
-Yours,
-Linus Walleij
+Bart
 
