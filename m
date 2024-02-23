@@ -1,109 +1,139 @@
-Return-Path: <linux-gpio+bounces-3681-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3682-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3BB1860D40
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:53:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41EC7860D57
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 09:58:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 46910285DE5
-	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:53:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6A28B1C22796
+	for <lists+linux-gpio@lfdr.de>; Fri, 23 Feb 2024 08:58:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57B622F19;
-	Fri, 23 Feb 2024 08:52:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 27E091AAD0;
+	Fri, 23 Feb 2024 08:58:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PXuVHDv7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="hsc9L+4q"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCE841F93F
-	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 08:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00ACA11CBF
+	for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 08:57:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708678376; cv=none; b=AuZT3AP6/HZHwWxrkRmS6629p0P5Dt3DPvrdA/zOBUtrd2KtZVIx/WuJL15gee2WDh8fTnVS6/taQatvBU9757u6FrjWjGlahZ373XnfW7fm2jtdieueyBjRt5pBzc/BxZ8wZ+MgHOccp0RiJpVW49LQuPShr4aoNoimrqArXzA=
+	t=1708678679; cv=none; b=K6X9UeqRbVwxtsQaAOS8529cukagmAFjn0xw4hI7c4YL2VaPCPs54hzW52W7txqoHruxbbhO5/kbcHzC0M4YQi0SVsP3RlmtywDgu7wHNFHFOEfKW5KgpUJqKkjw9/hkhxKK8N8ULAiDYTo9F3A5qFerb5chQZfm7ys82WR4GHY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708678376; c=relaxed/simple;
-	bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
+	s=arc-20240116; t=1708678679; c=relaxed/simple;
+	bh=nlK5qHaZhiykL1gGFylKHCeTVd6rL0Q153oLIBBktCA=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rDoJgN0fkBFqbag/nxXofBqVWY7O+m+VZpVv8EKnKEXAWkqt9EQ5CoNfC5viZ5mun0QCDXARNC1+BU9VzTCplGldNXMHNqShdZzUAbImACGD8FFTesLkAyf/OKvuqZsoNMjOS+CF1n5pGHUE3asl4JgfsyMHWRtDUI/WovzyWGE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PXuVHDv7; arc=none smtp.client-ip=209.85.222.54
+	 To:Cc:Content-Type; b=BJsYI7Wv42XRrdufnDKFo9zQn/pGCRFPvvIwlSTdZXpg5IpUlPNXxl13i6FIHElb8tUmYZPtbC1v3UbZfZI7a/6+sd5RxUtXpErhLkqG7DX9BVGOkqugQ7Hq8K6aXmXvdpyxNrObe9D7g6gISKRyVeD1Z/jYluWTovi89/Z3S4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=hsc9L+4q; arc=none smtp.client-ip=209.85.222.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-7d130979108so295768241.1
-        for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 00:52:53 -0800 (PST)
+Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d6a85586e3so349032241.2
+        for <linux-gpio@vger.kernel.org>; Fri, 23 Feb 2024 00:57:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708678372; x=1709283172; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708678677; x=1709283477; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
-        b=PXuVHDv7ttgoKljLtHg1q5B2kI53x9Zt8MkfSZNgfj6OagxkIH7wVgo3VUcvrXwatM
-         sjvFhCwKWNOyfwUwYJXnu+De/hhwogYjJy+/gWDRG22UBOrW4OtfKXE/9jzH1Acaj4TW
-         6TnUAYytwkWn2U87LsfvlnpKqD6fBn8Dyl5NUe2F8nDoARgFIBK64H8qyV2m+n6BEAuT
-         OtzjQRDsodZT1NO81BFBu17T4AX6pTAIebzAKUQ78JUaJQ6QT90XbGHJwfGsU7pOfSWq
-         OMQ4labVFxydeatcxAvpo0eU8eLYzlWJ26W+gPJacFaq59GL6Zrft23gdjXO9PoGhqPI
-         Licg==
+        bh=CjhPEhBa12TItlvxQZxsnnjXxJoCDUZerm30n59NmwU=;
+        b=hsc9L+4qeDS6W1HqxbjC7PeBfOfJt1ODkai83guOCktqMmL1LDOgoaLtMfyTRBkoWf
+         xXQ1vbZ5r4/ojrbDZUCHa7J3Gy+qcXzl9mNM8XBfv2M3q9UlbVYvxD/lEto9KoVbVv24
+         FIwrLb+gFmcdh4GhjU24KSzyCK/d/78lBA0Til/50FYmnEQnW0PvqL+ARiNWnkfZbbPK
+         1+Dtb8u5s1cIgY8+n8W7Jn+RXGncrYfYOUoD1bXYgmkDhIQjCDPeZzvY7QwMe3gi1VSt
+         GzKXdCIt79vNCMzhN/mZlSjzTjN227vvUasKylRDepNWUl3tKuO7y8P3gxGW1cuDG+zv
+         QoeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708678372; x=1709283172;
+        d=1e100.net; s=20230601; t=1708678677; x=1709283477;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=g3DztYcYHBisCopsdrxWdHuka4aOsmyFRpTwNGTdka8=;
-        b=PfA8ILx1CGXvBSXl90Rj7C45DADL4ewRW2i0LVbeFNPTiujVD3Qkq+uF6HfpjsGUz7
-         zOGCuljbhZS31x8k6UxT5v38/iSH8O7nYXk8PmfEdl7ZXdH9I7FR2s1SSRHEEWUjjPwP
-         bPfmiDe5ibJsyf7fFAsbreYO9BNkgAGFGq0I4uGaMFdewqwafJPkwNpcDJVXN7E5PmaK
-         DKcaUBHxCwnCkNTXZYTwhJBWAlG7hxEupfm0ydGkLhAsJlM6oJltFmbKlrMS0CvuJeag
-         NQzmyQ28pSOQKHARTW/a65mfeNhfEVy/dRL5xZxXkdJBgNpo8MeW2yPZtJriS6Ad9xwD
-         q1gw==
-X-Gm-Message-State: AOJu0YyalqoFDNL0023+BA8GCdEgJ1Z+i6Ds5viIfwhewlF8Rn0Oyuav
-	kDrh5Reg9ACaSNwjOhWHfizx7KCqgKhxJDVmBm71DlMqnql6r/tIDmGKH9quCTIsR0rCXziQ4aY
-	CetDN0ZfoglTGryULwplSJ+FE+nIlBqK6hCDtDg==
-X-Google-Smtp-Source: AGHT+IGaNMTtSVEdubH2GbnyG0AR5Hk5HfywbHtxHiKnvps0Jai1ymSs8LeNhk2vr7Lhe8k1UI9Z3510AGzVnVThweE=
-X-Received: by 2002:a67:b649:0:b0:470:498e:7e67 with SMTP id
- e9-20020a67b649000000b00470498e7e67mr1328030vsm.19.1708678372633; Fri, 23 Feb
- 2024 00:52:52 -0800 (PST)
+        bh=CjhPEhBa12TItlvxQZxsnnjXxJoCDUZerm30n59NmwU=;
+        b=j5eKMjuQq1KgwjePzNnFLogx7Eh3vb2/9H+h17LFy8rsMPcBo+yUqYrtLt4QnZeJH0
+         s2k+2IhP/vHRGtGNHyLjUFZiBrwRYoCyYR++xHW/jwJdvBQmlAlI8WuN6TexryLyAF6Y
+         8mSlj4YKW4OqOZsuBX2p5a/a0L5wX2khU4qT5NJTc1ThBmLH7idybXdyHKqa6nuxDffV
+         k8dvBmLPsy73deAIs3ZJtzF2mU3tLCf7w6egpq/pbalJaPQoCPt01bzMW23cXwlKYtgc
+         uNtiHIYzHjdcowcSvl13DlAG4CF1pj1GP1hHTBdo4f8yJ1uBov1GKf9r468x5G0re1oq
+         tN4Q==
+X-Gm-Message-State: AOJu0YzniA9F0FtWq7+FjJG0J4IYT6ixpZgnJBmiwBgHAfv/0+ciQcHL
+	/pATJw0GQ/X5cJG9a3Zz7lVaeflm4x4VOplW57IG/TBrTQ6jSyYvG/vDyf+z7plqJ1sc9cwY4go
+	vysyvH3IAb3E3ZZe9Snnr9tSW+2ZUIGmCW2jiPYmEwUYv11cG
+X-Google-Smtp-Source: AGHT+IF5EtRLg2sHfJzKBquPxZdBzGX8N61QJTJeYEubsIh78w4hHntCP/VtMxzVtkyLbjkp9oBlqYwmlgEWyY3rL4I=
+X-Received: by 2002:a05:6102:2910:b0:471:c4ad:4119 with SMTP id
+ cz16-20020a056102291000b00471c4ad4119mr1380211vsb.8.1708678676895; Fri, 23
+ Feb 2024 00:57:56 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240214104506.16771-1-brgl@bgdev.pl>
-In-Reply-To: <20240214104506.16771-1-brgl@bgdev.pl>
+References: <20240220135431.22910-1-brgl@bgdev.pl>
+In-Reply-To: <20240220135431.22910-1-brgl@bgdev.pl>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 23 Feb 2024 09:52:41 +0100
-Message-ID: <CAMRc=McYim_fkvatZTSzXa04-=7OQ73PjMVh951uR_engoE94A@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sim: add lockdep asserts
-To: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 23 Feb 2024 09:57:46 +0100
+Message-ID: <CAMRc=Me7h9fzTqu7hkfOOGdFz4dwcgcVOdLu+3KovX9nZk5U4A@mail.gmail.com>
+Subject: Re: [PATCH] gpio: sim: delimit the fwnode name with a ":" when
+ generating labels
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
 	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 14, 2024 at 11:45=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl=
-> wrote:
+On Tue, Feb 20, 2024 at 2:54=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
 >
 > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> We have three functions in gpio-sim that are called with the device lock
-> already held. We use the "_unlocked" suffix in their names to indicate
-> that. This has proven to be confusing though as the naming convention in
-> the kernel varies between using "_locked" or "_unlocked" for this
-> purpose. Naming convention also doesn't enforce anything. Let's remove
-> the suffix and add lockdep annotation at the top of these functions.
+> Typically, whenever a human-readable name is created for objects using
+> a software node, its name is delimited with ":" as dashes are often used
+> in other parts of the name. Make gpio-sim use the same pattern. This
+> results in better looking default names:
 >
-> This makes it clear the function requires a lock to be held (and which
-> one specifically!) as well as results in a warning if it's not the case.
-> The only place where the information is lost is the place where the
-> function is called but the caller doesn't care about that information
-> anyway.
+>   gpio-sim.0:node0
+>   gpio-sim.0:node1
+>   gpio-sim.1:node0
 >
 > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > ---
+>  drivers/gpio/gpio-sim.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-sim.c b/drivers/gpio/gpio-sim.c
+> index c4106e37e6db..1f3dd95dd6da 100644
+> --- a/drivers/gpio/gpio-sim.c
+> +++ b/drivers/gpio/gpio-sim.c
+> @@ -420,7 +420,7 @@ static int gpio_sim_add_bank(struct fwnode_handle *sw=
+node, struct device *dev)
+>
+>         ret =3D fwnode_property_read_string(swnode, "gpio-sim,label", &la=
+bel);
+>         if (ret) {
+> -               label =3D devm_kasprintf(dev, GFP_KERNEL, "%s-%pfwP",
+> +               label =3D devm_kasprintf(dev, GFP_KERNEL, "%s:%pfwP",
+>                                        dev_name(dev), swnode);
+>                 if (!label)
+>                         return -ENOMEM;
+> @@ -833,7 +833,7 @@ static int gpio_sim_add_hogs(struct gpio_sim_device *=
+dev)
+>                                                           GFP_KERNEL);
+>                         else
+>                                 hog->chip_label =3D kasprintf(GFP_KERNEL,
+> -                                                       "gpio-sim.%u-%pfw=
+P",
+> +                                                       "gpio-sim.%u:%pfw=
+P",
+>                                                         dev->id,
+>                                                         bank->swnode);
+>                         if (!hog->chip_label) {
+> --
+> 2.40.1
+>
 
-Patch queued for next.
+Patch applied.
 
 Bart
 
