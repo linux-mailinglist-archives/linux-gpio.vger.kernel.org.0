@@ -1,119 +1,119 @@
-Return-Path: <linux-gpio+bounces-3734-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3735-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E92E88626C6
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 19:30:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id DAEBC8626DD
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 19:57:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 911091F22425
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 18:30:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 95D752825D9
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 18:57:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C9C3F8FF;
-	Sat, 24 Feb 2024 18:30:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B51443AC2;
+	Sat, 24 Feb 2024 18:57:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLdR1wZ2"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DOMAV/pZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f171.google.com (mail-vk1-f171.google.com [209.85.221.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CEE11184;
-	Sat, 24 Feb 2024 18:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30AB546450
+	for <linux-gpio@vger.kernel.org>; Sat, 24 Feb 2024 18:57:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708799410; cv=none; b=YxLamSwr5p3DFydJkLgnxNRGZtkjmsF+F+gt+76IsFsrV5WmbP0YDTeOZHwuS5/mbb6u6JoumJIklgQmPkFJ2I7dup0vPqjUqGjFiL3XRgjoAVEZksXymjMXfgViQY8grGd4WnxwLmA4SCjB0jF7tSLHre02VxDuKH3Bs+i672Y=
+	t=1708801029; cv=none; b=W9RWNQQCO17t+1pbrR50Qk6zBFJ/NSq+4FDpBMR71m4X5eCVMGD+g6bAPseZXdxcKguvytOAh2LCFmqZbloXY6QA0xYR1MXoxGIsUTm5s81qY5rSZ2f991uL3zyxvp/x8DZLgbkn5dcXXI17GdA3/L3/FDOfKW/KrzeZSK7Iz2Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708799410; c=relaxed/simple;
-	bh=seEQb8OOmd5tvbOXouHrGJxGXsGVZAJiN369Eyry94k=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=k4OjHcOTPVRTYGM/MFcECx15g/0RXIdHXBnReqf0wTpsPWMMG7uhANA1vXgX5vk+usO7asbnyhIILQYpDC1vPFIUdd/UKzpoM1rc4hGNQazauQl+vgUdiYPMRD+QHaX8vmkhiXRHqWSSPJqdwvKbVT8rUHHo6+4+r3x293iGicY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLdR1wZ2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3655C433C7;
-	Sat, 24 Feb 2024 18:30:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708799409;
-	bh=seEQb8OOmd5tvbOXouHrGJxGXsGVZAJiN369Eyry94k=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=jLdR1wZ2bZgadL0a9YDlZDmw7YoKy39uS2gYESYkwxWdeqcqdgYSvBHt0CxVk6HCD
-	 WYu6xiiUp4+zLZHC2xjemHrveQu3tiBMnLgDnoXNNc6I4ZJFIC8D3hFtaGKGhiyzSm
-	 vTQAlFe6p6TrfxgOrRonb8RUzXPfQObyiP+xriOEiyOoAKV7cG9kXh2e0B4JWmJKIo
-	 c20zWWVSd2FMlRWyQeNjq/G1WP1Wu7TXdWU98yKsPkZAy1X4lcF6MOKDv5LCa7E+hm
-	 AzindeDKu3Mi4PXidtNWZQJ1w2NaDSb7BP0Vp46S1FYWK4vCjqgiDdSoO54Jn/gUpu
-	 Ad2erpMPCOcHw==
-Date: Sat, 24 Feb 2024 18:29:50 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Dumitru Ceclan <mitrutzceclan@gmail.com>, linus.walleij@linaro.org,
- brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org, Lars-Peter
- Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
- <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
- <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
- Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
-Message-ID: <20240224182950.1d00dab7@jic23-huawei>
-In-Reply-To: <20240220-outmost-flavoring-b2593160de91@spud>
-References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
-	<20240220-outmost-flavoring-b2593160de91@spud>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1708801029; c=relaxed/simple;
+	bh=ZYRTKusNjhoRms5QaEKUoN2lpVAHFgTGslctrMED8L8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VpCzPhzvw5T2pQMCJFcPmWRyi0bGo6BW0HnbWGQg79se2YnqmQw6695M3TkIrsIuJQnfF+FHPJYfXLIuMzH+xw8Qpk1Iv/A8AO+tfNsEYh1c/mctQfSfFLenXguny4xuYbJYZ+Hk63uKIOkm2e2vZmt579X01gOKz5YqbfJY6hs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DOMAV/pZ; arc=none smtp.client-ip=209.85.221.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vk1-f171.google.com with SMTP id 71dfb90a1353d-4cba3807eedso1067233e0c.0
+        for <linux-gpio@vger.kernel.org>; Sat, 24 Feb 2024 10:57:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1708801025; x=1709405825; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2g6l3eAVLnBHfDxE7wyqkZmE1aw5q5MGhmCobbv8fTQ=;
+        b=DOMAV/pZl+RDconUveqsZhZu5hZZyJHi7l6rJE2211hGojYGWoag0gFQ4V9LjPIm7o
+         wnKPckZcsIq2HCleYjn9tSrAq1TtQ7WUSkv4xN3jnQRQM3dnuzaTiX32ThvoYI5ukTP5
+         zh7kMbaBwsFzcHQfEzvHz4MGEmt4eHl3Z3QHBjkFiqzD0GRx2MXG8FMRVgIFpIpG1M2J
+         uWcCetpbvSybZhLtohIg2G/O1ZVGUvKmQhCNCx8rLdaIIwvssLODUP/NY517BtTjPHXV
+         xvlM1EGSAxUav4sG7jLq/UBKPuB1/MBJ1JMNsTJxm2EokBO9D/nzZcxnigEUihYEKcEI
+         lrXA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1708801025; x=1709405825;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2g6l3eAVLnBHfDxE7wyqkZmE1aw5q5MGhmCobbv8fTQ=;
+        b=qu2Cm9DDCVTNIm+JeYsv6rxtI6Xv/RhgnDaxFlUjx78dka89GLh/J0AfxQ2Pzku0l+
+         4MGYulL8RXtv+4DAoMuGI+5e7Ueg2E8skq4N4rXRQASvYBsFLbWhf+qS0mgNXSDU4Ri4
+         F/mLTEMqvuIBLReL2AtnKgOvhqqf6/f+fEIiar+sk0Ip6Dgc/JgUOdTPoLny5ttLKwc2
+         8WJ5ak7hVVfcfCBNeKmH1IiExX711NAfcheTXXtBogm3pxvrY8OQeE1XmZcFpjy8a91v
+         Eo25JbuodkOqZW2+fYP2m5BbdKcfcG9iHtsYuWXX2ZSBjeME1BA0VqKuTgQfK5Z3DKyt
+         cnYA==
+X-Forwarded-Encrypted: i=1; AJvYcCU6S+Y6G2olhkZxb/zmyN2IxmgagMMMyo5iQnwSHEv7zfERC8Wbq92cOk+YmCtotVqUDEk2KZWSNcvo3Fva4YeJRdUBwoXKNMoQXg==
+X-Gm-Message-State: AOJu0YzZFCnGV6AMPE/I1IHRuzyWEnbbvVXTsMF8Ef+pebMC7uAIb1du
+	cnSGJSW3SoydHSg5tDDpq6/Til0Hx+w4Nxyo8eskA6bgx2gbTXGxGe9/AxOAXd6UXTFjXKY8YRK
+	7ZdV3PcrewdhPWt79SicN7l7Ig5ObAWWiwt+ZpA==
+X-Google-Smtp-Source: AGHT+IEO2hrUoHhPWvohQA+K1R2xXirwjhjJF+iF5CkzSxqlZSBxnYTIfU3MNndbyuj4V3JcuzLlufJPh7rm2a9wew8=
+X-Received: by 2002:a1f:dac3:0:b0:4cc:b98:43d2 with SMTP id
+ r186-20020a1fdac3000000b004cc0b9843d2mr2598775vkg.4.1708801025155; Sat, 24
+ Feb 2024 10:57:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <202402232058.4eDf4GRs-lkp@intel.com> <CACRpkdZtwvZPB2=xW_SoV9DmjPQJZXyWRnwySDkEL1cDvoeGRw@mail.gmail.com>
+In-Reply-To: <CACRpkdZtwvZPB2=xW_SoV9DmjPQJZXyWRnwySDkEL1cDvoeGRw@mail.gmail.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Sat, 24 Feb 2024 19:56:54 +0100
+Message-ID: <CAMRc=Mevhd4b0kUi-FrWkWUxSDkpcSb9NW0+JJJbkMmPyG-RZA@mail.gmail.com>
+Subject: Re: [brgl:gpio/for-next 42/47] gpio-mmio.c:undefined reference to `iowrite64'
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: kernel test robot <lkp@intel.com>, "andy.shevchenko" <andy.shevchenko@gmail.com>, 
+	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 20 Feb 2024 18:52:37 +0000
-Conor Dooley <conor@kernel.org> wrote:
+On Sat, Feb 24, 2024 at 4:58=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
+.org> wrote:
+>
+> On Fri, Feb 23, 2024 at 1:44=E2=80=AFPM kernel test robot <lkp@intel.com>=
+ wrote:
+>
+> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git =
+gpio/for-next
+> > head:   7bb5f3a7ca8856c5c1fa26a6e3f58a1254019dc0
+> > commit: 36e44186e0badfda499b65d4462c49783bf92314 [42/47] gpio: mmio: Su=
+pport 64-bit BE access
+> > config: um-allyesconfig (https://download.01.org/0day-ci/archive/202402=
+23/202402232058.4eDf4GRs-lkp@intel.com/config)
+>
+> UM Linux now again.
+>
+> gpio-mmio depends on HAS_IOMEM
+> and UM Linux has set HAS_IOMEM, but
+> also claims to support 64bit without providing the necessary 64bit
+> io-accessors.
+>
+> Maybe UM Linux need to be fixed?
+>
+> Yours,
+> Linus Walleij
+>
 
-> On Tue, Feb 20, 2024 at 11:43:38AM +0200, Dumitru Ceclan wrote:
-> 
-> > +  interrupts:
-> > +    minItems: 1
-> > +    description: |  
-> 
-> > +
-> > +  interrupt-names:
-> > +    minItems: 1
-> > +    items:
-> > +      - const: rdy
-> > +      - const: err  
-> 
-> I noticed that for minItems == 1, the rdy interrupt is required and err
-> is the optional one.
-> 
-> With that in mind, you can simplify the interrupts description so that
-> it describes the interrupts separately:
-> 
->   interrupts:
->     minItems:
->     items:
->       - description:
->           Ready: multiplexed with SPI data out. While SPI CS is low,
->           can be used to indicate the completion of a conversion.
-> 
->       - description:
->           Error: The three error bits in the status register (ADC_ERROR, CRC_ERROR,
->           and REG_ERROR) are OR'ed, inverted, and mapped to the ERROR pin. Therefore,
->           the ERROR pin indicates that an error has occurred.
-> 
-> Otherwise, I think everything has been sorted out?
-> 
-> Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Nah, there were other reports for the same issues, at least for x86
+and alpha. I hope Andy will have some time to look into it early this
+week, otherwise we'll have to revert the offending patch.
 
-This ordering may bite us in the future. Someone will build a board
-with err as only one wired. But meh, it will be a binding relaxation needed
-so I'm not that bothered by that.
-> 
-> Cheers,
-> Conor.
-
+Bart
 
