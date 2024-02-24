@@ -1,109 +1,106 @@
-Return-Path: <linux-gpio+bounces-3730-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3731-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D19958625E2
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 16:58:38 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25E8D862638
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 18:02:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8BAFF283347
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 15:58:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0CD501C20A72
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 17:02:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4773E47774;
-	Sat, 24 Feb 2024 15:58:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 06D5A42046;
+	Sat, 24 Feb 2024 17:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UftY6FpU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TQOms0S5"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BD234655D
-	for <linux-gpio@vger.kernel.org>; Sat, 24 Feb 2024 15:58:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B108F137E;
+	Sat, 24 Feb 2024 17:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708790314; cv=none; b=Bo5CAh31aQATLJ5xTDPWazd9r3oLAMaxHSeKIt8+2BhF9WVAEYS+Gc3VB0jzUWGyLFV5hsOtOBO0IsMKnjb0ckIL4bwDjLVlgglXrK01iZ6bXZ+M0N4tlkr8XvwTlJUA6Y0oEEN75GKfCrfvQDJf6LMmdU6SOp1Y5Kg8HgPK738=
+	t=1708794164; cv=none; b=B9nlNEbcBzpK5/SUGkhc/UOhvpyxAsGUGeugU40xadhBcCx2BZSGjhXAkZGeapDC/ZWHnfpiD12wNu+XRWRbaQjfU4+i2uXQmtO8SytvGmYUxkrSUG0R72hGcRkaBhFapMw8TbGK9UMpVz24Ds6rXoU+IN52MVT5tV6d49QBXfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708790314; c=relaxed/simple;
-	bh=tn+wyxk5uwK/kJdVwaOVs+ptdO3qG5gdxMcayA3xpDE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=gajO8yBdhHTBZKFFHsKVWt16qHASdw7VQkclum9f47+bUM+Pd4D0AfMH9LNBW+RfPx4N1zwKwFZ85nYIMgGvGRxm58m21THTk95o0wsiCMKYnqy/SUX3juPsy4zjmOxrbOg6lIqveXbLmyTU6LcKwKI758NYq70Z9qcnQtEo4ZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UftY6FpU; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-dcdb210cb6aso2016678276.2
-        for <linux-gpio@vger.kernel.org>; Sat, 24 Feb 2024 07:58:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708790310; x=1709395110; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=1Q3LLVi7UXjfRcoBjabv86oQvRhY41hxKfXIsF7KHc4=;
-        b=UftY6FpUINTHMRuPZK11QlMAP4x+s2XqabwFM3p7Atj5wFtfItXX77NfoD07JlnZe+
-         syEl4MqVRq3ZYKDNGZxzqyoWqffv51Uz4CK6VJZZl3GIlT1xit5vo0VteRt537aj/QsG
-         N2UZMlTHSTrFe/O4n4OA6zAFC/Y3UKVUmQe/sD/fDBzTHM1c1o1oGUUBpP7eoS2+R7LI
-         KsNzq6aiX+yw4jTiqjx4BGlfPHt3nTbgLqsaq39ecgz/OqxEqmGUmvDthmf6xbOe41iu
-         R3gOg3Fi8dbZQ5gaCIe6cw3Lxt3n8uwbUQStNqDSSa47anzADWNsz4soSvRiX/ylWdZD
-         sCTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708790310; x=1709395110;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1Q3LLVi7UXjfRcoBjabv86oQvRhY41hxKfXIsF7KHc4=;
-        b=NUK3G/EK/DuNc3vStjpCBlxk88268X/Kc6D+Cm4uL4kLHxHzaSZMJSoLERV3hmDQmv
-         kBpFqFJt5y5RPW+NcIZSyKvwYEfNfkIN1of31lxVRQRfCr6bsYLhS7IA4LuFx701vzun
-         wsKdGxV26/P0qo7f40oEwokM+PUbIq2qgVhg763A5aqd/WChIKj0HSreE1ooX3owmckB
-         G79Zo4oFXH0b2/p0o03k3U44MojL87L6eghY3qFQs+PTxksQNy+RdqdBZoWbX9c+8XmP
-         tl1OpIxKOkxY06R7Ck1hYuoouKNpU4NJHP4pmh1VSLsR/vyx1Fl6cBXgTqMTqXa8TVMM
-         mirw==
-X-Forwarded-Encrypted: i=1; AJvYcCW+qgSc3atzOK6ZrTYxUEDTqPVq6Hy7Xqz3CYOpg1G43oJV1huXR5MkrPkMKKpYJgKUF3Drdz9Mn2zF6Op9yVAMm+xVGS2XPVioew==
-X-Gm-Message-State: AOJu0YyKFIAa6Ao+f5nVd1LejJEZ2SOPu4tP2MXEsDTKDUNoXGDaBG+x
-	Y8QLrZomEAyYyOxrdP9eSbDdJ7ETUjFWj4Enjhl3nmmOFNWcxQkwkDMLkJogq7q7eWgj7xAHLVh
-	tdhZYUeRujpOHAjcRyE+tR+4VrWypkkxSG08Btg==
-X-Google-Smtp-Source: AGHT+IFRW5fr+zTGpjnXwH+OyFOdktrbTb8M/GNEkdNtTl0r8IvGddJJSAXDmCIqx3AtLqd/ELkwAoJcF5n8CUl6gQ0=
-X-Received: by 2002:a25:844b:0:b0:dc7:347e:c6f4 with SMTP id
- r11-20020a25844b000000b00dc7347ec6f4mr2136513ybm.32.1708790310121; Sat, 24
- Feb 2024 07:58:30 -0800 (PST)
+	s=arc-20240116; t=1708794164; c=relaxed/simple;
+	bh=Rtj/JgUe0ZgjPqgZ3KPLXjUDHRaTYhlr9OcLC/lvnuM=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LUcS2CHz201yDTKAaKQ/ooDif+w0ETV3c+m/q+pObRSuBCaPWfIpZNIufU9/kx/84CKDKy4mriLYyFNNy/ivpWJp54XcO+Eu8csGlawhHoIsEC0fyNOkJrSVztq0DBce6/LEbNeFojLWE/H9Mx2/YLZg28A52+p5zQ9bVpSGxpE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TQOms0S5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63CBFC433C7;
+	Sat, 24 Feb 2024 17:02:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1708794164;
+	bh=Rtj/JgUe0ZgjPqgZ3KPLXjUDHRaTYhlr9OcLC/lvnuM=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TQOms0S5Yw/dWZmvtSpByX6E8sActTkdEb7pXIRHJQB/eVdouySNlLg41R6tsTQmo
+	 CJuNnzk75iRq2ZiaRYbThXwjwKODhpJM4lkn9CnG/whcCJsUL/sTp/AZ3IVEwfzPG+
+	 Eeq0j/vLz4wmx352vLM/QP/zZZKmpIVYbjhjkjrQdRLWuGGMGmJ3R9tqT+8i7qhCA5
+	 PsliHlbvy6exUsi+7+0S3H66AxsdxZcGQAtZRtwYR+Q/HYURxP3ttVtdxOQDdBV5Wo
+	 EeFh1ZyR9+VWbWaiXS+xsMC2nDoBM916p7x6uYlsMR9iQACe08/61Rs3OxtripWoj9
+	 ApZ4tPaJ+FGBA==
+Date: Sat, 24 Feb 2024 17:02:25 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Andy Shevchenko <andy@kernel.org>
+Cc: Ceclan Dumitru <mitrutzceclan@gmail.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, linux-gpio@vger.kernel.org, Lars-Peter Clausen
+ <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Michael Walle <michael@walle.cc>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+ <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
+ <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
+ Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 2/3] iio: adc: ad_sigma_delta: Add optional irq
+ selection
+Message-ID: <20240224170225.4720f9a2@jic23-huawei>
+In-Reply-To: <ZdS0kOKTWHlisuyn@smile.fi.intel.com>
+References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+	<20240220094344.17556-2-mitrutzceclan@gmail.com>
+	<ZdSzCe2cw8gL3K-W@smile.fi.intel.com>
+	<001d1e99-5d96-44f3-8695-ad2ecee42128@gmail.com>
+	<ZdS0kOKTWHlisuyn@smile.fi.intel.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202402232058.4eDf4GRs-lkp@intel.com>
-In-Reply-To: <202402232058.4eDf4GRs-lkp@intel.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sat, 24 Feb 2024 16:58:18 +0100
-Message-ID: <CACRpkdZtwvZPB2=xW_SoV9DmjPQJZXyWRnwySDkEL1cDvoeGRw@mail.gmail.com>
-Subject: Re: [brgl:gpio/for-next 42/47] gpio-mmio.c:undefined reference to `iowrite64'
-To: kernel test robot <lkp@intel.com>
-Cc: "andy.shevchenko" <andy.shevchenko@gmail.com>, oe-kbuild-all@lists.linux.dev, 
-	linux-gpio@vger.kernel.org, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Feb 23, 2024 at 1:44=E2=80=AFPM kernel test robot <lkp@intel.com> w=
-rote:
+On Tue, 20 Feb 2024 16:17:52 +0200
+Andy Shevchenko <andy@kernel.org> wrote:
 
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gp=
-io/for-next
-> head:   7bb5f3a7ca8856c5c1fa26a6e3f58a1254019dc0
-> commit: 36e44186e0badfda499b65d4462c49783bf92314 [42/47] gpio: mmio: Supp=
-ort 64-bit BE access
-> config: um-allyesconfig (https://download.01.org/0day-ci/archive/20240223=
-/202402232058.4eDf4GRs-lkp@intel.com/config)
+> On Tue, Feb 20, 2024 at 04:13:12PM +0200, Ceclan Dumitru wrote:
+> > On 2/20/24 16:11, Andy Shevchenko wrote:  
+> > > On Tue, Feb 20, 2024 at 11:43:39AM +0200, Dumitru Ceclan wrote:  
+> 
+> ...
+> 
+> > >> +	if (!info->irq_num)
+> > >> +		sigma_delta->irq_num = spi->irq;
+> > >> +	else
+> > >> +		sigma_delta->irq_num = info->irq_num;  
+> > > 
+> > > Why not positive check?
+> > >   
+> > Considered that selecting spi->irq is usually the default case, so it should
+> > be the first branch  
+> 
+> Let compiler do its job, the negative conditions are harder to read/parse by
+> human beings.
+> 
+FWIW compiler almost certainly won't figure this out as it has nothing to go on
+- history based branch prediction in processors will though!  We don't want to
+be hinting direction to the compiler for a case like this as that will make
+it very painful if we get it wrong.  Anyhow Andy's comment is valid even if
+I disagree with the reason.
 
-UM Linux now again.
-
-gpio-mmio depends on HAS_IOMEM
-and UM Linux has set HAS_IOMEM, but
-also claims to support 64bit without providing the necessary 64bit
-io-accessors.
-
-Maybe UM Linux need to be fixed?
-
-Yours,
-Linus Walleij
+Jonathan
 
