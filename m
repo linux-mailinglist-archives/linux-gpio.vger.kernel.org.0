@@ -1,66 +1,66 @@
-Return-Path: <linux-gpio+bounces-3733-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3734-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6EB886265A
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 18:31:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E92E88626C6
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 19:30:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6B32D1F21F83
-	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 17:31:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 911091F22425
+	for <lists+linux-gpio@lfdr.de>; Sat, 24 Feb 2024 18:30:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51A8A47F57;
-	Sat, 24 Feb 2024 17:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87C9C3F8FF;
+	Sat, 24 Feb 2024 18:30:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBWZLwnd"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jLdR1wZ2"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A3814B820;
-	Sat, 24 Feb 2024 17:31:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28CEE11184;
+	Sat, 24 Feb 2024 18:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708795874; cv=none; b=roY976YpHNO/orpoQHsaj63orej9IMq1JANe7j1rsuLl+CsmJl06hIX6V6ak8P01h8Y9hPvNM9NADTNH45VKtEeWKkbeOZoqsb6iZL37wDsZ0FBRvX7ybH/QUOXPsKcLrv2CFSWejrD0GQVu2jMTN9jlG7WkaZ4at9PU5xWVnHg=
+	t=1708799410; cv=none; b=YxLamSwr5p3DFydJkLgnxNRGZtkjmsF+F+gt+76IsFsrV5WmbP0YDTeOZHwuS5/mbb6u6JoumJIklgQmPkFJ2I7dup0vPqjUqGjFiL3XRgjoAVEZksXymjMXfgViQY8grGd4WnxwLmA4SCjB0jF7tSLHre02VxDuKH3Bs+i672Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708795874; c=relaxed/simple;
-	bh=WfWJQwTKNHoF6gInRBujgT3QRX8Cge62nrn0wrcBk7A=;
+	s=arc-20240116; t=1708799410; c=relaxed/simple;
+	bh=seEQb8OOmd5tvbOXouHrGJxGXsGVZAJiN369Eyry94k=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ai+JUnwMiPWtebWV2HL4Bce/kBpejR2UkhrluJsKPHwBa3YOYW7G30+jfiI69LI/x0ucbIZ2OnmXBs6nOK9BEKmidv0rxkuaNdQE0lrjpERST97phlnokUU+nHCu7bRCeFBrmbRG7G6+uXUw/ggIpP0kRWX761MOJlt94vy3vIc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBWZLwnd; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07A9EC433F1;
-	Sat, 24 Feb 2024 17:31:05 +0000 (UTC)
+	 MIME-Version:Content-Type; b=k4OjHcOTPVRTYGM/MFcECx15g/0RXIdHXBnReqf0wTpsPWMMG7uhANA1vXgX5vk+usO7asbnyhIILQYpDC1vPFIUdd/UKzpoM1rc4hGNQazauQl+vgUdiYPMRD+QHaX8vmkhiXRHqWSSPJqdwvKbVT8rUHHo6+4+r3x293iGicY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jLdR1wZ2; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3655C433C7;
+	Sat, 24 Feb 2024 18:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1708795873;
-	bh=WfWJQwTKNHoF6gInRBujgT3QRX8Cge62nrn0wrcBk7A=;
+	s=k20201202; t=1708799409;
+	bh=seEQb8OOmd5tvbOXouHrGJxGXsGVZAJiN369Eyry94k=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=CBWZLwndv9Xl9V2tCMhVRZ9F/sBbs1f0OKypavZCY3kKUGvjqM8KDq2YNcWQJNvNk
-	 WCzbXRlX2vQvoFOLgDWsjXgXQ5Rc7ldcpfRC2wOvS2dXJ8eEdKptYgRGTIwZVlH6eq
-	 gBxXprjkZ8ChP6xiJmS3hbi6brvG6WgIt5Jq8TiCPHWcwIAf8Gv4j3lqxkoYU8tZ8L
-	 Yqq345IF/Uyba5jgF/2cSIEdsN8BS6OXYOXROpsp75z6ZxxNW7TtXGRsUUbuARnmKC
-	 AYCus8Y63bnbK34hAnwR3esoQiaIV9767dyoi7wQHJ6GA2AEozZWK7sgbbDXUnD4HP
-	 98cOTnr1j3lNw==
-Date: Sat, 24 Feb 2024 17:30:55 +0000
+	b=jLdR1wZ2bZgadL0a9YDlZDmw7YoKy39uS2gYESYkwxWdeqcqdgYSvBHt0CxVk6HCD
+	 WYu6xiiUp4+zLZHC2xjemHrveQu3tiBMnLgDnoXNNc6I4ZJFIC8D3hFtaGKGhiyzSm
+	 vTQAlFe6p6TrfxgOrRonb8RUzXPfQObyiP+xriOEiyOoAKV7cG9kXh2e0B4JWmJKIo
+	 c20zWWVSd2FMlRWyQeNjq/G1WP1Wu7TXdWU98yKsPkZAy1X4lcF6MOKDv5LCa7E+hm
+	 AzindeDKu3Mi4PXidtNWZQJ1w2NaDSb7BP0Vp46S1FYWK4vCjqgiDdSoO54Jn/gUpu
+	 Ad2erpMPCOcHw==
+Date: Sat, 24 Feb 2024 18:29:50 +0000
 From: Jonathan Cameron <jic23@kernel.org>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Michael
- Walle <michael@walle.cc>, Andy Shevchenko <andy.shevchenko@gmail.com>, Arnd
- Bergmann <arnd@arndb.de>, ChiaEn Wu <chiaen_wu@richtek.com>, Niklas
- Schnelle <schnelle@linux.ibm.com>, Leonard =?UTF-8?B?R8O2aHJz?=
- <l.goehrs@pengutronix.de>, Mike Looijmans <mike.looijmans@topic.nl>, Haibo
- Chen <haibo.chen@nxp.com>, Hugo Villeneuve <hvilleneuve@dimonoff.com>,
- David Lechner <dlechner@baylibre.com>, Ceclan Dumitru
- <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Conor Dooley
- <conor.dooley@microchip.com>
-Subject: Re: [PATCH v15 1/3] dt-bindings: adc: add AD7173
-Message-ID: <20240224173055.2b2e067c@jic23-huawei>
-In-Reply-To: <20240223133758.9787-1-mitrutzceclan@gmail.com>
-References: <20240223133758.9787-1-mitrutzceclan@gmail.com>
+To: Conor Dooley <conor@kernel.org>
+Cc: Dumitru Ceclan <mitrutzceclan@gmail.com>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, andy@kernel.org, linux-gpio@vger.kernel.org, Lars-Peter
+ Clausen <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
+ <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+ <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
+ <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
+ Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v13 1/3] dt-bindings: adc: add AD7173
+Message-ID: <20240224182950.1d00dab7@jic23-huawei>
+In-Reply-To: <20240220-outmost-flavoring-b2593160de91@spud>
+References: <20240220094344.17556-1-mitrutzceclan@gmail.com>
+	<20240220-outmost-flavoring-b2593160de91@spud>
 X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -71,48 +71,49 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Fri, 23 Feb 2024 15:37:28 +0200
-Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+On Tue, 20 Feb 2024 18:52:37 +0000
+Conor Dooley <conor@kernel.org> wrote:
 
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel applications
-> or higher speed multiplexed applications. The Sigma-Delta ADC is intended
-> primarily for measurement of signals close to DC but also delivers
-> outstanding performance with input bandwidths out to ~10kHz.
+> On Tue, Feb 20, 2024 at 11:43:38AM +0200, Dumitru Ceclan wrote:
+> 
+> > +  interrupts:
+> > +    minItems: 1
+> > +    description: |  
+> 
+> > +
+> > +  interrupt-names:
+> > +    minItems: 1
+> > +    items:
+> > +      - const: rdy
+> > +      - const: err  
+> 
+> I noticed that for minItems == 1, the rdy interrupt is required and err
+> is the optional one.
+> 
+> With that in mind, you can simplify the interrupts description so that
+> it describes the interrupts separately:
+> 
+>   interrupts:
+>     minItems:
+>     items:
+>       - description:
+>           Ready: multiplexed with SPI data out. While SPI CS is low,
+>           can be used to indicate the completion of a conversion.
+> 
+>       - description:
+>           Error: The three error bits in the status register (ADC_ERROR, CRC_ERROR,
+>           and REG_ERROR) are OR'ed, inverted, and mapped to the ERROR pin. Therefore,
+>           the ERROR pin indicates that an error has occurred.
+> 
+> Otherwise, I think everything has been sorted out?
 > 
 > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
 
-Ok, in the interests of perfect not being the enemy of good enough.
-I'll leave the supplies for now.  There are lots of existing drivers
-where we don't list them as required (because my understanding of this
-changed in more recent times).
+This ordering may bite us in the future. Someone will build a board
+with err as only one wired. But meh, it will be a binding relaxation needed
+so I'm not that bothered by that.
+> 
+> Cheers,
+> Conor.
 
-It's been on my list of jobs for a really boring Friday afternoon
-to bring them all inline with the convention of if it needs power
-on the pin, it's required, so what's one more? :)
-
-As Nuno pointed out, patch 2 clashed with work already upstream to
-allow firmware to have the final say on interrupt types. I think
-I've resolved that correctly.
-
-I tidied up the docs ordering issue Andy noted.
-
-Also, ad_sigma_delta is namespaced. So added
-MODULE_IMPORT_NS(IIO_AD_SIGMA_DELTA).
-
-Make sure you test your patches with a modular build
-on a more recent tree - that change was early last in 2022!
-
-A few lines in the driver were too long.
-I don't mind them going over 80 for readability reasons, but
-not over 100.
-
-Anyhow, with those changes (and please check I didn't mess things up!)
-applied to the togreg branch of iio.git and pushed for now as testing
-for 0-day to get a look in.
-
-Thanks,
-
-Jonathan
 
