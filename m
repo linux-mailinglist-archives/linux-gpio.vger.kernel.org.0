@@ -1,53 +1,53 @@
-Return-Path: <linux-gpio+bounces-3738-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3739-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BC5B8629E7
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Feb 2024 11:02:21 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 896408629EF
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Feb 2024 11:14:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D1776B2113C
-	for <lists+linux-gpio@lfdr.de>; Sun, 25 Feb 2024 10:02:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0DD751F2151C
+	for <lists+linux-gpio@lfdr.de>; Sun, 25 Feb 2024 10:14:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 761DCE556;
-	Sun, 25 Feb 2024 10:02:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498AAEEDE;
+	Sun, 25 Feb 2024 10:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ZSpD0Noi"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="QdyL4hhh"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6781D528
-	for <linux-gpio@vger.kernel.org>; Sun, 25 Feb 2024 10:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BE24A50;
+	Sun, 25 Feb 2024 10:13:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708855334; cv=none; b=C8ZpL6X5cSSf/QuNtkPC8tIuJiKuO9X2NNjUn4tL0NOrQPAd22PLpDwEfP6hwoxQZ5+CRVOzp6zZ16XfQEFxgoxa+TehiW6y7O8TxpCH2gaZ8CJLv2Mg+C6UBp8O+u+i1z7mJUeSV9Fs+Bkk/IjJ69kM3ieyFr1A8MAJi0VoUjM=
+	t=1708856035; cv=none; b=beY53SHuBGbot85Q5/kD9gN3vGgqVj9ZQBACGxW0zvi9pb4s5OktqVgWD4vKoA6cjL49d519vpdlfjBkrL1hi5+2bAmhRD46OCZV4Z8HubGdQDDH2wl3cFEXL2DbkMEIRz4iH/ki0RD0Ae5gFg1qempgMHPWM8NC2FCz9FvoVWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708855334; c=relaxed/simple;
-	bh=plTdIV2dgxaWe5AFD6OXXs/8/8wWkjt6j3SRiHS7NXI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nr6wO0I+K/iXznx06GDOMnnCC3ayEqtYZVEZV85KpFnyw64npsZcWzWMxzTBpT+XC1QIYc/mLQbsKsmyxGCo4JnHG9WfGH3SuuFOT7MDBf0SM8gsqGl3iGYL78SY/QnpwTA5r6E11RnSZBtaO0wOHzOyQh04CvrTj1KPCryPWpQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ZSpD0Noi; arc=none smtp.client-ip=212.227.15.15
+	s=arc-20240116; t=1708856035; c=relaxed/simple;
+	bh=k16FhWqxIkb2YTFkDE1/tF23+cqblBHTs3vx4rzzstw=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=d+/QO9AXRKja9uT1jmQj22+jaqq1tu+3C6Tw/6fRwXEcmR0PuXHEzWJLhztvsqBarFDnmdrffVVYPzsxeQIJtomSSX+9yfVfDX9zbaEbGTV5u65SwkL2iOc37RJiDEA58GOlHVZFzb4y1gHQHl3uDBThxfDu2vQVfzy5f7SxEUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=QdyL4hhh; arc=none smtp.client-ip=212.227.15.15
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1708855289; x=1709460089; i=wahrenst@gmx.net;
-	bh=plTdIV2dgxaWe5AFD6OXXs/8/8wWkjt6j3SRiHS7NXI=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	s=s31663417; t=1708856027; x=1709460827; i=wahrenst@gmx.net;
+	bh=k16FhWqxIkb2YTFkDE1/tF23+cqblBHTs3vx4rzzstw=;
+	h=X-UI-Sender-Class:Date:Subject:From:To:Cc:References:
 	 In-Reply-To;
-	b=ZSpD0NoiGtBhnrDX301cxJWO63ZmLYP3cwhKCFM0/Z/l+0g6Z/hQYjaOkEEIm4N7
-	 XDCI5JfSlVraG3ipUHekI27dfdHiESTMStxZ+PouAxlbDu/qoNG6Re+C3VUFHx38p
-	 Z3WntjjcmEE7d0SqjZ+p0t549k+9QyIsiw2XiS2ww6eVLd8XgAIWRcqOHRI+fUQwQ
-	 ilLpDJIT/VtaR3zDPIHWgA0bu4kZk6nII72+mhJxqb9mZVzxe/CysAR8tpuh4tQIY
-	 v42i8YQKyOAn1aSXEny1mBRUM19ZytyX4azkvboAFEPSUAphCxFtcrqwdv3WwDE/e
-	 wlqayPSwzzP84i7ijg==
+	b=QdyL4hhhIcyAi70n2oU1P8iQhO9yCosK2tzjp1VBrUJbeP8HleXQ4/HoaUlqaI94
+	 DhPrL7m4jTH3vNTNSuVJI41p1raZwsawO2dHnkQtwel08ePOJF+tdJRr30+6c9Pye
+	 xGsQs5GUxeY5Q3HjV+XLTfvE1yva5lbp2qsUxus9ItqEWJb7NhfhiILdUAiYolW0w
+	 0DWpCCHR6cisl1SNFzEQbURg39V+iTBcrV/2oMsEH/WMki4+HchSjj3+bNnkKJdlu
+	 vF1cIziL0RodjkJZyGJsajUsJ+d3Xa8/xgeYs9J5m+mWl8uzDrKXHNOBfvScJ/WM5
+	 d2nNcUuiykzGQXGPWg==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1McYCl-1r3jRU2ker-00d2i2; Sun, 25
- Feb 2024 11:01:29 +0100
-Message-ID: <9d729c9f-94cb-457f-8a40-3ba4d62fe627@gmx.net>
-Date: Sun, 25 Feb 2024 11:01:29 +0100
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGW7-1rGsOk2mNR-00Pci2; Sun, 25
+ Feb 2024 11:13:47 +0100
+Message-ID: <f55f2edc-d612-40c0-9822-7d86a940e44e@gmx.net>
+Date: Sun, 25 Feb 2024 11:13:46 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -55,72 +55,86 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH RFC 0/2] pinctrl: bcm2835: Implement pin_conf_get
+Subject: Re: WARNING: fs/proc/generic.c:173 __xlate_proc_name
 Content-Language: en-US
-To: Florian Fainelli <florian.fainelli@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>
-Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
- bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
-References: <20240204165852.166157-1-wahrenst@gmx.net>
- <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
- <1709f26f-0486-4856-8b2d-ba5e6fd492e2@gmx.net>
- <553aa585-c442-4329-8a4d-fcf2f9c110c1@broadcom.com>
 From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <553aa585-c442-4329-8a4d-fcf2f9c110c1@broadcom.com>
+To: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Kent Gibson <warthog618@gmail.com>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ Geert Uytterhoeven <geert@linux-m68k.org>,
+ Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+ linux-fsdevel@vger.kernel.org
+References: <39fe95cb-aa83-4b8b-8cab-63947a726754@gmx.net>
+In-Reply-To: <39fe95cb-aa83-4b8b-8cab-63947a726754@gmx.net>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:iHixnaC8SiMQmHwoI9mBfEQlpMyjaleakMQYgy7G5+91JWkjEXo
- iv74JPxMpZY/p4rcwRlRuSA50JxQryMWdH54fnrzUowbrCZ+Tx7qPcDGQer23/dIgkC2K0z
- L0xTu7wLvYqVLaqfSaQeLzFnISCU78gqfL9FhRmRWj4pPoE77XtUmaj0LYuaF6soO9cmfRd
- FrV13DQj6cUpIReItf5/g==
+X-Provags-ID: V03:K1:jpOtRrxw+106IrW6klknzVTTu/LI1xSk7yCnXebeBBqzU2NtyvT
+ i3URaB/2aZASJGvM85830xfTcFmuD8nnUNHZ04yKdBxcioy1hhK7oeDpjZhzP+F+52X1tGM
+ YrMMxYBSsJedmuS8MxWBEZ7FONrbgDh7i6D7ltAFWN/hXPw2CSXE6YvXXgwsVEC0PJuQKw8
+ PpHalja3G067s+XUILp/A==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:QOrs+zQBvks=;1AfsgWpGpYtFpT4KrJRDlIPDtpM
- 9DYyxQt30Ur5PZoZGm9tSjr0pvJJ6yvrH1aNjgMNTKDG8zm0z0fKDVR/3tPrs70vd3jrdMgEw
- wseORbj0pUMN28Hi/DVUFcJO1fA2yKIE08c9k/kKzYB0EcVZFcSIKqLhSinVWVEGWJef2JAsE
- v/xx15VhOMsWnVOlnytfdsfrqGrCZLO+oscrdrbVDUCh63NiV4c+8ZqtrmjxKy/DYNVhp9q4p
- IzOHIYn2zN3Rgd8mpqUR5TP4yn8UdJIcjGArYBb+ZrRucD1GbPrQ6x3rj/Jxvu+sViWtzSTqW
- aFYio8KtoE2SNk9QrlELsR+j+z3iYrmVYsEyJ1El4T5u1sy47MzMDg5Lk3i7MjXVjWCOr77pu
- FrpWe/c+LLe3VgOgI0q1SP6A7TghDVoyhvtH1pTp6n8maZYcL7JMsUpzUroSKtOj97BGe5oLn
- G7qGOajpB3JeVAzm9DYyk3xjHpbVzzS6CmYPLsS+99eUPOGEl/d4BDCSVZRvOEgJYX+9DJI2r
- 5VNAzKB2ZCZAz8A4M2YbG9GRVsaerb9a/A8yYV92f4CkwqhR0rzOST742qeeRFcuaOHPOnMVY
- 65pXuforIOGeXyEsbBu25BtEiV/hD+x8/j1Sc2RPwG8c/AK9CO3+RfYARRVFpUFlj+mqZi9FL
- st+tiw+Wu/v5uc5eEFbqPY/F5A6axb5f+R13foiIby2a5tDJB1NIqF49+4Syb5s0xaNZI57xK
- TAfT9D1P+JTChSr8g8tBDKqHkDPIUzKUorS7q2KiS3+SeZay8pNa4BdvfAZmavnk3Rzxg77Ks
- V3IcAgdrXMubtGclbmsuxv1ReN7mCI5jIhXSwptutX00g=
+UI-OutboundReport: notjunk:1;M01:P0:7bPerityJsM=;jgVBouNgjDbPishgnt3wYrYMRiz
+ cO2/gd1Up7p1NC1U5020LyHcNxywwIoOPCaaidIyMUYaHa5XRdAgkaSjNQ7cKHvheaVUbQ1IH
+ 0skt7ehJEi7usgVIbINp7ugat/6r9Rsu3hZ/xbk41srz1ESyKeHn3w7mj8oAT7WaDB2jJeQHn
+ cCwmrw8XSqQGK+eMn3UmklIMeWuIs0oEIpDRbW2Nd8kVF9tdRls1wt+pwLkZ2bnz32OILR6kw
+ eikX1cYGmCCTBcK1Pn8RR7hZM/XubgU6uALlsSwl/1UCwet7fEj09XBtjAUU4QswGInvLvQCd
+ ZnC/mNqTpHufljhdOG4b24PBUo8mVjeaQUE1d6Wx/7H5ou5QRu4h9deecSBvcK6zsoAgZi5LI
+ pHK6XK6DR+lR0WzWgQMhfFu9DZULQYF81HmvOOUGezgL782qHFWdFuNH0ymO0vBBiCYFXFBYv
+ nkhe5roTBVdpYrudSVgSq9NBFpNa4Yw20q2BuDpHRHfNyGROC3Q3oiaVhYajLMUsUE6R0TzdR
+ Cx0DUCu4ktNFXOgyfu1zKQhgso3NHhfsRThnwAU2DvYZ3mGHlAyb9i2eE1OVKRsNdvhB22aFP
+ f2Q+8YQyAeL1xhEAiH3L+hVtZbEsGH44BmqoE0wXxTmil4PWw7wiKuXe7D8f2KOGjBwt06Q3R
+ TOaoZFwFq8f6V7N/98LdtNrkX0iIXECXQEjAL5MHMSAy1rI0WpXWN1PwHWKOHKj4fKUiMozJE
+ 9bP4vL7PiIP7n5kmzhNAHNj51cZPIDFxTgrkTTrx5WdISbk9NMSILLPIlZf7w0UpUZ1T6Z00o
+ R7ujKjnHBSe9aRClMdn/jxOy8sQjxi/0pWYOl0/kpIHZ4=
 
-Hi Florian,
+Hi,
 
-Am 07.02.24 um 19:22 schrieb Florian Fainelli:
-> On 2/7/24 03:33, Stefan Wahren wrote:
->> Hi Linus,
->>
->> Am 07.02.24 um 11:56 schrieb Linus Walleij:
->>> On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net=
-> wrote:
->>>
->>>> For years, the Raspberry Pi users relied on userspace programs to rea=
-d
->>>> the pin configuration. In the meantime, it has become apparent that
->>>> this
->>>> approach has reached its limits for various reasons.
->>>>
->>>> This patch series now attempts to improve the debugging
->>>> possibilities on
->>>> the kernel side in order to reduce the dependency on these userspace
->>>> programs.
->>>>
->>>> Stefan Wahren (2):
->>>> =C2=A0=C2=A0 pinctrl: bcm2835: Implement bcm2835_pinconf_get
->>>> =C2=A0=C2=A0 pinctrl: bcm2835: Implement bcm2711_pinconf_get
->>> I don't see any problems with this, can I just apply the patches or
->>> do you
->>> want to first resend them as non-RFC?
->> since the second patch hasn't been tested with BCM7211, it would be nic=
-e
->> to get a feedback from Florian or someone else with this hardware?
+[add lkml and linux-fsdevel]
+
+Am 10.02.24 um 11:06 schrieb Stefan Wahren:
+> Hi,
+> we are using libgpiod-2.0.1 with Linux 6.1.49 on our Tarragon hardware
+> platform. Recently we implemented an application which waits for GPIO
+> interrupts and we were able to trigger a warning by naming the owner
+> of the GPIO as "R1/S1":
 >
-> Give me a few days to get there and I will run a test.
+> WARNING: CPU: 0 PID: 429 at fs/proc/generic.c:173
+> __xlate_proc_name+0x78/0x98 name 'R1/S1'
+> CPU: 0 PID: 429 Comm: cb_tarragon_dri Not tainted
+> 6.1.49-00019-g9dbc76303a17 #147
+> Hardware name: Freescale i.MX6 Ultralite (Device Tree)
+> unwind_backtrace from show_stack+0x10/0x14
+> show_stack from dump_stack_lvl+0x24/0x2c
+> dump_stack_lvl from __warn+0x74/0xbc
+> __warn from warn_slowpath_fmt+0xc8/0x120
+> warn_slowpath_fmt from __xlate_proc_name+0x78/0x98
+> __xlate_proc_name from __proc_create+0x3c/0x284
+> __proc_create from _proc_mkdir+0x2c/0x70
+> _proc_mkdir from proc_mkdir_data+0x10/0x18
+> proc_mkdir_data from register_handler_proc+0xc8/0x118
+> register_handler_proc from __setup_irq+0x554/0x664
+> __setup_irq from request_threaded_irq+0xac/0x13c
+> request_threaded_irq from edge_detector_setup+0xc0/0x1f8
+> edge_detector_setup from linereq_create+0x30c/0x384
+> linereq_create from vfs_ioctl+0x20/0x38
+> vfs_ioctl from sys_ioctl+0xbc/0x8b0
+> sys_ioctl from ret_fast_syscall+0x0/0x54
+> Exception stack(0xe0b61fa8 to 0xe0b61ff0)
+> 1fa0:=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 01b019b8 01a9f428 0000000d c250=
+b407 beeae888
+> beeae880
+> 1fc0: 01b019b8 01a9f428 01af7e40 00000036 beeaeb88 beeaeb80 beeaeb58
+> beeaeb60
+> 1fe0: 00000036 beeae868 b6a88569 b6a01ae6
+> ---[ end trace 0000000000000000 ]---
+>
+> I'm not sure where this should be fixed.
+>
+since the discussion seems to stuck here [1], i reposted my original
+mail to a wider audience.
 
-is there any chance to test with BCM7211?
+Regards
+
+[1] - https://lore.kernel.org/linux-gpio/20240213030409.GA35527@rigel/
 
