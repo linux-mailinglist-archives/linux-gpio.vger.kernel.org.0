@@ -1,107 +1,156 @@
-Return-Path: <linux-gpio+bounces-3768-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3769-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EE5E867877
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 15:30:09 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAE0486799E
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 16:11:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5FE551C2A696
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 14:30:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8560829D71A
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 15:11:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D0A0F129A7B;
-	Mon, 26 Feb 2024 14:29:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YaxGyCVp"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9BBD91350E5;
+	Mon, 26 Feb 2024 14:55:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196B0129A64
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 14:29:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7F27FBAA;
+	Mon, 26 Feb 2024 14:55:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708957769; cv=none; b=jimFJVypTfr+gqcntcPRE5n7VUUlegRrwe4qAO2pu+lIpCpOHfJrtJIvnXxyUP4AW86DcIOlBEGRNcRfjLEc067T3lOR0v8PmSqwuHOlbDxO4upVGItx2oDU0oPg+QywKz2ivTczypw/02MK6HV0bJU1I4XK8cnBMKc5I7d5Mhs=
+	t=1708959307; cv=none; b=sbEQ+fc4adkbPGXCqCGQ51JEYs2N5T8mTRPaPi1dxUudGxDEAdJihn7aUQElz8YCBxYiKMMgjsp/wMvoi6JBqpnTzkqw6X2a3wBJLdF9o7ketUUo54MUz9TayGfEXolytVOH71031I4m0WdN60+dUQsjgEFK6WHEjdaP8cayOMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708957769; c=relaxed/simple;
-	bh=/uLxpOLO1j6FDLAFqYCfDZm58+r5Mbfa4yVEIGWnWAk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tALPg01tfNPXpcwvpA3G2C0FyKXJpyf8TCvfnixKyLx1w0eKt+pTB5lKUXLdGHt6MPhUKJbIum6bP0PoUdNDMrJ6yn/vODtikjO7teUFWhzYq5CjlJk5RSitK2vFfPYzL/EILAVgZNCWGIXJpqo3V6kZbN0TVobzjIAf87v+Z9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=YaxGyCVp; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-60853ad17f9so24384877b3.0
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 06:29:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1708957767; x=1709562567; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5F5T8yhzs23v++nMWXBDO7bbMb0OiZ0ptHeCp1LPSqA=;
-        b=YaxGyCVppHBulCKVLHol94G6BsbeCNEIoxz63YJqgjrHXyQyO7UvjHRBKgqv5X1J5E
-         nzH9H18rZ61j+5J+VdxavpmRi6vAtbkdxH/j47beBLZN4lcjThUT8/SNo5PyE8yw6/VW
-         0MaqXt+3fxnnpJRAWnzumScvHziCmjWg0Uxh/B+B0s7Aq4IrCri3iZ3IrZz+qh81Nwqa
-         IvfrX3I6qcVyyuweGVbp/TW1DKOBqTQYItDNjvm1ZaxuKrsZdmARu6JyFlugyb8b6AIW
-         O2/D+Ir1y0aCY7S2uAVq5YxiTBy9NMmXTqWFzYIutkx3g3Pw6pgcglHuv/FtnxgTg56z
-         4PXQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708957767; x=1709562567;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5F5T8yhzs23v++nMWXBDO7bbMb0OiZ0ptHeCp1LPSqA=;
-        b=PuGQ6OLTzNMQkqVh3jRnuG6Gqpa3TgV2Z9zRD1oy/BKW8R0TQPJ2LfrwpQ+VZigM+j
-         dYss6+a5ajbB3RI61RQXA4J7U4vwjbLje0EdkZi9Rdv79h6gnMwrf4CrUw+k+HHRx5s6
-         9FwTP4kIu/HXJr3LHxGNYy0xdBnyL5dUsYn5f5hLfmJO6u7ecuaWnbD5knx9OMjbwiSO
-         Ttbowca2SBH3OAFhkjbPtAN2DmpBxY1aG5u/8LSphDFXgXFPxjqGlYkA+DwuM/lBRxRU
-         HNMm+fq37tdfsU9sb+z/Si4Bby7xeSSMgjUnvl1e40RT79TpaTxDTsREznnNvt0mZCKB
-         XLXw==
-X-Gm-Message-State: AOJu0Yz0l7QQUyWsV5beDBoA0ccI6th5D9ru74m/schjSJSho7rALq2d
-	hlfk5IhkyIBGvtFD9SseaExDla2wui23U15DHqc4wu9tyLBWMkpJ6tLjxUGOUDvoiu0e6i5vdOH
-	m6qH+q9jQ3OPKE8EfxPvKBvS2ef2fWzAPXRdVcA==
-X-Google-Smtp-Source: AGHT+IEtZe/qnAbXXtUFnbg1Zv8vz7uzM8JXNLyuoBa8av7j0M3XZuoXCJuSmdwEFXMRCPbpjqFDWFl7kS4OBvoH4K8=
-X-Received: by 2002:a25:ceca:0:b0:dc2:279f:f7e with SMTP id
- x193-20020a25ceca000000b00dc2279f0f7emr4078190ybe.10.1708957765601; Mon, 26
- Feb 2024 06:29:25 -0800 (PST)
+	s=arc-20240116; t=1708959307; c=relaxed/simple;
+	bh=I0TdaHq2K6g+L+L8Q/Fh7u2BvRCJVW8ZB71K1N+w5bM=;
+	h=Date:From:To:CC:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=a0K5dGxV1CeoGbhqsAoQGh2K4q5c7DTTHkymJVE7Op4vLVj74HALqtxSXJZK0c4KSkANjVwBI3SpizuM1GPwEtKu8AbVnUrlt52qiN5kzE5y4xhEmgtAcInMw9MtaDznuSJXxsVD92I+kSeHoa2Zehl7OX/75zbiNoY3YXsxNPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=Huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Tk3Sz0Kg7z6K6hb;
+	Mon, 26 Feb 2024 22:50:43 +0800 (CST)
+Received: from lhrpeml500005.china.huawei.com (unknown [7.191.163.240])
+	by mail.maildlp.com (Postfix) with ESMTPS id D3BF0140D30;
+	Mon, 26 Feb 2024 22:55:01 +0800 (CST)
+Received: from localhost (10.202.227.76) by lhrpeml500005.china.huawei.com
+ (7.191.163.240) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 26 Feb
+ 2024 14:55:01 +0000
+Date: Mon, 26 Feb 2024 14:55:00 +0000
+From: Jonathan Cameron <Jonathan.Cameron@Huawei.com>
+To: Jonathan Cameron <jic23@kernel.org>
+CC: Dumitru Ceclan <mitrutzceclan@gmail.com>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, <linus.walleij@linaro.org>,
+	<brgl@bgdev.pl>, <andy@kernel.org>, <linux-gpio@vger.kernel.org>, "Lars-Peter
+ Clausen" <lars@metafoo.de>, Rob Herring <robh+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Michael Walle <michael@walle.cc>, Andy Shevchenko
+	<andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+	<chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?ISO-8859-1?Q?G=F6hrs?= <l.goehrs@pengutronix.de>, Mike Looijmans
+	<mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+	<hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, "Ceclan
+ Dumitru" <dumitru.ceclan@analog.com>, <linux-iio@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Conor Dooley
+	<conor.dooley@microchip.com>
+Subject: Re: [PATCH v15 1/3] dt-bindings: adc: add AD7173
+Message-ID: <20240226145500.00007783@Huawei.com>
+In-Reply-To: <20240224173055.2b2e067c@jic23-huawei>
+References: <20240223133758.9787-1-mitrutzceclan@gmail.com>
+	<20240224173055.2b2e067c@jic23-huawei>
+Organization: Huawei Technologies Research and Development (UK) Ltd.
+X-Mailer: Claws Mail 4.1.0 (GTK 3.24.33; x86_64-w64-mingw32)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <cover.1708687406.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1708687406.git.geert+renesas@glider.be>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Mon, 26 Feb 2024 15:29:13 +0100
-Message-ID: <CACRpkdanP4nPDFwcskLP8AQ9mYP8aubK_RqXqMxk-RJU6y-zyg@mail.gmail.com>
-Subject: Re: [GIT PULL] pinctrl: renesas: Updates for v6.9 (take two)
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: linux-gpio@vger.kernel.org, linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: lhrpeml100004.china.huawei.com (7.191.162.219) To
+ lhrpeml500005.china.huawei.com (7.191.163.240)
 
-On Fri, Feb 23, 2024 at 12:28=E2=80=AFPM Geert Uytterhoeven
-<geert+renesas@glider.be> wrote:
+On Sat, 24 Feb 2024 17:30:55 +0000
+Jonathan Cameron <jic23@kernel.org> wrote:
 
-> The following changes since commit fea58424e2523376ece6f734479e63061e17ad=
-7f:
->
->   pinctrl: renesas: pinctrl-rzg2l: Add the missing port pins P19 to P28 (=
-2024-01-31 14:50:44 +0100)
->
-> are available in the Git repository at:
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git=
- tags/renesas-pinctrl-for-v6.9-tag2
->
-> for you to fetch changes up to a6f06b909fee72c679c565adfa7f080f9595e336:
->
->   pinctrl: renesas: Allow the compiler to optimize away sh_pfc_pm (2024-0=
-2-21 16:34:33 +0100)
+> On Fri, 23 Feb 2024 15:37:28 +0200
+> Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+> 
+> > The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> > which can be used in high precision, low noise single channel applications
+> > or higher speed multiplexed applications. The Sigma-Delta ADC is intended
+> > primarily for measurement of signals close to DC but also delivers
+> > outstanding performance with input bandwidths out to ~10kHz.
+> > 
+> > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>  
+> 
+> Ok, in the interests of perfect not being the enemy of good enough.
+> I'll leave the supplies for now.  There are lots of existing drivers
+> where we don't list them as required (because my understanding of this
+> changed in more recent times).
+> 
+> It's been on my list of jobs for a really boring Friday afternoon
+> to bring them all inline with the convention of if it needs power
+> on the pin, it's required, so what's one more? :)
+> 
+> As Nuno pointed out, patch 2 clashed with work already upstream to
+> allow firmware to have the final say on interrupt types. I think
+> I've resolved that correctly.
+> 
+> I tidied up the docs ordering issue Andy noted.
+> 
+> Also, ad_sigma_delta is namespaced. So added
+> MODULE_IMPORT_NS(IIO_AD_SIGMA_DELTA).
+> 
+> Make sure you test your patches with a modular build
+> on a more recent tree - that change was early last in 2022!
+> 
+> A few lines in the driver were too long.
+> I don't mind them going over 80 for readability reasons, but
+> not over 100.
+> 
+> Anyhow, with those changes (and please check I didn't mess things up!)
+> applied to the togreg branch of iio.git and pushed for now as testing
+> for 0-day to get a look in.
 
-Pulled into my devel branch, thanks!
+Not good news.  There are 2 issues.
+>> drivers/iio/adc/ad7173.c:854:3: warning: variable 'chan_arr' is uninitialized when used here [-Wuninitialized]  
+     854 |                 chan_arr[chan_index] = ad7173_temp_iio_channel_template;
+         |                 ^~~~~~~~
+   drivers/iio/adc/ad7173.c:848:32: note: initialize the variable 'chan_arr' to silence this warning
+     848 |         struct iio_chan_spec *chan_arr, *chan;
+         |                                       ^
+         |                                        = NULL
+>> drivers/iio/adc/ad7173.c:855:19: warning: variable 'chans_st_arr' is uninitialized when used here [-Wuninitialized]  
+     855 |                 chan_st_priv = &chans_st_arr[chan_index];
+         |                                 ^~~~~~~~~~~~
+   drivers/iio/adc/ad7173.c:845:37: note: initialize the variable 'chans_st_arr' to silence this warning
+     845 |         struct ad7173_channel *chans_st_arr, *chan_st_priv;
+         |                                            ^
+         |                                             = NULL
 
-Yours,
-Linus Walleij
++ if you build with !CONFIG_GPIOLIB
+
+ad7173_gpio_init() isn't defined.  That needs a stub.
+
+I'll back this driver out for now as fixing the first issue is a little fiddly because
+indio_dev->channels is const so the code should allocate and fill the array via a local pointer
+before assigning it to indio_dev.
+
+Please send a new version with these resolved + make sure you run some build tests.
+
+Thanks,
+
+Jonathan
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
+
 
