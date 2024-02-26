@@ -1,138 +1,217 @@
-Return-Path: <linux-gpio+bounces-3744-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3745-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8440C866818
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 03:18:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EE93866892
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 04:20:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2C14C2814FF
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 02:18:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E0CE1C21680
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 03:20:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D68F33EC;
-	Mon, 26 Feb 2024 02:18:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C98812E78;
+	Mon, 26 Feb 2024 03:20:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WH+P/+XI"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="lO5wNnL/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35712D53C
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 02:18:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3490C11737;
+	Mon, 26 Feb 2024 03:20:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708913909; cv=none; b=hxNT3v/oJhRg2SiFskneqED4+Ehp5rCPKBRcTEAJRZ+iWqXj6MVVUAFe7KWejiQBSdGK459G+FFeQWj8xfPVDK67D1ejm/XBcjawQEn+m1eqWoYlCB3BF4WtGgAi/7kAsRGR+6SR7HwmzFfXQ3ZHrMGCjDDaBm9lwTnBNYD8piw=
+	t=1708917626; cv=none; b=tiLKols6PNHfTUT5S+iCSOVapra+NqGh/S9x0m5BWbq21ftcaaT9aqHWdofP/UgJ6H4Jl4rx+cEP+T+rEOpkiRGCOz2Co43vjZBlqFJzutb1MoMpU/hF+TCn7JCIeB69GjPkIlXbIOeG9MgB6zWcCoYYOEHiqKrasBtuUTjKflI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708913909; c=relaxed/simple;
-	bh=i2mPfz5hhKBgIesGtEKAqVUGi6/Ok6931Pv0c7OEASk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kCSSo5O4D5FOHr/355HKUtYkwtIxTR/jQEMWjqRbdn0JNFoSrGATSHV3dSoSssXXGDl3ebsyV1/IYa+CLXE4Td00i6mqivUF6GK69XAc/eV18qbmWtiV6UTC6SFZT1vSieRtKmeWPgRxZguN0LpY+eFlV6kf2D2D1icPBCF3fyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WH+P/+XI; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a293f2280c7so349664866b.1
-        for <linux-gpio@vger.kernel.org>; Sun, 25 Feb 2024 18:18:27 -0800 (PST)
+	s=arc-20240116; t=1708917626; c=relaxed/simple;
+	bh=qNyxXNVKh3rYR+lfM0KuOhVs8XEV+DHoZej5cgSnoF4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=A7oaPVJoDeaHt3kBtHDBbgP69Nxphf0fnxrhCFXsYX+g9v6NP11Ro3UWOxrpSa0sXofyrOOXVoJlfFJFUWG+8OG3zmJQiFTKKTAVjmCRyNdEEnBAF+wfYpQmM6oRWk1DgE9Ly2JZNUBRhFysmJq56v+f7S9CU8hW35TxBOw/nPI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=lO5wNnL/; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Received: from localhost.localdomain (ppp118-210-168-240.adl-adc-lon-bras34.tpg.internode.on.net [118.210.168.240])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id C384A2014E;
+	Mon, 26 Feb 2024 11:20:10 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708913906; x=1709518706; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=i2mPfz5hhKBgIesGtEKAqVUGi6/Ok6931Pv0c7OEASk=;
-        b=WH+P/+XIp2h6ilpbtuMOTqRRqaPQO2w72Us0Q2K8CPABTn10y9q4KcbvEBFWrO4lsV
-         5/gY95p56dBdXeE2cJWh7rukIdnjOeKaLIo4vKecPGb7G7bEO80U59rDM7LS2YPvM5Fh
-         5K997Fdr3uzn+st2G4LHX8uTKRm2qBCxr0JTVN2W/1qrLYt1/7uUINinWpWwl+Nc5aVj
-         1Okycree+wZ1zGAEwfFPS5rBxFSSe3Wg7arbA+4i4GN50FkS6SlpO3BS3eaAR4RgIUCz
-         z10+bwQHY70NxvMtDO4CMHYbqt1DF5+OX9/q+EwejQApnPl0Y8cDHQQ+4pErj4k7dYId
-         5ZWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708913906; x=1709518706;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=i2mPfz5hhKBgIesGtEKAqVUGi6/Ok6931Pv0c7OEASk=;
-        b=rKKfW7Q0MNO2zWTllvii5yMwZhQ74jCxV8ZvdYFS5t6qJ9zv+r+CWVgJsyfGq8YZw1
-         ScmYV1Qv2NW9rNpKOxQzMlY81f2isFpPsVEgIqO4kKtZ0j9xTuNpzwB11sWRPZbhA209
-         fhR1ipzR+4ljtxTSqj8N9/At7atOqNEo3gLd0MooOOSQajEvd1bjLZaA9ufwqtiXub6N
-         4qavcjUgMkMoroZiC4rP9QgispAGbRQT2+4jZ6VEwPe2iYvd86bWT2jR5yGEoeDfbQYZ
-         1Ud7+gK5xK1mqcF18W+LVLrQARv6w76a6Xv2IhuduWPRwnkWQpacWbzHRYl18Ko6RKVC
-         dL7A==
-X-Forwarded-Encrypted: i=1; AJvYcCUa9+NHKfe1yC1UGDyHa57aqv4j20devHejKu02WdIZfGXu0hsfspTeHFI1LCw8rx+OdJKOFz6kN6VbdpEP4+Qi80oLF7onfzYPXg==
-X-Gm-Message-State: AOJu0YxEpQzFrxdy6VT8llXJtJa7a9Poyth7jF4rAYNb6ahi8yqSh+IA
-	9KcJbJUD9bYN6xYioWCLX71a9yJLwFqai8M1WXBgW0uHBzxbCn+2Nxrju28Qjn7eUtXAPoinrgw
-	sevml9VMF+PsB7UysVO2OZQGqbaI=
-X-Google-Smtp-Source: AGHT+IG4YXMtSR6+Ovg9afTjcqQBhdC+SfOMhUOP9Ekm86AA6U2NO9exkl50Tdv03vNTes7hWhi7L25b46hLMfluMj0=
-X-Received: by 2002:a17:906:4f91:b0:a3e:7d36:62b1 with SMTP id
- o17-20020a1709064f9100b00a3e7d3662b1mr3289097eju.46.1708913906424; Sun, 25
- Feb 2024 18:18:26 -0800 (PST)
+	d=codeconstruct.com.au; s=2022a; t=1708917614;
+	bh=LNLPAUiRFnZl/7VHr8STDz7uh32Y54i1QIk4cgSLlRM=;
+	h=From:To:Cc:Subject:Date;
+	b=lO5wNnL/oJkFpK7pr0cijMRFZxr4Dnou6xRPTIB7bjv+v5iAQtbt2mAZw7TkqZadJ
+	 C9/nLWyAw8QBnFfpkAMkNrLQT+jKY1WvOJ4skySh4O/lCXze70qwc9kjkjjKag2Kce
+	 Sjs1rvcK8IBcbmp3YZus2BD8ppszTSt0U6sIWZ2oXJNZtkU5BgXZ+XP/OUIkQtJyMh
+	 FzsFfRaJiwd+ET6IT536vzo3BM7qUqP5ifDmp3G+Kj/Att/olv8rpwouOHvCaCos4D
+	 R7Vm7DskK1PBOELGnpFUkEkog9MEG/Mr4udmfZf6q/U+dKf5++ifyrghgvsoWRY8LP
+	 opkZEfKKS4gdA==
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	krzysztof.kozlowski+dt@linaro.org
+Cc: Andrew Jeffery <andrew@codeconstruct.com.au>,
+	robh+dt@kernel.org,
+	conor+dt@kernel.org,
+	joel@jms.id.au,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-aspeed@lists.ozlabs.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT schema
+Date: Mon, 26 Feb 2024 13:49:51 +1030
+Message-Id: <20240226031951.284847-1-andrew@codeconstruct.com.au>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202402232058.4eDf4GRs-lkp@intel.com> <CACRpkdZtwvZPB2=xW_SoV9DmjPQJZXyWRnwySDkEL1cDvoeGRw@mail.gmail.com>
- <CAMRc=Mevhd4b0kUi-FrWkWUxSDkpcSb9NW0+JJJbkMmPyG-RZA@mail.gmail.com>
- <CAHp75Vcm7wFKrUnt4qnRkUzcMqyqGVOsam-y6rHbYDjpPnSzyA@mail.gmail.com> <522ab6e6-97b4-472d-8a1e-a495a263dda3@app.fastmail.com>
-In-Reply-To: <522ab6e6-97b4-472d-8a1e-a495a263dda3@app.fastmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 26 Feb 2024 04:17:49 +0200
-Message-ID: <CAHp75VeSJ62oYBTpt4a80eH3tuyjJ_mRZe=P2w3yKKattmh1vg@mail.gmail.com>
-Subject: Re: [brgl:gpio/for-next 42/47] gpio-mmio.c:undefined reference to `iowrite64'
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij <linus.walleij@linaro.org>, 
-	kernel test robot <lkp@intel.com>, oe-kbuild-all@lists.linux.dev, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sun, Feb 25, 2024 at 11:09=E2=80=AFPM Arnd Bergmann <arnd@arndb.de> wrot=
-e:
-> On Sun, Feb 25, 2024, at 00:23, Andy Shevchenko wrote:
-> > On Sat, Feb 24, 2024 at 8:57=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev=
-.pl> wrote:
+Squash warnings such as:
 
-...
+```
+arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
+```
 
-> > So, the problem is that those architectures do define GENERIC_IOMAP
-> > which does NOT have implementations of ioread64*()/iowrite64*().
-> >
-> > Arnd, maybe you can shed a light on why it is so?
->
-> The problem here is that x86 cannot do 64-bit accesses
-> to IORESOURCE_IO() mappings, so neither inq()/outq() nor
-> ioread64()/iowrite64() can be implemented for it without
-> splitting the access into two 32-bit ones.
->
-> If you have the specification for the device that tries
-> to use this, you should be able to work out whether
-> the top or the bottom half of the 64-bit register comes
-> first and replace it with a pair of 32-bit accesses that
-> work on both I/O and memory space, see
-> include/linux/io-64-nonatomic-{hi-lo,lo-hi}.h
->
-> > And we have dead code like drivers/vfio/pci/vfio_pci_rdwr.c (the
-> > part related to 64-bit IO accessors), which nobody tried.
->
-> I could not figure out what that code is even trying to do,
-> with its extra byteswap.
->
-> > P.S. The workaround is to open code using readq()/writeq() [with
-> > swab64() for BE].
->
-> readq()/writeq() are not generally a replace for
-> ioread64()/iowrite64() because they can't deal with ioport_map()
-> type mappings, though the reverse is true and you can always
-> replace readl()/writel() with ioread32()/iowrite32() if you
-> can live with the performance overhead on x86.
+Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+---
+v2: Address feedback from Krzysztof:
+    https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
 
-The driver in question by name assumes that it won't perform IO port
-access. Perhaps use of ioread*()/iowrite*() is not what we should even
-consider there, Linus, Bart, do you know if gpio-mmio was ever used
-for devices that want IO port rather than MMIO accesses?
+v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
 
---=20
-With Best Regards,
-Andy Shevchenko
+ .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 73 +++++++++++++++++++
+ .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 ----------
+ 2 files changed, 73 insertions(+), 39 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+ delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+
+diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+new file mode 100644
+index 000000000000..74d376567dfc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+@@ -0,0 +1,73 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Aspeed GPIO controller
++
++maintainers:
++  - Andrew Jeffery <andrew@codeconstruct.com.au>
++
++properties:
++  compatible:
++    enum:
++      - aspeed,ast2400-gpio
++      - aspeed,ast2500-gpio
++      - aspeed,ast2600-gpio
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++    description: The clock to use for debounce timings
++
++  "#gpio-cells":
++    const: 2
++
++  gpio-controller: true
++  gpio-line-names: true
++  gpio-ranges: true
++
++  interrupts:
++    maxItems: 1
++
++  interrupt-controller: true
++
++  "#interrupt-cells":
++    const: 2
++
++  ngpios: true
++
++required:
++  - compatible
++  - reg
++  - interrupts
++  - interrupt-controller
++  - "#interrupt-cells"
++  - "#gpio-cells"
++  - gpio-controller
++
++allOf:
++  - if:
++      properties:
++        compatible:
++          contains:
++            const: aspeed,ast2600-gpio
++    then:
++      required:
++        - ngpios
++
++additionalProperties: false
++
++examples:
++  - |
++    gpio@1e780000 {
++        compatible = "aspeed,ast2400-gpio";
++        reg = <0x1e780000 0x1000>;
++        interrupts = <20>;
++        interrupt-controller;
++        #gpio-cells = <2>;
++        gpio-controller;
++    };
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+deleted file mode 100644
+index b2033fc3a71a..000000000000
+--- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
++++ /dev/null
+@@ -1,39 +0,0 @@
+-Aspeed GPIO controller Device Tree Bindings
+--------------------------------------------
+-
+-Required properties:
+-- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
+-					or "aspeed,ast2600-gpio".
+-
+-- #gpio-cells 		: Should be two
+-			  - First cell is the GPIO line number
+-			  - Second cell is used to specify optional
+-			    parameters (unused)
+-
+-- reg			: Address and length of the register set for the device
+-- gpio-controller	: Marks the device node as a GPIO controller.
+-- interrupts		: Interrupt specifier (see interrupt bindings for
+-			  details)
+-- interrupt-controller	: Mark the GPIO controller as an interrupt-controller
+-
+-Optional properties:
+-
+-- clocks		: A phandle to the clock to use for debounce timings
+-- ngpios		: Number of GPIOs controlled by this controller. Should	be set
+-				  when there are multiple GPIO controllers on a SoC (ast2600).
+-
+-The gpio and interrupt properties are further described in their respective
+-bindings documentation:
+-
+-- Documentation/devicetree/bindings/gpio/gpio.txt
+-- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+-
+-  Example:
+-	gpio@1e780000 {
+-		#gpio-cells = <2>;
+-		compatible = "aspeed,ast2400-gpio";
+-		gpio-controller;
+-		interrupts = <20>;
+-		reg = <0x1e780000 0x1000>;
+-		interrupt-controller;
+-	};
+-- 
+2.39.2
+
 
