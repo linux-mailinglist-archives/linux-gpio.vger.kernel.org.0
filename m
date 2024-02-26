@@ -1,117 +1,251 @@
-Return-Path: <linux-gpio+bounces-3761-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3762-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C9BC98675BB
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 13:56:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D53EC867640
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 14:17:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2A3471F22E44
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 12:56:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 76B871F28920
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 13:17:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E97A80602;
-	Mon, 26 Feb 2024 12:56:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0ED82127B59;
+	Mon, 26 Feb 2024 13:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="lE8evt7L"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="YK2qmOxs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from EUR04-VI1-obe.outbound.protection.outlook.com (mail-vi1eur04on2082.outbound.protection.outlook.com [40.107.8.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCA480021
-	for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 12:56:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708952180; cv=none; b=RtpWIcsNaM0sSXBm8AbtsE96Exf06qeWhl913S13df+xeEBuVjRXl3wT3MlSH+r4lTVbz4JlcK7W9t8+QgD7LXbBLXPoyBWpNl7HUbp3sl320ZAgH5YGeQ5CvmUSmh2/FAXx9UW8Jz5q45o++5UeZLgGlTPQYjGVpP1z+njr2bc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708952180; c=relaxed/simple;
-	bh=ut35o+2oN2Qn7bwysQIKI2sLMViTmOjyvxHNEvySY7Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=A4UaDDF6jouzM0wKZlEP+Lca8pu54KnnZCQW11sOGXH10k0vIlh8lzyQxCpJhijIT0kyeC5CwHQ8VbBMxzOn1b7ed0utyBEuT5ApWYctzcpXvLlJ3rh9W5q8xen8dc/7UTNs51DQOCItqMqF3EGYwcQizSmRf/gIZlTjgVZbcPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=lE8evt7L; arc=none smtp.client-ip=209.85.128.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-412a958d525so1118325e9.3
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 04:56:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1708952176; x=1709556976; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=jFrxQiHYrsfnghwiEcly4TZu16vAe3cS7xn00Nu2N2Q=;
-        b=lE8evt7LLhyMPL62h4NGBKC4vv6pX9/fPeiU+Sh1t2NpN4jSDha5bhnzKAE6EsiXxp
-         ul440nSrSQuSuYaHtkPnG6fGRJBNOq+mHXH69jCNQbNgMXAGEGh7bvboUhpaL6I4hrBW
-         xZtGcpMgyxDD8m/gMlrPUdRi4gW2UDwwVjyQxR7BXYOb0pj/YdDwuemRZpzhpSI/1JVB
-         mIG50iuB5YgYw961yz2J3xi/CzPhRkBsa/y/y02tdY+jkRy9VWDa5i6nwna0sj3/UUAb
-         VwJfI3WNfpizPPMOG7rwkLC4U6MLPbv6vrKGkHYQkOYAPjocB4zvNnIXwD5aUJwvAiQr
-         nCsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708952176; x=1709556976;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=jFrxQiHYrsfnghwiEcly4TZu16vAe3cS7xn00Nu2N2Q=;
-        b=bXFdvCs72Oiz7SGjAmoEtDRLh1MTb0SaI4FRA0pEyp8PpTkpYjcMouORuKbyR5nx+u
-         /Bgu8vAP3AnYBLKaWqDcyKJbGd0aqL5iZl0KMqC+rA3YXyGjXB/9dUpy/xjbfeeIgo1p
-         roFs1+RAEhSCEFDWmSjnD0sVNensg6up0fbzz4YScfkMkULS2SX9/rEbBEOi0XS+OgLp
-         PwTpyXX/4e2tFMSwGm2MhkQpb7M55HmCPYyS9RHbA5KApzWsZ9KO9lFkfx909OmtxR+2
-         COKFvtxOQTrO7aAk7ZGYY+1R4uGgteYmGJBNyY4bEACKo1Di10fMyiU3r/DXZMZybIWg
-         z3wg==
-X-Forwarded-Encrypted: i=1; AJvYcCXI5lt+IbQVKmS/MxTKMK9IkTx0tHjgfD9dojbLipxdlMhV8CgcfvSdWeF/n9LIHlPXxgN2aw18mkqt5cL86iIA7v2+01BUQ5voOg==
-X-Gm-Message-State: AOJu0Yy7d25AChKDzhBTR+Gqs00hwWuVMGP3EVBlZz1JXrflby4HMOs8
-	VpQckrBsFHuJPpw+jKyJWDhX9VY9ukGVFYK4g1vwD4H1TYemBY8xv4sWZ3RnW70=
-X-Google-Smtp-Source: AGHT+IHHeQtzlf12UyB07V/94hJb/CYNRe0xn/CubKev2viMPRPmMtQuMJ19vTXAxZluxRqI7qeKdQ==
-X-Received: by 2002:a05:600c:4751:b0:412:985b:a1c2 with SMTP id w17-20020a05600c475100b00412985ba1c2mr3887098wmo.14.1708952176153;
-        Mon, 26 Feb 2024 04:56:16 -0800 (PST)
-Received: from [192.168.1.70] ([84.102.31.43])
-        by smtp.gmail.com with ESMTPSA id n37-20020a05600c3ba500b004126ca2a1cbsm12348515wms.48.2024.02.26.04.56.14
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 04:56:15 -0800 (PST)
-Message-ID: <53abcb16-20f4-469f-b2d9-63544cbe1e9e@baylibre.com>
-Date: Mon, 26 Feb 2024 13:56:13 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744B1126F3B;
+	Mon, 26 Feb 2024 13:16:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.8.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1708953418; cv=fail; b=q6d9D8vCZVe8TwYV4LMbeLY0lwqIxbwhuyQf7Zd2cvHckpaROQ8hW/j1poHBrW3xM4Mwz5RlSzh+0IsORYjKhNyVd8wkyw+CDUvdfd9eonVGD1fekzjiRtfMm7Ljyq7tVky2y7c6vXVzPVDGduyaX3i9/NsyZRrzQMujkgWly48=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1708953418; c=relaxed/simple;
+	bh=0eueMde/W1cyk8U1v+I8peWLwZtQwmCJXcGq5XGMysE=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=BqYfvwbzX2aK95cMMS2jLrvNgTPiBU4H7luGG/ZAeQ9SAIGG6Z2WfHpQGGxM8HAoizHHDTF6sn+Dt8hfIYlSmWX5v7bE0Ot+7ov6sbfeM3yGOHEKcRLFDpXJDAqDz8k6hWd3Aazj4+4iieDY+68UtwIp7Yr/cjVXpziDJ9PYuuU=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=YK2qmOxs; arc=fail smtp.client-ip=40.107.8.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DYo5Z72KEaCrMHVjYDjy69JsHoSCL/37EM70o3YGfBP43kR1MSRFDMv7wClBU8KIAvS+1kVFneV78s4EbuzwehUVIIInq5dB7cvJY0sh4UIynaHDKED4LoC/AhRoEntLnYYnoUxNR/HPFII3UKfUzYqmoJ8X93HtRc0SSchJu/97eoNf4nZMbRtGr3x1tH6+Dv7BzT6RNbx765QX542YlwvKBnTGkYI0k1xBoGGwgVz3P1Z1QDOu/aiqi2j85dtbNkFD6W0sHA4HllwU6FKJn22P8GEhfjBQDpZsoIf0dN07GB2AKB9ROkZLDaZxDyvgTAGoa1sYR9RuloPZ6xbX3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=pWstsyFH8W/9+XrowUa+UBkmBBry6TMUIchylS8LE9E=;
+ b=mYm6f7OCK6QHZESNDBR7nXY4ASpmO0a0i+pz55403d9FY/nLVzK3qlBSpSlhk7Q3ALTKYlIt/Iz8kplde7/Xk4oV9aVrSvWyY0B14134SjwIwR81qlVWcvzRHSoMNAvcWTOdPWMGhD7SiUL5es830TFP1n/qI3Oymg87hI+SUuHaRCpmOVbDL8HEUe4FpAQqNXYE89HHwoV8wCggB6igQTCqhEmu5QXnUU+C3ICED/j+ooiZQcuZPjaANR1+pjSXicruHmxWRsb4T7eQJpj9xXcTCvtp+wXyzBVYovBfQmFp//jlp9GPl4bwuoeBXx1lpFtPql5bmP9IrUuVMysX4g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=pWstsyFH8W/9+XrowUa+UBkmBBry6TMUIchylS8LE9E=;
+ b=YK2qmOxs4Vo+zVXUsaqhZLlhY9V9rPX+heHaLiyNp4svPXpm7UHwGZ3lQZNM/x2I6khkG+EsH9Lxai7LF6VPLvp4Z5lP30NJE8Zo9WXfLxObcrs1565SKm9uHmlQSt0Nm34VGsMZGvuG3322ChK4nptqmzn+qncSJKC8aLXOj14=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by PAXPR04MB8405.eurprd04.prod.outlook.com (2603:10a6:102:1c2::19) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7316.34; Mon, 26 Feb
+ 2024 13:16:51 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::1232:ed97:118f:72fd%4]) with mapi id 15.20.7316.034; Mon, 26 Feb 2024
+ 13:16:51 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, "sudeep.holla@arm.com"
+	<sudeep.holla@arm.com>, "cristian.marussi@arm.com"
+	<cristian.marussi@arm.com>, "linus.walleij@linaro.org"
+	<linus.walleij@linaro.org>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Nitin Garg
+	<nitin.garg_3@nxp.com>, Ranjani Vaidyanathan <ranjani.vaidyanathan@nxp.com>,
+	Ye Li <ye.li@nxp.com>
+Subject: RE: [PATCH] pinctrl: scmi: support i.MX OEM pin configuration type
+Thread-Topic: [PATCH] pinctrl: scmi: support i.MX OEM pin configuration type
+Thread-Index: AQHaZicCkH+tvBnis0Gt2w9aePsLUbEcn84w
+Date: Mon, 26 Feb 2024 13:16:51 +0000
+Message-ID:
+ <DU0PR04MB94172086AB4EF0389B78CA6A885A2@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240223071557.2681316-1-peng.fan@oss.nxp.com>
+In-Reply-To: <20240223071557.2681316-1-peng.fan@oss.nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PAXPR04MB8405:EE_
+x-ms-office365-filtering-correlation-id: 446cf428-be6b-4836-8465-08dc36cd3224
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ wK0FrWpRATn4+vpgziAbx6xnDwTZVHJGAD0hT4Hkg1Atfzch5Jq7jMYiyXwxhFR/c4sRI7IC1cjKTpFsHdpCdXfZTImo01R8ZGkzViBYwsKiTEnpt3y+WlNL2p4HkPuMnO4qibtFzkQZ2IlnMsOpwW3L/DkGVVihhSU21OXcw0nR/vHz7h30LNsehLXK3/cD+heLX4Hdlg+7i9cYNHIGJHYs9nZCRpdNKToPqGDyOHm5sDWxMCJDGzo8vN+eTOtLppLgs+vxBoLKNj6vmRrTsjETn57roMD6FGYoYd4hPmVklHi8H6bqi9kUc/KdI8szBTTT7aZqYYQH7jtywaakC4bSsyM/wJkMJxxA+bO4yMHqxewWSJ3LBIrm8rSprXuH6tpNZ3RWHkVW1nwocwpMlHJdR9xCQvCekaC+yi0MU/Ufi9eQ7+xRKMD/nOR7fjaixr6rPgvu/teT78expHXlKTnYg+FdiWLHf8F/0VV6vJ54rks71akZT9IqW9rFsamexUPAuE63XzL8lZCb+OIZkkNtygxdy4VrfLGnQwvbhXBF9GqQHVzBBDON5xVwdGZIuLHf15w70BQiw2JR7SpAu+EaeGFr5T6nJ81ycNsOylhvVfTkeTjJKA3iQNsRUUMH37V73aKzLp7TfOLRwz+YlPujU01sX7ICchtGodZFLbGg4x06L4K7Wf3yzz1v/KGrZNoZtrO5R/3gGkkM268AZg==
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?yg13sSSeA8tKzX5VRkGNOt+ZoAbrIBzZq19Fw1L6JfzuD46zEcXwEwOP+ciC?=
+ =?us-ascii?Q?SuRtbLxwTKYAyEynWnUCcQ/u7TmqzGIqVTtf+zietdbh23Gp5ZQnoYBdurDC?=
+ =?us-ascii?Q?53zn1FGu6czGU+fCigQ0hArJ+0yVOx6hI/XN/Ns6TUtpizYovOSgJ4KLl+PR?=
+ =?us-ascii?Q?PIVfGe1s9Fr3euP/PJ6t2C2exHGJmsWqPQ4/Iw2RGpOuPCuGIRodgsNetk1C?=
+ =?us-ascii?Q?pWyAsj9aW19wzI3TFuqYPnHlUY0tEzvkm+2U6D97pqzgE+lnBOh4mun2jfOx?=
+ =?us-ascii?Q?po8piOXWQ7HslfNzMpHDacPAjDOeZ+Bw2YuSI6+SzhUcrugnWGEtJsgiz2gP?=
+ =?us-ascii?Q?K6e1uLHmFU52g2g0GZiIfUo7dhK2louZ7YPU7spQGiq9dBhAPOfOx6g6HD57?=
+ =?us-ascii?Q?VpKklw4ZeSrIfEV/pUbxR9gTFWM5eT5wK19dWwQxf7ATjSurPo+cfPoc9jfn?=
+ =?us-ascii?Q?Jt9s3FAfrO4cq6EpD3Y1xkIkUng6jBhCdVCzjW728kVfKa5FnfoWdqiRI5kY?=
+ =?us-ascii?Q?STpfIksAbzPGIOXtUvBmS9PXlgNKmMVely0o+PLoxOPXkl7gLB7O+GO5BLJX?=
+ =?us-ascii?Q?sMD4Pr534GqkdfL2ZXDR3f7D6cYFQVSeDuJZq0AimlJaKX/AoOq3msuZpuz9?=
+ =?us-ascii?Q?k0sOGCQ+9ZsU6MTCMrsVA9H0k1rfc+UhwtBymvh7x17KiKarp2mRmCPSmo1V?=
+ =?us-ascii?Q?RYI9cE3URkC7MrxIx6zBngD0wYbZ1Mnv7409DS97LZXUplhPY54YKpQo/pnF?=
+ =?us-ascii?Q?bH7obaUH7PoD9Te1hWcFznZ/tfi9N2BTGjwMoSZz5HbjykktDUMVRBfz/3/h?=
+ =?us-ascii?Q?da3lwEaFK/bBWWPZbZBotDBxSuk3psXXBTaqfdS7gQjrmnNY1gWzBiHTu5oX?=
+ =?us-ascii?Q?L9lmt0RA4e8I8eDJYsu8+VZLW2+2ZfGKn+ocmZt/XM1JZyqcCqTlNBkuQZyF?=
+ =?us-ascii?Q?8YgfVqMigq4hJOIT4Kah1hUh5lQdyeYnMKfWVBwPKvgww8VZ9AytVbLUaMsW?=
+ =?us-ascii?Q?5av8p1GL65sRqLl8FGsuEH3LeOI1YRp2mm71wIsoG2wwfm4rEC9/8sKLFsAu?=
+ =?us-ascii?Q?VZsYD9s+QzsADnxOZ2WxrjrbmvU8qPbIDVSntReT5910NgwEe0gqBDtURA/F?=
+ =?us-ascii?Q?Vp93P4boYudZdCIMRxMoizA/hPB0KrnrshdZJ96w1ywadDeFLcjhtvQ6xlAh?=
+ =?us-ascii?Q?v0LgvRQTBP1P9v1MufLEfxu+8KN8U6E42q0llLgreVh/aSedYCDbOU4+m5w6?=
+ =?us-ascii?Q?Wcl1Nq8ZCJMqIi53T6BY4dWHYh1JsNCHcmtO609z3yZv6wXyUgy2yrVxp34q?=
+ =?us-ascii?Q?LjEUdzG6zFlxIYFDnGQXfHU1JwXq9ivdzMj05cOyip7NtNzSRj1LCCyKL1ho?=
+ =?us-ascii?Q?k9pngMaL36E0LB4MGYmLibQV74RBNCKqkWJXwzPbUSftTWUlC09hGPYRTQ9g?=
+ =?us-ascii?Q?8lz7Ua5LbUeYv0sUPGIlBraRuvHsNPrrZXsnXyNCkUJaQCx16SFbd18oa8fO?=
+ =?us-ascii?Q?Iw07p9yx1go+k5MaQck89jw86lF/OOEaRGHjbX0KZ3GniesaraYGp4WJWqlU?=
+ =?us-ascii?Q?ET3jyc/nHkTky9iQAHw=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 09/14] misc: tps6594-esm: reversion check limited to
- TPS6594 family
-Content-Language: en-US
-To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
- devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
- lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
- linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com,
- vigneshr@ti.com, kristo@kernel.org
-References: <20240223093701.66034-1-bhargav.r@ltts.com>
- <20240223093701.66034-10-bhargav.r@ltts.com>
-From: Julien Panis <jpanis@baylibre.com>
-In-Reply-To: <20240223093701.66034-10-bhargav.r@ltts.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 446cf428-be6b-4836-8465-08dc36cd3224
+X-MS-Exchange-CrossTenant-originalarrivaltime: 26 Feb 2024 13:16:51.6915
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: p+mDW1FZGHu5EC8ClyuRefjk+Q0vUuMX9q5g5VDklIcgZIIuA46IVaHdB8NApeMYZWLsisdAOsmB1/uygGUj5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8405
 
-On 2/23/24 10:36, Bhargav Raviprakash wrote:
-> The reversion check is only applicable on TPS6594 family of PMICs.
-> Conditionally add that check if the chip_id is one of the PMIC in
-> the TPS6594 family.
->
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+Hi Linus, Sudeep, Cristian,
+
+> Subject: [PATCH] pinctrl: scmi: support i.MX OEM pin configuration type
+
+Sorry to ping early, but this impacts the design and i.MX95 SoC upstream(
+although I removed pinctrl to let uboot init pinmux as of now), so I would
+like see whether are you ok with the approach or not. This is the best as
+of now I could think out to not adding more size to firmware and make the
+dts format similar as previous i.MX.
+
+Thanks,
+Peng.
+
+>=20
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> i.MX95 System Manager FW supports SCMI PINCTRL protocol, but uses OEM
+> Pin Configuration type, so extend the driver to support custom params.
+>=20
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->   drivers/misc/tps6594-esm.c | 18 +++++++++++-------
->   1 file changed, 11 insertions(+), 7 deletions(-)
+>=20
+> V1:
+>  Based on https://lore.kernel.org/all/20240223-pinctrl-scmi-v4-0-
+> 10eb5a379274@nxp.com/
+>  This is an reimplementation for supporting i.MX95 OEM settings.
+>  With this patch, the dts will be like:
+>=20
+> +#define IMX95_PAD_SD1_CLK__USDHC1_CLK(val)	\
+> +	sd1clk {				\
+> +		pins =3D "sd1clk";		\
+> +		imx,func-id =3D <0>;		\
+> +		imx,pin-conf =3D <val>;		\
+> +	}
+>   ....
+> +
+> +	pinctrl_usdhc1: usdhc1grp {
+> +		IMX95_PAD_SD1_CLK__USDHC1_CLK(0x158e);
+> +		IMX95_PAD_SD1_CMD__USDHC1_CMD(0x138e);
+>  ....
+> +	};
+>=20
+>  drivers/pinctrl/pinctrl-scmi.c | 10 ++++++++++  drivers/pinctrl/pinctrl-=
+scmi.h
+> | 15 +++++++++++++++
+>  2 files changed, 25 insertions(+)
+>  create mode 100644 drivers/pinctrl/pinctrl-scmi.h
+>=20
+> diff --git a/drivers/pinctrl/pinctrl-scmi.c b/drivers/pinctrl/pinctrl-scm=
+i.c index
+> f2fef3fb85ae..e58f1aaf9963 100644
+> --- a/drivers/pinctrl/pinctrl-scmi.c
+> +++ b/drivers/pinctrl/pinctrl-scmi.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+>=20
+> +#include "pinctrl-scmi.h"
+>  #include "pinctrl-utils.h"
+>  #include "core.h"
+>  #include "pinconf.h"
+> @@ -472,6 +473,13 @@ static const struct pinconf_ops
+> pinctrl_scmi_pinconf_ops =3D {
+>  	.pin_config_config_dbg_show =3D pinconf_generic_dump_config,  };
+>=20
+> +static const struct pinconf_generic_params pinctrl_scmi_oem_dt_params[] =
+=3D
+> {
+> +	{"imx,func-id", IMX_SCMI_PIN_MUX, -1},
+> +	{"imx,daisy-id", IMX_SCMI_PIN_DAISY_ID, -1},
+> +	{"imx,daisy-conf", IMX_SCMI_PIN_DAISY_CFG, -1},
+> +	{"imx,pin-conf", IMX_SCMI_PIN_CONF, -1}, };
+> +
+>  static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+>  				 unsigned int *nr_pins,
+>  				 const struct pinctrl_pin_desc **pins) @@ -
+> 548,6 +556,8 @@ static int scmi_pinctrl_probe(struct scmi_device *sdev)
+>  	pmx->pctl_desc.pctlops =3D &pinctrl_scmi_pinctrl_ops;
+>  	pmx->pctl_desc.pmxops =3D &pinctrl_scmi_pinmux_ops;
+>  	pmx->pctl_desc.confops =3D &pinctrl_scmi_pinconf_ops;
+> +	pmx->pctl_desc.custom_params =3D pinctrl_scmi_oem_dt_params;
+> +	pmx->pctl_desc.num_custom_params =3D
+> +ARRAY_SIZE(pinctrl_scmi_oem_dt_params);
+>=20
+>  	ret =3D pinctrl_scmi_get_pins(pmx, &pmx->pctl_desc.npins,
+>  				    &pmx->pctl_desc.pins);
+> diff --git a/drivers/pinctrl/pinctrl-scmi.h b/drivers/pinctrl/pinctrl-scm=
+i.h new
+> file mode 100644 index 000000000000..fcc61bc19c98
+> --- /dev/null
+> +++ b/drivers/pinctrl/pinctrl-scmi.h
+> @@ -0,0 +1,15 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright 2024 NXP
+> + */
+> +
+> +#ifndef __DRIVERS_PINCTRL_SCMI_H
+> +#define __DRIVERS_PINCTRL_SCMI_H
+> +
+> +/* OEM VENDOR Pin Configuration Type */
+> +#define IMX_SCMI_PIN_MUX	192
+> +#define IMX_SCMI_PIN_CONF	193
+> +#define IMX_SCMI_PIN_DAISY_ID	194
+> +#define IMX_SCMI_PIN_DAISY_CFG	195
+> +
+> +#endif /* __DRIVERS_PINCTRL_SCMI_H */
+> --
+> 2.37.1
 
-Following my comment related to ESM_MCU interrupts for 'tps6594.h':
-Does it really make sense to add tps65224 ESM_MCU support in linux ?
-
-For tps6594. TI requested a linux driver for ESM_SOC only (the "main" ESM).
-No linux driver was requested for ESM_MCU.
-
-Since tps65224 does not have ESM_SOC, I'm not sure that anything should
-be done in linux for tps65224 ESM. Maybe you should discuss this point with
-TI analog team (our TI contact for tps6594 was Chris Sterzik).
-
-Julien
 
