@@ -1,115 +1,121 @@
-Return-Path: <linux-gpio+bounces-3775-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3776-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 860688680F4
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 20:26:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 137D08683E5
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 23:42:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 24CF91F2C3E5
-	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 19:26:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A8C47B2166C
+	for <lists+linux-gpio@lfdr.de>; Mon, 26 Feb 2024 22:42:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C7F212FB13;
-	Mon, 26 Feb 2024 19:26:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0982C13540C;
+	Mon, 26 Feb 2024 22:42:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XileNh/v"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="IqyDBwGf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71B211292FF;
-	Mon, 26 Feb 2024 19:25:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B8F1E878;
+	Mon, 26 Feb 2024 22:42:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1708975561; cv=none; b=Wmf1MgTMY1gOz3U1Ln5TaovRF1C678tKOgD3WXtTIbq81ity3yOlL6cdeh8/RPVPlWEi93CUD209B7QyUdiRnxohZcMxXcI3NkjelHVw6+KE2a6tG7Wh/0m5vO6xdMdLQwsrOFY7xAdsNV3G9SyyA6o3vnWeZ01MpTaAuY48bsc=
+	t=1708987339; cv=none; b=Z0xTRkgyJJZER1ha4ZYqjDFxscI/ycVK0cnvX1gWE6386YA/uA6Xw6sDm1SFnTMEZ99EQ9sOAjpSLCwWtziKubEI1TgVw5P6at3JL7vQSfilgxW4Ym3trY/+zjaG/T3lM1cJiY5JdA2vwxHM4TozxHpM13rZKxXsp/DoeD7x9nA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1708975561; c=relaxed/simple;
-	bh=PbWMB4jlXVby1Wtl2tOfGSorse+GRJQkhlfRWUhIiRU=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=d5vFVTV35y5NeUupNNxmiJ6fI88F7tZY1x6OFDziRP9McaYM/qzQHvhcSKzf2r1xK6bY2wjkqgrQuTUqmXxrXOSX2Emv619E5YKPfgURfJJDSHk09gPYyyyRZPqyIEAsubyw8e41MCo0y/sPkN8iz3v2rj54l89mppf1XBglBGw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XileNh/v; arc=none smtp.client-ip=209.85.221.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-33de620be53so261473f8f.2;
-        Mon, 26 Feb 2024 11:25:59 -0800 (PST)
+	s=arc-20240116; t=1708987339; c=relaxed/simple;
+	bh=V6ouCeVitevxOHsKiWCOL79474b7/h1XP8STN7igoe4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EeSeJnKfbyZawo095VE5DUpekTGPUjn1EVZiEuOrpD1mLfzSOQK+lwoIgjqRG7xuDyJTlydJFf92yNrt9cc4AG3X1Qza50LdHblOnrBQ/LNZcaIAbSn+nOM/OcS9rAZ+gUMVTiaoxvsrobRaaIVgkJbLqopjy7y1+2pADaSYaxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=IqyDBwGf; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Received: from [192.168.68.112] (ppp118-210-168-240.adl-adc-lon-bras34.tpg.internode.on.net [118.210.168.240])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id C4A1320127;
+	Tue, 27 Feb 2024 06:42:14 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1708975558; x=1709580358; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=IeaqTjbt7JM44Wpg22D37i2T0qr64kX299bh07EpMv0=;
-        b=XileNh/v+PFfiYHwxd6LTmqFm+cKKt0l2ctJlgeuYfh73i18CedY3BBvoB3K7CLef8
-         SVojRTFNfseAv3u3pVCeGNfv3izolRZOr1n+XwlKyl8cQxmw1MtVtbkMPRs78cxnUr7E
-         XjhMO9JWhFc0wnj4mPm5R8cQa8wSCSeQzfxoN9+QT744D7VV1rqxw3CF7XOkz8YIMFJk
-         +CqRVVB2hJKIoAga6d3Mv7dCO1ffaTBDbmUVkqsUv1KbrY8zsbB4q5/emZgiN7wrTtXS
-         Z+71tmPS6d11aISsLCfriUESDk+mUKMfUcCUOWxHtXjrbmTBlMY7s96ALXIJx8vJll33
-         3t0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1708975558; x=1709580358;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=IeaqTjbt7JM44Wpg22D37i2T0qr64kX299bh07EpMv0=;
-        b=K9scgApKP3YfgdyCOLfoRb8CNSX+LpUui+bwXYuFLweSQOfVciT2xn1rk6EUxaIzmO
-         NW+qapiECVNCZywOnKl3JT6FQLhCGoEU42/i13AmDOrzmGAza2kJ8EAT+7nRsQ7dRB2y
-         Q5aVBZ/uYDCPfE9btteloAM/bJbDlsCeaKiGKDe/ldLMG5eqEexypdGf1Nw5Z+Q/RTs3
-         vci3ngdqmW6ZwdPamiQ/I8F1AFsxn79+ryn8KVj3Uiu1d8d1UXt2pKVhVcnfdzMu4fEz
-         RENBC8F6ZQWOP/Llxy3NTeyy4WFCLAjXbUg7XHtGA4IORHTuYFvQfC952424IjrBRJxs
-         PtUA==
-X-Forwarded-Encrypted: i=1; AJvYcCXlgebgGawOfGiYv6TUK/lQvAhs+EnbjlzpE4Yi49vvKvNAsEqG+SlOiSjniH/omafYUuBVwhSyGlOiYNt4zhlLY15FV26J18qR8CNvFxzN7uzuH1k0ACDs8ZH0PbABYrTn8k2rNqjdGg==
-X-Gm-Message-State: AOJu0Yw70bhvdpOfqijMteguuAqXVjglDP+YS1YXxYe1JlrlZz+fZDL3
-	I8eOEjre9eZ4eEfaD8BASq1nA/ewnFEbGlRb/eBo0LYo6vP+p1K/
-X-Google-Smtp-Source: AGHT+IGCUQLoi0xhgTi5p000G5urv8WRNLFGbqdVQmw4abrxPsibNhvPn/iFua6baWGxMhkfWz0CgQ==
-X-Received: by 2002:adf:f88f:0:b0:33d:2226:a26b with SMTP id u15-20020adff88f000000b0033d2226a26bmr5955471wrp.24.1708975557436;
-        Mon, 26 Feb 2024 11:25:57 -0800 (PST)
-Received: from prasmi.home ([2a00:23c8:2500:a01:edb1:7d3e:765:66e3])
-        by smtp.gmail.com with ESMTPSA id g9-20020adfd1e9000000b0033cf4e47496sm9295412wrd.51.2024.02.26.11.25.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 26 Feb 2024 11:25:56 -0800 (PST)
-From: Prabhakar <prabhakar.csengg@gmail.com>
-X-Google-Original-From: Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Prabhakar <prabhakar.csengg@gmail.com>,
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH] pinctrl: renesas: pinctrl-rzg2l: Remove extra space in function parameter
-Date: Mon, 26 Feb 2024 19:25:30 +0000
-Message-Id: <20240226192530.141945-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-X-Mailer: git-send-email 2.34.1
+	d=codeconstruct.com.au; s=2022a; t=1708987335;
+	bh=/qvMBMrVFDTYVqfc8l6H/h1iuLNhCL0RUCd1VIFMYVM=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=IqyDBwGfwh2HZob3GYo5SUtNf44rqoQBZVTxs3qvSfCXE6SELc4Y7oUddjXEyIRhG
+	 uid4MOhriFaEXq+ig+lDlMtlbRVk0+mH/Hy1aW/xOgigMlQZS1tbcUqxMaPDMjtqoq
+	 mCH7e3Pk++aa18POkxcjzVS8cFKWrEt7O3eV8h5mxe775BVVuRCDgHmIACJSqmuYa+
+	 uMJ/OYGY8fGwHCMSF9BfRKxPiNDJMpSrNmalISJZGAyzKiUbwv0Id41IEXE9hidPdR
+	 NWKL+CSAmH4jbaxJQWrzDWqOtui4RBoJOJgA0z9xJ2JAhBl28gb5j9Btu+eF0ok2vO
+	 o7qEemSchbX/g==
+Message-ID: <cd7806bf4ae8818697b1eba47b380c82a919ecc5.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v3] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
+ DT schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, krzysztof.kozlowski+dt@linaro.org
+Cc: robh+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Date: Tue, 27 Feb 2024 09:12:10 +1030
+In-Reply-To: <458becdb-fb1e-4808-87b6-3037ec945647@linaro.org>
+References: <20240226051645.414935-1-andrew@codeconstruct.com.au>
+	 <458becdb-fb1e-4808-87b6-3037ec945647@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Mon, 2024-02-26 at 08:08 +0100, Krzysztof Kozlowski wrote:
+> On 26/02/2024 06:16, Andrew Jeffery wrote:
+> > Squash warnings such as:
+> >=20
+> > ```
+> > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e=
+600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,=
+ast2400-gpio']
+> > ```
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+>=20
+> ...
+>=20
+> > +  reg:
+> > +    maxItems: 1
+> > +
+> > +  clocks:
+> > +    maxItems: 1
+> > +    description: The clock to use for debounce timings
+> > +
+> > +  gpio-controller: true
+> > +  gpio-line-names: true
+>=20
+> min/maxItems
 
-Remove unnecessary space in rzg2l_pinctrl_pm_setup_pfc() function
-parameter.
+Ack.
 
-Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
----
- drivers/pinctrl/renesas/pinctrl-rzg2l.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> > +  gpio-ranges: true
+> > +
+> > +  "#gpio-cells":
+> > +    const: 2
+> > +
+> > +  interrupts:
+> > +    maxItems: 1
+> > +
+> > +  interrupt-controller: true
+> > +
+> > +  "#interrupt-cells":
+> > +    const: 2
+> > +
+> > +  ngpios: true
+>=20
+> Where are the constraints I asked? minimum, maximum.
 
-diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-index 6840ad574f7f..60974a2b3c0c 100644
---- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-+++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-@@ -2503,7 +2503,7 @@ static void rzg2l_pinctrl_pm_setup_dedicated_regs(struct rzg2l_pinctrl *pctrl, b
- 	}
- }
- 
--static void rzg2l_pinctrl_pm_setup_pfc(struct  rzg2l_pinctrl *pctrl)
-+static void rzg2l_pinctrl_pm_setup_pfc(struct rzg2l_pinctrl *pctrl)
- {
- 	u32 nports = pctrl->data->n_port_pins / RZG2L_PINS_PER_PORT;
- 	const struct rzg2l_hwcfg *hwcfg = pctrl->data->hwcfg;
--- 
-2.34.1
+Sorry. Thanks for clarifying. I'll address that in v4.
+
+Andrew
 
 
