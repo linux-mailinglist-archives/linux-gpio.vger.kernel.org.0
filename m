@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-3787-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3788-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFD9286896E
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 07:58:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C71F868989
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 08:06:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 6FE6B1F245AA
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 06:58:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F5891C21667
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 07:06:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25791537FC;
-	Tue, 27 Feb 2024 06:58:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2497553E3C;
+	Tue, 27 Feb 2024 07:06:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LA4AB5KD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QPx8K1ea"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f41.google.com (mail-ej1-f41.google.com [209.85.218.41])
+Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4680537145;
-	Tue, 27 Feb 2024 06:58:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C3B5339F
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 07:06:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709017101; cv=none; b=mSZFi8GGeGT/D5tnE0mocV7XmiixRO6NAdPEJWTMdOg6yy5Ui+YJeQmNibC2SKkLvUr3tX0gKONfdpQngJFAO9HImHqz0gMZxJ+OnqMKQ3sp4Th4dXQz4PMGRfQ009WmRqqULBGe+iY2iCh8zUQyLxwityw9Iv4yLdiFkhbN8hc=
+	t=1709017585; cv=none; b=drjFVyanBUqlgKG+OceTl2AgCGvb2ArMyRiZtzOmXpABuhPV5+LC3M4mp+L2mXhJzNUnug/1Jb6fpprTEPMJdwOchhBsRDx8gt/F7qoxB/3d6Z/EcfLBlp8Z6nizBaz/XcjrO3nM9IMAM+rFs0P7jwhctYalaJmzM8LHENRr0A8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709017101; c=relaxed/simple;
-	bh=WtF19yLgcWljmZ+iyA1mPaSgemYf7xN//8nTZWsmsII=;
+	s=arc-20240116; t=1709017585; c=relaxed/simple;
+	bh=TmTOt+hyHAifX2R0VSXHdchHMKRvzNoke2wPc8Ndato=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dQ8YAq2wzFZZK0o2XgQb88BMWNlM1DugQa1NGivD91exmyvwTMPjFYWHqwpMH9rNLbngn3tbygtjBM23VZzBYGfwQN6ERQ4VjrXLgcMBtcKbY3FkfVIbZ3rQ5NFnMRLSl63hjV+qZB3kR0hIHC1iOL1KAmyYStM+weFAIQO+tpw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LA4AB5KD; arc=none smtp.client-ip=209.85.218.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f41.google.com with SMTP id a640c23a62f3a-a3ddc13bbb3so595892066b.0;
-        Mon, 26 Feb 2024 22:58:19 -0800 (PST)
+	 In-Reply-To:Content-Type; b=GU9sBAG9F2+cmoM/eRcTB5Px9MFWjnh3hWKWzSVohfWEvXJerGZOAogPizo8E9WJi45UxImL5FQ6k8txayp2rHN/uJtIKizCro3qHRwXLZ1+q2BaomgK9/zmpdgohO87IENmDajb1EVJf+tsP1uVTrvfEe+KH/r4MpShjaPlzmU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QPx8K1ea; arc=none smtp.client-ip=209.85.208.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a8fd60af0so5207354a12.1
+        for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 23:06:23 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709017098; x=1709621898; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=linaro.org; s=google; t=1709017582; x=1709622382; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=+6Wuj7eZKvpR0/h7AmWg9U26NtZOIIFRnTuYstw2M8A=;
-        b=LA4AB5KDE4zANvxEIQBcJzeXX5CaaGV4McmZp8a95CJzo+1UPTnOjAuoteqiwzbc+k
-         fQehdntBAv5aIwVKTIQ95X2Ag9QCZpl/C3KB2vg51Yf3I1gbilmZT7co1uZVLuhq8pHN
-         KpoHThYeMtZLeU5Mg4QqTvfcxRj5QGzrzvi8DZY8loA8DabWRVHklgxX5VKqKjqJC0Ol
-         ZHGIzA2IrcOQmAmns8o60TuwD2x7XNqa4BeM9Fx68c/68rV9InIAGiDokV9q5Zr1KTfD
-         q4DboF5iaf3uBlgM5/+alYe8BszrAW/rqwA56czeHrhdYMxhHMQMJgEAmTg0jUoQlZQq
-         zUTQ==
+        bh=vLCxLnglQud6AafcMTZGxWqddfDheQOqmiuHd+EOBrk=;
+        b=QPx8K1ea+WO3K6OFeWl6S9PLsQj57L+TF8mVy/zgqpj4dZBBheF+ag/e1B8cWquf7M
+         GJFWIuUWQXm+tTNyq8Yl0DWJ3Dh8MOWRBjbHUo0V04+fMdpo4NVR+jOjhfFaeLpBlJYi
+         c1yZbOZb8AbAB/HYT3x8IOlsJtqf0i0SiFLQhHHX36LILSWLa1gInWy3Omh0xsmndfpb
+         wOP7mydp5ShnJy+sdjbleb03rOyl81VheMNl1tiPWGdwuDMEBWbwExvJxoyhXuqN5VAW
+         SJZxIhQR2HNyvAym38GEp1nGbKLd9jdTjF/lgrFX8KVYHJMmq5DJzFZUXq+hPAiYDteH
+         GzWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709017098; x=1709621898;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
+        d=1e100.net; s=20230601; t=1709017582; x=1709622382;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=+6Wuj7eZKvpR0/h7AmWg9U26NtZOIIFRnTuYstw2M8A=;
-        b=QQC7HHOTFgYjnpZ12eZgFrKGevicpXKa+Kzm1m3cayE0yApm8f/gnLikk3wYu1Z4Db
-         7uLY1hmYJxXsgpk+HepZu8rsKe54dqhYqlIeVezagGjMPR6O/OoclyWew+4XRduAymGy
-         y7swZHyLsAHBK5WJFXt5vt5af1DmtLWjIDvtZ0f7mKXEjJ+5JV0RrDELy7v4yDKbtuM8
-         +3C4un6WeZhqWi+h9T/+cv172aLjszuam8uogzxOZy06qxb5tEU/JP2aUaQJy0eSMwGn
-         VvGbjQBOoYvyBIyIFOBr07M9gJY3i8Q8YzMYwd7TBSfUoJDkP+jzMEcahxy6kfRU5X1I
-         tDYQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUAHutBPuki0TRtptzHB5ks28LrxYXKue3WtkDjg3cR3yu1M/VTeR0vMvV6VdThoSJVnqwdajJXAhd+zPQyiLx9A4JIMyHZBPh2X1E9WH0InZjYHMK7Vn5KMgW9wCXU8D06l07cwDN5YQ==
-X-Gm-Message-State: AOJu0YwmLByWHK+jr7aL1j/w9CO9aiNMb7FTd9aaH9GYJgu0RI8h5cF/
-	1LCPg9mT6yYzhXlcx2xVcHBqqa5KTBGDqxD1X8YTtFBTvhwNx6fL
-X-Google-Smtp-Source: AGHT+IGpHfRMSHULnORjFlnpR1xNs3zY8fsQONJ/NXogsHFRrBuYKu2sEJmESEmUMGp1mUYjiifsVQ==
-X-Received: by 2002:a17:907:9813:b0:a43:ab6f:ef6b with SMTP id ji19-20020a170907981300b00a43ab6fef6bmr910378ejc.32.1709017098442;
-        Mon, 26 Feb 2024 22:58:18 -0800 (PST)
-Received: from [192.168.3.110] (IN-84-15-189-254.bitemobile.lt. [84.15.189.254])
-        by smtp.gmail.com with ESMTPSA id pw11-20020a17090720ab00b00a3f963c66a8sm454038ejb.121.2024.02.26.22.58.17
+        bh=vLCxLnglQud6AafcMTZGxWqddfDheQOqmiuHd+EOBrk=;
+        b=oeunLdJknuuEbFV106kwHvY08Il6Dm+AJvZboiNRSdID3SVr+aWtMT1ga1BoXmBcdS
+         3oPyWaWIlEPoiHwi0BPwAXMtXthUSPltbYk3Ft8Htka08JwvYqpard78b2GoxuakCgzo
+         Fj+mjmAsUiCAV+GhNblHkC+fpZcFdlvw7h4fKQAR4NMS0mtq7NdAUhic8hVSWD8IPqjd
+         OjKFn6W32kAQbD0ZMfRA9aTOuW5eDNfQ9a4vQQo3/MxSaDnt4zUk9tBiVkyQ4JIX/AUV
+         pINvl6PbYRvNJYNee78XLnYtotV6pf9wTqOtTsgIADSr2HRl1dLFd1RxNaKFlc/ld4ka
+         AigA==
+X-Forwarded-Encrypted: i=1; AJvYcCUS/sPJyscrgg6lTimnCgbp8SGUdM4umYr3le99lssYlkd1bCOLrBw6VbpjD1MmrNPPtDrKyMOJCqLToN18zdgowME4Mjnh9DV9IQ==
+X-Gm-Message-State: AOJu0YzhwRcVII4NrNfxOlBBZF0nIiRhq4NoaV8r/S+ayy8E967tklvT
+	mvVDD11FOrhtSgJNIRBZlIvRXHORUr38gB7P64uMo6hiI80lN1dcVYgVZVIjqhU=
+X-Google-Smtp-Source: AGHT+IH3nPjxyLxePuzG85v10xOwBHg/CBPZEZjd12HuCqZJPvxpHQEs182DxeMGYt2iwDOWsPmcwg==
+X-Received: by 2002:a05:6402:78f:b0:565:ced9:2657 with SMTP id d15-20020a056402078f00b00565ced92657mr4158876edy.7.1709017582311;
+        Mon, 26 Feb 2024 23:06:22 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.116])
+        by smtp.gmail.com with ESMTPSA id r11-20020a056402018b00b0056608214577sm472173edv.16.2024.02.26.23.06.20
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 22:58:18 -0800 (PST)
-Message-ID: <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
-Date: Tue, 27 Feb 2024 08:58:16 +0200
+        Mon, 26 Feb 2024 23:06:21 -0800 (PST)
+Message-ID: <f69ef2ad-8ace-40c8-b923-4dde20eda2ec@linaro.org>
+Date: Tue, 27 Feb 2024 08:06:20 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,44 +76,231 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are
- reset
+Subject: Re: [PATCH v5] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT
+ schema
 Content-Language: en-US
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, u.kleine-koenig@pengutronix.de,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
- <ZdyZnqS_jKelbs6G@smile.fi.intel.com>
-From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-In-Reply-To: <ZdyZnqS_jKelbs6G@smile.fi.intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+To: Andrew Jeffery <andrew@codeconstruct.com.au>, linus.walleij@linaro.org,
+ brgl@bgdev.pl, krzysztof.kozlowski+dt@linaro.org
+Cc: robh+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
+ linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
+ linux-kernel@vger.kernel.org
+References: <20240227052353.1060306-1-andrew@codeconstruct.com.au>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240227052353.1060306-1-andrew@codeconstruct.com.au>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+On 27/02/2024 06:23, Andrew Jeffery wrote:
+> Squash warnings such as:
+> 
+> ```
+> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
+> ```
+> 
+> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> ---
+> v5: Resolve macro definition clashes from aspeed clock headers in examples
+>     identified by Rob's bot:
+> 
+>     https://lore.kernel.org/all/170900020204.2360855.790404478830111761.robh@kernel.org/
+> 
+>     Clearly I missed running `make dt_binding_check` on the final iteration of
+>     the v4 patch I sent. Hopefully I'm running out of rakes to step on here!
+> 
+> v4: https://lore.kernel.org/all/20240227004414.841391-1-andrew@codeconstruct.com.au/
+> 
+>     Add constraints for gpio-line-names, ngpios as requested by Krzysztof:
+>     https://lore.kernel.org/all/458becdb-fb1e-4808-87b6-3037ec945647@linaro.org/
+> 
+>     Add more examples to exercise constraints.
 
-On 2/26/24 16:01, Andy Shevchenko wrote:
-> On Mon, Feb 26, 2024 at 03:46:56PM +0200, Arturas Moskvinas wrote:
->> Move output enabling after chip registers are cleared.
-> Does this fix anything? If so, maybe elaborate a bit the potential behavioural
-> changes on the real lines.
+No, one or two examples (if there are quite different) is enough.
 
-Chip outputs are enabled[1] before actual reset is performed[2] which 
-might cause pin output value to flip flop if previous pin value was set 
-to 1 in chip. Change fixes that behavior by making sure chip is fully 
-reset before all outputs are enabled.
+> 
+> v3: https://lore.kernel.org/all/20240226051645.414935-1-andrew@codeconstruct.com.au/
+> 
+>     Base on v6.8-rc6, fix yamllint warning
+> 
+>     Rob's bot picked the missing `#interrupt-cells` in the example on v2[1]. The
+>     patch was based on v6.8-rc1, and going back over my shell history I missed
+>     the following output from `make dt_binding_check`:
+> 
+>     ```
+>     ...
+>       LINT    Documentation/devicetree/bindings
+>       usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [--list-files] [-f {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v] [FILE_OR_DIR ...]
+>       yamllint: error: one of the arguments FILE_OR_DIR - is required   
+>     ...
+>     ```
+> 
+>     I've rebased on v6.8-rc6 and no-longer see the issue with the invocation
+>     of `yamllint`.
+> 
+> [1]: https://lore.kernel.org/all/170892197611.2260479.15343562563553959436.robh@kernel.org/
+> 
+> v2: https://lore.kernel.org/all/20240226031951.284847-1-andrew@codeconstruct.com.au/
+> 
+>     Address feedback from Krzysztof:
+>     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
+> 
+> v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
+> 
+>  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 143 ++++++++++++++++++
+>  .../devicetree/bindings/gpio/gpio-aspeed.txt  |  39 -----
+>  2 files changed, 143 insertions(+), 39 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+>  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> new file mode 100644
+> index 000000000000..1aa28b1817cf
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> @@ -0,0 +1,143 @@
+> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Aspeed GPIO controller
+> +
+> +maintainers:
+> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - aspeed,ast2400-gpio
+> +      - aspeed,ast2500-gpio
+> +      - aspeed,ast2600-gpio
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: The clock to use for debounce timings
+> +
+> +  gpio-controller: true
+> +  gpio-line-names: true
 
-Flip-flop can be noticed when module is removed and inserted again and 
-one of the pins was changed to 1 before removal. 100 microsecond 
-flipping is noticeable on oscilloscope (100khz SPI bus).
+min/maxItems
 
-For a properly reset chip - output is enabled around 100 microseconds 
-(on 100khz SPI bus) later during probing process hence should be 
-irrelevant behavioral change.
 
-[1] - 
-https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L130
-[2] - 
-https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L150
+> +  gpio-ranges: true
+> +
+> +  "#gpio-cells":
+> +    const: 2
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +  interrupt-controller: true
+> +
+> +  "#interrupt-cells":
+> +    const: 2
+> +
+> +  ngpios: true
 
-Arturas Moskvinas
+minimum/maximum.
+
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - "#interrupt-cells"
+> +  - gpio-controller
+> +  - "#gpio-cells"
+> +
+> +allOf:
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2400-gpio
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 220
+> +          maxItems: 220
+> +        ngpios:
+> +          const: 220
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2500-gpio
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 232
+> +          maxItems: 232
+> +        ngpios:
+> +          const: 232
+> +  - if:
+> +      properties:
+> +        compatible:
+> +          contains:
+> +            const: aspeed,ast2600-gpio
+> +    then:
+> +      properties:
+> +        gpio-line-names:
+> +          minItems: 36
+> +          maxItems: 208
+> +        ngpios:
+> +          enum: [ 36, 208 ]
+> +      required:
+> +        - ngpios
+Best regards,
+Krzysztof
+
 
