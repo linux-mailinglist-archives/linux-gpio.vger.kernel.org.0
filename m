@@ -1,126 +1,119 @@
-Return-Path: <linux-gpio+bounces-3825-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3826-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 45C38869B54
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 16:55:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 373DD869C72
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 17:40:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 69A141C254F4
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 15:55:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 603FC1C24E14
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 16:40:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9511414D456;
-	Tue, 27 Feb 2024 15:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04DC1487D3;
+	Tue, 27 Feb 2024 16:38:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="H4czaRNT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl8yB78/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0ED8414CACB;
-	Tue, 27 Feb 2024 15:53:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD46145FF9;
+	Tue, 27 Feb 2024 16:38:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709049239; cv=none; b=D+aj+BFHdR0nNHqM9ToaA36NEZqu9mYUGAlgd7wtKmVxdncnz8mFPBxUOg1bzrw6ZbfCoZlPyaTtAOyY3mM+4hcXldD9qKQdPEAzka7u9R3t1W7oL32A4Mp7UOCdkQjBNw5tgtBeJZ2niwReLvW82Xy85BHAz9FlPhV6PwoXMbI=
+	t=1709051915; cv=none; b=FDSnBuJGZ8pZoHE2kuQPac+L4GjPXOywdqGaRIUFLYNC+rFegRSW8Oc5dFDHhdKNRa4f+7L6WUfKoJhRPZ8MBcwwGMSXJP8b68Ri4pX1ptV5goXDSoIOoalq60ZWnWqysU506oU3SDnrGaTOPg9tm3/coSS4PQgdl/tPkq9TI6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709049239; c=relaxed/simple;
-	bh=a6HqBkmx/YMzLwbBaE70Z4ncxL4+fd7dFK32oyoWxZM=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=gmdSBuczMyqP+qd+kDOuGg82L71KzzOgnJC/DAI34NcWqUQBAgQwHDwAkSD2E9rFTUuM1eH7IvaCdLeZdcEu/6XLmthwqiFDVSOoYh0DSZebUIQdWkwhnzAPwUJ6nNmCfrbXD4rV1XPTaqIMsgrbArC/q5Lnx2z4NLOw2+43VaA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=H4czaRNT; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 41RAuNdb009670;
-	Tue, 27 Feb 2024 15:53:55 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=oyNGVgf749RGIPNshcfIDi9wFWrNfE/UUoZx08FK340=; b=H4
-	czaRNTwEwgV1VPz8gpWMANM7SE0ArcnKq8Q8RMJQNLSXCF0cZv22iCsf4/4w3Htu
-	rqyaUp3OXCjgapmZH2XdTWFkj5lqiNj2OYPCmJ1QnpS/3j72QoKsY3nlqKLUZLFh
-	YrV7EuaUF5+btol18t7Uv8SPfr5xcVMcQqT7B7Tb6yNYiOybINRuNnz5sqyVbJ7l
-	GVbypcD5ZxZZkfc3OAEowq28eF9AjZMjUbtFe/Aa375niF0R9mab07atV3Q1wubi
-	13FJSRS3f4TQ8+gBoZWQYdJOrWIed/W1seGoYUiUgnnPBJnSeYDs5gVK0dEOJ4IG
-	gYA/f0IrnE83RxaWBJzg==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3whedvrr88-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 15:53:55 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 41RFrsDc011850
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 27 Feb 2024 15:53:54 GMT
-Received: from hu-mojha-hyd.qualcomm.com (10.80.80.8) by
- nasanex01c.na.qualcomm.com (10.45.79.139) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 27 Feb 2024 07:53:52 -0800
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
-        Mukesh Ojha
-	<quic_mojha@quicinc.com>
-Subject: [PATCH v12 9/9] firmware: scm: Remove redundant scm argument from qcom_scm_waitq_wakeup()
-Date: Tue, 27 Feb 2024 21:23:08 +0530
-Message-ID: <20240227155308.18395-10-quic_mojha@quicinc.com>
-X-Mailer: git-send-email 2.43.0.254.ga26002b62827
-In-Reply-To: <20240227155308.18395-1-quic_mojha@quicinc.com>
-References: <20240227155308.18395-1-quic_mojha@quicinc.com>
+	s=arc-20240116; t=1709051915; c=relaxed/simple;
+	bh=ikEKQlLSECX2b8BEADhWEQfhujAMjXxhYPJhlsmt8PI=;
+	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
+	 Message-Id:Subject; b=T48zqJwToRF2TI1GRN+FmdLju6mEslBKHFD7ELmzG0XWJjKZuFxQgd+LLuFxwIZlS2v/VV/CCGAOxnu6sXd6KaKG44YsoOmPACNfhUYUYdbbk41xeaU4MLLueIl+K3sWO6fIwUsrhQQ8N9xjHEBHVR1Qys51P25nmDeuuBrikdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl8yB78/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F929C433F1;
+	Tue, 27 Feb 2024 16:38:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709051914;
+	bh=ikEKQlLSECX2b8BEADhWEQfhujAMjXxhYPJhlsmt8PI=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=Zl8yB78/QGgEfBXbOE2rd4BWgjAnheF0pBdhJ1LOk6mW7YPw/rXx6fJyuhgnmBDta
+	 yi2LyvAU3PGI9FJN4gxPo10VelwIwhjiGA1hrOLr/wf8Npe/6ud9/3QqJbaEi/vJVk
+	 9vXrkmrHAAwJV63xA4UiGlzOQsUM7fy2y+83AnqrM8TjZZIfpCdC1TGW2ayacFRdc7
+	 1J8JhemTBkpHNOpnvFiozMvAF5rgRbWx3jlaNFVoO+k9a7TpmztIQGLum027h5l6qN
+	 0DBCB+4dKUmsOAOEKFPTlgYgoht6tqErsyD5VPfXo3NDLmYnf3dLDh2pEYcdz6br4Z
+	 BWly5kOEoP8Pw==
+Date: Tue, 27 Feb 2024 10:38:33 -0600
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: C_3KrFfEdNVvreYXkud8SuXx7N98pwtA
-X-Proofpoint-ORIG-GUID: C_3KrFfEdNVvreYXkud8SuXx7N98pwtA
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-02-27_01,2024-02-27_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- mlxlogscore=947 clxscore=1015 bulkscore=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 priorityscore=1501 adultscore=0 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2402270122
+From: Rob Herring <robh@kernel.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Cc: linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org, 
+ linux-clk@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+ Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Michael Turquette <mturquette@baylibre.com>
+In-Reply-To: <20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com>
+Message-Id: <170905191234.4042659.13935993184407860612.robh@kernel.org>
+Subject: Re: [PATCH v8 02/10] dt-bindings: soc: mobileye: add EyeQ5 OLB
+ system controller
 
-Remove unused scm argument from qcom_scm_waitq_wakeup().
 
-Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
----
- drivers/firmware/qcom/qcom_scm.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, 27 Feb 2024 15:55:23 +0100, Théo Lebrun wrote:
+> Add documentation to describe the "Other Logic Block" syscon.
+> 
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+> ---
+>  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 94 ++++++++++++++++++++++
+>  1 file changed, 94 insertions(+)
+> 
 
-diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-index a1dce417e6ec..d91f5872e003 100644
---- a/drivers/firmware/qcom/qcom_scm.c
-+++ b/drivers/firmware/qcom/qcom_scm.c
-@@ -1853,7 +1853,7 @@ int qcom_scm_wait_for_wq_completion(u32 wq_ctx)
- 	return 0;
- }
- 
--static int qcom_scm_waitq_wakeup(struct qcom_scm *scm, unsigned int wq_ctx)
-+static int qcom_scm_waitq_wakeup(unsigned int wq_ctx)
- {
- 	int ret;
- 
-@@ -1885,7 +1885,7 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
- 			goto out;
- 		}
- 
--		ret = qcom_scm_waitq_wakeup(scm, wq_ctx);
-+		ret = qcom_scm_waitq_wakeup(wq_ctx);
- 		if (ret)
- 			goto out;
- 	} while (more_pending);
--- 
-2.43.0.254.ga26002b62827
+My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+on your patch (DT_CHECKER_FLAGS is new in v5.13):
+
+yamllint warnings/errors:
+
+dtschema/dtc warnings/errors:
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml:
+Error in referenced schema matching $id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: clock-controller@2c: False schema does not allow {'compatible': ['mobileye,eyeq5-clk'], 'reg': [[44, 80], [284, 4]], 'reg-names': ['plls', 'ospi'], '#clock-cells': [[1]], 'clocks': [[4294967295]], 'clock-names': ['ref']}
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: reset-controller@0: False schema does not allow {'compatible': ['mobileye,eyeq5-reset'], 'reg': [[0, 12], [512, 52], [288, 4]], 'reg-names': ['d0', 'd1', 'd2'], '#reset-cells': [[2]]}
+	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
+Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/reset-controller@0: failed to match any schema with compatible: ['mobileye,eyeq5-reset']
+Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/clock-controller@2c: failed to match any schema with compatible: ['mobileye,eyeq5-clk']
+
+doc reference errors (make refcheckdocs):
+
+See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com
+
+The base for the series is generally the latest rc1. A different dependency
+should be noted in *this* patch.
+
+If you already ran 'make dt_binding_check' and didn't see the above
+error(s), then make sure 'yamllint' is installed and dt-schema is up to
+date:
+
+pip3 install dtschema --upgrade
+
+Please check and re-submit after running the above command yourself. Note
+that DT_SCHEMA_FILES can be set to your schema file to speed up checking
+your schema. However, it must be unset to test all examples with your schema.
 
 
