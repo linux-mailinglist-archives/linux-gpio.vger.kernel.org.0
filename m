@@ -1,119 +1,196 @@
-Return-Path: <linux-gpio+bounces-3826-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3827-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 373DD869C72
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 17:40:29 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 05DA9869C8B
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 17:43:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 603FC1C24E14
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 16:40:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B61FB284FC0
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 16:43:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C04DC1487D3;
-	Tue, 27 Feb 2024 16:38:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zl8yB78/"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6433F3EA93;
+	Tue, 27 Feb 2024 16:41:17 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6DD46145FF9;
-	Tue, 27 Feb 2024 16:38:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2CCA208AD;
+	Tue, 27 Feb 2024 16:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709051915; cv=none; b=FDSnBuJGZ8pZoHE2kuQPac+L4GjPXOywdqGaRIUFLYNC+rFegRSW8Oc5dFDHhdKNRa4f+7L6WUfKoJhRPZ8MBcwwGMSXJP8b68Ri4pX1ptV5goXDSoIOoalq60ZWnWqysU506oU3SDnrGaTOPg9tm3/coSS4PQgdl/tPkq9TI6A=
+	t=1709052077; cv=none; b=UWw+9UQ26ntNPlQIt/WYXejYFisfus+XMssXp/wYksauvC5RO9FovSxM8TntqJRGhPNTxJ/0hodtT3wSwL7hMPMHLGl/ktA1MlPzWf1kraZ2Ywc92dzheBimKMst6OpDlBQVgacJEGuF+Gs52H8LuS40MSp3fjZq99wfCee2w30=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709051915; c=relaxed/simple;
-	bh=ikEKQlLSECX2b8BEADhWEQfhujAMjXxhYPJhlsmt8PI=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=T48zqJwToRF2TI1GRN+FmdLju6mEslBKHFD7ELmzG0XWJjKZuFxQgd+LLuFxwIZlS2v/VV/CCGAOxnu6sXd6KaKG44YsoOmPACNfhUYUYdbbk41xeaU4MLLueIl+K3sWO6fIwUsrhQQ8N9xjHEBHVR1Qys51P25nmDeuuBrikdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zl8yB78/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F929C433F1;
-	Tue, 27 Feb 2024 16:38:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709051914;
-	bh=ikEKQlLSECX2b8BEADhWEQfhujAMjXxhYPJhlsmt8PI=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=Zl8yB78/QGgEfBXbOE2rd4BWgjAnheF0pBdhJ1LOk6mW7YPw/rXx6fJyuhgnmBDta
-	 yi2LyvAU3PGI9FJN4gxPo10VelwIwhjiGA1hrOLr/wf8Npe/6ud9/3QqJbaEi/vJVk
-	 9vXrkmrHAAwJV63xA4UiGlzOQsUM7fy2y+83AnqrM8TjZZIfpCdC1TGW2ayacFRdc7
-	 1J8JhemTBkpHNOpnvFiozMvAF5rgRbWx3jlaNFVoO+k9a7TpmztIQGLum027h5l6qN
-	 0DBCB+4dKUmsOAOEKFPTlgYgoht6tqErsyD5VPfXo3NDLmYnf3dLDh2pEYcdz6br4Z
-	 BWly5kOEoP8Pw==
-Date: Tue, 27 Feb 2024 10:38:33 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1709052077; c=relaxed/simple;
+	bh=Auiob5o1YiESgmh2qGEQ64V8+hNAmx59W2PnXQ/O2q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=NNYiQT+E006w1O3+71BTq2IyNmTvJeopZrkPT6+xB5OFTb5oNahJL/ZFPTKLGmlhBp/9E0Nv53SayZwAcCGr8XgKNEPDD8v/BXoCX129qLiLqYhtDqsj8prqDlCK/EZBXS1hFNCELwPyBk/lOn/mhUYA+nsxIni/vPEbAsZv9qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3245944"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="3245944"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:41:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913916735"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="913916735"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 08:41:11 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rf0Vw-00000007zsC-1bg5;
+	Tue, 27 Feb 2024 18:41:08 +0200
+Date: Tue, 27 Feb 2024 18:41:08 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Stefan Wahren <wahrenst@gmx.net>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+	Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+	Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: Re: [PATCH V4 2/2] pwm: Add GPIO PWM driver
+Message-ID: <Zd4QpBsyTnuM8hwt@smile.fi.intel.com>
+References: <20240204220851.4783-1-wahrenst@gmx.net>
+ <20240204220851.4783-3-wahrenst@gmx.net>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Cc: linux-gpio@vger.kernel.org, linux-mips@vger.kernel.org, 
- linux-clk@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
- Michael Turquette <mturquette@baylibre.com>
-In-Reply-To: <20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com>
-References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
- <20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com>
-Message-Id: <170905191234.4042659.13935993184407860612.robh@kernel.org>
-Subject: Re: [PATCH v8 02/10] dt-bindings: soc: mobileye: add EyeQ5 OLB
- system controller
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240204220851.4783-3-wahrenst@gmx.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Tue, 27 Feb 2024 15:55:23 +0100, Théo Lebrun wrote:
-> Add documentation to describe the "Other Logic Block" syscon.
+On Sun, Feb 04, 2024 at 11:08:51PM +0100, Stefan Wahren wrote:
+> From: Vincent Whitchurch <vincent.whitchurch@axis.com>
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
->  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 94 ++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
+> Add a software PWM which toggles a GPIO from a high-resolution timer.
 > 
+> This will naturally not be as accurate or as efficient as a hardware
+> PWM, but it is useful in some cases.  I have for example used it for
+> evaluating LED brightness handling (via leds-pwm) on a board where the
+> LED was just hooked up to a GPIO, and for a simple verification of the
+> timer frequency on another platform.
+> 
+> Since high-resolution timers are used, sleeping gpio chips are not
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+GPIO
 
-yamllint warnings/errors:
+> supported and are rejected in the probe function.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml:
-Error in referenced schema matching $id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: clock-controller@2c: False schema does not allow {'compatible': ['mobileye,eyeq5-clk'], 'reg': [[44, 80], [284, 4]], 'reg-names': ['plls', 'ospi'], '#clock-cells': [[1]], 'clocks': [[4294967295]], 'clock-names': ['ref']}
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: reset-controller@0: False schema does not allow {'compatible': ['mobileye,eyeq5-reset'], 'reg': [[0, 12], [512, 52], [288, 4]], 'reg-names': ['d0', 'd1', 'd2'], '#reset-cells': [[2]]}
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/reset-controller@0: failed to match any schema with compatible: ['mobileye,eyeq5-reset']
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/clock-controller@2c: failed to match any schema with compatible: ['mobileye,eyeq5-clk']
+Overall LGTM, but I have a few comments below.
 
-doc reference errors (make refcheckdocs):
+...
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com
++ container_of.h
 
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/gpio/consumer.h>
+> +#include <linux/hrtimer.h>
+> +#include <linux/module.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pwm.h>
+> +#include <linux/spinlock.h>
 
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
++ time.h
++ types.h
 
-pip3 install dtschema --upgrade
+...
 
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+> +static enum hrtimer_restart pwm_gpio_timer(struct hrtimer *gpio_timer)
+> +{
+> +	struct pwm_gpio *gpwm = container_of(gpio_timer, struct pwm_gpio,
+> +					     gpio_timer);
+> +	unsigned long next_toggle;
+> +	unsigned long flags;
+> +	bool new_level;
+
+> +	spin_lock_irqsave(&gpwm->lock, flags);
+
+Can we use cleanup.h from day 1?
+
+> +	/* Apply new state at end of current period */
+> +	if (!gpwm->level && gpwm->changing) {
+> +		gpwm->changing = false;
+> +		gpwm->state = gpwm->next_state;
+> +		new_level = !!gpwm->state.duty_cycle;
+> +	} else {
+> +		new_level = !gpwm->level;
+> +	}
+> +
+> +	next_toggle = pwm_gpio_toggle(gpwm, new_level);
+> +	if (next_toggle) {
+> +		hrtimer_forward(gpio_timer, hrtimer_get_expires(gpio_timer),
+> +				ns_to_ktime(next_toggle));
+> +	}
+> +
+> +	spin_unlock_irqrestore(&gpwm->lock, flags);
+> +
+> +	return next_toggle ? HRTIMER_RESTART : HRTIMER_NORESTART;
+> +}
+
+...
+
+> +		/*
+> +		 * This just enables the output, but pwm_gpio_toggle()
+> +		 * really starts the duty cycle.
+> +		 */
+> +		int ret = gpiod_direction_output(gpwm->gpio, invert);
+> +
+> +		if (ret)
+> +			return ret;
+
+Better to have it written as
+
+		int ret;
+
+		/*
+		 * This just enables the output, but pwm_gpio_toggle()
+		 * really starts the duty cycle.
+		 */
+		ret = gpiod_direction_output(gpwm->gpio, invert);
+		if (ret)
+			return ret;
+
+...
+
+> +	gpwm->gpio = devm_gpiod_get(dev, NULL, GPIOD_ASIS);
+> +	if (IS_ERR(gpwm->gpio)) {
+> +		return dev_err_probe(dev, PTR_ERR(gpwm->gpio),
+> +				     "could not get gpio\n");
+> +	}
+
+{} are not needed.
+
+...
+
+> +	if (gpiod_cansleep(gpwm->gpio)) {
+> +		return dev_err_probe(dev, -EINVAL,
+> +				     "sleeping GPIO %d not supported\n",
+
+> +				     desc_to_gpio(gpwm->gpio));
+
+Do not use plain GPIO numbers.
+
+> +	}
+
+{} are not needed.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
