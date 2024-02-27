@@ -1,132 +1,357 @@
-Return-Path: <linux-gpio+bounces-3831-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3832-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 86E30869D18
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 18:04:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9202869D43
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 18:12:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 276D01F26EB9
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 17:04:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8EF96290CF6
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 17:12:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5FCF25757;
-	Tue, 27 Feb 2024 17:04:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 22BCC481BD;
+	Tue, 27 Feb 2024 17:12:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="RZWe+Ivl"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nVED4zJo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail.zeus03.de (www.zeus03.de [194.117.254.33])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2338447F58
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 17:04:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03AFA47A7D;
+	Tue, 27 Feb 2024 17:12:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709053494; cv=none; b=Baar21oMrIqAAN0FI96Gckh8A/rmPp639eLTBC4d5t7LaMebYkU21L8NuJv2FSJ6g8P1pRpMDoutm4l/rA44BhsocBnorN8FDsIMWWKWK5WvQ4a9s1AqpTvIjud6V46MA7xgPfl3zdlJzT34aWmMeIH7wj0gKai6UXO23hwD7rc=
+	t=1709053928; cv=none; b=rPL/ery3XZ2iSbEKOho2Fp3Zv1AKq0RuskiHqMBIer9DqzzVT3r4j1VTy040D5orJpJKoi7NaBT/i6TFa81qX0XFiqYGEK8hbQMCSIcEJ5Nn5Ds1gY991QbL36jssYAur3+PqUqVTP99cUe/VG8PDefPXjsD59Nd8QTsCu03IMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709053494; c=relaxed/simple;
-	bh=nx3Al3sJLVHlvfnNiUefu/fSlBGWeq90iTuG8ElMJVI=;
+	s=arc-20240116; t=1709053928; c=relaxed/simple;
+	bh=4o7yMAvYJyQcMeGv3WKMeln+uo+IYka9fWH0EbkQvCc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uAV7+8/fqOSoYNwFGkplMetVN8m1qjleLYEXUo/hvPMX2sMMiczrU7sMzhVjTQzf6m+HjkGYdDBoLRQPWzt/GQfvSSNSIVziEkfSevZaPx7dWVL5yghcTEAtbgZLXsu+i4Dtvj+bEqi0pIzklEGwV0ZrcXGXwF3tF9cDlUha3EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=RZWe+Ivl; arc=none smtp.client-ip=194.117.254.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-	sang-engineering.com; h=date:from:to:cc:subject:message-id
-	:references:mime-version:content-type:in-reply-to; s=k1; bh=nx3A
-	l3sJLVHlvfnNiUefu/fSlBGWeq90iTuG8ElMJVI=; b=RZWe+IvlEXiNRgwQBlBr
-	HkeuLQlomaOzt17btM8FfRjYYXz3GxFr9/zMIUUmAYdMi944hjqvJ6n1YYD/421j
-	IAJ0Fy4gEbKYmsPmAAwLkD9BlkG/fVGmFIEg0cx3oeWCRBJr4gfIZ6DeaPo7i7rU
-	hgyz3v8BnPUXTrABKnkLDBhaejAUAiV/qndSkX11xH0QRyV34l29hMAF6gN/Pxyt
-	kZIYL8ltx8O8ESK60+lQeYkJJyzijLo4Ge+qQm5/9PN7gX/37Zt4vYeNBZRZdlig
-	T9o2CB+cbVIyoVuE440kLAtcQ6NSNZisaw76X7iZOQuY4xoAHZ1qnXFozdWiq9FF
-	Iw==
-Received: (qmail 1670908 invoked from network); 27 Feb 2024 18:04:42 +0100
-Received: by mail.zeus03.de with ESMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 27 Feb 2024 18:04:42 +0100
-X-UD-Smtp-Session: l3s3148p1@CKOvBWASTKUujnu9
-Date: Tue, 27 Feb 2024 18:04:41 +0100
-From: Wolfram Sang <wsa+renesas@sang-engineering.com>
-To: Rob Herring <robh@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=bZSmmRlYx/VOx6tPNRHqlMPXkLr+4pcrksWdSszKCfwLa178LL/NQkvekkuqefEiT+kEqeka/VYu5Ftdlxh0t2Dfh+UmJLATJMSofN0M4xUJAYR9x3lh8SxGAgLV6JY7Apy/GMEQeTVOwve5/JKKi8PR23lCUzjsTAnlxxjhSCo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nVED4zJo; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709053927; x=1740589927;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=4o7yMAvYJyQcMeGv3WKMeln+uo+IYka9fWH0EbkQvCc=;
+  b=nVED4zJoL5aLyk4cuI/OvRhyOQWkggtWuES7Bac4AFxdne6UhGXk9H1Y
+   Y3rg72Ea0pnNgd6nkYEdEpbFXtzWzADXh0AT+S3cRmSA+Yy4vIDL+/vmP
+   cJRIPdPIissthWWr48DiJwx8szfd1P6XAqtvb2rGVWWdC0CIT7EX9OIa7
+   wOatHqX99ClPxVDb0BctKblWla6wBHBbI78Av/irpB8Ts6cIz3iV9bGnE
+   bYQTvEs6+nNnpZtYLe+7t5WECk2heLWmUwsoFF3HboJlrq1EaLRFTIgmw
+   ym1qvZgL16ZAfTkQ9to2lVCGqq0d35ezC/7/m9xIXYFK1NhWbmEfjm23b
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="7219492"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="7219492"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 09:12:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913917380"
+X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
+   d="scan'208";a="913917380"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 09:12:00 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rf0zl-000000080L1-1443;
+	Tue, 27 Feb 2024 19:11:57 +0200
+Date: Tue, 27 Feb 2024 19:11:56 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
-	linux-sound@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
-Message-ID: <Zd4WKY966qe4DC3i@shikoro>
-Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Rob Herring <robh@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-i3c@lists.infradead.org,
-	linux-sound@vger.kernel.org
-References: <20240222174343.3482354-2-robh@kernel.org>
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init
+ routine at of_clk_init()
+Message-ID: <Zd4X3NnBoEl0wu2H@smile.fi.intel.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J5qK8c/j+dsQwcO0"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20240222174343.3482354-2-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+
+On Tue, Feb 27, 2024 at 03:55:24PM +0100, Théo Lebrun wrote:
+> Add the Mobileye EyeQ5 clock controller driver. It might grow to add
+> support for other platforms from Mobileye.
+> 
+> It handles 10 read-only PLLs derived from the main crystal on board. It
+
+If you wrap 'It' to the next line, overall text will look better.
+
+> exposes a table-based divider clock used for OSPI. Other platform
+> clocks are not configurable and therefore kept as fixed-factor
+> devicetree nodes.
+> 
+> Two PLLs are required early on and are therefore registered at
+> of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
+
+Ditto for 'the'
+
+> UARTs.
+
+...
+
+> +config COMMON_CLK_EYEQ5
+> +	bool "Clock driver for the Mobileye EyeQ5 platform"
+
+> +	depends on OF
+
+Since it's a functional dependency, why not allow compile test without OF being
+enabled?
+
+> +	depends on MACH_EYEQ5 || COMPILE_TEST
+> +	default MACH_EYEQ5
+> +	help
+> +	  This driver provides the clocks found on the Mobileye EyeQ5 SoC. Its
+> +	  registers live in a shared register region called OLB. It provides 10
+> +	  read-only PLLs derived from the main crystal clock which must be constant
+> +	  and one divider clock based on one PLL.
+
+...
+
+> +#include <linux/array_size.h>
+> +#include <linux/bitfield.h>
+> +#include <linux/bits.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+
++ errno.h (yes, you need both)
+
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+
++ overflow.h
+
+> +#include <linux/platform_device.h>
+> +#include <linux/printk.h>
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+
+...
+
+> +struct eq5c_pll {
+> +	int		index;
+
+Index can be negative? Any comment about this case?
+
+> +	const char	*name;
+> +	u32		reg;	/* next 8 bytes are r0 and r1 */
+
+Not sure this comments gives any clarification to a mere reader of the code.
+Perhaps you want to name this as reg64 (at least it will show that you have
+8 bytes, but I have no clue what is the semantic relationship between r0 and
+r1, it's quite cryptic to me). Or maybe it should be reg_0_1?
+
+> +};
+
+...
+
+> +static int eq5c_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+
+> +	struct device_node *np = dev->of_node;
+
+It's used only once. Why not just use dev->of_node there?
+
+> +	void __iomem *base_plls, *base_ospi;
+> +	struct clk_hw *hw;
+> +	int i;
+> +
+> +	/* Return potential error from eq5c_init(). */
+> +	if (IS_ERR(eq5c_clk_data))
+> +		return PTR_ERR(eq5c_clk_data);
+
+> +	/* Return an error if eq5c_init() did not get called. */
+> +	else if (!eq5c_clk_data)
+
+Redundant 'else'
+
+> +		return -EINVAL;
+
+I didn't get. If eq5c_init() was finished successfully, why do you need to
+seems repeat what it already done? What did I miss?
+
+> +	base_plls = devm_platform_ioremap_resource_byname(pdev, "plls");
+> +	if (IS_ERR(base_plls))
+> +		return PTR_ERR(base_plls);
+> +
+> +	base_ospi = devm_platform_ioremap_resource_byname(pdev, "ospi");
+> +	if (IS_ERR(base_ospi))
+> +		return PTR_ERR(base_ospi);
+> +
+> +	for (i = 0; i < ARRAY_SIZE(eq5c_plls); i++) {
+> +		const struct eq5c_pll *pll = &eq5c_plls[i];
+> +		unsigned long mult, div, acc;
+> +		u32 r0, r1;
+> +		int ret;
+> +
+> +		r0 = readl(base_plls + pll->reg);
+> +		r1 = readl(base_plls + pll->reg + sizeof(r0));
+> +
+> +		ret = eq5c_pll_parse_registers(r0, r1, &mult, &div, &acc);
+> +		if (ret) {
+> +			dev_warn(dev, "failed parsing state of %s\n", pll->name);
+> +			eq5c_clk_data->hws[pll->index] = ERR_PTR(ret);
+> +			continue;
+> +		}
+> +
+> +		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(dev, np,
+> +				pll->name, "ref", 0, mult, div, acc);
+> +		eq5c_clk_data->hws[pll->index] = hw;
+> +		if (IS_ERR(hw))
+
+> +			dev_err_probe(dev, PTR_ERR(hw), "failed registering %s\n",
+> +				      pll->name);
+
+Missed return statement?
+
+> +	}
+> +
+> +	hw = clk_hw_register_divider_table_parent_hw(dev, EQ5C_OSPI_DIV_CLK_NAME,
+> +			eq5c_clk_data->hws[EQ5C_PLL_PER], 0,
+> +			base_ospi, 0, EQ5C_OSPI_DIV_WIDTH, 0,
+> +			eq5c_ospi_div_table, NULL);
+> +	eq5c_clk_data->hws[EQ5C_DIV_OSPI] = hw;
+> +	if (IS_ERR(hw))
+> +		dev_err_probe(dev, PTR_ERR(hw), "failed registering %s\n",
+> +			      EQ5C_OSPI_DIV_CLK_NAME);
+
+Ditto.
+
+> +	return 0;
+> +}
+
+> +static void __init eq5c_init(struct device_node *np)
+> +{
+> +	void __iomem *base_plls, *base_ospi;
+> +	int index_plls, index_ospi;
+> +	int i, ret;
+
+Why is i signed?
+
+> +	eq5c_clk_data = kzalloc(struct_size(eq5c_clk_data, hws, EQ5C_NB_CLKS),
+> +				GFP_KERNEL);
+> +	if (!eq5c_clk_data) {
+> +		ret = -ENOMEM;
+> +		goto err;
+> +	}
+> +
+> +	eq5c_clk_data->num = EQ5C_NB_CLKS;
+> +
+> +	/*
+> +	 * Mark all clocks as deferred. We register some now and others at
+> +	 * platform device probe.
+> +	 */
+> +	for (i = 0; i < EQ5C_NB_CLKS; i++)
+> +		eq5c_clk_data->hws[i] = ERR_PTR(-EPROBE_DEFER);
+
+> +	index_plls = of_property_match_string(np, "reg-names", "plls");
+> +	if (index_plls < 0) {
+> +		ret = index_plls;
+> +		goto err;
+> +	}
+
+Better pattern is to avoid the output pollution in the error case. Hence
+
+	ret = of_property_match_string(np, "reg-names", "plls");
+	if (ret < 0)
+		goto err;
+	index_plls = ret;
+
+> +	index_ospi = of_property_match_string(np, "reg-names", "ospi");
+> +	if (index_ospi < 0) {
+> +		ret = index_ospi;
+> +		goto err;
+> +	}
+
+Ditto.
+
+> +	base_plls = of_iomap(np, index_plls);
+> +	base_ospi = of_iomap(np, index_ospi);
+> +	if (!base_plls || !base_ospi) {
+> +		ret = -ENODEV;
+> +		goto err;
+> +	}
+
+> +	for (i = 0; i < ARRAY_SIZE(eq5c_early_plls); i++) {
+> +		const struct eq5c_pll *pll = &eq5c_early_plls[i];
+> +		unsigned long mult, div, acc;
+> +		struct clk_hw *hw;
+> +		u32 r0, r1;
+> +
+> +		r0 = readl(base_plls + pll->reg);
+> +		r1 = readl(base_plls + pll->reg + sizeof(r0));
+> +
+> +		ret = eq5c_pll_parse_registers(r0, r1, &mult, &div, &acc);
+> +		if (ret) {
+> +			pr_warn("failed parsing state of %s\n", pll->name);
+> +			eq5c_clk_data->hws[pll->index] = ERR_PTR(ret);
+> +			continue;
+> +		}
+> +
+> +		hw = clk_hw_register_fixed_factor_with_accuracy_fwname(NULL,
+> +				np, pll->name, "ref", 0, mult, div, acc);
+> +		eq5c_clk_data->hws[pll->index] = hw;
+> +		if (IS_ERR(hw))
+> +			pr_err("failed registering %s: %ld\n",
+
+%pe ?
+
+> +			       pll->name, PTR_ERR(hw));
+
+Is the error not critical? Is it fine? How is it supposed to work at such
+circumstances?
+
+> +	}
+> +
+> +	ret = of_clk_add_hw_provider(np, of_clk_hw_onecell_get, eq5c_clk_data);
+> +	if (ret) {
+> +		pr_err("failed registering clk provider: %d\n", ret);
+> +		goto err;
+> +	}
+> +
+> +	return;
+> +
+> +err:
+> +	kfree(eq5c_clk_data);
+> +	/* Signal to platform driver probe that we failed init. */
+> +	eq5c_clk_data = ERR_PTR(ret);
+> +}
+> +
+> +CLK_OF_DECLARE_DRIVER(eq5c, "mobileye,eyeq5-clk", eq5c_init);
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
---J5qK8c/j+dsQwcO0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Feb 22, 2024 at 10:43:42AM -0700, Rob Herring wrote:
-> Everything in i2c.txt is covered by schemas/i2c/i2c-controller.yaml in
-> dtschema project, so remove i2c.txt and update links to it in the tree.
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-
-Reviewed-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-
-
---J5qK8c/j+dsQwcO0
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXeFiUACgkQFA3kzBSg
-KbY1UxAAs23gIOVvLkCmeyrbAAN7i3d7cIQP2kzKq9Z4iouxjZavNTtUoLQI3Dkk
-i2BhJMPBbngmCwt4X+FDvI5qNRbBLNmX11fyuXpND15iRR6dPZ4jPm7VvMBxy62h
-CrNy9H6KK6ydfsaaRCKZvx6SuvcRcPd+rZeHSFLh6/3ESldx7JA/dAtCsFI6KUxF
-58lIqJZg++rAfqxaa2lJJFu180EMRcJzRmGx/c14ySOtYszfEU/KMnSFxdLlStBu
-S74TiQ8Aif+WUILLavWSCBiXJ3L6eiba+0fS0m+68z3x4UbpiMX8J1Zs4wq0TF+I
-wkPJl9iI0EhNZCy2T0l+iAFCBkLG84w9iyd3eQuTyp6Wl2y1jlbw7B4h57P/8CK+
-SWI/E6NdS3Gda5CwQw4zqAMlTv1VaJXpOlJv4MohCy1VfzaK/q/9bR9w9WVFOf0T
-N4ub2OU3EmKrLvxZfJPPbWgSNsS4zuDrZ1EoC7LYP7+Wx15ktYux9a8pRNC2RwhL
-xrRYAR7lPkZwz3IVgrhAFeIssOsWD0C4qOeXvX27cd2mqnDa9xWHIGd1ZEAaiLm7
-5tbuk7aF9qizAL35XAeM7/zZnIvGGNDPeu696we834v6Ud5ThnMqjVTnmDgdBT6h
-ftuE2WjABe5yP+zBZtKDrNFl0Cf1UtJ6DXn7TyDGkdV1GB0IYBk=
-=PXn7
------END PGP SIGNATURE-----
-
---J5qK8c/j+dsQwcO0--
 
