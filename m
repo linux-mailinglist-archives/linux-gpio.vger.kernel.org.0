@@ -1,129 +1,106 @@
-Return-Path: <linux-gpio+bounces-3800-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3801-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBDEC8691C0
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:27:24 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0F168692A6
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:37:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEC781C2252C
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:27:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6A82D28EFDE
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E83613EFE0;
-	Tue, 27 Feb 2024 13:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 87AC113DBBC;
+	Tue, 27 Feb 2024 13:37:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiYsfqrN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGUhtyOl"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222A913A25D;
-	Tue, 27 Feb 2024 13:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A61D13B79F;
+	Tue, 27 Feb 2024 13:37:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709040428; cv=none; b=Nh5FtIS1vq3Mjx2AEPAhaW7qUEByV9pMMQBDxjjEhMFX8j/Cb6fFAWSpM8msDCnCwaCoG6ZYz6wNcPsRGMhqVUq8R8gCw0hUQnHexIEssnFBYfvKkQX6rzGkE/zPx3ZjNHdSrbIwsXATycX47DtkwbzvYWrCkyaRHXFGtYWZ3k8=
+	t=1709041039; cv=none; b=P3l97krUudpeqsbFfdg4m1PWMSA5BsXOem/SCnPjRJmTeJTFHRDBjucRjJ5k0cMQJhy8oHDy+OjUVk41rNHx04nAh+zxdu+lA8gT7Rn7wT3k+y0NBu3DzQB8dWmisa5oeo1Rfgxk68ckya0GK0Hps3E8yXEQyQExV7f9mUgn06w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709040428; c=relaxed/simple;
-	bh=mQuoPMjiuf8ynXjuDbiiuc6MSut0kX4NXC2fBVQm6FQ=;
+	s=arc-20240116; t=1709041039; c=relaxed/simple;
+	bh=H1c/bi5IfYB1iSUBfPU6PzkgJpun/PjAJmV416IBnMo=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RqYVIs7BLwIEROh3UN3Cc+DJlndYlC8P3k2XFlYhsaPW8MP1+yQFTT9/kD1xPhrQqqAeCum2SLDK5z7VoTrOW3XfeQ1hGDEpkMlHku8HuUAqmxPtQCLko9cp6WwIU5FYzHwUgtXoB/lzjxDY97uuRLBqRxqQM6FC59g1OXS5F7k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiYsfqrN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C53CC43390;
-	Tue, 27 Feb 2024 13:27:07 +0000 (UTC)
+	 To:Cc:Content-Type; b=E4ffLRmMZJs/wTS27sJ7I28BQ8gTp9FtxwfMtn8dBNUFTELJjZj2sLNlZjzStt+w5zUBa+SXwpSuxkcu3SKW7ClWWyVWGGCT2tgIAPBZEHI0JnciD9VCEcxNasObYp0vJy+hoNjpND7bC7VwoqRtnKRqfkqtajvePhXgr8eAP/s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGUhtyOl; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05AD9C433A6;
+	Tue, 27 Feb 2024 13:37:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709040427;
-	bh=mQuoPMjiuf8ynXjuDbiiuc6MSut0kX4NXC2fBVQm6FQ=;
+	s=k20201202; t=1709041039;
+	bh=H1c/bi5IfYB1iSUBfPU6PzkgJpun/PjAJmV416IBnMo=;
 	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=YiYsfqrNmxelw6OLCadO4d24dF73YVqv4GXCnzuNjZu47FB3rTy1hLVSKKAefEn1s
-	 ZMDN8gvO4BI8MI5h5oSI9qx85Gz8zdwEdyk5aGSjNSqYu1swE/C6/dcwxG2Ssf/V6p
-	 XH2rJg1Gc/o2ziShAi0h6jOS0LMybeZg5kh1ao5XhYDLQh3aICvvUNI7NjFpGLeW7u
-	 X5l5k1SHu5oQ2RzsIRiRv47fR/9KGDtu3DeKi7G+RXf8Dg2gnwpuJv/NZCdkH1BCD0
-	 85J66xJ7KqCX83NhABKxeyFSWFJHqZObxs8XA1oRVABAdLOzaeGmnowo8GwAvfctE+
-	 IU+Mjg83pNh8A==
-Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512fe342841so1770883e87.0;
-        Tue, 27 Feb 2024 05:27:07 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCVysh9KTj7+CwVyW2d8AJbZqez+bRdfLq2PvE4eI6DJBrEhoOr4Dj/PXISrpyOMtJLOdrLOaBStyo6ODZ/i1Xw0e6a6mpYeLIbp22PdwJcpjARlF4/XDQnLocx7rrErruJqqIkZHzB/r8djJu2A2iKgzrKX6P4dVompyJpIH6xQ1XkJ11gVOkwAIUcRTJfLjxOrIiPWwlRqTxBbRz4BlYvB1HW3cKe10qF2AtIwozTWhwrCU8zo+OaYLcm1iDy21Ji992M/U2JB2gIujvWb9IQEHe5VMDgmQbOn
-X-Gm-Message-State: AOJu0YxmAxNKZNPuYfZvSQ5Vjveg/uKVOFtFjdsIJRBle3omyhOESyQm
-	T5G1SBqZhgS7r9JYZ5YJb1wW+jlWUw3p7dfUC227j0BzNDTzOb2SYH1EbWX3ZPWLj3yy4gNWofR
-	oYO0/sJreaY/i6fhgmZjkJPPBtg==
-X-Google-Smtp-Source: AGHT+IGSECgtfha3Slu/bp01d2++70z6Ndl3JBsL88LZ7J9E4A1ZYVnx89bJzdpkH8hy8sv4XeL5Ccsb8VUnBLV0130=
-X-Received: by 2002:ac2:5611:0:b0:513:7b1:848c with SMTP id
- v17-20020ac25611000000b0051307b1848cmr545044lfd.18.1709040425849; Tue, 27 Feb
- 2024 05:27:05 -0800 (PST)
+	b=oGUhtyOleFDlVprD+BHiw5msYy/xXs7n8MPnqXIQXA7gm9Hx35qZCdT4MhSOkx4hP
+	 rz+kq2hfyJ9mFuFg2rQVbGqBXf+nptZOB8OM7UT6xaUH3iMMaxxSmajFqxPHBnzAR2
+	 Z9GJJwS9G96S3zO0litfHxufug7uCe1lCZFFT56C87WkeQDL+I4v4QXuX8grK9DK9D
+	 3pWJdu1qsuFeWnfa5CV7khEuxTM+E2w8PI8eWAJ2bCM15KQYtu69N3jg2cCT2OyII3
+	 zJcPL97J4E6ztRARi9eXcpjCj5XiuknpZeMhbq6LZztKrzW9e2bfKWRYyIWLElKDeT
+	 ca9EXgFPfgyVw==
+Received: by mail-lj1-f173.google.com with SMTP id 38308e7fff4ca-2d299b4ad6aso6253751fa.1;
+        Tue, 27 Feb 2024 05:37:18 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVgNfEOMMgUcZ8yAb6NZ8shSj9KY9s0ABYFaEi7uD7kPospD1lnx4ZSNAefMnvc/t+sMkndaZp2/AoJmmm2KJ0CFN+0wTI2vxBcEo6UtaLioKehCGJMJZgBUrFp99G53tRc8SEQFbHCtuZnHdVOhmLQR7SeALudoOQn/MAX3gSdabBvhGrg4fveyM3Nn30+OVkJ67Se7Ej7AWcM0akpaBZDA0dH
+X-Gm-Message-State: AOJu0YyXmFy4A9xiTp1WE9AbjH6NS0kh5XVFQejDAI9s4b/wZG3KzF+8
+	xJsAiqytGo9z7N4s2VyOC7IsaO5dl8MZH3VdMe8pNgD0z7dykXzb+zRNShNb7Wzc3Ln9XLHU4lB
+	iVkT9Xu7T68Vq8/JfhbOM7IzQIQ==
+X-Google-Smtp-Source: AGHT+IG5QHJKq6z8x6+mL6APDMaMcHT+R6XCLzJCa5meAUVodTB8s4RdbL4+VxRoHLTrkZTvWB3wRm4Tes8nApxV0wo=
+X-Received: by 2002:a05:6512:1317:b0:512:f4f6:9343 with SMTP id
+ x23-20020a056512131700b00512f4f69343mr3796213lfu.26.1709041037258; Tue, 27
+ Feb 2024 05:37:17 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240222174343.3482354-2-robh@kernel.org> <ZdemsdGQE0RtilCd@shikoro>
- <CAL_JsqKpn6jqktRLQUx7HMrJG0PZeiOZ=hQnHpZK6AHcM22CLQ@mail.gmail.com> <Zdkda5jf072mENvK@shikoro>
-In-Reply-To: <Zdkda5jf072mENvK@shikoro>
-From: Rob Herring <robh@kernel.org>
-Date: Tue, 27 Feb 2024 07:26:52 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+Wus0CFpD3+b1Ewfv0e7iCE35gzsAwahBxErex6tY5Ww@mail.gmail.com>
-Message-ID: <CAL_Jsq+Wus0CFpD3+b1Ewfv0e7iCE35gzsAwahBxErex6tY5Ww@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Andi Shyti <andi.shyti@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Miquel Raynal <miquel.raynal@bootlin.com>, linux-gpio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-i3c@lists.infradead.org, linux-sound@vger.kernel.org
+References: <20240129092512.23602-1-quic_tengfan@quicinc.com> <20240129092512.23602-2-quic_tengfan@quicinc.com>
+In-Reply-To: <20240129092512.23602-2-quic_tengfan@quicinc.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Tue, 27 Feb 2024 07:37:05 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJfsWaj9OPkvc34rBvx7W_3v9+1kZqNu6QKDsA=iWAA4w@mail.gmail.com>
+Message-ID: <CAL_JsqJfsWaj9OPkvc34rBvx7W_3v9+1kZqNu6QKDsA=iWAA4w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: pinctrl: qcom: update compatible name
+ for match with driver
+To: Tengfei Fan <quic_tengfan@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, linus.walleij@linaro.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@quicinc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 4:34=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
+On Mon, Jan 29, 2024 at 3:25=E2=80=AFAM Tengfei Fan <quic_tengfan@quicinc.c=
+om> wrote:
 >
-> Hi Rob,
+> Use compatible name "qcom,sm4450-tlmm" instead of "qcom,sm4450-pinctrl"
+> to match the compatible name in sm4450 pinctrl driver.
 >
-> > > * In the schema, "clock-frequency" has a minimum of 1kHz and a maximu=
-m
-> > >   of 3MHz. Why? The specs do not say anything about a minimum freq an=
-d
-> > >   fastest speed mentioned in the docs is 5Mhz (Ultra fast mode).
-> >
-> > IIRC, the high speed mode originally topped out at 3MHz. I guess
-> > that's been revised.
+> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
+> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+> ---
+>  Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> Hs-mode has a max of 3.4MHz...
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.y=
+aml b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> index bb08ca5a1509..bb675c8ec220 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml
+> @@ -17,7 +17,7 @@ allOf:
 >
-> >
-> > We can drop the minimum.
->
-> ... but I see you changed min/max now to 1/5000000. That's what I would
-> have suggested as well.
->
->
-> > > * new binding "i2c-scl-clk-low-timeout-us" has a description which I =
-do
-> > >   not understand. What is a waiting state?
-> >
-> > Shrug. May have to look at the MPC h/w that uses the property.
->
-> I will also have another look. My gut feeling is that the binding is
-> okay, only the description might need an update.
->
-> > >
-> > > * new binding "no-detect" is broken. At the least, it should be named
-> > >   something like "bus-fully-described" and then the OS can decide to
-> > >   leave out auto-detection mechanisms. If you are interested in the
-> > >   latter, you can simply disable class based instantiation on the hos=
-t
-> > >   controller. No need to describe this in DT.
-> >
-> > I've reverted the property now.
->
-> Cool, thanks!
+>  properties:
+>    compatible:
+> -    const: qcom,sm4450-pinctrl
+> +    const: qcom,sm4450-tlmm
 
-I don't think there's anything else to discuss on this patch, can I
-get your ack?
+I think you forgot to update the example:
 
-Rob
+Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.example.dtb:
+/example-0/pinctrl@f100000: failed to match any schema with
+compatible: ['qcom,sm4450-tlmm']
 
