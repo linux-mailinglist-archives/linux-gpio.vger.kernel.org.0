@@ -1,363 +1,107 @@
-Return-Path: <linux-gpio+bounces-3834-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3835-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4CB47869EBE
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 19:15:17 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 995AF869FED
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 20:11:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FDBB1C2098D
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 18:15:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4C89A2910FF
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 19:11:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C44E1474A9;
-	Tue, 27 Feb 2024 18:15:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B4451009;
+	Tue, 27 Feb 2024 19:11:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dpfRyXaU"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cW83lc43"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f50.google.com (mail-lf1-f50.google.com [209.85.167.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBCCD4B5C1;
-	Tue, 27 Feb 2024 18:15:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95074EB49;
+	Tue, 27 Feb 2024 19:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709057709; cv=none; b=XHW9xwV5U9raIC45w3lKNzFDzExGIfHR6V5J0qQLlGKaKcqHkF4b9gt2Gh2UdSkf9DODnAut5CHFm+onmZN/7YrxQte7BejwlS/hrkHscvA+QvAAYuUHybU2WAS7q7WvR5ti9N2MBj9hIpY+iIRIsKzYAu7Fm2Fan8KHNpbz14o=
+	t=1709061114; cv=none; b=Uj5vE1XJ5kQB364a+IAaSYhWeDNuaQKjfkK6CceuB1I11vEl+tIcJiyQFleBoWiamrQnhmEUPBLWhtulBw6oFAUQ4mmKnMduk6qCZY9MoJp+HK/zvphkFTPgMffqiiOtU1bDWXXCI8QdVY+7uM39ZzhEEitWMClPz54KKXY8XTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709057709; c=relaxed/simple;
-	bh=oQ5lgEqM93Az2/mBkEVI2NmWaWp+Sl8k1tCKiDAjuCg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UWK8joj2TBXrDvF1Xq8/m2ne/jCz1Ig1VEGmsFCfQlYACgc2x3dHsQi6wbmExksAWiDhttV9kqQxBO0ZzGkyKLypg0NU9QysneF42NRtDtnt0Axce3KbOIEIbVzCVWFCOEQLy18mA2UlK7HTUWjD0e0ed64J+UvmK93RkQc1K2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dpfRyXaU; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709057707; x=1740593707;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=oQ5lgEqM93Az2/mBkEVI2NmWaWp+Sl8k1tCKiDAjuCg=;
-  b=dpfRyXaUygx7JYCjSDyXrQpRxIoDErLwIfVbhqgoVCbc69TlGWNJAAIi
-   fHmGNMLX85ikuZ8VKKcMomtzTlY24THZnayavZaSDUBkVrolteB8bScq4
-   H6oyg+5MvsgmNLwZsW4k93l3ut1khIctQIXNxseUxHWyEzHl+Rl5U+LB1
-   5pn7CnrorWsAB+Oa6he/0L0CUE0SFPxNYSKbSpG9nEaC++uI00cuhIYpy
-   qHucIQE45D7yGtKhIa5U2fUCGiP8nPQdOFbwPCZqpDO75cs3eOWekPU2b
-   14zz7A6fvLL0UhMxLqRItVcwX4pbMuq/y9LfEHELzrISZehh/TrtK++tD
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3580188"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="3580188"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:15:05 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913918908"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="913918908"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 10:15:01 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rf1yj-000000081Ib-3XYd;
-	Tue, 27 Feb 2024 20:14:57 +0200
-Date: Tue, 27 Feb 2024 20:14:57 +0200
-From: Andy Shevchenko <andriy.shevchenko@intel.com>
-To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v8 05/10] pinctrl: eyeq5: add platform driver
-Message-ID: <Zd4moVd_-bY6Z_kL@smile.fi.intel.com>
-References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
- <20240227-mbly-clk-v8-5-c57fbda7664a@bootlin.com>
+	s=arc-20240116; t=1709061114; c=relaxed/simple;
+	bh=eodD27oovdZR2lffspXR1dcJkughyOXYXBmqB3nCKbw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=m7GWGhVrQ+Gnhb4PDiIWliGlD4OhS0ZN+Yuy4vjiZM0JJT6wz7L0kacAChPpwR9KZ1sN+OhD3Fmkr/acB0fB0vxkQzI8RZ947LN0P+pSR3Ox2NTlEtR057XICnrc3zvcMn78BhqT8gOdt+c7Fpy003FpzU9ku4WqdZxgSv75dtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cW83lc43; arc=none smtp.client-ip=209.85.167.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f50.google.com with SMTP id 2adb3069b0e04-5131316693cso1105431e87.0;
+        Tue, 27 Feb 2024 11:11:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709061111; x=1709665911; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=eodD27oovdZR2lffspXR1dcJkughyOXYXBmqB3nCKbw=;
+        b=cW83lc43KDp6GeclUrIYKq+NGu9mlCLiLfB9CBryXTCvPtvu+3E9RYCwJXTWTZiM4l
+         vhGnGMBQu+jDIhKv4j7YKWln9aQ9ahPd+On+tXsbUW5YMBLXF3SPbvFx8QocN70Y224z
+         xjztP0CHE3qtJNGxiifzgiX2PemMsfIZ/phse1M5I3TswfmVpYZgW7go4rhwvQ+z02Vr
+         PZjZkAefQSIN1ea8FVz7zEPHys5HKBNkJ682xJ6wbxsyrVzOOGaw1Tb71yEKsxXu/K/8
+         stWomPHr1uoNSd9X6zqIFUx3UtWYOEdanAneJGVVWqTOEOA33n+7FY57SYwYtM0Ehg7C
+         9Thw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709061111; x=1709665911;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=eodD27oovdZR2lffspXR1dcJkughyOXYXBmqB3nCKbw=;
+        b=U0er1dl8cz/uiesgtsXso6XWtj4D11OAKqDvlSAbMOqGINDMC5ncVk1uQsLrZ/hhD+
+         +LjoQVOHIhMgxW0B9YzxwowEQ0I52KJDaa6x5qANPAepT2FRaQN2OsnGSsEQyCSzNuU8
+         Zg37yiG4tHBKSfiAYZSlHZe7hpXAuPtIwMTwqjbMIY9W/26ENxt6JrQ8pBKaWvIPgOJn
+         YFnvCeSNPDftZ6qAkZo5D75TiCvtgXMfYH+/gQ16kiZrEu07IkSwiakMkbo1Db7LsByI
+         vIg0dP1m+DHW3fQSSoDFloCD0WrRoHc86KR86JtQ+U1q1MjJmkXaQoWww0VlyD1pa6Dc
+         rygQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUfv+DNfelx/Kz9XlLCx9EQwNfHiTwTqGanPTI7SfujhCr/4iE2jogYZOHviaWK+CiFziPQlaIKMwN3RKLgOx3i+2nXLDsp0qPT8X96GO2Mw6c5gc3LUYcYRMIF0NwouXaSoFVyg3otig==
+X-Gm-Message-State: AOJu0Yzlt/VdzVI1WztGE/4o80NY38D7z35f7bZLuDUOsIl7GBX66P1c
+	Wydu0TXqA0V2kLviFCevUBoJDHx99VcMDy8R7vpeH5VOC6oU/IIQOpUzPYxtjDK9lbyyH/e9lh3
+	rB5Cf6UA848I9/BICtvlCCjvDqDE=
+X-Google-Smtp-Source: AGHT+IEt4bwVV2XZ/d/78mgXG69FOjkGsAdZtu1hNQBS0i06GIZc4F2R6hbW9U4GTC5hYueueAl26OIxfvsQ/UPO63E=
+X-Received: by 2002:a05:6512:4015:b0:513:270:d5fc with SMTP id
+ br21-20020a056512401500b005130270d5fcmr3781032lfb.57.1709061110601; Tue, 27
+ Feb 2024 11:11:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240227-mbly-clk-v8-5-c57fbda7664a@bootlin.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
+ <ZdyZnqS_jKelbs6G@smile.fi.intel.com> <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
+ <CAMRc=McUsv9ic5aU7oAaJ06zWtpna0CkkxPWr2nqPhEig5vPOg@mail.gmail.com> <Zd33a69X9Ej4llbk@smile.fi.intel.com>
+In-Reply-To: <Zd33a69X9Ej4llbk@smile.fi.intel.com>
+From: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Date: Tue, 27 Feb 2024 21:11:38 +0200
+Message-ID: <CAPo8RJY2pVqRs3pvtMtOEEoMY3e8XPcub9d6LNwT6Ly0uOshbg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are reset
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-On Tue, Feb 27, 2024 at 03:55:26PM +0100, Théo Lebrun wrote:
-> Add the Mobileye EyeQ5 pin controller driver. It might grow to add later
-> support of other platforms from Mobileye. It belongs to a syscon region
-> called OLB.
-> 
-> Existing pins and their function live statically in the driver code
-> rather than in the devicetree, see compatible match data.
-
-...
-
-> +config PINCTRL_EYEQ5
-> +	bool "Mobileye EyeQ5 pinctrl driver"
-
-Can't be a module?
-
-> +	depends on OF
-
-It's even not needed for this software as far as I can tell from the code.
-
-> +	depends on MACH_EYEQ5 || COMPILE_TEST
-> +	select PINMUX
-> +	select GENERIC_PINCONF
-> +	select MFD_SYSCON
-> +	default MACH_EYEQ5
-> +	help
-> +	  Pin controller driver for the Mobileye EyeQ5 platform. It does both
-> +	  pin config & pin muxing. It does not handle GPIO.
-> +
-> +	  Pin muxing supports two functions for each pin: first is GPIO, second
-> +	  is pin-dependent. Pin config is about bias & drive strength.
+Hello,
 
 ...
-
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/pinctrl/pinconf-generic.h>
-> +#include <linux/pinctrl/pinconf.h>
-> +#include <linux/pinctrl/pinctrl.h>
-> +#include <linux/pinctrl/pinmux.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/seq_file.h>
-
-Semi-random list of the inclusions. Please, fix it.
-While doing that, group out pinctrl/* ones as it's done in other drivers.
-
-> +#include "core.h"
-> +#include "pinctrl-utils.h"
-
-...
-
-> +struct eq5p_function {
-> +	const char		*name;
-> +	const char * const	*groups;
-> +	unsigned int		ngroups;
-> +};
-
-We have struct pinfunction, use it instead.
-
-...
-
-> +static const char * const gpio_groups[] = {
-> +	/* Bank A */
-> +	"PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9",
-> +	"PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PA16", "PA17", "PA18",
-> +	"PA19", "PA20", "PA21", "PA22", "PA23", "PA24", "PA25", "PA26", "PA27",
-> +	"PA28",
-
-For all arrays like this, please split them on 4/8/10/16 items per line as it's
-much easier to count and refer by index when reading the code.
-
-> +	/* Bank B */
-> +	"PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9",
-> +	"PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PB16", "PB17", "PB18",
-> +	"PB19", "PB20", "PB21", "PB22",
-> +};
-
-...
-
-> +#define FUNCTION(a, b) { .name = a, .groups = b, .ngroups = ARRAY_SIZE(b) }
-
-Use PINCTRL_PINFUNCTION() instead.
-
-...
-
-> +static bool eq5p_test_bit(const struct eq5p_pinctrl *pctrl,
-> +			  enum eq5p_bank bank, enum eq5p_regs reg, int offset)
-> +{
-> +	u32 val = readl(pctrl->base + eq5p_regs[bank][reg]);
-
-> +	if (WARN_ON(offset > 31))
-> +		return false;
-
-When this condition can be true?
-
-> +	return (val & BIT(offset)) != 0;
-> +}
-
-...
-
-> +static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> +			    unsigned long *config);
-
-Can't you avoid forward declarations?
-
-...
-
-> +	if (!eq5p_test_bit(pctrl, bank, EQ5P_IOCR, offset)) {
-
-What's wrong with positive conditional?
-
-
-> +	} else {
-
-> +	}
-
-...
-
-> +static const struct pinctrl_ops eq5p_pinctrl_ops = {
-> +	.get_groups_count	= eq5p_pinctrl_get_groups_count,
-> +	.get_group_name		= eq5p_pinctrl_get_group_name,
-> +	.get_group_pins		= eq5p_pinctrl_get_group_pins,
-> +	.pin_dbg_show		= eq5p_pinctrl_pin_dbg_show,
-
-> +	.dt_node_to_map		= pinconf_generic_dt_node_to_map_pin,
-> +	.dt_free_map		= pinctrl_utils_free_map,
-
-ifdef is missing for these... But the question is, isn't these a default when
-OF is in use?
-
-> +};
-
-...
-
-> +	dev_dbg(pctldev->dev, "%s: func=%s group=%s\n", __func__, func_name,
-> +		group_name);
-
-Drop __func__ from all debug messages. With Dynamic Debug enabled (which is
-often the case) we can do it at run-time).
-
-...
-
-> +	mask = BIT(offset);
-> +	val = is_gpio ? 0 : U32_MAX;
-
-I think you meant something else (semantically) than U32_MAX.
-Perhaps GENMASK(31, 0)?
-
-...
-
-> +static int eq5p_pinconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
-> +			    unsigned long *config)
-> +{
-> +	enum pin_config_param param = pinconf_to_config_param(*config);
-> +	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	unsigned int offset = eq5p_pin_to_offset(pin);
-> +	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-> +	u32 val_ds, arg = 0;
-
-What's arg assignment for?
-
-> +	bool pd, pu;
-> +
-> +	pd = eq5p_test_bit(pctrl, bank, EQ5P_PD, offset);
-> +	pu = eq5p_test_bit(pctrl, bank, EQ5P_PU, offset);
-> +
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +		arg = !(pd || pu);
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		arg = pd;
-> +		break;
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		arg = pu;
-> +		break;
-> +	case PIN_CONFIG_DRIVE_STRENGTH:
-> +		offset *= 2; /* two bits per pin */
-> +		if (offset >= 32) {
-> +			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_HIGH]);
-> +			offset -= 32;
-> +		} else {
-> +			val_ds = readl(pctrl->base + eq5p_regs[bank][EQ5P_DS_LOW]);
-> +		}
-
-I'm wondering why you can't use your helpers before multiplication?
-
-> +		arg = (val_ds >> offset) & 0b11;
-
-GENMASK(1, 0)
-
-> +		break;
-> +	default:
-> +		return -ENOTSUPP;
-> +	}
-> +
-> +	*config = pinconf_to_config_packed(param, arg);
-> +	return 0;
-> +}
-
-...
-
-> +static int eq5p_pinconf_set_drive_strength(struct pinctrl_dev *pctldev,
-> +					   unsigned int pin, u32 arg)
-> +{
-> +	struct eq5p_pinctrl *pctrl = pinctrl_dev_get_drvdata(pctldev);
-> +	unsigned int offset = eq5p_pin_to_offset(pin);
-> +	enum eq5p_bank bank = eq5p_pin_to_bank(pin);
-> +	unsigned int reg;
-> +	u32 mask, val;
-> +
-> +	if (arg > 3) {
-
-Magic number.
-
-> +		dev_err(pctldev->dev, "Unsupported drive strength: %u\n", arg);
-> +		return -EINVAL;
-> +	}
-> +
-> +	offset *= 2; /* two bits per pin */
-> +
-> +	if (offset >= 32) {
-> +		reg = EQ5P_DS_HIGH;
-> +		offset -= 32;
-> +	} else {
-> +		reg = EQ5P_DS_LOW;
-> +	}
-
-> +	mask = 0b11 << offset;
-> +	val = arg << offset;
-> +	eq5p_update_bits(pctrl, bank, reg, mask, val);
-
-Similar comments as per previous function.
-
-> +	return 0;
-> +}
-
-...
-
-> +static const struct of_device_id eq5p_match[] = {
-> +	{ .compatible = "mobileye,eyeq5-pinctrl" },
-> +	{},
-
-No comma in the terminator entry.
-
-> +};
-
-No MODULE_DEVICE_TABLE()?
-
-> +static struct platform_driver eq5p_driver = {
-> +	.driver = {
-> +		.name = "eyeq5-pinctrl",
-> +		.of_match_table = eq5p_match,
-> +	},
-> +	.probe = eq5p_probe,
-> +};
-
-> +
-
-Unneeded blank line.
-
-> +builtin_platform_driver(eq5p_driver);
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+> > And this is precisely the kind of information that needs to go into
+> > commit messages. I can tell *what* you're doing by looking at the
+> > code. What I can't tell is *why*.
+>
+> +1. Please, add this to the commit message of v2, also try to find the commit
+> that you can mark to be fixed with help of Fixes tag.
+
+Thanks for suggestion regarding Fixes!
+
+I thought maybe I should as well move whole GPIO initialization[0]
+down to the same place I move "gpiod_set_value_cansleep(
+chip->gpiod_oe, 1)" in patch v2? I think knowledge that a pin is
+brought up later during probing process might be forgotten later, it
+will slightly complicate code due to need to clean mutex though.
+
+[0] https://elixir.bootlin.com/linux/v6.7.6/source/drivers/gpio/gpio-74x164.c#L125
+
+Arturas Moskvinas
 
