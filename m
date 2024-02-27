@@ -1,306 +1,278 @@
-Return-Path: <linux-gpio+bounces-3788-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3789-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C71F868989
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 08:06:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 710CB8689FD
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 08:40:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F5891C21667
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 07:06:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 9E1B01C21F4F
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 07:40:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2497553E3C;
-	Tue, 27 Feb 2024 07:06:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C6F5B54F8F;
+	Tue, 27 Feb 2024 07:39:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QPx8K1ea"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mALEQ1Ec"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6C3B5339F
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 07:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5C454BC8
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 07:39:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709017585; cv=none; b=drjFVyanBUqlgKG+OceTl2AgCGvb2ArMyRiZtzOmXpABuhPV5+LC3M4mp+L2mXhJzNUnug/1Jb6fpprTEPMJdwOchhBsRDx8gt/F7qoxB/3d6Z/EcfLBlp8Z6nizBaz/XcjrO3nM9IMAM+rFs0P7jwhctYalaJmzM8LHENRr0A8=
+	t=1709019597; cv=none; b=jm5yoSAqMWtkoaBOEsRFHhXJ6h3nQ6RELP/g31gjp69ZKh9zL9Z8ff09OUv+BAgS7cBlYxE6VYz0Eus39AxFNNmkq5agZsb0TGbkk9WmTzYp1pJUsUqdwqQU5QlDxusj28wtIZQgN5kE1rfxUsQtwLZ9BNUb4uip/DRjBOgkCTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709017585; c=relaxed/simple;
-	bh=TmTOt+hyHAifX2R0VSXHdchHMKRvzNoke2wPc8Ndato=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GU9sBAG9F2+cmoM/eRcTB5Px9MFWjnh3hWKWzSVohfWEvXJerGZOAogPizo8E9WJi45UxImL5FQ6k8txayp2rHN/uJtIKizCro3qHRwXLZ1+q2BaomgK9/zmpdgohO87IENmDajb1EVJf+tsP1uVTrvfEe+KH/r4MpShjaPlzmU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QPx8K1ea; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-55a8fd60af0so5207354a12.1
-        for <linux-gpio@vger.kernel.org>; Mon, 26 Feb 2024 23:06:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709017582; x=1709622382; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=vLCxLnglQud6AafcMTZGxWqddfDheQOqmiuHd+EOBrk=;
-        b=QPx8K1ea+WO3K6OFeWl6S9PLsQj57L+TF8mVy/zgqpj4dZBBheF+ag/e1B8cWquf7M
-         GJFWIuUWQXm+tTNyq8Yl0DWJ3Dh8MOWRBjbHUo0V04+fMdpo4NVR+jOjhfFaeLpBlJYi
-         c1yZbOZb8AbAB/HYT3x8IOlsJtqf0i0SiFLQhHHX36LILSWLa1gInWy3Omh0xsmndfpb
-         wOP7mydp5ShnJy+sdjbleb03rOyl81VheMNl1tiPWGdwuDMEBWbwExvJxoyhXuqN5VAW
-         SJZxIhQR2HNyvAym38GEp1nGbKLd9jdTjF/lgrFX8KVYHJMmq5DJzFZUXq+hPAiYDteH
-         GzWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709017582; x=1709622382;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=vLCxLnglQud6AafcMTZGxWqddfDheQOqmiuHd+EOBrk=;
-        b=oeunLdJknuuEbFV106kwHvY08Il6Dm+AJvZboiNRSdID3SVr+aWtMT1ga1BoXmBcdS
-         3oPyWaWIlEPoiHwi0BPwAXMtXthUSPltbYk3Ft8Htka08JwvYqpard78b2GoxuakCgzo
-         Fj+mjmAsUiCAV+GhNblHkC+fpZcFdlvw7h4fKQAR4NMS0mtq7NdAUhic8hVSWD8IPqjd
-         OjKFn6W32kAQbD0ZMfRA9aTOuW5eDNfQ9a4vQQo3/MxSaDnt4zUk9tBiVkyQ4JIX/AUV
-         pINvl6PbYRvNJYNee78XLnYtotV6pf9wTqOtTsgIADSr2HRl1dLFd1RxNaKFlc/ld4ka
-         AigA==
-X-Forwarded-Encrypted: i=1; AJvYcCUS/sPJyscrgg6lTimnCgbp8SGUdM4umYr3le99lssYlkd1bCOLrBw6VbpjD1MmrNPPtDrKyMOJCqLToN18zdgowME4Mjnh9DV9IQ==
-X-Gm-Message-State: AOJu0YzhwRcVII4NrNfxOlBBZF0nIiRhq4NoaV8r/S+ayy8E967tklvT
-	mvVDD11FOrhtSgJNIRBZlIvRXHORUr38gB7P64uMo6hiI80lN1dcVYgVZVIjqhU=
-X-Google-Smtp-Source: AGHT+IH3nPjxyLxePuzG85v10xOwBHg/CBPZEZjd12HuCqZJPvxpHQEs182DxeMGYt2iwDOWsPmcwg==
-X-Received: by 2002:a05:6402:78f:b0:565:ced9:2657 with SMTP id d15-20020a056402078f00b00565ced92657mr4158876edy.7.1709017582311;
-        Mon, 26 Feb 2024 23:06:22 -0800 (PST)
-Received: from [192.168.1.20] ([178.197.222.116])
-        by smtp.gmail.com with ESMTPSA id r11-20020a056402018b00b0056608214577sm472173edv.16.2024.02.26.23.06.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 26 Feb 2024 23:06:21 -0800 (PST)
-Message-ID: <f69ef2ad-8ace-40c8-b923-4dde20eda2ec@linaro.org>
-Date: Tue, 27 Feb 2024 08:06:20 +0100
+	s=arc-20240116; t=1709019597; c=relaxed/simple;
+	bh=y5MgZ36mneJ/k/R06NMGsO+y5WeKUfDBhj0JGpIOHsk=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=Usp1eGtOGFU4eAOyubvKtvataU6nApBvN0q8GwPyWOj7YP0OUYHHKaD1b931o3T8oTueSqdsR8hN3gnZF6hftodFliD/b4v8MZC3iLy/7L9vvIMSRlzSMn2dvpSJz2IE9CaAZc0wxgGgJ3RkQtL3evWf7OmQwIXjIP81fuYqQPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mALEQ1Ec; arc=none smtp.client-ip=198.175.65.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709019596; x=1740555596;
+  h=date:from:to:cc:subject:message-id;
+  bh=y5MgZ36mneJ/k/R06NMGsO+y5WeKUfDBhj0JGpIOHsk=;
+  b=mALEQ1Ec1MI7LYRHGKJUiIxKQGLqtUnyvEvrMjtNub39QUzQynm6aVjC
+   CqmHjbT0FhtC0Y2GoFGLB440nqe/gXelvPSeLHZGly2a5/Aj3eyfVsh5J
+   PNQW2Cg86MO8ltqH6+OkNsjSVfGPA304o+gPOvj5JbaUmXh98cWswBCzd
+   xATtrT2rHEoOpnZV+aIrDa4RqAy+wG7Vkr7mVBtqgZWPm/aYbj+j+923O
+   lXWq04YcDNdvOCmwyvwvW5lpg3JZeidguWMoTmB//s+Qi/fJN4tm/A6J1
+   XsZOQIt8fOlNkQnH5t+u/LyY1Q50mL2tjjPVxeKqR6RCpYz6BIG4LIcp+
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="3206941"
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="3206941"
+Received: from orviesa002.jf.intel.com ([10.64.159.142])
+  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Feb 2024 23:39:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,187,1705392000"; 
+   d="scan'208";a="37750717"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by orviesa002.jf.intel.com with ESMTP; 26 Feb 2024 23:39:53 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1res46-000B1l-0H;
+	Tue, 27 Feb 2024 07:39:50 +0000
+Date: Tue, 27 Feb 2024 15:38:52 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:for-next] BUILD SUCCESS
+ d2db5cd3721e98be5bc670e89857a27690eaef74
+Message-ID: <202402271549.uJ0dppDG-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT
- schema
-Content-Language: en-US
-To: Andrew Jeffery <andrew@codeconstruct.com.au>, linus.walleij@linaro.org,
- brgl@bgdev.pl, krzysztof.kozlowski+dt@linaro.org
-Cc: robh+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-References: <20240227052353.1060306-1-andrew@codeconstruct.com.au>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzTRLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnp5c3p0b2Yua296bG93c2tpQGxpbmFyby5vcmc+wsGUBBMBCgA+FiEE
- m9B+DgxR+NWWd7dUG5NDfTtBYpsFAmI+BxMCGwMFCRRfreEFCwkIBwIGFQoJCAsCBBYCAwEC
- HgECF4AACgkQG5NDfTtBYptgbhAAjAGunRoOTduBeC7V6GGOQMYIT5n3OuDSzG1oZyM4kyvO
- XeodvvYv49/ng473E8ZFhXfrre+c1olbr1A8pnz9vKVQs9JGVa6wwr/6ddH7/yvcaCQnHRPK
- mnXyP2BViBlyDWQ71UC3N12YCoHE2cVmfrn4JeyK/gHCvcW3hUW4i5rMd5M5WZAeiJj3rvYh
- v8WMKDJOtZFXxwaYGbvFJNDdvdTHc2x2fGaWwmXMJn2xs1ZyFAeHQvrp49mS6PBQZzcx0XL5
- cU9ZjhzOZDn6Apv45/C/lUJvPc3lo/pr5cmlOvPq1AsP6/xRXsEFX/SdvdxJ8w9KtGaxdJuf
- rpzLQ8Ht+H0lY2On1duYhmro8WglOypHy+TusYrDEry2qDNlc/bApQKtd9uqyDZ+rx8bGxyY
- qBP6bvsQx5YACI4p8R0J43tSqWwJTP/R5oPRQW2O1Ye1DEcdeyzZfifrQz58aoZrVQq+innR
- aDwu8qDB5UgmMQ7cjDSeAQABdghq7pqrA4P8lkA7qTG+aw8Z21OoAyZdUNm8NWJoQy8m4nUP
- gmeeQPRc0vjp5JkYPgTqwf08cluqO6vQuYL2YmwVBIbO7cE7LNGkPDA3RYMu+zPY9UUi/ln5
- dcKuEStFZ5eqVyqVoZ9eu3RTCGIXAHe1NcfcMT9HT0DPp3+ieTxFx6RjY3kYTGLOwU0EVUNc
- NAEQAM2StBhJERQvgPcbCzjokShn0cRA4q2SvCOvOXD+0KapXMRFE+/PZeDyfv4dEKuCqeh0
- hihSHlaxTzg3TcqUu54w2xYskG8Fq5tg3gm4kh1Gvh1LijIXX99ABA8eHxOGmLPRIBkXHqJY
- oHtCvPc6sYKNM9xbp6I4yF56xVLmHGJ61KaWKf5KKWYgA9kfHufbja7qR0c6H79LIsiYqf92
- H1HNq1WlQpu/fh4/XAAaV1axHFt/dY/2kU05tLMj8GjeQDz1fHas7augL4argt4e+jum3Nwt
- yupodQBxncKAUbzwKcDrPqUFmfRbJ7ARw8491xQHZDsP82JRj4cOJX32sBg8nO2N5OsFJOcd
- 5IE9v6qfllkZDAh1Rb1h6DFYq9dcdPAHl4zOj9EHq99/CpyccOh7SrtWDNFFknCmLpowhct9
- 5ZnlavBrDbOV0W47gO33WkXMFI4il4y1+Bv89979rVYn8aBohEgET41SpyQz7fMkcaZU+ok/
- +HYjC/qfDxT7tjKXqBQEscVODaFicsUkjheOD4BfWEcVUqa+XdUEciwG/SgNyxBZepj41oVq
- FPSVE+Ni2tNrW/e16b8mgXNngHSnbsr6pAIXZH3qFW+4TKPMGZ2rZ6zITrMip+12jgw4mGjy
- 5y06JZvA02rZT2k9aa7i9dUUFggaanI09jNGbRA/ABEBAAHCwXwEGAEKACYCGwwWIQSb0H4O
- DFH41ZZ3t1Qbk0N9O0FimwUCYDzvagUJFF+UtgAKCRAbk0N9O0Fim9JzD/0auoGtUu4mgnna
- oEEpQEOjgT7l9TVuO3Qa/SeH+E0m55y5Fjpp6ZToc481za3xAcxK/BtIX5Wn1mQ6+szfrJQ6
- 59y2io437BeuWIRjQniSxHz1kgtFECiV30yHRgOoQlzUea7FgsnuWdstgfWi6LxstswEzxLZ
- Sj1EqpXYZE4uLjh6dW292sO+j4LEqPYr53hyV4I2LPmptPE9Rb9yCTAbSUlzgjiyyjuXhcwM
- qf3lzsm02y7Ooq+ERVKiJzlvLd9tSe4jRx6Z6LMXhB21fa5DGs/tHAcUF35hSJrvMJzPT/+u
- /oVmYDFZkbLlqs2XpWaVCo2jv8+iHxZZ9FL7F6AHFzqEFdqGnJQqmEApiRqH6b4jRBOgJ+cY
- qc+rJggwMQcJL9F+oDm3wX47nr6jIsEB5ZftdybIzpMZ5V9v45lUwmdnMrSzZVgC4jRGXzsU
- EViBQt2CopXtHtYfPAO5nAkIvKSNp3jmGxZw4aTc5xoAZBLo0OV+Ezo71pg3AYvq0a3/oGRG
- KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
- fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240227052353.1060306-1-andrew@codeconstruct.com.au>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 27/02/2024 06:23, Andrew Jeffery wrote:
-> Squash warnings such as:
-> 
-> ```
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
-> ```
-> 
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
-> v5: Resolve macro definition clashes from aspeed clock headers in examples
->     identified by Rob's bot:
-> 
->     https://lore.kernel.org/all/170900020204.2360855.790404478830111761.robh@kernel.org/
-> 
->     Clearly I missed running `make dt_binding_check` on the final iteration of
->     the v4 patch I sent. Hopefully I'm running out of rakes to step on here!
-> 
-> v4: https://lore.kernel.org/all/20240227004414.841391-1-andrew@codeconstruct.com.au/
-> 
->     Add constraints for gpio-line-names, ngpios as requested by Krzysztof:
->     https://lore.kernel.org/all/458becdb-fb1e-4808-87b6-3037ec945647@linaro.org/
-> 
->     Add more examples to exercise constraints.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git for-next
+branch HEAD: d2db5cd3721e98be5bc670e89857a27690eaef74  Merge branch 'devel' into for-next
 
-No, one or two examples (if there are quite different) is enough.
+elapsed time: 951m
 
-> 
-> v3: https://lore.kernel.org/all/20240226051645.414935-1-andrew@codeconstruct.com.au/
-> 
->     Base on v6.8-rc6, fix yamllint warning
-> 
->     Rob's bot picked the missing `#interrupt-cells` in the example on v2[1]. The
->     patch was based on v6.8-rc1, and going back over my shell history I missed
->     the following output from `make dt_binding_check`:
-> 
->     ```
->     ...
->       LINT    Documentation/devicetree/bindings
->       usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [--list-files] [-f {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v] [FILE_OR_DIR ...]
->       yamllint: error: one of the arguments FILE_OR_DIR - is required   
->     ...
->     ```
-> 
->     I've rebased on v6.8-rc6 and no-longer see the issue with the invocation
->     of `yamllint`.
-> 
-> [1]: https://lore.kernel.org/all/170892197611.2260479.15343562563553959436.robh@kernel.org/
-> 
-> v2: https://lore.kernel.org/all/20240226031951.284847-1-andrew@codeconstruct.com.au/
-> 
->     Address feedback from Krzysztof:
->     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
-> 
-> v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
-> 
->  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 143 ++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-aspeed.txt  |  39 -----
->  2 files changed, 143 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> new file mode 100644
-> index 000000000000..1aa28b1817cf
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> @@ -0,0 +1,143 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Aspeed GPIO controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2400-gpio
-> +      - aspeed,ast2500-gpio
-> +      - aspeed,ast2600-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: The clock to use for debounce timings
-> +
-> +  gpio-controller: true
-> +  gpio-line-names: true
+configs tested: 189
+configs skipped: 3
 
-min/maxItems
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240227   gcc  
+arc                   randconfig-002-20240227   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                          collie_defconfig   gcc  
+arm                                 defconfig   clang
+arm                        keystone_defconfig   gcc  
+arm                          pxa910_defconfig   gcc  
+arm                   randconfig-001-20240227   gcc  
+arm                   randconfig-002-20240227   gcc  
+arm                   randconfig-003-20240227   gcc  
+arm                   randconfig-004-20240227   gcc  
+arm                         socfpga_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240227   clang
+arm64                 randconfig-002-20240227   gcc  
+arm64                 randconfig-003-20240227   gcc  
+arm64                 randconfig-004-20240227   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240227   gcc  
+csky                  randconfig-002-20240227   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240227   clang
+hexagon               randconfig-002-20240227   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240227   gcc  
+i386         buildonly-randconfig-002-20240227   gcc  
+i386         buildonly-randconfig-003-20240227   clang
+i386         buildonly-randconfig-004-20240227   gcc  
+i386         buildonly-randconfig-005-20240227   gcc  
+i386         buildonly-randconfig-006-20240227   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240227   gcc  
+i386                  randconfig-002-20240227   gcc  
+i386                  randconfig-003-20240227   clang
+i386                  randconfig-004-20240227   clang
+i386                  randconfig-005-20240227   clang
+i386                  randconfig-006-20240227   gcc  
+i386                  randconfig-011-20240227   clang
+i386                  randconfig-012-20240227   clang
+i386                  randconfig-013-20240227   clang
+i386                  randconfig-014-20240227   clang
+i386                  randconfig-015-20240227   clang
+i386                  randconfig-016-20240227   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240227   gcc  
+loongarch             randconfig-002-20240227   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          atari_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                        stmark2_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                         cobalt_defconfig   gcc  
+mips                 decstation_r4k_defconfig   gcc  
+mips                    maltaup_xpa_defconfig   gcc  
+mips                           rs90_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240227   gcc  
+nios2                 randconfig-002-20240227   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+parisc                           alldefconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240227   gcc  
+parisc                randconfig-002-20240227   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                        cell_defconfig   gcc  
+powerpc                      ep88xc_defconfig   gcc  
+powerpc                 mpc837x_rdb_defconfig   gcc  
+powerpc               randconfig-001-20240227   clang
+powerpc               randconfig-002-20240227   gcc  
+powerpc               randconfig-003-20240227   clang
+powerpc64             randconfig-001-20240227   clang
+powerpc64             randconfig-002-20240227   gcc  
+powerpc64             randconfig-003-20240227   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240227   gcc  
+riscv                 randconfig-002-20240227   clang
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240227   gcc  
+s390                  randconfig-002-20240227   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                    randconfig-001-20240227   gcc  
+sh                    randconfig-002-20240227   gcc  
+sh                           se7343_defconfig   gcc  
+sh                           se7705_defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                             sh03_defconfig   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240227   gcc  
+sparc64               randconfig-002-20240227   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240227   clang
+um                    randconfig-002-20240227   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240227   clang
+x86_64       buildonly-randconfig-002-20240227   gcc  
+x86_64       buildonly-randconfig-003-20240227   clang
+x86_64       buildonly-randconfig-004-20240227   clang
+x86_64       buildonly-randconfig-005-20240227   clang
+x86_64       buildonly-randconfig-006-20240227   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240227   clang
+x86_64                randconfig-002-20240227   clang
+x86_64                randconfig-003-20240227   gcc  
+x86_64                randconfig-004-20240227   gcc  
+x86_64                randconfig-005-20240227   gcc  
+x86_64                randconfig-006-20240227   gcc  
+x86_64                randconfig-011-20240227   gcc  
+x86_64                randconfig-012-20240227   gcc  
+x86_64                randconfig-013-20240227   clang
+x86_64                randconfig-014-20240227   gcc  
+x86_64                randconfig-015-20240227   gcc  
+x86_64                randconfig-016-20240227   gcc  
+x86_64                randconfig-071-20240227   gcc  
+x86_64                randconfig-072-20240227   clang
+x86_64                randconfig-073-20240227   gcc  
+x86_64                randconfig-074-20240227   clang
+x86_64                randconfig-075-20240227   clang
+x86_64                randconfig-076-20240227   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                generic_kc705_defconfig   gcc  
+xtensa                          iss_defconfig   gcc  
+xtensa                randconfig-001-20240227   gcc  
+xtensa                randconfig-002-20240227   gcc  
 
-> +  gpio-ranges: true
-> +
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  ngpios: true
-
-minimum/maximum.
-
-
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - gpio-controller
-> +  - "#gpio-cells"
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2400-gpio
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 220
-> +          maxItems: 220
-> +        ngpios:
-> +          const: 220
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2500-gpio
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 232
-> +          maxItems: 232
-> +        ngpios:
-> +          const: 232
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2600-gpio
-> +    then:
-> +      properties:
-> +        gpio-line-names:
-> +          minItems: 36
-> +          maxItems: 208
-> +        ngpios:
-> +          enum: [ 36, 208 ]
-> +      required:
-> +        - ngpios
-Best regards,
-Krzysztof
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
