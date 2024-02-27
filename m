@@ -1,116 +1,129 @@
-Return-Path: <linux-gpio+bounces-3799-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3800-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9C951869193
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:18:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBDEC8691C0
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:27:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 51FE01F22C1E
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:18:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DEC781C2252C
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:27:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5965A13B2A9;
-	Tue, 27 Feb 2024 13:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E83613EFE0;
+	Tue, 27 Feb 2024 13:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="dBFLCaLq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YiYsfqrN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8C2813B290
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 13:18:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222A913A25D;
+	Tue, 27 Feb 2024 13:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039917; cv=none; b=UK/o+MxjqaaORb0Oc8X2jicf8qel/xbg3E+phNWhxk0+hHWQyTJx9h5TDlWypoOYQMGeiu+OU4MhiYYTLKKfZEvZZWr3ksnCkq+wiBNeMSF4CXdbVnbZOZO+HPcBf7RWWgmKW104XfNln66tzQKe91bvT7BGVMtybYs0Oq0J2cg=
+	t=1709040428; cv=none; b=Nh5FtIS1vq3Mjx2AEPAhaW7qUEByV9pMMQBDxjjEhMFX8j/Cb6fFAWSpM8msDCnCwaCoG6ZYz6wNcPsRGMhqVUq8R8gCw0hUQnHexIEssnFBYfvKkQX6rzGkE/zPx3ZjNHdSrbIwsXATycX47DtkwbzvYWrCkyaRHXFGtYWZ3k8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039917; c=relaxed/simple;
-	bh=XIdqyDQpxejpU6Xbxt+vThMLN3OZbO3x1VzJ061nang=;
+	s=arc-20240116; t=1709040428; c=relaxed/simple;
+	bh=mQuoPMjiuf8ynXjuDbiiuc6MSut0kX4NXC2fBVQm6FQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GNOSzKQ0WkyG/saVicxpMXRt64SnAwYzku7TaAOYnNM9MNLN7DxyctEU84VTchSLJEYqYZ08friOtrCAbkr4bU0JloZYv0g6c7VjmakjsjN7voJivTRUrIolQzu0W7OUC+JSXlg/mWUFRtVZ4+KSuPUcO5zkpVqCF3LAzn9tAmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=dBFLCaLq; arc=none smtp.client-ip=209.85.222.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-7d5c890c67fso2007763241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 05:18:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709039914; x=1709644714; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/MJvKpz29jkQyBneNtGPQJRAHLJnHtGshFmhRL3AhTM=;
-        b=dBFLCaLqv6bPiBHvUYsU+VvHWDUN0oTzVzKfcFe8xX3uSQIyIiRORBZgO92CrdMDG7
-         ypK6++bcvNE/aBeZ42xFosgiyO9tJgMrLrRHQxepe5ORWcl+OuwNcWujSmKtLMPUkv6w
-         PlXu6bY1ILuKYmUNZ4r0HUBFb/irZh9YyYMpxLtwCrz5f0PAffMzwFqi2grFNNpnwHId
-         JcS0orFVmvPTiYiMDio2KEiXciKUbyDVM3497V2eYQ2vzMnl2R+Hhr6C79eOtpBjICOq
-         Cg426IHU6N20NL32DbI+PPGAQ/p5qZts6+2hcLxPr9ULoGGqt4irDp1fqO0GCsV2bDo5
-         I+Ag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709039914; x=1709644714;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=/MJvKpz29jkQyBneNtGPQJRAHLJnHtGshFmhRL3AhTM=;
-        b=C2g/gg7BzxqqhEiboS5Hxi0pqQfeeAa+HUtzs5sq5nnQlJRa1auCNOjHglQXXlw1BC
-         mKUNV9t9VW9Ux0LnzpcyrQUm84FdPzY8Rs9+zR+Hb+MIHmEwqErd9pdgNaIxeMNQmabv
-         ZL+Ifa5SvMmaIlwrbCVZgXFBuvXXDSz3bPjlH7lodXtRwg582KJozpg+X2Usgt5cUHCS
-         8uNkSjkA2WNyWVbmUuOQeULMC8YGN+u2/C8r55kdoEX6d9FznXebsxthCNEr17y9LFtI
-         rKZy8QDNXOK3J0Dr0dlEXRbu8ms+ktXXxgKd2cT949rBBhJvK6CF3nlnkZ+ZEOEXHnKy
-         dZwg==
-X-Forwarded-Encrypted: i=1; AJvYcCVmewK5NuZTf1HOXB4D0D6RXL7f3+IL7kW62j6qLiq8F/aHKJZVAO3mcp3LDwDu+dJ8AmIVZWz/Zu8Tld5UDfARzyC3KqGXZZupnQ==
-X-Gm-Message-State: AOJu0Ywy2KaoMQwcDRQ2OoZ6ygIkDwSxwAU9C2mJEmufIbnLZubpT4hw
-	nQ4JjDFSQONwdThqNqJ4e+troGAr28sSH7Tmc0777l8WksRVE2MVUxaNf+7KvBTVRXQveEZXSTq
-	1KoDeR+YaXD3Qad4q54Cw2o0nDCI6bK5hRgSAEg==
-X-Google-Smtp-Source: AGHT+IGFmZ4niK8yNBEqazbNpJaXrpKFX2pVzYNeNDBMOldwUgZekD8G6UAhaKmwhhECxJf9gr9cCnrgYNlum2RUL8o=
-X-Received: by 2002:a1f:e602:0:b0:4d0:36e3:40c3 with SMTP id
- d2-20020a1fe602000000b004d036e340c3mr7050322vkh.13.1709039914615; Tue, 27 Feb
- 2024 05:18:34 -0800 (PST)
+	 To:Cc:Content-Type; b=RqYVIs7BLwIEROh3UN3Cc+DJlndYlC8P3k2XFlYhsaPW8MP1+yQFTT9/kD1xPhrQqqAeCum2SLDK5z7VoTrOW3XfeQ1hGDEpkMlHku8HuUAqmxPtQCLko9cp6WwIU5FYzHwUgtXoB/lzjxDY97uuRLBqRxqQM6FC59g1OXS5F7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YiYsfqrN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C53CC43390;
+	Tue, 27 Feb 2024 13:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709040427;
+	bh=mQuoPMjiuf8ynXjuDbiiuc6MSut0kX4NXC2fBVQm6FQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=YiYsfqrNmxelw6OLCadO4d24dF73YVqv4GXCnzuNjZu47FB3rTy1hLVSKKAefEn1s
+	 ZMDN8gvO4BI8MI5h5oSI9qx85Gz8zdwEdyk5aGSjNSqYu1swE/C6/dcwxG2Ssf/V6p
+	 XH2rJg1Gc/o2ziShAi0h6jOS0LMybeZg5kh1ao5XhYDLQh3aICvvUNI7NjFpGLeW7u
+	 X5l5k1SHu5oQ2RzsIRiRv47fR/9KGDtu3DeKi7G+RXf8Dg2gnwpuJv/NZCdkH1BCD0
+	 85J66xJ7KqCX83NhABKxeyFSWFJHqZObxs8XA1oRVABAdLOzaeGmnowo8GwAvfctE+
+	 IU+Mjg83pNh8A==
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-512fe342841so1770883e87.0;
+        Tue, 27 Feb 2024 05:27:07 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCVysh9KTj7+CwVyW2d8AJbZqez+bRdfLq2PvE4eI6DJBrEhoOr4Dj/PXISrpyOMtJLOdrLOaBStyo6ODZ/i1Xw0e6a6mpYeLIbp22PdwJcpjARlF4/XDQnLocx7rrErruJqqIkZHzB/r8djJu2A2iKgzrKX6P4dVompyJpIH6xQ1XkJ11gVOkwAIUcRTJfLjxOrIiPWwlRqTxBbRz4BlYvB1HW3cKe10qF2AtIwozTWhwrCU8zo+OaYLcm1iDy21Ji992M/U2JB2gIujvWb9IQEHe5VMDgmQbOn
+X-Gm-Message-State: AOJu0YxmAxNKZNPuYfZvSQ5Vjveg/uKVOFtFjdsIJRBle3omyhOESyQm
+	T5G1SBqZhgS7r9JYZ5YJb1wW+jlWUw3p7dfUC227j0BzNDTzOb2SYH1EbWX3ZPWLj3yy4gNWofR
+	oYO0/sJreaY/i6fhgmZjkJPPBtg==
+X-Google-Smtp-Source: AGHT+IGSECgtfha3Slu/bp01d2++70z6Ndl3JBsL88LZ7J9E4A1ZYVnx89bJzdpkH8hy8sv4XeL5Ccsb8VUnBLV0130=
+X-Received: by 2002:ac2:5611:0:b0:513:7b1:848c with SMTP id
+ v17-20020ac25611000000b0051307b1848cmr545044lfd.18.1709040425849; Tue, 27 Feb
+ 2024 05:27:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240223065254.3795204-1-swboyd@chromium.org>
-In-Reply-To: <20240223065254.3795204-1-swboyd@chromium.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 27 Feb 2024 14:18:22 +0100
-Message-ID: <CAMRc=McvYEuK-0bfF67qDbb5FS017NcMkOGaLtWucx3LYL0DMQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+References: <20240222174343.3482354-2-robh@kernel.org> <ZdemsdGQE0RtilCd@shikoro>
+ <CAL_JsqKpn6jqktRLQUx7HMrJG0PZeiOZ=hQnHpZK6AHcM22CLQ@mail.gmail.com> <Zdkda5jf072mENvK@shikoro>
+In-Reply-To: <Zdkda5jf072mENvK@shikoro>
+From: Rob Herring <robh@kernel.org>
+Date: Tue, 27 Feb 2024 07:26:52 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Wus0CFpD3+b1Ewfv0e7iCE35gzsAwahBxErex6tY5Ww@mail.gmail.com>
+Message-ID: <CAL_Jsq+Wus0CFpD3+b1Ewfv0e7iCE35gzsAwahBxErex6tY5Ww@mail.gmail.com>
+Subject: Re: [PATCH] dt-bindings: i2c: Remove obsolete i2c.txt
+To: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Andi Shyti <andi.shyti@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Miquel Raynal <miquel.raynal@bootlin.com>, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org, 
+	linux-i3c@lists.infradead.org, linux-sound@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Feb 23, 2024 at 7:52=E2=80=AFAM Stephen Boyd <swboyd@chromium.org> =
-wrote:
+On Fri, Feb 23, 2024 at 4:34=E2=80=AFPM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
 >
-> This devm API takes a consumer device as an argument to setup the devm
-> action, but throws it away when calling further into gpiolib. This leads
-> to odd debug messages like this:
+> Hi Rob,
 >
->  (NULL device *): using DT '/gpio-keys/switch-pen-insert' for '(null)' GP=
-IO lookup
+> > > * In the schema, "clock-frequency" has a minimum of 1kHz and a maximu=
+m
+> > >   of 3MHz. Why? The specs do not say anything about a minimum freq an=
+d
+> > >   fastest speed mentioned in the docs is 5Mhz (Ultra fast mode).
+> >
+> > IIRC, the high speed mode originally topped out at 3MHz. I guess
+> > that's been revised.
 >
-> Let's pass the consumer device down, by directly calling what
-> fwnode_gpiod_get_index() calls but pass the device used for devm. This
-> changes the message to look like this instead:
+> Hs-mode has a max of 3.4MHz...
 >
->  gpio-keys gpio-keys: using DT '/gpio-keys/switch-pen-insert' for '(null)=
-' GPIO lookup
+> >
+> > We can drop the minimum.
 >
-> Note that callers of fwnode_gpiod_get_index() will still see the NULL
-> device pointer debug message, but there's not much we can do about that
-> because the API doesn't take a struct device.
+> ... but I see you changed min/max now to 1/5000000. That's what I would
+> have suggested as well.
 >
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
+>
+> > > * new binding "i2c-scl-clk-low-timeout-us" has a description which I =
+do
+> > >   not understand. What is a waiting state?
+> >
+> > Shrug. May have to look at the MPC h/w that uses the property.
+>
+> I will also have another look. My gut feeling is that the binding is
+> okay, only the description might need an update.
+>
+> > >
+> > > * new binding "no-detect" is broken. At the least, it should be named
+> > >   something like "bus-fully-described" and then the OS can decide to
+> > >   leave out auto-detection mechanisms. If you are interested in the
+> > >   latter, you can simply disable class based instantiation on the hos=
+t
+> > >   controller. No need to describe this in DT.
+> >
+> > I've reverted the property now.
+>
+> Cool, thanks!
 
-Applied, thanks!
+I don't think there's anything else to discuss on this patch, can I
+get your ack?
 
-Bart
+Rob
 
