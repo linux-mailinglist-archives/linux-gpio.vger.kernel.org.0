@@ -1,128 +1,304 @@
-Return-Path: <linux-gpio+bounces-3802-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3803-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 72D7C869922
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 15:53:45 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7097869942
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 15:56:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 917CA1C22D69
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:53:44 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A7BB8B21228
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:56:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 796CD3D68;
-	Tue, 27 Feb 2024 14:53:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 042BA1468E3;
+	Tue, 27 Feb 2024 14:55:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="dniY1zKx"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Unonv4oa"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E6BE54BFE;
-	Tue, 27 Feb 2024 14:53:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC10A13B2BA;
+	Tue, 27 Feb 2024 14:55:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709045619; cv=none; b=XV3KROtYH4/r6SMWdkE8D+GwnK0bLoxsUWrBmcOw3BRIS3P7sNfVpuv7x1A53ba+lBsQPucnvViHz33l4TNW9sqv4EceMr8VB2sXHv7OQyCKlz5uJ1myHLQp7qDIi0P1ZLrk6RNvYqVR6KYL4Bef0cUHk20X/01iIL3Tt+9rXUs=
+	t=1709045737; cv=none; b=LRlop+3IlVDIFAVnXoHlrVdVh95fPC1vZ2yjkbFDQeQkbK8Cv+4Mh2FaSK+Ia2/fkUZp/vOc5liRHjX4JFy+tqtzis/suJQLUGyWLVA7jPCxfdoJROzQitSXn+nqa9S5qYAVuN6GxEY8ysQ9iB+cIfljJJqjVsUjPW36WF701s0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709045619; c=relaxed/simple;
-	bh=7/HCLIxM8m8H1jm7lU/8tplk21ZMnEDIzNTpS1ZlOpY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mv5VkgcmVSI5SInGNSBHB/MN5ZJZcJtr2jAHfkmhrhtnpK+LidAz3ZphrgeLI1Ugaphza2mop4Hhqp4ZJhWlyzCnX+lSgO3iy2QjzNeJxGp/8bG4jTiQ2Ozc3ls1zrh3i4uRvw1OKIv4ez2n7sMLusVrW9oUEqEvG3cK90QpRNc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=dniY1zKx; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709045618; x=1740581618;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=7/HCLIxM8m8H1jm7lU/8tplk21ZMnEDIzNTpS1ZlOpY=;
-  b=dniY1zKx53x/l8Jx7pQdXo+PH7oze7L9oX046VkrPn5AF++5/48IhiwJ
-   J39lwlvK8T2gr99OQvRbBFNKOWR4HQxUMLumo3/MAl8vu7Ob8TSiQ6x1u
-   WgBMQVzvF8/LDs2rlFJi8cOMPxLI528ogDOZXfIqRtMcjHUwqTWlvWOV3
-   t79XndhikQMgXIuj/H3mkUrrLu59xCiSRJfgSukzgaRu2K8jFlI68+u3b
-   Oo7nIgY0fFYnEGsIH0VNIgur5dgSj/ZsMiKVuohy1lqxNjP4tBOwz+qKn
-   7OGVLERrpIHOPM/PM2ljsv3Mity/oz+YpT4iSnAywx6BwVoy4UY2hqUUn
-   g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="14537331"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="14537331"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:53:37 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10996"; a="913914249"
-X-IronPort-AV: E=Sophos;i="6.06,188,1705392000"; 
-   d="scan'208";a="913914249"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 27 Feb 2024 06:53:35 -0800
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1reypo-00000007yED-0xt7;
-	Tue, 27 Feb 2024 16:53:32 +0200
-Date: Tue, 27 Feb 2024 16:53:31 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Arturas Moskvinas <arturas.moskvinas@gmail.com>,
-	linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are
- reset
-Message-ID: <Zd33a69X9Ej4llbk@smile.fi.intel.com>
-References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
- <ZdyZnqS_jKelbs6G@smile.fi.intel.com>
- <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
- <CAMRc=McUsv9ic5aU7oAaJ06zWtpna0CkkxPWr2nqPhEig5vPOg@mail.gmail.com>
+	s=arc-20240116; t=1709045737; c=relaxed/simple;
+	bh=u4uruoiWAjUY8sogwgIds3DQQwu8NcRnD80xqcXBBaI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=QuIKkXo6dii5amZjlwO3zcoDI6/mii3ayMXlMFB8uLceLV5vDz4C+N5RlIA+uz3FgkhNE9QWrFluA2RoEG4jJtlEg9aA9+ZToOBimuq1gWXIkFdf0CizTP3v44W1Z/c/w/Uwhm1Y/I5m2xXDLAIW52s1kh6O086x9js6ryLKKAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Unonv4oa; arc=none smtp.client-ip=217.70.183.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 3E9C020002;
+	Tue, 27 Feb 2024 14:55:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709045733;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=C3wy3OzjNtRCu31GZFcEErzuOU7blmK5I4ZgOey5AC0=;
+	b=Unonv4oa9z027leV5e4eLXdUTgzqMkXtC12U84pHrz9748IQPaCdR7BVdWrZ8W+HMKKAoh
+	PRCMPgWRNkFwYEtgVK4oirCRJCrFgLI9VODItvkowH3+IWo1HZNRYVlsezsY3lTjwXJSy6
+	pnlUG4sKMxlz+VkTrG5g/1uYY1kje6ynd0qVgjrIDUjyQ2MUMJ9ohCUd7Cyzlj1LXuGG9V
+	Z9l2soPolgv7fli9poh5lI95jCWpil+A8RhPYD8WuyhflS5IMVkHT8GT78/ef0iuABdbfD
+	3krRmunZoNdGhJwuC7wDJlT9EU3l4fBOZ7W56jVriWhW/u3He16NZnmeqE8OaQ==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH v8 00/10] Add support for Mobileye EyeQ5 system controller
+Date: Tue, 27 Feb 2024 15:55:21 +0100
+Message-Id: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McUsv9ic5aU7oAaJ06zWtpna0CkkxPWr2nqPhEig5vPOg@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+X-B4-Tracking: v=1; b=H4sIANn33WUC/3XQS07DMBAG4KtUXhM0D8exWXEPxCJ+UYs0QUkVU
+ VW5O04Riktg4cVY/n7PzFVMYUxhEk+HqxjDnKY09LnQDwfhjm3/Fqrkcy0IiDGf6mS7S+W690o
+ 3LtSOJEbQIj//GENMn7eol9dcH9N0HsbLLXnG9fY7BBm2kBkrqLSyEdE0Hjk822E4d6l/dMNpT
+ f2HWA5Qe2WNDe2fhFD/IlLmfiWCjqDuyNrsTFuDRE1BKdM2/2UVO9YQ95R/qAQsFzRzpmzIAoL
+ VpHFPZUEZCyrXGZ0HqBG8amFP640SmILWmUYwMoQ6GNTtnqqCIhVUZeqkii1Gw5rNnjYFpbLhZ
+ p0Vfd4xKwbH93RZli8P4dm+agIAAA==
+To: Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Thomas Bogendoerfer <tsbogend@alpha.franken.de>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
+ Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Tue, Feb 27, 2024 at 02:14:40PM +0100, Bartosz Golaszewski wrote:
-> On Tue, Feb 27, 2024 at 7:58 AM Arturas Moskvinas
-> <arturas.moskvinas@gmail.com> wrote:
-> > On 2/26/24 16:01, Andy Shevchenko wrote:
-> > > On Mon, Feb 26, 2024 at 03:46:56PM +0200, Arturas Moskvinas wrote:
-> > >> Move output enabling after chip registers are cleared.
-> > > Does this fix anything? If so, maybe elaborate a bit the potential behavioural
-> > > changes on the real lines.
-> >
-> > Chip outputs are enabled[1] before actual reset is performed[2] which
-> > might cause pin output value to flip flop if previous pin value was set
-> > to 1 in chip. Change fixes that behavior by making sure chip is fully
-> > reset before all outputs are enabled.
-> >
-> > Flip-flop can be noticed when module is removed and inserted again and
-> > one of the pins was changed to 1 before removal. 100 microsecond
-> > flipping is noticeable on oscilloscope (100khz SPI bus).
-> >
-> > For a properly reset chip - output is enabled around 100 microseconds
-> > (on 100khz SPI bus) later during probing process hence should be
-> > irrelevant behavioral change.
-> >
-> > [1] -
-> > https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L130
-> > [2] -
-> > https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L150
-> >
-> > Arturas Moskvinas
-> 
-> And this is precisely the kind of information that needs to go into
-> commit messages. I can tell *what* you're doing by looking at the
-> code. What I can't tell is *why*.
+Hi,
 
-+1. Please, add this to the commit message of v2, also try to find the commit
-that you can mark to be fixed with help of Fixes tag.
+Here again for a new revision of the system-controller on Mobileye
+EyeQ5. It deals with clk, reset and pinctrl.
 
+Series dependencies are:
+ - We are based on v6.8-rc6.
+ - Both [1] and [0] series are needed, both are in mips-next [2].
+ - 4 patches from previous iteration have been applied to clk-next [3]
+   and dropped from this series. Those are needed for this to build
+   and test this series. Patches are:
+    - [PATCH v7 01/14] clk: fixed-factor: add optional accuracy support
+    - [PATCH v7 02/14] clk: fixed-factor: add fwname-based constructor functions
+    - [PATCH v7 03/14] dt-bindings: clock: mobileye,eyeq5-clk: add bindings
+    - [PATCH v7 04/14] dt-bindings: reset: mobileye,eyeq5-reset: add bindings
+
+The patch adding the system-controller dt-bindings ("dt-bindings: soc:
+mobileye: add EyeQ5 OLB system controller") is dependent on the three
+controllers dt-bindings:
+ - dt-bindings: clock: mobileye,eyeq5-clk: add bindings
+ - dt-bindings: reset: mobileye,eyeq5-reset: add bindings
+ - dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings
+
+Here is the patch list, split by subsystems. Pinctrl, clk and reset are
+meant to be applicable without dependencies from external trees. They
+apply fine on {clk,pinctrl}-next.
+
+- pinctrl:
+   [PATCH v8 01/10] dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings
+   [PATCH v8 05/10] pinctrl: eyeq5: add platform driver
+- clk:
+   [PATCH v8 03/10] clk: eyeq5: add platform driver, and init routine at of_clk_init()
+- reset:
+   [PATCH v8 04/10] reset: eyeq5: add platform driver
+- MIPS:
+   [PATCH v8 02/10] dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+   [PATCH v8 06/10] MAINTAINERS: Map OLB files to Mobileye SoCs
+   [PATCH v8 07/10] MIPS: mobileye: eyeq5: add OLB syscon node
+   [PATCH v8 08/10] MIPS: mobileye: eyeq5: use OLB clocks controller node
+   [PATCH v8 09/10] MIPS: mobileye: eyeq5: add OLB reset controller node
+   [PATCH v8 10/10] MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
+
+Thanks all for the previous feedback!
+
+Have a nice day,
+Théo Lebrun
+
+[0]: https://lore.kernel.org/lkml/20240216174227.409400-1-gregory.clement@bootlin.com/
+[1]: https://lore.kernel.org/linux-mips/20240209-regname-v1-0-2125efa016ef@flygoat.com/
+[2]: https://git.kernel.org/pub/scm/linux/kernel/git/mips/linux.git/log/
+[3]: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=clk-next
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
+---
+Changes in v8:
+- clk: drop two clk subsystem patches, clk dt-bindings and reset
+  dt-bindings (4 patches taken into clk-next).
+- clk: Kconfig: fix help block indent.
+- clk: fix #includes and whitespace.
+- clk: add comment to explicit error conditions at start of probe.
+- clk: fix error checking of devm_platform_ioremap_resource_byname() and
+  do not shadow the error.
+- clk: if parsing registers fail, put error in clk rather than keeping
+  the EPROBE_DEFER set at init.
+- clk: use dev_err_probe() on clk_hw_register_*() failure in probe.
+- Link to v7: https://lore.kernel.org/r/20240221-mbly-clk-v7-0-31d4ce3630c3@bootlin.com
+
+Changes in v7:
+- pinctrl: use dev_err_probe() and lower first letter of messages.
+- Move all MAINTAINERS changes to a separate patch aimed at the MIPS
+  tree. This means clk/reset/pinctrl can take patches independently.
+- Apply two Reviewed-by: Linus Walleij.
+- Link to v6: https://lore.kernel.org/r/20240212-mbly-clk-v6-0-c46fa1f93839@bootlin.com
+
+Changes in v6:
+- bindings/clk: remove minItems in reg.
+- bindings/reset: remove minItems in reg.
+- bindings/syscon: unify quotes (use single quotes everywhere).
+- bindings: apply three Reviewed-By tags from Krzysztof.
+- Rebased onto v6.8-rc5. No related changes. Tested on EyeQ5 hardware.
+- Link to v5: https://lore.kernel.org/r/20240209-mbly-clk-v5-0-f094ee5e918a@bootlin.com
+
+Changes in v5:
+- pinctrl: fix pin/offset distinction, add eq5p_pin_to_offset() helper,
+  rename eq5p_pin_offset_to_bank() to eq5p_pin_to_bank(), rename
+  eq5p_readl_bit() to eq5p_test_bit(), remove old <linux/mfd/syscon.h>
+  include, add defensive check in eq5p_test_bit().
+- dt-bindings/MIPS: OLB example (dt-bindings) and devicetree: fix
+  ordering of nodes and properties, fix register casing.
+- dt-bindings: add pin group node example to OLB dt-bindings.
+- MIPS: squashed "MIPS: mobileye: eyeq5: add reset properties to UARTs"
+  into "MIPS: mobileye: eyeq5: add OLB reset controller node".
+- MIPS: squashed "MIPS: mobileye: eyeq5: add pinctrl properties to UART
+  nodes" into "MIPS: mobileye: eyeq5: add pinctrl node & pinmux
+  function nodes".
+- MIPS: rebased onto V7 of [0], meaning we now introduce the OLB syscon
+  node in DT in this series rather than modifying it.
+- Apply Reviewed-by from Rob onto "dt-bindings: pinctrl:
+  mobileye,eyeq5-pinctrl: add bindings".
+- dt-bindings: Drop "dt-bindings: pinctrl: allow pin controller device
+  without unit address".
+- dt-bindings: I did NOT apply Krzysztof's Reviewed-By trailers from v3
+  as I am not sure he acked the changes made in V4.
+- Link to v4: https://lore.kernel.org/r/20240131-mbly-clk-v4-0-bcd00510d6a0@bootlin.com
+
+Changes in v4:
+- Have the three drivers access MMIO directly rather than through the
+  syscon & regmap.
+- pinctrl: Make the pin controller handle both banks using a single
+  instance.
+- pinctrl/dt-bindings: Add if/else for each function, to strictly define
+  possible functions.
+- clk: Changing to direct MMIO means we can use
+  clk_hw_register_divider_table_parent_hw() for the OSPI table-based
+  divider clock.
+- Use builtin_platform_driver() for platform driver registering instead
+  of manual initcalls.
+- reset: follow Philipp & Krzysztof's feedback:
+  - Use container_of() to get private struct.
+  - Use '_withlock' suffix instead of the underscore prefix.
+  - Use udelay() instead of the non-standard __udelay().
+  - Remove useless checks.
+  - Use mutex guards.
+  - Remove the ->reset() implementation.
+  - Use devres variants for kzalloc() and reset_controller_register().
+- Other small changes following feedback from reviewers. dt-bindings
+  whitespace for pinctrl.yaml, fix pinctrl driver dt-bindings
+  description, improve clk driver commit header, etc.
+- Link to v3: https://lore.kernel.org/r/20240123-mbly-clk-v3-0-392b010b8281@bootlin.com
+
+Changes in v3:
+- Unified the three series into one.
+- clk: split driver into two for clocks registered at of_clk_init() and
+  clocks registered at platform device probe.
+- reset/bindings: drop reset dt-bindings header & add comment in driver
+  to document known valid resets in each domain.
+- pinctrl/bindings: fix pinctrl.yaml to allow non unit addresses for pin
+  controller devices.
+- all/bindings: remove possibility to use `mobileye,olb` phandle to get
+  syscon. All three drivers use their parent node as syscon/regmap.
+- MIPS/bindings: fix bindings for OLB. Have single example in parent,
+  removing all examples in child.
+- all: drop the "probed" logs.
+- Link to v2: https://lore.kernel.org/r/20231227-mbly-clk-v2-0-a05db63c380f@bootlin.com
+
+Changes in v2:
+- Drop [PATCH 1/5] that was taken by Stephen for clk-next.
+- Add accuracy support to fixed-factor that is enabled with a flag.
+  Register prototypes were added to exploit this feature.
+- Add fw_name support to fixed-factor. This allows pointing to parent
+  clocks using the value in `clock-names` in the DT. Register
+  prototypes were added for that.
+- Bindings were modified to be less dumb: a binding was added for OLB
+  and the clock-controller is a child property of it. Removed the
+  possibility of pointing to OLB using a phandle. $nodename is the
+  generic `clock-controller` and not custom `clocks`. Fix dt-bindings
+  examples.
+- Fix commit message for the driver patch. Add details, remove useless
+  fluff.
+- Squash both driver commits together.
+- Declare a platform_driver instead of using CLK_OF_DECLARE_DRIVER. This
+  also means using `dev_*` for logging, removing `pr_fmt`. We add a
+  pointer to device in the private structure.
+- Use fixed-factor instead of fixed-rate for PLLs. We don't grab a
+  reference to the parent clk, instead using newly added fixed-factor
+  register prototypes and fwname.
+- NULL is not an error when registering PLLs anymore.
+- Now checking the return value of of_clk_add_hw_provider for errors.
+- Fix includes.
+- Remove defensive conditional at start of eq5c_pll_parse_registers.
+- Rename clk_hw_to_ospi_priv to clk_to_priv to avoid confusion: it is
+  not part of the clk_hw_* family of symbols.
+- Fix negative returns in eq5c_ospi_div_set_rate. It was a typo
+  highlighted by Stephen Boyd.
+- Declare eq5c_ospi_div_ops as static.
+- In devicetree, move the OLB node prior to the UARTs, as platform
+  device probe scheduling is dependent on devicetree ordering. This is
+  required to declare the driver as a platform driver, else it
+  CLK_OF_DECLARE_DRIVER is required.
+- In device, create a core0-timer-clk fixed clock to feed to the GIC
+  timer. It requires a clock earlier than platform bus type init.
+- Link to v1: https://lore.kernel.org/r/20231218-mbly-clk-v1-0-44ce54108f06@bootlin.com
+
+---
+Théo Lebrun (10):
+      dt-bindings: pinctrl: mobileye,eyeq5-pinctrl: add bindings
+      dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+      clk: eyeq5: add platform driver, and init routine at of_clk_init()
+      reset: eyeq5: add platform driver
+      pinctrl: eyeq5: add platform driver
+      MAINTAINERS: Map OLB files to Mobileye SoCs
+      MIPS: mobileye: eyeq5: add OLB syscon node
+      MIPS: mobileye: eyeq5: use OLB clocks controller node
+      MIPS: mobileye: eyeq5: add OLB reset controller node
+      MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
+
+ .../bindings/pinctrl/mobileye,eyeq5-pinctrl.yaml   | 242 +++++++++
+ .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  |  94 ++++
+ MAINTAINERS                                        |   8 +
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +-
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 +++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  42 +-
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-eyeq5.c                            | 306 +++++++++++
+ drivers/pinctrl/Kconfig                            |  15 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 577 +++++++++++++++++++++
+ drivers/reset/Kconfig                              |  12 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-eyeq5.c                        | 342 ++++++++++++
+ 15 files changed, 1792 insertions(+), 39 deletions(-)
+---
+base-commit: f48300386c909467ddd455ff619351214d94aa54
+change-id: 20231023-mbly-clk-87ce5c241f08
+
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Théo Lebrun <theo.lebrun@bootlin.com>
 
 
