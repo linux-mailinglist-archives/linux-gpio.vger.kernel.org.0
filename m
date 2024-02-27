@@ -1,156 +1,149 @@
-Return-Path: <linux-gpio+bounces-3837-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3838-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D97986A041
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 20:32:08 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 860FA86A0A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 21:07:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D3FB928301A
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 19:32:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1C0781F221DC
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 20:07:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 883BE52F70;
-	Tue, 27 Feb 2024 19:31:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57B3114A0A0;
+	Tue, 27 Feb 2024 20:07:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="h0pFhshc"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Lvokgkpi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f42.google.com (mail-ua1-f42.google.com [209.85.222.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD262524CF
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 19:31:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 739D92260A
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 20:07:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709062308; cv=none; b=XilnkUAUKCAM6wr8s+P69A+WXKEKZ1VTiASUDCyRWo9LvpOf9yPjP4rMhrZj2k5BcJjfws6Z/jxr9crBdm1y/+9cghaghxEShBaxvpowqXSXdNZen/TanNpHFTxXH3VAo5SeVkxy8/NvxOoSYA9ronjD+TV1evDlnQXiiQyGh10=
+	t=1709064446; cv=none; b=c5sFIO++DMi7FTt2ggZA2WN3OldFgI4/sgEaA1bMwjEatYz3hYtOoZdLXQ6URZSLOJOlBP2h+uSQplzEdfpCToHEq/ImNr39EnUjDElyDmTSboBrblnBNuGNWC02xTsXfLUTiBIINzo51j7pT3XluTWbS2Bl6FyAdTp3mtyPzJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709062308; c=relaxed/simple;
-	bh=P8n53itoisgvJX5fY9vQdEzs7mU+bJ7TA8FH2xx0oZo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bo+EybWfWbrgmsdfwbeZmzkvbFDnV8Fb2oXTaQB/qIhOey3R9GcTKrZTXexD7/gaY1tMV02zF9CEpErkAYxaPXTAAkf0I5rIPNI8IAJWZjst795r90yAnOlBbWaMZNbakJFodR2CafzATl6psggMivI84a/udKyfVBg2MCBIRYE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=h0pFhshc; arc=none smtp.client-ip=209.85.222.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f42.google.com with SMTP id a1e0cc1a2514c-7d995bd557eso2732896241.0
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 11:31:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709062305; x=1709667105; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CkUGI/OjSyRrcII58LGuIBmZGZ6Bi4UA80M+PogBoGE=;
-        b=h0pFhshcWkQPEPEFKpcGh55+eWw7obWC+/6T95QUUtD4yvSVhNMYQMeZDJm+dGtHp9
-         VRyKjINaRFfZPceBlHsM6YMcBhUAR+3ugKSSaSd2POMZWYuW7yBWPGk0tjUJPVwAdEuF
-         WcbNrqCw2Ez3aQUFj69pC9oTG2w8liMekQaN8hHWcWo7yPgtf9hmjypGJVP8/YLhxrMb
-         rZNZnLC1ynu3ZzTzNidOxIBaSG4reLY0znlbY9HMLbShPvw8FD90uErh2Pz63DzM8iUe
-         mxlgMiBJGqsv90f7pPppkEnnbnGB5JD/o4s1u6iwmTLF6LBDfmC9dIaky92d9AtW6pB2
-         wbCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709062305; x=1709667105;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=CkUGI/OjSyRrcII58LGuIBmZGZ6Bi4UA80M+PogBoGE=;
-        b=J+H9YiNB7r2oCkSnUlVKrOzhFKOv5SkEGv5Y9bSHg1h7ow2dbgJ3lZpeuEq0GGrM19
-         zwWMN3TLWjeSePHqxRm0hAUP/0NMuioLD4zZA1evLlES7rwfvxukAT6KPgMIY+lXWPaU
-         gI37O8NeMdn59qBLR5NROT2wzNPRDWvzxMlMrtPGJL71M95GAA4DzqcG5+FiYto24Siy
-         V1vWsX3+hQ91fT+9z+d31u8TOwXONAoDRuwm9gwAaYM0o0CuBaRbRt4txrfaiakQyPnf
-         fTWgGAvxQAxfybp+3ZiHqxY17gSXgK3E5pNrUNi34BlAsyUNL63k/x5Gp2rX0UqfF9bd
-         rNug==
-X-Forwarded-Encrypted: i=1; AJvYcCXcO4qVjusp64by2cDqlAZy6WfMBXA4rJhi3crl4T+PBDHgFWqrF2ybDjR4YeV47fa2+CKSowfTgFqTpWtAdBkMHdgNzRJCMuGMVQ==
-X-Gm-Message-State: AOJu0YxXBkymFCTEEhltUSS6Bze37OabTiYUuob1C52MlVGwGaQJGKG4
-	YT8Y+F65/N4iWoeGwP2Pq3+GVzbByURu14YIAy5hH51LyDYIydKdB46mXQM5z1FReZCkPtw8eZj
-	jT63JWzV/4Pi0noPnVyehONTPnJCuTToaDYo1ow==
-X-Google-Smtp-Source: AGHT+IE+hinBR9yrZq4DUl/9CZfrFnny4RogLgxjhnSvZNb0Ore3YufiBI2IwIDXSL7+MvKyu59PcAR8zbTrmCgRU1Y=
-X-Received: by 2002:a1f:dac2:0:b0:4c8:f076:cb0 with SMTP id
- r185-20020a1fdac2000000b004c8f0760cb0mr8464145vkg.4.1709062303829; Tue, 27
- Feb 2024 11:31:43 -0800 (PST)
+	s=arc-20240116; t=1709064446; c=relaxed/simple;
+	bh=SkIIjF1tyZwkpwHJ+uM1/lij30j4No74HWCjYtPxxmI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jvsp+1EzVDToOKsgiAYmfHrV8dff/6lz2waEY7SHv6O9G08NVS9oD2gG1J1aj/A/l3BHWd3SA4GczdtbfBsA4fC8eFsFtjJPpNTv8kLxHMvmkrt2vGDjIyjTpXU9NmeUjVx731oheo0Re4kQZaI6OQZNZjVXNI3fuQOJQLU7kgM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Lvokgkpi; arc=none smtp.client-ip=212.227.17.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1709064432; x=1709669232; i=wahrenst@gmx.net;
+	bh=SkIIjF1tyZwkpwHJ+uM1/lij30j4No74HWCjYtPxxmI=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=LvokgkpiWQCqV9uwuqJUivYs6biZ/IaT297Lk2l8P//EgQpqLkGhs8sQU6fVQcJ8
+	 SSk6bWBVxevwptve5V5rS9zbWqS+fdlyRuuL/2hGS/ZRHKpMsdl/417IiW5sN8IpU
+	 2pCJjzfwfwXi1x2Gv2Zs25IuzSP/mwpz64YonIoy1tqKWvva3Ms0pUhE6UaaZrJXD
+	 FdyImlWkcjHsBeQeAnAjLjtRQNMrVBNLhBJKbD1wut9YL5sGyNUldiew1eBODOLmF
+	 345bLku8D57GdFjbPART1LhhSkPMBzW7pqX4cN7JMhdNdvdkGdCzVqZ3T44io7Kzd
+	 vEFWRciLJM5Y6KWVTw==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MDhhX-1rmWdr0K3T-00Aj3g; Tue, 27
+ Feb 2024 21:07:12 +0100
+Message-ID: <04b71758-c4f3-434f-9d49-32c7af92005d@gmx.net>
+Date: Tue, 27 Feb 2024 21:07:11 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227113426.253232-1-herve.codina@bootlin.com>
-In-Reply-To: <20240227113426.253232-1-herve.codina@bootlin.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 27 Feb 2024 20:31:33 +0100
-Message-ID: <CAMRc=MeSMTnPUYGyJir4fc=6=Gnw_MVP9wfEKMQ6Ck33FYCrRA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio
- chip removal
-To: Herve Codina <herve.codina@bootlin.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Saravana Kannan <saravanak@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH RFC 0/2] pinctrl: bcm2835: Implement pin_conf_get
+Content-Language: en-US
+To: Florian Fainelli <florian.fainelli@broadcom.com>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
+ bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+References: <20240204165852.166157-1-wahrenst@gmx.net>
+ <CACRpkda=VsgiH0-iJVLry4hy6kLeJ_20mzMs8OrqR6Fr8eAp-g@mail.gmail.com>
+ <1709f26f-0486-4856-8b2d-ba5e6fd492e2@gmx.net>
+ <553aa585-c442-4329-8a4d-fcf2f9c110c1@broadcom.com>
+ <9d729c9f-94cb-457f-8a40-3ba4d62fe627@gmx.net>
+ <3bd0edd3-32ef-4781-bfe0-b678aa636bce@broadcom.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <3bd0edd3-32ef-4781-bfe0-b678aa636bce@broadcom.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:cRbnTSrX7cZmlFwrMuXjNT5och0ZDd3T4KY4JzEwYx9/i9pXX5L
+ 96F1+MZHCggF6Vq7RBs4DNIyxXkEDC+8N8X4DPpNiBgUXANUte8xv3szELJBJb1s8qWm74p
+ nofgio6QdQxHxgt864t083zRqOmG2m23KjxplWmMp2+1bAdXEuMXYjeHfdrkiJgrjiMT9Ru
+ GwTwdoW+DJi7ejjjr7AbA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:Kl2AVotJXIw=;QCL7YLlxtsTIS0JUfrtaAjFPRkv
+ e3GWZIbceZo9lp/wKzjXpx7eN2vWjD2iFoia3CqZdM8ivvQHsxXbRzQ5FdvDRawkQ2BZLondq
+ fXYoR/VOOPHnWkjXlXRBT/sBSPNSMWJv5uC9gOG6LOG6hngAd+uVK82+2gAZlGbVDZkwQ5msY
+ P7Yk3BQb70lBUP2cvT9YafE7OXBfBgttRS/9SugIETr62v0qwJaAIibDwm7BB+fCTG6NyoZam
+ S0CxvuZz+X32Cm9e2pYsFnuaf2RXRo2Z0T1MeHvL5FoCOnIDdZG1QzCDtWNCu0OShMdh4Rt4q
+ RLDtzCMZHXDEC32gqMwh3igygO1OCs7cUqCfPOZFaQ0aNAp6aiwIZ8KQZ35Uj/6Q1Xd0dSp97
+ IHPenL8a39sOm/E8JDmIm9gkyf714446rhLmtKBdXwd4Go1e/Gbglr8Fun3whiosABDnx5NZn
+ btvpKitK7xsVoPsDecXVrvmh2hXD5jG5cSKCavd/k2N0scvEy7O2vd93AEhOYi/HtXHGB0Vr5
+ OY1AfqqG/8740R8e1M1xS+ICpP0Wv5P+kFSTGoXR3Z8wkoxW6qHsdW4Mjk7FrnwPGq9FbFWqr
+ 9ryflan5SoNKO3W+d7wlaB9H0N7TJ7oNCnuexS1bS0Wvk/Ic6HR4TdRf+N4rzKO5mjoQxNOOZ
+ epNxhJH4FMWn+MypjeuQ/wzQ9EiNDhRDyIA2RPsETNmecI1NpManXDAMDBMnS9AkAscsvi0tX
+ P3Q5Ne2v6k8nyz4cjXVRgorx76FJJa6NIZ7tnjKSoVkSoVOIcaPVf84+2qivE+L+zyn60U3Tm
+ zI4j395IzT6kyyvmeegyQKZDyk+DTy0h1wMoJipzk+zeI=
 
-On Tue, Feb 27, 2024 at 12:34=E2=80=AFPM Herve Codina <herve.codina@bootlin=
-.com> wrote:
->
-> Hi,
->
-> When a gpio chip device is removed while some related gpio are used by
-> the user-space (gpiomon for instance), the following warning can appear:
->   remove_proc_entry: removing non-empty directory 'irq/233', leaking at l=
-east 'gpiomon'
->   WARNING: CPU: 2 PID: 72 at fs/proc/generic.c:717 remove_proc_entry+0x19=
-0/0x19c
->   ...
->   Call trace:
->     remove_proc_entry+0x190/0x19c
->     unregister_irq_proc+0xd0/0x104
->     free_desc+0x4c/0xc4
->     irq_free_descs+0x6c/0x90
->     irq_dispose_mapping+0x104/0x14c
->     gpiochip_irqchip_remove+0xcc/0x1a4
->     gpiochip_remove+0x48/0x100
->   ...
->
-> Indeed, even if the gpio removal is notified to the gpio-cdev, the
-> IRQ used is not released when it should be.
->
-> This series calls the gpio removal notifier sooner in the removal
-> process in order to give a chance to a notifier function to release
-> the IRQ before releasing the IRQ mapping and adds the needed
-> operations to release the IRQ in the gpio cdev notifier function.
->
-> Compared to the previous iteration:
->   https://lore.kernel.org/linux-kernel/20240220111019.133697-1-herve.codi=
-na@bootlin.com/
-> this v2 series set gdev->chip to NULL before calling gcdev_unregister().
->
-> Also, this v2 series was rebased on top of for-next branch of the GPIO
-> tree.
->
-> Best regards,
-> Herv=C3=A9 Codina
->
-> Changes v1 -> v2:
->   - Patch 1
->     Set gdev->chip to NULL before calling gcdev_unregister()
->
->   - Patch 2
->     No changes
->
-> Herve Codina (2):
->   gpiolib: call gcdev_unregister() sooner in the removal operations
->   gpiolib: cdev: release IRQs when the gpio chip device is removed
->
->  drivers/gpio/gpiolib-cdev.c | 33 ++++++++++++++++++++++-----------
->  drivers/gpio/gpiolib.c      |  6 +++++-
->  2 files changed, 27 insertions(+), 12 deletions(-)
->
-> --
-> 2.43.0
->
+Hi Florian,
 
-Sorry but this is just papering over the real issue. I'd say NAK for
-now as I'd really prefer to get to the root of the problem and fix it
-for all GPIO interrupt users.
+Am 27.02.24 um 01:22 schrieb Florian Fainelli:
+> On 2/25/24 02:01, Stefan Wahren wrote:
+>> Hi Florian,
+>>
+>> Am 07.02.24 um 19:22 schrieb Florian Fainelli:
+>>> On 2/7/24 03:33, Stefan Wahren wrote:
+>>>> Hi Linus,
+>>>>
+>>>> Am 07.02.24 um 11:56 schrieb Linus Walleij:
+>>>>> On Sun, Feb 4, 2024 at 5:59=E2=80=AFPM Stefan Wahren <wahrenst@gmx.n=
+et>
+>>>>> wrote:
+>>>>>
+>>>>>> For years, the Raspberry Pi users relied on userspace programs to
+>>>>>> read
+>>>>>> the pin configuration. In the meantime, it has become apparent that
+>>>>>> this
+>>>>>> approach has reached its limits for various reasons.
+>>>>>>
+>>>>>> This patch series now attempts to improve the debugging
+>>>>>> possibilities on
+>>>>>> the kernel side in order to reduce the dependency on these userspac=
+e
+>>>>>> programs.
+>>>>>>
+>>>>>> Stefan Wahren (2):
+>>>>>> =C2=A0=C2=A0 pinctrl: bcm2835: Implement bcm2835_pinconf_get
+>>>>>> =C2=A0=C2=A0 pinctrl: bcm2835: Implement bcm2711_pinconf_get
+>>>>> I don't see any problems with this, can I just apply the patches or
+>>>>> do you
+>>>>> want to first resend them as non-RFC?
+>>>> since the second patch hasn't been tested with BCM7211, it would be
+>>>> nice
+>>>> to get a feedback from Florian or someone else with this hardware?
+>>>
+>>> Give me a few days to get there and I will run a test.
+>>
+>> is there any chance to test with BCM7211?
+>
+> Sorry about the delay, I just gave those patches a try although I am
+> not sure where I should be seeing the reporting about being configured
+> as pull up/down? Is this supposed to be visible under
+> /sys/kernel/debug/pinctrl/*.gpio-pinctrl-bcm2711/pins?
+It should be .../pinconf-pins
+>
+> Checking the datasheet for 2711/7211 we advertise 50kOhms internal
+> pull ups/downs for all GPIO pins, so we might need to make the
+> resistor value different based upon the board/SoC maybe.
+Thanks for this, in this case i would change the resistor values to
+50000 Ohms. The CM4 datasheet actually provide a range.
 
-Kent, Linus: what do you think?
+Regards
 
-Bart
 
