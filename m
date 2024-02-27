@@ -1,115 +1,133 @@
-Return-Path: <linux-gpio+bounces-3782-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3783-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C77A8687B6
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 04:20:44 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id CAD3F8687D4
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 04:41:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 491DE283889
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 03:20:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 80E121F23112
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 03:41:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12AAE200A6;
-	Tue, 27 Feb 2024 03:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35DC3219FD;
+	Tue, 27 Feb 2024 03:40:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GGZalQiN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mcpnKLv3"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C82DE1B7E9;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC58A20DD3;
+	Tue, 27 Feb 2024 03:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709004031; cv=none; b=IxOTh+BGCwLXRjyeSUUJ+fwuC9FS+tvqptP0Z0GB66+ezn9s+klu1NofDh7doMEljRFM7pxAg7rb655uPrPDDKw5iQHFpq9E9pAUTYBRg8d5zsZGzlcmqMYhBzRG6YvGqIQmOvS+wXVGrN4ISPHCSi3eS1OtpWsTIvkrJ2J1rXk=
+	t=1709005251; cv=none; b=DTtERpymvymxrQ+PrqzDZrTVxeGdUtdxUIgEs9zOm+sS6CzPNbYIz1sn4KbuHP1UrG3B1Sg7Gzjf+amGQPr6x2DDi4jfLKR95b/xQaaTfk9r7ndKEPsZ/d8MyLZMf+r5tyVB1B2q6jJQiqwrLBdBBYW0yTom1nm7Z71X3xhMsWg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709004031; c=relaxed/simple;
-	bh=aEWeFJ2eAgzcvr+OaHdaIiM7TBOw2JHpdO912FAxBrQ=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=HiDNt3fnVXuGP2LZk9qZX6eq0d0c0aHWyi4s/80M34OXbJbLQ0J+BReyCNw8eAKY9rCvr6VjJ7pN8M4WAekOtB54cMsOofMp24ivlAhmBNBf5UmI1QFYq+WU5u3l5DwZNV0a4VpiDqu6rL8hyOpmG68YqCbm5Pz0yNEydiltP6U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GGZalQiN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 601C6C433F1;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
+	s=arc-20240116; t=1709005251; c=relaxed/simple;
+	bh=F7EpFyKjl+IHhn75vKorY4OI7se0+dD77WgdblI6/x0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bcLg21tA9bWbM//FyKZ79X18NrWfTEQoQ3B3G4jN7ThBj6xJ5wyKM2QQCpXodseacP11UPCLgDqoj36HSH1YwHM+dUM7+7zFGYC1T79N2WI24E1VFAztJp/2CNkPeeXgNha5ABNqaNdwtaQmTrH8xYHn/hSokUQ8GuehDIxqTJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mcpnKLv3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FFDDC433C7;
+	Tue, 27 Feb 2024 03:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709004030;
-	bh=aEWeFJ2eAgzcvr+OaHdaIiM7TBOw2JHpdO912FAxBrQ=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GGZalQiNOWNgvr31MEFJ81Scx/q8IuKaZAqiPFZE+SD8pSdQWwG3CioqZpDlRQUAD
-	 jKvVifURv7BOpc25WdOU3fYy6BfTMtetonGpoamgfDO3hXxtvjNyuDx94vkioJxfvV
-	 MubNjVgf5u85jr4mrAuCzosl1CeEkeDYgrDKshVma4vowdYyZfX9/uNolq5oS00HY6
-	 VdQ/8vtg8n+7bDwLjb5y8Yg2i9Qutge32EjMjVf5A2q9l0zWeu9yL5HgzRZ4UWdsvX
-	 1U/1FgMqGQhy/VrktEoQPhkUCFsQrCXfoN9l9KW3KzU1jxRXAX9mECe7VQa53IR0gn
-	 sUUzlKI2AvVrA==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 3DB28D88FB2;
-	Tue, 27 Feb 2024 03:20:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1709005250;
+	bh=F7EpFyKjl+IHhn75vKorY4OI7se0+dD77WgdblI6/x0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=mcpnKLv33h4/RDikiNfpNAwZoEGni5wy7RwuQuOUWYZ49SjyUiEHngtHF/Ie0byu3
+	 zpsuIyUhjpkniZG2ThzQAmVfzuckmU25CMlnu07msCPm0xA5nxUqrzReC8yNd0vBld
+	 huBTwoZQViD7rgdF2SEPq/mNYA/hNRvN10y8GM+M+etVEzSW0iA2W/1i9HQdFG2oI4
+	 Q6xHXFfc+l5TTEYV6q1+uuKcbHLr89FQmlIVZn8+Va3Fb72zXHpAtWTIk6NseIFSLP
+	 dY5fghMr+ashA33RN9xeGZNk6adadUcknmYMkKwXvbgtQTqPS4jGFq2UXtg0BaCJWq
+	 Huol/qweALfYQ==
+Date: Mon, 26 Feb 2024 21:40:47 -0600
+From: Rob Herring <robh@kernel.org>
+To: Andrew Jeffery <andrew@codeconstruct.com.au>
+Cc: joel@jms.id.au, krzysztof.kozlowski+dt@linaro.org,
+	linux-aspeed@lists.ozlabs.org, brgl@bgdev.pl,
+	linux-arm-kernel@lists.infradead.org, linus.walleij@linaro.org,
+	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-gpio@vger.kernel.org, conor+dt@kernel.org
+Subject: Re: [PATCH v4] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT
+ schema
+Message-ID: <20240227034047.GA2644802-robh@kernel.org>
+References: <20240227004414.841391-1-andrew@codeconstruct.com.au>
+ <170900020204.2360855.790404478830111761.robh@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v4 00/39] Add support for sam9x7 SoC family
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <170900403024.25082.9031028983461362329.git-patchwork-notify@kernel.org>
-Date: Tue, 27 Feb 2024 03:20:30 +0000
-References: <20240223171342.669133-1-varshini.rajendran@microchip.com>
-In-Reply-To: <20240223171342.669133-1-varshini.rajendran@microchip.com>
-To: Varshini Rajendran <varshini.rajendran@microchip.com>
-Cc: robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
- conor+dt@kernel.org, nicolas.ferre@microchip.com,
- alexandre.belloni@bootlin.com, claudiu.beznea@tuxon.dev,
- mturquette@baylibre.com, sboyd@kernel.org, herbert@gondor.apana.org.au,
- davem@davemloft.net, andi.shyti@kernel.org, tglx@linutronix.de,
- tudor.ambarus@linaro.org, miquel.raynal@bootlin.com, richard@nod.at,
- vigneshr@ti.com, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- linus.walleij@linaro.org, sre@kernel.org, u.kleine-koenig@pengutronix.de,
- p.zabel@pengutronix.de, olivia@selenic.com, radu_nicolae.pirea@upb.ro,
- richard.genoud@gmail.com, gregkh@linuxfoundation.org, jirislaby@kernel.org,
- lgirdwood@gmail.com, broonie@kernel.org, wim@linux-watchdog.org,
- linux@roeck-us.net, linux@armlinux.org.uk, andrei.simion@microchip.com,
- mihai.sain@microchip.com, andre.przywara@arm.com, neil.armstrong@linaro.org,
- tony@atomide.com, durai.manickamkr@microchip.com, geert+renesas@glider.be,
- arnd@arndb.de, Jason@zx2c4.com, rdunlap@infradead.org, rientjes@google.com,
- vbabka@suse.cz, mripard@kernel.org, codrin.ciubotariu@microchip.com,
- eugen.hristev@collabora.com, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-clk@vger.kernel.org, linux-crypto@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-mtd@lists.infradead.org,
- netdev@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-rtc@vger.kernel.org,
- linux-spi@vger.kernel.org, linux-serial@vger.kernel.org,
- alsa-devel@alsa-project.org, linux-sound@vger.kernel.org,
- linux-watchdog@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <170900020204.2360855.790404478830111761.robh@kernel.org>
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 23 Feb 2024 22:43:42 +0530 you wrote:
-> This patch series adds support for the new SoC family - sam9x7.
->  - The device tree, configs and drivers are added
->  - Clock driver for sam9x7 is added
->  - Support for basic peripherals is added
->  - Target board SAM9X75 Curiosity is added
+On Mon, Feb 26, 2024 at 08:16:43PM -0600, Rob Herring wrote:
 > 
->  Changes in v4:
+> On Tue, 27 Feb 2024 11:14:14 +1030, Andrew Jeffery wrote:
+> > Squash warnings such as:
+> > 
+> > ```
+> > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,ast2400-gpio']
+> > ```
+> > 
+> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> > ---
+> > v4: Add constraints for gpio-line-names, ngpios as requested by Krzysztof:
+> >     https://lore.kernel.org/all/458becdb-fb1e-4808-87b6-3037ec945647@linaro.org/
+> > 
+> >     Add more examples to exercise constraints.
+> > 
+> > v3: https://lore.kernel.org/all/20240226051645.414935-1-andrew@codeconstruct.com.au/
+> > 
+> >     Base on v6.8-rc6, fix yamllint warning
+> > 
+> >     Rob's bot picked the missing `#interrupt-cells` in the example on v2[1]. The
+> >     patch was based on v6.8-rc1, and going back over my shell history I missed
+> >     the following output from `make dt_binding_check`:
+> > 
+> >     ```
+> >     ...
+> >       LINT    Documentation/devicetree/bindings
+> >       usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [--list-files] [-f {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v] [FILE_OR_DIR ...]
+> >       yamllint: error: one of the arguments FILE_OR_DIR - is required
+> >     ...
+> >     ```
+> > 
+> >     I've rebased on v6.8-rc6 and no-longer see the issue with the invocation
+> >     of `yamllint`.
+> > 
+> > [1]: https://lore.kernel.org/all/170892197611.2260479.15343562563553959436.robh@kernel.org/
+> > 
+> > v2: https://lore.kernel.org/all/20240226031951.284847-1-andrew@codeconstruct.com.au/
+> > 
+> >     Address feedback from Krzysztof:
+> >     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@linaro.org/
+> > 
+> > v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstruct.com.au/
+> > 
+> >  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 149 ++++++++++++++++++
+> >  .../devicetree/bindings/gpio/gpio-aspeed.txt  |  39 -----
+> >  2 files changed, 149 insertions(+), 39 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
+> >  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
+> > 
 > 
-> [...]
+> My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+> 
+> yamllint warnings/errors:
+> 
+> dtschema/dtc warnings/errors:
+> In file included from Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.example.dts:91:
+> ./scripts/dtc/include-prefixes/dt-bindings/clock/ast2600-clock.h:14: warning: "ASPEED_CLK_GATE_LCLK" redefined
+>    14 | #define ASPEED_CLK_GATE_LCLK            6
 
-Here is the summary with links:
-  - [v4,01/39] dt-bindings: net: cdns,macb: add sam9x7 ethernet interface
-    https://git.kernel.org/netdev/net-next/c/5c237967e632
+The examples aren't isolated from each other, so you can't have 
+conflicting includes. You'll have to drop some of the examples or drop 
+their use of the conflicting include.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Rob
 
