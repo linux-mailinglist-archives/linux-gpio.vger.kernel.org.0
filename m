@@ -1,107 +1,127 @@
-Return-Path: <linux-gpio+bounces-3797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 191FE869152
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:06:26 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D387686917E
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 14:15:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A43D01F28371
-	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:06:25 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D17229033E
+	for <lists+linux-gpio@lfdr.de>; Tue, 27 Feb 2024 13:15:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23CEA13AA2A;
-	Tue, 27 Feb 2024 13:06:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4EDE13B295;
+	Tue, 27 Feb 2024 13:14:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="aqcbhvg0"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="qple0pkx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f169.google.com (mail-oi1-f169.google.com [209.85.167.169])
+Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0A431332A7
-	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 13:06:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2457413B281
+	for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 13:14:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709039180; cv=none; b=B9Qq+R0naiuRkurz17sW302KD7NQqIOOOwxzc5ZCHbS2d7C+98cC/SmP0iUFZhxHf2lf8taawmvcLX71fk6GBmDIwd283tdZ5Mn/3XRK8cLpjVuM6ghrbwcpWvDLoLldycDRjdP55xhsI/aGQc7Jxp96HxE6g8QF9naNjbqqwhA=
+	t=1709039695; cv=none; b=B5opkpimHrNQrfR/7tRMh6csQdtuTticNt8Rz4JAz3pDi9u0BhX6V8Xk/q1z7uKx6YVnL4BeeFtEYlcZUT2zQNP7qQQmHzdvOafgMo2S7SkSM/l+UNQ5m+OFbUDpKn9B+0lSw5zj4wEEjzOCcqIlonVs1yTANKjGuHoyffcGb44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709039180; c=relaxed/simple;
-	bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
+	s=arc-20240116; t=1709039695; c=relaxed/simple;
+	bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=UaRsZv5q/UmA862hUakZOvcysBfAzOJQ88icL6jwALNIc9VMxUtE4s0+x5OwdYMxOzvKqGzTdPeejeFFdSyycVUwxtduoZPrq6GqPGHXLJYPAZYP66rXqcXktxLtzLmt1W1uUrQKM8sZgBRIcPF4pxmrf0dWIyhS7Z2OCsHpARo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=aqcbhvg0; arc=none smtp.client-ip=209.85.167.169
+	 To:Cc:Content-Type; b=RuEjmWU26JM8l1m1WNkxHshXbu7LLhCZQQGQGX+zNo49oECkO5bbXjx9z7n8UYmR452/X7uLGOhDPwD5acd21BU+PkWnJnpfbYNFIBWHTqV5fr7euDuU1tLwXorlFIGSJrOsTqSDr/JOnN+w0T4XXVmwolN07VOaLGPJL9a8mq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=qple0pkx; arc=none smtp.client-ip=209.85.222.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-oi1-f169.google.com with SMTP id 5614622812f47-3c1b38ee443so45600b6e.1
-        for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 05:06:18 -0800 (PST)
+Received: by mail-ua1-f44.google.com with SMTP id a1e0cc1a2514c-7d5c40f874aso2144905241.1
+        for <linux-gpio@vger.kernel.org>; Tue, 27 Feb 2024 05:14:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709039178; x=1709643978; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709039693; x=1709644493; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
-        b=aqcbhvg0DZmDVK3W97ZeMU/LrSBRZ2r0yWF7B/Xykud2yfxYZP/DxxmZxYn2BZXjXh
-         pgw8yBhsw6NU/mI0lQ6vJXqmN8ih99OBrAKr/Pg4Ex+vp4Fq9DyQENang8K3qB0UtSw5
-         ekhG8Rv2LEcDKGbPfLyQ7kWq++XBpYO48fzUvt3MU9LA2nTnXnGC3yrX6Tm1+EO0SWeQ
-         e6AEfumgKlvcKQvJesOvhyPBwLhWXOLmEG5AUb/LcbAl6SJmz5oemIOuoK/CslXK1Yiz
-         TUuV5Qq9GeejIAw2Ya8961VHtjF+X3kIk6bJ3CLJSkQ3x83V3p8EvaAV7HKp3BP1J0ly
-         1jIw==
+        bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
+        b=qple0pkxnzJDd9Yn+9eMXeEhbx85nGc++HkFBgEW6ANDwHzduvps37G+TjRJCmE45U
+         cx1QxYQkn2HKg0nq9fT0Q2D70AMlUVHqrpapR/rqBYdAvmOJ+cx0Gch9hwTc9YmvhtgC
+         0UkIwgCq11oGB1PT3uMrKzPdEcF6eZJNjee4qaIJyaEuNdxoxD1so99pjcPJNqgmrMLU
+         fkxcxvW8ZWPxn6OZvkEKeHCSRmj8Sh3u5wmMO38xR/jy8Lx7a/MSXfWcMCti/2Fs984g
+         rVAEi4mmnhwt1YY+hGfFXRPeUnhDFUUXbljisVrsLBI4e2h/hS8e9qmQNUoq9NlbSr/6
+         X3aA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709039178; x=1709643978;
+        d=1e100.net; s=20230601; t=1709039693; x=1709644493;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=/uDylJuigd4d8kEq+ujZnBuzh0BMwt6INRnFR5uTzPE=;
-        b=EXDNh/GftGbW5cUna9i7he9G3cmUwF/w2hP0qbTv3VHTz2P3us0Y5OcygMpJ5efKYt
-         zY4YQug0xdU5tFXFUpZomeGh4nFs0hvgFh2jqlsxXslNjUX6myddqwwOIS5sKztV3G2V
-         m1E2fkuaWPdt+RXdROdhrHR1dThX+wzhe6r9jJQ+8PJeAU5/8qHAECiH5jeD94Uq/u3V
-         2BOnYMHWv44gzO0UnxGy3AQKqiiGVSuRt5wd9H9HXvPuzB9gL76lOx/Cdn8Re9T5tp0J
-         QtVlBYRTE1bl3f/l7YHgMzo0g5UdDcxj9018+2WXDanrvsUYhyxBHV5vYdrrASpoQFOz
-         LMTA==
-X-Forwarded-Encrypted: i=1; AJvYcCXYqhFlJZ9KSFnXkjegKKwjMKLPUSQ3aO6KWOzLhAx9btKfCxnsb/r+oTHo9D01EjHAjGJv/e67Irsd8XhILm4c0ijzdNbNMnPbvg==
-X-Gm-Message-State: AOJu0YyNClXcckUEJozoeRqbOgUz2ZIU2bstUOqvNp8NJXa2Cw7Io67p
-	PTPg/Fmsh0OUrHsapzpxzy6bHXx4JSxSET3cYZ4UQz6de/bpqKQlsLIMdY6NRlIX2xjcVnN/BiR
-	WX6ME0A2L/4UMDj8T1sBQh/iBKR5+KTTL9OrW1FN/+JEPRo2Z2Myljw==
-X-Google-Smtp-Source: AGHT+IHymsnTIzpxxyFaUH2TMYMIhZIuV1ZmmTokIhLJSPK8tB568uQzASfJBzQQOq6hn71h2+9vuxHhF3pkwDw32HM=
-X-Received: by 2002:a05:6808:10cf:b0:3c1:8039:c6a5 with SMTP id
- s15-20020a05680810cf00b003c18039c6a5mr2062657ois.35.1709039178020; Tue, 27
- Feb 2024 05:06:18 -0800 (PST)
+        bh=2AMRMbVhNM06Hgp1X0TeGKqLaPQRtt3bhZ1iElXox58=;
+        b=tuXV49GEv9QGPjU5luIWncsxkn6rzdBj0Qd66UPTzrWykf0gTd/1k5TDLgZsvQv22d
+         ScEnD9G1j7Uu54KhhZgLTJKSMZuSIAZK/OYfMT1mWA1kNjNJ1nOKHPkHQeYZkqAMgxxH
+         X/KCb+lKm023OjxnXqh/4l9O15678HJ/McPfj98gD+f/kCFMpnWigcZs+aF9a3361GeP
+         j+soLtw1nZjUh+14iewprw27G1tBHyyjOO17Xp5RemhlO1JzLEcaCvqXOJ7Z7mZl0tOc
+         P2CNXhUDXxgVTmR8yWV2tp5XahaqpqwxpNx7pRQ0sOms0j1Y7R3eWr3AUB2Q9OQAEu27
+         sRUQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUcoAjuMf/yrgSRdwapRTM4yxkOFT99PrmLHC6yMvW2Fft6G9csWhSJ5y6gpvZKhbaGW8+C2RZuYAhburwssXLsb8S4CUDiR6LdYw==
+X-Gm-Message-State: AOJu0YyxmMn4xLFd7uauPK89JV2bnyoAw4xMKkcIiH1D4rFdOylF6Oc5
+	Gw6GaMoqukxeuTJq7axZL7J89+LNSmX9QppXZFnUnX+kyNOj828k7gT9PUKIP0DOYCDuKcVYm6/
+	Pw27gE4Y4Zuc3rXzeSt4/H5weyv8BTiYjuy/GoA==
+X-Google-Smtp-Source: AGHT+IE+aoCuhINdmznTFe9JFtFLE74wM7BihxWVkNpvCU4rsgQWVYCbCscm8d1Rm4xX6DxB9G4niXzVUMF+EjPXSSU=
+X-Received: by 2002:a1f:ccc1:0:b0:4cd:b718:4b08 with SMTP id
+ c184-20020a1fccc1000000b004cdb7184b08mr6123482vkg.11.1709039691592; Tue, 27
+ Feb 2024 05:14:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240221213208.17914-1-andriy.shevchenko@linux.intel.com>
+References: <20240226134656.608559-1-arturas.moskvinas@gmail.com>
+ <ZdyZnqS_jKelbs6G@smile.fi.intel.com> <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
+In-Reply-To: <3f629079-6809-4cae-bd4d-8b0ee4860196@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 27 Feb 2024 14:06:05 +0100
-Message-ID: <CAMRc=Mfh-ojboNUELXfszKUbZRfeZn9vsN-HMTdMQv6my6ZrdQ@mail.gmail.com>
-Subject: Re: [rfc, PATCH v1 1/1] gpiolib: Get rid of never false
- gpio_is_valid() calls
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-gpio@vger.kernel.org, 
+Date: Tue, 27 Feb 2024 14:14:40 +0100
+Message-ID: <CAMRc=McUsv9ic5aU7oAaJ06zWtpna0CkkxPWr2nqPhEig5vPOg@mail.gmail.com>
+Subject: Re: [PATCH] gpio: 74x164: Enable output pins after registers are reset
+To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linus.walleij@linaro.org, 
+	u.kleine-koenig@pengutronix.de, linux-gpio@vger.kernel.org, 
 	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Feb 21, 2024 at 10:32=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Feb 27, 2024 at 7:58=E2=80=AFAM Arturas Moskvinas
+<arturas.moskvinas@gmail.com> wrote:
 >
-> In the cases when gpio_is_valid() is called with unsigned parameter
-> the result is always true in the GPIO library code, hence the check
-> for false won't ever be true. Get rid of such calls.
+> Hello,
 >
-> While at it, move GPIO device base to be unsigned to clearly show
-> it won't ever be negative. This requires a new definition for the
-> maximum GPIO number in the system.
+> On 2/26/24 16:01, Andy Shevchenko wrote:
+> > On Mon, Feb 26, 2024 at 03:46:56PM +0200, Arturas Moskvinas wrote:
+> >> Move output enabling after chip registers are cleared.
+> > Does this fix anything? If so, maybe elaborate a bit the potential beha=
+vioural
+> > changes on the real lines.
 >
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
+> Chip outputs are enabled[1] before actual reset is performed[2] which
+> might cause pin output value to flip flop if previous pin value was set
+> to 1 in chip. Change fixes that behavior by making sure chip is fully
+> reset before all outputs are enabled.
+>
+> Flip-flop can be noticed when module is removed and inserted again and
+> one of the pins was changed to 1 before removal. 100 microsecond
+> flipping is noticeable on oscilloscope (100khz SPI bus).
+>
+> For a properly reset chip - output is enabled around 100 microseconds
+> (on 100khz SPI bus) later during probing process hence should be
+> irrelevant behavioral change.
+>
+> [1] -
+> https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c=
+#L130
+> [2] -
+> https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c=
+#L150
+>
+> Arturas Moskvinas
 
-It looks like a risky change that late in the release cycle. I want to
-avoid some CI problems at rc6. Please resend it once v6.9-rc1 is
-tagged.
+And this is precisely the kind of information that needs to go into
+commit messages. I can tell *what* you're doing by looking at the
+code. What I can't tell is *why*.
 
-Bart
+Bartosz
 
