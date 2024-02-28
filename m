@@ -1,53 +1,54 @@
-Return-Path: <linux-gpio+bounces-3879-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3880-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C98186AD79
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 12:36:03 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CDDA686AD81
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 12:36:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7D4431C22750
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 11:36:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8888F28E1A3
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 11:36:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E8F015DBBA;
-	Wed, 28 Feb 2024 11:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A31E15E5BC;
+	Wed, 28 Feb 2024 11:28:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="XMIpp4tG"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="V0d5XFLH"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3107D15CD57;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12FF615D5A2;
 	Wed, 28 Feb 2024 11:28:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709119716; cv=none; b=SwLrJIjGMkyl3O+sTpQ1s4+aTb6VfEXIsB8RuicwoMWFFWhVOvBSZHjfTzXmocvP2qoPHYHV6RaK8YOOSwhv+XxRGeR4xQABBOk8C5R8xikpjLRJrLZr+OKQ9px+Ty1vEFq6Fx+ESbYwH/OthwNm+LAORbYcfVL5VoY0FEbAqNk=
+	t=1709119717; cv=none; b=tfPMrbgbxczQSIxfdxX2MrTmd1Xcne0RqnrkZwP9egU/RzxJLoqpLV809ONm2FDbJ5vpPOVXj0GG4lybuU9PR4e0wHuOV0sOk/n+gO2DtJS10BBw/uUI5vUwsNtZW6i6SpODxHSyV5wDb9likyQDScPUB4HfCggQIoX3jVZTjTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709119716; c=relaxed/simple;
-	bh=scoXGBjHtapVDwyNRsT3nzK/OYslkAGYZkSdqOZ17fM=;
+	s=arc-20240116; t=1709119717; c=relaxed/simple;
+	bh=LZXd37PvNSwXU5xfvI/2wf4xPTyEjUPaJOZPtTjdEuk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XLdPp2U7qvEDbVAxt7RXPDQ9XWnVNqK2kalg/s+apbrCf3pc57GpEtMxF/R8Bhxiqt/MRZFmtpcUrNJvq07l6UUDbttjjfur9Bc5uAOv7N9Ev32XzsWkwR8a3rTr1dfH/PyPDEjal6P0IogIwNPgWu9eUSiPSjCVjBLxd3Kg0is=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=XMIpp4tG; arc=none smtp.client-ip=217.70.183.201
+	 In-Reply-To:To:Cc; b=HWjLO9EiAJJ1jGAKjJBy9ImUbxn59gkTW/8+fRNlfxdvmwrOr2u5Aiztyyvi+PBzF01tOsBrWNYz0DxfHXc67Cad5omYBpZ0xib3STgRi3iSJ8XT0RIeLWU3Z7VDXwvgG24zesudhB4s2nU2myBZ+A5cD59E7TZBJeWFv/sMzt0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=V0d5XFLH; arc=none smtp.client-ip=217.70.183.201
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 49D751BF210;
+Received: by mail.gandi.net (Postfix) with ESMTPSA id F2F7B1BF21A;
 	Wed, 28 Feb 2024 11:28:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709119712;
+	t=1709119713;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=YKcXEFXFtj/83Z5hgCIOhTpOO4T5SFVRu7N+tcLxJRU=;
-	b=XMIpp4tGyLmn6M46me/FpCRHP5UB3+E2zxJOh5w8k0RY3lH7UnPTmm38uenYHYySPKILM/
-	dxDjJB8EdHz1bqldZcYCZqAlu9eDGoCAzNWdXCGDZqr5UdZcYO0yNIpbBfZMtWbf+jqt2S
-	K9IUH5gu4OEfyneiVL9NuBYnDcVpg8BwPEtVdJCEvsXnPqb3CT7F4RT70HFr3MR4qrF/x8
-	7J+twvJ6GdTobDHtVIW5lzsqghZ7+S3Myrorcm53BAu/ONZHXUENTIXPu9ckzD+L+AP08W
-	IvCiSsMQIfbueOzl5gKZTjBhf0ns8II5vJt8FqAIMYcZG6LRCrk5X5rnPPu1rA==
+	bh=VpV5SvbrLw6BtffS77u0tmC5Cq+M6dFN+xE6ca04/74=;
+	b=V0d5XFLHmBCXn5TfFeKJHIG2hVLgs1bsqH9BDqqayu45k42SOPN07miDPppVL9EpKui5zt
+	TpUkX5X7TS/35ocivrHFc0O9mHToArmHY+OL66bZIeUMyMqVp1x+4UGlTK7iDDKHB4TsDD
+	NpQq3vLV4eTSl0burMLrMvfbz2hIZk7HPB7hA5ptn0JwICHIhkHJz/vzLvR1nDAnKKH+WM
+	BgKMemBgQ1NPx2ggGomj0OaE8+uWjb3WIBARzcQsarC2XTdSCeU0FNBq3kEwCZ5evoJ/gM
+	rrYr4An8/+JqSNQ3FmfHapmTUoUV9NNPNmt8tQt9YCizfVt1TMpruFrhmp9Q7g==
 From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Date: Wed, 28 Feb 2024 12:28:27 +0100
-Subject: [PATCH v2 29/30] MIPS: mobileye: eyeq5: add resets to GPIO banks
+Date: Wed, 28 Feb 2024 12:28:28 +0100
+Subject: [PATCH v2 30/30] MIPS: mobileye: eyeq5: map GPIOs to pins using
+ gpio-ranges
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -56,7 +57,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20240228-mbly-gpio-v2-29-3ba757474006@bootlin.com>
+Message-Id: <20240228-mbly-gpio-v2-30-3ba757474006@bootlin.com>
 References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
 In-Reply-To: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
 To: Linus Walleij <linus.walleij@linaro.org>, 
@@ -74,7 +75,12 @@ Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
 X-Mailer: b4 0.13.0
 X-GND-Sasl: theo.lebrun@bootlin.com
 
-The two GPIO banks share a single reset line.
+Create a mapping between the GPIO controllers and the pin controllers.
+GPIO is handled in a one-instance-per-bank manner while pinctrl is done
+with a single instance for both pin banks.
+
+See gpio-ranges documentation:
+Documentation/devicetree/bindings/gpio/gpio.txt
 
 Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
@@ -82,25 +88,25 @@ Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/mips/boot/dts/mobileye/eyeq5.dtsi b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-index 0f18ac73620b..5f00d129c057 100644
+index 5f00d129c057..68f6c81331d7 100644
 --- a/arch/mips/boot/dts/mobileye/eyeq5.dtsi
 +++ b/arch/mips/boot/dts/mobileye/eyeq5.dtsi
-@@ -170,6 +170,7 @@ gpio0: gpio@1400000 {
+@@ -168,6 +168,7 @@ gpio0: gpio@1400000 {
+ 			interrupts = <GIC_SHARED 14 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
  			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 0 29>;
  			interrupt-controller;
  			#interrupt-cells = <2>;
-+			resets = <&reset 0 26>;
- 		};
- 
- 		gpio1: gpio@1500000 {
-@@ -183,6 +184,7 @@ gpio1: gpio@1500000 {
+ 			resets = <&reset 0 26>;
+@@ -182,6 +183,7 @@ gpio1: gpio@1500000 {
+ 			interrupts = <GIC_SHARED 14 IRQ_TYPE_LEVEL_HIGH>;
+ 			gpio-controller;
  			#gpio-cells = <2>;
++			gpio-ranges = <&pinctrl 0 29 23>;
  			interrupt-controller;
  			#interrupt-cells = <2>;
-+			resets = <&reset 0 26>;
- 		};
- 	};
- };
+ 			resets = <&reset 0 26>;
 
 -- 
 2.44.0
