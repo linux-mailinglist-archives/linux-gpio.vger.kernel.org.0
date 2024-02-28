@@ -1,215 +1,118 @@
-Return-Path: <linux-gpio+bounces-3890-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3891-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0B15886B581
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 18:05:06 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A37D986B6BE
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 19:06:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E3DD1F28C2C
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 17:05:06 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BE3C61C21FD3
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 18:06:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5750D3FBA0;
-	Wed, 28 Feb 2024 17:04:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D121079B81;
+	Wed, 28 Feb 2024 18:06:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iBfKunRp"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="ONYp/pfE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
+Received: from mout.gmx.net (mout.gmx.net [212.227.15.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BC503FB82;
-	Wed, 28 Feb 2024 17:04:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60C3740841;
+	Wed, 28 Feb 2024 18:06:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709139899; cv=none; b=r766KZ5BvMw0Fw37YWGorgkMVQwmxV0v/QlmLlKJe+x90G0U4oy0az4QrjaujazVQo5TABshzR7g+5IRxV3N18rE19sLlimwkCeAADFC1jnRMfz79BS2BHCWIfGJSvCXcNUU6pIqyB/oFbBVzYSRkXSXBmauwa9Wy9F6BcwAJBQ=
+	t=1709143603; cv=none; b=HOstnSCR3C5a1Dd67z8Vl3mvUuFg0mJyfW8Cjkq2S7daj6ro0GeQas9LUEPiaRDawib+oI2i4Pa5+KtgoMc9jzTNVK02XlBk3dM5kz+SGlJXOMIV5Rss1NtWCIcv8IK4BcG/Rp2+J9bprESTt/pWrdxrLZpKRwpOC+nXHcebEIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709139899; c=relaxed/simple;
-	bh=44x5yDcOLSCbcSbnsWN3XwhRRPVfXIBZAjD6hjXZx+U=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=UDhH1LQlk0yc+EX4FJ1WHmf3toxiWmR43m1kuec9Np3yEoIzcaHy3KM5Cymzjhg45WWDZPNKERi6h8l9jgidM7CsslWrHTuMv8GjBfIzGuQ7U88wdjH4oHAEQlsAczM/ahXxa70gCJCmPzOWkJAnql/n0mcAR9O2abFEIlgol08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iBfKunRp; arc=none smtp.client-ip=217.70.183.198
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 89A0BC0008;
-	Wed, 28 Feb 2024 17:04:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709139888;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=vCBAaabth7lAvvtJBPFWrOiPFUdycHNsNEJADPl3zuo=;
-	b=iBfKunRpv70S9wYQ7RV+vXOCFrhSr/wioOineNSxRoS8gzIJ7dP9cBopMwVt8SikHz4pmx
-	lnIvETzRCKqMbdO+bzwtUwjeaNz/cLX86KFW0GWzf/AXxKk0vNC3Y70ThSU7WnDc/JqhpK
-	rCMvQ8bJ+rjxe0V1WdPbKDZtSdGubAc+cSD4P16wSf+x/AO4ZC89zCX4f02MYOuA0YPAbQ
-	V3Lfw9vpxx4dV1bcNNd8MlwuwWnNnhrqJ8lbRKACwcD67WtzfyrFWVUextxAhObLvDjkn4
-	RaDLe0Z2o4OdJs+zXK0fAjps8rOUWppPw8BfJds4sYHHGiZ2BeU99k6pMXiiuQ==
+	s=arc-20240116; t=1709143603; c=relaxed/simple;
+	bh=n+EylA3KdC9PfeKTAfdWZ6rV3n1+43owzlt99U79yCs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=oKlsVxYk0rVKBzowwiQcE45nMs5I6R7OLQ81/7hOBT/UW7ep4TKGpyRtOZ8ZB6eh8LpwH1mu9WfVqdCnqQSbbmsEjObNFJwKeGvVOKFi+ZswO8G/nQqG4XhQYOrA0fUhujJhNCaSmFXu18H6roh0DpvZiM1+mDqVyCw8D1DDm+g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=ONYp/pfE; arc=none smtp.client-ip=212.227.15.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1709143592; x=1709748392; i=wahrenst@gmx.net;
+	bh=n+EylA3KdC9PfeKTAfdWZ6rV3n1+43owzlt99U79yCs=;
+	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
+	 In-Reply-To;
+	b=ONYp/pfEqq5ewd7WjExgOSmmf6DLl0TbRrvYDqs3SN0GeUqZAog1jbaXSBXrqN8X
+	 Nqt7TyPwijwAItxVWHycr1STl5RLkIXac8EGcJpYXjTAViqeh5DG3oEPTlaWE/3AV
+	 2GSoQ1oufDrOnnYAOnG3iEWEcbg1YFCszHnWMCoDbfCy73FTdWqU3Po8sDrXhDKiK
+	 LsH2z02GSguzocopJ4S2ihbB2rYmllTCeI/ROXnsZ6OkUIi/JrcFQl29Dde6FwbXq
+	 DT5y4SszvoeCVAegjcB4QqqmP7zSV/UtLqhU7EN/x8dbe98q3F8+/8/ZAFHGojkLB
+	 0QH5uW1hvxWgCn4YWg==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MmUHj-1rEp4521dx-00iTA0; Wed, 28
+ Feb 2024 19:06:32 +0100
+Message-ID: <1f8e87ab-273e-44bd-9ca5-aa916433023f@gmx.net>
+Date: Wed, 28 Feb 2024 19:06:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH V4 2/2] pwm: Add GPIO PWM driver
+Content-Language: en-US
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Angelo Compagnucci <angelo.compagnucci@gmail.com>,
+ Philip Howard <phil@gadgetoid.com>, Sean Young <sean@mess.org>,
+ Linus Walleij <linus.walleij@linaro.org>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240204220851.4783-1-wahrenst@gmx.net>
+ <20240204220851.4783-3-wahrenst@gmx.net>
+ <Zd4QpBsyTnuM8hwt@smile.fi.intel.com>
+ <4a6d8417-402e-4d40-96c5-15c2f1dba887@gmx.net>
+ <CAHp75VdLJi2eiFmwjskMmp2adG8k7zO5aDRb-5=4eQKHhB=PXg@mail.gmail.com>
+From: Stefan Wahren <wahrenst@gmx.net>
+In-Reply-To: <CAHp75VdLJi2eiFmwjskMmp2adG8k7zO5aDRb-5=4eQKHhB=PXg@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 28 Feb 2024 18:04:47 +0100
-Message-Id: <CZGVIWR4H4DE.3M5H3H99X0QPT@bootlin.com>
-Cc: "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
- <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
- <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
- <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>, "Vladimir
- Kondratiev" <vladimir.kondratiev@mobileye.com>,
- <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>
-To: "Andy Shevchenko" <andriy.shevchenko@intel.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v8 04/10] reset: eyeq5: add platform driver
-X-Mailer: aerc 0.15.2
-References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
- <20240227-mbly-clk-v8-4-c57fbda7664a@bootlin.com>
- <Zd4bbCsY54XEnvJM@smile.fi.intel.com>
-In-Reply-To: <Zd4bbCsY54XEnvJM@smile.fi.intel.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
+X-Provags-ID: V03:K1:AAG9V3Skrr5RGVxPXCVk+ys4hfthS7p3z7ViUbe3cSrHydxee2H
+ i2JnDubcSH/snSbi8O6wJvWQ78S+n0EAZkwmL6GKiUfMOo5ym8fjy+tDI40NvtlzpBpGm7w
+ iN8qDfHnbHUBQ1fzruY1xAoMYMDw8npP0G8p/8ez0DSmiGWSeP/SoGuqES/dQwnvNEgEiqI
+ eGmMahjYT8T0ewJYGBjZA==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:STOObC92ELI=;Uiv/ys5n+G/pu6CQPonI+AUsmSt
+ assDuFprHSXFerGyjGx43ciyTaN/mrJVh0hURKDgPXjBP2wYabikwZzHMiSwtUUi+lfSEKA1+
+ aCmFRSEqd1WIsiOpso1pwElFb6VoPfQlhWiSkT2t9WsD45SylVxv392ifA5rFzKKuz+dv6zPF
+ m8afnbLPMqbcmd2gKThffB7KXlTZuYx7pvX+Rj60ldjo3WglC2OuimchgwSwkaZ0MmMrz/liC
+ 7d9GdA5SfuCL5SQ67gSPENne9U2ZgMwEEObIc66MoaEL7FBXtW4/LqY5YemB54qU7yZhruWKX
+ o6vPzYczasMXPDFUR5txHSsCGrLrdXjK2bwpMyod3GVeU8g7eFYp65WcroLFujZw651hBQdp1
+ ixv/5/mluL7Nij71OCu7ApyKPe2VjS26dUJRw64t3xL3dONDbC+mMtiCqfMq5XUvjtX2xNT50
+ +5zOD1Uk4jSLNC8WtmS4fqRtH6hm4KPLSbcE2ThXAW2jrOvtfyF9S6cSPKMIm0LXWtoTIyb7R
+ c/IRYenom65ztJ4/ji7mvyY49MAWgTD4Rfg6FtngDdiOp/DoEw169mVqFs7Uu5pjq4ZduAntv
+ UznYFegfqumJq8Z/USPxptrMnrJ3NPJVBE8Q3+kiLa0ncEVXWKHq9ZpLCkVMgKtzIIFCYnoUs
+ 2c4njR7rytYM/29BaPW+Ig8GhNHKgziGqLXlESqlX7ottM4F+jOLpQWaSOceNpnNZBhSQDH6M
+ YpxsuUA3i+854GMQ5wSUp5HntcAoQqdGsmUxoGUr8LmF7YyyPX1nQVTKDdwWpHkXJqQdUoLwe
+ nTBPBDm1/xN986KSwVSRG6DcpAqp8IKQP8AtuscLo25+k=
 
-Hello,
-
-I won't be answering to straight forward comments.
-
-On Tue Feb 27, 2024 at 6:27 PM CET, Andy Shevchenko wrote:
-> On Tue, Feb 27, 2024 at 03:55:25PM +0100, Th=C3=A9o Lebrun wrote:
-> > Add the Mobileye EyeQ5 reset controller driver. It belongs to a syscon
-> > region called OLB. It might grow to add later support of other
-> > platforms from Mobileye.
->
-> ...
->
-> The inclusion block is a semi-random. Please, follow IWYU principle.
->
-> + array_size.h
-> + bits.h
-> + bug.h
-> + container_of.h
->
-> > +#include <linux/cleanup.h>
-> > +#include <linux/delay.h>
->
-> + device.h
-> + err.h
-> + io.h
-> + lockdep.h
->
-> + mod_devicetable.h
->
-> > +#include <linux/mutex.h>
->
-> > +#include <linux/of.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_device.h>
->
-> Are all of them in use?
->
-> > +#include <linux/platform_device.h>
-> > +#include <linux/reset-controller.h>
->
-> + types.h
-
-I'm adding yours + errno.h + init.h (for THIS_MODULE) + slab.h (for GFP
-flags). I'm removing unused of_address.h and of_device.h.
-
-delay.h will be removed and iopoll.h will be added based on changes
-following your comments.
-
-[...]
-
-> > +static int eq5r_deassert(struct reset_controller_dev *rcdev, unsigned =
-long id)
-> > +{
-> > +	struct eq5r_private *priv =3D rcdev_to_priv(rcdev);
-> > +	u32 offset =3D id & GENMASK(7, 0);
-> > +	u32 domain =3D id >> 8;
->
-> Perhaps
->
-> 	u32 offset =3D (id & GENMASK(7, 0)) >> 0;
-> 	u32 domain =3D (id & GENMASK(31, 8)) >> 8;
->
-> for better understanding the split?
-
-Do the additional zero-bit-shift and GENMASK() help understanding? My
-brain needs time to parse them to then notice they do nothing and
-simplify the code in my head, back to the original version.
-
-I personally like the simplest version (the original one). But otherwise
-FIELD_GET() with two globally-defined masks could be a solution as
-well. I still prefer the original version better. Less symbols, less
-complexity.
-
-[...]
-
-> > +	struct eq5r_private *priv;
-> > +	int ret, i;
->
-> Why is i signed?
-
-No reason, will switch to unsigned int.
-
->
-> > +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > +	if (!priv)
-> > +		return -ENOMEM;
-> > +
-> > +	priv->base_d0 =3D devm_platform_ioremap_resource_byname(pdev, "d0");
-> > +	if (IS_ERR(priv->base_d0))
-> > +		return PTR_ERR(priv->base_d0);
-> > +
-> > +	priv->base_d1 =3D devm_platform_ioremap_resource_byname(pdev, "d1");
-> > +	if (IS_ERR(priv->base_d1))
-> > +		return PTR_ERR(priv->base_d1);
-> > +
-> > +	priv->base_d2 =3D devm_platform_ioremap_resource_byname(pdev, "d2");
-> > +	if (IS_ERR(priv->base_d2))
-> > +		return PTR_ERR(priv->base_d2);
-> > +
-> > +	for (i =3D 0; i < EQ5R_DOMAIN_COUNT; i++)
-> > +		mutex_init(&priv->mutexes[i]);
-> > +
-> > +	priv->rcdev.ops =3D &eq5r_ops;
-> > +	priv->rcdev.owner =3D THIS_MODULE;
-> > +	priv->rcdev.dev =3D dev;
->
-> > +	priv->rcdev.of_node =3D np;
->
-> It's better to use device_set_node().
-
-I don't see how device_set_node() can help? It works on struct device
-pointers. Here priv->rcdev is a reset_controller_dev struct. There are
-no users of device_set_node() in drivers/reset/.
-
->
-> > +	priv->rcdev.of_reset_n_cells =3D 2;
-> > +	priv->rcdev.of_xlate =3D eq5r_of_xlate;
-> > +
-> > +	priv->rcdev.nr_resets =3D 0;
-> > +	for (i =3D 0; i < EQ5R_DOMAIN_COUNT; i++)
->
-> > +		priv->rcdev.nr_resets +=3D __builtin_popcount(eq5r_valid_masks[i]);
->
-> Please, use corresponding hweightXX() API.
-
-Noted. I did not find this keyword even though I searched quite a bit
-for it. "popcount" sounds more logical to me. :-)
-
-Thanks for the review Andy!
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Am 27.02.24 um 21:47 schrieb Andy Shevchenko:
+> On Tue, Feb 27, 2024 at 10:25=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net=
+> wrote:
+>> Hi,
+>>
+>> Am 27.02.24 um 17:41 schrieb Andy Shevchenko:
+>>> On Sun, Feb 04, 2024 at 11:08:51PM +0100, Stefan Wahren wrote:
+>>> ...
+>>>
+>>>> +    if (gpiod_cansleep(gpwm->gpio)) {
+>>>> +            return dev_err_probe(dev, -EINVAL,
+>>>> +                                 "sleeping GPIO %d not supported\n",
+>>>> +                                 desc_to_gpio(gpwm->gpio));
+>>> Do not use plain GPIO numbers.
+>> Uwe already complained this, but i didn't receive a reply on the
+>> question how do we provide a useful log message (reference to the
+>> affected GPIO) here? AFAIK the GPIO names are optional.
+> You have a firmware node path, also you may add a label to GPIO, but
+> it's unrelated to the message (as it's constant).
+> %pfw
+Thanks
 
