@@ -1,115 +1,144 @@
-Return-Path: <linux-gpio+bounces-3884-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3885-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4014986AF6C
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 13:49:41 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0AC1386B150
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 15:10:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 725571C2496D
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 12:49:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9B26EB264C3
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 14:10:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E2C61474D6;
-	Wed, 28 Feb 2024 12:49:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 046F0153513;
+	Wed, 28 Feb 2024 14:09:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rh8u43GT"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="gmI4s1wk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA38E73501;
-	Wed, 28 Feb 2024 12:49:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A05F514DFEC;
+	Wed, 28 Feb 2024 14:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709124576; cv=none; b=Dlf1PJVmw+U6WvPXe21sAXfk2sq6pLjo39sD1LMtJ1akz4NwcfnqO1mJ8c/uiQ22Qv7z+rofR+Q73fxgPrVKXqkOyr7yiEixSjRHXFyOub/AhMsPH+35FZsckswRyuFp79N/KVp0u0lue6ZTvif+mbnBCLdbzNvNq5MjbovQ6aQ=
+	t=1709129397; cv=none; b=VJQUzlpbFSwGyMaVEDjsUjY49uPmmSsctAYi5IM5bWI93Ro1XMcQyTjLeYKUjuLRgfIMGAXqsF03rL3IvxyJPsTatqxn2uSNYqTKohuRNdNXqBvXfc2N/pLSj2PbnV+XBIFCwFKxXlgGD5HJsoTOTzxCDKQf5LKlsEd+779iatM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709124576; c=relaxed/simple;
-	bh=kKrhwyZWXORapt6OCBD9X9Cbq63y3UaV5srvhlpNfhI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mms/6hzojp2XDus2gOcWkRrwz+y8S6KxNGdmYPW9Zrb+klyFaigH9HePk+5j4tnyAqPm4OolnAgmpBWUy3/iMv3jIYSRHdTxAysblfRF2A10FG8TVkAZ/F0w19nffsHBK3ErrCLZolqthZHUHxkPUBtZ1oMPNrp0biLbslRl4o0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rh8u43GT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36569C433F1;
-	Wed, 28 Feb 2024 12:49:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709124575;
-	bh=kKrhwyZWXORapt6OCBD9X9Cbq63y3UaV5srvhlpNfhI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Rh8u43GTkarJTZG22uMj1OWFlUH6fx586sT5DKG/kug5pyZNtd4iZGMSZhjoBI+JA
-	 yaaTX6DNowHRbjw+8rSPFktHWJU8QzbW2+CWnzShPfWbSECHErYZVTV/eDZfALhQoF
-	 8UjhA6u4UkMwLGExkEPt3ChCRkqK6uAcNyUQO9RdA7qUSsxJ5pl3efDmtq9i3cgeR6
-	 vhu7oSBKc1rp4JfvFV3vRi9yZQkJtSoaWAQbpAo1TdnY7mlc7AlKcwKo81SFng1qS5
-	 IJjE/OKSteMKOTfzBBZGDPOPTcN0jB35+OvHuYvrVseUahg9rQxdI0MiXNkjXaKYy/
-	 EKmzjRUICA3kQ==
-Date: Wed, 28 Feb 2024 12:49:29 +0000
-From: Conor Dooley <conor@kernel.org>
-To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mips@vger.kernel.org,
-	Gregory CLEMENT <gregory.clement@bootlin.com>,
-	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	Tawfik Bayouk <tawfik.bayouk@mobileye.com>
-Subject: Re: [PATCH v2 01/30] dt-bindings: gpio: nomadik: convert into yaml
- format
-Message-ID: <20240228-sandbar-hastiness-ec5c1337bd3b@spud>
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
- <20240228-mbly-gpio-v2-1-3ba757474006@bootlin.com>
+	s=arc-20240116; t=1709129397; c=relaxed/simple;
+	bh=zi3a7WfmF7xz9jF+a+/dTYIv2tudbxNO9bYJhYApnzc=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=ajEOHRkffrt/F2X/SoI1MjMkEjMaZjYuIdu1P873YJnNLhyeLagWBoSHOHEScm1mCzRmZhhQ7UNxRGuXAan9NG1vf9/QZ/zWckWOEiSZXC+MwG9FKuKASzRTTq/599j/ZrPFLxZbJciLLUSanF87oaHI7szU3najZtWxOE5wlg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=gmI4s1wk; arc=none smtp.client-ip=217.70.183.194
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 76AFA40005;
+	Wed, 28 Feb 2024 14:09:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709129387;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=puqEcgLYqO4kSzlmDT1lfSiSE31NVMpyJtiG4ww78PM=;
+	b=gmI4s1wk+Tj5gPLF+YDaTM6UQxYm/c92oIwgbV6hRXLmPx4jzrmTbMiScHOJqapnckd/tX
+	L65N6a5jBnPnMjnBhY4qEgnTFtroYXRWBbi44BuZ0ZWTNoQeyty89WLqRhRp9nKUsHTY/e
+	s76HPhEhrbPhVkTI14tBc3L/a8yqJ62Vba+3yCJ0wsi3xD6h32OIdsOOC5TbXqWjIZHPq/
+	WCff3oNNpJp4/f9AC8U49kH2hcRgwgBtDfEiObN9pfHxGYn+Cm0NuSddNSUY1u/073HNEQ
+	rlpq4rNOOpbJNeLhpW0QyiOVqhmDLKncD93HCaZ+pDXpnprhYrrNNzJT+dPzFw==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="XQPnKJoE2X/I/ya7"
-Content-Disposition: inline
-In-Reply-To: <20240228-mbly-gpio-v2-1-3ba757474006@bootlin.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 28 Feb 2024 15:09:46 +0100
+Message-Id: <CZGRSWQT1FZ0.2YQ0R8UD86L2U@bootlin.com>
+Cc: <linux-gpio@vger.kernel.org>, <linux-mips@vger.kernel.org>,
+ <linux-clk@vger.kernel.org>, "Gregory CLEMENT"
+ <gregory.clement@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, "Vladimir Kondratiev"
+ <vladimir.kondratiev@mobileye.com>, "Linus Walleij"
+ <linus.walleij@linaro.org>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Stephen Boyd" <sboyd@kernel.org>, "Conor
+ Dooley" <conor+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, <linux-kernel@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, "Rob Herring" <robh+dt@kernel.org>, "Philipp
+ Zabel" <p.zabel@pengutronix.de>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>,
+ "Michael Turquette" <mturquette@baylibre.com>
+To: "Rob Herring" <robh@kernel.org>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v8 02/10] dt-bindings: soc: mobileye: add EyeQ5 OLB
+ system controller
+X-Mailer: aerc 0.15.2
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-2-c57fbda7664a@bootlin.com>
+ <170905191234.4042659.13935993184407860612.robh@kernel.org>
+In-Reply-To: <170905191234.4042659.13935993184407860612.robh@kernel.org>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
+Hello,
 
---XQPnKJoE2X/I/ya7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue Feb 27, 2024 at 5:38 PM CET, Rob Herring wrote:
+> On Tue, 27 Feb 2024 15:55:23 +0100, Th=C3=A9o Lebrun wrote:
+> > Add documentation to describe the "Other Logic Block" syscon.
+> >=20
+> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> > ---
+> >  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 94 ++++++++++++++=
+++++++++
+> >  1 file changed, 94 insertions(+)
+> >=20
+>
+> My bot found errors running 'make DT_CHECKER_FLAGS=3D-m dt_binding_check'
+> on your patch (DT_CHECKER_FLAGS is new in v5.13):
+>
+> yamllint warnings/errors:
+>
+> dtschema/dtc warnings/errors:
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
+oc/mobileye/mobileye,eyeq5-olb.yaml:
+> Error in referenced schema matching $id: http://devicetree.org/schemas/cl=
+ock/mobileye,eyeq5-clk.yaml
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
+oc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: clock=
+-controller@2c: False schema does not allow {'compatible': ['mobileye,eyeq5=
+-clk'], 'reg': [[44, 80], [284, 4]], 'reg-names': ['plls', 'ospi'], '#clock=
+-cells': [[1]], 'clocks': [[4294967295]], 'clock-names': ['ref']}
+> 	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eye=
+q5-olb.yaml#
+> /builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/s=
+oc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: reset=
+-controller@0: False schema does not allow {'compatible': ['mobileye,eyeq5-=
+reset'], 'reg': [[0, 12], [512, 52], [288, 4]], 'reg-names': ['d0', 'd1', '=
+d2'], '#reset-cells': [[2]]}
+> 	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eye=
+q5-olb.yaml#
+> Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example=
+.dtb: /example-0/soc/system-controller@e00000/reset-controller@0: failed to=
+ match any schema with compatible: ['mobileye,eyeq5-reset']
+> Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example=
+.dtb: /example-0/soc/system-controller@e00000/clock-controller@2c: failed t=
+o match any schema with compatible: ['mobileye,eyeq5-clk']
 
-> +    gpio1: gpio@8012e080 {
+This series depends on 4 patches from previous revisions that got taken
+into clk-next. Those are v6.8-rc1..clk-mobileye on the clk remote [0].
 
-The gpio1 label is not used and can be removed.
+Without the 4 patches I've reproduced the above warning; it disappears
+once they are applied.
 
-Otherwise,
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+Have a nice day,
 
-Cheers,
-Conor.
+[0]: https://git.kernel.org/pub/scm/linux/kernel/git/clk/linux.git/log/?h=
+=3Dclk-mobileye
 
-> +        compatible = "st,nomadik-gpio";
-> +        reg =  <0x8012e080 0x80>;
-> +        interrupts = <0 120 0x4>;
-> +        #gpio-cells = <2>;
-> +        gpio-controller;
-> +        interrupt-controller;
-> +        st,supports-sleepmode;
-> +        gpio-bank = <1>;
-> +    };
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-
---XQPnKJoE2X/I/ya7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZd8r2QAKCRB4tDGHoIJi
-0n38AQCC1ntsIjUcAEohmeSuO00TkoNmkJJqMRTh0sWa1jMmWAD/dgZeTh5cG9Bh
-z+Gc36w3M/CeHOsRflN+45NVkh9w3wc=
-=816A
------END PGP SIGNATURE-----
-
---XQPnKJoE2X/I/ya7--
 
