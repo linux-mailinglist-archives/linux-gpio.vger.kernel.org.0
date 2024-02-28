@@ -1,126 +1,174 @@
-Return-Path: <linux-gpio+bounces-3897-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3898-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0F28786B844
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 20:35:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 24B8486B909
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 21:23:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3FE241C24CC9
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 19:35:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 47C531C244E7
+	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 20:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71CE81332BC;
-	Wed, 28 Feb 2024 19:35:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F12513541F;
+	Wed, 28 Feb 2024 20:23:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EmW+BrHs"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="qWlaX29r"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B50974413;
-	Wed, 28 Feb 2024 19:35:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0002F79B74
+	for <linux-gpio@vger.kernel.org>; Wed, 28 Feb 2024 20:23:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709148909; cv=none; b=WSJkSvjgwr/RsPbcwRiGrNAxoPuWYyHXmrnZNSx5eA2nDPbzfjpAcHqGxqbCxJjsoN9Gy0Ym2XfWjBmetTi4Q+ucfD7bQC1Ihznxm8L7jLfQ/h5OckWVLM8RhxKZQx9g87GBzuDrR/UPo2jAVGfdNiVjElhRXx6sBjmG1DDHpLc=
+	t=1709151795; cv=none; b=IjS4P8Xva4U7SpM7No1qGW3ar5AAU5sVVeOmtiYdaOKra3oE9ySdHAlC794XpBBZ7BkU+v2acK3v8UJpPHFdps7v+9XSdi/9Q3TTvfzMtVxGy1bv225rwPjhU90zjy7nMd2GaG5lrPN/QXRwpRNP6udNMqAdrq+MRZ+TNqktml0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709148909; c=relaxed/simple;
-	bh=Uym1km90jfZMuTJ+0Ntvz9OhbaTkbIPMPpk5s7b4d8A=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:Message-ID:
-	 MIME-Version:Content-Type; b=niNuQ9ocVMAa5UhFavKjKReRXOPhKUfE3LFejrUCJzRSQPYW8/qUZaQ1xUTfoCazNX51B9Ok0zXipZjMC+Ipt1VopOfqz9t85xZZXnK0QqFRrL9VSlXHNVgItY5/fCa5Lp1UyFJvZA2RTFl0dug4jAFAlQ96HQvsZMKVZ5JOsss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EmW+BrHs; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AB56C433C7;
-	Wed, 28 Feb 2024 19:35:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709148908;
-	bh=Uym1km90jfZMuTJ+0Ntvz9OhbaTkbIPMPpk5s7b4d8A=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=EmW+BrHsD9Qz1QoqJkLpg3c6cM9Xojkg2ra11HYCoP/1LDDOWM4P8DU+MTdP3XuxO
-	 Zt+ESIF1Ll5lJikG8jYq+TM/STBZR+jWSgyLX285aY8qjiuH0ADMGxly6E3mmLSwS5
-	 VFUk9G7RlY91r45tWc1oU3XB6nK9IDobx+mC9bkDnt8runGn2qNup4/lIMI8QF72PX
-	 aJPfZhd7mQIxjSUN43Gp4E3/YmP2eGwEN4OIulG8Jc9dHeqq30ySZ9KKBWnqtZoZAv
-	 cIg9vBxBpvX+BsFqSu4LaqOPuRkZp14PZyNTU+ng+/uLoVA4siyX3hGxPvmTnzmjr1
-	 yqeh0HaBE0oPA==
-Date: Wed, 28 Feb 2024 19:34:58 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Rob Herring <robh@kernel.org>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Alex Soo <yuklin.soo@starfivetech.com>,
- Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Hal Feng <hal.feng@starfivetech.com>,
- Ley Foon Tan <leyfoon.tan@starfivetech.com>,
- Jianlong Huang <jianlong.huang@starfivetech.com>,
- Emil Renner Berthing <kernel@esmil.dk>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
- Paul Walmsley <paul.walmsley@sifive.com>,
- Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
-Subject: =?US-ASCII?Q?Re=3A_=5BRFC_PATCH_v2_1/6=5D_dt-bindings=3A_?= =?US-ASCII?Q?pinctrl=3A_starfive=3A_Add_JH8100_pinctrl?=
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20240228170338.GA239206-robh@kernel.org>
-References: <20240220064246.467216-1-yuklin.soo@starfivetech.com> <20240220064246.467216-2-yuklin.soo@starfivetech.com> <1a11cee2-2ef1-4ce0-8cc1-63c6cc97863f@linaro.org> <20240220-bottling-reverence-e0ee08f48ccc@spud> <cafccf8d-b8f7-44cb-bc41-3c7a908fd1e4@linaro.org> <20240223002443.GA3877354-robh@kernel.org> <caea26e2-6598-4796-b199-4ee5b1b9cd30@linaro.org> <20240224-smudgy-eldercare-d5d8640d9961@spud> <20240228170338.GA239206-robh@kernel.org>
-Message-ID: <6CB89570-8BBE-4323-AB75-4D0582AD1058@kernel.org>
+	s=arc-20240116; t=1709151795; c=relaxed/simple;
+	bh=vB/QdaRW26QrKqvq80OzeVkAdTNRDXW8s0pqpZhXHKo=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=QCNBoHWqdRsc4fPFTIu0290BjgkkAxdmLOCwgAo3YSX4po4pAEmLoI/tYVaJ0NDvchm4bAFcL6XFlm6R39arQLRwnZIHW1cWEw+Z4nuotb37BFj+rtVOxuMCltimxabk+hRDQBNONNNku1DYvArF+UQgjx428nJIx1ArBKRE5OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=qWlaX29r; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 23EC52C0F60;
+	Thu, 29 Feb 2024 09:23:11 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1709151791;
+	bh=vB/QdaRW26QrKqvq80OzeVkAdTNRDXW8s0pqpZhXHKo=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=qWlaX29r7okd9YzQezVoaQmKX//Yv/AN/oVLpKCmKpbfpNvVYANvXJ+3gVNykeLgD
+	 M3QoDcFlyBlieYqzOqq/ysBS+ppiNcTa1HVQrQ9d71uF4zqmI6YwUQQjTBlvoqMUnD
+	 xSr3ivdd3pFc0RKmRd2iD7NJuHrkm0vYS3ibqE8rd3hNy0yaNzpOgk94GtlfsrwE1+
+	 Jr3BEQq73LqpDc9kYbNgBS1fj3w6+VCfWYK44LbN3sdjbg7YUe26mfpAEr8pvJLTIw
+	 7w1WFUCJNoDZkUPmf1N/ekiiO+9MY5MOCG4j/sdp7YNCulsnC7TbTNdBhdj7NK/SsA
+	 nBdBq1NA/9qJw==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65df962f0000>; Thu, 29 Feb 2024 09:23:11 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.40; Thu, 29 Feb 2024 09:23:10 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.48; Thu, 29 Feb 2024 09:23:10 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.040; Thu, 29 Feb 2024 09:23:10 +1300
+From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Bartosz Golaszewski
+	<bartosz.golaszewski@linaro.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, "linux-acpi@vger.kernel.org"
+	<linux-acpi@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+CC: Mika Westerberg <mika.westerberg@linux.intel.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/2] gpiolib-of: Make of_gpio_get_count() take firmware
+ node as a parameter
+Thread-Topic: [PATCH v1 1/2] gpiolib-of: Make of_gpio_get_count() take
+ firmware node as a parameter
+Thread-Index: AQHaanYmuTVWevmzq06Z7dTM4wzKi7EfWQmA
+Date: Wed, 28 Feb 2024 20:23:10 +0000
+Message-ID: <8862c6a9-529c-4c52-a84b-176e6d61351a@alliedtelesis.co.nz>
+References: <20240228184412.3591847-1-andriy.shevchenko@linux.intel.com>
+ <20240228184412.3591847-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240228184412.3591847-2-andriy.shevchenko@linux.intel.com>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <F4D671159A5C2C43B38EAB2FA709DC43@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65df962f a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=75chYTbOgJ0A:10 a=IkcTkHD0fZMA:10 a=k7vzHIieQBIA:10 a=QyXUC8HyAAAA:8 a=CNJck4tkpARU9y_bQmwA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-
-
-On 28 February 2024 17:03:38 GMT, Rob Herring <robh@kernel=2Eorg> wrote:
->On Sat, Feb 24, 2024 at 07:20:30PM +0000, Conor Dooley wrote:
->> On Sat, Feb 24, 2024 at 09:46:53AM +0100, Krzysztof Kozlowski wrote:
->> > > I would like a solution though=2E The only idea I have is passing=
-=20
->> > > SystemReady cert, but that's an Arm thing=2E
->>=20
->> I don't know jack about SystemReady
->
->AIUI, Risc-V is working on something similar=2E=2E=2E=20
-
-Probably, but there's a few other things they need to ratify first w=2Er=
-=2Et=2E booting before they're at the point of implementing something like =
-SR=2E
-They still seem to think they need to invent their own discovery mechanism=
-, so my hopes aren't super high for what they produce=2E
-
->
->The primary intent of it is to enable installing off-the-shelf OSs=2E
->
->> - I had it in my head that it was a
->> system level certification=2E I am wondering how you think that
->> SystemReady certification would apply to a whole binding (I can see it
->> being a per-compatible thing, but that would be a mess I am sure)=2E
->
->There's a lot of pieces, but I'll stick to the DT aspects (which is=20
->SystemReady IR band)=2E Certification applies to a specific firmware buil=
-d=20
->(which includes the DTB) on a specific board=2E The testing requirements=
-=20
->at the moment (for 2=2Ex) are every binding (compatible) must have a=20
->schema, but warnings are allowed=2E=20
->
->So a "stable" tag would apply to a DTS as a whole=2E That of course=20
->implies that everything within the DTS is stable too=2E=20
-
-Right, so it would be on a per-compatible basis then=2E I guess not altoge=
-ther different from marking a compatible deprecated=2E
-
->One wrinkle is that SR has no direct requirement that the DTB come from=
-=20
->anything upstream=2E Indirectly, the schemas must exist and be upstream=
-=20
->(or acked on the lists) and various distro kernels have to actually=20
->boot=2E For that reason, if we had some tag, it would have to be=20
->distinct from SR=2E
-
-And for the reason that other architectures may want to use it I suppose!
+DQpPbiAyOS8wMi8yNCAwNzo0MCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiBNYWtlIG9mX2dw
+aW9fZ2V0X2NvdW50KCkgdGFrZSBmaXJtd2FyZSBub2RlIGFzIGEgcGFyYW1ldGVyIGluIG9yZGVy
+DQo+IHRvIGJlIGFsaWduZWQgd2l0aCBvdGhlciBmdW5jdGlvbnMgYW5kIGRlY291cGxlIGZvcm0g
+dW51c2VkIGRldmljZQ0KdHlwbzogZm9ybSAtPiBmcm9tDQo+IHBvaW50ZXIuIFRoZSBsYXR0ZXIg
+aGVscHMgdG8gY3JlYXRlIGEgY29tbW9uIGZ3bm9kZV9ncGlvX2NvdW50KCkNCj4gaW4gdGhlIGZ1
+dHVyZS4NCj4NCj4gV2hpbGUgYXQgaXQsIHJlbmFtZSB0byBiZSBvZl9ncGlvX2NvdW50KCkgdG8g
+YmUgYWxpZ25lZCB3aXRoIHRoZSBvdGhlcnMuDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEFuZHkgU2hl
+dmNoZW5rbyA8YW5kcml5LnNoZXZjaGVua29AbGludXguaW50ZWwuY29tPg0KPiAtLS0NCj4gICBk
+cml2ZXJzL2dwaW8vZ3Bpb2xpYi1vZi5jIHwgMTMgKysrKysrLS0tLS0tLQ0KPiAgIGRyaXZlcnMv
+Z3Bpby9ncGlvbGliLW9mLmggfCAgNSArKystLQ0KPiAgIGRyaXZlcnMvZ3Bpby9ncGlvbGliLmMg
+ICAgfCAgMiArLQ0KPiAgIDMgZmlsZXMgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKSwgMTAgZGVs
+ZXRpb25zKC0pDQo+DQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi1vZi5jIGIv
+ZHJpdmVycy9ncGlvL2dwaW9saWItb2YuYw0KPiBpbmRleCBlMzVhOWM3ZGE0ZWUuLmMwZWFlODky
+NDA3NCAxMDA2NDQNCj4gLS0tIGEvZHJpdmVycy9ncGlvL2dwaW9saWItb2YuYw0KPiArKysgYi9k
+cml2ZXJzL2dwaW8vZ3Bpb2xpYi1vZi5jDQo+IEBAIC02OCw3ICs2OCw3IEBAIHN0YXRpYyBpbnQg
+b2ZfZ3Bpb19uYW1lZF9jb3VudChjb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wLA0KPiAgIA0K
+PiAgIC8qKg0KPiAgICAqIG9mX2dwaW9fc3BpX2NzX2dldF9jb3VudCgpIC0gc3BlY2lhbCBHUElP
+IGNvdW50aW5nIGZvciBTUEkNCj4gLSAqIEBkZXY6ICAgIENvbnN1bWluZyBkZXZpY2UNCj4gKyAq
+IEBucDogICAgQ29uc3VtaW5nIGRldmljZSBub2RlDQo+ICAgICogQGNvbl9pZDogRnVuY3Rpb24g
+d2l0aGluIHRoZSBHUElPIGNvbnN1bWVyDQo+ICAgICoNCj4gICAgKiBTb21lIGVsZGVyIEdQSU8g
+Y29udHJvbGxlcnMgbmVlZCBzcGVjaWFsIHF1aXJrcy4gQ3VycmVudGx5IHdlIGhhbmRsZQ0KPiBA
+QCAtNzgsMTAgKzc4LDggQEAgc3RhdGljIGludCBvZl9ncGlvX25hbWVkX2NvdW50KGNvbnN0IHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQo+ICAgICogdGhlIGNvdW50aW5nIG9mICJjcy1ncGlvcyIg
+dG8gY291bnQgImdwaW9zIiB0cmFuc3BhcmVudCB0byB0aGUNCj4gICAgKiBkcml2ZXIuDQo+ICAg
+ICovDQo+IC1zdGF0aWMgaW50IG9mX2dwaW9fc3BpX2NzX2dldF9jb3VudChzdHJ1Y3QgZGV2aWNl
+ICpkZXYsIGNvbnN0IGNoYXIgKmNvbl9pZCkNCj4gK3N0YXRpYyBpbnQgb2ZfZ3Bpb19zcGlfY3Nf
+Z2V0X2NvdW50KGNvbnN0IHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsIGNvbnN0IGNoYXIgKmNvbl9p
+ZCkNCj4gICB7DQo+IC0Jc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+b2Zfbm9kZTsNCj4g
+LQ0KPiAgIAlpZiAoIUlTX0VOQUJMRUQoQ09ORklHX1NQSV9NQVNURVIpKQ0KPiAgIAkJcmV0dXJu
+IDA7DQo+ICAgCWlmICghY29uX2lkIHx8IHN0cmNtcChjb25faWQsICJjcyIpKQ0KPiBAQCAtOTMs
+MTMgKzkxLDE0IEBAIHN0YXRpYyBpbnQgb2ZfZ3Bpb19zcGlfY3NfZ2V0X2NvdW50KHN0cnVjdCBk
+ZXZpY2UgKmRldiwgY29uc3QgY2hhciAqY29uX2lkKQ0KPiAgIAlyZXR1cm4gb2ZfZ3Bpb19uYW1l
+ZF9jb3VudChucCwgImdwaW9zIik7DQo+ICAgfQ0KPiAgIA0KPiAtaW50IG9mX2dwaW9fZ2V0X2Nv
+dW50KHN0cnVjdCBkZXZpY2UgKmRldiwgY29uc3QgY2hhciAqY29uX2lkKQ0KPiAraW50IG9mX2dw
+aW9fY291bnQoY29uc3Qgc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwgY29uc3QgY2hhciAq
+Y29uX2lkKQ0KPiAgIHsNCj4gKwljb25zdCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wID0gdG9fb2Zf
+bm9kZShmd25vZGUpOw0KPiAgIAlpbnQgcmV0Ow0KPiAgIAljaGFyIHByb3BuYW1lWzMyXTsNCj4g
+ICAJdW5zaWduZWQgaW50IGk7DQo+ICAgDQo+IC0JcmV0ID0gb2ZfZ3Bpb19zcGlfY3NfZ2V0X2Nv
+dW50KGRldiwgY29uX2lkKTsNCj4gKwlyZXQgPSBvZl9ncGlvX3NwaV9jc19nZXRfY291bnQobnAs
+IGNvbl9pZCk7DQo+ICAgCWlmIChyZXQgPiAwKQ0KPiAgIAkJcmV0dXJuIHJldDsNCj4gICANCj4g
+QEAgLTExMSw3ICsxMTAsNyBAQCBpbnQgb2ZfZ3Bpb19nZXRfY291bnQoc3RydWN0IGRldmljZSAq
+ZGV2LCBjb25zdCBjaGFyICpjb25faWQpDQo+ICAgCQkJc25wcmludGYocHJvcG5hbWUsIHNpemVv
+Zihwcm9wbmFtZSksICIlcyIsDQo+ICAgCQkJCSBncGlvX3N1ZmZpeGVzW2ldKTsNCj4gICANCj4g
+LQkJcmV0ID0gb2ZfZ3Bpb19uYW1lZF9jb3VudChkZXYtPm9mX25vZGUsIHByb3BuYW1lKTsNCj4g
+KwkJcmV0ID0gb2ZfZ3Bpb19uYW1lZF9jb3VudChucCwgcHJvcG5hbWUpOw0KPiAgIAkJaWYgKHJl
+dCA+IDApDQo+ICAgCQkJYnJlYWs7DQo+ICAgCX0NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3Bp
+by9ncGlvbGliLW9mLmggYi9kcml2ZXJzL2dwaW8vZ3Bpb2xpYi1vZi5oDQo+IGluZGV4IDZiM2E1
+MzQ3YzVkOS4uMTk5ODhjMTM1NGZhIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL2dwaW8vZ3Bpb2xp
+Yi1vZi5oDQo+ICsrKyBiL2RyaXZlcnMvZ3Bpby9ncGlvbGliLW9mLmgNCj4gQEAgLTksNiArOSw3
+IEBADQo+ICAgI2luY2x1ZGUgPGxpbnV4L25vdGlmaWVyLmg+DQo+ICAgDQo+ICAgc3RydWN0IGRl
+dmljZTsNCj4gK3N0cnVjdCBmd25vZGVfaGFuZGxlOw0KPiAgIA0KPiAgIHN0cnVjdCBncGlvX2No
+aXA7DQo+ICAgc3RydWN0IGdwaW9fZGVzYzsNCj4gQEAgLTIxLDcgKzIyLDcgQEAgc3RydWN0IGdw
+aW9fZGVzYyAqb2ZfZmluZF9ncGlvKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQo+ICAgCQkJICAg
+ICAgIHVuc2lnbmVkIGxvbmcgKmxvb2t1cGZsYWdzKTsNCj4gICBpbnQgb2ZfZ3Bpb2NoaXBfYWRk
+KHN0cnVjdCBncGlvX2NoaXAgKmdjKTsNCj4gICB2b2lkIG9mX2dwaW9jaGlwX3JlbW92ZShzdHJ1
+Y3QgZ3Bpb19jaGlwICpnYyk7DQo+IC1pbnQgb2ZfZ3Bpb19nZXRfY291bnQoc3RydWN0IGRldmlj
+ZSAqZGV2LCBjb25zdCBjaGFyICpjb25faWQpOw0KPiAraW50IG9mX2dwaW9fY291bnQoY29uc3Qg
+c3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwgY29uc3QgY2hhciAqY29uX2lkKTsNCj4gICAj
+ZWxzZQ0KPiAgIHN0YXRpYyBpbmxpbmUgc3RydWN0IGdwaW9fZGVzYyAqb2ZfZmluZF9ncGlvKHN0
+cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQo+ICAgCQkJCQkgICAgIGNvbnN0IGNoYXIgKmNvbl9pZCwN
+Cj4gQEAgLTMyLDcgKzMzLDcgQEAgc3RhdGljIGlubGluZSBzdHJ1Y3QgZ3Bpb19kZXNjICpvZl9m
+aW5kX2dwaW8oc3RydWN0IGRldmljZV9ub2RlICpucCwNCj4gICB9DQo+ICAgc3RhdGljIGlubGlu
+ZSBpbnQgb2ZfZ3Bpb2NoaXBfYWRkKHN0cnVjdCBncGlvX2NoaXAgKmdjKSB7IHJldHVybiAwOyB9
+DQo+ICAgc3RhdGljIGlubGluZSB2b2lkIG9mX2dwaW9jaGlwX3JlbW92ZShzdHJ1Y3QgZ3Bpb19j
+aGlwICpnYykgeyB9DQo+IC1zdGF0aWMgaW5saW5lIGludCBvZl9ncGlvX2dldF9jb3VudChzdHJ1
+Y3QgZGV2aWNlICpkZXYsIGNvbnN0IGNoYXIgKmNvbl9pZCkNCj4gK3N0YXRpYyBpbmxpbmUgaW50
+IG9mX2dwaW9fY291bnQoY29uc3Qgc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwgY29uc3Qg
+Y2hhciAqY29uX2lkKQ0KPiAgIHsNCj4gICAJcmV0dXJuIDA7DQo+ICAgfQ0KPiBkaWZmIC0tZ2l0
+IGEvZHJpdmVycy9ncGlvL2dwaW9saWIuYyBiL2RyaXZlcnMvZ3Bpby9ncGlvbGliLmMNCj4gaW5k
+ZXggNWZhM2JmN2I1NWJkLi5hOTMyNzFiM2Q1MzggMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3Bp
+by9ncGlvbGliLmMNCj4gKysrIGIvZHJpdmVycy9ncGlvL2dwaW9saWIuYw0KPiBAQCAtNDI4NSw3
+ICs0Mjg1LDcgQEAgaW50IGdwaW9kX2NvdW50KHN0cnVjdCBkZXZpY2UgKmRldiwgY29uc3QgY2hh
+ciAqY29uX2lkKQ0KPiAgIAlpbnQgY291bnQgPSAtRU5PRU5UOw0KPiAgIA0KPiAgIAlpZiAoaXNf
+b2Zfbm9kZShmd25vZGUpKQ0KPiAtCQljb3VudCA9IG9mX2dwaW9fZ2V0X2NvdW50KGRldiwgY29u
+X2lkKTsNCj4gKwkJY291bnQgPSBvZl9ncGlvX2NvdW50KGZ3bm9kZSwgY29uX2lkKTsNCj4gICAJ
+ZWxzZSBpZiAoaXNfYWNwaV9ub2RlKGZ3bm9kZSkpDQo+ICAgCQljb3VudCA9IGFjcGlfZ3Bpb19j
+b3VudChkZXYsIGNvbl9pZCk7DQo+ICAgCWVsc2UgaWYgKGlzX3NvZnR3YXJlX25vZGUoZndub2Rl
+KSk=
 
