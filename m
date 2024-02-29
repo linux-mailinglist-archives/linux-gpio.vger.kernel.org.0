@@ -1,300 +1,1302 @@
-Return-Path: <linux-gpio+bounces-4003-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4004-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2AAF686D6A6
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 23:13:54 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id C397186D70C
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 23:53:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4E2381C22BF1
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 22:13:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2D99F1F2606E
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 22:53:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB20A74C02;
-	Thu, 29 Feb 2024 22:13:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 812B72260A;
+	Thu, 29 Feb 2024 22:53:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mS/IlSLv"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zFfbUu2+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24A574BE2
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 22:13:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43FE9446A0
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 22:53:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709244818; cv=none; b=B8kkCnUi14E+ooo+tby5hjOPIXb0GXYUwDGkBl59qJHc+B9b6uLmQY7zCkPnweHjr+3d+pgpajiZpgTlYD66vIfF19UWyjCfJvRD7URgQarRMn6cKMExTxdGdmzgGzOeeOZLclBMobAqR1jaNtswfNjYfUcOuv0+EVbw4HNjHAk=
+	t=1709247183; cv=none; b=hktOdnPoA3IcTTfLPWAt5yXWYMGFIcwYtsnnXiQKrhNR04UmIh24jiHJNxewyYvtDKfgnW3IOwyK/YHczHJPNwS089Ex5qxDN/IL0V9JM92dm6IzrKI3C6Fj9FdVwAi6BDiCwnTmKHpwg6DnFOCAodS1GNFqFP78M2lyShb0eTU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709244818; c=relaxed/simple;
-	bh=fO8oPA7ZvXQC0gH4GLXYmhOJTPLBxNGIbsscJFO7n8U=;
-	h=Date:From:To:Cc:Subject:Message-ID; b=MEZjccxQBIHA+Z5gIjFdIQ1KqQyyyazk4js00zH2W0nYzPOOaGttFXdOBPf9Rh+QaM0Ptx4NOsvo4lJ72c5foPygWPSGQK4sL2FwA4dMtxys2Lc9HYKQuu1a1Hwfwu7Xr6Hh+3irR4wyIuFBMBywqqnuu6BtE1CecfG59g0RnuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mS/IlSLv; arc=none smtp.client-ip=192.198.163.17
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709244817; x=1740780817;
-  h=date:from:to:cc:subject:message-id;
-  bh=fO8oPA7ZvXQC0gH4GLXYmhOJTPLBxNGIbsscJFO7n8U=;
-  b=mS/IlSLvPPmtozXgO5DotI5sLRWB6cJ8+OEibMyJ5iBuaBGKoAc2OXh8
-   +SRXGAe1kyf7RGLMe/eEB/opVG+0PBTc0qriJwN6Wfmpi7l5bQ625U0lg
-   Iq9HJ71Y2YLVPv8KjLSeqm0UzZZ25xgEqozlS1XwBBQSGaqqr3F6iA5MP
-   VhQg+TWmUeLL+FrImB51SgSYXKSwo+7vzb6PbVPqw9XdP9xDfRwy2+sF3
-   fsvFw7BPrtxoYSBBsYkONZWTsQLXc33XpxGmQQsPtI2WthG3Ls9APkGfz
-   TXjU3G/GvYCVAT4/9z1IUsyo73fVcJ8JunfAqBL7yWTQL4ccni7PYZijg
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3610358"
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="3610358"
-Received: from orviesa006.jf.intel.com ([10.64.159.146])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 14:13:36 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="8395785"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa006.jf.intel.com with ESMTP; 29 Feb 2024 14:13:34 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfoeh-000DJb-3A;
-	Thu, 29 Feb 2024 22:13:31 +0000
-Date: Fri, 01 Mar 2024 06:12:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Subject: [linusw-pinctrl:ib-nomadik-gpio] BUILD SUCCESS
- 6ad679cfaeea9291e9dce3247e34656080fc1d29
-Message-ID: <202403010644.NtOhSu8V-lkp@intel.com>
-User-Agent: s-nail v14.9.24
+	s=arc-20240116; t=1709247183; c=relaxed/simple;
+	bh=6MgL+yxdsRC+GpiU2sl6/c9yAXvwFSNxRLwnJ/yyEsU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hhGHjTNnJxpdKl0Q9K84TTzMnEIedI6YgDVW0TTt41JyqSUOl2NzRsB9nN83LYMXp2BlTNe8AG6kgoBefiQyykorHoJoxDoOGqkOGfm/MaW3AScQ+/6KTrKz/i2rRUbUnw8lZXu4rhJZ/3twc1qGlvlMYoG5MsGAE3QIOUPwf2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zFfbUu2+; arc=none smtp.client-ip=209.85.208.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso2197951a12.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 14:52:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709247178; x=1709851978; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=AXf+4SamjN+mfhKu3KOjZPeO7SbqXrA2JV3kkV3VA8Q=;
+        b=zFfbUu2+phGbB3GHdDLsigweBDJWTbd2LXWsRSsRIsCTazip/4kE1T0QNXd1DKx/Q2
+         bp3MAZWXb/Vtn81XJGBfNFqBdWHP41iM97zFTxYXwSKYSP+wpenY+/DKKAw6qAYb2nOQ
+         7yLXxagqlkE35WKVN/1urbm1vMrWBmG+DWuHHJ6Z1CYhvsaseMztLex9phRfYDEKouFp
+         ZgG3aLjOFoaQc7UucY96Ie+0AfVgI80E1fdmZZMrgUCTJtJQvCdbIkDVXInFsxHxcgew
+         WGFX7+zvAFS1sxN9dg4XhvQu/fwaLGDbfVwbkK2dROyzhpl6AQgTdOwhFV1l2sO6792K
+         jD6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709247178; x=1709851978;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=AXf+4SamjN+mfhKu3KOjZPeO7SbqXrA2JV3kkV3VA8Q=;
+        b=DwCE924b99Q0cBN1cxuQ0+9wt8UlLD5AeDn+L5imOYV9FVFvMzcSjEuDLEodlBxjOC
+         d0fPbskhebQlzVrebo4/hGGmwRPQEQWGjYuaMaFzhE9iYNXaVc4Z35XsHRFsp1SKH/Ht
+         V+4uu/gROfKXNXjduTlr3Dtmooy0FyPWLQslXPIobx1dif1GSxcuap+klwnCTcAOv0WB
+         Kmkiklo2+rBTU/GYAKQqY0MRJz9nTawtNOHH1fCEa0dqmoNw6A/FW0eMb4D1ZfvF0f0d
+         AA+gDp6uJQ1hGyLIwOVFwWgvv4QA6iRmTZXyKWWP5Nt4SoSAnW1n7op12UTDn1xHcjo+
+         RgKw==
+X-Gm-Message-State: AOJu0YzZz58n7cdMU8w6kMtO6QL15zmwI7nVoF7yZgVe3fiYXPneonQC
+	x4mirCjC3wUlLlE+II29hbZGrYgvcr1FU9a5lzoJp/kF2SFCqNoOSa2m8QEnG/8=
+X-Google-Smtp-Source: AGHT+IHEm07igFVDByQSfT989/JHSSRIsRR+Ddt5DhtzmpMwOnHiLne0j9u+hfKGbciMuvq4FSFg+w==
+X-Received: by 2002:a17:906:191b:b0:a43:db94:cac4 with SMTP id a27-20020a170906191b00b00a43db94cac4mr67902eje.21.1709247178298;
+        Thu, 29 Feb 2024 14:52:58 -0800 (PST)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id ps2-20020a170906bf4200b00a43a79b10absm1111110ejb.140.2024.02.29.14.52.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 29 Feb 2024 14:52:57 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Thu, 29 Feb 2024 23:52:55 +0100
+Subject: [PATCH v7] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
+ Expander
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240229-awinic-aw9523-v7-1-b62d0d2963d2@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAMYK4WUC/x2MQQqAIBAAvyJ7TrAtUftKdBDdai8WChWEf086D
+ XOYeaFQZiowiRcyXVz4SE1MJyDsPm0kOTYHVDgqRCf9zYlDg9M4SBfW3tsYbDQaWnNmWvn5f/N
+ S6wcwv0ChXwAAAA==
+To: David Bauer <mail@david-bauer.net>, 
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>, 
+ Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.12.4
 
-tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
-branch HEAD: 6ad679cfaeea9291e9dce3247e34656080fc1d29  gpio: nomadik: grab optional reset control and deassert it at probe
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 
-elapsed time: 731m
+The Awinic AW9523(B) is a multi-function I2C gpio expander in a
+TQFN-24L package, featuring PWM (max 37mA per pin, or total max
+power 3.2Watts) for LED driving capability.
 
-configs tested: 211
-configs skipped: 3
+It has two ports with 8 pins per port (for a total of 16 pins),
+configurable as either PWM with 1/256 stepping or GPIO input/output,
+1.8V logic input; each GPIO can be configured as input or output
+independently from each other.
 
-The following configs have been built successfully.
-More configs may be tested in the coming days.
+This IC also has an internal interrupt controller, which is capable
+of generating an interrupt for each GPIO, depending on the
+configuration, and will raise an interrupt on the INTN pin to
+advertise this to an external interrupt controller.
 
-tested configs:
-alpha                             allnoconfig   gcc  
-alpha                            allyesconfig   gcc  
-alpha                               defconfig   gcc  
-arc                              allmodconfig   gcc  
-arc                               allnoconfig   gcc  
-arc                              allyesconfig   gcc  
-arc                      axs103_smp_defconfig   gcc  
-arc                                 defconfig   gcc  
-arc                        nsimosci_defconfig   gcc  
-arc                   randconfig-001-20240229   gcc  
-arc                   randconfig-002-20240229   gcc  
-arm                              alldefconfig   gcc  
-arm                              allmodconfig   gcc  
-arm                               allnoconfig   clang
-arm                              allyesconfig   gcc  
-arm                                 defconfig   clang
-arm                            dove_defconfig   gcc  
-arm                   randconfig-001-20240229   gcc  
-arm                   randconfig-002-20240229   gcc  
-arm                   randconfig-003-20240229   clang
-arm                   randconfig-004-20240229   gcc  
-arm                          sp7021_defconfig   gcc  
-arm64                            allmodconfig   clang
-arm64                             allnoconfig   gcc  
-arm64                               defconfig   gcc  
-arm64                 randconfig-001-20240229   clang
-arm64                 randconfig-002-20240229   gcc  
-arm64                 randconfig-003-20240229   clang
-arm64                 randconfig-004-20240229   clang
-csky                             allmodconfig   gcc  
-csky                              allnoconfig   gcc  
-csky                             allyesconfig   gcc  
-csky                                defconfig   gcc  
-csky                  randconfig-001-20240229   gcc  
-csky                  randconfig-002-20240229   gcc  
-hexagon                          allmodconfig   clang
-hexagon                           allnoconfig   clang
-hexagon                          allyesconfig   clang
-hexagon                             defconfig   clang
-hexagon               randconfig-001-20240229   clang
-hexagon               randconfig-002-20240229   clang
-i386                             allmodconfig   gcc  
-i386                              allnoconfig   gcc  
-i386                             allyesconfig   gcc  
-i386         buildonly-randconfig-001-20240229   clang
-i386         buildonly-randconfig-002-20240229   gcc  
-i386         buildonly-randconfig-003-20240229   gcc  
-i386         buildonly-randconfig-003-20240301   gcc  
-i386         buildonly-randconfig-004-20240229   clang
-i386         buildonly-randconfig-005-20240229   gcc  
-i386         buildonly-randconfig-006-20240229   gcc  
-i386                                defconfig   clang
-i386                  randconfig-001-20240229   clang
-i386                  randconfig-002-20240229   gcc  
-i386                  randconfig-003-20240229   clang
-i386                  randconfig-004-20240229   gcc  
-i386                  randconfig-005-20240229   gcc  
-i386                  randconfig-005-20240301   gcc  
-i386                  randconfig-006-20240229   gcc  
-i386                  randconfig-006-20240301   gcc  
-i386                  randconfig-011-20240229   gcc  
-i386                  randconfig-011-20240301   gcc  
-i386                  randconfig-012-20240229   gcc  
-i386                  randconfig-013-20240229   clang
-i386                  randconfig-014-20240229   clang
-i386                  randconfig-014-20240301   gcc  
-i386                  randconfig-015-20240229   clang
-i386                  randconfig-015-20240301   gcc  
-i386                  randconfig-016-20240229   clang
-i386                  randconfig-016-20240301   gcc  
-loongarch                        allmodconfig   gcc  
-loongarch                         allnoconfig   gcc  
-loongarch                        allyesconfig   gcc  
-loongarch                           defconfig   gcc  
-loongarch             randconfig-001-20240229   gcc  
-loongarch             randconfig-002-20240229   gcc  
-m68k                             allmodconfig   gcc  
-m68k                              allnoconfig   gcc  
-m68k                             allyesconfig   gcc  
-m68k                                defconfig   gcc  
-m68k                            q40_defconfig   gcc  
-m68k                           virt_defconfig   gcc  
-microblaze                       allmodconfig   gcc  
-microblaze                        allnoconfig   gcc  
-microblaze                       allyesconfig   gcc  
-microblaze                          defconfig   gcc  
-mips                             allmodconfig   gcc  
-mips                              allnoconfig   gcc  
-mips                             allyesconfig   gcc  
-mips                       bmips_be_defconfig   gcc  
-mips                  cavium_octeon_defconfig   gcc  
-mips                malta_qemu_32r6_defconfig   gcc  
-mips                       rbtx49xx_defconfig   gcc  
-nios2                            allmodconfig   gcc  
-nios2                             allnoconfig   gcc  
-nios2                            allyesconfig   gcc  
-nios2                               defconfig   gcc  
-nios2                 randconfig-001-20240229   gcc  
-nios2                 randconfig-002-20240229   gcc  
-openrisc                         allmodconfig   gcc  
-openrisc                          allnoconfig   gcc  
-openrisc                         allyesconfig   gcc  
-openrisc                            defconfig   gcc  
-openrisc                  or1klitex_defconfig   gcc  
-parisc                           allmodconfig   gcc  
-parisc                            allnoconfig   gcc  
-parisc                           allyesconfig   gcc  
-parisc                              defconfig   gcc  
-parisc                randconfig-001-20240229   gcc  
-parisc                randconfig-002-20240229   gcc  
-parisc64                            defconfig   gcc  
-powerpc                          allmodconfig   gcc  
-powerpc                           allnoconfig   gcc  
-powerpc                          allyesconfig   clang
-powerpc                          g5_defconfig   gcc  
-powerpc               randconfig-001-20240229   clang
-powerpc               randconfig-002-20240229   gcc  
-powerpc               randconfig-003-20240229   clang
-powerpc64             randconfig-001-20240229   gcc  
-powerpc64             randconfig-002-20240229   clang
-powerpc64             randconfig-003-20240229   clang
-riscv                            allmodconfig   clang
-riscv                             allnoconfig   gcc  
-riscv                            allyesconfig   clang
-riscv                               defconfig   clang
-riscv                 randconfig-001-20240229   clang
-riscv                 randconfig-002-20240229   clang
-s390                             allmodconfig   clang
-s390                              allnoconfig   clang
-s390                             allyesconfig   gcc  
-s390                                defconfig   clang
-s390                  randconfig-001-20240229   clang
-s390                  randconfig-002-20240229   gcc  
-sh                               allmodconfig   gcc  
-sh                                allnoconfig   gcc  
-sh                               allyesconfig   gcc  
-sh                                  defconfig   gcc  
-sh                          kfr2r09_defconfig   gcc  
-sh                          polaris_defconfig   gcc  
-sh                    randconfig-001-20240229   gcc  
-sh                    randconfig-002-20240229   gcc  
-sh                          rsk7201_defconfig   gcc  
-sh                           se7206_defconfig   gcc  
-sh                           se7705_defconfig   gcc  
-sh                   sh7724_generic_defconfig   gcc  
-sparc                            allmodconfig   gcc  
-sparc                             allnoconfig   gcc  
-sparc                            allyesconfig   gcc  
-sparc                               defconfig   gcc  
-sparc                       sparc32_defconfig   gcc  
-sparc                       sparc64_defconfig   gcc  
-sparc64                          allmodconfig   gcc  
-sparc64                          allyesconfig   gcc  
-sparc64                             defconfig   gcc  
-sparc64               randconfig-001-20240229   gcc  
-sparc64               randconfig-002-20240229   gcc  
-um                               allmodconfig   clang
-um                                allnoconfig   clang
-um                               allyesconfig   gcc  
-um                                  defconfig   clang
-um                             i386_defconfig   gcc  
-um                    randconfig-001-20240229   gcc  
-um                    randconfig-002-20240229   gcc  
-um                           x86_64_defconfig   clang
-x86_64                            allnoconfig   clang
-x86_64                           allyesconfig   clang
-x86_64       buildonly-randconfig-001-20240229   gcc  
-x86_64       buildonly-randconfig-002-20240229   clang
-x86_64       buildonly-randconfig-002-20240301   gcc  
-x86_64       buildonly-randconfig-003-20240229   gcc  
-x86_64       buildonly-randconfig-004-20240229   gcc  
-x86_64       buildonly-randconfig-004-20240301   gcc  
-x86_64       buildonly-randconfig-005-20240229   gcc  
-x86_64       buildonly-randconfig-006-20240229   gcc  
-x86_64       buildonly-randconfig-006-20240301   gcc  
-x86_64                              defconfig   gcc  
-x86_64                randconfig-001-20240229   clang
-x86_64                randconfig-001-20240301   gcc  
-x86_64                randconfig-002-20240229   clang
-x86_64                randconfig-003-20240229   clang
-x86_64                randconfig-004-20240229   clang
-x86_64                randconfig-005-20240229   clang
-x86_64                randconfig-005-20240301   gcc  
-x86_64                randconfig-006-20240229   clang
-x86_64                randconfig-006-20240301   gcc  
-x86_64                randconfig-011-20240229   gcc  
-x86_64                randconfig-012-20240229   gcc  
-x86_64                randconfig-013-20240229   gcc  
-x86_64                randconfig-014-20240229   gcc  
-x86_64                randconfig-014-20240301   gcc  
-x86_64                randconfig-015-20240229   gcc  
-x86_64                randconfig-016-20240229   gcc  
-x86_64                randconfig-016-20240301   gcc  
-x86_64                randconfig-071-20240229   clang
-x86_64                randconfig-071-20240301   gcc  
-x86_64                randconfig-072-20240229   clang
-x86_64                randconfig-073-20240229   clang
-x86_64                randconfig-073-20240301   gcc  
-x86_64                randconfig-074-20240229   clang
-x86_64                randconfig-074-20240301   gcc  
-x86_64                randconfig-075-20240229   gcc  
-x86_64                randconfig-075-20240301   gcc  
-x86_64                randconfig-076-20240229   clang
-x86_64                randconfig-076-20240301   gcc  
-x86_64                          rhel-8.3-rust   clang
-x86_64                               rhel-8.3   gcc  
-xtensa                            allnoconfig   gcc  
-xtensa                           allyesconfig   gcc  
-xtensa                          iss_defconfig   gcc  
-xtensa                randconfig-001-20240229   gcc  
-xtensa                randconfig-002-20240229   gcc  
+Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Signed-off-by: David Bauer <mail@david-bauer.net>
+Reported-by: kernel test robot <lkp@intel.com>
+Link: https://lore.kernel.org/r/20210624214458.68716-2-mail@david-bauer.net
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Resend and edit of David Bauers submission that is in use
+in OpenWrt. It was so close to being merged that we better
+just get it done.
+---
+Changes from v6->v7:
+- Set default IRQ type to IRQ_TYPE_EDGE_BOTH
+- Convert to immutable irq_chip
+- Convert probe and remove to new signatures
+- Drop some unused headers
+- Rename some variables as I like them
+---
+ drivers/pinctrl/Kconfig          |   18 +
+ drivers/pinctrl/Makefile         |    1 +
+ drivers/pinctrl/pinctrl-aw9523.c | 1119 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 1138 insertions(+)
 
+diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
+index 8163a5983166..21d38bf2d1ca 100644
+--- a/drivers/pinctrl/Kconfig
++++ b/drivers/pinctrl/Kconfig
+@@ -127,6 +127,24 @@ config PINCTRL_AXP209
+ 	  selected.
+ 	  Say Y to enable pinctrl and GPIO support for the AXP209 PMIC.
+ 
++config PINCTRL_AW9523
++	bool "Awinic AW9523/AW9523B I2C GPIO expander pinctrl driver"
++	depends on OF && I2C
++	select PINMUX
++	select PINCONF
++	select GENERIC_PINCONF
++	select GPIOLIB
++	select GPIOLIB_IRQCHIP
++	select REGMAP
++	select REGMAP_I2C
++	help
++	  The Awinic AW9523/AW9523B is a multi-function I2C GPIO
++	  expander with PWM functionality. This driver bundles a
++	  pinctrl driver to select the function muxing and a GPIO
++	  driver to handle GPIO, when the GPIO function is selected.
++
++	  Say yes to enable pinctrl and GPIO support for the AW9523(B).
++
+ config PINCTRL_BM1880
+ 	bool "Bitmain BM1880 Pinctrl driver"
+ 	depends on OF && (ARCH_BITMAIN || COMPILE_TEST)
+diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
+index 1071f301cc70..2152539b53d5 100644
+--- a/drivers/pinctrl/Makefile
++++ b/drivers/pinctrl/Makefile
+@@ -15,6 +15,7 @@ obj-$(CONFIG_PINCTRL_ARTPEC6)	+= pinctrl-artpec6.o
+ obj-$(CONFIG_PINCTRL_AS3722)	+= pinctrl-as3722.o
+ obj-$(CONFIG_PINCTRL_AT91)	+= pinctrl-at91.o
+ obj-$(CONFIG_PINCTRL_AT91PIO4)	+= pinctrl-at91-pio4.o
++obj-$(CONFIG_PINCTRL_AW9523)	+= pinctrl-aw9523.o
+ obj-$(CONFIG_PINCTRL_AXP209)	+= pinctrl-axp209.o
+ obj-$(CONFIG_PINCTRL_BM1880)	+= pinctrl-bm1880.o
+ obj-$(CONFIG_PINCTRL_CY8C95X0)	+= pinctrl-cy8c95x0.o
+diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
+new file mode 100644
+index 000000000000..679dcc259cd5
+--- /dev/null
++++ b/drivers/pinctrl/pinctrl-aw9523.c
+@@ -0,0 +1,1119 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Awinic AW9523B i2c pin controller driver
++ * Copyright (c) 2020, AngeloGioacchino Del Regno
++ *                     <angelogioacchino.delregno@somainline.org>
++ */
++
++#include <linux/bitfield.h>
++#include <linux/gpio/consumer.h>
++#include <linux/gpio/driver.h>
++#include <linux/i2c.h>
++#include <linux/init.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/mutex.h>
++#include <linux/module.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/property.h>
++#include <linux/regmap.h>
++#include <linux/regulator/consumer.h>
++#include <linux/slab.h>
++
++#define AW9523_MAX_FUNCS		2
++#define AW9523_NUM_PORTS		2
++#define AW9523_PINS_PER_PORT		8
++
++/*
++ * HW needs at least 20uS for reset and at least 1-2uS to recover from
++ * reset, but we have to account for eventual board quirks, if any:
++ * for this reason, keep reset asserted for 50uS and wait for 20uS
++ * to recover from the reset.
++ */
++#define AW9523_HW_RESET_US		50
++#define AW9523_HW_RESET_RECOVERY_US	20
++
++/* Port 0: P0_0...P0_7 - Port 1: P1_0...P1_7 */
++#define AW9523_PIN_TO_PORT(pin)		(pin >> 3)
++#define AW9523_REG_IN_STATE(pin)	(0x00 + AW9523_PIN_TO_PORT(pin))
++#define AW9523_REG_OUT_STATE(pin)	(0x02 + AW9523_PIN_TO_PORT(pin))
++#define AW9523_REG_CONF_STATE(pin)	(0x04 + AW9523_PIN_TO_PORT(pin))
++#define AW9523_REG_INTR_DIS(pin)	(0x06 + AW9523_PIN_TO_PORT(pin))
++#define AW9523_REG_CHIPID		0x10
++#define AW9523_VAL_EXPECTED_CHIPID	0x23
++
++#define AW9523_REG_GCR			0x11
++#define AW9523_GCR_ISEL_MASK		GENMASK(0, 1)
++#define AW9523_GCR_GPOMD_MASK		BIT(4)
++
++#define AW9523_REG_PORT_MODE(pin)	(0x12 + AW9523_PIN_TO_PORT(pin))
++#define AW9523_REG_SOFT_RESET		0x7f
++#define AW9523_VAL_RESET		0x00
++
++/*
++ * struct aw9523_irq - Interrupt controller structure
++ * @lock: mutex locking for the irq bus
++ * @irqchip: structure holding irqchip params
++ * @cached_gpio: stores the previous gpio status for bit comparison
++ */
++struct aw9523_irq {
++	struct mutex lock;
++	struct irq_chip *irqchip;
++	u16 cached_gpio;
++};
++
++/*
++ * struct aw9523_pinmux - Pin mux params
++ * @name: Name of the mux
++ * @grps: Groups of the mux
++ * @num_grps: Number of groups (sizeof array grps)
++ */
++struct aw9523_pinmux {
++	const char *name;
++	const char * const *grps;
++	const u8 num_grps;
++};
++
++/*
++ * struct aw9523 - Main driver structure
++ * @dev: device handle
++ * @regmap: regmap handle for current device
++ * @i2c_lock: Mutex lock for i2c operations
++ * @reset_gpio: Hardware reset (RSTN) signal GPIO
++ * @vio_vreg: VCC regulator (Optional)
++ * @pctl: pinctrl handle for current device
++ * @gpio: structure holding gpiochip params
++ * @irq: Interrupt controller structure
++ */
++struct aw9523 {
++	struct device *dev;
++	struct regmap *regmap;
++	struct mutex i2c_lock;
++	struct gpio_desc *reset_gpio;
++	struct regulator *vio_vreg;
++	struct pinctrl_dev *pctl;
++	struct gpio_chip gpio;
++	struct aw9523_irq *irq;
++};
++
++static const struct pinctrl_pin_desc aw9523_pins[] = {
++	/* Port 0 */
++	PINCTRL_PIN(0, "gpio0"),
++	PINCTRL_PIN(1, "gpio1"),
++	PINCTRL_PIN(2, "gpio2"),
++	PINCTRL_PIN(3, "gpio3"),
++	PINCTRL_PIN(4, "gpio4"),
++	PINCTRL_PIN(5, "gpio5"),
++	PINCTRL_PIN(6, "gpio6"),
++	PINCTRL_PIN(7, "gpio7"),
++
++	/* Port 1 */
++	PINCTRL_PIN(8, "gpio8"),
++	PINCTRL_PIN(9, "gpio9"),
++	PINCTRL_PIN(10, "gpio10"),
++	PINCTRL_PIN(11, "gpio11"),
++	PINCTRL_PIN(12, "gpio12"),
++	PINCTRL_PIN(13, "gpio13"),
++	PINCTRL_PIN(14, "gpio14"),
++	PINCTRL_PIN(15, "gpio15"),
++};
++
++static int aw9523_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++{
++	return ARRAY_SIZE(aw9523_pins);
++}
++
++static const char *aw9523_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
++						 unsigned int selector)
++{
++	return aw9523_pins[selector].name;
++}
++
++static int aw9523_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
++					 unsigned int selector,
++					 const unsigned int **pins,
++					 unsigned int *num_pins)
++{
++	*pins = &aw9523_pins[selector].number;
++	*num_pins = 1;
++	return 0;
++}
++
++static const struct pinctrl_ops aw9523_pinctrl_ops = {
++	.get_groups_count = aw9523_pinctrl_get_groups_count,
++	.get_group_pins = aw9523_pinctrl_get_group_pins,
++	.get_group_name = aw9523_pinctrl_get_group_name,
++	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
++	.dt_free_map = pinconf_generic_dt_free_map,
++};
++
++static const char * const gpio_pwm_groups[] = {
++	"gpio0", "gpio1", "gpio2", "gpio3", "gpio4", "gpio5",
++	"gpio6", "gpio7", "gpio8", "gpio9", "gpio10", "gpio11",
++	"gpio12", "gpio13", "gpio14", "gpio15"
++};
++
++/* Warning: Do NOT reorder this array */
++static const struct aw9523_pinmux aw9523_pmx[] = {
++	{
++		.name = "pwm",
++		.grps = gpio_pwm_groups,
++		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
++	},
++	{
++		.name = "gpio",
++		.grps = gpio_pwm_groups,
++		.num_grps = ARRAY_SIZE(gpio_pwm_groups),
++	},
++};
++
++static int aw9523_pmx_get_funcs_count(struct pinctrl_dev *pctl)
++{
++	return ARRAY_SIZE(aw9523_pmx);
++}
++
++static const char *aw9523_pmx_get_fname(struct pinctrl_dev *pctl,
++					unsigned int sel)
++{
++	return aw9523_pmx[sel].name;
++}
++
++static int aw9523_pmx_get_groups(struct pinctrl_dev *pctl, unsigned int sel,
++				 const char * const **groups,
++				 unsigned int * const num_groups)
++{
++	*groups = aw9523_pmx[sel].grps;
++	*num_groups = aw9523_pmx[sel].num_grps;
++	return 0;
++}
++
++static int aw9523_pmx_set_mux(struct pinctrl_dev *pctl, unsigned int fsel,
++			      unsigned int grp)
++{
++	struct aw9523 *awi = pinctrl_dev_get_drvdata(pctl);
++	int ret, pin = aw9523_pins[grp].number % AW9523_PINS_PER_PORT;
++
++	if (fsel >= ARRAY_SIZE(aw9523_pmx))
++		return -EINVAL;
++
++	/*
++	 * This maps directly to the aw9523_pmx array: programming a
++	 * high bit means "gpio" and a low bit means "pwm".
++	 */
++	mutex_lock(&awi->i2c_lock);
++	ret = regmap_update_bits(awi->regmap, AW9523_REG_PORT_MODE(pin),
++				 BIT(pin), (fsel ? BIT(pin) : 0));
++	mutex_unlock(&awi->i2c_lock);
++	return ret;
++}
++
++static const struct pinmux_ops aw9523_pinmux_ops = {
++	.get_functions_count	= aw9523_pmx_get_funcs_count,
++	.get_function_name	= aw9523_pmx_get_fname,
++	.get_function_groups	= aw9523_pmx_get_groups,
++	.set_mux		= aw9523_pmx_set_mux,
++};
++
++static int aw9523_pcfg_param_to_reg(enum pin_config_param pcp, int pin, u8 *r)
++{
++	u8 reg;
++
++	switch (pcp) {
++	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++	case PIN_CONFIG_BIAS_PULL_UP:
++		reg = AW9523_REG_IN_STATE(pin);
++		break;
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		reg = AW9523_REG_GCR;
++		break;
++	case PIN_CONFIG_INPUT_ENABLE:
++	case PIN_CONFIG_OUTPUT_ENABLE:
++		reg = AW9523_REG_CONF_STATE(pin);
++		break;
++	case PIN_CONFIG_OUTPUT:
++		reg = AW9523_REG_OUT_STATE(pin);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++	*r = reg;
++
++	return 0;
++}
++
++static int aw9523_pconf_get(struct pinctrl_dev *pctldev, unsigned int pin,
++			    unsigned long *config)
++{
++	struct aw9523 *awi = pinctrl_dev_get_drvdata(pctldev);
++	enum pin_config_param param = pinconf_to_config_param(*config);
++	int regbit = pin % AW9523_PINS_PER_PORT;
++	unsigned int val;
++	u8 reg;
++	int rc;
++
++	rc = aw9523_pcfg_param_to_reg(param, pin, &reg);
++	if (rc)
++		return rc;
++
++	mutex_lock(&awi->i2c_lock);
++	rc = regmap_read(awi->regmap, reg, &val);
++	mutex_unlock(&awi->i2c_lock);
++	if (rc)
++		return rc;
++
++	switch (param) {
++	case PIN_CONFIG_BIAS_PULL_UP:
++	case PIN_CONFIG_INPUT_ENABLE:
++	case PIN_CONFIG_OUTPUT:
++		val &= BIT(regbit);
++		break;
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++	case PIN_CONFIG_OUTPUT_ENABLE:
++		val &= BIT(regbit);
++		val = !val;
++		break;
++	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++		if (pin >= AW9523_PINS_PER_PORT)
++			val = 0;
++		else
++			val = !FIELD_GET(AW9523_GCR_GPOMD_MASK, val);
++		break;
++	case PIN_CONFIG_DRIVE_PUSH_PULL:
++		if (pin >= AW9523_PINS_PER_PORT)
++			val = 1;
++		else
++			val = FIELD_GET(AW9523_GCR_GPOMD_MASK, val);
++		break;
++	default:
++		return -EOPNOTSUPP;
++	}
++	if (val < 1)
++		return -EINVAL;
++
++	*config = pinconf_to_config_packed(param, !!val);
++
++	return rc;
++}
++
++static int aw9523_pconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
++			    unsigned long *configs, unsigned int num_configs)
++{
++	struct aw9523 *awi = pinctrl_dev_get_drvdata(pctldev);
++	enum pin_config_param param;
++	int regbit = pin % AW9523_PINS_PER_PORT;
++	u32 arg;
++	u8 reg;
++	unsigned int mask, val;
++	int i, rc;
++
++	mutex_lock(&awi->i2c_lock);
++	for (i = 0; i < num_configs; i++) {
++		param = pinconf_to_config_param(configs[i]);
++		arg = pinconf_to_config_argument(configs[i]);
++
++		rc = aw9523_pcfg_param_to_reg(param, pin, &reg);
++		if (rc)
++			goto end;
++
++		switch (param) {
++		case PIN_CONFIG_OUTPUT:
++			/* First, enable pin output */
++			rc = regmap_update_bits(awi->regmap,
++						AW9523_REG_CONF_STATE(pin),
++						BIT(regbit), 0);
++			if (rc)
++				goto end;
++
++			/* Then, fall through to config output level */
++			fallthrough;
++		case PIN_CONFIG_OUTPUT_ENABLE:
++			arg = !arg;
++			fallthrough;
++		case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
++		case PIN_CONFIG_BIAS_PULL_DOWN:
++		case PIN_CONFIG_BIAS_PULL_UP:
++		case PIN_CONFIG_INPUT_ENABLE:
++			mask = BIT(regbit);
++			val = arg ? BIT(regbit) : 0;
++			break;
++		case PIN_CONFIG_DRIVE_OPEN_DRAIN:
++			/* Open-Drain is supported only on port 0 */
++			if (pin >= AW9523_PINS_PER_PORT) {
++				rc = -EOPNOTSUPP;
++				goto end;
++			}
++			mask = AW9523_GCR_GPOMD_MASK;
++			val = 0;
++			break;
++		case PIN_CONFIG_DRIVE_PUSH_PULL:
++			/* Port 1 is always Push-Pull */
++			if (pin >= AW9523_PINS_PER_PORT) {
++				mask = 0;
++				val = 0;
++				continue;
++			}
++			mask = AW9523_GCR_GPOMD_MASK;
++			val = AW9523_GCR_GPOMD_MASK;
++			break;
++		default:
++			rc = -EOPNOTSUPP;
++			goto end;
++		}
++
++		rc = regmap_update_bits(awi->regmap, reg, mask, val);
++		if (rc)
++			goto end;
++	}
++end:
++	mutex_unlock(&awi->i2c_lock);
++	return rc;
++}
++
++static const struct pinconf_ops aw9523_pinconf_ops = {
++	.pin_config_get = aw9523_pconf_get,
++	.pin_config_set = aw9523_pconf_set,
++	.is_generic = true,
++};
++
++/*
++ * aw9523_get_pin_direction - Get pin direction
++ * @regmap: Regmap structure
++ * @pin: gpiolib pin number
++ * @n:   pin index in port register
++ *
++ * Return: Pin direction for success or negative number for error
++ */
++static int aw9523_get_pin_direction(struct regmap *regmap, u8 pin, u8 n)
++{
++	int ret;
++
++	ret = regmap_test_bits(regmap, AW9523_REG_CONF_STATE(pin), BIT(n));
++	if (ret < 0)
++		return ret;
++
++	return ret ? GPIO_LINE_DIRECTION_IN : GPIO_LINE_DIRECTION_OUT;
++}
++
++/*
++ * aw9523_get_port_state - Get input or output state for entire port
++ * @regmap: Regmap structure
++ * @pin:    gpiolib pin number
++ * @regbit: hw pin index, used to retrieve port number
++ * @state:  returned port state
++ *
++ * Return: Zero for success or negative number for error
++ */
++static int aw9523_get_port_state(struct regmap *regmap, u8 pin,
++				   u8 regbit, unsigned int *state)
++{
++	u8 reg;
++	int dir;
++
++	dir = aw9523_get_pin_direction(regmap, pin, regbit);
++	if (dir < 0)
++		return dir;
++
++	if (dir == GPIO_LINE_DIRECTION_IN)
++		reg = AW9523_REG_IN_STATE(pin);
++	else
++		reg = AW9523_REG_OUT_STATE(pin);
++
++	return regmap_read(regmap, reg, state);
++}
++
++static int aw9523_gpio_irq_type(struct irq_data *d, unsigned int type)
++{
++	switch (type) {
++	case IRQ_TYPE_NONE:
++	case IRQ_TYPE_EDGE_BOTH:
++		return 0;
++	default:
++		return -EINVAL;
++	};
++}
++
++/*
++ * aw9523_irq_mask - Mask interrupt
++ * @d: irq data
++ *
++ * Sets which interrupt to mask in the bitmap;
++ * The interrupt will be masked when unlocking the irq bus.
++ */
++static void aw9523_irq_mask(struct irq_data *d)
++{
++	struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
++	unsigned int n = d->hwirq % AW9523_PINS_PER_PORT;
++
++	regmap_update_bits(awi->regmap,
++			   AW9523_REG_INTR_DIS(d->hwirq),
++			   BIT(n), BIT(n));
++	gpiochip_disable_irq(&awi->gpio, irqd_to_hwirq(d));
++}
++
++/*
++ * aw9523_irq_unmask - Unmask interrupt
++ * @d: irq data
++ *
++ * Sets which interrupt to unmask in the bitmap;
++ * The interrupt will be masked when unlocking the irq bus.
++ */
++static void aw9523_irq_unmask(struct irq_data *d)
++{
++	struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
++	unsigned int n = d->hwirq % AW9523_PINS_PER_PORT;
++
++	gpiochip_enable_irq(&awi->gpio, irqd_to_hwirq(d));
++	regmap_update_bits(awi->regmap,
++			   AW9523_REG_INTR_DIS(d->hwirq),
++			   BIT(n), 0);
++}
++
++static irqreturn_t aw9523_irq_thread_func(int irq, void *dev_id)
++{
++	struct aw9523 *awi = (struct aw9523 *)dev_id;
++	unsigned long n, val = 0;
++	unsigned long changed_gpio;
++	unsigned int tmp, port_pin, i, ret;
++
++	for (i = 0; i < AW9523_NUM_PORTS; i++) {
++		port_pin = i * AW9523_PINS_PER_PORT;
++		ret = regmap_read(awi->regmap,
++				  AW9523_REG_IN_STATE(port_pin),
++				  &tmp);
++		if (ret)
++			return ret;
++		val |= (u8)tmp << (i * 8);
++	}
++
++	/* Handle GPIO input release interrupt as well */
++	changed_gpio = awi->irq->cached_gpio ^ val;
++	awi->irq->cached_gpio = val;
++
++	/*
++	 * To avoid up to four *slow* i2c reads from any driver hooked
++	 * up to our interrupts, just check for the irq_find_mapping
++	 * result: if the interrupt is not mapped, then we don't want
++	 * to care about it.
++	 */
++	for_each_set_bit(n, &changed_gpio, awi->gpio.ngpio) {
++		tmp = irq_find_mapping(awi->gpio.irq.domain, n);
++		if (tmp <= 0)
++			continue;
++		handle_nested_irq(tmp);
++	}
++
++	return IRQ_HANDLED;
++}
++
++/*
++ * aw9523_irq_bus_lock - Grab lock for interrupt operation
++ * @d: irq data
++ */
++static void aw9523_irq_bus_lock(struct irq_data *d)
++{
++	struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
++
++	mutex_lock(&awi->irq->lock);
++	regcache_cache_only(awi->regmap, true);
++}
++
++/*
++ * aw9523_irq_bus_sync_unlock - Synchronize state and unlock
++ * @d: irq data
++ *
++ * Writes the interrupt mask bits (found in the bit map) to the
++ * hardware, then unlocks the bus.
++ */
++static void aw9523_irq_bus_sync_unlock(struct irq_data *d)
++{
++	struct aw9523 *awi = gpiochip_get_data(irq_data_get_irq_chip_data(d));
++
++	regcache_cache_only(awi->regmap, false);
++	regcache_sync(awi->regmap);
++	mutex_unlock(&awi->irq->lock);
++}
++
++static int aw9523_gpio_get_direction(struct gpio_chip *chip,
++				     unsigned int offset)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 regbit = offset % AW9523_PINS_PER_PORT;
++	int ret;
++
++	mutex_lock(&awi->i2c_lock);
++	ret = aw9523_get_pin_direction(awi->regmap, offset, regbit);
++	mutex_unlock(&awi->i2c_lock);
++
++	return ret;
++}
++
++static int aw9523_gpio_get(struct gpio_chip *chip, unsigned int offset)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 regbit = offset % AW9523_PINS_PER_PORT;
++	unsigned int val;
++	int ret;
++
++	mutex_lock(&awi->i2c_lock);
++	ret = aw9523_get_port_state(awi->regmap, offset, regbit, &val);
++	mutex_unlock(&awi->i2c_lock);
++	if (ret)
++		return ret;
++
++	return !!(val & BIT(regbit));
++}
++
++/**
++ * _aw9523_gpio_get_multiple - Get I/O state for an entire port
++ * @regmap: Regmap structure
++ * @pin: gpiolib pin number
++ * @regbit: hw pin index, used to retrieve port number
++ * @state: returned port I/O state
++ *
++ * Return: Zero for success or negative number for error
++ */
++static int _aw9523_gpio_get_multiple(struct aw9523 *awi, u8 regbit,
++				     u8 *state, u8 mask)
++{
++	u32 dir_in, val;
++	u8 m;
++	int ret;
++
++	/* Registers are 8-bits wide */
++	ret = regmap_read(awi->regmap, AW9523_REG_CONF_STATE(regbit), &dir_in);
++	if (ret)
++		return ret;
++	*state = 0;
++
++	m = mask & dir_in;
++	if (m) {
++		ret = regmap_read(awi->regmap, AW9523_REG_IN_STATE(regbit),
++				  &val);
++		if (ret)
++			return ret;
++		*state |= (u8)val & m;
++	}
++
++	m = mask & ~dir_in;
++	if (m) {
++		ret = regmap_read(awi->regmap, AW9523_REG_OUT_STATE(regbit),
++				  &val);
++		if (ret)
++			return ret;
++		*state |= (u8)val & m;
++	}
++
++	return 0;
++}
++
++static int aw9523_gpio_get_multiple(struct gpio_chip *chip,
++				    unsigned long *mask,
++				    unsigned long *bits)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 m, state = 0;
++	int ret;
++
++	mutex_lock(&awi->i2c_lock);
++
++	/* Port 0 (gpio 0-7) */
++	m = *mask & U8_MAX;
++	if (m) {
++		ret = _aw9523_gpio_get_multiple(awi, 0, &state, m);
++		if (ret)
++			goto out;
++	}
++	*bits = state;
++
++	/* Port 1 (gpio 8-15) */
++	m = (*mask >> 8) & U8_MAX;
++	if (m) {
++		ret = _aw9523_gpio_get_multiple(awi, AW9523_PINS_PER_PORT,
++						&state, m);
++		if (ret)
++			goto out;
++
++		*bits |= (state << 8);
++	}
++out:
++	mutex_unlock(&awi->i2c_lock);
++	return ret;
++}
++
++static void aw9523_gpio_set_multiple(struct gpio_chip *chip,
++				    unsigned long *mask,
++				    unsigned long *bits)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 mask_lo, mask_hi, bits_lo, bits_hi;
++	unsigned int reg;
++	int ret = 0;
++
++	mask_lo = *mask & U8_MAX;
++	mask_hi = (*mask >> 8) & U8_MAX;
++	mutex_lock(&awi->i2c_lock);
++	if (mask_hi) {
++		reg = AW9523_REG_OUT_STATE(AW9523_PINS_PER_PORT);
++		bits_hi = (*bits >> 8) & U8_MAX;
++
++		ret = regmap_write_bits(awi->regmap, reg, mask_hi, bits_hi);
++		if (ret) {
++			dev_warn(awi->dev, "Cannot write port1 out level\n");
++			goto out;
++		}
++	}
++	if (mask_lo) {
++		reg = AW9523_REG_OUT_STATE(0);
++		bits_lo = *bits & U8_MAX;
++		ret = regmap_write_bits(awi->regmap, reg, mask_lo, bits_lo);
++		if (ret)
++			dev_warn(awi->dev, "Cannot write port0 out level\n");
++	}
++out:
++	mutex_unlock(&awi->i2c_lock);
++}
++
++static void aw9523_gpio_set(struct gpio_chip *chip,
++			    unsigned int offset, int value)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 regbit = offset % AW9523_PINS_PER_PORT;
++
++	mutex_lock(&awi->i2c_lock);
++	regmap_update_bits(awi->regmap, AW9523_REG_OUT_STATE(offset),
++			   BIT(regbit), value ? BIT(regbit) : 0);
++	mutex_unlock(&awi->i2c_lock);
++}
++
++
++static int aw9523_direction_input(struct gpio_chip *chip, unsigned int offset)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 regbit = offset % AW9523_PINS_PER_PORT;
++	int ret;
++
++	mutex_lock(&awi->i2c_lock);
++	ret = regmap_update_bits(awi->regmap, AW9523_REG_CONF_STATE(offset),
++				 BIT(regbit), BIT(regbit));
++	mutex_unlock(&awi->i2c_lock);
++
++	return ret;
++}
++
++static int aw9523_direction_output(struct gpio_chip *chip,
++				   unsigned int offset, int value)
++{
++	struct aw9523 *awi = gpiochip_get_data(chip);
++	u8 regbit = offset % AW9523_PINS_PER_PORT;
++	int ret;
++
++	mutex_lock(&awi->i2c_lock);
++	ret = regmap_update_bits(awi->regmap, AW9523_REG_OUT_STATE(offset),
++				 BIT(regbit), value ? BIT(regbit) : 0);
++	if (ret)
++		goto end;
++
++	ret = regmap_update_bits(awi->regmap, AW9523_REG_CONF_STATE(offset),
++				 BIT(regbit), 0);
++end:
++	mutex_unlock(&awi->i2c_lock);
++	return ret;
++}
++
++static int aw9523_drive_reset_gpio(struct aw9523 *awi)
++{
++	unsigned int chip_id;
++	int ret;
++
++	/*
++	 * If the chip is already configured for any reason, then we
++	 * will probably succeed in sending the soft reset signal to
++	 * the hardware through I2C: this operation takes less time
++	 * compared to a full HW reset and it gives the same results.
++	 */
++	ret = regmap_write(awi->regmap, AW9523_REG_SOFT_RESET, 0);
++	if (ret == 0)
++		goto done;
++
++	dev_dbg(awi->dev, "Cannot execute soft reset: trying hard reset\n");
++	ret = gpiod_direction_output(awi->reset_gpio, 0);
++	if (ret)
++		return ret;
++
++	/* The reset pulse has to be longer than 20uS due to deglitch */
++	usleep_range(AW9523_HW_RESET_US, AW9523_HW_RESET_US + 1);
++
++	ret = gpiod_direction_output(awi->reset_gpio, 1);
++	if (ret)
++		return ret;
++done:
++	/* The HW needs at least 1uS to reliably recover after reset */
++	usleep_range(AW9523_HW_RESET_RECOVERY_US,
++		     AW9523_HW_RESET_RECOVERY_US + 1);
++
++	/* Check the ChipID */
++	ret = regmap_read(awi->regmap, AW9523_REG_CHIPID, &chip_id);
++	if (ret) {
++		dev_err(awi->dev, "Cannot read Chip ID: %d\n", ret);
++		return ret;
++	}
++	if (chip_id != AW9523_VAL_EXPECTED_CHIPID) {
++		dev_err(awi->dev, "Bad ChipID; read 0x%x, expected 0x%x\n",
++			chip_id, AW9523_VAL_EXPECTED_CHIPID);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++static int aw9523_hw_reset(struct aw9523 *awi)
++{
++	int ret, max_retries = 2;
++
++	/* Sometimes the chip needs more than one reset cycle */
++	do {
++		ret = aw9523_drive_reset_gpio(awi);
++		if (ret == 0)
++			break;
++		max_retries--;
++	} while (max_retries);
++
++	return ret;
++}
++
++static int aw9523_init_gpiochip(struct aw9523 *awi, unsigned int npins)
++{
++	struct device *dev = awi->dev;
++	struct gpio_chip *gc = &awi->gpio;
++
++	gc->label = devm_kstrdup(dev, dev_name(dev), GFP_KERNEL);
++	if (!gc->label)
++		return -ENOMEM;
++
++	gc->base = -1;
++	gc->ngpio = npins;
++	gc->get_direction = aw9523_gpio_get_direction;
++	gc->direction_input = aw9523_direction_input;
++	gc->direction_output = aw9523_direction_output;
++	gc->get = aw9523_gpio_get;
++	gc->get_multiple = aw9523_gpio_get_multiple;
++	gc->set = aw9523_gpio_set;
++	gc->set_multiple = aw9523_gpio_set_multiple;
++	gc->set_config = gpiochip_generic_config;
++	gc->parent = dev;
++	gc->owner = THIS_MODULE;
++	gc->can_sleep = false;
++
++	return 0;
++}
++
++static const struct irq_chip aw9523_irq_chip = {
++	.name = "aw9523",
++	.irq_mask = aw9523_irq_mask,
++	.irq_unmask = aw9523_irq_unmask,
++	.irq_bus_lock = aw9523_irq_bus_lock,
++	.irq_bus_sync_unlock = aw9523_irq_bus_sync_unlock,
++	.irq_set_type = aw9523_gpio_irq_type,
++	.flags = IRQCHIP_IMMUTABLE,
++        GPIOCHIP_IRQ_RESOURCE_HELPERS,
++};
++
++static int aw9523_init_irq(struct aw9523 *awi, int irq)
++{
++	struct device *dev = awi->dev;
++	struct gpio_irq_chip *girq;
++	struct irq_chip *irqchip;
++	int ret;
++
++	if (!device_property_read_bool(dev, "interrupt-controller"))
++		return 0;
++
++	irqchip = devm_kzalloc(dev, sizeof(*irqchip), GFP_KERNEL);
++	if (!irqchip)
++		return -ENOMEM;
++
++	awi->irq = devm_kzalloc(dev, sizeof(*awi->irq), GFP_KERNEL);
++	if (!awi->irq)
++		return -ENOMEM;
++
++	awi->irq->irqchip = irqchip;
++	mutex_init(&awi->irq->lock);
++
++	ret = devm_request_threaded_irq(dev, irq, NULL, aw9523_irq_thread_func,
++					IRQF_ONESHOT, dev_name(dev), awi);
++	if (ret) {
++		dev_err(dev, "Failed to request irq %d\n", irq);
++		return ret;
++	}
++
++	girq = &awi->gpio.irq;
++	gpio_irq_chip_set_chip(girq, &aw9523_irq_chip);
++	girq->parent_handler = NULL;
++	girq->num_parents = 0;
++	girq->parents = NULL;
++	girq->default_type = IRQ_TYPE_EDGE_BOTH;
++	girq->handler = handle_simple_irq;
++	girq->threaded = true;
++
++	return 0;
++}
++
++static bool aw9523_is_reg_hole(unsigned int reg)
++{
++	return (reg > AW9523_REG_PORT_MODE(AW9523_PINS_PER_PORT) &&
++		reg < AW9523_REG_SOFT_RESET) ||
++	       (reg > AW9523_REG_INTR_DIS(AW9523_PINS_PER_PORT) &&
++		reg < AW9523_REG_CHIPID);
++}
++
++static bool aw9523_readable_reg(struct device *dev, unsigned int reg)
++{
++	/* All available registers (minus holes) can be read */
++	return !aw9523_is_reg_hole(reg);
++}
++
++static bool aw9523_volatile_reg(struct device *dev, unsigned int reg)
++{
++	return aw9523_is_reg_hole(reg) ||
++	       reg == AW9523_REG_IN_STATE(0) ||
++	       reg == AW9523_REG_IN_STATE(AW9523_PINS_PER_PORT) ||
++	       reg == AW9523_REG_CHIPID ||
++	       reg == AW9523_REG_SOFT_RESET;
++}
++
++static bool aw9523_writeable_reg(struct device *dev, unsigned int reg)
++{
++	return !aw9523_is_reg_hole(reg) && reg != AW9523_REG_CHIPID;
++}
++
++static bool aw9523_precious_reg(struct device *dev, unsigned int reg)
++{
++	/* Reading AW9523_REG_IN_STATE clears interrupt status */
++	return aw9523_is_reg_hole(reg) ||
++	       reg == AW9523_REG_IN_STATE(0) ||
++	       reg == AW9523_REG_IN_STATE(AW9523_PINS_PER_PORT);
++}
++
++static const struct regmap_config aw9523_regmap = {
++	.reg_bits = 8,
++	.val_bits = 8,
++	.reg_stride = 1,
++
++	.precious_reg = aw9523_precious_reg,
++	.readable_reg = aw9523_readable_reg,
++	.volatile_reg = aw9523_volatile_reg,
++	.writeable_reg = aw9523_writeable_reg,
++
++	.cache_type = REGCACHE_FLAT,
++	.disable_locking = true,
++
++	.num_reg_defaults_raw = AW9523_REG_SOFT_RESET,
++};
++
++static int aw9523_hw_init(struct aw9523 *awi)
++{
++	u8 p1_pin = AW9523_PINS_PER_PORT;
++	unsigned int val;
++	int ret;
++
++	/* No register caching during initialization */
++	regcache_cache_bypass(awi->regmap, true);
++
++	/* Bring up the chip */
++	ret = aw9523_hw_reset(awi);
++	if (ret) {
++		dev_err(awi->dev, "HW Reset failed: %d\n", ret);
++		return ret;
++	}
++
++	/*
++	 * This is the expected chip and it is running: it's time to
++	 * set a safe default configuration in case the user doesn't
++	 * configure (all of the available) pins in this chip.
++	 * P.S.: The writes order doesn't matter.
++	 */
++
++	/* Set all pins as GPIO */
++	ret = regmap_write(awi->regmap, AW9523_REG_PORT_MODE(0), U8_MAX);
++	if (ret)
++		return ret;
++	ret = regmap_write(awi->regmap, AW9523_REG_PORT_MODE(p1_pin), U8_MAX);
++	if (ret)
++		return ret;
++
++	/* Set Open-Drain mode on Port 0 (Port 1 is always P-P) */
++	ret = regmap_write(awi->regmap, AW9523_REG_GCR, 0);
++	if (ret)
++		return ret;
++
++	/* Set all pins as inputs */
++	ret = regmap_write(awi->regmap, AW9523_REG_CONF_STATE(0), U8_MAX);
++	if (ret)
++		return ret;
++	ret = regmap_write(awi->regmap, AW9523_REG_CONF_STATE(p1_pin), U8_MAX);
++	if (ret)
++		return ret;
++
++	/* Disable all interrupts to avoid unreasoned wakeups */
++	ret = regmap_write(awi->regmap, AW9523_REG_INTR_DIS(0), U8_MAX);
++	if (ret)
++		return ret;
++	ret = regmap_write(awi->regmap, AW9523_REG_INTR_DIS(p1_pin), U8_MAX);
++	if (ret)
++		return ret;
++
++	/* Clear setup-generated interrupts by performing a port state read */
++	ret = aw9523_get_port_state(awi->regmap, 0, 0, &val);
++	if (ret)
++		return ret;
++	ret = aw9523_get_port_state(awi->regmap, p1_pin, 0, &val);
++	if (ret)
++		return ret;
++
++	/* Everything went fine: activate and reinitialize register cache */
++	regcache_cache_bypass(awi->regmap, false);
++	return regmap_reinit_cache(awi->regmap, &aw9523_regmap);
++}
++
++static int aw9523_probe(struct i2c_client *client)
++{
++	struct device *dev = &client->dev;
++	struct pinctrl_desc *pdesc;
++	struct aw9523 *awi;
++	int ret;
++
++	awi = devm_kzalloc(dev, sizeof(*awi), GFP_KERNEL);
++	if (!awi)
++		return -ENOMEM;
++
++	i2c_set_clientdata(client, awi);
++
++	awi->dev = dev;
++	awi->reset_gpio = devm_gpiod_get(dev, "reset", GPIOD_OUT_HIGH);
++	if (IS_ERR(awi->reset_gpio))
++		return PTR_ERR(awi->reset_gpio);
++	gpiod_set_consumer_name(awi->reset_gpio, "aw9523 reset");
++
++	awi->regmap = devm_regmap_init_i2c(client, &aw9523_regmap);
++	if (IS_ERR(awi->regmap))
++		return PTR_ERR(awi->regmap);
++
++	awi->vio_vreg = devm_regulator_get_optional(dev, "vio");
++	if (IS_ERR(awi->vio_vreg)) {
++		if (PTR_ERR(awi->vio_vreg) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
++		awi->vio_vreg = NULL;
++	} else {
++		ret = regulator_enable(awi->vio_vreg);
++		if (ret)
++			return ret;
++	}
++
++	mutex_init(&awi->i2c_lock);
++	lockdep_set_subclass(&awi->i2c_lock,
++			     i2c_adapter_depth(client->adapter));
++
++	pdesc = devm_kzalloc(dev, sizeof(*pdesc), GFP_KERNEL);
++	if (!pdesc)
++		return -ENOMEM;
++
++	ret = aw9523_hw_init(awi);
++	if (ret)
++		goto err_disable_vregs;
++
++	pdesc->name = dev_name(dev);
++	pdesc->owner = THIS_MODULE;
++	pdesc->pctlops = &aw9523_pinctrl_ops;
++	pdesc->pmxops  = &aw9523_pinmux_ops;
++	pdesc->confops = &aw9523_pinconf_ops;
++	pdesc->pins = aw9523_pins;
++	pdesc->npins = ARRAY_SIZE(aw9523_pins);
++
++	ret = aw9523_init_gpiochip(awi, pdesc->npins);
++	if (ret)
++		goto err_disable_vregs;
++
++	if (client->irq) {
++		ret = aw9523_init_irq(awi, client->irq);
++		if (ret)
++			goto err_disable_vregs;
++	}
++
++	awi->pctl = devm_pinctrl_register(dev, pdesc, awi);
++	if (IS_ERR(awi->pctl)) {
++		ret = PTR_ERR(awi->pctl);
++		dev_err(dev, "Cannot register pinctrl: %d", ret);
++		goto err_disable_vregs;
++	}
++
++	ret = devm_gpiochip_add_data(dev, &awi->gpio, awi);
++	if (ret)
++		goto err_disable_vregs;
++
++	return ret;
++
++err_disable_vregs:
++	if (awi->vio_vreg)
++		regulator_disable(awi->vio_vreg);
++	mutex_destroy(&awi->i2c_lock);
++	return ret;
++}
++
++static void aw9523_remove(struct i2c_client *client)
++{
++	struct aw9523 *awi = i2c_get_clientdata(client);
++	int ret;
++
++	if (!awi)
++		return;
++
++	/*
++	 * If the chip VIO is connected to a regulator that we can turn
++	 * off, life is easy... otherwise, reinitialize the chip and
++	 * set the pins to hardware defaults before removing the driver
++	 * to leave it in a clean, safe and predictable state.
++	 */
++	if (awi->vio_vreg) {
++		regulator_disable(awi->vio_vreg);
++	} else {
++		mutex_lock(&awi->i2c_lock);
++		ret = aw9523_hw_init(awi);
++		mutex_unlock(&awi->i2c_lock);
++		if (ret)
++			return;
++	}
++
++	mutex_destroy(&awi->i2c_lock);
++}
++
++static const struct i2c_device_id aw9523_i2c_id_table[] = {
++	{ "aw9523_i2c", 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, aw9523_i2c_id_table);
++
++static const struct of_device_id of_aw9523_i2c_match[] = {
++	{ .compatible = "awinic,aw9523-pinctrl", },
++};
++MODULE_DEVICE_TABLE(of, of_aw9523_i2c_match);
++
++static struct i2c_driver aw9523_driver = {
++	.driver = {
++		.name = "aw9523-pinctrl",
++		.of_match_table = of_aw9523_i2c_match,
++	},
++	.probe = aw9523_probe,
++	.remove = aw9523_remove,
++	.id_table = aw9523_i2c_id_table,
++};
++module_i2c_driver(aw9523_driver);
++
++MODULE_DESCRIPTION("Awinic AW9523 I2C GPIO Expander driver");
++MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>");
++MODULE_LICENSE("GPL v2");
++MODULE_ALIAS("platform:aw9523");
+
+---
+base-commit: 6613476e225e090cc9aad49be7fa504e290dd33d
+change-id: 20240229-awinic-aw9523-9cf1a8dc8d75
+
+Best regards,
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Linus Walleij <linus.walleij@linaro.org>
+
 
