@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-3936-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3937-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73D5B86C584
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:38:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1BD386C58B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A5F831C21AFF
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 09:38:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FA2E1C23C1B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 09:39:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B2B160912;
-	Thu, 29 Feb 2024 09:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 47869608FD;
+	Thu, 29 Feb 2024 09:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EYYRkh6Y"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sMAZZZV9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BD176087F
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:38:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11F736086F
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:39:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199510; cv=none; b=rrQlKxbGbjc/JuGDDT/r5mLCRARtP4MMf/HSDvc8i9Oh7bsZkEwPP9cwND0BIpTDKhlRyNGDRUs3JjQPtyVGFPG4KOs/Zvqlu8+rA8+BVDtXxfhJl4TWaKjU2rcKfaESa1pCiXOEqWpPpaZRfghX/3Upopt3hz2sWg+RdcIqLkY=
+	t=1709199547; cv=none; b=GtGiA4JCMwXnfTu+yk+amhU/kgq5K6Z8GmwUAuchwkRHkDY697dJYugWARK4ysfd5xIY7dtKBjKRfVtc8926KaTtvrpMCg8SOpYJitLp2upT16QX7LGtNYYrQSQu8DYwLL/aGpe8D/Mx/DozR5gWRXHxIcMRrX9AqhzXAL7RYN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199510; c=relaxed/simple;
-	bh=ji0evMeodU7bNiEaX0y74fD8RtxAhbXOV6mH0WkgcmY=;
+	s=arc-20240116; t=1709199547; c=relaxed/simple;
+	bh=Id/0hLb1OoVGa9urk2OII9ZHzTzUCiC9fqBjkpo4oTk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=RwE/jTB7nSKa0t1RkEpJNpywsnxjCdQuim+0bwn/UQq8hJP5by4g9S4H6Mt/hYQs33b3pp45iQNVjyI6Vuque7N7QFnuFY7+VdAyOIGshlUPT2jMaLzZqhRulbuq933ouyx0+rmEkK+HcVKHvoQVZot2zoc4kjxnGVGPN/2Dt30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=EYYRkh6Y; arc=none smtp.client-ip=209.85.128.174
+	 To:Cc:Content-Type; b=bgZFk+FxT62mSMasMKt3hVf5OhzgWJpRqXkNwM8uvMJieZ8c4Z0cAOzOjyRkyBgs+bH4OyQ1fUPWRSiqY1IWhL3/SUA5VWFKNsu4w3oA6B1DryRQeaq12tma1pkX1NBsUvsxXyYkcDH6OJ2zgmDQBhTwx1ajBLde7uEEmaus9gQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=sMAZZZV9; arc=none smtp.client-ip=209.85.219.181
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-608e0b87594so7043727b3.1
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 01:38:28 -0800 (PST)
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dbed179f0faso1312115276.1
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 01:39:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709199507; x=1709804307; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709199543; x=1709804343; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ji0evMeodU7bNiEaX0y74fD8RtxAhbXOV6mH0WkgcmY=;
-        b=EYYRkh6YFvJprq0PxQoOtB2ny6Rb3DoEOA787lqXdLP2zlcm13be9SdFq4UtszcBly
-         VJi6Ni3n5LYKslcVDuOw8QK/hH633HvsuR1XIPzjyesrgSROG77Y4g4C2E9obsxc4xo+
-         GG2uVf3A0yMnMLWUDSa5OFJ38TAG64lvcQC1VM8rPO06nTCtF/E7QT3T9OujgNY/4UyR
-         bTuLDZnq8E3StaGO4JLlaW+mfmzY3RAhySqacYmPJcOe74eX8yhBi7fx+z0oJOx6ijj+
-         8sTrXAKh8HXKIfO00R4gzf5nd4CUxNY+9ax4loYf+7iRrfardiKx7TqOl19krmNSJPFw
-         6zjw==
+        bh=Id/0hLb1OoVGa9urk2OII9ZHzTzUCiC9fqBjkpo4oTk=;
+        b=sMAZZZV90iPYI4/G9PGJcTNCCMvv5Qd5Fcc8Oegz654V2iHCOAvmzhvHLmVmUHUM1C
+         jjyQ0MOeoX/csV6JLIxyt85OZa9kVEizTi1jw9NblPqmOlxcbEwX30IeRfY6J9IFIawA
+         AbV+bcXUiJD9z8nn6J/VpEfUMBanERNJjGQ+YeH1sLYoKet6NPi6pEL03YUtgNeyyfos
+         m780tFibJOfT+Da2Z5wNZlCQCPhUToDXgig+2tqJvzvOfIqUghowkXm30w6UdRI86dkG
+         vDpGNc2Tn1wtjnEYAkQgWkCeMlYgzJ7BVSUzlujOb3R1r1QQBaVdhvSenerGvD/usYQj
+         a8DQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199507; x=1709804307;
+        d=1e100.net; s=20230601; t=1709199543; x=1709804343;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ji0evMeodU7bNiEaX0y74fD8RtxAhbXOV6mH0WkgcmY=;
-        b=Jltg8Gqqgdy3W63ilJlkP6CEEBQeyzxKJq7jPXEo00U6WEGONGw3ErNjPF1JLQLAvj
-         TsBig+430gr0fi8UqATpelwV596VQkXaoE9uCHu7LhQg+nhcfq6Zj21aFOwKf77F+j0a
-         XdDarREt5EhpEnDkVR4npEmbFluC/4VOhEywM+Z9zZXTQG6OBulf7YeD8rHkSKJIVSzu
-         Xu/ZHkm6oOEWAp7p9L3BVMLqocer4lj6kecXgWrzXCUShrUfiL9sr4Q6d7x63XmB6N1i
-         CZvcvmyT5F+RcLjIkpb7+/goqomSSMYiBRutVXZWX7IJNiwC883oH5/+8+bZaEBW73r3
-         EKIw==
-X-Forwarded-Encrypted: i=1; AJvYcCXcxFmghdmC8wAm9b7c53j0DS7KE6hBhI7vc1z7QkNYlGSPC/9SsPLPgQVKe2qdOVJzEF1tElL+HkyGw0LsS2yrIt6GlZv8r+6lGg==
-X-Gm-Message-State: AOJu0YxrRLxF4KoZ3ufmzXvhi7m1VgoIyxfk0OxcKqEp8ko87Ji7DkTE
-	4TrmzS6q1DDJUdyvWfZz91ABAvgW5KPf4gPLW1G10Vs+wpNttf+2Blv6m+WkY+yJrIjGiiQ+FHY
-	LX+sB5SBo/PPpt2MB8IbG6Hmvo7wfSiD/BvC8fQ==
-X-Google-Smtp-Source: AGHT+IHpUTC0tD4+eeNVpg7JVN9p3Nit+u2YhFzzaD2mD4WuXW+hkiH/3TUn0JnN4dt3kNq1EBKU3Os1w/KcVFMeNHw=
-X-Received: by 2002:a5b:bc2:0:b0:dcd:26a8:7f84 with SMTP id
- c2-20020a5b0bc2000000b00dcd26a87f84mr1514094ybr.47.1709199507561; Thu, 29 Feb
- 2024 01:38:27 -0800 (PST)
+        bh=Id/0hLb1OoVGa9urk2OII9ZHzTzUCiC9fqBjkpo4oTk=;
+        b=Zy6rk/23q5N2xeTT2EfxlNKdB9YWP74lxrcfu2njTj9ZREABomirUsUcSJRBuuSZkf
+         MhwZxl18cBd28T6dJ0QuzouSmqAkqrZ0rM7JR+fozDQgJQF6WfgPnWc9AfBJkDDjEdnJ
+         UH8tzm+L2cE0ZqqlOp0xmBIe3bqEC5dTwCCL111QCynzTntIpHlAeWd3oqq3iU7Xw88Y
+         w+q8BcwoiIDkFh+HVB1Hd7rEPU6phXxiNmScpguWc0Pe2NYQAiBXvtzV2scFcRaG7QAN
+         Axbl+8Y9DnVFVygHJcTHzOYyEV1EuFlVBT5cG2xOLjvKHzK/sjVOgFZRNAdfx+q635Cn
+         mNfQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVn89IDfn5qGEzXdDJlOapxtF43Ex5g1KkJlTpUtgSmnNSdF3vx4Z8yFIiDFdsR2Kg/UzmpVe7R0BUApz+DlZpscKr7qz1IscgRoA==
+X-Gm-Message-State: AOJu0Ywr+DeYtoLrxDOOLKc5a5C9i/0bFxyz8f5wJxxbQWxef2dKVuM3
+	BRFoWtOsdGtasJkyj+15mIO2nyykxWnmMgQsAQtaM4SXKJMYtUnd7DvdTsCh8gHO58g65053ARp
+	Jl6miFRfeY3dleB/y1FWdugGzZIZf+X55hxTBgg==
+X-Google-Smtp-Source: AGHT+IFptHANPFZRp7pQwEznjk6ScLV2D3Oe6Z2gcGFVq3bPrlRpc7Zj2hsVukPM6YMB6JUz8/NILyAx36hRTe8VGnM=
+X-Received: by 2002:a25:8308:0:b0:dc2:2d55:4179 with SMTP id
+ s8-20020a258308000000b00dc22d554179mr861584ybk.17.1709199543032; Thu, 29 Feb
+ 2024 01:39:03 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-24-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-24-3ba757474006@bootlin.com>
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-25-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-25-3ba757474006@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:38:16 +0100
-Message-ID: <CACRpkdZpnHTNj7KUxk6WfSMzMsGk=c6Jzu=zy7UXpFjj_B5vMA@mail.gmail.com>
-Subject: Re: [PATCH v2 24/30] gpio: nomadik: support mobileye,eyeq5-gpio
+Date: Thu, 29 Feb 2024 10:38:52 +0100
+Message-ID: <CACRpkdZE-hZGPg-1cnFZ_amYT6t3p=fOpvEOcsaZY3E-Y7_Weg@mail.gmail.com>
+Subject: Re: [PATCH v2 25/30] gpio: nomadik: grab optional reset control and
+ deassert it at probe
 To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -92,20 +93,25 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
 lin.com> wrote:
 
-> We create a custom compatible for the STA2X11 IP block as integrated
-> into the Mobileye EyeQ5 platform. Its wake and alternate functions have
-> been disabled, we want to avoid touching those registers.
+> Fetch a reference to the optional shared reset control and deassert it
+> if it exists.
 >
-> We both do: (1) early return in functions that do not support the
-> platform, but with warnings, and (2) avoid calling those functions in
-> the first place.
+> Optional because not all platforms that use this driver have a reset
+> attached to the reset block. Shared because some platforms that use the
+> reset (at least Mobileye EyeQ5) share the reset across banks.
 >
-> We ensure that pinctrl-nomadik is not used with this STA2X11 variant.
+> Do not keep a reference to the reset control as it is not needed
+> afterwards; the driver does not handle suspend, does not use runtime
+> PM, does not register a remove callback and does not support unbinding
+> from sysfs (made explicit with suppress_bind_attrs).
 >
-> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> The operation is done in nmk_gpio_populate_chip(). This function is
+> called by either gpio-nomadik or pinctrl-nomadik, whoever comes first.
+> This is here for historic reasons and could probably be removed now; it
+> seems gpio-ranges enforces the ordering to be pinctrl-first. It is not
+> the topic of the present patch however.
+>
 > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
-
-Just as I wanted it.
 
 Patch applied!
 
