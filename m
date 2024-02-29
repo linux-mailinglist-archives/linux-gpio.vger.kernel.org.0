@@ -1,109 +1,110 @@
-Return-Path: <linux-gpio+bounces-3974-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3976-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A4C0886CC03
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 15:50:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id AE4FD86CC1D
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 15:53:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5C4F71F242ED
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:50:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 661FE1F234CB
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:53:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2516137774;
-	Thu, 29 Feb 2024 14:49:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A46FF1384A4;
+	Thu, 29 Feb 2024 14:53:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2D4aNTZ"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEpfA6qV"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 589AC137762;
-	Thu, 29 Feb 2024 14:49:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9ED613775A;
+	Thu, 29 Feb 2024 14:53:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709218165; cv=none; b=kAPQ1LpGAeZgk4HJGcGGQlBpkcoHglP7q4GauJOcCvi6PN/oWK8KEqnzPDX3R+i1K/eHUm0LlD1JcInn5Ps4nXWWA5aq21BLTE/JD6Lk/4sFfhiewMp0p8OiADkNTlCoFb55PSUrtUGDA/zNi0E+e5OPpTVsBgwojBpzo1+UMcA=
+	t=1709218392; cv=none; b=bsvBThLncYjxyreOq+g5AHnlmsnp9IX7DUJ8cD0RroWp/YG3hi8GJVwbauU+sJ6WklmzKRDqFHc+hNyTKswFJ1BauZSFZIHHMlhYD+Hvp/B1VB+0NqJz40E318OhqvPwo3fnP9uqSdVr26RUV3KzPS4NZ9Ttukr/Xni0BFh2r8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709218165; c=relaxed/simple;
-	bh=o8tpaIa/V7fni6pjjD3Yr8h+WCEMSgwXfLuroPO4B5U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HIYlt8DmMX+q6xZ5ANEWm30msmqH+FZmcD2skONvGT+xJK1cxHv7lQFXlkLuIi7/B+FKCMbe92dJHCXx1GGwPheaj3KtglximeMgYE4IWyezfZau7CKWP1ME0XPv5hEmv1BDJ6VnmRhnLCi+UWc3tSAFoFrLHRFbMLukez/kPTw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2D4aNTZ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1901EC433C7;
-	Thu, 29 Feb 2024 14:49:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709218163;
-	bh=o8tpaIa/V7fni6pjjD3Yr8h+WCEMSgwXfLuroPO4B5U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=E2D4aNTZm3hkOsgW8fCBdET1bIN8LHgIIrqPjtKS55WG8IfZmrpXr+jWMwvTlutae
-	 iZybrQ2d6y+4pkZrWqHRQDzpl9I8AvdOFJfi43QjtxUljzIoEQqhes78dsu9+7J36z
-	 YOf/mhe3Jot73QmV71QSX5wd1A+VTXf6CbWc2RS11rbz82fCrkM1ZmWOnGDUmew9mi
-	 7STxamXOCFLQId2SaA3qIJDO5BiOT8vP54x38XGfmTeFheX0oUmVh5tFxjD6TWCDPt
-	 lCAioh9AqY0lNGKLFJ2VZrzlKSFZ9Qk9/Koj9CEOGONoZ5f+omQMQVp8Ks6Rs/XDnQ
-	 9Jr/iGvDdf+/w==
-Date: Thu, 29 Feb 2024 14:49:16 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Esteban Blanc <eblanc@baylibre.com>
-Cc: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org,
-	m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
-	jpanis@baylibre.com, devicetree@vger.kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, lgirdwood@gmail.com,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org
-Subject: Re: [PATCH v2 12/14] regulator: tps6594-regulator: Add TI TPS65224
- PMIC regulators
-Message-ID: <6fa04f9a-2904-4955-a219-d4962b8fe41b@sirena.org.uk>
-References: <20240223093701.66034-1-bhargav.r@ltts.com>
- <20240223093701.66034-13-bhargav.r@ltts.com>
- <CZHN4S2QW6MY.KKKHHRPPY4ZG@baylibre.com>
+	s=arc-20240116; t=1709218392; c=relaxed/simple;
+	bh=Ib6eTByt4PRivyNulwEfDuCdZsACS0AUVpPOMm+fhJY=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FKFunRbSpuwc2/3zXDH3VwJOzh9yh8F4DUK2h/QLLQntBJ1A0Q7UfGPyW2hvhZNmBCFJMqYXkgUI1mG0NhDnAR0lR/+1gx9rMN+X46tKScU33hjowGTlfz6JvmQnuV7oA/bhIH8HdVf+0aUXoSM4ULPIRu48phu8po3nDiM8B0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEpfA6qV; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709218391; x=1740754391;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=Ib6eTByt4PRivyNulwEfDuCdZsACS0AUVpPOMm+fhJY=;
+  b=gEpfA6qVfMffPkeE4FdzBAo4z0HybIgIiGsKlO2ja4zuUR8Z4X6TO49u
+   xgb5Gi1iSMXYeuiNh/dYTTTKjLv2yaS6V4h4Eb3Hj9fy+vEuljdv4o6Zj
+   c6VYoLpb5LRpl97ZA7Vmh4oyDsQ6uPmn0ddvjLkHqgaDNtTnvnrf44Wu2
+   uJG2vQfUGzXOjHTSbS4BMYIgd71iwrZkXWpzMc+q9v88wmNVSYmyv9sMi
+   jc58inNn2xTPZEcOgAi6qcQC1cIes4HRImqAJa03gSC0BE7tv3Sa/Heb0
+   MMO0Kv70zRvuPDAkIKxqnfLslvjzrK5pRBVYqODPd1onprEO9M0YeKK4U
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14326503"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="14326503"
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:53:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937036061"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="937036061"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga001.fm.intel.com with ESMTP; 29 Feb 2024 06:53:06 -0800
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+	id D3F3923A; Thu, 29 Feb 2024 16:53:04 +0200 (EET)
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Subject: [PATCH v2 0/2] gpiolib: Align prototypes of *gpio_count() APIs
+Date: Thu, 29 Feb 2024 16:51:37 +0200
+Message-ID: <20240229145303.3801332-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="C3RoV1h1koPrEpV2"
-Content-Disposition: inline
-In-Reply-To: <CZHN4S2QW6MY.KKKHHRPPY4ZG@baylibre.com>
-X-Cookie: Marriage is the sole cause of divorce.
+Content-Transfer-Encoding: 8bit
 
+Two out of three GPIO count APIs take device pointer. OF case clearly
+does not need it as it immediately switches to device node inside, and
+ACPI abstracts that to struct acpi_device pointer. Unify all these by
+making them to take struct fwnode_handle pointer. This, in particular,
+will allow to create fwnode_gpio_count() API if needed. The need of that
+was discussed here [1].
 
---C3RoV1h1koPrEpV2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Note, no functional changes intended.
 
-On Thu, Feb 29, 2024 at 03:42:50PM +0100, Esteban Blanc wrote:
-> On Fri Feb 23, 2024 at 10:36 AM CET, Bhargav Raviprakash wrote:
+Link: https://lore.kernel.org/r/2ad735ed-963c-4e75-b83e-687ea2c0aef5@alliedtelesis.co.nz [1]
 
-> > +	/* Number of interrupts supported by each voltage source */
-> > +	interrupt_cnt = (tps->chip_id == TPS6594) ?
-> > +			 ARRAY_SIZE(tps6594_buck1_irq_types) :
-> > +			 ARRAY_SIZE(tps65224_buck1_irq_types);
+In v2:
+- fixed typo (Chris)
+- added tag (Linus)
 
-> The comment is not adding anything, the name is clear and ARRAY_SIZE is
-> quite explicit.
+Andy Shevchenko (2):
+  gpiolib-of: Make of_gpio_get_count() take firmware node as a parameter
+  gpiolib-acpi: Make acpi_gpio_count() take firmware node as a parameter
 
-Also please don't abuse the ternery operator like this, write normal
-conditionals or for a case like this where we may get more options in
-future use switch statements.
+ drivers/gpio/gpiolib-acpi.c | 13 ++++++-------
+ drivers/gpio/gpiolib-acpi.h |  4 ++--
+ drivers/gpio/gpiolib-of.c   | 13 ++++++-------
+ drivers/gpio/gpiolib-of.h   |  5 +++--
+ drivers/gpio/gpiolib.c      |  4 ++--
+ 5 files changed, 19 insertions(+), 20 deletions(-)
 
---C3RoV1h1koPrEpV2
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+2.43.0.rc1.1.gbec44491f096
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXgmWwACgkQJNaLcl1U
-h9A7fQf+P2ZRUxZ1OFuQHOH8xAkdPC++bb/AEXvafquTsQ66dbQL5g71d50MIspZ
-IX+GgMjYnGvg2778K7NWelmOo8+rFfrTcICsI2FnZUHBqUj6kXJoNHXbX6Tojwj6
-D+cbrt3TaG4fcH1T74uAvm4KKx3eY/MTFcQj7z1yx53Hw1YkaWKtI0RgTlw1H7Xw
-32T/R5x/YQRm9S0iY4on0N/uT8h9fx7uUiu4F0sRw3nNpF/A6TlFA+kpLomxcZPm
-zf76GFUrrhZx9l/04KHjyHL9JDli6hIJV59GKFCKlFLT+yW3aAxnOteoKXjJmezk
-yx4zUcarBxQbkemGxR9n6H/h44ALBg==
-=FOEF
------END PGP SIGNATURE-----
-
---C3RoV1h1koPrEpV2--
 
