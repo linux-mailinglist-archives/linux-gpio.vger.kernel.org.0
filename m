@@ -1,172 +1,188 @@
-Return-Path: <linux-gpio+bounces-3977-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3978-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F65A86CC21
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 15:53:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D5F086CC3F
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 15:59:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2A2C7286B43
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:53:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9D532B22247
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:59:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4337513A88F;
-	Thu, 29 Feb 2024 14:53:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CAAC137774;
+	Thu, 29 Feb 2024 14:59:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PomS4Fgj"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kqcFT4Bq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68A7D137772;
-	Thu, 29 Feb 2024 14:53:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3314113775A;
+	Thu, 29 Feb 2024 14:59:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709218393; cv=none; b=Ckf+9XxtDjHsv579QFbdJXMHGqaavQKM5cPHw7O7qmVEtcNQbFtr7NNanMkQw0Ovxt+fqzUSgaAE1FiFQ/itDJ87Ai/dzu+Agj0KQ2CAB+kMXYHKTwztefO0GN+Oq4wn2oslc1ol8PPXJWx57Q5mS/7wGDXpFxIbjYWoLBp9HvQ=
+	t=1709218762; cv=none; b=BprcXcZvMCf3VJB1zmnmGl6Q2an2ekIMTARVEQrmVrJ0RSjrCpHg7nCa9WGDC76MZvnDx2n/V22dtaN0tvh24fYrUiCIv6Prb7lWtoZY9MS0vdKHDJTYVDsyuY1xxf8KHFjkg8PZPLkdbblvuxD8XPkpW6fC2u/b85nRmgXpjSQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709218393; c=relaxed/simple;
-	bh=auK5leopyHo3okmJBfzsjNCZk5qwdivKbIquaIizWuU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QQFRDPiIdZD2TmxNEbkr+BHZop6wrILxmV9mqhBK5pn0XmqIHulXAJkImHWIof7JHQSMGuiWIcsW4xUc0Qv/DEM8cM14WhrBzCvbb08M7TqQngjzgm/cwMnGKGsZju7cpAtdCs+9e7hCa4z86byJfS2ckAKR/zAowafr2cag96o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PomS4Fgj; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	s=arc-20240116; t=1709218762; c=relaxed/simple;
+	bh=pL6jYa+vJnfd7vnNeJo8DWyR6G2DvoCi67myfzLlv4E=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OKLMHMFaxTcF2dAkhL6CkVIcXfXJsAWXigmGaBsW4OunMXU4dZW+TmUO8J48uOxAJfKdY1TTtxQsKkiIekzWVvb+06BA6ahsjC8mflGCTahxA1hdgQsdDSOp4FXcKvti3gj0GqgsB+obmwA2kkWUexfdAorDexVWCl7v/lXPQoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kqcFT4Bq; arc=none smtp.client-ip=192.198.163.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709218391; x=1740754391;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=auK5leopyHo3okmJBfzsjNCZk5qwdivKbIquaIizWuU=;
-  b=PomS4FgjXJNS2At8RnBp2aKLF9NjIAbXfETJREgVJQHlwo6qLd2W6WF6
-   N9kETvBJM2yhf+H7hlB2dfuBS721DKBCYGFHMP+gGWmsh0Rc3hnmo+iQE
-   XA6wLxMMpOKR9E382WM+Ca+FQ0xBDlH/+zyHPUVSEES2yKaHIzYdtmYFN
-   6dza119h1dpRnrut39S4qzO6kmNodXx0+hIrI+RIyZCmNSNE8YN/R5sLq
-   Z5aAMg0w6qxvIuBPXqnYlSiY8uZUvbzXEBKjcKNE/FbCOnsMO6TRkdMgb
-   J3IQYNFIJGKgB5qMiQKV9Mvn/0FrpgnistNdA+yDOruP19z2EVL5alAjD
+  t=1709218761; x=1740754761;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=pL6jYa+vJnfd7vnNeJo8DWyR6G2DvoCi67myfzLlv4E=;
+  b=kqcFT4BqlhfcqpAA72B0d5H7bHZQPu3XGOgO1G0kKFbM9Tn4gfLM4n4j
+   ohB7SIfb0vS4MqIXr+rFPeKjZV+IJeKlAI8KfPcA4pVeQwf1KmFhKBL3w
+   b6ph1c9nQzdc2ySR5fFvWuToxa/7RfFausUK3ulP+vyzwg9mRRrnzy08m
+   Wipj8/+lmiIWcyIPn5HfKFs1lUEa6SC5HYvAwbEtwGeN4QyoyKMXbLB1C
+   xO/J6zjPqTT6e5e1jq10Dsq2TI59nmVBz+NrNyQk7rhhgI6Pwy91ZLEn4
+   qozJqHXtwCH8FWFXLYPhc6iw0qZ3u7sMFaSMY4uYlgmlRHxm0bDVBR61l
    g==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14326508"
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="7471806"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="14326508"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:53:08 -0800
+   d="scan'208";a="7471806"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:59:19 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="937036062"
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913983949"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="937036062"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 29 Feb 2024 06:53:06 -0800
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id F3D4D476; Thu, 29 Feb 2024 16:53:04 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+   d="scan'208";a="913983949"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 06:59:14 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfhsN-00000008hQC-1bcJ;
+	Thu, 29 Feb 2024 16:59:11 +0200
+Date: Thu, 29 Feb 2024 16:59:10 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: [PATCH v2 2/2] gpiolib-acpi: Make acpi_gpio_count() take firmware node as a parameter
-Date: Thu, 29 Feb 2024 16:51:39 +0200
-Message-ID: <20240229145303.3801332-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240229145303.3801332-1-andriy.shevchenko@linux.intel.com>
-References: <20240229145303.3801332-1-andriy.shevchenko@linux.intel.com>
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init
+ routine at of_clk_init()
+Message-ID: <ZeCbvgWY6x1o17Kq@smile.fi.intel.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com>
+ <Zd4X3NnBoEl0wu2H@smile.fi.intel.com>
+ <CZGSB2O8P572.28HK6WFT43N6S@bootlin.com>
+ <ZeBnX2upNRN0xXH4@smile.fi.intel.com>
+ <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Make acpi_gpio_count() take firmware node as a parameter in order
-to be aligned with other functions and decouple from unused device
-pointer. The latter helps to create a common fwnode_gpio_count()
-in the future.
+On Thu, Feb 29, 2024 at 03:27:01PM +0100, Théo Lebrun wrote:
+> On Wed, Feb 28, 2024 at 03:33:29PM +0100, Théo Lebrun wrote:
+> > On Tue Feb 27, 2024 at 6:11 PM CET, Andy Shevchenko wrote:
+> > > On Tue, Feb 27, 2024 at 03:55:24PM +0100, Théo Lebrun wrote:
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib-acpi.c | 13 ++++++-------
- drivers/gpio/gpiolib-acpi.h |  4 ++--
- drivers/gpio/gpiolib.c      |  2 +-
- 3 files changed, 9 insertions(+), 10 deletions(-)
+[...]
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index 899cd505073e..7f140df40f35 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -1402,17 +1402,17 @@ static int acpi_find_gpio_count(struct acpi_resource *ares, void *data)
- }
- 
- /**
-- * acpi_gpio_count - count the GPIOs associated with a device / function
-- * @dev:	GPIO consumer, can be %NULL for system-global GPIOs
-+ * acpi_gpio_count - count the GPIOs associated with a firmware node / function
-+ * @fwnode:	firmware node of the GPIO consumer
-  * @con_id:	function within the GPIO consumer
-  *
-  * Return:
-- * The number of GPIOs associated with a device / function or %-ENOENT,
-+ * The number of GPIOs associated with a firmware node / function or %-ENOENT,
-  * if no GPIO has been assigned to the requested function.
-  */
--int acpi_gpio_count(struct device *dev, const char *con_id)
-+int acpi_gpio_count(const struct fwnode_handle *fwnode, const char *con_id)
- {
--	struct acpi_device *adev = ACPI_COMPANION(dev);
-+	struct acpi_device *adev = to_acpi_device_node(fwnode);
- 	const union acpi_object *obj;
- 	const struct acpi_gpio_mapping *gm;
- 	int count = -ENOENT;
-@@ -1429,8 +1429,7 @@ int acpi_gpio_count(struct device *dev, const char *con_id)
- 			snprintf(propname, sizeof(propname), "%s",
- 				 gpio_suffixes[i]);
- 
--		ret = acpi_dev_get_property(adev, propname, ACPI_TYPE_ANY,
--					    &obj);
-+		ret = acpi_dev_get_property(adev, propname, ACPI_TYPE_ANY, &obj);
- 		if (ret == 0) {
- 			if (obj->type == ACPI_TYPE_LOCAL_REFERENCE)
- 				count = 1;
-diff --git a/drivers/gpio/gpiolib-acpi.h b/drivers/gpio/gpiolib-acpi.h
-index 0fcd7e14d7f9..6f295ea580fe 100644
---- a/drivers/gpio/gpiolib-acpi.h
-+++ b/drivers/gpio/gpiolib-acpi.h
-@@ -33,7 +33,7 @@ struct gpio_desc *acpi_find_gpio(struct fwnode_handle *fwnode,
- 				 enum gpiod_flags *dflags,
- 				 unsigned long *lookupflags);
- 
--int acpi_gpio_count(struct device *dev, const char *con_id);
-+int acpi_gpio_count(const struct fwnode_handle *fwnode, const char *con_id);
- #else
- static inline void acpi_gpiochip_add(struct gpio_chip *chip) { }
- static inline void acpi_gpiochip_remove(struct gpio_chip *chip) { }
-@@ -51,7 +51,7 @@ acpi_find_gpio(struct fwnode_handle *fwnode, const char *con_id,
- {
- 	return ERR_PTR(-ENOENT);
- }
--static inline int acpi_gpio_count(struct device *dev, const char *con_id)
-+static inline int acpi_gpio_count(const struct fwnode_handle *fwnode, const char *con_id)
- {
- 	return -ENODEV;
- }
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index a93271b3d538..e6c5c7894553 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4287,7 +4287,7 @@ int gpiod_count(struct device *dev, const char *con_id)
- 	if (is_of_node(fwnode))
- 		count = of_gpio_count(fwnode, con_id);
- 	else if (is_acpi_node(fwnode))
--		count = acpi_gpio_count(dev, con_id);
-+		count = acpi_gpio_count(fwnode, con_id);
- 	else if (is_software_node(fwnode))
- 		count = swnode_gpio_count(fwnode, con_id);
- 
+> > > > > +	u32		reg;	/* next 8 bytes are r0 and r1 */
+> > > >
+> > > > Not sure this comments gives any clarification to a mere reader of the code.
+> > > > Perhaps you want to name this as reg64 (at least it will show that you have
+> > > > 8 bytes, but I have no clue what is the semantic relationship between r0 and
+> > > > r1, it's quite cryptic to me). Or maybe it should be reg_0_1?
+> > > 
+> > > Clocks are defined by two 32-bit registers. We only store the first
+> > > register offset because they always follow each other.
+> >
+> > > I like the reg64 name and will remove the comment. This straight forward
+> > > code is found in the rest of the code, I don't think it is anything
+> > > hard to understand (ie does not need a comment):
+> > > 
+> > > 	u32 r0 = readl(base_plls + pll->reg);
+> > > 	u32 r1 = readl(base_plls + pll->reg + sizeof(r0));
+> >
+> > Btw, why readq()/writeq() (with probably the inclusion of io-64-nonatomic-lo-hi.h)
+> > can be used in this case? It will be much better overall and be aligned with
+> > reg64 name.
+> 
+> The doc talks in terms of 32-bit registers. I do not see a reason to
+> work in 64-bit. If we get a 64-bit value that we need to split we need
+> to think about the endianness of our platform, which makes things more
+> complex than just reading both values independently.
+
+1) Would be nice to test on the real HW to confirm it doesn't accept 64-bit IO.
+2) Still I see a benefit from using lo_hi_readq() and friends directly.
+
+[...]
+
+> > > > I didn't get. If eq5c_init() was finished successfully, why do you need to
+> > > > seems repeat what it already done? What did I miss?
+> > > 
+> > > The key here is that eq5c_init() iterates on eq5c_early_plls[] while
+> > > eq5c_probe() iterates on eq5c_plls[]. I've tried to hint at this in the
+> > > commit message:
+> > > 
+> > > > Two PLLs are required early on and are therefore registered at
+> > > > of_clk_init(). Those are pll-cpu for the GIC timer and pll-per for the
+> > > > UARTs.
+> > > 
+> > > Doing everything in eq5c_init() is not clean because we expect all new
+> > > clock provider drivers to be standard platform drivers. Doing
+> > > everything from a platform driver probe doesn't work because some
+> > > clocks are required earlier than platform bus init. We therefore do a
+> > > mix.
+> >
+> > Am I missing something or these two pieces are using the same IO resources?
+> > This looks like a lot of code duplication without clear benefit. Perhaps
+> > you can have a helper?
+> 
+> There are two subtle differences that make creating a helper difficult:
+> 
+>  - Logging, pr_*() vs dev_*(). Second option is preferred but only
+>    available once a device is created.
+
+Some code uses (yeah, arguable that it's better, but depends on how much
+the real deduplication takes)
+
+	if (dev)
+		dev_*(...);
+	else
+		pr_*(...);
+
+>  - Behavior on error: we stop the world for early clocks but keep going
+>    for normal clocks.
+
+...(..., bool skip_errors)
+{
+	...
+}
+
+(with the same caveat)?
+
 -- 
-2.43.0.rc1.1.gbec44491f096
+With Best Regards,
+Andy Shevchenko
+
 
 
