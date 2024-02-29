@@ -1,109 +1,115 @@
-Return-Path: <linux-gpio+bounces-3945-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3946-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C55886C739
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 11:46:00 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A236D86C785
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 11:58:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E18B1C228D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:45:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 58C851F22557
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:58:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BA579DD5;
-	Thu, 29 Feb 2024 10:45:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F085E7A734;
+	Thu, 29 Feb 2024 10:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RrTPi1If"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kUj+VfAm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB3879DB0;
-	Thu, 29 Feb 2024 10:45:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10A4B7A711;
+	Thu, 29 Feb 2024 10:58:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709203554; cv=none; b=HgbSry6TedQAJbA1Yz5NWbaviaQEzDoNdm0H2LVnfNkCnFOgsk64570FjtdoyJqTwfCqd8/GBWJpKy82e122VP0LqNN5Hgau5zPme91FeZ/C6ABXLmZQ342ojl2hb062FJFbcHmRyjUvVh0uXb/w0nLgqb4eOeO6dFQZzBk6pDo=
+	t=1709204324; cv=none; b=nuBZ/E3DE39wk9CWuBzR60jkKnULJdf8wzH7JUuE+ps1ViE3FS28M7nZhnOl9bqjuC7R/LyGH6LG/30rkMrJWzVlKV5K2WQvg8evRtoJlS8a0iIU/b/LiHcVGhzI1vV0wYLR0IS5UKysl5DAX2PptFAw2SgKgf1l4H6qwkAxwwU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709203554; c=relaxed/simple;
-	bh=zNCU8bPfdsgAvaLe1ye6Hs5Kt2LyfDsod6rjLc8GSj4=;
+	s=arc-20240116; t=1709204324; c=relaxed/simple;
+	bh=a/GVLuUrTUXA8L8R4irxd4Al3SblyPKMDzQJ/K5AMdE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VogarKUWhJ5CT5IBZZ7gpvTqcg4eCayYqIkeJlAJgfog8/mBBS6JgTQPWS0TRJRdWfnAFuxQn8OLudjDGlyuDjvoxVubMEi79djqZgE6jQMEAEpsTB9UTzOyVGQpEiOPVcX2h8pQ0QcMeZu9L9Kyp7jN0Q0TcUQuYVooRUdPNh4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RrTPi1If; arc=none smtp.client-ip=198.175.65.10
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+	 Content-Type:Content-Disposition:In-Reply-To; b=olQreu3zqGt3okfhdBRE6c1p5XlzPZ/mBAJ99Cvd6aRMoEpwhyDHYlBKQNnNfaXXtOvAujQ5iihY2pq7aXtn8g004bhi+sTwUyqh/HP45qUZX4xM3SJiNPcsQhoyOY6gTa+T+pT/Sqkdkp7dOUOyKWEYN3uIBNDgzr7jNmlIeQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kUj+VfAm; arc=none smtp.client-ip=198.175.65.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709203553; x=1740739553;
+  t=1709204323; x=1740740323;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=zNCU8bPfdsgAvaLe1ye6Hs5Kt2LyfDsod6rjLc8GSj4=;
-  b=RrTPi1Ifwt9PhK/m2HDu4aqXuFOfq/Ag7Td6LF9//uPKWoNW815vHd/f
-   gem+suSoYuQY3RgYcVhLqcUsAaaCdLYYPDEWeUb4gACpy56GcMnI/yENh
-   GWD+qqQgNihOgzjwVefL+oocYJrr1wcxq6SrhSnL6xz7ESQ6BnR0GLQBG
-   NUlX3NolB7JBY7EvWNxUEZIkSgZ8zmiXYBvIbktO5VeHhH0S05Jq9ptEg
-   xcB3SBD0o8b1t+jY+ADSFBPAtTQglhS3EEx6qyeaeAfNVPdw0BDcJeAjT
-   N2PR9P5fdm2rSIlMwjWa8XsBX9Jl0cf4P//yH383tN/RKUaJRUpYACtS2
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21121570"
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=a/GVLuUrTUXA8L8R4irxd4Al3SblyPKMDzQJ/K5AMdE=;
+  b=kUj+VfAmaHPr/JlpAtOiJqtmIqvb+M7gz2ENHVlNjyRqxyyxaGq26U/+
+   KF3jI826whARDXQrq7PEhquUSAyZgdeAWc5aDRieDKe8wZRS59W0Jd6k3
+   5Y77Npxg0XPif0djlBxIFRiJff/j90KNdhk7biVuyVhs6PXZ/8ko4E1Vq
+   ftGXlSJgx3KoHMYnEg12HTb4TfQraCd2tD4gBSYSeWYOCaD3CJUZJi37f
+   UBXUW4Ozaj9f/X2n5YuWmOSepd1CQ9DTMHae/Szhw3sey1yj135X+iTn7
+   uZtnChZMNDuULr/cTJgoJ1YaarSAbnH0IoUwfNFrl9FfgI43bNV1sumZB
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="3789902"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="21121570"
+   d="scan'208";a="3789902"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:45:52 -0800
+  by orvoesa110.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:58:42 -0800
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913978733"
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913979058"
 X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
-   d="scan'208";a="913978733"
+   d="scan'208";a="913979058"
 Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:45:49 -0800
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:58:40 -0800
 Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rfdv9-00000008e1f-0QR7;
-	Thu, 29 Feb 2024 12:45:47 +0200
-Date: Thu, 29 Feb 2024 12:45:46 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, u.kleine-koenig@pengutronix.de,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] gpio: 74x164: Enable output pins after registers are
- reset
-Message-ID: <ZeBgWnt8bleYVXJl@smile.fi.intel.com>
-References: <20240229084555.43701-2-arturas.moskvinas@gmail.com>
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfe7Z-00000008eCZ-1cLi;
+	Thu, 29 Feb 2024 12:58:37 +0200
+Date: Thu, 29 Feb 2024 12:58:37 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-kernel@vger.kernel.org, patches@lists.linux.dev,
+	linux-gpio@vger.kernel.org,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2] gpiolib: Pass consumer device through to core in
+ devm_fwnode_gpiod_get_index()
+Message-ID: <ZeBjXfKH_Wl2Giai@smile.fi.intel.com>
+References: <20240223065254.3795204-1-swboyd@chromium.org>
+ <Zd-CJHkCHpuIEnWh@smile.fi.intel.com>
+ <CAMRc=Mdapd2jTACGqm-ujZrAunRmNeJ8_3+bpsN4ieCre52yrg@mail.gmail.com>
+ <Zd-nI9XoYW3hrPXx@smile.fi.intel.com>
+ <CAE-0n52cgFvaHPDLBd-cn0WMisxX41-fPJHkroTucxHNk39SZQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20240229084555.43701-2-arturas.moskvinas@gmail.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAE-0n52cgFvaHPDLBd-cn0WMisxX41-fPJHkroTucxHNk39SZQ@mail.gmail.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Feb 29, 2024 at 10:45:56AM +0200, Arturas Moskvinas wrote:
-> Chip outputs are enabled[1] before actual reset is performed[2] which might
-> cause pin output value to flip flop if previous pin value was set to 1 in chip.
-> Change fixes that behavior by making sure chip is fully reset before all outputs
-> are enabled.
+On Wed, Feb 28, 2024 at 01:38:54PM -0800, Stephen Boyd wrote:
+> Quoting Andy Shevchenko (2024-02-28 13:35:31)
+> > On Wed, Feb 28, 2024 at 10:28:07PM +0100, Bartosz Golaszewski wrote:
+> > > On Wed, Feb 28, 2024 at 7:57 PM Andy Shevchenko
+> > > <andriy.shevchenko@intel.com> wrote:
+
+...
+
+> > > > Have you seen this?
+> > > > https://lore.kernel.org/r/20231019173457.2445119-1-andriy.shevchenko@linux.intel.com
+> > >
+> > > Clearly yes as I queued the first one in that series. The rest did not
+> > > make its way upstream for whatever reason. What is your point? You
+> > > want to respin it?
+> >
+> > It was a reply to Stephen. :-)
 > 
-> Flip-flop can be noticed when module is removed and inserted again and one of
-> the pins was changed to 1 before removal. 100 microsecond flipping is
-> noticeable on oscilloscope (100khz SPI bus).
-> 
-> For a properly reset chip - output is enabled around 100 microseconds (on 100khz
-> SPI bus) later during probing process hence should be irrelevant behavioral
-> change.
+> I saw it but it hadn't gone anywhere for many months so I fixed the
+> problem I saw. Will you resend it?
 
-> [1] - https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L130
-> [2] - https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L150
-
-Please, convert these to be Link tags, so
-
-at the end it will look like
-
-Fixes:
-Link: URL1 [1]
-Link: URL2 [2]
-Signed-off-by:
+Yes, this is the plan, too many things are ongoing, so have had no time (yet)
+to address comments and resubmit. In any case I'm not against your change, it
+makes it better anyway without hacking the code.
 
 -- 
 With Best Regards,
