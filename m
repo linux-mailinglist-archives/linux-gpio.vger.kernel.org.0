@@ -1,99 +1,150 @@
-Return-Path: <linux-gpio+bounces-3963-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3964-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32EBF86CA8D
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:44:49 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA69486CAA2
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:49:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C9C531F2392E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:44:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EC4F41C2277B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:49:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92E7E7E782;
-	Thu, 29 Feb 2024 13:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 118EC13475F;
+	Thu, 29 Feb 2024 13:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GtQCeEs3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CQ7nlbzH"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF5F97D40D
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 13:44:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FF2412FB03;
+	Thu, 29 Feb 2024 13:49:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709214284; cv=none; b=jVoV++xgborgkgVDR4M7L0Mk5SLsj2X0xaAYFavPY9YAApmiieiwjH1FrbdSRon8jFcGdS40WuPTNchfO67+bbfNKysUN6RK+IGrcskzKLQSUKAJ3mbM/nBREP3b8eOyBKbH72EfxJQgU1Ir2fgS87mrydJQyFBmGuTSL+l6imY=
+	t=1709214550; cv=none; b=H3xlMcI7A8oenXGDIW30qRJTpLX3cVUBvfxQquOrkejStTu8X7I35lulYH3I9jch4vRnWaVV5a+6Tz3I256H2BIQuBQD3cnJmbKNAo/3CYn04EweemA09wX4DylYTxSidJhbhU2zvbd3MpyZxvf9zFj0Tz2ZMl143KeoHKJWgU0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709214284; c=relaxed/simple;
-	bh=arYLC+uZ4uuz1T0M8gbovYAhzFuJ9VVOnrgFslQqpSE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=XDbN3noMgApH/hzU28hIjrnZiWKU0++LO4UdDNgZBHbC7t2FuSGSe/5MDUr5eWHvGSTzYz8VGCrmQcl4AfcJ/Artw7Qam+H8OAo+7m/RkNiq5DQDdquAOzWONSnNYwnPeGDJRpNo1Z52FVfir347hVcq3dnEjp1zoIa5K2+JiBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=GtQCeEs3; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dc6d24737d7so976017276.0
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 05:44:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709214282; x=1709819082; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=arYLC+uZ4uuz1T0M8gbovYAhzFuJ9VVOnrgFslQqpSE=;
-        b=GtQCeEs3kiF6VYu9JuoXQd01SaOVA25zptc9Dxf3N/ldn/H8BvGz4JZAJoS+UixGS0
-         LV7ycB2jd3Pb1ZwOERbxC1SRNbm2TjBDUBMIBrir6cEEC8ta5rofFLJXAFXFt0+dEaIz
-         /TNjT0wAMRB0oTSsU/osKuY6eAGjHn/ifs4QHRbAwpvKRPBa8/+Tqoo5xSXwDocVcLTI
-         2Tk8pJ6V0iu0XfGRS7qGkKQzcX75FhGfseE1ymGG61I+1bgahaGaUVR3Sj/Yu0q8TQJ7
-         x9oZmx6WNk4oYwCDatYW6LfZe0xKAjtaSwDfaC2dF60xayFhMBGCKTg91H6YYy8OWAn+
-         EDUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709214282; x=1709819082;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=arYLC+uZ4uuz1T0M8gbovYAhzFuJ9VVOnrgFslQqpSE=;
-        b=nIqzLljzy4um1nOhXXeFaK3oc1i3j+cu1opfyt4gfJr9uFyegen9J9NBTzRYlfGfJs
-         A7ApfKf6AaeIPcL11m3iDCx4vPCChsCuWxI4GR2L1zsWQTp2nIEoWKUoa+e0MvO6a1rc
-         pl0WUTF1kD28aaZvuHzELDs6JrU68IjAkjAxYRYjbJfnh67oDbmpTsr7knqinEiPwvmi
-         YazzCY/X+A/eKefrNESUxjtC3zSYuxJQOXmB8WDIcqPih/BwiTB6Xj7bKh4ZVSG5l23p
-         S7fY845ItkoE6RuKdTAqEf/bX1KyIcNMsNPHrb9NRuQAz5smtDd+btKBsdSTFuEBrg7C
-         ZcyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW+ypXssF1d6AGhH5sXgSCDpBjm9N9eJrTXSmJGYOnpol4dLPjQWcupx/YALzUNkNfP3SZhEUUPLD7ucfnbedOzaONJTW/dSch1+w==
-X-Gm-Message-State: AOJu0YywQ3+QR6bDfAKtaFCJqwiOxJSbRHck5MfK5JjZIh78aCb98jZa
-	vN1mHBj+RMuQqX9PEQII2o1MCSGh5OjL9sgzt6XvK1ShLTOOfl1EVxeEXSFPnFPzJ16o5xQ1TEw
-	ujip0gnTC9AAGsuUAG+ypRvDdBGF7mxunAahast5fPiPopjX9
-X-Google-Smtp-Source: AGHT+IHi8eN5Wfh2JnmE1aIOt4CnlHTYtAv38O2XfHtZHksusIwxcm29Hb2iH0f+TCoc79GgOaXGUIH/luIX+BZx3cU=
-X-Received: by 2002:a5b:a:0:b0:dc6:e4f8:7e22 with SMTP id a10-20020a5b000a000000b00dc6e4f87e22mr2044131ybp.62.1709214281995;
- Thu, 29 Feb 2024 05:44:41 -0800 (PST)
+	s=arc-20240116; t=1709214550; c=relaxed/simple;
+	bh=gGCDaO4bQHTt76a5KiiGRQz41mE60d5yevJypV2fKy4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HntfsRdxtTXNPtTrrxgYHcprqoBP8wZWvSBAWmDj2+QgwSUCSj5I8qBcutfALpt+Yhd2xGIYuYYX8aahcsyrEK5SfXePhTcedGDCOgapAXdL4Sn3hqO/bwErznw2biC/sa/MU9Q0B9t7Ue+twM0MBDln0wTrrDRZ0Qp2GC0YQzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CQ7nlbzH; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709214549; x=1740750549;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=gGCDaO4bQHTt76a5KiiGRQz41mE60d5yevJypV2fKy4=;
+  b=CQ7nlbzHEqcTTk1BuQ9TudiEnW/KETfAgDKq8qEmxJsmmiDHq175w3Kl
+   Ekc18km2qvQ1EdRj6l+kkk4Tz97AunyUJonmGYNmQPfRQhxULDrwA0RZR
+   YHBaBIUUBAWaHlac6Rfc2xRqgLoWjGJGL9UW5ihAVOyo/jjmtVDdYA7T+
+   yK+nAIMjpG5BUgM+L6ctv6h67+HxUfV4DyoLSDvYfQwJf6BU3ZJR3dnB3
+   0ZqyPTwfDveVRBKHCWdIL/RHaOmKOciBhLWC7c9BBgiAg3UJWYJZqFT+o
+   BdPCKGkhLuYQtvU5SPfbMivYBxbpeu8XylY68scTEYJKQ7j4hZHgoHan0
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="14835089"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="14835089"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 05:49:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913982565"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913982565"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 05:49:03 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rfgmR-00000008gMs-3Ien;
+	Thu, 29 Feb 2024 15:48:59 +0200
+Date: Thu, 29 Feb 2024 15:48:59 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>,
+	linux-mips@vger.kernel.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	Tawfik Bayouk <tawfik.bayouk@mobileye.com>,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v8 04/10] reset: eyeq5: add platform driver
+Message-ID: <ZeCLS17PhKPuGvkm@smile.fi.intel.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com>
+ <20240227-mbly-clk-v8-4-c57fbda7664a@bootlin.com>
+ <Zd4bbCsY54XEnvJM@smile.fi.intel.com>
+ <CZGVIWR4H4DE.3M5H3H99X0QPT@bootlin.com>
+ <ZeBo4N204gLO0eUd@smile.fi.intel.com>
+ <CZHK1ZCSROM5.X4WYN7SAZJTH@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240226191607.397386-1-biju.das.jz@bp.renesas.com>
-In-Reply-To: <20240226191607.397386-1-biju.das.jz@bp.renesas.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 14:44:31 +0100
-Message-ID: <CACRpkdaPx51z15cdGKtZ9+KEMLMver1YF5QnzkX+XDSG+LL-eQ@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: da9062: Add OF table
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Support Opensource <support.opensource@diasemi.com>, linux-gpio@vger.kernel.org, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, Biju Das <biju.das.au@gmail.com>, 
-	linux-renesas-soc@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CZHK1ZCSROM5.X4WYN7SAZJTH@bootlin.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Feb 26, 2024 at 8:16=E2=80=AFPM Biju Das <biju.das.jz@bp.renesas.co=
-m> wrote:
+On Thu, Feb 29, 2024 at 01:18:08PM +0100, Théo Lebrun wrote:
+> On Thu Feb 29, 2024 at 12:22 PM CET, Andy Shevchenko wrote:
+> > On Wed, Feb 28, 2024 at 06:04:47PM +0100, Théo Lebrun wrote:
+> > > On Tue Feb 27, 2024 at 6:27 PM CET, Andy Shevchenko wrote:
+> > > > On Tue, Feb 27, 2024 at 03:55:25PM +0100, Théo Lebrun wrote:
 
-> Add OF table as per the binding so that driver get instantiated and
-> bind automatically when the driver is built as a module.
->
-> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+...
 
-Patch applied!
+> > > > > +	priv->rcdev.of_node = np;
+> > > >
+> > > > It's better to use device_set_node().
+> > > 
+> > > I don't see how device_set_node() can help? It works on struct device
+> > > pointers. Here priv->rcdev is a reset_controller_dev struct. There are
+> > > no users of device_set_node() in drivers/reset/.
+> >
+> > No users doesn't mean it's good. The API is relatively "new" and takes
+> > care of two things:
+> > 1) it uses agnostic interface;
+> > 2) it doesn't require any firmware node direct dereference.
+> >
+> > The 2) is most important here as allows us to refactor (firmware node) code
+> > in the future.
+> 
+> I think I get the point of device_set_node(). I still do not understand
+> how it could help me fill the ->of_node field in a reset_controller_dev
+> structure?
 
-Yours,
-Linus Walleij
+Exactly why I put the above comment as recommendation. And then I elaborated
+that entire reset framework should rather move towards fwnode.
+
+> Should I be using device_set_node() to fill the struct device pointer
+> and the reset subsystem, by some magic, will pick this up and use it
+> for its own of_node field? I've not seen any magic/code doing that.
+
+At bare minimum it will give beneficial things:
+1) less burden in the drivers conversion in case fwnode happens (and I believe
+   it's just matter of time) in reset framework;
+2) hiding fwnode/of_node implemetation details (which is currently is layering
+   violation to some extend (as we have a lot of *of_*() APIs to avoid direct
+   access to of_node field in struct device).
+
+The downside is that you will need to include property.h for this only thing.
+And I don't see other code that can be converted to fwnode right away here.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
