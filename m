@@ -1,82 +1,83 @@
-Return-Path: <linux-gpio+bounces-3928-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3929-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A928C86C537
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:30:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EC2B86C53F
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:31:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 101AE1F227F0
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 09:30:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id F12D6B231B3
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 09:31:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A0F05D754;
-	Thu, 29 Feb 2024 09:30:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2625D5788C;
+	Thu, 29 Feb 2024 09:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="F9/LAApI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="miaiGnrt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD2045D73C
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:30:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734DD5916C
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:31:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709199049; cv=none; b=l2MwBritpVkOsU+jNpwCSVMPpo2WSP/CU9frJaldXCIAoMvZD6lW0NwZkVWRE0wXAIp79rGiJvCITYXaj/uBNkwjbIxm3sfN1zTxYgip6E2/WllV4wnmVZU6+zbsKa44aX0ZPijpxXcx5lFPnpTeWSEkVTihGa1nFpU7A8l54aU=
+	t=1709199087; cv=none; b=f6H1pUHWCCIECcsXrRtPpmfLJDVCQusUW1qLUR6pYqZF2vq+qDOGJIFkGI8H4ZjBZB2lDKktgwoa1RQaJ+aVJAjQv/h5j8B3qo5LhqjotrWw+nOmjQtGh5+fDFK+DHrm83igrrmY1diWSDfCQ5MfgfOmOalfEfPyambUicAS6vc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709199049; c=relaxed/simple;
-	bh=31chdHlOIqy4WCMDjv7GZKxMkfPu9JZLtk09++EW130=;
+	s=arc-20240116; t=1709199087; c=relaxed/simple;
+	bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=l3GkXR2YTHw+xtst9K6uJ/PahRiAu++HxkmgzSfEkNc94QANP1UJWQ8rdxD0grUD+p4VK90GxWfSZbFoezilaP2AvVWIFmBxhafDA0CswEDrFqVCHDdkpPdsKpySOGQCNwl9DNEzX5F9iAYlClnUBFWcLHj6ttFdwmmdn7KLNwY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=F9/LAApI; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=bIUveTUQAf/Jqx+k0NX87ljGmM1XU2WCS0GXgjDatZhgkgpTcqp5q4TGravGYiQlPOUQm57YFaQhapUArypXxcbIHqBS0w2N/+x5I7tHv9esHtE0XZnKoWYFdDiIRbiQYD9hQzjapCx3IN95tkI7Q7xuGXkIdjuoBgpiV5iWhSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=miaiGnrt; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcd7c526cc0so752148276.1
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 01:30:47 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso767281276.3
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 01:31:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709199046; x=1709803846; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709199085; x=1709803885; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=31chdHlOIqy4WCMDjv7GZKxMkfPu9JZLtk09++EW130=;
-        b=F9/LAApIsHY429+cdXGQchpL4KoOf5QrS8Yb+dXjyclik0vicnut+U+NP2c3iRyPBR
-         t6yFM3DaOtkQsi5qcgFOzp+9bX1MUbXPyAddqSjeOmAOwaZhe2hyWQIAin/wn74LDPwq
-         I0e2c6lrHx2IzDf6jmUphVrte5OWNmQtNg/KjvvGGpYAY3T4TPKTtCYrx3eFNudnI6AV
-         Yi7opuP3nXvlLv8OwE9K3PKRyBRHqG8t7H7HGLqXfjhrruod7caV8Kn2whRjSrV/l++8
-         +0kXdoYujbLWvQXZGCy/4p53bY8Ro+RUUEqXhYh+28qSMLionK28a7qKbEXWpTisGVEd
-         i/Aw==
+        bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
+        b=miaiGnrt0Ofo/Y9TQswPkiaTMl+dgvBYegpF6lL+Tla111mA5PVr0JxUPAjhFaXN8t
+         YPgwarVt4S8w8FCN8D+M950Teob1tIypeRLnkMqPeU4jRKp8b7TWdBBPT36bwfbkwXD/
+         POufNVxJ6LAzDlLr0WsuTatvvFG14Xojy+jC8GYqH4zfcdtn9wyFyr+uDya5ufUSjLEm
+         O0olpqp7JT7iqOlii1adZmBrxq5i5+U/JP0jK5Zqfs5vz0G4f5KXA0ieOK3KVyPXedBn
+         e40aVi/wAdwxsUEzL+3NTKhqtftZxv2VWjvzGDq3K+7YNRAo0Ir4QXofOrThA4Glammg
+         Zs+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709199046; x=1709803846;
+        d=1e100.net; s=20230601; t=1709199085; x=1709803885;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=31chdHlOIqy4WCMDjv7GZKxMkfPu9JZLtk09++EW130=;
-        b=EMF2EEZMWB6eEA33OHAWDfE6sAZJChxD34NPFL3GwKj2iCVzc+/UTNo8E7u3TYjYYV
-         KZRGtbGTqrE2Lnhh6YMUS6CzMnpXKcVtxrisXmg86obmihKW/uB78rwcVNSd8qxB9TrH
-         Tcv63E6yy6dbYboeqK9HBv2vPM6A58OfdvFNgHgFdOWATaEDj9SQs1tSJ/xBgeboqt/o
-         90CWjPGfboRp832nm/0g+Rw6YaYfdPlsmlmrYc4xFxKpnSyL2TUQ+y5UXi3VjvS9yMvX
-         JsKC375bUmtedJpRrSqNdu7VDsR+F7amwPRp0RKk+Jvlwz4rYmh8I2oLIiMIZhmAqXg1
-         iZGQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1bsoUx+KiqjTgsQr0Hyq2PrF6gHk/0yaoSZSuKey27tNsFT+jROd1lVjmQXYEqgziuhRyoBAPAcnjGwzk/lujpHGQNmQFewAzVw==
-X-Gm-Message-State: AOJu0YxT97K9I6Hhu8e9kGlFsTEJaGvEbmqvZ+A6RjAcLqNG0VW9mQym
-	EUUU8kDbKgES2BvsA5BposyQT3IU0BjdOTGEPrxSzw36ckbmlFGPZalf+b7CwvjRvyjlqN7aHOe
-	QLgFjTQ9HGteZ7pLR3RLQleFwXqdsEbaEoXNwRw==
-X-Google-Smtp-Source: AGHT+IEmhOIkoqQABgOgh2spi9fO0NuLliWyGBbtbQP2Y3j61zegZ8lSPYJAXlb0pVJPAWRTtqtOPDmNbSb0YROYMtQ=
-X-Received: by 2002:a25:d30d:0:b0:dc6:da83:88e6 with SMTP id
- e13-20020a25d30d000000b00dc6da8388e6mr1480292ybf.32.1709199046701; Thu, 29
- Feb 2024 01:30:46 -0800 (PST)
+        bh=yLDH/SmZ8OkNo4IKopG13DYJTMTGxHzaAKTzK5mwr88=;
+        b=XiG3En7ogisxoGJETo95rAuh8Fy/H5yYEZ0tJiuyeaEESIRTowJG7PNDBg7R/MOg1w
+         6p3fPAOP0YnXQ1BiFYceXDoamQ8eIbLDJRT9Qbfmo1Zi+YUN3CBpINKDnCe69WiswXFQ
+         OhQ3taXztwbnjkiV5VImdYH9WPizh0c8oRn4JbSSc7vDVsfBCvridVQzWiV64jHYxaxi
+         b0XjWKTF9HrPJhMKPJTlJlWYT9YZdywsDXzPwFbaCR4qQARCgmhFcnyUJ59Q8sH2EpLH
+         j8J9fCK/eTK5gKZZZp4n9V27xfvcwGHdgm/1lJWStdGH1g9vUSUtsxdH5OjqnJuqr3ry
+         CjpQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVXbxcf2mQGt8dOybbN/SauGSYGqG8zMlgHDtVz1+SGul3U2VkrkZUMj4sI8bgnXE75e1Bd8t6Xg+HIYEzit5NbmddpDYmYQ/BAkg==
+X-Gm-Message-State: AOJu0Ywzhcna9YIuUd0kJVnTMmu6B4MX5QJ9DWMJHgIgom4gpgZs0wFg
+	B50VQbr+unWG0F1+oCVCsJQJK8FyLY5oYJRRM+b+f1PfuJK2mTJlLtKO1Z/+d0XE+aTx0POAV8A
+	SFNqmtonNGsF6I53ZC4K9Skj1ALlNgB28sPN7eQ==
+X-Google-Smtp-Source: AGHT+IGSggpuk2KLmltD3piA3qT24S+sa7pJ2na4Fu/l5Ohz9uHZf9k8yLApEggfc1Jf09gIebRKKbZvOzn1ChOVodk=
+X-Received: by 2002:a25:a28f:0:b0:dca:e4fd:b6d5 with SMTP id
+ c15-20020a25a28f000000b00dcae4fdb6d5mr1603586ybi.27.1709199085627; Thu, 29
+ Feb 2024 01:31:25 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-16-3ba757474006@bootlin.com>
-In-Reply-To: <20240228-mbly-gpio-v2-16-3ba757474006@bootlin.com>
+References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com> <20240228-mbly-gpio-v2-17-3ba757474006@bootlin.com>
+In-Reply-To: <20240228-mbly-gpio-v2-17-3ba757474006@bootlin.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 10:30:35 +0100
-Message-ID: <CACRpkdaR4fLef24SMFj=_C=o=dqWvKemVJPKcx1jjwjrvVnRPg@mail.gmail.com>
-Subject: Re: [PATCH v2 16/30] gpio: nomadik: replace of_property_read_*() by device_property_read_*()
+Date: Thu, 29 Feb 2024 10:31:14 +0100
+Message-ID: <CACRpkdbUNiK7wmtR0xastCgtsp+QpfEGgXTBf32S+R5xQtxD0Q@mail.gmail.com>
+Subject: Re: [PATCH v2 17/30] gpio: nomadik: use devm_platform_ioremap_resource()
+ helper
 To: =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>
 Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, 
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
@@ -92,8 +93,8 @@ Content-Transfer-Encoding: quoted-printable
 On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@boot=
 lin.com> wrote:
 
-> Avoid OF APIs in the GPIO subsystem. Here, replace
-> of_property_read_{u32,bool}() call by device_property_read_{u32,bool}().
+> Replace calls to platform_get_resource() then devm_ioremap_resource() by
+> a single call to devm_platform_ioremap_resource().
 >
 > Signed-off-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
 
