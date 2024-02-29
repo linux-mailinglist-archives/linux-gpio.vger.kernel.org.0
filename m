@@ -1,123 +1,113 @@
-Return-Path: <linux-gpio+bounces-3944-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3945-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3553986C62E
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:57:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C55886C739
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 11:46:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 656421C245D7
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 09:57:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3E18B1C228D7
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 10:45:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95ADF62816;
-	Thu, 29 Feb 2024 09:56:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6BA579DD5;
+	Thu, 29 Feb 2024 10:45:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="L3PusnRP"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="RrTPi1If"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E765F86F;
-	Thu, 29 Feb 2024 09:56:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DB3879DB0;
+	Thu, 29 Feb 2024 10:45:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709200599; cv=none; b=o1McPd2cAGXU/81mVh5yQ2+QwXKzLmNHjxSNQbL8+MvpDZeECNKnyDRjqvR8H4CiMvZffRIPkU2iZMmdoIRlzUFEwLmuyXmFYZxGFm/iRlnYiAYtyhjKQ+Ma+id5jsRWmNvYmlpNLiGMmB6WD06kwZ50mVx41dQ5hVlhFESBljI=
+	t=1709203554; cv=none; b=HgbSry6TedQAJbA1Yz5NWbaviaQEzDoNdm0H2LVnfNkCnFOgsk64570FjtdoyJqTwfCqd8/GBWJpKy82e122VP0LqNN5Hgau5zPme91FeZ/C6ABXLmZQ342ojl2hb062FJFbcHmRyjUvVh0uXb/w0nLgqb4eOeO6dFQZzBk6pDo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709200599; c=relaxed/simple;
-	bh=6r5UPWYkvqQFSDHNeLtsINM/kTHr8C9zl217UjTeoQQ=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=PKKNMEyNDjNQGugBZBiwidxh4Ew3Jo14JD0QQhJRbJlDdOXsCXYXXQyVqRaMRwcgkBhZmPCr/Uepa/+BQySDrBDadxSIJ4QxXO53qETz2qd7XvFfs4tlUgdlaTlTw2FLrbSpssQrK/ljKle+0RfsC5I23zXcvDDNH7Qt43cGdRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=L3PusnRP; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B5074240011;
-	Thu, 29 Feb 2024 09:56:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709200594;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=k/PhTuZtbma+b2uqep16NcKtM46o621J394ZeTPTZI0=;
-	b=L3PusnRPwEbDjYR4L9o8gH4UGu9vXKeMdR2QKBwtIJPNgNAXIEI+R36BHQ8lEnayZQfkpW
-	R2bOAaawZ2iyC9hVzar02u9ocGEa/2L4vUD4N4ObBe14RalRlDKIzRwilBVoYgPK9/2SDw
-	N5g2wiTrFKhSBWRymq2fI1gpCuSWxH+E908J0eDHmiTN72eNJ4eKgN/GJpOHOiqWbaIipM
-	ehoa7OiNbYptLGA9no1SnMR3hR61e23++aiwj0vcWr6ko37Rn2SjPQu1tzDRyxYr4q27Gz
-	Ux1m+dqzUgwWPxMD229EXKofRwfo5iQvOgg/iFCxVRkLkOFeGbahe6lcv15qwA==
+	s=arc-20240116; t=1709203554; c=relaxed/simple;
+	bh=zNCU8bPfdsgAvaLe1ye6Hs5Kt2LyfDsod6rjLc8GSj4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VogarKUWhJ5CT5IBZZ7gpvTqcg4eCayYqIkeJlAJgfog8/mBBS6JgTQPWS0TRJRdWfnAFuxQn8OLudjDGlyuDjvoxVubMEi79djqZgE6jQMEAEpsTB9UTzOyVGQpEiOPVcX2h8pQ0QcMeZu9L9Kyp7jN0Q0TcUQuYVooRUdPNh4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=RrTPi1If; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709203553; x=1740739553;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=zNCU8bPfdsgAvaLe1ye6Hs5Kt2LyfDsod6rjLc8GSj4=;
+  b=RrTPi1Ifwt9PhK/m2HDu4aqXuFOfq/Ag7Td6LF9//uPKWoNW815vHd/f
+   gem+suSoYuQY3RgYcVhLqcUsAaaCdLYYPDEWeUb4gACpy56GcMnI/yENh
+   GWD+qqQgNihOgzjwVefL+oocYJrr1wcxq6SrhSnL6xz7ESQ6BnR0GLQBG
+   NUlX3NolB7JBY7EvWNxUEZIkSgZ8zmiXYBvIbktO5VeHhH0S05Jq9ptEg
+   xcB3SBD0o8b1t+jY+ADSFBPAtTQglhS3EEx6qyeaeAfNVPdw0BDcJeAjT
+   N2PR9P5fdm2rSIlMwjWa8XsBX9Jl0cf4P//yH383tN/RKUaJRUpYACtS2
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="21121570"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="21121570"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:45:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10998"; a="913978733"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913978733"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 02:45:49 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rfdv9-00000008e1f-0QR7;
+	Thu, 29 Feb 2024 12:45:47 +0200
+Date: Thu, 29 Feb 2024 12:45:46 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, u.kleine-koenig@pengutronix.de,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] gpio: 74x164: Enable output pins after registers are
+ reset
+Message-ID: <ZeBgWnt8bleYVXJl@smile.fi.intel.com>
+References: <20240229084555.43701-2-arturas.moskvinas@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 29 Feb 2024 10:56:32 +0100
-Message-Id: <CZHH1KDAVDCC.1INC050YK8HU1@bootlin.com>
-Subject: Re: [PATCH v2 00/30] Rework Nomadik GPIO to add Mobileye EyeQ5
- support
-Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Rob Herring"
- <robh+dt@kernel.org>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
- "Philipp Zabel" <p.zabel@pengutronix.de>, "Thomas Bogendoerfer"
- <tsbogend@alpha.franken.de>, <linux-gpio@vger.kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <linux-mips@vger.kernel.org>,
- "Gregory CLEMENT" <gregory.clement@bootlin.com>, "Vladimir Kondratiev"
- <vladimir.kondratiev@mobileye.com>, "Thomas Petazzoni"
- <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
- <tawfik.bayouk@mobileye.com>, "Krzysztof Kozlowski"
- <krzysztof.kozlowski@linaro.org>, "Stephen Warren" <swarren@wwwdotorg.org>,
- "Jonathan Corbet" <corbet@lwn.net>, <linux-doc@vger.kernel.org>
-To: "Linus Walleij" <linus.walleij@linaro.org>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-X-Mailer: aerc 0.15.2
-References: <20240228-mbly-gpio-v2-0-3ba757474006@bootlin.com>
- <CACRpkdbK2Sa_4qp3VE0ivHP8W6F-QDkuxV-XnZYviAkO5ZBMsg@mail.gmail.com>
-In-Reply-To: <CACRpkdbK2Sa_4qp3VE0ivHP8W6F-QDkuxV-XnZYviAkO5ZBMsg@mail.gmail.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229084555.43701-2-arturas.moskvinas@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Hello,
+On Thu, Feb 29, 2024 at 10:45:56AM +0200, Arturas Moskvinas wrote:
+> Chip outputs are enabled[1] before actual reset is performed[2] which might
+> cause pin output value to flip flop if previous pin value was set to 1 in chip.
+> Change fixes that behavior by making sure chip is fully reset before all outputs
+> are enabled.
+> 
+> Flip-flop can be noticed when module is removed and inserted again and one of
+> the pins was changed to 1 before removal. 100 microsecond flipping is
+> noticeable on oscilloscope (100khz SPI bus).
+> 
+> For a properly reset chip - output is enabled around 100 microseconds (on 100khz
+> SPI bus) later during probing process hence should be irrelevant behavioral
+> change.
 
-On Thu Feb 29, 2024 at 10:44 AM CET, Linus Walleij wrote:
-> On Wed, Feb 28, 2024 at 12:28=E2=80=AFPM Th=C3=A9o Lebrun <theo.lebrun@bo=
-otlin.com> wrote:
->
-> > This patch series reworks the Nomadik GPIO driver to bring it up to dat=
-e
-> > to current kernel standards. We then add Mobileye EyeQ5 support that
-> > uses the same IP block but with limited functionality. We also add
-> > features required by our newly supported platform:
-> >
-> >  - Dynamic GPIO ID allocation;
-> >  - Make clock optional;
-> >  - Shared IRQ (usecase: EyeQ5 has two banks using the same IRQ);
-> >  - Handle variadic GPIO counts (usecase: EyeQ5 has <32 GPIOs per bank);
-> >  - Grab optional reset at probe (usecase: EyeQ5 has a shared GPIO reset=
-).
-> >
-> > This GPIO platform driver was previously declared & registered inside
-> > drivers/pinctrl/nomadik/pinctrl-nomadik.c, side-by-side with the
-> > pinctrl driver. Both are tightly integrated, mostly for muxing reasons.
-> > Now that gpio-nomadik is used for another platform, we loosen the
-> > relationship. The behavior should not change on already supported
-> > hardware but I do not have Nomadik hardware to test for that.
->
-> I have queued the relevant patches to an immutable branch in the
-> pinctrl tree for testing and I can also pick up some ACKs if they arrive.
->
-> When I'm confident in the branch, I will send an optional pull request
-> to Bartosz for it!
+> [1] - https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L130
+> [2] - https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74x164.c#L150
 
-That is all great news, thanks Linus! I'm staying available if you
-encounter anything that needs action.
+Please, convert these to be Link tags, so
 
-Have a nice day,
+at the end it will look like
 
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Fixes:
+Link: URL1 [1]
+Link: URL2 [2]
+Signed-off-by:
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
