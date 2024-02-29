@@ -1,106 +1,99 @@
-Return-Path: <linux-gpio+bounces-3903-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3904-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E772386BA1E
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 22:39:01 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A33886BF67
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 04:22:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3C2F28BE3E
-	for <lists+linux-gpio@lfdr.de>; Wed, 28 Feb 2024 21:39:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 92BE01F24D7B
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 03:22:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EEAB7004D;
-	Wed, 28 Feb 2024 21:38:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4424B374CB;
+	Thu, 29 Feb 2024 03:22:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mG9qMT+9"
+	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="fRNXX3Iz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABD7970020
-	for <linux-gpio@vger.kernel.org>; Wed, 28 Feb 2024 21:38:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D5A2030B;
+	Thu, 29 Feb 2024 03:22:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709156338; cv=none; b=vCtHxSeJxCPkTfXcUsHiCZyMiBLZOio82EjT+xJzhYNSYY/3Fl/++gR/hrx3R/wAC2xB2V6SyTLZQjXTHOrdPXEBS96r0Hl0fvsjmbhV2wugvGlI4bWk/ZpX2pwoVnGfqJ9eHk2oHwZi0CQTU4QKMQqfC0LvlklNVhyXzTymA7o=
+	t=1709176923; cv=none; b=IcwBjjAu3J7VGCnuEfTXlxf02//Pg6Jm2CSDx1UjXPPmL3xVkh7sgMY/m0sL5a6zzNO99ZTILYsV19ro1pWEZ0iE+cMprVhNDnAPNOoTWGPB4VcPYMmWmx/IMZY2Uv0coBaymhmd+26piRqnYH1asaVw9S1W+tcUZKp9qgM8owE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709156338; c=relaxed/simple;
-	bh=ZZYMMkvnT8rMcTzALb9auQy9jBxDCGxw/nkLNgFjKsA=;
-	h=MIME-Version:In-Reply-To:References:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=oEKxlGt7VFO/miZTEYTHM4YtzwPPMeKzORKoKtAXJSLuffUUtI07fHInMM8EnT6BcVPym/VPewhSaC6ywZlWsYaJfc5+G+mTwIcLm04MOdBSs8p9EZEvxbOa7qjfd9tmgL/CZMQlzxth5qWriz2vvtaQ0aVAoVxZJmN6OU4NrvU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=mG9qMT+9; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5131c21314fso195894e87.2
-        for <linux-gpio@vger.kernel.org>; Wed, 28 Feb 2024 13:38:56 -0800 (PST)
+	s=arc-20240116; t=1709176923; c=relaxed/simple;
+	bh=LPgGynQ+A1/bnYxF+wO/SXRI5kLXQ3Qw06TO0sy0C24=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SfeW0KKdnz3pJtUVF4iwuQIi1XySDVNYXjRBIIE+yGkZevDJ7VE143ybexBA0w0k0HyndizdApRENNYfe+Y7s9EXO5+g2ZmzJHbBEfcoyY2dZVpw5RLy8QOm3hqAIlu8pt3cZxr4g/Lq59VYJeo2/06dMLDLUs+c9dHiTbZXJls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=fRNXX3Iz; arc=none smtp.client-ip=203.29.241.158
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
+Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
+	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 854162003C;
+	Thu, 29 Feb 2024 11:21:48 +0800 (AWST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1709156335; x=1709761135; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:user-agent
-         :from:references:in-reply-to:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZZYMMkvnT8rMcTzALb9auQy9jBxDCGxw/nkLNgFjKsA=;
-        b=mG9qMT+9r/6FHrmIe8H+2YBd4V46U9J5uhVNcczMLRlG/OAnDpJ3YBiR+mIE5VzU93
-         ofw7bVG0gdVH3dwZePnfrtU7mKYso+K46Pmun+aJNQJFYuWnGn3tR7oVXtUnOBhxjRbu
-         npmpkxiM5erCstOsuDWSxubddRbHWiWHUUw8o=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709156335; x=1709761135;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:user-agent
-         :from:references:in-reply-to:mime-version:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=ZZYMMkvnT8rMcTzALb9auQy9jBxDCGxw/nkLNgFjKsA=;
-        b=ho+pm21t1qx8OPaIIZ3A9f6AriGHNtFtnPbmDGFIJ7UQsidfr9X4P7DhtNWiLDmhdA
-         GwOqKTXZ6AHZz8PHKCQ6kCbZtgad5B6FQSbRtSQeFq3vnelgqmhqTn33c26rg5CbtaHd
-         V8eEAIUPWliyta5ejU4gX4L7p515Arn716IR+tlS/H4l4nuvCTanOtfaNjN7jR9mDB4C
-         XIy8A4HXq7z+Goyhss3AneqtVSsstpxPFp0sMTTgCrzaUhj4JY3D7++3wYvPRrFymVcd
-         o8TgOhnt+3xaXCHH4YHPqqstKCxk9B1Ht8/0zLiVXnU90P5ajoCojjsJp34HgAviYOSX
-         NNtw==
-X-Forwarded-Encrypted: i=1; AJvYcCVuHYj+Cr9NoP78kLO2d3IPTy7B3pNBRUM+Llmr9zVHxGpuWDGsoqVrQGoQY5vS40BazJUtEP+UR7G1NHNxrL9Z05nzNCCXMjCTOg==
-X-Gm-Message-State: AOJu0YwXbIxBRlCFc5OLWngP11lgRrftpqaI6xV83h+fSBuibYsOxz9z
-	kRF0S8p6Vib1Fo936DzYuG8lRNwBFa5Y/njMS50OKtHXTu3o0RG+NInaPoq2BG5IQFzqgZ5SB/U
-	qj3OODFHOZKrjNpOs19kGd7En8VCHdmoLmg2t
-X-Google-Smtp-Source: AGHT+IETIffCFIqYQK+u9ZTlRcZaGK6oBiJ82QRaqg2mZdkQFQuCEw+hnjwQN/Y1e0VJoJC6rZCYqp34iNcxXmVtIdg=
-X-Received: by 2002:ac2:5976:0:b0:513:1a38:2406 with SMTP id
- h22-20020ac25976000000b005131a382406mr159441lfp.13.1709156334984; Wed, 28 Feb
- 2024 13:38:54 -0800 (PST)
-Received: from 753933720722 named unknown by gmailapi.google.com with
- HTTPREST; Wed, 28 Feb 2024 13:38:54 -0800
+	d=codeconstruct.com.au; s=2022a; t=1709176912;
+	bh=RLcNqeFFO91l5U2c2IKNxo911MnrtAjB3bSLnMByv8c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References;
+	b=fRNXX3IzTcEDeyZE4x/DP7vMGGIc5cp7BOkn7QL+57i48ck+9kkXj2c+UWUD9JxVX
+	 2EqFfWfksv4DLEqx48mVIcMgcys42fwv2FaWdBCdNGi9nyArnwCtBtvzDf7jUk5DR3
+	 /anASWfpRpAMG2muKIHLK/ZBzNlMpeM+0B9HZOepx0wgXeMYRdEj3m909jz4J63VTS
+	 aWztF4wAso9Qg9NuRqiVWWMiVr4GAYD35xnEa9cWmTkWE+vP5zCHwCiMvvsDAnUEjx
+	 hNZziqdSqQmtRsAZSeWSJSyWL5OIjPElh1aFlTOotSSxurW0x8g8Ryg1PYBbwVKuzz
+	 QNybC8fjN4CcA==
+Message-ID: <16ddd99007176da3f84462de217cb76c8fa4e1bd.camel@codeconstruct.com.au>
+Subject: Re: [PATCH v6] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
+ DT schema
+From: Andrew Jeffery <andrew@codeconstruct.com.au>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	linus.walleij@linaro.org, brgl@bgdev.pl, krzysztof.kozlowski+dt@linaro.org
+Cc: robh+dt@kernel.org, conor+dt@kernel.org, joel@jms.id.au, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, 
+	linux-kernel@vger.kernel.org
+Date: Thu, 29 Feb 2024 13:51:45 +1030
+In-Reply-To: <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
+References: <20240228003043.1167394-1-andrew@codeconstruct.com.au>
+	 <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.46.4-2 
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <Zd-nI9XoYW3hrPXx@smile.fi.intel.com>
-References: <20240223065254.3795204-1-swboyd@chromium.org> <Zd-CJHkCHpuIEnWh@smile.fi.intel.com>
- <CAMRc=Mdapd2jTACGqm-ujZrAunRmNeJ8_3+bpsN4ieCre52yrg@mail.gmail.com> <Zd-nI9XoYW3hrPXx@smile.fi.intel.com>
-From: Stephen Boyd <swboyd@chromium.org>
-User-Agent: alot/0.10
-Date: Wed, 28 Feb 2024 13:38:54 -0800
-Message-ID: <CAE-0n52cgFvaHPDLBd-cn0WMisxX41-fPJHkroTucxHNk39SZQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Pass consumer device through to core in devm_fwnode_gpiod_get_index()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev, linux-gpio@vger.kernel.org, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Quoting Andy Shevchenko (2024-02-28 13:35:31)
-> On Wed, Feb 28, 2024 at 10:28:07PM +0100, Bartosz Golaszewski wrote:
-> > On Wed, Feb 28, 2024 at 7:57=E2=80=AFPM Andy Shevchenko
-> > <andriy.shevchenko@intel.com> wrote:
-> > >
-> > > Have you seen this?
-> > > https://lore.kernel.org/r/20231019173457.2445119-1-andriy.shevchenko@=
-linux.intel.com
-> >
-> > Clearly yes as I queued the first one in that series. The rest did not
-> > make its way upstream for whatever reason. What is your point? You
-> > want to respin it?
->
-> It was a reply to Stephen. :-)
->
+On Wed, 2024-02-28 at 08:47 +0100, Krzysztof Kozlowski wrote:
+> On 28/02/2024 01:30, Andrew Jeffery wrote:
+> > Squash warnings such as:
+> >=20
+> > ```
+> > arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e=
+600000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,=
+ast2400-gpio']
+> > ```
+> >=20
+> > Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
+> > ---
+> > v6: Address more constraint feedback from Krzysztof:
+> >     https://lore.kernel.org/all/f69ef2ad-8ace-40c8-b923-4dde20eda2ec@li=
+naro.org/
+>=20
+> You still have way too many examples. One is enough, two is still okay.
+> We really do not want more of examples with minor differences.
 
-I saw it but it hadn't gone anywhere for many months so I fixed the
-problem I saw. Will you resend it?
+Noted, I'll keep them to a minimum in the future.
+
+>=20
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Thanks for the feedback.
+
+Andrew
+
 
