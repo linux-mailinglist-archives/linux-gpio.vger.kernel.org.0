@@ -1,205 +1,110 @@
-Return-Path: <linux-gpio+bounces-3957-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3958-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C86586C9A9
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:03:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9ECF786CA32
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:24:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4FE841C20F6D
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:03:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3AE011F223AC
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:24:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FCD27E0F6;
-	Thu, 29 Feb 2024 13:03:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D83727E579;
+	Thu, 29 Feb 2024 13:24:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="N7C9WFvE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="diK6zDaI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EBE97E0E3
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 13:03:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 036717E563
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 13:24:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709211808; cv=none; b=RNiViD5DXbHOc4iBSTilCRB8Kdihqim5alocPHIk0MoYdPELgJY8/II95q9EZpqOFQYYpQpZYQX2pgUPz63toDNhY4Iz9yFCEC7PoSMmHm828ktXWez4X5Da968AGC5TFWvo+lKanigz6XgHIgv5ZYUOobslq20Z+NklD8v3iUc=
+	t=1709213069; cv=none; b=d0DkWcupZ9pNU+KFJ+gzLvFfIzTf6yywXu+2PFvhrNAIVA+12JTUssPVfcDLjN9Sx4UoSfZyqBAeDf6kzofiqmu02TLCUL0rec0iF+Eg29N9bRxiNT0whAxD9MT/ZrlA1L5UWw8thGJCegQ7ZviTF+oe7jsBxLdkRW+m079LqGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709211808; c=relaxed/simple;
-	bh=3KFwAwzX3Nqj77zYQMOKvmHpYqpHOLy9C2qCRmqB3Is=;
+	s=arc-20240116; t=1709213069; c=relaxed/simple;
+	bh=5shKJIq6joWiQf1OMpN/6d1kx+W0ECYnM+AdFjTkEVE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Bm1x1CmNszINolHSOfv/c8sfla+A4Hd2+RPx8WKwKwTsXdSAEyqwQ35n68U6JBaOlw6Q2j0SpqLV92Co6/jt9/VtoiViulFKU1oXyQT3jNqRZWbwnIS/PxwohMzkMv4Ry6xGgFFyVsGTNagE3G8HoE7CJWGk4PpLx82CD19aurw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=N7C9WFvE; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=tGFsfupplZBAJOe638ly8rcGqOVY/Ec4B4TNhFcqvOlC+hofMbYQ/RMkTl0bkFE+HbK6N6kCP776vYd0D3RNdzO28V3ICAso59YZcIaQY+Gwu/ZDnJmMt3MMRIjn2gnz+AG5/gvYD3H7I83noiy0zjNLgSZkYICAWvE+yDF9AyQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=diK6zDaI; arc=none smtp.client-ip=209.85.219.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-db3a09e96daso899165276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 05:03:26 -0800 (PST)
+Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so859528276.1
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 05:24:27 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709211806; x=1709816606; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709213067; x=1709817867; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=H7BfAiS0dMbweRAkXE/17W2K80r1DmpgC/baihcoMn4=;
-        b=N7C9WFvESgQgQ58sJGCBk1jKwXLcI+MQelQpsM/721oaHZQWNhetCrFNF/55vJ8iAW
-         ioAPKVieW6U/Mc05Yo2CB1vUKgxzM59tAn0zLXkku4ukQnFXdeDxR9Oz1KT8MoSvuJN5
-         zTUUjTRcmmhgAEJnby5p3thdXnAP7LQVVGvN8m1uwU1I2AVORs0Upy5t4zndGwtydU+K
-         ASxNpKAPG0N3LaIlpYUmVzxshTsb+CJToyV4KHovo+LHPYk/cWxXMQu7QiNgmpAt1+T9
-         mITGTGj1QwWstzUTpr3VwrtqGI6FuKz882epUfDEqXrn+X/DqQanSIMJvK5Gt9lHR09q
-         ztNA==
+        bh=5shKJIq6joWiQf1OMpN/6d1kx+W0ECYnM+AdFjTkEVE=;
+        b=diK6zDaIjPNE2V7pvNGH68rA+DFSWmGbIJiwzirYiWR6s6XrojlKdeAh2MvYubHcq2
+         ELCRE3qa9p6DAgXPLXPjwIMeo3B+zbmxkU2BXtewrUUwMrVs83B+SRC64o+sR6mtnFe+
+         rtsEu3jGXCe+dqGfMG7+ODcF6xeGshzwUIS1wuqZt1sSw6TSQ4AGZAFhy+13waEg2FWl
+         IE7zKEz8soWg/9BRJEw7qZNiX8QBPrBfJWv+oqja9pKLKEJ/KlQWJISPMjgc0gsZhMsV
+         0HpsPrNgUDE8XR8j5OVBtF63Z3xZIL9MfTci1Cka0PlCq4jUZRH+ZQ5+mN0tCbrf80Bh
+         fj+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709211806; x=1709816606;
+        d=1e100.net; s=20230601; t=1709213067; x=1709817867;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=H7BfAiS0dMbweRAkXE/17W2K80r1DmpgC/baihcoMn4=;
-        b=OY8L0WCC2auNrL553z1/XV3WKEa/n8qS6N5dqI9IoZvhsrRUNEI2Gw87ARCYeHU1iK
-         ZzRUBOLW4Nx7eKiIA3S3IaAJNFa5SYnesseztV7PDh/+qJGvCESAgl+YpD5ZQq/y2lQV
-         Ql6HcT9vbh59eZ+qlY3qE83RZvpj1gY4eC6uwsdyt5aiNm1zCQekVeq7yjqmz23moSDn
-         HTtHjn7GC0POQb/vNdhOia54xm5CJE0LI+ph46Z15JHHcUkHy4LJfNNs/y3KB1eILoIZ
-         CohSnDxgbIby/Sc1jQrMfeEcDqBv2OBuF83TO3ENHOfVFq0yfx/ctSNKwbCW3vtfANjS
-         JTmw==
-X-Forwarded-Encrypted: i=1; AJvYcCWGZ3eA7RahzFze88BH6vaOLr1rMRqGVNo8TAo93CXZRSGNWNMTLsxkrakDN/qrwTWp9CQhaASEiLKt5NGWDegtHoSugex2C2EpnQ==
-X-Gm-Message-State: AOJu0YyGrotshs6vvhkgM0nf1fW2xE0/BqZ7MJKqVvgNLNIHg9lhh2/v
-	bKfm9bpkmiEocOd6MJWi0S4D+UHtlWEi58IEyJjopXr+wY1D7AjUMjB7wlIutrHPTQ3NxApz1Wq
-	BeCmRU7YanZfIurCsh3UEWA2HaoWCd47cxW2x6g==
-X-Google-Smtp-Source: AGHT+IHQz42wX2mAaaw9ho5RQMq4VSD4ZFqcEz4aryLKKrd9HwtJCvam+GQvCM1L9WJW5tUmbAJLU5/+2pI5vohfiqc=
-X-Received: by 2002:a25:ce02:0:b0:dcf:9019:a2fe with SMTP id
- x2-20020a25ce02000000b00dcf9019a2femr1786280ybe.64.1709211806087; Thu, 29 Feb
- 2024 05:03:26 -0800 (PST)
+        bh=5shKJIq6joWiQf1OMpN/6d1kx+W0ECYnM+AdFjTkEVE=;
+        b=MY69s7ApBCKPuwwCjvNdwRc8Qz/SP4dxknEG0zwZHglSgUpIGvfqCIiSbTl/k1OUlO
+         gfGm4Vt1X5+33V1vTonSi0tygBmnGBrwVNYXKyvUKaYyGofAOUmDzkDSDRexdH1CGe+C
+         PSIgtCacjNThwg9oX4iaWj7JWBPzNzeR2zPU/z9T8Tsb22o6EzeNqs6mZQSOCfNXJcUq
+         QjhmsnC1K7bzsaQnAh6NdzbJQdhIb1v6KetRr6St5kkNx3pGoWmcqTA4SDfMBUCPPe53
+         lHWURae8jKQ8EVbyWjQ24nOvFgnX2oZH02niQDF6smtVVY8L9yi2oCive0Gk2wJnaMnW
+         4IPA==
+X-Forwarded-Encrypted: i=1; AJvYcCVHDR0vuK3Tz//Kfc5oKJ6X371NUejU0Py6sALXhiwd1nhR+jzResiEfbWzbncF3r0DduqoWe2AY6x3W3pXPVf0sWqVPDhtu3QEhQ==
+X-Gm-Message-State: AOJu0YyDpiwqH+zv6aeTNtYN+iB/3qgxjG38B3a2oxy74AAwGQBY4Ljn
+	JY64KiAG2ADKY4x7DRjkR5rqPbhw8EVMaz9ubkKDGBZa/2Llj7wCSe9GyVx3ZzTK79pVOvcv/Ql
+	JqTGR9ErLKljKZzPEh6Uj4CR1NMplPg8WralbmA==
+X-Google-Smtp-Source: AGHT+IHtxtxLc1PV2T7biqX/e3kKfkY0L5vzXx+f1q90xelaRpKnFCLjxEZPqxD5C352GVD5oDSCgXpz2Z6iKLkdUDI=
+X-Received: by 2002:a25:ad85:0:b0:dcd:30f9:eb6d with SMTP id
+ z5-20020a25ad85000000b00dcd30f9eb6dmr2299746ybi.57.1709213066996; Thu, 29 Feb
+ 2024 05:24:26 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240220064246.467216-1-yuklin.soo@starfivetech.com> <20240220064246.467216-3-yuklin.soo@starfivetech.com>
-In-Reply-To: <20240220064246.467216-3-yuklin.soo@starfivetech.com>
+References: <20240223093701.66034-1-bhargav.r@ltts.com> <20240223093701.66034-14-bhargav.r@ltts.com>
+In-Reply-To: <20240223093701.66034-14-bhargav.r@ltts.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 14:03:14 +0100
-Message-ID: <CACRpkdZd9WuLmvBEjEOF5R+R8Yrva_KiEPRCOXU98yLDkS=+ZQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2 2/6] pinctrl: starfive: jh8100: add main and
- sys_east driver
-To: Alex Soo <yuklin.soo@starfivetech.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Hal Feng <hal.feng@starfivetech.com>, 
-	Ley Foon Tan <leyfoon.tan@starfivetech.com>, 
-	Jianlong Huang <jianlong.huang@starfivetech.com>, Emil Renner Berthing <kernel@esmil.dk>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Drew Fustini <drew@beagleboard.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>
+Date: Thu, 29 Feb 2024 14:24:16 +0100
+Message-ID: <CACRpkdZzTheR=+=in7RYTFM2dquEPmGDudB7n1zoiUU4B1UCVg@mail.gmail.com>
+Subject: Re: [PATCH v2 13/14] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
+ pinctrl and GPIO
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org, 
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	jpanis@baylibre.com, devicetree@vger.kernel.org, arnd@arndb.de, 
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com, 
+	vigneshr@ti.com, kristo@kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Thanks Alex,
+On Fri, Feb 23, 2024 at 10:37=E2=80=AFAM Bhargav Raviprakash <bhargav.r@ltt=
+s.com> wrote:
 
-this new version is much improved!
-
-On Tue, Feb 20, 2024 at 7:43=E2=80=AFAM Alex Soo <yuklin.soo@starfivetech.c=
-om> wrote:
-
-> Add JH8100 pinctrl main and sys_east domain driver.
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 >
-> Signed-off-by: Alex Soo <yuklin.soo@starfivetech.com>
+> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they
+> have significant functional overlap.
+> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+> dedicated device functions.
+>
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
 
-This commit message should at least explain what we are adding here,
-that it's a core driver that will be used by all the domains, what the
-SoC is etc etc.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-> +       select GPIOLIB_IRQCHIP
-(...)
-> +#include "../core.h"
-> +#include "../pinmux.h"
-> +#include "../pinconf.h"
-
-Do you really need to poke around in the internals like this?
-
-Please explain for each cross-include *why* you need to do this.
-
-> +++ b/drivers/pinctrl/starfive/pinctrl-starfive-jh8100.c
-(...)
-> +#include <linux/of_gpio.h>
-
-Never use this include. It is legacy and you should not be using
-it. Use <linux/gpio/consumer.h> solely. See comments below.
-
-> +#include <linux/pinctrl/consumer.h>
-
-Why?
-
-> +#include "../core.h"
-> +#include "../pinctrl-utils.h"
-> +#include "../pinmux.h"
-> +#include "../pinconf.h"
-
-Again all this. Explain for each one exactly why you need this.
-
-> +static int jh8100_gpio_irq_setup(struct device *dev, struct jh8100_pinct=
-rl *sfp)
-> +{
-> +       struct device_node *np =3D dev->of_node;
-> +       struct gpio_irq_chip *girq =3D &sfp->gc.irq;
-> +       struct gpio_desc *gpiod;
-> +       struct irq_desc *desc;
-> +       irq_hw_number_t hwirq;
-> +       int i, ret;
-> +       int dir;
-> +
-> +       if (!girq->domain) {
-> +               sfp->irq_domain =3D irq_domain_add_linear(np, sfp->gc.ngp=
-io,
-> +                                                       &irq_domain_simpl=
-e_ops,
-> +                                                       sfp);
-
-When would this happen? I don't quite get it.
-
-It looks like a probe order issue or something.
-
-> +       } else {
-> +               sfp->irq_domain =3D girq->domain;
-> +       }
-> +
-> +       if (!sfp->irq_domain) {
-> +               dev_err(dev, "Couldn't allocate IRQ domain\n");
-> +               return -ENXIO;
-> +       }
-> +
-> +       for (i =3D 0; i < sfp->gc.ngpio; i++) {
-> +               int virq =3D irq_create_mapping(sfp->irq_domain, i);
-> +
-> +               irq_set_chip_and_handler(virq, &jh8100_irq_chip,
-> +                                        handle_edge_irq);
-> +               irq_set_chip_data(virq, &sfp->gc);
-> +       }
-
-This duplicates core gpiolib irqchip handling, which you select using
-select GPIOLIB_IRQCHIP.
-
-Can you please look into just using the gpiolib irqchip handling?
-
-> +       sfp->wakeup_gpio =3D of_get_named_gpio(np, "wakeup-gpios", 0);
-
-No using <linux/of_gpio.h> please.
-
-Use just <linux/gpio/consumer.h> and something like:
-
-struct gpio_desc *wakeup;
-wakeup =3D devm_gpiod_get_optional(dev, "wakeup", GPIOD_IN);
-
-> +       if (gpio_is_valid(sfp->wakeup_gpio)) {
-> +               hwirq =3D pin_to_hwirq(sfp);
-> +               sfp->wakeup_irq =3D irq_find_mapping(sfp->irq_domain, hwi=
-rq);
-> +               desc =3D irq_to_desc(sfp->wakeup_irq);
-
-if (wakeup) {
-     irq =3D gpiod_to_irq(wakeup);
-     .. convert to irq descriptor etc...
-
-Actually: is this wakeup handling something we would like to add
-to the gpiolib irqchip so everyone can reuse it?
-In gpiochip_add_irqchip()?
-At least give it a thought.
+Is this something I can just merge to the pin control tree, or does it
+need to be applied in lockstep with the other patches?
 
 Yours,
 Linus Walleij
