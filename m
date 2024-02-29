@@ -1,147 +1,330 @@
-Return-Path: <linux-gpio+bounces-3992-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3993-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3377B86D0E6
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 18:39:42 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0CF5686D0F6
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 18:41:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DED012888EC
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 17:39:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 6080AB266A1
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 17:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 405E970AD5;
-	Thu, 29 Feb 2024 17:39:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B1FCC70AF3;
+	Thu, 29 Feb 2024 17:41:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Yr8AIOHA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qZ/AYTEr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 74C8D6CBF7
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 17:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C1D970ACB
+	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 17:41:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228377; cv=none; b=pkBeljiyTpT7oTsateHNq9DVB5nTWYnxB0R/Pal5GcGakhVu20UeSNENHwtyxKZkrnH6EZdfzjSqB6lP7vVTFyE6Om5h1QM9Xisue8N/I/kofwd+n4/1Xv1EeSrrD7/gVeKAIA/40QktJkneHjMyWjfVm2qS5zhJ6RK+1Bu0pmk=
+	t=1709228481; cv=none; b=YfhSV07XAPFiWYlFZUWm5sRxFf5lLyzSXquE2VOP1Jdmbsor/Eba9Eqcokj4FTXZnyGgf0YSA3XABX3Ww3EM+8ByFf9mBtkXza1yTRNbe46ZRN1pSJHW97ymqP5CeifYOBSfwfXBl8pkKjIph5QxCUBw593Im046TW0Lf5E3R5o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228377; c=relaxed/simple;
-	bh=IAtiPDsmSz7hD3vhPLE/igLGTYY4MMGETCJKNgYaVuM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ENwwTubxbXNgY794kWLKBiW9tusd8v+GCjcD7hlujAJxDVMvGROC0ZsWgxj6idpkMSdvOIJm0G5Qrzngr98uvs8xxw5dsqa6KEzIbbh4YRlbWwYNXGaBLrkuJsFi78f3SZlUJKpFdZK2c0oVC9avWSnxQHYDUJFX1WphVyhlv0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Yr8AIOHA; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7dacc916452so434620241.0
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:39:35 -0800 (PST)
+	s=arc-20240116; t=1709228481; c=relaxed/simple;
+	bh=Vt51PLDm+qqwo1+lF7bppptNgSSC5xhHiwCtQY8Hio0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RjA8rcBs0z+fCSo7QByX/E/CrBRFxgTABaSa5KXAzG/Lsfpkp/SOEZWnaVfILxfrwrFG/EOcDErEuvvjTh2tW7XUAtKLjRiddFkh9EH53e9SvEqyuLsunkiORJx1PlOyxf+lsJNa08IW7+8YtAgBWnniQJgLC/yf9RH1I/IlqFk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=qZ/AYTEr; arc=none smtp.client-ip=209.85.218.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a4429c556efso214183366b.0
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 09:41:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709228374; x=1709833174; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IAtiPDsmSz7hD3vhPLE/igLGTYY4MMGETCJKNgYaVuM=;
-        b=Yr8AIOHAyBNbzGWguva4lWdNncaEt96R8bL60P8X3DnCtuE5054AIquijNVFUR748m
-         k/CJw+UVgl9dxnmsKXx+gbn2eeLI1NZYG438eQFFjvOtZFAV5UEuXFYEIznMm58DlXC/
-         OlN5ePW/DltNEFyGphlyjQFyApnVnYKD5QBr945kB8NkTwRiAxY5ULGzn8tMl1bomSIz
-         6YUo4dZNr1CYIsYwBC6ATdjZY8e9QpMt42re6D1B5ToUwjrH+F5eJFulyWUNlsG43Dfq
-         4sdYlxNzRuxoBoo4FE6WA2IUeBW4J5MDsf2ZnYC4E9oCWVeRn8aoSQCYhCVHJ5Nzq87a
-         ep8g==
+        d=linaro.org; s=google; t=1709228478; x=1709833278; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2zytYnRTtQPDtsil9H1JUD4FPmGN5bcMZ2FHwWsum8w=;
+        b=qZ/AYTErL0fAi8kwgUKJ3+9FFlsLvI8TcwoiTv2jzPEfJkukqWCGOQ7gRSWFvxMAQr
+         kG8X9A8LAlVOx3t+iJuNBVTfXi6Pbb14LJjsUqlByk0OcdEFIiGqaXjqiOsDLFIZQkmI
+         Q9PB6n/g3it4KtDNplEIk7VwJezqQlFvnb4yLL2nJCgTc0j2sUGPq8yqh3Yn92/XHUb0
+         ED352OciBY2y3htCIc3GPdAvdruy2JrsLWvDhBIIbjIukhK+3qEVEabX6tld54XwOsQN
+         1fMW6u9ZIN5esLq5O4NryggcqSgf82LeXawfc0K+xErBYcSn1mxAnu6qvju7OiZRplLu
+         xHvQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709228374; x=1709833174;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=IAtiPDsmSz7hD3vhPLE/igLGTYY4MMGETCJKNgYaVuM=;
-        b=oUXZ1r6Fpt27mxsHO6bWYf3LJIujxkZBEC8DBNbWTpA0OxLejzIERBewhqm5NpWg4b
-         KcNDBDEhz4aL8mpQxulYgtelUVjQevvu+ajs4edxEe5priqUB9Lx9qV9z4yFd0T2nVNf
-         PbS3DFi0UDlT2bdNFywRNT9Ahi+wYK3ZP0UaFJUuh6fDHzv9008hSQfTRd6df8/k3yHK
-         cTqIgrvCPpN6QXNcWC/HkAFVy4EDTmnZKcmaMjUiDSz0k0FqNqsrxUaG4LH7paT2BC8N
-         Ot1/6PocXpS/GFSPbEaxVmDlmWIiibict7xlikZvelqs7DtF4Fu36vIVBJ+2NqKDni2m
-         TFJA==
-X-Forwarded-Encrypted: i=1; AJvYcCXdlil7T8Q6i+GnwTcudFobO0JLyjXHc7n/cUvJIDo8bhY1BhTklIydTekJSiUPMOG/jS8dd4Su9MfTNc/bp+ZCQxauAFnHOg1Hhg==
-X-Gm-Message-State: AOJu0YzDozsVpL377vYEytE4fNTS7OYdAKB2yDn+eDyQQC22YURM9LMB
-	5hIFbQztRzOIS/NKG5ZTuWgKIg0p/yy401giiKpU6uDVIqwLiJJvRxrkQXGJaiUrhMbetJkVMVm
-	igltByfUc/dUlDROCVmL0tRJ0HBidx3sgaTu6wg==
-X-Google-Smtp-Source: AGHT+IF3+Ifh+McFCEvMTyUM4nycbbpEpZ12Cahi2H6RdLSrouVmOQ1v6+nsASB2/9f5BsKQYIiB22pbGJw45Rvkepk=
-X-Received: by 2002:a1f:e642:0:b0:4d3:3974:657e with SMTP id
- d63-20020a1fe642000000b004d33974657emr2462155vkh.4.1709228374399; Thu, 29 Feb
- 2024 09:39:34 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709228478; x=1709833278;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2zytYnRTtQPDtsil9H1JUD4FPmGN5bcMZ2FHwWsum8w=;
+        b=OhMRjfC/uCWf8T1X99oy6vlQodMcCILGLeIyW5oJSplziME+AW//KnBPVm/erYfJX3
+         PmCmLFx+X4rUwkSWObkDK62cfWXE0TyE9Gl0e6916V0l3rNPgDNTtZnlyQTbnCd4DQze
+         MXkxI9cRv6myW3qO+BmDNY6laO3DJCPKO8w5vcLEMBGbNAYL+9vV8BypOhBxU1QluGKA
+         AjcpCrC/lNsMucYtsZqq84lb5F6FQaZoNNxnoD7Pe3vMM7IPtUnjB5qROy1GL6+V55e+
+         MuCWa1n7mVjfpd3eLdRNSwmYqcEtv8BVRdqmVoDr0Qh/FiKWIqScqNNpVcWowBj72XzM
+         kkqg==
+X-Forwarded-Encrypted: i=1; AJvYcCWaqqYTQDkETwYPbXcgBcFMxEhsndKr8Q6QlJr1ugM+fbnH4LAbLJCEAD2WMCrdc/wkJT7FCAwbRHnVSgcf1r6f5lZJV4ZqSEQ4sw==
+X-Gm-Message-State: AOJu0Yx2Ulmjynm3d/VV+710UB89Egxx5fXhIf45Gr7/xgr3/XFJU5HK
+	h2L9gMy2302UtRdJ3XhTyZaesWHou5yDz0HjmKUSUxSS1LoEANGK1Fiy+g6gMsY=
+X-Google-Smtp-Source: AGHT+IH9LRuofxOXA8A09/IC1O0+9Vunzu+NXHqc2+p6uPow0/WmiGba6teKAlj3ud2OyN9mieJygw==
+X-Received: by 2002:a17:906:80c4:b0:a43:ff8c:6d9c with SMTP id a4-20020a17090680c400b00a43ff8c6d9cmr2205206ejx.56.1709228477937;
+        Thu, 29 Feb 2024 09:41:17 -0800 (PST)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id mp20-20020a1709071b1400b00a431488d8efsm888255ejc.160.2024.02.29.09.41.16
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 29 Feb 2024 09:41:17 -0800 (PST)
+Message-ID: <44877f61-8f23-4334-90ae-35545c76c1a0@linaro.org>
+Date: Thu, 29 Feb 2024 18:41:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240229084555.43701-2-arturas.moskvinas@gmail.com>
- <CAMRc=MfTo7MnfMhRQsjeFsLv3yjEtP0C3ytqACN+nuGw0Sr-Bg@mail.gmail.com>
- <15e6e45f-7398-4703-8154-35e769bac94a@gmail.com> <CAMRc=Mf__-sbAV0xuC2hsxm_-kQWqgxSLRYLKqt9-ce+8_Kf_w@mail.gmail.com>
- <f9e90eb2-60e5-4ae8-9f3f-92922294e981@gmail.com>
-In-Reply-To: <f9e90eb2-60e5-4ae8-9f3f-92922294e981@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 29 Feb 2024 18:39:23 +0100
-Message-ID: <CAMRc=MfSO_RbrU672WV8MnfRoPJbkJwa4q+7p++6sZf-x3LGOA@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: 74x164: Enable output pins after registers are reset
-To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-Cc: andriy.shevchenko@linux.intel.com, linus.walleij@linaro.org, 
-	u.kleine-koenig@pengutronix.de, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 3/3] dt-bindings: pinctrl: at91-pio4: convert Atmel's PIO4
+ bindings to json-schema
+Content-Language: en-US
+To: Balakrishnan Sambath <balakrishnan.s@microchip.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Nicolas Ferre <nicolas.ferre@microchip.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Claudiu Beznea <claudiu.beznea@tuxon.dev>,
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+References: <20240229-pio4-pinctrl-yaml-v1-0-c4d8279c083f@microchip.com>
+ <20240229-pio4-pinctrl-yaml-v1-3-c4d8279c083f@microchip.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240229-pio4-pinctrl-yaml-v1-3-c4d8279c083f@microchip.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Thu, Feb 29, 2024 at 6:24=E2=80=AFPM Arturas Moskvinas
-<arturas.moskvinas@gmail.com> wrote:
->
->
->
-> On 2/29/24 15:25, Bartosz Golaszewski wrote:
->
-> On Thu, Feb 29, 2024 at 1:23=E2=80=AFPM Arturas Moskvinas
-> <arturas.moskvinas@gmail.com> wrote:
->
-> Chip outputs are enabled[1] before actual reset is performed[2] which mig=
-ht
-> cause pin output value to flip flop if previous pin value was set to 1
-> in chip.
-> Fix that behavior by making sure chip is fully reset before all outputs a=
-re
-> enabled.
->
-> Bartosz, does this look better?
->
-> ... if previous pin value was set to 1 period
->
-> Andriy, Bartosz, is commit message ok?
-> =3D=3D=3D
-> gpio: 74x164: Enable output pins after registers are reset
->
-> Chip outputs are enabled[1] before actual reset is performed[2] which mig=
-ht
-> cause pin output value to flip flop if previous pin value was set to 1.
-> Fix that behavior by making sure chip is fully reset before all outputs a=
-re
-> enabled.
->
-> Flip-flop can be noticed when module is removed and inserted again and on=
-e of
-> the pins was changed to 1 before removal. 100 microsecond flipping is
-> noticeable on oscilloscope (100khz SPI bus).
->
-> For a properly reset chip - output is enabled around 100 microseconds (on=
- 100khz
-> SPI bus) later during probing process hence should be irrelevant behavior=
-al
-> change.
->
-> Fixes: 7ebc194d0fd4 (gpio: 74x164: Introduce 'enable-gpios' property)
-> Link: https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74=
-x164.c#L130 [1]
-> Link: https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74=
-x164.c#L150 [2]
-> Signed-off-by: Arturas Moskvinas <arturas.moskvinas@gmail.com>
-> =3D=3D=3D
->
-> Arturas Moskvinas
+On 29/02/2024 12:39, Balakrishnan Sambath wrote:
+> Convert the existing text DT bindings of Atmel's PIO4 pincontroller to
+> yaml based DT schema.
+> 
+> Signed-off-by: Balakrishnan Sambath <balakrishnan.s@microchip.com>
+> ---
 
-Looks good to me.
+Dependency shall be noted here, with lore link.
 
-Bart
+>  .../bindings/pinctrl/atmel,at91-pio4-pinctrl.txt   |  98 ---------------
+>  .../bindings/pinctrl/atmel,sama5d2-pinctrl.yaml    | 140 +++++++++++++++++++++
+>  2 files changed, 140 insertions(+), 98 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> deleted file mode 100644
+> index 774c3c269c40..000000000000
+> --- a/Documentation/devicetree/bindings/pinctrl/atmel,at91-pio4-pinctrl.txt
+> +++ /dev/null
+> @@ -1,98 +0,0 @@
+> -* Atmel PIO4 Controller
+
+...
+
+> -...
+> diff --git a/Documentation/devicetree/bindings/pinctrl/atmel,sama5d2-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/atmel,sama5d2-pinctrl.yaml
+> new file mode 100644
+> index 000000000000..8a2dee1d6dd3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/atmel,sama5d2-pinctrl.yaml
+> @@ -0,0 +1,140 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pinctrl/atmel,sama5d2-pinctrl.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Microchip PIO4 Controller
+> +
+> +maintainers:
+> +  - Balakrishnan Sambath <balakrishnan.s@microchip.com>
+> +
+> +description:
+> +  The Microchip PIO4 controller is used to select the function of a pin and to
+> +  configure it.
+> +
+> +
+
+One blank line only.
+
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - microchip,sama7g5-pinctrl
+> +      - atmel,sama5d2-pinctrl
+
+Keep them alphabetically ordered.
+
+> +
+> +  reg:
+> +    minItems: 1
+> +    maxItems: 2
+
+You need to describe items instead. And why is this flexible?
+
+> +
+> +  interrupts:
+> +    description:
+> +      Interrupt outputs from the controller, one for each bank.
+
+maxItems
+
+> +
+> +  interrupt-controller: true
+> +
+> +  '#interrupt-cells':
+> +    const: 2
+> +
+> +  gpio-controller: true
+> +
+> +  '#gpio-cells':
+> +    const: 2
+> +
+> +  clocks:
+> +    maxItems: 1
+
+Missing blank line.
+
+
+> +if:
+
+Missing allOf: and then put it how it is in example schema.
+
+> +  properties:
+> +    compatible:
+> +      contains:
+> +        const: microchip,sama7g5-pinctrl
+> +then:
+> +  patternProperties:
+> +    '^.*([-_]default)?$':
+
+No, properties must be defined in top level, not in if:then:. Also
+underscore should not be allowed.
+
+> +      anyOf:
+> +        - $ref: "#/$defs/mchp-pio4-pincfg-node-1"
+> +        - patternProperties:
+> +            '^[a-z_-][a-z_-]*$':
+
+Both regexes are way too permissive. Look how other bindings do it.
+Usually these are -pins or -group.
+
+> +              $ref: "#/$defs/mchp-pio4-pincfg-node-1"
+> +else:
+> +  patternProperties:
+> +    '^.*([-_]default)?$':
+> +      anyOf:
+> +        - $ref: "#/$defs/mchp-pio4-pincfg-node-2"
+> +        - patternProperties:
+> +            '^[a-z_-][a-z_-]*$':
+> +              $ref: "#/$defs/mchp-pio4-pincfg-node-2"
+> +
+> +$defs:
+> +  mchp-pio4-pincfg-node-1:
+> +    $ref: pincfg-node.yaml#properties
+> +    properties:
+> +      pinmux:
+> +        $ref: pinmux-node.yaml#/properties/pinmux
+> +      atmel,drive-strength:
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1, 2, 3]
+> +        default: 0
+> +    required:
+> +      - pinmux
+> +
+> +  mchp-pio4-pincfg-node-2:
+> +    $ref: pincfg-node.yaml#properties
+> +    properties:
+> +      pinmux:
+> +        $ref: pinmux-node.yaml#/properties/pinmux
+> +    required:
+> +      - pinmux
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - interrupt-controller
+> +  - '#interrupt-cells'
+> +  - gpio-controller
+> +  - '#gpio-cells'
+> +
+> +unevaluatedProperties: false
+
+Nope, this must be additionalProperties: false. If you put here
+unevaluated, it's a sign you define properties not in correct spot.
+
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/clock/at91.h>
+> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
+> +    #include <dt-bindings/pinctrl/sama5d2-pinfunc.h>
+> +
+> +    pinctrl@fc038000 {
+> +        compatible = "atmel,sama5d2-pinctrl";
+> +        reg = <0xfc038000 0x600>;
+> +        interrupts = <18 IRQ_TYPE_LEVEL_HIGH 7>,
+> +                     <68 IRQ_TYPE_LEVEL_HIGH 7>,
+> +                     <69 IRQ_TYPE_LEVEL_HIGH 7>,
+> +                     <70 IRQ_TYPE_LEVEL_HIGH 7>;
+> +        interrupt-controller;
+> +        #interrupt-cells = <2>;
+> +        gpio-controller;
+> +        #gpio-cells = <2>;
+> +        clocks = <&pioA_clk>;
+> +
+> +        pinctrl_i2c0_default: i2c0_default {
+
+Underscores are not allowed. Please open DTS coding style. Or test your
+DTS with W=2.
+
+
+
+Best regards,
+Krzysztof
+
 
