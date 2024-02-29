@@ -1,108 +1,107 @@
-Return-Path: <linux-gpio+bounces-3968-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3969-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1E7786CACB
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:57:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CB7B986CAD2
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 14:59:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2FB831C21224
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:57:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 09FEB1C22244
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 13:59:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2114812AAEC;
-	Thu, 29 Feb 2024 13:56:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4107E12C554;
+	Thu, 29 Feb 2024 13:59:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="f+lwSG5j"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L2lS3IkQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52FA812A179
-	for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 13:56:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E98917E11C;
+	Thu, 29 Feb 2024 13:59:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709215018; cv=none; b=AqtzmPREJBhwD+uCnH7lYQhC/m6cAH47o4d9tmQJ5tTYoTApE8HwRuDOYxYlY/PqL3gkTMHjOn/pHUmc/kzsCLs/QqKcJ1cIbhDkZ4nYP5wb8chpuQFf+MBw/kEbP9g96Z/XK8OyvmnzkXhrgRmsc43reoGl2hq79bSnHDZym+o=
+	t=1709215141; cv=none; b=UwaVLCLAIVNMxm3NU55vn+m/DKRCvMX7GjaK7kCWJ7VZXYlvXpofIqIRNAfgjJVQeLJ9yjUYKZubaYuZ2pgmD1Vk3i/30gktrcvVm6Qf0mJC4gJzF5AFG+clOQ1Sgd5kf6xuCXNgyxGmyW8sLgyZKZYH/EaeFLoZz1vnDve4amY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709215018; c=relaxed/simple;
-	bh=Wws5urlY/pHKb5nO9L6+YF0fIvf4wojKA9CEm5jbQIw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mD9b/ThBA88BDdmqqFpXRtlGpusKFqznnIpeBqMF0P1B+Rd+KGGqNj29VPUeFX4QSZDHTGKk8ErBu9zoQJylD3GEqoAEpM7tFCZP03DNX4zWVylVEJLOHZH0bIeyROpe39ulD8EM0TmSHH0WfrPU7YB4pTOMEEhyM9Y1WJGawZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=f+lwSG5j; arc=none smtp.client-ip=209.85.219.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcc86086c9fso1049037276.3
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 05:56:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709215015; x=1709819815; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Wws5urlY/pHKb5nO9L6+YF0fIvf4wojKA9CEm5jbQIw=;
-        b=f+lwSG5jcLV6Jvh2VptIWbckKIq4g3bVLGsCTxwAmoB4r9wOm0qjHxsBW5YQHXD5Fq
-         8MeswxbOLPdHna7vbcMjOQRo6PSium9RcWJbQp/Y0M9FKZE92sK5AzeAwUrxsh+vWq5C
-         ejHf99vyHKL2EbnEfZoZnwyS3Jr9mbDFW0Fol20KdUfO6DXeN8sKENFGPsAq+JQsJV3e
-         D1QfAL2pGW0tQSzTvnuHeTNs9CzRo6+I937nDNiizWP1bXE0Jp2uGNwa1X+z2T0yQDtF
-         CwjAIJTFYiEgrQV+W2IV3DGoBqyBkxYMDkCollRyzlpuS744issI97QqwK64PAaagcqX
-         7U5Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709215015; x=1709819815;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Wws5urlY/pHKb5nO9L6+YF0fIvf4wojKA9CEm5jbQIw=;
-        b=NO99nTbYme4Zf+iBeYO1sFeL89Rsade8I3yVdTR4YIDdfcifyDVOCaBoXQ2+WeBDrn
-         jWLnzH/Ki7qNMEoKqiesfpstNvOzfRHCIcEvlVTEu0sCyrCzSZ2A6m9CxteWRV1hgokM
-         in3gz2BuNgDbjtObWPR7QkYXiHbHdSyfMXuOAkzDMX8lhBb2P8Fu2BS89M090gUSjYBe
-         Hcac1nJG8P6YjcJmttVIeVSz+q3Yai3EpN5AU4T8hwch9SQE9t3GDB4PMufZwuOfRG6W
-         aPlCg6Naw9fUXi20gaGGyumm2Fur85H5u0aUPvSY/blfv8/pdv4+gpFjwEJGTTg1Imvi
-         pPrg==
-X-Forwarded-Encrypted: i=1; AJvYcCUUrSQE+GZsoZd4HZjnV6cIebKV9f8UPYKN/3SH8PPZ58EGoyE0oQo6iIB1P+vK7XAsQlTJqGM+5gzBgOEz/f4iSGzXNab8X7K+fg==
-X-Gm-Message-State: AOJu0YzPvQW1fdUQx4ymFh+z+/75/vvm84DRAQbl8rvKZUSsdm5vQwAt
-	EfQlhFLMUgqCdL4QNdTAFyNju91v9SY/x9mv1bJKMVuHrld/ixcSiDd3fi7xxnWvcW0O705UPm/
-	OtSyemp07rN4g5ATArOUHW0f0chQQsWcGvtdjwg==
-X-Google-Smtp-Source: AGHT+IGyYyjopk2S0BDW1Ghoa/7hBgl0rLX3ecHmVYFRGAMgeBOBqeibeDjXXuQsuPB0jGCrausTn0ucexpYoda4cP0=
-X-Received: by 2002:a25:8249:0:b0:dc6:bcb3:5d8e with SMTP id
- d9-20020a258249000000b00dc6bcb35d8emr2335878ybn.20.1709215015418; Thu, 29 Feb
- 2024 05:56:55 -0800 (PST)
+	s=arc-20240116; t=1709215141; c=relaxed/simple;
+	bh=y6Om+g4533gCnaxmZsAwvyvAgGaQiv7qn3mP98aqyVA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfItHkKooX4NAyAgno9geVJCpQAsaTuWhPY6168cPTZoWFM9YKn8yRbMgqe+rx0AtvAyb6EYsMWF5dBihU5rlRBUMEVibHGp+mK7N09qSqznaeEfJEzBo+ePtSahuqiTcOEHrj543/osHO+8QEVuv9BJzZK0D9Ap5RMucD9ruVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L2lS3IkQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 06F4CC433F1;
+	Thu, 29 Feb 2024 13:58:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709215140;
+	bh=y6Om+g4533gCnaxmZsAwvyvAgGaQiv7qn3mP98aqyVA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=L2lS3IkQpptUuxQKmrfty95vZrENoSWX5EcBp3AGDq2Bg+CkySfMjujGs0H786luH
+	 swEd5iLahGPwng66drncSl8qgJfQiCs5qHkfQ4K/L80KJNsLFCczwGCcwYEdP/RIUz
+	 xNE7T2NOrVBdMtmj7WwZ0NiOe+TRJ7v0JM8yk955oEANWlDxqBpxzuuTns5tmRmtXU
+	 7NS3TBciZAYHyLYANHkkkui8zF+qVr4esl44+7b34YEs3/1u37pc30QNft3W7ItQgD
+	 W/vMM/vVTXzLz8mYLmQp7/qAvsKbtydlqctTx0fLw/NvAtdnRtSNR1COfUwQxRc2Lx
+	 HuahsHHQbFu4w==
+Date: Thu, 29 Feb 2024 13:58:54 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org
+Subject: Re: [PATCH v2 12/14] regulator: tps6594-regulator: Add TI TPS65224
+ PMIC regulators
+Message-ID: <a71bda52-524d-4493-aede-786aae7ff468@sirena.org.uk>
+References: <20240223093701.66034-1-bhargav.r@ltts.com>
+ <20240223093701.66034-13-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227155308.18395-1-quic_mojha@quicinc.com> <20240227155308.18395-6-quic_mojha@quicinc.com>
-In-Reply-To: <20240227155308.18395-6-quic_mojha@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 29 Feb 2024 14:56:44 +0100
-Message-ID: <CACRpkdaqf8niLVfT7i-x6gVda2nwy1A6akEEq+rYz+cEpg0DzQ@mail.gmail.com>
-Subject: Re: [PATCH v12 5/9] pinctrl: qcom: Use qcom_scm_io_rmw() function
-To: Mukesh Ojha <quic_mojha@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, 
-	linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="IdImxeBF2jIMpiDu"
+Content-Disposition: inline
+In-Reply-To: <20240223093701.66034-13-bhargav.r@ltts.com>
+X-Cookie: Marriage is the sole cause of divorce.
 
-On Tue, Feb 27, 2024 at 4:53=E2=80=AFPM Mukesh Ojha <quic_mojha@quicinc.com=
-> wrote:
 
-> Use qcom_scm_io_rmw() exported function in pinctrl-msm
-> driver.
->
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
-> @Linus.Walleij,
->
-> I have removed your Ack on this patch after your comment
-> on https://lore.kernel.org/lkml/CACRpkdbnj3W3k=3DsnTx3iadHWU+RNv9GY4B3O4K=
-0hu8TY+DrK=3DQ@mail.gmail.com/
->
-> If you agree on the current solution, please ack this again.
+--IdImxeBF2jIMpiDu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It's fine, I trust you guys mostly :)
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Feb 23, 2024 at 03:06:59PM +0530, Bhargav Raviprakash wrote:
 
-Yours,
-Linus Walleij
+> +static struct tps6594_regulator_irq_type tps65224_ext_regulator_irq_types[] = {
+> +	{ TPS65224_IRQ_NAME_VCCA_UVOV, "VCCA", "voltage out of range",
+> +	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+> +	{ TPS65224_IRQ_NAME_VMON1_UVOV, "VMON1", "voltage out of range",
+> +	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+> +	{ TPS65224_IRQ_NAME_VMON2_UVOV, "VMON2", "voltage out of range",
+> +	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
+> +};
+
+These should be REGULATOR_EVENT_REGULATION_OUT I think - they look like
+they could be warning on either under or over voltage.
+
+--IdImxeBF2jIMpiDu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmXgjZ0ACgkQJNaLcl1U
+h9AZpQgAgDQxpopqbu9eOrm5DijPH7ZT6wXrVVYNezNC+Eo52wB2uNqWIvL6rbuW
+BE+mbJjmilSzxKjZkLEKfsNbw74icUaCCACGQqrRU130tlKusqpMRkyTneWA4EK0
+9/tADo8fW6nwb1DhPt36Q+2VZDPX6pi+wV/7/aiZDYg8tbAx6jJodg0/aP8BPdwz
+HyaWu31XqjZgGJiJ8UcmXym3roLM9B+9UNlTYp7UCQnW1j3lglsf79sFK88zIv2C
+DKEWRIMqPJcKMaoCciRNrM5kq5+XJZxi+jEOiJvAltB9INy+j+DfoZRTn2cAuCXo
+CaCBx2UtVmnGkvyv8s1fYpBUE9XdWg==
+=6Vo6
+-----END PGP SIGNATURE-----
+
+--IdImxeBF2jIMpiDu--
 
