@@ -1,60 +1,81 @@
-Return-Path: <linux-gpio+bounces-3996-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-3997-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D707B86D11D
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 18:50:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1221186D1F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 19:21:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77CAF1F259A7
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 17:50:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A6D531F23262
+	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 18:21:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7F3F370AFF;
-	Thu, 29 Feb 2024 17:49:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0C877A127;
+	Thu, 29 Feb 2024 18:21:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tyokibzF"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ALZ6aQO8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3941B6CC14;
-	Thu, 29 Feb 2024 17:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F364878284;
+	Thu, 29 Feb 2024 18:21:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709228999; cv=none; b=Z6BW3LMQUyUr6r7pjPJMeWXNnycFPP6rxgxd+5EK7DtEUdkjD/Zs6SQsat50ju5wutbvYMLs5odQnKzr1ZsRCY5SqevwDdPfVRI1lItlVvlE2C2yTtyQ7eKtlKyP3g3oHkASo+zIr1jZ56BtWn1X06l/3hQ2TNUEecseFO8FFnk=
+	t=1709230900; cv=none; b=B6zweg2lqnhyWeyMhjMqp4T8mWod/3Ujxuotfc+3kehDcRktYTbtzL6WVkdUlwyaewQdyGG7lA692yXb1osxbjYmEkHAsmYEPLKwC20688bMJBbEH5hV9QM7qtQVaApafAWB3+QR9binqEnuMwisRDlweV4zZxnED6AtQMRQXBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709228999; c=relaxed/simple;
-	bh=JONg6HvGOojSoSRJPEKuGTsiCE0zDoykG6uAHJ/ihnc=;
+	s=arc-20240116; t=1709230900; c=relaxed/simple;
+	bh=FrgFr1PwHdvjBc7xr5zlxE5I160oyk5MyG0mCo/awmw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=awi2trA0FDTvuogq55ye+i92CwUVc/BtqmQyADhdRWejw+I27GK/Xue22MNT+7/3SelfRpNZUOqnAigbwOXxWpsA2I6a/G2vQrqKw6tXx6ueTEnrlQkz2YvxV9T8CrQLq6frAkfvHb9eONFZ+IcdejMwUa/tIj/uQMmz79sswOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tyokibzF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 260AFC433F1;
-	Thu, 29 Feb 2024 17:49:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709228998;
-	bh=JONg6HvGOojSoSRJPEKuGTsiCE0zDoykG6uAHJ/ihnc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tyokibzFYDSIyPqU5nT/wdhPqG6vLhyOT0kDecmI7MbMWEMLmeO4fBQGLtP+IPQDl
-	 x6N2kI4/9prhKOSlrrhZrEl4Wb3eSmWsjt3an2nz3tGqeURQTpMfj4LbloSSMDnPne
-	 n4BPQ4lV+qH/lcDgxQwFpcafMMAC/0uM6viVXPOZGVv6+/ijF+KpvhLtw8R11qVDbb
-	 dkQ8r+RAZraVNlkGGVo69CLC9GLeYOKY9cnC1VvFYJKREOhQPnqd5f8uXRkDMuuisb
-	 1CU2NY4TQR/lpS57O+TBQoAnQSHEkhYnHP5ylEEJnq3Ih1pMSCNFB2BunecgUkXObe
-	 UMD4IAy/htCuQ==
-Date: Thu, 29 Feb 2024 17:49:52 +0000
-From: Lee Jones <lee@kernel.org>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>
-Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jpanis@baylibre.com,
-	devicetree@vger.kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org
-Subject: Re: [PATCH v2 00/14]  Add support for TI TPS65224 PMIC
-Message-ID: <20240229174952.GC1209090@google.com>
-References: <20240223093701.66034-1-bhargav.r@ltts.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MG7qc1pDvuFJAN6myndYlBA8YJQ9QeBC/PHKosk2SGpswoYHyv8g16LJRpwLonke5DYVZfDUf1OGr5eT6crfS9liMAEvLW/ikEZMQ0Ajr66TZYPxcAcDEO911f1E6rvgx/Qz4UJRAXkgXheclzQi4T0uzLTozAqQDPbNOFaUVLk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ALZ6aQO8; arc=none smtp.client-ip=198.175.65.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709230899; x=1740766899;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=FrgFr1PwHdvjBc7xr5zlxE5I160oyk5MyG0mCo/awmw=;
+  b=ALZ6aQO8ksqaVn4sdzlUgnJrHeOTKUQGK9W2N8FNXGaV9etnrJ9RSwbo
+   dIy3eghp+kJd/IxRsrO4UOAkXR4YkAou4MI3I5gaSBNFqzlubck7gE86q
+   BS6i6kfI+E6myCFaExvMCT0IEmhN8KwXXdDpOpLeom5LU3TT+UB4JOpCN
+   7JMZ4E0T1jqvgac/U+sADHDuqS/qsnOlHzLQZzBbV6MeTe9hLRx5+Wa9M
+   P+HQDulbKiGzhPPcQaAVhzZ+j/rdIhawZuOZf1M/0Lobidcg3oy1OWNyr
+   e9IHm/250L3DIMHWIydw/673BhXCafi6hrmwIYvSgC81WrkzI/IMYojF3
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3898447"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="3898447"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa109.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 10:21:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="913988731"
+X-IronPort-AV: E=Sophos;i="6.06,194,1705392000"; 
+   d="scan'208";a="913988731"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 10:21:36 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rfl2E-00000008k9h-0f0o;
+	Thu, 29 Feb 2024 20:21:34 +0200
+Date: Thu, 29 Feb 2024 20:21:33 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in
+ gpiochip_add_data_with_key()
+Message-ID: <ZeDLLfQOrPLUzyGt@smile.fi.intel.com>
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com>
+ <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com>
+ <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+ <ZeCw3pzHdrXw46of@smile.fi.intel.com>
+ <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -64,107 +85,28 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240223093701.66034-1-bhargav.r@ltts.com>
+In-Reply-To: <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri, 23 Feb 2024, Bhargav Raviprakash wrote:
+On Thu, Feb 29, 2024 at 06:26:29PM +0100, Bartosz Golaszewski wrote:
+> On Thu, Feb 29, 2024 at 5:29 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > > I'm sorry I really need more (morning) coffee, maybe you can simply update
+> > > > yourself or submit a correct fix?
+> > >
+> > > Ok, I'll apply this and send a fix on top of it.
+> >
+> > I don't see any progress with this. Do I need to do something?
+> 
+> No, it just fell through the cracks. I applied this now and sent my
+> own fix on top.
 
-> This series modifies the existing TPS6594 drivers to add support for the
-> TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
-> similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
-> PFSM, Regulators and GPIO features overlap between the two devices.
-> 
-> TPS65224 is a Power Management IC (PMIC) which provides regulators and
-> other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
-> Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
-> communicate through the I2C or SPI interfaces. The PMIC TPS65224
-> additionally has a 12-bit ADC.
-> Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
-> 
-> Driver re-use is applied following the advice of the following series:
-> https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
-> 
-> The features implemented in this series are:
-> - TPS65224 Register definitions
-> - Core (MFD I2C and SPI entry points)
-> - PFSM	
-> - ESM
-> - Regulators
-> - Pinctrl
-> 
-> TPS65224 Register definitions:
-> This patch adds macros for register field definitions of TPS65224
-> to the existing TPS6594 driver.  
-> 
-> Core description:
-> I2C and SPI interface protocols are implemented, with and without
-> the bit-integrity error detection feature (CRC mode).
-> 
-> PFSM description:
-> Strictly speaking, PFSM is not hardware. It is a piece of code.
-> PMIC integrates a state machine which manages operational modes.
-> Depending on the current operational mode, some voltage domains
-> remain energized while others can be off.
-> PFSM driver can be used to trigger transitions between configured
-> states.
-> 
-> ESM description:
-> This device monitors the SoC error output signal at its nERR_MCU
-> input pin. On error detection, ESM driver toggles the PMIC nRSTOUT pin
-> to reset the SoC.
-> 
-> Regulators description:
-> 4 BUCKs and 3 LDOs.
-> BUCK12 can be used in dual-phase mode.
-> 
-> Pinctrl description:
-> TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
-> functions such as I2C or SPI interface or watchdog disable functions.
-> The driver provides both pinmuxing for the functions and GPIO capability.
-> 
-> This series was tested on linux-next tag: next-20240118
-> 
-> Test logs can be found here:
-> https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
-> 
-> Changelog v1 -> v2:
-> - Changes to patch sign-off
-> - Commit message change in dt-bindings patch
-> - regmap config included in the of_match_table data field
-> 
-> Bhargav Raviprakash (11):
->   mfd: tps6594: use volatile_table instead of volatile_reg
->   mfd: tps6594: add regmap config in match data
->   dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
->   mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
->   mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
->   mfd: tps6594-core: Add TI TPS65224 PMIC core
->   misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
->   misc: tps6594-esm: reversion check limited to TPS6594 family
->   misc: tps6594-esm: use regmap_field
->   misc: tps6594-esm: Add TI TPS65224 PMIC ESM
->   arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
->     dts
-> 
-> Nirmala Devi Mal Nadar (3):
->   mfd: tps6594: Add register definitions for TI TPS65224 PMIC
->   regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
->   pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-> 
->  .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
->  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
->  drivers/mfd/tps6594-core.c                    | 266 +++++++++++--
->  drivers/mfd/tps6594-i2c.c                     |  41 +-
->  drivers/mfd/tps6594-spi.c                     |  41 +-
->  drivers/misc/tps6594-esm.c                    |  89 +++--
->  drivers/misc/tps6594-pfsm.c                   |  55 ++-
->  drivers/pinctrl/pinctrl-tps6594.c             | 287 ++++++++++++--
->  drivers/regulator/Kconfig                     |   4 +-
->  drivers/regulator/tps6594-regulator.c         | 244 ++++++++++--
->  include/linux/mfd/tps6594.h                   | 369 +++++++++++++++++-
->  11 files changed, 1325 insertions(+), 167 deletions(-)
-
-Does this set have to be taken in wholesale?
+Thank you!
 
 -- 
-Lee Jones [李琼斯]
+With Best Regards,
+Andy Shevchenko
+
+
 
