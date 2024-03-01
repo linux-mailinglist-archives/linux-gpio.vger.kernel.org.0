@@ -1,97 +1,90 @@
-Return-Path: <linux-gpio+bounces-4005-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4006-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id F166286D7B2
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 00:26:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E61E86D8E0
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 02:34:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 91A4B1F239C6
-	for <lists+linux-gpio@lfdr.de>; Thu, 29 Feb 2024 23:26:01 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B06C11C2129D
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 01:34:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD831137763;
-	Thu, 29 Feb 2024 23:23:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3710339FEF;
+	Fri,  1 Mar 2024 01:33:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b="T35ZCjxn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sQdmN5Xf"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from codeconstruct.com.au (pi.codeconstruct.com.au [203.29.241.158])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 144B355E76;
-	Thu, 29 Feb 2024 23:23:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.29.241.158
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D47AD39FCE;
+	Fri,  1 Mar 2024 01:33:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709249024; cv=none; b=Eq6BomKbfjqev29sf4T5WbQHMk8ktfCcFgHnAaU2K7dr05prEf4qaptqCVbNvKDkrsqFIPiYgUNVsW45ft10dsFznRcr4Gx95syinR2Tdi7xCkvT2mBAFEeWGiGGzQQCZiuKDo7KMx71r6eeM/rJOQxZ5KKElJhpCI9GOXAMZyo=
+	t=1709256793; cv=none; b=dPW1Va2j+QeUXvK0YWj+mvRDOyBETbV+ruHf9xHGrXWGNp+p12Ai/PyUo/e2NhoqN/nB4QWyHk0FM5PKUxYHD5zJqHu3TfV2hsS8AXf3oRD2oRNk80VH7aLNrBYvjh7+fqMmr8VFQ9wpepaB7vALp1rBdwRp34u2jbGxOmFiU+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709249024; c=relaxed/simple;
-	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z1geHNgtd1OVgku2xuqHPwMzedRr7rSmSxytlM0lxvi550ykZH5Fz8TOwq1vPtJWWzvSuTnh3Z+1QKjQc3HOvFatoOO0tPYeb/4LULC9dkJ1A8b7j4b1iSf5wyCaXtB8XWNz6cDmAwpi9cevO00S5H845DkiHxYMIK93BGjBGLA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au; spf=pass smtp.mailfrom=codeconstruct.com.au; dkim=pass (2048-bit key) header.d=codeconstruct.com.au header.i=@codeconstruct.com.au header.b=T35ZCjxn; arc=none smtp.client-ip=203.29.241.158
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=codeconstruct.com.au
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codeconstruct.com.au
-Received: from [192.168.68.112] (ppp14-2-70-176.adl-apt-pir-bras31.tpg.internode.on.net [14.2.70.176])
-	by mail.codeconstruct.com.au (Postfix) with ESMTPSA id 1092A2014F;
-	Fri,  1 Mar 2024 07:23:36 +0800 (AWST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-	d=codeconstruct.com.au; s=2022a; t=1709249019;
-	bh=iwhvBuR3uowqRZpqmpqi0jgdnW+GpbB/EsS1T+Pi24Q=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References;
-	b=T35ZCjxnY32uGh1veM/9q6f1NytauK7tck34JYdig1hWxH48PHb4OylbgljFV7Yvs
-	 lMwpgNgI4Adtol5s228u5RgVH7fEvlW3pjC0EK2eb60yPen92xuja2B5vU5IebcL5B
-	 46yZkX+PriKqmQP57m/8GL90/NGbUfHxBLQUOjJqRSn5Ib+kxFGEknw6UBb8zDbq1r
-	 eeGC8jDGcZ5U2JxbesjLGLOKSsRRbqr391cKM/bVdWQuYYr0RdkJUTFmhWUzwLHrgm
-	 bm/iSfjkySDatt8zWhbl/05ELmOZPHoJTYyYixQXlMxOKxz9J8tHxm3fB6gCcavcbW
-	 PrNZeGOggyRag==
-Message-ID: <e55aa1321ccac8e6391ab65a5a439b49d265bfce.camel@codeconstruct.com.au>
-Subject: Re: [PATCH v6] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to
- DT schema
-From: Andrew Jeffery <andrew@codeconstruct.com.au>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
- robh+dt@kernel.org,  conor+dt@kernel.org, joel@jms.id.au,
- linux-gpio@vger.kernel.org,  devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org,  linux-aspeed@lists.ozlabs.org,
- linux-kernel@vger.kernel.org
-Date: Fri, 01 Mar 2024 09:53:36 +1030
-In-Reply-To: <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
-References: <20240228003043.1167394-1-andrew@codeconstruct.com.au>
-	 <c2060450-4b76-4740-afe4-d14717245f01@linaro.org>
-	 <16ddd99007176da3f84462de217cb76c8fa4e1bd.camel@codeconstruct.com.au>
-	 <CAMRc=MeEyo7y-G1saydxtTRedNtHPaEeLANuzXt6KsiDU2jOWw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.46.4-2 
+	s=arc-20240116; t=1709256793; c=relaxed/simple;
+	bh=EPalguZMNI5Njq+cA0Z5vHIwAsvdVkw9Z6GsK4GJQw4=;
+	h=Message-ID:Content-Type:MIME-Version:In-Reply-To:References:
+	 Subject:From:Cc:To:Date; b=kZxJMcbUL5KqgOb1h60k6G6iW1+qkAnU8vF38V8Xdp+deL8b0FVpXlussYuIsJXaWz6/+3EEqxrx+7LbzBhIhkfc88qOZ+6jEkfUMKJy3l7jxkQDWWk2ZmoE3L6GEbUDyIL26z6NbajTxLhODReg/32RYSHBANzvyuNeLEAeRMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sQdmN5Xf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C741C433C7;
+	Fri,  1 Mar 2024 01:33:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709256792;
+	bh=EPalguZMNI5Njq+cA0Z5vHIwAsvdVkw9Z6GsK4GJQw4=;
+	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
+	b=sQdmN5XfBeohDiRuXg5jE9JTzQsZoaXW1+rWjcvDXhcqo0t0yVw0gar/D1ZB3nu26
+	 cxMusPCGjm08abajYAE0U4MgNR/V1Pmdi6uNjsxzyN8Dvmd5v1OKTv8Mgn4oPmRvfY
+	 cvjHN8ZXEuY+1TRGf4c3uJXbrWDefmvYHzsal6HdPNkTd8tjf+5QLYwLgisTBAj8ZO
+	 zjE02xJbtMd+6zJ4HnXG+ifBOHEICZqbQ5+CqgFTI6n/2DO6bC9Of+e5wmBaoP7ljc
+	 3DT7VI6hBdI1CPLWeH7NBcTakqp2ujqHIn6kmrYFNCRR56K4MdAY7f2PvhQOQiHn6s
+	 fNisvaChiDmVg==
+Message-ID: <cd72dbb31387cd4e2551189d8d10d3a6.sboyd@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
+References: <20240227-mbly-clk-v8-0-c57fbda7664a@bootlin.com> <20240227-mbly-clk-v8-3-c57fbda7664a@bootlin.com> <Zd4X3NnBoEl0wu2H@smile.fi.intel.com> <CZGSB2O8P572.28HK6WFT43N6S@bootlin.com> <ZeBnX2upNRN0xXH4@smile.fi.intel.com> <CZHMSNWMH4KJ.2J6ZMWKMSZYH2@bootlin.com> <ZeCbvgWY6x1o17Kq@smile.fi.intel.com> <CZHOCV35A23S.14HL07U73EH6X@bootlin.com>
+Subject: Re: [PATCH v8 03/10] clk: eyeq5: add platform driver, and init routine at of_clk_init()
+From: Stephen Boyd <sboyd@kernel.org>
+Cc: Gregory CLEMENT <gregory.clement@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Linus Walleij <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, Philipp Zabel <p.zabel@pengutronix.de>, Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, linux-mips@vger.kernel.org, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Tawfik Bayouk <tawfik.bayouk@mobileye.com>, linux-gpio@vger.kernel.org
+To: Andy Shevchenko <andriy.shevchenko@intel.com>, =?utf-8?q?Th=C3=A9o?= Lebrun <theo.lebrun@bootlin.com>
+Date: Thu, 29 Feb 2024 17:33:10 -0800
+User-Agent: alot/0.10
 
-On Thu, 2024-02-29 at 09:52 +0100, Bartosz Golaszewski wrote:
-> On Thu, Feb 29, 2024 at 4:21=E2=80=AFAM Andrew Jeffery
-> <andrew@codeconstruct.com.au> wrote:
-> >=20
-> > On Wed, 2024-02-28 at 08:47 +0100, Krzysztof Kozlowski wrote:
-> > >=20
-> > > You still have way too many examples. One is enough, two is still oka=
-y.
-> > > We really do not want more of examples with minor differences.
-> >=20
-> > Noted, I'll keep them to a minimum in the future.
-> >=20
+Quoting Th=C3=A9o Lebrun (2024-02-29 07:40:25)
+> Hello,
 >=20
-> As in: I'll still send a v7? I can trim the examples when applying,
-> just tell me which ones to drop.
+> On Thu Feb 29, 2024 at 3:59 PM CET, Andy Shevchenko wrote:
+> > On Thu, Feb 29, 2024 at 03:27:01PM +0100, Th=C3=A9o Lebrun wrote:
+> > > On Wed, Feb 28, 2024 at 03:33:29PM +0100, Th=C3=A9o Lebrun wrote:
+> > > > On Tue Feb 27, 2024 at 6:11 PM CET, Andy Shevchenko wrote:
+> > > > > On Tue, Feb 27, 2024 at 03:55:24PM +0100, Th=C3=A9o Lebrun wrote:
+>=20
+> > 2) Still I see a benefit from using lo_hi_readq() and friends directly.
+>=20
+> So it is:
+>=20
+>         u32 r0 =3D readl(base_plls + pll->reg64);
+>         u32 r1 =3D readl(base_plls + pll->reg64 + sizeof(r0));
+>=20
+> vs:
+>=20
+>         u64 r =3D lo_hi_readq(base_plls + pll->regs64);
+>         u32 r0 =3D r;
+>         u32 r1 =3D r >> 32;
+>=20
+> One is straight forward, the other uses an obscure helper that code
+> readers must understand and follows that with bit manipulation.
+>=20
 
-Ah, thanks. I wasn't planning to send a v7 given the R-b tag from
-Krzysztof for v6. I intended for "in the future" to mean for patches
-converting other bindings to DT schema. But if you're keen to trim some
-examples out I'd drop the aspeed,ast2400-gpio and aspeed,ast2500-gpio
-nodes, keeping just the aspeed,ast2600-gpio example.
-
-Andrew
+Just use readq() and include the correct header please. We know what
+readq() is in the kernel.
 
