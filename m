@@ -1,122 +1,128 @@
-Return-Path: <linux-gpio+bounces-4047-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4048-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8309E86E74E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 18:32:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id B5A3786E758
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 18:34:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A40461C2086B
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 17:32:48 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B481D1C23DB7
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 17:33:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A515C3C063;
-	Fri,  1 Mar 2024 17:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5B1F8BFC;
+	Fri,  1 Mar 2024 17:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uIOF4Ss5"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OksYRh2k"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F1F33BB53;
-	Fri,  1 Mar 2024 17:29:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32F0F286AE;
+	Fri,  1 Mar 2024 17:31:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709314193; cv=none; b=ClnFL2Ifsk4CWcPYZ1M/1HkZN2hgr2ga5Gz8DLoNFFzF1cZvcgA2rnHf5sPBen8Oom2b/T39IzNLVT0dOk5rd+gB7rQkT1nrjhaxZINO7zyA3+rfKrV/hKsUtL8CtGPKoOT6jzXd+b6W8OmmPYjECidetR7l0+bqqJIAJG5Z9cw=
+	t=1709314293; cv=none; b=nIToKGARLcmz6ZNnNdMJvk+vnZNFS53znDwoubhGwGbiX3m+obuQjqkS4FZgCdYOmls3FYZwEWcFSz2ZTZGgFmGgA/l9T//qctHi7W09LvF9VqXtYz9inmtU9MxbKVOASCdybyVW7UsM0g0rCUhs8lqVUIPcTibyqVRqdCPqK7s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709314193; c=relaxed/simple;
-	bh=WVxywXC3sbGUricAi2EXdBOzFdQ8QwJnE94UfbYDxFs=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=JcZIcS256HF80OZRxHoTkt3sHF1atPeH4IkOzEUhJnbSF6YX5fZkHXSU72V8CnZLj6/KEGNwwIkiXku70x8coEh49JbLUoyUpD+c1W8HA8/c7USv+ZU4t25YonVeG/AyYwAwv3WjoONtiX6lrgRBS4qnoS29groH/bG2vkACy9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uIOF4Ss5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1C53C433C7;
-	Fri,  1 Mar 2024 17:29:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709314192;
-	bh=WVxywXC3sbGUricAi2EXdBOzFdQ8QwJnE94UfbYDxFs=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=uIOF4Ss549Pa5/GS1UuTqjZK59ux2hW/ydhhEXw+jc7kH1sUfbMIKf/2N9pRJlPme
-	 l+Hgb5hmGwOT9Q+ZoWc3d2/2qTn4EZE5WvymLVbMUDX15E3U+WoJSoeV+vcb+emUAK
-	 bhyceLdYgN2D1NCF4yRaCM9xpgI2kSiqraKHmQo1XdKgRi7pacPALnGAqJpUoQDwK2
-	 hZwhj/YUrBsVSpfWuXCC1jtF8vy2KaI9emP0W7//OiVZ5fH0Dwm98VwrjpRHmpPPWP
-	 PnVFAWFDlzlO4K0lfY8gyjaT0uAUN/iYae26XqCVeeSYiHA4F71o0L+AvevuXncLvP
-	 IuzYwm/Wtr9CQ==
-Date: Fri, 01 Mar 2024 11:29:51 -0600
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1709314293; c=relaxed/simple;
+	bh=WcVXXiR4nzAg12r56OyRHoYJrh+caVvMRz0vmAhETbg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mzXv2FKNI6RfXw/gjSFNkCMoKwuZgqgqEakMQdUJfahukl2xhqakwcL4D0tKJIK7d/acUtylHf6MG8Hhlp8TOWjAxxXxSQ3q+ic4D+R98mgKImfBXszF8iNFb5gXAfAk/WlOb/B1uDDDjv/7wES3QswNmg3/KkHFZCDFfBysS1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OksYRh2k; arc=none smtp.client-ip=192.198.163.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709314292; x=1740850292;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=WcVXXiR4nzAg12r56OyRHoYJrh+caVvMRz0vmAhETbg=;
+  b=OksYRh2kTdISN6LT2dqvVlIvnFKji2C8lONSEaoVKoT9GlbX0AZ16vGH
+   Bg5UlhAGr/fgNqa+gBdkqz97clhUusXwc+Y8orGhbqxd08eUFP6D+01Hw
+   M3khJi3Xkjf8IZUBtyWlRfjajfY51E0b3Jx9TRNW8Nwq4xsEz8AlUJMkA
+   JbYkQxma7p5VmR8CCCKQa+t+gBH6aJuFpkYG9WtH/9L++a1N1O2P/f37H
+   tViZWJdnMfvp4JeRnHXuQciMMZmaK0QDu/dD2rO7uIE8d/DsVG8fqse3H
+   BpzRf+q1CnqnQZUdUcktEoGeNim0IWS1c48i//L4JZzwwL3m8vsGQk+Y6
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="15273903"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="15273903"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:31:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="914021014"
+X-IronPort-AV: E=Sophos;i="6.06,196,1705392000"; 
+   d="scan'208";a="914021014"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 01 Mar 2024 09:31:27 -0800
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rg6jE-0000000911k-3lII;
+	Fri, 01 Mar 2024 19:31:24 +0200
+Date: Fri, 1 Mar 2024 19:31:24 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in
+ gpiochip_add_data_with_key()
+Message-ID: <ZeIQ7KsOsGHUqdny@smile.fi.intel.com>
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com>
+ <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com>
+ <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+ <ZeCw3pzHdrXw46of@smile.fi.intel.com>
+ <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
+ <ZeDLLfQOrPLUzyGt@smile.fi.intel.com>
+ <CAMRc=McxWc-78q6FW61doDua60ZvCOfSXK7v7wmAm0rX7wDDgA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- linux-kernel@vger.kernel.org, 
- =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- linux-clk@vger.kernel.org, Conor Dooley <conor+dt@kernel.org>, 
- Thomas Bogendoerfer <tsbogend@alpha.franken.de>, devicetree@vger.kernel.org, 
- Rob Herring <robh+dt@kernel.org>, linux-mips@vger.kernel.org, 
- linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <20240301-mbly-clk-v9-1-cbf06eb88708@bootlin.com>
-References: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
- <20240301-mbly-clk-v9-1-cbf06eb88708@bootlin.com>
-Message-Id: <170931419071.2439554.3352250315486620896.robh@kernel.org>
-Subject: Re: [PATCH v9 1/9] dt-bindings: soc: mobileye: add EyeQ5 OLB
- system controller
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=McxWc-78q6FW61doDua60ZvCOfSXK7v7wmAm0rX7wDDgA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-On Fri, 01 Mar 2024 17:22:14 +0100, Théo Lebrun wrote:
-> Add documentation to describe the "Other Logic Block" syscon.
+On Fri, Mar 01, 2024 at 08:41:09AM +0100, Bartosz Golaszewski wrote:
+> On Thu, Feb 29, 2024 at 7:21 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> > On Thu, Feb 29, 2024 at 06:26:29PM +0100, Bartosz Golaszewski wrote:
+> > > On Thu, Feb 29, 2024 at 5:29 PM Andy Shevchenko
+> > > <andriy.shevchenko@linux.intel.com> wrote:
+> > > >
+> > > > > > I'm sorry I really need more (morning) coffee, maybe you can simply update
+> > > > > > yourself or submit a correct fix?
+> > > > >
+> > > > > Ok, I'll apply this and send a fix on top of it.
+> > > >
+> > > > I don't see any progress with this. Do I need to do something?
+> > >
+> > > No, it just fell through the cracks. I applied this now and sent my
+> > > own fix on top.
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
->  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 94 ++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
-> 
+> I now realized that this commit doesn't really fix ba5c5effe02c
+> ("gpio: initialize descriptor SRCU structure before adding OF-based
+> chips"). It addresses an issue introduced as long ago as commit
+> 2f4133bb5f14 ("gpiolib: No need to call gpiochip_remove_pin_ranges()
+> twice").
 
-My bot found errors running 'make DT_CHECKER_FLAGS=-m dt_binding_check'
-on your patch (DT_CHECKER_FLAGS is new in v5.13):
+Oh, that means it revealed the issue :-)
 
-yamllint warnings/errors:
+> I will change the Fixes tag, queue it for fixes and send it to
+> Torvalds for rc7, then merge them back into for-next.
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.yaml:
-Error in referenced schema matching $id: http://devicetree.org/schemas/clock/mobileye,eyeq5-clk.yaml
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: clock-controller@2c: False schema does not allow {'compatible': ['mobileye,eyeq5-clk'], 'reg': [[44, 80], [284, 4]], 'reg-names': ['plls', 'ospi'], '#clock-cells': [[1]], 'clocks': [[4294967295]], 'clock-names': ['ref']}
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: reset-controller@0: False schema does not allow {'compatible': ['mobileye,eyeq5-reset'], 'reg': [[0, 12], [512, 52], [288, 4]], 'reg-names': ['d0', 'd1', 'd2'], '#reset-cells': [[2]]}
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@e00000: pinctrl@b0: False schema does not allow {'compatible': ['mobileye,eyeq5-pinctrl'], 'reg': [[176, 48]], 'uart2-pins': {'function': ['uart2'], 'pins': ['PB8', 'PB9']}}
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/reset-controller@0: failed to match any schema with compatible: ['mobileye,eyeq5-reset']
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/clock-controller@2c: failed to match any schema with compatible: ['mobileye,eyeq5-clk']
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-0/soc/system-controller@e00000/pinctrl@b0: failed to match any schema with compatible: ['mobileye,eyeq5-pinctrl']
+Thank you!
 
-doc reference errors (make refcheckdocs):
+-- 
+With Best Regards,
+Andy Shevchenko
 
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240301-mbly-clk-v9-1-cbf06eb88708@bootlin.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
 
 
