@@ -1,106 +1,130 @@
-Return-Path: <linux-gpio+bounces-4015-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4016-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8EB8B86DC15
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 08:29:25 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3847A86DC38
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 08:41:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A6BA283F89
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 07:29:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 698031C23202
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 07:41:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FE886994F;
-	Fri,  1 Mar 2024 07:29:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92ECF6995C;
+	Fri,  1 Mar 2024 07:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gnQPYAEr"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="U64tQMdd"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1013692FE
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 07:29:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC36F69D04
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 07:41:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709278160; cv=none; b=ERClXCYfz/iS19TjbEKHvqXarZfL7lVM624qFsako1lF++bZp/yNcjT7qHOHfU0p3k2LiQi9Vk0l3bdxGQihslUUX6W0FTolNd9db3YlabR0V0r81uhwea2QnjvliXtjJTLFOiOaIrDBX+SzZHbxJHFoMHCGeDzC/O06p0eUHF4=
+	t=1709278883; cv=none; b=TvuNoYY6vlFetXMHcjBBry8x+sHgYmHWfftQpUdyUWBjnPP2VQE2uYXpFad49nXHHDOsHvAeOYL1pnLgYOf3id5CBpwyev0ZKnrd4b2PISN/5SsqHdRQPdtRduTE/hD7IMuRC64z1qSbmQZl+BlbOZnwG75fIddtu3rCr6Lumn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709278160; c=relaxed/simple;
-	bh=XNkAkfAUHjqcsvsxXxFcQOljH2NkjG05DEoL695K/q4=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=aFbzYWi2JEaF5hR24wy0/xp/346OL9bV4TQbmuMg53DlXPk4vD5APzrJPs1pxDsWIKwZ0DGK7VeOO/VbiBVby/eLZ60qCSDMB4+CSNcZ5ca3bhSItCWHnJgHeGf0wzBw2y757bLRt/Bd4qmsc5zEIznjrkBLRxmm5sT+G5TEEMo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gnQPYAEr; arc=none smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1709278159; x=1740814159;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=XNkAkfAUHjqcsvsxXxFcQOljH2NkjG05DEoL695K/q4=;
-  b=gnQPYAErTBC7EEilCnhcjNT11PsD9bqUlt9CMdfPgz7ddP1+FcFWndGk
-   ysnMfaeRRUM7jsibnxFVpYm9wdleTA7Cj+7JVu3KQT2aRtRJC/SF9M+pw
-   7PL7T8xh8/7+nCtTFyYImaAibuJU6oAzwxMrGY3AiqyWkfllPBg8nf3ra
-   Y2rcnlh748xE/iNwqsaYf25THP2jp2L77bX6z1Cy9Y7/aynnxRqGGUmS4
-   8liC+DZdaJWAdTHCrRCfm4gyr3JKsJbBAJnr0EiOXFuKfbVw/D2ha5zMC
-   p5ol0EbD9lxGMNQcl/u5dQKtbbtrCdDa16+nAGsYt9WPTZWXlFivnHydp
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,10999"; a="3961336"
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="3961336"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 29 Feb 2024 23:29:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.06,195,1705392000"; 
-   d="scan'208";a="38958647"
-Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
-  by orviesa002.jf.intel.com with ESMTP; 29 Feb 2024 23:29:17 -0800
-Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rfxKB-000Dcx-1Y;
-	Fri, 01 Mar 2024 07:29:01 +0000
-Date: Fri, 1 Mar 2024 15:28:01 +0800
-From: kernel test robot <lkp@intel.com>
-To: =?iso-8859-1?Q?Th=E9o?= Lebrun <theo.lebrun@bootlin.com>
-Cc: Paul Gazzillo <paul@pgazz.com>,
-	Necip Fazil Yildiran <fazilyildiran@gmail.com>,
-	oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>
-Subject: [linusw-pinctrl:ib-nomadik-gpio 6/25] kismet: WARNING: unmet direct
- dependencies detected for OF_GPIO when selected by GPIO_NOMADIK
-Message-ID: <202403011546.Hpt8sBTa-lkp@intel.com>
+	s=arc-20240116; t=1709278883; c=relaxed/simple;
+	bh=dpv2hcr4FeICXO7eqPY5guzF9/CmL31fkwp66EImYJ8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rQo8blu+BiJgCk51E8FRdXQPdajsOrWYQ03r67gqcWPzOgxg6bvF0XXKHdR+Up5TDV9UwiOEjfh5KLwT/OHYAKfCpkt+6Yj9Lq2+U00bK9njW6NFfffTuhkOGiponZ3Sewo8EOHy+3L9+utC1ymh7TmYrrQrGeke8ntWUNBqQTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=U64tQMdd; arc=none smtp.client-ip=209.85.217.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-vs1-f48.google.com with SMTP id ada2fe7eead31-47282752fc7so511492137.2
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 23:41:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709278881; x=1709883681; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dpv2hcr4FeICXO7eqPY5guzF9/CmL31fkwp66EImYJ8=;
+        b=U64tQMddQFzOalpSHh+dOmZH6pMuj4aYbK7J+bLYAfIBrQyiI8SN2CnMToqgJgwNdb
+         UkdjHt77HryzYxvv+TKN4dbZNY9Ff0MnmU0/2b2iS0nu/5hDNI9irvUL/MPrfRqS1LdK
+         1hSD5JcduSbDfuwChejK7ViAkxY9qSUTehNKUbVB2L1DxcaBdmXcDcVX8yxJPSZ+6pZP
+         ZKwHAaT7YopJGoznDTmj2u4ga0/lGkJQOVaFh9TlnMKRDdd3DVvz1yDmi+lsATAXsWc9
+         Ji7+CR+6Q4WB+x6Fhjcjzg4Ev8PginUThyfQ223hNZrEf6fbWU92BMcdgbHQQb+qXwru
+         xtrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709278881; x=1709883681;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=dpv2hcr4FeICXO7eqPY5guzF9/CmL31fkwp66EImYJ8=;
+        b=RK4DTK0YVitkAL3Qvzds8QEkvGFy0NhUmYt0eWyrD/4gnmGbU3zZjKnKwOrSL6nV82
+         ljyfqWV+eZ5BMNJz3AX+EFsnTXw10v0ic2zAymTGFtshV9kGqcO9xUywZFK989p8g2J2
+         63nsYyX6a1bcyuM5l8hzpgZ5k8v+gf+gbs2w+CKowRKhRs3KPPoI5Z9N7n/IFPLcR3Ks
+         9PUkCF9XPs6ULXStspOhlip3iSfVjGavgufl75HeN5aewlNDjtsmzjFJUxlVAsowPiPn
+         0SVDG0c7RSGJ3kGzI877Yid0/6nBFIBOqpcorQyfIyfxIWL4jjX+2K4Y7CpNaAcGGnLt
+         da4g==
+X-Forwarded-Encrypted: i=1; AJvYcCW70TrR5/Tmdgvjl5grJxTtuGJN18OFuxcFFvtHk4wxM6BDK4nB/7m8//iu8C/0ZL4CW5Gvya9IF7eqimSjU4SC5dSYlE+Kfj6Qbw==
+X-Gm-Message-State: AOJu0YxUsKKFwOj0TWPlzs/6rSSqwKsK8IQV0a1a9BC9KNAeL5gB2cQ9
+	Dfjs7s5ec1lFxui4EOsJLZtLPOm5/ijyX+39nThoUyXzQYBziIQi4e03XGFIGXFMUpLBMaBk4Iu
+	tfER8md2kCVTx+rzV7jA9YBkCJN7/aRv3jRYrU9q1lUK12sjZ4dMNwQ==
+X-Google-Smtp-Source: AGHT+IFUbwEXS2uhZL031xGACrfpf2lSfi0yYT5H2z9NdnVwbv8aNUKb2mXVg1/R0HuCAHebCZoWxEcCp9FSoCNM3pQ=
+X-Received: by 2002:a05:6102:2758:b0:472:5572:fe32 with SMTP id
+ p24-20020a056102275800b004725572fe32mr684624vsu.13.1709278880835; Thu, 29 Feb
+ 2024 23:41:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <20240221192846.4156888-1-andriy.shevchenko@linux.intel.com>
+ <CAMRc=MdvYdx6x=gSiOZ3SXAdJORnqhsNW79G2c7wABofWARwFw@mail.gmail.com>
+ <ZddLRAqxFr7v3Zqs@smile.fi.intel.com> <CAMRc=Mdxtx-wh3HGu+SNrCwfSq0PEm3fG7hK_6wPAk2uzk8xpA@mail.gmail.com>
+ <ZddOKTP73ja6ejTc@smile.fi.intel.com> <CAMRc=Mf_w_E4B7c_Uj1WV3zv9DbmJ22oFvJJwtd-+3oUDVcvXA@mail.gmail.com>
+ <ZeCw3pzHdrXw46of@smile.fi.intel.com> <CAMRc=MdKFvAefKxLnovxnQt_tpiW+dCviWXKuHqg3vqHhEtPNA@mail.gmail.com>
+ <ZeDLLfQOrPLUzyGt@smile.fi.intel.com>
+In-Reply-To: <ZeDLLfQOrPLUzyGt@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 1 Mar 2024 08:41:09 +0100
+Message-ID: <CAMRc=McxWc-78q6FW61doDua60ZvCOfSXK7v7wmAm0rX7wDDgA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] gpiolib: Fix the error path order in gpiochip_add_data_with_key()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
-head:   6ad679cfaeea9291e9dce3247e34656080fc1d29
-commit: 966942ae493650210b9514f3d4bfc95f78ef0129 [6/25] gpio: nomadik: extract GPIO platform driver from drivers/pinctrl/nomadik/
-config: alpha-kismet-CONFIG_OF_GPIO-CONFIG_GPIO_NOMADIK-0-0 (https://download.01.org/0day-ci/archive/20240301/202403011546.Hpt8sBTa-lkp@intel.com/config)
-reproduce: (https://download.01.org/0day-ci/archive/20240301/202403011546.Hpt8sBTa-lkp@intel.com/reproduce)
+On Thu, Feb 29, 2024 at 7:21=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Feb 29, 2024 at 06:26:29PM +0100, Bartosz Golaszewski wrote:
+> > On Thu, Feb 29, 2024 at 5:29=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> > >
+> > > > > I'm sorry I really need more (morning) coffee, maybe you can simp=
+ly update
+> > > > > yourself or submit a correct fix?
+> > > >
+> > > > Ok, I'll apply this and send a fix on top of it.
+> > >
+> > > I don't see any progress with this. Do I need to do something?
+> >
+> > No, it just fell through the cracks. I applied this now and sent my
+> > own fix on top.
+>
+> Thank you!
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
+>
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403011546.Hpt8sBTa-lkp@intel.com/
+Hey!
 
-kismet warnings: (new ones prefixed by >>)
->> kismet: WARNING: unmet direct dependencies detected for OF_GPIO when selected by GPIO_NOMADIK
-   
-   WARNING: unmet direct dependencies detected for OF_GPIO
-     Depends on [n]: GPIOLIB [=y] && OF [=n] && HAS_IOMEM [=y]
-     Selected by [y]:
-     - GPIO_NOMADIK [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && (ARCH_U8500 || ARCH_NOMADIK || COMPILE_TEST [=y])
-   
-   WARNING: unmet direct dependencies detected for GPIO_SYSCON
-     Depends on [n]: GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && OF [=n]
-     Selected by [y]:
-     - GPIO_SAMA5D2_PIOBU [=y] && GPIOLIB [=y] && HAS_IOMEM [=y] && MFD_SYSCON [=y] && OF_GPIO [=y] && (ARCH_AT91 || COMPILE_TEST [=y])
+I now realized that this commit doesn't really fix ba5c5effe02c
+("gpio: initialize descriptor SRCU structure before adding OF-based
+chips"). It addresses an issue introduced as long ago as commit
+2f4133bb5f14 ("gpiolib: No need to call gpiochip_remove_pin_ranges()
+twice").
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I will change the Fixes tag, queue it for fixes and send it to
+Torvalds for rc7, then merge them back into for-next.
+
+Bart
 
