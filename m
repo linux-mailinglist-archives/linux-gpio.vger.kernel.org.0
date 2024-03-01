@@ -1,171 +1,158 @@
-Return-Path: <linux-gpio+bounces-4013-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4014-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8941F86DC05
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 08:21:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B34A786DC08
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 08:23:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EB60284672
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 07:21:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 43B04B26015
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 07:23:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 816C66994B;
-	Fri,  1 Mar 2024 07:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD56D69949;
+	Fri,  1 Mar 2024 07:23:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="VJ4wAtDN"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="iWQ1U0a4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ua1-f50.google.com (mail-ua1-f50.google.com [209.85.222.50])
+Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 681B938DEA
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 07:21:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB4F269304
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 07:23:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709277683; cv=none; b=YPQJt0sQOx9aXDGrOrtrwMr6/vGtenn7kfKBV5HF948rL7IqKWJqobP0cCbbeXwD+wiOPtH/+hktFoOSFaJS39Eizkab8qCqfck+hnGvDVMsAj8PlLuzqxfA30rZwkdgGKaCi1BSlHJt7kdLuoGfTnq/ly3Ez55xDiTfmDb86UU=
+	t=1709277820; cv=none; b=Idj8mHOyu111GcLm5gmlukaVHcPlsTE+cQa76R8vJHjPUFM3s3e7X7zssx/Vl6ld6X4jrxvAy4PrW3mJDoQg3dO7ID947EMnvKeme1Y1LY5wJLkFWIyNM8V4sO0cUcBC/iFi9fclQCNLMbykBZ3UWgPxLwDiQ7yqk3JDIWjHRHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709277683; c=relaxed/simple;
-	bh=OrncqaTXrlnSSo5Ks5wvawPnkOUwSaYWu/OShdbLwDI=;
+	s=arc-20240116; t=1709277820; c=relaxed/simple;
+	bh=CjK66I7AAiXRRRBBKwH0tV6G4vJewM6HUWGvkhfyOOI=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=mRgxG2AkNEen76TwUnFbtJPDHUJ90tQyVwcYS4fOvjkjaKERpoUM5HMagpfqY9tQK4TYMfoGK004czK02PZDg/YIADs/zFIfQ46Q/XLuHV4BhzH0OpxmZX0O3KToWMGIHGCypubm+aRHF93TV+ngATlGkeX7Lhi5iTJTJsaBLgc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=VJ4wAtDN; arc=none smtp.client-ip=209.85.222.50
+	 To:Cc:Content-Type; b=FIrCXVOBgakf59Dmi3jQOj0+t8JiwKepaChd7EWkH3i8wVbpLZkCC7zS7CQU5R4sxuHb1mZJIrP9KfmwSOLTT5e12cipPnVL8lBNB29Qs5u6dZlIsMxs4LJgaRS55d4Fmv1sECsAdkW5OdEvriOYkWR1YRZef/QYWTZPI9M6oEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=iWQ1U0a4; arc=none smtp.client-ip=209.85.221.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ua1-f50.google.com with SMTP id a1e0cc1a2514c-7d5bbbe5844so1051162241.0
-        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 23:21:21 -0800 (PST)
+Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d33d049cbaso537617e0c.0
+        for <linux-gpio@vger.kernel.org>; Thu, 29 Feb 2024 23:23:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709277680; x=1709882480; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709277818; x=1709882618; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KyoG1uo3ScEmdemTn2LXfZu/G+/KNWf3x3wgjIbdxkI=;
-        b=VJ4wAtDNdhEBwcUNNPUoYwcsj+hjhwXNWjZunHGWpWwkOaOEMCEaOCNFpy5uS+Egja
-         5xwW1TL47yWAIcxh7OQ1qWbBzrd5degy3Z7xT/SJ7RMe15iFjPYszk6JmdLISlu7DOAq
-         +tZyMw06yFzLMnJrSff4IWe/rElLgED16kwIJlugtW04or/A3aX6tVSCdCZGAhAShynp
-         t1+6RLrjdREt0s4ZlC/Ye544ENtyFE7ZdHjEBNILjw9Kqx2SLdqkuD5bVM7S5bJCn1B2
-         kUvhD1Zn3GynBlseGIH/jmaXei+I9QxEE+yxn2JpPfs2cP5VnJHrp3hHilSiF85GAb+6
-         mvQw==
+        bh=ISkilHc4+MWs21rEtu/gLxlqPUCtJS0KbdJABF0S0Go=;
+        b=iWQ1U0a4F0NPgiwm5InoPT1US+r+03A2BhWk1l1h2nioEJUBYFgY1RMwlRRef5ep1A
+         gyTh3FD2wZQFU0HOGfmKyRpWe1js3qvKIov2M7BZKXHmZmpXJd9PoxBbLCPqjYrHjwqh
+         nq0flFDmNJP8lqiVN1ytnjoxBCiMeFExDSLH3UxMYA8Azo0ES+awGhP3pHGJkntdOdVC
+         r/9Gfz72IXyYQ/9hDL3yWFmnUUO7u4JNjRmTn5gqiqXp6jPN2h8esOTi8M5FqjpAWmBf
+         /9d62bxF7PCfd0UQwxhResXUyYtLTZPHyIEkrabG3qve7ttOW3GiurB1C+8qfgFqeAkM
+         AALg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709277680; x=1709882480;
+        d=1e100.net; s=20230601; t=1709277818; x=1709882618;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KyoG1uo3ScEmdemTn2LXfZu/G+/KNWf3x3wgjIbdxkI=;
-        b=adqxhC5AcshZIa4c164iFKBY2mW716j4i3M/ZK8KbasCSe5rEmoPFx8m27ln0JfGYV
-         qJD62aP/ukv3FB2UlGWSPpifWvJB5CQw7OrYJbByjGTq/fYELFBDJM7JZiav98Hg/1nt
-         4SpdSKoJYxPPuXgQMeXn+IqUXE0/qtIlu0ZqNDaWl5u8EDsAk0F/35pZ77vhMjMfpc5H
-         AHlgBL9MlHfhDmadI0AUiwOdm1YXRRoZ/v5FO95yeph74Uw+SyB7lhHeMvPaVzhphj/M
-         2YpfkeEeX+kFiiCOPAI12MFq14JJjYWeAypHFajXoJCHqaO6D/ZgWxZngylv2HXPGYk5
-         BsvA==
-X-Forwarded-Encrypted: i=1; AJvYcCU/Hn2LUYFajJdLY4F7cpX+ssZSa7EczvJz56EGJjyfeDFo8h72XIvaiJKI7BqPVFl9rRxP9fPvwf8bSLxI5tj+17dMbGpMnn3nRQ==
-X-Gm-Message-State: AOJu0YyT53NR4HGlsDyjrCqB1S5Wc/4YKoE/J6zBHSkKKY5ejqgSy/nx
-	0GvGXlhzbiS6t0hSXN2lbr59zYnCAF7Qp7iwKf0lVvGuBoGW5RYqTLuerOm61OsjIVk7OY0RJ2g
-	Q0GHPN9J9AjuGxcia/Mp6bh1butlE+KJlLlPLSg==
-X-Google-Smtp-Source: AGHT+IERSVUgpvpyYMrdOTfgI4JxiMpYQbWoDI6IXuRXf9ALPcJwc0uXFrdgjYiNqA/rxy7WgVdFWYxJiaPV9/JKcGo=
-X-Received: by 2002:a05:6122:2709:b0:4d3:3974:657a with SMTP id
- ej9-20020a056122270900b004d33974657amr701603vkb.14.1709277680325; Thu, 29 Feb
- 2024 23:21:20 -0800 (PST)
+        bh=ISkilHc4+MWs21rEtu/gLxlqPUCtJS0KbdJABF0S0Go=;
+        b=qrghPwuCpDJtFtMzS/7Kwlt4DzcEWo61QzElwi/wFoh1OZD8iSnmVJOJfVq+fkzz5N
+         gO9H8FRu23v/wm1I4P0WzgocA3jMtBknj9w4NNT1CBh412EfQQg3EfHGXTMQkF93dVlj
+         SnfMQjk3bACGcKcb57dWowe5RjZ94vxgy7dZKt9pULBi6iW7OKCEUZSr0T/duo11f1PA
+         Vwl5W4mqcaHXVNYnz8OONA1BpFESRF67u639G3cjTjhxq/Ij21fS1Q3stdg/Dp2Jidxj
+         +HQBNd6SsIK/ikFx5iRSpxmUC5ccLXxNqMWo0S6SG73alGipxcxQ5pOB2pgXiVjztAqs
+         dFcw==
+X-Forwarded-Encrypted: i=1; AJvYcCVbHTDfVm45utVhLZRiUCpPRzlxBE26LoJJPbIM/L82okrMbLAk+D53fE09yLtWFLJeorTL9IrVhlLF1/hdcKTxqslFcHdhTSz30A==
+X-Gm-Message-State: AOJu0YyPSTH2F1mwa/2b/R1UmcMSE+WSDv2HqI9ptTvdmtGs4WR5DlBx
+	RXrPEL83rx0hVmfK++W1q6uQl3QEQ/TF+yJ4uXr9ODFlhFyti0UaYEDsuSdX2AeQOa6/ZawGcLs
+	ya0ZuaP24slEeDsJHy+L2h34TomtRcjUhqde49A==
+X-Google-Smtp-Source: AGHT+IHuXxnItq1PKx1TpfzLZQZEYNVVdnltsCQUp3DoH5HItn6kO+vMOytNWwPNyr6pDjxOFiYTVgZwtN7Y1wM851E=
+X-Received: by 2002:a05:6122:2b7:b0:4d3:3ac7:495 with SMTP id
+ 23-20020a05612202b700b004d33ac70495mr485168vkq.13.1709277818025; Thu, 29 Feb
+ 2024 23:23:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227113426.253232-1-herve.codina@bootlin.com>
- <CAMRc=MeSMTnPUYGyJir4fc=6=Gnw_MVP9wfEKMQ6Ck33FYCrRA@mail.gmail.com> <CACRpkdZbGUd-u3ZcmmK1POSEq8z9J1aDhbGPAbcR6guKuEpEFQ@mail.gmail.com>
-In-Reply-To: <CACRpkdZbGUd-u3ZcmmK1POSEq8z9J1aDhbGPAbcR6guKuEpEFQ@mail.gmail.com>
+References: <20240301071203.5170-2-arturas.moskvinas@gmail.com>
+In-Reply-To: <20240301071203.5170-2-arturas.moskvinas@gmail.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 1 Mar 2024 08:21:09 +0100
-Message-ID: <CAMRc=MeqiYZv3ViHRKKUsXTqG5Pc8Ev2jUcN=A4VuX3RU7dDtw@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio
- chip removal
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Herve Codina <herve.codina@bootlin.com>, Kent Gibson <warthog618@gmail.com>, 
-	Saravana Kannan <saravanak@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Date: Fri, 1 Mar 2024 08:23:27 +0100
+Message-ID: <CAMRc=Mf47FqjMUGv4YN2eypx_pyvFR6fwf3E=R+jYf4gpGa9Gg@mail.gmail.com>
+Subject: Re: [PATCH v3] gpio: 74x164: Enable output pins after registers are reset
+To: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+Cc: linus.walleij@linaro.org, u.kleine-koenig@pengutronix.de, 
+	andriy.shevchenko@linux.intel.com, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 29, 2024 at 3:09=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Fri, Mar 1, 2024 at 8:12=E2=80=AFAM Arturas Moskvinas
+<arturas.moskvinas@gmail.com> wrote:
 >
-> On Tue, Feb 27, 2024 at 8:31=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.p=
-l> wrote:
-> > On Tue, Feb 27, 2024 at 12:34=E2=80=AFPM Herve Codina <herve.codina@boo=
-tlin.com> wrote:
+> Chip outputs are enabled[1] before actual reset is performed[2] which mig=
+ht
+> cause pin output value to flip flop if previous pin value was set to 1.
+> Fix that behavior by making sure chip is fully reset before all outputs a=
+re
+> enabled.
 >
-> > > Herve Codina (2):
-> > >   gpiolib: call gcdev_unregister() sooner in the removal operations
-> > >   gpiolib: cdev: release IRQs when the gpio chip device is removed
-> (...)
-> > Sorry but this is just papering over the real issue. I'd say NAK for
-> > now as I'd really prefer to get to the root of the problem and fix it
-> > for all GPIO interrupt users.
-> >
-> > Kent, Linus: what do you think?
+> Flip-flop can be noticed when module is removed and inserted again and on=
+e of
+> the pins was changed to 1 before removal. 100 microsecond flipping is
+> noticeable on oscilloscope (100khz SPI bus).
 >
-> I'm not sure. What does "all GPIO interrupt users" mean in this context?
+> For a properly reset chip - output is enabled around 100 microseconds (on=
+ 100khz
+> SPI bus) later during probing process hence should be irrelevant behavior=
+al
+> change.
 >
-> If you mean "also the kernel-internal" (such as some random driver
-> having performed gpiod_to_irq() and requested it or, taken it from a
-> phandle in the device tree) then I think these are slightly semantically
-> different.
+> Fixes: 7ebc194d0fd4 (gpio: 74x164: Introduce 'enable-gpios' property)
+> Link: https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74=
+x164.c#L130 [1]
+> Link: https://elixir.bootlin.com/linux/v6.7.4/source/drivers/gpio/gpio-74=
+x164.c#L150 [2]
+> Signed-off-by: Arturas Moskvinas <arturas.moskvinas@gmail.com>
+>
+> ---
+> v2 -> v3
+> * Updated commit message to be imperatively moody
+> * Converted links to proper tags
+> * Added Fixes tag
+>
+> v1 -> v2
+> * Updated commit message to contain more information why change is made.
+> ---
+>  drivers/gpio/gpio-74x164.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpio/gpio-74x164.c b/drivers/gpio/gpio-74x164.c
+> index e00c33310517..753e7be039e4 100644
+> --- a/drivers/gpio/gpio-74x164.c
+> +++ b/drivers/gpio/gpio-74x164.c
+> @@ -127,8 +127,6 @@ static int gen_74x164_probe(struct spi_device *spi)
+>         if (IS_ERR(chip->gpiod_oe))
+>                 return PTR_ERR(chip->gpiod_oe);
+>
+> -       gpiod_set_value_cansleep(chip->gpiod_oe, 1);
+> -
+>         spi_set_drvdata(spi, chip);
+>
+>         chip->gpio_chip.label =3D spi->modalias;
+> @@ -153,6 +151,8 @@ static int gen_74x164_probe(struct spi_device *spi)
+>                 goto exit_destroy;
+>         }
+>
+> +       gpiod_set_value_cansleep(chip->gpiod_oe, 1);
+> +
+>         ret =3D gpiochip_add_data(&chip->gpio_chip, chip);
+>         if (!ret)
+>                 return 0;
+>
+> base-commit: d206a76d7d2726f3b096037f2079ce0bd3ba329b
+> --
+> 2.44.0
 >
 
-Yes I mean both in-kernel and user-space consumers.
-
-> The big difference is that users of the cdev are *expected* to *crash*
-> sometimes, releasing the file handle and then this cleanup needs to
-> happen. Also cdev is more likely to be used for hotplugged/unplugged
-> GPIOs.
->
-> The kernel-internal users are *not* expected to crash, but to clean up
-> their usage the right way. Also they are predominantly if not exclusively
-> used for fixed GPIOs such as those on an SoC that do not hot-unplug
-> and go away randomly.
->
-> Use case 1: you run gpio-mon on a random GPIO with IRQ on a board.
-> It is using a SoC-native GPIO. Suddenly gpio-mon crashes because
-> of OOM or whatever and releases the filehandle on the way down.
-> What to do?
->
-> Use case 2: you plug in a USB dongle with GPIOs on. Start gpio-mon
-> on one of the pins. Unplug the dongle. Then it is fair that the cdev clea=
-ns
-> up the irq, because I don't see any way that a kernel driver would
-> request any of these GPIOs (but I'm more uncertain here).
->
-> I just think it is necessary to think about the big picture here.
->
-
-Agreed and the big picture - just like with the reason behind the SRCU
-rework - is the fact that even static GPIO chips defined in ACPI or DT
-can be unbound. Unless you want to make the decision that we
-arbitrarily suppress_bind_attrs for all GPIO chips which I don't think
-you do.
-
-I have shown in the discussion under the previous iteration that a
-static GPIO chip defined in DT that is also marked as an
-interrupt-controller may have interrupts requested directly from its
-irq domain bypassing the .to_irq() callback. As long as this GPIO chip
-may be unbound (and we do not restrict this) it means the splat
-mentioned here can be triggered from user-space with a simple rmmod
-because a requested irq does not increase the module reference count
-nor do device links seem to work for interrupts not associated with a
-struct device explicitly.
-
-I DO want to fix it, don't get me wrong. I don't want to just leave it
-like this, especially since we've made so much progress with
-hotpluggability recently. I just don't believe this is the right fix,
-I will try to come up with a solution that addresses the issue
-globally.
+Queued for fixes.
 
 Bart
-
-> Yours,
-> Linus Walleij
-
-[1] https://lore.kernel.org/lkml/CAMRc=3DMf5fRWoOMsJ41vzvE=3D-vp3wi-Obw=3Dj=
-5fBk3DuQaZNQP2Q@mail.gmail.com/
 
