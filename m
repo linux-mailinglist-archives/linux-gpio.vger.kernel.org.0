@@ -1,150 +1,104 @@
-Return-Path: <linux-gpio+bounces-4023-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4024-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD7C986DE8E
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 10:48:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DB79386DEF4
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 11:08:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 536C3283A78
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 09:48:24 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 71D4C28581E
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 10:08:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8925D6A8A7;
-	Fri,  1 Mar 2024 09:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC9F6BB33;
+	Fri,  1 Mar 2024 10:04:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="2PkzuQiV"
+	dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b="tBKpiB3Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from mail5.25mail.st (mail5.25mail.st [74.50.62.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83D9C6A8B5
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 09:48:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E02936A8D3
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 10:04:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.50.62.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709286500; cv=none; b=HuinbSwy1WBjdoQ9STsdo4ClDkJ9CD2zC4FPizMIf21aUf889cMgX0rbeV+h4b9Jk+aPgmNPU/N37ShSMJ6QHQLRHuN6HdMcT2KvOWdGvFr9o/M8h6Di31bfAd3i05VC4dC9TWgeIAa/Pf/CUAGsXjU7lCtX1qlcY+ff36YWNP8=
+	t=1709287487; cv=none; b=QmA8h/HmKTpgBDbzh3SbBA8PuFC6phHqmGnPn0QQ1Iih4kd+hDRnfh7kJr9zKTktCTdP1bi2voSPHkqK0H0aDu2d1oqSzTQ9tkL+E2mDxEYeD97EilKkWKGQCsJfQUyXuSQ6b+Nnlfkn5vt9azn3EQpnP7KlyqTYgXw7mH48eWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709286500; c=relaxed/simple;
-	bh=+80vNOLMDKRVmpQMdBh5/8bGOioHugjXyZ1PP3Zrvws=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YHQa+s5tjHk4xTFBT0JCJr2Jm9R3Nst2/szuB4Fbjj3k1iiIKeEnw5YkKOhNCz91dQM9yI3VyOn6Rg6aXSUy2vB6bcLd3deBWgch6Et64K58uoOXumXf5Osx5n7bRmNCOFdutFNU6wuPGOsClU+H/UNHqnnieQEH3oVbM8euj1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=2PkzuQiV; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1709286496;
-	bh=+80vNOLMDKRVmpQMdBh5/8bGOioHugjXyZ1PP3Zrvws=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=2PkzuQiV67k38oPZVXz3uPdGz2GdyamlCpWJNb5s6tc5TxNtzHvrTIhYyZ7VCcs6/
-	 aeZ4pEltFITDpIQeasrBww4gge8fXfD9OwtBtoocd+RjuOdJBHAv12tU8JCvpdvUDb
-	 R6JgypJ1gs/6RaWZHVsAOpg0JIc8rTnX1oUWQts+5U30ppJvMtBVwouGFIT9HovBe/
-	 PbzYNtqXxbMR6qOp1qODe8Q+A8XhqFaNcb9uP+m3eTPTEmZa5H5S5pFtQxbuE1m4ms
-	 ExLyMi2LDAgM0jB2vNSR+FKSM32DjDm9jSM0rWUlPw48ftQpRuXFii81HeKZJbvjC7
-	 pXoxo3GLKwLpQ==
-Received: from [100.113.186.2] (cola.collaboradmins.com [195.201.22.229])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kholk11)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 711AA37820C2;
-	Fri,  1 Mar 2024 09:48:16 +0000 (UTC)
-Message-ID: <ee1828ed-47c3-4e4c-8864-445522414c16@collabora.com>
-Date: Fri, 1 Mar 2024 10:48:15 +0100
+	s=arc-20240116; t=1709287487; c=relaxed/simple;
+	bh=6feN6yOIheZ+dtgydgU6GgCDdFRyE1viQIGzzrMdBes=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DtEsD6ZgVBH01INvd0I6Y/NK9luFoDS6LCuZ1No9TVqA63nwpR1nzfi52cw2VwetRmTqtC9r/neM/xoPB7pS5FiO+TS4C3fwOmw3P1ny2ciO89C9wk3VMzfnf9rAw+j2F4odBT/G1/uaZZ+e4pQ0D4gMmnEIEv114a2Epl+4zUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com; spf=fail smtp.mailfrom=atomide.com; dkim=pass (2048-bit key) header.d=atomide.com header.i=@atomide.com header.b=tBKpiB3Z; arc=none smtp.client-ip=74.50.62.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=atomide.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=atomide.com
+Received: from localhost (91-158-86-216.elisa-laajakaista.fi [91.158.86.216])
+	by mail5.25mail.st (Postfix) with ESMTPSA id AD51F6051A;
+	Fri,  1 Mar 2024 10:04:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=atomide.com;
+	s=25mailst; t=1709287478;
+	bh=6feN6yOIheZ+dtgydgU6GgCDdFRyE1viQIGzzrMdBes=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=tBKpiB3ZNFZSvZOXmhc/oRO3BfBLuFk0rFqoa3vkg49tfbxsXtw0rJkvu3ovRdl/f
+	 cImNKFZBOQdm/t7Kad6NvPI2yFvhXor/S1D0NSt8sdT+XCcvYTarZ6Jx8RpcdREiNw
+	 H9q5RnJtJBWw9OXcc/CZeB1ybdaqlWvd3MYqF7L/Clb6LmRaXZeehBxZ6QDUJ0hzyM
+	 LWuXXxmj0bbXf2nIxPSen2juqtu7ai2/pvx9sfXADrlc6LTzNLhcpBc39fe84MhUm3
+	 km9rdBT7u3hMFEFcgMo+D6Un2OjW/E2oPCvg1pong7pW/e9qLBoewj7FjnCW3/xIvx
+	 WqXEIsTsEWnuw==
+Date: Fri, 1 Mar 2024 12:04:27 +0200
+From: Tony Lindgren <tony@atomide.com>
+To: Nathan Chancellor <nathan@kernel.org>
+Cc: Matthijs Kooijman <matthijs@stdin.nl>, linux-gpio@vger.kernel.org,
+	Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: pinctrl: single: Cannot disable bias - PIN_CONFIG_BIAS_DISABLE
+ not handled
+Message-ID: <20240301100427.GE5299@atomide.com>
+References: <Zd8hYYDvvk2Q-GcG@login.tika.stderr.nl>
+ <20240229073211.GB5299@atomide.com>
+ <20240229183115.GA2905548@dev-arch.thelio-3990X>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
- Expander
-Content-Language: en-US
-To: Linus Walleij <linus.walleij@linaro.org>,
- David Bauer <mail@david-bauer.net>
-Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20240229-awinic-aw9523-v7-1-b62d0d2963d2@linaro.org>
-From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-In-Reply-To: <20240229-awinic-aw9523-v7-1-b62d0d2963d2@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240229183115.GA2905548@dev-arch.thelio-3990X>
 
-Il 29/02/24 23:52, Linus Walleij ha scritto:
-> From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+* Nathan Chancellor <nathan@kernel.org> [240229 18:31]:
+> On Thu, Feb 29, 2024 at 09:32:11AM +0200, Tony Lindgren wrote:
+> > > cause. I also do not have a good toolchain setup for compiling custom
+> > > kernels for this setup (and limited time for setting up one), so I do
+> > > not expect to be able to provide more testing or a patch anytime soon.
+> > 
+> > The buildall script should allow you to easily build a cross compiler
+> > on pretty much any current Linux host. I think this is the current
+> > git tree for it:
+> > 
+> > https://github.com/nathanchance/buildall
 > 
-> The Awinic AW9523(B) is a multi-function I2C gpio expander in a
-> TQFN-24L package, featuring PWM (max 37mA per pin, or total max
-> power 3.2Watts) for LED driving capability.
+> That is actually a fork of
+> http://git.infradead.org/users/segher/buildall.git from Segher
+> Boessenkool, which appears to no longer exist, so good thing I did that
+> :)
+
+Yes, no idea what happened to the original git repo.
+
+> > Seems like buildall should be hosted at kernel.org but I don't know the
+> > details, so adding Nathan to Cc too.
 > 
-> It has two ports with 8 pins per port (for a total of 16 pins),
-> configurable as either PWM with 1/256 stepping or GPIO input/output,
-> 1.8V logic input; each GPIO can be configured as input or output
-> independently from each other.
+> For what it's worth, there are prebuilt GCC and LLVM toolchains on
+> kernel.org that should work with the majority of distros on aarch64 and
+> x86_64 hosts.
 > 
-> This IC also has an internal interrupt controller, which is capable
-> of generating an interrupt for each GPIO, depending on the
-> configuration, and will raise an interrupt on the INTN pin to
-> advertise this to an external interrupt controller.
+> https://mirrors.edge.kernel.org/pub/tools/crosstool/
+> https://mirrors.edge.kernel.org/pub/tools/llvm/
 > 
-> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-> Signed-off-by: David Bauer <mail@david-bauer.net>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Link: https://lore.kernel.org/r/20210624214458.68716-2-mail@david-bauer.net
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> Resend and edit of David Bauers submission that is in use
-> in OpenWrt. It was so close to being merged that we better
-> just get it done.
-> ---
-> Changes from v6->v7:
-> - Set default IRQ type to IRQ_TYPE_EDGE_BOTH
-> - Convert to immutable irq_chip
-> - Convert probe and remove to new signatures
-> - Drop some unused headers
-> - Rename some variables as I like them
-> ---
->   drivers/pinctrl/Kconfig          |   18 +
->   drivers/pinctrl/Makefile         |    1 +
->   drivers/pinctrl/pinctrl-aw9523.c | 1119 ++++++++++++++++++++++++++++++++++++++
->   3 files changed, 1138 insertions(+)
-> 
+> Arnd maintains the GCC ones, I maintain the LLVM ones.
 
-..snip..
+OK great thanks for the links.
 
-> +
-> +static const struct of_device_id of_aw9523_i2c_match[] = {
-> +	{ .compatible = "awinic,aw9523-pinctrl", },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_aw9523_i2c_match);
-> +
-> +static struct i2c_driver aw9523_driver = {
-> +	.driver = {
-> +		.name = "aw9523-pinctrl",
-> +		.of_match_table = of_aw9523_i2c_match,
-> +	},
-> +	.probe = aw9523_probe,
-> +	.remove = aw9523_remove,
-> +	.id_table = aw9523_i2c_id_table,
-> +};
-> +module_i2c_driver(aw9523_driver);
-> +
-> +MODULE_DESCRIPTION("Awinic AW9523 I2C GPIO Expander driver");
-> +MODULE_AUTHOR("AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_ALIAS("platform:aw9523");
+Regards,
 
-As pointed by Krzysztof, MODULE_ALIAS is actually unneeded...
-...but the rest looks good.
-
-Since it's signed off by .. me, and the author is still, well, me... it would
-look weird if I gave you a R-b.
-
-So...
-
-After removing MODULE_ALIAS (and of course picking the bindings),
-
-"R-b myself" :-)
-
-Cheers,
-Angelo
+Tony
 
