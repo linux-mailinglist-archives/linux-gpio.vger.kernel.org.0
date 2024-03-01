@@ -1,48 +1,48 @@
-Return-Path: <linux-gpio+bounces-4034-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4035-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 746AE86E30B
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 15:11:14 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC6B786E30C
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 15:11:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8CAF41C20BA8
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 14:11:13 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 61A24B21839
+	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 14:11:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 362F36EB7D;
-	Fri,  1 Mar 2024 14:11:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4B526EB7D;
+	Fri,  1 Mar 2024 14:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XplpJWBB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q3Uk2JMp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9CC067E8D
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 14:11:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65B696EB7C
+	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 14:11:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709302269; cv=none; b=mf+8zoog0Z3YJG585v/ouFH13uzzEEmB65c91uWAL6RW2CnhZtAgkwz1h6Ax/LC3xV7187BRv40QD5o04XLNZI8B5P53m+vNO2qqH08vcFRsx7Gi9BlUwtArNL9iu3GnaaNgneIEjRtW0Nd0G3buc7TT/Gmg+A3xnuNP1zTErUk=
+	t=1709302282; cv=none; b=YvGmJ6WTZcLWt+GWSgBHhvIu8nnCnh95q14iplOVfrMlUiWRO7yB+elmZpylnr6GufITTBtSrEtOqsxktSP1JgRmKsYO//kegzs1QxXPqBrIeaDq263hu/BeKvUbbUHYN1PrrYInMj/NFqrUdpgrQ8uzqgQ3icJNDaWoUKxDTXA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709302269; c=relaxed/simple;
-	bh=bgzTXgRgSdey7Ymegna3vdgn0/iF2aA0V2VZOlltR9s=;
+	s=arc-20240116; t=1709302282; c=relaxed/simple;
+	bh=OUiUx2nrRMFXD7Q7U4VT2jDvbTJ4I2itQl0Yxot5q+w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rljNCQcjQlgBqaGrRi6H0saziyTbLV/3tJqJ4OqkA+yU5o+DK41Hx3atyXWfrbMmuV3TwJ8ThMZumwYNnQwxbuS/PFL6f9b4a+steTlobXNRfogSLoPdXkhTFlYHWqQuKIZbotZIB5DS9cJq7DHBu66ZyLhW481vfyHw4CbYKLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XplpJWBB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7305FC433C7;
-	Fri,  1 Mar 2024 14:11:06 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=f7jz2fWcg9Hdz+KZ8ilXlCATEYa7lIkukQbMf6KscpQjS1FPh77mrPFwi/mnyARfR3oHRTy+08BUFobYs9tnecnvC6X+LNmEBvmrHUq1G75p97XsH4FEgpaOvfxOkzlx12goLayRjeApaTWbLgcNkUVHTM8/UGro46TEzMRxARE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q3Uk2JMp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A62C433F1;
+	Fri,  1 Mar 2024 14:11:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709302268;
-	bh=bgzTXgRgSdey7Ymegna3vdgn0/iF2aA0V2VZOlltR9s=;
+	s=k20201202; t=1709302282;
+	bh=OUiUx2nrRMFXD7Q7U4VT2jDvbTJ4I2itQl0Yxot5q+w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XplpJWBBmgazVdA5D+qKmK1Ae1EACe3zEv+8bpL01p340wKngavHE6PBcEAByQLI7
-	 4jhVfzkRacoFAxpj+mPn7obOd15bEfDm3hY8CzOKjfEw1GJAloX0Tl1hjGmuQfeJ2c
-	 qlz9+wV7gxD993roOrfn/81HIXgL8xpHq+O9oLOvEbU6PV5INcMc5OF7rZucAg5g9v
-	 gE625RCnQ7GuRq64xHG6waD6rJJMRQTVIThqscw69BPpcu5RVrzhxA/tJJHqQFidIx
-	 ldZf2mHxT8YneTtbyis+fiCs34tdZebgTdUpt679CsXqHyTSdZIDGAfhs1QvOxEA2X
-	 hoSB4Kn4tIf9g==
-Message-ID: <433a75de-c340-4baf-a7ad-81513b210a89@kernel.org>
-Date: Fri, 1 Mar 2024 15:11:01 +0100
+	b=Q3Uk2JMpwsoXKrmGh6aO3FEKwqnm1a//ritmnSsCDd2hSNlpS4wSJUvaIh09IpF9u
+	 xqRkfEqJz+g7LmRnNLaxf1QNYqh7Ror2yaLns9TB8Px5N9fZGUOX7pJ9VozMWwyT77
+	 Bb+kPq2QkEWsnKtbMhIRYArmAl/R8zeS4D1n5UtPX3RSuwKbnwy/yUgIHwmPkdnIxT
+	 kZfT9Na5RLmWT7KSxEtV90x5SdVcfuJX4Xh80z/jv3dDDMP3zrQvbRyu867iwhqZ0i
+	 0vdYiDhbBXoxY6dYg00h8m8+5CQ1uW8kQU/tqa910cDk8Em3tLt52u3pJbOBfr33Ke
+	 YrRgxbo7KGpRw==
+Message-ID: <81e7b146-8e09-4f85-9740-e0bbf5845a44@kernel.org>
+Date: Fri, 1 Mar 2024 15:11:19 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -50,16 +50,14 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v7] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
+Subject: Re: [PATCH v8] pinctrl: Add driver for Awinic AW9523/B I2C GPIO
  Expander
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: David Bauer <mail@david-bauer.net>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
- linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
-References: <20240229-awinic-aw9523-v7-1-b62d0d2963d2@linaro.org>
- <0194039f-e1bb-4b97-b8f5-b8034fe13f63@kernel.org>
- <CACRpkdb1U3HbjPATJo+DNoMCxkj0dk7Rk7jG974qQ0kkqLruSg@mail.gmail.com>
 Content-Language: en-US
+To: Linus Walleij <linus.walleij@linaro.org>,
+ David Bauer <mail@david-bauer.net>,
+ AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>
+References: <20240301-awinic-aw9523-v8-1-7ec572f5dfb4@linaro.org>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Autocrypt: addr=krzk@kernel.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -104,25 +102,36 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
  7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
  5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <CACRpkdb1U3HbjPATJo+DNoMCxkj0dk7Rk7jG974qQ0kkqLruSg@mail.gmail.com>
+In-Reply-To: <20240301-awinic-aw9523-v8-1-7ec572f5dfb4@linaro.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 01/03/2024 14:20, Linus Walleij wrote:
-> On Fri, Mar 1, 2024 at 10:34 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+On 01/03/2024 14:29, Linus Walleij wrote:
+> From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 > 
+> The Awinic AW9523(B) is a multi-function I2C gpio expander in a
+> TQFN-24L package, featuring PWM (max 37mA per pin, or total max
+> power 3.2Watts) for LED driving capability.
 > 
->>> +static const struct of_device_id of_aw9523_i2c_match[] = {
->>> +     { .compatible = "awinic,aw9523-pinctrl", },
->>
->> That's an undocumented compatible, which we cannot take. You need bindings.
+> It has two ports with 8 pins per port (for a total of 16 pins),
+> configurable as either PWM with 1/256 stepping or GPIO input/output,
+> 1.8V logic input; each GPIO can be configured as input or output
+> independently from each other.
 > 
-> There is a binding, I just merged it yesterday but that's not easy for you
-> to know, I should have pointed it out:
-> https://lore.kernel.org/all/20210624214458.68716-1-mail@david-bauer.net/
+> This IC also has an internal interrupt controller, which is capable
+> of generating an interrupt for each GPIO, depending on the
+> configuration, and will raise an interrupt on the INTN pin to
+> advertise this to an external interrupt controller.
 > 
+> Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+> Signed-off-by: David Bauer <mail@david-bauer.net>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Link: https://lore.kernel.org/r/20210624214458.68716-2-mail@david-bauer.net
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 
-Ah, ok, I checked next from 29th of Feb.
+FWIW
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
 Krzysztof
