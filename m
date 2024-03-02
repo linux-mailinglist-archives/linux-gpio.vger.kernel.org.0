@@ -1,217 +1,247 @@
-Return-Path: <linux-gpio+bounces-4055-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4056-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id A471986ED89
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 01:44:53 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4553F86EFA3
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 09:40:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 123741F23264
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 00:44:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EE92728251F
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 08:40:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D847B10F1;
-	Sat,  2 Mar 2024 00:44:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49C388F5D;
+	Sat,  2 Mar 2024 08:40:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="DYXglj3P"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F380C
-	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 00:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17C1A6FBE
+	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 08:40:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709340286; cv=none; b=Y4FSVhUoT5noNH6Ccdr6047Hfb3kwKbAxy44sR/jFY9MzlEHDxuSdiCBD82oQeXhhJMyE41UCGeMun8cntjjUgSo+ossHTymZvHIP/xTZ4Wdafiz/NvbxQNLd/keH+N7JP5l0NrQouLpZfVXHOXjRRPrHJgXxZnKq2ax9QEA+3w=
+	t=1709368808; cv=none; b=c5IHi1jYuZAeqLZ8Z4KhIXVECQyrvMIcPhfMWJ0maK4KQEvhEETdOpc+d+7s1xuSs16jrAcQA/f4slJ0/xr1C63P/+vzt3UIBeF0dtGI9nkquhkNnAoeBTWiP2VGm4ul3lUOzsnQDSeRGgjtQM/Y0UwF1XC03YKz0RSl9Bg+W5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709340286; c=relaxed/simple;
-	bh=N7aLsipkDvipYuH/b5r8b2CKLMOVSg0u+ObIwgGk21s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MqT0emLYK3mdPM70WQMwhCatJ8m2KR3qsRyZ6ZCAKpkGMVyVeaw99CyLwS8koLk7Aqozcf6EzSLusrENd7AxGL+/LOvwrsqA2z/I1ctN0EVSCciF6nADVI/58fc5eDcxKVfqJGHVjLrJhBRA7YwlmHbO7nkdral4a9kXOLLFMds=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 0e94cdf9-d82e-11ee-b3cf-005056bd6ce9;
-	Sat, 02 Mar 2024 02:44:42 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: [PATCH v2 1/1] gpio: nomadik: Finish conversion to use firmware node APIs
-Date: Sat,  2 Mar 2024 02:44:18 +0200
-Message-ID: <20240302004439.197232-1-andy.shevchenko@gmail.com>
-X-Mailer: git-send-email 2.44.0
+	s=arc-20240116; t=1709368808; c=relaxed/simple;
+	bh=e6kQwXuoVegFxGIhaj+Z1jrXeDZpmC2JfcGKlAK1/mo=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=LcGN4tlIvQ3tBAG9sri48plRMHEb0ofS+cPQ8av5fQVmuS4h75NiF9q3VRF+DtwlyrGN9NauyXL2ZDaBlokEZo3YRfJa4l/IGfZuuh/JKmePg/xRmHvfGeftyq9Uh8lPqpx05dJkeFhwBS5GKit6DAzi8xS8zm24jQwOkm2WvW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=DYXglj3P; arc=none smtp.client-ip=192.198.163.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709368806; x=1740904806;
+  h=date:from:to:cc:subject:message-id;
+  bh=e6kQwXuoVegFxGIhaj+Z1jrXeDZpmC2JfcGKlAK1/mo=;
+  b=DYXglj3P1qKjRllPG8ZzAhYXpEppOI0GfE5Z0tHHyAuPLk77igSWHzq1
+   HlO2i3hC1ATnZIy197nLM4dXkwjGgSNWE6TU/pYwtYPPkKSdI/DsZh+Mt
+   8Tbu1KHlXDbGGCjUIPo/nmYeR54weHEqvGwIP3Y2ED3uT6EhvjJNdWn68
+   UbULN5psDHWRL4Hxkb+W5VgaN2qLU2Z9vHCXSX6Bc29WACrIyJaSqDr7M
+   F1Ykia8pg2r9YZDCyT6WofDDZ5HuE9HQJhbfNkCFC9MtY9Yg1heh9kxsI
+   /qBeC7QHWBqKywuoIZ5CQ5UXC/aWcuc0K/k/rs6dGrPzzF01T2fAK5gba
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11000"; a="4082606"
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="4082606"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 00:40:05 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="13029399"
+Received: from lkp-server02.sh.intel.com (HELO 3c78fa4d504c) ([10.239.97.151])
+  by fmviesa004.fm.intel.com with ESMTP; 02 Mar 2024 00:40:04 -0800
+Received: from kbuild by 3c78fa4d504c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgKuX-000ETN-2r;
+	Sat, 02 Mar 2024 08:40:01 +0000
+Date: Sat, 02 Mar 2024 16:39:09 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:ib-nomadik-gpio] BUILD SUCCESS
+ b824f841a4a8442f626fedeafb3c8fcfb7bef823
+Message-ID: <202403021606.n9V0Uykk-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Previously driver got a few updates in order to replace OF APIs by
-respective firmware node, however it was not finished to the logical
-end, e.g., some APIs that has been used are still require OF node
-to be passed. Finish that job by converting leftovers to use firmware
-node APIs.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
+branch HEAD: b824f841a4a8442f626fedeafb3c8fcfb7bef823  gpio: nomadik: fix Kconfig dependencies inbetween pinctrl & GPIO
 
-Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
----
-v2: also update necessary parts in the respective pin control driver
- drivers/gpio/Kconfig                      |  1 -
- drivers/gpio/gpio-nomadik.c               | 13 ++++++------
- drivers/pinctrl/nomadik/pinctrl-nomadik.c | 25 +++++++++++------------
- include/linux/gpio/gpio-nomadik.h         |  4 +++-
- 4 files changed, 21 insertions(+), 22 deletions(-)
+elapsed time: 1052m
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index f633be517654..ef20ab921010 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -481,7 +481,6 @@ config GPIO_MXS
- config GPIO_NOMADIK
- 	bool "Nomadik GPIO driver"
- 	depends on ARCH_U8500 || ARCH_NOMADIK || MACH_EYEQ5 || COMPILE_TEST
--	depends on OF_GPIO
- 	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to support the Nomadik SoC GPIO block. This block is also
-diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-index c9fd6631e0aa..483086deb397 100644
---- a/drivers/gpio/gpio-nomadik.c
-+++ b/drivers/gpio/gpio-nomadik.c
-@@ -23,10 +23,10 @@
- #include <linux/gpio/driver.h>
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
--#include <linux/of_device.h>
--#include <linux/of_platform.h>
-+#include <linux/mod_devicetable.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/platform_device.h>
-+#include <linux/property.h>
- #include <linux/reset.h>
- #include <linux/seq_file.h>
- #include <linux/slab.h>
-@@ -504,7 +504,7 @@ static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
-  * it is the pin controller or GPIO driver. However we need to use the right
-  * platform device when looking up resources so pay attention to pdev.
-  */
--struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
-+struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 					     struct platform_device *pdev)
- {
- 	struct nmk_gpio_chip *nmk_chip;
-@@ -517,9 +517,9 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
- 	u32 id, ngpio;
- 	int ret;
- 
--	gpio_dev = bus_find_device_by_of_node(&platform_bus_type, np);
-+	gpio_dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
- 	if (!gpio_dev) {
--		pr_err("populate \"%pOFn\": device not found\n", np);
-+		dev_err(&pdev->dev, "populate \"%pfwP\": device not found\n", fwnode);
- 		return ERR_PTR(-ENODEV);
- 	}
- 	gpio_pdev = to_platform_device(gpio_dev);
-@@ -624,7 +624,6 @@ static const struct irq_chip nmk_irq_chip = {
- static int nmk_gpio_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
--	struct device_node *np = dev->of_node;
- 	struct nmk_gpio_chip *nmk_chip;
- 	struct gpio_irq_chip *girq;
- 	bool supports_sleepmode;
-@@ -632,7 +631,7 @@ static int nmk_gpio_probe(struct platform_device *pdev)
- 	int irq;
- 	int ret;
- 
--	nmk_chip = nmk_gpio_populate_chip(np, pdev);
-+	nmk_chip = nmk_gpio_populate_chip(dev_fwnode(dev), pdev);
- 	if (IS_ERR(nmk_chip)) {
- 		dev_err(dev, "could not populate nmk chip struct\n");
- 		return PTR_ERR(nmk_chip);
-diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-index 7849144b3b80..b89b2609fdfd 100644
---- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-+++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
-@@ -1190,8 +1190,8 @@ static int nmk_pinctrl_resume(struct device *dev)
- 
- static int nmk_pinctrl_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
--	struct device_node *prcm_np;
-+	struct device_node *fwnode = dev_fwnode(&pdev->dev);
-+	struct device_node *prcm_fwnode;
- 	struct nmk_pinctrl *npct;
- 	uintptr_t version = 0;
- 	int i;
-@@ -1216,28 +1216,27 @@ static int nmk_pinctrl_probe(struct platform_device *pdev)
- 	 * or after this point: it shouldn't matter as the APIs are orthogonal.
- 	 */
- 	for (i = 0; i < NMK_MAX_BANKS; i++) {
--		struct device_node *gpio_np;
-+		struct fwnode_handle *gpio_fwnode;
- 		struct nmk_gpio_chip *nmk_chip;
- 
--		gpio_np = of_parse_phandle(np, "nomadik-gpio-chips", i);
--		if (!gpio_np)
-+		gpio_fwnode = fwnode_find_reference(fwnode, "nomadik-gpio-chips", i);
-+		if (IS_ERR(gpio_fwnode))
- 			continue;
- 
--		dev_info(&pdev->dev, "populate NMK GPIO %d \"%pOFn\"\n",
--			 i, gpio_np);
--		nmk_chip = nmk_gpio_populate_chip(gpio_np, pdev);
-+		dev_info(&pdev->dev, "populate NMK GPIO %d \"%pfwP\"\n", i, gpio_fwnode);
-+		nmk_chip = nmk_gpio_populate_chip(gpio_fwnode, pdev);
- 		if (IS_ERR(nmk_chip))
- 			dev_err(&pdev->dev,
- 				"could not populate nmk chip struct - continue anyway\n");
--		of_node_put(gpio_np);
-+		fwnode_handle_put(gpio_fwnode);
- 		/* We are NOT compatible with mobileye,eyeq5-gpio. */
- 		BUG_ON(nmk_chip->is_mobileye_soc);
- 	}
- 
--	prcm_np = of_parse_phandle(np, "prcm", 0);
--	if (prcm_np) {
--		npct->prcm_base = of_iomap(prcm_np, 0);
--		of_node_put(prcm_np);
-+	prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
-+	if (!IS_ERR(prcm_fwnode)) {
-+		npct->prcm_base = fwnode_iomap(prcm_fwnode, 0);
-+		fwnode_handle_put(prcm_fwnode);
- 	}
- 	if (!npct->prcm_base) {
- 		if (version == PINCTRL_NMK_STN8815) {
-diff --git a/include/linux/gpio/gpio-nomadik.h b/include/linux/gpio/gpio-nomadik.h
-index 9bdb09fda4c9..4a95ea7935fb 100644
---- a/include/linux/gpio/gpio-nomadik.h
-+++ b/include/linux/gpio/gpio-nomadik.h
-@@ -2,6 +2,8 @@
- #ifndef __LINUX_GPIO_NOMADIK_H
- #define __LINUX_GPIO_NOMADIK_H
- 
-+struct fwnode_handle;
-+
- /* Package definitions */
- #define PINCTRL_NMK_STN8815	0
- #define PINCTRL_NMK_DB8500	1
-@@ -263,7 +265,7 @@ void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
- 			    unsigned int offset, int val);
- void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip, unsigned int offset,
- 			 enum nmk_gpio_slpm mode);
--struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
-+struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 					     struct platform_device *pdev);
- 
- /* Symbols declared in pinctrl-nomadik used by gpio-nomadik. */
+configs tested: 158
+configs skipped: 8
+
+The following configs have been built successfully.
+More configs may be tested in the coming days.
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240302   gcc  
+arc                   randconfig-002-20240302   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240302   gcc  
+arm                   randconfig-002-20240302   gcc  
+arm                   randconfig-003-20240302   gcc  
+arm                   randconfig-004-20240302   clang
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240302   gcc  
+arm64                 randconfig-002-20240302   gcc  
+arm64                 randconfig-003-20240302   clang
+arm64                 randconfig-004-20240302   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240302   gcc  
+csky                  randconfig-002-20240302   gcc  
+hexagon                           allnoconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240302   clang
+hexagon               randconfig-002-20240302   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240302   clang
+i386         buildonly-randconfig-002-20240302   gcc  
+i386         buildonly-randconfig-003-20240302   gcc  
+i386         buildonly-randconfig-004-20240302   clang
+i386         buildonly-randconfig-005-20240302   gcc  
+i386         buildonly-randconfig-006-20240302   gcc  
+i386                                defconfig   clang
+i386                  randconfig-001-20240302   clang
+i386                  randconfig-002-20240302   gcc  
+i386                  randconfig-003-20240302   clang
+i386                  randconfig-004-20240302   gcc  
+i386                  randconfig-005-20240302   gcc  
+i386                  randconfig-006-20240302   clang
+i386                  randconfig-011-20240302   gcc  
+i386                  randconfig-012-20240302   gcc  
+i386                  randconfig-013-20240302   gcc  
+i386                  randconfig-014-20240302   gcc  
+i386                  randconfig-015-20240302   clang
+i386                  randconfig-016-20240302   gcc  
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240302   gcc  
+loongarch             randconfig-002-20240302   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240302   gcc  
+nios2                 randconfig-002-20240302   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240302   gcc  
+parisc                randconfig-002-20240302   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240302   clang
+powerpc               randconfig-002-20240302   clang
+powerpc               randconfig-003-20240302   gcc  
+powerpc64             randconfig-001-20240302   clang
+powerpc64             randconfig-002-20240302   gcc  
+powerpc64             randconfig-003-20240302   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240302   gcc  
+riscv                 randconfig-002-20240302   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240302   gcc  
+s390                  randconfig-002-20240302   clang
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240302   gcc  
+sh                    randconfig-002-20240302   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240302   gcc  
+sparc64               randconfig-002-20240302   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240302   gcc  
+um                    randconfig-002-20240302   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64       buildonly-randconfig-001-20240302   clang
+x86_64       buildonly-randconfig-002-20240302   clang
+x86_64       buildonly-randconfig-003-20240302   gcc  
+x86_64       buildonly-randconfig-004-20240302   gcc  
+x86_64       buildonly-randconfig-005-20240302   gcc  
+x86_64       buildonly-randconfig-006-20240302   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240302   clang
+x86_64                randconfig-002-20240302   gcc  
+x86_64                randconfig-003-20240302   gcc  
+x86_64                randconfig-004-20240302   clang
+x86_64                randconfig-005-20240302   gcc  
+x86_64                randconfig-006-20240302   clang
+x86_64                randconfig-011-20240302   clang
+x86_64                randconfig-012-20240302   clang
+x86_64                randconfig-013-20240302   gcc  
+x86_64                randconfig-014-20240302   gcc  
+x86_64                randconfig-015-20240302   clang
+x86_64                randconfig-016-20240302   gcc  
+x86_64                randconfig-071-20240302   clang
+x86_64                randconfig-072-20240302   clang
+x86_64                randconfig-073-20240302   clang
+x86_64                randconfig-074-20240302   gcc  
+x86_64                randconfig-075-20240302   clang
+x86_64                randconfig-076-20240302   clang
+x86_64                          rhel-8.3-rust   clang
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240302   gcc  
+xtensa                randconfig-002-20240302   gcc  
+
 -- 
-2.44.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
