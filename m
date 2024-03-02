@@ -1,146 +1,217 @@
-Return-Path: <linux-gpio+bounces-4054-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4055-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 73DD286ED03
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 00:42:39 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id A471986ED89
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 01:44:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 451401C21B90
-	for <lists+linux-gpio@lfdr.de>; Fri,  1 Mar 2024 23:42:38 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 123741F23264
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 00:44:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFE45F46A;
-	Fri,  1 Mar 2024 23:42:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eYleZ5U5"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D847B10F1;
+	Sat,  2 Mar 2024 00:44:46 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B16E758AA4
-	for <linux-gpio@vger.kernel.org>; Fri,  1 Mar 2024 23:42:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E23F380C
+	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 00:44:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709336551; cv=none; b=CfXnR8thioybLKXQn7Kb76u0dFH49z0hiOL2kwnV1Dr+vDNEx9SuD/OYMtXL37S6f6BJIZO3N1XA0frw+Z9PQTxrccFWbdsErm11rEciupf00Fd6mBAztJLPsDwpWJwe/N864xHsjApFKexT0g78AmvwlgVVwDM1Rm6YGlZ3x6g=
+	t=1709340286; cv=none; b=Y4FSVhUoT5noNH6Ccdr6047Hfb3kwKbAxy44sR/jFY9MzlEHDxuSdiCBD82oQeXhhJMyE41UCGeMun8cntjjUgSo+ossHTymZvHIP/xTZ4Wdafiz/NvbxQNLd/keH+N7JP5l0NrQouLpZfVXHOXjRRPrHJgXxZnKq2ax9QEA+3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709336551; c=relaxed/simple;
-	bh=25h2s03QLSdp6bRNpLiP+irXeh+fZcWx//JXhu+B3aE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W/bJO7C4k6OJFGXMK9GSoptYivjWxYDyf999j7cWUjfw8qonEWGUi9l3MXLpnlcMYKSwrlQK0VUrdqQ4OV8Ub5VjM/p1lxND6Cy9rHNf0nx7OaGwZtzZL9rQDPrTcwAjwLzQXhX8kSs1YNrR9COBymw38/jSAQWvpFwrhv0Kv70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eYleZ5U5; arc=none smtp.client-ip=209.85.208.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5645960cd56so4050857a12.1
-        for <linux-gpio@vger.kernel.org>; Fri, 01 Mar 2024 15:42:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709336548; x=1709941348; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=QTpk9ZPQWyNrhHVW/3ykx8bCWFEXW6TZCcUdpJn/0yY=;
-        b=eYleZ5U5uRz4CbzUtw5H0NJ1TRU8JZzL3x39w306wijfF4ZNzoAO9lE5J6Tsbi6zIf
-         W6LdUSET5UTCqscTpETnnVcudqEso2Ox7dSOobgvIrK4nb9BPAlHEbR1gDy8LreGp7pl
-         EwjcDBdmoqFA6SXVx6Q8jalNnUDcm257Lgh09fDmse0Wn+Vur3NeW0r/vDFtm23JetcS
-         1MPbMOBEOXgp1NPmb4EJ5xAkHXxui4sCMW7x+COfd3VDP3g8+B4r2vxjmpkTibTcjN7l
-         2mMcRFEF1dUZ4d3UioqUHWEXFzxOcWXSuuuVwyHvu673uBS6sFdHsAmR5s1yPpzx2VDC
-         kebQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709336548; x=1709941348;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QTpk9ZPQWyNrhHVW/3ykx8bCWFEXW6TZCcUdpJn/0yY=;
-        b=NOZpsxuYw9tZg06q8fK7nOM8QQnHJoISO/CWAf5BAybD/xBEf41FL+E+RekI9S7Xjb
-         SXGdP4h73Un7l2F2cLZ0tPAZqCSmhx7FxG3AmsYV8bQUWesIjVrGyqIdYWqidElScHL0
-         upzWB029iBHW2otxzv+IRYr7pzCIkvTNpX+7pnqLbmi2QZmenQCQBcrNL0jpSlofWU01
-         AZO4A88MslIWBSkchtJ4stXO58eUJLZTI/VR8GAz7dtxJdN15Ls47ZriBTqIjffbRaj3
-         PnUzAZ1smdfNKloU2PsuLotnebmr+PFXf7nsTkT52iMGBEwr1HmHl7XZWoJMjQ4bFpsX
-         Q+eA==
-X-Forwarded-Encrypted: i=1; AJvYcCXRWWXigbPZwrSCLZKQpJIMCO/AfX5QKGikpDlN8DShl9XIVOHC/D3sZjKZ99EkvzVtd+d9Qh0ifw/N4BBh0Vxr0MVydW5r9aOgdg==
-X-Gm-Message-State: AOJu0YyBWyllAK1OLZrIWVHwxthyYNyqFATftkfhUqO38ffOziXy7Cth
-	EuFJ9B6LcgmQrPWqg4PsmNirmv6ApWzGQJifvcjz60TwuTelc7tJksUkWnylX/U=
-X-Google-Smtp-Source: AGHT+IFRQx/BGvRRQHWnehLDkyl5yY9eCMtCmTp08r8NunqurYAeKV/S0PNGCAL3TJ5DxTCTzyOX9A==
-X-Received: by 2002:a50:c8c9:0:b0:566:348:fc4a with SMTP id k9-20020a50c8c9000000b005660348fc4amr2195978edh.32.1709336547817;
-        Fri, 01 Mar 2024 15:42:27 -0800 (PST)
-Received: from [192.168.216.32] (078088045141.garwolin.vectranet.pl. [78.88.45.141])
-        by smtp.gmail.com with ESMTPSA id c28-20020a50d65c000000b00565a9c11987sm2077259edj.76.2024.03.01.15.42.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 01 Mar 2024 15:42:27 -0800 (PST)
-Message-ID: <77485a55-c9da-408f-8dcc-77c6734927da@linaro.org>
-Date: Sat, 2 Mar 2024 00:42:26 +0100
+	s=arc-20240116; t=1709340286; c=relaxed/simple;
+	bh=N7aLsipkDvipYuH/b5r8b2CKLMOVSg0u+ObIwgGk21s=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=MqT0emLYK3mdPM70WQMwhCatJ8m2KR3qsRyZ6ZCAKpkGMVyVeaw99CyLwS8koLk7Aqozcf6EzSLusrENd7AxGL+/LOvwrsqA2z/I1ctN0EVSCciF6nADVI/58fc5eDcxKVfqJGHVjLrJhBRA7YwlmHbO7nkdral4a9kXOLLFMds=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id 0e94cdf9-d82e-11ee-b3cf-005056bd6ce9;
+	Sat, 02 Mar 2024 02:44:42 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	=?UTF-8?q?Th=C3=A9o=20Lebrun?= <theo.lebrun@bootlin.com>,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: [PATCH v2 1/1] gpio: nomadik: Finish conversion to use firmware node APIs
+Date: Sat,  2 Mar 2024 02:44:18 +0200
+Message-ID: <20240302004439.197232-1-andy.shevchenko@gmail.com>
+X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v12 8/9] firmware: qcom: scm: Add check to prevent Null
- pointer dereference
-Content-Language: en-US
-To: Mukesh Ojha <quic_mojha@quicinc.com>, andersson@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
- linus.walleij@linaro.org, linux-gpio@vger.kernel.org
-References: <20240227155308.18395-1-quic_mojha@quicinc.com>
- <20240227155308.18395-9-quic_mojha@quicinc.com>
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-Autocrypt: addr=konrad.dybcio@linaro.org; keydata=
- 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
- izWDgYvmBE8=
-In-Reply-To: <20240227155308.18395-9-quic_mojha@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 27.02.2024 16:53, Mukesh Ojha wrote:
-> There are multiple place in SCM driver __scm->dev is being
-> accessed without checking if it is valid or not and all
-> not all of function needs the device but it is needed
-> for some cases when the number of argument passed is more
-> and dma_map_single () api is used.
-> 
-> Add a NULL check for the cases when it is fine even to pass
-> device as NULL and add qcom_scm_is_available() check for
-> cases when it is needed for DMA api's.
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
-> ---
+Previously driver got a few updates in order to replace OF APIs by
+respective firmware node, however it was not finished to the logical
+end, e.g., some APIs that has been used are still require OF node
+to be passed. Finish that job by converting leftovers to use firmware
+node APIs.
 
-Most (all?) drivers calling into SCM already check is_available()
-at probe time. I'm not sure returning -EPROBE_DEFER would be good
-for calls outside .probe.
+Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+---
+v2: also update necessary parts in the respective pin control driver
+ drivers/gpio/Kconfig                      |  1 -
+ drivers/gpio/gpio-nomadik.c               | 13 ++++++------
+ drivers/pinctrl/nomadik/pinctrl-nomadik.c | 25 +++++++++++------------
+ include/linux/gpio/gpio-nomadik.h         |  4 +++-
+ 4 files changed, 21 insertions(+), 22 deletions(-)
 
-Konrad
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index f633be517654..ef20ab921010 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -481,7 +481,6 @@ config GPIO_MXS
+ config GPIO_NOMADIK
+ 	bool "Nomadik GPIO driver"
+ 	depends on ARCH_U8500 || ARCH_NOMADIK || MACH_EYEQ5 || COMPILE_TEST
+-	depends on OF_GPIO
+ 	select GPIOLIB_IRQCHIP
+ 	help
+ 	  Say yes here to support the Nomadik SoC GPIO block. This block is also
+diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+index c9fd6631e0aa..483086deb397 100644
+--- a/drivers/gpio/gpio-nomadik.c
++++ b/drivers/gpio/gpio-nomadik.c
+@@ -23,10 +23,10 @@
+ #include <linux/gpio/driver.h>
+ #include <linux/interrupt.h>
+ #include <linux/kernel.h>
+-#include <linux/of_device.h>
+-#include <linux/of_platform.h>
++#include <linux/mod_devicetable.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/platform_device.h>
++#include <linux/property.h>
+ #include <linux/reset.h>
+ #include <linux/seq_file.h>
+ #include <linux/slab.h>
+@@ -504,7 +504,7 @@ static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
+  * it is the pin controller or GPIO driver. However we need to use the right
+  * platform device when looking up resources so pay attention to pdev.
+  */
+-struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
++struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 					     struct platform_device *pdev)
+ {
+ 	struct nmk_gpio_chip *nmk_chip;
+@@ -517,9 +517,9 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
+ 	u32 id, ngpio;
+ 	int ret;
+ 
+-	gpio_dev = bus_find_device_by_of_node(&platform_bus_type, np);
++	gpio_dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
+ 	if (!gpio_dev) {
+-		pr_err("populate \"%pOFn\": device not found\n", np);
++		dev_err(&pdev->dev, "populate \"%pfwP\": device not found\n", fwnode);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 	gpio_pdev = to_platform_device(gpio_dev);
+@@ -624,7 +624,6 @@ static const struct irq_chip nmk_irq_chip = {
+ static int nmk_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct device_node *np = dev->of_node;
+ 	struct nmk_gpio_chip *nmk_chip;
+ 	struct gpio_irq_chip *girq;
+ 	bool supports_sleepmode;
+@@ -632,7 +631,7 @@ static int nmk_gpio_probe(struct platform_device *pdev)
+ 	int irq;
+ 	int ret;
+ 
+-	nmk_chip = nmk_gpio_populate_chip(np, pdev);
++	nmk_chip = nmk_gpio_populate_chip(dev_fwnode(dev), pdev);
+ 	if (IS_ERR(nmk_chip)) {
+ 		dev_err(dev, "could not populate nmk chip struct\n");
+ 		return PTR_ERR(nmk_chip);
+diff --git a/drivers/pinctrl/nomadik/pinctrl-nomadik.c b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+index 7849144b3b80..b89b2609fdfd 100644
+--- a/drivers/pinctrl/nomadik/pinctrl-nomadik.c
++++ b/drivers/pinctrl/nomadik/pinctrl-nomadik.c
+@@ -1190,8 +1190,8 @@ static int nmk_pinctrl_resume(struct device *dev)
+ 
+ static int nmk_pinctrl_probe(struct platform_device *pdev)
+ {
+-	struct device_node *np = pdev->dev.of_node;
+-	struct device_node *prcm_np;
++	struct device_node *fwnode = dev_fwnode(&pdev->dev);
++	struct device_node *prcm_fwnode;
+ 	struct nmk_pinctrl *npct;
+ 	uintptr_t version = 0;
+ 	int i;
+@@ -1216,28 +1216,27 @@ static int nmk_pinctrl_probe(struct platform_device *pdev)
+ 	 * or after this point: it shouldn't matter as the APIs are orthogonal.
+ 	 */
+ 	for (i = 0; i < NMK_MAX_BANKS; i++) {
+-		struct device_node *gpio_np;
++		struct fwnode_handle *gpio_fwnode;
+ 		struct nmk_gpio_chip *nmk_chip;
+ 
+-		gpio_np = of_parse_phandle(np, "nomadik-gpio-chips", i);
+-		if (!gpio_np)
++		gpio_fwnode = fwnode_find_reference(fwnode, "nomadik-gpio-chips", i);
++		if (IS_ERR(gpio_fwnode))
+ 			continue;
+ 
+-		dev_info(&pdev->dev, "populate NMK GPIO %d \"%pOFn\"\n",
+-			 i, gpio_np);
+-		nmk_chip = nmk_gpio_populate_chip(gpio_np, pdev);
++		dev_info(&pdev->dev, "populate NMK GPIO %d \"%pfwP\"\n", i, gpio_fwnode);
++		nmk_chip = nmk_gpio_populate_chip(gpio_fwnode, pdev);
+ 		if (IS_ERR(nmk_chip))
+ 			dev_err(&pdev->dev,
+ 				"could not populate nmk chip struct - continue anyway\n");
+-		of_node_put(gpio_np);
++		fwnode_handle_put(gpio_fwnode);
+ 		/* We are NOT compatible with mobileye,eyeq5-gpio. */
+ 		BUG_ON(nmk_chip->is_mobileye_soc);
+ 	}
+ 
+-	prcm_np = of_parse_phandle(np, "prcm", 0);
+-	if (prcm_np) {
+-		npct->prcm_base = of_iomap(prcm_np, 0);
+-		of_node_put(prcm_np);
++	prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
++	if (!IS_ERR(prcm_fwnode)) {
++		npct->prcm_base = fwnode_iomap(prcm_fwnode, 0);
++		fwnode_handle_put(prcm_fwnode);
+ 	}
+ 	if (!npct->prcm_base) {
+ 		if (version == PINCTRL_NMK_STN8815) {
+diff --git a/include/linux/gpio/gpio-nomadik.h b/include/linux/gpio/gpio-nomadik.h
+index 9bdb09fda4c9..4a95ea7935fb 100644
+--- a/include/linux/gpio/gpio-nomadik.h
++++ b/include/linux/gpio/gpio-nomadik.h
+@@ -2,6 +2,8 @@
+ #ifndef __LINUX_GPIO_NOMADIK_H
+ #define __LINUX_GPIO_NOMADIK_H
+ 
++struct fwnode_handle;
++
+ /* Package definitions */
+ #define PINCTRL_NMK_STN8815	0
+ #define PINCTRL_NMK_DB8500	1
+@@ -263,7 +265,7 @@ void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
+ 			    unsigned int offset, int val);
+ void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip, unsigned int offset,
+ 			 enum nmk_gpio_slpm mode);
+-struct nmk_gpio_chip *nmk_gpio_populate_chip(struct device_node *np,
++struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 					     struct platform_device *pdev);
+ 
+ /* Symbols declared in pinctrl-nomadik used by gpio-nomadik. */
+-- 
+2.44.0
+
 
