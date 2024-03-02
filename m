@@ -1,117 +1,79 @@
-Return-Path: <linux-gpio+bounces-4067-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4068-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 11FF086F1B9
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 18:42:36 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66FC586F1D9
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 19:22:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 454B11C20FDD
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 17:42:35 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 230D31F21CB6
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 18:22:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBA432BB16;
-	Sat,  2 Mar 2024 17:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 45E6B36AF0;
+	Sat,  2 Mar 2024 18:22:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GQbwShuB"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38F861B298
-	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 17:42:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020F236AEF;
+	Sat,  2 Mar 2024 18:22:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709401350; cv=none; b=ADzo0wyOZASbUCN4y4CwdxqhBqWG6nXNvTGkJ1bXRA74EqG+7QLA/RqY1YsB429pyVJX0ggiq5dmebxTaGmaHPQrA2iD+3ypO5MIbTzKnNopskxrLXyxGxqLv/CdMXk3bUTpYHF3BbhZTfdwH2BbuqoVjZnWCV9h469/V0vkbGc=
+	t=1709403740; cv=none; b=GKFHqQZbwaYpQcsP5NDaraK+Z32N55j20x8Ot6vAKutR1p6reFB/md5mEmvQ86axvOWYiUGF8mFZAsrDD/nff0jrZw2644UHwYsgBC9MdJ0nkkupSP1BW36/qGZiq2Ngik35NBO0fcpZHUT9a2E3RK2OCsWtP38eyNFeQNF3kNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709401350; c=relaxed/simple;
-	bh=0yII0owIVEPUGaCKetIuklA8cKBZiaC6IfZgHBDSKxw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ruKvDdxCDKglEkAH28XPY3kXyEOg11jim9GrA2hutAYUvL2DAZe70Clh6DNjkiq8Cd+xSycUiaECIxOaDxl/9459tRp/cLVtQbtqTyTesWpZuogC/QDBcBbOzmvukDvPCocSaXRtQM0IUPak8uBM0lPRZQEk9e51KPVMIfaT85c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw23.mail.saunalahti.fi (Halon) with ESMTP
-	id 3bd3e3e1-d8bc-11ee-b972-005056bdfda7;
-	Sat, 02 Mar 2024 19:42:26 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Sat, 2 Mar 2024 19:42:26 +0200
-To: Stefan Wahren <wahrenst@gmx.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org
-Subject: Re: [PATCH V2 2/2] pinctrl: bcm2835: Implement bcm2711_pinconf_get
-Message-ID: <ZeNlAry1QR8B00hH@surfacebook.localdomain>
-References: <20240302095430.4871-1-wahrenst@gmx.net>
- <20240302095430.4871-3-wahrenst@gmx.net>
+	s=arc-20240116; t=1709403740; c=relaxed/simple;
+	bh=EEBj1zdMva9LX6TZaViZ2X57np1ryAMGwfbZwuXXZkE=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=AnM1iv/lZ3r2D14imIYGVcmvQXkhldO/1vgZ0q87YDC0Vt2/YLIadCe6m5BZfgRRNpzwPzsmL2tWcX+JQrLR6YN+qxKAWhN857PEA7nWlBgqHgjZ4LWwsiftPepZjMvXo7Gygg0A/OteqQDopr4d01HWuX1JKAajno4BC1xJG0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GQbwShuB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 81B7BC43142;
+	Sat,  2 Mar 2024 18:22:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709403739;
+	bh=EEBj1zdMva9LX6TZaViZ2X57np1ryAMGwfbZwuXXZkE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=GQbwShuBVQHEb2dHmYW1bnRq7YRDHdbVn9vG/KmBEtNgN/EvYUabkAt5Pvtgb93bQ
+	 qNAuvtEwd/i8Eo3uYZLRDK1Os4AYx4E6kHk2VnsKwyQxkFcHV8qzqRT+PFnTA/T6AC
+	 Jh9n6d+2LJox81xGHzs4P4T7GrAHuqaZiATWkF5X8aLH7EoBOJ7d5IBLWXF6EJYKum
+	 qctJL7FbycVPhPAby5qxMGbJEsu49o+v0eG7KPLEhIGTTdGiH59jaeU56M7qvqRgWt
+	 or6sjGdH7KEEqP+tqgXxVsh7HKY4u/gcdO0DdncweeeHcYcfj+MM8uF3jPO2SHUwU9
+	 L9mJrrpFTpU2w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 6FB7DC595D1;
+	Sat,  2 Mar 2024 18:22:19 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.8-rc8
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240302103449.4313-1-brgl@bgdev.pl>
+References: <20240302103449.4313-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240302103449.4313-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc7
+X-PR-Tracked-Commit-Id: ec5c54a9d3c4f9c15e647b049fea401ee5258696
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 705c72567be6a31a73ce57fa6a2441498479dd71
+Message-Id: <170940373945.2799.1277110762014734687.pr-tracker-bot@kernel.org>
+Date: Sat, 02 Mar 2024 18:22:19 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240302095430.4871-3-wahrenst@gmx.net>
 
-Sat, Mar 02, 2024 at 10:54:30AM +0100, Stefan Wahren kirjoitti:
-> The BCM2711 allows to read the bias config. So implement pin_conf_get
-> accordingly. The pull resistor values has been taken from the
-> BCM2711/7211 datasheet.
-> 
-> This implementation assumes that BCM7211 behaves the same way.
+The pull request you sent on Sat,  2 Mar 2024 11:34:49 +0100:
 
-...
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc7
 
-> +	switch (param) {
-> +	case PIN_CONFIG_BIAS_DISABLE:
-> +		if (((val >> shift) & PUD_2711_MASK) == BCM2711_PULL_NONE)
-> +			return 0;
-> +		else
-> +			return -EINVAL;
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/705c72567be6a31a73ce57fa6a2441498479dd71
 
-Redundant 'else' in all cases. Also as in previous patch, use single return point of success.
-
-		if (((val >> shift) & PUD_2711_MASK) != BCM2711_PULL_NONE)
-			return -EINVAL;
-		break;
-
-> +	case PIN_CONFIG_BIAS_PULL_UP:
-> +		if (((val >> shift) & PUD_2711_MASK) == BCM2711_PULL_UP) {
-> +			*config = pinconf_to_config_packed(param, 50000);
-> +			return 0;
-> +		} else {
-> +			return -EINVAL;
-> +		}
-> +
-> +	case PIN_CONFIG_BIAS_PULL_DOWN:
-> +		if (((val >> shift) & PUD_2711_MASK) == BCM2711_PULL_DOWN) {
-> +			*config = pinconf_to_config_packed(param, 50000);
-> +			return 0;
-> +		} else {
-> +			return -EINVAL;
-> +		}
-> +
-> +	default:
-> +		break;
-
-Return directly from here.
-
-		return bcm2835_pinconf_get(pctldev, pin, config);
-
-> +	}
-> +
-> +	return bcm2835_pinconf_get(pctldev, pin, config);
-
-	return 0;
-
-> +}
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
