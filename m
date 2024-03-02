@@ -1,126 +1,161 @@
-Return-Path: <linux-gpio+bounces-4062-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4063-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA4E586F00D
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 11:35:01 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2E57086F0BC
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 16:01:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 07E911C209FB
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 10:35:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 62BA6B21C06
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 15:01:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 959F7A92F;
-	Sat,  2 Mar 2024 10:34:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA71617BD3;
+	Sat,  2 Mar 2024 15:00:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZHT85v9D"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tha7k2B6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f53.google.com (mail-ed1-f53.google.com [209.85.208.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.15])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B9766AD6
-	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 10:34:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112FA1754F
+	for <linux-gpio@vger.kernel.org>; Sat,  2 Mar 2024 15:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709375696; cv=none; b=GkIfAZKkNJNYQ1Z3rLp1M7atYUlfaIrNJm7H7NFNfQ6SPe5MR1ef5sgWEd31KE6NRxaRXfNanDPyGeq4FI2Gilag7bs33VX4kRWk3mMCPkDuULLdWQmScLAcntGp59tIxaQKtdLrzbqj2Wr0Hi+UQ3bA1V9e8OwR4CM97Z668Dw=
+	t=1709391655; cv=none; b=uE0yDrXi7Na+/iRsjcMAilpn+B4NdJPknsKxNt7vxf37LfB2H7pLGeq20qMw3imH3VsMiu48ERIozCHGajpKIhIeYvAQN1F237clGJqiSfQZFYM21gNKtJwLKXWNhLmAIEzAIPab1pqe1B0jQ82trXGe6UmVkbBWlAbs2jg29hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709375696; c=relaxed/simple;
-	bh=sU/U+dcrbZ8tDTKuLknC7zmr+3FgD7Tp9JetO2YQS64=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=YMDtx+ntGyyLCEg2pECJsaQll79cS4FV7xTMI5l8uYjeckDrrbv5JmkN7KjCOOrGNkRwMoWFQvqYjDsnQ5q449pLr7n3Rks+OSmXJJ+3l+Z7H1dh90imZUGYQcJgtzUhA3ycwSGWLgBgSdQhw7Mvuo/725weKZKRsPCHE2u/9lA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZHT85v9D; arc=none smtp.client-ip=209.85.208.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-ed1-f53.google.com with SMTP id 4fb4d7f45d1cf-5656e5754ccso3999563a12.0
-        for <linux-gpio@vger.kernel.org>; Sat, 02 Mar 2024 02:34:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709375693; x=1709980493; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=6x3G/447xYYzN0a+qHQfs0du3vAWnXkAb+OXnYJ4404=;
-        b=ZHT85v9DDnHtmTfCZ2zAHb87v47vcHsqlvxQBDwETX+ftxCy45Qs32TMZ75YvSEvYa
-         R9OOUwbCTNgcuMIDr3Muc7c15CVZ2URJpCKjJgpquLaTLfBf4A+AwfICAbMELYpSPah6
-         BYtYolcd6CmMOAG2+B7Zx3qKcs+DF1fpMN2KypJKZpV2vpmCN/G2/w5XEoR5zsmXQqG9
-         Zy1I0raqzChLAn95Meb5+cY9hP0YsvZCZG/hHDMeWE/2ZgJKGxZClP2D8F6h5av/xU41
-         M7Ud4zXh1RuEUSnZFot6VHRY3HV7E7uol8leAtepPkUSxt12oC/bHKTkl6EZRoRhJll9
-         VrKg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709375693; x=1709980493;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=6x3G/447xYYzN0a+qHQfs0du3vAWnXkAb+OXnYJ4404=;
-        b=KLP4KMaKBWuBXkxRZRH9RjSiM4XsvEpojvLOGBGOESpaDuBf1GI+0+Wn/zCnni6wwZ
-         nsvp2sSCUbuN+XWGlhaoD6Z+7VKJyGvdRJFxThae5NKR6X45Aog/R6l1IoBmdAfudjFz
-         OPoOF/huZY//B25/0cUPWpXrQ/gsZRy+6AMiOVCZhjCi85upOBwAJavaIfROMu64MzUg
-         G1/UBFeA/ggwRhn4FgHgA86mCoA9V7zxHO6gm9105vlizeOjzDYq7NLKWr01SxL7ziGv
-         74qY0Qn1kY2IMbSak/FE1TElCEzeXosgT7D0BWwUxz3JWdz95saPao/MdUzYejkj6NVW
-         Jp6A==
-X-Forwarded-Encrypted: i=1; AJvYcCVwjddP/gfndNT9AjgY/gKuebqyR+QOV+e8rehM6ahpYwQ0IRZi2+lgde3Ato2N7aDpTZb0LCMrsXdmHyYSIrCOkCKoI+seXn3rtQ==
-X-Gm-Message-State: AOJu0Yy0QpTyuPo7t9Inm7fCw72m04j5LdBslIMl5hiyW69oeBPgDWmI
-	xxLV/jKZrmItugxiW1tulS5aDFaIpDwYEEnUfjxvablySfoIm26Wa1MNXankR/M=
-X-Google-Smtp-Source: AGHT+IHDZTuNbAQJK5yevt/jXaXNIVmhn4m5ZxLyfB5h8uOTtDaQyZ9IKc0wfSRV9/+mjbfVWlSklQ==
-X-Received: by 2002:a17:906:8da:b0:a3f:ab4d:f7e3 with SMTP id o26-20020a17090608da00b00a3fab4df7e3mr3529849eje.0.1709375692641;
-        Sat, 02 Mar 2024 02:34:52 -0800 (PST)
-Received: from brgl-uxlite.michal.lan ([95.214.216.87])
-        by smtp.gmail.com with ESMTPSA id cw5-20020a170907160500b00a444481e031sm2479520ejd.210.2024.03.02.02.34.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 02 Mar 2024 02:34:52 -0800 (PST)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Subject: [GIT PULL] gpio: fixes for v6.8-rc8
-Date: Sat,  2 Mar 2024 11:34:49 +0100
-Message-Id: <20240302103449.4313-1-brgl@bgdev.pl>
-X-Mailer: git-send-email 2.40.1
+	s=arc-20240116; t=1709391655; c=relaxed/simple;
+	bh=eA1kHRfO6z7ClMVS2v6m9LQHnLosiYCi9uDcESMKg/8=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=iTXnOJRVhDB1eah7MTT6OGiQVV7rc0MzMvy5U7X4B08S0iooKpycLWLHgMjel+zJgi5C+4Wc8Ff2xVa7KMvUtShsZBRp5wwkDaLD4hL1UHge5AZxNQCQfX4/RVPmJKFQjMlWiDnkyUXKfYXBjReLf45GdYogDH8+T4pHhBbsvkI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tha7k2B6; arc=none smtp.client-ip=198.175.65.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709391653; x=1740927653;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=eA1kHRfO6z7ClMVS2v6m9LQHnLosiYCi9uDcESMKg/8=;
+  b=Tha7k2B6XRVYuJyM3n3lcsvlZdHsRTc3kLkVDGVPdc2MAmzbJCL0mY7o
+   DVPbcbUGO0eCOZcRTZVBRRS/g1P8cAqO6IWZez16eNarIkUcxaTxJVFN3
+   dEL+dYh2cPcIsMp1L0cqzc0lhtovLbNPfmIxKuLLyRdTj3gZFng/co/uP
+   OYP5XMNzLORrZucHG8q3V1da4ntuKWrlBjnCtQ3awA+Lx7cP8dlOXD0QO
+   TEuzBoemu1PEv8XBmvnWU0nFwMp1nkbCATptLiuPzhrWQRjGpEfA60hyu
+   nit+1lIPinov2sRI5X+0+3+/IBsrwvxI6Rp5J9fTuiY4gYLu2vABZIn07
+   Q==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11001"; a="7744946"
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="7744946"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by orvoesa107.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Mar 2024 07:00:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,199,1705392000"; 
+   d="scan'208";a="8881586"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 02 Mar 2024 07:00:52 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgQr2-00003w-2C;
+	Sat, 02 Mar 2024 15:00:48 +0000
+Date: Sat, 2 Mar 2024 23:00:12 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>
+Subject: [linusw-pinctrl:ib-nomadik-gpio 27/27]
+ include/linux/property.h:39:9: error: initialization of 'struct device_node
+ *' from incompatible pointer type 'struct fwnode_handle *'
+Message-ID: <202403022253.zPyD6rUu-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
+head:   528904342169c582c128c4f83fbc4a7c9611fb0a
+commit: 528904342169c582c128c4f83fbc4a7c9611fb0a [27/27] gpio: nomadik: Finish conversion to use firmware node APIs
+config: arm-randconfig-003-20240302 (https://download.01.org/0day-ci/archive/20240302/202403022253.zPyD6rUu-lkp@intel.com/config)
+compiler: arm-linux-gnueabi-gcc (GCC) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240302/202403022253.zPyD6rUu-lkp@intel.com/reproduce)
 
-Linus,
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202403022253.zPyD6rUu-lkp@intel.com/
 
-Please pull the following fixes for the next RC from the GPIO tree.
+All errors (new ones prefixed by >>):
 
-Thanks,
-Bartosz
+   In file included from include/linux/of.h:19,
+                    from include/linux/irqdomain.h:36,
+                    from include/linux/gpio/driver.h:9,
+                    from drivers/pinctrl/nomadik/pinctrl-nomadik.c:18:
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c: In function 'nmk_pinctrl_probe':
+>> include/linux/property.h:39:9: error: initialization of 'struct device_node *' from incompatible pointer type 'struct fwnode_handle *' [-Werror=incompatible-pointer-types]
+      39 |         _Generic((dev),                                                 \
+         |         ^~~~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1193:38: note: in expansion of macro 'dev_fwnode'
+    1193 |         struct device_node *fwnode = dev_fwnode(&pdev->dev);
+         |                                      ^~~~~~~~~~
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1222:53: error: passing argument 1 of 'fwnode_find_reference' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    1222 |                 gpio_fwnode = fwnode_find_reference(fwnode, "nomadik-gpio-chips", i);
+         |                                                     ^~~~~~
+         |                                                     |
+         |                                                     struct device_node *
+   include/linux/property.h:144:73: note: expected 'const struct fwnode_handle *' but argument is of type 'struct device_node *'
+     144 | struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
+         |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   drivers/pinctrl/nomadik/pinctrl-nomadik.c:1236:45: error: passing argument 1 of 'fwnode_find_reference' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    1236 |         prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
+         |                                             ^~~~~~
+         |                                             |
+         |                                             struct device_node *
+   include/linux/property.h:144:73: note: expected 'const struct fwnode_handle *' but argument is of type 'struct device_node *'
+     144 | struct fwnode_handle *fwnode_find_reference(const struct fwnode_handle *fwnode,
+         |                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1236:21: error: assignment to 'struct device_node *' from incompatible pointer type 'struct fwnode_handle *' [-Werror=incompatible-pointer-types]
+    1236 |         prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
+         |                     ^
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1238:48: error: passing argument 1 of 'fwnode_iomap' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    1238 |                 npct->prcm_base = fwnode_iomap(prcm_fwnode, 0);
+         |                                                ^~~~~~~~~~~
+         |                                                |
+         |                                                struct device_node *
+   include/linux/property.h:452:50: note: expected 'struct fwnode_handle *' but argument is of type 'struct device_node *'
+     452 | void __iomem *fwnode_iomap(struct fwnode_handle *fwnode, int index);
+         |                            ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+>> drivers/pinctrl/nomadik/pinctrl-nomadik.c:1239:35: error: passing argument 1 of 'fwnode_handle_put' from incompatible pointer type [-Werror=incompatible-pointer-types]
+    1239 |                 fwnode_handle_put(prcm_fwnode);
+         |                                   ^~~~~~~~~~~
+         |                                   |
+         |                                   struct device_node *
+   include/linux/property.h:190:46: note: expected 'struct fwnode_handle *' but argument is of type 'struct device_node *'
+     190 | void fwnode_handle_put(struct fwnode_handle *fwnode);
+         |                        ~~~~~~~~~~~~~~~~~~~~~~^~~~~~
+   cc1: some warnings being treated as errors
 
-The following changes since commit d206a76d7d2726f3b096037f2079ce0bd3ba329b:
 
-  Linux 6.8-rc6 (2024-02-25 15:46:06 -0800)
+vim +39 include/linux/property.h
 
-are available in the Git repository at:
+1b9863c6aa56d9 Suthikulpanit, Suravee 2015-10-28  35  
+b295d484b97081 Andy Shevchenko        2022-10-04  36  const struct fwnode_handle *__dev_fwnode_const(const struct device *dev);
+b295d484b97081 Andy Shevchenko        2022-10-04  37  struct fwnode_handle *__dev_fwnode(struct device *dev);
+b295d484b97081 Andy Shevchenko        2022-10-04  38  #define dev_fwnode(dev)							\
+b295d484b97081 Andy Shevchenko        2022-10-04 @39  	_Generic((dev),							\
+b295d484b97081 Andy Shevchenko        2022-10-04  40  		 const struct device *: __dev_fwnode_const,	\
+b295d484b97081 Andy Shevchenko        2022-10-04  41  		 struct device *: __dev_fwnode)(dev)
+e44bb0cbdc8868 Sakari Ailus           2017-03-28  42  
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.8-rc7
+:::::: The code at line 39 was first introduced by commit
+:::::: b295d484b97081feba72b071ffcb72fb4638ccfd device property: Allow const parameter to dev_fwnode()
 
-for you to fetch changes up to ec5c54a9d3c4f9c15e647b049fea401ee5258696:
+:::::: TO: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+:::::: CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-  gpio: fix resource unwinding order in error path (2024-03-01 09:33:30 +0100)
-
-----------------------------------------------------------------
-gpio fixes for v6.8-rc7
-
-- fix resource freeing ordering in error path when adding a GPIO chip
-- only set pins to output after the reset is complete in gpio-74x164
-
-----------------------------------------------------------------
-Andy Shevchenko (1):
-      gpiolib: Fix the error path order in gpiochip_add_data_with_key()
-
-Arturas Moskvinas (1):
-      gpio: 74x164: Enable output pins after registers are reset
-
-Bartosz Golaszewski (1):
-      gpio: fix resource unwinding order in error path
-
- drivers/gpio/gpio-74x164.c |  4 ++--
- drivers/gpio/gpiolib.c     | 12 ++++++------
- 2 files changed, 8 insertions(+), 8 deletions(-)
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
