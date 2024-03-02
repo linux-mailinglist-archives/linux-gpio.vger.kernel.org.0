@@ -1,56 +1,56 @@
-Return-Path: <linux-gpio+bounces-4074-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4075-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFD9886F215
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 20:19:05 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8A9686F21D
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 20:23:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F23ED1C20D13
-	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 19:19:04 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 52134B22918
+	for <lists+linux-gpio@lfdr.de>; Sat,  2 Mar 2024 19:23:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8388C3FE3D;
-	Sat,  2 Mar 2024 19:18:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3472E3FE46;
+	Sat,  2 Mar 2024 19:23:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTF3Rejw"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VazmT78Q"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D74117C77;
-	Sat,  2 Mar 2024 19:18:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2607182CA;
+	Sat,  2 Mar 2024 19:23:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709407139; cv=none; b=qIMlxy8K41cU6BopA80WEPJ89lA5brHMccI6C+w/pmT5wrbdqCh3/eW0WKoQj97py7CTeNYJuL+mC6B7VQNZBIqBxlTSWan0FQGJcy+1T+Nf0JSkFx3Am1pA9W39htuj/rk2xLQHn6z3rc9q6ZWHRY9FTov3m0+WZBuQQYhLNrw=
+	t=1709407412; cv=none; b=PKfaiRcJupVY6ySDsBTQ/iBGZ8xpTxRsGQuiApR/AtHX2xM3e0pcv3RQnjXE6tNdl2xxMDuBmZsyEDO4pKdmSrEJFVPiVM3rEjkYU4Wy8GSjBuV4FlS2xUT0W0XGAYEVv6OAQufXkHblRzx1/KAc46SY6z8N1XD1zhJHSaV0R7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709407139; c=relaxed/simple;
-	bh=NzbhSdr/NBjCmH9e1ImgNzn6dVpYSWiisFslYjeKN+s=;
+	s=arc-20240116; t=1709407412; c=relaxed/simple;
+	bh=8jSw52uXjV4fw2ydJjEpV5D5UyF/AePP07C1rTZG3iI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Z7WlaR19Y5gla7qxRmEUnGCBQIhPSJPi1rrzgEOxpXwzt7HuqduHqbWZEaY2oyH6yaRFpjDeG0/KP0Xuv3dqxaUT/GOc/i4tIeguHUJKzDJdh3kZzc9yrgGI20ufeyG8fTwcr5IcDclDiFclm/QfGHqv7Ak5qjmaKrfMVWUDG0U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTF3Rejw; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3FE4CC433C7;
-	Sat,  2 Mar 2024 19:18:58 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=Xpnev721EFcW2xQ5HvOf7DcqRhr1i7VVXdeC8NBckMhS2C7NehHNHoBnuDwNCnAdXdHHMVwWjT5NKC2LlxGeSoUX2yCJq4ul1i6NcFtaUAPcPktO9vkfXqMQjONXjsExHGmnml44KJkjtGUeu17eHax0TbqHUB8R4s3BngFYl8M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VazmT78Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDEFAC433C7;
+	Sat,  2 Mar 2024 19:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709407138;
-	bh=NzbhSdr/NBjCmH9e1ImgNzn6dVpYSWiisFslYjeKN+s=;
+	s=k20201202; t=1709407412;
+	bh=8jSw52uXjV4fw2ydJjEpV5D5UyF/AePP07C1rTZG3iI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=XTF3RejwvLu0SrNmQ4uhnkGJhFVZ9PnIvjaGMxvqTK9f+kiwiQte99mTTgDgKE+Wg
-	 RhkI6UtsRLJqNIoMNmSrZYAyhY2KzuTtoAw79/5NDkejoeQxgj2j7xYbNO92tdSH6J
-	 2yDEuP682dtD+oV89DIKkhsbpXOHC7Ky4rqJ/f91UAR0Qm6pa4U8BdZGE1QWl8UWoJ
-	 QbZA5LGBHwJT0ePHuNhJ0QfB5GWOITz3IGr18PJCTGaeMhK6NThnek2eMFH6UiZfw9
-	 yg5s9DqP6dSDbRRczjw+ApC6xrmT9wDpuZPA7nWHwdi9pPODtrdpo9YhDdmsssJmA6
-	 I75LkgHCDYm8A==
-Date: Sat, 2 Mar 2024 13:18:56 -0600
+	b=VazmT78QFfRnBeDbPXyLF/BWMr928o9g3aSl++R5Iv6TCjlj2wOx4DOE1GAQy6UiH
+	 UoQ6CSJtrf3kO+5/yHjMuEe2/PVm/Uh4JzBwvchiqcKxGUtSCR+Bxou/oNep8jmRY8
+	 OdpIVcdXqy0vincsc4ka8egE6hGxSP8FYwKAxCbAr+5npL5LrFcZfiYp6pG7wKU/sr
+	 Y+1sGg7OOKpvSp2ZLUrGMSdkEfq4XE2XdZhhvpsVOIk7eqtsB3GfWS1IW++8g7v5Rq
+	 WVa68VTUwYSr1yL6Q6wMtbK4Bzg1z+kjmdrSmB6YhIS/xIpu1Z3BQSAbKwpMm1Miv8
+	 kNaYMhDVVwCCw==
+Date: Sat, 2 Mar 2024 13:23:29 -0600
 From: Bjorn Andersson <andersson@kernel.org>
 To: Mukesh Ojha <quic_mojha@quicinc.com>
 Cc: konrad.dybcio@linaro.org, linux-arm-msm@vger.kernel.org, 
 	linux-kernel@vger.kernel.org, linus.walleij@linaro.org, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v12 6/9] firmware: qcom: scm: Remove log reporting memory
- allocation failure
-Message-ID: <2dn2o57yfgfwrkdb2dcdz4qdlhxyhr4tozdsxumgkib5tlgnj7@6qpvoe2zb3q4>
+Subject: Re: [PATCH v12 9/9] firmware: scm: Remove redundant scm argument
+ from qcom_scm_waitq_wakeup()
+Message-ID: <xeijmkykwsdk2x2g425ljowiuh4t46qicwxasmedqrt4iejfju@7mfkjubfiehl>
 References: <20240227155308.18395-1-quic_mojha@quicinc.com>
- <20240227155308.18395-7-quic_mojha@quicinc.com>
+ <20240227155308.18395-10-quic_mojha@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -59,46 +59,44 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240227155308.18395-7-quic_mojha@quicinc.com>
+In-Reply-To: <20240227155308.18395-10-quic_mojha@quicinc.com>
 
-On Tue, Feb 27, 2024 at 09:23:05PM +0530, Mukesh Ojha wrote:
-> Remove redundant memory allocation failure.
-> 
-> WARNING: Possible unnecessary 'out of memory' message
-> +       if (!mdata_buf) {
-> +               dev_err(__scm->dev, "Allocation of metadata buffer failed.\n");
-> 
-> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+On Tue, Feb 27, 2024 at 09:23:08PM +0530, Mukesh Ojha wrote:
+> Remove unused scm argument from qcom_scm_waitq_wakeup().
 
-Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-
-This seems unrelated to the rest of the series, if you send independent
-patches (or patch series) on their own it's easy to just pick them.
+Is it unused or redundant? Please pick on word (the right one ;))
 
 Regards,
 Bjorn
 
+> 
+> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
 > ---
->  drivers/firmware/qcom/qcom_scm.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  drivers/firmware/qcom/qcom_scm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
-> index 3fd89cddba3b..6c252cddd44e 100644
+> index a1dce417e6ec..d91f5872e003 100644
 > --- a/drivers/firmware/qcom/qcom_scm.c
 > +++ b/drivers/firmware/qcom/qcom_scm.c
-> @@ -598,10 +598,9 @@ int qcom_scm_pas_init_image(u32 peripheral, const void *metadata, size_t size,
->  	 */
->  	mdata_buf = dma_alloc_coherent(__scm->dev, size, &mdata_phys,
->  				       GFP_KERNEL);
-> -	if (!mdata_buf) {
-> -		dev_err(__scm->dev, "Allocation of metadata buffer failed.\n");
-> +	if (!mdata_buf)
->  		return -ENOMEM;
-> -	}
-> +
->  	memcpy(mdata_buf, metadata, size);
+> @@ -1853,7 +1853,7 @@ int qcom_scm_wait_for_wq_completion(u32 wq_ctx)
+>  	return 0;
+>  }
 >  
->  	ret = qcom_scm_clk_enable();
+> -static int qcom_scm_waitq_wakeup(struct qcom_scm *scm, unsigned int wq_ctx)
+> +static int qcom_scm_waitq_wakeup(unsigned int wq_ctx)
+>  {
+>  	int ret;
+>  
+> @@ -1885,7 +1885,7 @@ static irqreturn_t qcom_scm_irq_handler(int irq, void *data)
+>  			goto out;
+>  		}
+>  
+> -		ret = qcom_scm_waitq_wakeup(scm, wq_ctx);
+> +		ret = qcom_scm_waitq_wakeup(wq_ctx);
+>  		if (ret)
+>  			goto out;
+>  	} while (more_pending);
 > -- 
 > 2.43.0.254.ga26002b62827
 > 
