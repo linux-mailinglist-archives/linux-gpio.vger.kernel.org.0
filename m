@@ -1,50 +1,50 @@
-Return-Path: <linux-gpio+bounces-4082-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4083-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6CB1A86F55A
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:02:58 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D28F386F559
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:02:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C9B61F225EB
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:02:58 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97CDA285451
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:02:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A577F5A11A;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57445A0FA;
 	Sun,  3 Mar 2024 14:02:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="JjcLRKi3"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AJeokGLZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.22])
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485B75A4C0
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:02:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A82B5A79C
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:02:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709474543; cv=none; b=Wm7msdIUWwR5cNaELNZHPGsRAC8eAxceCvT4JK0xV9bKjfst9tQJwspOChvXJZj3fF8ymBgzGueZAGSyJdtc+Cio/uM9AUtl1SQLXFxukNN+TezfYdSqHQjQU7gKPXcIW/Ad3OXTatjMEBdq8cTVF/iu50YTEJkGxk9DOT2+kH0=
+	t=1709474543; cv=none; b=FlBTiEGtzLeYZtZZHKNZ+Ela4CJ1B3CxTAAoUzXKngBKfrGFz7g0syUTao+tFRXN7U35Jn2NDpXgoN2okNCb7j8bJLwObkG/6u/M+c+jY1NynUQpMBPXnke/O3jRPbWYybm7S35daRy4NmU/xWrf2Pe2dq9MbB9Uxr2haGZajPw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1709474543; c=relaxed/simple;
-	bh=uCS91GZqow1KBZx5XBuDBENNSV0kJKJlai0KDN1MmPg=;
+	bh=lECRiuSJWaP4QyRGREeVhkDPQQYnJwFCWuROb1bA+tc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=C1wQkW8pl+fd6zVl1Azl/Ycb9D+KxT7WCxg1ay5nAK+2Gn38ZDnYgYlBNPezenEArpBA6DH3rmqUrR9ImO/kYM8tFS4SibqICsfNa/CaGREMgyh19nRw8LMbXNVjVoFlq0hy72Xa0Hs43mAx7ajX7Vbf1KzMdUzmRzaYXM4qo8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=JjcLRKi3; arc=none smtp.client-ip=212.227.17.22
+	 MIME-Version; b=ewqc//Rg2nkTPaR9iu+fT/0D+p0ao4eYZ2fVplXbESEfD3ju2poEis7o7KBoYO7RV7ac73I3nPZO78PqRPG2MkmPrLhf14aFYVVvPhAHruyIwGSK8CqIKAJfzIH3ctHHwivr4B9oermOcQBUTkEWfb8UMiwSjT2A5IaSN0+SW+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AJeokGLZ; arc=none smtp.client-ip=212.227.17.20
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
 	s=s31663417; t=1709474524; x=1710079324; i=wahrenst@gmx.net;
-	bh=uCS91GZqow1KBZx5XBuDBENNSV0kJKJlai0KDN1MmPg=;
+	bh=lECRiuSJWaP4QyRGREeVhkDPQQYnJwFCWuROb1bA+tc=;
 	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
 	 References;
-	b=JjcLRKi3zA54WGgX9gi5QGYdl8tG2IYdtTLY9pbYaakA61Szg3dLgN3pN+F5i4yb
-	 FXl4Kb4VwAQwdvcXzGWsaDjt+sS6H/nKDVWK19YP7xyJBTpZmepQ1UG2rGpoxCysy
-	 +j4jI/fUh+BCV59J5L+3X0NC/I1UR8puCxTnt39oim72BILcjz4wNzQTHPXTqUomt
-	 ZLvMIyXatTARlz1g7wk1gkKmcBcfI5FQEuCp5rrP7UhI74Dhc+LIrOWwDQGNTVlSF
-	 F8/YxOPikFlP7DHdFG/O4ZNsKQxCuaxWoPvCoCkdFJp8jz0zDercVpe0E+zKWCf0H
-	 PSrfyrU7CxLEYbx4Qg==
+	b=AJeokGLZI2lz0dpuM3pF25DydrqIzrZZ/+5ojyMSEZqZfzdxiAjcyo+aFZCsVElY
+	 eMTSQFcLRBOn3R/BPVmOaZRdF9/ccSlzMFr48HNQlBJ3S+CXjAcN4/E66Vo5q890X
+	 a6nPeGMkUsO7t+TTggBFyKSF3AghxHsQheZu5r0AjMlV58OcdgCFWgucZeTm89bL5
+	 ac4C2pBaYnoyOzH3MYaVwZhpqU+oa9I48GBoIrLejfZuyP+pxl/c8e3Vptc0RiIJl
+	 I7GMwqgWDmM2AMH37MruAbm4SLm7w2WTQ3wcjLvQ8XXRlTMZP9bPzMD/QpLeQlL+a
+	 sTk92/IptgpXLZZVVA==
 X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
 Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1M6Daq-1rnPBE1Sye-006bK5; Sun, 03
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N79yG-1qmg7c37GO-017XgT; Sun, 03
  Mar 2024 15:02:04 +0100
 From: Stefan Wahren <wahrenst@gmx.net>
 To: Linus Walleij <linus.walleij@linaro.org>,
@@ -56,9 +56,9 @@ Cc: bcm-kernel-feedback-list@broadcom.com,
 	linux-arm-kernel@lists.infradead.org,
 	linux-rpi-kernel@lists.infradead.org,
 	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
-Date: Sun,  3 Mar 2024 15:01:36 +0100
-Message-Id: <20240303140137.157522-2-wahrenst@gmx.net>
+Subject: [PATCH V3 2/2] pinctrl: bcm2835: Implement bcm2711_pinconf_get
+Date: Sun,  3 Mar 2024 15:01:37 +0100
+Message-Id: <20240303140137.157522-3-wahrenst@gmx.net>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20240303140137.157522-1-wahrenst@gmx.net>
 References: <20240303140137.157522-1-wahrenst@gmx.net>
@@ -69,87 +69,98 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:ojTc3Wuvgjf3lkvtPOyZl2Lyi3XdZi2DhfMS8D5tfy5ejZYBHQ/
- 6NUSwi/E1itHud9lvcki2znPnG64QyXQ6kR63JiFX0yfVDnbHCOhfvKezpXCaDxMIngi/m1
- dhNyu9pp1lkm+cfqzWP87f3eCnW31tstv2VvFTEeX4SF7BM0ibddkh3Lp6BSh6OrbTNz0k8
- IVugUKuuYQYf+YxJoCOQA==
+X-Provags-ID: V03:K1:bXCSHkyGiT5pFZpix0e5CvssCVAhBmhUQL5AHfxukT/TaeGfXW6
+ hdjDEt6yvjLIFJpoXoitiR3qS3/OlQSs5ODWbMJpMGUHnCekmqtL/JTgiXkkHUGs/VuoXSB
+ QTzIPirzIUuhkaavTB2SNkLQsOlC3eTzu5BrG4caWz/aFkS+86eLBq4H1YFxxBl83WBpU5g
+ yPcsbQi/5n0HbYulC+EgQ==
 X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:FYYktVhprKk=;iCgM8NGpKrZYQZH9sYQHhVxTG+y
- KBd2cBLQL3UAJzNNEf6JhwFIf9rAglTFB6ljajecu/Hyl2EFJrkxdtaMzQc8dP4xBOKY4s7pJ
- EjyiDnMHnaYkmUGNWsL1ZKRukXZs35NQNPp7AQoHirltks6zAKLKSK2ktbk3zIn+g3zOMWtPq
- HpxsDVHK8GMjI8ShYCmw5A+1yRhtd+JKgwt1N1ktkpEF7lqgMikln5Y81Io+qKOWIOzMUxdkk
- UHZJFKzyyQxV2jZ+2xcfodbVWLvL+y4Hatx/1iQdGp5iab8YQr69LPn9YravXqSuEvPMiVaGT
- +s/sa5s0nMWxMWDjkfUb6AqzwmVfWUUpg+8l7Z6pMfoQ1DFHe2vj0fOw1SRZ2aHv9K5pv2P/1
- 953Ox9/GAZTuFi4DcMblYBSo2f9T2RsQcxqymxgA+Ei6BIJT2y+gpCbLVrJSxmafS0L5AsGiu
- YptfUMr8kXZiI7sY1AKE1vKr94abd5tld352ucaRdOx9NgFoTdxWRdLskvz2R9/c6jnlblT87
- TWWD1pFZk0qRkr92+KLQMe8kbUDl2xvhZ3abHPZMLKDIZqoakHA2iFd7DnqgafwtKon5fM888
- cdwyRPNmMR3hg02ryEpQhHzg8zgd5t+pPetYwAyJlp1b3hkkMRTzVeZgH1bVN2gRjsuTdykBx
- B9G3aTJ6iL8fNbvSRME61qJnFZu0wXSrk4vrNK/Sy45J/08z1M5Dgjm4tH8BC9+Kj06GEIbRP
- 4tDlGdxXAy1tfMI7ycJzD+u9VghDgLfWVclSUF9kKtzQUH5X+kvP0DwTRPDMPDtNkacaKw4kn
- h1Tpbqa6zir8r46zGe9pZhAkovY9oMqpYO4P0lLpzjrHc=
+UI-OutboundReport: notjunk:1;M01:P0:SP4B2YZj6Kg=;c8TgZYmBwovrbUH6iK/Q0h81KaI
+ zZusHPy+ypC+f0122YbEX+iaqAbv9QryJzfKu0PCc6cjeMvAp7hifz+GYeUe6DrQFHfJuywSo
+ QxguXzDONDwvMaCpBBRKODLI5tGOk3Hj5labo5w6OgZmTydq8yKeWcU9V65iqZJgfxhqzGURw
+ WWqrVR/ME7Xp2E/nsCfzeZNfqo8jrtcs6elht98CIt+iEKOjVC1eITHx29MvdmiVy+d/kGmyQ
+ G9sbqfHKiwjvKm49g6ZLzG6uCPwdn+pATNZt4T3u2HkCubR8YhwEPgY0kazGZyY40oDhLsJfr
+ Ncb0xuZbABuc+HqdTZwEjN4JvcCHLJQuSA2qsvPqF6OPqMBtP81jTwjQNP/FtupdquDtoKH7Y
+ 9qbSyH+gGvWisgzJ/pVeK/E+A5LCjIqmVCGCSYctygPu/a21uF1J1pgU1hEtDJ/iVKEPHQGaX
+ 2IkUBT4L2AppR7n+wN1NS5Cun6SPjr0FEo5x65AJSCmv9Ybe9lk56SEGzq56GI2exat+MhQHL
+ LdA6YIL4G+VO5z/JRPp35bbYG7hzcRtDhKvcOqTh9DoU12kNaacUTn3cK8b3w5D+e94UxVIGm
+ zpnVVE17Zi9K/5XHZYIknRK91YJmvpzjK/52Gl2YRn4hrcavrw2XTwyZZHzDc+HM2MHiM3eqy
+ fYa4z+WDUmgPQUGrPnNsNhFNRhf4x3+zPZki4ts4gDp8+2lrTbe5Ob4il1crvMp7SRF4ulrlH
+ 8OtEFlqYpOAvLt8WxbRoq3vOqR6rWrnggb659jrASQwAAdYW4Qddb91N3cGPT16c6jttl1mWW
+ Jsi5Suh1kYLpwXuSTu95AHZfZz6lfWuZ7A514y4er14Rk=
 
-Even the driver already has implemented pin_dbg_show, it could
-be helpful to implement pin_conf_get for a more generic behavior.
-Contrary to the BCM2711, the BCM2835 SOC doesn't allow to read
-the bias config, so the implementation is limited to the basics.
+The BCM2711 allows to read the bias config. So implement pin_conf_get
+accordingly. The pull resistor values has been taken from the
+BCM2711/7211 datasheet.
 
-Keep ENOTSUPP here, because it's only used internally.
+This implementation assumes that BCM7211 behaves the same way.
 
 Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
 =2D--
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 37 +++++++++++++++++++++++++--
- 1 file changed, 35 insertions(+), 2 deletions(-)
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 41 ++++++++++++++++++++++++++-
+ 1 file changed, 40 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
 inctrl-bcm2835.c
-index 1489191a213f..ed768cefe5d0 100644
+index ed768cefe5d0..7c88626af736 100644
 =2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
 +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -1003,8 +1003,41 @@ static const struct pinmux_ops bcm2835_pmx_ops =3D =
-{
- static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
- 			unsigned pin, unsigned long *config)
- {
--	/* No way to read back config in HW */
--	return -ENOTSUPP;
-+	enum pin_config_param param =3D pinconf_to_config_param(*config);
+@@ -1112,6 +1112,45 @@ static const struct pinconf_ops bcm2835_pinconf_ops=
+ =3D {
+ 	.pin_config_set =3D bcm2835_pinconf_set,
+ };
+
++static int bcm2711_pinconf_get(struct pinctrl_dev *pctldev, unsigned pin,
++			       unsigned long *config)
++{
 +	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
-+	enum bcm2835_fsel fsel =3D bcm2835_pinctrl_fsel_get(pc, pin);
-+	u32 val;
++	enum pin_config_param param =3D pinconf_to_config_param(*config);
++	u32 offset, shift, val;
 +
-+	/* No way to read back bias config in HW */
++	offset =3D PUD_2711_REG_OFFSET(pin);
++	shift =3D PUD_2711_REG_SHIFT(pin);
++	val =3D bcm2835_gpio_rd(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 + (offset * 4));
 +
 +	switch (param) {
-+	case PIN_CONFIG_INPUT_ENABLE:
-+		if (fsel !=3D BCM2835_FSEL_GPIO_IN)
++	case PIN_CONFIG_BIAS_DISABLE:
++		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_NONE)
 +			return -EINVAL;
 +
-+		*config =3D pinconf_to_config_packed(param, 1);
 +		break;
 +
-+	case PIN_CONFIG_OUTPUT_ENABLE:
-+		if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
++	case PIN_CONFIG_BIAS_PULL_UP:
++		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_UP)
 +			return -EINVAL;
 +
-+		*config =3D pinconf_to_config_packed(param, 1);
++		*config =3D pinconf_to_config_packed(param, 50000);
 +		break;
 +
-+	case PIN_CONFIG_OUTPUT:
-+		if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
++	case PIN_CONFIG_BIAS_PULL_DOWN:
++		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_DOWN)
 +			return -EINVAL;
 +
-+		val =3D bcm2835_gpio_get_bit(pc, GPLEV0, pin);
-+		*config =3D pinconf_to_config_packed(param, val);
++		*config =3D pinconf_to_config_packed(param, 50000);
 +		break;
 +
 +	default:
-+		return -ENOTSUPP;
++		return bcm2835_pinconf_get(pctldev, pin, config);
 +	}
 +
 +	return 0;
- }
++}
++
+ static void bcm2711_pull_config_set(struct bcm2835_pinctrl *pc,
+ 				    unsigned int pin, unsigned int arg)
+ {
+@@ -1179,7 +1218,7 @@ static int bcm2711_pinconf_set(struct pinctrl_dev *p=
+ctldev,
 
- static void bcm2835_pull_config_set(struct bcm2835_pinctrl *pc,
+ static const struct pinconf_ops bcm2711_pinconf_ops =3D {
+ 	.is_generic =3D true,
+-	.pin_config_get =3D bcm2835_pinconf_get,
++	.pin_config_get =3D bcm2711_pinconf_get,
+ 	.pin_config_set =3D bcm2711_pinconf_set,
+ };
+
 =2D-
 2.34.1
 
