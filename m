@@ -1,120 +1,114 @@
-Return-Path: <linux-gpio+bounces-4080-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4081-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 105AB86F41B
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 09:48:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 826EE86F558
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:02:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CDA21C208EF
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 08:48:28 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B44951C20925
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:02:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C160B662;
-	Sun,  3 Mar 2024 08:48:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAF385A109;
+	Sun,  3 Mar 2024 14:02:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pNA73hkW"
+	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="WxIy9+Er"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f170.google.com (mail-yw1-f170.google.com [209.85.128.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37071AD4C
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 08:48:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 485705A11F
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:02:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709455693; cv=none; b=fvb7rSFHy+QlRZ0d7G3hSN2Yszi/6K3UzCqz8EkjEAMfOiZQZ//OsB9DQeifXODHRWgRGJIpFOM5hl0MX3or5ypvOEWWYS73wYQrmu36IAAwHdkXJ3o5aHUK37xRdI5I9CjgWgfN0eO5o/48re7S/0YAa21yAsMEGP+CYbgyj40=
+	t=1709474542; cv=none; b=oCUZjEKJ1DOw9cNq7bcp5X60bQO+1q/lqayIbiOIkyN6YprzhuvQWWjNB4Jdj15yi+GjEp5PGV5rJR0ZbsTWJU933jYwvjx+V8V+F3Vk2RhPSPLelWcDdPpn3ckIhuKU4jPR5ksy89OJq0rR55B587J8ohmqxIDqoBzjOOO5t1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709455693; c=relaxed/simple;
-	bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=WW19/4RVALwVjaL0iN4tX9S9GW6f0yu3IB/ANwVgoqGwZCyBfxP3rlXrYUveerXv8m02E2J8Cgt2Dq7PxY4GNWMXeCz1sgoRcTMaROIVAp72h+toI37lm8Hcm70rdTcTNgappB9Pk3k+B63VJqnz3EgD6Qe04hfBPwM58K+OjoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=pNA73hkW; arc=none smtp.client-ip=209.85.128.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f170.google.com with SMTP id 00721157ae682-6098a20ab22so14175357b3.2
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Mar 2024 00:48:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709455691; x=1710060491; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-        b=pNA73hkWKG5hBTFzkSQB9Rci2BFiBoAUaoOfrU5+NFg7sEqvm8W29LtG8D9YhmFZy+
-         hOQdg7pRinoXHTOYfyWNbU/V4iTQoYflmMgnZJUo4kVqGbqMG1yqAOenq9STYLi2maFW
-         ThmZeT1NiYfaaMK+uthM9k0ZRzVsoySAa8FauEAv/tV5m341VcsKvJ4n4ejZSG33NmKO
-         BeZ5LP5pUfcbeh6smpK6u8jH1nTU1HGUj6yET6vgPhJwWImVavuf4bpYBQFLlIGBiVwu
-         ZPY3pfhIW87JHtiNsJDksyb/oTCKHzOkmnVzxNZ5A3fzQ7fTzq4hyWflh3LRQtyXo6DR
-         ISDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709455691; x=1710060491;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=kLYaTjP5R2oq1R/5Twd/mx9E1Qx85BwSSo78QQuvl+8=;
-        b=EIS2fmt3PKFNM8rwbOnJFNxO1n7d6Q4eai3BS0aC6rNRAbLIw2RBaH0+3V5Ov4Akkc
-         4Z5nFs34AFHwgmPN+k8QAdrkzSPobAaYkJuJvqsK6SQ3BSw2bYR+cFPVzMCAEcL9ysTh
-         7nSmNHeoFpxdI9RSCu8RbkvkFS96j18VtiTR7M96I8RCMv9M/BbKDOef9TY00hJ/aO1J
-         46JWdfWvbQll/qLPUIGCs1pxAzldv3RwIb2cIfi9L+oK9NrX3XkGg1ane+GAmjCZTSpW
-         9SQNBlocyFQw915I/nl7NwsoZRIOCXwfQzllQs1rkZopnoai5uxlQDo66sKiNDnU9U0k
-         Sp7A==
-X-Forwarded-Encrypted: i=1; AJvYcCXhwODeSLaNw4/IKE7tuuRXBGyfds8rU0Ss2j8S9nRt7TCfO02tqvEIfKEb9pCQzYlXfqfi4GpB2yGLcUyWfhvKZexWn+MmVqqULw==
-X-Gm-Message-State: AOJu0Yz2ZlSN5DctNmoxmFPxNQOCwvgUxwufJkZiRBQ+CNedw1e7ljWy
-	U7aaoPBjPsJW6NIwn5+1Pr57ZtdMteDdQfp4Wtdn7/T6Btt4QVRNAjLL/kzQ749E+wDbjyF1fBq
-	Dgz/6VLyjTehYJoYxjNwbNg4TIUJdFLpoxfydmA==
-X-Google-Smtp-Source: AGHT+IHBdRv9QfjCZh/K8ngsmlUj0sB9GmAcizj5skko5rUg2FHag7v7Vi1eEBnFSP2Nv1DpYsQn3HvCRk62lQBOy0s=
-X-Received: by 2002:a81:7705:0:b0:604:9d6d:681f with SMTP id
- s5-20020a817705000000b006049d6d681fmr6160056ywc.31.1709455691305; Sun, 03 Mar
- 2024 00:48:11 -0800 (PST)
+	s=arc-20240116; t=1709474542; c=relaxed/simple;
+	bh=1zUZ6OjeYmcPgNGlJImXH20GJ/TneTZWtMn2tID45qQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=mBoQkOdMNS8X/Aq5LHf72oDGZSXHEKPnGk0ZiLKElv/shgvEBZBVE4dq+8/q7neNsbGaPj45qvnyJHDWy8mYi4dOvVuZ7I2ziaw0E+u0z3ZO/wQSZic8AY52E60UpZlj81Jr2YFSJAT1hTQoPfRLK3qOffi8JTASAtvge4r6jfA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=WxIy9+Er; arc=none smtp.client-ip=212.227.17.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+	s=s31663417; t=1709474524; x=1710079324; i=wahrenst@gmx.net;
+	bh=1zUZ6OjeYmcPgNGlJImXH20GJ/TneTZWtMn2tID45qQ=;
+	h=X-UI-Sender-Class:From:To:Cc:Subject:Date;
+	b=WxIy9+Er3QX+1ga6O2vl1AbjwDdXfMjyzqSrxePhx2OKh1kEjgZOecpExPkWtmXY
+	 2PVWYyjjxRx/22jr0h4S3V43NgTtQFoQ+msVxTylNKn+kcO8Hoa/FCfg7d+Gv3I9b
+	 a3SbxiLlvScfiI6/WR7j03nYqh17Cq9QSsHCO6tAzd0LRuso+8yK0CR6kkflc/8SD
+	 2WoVeL82Cz9/YGqvvc460ae1ZPvugvRQuro2yixNlwyHju7eQv28mZZhF+FPT6U/E
+	 4NsPRrS9nMg2fZ68QwW31l2K4c8sG9oasxEW7/of3CXDb4/HHwxVGmoi4WnPxhHM/
+	 QnyuXALi5h/TF5HIsQ==
+X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
+Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MnJlc-1qxaF53tOG-00jIjt; Sun, 03
+ Mar 2024 15:02:04 +0100
+From: Stefan Wahren <wahrenst@gmx.net>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rpi-kernel@lists.infradead.org,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH V3 0/2] pinctrl: bcm2835: Implement pin_conf_get
+Date: Sun,  3 Mar 2024 15:01:35 +0100
+Message-Id: <20240303140137.157522-1-wahrenst@gmx.net>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240227113426.253232-1-herve.codina@bootlin.com>
- <CAMRc=MeSMTnPUYGyJir4fc=6=Gnw_MVP9wfEKMQ6Ck33FYCrRA@mail.gmail.com>
- <CACRpkdZbGUd-u3ZcmmK1POSEq8z9J1aDhbGPAbcR6guKuEpEFQ@mail.gmail.com>
- <CAMRc=MeqiYZv3ViHRKKUsXTqG5Pc8Ev2jUcN=A4VuX3RU7dDtw@mail.gmail.com>
- <CACRpkdYWDzu+VMQOYO_Sh1NM2ei=VRC-0df4teAZjirfrTB67A@mail.gmail.com> <CAMRc=MdLmU3uezKSg2d83HSZ3wYXFx68oGshx_yJyvJToN261Q@mail.gmail.com>
-In-Reply-To: <CAMRc=MdLmU3uezKSg2d83HSZ3wYXFx68oGshx_yJyvJToN261Q@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Sun, 3 Mar 2024 09:48:00 +0100
-Message-ID: <CACRpkdaQ5OthgFMG+6DNy7BGi+qLMgqNMOfk+cqra37EGyEYRA@mail.gmail.com>
-Subject: Re: [PATCH v2 0/2] gpio-cdev: Release IRQ used by gpio-cdev on gpio
- chip removal
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Herve Codina <herve.codina@bootlin.com>, Kent Gibson <warthog618@gmail.com>, 
-	Saravana Kannan <saravanak@google.com>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:hXg11jiqiNu4q+6x5gTfYQ1gGFu1ud+YLUuyHcNitTxiLSN7X83
+ iW9OwvsVNRwY52deLaBYSVsJUQ3B8Pp22gAEfWLBK+4djAV0nbpMYmZ9F3T9ZmQHZWJkgaM
+ m5NfDpZa4zvYl/NaTnbsK3TJcLcH3EGDJL+s+MDCOJOVE+KpSLzmASFXb5RP8VpF3si+gsZ
+ NmL2OQutCVmTF4HuNF51w==
+X-Spam-Flag: NO
+UI-OutboundReport: notjunk:1;M01:P0:HKV9daIyTI4=;uLQs8avpxu5OvakMptORuVkDfa+
+ lJrRY9xwB4whtumDvE+fi6oSwLk6XAOhcmMzkXPRv9ZuDnUhoM8K8rtKrRRXP3Tnr9sz46vA6
+ gPmZX11TPlpdUOeCu0hkpuD29F2zWXUMS15PVSFvQqfg5rXdr/bjJG0VVY14Vh20VFj228DWs
+ ws+S+Bb/yE8LSucfj2XsyZAGPm13h6kH/9v9lymu8TRu7ql+JDCfz+B9H5lAVDD4Llx9JTe8V
+ PBd2B4ts3AHvFo5AkoH6P9lqcM/nCOlcAeqyH71mM9t7ng32cAr1VgbvKu0BChRx4tEUNa/2B
+ LGRhSlreORpT92+CvRIcOlRXl0e3r+gF6C+kjKWr9O20JP8qwEIauzKawravJ336hrcDDXAtu
+ MOlVx6YHMse7/SNjW0MT/lIAShDUGweZ2WIgtTG6IVr3ZVBzNLZ5tzG1rxzlRBQt4Fb1LLwhH
+ Nn1Y/pjGA0+jmb3FrEHUD+wppSD7yxxpA/zMNlGW17cBICdHHUGuz+yHQBAWXRZ5BsqmRPUYE
+ 8XhDCS0doQsa03hQNvMN6AxLATdI/wX+ne6zuDBBxP6FujWXJ5yCPTKromGEEoJMn5f37ar3E
+ wU5gh0TsREc0KEXJPn37D3DqKCnMK6nG22ed1Yu65YuLo37frfMINln5AGSxIx0zIzfTkueAi
+ oFe7e9afM1xAu13PPfa1VV4n+yi77MiEMMZvrlk4O2unFfmX6B6cM1J2Ym7ZGZ+HVoAZO25bX
+ b8tRGxyPNiIt4793ZA1RGHe5ewXyFJWbPT0RpwymXBBVmR/KERilXRLkp7+f1j53ETcQQ850X
+ gW8adjiG3ZDBGk/LcFLt0YxVvaRhbWC27u3ucSJXay4yo=
 
-On Sat, Mar 2, 2024 at 10:00=E2=80=AFAM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Fri, Mar 1, 2024 at 9:15=E2=80=AFPM Linus Walleij <linus.walleij@linar=
-o.org> wrote:
+For years, the Raspberry Pi users relied on userspace programs to read
+the pin configuration. In the meantime, it has become apparent that this
+approach has reached its limits for various reasons.
 
-> > The problem is that I have never heard about a user unbinding/binding
-> > a driver from sysfs for anything but debugging a drivers ability to
-> > bind/unbind. Partly I feel that thing should just be moved
-> > to debugfs given the usecase and because it just looks like a way for
-> > attackers to provoke crashes given how some drivers look.
->
-> That's not the only thing - device unbind can also be triggered by
-> removing the module providing the driver which is a completely normal
-> operation for user-space.
+This patch series now attempts to improve the debugging possibilities on
+the kernel side in order to reduce the dependency on these userspace
+programs.
 
-That is one thing, but every time I hear about "have you thought about
-users going in and using bind/unbind in sysfs" it's for builtin bool
-drivers.
+Changes in V3:
+- convert changes to single return point of success as suggested by
+  Andy Shevchenko
+- justify ENOTSUPP checkpatch false positive
 
-I almost feel like bool drivers should have bind/unbind disabled by
-default :/
+Changes in V2:
+- adjust the BCM2711/7211 pull resistor value according to the Broadcom
+  datasheet
 
-The introduction of deferred probe has made the situation much better
-because it tends to exercise the bind/unbind path a bit.
+Stefan Wahren (2):
+  pinctrl: bcm2835: Implement bcm2835_pinconf_get
+  pinctrl: bcm2835: Implement bcm2711_pinconf_get
 
-Yours,
-Linus Walleij
+ drivers/pinctrl/bcm/pinctrl-bcm2835.c | 78 +++++++++++++++++++++++++--
+ 1 file changed, 75 insertions(+), 3 deletions(-)
+
+=2D-
+2.34.1
+
 
