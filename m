@@ -1,169 +1,193 @@
-Return-Path: <linux-gpio+bounces-4084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4085-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC5A986F580
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:19:46 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id AFD5986F60B
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 17:23:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6F0A1C20A01
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:19:40 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1185AB23253
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 16:23:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3101A5A0FA;
-	Sun,  3 Mar 2024 14:19:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FFFB6BB56;
+	Sun,  3 Mar 2024 16:23:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jodiD9x4"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7z3tnNg"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73A959B52
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:19:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B256FD1;
+	Sun,  3 Mar 2024 16:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709475576; cv=none; b=M5VxPVmRnCMXkU3RgRAaL8IrWe/j2z/5ZVdaH5srpjIxdZi9f8e2jItkHqAX2zZQ+tVGG0OxXJmdHPFb+voQ9PizWbTIS0jI/LYZFZJ4TzngMPEc/Un0pPK02X7L4rUF1EclgnQrGPvECfeE69gk/7TdTL17QLLm0FJi5fduWYI=
+	t=1709483002; cv=none; b=SF5S5LhjH9JqOE4YZHlvCv6k0MxCGDeecWW02xhWU1rrYyr4+8HOhiDUb5eOspx/xcKRvSZ7/08UP2psytU+ahPn94yE/OezmeJS/mu8FakaSJVWCpCjyO1b7S6aT0oZptWrrZfGlOOtz2gs2Y+iJf06lCSpO+/5AJS+cr4R4WQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709475576; c=relaxed/simple;
-	bh=PRY+uK511uqmO9RUb/VkX2Ax+vPSC9tv6zLdFcdFWPs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=nsNuuKa6nsZpWs15StAbYk193vagdLNYd9T2xmPjl55ZW2D5xF6wKQyjQ5CsioC41WIGzmEvZzUIg6tpf7BmFC3aAfDbkz63Mkf7qBm+3oRpjRMAJGh9tOqteBHmEJoylXWMQPXBvN4/IA7FR2Oml9L2e/KxhH4YLBj+y9OHhq0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jodiD9x4; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B9DC43399
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:19:35 +0000 (UTC)
+	s=arc-20240116; t=1709483002; c=relaxed/simple;
+	bh=ccLhOeCw63kO5+CZbFFUdM1Ipgk7yJPFonmL/Hkemm8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FUV4gwbtQi0aJZNDmmmM2wOog2xHjcCrTKsQ53y1kU+Wo2/1H1C8Y/OfiP+vTphEbDSyNuBKyg7h88+rhdFfPStt9VI5H+p2ohPqTF3pQmpRrRZezupYDjTVsmcVEBnDfb/ixfJNpCHVOkM1qWl+WcsM6o2zUYrdV11Xl4dts4U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7z3tnNg; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D096C433F1;
+	Sun,  3 Mar 2024 16:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709475575;
-	bh=PRY+uK511uqmO9RUb/VkX2Ax+vPSC9tv6zLdFcdFWPs=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=jodiD9x4q+FNeORbhezAd9VNw+wJD58b7wBXpJG7rUrWUlwTZwXsceh6u99LAWZaJ
-	 RdV/dg6IU6r+6iGY6SUo0PdWhmvRwbbDWqHjpmlYlNQsB2Xh/WYNO2ojvYdtcCmn+H
-	 +xE1zl9BD6TZHQ+R6Z9Fg8DVa8ozNnu2oWkXqc/hOUA6Ly7lRqKSlX8Lg7yPNsKlrC
-	 bFNUsFcNL1CYAq/iXjUYcVy9xcSAumo8L7SXAJ3+jfgYRK4Tbotxgh7MkjxCPgHIvA
-	 l1HtnwxbmeXpdogl1Fgy2akbKd7mGCzZ5pwQkLgLhEu9NxCs7uqtb5qM4YeEFcxHKN
-	 mXqLQeh8qixqg==
-Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-299e4b352cdso2369322a91.0
-        for <linux-gpio@vger.kernel.org>; Sun, 03 Mar 2024 06:19:35 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXAQIqCYtb8VF9skmoFsSj9s/VGy0X6+SB0Ne9uVwgpXVi5XJCavjR1cJ3YBQZxVu4Ka+ybZG3PdyH5ZnrPRRVvIiRgdkt3j79wwg==
-X-Gm-Message-State: AOJu0Yx9etSMySm1LdbzCyKkVFS3aEdWgcQX0AunbEkZaFpHuy/Y5Hh4
-	cUOOvq7h+c6p45GtDBu4fx4371M9M6VtTD3mqyX4dR6nHl9XU2WbvG587qSKZHa0sEhHPhcE3nq
-	m855ommFl8rWcNkTZPquk9fK+7yE=
-X-Google-Smtp-Source: AGHT+IE+6F0veOMNza3Z5wBJvdbnTn9Ze39w0y2g6n+T+VBaeDWi/4TVGeZvs9C8umMjjncgzBdt6rIhjFbCAyTLxQU=
-X-Received: by 2002:a17:90a:aa95:b0:29a:8ac0:9fd2 with SMTP id
- l21-20020a17090aaa9500b0029a8ac09fd2mr4496486pjq.49.1709475574952; Sun, 03
- Mar 2024 06:19:34 -0800 (PST)
+	s=k20201202; t=1709483001;
+	bh=ccLhOeCw63kO5+CZbFFUdM1Ipgk7yJPFonmL/Hkemm8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=i7z3tnNgOhxmB37+92kFhOew3WuN23ILppFzZETM/639M26TqbDdsxnqChefUFmYH
+	 wJzLcbhn7kXDNyElc66x2gQDvlI0VueD/gF7ogoTK7e174G/WvDxbVuB39CX43r7iV
+	 j3N9hAKrL2RsjLRd31mI6py9/eGH0qqqdKA09ddD8PySQKoZloUW5U8yhEq6CngdZw
+	 FVef2+V+vJ1rXEY5PG7ozCyFYFQG116ZOXxP+jsABRuYPma3xPWZehgIBGb8yZSYZF
+	 us2jJJPikM/L07p9wHZ2tHM2WmuxC1BQj7cyitwdgzAVmW5t93b9uPN+JBvKA/18Kw
+	 Qqo1l6Mwvg5bA==
+Date: Sun, 3 Mar 2024 16:22:32 +0000
+From: Jonathan Cameron <jic23@kernel.org>
+To: Dumitru Ceclan <mitrutzceclan@gmail.com>
+Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
+ linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
+ Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
+ <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+ Michael Walle <michael@walle.cc>, Andy Shevchenko
+ <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
+ <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
+ =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
+ <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
+ <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
+ Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nuno Sa
+ <nuno.sa@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v16 3/3] iio: adc: ad7173: add AD7173 driver
+Message-ID: <20240303162148.3ad91aa2@jic23-huawei>
+In-Reply-To: <20240228110622.25114-3-mitrutzceclan@gmail.com>
+References: <20240228110622.25114-1-mitrutzceclan@gmail.com>
+	<20240228110622.25114-3-mitrutzceclan@gmail.com>
+X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
-In-Reply-To: <20240303140137.157522-2-wahrenst@gmx.net>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Sun, 3 Mar 2024 22:19:22 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
-Message-ID: <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
-To: Stefan Wahren <wahrenst@gmx.net>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
-	Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
-	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-rpi-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Linus,
+On Wed, 28 Feb 2024 13:06:20 +0200
+Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
 
-On Sun, Mar 3, 2024 at 10:02=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> wr=
-ote:
->
-> Even the driver already has implemented pin_dbg_show, it could
-> be helpful to implement pin_conf_get for a more generic behavior.
-> Contrary to the BCM2711, the BCM2835 SOC doesn't allow to read
-> the bias config, so the implementation is limited to the basics.
->
-> Keep ENOTSUPP here, because it's only used internally.
->
-> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-> ---
->  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 37 +++++++++++++++++++++++++--
->  1 file changed, 35 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/=
-pinctrl-bcm2835.c
-> index 1489191a213f..ed768cefe5d0 100644
-> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-> @@ -1003,8 +1003,41 @@ static const struct pinmux_ops bcm2835_pmx_ops =3D=
- {
->  static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
->                         unsigned pin, unsigned long *config)
->  {
-> -       /* No way to read back config in HW */
-> -       return -ENOTSUPP;
-> +       enum pin_config_param param =3D pinconf_to_config_param(*config);
-> +       struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
-> +       enum bcm2835_fsel fsel =3D bcm2835_pinctrl_fsel_get(pc, pin);
-> +       u32 val;
-> +
-> +       /* No way to read back bias config in HW */
-> +
-> +       switch (param) {
-> +       case PIN_CONFIG_INPUT_ENABLE:
-> +               if (fsel !=3D BCM2835_FSEL_GPIO_IN)
-> +                       return -EINVAL;
-> +
-> +               *config =3D pinconf_to_config_packed(param, 1);
-> +               break;
-> +
-> +       case PIN_CONFIG_OUTPUT_ENABLE:
-> +               if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
-> +                       return -EINVAL;
-> +
-> +               *config =3D pinconf_to_config_packed(param, 1);
-> +               break;
+> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
+> which can be used in high precision, low noise single channel
+> applications or higher speed multiplexed applications. The Sigma-Delta
+> ADC is intended primarily for measurement of signals close to DC but also
+> delivers outstanding performance with input bandwidths out to ~10kHz.
+> 
+> Reviewed-by: Andy Shevchenko <andy@kernel.org>
+> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
+> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
+> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
+> Link: https://lore.kernel.org/r/20240223133758.9787-3-mitrutzceclan@gmail.com
+> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 
-I'd like to take this opportunity to ask about INPUT_ENABLE and
-OUTPUT_ENABLE.
+Err. I guess you pulled this down from the tree where we got build errors.
+If you do that make sure to drop the Link and sign off from next version
+as those reflect the path upstream so need to be done afresh for v16.
 
-AFAICT from existing comments in include/linux/pinctrl/pinconf-generic.h ,
-these two options refer to input and output buffers or connections within
-the general electric path, i.e. it allows the signal to pass through in
-a certain direction. It does not refer to the current selected direction
-of the GPIO function, which is covered by the PIN_CONFIG_OUTPUT option,
-and by gpiolib, if and only if the pin has been allocated for gpiolib
-use. But it seems multiple existing drivers do this.
+I fixed it up.
 
-What's the correct thing to do here?
+Anyhow, I'm think there are a few cleanups that would be ideally done here
+but lets do those after it's merged.
+
+Applied to the togreg-normal branch of iio.git.
+
+Note that I'm not yet sure if I'll be able to squeeze in another pull
+request this cycle, so this may be waiting for a while.
+
+Jonathan
 
 
-Thanks
-ChenYu
+> +
+> +static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
+> +{
+> +	struct ad7173_state *st = iio_priv(indio_dev);
+> +	struct device *dev = indio_dev->dev.parent;
+> +	unsigned int num_channels;
+> +	int ret;
+> +
+> +	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
+> +	st->regulators[1].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF2];
+> +	st->regulators[2].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_AVDD1_AVSS];
+> +
+> +	/*
+> +	 * If a regulator is not available, it will be set to a dummy regulator.
+> +	 * Each channel reference is checked with regulator_get_voltage() before
+> +	 * setting attributes so if any channel uses a dummy supply the driver
+> +	 * probe will fail.
+> +	 */
+> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->regulators),
+> +				      st->regulators);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(st->regulators), st->regulators);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
+> +
+> +	ret = devm_add_action_or_reset(dev, ad7173_disable_regulators, st);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret,
+> +				     "Failed to add regulators disable action\n");
+> +
+> +	ret = device_property_match_property_string(dev, "clock-names",
+> +						    ad7173_clk_sel,
+> +						    ARRAY_SIZE(ad7173_clk_sel));
+> +	if (ret < 0) {
+> +		st->adc_mode |= FIELD_PREP(AD7173_ADC_MODE_CLOCKSEL_MASK,
+> +					   AD7173_ADC_MODE_CLOCKSEL_INT);
+> +		ad7173_register_clk_provider(indio_dev);
+> +	} else {
+> +		st->adc_mode |= FIELD_PREP(AD7173_ADC_MODE_CLOCKSEL_MASK,
+> +					   AD7173_ADC_MODE_CLOCKSEL_EXT + ret);
+> +		st->ext_clk = devm_clk_get(dev, ad7173_clk_sel[ret]);
+> +		if (IS_ERR(st->ext_clk))
+> +			return dev_err_probe(dev, PTR_ERR(st->ext_clk),
+> +					     "Failed to get external clock\n");
+> +
+> +		ret = clk_prepare_enable(st->ext_clk);
+> +		if (ret)
+> +			return dev_err_probe(dev, ret,
+> +					     "Failed to enable external clock\n");
+> +
+> +		ret = devm_add_action_or_reset(dev, ad7173_clk_disable_unprepare,
+> +					       st->ext_clk);
+> +		if (ret)
+> +			return ret;
+> +	}
+> +
+> +	ret = fwnode_irq_get_byname(dev_fwnode(dev), "rdy");
+> +	if (ret < 0)
+> +		return dev_err_probe(dev, ret, "Interrupt 'rdy' is required\n");
+> +
+> +	ad7173_sigma_delta_info.irq_line = ret;
+> +
+> +	num_channels = device_get_child_node_count(dev);
+> +
+> +	if (st->info->has_temp)
+> +		num_channels++;
+> +
+> +	if (num_channels == 0)
+> +		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
+> +	indio_dev->num_channels = num_channels;
+> +	st->num_channels = num_channels;
+
+I'm not seeing benefit of duplication here really and logically it feels like
+a lot of this last chunk would sit better in ad7173_fw_parse_channel_config()
+
+Perhaps that's a job for a future tidying up patch.
 
 > +
-> +       case PIN_CONFIG_OUTPUT:
-> +               if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
-> +                       return -EINVAL;
-> +
-> +               val =3D bcm2835_gpio_get_bit(pc, GPLEV0, pin);
-> +               *config =3D pinconf_to_config_packed(param, val);
-> +               break;
-> +
-> +       default:
-> +               return -ENOTSUPP;
-> +       }
-> +
-> +       return 0;
->  }
->
->  static void bcm2835_pull_config_set(struct bcm2835_pinctrl *pc,
-> --
-> 2.34.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> +	return ad7173_fw_parse_channel_config(indio_dev);
+> +}
+
+...
+
 
