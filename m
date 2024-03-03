@@ -1,167 +1,169 @@
-Return-Path: <linux-gpio+bounces-4083-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4084-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D28F386F559
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:02:57 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC5A986F580
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 15:19:46 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 97CDA285451
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:02:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6F0A1C20A01
+	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 14:19:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A57445A0FA;
-	Sun,  3 Mar 2024 14:02:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3101A5A0FA;
+	Sun,  3 Mar 2024 14:19:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="AJeokGLZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jodiD9x4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.17.20])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A82B5A79C
-	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:02:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.17.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E73A959B52
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:19:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709474543; cv=none; b=FlBTiEGtzLeYZtZZHKNZ+Ela4CJ1B3CxTAAoUzXKngBKfrGFz7g0syUTao+tFRXN7U35Jn2NDpXgoN2okNCb7j8bJLwObkG/6u/M+c+jY1NynUQpMBPXnke/O3jRPbWYybm7S35daRy4NmU/xWrf2Pe2dq9MbB9Uxr2haGZajPw=
+	t=1709475576; cv=none; b=M5VxPVmRnCMXkU3RgRAaL8IrWe/j2z/5ZVdaH5srpjIxdZi9f8e2jItkHqAX2zZQ+tVGG0OxXJmdHPFb+voQ9PizWbTIS0jI/LYZFZJ4TzngMPEc/Un0pPK02X7L4rUF1EclgnQrGPvECfeE69gk/7TdTL17QLLm0FJi5fduWYI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709474543; c=relaxed/simple;
-	bh=lECRiuSJWaP4QyRGREeVhkDPQQYnJwFCWuROb1bA+tc=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ewqc//Rg2nkTPaR9iu+fT/0D+p0ao4eYZ2fVplXbESEfD3ju2poEis7o7KBoYO7RV7ac73I3nPZO78PqRPG2MkmPrLhf14aFYVVvPhAHruyIwGSK8CqIKAJfzIH3ctHHwivr4B9oermOcQBUTkEWfb8UMiwSjT2A5IaSN0+SW+w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=AJeokGLZ; arc=none smtp.client-ip=212.227.17.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1709474524; x=1710079324; i=wahrenst@gmx.net;
-	bh=lECRiuSJWaP4QyRGREeVhkDPQQYnJwFCWuROb1bA+tc=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=AJeokGLZI2lz0dpuM3pF25DydrqIzrZZ/+5ojyMSEZqZfzdxiAjcyo+aFZCsVElY
-	 eMTSQFcLRBOn3R/BPVmOaZRdF9/ccSlzMFr48HNQlBJ3S+CXjAcN4/E66Vo5q890X
-	 a6nPeGMkUsO7t+TTggBFyKSF3AghxHsQheZu5r0AjMlV58OcdgCFWgucZeTm89bL5
-	 ac4C2pBaYnoyOzH3MYaVwZhpqU+oa9I48GBoIrLejfZuyP+pxl/c8e3Vptc0RiIJl
-	 I7GMwqgWDmM2AMH37MruAbm4SLm7w2WTQ3wcjLvQ8XXRlTMZP9bPzMD/QpLeQlL+a
-	 sTk92/IptgpXLZZVVA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N79yG-1qmg7c37GO-017XgT; Sun, 03
- Mar 2024 15:02:04 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V3 2/2] pinctrl: bcm2835: Implement bcm2711_pinconf_get
-Date: Sun,  3 Mar 2024 15:01:37 +0100
-Message-Id: <20240303140137.157522-3-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240303140137.157522-1-wahrenst@gmx.net>
-References: <20240303140137.157522-1-wahrenst@gmx.net>
+	s=arc-20240116; t=1709475576; c=relaxed/simple;
+	bh=PRY+uK511uqmO9RUb/VkX2Ax+vPSC9tv6zLdFcdFWPs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=nsNuuKa6nsZpWs15StAbYk193vagdLNYd9T2xmPjl55ZW2D5xF6wKQyjQ5CsioC41WIGzmEvZzUIg6tpf7BmFC3aAfDbkz63Mkf7qBm+3oRpjRMAJGh9tOqteBHmEJoylXWMQPXBvN4/IA7FR2Oml9L2e/KxhH4YLBj+y9OHhq0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jodiD9x4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69B9DC43399
+	for <linux-gpio@vger.kernel.org>; Sun,  3 Mar 2024 14:19:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709475575;
+	bh=PRY+uK511uqmO9RUb/VkX2Ax+vPSC9tv6zLdFcdFWPs=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=jodiD9x4q+FNeORbhezAd9VNw+wJD58b7wBXpJG7rUrWUlwTZwXsceh6u99LAWZaJ
+	 RdV/dg6IU6r+6iGY6SUo0PdWhmvRwbbDWqHjpmlYlNQsB2Xh/WYNO2ojvYdtcCmn+H
+	 +xE1zl9BD6TZHQ+R6Z9Fg8DVa8ozNnu2oWkXqc/hOUA6Ly7lRqKSlX8Lg7yPNsKlrC
+	 bFNUsFcNL1CYAq/iXjUYcVy9xcSAumo8L7SXAJ3+jfgYRK4Tbotxgh7MkjxCPgHIvA
+	 l1HtnwxbmeXpdogl1Fgy2akbKd7mGCzZ5pwQkLgLhEu9NxCs7uqtb5qM4YeEFcxHKN
+	 mXqLQeh8qixqg==
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-299e4b352cdso2369322a91.0
+        for <linux-gpio@vger.kernel.org>; Sun, 03 Mar 2024 06:19:35 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXAQIqCYtb8VF9skmoFsSj9s/VGy0X6+SB0Ne9uVwgpXVi5XJCavjR1cJ3YBQZxVu4Ka+ybZG3PdyH5ZnrPRRVvIiRgdkt3j79wwg==
+X-Gm-Message-State: AOJu0Yx9etSMySm1LdbzCyKkVFS3aEdWgcQX0AunbEkZaFpHuy/Y5Hh4
+	cUOOvq7h+c6p45GtDBu4fx4371M9M6VtTD3mqyX4dR6nHl9XU2WbvG587qSKZHa0sEhHPhcE3nq
+	m855ommFl8rWcNkTZPquk9fK+7yE=
+X-Google-Smtp-Source: AGHT+IE+6F0veOMNza3Z5wBJvdbnTn9Ze39w0y2g6n+T+VBaeDWi/4TVGeZvs9C8umMjjncgzBdt6rIhjFbCAyTLxQU=
+X-Received: by 2002:a17:90a:aa95:b0:29a:8ac0:9fd2 with SMTP id
+ l21-20020a17090aaa9500b0029a8ac09fd2mr4496486pjq.49.1709475574952; Sun, 03
+ Mar 2024 06:19:34 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
+In-Reply-To: <20240303140137.157522-2-wahrenst@gmx.net>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Sun, 3 Mar 2024 22:19:22 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
+Message-ID: <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
+To: Stefan Wahren <wahrenst@gmx.net>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>, Ray Jui <rjui@broadcom.com>, 
+	Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, 
+	linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:bXCSHkyGiT5pFZpix0e5CvssCVAhBmhUQL5AHfxukT/TaeGfXW6
- hdjDEt6yvjLIFJpoXoitiR3qS3/OlQSs5ODWbMJpMGUHnCekmqtL/JTgiXkkHUGs/VuoXSB
- QTzIPirzIUuhkaavTB2SNkLQsOlC3eTzu5BrG4caWz/aFkS+86eLBq4H1YFxxBl83WBpU5g
- yPcsbQi/5n0HbYulC+EgQ==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:SP4B2YZj6Kg=;c8TgZYmBwovrbUH6iK/Q0h81KaI
- zZusHPy+ypC+f0122YbEX+iaqAbv9QryJzfKu0PCc6cjeMvAp7hifz+GYeUe6DrQFHfJuywSo
- QxguXzDONDwvMaCpBBRKODLI5tGOk3Hj5labo5w6OgZmTydq8yKeWcU9V65iqZJgfxhqzGURw
- WWqrVR/ME7Xp2E/nsCfzeZNfqo8jrtcs6elht98CIt+iEKOjVC1eITHx29MvdmiVy+d/kGmyQ
- G9sbqfHKiwjvKm49g6ZLzG6uCPwdn+pATNZt4T3u2HkCubR8YhwEPgY0kazGZyY40oDhLsJfr
- Ncb0xuZbABuc+HqdTZwEjN4JvcCHLJQuSA2qsvPqF6OPqMBtP81jTwjQNP/FtupdquDtoKH7Y
- 9qbSyH+gGvWisgzJ/pVeK/E+A5LCjIqmVCGCSYctygPu/a21uF1J1pgU1hEtDJ/iVKEPHQGaX
- 2IkUBT4L2AppR7n+wN1NS5Cun6SPjr0FEo5x65AJSCmv9Ybe9lk56SEGzq56GI2exat+MhQHL
- LdA6YIL4G+VO5z/JRPp35bbYG7hzcRtDhKvcOqTh9DoU12kNaacUTn3cK8b3w5D+e94UxVIGm
- zpnVVE17Zi9K/5XHZYIknRK91YJmvpzjK/52Gl2YRn4hrcavrw2XTwyZZHzDc+HM2MHiM3eqy
- fYa4z+WDUmgPQUGrPnNsNhFNRhf4x3+zPZki4ts4gDp8+2lrTbe5Ob4il1crvMp7SRF4ulrlH
- 8OtEFlqYpOAvLt8WxbRoq3vOqR6rWrnggb659jrASQwAAdYW4Qddb91N3cGPT16c6jttl1mWW
- Jsi5Suh1kYLpwXuSTu95AHZfZz6lfWuZ7A514y4er14Rk=
 
-The BCM2711 allows to read the bias config. So implement pin_conf_get
-accordingly. The pull resistor values has been taken from the
-BCM2711/7211 datasheet.
+Hi Linus,
 
-This implementation assumes that BCM7211 behaves the same way.
-
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-=2D--
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 41 ++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
-inctrl-bcm2835.c
-index ed768cefe5d0..7c88626af736 100644
-=2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -1112,6 +1112,45 @@ static const struct pinconf_ops bcm2835_pinconf_ops=
- =3D {
- 	.pin_config_set =3D bcm2835_pinconf_set,
- };
-
-+static int bcm2711_pinconf_get(struct pinctrl_dev *pctldev, unsigned pin,
-+			       unsigned long *config)
-+{
-+	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param =3D pinconf_to_config_param(*config);
-+	u32 offset, shift, val;
-+
-+	offset =3D PUD_2711_REG_OFFSET(pin);
-+	shift =3D PUD_2711_REG_SHIFT(pin);
-+	val =3D bcm2835_gpio_rd(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 + (offset * 4));
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_NONE)
-+			return -EINVAL;
-+
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_UP)
-+			return -EINVAL;
-+
-+		*config =3D pinconf_to_config_packed(param, 50000);
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_DOWN)
-+			return -EINVAL;
-+
-+		*config =3D pinconf_to_config_packed(param, 50000);
-+		break;
-+
-+	default:
-+		return bcm2835_pinconf_get(pctldev, pin, config);
-+	}
-+
-+	return 0;
-+}
-+
- static void bcm2711_pull_config_set(struct bcm2835_pinctrl *pc,
- 				    unsigned int pin, unsigned int arg)
+On Sun, Mar 3, 2024 at 10:02=E2=80=AFPM Stefan Wahren <wahrenst@gmx.net> wr=
+ote:
+>
+> Even the driver already has implemented pin_dbg_show, it could
+> be helpful to implement pin_conf_get for a more generic behavior.
+> Contrary to the BCM2711, the BCM2835 SOC doesn't allow to read
+> the bias config, so the implementation is limited to the basics.
+>
+> Keep ENOTSUPP here, because it's only used internally.
+>
+> Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
+> ---
+>  drivers/pinctrl/bcm/pinctrl-bcm2835.c | 37 +++++++++++++++++++++++++--
+>  1 file changed, 35 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/=
+pinctrl-bcm2835.c
+> index 1489191a213f..ed768cefe5d0 100644
+> --- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> +++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
+> @@ -1003,8 +1003,41 @@ static const struct pinmux_ops bcm2835_pmx_ops =3D=
  {
-@@ -1179,7 +1218,7 @@ static int bcm2711_pinconf_set(struct pinctrl_dev *p=
-ctldev,
+>  static int bcm2835_pinconf_get(struct pinctrl_dev *pctldev,
+>                         unsigned pin, unsigned long *config)
+>  {
+> -       /* No way to read back config in HW */
+> -       return -ENOTSUPP;
+> +       enum pin_config_param param =3D pinconf_to_config_param(*config);
+> +       struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
+> +       enum bcm2835_fsel fsel =3D bcm2835_pinctrl_fsel_get(pc, pin);
+> +       u32 val;
+> +
+> +       /* No way to read back bias config in HW */
+> +
+> +       switch (param) {
+> +       case PIN_CONFIG_INPUT_ENABLE:
+> +               if (fsel !=3D BCM2835_FSEL_GPIO_IN)
+> +                       return -EINVAL;
+> +
+> +               *config =3D pinconf_to_config_packed(param, 1);
+> +               break;
+> +
+> +       case PIN_CONFIG_OUTPUT_ENABLE:
+> +               if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
+> +                       return -EINVAL;
+> +
+> +               *config =3D pinconf_to_config_packed(param, 1);
+> +               break;
 
- static const struct pinconf_ops bcm2711_pinconf_ops =3D {
- 	.is_generic =3D true,
--	.pin_config_get =3D bcm2835_pinconf_get,
-+	.pin_config_get =3D bcm2711_pinconf_get,
- 	.pin_config_set =3D bcm2711_pinconf_set,
- };
+I'd like to take this opportunity to ask about INPUT_ENABLE and
+OUTPUT_ENABLE.
 
-=2D-
-2.34.1
+AFAICT from existing comments in include/linux/pinctrl/pinconf-generic.h ,
+these two options refer to input and output buffers or connections within
+the general electric path, i.e. it allows the signal to pass through in
+a certain direction. It does not refer to the current selected direction
+of the GPIO function, which is covered by the PIN_CONFIG_OUTPUT option,
+and by gpiolib, if and only if the pin has been allocated for gpiolib
+use. But it seems multiple existing drivers do this.
 
+What's the correct thing to do here?
+
+
+Thanks
+ChenYu
+
+> +
+> +       case PIN_CONFIG_OUTPUT:
+> +               if (fsel !=3D BCM2835_FSEL_GPIO_OUT)
+> +                       return -EINVAL;
+> +
+> +               val =3D bcm2835_gpio_get_bit(pc, GPLEV0, pin);
+> +               *config =3D pinconf_to_config_packed(param, val);
+> +               break;
+> +
+> +       default:
+> +               return -ENOTSUPP;
+> +       }
+> +
+> +       return 0;
+>  }
+>
+>  static void bcm2835_pull_config_set(struct bcm2835_pinctrl *pc,
+> --
+> 2.34.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
