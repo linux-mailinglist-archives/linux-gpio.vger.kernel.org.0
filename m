@@ -1,102 +1,99 @@
-Return-Path: <linux-gpio+bounces-4091-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4092-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9CF486FD22
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 10:22:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C41886FEF9
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 11:24:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2765F1C21F56
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 09:22:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6A74B2314C
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 10:24:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1831B208DD;
-	Mon,  4 Mar 2024 09:21:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 58BD92574D;
+	Mon,  4 Mar 2024 10:22:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="MFmwpgHO"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RXUrc1pb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f181.google.com (mail-yb1-f181.google.com [209.85.219.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DAA612E73;
-	Mon,  4 Mar 2024 09:21:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADCDB250F1
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Mar 2024 10:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709544115; cv=none; b=pX2nyCIkv3ch9mF5BAbj1PMA6N6NY3PUnR8+5u+rxStDbmc0VEoLI92iltLeInchFna1BNQbG80w+hVwyqi8thvCLamIfeQBLerX/01xk7XsiaoDzr8/5c2tlsxfQ4UvmmVEROO5F+HcYbM6n9dOxOj/pST1+jmLrQs9l7han90=
+	t=1709547746; cv=none; b=mdO2sRi/F1qgWgnttK75NgVxSgYh+VLcsBHTFK2vsaeHTY4ZGZIizQ9S7nHeRBYG5a8f+7syAb+53YqQPl1K2n97e8tro28oj/lv0eW9tXzQ6SZoqGjhhs4A4BZUv6lf5APL2ZTLk5aNS2HGH7lcyyCckn+YxCOmGFVOG8NA044=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709544115; c=relaxed/simple;
-	bh=ksOqlYY4eSQHiYECRK/IIOdgenRG+JUn90uhHqMkQy8=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
-	 References:In-Reply-To; b=rEEPGBS+z8VLJHqfznWgSiRGRYDOgolLez0fI5PAMPQXaMPi0WFWsHMGHS2zH7hVKip+mVWIORfQyZlDvXlP3YLi1p4ZFPtLaNTzEql0zOanAXWuTLtc1mcyqt3K/1jzRVCMmGmbai+G8F8gO72UFHwNkJ2ZMKIOZZXc4001Dxs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=MFmwpgHO; arc=none smtp.client-ip=217.70.183.193
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 3A4DA240002;
-	Mon,  4 Mar 2024 09:21:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1709544105;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=ksOqlYY4eSQHiYECRK/IIOdgenRG+JUn90uhHqMkQy8=;
-	b=MFmwpgHO9G6ggCW1sniaYtRNodOXdynmxY7Zm+ErNQqpN7F5sLKrBDZ3acSMw/Rc6VvZnI
-	2sSiFig4GjQ7nV/rLbb33leoQ5HHcqm+8efGpdZ7tb7YWSLoQ77JXHs5qCLqU7Um4CtZX9
-	iVbv+0G8pcak9bZdjUrkDNTl4mbRkUBLq7aqOtdNXlKT2qW/JAfzX6okreVGwNLtReFUbh
-	griBPBlRDh86GmziyIdI04xC5DG+WZZpvIA2meSHwymGm4icc2nn9ZBA3rj8KYpfbNFusI
-	ouJUn0v2SBq5tr0SXSGjLCVY9ODhPdxHU8XQpBlu3ZMhA7EDperpGE+PgZlSTQ==
+	s=arc-20240116; t=1709547746; c=relaxed/simple;
+	bh=YSFO93jw3tL7yBDt9bC7BvQt0VDaYsOPHGNL4HB4+Eg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=DiVKvTZXJFdKgT9a4rD+eF31oZFQduQAdVvaCApIamO3P4VBRREpon6eezYnXWmI0unA8Q0l2OfuKX2L3bl3qcrWIzSpEsYoUivHEhXVU0WY7MSxW7SQ71T4d3Ss0QVoN1aLpXBM1KoK1XrJ5btHsSs3919bLHFX6rQDyixxPeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=RXUrc1pb; arc=none smtp.client-ip=209.85.219.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f181.google.com with SMTP id 3f1490d57ef6-dbed0710c74so3757486276.1
+        for <linux-gpio@vger.kernel.org>; Mon, 04 Mar 2024 02:22:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709547744; x=1710152544; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YSFO93jw3tL7yBDt9bC7BvQt0VDaYsOPHGNL4HB4+Eg=;
+        b=RXUrc1pbI1hK+DVdAJhZdfjMDhTQQK6hQgL9yhj8HeWpOx++5JTkYosV0A0+1b/3ni
+         deJq/DEvVl0jcFro6/v2rPVnfm5fK93gjQOQq9PpoINDZzw6xOQnzBK6IB/2FEPGuZDW
+         r8ImqAuqsen3N4OvJAEo6WLCDAwZF5J0jAxgJolPp1utGukDX0/RuMwGIJ3U/0qmrKgK
+         VeoCkbwyyMRRAdzx2DhonmidfF3YVx9ORw8CQrifIXih73wR0ers6ZB2FIAnixG6kakW
+         ip3G0x6SqjkwfZJ1jlH93KeA6wIF+UQhRCS/6vduPm1PZc8oRImiFYfN6cRKvy4B3Spl
+         C4GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709547744; x=1710152544;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=YSFO93jw3tL7yBDt9bC7BvQt0VDaYsOPHGNL4HB4+Eg=;
+        b=iNspZEmUGU7BVuVaCOtTv8noMCv3Hv6QIDzrPqDO2Bgpzsw+NAfayQ4KmuytDCQLje
+         OG9gzflf/UHag+ayypmqqGGkiIXHBPon4zH7zFXLpmYxMmcUDvTt8NZTdl1Vb/Fj49tv
+         v4GLAp0NwOI5kUdrvRVjcTAh4Cweq13FBY9Oq2VQS3YuCnoEcq5falufNJFxZbPiaGUK
+         yFXWN+KPh6TiIbuz4tnlaLOJPRj2EN+2ZdMRI0KQwsb2rOrU/Q8SY+XfGcKfaSMuC3iZ
+         upe60ArzI7K2Pw6C1VBdQ92HmW5W5jkCcIStxP/n2Xscoa5AcU/8wL9uhayp8aiKTqqg
+         RuAQ==
+X-Gm-Message-State: AOJu0Yz/QoYRg2SSgucDzvJL6yY0C5T8LQMa16zsweI47/GC1LGykAjz
+	wiSawOiAm3x+dqznYaCgBjt+FIyv3dxyyjD21IHnEEOr7MjyS1VxCbGnf5ivJPynrO0U57nxVoM
+	ZV8Uh8ALqlF5ihi9SrBfh+1neHg+mf44Vs3gd/4aGCz7yOIya
+X-Google-Smtp-Source: AGHT+IE4b27GDCsXDObk0BYrO5rt8jnYvcbKgZyfdhcqHryS7J8JyHcmQbqfswsg8jB9Mkor466Yz6NO5oHGCTK6s/E=
+X-Received: by 2002:a25:dc87:0:b0:dcd:4d96:741f with SMTP id
+ y129-20020a25dc87000000b00dcd4d96741fmr5763328ybe.10.1709547743815; Mon, 04
+ Mar 2024 02:22:23 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+References: <CACRpkdbCniO7imk3+EfhAqR11Wj9NFnR08d2+Hf_oXks5QKzqw@mail.gmail.com>
+In-Reply-To: <CACRpkdbCniO7imk3+EfhAqR11Wj9NFnR08d2+Hf_oXks5QKzqw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 4 Mar 2024 11:22:12 +0100
+Message-ID: <CACRpkdY07F=kq=MZq94WJdf18VXFpsO_SvaDvF_B4zPUzUiVrQ@mail.gmail.com>
+Subject: Re: Immutable branch for nomadik-gpio rework
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, =?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 04 Mar 2024 10:21:43 +0100
-Message-Id: <CZKUT3B1GRAC.19GQOH3JTKT10@bootlin.com>
-Cc: "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
- <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, "Bartosz Golaszewski"
- <brgl@bgdev.pl>
-To: "Linus Walleij" <linus.walleij@linaro.org>, "Andy Shevchenko"
- <andy.shevchenko@gmail.com>
-From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Subject: Re: [PATCH v3 1/1] gpio: nomadik: Finish conversion to use firmware
- node APIs
-X-Mailer: aerc 0.15.2
-References: <20240302173401.217830-1-andy.shevchenko@gmail.com>
- <CACRpkdZudHHkFcdmHB9mWGriV0EtvZrjiGUHF+b7W2L=t6xmwA@mail.gmail.com>
-In-Reply-To: <CACRpkdZudHHkFcdmHB9mWGriV0EtvZrjiGUHF+b7W2L=t6xmwA@mail.gmail.com>
-X-GND-Sasl: theo.lebrun@bootlin.com
 
-Hello,
+On Mon, Mar 4, 2024 at 9:38=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
 
-On Sun Mar 3, 2024 at 9:44 AM CET, Linus Walleij wrote:
-> On Sat, Mar 2, 2024 at 6:34=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
->
-> > Previously driver got a few updates in order to replace OF APIs by
-> > respective firmware node, however it was not finished to the logical
-> > end, e.g., some APIs that has been used are still require OF node
-> > to be passed. Finish that job by converting leftovers to use firmware
-> > node APIs.
-> >
-> > Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-> > ---
-> > v3: used correct types for fwnode (LKP)
->
-> OK took out v2 and put in v3 instead :)
+> I prepared an immutable branch with Theo's rework of the Nomadik
+> GPIO driver, including some icing on top from Andy making it a solid
+> rework and cleanup series.
 
-I'm late to the party. Tested this v3 on Mobileye hardware, all good.
+Nix that for now, I discovered that it doesn't boot on the Ux500 anymore :(
 
-Tested-by: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+I have to backtrack and see what the problem is. At least two patches
+are regressing.
 
-Have a nice day,
-
---
-Th=C3=A9o Lebrun, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Yours,
+Linus Walleij
 
