@@ -1,100 +1,102 @@
-Return-Path: <linux-gpio+bounces-4117-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4119-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DE52870747
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 17:34:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id DE52B870856
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 18:34:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CDD471C2140E
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 16:34:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1BB6C1C21264
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 17:34:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8CEC7481DE;
-	Mon,  4 Mar 2024 16:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CFC71612E3;
+	Mon,  4 Mar 2024 17:34:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="HhNdSJWE"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="KVJbzvVt"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36481E48B
-	for <linux-gpio@vger.kernel.org>; Mon,  4 Mar 2024 16:34:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D81E484;
+	Mon,  4 Mar 2024 17:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709570081; cv=none; b=s/yAvJe5ttwM0hhmK0HQPGiFVyVG9yeVVJPuupCbeFD5C/PoafgjEZ+AlANsWgst4Fje3Xvu66qOEhfQAi+aetgr7go5qjeg6xRLCWHNQCCbx0Kq5Z/DyTCH3V+kNaAiMJcwx0v21sO/WIRxnHWwy52rMNbEjhh2n2KqgnU18WU=
+	t=1709573674; cv=none; b=g9nrit9xTfD6gMxEWXAP69QhC9LABi9E2PSM4cyBhCIGSbMKgpTYSenO9UUBGojQGUGJDfnTISdOTYos5wWgfAKD3Ltc7zzpry+r6PT1tA9yfV6yQQO8gbhpk2HwDpUFBaErjZMrhtRfKJZQWZlERsD3fzDt/E752k40DfOxt8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709570081; c=relaxed/simple;
-	bh=A2zNd/rgYKnFeMBKCoWUuiwBLWEvwOAkTF2/8zWjdQ8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZxgggMvYvLbPAfQW5rVmyeeRarSIDYOLOi4JuBDXB6udrxmtEuQyQ1KTOl5UqxCTrngFTYPs1D/Z22tDAmpYXmSMC6EFnbyLpih0TRV9+/YmL+/BgtNd4+AoVf6kyYM8okJlJnWyMnjI2b9FFZrCjOLnZSVcTjY3i8W8Vz8dVCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=HhNdSJWE; arc=none smtp.client-ip=209.85.221.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-4d331ba6078so837184e0c.3
-        for <linux-gpio@vger.kernel.org>; Mon, 04 Mar 2024 08:34:39 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709570078; x=1710174878; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A2zNd/rgYKnFeMBKCoWUuiwBLWEvwOAkTF2/8zWjdQ8=;
-        b=HhNdSJWEiWSXAVtMjNkTyTZ+hfgEiI/SlCMEIOIS7ZyG6Rb90n+AN47rKOTUhY1bpj
-         qAfLi+Vud2+q5ot1jxSgYE8KXEy08/anE/B/bjdgyYEe6sjOc7SOtt8Ufazek0nw0YY0
-         9tPLbYVVT0PlWgOxN4iY+MBTu/+XIJ9AyOiDkSMRFvCCoZziXSkF0rGCFKlTHwFIsveY
-         Emjl0MxhMaVM1auwGb0ozQPtp3bgXxCumC+hvD7ISSZOc6SjmyOUewkvmhIyzs1OCXx9
-         2ROUNAE7Sk+DnUtAyTF/cX/POagZGnJZ5lQl1pbe7sRzYtBGB5FxpQOeSUqFgzI1lBk1
-         yG1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709570078; x=1710174878;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=A2zNd/rgYKnFeMBKCoWUuiwBLWEvwOAkTF2/8zWjdQ8=;
-        b=IGfD3hYd/0bF6uKus372GcRpcQFlVUiVcEECqaWs6iVjEUMglnY/3z7US9k6VNWOZ3
-         T3yJF2MRaeqxQu+puX/ArTNpcCqldJxTj79ktcN9ITT1pWRdYaNyMnyMr/0DC2tceFap
-         zHG2Mprb7XUrGcnnNFTXSUDlPCAOD0e/raLVM6w202lLZ0zNhYjY3N7NdQ8abqFqrCVr
-         3G6AHuRQoNUXh5ooU74mJGTljhZqWjecuTBLJx0VYY3jKF1Q9SZ2Cit4VFKUV+YgN/NJ
-         lTaB3bj9BBArJ+X2OGX3NT042VpqZQYEOSOCUzhdOeQPag1gsAt0WzLKSoldDgy+RleJ
-         3hhQ==
-X-Forwarded-Encrypted: i=1; AJvYcCULgLsWv+PqBg8aHEf9IakeqOva/jauu/5kGerxmXWO9fFHhtqfKMtIH7k8tEO3s2LaVhyEhC8OhNQ/AMIaZAJSzEDAdpsOux8WQA==
-X-Gm-Message-State: AOJu0Yz87RNCHQtuPpyng8sdP2hKPdq2bnwfYYONDw0rPl2tXW1/PXXv
-	zmkMPPqW13dloHKHphdT3voe75aJvTTzwR6ov1neCW1xVbylArYxOkxS9UdS5wbuuP2vF2ZJZlP
-	rlZdDWt4NFQahZ8c9XIZayt2wIGB9s4k2mwIid5VRRVCVoVagUALJCoip
-X-Google-Smtp-Source: AGHT+IH6XCBv1powBU6LBfdOrzCrdX0z2XKGs7EqHW7M1CvYIuEzvlBS2CVQ/zEabk3lty6i91pid2y9iE8oMH4BO5E=
-X-Received: by 2002:a05:6122:168f:b0:4d1:3fbc:db6f with SMTP id
- 15-20020a056122168f00b004d13fbcdb6fmr6888602vkl.16.1709570078228; Mon, 04 Mar
- 2024 08:34:38 -0800 (PST)
+	s=arc-20240116; t=1709573674; c=relaxed/simple;
+	bh=TUFC2oXSkwh1q+EPlqWlIYwORwjSCpCR0ZK+J1sWVDg=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ckVAg4+MUeQnDADjgfGBurcyj7sCG7zDQHeWnWV15N+x03gSx3Wd+jeOlYBuDEJb5aECeJLgwq005Qyb7L61gsqKZ4+NyXPZNkU8yj/EdXfQENMIpaQmKwP9F6NyPhpgveeI5ElPxFtLslMFgg14Yg4mRlTbf4Bv2KSp4vh6Q64=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=KVJbzvVt; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 424H03rG023294;
+	Mon, 4 Mar 2024 11:08:58 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=
+	PODMain02222019; bh=UmgdeD3y5bH8MTO7d9mjBfyE5hjIg3x+2bIjgp9F6A8=; b=
+	KVJbzvVtmtnT9Mz7C9idMb6aC/rJgH7jReMf23cfoKrPMhio0HJbfUcSlLc3c35o
+	16hGfV3YAurNHMZ5mCzS3kc7vt45xkDMs+TtQm2RmKPNFZSoAf3XqhcyT6+HtmVc
+	bGMeF2e+9OphoBDETNJOsMjTmvP6JXoJI8KxUg5T8ylZ2NCD/APavn1X3Icdy2oY
+	EiQ/phA0mtqdA/nHzMXHa7IKUiIPtQtXP3gKlNlXunYlwB1akH/r6FE9sU6tKhN2
+	It2olIOVuh+XmUq2LcCCG+tthL9DL/6UfAc03lUdhYNvcjZHKwCA86rHC6uAtMm3
+	Ch1+utbxVgn5UGNEWgEljQ==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3wm2d2j4uw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 04 Mar 2024 11:08:57 -0600 (CST)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 4 Mar 2024
+ 17:08:55 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.4 via Frontend Transport; Mon, 4 Mar 2024 17:08:55 +0000
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id B6E48820241;
+	Mon,  4 Mar 2024 17:08:55 +0000 (UTC)
+Date: Mon, 4 Mar 2024 17:08:54 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+CC: <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH] gpio: swnode: Don't use __free() on result of
+ swnode_get_gpio_device()
+Message-ID: <ZeYAJkHwPImooI9S@ediswmail9.ad.cirrus.com>
+References: <20240304160320.1054811-1-ckeepax@opensource.cirrus.com>
+ <CAMRc=MfAZC8yGXXYrCLeSxonOwozgxRdPC4h=aVgCMSkA7O_dA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240304160320.1054811-1-ckeepax@opensource.cirrus.com>
-In-Reply-To: <20240304160320.1054811-1-ckeepax@opensource.cirrus.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 4 Mar 2024 17:34:27 +0100
-Message-ID: <CAMRc=MfAZC8yGXXYrCLeSxonOwozgxRdPC4h=aVgCMSkA7O_dA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: swnode: Don't use __free() on result of swnode_get_gpio_device()
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: linus.walleij@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfAZC8yGXXYrCLeSxonOwozgxRdPC4h=aVgCMSkA7O_dA@mail.gmail.com>
+X-Proofpoint-ORIG-GUID: o8tyN_KVLbO71e-kPl2lMRBj3NUNHT8H
+X-Proofpoint-GUID: o8tyN_KVLbO71e-kPl2lMRBj3NUNHT8H
+X-Proofpoint-Spam-Reason: safe
 
-On Mon, Mar 4, 2024 at 5:03=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
->
-> swnode_get_gpio_device() can return an error pointer, however
-> gpio_device_put() is not able to accept error values. Thus using
-> __free() will result in dereferencing an invalid pointer.
->
+On Mon, Mar 04, 2024 at 05:34:27PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Mar 4, 2024 at 5:03 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> >
+> > swnode_get_gpio_device() can return an error pointer, however
+> > gpio_device_put() is not able to accept error values. Thus using
+> > __free() will result in dereferencing an invalid pointer.
+> >
+> 
+> Can you post the steps to reproduce this? Because it should work[1].
 
-Can you post the steps to reproduce this? Because it should work[1].
+Hmm... yeah that does look like it should work, I have had the
+patch sitting in my tree for a little while, let me double check
+and I will come back/resend if it is actually still needed.
 
-Bart
-
-[1] https://elixir.bootlin.com/linux/latest/source/include/linux/gpio/drive=
-r.h#L616
+Thanks,
+Charles
 
