@@ -1,193 +1,311 @@
-Return-Path: <linux-gpio+bounces-4085-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4086-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id AFD5986F60B
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 17:23:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id A431686F851
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 02:47:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1185AB23253
-	for <lists+linux-gpio@lfdr.de>; Sun,  3 Mar 2024 16:23:30 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 4AE30B20B24
+	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 01:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4FFFB6BB56;
-	Sun,  3 Mar 2024 16:23:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE810EDF;
+	Mon,  4 Mar 2024 01:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i7z3tnNg"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="G9GHEuAn"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.15])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B256FD1;
-	Sun,  3 Mar 2024 16:23:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D433A31
+	for <linux-gpio@vger.kernel.org>; Mon,  4 Mar 2024 01:47:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.15
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709483002; cv=none; b=SF5S5LhjH9JqOE4YZHlvCv6k0MxCGDeecWW02xhWU1rrYyr4+8HOhiDUb5eOspx/xcKRvSZ7/08UP2psytU+ahPn94yE/OezmeJS/mu8FakaSJVWCpCjyO1b7S6aT0oZptWrrZfGlOOtz2gs2Y+iJf06lCSpO+/5AJS+cr4R4WQ=
+	t=1709516862; cv=none; b=fcakefdrw5nbwh3nEN6X4oP22lcr15Lqh1n1F1NzaoM3FE4/okyrdwXtG8AGVHEdJfGMYYIMI+hUALXgLvV6HeBIzfa4XyRi10mX271UAeWMO+oQWEjW+LKV+pnOmz2GD/4V34Pa+EtAdOFFwCeBNTlkORn76TtdZKU9Ulzdesw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709483002; c=relaxed/simple;
-	bh=ccLhOeCw63kO5+CZbFFUdM1Ipgk7yJPFonmL/Hkemm8=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FUV4gwbtQi0aJZNDmmmM2wOog2xHjcCrTKsQ53y1kU+Wo2/1H1C8Y/OfiP+vTphEbDSyNuBKyg7h88+rhdFfPStt9VI5H+p2ohPqTF3pQmpRrRZezupYDjTVsmcVEBnDfb/ixfJNpCHVOkM1qWl+WcsM6o2zUYrdV11Xl4dts4U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i7z3tnNg; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D096C433F1;
-	Sun,  3 Mar 2024 16:22:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709483001;
-	bh=ccLhOeCw63kO5+CZbFFUdM1Ipgk7yJPFonmL/Hkemm8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=i7z3tnNgOhxmB37+92kFhOew3WuN23ILppFzZETM/639M26TqbDdsxnqChefUFmYH
-	 wJzLcbhn7kXDNyElc66x2gQDvlI0VueD/gF7ogoTK7e174G/WvDxbVuB39CX43r7iV
-	 j3N9hAKrL2RsjLRd31mI6py9/eGH0qqqdKA09ddD8PySQKoZloUW5U8yhEq6CngdZw
-	 FVef2+V+vJ1rXEY5PG7ozCyFYFQG116ZOXxP+jsABRuYPma3xPWZehgIBGb8yZSYZF
-	 us2jJJPikM/L07p9wHZ2tHM2WmuxC1BQj7cyitwdgzAVmW5t93b9uPN+JBvKA/18Kw
-	 Qqo1l6Mwvg5bA==
-Date: Sun, 3 Mar 2024 16:22:32 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Dumitru Ceclan <mitrutzceclan@gmail.com>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, andy@kernel.org,
- linux-gpio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Rob
- Herring <robh+dt@kernel.org>, Krzysztof Kozlowski
- <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
- Michael Walle <michael@walle.cc>, Andy Shevchenko
- <andy.shevchenko@gmail.com>, Arnd Bergmann <arnd@arndb.de>, ChiaEn Wu
- <chiaen_wu@richtek.com>, Niklas Schnelle <schnelle@linux.ibm.com>, Leonard
- =?UTF-8?B?R8O2aHJz?= <l.goehrs@pengutronix.de>, Mike Looijmans
- <mike.looijmans@topic.nl>, Haibo Chen <haibo.chen@nxp.com>, Hugo Villeneuve
- <hvilleneuve@dimonoff.com>, David Lechner <dlechner@baylibre.com>, Ceclan
- Dumitru <dumitru.ceclan@analog.com>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Nuno Sa
- <nuno.sa@analog.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v16 3/3] iio: adc: ad7173: add AD7173 driver
-Message-ID: <20240303162148.3ad91aa2@jic23-huawei>
-In-Reply-To: <20240228110622.25114-3-mitrutzceclan@gmail.com>
-References: <20240228110622.25114-1-mitrutzceclan@gmail.com>
-	<20240228110622.25114-3-mitrutzceclan@gmail.com>
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1709516862; c=relaxed/simple;
+	bh=Ff+mx7bst9A3X8dXN7CRMLfBq+rOAysb6s6Y3bD9U6g=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=huepDQ1/a3glAakvuYrHiQHhMIlpe/Gjuq4Ta6vFRZePXahIODw5PvyG88H9j0Nq/8XVnZKye7e5lsCERCYKk/NqCJePpBihY55WcTcdspnMbxNPofkapHntPAT5gMnVyb7kFWTtDi/lio+/cAnyS9iEeJ9JoK3sJPo9NZviABg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=G9GHEuAn; arc=none smtp.client-ip=192.198.163.15
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709516860; x=1741052860;
+  h=date:from:to:cc:subject:message-id;
+  bh=Ff+mx7bst9A3X8dXN7CRMLfBq+rOAysb6s6Y3bD9U6g=;
+  b=G9GHEuAnj8ZQfgVvrKz0QDbuGkpigmfV14Rpm5B/3bMWwDSiE88Cdjo9
+   oBkGuGeBZTYayQj/ESWasF0kFhPsT1FgnlYnKdFrgWt8+wKMh+UfVe5Ej
+   P1hj7sbCYRzMD4ptyU8CCHAyq6sVPNdFJXwYC7iWPYYfpiMGn3hgOzVNE
+   wUAIoZPfYAGE1X3TZXePj3XNIi6xSS/5q+DbD69p5RLWnHDJ/SeE1/75z
+   Lkmt4dOEbhdx1ABfOgOLjD7yTdyD4j3SHjMOND/3Yzf6SJZj6yTQtQ2R5
+   bk2LRt2SNR2klmbuf4AGJ/irGvCIvpKir2tgFkm2OjcxyuQZ5xLKjsPn2
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11002"; a="4156730"
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="4156730"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa109.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2024 17:47:39 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,203,1705392000"; 
+   d="scan'208";a="13494295"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa004.jf.intel.com with ESMTP; 03 Mar 2024 17:47:38 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rgxQV-0002G3-0f;
+	Mon, 04 Mar 2024 01:47:35 +0000
+Date: Mon, 04 Mar 2024 09:47:23 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:ib-nomadik-gpio] BUILD SUCCESS
+ caddc92c57451d983c7e31e60b961c5aae4ece63
+Message-ID: <202403040919.1HJb4svA-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Wed, 28 Feb 2024 13:06:20 +0200
-Dumitru Ceclan <mitrutzceclan@gmail.com> wrote:
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
+branch HEAD: caddc92c57451d983c7e31e60b961c5aae4ece63  gpio: nomadik: Finish conversion to use firmware node APIs
 
-> The AD7173 family offer a complete integrated Sigma-Delta ADC solution
-> which can be used in high precision, low noise single channel
-> applications or higher speed multiplexed applications. The Sigma-Delta
-> ADC is intended primarily for measurement of signals close to DC but also
-> delivers outstanding performance with input bandwidths out to ~10kHz.
-> 
-> Reviewed-by: Andy Shevchenko <andy@kernel.org>
-> Reviewed-by: Michael Walle <michael@walle.cc> # for gpio-regmap
-> Signed-off-by: Dumitru Ceclan <mitrutzceclan@gmail.com>
-> Reviewed-by: Nuno Sa <nuno.sa@analog.com>
-> Link: https://lore.kernel.org/r/20240223133758.9787-3-mitrutzceclan@gmail.com
-> Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+elapsed time: 1007m
 
-Err. I guess you pulled this down from the tree where we got build errors.
-If you do that make sure to drop the Link and sign off from next version
-as those reflect the path upstream so need to be done afresh for v16.
+configs tested: 222
+configs skipped: 6
 
-I fixed it up.
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Anyhow, I'm think there are a few cleanups that would be ideally done here
-but lets do those after it's merged.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                          axs101_defconfig   gcc  
+arc                                 defconfig   gcc  
+arc                     haps_hs_smp_defconfig   gcc  
+arc                   randconfig-001-20240303   gcc  
+arc                   randconfig-001-20240304   gcc  
+arc                   randconfig-002-20240303   gcc  
+arc                   randconfig-002-20240304   gcc  
+arc                    vdk_hs38_smp_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                       aspeed_g5_defconfig   gcc  
+arm                                 defconfig   clang
+arm                          exynos_defconfig   clang
+arm                          ixp4xx_defconfig   gcc  
+arm                          moxart_defconfig   gcc  
+arm                   randconfig-001-20240303   gcc  
+arm                   randconfig-002-20240303   clang
+arm                   randconfig-002-20240304   gcc  
+arm                   randconfig-003-20240303   clang
+arm                   randconfig-004-20240303   clang
+arm                           stm32_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240303   clang
+arm64                 randconfig-001-20240304   gcc  
+arm64                 randconfig-002-20240303   gcc  
+arm64                 randconfig-002-20240304   gcc  
+arm64                 randconfig-003-20240303   gcc  
+arm64                 randconfig-004-20240303   gcc  
+arm64                 randconfig-004-20240304   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240303   gcc  
+csky                  randconfig-001-20240304   gcc  
+csky                  randconfig-002-20240303   gcc  
+csky                  randconfig-002-20240304   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+hexagon               randconfig-001-20240303   clang
+hexagon               randconfig-002-20240303   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240303   clang
+i386         buildonly-randconfig-002-20240303   clang
+i386         buildonly-randconfig-003-20240303   gcc  
+i386         buildonly-randconfig-004-20240303   clang
+i386         buildonly-randconfig-005-20240303   clang
+i386         buildonly-randconfig-006-20240303   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240303   gcc  
+i386                  randconfig-002-20240303   gcc  
+i386                  randconfig-003-20240303   gcc  
+i386                  randconfig-004-20240303   clang
+i386                  randconfig-005-20240303   gcc  
+i386                  randconfig-006-20240303   gcc  
+i386                  randconfig-011-20240303   clang
+i386                  randconfig-012-20240303   gcc  
+i386                  randconfig-013-20240303   gcc  
+i386                  randconfig-014-20240303   gcc  
+i386                  randconfig-015-20240303   gcc  
+i386                  randconfig-016-20240303   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240303   gcc  
+loongarch             randconfig-001-20240304   gcc  
+loongarch             randconfig-002-20240303   gcc  
+loongarch             randconfig-002-20240304   gcc  
+m68k                             alldefconfig   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                          amiga_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5249evb_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+microblaze                      mmu_defconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                       rbtx49xx_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240303   gcc  
+nios2                 randconfig-001-20240304   gcc  
+nios2                 randconfig-002-20240303   gcc  
+nios2                 randconfig-002-20240304   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-32bit_defconfig   gcc  
+parisc                randconfig-001-20240303   gcc  
+parisc                randconfig-001-20240304   gcc  
+parisc                randconfig-002-20240303   gcc  
+parisc                randconfig-002-20240304   gcc  
+parisc64                            defconfig   gcc  
+powerpc                    adder875_defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                    amigaone_defconfig   gcc  
+powerpc                      arches_defconfig   gcc  
+powerpc                        cell_defconfig   gcc  
+powerpc                          g5_defconfig   gcc  
+powerpc                    gamecube_defconfig   clang
+powerpc                 mpc8313_rdb_defconfig   gcc  
+powerpc                 mpc834x_itx_defconfig   clang
+powerpc                      ppc64e_defconfig   gcc  
+powerpc                     rainier_defconfig   gcc  
+powerpc               randconfig-001-20240303   clang
+powerpc               randconfig-002-20240303   gcc  
+powerpc               randconfig-003-20240303   gcc  
+powerpc                     stx_gp3_defconfig   clang
+powerpc                     taishan_defconfig   clang
+powerpc                 xes_mpc85xx_defconfig   gcc  
+powerpc64             randconfig-001-20240303   gcc  
+powerpc64             randconfig-002-20240303   clang
+powerpc64             randconfig-003-20240303   clang
+powerpc64             randconfig-003-20240304   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-001-20240303   gcc  
+riscv                 randconfig-002-20240303   clang
+riscv                 randconfig-002-20240304   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240303   clang
+s390                  randconfig-001-20240304   gcc  
+s390                  randconfig-002-20240303   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                               j2_defconfig   gcc  
+sh                          kfr2r09_defconfig   gcc  
+sh                            migor_defconfig   gcc  
+sh                    randconfig-001-20240303   gcc  
+sh                    randconfig-001-20240304   gcc  
+sh                    randconfig-002-20240303   gcc  
+sh                    randconfig-002-20240304   gcc  
+sh                          rsk7269_defconfig   gcc  
+sh                      rts7751r2d1_defconfig   gcc  
+sh                           se7722_defconfig   gcc  
+sh                           sh2007_defconfig   gcc  
+sh                     sh7710voipgw_defconfig   gcc  
+sh                            shmin_defconfig   gcc  
+sh                            titan_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240303   gcc  
+sparc64               randconfig-001-20240304   gcc  
+sparc64               randconfig-002-20240303   gcc  
+sparc64               randconfig-002-20240304   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240303   clang
+um                    randconfig-001-20240304   gcc  
+um                    randconfig-002-20240303   clang
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240303   clang
+x86_64       buildonly-randconfig-002-20240303   clang
+x86_64       buildonly-randconfig-003-20240303   clang
+x86_64       buildonly-randconfig-004-20240303   clang
+x86_64       buildonly-randconfig-005-20240303   gcc  
+x86_64       buildonly-randconfig-006-20240303   gcc  
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240303   clang
+x86_64                randconfig-002-20240303   gcc  
+x86_64                randconfig-003-20240303   clang
+x86_64                randconfig-004-20240303   clang
+x86_64                randconfig-005-20240303   clang
+x86_64                randconfig-006-20240303   gcc  
+x86_64                randconfig-011-20240303   gcc  
+x86_64                randconfig-012-20240303   gcc  
+x86_64                randconfig-013-20240303   clang
+x86_64                randconfig-014-20240303   gcc  
+x86_64                randconfig-015-20240303   clang
+x86_64                randconfig-016-20240303   gcc  
+x86_64                randconfig-071-20240303   clang
+x86_64                randconfig-072-20240303   gcc  
+x86_64                randconfig-073-20240303   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                randconfig-001-20240303   gcc  
+xtensa                randconfig-001-20240304   gcc  
+xtensa                randconfig-002-20240303   gcc  
+xtensa                randconfig-002-20240304   gcc  
 
-Applied to the togreg-normal branch of iio.git.
-
-Note that I'm not yet sure if I'll be able to squeeze in another pull
-request this cycle, so this may be waiting for a while.
-
-Jonathan
-
-
-> +
-> +static int ad7173_fw_parse_device_config(struct iio_dev *indio_dev)
-> +{
-> +	struct ad7173_state *st = iio_priv(indio_dev);
-> +	struct device *dev = indio_dev->dev.parent;
-> +	unsigned int num_channels;
-> +	int ret;
-> +
-> +	st->regulators[0].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF];
-> +	st->regulators[1].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_EXT_REF2];
-> +	st->regulators[2].supply = ad7173_ref_sel_str[AD7173_SETUP_REF_SEL_AVDD1_AVSS];
-> +
-> +	/*
-> +	 * If a regulator is not available, it will be set to a dummy regulator.
-> +	 * Each channel reference is checked with regulator_get_voltage() before
-> +	 * setting attributes so if any channel uses a dummy supply the driver
-> +	 * probe will fail.
-> +	 */
-> +	ret = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->regulators),
-> +				      st->regulators);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to get regulators\n");
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(st->regulators), st->regulators);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to enable regulators\n");
-> +
-> +	ret = devm_add_action_or_reset(dev, ad7173_disable_regulators, st);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret,
-> +				     "Failed to add regulators disable action\n");
-> +
-> +	ret = device_property_match_property_string(dev, "clock-names",
-> +						    ad7173_clk_sel,
-> +						    ARRAY_SIZE(ad7173_clk_sel));
-> +	if (ret < 0) {
-> +		st->adc_mode |= FIELD_PREP(AD7173_ADC_MODE_CLOCKSEL_MASK,
-> +					   AD7173_ADC_MODE_CLOCKSEL_INT);
-> +		ad7173_register_clk_provider(indio_dev);
-> +	} else {
-> +		st->adc_mode |= FIELD_PREP(AD7173_ADC_MODE_CLOCKSEL_MASK,
-> +					   AD7173_ADC_MODE_CLOCKSEL_EXT + ret);
-> +		st->ext_clk = devm_clk_get(dev, ad7173_clk_sel[ret]);
-> +		if (IS_ERR(st->ext_clk))
-> +			return dev_err_probe(dev, PTR_ERR(st->ext_clk),
-> +					     "Failed to get external clock\n");
-> +
-> +		ret = clk_prepare_enable(st->ext_clk);
-> +		if (ret)
-> +			return dev_err_probe(dev, ret,
-> +					     "Failed to enable external clock\n");
-> +
-> +		ret = devm_add_action_or_reset(dev, ad7173_clk_disable_unprepare,
-> +					       st->ext_clk);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +
-> +	ret = fwnode_irq_get_byname(dev_fwnode(dev), "rdy");
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Interrupt 'rdy' is required\n");
-> +
-> +	ad7173_sigma_delta_info.irq_line = ret;
-> +
-> +	num_channels = device_get_child_node_count(dev);
-> +
-> +	if (st->info->has_temp)
-> +		num_channels++;
-> +
-> +	if (num_channels == 0)
-> +		return dev_err_probe(dev, -ENODATA, "No channels specified\n");
-> +	indio_dev->num_channels = num_channels;
-> +	st->num_channels = num_channels;
-
-I'm not seeing benefit of duplication here really and logically it feels like
-a lot of this last chunk would sit better in ad7173_fw_parse_channel_config()
-
-Perhaps that's a job for a future tidying up patch.
-
-> +
-> +	return ad7173_fw_parse_channel_config(indio_dev);
-> +}
-
-...
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
