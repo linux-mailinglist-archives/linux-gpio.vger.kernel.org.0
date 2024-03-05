@@ -1,142 +1,241 @@
-Return-Path: <linux-gpio+bounces-4151-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4152-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5975887273A
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 20:02:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 146848729F3
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 23:09:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 141B428A5C2
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 19:02:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8A4491F2B2AD
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 22:09:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ACFF624B29;
-	Tue,  5 Mar 2024 19:02:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C2E512D1E6;
+	Tue,  5 Mar 2024 22:09:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="3Vx/ki12"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="WK7oBzz2"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com [209.85.167.179])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A431C1B81A
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 19:02:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7C0012BEAE
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 22:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709665344; cv=none; b=BfG1E5LycICtKm9QxR7jZRU49MCZFi5UjPZT/7nuHC2dhszoFojWcvaUgL6CWAXvGw8Amkayo0OhtTQiPdf0NCRYtwVE7drBi6F1mfuIDojd0OO57hPxPJqLLMloUtpDhh6viuvTSR+X3DALksCr9H97uNo74W++i8QCdWveuTA=
+	t=1709676549; cv=none; b=hzCRP/26i/AMw7vumSMwRMjyZ7wDERHywNKDj+1LR/9gNAqfJeKFDrZdN67O0WVOHi/D+qQ+fg6dVqjsXRo/KNoet6W+FYrhrtYyaKHDaAb3r+xlQ5WuNuP92NFMIpU5mpSDnL/oQ/MDTEKF4JTm6yeeML1F1yis8O6g48hAQWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709665344; c=relaxed/simple;
-	bh=K6FkNMPBXHerOI4xPkbioCN3A0D3+Ds7NwZGpoSSfe0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=TZGkTGa5mx3mhpUk33bK6SsYB/lSgeMU2eQbVKFuqqbw5H8E8xjXIibXGDYpTVi6D8cQWePKedHVfzwmUag+ky4bTVyeQvGMJDM1r342QyjoNq+1Uc4YOfhCRsjLXzuVFM0AJkKJ1lrOVS27s6ChZ0x2a0DYnFTBEfoVmyXqNUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=3Vx/ki12; arc=none smtp.client-ip=209.85.167.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-oi1-f179.google.com with SMTP id 5614622812f47-3c19dd9ade5so3735436b6e.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 11:02:21 -0800 (PST)
+	s=arc-20240116; t=1709676549; c=relaxed/simple;
+	bh=4VOQRGGNHn1IIn1ZLijQZp7r692vBrmcK7QdIWSs1SY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pz60j3KbR/3LNlGODe8pisykqCvjlmDVbeIBS7E5xfYsKPm6YFxyJf8QxSgEEUi03PzjU88J5tni98e0dk0veGmhheWs4A4FYWpmxQuxuwQRkytLispPCm9jFfzCMSgIBt9a4za0Fs2t81XoNc9sKANWcWHHhsYy27MTBjx50+U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=WK7oBzz2; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-563c595f968so9177524a12.0
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 14:09:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709665341; x=1710270141; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xBwFyKsVTwVp75+p2nwkinAD6Bz4XTPqba7sPzbW0JE=;
-        b=3Vx/ki12OkG9eSjnqNnLIPf1HkuxdA4XBPXIjRZ9w58KHKzpNCzgY0JVed9PmQs4LI
-         rZ9jlpK49HC9sqwvDjREV8J9VNn+GE0NBnJwCflbv/bNI2/Y9OFwYBuxnnShhpAhTSkx
-         1zTiNizcpawsWPFQywsIh2ahOgYWYVqehEtp9Q9RBAQ9HGeKw4e4shhvgdGvKgxFm3Po
-         J3JKs9BO5ZEWtdifoNqtqap/d3dvVHwj2Y1MZW40JnEFckLOvySJaxgUoaizGMe+EsqL
-         UAMGnPMZ99nyV2tg3WTSwaXWHiN/wUYiUiwXzo5w4uwMxTZQYkD5XSgy2RQGOZWqdzbA
-         cXdw==
+        d=linaro.org; s=google; t=1709676545; x=1710281345; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=CC57Ga2RfJHq8c2gt6LVOSgDiInTgnW/cliHh+GC8aw=;
+        b=WK7oBzz2Ocd9/my31zFxMSDp2ALblqzrOMB7wp1RFHtn6ci8iSvrBF+EoOflVMm2Hn
+         XxnA2MP10dUns9zrtiPTD7dtrFkdlwCzl6lopXYWC4OlrVVKZqULc6tBIi46a5B7IU4f
+         /oMqdtYCoSQcZkZ37qpyA4Fic+YEc476M3hu020JVgIvjdCgqLMpIDr2UaZcOJrx8aa2
+         98ilO4aUjsm2JCdtiN3ctgLYGk++iNheHv0Q+BcAVCEiArhjdNkR45phtHplgd6bFlbZ
+         FTniGIV5z7Hx7Uw8qguv/oXJvxZLsNnl5SyP01BBrsfJoZKU13sD4CDehIPGXzheps77
+         Slcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709665341; x=1710270141;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=xBwFyKsVTwVp75+p2nwkinAD6Bz4XTPqba7sPzbW0JE=;
-        b=Nz6cq8SrK1GILJwMMBt4rZuy9lDexpMEJzMxQli4w5F9uwnm8v0gubDFoLfc181uwh
-         nQ6/NGf1Ywys0ZeF0etIb1f0V0d2YP3dRW1zL/zojqfqr+7AtGmykVoRqBd+pU+EXcCi
-         PQXQFw+gbSYddM83Jr6B8pt0agqL7VV6OA3qQJvFqf2odcM+XN3i6Kz9GvY2i2iWEsC8
-         kBXQKtOQ96BtAaJSLJA6DwbqOec6GICs5kYJHaXa3rQ6AuWzC0MoCeT68loTkxMA41t0
-         vf762pGpRy8h0aN3LS/ICMXX6of/jNY1GWq0lvdpIMZgfVc8BwMR6O3nZSmd0wHaXAjv
-         xbMA==
-X-Forwarded-Encrypted: i=1; AJvYcCXCIWGj6QClmplNi265K9ciXYNg9qHBA2Pw9FRtMz2lljk4VUJZPTN+N8DTvqcprxxkRnyzdEEw4AUEavJ7shr2sk2FjE1FnavqVw==
-X-Gm-Message-State: AOJu0YzXzmsG+gOvprYeI78J4oouR1gtRixUbOVcMqlmvCW7t4oJ/+LU
-	ciQBLCfyZcbdsZb/SLlE5z1amzyrUNEna1YNVrbfsCqyhYNH3WX7s4b7Wb/Z6O+kRmyOOqjH63G
-	z85auf9biRj3+f4Trc0bVNFXmCKycm4mZQofD+0mursxD0WTqUqs=
-X-Google-Smtp-Source: AGHT+IEWrieqCghcMtuAiU8+E4g1wtb0MN+anUUpKGJrOGNU5YfOBzlImhJC+Y9W4AXeVKQmrFK59za9cu/REtKiSrk=
-X-Received: by 2002:a05:6808:14d:b0:3c2:1944:e2f9 with SMTP id
- h13-20020a056808014d00b003c21944e2f9mr223145oie.17.1709665340696; Tue, 05 Mar
- 2024 11:02:20 -0800 (PST)
+        d=1e100.net; s=20230601; t=1709676545; x=1710281345;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=CC57Ga2RfJHq8c2gt6LVOSgDiInTgnW/cliHh+GC8aw=;
+        b=RcrvyrLCm9zsPaVw1ASrexOXH+0TYFOENAZQju+rg/8FUoHEBepTruh+BFktIu19P6
+         vwIN0cecSglJ51XkxjGNrtREvPpuUbSOh7yplzX2kv+Mi9X3tK03mNsNJeVq+eGDZtH+
+         odKw9AsmdJMZfNaGZ4gc1SalscKP2uo156EJr0+9KUHhe0cH36/ummoIsdaF3DgeIY2E
+         LvFLz1gv3mQWHZ/4WUXTv12zFfdmZvDwLv4Tmp/vQ/CfQ+Y9D2j3MYv0Bea54fKqZXvM
+         wxYPtK/ARMvvYpwReqPxskJqk0CKgfJNU0OByPY0/SvK7n4o43fYwGSDFraTJW6b08AJ
+         OX+g==
+X-Gm-Message-State: AOJu0YxIhvcj2LOZAQh8aNGZAtlWcgzluAQ7xYGhXLGQ4TcAFcTsF2Rk
+	dkGvDqDtY9lAkyz5hDmIPljafAemT0cPUBhP6mPPNrOHL2Cxypa5vBc3Jza375Y=
+X-Google-Smtp-Source: AGHT+IEo8A/wfv3+6WPTlCHO78rl8zXspUcWcUBCZ0a/vDmbcIa7EM3hX02B3xVcKalYWucwE3nfKw==
+X-Received: by 2002:a17:906:f35b:b0:a43:fb64:e21d with SMTP id hg27-20020a170906f35b00b00a43fb64e21dmr10769982ejb.7.1709676545257;
+        Tue, 05 Mar 2024 14:09:05 -0800 (PST)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id s21-20020a170906355500b00a44dfaf84f4sm4193652eja.153.2024.03.05.14.09.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Mar 2024 14:09:04 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 05 Mar 2024 23:09:04 +0100
+Subject: [PATCH v2] gpio: nomadik: Back out some managed resources
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305002124.7552-1-warthog618@gmail.com>
-In-Reply-To: <20240305002124.7552-1-warthog618@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 5 Mar 2024 20:02:09 +0100
-Message-ID: <CAMRc=McneyUZztqtdrsbGG1E+DWhBxq2cQH7OWMEStaJjKLkCA@mail.gmail.com>
-Subject: Re: [PATCH] selftest: gpio: remove obsolete gpio-mockup test
-To: Kent Gibson <warthog618@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, bartosz.golaszewski@linaro.org, 
-	andriy.shevchenko@linux.intel.com, christophe.leroy@csgroup.eu, 
-	shuah@kernel.org, bamv2005@gmail.com, Pengfei Xu <pengfei.xu@intel.com>, 
-	Yi Lai <yi1.lai@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20240305-fix-nomadik-gpio-v2-1-e5d1fbdc3f5c@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAP+X52UC/32NTQrCMBCFr1Jm7Uh+rBZX3kO6CGaaDmpSJhKUk
+ rsbewA3D77H+1khkzBlOHcrCBXOnGIDs+vgNrsYCNk3BqPMQVnV48RvjOnpPN8xLJywV5Px3jv
+ XFFptEWqZbfI6Np45v5J8toeif+6fsaJR48nqoyHr7DDQ5cHRSdonCTDWWr+IuUFSsQAAAA==
+To: Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.12.4
 
-On Tue, Mar 5, 2024 at 1:26=E2=80=AFAM Kent Gibson <warthog618@gmail.com> w=
-rote:
->
-> With the removal of the ARCH_NR_GPIOS, the number of available GPIOs
-> is effectively unlimited, causing the gpio-mockup module load failure
-> test that overflowed the number of GPIOs to unexpectedly succeed, and
-> so fail.
->
-> The test is no longer relevant so remove it.
-> Promote the "no lines defined" test so there is still one load
-> failure test in the basic set.
->
-> Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
-> Reported-by: Pengfei Xu <pengfei.xu@intel.com>
-> Reported-by: Yi Lai <yi1.lai@intel.com>
-> Closes: https://lore.kernel.org/linux-gpio/ZC6OHBjdwBdT4sSb@xpf.sh.intel.=
-com/
-> Signed-off-by: Kent Gibson <warthog618@gmail.com>
-> ---
->  tools/testing/selftests/gpio/gpio-mockup.sh | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/tools/testing/selftests/gpio/gpio-mockup.sh b/tools/testing/=
-selftests/gpio/gpio-mockup.sh
-> index 0d6c5f7f95d2..fc2dd4c24d06 100755
-> --- a/tools/testing/selftests/gpio/gpio-mockup.sh
-> +++ b/tools/testing/selftests/gpio/gpio-mockup.sh
-> @@ -377,13 +377,10 @@ if [ "$full_test" ]; then
->         insmod_test "0,32,32,44,-1,22,-1,31" 32 12 22 31
->  fi
->  echo "2.  Module load error tests"
-> -echo "2.1 gpio overflow"
-> -# Currently: The max number of gpio(1024) is defined in arm architecture=
-.
-> -insmod_test "-1,1024"
-> +echo "2.1 no lines defined"
-> +insmod_test "0,0"
->  if [ "$full_test" ]; then
-> -       echo "2.2 no lines defined"
-> -       insmod_test "0,0"
-> -       echo "2.3 ignore range overlap"
-> +       echo "2.2 ignore range overlap"
->         insmod_test "0,32,0,1" 32
->         insmod_test "0,32,1,5" 32
->         insmod_test "0,32,30,35" 32
-> --
-> 2.39.2
->
->
+Several commits introduce managed resources (devm_*) into the
+nmk_gpio_populate_chip() function.
 
-Applied, thanks!
+This isn't always working because when called from the Nomadik pin
+control driver we just want to populate some states for the device as
+the same states are used by the pin control driver.
 
-Bart
+Some managed resources such as devm_kzalloc() etc will work, as the
+passed in platform device will be used for lifecycle management,
+but in some cases where we used the looked-up platform device
+for the GPIO block, this will cause problems for the combined
+pin control and GPIO driver, because it adds managed resources
+to the GPIO device before it is probed, which is something that
+the device core will not accept, and all of the GPIO blocks will
+refuse to probe:
+
+platform 8012e000.gpio: Resources present before probing
+platform 8012e080.gpio: Resources present before probing
+(...)
+
+Fix this by not tying any managed resources to the looked-up
+gpio_pdev/gpio_dev device, let's just live with the fact that
+these need imperative resource management for now.
+
+Drop in some notes and use a local *dev variable to clarify the
+code.
+
+Cc: Théo Lebrun <theo.lebrun@bootlin.com>
+Fixes: 12410e95903c ("gpio: nomadik: use devm_platform_ioremap_resource() helper")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+Changes in v2:
+- Fix all the errorpaths.
+- I did consider using the goto pattern, but the PTR_CAST() cases
+  make it just uglier: we have to cast pointers to integers and back
+  to pointers to return them in a goto :/
+- Add some missing platform_device_put():s on some errorpaths.
+- use PTR_CAST() instead of (void *) cast in one site.
+- Link to v1: https://lore.kernel.org/r/20240305-fix-nomadik-gpio-v1-1-73162e3a388e@linaro.org
+---
+ drivers/gpio/gpio-nomadik.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+index 483086deb397..e744beafdd00 100644
+--- a/drivers/gpio/gpio-nomadik.c
++++ b/drivers/gpio/gpio-nomadik.c
+@@ -509,9 +509,11 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ {
+ 	struct nmk_gpio_chip *nmk_chip;
+ 	struct platform_device *gpio_pdev;
++	struct device *dev = &pdev->dev;
+ 	struct reset_control *reset;
+ 	struct device *gpio_dev;
+ 	struct gpio_chip *chip;
++	struct resource *res;
+ 	struct clk *clk;
+ 	void __iomem *base;
+ 	u32 id, ngpio;
+@@ -519,13 +521,13 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 
+ 	gpio_dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
+ 	if (!gpio_dev) {
+-		dev_err(&pdev->dev, "populate \"%pfwP\": device not found\n", fwnode);
++		dev_err(dev, "populate \"%pfwP\": device not found\n", fwnode);
+ 		return ERR_PTR(-ENODEV);
+ 	}
+ 	gpio_pdev = to_platform_device(gpio_dev);
+ 
+ 	if (device_property_read_u32(gpio_dev, "gpio-bank", &id)) {
+-		dev_err(&pdev->dev, "populate: gpio-bank property not found\n");
++		dev_err(dev, "populate: gpio-bank property not found\n");
+ 		platform_device_put(gpio_pdev);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+@@ -539,7 +541,7 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 	}
+ #endif
+ 
+-	nmk_chip = devm_kzalloc(&pdev->dev, sizeof(*nmk_chip), GFP_KERNEL);
++	nmk_chip = devm_kzalloc(dev, sizeof(*nmk_chip), GFP_KERNEL);
+ 	if (!nmk_chip) {
+ 		platform_device_put(gpio_pdev);
+ 		return ERR_PTR(-ENOMEM);
+@@ -547,7 +549,7 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 
+ 	if (device_property_read_u32(gpio_dev, "ngpios", &ngpio)) {
+ 		ngpio = NMK_GPIO_PER_CHIP;
+-		dev_dbg(&pdev->dev, "populate: using default ngpio (%d)\n", ngpio);
++		dev_dbg(dev, "populate: using default ngpio (%d)\n", ngpio);
+ 	}
+ 
+ 	nmk_chip->is_mobileye_soc = device_is_compatible(gpio_dev,
+@@ -559,24 +561,31 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 	chip->label = dev_name(gpio_dev);
+ 	chip->parent = gpio_dev;
+ 
+-	base = devm_platform_ioremap_resource(pdev, 0);
++	/* NOTE: different devices! No devm_platform_ioremap_resource() here! */
++	res = platform_get_resource(gpio_pdev, IORESOURCE_MEM, 0);
++	base = devm_ioremap_resource(dev, res);
+ 	if (IS_ERR(base)) {
+ 		platform_device_put(gpio_pdev);
+ 		return ERR_CAST(base);
+ 	}
+ 	nmk_chip->addr = base;
+ 
+-	clk = devm_clk_get_optional(gpio_dev, NULL);
++	/* NOTE: do not use devm_ here! */
++	clk = clk_get_optional(gpio_dev, NULL);
+ 	if (IS_ERR(clk)) {
+ 		platform_device_put(gpio_pdev);
+-		return (void *)clk;
++		return ERR_CAST(clk);
+ 	}
+ 	clk_prepare(clk);
+ 	nmk_chip->clk = clk;
+ 
+-	reset = devm_reset_control_get_optional_shared(gpio_dev, NULL);
++	/* NOTE: do not use devm_ here! */
++	reset = reset_control_get_optional_shared(gpio_dev, NULL);
+ 	if (IS_ERR(reset)) {
+-		dev_err(&pdev->dev, "failed getting reset control: %ld\n",
++		clk_unprepare(clk);
++		clk_put(clk);
++		platform_device_put(gpio_pdev);
++		dev_err(dev, "failed getting reset control: %ld\n",
+ 			PTR_ERR(reset));
+ 		return ERR_CAST(reset);
+ 	}
+@@ -588,7 +597,11 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
+ 	 */
+ 	ret = reset_control_deassert(reset);
+ 	if (ret) {
+-		dev_err(&pdev->dev, "failed reset deassert: %d\n", ret);
++		reset_control_put(reset);
++		clk_unprepare(clk);
++		clk_put(clk);
++		platform_device_put(gpio_pdev);
++		dev_err(dev, "failed reset deassert: %d\n", ret);
+ 		return ERR_PTR(ret);
+ 	}
+ 
+
+---
+base-commit: caddc92c57451d983c7e31e60b961c5aae4ece63
+change-id: 20240305-fix-nomadik-gpio-50f2dddaa2dd
+
+Best regards,
+-- 
+Linus Walleij <linus.walleij@linaro.org>
+
 
