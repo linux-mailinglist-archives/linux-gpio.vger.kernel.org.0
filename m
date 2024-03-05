@@ -1,63 +1,63 @@
-Return-Path: <linux-gpio+bounces-4139-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4140-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9DAA7871C35
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 11:52:48 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D5366871C76
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 11:59:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CF59A1C22B9E
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 10:52:47 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 81C09B25856
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 10:59:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF09D5FB86;
-	Tue,  5 Mar 2024 10:43:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7ACE5D48A;
+	Tue,  5 Mar 2024 10:54:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MkR7jZLm"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="KOtvR2uk"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF8F85F548;
-	Tue,  5 Mar 2024 10:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE1AB5D470;
+	Tue,  5 Mar 2024 10:54:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709635405; cv=none; b=oRtJnV2tJz6/NYrKvLpfJqa2GhjY2RPJfd0Z36B1b9aOTh5r7USt7ihF23+gXdqh9yjxO38rBtP6sjBP1HyYjwI5LuC+kb2crNfI8+rQWU0lMgPZth8Co8G8HvQSFNmDlMuuUWVkyd5a6FXDqONXzZQSShDSVcB1ZKiNzuWxxxQ=
+	t=1709636084; cv=none; b=SFs/thFEmTuMHF2MD26qFmcxoOOvMrNpGSIN2Bj10anmKtsBlalPU4wBrPmf0Fao1byYC6ya/2QAZHHzXIknYXvc//oCxdZ3rpTSkRr+xRyVXS/jf1BS+X8b1jF3e/8GEArQ+b1AkibGhCKCZDBg4cYeEAvakGR8mQRZnsWqr+k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709635405; c=relaxed/simple;
-	bh=hDbY2NQ9polGrv9HSJqo9UNEanixoEg4qzdkooTajxA=;
+	s=arc-20240116; t=1709636084; c=relaxed/simple;
+	bh=oxRVpdLJF2FGYqRu9QIMQZ4jI/4N8Pa67tYhC3kRTdM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=E7XxzNotQ1MFwqa7qailBrPWKcqM1X7kSFbnTHwOekGZD6SThnDiGoqndQssDaCUCSBxOmHHu6+le0YObYzmTgTWl6iEwKB7WC7d+eHmX8T5k7HF0WAw1KnYxuje10miJotAfjgPKRu2Z4nlWpAdqGSFmehLbVcE2Z52tYoaQw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MkR7jZLm; arc=none smtp.client-ip=205.220.180.131
+	 In-Reply-To:Content-Type; b=nyNFBrJZaiwOvVTGrdyZjnMThX8WPYkvYubdx5JyUe/EWSWMZyLsup4JuXaZIwhZOnf2HTjl6zye4ylZoMRiAWNSBI0LiagB2YvlPByMOvt44kqdqCHrwXt1QJBgL7WVtVNo2/nny84UgVYpTctSA/1IZdKIB+EkO0/5z/m6SB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=KOtvR2uk; arc=none smtp.client-ip=205.220.180.131
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279868.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4258dt9C021261;
-	Tue, 5 Mar 2024 10:43:20 GMT
+Received: from pps.filterd (m0279872.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 4258n2KA031464;
+	Tue, 5 Mar 2024 10:54:39 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
 	message-id:date:mime-version:subject:to:cc:references:from
 	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=8PGf5hdv0hOQx9O36PwsQAiUUTJREg1bm9I7Nb6wUFA=; b=Mk
-	R7jZLmhOym9Dbs1hn584vPzFkBZJ6S5hyfvrlZagN4YnKQiVhJBZOCD+nAAY5dsV
-	Pw5mHpiNutYo5L5yL4k26bx28WzLLNlzMIW8KXfgKDANKbnX0IIrTlVibHl4kWCk
-	vw5w8/gKDB3cAhxS1xtr4bsfPzUZukne+NJB602VwIwsZUg3nnp8Yke+oVbs+J8I
-	u2GFEGGWQEk8OTYkFPmzl6EnL/7n2W1FXh6z7Z0Izsgex1/BM9eQI4042KtG44mw
-	89j1Xu4mOduGL35URilZm7rXsdV3ohe21lsQ1bJqN7nHK8gmSgYfY+AJghYG/wpz
-	gObpNIlsu0mAGCpD1hSA==
-Received: from nasanppmta01.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wnucrrsf6-1
+	qcppdkim1; bh=Q+2JuocJ0ml2lss8W2wnTp8l9G02UA/Lm3HYCXFFg/4=; b=KO
+	tvR2ukBl4/73NTRxjwEJaadCUuNEP6diZpCajfBcIxGrnGZ3owvxZfP5FKE8htUq
+	p2h0rV7mN1Tg8NGd6/fBjzYSUPremVDyxpAcJz1M+ilytYj+GLNs1o8/0pMvvppD
+	f+fZ2m37NwbYhn941p8uqBAXb4vFOQSiXleAhFODKpXnNHdfx5YY9PlrunW+D8wL
+	vEwZkBCyd8lmQ01A2CwyVwbDSyE6N/Rh57DD4PR+76HOBMUCuKSPeH5u+JBbLTai
+	PurKKwBj1qEXACUq5IkenSQnSzNFKN/AAhY3DKL4qRWdF27MlDIWUCWAWVOZSBjh
+	ZJ6Cxw/SB+LQiDBsvzcA==
+Received: from nasanppmta04.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wnqwhs69s-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Mar 2024 10:43:20 +0000 (GMT)
+	Tue, 05 Mar 2024 10:54:38 +0000 (GMT)
 Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425AhJns001655
+	by NASANPPMTA04.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 425AsbpL025647
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 5 Mar 2024 10:43:19 GMT
+	Tue, 5 Mar 2024 10:54:37 GMT
 Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
  (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 5 Mar
- 2024 02:43:15 -0800
-Message-ID: <fb419b4b-62b2-8316-201e-e11430e32d8f@quicinc.com>
-Date: Tue, 5 Mar 2024 16:13:12 +0530
+ 2024 02:54:35 -0800
+Message-ID: <6670e21a-46d7-db1f-3830-73e97786cde8@quicinc.com>
+Date: Tue, 5 Mar 2024 16:24:32 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -66,87 +66,104 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
  Thunderbird/102.13.0
-Subject: Re: [PATCH v12 3/9] firmware: qcom: scm: Modify only the download
- bits in TCSR register
+Subject: Re: [PATCH v12 4/9] firmware: qcom: scm: Rework dload mode
+ availability check
 Content-Language: en-US
 To: Bjorn Andersson <andersson@kernel.org>
 CC: <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>, <linus.walleij@linaro.org>,
-        <linux-gpio@vger.kernel.org>,
-        Poovendhan Selvaraj
-	<quic_poovendh@quicinc.com>,
-        Kathiravan Thirumoorthy
-	<quic_kathirav@quicinc.com>,
-        Dmitry Baryshkov <dmitry.baryshkov@linaro.org>,
-        Elliot Berman <quic_eberman@quicinc.com>
+        <linux-gpio@vger.kernel.org>, Elliot Berman <quic_eberman@quicinc.com>
 References: <20240227155308.18395-1-quic_mojha@quicinc.com>
- <20240227155308.18395-4-quic_mojha@quicinc.com>
- <ncyanjtxtqyx236d5tfm46nepvy6ncxikonc6g6hlddhx2joee@jqjhfxtu3sr6>
+ <20240227155308.18395-5-quic_mojha@quicinc.com>
+ <bmwswdvzqldse4dgbcev7hcyktkzffur3pcs6ogwnekxrklgiu@hridh2l2hhgk>
 From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <ncyanjtxtqyx236d5tfm46nepvy6ncxikonc6g6hlddhx2joee@jqjhfxtu3sr6>
+In-Reply-To: <bmwswdvzqldse4dgbcev7hcyktkzffur3pcs6ogwnekxrklgiu@hridh2l2hhgk>
 Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
  nasanex01c.na.qualcomm.com (10.45.79.139)
 X-QCInternal: smtphost
 X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: owAQoPT0hUqYLOay4X0cQRPRi_y6TqrM
-X-Proofpoint-ORIG-GUID: owAQoPT0hUqYLOay4X0cQRPRi_y6TqrM
+X-Proofpoint-GUID: NNLZd221BDqmqAjvKT-TjdBnd5JPvuFh
+X-Proofpoint-ORIG-GUID: NNLZd221BDqmqAjvKT-TjdBnd5JPvuFh
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
  definitions=2024-03-05_08,2024-03-04_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 bulkscore=0
- spamscore=0 adultscore=0 mlxscore=0 phishscore=0 priorityscore=1501
- malwarescore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403050085
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
+ clxscore=1015 lowpriorityscore=0 adultscore=0 malwarescore=0
+ priorityscore=1501 bulkscore=0 impostorscore=0 mlxlogscore=999
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403050087
 
 
 
-On 3/3/2024 12:43 AM, Bjorn Andersson wrote:
-> On Tue, Feb 27, 2024 at 09:23:02PM +0530, Mukesh Ojha wrote:
->> Crashdump collection is done based on DLOAD bits of TCSR register.
->> To retain other bits, scm driver need to read the register and
->> modify only the DLOAD bits, as other bits in TCSR may have their
->> own significance.
+On 3/3/2024 12:46 AM, Bjorn Andersson wrote:
+> On Tue, Feb 27, 2024 at 09:23:03PM +0530, Mukesh Ojha wrote:
+>> QCOM_SCM_BOOT_SET_DLOAD_MODE was only valid for very older
+>> target and firmware and for recent targets there is dload
+>> mode tcsr registers available to set the download mode.
 >>
->> Co-developed-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
->> Signed-off-by: Poovendhan Selvaraj <quic_poovendh@quicinc.com>
->> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->> Tested-by: Kathiravan Thirumoorthy <quic_kathirav@quicinc.com> # IPQ9574 and IPQ5332
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
->> ---
->>   drivers/firmware/qcom/qcom_scm.c | 14 ++++++++++++--
->>   1 file changed, 12 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
->> index 8f766fce5f7c..bd6bfdf2d828 100644
->> --- a/drivers/firmware/qcom/qcom_scm.c
->> +++ b/drivers/firmware/qcom/qcom_scm.c
->> @@ -4,6 +4,8 @@
->>    */
->>   
->>   #include <linux/arm-smccc.h>
->> +#include <linux/bitfield.h>
->> +#include <linux/bits.h>
->>   #include <linux/clk.h>
->>   #include <linux/completion.h>
->>   #include <linux/cpumask.h>
->> @@ -114,6 +116,12 @@ static const u8 qcom_scm_cpu_warm_bits[QCOM_SCM_BOOT_MAX_CPUS] = {
->>   #define QCOM_SMC_WAITQ_FLAG_WAKE_ONE	BIT(0)
->>   #define QCOM_SMC_WAITQ_FLAG_WAKE_ALL	BIT(1)
->>   
->> +#define QCOM_DLOAD_MASK		GENMASK(5, 4)
->> +enum qcom_dload_mode {
->> +	QCOM_DLOAD_NODUMP	= 0,
->> +	QCOM_DLOAD_FULLDUMP	= 1,
 > 
-> These values are not enumerations, they represent fixed/defined values
-> in the interface. As such it's appropriate to use #define.
-> 
+> I presume this implies that it will always return false, so what's the
+> actual problem with that? Presumably you want this because it takes
+> unnecessary time to make that call, if so please say so.
 
-Thanks for giving reasoning on why it should be #define and not enum.
+Correct, will add in commit description.
+
+Also, __qcom_scm_is_call_available() usage legacy mode of setting DLOAD 
+mode setting via command which is deprecated long back from Trust zone 
+firmware also it takes or wait statically global mutex lock at the lower 
+level which unnecessary adds time which is of no use.
+> 
+> 
+> Content of the patch looks good.
+
+Thanks.
 
 -Mukesh
+
+> 
+> Regards,
+> Bjorn
+> 
+>> So, it is better to keep it as fallback check instead of
+>> checking its availability and failing it always.
+>>
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> Reviewed-by: Elliot Berman <quic_eberman@quicinc.com>
+>> ---
+>>   drivers/firmware/qcom/qcom_scm.c | 12 +++++-------
+>>   1 file changed, 5 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+>> index bd6bfdf2d828..3fd89cddba3b 100644
+>> --- a/drivers/firmware/qcom/qcom_scm.c
+>> +++ b/drivers/firmware/qcom/qcom_scm.c
+>> @@ -540,18 +540,16 @@ static int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>>   static void qcom_scm_set_download_mode(bool enable)
+>>   {
+>>   	u32 val = enable ? QCOM_DLOAD_FULLDUMP : QCOM_DLOAD_NODUMP;
+>> -	bool avail;
+>>   	int ret = 0;
+>>   
+>> -	avail = __qcom_scm_is_call_available(__scm->dev,
+>> -					     QCOM_SCM_SVC_BOOT,
+>> -					     QCOM_SCM_BOOT_SET_DLOAD_MODE);
+>> -	if (avail) {
+>> -		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>> -	} else if (__scm->dload_mode_addr) {
+>> +	if (__scm->dload_mode_addr) {
+>>   		ret = qcom_scm_io_rmw(__scm->dload_mode_addr,
+>>   				      QCOM_DLOAD_MASK,
+>>   				      FIELD_PREP(QCOM_DLOAD_MASK, val));
+>> +	} else if (__qcom_scm_is_call_available(__scm->dev,
+>> +						QCOM_SCM_SVC_BOOT,
+>> +						QCOM_SCM_BOOT_SET_DLOAD_MODE)) {
+>> +		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>>   	} else {
+>>   		dev_err(__scm->dev,
+>>   			"No available mechanism for setting download mode\n");
+>> -- 
+>> 2.43.0.254.ga26002b62827
+>>
 
