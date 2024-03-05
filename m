@@ -1,142 +1,532 @@
-Return-Path: <linux-gpio+bounces-4132-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4133-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2A47A871927
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 10:10:40 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFDD6871969
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 10:19:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A82801F24124
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 09:10:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1F8631C223DB
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 09:19:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C091B50263;
-	Tue,  5 Mar 2024 09:10:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1C56452F6F;
+	Tue,  5 Mar 2024 09:19:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hpoxuKON"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f180.google.com (mail-yw1-f180.google.com [209.85.128.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD4174F1F5
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 09:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91AFD5026E
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 09:19:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709629800; cv=none; b=XQ31otViJTKEK0fAA9tg7kzwVrSXsHHfWkgTmVzUOEuVl+PukFYfqRm9V1bwOItuVBqe6BGNceW+iW4rLYAqpr3tjwz92mnbc59VaiqXV2EvT3DUl9FXdTSfRuMynNZ7l11P1SBPm9dh2OkSUm3pkKFMV51RN8loOVoy9mosh1o=
+	t=1709630385; cv=none; b=Rev6+YapPRIJ3TL3ksoXbS/yTkY/7ixBD2jFQ4gCbgcbfckIzlBYsYgyJnhVp+bzPifKDhPP8d0+BEZKBLGz8rgRw71VTy+ORwOdVa272h/Nt/4Y2m309mvGdaiiCFWXm7P/guugSQuSPeS1+7ahctEJXG825in1+7iPNw3FjxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709629800; c=relaxed/simple;
-	bh=MS65Alsxnkr74qwNikRDdp4gOsQCK5+O6xrsazKiMI0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cbUOfhbsq8P5CfeH+w4XzGVuglEk8c2XrRW7zhA4pD+fExAc2b2lAHEym2tCJ6f7R7wZ+cEq7amTPToSgvajsGGkHVM64WRul7BrIXJFleFcsXJX4Q6lf2tdu8jxtu3ZIGoisDU0gX5tEjOpXpKkNtkGnBQvtBt6kTtHQ6kHxk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f180.google.com with SMTP id 00721157ae682-60821136c5aso37861837b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 01:09:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709629796; x=1710234596;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=cS2EhQkb8znzNRLVG31kt1hidEbM4cOpbHTV1RY1MOY=;
-        b=wy7TESM0b6P6H/SiEhG1kgWsrkF1I5hwjxATNI6Mn4G35mkP7IPgs4c2yFOATe9b/r
-         pIMxzKpQv+prEMZGADCQEpfn17JxRcsggIj2/G48LRYAloXKOcy+N9CgBQHNWz6wFrtX
-         aVBpp+ioIPmIYyKMjE/nW1stU2QKWyHB53HD//tSPlc7LdUJ5S92WV2A5vLmyQuanOWi
-         05MKwjqLBrxiCblfP/9uwBqsRiRPehpjsa+kd3Bwhp5zhMzptnHeJhfPWUABdeoaqvTB
-         siEduv3fwHTacpomHujbbQmat5eIz5U5pGVUz9dyI98c/R1dvsJNbdBExQJ7/mqHVVTv
-         KERA==
-X-Forwarded-Encrypted: i=1; AJvYcCVPDsiG4oxgbNKzHMSH9MWBCYRblYPm5KJlTU8y4L745YEJ0KPXeLBbHUHBmsn64edibHfOrkDGLRBasXd1U7aPAv+TOMug2OpXjA==
-X-Gm-Message-State: AOJu0YzhCREyBRDdvAFcMXG0wJGWgZzk5MZUvcA+mbKQhETIfnHCROCf
-	NMurBnhNujKcgHbjR3AnFU0qkuJGzxAr5lWN1uYpk1ocfHbdLLSBFXv10CfBokQ=
-X-Google-Smtp-Source: AGHT+IHLbpkj/E05OfhNw25OBOjX11xVQ3EDXAsSG2Z/AffGDbivqThIEyZh/cbQ36oFrXeW+3SXAg==
-X-Received: by 2002:a81:994e:0:b0:609:3a4:5cce with SMTP id q75-20020a81994e000000b0060903a45ccemr10224171ywg.49.1709629796412;
-        Tue, 05 Mar 2024 01:09:56 -0800 (PST)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id h5-20020a81b645000000b006094292e834sm3071517ywk.75.2024.03.05.01.09.55
-        for <linux-gpio@vger.kernel.org>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Mar 2024 01:09:55 -0800 (PST)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dcbc00f6c04so5338746276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 01:09:55 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCWVAEavHTegt0tp+k6ugsW4sSH5SLZGw7BIVsyKlnFQ88fsVu+9Nt92QPx9MlKVbnrnkNgZtw75OrWEg2IRx898qvGt5lTHkKuh3w==
-X-Received: by 2002:a5b:582:0:b0:dc6:deca:468f with SMTP id
- l2-20020a5b0582000000b00dc6deca468fmr8307295ybp.29.1709629795563; Tue, 05 Mar
- 2024 01:09:55 -0800 (PST)
+	s=arc-20240116; t=1709630385; c=relaxed/simple;
+	bh=l0e/RYxFoAD6OIyR/tbTKx7tlpaEt8Mwn0xLUXJEeig=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=DJ7pRu7Zh8gBs2BDhxYxomdmIPR7DF1H8Ux/1kNdQ/A/jZ2KgaxqQk0vXvNdOPZjn64u239QvVyw8VbA9TDBKEQ+4mCxCjwicQlAg7XrPTs52LtnG8TtMV4uAhOR7FGUupdkSVRji3i5hXfFkXabMbYyR3kOFNgVcFWE56u/cxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hpoxuKON; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709630383; x=1741166383;
+  h=date:from:to:cc:subject:message-id;
+  bh=l0e/RYxFoAD6OIyR/tbTKx7tlpaEt8Mwn0xLUXJEeig=;
+  b=hpoxuKON/K9QA2VslvaKdV9WGtOqxCtVDePTgfo3gaWijDPro7rjIYab
+   Id/EMZsVFiSs6QCLCfV6hWttI80H9QMuCxphJjx+87KtrupT45p/l1xx+
+   jHvic1JWmgD8KZz8iQJbrPiSK7a2/yRM0TN/ycJvUJqb9CJzmxaGxzWOO
+   /yf/3LupoL8Qq5txNLMzHsEDByT8jbWDhavVmilO6JfopXembpeGxp8u4
+   /B1T3nIlo2LL9WoagapE9NEfP6hBJAH3LaUYBIxLdHb7qPElGDY0HPP31
+   S9ShYUFtWMCh3SuEz0yVZrJ9EL+Vm/oo3Fd0DzyTNU4PNaK382MOc/Dop
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11003"; a="4032718"
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="4032718"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Mar 2024 01:19:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,205,1705392000"; 
+   d="scan'208";a="13962717"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by orviesa003.jf.intel.com with ESMTP; 05 Mar 2024 01:19:40 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rhQxV-0003Bj-1D;
+	Tue, 05 Mar 2024 09:19:37 +0000
+Date: Tue, 05 Mar 2024 17:18:46 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:b4/awinic-aw9523] BUILD REGRESSION
+ 70c38171f464ba4b47c120a90c11388a43fffa6a
+Message-ID: <202403051741.jUxyiWld-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240301-awinic-aw9523-v8-1-7ec572f5dfb4@linaro.org>
- <CAMuHMdU3yUAxMgN-xo5BU2O8x0sn92myz6ZH68DB6JnMfgh7rg@mail.gmail.com> <CACRpkdY+6__RoDrMT5tsxSAUBOxzjOFzH56Z=07SSG=2PXwcxA@mail.gmail.com>
-In-Reply-To: <CACRpkdY+6__RoDrMT5tsxSAUBOxzjOFzH56Z=07SSG=2PXwcxA@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 5 Mar 2024 10:09:42 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdWumc5d2=otMjwhcT7xtyKCoJk1EXRDsPHtTwt_02g18A@mail.gmail.com>
-Message-ID: <CAMuHMdWumc5d2=otMjwhcT7xtyKCoJk1EXRDsPHtTwt_02g18A@mail.gmail.com>
-Subject: Re: [PATCH v8] pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: David Bauer <mail@david-bauer.net>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
-	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
-	kernel test robot <lkp@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-Hi Linus,
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git b4/awinic-aw9523
+branch HEAD: 70c38171f464ba4b47c120a90c11388a43fffa6a  pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
 
-On Tue, Mar 5, 2024 at 9:58=E2=80=AFAM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
-> On Tue, Mar 5, 2024 at 9:00=E2=80=AFAM Geert Uytterhoeven <geert@linux-m6=
-8k.org> wrote:
-> > On Fri, Mar 1, 2024 at 2:30=E2=80=AFPM Linus Walleij <linus.walleij@lin=
-aro.org> wrote:
-> > > From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainlin=
-e.org>
-> > >
-> > > The Awinic AW9523(B) is a multi-function I2C gpio expander in a
-> > > TQFN-24L package, featuring PWM (max 37mA per pin, or total max
-> > > power 3.2Watts) for LED driving capability.
-> > >
-> > > It has two ports with 8 pins per port (for a total of 16 pins),
-> > > configurable as either PWM with 1/256 stepping or GPIO input/output,
-> > > 1.8V logic input; each GPIO can be configured as input or output
-> > > independently from each other.
-> > >
-> > > This IC also has an internal interrupt controller, which is capable
-> > > of generating an interrupt for each GPIO, depending on the
-> > > configuration, and will raise an interrupt on the INTN pin to
-> > > advertise this to an external interrupt controller.
-> > >
-> > > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@=
-somainline.org>
-> > > Signed-off-by: David Bauer <mail@david-bauer.net>
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> >
-> > This "Reported-by" should not be here, especially since the issue
-> > reported[1] was not fixed, and is now in next[2].
->
-> Oops I dropped the tag.
->
-> > [1] https://lore.kernel.org/all/202106251415.3UY7htNp-lkp@intel.com/
-> > [2] http://kisskb.ellerman.id.au/kisskb/buildresult/15135594/
->
-> I wonder what the problem is though since the driver
-> depends on OF && I2C...
+Error/Warning reports:
 
-CONFIG_PINCTRL_AW9523=3Dy (bool)
-CONFIG_I2C=3Dm (tristate)
+https://lore.kernel.org/oe-kbuild-all/202403050916.KBtE6eEj-lkp@intel.com
+https://lore.kernel.org/oe-kbuild-all/202403051235.HMdG0ybN-lkp@intel.com
 
-Gr{oetje,eeting}s,
+Error/Warning: (recently discovered and may have been fixed)
 
-                        Geert
+drivers/pinctrl/pinctrl-aw9523.c:582: warning: Excess function parameter 'pin' description in '_aw9523_gpio_get_multiple'
+drivers/pinctrl/pinctrl-aw9523.c:582: warning: Excess function parameter 'regmap' description in '_aw9523_gpio_get_multiple'
+drivers/pinctrl/pinctrl-aw9523.c:582: warning: Function parameter or struct member 'awi' not described in '_aw9523_gpio_get_multiple'
+drivers/pinctrl/pinctrl-aw9523.c:582: warning: Function parameter or struct member 'mask' not described in '_aw9523_gpio_get_multiple'
+pinctrl-aw9523.c:(.exit.text+0x8): undefined reference to `i2c_del_driver'
+pinctrl-aw9523.c:(.init.text+0x14): undefined reference to `i2c_register_driver'
+pinctrl-aw9523.c:(.text+0x167c): undefined reference to `__devm_regmap_init_i2c'
+sparc64-linux-ld: pinctrl-aw9523.c:(.text+0x16f8): undefined reference to `i2c_adapter_depth'
 
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
+Error/Warning ids grouped by kconfigs:
 
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+gcc_recent_errors
+|-- alpha-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arc-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arc-randconfig-r063-20240305
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arm-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arm-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- csky-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- csky-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- i386-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- i386-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- loongarch-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- loongarch-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- m68k-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- m68k-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- microblaze-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- microblaze-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- mips-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- mips-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- nios2-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- nios2-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- openrisc-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- openrisc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- parisc-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- parisc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- powerpc-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- powerpc64-randconfig-r052-20240305
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- s390-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sh-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sh-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sparc-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|   |-- pinctrl-aw9523.c:(.exit.text):undefined-reference-to-i2c_del_driver
+|   |-- pinctrl-aw9523.c:(.init.text):undefined-reference-to-i2c_register_driver
+|   |-- pinctrl-aw9523.c:(.text):undefined-reference-to-__devm_regmap_init_i2c
+|   `-- sparc64-linux-ld:pinctrl-aw9523.c:(.text):undefined-reference-to-i2c_adapter_depth
+|-- sparc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sparc-randconfig-r053-20240305
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sparc-randconfig-r081-20240305
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sparc64-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- sparc64-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- um-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+`-- xtensa-allyesconfig
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+    `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+clang_recent_errors
+|-- arm64-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- arm64-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- hexagon-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- hexagon-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- powerpc-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- powerpc-randconfig-r081-20240305
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- riscv-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- riscv-allyesconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- s390-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+|-- x86_64-allmodconfig
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+|   |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+|   `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+`-- x86_64-allyesconfig
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-pin-description-in-_aw9523_gpio_get_multiple
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Excess-function-parameter-regmap-description-in-_aw9523_gpio_get_multiple
+    |-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-awi-not-described-in-_aw9523_gpio_get_multiple
+    `-- drivers-pinctrl-pinctrl-aw9523.c:warning:Function-parameter-or-struct-member-mask-not-described-in-_aw9523_gpio_get_multiple
+
+elapsed time: 1468m
+
+configs tested: 181
+configs skipped: 3
+
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                            hsdk_defconfig   gcc  
+arc                        nsimosci_defconfig   gcc  
+arc                   randconfig-001-20240305   gcc  
+arc                   randconfig-002-20240305   gcc  
+arc                           tb10x_defconfig   gcc  
+arc                        vdk_hs38_defconfig   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                           h3600_defconfig   gcc  
+arm                           imxrt_defconfig   clang
+arm                        mvebu_v5_defconfig   gcc  
+arm                       netwinder_defconfig   gcc  
+arm                   randconfig-002-20240305   gcc  
+arm                   randconfig-004-20240305   gcc  
+arm                        shmobile_defconfig   gcc  
+arm                         socfpga_defconfig   gcc  
+arm                           sunxi_defconfig   gcc  
+arm                         vf610m4_defconfig   gcc  
+arm                    vt8500_v6_v7_defconfig   gcc  
+arm                         wpcm450_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240305   gcc  
+arm64                 randconfig-003-20240305   gcc  
+arm64                 randconfig-004-20240305   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240305   gcc  
+csky                  randconfig-002-20240305   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240305   clang
+i386         buildonly-randconfig-004-20240305   clang
+i386         buildonly-randconfig-005-20240305   clang
+i386                                defconfig   clang
+i386                  randconfig-001-20240305   clang
+i386                  randconfig-003-20240305   clang
+i386                  randconfig-015-20240305   clang
+i386                  randconfig-016-20240305   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240305   gcc  
+loongarch             randconfig-002-20240305   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                          multi_defconfig   gcc  
+m68k                           sun3_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+mips                  maltasmvp_eva_defconfig   gcc  
+mips                       rbtx49xx_defconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240305   gcc  
+nios2                 randconfig-002-20240305   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+openrisc                    or1ksim_defconfig   gcc  
+openrisc                 simple_smp_defconfig   gcc  
+openrisc                       virt_defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                randconfig-001-20240305   gcc  
+parisc                randconfig-002-20240305   gcc  
+parisc64                            defconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc                        fsp2_defconfig   gcc  
+powerpc                          g5_defconfig   gcc  
+powerpc                   microwatt_defconfig   gcc  
+powerpc                   motionpro_defconfig   clang
+powerpc                 mpc832x_rdb_defconfig   gcc  
+powerpc                      pmac32_defconfig   clang
+powerpc                         ps3_defconfig   gcc  
+powerpc               randconfig-001-20240305   gcc  
+powerpc               randconfig-002-20240305   gcc  
+powerpc               randconfig-003-20240305   gcc  
+powerpc                     tqm8560_defconfig   gcc  
+powerpc64             randconfig-003-20240305   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-002-20240305   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                          debug_defconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-001-20240305   gcc  
+s390                  randconfig-002-20240305   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                         ap325rxa_defconfig   gcc  
+sh                         apsh4a3a_defconfig   gcc  
+sh                                  defconfig   gcc  
+sh                    randconfig-001-20240305   gcc  
+sh                    randconfig-002-20240305   gcc  
+sh                          sdk7786_defconfig   gcc  
+sh                           se7206_defconfig   gcc  
+sh                           se7724_defconfig   gcc  
+sh                           se7750_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240305   gcc  
+sparc64               randconfig-002-20240305   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240305   gcc  
+um                    randconfig-002-20240305   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240305   clang
+x86_64       buildonly-randconfig-002-20240305   clang
+x86_64       buildonly-randconfig-003-20240305   clang
+x86_64       buildonly-randconfig-004-20240305   clang
+x86_64       buildonly-randconfig-005-20240305   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240305   clang
+x86_64                randconfig-002-20240305   clang
+x86_64                randconfig-004-20240305   clang
+x86_64                randconfig-005-20240305   clang
+x86_64                randconfig-013-20240305   clang
+x86_64                randconfig-015-20240305   clang
+x86_64                randconfig-016-20240305   clang
+x86_64                randconfig-073-20240305   clang
+x86_64                randconfig-074-20240305   clang
+x86_64                randconfig-076-20240305   clang
+x86_64                           rhel-8.3-bpf   gcc  
+x86_64                          rhel-8.3-func   gcc  
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                           alldefconfig   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240305   gcc  
+xtensa                randconfig-002-20240305   gcc  
+xtensa                    smp_lx200_defconfig   gcc  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
