@@ -1,254 +1,134 @@
-Return-Path: <linux-gpio+bounces-4122-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4123-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 99965870B79
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 21:23:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 325D78711A5
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 01:26:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1CCFEB23B64
-	for <lists+linux-gpio@lfdr.de>; Mon,  4 Mar 2024 20:23:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 64AED1C2122C
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 00:26:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 81FB17A736;
-	Mon,  4 Mar 2024 20:23:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85EA010F4;
+	Tue,  5 Mar 2024 00:26:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcPo69xN"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f5FM0iLZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A2F4AEF9;
-	Mon,  4 Mar 2024 20:23:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFC7A10E4;
+	Tue,  5 Mar 2024 00:26:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709583813; cv=none; b=sALatm6mOCyAZ52oKXAjKcBwckZ/376IBXhicu8mQVHq0U37H5ghU0h0UGAJwSXhe/LAngRW74lyc27RqgRmTdxGWjZMjqy+3xV4Zfl6aZERZUFEkYixC2pSHQnN+WQ2Jc4DxrWkyADrljLINmB1JTGcx01ZDwY1g4VNvZfgwfc=
+	t=1709598362; cv=none; b=BSAXENNz7pYdpcIy8eKJcufteAM9w6+c0LUzilmRt67isSoDb8fDe4QJDDjesTF5MsYOcO10vSVm28zbBfSFmev0tdArUrRt8lq9QzsUb6keEXf17AmFQ77SnJ/mZbjAqMXg1crSsKTYi3SxkuSJfU85sSbiBGn89UlOzE5HEwY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709583813; c=relaxed/simple;
-	bh=V1Qaqr+cyN7FZy2RgN8ZX4Ee45PfginbyyRueKS1KDA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hCZL/+9dhNwU5MWY9un31MW2u1H1KdKHxxX0r/aQpKkndCHnjCpO52emdCRxQad9FWcsKPpWieCD8lmGCdcCZHkgNFWf36EQCH3gfx5SFqodbuVvxJ9+4uWAFeUixMmYhyX5nGk5qSrGBxI/tHW9xB4LTTFwBtAUKDeJIJxKVjg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcPo69xN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46DD4C433F1;
-	Mon,  4 Mar 2024 20:23:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709583812;
-	bh=V1Qaqr+cyN7FZy2RgN8ZX4Ee45PfginbyyRueKS1KDA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=BcPo69xNTWbhO57HEa1G617Db21l02p4Gon6X7YSOl6YpywckluTFZMgliFwCSsqJ
-	 FA0NwdejFMI7Zi2a48kyI+PWD3ui+zH0dO0QOqJnsPpgDbZkAAA1EBdr/b4/uJds2O
-	 H3RKJ9Y2r2o8QI8YgRQKFmSbOS/QXtHmtutMoc5fvU3+/iomuQiDLv/tOClrGnTgxu
-	 S4PJz4ULuXdurrE78SviCipbqX1LCpeIEoIUQ5T6bqFXsZHKdTIN+HW8xdYCL8BPPe
-	 1C0g5Dfh8CcQDO5tvJoDF5nkDCwPeo/84jiwr7keVuO/wLeCL1BaArsBcWXwznUDca
-	 y6J5OCU48OMsA==
-Date: Mon, 4 Mar 2024 20:23:27 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Andrew Jeffery <andrew@codeconstruct.com.au>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl,
-	krzysztof.kozlowski+dt@linaro.org, robh+dt@kernel.org,
-	conor+dt@kernel.org, joel@jms.id.au, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] dt-bindings: gpio: aspeed,ast2400-gpio: Convert to DT
- schema
-Message-ID: <20240304-radio-urban-9843704f374e@spud>
-References: <20240226031951.284847-1-andrew@codeconstruct.com.au>
+	s=arc-20240116; t=1709598362; c=relaxed/simple;
+	bh=Vic1yyYZkTyBkcHMN/DlotFLffO5adzTXya6pqwwL2Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=t5hl7z9WtrVYOne6Jm2mKf4uoPYsdRc+RnEySX8Kg9c3HwrW50Nd32aPlAPOFF+8HRUGexsP6yyCfxGfRrzZpyw5VEoalJmrG2aTDEgWTNHNvnAEJN3N2q8OCMaN5X16u6sYRDTvV0+HpSgeAUUd5oqYBaGace6HMzGhuuPC0MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=f5FM0iLZ; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-1dc13fb0133so37902165ad.3;
+        Mon, 04 Mar 2024 16:26:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1709598360; x=1710203160; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
+        b=f5FM0iLZMtFLWqAXPmIYuqfgTfYvkxU8c2SuIuRe3oooH5rvzDqHERIqfsgMRKoUvQ
+         Y20Qt1W1IDXa3tVR0mYYtucGqYA9Rk87vdEnuYtzcNrGlOQ2yV1uHak+emlouhiTSHnc
+         pGMWbrn5CLTZr6RLwPzYYsbkQ5kWPkLR0nsmr69am2mils40r5mJjNISJdG3oq62ec2A
+         3O9QolBPLETtG5WRX+jMhlkDr+qY/awh7K9auB5cwPv1ML48BgSpUxdA0Lm0yZosskm5
+         n/MgrtsMxKmHoo5bUaAEdIyDLvE/CMDYbzQKlGjJgYsDTkn4yj3z13756/T1Ii2/fjxq
+         DoRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709598360; x=1710203160;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=apgfPOyBm8fjbNIlIAw478BrY43o1tnAskOyysD67Fs=;
+        b=m+OlDuOMU69Bhkhjm8R8gcpKUEkICYm3tPX8x1OYSoX5goosst81jjZn5B+t2YRfsB
+         b3+V2z/fqWdu+RaklY7iLOxuzSzF9vT+he/MsDDxvT8I4uLgkW3RprAof1Mcz0TLW325
+         QjvMie4+G+xa0CA6RrgfXujYPIpalF/CMApRzisiOspdOgx8Z4iBj57BIsJCBcBYfzEd
+         3UTq2bsKPdjYjVyFAh48cLIH7KRQG3ukjH3RAmvjJy3tRnIzISsrnH/9see93ZDJljGc
+         Layxq5zk5e0MnQibLKQ97NDHiXjg+OVjKvP7CSeS3xdG9vNlSjyaAqTEfQaJ8WnuSb8j
+         2AxA==
+X-Forwarded-Encrypted: i=1; AJvYcCVpshuTl4l8jwWt4OxAWil3Cm5inYBqcoBZeXwrT+yJuwVhqvZJ4umWvv/buylcVXfdVEH3sNu1fqLWbcYf+tWLdTxMw3cnaSGmAaZXH4DgabTByz2c6VzxhS0IhhV720nOO+jI4Iy/TvZj/w==
+X-Gm-Message-State: AOJu0YwjZpgybyE0W6/clV/A8Z5KN6Fso4SD3oe90GkEqT2F9wCOF2Iu
+	EcPPh+NZ0EVmqO51g3KjE7CkNDRqnNWECQb1RTwwyzm8WXIxv6asqM+GrDNb
+X-Google-Smtp-Source: AGHT+IH8VISteBQwVu/ywVhok1br8asTz3CWnUenMckIjlocnVPMmLNsv+ZYwZwB+41xt68s6nRvRg==
+X-Received: by 2002:a17:903:1104:b0:1dc:1c81:1b19 with SMTP id n4-20020a170903110400b001dc1c811b19mr404186plh.3.1709598359824;
+        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
+Received: from rigel.home.arpa ([220.235.35.85])
+        by smtp.gmail.com with ESMTPSA id mm12-20020a1709030a0c00b001dc96d1a662sm9131940plb.197.2024.03.04.16.25.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Mar 2024 16:25:59 -0800 (PST)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	bartosz.golaszewski@linaro.org,
+	andriy.shevchenko@linux.intel.com,
+	christophe.leroy@csgroup.eu,
+	shuah@kernel.org,
+	bamv2005@gmail.com
+Cc: Kent Gibson <warthog618@gmail.com>,
+	Pengfei Xu <pengfei.xu@intel.com>,
+	Yi Lai <yi1.lai@intel.com>
+Subject: [PATCH] selftest: gpio: remove obsolete gpio-mockup test
+Date: Tue,  5 Mar 2024 08:21:24 +0800
+Message-Id: <20240305002124.7552-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="WBinYbWIzry76kSg"
-Content-Disposition: inline
-In-Reply-To: <20240226031951.284847-1-andrew@codeconstruct.com.au>
+Content-Transfer-Encoding: 8bit
 
+With the removal of the ARCH_NR_GPIOS, the number of available GPIOs
+is effectively unlimited, causing the gpio-mockup module load failure
+test that overflowed the number of GPIOs to unexpectedly succeed, and
+so fail.
 
---WBinYbWIzry76kSg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The test is no longer relevant so remove it.
+Promote the "no lines defined" test so there is still one load
+failure test in the basic set.
 
-On Mon, Feb 26, 2024 at 01:49:51PM +1030, Andrew Jeffery wrote:
-> Squash warnings such as:
->=20
-> ```
-> arch/arm/boot/dts/aspeed/aspeed-bmc-facebook-galaxy100.dtb: /ahb/apb@1e60=
-0000/gpio@1e780000: failed to match any schema with compatible: ['aspeed,as=
-t2400-gpio']
-> ```
->=20
-> Signed-off-by: Andrew Jeffery <andrew@codeconstruct.com.au>
-> ---
-> v2: Address feedback from Krzysztof:
->     https://lore.kernel.org/all/0d1dd262-b6dd-4d71-9239-8b0aec8cceff@lina=
-ro.org/
->=20
-> v1: https://lore.kernel.org/all/20240220052918.742793-1-andrew@codeconstr=
-uct.com.au/
->=20
->  .../bindings/gpio/aspeed,ast2400-gpio.yaml    | 73 +++++++++++++++++++
->  .../devicetree/bindings/gpio/gpio-aspeed.txt  | 39 ----------
->  2 files changed, 73 insertions(+), 39 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/gpio/aspeed,ast2400=
--gpio.yaml
->  delete mode 100644 Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.y=
-aml b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> new file mode 100644
-> index 000000000000..74d376567dfc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/aspeed,ast2400-gpio.yaml
-> @@ -0,0 +1,73 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/gpio/aspeed,ast2400-gpio.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Aspeed GPIO controller
-> +
-> +maintainers:
-> +  - Andrew Jeffery <andrew@codeconstruct.com.au>
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - aspeed,ast2400-gpio
-> +      - aspeed,ast2500-gpio
-> +      - aspeed,ast2600-gpio
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: The clock to use for debounce timings
+Fixes: 7b61212f2a07 ("gpiolib: Get rid of ARCH_NR_GPIOS")
+Reported-by: Pengfei Xu <pengfei.xu@intel.com>
+Reported-by: Yi Lai <yi1.lai@intel.com>
+Closes: https://lore.kernel.org/linux-gpio/ZC6OHBjdwBdT4sSb@xpf.sh.intel.com/
+Signed-off-by: Kent Gibson <warthog618@gmail.com>
+---
+ tools/testing/selftests/gpio/gpio-mockup.sh | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-The original binding does not require this clock, but I can't help but
-wonder if it should be required. I suspect that this peripheral does
-not actually work if a clock is not provided to it. Whether or not the
-rate of the clock is then used by the driver for debounce timings or
-whatever is a different question.
+diff --git a/tools/testing/selftests/gpio/gpio-mockup.sh b/tools/testing/selftests/gpio/gpio-mockup.sh
+index 0d6c5f7f95d2..fc2dd4c24d06 100755
+--- a/tools/testing/selftests/gpio/gpio-mockup.sh
++++ b/tools/testing/selftests/gpio/gpio-mockup.sh
+@@ -377,13 +377,10 @@ if [ "$full_test" ]; then
+ 	insmod_test "0,32,32,44,-1,22,-1,31" 32 12 22 31
+ fi
+ echo "2.  Module load error tests"
+-echo "2.1 gpio overflow"
+-# Currently: The max number of gpio(1024) is defined in arm architecture.
+-insmod_test "-1,1024"
++echo "2.1 no lines defined"
++insmod_test "0,0"
+ if [ "$full_test" ]; then
+-	echo "2.2 no lines defined"
+-	insmod_test "0,0"
+-	echo "2.3 ignore range overlap"
++	echo "2.2 ignore range overlap"
+ 	insmod_test "0,32,0,1" 32
+ 	insmod_test "0,32,1,5" 32
+ 	insmod_test "0,32,30,35" 32
+-- 
+2.39.2
 
-Otherwise though, this looks fine to me.
-Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
-
-Cheers,
-Conor.
-
-> +  "#gpio-cells":
-> +    const: 2
-> +
-> +  gpio-controller: true
-> +  gpio-line-names: true
-> +  gpio-ranges: true
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  interrupt-controller: true
-> +
-> +  "#interrupt-cells":
-> +    const: 2
-> +
-> +  ngpios: true
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +  - interrupt-controller
-> +  - "#interrupt-cells"
-> +  - "#gpio-cells"
-> +  - gpio-controller
-> +
-> +allOf:
-> +  - if:
-> +      properties:
-> +        compatible:
-> +          contains:
-> +            const: aspeed,ast2600-gpio
-> +    then:
-> +      required:
-> +        - ngpios
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    gpio@1e780000 {
-> +        compatible =3D "aspeed,ast2400-gpio";
-> +        reg =3D <0x1e780000 0x1000>;
-> +        interrupts =3D <20>;
-> +        interrupt-controller;
-> +        #gpio-cells =3D <2>;
-> +        gpio-controller;
-> +    };
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt b/Doc=
-umentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> deleted file mode 100644
-> index b2033fc3a71a..000000000000
-> --- a/Documentation/devicetree/bindings/gpio/gpio-aspeed.txt
-> +++ /dev/null
-> @@ -1,39 +0,0 @@
-> -Aspeed GPIO controller Device Tree Bindings
-> --------------------------------------------
-> -
-> -Required properties:
-> -- compatible		: Either "aspeed,ast2400-gpio", "aspeed,ast2500-gpio",
-> -					or "aspeed,ast2600-gpio".
-> -
-> -- #gpio-cells 		: Should be two
-> -			  - First cell is the GPIO line number
-> -			  - Second cell is used to specify optional
-> -			    parameters (unused)
-> -
-> -- reg			: Address and length of the register set for the device
-> -- gpio-controller	: Marks the device node as a GPIO controller.
-> -- interrupts		: Interrupt specifier (see interrupt bindings for
-> -			  details)
-> -- interrupt-controller	: Mark the GPIO controller as an interrupt-contro=
-ller
-> -
-> -Optional properties:
-> -
-> -- clocks		: A phandle to the clock to use for debounce timings
-> -- ngpios		: Number of GPIOs controlled by this controller. Should	be set
-> -				  when there are multiple GPIO controllers on a SoC (ast2600).
-> -
-> -The gpio and interrupt properties are further described in their respect=
-ive
-> -bindings documentation:
-> -
-> -- Documentation/devicetree/bindings/gpio/gpio.txt
-> -- Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> -
-> -  Example:
-> -	gpio@1e780000 {
-> -		#gpio-cells =3D <2>;
-> -		compatible =3D "aspeed,ast2400-gpio";
-> -		gpio-controller;
-> -		interrupts =3D <20>;
-> -		reg =3D <0x1e780000 0x1000>;
-> -		interrupt-controller;
-> -	};
-> --=20
-> 2.39.2
->=20
-
---WBinYbWIzry76kSg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZeYtvwAKCRB4tDGHoIJi
-0sA/AQC/NSqxk+gOMc2YKFuxBEmSMAC+J4rmo8SMcdjAjYJccwD8DNJO0vzMwQ7l
-7ZJZiqqGTf2fmGaQkS/nuX0wdNesOQ0=
-=jXZ8
------END PGP SIGNATURE-----
-
---WBinYbWIzry76kSg--
 
