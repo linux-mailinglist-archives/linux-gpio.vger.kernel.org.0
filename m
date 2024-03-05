@@ -1,139 +1,108 @@
-Return-Path: <linux-gpio+bounces-4153-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4154-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 60314872A2B
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 23:25:38 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7E609872A34
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 23:30:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E20971F2515E
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 22:25:37 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1A4ECB288DE
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 22:30:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10E012D215;
-	Tue,  5 Mar 2024 22:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2942338398;
+	Tue,  5 Mar 2024 22:30:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QjBLif5N"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S4oWTXX6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-yw1-f182.google.com (mail-yw1-f182.google.com [209.85.128.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E867B12D213
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 22:25:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56A921E4B7
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 22:30:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709677523; cv=none; b=FmqjshKYA13ePKIAwmSXv0ueoZciL+mzkXxQaTKmsOozqzdRzXERAwchvKE0EGW8JzkU/wYwYQm7jkHRC+tbyvayRy4bI8FbAPSSSyQm6d1eg0xJE17rjWa0MI0/BVxqm3JSWBgBVcOtsjwtQwn8XO0vmYnnMe70QN/23Eiio14=
+	t=1709677815; cv=none; b=VtZ/zO78tT0+4tcW/z5N9wa4EiyBIS0nLQyUtVNJr6kJDADpzMIp/4ejJ1WYqz9Ud5E38OQXS4Q7T53KBfi1csutnr5gZZ6unP6MbCeGlnoT0X7sbRSuHm6h7IxopSlnYGw3EvsmjFL+czrZ+ho2GCsRUqe1mgHAZ9G1c6t9vN8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709677523; c=relaxed/simple;
-	bh=f3nTnJgkfAw37K33Z2PvqlSHbbqdwxuoQkfrKprzz20=;
+	s=arc-20240116; t=1709677815; c=relaxed/simple;
+	bh=M9jh5WEb5IW5tRz7dceyYVvVzGkNBzoZVU9ALfghlYk=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ghu0nd+tH9TPQwIBKNaIloBlcXCmBdy/F0CVWa0AsmuxXz5abaB/0AYfuiN4f0xY3/I87bef+Il1+SZoCYLES4oIiRSbH46pvZdODcDFwsiPKDw5qxGmMd4UaiP70qpAVG55yiW6DUdh0GYVS6BMIkJIcfGMPn34Vyni9/vWBqI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=QjBLif5N; arc=none smtp.client-ip=209.85.219.179
+	 To:Cc:Content-Type; b=QBwz1w/OZzFanWwFjJi69wGawty0qJMwCJDv8aoIB8YgiQs43vwh3h2c51chW7yfuTBl8CjTYOpEWb1YW9jTOL4CCUX3xudHpNchHdJ8ynxBhJfaIyZB+vcbbl0rQ5JruC7AAzG2gKaiVu3XU5vqvjH0FhJahryVcVDwYzrLwVY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=S4oWTXX6; arc=none smtp.client-ip=209.85.128.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6d8bd618eso6634152276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 14:25:21 -0800 (PST)
+Received: by mail-yw1-f182.google.com with SMTP id 00721157ae682-608c40666e0so58681767b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 14:30:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709677521; x=1710282321; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709677813; x=1710282613; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=MGwm2lfKrMr319TGYTOdrKoM3Z86YjxAynwdBTS1iXw=;
-        b=QjBLif5NMOp7HWG/GHIQnQ23AlXp6GI5oo4C5gXs8ET03hdpvg1eHJjo7+Y0L/KPHw
-         NcC0pcxcmHGoT/kZ76p7s036yBRnr87aUaOxo6nlJA69JRU8HhLcJkeepdUxh7OQvLb1
-         yHOZMNI90Qm56ijDUdMyNo4crWJdCZxyoY8hK8QFw2ShR5d6o0kXn8duLKdBTFOXR7Ej
-         k0JK1yDC4eLAOg6PC+NUjUR8RUAqHsi3+S52nT2MxWjUebcZSWetduF2H2gKyo7pNV88
-         YHjoK5MoPYVEAaTsMEma9KMJukz1NB7T6IcOmUgjdRyW43bcCLK++1gLg6maksmI6Zob
-         z4bg==
+        bh=sstiXCgtxh1I1WdeLd29OT6yXthQI1YxVvocUUKixik=;
+        b=S4oWTXX6LTGupEY05zss1sf0zwdg7w+oUhUDWkLk2U2M6BTxZmSvuDOoilCSxT5ZgJ
+         2SU21eTLdCkMzsSJf9v3H6mywYdZ/7Iu1ZNzwwICkbGv17qNk5CY0kwcFd242xhMUoMv
+         QUTlHGAdnocLy9RMnBiYnozUp/KA+CioIrCgUSR8DLc6SN5K5+GToTGhFgIU9T7vUljK
+         pyDksT/ebEFpFJswtal9UFbQKK5uK5sktEUj/QTuNTku5Q7DBZx3skRrGnMcUW7qfG6r
+         JJna/ICoJ9P67Xs8vSVAzkp5cIJ/Uxso9K1m1VE7n5Z123bv/IlHDAaI2gDGjd+Tf9lV
+         +5JA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709677521; x=1710282321;
+        d=1e100.net; s=20230601; t=1709677813; x=1710282613;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=MGwm2lfKrMr319TGYTOdrKoM3Z86YjxAynwdBTS1iXw=;
-        b=HG3JG+Rv1NeRK7MYJ39JuqnSpqZ2JsjrfGF7EcgXL4MhZG8OKG6bT+XWSCH1cLZp+3
-         BO+vndqB+qsYKYfc1mEgBgapzndT9Rj7jUti1XR5KbbMh0ViF5rmLWlkuIYgkd4Wgygt
-         y0heKx37OQnuBQE4Hh+tA/4rRTKBa0yAzPSUiy78s0jyNbKKlgJpncQC4cZ0md9hvcsP
-         ytKMF2PtrU7mo5OsBEqXS+FrTUJki5XgHofWSBMu2r8caaVa7bSVo12VE5CZS37VBMPq
-         eQM60jz9qRU4Sbv5XnfTZs0mMPSpDMU6LY2XAFJtR78HJ/zvt/EvFL/BtHMLrK5fAiZv
-         87Fw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdCqrNrlRaMuOT9AoDo1glGJbsLSzvF67Nr6CfBrpkLP/tJoaUdoDu2/fZmPLLTiGnkOO42T+1P30p7NQBvdMLnlmHK1JmNVGLXg==
-X-Gm-Message-State: AOJu0YwYAHjoi/wnzUrxHOSs5lrdGLJ1BhIwxTeiDobXQz1Uf5zCLKmS
-	c5mr2OZ6uhkJ0tHM0fsPm4COQ4fcnypnu+MK7+vHd+MjqPiDef5U19wROhoba/5w7lSlV14gvxu
-	xEqiPgiBYTX44PsmNBguM+V6ismw0W6xG3zSgLp24RbhnTHOr3W6d/w==
-X-Google-Smtp-Source: AGHT+IGCdBLYsjDNCkkw2T9dTQxo/+OlDyUZJVGvcZE9zzZknOwfEVyAo06mr0npYAzlyIfo8T2NS/SnSwT0EVODHnE=
-X-Received: by 2002:a81:9294:0:b0:608:7af2:f5f5 with SMTP id
- j142-20020a819294000000b006087af2f5f5mr12914368ywg.50.1709677520791; Tue, 05
- Mar 2024 14:25:20 -0800 (PST)
+        bh=sstiXCgtxh1I1WdeLd29OT6yXthQI1YxVvocUUKixik=;
+        b=lP84sPY4Jz74Ogld4qosyrE7qJJPLOaw99AFPRzy4uFR2m08lJGD7cC82Z9bpYCeFW
+         y85GIaP7xmF31syyHv4DRy5LgAjBT3eRiq21kIV+wVjNtmYBOpaG1iE5tEK+9t0h2o3W
+         Imff/o1/+/GFRm3moRKbPVIJzsao5WSlrMaPCBARiBEECnTRKHb59EbMgMzGslJZs90S
+         os//1ZxgTF0F3OxlEVq20ANCeDCRdntG9Gl/3MqjEBmAZHJBCwOXn9WmUYnqwLzDxGRT
+         f3DW2sIZ396ejUhTmdVhX3Lc5FgyrGRmDhqBEKZGUjvc+Xfl9hijCcKLmuj/h3E5j3fl
+         1+uA==
+X-Gm-Message-State: AOJu0YwvinLA8DF3V+e1F8nlKdGzG3rQLq2rp45FTb0jJict8QIAIDvG
+	Zj1lzewS6E9emIemENUY1tdon/Elp2kNA90HUd/PR93vNytGkE0KyRe9BbTbE2DrDfxjRelnIBD
+	aIl3KQeIW+UM21G781sTb4HkUA9QcUoy7jvHmww0MaX5HqQTGe4M=
+X-Google-Smtp-Source: AGHT+IFS0PD9/FUIwQ1baCjGkvctBDIFcmKONCKsI6xrDtthFJ7zqv3OPuHcb7o1XyrIBRTmFE7jCYgjzyUM4/XGYTI=
+X-Received: by 2002:a25:1441:0:b0:dcd:3d0f:1ba2 with SMTP id
+ 62-20020a251441000000b00dcd3d0f1ba2mr9711276ybu.33.1709677813220; Tue, 05 Mar
+ 2024 14:30:13 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20210624214458.68716-1-mail@david-bauer.net> <CAL_Jsq+sHy=mr0paWvxOL8yT9TwuaJdfapX0sFkOJFtjCqoT1w@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+sHy=mr0paWvxOL8yT9TwuaJdfapX0sFkOJFtjCqoT1w@mail.gmail.com>
+References: <20240305143859.2449147-1-andre.przywara@arm.com>
+In-Reply-To: <20240305143859.2449147-1-andre.przywara@arm.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 5 Mar 2024 23:25:09 +0100
-Message-ID: <CACRpkdY2jfszTNvUHxc8-AXFwZKQaaOkcTwZrAiKi2rU5tTn6g@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
-To: Rob Herring <robh+dt@kernel.org>
-Cc: David Bauer <mail@david-bauer.net>, lgirdwood@gmail.com, broonie@kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
+Date: Tue, 5 Mar 2024 23:30:02 +0100
+Message-ID: <CACRpkdYnFrB87T9Pq_kFDL_x399haA1n2hxPN0aSYO=KQSQQ6g@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinmux: Suppress error message for -EPROBE_DEFER
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 5, 2024 at 6:28=E2=80=AFPM Rob Herring <robh+dt@kernel.org> wro=
-te:
+On Tue, Mar 5, 2024 at 3:39=E2=80=AFPM Andre Przywara <andre.przywara@arm.c=
+om> wrote:
 
-> Linus, did you just apply this 3 year old bit-rotted patch? Linux-next
-> now warns:
+> EPROBE_DEFER error returns are not really critical, since they cancel
+> the probe process, but the kernel will return later and retry.
+> However, depending on the probe order, this might issue quite some
+> verbatim and scary, though pointless messages:
+>
+> [    2.388731] 300b000.pinctrl: pin-224 (5000000.serial) status -517
+> [    2.397321] 300b000.pinctrl: could not request pin 224 (PH0) from grou=
+p PH0  on device 300b000.pinctrl
+>
+> Replace dev_err() with dev_err_probe(), which not only drops the
+> priority of the message from error to debug, but also puts some text
+> into debugfs' devices_deferred file, for later reference.
+>
+> Signed-off-by: Andre Przywara <andre.przywara@arm.com>
 
-Not "just", I did run checks on it first i.e.:
-$ make DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pinctrl/awinic,a=
-w9523-pinctrl.yaml
-dt_binding_check
-  HOSTCC  scripts/basic/fixdep
-  HOSTCC  scripts/dtc/dtc.o
-  HOSTCC  scripts/dtc/flattree.o
-  HOSTCC  scripts/dtc/fstree.o
-  HOSTCC  scripts/dtc/data.o
-  HOSTCC  scripts/dtc/livetree.o
-  HOSTCC  scripts/dtc/treesource.o
-  HOSTCC  scripts/dtc/srcpos.o
-  HOSTCC  scripts/dtc/checks.o
-  HOSTCC  scripts/dtc/util.o
-  LEX     scripts/dtc/dtc-lexer.lex.c
-  YACC    scripts/dtc/dtc-parser.tab.[ch]
-  HOSTCC  scripts/dtc/dtc-lexer.lex.o
-  HOSTCC  scripts/dtc/dtc-parser.tab.o
-  HOSTLD  scripts/dtc/dtc
-  LINT    Documentation/devicetree/bindings
-usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [-f
-{parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v]
-[FILE_OR_DIR ...]
-yamllint: error: one of the arguments FILE_OR_DIR - is required
-  CHKDT   Documentation/devicetree/bindings/processed-schema.json
-  SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+That does cut a lot of noise.
 
-So that's at least something but apparently not enough, hm the yamllint moa=
-ning
-should be a hint should it not... it's on v6.8-rc1.
-
-> ./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:49=
-:2:
-> [error] missing starting space in comment (comments)
-> ./Documentation/devicetree/bindings/pinctrl/awinic,aw9523-pinctrl.yaml:56=
-:11:
-> [error] string value is redundantly quoted with any quotes
-> (quoted-strings)
-
-They were so simple that I just fixed them up in-tree.
-
-> Also, David's S-o-b is missing if you picked up this one.
-
-I mailed David about it.
+Patch applied!
 
 Yours,
 Linus Walleij
