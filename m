@@ -1,225 +1,127 @@
-Return-Path: <linux-gpio+bounces-4130-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4131-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E3E7F871838
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 09:26:43 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EDFA8718BA
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 09:58:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5BF4C1F2254F
-	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 08:26:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 1A8C4284103
+	for <lists+linux-gpio@lfdr.de>; Tue,  5 Mar 2024 08:58:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 596B07F47A;
-	Tue,  5 Mar 2024 08:26:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F1BE4F1F8;
+	Tue,  5 Mar 2024 08:58:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DV1AKP3I"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VtoEIMO+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EC2B7B3E7
-	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 08:26:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91F1D38DD1
+	for <linux-gpio@vger.kernel.org>; Tue,  5 Mar 2024 08:58:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709627199; cv=none; b=fBZsDHQUH1UlmqcWXtTSmqo3aQ8ARfN96t155XqHQVH8E+iV1jyaCn4PycSzBDGLK6/+NPmJsElbSnb88Hl8ISt2BI7+GCMLlBuQkUtr5/bNeKUTA2ppc4yb5RYN8k5fMm5TilEAR84UNASLJezsxt9hIgoxa13+AfKmjdyAADI=
+	t=1709629101; cv=none; b=GVn2vbMHw4ZTWbBp3P22srupXhqunV0YUho2b9yvNnU/DTgxfcmFUlCjpk+94OhBwkQM59GQoCb5zLk7th2nTTT5rZ6kydUlNoxw5YVpVK27vtakkyavVZD/cKL/AqgDPCABQi03BF6jR8EBfv4f3+tlTKE3lI1WGK5wRAxomXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709627199; c=relaxed/simple;
-	bh=5FvrQI3nb24c4cBtE1AD3+QcnePFRYQxnA9iQaS7VZA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=K7/TZHNC9DKM6tCq02deJ+9NIFZGTd9ATmwRpHbiTtnzvup1k0P/UmFH5Jd6Fniwmf2kxcek/PNyJtvUucCdo6F6o4V22+2YdP10AzHWoOAmzDC1/Ny0kfKOnAhCCExZWjiyOe4XmWWKiv3Iay1yh57TjKV6WMxc6Ej3HypzB70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=DV1AKP3I; arc=none smtp.client-ip=209.85.208.44
+	s=arc-20240116; t=1709629101; c=relaxed/simple;
+	bh=HuwDDAWMV9bZP+9DIdSi5gyDUDZ8Gcoqy8rJpCsW9mM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ifd8W/azDorV4t5WnZyN6EL4Lb6PQ7wGB6s4Yb3acFFMsWGCZOir5QijUgJW5N54aVuKicGJZWzwl09UJeDaMXe37Aa8xXlxHKsnR1Z/tRZd2E1a+/QmOnJqjms5Ns7AcQ++Y+9SCSpRYQvZe1nik8JMN2xVl8YHrDe+Cg02tmQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=VtoEIMO+; arc=none smtp.client-ip=209.85.128.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-5649c25369aso7563682a12.2
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 00:26:36 -0800 (PST)
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6089b64f4eeso47727397b3.2
+        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 00:58:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709627195; x=1710231995; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=OhQnfn1wdqMWGFXvLLnPFMPVdYmIy3X2weY0l67X4EA=;
-        b=DV1AKP3ISh3eC4QhKIUVLTyoncw1AGDiW0DCW/aOostitld5s2GXE/SxmaZNRXxYXR
-         AHFqg2+7A6gb0Pn95xJj4oIQ6GFrVsGupBktCkuvh5yv0rZSQOZ2sBGaa6d5reic6TnQ
-         XqNj/3zmI98wI7hkTHk8gBiiJvswGxImANlzP806OSWbLf+W9J6z6N6OGfmr1f/9bX7U
-         hkbVCI03Zjsu/Ku17zEgREyUDLcXBnhNvwpIlDnP+TdB7EXaS8nvTiz+yiQ8IXvBtCXP
-         VIrmQRDV06TLX3+w6dB0ILuEZjUzHwG5yb4MntXZkAEkpjaAjwjV0I7QVzpB0YN93/RK
-         6fKg==
+        d=linaro.org; s=google; t=1709629098; x=1710233898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=HuwDDAWMV9bZP+9DIdSi5gyDUDZ8Gcoqy8rJpCsW9mM=;
+        b=VtoEIMO+7pGt93zZsxe76Gyk6SLGsTPM3NwD1v0jGGiKf2omXhjDD0VaUfwuJK5JZx
+         LcJ//GHdJABRMarVz4W4i8N3oeIwfEn37i3ijBb/pUe5nMWvA2yxYNzAjNC/ViRxUgsu
+         dKyFAjggpqYUS4YyLg4hvXMidQA6Vg8ks/CCGy0SiYzDOi6MPVd3qaSCAmJUb0Jc5jB6
+         gLJHZHC7juqxZANzzLnOK8b0+HrKfG3E338n1BjWz1qG1F/sOMgEl2Sdgb5QZJYCVYYb
+         peVOEJNtfZXn4em0iyY8GL4nWEn0wi98THd8u8t0j/vvif6tnbJ6Iisk4bePEcisnxm0
+         uh1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709627195; x=1710231995;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=OhQnfn1wdqMWGFXvLLnPFMPVdYmIy3X2weY0l67X4EA=;
-        b=H6cTZnZ1nyYWlkX2sL+CyTw15I3PAVWjUgVZViTwIXriF9ePrCSUFUFurFLNH323Zt
-         Girv6S7vS4KEedN+8Vx6hFLd2fbNDjJ1Jrt9Fgj5w5CwjkayO62Mm9xvoNHcOeGthCYP
-         nuqqZqO5QWCllP5Un/iRZ3EtN+PhoHc/NggWw6L1j0ZUI7lLEAToE019Qmfc1jjY1lCr
-         wtf0I7ifj35UFKDGkIh0RVbaAzh9Wm5cjwDgpHK9vHMP8b2E12FW2coKPCrbP7kJd+5B
-         PFt/loSVLrqQow01n3w++QYk3A9I8rbynBAg7iHZsZSDsJ+1KQbOiN7XcM7+Y/dziU0/
-         WVMg==
-X-Gm-Message-State: AOJu0YzjZrKNKh191NVEcBP4dgK/JlaIu5NpyqyN04eaQdQSvhCY0+S5
-	75a5fFQ8JrJsUPhkqrK+G2MmGfxDSGXGtefqkNWPwjZ/EvbKkBdYUbATB4jOuJbJ3g1H+zQhTCw
-	r
-X-Google-Smtp-Source: AGHT+IF6klHJqWT0oB64li1BBZDr5y6xBF4YRpNtgnd+hNquWgAHjZ99ZzB1qAhn62zzWOTkDEfgmw==
-X-Received: by 2002:a50:cac7:0:b0:566:d28b:3d72 with SMTP id f7-20020a50cac7000000b00566d28b3d72mr8757465edi.2.1709627195228;
-        Tue, 05 Mar 2024 00:26:35 -0800 (PST)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id h6-20020a0564020e0600b00566d87734c0sm4434294edh.16.2024.03.05.00.26.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 00:26:34 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 05 Mar 2024 09:26:34 +0100
-Subject: [PATCH] gpio: nomadik: Back out some managed resources
+        d=1e100.net; s=20230601; t=1709629098; x=1710233898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=HuwDDAWMV9bZP+9DIdSi5gyDUDZ8Gcoqy8rJpCsW9mM=;
+        b=FsbZ0dV+SwloX8uAbEBqW4F9DWW3en479FZAiTGTWurDQ7rVFAr3R67LgnRZK6RuDg
+         +ufGD0srRFimzj8V2tPIdwHU8quiyxifMnl0j5zV6cqVKxqK8Qrofst1dNJnrjjF2ROg
+         4jLrnx27VBXQTaLH/lDuewyE7umMriWqFPHAU3bYh3cAzt602XCyUudig3wP4JbIGAXm
+         kumMAHakgRu8D9RiamPZTDNP08ZsFJgpc5TQL3VoFcrO9UxEtaFoJcBVmgzvCte9n12A
+         yJ8xIM3s6JkFoNBvpG2dopzy8Sxkao5+iCXx2MbshG/0VSfHG633u4EnPViET+dN9mFo
+         gfAg==
+X-Forwarded-Encrypted: i=1; AJvYcCWsQTZLgftfOHs0G0iij5PhT0HXddw380L0LrYRgIK0McvgVB+j8yhYZxRGlEhG6Ij+GkDur096KPve/sqPz0qRUBcClsD5YujnMw==
+X-Gm-Message-State: AOJu0Yw5cDZ3rQ8E17KHtrlUGhSEIp6MK3/VlN7X5tZ3oD4oyliRgWTb
+	JSSylS8lCBP5s8tXw5jQeqcfT0pGFntyl17KGQW0j7xahp6E3TNh5qc58WNGWSpOprqWz9v22tP
+	2CI+lncvB0CwCliLoum3kGHZu+4NSalKnqAl49Q==
+X-Google-Smtp-Source: AGHT+IHDiMYNrnSxZP1Ky5LIhxgCMW+wJkwNjND8zOGLnolqKWQ9BvBVPa7JbmdoMqyRIJ2L+lHknttDUG9meN2659c=
+X-Received: by 2002:a25:b195:0:b0:dcc:f6e2:44d0 with SMTP id
+ h21-20020a25b195000000b00dccf6e244d0mr9524314ybj.37.1709629098555; Tue, 05
+ Mar 2024 00:58:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Message-Id: <20240305-fix-nomadik-gpio-v1-1-73162e3a388e@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADnX5mUC/x2MQQqAMAwEvyI5G6hVL35FPAST1iC20oII4t8NX
- gYGZveBKkWlwtQ8UOTSqjmZdG0D60YpCiqbg3d+cL0bMeiNKR/EumM8NePogmdmIiPY7CxizX8
- 5L+/7Ab6sIi5iAAAA
-To: Bartosz Golaszewski <brgl@bgdev.pl>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
- Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.4
+References: <20240301-awinic-aw9523-v8-1-7ec572f5dfb4@linaro.org> <CAMuHMdU3yUAxMgN-xo5BU2O8x0sn92myz6ZH68DB6JnMfgh7rg@mail.gmail.com>
+In-Reply-To: <CAMuHMdU3yUAxMgN-xo5BU2O8x0sn92myz6ZH68DB6JnMfgh7rg@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Tue, 5 Mar 2024 09:58:07 +0100
+Message-ID: <CACRpkdY+6__RoDrMT5tsxSAUBOxzjOFzH56Z=07SSG=2PXwcxA@mail.gmail.com>
+Subject: Re: [PATCH v8] pinctrl: Add driver for Awinic AW9523/B I2C GPIO Expander
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: David Bauer <mail@david-bauer.net>, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
+	Krzysztof Kozlowski <krzk@kernel.org>, linux-gpio@vger.kernel.org, 
+	kernel test robot <lkp@intel.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Several commits introduce managed resources (devm_*) into the
-nmk_gpio_populate_chip() function.
+On Tue, Mar 5, 2024 at 9:00=E2=80=AFAM Geert Uytterhoeven <geert@linux-m68k=
+.org> wrote:
+> On Fri, Mar 1, 2024 at 2:30=E2=80=AFPM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+> > From: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.=
+org>
+> >
+> > The Awinic AW9523(B) is a multi-function I2C gpio expander in a
+> > TQFN-24L package, featuring PWM (max 37mA per pin, or total max
+> > power 3.2Watts) for LED driving capability.
+> >
+> > It has two ports with 8 pins per port (for a total of 16 pins),
+> > configurable as either PWM with 1/256 stepping or GPIO input/output,
+> > 1.8V logic input; each GPIO can be configured as input or output
+> > independently from each other.
+> >
+> > This IC also has an internal interrupt controller, which is capable
+> > of generating an interrupt for each GPIO, depending on the
+> > configuration, and will raise an interrupt on the INTN pin to
+> > advertise this to an external interrupt controller.
+> >
+> > Signed-off-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@so=
+mainline.org>
+> > Signed-off-by: David Bauer <mail@david-bauer.net>
+> > Reported-by: kernel test robot <lkp@intel.com>
+>
+> This "Reported-by" should not be here, especially since the issue
+> reported[1] was not fixed, and is now in next[2].
 
-This isn't always working because when called from the Nomadik pin
-control driver we just want to populate some states for the device as
-the same states are used by the pin control driver.
+Oops I dropped the tag.
 
-Some managed resources such as devm_kzalloc() etc will work, as the
-passed in platform device will be used for lifecycle management,
-but in some cases where we used the looked-up platform device
-for the GPIO block, this will cause problems for the combined
-pin control and GPIO driver, because it adds managed resources
-to the GPIO device before it is probed, which is something that
-the device core will not accept, and all of the GPIO blocks will
-refuse to probe:
+> [1] https://lore.kernel.org/all/202106251415.3UY7htNp-lkp@intel.com/
+> [2] http://kisskb.ellerman.id.au/kisskb/buildresult/15135594/
 
-platform 8012e000.gpio: Resources present before probing
-platform 8012e080.gpio: Resources present before probing
-(...)
+I wonder what the problem is though since the driver
+depends on OF && I2C...
 
-Fix this by not tying any managed resources to the looked-up
-gpio_pdev/gpio_dev device, let's just live with the fact that
-these need imperative resource management for now.
-
-Drop in some notes and use a local *dev variable to clarify the
-code.
-
-Cc: Théo Lebrun <theo.lebrun@bootlin.com>
-Fixes: 12410e95903c ("gpio: nomadik: use devm_platform_ioremap_resource() helper")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/gpio/gpio-nomadik.c | 24 +++++++++++++++---------
- 1 file changed, 15 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-index 483086deb397..1ed547491f48 100644
---- a/drivers/gpio/gpio-nomadik.c
-+++ b/drivers/gpio/gpio-nomadik.c
-@@ -509,9 +509,11 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- {
- 	struct nmk_gpio_chip *nmk_chip;
- 	struct platform_device *gpio_pdev;
-+	struct device *dev = &pdev->dev;
- 	struct reset_control *reset;
- 	struct device *gpio_dev;
- 	struct gpio_chip *chip;
-+	struct resource *res;
- 	struct clk *clk;
- 	void __iomem *base;
- 	u32 id, ngpio;
-@@ -519,13 +521,13 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 
- 	gpio_dev = bus_find_device_by_fwnode(&platform_bus_type, fwnode);
- 	if (!gpio_dev) {
--		dev_err(&pdev->dev, "populate \"%pfwP\": device not found\n", fwnode);
-+		dev_err(dev, "populate \"%pfwP\": device not found\n", fwnode);
- 		return ERR_PTR(-ENODEV);
- 	}
- 	gpio_pdev = to_platform_device(gpio_dev);
- 
- 	if (device_property_read_u32(gpio_dev, "gpio-bank", &id)) {
--		dev_err(&pdev->dev, "populate: gpio-bank property not found\n");
-+		dev_err(dev, "populate: gpio-bank property not found\n");
- 		platform_device_put(gpio_pdev);
- 		return ERR_PTR(-EINVAL);
- 	}
-@@ -539,7 +541,7 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	}
- #endif
- 
--	nmk_chip = devm_kzalloc(&pdev->dev, sizeof(*nmk_chip), GFP_KERNEL);
-+	nmk_chip = devm_kzalloc(dev, sizeof(*nmk_chip), GFP_KERNEL);
- 	if (!nmk_chip) {
- 		platform_device_put(gpio_pdev);
- 		return ERR_PTR(-ENOMEM);
-@@ -547,7 +549,7 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 
- 	if (device_property_read_u32(gpio_dev, "ngpios", &ngpio)) {
- 		ngpio = NMK_GPIO_PER_CHIP;
--		dev_dbg(&pdev->dev, "populate: using default ngpio (%d)\n", ngpio);
-+		dev_dbg(dev, "populate: using default ngpio (%d)\n", ngpio);
- 	}
- 
- 	nmk_chip->is_mobileye_soc = device_is_compatible(gpio_dev,
-@@ -559,14 +561,17 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	chip->label = dev_name(gpio_dev);
- 	chip->parent = gpio_dev;
- 
--	base = devm_platform_ioremap_resource(pdev, 0);
-+	/* NOTE: different devices! No devm_platform_ioremap_resource() here! */
-+	res = platform_get_resource(gpio_pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
- 	if (IS_ERR(base)) {
- 		platform_device_put(gpio_pdev);
- 		return ERR_CAST(base);
- 	}
- 	nmk_chip->addr = base;
- 
--	clk = devm_clk_get_optional(gpio_dev, NULL);
-+	/* NOTE: do not use devm_ here! */
-+	clk = clk_get_optional(gpio_dev, NULL);
- 	if (IS_ERR(clk)) {
- 		platform_device_put(gpio_pdev);
- 		return (void *)clk;
-@@ -574,9 +579,10 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	clk_prepare(clk);
- 	nmk_chip->clk = clk;
- 
--	reset = devm_reset_control_get_optional_shared(gpio_dev, NULL);
-+	/* NOTE: do not use devm_ here! */
-+	reset = reset_control_get_optional_shared(gpio_dev, NULL);
- 	if (IS_ERR(reset)) {
--		dev_err(&pdev->dev, "failed getting reset control: %ld\n",
-+		dev_err(dev, "failed getting reset control: %ld\n",
- 			PTR_ERR(reset));
- 		return ERR_CAST(reset);
- 	}
-@@ -588,7 +594,7 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	 */
- 	ret = reset_control_deassert(reset);
- 	if (ret) {
--		dev_err(&pdev->dev, "failed reset deassert: %d\n", ret);
-+		dev_err(dev, "failed reset deassert: %d\n", ret);
- 		return ERR_PTR(ret);
- 	}
- 
-
----
-base-commit: caddc92c57451d983c7e31e60b961c5aae4ece63
-change-id: 20240305-fix-nomadik-gpio-50f2dddaa2dd
-
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
-
+Yours,
+Linus Walleij
 
