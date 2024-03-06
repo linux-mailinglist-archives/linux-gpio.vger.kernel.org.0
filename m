@@ -1,119 +1,144 @@
-Return-Path: <linux-gpio+bounces-4162-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4163-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1EB0D872FFE
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 08:54:37 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7CD08730E9
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 09:39:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B6FFDB20A60
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 07:54:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 925B528784C
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 08:39:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5425D5CDCE;
-	Wed,  6 Mar 2024 07:54:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1E4F85D912;
+	Wed,  6 Mar 2024 08:38:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="L+MwHYEK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Ein3nH0Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
+Received: from mail-yb1-f176.google.com (mail-yb1-f176.google.com [209.85.219.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC835C60F
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 07:54:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D715D910
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 08:38:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709711669; cv=none; b=qos1ZPLPbmrOmZjBQ9aLn4P9QDsl0xaENnTK3hjuUAMEgpaoY7sgYdzWeJwlVmKrMA0z/KQYg+KMhXSCq+QtkrUXxuUxKVvhZWpLzZk9O5QmVCbIgH3tXcPJ6utPjgyUwa1zO+yJk8HpAhFkhB95Jtu15yN156c17FoGPVqJiO0=
+	t=1709714332; cv=none; b=fFGLYhKnXBe0MnYt8VutkxvUn/mKL9u9txgOGw3fLAo+Mrh4CKhURUn1NQr+IFXUBpOjtrFF07fsLoXkj6IwPb62cV/SVWgLx8p2cEzo8E7RXtnucHo1SwL+Ukd4PwpuA7Ir6LhZ6k4cJOU64qq8ITSbaIpg7MhS3yzbYTmycYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709711669; c=relaxed/simple;
-	bh=0wiRTVwMpATfOfJ72M+YthVFgGZDcMmaS7CMlxBL95E=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i+mJ+MS0pRFqBpQZou9w9l2C02S8uS19O2aYtRgOjSgOf2fN68sQmADgZhR+RJMCJzKxr+3ZYoeI9Q3iVr6JsH79sCBSxV0toAYFbwPkFJa4Su9aGV/IGNKjqCSRp4xBIdquRHUy+sEaEG5L5ZQPRfKXGK0ewrYEoW/uWtOX3S0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=L+MwHYEK; arc=none smtp.client-ip=209.85.218.51
+	s=arc-20240116; t=1709714332; c=relaxed/simple;
+	bh=JKfQSevmPOCRb92592Z8SBypvKHpL6XdbrHsgolSWJc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=JcYmCLZp4/x77UevV1wnBw5ePliqGKhrL0WS84WZAooht85ORI6a9tl+U3jpPvsrpPicgrBDmIbYklOvUHv9+/0cmHMWAAltfws29q2NVU1DLjHDNpjwYkZ2A+gJpGWv0qCl1Q6+U2cfrj05NHHeUf0MT70Jp9mWKK1XuEhClI0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Ein3nH0Z; arc=none smtp.client-ip=209.85.219.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a4499ef8b5aso514394366b.0
-        for <linux-gpio@vger.kernel.org>; Tue, 05 Mar 2024 23:54:27 -0800 (PST)
+Received: by mail-yb1-f176.google.com with SMTP id 3f1490d57ef6-dc23bf7e5aaso1704428276.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 00:38:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709711666; x=1710316466; darn=vger.kernel.org;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=jnmhCaXqdBzSzRGuB9lkt+sZL4daDBjvU6v4e0QXBuA=;
-        b=L+MwHYEK6wYQCmcrfbrLkgku7KARSm9BKek7rD7CYM1plSd/FS4Jntvws1zVqtrUh+
-         8NI5qupispFH0izzFa+dNPWTXYiuRfad10gTrCyEHNK7D3pNHfobuMLVfXiF0VXftcsm
-         iVLUwPdOLPgqtwb+e5EO3ICQ6Iiyqxirz38sFJQPeWQJgViXn6gLjUAED8Bl2mRcrwQt
-         FQqaLUvw4AGlY8bF8WLMiY6RZuLNvymFVC4Ce57UQ39KPA0FXuz8IKVaLpzHxTKB+FH0
-         m860yA+6yN0u+8Txe8z/horer8tapqEwaN7AtZ3Bz7wm9xWw1jzoorcGyb/39hoKsOvB
-         8mvQ==
+        d=linaro.org; s=google; t=1709714330; x=1710319130; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JKfQSevmPOCRb92592Z8SBypvKHpL6XdbrHsgolSWJc=;
+        b=Ein3nH0ZJxX5Uz/MBcEmFmeoux4fsqJ9RcYIS2G5zMzTIMa9sGwOvrH+4XDo4rpVDp
+         Uv9lww6nphJi4t2JwZbSZR3RHFTv/lGAZwjcj7yKxZxUkDOcHAPEiT0LcVz08O2d0ZHB
+         6CBkc9TuBVnCt4Kc6QK/jtv1bQOCubBp36kSGE01xwPa7lYfc39FjV8uvodV3ImyxD+g
+         vNeQAFDF8LVTR2QfcThNW2pGAEdBfZFXcm9gONwskc79jWlN7uQeJ4xKZWiLBn31leE3
+         8d5ps9PA98Rlj8RLEJkIPFGdGzgsA9bU8ELPSxOGmJOsxOpwiOexEW1yBCKo9RBsZFuX
+         PCBg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709711666; x=1710316466;
-        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
-         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=jnmhCaXqdBzSzRGuB9lkt+sZL4daDBjvU6v4e0QXBuA=;
-        b=NNwUO99ucui/+NWsyyWs6zNbLR/suEv0O+t13KbR9tmzhrx0LYyCT6C+olpoMt/4jw
-         a0AlCE/Uc00i9Jc460cC5mylh7LJcY/+en8mQfkZYSZYmd7dQ1cOD5VVnZ+KDqyAYypf
-         ZF+OnbwipCF+KFyBIZiApPGdY0wFDy+bb3fYCnfjquLhfB0GTtVlaXjFc0yNckeVSsDi
-         vGB4CpUwtVERO6WjB0iUQC3HvZsXLiH9K8EPowTTfFZfSm3x0KDS3c4CDQngASPX60EJ
-         JnpCQD7Go8sUKFemKlVuXLzOlf6A8gTdgeoI7i3vm0GsrKJqT5zgUE4faVT7X7Owj7pK
-         A60w==
-X-Gm-Message-State: AOJu0YyjrAkWXhjQIAvTgPfyEq3J8hgi54nMknTcYr1RE6Bug4v3ZfTh
-	NfVH/NdwmZQgGQIybrGRn1ypJbwdKDtpHDQeqO96IEgzuAbOAxLyHPAgy/cnMOM=
-X-Google-Smtp-Source: AGHT+IG/hCxSmlJrB+uKaj28OCu9hJlPe03uEFXEPKx6fHuK00XoM411y9q7ROI0AVmVQqkPPn1gXQ==
-X-Received: by 2002:a17:906:714f:b0:a44:5515:3b48 with SMTP id z15-20020a170906714f00b00a4455153b48mr9519653ejj.14.1709711665847;
-        Tue, 05 Mar 2024 23:54:25 -0800 (PST)
-Received: from [127.0.1.1] ([85.235.12.238])
-        by smtp.gmail.com with ESMTPSA id bx18-20020a170906a1d200b00a44f07e55d2sm4367688ejb.41.2024.03.05.23.54.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Mar 2024 23:54:25 -0800 (PST)
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 06 Mar 2024 08:54:25 +0100
-Subject: [PATCH] pinctrl: aw9523: Add proper terminator
+        d=1e100.net; s=20230601; t=1709714330; x=1710319130;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=JKfQSevmPOCRb92592Z8SBypvKHpL6XdbrHsgolSWJc=;
+        b=PI9WTyen17LJ5g+bpL7+fMWQjs/P1s+TfWJjSGfHM+Bcl9GSBejoQVztlM/TsvYx/4
+         WrOs8FqxkJIo+qvn2zNrU6Xwzj5INt5k8xGRInEGtFmbaeVjtBAfKSS5+XVe0cLKAhl2
+         gZOB/QXErzpicLhGo4+I7gapM8jaJc8JwUjoIF+cv2A9aNv3v0LFUP87oFHyiQU+svmG
+         ueqW2m305y2Z6Vadzh7aWuO3gKndZieQLVbPBAmnuG+Jd6rULUHnvy5HjpTYf+42l2AP
+         b+J6h9Ol5nO/xsbFz2aFsISemCVwTStXsSIX481A48r3NwfH38a0m08Hakis1oIgBYRS
+         D96g==
+X-Forwarded-Encrypted: i=1; AJvYcCXaJpRuQ951FCROKNZMC1d8S/VhbQtkI6AmQVx5IvJzFtUnWRQ9qZ57cP+EHsZ2kVAdbrAWsuHqbX9wjJBcP97CnNRdv85jtc0NYA==
+X-Gm-Message-State: AOJu0Yx1UcZG4OZNKsmUK86Z9WGcCeXQIMkvi4u53yrTrQdFMSIv0GYX
+	YjfJHg0eCQHsMFZIeeXSVjQT73Czs7NEzB5ureED5kkbUa8QSHEU12dZTw5MFapCNL6l/opOphU
+	yajlIn/I4vl/uHxW/cFIVZ6mHPt7L3wv4pNtG/w==
+X-Google-Smtp-Source: AGHT+IEYHmvP9yXV29D7DquFpqXISz0VM0lwIjWOku1/Pxa9ZGiag1E1capZdHkon0gZtLboEXtbjNNd2egyOoBDqlg=
+X-Received: by 2002:a5b:810:0:b0:dc7:4692:c29 with SMTP id x16-20020a5b0810000000b00dc746920c29mr12032108ybp.33.1709714330114;
+ Wed, 06 Mar 2024 00:38:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240306-fix-aw9523-terminator-v1-1-13f90f87a7f6@linaro.org>
-X-B4-Tracking: v=1; b=H4sIADAh6GUC/x2MSQqAMAwAvyI5G+jign5FPFSNmoNV0qKC+HeLx
- 4GZeSCQMAVosweETg68+wQ6z2BcnV8IeUoMRplCWVXhzDe6qymNxUiysXdxF6xsTU6PWg8TQWo
- PoST+365/3w+OBpbPZwAAAA==
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, 
- David Bauer <mail@david-bauer.net>
-Cc: linux-gpio@vger.kernel.org, kernel test robot <lkp@intel.com>, 
- Linus Walleij <linus.walleij@linaro.org>
-X-Mailer: b4 0.12.4
+References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
+ <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
+ <CACRpkdZX2WHCggT2hvS86eLUq3pH6jYYpEFLbY4WwN6_Ya+mQw@mail.gmail.com> <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
+In-Reply-To: <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Wed, 6 Mar 2024 09:38:39 +0100
+Message-ID: <CACRpkdZ-6neizSv-F5jEJPZ-a_emoCbxM9AFqfzYSHTZFGnM1g@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
+To: wens@kernel.org
+Cc: Stefan Wahren <wahrenst@gmx.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-The of_device_id array needs to be terminated with a NULL
-entry.
+On Wed, Mar 6, 2024 at 4:10=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wrote=
+:
+> On Wed, Mar 6, 2024 at 6:38=E2=80=AFAM Linus Walleij <linus.walleij@linar=
+o.org> wrote:
+> > On Sun, Mar 3, 2024 at 3:19=E2=80=AFPM Chen-Yu Tsai <wens@kernel.org> w=
+rote:
+> >
+> > > Hi Linus,
+> > (...)
+> > > I'd like to take this opportunity to ask about INPUT_ENABLE and
+> > > OUTPUT_ENABLE.
+> > >
+> > > AFAICT from existing comments in include/linux/pinctrl/pinconf-generi=
+c.h ,
+> > > these two options refer to input and output buffers or connections wi=
+thin
+> > > the general electric path, i.e. it allows the signal to pass through =
+in
+> > > a certain direction. It does not refer to the current selected direct=
+ion
+> > > of the GPIO function, which is covered by the PIN_CONFIG_OUTPUT optio=
+n,
+> > > and by gpiolib, if and only if the pin has been allocated for gpiolib
+> > > use. But it seems multiple existing drivers do this.
+> > >
+> > > What's the correct thing to do here?
+> >
+> > It's really up to the driver author: the text in pinconf-generic.h does=
+ its best
+> > to describe the intended semantics, but sometimes hardware will not ful=
+ly
+> > match what is said in the documentation.
+> >
+> > I guess in this case the PIN_CONFIG_OUTPUT_ENABLE and
+> > PIN_CONFIG_OUTPUT is not two distinctly different things for this
+> > hardware so a reasonable semantic is to implement both in the same
+> > case and do the same for both of them.
+>
+> But that doesn't really match the intended semantics. Maybe the driver
+> should just ignore PIN_CONFIG_OUTPUT / PIN_CONFIG_INPUT if the hardware
+> doesn't have matching toggles?
+>
+> On MediaTek hardware, they have input enable controls, but not for output
+> enable. So mapping directly to GPIO direction doesn't quite make sense.
 
-Reported-by: kernel test robot <lkp@intel.com>
-Closes: https://lore.kernel.org/oe-kbuild-all/202403061147.85XYVsk3-lkp@intel.com/
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
----
- drivers/pinctrl/pinctrl-aw9523.c | 1 +
- 1 file changed, 1 insertion(+)
+I think you should look what will work in practice, given the state
+definitions in the device tree file and the runtime requirements from
+GPIO.
 
-diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index 3b35ef197103..4edd371c469f 100644
---- a/drivers/pinctrl/pinctrl-aw9523.c
-+++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -1099,6 +1099,7 @@ MODULE_DEVICE_TABLE(i2c, aw9523_i2c_id_table);
- 
- static const struct of_device_id of_aw9523_i2c_match[] = {
- 	{ .compatible = "awinic,aw9523-pinctrl", },
-+	{ }
- };
- MODULE_DEVICE_TABLE(of, of_aw9523_i2c_match);
- 
+If these things add up and work in practice it's fine.
 
----
-base-commit: 3ded216936392775d17bb22fdc480a48eb549961
-change-id: 20240306-fix-aw9523-terminator-637ea1c11bde
+Rough consensus and running code.
 
-Best regards,
--- 
-Linus Walleij <linus.walleij@linaro.org>
-
+Yours,
+Linus Walleij
 
