@@ -1,126 +1,125 @@
-Return-Path: <linux-gpio+bounces-4168-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4169-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0A267873726
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:58:03 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 056698737A0
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:21:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B12B21F21539
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 12:58:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89051B25EAB
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:21:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0F78289A;
-	Wed,  6 Mar 2024 12:57:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A4F1131731;
+	Wed,  6 Mar 2024 13:20:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CC7gJs59"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9eechLF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EEE7F7FA
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 12:57:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CC2131724;
+	Wed,  6 Mar 2024 13:20:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709729860; cv=none; b=lzEdzza4OGWwZtceyWiCFCr6S9cu3JZxQFgWkEKhMTfNsfd1d9ud8Xi+cUSbSgn7O8RXJaFlV8ZTxmv7SXUu2ds3qEwmRjdwDAtrTw/VqPkXlZHvO+zeqsWak7Vl5544NfJDMw9cPajo3aQIjfowV0NMjJQ2Y3vOnsbphBBIV3w=
+	t=1709731253; cv=none; b=pPMrZgYf0m+X3a7r62hK/gHeKfH1Jtchdy+xPdIlUBkyOBty93+PoQ4k1ui28uFypzryepqNMwuVwzJDyRnAU4coWuuQiJ8n3eA9e8SBsoGH0dEJ11A5A+rPt2NFYodcSgJ9ANJ6GV36Tf349YO3uxmKHFpB83aSEFfMMfkAHsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709729860; c=relaxed/simple;
-	bh=lKxUp8iQmr2CFCgCoU8yw4kxsbGfObo9DobLfsZzj/c=;
+	s=arc-20240116; t=1709731253; c=relaxed/simple;
+	bh=hBwQRfDB3vRxBfC1PFrHDC8bEfAnJTBEaB2IzGBEn8g=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=HmxdHZ3w4HdBkE9GMZdg27cDwnrFlKs0b85/1a1KpIILRDVkgUYA8TXEr6VkI4DZb1eGnAFvuAsEnla7lAfht1V6d+jwja0y8bJMzv0Rp3Y6O+s0THyhImJO/8N0wjtiPLYDcplaE2n2d+SoqfIpUImLpPKeWWofgJmCyJXJxHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CC7gJs59; arc=none smtp.client-ip=209.85.128.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-609a773ec44so42104957b3.3
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 04:57:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709729858; x=1710334658; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jLhDkVixqYfE4pnSjrgLdoF6qlywqVJESJHWtblUgRI=;
-        b=CC7gJs59d9qNE80+9bDVowdYR9pvc+AgMyQg5M5/hXaOACJaGYAfPw7OXd6Zi1HJf5
-         Yqp45GHJevIt5eg6qFc3nxPDrX+kLDQne6bVHSOuHD1q3OdMavRUoE6gSrrqz6bdAxbk
-         xtYBVrLSSnE05kDMsOKxOFL81hJk+ptiH3EXkuuZ+xtXcbL0d7lnMJrJNFXC8CtDKKuY
-         W4r/auWkB5gkKzlijCHJbo5440YdmkUuX2WLyzlAO2KQjZded+zBBlcBQStyfzJ+8SNr
-         Me6TbutCTGQ5tB17SaJs+KBQ44fXpJwOv0eCYzYKObQSPtUry7yzh/e5AjWNFCcrfzQJ
-         GsQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709729858; x=1710334658;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jLhDkVixqYfE4pnSjrgLdoF6qlywqVJESJHWtblUgRI=;
-        b=Zkqeoe5140YfbnPUb7i83ssFX9A4XIw6EG7AQR+vCL2dfFxu9K191AO83NTB4eFEMQ
-         XNIu26yK8SptLOLiXMZ4CX3cxqhzJakIb7dIsewzTUZuLblOSIJ10hZyOKIMxlrd2Pdr
-         E69gdA4i0QG45nCEqTxwcCLJJhjx23V6H04p9tO/SC7R7J9dCGaz7PwDqlrX/zxGnpql
-         mCuNY+QZtsmCa20mGJCpmZ7uWEBySpcXIWQlw0l/tDqArSnPJsqDlZmQGuCJ8Zk2VGNC
-         Pis4zyqaDumuwROnWX+xaa2jfTSFvOemwIPxL+ia/1R97iJd7uOwCGj23ecvBeOU9mUK
-         rkEw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtJ6V2RyubFco7C5IwG+OlxAIwxYq1Q8Oc5rPlDc02+KjEkldehlk1AyIkL+wnEpihDY+chHZ7fBeP8jqo3W3WRTpAoAPAEeBQnQ==
-X-Gm-Message-State: AOJu0YyQYH5rTw9OTfwnkUEeY3YSuQ7nP0iz7gpdiW+yNtMDAPaL6Vrs
-	/iiIQ/pQYGMhBM2wNkKit07/6TPCAZq7wGRct7CU5vTsjh9oa0s4Af/ZPIxmZttJIWstxuWoVd7
-	L0M9ZEdFBbA2+IbZMwht3rcgBuJR7RmfAWGxYmA==
-X-Google-Smtp-Source: AGHT+IFUnfbvik6I2UyytH96nMWqjpkCh4zYeN8ZyrqghEG+E8HsZS3SNVQjZERuyCBIvPiv8XNjZ0khjc5IWnqOCLk=
-X-Received: by 2002:a05:690c:fc3:b0:5ff:a9bc:b7f with SMTP id
- dg3-20020a05690c0fc300b005ffa9bc0b7fmr17442872ywb.21.1709729858098; Wed, 06
- Mar 2024 04:57:38 -0800 (PST)
+	 To:Cc:Content-Type; b=O6CPtDrZkKL4tIbcAw3ZGdBPkILClf1j234HN/qXeHJb6oAIPpMyJI5VuxBAKiEwVpoUlxD35fjvevqLMT2QHACfl7wFAri785/JddLLwh3XCmATmT4MMGCVATDck/hxF3PViJMoafqpRt2Ob2cuYx8QclMb7PL9omgAcY4CseM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9eechLF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFC3C43394;
+	Wed,  6 Mar 2024 13:20:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709731252;
+	bh=hBwQRfDB3vRxBfC1PFrHDC8bEfAnJTBEaB2IzGBEn8g=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=H9eechLFsCUlveAwDf122TxG/RfEysWowspaZGRv6h6Mkzv2guaOSGDUjnutHbXmZ
+	 pJSWdZ8Z46pd9rr9/BjTMfy30R2tKQKq7hyDD4eK7KqdC7Y4eeZRPTTxnHyddo/2FV
+	 Q2mTZM5qyPtaktrQmVDS+3qgCZ6VlLFWpro2/GoLmHltyAALmByoCfuumAnQd/q2vW
+	 Y9+VJfkl+fftG0V0oIdZmsMdludkSIQ/NTRdjNUEhP5YQbWw3n40Vhvt9PkaWtrUWp
+	 J/p6kJXl8nr68nMHSw+J26jsuOUWDDtcNS8Fi5xQULfh0g+zZMg9KXlU6m5POhoDLe
+	 OSoldeGUX4XIA==
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d27fef509eso13412811fa.3;
+        Wed, 06 Mar 2024 05:20:52 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXLL7FL5uqakXyEKkPAdpG2MK1eV6IGpT3WQ08AFshKY4ysNOin9bYVNtMu5Qj9gbJahvvY5uYxfoeF0UGoz4h5qtJrgl86RCZjLTr7d1fjtEGENH3qarK/VMv/T4+QOstY9npTpP4=
+X-Gm-Message-State: AOJu0YxzyVL0pcU9un9wHzzOZXb36Uje628GgFZcIgw9ZOBsLaoy2Y7q
+	EsEM4Yon27KcDY90gp8LMVn4CuoIboq9OB3rDEYW2Rj0vnBEFjWGyzRQdRnoprrViFHYFgdcUo9
+	dbOkuG8Ff5s6XDaYoa5OOihVXJw==
+X-Google-Smtp-Source: AGHT+IFKThumhv59EjFUdOH4xKjy6uY/jkwVsSZsbZtQIc/HJ9nFKAPTxbyOPWQeWZJHzM4Y17xir7f42ecDV/1Dy+Q=
+X-Received: by 2002:a2e:2c05:0:b0:2d2:e82e:75f6 with SMTP id
+ s5-20020a2e2c05000000b002d2e82e75f6mr3091068ljs.44.1709731250644; Wed, 06 Mar
+ 2024 05:20:50 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
- <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
- <CACRpkdZX2WHCggT2hvS86eLUq3pH6jYYpEFLbY4WwN6_Ya+mQw@mail.gmail.com>
- <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
- <CACRpkdZ-6neizSv-F5jEJPZ-a_emoCbxM9AFqfzYSHTZFGnM1g@mail.gmail.com> <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com>
-In-Reply-To: <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 6 Mar 2024 13:57:27 +0100
-Message-ID: <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
-To: wens@kernel.org
-Cc: Stefan Wahren <wahrenst@gmx.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+References: <20210624214458.68716-1-mail@david-bauer.net> <CAL_Jsq+sHy=mr0paWvxOL8yT9TwuaJdfapX0sFkOJFtjCqoT1w@mail.gmail.com>
+ <CACRpkdY2jfszTNvUHxc8-AXFwZKQaaOkcTwZrAiKi2rU5tTn6g@mail.gmail.com>
+In-Reply-To: <CACRpkdY2jfszTNvUHxc8-AXFwZKQaaOkcTwZrAiKi2rU5tTn6g@mail.gmail.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Wed, 6 Mar 2024 07:20:37 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJWWvVQHtM6fmqewQz0YXhr5t3hzSso5CLhi_Sws8uihA@mail.gmail.com>
+Message-ID: <CAL_JsqJWWvVQHtM6fmqewQz0YXhr5t3hzSso5CLhi_Sws8uihA@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: David Bauer <mail@david-bauer.net>, lgirdwood@gmail.com, broonie@kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 6, 2024 at 9:55=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wrote=
-:
-
-> For the MediaTek device trees, the only two occurrences of "output-enable=
-"
-> actually describe conflicting information:
+On Tue, Mar 5, 2024 at 4:25=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
 >
->     pins-rts {
->             pinmux =3D <PINMUX_GPIO47__FUNC_URTS1>;
->             output-enable;
->     };
+> On Tue, Mar 5, 2024 at 6:28=E2=80=AFPM Rob Herring <robh+dt@kernel.org> w=
+rote:
 >
-> The above asks for the UART function on this pin, but based on existing
-> driver definitions, switches the function to GPIO output because of the
-> "output-enable" property. Hence the confusion.
+> > Linus, did you just apply this 3 year old bit-rotted patch? Linux-next
+> > now warns:
+>
+> Not "just", I did run checks on it first i.e.:
 
-This is actually also driver-dependent.
+Sorry, I meant "just now".
 
-It is only conflicting if the pin controller has .strict set in struct
-pinmux_ops,
-because many SoCs are perfectly capable of using a pin as a function
-such as UART RTS and GPIO at *the same time*.
+> $ make DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pinctrl/awinic=
+,aw9523-pinctrl.yaml
+> dt_binding_check
+>   HOSTCC  scripts/basic/fixdep
+>   HOSTCC  scripts/dtc/dtc.o
+>   HOSTCC  scripts/dtc/flattree.o
+>   HOSTCC  scripts/dtc/fstree.o
+>   HOSTCC  scripts/dtc/data.o
+>   HOSTCC  scripts/dtc/livetree.o
+>   HOSTCC  scripts/dtc/treesource.o
+>   HOSTCC  scripts/dtc/srcpos.o
+>   HOSTCC  scripts/dtc/checks.o
+>   HOSTCC  scripts/dtc/util.o
+>   LEX     scripts/dtc/dtc-lexer.lex.c
+>   YACC    scripts/dtc/dtc-parser.tab.[ch]
+>   HOSTCC  scripts/dtc/dtc-lexer.lex.o
+>   HOSTCC  scripts/dtc/dtc-parser.tab.o
+>   HOSTLD  scripts/dtc/dtc
+>   LINT    Documentation/devicetree/bindings
+> usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [-f
+> {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v]
+> [FILE_OR_DIR ...]
+> yamllint: error: one of the arguments FILE_OR_DIR - is required
+>   CHKDT   Documentation/devicetree/bindings/processed-schema.json
+>   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
+>
+> So that's at least something but apparently not enough, hm the yamllint m=
+oaning
+> should be a hint should it not... it's on v6.8-rc1.
 
-Details on strict mode can be found in Documentation/driver-api/pin-control=
-.rst
+That's fixed in later RCs.
 
-I don't know which Mediatek this is but:
-$ git grep strict drivers/pinctrl/mediatek/
-drivers/pinctrl/mediatek/pinctrl-moore.c:       .strict =3D true,
+BTW, you can do just "DT_SCHEMA_FILES=3Dawinic,aw9523-pinctrl" or even
+"DT_SCHEMA_FILES=3Dpinctrl" to test all pinctrl. It's just a substring
+match. (It was just the full path that broke.)
 
-Only the Moore family is strict, and I think BCM2835 is not.
-
-Yours,
-Linus Walleij
+Rob
 
