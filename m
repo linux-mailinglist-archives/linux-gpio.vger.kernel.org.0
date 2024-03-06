@@ -1,135 +1,178 @@
-Return-Path: <linux-gpio+bounces-4171-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4172-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B9E48737F3
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:41:09 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 68D3C873A73
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 16:13:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C858B23AB2
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:41:07 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA8F11F2C4E6
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 15:13:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6610F130AFE;
-	Wed,  6 Mar 2024 13:41:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A267134751;
+	Wed,  6 Mar 2024 15:13:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YV93bZ62"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="F8qtd1Cg"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay8-d.mail.gandi.net (relay8-d.mail.gandi.net [217.70.183.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E831E519
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:41:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93DA5131742
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 15:13:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709732465; cv=none; b=O2QxQ5poozt5h7F4TSER8om+B35vrzCL0tZF52MWROpEiU0w9cxaDIesdo4cUB2G4Aj0OnfxLYVeOTrPgI+ir9osE7JRk5z5re9HkCZPMyUlFROi6OcJtAaR05rGq0w/Gm+N27bUW868zH8bmQZ4xlsjyFvWGW5kdb8XSeepxI4=
+	t=1709738034; cv=none; b=cGCavtzjMA7HuDjojMdFy+dHe8AsP23OUF6y0nZpmxmd9luL6+YdPSqPIeJWF6eTj7TbffuJiarwDM+jWXA0Zww9UVH4opnnqM4iLadZp4N9C9pzsOfmasCMMCmQ9fH2Em/Tuazbo6osxNIRVhJ4wLhm80VOx5UkV3pYMY8KrCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709732465; c=relaxed/simple;
-	bh=H5GpHOsYCpSMN3/akkts95UVt0OpYJkeytlUjVEwcnk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=bTdXAWUG1mQY/MX/3y3MxL6oKWUCR/SsGxj0JEErnbN/I44020O1560tNhCFY5YuRbL3N94xXJ5CGnZ7idpPmX4dycYdxd/s0a618jtAhmeBI9yY3ZzCflNwj0PVbcakJLIUrQyFtjDlKTV8WfQhASosU9KODFDLpKFcjj/R+kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YV93bZ62; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76815C43143
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:41:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709732464;
-	bh=H5GpHOsYCpSMN3/akkts95UVt0OpYJkeytlUjVEwcnk=;
-	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
-	b=YV93bZ62J3SSdGw8pr/1YkKyNeitzq7hdO4zXq0czId8uqJ20tlMptKvsUR1K0HlU
-	 XXHfNXIvANOfr9Kuj59/PB8NTeYau+AvBvQlJZNw9VrvFp1TK1XHDd6eVexZBmhW6m
-	 8KCgtBI5K6WMo4nTDQgcCsLK1mmblKQXMq0vcmf/2pSTAl+8F3kYT3uhyLzjFz8w/M
-	 61LDb0TIFBq0nEwoU1d+xw8EJ2qrr2fCOsu/PVif9Ab4hvWsUqi5DRRsyQE8hWLpiD
-	 lSPFyuqZqYVVstiAJkY5prmeLlWHKuGwLa8myOLzQYbMwygakZoyjB6lL+1XuFBl9/
-	 D3nosU59n5jBw==
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29b31254820so2832488a91.0
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 05:41:04 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUy0dq+Ep0jQ6QHB6GSCEdu+86BzHhvffydMHFy3zB043ZEtsJ6S3uTtz3NAs1wi+yeBXLUIac77kb3a4iKeAgaDxVEws3QBqKlaw==
-X-Gm-Message-State: AOJu0YwgjfTayHTz3v7uUKUC7qPSqplxCN38wWQhVbEnnS3m/HSU6qwq
-	RKLuek77fjVqsAj4eTRll1snEX7uYX/YUzAJmF0lZXlcC3P9iMK9Alm8ViLL5DUwaXY44BweRZy
-	FanQC9gIMaCOtIPvUD2E+9eN9ick=
-X-Google-Smtp-Source: AGHT+IG54lf9f8aNuFOqv/gHJu5Amwf1SjSTlMDCco/PfPZPgRpCFKptAwoYWHAiNxFRdqCCDz3igWAGaEV+ZAbmzKQ=
-X-Received: by 2002:a17:90b:4d8d:b0:29a:83da:efd1 with SMTP id
- oj13-20020a17090b4d8d00b0029a83daefd1mr12053295pjb.6.1709732464002; Wed, 06
- Mar 2024 05:41:04 -0800 (PST)
+	s=arc-20240116; t=1709738034; c=relaxed/simple;
+	bh=OWawPekkIytNLOs/rJCehNPCbyJsOfdGlmgMeHnQ5T8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=WBC9FPPztKh42fV9o88/DiOXzW3NZhWdXHDyYGw0DDepMru89nhgTEbKKKL5W5e1AymHRccsayxpQ1DXNIdDvHaWMB0nRAv+jB9hyV3JnaPhCH0cCnI68i5MAA5YJVgIXvK6ZazYVrxFAFDOkt401iSdNfPHcothGUqioIcm+hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=F8qtd1Cg; arc=none smtp.client-ip=217.70.183.201
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 896351BF204;
+	Wed,  6 Mar 2024 15:13:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709738024;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=VtbuwLqdyjIEhU7fiX0WLZW5mD3J8673gqbudp7JQpY=;
+	b=F8qtd1Cg46HTsD0CO5VuCioeG+2apLV5ygaKgN5L6eqgzsyjBooemTGHzR4uN/Dpja4eRK
+	ZxgUghAnM+S+xtU0GJ454hqEP8DVRXbC2RyI3jUVyx5SiG8s3PgJxOxatB+uZ6c7q4aWjo
+	7FakXoEmBgG+nqEesVFYV7OygjvGgtCUhBKUV4K0xU1wgbrybjOg/k+ZSj2xRAaN3YgUqf
+	O3/42BtHf5eQdmPu9T+U911dDE5qJlAfF2Wr/FzXTgeKM1gYJGAQXqf7J7Z70XM/1itgCn
+	rWpIFCqMIaOsYr8IZbw8X5zlX0BQYh/JJ+Q0QJ+E9Net829yhc0HTqvpvVJIVQ==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
- <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
- <CACRpkdZX2WHCggT2hvS86eLUq3pH6jYYpEFLbY4WwN6_Ya+mQw@mail.gmail.com>
- <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
- <CACRpkdZ-6neizSv-F5jEJPZ-a_emoCbxM9AFqfzYSHTZFGnM1g@mail.gmail.com>
- <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com> <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
-In-Reply-To: <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
-Reply-To: wens@kernel.org
-From: Chen-Yu Tsai <wens@kernel.org>
-Date: Wed, 6 Mar 2024 21:40:53 +0800
-X-Gmail-Original-Message-ID: <CAGb2v6497xS8OQgDssGYw+7aNGeP31FGanJOT+sfZHF1ybAnEw@mail.gmail.com>
-Message-ID: <CAGb2v6497xS8OQgDssGYw+7aNGeP31FGanJOT+sfZHF1ybAnEw@mail.gmail.com>
-Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stefan Wahren <wahrenst@gmx.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
-	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 06 Mar 2024 16:13:41 +0100
+Message-Id: <CZMRJNWD7F6W.23A8YUXQ6P7H7@bootlin.com>
+Subject: Re: [PATCH v2] gpio: nomadik: Back out some managed resources
+Cc: "Bartosz Golaszewski" <brgl@bgdev.pl>, "Philipp Zabel"
+ <p.zabel@pengutronix.de>, <linux-gpio@vger.kernel.org>
+To: "Linus Walleij" <linus.walleij@linaro.org>, "Andy Shevchenko"
+ <andy.shevchenko@gmail.com>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: aerc 0.15.2
+References: <20240305-fix-nomadik-gpio-v2-1-e5d1fbdc3f5c@linaro.org>
+ <CAHp75Vc2+wx=82kx1qMsXH3uWX4tMdDEMXLm=MqB869-=bcGeg@mail.gmail.com>
+ <CACRpkdZCXE6VBa3f7asSNYF7Esn5nHnxf0QJfibT7TcfSE52FQ@mail.gmail.com>
+In-Reply-To: <CACRpkdZCXE6VBa3f7asSNYF7Esn5nHnxf0QJfibT7TcfSE52FQ@mail.gmail.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-On Wed, Mar 6, 2024 at 8:57=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Wed, Mar 6, 2024 at 9:55=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wro=
-te:
->
-> > For the MediaTek device trees, the only two occurrences of "output-enab=
-le"
-> > actually describe conflicting information:
+Hello,
+
+On Wed Mar 6, 2024 at 1:51 PM CET, Linus Walleij wrote:
+> On Wed, Mar 6, 2024 at 12:20=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Wed, Mar 6, 2024 at 12:09=E2=80=AFAM Linus Walleij <linus.walleij@li=
+naro.org> wrote:
+> > >
+> > > Several commits introduce managed resources (devm_*) into the
+> > > nmk_gpio_populate_chip() function.
+> > >
+> > > This isn't always working because when called from the Nomadik pin
+> > > control driver we just want to populate some states for the device as
+> > > the same states are used by the pin control driver.
+> > >
+> > > Some managed resources such as devm_kzalloc() etc will work, as the
+> > > passed in platform device will be used for lifecycle management,
+> > > but in some cases where we used the looked-up platform device
+> > > for the GPIO block, this will cause problems for the combined
+> > > pin control and GPIO driver, because it adds managed resources
+> > > to the GPIO device before it is probed, which is something that
+> > > the device core will not accept, and all of the GPIO blocks will
+> > > refuse to probe:
+> > >
+> > > platform 8012e000.gpio: Resources present before probing
+> > > platform 8012e080.gpio: Resources present before probing
+> > > (...)
+> > >
+> > > Fix this by not tying any managed resources to the looked-up
+> > > gpio_pdev/gpio_dev device, let's just live with the fact that
+> > > these need imperative resource management for now.
+> > >
+> > > Drop in some notes and use a local *dev variable to clarify the
+> > > code.
 > >
-> >     pins-rts {
-> >             pinmux =3D <PINMUX_GPIO47__FUNC_URTS1>;
-> >             output-enable;
-> >     };
+> > LGTM, some minor remarks below.
 > >
-> > The above asks for the UART function on this pin, but based on existing
-> > driver definitions, switches the function to GPIO output because of the
-> > "output-enable" property. Hence the confusion.
+> > ...
+> >
+> > > Cc: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+> >
+> > Note, you can put Cc:s after --- line and it won't go to the commit
+> > message while Cc to the respective people.
 >
-> This is actually also driver-dependent.
+> Yeah old habit, actually b4 handles it fine by recording the
+> recipients only in the cover letter.
 >
-> It is only conflicting if the pin controller has .strict set in struct
-> pinmux_ops,
-> because many SoCs are perfectly capable of using a pin as a function
-> such as UART RTS and GPIO at *the same time*.
-
-I don't think MediaTek falls in this category. Nor does BCM2835. It is
-quite obvious, since GPIO in/out are selectable pinmux functions.
-
-> Details on strict mode can be found in Documentation/driver-api/pin-contr=
-ol.rst
+> > > +               dev_dbg(dev, "populate: using default ngpio (%d)\n", =
+ngpio);
+> >
+> > While at it %d --> %u.
+> (...)
+> > > +               dev_err(dev, "failed getting reset control: %ld\n",
+> > >                         PTR_ERR(reset));
+> >
+> > Also possible %pe.
 >
-> I don't know which Mediatek this is but:
-> $ git grep strict drivers/pinctrl/mediatek/
-> drivers/pinctrl/mediatek/pinctrl-moore.c:       .strict =3D true,
->
-> Only the Moore family is strict, and I think BCM2835 is not.
+> Fixed them both when applying! Thanks!
 
-While that would be true for new drivers, I believe we do have many existin=
-g
-drivers that cannot set the strict bit, as existing device trees already
-have their pinctrl options selecting the GPIO function in conjunction with
-*-gpios usage. We also had this on older Allwinner platforms. We ended up
-only setting the .strict option for new platforms, not because of any
-hardware difference, but because of backwards compatibility. Otherwise
-I would love to clean up many of them.
+Format specifier %pe takes a pointer, ie it should be reset and not
+PTR_ERR(reset). See efaa90ed2cff ("gpio: nomadik: Back out some managed
+resources") on linux-pinctrl/ib-nomadik-gpio.
 
-In both MediaTek and BCM2835's cases, it is quite obvious from the driver
-that the hardware cannot use the pin as a dedicated function and a GPIO
-at the same time. And we should not give them more options to shoot
-themselves in the foot.
+Apart from that, tested efaa90ed2cff on Mobileye hardware.
+
+GCC warning:
+
+In file included from ./include/linux/device.h:15,
+                 from ./include/linux/platform_device.h:13,
+                 from drivers/gpio/gpio-nomadik.c:28:
+drivers/gpio/gpio-nomadik.c: In function =E2=80=98nmk_gpio_populate_chip=E2=
+=80=99:
+drivers/gpio/gpio-nomadik.c:588:30: warning: format =E2=80=98%p=E2=80=99 ex=
+pects argument of type =E2=80=98void *=E2=80=99, but argument 3 has type =
+=E2=80=98long int=E2=80=99 [-Wformat=3D]
+  588 |                 dev_err(dev, "failed getting reset control: %pe\n",
+      |                              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+./include/linux/dev_printk.h:110:30: note: in definition of macro =E2=80=98=
+dev_printk_index_wrap=E2=80=99
+  110 |                 _p_func(dev, fmt, ##__VA_ARGS__);                  =
+     \
+      |                              ^~~
+./include/linux/dev_printk.h:144:56: note: in expansion of macro =E2=80=98d=
+ev_fmt=E2=80=99
+  144 |         dev_printk_index_wrap(_dev_err, KERN_ERR, dev, dev_fmt(fmt)=
+, ##__VA_ARGS__)
+      |                                                        ^~~~~~~
+drivers/gpio/gpio-nomadik.c:588:17: note: in expansion of macro =E2=80=98de=
+v_err=E2=80=99
+  588 |                 dev_err(dev, "failed getting reset control: %pe\n",
+      |                 ^~~~~~~
+drivers/gpio/gpio-nomadik.c:588:62: note: format string is defined here
+  588 |                 dev_err(dev, "failed getting reset control: %pe\n",
+      |                                                             ~^
+      |                                                              |
+      |                                                              void *
+      |                                                             %ld
 
 
-ChenYu
+
+Regards,
+
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
