@@ -1,144 +1,125 @@
-Return-Path: <linux-gpio+bounces-4167-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4168-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF2428736E9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:51:32 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0A267873726
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:58:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7FC171F231A7
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 12:51:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B12B21F21539
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 12:58:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D87D512D208;
-	Wed,  6 Mar 2024 12:51:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE0F78289A;
+	Wed,  6 Mar 2024 12:57:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UTA/taUD"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="CC7gJs59"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f169.google.com (mail-yw1-f169.google.com [209.85.128.169])
+Received: from mail-yw1-f173.google.com (mail-yw1-f173.google.com [209.85.128.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19B0A84FAC
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 12:51:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19EEE7F7FA
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 12:57:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709729484; cv=none; b=cKUCjhLQyof2mNqttdtEc78SlwaXo8/4iO29xEDgl4dsg3Q2ve8YlGFbxz3IsHml/fCVEMSIJsZUCbTqelEVlbyN+nUXywCi7m6yA87yKeG4e1cVBlTRfLXudQkXjJEsyxCyiJdmKHjC4NrD+bTaUuypFNEtTdevLFL83eiQ96M=
+	t=1709729860; cv=none; b=lzEdzza4OGWwZtceyWiCFCr6S9cu3JZxQFgWkEKhMTfNsfd1d9ud8Xi+cUSbSgn7O8RXJaFlV8ZTxmv7SXUu2ds3qEwmRjdwDAtrTw/VqPkXlZHvO+zeqsWak7Vl5544NfJDMw9cPajo3aQIjfowV0NMjJQ2Y3vOnsbphBBIV3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709729484; c=relaxed/simple;
-	bh=o2BZavsoHilApJIye2i6sE0vbVlVAbix7AsibeZI/T8=;
+	s=arc-20240116; t=1709729860; c=relaxed/simple;
+	bh=lKxUp8iQmr2CFCgCoU8yw4kxsbGfObo9DobLfsZzj/c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VOC1RgTB+RIoSSJ45qiyw3T9xBaTKvLvjf97Z4ng+miikazqcyLDTvVDoJJGuwJi0zbYm0ZYv6gaDCNbLEwOWnX3eZkQKq/3Rl+z05TAKj4aI90APkd7Wx7rLdQ4rjplDL9B/G+Uz45DH8HFQSddEvE+Gy9YSRVX33D/5kUPdkA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=UTA/taUD; arc=none smtp.client-ip=209.85.128.169
+	 To:Cc:Content-Type; b=HmxdHZ3w4HdBkE9GMZdg27cDwnrFlKs0b85/1a1KpIILRDVkgUYA8TXEr6VkI4DZb1eGnAFvuAsEnla7lAfht1V6d+jwja0y8bJMzv0Rp3Y6O+s0THyhImJO/8N0wjtiPLYDcplaE2n2d+SoqfIpUImLpPKeWWofgJmCyJXJxHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=CC7gJs59; arc=none smtp.client-ip=209.85.128.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f169.google.com with SMTP id 00721157ae682-607c5679842so69146917b3.2
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 04:51:22 -0800 (PST)
+Received: by mail-yw1-f173.google.com with SMTP id 00721157ae682-609a773ec44so42104957b3.3
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 04:57:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709729482; x=1710334282; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1709729858; x=1710334658; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=zhi2mQr6cY8VLdI/IRl3bAL9UXcUBxcmlwCsmS2g2tc=;
-        b=UTA/taUDcbVsNwWgW3ro/85lTamavjEOlsE8aXZe7flSy1gX05Cm+rt1hYzNX1dDdx
-         zYpOu3O5ly2syw446Gzv33Gq8RGKLBByHvHvQiTfxhVgQy0fqSNJlZOq4ROkBI/NQHyK
-         WUKs6fwLZ8qwpOJPimXiSBuwsktsVL4+U9ybt8YHzgFfDwlRe2nOiIQStfZXVn5Db598
-         d8/JQvu+tgOMN42bN3JvHqQKlti9OvPt+NyPgImc+ZC8M70x6awAAgwaE8sLcu8DSOYn
-         +endF/zuylDPGP6NxjzktcpX9/CLi/F8CXZ7Kq8Qq9VmWsSBlj6pjml3y4dJtzlhMr0e
-         EVDw==
+        bh=jLhDkVixqYfE4pnSjrgLdoF6qlywqVJESJHWtblUgRI=;
+        b=CC7gJs59d9qNE80+9bDVowdYR9pvc+AgMyQg5M5/hXaOACJaGYAfPw7OXd6Zi1HJf5
+         Yqp45GHJevIt5eg6qFc3nxPDrX+kLDQne6bVHSOuHD1q3OdMavRUoE6gSrrqz6bdAxbk
+         xtYBVrLSSnE05kDMsOKxOFL81hJk+ptiH3EXkuuZ+xtXcbL0d7lnMJrJNFXC8CtDKKuY
+         W4r/auWkB5gkKzlijCHJbo5440YdmkUuX2WLyzlAO2KQjZded+zBBlcBQStyfzJ+8SNr
+         Me6TbutCTGQ5tB17SaJs+KBQ44fXpJwOv0eCYzYKObQSPtUry7yzh/e5AjWNFCcrfzQJ
+         GsQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709729482; x=1710334282;
+        d=1e100.net; s=20230601; t=1709729858; x=1710334658;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=zhi2mQr6cY8VLdI/IRl3bAL9UXcUBxcmlwCsmS2g2tc=;
-        b=kMaR47i6al0cjqaT9icl5KhdiA+Ov62PIbb13wFdLE2M0hFAvwbeT10iAqRcg1CegU
-         Vy66v79JA/odcH5rzLRoRcMf5r96FUNTH8vASX1EERipQu3zdv83Y4/x5M+3Ad7Tfcc8
-         JcJfulHfkozkNZe9Hc7gV2qn+04A5eDE7erp0V6lFO/4sIgS/KG42sWTRDyvsLhlTtIf
-         y/CRVKkFN/ZniHXmVPs3kzN0rZLY31BNXbhVZmJvLv1wzYjL1hr4GKy9FQ09RuMq9glk
-         ms+uWZ3p7KUvCyzzK4VaDjKmMLwUk2yJaEV+g7FaNg1hn0vzuLdQCz0kTp/XV/JcEvA/
-         m9QQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUeBVIkOesr/gz8qw1eEor+hDTYdMNmxJvabmNvAof2OFTAb4VwrmE4s+A6WzZ7MlssXR++75oP8U/spBJUwHXfwCeQfqQ96W82sA==
-X-Gm-Message-State: AOJu0YxlYf9PhOjjXb50oLbl5eIJYFueKZl8VXYdeqFigJQjY2mxnmcp
-	Cqq3z8/tr+M28XYey6fHn4JvUtOa8/ZJ/ZbPkQFK08AohJo9+IODZi8gPI0GqSKjOx6Hwf+C8ky
-	OeFA6IPKNfk4x1fwkrVEQYgDScoaW/OSAzCQZAA==
-X-Google-Smtp-Source: AGHT+IGBU3NJreERbqwtkrS6U6bYeNoprvCDJRKpJlExHsRqNwHoWab/JkZuiCHz9EyhMS0M1P8EYawP1F5oHZY2B2Y=
-X-Received: by 2002:a5b:d41:0:b0:dc7:4bab:c390 with SMTP id
- f1-20020a5b0d41000000b00dc74babc390mr11816495ybr.61.1709729480620; Wed, 06
- Mar 2024 04:51:20 -0800 (PST)
+        bh=jLhDkVixqYfE4pnSjrgLdoF6qlywqVJESJHWtblUgRI=;
+        b=Zkqeoe5140YfbnPUb7i83ssFX9A4XIw6EG7AQR+vCL2dfFxu9K191AO83NTB4eFEMQ
+         XNIu26yK8SptLOLiXMZ4CX3cxqhzJakIb7dIsewzTUZuLblOSIJ10hZyOKIMxlrd2Pdr
+         E69gdA4i0QG45nCEqTxwcCLJJhjx23V6H04p9tO/SC7R7J9dCGaz7PwDqlrX/zxGnpql
+         mCuNY+QZtsmCa20mGJCpmZ7uWEBySpcXIWQlw0l/tDqArSnPJsqDlZmQGuCJ8Zk2VGNC
+         Pis4zyqaDumuwROnWX+xaa2jfTSFvOemwIPxL+ia/1R97iJd7uOwCGj23ecvBeOU9mUK
+         rkEw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtJ6V2RyubFco7C5IwG+OlxAIwxYq1Q8Oc5rPlDc02+KjEkldehlk1AyIkL+wnEpihDY+chHZ7fBeP8jqo3W3WRTpAoAPAEeBQnQ==
+X-Gm-Message-State: AOJu0YyQYH5rTw9OTfwnkUEeY3YSuQ7nP0iz7gpdiW+yNtMDAPaL6Vrs
+	/iiIQ/pQYGMhBM2wNkKit07/6TPCAZq7wGRct7CU5vTsjh9oa0s4Af/ZPIxmZttJIWstxuWoVd7
+	L0M9ZEdFBbA2+IbZMwht3rcgBuJR7RmfAWGxYmA==
+X-Google-Smtp-Source: AGHT+IFUnfbvik6I2UyytH96nMWqjpkCh4zYeN8ZyrqghEG+E8HsZS3SNVQjZERuyCBIvPiv8XNjZ0khjc5IWnqOCLk=
+X-Received: by 2002:a05:690c:fc3:b0:5ff:a9bc:b7f with SMTP id
+ dg3-20020a05690c0fc300b005ffa9bc0b7fmr17442872ywb.21.1709729858098; Wed, 06
+ Mar 2024 04:57:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240305-fix-nomadik-gpio-v2-1-e5d1fbdc3f5c@linaro.org> <CAHp75Vc2+wx=82kx1qMsXH3uWX4tMdDEMXLm=MqB869-=bcGeg@mail.gmail.com>
-In-Reply-To: <CAHp75Vc2+wx=82kx1qMsXH3uWX4tMdDEMXLm=MqB869-=bcGeg@mail.gmail.com>
+References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
+ <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
+ <CACRpkdZX2WHCggT2hvS86eLUq3pH6jYYpEFLbY4WwN6_Ya+mQw@mail.gmail.com>
+ <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
+ <CACRpkdZ-6neizSv-F5jEJPZ-a_emoCbxM9AFqfzYSHTZFGnM1g@mail.gmail.com> <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com>
+In-Reply-To: <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Wed, 6 Mar 2024 13:51:09 +0100
-Message-ID: <CACRpkdZCXE6VBa3f7asSNYF7Esn5nHnxf0QJfibT7TcfSE52FQ@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: nomadik: Back out some managed resources
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	=?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	linux-gpio@vger.kernel.org
+Date: Wed, 6 Mar 2024 13:57:27 +0100
+Message-ID: <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
+To: wens@kernel.org
+Cc: Stefan Wahren <wahrenst@gmx.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 6, 2024 at 12:20=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
-> On Wed, Mar 6, 2024 at 12:09=E2=80=AFAM Linus Walleij <linus.walleij@lina=
-ro.org> wrote:
-> >
-> > Several commits introduce managed resources (devm_*) into the
-> > nmk_gpio_populate_chip() function.
-> >
-> > This isn't always working because when called from the Nomadik pin
-> > control driver we just want to populate some states for the device as
-> > the same states are used by the pin control driver.
-> >
-> > Some managed resources such as devm_kzalloc() etc will work, as the
-> > passed in platform device will be used for lifecycle management,
-> > but in some cases where we used the looked-up platform device
-> > for the GPIO block, this will cause problems for the combined
-> > pin control and GPIO driver, because it adds managed resources
-> > to the GPIO device before it is probed, which is something that
-> > the device core will not accept, and all of the GPIO blocks will
-> > refuse to probe:
-> >
-> > platform 8012e000.gpio: Resources present before probing
-> > platform 8012e080.gpio: Resources present before probing
-> > (...)
-> >
-> > Fix this by not tying any managed resources to the looked-up
-> > gpio_pdev/gpio_dev device, let's just live with the fact that
-> > these need imperative resource management for now.
-> >
-> > Drop in some notes and use a local *dev variable to clarify the
-> > code.
->
-> LGTM, some minor remarks below.
->
-> ...
->
-> > Cc: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
->
-> Note, you can put Cc:s after --- line and it won't go to the commit
-> message while Cc to the respective people.
+On Wed, Mar 6, 2024 at 9:55=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wrote=
+:
 
-Yeah old habit, actually b4 handles it fine by recording the
-recipients only in the cover letter.
-
-> > +               dev_dbg(dev, "populate: using default ngpio (%d)\n", ng=
-pio);
+> For the MediaTek device trees, the only two occurrences of "output-enable=
+"
+> actually describe conflicting information:
 >
-> While at it %d --> %u.
-(...)
-> > +               dev_err(dev, "failed getting reset control: %ld\n",
-> >                         PTR_ERR(reset));
+>     pins-rts {
+>             pinmux =3D <PINMUX_GPIO47__FUNC_URTS1>;
+>             output-enable;
+>     };
 >
-> Also possible %pe.
+> The above asks for the UART function on this pin, but based on existing
+> driver definitions, switches the function to GPIO output because of the
+> "output-enable" property. Hence the confusion.
 
-Fixed them both when applying! Thanks!
+This is actually also driver-dependent.
+
+It is only conflicting if the pin controller has .strict set in struct
+pinmux_ops,
+because many SoCs are perfectly capable of using a pin as a function
+such as UART RTS and GPIO at *the same time*.
+
+Details on strict mode can be found in Documentation/driver-api/pin-control=
+.rst
+
+I don't know which Mediatek this is but:
+$ git grep strict drivers/pinctrl/mediatek/
+drivers/pinctrl/mediatek/pinctrl-moore.c:       .strict =3D true,
+
+Only the Moore family is strict, and I think BCM2835 is not.
 
 Yours,
 Linus Walleij
