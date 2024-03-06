@@ -1,130 +1,135 @@
-Return-Path: <linux-gpio+bounces-4170-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4171-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F0348737B9
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:28:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B9E48737F3
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:41:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70A931C21B27
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:28:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3C858B23AB2
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:41:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7741D130AEE;
-	Wed,  6 Mar 2024 13:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6610F130AFE;
+	Wed,  6 Mar 2024 13:41:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5qWhSMk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YV93bZ62"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4651BDD3
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:28:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E831E519
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:41:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709731731; cv=none; b=eLX3y8m57leKtYnczqHzSWLLksN2gzMxZS5P/Yjh5CgeVlap6espMyyLeqabturBBMiBzBWJ/A/uoFVQ2zZ4GzZ6fTV4qMBNTHDo6b/2mMXCAxZvc9pr53LAfntSSZtptAa1Byydtfry9jqOPi0DqwZjrN7vU4NhfMwEKbYpWt4=
+	t=1709732465; cv=none; b=O2QxQ5poozt5h7F4TSER8om+B35vrzCL0tZF52MWROpEiU0w9cxaDIesdo4cUB2G4Aj0OnfxLYVeOTrPgI+ir9osE7JRk5z5re9HkCZPMyUlFROi6OcJtAaR05rGq0w/Gm+N27bUW868zH8bmQZ4xlsjyFvWGW5kdb8XSeepxI4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709731731; c=relaxed/simple;
-	bh=OrjFciEgPoiDtAlwGxwXG8sb4TXqk3WJU/1lUh/nqRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=t/oYvVYxye0LsZsR1GE6nAv2muVQFHdKO1oRs8R/7QkxpmLMsqCHaYclbspy8TZcYAFw7281OOXlH1GXm7AxXftXv2Lcx9s8IUXvu/d0wyrNgenK2ayWumzjup/2dtk783lcp4srxr71xFZc2okH5f6DrBMM4uwwnH2AimIQcek=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5qWhSMk; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e1878e357so602996f8f.3
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 05:28:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1709731728; x=1710336528; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9W+DTc1gBu+fa1Ts7s8hZNpaIVMonPw2fIrPTG6GOjs=;
-        b=e5qWhSMkMGCm4T864VYOc1XOA+5x3ue8kvTaigi6XiDtemdSiqAwHJrf3HPOATMxLh
-         CrOXRcc/0rtVTggoRHrulP/bdmGuC9p7H7qKYy4ucflYT57au3ubr+otufqEKDM/Rs5g
-         mGd9r6/uGpvnDFYjkYdPx5uL0CpTHTfvFH92fS9AyjhXkTMxRARONVWFWoSGe8lefTTL
-         cxV5wJ+XvZ2yr6cb808Rwyapf5M3JKbhAF92A7bBJFoujGbpgQGSNVsZoTlF57RF2Vud
-         CkYnVj0dHWS/NUy1rpvnZeW8XumunVI7qKzENY+G/g4JMRJH8cSgO8yge+2IXDp1V9xV
-         v30g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709731728; x=1710336528;
-        h=content-transfer-encoding:content-disposition:mime-version
-         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9W+DTc1gBu+fa1Ts7s8hZNpaIVMonPw2fIrPTG6GOjs=;
-        b=CCcoSG2iSsuYLsNBjtvCuHaxwS+Qh7Ea+NwIUhlj0MICom5/aLAdXoLRNcABefYjOT
-         D9o4FCo+YHM6TBx4HK9O47cbN4sMey5rmH1Z4msmM+9H6/98I7xmfmW45/ncYxShNG1h
-         I34hdeaZrAOMguGwntG3PRGOpM7aT1MGPKBkb/IlYzcAVnfVavAPmiUEy1297oTejm7W
-         3keg+Y/a817VuXzyMT28UuZWbx+4zUof3L/ip2VqeD+Juggfh7Vtxl3BcQVUOGY1senK
-         ++kUrkmiMFhoCKXBT3SrsmUx7D4xlLHv3o71+QqUDnrMD8VIrPdRQR1KsfbC2sr7xYbp
-         sn4w==
-X-Gm-Message-State: AOJu0YxiYqu7ZfldPfn68cH7zsaaqbJXvE7/FL3SgbRbppKw6L2xPElG
-	z/V3/CSTjefIvixSfOsQk8fm5hYMBKoxbrKUXdd7BqSK6KntHBm+LcqSalRu+go=
-X-Google-Smtp-Source: AGHT+IHXvS/Yad38z/wzLjL/BaHpBjt40v1xg3fqqJuJtENcEMg/p0pvbJmE3w3bMcKFfGqRT5lNKA==
-X-Received: by 2002:a5d:5443:0:b0:33d:f46f:6384 with SMTP id w3-20020a5d5443000000b0033df46f6384mr10659099wrv.23.1709731727548;
-        Wed, 06 Mar 2024 05:28:47 -0800 (PST)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id f15-20020adffccf000000b0033dedd63382sm17645169wrs.101.2024.03.06.05.28.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Mar 2024 05:28:47 -0800 (PST)
-Date: Wed, 6 Mar 2024 16:28:43 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: theo.lebrun@bootlin.com
-Cc: linux-gpio@vger.kernel.org
-Subject: [bug report] gpio: nomadik: support mobileye,eyeq5-gpio
-Message-ID: <5ee722f8-7582-420d-8477-45be6acde90f@moroto.mountain>
+	s=arc-20240116; t=1709732465; c=relaxed/simple;
+	bh=H5GpHOsYCpSMN3/akkts95UVt0OpYJkeytlUjVEwcnk=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=bTdXAWUG1mQY/MX/3y3MxL6oKWUCR/SsGxj0JEErnbN/I44020O1560tNhCFY5YuRbL3N94xXJ5CGnZ7idpPmX4dycYdxd/s0a618jtAhmeBI9yY3ZzCflNwj0PVbcakJLIUrQyFtjDlKTV8WfQhASosU9KODFDLpKFcjj/R+kU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YV93bZ62; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76815C43143
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:41:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1709732464;
+	bh=H5GpHOsYCpSMN3/akkts95UVt0OpYJkeytlUjVEwcnk=;
+	h=References:In-Reply-To:Reply-To:From:Date:Subject:To:Cc:From;
+	b=YV93bZ62J3SSdGw8pr/1YkKyNeitzq7hdO4zXq0czId8uqJ20tlMptKvsUR1K0HlU
+	 XXHfNXIvANOfr9Kuj59/PB8NTeYau+AvBvQlJZNw9VrvFp1TK1XHDd6eVexZBmhW6m
+	 8KCgtBI5K6WMo4nTDQgcCsLK1mmblKQXMq0vcmf/2pSTAl+8F3kYT3uhyLzjFz8w/M
+	 61LDb0TIFBq0nEwoU1d+xw8EJ2qrr2fCOsu/PVif9Ab4hvWsUqi5DRRsyQE8hWLpiD
+	 lSPFyuqZqYVVstiAJkY5prmeLlWHKuGwLa8myOLzQYbMwygakZoyjB6lL+1XuFBl9/
+	 D3nosU59n5jBw==
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-29b31254820so2832488a91.0
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 05:41:04 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCUy0dq+Ep0jQ6QHB6GSCEdu+86BzHhvffydMHFy3zB043ZEtsJ6S3uTtz3NAs1wi+yeBXLUIac77kb3a4iKeAgaDxVEws3QBqKlaw==
+X-Gm-Message-State: AOJu0YwgjfTayHTz3v7uUKUC7qPSqplxCN38wWQhVbEnnS3m/HSU6qwq
+	RKLuek77fjVqsAj4eTRll1snEX7uYX/YUzAJmF0lZXlcC3P9iMK9Alm8ViLL5DUwaXY44BweRZy
+	FanQC9gIMaCOtIPvUD2E+9eN9ick=
+X-Google-Smtp-Source: AGHT+IG54lf9f8aNuFOqv/gHJu5Amwf1SjSTlMDCco/PfPZPgRpCFKptAwoYWHAiNxFRdqCCDz3igWAGaEV+ZAbmzKQ=
+X-Received: by 2002:a17:90b:4d8d:b0:29a:83da:efd1 with SMTP id
+ oj13-20020a17090b4d8d00b0029a83daefd1mr12053295pjb.6.1709732464002; Wed, 06
+ Mar 2024 05:41:04 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+References: <20240303140137.157522-1-wahrenst@gmx.net> <20240303140137.157522-2-wahrenst@gmx.net>
+ <CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com>
+ <CACRpkdZX2WHCggT2hvS86eLUq3pH6jYYpEFLbY4WwN6_Ya+mQw@mail.gmail.com>
+ <CAGb2v67TFYZwCk1KViDHFVzuYX1QsA2E69UcJ-ZMMmw5UAxH8w@mail.gmail.com>
+ <CACRpkdZ-6neizSv-F5jEJPZ-a_emoCbxM9AFqfzYSHTZFGnM1g@mail.gmail.com>
+ <CAGb2v66Op2zSN1JrFEUCfBKxRL-W0cX=Pj18yym4FtWnNeGiXw@mail.gmail.com> <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
+In-Reply-To: <CACRpkdbni-oN5mNT9Z3GMueWaCjxDcmvjGHYet3YQubDowg58Q@mail.gmail.com>
+Reply-To: wens@kernel.org
+From: Chen-Yu Tsai <wens@kernel.org>
+Date: Wed, 6 Mar 2024 21:40:53 +0800
+X-Gmail-Original-Message-ID: <CAGb2v6497xS8OQgDssGYw+7aNGeP31FGanJOT+sfZHF1ybAnEw@mail.gmail.com>
+Message-ID: <CAGb2v6497xS8OQgDssGYw+7aNGeP31FGanJOT+sfZHF1ybAnEw@mail.gmail.com>
+Subject: Re: [PATCH V3 1/2] pinctrl: bcm2835: Implement bcm2835_pinconf_get
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Stefan Wahren <wahrenst@gmx.net>, Florian Fainelli <florian.fainelli@broadcom.com>, 
+	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, 
+	bcm-kernel-feedback-list@broadcom.com, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello Théo Lebrun,
+On Wed, Mar 6, 2024 at 8:57=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
+org> wrote:
+>
+> On Wed, Mar 6, 2024 at 9:55=E2=80=AFAM Chen-Yu Tsai <wens@kernel.org> wro=
+te:
+>
+> > For the MediaTek device trees, the only two occurrences of "output-enab=
+le"
+> > actually describe conflicting information:
+> >
+> >     pins-rts {
+> >             pinmux =3D <PINMUX_GPIO47__FUNC_URTS1>;
+> >             output-enable;
+> >     };
+> >
+> > The above asks for the UART function on this pin, but based on existing
+> > driver definitions, switches the function to GPIO output because of the
+> > "output-enable" property. Hence the confusion.
+>
+> This is actually also driver-dependent.
+>
+> It is only conflicting if the pin controller has .strict set in struct
+> pinmux_ops,
+> because many SoCs are perfectly capable of using a pin as a function
+> such as UART RTS and GPIO at *the same time*.
 
-Commit 3c30cc26df0a ("gpio: nomadik: support mobileye,eyeq5-gpio")
-from Feb 28, 2024 (linux-next), leads to the following Smatch static
-checker warning:
+I don't think MediaTek falls in this category. Nor does BCM2835. It is
+quite obvious, since GPIO in/out are selectable pinmux functions.
 
-	drivers/pinctrl/nomadik/pinctrl-nomadik.c:1233 nmk_pinctrl_probe()
-	error: 'nmk_chip' dereferencing possible ERR_PTR()
+> Details on strict mode can be found in Documentation/driver-api/pin-contr=
+ol.rst
+>
+> I don't know which Mediatek this is but:
+> $ git grep strict drivers/pinctrl/mediatek/
+> drivers/pinctrl/mediatek/pinctrl-moore.c:       .strict =3D true,
+>
+> Only the Moore family is strict, and I think BCM2835 is not.
 
-drivers/pinctrl/nomadik/pinctrl-nomadik.c
-    1211         /*
-    1212          * Since we depend on the GPIO chips to provide clock and register base
-    1213          * for the pin control operations, make sure that we have these
-    1214          * populated before we continue. Follow the phandles to instantiate
-    1215          * them. The GPIO portion of the actual hardware may be probed before
-    1216          * or after this point: it shouldn't matter as the APIs are orthogonal.
-    1217          */
-    1218         for (i = 0; i < NMK_MAX_BANKS; i++) {
-    1219                 struct fwnode_handle *gpio_fwnode;
-    1220                 struct nmk_gpio_chip *nmk_chip;
-    1221 
-    1222                 gpio_fwnode = fwnode_find_reference(fwnode, "nomadik-gpio-chips", i);
-    1223                 if (IS_ERR(gpio_fwnode))
-    1224                         continue;
-    1225 
-    1226                 dev_info(&pdev->dev, "populate NMK GPIO %d \"%pfwP\"\n", i, gpio_fwnode);
-    1227                 nmk_chip = nmk_gpio_populate_chip(gpio_fwnode, pdev);
-    1228                 if (IS_ERR(nmk_chip))
-                                    ^^^^^^^^
-Error pointer.
+While that would be true for new drivers, I believe we do have many existin=
+g
+drivers that cannot set the strict bit, as existing device trees already
+have their pinctrl options selecting the GPIO function in conjunction with
+*-gpios usage. We also had this on older Allwinner platforms. We ended up
+only setting the .strict option for new platforms, not because of any
+hardware difference, but because of backwards compatibility. Otherwise
+I would love to clean up many of them.
 
-    1229                         dev_err(&pdev->dev,
-    1230                                 "could not populate nmk chip struct - continue anyway\n");
-    1231                 fwnode_handle_put(gpio_fwnode);
-    1232                 /* We are NOT compatible with mobileye,eyeq5-gpio. */
---> 1233                 BUG_ON(nmk_chip->is_mobileye_soc);
-                                ^^^^^^^^^^^^^^^^^^^^^^^^^
-Unchecked dereference
+In both MediaTek and BCM2835's cases, it is quite obvious from the driver
+that the hardware cannot use the pin as a dedicated function and a GPIO
+at the same time. And we should not give them more options to shoot
+themselves in the foot.
 
-    1234         }
-    1235 
-    1236         prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
 
-regards,
-dan carpenter
+ChenYu
 
