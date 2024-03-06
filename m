@@ -1,149 +1,245 @@
-Return-Path: <linux-gpio+bounces-4165-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4166-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1F6C2873581
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 12:20:34 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 812E7873617
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:11:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5160B1C21FD2
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 11:20:33 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EA1B71F24486
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 12:11:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE0F577F3E;
-	Wed,  6 Mar 2024 11:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AB9457FBD9;
+	Wed,  6 Mar 2024 12:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gSy/GxI3"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kH2ZIfN3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D420477A0C
-	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 11:20:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8F952F6B
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 12:11:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709724029; cv=none; b=PamJX7esiF1eFzC4T+Bn9E/CXDPqq/c8iSVr8IJazuaUiAat40pV4fTDXN9/pzN67cldaRMo6yEGO3LwLiItoUHaVHWLt7ITcfeggEkI8wj+m/l4JyEfQdW42Anfi1ZaxFo3EvuTZ29+3Bo7oRIRz3HZE0VHHP2SI0NdNX4YW60=
+	t=1709727085; cv=none; b=lJLyP+Z1XnR0mhgvrmUi3QMGI2oYv3NjEqU0Ex7IPpTYBl3a+CrHFdqWlSFddu9PXVqfYb0fSPFlh9Cu2jZgqgUj6M0eopkjolGUPtXh4uswMAZj34CcqtfGyv3yhYlfyfZ+ifXK4sbAE4qmMrY9yVlQsgrGXbb/d1KSjyK1MC4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709724029; c=relaxed/simple;
-	bh=eopk3piQXW91sIa/OLXvlgs3+dpFj3FUixr6x1WP36o=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Y380npgCQJOiQHYU8ghnJlIqRN1AmOX9v0QLmDjej0+l+ACEfgSO8nrn2vBPSaoocASKQifTIAvI7DVQISs7Tan8TwWR4ja9XfRykE7RCwrHqBxwrYUSoqyxCfD+Ziqle6sOWLR+WEc09yiF3LG1dSM+raeDzl9FbdFlfUKcpfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gSy/GxI3; arc=none smtp.client-ip=209.85.218.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a45c006ab82so51672966b.3
-        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 03:20:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709724026; x=1710328826; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=El22IQDLPvxrnLo/IpXj5HslQLdLzDv6ID2FMaleaZI=;
-        b=gSy/GxI3Qd90LdPRLepRLBb2UEpCdach1NyaVSQcm37wltiwVVzq/SMpJamKN56ty8
-         NopXpK7jxmYL3XYPpbkUaQf6f7p3n35IGvZ9zOWYF625JUBDquD2sQdC7qUlYmJl/sCr
-         8IggciC9tIeKA4WRnXBogZETGERayDad8DiEJpdr5TFkdXxrl8mU5X2NZdkiMZaxwYnd
-         Chy+jb14npGUqMr+X70ykKYI7Xa8KiRnR548Z0sAKFG7dYUow0iVQ3+bb2OmUmCh0rzR
-         YkPVoH0Q4qFejsTm14ah7jyQXnY5LbekQyiG5fxZJoZ+YyQnsKGXO2L9Lf0QHpywFKfe
-         9QEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709724026; x=1710328826;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=El22IQDLPvxrnLo/IpXj5HslQLdLzDv6ID2FMaleaZI=;
-        b=XresPrUXqIbiYzWTcsJ/q/3cm7MAwrzlRyqyjAuABlOkjzc9hhhQdrBkuDEi27p+GF
-         8+PFlR/rrmF97MgV1gitWplAW/0YXpEleohCoVLM38+2xKXDQl2FZiHkDXCKpjGzfPTH
-         6E+DC2Z+dupi6ZczA8PPsay1VjEVdPpqJ/ndVii9pMFOtauPpakmoh8iXQAzvyuac0bT
-         Sw3QaYKkl5/nY1jjf/1rSIZra45U88BtJQxCmPu4+dLkyjof2PdQZKDSFdheI1uEffAE
-         t1PEvBfDEYTZwVVDwj+6YOKxx8u/xsZaEqB1JERNMXcLF7gPCfDXguBZQaAKKSP3uhHz
-         RtoQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUD74reqZHXtyMO1KL/kKRBcVlUBgdaz5QhjCzyCoi1t+XKBfA90e03k+2Zjqf066ESsc8A5Sr7+e6fcwdKcy1kN1NGd9z3+rOqGA==
-X-Gm-Message-State: AOJu0YwsTxQ7oJBmqU48v0yGT0UA7y0pyj5LWTtH8k5B5z22ZGJ2bAde
-	f8zbyAwdMe+4Gx53Bx84j/j3CEwnNA8FFC5LdqWpTa5DAnANbW+TlQEzhbrpSZyVAlUqDKqXuAr
-	AZsSe8Yg9I9UaIFxuX2aqhszYce8=
-X-Google-Smtp-Source: AGHT+IHtj/NdXOyz9wCfLy0S4aTXV2bqxAlWUJsdw+a/jMthcBYGNL/6Ax7h1mxainb2qHyVB0j/FHeAgDH0CARlPsg=
-X-Received: by 2002:a17:907:20b9:b0:a43:6cd2:7a27 with SMTP id
- pw25-20020a17090720b900b00a436cd27a27mr9296049ejb.19.1709724025857; Wed, 06
- Mar 2024 03:20:25 -0800 (PST)
+	s=arc-20240116; t=1709727085; c=relaxed/simple;
+	bh=f4izgCmRu9xc8NOY17b6aFnaKzAkRuxsGWstEVr9rzE=;
+	h=Date:From:To:Cc:Subject:Message-ID; b=od7DgxATuZ+u0HEIzQS9wUDh83qIZtiEVbUV7WoZjO9D8Oh2nxGvHiVmJD0F7Wpu4qVaujOwW5SlEfsledFf+Gd8RsYfPNLdmP3HrHQGV+z+acVlxDs3cEwLma/7MIIHKI/c1Fi62Z4MGDKjAIrNZbz8akS71V3Sjh0tlgYhK2U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kH2ZIfN3; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1709727084; x=1741263084;
+  h=date:from:to:cc:subject:message-id;
+  bh=f4izgCmRu9xc8NOY17b6aFnaKzAkRuxsGWstEVr9rzE=;
+  b=kH2ZIfN3X7gz5NNGcCPjDQLJrJIQNIdgE8wT0RMv/FSuzQsSFZ3Ffixs
+   Y2SBj4HQeNHVT6MQ9xT777WoLidlECBslijgZ5NczFgrzkFlzNV3yu/0a
+   vbcY3SiO9dt7OUlDsI+pTlLwVdN1F4UppvGqGHhWTbO5dq5HAlFQp3GQ/
+   23lOgMlsstXQGTi15kt06LBu6HUFCvXAweLkkbfNIy8O2puZHKHQb5JG3
+   pbt43uTZb+eHAUJ1kuSMS06oj/tIMoJRJmq1BvlLSS0SZEZTT6gSUr02t
+   18xmg0sIlUrLfSqhxDVuy56EUWpcGCvmyqIu9KrDuUn1RQs77rKk8S8do
+   g==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11004"; a="15760775"
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="15760775"
+Received: from fmviesa004.fm.intel.com ([10.60.135.144])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Mar 2024 04:11:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.06,208,1705392000"; 
+   d="scan'208";a="14294349"
+Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
+  by fmviesa004.fm.intel.com with ESMTP; 06 Mar 2024 04:11:21 -0800
+Received: from kbuild by b21307750695 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1rhq7D-0004D4-1C;
+	Wed, 06 Mar 2024 12:11:19 +0000
+Date: Wed, 06 Mar 2024 20:10:42 +0800
+From: kernel test robot <lkp@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org
+Subject: [linusw-pinctrl:ib-nomadik-gpio] BUILD SUCCESS
+ f17dccd3ead82f2c7c72762c9785fa3719b5e397
+Message-ID: <202403062038.XPFXLJoS-lkp@intel.com>
+User-Agent: s-nail v14.9.24
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240305-fix-nomadik-gpio-v2-1-e5d1fbdc3f5c@linaro.org>
-In-Reply-To: <20240305-fix-nomadik-gpio-v2-1-e5d1fbdc3f5c@linaro.org>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Wed, 6 Mar 2024 13:19:49 +0200
-Message-ID: <CAHp75Vc2+wx=82kx1qMsXH3uWX4tMdDEMXLm=MqB869-=bcGeg@mail.gmail.com>
-Subject: Re: [PATCH v2] gpio: nomadik: Back out some managed resources
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	=?UTF-8?B?VGjDqW8gTGVicnVu?= <theo.lebrun@bootlin.com>, 
-	linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 6, 2024 at 12:09=E2=80=AFAM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
->
-> Several commits introduce managed resources (devm_*) into the
-> nmk_gpio_populate_chip() function.
->
-> This isn't always working because when called from the Nomadik pin
-> control driver we just want to populate some states for the device as
-> the same states are used by the pin control driver.
->
-> Some managed resources such as devm_kzalloc() etc will work, as the
-> passed in platform device will be used for lifecycle management,
-> but in some cases where we used the looked-up platform device
-> for the GPIO block, this will cause problems for the combined
-> pin control and GPIO driver, because it adds managed resources
-> to the GPIO device before it is probed, which is something that
-> the device core will not accept, and all of the GPIO blocks will
-> refuse to probe:
->
-> platform 8012e000.gpio: Resources present before probing
-> platform 8012e080.gpio: Resources present before probing
-> (...)
->
-> Fix this by not tying any managed resources to the looked-up
-> gpio_pdev/gpio_dev device, let's just live with the fact that
-> these need imperative resource management for now.
->
-> Drop in some notes and use a local *dev variable to clarify the
-> code.
+tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git ib-nomadik-gpio
+branch HEAD: f17dccd3ead82f2c7c72762c9785fa3719b5e397  gpio: nomadik: Back out some managed resources
 
-LGTM, some minor remarks below.
+elapsed time: 1479m
 
-...
+configs tested: 156
+configs skipped: 3
 
-> Cc: Th=C3=A9o Lebrun <theo.lebrun@bootlin.com>
+The following configs have been built successfully.
+More configs may be tested in the coming days.
 
-Note, you can put Cc:s after --- line and it won't go to the commit
-message while Cc to the respective people.
+tested configs:
+alpha                             allnoconfig   gcc  
+alpha                            allyesconfig   gcc  
+alpha                               defconfig   gcc  
+arc                              allmodconfig   gcc  
+arc                               allnoconfig   gcc  
+arc                              allyesconfig   gcc  
+arc                                 defconfig   gcc  
+arc                   randconfig-001-20240306   gcc  
+arc                   randconfig-002-20240306   gcc  
+arm                              allmodconfig   gcc  
+arm                               allnoconfig   clang
+arm                              allyesconfig   gcc  
+arm                                 defconfig   clang
+arm                   randconfig-001-20240306   gcc  
+arm                           tegra_defconfig   gcc  
+arm64                            allmodconfig   clang
+arm64                             allnoconfig   gcc  
+arm64                            allyesconfig   clang
+arm64                               defconfig   gcc  
+arm64                 randconfig-001-20240306   gcc  
+arm64                 randconfig-003-20240306   gcc  
+csky                             allmodconfig   gcc  
+csky                              allnoconfig   gcc  
+csky                             allyesconfig   gcc  
+csky                                defconfig   gcc  
+csky                  randconfig-001-20240306   gcc  
+csky                  randconfig-002-20240306   gcc  
+hexagon                          allmodconfig   clang
+hexagon                           allnoconfig   clang
+hexagon                          allyesconfig   clang
+hexagon                             defconfig   clang
+i386                             alldefconfig   gcc  
+i386                             allmodconfig   gcc  
+i386                              allnoconfig   gcc  
+i386                             allyesconfig   gcc  
+i386         buildonly-randconfig-001-20240306   clang
+i386         buildonly-randconfig-002-20240306   clang
+i386         buildonly-randconfig-004-20240306   clang
+i386         buildonly-randconfig-005-20240306   clang
+i386                                defconfig   clang
+i386                  randconfig-002-20240306   clang
+i386                  randconfig-003-20240306   clang
+i386                  randconfig-004-20240306   clang
+i386                  randconfig-006-20240306   clang
+i386                  randconfig-011-20240306   clang
+i386                  randconfig-012-20240306   clang
+i386                  randconfig-015-20240306   clang
+i386                  randconfig-016-20240306   clang
+loongarch                        allmodconfig   gcc  
+loongarch                         allnoconfig   gcc  
+loongarch                        allyesconfig   gcc  
+loongarch                           defconfig   gcc  
+loongarch             randconfig-001-20240306   gcc  
+loongarch             randconfig-002-20240306   gcc  
+m68k                             allmodconfig   gcc  
+m68k                              allnoconfig   gcc  
+m68k                             allyesconfig   gcc  
+m68k                       bvme6000_defconfig   gcc  
+m68k                                defconfig   gcc  
+m68k                       m5275evb_defconfig   gcc  
+m68k                        mvme16x_defconfig   gcc  
+microblaze                       allmodconfig   gcc  
+microblaze                        allnoconfig   gcc  
+microblaze                       allyesconfig   gcc  
+microblaze                          defconfig   gcc  
+mips                             allmodconfig   gcc  
+mips                              allnoconfig   gcc  
+mips                             allyesconfig   gcc  
+nios2                            allmodconfig   gcc  
+nios2                             allnoconfig   gcc  
+nios2                            allyesconfig   gcc  
+nios2                               defconfig   gcc  
+nios2                 randconfig-001-20240306   gcc  
+nios2                 randconfig-002-20240306   gcc  
+openrisc                         allmodconfig   gcc  
+openrisc                          allnoconfig   gcc  
+openrisc                         allyesconfig   gcc  
+openrisc                            defconfig   gcc  
+parisc                           allmodconfig   gcc  
+parisc                            allnoconfig   gcc  
+parisc                           allyesconfig   gcc  
+parisc                              defconfig   gcc  
+parisc                generic-64bit_defconfig   gcc  
+parisc                randconfig-001-20240306   gcc  
+parisc                randconfig-002-20240306   gcc  
+parisc64                            defconfig   gcc  
+powerpc                          allmodconfig   gcc  
+powerpc                           allnoconfig   gcc  
+powerpc                          allyesconfig   clang
+powerpc               randconfig-001-20240306   gcc  
+powerpc               randconfig-002-20240306   gcc  
+powerpc64             randconfig-001-20240306   gcc  
+riscv                            allmodconfig   clang
+riscv                             allnoconfig   gcc  
+riscv                            allyesconfig   clang
+riscv                               defconfig   clang
+riscv                 randconfig-002-20240306   gcc  
+s390                             allmodconfig   clang
+s390                              allnoconfig   clang
+s390                             allyesconfig   gcc  
+s390                                defconfig   clang
+s390                  randconfig-002-20240306   gcc  
+sh                               allmodconfig   gcc  
+sh                                allnoconfig   gcc  
+sh                               allyesconfig   gcc  
+sh                                  defconfig   gcc  
+sh                        dreamcast_defconfig   gcc  
+sh                        edosk7705_defconfig   gcc  
+sh                          lboxre2_defconfig   gcc  
+sh                    randconfig-001-20240306   gcc  
+sh                    randconfig-002-20240306   gcc  
+sh                              ul2_defconfig   gcc  
+sparc                            allmodconfig   gcc  
+sparc                             allnoconfig   gcc  
+sparc                            allyesconfig   gcc  
+sparc                               defconfig   gcc  
+sparc64                          allmodconfig   gcc  
+sparc64                          allyesconfig   gcc  
+sparc64                             defconfig   gcc  
+sparc64               randconfig-001-20240306   gcc  
+sparc64               randconfig-002-20240306   gcc  
+um                               allmodconfig   clang
+um                                allnoconfig   clang
+um                               allyesconfig   gcc  
+um                                  defconfig   clang
+um                             i386_defconfig   gcc  
+um                    randconfig-001-20240306   gcc  
+um                           x86_64_defconfig   clang
+x86_64                            allnoconfig   clang
+x86_64                           allyesconfig   clang
+x86_64       buildonly-randconfig-001-20240306   clang
+x86_64       buildonly-randconfig-002-20240306   clang
+x86_64       buildonly-randconfig-003-20240306   clang
+x86_64       buildonly-randconfig-004-20240306   clang
+x86_64       buildonly-randconfig-006-20240306   clang
+x86_64                              defconfig   gcc  
+x86_64                randconfig-001-20240306   clang
+x86_64                randconfig-002-20240306   clang
+x86_64                randconfig-005-20240306   clang
+x86_64                randconfig-006-20240306   clang
+x86_64                randconfig-011-20240306   clang
+x86_64                randconfig-012-20240306   clang
+x86_64                randconfig-013-20240306   clang
+x86_64                randconfig-015-20240306   clang
+x86_64                randconfig-071-20240306   clang
+x86_64                randconfig-072-20240306   clang
+x86_64                randconfig-073-20240306   clang
+x86_64                randconfig-074-20240306   clang
+x86_64                randconfig-075-20240306   clang
+x86_64                randconfig-076-20240306   clang
+x86_64                          rhel-8.3-rust   clang
+x86_64                               rhel-8.3   gcc  
+xtensa                            allnoconfig   gcc  
+xtensa                           allyesconfig   gcc  
+xtensa                randconfig-001-20240306   gcc  
+xtensa                randconfig-002-20240306   gcc  
 
-...
-
->         if (device_property_read_u32(gpio_dev, "ngpios", &ngpio)) {
->                 ngpio =3D NMK_GPIO_PER_CHIP;
-> -               dev_dbg(&pdev->dev, "populate: using default ngpio (%d)\n=
-", ngpio);
-> +               dev_dbg(dev, "populate: using default ngpio (%d)\n", ngpi=
-o);
-
-While at it %d --> %u.
-
->         }
-
-...
-
-> +               dev_err(dev, "failed getting reset control: %ld\n",
->                         PTR_ERR(reset));
-
-Also possible %pe.
-
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
