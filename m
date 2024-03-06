@@ -1,125 +1,130 @@
-Return-Path: <linux-gpio+bounces-4169-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4170-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 056698737A0
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:21:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F0348737B9
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 14:28:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 89051B25EAB
-	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:21:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 70A931C21B27
+	for <lists+linux-gpio@lfdr.de>; Wed,  6 Mar 2024 13:28:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A4F1131731;
-	Wed,  6 Mar 2024 13:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7741D130AEE;
+	Wed,  6 Mar 2024 13:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9eechLF"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e5qWhSMk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04CC2131724;
-	Wed,  6 Mar 2024 13:20:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A4651BDD3
+	for <linux-gpio@vger.kernel.org>; Wed,  6 Mar 2024 13:28:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709731253; cv=none; b=pPMrZgYf0m+X3a7r62hK/gHeKfH1Jtchdy+xPdIlUBkyOBty93+PoQ4k1ui28uFypzryepqNMwuVwzJDyRnAU4coWuuQiJ8n3eA9e8SBsoGH0dEJ11A5A+rPt2NFYodcSgJ9ANJ6GV36Tf349YO3uxmKHFpB83aSEFfMMfkAHsw=
+	t=1709731731; cv=none; b=eLX3y8m57leKtYnczqHzSWLLksN2gzMxZS5P/Yjh5CgeVlap6espMyyLeqabturBBMiBzBWJ/A/uoFVQ2zZ4GzZ6fTV4qMBNTHDo6b/2mMXCAxZvc9pr53LAfntSSZtptAa1Byydtfry9jqOPi0DqwZjrN7vU4NhfMwEKbYpWt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709731253; c=relaxed/simple;
-	bh=hBwQRfDB3vRxBfC1PFrHDC8bEfAnJTBEaB2IzGBEn8g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=O6CPtDrZkKL4tIbcAw3ZGdBPkILClf1j234HN/qXeHJb6oAIPpMyJI5VuxBAKiEwVpoUlxD35fjvevqLMT2QHACfl7wFAri785/JddLLwh3XCmATmT4MMGCVATDck/hxF3PViJMoafqpRt2Ob2cuYx8QclMb7PL9omgAcY4CseM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9eechLF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FFC3C43394;
-	Wed,  6 Mar 2024 13:20:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1709731252;
-	bh=hBwQRfDB3vRxBfC1PFrHDC8bEfAnJTBEaB2IzGBEn8g=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=H9eechLFsCUlveAwDf122TxG/RfEysWowspaZGRv6h6Mkzv2guaOSGDUjnutHbXmZ
-	 pJSWdZ8Z46pd9rr9/BjTMfy30R2tKQKq7hyDD4eK7KqdC7Y4eeZRPTTxnHyddo/2FV
-	 Q2mTZM5qyPtaktrQmVDS+3qgCZ6VlLFWpro2/GoLmHltyAALmByoCfuumAnQd/q2vW
-	 Y9+VJfkl+fftG0V0oIdZmsMdludkSIQ/NTRdjNUEhP5YQbWw3n40Vhvt9PkaWtrUWp
-	 J/p6kJXl8nr68nMHSw+J26jsuOUWDDtcNS8Fi5xQULfh0g+zZMg9KXlU6m5POhoDLe
-	 OSoldeGUX4XIA==
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d27fef509eso13412811fa.3;
-        Wed, 06 Mar 2024 05:20:52 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCXLL7FL5uqakXyEKkPAdpG2MK1eV6IGpT3WQ08AFshKY4ysNOin9bYVNtMu5Qj9gbJahvvY5uYxfoeF0UGoz4h5qtJrgl86RCZjLTr7d1fjtEGENH3qarK/VMv/T4+QOstY9npTpP4=
-X-Gm-Message-State: AOJu0YxzyVL0pcU9un9wHzzOZXb36Uje628GgFZcIgw9ZOBsLaoy2Y7q
-	EsEM4Yon27KcDY90gp8LMVn4CuoIboq9OB3rDEYW2Rj0vnBEFjWGyzRQdRnoprrViFHYFgdcUo9
-	dbOkuG8Ff5s6XDaYoa5OOihVXJw==
-X-Google-Smtp-Source: AGHT+IFKThumhv59EjFUdOH4xKjy6uY/jkwVsSZsbZtQIc/HJ9nFKAPTxbyOPWQeWZJHzM4Y17xir7f42ecDV/1Dy+Q=
-X-Received: by 2002:a2e:2c05:0:b0:2d2:e82e:75f6 with SMTP id
- s5-20020a2e2c05000000b002d2e82e75f6mr3091068ljs.44.1709731250644; Wed, 06 Mar
- 2024 05:20:50 -0800 (PST)
+	s=arc-20240116; t=1709731731; c=relaxed/simple;
+	bh=OrjFciEgPoiDtAlwGxwXG8sb4TXqk3WJU/1lUh/nqRk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=t/oYvVYxye0LsZsR1GE6nAv2muVQFHdKO1oRs8R/7QkxpmLMsqCHaYclbspy8TZcYAFw7281OOXlH1GXm7AxXftXv2Lcx9s8IUXvu/d0wyrNgenK2ayWumzjup/2dtk783lcp4srxr71xFZc2okH5f6DrBMM4uwwnH2AimIQcek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=e5qWhSMk; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-33e1878e357so602996f8f.3
+        for <linux-gpio@vger.kernel.org>; Wed, 06 Mar 2024 05:28:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1709731728; x=1710336528; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9W+DTc1gBu+fa1Ts7s8hZNpaIVMonPw2fIrPTG6GOjs=;
+        b=e5qWhSMkMGCm4T864VYOc1XOA+5x3ue8kvTaigi6XiDtemdSiqAwHJrf3HPOATMxLh
+         CrOXRcc/0rtVTggoRHrulP/bdmGuC9p7H7qKYy4ucflYT57au3ubr+otufqEKDM/Rs5g
+         mGd9r6/uGpvnDFYjkYdPx5uL0CpTHTfvFH92fS9AyjhXkTMxRARONVWFWoSGe8lefTTL
+         cxV5wJ+XvZ2yr6cb808Rwyapf5M3JKbhAF92A7bBJFoujGbpgQGSNVsZoTlF57RF2Vud
+         CkYnVj0dHWS/NUy1rpvnZeW8XumunVI7qKzENY+G/g4JMRJH8cSgO8yge+2IXDp1V9xV
+         v30g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709731728; x=1710336528;
+        h=content-transfer-encoding:content-disposition:mime-version
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9W+DTc1gBu+fa1Ts7s8hZNpaIVMonPw2fIrPTG6GOjs=;
+        b=CCcoSG2iSsuYLsNBjtvCuHaxwS+Qh7Ea+NwIUhlj0MICom5/aLAdXoLRNcABefYjOT
+         D9o4FCo+YHM6TBx4HK9O47cbN4sMey5rmH1Z4msmM+9H6/98I7xmfmW45/ncYxShNG1h
+         I34hdeaZrAOMguGwntG3PRGOpM7aT1MGPKBkb/IlYzcAVnfVavAPmiUEy1297oTejm7W
+         3keg+Y/a817VuXzyMT28UuZWbx+4zUof3L/ip2VqeD+Juggfh7Vtxl3BcQVUOGY1senK
+         ++kUrkmiMFhoCKXBT3SrsmUx7D4xlLHv3o71+QqUDnrMD8VIrPdRQR1KsfbC2sr7xYbp
+         sn4w==
+X-Gm-Message-State: AOJu0YxiYqu7ZfldPfn68cH7zsaaqbJXvE7/FL3SgbRbppKw6L2xPElG
+	z/V3/CSTjefIvixSfOsQk8fm5hYMBKoxbrKUXdd7BqSK6KntHBm+LcqSalRu+go=
+X-Google-Smtp-Source: AGHT+IHXvS/Yad38z/wzLjL/BaHpBjt40v1xg3fqqJuJtENcEMg/p0pvbJmE3w3bMcKFfGqRT5lNKA==
+X-Received: by 2002:a5d:5443:0:b0:33d:f46f:6384 with SMTP id w3-20020a5d5443000000b0033df46f6384mr10659099wrv.23.1709731727548;
+        Wed, 06 Mar 2024 05:28:47 -0800 (PST)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id f15-20020adffccf000000b0033dedd63382sm17645169wrs.101.2024.03.06.05.28.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Mar 2024 05:28:47 -0800 (PST)
+Date: Wed, 6 Mar 2024 16:28:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: theo.lebrun@bootlin.com
+Cc: linux-gpio@vger.kernel.org
+Subject: [bug report] gpio: nomadik: support mobileye,eyeq5-gpio
+Message-ID: <5ee722f8-7582-420d-8477-45be6acde90f@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20210624214458.68716-1-mail@david-bauer.net> <CAL_Jsq+sHy=mr0paWvxOL8yT9TwuaJdfapX0sFkOJFtjCqoT1w@mail.gmail.com>
- <CACRpkdY2jfszTNvUHxc8-AXFwZKQaaOkcTwZrAiKi2rU5tTn6g@mail.gmail.com>
-In-Reply-To: <CACRpkdY2jfszTNvUHxc8-AXFwZKQaaOkcTwZrAiKi2rU5tTn6g@mail.gmail.com>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Wed, 6 Mar 2024 07:20:37 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJWWvVQHtM6fmqewQz0YXhr5t3hzSso5CLhi_Sws8uihA@mail.gmail.com>
-Message-ID: <CAL_JsqJWWvVQHtM6fmqewQz0YXhr5t3hzSso5CLhi_Sws8uihA@mail.gmail.com>
-Subject: Re: [PATCH v6 1/2] dt-bindings: pinctrl: Add bindings for Awinic AW9523/AW9523B
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: David Bauer <mail@david-bauer.net>, lgirdwood@gmail.com, broonie@kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 5, 2024 at 4:25=E2=80=AFPM Linus Walleij <linus.walleij@linaro.=
-org> wrote:
->
-> On Tue, Mar 5, 2024 at 6:28=E2=80=AFPM Rob Herring <robh+dt@kernel.org> w=
-rote:
->
-> > Linus, did you just apply this 3 year old bit-rotted patch? Linux-next
-> > now warns:
->
-> Not "just", I did run checks on it first i.e.:
+Hello Théo Lebrun,
 
-Sorry, I meant "just now".
+Commit 3c30cc26df0a ("gpio: nomadik: support mobileye,eyeq5-gpio")
+from Feb 28, 2024 (linux-next), leads to the following Smatch static
+checker warning:
 
-> $ make DT_SCHEMA_FILES=3DDocumentation/devicetree/bindings/pinctrl/awinic=
-,aw9523-pinctrl.yaml
-> dt_binding_check
->   HOSTCC  scripts/basic/fixdep
->   HOSTCC  scripts/dtc/dtc.o
->   HOSTCC  scripts/dtc/flattree.o
->   HOSTCC  scripts/dtc/fstree.o
->   HOSTCC  scripts/dtc/data.o
->   HOSTCC  scripts/dtc/livetree.o
->   HOSTCC  scripts/dtc/treesource.o
->   HOSTCC  scripts/dtc/srcpos.o
->   HOSTCC  scripts/dtc/checks.o
->   HOSTCC  scripts/dtc/util.o
->   LEX     scripts/dtc/dtc-lexer.lex.c
->   YACC    scripts/dtc/dtc-parser.tab.[ch]
->   HOSTCC  scripts/dtc/dtc-lexer.lex.o
->   HOSTCC  scripts/dtc/dtc-parser.tab.o
->   HOSTLD  scripts/dtc/dtc
->   LINT    Documentation/devicetree/bindings
-> usage: yamllint [-h] [-] [-c CONFIG_FILE | -d CONFIG_DATA] [-f
-> {parsable,standard,colored,github,auto}] [-s] [--no-warnings] [-v]
-> [FILE_OR_DIR ...]
-> yamllint: error: one of the arguments FILE_OR_DIR - is required
->   CHKDT   Documentation/devicetree/bindings/processed-schema.json
->   SCHEMA  Documentation/devicetree/bindings/processed-schema.json
->
-> So that's at least something but apparently not enough, hm the yamllint m=
-oaning
-> should be a hint should it not... it's on v6.8-rc1.
+	drivers/pinctrl/nomadik/pinctrl-nomadik.c:1233 nmk_pinctrl_probe()
+	error: 'nmk_chip' dereferencing possible ERR_PTR()
 
-That's fixed in later RCs.
+drivers/pinctrl/nomadik/pinctrl-nomadik.c
+    1211         /*
+    1212          * Since we depend on the GPIO chips to provide clock and register base
+    1213          * for the pin control operations, make sure that we have these
+    1214          * populated before we continue. Follow the phandles to instantiate
+    1215          * them. The GPIO portion of the actual hardware may be probed before
+    1216          * or after this point: it shouldn't matter as the APIs are orthogonal.
+    1217          */
+    1218         for (i = 0; i < NMK_MAX_BANKS; i++) {
+    1219                 struct fwnode_handle *gpio_fwnode;
+    1220                 struct nmk_gpio_chip *nmk_chip;
+    1221 
+    1222                 gpio_fwnode = fwnode_find_reference(fwnode, "nomadik-gpio-chips", i);
+    1223                 if (IS_ERR(gpio_fwnode))
+    1224                         continue;
+    1225 
+    1226                 dev_info(&pdev->dev, "populate NMK GPIO %d \"%pfwP\"\n", i, gpio_fwnode);
+    1227                 nmk_chip = nmk_gpio_populate_chip(gpio_fwnode, pdev);
+    1228                 if (IS_ERR(nmk_chip))
+                                    ^^^^^^^^
+Error pointer.
 
-BTW, you can do just "DT_SCHEMA_FILES=3Dawinic,aw9523-pinctrl" or even
-"DT_SCHEMA_FILES=3Dpinctrl" to test all pinctrl. It's just a substring
-match. (It was just the full path that broke.)
+    1229                         dev_err(&pdev->dev,
+    1230                                 "could not populate nmk chip struct - continue anyway\n");
+    1231                 fwnode_handle_put(gpio_fwnode);
+    1232                 /* We are NOT compatible with mobileye,eyeq5-gpio. */
+--> 1233                 BUG_ON(nmk_chip->is_mobileye_soc);
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^
+Unchecked dereference
 
-Rob
+    1234         }
+    1235 
+    1236         prcm_fwnode = fwnode_find_reference(fwnode, "prcm", 0);
+
+regards,
+dan carpenter
 
