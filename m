@@ -1,169 +1,103 @@
-Return-Path: <linux-gpio+bounces-4189-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4190-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EFE487486B
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 08:02:02 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BAA25874950
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 09:16:15 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 36BD528440D
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 07:02:01 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 167C0B22408
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 08:16:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C36A21CF8A;
-	Thu,  7 Mar 2024 07:01:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 82CA76340A;
+	Thu,  7 Mar 2024 08:15:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="eqUErcwQ"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="blvw5orK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.19])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF19A1CD1E
-	for <linux-gpio@vger.kernel.org>; Thu,  7 Mar 2024 07:01:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6090C6313B;
+	Thu,  7 Mar 2024 08:15:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709794907; cv=none; b=d4N095WKWRfDiVamt5NKwHOF0NFON7erph3SrJMOWenOtd8UJrVwXAzNdcNsMFIMKlnyQ5buTFg5lgYyTy6iCSlcLfTiDQQEl6rKfOt70T3y6yJdXj4BTDHWhfM1g1RcYetlDeAVCu1tmd7JOFbp+AOZiX9gkSMyMd59eFOYXK4=
+	t=1709799325; cv=none; b=HGTLjHaqYrmAH9FECmSMnWHzrCtm+7QKVWaYITKbvZ0upTG6Ge77yOJthLjvzU4eYFHTJtvrB1kDfKJJl1c/oYheg657NX2hOEM5Uq65NQPNSbdZhh0nUbLjS5yP2NGa8hwh7YnmTtjg/nSDB6Bqvs/hukRcPmz2I9+SBvSg6dE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709794907; c=relaxed/simple;
-	bh=ifYiOgp3knTsR6lC0MHYh79PwcVHlan23djwx4rl6OU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=F9mKq1D/tudV9Pbxy44xTZ/dU+ELOj4ntc0hubDTCqRzygU/WasPTbUGPqZMWg3flYzDO9gRNZGpOUMgEv6eXlCLwD6+1ENJF4tcvrYa8RBDzTjxAlIgS3RnLNGLTWQc33yAajAMpiN9JR3brtNlvlLjJDopAgj4Lz+CrwQhSuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=eqUErcwQ; arc=none smtp.client-ip=212.227.15.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-	s=s31663417; t=1709794895; x=1710399695; i=wahrenst@gmx.net;
-	bh=ifYiOgp3knTsR6lC0MHYh79PwcVHlan23djwx4rl6OU=;
-	h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:
-	 References;
-	b=eqUErcwQMb/NC0eL+Qu273xANDwup/kw4KBWDclbx8da76rWxjGTjN/l575VmS5Z
-	 /8icEyxV9/Mbqi1pifCl5U0/HbLGfmjFpW4/iQ13SpuYcySDl1OlrERYeABZBC+Un
-	 UChKOMILkV4QrvHGn4sKqZQXxgbZUB9oDYUgoms+PDzRMhMhG6oCULxinu9E/XP1L
-	 vpGfdjMIqif4xe2XaWNNtCxrQ1THNRBs0DXllwzXRrgin7ivko081IR1Kb+nYYCEv
-	 HQ/tzTH3V0MUs0cAnn7jKSoRCnSduHUGMq1S/MRqcLxuZfU29w/6u1fZVIR2TWWS9
-	 O3I3gO6a7kRcvcihHA==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from stefanw-SCHENKER ([37.4.248.43]) by mail.gmx.net (mrgmx004
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1My36T-1quzY02y47-00zSba; Thu, 07
- Mar 2024 08:01:35 +0100
-From: Stefan Wahren <wahrenst@gmx.net>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>,
-	Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rpi-kernel@lists.infradead.org,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: [PATCH V4 2/2] pinctrl: bcm2835: Implement bcm2711_pinconf_get
-Date: Thu,  7 Mar 2024 08:01:13 +0100
-Message-Id: <20240307070113.4888-3-wahrenst@gmx.net>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240307070113.4888-1-wahrenst@gmx.net>
-References: <20240307070113.4888-1-wahrenst@gmx.net>
+	s=arc-20240116; t=1709799325; c=relaxed/simple;
+	bh=ZstXiN8BCb6FOQN96D81OboJCXKA33Stl82Xuecf8cg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:To:From:Subject:
+	 References:In-Reply-To; b=vFCeS7Z5L4cQ4E2+Nap7YXaxLSNTaJ8xiZlQdTLpYtxrjdduSv7fmeb5e2bSw0+EvDDRf9Ta4GhmM4Sjumw6Q19/HjPosZRLvc86MbegenSzmYgiPzfLQ8ZFH0kBKEHbbZ11Nzvx6m+e5FxQSq8WRNv70mOz3y1KDVyM/PT5/TY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=blvw5orK; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 432FE240003;
+	Thu,  7 Mar 2024 08:15:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1709799320;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=buhNLZyABPkypJJr6jjWYuCWSEEmx3G3WXbzfi/P7uA=;
+	b=blvw5orKpmVdJ/dB539TbEIfgeahPbmYw365thGcbpUH75juP7CDVqDlaI73HRofGBHhjT
+	rSUx+luK9x/JspZBrKcrQA17WCLNSz4AqQFFOhje2kCoIG1I/Rx1rhE0HEvXz1YROKA7R3
+	bTHZpEQstUB92nTHj4zqd7vFh6Dsz6cSXtz2nAIPajHvOeX79alwbXDAoq3SccCYjjl3Vk
+	b1NPOf8100775Jyc5YgySmD4sMdov+G0yHW3czaj/oKWL8PLvoU2QifgzjNWyA/4ft8Z2E
+	+P10YYalHRf5t+cJEhkC8qsHO0EOsNtCdEwB0BVRKyLC/dcV6m7HnKe3183WTg==
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:DCccPuS8QyVdPnMEcwog/EF0++clZNFV5FmydDrTVqEaJx5LsSa
- I4KEmckJZowefSlMYv9rYno83+Bg8210wiTRtSIIp33KgcpT/l1N9UhDH+p0RcvQVbMp3dq
- luGMo9m6WJa6uAm+7R8v/xKp8sCHGa94b7rFk/BixUPMq2DBagRGAVcUnhzaad0p6Gsmiw7
- Bkr4G2Xsk+JkiUMimv34g==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:11mm5wwasfY=;sWUeDeS0YKe2o8YXTrSL4SrjuaB
- iFhcu7nmkhM1FuTfPfRNqEA5OnkbaQLe3QtQHhGSVC9s+6qP2uRr2raJCgzcKLvLVUMdX1wKl
- 7FiAP2EkYsCZRr9ln7U0zR6DMnPiGb/h9oSzU4u5AgtrsqzSvkfPjR57rm6WWwKj2rzvhZv6D
- MWmmRmr6hmfLucMVjpnxoH0hIuTkK0cxQIfNvV2/Oav1c+yJMGExXtsXLkmTLbBdMC+ZhoErO
- GXE78Y2T72PoULNPJ0s2mee05z2K6rxDONvTmWtn9VW6E3rSY4X9oL42/mrTUiqZNK7/yfXYb
- gw8xrcxrrCTWcwdRYTLUAO05iLTYYzjKJXei9UAGMTg89rgqdziPic6hnbexYLJkY32EHkLs2
- CjKRgXiBGwgganx7WYV/ep5sa+jrX9YB+0WXCvOZi7DXowZ2XhJHBJH1RXhKmVHXxtIdfBdvM
- YFdnFD5v9951S+Em4aze3zR8djFNVIjXlCogs1CIKwjfjTqzzVvPdCd+SBHHSB1hMB1YLWE9P
- t1toud1viYuSor/vOe4kdBulICzQ9UuTor1oY4uiyHy+BJtMlpCDEeqpW6zywsO4RsZL6SHKq
- SI9d59bDwYBrihyzBqFPNHvhyAVPiZyDFbglRgIV/GHiTJaQFeOE8wXatDnQtqAcJBfz5V1DZ
- hPzs/c9VijnEtsenGYvnBExvapuP9MEEOZoR8SoNhlNahBi29deVhrSlGxEUaHQXm7ekkoUuN
- k/XSBWj4pv4f7YggKVtzZaCqIOs20pSjqkM+xtr5QC5DutPPo4CRY14nolAL50hS5fvfeY+IH
- VCM63FxNBSxRawI7wmO9WRHmu7bgCSkFIvTsQQ/X8xgCA=
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 07 Mar 2024 09:15:18 +0100
+Message-Id: <CZND9VGAGS45.210DYP50RTA9F@bootlin.com>
+Cc: "Vladimir Kondratiev" <vladimir.kondratiev@mobileye.com>,
+ <linux-mips@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Tawfik Bayouk"
+ <tawfik.bayouk@mobileye.com>, <linux-gpio@vger.kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, "Gregory
+ CLEMENT" <gregory.clement@bootlin.com>, "Michael Turquette"
+ <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>, "Rob Herring"
+ <robh+dt@kernel.org>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski+dt@linaro.org>, "Conor Dooley" <conor+dt@kernel.org>,
+ "Thomas Bogendoerfer" <tsbogend@alpha.franken.de>, "Linus Walleij"
+ <linus.walleij@linaro.org>, =?utf-8?q?Rafa=C5=82_Mi=C5=82ecki?=
+ <rafal@milecki.pl>, "Philipp Zabel" <p.zabel@pengutronix.de>
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: Re: [PATCH v9 0/9] Add support for Mobileye EyeQ5 system controller
+X-Mailer: aerc 0.15.2
+References: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
+In-Reply-To: <20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com>
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-The BCM2711 allows to read the bias config. So implement pin_conf_get
-accordingly. The pull resistor values has been taken from the
-BCM2711/7211 datasheet.
+Hello,
 
-This implementation assumes that BCM7211 behaves the same way.
+On Fri Mar 1, 2024 at 5:22 PM CET, Th=C3=A9o Lebrun wrote:
+> Here again for a new revision of the system-controller on Mobileye
+> EyeQ5. It deals with clk, reset and pinctrl. Drivers are meant to be
+> merged in their respective trees. Each already have their dt-bindings
+> in -next.
 
-Signed-off-by: Stefan Wahren <wahrenst@gmx.net>
-Reviewed-by: Florian Fainelli <florian.fainelli@broadcom.com>
-Tested-by: Florian Fainelli <florian.fainelli@broadcom.com>
-=2D--
- drivers/pinctrl/bcm/pinctrl-bcm2835.c | 41 ++++++++++++++++++++++++++-
- 1 file changed, 40 insertions(+), 1 deletion(-)
+I'd be curious to get the state of mind of the involved maintainers
+about this series?
+ - clk, reset, pinctrl: I feel like the three drivers look in good shape
+   now that we've done a few review iterations.
+ - MIPS: dt-bindings have been queued in their respective branches so
+   devicetree patches have no reason to change.
 
-diff --git a/drivers/pinctrl/bcm/pinctrl-bcm2835.c b/drivers/pinctrl/bcm/p=
-inctrl-bcm2835.c
-index 5d2b188a1ef4..f5a9372d43bd 100644
-=2D-- a/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-+++ b/drivers/pinctrl/bcm/pinctrl-bcm2835.c
-@@ -1098,6 +1098,45 @@ static const struct pinconf_ops bcm2835_pinconf_ops=
- =3D {
- 	.pin_config_set =3D bcm2835_pinconf_set,
- };
+Can patches be queued before the upcoming merge window?
 
-+static int bcm2711_pinconf_get(struct pinctrl_dev *pctldev, unsigned pin,
-+			       unsigned long *config)
-+{
-+	struct bcm2835_pinctrl *pc =3D pinctrl_dev_get_drvdata(pctldev);
-+	enum pin_config_param param =3D pinconf_to_config_param(*config);
-+	u32 offset, shift, val;
-+
-+	offset =3D PUD_2711_REG_OFFSET(pin);
-+	shift =3D PUD_2711_REG_SHIFT(pin);
-+	val =3D bcm2835_gpio_rd(pc, GP_GPIO_PUP_PDN_CNTRL_REG0 + (offset * 4));
-+
-+	switch (param) {
-+	case PIN_CONFIG_BIAS_DISABLE:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_NONE)
-+			return -EINVAL;
-+
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_UP:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_UP)
-+			return -EINVAL;
-+
-+		*config =3D pinconf_to_config_packed(param, 50000);
-+		break;
-+
-+	case PIN_CONFIG_BIAS_PULL_DOWN:
-+		if (((val >> shift) & PUD_2711_MASK) !=3D BCM2711_PULL_DOWN)
-+			return -EINVAL;
-+
-+		*config =3D pinconf_to_config_packed(param, 50000);
-+		break;
-+
-+	default:
-+		return bcm2835_pinconf_get(pctldev, pin, config);
-+	}
-+
-+	return 0;
-+}
-+
- static void bcm2711_pull_config_set(struct bcm2835_pinctrl *pc,
- 				    unsigned int pin, unsigned int arg)
- {
-@@ -1165,7 +1204,7 @@ static int bcm2711_pinconf_set(struct pinctrl_dev *p=
-ctldev,
+Have a nice day,
 
- static const struct pinconf_ops bcm2711_pinconf_ops =3D {
- 	.is_generic =3D true,
--	.pin_config_get =3D bcm2835_pinconf_get,
-+	.pin_config_get =3D bcm2711_pinconf_get,
- 	.pin_config_set =3D bcm2711_pinconf_set,
- };
-
-=2D-
-2.34.1
+--
+Th=C3=A9o Lebrun, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
 
