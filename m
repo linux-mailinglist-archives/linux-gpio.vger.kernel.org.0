@@ -1,180 +1,237 @@
-Return-Path: <linux-gpio+bounces-4197-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4198-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B3407874B3C
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 10:48:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 89398874D55
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 12:25:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 671D11F21779
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 09:48:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AD4DF1C238A0
+	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 11:25:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8186A84FA9;
-	Thu,  7 Mar 2024 09:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 85854128836;
+	Thu,  7 Mar 2024 11:25:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="JKD/walc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa2.ltts.com (unknown [14.140.155.42])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6383E84052;
-	Thu,  7 Mar 2024 09:48:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD78F12882C
+	for <linux-gpio@vger.kernel.org>; Thu,  7 Mar 2024 11:25:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709804891; cv=none; b=GKmUVgeo3ZhYum6Wktyu2QrcX7vO847pbUEdB9xZEcXXEiBwURE6vn6NduDee7NDU2rZPiTH3PQToizaqdqSFmszk/7zEOYPVMs/Onck6pzXu6XR5285Bpenr83HgCGDdPuy6baKZYUMxp5rJIZFgakXl9U4CGwjM3VbdVSZrxA=
+	t=1709810705; cv=none; b=YbltCdn08gx1QYgqoWCgczzWay7bfUZSugIuIP7M6uABRXmSFdMWhmA9ini8bXpfLWrjA+l3iyKN34OswpZnTBO3XfC0mFM963Jm/cdSO/pp1+ydXtW4o8BV616DdbJsHwdMs556gIX0QClrXXRhWBTB4teD4n3ax08nptslvsE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709804891; c=relaxed/simple;
-	bh=T0vQqe3wQDgCmBiHKB5MY86dFbkqqis5Rjc6YBC2yFg=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=f/DKWZZWnoU/XmDmu/hRiv35yLlIRSAc7ei7Iok9v5oSrqIy4ZyQymfm0mX4q7Xx+uJc4EoHN+OCs8c7gbg/7ff/Ir4pD6luF8PPyAv8AcNgDXSkR7JyI3eB+LEdSrHKXdjYlbqST9Tw1Z7QCIFKAQlvr0zQbXCXTKcu2p7gGU0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: /xSOhYlBDg1N1Qpcfld4tp3hwf86Wtgkqc8oDDR80mtX1KUxvoAXE2Xl6xhnORuxBOL+RyNVIm
- ilK25fQs9Vlw==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 07 Mar 2024 15:18:04 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: lee@kernel.org
-Cc: arnd@arndb.de,
-	bhargav.r@ltts.com,
-	broonie@kernel.org,
-	conor+dt@kernel.org,
-	devicetree@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	jpanis@baylibre.com,
-	kristo@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	lgirdwood@gmail.com,
-	linus.walleij@linaro.org,
-	linux-arm-kernel@lists.infradead.org,
+	s=arc-20240116; t=1709810705; c=relaxed/simple;
+	bh=BA2bEb7FYXnJNzItE9FqQDauXUrW1+GLrZzotUpuJu4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=LP/fipXf3oadDB/zrU1uPePwf0Sy4vD3QVaLb5lR6LjbbCfsNT+MO+XPPjHiEoCpxW8E8P/+iQE/R11rbXNiDH+BOH7+NfUVnEAWPIRAZggyV5LdWkubbA05fPnLTEOQtaZAJ7nBGNUly9q/kh45UwRwN8anKOWECVu6iRlhbC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=JKD/walc; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a45606c8444so96947666b.3
+        for <linux-gpio@vger.kernel.org>; Thu, 07 Mar 2024 03:25:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tuxon.dev; s=google; t=1709810701; x=1710415501; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=840ydxtL4Z7hkmGQ5KnlY8fdo8pgA3pZwtE5eIoBkA4=;
+        b=JKD/walcjVmIYiEWtL5mhv8xEGBwa+PYw/rrnu/A81tWm8JxYWOmMIerBFv15ghPH0
+         tukxi7rVGvd/XRcXXyw6gkXt4dOLeF7OatDy5wc/Gr8rFSA2mB3R2ra60TccJqnpYM4H
+         nbFy067EKymXg1qlIqA2EfIRTNKyAy0nMcGadMDiTbhevGRTAyrNa6F2BD8+YPg18jYV
+         vfnkT2sQ9btLzWgU0VZvDr+Rs9g24S1rALJwC1Wxo3MOyLmoDfGxbSJl1mduihvEZcu4
+         jefJtmeqDMaWvIyQqejgcooh8eaQYVaHSCBGTq+CyAF4vuvgpkrfT3CcHBGMFYKoB6qO
+         9x6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1709810701; x=1710415501;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=840ydxtL4Z7hkmGQ5KnlY8fdo8pgA3pZwtE5eIoBkA4=;
+        b=rkgzBuESos266ZIVJV3i1xJ+Mj6ArFv/ZxE+8sMDY8pndq7y5S6m8e8v/x6qM3H4SO
+         v8UuecAPIrZC3G+Sndc0RNl2jNTNKBFarN3vVOT58mstoEfIxU1SWue2/3uBzupQBqAC
+         4rY40H39U/v6PBBhEUIfktWkiAOqC7qcUnMEkt4D2tr53tWt5jeoGsPaBpxCnaDmLs36
+         461CJr9wDRQEXeSgMUXJiYlxr8PkKqBFktHBVFZw1DofFEKkdoO0uZtzakKcCh6OwAYN
+         fBLYPeQpiPaDqy/Zb/XaJ6DDMKEjov8E4hvMQQXVggvxQh+XQYX1JnOySxVltzjGJPr0
+         15oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUSbw+Q7imBz7lnglOrquiDD933V2SRyL3F1YEWp6igWPNye0WOfRzcbgQm++Q0lIxVqtpn9N8rWTenxKnwCKVBOyE83XXNIZb3Tw==
+X-Gm-Message-State: AOJu0Yzoi5sOqmgtm2Vk7ylc4mQ/3/dlQbIHfQYFnlkPCd9BomzncqsL
+	Hs9bdhv9TFtk/UyXFih5pNfMajHJaNgkcd6NzFFMnQyQKRg0ckxUM38OH2vFD9U=
+X-Google-Smtp-Source: AGHT+IFs+uBKrBgFQTw7SH9b6rMuIes8wFiFKwHhXFPk+T5XilLwXY35Q2PzQE9f9z2KnCuF3OBJ3g==
+X-Received: by 2002:a17:906:6d14:b0:a45:27bd:e1ff with SMTP id m20-20020a1709066d1400b00a4527bde1ffmr8031301ejr.6.1709810700790;
+        Thu, 07 Mar 2024 03:25:00 -0800 (PST)
+Received: from claudiu-X670E-Pro-RS.. ([82.78.167.38])
+        by smtp.gmail.com with ESMTPSA id u22-20020a170906c41600b00a44e180b9a5sm5910296ejz.1.2024.03.07.03.24.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Mar 2024 03:25:00 -0800 (PST)
+From: Claudiu <claudiu.beznea@tuxon.dev>
+X-Google-Original-From: Claudiu <claudiu.beznea.uj@bp.renesas.com>
+To: geert+renesas@glider.be,
+	linus.walleij@linaro.org
+Cc: linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
-	m.nirmaladevi@ltts.com,
-	nm@ti.com,
-	robh+dt@kernel.org,
-	vigneshr@ti.com
-Subject: Re: [PATCH v2 00/14]  Add support for TI TPS65224 PMIC
-Date: Thu,  7 Mar 2024 15:17:53 +0530
-Message-Id: <20240307094753.172319-1-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240229174952.GC1209090@google.com>
-References: <20240229174952.GC1209090@google.com>
+	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+Subject: [PATCH] pinctrl: renesas: rzg2l: Execute atomically the interrupt configuration
+Date: Thu,  7 Mar 2024 13:24:52 +0200
+Message-Id: <20240307112452.74220-1-claudiu.beznea.uj@bp.renesas.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi,
+From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
 
-On Thu, 29 Feb 2024 17:49:52 +0000, Lee Jones wrote:
-> On Fri, 23 Feb 2024, Bhargav Raviprakash wrote:
-> 
-> > This series modifies the existing TPS6594 drivers to add support for the
-> > TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
-> > similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
-> > PFSM, Regulators and GPIO features overlap between the two devices.
-> > 
-> > TPS65224 is a Power Management IC (PMIC) which provides regulators and
-> > other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
-> > Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
-> > communicate through the I2C or SPI interfaces. The PMIC TPS65224
-> > additionally has a 12-bit ADC.
-> > Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
-> > 
-> > Driver re-use is applied following the advice of the following series:
-> > https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
-> > 
-> > The features implemented in this series are:
-> > - TPS65224 Register definitions
-> > - Core (MFD I2C and SPI entry points)
-> > - PFSM	
-> > - ESM
-> > - Regulators
-> > - Pinctrl
-> > 
-> > TPS65224 Register definitions:
-> > This patch adds macros for register field definitions of TPS65224
-> > to the existing TPS6594 driver.  
-> > 
-> > Core description:
-> > I2C and SPI interface protocols are implemented, with and without
-> > the bit-integrity error detection feature (CRC mode).
-> > 
-> > PFSM description:
-> > Strictly speaking, PFSM is not hardware. It is a piece of code.
-> > PMIC integrates a state machine which manages operational modes.
-> > Depending on the current operational mode, some voltage domains
-> > remain energized while others can be off.
-> > PFSM driver can be used to trigger transitions between configured
-> > states.
-> > 
-> > ESM description:
-> > This device monitors the SoC error output signal at its nERR_MCU
-> > input pin. On error detection, ESM driver toggles the PMIC nRSTOUT pin
-> > to reset the SoC.
-> > 
-> > Regulators description:
-> > 4 BUCKs and 3 LDOs.
-> > BUCK12 can be used in dual-phase mode.
-> > 
-> > Pinctrl description:
-> > TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
-> > functions such as I2C or SPI interface or watchdog disable functions.
-> > The driver provides both pinmuxing for the functions and GPIO capability.
-> > 
-> > This series was tested on linux-next tag: next-20240118
-> > 
-> > Test logs can be found here:
-> > https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
-> > 
-> > Changelog v1 -> v2:
-> > - Changes to patch sign-off
-> > - Commit message change in dt-bindings patch
-> > - regmap config included in the of_match_table data field
-> > 
-> > Bhargav Raviprakash (11):
-> >   mfd: tps6594: use volatile_table instead of volatile_reg
-> >   mfd: tps6594: add regmap config in match data
-> >   dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
-> >   mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
-> >   mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
-> >   mfd: tps6594-core: Add TI TPS65224 PMIC core
-> >   misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
-> >   misc: tps6594-esm: reversion check limited to TPS6594 family
-> >   misc: tps6594-esm: use regmap_field
-> >   misc: tps6594-esm: Add TI TPS65224 PMIC ESM
-> >   arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
-> >     dts
-> > 
-> > Nirmala Devi Mal Nadar (3):
-> >   mfd: tps6594: Add register definitions for TI TPS65224 PMIC
-> >   regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
-> >   pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
-> > 
-> >  .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
-> >  arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
-> >  drivers/mfd/tps6594-core.c                    | 266 +++++++++++--
-> >  drivers/mfd/tps6594-i2c.c                     |  41 +-
-> >  drivers/mfd/tps6594-spi.c                     |  41 +-
-> >  drivers/misc/tps6594-esm.c                    |  89 +++--
-> >  drivers/misc/tps6594-pfsm.c                   |  55 ++-
-> >  drivers/pinctrl/pinctrl-tps6594.c             | 287 ++++++++++++--
-> >  drivers/regulator/Kconfig                     |   4 +-
-> >  drivers/regulator/tps6594-regulator.c         | 244 ++++++++++--
-> >  include/linux/mfd/tps6594.h                   | 369 +++++++++++++++++-
-> >  11 files changed, 1325 insertions(+), 167 deletions(-)
-> 
-> Does this set have to be taken in wholesale?
-> 
-> -- 
-> Lee Jones [李琼斯]
+Lockdep detects a possible deadlock as listed below. This is because it
+detects the IA55 interrupt controller .irq_eoi() API is called from
+interrupt context while configuration-specific API (e.g., .irq_enable())
+could be called from process context on resume path (by calling
+rzg2l_gpio_irq_restore()). To avoid this, protect the call of
+rzg2l_gpio_irq_enable() with spin_lock_irqsave()/spin_unlock_irqrestore().
+With this the same approach that is available in __setup_irq() is mimicked
+to pinctrl IRQ resume function.
 
-The drivers do not have to be applied in lockstep or taken in wholesale.
+Below is the lockdep report:
 
-Regards,
-Bhargav
+ WARNING: inconsistent lock state
+ 6.8.0-rc5-next-20240219-arm64-renesas-00030-gb17a289abf1f #90 Not tainted
+ --------------------------------
+ inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
+ str_rwdt_t_001./159 [HC0[0]:SC0[0]:HE1:SE1] takes:
+ ffff00000b001d70 (&rzg2l_irqc_data->lock){?...}-{2:2}, at: rzg2l_irqc_irq_enable+0x60/0xa4
+ {IN-HARDIRQ-W} state was registered at:
+ lock_acquire+0x1e0/0x310
+ _raw_spin_lock+0x44/0x58
+ rzg2l_irqc_eoi+0x2c/0x130
+ irq_chip_eoi_parent+0x18/0x20
+ rzg2l_gpio_irqc_eoi+0xc/0x14
+ handle_fasteoi_irq+0x134/0x230
+ generic_handle_domain_irq+0x28/0x3c
+ gic_handle_irq+0x4c/0xbc
+ call_on_irq_stack+0x24/0x34
+ do_interrupt_handler+0x78/0x7c
+ el1_interrupt+0x30/0x5c
+ el1h_64_irq_handler+0x14/0x1c
+ el1h_64_irq+0x64/0x68
+ _raw_spin_unlock_irqrestore+0x34/0x70
+ __setup_irq+0x4d4/0x6b8
+ request_threaded_irq+0xe8/0x1a0
+ request_any_context_irq+0x60/0xb8
+ devm_request_any_context_irq+0x74/0x104
+ gpio_keys_probe+0x374/0xb08
+ platform_probe+0x64/0xcc
+ really_probe+0x140/0x2ac
+ __driver_probe_device+0x74/0x124
+ driver_probe_device+0x3c/0x15c
+ __driver_attach+0xec/0x1c4
+ bus_for_each_dev+0x70/0xcc
+ driver_attach+0x20/0x28
+ bus_add_driver+0xdc/0x1d0
+ driver_register+0x5c/0x118
+ __platform_driver_register+0x24/0x2c
+ gpio_keys_init+0x18/0x20
+ do_one_initcall+0x70/0x290
+ kernel_init_freeable+0x294/0x504
+ kernel_init+0x20/0x1cc
+ ret_from_fork+0x10/0x20
+ irq event stamp: 69071
+ hardirqs last enabled at (69071): [<ffff800080e0dafc>] _raw_spin_unlock_irqrestore+0x6c/0x70
+ hardirqs last disabled at (69070): [<ffff800080e0cfec>] _raw_spin_lock_irqsave+0x7c/0x80
+ softirqs last enabled at (67654): [<ffff800080010614>] __do_softirq+0x494/0x4dc
+ softirqs last disabled at (67645): [<ffff800080015238>] ____do_softirq+0xc/0x14
+
+ other info that might help us debug this:
+ Possible unsafe locking scenario:
+
+ CPU0
+ ----
+ lock(&rzg2l_irqc_data->lock);
+ <Interrupt>
+ lock(&rzg2l_irqc_data->lock);
+
+ *** DEADLOCK ***
+
+ 4 locks held by str_rwdt_t_001./159:
+ #0: ffff00000b10f3f0 (sb_writers#4){.+.+}-{0:0}, at: vfs_write+0x1a4/0x35c
+ #1: ffff00000e43ba88 (&of->mutex){+.+.}-{3:3}, at: kernfs_fop_write_iter+0xe8/0x1a8
+ #2: ffff00000aa21dc8 (kn->active#40){.+.+}-{0:0}, at: kernfs_fop_write_iter+0xf0/0x1a8
+ #3: ffff80008179d970 (system_transition_mutex){+.+.}-{3:3}, at: pm_suspend+0x9c/0x278
+
+ stack backtrace:
+ CPU: 0 PID: 159 Comm: str_rwdt_t_001. Not tainted 6.8.0-rc5-next-20240219-arm64-renesas-00030-gb17a289abf1f #90
+ Hardware name: Renesas SMARC EVK version 2 based on r9a08g045s33 (DT)
+ Call trace:
+ dump_backtrace+0x94/0xe8
+ show_stack+0x14/0x1c
+ dump_stack_lvl+0x88/0xc4
+ dump_stack+0x14/0x1c
+ print_usage_bug.part.0+0x294/0x348
+ mark_lock+0x6b0/0x948
+ __lock_acquire+0x750/0x20b0
+ lock_acquire+0x1e0/0x310
+ _raw_spin_lock+0x44/0x58
+ rzg2l_irqc_irq_enable+0x60/0xa4
+ irq_chip_enable_parent+0x1c/0x34
+ rzg2l_gpio_irq_enable+0xc4/0xd8
+ rzg2l_pinctrl_resume_noirq+0x4cc/0x520
+ pm_generic_resume_noirq+0x28/0x3c
+ genpd_finish_resume+0xc0/0xdc
+ genpd_resume_noirq+0x14/0x1c
+ dpm_run_callback+0x34/0x90
+ device_resume_noirq+0xa8/0x268
+ dpm_noirq_resume_devices+0x13c/0x160
+ dpm_resume_noirq+0xc/0x1c
+ suspend_devices_and_enter+0x2c8/0x570
+ pm_suspend+0x1ac/0x278
+ state_store+0x88/0x124
+ kobj_attr_store+0x14/0x24
+ sysfs_kf_write+0x48/0x6c
+ kernfs_fop_write_iter+0x118/0x1a8
+ vfs_write+0x270/0x35c
+ ksys_write+0x64/0xec
+ __arm64_sys_write+0x18/0x20
+ invoke_syscall+0x44/0x108
+ el0_svc_common.constprop.0+0xb4/0xd4
+ do_el0_svc+0x18/0x20
+ el0_svc+0x3c/0xb8
+ el0t_64_sync_handler+0xb8/0xbc
+ el0t_64_sync+0x14c/0x150
+
+Fixes: 254203f9a94c ("pinctrl: renesas: rzg2l: Add suspend/resume support")
+Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
+---
+ drivers/pinctrl/renesas/pinctrl-rzg2l.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+index eb5a8c654260..76124b860c3f 100644
+--- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
++++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+@@ -2063,8 +2063,17 @@ static void rzg2l_gpio_irq_restore(struct rzg2l_pinctrl *pctrl)
+ 			continue;
+ 		}
+ 
+-		if (!irqd_irq_disabled(data))
++		if (!irqd_irq_disabled(data)) {
++			unsigned long flags;
++
++			/*
++			 * This has to be atomically executed to protect against a concurrent
++			 * interrupt.
++			 */
++			spin_lock_irqsave(&pctrl->lock, flags);
+ 			rzg2l_gpio_irq_enable(data);
++			spin_unlock_irqrestore(&pctrl->lock, flags);
++		}
+ 	}
+ }
+ 
+-- 
+2.39.2
+
 
