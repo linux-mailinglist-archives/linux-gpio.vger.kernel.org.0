@@ -1,116 +1,322 @@
-Return-Path: <linux-gpio+bounces-4207-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4208-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C5D1187598D
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 22:43:17 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02E9C875BE7
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 02:14:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7F731288AED
-	for <lists+linux-gpio@lfdr.de>; Thu,  7 Mar 2024 21:43:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 179A91C210D2
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 01:14:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C9C13B78F;
-	Thu,  7 Mar 2024 21:43:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsDbd/la"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14D2922333;
+	Fri,  8 Mar 2024 01:14:30 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com [209.85.208.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8791A18B1B;
-	Thu,  7 Mar 2024 21:43:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.48
+Received: from mail.loongson.cn (mail.loongson.cn [114.242.206.163])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 177C0224CC;
+	Fri,  8 Mar 2024 01:14:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=114.242.206.163
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709847793; cv=none; b=h+en8e3k09tP2NkZdF1cJuXurRKNnVEV2y308xrRNTB22Jzuxsvma+MDVGY6QXV8PNCfTNO/o1M0C9fioHrQbVGabsntjbuoeTzhwXJOcXJNHJ7k1LztoMIzEjJavFSFLyOTT4k2fu6xNSc0l6XQJ0xsHWGcwbpdDGTez5MsI7Y=
+	t=1709860469; cv=none; b=ljxcEZjygLX3RAMLBylzCfXoW1R1EiiHsc/hGyhY9ogpNjrBxOMeAG1eaS/qH+Oj0bti0t3yIwN73BeIVpupuKVnuYspU2niFfCc42lnDLeELHPE4aX5odvQq+NqGAeVTZWG+QdaYD4AaIsvybXsMcA3nHNaCmjY9TB8BU0bcVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709847793; c=relaxed/simple;
-	bh=80M8NjbIjYoL/onQSzHxeq0H7eHvyEkUJPoIAW4HmYs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=N7zviGbweTz5cRqenTwCbmlVUBWvxRcKdokVQ89YO7DEiYAbyqtS3OGtJ+yhHbt01AqU6f+tzSmv32bc2CSgpc0dsEcCKpIpu8Pi4HNZqPMwalESLLPxaVx7S1MMq4crWwGEem3z+CdJCBe27WYMispZ5khCYbMN+UgFk/oPAaU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsDbd/la; arc=none smtp.client-ip=209.85.208.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f48.google.com with SMTP id 4fb4d7f45d1cf-568107a9ff2so1627378a12.3;
-        Thu, 07 Mar 2024 13:43:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709847790; x=1710452590; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8Tf/utQAGrXJiwwCktTXSiNfcX33NE8VCZTiMoCOxs4=;
-        b=PsDbd/land/1S4SJPSXikcyY1Qxl/JEgVRNbfQeJZS1/rFCtr8zJyfVcEHH2K1yckZ
-         rAMe+rOAr1S+EcYvmXx0PYsk+0tNsDPyrx80LrVf+bGFn6+lHBm0RsYrf+37YGfx4f8I
-         YRhvYyrLoMNWpxsXrIMLdZKNahab1BGgFksRsnFVlRduxstPB2A+N3HrUpmwyaeta1cc
-         ww6KXmvQ6VHWEoCgjKQ3S8Wj4Lw/uPX64qU9KfwZRB+kW+1f0JSkiCrUWpLPqNV867ES
-         HtQYyV0pBAWpzjI4/kuzi3SrYCMPiDQmAEhawqDoH3VKS8nu3BIiZo+ob90ntFSlTA4I
-         ALow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709847790; x=1710452590;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8Tf/utQAGrXJiwwCktTXSiNfcX33NE8VCZTiMoCOxs4=;
-        b=PUcESiWhFyn14rVFhFWF1ad5qDDLNO7p8USSqDKFWlTTQ0dAZ8RAD5agmvfIpXrgO2
-         iFRE5hGwxL02BopEYZXF+orXarfSqUfhdd7XoQHInLl8Jh8P86QMbFbG/jtlzCwEpOJE
-         V6WURRjaEch7WRQMP42w6vxDbOOyr+2SamaRRR+Ok4+UjrsdH624T/BXiwCSjodSRF2W
-         sV/arQV8MEd+HCnMWJSZbsUv3O1t+5OKpWIxVCpI/pFO7JxFQUUwfDr8Dxn9TApBy5Iz
-         Q4i9kAK2EVdqzrbKKzPOotjj4Md1lrYa3vt+ueQoK6xUbXEXmbdfcbZRyJX76R98kzGa
-         0K7A==
-X-Forwarded-Encrypted: i=1; AJvYcCW6A3kZ7kk3IdPkKd0A5IDD8FNsqGWedUYSDk6V8xgWiCyookcX2QR8UZJ7Qs5UdZ54NMYEpJxv5TfwG1neU3M8CjKT42wkc0/agHeB
-X-Gm-Message-State: AOJu0YybK8P4fvnLDWfe1s9mo3pMmfhkC3JVLRz6lpcCuudo6ACrgWa1
-	SR0r4TnKew6TDGW3EFDv7r/m6vZErjWd2L4Sx94XiWgNzXhX/fRnQRoFVrAO
-X-Google-Smtp-Source: AGHT+IGobn1aO2RSPYSmZnXC3eicyLV0+u9GGx5+WP9WuTBfdRZHQB0krYlAJXFN189RWO81feREdw==
-X-Received: by 2002:a17:906:fb93:b0:a45:9347:e3d6 with SMTP id lr19-20020a170906fb9300b00a459347e3d6mr5534427ejb.66.1709847789524;
-        Thu, 07 Mar 2024 13:43:09 -0800 (PST)
-Received: from localhost ([2a02:1210:8690:9300:82ee:73ff:feb8:99e3])
-        by smtp.gmail.com with UTF8SMTPSA id js20-20020a170906ca9400b00a3e643e61e1sm8623634ejb.214.2024.03.07.13.43.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 07 Mar 2024 13:43:08 -0800 (PST)
-From: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-To: linux-gpio@vger.kernel.org
-Cc: Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] gpio: sysfs: repair export returning -EPERM on 1st attempt
-Date: Thu,  7 Mar 2024 22:43:16 +0100
-Message-ID: <20240307214317.2914835-1-alexander.sverdlin@gmail.com>
-X-Mailer: git-send-email 2.43.2
+	s=arc-20240116; t=1709860469; c=relaxed/simple;
+	bh=6DLoLRfIvnW++px44Y/21mjPNbxrYAB9FR08pnzPg/k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qdGokzCMPlpO2DIAzvZKiwoCn7Nkc/gtPdYlPjYkIBTX6o2GI9z0v2p0aJ9uwcChlXteHFeqnfUaNgSrbmaLYtSo1p7hdm5puNuKXFWt7BQU6xzhGhCMiGxCS2/g29E+ZOAc/9iRs54ThoTrN/1XqyCvRRXMKiRqU83tjHEWS2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn; spf=pass smtp.mailfrom=loongson.cn; arc=none smtp.client-ip=114.242.206.163
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=loongson.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=loongson.cn
+Received: from loongson.cn (unknown [112.20.109.198])
+	by gateway (Coremail) with SMTP id _____8BxyuhvZuplFiMWAA--.35104S3;
+	Fri, 08 Mar 2024 09:14:23 +0800 (CST)
+Received: from [192.168.100.8] (unknown [112.20.109.198])
+	by localhost.localdomain (Coremail) with SMTP id AQAAf8Bx7c5qZuplEMpQAA--.18370S3;
+	Fri, 08 Mar 2024 09:14:19 +0800 (CST)
+Message-ID: <18a69517-9796-476b-973e-291319e121ce@loongson.cn>
+Date: Fri, 8 Mar 2024 09:14:16 +0800
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v1 3/3] gpiolib: legacy: Remove unused
+ gpio_request_array() and gpio_free_array()
+Content-Language: en-US
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, Jonathan Corbet <corbet@lwn.net>,
+ Alex Shi <alexs@kernel.org>, Hu Haowen <2023002089@link.tyut.edu.cn>,
+ Daniel Mack <daniel@zonque.org>, Haojian Zhuang <haojian.zhuang@gmail.com>,
+ Robert Jarzmik <robert.jarzmik@free.fr>, Russell King <linux@armlinux.org.uk>
+References: <20240307135109.3778316-1-andriy.shevchenko@linux.intel.com>
+ <20240307135109.3778316-4-andriy.shevchenko@linux.intel.com>
+From: Yanteng Si <siyanteng@loongson.cn>
+In-Reply-To: <20240307135109.3778316-4-andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:AQAAf8Bx7c5qZuplEMpQAA--.18370S3
+X-CM-SenderInfo: pvl1t0pwhqwqxorr0wxvrqhubq/
+X-Coremail-Antispam: 1Uk129KBj93XoWxKFWfuw4xtry3uFy3Gr18CrX_yoW3Gr1fpF
+	sxtF4SyayUXa4DKryDJay7C3W7K39rXr13C3yak3yrZFn0y3sYvF4DtFy8XFyayrWkAF4x
+	JFZ5Wr98JFyqvFcCm3ZEXasCq-sJn29KB7ZKAUJUUUUk529EdanIXcx71UUUUU7KY7ZEXa
+	sCq-sGcSsGvfJ3Ic02F40EFcxC0VAKzVAqx4xG6I80ebIjqfuFe4nvWSU5nxnvy29KBjDU
+	0xBIdaVrnRJUUU9Eb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I20VC2zVCF04k26cxKx2
+	IYs7xG6rWj6s0DM7CIcVAFz4kK6r1Y6r17M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48v
+	e4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI
+	0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVW8JVWxJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_
+	Gr0_Gr1UM2kKe7AKxVWUtVW8ZwAS0I0E0xvYzxvE52x082IY62kv0487Mc804VCY07AIYI
+	kI8VC2zVCFFI0UMc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUtVWr
+	XwAv7VC2z280aVAFwI0_Gr0_Cr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcVAKI48JMx
+	kF7I0En4kS14v26r1q6r43MxAIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4U
+	MxCIbckI1I0E14v26r1q6r43MI8I3I0E5I8CrVAFwI0_Jr0_Jr4lx2IqxVCjr7xvwVAFwI
+	0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrwCI42IY6xIIjxv20xvE
+	14v26r1I6r4UMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI42IY6xAIw20EY4v20x
+	vaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z280aVCY1x0267AKxVW8
+	JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7IU0L0ePUUUUU==
 
-It would make sense to return -EPERM if the bit was already set (already
-used), not if it was cleared. Before this fix pins can only be exported on
-the 2nd attempt:
 
-$ echo 522 > /sys/class/gpio/export 
-sh: write error: Operation not permitted
-$ echo 522 > /sys/class/gpio/export 
+在 2024/3/7 21:49, Andy Shevchenko 写道:
+> No more users.
+>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>   Documentation/driver-api/gpio/legacy.rst      | 16 --------
+>   .../zh_CN/driver-api/gpio/legacy.rst          | 16 --------
 
-Fixes: 35b545332b80 ("gpio: remove gpio_lock")
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
----
- drivers/gpio/gpiolib-sysfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+For Chinese:
 
-diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-index 67fc09a57f26..6853ecd98bcb 100644
---- a/drivers/gpio/gpiolib-sysfs.c
-+++ b/drivers/gpio/gpiolib-sysfs.c
-@@ -593,7 +593,7 @@ int gpiod_export(struct gpio_desc *desc, bool direction_may_change)
- 	if (!guard.gc)
- 		return -ENODEV;
- 
--	if (!test_and_set_bit(FLAG_EXPORT, &desc->flags))
-+	if (test_and_set_bit(FLAG_EXPORT, &desc->flags))
- 		return -EPERM;
- 
- 	gdev = desc->gdev;
--- 
-2.43.2
+
+Reviewed-by: Yanteng Si <siyanteng@loongson.cn>
+
+
+Thanks,
+
+Yanteng
+
+>   Documentation/translations/zh_TW/gpio.txt     | 17 --------
+>   drivers/gpio/gpiolib-legacy.c                 | 39 -------------------
+>   include/linux/gpio.h                          | 15 -------
+>   5 files changed, 103 deletions(-)
+>
+> diff --git a/Documentation/driver-api/gpio/legacy.rst b/Documentation/driver-api/gpio/legacy.rst
+> index b6505914791c..534dfe95d128 100644
+> --- a/Documentation/driver-api/gpio/legacy.rst
+> +++ b/Documentation/driver-api/gpio/legacy.rst
+> @@ -225,8 +225,6 @@ setup or driver probe/teardown code, so this is an easy constraint.)::
+>                   gpio_request()
+>   
+>           ## 	gpio_request_one()
+> -        ##	gpio_request_array()
+> -        ## 	gpio_free_array()
+>   
+>                   gpio_free()
+>   
+> @@ -295,14 +293,6 @@ are claimed, three additional calls are defined::
+>   	 */
+>   	int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+>   
+> -	/* request multiple GPIOs in a single call
+> -	 */
+> -	int gpio_request_array(struct gpio *array, size_t num);
+> -
+> -	/* release multiple GPIOs in a single call
+> -	 */
+> -	void gpio_free_array(struct gpio *array, size_t num);
+> -
+>   where 'flags' is currently defined to specify the following properties:
+>   
+>   	* GPIOF_DIR_IN		- to configure direction as input
+> @@ -341,12 +331,6 @@ A typical example of usage::
+>   	if (err)
+>   		...
+>   
+> -	err = gpio_request_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -	if (err)
+> -		...
+> -
+> -	gpio_free_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -
+>   
+>   GPIOs mapped to IRQs
+>   --------------------
+> diff --git a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+> index aeccff777170..0faf042001d2 100644
+> --- a/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+> +++ b/Documentation/translations/zh_CN/driver-api/gpio/legacy.rst
+> @@ -208,8 +208,6 @@ GPIO 值的命令需要等待其信息排到队首才发送命令，再获得其
+>                   gpio_request()
+>   
+>           ## 	gpio_request_one()
+> -        ##	gpio_request_array()
+> -        ## 	gpio_free_array()
+>   
+>                   gpio_free()
+>   
+> @@ -272,14 +270,6 @@ gpio_request()前将这类细节配置好，例如使用引脚控制子系统的
+>   	 */
+>   	int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+>   
+> -	/* 在单个函数中申请多个 GPIO
+> -	 */
+> -	int gpio_request_array(struct gpio *array, size_t num);
+> -
+> -	/* 在单个函数中释放多个 GPIO
+> -	 */
+> -	void gpio_free_array(struct gpio *array, size_t num);
+> -
+>   这里 'flags' 当前定义可指定以下属性:
+>   
+>   	* GPIOF_DIR_IN		- 配置方向为输入
+> @@ -317,12 +307,6 @@ gpio_request()前将这类细节配置好，例如使用引脚控制子系统的
+>   	if (err)
+>   		...
+>   
+> -	err = gpio_request_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -	if (err)
+> -		...
+> -
+> -	gpio_free_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -
+>   
+>   GPIO 映射到 IRQ
+>   ----------------
+> diff --git a/Documentation/translations/zh_TW/gpio.txt b/Documentation/translations/zh_TW/gpio.txt
+> index b9b48012c62e..77d69d381316 100644
+> --- a/Documentation/translations/zh_TW/gpio.txt
+> +++ b/Documentation/translations/zh_TW/gpio.txt
+> @@ -215,13 +215,10 @@ GPIO 值的命令需要等待其信息排到隊首才發送命令，再獲得其
+>   	gpio_request()
+>   
+>   ## 	gpio_request_one()
+> -##	gpio_request_array()
+> -## 	gpio_free_array()
+>   
+>   	gpio_free()
+>   
+>   
+> -
+>   聲明和釋放 GPIO
+>   ----------------------------
+>   爲了有助於捕獲系統配置錯誤,定義了兩個函數。
+> @@ -278,14 +275,6 @@ gpio_request()前將這類細節配置好，例如使用 pinctrl 子系統的映
+>   	 */
+>   	int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+>   
+> -	/* 在單個函數中申請多個 GPIO
+> -	 */
+> -	int gpio_request_array(struct gpio *array, size_t num);
+> -
+> -	/* 在單個函數中釋放多個 GPIO
+> -	 */
+> -	void gpio_free_array(struct gpio *array, size_t num);
+> -
+>   這裡 'flags' 當前定義可指定以下屬性:
+>   
+>   	* GPIOF_DIR_IN		- 配置方向爲輸入
+> @@ -323,12 +312,6 @@ gpio_request()前將這類細節配置好，例如使用 pinctrl 子系統的映
+>   	if (err)
+>   		...
+>   
+> -	err = gpio_request_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -	if (err)
+> -		...
+> -
+> -	gpio_free_array(leds_gpios, ARRAY_SIZE(leds_gpios));
+> -
+>   
+>   GPIO 映射到 IRQ
+>   --------------------
+> diff --git a/drivers/gpio/gpiolib-legacy.c b/drivers/gpio/gpiolib-legacy.c
+> index 3392e758d36f..5a9911ae9125 100644
+> --- a/drivers/gpio/gpiolib-legacy.c
+> +++ b/drivers/gpio/gpiolib-legacy.c
+> @@ -72,42 +72,3 @@ int gpio_request(unsigned gpio, const char *label)
+>   	return gpiod_request(desc, label);
+>   }
+>   EXPORT_SYMBOL_GPL(gpio_request);
+> -
+> -/**
+> - * gpio_request_array - request multiple GPIOs in a single call
+> - * @array:	array of the 'struct gpio'
+> - * @num:	how many GPIOs in the array
+> - *
+> - * **DEPRECATED** This function is deprecated and must not be used in new code.
+> - */
+> -int gpio_request_array(const struct gpio *array, size_t num)
+> -{
+> -	int i, err;
+> -
+> -	for (i = 0; i < num; i++, array++) {
+> -		err = gpio_request_one(array->gpio, array->flags, array->label);
+> -		if (err)
+> -			goto err_free;
+> -	}
+> -	return 0;
+> -
+> -err_free:
+> -	while (i--)
+> -		gpio_free((--array)->gpio);
+> -	return err;
+> -}
+> -EXPORT_SYMBOL_GPL(gpio_request_array);
+> -
+> -/**
+> - * gpio_free_array - release multiple GPIOs in a single call
+> - * @array:	array of the 'struct gpio'
+> - * @num:	how many GPIOs in the array
+> - *
+> - * **DEPRECATED** This function is deprecated and must not be used in new code.
+> - */
+> -void gpio_free_array(const struct gpio *array, size_t num)
+> -{
+> -	while (num--)
+> -		gpio_free((array++)->gpio);
+> -}
+> -EXPORT_SYMBOL_GPL(gpio_free_array);
+> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> index f4e5406554bb..56ac7e7a2889 100644
+> --- a/include/linux/gpio.h
+> +++ b/include/linux/gpio.h
+> @@ -120,8 +120,6 @@ static inline int gpio_to_irq(unsigned gpio)
+>   }
+>   
+>   int gpio_request_one(unsigned gpio, unsigned long flags, const char *label);
+> -int gpio_request_array(const struct gpio *array, size_t num);
+> -void gpio_free_array(const struct gpio *array, size_t num);
+>   
+>   /* CONFIG_GPIOLIB: bindings for managed devices that want to request gpios */
+>   
+> @@ -152,11 +150,6 @@ static inline int gpio_request_one(unsigned gpio,
+>   	return -ENOSYS;
+>   }
+>   
+> -static inline int gpio_request_array(const struct gpio *array, size_t num)
+> -{
+> -	return -ENOSYS;
+> -}
+> -
+>   static inline void gpio_free(unsigned gpio)
+>   {
+>   	might_sleep();
+> @@ -165,14 +158,6 @@ static inline void gpio_free(unsigned gpio)
+>   	WARN_ON(1);
+>   }
+>   
+> -static inline void gpio_free_array(const struct gpio *array, size_t num)
+> -{
+> -	might_sleep();
+> -
+> -	/* GPIO can never have been requested */
+> -	WARN_ON(1);
+> -}
+> -
+>   static inline int gpio_direction_input(unsigned gpio)
+>   {
+>   	return -ENOSYS;
 
 
