@@ -1,124 +1,160 @@
-Return-Path: <linux-gpio+bounces-4212-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8082A8760FA
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 10:33:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE603876214
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 11:35:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B638728456B
-	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 09:33:12 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A3B6B283705
+	for <lists+linux-gpio@lfdr.de>; Fri,  8 Mar 2024 10:35:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1216053392;
-	Fri,  8 Mar 2024 09:33:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DvJMlbwW"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AFC8455C27;
+	Fri,  8 Mar 2024 10:35:18 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa2.ltts.com (unknown [14.140.155.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7CD53388
-	for <linux-gpio@vger.kernel.org>; Fri,  8 Mar 2024 09:33:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9664E53E01;
+	Fri,  8 Mar 2024 10:35:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709890388; cv=none; b=JeVInUs4mUT8FFYIjpAJQtzGSnE5FYMYdiSBbHv63jGEXmgaFNbUixtv+c5sFPZNDH4dMu4VLVyjFleclpvnPpIMRl5EYMZRgFirxkPX47QBYGhtIqmpHquCsT34xkc5EJLNecLgy786UdW0zaKCtz/4CZ/hIHUMeKvjamb+zy4=
+	t=1709894118; cv=none; b=Rdai3E8/7CzztD5/QTwdbqCAVnigaiGWCUye+DB5HzBOhD2/qzS8TOqP3ro/7oKEt7c2oV6qYahCW2ma8eBReoezoGq5FzDq3+3f5pDfD8SWGkCusmkxaljaQUq3WM84FX6ab3ITbYkI5LpbhHRj0AZeNpzHU77vKl6FsALpwCQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709890388; c=relaxed/simple;
-	bh=G5c+9IWvn6ieMhvBUbYIVPZPnNSgCyJnNf7/vpLBkgU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=poQz/DpjPQRATzXbY6FoSJZhgOOspSHvgpx5/JEnwiafIeY2+uXRrNluWB92kpQZCDihOAbHdHzlL8KxcH9fC6/R//b+053N2XutsynHFNP4Gj4Ilj7aTiYCKUHdSdh7CrDfj4+YlHWD17b7odPw8e3gIzVcPZdetVueR1IUgdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DvJMlbwW; arc=none smtp.client-ip=209.85.221.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d34dadcb23so534650e0c.1
-        for <linux-gpio@vger.kernel.org>; Fri, 08 Mar 2024 01:33:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1709890386; x=1710495186; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uSPL9R4NEdEb5t9F1k6HdAHD+VzckhslVdvrEVAW9tM=;
-        b=DvJMlbwWcoCxcE5wlsunzqOQ0UG23+cOrtow8JR1rNug5SpaI1OJvkMy30DUxvDc+w
-         1FmU++KsWw614yvYwD5Uof8NG0jm+MhvD/i3M9T2BqJMIj4IDRc8RLo9HAKf4gwvCw34
-         StBZmh4WfMUXF87/oZDrXPL3QjzcpmYsmea0hs6ssGo6s9z1aZtV5MCjIMpTgaPhEIFa
-         BmZScbL93bA5opMhUeu4HJCHNyvYu4SKrX5vZJ4zQFpKU2v0nvcSMM1S+nnmPVQrNBOd
-         ybTkUfGS2P8QtpHJU3sTxEcgHgj2FfzL6khJ4dQfulLgr3uoJi9rj/SMWap/dHV7o36M
-         TDUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709890386; x=1710495186;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=uSPL9R4NEdEb5t9F1k6HdAHD+VzckhslVdvrEVAW9tM=;
-        b=IVlRq/DFWfLiNPqbtUXfY8MsFOw744Q5KO9o1C/zX3NAbn4+dGS242RLOqjzq3imlY
-         GRVIag8wv6stBVVGWgnEhO0lA4uDFO1AWpcnIW34sbGEcMWS/3D6RQSa2Bces+NaA83g
-         4muNcrv1p7QyBVCTzL7988f6iJFMnGaSfkLKls0KaSwk4Wfq7tgKWC6gQC8zEHjfZ/EY
-         7IE03hWbINLV2m/68ynzy3KaugJZjC5R2M5C710aSkourYVvSgpXnyB4SAWFYJxdi1Kr
-         iMcPcPaYNpry8H3zQT1erSyGUixvqZbwcID/GR3zdhcQVsrwYkVhjY4zcD+cY7wOvHwc
-         /teA==
-X-Gm-Message-State: AOJu0YxIilaKKoPgxMpbOB7LV4/NZNZ8DTXujtT+2JtnbmKK9A0jAKgv
-	OAcVCQ1h+UKX3mCZF/OzthbOLNiBdZngiLvu6w05/hYEJg78KvpLwIfYGkBsmSGh4NLt/SzlJpZ
-	80d3JNPCmkYCWPQMrX50wr63pU8NJYCi1F4rkEA==
-X-Google-Smtp-Source: AGHT+IG+yjLhhIesv+RIZF76RV01Z9AqyXG3WzamQmnvFMO5iJ0EoNbH/PSfpWD7+rmgh9gTocQJiEzC3Ty++qgckBM=
-X-Received: by 2002:a1f:1402:0:b0:4d3:3974:657a with SMTP id
- 2-20020a1f1402000000b004d33974657amr9398254vku.14.1709890385847; Fri, 08 Mar
- 2024 01:33:05 -0800 (PST)
+	s=arc-20240116; t=1709894118; c=relaxed/simple;
+	bh=gM3MAYJOfpZENBvRKZcil7tVc/21ayCvY/Ke+cDMGZQ=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OG79rSS9Yy3qjdEufHbDPKcZ27gRuwz9EdIeaNa3qERHdTkDz1b3lG944CWk8sSSsddzHo6BwtFD0yvPE0tI7IHT1IWidGdN5DKI4PWKGEiqi0KQdR9qaaXVLD7Hs1YgyoM7Mr6s8Jnu+M7mRumB9m7Avl2zddu4uiAzNTe34vk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: ReLryFVYQ6WYWximSVQqvE4vhKq8wseJb6Vy9p7gIabixbxOqeTn+W5BejpV6ekcHQkET2kX3+
+ HI73MVhwYT1Q==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 08 Mar 2024 16:05:06 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	eblanc@baylibre.com,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v3 00/11] Add support for TI TPS65224 PMIC
+Date: Fri,  8 Mar 2024 16:04:44 +0530
+Message-Id: <20240308103455.242705-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240307214317.2914835-1-alexander.sverdlin@gmail.com>
-In-Reply-To: <20240307214317.2914835-1-alexander.sverdlin@gmail.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 8 Mar 2024 10:32:54 +0100
-Message-ID: <CAMRc=Me8J0fd066QaSmDhhc+g54A8m-dWTDmtx14HOPc+d0TYA@mail.gmail.com>
-Subject: Re: [PATCH] gpio: sysfs: repair export returning -EPERM on 1st attempt
-To: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc: linux-gpio@vger.kernel.org, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Thu, Mar 7, 2024 at 10:43=E2=80=AFPM Alexander Sverdlin
-<alexander.sverdlin@gmail.com> wrote:
->
-> It would make sense to return -EPERM if the bit was already set (already
-> used), not if it was cleared. Before this fix pins can only be exported o=
-n
-> the 2nd attempt:
->
-> $ echo 522 > /sys/class/gpio/export
-> sh: write error: Operation not permitted
-> $ echo 522 > /sys/class/gpio/export
->
-> Fixes: 35b545332b80 ("gpio: remove gpio_lock")
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@gmail.com>
-> ---
->  drivers/gpio/gpiolib-sysfs.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpiolib-sysfs.c b/drivers/gpio/gpiolib-sysfs.c
-> index 67fc09a57f26..6853ecd98bcb 100644
-> --- a/drivers/gpio/gpiolib-sysfs.c
-> +++ b/drivers/gpio/gpiolib-sysfs.c
-> @@ -593,7 +593,7 @@ int gpiod_export(struct gpio_desc *desc, bool directi=
-on_may_change)
->         if (!guard.gc)
->                 return -ENODEV;
->
-> -       if (!test_and_set_bit(FLAG_EXPORT, &desc->flags))
-> +       if (test_and_set_bit(FLAG_EXPORT, &desc->flags))
->                 return -EPERM;
->
->         gdev =3D desc->gdev;
-> --
-> 2.43.2
->
+This series modifies the existing TPS6594 drivers to add support for the
+TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
+similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
+PFSM, Regulators and GPIO features overlap between the two devices.
 
-That's of course correct. Applied.
+TPS65224 is a Power Management IC (PMIC) which provides regulators and
+other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
+Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces. The PMIC TPS65224
+additionally has a 12-bit ADC.
+Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
 
-Bart
+Driver re-use is applied following the advice of the following series:
+https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
+
+The features implemented in this series are:
+- TPS65224 Register definitions
+- Core (MFD I2C and SPI entry points)
+- PFSM	
+- Regulators
+- Pinctrl
+
+TPS65224 Register definitions:
+This patch adds macros for register field definitions of TPS65224
+to the existing TPS6594 driver.  
+
+Core description:
+I2C and SPI interface protocols are implemented, with and without
+the bit-integrity error detection feature (CRC mode).
+
+PFSM description:
+Strictly speaking, PFSM is not hardware. It is a piece of code.
+PMIC integrates a state machine which manages operational modes.
+Depending on the current operational mode, some voltage domains
+remain energized while others can be off.
+PFSM driver can be used to trigger transitions between configured
+states.
+
+Regulators description:
+4 BUCKs and 3 LDOs.
+BUCK12 can be used in dual-phase mode.
+
+Pinctrl description:
+TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
+functions such as I2C or SPI interface or watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+This series was tested on linux-next tag: next-20240118
+
+Test logs can be found here:
+https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
+
+Changelog v2 -> v3:
+- Corrected comments and refactored ioctl fn in pfsm driver
+- Commit message and description changes in SPI
+- Removed unwanted comments, fixing indentation and minor refactoring 
+  in regulator driver
+- ESM driver is removed from linux as it will be handled from MCU side
+
+Bhargav Raviprakash (8):
+  mfd: tps6594: use volatile_table instead of volatile_reg
+  mfd: tps6594: add regmap config in match data
+  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+  mfd: tps6594-core: Add TI TPS65224 PMIC core
+  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
+    dts
+
+Nirmala Devi Mal Nadar (3):
+  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
+  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
+ drivers/mfd/tps6594-core.c                    | 253 ++++++++++--
+ drivers/mfd/tps6594-i2c.c                     |  41 +-
+ drivers/mfd/tps6594-spi.c                     |  43 +-
+ drivers/misc/tps6594-pfsm.c                   |  48 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             | 287 ++++++++++++--
+ drivers/regulator/Kconfig                     |   4 +-
+ drivers/regulator/tps6594-regulator.c         | 236 +++++++++--
+ include/linux/mfd/tps6594.h                   | 369 +++++++++++++++++-
+ 10 files changed, 1239 insertions(+), 138 deletions(-)
+
+
+base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+-- 
+2.25.1
+
 
