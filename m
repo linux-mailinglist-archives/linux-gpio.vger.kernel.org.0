@@ -1,106 +1,128 @@
-Return-Path: <linux-gpio+bounces-4233-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4234-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 201C387705D
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Mar 2024 11:31:05 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 45DB787747E
+	for <lists+linux-gpio@lfdr.de>; Sun, 10 Mar 2024 00:27:39 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8B54F1F21642
-	for <lists+linux-gpio@lfdr.de>; Sat,  9 Mar 2024 10:31:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 68C511C20E85
+	for <lists+linux-gpio@lfdr.de>; Sat,  9 Mar 2024 23:27:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A438125DC;
-	Sat,  9 Mar 2024 10:31:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00EA851C43;
+	Sat,  9 Mar 2024 23:27:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T140UAcT"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iIEp4Kre"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f180.google.com (mail-pf1-f180.google.com [209.85.210.180])
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBF4C3FE1
-	for <linux-gpio@vger.kernel.org>; Sat,  9 Mar 2024 10:30:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF22943ADE
+	for <linux-gpio@vger.kernel.org>; Sat,  9 Mar 2024 23:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1709980260; cv=none; b=nI7mCJe3/gzBhRYmIVOs6T0Rw217qgeKFVOI0I3wJ0Oukxh1XqLacV6R3LGUiFfGBoQqlefRsykMfo8vWprRJX73alhKdF+NLDKgo4XOk3xuYmeEbiLKfzwwS6CLyfpLyDtnsZzRJUSXVJCbnwcqRQUKICLKjzX876zEKlDUceI=
+	t=1710026853; cv=none; b=nIKf9aIkJHrEEHip84pPJYVQppvQW9xyYckucLqRg7enOf7k80013linKCVzFoDo3rTYPuoi5VXbJG+HWb+pylNBs6F5RiC+rXBrOQCnOShFK4J2WSkqWB0PVrHWVbALTmtNo8VaUqKEjQxSRDtOE0c9Q70zrQftDtJeynQ3S7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1709980260; c=relaxed/simple;
-	bh=/w8KesGuP7MkeFy7DS3K6jtbaeccxDXeLA9FS1MAMws=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PQLcIsRbaJHV6KzgvL7/fvLMeuFtDMrqpVtc7klivAZMpGtCH3FNgA6KknapXb70+/oAsFIhEHCY0s8+Iu3zFaO8NkIcwMqfvfFH4LYcMOhfYtn7SvcD/F5Lzz86LoL5CWmvL5PzXU0DPHGMVq5AvJVrn1t9nmJwYWlQ6Ywb6uQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=T140UAcT; arc=none smtp.client-ip=209.85.210.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f180.google.com with SMTP id d2e1a72fcca58-6e5a232fe80so2047583b3a.0
-        for <linux-gpio@vger.kernel.org>; Sat, 09 Mar 2024 02:30:58 -0800 (PST)
+	s=arc-20240116; t=1710026853; c=relaxed/simple;
+	bh=p+My4HmWBQsJvPSmqxFwCa000CPQedSiE6H9ZDUlVyI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=T/vdHpYH15LFgVDD+Kur8qvUrrLr9hWqFE9shPNEM8L2wVjoBtIYXcP6Ppo5pOi2Vv9htNiGr84VsMoj0M1XV5XHB8VCfjoTU9qJeOGrRRfcXmuMFMXM/w5MUABX6fAZCVI8stwIsrqaTg1QbvnwR5Jef+PKd6Zx0CEOWcQ2pzQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iIEp4Kre; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-5684073ab38so893949a12.0
+        for <linux-gpio@vger.kernel.org>; Sat, 09 Mar 2024 15:27:31 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1709980258; x=1710585058; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=D4ktnVnn+QPuRVT3FwvmxdOhBS2RwDhlPSlEEAR/Jhw=;
-        b=T140UAcTzDVSYVY4qTdjHbfXrpQ/kxQ2hJPZ5/rIWyGRNMobuYZjb/32DqeEYz8TUA
-         U9h/hxH3xbLyNbW7+TIhu2msn1m7aDd1ENQM9qBQj/T8dBOfgz+tsvFitkmWGzhCMJkF
-         +Rr8ErKEhILcNv6HiGmZHvSsvYlh99f9GuWidwrh4sdfkjHDuxC9JfnpQ6RSKzetAYMT
-         TlmLt6Z2UDfU+DhR50+/B1I1djXobu0VQCRugQ+U/m3hLal0b8j+cblHex9/+Po2tBhO
-         qFIe0jaoHV9BjVh5nRf0DC4Jl5d4ZHo5fmQCKlEnD33IKIARsqjA4l+hbh6OhxXNbnHX
-         VQtg==
+        d=linaro.org; s=google; t=1710026850; x=1710631650; darn=vger.kernel.org;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=T2VvUr57XpWLkwj2Urdow9kP8nzOatkbx+ejTfT17F4=;
+        b=iIEp4KreNT05wUj4vYOQ3Ap1UGYiCABmhiucI4ct1iVm5a/l4YwzKH1zRk+cmKkS2x
+         JLrr2J8jKicAWWEKarvR8WINB2xUy6LEC/poSsK/KzoYjFdFJaFOxNruHQIXgxh/dUHx
+         mu70YKGS4Jk1PYLY1mMBR1HvCQbPlUpzNrt2SXB7T//zH43QjzI/Y//Nf4rnyk/mU6IZ
+         gnsT8WB0CYQPVL4R3E6ddYYGHrHy+qIoFyqgco6HVMsa6M7zM+rt6C8sx4xW5AQ5VNJh
+         xdnmkJ8V+8Zbz9yru7x7+7rtkCAAjQFPhru5AZpORxmy6US+taEe1b0sxoKUojNHTTxP
+         ErLg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1709980258; x=1710585058;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=1e100.net; s=20230601; t=1710026850; x=1710631650;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=D4ktnVnn+QPuRVT3FwvmxdOhBS2RwDhlPSlEEAR/Jhw=;
-        b=NcsF1rVc0RxqEFoFJs4geuMLjjUjnEd8egmLtgy00MEQ0/2QrOBTvV++Igfe7r9LZq
-         EhImpS4qwJBByLZBw8u4nkMaCGmksss1AtzeAfzXaolkv+OgJPtPrkHErYSqYLzUQMGy
-         yiORORU19vVM3FScR4ExjAHBAwW3DgF3AMkMWwMeslK3uwLPN9Aw7JsH++IydGGqtJrE
-         BtO4N5x6Zpus+Dpg/r/DQ/a8kzyeQtQXuBzuOZc/Qz76P5/l/PzY5iOMJpo8rvA7tn6k
-         p8w9PeGoYork0cPkBbQBsGE8S8ZzRq7aLterI+qrNpz0vEt1MDGpDwySr3n8WcbGR3VH
-         SeZw==
-X-Gm-Message-State: AOJu0YxoFEPyDUDY9b6JQjQz43zbYp2zbhMPn7huj7hcstQ+MH/73+yh
-	9LC06i55ouU1V2uf+cJz2qRp0f0JQfuUyTZlodXviJLbBoFqxOrJM+wvw3cx
-X-Google-Smtp-Source: AGHT+IGLyfIc7MnaVMaLfENpYhNUN/337Y2rHbGJtg9K5u6Vd+oMk0mms0u268C66vCv2yhGQ5IRfw==
-X-Received: by 2002:a05:6a00:180f:b0:6e6:4dfe:a4c8 with SMTP id y15-20020a056a00180f00b006e64dfea4c8mr2396653pfa.4.1709980257792;
-        Sat, 09 Mar 2024 02:30:57 -0800 (PST)
-Received: from rigel.home.arpa (110-175-159-48.tpgi.com.au. [110.175.159.48])
-        by smtp.gmail.com with ESMTPSA id b19-20020a631b13000000b005dc36761ad1sm1036248pgb.33.2024.03.09.02.30.55
+        bh=T2VvUr57XpWLkwj2Urdow9kP8nzOatkbx+ejTfT17F4=;
+        b=jZSczKcKSK/pFwi+kOpa0mElLyyiCyHJlgZ2AMa/2Ac4ziql9oOcX7kox3STFczO3+
+         4wjYz1Q9EZs0PHP0EqjtmdXoTQ9yDfnMF0xtBbEntF5F2oU1uszKhlrx/MJ25icTPttQ
+         FXxXc5Ahuc3Od0e1FystPv5GSseMGayQjV90aP3sRwgE36EIAeDKjg2mQk43fzaDq+w6
+         k3wuboFjoP5N8duTxyrIW8o5JnQqVVtu/VgKNOxFJwd+x5waNWuy/5f+XM3sa59iENpD
+         0eWqNmhctEtawX9bnG2+df6eji4UUQtehFdW+87lfMijFTRBj8ydIisbWpJvbXirxKd4
+         HU7g==
+X-Gm-Message-State: AOJu0YyLwAH6IlKU8LetQKPR+q//KQQvaH7fBv1QMt+XqqX0Qlz9T+1J
+	xFNnMUzUHucQ85LLgngRFqWRI7drLvf4yW6EiAsW6WgvZU5DleSnJ7fRyUbpTpE=
+X-Google-Smtp-Source: AGHT+IG0F0gSTyufv1LTvBqnwgOBfmwFVZn1vlsoaptKYMqYWIJfQufcSSH+0K9OWqiOdZfm2Ul2dg==
+X-Received: by 2002:a50:8d18:0:b0:566:78ff:b24e with SMTP id s24-20020a508d18000000b0056678ffb24emr3365666eds.17.1710026850159;
+        Sat, 09 Mar 2024 15:27:30 -0800 (PST)
+Received: from [127.0.1.1] ([85.235.12.238])
+        by smtp.gmail.com with ESMTPSA id o8-20020a056402038800b00567566227a5sm1326641edv.18.2024.03.09.15.27.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 09 Mar 2024 02:30:57 -0800 (PST)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] bindings: cxx: examples:  fix typo in comment
-Date: Sat,  9 Mar 2024 18:30:41 +0800
-Message-Id: <20240309103041.168095-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+        Sat, 09 Mar 2024 15:27:29 -0800 (PST)
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Sun, 10 Mar 2024 00:27:29 +0100
+Subject: [PATCH] gpio: nomadik: Fix debugfs without debugfs
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240310-fix-nmk-debugfs-v1-1-38fe65409c56@linaro.org>
+X-B4-Tracking: v=1; b=H4sIAGDw7GUC/x2MQQqAIBAAvxJ7bkEzCPpKdDBdbYkslCII/97Sc
+ WBmXiiUmQqMzQuZbi58JAHdNuBWmyIhe2HoVNcroxUGfjDtG3parhgKDt7aYEkvzhiQ6swkyn+
+ c5lo/TuKYc2EAAAA=
+To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
+X-Mailer: b4 0.12.4
 
-Fix typo in comment in watch_multiple_line_values.cpp.
+When the code was extracted from the pin control driver the
+non-debugfs compile path forgot to take into account that this
+function is no longer static but shared.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Fix it by making it a non-static stub.
+
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- bindings/cxx/examples/watch_multiple_line_values.cpp | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpio/gpio-nomadik.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/bindings/cxx/examples/watch_multiple_line_values.cpp b/bindings/cxx/examples/watch_multiple_line_values.cpp
-index fb71fb2..ea78667 100644
---- a/bindings/cxx/examples/watch_multiple_line_values.cpp
-+++ b/bindings/cxx/examples/watch_multiple_line_values.cpp
-@@ -46,7 +46,7 @@ int main()
- 	::gpiod::edge_event_buffer buffer;
+diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
+index 463a765620dc..7ea630f70ce3 100644
+--- a/drivers/gpio/gpio-nomadik.c
++++ b/drivers/gpio/gpio-nomadik.c
+@@ -486,11 +486,11 @@ static void nmk_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
  
- 	for (;;) {
--		/* Blocks until at leat one event available */
-+		/* Blocks until at least one event available */
- 		request.read_edge_events(buffer);
+ #else
  
- 		for (const auto &event : buffer)
+-static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
+-					 struct pinctrl_dev *pctldev,
+-					 struct gpio_chip *chip,
+-					 unsigned int offset,
+-					 unsigned int gpio)
++void nmk_gpio_dbg_show_one(struct seq_file *s,
++			   struct pinctrl_dev *pctldev,
++			   struct gpio_chip *chip,
++			   unsigned int offset,
++			   unsigned int gpio)
+ {
+ }
+ 
+
+---
+base-commit: d295ad7ef0137b292289dc214b27993ddffeae15
+change-id: 20240310-fix-nmk-debugfs-7daafae1bc33
+
+Best regards,
 -- 
-2.39.2
+Linus Walleij <linus.walleij@linaro.org>
 
 
