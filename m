@@ -1,122 +1,157 @@
-Return-Path: <linux-gpio+bounces-4246-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4247-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 103BA877E87
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Mar 2024 12:01:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 69D9F8780A9
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Mar 2024 14:32:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 93BD1B2197E
-	for <lists+linux-gpio@lfdr.de>; Mon, 11 Mar 2024 11:01:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 85B0B1C2130E
+	for <lists+linux-gpio@lfdr.de>; Mon, 11 Mar 2024 13:32:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C6A7383B5;
-	Mon, 11 Mar 2024 11:01:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 63D593D541;
+	Mon, 11 Mar 2024 13:32:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZlD5C2IF"
+	dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b="XAH33kDO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81435381AA
-	for <linux-gpio@vger.kernel.org>; Mon, 11 Mar 2024 11:01:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F1D11C88
+	for <linux-gpio@vger.kernel.org>; Mon, 11 Mar 2024 13:32:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710154862; cv=none; b=ZzJ6jMjLoUBMak2FojU2nAQxfGcnV4xcXnQaHDg9SMdi/GE4mfbUynj18qh/nwBGld5rsk00M2BAgIIfZRCDRISDVZkKUy8FV2Pf+fuEkAe0QkOKm1Y42+T+FirfE9SHgCnUhCJITJmyKpKzPXUiJdb2sgSKgNLqPA6VkvmaPUA=
+	t=1710163962; cv=none; b=eJxJ175L3xcwXY30e1+sWngCVIN/dWh1BGv8MQrHKEBg4x4pKW2o44E4aOYqotHdqqRUvwu5XFTKfPbDLFf/vWVxAcYnZOuNrwJ8BtqoGrtEaKs39Bn52BKjbt+oFwdp0VB4GJ9UG4bqLFjTmEdlWMNJo5xjor6O7BI0R4hyglU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710154862; c=relaxed/simple;
-	bh=EJwC2X4/a4PrYYGENHc96zyVnf31IyxcNikfeTn9Iqo=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Oo222N5qQajvPunDj/i/ZBmdIxYxsqeqE0BRobSaY7KjeltDssua47BTaD5OIkBfPXCMJK79NBCQYPSx8U+VUN1Ax21uAZL1wb/YAGm1jCFK1P7RqI6XzIDbjKZcN06PjO9QZyHnXkBO4QVe1VKsKjmcysjZko6m4XYnJbCf0CQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ZlD5C2IF; arc=none smtp.client-ip=209.85.167.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5133bd7eb47so4966457e87.3
-        for <linux-gpio@vger.kernel.org>; Mon, 11 Mar 2024 04:01:00 -0700 (PDT)
+	s=arc-20240116; t=1710163962; c=relaxed/simple;
+	bh=I9l/m9/sESJzPfg9zL5RZnfr9QHcIOTJ6oQii+l25rY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BgLcUsF5cppQAM2vphqRp1LWY3a7wX+Lsmf5dpq4LQsoMBY4XmPh9dpvzSRtC4KMQ011xd+e5LCxsIjbuUnZsMUIGupzVmhDoJjbMLmGQsqMZJ7Edw3n9m6hiAQ//MGGJOso92THfqubmyk5A8V+lve/UKbSlVmwyiBj0FtelNA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com; spf=pass smtp.mailfrom=ionos.com; dkim=pass (2048-bit key) header.d=ionos.com header.i=@ionos.com header.b=XAH33kDO; arc=none smtp.client-ip=209.85.208.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ionos.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ionos.com
+Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d41d1bedc9so44963501fa.3
+        for <linux-gpio@vger.kernel.org>; Mon, 11 Mar 2024 06:32:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710154858; x=1710759658; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=S1M9CrsxURK9osAlAJKJLTrbinlvddAx/ivsJ1lbXFE=;
-        b=ZlD5C2IFACJ4UPjCHpoXcXKQGOCuGcUFqTEzYM351C1VHdnybgaUGdlfwjcb/mGQJg
-         HQ0bOQ9tKUyj+E/DbHyf3u8mGgzhjTPDRHE1sj1uUW372JSY4BMNe2AnS6CNX/A0Om9V
-         qUZ/mE4o5mQm/49Mz8+AghmwUuZPvVHCeSrycuDPcEPgDtGgNvu2nJ9JLLv0d7yZ89Qq
-         NMo5wb26tixOAuS/z5MJXdLv5G/1smmNDOjvnlz1c7CbS84JkbjwHMR/NapYewNyOKB3
-         jnCvDbpZgMx5YJ09E/6ATgop3oLsc79hqQTAXMJ3vaZWFIedg4Z2K7BRar6XNvsAhTsb
-         vQLg==
+        d=ionos.com; s=google; t=1710163958; x=1710768758; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pydvit0k5bF0u99aS8RvUteGFoApwP4u2/5qle+X0TE=;
+        b=XAH33kDOGKjIkkMWTaSJzO6Mhwfmgmbt/FrNLgzIOUtpiMwgd2esnCicK87qvQwnIs
+         +eheJiHvrjYhEN6QZRDPgQ9zSGkgHxeqhNVoMfk8EWqtHEQEjiZbbc0t5QPE9uobOp/w
+         ZOIxpqHtBaa5wRTGKOp6bg6ia6XY+XX0JUrGFZaZliTA4AueYhGJBHpmhZpJZSFkMcks
+         TQ2bqfI9X5NrBkZTmlSE7V7SmVitUfbH2xoXC7DabjMQ9TFLCmbfb+DE7S7vh9RJNwzN
+         0Biwg8wOcMxG6srMUtFUXuvUz6LQVMya1qB5oOoVhCTZxL3MRKHJPM8ptWixufbWW1pt
+         EJ8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710154858; x=1710759658;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=S1M9CrsxURK9osAlAJKJLTrbinlvddAx/ivsJ1lbXFE=;
-        b=gQyMvi5SH2Bqmnj9P7/KbkabSISQFZ5tfZlEGwKSpBIUG5F4Ok0iTAYiu+RaOkDwjm
-         x4tFPrDSdoa7Yfqkc8u+3eLl50S2Mqg3j/EBMJCanBKMe592TKiw38iIDDkCpk1v5DpP
-         sIyyIIrHto+Tw7UJpe9KhOahhAPGtgPb0IwpyTI5APcMq4MV7W3lQ2XctyVmgxEfHlDw
-         373LdONPzrFBAdvcDH8DaD80O+/Oi2u1YxZbvnLOanq2oZe/sUdTf+vWGdWRJMBG19DE
-         pI7P2IjXjH9Qb+TPS5wkR+MCYSFfUVywYL1Sx0dq4LOU5JNuDp2k2sknURdX5vsPkgMl
-         VYew==
-X-Forwarded-Encrypted: i=1; AJvYcCXXhJq+Wb0tXYQyUsGz7orzWqWAy+thDKBJ+1uFz3W8h3EtOv5rftdnGbA3MJrB6dOqVlgO+41YuxpcOTYS7BsNZxuMSBXpTUWnTA==
-X-Gm-Message-State: AOJu0YxUnrPXf3+AxxMVLIoLCyhvXok7GZCZ+3hMI4d2PY1Q74DJq44q
-	62Pe/i/9zIAY5X40yXaVRqf4W4jU2hrc5F+kqGYsTmG4orlkrWCrrl+xEWq37iQ=
-X-Google-Smtp-Source: AGHT+IFwCGdoVdTpdQaznB2idQvFXubh9UWyyPMuumHmhiYMoRkMnvTiGe/Fhx2f7ORUyE/itJx+5g==
-X-Received: by 2002:a05:6512:ea2:b0:513:b0d4:da40 with SMTP id bi34-20020a0565120ea200b00513b0d4da40mr706289lfb.20.1710154857841;
-        Mon, 11 Mar 2024 04:00:57 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id eo5-20020a056512480500b00513179f6c22sm1045933lfb.96.2024.03.11.04.00.57
+        d=1e100.net; s=20230601; t=1710163958; x=1710768758;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pydvit0k5bF0u99aS8RvUteGFoApwP4u2/5qle+X0TE=;
+        b=fxPoLx9w2KzJkF/zZIgdebuzySHUsTHvy+roUBiLXcNkaqX1c7NBo21glr2vUu57hD
+         fYRFEYXP3JqdEnUFFJOWuTVLkw5sNZQSLGZ+0P3dx7FewkuKQ/fjVriSGPUr1+qZvIW5
+         xDVR1n79CemGb/PKAQPjbj2sw+teAMF2Ez2qgixpTkcbmftHn8p8nVqwDv6Pix941TBS
+         zwrIf26IIMDgqR5OCcwn4fzZQXraTQ9JMzccT85+eIIKLhLxbmr82/1Drs5TWJdhXOXY
+         ZO3LiHmPMlJ2J6acvNT0SKIYTDm87fWoLXSKMALCOJ/fUk2i0nrYz9d9p6odpsWe/KAo
+         S60w==
+X-Forwarded-Encrypted: i=1; AJvYcCXUYfwu6U3N5XXk7zSXMmjTzp08nvJcH0gXlfyGSgm0IjzwIlmU9NuqDeO1W1sJcY3JM6i8T59YqmaN3Nk+hvLQ/kUQ15IN2ZgxdQ==
+X-Gm-Message-State: AOJu0Yz1zK5XviTof0m+XrmHvJOPie1wj98LOZjP+ePaftvrPzqpaPcM
+	XCCbiCeJucLKSJlA+wZLHK14rUtcDMKSYB3e+TDXuZtVgFOMUY0nkwwP8BNAuOc=
+X-Google-Smtp-Source: AGHT+IF4nCfaEVZ8lezh+TtTa3vRsYojgVPmHkyqd40yjAWy8wmDLzK2Zs88Hh7EVVZHr3pmvPpnGg==
+X-Received: by 2002:a2e:8058:0:b0:2d2:a839:a39a with SMTP id p24-20020a2e8058000000b002d2a839a39amr4359305ljg.5.1710163958137;
+        Mon, 11 Mar 2024 06:32:38 -0700 (PDT)
+Received: from raven.blarg.de (p200300dc6f010900023064fffe740809.dip0.t-ipconnect.de. [2003:dc:6f01:900:230:64ff:fe74:809])
+        by smtp.gmail.com with ESMTPSA id p3-20020a17090628c300b00a444526962asm2861953ejd.128.2024.03.11.06.32.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Mar 2024 04:00:57 -0700 (PDT)
-Date: Mon, 11 Mar 2024 14:00:53 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
-Subject: [PATCH] gpio: nomadik: remove BUG_ON() in nmk_gpio_populate_chip()
-Message-ID: <ae643df0-3a3e-4270-8dbf-be390ee4b478@moroto.mountain>
+        Mon, 11 Mar 2024 06:32:37 -0700 (PDT)
+From: Max Kellermann <max.kellermann@ionos.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: Max Kellermann <max.kellermann@ionos.com>
+Subject: [PATCH] drivers/gpio/nomadik: move dummy nmk_gpio_dbg_show_one() to header
+Date: Mon, 11 Mar 2024 14:32:23 +0100
+Message-Id: <20240311133223.3429428-1-max.kellermann@ionos.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
+Content-Transfer-Encoding: 8bit
 
-Using BUG_ON() is discouraged and also the check wasn't done early
-enough to prevent an out of bounds access.  Check earlier and return
-an error instead of calling BUG().
+When `CONFIG_DEBUG_FS` is disabled, nmk_gpio_dbg_show_one() is an
+empty dummy function; this however triggers a `-Wmissing-prototypes`
+warning and later a linker error because the function is also used by
+drivers/pinctrl/nomadik/pinctrl-nomadik.c, therefore it needs to be
+non-static.
 
-Signed-off-by: Dan Carpenter <dan.carpenter@linaro.org>
+To allow both sources to access this dummy function, this patch moves
+it to the header, adding the `#ifdef CONFIG_DEBUG_FS` there as well.
+
+Signed-off-by: Max Kellermann <max.kellermann@ionos.com>
 ---
- drivers/gpio/gpio-nomadik.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/gpio/gpio-nomadik.c       |  8 --------
+ include/linux/gpio/gpio-nomadik.h | 15 +++++++++++++++
+ 2 files changed, 15 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/gpio/gpio-nomadik.c b/drivers/gpio/gpio-nomadik.c
-index 463a765620dc..5e2f9b51ece3 100644
+index 463a765620dc..9637ede8ab43 100644
 --- a/drivers/gpio/gpio-nomadik.c
 +++ b/drivers/gpio/gpio-nomadik.c
-@@ -533,6 +533,11 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	}
+@@ -486,14 +486,6 @@ static void nmk_gpio_dbg_show(struct seq_file *s, struct gpio_chip *chip)
  
- #ifdef CONFIG_PINCTRL_NOMADIK
-+	if (id >= ARRAY_SIZE(nmk_gpio_chips)) {
-+		dev_err(dev, "populate: invalid id: %u\n", id);
-+		platform_device_put(gpio_pdev);
-+		return ERR_PTR(-EINVAL);
-+	}
- 	/* Already populated? */
- 	nmk_chip = nmk_gpio_chips[id];
- 	if (nmk_chip) {
-@@ -606,7 +611,6 @@ struct nmk_gpio_chip *nmk_gpio_populate_chip(struct fwnode_handle *fwnode,
- 	}
+ #else
  
- #ifdef CONFIG_PINCTRL_NOMADIK
--	BUG_ON(nmk_chip->bank >= ARRAY_SIZE(nmk_gpio_chips));
- 	nmk_gpio_chips[id] = nmk_chip;
+-static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
+-					 struct pinctrl_dev *pctldev,
+-					 struct gpio_chip *chip,
+-					 unsigned int offset,
+-					 unsigned int gpio)
+-{
+-}
+-
+ #define nmk_gpio_dbg_show	NULL
+ 
  #endif
- 	return nmk_chip;
+diff --git a/include/linux/gpio/gpio-nomadik.h b/include/linux/gpio/gpio-nomadik.h
+index 4a95ea7935fb..b5a84864650d 100644
+--- a/include/linux/gpio/gpio-nomadik.h
++++ b/include/linux/gpio/gpio-nomadik.h
+@@ -253,6 +253,8 @@ nmk_pinctrl_db8540_init(const struct nmk_pinctrl_soc_data **soc)
+ 
+ struct platform_device;
+ 
++#ifdef CONFIG_DEBUG_FS
++
+ /*
+  * Symbols declared in gpio-nomadik used by pinctrl-nomadik. If pinctrl-nomadik
+  * is enabled, then gpio-nomadik is enabled as well; the reverse if not always
+@@ -261,6 +263,19 @@ struct platform_device;
+ void nmk_gpio_dbg_show_one(struct seq_file *s, struct pinctrl_dev *pctldev,
+ 			   struct gpio_chip *chip, unsigned int offset,
+ 			   unsigned int gpio);
++
++#else
++
++static inline void nmk_gpio_dbg_show_one(struct seq_file *s,
++					 struct pinctrl_dev *pctldev,
++					 struct gpio_chip *chip,
++					 unsigned int offset,
++					 unsigned int gpio)
++{
++}
++
++#endif
++
+ void __nmk_gpio_make_output(struct nmk_gpio_chip *nmk_chip,
+ 			    unsigned int offset, int val);
+ void __nmk_gpio_set_slpm(struct nmk_gpio_chip *nmk_chip, unsigned int offset,
 -- 
-2.43.0
+2.39.2
 
 
