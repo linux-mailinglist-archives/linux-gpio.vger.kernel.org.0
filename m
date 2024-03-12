@@ -1,135 +1,157 @@
-Return-Path: <linux-gpio+bounces-4254-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4255-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0CB6D878F32
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 08:48:20 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 74D2D878F5E
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 09:03:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 92C44282E31
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 07:48:18 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A6A2C1C20E2B
+	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 08:03:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 46FE969975;
-	Tue, 12 Mar 2024 07:48:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D1576997A;
+	Tue, 12 Mar 2024 08:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="ekx8eCHi"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXWn4pMe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D15AB657;
-	Tue, 12 Mar 2024 07:48:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C20269D04;
+	Tue, 12 Mar 2024 08:03:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710229692; cv=none; b=QTDBLiIwcTdZUYZFkZz3P4rFNLYQQZ8KbaDLf8XX/As5glNUIyz65xO7vX0VbPQbaN+zsYSnD56tWO8reR4zvIaE/MuW/QBv0CpVb50MsTQ0qN2+he/YA41+B/TCfNc7oDXlb1bLA8/JTYBTwVSicXkzFgt4npcRcoG2BlCs+5M=
+	t=1710230612; cv=none; b=LgK0CVK2cDNstXQZSxL2m/wti8IdIo8xxWt57//rNLlbG36g3TXKX3NKyWNgRwzyzidAJs7T74XeMo0gStDk1BlnakgLU6E99C2KJ/wnUjkjwcrA3qqzAWK2gS15TrZYpFy2KGUHBxqhhvaDp0RfH7xKf91y/nUdeFwKmp3bv1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710229692; c=relaxed/simple;
-	bh=oHNMUs0E9LTvbdffnW9qL4JVkImwURiE8Vj3N2Ew36I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=CQPcEuCO1XCs5DRcNixbpvhMydOp+Cy25ayHgpsmFYfptXD8B13pIYw+x5tCcDyblS4kG3tZSCbIe+Cyo85NBvov80wUWY0uat2GSMZH1Kwn/E/Dnes74JkS64SO9lw0dQX8u10Eu+3jrkGRXMVgy3kMjI8CO6aFdd5teix8lG0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=ekx8eCHi; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42C5fswZ010197;
-	Tue, 12 Mar 2024 07:47:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=09wLCnezT9Uab9FiCyCAUmZgWKMnkvwzvdFxcpiHZ7Q=; b=ek
-	x8eCHiCJLwB0ucuLy/+ZXmmgwB85Ni72Oz7TC1n4RXKuuEEcsvGGD1s0uGYzJcPJ
-	kYb8PGB4ld4q+X2FA6g6d/WLQiDhDnJMcW2aSpWTECaEypWv0AsqRO+rwxAgfYUl
-	deU+X3tV8+VtNuSDXpbq7VTMD61tOXhoDysSYZtJzbG9EJ4PnnI6MBLnjj6TAw27
-	nB1IzrEndZV466AkL7Cto2YOyRHjy7XfW8xAEYPUvgF6AYyBgP2Kh86t0nUwBRBO
-	GGOrPCkoj2kPpWnvl1AaIzP+uzwt07miHTzcsM1b7prw/KVzuJF90ko9q6fcQ4ld
-	SB0Giha3oFgRhVoBrnPw==
-Received: from nalasppmta03.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wte5d0hps-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 07:47:54 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42C7lrBW013216
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 12 Mar 2024 07:47:53 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 12 Mar
- 2024 00:47:48 -0700
-Message-ID: <31b02b76-88ff-42d7-a665-18d2661e028c@quicinc.com>
-Date: Tue, 12 Mar 2024 15:47:44 +0800
+	s=arc-20240116; t=1710230612; c=relaxed/simple;
+	bh=7CSXkSa3VNcY7x9b6by6FO8IPWIdgHGiqUx6k0fKoo8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UA6tbP/e1nk17ts2exKxJ6vXFSbnTjPLgku9Yqg8/7uenstArnz6Nt40UnsymqKXFLsBf4rB657WukOBmYfqYEqBqbGqEXrZmnesqNEyBSh6NUzhtB1dSaxvOmMaSiMPJAaMFM1P6UPYaEXVztc6sZAZVOcZgcWx5d146aysPq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXWn4pMe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14D4DC433C7;
+	Tue, 12 Mar 2024 08:03:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710230610;
+	bh=7CSXkSa3VNcY7x9b6by6FO8IPWIdgHGiqUx6k0fKoo8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=GXWn4pMeQg4hJsAkIuEH/dvhu5T8dLwWVRrGftqgwMwBYiZl0C3puzKCtdzWFrN7p
+	 gwR5tOBCsKepUM0L1+VQCxoLpLtMb6B+KZQl7ArGelO/pmj6hr4nfuvkGprlzZ3qmM
+	 UeEfu90878dwAoUylCYtFeiih9QICuFvQ6UIISX3SRELBGMBKdCfjOTSXgP9M0jnpk
+	 HmK5M6fp5QQhIVTKBncymtqYSzLtQlJEzp42lA1X9IulXYVq3/ffSL7iuQ3mSJ84hm
+	 Ez7uopf+12pzCQL/d/3d60MrnRv9ZLk4k1/IvmKVVnBhuL1vt5xtdjT2l4AB7Bw4zU
+	 udv4ffal4JQhg==
+Date: Tue, 12 Mar 2024 09:03:27 +0100
+From: Wolfram Sang <wsa@kernel.org>
+To: Tony Lindgren <tony@atomide.com>
+Cc: Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v4 03/18] i2c: omap: wakeup the controller during
+ suspend() callback
+Message-ID: <ZfAMT8CDW1VKW0qR@shikoro>
+Mail-Followup-To: Wolfram Sang <wsa@kernel.org>,
+	Tony Lindgren <tony@atomide.com>,
+	Thomas Richard <thomas.richard@bootlin.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
+	Vinod Koul <vkoul@kernel.org>,
+	Kishon Vijay Abraham I <kishon@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
+	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
+	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
+	u-kumar1@ti.com
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-3-6f1f53390c85@bootlin.com>
+ <20240308084240.GK52537@atomide.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: update compatible name
- for match with driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20240312025807.26075-1-quic_tengfan@quicinc.com>
- <20240312025807.26075-2-quic_tengfan@quicinc.com>
- <0d768f17-22d9-448e-9253-8498b61bf71e@linaro.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <0d768f17-22d9-448e-9253-8498b61bf71e@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: sGpLBNzSyAuYletnjCAvLzneg5Gd2Gcg
-X-Proofpoint-GUID: sGpLBNzSyAuYletnjCAvLzneg5Gd2Gcg
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_06,2024-03-11_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 impostorscore=0 phishscore=0 suspectscore=0 mlxlogscore=923
- malwarescore=0 clxscore=1015 lowpriorityscore=0 bulkscore=0 mlxscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403120060
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Qxnn2a5IXmQEXJ6+"
+Content-Disposition: inline
+In-Reply-To: <20240308084240.GK52537@atomide.com>
 
 
+--Qxnn2a5IXmQEXJ6+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 3/12/2024 3:41 PM, Krzysztof Kozlowski wrote:
-> On 12/03/2024 03:58, Tengfei Fan wrote:
->> Use compatible name "qcom,sm4450-tlmm" instead of "qcom,sm4450-pinctrl"
->> to match the compatible name in sm4450 pinctrl driver.
->>
->> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
->> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->> ---
->>   Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Wasn't this applied?
+On Fri, Mar 08, 2024 at 10:42:40AM +0200, Tony Lindgren wrote:
+> * Thomas Richard <thomas.richard@bootlin.com> [240304 15:36]:
+> > A device may need the controller up during suspend_noirq() or
+> > resume_noirq().
+> > But if the controller is autosuspended, there is no way to wakeup it du=
+ring
+> > suspend_noirq() or resume_noirq() because runtime pm is disabled at this
+> > time.
+> >=20
+> > The suspend() callback wakes up the controller, so it is available until
+> > its suspend_noirq() callback (pm_runtime_force_suspend()).
+> > During the resume, it's restored by resume_noirq() callback
+> > (pm_runtime_force_resume()). Then resume() callback enables autosuspend.
+>=20
+> Reviewed-by: Tony Lindgren <tony@atomide.com>
 
-My test code base on tag: next-20240308, this patch is still not applied.
+I fully trust Tony and I assume that this series should go in via some
+other tree than I2C. So:
 
-In fact, the following dt binding check warning only can be got before 
-this patch is applied.
+Acked-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.example.dtb:
-/example-0/pinctrl@f100000: failed to match any schema with
-compatible: ['qcom,sm4450-tlmm']
+Andi, do you agree?
 
 
-> 
-> Best regards,
-> Krzysztof
-> 
+--Qxnn2a5IXmQEXJ6+
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Thx and BRs,
-Tengfei Fan
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAmXwDE8ACgkQFA3kzBSg
+KbZneQ/+KWOJptPe830nsn7JfSUf3AOnK9q6xIxIiubJncJXVEeQU9CREDaUg9qm
+bI/l+empAXTCyZjGwuEjah2mFlBcT1y1+hNXAPG0px0omBk/p774NjskL0zONP4u
+rWQ6gc3Wl5cEyNBoZzUml+jdXYg8Ie2HL2Ymhxcpl4Y8bHiQT8WXyHdBDlD10hzK
+Q7oKeMO4aaoBHrnb8GTIPJkm6XaYNJHV7fVwf/b8pzzajEYoRJasGIdhs0U4b2aM
+gfC3C3/eTf035xZmqXvesTt0j3Kqbn5HxkcCG531iGpXUc6FthYKHHd77a46DwCe
+pCzGtTo8o7ezUnYOdySYJic5ZJEChC795pdl4rsrHMRM5B/NseT9ieAIvisVS4Ll
+mYQyCzW7jrhqT9A56/o+0rudG8LXs+b+MedNFDFcvCDv3LwWSt9imYDhvClKWMIJ
+4I+rDBS0ONXz/PqMD77QIOtuILV85GvDrbrmFUSiIzP/LtbIpUaFoRBQFw6QSpKI
+S3doeQqZayubO7DkMYhU4wrhSs5n6fKRHP4fr11VSclA8czlRuLKvm8vJrzmM5kh
+WU8UXU/JXpUHdQz3GSbIcHEs5e3AJa0JdCN+4x+qgSI4FYH5rr+SFnqnX6qXXipW
++cNJyxzVT59Y4MQYLNhwXxa5FGwlKdOJuory0HQRv+qRip/+f8Y=
+=P3pn
+-----END PGP SIGNATURE-----
+
+--Qxnn2a5IXmQEXJ6+--
 
