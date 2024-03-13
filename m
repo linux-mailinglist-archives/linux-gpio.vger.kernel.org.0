@@ -1,90 +1,112 @@
-Return-Path: <linux-gpio+bounces-4289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B7EED87A6DF
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 12:11:56 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 976FC87A6F2
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 12:14:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3D26BB226EE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 11:11:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 38DB4B21F93
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 11:14:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 927DD3EA88;
-	Wed, 13 Mar 2024 11:09:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9CA453F9D5;
+	Wed, 13 Mar 2024 11:14:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="O+FjSmVX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx3.molgen.mpg.de (mx3.molgen.mpg.de [141.14.17.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19E364C618;
-	Wed, 13 Mar 2024 11:09:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=141.14.17.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07BAD3F9C5;
+	Wed, 13 Mar 2024 11:14:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710328179; cv=none; b=PuSiNCY2z0gCf+cM7H7ZXrBFeIQm8rn/YGiDZaQ6XnmSkZCZ15YkCenNZIiQUMSz41K0gAjoJCH8bUGt+WDdYxQgwQUmIDVqF15urn6XFTAtyao4a99ZroJq1RF4Mexv2LT1dnbkwf0yGuTrs2rJGtNBXvvcsyeDnxo5DSCyO2I=
+	t=1710328475; cv=none; b=hKlgBuoc0lXBFpXLwruONpKNUQfhakw9a+uk0cQpGarXfdxlO8cMh9MR88qyZwGXHxkxFAIdqR06cK06wmPBAYYo4XRI3h+iNWkT6ANTcmCQBsVatsgF+7XfvUbFED3gSRAqOIhjxjeZIOLA2JUvW6z+XnNarxHcw4CtMPyJMVU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710328179; c=relaxed/simple;
-	bh=7E0FWu/tC3XQEAq8/VJphNgdP79HyVmJK+bjjlHyHHU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=RCWNRya7DPFkfE1yRsu/Zu3nuuuVM2xpM83T8r6WWL+HY+0q6IgJuXv6jd563BPr0kgkX0RMS7kqZ2lthFSpDGRALHAGqYaVa3AjtBhgKKFi10Nc4InE9ZS8ZfYQY3Y9G67MeoDf6li43VDo2F4aT7xIP8Z9WqSQn2+czEmoqYg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de; spf=pass smtp.mailfrom=molgen.mpg.de; arc=none smtp.client-ip=141.14.17.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=molgen.mpg.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=molgen.mpg.de
-Received: from [141.14.220.34] (g34.guest.molgen.mpg.de [141.14.220.34])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: pmenzel)
-	by mx.molgen.mpg.de (Postfix) with ESMTPSA id 40E6161E5FE04;
-	Wed, 13 Mar 2024 12:08:02 +0100 (CET)
-Message-ID: <6f2af609-e3fc-426b-a7ee-b83b859af09f@molgen.mpg.de>
-Date: Wed, 13 Mar 2024 12:08:01 +0100
+	s=arc-20240116; t=1710328475; c=relaxed/simple;
+	bh=rjBWIoX7FUFBKjKqdMh9OVQTIYw1aLir8rSR4UM0APg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lSHC8EP8947lX//eB0EfBf4j27UpSAxNGVtuUB/f5TdN865o+KCi4mOA7FGKl2WxhA1cvQxvbkPv/jlqANqFXpXyg25Aq0vDRRyxyFPfjVMnT9C7eJAfu/BSaX2m+k2idWaZO7CepoDM0X7xiwU7srzyfX8NFlSqxCD4BhAZLV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=O+FjSmVX; arc=none smtp.client-ip=198.175.65.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710328474; x=1741864474;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=rjBWIoX7FUFBKjKqdMh9OVQTIYw1aLir8rSR4UM0APg=;
+  b=O+FjSmVXZAjPNpfNfb/LO9tL7dZii7cKbjTOjZvrDR4Gd6M6+lGpMMrW
+   T6m81jQ5b+Sf3gXZUhIDSt6mrSEELEU+TSIOhnf4/PJgZ5SDBacNxwK8t
+   NOOd9Gqq2qe/pIYYK5nl0UD75aF2zV7/7gjL1++CZH9D3sdVU1F56P8s2
+   8ANhds6VyqqF1tIntJVS90cP3cDHojoLCrXTeXJjPj2D48WCl+42IFEg9
+   l17nUwKtKqoPgnMxOfufmSDZjJvyMjVoAteA4268JdLE3I/CFT+9dzICN
+   D4mtaqbhZck9tUX6XQbptoIP746MxKmAlfFk3vAbnj4c4hvqr9W/UmtzD
+   A==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="16532504"
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="16532504"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 04:14:34 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="914429190"
+X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
+   d="scan'208";a="914429190"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 04:14:29 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rkMZ0-0000000CCC4-378N;
+	Wed, 13 Mar 2024 13:14:26 +0200
+Date: Wed, 13 Mar 2024 13:14:26 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
+	Yanteng Si <siyanteng@loongson.cn>,
+	Hu Haowen <2023002089@link.tyut.edu.cn>,
+	Daniel Mack <daniel@zonque.org>,
+	Haojian Zhuang <haojian.zhuang@gmail.com>,
+	Robert Jarzmik <robert.jarzmik@free.fr>,
+	Russell King <linux@armlinux.org.uk>
+Subject: Re: [PATCH v1 0/3] gpiolib: Get rid of
+ gpio_free_array()/gpio_request_array()
+Message-ID: <ZfGKkjxIT9AEd8dy@smile.fi.intel.com>
+References: <20240307135109.3778316-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkda6bykOFY6gcZqRKLAnprUooZooQ_g7Rj_63da2akbwtA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pinctrl: pinctrl-aspeed-g6: Fix register offset for
- pinconf of GPIOR-T
-Content-Language: en-US
-To: Billy Tsai <billy_tsai@aspeedtech.com>
-References: <20240313092809.2596644-1-billy_tsai@aspeedtech.com>
-Cc: andrew@codeconstruct.com.au, linus.walleij@linaro.org, joel@jms.id.au,
- johnny_huang@aspeedtech.com, linux-aspeed@lists.ozlabs.org,
- openbmc@lists.ozlabs.org, linux-gpio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- BMC-SW@aspeedtech.com, Ricky_CX_Wu@wiwynn.com
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-In-Reply-To: <20240313092809.2596644-1-billy_tsai@aspeedtech.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkda6bykOFY6gcZqRKLAnprUooZooQ_g7Rj_63da2akbwtA@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-Dear Billy,
+On Thu, Mar 07, 2024 at 03:36:18PM +0100, Linus Walleij wrote:
+> On Thu, Mar 7, 2024 at 2:51 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
+> 
+> > There are only two users left of the gpio_free_array()/gpio_request_array().
+> > Convert them to very basic legacy APIs (it requires much less work for
+> > now) and drop no more used gpio_free_array()/gpio_request_array().
+> 
+> That's reasonable and makes the kernel a better place.
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
+Thank you!
 
-Thank you very much for sending version 2.
+Bart, do you want me to take it via my tree or you want to take directly?
 
-
-Am 13.03.24 um 10:28 schrieb Billy Tsai:
-> The register offset to disable the internal pull-down of GPIOR~T is 0x630
-> instead of 0x620, as specified in the Ast2600 datasheet v15
-> The datasheet can download from the official Aspeed website.
-
-(No need for another iteration for this, but “can be downloaded”.)
-
-> Fixes: 15711ba6ff19 ("pinctrl: aspeed-g6: Add AST2600 pinconf support")
-> Signed-off-by: Billy Tsai <billy_tsai@aspeedtech.com>
-> ---
->   drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 34 +++++++++++-----------
->   1 file changed, 17 insertions(+), 17 deletions(-)
-
-[…]
-
-Reviewed-by: Paul Menzel <pmenzel@molgen.mpg.de>
+-- 
+With Best Regards,
+Andy Shevchenko
 
 
-Kind regards,
-
-Paul
 
