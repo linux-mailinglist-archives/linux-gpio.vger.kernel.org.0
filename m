@@ -1,278 +1,160 @@
-Return-Path: <linux-gpio+bounces-4269-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4270-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4EC1687A1C9
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 04:03:16 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B403087A21B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 04:57:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DEC01C21A60
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 03:03:15 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 32997B20631
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 03:57:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48EED26D;
-	Wed, 13 Mar 2024 03:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5214710A01;
+	Wed, 13 Mar 2024 03:57:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IIkfJKG+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJzfGgIs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EB4D51B
-	for <linux-gpio@vger.kernel.org>; Wed, 13 Mar 2024 03:03:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9900ADF62;
+	Wed, 13 Mar 2024 03:57:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710298990; cv=none; b=HiHxPltyid7LveK8p9+M9gW+hc7dz5qdxm8om7HaHe0Jsd4pXqnWBqYU9E7mS+we1tklsjmhv3Amk4B2tfHjy9wDfyQ8ww3tzdQnnVkA41GNXkfyMpHTnwb7gKbT5an9T133xo8AR5PEAvTPD0nL3Fohq2gzOwW28JaFZKob2jo=
+	t=1710302249; cv=none; b=b19kE34OCEX4VfQgHjLivLm8kD6O62UbwfwTsZ9s7HwS8cy8Lt+hjYYjapEa6u7vP3kNHKi8vvMKbpu5Rz+WjA39e/x05SKwPB0MPOlB3Kg1q0bBkXK8lY4TFlN+X+E0iN3uUK3MZYop66LHPNa1LT+FtkhXRZemLva8CMLm0BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710298990; c=relaxed/simple;
-	bh=gFW5hMTbaG1K47hGfNLNUOgpap+1DIiUz88Htc00KHs=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u+WM7egNE5apOBK/jAxlP05dNNoD14lLAQa7X8d6tPJFjOR9A7qhvHczLahgMyV6TpsT87obeUsggwTu49SXw6qPCgCN1FhC4EUUnFfeYaLEOe19pgDykxKeie2WW5hWP3J5kDVtue6xl99wGkPsP8n8o2lnUbXJwmar7+JBP/E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IIkfJKG+; arc=none smtp.client-ip=202.36.163.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
-Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(Client did not present a certificate)
-	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A38E2C03B6;
-	Wed, 13 Mar 2024 16:03:03 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-	s=mail181024; t=1710298983;
-	bh=/oXEFZFkNeReiz2Qe1ck1mRocFWyHSVCru3ultVwEQ4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=IIkfJKG+oZVGHiYCak2oaFPsilWdr7u/IiNuEcU78/fL6hoQqBti4cc9tPTG6EyYy
-	 nWVDGelhPAB5RQof0Cu3YQtwmUAR9FvsinxaL50bEDlEsjMvmJkzTGLOuZfE8mAkkv
-	 S36/1YnBOtI2paNdXWejl9abN8Ahg+wy/kEpkiNpQgljNwbcyofc8a+NL6ADBXHoHA
-	 lcYdrI0uBJ45Yupoa+klXxeNuhIjELXKWZLj3dU1YUTuz3IDs6BVZqDostWkdLofAr
-	 1nj/sZBhN2WQ8QJTOqGR1TWDgWemKAGlsuCRJeKQrqfonvzAaS3suc4bF6zhW2YTII
-	 XInkZF0PQ7N9A==
-Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
-	id <B65f117660000>; Wed, 13 Mar 2024 16:03:02 +1300
-Received: from hamishm-dl.ws.atlnz.lc (hamishm-dl.ws.atlnz.lc [10.33.24.13])
-	by pat.atlnz.lc (Postfix) with ESMTP id F37C413ED56;
-	Wed, 13 Mar 2024 16:03:02 +1300 (NZDT)
-Received: by hamishm-dl.ws.atlnz.lc (Postfix, from userid 1133)
-	id F119124092D; Wed, 13 Mar 2024 16:03:02 +1300 (NZDT)
-From: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-To: mika.westerberg@linux.intel.com,
-	andriy.shevchenko@linux.intel.com,
-	linus.walleij@linaro.org,
-	brgl@bgdev.pl
-Cc: linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	Hamish Martin <hamish.martin@alliedtelesis.co.nz>
-Subject: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
-Date: Wed, 13 Mar 2024 16:02:51 +1300
-Message-ID: <20240313030251.1049624-1-hamish.martin@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.43.2
+	s=arc-20240116; t=1710302249; c=relaxed/simple;
+	bh=mMCqrX5ys6pZ/zh0FM2mM7MOiPYvzIgqQWPL+8JEJ30=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=O7L7PY/J6XGdOB90qT8EgqmtfD6xkjCVaiy7G2nTaMNrLmhcGHwgA92Gjo/S6dwHbIePxpj7UYD3wVm9thvGIXmejPSQvmQhSeML/SZaYl7/Mvy9AOPlNiAFKBg/XxyRlMhVp6/yDxxGRVsDVPb0sCd7j+sy8lUeNYJLBuQATnA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJzfGgIs; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e649a2548cso4365338b3a.3;
+        Tue, 12 Mar 2024 20:57:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1710302247; x=1710907047; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=HygAHjwPzgq2yfeMwPFxpy16XS23OG5KKP0Xtf/udRE=;
+        b=GJzfGgIsWrpgTrwW1HRiBhDpQYFjKhSH8jSaSIgaoekaSPwh2e5S4D8NQXUs7cOs1f
+         ZbGf3gRcLhNUxfM6WtRHeoBXESvqK5Lt4D8s5RhH1UpkVmtMDDIk+4mgAIUJpfFsq5OL
+         ILcHys4ydjhWYcFn83eOrXgtGxAVoOP2gX9LH0oEjpArwcHkIAmrrjXeXXA0SX7WOORd
+         KUA0Hh7WY83LRwEq3XaC8tz+ZYdJ9lalovvJHoGqpcdA0ojmxo2nXHHm9kR0Uu69Vez4
+         DwDRDs9GrxSUClSnHqauoDSbSGB+0OcLAr8eVII3SXgQYnO5oD1/W59M6zahRj9eZOZA
+         47kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710302247; x=1710907047;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=HygAHjwPzgq2yfeMwPFxpy16XS23OG5KKP0Xtf/udRE=;
+        b=KFFSgZw7fo7Jr0myfj4ahdKY+/LCX1cj8SS7uD9F9AXNsxWUtCLZaePuYaoi03w6vO
+         rgRIIIu5WE2Ag7vCddN7Bewes9x5ySFVoVkP02Z8ZVZz1P8IznIinBgWGscPYsCZ3pAI
+         EQ0WWZqvtPmdwx7NqPCsjJRTvxjBx1COLPyHkbsbHWzKTQe8m+m4/5qU3IspNdB7IehH
+         11+x6uUGpuXqce3vdGMX9hL0SETVH3mse8DlNSNaK1pcGNNRENfSCcC3K8zdGoZ66/G/
+         BH4eg7GDuQq1RY+Lc8HKsDWykbhndeMiGvwX2kguonsjI2nX+dy51L0KAiSiD3VIO16X
+         3uKg==
+X-Forwarded-Encrypted: i=1; AJvYcCWCf2qGVowBCVpCacTTNP8JAiXEgUuEyxq18FqiEV9jGF//hhEUemXccFwoxzSl7CUqzPFEE8JrB6bGtO4natwmVI9thfuQRcX6PTCpFClgY+eXTRcXxne1LMQhkNALcRmfq57Gk6cvTxMcSdcWjDYLKK9+OR4rREydD9CDE6fBM2YgAH4=
+X-Gm-Message-State: AOJu0Yz2fOuqHwJFvtvze66DBmDx+6PL13zKCw2/ziyJ43gC8PFbrguB
+	Mvixsw/EThna6ZLfIHQJ3ncAWuJ950kRTcQFxHVHI1wMKgt8Fy89
+X-Google-Smtp-Source: AGHT+IFmD0gFBLcV7Tp09i9d4J7qIKfyrdyspfwdQYfnK1eOkEw9AMJzK9yQndrHtHiojBqAgJ/3lQ==
+X-Received: by 2002:a05:6a00:10c3:b0:6e6:9421:bfda with SMTP id d3-20020a056a0010c300b006e69421bfdamr1528104pfu.22.1710302246702;
+        Tue, 12 Mar 2024 20:57:26 -0700 (PDT)
+Received: from a28aa0606c51.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id o17-20020a63fb11000000b005cd835182c5sm6721605pgh.79.2024.03.12.20.57.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Mar 2024 20:57:26 -0700 (PDT)
+From: Jacky Huang <ychuang570808@gmail.com>
+To: linus.walleij@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com
+Subject: [PATCH v6 0/3] Add support for nuvoton ma35d1 pin control
+Date: Wed, 13 Mar 2024 03:57:16 +0000
+Message-Id: <20240313035719.768469-1-ychuang570808@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65f11767 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=4Qf1ARyw2_cHiD8XAKQA:9 a=3ZKOabzyN94A:10
-X-SEG-SpamProfiler-Score: 0
-x-atlnz-ls: pat
+Content-Transfer-Encoding: 8bit
 
-A memory leak occurs in a scenario where an ACPI SSDT overlay is removed
-and that is the trigger for the removal of the acpi_gpio_chip.
-This occurs because we use the ACPI_HANDLE of the chip->parent as a
-convenient location to tie the 'struct acpi_gpio_chip' to, using
-acpi_attach_data().
-This is fine in the usual case of removal of the 'struct acpi_gpio_chip'
-via a call to acpi_gpiochip_remove() because usually the ACPI data is
-still valid.
-But in the case of an SSDT overlay removal, the ACPI data has been
-marked as invalid before the removal code is triggered (see the setting
-of the acpi_device handle to INVALID_ACPI_HANDLE in
-acpi_scan_drop_device()). This means that by the time we execute
-acpi_gpiochip_remove(), the handles are invalid and we are unable to
-retrieve the 'struct acpi_gpio_chip' using acpi_get_data(). Unable to
-get our data, we hit the failure case and see the following warning
-logged:
-  Failed to retrieve ACPI GPIO chip
-This means we also fail to kfree() the struct at the end of
-acpi_gpiochip_remove().
+From: Jacky Huang <ychuang3@nuvoton.com>
 
-The fix is to no longer tie the acpi_gpio_chip data to the ACPI data,
-but instead hang it directly from the 'struct gpio_chip' with a new
-field. This decouples the lifecycle of the acpi_gpio_chip from the ACPI
-data, and ties it to the gpio_chip. This seems a much better place since
-they share a common lifecycle.
+This patch series adds the pin control and GPIO driver for the nuvoton ma35d1
+ARMv8 SoC. It includes DT binding documentation and the ma35d1 pin control driver.
 
-The general concept of attaching data to the ACPI objects may also need
-revisiting in light of the issue this patch addresses. For instance
-i2c_acpi_remove_space_handler() is vulnerable to a similar leak due to
-using acpi_bus_get_private_data(), which just wraps acpi_attach_data().
-This may need a more widespread change than is addressed in this patch.
+This pin control driver has been tested on the ma35d1 som board with Linux 6.8-rc5	.
 
-Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
----
- drivers/gpio/gpiolib-acpi.c | 57 ++++++++-----------------------------
- include/linux/gpio/driver.h |  4 +++
- 2 files changed, 16 insertions(+), 45 deletions(-)
+v6:
+  - Remove DTS from this patchset. The DTS will be submitted in another patchset.
 
-diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
-index cd3e9657cc36..14d29902391f 100644
---- a/drivers/gpio/gpiolib-acpi.c
-+++ b/drivers/gpio/gpiolib-acpi.c
-@@ -180,11 +180,6 @@ static irqreturn_t acpi_gpio_irq_handler_evt(int irq=
-, void *data)
- 	return IRQ_HANDLED;
- }
-=20
--static void acpi_gpio_chip_dh(acpi_handle handle, void *data)
--{
--	/* The address of this function is used as a key. */
--}
--
- bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
- 				struct acpi_resource_gpio **agpio)
- {
-@@ -500,18 +495,17 @@ void acpi_gpiochip_request_interrupts(struct gpio_c=
-hip *chip)
- {
- 	struct acpi_gpio_chip *acpi_gpio;
- 	acpi_handle handle;
--	acpi_status status;
- 	bool defer;
-=20
- 	if (!chip->parent || !chip->to_irq)
- 		return;
-=20
--	handle =3D ACPI_HANDLE(chip->parent);
--	if (!handle)
-+	acpi_gpio =3D chip->acpi_gpio;
-+	if (!acpi_gpio)
- 		return;
-=20
--	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
-);
--	if (ACPI_FAILURE(status))
-+	handle =3D ACPI_HANDLE(chip->parent);
-+	if (!handle)
- 		return;
-=20
- 	if (acpi_quirk_skip_gpio_event_handlers())
-@@ -545,18 +539,12 @@ void acpi_gpiochip_free_interrupts(struct gpio_chip=
- *chip)
- {
- 	struct acpi_gpio_chip *acpi_gpio;
- 	struct acpi_gpio_event *event, *ep;
--	acpi_handle handle;
--	acpi_status status;
-=20
- 	if (!chip->parent || !chip->to_irq)
- 		return;
-=20
--	handle =3D ACPI_HANDLE(chip->parent);
--	if (!handle)
--		return;
--
--	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
-);
--	if (ACPI_FAILURE(status))
-+	acpi_gpio =3D chip->acpi_gpio;
-+	if (!acpi_gpio)
- 		return;
-=20
- 	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
-@@ -1218,15 +1206,10 @@ static void acpi_gpiochip_free_regions(struct acp=
-i_gpio_chip *achip)
- 	struct gpio_chip *chip =3D achip->chip;
- 	acpi_handle handle =3D ACPI_HANDLE(chip->parent);
- 	struct acpi_gpio_connection *conn, *tmp;
--	acpi_status status;
-=20
--	status =3D acpi_remove_address_space_handler(handle, ACPI_ADR_SPACE_GPI=
-O,
--						   acpi_gpio_adr_space_handler);
--	if (ACPI_FAILURE(status)) {
--		dev_err(chip->parent,
--			"Failed to remove GPIO OpRegion handler\n");
--		return;
--	}
-+	/* Ignore the return status as the handle is likely no longer valid. */
-+	acpi_remove_address_space_handler(handle, ACPI_ADR_SPACE_GPIO,
-+					  acpi_gpio_adr_space_handler);
-=20
- 	list_for_each_entry_safe_reverse(conn, tmp, &achip->conns, node) {
- 		gpiochip_free_own_desc(conn->desc);
-@@ -1310,7 +1293,6 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
- {
- 	struct acpi_gpio_chip *acpi_gpio;
- 	struct acpi_device *adev;
--	acpi_status status;
-=20
- 	if (!chip || !chip->parent)
- 		return;
-@@ -1327,16 +1309,10 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
- 	}
-=20
- 	acpi_gpio->chip =3D chip;
-+	chip->acpi_gpio =3D acpi_gpio;
- 	INIT_LIST_HEAD(&acpi_gpio->events);
- 	INIT_LIST_HEAD(&acpi_gpio->deferred_req_irqs_list_entry);
-=20
--	status =3D acpi_attach_data(adev->handle, acpi_gpio_chip_dh, acpi_gpio)=
-;
--	if (ACPI_FAILURE(status)) {
--		dev_err(chip->parent, "Failed to attach ACPI GPIO chip\n");
--		kfree(acpi_gpio);
--		return;
--	}
--
- 	acpi_gpiochip_request_regions(acpi_gpio);
- 	acpi_gpiochip_scan_gpios(acpi_gpio);
- 	acpi_dev_clear_dependencies(adev);
-@@ -1345,25 +1321,16 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
- void acpi_gpiochip_remove(struct gpio_chip *chip)
- {
- 	struct acpi_gpio_chip *acpi_gpio;
--	acpi_handle handle;
--	acpi_status status;
-=20
- 	if (!chip || !chip->parent)
- 		return;
-=20
--	handle =3D ACPI_HANDLE(chip->parent);
--	if (!handle)
-+	acpi_gpio =3D chip->acpi_gpio;
-+	if (!acpi_gpio)
- 		return;
-=20
--	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
-);
--	if (ACPI_FAILURE(status)) {
--		dev_warn(chip->parent, "Failed to retrieve ACPI GPIO chip\n");
--		return;
--	}
--
- 	acpi_gpiochip_free_regions(acpi_gpio);
-=20
--	acpi_detach_data(handle, acpi_gpio_chip_dh);
- 	kfree(acpi_gpio);
- }
-=20
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 7f75c9a51874..698b92b1764c 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -529,6 +529,10 @@ struct gpio_chip {
- 	int (*of_xlate)(struct gpio_chip *gc,
- 			const struct of_phandle_args *gpiospec, u32 *flags);
- #endif /* CONFIG_OF_GPIO */
-+
-+#ifdef CONFIG_GPIO_ACPI
-+	struct acpi_gpio_chip *acpi_gpio;
-+#endif /* CONFIG_GPIO_ACPI */
- };
-=20
- char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)=
-;
---=20
-2.43.2
+v5:
+  - Update the pinctrl driver header file pinctrl-ma35.h
+    - Include platform_device.h to fix compile issues.
+
+v4:
+  - Update the pinctrl driver Kconfig
+    - Add depends to CONFIG_PINCTRL_MA35D1 to prevent compilation errors.
+  - Update the pinctrl driver
+    - Utilize devm_kcalloc() instead of devm_kzalloc().
+    - Employ ARRAY_SIZE() instead of sizeof()/sizeof().
+
+v3:
+  - Update DTS and YAML files
+    - Corrected the unit address of nodes gpioa ~ gpion.
+    - Removed the invalid "pin-default" node.
+    - Removed the phandle entry from "nuvoton,pins".
+  - Update pinctrl driver
+    - Fixed the Kconfig by using "depend on" instead of "if".
+    - Removed unused #include of header files.
+    - Utilized immutable irq_chip instead of dynamic irq_chip.
+    - Replaced ma35_dt_free_map() with pinconf_generic_dt_free_map().
+    - Implemented other minor fixes as suggested by the reviewer.
+
+v2:
+  - Update nuvoton,ma35d1-pinctrl.yaml
+    - Update the 'nuvoton,pins' to follow the style of rockchip pinctrl approch.
+    - Use power-source to indicate the pin voltage selection which follow the
+      realtek pinctrl approch.
+    - Instead of integer, use drive-strength-microamp to specify the real driving
+      strength capability of IO pins.
+  - Update ma35d1 pinctrl driver
+    - Add I/O drive strength lookup table for translating device tree setting
+      into control register.
+  - Remove ma35d1-pinfunc.h which is unused after update definition of 'nuvoton,pins'.
+
+Jacky Huang (3):
+  dt-bindings: reset: Add syscon to nuvoton ma35d1 system-management
+    node
+  dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
+  pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+
+ .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       |  163 ++
+ .../bindings/reset/nuvoton,ma35d1-reset.yaml  |    3 +-
+ drivers/pinctrl/nuvoton/Kconfig               |   19 +
+ drivers/pinctrl/nuvoton/Makefile              |    2 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c        | 1211 +++++++++++
+ drivers/pinctrl/nuvoton/pinctrl-ma35.h        |   51 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35d1.c      | 1797 +++++++++++++++++
+ 7 files changed, 3245 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
+
+-- 
+2.34.1
 
 
