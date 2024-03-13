@@ -1,163 +1,97 @@
-Return-Path: <linux-gpio+bounces-4264-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4265-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2420D879C14
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 20:08:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CB7587A02F
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 01:37:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CEAE328732D
-	for <lists+linux-gpio@lfdr.de>; Tue, 12 Mar 2024 19:08:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 65DFF1C21906
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 00:37:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6502D14262B;
-	Tue, 12 Mar 2024 19:08:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 23C926116;
+	Wed, 13 Mar 2024 00:37:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Lu4CU3Bn"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PSsvmZeI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E3441420D2
-	for <linux-gpio@vger.kernel.org>; Tue, 12 Mar 2024 19:08:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3E0EA930;
+	Wed, 13 Mar 2024 00:37:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710270519; cv=none; b=bKxnWo2WcWNQsAkCnvbREwh3apk/H9T4ewm8JxI27klsDBlhVh+QRKsOsWwb5DjjaamQ8a4jLQjyT90ejKGAuGRjmlAemO9m7YvHECXZKOATON7YVOLv5bb0ZTY4Ncyj9PouAoRgPBXMod6gnfeLFB30FAmJ4G9hsg7QOjdKl4M=
+	t=1710290259; cv=none; b=A0adGFvon3pX2rLtNEHi+wH7IwykUW7P4PNpAePxRPZZ2tMv9BfLGbHMBnt0QBDyK1nJ1X+fieY3G5bae1j0oEjMFgRjuscXezJs01EaDNI04r98xTLL69rxewJcIq4GUK7vw0B3CsGnrlznMsR2SGpGLgLPkAaiW/U0tF+jVN4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710270519; c=relaxed/simple;
-	bh=HOvM1INRucQgbLo4lsnsFEr6TFjoAs5K2HPCyrFjNb8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NPtXrP3CLd2NTjhUZT0jVcTlSYtMnB3w9JM4eZvDm9O0QH/UF3LnbJH2Eh8YVgxD+AUv1jvRfqu7bs6lGnGnL1L/6iFWHBEL4ThjmJQDlhydJ3n4Lv4+I++mnibi4aysohf34Uj3u8v4aO3I0ixzRbcppi5ym/+Ra2mA8gLANEo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Lu4CU3Bn; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-41329a665a8so2003375e9.3
-        for <linux-gpio@vger.kernel.org>; Tue, 12 Mar 2024 12:08:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710270516; x=1710875316; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=16YGdsT3Q2m5RXOX4ZkK+9AENjmmW2MP9xez+9u6hqY=;
-        b=Lu4CU3BnVUtZaUl5lHwUWd9rRlqSAkmhVaKaTpQNHknXRd1dUOynD9vUxrU9LBukMW
-         AV5nlkFlLw9yp7FiTdTBv5gFZXn8vjHAT1z0IaWayiu+IGGzLhqzpnjmDkCcTOzt6yi3
-         jOFZ2pZ40Nt9cnJ6LfV9laaqvzGc+5A/jfzfDyQ2Tdj0J6tkIpGdhd0kMTeuiwud9uVL
-         BF2vku0brV5VDgAnCHLQ7HYGxRNwlmCPFe8F/JbGNEoiqRPDWgc+cHDHIjiLDpYItxoX
-         rSVzQLucqIh4FwnlfQPPR8fVWZGas2035LKMjdivAxBazkvsumikkoImh6YwzBHR6Xq7
-         JCcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710270516; x=1710875316;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=16YGdsT3Q2m5RXOX4ZkK+9AENjmmW2MP9xez+9u6hqY=;
-        b=SXEXd5q1Ja7vjfrvUmPSdeucVrZG14GxSA5aDOz+TSNlySvLanyVKBG0e84HePBdtL
-         bYidfaLVD85MtIPd/Elan4e/dkqUqJBoK+qL67QGNnkcueViOQlJi4pSfQKbZAvVW0cT
-         hJoYPCzFIkhm0UqlhyeW2euJ22+Baxqpn89mZBsG4ZFpvryi0TQiCtgKNFWLzhjE7jce
-         0GLE75gwW+5sMi0TMdihAMBbH9hIR6yVzmY7Ecw2m1I877IrJH3S9oSPztC7cDJIN3DN
-         qWplF3jIzIuz+85wPQM2ErArTq4DWKbryXvxA4pTJv15lk4Sw8547nZDwvPCFniN8czA
-         5/4Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWIvpF+X1zJ0Xeql+jar+5lz2p0dS3n3FpMjX2x6YQd3/RrTNYb9I0CXYG5sO/aglvLS5UmrmQbedI6UmM4jCImMapN2Np3M2A/bQ==
-X-Gm-Message-State: AOJu0Yzc7WFkOZXuG5ZYTKMzndwqDUAgheLfNOOTC9igJIBZXv7YxWOX
-	VEDWaLPe4M1zYrCJGYsz5dl8RM4LPHqlAxFOrbgxX116d6CGTTelQ5aAIhQ9n20=
-X-Google-Smtp-Source: AGHT+IHXlK5FVG9W97jusqM5BnM2BtWdimJZJvNfvTf1XxKIxw2BoowRAjRbqipjQYBQG03wkXctvA==
-X-Received: by 2002:a05:600c:3b07:b0:413:27d0:45f4 with SMTP id m7-20020a05600c3b0700b0041327d045f4mr3657486wms.6.1710270513778;
-        Tue, 12 Mar 2024 12:08:33 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id r11-20020a05600c35cb00b004127057d6b9sm19857777wmq.35.2024.03.12.12.08.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Mar 2024 12:08:33 -0700 (PDT)
-Message-ID: <05a3763c-1855-4028-9f2a-b125c7ed58cc@linaro.org>
-Date: Tue, 12 Mar 2024 20:08:31 +0100
+	s=arc-20240116; t=1710290259; c=relaxed/simple;
+	bh=1SnPGZWN0QXG/cj+HeG9fCWJ3nuxPvrSGvhQr+67xqg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XyF2Za/rT92NcMcmmveXBsXPic9I0NhEV8PT2cLT8F5xevf/r9JgZMTU+h1iGZyltsgXiAR9kW6sg4LCVqgSphxL4zY876pldzBLRPXuQ2NazxQfKs0L6EB1U/s66svU0B8SzrgtaQCifoyewYxo3BmnC0obzeJIc5RivkllxZY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PSsvmZeI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 897F2C43390;
+	Wed, 13 Mar 2024 00:37:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710290259;
+	bh=1SnPGZWN0QXG/cj+HeG9fCWJ3nuxPvrSGvhQr+67xqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=PSsvmZeILe0xThjiru4Kga15JP/fW+1l8qlwVKVBHT8jT9Fp1TMJPjJ32D+rWpNIj
+	 TEfNf0niIVdNTsssrJJZMJqZf8sUTLRsX6u51ZZMJoDMTNsUST9sBGL46uF38dTZut
+	 yYIxBgR7iEq4/24utxzmBLoRYM5KeMkJVLnBGaqtVIvPhK2guawDaFjTtWIALzeaAf
+	 rXIu6KCkicc7CKZAgNLjMowqaFsPLAsMBOqOrxAipyIt1fBiVY56oixNsxO8dPEsgx
+	 8XdcXgzV2BnhKZCZhGEqybj98lgbIMYZ4KwDamk7r+eLzVrgfPk+qv16gyRo44kGSf
+	 vteE9PgDz5PnA==
+Date: Wed, 13 Mar 2024 01:37:35 +0100
+From: Andi Shyti <andi.shyti@kernel.org>
+To: Thomas Richard <thomas.richard@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>, 
+	Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, 
+	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, 
+	Janusz Krzysztofik <jmkrzyszt@gmail.com>, Peter Rosin <peda@axentia.se>, Vinod Koul <vkoul@kernel.org>, 
+	Kishon Vijay Abraham I <kishon@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>, 
+	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
+	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org, linux-pci@vger.kernel.org, 
+	gregory.clement@bootlin.com, theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, 
+	u-kumar1@ti.com
+Subject: Re: [PATCH v4 03/18] i2c: omap: wakeup the controller during
+ suspend() callback
+Message-ID: <z5sitoz6iz34v6nlfzc3ao3yijbzbsw2xxulqee2yuxx7sfnmi@pajsdc473jy2>
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-3-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pinctrl: samsung: drop unused header with
- register constants
-Content-Language: en-US
-To: Conor Dooley <conor@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-References: <20240312164428.692552-1-krzysztof.kozlowski@linaro.org>
- <20240312-numbly-starfish-d2ebb32a222d@spud>
- <20240312-disobey-playset-f3d451adf41c@spud>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240312-disobey-playset-f3d451adf41c@spud>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-3-6f1f53390c85@bootlin.com>
 
-On 12/03/2024 19:46, Conor Dooley wrote:
-> On Tue, Mar 12, 2024 at 06:44:17PM +0000, Conor Dooley wrote:
->> On Tue, Mar 12, 2024 at 05:44:28PM +0100, Krzysztof Kozlowski wrote:
->>> The bindings header for Samsung pin controller DTS pin values (holding
->>> register values in fact) was deprecated in v6.1 kernel in
->>> commit 9d9292576810 ("dt-bindings: pinctrl: samsung: deprecate header
->>> with register constants").  This was enough of time for users to switch
->>> to in-DTS headers, so drop the bindings header.
->>>
->>> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>
->> Have you checked whether U-Boot has also dropped use (or never did use)
->> of this header?
+Hi Thomas,
+
+On Mon, Mar 04, 2024 at 04:35:46PM +0100, Thomas Richard wrote:
+> A device may need the controller up during suspend_noirq() or
+> resume_noirq().
+> But if the controller is autosuspended, there is no way to wakeup it during
+> suspend_noirq() or resume_noirq() because runtime pm is disabled at this
+> time.
 > 
-> nvm, I checked it myself and Caleb's series that moves things to use
-> upstream headers does't seem to use this either.
+> The suspend() callback wakes up the controller, so it is available until
+> its suspend_noirq() callback (pm_runtime_force_suspend()).
+> During the resume, it's restored by resume_noirq() callback
+> (pm_runtime_force_resume()). Then resume() callback enables autosuspend.
 > 
+> So the controller is up during a little time slot in suspend and resume
+> sequences even if it's not used.
+> 
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-U-Boot did not use it, but even if they did, they had more than one year
-to change. The header had a big-fat warning.
+Reviewed-by: Andi Shyti <andi.shyti@kernel.org>
 
-Best regards,
-Krzysztof
-
+Thanks,
+Andi
 
