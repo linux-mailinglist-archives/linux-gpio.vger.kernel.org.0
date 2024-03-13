@@ -1,195 +1,278 @@
-Return-Path: <linux-gpio+bounces-4268-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4269-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D21F87A1B6
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 03:42:30 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4EC1687A1C9
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 04:03:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 35FDBB21E93
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 02:42:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DEC01C21A60
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 03:03:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73A4AD5D;
-	Wed, 13 Mar 2024 02:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B48EED26D;
+	Wed, 13 Mar 2024 03:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="ooXevoVx"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="IIkfJKG+"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2075.outbound.protection.outlook.com [40.107.255.75])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971EA10953;
-	Wed, 13 Mar 2024 02:42:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.75
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710297741; cv=fail; b=g2RiWQDfe8YB9QtWUrDQIXuWR5A6Nu/E7KaNCthRhbyzIwFyf5rShW7/F8fbHPMWdmz6ebA0Gnp5iCdX5AiGCUSJBpij7ByDzQKfNGz+E1vA9hOoQighVxbjBcMD1rTadcPVe0oZkJU8C1oNli6GAO0Aaq6zIy68BYc4a2YUe0M=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710297741; c=relaxed/simple;
-	bh=9qUqyT3UDc4Lec1MNa18dtSyMYFqOdzXneQpqUF7zds=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=saOiD/E5Dpcn1TMl3tbihsIc3ThXv1VfOuNafu3WfoJN3u7A0sB7j4cqeQrUKlYtljxRNI+NsvaWsWVCkG7SVwjhslIiBiFsh7f9oFdRd/RRn4k4J6FTEJ3gB/wtlMqoS47uxlCqAggbCJNyQRcEFOnHC0WPUuWbPGwuebSpFgw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=ooXevoVx; arc=fail smtp.client-ip=40.107.255.75
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XU2Ru2pTFlACRp50PAOQ1nACEv5CXPims4UexZSSNPZhEbAAbvRo/PCKde70j+A54s+W3lcAJQK9+nyX+gLbKzY63jB69KAGs9IToJoxpsOrxN6ao/joPcQT0shVySTDwODMePX5gNorygXjMjsec48Ng+EKqza7JofgNG4sJhOv4hQQFEqv92nUph+Qv5k9c4EX550FApjYl22ICEl2uEXq1bKwF7KsCnDlBtbekhaacMAQ1Q5sIFPJ0FaDI/d/heqZ4a+G/i4m0dD6QW05inpPFlTnaIA2RtleGsLw9OwRg8RA8m9JBs/XjaAL/YQHTP8VD2ylNBJMWh2mtqO06Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TW3Lfg28Nu7zLIyIVqNz+ndBJZNbcytAHk0U0JB2VSc=;
- b=kEVhYn1yjVpexqtGVefFKo5jbdnoPZFQ59XPDefa6BhpujZITFa8kFWjbGA2hP4TUHeEUG6qsix1jO//1MNDz/pbjjCsdgcXpauNU1DG4zs/gb2+nenkewSk3Wffb4xr9d9Yv+W92YhWakhZ/H+9/Xrmy95spotgCACGEf7cnLmxqxt/vZydTNyKuWUPB64n9BC+4UDBxoeGR8mNNhqjyBJECJHjNlQudYZi6TWY8UGbm+J22YLF5u0z3od2G0eO8YwHA0GarTgJ+XH81YYB+YUtKFCElVs+KfkJJyOOYq1Yb+rQfsvGUWoJYZISZxPWhUKrjbLQZATPP3h74Cfo0g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
- 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
- (p=quarantine sp=quarantine pct=100) action=quarantine
- header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TW3Lfg28Nu7zLIyIVqNz+ndBJZNbcytAHk0U0JB2VSc=;
- b=ooXevoVxQrcILK+eaSQJI6vc0w9cIo7tGmnq3x3BvbNtYwA8mc4u3uEjH+g6bULpHev01HNwD5hxJarLQmdDmawkG35WzCVbKA+JG9bA1TsvOElK/6LKnKWzB/1dvsiMG/bobMAUz5mM8HXTmZZa7nuB8jBgE5aX3FhhpI/OmCUhG+NY99Plu56ZPX5Nvec39vWToaa8QWkrSvpFOcgfG0DrcSJH4NBxwWcHZN2Jxt7ETYHPEr/fy1AlWUpBe9TYjTm9Q+IBk6/Udk+VBofGpOSISK4gq0yYuIU9j0hBdQUd3UmTMZ9KNykzRDQ/zQE+izGr3TiGh38z6H7D/f9Scg==
-Received: from SI2PR02CA0022.apcprd02.prod.outlook.com (2603:1096:4:195::23)
- by TYSPR04MB7714.apcprd04.prod.outlook.com (2603:1096:405:57::12) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Wed, 13 Mar
- 2024 02:42:14 +0000
-Received: from HK2PEPF00006FB0.apcprd02.prod.outlook.com
- (2603:1096:4:195:cafe::94) by SI2PR02CA0022.outlook.office365.com
- (2603:1096:4:195::23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19 via Frontend
- Transport; Wed, 13 Mar 2024 02:42:13 +0000
-X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
- smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
- header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
-Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
- designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
- client-ip=211.20.1.79; helo=localhost.localdomain;
-Received: from localhost.localdomain (211.20.1.79) by
- HK2PEPF00006FB0.mail.protection.outlook.com (10.167.8.6) with Microsoft SMTP
- Server id 15.20.7386.12 via Frontend Transport; Wed, 13 Mar 2024 02:42:12
- +0000
-From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
-To: patrick@stwcx.xyz,
-	Andrew Jeffery <andrew@codeconstruct.com.au>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Joel Stanley <joel@jms.id.au>
-Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
-	linux-aspeed@lists.ozlabs.org,
-	openbmc@lists.ozlabs.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] pinctrl: pinctrl-aspeed-g6: correct the offset of SCU630
-Date: Wed, 13 Mar 2024 10:42:10 +0800
-Message-Id: <20240313024210.31452-1-Delphine_CC_Chiu@wiwynn.com>
-X-Mailer: git-send-email 2.25.1
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2EB4D51B
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Mar 2024 03:03:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710298990; cv=none; b=HiHxPltyid7LveK8p9+M9gW+hc7dz5qdxm8om7HaHe0Jsd4pXqnWBqYU9E7mS+we1tklsjmhv3Amk4B2tfHjy9wDfyQ8ww3tzdQnnVkA41GNXkfyMpHTnwb7gKbT5an9T133xo8AR5PEAvTPD0nL3Fohq2gzOwW28JaFZKob2jo=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710298990; c=relaxed/simple;
+	bh=gFW5hMTbaG1K47hGfNLNUOgpap+1DIiUz88Htc00KHs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u+WM7egNE5apOBK/jAxlP05dNNoD14lLAQa7X8d6tPJFjOR9A7qhvHczLahgMyV6TpsT87obeUsggwTu49SXw6qPCgCN1FhC4EUUnFfeYaLEOe19pgDykxKeie2WW5hWP3J5kDVtue6xl99wGkPsP8n8o2lnUbXJwmar7+JBP/E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=IIkfJKG+; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3A38E2C03B6;
+	Wed, 13 Mar 2024 16:03:03 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1710298983;
+	bh=/oXEFZFkNeReiz2Qe1ck1mRocFWyHSVCru3ultVwEQ4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=IIkfJKG+oZVGHiYCak2oaFPsilWdr7u/IiNuEcU78/fL6hoQqBti4cc9tPTG6EyYy
+	 nWVDGelhPAB5RQof0Cu3YQtwmUAR9FvsinxaL50bEDlEsjMvmJkzTGLOuZfE8mAkkv
+	 S36/1YnBOtI2paNdXWejl9abN8Ahg+wy/kEpkiNpQgljNwbcyofc8a+NL6ADBXHoHA
+	 lcYdrI0uBJ45Yupoa+klXxeNuhIjELXKWZLj3dU1YUTuz3IDs6BVZqDostWkdLofAr
+	 1nj/sZBhN2WQ8QJTOqGR1TWDgWemKAGlsuCRJeKQrqfonvzAaS3suc4bF6zhW2YTII
+	 XInkZF0PQ7N9A==
+Received: from pat.atlnz.lc (Not Verified[10.32.16.33]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65f117660000>; Wed, 13 Mar 2024 16:03:02 +1300
+Received: from hamishm-dl.ws.atlnz.lc (hamishm-dl.ws.atlnz.lc [10.33.24.13])
+	by pat.atlnz.lc (Postfix) with ESMTP id F37C413ED56;
+	Wed, 13 Mar 2024 16:03:02 +1300 (NZDT)
+Received: by hamishm-dl.ws.atlnz.lc (Postfix, from userid 1133)
+	id F119124092D; Wed, 13 Mar 2024 16:03:02 +1300 (NZDT)
+From: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+To: mika.westerberg@linux.intel.com,
+	andriy.shevchenko@linux.intel.com,
+	linus.walleij@linaro.org,
+	brgl@bgdev.pl
+Cc: linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org,
+	Hamish Martin <hamish.martin@alliedtelesis.co.nz>
+Subject: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
+Date: Wed, 13 Mar 2024 16:02:51 +1300
+Message-ID: <20240313030251.1049624-1-hamish.martin@alliedtelesis.co.nz>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB0:EE_|TYSPR04MB7714:EE_
-Content-Type: text/plain
-X-MS-Office365-Filtering-Correlation-Id: 2fbff89c-6ee3-4525-5767-08dc4307300f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	oaSuPh/Z17boEIZKsqtTRtXIQ1cQr3gU/6fIG5ckwfV+qwoKJxPxf1AsDrYPjNiVPmYD8vHJ+Q2aTlKji3jg5l4Hlg9P7tbFDf6uVNnp0pi7xylsNM2n4m6n4TFFmMNqL54bBYig6ED4rki0AjZpEFS4SZZp2meWty5Kj3nRLpV4bJxABCAOzdjIz1BP7V7zsME98sjgiTm5Rlz1UvSOljD67ByAG9nKFwJqDzZgzBdkBiTcA0yQcrWQSeM77EnRG9gYpufMI4PjX81t6bB4exgFBJ4La5C9Rvgd+cFo5rURT9RsNRltfbg9h4cppzE/cB7HWR1b9sIOgBrCR65TArQuxk+m0uIDjkV9U+J84FODw3dXEGtg+93VN4RH3lu+eQH5ZQ5r51vyrtvuoY60Tr8QYOL/RR6gYykEmbq0P6FVm3TRieH9EbG8qv2l6wBYZLP9ZnjaFwGlqhSFoR+QMMgfAY4OozGhBcYIr8blxAVKP6MPa/S0yG5MSyRUjXgjeQPmu5s9lSRWQS2swys/yC3GjPMHb+EAjcuhdRZPXtZ9AruptUW4yRSDniwmPaq8BqLjVw0ABuxQLBz4X89mFQfOFkSbgnBGSYRT6bDKNSbXUbw58RcAa4f+aF2r0JyAA3AKWFShm7xUUyWrWHjty1sCbuqHzzFemWQH9JqmocI5vDLylN20rELRJsvlFwfIHoEndgKdhBPXq/MjlZwDZ9LJY1knaQOqIqMaZjp+X32MCWrqrNFkcD/C453XeJcI
-X-Forefront-Antispam-Report:
-	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
-X-OriginatorOrg: wiwynn.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 02:42:12.8035
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2fbff89c-6ee3-4525-5767-08dc4307300f
-X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
-X-MS-Exchange-CrossTenant-AuthSource:
-	HK2PEPF00006FB0.apcprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR04MB7714
+Content-Transfer-Encoding: quoted-printable
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=BKkQr0QG c=1 sm=1 tr=0 ts=65f11767 a=KLBiSEs5mFS1a/PbTCJxuA==:117 a=K6JAEmCyrfEA:10 a=4Qf1ARyw2_cHiD8XAKQA:9 a=3ZKOabzyN94A:10
+X-SEG-SpamProfiler-Score: 0
+x-atlnz-ls: pat
 
-Description:
-Correct the offset of "Disable GPIO Internal Pull-Down #4" register that
-should be 630h according to the AST2620 datasheet.
+A memory leak occurs in a scenario where an ACPI SSDT overlay is removed
+and that is the trigger for the removal of the acpi_gpio_chip.
+This occurs because we use the ACPI_HANDLE of the chip->parent as a
+convenient location to tie the 'struct acpi_gpio_chip' to, using
+acpi_attach_data().
+This is fine in the usual case of removal of the 'struct acpi_gpio_chip'
+via a call to acpi_gpiochip_remove() because usually the ACPI data is
+still valid.
+But in the case of an SSDT overlay removal, the ACPI data has been
+marked as invalid before the removal code is triggered (see the setting
+of the acpi_device handle to INVALID_ACPI_HANDLE in
+acpi_scan_drop_device()). This means that by the time we execute
+acpi_gpiochip_remove(), the handles are invalid and we are unable to
+retrieve the 'struct acpi_gpio_chip' using acpi_get_data(). Unable to
+get our data, we hit the failure case and see the following warning
+logged:
+  Failed to retrieve ACPI GPIO chip
+This means we also fail to kfree() the struct at the end of
+acpi_gpiochip_remove().
 
-Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+The fix is to no longer tie the acpi_gpio_chip data to the ACPI data,
+but instead hang it directly from the 'struct gpio_chip' with a new
+field. This decouples the lifecycle of the acpi_gpio_chip from the ACPI
+data, and ties it to the gpio_chip. This seems a much better place since
+they share a common lifecycle.
+
+The general concept of attaching data to the ACPI objects may also need
+revisiting in light of the issue this patch addresses. For instance
+i2c_acpi_remove_space_handler() is vulnerable to a similar leak due to
+using acpi_bus_get_private_data(), which just wraps acpi_attach_data().
+This may need a more widespread change than is addressed in this patch.
+
+Signed-off-by: Hamish Martin <hamish.martin@alliedtelesis.co.nz>
 ---
- drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 34 +++++++++++-----------
- 1 file changed, 17 insertions(+), 17 deletions(-)
+ drivers/gpio/gpiolib-acpi.c | 57 ++++++++-----------------------------
+ include/linux/gpio/driver.h |  4 +++
+ 2 files changed, 16 insertions(+), 45 deletions(-)
 
-diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-index d376fa7114d1..029efe16f8cc 100644
---- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-+++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
-@@ -43,7 +43,7 @@
- #define SCU614		0x614 /* Disable GPIO Internal Pull-Down #1 */
- #define SCU618		0x618 /* Disable GPIO Internal Pull-Down #2 */
- #define SCU61C		0x61c /* Disable GPIO Internal Pull-Down #3 */
--#define SCU620		0x620 /* Disable GPIO Internal Pull-Down #4 */
-+#define SCU630		0x630 /* Disable GPIO Internal Pull-Down #4 */
- #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
- #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
- #define SCU690		0x690 /* Multi-function Pin Control #24 */
-@@ -2495,38 +2495,38 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
- 	ASPEED_PULL_DOWN_PINCONF(D14, SCU61C, 0),
- 
- 	/* GPIOS7 */
--	ASPEED_PULL_DOWN_PINCONF(T24, SCU620, 23),
-+	ASPEED_PULL_DOWN_PINCONF(T24, SCU630, 23),
- 	/* GPIOS6 */
--	ASPEED_PULL_DOWN_PINCONF(P23, SCU620, 22),
-+	ASPEED_PULL_DOWN_PINCONF(P23, SCU630, 22),
- 	/* GPIOS5 */
--	ASPEED_PULL_DOWN_PINCONF(P24, SCU620, 21),
-+	ASPEED_PULL_DOWN_PINCONF(P24, SCU630, 21),
- 	/* GPIOS4 */
--	ASPEED_PULL_DOWN_PINCONF(R26, SCU620, 20),
-+	ASPEED_PULL_DOWN_PINCONF(R26, SCU630, 20),
- 	/* GPIOS3*/
--	ASPEED_PULL_DOWN_PINCONF(R24, SCU620, 19),
-+	ASPEED_PULL_DOWN_PINCONF(R24, SCU630, 19),
- 	/* GPIOS2 */
--	ASPEED_PULL_DOWN_PINCONF(T26, SCU620, 18),
-+	ASPEED_PULL_DOWN_PINCONF(T26, SCU630, 18),
- 	/* GPIOS1 */
--	ASPEED_PULL_DOWN_PINCONF(T25, SCU620, 17),
-+	ASPEED_PULL_DOWN_PINCONF(T25, SCU630, 17),
- 	/* GPIOS0 */
--	ASPEED_PULL_DOWN_PINCONF(R23, SCU620, 16),
-+	ASPEED_PULL_DOWN_PINCONF(R23, SCU630, 16),
- 
- 	/* GPIOR7 */
--	ASPEED_PULL_DOWN_PINCONF(U26, SCU620, 15),
-+	ASPEED_PULL_DOWN_PINCONF(U26, SCU630, 15),
- 	/* GPIOR6 */
--	ASPEED_PULL_DOWN_PINCONF(W26, SCU620, 14),
-+	ASPEED_PULL_DOWN_PINCONF(W26, SCU630, 14),
- 	/* GPIOR5 */
--	ASPEED_PULL_DOWN_PINCONF(T23, SCU620, 13),
-+	ASPEED_PULL_DOWN_PINCONF(T23, SCU630, 13),
- 	/* GPIOR4 */
--	ASPEED_PULL_DOWN_PINCONF(U25, SCU620, 12),
-+	ASPEED_PULL_DOWN_PINCONF(U25, SCU630, 12),
- 	/* GPIOR3*/
--	ASPEED_PULL_DOWN_PINCONF(V26, SCU620, 11),
-+	ASPEED_PULL_DOWN_PINCONF(V26, SCU630, 11),
- 	/* GPIOR2 */
--	ASPEED_PULL_DOWN_PINCONF(V24, SCU620, 10),
-+	ASPEED_PULL_DOWN_PINCONF(V24, SCU630, 10),
- 	/* GPIOR1 */
--	ASPEED_PULL_DOWN_PINCONF(U24, SCU620, 9),
-+	ASPEED_PULL_DOWN_PINCONF(U24, SCU630, 9),
- 	/* GPIOR0 */
--	ASPEED_PULL_DOWN_PINCONF(V25, SCU620, 8),
-+	ASPEED_PULL_DOWN_PINCONF(V25, SCU630, 8),
- 
- 	/* GPIOX7 */
- 	ASPEED_PULL_DOWN_PINCONF(AB10, SCU634, 31),
--- 
-2.25.1
+diff --git a/drivers/gpio/gpiolib-acpi.c b/drivers/gpio/gpiolib-acpi.c
+index cd3e9657cc36..14d29902391f 100644
+--- a/drivers/gpio/gpiolib-acpi.c
++++ b/drivers/gpio/gpiolib-acpi.c
+@@ -180,11 +180,6 @@ static irqreturn_t acpi_gpio_irq_handler_evt(int irq=
+, void *data)
+ 	return IRQ_HANDLED;
+ }
+=20
+-static void acpi_gpio_chip_dh(acpi_handle handle, void *data)
+-{
+-	/* The address of this function is used as a key. */
+-}
+-
+ bool acpi_gpio_get_irq_resource(struct acpi_resource *ares,
+ 				struct acpi_resource_gpio **agpio)
+ {
+@@ -500,18 +495,17 @@ void acpi_gpiochip_request_interrupts(struct gpio_c=
+hip *chip)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio;
+ 	acpi_handle handle;
+-	acpi_status status;
+ 	bool defer;
+=20
+ 	if (!chip->parent || !chip->to_irq)
+ 		return;
+=20
+-	handle =3D ACPI_HANDLE(chip->parent);
+-	if (!handle)
++	acpi_gpio =3D chip->acpi_gpio;
++	if (!acpi_gpio)
+ 		return;
+=20
+-	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
+);
+-	if (ACPI_FAILURE(status))
++	handle =3D ACPI_HANDLE(chip->parent);
++	if (!handle)
+ 		return;
+=20
+ 	if (acpi_quirk_skip_gpio_event_handlers())
+@@ -545,18 +539,12 @@ void acpi_gpiochip_free_interrupts(struct gpio_chip=
+ *chip)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio;
+ 	struct acpi_gpio_event *event, *ep;
+-	acpi_handle handle;
+-	acpi_status status;
+=20
+ 	if (!chip->parent || !chip->to_irq)
+ 		return;
+=20
+-	handle =3D ACPI_HANDLE(chip->parent);
+-	if (!handle)
+-		return;
+-
+-	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
+);
+-	if (ACPI_FAILURE(status))
++	acpi_gpio =3D chip->acpi_gpio;
++	if (!acpi_gpio)
+ 		return;
+=20
+ 	mutex_lock(&acpi_gpio_deferred_req_irqs_lock);
+@@ -1218,15 +1206,10 @@ static void acpi_gpiochip_free_regions(struct acp=
+i_gpio_chip *achip)
+ 	struct gpio_chip *chip =3D achip->chip;
+ 	acpi_handle handle =3D ACPI_HANDLE(chip->parent);
+ 	struct acpi_gpio_connection *conn, *tmp;
+-	acpi_status status;
+=20
+-	status =3D acpi_remove_address_space_handler(handle, ACPI_ADR_SPACE_GPI=
+O,
+-						   acpi_gpio_adr_space_handler);
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(chip->parent,
+-			"Failed to remove GPIO OpRegion handler\n");
+-		return;
+-	}
++	/* Ignore the return status as the handle is likely no longer valid. */
++	acpi_remove_address_space_handler(handle, ACPI_ADR_SPACE_GPIO,
++					  acpi_gpio_adr_space_handler);
+=20
+ 	list_for_each_entry_safe_reverse(conn, tmp, &achip->conns, node) {
+ 		gpiochip_free_own_desc(conn->desc);
+@@ -1310,7 +1293,6 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio;
+ 	struct acpi_device *adev;
+-	acpi_status status;
+=20
+ 	if (!chip || !chip->parent)
+ 		return;
+@@ -1327,16 +1309,10 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
+ 	}
+=20
+ 	acpi_gpio->chip =3D chip;
++	chip->acpi_gpio =3D acpi_gpio;
+ 	INIT_LIST_HEAD(&acpi_gpio->events);
+ 	INIT_LIST_HEAD(&acpi_gpio->deferred_req_irqs_list_entry);
+=20
+-	status =3D acpi_attach_data(adev->handle, acpi_gpio_chip_dh, acpi_gpio)=
+;
+-	if (ACPI_FAILURE(status)) {
+-		dev_err(chip->parent, "Failed to attach ACPI GPIO chip\n");
+-		kfree(acpi_gpio);
+-		return;
+-	}
+-
+ 	acpi_gpiochip_request_regions(acpi_gpio);
+ 	acpi_gpiochip_scan_gpios(acpi_gpio);
+ 	acpi_dev_clear_dependencies(adev);
+@@ -1345,25 +1321,16 @@ void acpi_gpiochip_add(struct gpio_chip *chip)
+ void acpi_gpiochip_remove(struct gpio_chip *chip)
+ {
+ 	struct acpi_gpio_chip *acpi_gpio;
+-	acpi_handle handle;
+-	acpi_status status;
+=20
+ 	if (!chip || !chip->parent)
+ 		return;
+=20
+-	handle =3D ACPI_HANDLE(chip->parent);
+-	if (!handle)
++	acpi_gpio =3D chip->acpi_gpio;
++	if (!acpi_gpio)
+ 		return;
+=20
+-	status =3D acpi_get_data(handle, acpi_gpio_chip_dh, (void **)&acpi_gpio=
+);
+-	if (ACPI_FAILURE(status)) {
+-		dev_warn(chip->parent, "Failed to retrieve ACPI GPIO chip\n");
+-		return;
+-	}
+-
+ 	acpi_gpiochip_free_regions(acpi_gpio);
+=20
+-	acpi_detach_data(handle, acpi_gpio_chip_dh);
+ 	kfree(acpi_gpio);
+ }
+=20
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 7f75c9a51874..698b92b1764c 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -529,6 +529,10 @@ struct gpio_chip {
+ 	int (*of_xlate)(struct gpio_chip *gc,
+ 			const struct of_phandle_args *gpiospec, u32 *flags);
+ #endif /* CONFIG_OF_GPIO */
++
++#ifdef CONFIG_GPIO_ACPI
++	struct acpi_gpio_chip *acpi_gpio;
++#endif /* CONFIG_GPIO_ACPI */
+ };
+=20
+ char *gpiochip_dup_line_label(struct gpio_chip *gc, unsigned int offset)=
+;
+--=20
+2.43.2
 
 
