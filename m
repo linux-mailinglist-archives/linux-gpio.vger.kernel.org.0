@@ -1,133 +1,117 @@
-Return-Path: <linux-gpio+bounces-4292-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4293-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id BBD2A87A715
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 12:27:16 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EAB1787A73C
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 12:48:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 564101F23EBD
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 11:27:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9FEDE1F2109A
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 11:48:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AA4E33FB07;
-	Wed, 13 Mar 2024 11:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 708903F9CE;
+	Wed, 13 Mar 2024 11:48:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AN5eS90K"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="is1MNn0M"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com [209.85.222.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 067593F9CB;
-	Wed, 13 Mar 2024 11:26:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5F753F9C7
+	for <linux-gpio@vger.kernel.org>; Wed, 13 Mar 2024 11:48:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710329221; cv=none; b=t1zgwnAw1Y6ZtJu0EQZxGivA79Sg2Z6IfuIWAQex7QIdQrNWlY0ufmrlMEJkreXC74J4n7BtPCPbbUZBXVH9iOFz2G8+CE/sln/w+g+S2cScmrPZcG8/N1IYr+sdNSHDGSSoL2yFPGBQd/OxVJnpl8qy89Pm4tCuOYTZb6hrlyg=
+	t=1710330492; cv=none; b=KFB1gbJuKqmG0GK7/CdRzC3kSGtL7oBIljZEAcAOCABtC2+7b4PXncoXKzZGYXw+53neaQsDe3EYynKMtrRVFjXpnk5mIXFwASAAwaupt+OeBhhUcHdKoFxYYch4mMCnaqFV9yLX0bPc3+rGpuDq23I2YyRVdJ7tH1hQc/K4+eA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710329221; c=relaxed/simple;
-	bh=XuGuW6XvhnOtp6HfIRnoPoGh3CLC2AY/FTeix59wTzg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ev09KNA16tTRG1FyWdRGxJNiKbGUdWoVoA/2l+aEbkbVm92qRQeiSxbO7I1uInS0nlGJ8vAISWmRE/9+5QxfPu+VkeAjVyxcbJ4jrTW2YK+MDNqa/+vTQ+lxLH2a9gmtYmSBsz2QbuYaIy4RgREm4jufgNY7cdnTI7XbUSHn6Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AN5eS90K; arc=none smtp.client-ip=192.198.163.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710329220; x=1741865220;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=XuGuW6XvhnOtp6HfIRnoPoGh3CLC2AY/FTeix59wTzg=;
-  b=AN5eS90KQ9ejKsb6NQQ/RoJkX531pgkAIrr1re1nleKfQcNIF+NBYyu/
-   Gdetk/Xd0js0amFYlP1+N1cBuHIxIGlaY0H7BWA6/QfC4APR/TUupW9RZ
-   bTtP9cKME1wNHkdRU1qGV5UfISSM72fYuutuYQq5UcRhWN39bsmaKIyJf
-   rMB7Fu3X0F9peHjG6YJzf7qhV2EQzTjn5pAb+mxqfJq/BD/ruQoEAbsZ6
-   OPWQ2EHuXODFIlC8zFL/2rSn6w2fB+VZmsJucuv4mafp4HcfFWHPusoDW
-   4d520cpgPVQkRt6UWAtYcc0TERBEbAE+XGSs+cmSOB0L/NoLmUeYPBRno
-   Q==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="8028979"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="8028979"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 04:26:59 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11011"; a="914429450"
-X-IronPort-AV: E=Sophos;i="6.07,122,1708416000"; 
-   d="scan'208";a="914429450"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Mar 2024 04:26:57 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rkMl4-0000000CCMO-2E56;
-	Wed, 13 Mar 2024 13:26:54 +0200
-Date: Wed, 13 Mar 2024 13:26:54 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Hamish Martin <hamish.martin@alliedtelesis.co.nz>,
-	"Rafael J. Wysocki" <rafael@kernel.org>
-Cc: mika.westerberg@linux.intel.com, linus.walleij@linaro.org,
-	brgl@bgdev.pl, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org
-Subject: Re: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
-Message-ID: <ZfGNfucm2-izJBfd@smile.fi.intel.com>
-References: <20240313030251.1049624-1-hamish.martin@alliedtelesis.co.nz>
- <ZfGMNWtFrgsuUdLz@smile.fi.intel.com>
+	s=arc-20240116; t=1710330492; c=relaxed/simple;
+	bh=DNFni+XUTW3FICrmk/m7hXGzpOYHOb0w8uarqKy8hAQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=kf8e+LkAE4g6lf8s3nVm9DLXqFwWHyTU3039KYmd4d/O9AJFj7hzNYdUq9ggY+kD8D4Piz7Wg40OSkURfkuA/IrF61UQLuKkmH0jFO1cUZA65WG7dLFVC9ve4Ub/I/xQnTsWjYYECQGKtVo+KpSPv6p5xAHpCXxee1Lg3G4sFLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=is1MNn0M; arc=none smtp.client-ip=209.85.222.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-7d130979108so3589917241.1
+        for <linux-gpio@vger.kernel.org>; Wed, 13 Mar 2024 04:48:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1710330489; x=1710935289; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=DNFni+XUTW3FICrmk/m7hXGzpOYHOb0w8uarqKy8hAQ=;
+        b=is1MNn0MzDh2bNxd/Mu5MUtXha5AO9+HWfGhIwfIZQEiAlvyH+p2N5hq6MG1aVtn1G
+         wjWs+GLQ3MAKVmHnmFI35vIpBINl6pFOKcxI6y/6CXNpnTqUbC9cwNYt0rNWyC/qcrjs
+         MsQkCqn8GvYtf5+PIYTSLM6H7J2R9fyq+d9se5je5HiD5BpGYsRW7Z46GZQnWenOMceD
+         RdYq6Dw+i1iDq6gb3Fgc6YB8CyApeJs7X1u0WtdmDUCk372RLxhrhhiNZcwNPWqjtyIx
+         4g/Zm2pkeK9gpNzUNFoqTujAsWjho9ieUkMkoo4DQawydOThl01CRRJPgYDzhtmTe2uz
+         iKSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710330489; x=1710935289;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=DNFni+XUTW3FICrmk/m7hXGzpOYHOb0w8uarqKy8hAQ=;
+        b=qNeoztmdGbPu33vHuR9HBXh4UuzsFgeM485zEul2dQBEBWi6YLrcgb7mBBaKLHPcdO
+         GDyPxOY+0pn/QCTxsxo8e0mKUIyx3PQQVzfwE6JTum6WK4Vpsg+DGnl3ob+pE5LGm+WW
+         G3Iw26LNiAjFHQ4UyD2hjErqBwFXxM9Rwdh/DYqipze7ftluG8oVmhdwKjQvyv6vOvyv
+         lmM3nByAotJIdZ7L37e4D/T2BLml1NSDkCiAGgdaqP+YYlY1BrnLf6IvDb5nvxwrNEby
+         28LqEbwPOXIoTym1mWb3DeF8RhnpQOd9Zp6cvd5oMs0m2sDU1tJw/PSD1k8VcTg5EiSI
+         IX5A==
+X-Forwarded-Encrypted: i=1; AJvYcCXvKQyrSCFUvPsnYq6t3WlW6ThtnOkyF5NX5l4wZJLjEi6p8FJ0KX5kJM7ZKRGNMfgiRASD2IHsCC6QEgXIxg4vBr6hR9dkRIv+Qg==
+X-Gm-Message-State: AOJu0Yw1DuQGBCVAAreg8vQlQ/NAdWefRe3lUX41s81YSFB465hW0Ug/
+	GvYIGCHAaKwdV/5mbA9bCh5HKt0+ygXVEyOksgdsbNJ96NhmvrUYTZNGQILQrSaTgKpq6Ji0x3O
+	007YcK8TI0l9HJQb8D/T5SrMuIZviDSRmT1ju6w==
+X-Google-Smtp-Source: AGHT+IGluT9xzhiFMWC0Cc9+B6tkk59Ep9zHKSImJGtOuPJFypPJghuHNvH8l+0pIM+ELjCSmDlX3v320pWMu4ltdjU=
+X-Received: by 2002:a67:af02:0:b0:473:2066:6df0 with SMTP id
+ v2-20020a67af02000000b0047320666df0mr9214696vsl.33.1710330489649; Wed, 13 Mar
+ 2024 04:48:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfGMNWtFrgsuUdLz@smile.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20240307135109.3778316-1-andriy.shevchenko@linux.intel.com>
+ <CACRpkda6bykOFY6gcZqRKLAnprUooZooQ_g7Rj_63da2akbwtA@mail.gmail.com> <ZfGKkjxIT9AEd8dy@smile.fi.intel.com>
+In-Reply-To: <ZfGKkjxIT9AEd8dy@smile.fi.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 13 Mar 2024 12:47:58 +0100
+Message-ID: <CAMRc=McjYKCLGKk42SWdCy3Lc=B4B21WpS1kvx_d66itHKsQzQ@mail.gmail.com>
+Subject: Re: [PATCH v1 0/3] gpiolib: Get rid of gpio_free_array()/gpio_request_array()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, 
+	Alex Shi <alexs@kernel.org>, Yanteng Si <siyanteng@loongson.cn>, 
+	Hu Haowen <2023002089@link.tyut.edu.cn>, Daniel Mack <daniel@zonque.org>, 
+	Haojian Zhuang <haojian.zhuang@gmail.com>, Robert Jarzmik <robert.jarzmik@free.fr>, 
+	Russell King <linux@armlinux.org.uk>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Mar 13, 2024 at 01:21:25PM +0200, Andy Shevchenko wrote:
-> On Wed, Mar 13, 2024 at 04:02:51PM +1300, Hamish Martin wrote:
-> > A memory leak occurs in a scenario where an ACPI SSDT overlay is removed
-> > and that is the trigger for the removal of the acpi_gpio_chip.
-> > This occurs because we use the ACPI_HANDLE of the chip->parent as a
-> > convenient location to tie the 'struct acpi_gpio_chip' to, using
-> > acpi_attach_data().
-> > This is fine in the usual case of removal of the 'struct acpi_gpio_chip'
-> > via a call to acpi_gpiochip_remove() because usually the ACPI data is
-> > still valid.
-> > But in the case of an SSDT overlay removal, the ACPI data has been
-> > marked as invalid before the removal code is triggered (see the setting
-> > of the acpi_device handle to INVALID_ACPI_HANDLE in
-> > acpi_scan_drop_device()). This means that by the time we execute
-> > acpi_gpiochip_remove(), the handles are invalid and we are unable to
-> > retrieve the 'struct acpi_gpio_chip' using acpi_get_data(). Unable to
-> > get our data, we hit the failure case and see the following warning
-> > logged:
-> >   Failed to retrieve ACPI GPIO chip
-> > This means we also fail to kfree() the struct at the end of
-> > acpi_gpiochip_remove().
-> > 
-> > The fix is to no longer tie the acpi_gpio_chip data to the ACPI data,
-> > but instead hang it directly from the 'struct gpio_chip' with a new
-> > field. This decouples the lifecycle of the acpi_gpio_chip from the ACPI
-> > data, and ties it to the gpio_chip. This seems a much better place since
-> > they share a common lifecycle.
-> 
-> Maybe in this case it's indeed better.
-> 
-> > The general concept of attaching data to the ACPI objects may also need
-> > revisiting in light of the issue this patch addresses. For instance
-> > i2c_acpi_remove_space_handler() is vulnerable to a similar leak due to
-> > using acpi_bus_get_private_data(), which just wraps acpi_attach_data().
-> > This may need a more widespread change than is addressed in this patch.
-> 
-> But with this it sounds to me that the root cause is like you said in ACPI
-> removal device code, i.e. acpi_scan_drop_device. Shouldn't that be fixed first
-> to be more clever?
-> Or are you stating that basically acpi_bus_get_private_data() and concept of
-> the private data is weak to the point that mostly become useless?
+On Wed, Mar 13, 2024 at 12:14=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> On Thu, Mar 07, 2024 at 03:36:18PM +0100, Linus Walleij wrote:
+> > On Thu, Mar 7, 2024 at 2:51=E2=80=AFPM Andy Shevchenko
+> > <andriy.shevchenko@linux.intel.com> wrote:
+> >
+> > > There are only two users left of the gpio_free_array()/gpio_request_a=
+rray().
+> > > Convert them to very basic legacy APIs (it requires much less work fo=
+r
+> > > now) and drop no more used gpio_free_array()/gpio_request_array().
+> >
+> > That's reasonable and makes the kernel a better place.
+> > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>
+> Thank you!
+>
+> Bart, do you want me to take it via my tree or you want to take directly?
+>
 
-Another Q is how does the OF case survive similar flow (DT overlay removal)?
+We don't have Acks from the relevant arch maintainers yet. I can pick
+it up but I won't do it before the end of the merge window anyway.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Bart
 
