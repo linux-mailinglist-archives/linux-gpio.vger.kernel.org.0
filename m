@@ -1,156 +1,195 @@
-Return-Path: <linux-gpio+bounces-4267-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4268-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 15C3D87A0BE
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 02:30:30 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D21F87A1B6
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 03:42:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C4B5B2811C0
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 01:30:28 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 35FDBB21E93
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 02:42:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 507E8A951;
-	Wed, 13 Mar 2024 01:30:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A73A4AD5D;
+	Wed, 13 Mar 2024 02:42:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="C87PEHjb"
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="ooXevoVx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2075.outbound.protection.outlook.com [40.107.255.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6F18F6F;
-	Wed, 13 Mar 2024 01:30:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710293423; cv=none; b=kuuQ8g32nimJHXcVN73S3Gp3sDaQ+ChY8GgAv9LHgNEir43MGAPy8P+03rL3KQ2WN0fmq4SPlpRW/TpKu6DjtMtOVGKWlwFWdE40MssYYNDWw35841772TWD15DMXoG4+DLSDoNG3u27nx+B1jolhkrbOD2xFqDFGqv9Vg3KkvU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710293423; c=relaxed/simple;
-	bh=QeLHPMjtJQa9u4WOOLbF84Sos8zF1E8vXw09x+PS0QM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=PEHWIj8AcGqV1eLSyY6EkWgYXuvYtoC9iE+BXPnTRL1bDxc68yXSHVca2V2iPh673BTLBrMjaHPwwxlbNSMjd10Txf2BWSHwj/iketFyZjxfuNZMgMfEsnULbiu8vMVMnIa1r4MVkvQoWKzeBvtU1YycChQK+bD1Ka2IUpLozbM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=C87PEHjb; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279867.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42D0gDH0019760;
-	Wed, 13 Mar 2024 01:30:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=ouYn95H+zAQcXhJ9561a3sq1sdW1pT1PRaJbAoeiPVw=; b=C8
-	7PEHjbpB6gK6X5rRmyhRG4qumP2JfXag15854fGJ3OROzTzB+Eg2/Q6fufcMsZ0D
-	o0DkdKVMxv3szxG6yTBL7qOTV4PkXm+jUWyYTK/0viLzLhqiwAD/ZlG1P8OzUWQr
-	LN57rB9ziyMOD0ieDk96Vu75Op/zQpwT+zEd0tVUE/wGKXgJHzjNhHRYUAntANPG
-	N+7VkjswSXEu3NXkh8cmZEOrdfhOew1oOXLoJrz0QrpH/aT0kmhErfT2SWYQaX9R
-	Pe2CLtlydMrZu0F3Ae2rnZn2Phf2yDYag1JeeogoHvyB1gbk6SEJ0DVNglOcRyNu
-	ddRBtrDNHCLMu2rdKb0g==
-Received: from nalasppmta02.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wtmpd2041-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 01:30:16 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA02.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42D1UFkF010432
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 13 Mar 2024 01:30:15 GMT
-Received: from [10.239.132.204] (10.80.80.8) by nalasex01a.na.qualcomm.com
- (10.47.209.196) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 12 Mar
- 2024 18:30:09 -0700
-Message-ID: <ef237b3c-8613-4cd8-9391-e4a08d50cc6c@quicinc.com>
-Date: Wed, 13 Mar 2024 09:30:07 +0800
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 971EA10953;
+	Wed, 13 Mar 2024 02:42:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.75
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710297741; cv=fail; b=g2RiWQDfe8YB9QtWUrDQIXuWR5A6Nu/E7KaNCthRhbyzIwFyf5rShW7/F8fbHPMWdmz6ebA0Gnp5iCdX5AiGCUSJBpij7ByDzQKfNGz+E1vA9hOoQighVxbjBcMD1rTadcPVe0oZkJU8C1oNli6GAO0Aaq6zIy68BYc4a2YUe0M=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710297741; c=relaxed/simple;
+	bh=9qUqyT3UDc4Lec1MNa18dtSyMYFqOdzXneQpqUF7zds=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=saOiD/E5Dpcn1TMl3tbihsIc3ThXv1VfOuNafu3WfoJN3u7A0sB7j4cqeQrUKlYtljxRNI+NsvaWsWVCkG7SVwjhslIiBiFsh7f9oFdRd/RRn4k4J6FTEJ3gB/wtlMqoS47uxlCqAggbCJNyQRcEFOnHC0WPUuWbPGwuebSpFgw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=ooXevoVx; arc=fail smtp.client-ip=40.107.255.75
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=XU2Ru2pTFlACRp50PAOQ1nACEv5CXPims4UexZSSNPZhEbAAbvRo/PCKde70j+A54s+W3lcAJQK9+nyX+gLbKzY63jB69KAGs9IToJoxpsOrxN6ao/joPcQT0shVySTDwODMePX5gNorygXjMjsec48Ng+EKqza7JofgNG4sJhOv4hQQFEqv92nUph+Qv5k9c4EX550FApjYl22ICEl2uEXq1bKwF7KsCnDlBtbekhaacMAQ1Q5sIFPJ0FaDI/d/heqZ4a+G/i4m0dD6QW05inpPFlTnaIA2RtleGsLw9OwRg8RA8m9JBs/XjaAL/YQHTP8VD2ylNBJMWh2mtqO06Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=TW3Lfg28Nu7zLIyIVqNz+ndBJZNbcytAHk0U0JB2VSc=;
+ b=kEVhYn1yjVpexqtGVefFKo5jbdnoPZFQ59XPDefa6BhpujZITFa8kFWjbGA2hP4TUHeEUG6qsix1jO//1MNDz/pbjjCsdgcXpauNU1DG4zs/gb2+nenkewSk3Wffb4xr9d9Yv+W92YhWakhZ/H+9/Xrmy95spotgCACGEf7cnLmxqxt/vZydTNyKuWUPB64n9BC+4UDBxoeGR8mNNhqjyBJECJHjNlQudYZi6TWY8UGbm+J22YLF5u0z3od2G0eO8YwHA0GarTgJ+XH81YYB+YUtKFCElVs+KfkJJyOOYq1Yb+rQfsvGUWoJYZISZxPWhUKrjbLQZATPP3h74Cfo0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=fail (sender ip is
+ 211.20.1.79) smtp.rcpttodomain=stwcx.xyz smtp.mailfrom=wiwynn.com; dmarc=fail
+ (p=quarantine sp=quarantine pct=100) action=quarantine
+ header.from=wiwynn.com; dkim=none (message not signed); arc=none (0)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TW3Lfg28Nu7zLIyIVqNz+ndBJZNbcytAHk0U0JB2VSc=;
+ b=ooXevoVxQrcILK+eaSQJI6vc0w9cIo7tGmnq3x3BvbNtYwA8mc4u3uEjH+g6bULpHev01HNwD5hxJarLQmdDmawkG35WzCVbKA+JG9bA1TsvOElK/6LKnKWzB/1dvsiMG/bobMAUz5mM8HXTmZZa7nuB8jBgE5aX3FhhpI/OmCUhG+NY99Plu56ZPX5Nvec39vWToaa8QWkrSvpFOcgfG0DrcSJH4NBxwWcHZN2Jxt7ETYHPEr/fy1AlWUpBe9TYjTm9Q+IBk6/Udk+VBofGpOSISK4gq0yYuIU9j0hBdQUd3UmTMZ9KNykzRDQ/zQE+izGr3TiGh38z6H7D/f9Scg==
+Received: from SI2PR02CA0022.apcprd02.prod.outlook.com (2603:1096:4:195::23)
+ by TYSPR04MB7714.apcprd04.prod.outlook.com (2603:1096:405:57::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.27; Wed, 13 Mar
+ 2024 02:42:14 +0000
+Received: from HK2PEPF00006FB0.apcprd02.prod.outlook.com
+ (2603:1096:4:195:cafe::94) by SI2PR02CA0022.outlook.office365.com
+ (2603:1096:4:195::23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.19 via Frontend
+ Transport; Wed, 13 Mar 2024 02:42:13 +0000
+X-MS-Exchange-Authentication-Results: spf=fail (sender IP is 211.20.1.79)
+ smtp.mailfrom=wiwynn.com; dkim=none (message not signed)
+ header.d=none;dmarc=fail action=quarantine header.from=wiwynn.com;
+Received-SPF: Fail (protection.outlook.com: domain of wiwynn.com does not
+ designate 211.20.1.79 as permitted sender) receiver=protection.outlook.com;
+ client-ip=211.20.1.79; helo=localhost.localdomain;
+Received: from localhost.localdomain (211.20.1.79) by
+ HK2PEPF00006FB0.mail.protection.outlook.com (10.167.8.6) with Microsoft SMTP
+ Server id 15.20.7386.12 via Frontend Transport; Wed, 13 Mar 2024 02:42:12
+ +0000
+From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+To: patrick@stwcx.xyz,
+	Andrew Jeffery <andrew@codeconstruct.com.au>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Joel Stanley <joel@jms.id.au>
+Cc: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>,
+	linux-aspeed@lists.ozlabs.org,
+	openbmc@lists.ozlabs.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v1] pinctrl: pinctrl-aspeed-g6: correct the offset of SCU630
+Date: Wed, 13 Mar 2024 10:42:10 +0800
+Message-Id: <20240313024210.31452-1-Delphine_CC_Chiu@wiwynn.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/2] dt-bindings: pinctrl: qcom: update compatible name
- for match with driver
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <robh@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
-        <dmitry.baryshkov@linaro.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel@quicinc.com>
-References: <20240312025807.26075-1-quic_tengfan@quicinc.com>
- <20240312025807.26075-2-quic_tengfan@quicinc.com>
- <0d768f17-22d9-448e-9253-8498b61bf71e@linaro.org>
- <31b02b76-88ff-42d7-a665-18d2661e028c@quicinc.com>
- <6a3b5c9d-6375-457f-83c9-269746c1612a@linaro.org>
-From: Tengfei Fan <quic_tengfan@quicinc.com>
-In-Reply-To: <6a3b5c9d-6375-457f-83c9-269746c1612a@linaro.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-GUID: jsOBfqwhhLdUvo5ElmlqqDO-Hc4Hp-4J
-X-Proofpoint-ORIG-GUID: jsOBfqwhhLdUvo5ElmlqqDO-Hc4Hp-4J
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-12_14,2024-03-12_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=928 mlxscore=0
- spamscore=0 clxscore=1015 malwarescore=0 impostorscore=0 adultscore=0
- bulkscore=0 suspectscore=0 lowpriorityscore=0 priorityscore=1501
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.19.0-2402120000 definitions=main-2403130010
+Content-Transfer-Encoding: 8bit
+X-EOPAttributedMessage: 0
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: HK2PEPF00006FB0:EE_|TYSPR04MB7714:EE_
+Content-Type: text/plain
+X-MS-Office365-Filtering-Correlation-Id: 2fbff89c-6ee3-4525-5767-08dc4307300f
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	oaSuPh/Z17boEIZKsqtTRtXIQ1cQr3gU/6fIG5ckwfV+qwoKJxPxf1AsDrYPjNiVPmYD8vHJ+Q2aTlKji3jg5l4Hlg9P7tbFDf6uVNnp0pi7xylsNM2n4m6n4TFFmMNqL54bBYig6ED4rki0AjZpEFS4SZZp2meWty5Kj3nRLpV4bJxABCAOzdjIz1BP7V7zsME98sjgiTm5Rlz1UvSOljD67ByAG9nKFwJqDzZgzBdkBiTcA0yQcrWQSeM77EnRG9gYpufMI4PjX81t6bB4exgFBJ4La5C9Rvgd+cFo5rURT9RsNRltfbg9h4cppzE/cB7HWR1b9sIOgBrCR65TArQuxk+m0uIDjkV9U+J84FODw3dXEGtg+93VN4RH3lu+eQH5ZQ5r51vyrtvuoY60Tr8QYOL/RR6gYykEmbq0P6FVm3TRieH9EbG8qv2l6wBYZLP9ZnjaFwGlqhSFoR+QMMgfAY4OozGhBcYIr8blxAVKP6MPa/S0yG5MSyRUjXgjeQPmu5s9lSRWQS2swys/yC3GjPMHb+EAjcuhdRZPXtZ9AruptUW4yRSDniwmPaq8BqLjVw0ABuxQLBz4X89mFQfOFkSbgnBGSYRT6bDKNSbXUbw58RcAa4f+aF2r0JyAA3AKWFShm7xUUyWrWHjty1sCbuqHzzFemWQH9JqmocI5vDLylN20rELRJsvlFwfIHoEndgKdhBPXq/MjlZwDZ9LJY1knaQOqIqMaZjp+X32MCWrqrNFkcD/C453XeJcI
+X-Forefront-Antispam-Report:
+	CIP:211.20.1.79;CTRY:TW;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:localhost.localdomain;PTR:211-20-1-79.hinet-ip.hinet.net;CAT:NONE;SFS:(13230031)(82310400014)(376005)(1800799015)(36860700004);DIR:OUT;SFP:1101;
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2024 02:42:12.8035
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2fbff89c-6ee3-4525-5767-08dc4307300f
+X-MS-Exchange-CrossTenant-Id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=da6e0628-fc83-4caf-9dd2-73061cbab167;Ip=[211.20.1.79];Helo=[localhost.localdomain]
+X-MS-Exchange-CrossTenant-AuthSource:
+	HK2PEPF00006FB0.apcprd02.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Anonymous
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYSPR04MB7714
 
+Description:
+Correct the offset of "Disable GPIO Internal Pull-Down #4" register that
+should be 630h according to the AST2620 datasheet.
 
+Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+---
+ drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c | 34 +++++++++++-----------
+ 1 file changed, 17 insertions(+), 17 deletions(-)
 
-On 3/12/2024 6:55 PM, Krzysztof Kozlowski wrote:
-> On 12/03/2024 08:47, Tengfei Fan wrote:
->>
->>
->> On 3/12/2024 3:41 PM, Krzysztof Kozlowski wrote:
->>> On 12/03/2024 03:58, Tengfei Fan wrote:
->>>> Use compatible name "qcom,sm4450-tlmm" instead of "qcom,sm4450-pinctrl"
->>>> to match the compatible name in sm4450 pinctrl driver.
->>>>
->>>> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
->>>> Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
->>>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>>> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
->>>> ---
->>>>    Documentation/devicetree/bindings/pinctrl/qcom,sm4450-tlmm.yaml | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> Wasn't this applied?
->>
->> My test code base on tag: next-20240308, this patch is still not applied.
->>
->> In fact, the following dt binding check warning only can be got before
->> this patch is applied.
->>
-> 
-> Please read all emails in the previous thread. You ignored two emails in
-> the past and apparently one more recent.
-
-I don't know if you mean I ignored the email which related with "Patch 
-applied" tag from Linus Walleij. If so, the following is the reasion why 
-I still include this patch:
-
-I synced the latest upstream code on 03/12/2024, the latest tag is 
-next-20240308, this tag still doesn't include this patch[PATCH v3 1/2].
-
-Dt binding check still get warning if I only send [PATCH v3 2/2] patch 
-to upstream base on next-20240308. so I include this patch[PATCH v3 1/2] 
-in patch series even if this patch have "Patch applied" tag.
-
-Looking forward to getting your advice if submitting patch series this 
-way is problematic.
-
-Thank Krzysztof again for your patient and kind review this patch series!
-
-> 
-> Best regards,
-> Krzysztof
-> 
-
+diff --git a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+index d376fa7114d1..029efe16f8cc 100644
+--- a/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
++++ b/drivers/pinctrl/aspeed/pinctrl-aspeed-g6.c
+@@ -43,7 +43,7 @@
+ #define SCU614		0x614 /* Disable GPIO Internal Pull-Down #1 */
+ #define SCU618		0x618 /* Disable GPIO Internal Pull-Down #2 */
+ #define SCU61C		0x61c /* Disable GPIO Internal Pull-Down #3 */
+-#define SCU620		0x620 /* Disable GPIO Internal Pull-Down #4 */
++#define SCU630		0x630 /* Disable GPIO Internal Pull-Down #4 */
+ #define SCU634		0x634 /* Disable GPIO Internal Pull-Down #5 */
+ #define SCU638		0x638 /* Disable GPIO Internal Pull-Down #6 */
+ #define SCU690		0x690 /* Multi-function Pin Control #24 */
+@@ -2495,38 +2495,38 @@ static struct aspeed_pin_config aspeed_g6_configs[] = {
+ 	ASPEED_PULL_DOWN_PINCONF(D14, SCU61C, 0),
+ 
+ 	/* GPIOS7 */
+-	ASPEED_PULL_DOWN_PINCONF(T24, SCU620, 23),
++	ASPEED_PULL_DOWN_PINCONF(T24, SCU630, 23),
+ 	/* GPIOS6 */
+-	ASPEED_PULL_DOWN_PINCONF(P23, SCU620, 22),
++	ASPEED_PULL_DOWN_PINCONF(P23, SCU630, 22),
+ 	/* GPIOS5 */
+-	ASPEED_PULL_DOWN_PINCONF(P24, SCU620, 21),
++	ASPEED_PULL_DOWN_PINCONF(P24, SCU630, 21),
+ 	/* GPIOS4 */
+-	ASPEED_PULL_DOWN_PINCONF(R26, SCU620, 20),
++	ASPEED_PULL_DOWN_PINCONF(R26, SCU630, 20),
+ 	/* GPIOS3*/
+-	ASPEED_PULL_DOWN_PINCONF(R24, SCU620, 19),
++	ASPEED_PULL_DOWN_PINCONF(R24, SCU630, 19),
+ 	/* GPIOS2 */
+-	ASPEED_PULL_DOWN_PINCONF(T26, SCU620, 18),
++	ASPEED_PULL_DOWN_PINCONF(T26, SCU630, 18),
+ 	/* GPIOS1 */
+-	ASPEED_PULL_DOWN_PINCONF(T25, SCU620, 17),
++	ASPEED_PULL_DOWN_PINCONF(T25, SCU630, 17),
+ 	/* GPIOS0 */
+-	ASPEED_PULL_DOWN_PINCONF(R23, SCU620, 16),
++	ASPEED_PULL_DOWN_PINCONF(R23, SCU630, 16),
+ 
+ 	/* GPIOR7 */
+-	ASPEED_PULL_DOWN_PINCONF(U26, SCU620, 15),
++	ASPEED_PULL_DOWN_PINCONF(U26, SCU630, 15),
+ 	/* GPIOR6 */
+-	ASPEED_PULL_DOWN_PINCONF(W26, SCU620, 14),
++	ASPEED_PULL_DOWN_PINCONF(W26, SCU630, 14),
+ 	/* GPIOR5 */
+-	ASPEED_PULL_DOWN_PINCONF(T23, SCU620, 13),
++	ASPEED_PULL_DOWN_PINCONF(T23, SCU630, 13),
+ 	/* GPIOR4 */
+-	ASPEED_PULL_DOWN_PINCONF(U25, SCU620, 12),
++	ASPEED_PULL_DOWN_PINCONF(U25, SCU630, 12),
+ 	/* GPIOR3*/
+-	ASPEED_PULL_DOWN_PINCONF(V26, SCU620, 11),
++	ASPEED_PULL_DOWN_PINCONF(V26, SCU630, 11),
+ 	/* GPIOR2 */
+-	ASPEED_PULL_DOWN_PINCONF(V24, SCU620, 10),
++	ASPEED_PULL_DOWN_PINCONF(V24, SCU630, 10),
+ 	/* GPIOR1 */
+-	ASPEED_PULL_DOWN_PINCONF(U24, SCU620, 9),
++	ASPEED_PULL_DOWN_PINCONF(U24, SCU630, 9),
+ 	/* GPIOR0 */
+-	ASPEED_PULL_DOWN_PINCONF(V25, SCU620, 8),
++	ASPEED_PULL_DOWN_PINCONF(V25, SCU630, 8),
+ 
+ 	/* GPIOX7 */
+ 	ASPEED_PULL_DOWN_PINCONF(AB10, SCU634, 31),
 -- 
-Thx and BRs,
-Tengfei Fan
+2.25.1
+
 
