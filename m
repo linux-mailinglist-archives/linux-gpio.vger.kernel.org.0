@@ -1,249 +1,173 @@
-Return-Path: <linux-gpio+bounces-4276-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4277-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 036DB87A314
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 07:51:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EBC587A31B
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 07:57:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 275C91C2138B
-	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 06:51:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9A9928331D
+	for <lists+linux-gpio@lfdr.de>; Wed, 13 Mar 2024 06:57:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E4F314AAE;
-	Wed, 13 Mar 2024 06:51:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 041FE134AD;
+	Wed, 13 Mar 2024 06:57:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="km6Clk7q"
+	dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b="xo7Kf9dj"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from lelv0143.ext.ti.com (lelv0143.ext.ti.com [198.47.23.248])
+Received: from APC01-PSA-obe.outbound.protection.outlook.com (mail-psaapc01on2059.outbound.protection.outlook.com [40.107.255.59])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CDAD1170A;
-	Wed, 13 Mar 2024 06:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.23.248
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710312706; cv=none; b=XiBoEZkzhHmP9yCm5qE80QHcQf5Hp54Ur0FRnzs/k6Q5yB2j4sLae2oOr3LKIW7uVu+nXISyKzFF4ZIJjJcjjfCuLXWmMLKr16HSBCVopN3YAjgo/2x2b5qXf3xH0LekrZ0y9lQTM0xC3FTD0FXspN3AMefftfCZGJdRJPCs58g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710312706; c=relaxed/simple;
-	bh=qV+who9BCOcvHst6HiD77hsq69Fk4GtrUpMmKKkjj00=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pYqRJ9HnYEnCjXGBFwVNfxO5zOrBvF/PLQ3MQ2ZuMhL1SAhZYH/kVe0W4ND3Am3r7yMV3FJeeNgF7YxiwkDZATaDHISCGTzNsoeeUHwEleVAMHig/Nt7404fuZrWYVWE6pyoRESLwHhutLvEA543z40RHHP21N41zJHG6dddDDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=km6Clk7q; arc=none smtp.client-ip=198.47.23.248
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-	by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42D6pBSN009136;
-	Wed, 13 Mar 2024 01:51:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-	s=ti-com-17Q1; t=1710312671;
-	bh=rzD+EzX/k7d5q06olV4JiQMj7NEc0ZLvW6rR4gLdO+Q=;
-	h=Date:From:To:CC:Subject:References:In-Reply-To;
-	b=km6Clk7qp/+sN3+TgPu6pY/9+6Y4NqK55vGuGGeuzCQE07yYflykG9/SNVsFWTjyK
-	 DHzTupyUxpiXmEFCei2+2g7Sg9HNbR+VcOrIuHFluhVAXESUuymUmH541bvrq171xZ
-	 ZmcuNa5Rvcr0NnqaOTr/IWF6QnHGy9odQ3zclXBQ=
-Received: from DFLE106.ent.ti.com (dfle106.ent.ti.com [10.64.6.27])
-	by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42D6pBXi064923
-	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-	Wed, 13 Mar 2024 01:51:11 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 13
- Mar 2024 01:51:10 -0500
-Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
- Frontend Transport; Wed, 13 Mar 2024 01:51:10 -0500
-Received: from localhost (uda0492258.dhcp.ti.com [172.24.227.9])
-	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42D6pAAW097772;
-	Wed, 13 Mar 2024 01:51:10 -0500
-Date: Wed, 13 Mar 2024 12:21:09 +0530
-From: Siddharth Vadapalli <s-vadapalli@ti.com>
-To: Thomas Richard <thomas.richard@bootlin.com>
-CC: Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski
-	<brgl@bgdev.pl>,
-        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
-	<tony@atomide.com>,
-        Haojian Zhuang <haojian.zhuang@linaro.org>,
-        Vignesh R
-	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-        Janusz Krzysztofik
-	<jmkrzyszt@gmail.com>,
-        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
-	<peda@axentia.se>,
-        Vinod Koul <vkoul@kernel.org>,
-        Kishon Vijay Abraham I
-	<kishon@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Lorenzo
- Pieralisi <lpieralisi@kernel.org>,
-        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
-	<kw@linux.com>,
-        Rob Herring <robh@kernel.org>, Bjorn Helgaas
-	<bhelgaas@google.com>,
-        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
-        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
-        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
-        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
-        <u-kumar1@ti.com>, <s-vadapalli@ti.com>
-Subject: Re: [PATCH v4 18/18] PCI: j721e: Add suspend and resume support
-Message-ID: <e4fc0b47-6a7f-4cc5-bb69-77655f775486@ti.com>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
- <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B95DD15EA2;
+	Wed, 13 Mar 2024 06:57:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.255.59
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710313054; cv=fail; b=lA17hQW08jHuh/p8LXyrX+KRZZa3wju4M6FYsgybuOIGC9fNo7EbyF71mKOfyPT1CVT3Kfv+11mqcYCBlGeVl0MPuekL++ZywDim1TESbgM1343rQTC14MHsvhdTWd/yLISvvXd6hsL1oI0lXlTRzSmH8ZaakFgHJjOC+XFwFS0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710313054; c=relaxed/simple;
+	bh=0mFGQ01dBiqip0fUSuh9ZYHCUjk/sIAr4jRkLgEo89Y=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=nGnAIgO2halkT2h4HSxpFpPILacEo8YqvsxtQ/8iOPJaUiVPBbSgUvikNkZoYQHbkTZ326qNlA+AR7duULiNF/n+xsho6cRGFzgDctl23sMOsarg6LAg1oTxVOphjuaqBPZNbOdHNaj3bjX61RaWg21amgP/xur6HC3AlnzOOUM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com; spf=pass smtp.mailfrom=wiwynn.com; dkim=pass (2048-bit key) header.d=wiwynn.com header.i=@wiwynn.com header.b=xo7Kf9dj; arc=fail smtp.client-ip=40.107.255.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wiwynn.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wiwynn.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=QuEHIZLy5eLWrA/0rp6DzM5WmS4hloQqetTNDo7gaNZt8l2i3Otpv5INQXP5E6pDqCYxzBBcsdaIN6ctgd2JguEfBqPc3gNxEaNPMdtnlcB79X+jPBpjNm1k10MK7m0+eqpnA+IjzBZQgK5q/UvL39sSr0s4D/pOOHHV/ap6h6TAsVqMRpWBbmIDhHMHDq3+KWFa4GZPO/E3TiylroVxzrPp3y9rPchzbjN04H8g8bUB5JqkjGDjqJV+LDzx9/ZJwDlHS1aKQob9xKdPzJ4kpUt18UETDsLU8PcJuCDrNJK/WhUSa7hVvUoFmP+Uzsm/jnW/heGHTvf9YcyCs05fSA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=0mFGQ01dBiqip0fUSuh9ZYHCUjk/sIAr4jRkLgEo89Y=;
+ b=hspIXZfptsjSDSn67b2FTLR/5ftUGB/JrVkt3sds6OJ+ifeiEeLCGTm9I5TL0vX3w80MRzlDrTndK3D2if6biieUe7WvgyI2Wk6lfuNz6K6LfSr3zB2qwSo3FC9eL0IThszf4EerbKUPBM6XnvB7FcRbE5FVQlJvwUtFzEwAhSNjoR8vclHfNlawFhdpSoNIFTVyS8p3QRHB4nOsArnzRMdd5FjB7Xqn+f+ej5P18+2Kg6Nvs/wgKj0pdAx1txJO8kbsnLjI+fycRDeukzuZBHfcLhps+nXoLYdO/xsLhDE62kqyAWSWAfrkp7NdAopJ1CTWaNiTvsimgW8LVhDlNg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wiwynn.com; dmarc=pass action=none header.from=wiwynn.com;
+ dkim=pass header.d=wiwynn.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wiwynn.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0mFGQ01dBiqip0fUSuh9ZYHCUjk/sIAr4jRkLgEo89Y=;
+ b=xo7Kf9djjvOX2hNRbfgbembQTBsOhAJ7N1qpLH7HnXlWVD7soWSLf8VdYiOKuy9K9D6NFQbi2FhZydcs0oX2rPVg/Ajow1TbR5ROCf5L3U+Fs7qnoEaKFjrnko0U5MO2WNr91jf+OxzZNtU7mdw8dQnNbmXbemsXUBUD1PgyKSO0uoFDqwpvz9rSM8yAg4XpkLF3SlWwKYrQ/4KqGY96mij2IG7H/Buc0gsTrsroNTOJJSGYBfsbcTXBrCXqvVtOdIqwgKJaXwmSd7W7MY2LZwp3HKgBj37vH+0HI+mHsJIDCoOBcJJvGv4pk1IIktBISDmWCnma6ag0RKU0xxcYJw==
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com (2603:1096:400:1f3::5)
+ by SI6PR04MB7925.apcprd04.prod.outlook.com (2603:1096:4:24f::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7362.33; Wed, 13 Mar
+ 2024 06:57:26 +0000
+Received: from TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::7cab:4c63:26d2:5f1b]) by TYZPR04MB5853.apcprd04.prod.outlook.com
+ ([fe80::7cab:4c63:26d2:5f1b%4]) with mapi id 15.20.7362.035; Wed, 13 Mar 2024
+ 06:57:25 +0000
+From: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>
+To: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>,
+	"patrick@stwcx.xyz" <patrick@stwcx.xyz>, Andrew Jeffery
+	<andrew@codeconstruct.com.au>, Linus Walleij <linus.walleij@linaro.org>, Joel
+ Stanley <joel@jms.id.au>
+CC: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>,
+	"linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+	"openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v1] pinctrl: pinctrl-aspeed-g6: correct the offset of
+ SCU630
+Thread-Topic: [PATCH v1] pinctrl: pinctrl-aspeed-g6: correct the offset of
+ SCU630
+Thread-Index: AQHadPAQCNfRzKU/REGwDwaoATPZ9LE1PK5w
+Date: Wed, 13 Mar 2024 06:57:25 +0000
+Message-ID:
+ <TYZPR04MB58539A1D94340F330CAF3CF9D62A2@TYZPR04MB5853.apcprd04.prod.outlook.com>
+References: <20240313024210.31452-1-Delphine_CC_Chiu@wiwynn.com>
+In-Reply-To: <20240313024210.31452-1-Delphine_CC_Chiu@wiwynn.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=wiwynn.com;
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TYZPR04MB5853:EE_|SI6PR04MB7925:EE_
+x-ms-office365-filtering-correlation-id: 1c48da80-071b-427f-a14c-08dc432ad73d
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ iRdNo897R8BEFQ6YQNFvGzI9rwTICAwMHNFyCG8PMIaUEK6jDE2eR2kq7CC+JsWea2omBrLdEFe9wwBk4NmLVN5XoSX2Zl2NLXNVzvF9zHcZ751ShIwP2CCpEUcSru+5rL4bHsp5byhyCcj0xZcTuf/uHV16+movE0cd4XFzcx2nTFPibOzQGqoZKElFcT778SXlmoNa4G2XgEg+prwIpfziD0IOlYx+U4x6Of4b5Tc7BmI6xeEZPaLTYmOP2+1FQa6ySElmdFoVwE/Adqj/Rp3syEzcaTViWcm9nD/ihZbf2icXnaT96FCbunzTE0IzOa1M3adLiLH3vHBjQ26Wg60zGWCO8puuBaGDTgq5lF+IWG5EmsM/mkADDLQ6fpOvFMunzxtEx4JSz9pXqljYtJpRTWNUXNfjXz6NcFiR0Me/EK1Vz0U5hfcA9vmxJaSrJH2Vqh80EPXMUbsbPxbs67o38eNH4KzoZpLjdypnguOsJf5/tiSz174XdYwf5+BiGmWLVnHuwXt9vPqUg82f4YcFF5xYck2P6Te/J1/Gih0eYld7ngYJPamZdG0ehucKXOA/qU7mxvzuvgqxt8oBpUQv2dXeFSfyKNZcysYo2dVXWz9aaYVSUsbkrJsnQPf1fRtIIAC/p+WUu8h3XPrpz96IgNfebCRQZ8ac/RnsVAv8fw2JW3MZEB3AcZhOZNe6o1Rs8hTm1Enom3xH+JWM34lyrUBwOjWM49xGZ0c45JA=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR04MB5853.apcprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?XvmiVp5pEvPWb5FdCu6pRUW1hf0LXLbXSAXbpJVnLQ9fNJFWLidYuP5lsrCP?=
+ =?us-ascii?Q?jTrMAIvCFFB2EvPDIrxOtvIwuU6ZCaZPUk2XwjVl34ip+uvuMcGMPxet4OHX?=
+ =?us-ascii?Q?Lj458dgcEubu7IpMaWsFxgDUW58mkACY99q/4SZgeXTb6vvfJ1l7qWstXBOR?=
+ =?us-ascii?Q?4VvblzAaTjE5ie6L32Eea852+vPUE0S0om7DsmBcoqGFruwmCrL6A4Ilce84?=
+ =?us-ascii?Q?tn5Tj6yzPxZbpyzKg/DxQnV+tjH+YtDG5sdLOCgrcnQxuqaX7WDQaXNENV6u?=
+ =?us-ascii?Q?30eu/RNLxzQoLVH0sIEI7OWcbHHq7fefYTDWRJX88wDDc6wbQwH1r23yNBwZ?=
+ =?us-ascii?Q?w9TOXah/3JjZI+pwq7Pnd1gT8haWguLZODEACqr7OAGPaJV2VTBMKuT1ZAIn?=
+ =?us-ascii?Q?V2TPib3fBxxioopoKX4TKjSnMgGhm9oYvfZyxYq9BRAMrov3NZfwQOBcCYVJ?=
+ =?us-ascii?Q?fgd1TDavL7OlYjgL9ZyxNxNyzlNVIhj4Pk+3o5FEAz94n5LzfuNtqO9pxLpL?=
+ =?us-ascii?Q?Zyq4coEFmUVnWYtNgoVDs3uMQd0A8X53phRFlCWRkCW4XJekEh28W1qwBRbh?=
+ =?us-ascii?Q?ZF/ncNRDPRy6J0zUUrOWjShQeID6MEBVuQsUD24e+ymZEY/OQCN1ktFUJZQh?=
+ =?us-ascii?Q?0je/ts0zfmVgxgO//yaIv5TYBFbVZsP7x3c4kLqE1ZipshUHfGxuB+cHiqnC?=
+ =?us-ascii?Q?Po1WOloyYLdvchu08whomvotuO6KvWmuaVdd7wMCRqUeVgt0IJLDxM4QH92U?=
+ =?us-ascii?Q?pEGh8sPctw9uExsUGr9Pjb9voXPFqbWT6rqYq3TzD3C2rkdrz385xuGSiWiz?=
+ =?us-ascii?Q?718aBVvF3oQSRiBHHsApwkTOcS1JwH+FQpfv2C7UCPepnwVnQ1H9IzwA6V/n?=
+ =?us-ascii?Q?4jeAXWmTb4yTbYWjB1z9ypFKNft0b739jCFJAzVK628zvxdG7ZOGrnCYlsAP?=
+ =?us-ascii?Q?TkgeFs+HmIDPQXDgkdTof805A0zir4P/m3lGWsfsbMOBez2LylCNaIpOphK0?=
+ =?us-ascii?Q?KoD7B7aaoN0l6rCQDOoTERiwsk5SwTXrZfa0qoILREZUWXI20wbvEQueisAm?=
+ =?us-ascii?Q?aUqSWSpUcQ3SXHsQfkCyn92ao320wslYlFb878P0hR9pslgkKhI93phgnBoL?=
+ =?us-ascii?Q?QDE1KUQnHGTCya1M64Ujwrj3Gjuj88+HSANanH+8OFa7WDwLEiET8LkJ0gOD?=
+ =?us-ascii?Q?3LZ4QcMXxEtzDHlbU8FVajmPrl+gn8cDV0vERf5/69kKUIQbMCDIfVmbL0tR?=
+ =?us-ascii?Q?z9rOW8XbaZ4S0TmoFXDrEzo/6afpNAhn2u6Z726Sw4o64iK4KcUboJqE5lly?=
+ =?us-ascii?Q?FoYrz8uWp1Xfp3dER3hQ1Vp0UMk5p7xBS9NltNVZMAhrv/q5SSUHaNypmIjh?=
+ =?us-ascii?Q?vrecS9wk8KPaq3wyFjR/M3iBZ6aoPZRI1uAInc3P3NRslyTUkAgzwCv68Whi?=
+ =?us-ascii?Q?v7ADDyTBgi22RxNxY6w3UAhAo3WtlRRFU/FwJ5sBHgex3L+xVdkOVQX6zaaF?=
+ =?us-ascii?Q?Nq8fy2oPRx/Uuq6kgZuAshCk8nyNgQ/qXyC69TpnoHtfnA/8u53SFYl01nNt?=
+ =?us-ascii?Q?VIuPfcgwBZKHCT98bw0B+TlJW7wiLIeBw8q62xc3?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-18-6f1f53390c85@bootlin.com>
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-OriginatorOrg: wiwynn.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR04MB5853.apcprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1c48da80-071b-427f-a14c-08dc432ad73d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Mar 2024 06:57:25.8537
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: da6e0628-fc83-4caf-9dd2-73061cbab167
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: bxDKNn4jrPk+knTjOR4mZqk7YFrCRAWraEQ9ViIFt4VeFD2Niq0tSkVtzpOzmCCC8NjFFwL8HS3R0ocxwE+UGw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SI6PR04MB7925
 
-On Mon, Mar 04, 2024 at 04:36:01PM +0100, Thomas Richard wrote:
-> From: Théo Lebrun <theo.lebrun@bootlin.com>
-> 
-> Add suspend and resume support. Only the rc mode is supported.
-> 
-> During the suspend stage PERST# is asserted, then deasserted during the
-> resume stage.
-> 
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
 
-Reviewed-by: Siddharth Vadapalli <s-vadapalli@ti.com>
 
-Regards,
-Siddharth.
-
+> -----Original Message-----
+> From: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
+> Sent: Wednesday, March 13, 2024 10:42 AM
+> To: patrick@stwcx.xyz; Andrew Jeffery <andrew@codeconstruct.com.au>; Linu=
+s
+> Walleij <linus.walleij@linaro.org>; Joel Stanley <joel@jms.id.au>
+> Cc: Delphine_CC_Chiu/WYHQ/Wiwynn <Delphine_CC_Chiu@wiwynn.com>;
+> linux-aspeed@lists.ozlabs.org; openbmc@lists.ozlabs.org;
+> linux-gpio@vger.kernel.org; linux-arm-kernel@lists.infradead.org;
+> linux-kernel@vger.kernel.org
+> Subject: [PATCH v1] pinctrl: pinctrl-aspeed-g6: correct the offset of SCU=
+630
+>=20
+> Description:
+> Correct the offset of "Disable GPIO Internal Pull-Down #4" register that =
+should
+> be 630h according to the AST2620 datasheet.
+>=20
+> Signed-off-by: Delphine CC Chiu <Delphine_CC_Chiu@wiwynn.com>
 > ---
->  drivers/pci/controller/cadence/pci-j721e.c | 86 ++++++++++++++++++++++++++++++
->  1 file changed, 86 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/cadence/pci-j721e.c b/drivers/pci/controller/cadence/pci-j721e.c
-> index 9af4fd64c1f9..a1f1232e8ee5 100644
-> --- a/drivers/pci/controller/cadence/pci-j721e.c
-> +++ b/drivers/pci/controller/cadence/pci-j721e.c
-> @@ -7,6 +7,8 @@
->   */
->  
->  #include <linux/clk.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/container_of.h>
->  #include <linux/delay.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/io.h>
-> @@ -22,6 +24,8 @@
->  #include "../../pci.h"
->  #include "pcie-cadence.h"
->  
-> +#define cdns_pcie_to_rc(p) container_of(p, struct cdns_pcie_rc, pcie)
-> +
->  #define ENABLE_REG_SYS_2	0x108
->  #define STATUS_REG_SYS_2	0x508
->  #define STATUS_CLR_REG_SYS_2	0x708
-> @@ -588,6 +592,87 @@ static void j721e_pcie_remove(struct platform_device *pdev)
->  	pm_runtime_disable(dev);
->  }
->  
-> +static int j721e_pcie_suspend_noirq(struct device *dev)
-> +{
-> +	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-> +
-> +	if (pcie->mode == PCI_MODE_RC) {
-> +		gpiod_set_value_cansleep(pcie->reset_gpio, 0);
-> +		clk_disable_unprepare(pcie->refclk);
-> +	}
-> +
-> +	cdns_pcie_disable_phy(pcie->cdns_pcie);
-> +
-> +	return 0;
-> +}
-> +
-> +static int j721e_pcie_resume_noirq(struct device *dev)
-> +{
-> +	struct j721e_pcie *pcie = dev_get_drvdata(dev);
-> +	struct cdns_pcie *cdns_pcie = pcie->cdns_pcie;
-> +	int ret;
-> +
-> +	ret = j721e_pcie_ctrl_init(pcie);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	j721e_pcie_config_link_irq(pcie);
-> +
-> +	/*
-> +	 * This is not called explicitly in the probe, it is called by
-> +	 * cdns_pcie_init_phy().
-> +	 */
-> +	ret = cdns_pcie_enable_phy(pcie->cdns_pcie);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (pcie->mode == PCI_MODE_RC) {
-> +		struct cdns_pcie_rc *rc = cdns_pcie_to_rc(cdns_pcie);
-> +
-> +		ret = clk_prepare_enable(pcie->refclk);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		/*
-> +		 * "Power Sequencing and Reset Signal Timings" table in
-> +		 * PCI EXPRESS CARD ELECTROMECHANICAL SPECIFICATION, REV. 3.0
-> +		 * indicates PERST# should be deasserted after minimum of 100us
-> +		 * once REFCLK is stable. The REFCLK to the connector in RC
-> +		 * mode is selected while enabling the PHY. So deassert PERST#
-> +		 * after 100 us.
-> +		 */
-> +		if (pcie->reset_gpio) {
-> +			fsleep(100);
-> +			gpiod_set_value_cansleep(pcie->reset_gpio, 1);
-> +		}
-> +
-> +		ret = cdns_pcie_host_link_setup(rc);
-> +		if (ret < 0) {
-> +			clk_disable_unprepare(pcie->refclk);
-> +			return ret;
-> +		}
-> +
-> +		/*
-> +		 * Reset internal status of BARs to force reinitialization in
-> +		 * cdns_pcie_host_init().
-> +		 */
-> +		for (enum cdns_pcie_rp_bar bar = RP_BAR0; bar <= RP_NO_BAR; bar++)
-> +			rc->avail_ib_bar[bar] = true;
-> +
-> +		ret = cdns_pcie_host_init(rc);
-> +		if (ret) {
-> +			clk_disable_unprepare(pcie->refclk);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static DEFINE_NOIRQ_DEV_PM_OPS(j721e_pcie_pm_ops,
-> +			       j721e_pcie_suspend_noirq,
-> +			       j721e_pcie_resume_noirq);
-> +
->  static struct platform_driver j721e_pcie_driver = {
->  	.probe  = j721e_pcie_probe,
->  	.remove_new = j721e_pcie_remove,
-> @@ -595,6 +680,7 @@ static struct platform_driver j721e_pcie_driver = {
->  		.name	= "j721e-pcie",
->  		.of_match_table = of_j721e_pcie_match,
->  		.suppress_bind_attrs = true,
-> +		.pm	= pm_sleep_ptr(&j721e_pcie_pm_ops),
->  	},
->  };
->  builtin_platform_driver(j721e_pcie_driver);
-> 
-> -- 
-> 2.39.2
-> 
-> 
+
+Hi,
+Please don't review this patch since ASPEED also provided the patch to
+fix this issue.
+Thanks!
 
