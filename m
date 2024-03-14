@@ -1,126 +1,127 @@
-Return-Path: <linux-gpio+bounces-4320-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4326-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9079887BD94
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 14:22:15 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1A5087BDB6
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 14:30:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DAE2B2153B
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 13:22:13 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CB4128417F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 13:30:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20BA36EB56;
-	Thu, 14 Mar 2024 13:21:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D3D25C60D;
+	Thu, 14 Mar 2024 13:30:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ItMcJgnr"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cAPWBsXC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466415A11A;
-	Thu, 14 Mar 2024 13:21:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A4105A4E0
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 13:30:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710422516; cv=none; b=qI+jU3o59Z1e2H4YiDxHelaF3nJqHCHiXzlCdsoTWrP9bEvjE83tq3/VKY5qCaZ9MQ5y3YijKVKQ8ql+NLltwiSHUkZgu+x7GlXkMrNZbFDaOEMnSvvH19CV16rBIFPE6qQncKYVbokIGIYLeXub3uFFy4PA7vYY5fthLQ0uLSY=
+	t=1710423018; cv=none; b=P8n5K9F33YaSARy5opmTL+MqNqbbF4GCdE/91bAl2oVnPS0h/7l7jeYtXkr8gNAc/RV757DW2QNkuHqVLIaTmaO/ro078a+KCN8lERWCaAxzBzfLmbtY/kemsjNRUPdIAJ80z5qiGL4TnLgTVyw6OrUKjO1NjlAK/u2rmzOl6bc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710422516; c=relaxed/simple;
-	bh=efNmoPB9xQTqqj1zcv7v1m8HPH9PXIJnJFCvFlBcJWk=;
+	s=arc-20240116; t=1710423018; c=relaxed/simple;
+	bh=m5md2DATneVglsvVJFiUcHc0rqlaZ+Wq/gpNeDLEA+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qoXkyOpgdPQbyipl0i027WfSxImvhqlwqIaBs+b1WXUBfmgvu0e1zcmTRSBs57FLnKoCKx0lbUNtugS7JoV5X6TzKx0TRZ4C18Tatdw+1XIR1eB8RMkGtc0MQqeERdVR0vAqNwUGbZ0KcE1sL/E9nev694zLqFfPuKatAmZdsvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ItMcJgnr; arc=none smtp.client-ip=192.198.163.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710422515; x=1741958515;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=efNmoPB9xQTqqj1zcv7v1m8HPH9PXIJnJFCvFlBcJWk=;
-  b=ItMcJgnrQO7AOCeMJOV3eOtmjqhzUwj8JqQe5unxHuv4RoMTM0rXetHZ
-   2WGeo3RQ7IBJQsMlmEH4oIQ2kamaN0juaMPz/H2Qu+ZeqzNXhG40lWFl4
-   Kdv2+01T5OuVhakFg2cB7eV4QKAkYEILj6bgoRNPL5zqmTBC4HI2un1cS
-   AqdyVeqqqIhIuZ4V0ViylBLihljz/9RUQm+ZC+Eodz9AvFJBz/kx8qcRL
-   tgyrF84B6gGFhxjJLMj4DpnHjxGy0YwyHSrOJeVSXfKY1lO8shjxqpLHA
-   6O/Jy35Rx9rvSd6YB5+CTAfLdYPpqLtMA0HqV5H1uz7JK29zKMtJbjmvI
-   w==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5092509"
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="5092509"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 06:21:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="914460276"
-X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
-   d="scan'208";a="914460276"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 06:21:50 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rkl1n-0000000CWQ3-1pAU;
-	Thu, 14 Mar 2024 15:21:47 +0200
-Date: Thu, 14 Mar 2024 15:21:47 +0200
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>, Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 0/3] gpiolib: Get rid of
- gpio_free_array()/gpio_request_array()
-Message-ID: <ZfL562yGPEwA3ZM7@smile.fi.intel.com>
-References: <20240307135109.3778316-1-andriy.shevchenko@linux.intel.com>
- <CACRpkda6bykOFY6gcZqRKLAnprUooZooQ_g7Rj_63da2akbwtA@mail.gmail.com>
- <ZfGKkjxIT9AEd8dy@smile.fi.intel.com>
- <CAMRc=McjYKCLGKk42SWdCy3Lc=B4B21WpS1kvx_d66itHKsQzQ@mail.gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=S116fqpxbg27h8qTJN2L0UNeMzBmS1jE8Ze7IwBCHV3/p4d+4ceZOha04eV7jeI/5AF1dilxRTTSuS9BMrbxt8BtLzaoJO3EpqJvQiNqEk7xGTapBXo8ZNhMRXTlnDV8AdfIAlbuLISVy8yq/RRcuXsu+dMthiU2QY0H0AHZCEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cAPWBsXC; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-413eb712c3fso5753115e9.2
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 06:30:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710423014; x=1711027814; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=mD3qkQbPr9JbryhWa1YZ2ITHxrO+wsqWrxU8GdzivNU=;
+        b=cAPWBsXC7QcN+rkh3Csh8CSg1p1m4LrF6eLxv6sD1oIblHbrSVSIaoUfN27UQF+MmB
+         8SJs4TJ9jM55C6Wzv0eObp5iJ9NmuPdE0Yb9G3uAHcCzX2uydqNYIkLID5E3Yr4OBBO3
+         H7NLAc/fB36sFXv2tTKBo7szwKODOgxeKuNowxRfWbm1rH8L9PFQPgeL/AShQT3m7QLT
+         +tw4Z63iohBQoY7i6u6yVW6tcaNknO+wwkNFYucj5G5mMNQfracjh4n/O7uEzQ7+MjaA
+         rs+n+A7qDpGm9kDmzpOU6gcxocDk/SLOXEaKqZQLcuRfB6L3f3H2EUDm4kEuD+0bFVeR
+         1kkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710423014; x=1711027814;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mD3qkQbPr9JbryhWa1YZ2ITHxrO+wsqWrxU8GdzivNU=;
+        b=voFMD2Hd6RH7HK1jqK7SdStn7Q2XMRgUtDuWWoxszbwOZpiA/2ZmxM3ZrBnTgo/eZ7
+         hLov79wZhnoJKDkbSPdVJzgmx7uD1wd9II8CpQWpqedSiJWtoZimARYxZdXkNhqEHKan
+         W+ElRmGBrHHKIPpl8ONRu4E6rU7nsje3f1LFYmLKxgIBqOCKBvpTA+8DG2ufKa7P/78x
+         cEuc4cGR8/Jtybs2p7CdxOEswWL8EZuNIoYI+GnXY0D29MesFqBWiHGNxaAOxtxcwcZZ
+         uquniD+wZp/Mad2UXP+Ojtf1nOo+V1aWiYdLWDVBvvk7I4b+wvhoNeTyYfBz5KsSfVsa
+         JBBg==
+X-Forwarded-Encrypted: i=1; AJvYcCV+l4DPir94G2TV49ZapQnGEmUxpga01i2n9FTVOEsbJnfb4EZqoFdol8zTM5OpRbwhoyd02iyyI7c92o4v5nOOGa6atQgrQujiMw==
+X-Gm-Message-State: AOJu0YxpqUilQo+Sy0+5FKeb5WBDTMXLBS1xtiMHUVkTJ8XwdfyQ6/oE
+	yK+dmVualLTxZ+iMQmNnMmJKwM34ZvceAmUTkCqFUy6FHfgF7jbpHVkwwZo1Q1I=
+X-Google-Smtp-Source: AGHT+IHUI8pInUMKMU6pURDI6IOrA5SjtV26vKKqsGZ89FUmkuJ+5HmZ3wmdkA2PC8r8vd1EStbYzQ==
+X-Received: by 2002:a05:600c:3d18:b0:413:1dcb:b618 with SMTP id bh24-20020a05600c3d1800b004131dcbb618mr1431873wmb.39.1710423013999;
+        Thu, 14 Mar 2024 06:30:13 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id n2-20020a05600c4f8200b004134540ae3asm2499048wmq.3.2024.03.14.06.30.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 06:30:13 -0700 (PDT)
+Date: Thu, 14 Mar 2024 16:30:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org, eblanc@baylibre.com
+Subject: Re: [PATCH v3 09/11] regulator: tps6594-regulator: Add TI TPS65224
+ PMIC regulators
+Message-ID: <4aee8c9a-43eb-45b4-bc23-e58aede18e54@moroto.mountain>
+References: <20240308103455.242705-1-bhargav.r@ltts.com>
+ <20240308103455.242705-10-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=McjYKCLGKk42SWdCy3Lc=B4B21WpS1kvx_d66itHKsQzQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240308103455.242705-10-bhargav.r@ltts.com>
 
-On Wed, Mar 13, 2024 at 12:47:58PM +0100, Bartosz Golaszewski wrote:
-> On Wed, Mar 13, 2024 at 12:14 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Thu, Mar 07, 2024 at 03:36:18PM +0100, Linus Walleij wrote:
-> > > On Thu, Mar 7, 2024 at 2:51 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > > There are only two users left of the gpio_free_array()/gpio_request_array().
-> > > > Convert them to very basic legacy APIs (it requires much less work for
-> > > > now) and drop no more used gpio_free_array()/gpio_request_array().
-> > >
-> > > That's reasonable and makes the kernel a better place.
-> > > Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-> >
-> > Thank you!
-> >
-> > Bart, do you want me to take it via my tree or you want to take directly?
-> 
-> We don't have Acks from the relevant arch maintainers yet.
+On Fri, Mar 08, 2024 at 04:04:53PM +0530, Bhargav Raviprakash wrote:
+> @@ -374,11 +518,17 @@ static int tps6594_request_reg_irqs(struct platform_device *pdev,
+>  {
+>  	struct tps6594_regulator_irq_type *irq_type;
+>  	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
+> -	int j;
+> +	size_t j;
+>  	int irq;
+>  	int error;
+> +	size_t interrupt_cnt;
+> +
+> +	if (tps->chip_id == TPS6594)
+> +		interrupt_cnt = ARRAY_SIZE(tps6594_buck1_irq_types);
+> +	else
+> +		interrupt_cnt = ARRAY_SIZE(tps65224_buck1_irq_types);
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-True. But I haven't noticed much maintainer's activity WRT PXA code.
-I dunno who can be the best to Ack these. Arnd?
+>  
+> -	for (j = 0; j < REGS_INT_NB; j++) {
+> +	for (j = 0; j < interrupt_cnt; j++) {
+>  		irq_type = &tps6594_regs_irq_types[j];
+                            ^^^^^^^^^^^^^^^^^^^^^^
+>  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
+>  		if (irq < 0)
 
-> I can pick it up but I won't do it before the end of the merge window anyway.
+The tps6594_regs_irq_types pointer needs to be renamed or people won't
+know it's holding tps65224_ data.  Probably the function should be
+renamed too.
 
-Sure.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+regards,
+dan carpenter
 
 
