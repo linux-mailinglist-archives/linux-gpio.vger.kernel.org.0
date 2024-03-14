@@ -1,124 +1,162 @@
-Return-Path: <linux-gpio+bounces-4343-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4344-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 12AFE87C402
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 21:06:36 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F24EF87C4AC
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 22:20:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1C43284159
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 20:06:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 225221C2146E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 21:20:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCDDC762ED;
-	Thu, 14 Mar 2024 20:05:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98CC6768ED;
+	Thu, 14 Mar 2024 21:19:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="PLy/v9NK"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NE/79Qq3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5B2768ED;
-	Thu, 14 Mar 2024 20:05:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768AE76416
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 21:19:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710446752; cv=none; b=hUSsHHDvTXS/rJir6uBe0CGCftCBQOPjtyiqeFiOdo3ssOfNIzGZf01AwPtFacfaxGHX5jD8HYP67rYI5j4m6HUxRQ0nLaUARvdy98N9iCQkSRGDnnT8d7VmJ+EH0NeAopp3gQSN0qbQPUzvKmb4JiPBHrzgyzNTlX7VVIA+Z0U=
+	t=1710451193; cv=none; b=g7e/7bABx6E8M5aJB8TGzkMJNBtGqMOUqBHtfGitQeGpLfiVTUbcw+0Hqyqeoy61V/uXhvYdaO/DWFAd328noMlpk/2YoYDEf13XvMBbxfTMPtUDQGNtXRfZeqFYSx8TXN5klZwmEPXAmaZjz9b5XmZGGDHPJH6xaqN7552paW0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710446752; c=relaxed/simple;
-	bh=bfbInkB/y9wev/ii7nfCygHk7JEr/hAGL0uXm/lU2Hs=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=pRUznc3ps45fDAnW/34GCyImIepkFYC20KBb1ZW8S74dWqshgGMjCVJJ2tPWEHAccB6PwhXvPzIUivJXqtJC9kIZcuDGmQx1QJaqQ3EcOqn5ZEPZ/mU8JU2WBU2tYuP26e89fcsJjPiurpVZ1A7QivVk4Z+SAoLVLWx6078qclw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=PLy/v9NK; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279864.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42ECt8Yt020772;
-	Thu, 14 Mar 2024 20:05:47 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	qcppdkim1; bh=99Zae2BxOCsN94FOQOx5wNoY9BJy+DkkGXudGVOW/g4=; b=PL
-	y/v9NK1/MkxUtO5PgNvIrKhTcm9j6xswBZ+xRdlVz8KyZ/udII12a/MaL1ZLoX6T
-	3TSqGlMfUm3OLx1MfwX5MAGcotOjbr4wKt6y65dQB42ZpHf8IzC/rQO4xwlQJGDV
-	p5j+50loHcXij/BVGe9jNXdvxKzX6rnCrjp4ew/zakftj98T1ysvTs6lohNlYq+G
-	GXu/wfHwxmhLsQ2yg2nrVtkUKDFBTc/52Cv3yQ4Wlmjl8DYGMHMZkuxnf58TowYy
-	4yN2bfYJ+ib6TOvUikZ4O2NxtrmzedES9TLnaIsDwaSAd9Mo6Xrv5ccBhOkzCn8f
-	DJo1SiOI609lGO1JWK9A==
-Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wv1njrxsa-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 20:05:46 +0000 (GMT)
-Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
-	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42EK5klT007866
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 14 Mar 2024 20:05:46 GMT
-Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
- nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Thu, 14 Mar 2024 13:05:45 -0700
-From: Anjelique Melendez <quic_amelende@quicinc.com>
-To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
-        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
-CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <quic_subbaram@quicinc.com>, <quic_collinsd@quicinc.com>,
-        <quic_jprakash@quicinc.com>,
-        Anjelique Melendez <quic_amelende@quicinc.com>
-Subject: [PATCH 5/5] pinctrl: qcom: spmi-gpio: Add support for pmih010x and pmd802x
-Date: Thu, 14 Mar 2024 13:04:25 -0700
-Message-ID: <20240314200419.4733-12-quic_amelende@quicinc.com>
-X-Mailer: git-send-email 2.41.0
-In-Reply-To: <20240314200419.4733-2-quic_amelende@quicinc.com>
-References: <20240314200419.4733-2-quic_amelende@quicinc.com>
+	s=arc-20240116; t=1710451193; c=relaxed/simple;
+	bh=pSv0eq6GyP4oEbxXECA3HFqxNdyJm2px1DqDOlMoI2E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EcqfM49XInwO2mHWzfcNP86dekrxNT/69ESllLE52kiESXs5XaXKxt4lnov/WR0wSBMpkRPkJrnC7hvGqHxsOxs+6WUvZkweloqbA88rEkCSDPknvd6VMIdRnEOWvbk71xQ1AgMuEAtqu1Ze7S2yH57SK4ONpFrswQkn0p4G3D0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=NE/79Qq3; arc=none smtp.client-ip=209.85.167.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-513c53ed3d8so2055305e87.3
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 14:19:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1710451189; x=1711055989; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=2sLPEvi0ZaC2kuwz/XuKP+9Qos5a2edAXZoosOOpf/8=;
+        b=NE/79Qq3JEUHRNYEpUEpo6zF+E9BM+vsaoLbRo6Ex8wI413gm5MB65oyAEf1rvXwpS
+         g2GxnN/Yr81kmniPouqKpNRFgCOSb4NHmBvGQ/GskV4BhAmzEfj3l/hoQH/gKaCrxHVe
+         0r8fJIx1EkRDKkRgOUJY9vVA7c92uejQ7ETNgkVe5HNJySNjZpwUBqkeuBqAa0nM3J5L
+         xUQ9EohRE/Bmv0AGp8gYZUlbfQXdi86yrSKVpgDW6aibCgmup5RQaX5zaOgJ1DKFbCJ/
+         XKLDE+bvm1mXI+RYN/i3gvAni1gEtpzj83gtQpypm2bx4dmiHTcrUzebQktgFeLnU0QZ
+         0rBA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710451189; x=1711055989;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
+         :to:content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2sLPEvi0ZaC2kuwz/XuKP+9Qos5a2edAXZoosOOpf/8=;
+        b=iyhfZWAInbFN47URrxK6K35oBfO1c0QngFKn6lOEg4BdAHvg+CyJLmqtOU21RkCTGo
+         U9APLX8cfmZ90wmnCXRHuL3xCXWdOxCB6gQoDg81mL1Ih4N7ls1tcDxpQ9XXgnhbEuh3
+         SPaQXbvyZlUZzEHJE1dtx99BtEsXYj7lPYgQmn3oYNrz7DGUkZfwcyeInVDwzAOw+r/P
+         4nyQBo6hjhs4wXuHNvbStuW7YbL64zeD1WOhcklJQnDsjffCtnzljl0yOi7T1S7Liiwy
+         U4v98vJOUTlm60OYPbASCfbfsudZRMcIEtWvkGQiNU6N3NJwMit7FY8DflfsRNRCw4jk
+         KuEA==
+X-Forwarded-Encrypted: i=1; AJvYcCXLVLoahd0ohDdkGOp9HTQMiEg+fqJOAQDdHJwEk4Oc2jDwVmeRMGA/H82hGQAXvoYKtK0AnOhDRo02NIeJPYH13ehwE/y2EYEHkw==
+X-Gm-Message-State: AOJu0YxDoFItkoLno5eKKGLPIWIqnAQwUEe32OxGZzEtFaA4x9obeByw
+	PbgpdVpqDGPc8+usQ73Bt0OKdrYNwXZgS1V/2DUtF1ZMj7SBOhsib4UhSSSvD7g=
+X-Google-Smtp-Source: AGHT+IHL9af5IE/kz7UeAnUi/ux425Z168X5ciRdXXbofyKlY4kgYwRnh4yET5H3+0pN17jYG/i3uw==
+X-Received: by 2002:ac2:4ecb:0:b0:513:c790:792a with SMTP id p11-20020ac24ecb000000b00513c790792amr1628624lfr.38.1710451188631;
+        Thu, 14 Mar 2024 14:19:48 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id kk28-20020a170907767c00b00a4666bfa979sm1038038ejc.118.2024.03.14.14.19.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 14 Mar 2024 14:19:48 -0700 (PDT)
+Message-ID: <a80f428c-1429-4393-a055-3027dea90f96@linaro.org>
+Date: Thu, 14 Mar 2024 22:19:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
- nalasex01a.na.qualcomm.com (10.47.209.196)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: we9mOisYeT53EY9L51bcseXQO7G7Wpru
-X-Proofpoint-GUID: we9mOisYeT53EY9L51bcseXQO7G7Wpru
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 impostorscore=0
- clxscore=1015 malwarescore=0 priorityscore=1501 adultscore=0 phishscore=0
- mlxlogscore=994 spamscore=0 suspectscore=0 lowpriorityscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2402120000
- definitions=main-2403140155
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/5] dt-bindings: pinctrl: qcom-pmic-gpio: add PMXR2230
+ and PM6450 binding
+Content-Language: en-US
+To: Anjelique Melendez <quic_amelende@quicinc.com>, andersson@kernel.org,
+ konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ quic_subbaram@quicinc.com, quic_collinsd@quicinc.com,
+ quic_jprakash@quicinc.com
+References: <20240314200419.4733-2-quic_amelende@quicinc.com>
+ <20240314200419.4733-4-quic_amelende@quicinc.com>
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240314200419.4733-4-quic_amelende@quicinc.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Add support for qcom,pmih010x-gpio and qcom,pmd802x-gpio.
+On 14/03/2024 21:04, Anjelique Melendez wrote:
+> From: David Collins <quic_collinsd@quicinc.com>
+> 
+> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
+> to inclde compatible strings for PMXR2230 and PM6450 PMICs.
 
-Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
----
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 2 ++
- 1 file changed, 2 insertions(+)
+Typo, include
 
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 54ffb7e1189a..c7ed35cce13e 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -1235,10 +1235,12 @@ static const struct of_device_id pmic_gpio_of_match[] = {
- 	{ .compatible = "qcom,pm8994-gpio", .data = (void *) 22 },
- 	{ .compatible = "qcom,pm8998-gpio", .data = (void *) 26 },
- 	{ .compatible = "qcom,pma8084-gpio", .data = (void *) 22 },
-+	{ .compatible = "qcom,pmd802x-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pmi632-gpio", .data = (void *) 8 },
- 	{ .compatible = "qcom,pmi8950-gpio", .data = (void *) 2 },
- 	{ .compatible = "qcom,pmi8994-gpio", .data = (void *) 10 },
- 	{ .compatible = "qcom,pmi8998-gpio", .data = (void *) 14 },
-+	{ .compatible = "qcom,pmih010x-gpio", .data = (void *) 18 },
- 	{ .compatible = "qcom,pmk8350-gpio", .data = (void *) 4 },
- 	{ .compatible = "qcom,pmk8550-gpio", .data = (void *) 6 },
- 	{ .compatible = "qcom,pmm8155au-gpio", .data = (void *) 10 },
--- 
-2.41.0
+Two commits and quite different subjects... Please make it somehow
+consistent. Prefix is qcom,pmic-gpio, not qcom-pmic-gpio. Start either
+with capital or lower case - just choose one pattern.
+
+A nit, subject: drop second/last, redundant "binding". The "dt-bindings"
+prefix is already stating that these are bindings.
+See also:
+https://elixir.bootlin.com/linux/v6.7-rc8/source/Documentation/devicetree/bindings/submitting-patches.rst#L18
+
+Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+
+Best regards,
+Krzysztof
 
 
