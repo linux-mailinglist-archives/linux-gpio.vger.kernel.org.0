@@ -1,135 +1,196 @@
-Return-Path: <linux-gpio+bounces-4315-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4316-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 063DF87B9B3
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 09:52:14 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E714187BBEF
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 12:28:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id AFBA01F24029
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 08:52:13 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 240DA1C21E4F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 11:28:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34A606BFCD;
-	Thu, 14 Mar 2024 08:51:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 119296EB69;
+	Thu, 14 Mar 2024 11:28:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="njcAB7ED"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BF036BB50;
-	Thu, 14 Mar 2024 08:51:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1554D6EB51
+	for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 11:28:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710406301; cv=none; b=kX1nyTdQAeQIBBEy3omFsBVhS/BYUtr7XdSAdZrbtc4jJBK4quAdP7jzC2AWItGgULyoqgAGA6fcCT7hMrApNT+qWGqxL47WgL/vV+pt5YmRTZBt6Nk6Q3EE/2QXoTRMfWKgJdxZuzJiiQnU4uBvMlgTzEs3TtZXVk92xkHI2H0=
+	t=1710415693; cv=none; b=TSLVolWeCGrkCZzG87oR3LYY9SE6IpkMSOICque2ERtQv6caeiZcUo8w0PFF+SefRs3yjzMQPY0QknWYsKqoJCF6U3LxUopwiJ3cDbGImbbD5py7gQtEKL/5A6KpnabfVlwJ/0wokXe73bS0nW5htjGKRJKQbhq53tuVRVXGeqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710406301; c=relaxed/simple;
-	bh=P7Ik2T6eOKGJQ8UNDv3pkbwaaLfaS8Lw/66XvFCQSg8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tA4Gb48HWmEk0zLhuKiiVQ/cgQykRXkpp3SbN/tqKQbXD1a53apPzbqf1LR4wpzYmm1ny9X/gtE6Bgf6gmBiq7aogc4nVq7hHOrQYqQYgJbvGhRH5elSrwu2R1/Xf0mVdIlp21Mxydj62n/nx37d3zQrpRMQfsc7HkEiNcN5yiI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-609f24f447cso8611677b3.2;
-        Thu, 14 Mar 2024 01:51:39 -0700 (PDT)
+	s=arc-20240116; t=1710415693; c=relaxed/simple;
+	bh=YUnswxyokFpRUhgWdZGsOpo63QsptGL2RAJyQpOw/pA=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Cc:Subject:From:To:
+	 References:In-Reply-To; b=Nwnn5Rwt8z3ZwBLLUVOMZFxcGp6qudxvwkRDGuGD9cmg6+s3czA/uys/4eRo58Z0OufSf0eb9ywYZ7JTy1KiLlA9IVZ9x+JBtA4ZFAMpiiTdkBqLFx1XyIZ/0oMp+QHrvYprN3LW5ZKzMQA1lG3foQFWOa3cSXk14h7a23TA0sg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=njcAB7ED; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-413f4b5171dso1999165e9.1
+        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 04:28:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710415689; x=1711020489; darn=vger.kernel.org;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=kvfWswJLMy50JXcwMfpuKNA6ONIoYQGANkniEpLZiS0=;
+        b=njcAB7ED6FK0wuLtJKLN3HhPWGwP/no4entwuNWxmqXZon6GhzQ6vN3WZLCqGe5VnL
+         6WjKudpCfMpZCBSoK0+RGnjxq2s7/g/xlIEmWaBR9+JwFfPIR7//tyi7fmniqR81LeUa
+         XsW4uU76rX1TalRE/UTAKt2bRh8DSv+HFD1P7zWdvrJFVEySDfV16Et/BxBeTiRvtH4W
+         j7ZM+Lzl3rc7HobNV17kja9dXA60noIo6sDY9YEalFFM74OX0s65xSB0rtAC3z0G+fDg
+         E03bdwmLeUMia9TaEIgrqx6Dw8lf3Cn9byJXdkCjXTVO4Ow/NGxVjyB1M1yei6QmW9AF
+         bjyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710406298; x=1711011098;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=1ULFHXDuigi1AqlFawPWkMS5gLCIeFanRuYVFCogxVU=;
-        b=qpjigTnhrD+SMeOQQ5fOBYFKUnHJTI9UFo2BWNNkwLupiV8Gm/l3SetK2Uf7/VKZJR
-         2bky+xQo0t4XvZtWsUfvn9lOtw50ODlZNCAsFJR2TvGZWGS61Et1kLSaMfRelT2MrIhl
-         RO47xWLp0wyOFID3f8jmLiuzp7Bq+rSbbH5hVVBkkNSb7JiHzIaH4y8XDYIi3LDvELd4
-         kUZskN09Ylikw/r6kmbHLs4DVwT3rmA/HR/VbEW7WyY5FR1nnxfXhYHRPVr+U5YtgdA9
-         fj5UBhGBkNWNEQpceTJqs1qSrG4EHLDERJXNtRqjqMehvFVgc7dFbvVvHs6aHM13hO4X
-         xDaQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWMmtO+wHUpbRgbXUXmFDppgtZrppC3cgW5f5f4tm/P9pfKwj1Aia2mGTTo4UloZ3V1L9kvZYO0KCdfZNpzQUYu7LQf5CpK2BS3UpNDNij6fyUsMa4KCFtuK/OFWqkdk32iNPy6xBN31yO2BpKjTQsKHL2VQhtAEC0YkEr3jWD5c96lkGg+nvl1ur7tXl8vyIrVZrR57DA53mBlF9EvETFpu0XokYqk0w==
-X-Gm-Message-State: AOJu0Yx/6M2tU/FwG+TrBz8UczBZODtUIA0KMuXN+ymn1/CHtJfk1JG1
-	7WHIHhQ3qH9ASgbW7G9hZWKXtO0bRilOOn01UBGPesFKDnj9pvz+6f0vt0j1SIU=
-X-Google-Smtp-Source: AGHT+IGPVhapKf2RbqkoEa6RWd3h1CEpweFn3WEGqxWuy2RxpUZvTHTdE8qWtQpsa4RvvcWNWHTrsA==
-X-Received: by 2002:a0d:f0c3:0:b0:60c:caf2:323d with SMTP id z186-20020a0df0c3000000b0060ccaf2323dmr63455ywe.17.1710406298209;
-        Thu, 14 Mar 2024 01:51:38 -0700 (PDT)
-Received: from mail-yb1-f177.google.com (mail-yb1-f177.google.com. [209.85.219.177])
-        by smtp.gmail.com with ESMTPSA id ce1-20020a05690c098100b00609fc2bd948sm183527ywb.79.2024.03.14.01.51.37
+        d=1e100.net; s=20230601; t=1710415689; x=1711020489;
+        h=in-reply-to:references:to:from:subject:cc:message-id:date
+         :content-transfer-encoding:mime-version:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=kvfWswJLMy50JXcwMfpuKNA6ONIoYQGANkniEpLZiS0=;
+        b=Md19rB2m6ZE7pgGVQkF/D5jQGpt4p7CMQAMU0hXZ7TD+ca+GgW+fgTN9UL1Cfz7V50
+         06FrNfba5guwgq75Wi6l3N9WfxInwJW2fIe0e5Ku4x8VhnahpL8Elr88Mded1oJZ5SuJ
+         VB81KJRNOidnTGQhxWlnO8o7wcGpkQzwKJnRwK1d+ERwueMvNEetdyCFEJ8kq00lhDWH
+         eKCI7SMFJEo/EKe4t14wW7j2EBErpv6mO6C1vnEEtBH827KvJVueSDPuzcv51cuZzYY5
+         G/rT5TQHjd9/h7q6bs5sDU+KGi9HoBwzZ036X2drAfREzwEVy5zR+GoOwmsuXIRW8Mcb
+         XY4w==
+X-Forwarded-Encrypted: i=1; AJvYcCWdww4aphxqgqB94LdIp5so4kzj4faNl4LoM0Kylznvq8nHLb4jc6wzG59lTmpUr9ELlKZGEaio1bgCS63WkM5/n6MEFKWTE8HyWA==
+X-Gm-Message-State: AOJu0YzWrZa+yrJOskaGK1PL2xSAAhQw3mJYTDmLMujipMs8QoPeslLH
+	LoBkegvnttFtoV0Vaxo+jDzE5AfTKV8O2q6uYHH5Tdlp/xUkrneqEwnXOILEdTA=
+X-Google-Smtp-Source: AGHT+IHJEfdVwTbuH+JSGze0FRnS2aVhc9zhn5UqeSV3T5GymAUUSVuHfjDeQarE9hvcW2PNnyn7NA==
+X-Received: by 2002:a05:600c:470e:b0:413:2fee:b359 with SMTP id v14-20020a05600c470e00b004132feeb359mr1310873wmo.3.1710415689433;
+        Thu, 14 Mar 2024 04:28:09 -0700 (PDT)
+Received: from localhost (alyon-651-1-22-137.w82-122.abo.wanadoo.fr. [82.122.123.137])
+        by smtp.gmail.com with ESMTPSA id je2-20020a05600c1f8200b004133072017csm5422626wmb.42.2024.03.14.04.28.01
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 01:51:37 -0700 (PDT)
-Received: by mail-yb1-f177.google.com with SMTP id 3f1490d57ef6-dc238cb1b17so643943276.0;
-        Thu, 14 Mar 2024 01:51:37 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCWk+4huGhf5SowtnS2ppnK0x5jGxhOJ91bh+KjNsa0MSVaMwAUInqlYHZdWQYMFQzDbYsI2+kRN2cWtSHYU0aEf1Q072RmV0JOxdaulNgkyDO44SnpDxg/LkFiZ/2VujEHPydIEfyn6J7/fAxzOIoK0Q/eGxHe5Yv8j8mVs4oJjr22w4WAxv1rntu9B6bqUclx/jumF5E+o4LSmedf8mgMKzuqfCLPlMQ==
-X-Received: by 2002:a25:4cc2:0:b0:dc8:5e26:f501 with SMTP id
- z185-20020a254cc2000000b00dc85e26f501mr988352yba.61.1710406297778; Thu, 14
- Mar 2024 01:51:37 -0700 (PDT)
+        Thu, 14 Mar 2024 04:28:06 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20240313083828.5048-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-In-Reply-To: <20240313083828.5048-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 14 Mar 2024 09:51:26 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVRQTi6jpgKasZiO3_SW7oUy-FX2ocKw5OoOAvE89SpEg@mail.gmail.com>
-Message-ID: <CAMuHMdVRQTi6jpgKasZiO3_SW7oUy-FX2ocKw5OoOAvE89SpEg@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: pinctrl: renesas,rzg2l-pinctrl: Allow
- 'input' and 'output-enable' properties
-To: Prabhakar <prabhakar.csengg@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 14 Mar 2024 12:28:00 +0100
+Message-Id: <CZTFR87IG7MI.11DN441APOPE3@baylibre.com>
+Cc: <m.nirmaladevi@ltts.com>, <lee@kernel.org>, <robh+dt@kernel.org>,
+ <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
+ <jpanis@baylibre.com>, <devicetree@vger.kernel.org>, <arnd@arndb.de>,
+ <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
+ <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
+ <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
+ <kristo@kernel.org>
+Subject: Re: [PATCH v3 09/11] regulator: tps6594-regulator: Add TI TPS65224
+ PMIC regulators
+From: "Esteban Blanc" <eblanc@baylibre.com>
+To: "Bhargav Raviprakash" <bhargav.r@ltts.com>,
+ <linux-kernel@vger.kernel.org>
+X-Mailer: aerc 0.15.2
+References: <20240308103455.242705-1-bhargav.r@ltts.com>
+ <20240308103455.242705-10-bhargav.r@ltts.com>
+In-Reply-To: <20240308103455.242705-10-bhargav.r@ltts.com>
 
-On Wed, Mar 13, 2024 at 9:39=E2=80=AFAM Prabhakar <prabhakar.csengg@gmail.c=
-om> wrote:
-> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+On Fri Mar 8, 2024 at 11:34 AM CET, Bhargav Raviprakash wrote:
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
 >
-> On the RZ/G3S SMARC platform, the 'input' property is utilized in gpio-ho=
-g
-> nodes, and the 'output-enable' property is used for ETH0/1 TXC pins. Upda=
-te
-> the binding documentation to include these properties, addressing the
-> following dtbs_check warnings:
+> Add support for TPS65224 regulators (bucks and LDOs) to TPS6594 driver as
+> they have significant functional overlap. TPS65224 PMIC has 4 buck
+> regulators and 3 LDOs. BUCK12 can operate in dual phase.
+> The output voltages are configurable and are meant to supply power to the
+> main processor and other components.
 >
-> arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dtb: pinctrl@11030000: key=
--1-gpio-hog: 'anyOf' conditional failed, one must be fixed:
->         'input' does not match any of the regexes: 'pinctrl-[0-9]+'
->         True is not of type 'object'
->         [[144, 1]] is not of type 'object'
->         ['key-1-gpio-irq'] is not of type 'object'
->         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
-g2l-pinctrl.yaml#
+> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> ---
+>  drivers/regulator/Kconfig             |   4 +-
+>  drivers/regulator/tps6594-regulator.c | 236 +++++++++++++++++++++++---
+>  2 files changed, 215 insertions(+), 25 deletions(-)
 >
-> arch/arm64/boot/dts/renesas/r9a08g045s33-smarc.dtb: pinctrl@11030000: eth=
-0: 'anyOf' conditional failed, one must be fixed:
->         'mux', 'tx_ctl', 'txc' do not match any of the regexes: 'pinctrl-=
-[0-9]+'
->         'output-enable' does not match any of the regexes: 'pinctrl-[0-9]=
-+'
->         from schema $id: http://devicetree.org/schemas/pinctrl/renesas,rz=
-g2l-pinctrl.yaml#
->
-> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> diff --git a/drivers/regulator/tps6594-regulator.c b/drivers/regulator/tp=
+s6594-regulator.c
+> index b7f0c8779..37d76c483 100644
+> --- a/drivers/regulator/tps6594-regulator.c
+> +++ b/drivers/regulator/tps6594-regulator.c
+> @@ -412,14 +562,20 @@ static int tps6594_regulator_probe(struct platform_=
+device *pdev)
+>  	struct tps6594_ext_regulator_irq_data *irq_ext_reg_data;
+>  	struct tps6594_regulator_irq_type *irq_type;
+>  	u8 buck_configured[BUCK_NB] =3D { 0 };
+> +	u8 ldo_configured[LDO_NB] =3D { 0 };
+>  	u8 buck_multi[MULTI_PHASE_NB] =3D { 0 };
+>  	static const char * const multiphases[] =3D {"buck12", "buck123", "buck=
+1234", "buck34"};
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.10, with the warning messages
-trimmed.
+`multiphases` should prefixed like the new one.
 
-Gr{oetje,eeting}s,
+> +	static const char * const tps65224_multiphases[] =3D {"buck12"};
 
-                        Geert
+> @@ -495,25 +660,30 @@ static int tps6594_regulator_probe(struct platform_=
+device *pdev)
+>  	if (!irq_data)
+>  		return -ENOMEM;
+> =20
+> -	for (i =3D 0; i < MULTI_PHASE_NB; i++) {
+> +	for (i =3D 0; i < multi_phase_cnt; i++) {
+>  		if (buck_multi[i] =3D=3D 0)
+>  			continue;
+> =20
+> +		const struct regulator_desc *multi_regs =3D (tps->chip_id =3D=3D TPS65=
+224) ?
+> +							   tps65224_multi_regs :
+> +							   tps6594_multi_regs;
+
+This should be declared at the top of the function.
+
+>  		rdev =3D devm_regulator_register(&pdev->dev, &multi_regs[i], &config);
+> -		if (IS_ERR(rdev))
+> -			return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> -					     "failed to register %s regulator\n",
+> -					     pdev->name);
+> +			if (IS_ERR(rdev))
+> +				return dev_err_probe(tps->dev, PTR_ERR(rdev),
+> +						     "failed to register %s regulator\n",
+> +						     pdev->name);
+
+The indentation of the `if` looks odd. You should revert this.
+
+> @@ -537,21 +707,34 @@ static int tps6594_regulator_probe(struct platform_=
+device *pdev)
+>  		if (buck_configured[i] =3D=3D 1)
+>  			continue;
+> =20
+> -		rdev =3D devm_regulator_register(&pdev->dev, &buck_regs[i], &config);
+> +		const struct regulator_desc *buck_cfg =3D (tps->chip_id =3D=3D TPS6522=
+4) ?
+> +							 tps65224_buck_regs : buck_regs;
+
+Same here, should be at the top of the function.
+
+> -	/* LP8764 dosen't have LDO */
+> +	/* LP8764 doesn't have LDO */
+>  	if (tps->chip_id !=3D LP8764) {
+> -		for (i =3D 0; i < ARRAY_SIZE(ldo_regs); i++) {
+> +		for (i =3D 0; i < LDO_NB; i++) {
+> +			if (ldo_configured[i] =3D=3D 1)
+> +				continue;
+> +
+> +			struct tps6594_regulator_irq_type **ldos_irq_types =3D
+> +						(tps->chip_id =3D=3D TPS65224) ?
+> +						tps65224_ldos_irq_types : tps6594_ldos_irq_types;
+> +
+> +			const struct regulator_desc *ldo_regs =3D
+> +						(tps->chip_id =3D=3D TPS65224) ?
+> +						tps65224_ldo_regs : tps6594_ldo_regs;
+
+Should be at the top of the function, please fix this in the whole file.
+
+Best regards,
 
 --=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Esteban "Skallwar" Blanc
+BayLibre
 
