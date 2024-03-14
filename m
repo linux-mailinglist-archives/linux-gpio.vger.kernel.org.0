@@ -1,79 +1,114 @@
-Return-Path: <linux-gpio+bounces-4337-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4338-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E908287C27F
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 19:21:16 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 43E3E87C3EE
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 21:05:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F0EF1F229D8
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 18:21:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 745C71C20CDC
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 20:05:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D28276034;
-	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC4897602C;
+	Thu, 14 Mar 2024 20:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na9a34pi"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="R/PZ2e/g"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F407581E;
-	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E9D571750;
+	Thu, 14 Mar 2024 20:05:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710440434; cv=none; b=bcrGJQ9tZktvk22iCqIdSsgI44vyU9MCVeRoa4yTusCiu67aHlVwrWWVj1CsR4r5Bz39fF3m5Wst5fZ4r8gg43d0GFqVENWGrZvWINtfN652VPHkxl7eJ5rJxj+S56PAv90SmPHSMyxb4oIif+yMxSEf4kLZLOy5v8LByIBdfZQ=
+	t=1710446717; cv=none; b=MkEQfGOWEouJwt36PpBBs8bdPa4WR+9Mqi0mldOE1yk1M4HXFNnL1TYgf+vuMD7w0QvXk6UwDu1f4tyxhfXm+3uzDLlpWbbZDKMj8MWosy2r2JYjKQUxw/WB1HOyZU671A5zhBXF/30x8eKLuO47kg4fT4cYCu9aj22+/6jCUfE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710440434; c=relaxed/simple;
-	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=E/9qZY5RqkMaUsy6j0UwAOwvWcawHI37rFujcp2P7+d3Fj/DWgFp1jTxVBQf/zc0VbIwSrQzpozgDOScQy4ljPp2T+G2n+czDDqGs9TIygzRF4KTDRkYi/trt2vRh4EzF0pfyQ/FW/WaszUy/gEb7A+P5CTtrc2M6oXn9GxrWAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na9a34pi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 2862CC433C7;
-	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710440434;
-	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=na9a34pin0xQj2UeBUMMV7xe8NY8YFJB1VERDBJPGgb/mChCDu1ouT7lVuYvbNiJf
-	 rmXMBjtmDujZduOLWGKSH6bLgqRD+MppbSKiTp9La1dAz7IdXBihL93Ez4UiLAGaBW
-	 /7ntbDMVuNh7hzHn1uUUee9bGqqeo3uRHwOQ7bHK9y+33WUjCpVEa1Sqmx5PpL6Ldt
-	 CKjGmj1A6IEgDLgrF22XJ89B47WRxl+XZ6za6UmwsZDn3UxLMP4wSWkoECeqUBsJ7e
-	 wEOLOnRxTyM51ztUAFn08HouEzSdowMxpZTxB5lRxvaIh2qhZccAibxJ7C/3rNiu/3
-	 OQeit156YG93w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1DFC2D84BAA;
-	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
-Subject: Re: [GIT PULL] pin control changes for v6.9
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
-References: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
-X-PR-Tracked-Commit-Id: fa63587f94a77a49b53274dc0fd1ea41dfde5966
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a3df5d5422b4edfcfe658d5057e7e059571e32ce
-Message-Id: <171044043411.24196.17256053826707694115.pr-tracker-bot@kernel.org>
-Date: Thu, 14 Mar 2024 18:20:34 +0000
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+	s=arc-20240116; t=1710446717; c=relaxed/simple;
+	bh=AfZNiMuf+aRKSrN9yhoJPnwQSNTUG/o4Bdr+xYUO1nU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Gc63JhvzFrac7SeTHxBT8SxPfuwFM0rQRxSSHMFGbSHa2FoY6NGEKGnFq3KCoTjJcRb2JKw4O5IFNu9JZfYqC0OxgCmUAfrxMljFQGFvRjLl57xpgx6bnGMDEJ4JjSitmx6zkdlxhoOhOpizvseysr2njLKcG60t66C6adfPOOU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=R/PZ2e/g; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279862.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42ECLWNa027667;
+	Thu, 14 Mar 2024 20:05:13 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=y6k9BHC
+	ta1k7vYaUGdCU6yGFkgTyg1ttSbq9T+xA2iY=; b=R/PZ2e/gYLg65JaxHW41s9+
+	R8C8/NpikCERM5KoNktqTYmkVcg/GB805+5eHFvy3V/O8lnhAgrv7VMtqArHT4/+
+	17ryinQuit1W1aW/xu4AcgnxLAWFkvJ1CbmItDQfw/vkerms3wPm0wiuJ9pe3y2u
+	BQ5MCM2TGdci06nFu859WE14TsvoMEa3CH4lrPDZncd5xV6HCUHHMWCxOxzbxnJw
+	rDmhYU3FGcFH6qtTNg6uZkXkTQAOqJRafkPJgw8nhepk10WhLoraimQ1J5z6+vQy
+	9NKnsK1AV/jE9SgM/zuHJdkWrlBJnek08O+B+qjH54AF6x2lMWko+9gG99nYjjA=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wuujssuqg-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Mar 2024 20:05:12 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42EK5CTg009411
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 14 Mar 2024 20:05:12 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Thu, 14 Mar 2024 13:05:11 -0700
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_subbaram@quicinc.com>, <quic_collinsd@quicinc.com>,
+        <quic_jprakash@quicinc.com>,
+        Anjelique Melendez <quic_amelende@quicinc.com>
+Subject: [PATCH 0/5] Add GPIO support for various PMICs
+Date: Thu, 14 Mar 2024 13:04:15 -0700
+Message-ID: <20240314200419.4733-2-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.41.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01b.na.qualcomm.com (10.47.209.197) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: j7xGd0AWaWQXiiXllvifo7HQlecg_j4T
+X-Proofpoint-GUID: j7xGd0AWaWQXiiXllvifo7HQlecg_j4T
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-14_13,2024-03-13_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 phishscore=0 adultscore=0 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=739 spamscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2402120000 definitions=main-2403140155
 
-The pull request you sent on Wed, 13 Mar 2024 23:24:14 +0100:
+Add GPIO support for PMXR2230, PM6450, PMIH010X and PMD802X
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
+Anjelique Melendez (2):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH010x and PMD802x binding
+  pinctrl: qcom: spmi-gpio: Add support for pmih010x and pmd802x
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a3df5d5422b4edfcfe658d5057e7e059571e32ce
+David Collins (1):
+  dt-bindings: pinctrl: qcom-pmic-gpio: add PMXR2230 and PM6450 binding
 
-Thank you!
+Jishnu Prakash (2):
+  gpio: pinctrl-spmi-gpio: Add support for pmxr2230
+  gpio: pinctrl-spmi-gpio: Add support for pm6450
+
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 26 +++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      |  4 +++
+ 2 files changed, 30 insertions(+)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.41.0
+
 
