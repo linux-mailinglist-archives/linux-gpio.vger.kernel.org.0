@@ -1,124 +1,110 @@
-Return-Path: <linux-gpio+bounces-4317-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4318-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC48B87BBF3
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 12:29:35 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 814C687BD8A
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 14:19:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6413D286793
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 11:29:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0AC12B22D0B
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 13:19:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E14D6EB64;
-	Thu, 14 Mar 2024 11:29:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54D3170CDE;
+	Thu, 14 Mar 2024 13:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="pUVMmRFT"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Cae6EuGo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f67.google.com (mail-wr1-f67.google.com [209.85.221.67])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879E26EB50
-	for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 11:29:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.67
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5469B71720;
+	Thu, 14 Mar 2024 13:18:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710415770; cv=none; b=rxsS7jeIOboft/tIqOHdrufa2Cl9QtZd4Gzx9s/iPTamy02PQHtB4EjjEB3SZRPc5sWGSpMME47bbr/GjtbY8OS6RVfo3TTU+zR5tb90cHbJTsxMw/JddOTvWmSkoIH61IpXa0VtheZpxQLqStAE80IHHfVIiPme1dqfYyA5rE4=
+	t=1710422292; cv=none; b=oBt/qwfxlYMLZMrvf9xNbUl31vpbFz2mJuPEMbF4YDVRtoOZHYwzl2rACExFivHrxKb55MBpHSfq51mVqh1Ol1/w4HTyHaGYMlhQA/At25bLrgi+/w/2EGejahFKgwFqEyLdNIqZHysxfY6aMIoW3MmGLUxvKDnI70s0f3nPkd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710415770; c=relaxed/simple;
-	bh=DiE9EEVgFjio7zvrWO5a1XtVxji/hH4q6/j8/ifn8DE=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:Mime-Version:
-	 References:In-Reply-To; b=UQOOOIpivufqY8KWrrlqUVc4YuxeYPeZs0XGKYHSJwFLZMMLCLn92c2Xbv23/Mv2xrtVjoi/xhtGUjLlUu5C+T5SykNHvQF8cHTXQOoVbqyhZ/B2FDvKQnT381hbEznufMBWoT6Hcyl9eGRx0k95VCi2VU3EC3D3jfz6d+j3t70=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=pUVMmRFT; arc=none smtp.client-ip=209.85.221.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f67.google.com with SMTP id ffacd0b85a97d-33e92b3b5c9so910141f8f.2
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 04:29:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710415767; x=1711020567; darn=vger.kernel.org;
-        h=in-reply-to:references:mime-version:content-transfer-encoding:to
-         :from:subject:cc:message-id:date:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=DiE9EEVgFjio7zvrWO5a1XtVxji/hH4q6/j8/ifn8DE=;
-        b=pUVMmRFTtQhao619MEMQwCBYD5o2nLXE6kyKPiRxn6aPQTsDWuQYk/Jw/47It5ZbqX
-         xar3GZccRXpmNdBD/J+rFZAWd+xxsWAxzw8jNX/ge9arw3/fCnF4NvS9OcEzWOhEAnoM
-         92oHsdV9HKyXuENsFa5hid0TvFnD7LlZr2frvFHRHzehEhW/WPuH3HQxEeMDeKXLxX7V
-         6/N/9LXx2nfTIKLZs2T5GIBT4j7fnSzVxtFrUuVYoL5b6hGtlvn2P5qRG6vtUr271HAg
-         LSt/fD5QOXvwiWxaQtplKPDpuLdrPa/fTzdONIem30qerhIQsjo+rz4AVg83KxpByw/6
-         RneA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710415767; x=1711020567;
-        h=in-reply-to:references:mime-version:content-transfer-encoding:to
-         :from:subject:cc:message-id:date:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DiE9EEVgFjio7zvrWO5a1XtVxji/hH4q6/j8/ifn8DE=;
-        b=bBjFbyQtSW8AbMh5yxsobdXeUrGs2hnObo6/rTDAwOXEbc9mx1Ob8VY/RQSgvW5ETH
-         xxFobmlS9DZSAnBiq8HC3nTn5t77o+7P70vXRbH6soPrMQ1MWtNy+PIqmiojTA5sGMkI
-         /c4zVEDXAQaVWB8x9vMBLONOTJt3dsFWnP4V/AcK+mHXkeNrIAdBZ0YC59eMQrazut4U
-         YxQGhETtWOPDtY085d4Qxvfh2sH7n54wzjHz2mQaqcdJMS1GbCbiAz1n8/rOdxl4k+em
-         JDg+KJqvL4PbTPyMX54Miu0fSlEp2Cb2l6gZcq4+xuoE2+ApYMJoWeUAfT8QPpTOKEho
-         dpUA==
-X-Forwarded-Encrypted: i=1; AJvYcCWPqbk4Ghu4M7D4bIVFXDp4V6n916UnZDYAbJMJ+2X/zT9i8+9OC9AOYDk2qDFEWeCGTlyo27qHS4gwADNJ5gnJIzBIR2P66pJweg==
-X-Gm-Message-State: AOJu0YxLt7ovzEjKQPdor+wkv1dg+pfMND+jZL5z58xISicowBwzwwsA
-	X6BnqT3UPEpfZ7oGg/Ehzocwzy5o/o/dpPjwFPxiJyKBAoFVhTIB7jvI0VpxGHc=
-X-Google-Smtp-Source: AGHT+IFlvfFShWc43gizRgqbXtLxPN837uXmBEtemv4L9dx6zk39jQ3uF7UInFSgzfVMY1ONsju8pw==
-X-Received: by 2002:adf:cf08:0:b0:33e:7f67:5dd8 with SMTP id o8-20020adfcf08000000b0033e7f675dd8mr1035572wrj.54.1710415766841;
-        Thu, 14 Mar 2024 04:29:26 -0700 (PDT)
-Received: from localhost (alyon-651-1-22-137.w82-122.abo.wanadoo.fr. [82.122.123.137])
-        by smtp.gmail.com with ESMTPSA id t4-20020a0560001a4400b0033e756ed840sm543934wry.47.2024.03.14.04.29.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 04:29:24 -0700 (PDT)
-Content-Type: text/plain; charset=UTF-8
-Date: Thu, 14 Mar 2024 12:29:23 +0100
-Message-Id: <CZTFSA2OG09N.3V2KR7KS6GU1W@baylibre.com>
-Cc: <m.nirmaladevi@ltts.com>, <lee@kernel.org>, <robh+dt@kernel.org>,
- <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>,
- <jpanis@baylibre.com>, <devicetree@vger.kernel.org>, <arnd@arndb.de>,
- <gregkh@linuxfoundation.org>, <lgirdwood@gmail.com>, <broonie@kernel.org>,
- <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>,
- <linux-arm-kernel@lists.infradead.org>, <nm@ti.com>, <vigneshr@ti.com>,
- <kristo@kernel.org>
-Subject: Re: [PATCH v3 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
- pinctrl and GPIO
-From: "Esteban Blanc" <eblanc@baylibre.com>
-To: "Bhargav Raviprakash" <bhargav.r@ltts.com>,
- <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: quoted-printable
+	s=arc-20240116; t=1710422292; c=relaxed/simple;
+	bh=TIpEZ52kU0piR4WN3tJ7pG9MeperkqFwPKj1jGcMTOE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=E6J2TLAtT1LX5JkfIo/iNHIKgQ2n0SuGkIHEZGq5zzOtgxwOAsfrKu1+M2RSQfleFeHUqexHBYQyVKcwysiNtPosVE2MVfHgmEKMiLu0vNVzrlMpmJFdaadamezEyNpufnAcOyBrTQdE6DcOnIn2Z1aZnsMPGCsRDeG+auO0YQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Cae6EuGo; arc=none smtp.client-ip=192.198.163.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1710422291; x=1741958291;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TIpEZ52kU0piR4WN3tJ7pG9MeperkqFwPKj1jGcMTOE=;
+  b=Cae6EuGoylqteVrbAI5ECSTDQoCessnIAyqEcBSvtYTvxBzLpkdW40rP
+   s7GW2tTC1RX6gnETEqVzF5RcWTTogwDZ1m7yyzlRr1DIF03rHUYjPslIr
+   /C1rm4N0CfVmd+KEecM36qf/GmeG6tOD5ARNbVuxIj4eQoGPVg3jbta9D
+   Th0zs5xV7qqxdhuRapOuD760DuCM4XL9C5M54ApjSBjWjKNKIHgH1ikS8
+   7g46Q3jbUSCn8rKvinpdXqrdTMhgg+pDHlvivWarAYxnopE+l5zPIWgj9
+   B8y0fSTNll07XSc0eauGBTJu9d3pWinDFnEO13JiL+JDyHOnnC5HKR0Ed
+   w==;
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="5091828"
+X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
+   d="scan'208";a="5091828"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa113.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 06:18:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11012"; a="914460152"
+X-IronPort-AV: E=Sophos;i="6.07,125,1708416000"; 
+   d="scan'208";a="914460152"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 06:18:04 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rkky9-0000000CWMl-4ARz;
+	Thu, 14 Mar 2024 15:18:01 +0200
+Date: Thu, 14 Mar 2024 15:18:01 +0200
+From: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+To: Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+Cc: "rafael@kernel.org" <rafael@kernel.org>,
+	"mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
+Message-ID: <ZfL5CYMLY03i8q6u@smile.fi.intel.com>
+References: <20240313030251.1049624-1-hamish.martin@alliedtelesis.co.nz>
+ <ZfGMNWtFrgsuUdLz@smile.fi.intel.com>
+ <ZfGNfucm2-izJBfd@smile.fi.intel.com>
+ <f6833616b81e4e35f561dc0ea4dae8dcd0ac026b.camel@alliedtelesis.co.nz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-X-Mailer: aerc 0.15.2
-References: <20240308103455.242705-1-bhargav.r@ltts.com>
- <20240308103455.242705-11-bhargav.r@ltts.com>
-In-Reply-To: <20240308103455.242705-11-bhargav.r@ltts.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f6833616b81e4e35f561dc0ea4dae8dcd0ac026b.camel@alliedtelesis.co.nz>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Fri Mar 8, 2024 at 11:34 AM CET, Bhargav Raviprakash wrote:
-> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
->
-> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
-> significant functional overlap.
-> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
-> dedicated device functions.
->
-> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Mar 14, 2024 at 01:13:31AM +0000, Hamish Martin wrote:
+> On Wed, 2024-03-13 at 13:26 +0200, Andy Shevchenko wrote:
 
-Hi,
+...
 
-What changed here compared to the previous version?
+> Removing the setting of the handle to invalid may be the right fix but
+> I don't feel I know the code well enough to make a decision on that. It
+> certainly doesn't resolve things immediately - I saw ref counting
+> warnings output.
 
-You might have missed my previous email[1] since I don't see any of changes
-I suggested.
+Not removing, but moving to the better place?
+Can you share warnings, though?
 
-[1] https://lore.kernel.org/r/CZHM5FYHS6G0.295L6AYUNZCT@baylibre.com/
+P.S.
+I'm not an expert in ACPICA and low lever of ACPI glue layer in the Linux
+kernel, perhaps Rafael can suggest something better.
 
-Best regards,
+-- 
+With Best Regards,
+Andy Shevchenko
 
---=20
-Esteban "Skallwar" Blanc
-BayLibre
 
 
