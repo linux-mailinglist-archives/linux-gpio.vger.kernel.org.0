@@ -1,131 +1,195 @@
-Return-Path: <linux-gpio+bounces-4346-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4350-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 488E087C51C
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 23:23:58 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id B9D0287C5F1
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:23:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C4499B21365
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 22:23:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BE4E5B21F32
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 23:23:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8A8B276906;
-	Thu, 14 Mar 2024 22:23:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76CC14A9D;
+	Thu, 14 Mar 2024 23:23:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="H3g78vW5"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="D1qg+4UM"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682C0768FB;
-	Thu, 14 Mar 2024 22:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF24C7483;
+	Thu, 14 Mar 2024 23:23:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710455030; cv=none; b=IyK7LRWVYr/ygRAf3+lL7mieEAW8+dCiBU2BuoDDOnKRWDbt4+0YtNXwGoayH8ooNu6SyTj7BtkRJLdhnSQzTqrmiEFCJxdQz+nXgJTZjZqEIqXuDI05StczCNeyeeHabRaTwhOIlZYn+uSV5GBss3UQXcW/zkwhxD4NXswfujM=
+	t=1710458587; cv=none; b=acAHXSpuSAzt7FgFM6k0SxppVQ3TFTytTtgSRgIlJOqAPrwo+6OAcqE1kDSHgTjvCyJ38Aw1f6dhsZQZbRFiTtPBSuUTjAgB9lflvDaEhG3Mca03utagCWWc+apTya6hVvRXJ3mOqf6FtOfl5auMdvzze5QUMsjqQm8aAKnq5Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710455030; c=relaxed/simple;
-	bh=1UvIatx4kpXKXQ8b0xv9aC+YyzrYn0tYZ+udZOWdEus=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jDBjbOyLo60Y2UOp4kxhv5uf+H0B98DmaBATCDOGDUOO4Mwerf3jLDIAj0JGAO5vWwOSMo6UyWICg653BQXw0y0mjMh62p6pgF2v0Om9VjCUfpjiDiPF1s4c5YVgZgNWhPm9byGD95WvVZX4TCSCH0FXBAFujkYMNzjiYqSg4/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=H3g78vW5; arc=none smtp.client-ip=198.175.65.19
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1710455029; x=1741991029;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1UvIatx4kpXKXQ8b0xv9aC+YyzrYn0tYZ+udZOWdEus=;
-  b=H3g78vW5+CsEzJvkBjymxqCfcDxRw7DxrybtWnwcjiN+irwvDTe3K1L/
-   vwOcXlfPaI7Ncf4H9cFTo8CccEIm6ibosKMyh3f8nwDOjgCTgu4OEpnKD
-   WdIVSV+0XbSCU6GbBW72ULtJ0GWJXSqm31KTLvh1bFqa3N7Php/GhJbZh
-   GL+kH8WRg0kVXLStxOnbNgpo1t+/mq9X23NE78Wm+Rx0d/XyAvXRoX9Ru
-   Au9QZ7LNBVuO1lh6q5gyRNTBYhRa74irhvzAuhem9rNsSxio2Sziyx1So
-   BYpyqL3n5QP89k4dUbAhSkBkNWpuGuk8NAVm/SMmXPaOERLWr5XH4gTuW
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11013"; a="5171640"
-X-IronPort-AV: E=Sophos;i="6.07,126,1708416000"; 
-   d="scan'208";a="5171640"
-Received: from orviesa002.jf.intel.com ([10.64.159.142])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Mar 2024 15:23:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,126,1708416000"; 
-   d="scan'208";a="43358107"
-Received: from lkp-server01.sh.intel.com (HELO b21307750695) ([10.239.97.150])
-  by orviesa002.jf.intel.com with ESMTP; 14 Mar 2024 15:23:45 -0700
-Received: from kbuild by b21307750695 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rktUF-000Dpx-1m;
-	Thu, 14 Mar 2024 22:23:43 +0000
-Date: Fri, 15 Mar 2024 06:22:48 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v1 04/11] pinctrl: aw9523: Make use of struct pinfunction
- and PINCTRL_PINFUNCTION()
-Message-ID: <202403150648.HPQmT2Ob-lkp@intel.com>
-References: <20240313235422.180075-5-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1710458587; c=relaxed/simple;
+	bh=YgYS3RkelOTEkhUj4bVVmVrIgp/NrO8aKhUpHUD7bt4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dHvQkEmAK763fDemENhPXYcN9B5z2JupDmjk9ht+aboaM2g1rgY38mMfixgKF7puaTAy+XVmcKb8FE0ZU3XQQyddNgWuunBLqb/FEq1bnmfzz0oGGcuqJPcA+AITJXc1Zymw1T6pqwZbO8wsb/AIg//hatXt2pbsF/a3vujnbTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=D1qg+4UM; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 60CE810000E;
+	Fri, 15 Mar 2024 02:23:00 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 60CE810000E
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710458580;
+	bh=k/KjHQTEMbNbNQoJ8kJxtt3YqCKnhYgeapWc9/6QS/4=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=D1qg+4UMdHIDAvwEQXQNNqThdhmlSxF9/GZZ7ZfnkfIZcsDRvPNSq0WUmPDfFNcVc
+	 4j3UhMUwYnw2FPlEVh1BxaCgbWmhdz45D5vx1oLqwFuZS22lbK+ZRmxWCn7MwJCnXj
+	 Fbms0j6G7g9rqb06AITwWzzWMOph30aCkz4ty9skD7vqzK1f+PgSTau7H1TupHlZLz
+	 PO/G2oZcY9ApS4cL2Ko4He0w6EEfVfvyewuvSN/1rJF+9XTXjUFODM/GtmvZE+u7gp
+	 QXer2VmNd2/uta0LFwyYWqmrVre5Q0mgQx4NEPQYGjuUquK5/SbgH8f9CuKIucykfW
+	 1CmMcIoQ+Ap6Q==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Fri, 15 Mar 2024 02:23:00 +0300 (MSK)
+Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Fri, 15 Mar 2024 02:22:59 +0300
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
+ Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
+ Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liam Girdwood
+	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
+	<linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
+	<tiwai@suse.com>, <linux-amlogic@lists.infradead.org>,
+	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
+	<linux-gpio@vger.kernel.org>
+CC: <kernel@salutedevices.com>
+Subject: [PATCH 00/25] Introduce support of audio for Amlogic A1 SoC family
+Date: Fri, 15 Mar 2024 02:21:36 +0300
+Message-ID: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240313235422.180075-5-andy.shevchenko@gmail.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_smtp_not_equal_from}, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-Hi Andy,
+This series includes the following:
 
-kernel test robot noticed the following build errors:
+ - new audio clock and reset controller data and adaptation for it of existing
+   code (patches 0001..0004);
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next linus/master next-20240314]
-[cannot apply to v6.8]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+ - adaptation of existing audio components for A1 Soc (patches 0005..0021);
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-aw9523-Destroy-mutex-on-remove/20240314-075853
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20240313235422.180075-5-andy.shevchenko%40gmail.com
-patch subject: [PATCH v1 04/11] pinctrl: aw9523: Make use of struct pinfunction and PINCTRL_PINFUNCTION()
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240315/202403150648.HPQmT2Ob-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240315/202403150648.HPQmT2Ob-lkp@intel.com/reproduce)
+ - handy cosmetics for dai-link naming (patches 0022..0023);
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202403150648.HPQmT2Ob-lkp@intel.com/
+ - integration of audio devices into common trees (patch 0024);
 
-All errors (new ones prefixed by >>):
+ - audio support bring up on Amlogic ad402 reference board (patch 0025). This
+   patch is not actually checked on real hardware (because all ad402 that we had
+   were burned out). This patch is based on ad402's schematics and on experience
+   with our own hardware (which is very close to reference board);
 
-   drivers/pinctrl/pinctrl-aw9523.c: In function 'aw9523_pmx_get_groups':
->> drivers/pinctrl/pinctrl-aw9523.c:170:36: error: 'const struct pinfunction' has no member named 'ngrpoups'; did you mean 'ngroups'?
-     170 |         *ngroups = aw9523_pmx[sel].ngrpoups;
-         |                                    ^~~~~~~~
-         |                                    ngroups
+Dmitry Rokosov (2):
+  ASoC: dt-bindings: meson: introduce link-name optional property
+  ASoC: meson: implement link-name optional property in meson card utils
 
+Jan Dakinevich (23):
+  clk: meson: a1: restrict an amount of 'hifi_pll' params
+  clk: meson: axg: move reset controller's code to separate module
+  dt-bindings: clock: meson: add A1 audio clock and reset controller
+    bindings
+  clk: meson: a1: add the audio clock controller driver
+  ASoC: meson: codec-glue: add support for capture stream
+  ASoC: meson: g12a-toacodec: fix "Lane Select" width
+  ASoC: meson: g12a-toacodec: rework the definition of bits
+  ASoC: dt-bindings: meson: g12a-toacodec: add support for A1 SoC family
+  ASoC: meson: g12a-toacodec: add support for A1 SoC family
+  ASoC: meson: t9015: prepare to adding new platforms
+  ASoC: dt-bindings: meson: t9015: add support for A1 SoC family
+  ASoC: meson: t9015: add support for A1 SoC family
+  ASoC: dt-bindings: meson: axg-pdm: document 'sysrate' property
+  ASoC: meson: axg-pdm: introduce 'sysrate' property
+  pinctrl/meson: fix typo in PDM's pin name
+  ASoC: dt-bindings: meson: meson-axg-audio-arb: claim support of A1 SoC
+    family
+  ASoC: dt-bindings: meson: axg-fifo: claim support of A1 SoC family
+  ASoC: dt-bindings: meson: axg-pdm: claim support of A1 SoC family
+  ASoC: dt-bindings: meson: axg-sound-card: claim support of A1 SoC
+    family
+  ASoC: dt-bindings: meson: axg-tdm-formatters: claim support of A1 SoC
+    family
+  ASoC: dt-bindings: meson: axg-tdm-iface: claim support of A1 SoC
+    family
+  arm64: dts: meson: a1: add audio devices
+  arm64: dts: ad402: enable audio
 
-vim +170 drivers/pinctrl/pinctrl-aw9523.c
-
-   164	
-   165	static int aw9523_pmx_get_groups(struct pinctrl_dev *pctl, unsigned int sel,
-   166					 const char * const **groups,
-   167					 unsigned int * const ngroups)
-   168	{
-   169		*groups = aw9523_pmx[sel].groups;
- > 170		*ngroups = aw9523_pmx[sel].ngrpoups;
-   171		return 0;
-   172	}
-   173	
+ .../bindings/clock/amlogic,a1-audio-clkc.yaml |  83 +++
+ .../reset/amlogic,meson-axg-audio-arb.yaml    |  10 +-
+ .../bindings/sound/amlogic,axg-fifo.yaml      |   8 +
+ .../bindings/sound/amlogic,axg-pdm.yaml       |   5 +
+ .../sound/amlogic,axg-sound-card.yaml         |  12 +-
+ .../sound/amlogic,axg-tdm-formatters.yaml     |  22 +-
+ .../bindings/sound/amlogic,axg-tdm-iface.yaml |   6 +-
+ .../bindings/sound/amlogic,g12a-toacodec.yaml |   1 +
+ .../bindings/sound/amlogic,gx-sound-card.yaml |   6 +
+ .../bindings/sound/amlogic,t9015.yaml         |   4 +-
+ .../arm64/boot/dts/amlogic/meson-a1-ad402.dts | 126 ++++
+ arch/arm64/boot/dts/amlogic/meson-a1.dtsi     | 471 +++++++++++++++
+ drivers/clk/meson/Kconfig                     |  18 +
+ drivers/clk/meson/Makefile                    |   2 +
+ drivers/clk/meson/a1-audio.c                  | 556 ++++++++++++++++++
+ drivers/clk/meson/a1-audio.h                  |  58 ++
+ drivers/clk/meson/a1-pll.c                    |   8 +-
+ drivers/clk/meson/axg-audio.c                 |  95 +--
+ drivers/clk/meson/meson-audio-rstc.c          | 109 ++++
+ drivers/clk/meson/meson-audio-rstc.h          |  12 +
+ drivers/pinctrl/meson/pinctrl-meson-a1.c      |   6 +-
+ .../dt-bindings/clock/amlogic,a1-audio-clkc.h | 122 ++++
+ .../reset/amlogic,meson-a1-audio-reset.h      |  29 +
+ .../dt-bindings/sound/meson-g12a-toacodec.h   |   5 +
+ sound/soc/meson/axg-pdm.c                     |  10 +-
+ sound/soc/meson/g12a-toacodec.c               | 298 ++++++++--
+ sound/soc/meson/meson-card-utils.c            |  12 +-
+ sound/soc/meson/meson-codec-glue.c            | 174 ++++--
+ sound/soc/meson/meson-codec-glue.h            |  23 +
+ sound/soc/meson/t9015.c                       | 326 +++++++++-
+ 30 files changed, 2394 insertions(+), 223 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/amlogic,a1-audio-clkc.yaml
+ create mode 100644 drivers/clk/meson/a1-audio.c
+ create mode 100644 drivers/clk/meson/a1-audio.h
+ create mode 100644 drivers/clk/meson/meson-audio-rstc.c
+ create mode 100644 drivers/clk/meson/meson-audio-rstc.h
+ create mode 100644 include/dt-bindings/clock/amlogic,a1-audio-clkc.h
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-a1-audio-reset.h
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.34.1
+
 
