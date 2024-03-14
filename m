@@ -1,132 +1,158 @@
-Return-Path: <linux-gpio+bounces-4330-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4331-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9CB2687BF04
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 15:35:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 700E387BFCA
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 16:21:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id CE9AC1C215FF
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 14:35:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2349A1F2290E
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 15:21:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2E481E497;
-	Thu, 14 Mar 2024 14:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C64C671B37;
+	Thu, 14 Mar 2024 15:21:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="gMVq9Xp3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SSPPS5gY"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-pf1-f182.google.com (mail-pf1-f182.google.com [209.85.210.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A111B548F2
-	for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 14:35:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 125BF71B27;
+	Thu, 14 Mar 2024 15:21:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710426918; cv=none; b=GMLftty9iOv5hyQknl+wvbrzOGo2QVy0IMwQofHb8eZFWuVigMIWkq7heTc2uwz9W5rGr7y+oUnzIlv4h5qSEcM619xazGnqRwM3b48dv1M16oJ10hHAya4ef4IVcfPa+Gc64RMLPvDyN9LTpzYgIojdRzLa0qN539yxmlTTafI=
+	t=1710429686; cv=none; b=HmjbJY2ZMFMgHo4lBzrvwdc+ROKkpkc137njjcaXhQnG/k0903J9wjMDmepJHZgydfJyfPobg44fl472rQjqBHM8uRFTZJRNSOBlSVRMfEy0F3oMbWrCuWU0MxgcFUA5zh8T5P26ryUol10b4JJo76oTihOVTCJVn688oCq8Qnk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710426918; c=relaxed/simple;
-	bh=ADBh9YibRLgJRYob/1rW3aS+FG3zpqR0Xph5ndKNCAM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tZLuaLmZDyQxJR+zhVUYkpSxiVd7ItY1Mhr3/HjrRDFs6u9WouBgaRTwVpCsufoOYEWl55BAVfLtCj7VB3Mj1lig63kaHmRKUoKxJQyTbA7AGmqdIS70+R7LYv6CtM27bJOq/PHR7lX2NtKvNQqvJnKD4POgDkpVYz5FBPPokbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=gMVq9Xp3; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-56829f41f81so1402750a12.2
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 07:35:16 -0700 (PDT)
+	s=arc-20240116; t=1710429686; c=relaxed/simple;
+	bh=Nxn5JtOFrYpN0fHpacI2byBmMGBLKNGEX9bKalqA2BM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=P4mYLpLCybJWMgdgLa75wCRn+q/jmRgALQ/AP4CRftc5MY0C6174ZC2Nx+hwXrlE+d2caL+Vf0bx5VKWyHAiMC8o8gSnMavhqZeGjUogizbEdkHy9r0C4SX1T8wWBH0FnfQvS5ZXJnNdH3hLIJSes17yuJlNrAw/3eJ3pNcysQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SSPPS5gY; arc=none smtp.client-ip=209.85.210.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f182.google.com with SMTP id d2e1a72fcca58-6e6082eab17so1030223b3a.1;
+        Thu, 14 Mar 2024 08:21:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tuxon.dev; s=google; t=1710426915; x=1711031715; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=axdW4v18nIUnyQiLKKJXBxP/Lw0GVm9nBviRq+44A7A=;
-        b=gMVq9Xp3iIOtVStc1Rk/uReG1wltgabzvEICElpxAXXYAKRd9y4fEn2ND89K4O6ImM
-         CWMD8b76N22TwtEl3qgXfUl9iBD+fVYd99gCK90bqu7c4QCd85A0MEK/83G9VEuRQ/eH
-         oUKPojfM1dArnOIVIRwLMtUuC5E20XnpBDkQF3N0zKSv9yMuG8RPQ9u6oPPhBhvbKRws
-         iyXiJcUwqRC3tFvbBJWjctyVNoQ/5rgO6Cr1klxBEJY82KT6NKcfbjxHjiotpBMAt3ry
-         EbexeL7MXJuiPg2xZAJ/sQwCEfaRCAxC3069dwO5UQ8e7Pxi4W3WhXPWO66tm+Mou0kv
-         4l9w==
+        d=gmail.com; s=20230601; t=1710429684; x=1711034484; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=G7sWNt577aBHDyddBZ3kkUFNs3z9eJyKWD9qgLbpckE=;
+        b=SSPPS5gYQlIWQSZo7CBjX/wMs/KE7HrADgJAG6jtVjIdi7ym4YlpkI9vwUcgQ59PBr
+         41ZaPQONVQD8K0bW29Uc7tebV/rpN8xWUkZ8gzX7qIsIYKA9w33zzlpzwFwCE6/7fPDu
+         R5FJalb1YI3D71e9TUMHZCNPUVY13A+OIe4irFRuUb9GnE7so6JA7/fmtXtttUm3lOTj
+         m6DlhweXnWWMCh4+dapnT0rRfTDCwa3rYOwm5a6VGCGTpdV4dXrWpJ5UIxwp+LdrVpGw
+         mmTswOQ8Ogb00e0xQlDVC5S+0ELqN5HO0iedWWTKQsu+bB17vR5a/trbo0SPJNyDQ2Vp
+         HCbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710426915; x=1711031715;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=axdW4v18nIUnyQiLKKJXBxP/Lw0GVm9nBviRq+44A7A=;
-        b=ifg/XPDnnly72+zTpHDzH0rVFBMd2QNA+YRpVlTl06f/8Kc0L53EPtkAK6o/T71nQ/
-         TgzQn+3nPw2PXG7yKZS+f9PIV3FFegdQWPWpeoO3WBkjT9QWmG7gXhlqeXjnfYdWkowN
-         3U2iE85JaWGO/8xtc65KHad7Sb69Pqp0oB948gXIBTALO7Fky26EPhQO4aJwUjnaKFnM
-         +qy0cbAkeXDEJOQeOXglWZAja4VsbgGO98GJIUpA107PZQATaT+uw4nTLUThM91sRTPu
-         292FNRGQFFK0OgJkx9I7K4qdyS6NY+2Pug00vF+wzC2Givc1HNq2PQAWngIEs9LOkKsj
-         D/2w==
-X-Forwarded-Encrypted: i=1; AJvYcCU4Bta2sboLvwdv+Bu1+/5TvaBfSByMSF03zYO0hxO8BTNhs/rQlRoy4ahKpZs57LGhybFEWiMQMPvuVO0GyoPeUJGnBiZffZ6x/w==
-X-Gm-Message-State: AOJu0YzwNvfkRLHhLhgjD7un7zkCLQ/bT1B7M/9ID0+PyEtxNTUsm705
-	fHmKR0j+Qouo+AVOAgf2yT6tNpsWiyUvt+XGpncsnmvXGFMftMbimK0Uq/pThVk=
-X-Google-Smtp-Source: AGHT+IFSlOL+Ts8Nmv1jHT+0qtRQeIM5wTh5Txsp0n0sk9VCn8HaKd8RKJDlwXgo0lwsxy5YcyQhBQ==
-X-Received: by 2002:a05:6402:380b:b0:568:9b13:77fc with SMTP id es11-20020a056402380b00b005689b1377fcmr581261edb.36.1710426914916;
-        Thu, 14 Mar 2024 07:35:14 -0700 (PDT)
-Received: from [192.168.50.4] ([82.78.167.144])
-        by smtp.gmail.com with ESMTPSA id y14-20020aa7ccce000000b005653c441a20sm766627edt.34.2024.03.14.07.35.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 14 Mar 2024 07:35:14 -0700 (PDT)
-Message-ID: <03d20c1a-cbdf-46ec-963f-6c5b8305e5f3@tuxon.dev>
-Date: Thu, 14 Mar 2024 16:35:13 +0200
+        d=1e100.net; s=20230601; t=1710429684; x=1711034484;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:sender:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=G7sWNt577aBHDyddBZ3kkUFNs3z9eJyKWD9qgLbpckE=;
+        b=D4uQlRLURbq2gmGCJwnSLrP+onxV85oANQvEiJvbSP5u3doFCveSCWq4vVlIbwxFK2
+         e2D0VQtPPmFaOQJoIRC75SF6mE2/CA1dD806oA1TpkaaoQ5sKhtUGIUyNA3jl+CEhp76
+         2qABSdlV2+/4t0gteH48UI8k9zAcUGzdrk/7BZWPEjyx9OH4RXol3S/NdKqzjaLMin79
+         M2P4LCzOycNBLvR7lC3+zAOc8vaJRQZc4FT7rHkbj//VTf6AA/efrxjltEWFfJ94PuFc
+         GMgzjJj3PLoZmL2nBya3JIAUmb1TsWUCUS1nNmZ2sa8ZuXfxFo1KzEnaKG/RhVRJOS0i
+         H8vA==
+X-Forwarded-Encrypted: i=1; AJvYcCXX1Qj1MDIwPhcywOBfM9SMbA7CcExmMvktcZKdm5rfO+UaF8/deRKUnre9Aook3Gc2jH+DFZW9Cx/F2kUgzitjAi/vYA5jcmSAOcCEXFHRQHQKpHkswvfzGbQ8dk1VkylGqyAZ5Crg56trFT8w7QDqYu3vCFis3RA/9Z7JOAvRkZ/vO8vE35XrYeIsWTUzlDxjAgd0S9VjZ38A2g4=
+X-Gm-Message-State: AOJu0YwFckHrbvZ5xWZx3J1KLYWVkl+2VVZxhIWlbYIEPr7zpKYtMX0h
+	idZc1K5N8Xsf4z02W5+nAnqnkP7gFvPwfSkM7gQzFiEGrehNY0FR
+X-Google-Smtp-Source: AGHT+IE976LiIs3J+wZRKHFMiWO2GPc/z1HYI5pokfTUW/WlvRcrsBtERWAE0daVU3yJUtEiJynjHA==
+X-Received: by 2002:a05:6a00:2312:b0:6e5:eab8:4db8 with SMTP id h18-20020a056a00231200b006e5eab84db8mr2351181pfh.17.1710429684285;
+        Thu, 14 Mar 2024 08:21:24 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y1-20020aa793c1000000b006e6795932a4sm1618767pff.80.2024.03.14.08.21.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 14 Mar 2024 08:21:23 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Thu, 14 Mar 2024 08:21:22 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Herve Codina <herve.codina@bootlin.com>
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Andrew Lunn <andrew@lunn.ch>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Lee Jones <lee@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+	Takashi Iwai <tiwai@suse.com>,
+	Shengjiu Wang <shengjiu.wang@gmail.com>,
+	Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <festevam@gmail.com>,
+	Nicolin Chen <nicoleotsuka@gmail.com>,
+	Christophe Leroy <christophe.leroy@csgroup.eu>,
+	Randy Dunlap <rdunlap@infradead.org>, netdev@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+	Simon Horman <horms@kernel.org>,
+	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v9 07/27] net: wan: Add support for QMC HDLC
+Message-ID: <bd7b7714-1e73-444a-a175-675039d4f6e4@roeck-us.net>
+References: <20231115144007.478111-1-herve.codina@bootlin.com>
+ <20231115144007.478111-8-herve.codina@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pinctrl: renesas: rzg2l: Execute atomically the interrupt
- configuration
-Content-Language: en-US
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-References: <20240307112452.74220-1-claudiu.beznea.uj@bp.renesas.com>
- <CAMuHMdWwbfem71Q9FE40jqHM2pXWJW9u+w-+NKy3OffFkzu5SQ@mail.gmail.com>
- <da48838c-5043-4fff-99aa-2f75f0755609@tuxon.dev>
- <CAMuHMdU6fo0S0FOpvii8gksa=X=2o4BTCQOp2KS5SnErHeXLKg@mail.gmail.com>
-From: claudiu beznea <claudiu.beznea@tuxon.dev>
-In-Reply-To: <CAMuHMdU6fo0S0FOpvii8gksa=X=2o4BTCQOp2KS5SnErHeXLKg@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20231115144007.478111-8-herve.codina@bootlin.com>
 
-
-
-On 14.03.2024 16:31, Geert Uytterhoeven wrote:
-> Hi Claudiu,
+On Wed, Nov 15, 2023 at 03:39:43PM +0100, Herve Codina wrote:
+> The QMC HDLC driver provides support for HDLC using the QMC (QUICC
+> Multichannel Controller) to transfer the HDLC data.
 > 
-> On Thu, Mar 14, 2024 at 3:11 PM claudiu beznea <claudiu.beznea@tuxon.dev> wrote:
->> On 14.03.2024 15:21, Geert Uytterhoeven wrote:
->>> On Thu, Mar 7, 2024 at 12:25 PM Claudiu <claudiu.beznea@tuxon.dev> wrote:
->>>> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->>>>
->>>> Lockdep detects a possible deadlock as listed below. This is because it
->>>> detects the IA55 interrupt controller .irq_eoi() API is called from
->>>> interrupt context while configuration-specific API (e.g., .irq_enable())
->>>> could be called from process context on resume path (by calling
->>>> rzg2l_gpio_irq_restore()). To avoid this, protect the call of
->>>> rzg2l_gpio_irq_enable() with spin_lock_irqsave()/spin_unlock_irqrestore().
->>>> With this the same approach that is available in __setup_irq() is mimicked
->>>> to pinctrl IRQ resume function.
->>>
->>> You mean __setup_irq() in kernel/irq/manage.c?
->>
->> Yes!
->>
->>> That one uses the raw spinlock methods?
->>
->> Yes! Would you prefer to have raw spinlock here, too?
-> 
-> Most pin control driver needing protection in an irq_enable
-> method use raw spinlock, so I think it makes sense to follow that.
+> Signed-off-by: Herve Codina <herve.codina@bootlin.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@csgroup.eu>
+> Acked-by: Jakub Kicinski <kuba@kernel.org>
+> ---
+[ ... ]
 
-Ok, I'll  update it, thanks!
+> +
+> +static const struct of_device_id qmc_hdlc_id_table[] = {
+> +	{ .compatible = "fsl,qmc-hdlc" },
+> +	{} /* sentinel */
+> +};
+> +MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
 
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
+I am a bit puzzled. How does this even compile ?
+
+Building powerpc:ppc32_allmodconfig ... failed
+--------------
+Error log:
+In file included from include/linux/device/driver.h:21,
+                 from include/linux/device.h:32,
+                 from include/linux/dma-mapping.h:8,
+                 from drivers/net/wan/fsl_qmc_hdlc.c:14:
+drivers/net/wan/fsl_qmc_hdlc.c:783:25: error: 'qmc_hdlc_driver' undeclared here (not in a function); did you mean 'qmc_hdlc_probe'?
+  783 | MODULE_DEVICE_TABLE(of, qmc_hdlc_driver);
+
+Guenter
+
+> +
+> +static struct platform_driver qmc_hdlc_driver = {
+> +	.driver = {
+> +		.name = "fsl-qmc-hdlc",
+> +		.of_match_table = qmc_hdlc_id_table,
+> +	},
+> +	.probe = qmc_hdlc_probe,
+> +	.remove = qmc_hdlc_remove,
+> +};
+> +module_platform_driver(qmc_hdlc_driver);
+> +
+> +MODULE_AUTHOR("Herve Codina <herve.codina@bootlin.com>");
+> +MODULE_DESCRIPTION("QMC HDLC driver");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.41.0
 > 
 
