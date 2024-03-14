@@ -1,84 +1,79 @@
-Return-Path: <linux-gpio+bounces-4336-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4337-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7F8C387C181
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 17:48:37 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E908287C27F
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 19:21:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B079E1C217E4
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 16:48:36 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9F0EF1F229D8
+	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 18:21:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1A24974407;
-	Thu, 14 Mar 2024 16:48:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D28276034;
+	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="na9a34pi"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A656E73526;
-	Thu, 14 Mar 2024 16:48:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45F407581E;
+	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710434911; cv=none; b=dar3/4VHmzFARhQchgByWr69C3L6RzV4U9OF9x3HBrwlj5iVqCauaowMTI+BDgYClCR7H96GdX7ZS/9slZNf1t7tG+pEsjJ4kbI6/+nXjdArEUPF/azsqj//aaGWcH7r91skmQbb/7818+i/gjK6UlQERl9Nc6OHMQR9bE1ZCJg=
+	t=1710440434; cv=none; b=bcrGJQ9tZktvk22iCqIdSsgI44vyU9MCVeRoa4yTusCiu67aHlVwrWWVj1CsR4r5Bz39fF3m5Wst5fZ4r8gg43d0GFqVENWGrZvWINtfN652VPHkxl7eJ5rJxj+S56PAv90SmPHSMyxb4oIif+yMxSEf4kLZLOy5v8LByIBdfZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710434911; c=relaxed/simple;
-	bh=61OWcJo8xpjNajI8IviQi0Oc5WE5ZxABZnArcdDNUDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=idMvywmrnq/zCYQ/wwVT+Zyyrbbxt8YIAkDCbSkrB5TYErYm3B78M9tW5Q3OYEzzUb20xvFEmnz2UCOqY4o1i8BpZ1yFAU+AbcPeC32sLvLI165tiaR/eC7KG9GtITxLQAGVOLm6dSUxBTQ2Er8Yog3OraOTzVQL3Wlz3UJNVgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 067561007;
-	Thu, 14 Mar 2024 09:49:05 -0700 (PDT)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 698643F762;
-	Thu, 14 Mar 2024 09:48:26 -0700 (PDT)
-Date: Thu, 14 Mar 2024 16:48:24 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>, Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZfMqWP-t39SCvkA2@pluto>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+	s=arc-20240116; t=1710440434; c=relaxed/simple;
+	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=E/9qZY5RqkMaUsy6j0UwAOwvWcawHI37rFujcp2P7+d3Fj/DWgFp1jTxVBQf/zc0VbIwSrQzpozgDOScQy4ljPp2T+G2n+czDDqGs9TIygzRF4KTDRkYi/trt2vRh4EzF0pfyQ/FW/WaszUy/gEb7A+P5CTtrc2M6oXn9GxrWAg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=na9a34pi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2862CC433C7;
+	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1710440434;
+	bh=En9h4aM49K1ODmzZcrnUzkf49GvEV0uAo4ULw9O7InM=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=na9a34pin0xQj2UeBUMMV7xe8NY8YFJB1VERDBJPGgb/mChCDu1ouT7lVuYvbNiJf
+	 rmXMBjtmDujZduOLWGKSH6bLgqRD+MppbSKiTp9La1dAz7IdXBihL93Ez4UiLAGaBW
+	 /7ntbDMVuNh7hzHn1uUUee9bGqqeo3uRHwOQ7bHK9y+33WUjCpVEa1Sqmx5PpL6Ldt
+	 CKjGmj1A6IEgDLgrF22XJ89B47WRxl+XZ6za6UmwsZDn3UxLMP4wSWkoECeqUBsJ7e
+	 wEOLOnRxTyM51ztUAFn08HouEzSdowMxpZTxB5lRxvaIh2qhZccAibxJ7C/3rNiu/3
+	 OQeit156YG93w==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 1DFC2D84BAA;
+	Thu, 14 Mar 2024 18:20:34 +0000 (UTC)
+Subject: Re: [GIT PULL] pin control changes for v6.9
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
+References: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CACRpkdYZ01rEzd5d8RcDbZqBPdy4uVU1uYWH6q7XS1WjKNXrUA@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
+X-PR-Tracked-Commit-Id: fa63587f94a77a49b53274dc0fd1ea41dfde5966
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a3df5d5422b4edfcfe658d5057e7e059571e32ce
+Message-Id: <171044043411.24196.17256053826707694115.pr-tracker-bot@kernel.org>
+Date: Thu, 14 Mar 2024 18:20:34 +0000
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
 
-On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
-> Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b,
-> is it ok to land this patchset?
-> 
+The pull request you sent on Wed, 13 Mar 2024 23:24:14 +0100:
 
-I'll have a look at this last version and a spin on my test setup.
+> git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git tags/pinctrl-v6.9-1
 
-...but has this V5 change at all since the Reviewed-by tags due to the
-latest spec changes ?
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a3df5d5422b4edfcfe658d5057e7e059571e32ce
 
-...IOW does this V5 include the latest small bits spec-changes or those
-latest gpio-related spec-changes are just not needed at the level of the Linux
-pinctrl support as of now and can be added later on when a Linux gpio
-driver will be built on top of this ?
+Thank you!
 
-Thanks,
-Cristian
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
