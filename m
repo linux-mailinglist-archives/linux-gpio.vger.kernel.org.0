@@ -1,237 +1,159 @@
-Return-Path: <linux-gpio+bounces-4375-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4376-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8659387C6D0
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 01:44:46 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9D6A87C6E5
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 02:02:30 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A625D1C214F9
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:44:45 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 77E861F2209A
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 01:02:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2E9910F4;
-	Fri, 15 Mar 2024 00:44:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B10D910F4;
+	Fri, 15 Mar 2024 01:02:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="d5jpwe2C"
+	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="WoZ37Of/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-VI1-obe.outbound.protection.outlook.com (mail-vi1eur05on2081.outbound.protection.outlook.com [40.107.21.81])
+Received: from EUR05-DB8-obe.outbound.protection.outlook.com (mail-db8eur05on2063.outbound.protection.outlook.com [40.107.20.63])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A87FF10E4;
-	Fri, 15 Mar 2024 00:44:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.21.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69F0C613D;
+	Fri, 15 Mar 2024 01:02:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.20.63
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710463479; cv=fail; b=WEgppcfw7L9SLbiOX7iBPC2gh4notNB5KY+DoFY5APayu2MtiPxl9YGglIAES3/eOxTO6uHUb8RGh6m0EPGKzCtwz6O1dppQxgSrn60nFrhWEp/UN7eG74PI0QqBoa69wxYlKH1p5Cnm8UajqM2NcFd8jERX8KZe0pmpjVglEBk=
+	t=1710464538; cv=fail; b=WomGqI9vaXIjDU2qfFdU+qSlUGlhbi8NO1QhjEV1MXblZtnw3JO+SLHuUJy1TwjfaHytHgsqsz7buwJP5qp90pVMC894jl5GfVUQVKjFaboETsqadYUNtudBoRMn00PcpGvQbFP8ufQzQKq+ZmvsKgF8qA9q1H555rqnsLTiuSY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710463479; c=relaxed/simple;
-	bh=oqBTUCn/ppl5btcufmot9AcQI6ymnzm1vlD0TD07ofs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=r2Gjx0m/MDVkhQlr7OTEeXabqpIxdLGQ7UyJlEEDBUDIfBv5gyA75W0wYMIFiccKKx9YXPbrlwNIaaUt2O/sAtn7hFRWM45niOCTNdLr1p2OzOk2PGGxKZq/lSCAcx6tpc3wbnlFJNzlb+V4kZbPvbY59ffsH3qPBH9EDo8V23g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=d5jpwe2C; arc=fail smtp.client-ip=40.107.21.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+	s=arc-20240116; t=1710464538; c=relaxed/simple;
+	bh=uSacvYHOYMGghF8wKHUB8QZILXrKkMd+o/GOxf4uLkM=;
+	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=gAgkKNtCwvrLzxl/8B9JbiT94nJc/aXdwIVhpdxnDMK1fTTIxJcr8wE9kib13eFjhE31pfz5EoKjwfxHVcS9H4Uv1OV98Of/irj3WbgBTRlQemRxxfcEeKyH1ZXHfIe/4weMhL/OiWmjFipHC/040wdEcy9Hi6sKoAQEoOn4FN0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=WoZ37Of/; arc=fail smtp.client-ip=40.107.20.63
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iUupdtn4UpUOHbIuRDH9wdlCz7O0UmR0QYgR46X78Da5uqIzpFxZmUO9WFrp3hyjSWWNAFX0g62RiFRDJduY/kNGoE/3JtSKazTecBRc9ymocg2dsLmDJfaKkqxxi7nAnL6o+7SBMvl/y/jKxgxv43X8hhwWYWCAttoNLBj9Dc6AnP6W6BUCh9jVJW5cvwTf0iQ+GBP4GkTmudSEcR24iSWr1FqmamBJTo7CaF1ppQm162NU8vIkS46hjh10KZ60n3kfG+NcXqGUKoajsW3QsRPoYkq+UZ4icL5n2h/eTUleKzVlbG4P4kkxF8DV3AxFxRx0g1kQFgwp1L1N97BuUw==
+ b=RGaW/orPzzzomHg4unLmLslW76PNKkkq/xBPgXMmvB7VYFyS9Yx89iw0kxcF/SI3xlh9kLucRzjKFAySLRNyg3+y5KVsv8xYGaT6fhqaJSjCUA9ehYv4t4uPp0rFNDveczMENNLawC4HwQC3CwcJilVTwDxtvOA6C/UYIgoGq8V2WiWUICVELuhuaWg53ocia3ukfu3djX0sF+vCpv9bF6YBG1tfZYm9NQnkaXw69n2d937S0IRXuyJoYfKudBbbaTmBdK+VAxUoWJbZWD93b2RcfS0xaQ0kjrO7gAinsY7gmvKOPmlLsjKRBp1OWEHh/h2NxY+ZtsuSdKNcLKZu6A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=E5Eg1cXg/Q85KwGpf5T4x3Xb88TTe14vDwOEhWrAhNM=;
- b=mIk49s5MES/CF36ArjZvuX/lXR+NzefaMhJDwKOpFmhqL4vsif6bCe22UnwGJc7V+TpCYHl6EoQ6t9BiR5Ok69GsXhuVr6rUHnBgWSh2uWGQegZQoIhOlR6qDlBCAlyBUynDilHGJys8vXuWWF2f4A5dNGLfPJe/YUsETFr5BNOb5/MIVf4olYuLO7oQneqAWIL6ReSlwRAGSByV9qwxkQR1ZwOIGU0hf6uYDs3Cns2bNxXNOPEgq8dKlSp9w+7pc7bKCeNgOmfAmEgSjlAH89FS1FBqVh/wAVDDFu1nZAOgfsoKmQe9/cx4yBbvkrvVgHU+inCW92RRHpkoor38BQ==
+ bh=vMxITTROFr7pcFnbdky1mAqE1r4IrTs0UNzC9IsD+nc=;
+ b=ZT/YN0N+Ism7emx+lCp6u3ZZM2uOJpJLgASU6C4NaireHnS3TG3gRph6HcokUVAmLZOI0o5mQ1XbCgBViS0pHaP80n2FbnsBkb9eTjEGQpOpkb+78c7mLQa3fkZrsHybck5mSrvwlLK7Jh52kBQnbVv9rwvvX72QChjEFDf0ECaKiY68HgQ7AtrF/DEYtiQAzTDZenS87pIGcDCY3UVGlU2FCwqTVoR5G2XxAdhbTo+VS0eAC4o4fLuc2f238SaCiGKs9lbA9ztqE4m31KuJsD4a0w8GPcA6xFAMLOtEzIKnaTDQMekGY6hIM5HFDA06eBnmJKTSzPtexPr5Eolfag==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
+ dkim=pass header.d=oss.nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
+ s=selector2-NXP1-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=E5Eg1cXg/Q85KwGpf5T4x3Xb88TTe14vDwOEhWrAhNM=;
- b=d5jpwe2CAxF6ODJNVZoesGISigKljmaa7UMROd2h/esIdVjbWt7T6kW450OPrVNxJDwesHvBnWzS2kGwqvcIMfuVx2TwuXrLGtm4yUZQ0Tl5MyAuGJGwhehGxEYBwQ292v4cecJcv0MuSGW9kblQcbewPAi9F2pti1Ij11hg6Wk=
+ bh=vMxITTROFr7pcFnbdky1mAqE1r4IrTs0UNzC9IsD+nc=;
+ b=WoZ37Of/h3GvGvlMmlo/P3JfeiaHrmLPgWS5gWBYK1R3AubaJhjpUEgnJRyk/8XoeGqoZ0UTzm1pvtRE7hueIastFJchNfXipwLXSznVcAVpLnzjjIYPIKvBjDFvDwmBeeaIjGwsmTll290W2rvU82r+xeD203wsCxevw20DNUM=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=oss.nxp.com;
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DB9PR04MB10065.eurprd04.prod.outlook.com (2603:10a6:10:4c4::10) with
+ by AS8PR04MB7864.eurprd04.prod.outlook.com (2603:10a6:20b:2a4::15) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
- 2024 00:44:34 +0000
+ 2024 01:02:13 +0000
 Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
  ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Fri, 15 Mar 2024
- 00:44:34 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus
- Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx
-	<linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH v5 4/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Thread-Topic: [PATCH v5 4/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Thread-Index: AQHadhNdlT3LNwW+z0GotvRK+LURY7E3XT6AgACaO0A=
-Date: Fri, 15 Mar 2024 00:44:34 +0000
-Message-ID:
- <DU0PR04MB9417F0C53A0B112E7A8A334288282@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <20240314-pinctrl-scmi-v5-4-b19576e557f2@nxp.com>
- <55ec2392-c196-4669-a339-12ef336707fa@moroto.mountain>
-In-Reply-To: <55ec2392-c196-4669-a339-12ef336707fa@moroto.mountain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DB9PR04MB10065:EE_
-x-ms-office365-filtering-correlation-id: 2e7b1b11-fdbd-4ca4-8b0b-08dc44891585
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- pKpKh7xlLVAneJ3QT0wKYLCjH+w4JtdkJOisJZxuQzx+ksif/1YGmDqd3IldkO5h1Mkyirw7rhcRsHc5n4VhE6IPZAA8nzi10bxdyICcf3jtGrnb18MLRye+LZ/GbRS5HMQnVgGyqwviyw8bd1ciE8eEj1jeEzCp0LQxz+nByxAAj8hs7aZGLY+WCTRt4nHGB4+0keqoFvbuF7nU3gJqXhp20x9SQs+8rhccyRBJxdf4QW76JCbfEndbcut6PZFOyNiupF4EKVMnBBfKEjcVRQiR+eirnhJGTgh426GtMNr/FrIGWxpPMx+Yd9uuokmGaXbwpEkW3/tIqD5YdyfPhKJ8VB2tmxvO4E93KTITQprXBrpT3tsWXX6SfKRAUG0gziw8FDuveQzWMrdEcsHx5FtYqXP6uFxX5tV5Jsnh5wipM5kUu1TIhhujsAS+u0d+qkQk3eMIc+dsrp++tyF2T2M1tw/tIdlRQo2ghpZjLiHwLKPK2by2+Umf/wau5NTN30X85fjFJUOoR6PAui/ND+Rln5pFedJEQvkCe0PWQxZwX5Mr15GrMdjaxMZboXiXRuJwkuQDRoRPxQxEjMwnssQLddHkANKUDzX7K69bo3vVozPzO9bbSp/sAm08UlCw5KDSrK327ReIdTyTvmUqCHeEQeUH/Zd5ecEqZO4nbl0Vr2kK7p52T6hZAvyiZtfmR/ssUMCakNOQghCj25UK7BY7w6ZFd2S+bLS2oMyz278=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(7416005)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?esvZqgotgQXHrYdT3GhKqFkxVpHOeYbEqAmJL+Ztuux/6TIGsYxlPNxG/6Gu?=
- =?us-ascii?Q?6sAGUnrMM5zQd3wVWr3Nhld87ycNR2Ch2A1MqPlMKe8p4MQWcFXANPpaDLZI?=
- =?us-ascii?Q?+Ab78hOd3yM2nl6Lnh+VumMjkV00FGvUslHQuoWKhphm9PBqucutaM939e4w?=
- =?us-ascii?Q?kUdlwUmBUO6OyBD3XoWNZd14tSej7h0ArBKg1StrTpMPwItmZ2yTiOlX28zc?=
- =?us-ascii?Q?T6yxtiKvc+OnmQuWqKRPZoADFNnn+Hb9+I7T0j5bG4kqTLKghIAZbJ3JaZ5b?=
- =?us-ascii?Q?bDsxAa7oK17AgAgCW5LQHyN//YE7X6Gnhb0rYK+MVElNTe5CIwyIoSvkDY4X?=
- =?us-ascii?Q?T2Lr+rn6kXQAd6yaS3qGBG2P+oeXXgY039rWkdmMWCZ0G7fjefOEZ04BbojA?=
- =?us-ascii?Q?p6WogpblYR+gYV6+e5GNSG1BY/UDVHmDoFE2YynwLNbnmIpLQ/moWKD8Y/eN?=
- =?us-ascii?Q?fvY+te0Dh2SBsHbWqu1XLFa2d4QwL0AauGlDtmdrg9YeW7OjGpoHcPj/Cw96?=
- =?us-ascii?Q?lGFW3QYqB0IJtiouy/rkIuKbZAKmWSBMThtCzfMa2dkpCuHzqvl5h6ZW0jzL?=
- =?us-ascii?Q?sbWCp26pEWRat+p9tKzpTSpZsb10rVMsaccXW3jZ56nc5/LeJL3ArbWASRSE?=
- =?us-ascii?Q?FzLHPNyFqqrATomur6P9uhMQjYKnAcfMqrVB5Odxz7LJV/sgKFoZ8pwIKRf2?=
- =?us-ascii?Q?Y5JSUUzwlon9B1oGe9mR2quOZcRNTsqSmCmws+DHiYefdoIvE4TYbxqj7qzp?=
- =?us-ascii?Q?sezPLFXpT44mkDydChvKx02EgHJrZYUlqNe1ZQP/7p2yf/Gykq+aF1YVqHIT?=
- =?us-ascii?Q?DFJHdcpHcXh1/WcQ3kdKzzR5G5Y+r9QxBTEymjhxC6tRJm/BXwBreAq31EqY?=
- =?us-ascii?Q?n3gmFWkT4XSnaCaqpB7LBFPDBRCqBLPPgyY2sGrQKmF396VzQTBIy7gQ25sS?=
- =?us-ascii?Q?TKSca67Nw8m8Al5W3o/lwVdnGTkhuEZK4T3EXPzv93ByuBkbnWc6nQu58RHf?=
- =?us-ascii?Q?DVNEkAtUbd0a0DVx7BJboIFuTSaU9ATdT5YGFBBCb84YAFhALGX+g99j9OA3?=
- =?us-ascii?Q?/u8u84Y1O2b1hQhFp8cDZFtmxvCxJmE2MddBwdkMsV+L6lWNqafd++ofNVsQ?=
- =?us-ascii?Q?nDpJ+O35CdWmbf+roFu4wn8YMon5hFYPNVYFbx/B/0O3gL34LJosiZUB17j8?=
- =?us-ascii?Q?ceSkfZfQr0eadF1j+T+TdFteMh/YVQy2d3xzRFTQzYJqk2MzyAAIWyJH9QkW?=
- =?us-ascii?Q?X8zLo51sTTjj/M7NjxfixAQb6ECnMogUDlLCkiIAbjo/q1nDQUHWAJjU3pgw?=
- =?us-ascii?Q?W4hBr2TQrYB20APgpoA+U/Xo/v9T829mdlLd4aFoIe4M191LnUxQMuvnKh7b?=
- =?us-ascii?Q?WTm0CKTY26zh4487eARew6cd6UFIuhloxPDjhWNc8P9jinOv+/K6YSX9ZOJx?=
- =?us-ascii?Q?gm5tR8p3ez8nWINYGC24JIqgitppcYdDwF/Eedv4L95gI12ra/DhT7Zz5XUD?=
- =?us-ascii?Q?xhM/1PsSXrGhWw42EZJU6iJWmtAlfaWG7Ge2P/kqzl42rgoN9BTcv+vh1tA8?=
- =?us-ascii?Q?Y/DFwczJo9AFfc8zBRM=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+ 01:02:13 +0000
+From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+To: linus.walleij@linaro.org,
+	brgl@bgdev.pl,
+	andy@kernel.org
+Cc: linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] gpiolib: use dev_err when gpiod_configure_flags failed
+Date: Fri, 15 Mar 2024 09:10:15 +0800
+Message-Id: <20240315011015.3106272-1-peng.fan@oss.nxp.com>
+X-Mailer: git-send-email 2.37.1
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: SI2PR02CA0053.apcprd02.prod.outlook.com
+ (2603:1096:4:196::16) To DU0PR04MB9417.eurprd04.prod.outlook.com
+ (2603:10a6:10:358::11)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-MessageSentRepresentingType: 1
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|AS8PR04MB7864:EE_
+X-MS-Office365-Filtering-Correlation-Id: 34e5e75e-841e-4bd6-8ac2-08dc448b8ca5
+X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info:
+	7WfnHcrAmLMYtSaAH0xZq8xDvywJH7bw++EwxZSd/LDQLOp1q0UFvzrD1IFHqPl7PnEwCp97a/XVVhuqzslqcKdt/fpLFPvvF+hCbNE5GECFE+wU16LDhviv6DkIoWMjRahwiYWW1wC4+NG+2VayPRNhLF4Y8Pq6BhBque6Vqrft3GaKXqxPHkhZAh4AIVu+vU+NntbyUc6mQY65fZbwuZOlmF1YwS+MAX8Pydw3LoFwqlHi0GcMaXCpwUnmAOomGLx7/FmML5hmPfqMIWSOnKznYGOrZr5NfAodtpYZFgV3vWYIZOZ41HADb3rsH0KE0JxJpm3QRdVCRze7xVj8Eu7xCX4VmdTUEn4B5nE7VA3AM5HFkSbTKEl6Ivkh6kSFcC+GC6GpUiI+ReMzyEq4Cg3iH8vIMxW4qCdHGjGYcZ9Hhpvl4EurpqM39G44sGQC1cEWb7AFyaebOtXD66cpWE2qBqfFjYRzFbCx62KRNLVJE7ySz22EuDdfEPJLTZa/0zz2QJUR39jJ617o8jDgABL4mkWDd3GuAN7a4FS393fLlDjIVh9EQsUDd9z2UXiM38HX8DL1mZHEYI/xdEZx64tTrDMNagvMBie0Ph0g3dcvaVu0RBHVwhdckBMG78+XeRI2xKaMXb6aj5i+XWM3tKgcWUqxTbD1WaI26xfZVF3N2RAB9je48P2eG6AM4gh7hRJ744jwe9OC9Ts+o5SC/mIlSFgO6jqcoTIusHdunPo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(366007)(376005)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?YQO0mnT4fbcMS2jeFmTFA4a2r58qH7bA1XxXOxLuCiY9PdMrZ5Y3FGHjKQ9S?=
+ =?us-ascii?Q?QbQ0CaIENbL8UNjYZZHd3jOINYB0YENsJc5u2usHJ53hwltPGhXeV9DzX5Ka?=
+ =?us-ascii?Q?1IQlhSiN5J/ZuqwCiN8Xj07YVQ42jMTAu3C/+n8gftfC4+KqOsNoGKZUN3rq?=
+ =?us-ascii?Q?j5Styz9E0u6X6w0Q5Rp1m6I2Yeo2BJq7FQr3S5kDakwzUVfy3aK3ZrYScFbv?=
+ =?us-ascii?Q?dDwLv/LKdkGkHdOpPCiUrzJH6UsvoLFFJtIjdUOhq7E0CV8pFjmTYaeXvqFe?=
+ =?us-ascii?Q?+/hH/cPS7djzER/P3jAJSA7HKTg2AL8W6Y7yNPkHsfWcaIP7CkSZNwk/797y?=
+ =?us-ascii?Q?TpW+aSgUUql4JSp9yPqdlnvNpc1bt+E8qxJnsYUT6m4eCzxogN9v8txqYdK4?=
+ =?us-ascii?Q?K9yTEiJW83nsJg5lHmMqBz102IwTuGEj15UO/YM13+PB+4EariLmDrLIPIWA?=
+ =?us-ascii?Q?NnmKvIwetDl8HZd7KAEbjviDF1RK33230Db4VChh93LBy+b7KhDfHzowHnsE?=
+ =?us-ascii?Q?o+6RX5SrRgKTGNxTZraSBRzIKGufk/4tq1ysHlXdySAbvWCuPUgahKlSwc3C?=
+ =?us-ascii?Q?PTVnR48/iFGeEbMVrldH5p1ydU5XUAjQNkeHCVZkGo/2rAS6HlwgfwdkupC/?=
+ =?us-ascii?Q?MXzGDW/dQ/HTxDAAlH1y71xU51x85wJJj0kiwGgWDyy/hynI55kdFJ3hVVzl?=
+ =?us-ascii?Q?umT7VOccs2siNzRW8vHw0mJGm3MsnKejbHIS5W6l5VGMbEF96LydF03n0qNp?=
+ =?us-ascii?Q?IO9EVoPswKkcvFozvKvPDE2ftKlFjOcJvhOqMI97YcSZTkYFQeRD7RhJl7Xv?=
+ =?us-ascii?Q?c9iBO6cIoPVoiyQn5wk6VGQlyfrGtCj+zQjjopm1qe55veBkXEtRtnQvPle2?=
+ =?us-ascii?Q?fEc132ePn/FmCZMAWvHUZxTNhXoSL5z3DQ85P1677jwFiYUGF0TXDGD7O8tS?=
+ =?us-ascii?Q?FiZIIRwIlMxyfAwNpjqx+QQpMYiDy8lWcqUhN/2YKBJggpUu/wf8fuQMWi6x?=
+ =?us-ascii?Q?hstfJjvWDnpSLFFxcKB3Ay3Oh3BpRYUGeSefUHgrvH2DJOoTx5SQwRsQ/qLJ?=
+ =?us-ascii?Q?+h5z1rOvHw0dX+jJSpWzA1bxERpafEv1uCmxfz5Z7oA+WJ66yyR3aBTUb0cT?=
+ =?us-ascii?Q?HuyEQnfMiPstFhFGvlY1n7jh+6+2t8SbXPEU+6NkB9EQ5I9dM8O5IHqbUrrb?=
+ =?us-ascii?Q?Q5dc99O08O3Z4b/Gc5YzAz1r6hh3x/jtjUSRlkFq/S9pBKxe15GTF1H0AWuK?=
+ =?us-ascii?Q?z9mQvwlw2DTiNprTwYwbTscsE4sAjH7lgvdIRHPEpkq0FZxvEEQHbzf5TxNQ?=
+ =?us-ascii?Q?MX4/Ru/sMXOWVQDrXXHglAReeaogrwtDZsN6vJllCgMj+UVVrbqQe6l4Ia2R?=
+ =?us-ascii?Q?YLhi2oGcquxMs84EoPYs758oa1p/wpubk4R9ienr02bcqFyD/p0rxxea/ycp?=
+ =?us-ascii?Q?/jiyrIyLpHjccfadMFgVpXVUv6pnjCRj8E1aP9g9ngIRzVrT6BYTTgHmI/b7?=
+ =?us-ascii?Q?CfJjzf6wTZpmBj5A7WkRRgfPQqsLbClgB3VbANE+VYlIY3zhu2HxMvbZRpfi?=
+ =?us-ascii?Q?00X5KRXiC0jsnI6uJpt5Kzyi9IL+KcxRllCv+DC3?=
+X-OriginatorOrg: oss.nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 34e5e75e-841e-4bd6-8ac2-08dc448b8ca5
 X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2e7b1b11-fdbd-4ca4-8b0b-08dc44891585
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 00:44:34.2035
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Mar 2024 01:02:13.5162
  (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: nGpiqq2VK3AGXLjmcY/p6c6PCL0tM46t+U046vmPIbYuyHjuKhY+US5xNZdnwgvVHgEYlr1GthYzOy/PKx0tFg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB9PR04MB10065
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: iuEeQF3Aks2tFMdl6rD1ChjDhTZJ1QtNo/TpigswwibBYUmZXB/Ttp1Vffv5vnR3lKzFP2WYI1J6vhZcxe+hVQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS8PR04MB7864
 
-> Subject: Re: [PATCH v5 4/4] pinctrl: Implementation of the generic scmi-
-> pinctrl driver
->=20
-> On Thu, Mar 14, 2024 at 09:35:21PM +0800, Peng Fan (OSS) wrote:
-> > +static int pinctrl_scmi_get_function_groups(struct pinctrl_dev *pctlde=
-v,
-> > +					    unsigned int selector,
-> > +					    const char * const **groups,
-> > +					    unsigned int * const num_groups)
-> {
-> > +	const unsigned int *group_ids;
-> > +	int ret, i;
-> > +	struct scmi_pinctrl *pmx =3D pinctrl_dev_get_drvdata(pctldev);
-> > +
-> > +	if (!groups || !num_groups)
-> > +		return -EINVAL;
-> > +
-> > +	if (selector < pmx->nr_functions &&
-> > +	    pmx->functions[selector].num_groups) {
->=20
-> If pmx->functions[selector].num_groups is set then we assume that
-> functions[selector].groups has been allocated.
->=20
-> > +		*groups =3D (const char * const *)pmx-
-> >functions[selector].groups;
-> > +		*num_groups =3D pmx->functions[selector].num_groups;
-> > +		return 0;
-> > +	}
-> > +
-> > +	ret =3D pinctrl_ops->function_groups_get(pmx->ph, selector,
-> > +					       &pmx-
-> >functions[selector].num_groups,
-> > +					       &group_ids);
->=20
-> However, pmx->functions[selector].num_groups is set here and not cleared
-> on the error paths.  Or instead of clearing the .num_groups it would be n=
-ice
-> to pass a local variable and only do the
-> pmx->functions[selector].num_groups =3D local assignment right before the
-> success return.
+From: Peng Fan <peng.fan@nxp.com>
 
-So you concern is I should clear the pmx->functions[selector].num_groups in
-err path, right?
+Using dev_err to show error message will make life easier.
 
-Thanks,
-Peng.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/gpio/gpiolib.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->=20
-> regards,
-> dan carpenter
->=20
-> > +	if (ret) {
-> > +		dev_err(pmx->dev, "Unable to get function groups, err %d",
-> ret);
-> > +		return ret;
-> > +	}
-> > +
-> > +	*num_groups =3D pmx->functions[selector].num_groups;
-> > +	if (!*num_groups)
-> > +		return -EINVAL;
-> > +
-> > +	pmx->functions[selector].groups =3D
-> > +		devm_kcalloc(pmx->dev, *num_groups,
-> > +			     sizeof(*pmx->functions[selector].groups),
-> > +			     GFP_KERNEL);
-> > +	if (!pmx->functions[selector].groups)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i =3D 0; i < *num_groups; i++) {
-> > +		pmx->functions[selector].groups[i] =3D
-> > +			pinctrl_scmi_get_group_name(pmx->pctldev,
-> > +						    group_ids[i]);
-> > +		if (!pmx->functions[selector].groups[i]) {
-> > +			ret =3D -ENOMEM;
-> > +			goto err_free;
-> > +		}
-> > +	}
-> > +
-> > +	*groups =3D (const char * const *)pmx->functions[selector].groups;
-> > +
-> > +	return 0;
-> > +
-> > +err_free:
-> > +	devm_kfree(pmx->dev, pmx->functions[selector].groups);
-> > +
-> > +	return ret;
-> > +}
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index ce94e37bcbee..37fe9db0bd74 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4233,7 +4233,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
+ 
+ 	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
+ 	if (ret < 0) {
+-		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
++		dev_err(consumer, "setup of GPIO %s failed: %d\n", con_id, ret);
+ 		gpiod_put(desc);
+ 		return ERR_PTR(ret);
+ 	}
+-- 
+2.37.1
 
 
