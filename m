@@ -1,326 +1,182 @@
-Return-Path: <linux-gpio+bounces-4372-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4373-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E62C887C641
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:28:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A3F8187C6C6
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 01:32:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 161351C216BD
-	for <lists+linux-gpio@lfdr.de>; Thu, 14 Mar 2024 23:28:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5FE0282948
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:32:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98A973EA90;
-	Thu, 14 Mar 2024 23:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC00ECF;
+	Fri, 15 Mar 2024 00:31:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="G26JHzXC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GKGBcv93"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2071.outbound.protection.outlook.com [40.107.7.71])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 814A336AFF;
-	Thu, 14 Mar 2024 23:23:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710458598; cv=none; b=SZKPUWNoaNeAwPHkIJITFrH3RLyE04xx2EFpWkWIe073hoXe8TZ24JmqQKm0J9odFM0QdMxgMRffYuJTuudxYUXo895hZ9chFLUjTriE4XXUbL1qrdTD/nSi1jlvQ1EumkKggLHc9e+i3ejD+O2OChDBtlHxxhofT0EHTPa251M=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710458598; c=relaxed/simple;
-	bh=hOSFz8IqviIayTF9NX2uZ9af/0U6rooCXBTE0GSBCko=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fN+IDcklkaIDBjo/8dDKaILIRxj2SfJA9nhdjk9P7BWb/Kfu0KCQMrLeSt/KSnR4rLXsd2pyakhXMN6oOVdChH6qqAesXskt4X/rtE7xm2bNy1G70/AzOgTW4uiNkEuvm2fdg49yum7rNwd1vKpnE5OO35dATQZWOjcwgElru/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=G26JHzXC; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 4AA63120018;
-	Fri, 15 Mar 2024 02:23:10 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 4AA63120018
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710458590;
-	bh=EsZkg7PsNgeBq/F6pkLPHW4XZGjF5/748MlZOP2PBl4=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
-	b=G26JHzXCwUXkf5+fNL9hrJJaEQdjxSF00tPbOiMwxhkEobOtNk9MZUPOD+IoWeBzE
-	 n+3h7+SpGvrawGKENtFgplBVU8Gwmc33+ZoA3n+uCbAsKCmH0Ge4fewlzWCaGpAwgY
-	 T6D2P1vcTjRM4sOeobxCNMrX8IkX63wPXu3ZzV5vzZ3DEmX2RNUuJYEZyabyaR56rs
-	 X3Ft1UZjeVaxnu03F3HH9kEb2a21OrJ1+pzGpRTxkiTJDJKnhVIxuupmqMhbi8FhMH
-	 x/0enhqmF/rkEsHjvDcuYjp5IMpZ+fLlS2JrLEd3xGfA+qreSVH8k+yziStOokW0q+
-	 e/aWVeXJ685Jw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Fri, 15 Mar 2024 02:23:10 +0300 (MSK)
-Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Fri, 15 Mar 2024 02:23:09 +0300
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, <linux-amlogic@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>
-CC: <kernel@salutedevices.com>, Dmitry Rokosov <ddrokosov@salutedevices.com>
-Subject: [PATCH 25/25] arm64: dts: ad402: enable audio
-Date: Fri, 15 Mar 2024 02:22:01 +0300
-Message-ID: <20240314232201.2102178-26-jan.dakinevich@salutedevices.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C5110E4;
+	Fri, 15 Mar 2024 00:31:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.71
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710462717; cv=fail; b=Fd8ey7JsM77wziuo7N7F98/P3NzeDHeW9+XlAmNFMDMuw+TkZnalOMI3bzal+CU2ew3W5pf9Ov+bkzr5kiQLpwyxwVc4UgsZgmvjYSItCABAwnSV6+Iou8NW3Qy2k8MoQRukSL6TU9fKKYToydvRIzl3usN0G9yn0ZPeq2j7Dzs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710462717; c=relaxed/simple;
+	bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=D2gW8QZg04eZEvGgPyRUOB7huK0RsBiMInEcQgikEG/xnjAjkQpbSXgnxvzlPUwi4m7eHfKGFCds7xrylN7A1BC5pq5F2xKIStwCiPVfBOJ22eCIz5nsKy6FY9K9I5p4nvKMOt4yO7SxPFSJikSJv8ZoE63jUgQF53fcKNwY5EA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=GKGBcv93; arc=fail smtp.client-ip=40.107.7.71
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=EtuJaderqHykRPjPoGwlc6kO1IrruqvG3pRMwJjuLfqYezm6pEU1mty1hvucIOAKZ/vHXCbwFKSbAWkG2MswTFLZpmLOdyzdH02buc7f8SierwQD5OSOSifjTzX1GDrrUTrFqMiFQfAe827x7tZFtiLwiyyKrrybmA5k0Xh/5peppoIO4blVxgtKP4i14PWUIGjzZl30MnIqTp3n7l8QLhdrGP17+XjZ9qGGDtkG8Nw4s3Go/rbYFZnIP+SpEz4ZE/2CiG6B+eex9GfBTYJhBZHjP5DVpjt5k5hIYoDUqj6Cshnvva0HiFdBrx5PMXcBMhUidAOzHHkjVKF1M7p8nw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
+ b=gbrA+woPnQ/P+7grpQYt/NZN7xiMktmCRmpmbz7326wl4TPH2j4pfOEha39K0/Qnv0hSvQPNv6BeV0b1m7BOVr8obLPqzsxm7lCZdXSFvt7HQeLOLph6ljqh9Dz6pAS/W2rnrAXc0VDwzYNmsomJ42C5rzL1dvxql++fbHyJic5an+za6s2KjYhym8nU9vhGe+mhBEIf740sELSdC5+Qi0yEo7uS8vQ+4kmPIaLgGF3CMWMLd+faLGcInhE4tJv6Des+yTlNNnhXKEahS68fZkchhCuhuuRkBKGbeLMqi06TD5mBMeST+QamEKFgBombgvLbEMjaWrsEBF71oNEwbA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
+ b=GKGBcv93mbOZY9z2ctWeJrr3PFHvHVfrmgUfWXuxRje7G2MdVzHLWMXnl5mt7fSasuIfOoPCWgHy4LIne1IRhyPWBpi2gGXvvH/AD71CXqTy025bRIcj7aUfQ0nBjvdtjbuwFA75COUVtQSA/9KZ9sPMTo6kpfOl66+LXEFIEKo=
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
+ by DU2PR04MB9017.eurprd04.prod.outlook.com (2603:10a6:10:2d0::11) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
+ 2024 00:31:51 +0000
+Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
+ ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Fri, 15 Mar 2024
+ 00:31:51 +0000
+From: Peng Fan <peng.fan@nxp.com>
+To: Cristian Marussi <cristian.marussi@arm.com>, "Peng Fan (OSS)"
+	<peng.fan@oss.nxp.com>
+CC: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus
+ Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
+ Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
+	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx
+	<linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org"
+	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
+	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
+	<linux-gpio@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Rob Herring <robh@kernel.org>
+Subject: RE: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Thread-Topic: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Thread-Index: AQHadhNQAq3ztPnC+06ZIaeZ1qof0rE3crUAgACA3vA=
+Date: Fri, 15 Mar 2024 00:31:51 +0000
+Message-ID:
+ <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
+References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+ <ZfMqWP-t39SCvkA2@pluto>
+In-Reply-To: <ZfMqWP-t39SCvkA2@pluto>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DU2PR04MB9017:EE_
+x-ms-office365-filtering-correlation-id: f14dca5b-020b-4716-9f57-08dc44874ec6
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:
+ AsDnWkMq6uNOUGEFIc7kQ/ZLr7MuY7SGANxob7i+dEsVxM152RCam/ZzEnAgeU5TBvb4ogT27p84aYm/vQUHEEw0gPBA/UhxEt/BQ2w6stiD3jpNxnWV2zfy2ardGjZHrT4YnOky7yQZ5ct/2axefcQ91ya4TdBj389owJ78oAiyLDAK2eK1Y3kb2sJqKR21+seFlWDZRw9aeamNrFBC1bMD1CUCcWpa+BEbU2r8k0z6tTZrUbnNQisj3pXN6d+HRIF4IfB8AhNpqUieNywr/z4Ex0qY37S8jPb0bUIF/8Kx2qzWtht639osaip/LJZS1N8ZCnSJ3xt8+MnatjsuqlajCp8lPRM4KKWDFRbF7ipV0BNtsh2TOOm02x1g9fMmZyPMvxl9n+fx6Au53Dg8W4vpoID2jkLvChyhWwlnevLtdgVPgLAiy/0RUJOnxUHRv8ujJf2SFG0AFEGfiD602A5c58pVE28ghW9EVvQJuC1ZLLoXDwEMIFflHnA5+nK7pHsKbABaUsto1BhAiPdNK5jyXrYPQn0aMX2vHIw9US1aBf5fOyZb6OOtis9EExaZCRuhY7yht+1S4nla6c9LHwOitaKbEZL5dzyhlJAEK1avQ2aS2tucEKzYLEtDO4IWKDOe2A8Ag8D/wEUe3eaJthD49NpOkOLco+ei+NYta5k9GPQQooAVbfwTwdW0L3JwTLcUPJXtG+D3wQr/QTBaFzCU9sBnh7W4IhoI84a2oEA=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?us-ascii?Q?1xHKOL+uo8g9w7CwyCnU7G2OROnYbhxcl5yw3P6Algm9EXlVLa+1SdwH5cFr?=
+ =?us-ascii?Q?baRfTv6DeOLGBNs0nlQCl5f3Isd02zE3MDi6CUaG8FVT4k62Ce9tFygA8d86?=
+ =?us-ascii?Q?tXhU5x/OcxjCn7YcPZNEor9H/1CiA7FKw7M29PVdWlZWM3YNaPHadwsayI+f?=
+ =?us-ascii?Q?b+tobjmrZpuwcE3kRBDoEx3iLROTRGO2J96JWo/xX0y2fxLWsmTLWh/1MlQy?=
+ =?us-ascii?Q?4OJs4uA8DaCcUN9PgBnb4sP/nrOp4pEBQqo8Pqx1MrxFnXM0OytlFY/3/qL1?=
+ =?us-ascii?Q?lYqNU2nHnEZnSqocnoT1mcGLnvgpXwXcaMNIQ/ow7/47EVCiVDB+b3xpPFwn?=
+ =?us-ascii?Q?skzRvTVrxcGoQhrVfzsHoI3Avbcp2pWAQoGrwsMQeLB/AOGHUkTILjctwHW3?=
+ =?us-ascii?Q?FUMYP1739BbQ7Xv4rN03joj7j7TfWM2ZScSU26BOER1DvrYhSdw0Ov457o8E?=
+ =?us-ascii?Q?1r8BIkazYo/LOUQbJ3NmNfjKNbbHNgdXa8KqbYdWpG/mcpArOX0AeqqysKn2?=
+ =?us-ascii?Q?HroZF+PdorJls+kx590TZ5BAq2kO7DfgrGVwfkhgPwJzV01wyiZPdmoWIz6h?=
+ =?us-ascii?Q?vpV4nerW9K5hvcUQRHbtZC6Zz6AOrKe6+TtXzwj73gkXkeF6D5K28vaaWnpz?=
+ =?us-ascii?Q?k3YH021sdqqz7QzOouMgo7Omx6hcVVWgsI5FVuvIke2C1E7yT4cd/QZZKo6w?=
+ =?us-ascii?Q?QPhfQfgTzNWmdltNzbILMrPYCJzUPcp16jao7VJ34wC690fx7KWS3pe4+nyW?=
+ =?us-ascii?Q?9EZtPJjVXX30Jzu4As1s5WUS24cjWUCz7bd8wc5MV4GH+Zi8uK0yFh/gaLU+?=
+ =?us-ascii?Q?VLmZQjqGUJH6BpSfDiYVYvCMRig7DljwU5NvP3QpNWIsuVGFutL4urXfNyQ0?=
+ =?us-ascii?Q?zIsSTwh4zgAzXdgaFUw4GqxjPSvmMStErGOQuDWdnf58c7V94JA3ARSGS4pi?=
+ =?us-ascii?Q?EUjd0UQzf2Cnq/GF+6rcekmDc7cUmg/RvGOv62/UfzJWivcgB27+ZTmSQVKh?=
+ =?us-ascii?Q?na+t0uUtCU2vPgjazZP/Wii2LuPBdLIRGYdyUYmiEB13Lqc+ty8lO1bH33kS?=
+ =?us-ascii?Q?kLrAaJNmu4SSVEUJzuRhsONbeZyeaPPOl8D/jSfCbGRaPY0qBX5jsCY6fs56?=
+ =?us-ascii?Q?q+jsyYxlgMLOOQNQ5Fn/bLHZFiPLGIHaZoHM3xYB1pg+2yw9RQkjGCOhuxMH?=
+ =?us-ascii?Q?E7K7H0sLKpYs6+1bjVKz4+mD2zLWEqHmrHUhSLrfa3RuI+EOgQhr35Iss9Iq?=
+ =?us-ascii?Q?7sKEQCrTKjXko8mDlyBQ3zxzxDsqv0sSzQOnWxw9NxoyEWhUfN/vJ3SYtLPw?=
+ =?us-ascii?Q?aKJdAbB+aa5nSKR4rASR03YH8t84kAklDExox+VxLaG8NhYTNl3vRmoGLv4z?=
+ =?us-ascii?Q?bILVwXvRd/TlrbyJiCXVOzJZS1XJnv7MamXWFI0ObrXapHAEWyztHPYpMXlB?=
+ =?us-ascii?Q?wHmIAOmdaCcKqFUF+7k1wtrKmnAiXy2H9HgmgL+ovquFO9zWYP+9AG+et6uR?=
+ =?us-ascii?Q?cH+LpzUeeNOHtO6X6WNK/wpQRWLBxdxKb5q5NoYwRSazpi9v/5NLuGs37lLE?=
+ =?us-ascii?Q?SR48AcftULrOq34KbNg=3D?=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.3
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_smtp_not_equal_from}, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
-X-KSMG-AntiVirus-Status: Clean, skipped
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f14dca5b-020b-4716-9f57-08dc44874ec6
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 00:31:51.2267
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: qwCjkuTt7snK7tfZ+oaED1s2NWcoBaSrmiG+2nRrXEBmVbm3YG4vb8JJ/0VDpt46i0S/HY576CdX+2Z8IMfMsA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9017
 
- * playback to speaker
+> Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+> protocol basic support
+>=20
+> On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
+> > Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b, is
+> > it ok to land this patchset?
+> >
+>=20
+> I'll have a look at this last version and a spin on my test setup.
+>=20
+> ...but has this V5 change at all since the Reviewed-by tags due to the la=
+test
+> spec changes ?
 
-   - setup:
-     $ amixer set "FRDDR_A SINK 1 SEL" "OUT 0"
-     $ amixer set "FRDDR_A SRC 1 EN" "on"
-     $ amixer set "TDMOUT_A SRC SEL" "IN 0"
-     $ amixer set "TOACODEC Source" "I2S A"
-     $ amixer set "TOACODEC Lane Select" "0"
-     $ amixer set "TOACODEC EN" "on"
-     $ amixer set "ACODEC" "70%"
-     $ amixer set "ACODEC Playback Channel Mode" "Mono"
-     $ amixer set "ACODEC Right+ Driver Sel" "Right DAC"
-     $ amixer set "ACODEC Left+ Driver Sel" "Right DAC Inverted"
+The tags are same as V4. I only did a rebase, no more changes.
+>=20
+> ...IOW does this V5 include the latest small bits spec-changes or those l=
+atest
+> gpio-related spec-changes are just not needed at the level of the Linux p=
+inctrl
+> support as of now and can be added later on when a Linux gpio driver will=
+ be
+> built on top of this ?
 
-   - usage:
-     $ aplay -D hw:0,0 -f S16_LE -r 48000 /path/to/sample.wav
+In my current test, I no need the gpio related changes, so I would add that=
+ later
+if you are ok.
 
- * capture from digital mics
+Thanks,
+Peng.
 
-   - setup:
-     $ amixer set "TODDR_A SRC SEL" "IN 4"
-
-   - usage:
-     $ arecord -D hw:0,1 -f S32_LE -r 48000 -c 2 -t wav /path/to/sample.wav
-
- * capture from analog mics
-
-   - setup:
-     $ amixer set "TDMIN_A SRC SEL" "IN 3"
-     $ amixer set "TODDR_B SRC SEL" "IN 0"
-     $ amixer set "TOACODEC Source" "I2S A"
-     $ amixer set "TOACODEC Lane Select" "0"
-     $ amixer set "TOACODEC EN" "on"
-     $ amixer set "ACODEC ADC" "70%"
-     $ amixer set "ACODEC ADC Filter" "on"
-     $ amixer set "ACODEC ADC Filter Mode" "HiFi"
-     $ amixer set "ACODEC ADC Mic Bias" "on"
-     $ amixer set "ACODEC ADC Mic Bias Level" "2.5V"
-     $ amixer set "ACODEC ADC PGA" "50%"
-     $ amixer set "ACODEC ADC PGA Right Sel" "Differential"
-     $ amixer set "ACODEC ADC PGA Left Sel" "Differential"
-
-   - usage:
-     $ arecord -D hw:0,2 -f S16_LE -r 48000 -c 2 -t wav /path/to/sample.wav
-
- * capture from TDM loopback
-
-   - setup:
-     $ amixer set "TDMIN_LB SRC SEL" "IN 0"
-     $ amixer set "TODDR_A SRC SEL" "IN 6"
-
-   - usage:
-     $ arecord -D hw:0,1 -f S16_LE -r 48000 -c 2 -t wav /path/to/sample.wav
-
-   or
-
-   - setup:
-     $ amixer set "TDMIN_LB SRC SEL" "IN 0"
-     $ amixer set "TODDR_B SRC SEL" "IN 6"
-
-   - usage:
-     $ arecord -D hw:0,2 -f S16_LE -r 48000 -c 2 -t wav /path/to/sample.wav
-
-Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
----
- .../arm64/boot/dts/amlogic/meson-a1-ad402.dts | 126 ++++++++++++++++++
- 1 file changed, 126 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-index 4bc30af05848..4e0865a4b44e 100644
---- a/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-a1-ad402.dts
-@@ -8,6 +8,8 @@
- 
- #include "meson-a1.dtsi"
- 
-+#include <dt-bindings/gpio/gpio.h>
-+
- / {
- 	compatible = "amlogic,ad402", "amlogic,a1";
- 	model = "Amlogic Meson A1 AD402 Development Board";
-@@ -83,6 +85,100 @@ vddio_1v8: regulator-vddio-1v8 {
- 		vin-supply = <&vddao_3v3>;
- 		regulator-always-on;
- 	};
-+
-+	amplifier: amplifier {
-+		compatible = "simple-audio-amplifier";
-+		sound-name-prefix = "AMPLIFIER";
-+		enable-gpios = <&gpio GPIOF_4 GPIO_ACTIVE_HIGH>;
-+		VCC-supply = <&battery_4v2>;
-+	};
-+
-+	dmics: dmics {
-+		compatible = "dmic-codec";
-+		#sound-dai-cells = <0>;
-+		sound-name-prefix = "MIC";
-+		num-channels = <4>;
-+		wakeup-delay-ms = <50>;
-+	};
-+
-+	sound {
-+		compatible = "amlogic,a1-sound-card",
-+			     "amlogic,axg-sound-card";
-+		model = "AD402";
-+		audio-aux-devs = <&tdmout_a>,
-+				 <&amplifier>,
-+				 <&tdmin_lb>,
-+				 <&tdmin_a>;
-+		audio-routing = "TDMOUT_A IN 0", "FRDDR_A OUT 0",
-+				"TDM_A Playback", "TDMOUT_A OUT",
-+				"AMPLIFIER INL", "ACODEC LOLP",
-+				"AMPLIFIER INR", "ACODEC LORP",
-+
-+				"TODDR_A IN 4", "PDM Capture",
-+
-+				"TDMIN_A IN 3", "TDM_A Capture",
-+				"TODDR_B IN 0", "TDMIN_A OUT",
-+
-+				"TDMIN_LB IN 0", "TDM_A Loopback",
-+				"TODDR_A IN 6", "TDMIN_LB OUT",
-+				"TDMIN_LB IN 0", "TDM_A Loopback",
-+				"TODDR_B IN 6", "TDMIN_LB OUT";
-+
-+		dai-link-0 {
-+			link-name = "speaker";
-+			sound-dai = <&frddr_a>;
-+		};
-+
-+		dai-link-1 {
-+			link-name = "dmics";
-+			sound-dai = <&toddr_a>;
-+		};
-+
-+		dai-link-2 {
-+			link-name = "amics";
-+			sound-dai = <&toddr_b>;
-+		};
-+
-+		dai-link-3 {
-+			sound-dai = <&tdmif_a>;
-+			dai-format = "i2s";
-+			dai-tdm-slot-tx-mask-0 = <1 1>;
-+			dai-tdm-slot-rx-mask-0 = <1 1>;
-+			mclk-fs = <256>;
-+
-+			codec-0 {
-+				sound-dai = <&toacodec TOACODEC_IN_A>;
-+			};
-+
-+			codec-1 {
-+				sound-dai = <&toacodec TOACODEC_CAPTURE_OUT_A>;
-+			};
-+		};
-+
-+		dai-link-4 {
-+			sound-dai = <&toacodec TOACODEC_OUT>;
-+
-+			codec {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+
-+		dai-link-5 {
-+			sound-dai = <&toacodec TOACODEC_CAPTURE_IN>;
-+
-+			codec {
-+				sound-dai = <&acodec>;
-+			};
-+		};
-+
-+		dai-link-6 {
-+			sound-dai = <&pdm>;
-+
-+			codec {
-+				sound-dai = <&dmics>;
-+			};
-+		};
-+	};
- };
- 
- /* Bluetooth HCI H4 */
-@@ -145,3 +241,33 @@ &sd_emmc {
- 	vmmc-supply = <&vddao_3v3>;
- 	vqmmc-supply = <&vddio_1v8>;
- };
-+
-+&clkc_audio {
-+	assigned-clocks = <&clkc_pll CLKID_HIFI_PLL>,
-+			  <&clkc_audio AUD_CLKID_MST_A_MCLK_SEL>,
-+			  <&clkc_audio AUD_CLKID_MST_A_MCLK>,
-+			  <&clkc_audio AUD2_CLKID_PDM_SYSCLK_SEL>,
-+			  <&clkc_audio AUD2_CLKID_PDM_DCLK_SEL>;
-+	assigned-clock-parents = <0>,
-+				 <&clkc_pll CLKID_HIFI_PLL>,
-+				 <0>,
-+				 <&clkc_pll CLKID_FCLK_DIV3>,
-+				 <&clkc_pll CLKID_FCLK_DIV2>;
-+	assigned-clock-rates = <614400000>,
-+			       <0>,
-+			       <12288000>,
-+			       <512000000>,
-+			       <768000000>;
-+};
-+
-+&acodec {
-+	AVDD-supply = <&vddio_1v8>;
-+};
-+
-+&pdm {
-+	sysrate = <256000000>;
-+	pinctrl-0 = <&pdm_din0_a_pins>,
-+		    <&pdm_din1_a_pins>,
-+		    <&pdm_dclk_a_pins>;
-+	pinctrl-names = "default";
-+};
--- 
-2.34.1
-
+>=20
+> Thanks,
+> Cristian
 
