@@ -1,182 +1,134 @@
-Return-Path: <linux-gpio+bounces-4373-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4374-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3F8187C6C6
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 01:32:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2700087C6CE
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 01:39:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5FE0282948
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:32:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9604282929
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 00:39:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DC00ECF;
-	Fri, 15 Mar 2024 00:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93D2510F7;
+	Fri, 15 Mar 2024 00:39:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="GKGBcv93"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="xpUtXrLD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2071.outbound.protection.outlook.com [40.107.7.71])
+Received: from gate2.alliedtelesis.co.nz (gate2.alliedtelesis.co.nz [202.36.163.20])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43C5110E4;
-	Fri, 15 Mar 2024 00:31:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.71
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710462717; cv=fail; b=Fd8ey7JsM77wziuo7N7F98/P3NzeDHeW9+XlAmNFMDMuw+TkZnalOMI3bzal+CU2ew3W5pf9Ov+bkzr5kiQLpwyxwVc4UgsZgmvjYSItCABAwnSV6+Iou8NW3Qy2k8MoQRukSL6TU9fKKYToydvRIzl3usN0G9yn0ZPeq2j7Dzs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710462717; c=relaxed/simple;
-	bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA10119F
+	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 00:39:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=202.36.163.20
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710463155; cv=none; b=qF0PdqAI0Tl0agYziEbXR/FEh6D4h697JkW2tQmOs1T2ryJ8CFm3JDvD/OCzRwhNOlWb56TJINKTODqRGuRl/Rj2ouOsBgna+Hw4ymKBdqBZ8X1m1sN9VhLrncj7C/y9eRM4DqGSkju065oAyof0ZzC3qLRvaym6pIt70wdUzXU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710463155; c=relaxed/simple;
+	bh=OYLR286lMK0RbbvfSuwnlIVOsJXDh/dUIXhqnNyYNj0=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=D2gW8QZg04eZEvGgPyRUOB7huK0RsBiMInEcQgikEG/xnjAjkQpbSXgnxvzlPUwi4m7eHfKGFCds7xrylN7A1BC5pq5F2xKIStwCiPVfBOJ22eCIz5nsKy6FY9K9I5p4nvKMOt4yO7SxPFSJikSJv8ZoE63jUgQF53fcKNwY5EA=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=GKGBcv93; arc=fail smtp.client-ip=40.107.7.71
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=EtuJaderqHykRPjPoGwlc6kO1IrruqvG3pRMwJjuLfqYezm6pEU1mty1hvucIOAKZ/vHXCbwFKSbAWkG2MswTFLZpmLOdyzdH02buc7f8SierwQD5OSOSifjTzX1GDrrUTrFqMiFQfAe827x7tZFtiLwiyyKrrybmA5k0Xh/5peppoIO4blVxgtKP4i14PWUIGjzZl30MnIqTp3n7l8QLhdrGP17+XjZ9qGGDtkG8Nw4s3Go/rbYFZnIP+SpEz4ZE/2CiG6B+eex9GfBTYJhBZHjP5DVpjt5k5hIYoDUqj6Cshnvva0HiFdBrx5PMXcBMhUidAOzHHkjVKF1M7p8nw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
- b=gbrA+woPnQ/P+7grpQYt/NZN7xiMktmCRmpmbz7326wl4TPH2j4pfOEha39K0/Qnv0hSvQPNv6BeV0b1m7BOVr8obLPqzsxm7lCZdXSFvt7HQeLOLph6ljqh9Dz6pAS/W2rnrAXc0VDwzYNmsomJ42C5rzL1dvxql++fbHyJic5an+za6s2KjYhym8nU9vhGe+mhBEIf740sELSdC5+Qi0yEo7uS8vQ+4kmPIaLgGF3CMWMLd+faLGcInhE4tJv6Des+yTlNNnhXKEahS68fZkchhCuhuuRkBKGbeLMqi06TD5mBMeST+QamEKFgBombgvLbEMjaWrsEBF71oNEwbA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cppvwl10qKdRCFtppMJcp+UREa6CmnqsLPk535QU8rA=;
- b=GKGBcv93mbOZY9z2ctWeJrr3PFHvHVfrmgUfWXuxRje7G2MdVzHLWMXnl5mt7fSasuIfOoPCWgHy4LIne1IRhyPWBpi2gGXvvH/AD71CXqTy025bRIcj7aUfQ0nBjvdtjbuwFA75COUVtQSA/9KZ9sPMTo6kpfOl66+LXEFIEKo=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DU2PR04MB9017.eurprd04.prod.outlook.com (2603:10a6:10:2d0::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.21; Fri, 15 Mar
- 2024 00:31:51 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Fri, 15 Mar 2024
- 00:31:51 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Cristian Marussi <cristian.marussi@arm.com>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus
- Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx
-	<linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: RE: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHadhNQAq3ztPnC+06ZIaeZ1qof0rE3crUAgACA3vA=
-Date: Fri, 15 Mar 2024 00:31:51 +0000
-Message-ID:
- <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <ZfMqWP-t39SCvkA2@pluto>
-In-Reply-To: <ZfMqWP-t39SCvkA2@pluto>
-Accept-Language: en-US
+	 Content-Type:MIME-Version; b=Qg5r+t0SkVFzeX37fzVqi1SlPBJfQC/7YMcYvYvMEjyXfHN9ek2wOqavlW8t9aYSOJL6ffO9Sji7bICBbqTEGxMGNGizoiN9ku/s4nJP7Rr+0GWFpES04lY3603GM36DtDh3sBRbeKEPPo8M+8EwqUqbQdsAMciRh1YJ9vXq3Ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz; spf=pass smtp.mailfrom=alliedtelesis.co.nz; dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b=xpUtXrLD; arc=none smtp.client-ip=202.36.163.20
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=alliedtelesis.co.nz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=alliedtelesis.co.nz
+Received: from svr-chch-seg1.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(Client did not present a certificate)
+	by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 42C512C05FB;
+	Fri, 15 Mar 2024 13:39:04 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+	s=mail181024; t=1710463144;
+	bh=OYLR286lMK0RbbvfSuwnlIVOsJXDh/dUIXhqnNyYNj0=;
+	h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+	b=xpUtXrLDtaT0iyAjJW8U39i7OkgZ/nn2Ou+k92+woJ4uwznRtw4+rzCTQ37VYaVvU
+	 vKOUiBXH/5msM4PhrE0z88GZLeUep4MdMizcuef6lrvqlyNxldshZ9ssFlHEIAG9QU
+	 GOINJ2WpIZcTNp5WXi2KgjuPQKzRLq5KjPfItHeRu54QHG2bbvLTHthZSKWq4ulciz
+	 1LeVOhHe0jzMqNQm9BQDepPWFq2BiXcXfTjl1KPLs4yleUZZd0cYI6uSaWOouyYtwD
+	 pmhKoFotAOEBSgFkjS6zjCXQhq69Z/pA0rbLmnqY9m6LMVL7KyimO7ilwyWKCjoGwQ
+	 L8VFrwSHFoeoA==
+Received: from svr-chch-ex2.atlnz.lc (Not Verified[2001:df5:b000:bc8::76]) by svr-chch-seg1.atlnz.lc with Trustwave SEG (v8,2,6,11305)
+	id <B65f398a80001>; Fri, 15 Mar 2024 13:39:04 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) by
+ svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8:f753:6de:11c0:a008) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.2.1118.40; Fri, 15 Mar 2024 13:39:04 +1300
+Received: from svr-chch-ex2.atlnz.lc (2001:df5:b000:bc8::76) by
+ svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8::77) with Microsoft SMTP Server
+ (TLS) id 15.0.1497.48; Fri, 15 Mar 2024 13:39:03 +1300
+Received: from svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567]) by
+ svr-chch-ex2.atlnz.lc ([fe80::a9eb:c9b7:8b52:9567%15]) with mapi id
+ 15.02.1118.040; Fri, 15 Mar 2024 13:39:03 +1300
+From: Hamish Martin <Hamish.Martin@alliedtelesis.co.nz>
+To: "andriy.shevchenko@linux.intel.com" <andriy.shevchenko@linux.intel.com>
+CC: "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"rafael@kernel.org" <rafael@kernel.org>, "brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+	"linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>
+Subject: Re: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
+Thread-Topic: [PATCH] gpiolib: acpi: Move storage of acpi_gpio_chip
+Thread-Index: AQHadPL2e5DSb6pETUy7jtZsYbUE97E0rVeAgAABiACAAOb0gIAAym2AgAC+R4A=
+Date: Fri, 15 Mar 2024 00:39:03 +0000
+Message-ID: <a0c6898f94d5ca3132a132fc47e8d8e23c36eb4e.camel@alliedtelesis.co.nz>
+References: <20240313030251.1049624-1-hamish.martin@alliedtelesis.co.nz>
+	 <ZfGMNWtFrgsuUdLz@smile.fi.intel.com> <ZfGNfucm2-izJBfd@smile.fi.intel.com>
+	 <f6833616b81e4e35f561dc0ea4dae8dcd0ac026b.camel@alliedtelesis.co.nz>
+	 <ZfL5CYMLY03i8q6u@smile.fi.intel.com>
+In-Reply-To: <ZfL5CYMLY03i8q6u@smile.fi.intel.com>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DU2PR04MB9017:EE_
-x-ms-office365-filtering-correlation-id: f14dca5b-020b-4716-9f57-08dc44874ec6
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- AsDnWkMq6uNOUGEFIc7kQ/ZLr7MuY7SGANxob7i+dEsVxM152RCam/ZzEnAgeU5TBvb4ogT27p84aYm/vQUHEEw0gPBA/UhxEt/BQ2w6stiD3jpNxnWV2zfy2ardGjZHrT4YnOky7yQZ5ct/2axefcQ91ya4TdBj389owJ78oAiyLDAK2eK1Y3kb2sJqKR21+seFlWDZRw9aeamNrFBC1bMD1CUCcWpa+BEbU2r8k0z6tTZrUbnNQisj3pXN6d+HRIF4IfB8AhNpqUieNywr/z4Ex0qY37S8jPb0bUIF/8Kx2qzWtht639osaip/LJZS1N8ZCnSJ3xt8+MnatjsuqlajCp8lPRM4KKWDFRbF7ipV0BNtsh2TOOm02x1g9fMmZyPMvxl9n+fx6Au53Dg8W4vpoID2jkLvChyhWwlnevLtdgVPgLAiy/0RUJOnxUHRv8ujJf2SFG0AFEGfiD602A5c58pVE28ghW9EVvQJuC1ZLLoXDwEMIFflHnA5+nK7pHsKbABaUsto1BhAiPdNK5jyXrYPQn0aMX2vHIw9US1aBf5fOyZb6OOtis9EExaZCRuhY7yht+1S4nla6c9LHwOitaKbEZL5dzyhlJAEK1avQ2aS2tucEKzYLEtDO4IWKDOe2A8Ag8D/wEUe3eaJthD49NpOkOLco+ei+NYta5k9GPQQooAVbfwTwdW0L3JwTLcUPJXtG+D3wQr/QTBaFzCU9sBnh7W4IhoI84a2oEA=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(1800799015)(7416005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?1xHKOL+uo8g9w7CwyCnU7G2OROnYbhxcl5yw3P6Algm9EXlVLa+1SdwH5cFr?=
- =?us-ascii?Q?baRfTv6DeOLGBNs0nlQCl5f3Isd02zE3MDi6CUaG8FVT4k62Ce9tFygA8d86?=
- =?us-ascii?Q?tXhU5x/OcxjCn7YcPZNEor9H/1CiA7FKw7M29PVdWlZWM3YNaPHadwsayI+f?=
- =?us-ascii?Q?b+tobjmrZpuwcE3kRBDoEx3iLROTRGO2J96JWo/xX0y2fxLWsmTLWh/1MlQy?=
- =?us-ascii?Q?4OJs4uA8DaCcUN9PgBnb4sP/nrOp4pEBQqo8Pqx1MrxFnXM0OytlFY/3/qL1?=
- =?us-ascii?Q?lYqNU2nHnEZnSqocnoT1mcGLnvgpXwXcaMNIQ/ow7/47EVCiVDB+b3xpPFwn?=
- =?us-ascii?Q?skzRvTVrxcGoQhrVfzsHoI3Avbcp2pWAQoGrwsMQeLB/AOGHUkTILjctwHW3?=
- =?us-ascii?Q?FUMYP1739BbQ7Xv4rN03joj7j7TfWM2ZScSU26BOER1DvrYhSdw0Ov457o8E?=
- =?us-ascii?Q?1r8BIkazYo/LOUQbJ3NmNfjKNbbHNgdXa8KqbYdWpG/mcpArOX0AeqqysKn2?=
- =?us-ascii?Q?HroZF+PdorJls+kx590TZ5BAq2kO7DfgrGVwfkhgPwJzV01wyiZPdmoWIz6h?=
- =?us-ascii?Q?vpV4nerW9K5hvcUQRHbtZC6Zz6AOrKe6+TtXzwj73gkXkeF6D5K28vaaWnpz?=
- =?us-ascii?Q?k3YH021sdqqz7QzOouMgo7Omx6hcVVWgsI5FVuvIke2C1E7yT4cd/QZZKo6w?=
- =?us-ascii?Q?QPhfQfgTzNWmdltNzbILMrPYCJzUPcp16jao7VJ34wC690fx7KWS3pe4+nyW?=
- =?us-ascii?Q?9EZtPJjVXX30Jzu4As1s5WUS24cjWUCz7bd8wc5MV4GH+Zi8uK0yFh/gaLU+?=
- =?us-ascii?Q?VLmZQjqGUJH6BpSfDiYVYvCMRig7DljwU5NvP3QpNWIsuVGFutL4urXfNyQ0?=
- =?us-ascii?Q?zIsSTwh4zgAzXdgaFUw4GqxjPSvmMStErGOQuDWdnf58c7V94JA3ARSGS4pi?=
- =?us-ascii?Q?EUjd0UQzf2Cnq/GF+6rcekmDc7cUmg/RvGOv62/UfzJWivcgB27+ZTmSQVKh?=
- =?us-ascii?Q?na+t0uUtCU2vPgjazZP/Wii2LuPBdLIRGYdyUYmiEB13Lqc+ty8lO1bH33kS?=
- =?us-ascii?Q?kLrAaJNmu4SSVEUJzuRhsONbeZyeaPPOl8D/jSfCbGRaPY0qBX5jsCY6fs56?=
- =?us-ascii?Q?q+jsyYxlgMLOOQNQ5Fn/bLHZFiPLGIHaZoHM3xYB1pg+2yw9RQkjGCOhuxMH?=
- =?us-ascii?Q?E7K7H0sLKpYs6+1bjVKz4+mD2zLWEqHmrHUhSLrfa3RuI+EOgQhr35Iss9Iq?=
- =?us-ascii?Q?7sKEQCrTKjXko8mDlyBQ3zxzxDsqv0sSzQOnWxw9NxoyEWhUfN/vJ3SYtLPw?=
- =?us-ascii?Q?aKJdAbB+aa5nSKR4rASR03YH8t84kAklDExox+VxLaG8NhYTNl3vRmoGLv4z?=
- =?us-ascii?Q?bILVwXvRd/TlrbyJiCXVOzJZS1XJnv7MamXWFI0ObrXapHAEWyztHPYpMXlB?=
- =?us-ascii?Q?wHmIAOmdaCcKqFUF+7k1wtrKmnAiXy2H9HgmgL+ovquFO9zWYP+9AG+et6uR?=
- =?us-ascii?Q?cH+LpzUeeNOHtO6X6WNK/wpQRWLBxdxKb5q5NoYwRSazpi9v/5NLuGs37lLE?=
- =?us-ascii?Q?SR48AcftULrOq34KbNg=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <146FC29BA448FE4487140143F10DBB50@atlnz.lc>
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f14dca5b-020b-4716-9f57-08dc44874ec6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Mar 2024 00:31:51.2267
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: qwCjkuTt7snK7tfZ+oaED1s2NWcoBaSrmiG+2nRrXEBmVbm3YG4vb8JJ/0VDpt46i0S/HY576CdX+2Z8IMfMsA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU2PR04MB9017
+X-SEG-SpamProfiler-Analysis: v=2.4 cv=KIH5D0Fo c=1 sm=1 tr=0 ts=65f398a8 a=Xf/6aR1Nyvzi7BryhOrcLQ==:117 a=xqWC_Br6kY4A:10 a=fzn4atkRgMAA:10 a=IkcTkHD0fZMA:10 a=K6JAEmCyrfEA:10 a=QyXUC8HyAAAA:8 a=6qSdqfhXhhJZOklO0PgA:9 a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10
+X-SEG-SpamProfiler-Score: 0
 
-> Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> protocol basic support
->=20
-> On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
-> > Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b, is
-> > it ok to land this patchset?
-> >
->=20
-> I'll have a look at this last version and a spin on my test setup.
->=20
-> ...but has this V5 change at all since the Reviewed-by tags due to the la=
-test
-> spec changes ?
-
-The tags are same as V4. I only did a rebase, no more changes.
->=20
-> ...IOW does this V5 include the latest small bits spec-changes or those l=
-atest
-> gpio-related spec-changes are just not needed at the level of the Linux p=
-inctrl
-> support as of now and can be added later on when a Linux gpio driver will=
- be
-> built on top of this ?
-
-In my current test, I no need the gpio related changes, so I would add that=
- later
-if you are ok.
-
-Thanks,
-Peng.
-
->=20
-> Thanks,
-> Cristian
+T24gVGh1LCAyMDI0LTAzLTE0IGF0IDE1OjE4ICswMjAwLCBhbmRyaXkuc2hldmNoZW5rb0BsaW51
+eC5pbnRlbC5jb20NCndyb3RlOg0KPiBPbiBUaHUsIE1hciAxNCwgMjAyNCBhdCAwMToxMzozMUFN
+ICswMDAwLCBIYW1pc2ggTWFydGluIHdyb3RlOg0KPiA+IE9uIFdlZCwgMjAyNC0wMy0xMyBhdCAx
+MzoyNiArMDIwMCwgQW5keSBTaGV2Y2hlbmtvIHdyb3RlOg0KPiANCj4gLi4uDQo+IA0KPiA+IFJl
+bW92aW5nIHRoZSBzZXR0aW5nIG9mIHRoZSBoYW5kbGUgdG8gaW52YWxpZCBtYXkgYmUgdGhlIHJp
+Z2h0IGZpeA0KPiA+IGJ1dA0KPiA+IEkgZG9uJ3QgZmVlbCBJIGtub3cgdGhlIGNvZGUgd2VsbCBl
+bm91Z2ggdG8gbWFrZSBhIGRlY2lzaW9uIG9uDQo+ID4gdGhhdC4gSXQNCj4gPiBjZXJ0YWlubHkg
+ZG9lc24ndCByZXNvbHZlIHRoaW5ncyBpbW1lZGlhdGVseSAtIEkgc2F3IHJlZiBjb3VudGluZw0K
+PiA+IHdhcm5pbmdzIG91dHB1dC4NCj4gDQo+IE5vdCByZW1vdmluZywgYnV0IG1vdmluZyB0byB0
+aGUgYmV0dGVyIHBsYWNlPw0KPiBDYW4geW91IHNoYXJlIHdhcm5pbmdzLCB0aG91Z2g/DQo+IA0K
+Rm9yIGNvbnRleHQgaGVyZSBpcyB0aGUgY3VycmVudCBjYWxsIGNoYWluIHRoYXQgbGVhZHMgdG8N
+CmFjcGlfZ3Bpb2NoaXBfcmVtb3ZlKCk6DQoNCiBhY3BpX2dwaW9jaGlwX3JlbW92ZSsweDMyLzB4
+MWEwDQogZ3Bpb2NoaXBfcmVtb3ZlKzB4MzkvMHgxNDANCiBkZXZyZXNfcmVsZWFzZV9ncm91cCsw
+eGU2LzB4MTYwDQogaTJjX2RldmljZV9yZW1vdmUrMHgyZC8weDgwDQogZGV2aWNlX3JlbGVhc2Vf
+ZHJpdmVyX2ludGVybmFsKzB4MTlhLzB4MjAwDQogYnVzX3JlbW92ZV9kZXZpY2UrMHhiZi8weDEw
+MA0KIGRldmljZV9kZWwrMHgxNTcvMHg0OTANCiA/IF9fcGZ4X2RldmljZV9tYXRjaF9md25vZGUr
+MHgxMC8weDEwDQogPyBzcnNvX3JldHVybl90aHVuaysweDUvMHg1Zg0KIGRldmljZV91bnJlZ2lz
+dGVyKzB4ZC8weDMwDQogaTJjX2FjcGlfbm90aWZ5KzB4MTBlLzB4MTYwDQogbm90aWZpZXJfY2Fs
+bF9jaGFpbisweDU4LzB4ZDANCiBibG9ja2luZ19ub3RpZmllcl9jYWxsX2NoYWluKzB4M2EvMHg2
+MA0KIGFjcGlfZGV2aWNlX2RlbF93b3JrX2ZuKzB4ODUvMHgxZDANCiBwcm9jZXNzX29uZV93b3Jr
+KzB4MTM0LzB4MmYwDQogd29ya2VyX3RocmVhZCsweDJmMC8weDQxMA0KID8gX19wZnhfd29ya2Vy
+X3RocmVhZCsweDEwLzB4MTANCiBrdGhyZWFkKzB4ZTMvMHgxMTANCiA/IF9fcGZ4X2t0aHJlYWQr
+MHgxMC8weDEwDQogcmV0X2Zyb21fZm9yaysweDJmLzB4NTANCiA/IF9fcGZ4X2t0aHJlYWQrMHgx
+MC8weDEwDQogcmV0X2Zyb21fZm9ya19hc20rMHgxYi8weDMwDQoNCkkgcmVtb3ZlZCB0aGUgc2V0
+dGluZyBvZiBhZGV2LT5oYW5kbGUgPSBJTlZBTElEX0FDUElfSEFORExFIGZyb20NCmFjcGlfc2Nh
+bl9kcm9wX2RldmljZSgpIGFuZCBzaGlmdGVkIGl0IHRvIGp1c3QgYWZ0ZXIgdGhlIGNhbGwgdG8N
+CmJsb2NraW5nX25vdGlmaWVyX2NhbGxfY2hhaW4oKSBpbiBhY3BpX2RldmljZV9kZWxfd29ya19m
+bigpLg0KV2l0aCB0aGF0IGl0IHNlZW1zIHRoaW5ncyBwcm9ncmVzcyBmdXJ0aGVyIHdpdGggdGhl
+IGNhbGwgdG8NCmFjcGlfZ2V0X2RhdGEoKSBpbiBhY3BpX2dwaW9jaGlwX3JlbW92ZSgpIHN1Y2Nl
+ZWRpbmcgbm93LiBIb3dldmVyLA0KbGF0ZXIgaW4gYWNwaV9ncGlvY2hpcF9mcmVlX3JlZ2lvbnMo
+KSB3ZSBoaXQgdGhpcyBlcnJvcjoNCg0KcGNhOTUzeCBpMmMtUFJQMDAwMTowMzogRmFpbGVkIHRv
+IHJlbW92ZSBHUElPIE9wUmVnaW9uIGhhbmRsZXINCg0KV2UgYWxzbyBnZXQgdGhlc2UgZXJyb3Jz
+Og0KQUNQSSBXYXJuaW5nOiBPYmogMDAwMDAwMDBiYTZhOTYwMCwgUmVmZXJlbmNlIENvdW50IGlz
+IGFscmVhZHkgemVybywNCmNhbm5vdCBkZWNyZW1lbnQNCiAoMjAyMzA2MjgvdXRkZWxldGUtNDIy
+KQ0KDQo+IFAuUy4NCj4gSSdtIG5vdCBhbiBleHBlcnQgaW4gQUNQSUNBIGFuZCBsb3cgbGV2ZXIg
+b2YgQUNQSSBnbHVlIGxheWVyIGluIHRoZQ0KPiBMaW51eA0KPiBrZXJuZWwsIHBlcmhhcHMgUmFm
+YWVsIGNhbiBzdWdnZXN0IHNvbWV0aGluZyBiZXR0ZXIuDQo+IA0KT0ssIHRoYW5rcyBmb3IgeW91
+ciBoZWxwLiBIb3BlZnVsbHkgUmFmYWVsIGNhbiBhZGQgc29tZXRoaW5nIHRvIHRoZQ0KZGlzY3Nz
+aW9uLg0KDQpUaGFua3MsDQpIYW1pc2ggTQ0K
 
