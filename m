@@ -1,74 +1,74 @@
-Return-Path: <linux-gpio+bounces-4381-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4382-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4DD5F87CAFA
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 10:58:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D093887CB05
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 11:00:38 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 09997283A51
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 09:58:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 001A41C226BC
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 10:00:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE3F817C7B;
-	Fri, 15 Mar 2024 09:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 781CF1863C;
+	Fri, 15 Mar 2024 10:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jSqXuiWa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Laqcq9rz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C15E18026
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 09:58:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B6FD182C3
+	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 10:00:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710496719; cv=none; b=Cp/qSNVUqEnRNzGxE9pdfM90arRSNn7l+5uooxPzPhQdugkTUpIE1CJiUzqKiIF0gWhkL9PgXoof12Q3uZg5hbB0322FgcjD7JeIouO9k1yUCp7fwRdZ7kvcz+JI+LyWYAXb2jaMcvL5kbzz5Y6eQKM1qQW0Ffi33SKX1o+SYpY=
+	t=1710496821; cv=none; b=Fof7j/KGi5ZNFzWnPPJySSIvG0FUBqVsgroqFqYecBadsScTlWpGksFKsHK4FpJWyNdgi2m0W4iHwNshPzu76fNlNhdHdmEe1kbOujhcFEvRZ/1QM7ZDM2dE/Ajf7afCTBJhUMhIEI9puvF4QN5tLrAQ/pV6U+hL5p3jU+OiZ/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710496719; c=relaxed/simple;
-	bh=Iu8k+oLwr4hqiYGmKQ/JGJ3jwWl99QjATtzgXxf4OXU=;
+	s=arc-20240116; t=1710496821; c=relaxed/simple;
+	bh=MdPiINrYitdZDH2g/vvUhvEntL1U9Tr4A8teJzOp2iY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iYlz05n4QZwZFHRIk7Y7hj3V35aJeMx4YF7zKXF3vOv6Zf32TSkCQSphSeAIbm+HH7T0LPKu/Mem8xtQR30WrLJcMtEwdkLV4T+XqoUF1vkMq8QB4UPwPx8uOo99NWwqfNqMyQWOBYRKutFopTetEdYSgLISIN21gbQiYP31QTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jSqXuiWa; arc=none smtp.client-ip=209.85.218.52
+	 In-Reply-To:Content-Type; b=XWEqqFicP95S/jkaw6BbdYnd38gfb48F7eTy+ALzxMMSWYxW3EvmllKDfZ1I2+9RIxVp/DD6bpwLQhhmnZSNFWcBd/t21Cc6tFwO2PXXSdIebpKkLTs/tHNK7KXYjYzf3Wnxnvo6DQphKOhi3q+JQanF/1L8vG/A7EGl/1Jav2M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Laqcq9rz; arc=none smtp.client-ip=209.85.218.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a466fc8fcccso206018166b.1
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 02:58:37 -0700 (PDT)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a466a27d30aso251957066b.1
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 03:00:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710496716; x=1711101516; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1710496816; x=1711101616; darn=vger.kernel.org;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :from:to:cc:subject:date:message-id:reply-to;
-        bh=XCDp802c/vz00Jj0fM4zOQgn8Q59NL1j5+KpAzF7J7g=;
-        b=jSqXuiWayhwPsLCkyutVXWLtC1vGR7vkoSEbU8owomudfMu9cXg8m5bJu0nSn/kScz
-         BKVUTZYkxxfhFZN3rNG9gt6AQIieM/9B6f8g6BTXT2C0XSBf6wa1J8A76r/eYodS5dH5
-         tNy/WIxLp6n2OIU+0XjvFbD1aQLHuAP3KRso3ZcS1c3YJnedH7Wds7kmbL/HYufMvf1J
-         EU3J06g6JY9965FWIxJFsv0PEQc9127go1BflGkOFUzYS42GZV/kz1DCxeg1O4LRbjdW
-         uJY6kPOLDU4T3grbh4bnuzvOT/D9bbBv08gyDvKyLGlAWSLV9aPaymJ/HDyiqqM//FUx
-         +aOA==
+        bh=LpB1iaL8i/TMAgyiGjpKHex+3mHIdJteZ4k5b7bX7pQ=;
+        b=Laqcq9rzWzCdYxi2buioA+GIGSWA9v6O0crWcGDUf4/clGXa9bS+otS9DvzDXTSIaS
+         Jzg5yrUs2koUEW2s8RZ7NptglNgtnu0oTtbltMwMQz3SL6TXSSx5TRnrpCMpQLupI/Fr
+         NwNuezJ0vkk0eq2CRF4G0EuvDB2nyRRB/QCZW+wYbqfF9h96LYAAzH1CxiyzGVONOmVo
+         eABMqwqw+nzCjku+k2lZbcVIoVONEkhyGtEO1z8L/6EJPicedHMmX2nE0P2VZ0r7TFf7
+         ra5s4+JEx2ZFOUiE0J1OlSct+vHIAMl+w1Y1ElFFo19P67eq8SXKAs0hJXVcvTZ4uczV
+         GaNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710496716; x=1711101516;
+        d=1e100.net; s=20230601; t=1710496816; x=1711101616;
         h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
          :to:content-language:subject:user-agent:mime-version:date:message-id
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=XCDp802c/vz00Jj0fM4zOQgn8Q59NL1j5+KpAzF7J7g=;
-        b=TLy78ySJ3dNeDx+MQ9KLVfufgvUaLldLLc9IOZyEDBQCrmv9fo5aBiFFzL0DJ6MUsF
-         wWrE+xS2v7mZp3f94CQDs/w23AAZpyYfniRnUCads58wWFDCLC/hi3Kd1mBQ7tv/mPel
-         3hC/7BWd0r8RdSYJ2kIffIT8aD/QmArAuuP3SsM0ZTZReMagHlBk0I6pWQsOV9w/uDK4
-         08zJCuQ6+f1M4UfZMQCpu2oCZ5s9Ra1Pa3fSXnrp7VzsPSk1LzPmuNsoS8pO2oqeN3iY
-         wjBoZsLMLWhHscW/LGYe1m5/PkfcMR81GDbxx1bYpKLIx3PasePc/yFVNSTndPJOPPF9
-         nblA==
-X-Forwarded-Encrypted: i=1; AJvYcCW/BlqUAM+0GFS19ycyg4CvYPIyzN4ZvebCA41fNXl1YPLjecNSgeAk6AluvXhTRsDpyn7jVD8ire4uz3R26P8HLqOkFit0wtHA9g==
-X-Gm-Message-State: AOJu0YxTnYVqlh0OHul7WSBSxKKi6rMorm/C1yMRzYYnD3PSVb+EKixM
-	vP1qS5HPN60PKUMPvDBCJ20A+bsnUDJdW4gKWHgvYqcYtBgPf64WTP1I5oORUfU=
-X-Google-Smtp-Source: AGHT+IHIsIdUGhPXOM3BQx4/0p1MeZLlO90elMoxks/E8rq2q+6HU+t6JEfKjICz9pAzbqmmPNO/Hw==
-X-Received: by 2002:a17:907:c086:b0:a46:6dcf:3f39 with SMTP id st6-20020a170907c08600b00a466dcf3f39mr3347105ejc.57.1710496716475;
-        Fri, 15 Mar 2024 02:58:36 -0700 (PDT)
+        bh=LpB1iaL8i/TMAgyiGjpKHex+3mHIdJteZ4k5b7bX7pQ=;
+        b=fc1FQiX0V3yHQrS+EHC9PiBFBkIXUbxHYB8b/NSsHmoB8sFRmpj18FAJl/V8UcP/FG
+         BUvl57rjdh2glSgn/u9fAHLPdEDJh+Zby1SLc2kUCwiGiQUjb/00J0W66YwiO62PMUz5
+         wjm6nbC6j3JLc03Kc35eZcrj7IpASLun3X0dhZ6BBzmrgqo0171o86kS16FKHl5NzExi
+         ztOYUxKwWGVGk8kGIf4qwam9IQqe1RIwZ8/7glMStf+kEIquauQGvDp/z1uUGrQdSb01
+         YiYwqxvGv3fRQXsLpuxVl3z53mx4MnzAogceqGy9sC7LHPqyBKwYNR0U9J/8vWGJLShv
+         Mf4w==
+X-Forwarded-Encrypted: i=1; AJvYcCX+ah5aoLL9Ea6HHkF3fWMMRBydv1YvjLNAaZFH+EwWvfigKDQiCdbddFl5tP0nBlY8yyr/u05jMPlkquv3+qmeEBOQtsw+QgGbeA==
+X-Gm-Message-State: AOJu0YzPJY5YSzUmyTiLqKjQld5T2qCqHsYOqARKCuBOeCl94ZYaETwO
+	3uHlnZVVtZZLMXE3ZNUYrDw1XrVa08qYgMMGnAsy9++OV0ezRl5rMVk8GF4WxcM=
+X-Google-Smtp-Source: AGHT+IETRWxFpcKiWIwfwIe1BRvOlwqPlsFpdWcZAC6w358bOa1ndXYyZ3o2HSFBW1oGzkXMoym+Ow==
+X-Received: by 2002:a17:907:8dcc:b0:a46:7509:2425 with SMTP id tg12-20020a1709078dcc00b00a4675092425mr3299196ejc.63.1710496816404;
+        Fri, 15 Mar 2024 03:00:16 -0700 (PDT)
 Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id dv22-20020a170906b81600b00a4658d3e405sm1529599ejb.196.2024.03.15.02.58.34
+        by smtp.gmail.com with ESMTPSA id dv22-20020a170906b81600b00a4658d3e405sm1529599ejb.196.2024.03.15.03.00.14
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 15 Mar 2024 02:58:36 -0700 (PDT)
-Message-ID: <f91ea77c-8170-4ae6-850f-3d5715d83855@linaro.org>
-Date: Fri, 15 Mar 2024 10:58:34 +0100
+        Fri, 15 Mar 2024 03:00:15 -0700 (PDT)
+Message-ID: <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
+Date: Fri, 15 Mar 2024 11:00:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -76,8 +76,8 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/25] ASoC: dt-bindings: meson: g12a-toacodec: add
- support for A1 SoC family
+Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
+ 'sysrate' property
 Content-Language: en-US
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>,
  Neil Armstrong <neil.armstrong@linaro.org>,
@@ -97,7 +97,7 @@ To: Jan Dakinevich <jan.dakinevich@salutedevices.com>,
  linux-gpio@vger.kernel.org
 Cc: kernel@salutedevices.com
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-9-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
 From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
@@ -143,39 +143,37 @@ Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
  KQ06ztUMRrj8eVtpImjsWCd0bDWRaaR4vqhCHvAG9iWXZu4qh3ipie2Y0oSJygcZT7H3UZxq
  fyYKiqEmRuqsvv6dcbblD8ZLkz1EVZL6djImH5zc5x8qpVxlA0A0i23v5QvN00m6G9NFF0Le
  D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240314232201.2102178-9-jan.dakinevich@salutedevices.com>
+In-Reply-To: <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 15/03/2024 00:21, Jan Dakinevich wrote:
-> Add "amlogic,t9015-a1" compatible string and new device tree phandle
-> options.
+> This option allow to redefine the rate of DSP system clock.
 
-I don't understand the second part. You did not add any options, no
-phandles. You added some defines for something, so say what are these
-"something".
+And why is it suitable for bindings? Describe the hardware, not what you
+want to do in the driver.
 
 > 
 > Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 > ---
->  .../devicetree/bindings/sound/amlogic,g12a-toacodec.yaml     | 1 +
->  include/dt-bindings/sound/meson-g12a-toacodec.h              | 5 +++++
->  2 files changed, 6 insertions(+)
+>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
-> index 23f82bb89750..c47604aa590f 100644
-> --- a/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
-> +++ b/Documentation/devicetree/bindings/sound/amlogic,g12a-toacodec.yaml
-> @@ -26,6 +26,7 @@ properties:
->        - items:
->            - enum:
->                - amlogic,sm1-toacodec
-> +              - amlogic,a1-toacodec
+> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+> index df21dd72fc65..d2f23a59a6b6 100644
+> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
+> @@ -40,6 +40,10 @@ properties:
+>    resets:
+>      maxItems: 1
+>  
+> +  sysrate:
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +    description: redefine rate of DSP system clock
 
-Keep alphabetical order. Don't stuff new entries to the end...
-
-
-
+No vendor prefix, so is it a generic property? Also, missing unit
+suffix, but more importantly I don't understand why this is a property
+of hardware.
 
 Best regards,
 Krzysztof
