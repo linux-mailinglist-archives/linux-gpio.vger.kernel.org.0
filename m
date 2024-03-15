@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-4391-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4392-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3EB9187CE22
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 14:33:42 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E8D1D87CE29
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 14:37:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D34151F22774
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 13:33:41 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 262C21C213D1
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 13:37:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 93DD62C188;
-	Fri, 15 Mar 2024 13:33:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 62E712CCD3;
+	Fri, 15 Mar 2024 13:36:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aqYoumkN"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WBikQgWF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D82C28DA0;
-	Fri, 15 Mar 2024 13:33:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10E8236AED;
+	Fri, 15 Mar 2024 13:36:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710509613; cv=none; b=apgjH8ZhaV2lSxLetYMbZPqbbVmUdaE6N/fHDUiYjLCnebU9CiiPLzLov9ABKzzG0YMGdSiAWisuYyNnIrkRqMfsVAvQ5m/0+H1dDULZeAt8dIGSJ2QJ2QVwI2OZtKTxwoSOjd4T2hC8yBlnDsM//CuzRJlm74n2DchKYtD4m74=
+	t=1710509816; cv=none; b=QW1Dtb2yFi7mOa+9a+USvlQ3PxK+lGMgTlQsF17mUFik2YOtm8/z6icdGnDo9R361nRuS+iAmyfOZ4+aKrRBu1CkRbQDL4yBEym5tUdzK7h1y25FOXhCHzsXGMSIWkA98ivmwvjeW3aBhqw/hykvWEmXsGyLFN/tXnJjUy7zB1s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710509613; c=relaxed/simple;
-	bh=JfFjAgEhqLnBfKgjQe9qzywYHRntA6N/TCPrlY0SO3s=;
+	s=arc-20240116; t=1710509816; c=relaxed/simple;
+	bh=mnKx/USIAWKFowB3UECi37soYZOTeSdjE7YC6dui0gY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ELZo2xPsH/fn1RoMPBip4mIgkzw1yuhCnhIultfmTdjPMW6nkdJB4/Z7QqsvWrijsQuN9lvAcdjovEYMHHxznevAfGg6G9AOvmadj+yPhgGTk2HS1TQ2q5eM/vxyfZ2rfA1c1HGFvMXzWU5KaPZfbOr1XnLxv160rHXH/pd5h6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aqYoumkN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1682EC433C7;
-	Fri, 15 Mar 2024 13:33:26 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=nQbgdKYHyu/lcRDgYQy6/uQJdqrpI4ceH+tiMPMEm6idfyntRHVuH1+X4ZOArh+vH/8k4mj9ZYLXQV4HzTQ1NV7TTu/sRC7lYSXudSWGR7JfhKVA8y1ACxJEyNKXsSIvKsyf6MhbSW+rgSwgBSeE/OUBd+rpL/oR24uuRUAL4nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WBikQgWF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B990C433F1;
+	Fri, 15 Mar 2024 13:36:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710509612;
-	bh=JfFjAgEhqLnBfKgjQe9qzywYHRntA6N/TCPrlY0SO3s=;
+	s=k20201202; t=1710509815;
+	bh=mnKx/USIAWKFowB3UECi37soYZOTeSdjE7YC6dui0gY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aqYoumkNxTsioqSB8CHVWJv6WqJg7w80kOK6LuxD1ntomlPu2KhueYUskFagoOWcV
-	 +/GjL/DAHUdcNR9lvwtkhKtwlRxaMhAv/b+c2X1Wr1J/+op42sMSrJYd11dOIStcRe
-	 sD8Wsy1gnp7j/MgKDTbm6sc1Vi6hOZ9PwGlNWJBVz5Hl5puzNVm+BIwNOYT7l3I9Up
-	 q3w9tASq5ZFgvWlIwcQlOstwahLObdzOuPViX3fhg+nIJyjfoqcWW1G4cdjJUe6JVh
-	 40RmBTRBjMvoflBe/rhfxo04DMidctU7GO2AIDeYBE4zZ0/4hurR2VoNINr8LCSNyE
-	 FFrSLJjsySVZQ==
-Date: Fri, 15 Mar 2024 13:33:23 +0000
+	b=WBikQgWFYtKFSQn7AJHJtgle7tDUdFM0GNQ/6JqxAf0lxH6kRfm2hxTIXdG5E6Egy
+	 YAzTuwY1PjSj0ojy2bfIUYwcULJe3/38mYLHr+20Nw39reMae5OEJudFQOAYqJS1cG
+	 mjHGzUI/L69hkyZrBEUsb8oCQhOHCT3JZQ44vfSkw/OskPHgcBcH2rCpWA6LWBCF5E
+	 diWwtCdzYwAdPO346YhitMreYA0mq7RAR0VnKsuUT5V6yoGUgrZLjFm21Xpp4uFg52
+	 3KzbWdPKyTbVDmpXxzm5MDzWsiHQEt7QAGwNh5hjZUGzrkEU44uZ9fAbLix7zN5tme
+	 8jjsI9jEx/Dhw==
+Date: Fri, 15 Mar 2024 13:36:48 +0000
 From: Mark Brown <broonie@kernel.org>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 Cc: Neil Armstrong <neil.armstrong@linaro.org>,
@@ -61,11 +61,10 @@ Cc: Neil Armstrong <neil.armstrong@linaro.org>,
 	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
 	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
 	kernel@salutedevices.com
-Subject: Re: [PATCH 09/25] ASoC: meson: g12a-toacodec: add support for A1 SoC
- family
-Message-ID: <2a41e8b6-7e8a-4995-a1d7-c5d30e53c2d5@sirena.org.uk>
+Subject: Re: [PATCH 12/25] ASoC: meson: t9015: add support for A1 SoC family
+Message-ID: <5f8e8cd2-f9c4-4961-a85d-a0f3217294e6@sirena.org.uk>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-10-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-13-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,44 +72,54 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="whZtyi24go8F2IXG"
+	protocol="application/pgp-signature"; boundary="4AHceM7kGoMGggFJ"
 Content-Disposition: inline
-In-Reply-To: <20240314232201.2102178-10-jan.dakinevich@salutedevices.com>
+In-Reply-To: <20240314232201.2102178-13-jan.dakinevich@salutedevices.com>
 X-Cookie: A well-known friend is a treasure.
 
 
---whZtyi24go8F2IXG
+--4AHceM7kGoMGggFJ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Mar 15, 2024 at 02:21:45AM +0300, Jan Dakinevich wrote:
+On Fri, Mar 15, 2024 at 02:21:48AM +0300, Jan Dakinevich wrote:
 
->  static const struct regmap_config g12a_toacodec_regmap_cfg = {
-> -	.reg_bits	= 32,
-> -	.val_bits	= 32,
-> -	.reg_stride	= 4,
-> +	.reg_bits		= 32,
-> +	.val_bits		= 32,
-> +	.reg_stride		= 4,
-> +	.max_register		= TOACODEC_CTRL0,
-> +	.max_register_is_0	= true,
+> +static const char * const a1_adc_mic_bias_level_txt[] = { "2.0V", "2.1V",
+> +	"2.3V", "2.5V", "2.8V" };
+> +static const unsigned int a1_adc_mic_bias_level_values[] = { 0, 1, 2, 3, 7 };
 
-If the maximum register is 0 how does the regmap have a stride?
+Why would this be varied at runtime rather than being something fixed
+when the system is designed?
 
---whZtyi24go8F2IXG
+> +static const char * const a1_adc_pga_txt[] = { "None", "Differential",
+> +	"Positive", "Negative" };
+> +static const unsigned int a1_adc_pga_right_values[] = { 0, PGAR_DIFF,
+> +	PGAR_POSITIVE, PGAR_NEGATIVE };
+> +static const unsigned int a1_adc_pga_left_values[] = { 0, PGAL_DIFF,
+> +	PGAL_POSITIVE, PGAL_NEGATIVE };
+
+Similarly here.
+
+> +	SOC_SINGLE("ADC Mic Bias Switch", LINEIN_CFG, MICBIAS_EN, 1, 0),
+> +	SOC_ENUM("ADC Mic Bias Level", a1_adc_mic_bias_level),
+
+Why would micbias be user controlled rather than a DAPM widget as
+normal?
+
+--4AHceM7kGoMGggFJ
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0TiMACgkQJNaLcl1U
-h9CfZwf9FCsJlpA0ZVHlgM+29kv/xJWAC/kxB2g9thms8cg6YPHLUd9VqS+DpK4u
-Q1506N0mbJUukxVui6tAnM0IUp+AZDr/ZmpdA1+qqTmHXWJYdGW9AlLdwMKLrURg
-HfnYEEeIqCizK2nTTVhOJfkIR9W7ynS35aFJvmsO4BYd1LD4eh4SeD+Qg+L+rW/p
-rmEIYL1arUZjZy0n7oFuinL7TImzcPP64lNK2AN9ilTmp5QtoV6TX+Vs/3bifpct
-GmTkrmSC7N+jX9S9djridoNIVNXjWGZIofNCpNZbOm+vnkwmAZ+jyKz5uPt+twrQ
-R4METAHd4l9JPhWejRP3JBTwMZ3pug==
-=VGfS
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX0Tu8ACgkQJNaLcl1U
+h9B7RQf/eYxVKAjAigpYP4vgwBWRE/HosjdaaB5ogMo8PMSiXfacGnLx0ZtIpWa9
+i6saOA5iW9E/n7Et4JpmJ0J/fYdN7d5TkSlgYGwYP/ojBAChias0hOS7f+fHKvdM
+qH8C+20ovZC5RpNOZUjLmiwJ1WMJQrXgjYVTLpBHn23XPsf8fV3i+B5JEQzBJtXI
+px2DiSaV2iQ+nBmrZQEQo7KnJsQiLahPLQgr81xq5322lUfLN0+kRHrNGnqMU/Aw
+BW++2BV+mf6HXT8WKXrn2DeQByMpBN+jc7eeRDI7xIiB4iAWwpDL9Cn5HsSuYYvI
+ZdU3lU/s6CaDa3e5AyxYVatZ42Rx4Q==
+=sm4b
 -----END PGP SIGNATURE-----
 
---whZtyi24go8F2IXG--
+--4AHceM7kGoMGggFJ--
 
