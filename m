@@ -1,156 +1,152 @@
-Return-Path: <linux-gpio+bounces-4377-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4378-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9EC0687C8CC
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 07:27:29 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63BD987CA60
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 10:06:23 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 507C61F21BF8
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 06:27:27 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 96A4CB21280
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 09:06:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A4121427E;
-	Fri, 15 Mar 2024 06:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9561717991;
+	Fri, 15 Mar 2024 09:06:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hi4E6Ocl"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="uxb9xEco"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 305F61426B
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 06:24:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C302B175A6
+	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 09:06:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710483851; cv=none; b=fyBe3THqmDX4bs496GV6o4/5r8T1wgn6G+/EDni8DCX3P1UHk+YL4lxTcj1KMmh+3YZpovq3sSHFrlFrNOqXK9CtxxMnZxkZO5TJE4q4Ik/LZaSJ98eLH/R3NgOBHe1mlzh3nLhDG00IGIk3rP6MXJaVM105qwXqnLvt/nvoIEQ=
+	t=1710493570; cv=none; b=qOAeOyJF63UWgvKM92A+OQJQ3Au2WWkTMwChQuY17QjG/lM+GyOfevkeD5qWH5eAvqCCuwnoBGeUFiQsz4+l4clSC6B16ObkqSPoVukmyLFr/0TJ3VZnYVaSTHSS8QjnbQFx2avhnM6nJT4xe2yzh0aRUa9UEBkm8jeBdb4bG7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710483851; c=relaxed/simple;
-	bh=8hatKKv5/7R423aa6ntHditmiT/I4Zc0RS592ZzdzBo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rimqn03prUr+elpiuoWvFM5auApvSa1kYUPee4DXAKysCCkp3ZUa30GXiPVoW13kk5orHeXsM38jYwaMhftbnbFrQBUB98bsOr8BEcafIQMImmMJi5RlwZvsj9e1ULsfv3aO1i0LE5UywODAUA1Rt0KIBi8D1T7BpuGKOZM6HMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=hi4E6Ocl; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41401f1d665so902265e9.2
-        for <linux-gpio@vger.kernel.org>; Thu, 14 Mar 2024 23:24:08 -0700 (PDT)
+	s=arc-20240116; t=1710493570; c=relaxed/simple;
+	bh=VYYch6XeureEVUpN2Mw2LknizCfpr7ksjmijCa7rU1g=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=Dh7ykN0Uohbpo98K+Wvt1Jp3Ywf+QDlprI4NDvjfbhztGaKM2GvT+OBdKoPi9rJ86EeI2zWcVKEVDa5OirPMkJ6P0t80CuK1aGWJrVGCbcjoqzmqiKVUJ1iBNRZKS39WxJ8Kp1gFBQEmbQtRzD1tHiWJk+PwOKhQCrgxSVqvFhU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=uxb9xEco; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41400a9844aso1671705e9.0
+        for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 02:06:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710483847; x=1711088647; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=s9LPhepAIkivg02JjKy3gGkvg0KX9KjTZMR9ul/pzXw=;
-        b=hi4E6OclXfSNhOQsILaTH56uAg3eD5I+wY6oZTBCxOBnao3ofmJkn4TGM70t91fqXZ
-         IJl/pdCOtoJRVidZt3/9fi4gQ5MhYBRz8KkDWrd1MSAZ77MI/D2034HKDNIMRf8tkCPs
-         2uQSurVlurkVAxHfwvs7iqEsmkGPibL0lTnKCFf+AeWd3lP4N2/Z9FUJoofN8oRJF0I2
-         lJBbfRQfgRZCcip6AKN+lXxjMCrG4SdDFuofFJD+ge+tuC1ZVDaAeQ8ZFFHt3rF+qJb5
-         /VfNbYAdmTN8GC63NhnSmF1ZYYn+BtAElEG19SpRxKfg8xH73jGN0IOdjblYI+6T44rp
-         p/dQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710493565; x=1711098365; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=ZpMSBa9vXitkcuu7vgMM3w3/yA6IqPigK2dGLCTN5uc=;
+        b=uxb9xEcoW06sfo43xA0iTAYPNc/sHcZzFzBdFoMm+3EOzpxR7jYZ/onGi6nNR8uU/v
+         hl02w0ZJJNgsZcO+8zUMT/ZhxT7Ey0uKjCJnmqRq86yVfuKsQntH3/BKSW6mbMMDPDIs
+         9t6UgkeVK8jQ72uKve4rd1X8oaBEKaVXA+ZkyDOoQYuNXEMneLNEABWHxQUjJBbEpGzY
+         /I+RhDbrsHd9aCGoUaVegA21Y7cErzy+NM5ghfysg2RlnChMoeDwYEyHATPnBBGLmnCL
+         5izbvTWkvXkmUI63aC40YFTXBmYB/uzsyes0oRGna1aEKGa7wfOsaTouDqyBioAxPrT0
+         WaDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710483847; x=1711088647;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+        d=1e100.net; s=20230601; t=1710493565; x=1711098365;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=s9LPhepAIkivg02JjKy3gGkvg0KX9KjTZMR9ul/pzXw=;
-        b=qPUIJxgHBWbFQXPK1QMNgsfp3HZtC8eG8XqLM4GeqVKP+ZGZ1Fh8CqG+dyES2aKwX9
-         ukDQjYu79CizykbdZy2WNq22bWLlINKI/WFlzoeOpXvJYIamcCdcg78VGHtul6iX0E2H
-         PqrOYVbd1iEmI+zCZip2W6gh7jaZE1tFr8/3+1eTujroRUsJ8HLKGChVajgL9fsB16x4
-         DWJ6ZeI8qjZU+Dg2IZPasAUsoP/UWr5dtk/UzG18r77rUn1NRdjv6jq63c3uV1+XpxML
-         E6OqHhKB2IeA5fy5QSNJg3cVpsP1f/p9bezd8InTuKIWB3WVBZKTyQcK2dDtWwTLXt7O
-         XO1g==
-X-Forwarded-Encrypted: i=1; AJvYcCUodYc2ZotcVyvUdcrYn/w0TOYTwGpffPh8x9OCtUGDPJUoYttlIsT5MnYnrNnqd7gu6GDjswYUV36JSzb75se2PzVONLcwqSh0pQ==
-X-Gm-Message-State: AOJu0YwwnH8yVPvtHv77Gslin7TKFDh+uClbmDKxiu7GtgkRY+Vv1PZy
-	bMDFeTqOoE5sz8OwIkofJdzgwBC2ZeaPmpuQ/5BoW+3AgcaVe+mDni4huRbAGXc=
-X-Google-Smtp-Source: AGHT+IGuc1jijyMO18jNQFeSjG/gNhcDM/wtNd54nQwkBqzISLhJ08o59pWhpo7tuOIhvoHzQzAu1g==
-X-Received: by 2002:a05:6000:a90:b0:33e:4238:8615 with SMTP id dh16-20020a0560000a9000b0033e42388615mr2698769wrb.40.1710483847319;
-        Thu, 14 Mar 2024 23:24:07 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id dd12-20020a0560001e8c00b0033eab3520a9sm2384912wrb.43.2024.03.14.23.24.05
+        bh=ZpMSBa9vXitkcuu7vgMM3w3/yA6IqPigK2dGLCTN5uc=;
+        b=sm5OT2ddLJdasQE8JiFvmZgRrWgLBWUreHg15WO9N7OBewyyn7wwMjYyeJAy1W4QI4
+         fzWZvzdHp9+hfcfQIIzDV/JHzuBGgOD3QX3yRThgI27U6YDekR4C4m0LSlkwxEb88Xx4
+         +gFQsMYW65dvDKJPLdOQuujgt5gUx9/B2za6jgKxBEY7SQgFfDAjElmhFC8y/8/7+8Qf
+         SxK0Yc4IAgAlun04h08qvOqCXCiqAh8GkM3OmS3nDAFGfOb7pmTlabBQlwBR/j7X8Ad2
+         xOON1UGaL7gdwgeaO7ouZttsliDSjwQIJzI+u1hHQS8IjM/8Adr1K8PemkyHgX7cUqa6
+         VxBA==
+X-Forwarded-Encrypted: i=1; AJvYcCU1YYG3oaXGh3pNfNwktwL0Squ5cS8KuFflkx11DLE5wdB+y8IzsjHkzh8TXVkdTipPfm3A74CktRxPN4TqyJyLykKY+kZZRIFkGA==
+X-Gm-Message-State: AOJu0YxgqU39GOXE7hyYMuusehI2g9S3vSFvywuQrb6e18HIaqixApGe
+	kuj7y+JcKzBnG4pFTuBBuZUcogQ4wnMcmjfxZEkgBnF8ln4w9IwVlu17r3ECIzY=
+X-Google-Smtp-Source: AGHT+IGv2qeT4+XV+fkhSqD7rZTLCUTw8RubHWgYTp3yu9LMq3zgewNkauR43y7qOB4OhUkwae7l8g==
+X-Received: by 2002:a05:600c:4f11:b0:414:37f:2798 with SMTP id l17-20020a05600c4f1100b00414037f2798mr483210wmq.6.1710493564904;
+        Fri, 15 Mar 2024 02:06:04 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:8151:4d0a:14d8:1124])
+        by smtp.gmail.com with ESMTPSA id fj6-20020a05600c0c8600b00414024b2f49sm900044wmb.0.2024.03.15.02.06.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Mar 2024 23:24:06 -0700 (PDT)
-Date: Fri, 15 Mar 2024 09:24:02 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: Re: [PATCH v5 4/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Message-ID: <64523bd3-d208-4989-b8d9-57952c77954c@moroto.mountain>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <20240314-pinctrl-scmi-v5-4-b19576e557f2@nxp.com>
- <55ec2392-c196-4669-a339-12ef336707fa@moroto.mountain>
- <DU0PR04MB9417F0C53A0B112E7A8A334288282@DU0PR04MB9417.eurprd04.prod.outlook.com>
+        Fri, 15 Mar 2024 02:06:04 -0700 (PDT)
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+Cc: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
+ <jbrunet@baylibre.com>, Michael  Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob  Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
+ Hilman <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ kernel@salutedevices.com
+Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
+ params
+Date: Fri, 15 Mar 2024 09:58:50 +0100
+In-reply-to: <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+Message-ID: <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9417F0C53A0B112E7A8A334288282@DU0PR04MB9417.eurprd04.prod.outlook.com>
+Content-Type: text/plain
 
-On Fri, Mar 15, 2024 at 12:44:34AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH v5 4/4] pinctrl: Implementation of the generic scmi-
-> > pinctrl driver
-> > 
-> > On Thu, Mar 14, 2024 at 09:35:21PM +0800, Peng Fan (OSS) wrote:
-> > > +static int pinctrl_scmi_get_function_groups(struct pinctrl_dev *pctldev,
-> > > +					    unsigned int selector,
-> > > +					    const char * const **groups,
-> > > +					    unsigned int * const num_groups)
-> > {
-> > > +	const unsigned int *group_ids;
-> > > +	int ret, i;
-> > > +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
-> > > +
-> > > +	if (!groups || !num_groups)
-> > > +		return -EINVAL;
-> > > +
-> > > +	if (selector < pmx->nr_functions &&
-> > > +	    pmx->functions[selector].num_groups) {
-> > 
-> > If pmx->functions[selector].num_groups is set then we assume that
-> > functions[selector].groups has been allocated.
-> > 
-> > > +		*groups = (const char * const *)pmx-
-> > >functions[selector].groups;
-> > > +		*num_groups = pmx->functions[selector].num_groups;
-> > > +		return 0;
-> > > +	}
-> > > +
-> > > +	ret = pinctrl_ops->function_groups_get(pmx->ph, selector,
-> > > +					       &pmx-
-> > >functions[selector].num_groups,
-> > > +					       &group_ids);
-> > 
-> > However, pmx->functions[selector].num_groups is set here and not cleared
-> > on the error paths.  Or instead of clearing the .num_groups it would be nice
-> > to pass a local variable and only do the
-> > pmx->functions[selector].num_groups = local assignment right before the
-> > success return.
-> 
-> So you concern is I should clear the pmx->functions[selector].num_groups in
-> err path, right?
-> 
 
-Yes.  If functions[selector].groups is invalid (NULL or freed) then the
-pmx->functions[selector].num_groups variable must also be zero.
+On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
 
-regards,
-dan carpenter
+> Existing values were insufficient to produce accurate clock for audio
+> devices. New values are safe and most suitable to produce 48000Hz sample
+> rate.
 
+The hifi pll is not about 48k only. I see no reason to restrict the PLL
+to a single setting.
+
+You've provided no justification why the PLL driver can't reach the same
+setting for 48k. The setting below is just the crude part. the fine
+tuning is done done with the frac parameter so I doubt this provides a
+more accurate rate.
+
+>
+> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+> ---
+>  drivers/clk/meson/a1-pll.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
+> index 4325e8a6a3ef..00e06d03445b 100644
+> --- a/drivers/clk/meson/a1-pll.c
+> +++ b/drivers/clk/meson/a1-pll.c
+> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
+>  	},
+>  };
+>  
+> -static const struct pll_mult_range hifi_pll_mult_range = {
+> -	.min = 32,
+> -	.max = 64,
+> +static const struct pll_params_table hifi_pll_params_table[] = {
+> +	PLL_PARAMS(128, 5),
+> +	{ },
+>  };
+>  
+>  static const struct reg_sequence hifi_init_regs[] = {
+> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
+>  			.shift   = 6,
+>  			.width   = 1,
+>  		},
+> -		.range = &hifi_pll_mult_range,
+> +		.table = hifi_pll_params_table,
+>  		.init_regs = hifi_init_regs,
+>  		.init_count = ARRAY_SIZE(hifi_init_regs),
+>  	},
+
+
+-- 
+Jerome
 
