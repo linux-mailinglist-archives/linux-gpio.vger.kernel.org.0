@@ -1,44 +1,42 @@
-Return-Path: <linux-gpio+bounces-4395-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4396-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E79A087D1AB
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 17:56:10 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3B9BA87D253
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 18:07:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 722061F23D37
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 16:56:10 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D10A2B251C3
+	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 17:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 288DB5490A;
-	Fri, 15 Mar 2024 16:53:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 11773524DC;
+	Fri, 15 Mar 2024 16:58:16 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4F5335478B;
-	Fri, 15 Mar 2024 16:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8100126AF2;
+	Fri, 15 Mar 2024 16:58:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710521603; cv=none; b=sGdBu0jeIBcGyQXUjYvLLv8dBIilyA8BUwmUg4FwoTWwBahVP2bHnc6VZVbh4jVUJwHp89YicR5Wbj5gjlmy3Skca8OLhUXsas1vEKUwY02mzmKtWkJ05UBODUs4efW/NaeDQ0JtUk/+I5fEd8utakf+XtWqY4cyJeiH0ez7pYY=
+	t=1710521895; cv=none; b=PKIdMpFutzSM3kcKYg5nU9VhNoP0sqEDFmbfqq5KAk2KRdUKWV0wlomn0W56w5kzbX+NZNU27DPhZw67Or6ndV7hipcHyBuPXH7DTgERH52+KAfvfVKgsSg6zMScTpO9dZOBFCjvGex7/3Ic/7AuvB8H12prfN36pKjWggaaTzs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710521603; c=relaxed/simple;
-	bh=quOxwG7GF78bsqXhXIFaqgiZCtCviVlc+c2l1XriIXE=;
+	s=arc-20240116; t=1710521895; c=relaxed/simple;
+	bh=h+V5x9FH3S78+aNGetznfB0xwt4NshA81QKscITTQ4Q=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aaiHM/RDmKgPkTmpwu3iudvKYmt9ksqjmFobUVqKuyGHxbebKIPEQHa33GArUyXyKFt1CzQSFaG3wwudnoLnVQxGVW4d0BsAE5RL+zAyRvebIVH2BS2eL/j6nO+F1ePQxGHr2uWLtG/9HL39EK1E26Vds23sxgpIJQ0D/d42o+Y=
+	 Content-Type:Content-Disposition:In-Reply-To; b=aKkb7i6g9dGbBD74NHGETbn9TQl11Q8Nusbf5b4T2edvFhlIgDwjlSoQJpEncM/pWg5gIjP9z6C4tPC/pR86YV/AD30iEbF5gb/c6hGsCSQT3DHrmn5m3xCz8fzPjY28Sr1wIkQTdACEk9OHp9VZaVdcFzQmuLgoDUvlfR4LT3k=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9BD90C15;
-	Fri, 15 Mar 2024 09:53:54 -0700 (PDT)
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 112C9C15;
+	Fri, 15 Mar 2024 09:58:48 -0700 (PDT)
 Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 83CF33F762;
-	Fri, 15 Mar 2024 09:53:16 -0700 (PDT)
-Date: Fri, 15 Mar 2024 16:53:10 +0000
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 297643F762;
+	Fri, 15 Mar 2024 09:58:10 -0700 (PDT)
+Date: Fri, 15 Mar 2024 16:58:07 +0000
 From: Cristian Marussi <cristian.marussi@arm.com>
-To: Peng Fan <peng.fan@nxp.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh+dt@kernel.org>,
 	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
 	Conor Dooley <conor+dt@kernel.org>,
 	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
@@ -47,19 +45,16 @@ Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
 	Sascha Hauer <s.hauer@pengutronix.de>,
 	Pengutronix Kernel Team <kernel@pengutronix.de>,
 	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
 	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
  protocol basic support
-Message-ID: <ZfR89rdzRymY1Ovx@pluto>
+Message-ID: <ZfR-H_jAlm3CKTM6@pluto>
 References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <ZfMqWP-t39SCvkA2@pluto>
- <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -68,58 +63,141 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
+In-Reply-To: <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
 
-On Fri, Mar 15, 2024 at 12:31:51AM +0000, Peng Fan wrote:
-> > Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> > protocol basic support
-> > 
-> > On Thu, Mar 14, 2024 at 09:35:17PM +0800, Peng Fan (OSS) wrote:
-> > > Since SCMI 3.2 Spec is released, and this patchset has got R-b/T-b, is
-> > > it ok to land this patchset?
-> > >
-> > 
-> > I'll have a look at this last version and a spin on my test setup.
-> > 
-> > ...but has this V5 change at all since the Reviewed-by tags due to the latest
-> > spec changes ?
+On Thu, Mar 14, 2024 at 09:35:20PM +0800, Peng Fan (OSS) wrote:
+> From: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
 > 
-> The tags are same as V4. I only did a rebase, no more changes.
-> > 
-
-Ok.
-
-> > ...IOW does this V5 include the latest small bits spec-changes or those latest
-> > gpio-related spec-changes are just not needed at the level of the Linux pinctrl
-> > support as of now and can be added later on when a Linux gpio driver will be
-> > built on top of this ?
+> Add basic implementation of the SCMI v3.2 pincontrol protocol.
 > 
-> In my current test, I no need the gpio related changes, so I would add that later
-> if you are ok.
+> Reviewed-by: Cristian Marussi <cristian.marussi@arm.com>
+> Tested-by: Cristian Marussi <cristian.marussi@arm.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> Co-developed-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> ---
+>  drivers/firmware/arm_scmi/Makefile    |   1 +
+>  drivers/firmware/arm_scmi/driver.c    |   2 +
+>  drivers/firmware/arm_scmi/pinctrl.c   | 908 ++++++++++++++++++++++++++++++++++
+>  drivers/firmware/arm_scmi/protocols.h |   1 +
+>  include/linux/scmi_protocol.h         |  75 +++
+>  5 files changed, 987 insertions(+)
 > 
+> diff --git a/drivers/firmware/arm_scmi/Makefile b/drivers/firmware/arm_scmi/Makefile
+> index a7bc4796519c..8e3874ff1544 100644
+> --- a/drivers/firmware/arm_scmi/Makefile
+> +++ b/drivers/firmware/arm_scmi/Makefile
+> @@ -11,6 +11,7 @@ scmi-transport-$(CONFIG_ARM_SCMI_HAVE_MSG) += msg.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
+>  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+> +scmi-protocols-y += pinctrl.o
+>  scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+>  
+>  obj-$(CONFIG_ARM_SCMI_PROTOCOL) += scmi-core.o
+> diff --git a/drivers/firmware/arm_scmi/driver.c b/drivers/firmware/arm_scmi/driver.c
+> index 415e6f510057..ac2d4b19727c 100644
+> --- a/drivers/firmware/arm_scmi/driver.c
+> +++ b/drivers/firmware/arm_scmi/driver.c
+> @@ -3142,6 +3142,7 @@ static int __init scmi_driver_init(void)
+>  	scmi_voltage_register();
+>  	scmi_system_register();
+>  	scmi_powercap_register();
+> +	scmi_pinctrl_register();
+>  
+>  	return platform_driver_register(&scmi_driver);
+>  }
+> @@ -3159,6 +3160,7 @@ static void __exit scmi_driver_exit(void)
+>  	scmi_voltage_unregister();
+>  	scmi_system_unregister();
+>  	scmi_powercap_unregister();
+> +	scmi_pinctrl_unregister();
+>  
+>  	scmi_transports_exit();
+>  
+> diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
+> new file mode 100644
+> index 000000000000..0fcfa4269473
+> --- /dev/null
+> +++ b/drivers/firmware/arm_scmi/pinctrl.c
+> @@ -0,0 +1,908 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * System Control and Management Interface (SCMI) Pinctrl Protocol
+> + *
+> + * Copyright (C) 2024 EPAM
+> + * Copyright 2024 NXP
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+> +
+> +#include "common.h"
+> +#include "protocols.h"
+> +
+> +/* Updated only after ALL the mandatory features for that version are merged */
+> +#define SCMI_PROTOCOL_SUPPORTED_VERSION                0x0
+> +
+> +#define REG_TYPE_BITS GENMASK(9, 8)
+> +#define REG_CONFIG GENMASK(7, 0)
+> +
+> +#define GET_GROUPS_NR(x)	le32_get_bits((x), GENMASK(31, 16))
+> +#define GET_PINS_NR(x)		le32_get_bits((x), GENMASK(15, 0))
+> +#define GET_FUNCTIONS_NR(x)	le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define EXT_NAME_FLAG(x)	le32_get_bits((x), BIT(31))
+> +#define NUM_ELEMS(x)		le32_get_bits((x), GENMASK(15, 0))
+> +
+> +#define REMAINING(x)		le32_get_bits((x), GENMASK(31, 16))
+> +#define RETURNED(x)		le32_get_bits((x), GENMASK(11, 0))
+> +
+> +enum scmi_pinctrl_protocol_cmd {
+> +	PINCTRL_ATTRIBUTES = 0x3,
+> +	PINCTRL_LIST_ASSOCIATIONS = 0x4,
+> +	PINCTRL_CONFIG_GET = 0x5,
+> +	PINCTRL_CONFIG_SET = 0x6,
 
-I COULD have agreed with this, since AFAIK there is currently an effort to
-add support for GPIO on top of SCMI Pinctrl BUT not in Linux, so no reason to
-block this series for gpio-related missing features, that should only be additions
-not breaking backward compatibility...
+These are now PINCTRL_SETTINGS_GET and PINCTRL_SETTINGS_CONFIGURE
+with a bit of different payload and size....please also fix and rename
+the related msg descriptos down below.
 
-....BUT, I've just wrapped my head again around the latest public release
-of v3.2 spec (which has gone through so many changes and additions that
-I had lost track O_o) AND beside the above mentioned GPIO changes there
-are indeed also BREAKING changes around the commands PINCTRL_SETTINGS_GET and
-PINCTRL_SETTINGS_CONFIGURE (which were the old PINCTRL_CONFIG_GET/SET),
-that now also get/set the selected function: so that, at the end the payload
-itself of those commands/replies has also changed IN SIZE, so the driver needs
-definitely to be updated (and whatever you use to test on the backend server too,
-if you want to test this...)
+> +	PINCTRL_FUNCTION_SELECT = 0x7,
+> +	PINCTRL_REQUEST = 0x8,
+> +	PINCTRL_RELEASE = 0x9,
+> +	PINCTRL_NAME_GET = 0xa,
+> +	PINCTRL_SET_PERMISSIONS = 0xb
+> +};
+> +
+> +struct scmi_msg_conf_set {
+> +	__le32 identifier;
 
-I think these changes (which I forgot being there) were in since last month, so
-already V4 was broken in these regards (which I have not looked at)
+new field:
 
-I'll leave some comments along the series and test all of this again next week...
-...since too many things has changed and I want to re-verify all on my side.
+	__le32 function_id;
+
+> +	__le32 attributes;
+> +	__le32 configs[];
+> +};
+> +
+> +struct scmi_msg_conf_get {
+> +	__le32 identifier;
+> +	__le32 attributes;
+> +};
+> +
+> +struct scmi_resp_conf_get {
+
+new field
+
+	__le32 function_selected;
+
+> +	__le32 num_configs;
+
+> +	__le32 configs[];
+> +};
+> +
 
 Thanks,
 Cristian
-
 
