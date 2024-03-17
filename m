@@ -1,70 +1,73 @@
-Return-Path: <linux-gpio+bounces-4414-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4415-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 95CD787DF95
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 20:16:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id F1B8787DFC8
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 20:45:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F211280FD4
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 19:16:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ABC89281502
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 19:45:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 051C71EA80;
-	Sun, 17 Mar 2024 19:16:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D7CED1EEF8;
+	Sun, 17 Mar 2024 19:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hCdDUd6X"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dltRHZ8b"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EF041CF9A;
-	Sun, 17 Mar 2024 19:16:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FB3C1EA84;
+	Sun, 17 Mar 2024 19:45:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710703004; cv=none; b=O4FU8+TfBbAf0Tt2r/cpRwTq0w2JzyL/zOk1r6EMrp6dfJn8zWJQ1JVRc52chrkLtqxm6S3WLQMbq+qwYaI3N3/v9wNmSjC2N3UKAKffazlOjTpDpSdZo0WUgqyjn5gmUpja4yq2ZN6BPiIUvnJWMg6iVCJJcr3aWC+YuTQCwms=
+	t=1710704739; cv=none; b=LT/3CC3yQZTSjFe/omtu2Z/cJWw6ZArj2Sve1WLh+hVYlyxJD5soDJ009VGzTXuLFL3z9rTk5aQACTm1gaawRhCg4+sr2STj5vqNIAwA3sGCzBuy3uPYSzUFKTtr/k4Daa6NfKStmMGWGbdZ3eKImAIytW8i3WSPkYfDL/TDErI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710703004; c=relaxed/simple;
-	bh=7wgxPIyPTJm1sbVQLW+1u/0UytpBtpCuchrtZamPsh8=;
+	s=arc-20240116; t=1710704739; c=relaxed/simple;
+	bh=hkVeux51Cmhvp7Xg3Iab1zpv0mwTLFU+W3UsYrIQPaI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rvKrygeV+0cYzNILHum2UAz78MwBWar9/2+qYNuhqMokf//hS8eIeVMWNSr0GVrfzxuU5GoX/PlBQ5rh/OBdvjVNpnr9ucrkHECiP4ydw1ZK4Ti1qOQN91h73F4+iAT7DZMY3UAw8G19Rw7Q4beDzBWMth0eBosy3qItCaYyn78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hCdDUd6X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E28F0C433F1;
-	Sun, 17 Mar 2024 19:16:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=BGNxXLdZqI46rb9nt+PIWVO/O31tjY2pKXzga3lYWD4egk+b92yqfaDBDlp29H/8b22WiZNjdaAEIGat+VK2/xZNOCD+B7SQQTFp/9YDEYSkqwwNSbKc7iDJfXdK04KI+IgWHI+3v9RXzNO2kGbT4hHP6BoZei60/fmwgFNWv2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dltRHZ8b; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55260C433C7;
+	Sun, 17 Mar 2024 19:45:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710703004;
-	bh=7wgxPIyPTJm1sbVQLW+1u/0UytpBtpCuchrtZamPsh8=;
+	s=k20201202; t=1710704738;
+	bh=hkVeux51Cmhvp7Xg3Iab1zpv0mwTLFU+W3UsYrIQPaI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=hCdDUd6XU5vR4dSofVsop9l+p6Dl2b5mAPLEOUE7ukSv4/Y8P/BVftbMzhxOhf7LX
-	 6qIkoK14BS+DxglAcIaMLD847oylzu+ss8P1wMeR/0aB68MBkwaI1zpEB8YN9tH7PQ
-	 QjraJ7ZUXmNmE+XSFJhRwr6aTD30kEkxM1sG5KmeFXBGS2LEx97GbmteJwoqE7/B0P
-	 JAwqVb6hONCDlvIZNVGYH9BQrBaXwAlMHQquP5Qx3kFTSDbqsr1CdAUWQD9bzjPQc4
-	 XoaWBS7iu1PMSMw2U0CPddNlsPWDjJ3WoCrPWmG6teSrG8+yqviCF6Lr23hiOoYxvG
-	 eXsdYplLneFhg==
-Date: Sun, 17 Mar 2024 13:16:41 -0600
+	b=dltRHZ8b/HGv9D1TGsihU+XD5kgo7B+JJEUXHnQQDEiDeYKbO7oS2ou3j2gTFCkeX
+	 cIFHfIjZzp5+2Kcn5zBqJCnZkHaJHF1YzR0qjzRi7LvCXXjaa6p0pmi1+UlFwr5wks
+	 /6wf1Vb7f6rPfBqtMEnBG6cdfdXPw8ACFUXfEAcRJYy5cwDwn7A7oBRuE3XbYuhAmO
+	 cD6fhw4Jbr26lPRJgnSoSKnY7odLk8NISMo24Z6u4icPmc8F2q4yGfMItGFeFLP5bD
+	 HIvKVZClMT+EZxJLdjgVXqb9KkaocIHZvyI0klslGICo71sObO8zV5a8NM3xFed+MT
+	 4wbyLiD1wYf+A==
+Date: Sun, 17 Mar 2024 13:45:34 -0600
 From: Rob Herring <robh@kernel.org>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+Cc: Neil Armstrong <neil.armstrong@linaro.org>,
+	Jerome Brunet <jbrunet@baylibre.com>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Kevin Hilman <khilman@baylibre.com>,
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+	Liam Girdwood <lgirdwood@gmail.com>,
 	Mark Brown <broonie@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Takashi Iwai <tiwai@suse.com>,
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-	Stephen Boyd <sboyd@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
-	linux-amlogic@lists.infradead.org,
-	Neil Armstrong <neil.armstrong@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, linux-gpio@vger.kernel.org,
-	Jerome Brunet <jbrunet@baylibre.com>, linux-sound@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Kevin Hilman <khilman@baylibre.com>, alsa-devel@alsa-project.org,
-	kernel@salutedevices.com, linux-clk@vger.kernel.org,
-	Michael Turquette <mturquette@baylibre.com>,
-	linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH 20/25] ASoC: dt-bindings: meson: axg-tdm-formatters:
- claim support of A1 SoC family
-Message-ID: <171070300107.2091785.7788958335533419953.robh@kernel.org>
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Dmitry Rokosov <ddrokosov@salutedevices.com>,
+	kernel@salutedevices.com
+Subject: Re: [PATCH 22/25] ASoC: dt-bindings: meson: introduce link-name
+ optional property
+Message-ID: <20240317194534.GA2093375-robh@kernel.org>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-21-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-23-jan.dakinevich@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -73,19 +76,24 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240314232201.2102178-21-jan.dakinevich@salutedevices.com>
+In-Reply-To: <20240314232201.2102178-23-jan.dakinevich@salutedevices.com>
 
-
-On Fri, 15 Mar 2024 02:21:56 +0300, Jan Dakinevich wrote:
-> Add "amlogic,a1-tdmout" and "amlogic,a1-tdmin" compatible string aliases
-> to "amlogic,sm1-tdmout" and "amlogic,sm1-tdmin" respectevely.
+On Fri, Mar 15, 2024 at 02:21:58AM +0300, Jan Dakinevich wrote:
+> From: Dmitry Rokosov <ddrokosov@salutedevices.com>
 > 
-> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> ---
->  .../sound/amlogic,axg-tdm-formatters.yaml     | 22 ++++++++++++-------
->  1 file changed, 14 insertions(+), 8 deletions(-)
+> The 'link-name' property is an optional DT property that allows for the
+> customization of the name associated with the DAI link and PCM stream.
+> This functionality mirrors the approach commonly utilized in Qualcomm
+> audio cards, providing flexibility in DAI naming conventions for
+> improved system integration and userspace experience.
 > 
+> It allows userspace program to easy determine PCM stream purpose, e.g.:
+>     ~ # cat /proc/asound/pcm
+>     00-00: speaker (*) :  : playback 1
+>     00-01: mics (*) :  : capture 1
+>     00-02: loopback (*) :  : capture 1
+> 
+> Signed-off-by: Dmitry Rokosov <ddrokosov@salutedevices.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
-
+This needs your S-o-b as well.
 
