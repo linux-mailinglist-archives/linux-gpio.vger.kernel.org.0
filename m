@@ -1,117 +1,177 @@
-Return-Path: <linux-gpio+bounces-4397-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4398-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 20A3D87D379
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 19:20:19 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2C3687DD62
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 15:18:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ADBAA283D4C
-	for <lists+linux-gpio@lfdr.de>; Fri, 15 Mar 2024 18:20:17 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 579DF1F2116E
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 14:18:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68E854E1DB;
-	Fri, 15 Mar 2024 18:20:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0FBC1BF37;
+	Sun, 17 Mar 2024 14:18:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h2d7XwGx"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="uv7Lm/X9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8448E4DA19
-	for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 18:20:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4B91BF27;
+	Sun, 17 Mar 2024 14:18:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710526813; cv=none; b=Z4pvdcuM9vggW9U3nnGk+1DqhWzZbuLlM9//Bse9RsBjePs9QlUGh5VlbMQVgGdSLYbV1VMvUXU1hf5XwbVPkVu5ifaaA6aubRvf55AwspLXWvjkOv1u2l4XjZmr+JFHU1fyU6ndDyMMNA2gH5e4VCtjLnRdCoVd/h8xMz4tXUk=
+	t=1710685092; cv=none; b=qRSrAz/v19tiLpNTLCaaDa3nq/uLKnxvqZqzoAQRPeH3g8a5jLgs8aLtKHkqLGz9aO7SKKsBu/DswgPqIZRd6I3LbjsPEoAW91VeSY7R40DjLmF6G7KAt8o66k8+lUzSRPeOtshfNCtNSji8pUkKsczRTmrGH3TFurvmsWwkLvw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710526813; c=relaxed/simple;
-	bh=L7cy8ipUkDx7KmlC8r7MwrGmXHewBTDD5LGXkBR5uVk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BpSq8HvzXZsn5PHPUNoD9ll2c1G0ezqLJxzos2zrQJwAK7sDkxvN10XqvMrjLawlA2j8RnKFl33uHvIq+TwGjXcOGoiE+FKgC7ew0Ujr7b1Gz8XRpq+rQgA8zhzr8AFUFzQUfkqZ9qyCMwhfvnMm0iaNT81UDll5iMZJe9bQN/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=h2d7XwGx; arc=none smtp.client-ip=209.85.128.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-414037f3767so4771585e9.3
-        for <linux-gpio@vger.kernel.org>; Fri, 15 Mar 2024 11:20:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710526810; x=1711131610; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=4gczFt4/ANkeuztDhpAozYDqwLiBHng72KTDamm/8x0=;
-        b=h2d7XwGxLVP17Av66f1wYMFOHmNCybbuF0dSAb1YlElwf904zwc2IR4ox+UBE/41ln
-         LDButNaf/pJrN4z7jWAvnytDlw0VLhj43wI32vF5j42OP4b8RGEdPc1iy6JUuG97+KFW
-         l/59oeUr+IPGQdC6Cu9oz6VBKJwAeX85l4X5IhOK8RBe5YUgAEqyiAZtmHuDsKUkd6G1
-         Znr3UI6+2d+LSGCO2k5eE7ggjLQihV9NMozJUUJmjYSGEJMbXSMxJmTPVyqwzFeNXuK7
-         MAG3ySNh2q+qhTQ+AaXJWq/BfcDCmmJcNHJDfmrMuTsWhOKjqbgx5S2EQHe4uUMccbeq
-         gdlw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710526810; x=1711131610;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4gczFt4/ANkeuztDhpAozYDqwLiBHng72KTDamm/8x0=;
-        b=EuOr8rOqsq7gYVfwPpSuOZYAuVcZhRg0BTTAEIjXq0ytkCm2pElPzQmyDvf+RcScAO
-         3uu+rM2h4qrEgAGKT6gKMTi2pSSpfCGH1XR3Y1CTypk/8Gxom8fzeDVcD0PCrw4q8naj
-         M6ZlKa49QMNQi6ZzIz+8w4f4xbsP+Sa/W98U7SmUgVDnNLHfhbuDdu5acvOTJ4Pm34rO
-         CMlhAhARfn4q3FpBcyeTHOX/BnUvJzBVcFdZC5caMoPFOHyFuSrMjEaRM5FLm7tiDEiC
-         tDkBcw2+av+CrARyBYg+lLPJezxYqyzaXp/8lDiL3nP4SW7w8QdP5/fuqrK/w6Iz7ekv
-         u7lQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXKgH07cZlvCvKl1Beys6MkJxcvTKFKo6rmkVNWbciKW+QZYZIYMyrxv6SHf6u7+bAcIC4zJjr0YiJ6VnSL5acED+QXJzD06jTaTQ==
-X-Gm-Message-State: AOJu0YyZE/8N8RWH9TWDDe/SaGuk+2UWRnaLEGCr5//n9EPpSGKkXYlN
-	BCS5MV/P2wUt6SuBFKORQ3XXZM6fnat7APRpTOCjM1I0AfUDD3RPyAjBcW0FNEE=
-X-Google-Smtp-Source: AGHT+IFWS4FZMemlafQGX1s1VguV4PoMvo1YTeX7YHgn1fZGY99SKFf+IaNBBrHDW1qmgbaxF97uYQ==
-X-Received: by 2002:a05:600c:3496:b0:414:2f:4ec3 with SMTP id a22-20020a05600c349600b00414002f4ec3mr2120588wmq.21.1710526809664;
-        Fri, 15 Mar 2024 11:20:09 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id fb4-20020a05600c520400b00413e4ff2884sm9663205wmb.40.2024.03.15.11.20.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Mar 2024 11:20:08 -0700 (PDT)
-Date: Fri, 15 Mar 2024 21:20:02 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	dl-linux-imx <linux-imx@nxp.com>,
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <e42e28ad-799d-4254-bf87-634bcd14c086@moroto.mountain>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <ZfMqWP-t39SCvkA2@pluto>
- <DU0PR04MB9417056FD84405898F1B007B88282@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <ZfR89rdzRymY1Ovx@pluto>
+	s=arc-20240116; t=1710685092; c=relaxed/simple;
+	bh=xAVsxMnJoqTUvzQY5QFOBDRP+AQP097SoH7H4Z6KpPk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=OSTOA+nVJx/x1Ks3Z825/odkZ7II9bqpcZPYAeOGA1m0/rTpX+Ut2CfdmZrpC0UsA7jNpDp4ZojueO6yskepSgmKioC0HgdaSYeruFlNxPGzswl/JJYBZ0C4Y/rOIEcPopKtZOqQpu5uTGdNbjztKQmdPyvKOJ2H0Kyvw3Ri2Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=uv7Lm/X9; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id EEF53100004;
+	Sun, 17 Mar 2024 17:17:55 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru EEF53100004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710685075;
+	bh=SQRSKK7y7FzIxWfxLiQrXC7XGIdk++wvMoC5iAR3Cb4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=uv7Lm/X9X5z1ZUSUWfoS0ttfd/72rpm6SUnpRRaNa24NwI+up88M2sXcGcvi9f9YN
+	 Jig10wMsHnHwV3wanec2UWaKwWicjrcIw9dzuHtmOHhcc7uYxFsB3ysm6RbjCzKe6y
+	 jFKr94t1wofL3qvT2jXHDt0cZ9TG2LvhthtFoXo8mnq8bJQBPmuOH+d043V2q04tZW
+	 98zrHAAMKuh6hEZvYg4S/n02z1WyFyc8uh7Y4DQZO2og/ahv9LdqCGSLBmonIYf9hv
+	 V9kuUDEqBFP9SD9NKttW20YDJR+hHD4daPmB+e6xNuANLo3Bwgo7cs0+9iYR4UQ95k
+	 jIktZ299+OK9Q==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Sun, 17 Mar 2024 17:17:55 +0300 (MSK)
+Received: from [172.28.160.49] (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Sun, 17 Mar 2024 17:17:55 +0300
+Message-ID: <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
+Date: Sun, 17 Mar 2024 17:17:12 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ZfR89rdzRymY1Ovx@pluto>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
+ params
+Content-Language: en-US
+To: Jerome Brunet <jbrunet@baylibre.com>
+CC: Neil Armstrong <neil.armstrong@linaro.org>, Michael Turquette
+	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+	Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
+	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<kernel@salutedevices.com>
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+ <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+In-Reply-To: <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 183875 [Feb 29 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.3
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 7 0.3.7 6d6bf5bd8eea7373134f756a2fd73e9456bb7d1a, {Tracking_smtp_not_equal_from}, {Tracking_from_domain_doesnt_match_to}, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean
+X-KSMG-LinksScanning: Clean
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/02/29 19:21:00 #23899999
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Fri, Mar 15, 2024 at 04:53:10PM +0000, Cristian Marussi wrote:
-> On Fri, Mar 15, 2024 at 12:31:51AM +0000, Peng Fan wrote:
-> (and whatever you use to test on the backend server too, if you want
-> to test this...)
+
+
+On 3/15/24 11:58, Jerome Brunet wrote:
+> 
+> On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+> 
+>> Existing values were insufficient to produce accurate clock for audio
+>> devices. New values are safe and most suitable to produce 48000Hz sample
+>> rate.
+> 
+> The hifi pll is not about 48k only. I see no reason to restrict the PLL
+> to a single setting.
+> > You've provided no justification why the PLL driver can't reach the same
+> setting for 48k. The setting below is just the crude part. the fine
+> tuning is done done with the frac parameter so I doubt this provides a
+> more accurate rate.
 > 
 
-What are people using to test this, btw?
+You are right, it is not about 48k only. However, there are two issues.
 
-regards,
-dan carpenter
+First, indeed, I could just extend the range of multipliers to 1..255.
+But I am unsure if hifi_pll is able to handle whole range of
+mulptipliers. The value 128 is taken from Amlogic's branch, and I am
+pretty sure that it works.
+
+Second, unfortunately frac parameter currently doesn't work. When frac
+is used enabling of hifi_pll fails in meson_clk_pll_wait_lock(). I see
+it when try to use 44100Hz and multipliers' range is set to 1..255. So,
+support of other rates than 48k requires extra effort.
+
+>>
+>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+>> ---
+>>  drivers/clk/meson/a1-pll.c | 8 ++++----
+>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
+>> index 4325e8a6a3ef..00e06d03445b 100644
+>> --- a/drivers/clk/meson/a1-pll.c
+>> +++ b/drivers/clk/meson/a1-pll.c
+>> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
+>>  	},
+>>  };
+>>  
+>> -static const struct pll_mult_range hifi_pll_mult_range = {
+>> -	.min = 32,
+>> -	.max = 64,
+>> +static const struct pll_params_table hifi_pll_params_table[] = {
+>> +	PLL_PARAMS(128, 5),
+>> +	{ },
+>>  };
+>>  
+>>  static const struct reg_sequence hifi_init_regs[] = {
+>> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
+>>  			.shift   = 6,
+>>  			.width   = 1,
+>>  		},
+>> -		.range = &hifi_pll_mult_range,
+>> +		.table = hifi_pll_params_table,
+>>  		.init_regs = hifi_init_regs,
+>>  		.init_count = ARRAY_SIZE(hifi_init_regs),
+>>  	},
+> 
+> 
+
+-- 
+Best regards
+Jan Dakinevich
 
