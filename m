@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-4401-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4402-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4E8B787DDD1
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 16:12:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id E7D2487DDE2
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 16:20:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3BBB61C208BE
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 15:12:37 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 20AEF1C20A95
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 15:20:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 752B61C69E;
-	Sun, 17 Mar 2024 15:12:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C5871C6AE;
+	Sun, 17 Mar 2024 15:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="i3G//zfv"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Z4kUHGOp"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6506B1BC3E;
-	Sun, 17 Mar 2024 15:12:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 613201C696;
+	Sun, 17 Mar 2024 15:20:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710688351; cv=none; b=W/6zoCGGw6GO0s7KOEgWt1M9ursHudw3QPv5mqbj++E6eBUumXd4JL/AidZQxG85EBkSrd4yTOzi6ufV1f0jsca+C23c3PTOOOSuCW+8RFEC2BbGiML8j/0QdTSSbCr+7/UehwCFZpY93H79j9/lW/+MR7GzWfMCztx6FW7F0mQ=
+	t=1710688827; cv=none; b=Vx1NqfNWDDtac0duSSYg6C3haPvjwemj6m0cQnf4RHzpxs2LU5qTpfEeB4C1I8VUDr7i70m+Im99ljYT4C94NCw0UbwVuflgSZOORwcRgemJkaHaCssStmBsgR+ALlSWUJarlAfBF8bqu0PeUl5G8g3tFU5jdaCm1wcVK29e+e0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710688351; c=relaxed/simple;
-	bh=7D6rUs7oxFVkKkNiFleJBun4VT034Uea7yEgWMsWmlw=;
+	s=arc-20240116; t=1710688827; c=relaxed/simple;
+	bh=VoSqNLYv2i0ZbSLZdhqqHqA7Sr+JNd2dFFiH2pYAt6I=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Mq4FYHKQTqVPGlAi5FNwfSua9Gjer3QQFrgSrrRV8uIpIAfnAMdpno3ZgPOMXaj/fttWyED8+D7GGAqirz8zAlLMdi2Cdh0SSeRB4nn4TWZQY77XGZ4b3nTObxPbM1UJs0WKpFjit6e9xIQcezlKiKEu1zMhphFa3cAZ2pdkGjM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=i3G//zfv; arc=none smtp.client-ip=45.89.224.132
+	 In-Reply-To:Content-Type; b=sCrjhl2agSlbzYgwUys9c1raSRmOjUPNFQitsZO87osNJEoxfxfx6aHWoV8Dfh+51bS2bH4iGedml7r4k4d9tlvJJJySdCx6hLRSl7yd26m9Ka5/ps8hlNvPzx0CzogBa+8PjmZNwH45Htwy81aFB1r5CTj8uH6m2guDROMHmTM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Z4kUHGOp; arc=none smtp.client-ip=45.89.224.132
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id CD12E120006;
-	Sun, 17 Mar 2024 18:12:23 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru CD12E120006
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 7F206120006;
+	Sun, 17 Mar 2024 18:20:19 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 7F206120006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710688343;
-	bh=vuhFTgRx08IRoav35YN/UioWYf2u92NjCnQaH1ojeG8=;
+	s=mail; t=1710688819;
+	bh=V0nv3zgvdKj1Lp4YbBHZoSBadq2eA8+xFKoUJSBsE9c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=i3G//zfvC8D25R7CeiPqgfTYLeC1qWFZb4cP+lom1aRx85YIxRzgmxU3gi1fDQbCC
-	 FEWDKcilb3Q85z+4Mw5WaWRNsztDe1af8+3dhhpqnBxsTVOSPymdOH6yq1g5Zxjy6a
-	 GN33MnDQpD9srrr1P5ZmWs+zVitGL0ZLyVh684TnWlOs0Ml7K0lcAsPNBm5SGB5tH5
-	 rRYc7EssYUt+6JUSq5ei4AZWv9iJ1eoGkzqUc7cpgI2IfJZUk4Y7Drr/yIMc4fDtiH
-	 8+ONekataCh0QleERya7UP7hwSWekqrJFjvMUWJkyF9yOrxgLvLfDs8WAyXZciHY4U
-	 GHsupLqGtGiMw==
+	b=Z4kUHGOpgIiCzFmKxPX172UziPQP3MmtXzVPzlvesuZGwluMZX/bjigs7i5+lXJYO
+	 6b9FqZ+r6vlAHIU/wzGgGT94z6UfCoYQUXHy1xTxSn2HrLAmTz0ULFYTXfO4LfiOFc
+	 9g4taKa3wMlaJe2D6Ef5VK6K0BRWjGOal61J71l3vdKiIeUCeY/wEVD7xdvf7moVIw
+	 PXvUnF7/gcArytcKWO4A5rnMV/2ILBDsztpsrjWVROQ4dGjUvvTcvA9veec4CWA4B3
+	 BxdjImQ9mx8cJ7OZigIn9MNGcZA5hCaFuXaJDFIQwPfrH4Jr7BO3VQKepAodb78gkQ
+	 cNLMfIrTdStog==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sun, 17 Mar 2024 18:12:23 +0300 (MSK)
+	Sun, 17 Mar 2024 18:20:19 +0300 (MSK)
 Received: from [172.28.160.49] (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 17 Mar 2024 18:12:23 +0300
-Message-ID: <5ca8e65f-9e65-45d2-9bb5-10be3eea2e0b@salutedevices.com>
-Date: Sun, 17 Mar 2024 18:11:40 +0300
+ 15.2.1118.40; Sun, 17 Mar 2024 18:20:18 +0300
+Message-ID: <3ae535cf-9a89-4187-a761-8390d649b00b@salutedevices.com>
+Date: Sun, 17 Mar 2024 18:19:36 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,34 +63,31 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 08/25] ASoC: dt-bindings: meson: g12a-toacodec: add
- support for A1 SoC family
+Subject: Re: [PATCH 09/25] ASoC: meson: g12a-toacodec: add support for A1 SoC
+ family
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
+To: Mark Brown <broonie@kernel.org>
+CC: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
+	<jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
+ Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
 	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, <linux-amlogic@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>
-CC: <kernel@salutedevices.com>
+	<lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jaroslav
+ Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
+	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<kernel@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-9-jan.dakinevich@salutedevices.com>
- <f91ea77c-8170-4ae6-850f-3d5715d83855@linaro.org>
- <5a541ea3-ac4b-4606-9b6a-b103084b30b5@salutedevices.com>
- <83c5f475-6cc5-4084-a54e-1ed7c71735a0@linaro.org>
+ <20240314232201.2102178-10-jan.dakinevich@salutedevices.com>
+ <2a41e8b6-7e8a-4995-a1d7-c5d30e53c2d5@sirena.org.uk>
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <83c5f475-6cc5-4084-a54e-1ed7c71735a0@linaro.org>
+In-Reply-To: <2a41e8b6-7e8a-4995-a1d7-c5d30e53c2d5@sirena.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
@@ -111,26 +108,25 @@ X-KSMG-AntiVirus-Status: Clean, skipped
 
 
 
-On 3/17/24 17:46, Krzysztof Kozlowski wrote:
-> On 17/03/2024 15:29, Jan Dakinevich wrote:
->> I mean the following... This commit adds new defines to
->> meson-g12a-toacodec.h header. These defines are used in the following way:
->>
->> sound-dai = <&toacodec TOACODEC_IN_A>;
->> sound-dai = <&toacodec TOACODEC_CAPTURE_OUT_A>;
->>
->> So, can you make an advise how to call something like "&toacodec" to
->> which I declare new parameters.
+On 3/15/24 16:33, Mark Brown wrote:
+> On Fri, Mar 15, 2024 at 02:21:45AM +0300, Jan Dakinevich wrote:
 > 
-> &toacodec is phandle but it is not really relevant here. You should
-> explain what these defines are. DAI ids?
+>>  static const struct regmap_config g12a_toacodec_regmap_cfg = {
+>> -	.reg_bits	= 32,
+>> -	.val_bits	= 32,
+>> -	.reg_stride	= 4,
+>> +	.reg_bits		= 32,
+>> +	.val_bits		= 32,
+>> +	.reg_stride		= 4,
+>> +	.max_register		= TOACODEC_CTRL0,
+>> +	.max_register_is_0	= true,
 > 
+> If the maximum register is 0 how does the regmap have a stride?
 
-Yes, these are DAI ids. Ok, I'll write it in next version.
-
-> Best regards,
-> Krzysztof
-> 
+reg_stride inherited from existing code. Apparently, it was meaningless
+even before my modifications (the hardware has single register
+regardless of max_register declaration) and it should be dropped. But,
+is it okay to remove it in the same commit?
 
 -- 
 Best regards
