@@ -1,61 +1,61 @@
-Return-Path: <linux-gpio+bounces-4404-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4406-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3524687DE29
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 16:56:54 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BABE87DE86
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 17:29:02 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1A73B1C20F6D
-	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 15:56:53 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F131828032E
+	for <lists+linux-gpio@lfdr.de>; Sun, 17 Mar 2024 16:29:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4DE141CAA8;
-	Sun, 17 Mar 2024 15:56:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490531D54F;
+	Sun, 17 Mar 2024 16:28:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="Zn4i5CUG"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="tW0w0m6R"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0438D1C68F;
-	Sun, 17 Mar 2024 15:56:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A9DF208A3;
+	Sun, 17 Mar 2024 16:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710691006; cv=none; b=tijDRold05HFw2+wUwCiNXM2xzqu3+pzOABoTweebDs7XlLDZrXXIe0C7w7TlQHxbq+SRphfzAbCFt4HF97VHX1ERIUpEyr+W4O6opj2HkULqCg55ffX48rccSW48wLuqstv1DiwzIhlovZc7Wh5LOXd5N5JFjamUUVwfh9TIx8=
+	t=1710692886; cv=none; b=CmaGoPkG3+n8UGc93yWt0JWfx1fdRPMobcx7cHCZeMZA9MjG29j+NWksuf8w7RvpMoQZAYlmXYJMivWrNtBMO2bdfoktLfI/SAWY0QRAbfEsA0QNJdFHEbnTu4HxMM4fn212Ax6DhCMTvZJdT4b18YpJ9oEWRQOHZsSOFKWXo+0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710691006; c=relaxed/simple;
-	bh=LOpDTryQU9TB276fSdpuc7hzwIz6lRjRgZpEEbygp3A=;
+	s=arc-20240116; t=1710692886; c=relaxed/simple;
+	bh=FZB+Ru54xR1WMMpBS6VYjrA31Nq/JCKODbm5lDsavoU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=RCIhiT20W4MyJd4XQ+hBLnq2GSpkdJr4UwYdE2y6C4BNysJzopJorjavJuQqJYUzpDchcDW9radxR+fm1Z/j7WWSaMKodTFmLqtn2JNCCKstTtt1C1AN0obTqPCOim+eT7MEENYp6uyIZd3n2MhJr8qe8L3OVTOzP5B0XqpCkCs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=Zn4i5CUG; arc=none smtp.client-ip=37.18.73.165
+	 In-Reply-To:Content-Type; b=PXzvQBfPvY8vS6is8lBW1on166a2j0pEO+Oxa7dwIHrOZAbaWAo9doH6ZnpIp55Mg9Q7jY75lBHQeeWLWmFdON6oC+7M6zPokoy978ch+K/pAp9rYrwgtdxgRTsHmKUE6YOTy1f3BBTpdM9gbwX+9OanS9t1g6YMWdbwJNYtZrg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=tW0w0m6R; arc=none smtp.client-ip=37.18.73.165
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
 Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id DF8FA100004;
-	Sun, 17 Mar 2024 18:56:40 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru DF8FA100004
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 74482100006;
+	Sun, 17 Mar 2024 19:27:57 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 74482100006
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710691000;
-	bh=Cfmvtd8+RWjDHdplGc7y/19DFlRbIEeWUqLQYoQINEc=;
+	s=mail; t=1710692877;
+	bh=4qS7So0Sq9vro7xE2zLDXeUD46+3m6X+u8Tq5QOIzBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=Zn4i5CUG1rPcaaBktZp5q4tiGyqYkTpX9uyN9C9GryTrFOVtH+MG1VhRCoV+rEOEs
-	 fAg+L62GHJ977FjWkckAtdno5kHjtFyisRNEuYQPFdjwon/kdkrBKmsKlth+3NNUN/
-	 MRV89kKCp3EtotqGmP98txRu/b12yEjgZX7ZVq3hNx28eHWiRF/AyQqd+a2dETp9NP
-	 IKdwbVCZGRtzgXQvm9Phx5fHovnL2QBjoblSNtuKMvyneuR77JOvhgysMrQHBV+Orb
-	 y5GVgzZPqE9IeS/sVC+9E1aw2jlfaB8pHxfuTdGtU81C/7WHpIp+jY86YpImq9xgx3
-	 sZHQAgm4ifuPQ==
+	b=tW0w0m6RJF1gAE8R44hsxulHFsWnRUpT4WgEYVKp1z2mHww8GdOgs2W7gkOyYeZrA
+	 0doNe4sA+BxnMVi/5Zdk1modCoIZUj3NeT/bbbgCZPCpOEBHjHbfIr079ybI5Bma3y
+	 gGHNhvIVgsk94SRBmJbiYquUXAW9zSPHnQSUwSKZpEPEYRESbpBGpco6KMbOk20/xR
+	 4BNgal5O4neLf422l9A9Tf4nP++vFSjgunGVtQvOjE1EOw5Rog/YBc7126L7bf1ulE
+	 1ZXf++qiKcaT2HXRPbzn9TjrMta/y8+rcd8VbGWdFkRow50TRXjmfBHBxr1dSGlUUC
+	 E2RZul9be+Ozg==
 Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
 	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Sun, 17 Mar 2024 18:56:40 +0300 (MSK)
+	Sun, 17 Mar 2024 19:27:57 +0300 (MSK)
 Received: from [172.28.160.49] (100.64.160.123) by
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Sun, 17 Mar 2024 18:56:40 +0300
-Message-ID: <827c4f17-043e-4e09-aea6-0fee22d1b234@salutedevices.com>
-Date: Sun, 17 Mar 2024 18:55:57 +0300
+ 15.2.1118.40; Sun, 17 Mar 2024 19:27:56 +0300
+Message-ID: <c4c0e3a3-eaa8-42c6-bbd3-e5c6993dc63b@salutedevices.com>
+Date: Sun, 17 Mar 2024 19:27:14 +0300
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,32 +63,30 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
- 'sysrate' property
+Subject: Re: [PATCH 12/25] ASoC: meson: t9015: add support for A1 SoC family
 Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob
- Herring <robh@kernel.org>, Krzysztof Kozlowski
+To: Mark Brown <broonie@kernel.org>
+CC: Neil Armstrong <neil.armstrong@linaro.org>, Jerome Brunet
+	<jbrunet@baylibre.com>, Michael Turquette <mturquette@baylibre.com>, Stephen
+ Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
 	<krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>,
 	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
-	<linus.walleij@linaro.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai
-	<tiwai@suse.com>, <linux-amlogic@lists.infradead.org>,
-	<linux-clk@vger.kernel.org>, <devicetree@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<alsa-devel@alsa-project.org>, <linux-sound@vger.kernel.org>,
-	<linux-gpio@vger.kernel.org>
-CC: <kernel@salutedevices.com>
+	<lgirdwood@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Jaroslav
+ Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
+	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<kernel@salutedevices.com>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
- <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
+ <20240314232201.2102178-13-jan.dakinevich@salutedevices.com>
+ <5f8e8cd2-f9c4-4961-a85d-a0f3217294e6@sirena.org.uk>
 From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
+In-Reply-To: <5f8e8cd2-f9c4-4961-a85d-a0f3217294e6@sirena.org.uk>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
  p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
 X-KSMG-Rule-ID: 10
 X-KSMG-Message-Action: clean
@@ -109,45 +107,40 @@ X-KSMG-AntiVirus-Status: Clean, skipped
 
 
 
-On 3/15/24 13:00, Krzysztof Kozlowski wrote:
-> On 15/03/2024 00:21, Jan Dakinevich wrote:
->> This option allow to redefine the rate of DSP system clock.
+On 3/15/24 16:36, Mark Brown wrote:
+> On Fri, Mar 15, 2024 at 02:21:48AM +0300, Jan Dakinevich wrote:
 > 
-> And why is it suitable for bindings? Describe the hardware, not what you
-> want to do in the driver.
+>> +static const char * const a1_adc_mic_bias_level_txt[] = { "2.0V", "2.1V",
+>> +	"2.3V", "2.5V", "2.8V" };
+>> +static const unsigned int a1_adc_mic_bias_level_values[] = { 0, 1, 2, 3, 7 };
 > 
-
-What do you mean? I am adding some new property and should describe it
-in dt-bindinds. Isn't it?
-
->>
->> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->> ---
->>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
->>  1 file changed, 4 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->> index df21dd72fc65..d2f23a59a6b6 100644
->> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->> @@ -40,6 +40,10 @@ properties:
->>    resets:
->>      maxItems: 1
->>  
->> +  sysrate:
->> +    $ref: /schemas/types.yaml#/definitions/uint32
->> +    description: redefine rate of DSP system clock
+> Why would this be varied at runtime rather than being something fixed
+> when the system is designed?
 > 
-> No vendor prefix, so is it a generic property? Also, missing unit
-> suffix, but more importantly I don't understand why this is a property
-> of hardware.
+>> +static const char * const a1_adc_pga_txt[] = { "None", "Differential",
+>> +	"Positive", "Negative" };
+>> +static const unsigned int a1_adc_pga_right_values[] = { 0, PGAR_DIFF,
+>> +	PGAR_POSITIVE, PGAR_NEGATIVE };
+>> +static const unsigned int a1_adc_pga_left_values[] = { 0, PGAL_DIFF,
+>> +	PGAL_POSITIVE, PGAL_NEGATIVE };
+> 
+> Similarly here.
 > 
 
-Answered in next message.
+Both mic bias and ADC's input mode depends on schematics and should be
+configurable. What is the better way to give access to these parameters?
+Device tree?
 
-> Best regards,
-> Krzysztof
+>> +	SOC_SINGLE("ADC Mic Bias Switch", LINEIN_CFG, MICBIAS_EN, 1, 0),
+>> +	SOC_ENUM("ADC Mic Bias Level", a1_adc_mic_bias_level),
 > 
+> Why would micbias be user controlled rather than a DAPM widget as
+> normal?
+
+Yes, I could use SND_SOC_DAPM_SUPPLY, but it supports only raw values,
+and doesn't supports enums. Here, I want to use enum to restrict
+possible values, because only these values mentioned in the
+documentation that I have.
 
 -- 
 Best regards
