@@ -1,47 +1,47 @@
-Return-Path: <linux-gpio+bounces-4431-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4432-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A594287EA19
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 14:31:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0C8B787EA55
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 14:48:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id D52CD1C21275
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 13:31:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3B6191C218AB
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 13:48:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC8E47F69;
-	Mon, 18 Mar 2024 13:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51AE9487B4;
+	Mon, 18 Mar 2024 13:48:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JqclMs/D"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DKkpVxKx"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F057839FF8;
-	Mon, 18 Mar 2024 13:30:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024A44AED2;
+	Mon, 18 Mar 2024 13:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710768656; cv=none; b=HqFMpc244GF8/mCFlsw9Dd9LfZRaqy3s5SzSdjQN+NjgpiagzlMtSM6BPysduNqn8bpaehL/ojX2w4cQKQqG4gkGx1sy+kNYYSyEZPiqegqitfeedXlvHm4AmCEcNjvkcMUOUtSJT3gU1iqteKoN8lAmiecXjuZ43gLzmOjVkZI=
+	t=1710769719; cv=none; b=Tx5OBXUNTIb8V+g+df3PQtgNqCFMafmxBAEbKsa+vmwBiAJVoUNFTQb3C1lyCJWnbPW65hsQuZ4pAvLeXGSlDuGSg0s9oFjEPj75umRPJio5caRWL23tkr2D9f2PNcXKzi+YbKNS3PPTNUqtPhDxSzx0H5dEGgEN9X3RwC4RCWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710768656; c=relaxed/simple;
-	bh=9Fc4MdmLlXNEnOvlrkuX3SM2n8OiLdq3X0zd5LtujCI=;
+	s=arc-20240116; t=1710769719; c=relaxed/simple;
+	bh=MHoHwr0eDPD5cgVd1+iwqRgWIVLOzhoSjzj/dQkgH/M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=n7i03QBwEB6fh2ccr3HLaQh7V/QieJebai2J20rnfTzFsdOiTDkSsmls4H01iOs8FA0scbe8/zRBcL7St5hbsSmK1FySiWmLjdphwnfo4CDyq0xL9oCVES3+qhPoddtWo/O+frbB3Ftz7FI3c8Kgy/0FVdCxDiN+TRdm9EipdCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JqclMs/D; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5D9C433C7;
-	Mon, 18 Mar 2024 13:30:45 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=DLQn7ULMrmlVxLRMf4+dM3xQYaq9SPn4ceHuOIldoirkdqnh/VlXfu+KOiJb4aKnsKxLDIELJerXAnzbtgapHvaDQeMNzoO0j71bpaJQTJKBVyc7VbysIMKJ4/JC3KlSppOh4KC2wi+bIhW0qlRxGRnShIOPuRRt3WC4Nnc7NRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DKkpVxKx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1095BC433F1;
+	Mon, 18 Mar 2024 13:48:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710768655;
-	bh=9Fc4MdmLlXNEnOvlrkuX3SM2n8OiLdq3X0zd5LtujCI=;
+	s=k20201202; t=1710769718;
+	bh=MHoHwr0eDPD5cgVd1+iwqRgWIVLOzhoSjzj/dQkgH/M=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JqclMs/DzIEOK7ZpEwUgIzoVU1UjeIdAZZQdx6vUjh0lzTWdigVBvpZmOlesultD5
-	 JTkAUd9Pfse0PNMT4KOwhhsltIaS+gU5RreTQcUBhyH8ZHJTgjpgx7sqsN8RHuuveY
-	 sNriNDMViTvF8HK/DqLXLbfe6iXTq9EnlQOhSCIQFdLdlUS6o/jl0HIK2dEoh32VzZ
-	 h1n/0ieViBX9jibuxMJTowPxhqmHCzl01P8ZfrChyC/0CMImwwn7nOHfNCLVuDYe6x
-	 nljETBFTEnkf8ghtUnwR69ixxtFuhvfglePyeZODASc98n15rwteIxYKNyJbpZVDqo
-	 ZtXX5hnGlSU5A==
-Date: Mon, 18 Mar 2024 13:30:42 +0000
+	b=DKkpVxKxY7h9v+lH5UT2+3Yhzkji9Pqcx33yJYLYim45vOo92XuYMu+YsHi1ZhZwG
+	 fc9Kinal7Gz43JO9X6EBtVPVJCa1KqGDeTMjMwSQb2cw9+nUNz28XZMOze6O1MLI0h
+	 5KMZotzvi/hfqpFn29SDRG0ZiAYMYaMJMcyWl527F8xnrvyortoF9cxBPADf3dH1ek
+	 XXUJlYYrGd9CKFAxhjwbp1ORhxlvSc9ZgcC8dEj2fdtNa6b3cfkExJIlFD+vZcTijm
+	 M0lnpXAg63TlsHu/H9VvpHn83Ki149ZsnCePdDElv4ZWROEyOXFnYSWSNT6WCSeekd
+	 QLkjCGvBD0jXA==
+Date: Mon, 18 Mar 2024 13:48:31 +0000
 From: Mark Brown <broonie@kernel.org>
 To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 Cc: Neil Armstrong <neil.armstrong@linaro.org>,
@@ -61,13 +61,12 @@ Cc: Neil Armstrong <neil.armstrong@linaro.org>,
 	linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
 	linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
 	kernel@salutedevices.com
-Subject: Re: [PATCH 09/25] ASoC: meson: g12a-toacodec: add support for A1 SoC
- family
-Message-ID: <143bb232-1ba8-4e91-92a7-bab7c14f6df0@sirena.org.uk>
+Subject: Re: [PATCH 12/25] ASoC: meson: t9015: add support for A1 SoC family
+Message-ID: <30dadd4c-de10-43a7-baf8-8ddd49f5c80e@sirena.org.uk>
 References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-10-jan.dakinevich@salutedevices.com>
- <2a41e8b6-7e8a-4995-a1d7-c5d30e53c2d5@sirena.org.uk>
- <3ae535cf-9a89-4187-a761-8390d649b00b@salutedevices.com>
+ <20240314232201.2102178-13-jan.dakinevich@salutedevices.com>
+ <5f8e8cd2-f9c4-4961-a85d-a0f3217294e6@sirena.org.uk>
+ <c4c0e3a3-eaa8-42c6-bbd3-e5c6993dc63b@salutedevices.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -75,42 +74,52 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kjWorJl0TaUMqWHd"
+	protocol="application/pgp-signature"; boundary="cWXPDKTXShavPzNA"
 Content-Disposition: inline
-In-Reply-To: <3ae535cf-9a89-4187-a761-8390d649b00b@salutedevices.com>
+In-Reply-To: <c4c0e3a3-eaa8-42c6-bbd3-e5c6993dc63b@salutedevices.com>
 X-Cookie: Alaska:
 
 
---kjWorJl0TaUMqWHd
+--cWXPDKTXShavPzNA
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Mar 17, 2024 at 06:19:36PM +0300, Jan Dakinevich wrote:
-> On 3/15/24 16:33, Mark Brown wrote:
+On Sun, Mar 17, 2024 at 07:27:14PM +0300, Jan Dakinevich wrote:
 
-> > If the maximum register is 0 how does the regmap have a stride?
+> Both mic bias and ADC's input mode depends on schematics and should be
+> configurable. What is the better way to give access to these parameters?
+> Device tree?
 
-> reg_stride inherited from existing code. Apparently, it was meaningless
-> even before my modifications (the hardware has single register
-> regardless of max_register declaration) and it should be dropped. But,
-> is it okay to remove it in the same commit?
+Yes.
 
-Sure.
+> >> +	SOC_SINGLE("ADC Mic Bias Switch", LINEIN_CFG, MICBIAS_EN, 1, 0),
+> >> +	SOC_ENUM("ADC Mic Bias Level", a1_adc_mic_bias_level),
 
---kjWorJl0TaUMqWHd
+> > Why would micbias be user controlled rather than a DAPM widget as
+> > normal?
+
+> Yes, I could use SND_SOC_DAPM_SUPPLY, but it supports only raw values,
+> and doesn't supports enums. Here, I want to use enum to restrict
+> possible values, because only these values mentioned in the
+> documentation that I have.
+
+A supply is an on/off switch not an enum.  Users should not be selecting
+values at all.
+
+--cWXPDKTXShavPzNA
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX4QgEACgkQJNaLcl1U
-h9BLdQf/Zz1jN3+6EFmJI8/2S5KURnuXZVf/whz0eP6IHVV+novzn9bZzi9aDR8u
-ivtJ5z3NMrKZpT3yKRb/iP42lcArTnbx8KtRbgkpBCvSW0xodc7pyVJqfkvIDPNg
-ribamZQkNViB+vRZe+1M+lKpXGKZQT9VihxnkNjxjIBjjiDONfYP9zzHFNQorPlh
-lZLfVCdNixkECtkZ8S2pC9SUMOTqVNHUNloEosl515koEkh5H3wWA4izpVAgFuCd
-sAtcI63aM0UfO63qTzXy4qk4482W57UwJx6DuSSws6Y0DSjBpq7nw2gJw6MQb8SE
-xTDZc6yggF0aEYdVMCor8vldLH2yxw==
-=osK+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX4Ri4ACgkQJNaLcl1U
+h9DTQAf+Ppr066CVfsvlN/xyNgCUEg1jqhI9r20Nh5lxtnjU+wC1Kcr+iobrATQM
+TDOweMGu65tzuQZfO6T+CaB8UHXIAHKQStRrDMt60u8hvNbQ1WBBGcNpHZ4aEnH7
+dha2+WYeSatRy9dWtHHuumkiG0oMZO93Q9agqdWm0p3dcF/kfp0UsgdfjFXbC0CZ
+bF5SO0qaSh4sYzmkOWdsGn175ELpN2HMYaAL5R1kaS4QntznG3QCuLXxdOSy6/+7
+SByMPu2j+jkFJTHfOQlYZZCDrgZ+czQ4gWszPQuk9LWDTYFrxajuRVwRKXew/GA8
+Z0fuEs8wuIMGmSTEXpNJXc/IeEv+nw==
+=YCeA
 -----END PGP SIGNATURE-----
 
---kjWorJl0TaUMqWHd--
+--cWXPDKTXShavPzNA--
 
