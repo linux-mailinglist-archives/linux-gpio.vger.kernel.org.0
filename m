@@ -1,206 +1,157 @@
-Return-Path: <linux-gpio+bounces-4429-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4430-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1D76787E965
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 13:37:34 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1318587E9D7
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 14:08:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8AFC41F23387
-	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 12:37:33 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C06632820EE
+	for <lists+linux-gpio@lfdr.de>; Mon, 18 Mar 2024 13:08:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26E638DEF;
-	Mon, 18 Mar 2024 12:37:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B92F383BC;
+	Mon, 18 Mar 2024 13:08:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="3H1r+fcn"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="YnU+g3/Z"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C398381D2
-	for <linux-gpio@vger.kernel.org>; Mon, 18 Mar 2024 12:37:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27A2D3BB35;
+	Mon, 18 Mar 2024 13:08:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710765431; cv=none; b=aabpuMnbCjM+If6EMvF5x3586URgCPWzUEP0pLjK2SYurQovnjJOPX9BrbVAGCwbkj47Qw8DELzC3Jz9hzMuVH66nqiPHKk2ZOD++Ftw7FubGb9rZJM9L6H+fr6jcsX0pXI6JBqgMs3BHcnjvQXZYEy+YkizwTA5sCevU/qVSJA=
+	t=1710767323; cv=none; b=VzZxyI+vOIIm7lyQjTCgrzX1DiAfxThrG2UPb4uV0NXNMMdlf/NZs9slxI189LPM7vd/9++dMrCp3yQFyLBfiFqZnxGYdyQVxcvMDGOiuGipSBlMWC+ba25ejUIYThj3sVltJn2KvaMMJ6jmze5EQJYwrslOJbE3UoQh6mqxqTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710765431; c=relaxed/simple;
-	bh=ffVSz7DOuhkOHsp+hZtUJyFaeYyOmG7SnEA1gJweHr8=;
-	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
-	 MIME-Version:Content-Type; b=YPAm3gvzlCxBUPtPFenHl9LKu1wSxQwWABAMIaKGm8egP/0lSNUBOUxurqyIEgvw6adBmvnl4GJAZ0EncgrqDL230f+tkVMd2i34v/lFbueDcZhX8Im8Pg0zSktgTB5lH+Ct8KSTkRK0ba/g8+OyBaYttFTrZXjcjDKgCj2veoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=3H1r+fcn; arc=none smtp.client-ip=209.85.221.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-33d90dfe73cso2395189f8f.0
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Mar 2024 05:37:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710765427; x=1711370227; darn=vger.kernel.org;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
-        bh=rOOelAXYkB/aiK2SaiRN9v1LrZq2BMclSsiRMOgV+hM=;
-        b=3H1r+fcnra/gm/Xsk+79PZMv5zKsl7ToQOUHMjp2643/bLLbVsoe1nk9I1djcBzljM
-         IadEKd3FWf/M/zDloxKzRnXng0veGHo7IRA+HK8EaNzLKHw75ZX5FiVl7XL4qexiLfVv
-         8E3SkROWFiLYjAybftrvQ+Smj8bay+x+WvjwfvusMusMgeYNCS/CziCUPMrfUaf3WH0O
-         XFB4haA3eSNqTakEHHzWoJ/nk85hqCpF1zxiu1j/k64RpBebZrglJ7QbsrYu8f2ZvuZ6
-         GuMI00vL+1cAPuzrKTt3E0ejpb/NCG/oU6OZpj+IPut02GwPHGi/mln878luOEucieGk
-         9RDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710765427; x=1711370227;
-        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
-         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=rOOelAXYkB/aiK2SaiRN9v1LrZq2BMclSsiRMOgV+hM=;
-        b=Xzqk2m/Fsl8rDk+kIMxzwqWXCsQzD6HwTjsjN5nPJh/4/nMiazfQRzl5ZpuIZGWOUI
-         XDM/JaZr745aExjXb2c2HmE9ffFNGMsjMhOdEjEyiDJH9TFu77oTfXXMkisqtWOSNjM6
-         1ISNjgJmtFEA4YOM0B665JluW29Hv/eY3Jh6u2CKgiB0UQz57Y5zgIpCmzl7fLr0o0FW
-         ar3g3i6DKyV49jEQQABDpCeLa1GzGms5O/dEt+/oyik6mTNExw5Zcc6kK51DNpEOvLau
-         apRtbRvlrcWyvM3NuAPEZiPNno4aYoA8wBtaxmaxOLLccIO7+jlql8K7PsHj9npRykWr
-         z5lA==
-X-Forwarded-Encrypted: i=1; AJvYcCUCjKEQ2XgkwAl5R74eWzrmbtZFyeFM53m4atIAtDFisFhPSLu/lsaeK7m8oHAKIn0FbLfg37AZlISR+rb3yi/kIRLTnMYyyORTAQ==
-X-Gm-Message-State: AOJu0YyoKIB1mrateySrmQ4YoKm1Idfyi/RskbjWIwM+3jftdiTw2907
-	TcBTIOBDz6v6CtYsFyxLN9Eed6ZVZI8PXa0DTaTxIq+G/PQswXzcxVCrV0d1i+8=
-X-Google-Smtp-Source: AGHT+IGH3TE2GhAXJz1wHAYIWwW1VoL15oPzUDNMTpeZ23Nb9XboEbKTQoGyB/c9i7ijddIXELni7w==
-X-Received: by 2002:a5d:404a:0:b0:33e:6a81:d8b9 with SMTP id w10-20020a5d404a000000b0033e6a81d8b9mr10519425wrp.20.1710765426924;
-        Mon, 18 Mar 2024 05:37:06 -0700 (PDT)
-Received: from localhost ([2a01:e0a:3c5:5fb1:e4d5:78c0:18b:ad85])
-        by smtp.gmail.com with ESMTPSA id p6-20020adfe606000000b0033e79eca6dfsm9665379wrm.50.2024.03.18.05.37.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 18 Mar 2024 05:37:06 -0700 (PDT)
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
- <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
- <1jil1nhjwd.fsf@starbuckisacylon.baylibre.com>
- <6feba9ff-8bbf-4494-93f0-732679bc4032@salutedevices.com>
- <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-User-agent: mu4e 1.10.8; emacs 29.2
-From: Jerome Brunet <jbrunet@baylibre.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Krzysztof Kozlowski
- <krzysztof.kozlowski@linaro.org>, Neil Armstrong
- <neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
-  Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
- <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
-  Hilman <khilman@baylibre.com>, Martin Blumenstingl
- <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
- linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
- kernel@salutedevices.com
-Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
- 'sysrate' property
-Date: Mon, 18 Mar 2024 13:19:28 +0100
-In-reply-to: <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-Message-ID: <1jwmpzg1hq.fsf@starbuckisacylon.baylibre.com>
+	s=arc-20240116; t=1710767323; c=relaxed/simple;
+	bh=ztUZOiiQ83sOZSaGrczXdpBYDKXlAj5hFGLEYEnTbW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=btZjYQcYVOj1oJooPn0QLMB5bZVMN8yQ7D1cRDSbh1MLv5NqAQ0JgpxvpvKJjLJTomvwYYYgV53pQ0fCmWdxYXY+GVq/wDVbuJJ8PXk9wwn9aop/sih4UKufC4z6xEnx87efF408+EYGkR7Py4F72VVCCPeXEMfArMPgSLMld+w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=YnU+g3/Z; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42IC2IW7021532;
+	Mon, 18 Mar 2024 13:08:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=ZxobO1it1RfZw+po5acttX2e+DmpggTe3qaJAqZDePs=; b=Yn
+	U+g3/ZECPHeIdJ+7j+XUTmlX+oLvz7JBObLHs4uWu+/AhCCeDmS640if38KF2h3O
+	2l8ZOSMdO9f0xSCrnjDRpjB1RThnvjppmSkPPYgOZHl563LMPV0n9QjGSl5ay+15
+	bj+zRtlwSDzcYlLRFPlNngEgcuwj/N852dZBRMxIWMcssitqe8SGOYD+r3ggu0Zc
+	IuktDi3gxvLEmEx3WfRaEZ3lpgHkZEtagCFL7lniz5X8UmDu+dtDfxryuH7W1n7i
+	UaAYgvCSUETX2YUJMmyDwHgQ41HbYXTXlgCmMadPmsy+xntZI8O27ef4+6Hr/NGb
+	+BSYMtWQecRtLbGGpU6A==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wwxta9y1u-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Mar 2024 13:08:32 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42ID8VMe029353
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 18 Mar 2024 13:08:31 GMT
+Received: from [10.214.66.81] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Mon, 18 Mar
+ 2024 06:08:29 -0700
+Message-ID: <260371ff-da7a-8406-0511-4019f6b860bf@quicinc.com>
+Date: Mon, 18 Mar 2024 18:38:20 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v12 7/9] firmware: qcom: scm: Fix __scm->dev assignement
+Content-Language: en-US
+To: Bjorn Andersson <andersson@kernel.org>
+CC: <konrad.dybcio@linaro.org>, <linux-arm-msm@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+References: <20240227155308.18395-1-quic_mojha@quicinc.com>
+ <20240227155308.18395-8-quic_mojha@quicinc.com>
+ <n2gomlmlzwodpg2v3gzuc62n3plewdqgiwctrv2tawdih26rig@obqd2a2ovqvp>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <n2gomlmlzwodpg2v3gzuc62n3plewdqgiwctrv2tawdih26rig@obqd2a2ovqvp>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: 0D1krBj979_XuCMiTaT-7x-b_71Hffyw
+X-Proofpoint-ORIG-GUID: 0D1krBj979_XuCMiTaT-7x-b_71Hffyw
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-18_04,2024-03-18_01,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ priorityscore=1501 malwarescore=0 adultscore=0 spamscore=0 impostorscore=0
+ mlxscore=0 phishscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403140001 definitions=main-2403180098
 
 
-On Mon 18 Mar 2024 at 11:55, Jerome Brunet <jbrunet@baylibre.com> wrote:
 
-> On Sun 17 Mar 2024 at 18:52, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
->
->> On 3/15/24 13:22, Jerome Brunet wrote:
->>> 
->>> On Fri 15 Mar 2024 at 11:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->>> 
->>>> On 15/03/2024 00:21, Jan Dakinevich wrote:
->>>>> This option allow to redefine the rate of DSP system clock.
->>>>
->>>> And why is it suitable for bindings? Describe the hardware, not what you
->>>> want to do in the driver.
->>>>
->>>>>
->>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
->>>>>  1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> index df21dd72fc65..d2f23a59a6b6 100644
->>>>> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> @@ -40,6 +40,10 @@ properties:
->>>>>    resets:
->>>>>      maxItems: 1
->>>>>  
->>>>> +  sysrate:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    description: redefine rate of DSP system clock
->>>>
->>>> No vendor prefix, so is it a generic property? Also, missing unit
->>>> suffix, but more importantly I don't understand why this is a property
->>>> of hardware.
->>> 
->>> +1.
->>> 
->>> The appropriate way to set rate of the clock before the driver take over
->>> is 'assigned-rate', if you need to customize this for different
->>> platform.
->>> 
+On 3/3/2024 12:55 AM, Bjorn Andersson wrote:
+> On Tue, Feb 27, 2024 at 09:23:06PM +0530, Mukesh Ojha wrote:
+>> qcom_scm_is_available() gives wrong indication if __scm
+>> is initialized but __scm->dev is not.
 >>
->> It would be great, but it doesn't work. Below, is what I want to see:
+>> Fix this appropriately by making sure if __scm is
+>> initialized and then it is associated with its
+>> device.
 >>
->> 	assigned-clocks =
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_SEL>,
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_DIV>;
->> 	assigned-clock-parents =
->> 		<&clkc_pll CLKID_FCLK_DIV3>,
->> 		<0>;
->> 	assigned-clock-rates =
->> 		<0>,
->> 		<256000000>;
+> 
+> This seems like a bug fix, and should as such have a Fixes: tag and
+> probably Cc: stable@vger.kernel.org
+> 
+>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>> ---
+>>   drivers/firmware/qcom/qcom_scm.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
 >>
->> But regardles of this declaration, PDM's driver unconditionally sets
->> sysclk'rate to 250MHz and throws away everything that was configured
->> before, reparents audio2_pdm_sysclk_mux to hifi_pll and changes
->> hifi_pll's rate.
+>> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+>> index 6c252cddd44e..6f14254c0c10 100644
+>> --- a/drivers/firmware/qcom/qcom_scm.c
+>> +++ b/drivers/firmware/qcom/qcom_scm.c
+>> @@ -1859,6 +1859,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>>   	if (!scm)
+>>   		return -ENOMEM;
+>>   
+>> +	scm->dev = &pdev->dev;
+>>   	ret = qcom_scm_find_dload_address(&pdev->dev, &scm->dload_mode_addr);
+>>   	if (ret < 0)
+>>   		return ret;
+>> @@ -1895,7 +1896,6 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>>   		return ret;
+>>   
+>>   	__scm = scm;
+>> -	__scm->dev = &pdev->dev;
+> 
+> Is it sufficient to just move the line up, or do we need a barrier of
+> some sort here?
+
+Would be good to use, smp_mb() before the assignment
+      __scm = scm
+along with moving below line
+__scm->dev = &pdev->dev
+
+somewhere up.
+
+-Mukesh
+
+> 
+> Regards,
+> Bjorn
+> 
+>>   
+>>   	init_completion(&__scm->waitq_comp);
+>>   
+>> -- 
+>> 2.43.0.254.ga26002b62827
 >>
->> This value 250MHz is declared here:
->>
->> static const struct axg_pdm_cfg axg_pdm_config = {
->> 	.filters = &axg_default_filters,
->> 	.sys_rate = 250000000,
->> };
->>
->> The property 'sysrate' is intended to redefine hardcoded 'sys_rate'
->> value in 'axg_pdm_config'.
->
-> What is stopping you from removing that from the driver and adding
-> assigned-rate to 250M is the existing platform ?
-
-... Also, considering how PDM does work, I'm not sure I get the point of
-the doing all this to go from 250MHz to 256Mhz.
-
-PDM value is sampled at ~75% of the half period. That clock basically
-feeds a counter and the threshold is adjusted based on the clock rate.
-
-So there is no need to change the rate. Changing it is only necessary
-when the captured audio rate is extremely slow (<8kHz) and the counter
-may overflow. The driver already adjust this automatically.
-
-So changing the input rate from 250MHz to 256MHz should not make any
-difference.
-
->
->>
->>> Then you don't have to deal with it in the device driver.
->>> 
->>>>
->>>> Best regards,
->>>> Krzysztof
->>> 
->>> 
-
-
--- 
-Jerome
 
