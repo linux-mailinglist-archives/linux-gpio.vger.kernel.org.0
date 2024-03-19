@@ -1,157 +1,275 @@
-Return-Path: <linux-gpio+bounces-4453-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4454-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id BB02187FC88
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 12:07:59 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 479A387FF1C
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 14:53:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED3A91C2226F
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 11:07:58 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A277FB2477B
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 13:53:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244FA7E572;
-	Tue, 19 Mar 2024 11:07:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF46C81728;
+	Tue, 19 Mar 2024 13:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="ZqxUXM9e"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ZdXJ+IUo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from tika.stderr.nl (tika.stderr.nl [94.142.244.14])
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D75C4F8A9
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 11:07:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.142.244.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4B680BFD;
+	Tue, 19 Mar 2024 13:53:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710846468; cv=none; b=ozT6QOeiu6wPSekV4IG+5XV1b7a4VnsotQuPfZzKbAfdRBKez2io25A9ONfqwEphwd+FqfZvbeWt5ZxkrI0EZJ6mITGRHdAOyq7kq0bqYS8RFilFfxSVs1EuvvC8Ff8elHnvyaQpC7X6ZnqE4FwDNeKL9G9BukRma7EX51Dtmgs=
+	t=1710856400; cv=none; b=YnbwmPywisBQPMi0F7R9IPfzTFmeqw833TjG+IFLYiJefq0YBBWEZUp6reGTfs3IbKrIGTnxxOJx+o8I2EM+5AV4MRgQOlE7jiPmtQR/W0/oCy61TY7VnelDiSmO7vI+MnLSSu0SZNi67aV5oqleE2P1h9kByF24g8ruu/PEj24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710846468; c=relaxed/simple;
-	bh=inKup3D/8dipB+Qu0lMvoshz+kgaaw/op0vTkz2/AG8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=sMYc3skX7nSD7boCeIQreZcWam4ac7b+0L1H78Zy4clYRkOlrD/Lvctep/aBKpXQnaN2CdzYKPTnGXDbATO7rPq6fQcqTx//bQB7s/Ejxc+iw495HZRuGvreWur6PK0Phuh305WeTg7dE7y+Pfh7COI5j5oRoj4p4WndFEJn/Xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=stdin.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=ZqxUXM9e; arc=none smtp.client-ip=94.142.244.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=stdin.nl
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.tikatika.nl; s=201709.tika; h=Content-Transfer-Encoding:MIME-Version:
-	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=/V3VUchtkJBjrXmDOTYW7qyOyeFhpgq7uaPdWRkylas=; b=ZqxUXM9eXpusNSP/1jmA9i9xk3
-	5sjk6dNajeOWc54iUUcUnN0HQtBo1poe5oA9Fu/5d0W9kUqovh6BxBpZejhLv7Pi1A3v5PumtgfDn
-	ZFjkV3nWtlHR8Ha+CtL2i1hqjiErFSDMFtoZWBVrf2TLrfYCS3lvDqorkwwyuWk52jkc=;
-X-Preliminary-Spam-Score: -2.0 (--)
-Received: from 86-88-12-114.fixed.kpn.net ([86.88.12.114] helo=dottie)
-	by tika.stderr.nl with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <matthijs@stdin.nl>)
-	id 1rmXJn-000nto-1q
-	for linux-gpio@vger.kernel.org;
-	Tue, 19 Mar 2024 12:07:43 +0100
-Received: from matthijs (uid 1000)
-	(envelope-from matthijs@stdin.nl)
-	id 40d99
-	by dottie (DragonFly Mail Agent v0.13);
-	Tue, 19 Mar 2024 12:07:42 +0100
-From: Matthijs Kooijman <matthijs@stdin.nl>
-To: Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Tony Lindgren <tony@atomide.com>
-Cc: linux-gpio@vger.kernel.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-omap@vger.kernel.org,
-	Matthijs Kooijman <matthijs@stdin.nl>
-Subject: [PATCH] pinctrl: single: Fix PIN_CONFIG_BIAS_DISABLE handling
-Date: Tue, 19 Mar 2024 12:06:34 +0100
-Message-Id: <20240319110633.230329-1-matthijs@stdin.nl>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <Zflxi8SCzzouP9zW@login.tika.stderr.nl>
-References: <Zflxi8SCzzouP9zW@login.tika.stderr.nl>
+	s=arc-20240116; t=1710856400; c=relaxed/simple;
+	bh=OXZgPwWPdTNaxtMnH4myg+ToziRSNnXvhkwXx1ZufmU=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M/8P5/w41ZhMAOV4Ao35XkNBYUaPLpnh59pm4ubf7gkptaZaCm7JzpL9lZSS4CLwPHxOBpFnC+yw3x+6C7QIXa3/FPeeIE9+WdqZcWA9l9C9h8Umqj6KGN1JpOgPUYWtG2kQdH5OF3HaOp2DqGsqeQ/2nk6EekG8Kzsc2qIztTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ZdXJ+IUo; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 0957D10000A;
+	Tue, 19 Mar 2024 16:53:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0957D10000A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1710856392;
+	bh=cMQFR177UDppiHHa9pB9nbmCdpBrIycSstEw9RoGTQI=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
+	b=ZdXJ+IUoxafVJmHArgilqIq/xR+cA8woWE5N9r6qzBMaWFunn7syOsKx8qLG8PS9j
+	 vQ83YE4Sbd4e2GyM/LXFVj5CQEzYiLvCcu31GAteRYOud+OnUBzC23Uf/Xqzn91k3G
+	 ST/k5QpvS04ZBnytrGLzHPs3ec/4lGwCGF1I6Z0yPqQCyvYoG1ITUtXLW7gjQFLDOv
+	 oH3k8K5Ak8eAwJJDsOFfN4BFtfd2MH2RBk9JpLmvU0nmCx8BeYg+zHF8roQ5tmlLJ6
+	 CW/G29alyisg1jGq+assolGMSWPgFNCYosGKMcHu2B9G5KWPNSyYdnYJtcU7RobrrC
+	 IKjlAIup7GSgw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Tue, 19 Mar 2024 16:53:11 +0300 (MSK)
+Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
+ (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
+ 2024 16:53:11 +0300
+Date: Tue, 19 Mar 2024 16:53:11 +0300
+From: Dmitry Rokosov <ddrokosov@salutedevices.com>
+To: Jerome Brunet <jbrunet@baylibre.com>
+CC: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman
+	<khilman@baylibre.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
+	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+	<kernel@salutedevices.com>
+Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
+ params
+Message-ID: <20240319135311.xjpgkvgyczq4eymi@CAB-WSD-L081021>
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+ <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
+ <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
+ <1jedc7hlg4.fsf@starbuckisacylon.baylibre.com>
+ <d4cfef9e-3cae-4f1a-90b3-33d5707596f9@salutedevices.com>
+ <1jsf0mfwwg.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <1jsf0mfwwg.fsf@starbuckisacylon.baylibre.com>
+User-Agent: NeoMutt/20220415
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184265 [Mar 19 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/19 13:26:00
+X-KSMG-LinksScanning: Clean, bases: 2024/03/19 13:26:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/19 01:36:00 #24282057
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-The pinctrl-single driver handles pin_config_set by looking up the
-requested setting in a DT-defined lookup table, which defines what bits
-correspond to each setting. There is no way to add
-PIN_CONFIG_BIAS_DISABLE entries to the table, since there is instead
-code to disable the bias by applying the disable values of both the
-pullup and pulldown entries in the table.
+On Tue, Mar 19, 2024 at 09:21:27AM +0100, Jerome Brunet wrote:
+> 
+> On Tue 19 Mar 2024 at 01:35, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+> 
+> > On 3/18/24 13:17, Jerome Brunet wrote:
+> >> 
+> >> On Sun 17 Mar 2024 at 17:17, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+> >> 
+> >>> On 3/15/24 11:58, Jerome Brunet wrote:
+> >>>>
+> >>>> On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+> >>>>
+> >>>>> Existing values were insufficient to produce accurate clock for audio
+> >>>>> devices. New values are safe and most suitable to produce 48000Hz sample
+> >>>>> rate.
+> >>>>
+> >>>> The hifi pll is not about 48k only. I see no reason to restrict the PLL
+> >>>> to a single setting.
+> >>>>> You've provided no justification why the PLL driver can't reach the same
+> >>>> setting for 48k. The setting below is just the crude part. the fine
+> >>>> tuning is done done with the frac parameter so I doubt this provides a
+> >>>> more accurate rate.
+> >>>>
+> >>>
+> >>> You are right, it is not about 48k only. However, there are two issues.
+> >>>
+> >>> First, indeed, I could just extend the range of multipliers to 1..255.
+> >> 
+> >> Why 1..255 ? This is not what I'm pointing out
+> >> 
+> >> According to the datasheet - the range is 32 - 64, as currently
+> >> set in the driver.
+> >> 
+> >
+> > Could you point where in the doc the range 32..64 is documented?
+> > Documentation that I have may be not so complete, but I don't see there
+> > any mention about it.
+> >
+> > Anyway, range 32..64 of multipliers is not enough to produce accurate
+> > clock, and a need 128 for 48kHz.
+> 
+> A1 datasheet v0.4 - Section 7.6.3.2
+> 
+> >
+> >> The change you have provided request a multipler of 128/5 = 25,6
+> >> If you put assigned-rate = 614400000 in DT, I see no reason can find the
+> >> same solution on its own.
+> >> 
+> >
+> > The reasoning is following. I don't know why 32..64 range was declared
+> > for this clock, and whether it would be safe to extend it and include
+> > 128, which is required for 48kHz. But I know, that multiplier=128 is
+> > safe and works fine (together divider=5).
+> 
+> You have not answer my remark.
+> Mainline does not do everything like the AML SDK does. Saying you are
+> copying it because you know it works (in your opinion) is not good
+> enough.
+> 
+> I'm telling you that your hack is not necessary and so far, you have not
+> demonstrated that it is.
+> 
+> Also the multiplier range in m/n, not m alone.
+> 
+> >
+> >>> But I am unsure if hifi_pll is able to handle whole range of
+> >>> mulptipliers. The value 128 is taken from Amlogic's branch, and I am
+> >>> pretty sure that it works.
+> >> 
+> >>>
+> >>> Second, unfortunately frac parameter currently doesn't work. When frac
+> >>> is used enabling of hifi_pll fails in meson_clk_pll_wait_lock(). I see
+> >>> it when try to use 44100Hz and multipliers' range is set to 1..255. So,
+> >>> support of other rates than 48k requires extra effort.
+> >> 
+> >> Then your change is even more problematic because it certainly does not
+> >> disable frac ... which you say is broken.
+> >> 
+> >> That parameter should be removed with a proper comment explaining why
+> >> you are disabling it. That type a limitation / known issue should be
+> >> mentionned in your change.
+> >> 
+> >
+> > Handling of frac should not be removed, it should be fixed to achieve
+> > another rates. But that is not the goal of this commit.
+> 
+> You argued that frac was broken and that was partly why you introduced
+> this work around. I'm telling you this approach is incorrect.
+> 
+> So either :
+> * Remove frac for now, until it is fixed, because it is broken and add
+>   comment clearly explaining that quirk.
+> * Or fix it now.
+> 
+> Your choice.
+> 
+> >
+> >
+> >>>
+> >>>>>
+> >>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+> >>>>> ---
+> >>>>>  drivers/clk/meson/a1-pll.c | 8 ++++----
+> >>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>>>>
+> >>>>> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
+> >>>>> index 4325e8a6a3ef..00e06d03445b 100644
+> >>>>> --- a/drivers/clk/meson/a1-pll.c
+> >>>>> +++ b/drivers/clk/meson/a1-pll.c
+> >>>>> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
+> >>>>>  	},
+> >>>>>  };
+> >>>>>  
+> >>>>> -static const struct pll_mult_range hifi_pll_mult_range = {
+> >>>>> -	.min = 32,
+> >>>>> -	.max = 64,
+> >>>>> +static const struct pll_params_table hifi_pll_params_table[] = {
+> >>>>> +	PLL_PARAMS(128, 5),
+> >>>>> +	{ },
+> >>>>>  };
+> >>>>>  
+> >>>>>  static const struct reg_sequence hifi_init_regs[] = {
+> >>>>> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
+> >>>>>  			.shift   = 6,
+> >>>>>  			.width   = 1,
+> >>>>>  		},
+> >>>>> -		.range = &hifi_pll_mult_range,
+> >>>>> +		.table = hifi_pll_params_table,
+> >>>>>  		.init_regs = hifi_init_regs,
+> >>>>>  		.init_count = ARRAY_SIZE(hifi_init_regs),
+> >>>>>  	},
+> >>>>
+> >>>>
+> >> 
+> >> 
+> 
+> 
+> -- 
+> Jerome
 
-However, this code is inside the table-lookup loop, so it would only
-execute if there is an entry for PIN_CONFIG_BIAS_DISABLE in the table,
-which can never exist, so this code never runs.
+BTW, here Amlogic already mentioned all possible output audio rates for
+which hifipll can be used:
 
-This commit lifts the offending code out of the loop, so it just
-executes directly whenever PIN_CONFIG_BIAS_DISABLE is requested,
-skippipng the table lookup loop.
+https://lore.kernel.org/all/1569411888-98116-1-git-send-email-jian.hu@amlogic.com/T/#md7083b4f851ab97dfce43f8f6a3b266eb49ed329
 
-This also introduces a new `param` variable to make the code slightly
-more readable.
+```
+The audio working frequency are 44.1khz, 48khz and 192khz.
 
-This bug seems to have existed when this code was first merged in commit
-9dddb4df90d13 ("pinctrl: single: support generic pinconf"). Earlier
-versions of this patch did have an entry for PIN_CONFIG_BIAS_DISABLE in
-the lookup table, but that was removed, which is probably how this bug
-was introduced.
+614.4M can meet the three frequency.
 
-Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
----
- drivers/pinctrl/pinctrl-single.c | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+after the hifi pll, there are two dividers in Audio clock.
 
-diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
-index 19cc0db771a5a..c7a03b63fa812 100644
---- a/drivers/pinctrl/pinctrl-single.c
-+++ b/drivers/pinctrl/pinctrl-single.c
-@@ -554,21 +554,30 @@ static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
- 	unsigned offset = 0, shift = 0, i, data, ret;
- 	u32 arg;
- 	int j;
-+	enum pin_config_param param;
- 
- 	ret = pcs_get_function(pctldev, pin, &func);
- 	if (ret)
- 		return ret;
- 
- 	for (j = 0; j < num_configs; j++) {
-+		param = pinconf_to_config_param(configs[j]);
-+
-+		/* BIAS_DISABLE has no entry in the func->conf table */
-+		if (param == PIN_CONFIG_BIAS_DISABLE) {
-+			/* This just disables all bias entries */
-+			pcs_pinconf_clear_bias(pctldev, pin);
-+			continue;
-+		}
-+
- 		for (i = 0; i < func->nconfs; i++) {
--			if (pinconf_to_config_param(configs[j])
--				!= func->conf[i].param)
-+			if (param != func->conf[i].param)
- 				continue;
- 
- 			offset = pin * (pcs->width / BITS_PER_BYTE);
- 			data = pcs->read(pcs->base + offset);
- 			arg = pinconf_to_config_argument(configs[j]);
--			switch (func->conf[i].param) {
-+			switch (param) {
- 			/* 2 parameters */
- 			case PIN_CONFIG_INPUT_SCHMITT:
- 			case PIN_CONFIG_DRIVE_STRENGTH:
-@@ -580,9 +589,6 @@ static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
- 				data |= (arg << shift) & func->conf[i].mask;
- 				break;
- 			/* 4 parameters */
--			case PIN_CONFIG_BIAS_DISABLE:
--				pcs_pinconf_clear_bias(pctldev, pin);
--				break;
- 			case PIN_CONFIG_BIAS_PULL_DOWN:
- 			case PIN_CONFIG_BIAS_PULL_UP:
- 				if (arg)
+614.4M/3200 = 192khz
+
+614.4M/12800 = 48khz
+
+614,4M/13932 = 44.0999khz
+```
+
 -- 
-2.40.1
-
+Thank you,
+Dmitry
 
