@@ -1,122 +1,157 @@
-Return-Path: <linux-gpio+bounces-4452-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4453-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFF4C87FC83
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 12:06:04 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id BB02187FC88
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 12:07:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A98A1F22CD8
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 11:06:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED3A91C2226F
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 11:07:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ABA207E564;
-	Tue, 19 Mar 2024 11:05:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244FA7E572;
+	Tue, 19 Mar 2024 11:07:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="iCvMuUOK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b="ZqxUXM9e"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from tika.stderr.nl (tika.stderr.nl [94.142.244.14])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D271B1CD13
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 11:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D75C4F8A9
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 11:07:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=94.142.244.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710846359; cv=none; b=Ye3ptCfeToYZT+v95Pim/w2Bz4SxqfC1/JI/vbw7+6jz9bucIn0dYzudW2DxdcJGyVd3IoFwbV635Y6raDAY1sM14MYD8BJsmHJaJ3XCnnzwOSnAKAAnNz5JxA/Osfi6nFrmXwlgmWaB2PZCRDNXI7GbUdAOsY74nvOUdVKhmIg=
+	t=1710846468; cv=none; b=ozT6QOeiu6wPSekV4IG+5XV1b7a4VnsotQuPfZzKbAfdRBKez2io25A9ONfqwEphwd+FqfZvbeWt5ZxkrI0EZJ6mITGRHdAOyq7kq0bqYS8RFilFfxSVs1EuvvC8Ff8elHnvyaQpC7X6ZnqE4FwDNeKL9G9BukRma7EX51Dtmgs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710846359; c=relaxed/simple;
-	bh=iAN2vBmPvQbFWtQLtbEAaM0U+MnuCTu6AqUKsRjR6Qo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cy31+MUZbr3DUaipX+D3E7WaLIJ5CqoFgOxcB0QnDqEfTaHodiR0Q2hGAljSWgeev0FiJNr8LTti+BbJ3lfKicOUAp2k5ftd85kYFC2h73f5bFlK1b1BNVh5lOLx8mUFFdb3BHDU1RdXOpKk9DYddvFV+jpME6isc2uX1R/alkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=stdin.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=iCvMuUOK; arc=none smtp.client-ip=94.142.244.14
+	s=arc-20240116; t=1710846468; c=relaxed/simple;
+	bh=inKup3D/8dipB+Qu0lMvoshz+kgaaw/op0vTkz2/AG8=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=sMYc3skX7nSD7boCeIQreZcWam4ac7b+0L1H78Zy4clYRkOlrD/Lvctep/aBKpXQnaN2CdzYKPTnGXDbATO7rPq6fQcqTx//bQB7s/Ejxc+iw495HZRuGvreWur6PK0Phuh305WeTg7dE7y+Pfh7COI5j5oRoj4p4WndFEJn/Xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl; spf=none smtp.mailfrom=stdin.nl; dkim=pass (1024-bit key) header.d=mail.tikatika.nl header.i=@mail.tikatika.nl header.b=ZqxUXM9e; arc=none smtp.client-ip=94.142.244.14
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=stdin.nl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=stdin.nl
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=mail.tikatika.nl; s=201709.tika; h=In-Reply-To:Content-Type:MIME-Version:
-	References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=iAN2vBmPvQbFWtQLtbEAaM0U+MnuCTu6AqUKsRjR6Qo=; b=iCvMuUOKxB0J77mbV91mIfEttk
-	oooa7ObI45O3Un5Z2/6Pml0hgYO8mgpqSTGXkpDGebs1GzbQ89X+mYIev/QRbodUnArMhIB0sa+qh
-	l76OZgQ1leDcnDuPFU2W2dDd/usuCUGFhvEbn0XkScmwC1sFjjvtOdpo3VECg0JjXWkU=;
-X-Preliminary-Spam-Score: -2.5 (--)
-Received: from [10.42.0.16] (helo=login.tika.stderr.nl)
-	by tika.stderr.nl with smtp (Exim 4.96)
+	d=mail.tikatika.nl; s=201709.tika; h=Content-Transfer-Encoding:MIME-Version:
+	References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+	Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+	List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+	bh=/V3VUchtkJBjrXmDOTYW7qyOyeFhpgq7uaPdWRkylas=; b=ZqxUXM9eXpusNSP/1jmA9i9xk3
+	5sjk6dNajeOWc54iUUcUnN0HQtBo1poe5oA9Fu/5d0W9kUqovh6BxBpZejhLv7Pi1A3v5PumtgfDn
+	ZFjkV3nWtlHR8Ha+CtL2i1hqjiErFSDMFtoZWBVrf2TLrfYCS3lvDqorkwwyuWk52jkc=;
+X-Preliminary-Spam-Score: -2.0 (--)
+Received: from 86-88-12-114.fixed.kpn.net ([86.88.12.114] helo=dottie)
+	by tika.stderr.nl with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.96)
 	(envelope-from <matthijs@stdin.nl>)
-	id 1rmXHv-000ntS-2T;
-	Tue, 19 Mar 2024 12:05:48 +0100
-Received: (nullmailer pid 241466 invoked by uid 2001);
-	Tue, 19 Mar 2024 11:05:47 -0000
-Date: Tue, 19 Mar 2024 12:05:47 +0100
+	id 1rmXJn-000nto-1q
+	for linux-gpio@vger.kernel.org;
+	Tue, 19 Mar 2024 12:07:43 +0100
+Received: from matthijs (uid 1000)
+	(envelope-from matthijs@stdin.nl)
+	id 40d99
+	by dottie (DragonFly Mail Agent v0.13);
+	Tue, 19 Mar 2024 12:07:42 +0100
 From: Matthijs Kooijman <matthijs@stdin.nl>
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-gpio@vger.kernel.org, Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: Re: pinctrl: single: Cannot disable bias - PIN_CONFIG_BIAS_DISABLE
- not handled
-Message-ID: <Zflxi8SCzzouP9zW@login.tika.stderr.nl>
-Mail-Followup-To: Matthijs Kooijman <matthijs@stdin.nl>,
-	Tony Lindgren <tony@atomide.com>, linux-gpio@vger.kernel.org,
-	Haojian Zhuang <haojian.zhuang@linaro.org>
-References: <Zd8hYYDvvk2Q-GcG@login.tika.stderr.nl>
- <20240229073211.GB5299@atomide.com>
+To: Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Tony Lindgren <tony@atomide.com>
+Cc: linux-gpio@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-omap@vger.kernel.org,
+	Matthijs Kooijman <matthijs@stdin.nl>
+Subject: [PATCH] pinctrl: single: Fix PIN_CONFIG_BIAS_DISABLE handling
+Date: Tue, 19 Mar 2024 12:06:34 +0100
+Message-Id: <20240319110633.230329-1-matthijs@stdin.nl>
+X-Mailer: git-send-email 2.40.1
+In-Reply-To: <Zflxi8SCzzouP9zW@login.tika.stderr.nl>
+References: <Zflxi8SCzzouP9zW@login.tika.stderr.nl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="fZx3L+ano7jogRcX"
-Content-Disposition: inline
-In-Reply-To: <20240229073211.GB5299@atomide.com>
-X-PGP-Fingerprint: E7D0 C6A7 5BEE 6D84 D638  F60A 3798 AF15 A156 5658
-X-PGP-Key: http://www.stderr.nl/static/files/gpg_pubkey.asc
+Content-Transfer-Encoding: 8bit
 
+The pinctrl-single driver handles pin_config_set by looking up the
+requested setting in a DT-defined lookup table, which defines what bits
+correspond to each setting. There is no way to add
+PIN_CONFIG_BIAS_DISABLE entries to the table, since there is instead
+code to disable the bias by applying the disable values of both the
+pullup and pulldown entries in the table.
 
---fZx3L+ano7jogRcX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+However, this code is inside the table-lookup loop, so it would only
+execute if there is an entry for PIN_CONFIG_BIAS_DISABLE in the table,
+which can never exist, so this code never runs.
 
-Hi Tony,
+This commit lifts the offending code out of the loop, so it just
+executes directly whenever PIN_CONFIG_BIAS_DISABLE is requested,
+skippipng the table lookup loop.
 
-> > An obvious fix for this would be to lift the handling for
-> > PIN_CONFIG_BIAS_DISABLE out of the inner loop, running that instead of
-> > the inner loop in that case.
->
-> Maybe post a suggested patch for Haojian to look at?
+This also introduces a new `param` variable to make the code slightly
+more readable.
 
-I've created a patch (will send in a followup) to do exactly this.
+This bug seems to have existed when this code was first merged in commit
+9dddb4df90d13 ("pinctrl: single: support generic pinconf"). Earlier
+versions of this patch did have an entry for PIN_CONFIG_BIAS_DISABLE in
+the lookup table, but that was removed, which is probably how this bug
+was introduced.
 
-I've compile-tested it but have not been able to runtime test it (I
-managed to compile and run a mainline kernel for the BBB, but ran into
-problems setting up the bias control devicetree). For now, I'll just
-leave the patch here for review, maybe I'll find some time also runtime
-test it in the future (but likely not).
+Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
+---
+ drivers/pinctrl/pinctrl-single.c | 18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-Gr.
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 19cc0db771a5a..c7a03b63fa812 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -554,21 +554,30 @@ static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
+ 	unsigned offset = 0, shift = 0, i, data, ret;
+ 	u32 arg;
+ 	int j;
++	enum pin_config_param param;
+ 
+ 	ret = pcs_get_function(pctldev, pin, &func);
+ 	if (ret)
+ 		return ret;
+ 
+ 	for (j = 0; j < num_configs; j++) {
++		param = pinconf_to_config_param(configs[j]);
++
++		/* BIAS_DISABLE has no entry in the func->conf table */
++		if (param == PIN_CONFIG_BIAS_DISABLE) {
++			/* This just disables all bias entries */
++			pcs_pinconf_clear_bias(pctldev, pin);
++			continue;
++		}
++
+ 		for (i = 0; i < func->nconfs; i++) {
+-			if (pinconf_to_config_param(configs[j])
+-				!= func->conf[i].param)
++			if (param != func->conf[i].param)
+ 				continue;
+ 
+ 			offset = pin * (pcs->width / BITS_PER_BYTE);
+ 			data = pcs->read(pcs->base + offset);
+ 			arg = pinconf_to_config_argument(configs[j]);
+-			switch (func->conf[i].param) {
++			switch (param) {
+ 			/* 2 parameters */
+ 			case PIN_CONFIG_INPUT_SCHMITT:
+ 			case PIN_CONFIG_DRIVE_STRENGTH:
+@@ -580,9 +589,6 @@ static int pcs_pinconf_set(struct pinctrl_dev *pctldev,
+ 				data |= (arg << shift) & func->conf[i].mask;
+ 				break;
+ 			/* 4 parameters */
+-			case PIN_CONFIG_BIAS_DISABLE:
+-				pcs_pinconf_clear_bias(pctldev, pin);
+-				break;
+ 			case PIN_CONFIG_BIAS_PULL_DOWN:
+ 			case PIN_CONFIG_BIAS_PULL_UP:
+ 				if (arg)
+-- 
+2.40.1
 
-Matthijs
-
---fZx3L+ano7jogRcX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEMyF3AetYrDfGJ9el6ZMxy91tJYwFAmX5cYgACgkQ6ZMxy91t
-JYyB1xAA1Jxwmh4iJYO8ZqtIKpTzuPxwR3V/Xy7WLXX0QlAovvB79B3J/4angjAP
-u/7+7SgYEZrS6HRXjSnTW//L8X853dtfz0LI3TjblLvYd8Xc9mj1hBfSmmEdPU0T
-rZBoITXIQFd4+RqaJ38nxWOOiOotwX5Zjr2WIfQ0QHkJISOFtYmRqk9Abx/Oh1b8
-7rrMxZgGFNJ+C05heCZwffiA2UV6J8GETZ9LQjjTbG7rUU6jEUrryX6IaDuzzZjX
-OuSV/q6xudzGUeL/n5m4dWWxZLFpcdnI1H4BVovWZ7GL9rm5/VTmwEKLKNdwAblC
-MhGHaHDe//GZmJ8HgivbVzZoN0RBUCncqIZSnUuvCTCVzU4mnRNa7SDBBpnOO1rQ
-I8Ab0NfIP4kxRl98MnI6ZXw/NvqMt/xDyswMOgOdPAo/uIiqc/Nneuiwh3NhpLWh
-vJnrvQj34ywNuGSzy1BdYZlrSq1G5z8hJFKi2Ej9PAAxELPrG/wno9+cx1rbOCB/
-Cz9d7S2/2Izheoh9Wtnvynzs0tgxwsqJ5Q0K3NK55yWjTdZpMZ4v3QMsByEektSF
-XDOGBD1L6ZNAsD5CX8k1tIw1FFGWa1P0GmHvHMVg7Kh+8xNyf8HrY0Tcg/LGYhY5
-gENQrxDywi6tdL+PAZf/2zb7aCjoCy0fzeCYzXiJ86xLk4ZxSAY=
-=Unjn
------END PGP SIGNATURE-----
-
---fZx3L+ano7jogRcX--
 
