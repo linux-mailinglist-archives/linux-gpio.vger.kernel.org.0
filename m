@@ -1,213 +1,153 @@
-Return-Path: <linux-gpio+bounces-4455-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4456-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFAEA87FFC4
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 15:40:17 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6E943880451
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 19:04:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA011C22A27
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 14:40:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E8022B24561
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 18:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B151A2628C;
-	Tue, 19 Mar 2024 14:40:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D17B2B9D3;
+	Tue, 19 Mar 2024 18:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="giUt/UYE"
+	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="rrGyyQu/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F01CFB6;
-	Tue, 19 Mar 2024 14:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FCD638F9C
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 18:01:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710859212; cv=none; b=Rk5JaZ9e3lGCTTROnylaB+J2+Yq+zpVNdjNbDbtU/rxOyItQ/UkO/Gv0UciJJOD8RIr/eEMTVKVgQr3cK3gf53wYyfqUv46e1Xh52FW+U3ifisLcNwX5C2rn3UyZZ2twOjCXt5PlzQu9S669fCDoL9oka3bSC/l3cLMH112dYPs=
+	t=1710871299; cv=none; b=GtMTqLQMYc3G0RjAfIcITNUUlfPS8E3hGcTUQqR3NQvtJBDfxgK7yPNj3si/oY30Qvh7lHSkF55fNPviQZEju8zQNl/EU5dltRlyZn1KDEUr//4lVozEOkjHmMNInrZZCdgrow4l8J3OEcQBecLH7alG+YCmq5X/L1JCZDT2E+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710859212; c=relaxed/simple;
-	bh=pyJIFooyiBsskHRUs3QZ9a4TPD6RJdsZtGVeIr+yqh0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=ieW77Ur1kLm3HXXv5v/MUREX7gq996M9XgbTI26aAqDDXyCInitugqQSfZv4gOnXVmEtbIxshWkIgp00jKO1OqXG6pvPsDrlY21H3+w4CdY/R3gWJ+C26hqcHl+UFGgCj18+oWYppepJAuHxb0Jl3DlD2tw+RcZ0twmHsO2laRI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=giUt/UYE; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42JCePUN016300;
-	Tue, 19 Mar 2024 14:40:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
-	message-id:date:mime-version:subject:to:cc:references:from
-	:in-reply-to:content-type:content-transfer-encoding; s=
-	qcppdkim1; bh=xqB+lNzHIodLkLTeclAOVQStR8PiYLj4tVxJgCfsqwU=; b=gi
-	Ut/UYE27keQAplo6o08pfzcrPOqrnMonkWDRYCY1iVFJtthDtjtdZcqGkQQr93rB
-	XlBqQyUvDSsmLXlIg4JwcUIe88QsPPrTgj547lMTWo3onzVA2C+R5t0UHyfB4yXd
-	RdF3QDVsr2R/y0H1zG4wDEhgZbdoyReuQlTnE+N32hfAsuYDwpOA09vazfZRD8cM
-	30BEqBnD4mykm4yDunDywCIpYd2V0n/r/WRNbdkIk/EQLzqQQyxsd7q8b/fo04Ve
-	/C9T/MQ8DzLAT+wPSJT/4UhWSreakAthVxCuwbGmg/H2KhBtJ67jLAIANcjxGjXu
-	eVkPAGAlC9StZfFCNVrw==
-Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy2cjsfux-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 14:40:05 +0000 (GMT)
-Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
-	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JEe2uK020825
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 19 Mar 2024 14:40:02 GMT
-Received: from [10.216.21.188] (10.80.80.8) by nasanex01c.na.qualcomm.com
- (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
- 2024 07:39:59 -0700
-Message-ID: <8222e4cf-bc40-98b5-cf75-b0a547a3c4df@quicinc.com>
-Date: Tue, 19 Mar 2024 20:09:55 +0530
+	s=arc-20240116; t=1710871299; c=relaxed/simple;
+	bh=DFuwDdLRYzZzwDZt3GEBAbUTwZt+9FAGHBQaulnJ+LU=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type; b=W4e3rAm6rE7QkhtG+Nr1IVnq+ha8NC4I3WgsqXEQ0JeN/vjkScJjBYT5nYkGxWrjK6RHzznDJHacbw3NE2lRdzo88OvxlUZNpeDysbdo6MRSRsWmrvsxSDDwLLRq/Tt40Van3LCMyeiyU09bcfd72SsHsiZR5u4vqWNJfsj4HGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=rrGyyQu/; arc=none smtp.client-ip=198.252.153.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
+Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx0.riseup.net (Postfix) with ESMTPS id 4Tzffz3nrcz9sSK
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 18:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
+	t=1710871291; bh=DFuwDdLRYzZzwDZt3GEBAbUTwZt+9FAGHBQaulnJ+LU=;
+	h=Date:From:To:Subject:From;
+	b=rrGyyQu/b1yqICVrmWLj/5i7yUdDhA9POU/xgtFcv1CffPVx3k/sARISnTEVqQ2h6
+	 Br/mB2sTNx33qs6mIkUtPvcXafsydh7kCwqpQ2HZi+YtPHLjEjibqPPbtXhNRPo6Nk
+	 m1Mi6VXLBTKcaAdthc72ZuXf0AbQGLE889rCWy4Y=
+X-Riseup-User-ID: 8612497C1C36F016C7200B9F5B42FE2F9F511447C9CC5AC8FDA830EBE9FDB66F
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4Tzffm258szJsmq
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 18:01:20 +0000 (UTC)
+Date: Tue, 19 Mar 2024 11:01:19 -0700
+From: orbea <orbea@riseup.net>
+To: linux-gpio@vger.kernel.org
+Subject: [libgpiod] [PATCH] bindings: cxx: link using the libtool archives
+Message-ID: <20240319110119.36cfd704@Akita>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
- Thunderbird/102.13.0
-Subject: Re: [PATCH v12 7/9] firmware: qcom: scm: Fix __scm->dev assignement
-Content-Language: en-US
-To: Pavan Kondeti <quic_pkondeti@quicinc.com>
-CC: Bjorn Andersson <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
-        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>
-References: <20240227155308.18395-1-quic_mojha@quicinc.com>
- <20240227155308.18395-8-quic_mojha@quicinc.com>
- <n2gomlmlzwodpg2v3gzuc62n3plewdqgiwctrv2tawdih26rig@obqd2a2ovqvp>
- <260371ff-da7a-8406-0511-4019f6b860bf@quicinc.com>
- <03367100-1ad4-4d83-8200-5879550398be@quicinc.com>
- <fce3beb8-7d70-672c-e25b-d46810c4d1dd@quicinc.com>
- <60535d91-3610-4610-ae1a-46b8e3ccd4fa@quicinc.com>
-From: Mukesh Ojha <quic_mojha@quicinc.com>
-In-Reply-To: <60535d91-3610-4610-ae1a-46b8e3ccd4fa@quicinc.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: multipart/mixed; boundary="MP_/Qn_K23aF7Ms_icVJz7vlWOy"
+
+--MP_/Qn_K23aF7Ms_icVJz7vlWOy
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
- nasanex01c.na.qualcomm.com (10.45.79.139)
-X-QCInternal: smtphost
-X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
-X-Proofpoint-ORIG-GUID: 4h0pPrrwiO2_94Iu8xRYkNaOgGtWOIER
-X-Proofpoint-GUID: 4h0pPrrwiO2_94Iu8xRYkNaOgGtWOIER
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-03-19_04,2024-03-18_03,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015
- impostorscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
- mlxscore=0 phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.19.0-2403140001 definitions=main-2403190109
+Content-Disposition: inline
+
+Hi,
+
+When building libgpiod with slibtool instead of GNU libtool it fails
+when it doesn't find -lgpiod. I attached a patch that fixes the issue,
+is it possible this can be applied to the git repo?
+
+This was reported for Gentoo: https://bugs.gentoo.org/913899
+
+Thanks!
+
+--MP_/Qn_K23aF7Ms_icVJz7vlWOy
+Content-Type: text/x-patch
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename=0001-bindings-cxx-link-using-the-libtool-archives.patch
+
+From b00593eb3d6bec02f21d61d490e47d7f2f2e4ce0 Mon Sep 17 00:00:00 2001
+From: orbea <orbea@riseup.net>
+Date: Tue, 19 Mar 2024 10:41:18 -0700
+Subject: [PATCH] bindings: cxx: link using the libtool archives
+
+When linking with internal dependencies that were built with libtool the
+most reliable method is to use the libtool archive (.la) files.
+
+When building with slibtool it fails when it doesn't find the -lgpiod
+linker flag, but if libgpiod is already installed to the system it will
+be built using the system version instead of the newly built libraries.
+
+Gentoo issue: https://bugs.gentoo.org/913899
+
+Signed-off-by: orbea <orbea@riseup.net>
+---
+ bindings/cxx/Makefile.am          | 2 +-
+ bindings/cxx/examples/Makefile.am | 2 +-
+ bindings/cxx/tests/Makefile.am    | 6 +++---
+ 3 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/bindings/cxx/Makefile.am b/bindings/cxx/Makefile.am
+index 1eafaa2..e2a89cf 100644
+--- a/bindings/cxx/Makefile.am
++++ b/bindings/cxx/Makefile.am
+@@ -24,8 +24,8 @@ libgpiodcxx_la_CXXFLAGS = -Wall -Wextra -g -std=gnu++17
+ libgpiodcxx_la_CXXFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
+ libgpiodcxx_la_CXXFLAGS += $(PROFILING_CFLAGS)
+ libgpiodcxx_la_LDFLAGS = -version-info $(subst .,:,$(ABI_CXX_VERSION))
+-libgpiodcxx_la_LDFLAGS += -lgpiod -L$(top_builddir)/lib
+ libgpiodcxx_la_LDFLAGS += $(PROFILING_LDFLAGS)
++libgpiodcxx_la_LIBADD = $(top_builddir)/lib/libgpiod.la
+ 
+ include_HEADERS = gpiod.hpp
+ 
+diff --git a/bindings/cxx/examples/Makefile.am b/bindings/cxx/examples/Makefile.am
+index 64ced20..eca4d64 100644
+--- a/bindings/cxx/examples/Makefile.am
++++ b/bindings/cxx/examples/Makefile.am
+@@ -3,7 +3,7 @@
+ 
+ AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
+ AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17
+-AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
++LDADD = $(top_builddir)/bindings/cxx/libgpiodcxx.la
+ 
+ noinst_PROGRAMS = \
+ 	async_watch_line_value \
+diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
+index 02b5b6d..4d40d33 100644
+--- a/bindings/cxx/tests/Makefile.am
++++ b/bindings/cxx/tests/Makefile.am
+@@ -4,9 +4,9 @@
+ AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
+ AM_CXXFLAGS += -I$(top_srcdir)/tests/gpiosim/
+ AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17 $(CATCH2_CFLAGS)
+-AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
+-AM_LDFLAGS += -lgpiosim -L$(top_builddir)/tests/gpiosim/
+-AM_LDFLAGS += -pthread
++AM_LDFLAGS = -pthread
++LDADD = $(top_builddir)/bindings/cxx/libgpiodcxx.la
++LDADD += $(top_builddir)/tests/gpiosim/libgiosim.la
+ 
+ noinst_PROGRAMS = gpiod-cxx-test
+ 
+-- 
+2.43.2
 
 
-
-On 3/19/2024 3:52 PM, Pavan Kondeti wrote:
-> On Tue, Mar 19, 2024 at 03:38:57PM +0530, Mukesh Ojha wrote:
->>
->>
->> On 3/19/2024 6:47 AM, Pavan Kondeti wrote:
->>> On Mon, Mar 18, 2024 at 06:38:20PM +0530, Mukesh Ojha wrote:
->>>>
->>>>
->>>> On 3/3/2024 12:55 AM, Bjorn Andersson wrote:
->>>>> On Tue, Feb 27, 2024 at 09:23:06PM +0530, Mukesh Ojha wrote:
->>>>>> qcom_scm_is_available() gives wrong indication if __scm
->>>>>> is initialized but __scm->dev is not.
->>>>>>
->>>>>> Fix this appropriately by making sure if __scm is
->>>>>> initialized and then it is associated with its
->>>>>> device.
->>>>>>
->>>>>
->>>>> This seems like a bug fix, and should as such have a Fixes: tag and
->>>>> probably Cc: stable@vger.kernel.org
->>>>>
->>>>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
->>>>>> ---
->>>>>>     drivers/firmware/qcom/qcom_scm.c | 2 +-
->>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
->>>>>> index 6c252cddd44e..6f14254c0c10 100644
->>>>>> --- a/drivers/firmware/qcom/qcom_scm.c
->>>>>> +++ b/drivers/firmware/qcom/qcom_scm.c
->>>>>> @@ -1859,6 +1859,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
->>>>>>     	if (!scm)
->>>>>>     		return -ENOMEM;
->>>>>> +	scm->dev = &pdev->dev;
->>>>>>     	ret = qcom_scm_find_dload_address(&pdev->dev, &scm->dload_mode_addr);
->>>>>>     	if (ret < 0)
->>>>>>     		return ret;
->>>>>> @@ -1895,7 +1896,6 @@ static int qcom_scm_probe(struct platform_device *pdev)
->>>>>>     		return ret;
->>>>>>     	__scm = scm;
->>>>>> -	__scm->dev = &pdev->dev;
->>>>>
->>>>> Is it sufficient to just move the line up, or do we need a barrier of
->>>>> some sort here?
->>>>
->>>> Would be good to use, smp_mb() before the assignment
->>>>        __scm = scm
->>>> along with moving below line
->>>> __scm->dev = &pdev->dev
->>>>
->>>
->>> Full memory barrier is not needed here. store variant is sufficient.
->>> WRITE_ONCE() + smp_store_release() will fit here no?
->>
->> Thanks for the comment, i again have a look at it and agree we don't
->> need a full barrier here.
->>
->> And we can do either of the below two ways.
->>
->> -Mukesh
->>
->>
->> // 1st way
->>
->> diff --git a/drivers/firmware/qcom/qcom_scm.c
->> b/drivers/firmware/qcom/qcom_scm.c
->> index 49ddbcab0680..b638fb407fc6 100644
->> --- a/drivers/firmware/qcom/qcom_scm.c
->> +++ b/drivers/firmware/qcom/qcom_scm.c
->> @@ -1741,7 +1741,12 @@ static int qcom_scm_qseecom_init(struct qcom_scm
->> *scm)
->>    */
->>   bool qcom_scm_is_available(void)
->>   {
->> -       return !!__scm;
->> +       bool avail;
->>    */
->>   bool qcom_scm_is_available(void)
->>   {
->> -       return !!__scm;
->> +       bool avail;
->> +
->> +       avail = !!READ_ONCE(__scm);
->> +       smp_rmb();
->> +
->> +       return avail;
->>   }
->>   EXPORT_SYMBOL_GPL(qcom_scm_is_available);
->>
-> 
-> Your original problem statement: qcom_scm_is_available() gives wrong indication
-> if __scm is initialized but __scm->dev is not.
-> 
-> This does not require read side barrier as there is an address
-> dependency. If the writer does it *correctly*, the reader would always
-> observe __scm->dev != NULL when __scm != NULL without any barrier.
-
-It looks like write barrier pairs with an address-dependency barrier, a
-control dependency, an acquire barrier, a release barrier, a read 
-barrier, or a general barrier.
-
-So, smp_rmb() is redundant here.
-
-Also, for correction, we may not need smp_load_acquire() in the 1st way
-and just using READ_ONCE() is enough.
-
--Mukesh
-> 
-> Thanks,
-> Pavan
+--MP_/Qn_K23aF7Ms_icVJz7vlWOy--
 
