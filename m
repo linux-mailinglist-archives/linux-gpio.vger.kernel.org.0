@@ -1,206 +1,145 @@
-Return-Path: <linux-gpio+bounces-4440-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4441-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1AECC87F4AD
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 01:36:18 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC4F387F4D9
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 02:17:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3A65A1C21774
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 00:36:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3E49282004
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 01:17:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF619620;
-	Tue, 19 Mar 2024 00:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2CD54816;
+	Tue, 19 Mar 2024 01:17:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="LhUwNjh/"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="aOaQxjbW"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx2.sberdevices.ru [45.89.224.132])
+Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFE6846D;
-	Tue, 19 Mar 2024 00:36:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.89.224.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66F10F4FC;
+	Tue, 19 Mar 2024 01:17:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710808566; cv=none; b=gRNxgh0cpuH82xw6s3rW+mZeZo55cMceTGogBBSzJkWnOoZEtX9qLQ35ojwbLcDpTKMb1af5JhKfifYM8gJq/vcbE3nzQde9WILBrTkxxJHJTsXraDcm0k9T6Slw9D+2eVoDdpaZ5V+hVpxOly6wQhYNJP1rooAfQmTLQYmU5qs=
+	t=1710811071; cv=none; b=oSlgXsS8UnxiNxH+C48PF8gggQuOgsaX5Omh4K2TdjL0Ve3dchHCOd4ASQu4rMeQlyakuztvTw0J+qdjV44koa95GJHAcZJEKXe4TgRTr42Xh14q9aBnadyChAoFUc4VNXyXjm3P9N8wLMvsE4pxo6Z98gpF47HR/ZwVxmZ3P3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710808566; c=relaxed/simple;
-	bh=D/vU+aKG4bOtngerNGs+IR+QCiFa7x2M/xMzsX6g700=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=AgP4pApJjOVuPBLyoSNxeZRXkyN57XnBbvT9zQsR9zhcdpUdCEUQI5nmuScjPRnRlCONu0uqJ33sw2oQmlYfTDqIVmleNYb6mcZBYEZMUU2V/Wcp8w8AYesDs16gxl1uIiYjnkYO5F1TBnStZiaTrcD+je0QUPjgeujyo6omJPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=LhUwNjh/; arc=none smtp.client-ip=45.89.224.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
-Received: from p-infra-ksmg-sc-msk02 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 152E012000B;
-	Tue, 19 Mar 2024 03:36:01 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 152E012000B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710808561;
-	bh=IAxjzQO549n6P/EQrOvtcZd9jtdlj6D3hmWwNuQy9Rs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=LhUwNjh/OPWvv6aoHqGKCaLkSsX7rh/W4H5kTq+ISfFzLcpWhp+Ixak1WHXuZMoAn
-	 oi5/gc+Xs6S/D2j6sR5tFiITakeVQH2W4B79cxb2D+C+rquGbGizqg9RK1W6aZOPfG
-	 FJEF8yZgA3mU63iaxki34WK5J2uGPvBrab+XHgkJMiDwlt/C8kFsetQ6O0hf13ybS9
-	 T/kfuLb3ILNWrGLd7ppHPAyPZNCBFiCXZ1JR2/ArFCtuf/1HQya6fU6mSYMXYGFvuF
-	 cyXEncC2vfCBUI25XWeGfePQ1BL3KCpmNCWvW6HcaOoy0d4ceiK8ugMK71vlyH3gVB
-	 /bbVz/B4p2NaA==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 19 Mar 2024 03:36:00 +0300 (MSK)
-Received: from [172.28.224.29] (100.64.160.123) by
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+	s=arc-20240116; t=1710811071; c=relaxed/simple;
+	bh=296Aa5IYrw+k3OBNGji0A97d7DKH3UDMwHn5T5Ph/hw=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=glwPceXkCE7vRwyBAi+N4FGgytPVEWBlrE4K7M0j4ERZ7LmhzxtL0wLj2MaSpLEYI6aaqM6ICKJktAsF8XXi3v+SaYsUqU9vLf1Zxguwhe/T76qrCBcypqi2dH49+hVpt7QijsBumKjWaVrXxSVzONonsE8yEO1iPcvU3f6JWTo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=aOaQxjbW; arc=none smtp.client-ip=205.220.168.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279865.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42J0kunb023937;
+	Tue, 19 Mar 2024 01:17:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=qcppdkim1; bh=H7x/R1+R+BCgNC4W4I1mP
+	HO8Zw8WK5UeRiKPms7Hmh8=; b=aOaQxjbWAt+CWON7aJhaxV05LSf5wBy2Z6Ow2
+	5ItxFn+JRmfiSlIdG6BCaBNOb2xUUizP0T9AvudL1o7IMndgO+ot4Wu7aIVkfyFv
+	tHmZX9NqSwHmSlNnHAvJY48ALQzK/zrkqZHsqFSI2B7Gzzzg+8vWeh6cIYAxj9xt
+	KUVUQag8akV3jq0OabFy2wI6MIfg6TBctsj2DOpCEruoDGxJUA2yDRdVOBkswqoe
+	ynN+DUAsxoz9xVhGU8LVNpii5ttgP+vKFjo+40kuJoykXEbr3+ctZZDurYb3Op8f
+	rcvNgWNsq5wDbaebJLsSVHFKjQ3I95i2AZxFNl+1sLo0tQn6g==
+Received: from nalasppmta01.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wxmnjsnrx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 01:17:46 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA01.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42J1Hkdk025641
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 01:17:46 GMT
+Received: from hu-pkondeti-hyd.qualcomm.com (10.80.80.8) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1118.40; Tue, 19 Mar 2024 03:36:00 +0300
-Message-ID: <3d8f23ce-1864-4cef-9895-209aff599bfa@salutedevices.com>
-Date: Tue, 19 Mar 2024 03:35:14 +0300
+ 15.2.1118.40; Mon, 18 Mar 2024 18:17:43 -0700
+Date: Tue, 19 Mar 2024 06:47:40 +0530
+From: Pavan Kondeti <quic_pkondeti@quicinc.com>
+To: Mukesh Ojha <quic_mojha@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>
+Subject: Re: [PATCH v12 7/9] firmware: qcom: scm: Fix __scm->dev assignement
+Message-ID: <03367100-1ad4-4d83-8200-5879550398be@quicinc.com>
+References: <20240227155308.18395-1-quic_mojha@quicinc.com>
+ <20240227155308.18395-8-quic_mojha@quicinc.com>
+ <n2gomlmlzwodpg2v3gzuc62n3plewdqgiwctrv2tawdih26rig@obqd2a2ovqvp>
+ <260371ff-da7a-8406-0511-4019f6b860bf@quicinc.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/25] ASoC: dt-bindings: meson: axg-pdm: document
- 'sysrate' property
-Content-Language: en-US
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman
-	<khilman@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
-	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<kernel@salutedevices.com>
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-14-jan.dakinevich@salutedevices.com>
- <ca80caab-2664-4797-a222-e14537eea440@linaro.org>
- <1jil1nhjwd.fsf@starbuckisacylon.baylibre.com>
- <6feba9ff-8bbf-4494-93f0-732679bc4032@salutedevices.com>
- <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-In-Reply-To: <1j1q87hkq2.fsf@starbuckisacylon.baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184250 [Mar 18 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_smtp_not_equal_from}, {Tracking_bl_eng_cat, c15}, {Tracking_from_domain_doesnt_match_to}, d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;sberdevices.ru:7.1.1,5.0.1;127.0.0.199:7.1.2;smtp.sberdevices.ru:7.1.1,5.0.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean
-X-KSMG-LinksScanning: Clean
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/18 21:41:00 #24279760
-X-KSMG-AntiVirus-Status: Clean, skipped
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <260371ff-da7a-8406-0511-4019f6b860bf@quicinc.com>
+X-ClientProxiedBy: nasanex01b.na.qualcomm.com (10.46.141.250) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-GUID: jnpVEGgqOve90oQlCkE5ZPbPm_TRA_JO
+X-Proofpoint-ORIG-GUID: jnpVEGgqOve90oQlCkE5ZPbPm_TRA_JO
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-18_12,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 suspectscore=0
+ clxscore=1011 mlxscore=0 lowpriorityscore=0 mlxlogscore=987 phishscore=0
+ impostorscore=0 bulkscore=0 priorityscore=1501 adultscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.19.0-2403140001
+ definitions=main-2403190008
 
-
-
-On 3/18/24 13:55, Jerome Brunet wrote:
-> 
-> On Sun 17 Mar 2024 at 18:52, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> 
->> On 3/15/24 13:22, Jerome Brunet wrote:
->>>
->>> On Fri 15 Mar 2024 at 11:00, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org> wrote:
->>>
->>>> On 15/03/2024 00:21, Jan Dakinevich wrote:
->>>>> This option allow to redefine the rate of DSP system clock.
->>>>
->>>> And why is it suitable for bindings? Describe the hardware, not what you
->>>> want to do in the driver.
->>>>
->>>>>
->>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
->>>>> ---
->>>>>  Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml | 4 ++++
->>>>>  1 file changed, 4 insertions(+)
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> index df21dd72fc65..d2f23a59a6b6 100644
->>>>> --- a/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> +++ b/Documentation/devicetree/bindings/sound/amlogic,axg-pdm.yaml
->>>>> @@ -40,6 +40,10 @@ properties:
->>>>>    resets:
->>>>>      maxItems: 1
->>>>>  
->>>>> +  sysrate:
->>>>> +    $ref: /schemas/types.yaml#/definitions/uint32
->>>>> +    description: redefine rate of DSP system clock
->>>>
->>>> No vendor prefix, so is it a generic property? Also, missing unit
->>>> suffix, but more importantly I don't understand why this is a property
->>>> of hardware.
->>>
->>> +1.
->>>
->>> The appropriate way to set rate of the clock before the driver take over
->>> is 'assigned-rate', if you need to customize this for different
->>> platform.
->>>
->>
->> It would be great, but it doesn't work. Below, is what I want to see:
->>
->> 	assigned-clocks =
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_SEL>,
->> 		<&clkc_audio AUD2_CLKID_PDM_SYSCLK_DIV>;
->> 	assigned-clock-parents =
->> 		<&clkc_pll CLKID_FCLK_DIV3>,
->> 		<0>;
->> 	assigned-clock-rates =
->> 		<0>,
->> 		<256000000>;
->>
->> But regardles of this declaration, PDM's driver unconditionally sets
->> sysclk'rate to 250MHz and throws away everything that was configured
->> before, reparents audio2_pdm_sysclk_mux to hifi_pll and changes
->> hifi_pll's rate.
->>
->> This value 250MHz is declared here:
->>
->> static const struct axg_pdm_cfg axg_pdm_config = {
->> 	.filters = &axg_default_filters,
->> 	.sys_rate = 250000000,
->> };
->>
->> The property 'sysrate' is intended to redefine hardcoded 'sys_rate'
->> value in 'axg_pdm_config'.
-> 
-> What is stopping you from removing that from the driver and adding
-> assigned-rate to 250M is the existing platform ?
-> 
-
-Ok, in next version I will try to remove this unconditional setting of
-rate that spoils my clock hierarchy.
-
->>
->>> Then you don't have to deal with it in the device driver.
->>>
->>>>
->>>> Best regards,
->>>> Krzysztof
->>>
->>>
+On Mon, Mar 18, 2024 at 06:38:20PM +0530, Mukesh Ojha wrote:
 > 
 > 
+> On 3/3/2024 12:55 AM, Bjorn Andersson wrote:
+> > On Tue, Feb 27, 2024 at 09:23:06PM +0530, Mukesh Ojha wrote:
+> > > qcom_scm_is_available() gives wrong indication if __scm
+> > > is initialized but __scm->dev is not.
+> > > 
+> > > Fix this appropriately by making sure if __scm is
+> > > initialized and then it is associated with its
+> > > device.
+> > > 
+> > 
+> > This seems like a bug fix, and should as such have a Fixes: tag and
+> > probably Cc: stable@vger.kernel.org
+> > 
+> > > Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+> > > ---
+> > >   drivers/firmware/qcom/qcom_scm.c | 2 +-
+> > >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+> > > index 6c252cddd44e..6f14254c0c10 100644
+> > > --- a/drivers/firmware/qcom/qcom_scm.c
+> > > +++ b/drivers/firmware/qcom/qcom_scm.c
+> > > @@ -1859,6 +1859,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+> > >   	if (!scm)
+> > >   		return -ENOMEM;
+> > > +	scm->dev = &pdev->dev;
+> > >   	ret = qcom_scm_find_dload_address(&pdev->dev, &scm->dload_mode_addr);
+> > >   	if (ret < 0)
+> > >   		return ret;
+> > > @@ -1895,7 +1896,6 @@ static int qcom_scm_probe(struct platform_device *pdev)
+> > >   		return ret;
+> > >   	__scm = scm;
+> > > -	__scm->dev = &pdev->dev;
+> > 
+> > Is it sufficient to just move the line up, or do we need a barrier of
+> > some sort here?
+> 
+> Would be good to use, smp_mb() before the assignment
+>      __scm = scm
+> along with moving below line
+> __scm->dev = &pdev->dev
+> 
 
--- 
-Best regards
-Jan Dakinevich
+Full memory barrier is not needed here. store variant is sufficient.
+WRITE_ONCE() + smp_store_release() will fit here no?
+
+Thanks,
+Pavan
 
