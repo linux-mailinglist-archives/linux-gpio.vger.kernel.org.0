@@ -1,179 +1,243 @@
-Return-Path: <linux-gpio+bounces-4447-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4448-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87E8E87F6A1
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 06:22:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 90FD587F9BF
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 09:28:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D5E8280E6B
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 05:22:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4643D282FCF
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 08:28:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F3DA4436A;
-	Tue, 19 Mar 2024 05:22:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07B01548EA;
+	Tue, 19 Mar 2024 08:28:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="p7bI3Drr"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="oqQDhAkp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A9D54085B
-	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 05:22:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C95A54776
+	for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 08:28:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710825755; cv=none; b=fqmqiWXbR6kQc9as+4VVfAyDxD03xrztig0v1x54Urd69fOGGBVEFYo8yRDOoOjaJm0oT1sxebv40QbT3DSiqVD75Dxx5h4AgCneZaElEhLfVBY6S+ViDsW2V3Hw+OuYuQUauszQdf3vDcCmHxrjKf2bAFJJIJ5M3NhOjvqYrUk=
+	t=1710836917; cv=none; b=TWSFRVHFu+P4DLgn9TrwckfDi7SVEpZrF/2x2xFecvHPX1kPDdJB5HjEMzSTG7G0MNuwI7YT9lK8/rCRgHnp6g3RXVVX1vFITUFJkwnIG6maMgljPmQtaIy6iQcBfd3u+VTAIkZWoI57e4DROWEJKpQVTyiam1uYThVyVQo88oY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710825755; c=relaxed/simple;
-	bh=dakUAomHM3mI4Ar32yzINJG3dvyX3c/5nBdxwHWkLTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NcESaiIGKxueJ2unE53JEp1P2IA4TbdUxDKA9wx0LcKHjxwKXu5jgr7k0YHC2nfto80tqUqbGEDiZLLQvhWJ6PIpBCj4kJG6mbGzYgNakSg2hH3M9RD3GYKk01BixKaODRt05CXiwhSGuYjWzRMGPrJuNt8ACmesBmPCX1pe+cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=p7bI3Drr; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-563c595f968so6399829a12.0
-        for <linux-gpio@vger.kernel.org>; Mon, 18 Mar 2024 22:22:33 -0700 (PDT)
+	s=arc-20240116; t=1710836917; c=relaxed/simple;
+	bh=wEOu2J6N3RicgE6VdikhaGkAHK9MlBxWFNBPisxCRwo=;
+	h=References:From:To:Cc:Subject:Date:In-reply-to:Message-ID:
+	 MIME-Version:Content-Type; b=RZD80G8Ype8ESDnoXg88sSymIf3LJu6AjyHfiQeYVKLWV+lAp6+xzWfJkk7Useu3QvLavNavidxfRy5TM301ApuI75+lHyZbOlhWCcVsZusx/xz4YVo/7T/mM+/kPqkcmf+rUW50ghwCrwtAIICfcEsLD9i1sJWaXaw6rHmiKKc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=oqQDhAkp; arc=none smtp.client-ip=209.85.128.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4141088f1c3so13251415e9.3
+        for <linux-gpio@vger.kernel.org>; Tue, 19 Mar 2024 01:28:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1710825752; x=1711430552; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=8X8XA8ugz+VoL9vJzAf5guKYiNdpgnUbOGlQvkOg63Q=;
-        b=p7bI3DrrG8wKg087V0jc8xj8IrrZcuIAMe0nyZYmCRXqHdFEwYstohb98ufGk4g7W9
-         SVS7IazHPV7ctLIGk1qK3I7oKRjkE7Tiy+DHex2Ztdwq6Xv3LjpS3tB30YlmdeeItM3J
-         0ofBVMFeL6kZhvBxgL7R6NfdIj11eqhM60QB/OGCStyVYvOT0B/60tLVAiO7aMkswGcM
-         lSdJ6BSo61TvOogXI4ykORG7Dqjf5sy0HC9lnwbBGExvqSzMzTty5qRWqQiCVLvBgGxC
-         AQFhc8DfTWm5T2SHeH89gINnPQPvpBoTo1208dhHN7QLrIh83qFWJxuAv7mbbzUA2Zcy
-         wywg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1710836913; x=1711441713; darn=vger.kernel.org;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:from:to:cc:subject:date:message-id:reply-to;
+        bh=hgFFAPN7B2IdqbSbHOUWcvyqPwWPHdQWlex71RuQvmY=;
+        b=oqQDhAkpgLw5OUssGrIeyW21nyYmJJfiZEzHuuJBv2Q+Teo8dmTaCaztY2Y5JCM4lI
+         OrjeHBZVNkizeBLsQ6o0vtAyBE3daTkROgs77VU5qAK9HSi7dMa2ypmLmCJhU8EyAKqM
+         1vz3J+bF7xJKd8XN4QSiWaU103vA/Qo5kuLbkIM8BvT4ArTM7CKHwbJLmdbLCmOeJwCT
+         +jkyoXRxHAHi31KJT4jkwL8idnVo28psaU0d/7m0n7oJdxMfEFziTNxWG7lwoTzcwCeH
+         MLmAM/aA/ylmz3Aqy8++f6N4E4eHxMeM8o5rLbYodh46bSJljU0f5g0mHK5kID0q7PkW
+         JAPw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710825752; x=1711430552;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from:references:cc
-         :to:content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=8X8XA8ugz+VoL9vJzAf5guKYiNdpgnUbOGlQvkOg63Q=;
-        b=hJ1H5pKFXthagwyYFRiSF7BIX/sdJtTMETESIIZCmxY05S/UfOIQVpzcF28AU9+wcq
-         P+mULjr46Oc6kEHPXfDPBSZ5yoPo1QDgYqT+lzcVvhpnycLVckGcnh0eS3epT26OOpSv
-         TSlituG2WRO3iFxRfpenrOFwuZlohoB+8ExoLGGHBM4drK+nmkKUBEvEz965R5mviDk6
-         dTPatbgMwgYJbxzqgT1VuceEdXRL6n0FRw/9XGLN9lFivJsVEgJcDyHMswxn6/QcGQAr
-         aN+VwLDtPJIX7NNkALZi8DdTGosEui2pwDEeJ8ePBpClmAZ/W+6Jy/ErJLWhky8zTMHX
-         VgOg==
-X-Forwarded-Encrypted: i=1; AJvYcCUH0aQckRq+NR067nxQWe++fuMtsyDoVaEAEhHXyX5lehhcK4fDoz5R+j/D8gWLSrTYG7cBYXMp76Xza3nsstU71k2DZ5hqG1rRSg==
-X-Gm-Message-State: AOJu0Yyp7QKXXs5c+4t9gjApzkH+MD6kbYDXeDAA5o+usmNx2IP/EGPR
-	ZdTYlHCPmRLJCzwRDrp0KiXlh49wsFs+IrZGmUcK7B/DJK8NKB+Gtb1681RzK2Y=
-X-Google-Smtp-Source: AGHT+IFJpcINqeLcciVN4YPO+LjPsNJ7L2ktDfLEJgPktjH5qYsw5hy8zP0COUT4GcTgH8tfp6c6ig==
-X-Received: by 2002:a05:6402:b34:b0:568:32cc:f808 with SMTP id bo20-20020a0564020b3400b0056832ccf808mr7388204edb.15.1710825751985;
-        Mon, 18 Mar 2024 22:22:31 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id g19-20020aa7c593000000b005689a4b250fsm5471099edq.48.2024.03.18.22.22.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 18 Mar 2024 22:22:31 -0700 (PDT)
-Message-ID: <d6a49d18-51cb-49ad-ba81-b162cb742fb0@linaro.org>
-Date: Tue, 19 Mar 2024 06:22:29 +0100
+        d=1e100.net; s=20230601; t=1710836913; x=1711441713;
+        h=mime-version:message-id:in-reply-to:date:subject:cc:to:from
+         :user-agent:references:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hgFFAPN7B2IdqbSbHOUWcvyqPwWPHdQWlex71RuQvmY=;
+        b=MAGPqX//xAd+FZ5VStgqNNXvn5jjzl4zvs+TgOcPETyzjSxVpIqpqZytDHH/taJ78L
+         h8Hd7IcjZBGWL9YUAxS/5iO6Ash4sPS8yU0tHLH/z0+EjxNIXVWa5YAqQND/QE/l2P5j
+         fjr11dfHlHBVUemvnjIy9phGUVup1Z9gyAulsvdOMEN8QlhCDcFEslk1+gppQDZbVzRA
+         XWWi6+Alr9DpxLUATyvmyfyOcik/Xo/9P9VKP0RdpUSZWPbw9VeX02+7jhScKdL+YTqA
+         OxuUUeB1psH4tNBTh/ksJ4zwsfx2TvIRImaEDBabs7qMW3ilfjxXmPCEkfAPBf1wHCQE
+         3oNg==
+X-Forwarded-Encrypted: i=1; AJvYcCVH4SKLvTwcCXQX3nc81YdTgEsMeEDh3DBl04U0Z+lTR51GEM8xeT5lCllAokhsEiLLrzPUXS/p9qVq/zMLW8uxKB4N3IZpzc/pFg==
+X-Gm-Message-State: AOJu0YxNnf7tyLMJWdBUqU9a/2yB4b3Fkh48C+7dSrl20kYVxhL7KuZB
+	PElRbSwxN3KuZecc2qKJ0e4Lwx9UREFIpH6eaYic6sp2tBoQUg+BlbMwcjihVv0=
+X-Google-Smtp-Source: AGHT+IF8VeQ4xCRzE1F2nR3lm7Kyoo5lbqorbXz3zLlgIR0czhWjHZf4ZYDwVRGEa2XhkhvSTql6LA==
+X-Received: by 2002:adf:a358:0:b0:341:8666:ce2e with SMTP id d24-20020adfa358000000b003418666ce2emr913294wrb.0.1710836912716;
+        Tue, 19 Mar 2024 01:28:32 -0700 (PDT)
+Received: from localhost ([2a01:e0a:3c5:5fb1:a757:fdcf:e3d7:eaed])
+        by smtp.gmail.com with ESMTPSA id ay25-20020a5d6f19000000b0033e3cb02cefsm11883313wrb.86.2024.03.19.01.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 Mar 2024 01:28:32 -0700 (PDT)
+References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
+ <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
+ <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
+ <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
+ <1jedc7hlg4.fsf@starbuckisacylon.baylibre.com>
+ <d4cfef9e-3cae-4f1a-90b3-33d5707596f9@salutedevices.com>
+User-agent: mu4e 1.10.8; emacs 29.2
+From: Jerome Brunet <jbrunet@baylibre.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong
+ <neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin
+ Hilman <khilman@baylibre.com>, Martin Blumenstingl
+ <martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org, linux-gpio@vger.kernel.org,
+ kernel@salutedevices.com
+Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
+ params
+Date: Tue, 19 Mar 2024 09:21:27 +0100
+In-reply-to: <d4cfef9e-3cae-4f1a-90b3-33d5707596f9@salutedevices.com>
+Message-ID: <1jsf0mfwwg.fsf@starbuckisacylon.baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/5] dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH010x
- and PMD802x binding
-Content-Language: en-US
-To: Anjelique Melendez <quic_amelende@quicinc.com>, andersson@kernel.org,
- konrad.dybcio@linaro.org, linus.walleij@linaro.org, robh+dt@kernel.org,
- krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- quic_subbaram@quicinc.com, quic_collinsd@quicinc.com,
- quic_jprakash@quicinc.com
-References: <20240314200419.4733-2-quic_amelende@quicinc.com>
- <20240314200419.4733-6-quic_amelende@quicinc.com>
- <5e317ad1-d473-423a-b85e-2f64a37f7d0d@linaro.org>
- <72a066f9-864d-deb4-7880-781558d59d6f@quicinc.com>
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <72a066f9-864d-deb4-7880-781558d59d6f@quicinc.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 
-On 19/03/2024 04:57, Anjelique Melendez wrote:
-> 
-> 
-> On 3/14/2024 2:20 PM, Krzysztof Kozlowski wrote:
->> On 14/03/2024 21:04, Anjelique Melendez wrote:
->>> Update the Qualcomm Technologies, Inc. PMIC GPIO binding documentation
->>> to include compatible strings for PMIH010x and PMD802x PMICs.
+
+On Tue 19 Mar 2024 at 01:35, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+
+> On 3/18/24 13:17, Jerome Brunet wrote:
+>> 
+>> On Sun 17 Mar 2024 at 17:17, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+>> 
+>>> On 3/15/24 11:58, Jerome Brunet wrote:
+>>>>
+>>>> On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
+>>>>
+>>>>> Existing values were insufficient to produce accurate clock for audio
+>>>>> devices. New values are safe and most suitable to produce 48000Hz sample
+>>>>> rate.
+>>>>
+>>>> The hifi pll is not about 48k only. I see no reason to restrict the PLL
+>>>> to a single setting.
+>>>>> You've provided no justification why the PLL driver can't reach the same
+>>>> setting for 48k. The setting below is just the crude part. the fine
+>>>> tuning is done done with the frac parameter so I doubt this provides a
+>>>> more accurate rate.
+>>>>
 >>>
->>> Signed-off-by: Anjelique Melendez <quic_amelende@quicinc.com>
->>> ---
->>>  .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 20 +++++++++++++++++++
->>>  1 file changed, 20 insertions(+)
+>>> You are right, it is not about 48k only. However, there are two issues.
 >>>
->>> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->>> index 2b17d244f051..5cc04c016b25 100644
->>> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->>> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
->>> @@ -57,10 +57,12 @@ properties:
->>>            - qcom,pma8084-gpio
->>>            - qcom,pmc8180-gpio
->>>            - qcom,pmc8180c-gpio
->>> +          - qcom,pmd802x-gpio
->>
->> Is the "x" some sort of wildcard or actual PMIC model/version name?
->> Wildcards are in general discouraged.
->>
-> 
-> "x" is being used as a wildcard here so can update with actual PMIC version
-> in next version.
-> 
+>>> First, indeed, I could just extend the range of multipliers to 1..255.
+>> 
+>> Why 1..255 ? This is not what I'm pointing out
+>> 
+>> According to the datasheet - the range is 32 - 64, as currently
+>> set in the driver.
+>> 
+>
+> Could you point where in the doc the range 32..64 is documented?
+> Documentation that I have may be not so complete, but I don't see there
+> any mention about it.
+>
+> Anyway, range 32..64 of multipliers is not enough to produce accurate
+> clock, and a need 128 for 48kHz.
 
-Then please drop it also in all future submissions, as asked by writing
-bindings.
+A1 datasheet v0.4 - Section 7.6.3.2
 
-Best regards,
-Krzysztof
+>
+>> The change you have provided request a multipler of 128/5 = 25,6
+>> If you put assigned-rate = 614400000 in DT, I see no reason can find the
+>> same solution on its own.
+>> 
+>
+> The reasoning is following. I don't know why 32..64 range was declared
+> for this clock, and whether it would be safe to extend it and include
+> 128, which is required for 48kHz. But I know, that multiplier=128 is
+> safe and works fine (together divider=5).
 
+You have not answer my remark.
+Mainline does not do everything like the AML SDK does. Saying you are
+copying it because you know it works (in your opinion) is not good
+enough.
+
+I'm telling you that your hack is not necessary and so far, you have not
+demonstrated that it is.
+
+Also the multiplier range in m/n, not m alone.
+
+>
+>>> But I am unsure if hifi_pll is able to handle whole range of
+>>> mulptipliers. The value 128 is taken from Amlogic's branch, and I am
+>>> pretty sure that it works.
+>> 
+>>>
+>>> Second, unfortunately frac parameter currently doesn't work. When frac
+>>> is used enabling of hifi_pll fails in meson_clk_pll_wait_lock(). I see
+>>> it when try to use 44100Hz and multipliers' range is set to 1..255. So,
+>>> support of other rates than 48k requires extra effort.
+>> 
+>> Then your change is even more problematic because it certainly does not
+>> disable frac ... which you say is broken.
+>> 
+>> That parameter should be removed with a proper comment explaining why
+>> you are disabling it. That type a limitation / known issue should be
+>> mentionned in your change.
+>> 
+>
+> Handling of frac should not be removed, it should be fixed to achieve
+> another rates. But that is not the goal of this commit.
+
+You argued that frac was broken and that was partly why you introduced
+this work around. I'm telling you this approach is incorrect.
+
+So either :
+* Remove frac for now, until it is fixed, because it is broken and add
+  comment clearly explaining that quirk.
+* Or fix it now.
+
+Your choice.
+
+>
+>
+>>>
+>>>>>
+>>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+>>>>> ---
+>>>>>  drivers/clk/meson/a1-pll.c | 8 ++++----
+>>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
+>>>>> index 4325e8a6a3ef..00e06d03445b 100644
+>>>>> --- a/drivers/clk/meson/a1-pll.c
+>>>>> +++ b/drivers/clk/meson/a1-pll.c
+>>>>> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
+>>>>>  	},
+>>>>>  };
+>>>>>  
+>>>>> -static const struct pll_mult_range hifi_pll_mult_range = {
+>>>>> -	.min = 32,
+>>>>> -	.max = 64,
+>>>>> +static const struct pll_params_table hifi_pll_params_table[] = {
+>>>>> +	PLL_PARAMS(128, 5),
+>>>>> +	{ },
+>>>>>  };
+>>>>>  
+>>>>>  static const struct reg_sequence hifi_init_regs[] = {
+>>>>> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
+>>>>>  			.shift   = 6,
+>>>>>  			.width   = 1,
+>>>>>  		},
+>>>>> -		.range = &hifi_pll_mult_range,
+>>>>> +		.table = hifi_pll_params_table,
+>>>>>  		.init_regs = hifi_init_regs,
+>>>>>  		.init_count = ARRAY_SIZE(hifi_init_regs),
+>>>>>  	},
+>>>>
+>>>>
+>> 
+>> 
+
+
+-- 
+Jerome
 
