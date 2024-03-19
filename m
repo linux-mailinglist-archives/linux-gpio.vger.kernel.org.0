@@ -1,275 +1,213 @@
-Return-Path: <linux-gpio+bounces-4454-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4455-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 479A387FF1C
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 14:53:32 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EFAEA87FFC4
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 15:40:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A277FB2477B
-	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 13:53:29 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA011C22A27
+	for <lists+linux-gpio@lfdr.de>; Tue, 19 Mar 2024 14:40:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF46C81728;
-	Tue, 19 Mar 2024 13:53:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B151A2628C;
+	Tue, 19 Mar 2024 14:40:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="ZdXJ+IUo"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="giUt/UYE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC4B680BFD;
-	Tue, 19 Mar 2024 13:53:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 475F01CFB6;
+	Tue, 19 Mar 2024 14:40:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710856400; cv=none; b=YnbwmPywisBQPMi0F7R9IPfzTFmeqw833TjG+IFLYiJefq0YBBWEZUp6reGTfs3IbKrIGTnxxOJx+o8I2EM+5AV4MRgQOlE7jiPmtQR/W0/oCy61TY7VnelDiSmO7vI+MnLSSu0SZNi67aV5oqleE2P1h9kByF24g8ruu/PEj24=
+	t=1710859212; cv=none; b=Rk5JaZ9e3lGCTTROnylaB+J2+Yq+zpVNdjNbDbtU/rxOyItQ/UkO/Gv0UciJJOD8RIr/eEMTVKVgQr3cK3gf53wYyfqUv46e1Xh52FW+U3ifisLcNwX5C2rn3UyZZ2twOjCXt5PlzQu9S669fCDoL9oka3bSC/l3cLMH112dYPs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710856400; c=relaxed/simple;
-	bh=OXZgPwWPdTNaxtMnH4myg+ToziRSNnXvhkwXx1ZufmU=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=M/8P5/w41ZhMAOV4Ao35XkNBYUaPLpnh59pm4ubf7gkptaZaCm7JzpL9lZSS4CLwPHxOBpFnC+yw3x+6C7QIXa3/FPeeIE9+WdqZcWA9l9C9h8Umqj6KGN1JpOgPUYWtG2kQdH5OF3HaOp2DqGsqeQ/2nk6EekG8Kzsc2qIztTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=ZdXJ+IUo; arc=none smtp.client-ip=37.18.73.165
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
-	by mx1.sberdevices.ru (Postfix) with ESMTP id 0957D10000A;
-	Tue, 19 Mar 2024 16:53:12 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 0957D10000A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=mail; t=1710856392;
-	bh=cMQFR177UDppiHHa9pB9nbmCdpBrIycSstEw9RoGTQI=;
-	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:From;
-	b=ZdXJ+IUoxafVJmHArgilqIq/xR+cA8woWE5N9r6qzBMaWFunn7syOsKx8qLG8PS9j
-	 vQ83YE4Sbd4e2GyM/LXFVj5CQEzYiLvCcu31GAteRYOud+OnUBzC23Uf/Xqzn91k3G
-	 ST/k5QpvS04ZBnytrGLzHPs3ec/4lGwCGF1I6Z0yPqQCyvYoG1ITUtXLW7gjQFLDOv
-	 oH3k8K5Ak8eAwJJDsOFfN4BFtfd2MH2RBk9JpLmvU0nmCx8BeYg+zHF8roQ5tmlLJ6
-	 CW/G29alyisg1jGq+assolGMSWPgFNCYosGKMcHu2B9G5KWPNSyYdnYJtcU7RobrrC
-	 IKjlAIup7GSgw==
-Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mx1.sberdevices.ru (Postfix) with ESMTPS;
-	Tue, 19 Mar 2024 16:53:11 +0300 (MSK)
-Received: from localhost (100.64.160.123) by p-i-exch-sc-m02.sberdevices.ru
- (172.16.192.103) with Microsoft SMTP Server (version=TLS1_2,
+	s=arc-20240116; t=1710859212; c=relaxed/simple;
+	bh=pyJIFooyiBsskHRUs3QZ9a4TPD6RJdsZtGVeIr+yqh0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=ieW77Ur1kLm3HXXv5v/MUREX7gq996M9XgbTI26aAqDDXyCInitugqQSfZv4gOnXVmEtbIxshWkIgp00jKO1OqXG6pvPsDrlY21H3+w4CdY/R3gWJ+C26hqcHl+UFGgCj18+oWYppepJAuHxb0Jl3DlD2tw+RcZ0twmHsO2laRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=giUt/UYE; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42JCePUN016300;
+	Tue, 19 Mar 2024 14:40:05 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	message-id:date:mime-version:subject:to:cc:references:from
+	:in-reply-to:content-type:content-transfer-encoding; s=
+	qcppdkim1; bh=xqB+lNzHIodLkLTeclAOVQStR8PiYLj4tVxJgCfsqwU=; b=gi
+	Ut/UYE27keQAplo6o08pfzcrPOqrnMonkWDRYCY1iVFJtthDtjtdZcqGkQQr93rB
+	XlBqQyUvDSsmLXlIg4JwcUIe88QsPPrTgj547lMTWo3onzVA2C+R5t0UHyfB4yXd
+	RdF3QDVsr2R/y0H1zG4wDEhgZbdoyReuQlTnE+N32hfAsuYDwpOA09vazfZRD8cM
+	30BEqBnD4mykm4yDunDywCIpYd2V0n/r/WRNbdkIk/EQLzqQQyxsd7q8b/fo04Ve
+	/C9T/MQ8DzLAT+wPSJT/4UhWSreakAthVxCuwbGmg/H2KhBtJ67jLAIANcjxGjXu
+	eVkPAGAlC9StZfFCNVrw==
+Received: from nasanppmta03.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3wy2cjsfux-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 14:40:05 +0000 (GMT)
+Received: from nasanex01c.na.qualcomm.com (nasanex01c.na.qualcomm.com [10.45.79.139])
+	by NASANPPMTA03.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42JEe2uK020825
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 19 Mar 2024 14:40:02 GMT
+Received: from [10.216.21.188] (10.80.80.8) by nasanex01c.na.qualcomm.com
+ (10.45.79.139) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1118.40; Tue, 19 Mar
- 2024 16:53:11 +0300
-Date: Tue, 19 Mar 2024 16:53:11 +0300
-From: Dmitry Rokosov <ddrokosov@salutedevices.com>
-To: Jerome Brunet <jbrunet@baylibre.com>
-CC: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman
-	<khilman@baylibre.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	<linux-amlogic@lists.infradead.org>, <linux-clk@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <alsa-devel@alsa-project.org>,
-	<linux-sound@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
-	<kernel@salutedevices.com>
-Subject: Re: [PATCH 01/25] clk: meson: a1: restrict an amount of 'hifi_pll'
- params
-Message-ID: <20240319135311.xjpgkvgyczq4eymi@CAB-WSD-L081021>
-References: <20240314232201.2102178-1-jan.dakinevich@salutedevices.com>
- <20240314232201.2102178-2-jan.dakinevich@salutedevices.com>
- <1j8r2jj24k.fsf@starbuckisacylon.baylibre.com>
- <cbfd9c66-cca5-49f5-9468-43710c48518e@salutedevices.com>
- <1jedc7hlg4.fsf@starbuckisacylon.baylibre.com>
- <d4cfef9e-3cae-4f1a-90b3-33d5707596f9@salutedevices.com>
- <1jsf0mfwwg.fsf@starbuckisacylon.baylibre.com>
+ 2024 07:39:59 -0700
+Message-ID: <8222e4cf-bc40-98b5-cf75-b0a547a3c4df@quicinc.com>
+Date: Tue, 19 Mar 2024 20:09:55 +0530
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <1jsf0mfwwg.fsf@starbuckisacylon.baylibre.com>
-User-Agent: NeoMutt/20220415
-X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
- p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
-X-KSMG-Rule-ID: 10
-X-KSMG-Message-Action: clean
-X-KSMG-AntiSpam-Lua-Profiles: 184265 [Mar 19 2024]
-X-KSMG-AntiSpam-Version: 6.1.0.4
-X-KSMG-AntiSpam-Envelope-From: ddrokosov@salutedevices.com
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Info: LuaCore: 10 0.3.10 53c821b925e16276b831986eabc71d60ab82ee60, {Tracking_uf_ne_domains}, {Track_E25351}, {Tracking_from_domain_doesnt_match_to}, lore.kernel.org:7.1.1;127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;smtp.sberdevices.ru:5.0.1,7.1.1;100.64.160.123:7.1.2;salutedevices.com:7.1.1, FromAlignment: s, ApMailHostAddress: 100.64.160.123
-X-MS-Exchange-Organization-SCL: -1
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiPhishing: Clean, bases: 2024/03/19 13:26:00
-X-KSMG-LinksScanning: Clean, bases: 2024/03/19 13:26:00
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/19 01:36:00 #24282057
-X-KSMG-AntiVirus-Status: Clean, skipped
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:102.0) Gecko/20100101
+ Thunderbird/102.13.0
+Subject: Re: [PATCH v12 7/9] firmware: qcom: scm: Fix __scm->dev assignement
+Content-Language: en-US
+To: Pavan Kondeti <quic_pkondeti@quicinc.com>
+CC: Bjorn Andersson <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linux-arm-msm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linus.walleij@linaro.org>, <linux-gpio@vger.kernel.org>
+References: <20240227155308.18395-1-quic_mojha@quicinc.com>
+ <20240227155308.18395-8-quic_mojha@quicinc.com>
+ <n2gomlmlzwodpg2v3gzuc62n3plewdqgiwctrv2tawdih26rig@obqd2a2ovqvp>
+ <260371ff-da7a-8406-0511-4019f6b860bf@quicinc.com>
+ <03367100-1ad4-4d83-8200-5879550398be@quicinc.com>
+ <fce3beb8-7d70-672c-e25b-d46810c4d1dd@quicinc.com>
+ <60535d91-3610-4610-ae1a-46b8e3ccd4fa@quicinc.com>
+From: Mukesh Ojha <quic_mojha@quicinc.com>
+In-Reply-To: <60535d91-3610-4610-ae1a-46b8e3ccd4fa@quicinc.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: nasanex01a.na.qualcomm.com (10.52.223.231) To
+ nasanex01c.na.qualcomm.com (10.45.79.139)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: 4h0pPrrwiO2_94Iu8xRYkNaOgGtWOIER
+X-Proofpoint-GUID: 4h0pPrrwiO2_94Iu8xRYkNaOgGtWOIER
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-19_04,2024-03-18_03,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
+ priorityscore=1501 malwarescore=0 bulkscore=0 clxscore=1015
+ impostorscore=0 lowpriorityscore=0 mlxlogscore=999 suspectscore=0
+ mlxscore=0 phishscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.19.0-2403140001 definitions=main-2403190109
 
-On Tue, Mar 19, 2024 at 09:21:27AM +0100, Jerome Brunet wrote:
-> 
-> On Tue 19 Mar 2024 at 01:35, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> 
-> > On 3/18/24 13:17, Jerome Brunet wrote:
-> >> 
-> >> On Sun 17 Mar 2024 at 17:17, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> >> 
-> >>> On 3/15/24 11:58, Jerome Brunet wrote:
-> >>>>
-> >>>> On Fri 15 Mar 2024 at 02:21, Jan Dakinevich <jan.dakinevich@salutedevices.com> wrote:
-> >>>>
-> >>>>> Existing values were insufficient to produce accurate clock for audio
-> >>>>> devices. New values are safe and most suitable to produce 48000Hz sample
-> >>>>> rate.
-> >>>>
-> >>>> The hifi pll is not about 48k only. I see no reason to restrict the PLL
-> >>>> to a single setting.
-> >>>>> You've provided no justification why the PLL driver can't reach the same
-> >>>> setting for 48k. The setting below is just the crude part. the fine
-> >>>> tuning is done done with the frac parameter so I doubt this provides a
-> >>>> more accurate rate.
-> >>>>
-> >>>
-> >>> You are right, it is not about 48k only. However, there are two issues.
-> >>>
-> >>> First, indeed, I could just extend the range of multipliers to 1..255.
-> >> 
-> >> Why 1..255 ? This is not what I'm pointing out
-> >> 
-> >> According to the datasheet - the range is 32 - 64, as currently
-> >> set in the driver.
-> >> 
-> >
-> > Could you point where in the doc the range 32..64 is documented?
-> > Documentation that I have may be not so complete, but I don't see there
-> > any mention about it.
-> >
-> > Anyway, range 32..64 of multipliers is not enough to produce accurate
-> > clock, and a need 128 for 48kHz.
-> 
-> A1 datasheet v0.4 - Section 7.6.3.2
-> 
-> >
-> >> The change you have provided request a multipler of 128/5 = 25,6
-> >> If you put assigned-rate = 614400000 in DT, I see no reason can find the
-> >> same solution on its own.
-> >> 
-> >
-> > The reasoning is following. I don't know why 32..64 range was declared
-> > for this clock, and whether it would be safe to extend it and include
-> > 128, which is required for 48kHz. But I know, that multiplier=128 is
-> > safe and works fine (together divider=5).
-> 
-> You have not answer my remark.
-> Mainline does not do everything like the AML SDK does. Saying you are
-> copying it because you know it works (in your opinion) is not good
-> enough.
-> 
-> I'm telling you that your hack is not necessary and so far, you have not
-> demonstrated that it is.
-> 
-> Also the multiplier range in m/n, not m alone.
-> 
-> >
-> >>> But I am unsure if hifi_pll is able to handle whole range of
-> >>> mulptipliers. The value 128 is taken from Amlogic's branch, and I am
-> >>> pretty sure that it works.
-> >> 
-> >>>
-> >>> Second, unfortunately frac parameter currently doesn't work. When frac
-> >>> is used enabling of hifi_pll fails in meson_clk_pll_wait_lock(). I see
-> >>> it when try to use 44100Hz and multipliers' range is set to 1..255. So,
-> >>> support of other rates than 48k requires extra effort.
-> >> 
-> >> Then your change is even more problematic because it certainly does not
-> >> disable frac ... which you say is broken.
-> >> 
-> >> That parameter should be removed with a proper comment explaining why
-> >> you are disabling it. That type a limitation / known issue should be
-> >> mentionned in your change.
-> >> 
-> >
-> > Handling of frac should not be removed, it should be fixed to achieve
-> > another rates. But that is not the goal of this commit.
-> 
-> You argued that frac was broken and that was partly why you introduced
-> this work around. I'm telling you this approach is incorrect.
-> 
-> So either :
-> * Remove frac for now, until it is fixed, because it is broken and add
->   comment clearly explaining that quirk.
-> * Or fix it now.
-> 
-> Your choice.
-> 
-> >
-> >
-> >>>
-> >>>>>
-> >>>>> Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
-> >>>>> ---
-> >>>>>  drivers/clk/meson/a1-pll.c | 8 ++++----
-> >>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
-> >>>>>
-> >>>>> diff --git a/drivers/clk/meson/a1-pll.c b/drivers/clk/meson/a1-pll.c
-> >>>>> index 4325e8a6a3ef..00e06d03445b 100644
-> >>>>> --- a/drivers/clk/meson/a1-pll.c
-> >>>>> +++ b/drivers/clk/meson/a1-pll.c
-> >>>>> @@ -74,9 +74,9 @@ static struct clk_regmap fixed_pll = {
-> >>>>>  	},
-> >>>>>  };
-> >>>>>  
-> >>>>> -static const struct pll_mult_range hifi_pll_mult_range = {
-> >>>>> -	.min = 32,
-> >>>>> -	.max = 64,
-> >>>>> +static const struct pll_params_table hifi_pll_params_table[] = {
-> >>>>> +	PLL_PARAMS(128, 5),
-> >>>>> +	{ },
-> >>>>>  };
-> >>>>>  
-> >>>>>  static const struct reg_sequence hifi_init_regs[] = {
-> >>>>> @@ -124,7 +124,7 @@ static struct clk_regmap hifi_pll = {
-> >>>>>  			.shift   = 6,
-> >>>>>  			.width   = 1,
-> >>>>>  		},
-> >>>>> -		.range = &hifi_pll_mult_range,
-> >>>>> +		.table = hifi_pll_params_table,
-> >>>>>  		.init_regs = hifi_init_regs,
-> >>>>>  		.init_count = ARRAY_SIZE(hifi_init_regs),
-> >>>>>  	},
-> >>>>
-> >>>>
-> >> 
-> >> 
-> 
-> 
-> -- 
-> Jerome
 
-BTW, here Amlogic already mentioned all possible output audio rates for
-which hifipll can be used:
 
-https://lore.kernel.org/all/1569411888-98116-1-git-send-email-jian.hu@amlogic.com/T/#md7083b4f851ab97dfce43f8f6a3b266eb49ed329
+On 3/19/2024 3:52 PM, Pavan Kondeti wrote:
+> On Tue, Mar 19, 2024 at 03:38:57PM +0530, Mukesh Ojha wrote:
+>>
+>>
+>> On 3/19/2024 6:47 AM, Pavan Kondeti wrote:
+>>> On Mon, Mar 18, 2024 at 06:38:20PM +0530, Mukesh Ojha wrote:
+>>>>
+>>>>
+>>>> On 3/3/2024 12:55 AM, Bjorn Andersson wrote:
+>>>>> On Tue, Feb 27, 2024 at 09:23:06PM +0530, Mukesh Ojha wrote:
+>>>>>> qcom_scm_is_available() gives wrong indication if __scm
+>>>>>> is initialized but __scm->dev is not.
+>>>>>>
+>>>>>> Fix this appropriately by making sure if __scm is
+>>>>>> initialized and then it is associated with its
+>>>>>> device.
+>>>>>>
+>>>>>
+>>>>> This seems like a bug fix, and should as such have a Fixes: tag and
+>>>>> probably Cc: stable@vger.kernel.org
+>>>>>
+>>>>>> Signed-off-by: Mukesh Ojha <quic_mojha@quicinc.com>
+>>>>>> ---
+>>>>>>     drivers/firmware/qcom/qcom_scm.c | 2 +-
+>>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>>
+>>>>>> diff --git a/drivers/firmware/qcom/qcom_scm.c b/drivers/firmware/qcom/qcom_scm.c
+>>>>>> index 6c252cddd44e..6f14254c0c10 100644
+>>>>>> --- a/drivers/firmware/qcom/qcom_scm.c
+>>>>>> +++ b/drivers/firmware/qcom/qcom_scm.c
+>>>>>> @@ -1859,6 +1859,7 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>>>>>>     	if (!scm)
+>>>>>>     		return -ENOMEM;
+>>>>>> +	scm->dev = &pdev->dev;
+>>>>>>     	ret = qcom_scm_find_dload_address(&pdev->dev, &scm->dload_mode_addr);
+>>>>>>     	if (ret < 0)
+>>>>>>     		return ret;
+>>>>>> @@ -1895,7 +1896,6 @@ static int qcom_scm_probe(struct platform_device *pdev)
+>>>>>>     		return ret;
+>>>>>>     	__scm = scm;
+>>>>>> -	__scm->dev = &pdev->dev;
+>>>>>
+>>>>> Is it sufficient to just move the line up, or do we need a barrier of
+>>>>> some sort here?
+>>>>
+>>>> Would be good to use, smp_mb() before the assignment
+>>>>        __scm = scm
+>>>> along with moving below line
+>>>> __scm->dev = &pdev->dev
+>>>>
+>>>
+>>> Full memory barrier is not needed here. store variant is sufficient.
+>>> WRITE_ONCE() + smp_store_release() will fit here no?
+>>
+>> Thanks for the comment, i again have a look at it and agree we don't
+>> need a full barrier here.
+>>
+>> And we can do either of the below two ways.
+>>
+>> -Mukesh
+>>
+>>
+>> // 1st way
+>>
+>> diff --git a/drivers/firmware/qcom/qcom_scm.c
+>> b/drivers/firmware/qcom/qcom_scm.c
+>> index 49ddbcab0680..b638fb407fc6 100644
+>> --- a/drivers/firmware/qcom/qcom_scm.c
+>> +++ b/drivers/firmware/qcom/qcom_scm.c
+>> @@ -1741,7 +1741,12 @@ static int qcom_scm_qseecom_init(struct qcom_scm
+>> *scm)
+>>    */
+>>   bool qcom_scm_is_available(void)
+>>   {
+>> -       return !!__scm;
+>> +       bool avail;
+>>    */
+>>   bool qcom_scm_is_available(void)
+>>   {
+>> -       return !!__scm;
+>> +       bool avail;
+>> +
+>> +       avail = !!READ_ONCE(__scm);
+>> +       smp_rmb();
+>> +
+>> +       return avail;
+>>   }
+>>   EXPORT_SYMBOL_GPL(qcom_scm_is_available);
+>>
+> 
+> Your original problem statement: qcom_scm_is_available() gives wrong indication
+> if __scm is initialized but __scm->dev is not.
+> 
+> This does not require read side barrier as there is an address
+> dependency. If the writer does it *correctly*, the reader would always
+> observe __scm->dev != NULL when __scm != NULL without any barrier.
 
-```
-The audio working frequency are 44.1khz, 48khz and 192khz.
+It looks like write barrier pairs with an address-dependency barrier, a
+control dependency, an acquire barrier, a release barrier, a read 
+barrier, or a general barrier.
 
-614.4M can meet the three frequency.
+So, smp_rmb() is redundant here.
 
-after the hifi pll, there are two dividers in Audio clock.
+Also, for correction, we may not need smp_load_acquire() in the 1st way
+and just using READ_ONCE() is enough.
 
-614.4M/3200 = 192khz
-
-614.4M/12800 = 48khz
-
-614,4M/13932 = 44.0999khz
-```
-
--- 
-Thank you,
-Dmitry
+-Mukesh
+> 
+> Thanks,
+> Pavan
 
