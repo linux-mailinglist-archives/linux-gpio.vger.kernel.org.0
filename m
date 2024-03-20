@@ -1,128 +1,188 @@
-Return-Path: <linux-gpio+bounces-4490-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4491-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 829448812AD
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 14:50:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9DC99881419
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 16:06:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B3A571C2135A
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 13:50:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 003E11C22F63
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 15:06:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D36D442065;
-	Wed, 20 Mar 2024 13:50:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b="bYuu7CuO"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C754D110;
+	Wed, 20 Mar 2024 15:05:54 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0.riseup.net (mx0.riseup.net [198.252.153.6])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D243E43146
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 13:50:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.252.153.6
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3955342044;
+	Wed, 20 Mar 2024 15:05:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710942612; cv=none; b=rlJI42GlHkJTgTCpqGYSrdy26m3dfgbU2IGF+GCKmZoUTT41+dyfZvMyvt+Cf26ErpTiilOyusNT8AfBVy2T41AQpkRrzUO//lmbrjUC8C0Xs3JPge5kob2I2vovRQG7vXAjhUm6o0x/6zYqHKOVaxEtT+4y0qhwPwVZYO6P5RU=
+	t=1710947154; cv=none; b=Yw/LfFErt/EGrZgSwhK0U0SrNFgegcaMNQtLm8HppsfPZWO2Pb00IVk+uOz5EtzSKk2HmWIQ+S4ecvd+Yiwfuv96SFoYkNEWQexh0JJeigllFjoyADUu7YrKWo3Day4m6aivCXas9V51SwSEVlhjHOIR8kQ5UpFr3vaeLPtckBA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710942612; c=relaxed/simple;
-	bh=9AaU+PAkCvChf8zz0KygWhi6E6TCnladhtdFhkQ38TM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Bpm7vdPKURh0ZBvO3Gv+6r4zFjxeLu2aKy57GgAgDOEa3nsMT9zDYjfD0RKoJE6q8V2LpH64TY22adOOVC2mTIlO3Oq6l0eNU0OB7HjznBAXt+MR/D11b1gK2PBdglAHpmE8al2T4zLmZR0BOzH/9kzA5XyKluXHZlhyONk9ZfY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net; spf=pass smtp.mailfrom=riseup.net; dkim=pass (1024-bit key) header.d=riseup.net header.i=@riseup.net header.b=bYuu7CuO; arc=none smtp.client-ip=198.252.153.6
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=riseup.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=riseup.net
-Received: from fews01-sea.riseup.net (fews01-sea-pn.riseup.net [10.0.1.109])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx0.riseup.net (Postfix) with ESMTPS id 4V092V1PNQz9w0V
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 13:50:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=riseup.net; s=squak;
-	t=1710942610; bh=9AaU+PAkCvChf8zz0KygWhi6E6TCnladhtdFhkQ38TM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bYuu7CuOXPVMxMbqh6QTYwEVH4k6aQaepFFa+tnB7arR/dyahIgYsIouigWgLJuTe
-	 R0Wqxx2Zr2o3LCrQLRxHXFSElrqskua3M0cPVpWtUqP+eagdMMStW5Yn/L2o/lnLKt
-	 EBPDQ3eo5hIZXHi4mR6k/2tn5JW02/1nqtQUfMmM=
-X-Riseup-User-ID: 9083D9FB3CDF20700D954ABDE17C25E47E5F1FA9100C63DFBD935E585CB3E389
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-	 by fews01-sea.riseup.net (Postfix) with ESMTPSA id 4V092G6DCQzJrXK;
-	Wed, 20 Mar 2024 13:49:58 +0000 (UTC)
-From: orbea@riseup.net
-To: linux-gpio@vger.kernel.org
-Cc: orbea <orbea@riseup.net>
-Subject: [PATCH] bindings: cxx: link using the libtool archives
-Date: Wed, 20 Mar 2024 06:49:57 -0700
-Message-ID: <20240320134957.7928-1-orbea@riseup.net>
+	s=arc-20240116; t=1710947154; c=relaxed/simple;
+	bh=d/cSt3fSGUqWXRJWnG+U0v3qY/qL1KyLp83SUbSo5X0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=RfZ7hZmBxdSGWBXq5rhxyyT+ihpREXkwn69dWNxYhKOk6ampAJ+36ChQ9MsJRP9AUk5TXAmbM1pPZXVUNykOHqOCf0g0s/luLU5kFBgr89bEO8QOb4oskvMjtzubsvwBvLAV7JJw1n2QarjPRRmty7XHe0a8zV1qS/Wy5h2fPis=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="23333147"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="23333147"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 08:05:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11019"; a="914670597"
+X-IronPort-AV: E=Sophos;i="6.07,140,1708416000"; 
+   d="scan'208";a="914670597"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Mar 2024 08:05:49 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andy.shevchenko@gmail.com>)
+	id 1rmxVj-0000000EbEb-0Cg7;
+	Wed, 20 Mar 2024 17:05:47 +0200
+Date: Wed, 20 Mar 2024 17:05:46 +0200
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Ferry Toth <ftoth@exalondelft.nl>
+Subject: Re: [PATCH v1 2/3] gpiolib: Fix debug messaging in
+ gpiod_find_and_request()
+Message-ID: <Zfr7Sut9G0x14lDN@smile.fi.intel.com>
+References: <20231019173457.2445119-1-andriy.shevchenko@linux.intel.com>
+ <20231019173457.2445119-3-andriy.shevchenko@linux.intel.com>
+ <ZTGBqEUzgGCcZP1B@google.com>
+ <ZVOSd62yCz4lFIP1@smile.fi.intel.com>
+ <ZVPkIOk6gvnwkp9F@google.com>
+ <ZVQg9hTQwGtNwIhv@surfacebook.localdomain>
+ <ZVTcQnH_BEEFJ2Ut@google.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ZVTcQnH_BEEFJ2Ut@google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: orbea <orbea@riseup.net>
+On Wed, Nov 15, 2023 at 02:57:06PM +0000, Dmitry Torokhov wrote:
+> On Wed, Nov 15, 2023 at 03:37:58AM +0200, andy.shevchenko@gmail.com wrote:
+> > Tue, Nov 14, 2023 at 09:18:24PM +0000, Dmitry Torokhov kirjoitti:
+> > > On Tue, Nov 14, 2023 at 05:29:59PM +0200, Andy Shevchenko wrote:
+> > > > On Thu, Oct 19, 2023 at 12:21:12PM -0700, Dmitry Torokhov wrote:
+> > > > > On Thu, Oct 19, 2023 at 08:34:56PM +0300, Andy Shevchenko wrote:
 
-When linking with internal dependencies that were built with libtool the
-most reliable method is to use the libtool archive (.la) files.
+Sorry for the late reply. Took me a bit to go through other things first.
 
-When building with slibtool it fails when it doesn't find the -lgpiod
-linker flag, but if libgpiod is already installed to the system it will
-be built using the system version instead of the newly built libraries.
+...
 
-Gentoo issue: https://bugs.gentoo.org/913899
+> > > > > > When consolidating GPIO lookups in ACPI code, the debug messaging
+> > > > > > had been broken and hence lost a bit of sense. Restore debug
+> > > > > > messaging in gpiod_find_and_request() when configuring the GPIO
+> > > > > > line via gpiod_configure_flags().
+> > > > > 
+> > > > > Could you give an example of the before/after messages to show exavtly
+> > > > > what is being improved?
+> > > > 
+> > > > Before your patch:
+> > > > 
+> > > > [    5.266823] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   14.182994] gpio-40 (?): no flags found for gpios
+> > > > 
+> > > > After your patch:
+> > > > 
+> > > > [    5.085048] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   13.401402] gpio-40 (?): no flags found for (null)
+> > > > 
+> > > > After this patch:
+> > > > 
+> > > > [    3.871185] gpio-96 (ACPI:OpRegion): no flags found for ACPI:OpRegion
+> > > > [   12.491998] gpio-40 (?): no flags found for gpios
+> > > > 
+> > > > ...
+> > > > 
+> > > > Looking at this it's definitely a fix.
+> > > 
+> > > If this ("(null)" vs static "gpios" string) is important, can we reduce
+> > > the patch to:
+> > > 
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index 76e0c38026c3..b868c016a9be 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -4151,7 +4151,7 @@ int gpiod_configure_flags(struct gpio_desc *desc, const char *con_id,
+> > >  
+> > >  	/* No particular flag request, return here... */
+> > >  	if (!(dflags & GPIOD_FLAGS_BIT_DIR_SET)) {
+> > > -		gpiod_dbg(desc, "no flags found for %s\n", con_id);
+> > > +		gpiod_dbg(desc, "no flags found for %s\n", con_id ?: "gpios");
+> > >  		return 0;
+> > >  	}
+> > >  
+> > > 
+> > > instead of plumbing the names through?
+> > 
+> > Definitely no, because how can you guess that this is "gpios" and not "gpio"?
+> > 
+> > > Although this (and the original fix patch) are losing information, in
+> > > the sense that "(null)" explicitly communicates that caller used
+> > > default/NULL conn_id, and not something like "gpios-gpios".
+> > 
+> > This is not true, there was no such information before your patch and NULL
+> > pointer printing is simply a bad style programming. We already had the cases
+> > when users were scary by "NULL device *" and other similar stuff when it's
+> > practically no problems in the flow. This has to be fixed anyway.
+> > 
+> > And what's the practical meaning of gpios-gpios / gpio-gpios / gpios-gpio /
+> > gpio-gpio? I believe they are so weird that thinking about them would be lowest
+> > priority over the issues with the messaging there.
+> 
+> Well, I think we should try to communicate better what it is that we are
+> printing. Consider your example:
+> 
+> 	"gpio-40 (?): no flags found for gpios"
+> 
+> what gpios mean here? You need to go into the code to figure out that it
+> is connection id (whatever it is for a person who is not ultimately
+> familiar with gpio subsystem) and not "gpios" in a generic sense. Plus
+> with your patch you need to ascend a couple of layers up to figure out
+> that it is connection id and not something else. With "(null)" we at
+> least did not obfuscate things just so they are visually pleasing to a
+> random user.
+> 
+> How about we change a message a bit:
+> 
+> 	gpiod_dbg(desc, "no flags found for %s gpios\n",
+> 		  con_id ?: "default");
+> 
+> We can argue if "default" should be "unnamed" or "unspecified" or
+> something else.
 
-Signed-off-by: orbea <orbea@riseup.net>
----
- bindings/cxx/Makefile.am          | 2 +-
- bindings/cxx/examples/Makefile.am | 2 +-
- bindings/cxx/tests/Makefile.am    | 6 +++---
- 3 files changed, 5 insertions(+), 5 deletions(-)
+We can use something with a space that would definitely may not be a connection
+ID (in the DT/ACPI/swnode[?]).
 
-diff --git a/bindings/cxx/Makefile.am b/bindings/cxx/Makefile.am
-index 1eafaa2..e2a89cf 100644
---- a/bindings/cxx/Makefile.am
-+++ b/bindings/cxx/Makefile.am
-@@ -24,8 +24,8 @@ libgpiodcxx_la_CXXFLAGS = -Wall -Wextra -g -std=gnu++17
- libgpiodcxx_la_CXXFLAGS += -fvisibility=hidden -I$(top_srcdir)/include/
- libgpiodcxx_la_CXXFLAGS += $(PROFILING_CFLAGS)
- libgpiodcxx_la_LDFLAGS = -version-info $(subst .,:,$(ABI_CXX_VERSION))
--libgpiodcxx_la_LDFLAGS += -lgpiod -L$(top_builddir)/lib
- libgpiodcxx_la_LDFLAGS += $(PROFILING_LDFLAGS)
-+libgpiodcxx_la_LIBADD = $(top_builddir)/lib/libgpiod.la
- 
- include_HEADERS = gpiod.hpp
- 
-diff --git a/bindings/cxx/examples/Makefile.am b/bindings/cxx/examples/Makefile.am
-index 64ced20..eca4d64 100644
---- a/bindings/cxx/examples/Makefile.am
-+++ b/bindings/cxx/examples/Makefile.am
-@@ -3,7 +3,7 @@
- 
- AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
- AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17
--AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
-+LDADD = $(top_builddir)/bindings/cxx/libgpiodcxx.la
- 
- noinst_PROGRAMS = \
- 	async_watch_line_value \
-diff --git a/bindings/cxx/tests/Makefile.am b/bindings/cxx/tests/Makefile.am
-index 02b5b6d..4d40d33 100644
---- a/bindings/cxx/tests/Makefile.am
-+++ b/bindings/cxx/tests/Makefile.am
-@@ -4,9 +4,9 @@
- AM_CXXFLAGS = -I$(top_srcdir)/bindings/cxx/ -I$(top_srcdir)/include
- AM_CXXFLAGS += -I$(top_srcdir)/tests/gpiosim/
- AM_CXXFLAGS += -Wall -Wextra -g -std=gnu++17 $(CATCH2_CFLAGS)
--AM_LDFLAGS = -lgpiodcxx -L$(top_builddir)/bindings/cxx/
--AM_LDFLAGS += -lgpiosim -L$(top_builddir)/tests/gpiosim/
--AM_LDFLAGS += -pthread
-+AM_LDFLAGS = -pthread
-+LDADD = $(top_builddir)/bindings/cxx/libgpiodcxx.la
-+LDADD += $(top_builddir)/tests/gpiosim/libgiosim.la
- 
- noinst_PROGRAMS = gpiod-cxx-test
- 
+Let me figure out, but yes, can be a workaround as a quickfix.
+
+> And finally what would help most is having a consumer device for which
+> we are carrying out the operation. You can figure it out from the
+> sequence of debug messages, but having it right here would be better.
+
+Maybe, but it's out of scope of this fix.
+
 -- 
-2.43.2
+With Best Regards,
+Andy Shevchenko
+
 
 
