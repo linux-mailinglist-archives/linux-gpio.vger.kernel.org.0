@@ -1,129 +1,105 @@
-Return-Path: <linux-gpio+bounces-4459-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4460-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3CD29880D30
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 09:37:45 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BEFAC880E38
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:04:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9371DB21DD3
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 08:37:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD0211C20DD0
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 09:04:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707DD374C3;
-	Wed, 20 Mar 2024 08:37:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3927338394;
+	Wed, 20 Mar 2024 09:04:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YZcI3zZ6"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="obfEUUOe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D24B738F94;
-	Wed, 20 Mar 2024 08:37:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81B13AC10
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 09:04:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710923849; cv=none; b=WusI+gZVUcr7b+W1MELGUxVnFVnRgYRzp+EZU38F37LiEmDBPCpBNC/3uIKxrdBgnwnOF4BJlhhRW2ZoHnyidT2j3cNBOmX2wm0MjyONSKidL+/JwRRHtuVayklN6L9pFH8dqMOvFydl6t1Kj+iSogioHk8JM+ETz4xkK38Ud+8=
+	t=1710925459; cv=none; b=V/RHaqzfejmcpNAQqN1wW81OV7u1wv5OwY/Obx7oS0fuKRDbe4r5DUVbut4Ibv1tHneOUCi5TinebDji934+BYyduyho3L9W4Hv+VY1sTqkjOnkoKsVzMX+JYs4Qn+x+k4X9RxlZB2euK2Jr/kj7KJD6mZq10+Uo6jX9Jz55VVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710923849; c=relaxed/simple;
-	bh=e7sm5KHKe7u07Hsum6EAU2IzxwlcrcHFBumoupR3X0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uxuYaJdW8uXRk4Spt+/0QGqZmodE5mBprctzoOqs7tzXP3uZW/x+Q1vhTQGOs7z8b8kgiAHZqOazg9aqIWhtzSpGFQNaj575B9+Wm/sPtJrhD0hy9VuH6LxaU3tWowxOo3bBpwfRTV25kcpFhnDjhuppG+q9Y2cKGQjZvhobZF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YZcI3zZ6; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 45FB44000B;
-	Wed, 20 Mar 2024 08:37:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1710923843;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=STDUP9Qpyn6byZT3Ex4nieAzKGvpxzwoBCLFYRcWYac=;
-	b=YZcI3zZ6pCAGbOyaL4vujc3a8ofF3MTLoqFnqYp2nnh6+aION1xaleoyRffG047ewxT09f
-	sAbNU86SW5htuCuTQnymVuuwp/9TS+uJ854aCbULiTNRZLut0QO6yurLmTxiWbboBE3Vzm
-	idoVKgot7+G7goramB7nNFKAjUuPNJ3KWJB3N0XiT3x8T/NUECF7n64SH3OfaKGlZBGilc
-	Rtwp2GMx7wArlXzCFnyM+RVp2pEedhtJy6oDAuH60kBFJK9byFbZNVdqce+2o4QoBChdg2
-	WTV5ompOrojR4xHgMsWPjDHilcSja1wX1gZ5i3z5sqYkp3un611thZiP4rQbCg==
-Message-ID: <feb63292-8739-41b2-9503-c83a6fd930fd@bootlin.com>
-Date: Wed, 20 Mar 2024 09:37:21 +0100
+	s=arc-20240116; t=1710925459; c=relaxed/simple;
+	bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=cdQpvWpeT/iyVNpqHrQ4CDasrsa5xo66tQbSqDBFX4CSo3wO19YTR8ttD0Zq7aduwTHCx2g03eOqDd3SGFCKSxueNJfWUzOdgUP+Q4EmMjvpjwwPlL0AitfwfaN0wWQRT2hlwen+vvvgcyyO1WeS3xuhFhwP01vE1sHDI/GKVWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=obfEUUOe; arc=none smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d476d7972aso96595041fa.1
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 02:04:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1710925455; x=1711530255; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
+        b=obfEUUOePojeab/con7HpYquV1rygi2Q1CJxSUF7/q9CGK7YfnektJ9uoBc/CHq2mX
+         o5SP6568h9LQnbJTbfW8YyJ/MOdQWkV7nRSPYMOOXbmoD1XOVm5LSzv48+L1/seswMAU
+         UHRhUFGB3aBLEJ5WYnkJHtlg+Azp7FuOsdOLFtM+jH6Y0XemLY+M0VFdsvFCGtWPIN7c
+         4QGjZFtolZNCvofmiMIpYyzNsAFHiSr2Wr6WTpBg1wk7MZsoWIl0rkNkgUfaEdOhF6I8
+         V/KhKPu0Y71qm7w7dXBezvihtclAi5TFHj0HRFImaF5/fjeMTwXsIwn8B0fJQjr+PCqg
+         zM1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710925455; x=1711530255;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
+        b=kddP0+mFH7xsFHl1fmkXHlBws7vogwrt0r4MTM4A0tHS9LtJkv0Dv6nrqONJGM3md2
+         nNRgWPMvPGMDTUOSgaUehc+e3dVyA3+RgT5uLITVIQtZe+1yJu9H7vFlObjaxwmId9Lb
+         um6MNEFw+DVchmuzmj+CkuEQBH4dw8b4H73lJ3SSvZ4F5l+owWdA73yT3ted8y5cuwh5
+         XyYFJB3uulpEsBJ2L2UYdzIwdjPx/TfLwx4miV+8n5tuQN8sMvaSUycGoY7BkL6fv0+4
+         55BlkxLHvA3Sc50ZXezv3c5cCf0+rb1nTBBpGQ1DRyIaMJrEQnAVyBucra75UzY56uA7
+         lU5Q==
+X-Gm-Message-State: AOJu0YyR7tCxRs9LLMp3/KH0HMnJN//rWhzYpRWN16W5ROCnCTkdhxz8
+	lXV6XYnYGbW1xdc619k2KjBW+NnUmNGaWj36gHMm3SmlUgT4oyWpvUdDtq1y2lFVOeaj0U/hlE3
+	VQkdSLAKQ0YvBaYELBrXw7ha9vU1i/PDi1w8fc5+OrAS9IvzZ
+X-Google-Smtp-Source: AGHT+IFkS2FFIE/z7ZHDwBFNpDrqu8wxVjX6iC74+DTWn1lNJ4BJyQXN1jtQVEfvk4pMg6KFD6noLV/DF2d0UlLRRNA=
+X-Received: by 2002:a2e:b0fc:0:b0:2d4:68ef:c711 with SMTP id
+ h28-20020a2eb0fc000000b002d468efc711mr3431473ljl.25.1710925454800; Wed, 20
+ Mar 2024 02:04:14 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move suspend()/resume()
- callbacks to noirq
-Content-Language: en-US
-To: Dhruva Gole <d-gole@ti.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
- Bartosz Golaszewski <brgl@bgdev.pl>, Andy Shevchenko <andy@kernel.org>,
- Tony Lindgren <tony@atomide.com>, Haojian Zhuang
- <haojian.zhuang@linaro.org>, Vignesh R <vigneshr@ti.com>,
- Aaro Koskinen <aaro.koskinen@iki.fi>,
- Janusz Krzysztofik <jmkrzyszt@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
- Vinod Koul <vkoul@kernel.org>, Kishon Vijay Abraham I <kishon@kernel.org>,
- Philipp Zabel <p.zabel@pengutronix.de>,
- Lorenzo Pieralisi <lpieralisi@kernel.org>,
- =?UTF-8?Q?Krzysztof_Wilczy=C5=84ski?= <kw@linux.com>,
- Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
- linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
- theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com, u-kumar1@ti.com,
- Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
- <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
- <20240320074431.6yzao3jlyaxuii7c@dhruva>
-From: Thomas Richard <thomas.richard@bootlin.com>
-In-Reply-To: <20240320074431.6yzao3jlyaxuii7c@dhruva>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-GND-Sasl: thomas.richard@bootlin.com
+References: <20240319110119.36cfd704@Akita>
+In-Reply-To: <20240319110119.36cfd704@Akita>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 20 Mar 2024 10:04:03 +0100
+Message-ID: <CAMRc=MeGWPNFKK1iRwBuETfgQnQzKEPDb96O_uEKouO8MiN0cQ@mail.gmail.com>
+Subject: Re: [libgpiod] [PATCH] bindings: cxx: link using the libtool archives
+To: orbea <orbea@riseup.net>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 3/20/24 08:44, Dhruva Gole wrote:
+On Tue, Mar 19, 2024 at 7:04=E2=80=AFPM orbea <orbea@riseup.net> wrote:
+>
 > Hi,
-> 
-> On Mar 04, 2024 at 16:35:45 +0100, Thomas Richard wrote:
->> The goal is to extend the active period of pinctrl.
->> Some devices may need active pinctrl after suspend() and/or before
->> resume().
->> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
->> have active pinctrl until suspend_noirq() (included), and from
->> resume_noirq() (included).
->>
->> The deprecated API has been removed to use the new one (dev_pm_ops struct).
->>
->> No need to check the pointer returned by dev_get_drvdata(), as
->> platform_set_drvdata() is called during the probe.
->>
->> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
->> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
->> ---
-> 
-> I was planning to do this but didn't see particular benefit to it. Do
-> you see the benefit on your specific device? Can you help me understand
-> how? Not against the patch, just curious.
+>
+> When building libgpiod with slibtool instead of GNU libtool it fails
+> when it doesn't find -lgpiod. I attached a patch that fixes the issue,
+> is it possible this can be applied to the git repo?
+>
+> This was reported for Gentoo: https://bugs.gentoo.org/913899
+>
+> Thanks!
 
-Hello Dhruva,
+Hi!
 
-We need this patch to support suspend to ram for the PCIe on J7200.
-In root complex mode, a gpio is used to reset endpoints.
-This gpio shall be managed during suspend_noirq and resume_noirq stages.
-On J7200 this gpio is on a gpio expander.
-So we need this patch to restore pinctrl to be able to do i2c accesses
-in noirq stages.
+Thanks for the patch! Could you please resend it using `git
+send-email` so that it appears as inline text on the list and makes
+reviewing easier? Also: please use your real name in the commit
+message and the Signed-off-by: tag.
 
-Best Regards,
-
--- 
-Thomas Richard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
+Thanks,
+Bartosz
 
