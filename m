@@ -1,105 +1,789 @@
-Return-Path: <linux-gpio+bounces-4460-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4461-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BEFAC880E38
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:04:24 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6E06880F1A
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:53:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id BD0211C20DD0
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 09:04:23 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2CAF11F2148B
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 09:53:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3927338394;
-	Wed, 20 Mar 2024 09:04:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEBB53BBCF;
+	Wed, 20 Mar 2024 09:53:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="obfEUUOe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lCWX9BDb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D81B13AC10
-	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 09:04:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62D563BB4B
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 09:53:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710925459; cv=none; b=V/RHaqzfejmcpNAQqN1wW81OV7u1wv5OwY/Obx7oS0fuKRDbe4r5DUVbut4Ibv1tHneOUCi5TinebDji934+BYyduyho3L9W4Hv+VY1sTqkjOnkoKsVzMX+JYs4Qn+x+k4X9RxlZB2euK2Jr/kj7KJD6mZq10+Uo6jX9Jz55VVs=
+	t=1710928395; cv=none; b=G51Xg6Ryg3O9Cvh5/uWSikjunWPiVeievk3nFNpCBlO9BP1vXaVCcA5c4VlAqhK0ehlG6DTewfk+Ko5k7kt8t8BAra4HOR51Ho17+JW2OeeWPQ/mA3hY5SpguqB5s/ttqaPwiO13JCoBnoih++shXHHItqCfHymDm2hPUI+StM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710925459; c=relaxed/simple;
-	bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=cdQpvWpeT/iyVNpqHrQ4CDasrsa5xo66tQbSqDBFX4CSo3wO19YTR8ttD0Zq7aduwTHCx2g03eOqDd3SGFCKSxueNJfWUzOdgUP+Q4EmMjvpjwwPlL0AitfwfaN0wWQRT2hlwen+vvvgcyyO1WeS3xuhFhwP01vE1sHDI/GKVWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=obfEUUOe; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d476d7972aso96595041fa.1
-        for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 02:04:16 -0700 (PDT)
+	s=arc-20240116; t=1710928395; c=relaxed/simple;
+	bh=Xbz7RZs2qoxsSOVgBMXtuw7wrgJQ6iyANAo/cpTdYS8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=nXWgDO+KU4yjovihw++ycc0qGpPZSbtOnY6hA0HJhuialZHxqNa0AwUq1WRZEV3a5wFXBJ3fdb4mvXHwth8z5gya9uqYgP30UFS12wYoJRR0YSAFqSEjsTGgkJHgkThX0Djp1Temj8tZ/M6WYzFPTVXgZBA2fBKUJsGdFMPWoyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=lCWX9BDb; arc=none smtp.client-ip=209.85.128.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-4146ecc4049so653905e9.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 02:53:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1710925455; x=1711530255; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
-        b=obfEUUOePojeab/con7HpYquV1rygi2Q1CJxSUF7/q9CGK7YfnektJ9uoBc/CHq2mX
-         o5SP6568h9LQnbJTbfW8YyJ/MOdQWkV7nRSPYMOOXbmoD1XOVm5LSzv48+L1/seswMAU
-         UHRhUFGB3aBLEJ5WYnkJHtlg+Azp7FuOsdOLFtM+jH6Y0XemLY+M0VFdsvFCGtWPIN7c
-         4QGjZFtolZNCvofmiMIpYyzNsAFHiSr2Wr6WTpBg1wk7MZsoWIl0rkNkgUfaEdOhF6I8
-         V/KhKPu0Y71qm7w7dXBezvihtclAi5TFHj0HRFImaF5/fjeMTwXsIwn8B0fJQjr+PCqg
-         zM1g==
+        d=linaro.org; s=google; t=1710928392; x=1711533192; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=IWqSfDCJHms7lqXfIlaTfW+dy8ZdX9KOyEEBvt9xH0E=;
+        b=lCWX9BDb9neM7H2OaosLnjqakKby+1ZDqtXGDTCkm3y+6gWiNyPpY1fSmTEvpXC2fR
+         hU9ocgOr2Evpbe51spw7oEbl2Rv3fyII4VFtIOyPGtdX45K1zPD35ljxRNLJLxo1A3R/
+         AZmPhwvUDQ0YiOzmk6bl+CdhRgbNACgN0aNzADaTMd+TacQpbGD9gNUohNfbdU+ibuqR
+         D9ycalPKJe76sJ+mpZoXI2USqZGBIQyXL34lgAFu1ERbkyTr0ivFkGLIhDWSnOn4f2u5
+         i9euurB22YaDolhYCMYevcUgd7rXS6AADbCu7YEKiegOUCfaTpTr1BVbRDOLREF3ObiN
+         hOvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710925455; x=1711530255;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BTkTcVfqWVWbzXxMtTPuxzFtl9EAto5vfkPgrX6+cTg=;
-        b=kddP0+mFH7xsFHl1fmkXHlBws7vogwrt0r4MTM4A0tHS9LtJkv0Dv6nrqONJGM3md2
-         nNRgWPMvPGMDTUOSgaUehc+e3dVyA3+RgT5uLITVIQtZe+1yJu9H7vFlObjaxwmId9Lb
-         um6MNEFw+DVchmuzmj+CkuEQBH4dw8b4H73lJ3SSvZ4F5l+owWdA73yT3ted8y5cuwh5
-         XyYFJB3uulpEsBJ2L2UYdzIwdjPx/TfLwx4miV+8n5tuQN8sMvaSUycGoY7BkL6fv0+4
-         55BlkxLHvA3Sc50ZXezv3c5cCf0+rb1nTBBpGQ1DRyIaMJrEQnAVyBucra75UzY56uA7
-         lU5Q==
-X-Gm-Message-State: AOJu0YyR7tCxRs9LLMp3/KH0HMnJN//rWhzYpRWN16W5ROCnCTkdhxz8
-	lXV6XYnYGbW1xdc619k2KjBW+NnUmNGaWj36gHMm3SmlUgT4oyWpvUdDtq1y2lFVOeaj0U/hlE3
-	VQkdSLAKQ0YvBaYELBrXw7ha9vU1i/PDi1w8fc5+OrAS9IvzZ
-X-Google-Smtp-Source: AGHT+IFkS2FFIE/z7ZHDwBFNpDrqu8wxVjX6iC74+DTWn1lNJ4BJyQXN1jtQVEfvk4pMg6KFD6noLV/DF2d0UlLRRNA=
-X-Received: by 2002:a2e:b0fc:0:b0:2d4:68ef:c711 with SMTP id
- h28-20020a2eb0fc000000b002d468efc711mr3431473ljl.25.1710925454800; Wed, 20
- Mar 2024 02:04:14 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1710928392; x=1711533192;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=IWqSfDCJHms7lqXfIlaTfW+dy8ZdX9KOyEEBvt9xH0E=;
+        b=sdFp/3A8EzInmZ6CZZKJp+/ayxiZrgSzGbLqpTd320sLixjFarvLLZhSmUe5Bec0Hr
+         ykufSBn0J5DsU+jwyB6wCspAAHzCML42tjDJA03c2BkgXaXAe4FvZb/7PwxEmDArjHsL
+         +64J8lgTcRey+3Noe03MAqCg+5hWD04lFXhdl25um9Kpgec6PVbpAVyHJz80P/dwaTuv
+         rFUwXteO+3knQNm3TPGTOeNxRQ+Zzao/nMaRr2g6fs7CdSrHiPs8RNXRdPS7FkzGHcWg
+         2ubMpMiN7U2jGfxkiF66xDbSdNqzTC1byMGBlXjZX4fsojFLG6Ed7PGEkNi4XttMiImP
+         4KzA==
+X-Forwarded-Encrypted: i=1; AJvYcCVDB3BTiumQDzQxtD5v3WIm3FWdI0G2caQXoIUYx6AlVytudr2TWM7FzqHH0zSTzUUSQxTv/I9w6n/ctg5VXlO8+BpMEONu4OAQhA==
+X-Gm-Message-State: AOJu0YzCnHFsHmFA/Rau10/KcbqTrnd7NVXnrORpeKx4FAMiXChs1NYS
+	uo6/mciFyBYWv2jDTOeCJP6H/LKIe2v+P+UM+NFy9GVQGB+0LrB86p5poJcTjrQ=
+X-Google-Smtp-Source: AGHT+IEGWam2BleDDIwAwkbAAZrry/0SqhJqmR1BrfBwYOhRWw9HQlg4QVKLKIvTSul95+1yqCvwQw==
+X-Received: by 2002:a05:600c:4ed4:b0:414:37f:276f with SMTP id g20-20020a05600c4ed400b00414037f276fmr9306967wmq.22.1710928391476;
+        Wed, 20 Mar 2024 02:53:11 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id b2-20020a05600c4e0200b0041312c4865asm1720146wmq.2.2024.03.20.02.53.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 20 Mar 2024 02:53:10 -0700 (PDT)
+Date: Wed, 20 Mar 2024 12:53:06 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 4/4] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+Message-ID: <dc43e3ac-584c-4b93-92bf-44bb6cee144a@moroto.mountain>
+References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+ <20240314-pinctrl-scmi-v5-4-b19576e557f2@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240319110119.36cfd704@Akita>
-In-Reply-To: <20240319110119.36cfd704@Akita>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Wed, 20 Mar 2024 10:04:03 +0100
-Message-ID: <CAMRc=MeGWPNFKK1iRwBuETfgQnQzKEPDb96O_uEKouO8MiN0cQ@mail.gmail.com>
-Subject: Re: [libgpiod] [PATCH] bindings: cxx: link using the libtool archives
-To: orbea <orbea@riseup.net>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240314-pinctrl-scmi-v5-4-b19576e557f2@nxp.com>
 
-On Tue, Mar 19, 2024 at 7:04=E2=80=AFPM orbea <orbea@riseup.net> wrote:
->
-> Hi,
->
-> When building libgpiod with slibtool instead of GNU libtool it fails
-> when it doesn't find -lgpiod. I attached a patch that fixes the issue,
-> is it possible this can be applied to the git repo?
->
-> This was reported for Gentoo: https://bugs.gentoo.org/913899
->
-> Thanks!
+On Thu, Mar 14, 2024 at 09:35:21PM +0800, Peng Fan (OSS) wrote:
+> +/* Define num configs, if not large than 4 use stack, else use kcalloc */
+> +#define SCMI_NUM_CONFIGS	4
+> +
+> +static const struct scmi_pinctrl_proto_ops *pinctrl_ops;
+> +
+> +struct scmi_pinctrl_funcs {
+> +	unsigned int num_groups;
+> +	const char **groups;
+> +};
+> +
+> +struct scmi_pinctrl {
+> +	struct device *dev;
+> +	struct scmi_protocol_handle *ph;
+> +	struct pinctrl_dev *pctldev;
+> +	struct pinctrl_desc pctl_desc;
+> +	struct scmi_pinctrl_funcs *functions;
+> +	unsigned int nr_functions;
+> +	char **groups;
+> +	unsigned int nr_groups;
 
-Hi!
+groups and nr_groups are set/allocated but not used anywhere.  Delete
+them.
 
-Thanks for the patch! Could you please resend it using `git
-send-email` so that it appears as inline text on the list and makes
-reviewing easier? Also: please use your real name in the commit
-message and the Signed-off-by: tag.
+> +	struct pinctrl_pin_desc *pins;
+> +	unsigned int nr_pins;
 
-Thanks,
-Bartosz
+These last two struct members duplicate the information in
+pmx->pctl_desc.pins and pmx->pctl_desc.npins.  They're not used outside
+of the pinctrl_scmi_get_pins() function.  Delete them.
+
+> +};
+> +
+> +static int pinctrl_scmi_get_groups_count(struct pinctrl_dev *pctldev)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->count_get(pmx->ph, GROUP_TYPE);
+> +}
+> +
+> +static const char *pinctrl_scmi_get_group_name(struct pinctrl_dev *pctldev,
+> +					       unsigned int selector)
+> +{
+> +	int ret;
+> +	const char *name;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	ret = pinctrl_ops->name_get(pmx->ph, selector, GROUP_TYPE, &name);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "get name failed with err %d", ret);
+> +		return NULL;
+> +	}
+> +
+> +	return name;
+> +}
+> +
+> +static int pinctrl_scmi_get_group_pins(struct pinctrl_dev *pctldev,
+> +				       unsigned int selector,
+> +				       const unsigned int **pins,
+> +				       unsigned int *num_pins)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->group_pins_get(pmx->ph, selector, pins, num_pins);
+> +}
+> +
+> +static const struct pinctrl_ops pinctrl_scmi_pinctrl_ops = {
+> +	.get_groups_count = pinctrl_scmi_get_groups_count,
+> +	.get_group_name = pinctrl_scmi_get_group_name,
+> +	.get_group_pins = pinctrl_scmi_get_group_pins,
+> +#ifdef CONFIG_OF
+> +	.dt_node_to_map = pinconf_generic_dt_node_to_map_all,
+> +	.dt_free_map = pinconf_generic_dt_free_map,
+> +#endif
+> +};
+> +
+> +static int pinctrl_scmi_get_functions_count(struct pinctrl_dev *pctldev)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->count_get(pmx->ph, FUNCTION_TYPE);
+> +}
+> +
+> +static const char *pinctrl_scmi_get_function_name(struct pinctrl_dev *pctldev,
+> +						  unsigned int selector)
+> +{
+> +	int ret;
+> +	const char *name;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	ret = pinctrl_ops->name_get(pmx->ph, selector, FUNCTION_TYPE, &name);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "get name failed with err %d", ret);
+> +		return NULL;
+> +	}
+> +
+> +	return name;
+> +}
+> +
+> +static int pinctrl_scmi_get_function_groups(struct pinctrl_dev *pctldev,
+> +					    unsigned int selector,
+> +					    const char * const **groups,
+> +					    unsigned int * const num_groups)
+> +{
+> +	const unsigned int *group_ids;
+> +	int ret, i;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	if (!groups || !num_groups)
+> +		return -EINVAL;
+> +
+> +	if (selector < pmx->nr_functions &&
+> +	    pmx->functions[selector].num_groups) {
+> +		*groups = (const char * const *)pmx->functions[selector].groups;
+> +		*num_groups = pmx->functions[selector].num_groups;
+> +		return 0;
+> +	}
+> +
+> +	ret = pinctrl_ops->function_groups_get(pmx->ph, selector,
+> +					       &pmx->functions[selector].num_groups,
+> +					       &group_ids);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "Unable to get function groups, err %d", ret);
+> +		return ret;
+> +	}
+> +
+> +	*num_groups = pmx->functions[selector].num_groups;
+> +	if (!*num_groups)
+> +		return -EINVAL;
+> +
+> +	pmx->functions[selector].groups =
+> +		devm_kcalloc(pmx->dev, *num_groups,
+> +			     sizeof(*pmx->functions[selector].groups),
+> +			     GFP_KERNEL);
+> +	if (!pmx->functions[selector].groups)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < *num_groups; i++) {
+> +		pmx->functions[selector].groups[i] =
+> +			pinctrl_scmi_get_group_name(pmx->pctldev,
+> +						    group_ids[i]);
+> +		if (!pmx->functions[selector].groups[i]) {
+> +			ret = -ENOMEM;
+
+-EINVAL would be a more appropriate error code than -ENOMEM.  Nothing
+is allocated here.
+
+> +			goto err_free;
+> +		}
+> +	}
+> +
+> +	*groups = (const char * const *)pmx->functions[selector].groups;
+> +
+> +	return 0;
+> +
+> +err_free:
+> +	devm_kfree(pmx->dev, pmx->functions[selector].groups);
+> +
+> +	return ret;
+> +}
+
+I re-wrote this function.  I'm not totally sure it's better...
+
+static int pinctrl_scmi_get_function_groups(struct pinctrl_dev *pctldev,
+					    unsigned int selector,
+					    const char * const **p_groups,
+					    unsigned int * const p_num_groups)
+{
+	struct scmi_pinctrl_funcs *func;
+	const unsigned int *group_ids;
+	unsigned int num_groups;
+	const char **groups;
+	int ret, i;
+	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+
+	if (!p_groups || !p_num_groups)
+		return -EINVAL;
+
+	if (selector >= pmx->nr_functions)
+		return -EINVAL;
+
+	func = &pmx->functions[selector];
+	if (func->num_groups)
+		goto done;
+
+	ret = pinctrl_ops->function_groups_get(pmx->ph, selector, &num_groups,
+					       &group_ids);
+	if (ret) {
+		dev_err(pmx->dev, "Unable to get function groups, err %d", ret);
+		return ret;
+	}
+	if (!num_groups)
+		return -EINVAL;
+
+	groups = devm_kcalloc(pmx->dev, num_groups, sizeof(*groups), GFP_KERNEL);
+	if (!groups)
+		return -ENOMEM;
+
+	for (i = 0; i < num_groups; i++) {
+		groups[i] = pinctrl_scmi_get_group_name(pctldev, group_ids[i]);
+		if (!groups[i]) {
+			ret = -EINVAL;
+			goto err_free;
+		}
+	}
+
+	func->num_groups = num_groups;
+	func->groups = groups;
+done:
+	*p_groups = (const char * const *)func->groups;
+	*p_num_groups = func->num_groups;
+
+	return 0;
+
+err_free:
+	devm_kfree(pmx->dev, groups);
+
+	return ret;
+}
+
+> +
+> +static int pinctrl_scmi_func_set_mux(struct pinctrl_dev *pctldev,
+> +				     unsigned int selector, unsigned int group)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->mux_set(pmx->ph, selector, group);
+> +}
+> +
+> +static int pinctrl_scmi_request(struct pinctrl_dev *pctldev,
+> +				unsigned int offset)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->pin_request(pmx->ph, offset);
+> +}
+> +
+> +static int pinctrl_scmi_free(struct pinctrl_dev *pctldev, unsigned int offset)
+> +{
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +
+> +	return pinctrl_ops->pin_free(pmx->ph, offset);
+> +}
+> +
+> +static const struct pinmux_ops pinctrl_scmi_pinmux_ops = {
+> +	.request = pinctrl_scmi_request,
+> +	.free = pinctrl_scmi_free,
+> +	.get_functions_count = pinctrl_scmi_get_functions_count,
+> +	.get_function_name = pinctrl_scmi_get_function_name,
+> +	.get_function_groups = pinctrl_scmi_get_function_groups,
+> +	.set_mux = pinctrl_scmi_func_set_mux,
+> +};
+> +
+> +static int pinctrl_scmi_map_pinconf_type(enum pin_config_param param,
+> +					 enum scmi_pinctrl_conf_type *type)
+> +{
+> +	u32 arg = param;
+> +
+> +	switch (arg) {
+> +	case PIN_CONFIG_BIAS_BUS_HOLD:
+> +		*type = SCMI_PIN_BIAS_BUS_HOLD;
+> +		break;
+> +	case PIN_CONFIG_BIAS_DISABLE:
+> +		*type = SCMI_PIN_BIAS_DISABLE;
+> +		break;
+> +	case PIN_CONFIG_BIAS_HIGH_IMPEDANCE:
+> +		*type = SCMI_PIN_BIAS_HIGH_IMPEDANCE;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_DOWN:
+> +		*type = SCMI_PIN_BIAS_PULL_DOWN;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_PIN_DEFAULT:
+> +		*type = SCMI_PIN_BIAS_PULL_DEFAULT;
+> +		break;
+> +	case PIN_CONFIG_BIAS_PULL_UP:
+> +		*type = SCMI_PIN_BIAS_PULL_UP;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_OPEN_DRAIN:
+> +		*type = SCMI_PIN_DRIVE_OPEN_DRAIN;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_OPEN_SOURCE:
+> +		*type = SCMI_PIN_DRIVE_OPEN_SOURCE;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_PUSH_PULL:
+> +		*type = SCMI_PIN_DRIVE_PUSH_PULL;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_STRENGTH:
+> +		*type = SCMI_PIN_DRIVE_STRENGTH;
+> +		break;
+> +	case PIN_CONFIG_DRIVE_STRENGTH_UA:
+> +		*type = SCMI_PIN_DRIVE_STRENGTH;
+> +		break;
+> +	case PIN_CONFIG_INPUT_DEBOUNCE:
+> +		*type = SCMI_PIN_INPUT_DEBOUNCE;
+> +		break;
+> +	case PIN_CONFIG_INPUT_ENABLE:
+> +		*type = SCMI_PIN_INPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT:
+> +		*type = SCMI_PIN_INPUT_SCHMITT;
+> +		break;
+> +	case PIN_CONFIG_INPUT_SCHMITT_ENABLE:
+> +		*type = SCMI_PIN_INPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_MODE_LOW_POWER:
+> +		*type = SCMI_PIN_LOW_POWER_MODE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT:
+> +		*type = SCMI_PIN_OUTPUT_VALUE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT_ENABLE:
+> +		*type = SCMI_PIN_OUTPUT_MODE;
+> +		break;
+> +	case PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS:
+> +		*type = SCMI_PIN_OUTPUT_VALUE;
+> +		break;
+> +	case PIN_CONFIG_POWER_SOURCE:
+> +		*type = SCMI_PIN_POWER_SOURCE;
+> +		break;
+> +	case PIN_CONFIG_SLEW_RATE:
+> +		*type = SCMI_PIN_SLEW_RATE;
+> +		break;
+> +	case SCMI_PIN_OEM_START ... SCMI_PIN_OEM_END:
+> +		*type = arg;
+> +		break;
+> +	default:
+> +		return -EOPNOTSUPP;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pinctrl_scmi_pinconf_get(struct pinctrl_dev *pctldev,
+> +				    unsigned int _pin, unsigned long *config)
+> +{
+> +	int ret;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +	enum pin_config_param config_type;
+> +	enum scmi_pinctrl_conf_type type;
+> +	u32 config_value;
+> +
+> +	if (!config)
+> +		return -EINVAL;
+> +
+> +	config_type = pinconf_to_config_param(*config);
+> +
+> +	ret = pinctrl_scmi_map_pinconf_type(config_type, &type);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = pinctrl_ops->config_get(pmx->ph, _pin, PIN_TYPE, type,
+> +				      &config_value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(config_type, config_value);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +pinctrl_scmi_alloc_configs(struct pinctrl_dev *pctldev, u32 num_configs,
+> +			   u32 **p_config_value,
+> +			   enum scmi_pinctrl_conf_type **p_config_type)
+> +{
+> +	if (num_configs <= SCMI_NUM_CONFIGS)
+> +		return 0;
+> +
+> +	*p_config_value = kcalloc(num_configs, sizeof(u32), GFP_KERNEL);
+> +	*p_config_type = kcalloc(num_configs,
+> +				 sizeof(enum scmi_pinctrl_conf_type),
+> +				 GFP_KERNEL);
+> +
+> +	if (!*p_config_value || !*p_config_type) {
+> +		kfree(*p_config_value);
+> +		kfree(*p_config_type);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static void
+> +pinctrl_scmi_free_configs(struct pinctrl_dev *pctldev, u32 num_configs,
+> +			  u32 **p_config_value,
+> +			  enum scmi_pinctrl_conf_type **p_config_type)
+> +{
+> +	if (num_configs <= SCMI_NUM_CONFIGS)
+> +		return;
+> +
+> +	kfree(*p_config_value);
+> +	kfree(*p_config_type);
+> +}
+> +
+> +static int pinctrl_scmi_pinconf_set(struct pinctrl_dev *pctldev,
+> +				    unsigned int _pin,
+> +				    unsigned long *configs,
+> +				    unsigned int num_configs)
+> +{
+> +	int i, ret;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +	enum scmi_pinctrl_conf_type config_type[SCMI_NUM_CONFIGS];
+> +	u32 config_value[SCMI_NUM_CONFIGS];
+> +	enum scmi_pinctrl_conf_type *p_config_type = config_type;
+> +	u32 *p_config_value = config_value;
+> +	enum pin_config_param param;
+> +
+> +	if (!configs || !num_configs)
+> +		return -EINVAL;
+> +
+> +	ret = pinctrl_scmi_alloc_configs(pctldev, num_configs, &p_config_type,
+> +					 &p_config_value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		ret = pinctrl_scmi_map_pinconf_type(param, &p_config_type[i]);
+> +		if (ret) {
+> +			dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +			goto free_config;
+> +		}
+> +		p_config_value[i] = pinconf_to_config_argument(configs[i]);
+> +	}
+> +
+> +	ret = pinctrl_ops->config_set(pmx->ph, _pin, PIN_TYPE, num_configs,
+> +				      p_config_type,  p_config_value);
+> +	if (ret)
+> +		dev_err(pmx->dev, "Error parsing config %d\n", ret);
+> +
+> +free_config:
+> +	pinctrl_scmi_free_configs(pctldev, num_configs, &p_config_type,
+> +				  &p_config_value);
+> +	return ret;
+> +}
+> +
+> +static int pinctrl_scmi_pinconf_group_set(struct pinctrl_dev *pctldev,
+> +					  unsigned int group,
+> +					  unsigned long *configs,
+> +					  unsigned int num_configs)
+> +{
+> +	int i, ret;
+> +	struct scmi_pinctrl *pmx =  pinctrl_dev_get_drvdata(pctldev);
+> +	enum scmi_pinctrl_conf_type config_type[SCMI_NUM_CONFIGS];
+> +	u32 config_value[SCMI_NUM_CONFIGS];
+> +	enum scmi_pinctrl_conf_type *p_config_type = config_type;
+> +	u32 *p_config_value = config_value;
+> +	enum pin_config_param param;
+> +
+> +	if (!configs || !num_configs)
+> +		return -EINVAL;
+> +
+> +	ret = pinctrl_scmi_alloc_configs(pctldev, num_configs, &p_config_type,
+> +					 &p_config_value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	for (i = 0; i < num_configs; i++) {
+> +		param = pinconf_to_config_param(configs[i]);
+> +		ret = pinctrl_scmi_map_pinconf_type(param,
+> +						    &p_config_type[i]);
+> +		if (ret) {
+> +			dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +			goto free_config;
+> +		}
+> +
+> +		p_config_value[i] = pinconf_to_config_argument(configs[i]);
+> +	}
+> +
+> +	ret = pinctrl_ops->config_set(pmx->ph, group, GROUP_TYPE, num_configs,
+> +				      p_config_type, p_config_value);
+> +	if (ret)
+> +		dev_err(pmx->dev, "Error parsing config %d", ret);
+> +
+> +free_config:
+> +	pinctrl_scmi_free_configs(pctldev, num_configs, &p_config_type,
+> +				  &p_config_value);
+> +	return ret;
+> +};
+> +
+> +static int pinctrl_scmi_pinconf_group_get(struct pinctrl_dev *pctldev,
+> +					  unsigned int group,
+> +					  unsigned long *config)
+> +{
+> +	int ret;
+> +	struct scmi_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
+> +	enum pin_config_param config_type;
+> +	enum scmi_pinctrl_conf_type type;
+> +	u32 config_value;
+> +
+> +	if (!config)
+> +		return -EINVAL;
+> +
+> +	config_type = pinconf_to_config_param(*config);
+> +	ret = pinctrl_scmi_map_pinconf_type(config_type, &type);
+> +	if (ret) {
+> +		dev_err(pmx->dev, "Error map pinconf_type %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = pinctrl_ops->config_get(pmx->ph, group, GROUP_TYPE, type,
+> +				      &config_value);
+> +	if (ret)
+> +		return ret;
+> +
+> +	*config = pinconf_to_config_packed(config_type, config_value);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct pinconf_ops pinctrl_scmi_pinconf_ops = {
+> +	.is_generic = true,
+> +	.pin_config_get = pinctrl_scmi_pinconf_get,
+> +	.pin_config_set = pinctrl_scmi_pinconf_set,
+> +	.pin_config_group_set = pinctrl_scmi_pinconf_group_set,
+> +	.pin_config_group_get = pinctrl_scmi_pinconf_group_get,
+> +	.pin_config_config_dbg_show = pinconf_generic_dump_config,
+> +};
+> +
+> +static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+> +				 unsigned int *nr_pins,
+> +				 const struct pinctrl_pin_desc **pins)
+> +{
+> +	int ret, i;
+> +
+> +	if (!pins || !nr_pins)
+> +		return -EINVAL;
+> +
+> +	if (pmx->nr_pins) {
+
+This condition is testing whether we can re-use the information from the
+previous call.  However, the function is only called once (from probe)
+so there is no previous call and this condition can be removed.
+
+> +		*pins = pmx->pins;
+> +		*nr_pins = pmx->nr_pins;
+> +		return 0;
+> +	}
+> +
+> +	*nr_pins = pinctrl_ops->count_get(pmx->ph, PIN_TYPE);
+> +
+> +	pmx->nr_pins = *nr_pins;
+> +	pmx->pins = devm_kmalloc_array(pmx->dev, *nr_pins, sizeof(*pmx->pins),
+> +				       GFP_KERNEL);
+> +	if (!pmx->pins)
+> +		return -ENOMEM;
+
+If we were going to re-use the information then we'd need to set
+pmx->nr_pins = 0; on this path.  But we're not, so that's fine.
+
+> +
+> +	for (i = 0; i < *nr_pins; i++) {
+> +		pmx->pins[i].number = i;
+> +		ret = pinctrl_ops->name_get(pmx->ph, i, PIN_TYPE,
+> +					    &pmx->pins[i].name);
+> +		if (ret) {
+> +			dev_err(pmx->dev, "Can't get name for pin %d: rc %d", i, ret);
+> +			pmx->nr_pins = 0;
+
+No need to set ->nr_pins = 0;
+
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	*pins = pmx->pins;
+> +	dev_dbg(pmx->dev, "got pins %d", *nr_pins);
+> +
+> +	return 0;
+> +}
+
+Ok, I put way too much thought into reviewing this function and I ended
+up re-writing it slightly:
+
+static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+				 struct pinctrl_desc *desc)
+{
+	struct pinctrl_pin_desc *pins;
+	unsigned int npins;
+	int ret, i;
+
+	npins = pinctrl_ops->count_get(pmx->ph, PIN_TYPE);
+	pins = devm_kmalloc_array(pmx->dev, npins, sizeof(*pins), GFP_KERNEL);
+	if (!pins)
+		return -ENOMEM;
+
+	for (i = 0; i < npins; i++) {
+		pins[i].number = i;
+		ret = pinctrl_ops->name_get(pmx->ph, i, PIN_TYPE, &pins[i].name);
+		if (ret)
+			return dev_err_probe(pmx->dev, ret,
+					     "Can't get name for pin %d", i);
+	}
+
+	desc->npins = npins;
+	desc->pins = pins;
+	dev_dbg(pmx->dev, "got pins %d", npins);
+
+	return 0;
+}
+
+> +
+> +static const struct scmi_device_id scmi_id_table[] = {
+> +	{ SCMI_PROTOCOL_PINCTRL, "pinctrl" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+> +
+> +static int scmi_pinctrl_probe(struct scmi_device *sdev)
+> +{
+> +	int ret;
+> +	struct device *dev = &sdev->dev;
+> +	struct scmi_pinctrl *pmx;
+> +	const struct scmi_handle *handle;
+> +	struct scmi_protocol_handle *ph;
+> +
+> +	if (!sdev || !sdev->handle)
+> +		return -EINVAL;
+> +
+> +	handle = sdev->handle;
+> +
+> +	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL,
+> +						&ph);
+> +	if (IS_ERR(pinctrl_ops))
+> +		return PTR_ERR(pinctrl_ops);
+> +
+> +	pmx = devm_kzalloc(dev, sizeof(*pmx), GFP_KERNEL);
+> +	if (!pmx)
+> +		return -ENOMEM;
+> +
+> +	pmx->ph = ph;
+> +
+> +	pmx->dev = dev;
+> +	pmx->pctl_desc.name = DRV_NAME;
+> +	pmx->pctl_desc.owner = THIS_MODULE;
+> +	pmx->pctl_desc.pctlops = &pinctrl_scmi_pinctrl_ops;
+> +	pmx->pctl_desc.pmxops = &pinctrl_scmi_pinmux_ops;
+> +	pmx->pctl_desc.confops = &pinctrl_scmi_pinconf_ops;
+> +
+> +	ret = pinctrl_scmi_get_pins(pmx, &pmx->pctl_desc.npins,
+> +				    &pmx->pctl_desc.pins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_pinctrl_register_and_init(dev, &pmx->pctl_desc, pmx,
+> +					     &pmx->pctldev);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "Failed to register pinctrl\n");
+> +
+> +	pmx->nr_functions = pinctrl_scmi_get_functions_count(pmx->pctldev);
+> +	pmx->nr_groups = pinctrl_scmi_get_groups_count(pmx->pctldev);
+> +
+> +	if (pmx->nr_functions) {
+
+You don't need to have this condition.  kcalloc() can allocate zero
+element arrays.
+
+> +		pmx->functions = devm_kcalloc(dev, pmx->nr_functions,
+> +					      sizeof(*pmx->functions),
+> +					      GFP_KERNEL);
+> +		if (!pmx->functions)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	if (pmx->nr_groups) {
+
+Same.
+
+> +		pmx->groups = devm_kcalloc(dev, pmx->nr_groups,
+> +					   sizeof(*pmx->groups), GFP_KERNEL);
+> +		if (!pmx->groups)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	return pinctrl_enable(pmx->pctldev);
+
+There is a double free bug in pinctrl_enable() but it's not related to
+your patch.  I'll send a fix for that.
+
+> +}
+
+regards,
+dan carpenter
+
 
