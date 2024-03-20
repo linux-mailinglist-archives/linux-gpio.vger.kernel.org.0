@@ -1,126 +1,210 @@
-Return-Path: <linux-gpio+bounces-4462-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4463-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 449D8880F62
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 11:12:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C46AC880F6D
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 11:15:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id F3E542845B3
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:12:38 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4DD88283717
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:15:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C52F3CF51;
-	Wed, 20 Mar 2024 10:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7543C478;
+	Wed, 20 Mar 2024 10:15:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from esa2.ltts.com (unknown [14.140.155.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE3253BB55;
-	Wed, 20 Mar 2024 10:12:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21BBE2A1B2;
+	Wed, 20 Mar 2024 10:15:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929546; cv=none; b=f02O683vYPNx0BEFBpTJ1gYBE33C3ZC4FN3+MCfGkGJaEfx/6xfFMBYdWC90TZgLhMPDKx9UTbmUoalLst6r4NAkmrPj86PRpz6chnoM0fncP0PBZkmBmNhd4qMT7543x9ofDWOko2f+XUbFVxRaD10MmPDjlY2Cq86EmZPTlps=
+	t=1710929726; cv=none; b=AzS8Sm7POeYHjPp2ZMJhWfWMOmGk25ziuYJP1izCnxLF++lCy2gf7544/Ew6N6OoXNVQH45xApJqF7FMcfqwxCgNms4oZJ3L1XWoKc6XIzWq22fW0hjAD4KmUxh544osMNb/9h4+vrNXKf8NhA4uIc2e8ZRqLa8SuxG+wamz/TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929546; c=relaxed/simple;
-	bh=VcS92yfIZWQiU6DLOdkW1GLNdpstssB+lwJUNBrM/Ow=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ueuuHGcNmzjGH4A+hiSMPc3aQM13K92U/swP2RUx2MVwwK7sr4nNTy2aqNqiGNgbjX8Uz8RYTwXukEpySle+WcyLyqTnq5S9VtyB6CDkYtLrQPeSQbW5MiAWE5123Nx678yTXLCf0J9XHNEkLODIpmjyEHGCWB9tzGWCRIIa+3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.219.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcc7cdb3a98so6426013276.2;
-        Wed, 20 Mar 2024 03:12:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1710929543; x=1711534343;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=G/TVf8JbKlIsPFjDw8k2PXMgINwKJNNEI5WzM7hT5rA=;
-        b=FG7u8esl3RT/IqhJybPFp0XFKyPtq+wo42Tr8543I/ZDnIVmnEdJxXD/eiBkUG8w41
-         U7LKC55ybO9qKAN6VOAh263NUvX+Gmc9X2pc5rif7+BoPjZE5JZZnXXMUiXhuzgRdLO/
-         5CKW+TtrTQmBO9ZlUL5Z3OqSsQeSvykVnVN3o4YNuxqcrWsjaC8ZpKt2QBC7P7YqXRUn
-         p6EOdBvpQROZ2cTHvXLHGqdZfxaTFQYvFSkV7VpnURi3uBVYapqKA9XlgPoldjP7OfEl
-         cf5BnRAhTCKOKMShFObpO8ILS+KZSIhxuPmIUo0fgJlSy/oKHHI/gBW2QBM+UEqXMTkr
-         DFJg==
-X-Forwarded-Encrypted: i=1; AJvYcCVRR69SYaCII7CTeILeQA+J6iSB4jjTZ6HTFNyBEoFzJDdx9nhKcubEDuQnY17KbOUq3+j8iu7T2XLT4i0rt+G6wfDbnK5Smb9VhGHLL8G8vWFdjI3Ft6CqK9wChBrq4ZMHN6NKcwZUSF5Og2B2M7MCXMRgdWXWKEL/+3FnNKiXXQVLssVI4cQfbVKv
-X-Gm-Message-State: AOJu0Yw5fknkqOsC4VN1p2oHkXiSlBUJG2vyTo+EC2n4n9Mp2e5r2+8q
-	nuDLrDzIzghFwe7wUlcK+808LZCutqqsMxdvxr1JBwIkvU46eSWm7YpxCZS9Ww0=
-X-Google-Smtp-Source: AGHT+IGDyqV6z8Btd/sBdbDVtqlZH3oNJi7wduUdeaBUxHuMuPKXmi+/ygWqHjKIfakg3l2NdMIGQA==
-X-Received: by 2002:a25:a302:0:b0:dcf:9018:67 with SMTP id d2-20020a25a302000000b00dcf90180067mr15403461ybi.42.1710929543138;
-        Wed, 20 Mar 2024 03:12:23 -0700 (PDT)
-Received: from mail-yw1-f172.google.com (mail-yw1-f172.google.com. [209.85.128.172])
-        by smtp.gmail.com with ESMTPSA id y23-20020a25ad17000000b00dcd56356c80sm1995205ybi.47.2024.03.20.03.12.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 20 Mar 2024 03:12:22 -0700 (PDT)
-Received: by mail-yw1-f172.google.com with SMTP id 00721157ae682-6098a20ab22so60283217b3.2;
-        Wed, 20 Mar 2024 03:12:22 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV46WZA4FYEZedJAg3GbqF8utOFcThzGNw5mNB30Tai0XljU9sWZ342PiRsrwZxi3hBKc/gmzmwVdPnSw4wTQp3KiUCGN+63BADIz2xOykHp/Rzi0J6ZcM5TCYk8B2r/+MH+lIDwvLoCGhT6VoKZqzIObEFuWvb8IPI06PmRqlYCeOhyhkWQVFMnDO2
-X-Received: by 2002:a81:dd06:0:b0:610:bc71:43ab with SMTP id
- e6-20020a81dd06000000b00610bc7143abmr9487139ywn.44.1710929542478; Wed, 20 Mar
- 2024 03:12:22 -0700 (PDT)
+	s=arc-20240116; t=1710929726; c=relaxed/simple;
+	bh=zfDLbqWgOH8d1+adp9RxEyhJRbc2lOUnCC4kwPqZ5qc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=LseY4B1DSI2HDsGmJvjolHjO3up1hhZe0RzxKRh6ISLGP/NPDKrimwnNCTIEIzVbzSkN7eqzNluqnV1b0rson5F93gvUOpKz0lBndnhoxdun03w6kEqyKKrWYRitXynXllfUQBfIVy1ry4XzBIA0p96Zz9h0Zbrv41jvou5Anpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: oQrzJEPhxgP8uSFlXa+okPvyeBYCfJjsBKwDc4F+mjozrIdneuUGtuGjWkX3CLcm3b42JOf9Tz
+ bIziGp9kJiug==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 20 Mar 2024 15:44:07 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: jpanis@baylibre.com
+Cc: arnd@arndb.de,
+	bhargav.r@ltts.com,
+	broonie@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	eblanc@baylibre.com,
+	gregkh@linuxfoundation.org,
+	kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	linus.walleij@linaro.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	m.nirmaladevi@ltts.com,
+	nm@ti.com,
+	robh+dt@kernel.org,
+	vigneshr@ti.com
+Subject: Re: [PATCH v3 01/11] mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+Date: Wed, 20 Mar 2024 15:43:54 +0530
+Message-Id: <20240320101354.463936-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <44295772-4635-42c2-b7b5-cdc37505715e@baylibre.com>
+References: <44295772-4635-42c2-b7b5-cdc37505715e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240318143149.2468349-1-claudiu.beznea.uj@bp.renesas.com>
-In-Reply-To: <20240318143149.2468349-1-claudiu.beznea.uj@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 20 Mar 2024 11:12:10 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdVwK6CRZyRMuS1mw7EXEb-fqtWOAdG6HmX-v+HTvhPV5g@mail.gmail.com>
-Message-ID: <CAMuHMdVwK6CRZyRMuS1mw7EXEb-fqtWOAdG6HmX-v+HTvhPV5g@mail.gmail.com>
-Subject: Re: [PATCH v2] pinctrl: renesas: rzg2l: Execute atomically the
- interrupt configuration
-To: Claudiu <claudiu.beznea@tuxon.dev>
-Cc: linus.walleij@linaro.org, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 18, 2024 at 3:31=E2=80=AFPM Claudiu <claudiu.beznea@tuxon.dev> =
-wrote:
-> From: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
->
-> Lockdep detects a possible deadlock as listed below. This is because it
-> detects the IA55 interrupt controller .irq_eoi() API is called from
-> interrupt context while configuration-specific API (e.g., .irq_enable())
-> could be called from process context on resume path (by calling
-> rzg2l_gpio_irq_restore()). To avoid this, protect the call of
-> rzg2l_gpio_irq_enable() with spin_lock_irqsave()/spin_unlock_irqrestore()=
-.
-> With this the same approach that is available in __setup_irq() is mimicke=
-d
-> to pinctrl IRQ resume function.
->
-> Below is the lockdep report:
+Hello,
 
-[...]
+On Fri, 8 Mar 2024 12:24:40 +0100, Julien wrote:
+> On 3/8/24 11:34, Bhargav Raviprakash wrote:
+> > From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> >
+> > Extend TPS6594 PMIC register and field definitions to support TPS65224
+> > power management IC.
+> >
+> > TPS65224 is software compatible to TPS6594 and can re-use many of the
+> > same definitions, new definitions are added to support additional
+> > controls available on TPS65224.
+> >
+> > Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > ---
+> >   include/linux/mfd/tps6594.h | 354 ++++++++++++++++++++++++++++++++++--
+> >   1 file changed, 342 insertions(+), 12 deletions(-)
+> 
+> [...]
+> 
+> > +/* IRQs */
+> > +enum tps65224_irqs {
+> > +	/* INT_BUCK register */
+> > +	TPS65224_IRQ_BUCK1_UVOV,
+> > +	TPS65224_IRQ_BUCK2_UVOV,
+> > +	TPS65224_IRQ_BUCK3_UVOV,
+> > +	TPS65224_IRQ_BUCK4_UVOV,
+> > +	/* INT_LDO_VMON register */
+> > +	TPS65224_IRQ_LDO1_UVOV,
+> > +	TPS65224_IRQ_LDO2_UVOV,
+> > +	TPS65224_IRQ_LDO3_UVOV,
+> > +	TPS65224_IRQ_VCCA_UVOV,
+> > +	TPS65224_IRQ_VMON1_UVOV,
+> > +	TPS65224_IRQ_VMON2_UVOV,
+> > +	/* INT_GPIO register */
+> > +	TPS65224_IRQ_GPIO1,
+> > +	TPS65224_IRQ_GPIO2,
+> > +	TPS65224_IRQ_GPIO3,
+> > +	TPS65224_IRQ_GPIO4,
+> > +	TPS65224_IRQ_GPIO5,
+> > +	TPS65224_IRQ_GPIO6,
+> > +	/* INT_STARTUP register */
+> > +	TPS65224_IRQ_VSENSE,
+> > +	TPS65224_IRQ_ENABLE,
+> > +	TPS65224_IRQ_PB_SHORT,
+> > +	TPS65224_IRQ_FSD,
+> > +	TPS65224_IRQ_SOFT_REBOOT,
+> > +	/* INT_MISC register */
+> > +	TPS65224_IRQ_BIST_PASS,
+> > +	TPS65224_IRQ_EXT_CLK,
+> > +	TPS65224_IRQ_REG_UNLOCK,
+> > +	TPS65224_IRQ_TWARN,
+> > +	TPS65224_IRQ_PB_LONG,
+> > +	TPS65224_IRQ_PB_FALL,
+> > +	TPS65224_IRQ_PB_RISE,
+> > +	TPS65224_IRQ_ADC_CONV_READY,
+> > +	/* INT_MODERATE_ERR register */
+> > +	TPS65224_IRQ_TSD_ORD,
+> > +	TPS65224_IRQ_BIST_FAIL,
+> > +	TPS65224_IRQ_REG_CRC_ERR,
+> > +	TPS65224_IRQ_RECOV_CNT,
+> > +	/* INT_SEVERE_ERR register */
+> > +	TPS65224_IRQ_TSD_IMM,
+> > +	TPS65224_IRQ_VCCA_OVP,
+> > +	TPS65224_IRQ_PFSM_ERR,
+> > +	TPS65224_IRQ_BG_XMON,
+> > +	/* INT_FSM_ERR register */
+> > +	TPS65224_IRQ_IMM_SHUTDOWN,
+> > +	TPS65224_IRQ_ORD_SHUTDOWN,
+> > +	TPS65224_IRQ_MCU_PWR_ERR,
+> > +	TPS65224_IRQ_SOC_PWR_ERR,
+> > +	TPS65224_IRQ_COMM_ERR,
+> > +	TPS65224_IRQ_I2C2_ERR,
+> > +	/* INT_ESM register */
+> > +	TPS65224_IRQ_ESM_MCU_PIN,
+> > +	TPS65224_IRQ_ESM_MCU_FAIL,
+> > +	TPS65224_IRQ_ESM_MCU_RST,
+> 
+> You should remove the 3 lines above for ESM_MCU, since there is none
+> linux driver for ESM_MCU.
+> 
+> > +};
+> > +
+> > +#define TPS65224_IRQ_NAME_BUCK1_UVOV		"buck1_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK2_UVOV		"buck2_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK3_UVOV		"buck3_uvov"
+> > +#define TPS65224_IRQ_NAME_BUCK4_UVOV		"buck4_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO1_UVOV		"ldo1_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO2_UVOV		"ldo2_uvov"
+> > +#define TPS65224_IRQ_NAME_LDO3_UVOV		"ldo3_uvov"
+> > +#define TPS65224_IRQ_NAME_VCCA_UVOV		"vcca_uvov"
+> > +#define TPS65224_IRQ_NAME_VMON1_UVOV		"vmon1_uvov"
+> > +#define TPS65224_IRQ_NAME_VMON2_UVOV		"vmon2_uvov"
+> > +#define TPS65224_IRQ_NAME_GPIO1			"gpio1"
+> > +#define TPS65224_IRQ_NAME_GPIO2			"gpio2"
+> > +#define TPS65224_IRQ_NAME_GPIO3			"gpio3"
+> > +#define TPS65224_IRQ_NAME_GPIO4			"gpio4"
+> > +#define TPS65224_IRQ_NAME_GPIO5			"gpio5"
+> > +#define TPS65224_IRQ_NAME_GPIO6			"gpio6"
+> > +#define TPS65224_IRQ_NAME_VSENSE	        "vsense"
+> > +#define TPS65224_IRQ_NAME_ENABLE		"enable"
+> > +#define TPS65224_IRQ_NAME_PB_SHORT		"pb_short"
+> > +#define TPS65224_IRQ_NAME_FSD			"fsd"
+> > +#define TPS65224_IRQ_NAME_SOFT_REBOOT		"soft_reboot"
+> > +#define TPS65224_IRQ_NAME_BIST_PASS		"bist_pass"
+> > +#define TPS65224_IRQ_NAME_EXT_CLK		"ext_clk"
+> > +#define TPS65224_IRQ_NAME_REG_UNLOCK		"reg_unlock"
+> > +#define TPS65224_IRQ_NAME_TWARN			"twarn"
+> > +#define TPS65224_IRQ_NAME_PB_LONG		"pb_long"
+> > +#define TPS65224_IRQ_NAME_PB_FALL		"pb_fall"
+> > +#define TPS65224_IRQ_NAME_PB_RISE		"pb_rise"
+> > +#define TPS65224_IRQ_NAME_ADC_CONV_READY	"adc_conv_ready"
+> > +#define TPS65224_IRQ_NAME_TSD_ORD		"tsd_ord"
+> > +#define TPS65224_IRQ_NAME_BIST_FAIL		"bist_fail"
+> > +#define TPS65224_IRQ_NAME_REG_CRC_ERR		"reg_crc_err"
+> > +#define TPS65224_IRQ_NAME_RECOV_CNT		"recov_cnt"
+> > +#define TPS65224_IRQ_NAME_TSD_IMM		"tsd_imm"
+> > +#define TPS65224_IRQ_NAME_VCCA_OVP		"vcca_ovp"
+> > +#define TPS65224_IRQ_NAME_PFSM_ERR		"pfsm_err"
+> > +#define TPS65224_IRQ_NAME_BG_XMON		"bg_xmon"
+> > +#define TPS65224_IRQ_NAME_IMM_SHUTDOWN		"imm_shutdown"
+> > +#define TPS65224_IRQ_NAME_ORD_SHUTDOWN		"ord_shutdown"
+> > +#define TPS65224_IRQ_NAME_MCU_PWR_ERR		"mcu_pwr_err"
+> > +#define TPS65224_IRQ_NAME_SOC_PWR_ERR		"soc_pwr_err"
+> > +#define TPS65224_IRQ_NAME_COMM_ERR		"comm_err"
+> > +#define TPS65224_IRQ_NAME_I2C2_ERR		"i2c2_err"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_PIN		"esm_mcu_pin"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_FAIL		"esm_mcu_fail"
+> > +#define TPS65224_IRQ_NAME_ESM_MCU_RST		"esm_mcu_rst"
+> 
+> You should remove the 3 lines above for ESM_MCU.
+> 
+> Julien
 
-> Fixes: 254203f9a94c ("pinctrl: renesas: rzg2l: Add suspend/resume support=
-")
-> Signed-off-by: Claudiu Beznea <claudiu.beznea.uj@bp.renesas.com>
-> ---
->
-> Changes in v2:
-> - used raw_spin_lock_irqsave()/raw_spin_unlock_irqrestore()
+Thanks! will get it done in the next version.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-i.e. will queue in renesas-pinctrl for v6.10.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---=20
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
+Regards,
+Bhargav
 
