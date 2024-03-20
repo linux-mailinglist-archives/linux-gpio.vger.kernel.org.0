@@ -1,46 +1,45 @@
-Return-Path: <linux-gpio+bounces-4465-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4466-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8D95880F77
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 11:17:49 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1E589880F7C
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 11:19:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 04F1A1C22120
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:17:49 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C77A7283801
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 10:19:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 095793C493;
-	Wed, 20 Mar 2024 10:17:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 569943C68C;
+	Wed, 20 Mar 2024 10:19:12 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFEDB3C460;
-	Wed, 20 Mar 2024 10:17:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 895D33D3B8;
+	Wed, 20 Mar 2024 10:19:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710929866; cv=none; b=XqLc+v4umiY3nMdj0KOXVHIQwkqAWYtotHaCgKNgsKy7tdMLcHpiXZf2JxFOfzpY2lkl8qk/Xq6Irmbbxs3WpSZxlRVqQ1bJZ5nP2iESqtcCVahdrGsCJ5+ZIU/ArK42NXfYiydUyUDW/An1xJPR77cj2Au9uxule415IqSXCas=
+	t=1710929952; cv=none; b=fplHrSwtKPja4tw3gdzSUCm2jmuyFHanM3R2GcDobg+/nShzbrV3z7blzEAnn1WhbucBB9jd6IQxoYrcaNjJtnBeV8MhbiQnlmAOPh9Yb9iM9xGdNSWdE1J/11sOr0oofjTceuXjO3k/B/kvKR/j1pObXf4qCXJZRLy/xccI2ho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710929866; c=relaxed/simple;
-	bh=3c7SIBPcXa1tsEQ9GDQ8WzDWjWbomxFANSyFw4oyP7s=;
+	s=arc-20240116; t=1710929952; c=relaxed/simple;
+	bh=sHz1b4+w2VmuCDq0NFjSHsu5Jh7QjvvpN2QQ5HDSoog=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vGPJeXQ7X4JL9ai1vEOl8byHu0KstpeAB9rb9v0yYEtEC+eENoc+Rq8o6YMYasH/88YRZnsDiY8mdWz4uOwION9Y+6CdMrGHU8HsAbd8d3IpR/roQOSB96wLYpwcFzrUVOqS/AKMDf//91A99u56mO5N0ywjW/8PM/rCnSoS8+k=
+	 MIME-Version; b=GQ97WMrBTqeGb9NVR+c5Z9UvMI3UjHbN2Jx0Ehf1wENVPYA9hY6YSKMLsFeTZCw69xdgOTvekYWEyuq0ZnKtNwkltjj3oZttZ1f8lP/6dsiNh8hqNxCs/hvcqz2GuluwQ7gS/vtriYoEM3prT3WJqK2EezU3jTsJqPTjj5K+u3Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: ExPPrGOtUKQdIoi8dq2mAWYU3xj1nV/gUZGFU94t9Yr6WLUA5BsTy+hmvaQFLzmnIzvomqXykr
- U4g0qZbSdOEg==
+IronPort-SDR: 72OkoL4oJSz74/abrQJBbo8wGQ0EtUGOe5eUVbjj+RkZP6XIHbkTKGRp+vORlIDL6y6Q3sJ8Gc
+ WdDfYw2XFztw==
 Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 20 Mar 2024 15:47:39 +0530
+  by esa2.ltts.com with ESMTP; 20 Mar 2024 15:49:05 +0530
 From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: dan.carpenter@linaro.org
+To: eblanc@baylibre.com
 Cc: arnd@arndb.de,
 	bhargav.r@ltts.com,
 	broonie@kernel.org,
 	conor+dt@kernel.org,
 	devicetree@vger.kernel.org,
-	eblanc@baylibre.com,
 	gregkh@linuxfoundation.org,
 	jpanis@baylibre.com,
 	kristo@kernel.org,
@@ -55,12 +54,12 @@ Cc: arnd@arndb.de,
 	nm@ti.com,
 	robh+dt@kernel.org,
 	vigneshr@ti.com
-Subject: Re: [PATCH v3 09/11] regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
-Date: Wed, 20 Mar 2024 15:47:25 +0530
-Message-Id: <20240320101725.464327-1-bhargav.r@ltts.com>
+Subject: Re: [PATCH v3 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+Date: Wed, 20 Mar 2024 15:48:51 +0530
+Message-Id: <20240320101851.464478-1-bhargav.r@ltts.com>
 X-Mailer: git-send-email 2.25.1
-In-Reply-To: <4aee8c9a-43eb-45b4-bc23-e58aede18e54@moroto.mountain>
-References: <4aee8c9a-43eb-45b4-bc23-e58aede18e54@moroto.mountain>
+In-Reply-To: <CZTFSA2OG09N.3V2KR7KS6GU1W@baylibre.com>
+References: <CZTFSA2OG09N.3V2KR7KS6GU1W@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -71,40 +70,37 @@ Content-Transfer-Encoding: 8bit
 
 Hello,
 
-On Thu, 14 Mar 2024 16:30:09 +0300, Dan Carpenter wrote:
-> On Fri, Mar 08, 2024 at 04:04:53PM +0530, Bhargav Raviprakash wrote:
-> > @@ -374,11 +518,17 @@ static int tps6594_request_reg_irqs(struct platform_device *pdev,
-> >  {
-> >  	struct tps6594_regulator_irq_type *irq_type;
-> >  	struct tps6594 *tps = dev_get_drvdata(pdev->dev.parent);
-> > -	int j;
-> > +	size_t j;
-> >  	int irq;
-> >  	int error;
-> > +	size_t interrupt_cnt;
-> > +
-> > +	if (tps->chip_id == TPS6594)
-> > +		interrupt_cnt = ARRAY_SIZE(tps6594_buck1_irq_types);
-> > +	else
-> > +		interrupt_cnt = ARRAY_SIZE(tps65224_buck1_irq_types);
->                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+On Thu, 14 Mar 2024 12:29:23 +0100, Esteban Blanc wrote:
+> On Fri Mar 8, 2024 at 11:34 AM CET, Bhargav Raviprakash wrote:
+> > From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> >
+> > Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+> > significant functional overlap.
+> > TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+> > dedicated device functions.
+> >
+> > Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> > Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> > Acked-by: Linus Walleij <linus.walleij@linaro.org>
 > 
-> >  
-> > -	for (j = 0; j < REGS_INT_NB; j++) {
-> > +	for (j = 0; j < interrupt_cnt; j++) {
-> >  		irq_type = &tps6594_regs_irq_types[j];
->                             ^^^^^^^^^^^^^^^^^^^^^^
-> >  		irq = platform_get_irq_byname(pdev, irq_type->irq_name);
-> >  		if (irq < 0)
+> Hi,
 > 
-> The tps6594_regs_irq_types pointer needs to be renamed or people won't
-> know it's holding tps65224_ data.  Probably the function should be
-> renamed too.
+> What changed here compared to the previous version?
 > 
-> regards,
-> dan carpenter
+> You might have missed my previous email[1] since I don't see any of changes
+> I suggested.
+> 
+> [1] https://lore.kernel.org/r/CZHM5FYHS6G0.295L6AYUNZCT@baylibre.com/
+> 
+> Best regards,
+> 
+> -- 
+> Esteban "Skallwar" Blanc
+> BayLibre
 
-Thanks for the feedback! The name will be changed in the next version.
+Thanks for the feedback!
+It will be addressed in the next version.
+We have regrouped wherever logically possible. 
 
 Regards,
 Bhargav
