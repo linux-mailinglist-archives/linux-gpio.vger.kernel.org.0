@@ -1,165 +1,136 @@
-Return-Path: <linux-gpio+bounces-4457-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4458-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D891A880BF8
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 08:25:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4DEF8880C47
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 08:45:29 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 861BD284006
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 07:25:51 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D19E283673
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 07:45:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 026151EEF8;
-	Wed, 20 Mar 2024 07:25:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B520224D7;
+	Wed, 20 Mar 2024 07:45:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b="fEUfB3p0"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zR4dYbbI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR04-DB3-obe.outbound.protection.outlook.com (mail-db3eur04on2078.outbound.protection.outlook.com [40.107.6.78])
+Received: from fllv0015.ext.ti.com (fllv0015.ext.ti.com [198.47.19.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C1D1DA52;
-	Wed, 20 Mar 2024 07:25:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.6.78
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710919545; cv=fail; b=QkkPBmaILO9N7geUI6HtHaeLBCfhyAuTaW7+KVh6nyPNrmjceWg6ZPdM1/lL+CtCLE4Vg5pfM2RLILnaN9r5Fe/vNiYVk872qLfGd77v1ynmxk6Cw2oBML2HiGgtgaaQn9D3BPTuYIhvw/CW02xq9DF4Tri6BTw9Q+UvFkNPEtc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710919545; c=relaxed/simple;
-	bh=Um/r8MknPez7aM61iNWInogMj4nRNUtHBG8Bz5D+FIM=;
-	h=From:To:Cc:Subject:Date:Message-Id:Content-Type:MIME-Version; b=kVWcKQLY2Jw6Q5OooRSeRtZvo6H5He9aTfHlbRuO02u2zDuMu/kD+LyY22yFm1rmWGkhdeN1ARN6oi6X1JqatH5wKs0fR9OzoQnd3Qkxu+BnEXdi5B99rRkdAbB+Zv7GflgHg43FAOMevLOnGKmIwJJiEg14Ti2wZdRpVhn2Q4w=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com; spf=pass smtp.mailfrom=oss.nxp.com; dkim=pass (1024-bit key) header.d=NXP1.onmicrosoft.com header.i=@NXP1.onmicrosoft.com header.b=fEUfB3p0; arc=fail smtp.client-ip=40.107.6.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=oss.nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=lpaDLVxmN1ZmZGOsZdO8FHijeBOYqwt0iovkBdMiFhbt8tTDESdG/DyxUTEWAk8MX5wXZf7Pcazkz+c+sqWQczJQZZ979sd4Se1LYPN/xWsstapcOrzTjI6XcLpP4NC85PLd0TTPviC6/Y9OYRVe014Pl3eu0lpmMsHIq+CFRsTNq6jQ63h92unPkrvrxw/eXpYEf8UjpBrqVoaVvznTkFgDDBC5LNwdIgbUh4HsD0ALeSoipeppj2/9Enzm0i3vwFymD+sYSak/bHkca8Aae9I3PIPxTuM7RCyFqoZKpGGhnyzDfeA5yiJu/rg2reCn5DBOL5hyifVSegph5ZBJ1Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=bmi7PaoJXslA/Tr/W4aXut8MnEAB5rC7JmKve1KfteQ=;
- b=nMH7R4tyDyRmIR+hafRUOG6H/nOZhbv5t3ZYhYEIbeUOs4dWgSw3lq2/EUDcmhBCjFoFPyVz3TyF3EU8ezv9Byxw597vctAaWX5TYjs/qOCNIpKbJWy/jZVC7rzQs6EfE/vb6aqj9YzTFLlEq0N2Zue8xeUgnGaMbIfMC5gb3Euzt4KPMvRXoGDtev3XK90k+zw1HC2WcnU+w0iBH/wU/ErYbXyYJtwf3f3IuQQcPi1uLYU2JjrQFNqUATOKKpcNcjqBz53m7L7eYS0qEKhXA5ot41W1hmZfsS63CsW3LdnlO8ztkLFd/g346omurVsG9uUT1iC70TQuXEVTia6i+w==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oss.nxp.com; dmarc=pass action=none header.from=oss.nxp.com;
- dkim=pass header.d=oss.nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=NXP1.onmicrosoft.com;
- s=selector2-NXP1-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bmi7PaoJXslA/Tr/W4aXut8MnEAB5rC7JmKve1KfteQ=;
- b=fEUfB3p0XbTg1yQN20stDgawUT/i+yhH/jGEsM/Lo5frg2dXpyeKYLiAveH2iR25DqLHRTTXdu8jL9c9FQEBFHzN54hp5ULL+8xgwNvJ95ZWuiYHcLHSm42Hb4sDbLRjIG0CGGgfvVnq/NRcoM/VU0w1AH3iMlHetwP/W+1h2Mg=
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=oss.nxp.com;
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by PA2PR04MB10157.eurprd04.prod.outlook.com (2603:10a6:102:409::15) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.28; Wed, 20 Mar
- 2024 07:25:40 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.017; Wed, 20 Mar 2024
- 07:25:40 +0000
-From: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-To: linus.walleij@linaro.org,
-	brgl@bgdev.pl,
-	andy@kernel.org
-Cc: linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>
-Subject: [PATCH V2] gpiolib: use dev_err() when gpiod_configure_flags failed
-Date: Wed, 20 Mar 2024 15:33:44 +0800
-Message-Id: <20240320073344.1563102-1-peng.fan@oss.nxp.com>
-X-Mailer: git-send-email 2.37.1
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SI2PR01CA0010.apcprd01.prod.exchangelabs.com
- (2603:1096:4:191::12) To DU0PR04MB9417.eurprd04.prod.outlook.com
- (2603:10a6:10:358::11)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 934F9224C6;
+	Wed, 20 Mar 2024 07:45:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.47.19.141
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1710920720; cv=none; b=EtHMpNuqFvYUo3BVo+9uN55jiPSQae7zl9PcHk0YBHYVPfWCdkrZSyPQEI6XmOSAkrv5mW6jzYzJREmo+3GllQcnK/r2MMXMWepBqBP/06KjHWt52UPAPz+Bjg8PtxmCQ78bITE1rlul3KWMCfiDGgliqnd05BU/fmLJCVIbadk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1710920720; c=relaxed/simple;
+	bh=7qSpsLonZkPp6n1sVROjtTe4FhN1SzwKxxvPmVPaxvo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=LdE6ZBBTLoKowvVRu+3NA5VyfNjnGbzesAbAtB6ydURvxyQYWKGExaEFvBCSRSuQxCT4yHb9q5/IO1P75yXRfaBTyyKb+JXVjByTYbA3Zgnr74ypiVvOofJKkJbUrBjHVQ3fLwzSJKgjydnznJMg+2xRCOtXOju8Jwqf+2nJP1I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=zR4dYbbI; arc=none smtp.client-ip=198.47.19.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+	by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id 42K7iXW8064345;
+	Wed, 20 Mar 2024 02:44:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+	s=ti-com-17Q1; t=1710920673;
+	bh=G30qDNGsYpoAs9e2Fev9q4x3U8X+mKvech/LuR0V5SM=;
+	h=Date:From:To:CC:Subject:References:In-Reply-To;
+	b=zR4dYbbIOU0T9kSt2VAkyYXxgXqFflmKQJcJc+YRexUebfWrIRTYWDW/9HdGCRAH2
+	 2KUlZh22RTmTpHqsFOz+C2TVKTzBC+DoK9AZodPH7VJPCFH79hW1rqqmURZtTPHqsv
+	 OyhxsW9BCi0nXXAUXKmJx4XlNhwYmsvj5qI2UeJE=
+Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
+	by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id 42K7iX2x116495
+	(version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Wed, 20 Mar 2024 02:44:33 -0500
+Received: from DFLE101.ent.ti.com (10.64.6.22) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23; Wed, 20
+ Mar 2024 02:44:32 -0500
+Received: from lelvsmtp5.itg.ti.com (10.180.75.250) by DFLE101.ent.ti.com
+ (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.2507.23 via
+ Frontend Transport; Wed, 20 Mar 2024 02:44:32 -0500
+Received: from localhost (dhruva.dhcp.ti.com [172.24.227.68])
+	by lelvsmtp5.itg.ti.com (8.15.2/8.15.2) with ESMTP id 42K7iVIb016176;
+	Wed, 20 Mar 2024 02:44:32 -0500
+Date: Wed, 20 Mar 2024 13:14:31 +0530
+From: Dhruva Gole <d-gole@ti.com>
+To: Thomas Richard <thomas.richard@bootlin.com>
+CC: Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski
+	<brgl@bgdev.pl>,
+        Andy Shevchenko <andy@kernel.org>, Tony Lindgren
+	<tony@atomide.com>,
+        Haojian Zhuang <haojian.zhuang@linaro.org>,
+        Vignesh R
+	<vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Janusz Krzysztofik
+	<jmkrzyszt@gmail.com>,
+        Andi Shyti <andi.shyti@kernel.org>, Peter Rosin
+	<peda@axentia.se>,
+        Vinod Koul <vkoul@kernel.org>,
+        Kishon Vijay Abraham I
+	<kishon@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Lorenzo
+ Pieralisi <lpieralisi@kernel.org>,
+        Krzysztof =?utf-8?Q?Wilczy=C5=84ski?=
+	<kw@linux.com>,
+        Rob Herring <robh@kernel.org>, Bjorn Helgaas
+	<bhelgaas@google.com>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-omap@vger.kernel.org>,
+        <linux-i2c@vger.kernel.org>, <linux-phy@lists.infradead.org>,
+        <linux-pci@vger.kernel.org>, <gregory.clement@bootlin.com>,
+        <theo.lebrun@bootlin.com>, <thomas.petazzoni@bootlin.com>,
+        <u-kumar1@ti.com>, Andy Shevchenko
+	<andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 02/18] pinctrl: pinctrl-single: move
+ suspend()/resume() callbacks to noirq
+Message-ID: <20240320074431.6yzao3jlyaxuii7c@dhruva>
+References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
+ <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DU0PR04MB9417:EE_|PA2PR04MB10157:EE_
-X-MS-Office365-Filtering-Correlation-Id: 4a4c2a12-a10f-4549-cb4c-08dc48aef13f
-X-MS-Exchange-SharedMailbox-RoutingAgent-Processed: True
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info:
-	8/KWr3YHereSTi/g62fptLOxI8mHHWiZ8kUgvLEvMXX62Y7BAnQHJ7ifrRgnrZRxUHUVQQNvB75BJTFlJBNhOxHc89WPyyoD5tcHPcMKNJs5vXvelSx/5nOcMuufZvQxLX2GJ7AfCaWF1dlPrSbGAE9NjSJ3SMMBTyjXCW2hUNqaE4u2fKmtDkplY1Bkwq92WNFu22q65Nko7faziCtHUJBt36F4bHU+PyWN8K/r/CURqnB3JN/DLCWeuLHL50/p2D0ow0fe3Ta0+ZRiwUeAbZrdLC/6dX9qnXorq8DjYitbdKQUDjLEGlh0vzt6ma44d7N9hVG4E4Rk9lN4+G+msnRBY1rpfnWgfouWifYHoTcNyFWd10TbieLdvCOLMX2ok6LJsHw3yI6QoLs9Ik7+N64/EQy3Zreoy3zEy8ecZlr1KlSUrliAGx1DFpEX5rnhmizpPuFSItdNQGvCg64yHFR7xF8eZYm7jAW0tklCIa7JYC0iUvztTkSj+4GEg4eVA7KOA+3eAJ6Emtu5po22LzVR+B2dQELIYMBkRx/CaWgJyFT2VRfdrcJMIFZ9bFWZhXu4lKhFdbgBba7sjyTz+bt+5JPUEdomE3oJ1mrNyAlcIQtRbYtxMs0hLEIvA4YzSlI2QRd3BTE1+FvZWW+WQqs0MvnXEPQBnWOYS4YEcaEXzBMGK9g45kSCbE/+tmHuElxTpcjKK4YwqgrEJMyFpO2/O7SRIMMwi7HlrabTK2k=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(376005)(366007)(1800799015)(52116005)(38350700005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?bCG+ewoV4W7RwzHDwcGWgTkirK50ak0BcMJELJ+GXDnv5vcFZNV0QDtt3WiF?=
- =?us-ascii?Q?uKaKLy3avxd1lBvkEzCUYf8Y65PHrWYAHyzY99KFpDU2NG+LfZMmPbULeI6v?=
- =?us-ascii?Q?G0V34Tg7PPyp0p7gXjNsTgGjNWHXNBbSgbJt1Vto3Tf8KcPU0FOA5l5wOZ8h?=
- =?us-ascii?Q?7P2QYcfEV7P3+J7os7np1xXno89/tkc6rUu/HsUwWgTdaFbea9Yza4EFxE/8?=
- =?us-ascii?Q?ybXtVeotG/KIPNpTkY8E/bbQwZxsQE9E7GhsJP4h2OFoe+FwuDfGjHA0HYI3?=
- =?us-ascii?Q?tvdsY8HptxiVXoSs3wQnzgis/IX+U8yRJXCbEZbaus52NTJIxaIBmHlI+o/R?=
- =?us-ascii?Q?8t8BGBc4OVFJSLvOdwUwJ0FWWtmNLGo/ctsFxwrLIxRQIAUVx5zp20bfObbU?=
- =?us-ascii?Q?U6VMX/29kyYUdkfAW4rKrtkuOYc9ZdWMNEqKVzlJaEEFO9qYPStGRjBfugEp?=
- =?us-ascii?Q?dvUBGhx5FzhKUNNEqYIOwlDwT3g4ZLVk3v5HDPu8lSXOojtWPDBuLaBq2R6l?=
- =?us-ascii?Q?FVWfkz+yS//F6UZWDcsbh/RDO48bdNIGd/IVP6rv372vi71ryKEhDNFzYX/W?=
- =?us-ascii?Q?Nz+5T5I/O75r+nsS/tL7zoLKgpwUbCUyXfu62eHYF/ZEk5YwwQ51fbkhxkEL?=
- =?us-ascii?Q?DS9+dxrA71dTCykGJEgl1liHJLZa2ZRu9umgWOP3F6b1189JIShujcZRHANz?=
- =?us-ascii?Q?yVffH2TMS9OwEo5e6GgajQK50KsTAtG+mXBLGGz3PG06C8mdqlpBZ0KK9ALW?=
- =?us-ascii?Q?Qm94WeU/O8YskmKLLCOKOrE1CyJmar3PEoVWp9JdWfgSKkdWZVuJHRXZ9F3X?=
- =?us-ascii?Q?1BOVBmP1Pp4FylMSB9Zv19KdqPjdRiYJDbPXl2J7UA6c2RAxS9h/aalH0RL8?=
- =?us-ascii?Q?2NYwIAvjcqE4JbcIoJRYGVCdZIRm0bSijhZrM1PwqucrC+6IJo0kig2VPphX?=
- =?us-ascii?Q?JAmaw2MDLhaYsP1Npi/jnjxar/HbQRQZKj58cCOtqnQ7aZiPFnt8qVZg1ZjM?=
- =?us-ascii?Q?2P/sWYSnvJL44PqWUFxUDaZIWu+63op/5ziOazOJvTc/iwjyj7xnfPK/HTz7?=
- =?us-ascii?Q?pJPQjtHO/0RDuBySyqvnlybIs2cawiEVVLMEi4IRo7RF3tvigcokSEK2J1iY?=
- =?us-ascii?Q?4svvIz3zez627OX0jpN7sdcu5cfpBYlR9h9INzxSqEaG346PLaHNmxS1Pcnd?=
- =?us-ascii?Q?vning4vI4mwSK4GwriNT6guD90dHqR9v8+j9Ut1FNZOwWMk4OoiE1B/NEcrK?=
- =?us-ascii?Q?L3FnXioY8X7anemD709D2yTG2mrk0mN8LtfwT0ZwZRJ0XjtIJQFuFFLdSmQS?=
- =?us-ascii?Q?bNw57VXNPpp2Se2Pd9Gsno7sHGJ/7vifYWl50i0YMMl6KyeiWvh2lDulXG8Q?=
- =?us-ascii?Q?qbP1WqJfg0knypdQvJaRi1yCis8AXwZgHvSlp6NFcJqnnGZwbtDpAr8DF5ga?=
- =?us-ascii?Q?be2iwpGLwbZmiAYxC4zcRGKXad6Gce+sL5UkX02EkETK7TDymqsKg0tTe2J8?=
- =?us-ascii?Q?QIY8yoNAlO6pHefENUhICm9+zeFa4+gFS1nheo78H6Klz8xYxBHMXa4akLa+?=
- =?us-ascii?Q?jpF48avZQXihd6jOqgzI9SQUxqkg0parSuF4vJt0?=
-X-OriginatorOrg: oss.nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4a4c2a12-a10f-4549-cb4c-08dc48aef13f
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Mar 2024 07:25:40.6357
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: FOrC2gUb3BP+yk/6Rby/ejZ8zwb/jAXwlh61u1HFJ7sZLfdVho87LNP0N9eEbdxe3AzktAdAfGwGNxVJVGBvdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA2PR04MB10157
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20240102-j7200-pcie-s2r-v4-2-6f1f53390c85@bootlin.com>
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 
-From: Peng Fan <peng.fan@nxp.com>
+Hi,
 
-When gpio-ranges property was missed to be added in the gpio node,
-using dev_err() to show an error message will helping to locate issues
-easier.
+On Mar 04, 2024 at 16:35:45 +0100, Thomas Richard wrote:
+> The goal is to extend the active period of pinctrl.
+> Some devices may need active pinctrl after suspend() and/or before
+> resume().
+> So move suspend()/resume() to suspend_noirq()/resume_noirq() in order to
+> have active pinctrl until suspend_noirq() (included), and from
+> resume_noirq() (included).
+> 
+> The deprecated API has been removed to use the new one (dev_pm_ops struct).
+> 
+> No need to check the pointer returned by dev_get_drvdata(), as
+> platform_set_drvdata() is called during the probe.
+> 
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+> ---
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
----
+I was planning to do this but didn't see particular benefit to it. Do
+you see the benefit on your specific device? Can you help me understand
+how? Not against the patch, just curious.
 
-V2:
- Update commit log
+Reviewed-by: Dhruva Gole <d-gole@ti.com>
 
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ce94e37bcbee..37fe9db0bd74 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4233,7 +4233,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 
- 	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
- 	if (ret < 0) {
--		dev_dbg(consumer, "setup of GPIO %s failed\n", con_id);
-+		dev_err(consumer, "setup of GPIO %s failed: %d\n", con_id, ret);
- 		gpiod_put(desc);
- 		return ERR_PTR(ret);
- 	}
 -- 
-2.37.1
-
+Best regards,
+Dhruva
 
