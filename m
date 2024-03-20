@@ -1,106 +1,106 @@
-Return-Path: <linux-gpio+bounces-4494-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4495-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 249168815BF
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 17:38:35 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD4678815D8
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 17:43:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id CE8761F232B0
-	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 16:38:34 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1AC901C20A1C
+	for <lists+linux-gpio@lfdr.de>; Wed, 20 Mar 2024 16:43:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 073E9138C;
-	Wed, 20 Mar 2024 16:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BD9C664A5;
+	Wed, 20 Mar 2024 16:43:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7A6Ko2R"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="rrwEfcDo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B226CA47;
-	Wed, 20 Mar 2024 16:38:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2201D65BDC
+	for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 16:43:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710952707; cv=none; b=VSHs6LsW8ELcIXQRcXNSNMEr+wz++aDaoSipGjPdP/lSOgsWt9ZRA2r4oskXfxAekDjlJq41VUpmRbd2CFFIPovgBrLK3n68qwx8iR7uJxYx72ziFpUWispR6S4nX2Aqy8+C63RmZfbo3hVAMLOF+3n78QMNDXGPoS6vPQ+WyVU=
+	t=1710952984; cv=none; b=VhSIStP2q0W57gg9EcqD5erp4b5lsnDUnh7mqSSGjAIRFn/Wmf06ehDeTc/firJ23yYeWCNiKHbVfk624tkgCtE/wAo+K9CxMXKFj5t/vep48b3wmYdSYUg1MX9cUjX7OTjWWrwFL4LD0lufHrAERgRsG79bnNzYA1FecllZ5uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710952707; c=relaxed/simple;
-	bh=LfhemfK7EXzpmS+yo/9x2s9Dw48aQ75sJV6RERhj+as=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=X9QFQkXo+8d/pCCuH83u7UjQ3te9gLxeqiLaH68+dH5Fin/V6y9+46moMGfR72/Yj8J+HQUaSziFjYveYqwG8r65wV2VyMZlSkfsfES3AxDpW80YlD7NRb5dEcLOgiG1rvaquWesmUe5Q5PaT2gWM1buvStaxdwbIwphmMfHQwM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7A6Ko2R; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1918C433F1;
-	Wed, 20 Mar 2024 16:38:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710952707;
-	bh=LfhemfK7EXzpmS+yo/9x2s9Dw48aQ75sJV6RERhj+as=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=j7A6Ko2RVqQghkOeZydShEtgZmkJRgHMoJdMVxeES4UpvjlL8yvrm+DwaQSQIDauU
-	 kK9PmThsri5iCKSU9PmsKlw2uyNG48amVxRoFo/ceDdE70cA4uoDjksvBLo8eSD7rz
-	 sGSoOlb3Pgga2RYkRf0wOp0ztSnGDxnzpQCjgiFJYXeZX+kFM4MT2WHIfS+6alO0xH
-	 2VLrMiRTa831bK0zvXc7nrPNDleL2ENjSMWrucq2iTxtl5K4VPls1yn3rfmeaKGJuJ
-	 Sv8DG+x6nzA4XnSW6+Whm0sSfvb8KvG4z8i/uSGVHC7bWFp9MCF4jtDy9LVbQutA7M
-	 294FXG+F8Ey7g==
-Date: Wed, 20 Mar 2024 16:38:20 +0000
-From: Mark Brown <broonie@kernel.org>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>
-Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jpanis@baylibre.com,
-	devicetree@vger.kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, lgirdwood@gmail.com,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org, eblanc@baylibre.com
-Subject: Re: [PATCH v4 09/11] regulator: tps6594-regulator: Add TI TPS65224
- PMIC regulators
-Message-ID: <a3ec3c14-eed3-429d-b3f6-0764bcfb8dc4@sirena.org.uk>
-References: <20240320102559.464981-1-bhargav.r@ltts.com>
- <20240320102559.464981-10-bhargav.r@ltts.com>
+	s=arc-20240116; t=1710952984; c=relaxed/simple;
+	bh=Ro+y7r+bchkhmtpUOdWxBdLNti6gXnC7ydQOTSoB4ko=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Xn6b5KYE43SnSMNpuabXhO+rWKfpGXqMA4cYdkQRSylMuVGPZCunozgkBqPH5pgTuyfPUgnc2Q2VaZ8a06EkDYbpeZE5LA5+ziGg4YosZJo+2lRoAllDRfbrWo9InxJ0YIAgCyLBFQcqV4UA4Qvmr0w7TOiKSFOr3thFRkREIgA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=rrwEfcDo; arc=none smtp.client-ip=209.85.208.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d4541bf57eso770311fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 20 Mar 2024 09:43:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1710952980; x=1711557780; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Ro+y7r+bchkhmtpUOdWxBdLNti6gXnC7ydQOTSoB4ko=;
+        b=rrwEfcDowMuuQhujXdIAi3hPrPtg4bf8S4k/DXFT6OSFY+S1OVyn7UFIQ20uL6UGUm
+         V4TzTFCgBspm2UTmUOOnwGPnsmcy25iIYfYeUtTqIlM63GeCaQP3nfi/t8Tysuyggc2W
+         4eMtHUdg68T1ELGHhxsGao2KkV+y6vSwe0qUbUmberX5R8RdZ88Mh2OaGUPMREU3yRYg
+         ZSAe3LbgRgHwR4oYjIga6m5RFwIm/Wqb1HQAzwBIoBaW5wo6rM6OG7A8qy1EezVj9MBt
+         0rl15j0OZUncoLgHpyzQ6bXK91fMoFBHTTWgPmhjX/RKHQeo1Pv8D7oQF1RiX9YwlnJ6
+         SIwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1710952980; x=1711557780;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Ro+y7r+bchkhmtpUOdWxBdLNti6gXnC7ydQOTSoB4ko=;
+        b=L3+ouWdqAuEe2QJV7Al50rRjhqu0ZF3wJPvGqAkE93MUQIJrLhkDj5dSDoJnpS6t7R
+         wrZTbiu/tsKqpNSu31AgPv2UtfRaNbAPs8BtnrcdFLrJQ7qql/s0Af2JjKYUNpBQSi8r
+         HUrh3FCMPaOGNzdAos1hiVZAzXOH47ihLL4khd5n1Iux/rvGL+lG8R4zl+m9D+cJa3ho
+         ZyV5rpYMe8aKIWfhy2ibFg8FnAVWwx9qa5yYSYsOGjxSH6/yPwiqOIY746OYB1j7++2+
+         OS6A8+TVgpXeCaIXGrN0n7QGn4zvYV6fpQ8FCrYog3V2wNxoCxQVjGmP0F/KgWA9+opp
+         681g==
+X-Gm-Message-State: AOJu0YyIhXEZv+m+IidGiS0rpcCD3Lf0PbdBlUfmuFD0XRMbyH0qmJzr
+	MCqgNGpoc/lDsnJ9PaMJ1t7m++3Enh+F3Rea7v1cS4J0sdpoQJ/fEyT+dN2jnWiii6x1eKQbyQr
+	4Bh40kM4+1ZCwT51bjuBoDs2/0ZNwNpfeUCvNPwbXnohoTxfe
+X-Google-Smtp-Source: AGHT+IFuJlot0XoZmiGhvwi1Qmy6r13S6ZA6NOo95wxzsfE83Bu3H+mWdK4Hsp9mTpw1vZ5Mpgpa/BSATaPNCi1PkeI=
+X-Received: by 2002:a05:651c:542:b0:2d4:403f:81ab with SMTP id
+ q2-20020a05651c054200b002d4403f81abmr14196639ljp.36.1710952980321; Wed, 20
+ Mar 2024 09:43:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="z9H/iAfII3PBOX7h"
-Content-Disposition: inline
-In-Reply-To: <20240320102559.464981-10-bhargav.r@ltts.com>
-X-Cookie: Androphobia:
+References: <20240320134957.7928-1-orbea@riseup.net> <CAMRc=MezeyGEgVm54HYwPRvdid=r66YEv9dh647jYLuYTAWd9Q@mail.gmail.com>
+ <20240320090046.19dc31f5@Akita>
+In-Reply-To: <20240320090046.19dc31f5@Akita>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 20 Mar 2024 17:42:49 +0100
+Message-ID: <CAMRc=Mfe55-udjouY0Xd3c=TZy4wcY99uESr5FN0K=Dd3y-BaQ@mail.gmail.com>
+Subject: Re: [PATCH] bindings: cxx: link using the libtool archives
+To: orbea <orbea@riseup.net>
+Cc: linux-gpio@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Mar 20, 2024 at 5:01=E2=80=AFPM orbea <orbea@riseup.net> wrote:
+>
+> >
+> > Thanks,
+> >
+> > Could you use your real name for the sake of code attribution (if we
+> > need a license change later on or whatever)?
+> >
+> > Bart
+>
+> If its possible I would really prefer to not, my change is trivial and
+> I do not think it is significant enough to claim copyright.
+>
+> So that I could easily link to it in the Gentoo issue I also made an
+> github PR which is gpg signed if that helps?
+>
+> https://github.com/brgl/libgpiod/pull/65
 
---z9H/iAfII3PBOX7h
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Whatever, I guess it doesn't touch the code anyway.
 
-On Wed, Mar 20, 2024 at 03:55:57PM +0530, Bhargav Raviprakash wrote:
-
-> +static struct tps6594_regulator_irq_type tps65224_buck1_irq_types[] = {
-> +	{ TPS65224_IRQ_NAME_BUCK1_UVOV, "BUCK1", "voltage out of range",
-> +	  REGULATOR_EVENT_OVER_VOLTAGE_WARN },
-> +};
-
-These all look like they should be _REGULATION_OUT given that the
-interrupt names are _UVOV which look like they could be either under or
-over voltage.
-
-Otherwise this all looks good.
-
---z9H/iAfII3PBOX7h
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmX7EPwACgkQJNaLcl1U
-h9C33Qf/SK43LIIBuu6A1cE5VdiwLJ+7i3NH/P3xXDF4J9G2ic8BC68uYOV1rekm
-CmKoq6tpnTt/JjjUXTqrp85gD2QmFzcUElvR5AJgwSQKvWvMSYSyC0MSe0PGBg6P
-VruWKljEYGHSgxvdC4fkOQTlsp8Qntk2EXUXIL3QbtL+auVsKhmkQJBmG1xIPy1H
-YeHN+XmIMuORdXttP0REyjc1C3/oWOo5WW0R5dgsRbgndF6jfufoU3k0JsvDoyPj
-wAA3z0M7giEnfG7hwn16avEhFa2bo8FV2euj7p2KLJNuvwNeF9DBOyefMOOaEv9F
-1Z7HvBMpq+qoeU0g2CwExaT/rE+VgQ==
-=zsxV
------END PGP SIGNATURE-----
-
---z9H/iAfII3PBOX7h--
+Bart
 
