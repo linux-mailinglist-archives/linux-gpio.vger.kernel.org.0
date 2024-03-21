@@ -1,134 +1,125 @@
-Return-Path: <linux-gpio+bounces-4512-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4513-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 17E65885C35
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 16:41:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD54F885F2B
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 18:07:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 491FC1C22DA3
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 15:41:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DF21A1C2395D
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 17:07:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 05895126F10;
-	Thu, 21 Mar 2024 15:38:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6452313540F;
+	Thu, 21 Mar 2024 17:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="ZnwMhzUR"
+	dkim=pass (1024-bit key) header.d=destefani.eng.br header.i=@destefani.eng.br header.b="EfASMgUD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
+Received: from mail-il1-f173.google.com (mail-il1-f173.google.com [209.85.166.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0EABA20304
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 15:38:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24928135419
+	for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 17:00:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711035487; cv=none; b=VZn5vW3ghwXeSRn5/22De8zLmAJGazDRjdNMux/nJ49CR/KdjDztRNArzyUgaF06nr5mjK2Kj0e+5R/arI9TUdI12kzP3lMkwAsrNN6tOb5/zAlafHhK2r6SbUDYRGAqFiZwc+/9mznWKEdC6u4/4cKjgERWj5Tz+Dk5nWuHC20=
+	t=1711040431; cv=none; b=it8oH/GIR5tcRAxKGEmRfnZIDLC+4kjXluuDCKT1aAp11oWf6xvdkBObTQ4zUqZEjj89s8IXr1+m+0dtmArijhLkaXEqUSuMucivRfOCrWbKb+VV/Wonyf3UzgA16yLk3rOFqBiQfsceH4e6mulD8B+rSOK5ylqyJOEWViwp6Nk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711035487; c=relaxed/simple;
-	bh=8thm5SjkAWvV7KbxS16lzfnalp89YyrFksTLWQiMALM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=u3hZtGBMXIPZwcSV1tUg6XL5v7Yage+DnUC76A3Zrnu5pgu9vT+tCyDsrDhLcALLfzjfxLSMGaP4z+g24kQiamkW+p97Iv5Bbv94QofJk6cbi7FrXiENC1gQAR8A0eXQsxElR6rzx5UmRRofeAzJv+LBMFzjDUrv/0IB9kYKepU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=ZnwMhzUR; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-2d28051376eso23164311fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 08:38:05 -0700 (PDT)
+	s=arc-20240116; t=1711040431; c=relaxed/simple;
+	bh=oB5zoBAMIIUAKl+NPEnh5d82Frfnml2dNHWRJ+Pa6f0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=C/MyHVTlLdLUJhip1O5f80Bxfj/UwzM4tNenWl5QksdM8+2NTywcCffFsg4+RQS04RMvBXpODgkV/l+kTjWCoVhQL/zJV+uwLNikIacmhGIYD/hLATgOUXAtAxvnsK1SPp4fRcWHGKUSPJnmN8wgA8WYWfqM9Ql3eHe+zmiT0jk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=destefani.eng.br; spf=pass smtp.mailfrom=destefani.eng.br; dkim=pass (1024-bit key) header.d=destefani.eng.br header.i=@destefani.eng.br header.b=EfASMgUD; arc=none smtp.client-ip=209.85.166.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=destefani.eng.br
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=destefani.eng.br
+Received: by mail-il1-f173.google.com with SMTP id e9e14a558f8ab-36864f7c5cdso3056335ab.1
+        for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 10:00:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711035484; x=1711640284; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=BXwB0/1efUp2u0X/Za5IDEJwa5crOpwovhlePEGGwYY=;
-        b=ZnwMhzURpxdgCYaKdqHrKneQOiiT3PfPygpl5pvm96sXTG2HduTndWIfTw7NgGciWZ
-         MOUrszl/axr4iuedU1P6LVwYdTheA1CXpsjleOuFzMPZYnW3MO505TJLMZui5gC8a15a
-         Sefx9GpfM4seyZO7yuyXKOuU5mPpqtGETE2+Ge8Pdg6itPAsGAs9GUUcu4ExQmNStgvl
-         FOT5RhCF6UvEBDKXK8rP75A5CfUSJXft0R20NJkHsTP8iqpyrRVco/mg2sCpdk2tKeEy
-         gJJVJxHfcloW3+Pobg0NIKOnA3CfRfADWTDmKN9Iw8fetECxI5eHS5I7LWRyMKEF904W
-         oqQw==
+        d=destefani.eng.br; s=destefani.eng.br; t=1711040426; x=1711645226; darn=vger.kernel.org;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=uEPLM7OkKexBynty5sXs1ZBTiCkojoMeCpVCGiFLV5k=;
+        b=EfASMgUDWMjes2b8O5EuiHK53LHra/usm64BhDsZQyJundGZiJTO0ODrP8nKotD3KS
+         ms22JjEOyUYZqCuna95lPpSbgvJCKCKvf1/jQs9Z9Fy9EF3qZ/S1YMOVDEcI9fXf/mtN
+         2mdC7r51iZUkjfSk2IRV584OgBvOH8tk91NDs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711035484; x=1711640284;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=BXwB0/1efUp2u0X/Za5IDEJwa5crOpwovhlePEGGwYY=;
-        b=g6nMWc3pLrHjDJubTANUaB/vXWL+tSH3qMkuAro0vVPiTbHLxj8hC52FM9W8zNzH3C
-         Mx1u0aMnXW/Q5mo/+k7BoVNS60l77kk/8MT3+HznYU+oZAYuEtAA6MCd+OrVwRoLTuTT
-         IvavIy+RwTewYY4P1rYQ+hAQZLWO5lgc3WyPbicRpRWTe3ugI2LFTp4fXlTKOobFARuR
-         g2TxDdmAX+HmHOKvTA7nfZh0ICJGzvoA9Nec5UBmo8BDdC5at37xczOOcIXq9wd15as8
-         Hw3rExRBr4rtVIb6wMIDiOiH7gCVnf8TS3uuNwkaqN/O4xirMFdXwjp2mYQjJbCXEUFv
-         2NKg==
-X-Forwarded-Encrypted: i=1; AJvYcCUTGBeoQc+uPrbKOWzNY3q0v8+DQolt56ow2ohlupApdVl6wtCHBxMINx2f+8Fl0HWU1OVZ2G+z1ZB6CZ1V6chR+Y+Rky6EKVSF+A==
-X-Gm-Message-State: AOJu0YygbPQ/Gt8IGzLbvlRFXRLafLX4xYBlKDJfRl9TgYtUI2qU6G/y
-	Vn8NiOhLpCmc4GyRNivlM/5DGn+0Q0UePv0kjZ99JWae6WZRCQQKboyHUXaHM2+m7wc/QVVMHm/
-	uzMr19yLPCXvir+wVVFZl9swBWo6/GxD3JB0vlYVepPm6l0at
-X-Google-Smtp-Source: AGHT+IHZ1uQJtuvIF7lcojmcQ84U5q3lTCGn2mFY454HURxGZGur5YRAQi9e/q20H46SLSiNjbkzV534YZmnJcgTaDU=
-X-Received: by 2002:a2e:b001:0:b0:2d3:5ddc:b949 with SMTP id
- y1-20020a2eb001000000b002d35ddcb949mr2108970ljk.2.1711035484114; Thu, 21 Mar
- 2024 08:38:04 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711040426; x=1711645226;
+        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uEPLM7OkKexBynty5sXs1ZBTiCkojoMeCpVCGiFLV5k=;
+        b=jHAIYKU9HqLBH6oFqxg++Rm96fPSAByXONw/hqE06ojP3czLoRX/lqjqsD9gHzAHma
+         gQDd50oiHPHabfvpI/nhFngoaJUnGA+QsOVsBa0F8M3vCQdQJSMKpSy+KYm4n9TVBn/z
+         OvjFsTsFie5dZALqulvAHlp9HGnWyjBT/2UGCwqItdeXNz0cvn3uVixzFjOdjzynOCap
+         4HVGmLwTN96hqkIdYq44UzTbltt9rN8JPcMrOo0+lH1G9BZrq6k36kURSpCgPDWIhpWb
+         JyZT5pgWXJLdQnLq/7ztCXFbSY9B9Tp+IlC8yE5qNbzfRAcrtUgc7DnpybL1I+JWNDaa
+         n7VA==
+X-Gm-Message-State: AOJu0YyIOrcSMzZRo/sBFBuWH9KmGW4tC0gh6K9lI1doa4IcFkjhL5rf
+	KVe2St5GqhXbZ68fiLQ5CMQjdPpVobdWIdZSgVfNcqMQkyLYOHgBQSnS3WwiMlzSEcSl7x+BZ8L
+	9
+X-Google-Smtp-Source: AGHT+IHGKuH/5XIgWJzPZZK8/nEM0rHLmf7KC14e1l+FCy+WzSqBoLeTQyVSlGVui46m0dnrLINRNQ==
+X-Received: by 2002:a92:dc83:0:b0:365:29e4:d95d with SMTP id c3-20020a92dc83000000b0036529e4d95dmr57794iln.30.1711040426413;
+        Thu, 21 Mar 2024 10:00:26 -0700 (PDT)
+Received: from toolbox ([2001:1284:f508:4314:8c5d:889a:4b96:5])
+        by smtp.gmail.com with ESMTPSA id l63-20020a632542000000b005f034b4d123sm43209pgl.24.2024.03.21.10.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 21 Mar 2024 10:00:26 -0700 (PDT)
+Date: Thu, 21 Mar 2024 14:00:18 -0300
+From: Guilherme Destefani <linux@destefani.eng.br>
+To: linux-gpio@vger.kernel.org
+Cc: brgl@bgdev.pl, steffen.kothe.gc1993@googlemail.com,
+	linus.walleij@linaro.org,
+	Guilherme Destefani <linux@destefani.eng.br>
+Subject: [PATCH 0/1] gpio-f7188x: add support Fintek F81804 & F81966
+Message-ID: <20240321170015.74544-1-linux@destefani.eng.br>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320073344.1563102-1-peng.fan@oss.nxp.com>
- <CAHp75Vf1K8c+7O5Cga3t+WiiSkk-yk_gATGJrMZ8rnPPtWLkWQ@mail.gmail.com>
- <DU0PR04MB9417FEFA3DB02082D02A963F88332@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <ZfrGvwV92a9Zzrg_@smile.fi.intel.com> <DU0PR04MB94171BA7C2E35D6691B47BBC88322@DU0PR04MB9417.eurprd04.prod.outlook.com>
-In-Reply-To: <DU0PR04MB94171BA7C2E35D6691B47BBC88322@DU0PR04MB9417.eurprd04.prod.outlook.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Mar 2024 16:37:53 +0100
-Message-ID: <CAMRc=Mcm-AkYmhfA4KfDDaNJaOx51+0yVQuXSJt2Ac1rb4FQ4w@mail.gmail.com>
-Subject: Re: [PATCH V2] gpiolib: use dev_err() when gpiod_configure_flags failed
-To: Peng Fan <peng.fan@nxp.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	"linus.walleij@linaro.org" <linus.walleij@linaro.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-Mailer: git-send-email 2.42.0
 
-On Thu, Mar 21, 2024 at 6:40=E2=80=AFAM Peng Fan <peng.fan@nxp.com> wrote:
-> > > >
-> > > > I'm not convinced, so not my call to approve / reject, but see a re=
-mark
-> > below.
-> > >
-> > > You mean dev_err not help or else?
-> >
-> > Moving it to error level.
-> > Usually developers enable CONFIG_DEBUG_GPIO for these messages to
-> > appear.
->
-> But this is a error log. Let's leave this to gpio maintainers.
->
+Hello Steffen Kothe, and Bartosz Golaszewski,
 
-I'm fine with this change.
+I have a board with the Fintek F81966 chip, and noticed that
+the GPIO exported in a physical pin wasn't working with the latest
+kernel.
 
-> >
-> > ...
-> >
-> > > > >         ret =3D gpiod_configure_flags(desc, con_id, lookupflags, =
-flags);
-> > > > >         if (ret < 0) {
-> > > > > -               dev_dbg(consumer, "setup of GPIO %s failed\n", co=
-n_id);
-> > > > > +               dev_err(consumer, "setup of GPIO %s failed: %d\n"=
-,
-> > > > > + con_id, ret);
-> > > > >                 gpiod_put(desc);
-> > > > >                 return ERR_PTR(ret);
-> > > >
-> > > > While at it, can you move it to be after the gpiod_put()?
-> > >
-> > > Does it matter?
-> >
-> > Yes, the system gives resource back as soon as possible.
->
-> Got it.
->
+The board is a https://www.jetwaycomputer.com/MI24.html
 
-Please change this and resend it.
+Reading the datasheet and asking for help from Fintek for
+a way to make both chips work, I ended up with the patch in the
+following email.
 
-Bart
+Bartosz, I sent it to you because you are listed as maintainer for the GPIO
+subsystem.
+Steffen, you made the change that bring support to the F81804, so I hope
+that you still have a board with the F81804.
+
+I only have a board with the F81966, so I can't test if it still works
+with your board after applying the patch.
+
+Despite being a small change, and following the method recommended by the
+manufacturer, it would be nice to test this on a real board.
+
+Can you please test this change in your board, Steffen?
+If anyone else has a board with F81804, can you please confirm if with
+this patch the driver recognizes the right GPIO for your board?
+
+If is there anything that could be improved in the patch, let me know
+and I will change it as needed.
+
+Thank you all in advance (and Yu Chen from Fintek for the guidance),
+Guilherme Destefani.
+
+Guilherme Destefani (1):
+  GPIO support for Fintek family F819XX
+
+ drivers/gpio/gpio-f7188x.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
+
+-- 
+2.42.0
+
 
