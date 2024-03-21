@@ -1,95 +1,130 @@
-Return-Path: <linux-gpio+bounces-4510-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4511-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6408885B4A
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 16:01:06 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3AD7885B4D
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 16:01:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 55D1A1F22F5B
-	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 15:01:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9171B1F23B7E
+	for <lists+linux-gpio@lfdr.de>; Thu, 21 Mar 2024 15:01:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E46E585958;
-	Thu, 21 Mar 2024 15:01:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5533F8613F;
+	Thu, 21 Mar 2024 15:01:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="YrQvzPoR"
+	dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b="SiD/LbjN"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mail.manjaro.org (mail.manjaro.org [116.203.91.91])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B3C71E522
-	for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 15:00:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D1271E522;
+	Thu, 21 Mar 2024 15:01:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.91.91
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711033261; cv=none; b=rxZPVYehpc7IIcp2LIkP/UdF1FVT2XINTbypE9/Wt1WQM8quDjwhuYRBGZl0Lui18fKVrlPe9eSpWQx9hq/+/GT6LdMojrvypwTBRLoCFFccXgSlAoLuc3vf39yHxHs101gMqB77BXrqjjqROrqn5iXct7BMY3oQxolWG0uo5AQ=
+	t=1711033272; cv=none; b=vA4GGGRc2+gjxD+aLLEsPfYFwikGcJTMfuqjt8K6lkTmRzYxJhnHgNFHeA21Y/dfuTsyfxI9qdeDwwnbPOoapV7Kw/0MM4H14cE17uGKtosMHy1n+86f3nx8V4xjWqtv+xagENmXAClauHm7s5FZ/uU/x0CWN7fuesMPh5lAD4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711033261; c=relaxed/simple;
-	bh=eFdgMBog55pPacvetVrNtMYWsrYORvl/b2ysPzLPlV0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Fqo3uGsRIaXUG0qko1LvMA31W1p5IePQstyoD/UiwyW05u5pBryrWAXJ20I+TrEEqtrPPkTvCrmBJGXFnylgAaFJf99+Sbk0wVbHgRMzoO6rv+ILBQzVMcP/zB3AEqy1Sy8eMb/bLlgGTABqzH9gyjVGi4ayQx8AnV5wC84+C3g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=YrQvzPoR; arc=none smtp.client-ip=209.85.208.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d4886a1cb4so15336901fa.0
-        for <linux-gpio@vger.kernel.org>; Thu, 21 Mar 2024 08:00:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711033258; x=1711638058; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=eFdgMBog55pPacvetVrNtMYWsrYORvl/b2ysPzLPlV0=;
-        b=YrQvzPoRDFaG3o1zHZ4/FYRULE1qvFf2rS1TRa4osEm8OADXTvq0nzl7Oo5uvx/Q1m
-         m11Uk/28nakJZEQF0b31b32iN9OZbyOhFAkZ6DumQ8uu9jCmL2N746S1bDfu3bNFpLdL
-         gBze7vMazG1lIBIJLkacgqlrznD0O8XlWzVbyHWWcco8VHj5dEmHNUaQI+MZZEi8F/ig
-         C00Kgvaw1Z26fX1whUftFklmpc/ukrVInkr6DUUfqHBeFQgktoieBnC5ej9faLp4/5Un
-         flKaRrjb0/5OPu0b4LUIY3XDE+QYfSCaPBvej+EUI2U4dPxBA02MKRarpnkZNledDxIf
-         sbsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711033258; x=1711638058;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=eFdgMBog55pPacvetVrNtMYWsrYORvl/b2ysPzLPlV0=;
-        b=bOHazZe4mwyfqHUe0Q5UezQUhRjBWH3KezfVR40c7sqZtbek5ceOfgNlI+U9I3R8x2
-         SrTVtCFtEGxR65pwDn/eoyuX+X8q4Kjl6oroY8m6bdmBVUijFlM/ZXOMDgaTzt4dpNyn
-         zNQmuAYu3TyJ1qsJTQBC+tOA03D3Wu4R2JPFazjX5YNt/Lr7CAk7II0Xq3vVk4Wa2JKH
-         ll3mNRqmfeZMO2SLJfGsGWwf+TgX1VOZPbJaB+m3/KuNSPOlncvJuG1f0MKjxkJTMaMS
-         6kHWV3aWCw1GcK8R7r/dD15K9z9KSY/E008euJX3E5ThVk/Wx9Ji6sq9sEcrJaOg7phb
-         BZUg==
-X-Gm-Message-State: AOJu0YyzzzNn9CqZ6xe4Y4tHv4JEszBKOAD7aUr7XlcvEzGGCYnF5IpS
-	VfPFGKkr4ei0S181e91hQvGPU28rtdVw2Pkjc3m5rJxKwEAeiqejuZQERicRKMf8AZsXAEi5RYP
-	bOODJreSp3P1CZMWgtrCZHmRCJ6TrYfK27Mq3Uy3RaiK42pFQ
-X-Google-Smtp-Source: AGHT+IGH+xTo4vgJ4hFnHL2r2+q/CE5y0X3891XskinOSEo2YMqlBpeWtmYEU8wpP/BF2wFOgRDa+T3axHohjAitnho=
-X-Received: by 2002:a2e:3005:0:b0:2d6:8fe1:5e17 with SMTP id
- w5-20020a2e3005000000b002d68fe15e17mr3675165ljw.25.1711033257605; Thu, 21 Mar
- 2024 08:00:57 -0700 (PDT)
+	s=arc-20240116; t=1711033272; c=relaxed/simple;
+	bh=MeHpHFngmGDIRw0t6x3fj84LYp7O6nC0DGzx+CxZmLk=;
+	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
+	 Message-ID:Content-Type; b=BMoW3imUhQOjEQHXshOfk9vlZcv9Xg3pFo5Y+P+mcZ4wZ76rUxrgzJQgc/zSeARzJoo+xZqHVEOv4g0NuJSEeqOmc0mOluupG127/0OsgunKGN2rWQhYBAYZL97FvqZhrh6fIPrj3bYWsx3ag6O4iOf+SApzE9/c0REyEvR0Dls=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org; spf=pass smtp.mailfrom=manjaro.org; dkim=pass (2048-bit key) header.d=manjaro.org header.i=@manjaro.org header.b=SiD/LbjN; arc=none smtp.client-ip=116.203.91.91
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=manjaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=manjaro.org
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320134957.7928-1-orbea@riseup.net> <CAMRc=Mc1JOf97jQKPL_k3u=NWJBf2aGGDPTw5kaem3t3SzSxig@mail.gmail.com>
- <20240321063446.0cfd3229@Akita>
-In-Reply-To: <20240321063446.0cfd3229@Akita>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 21 Mar 2024 16:00:46 +0100
-Message-ID: <CAMRc=Mf+fGwg=dKZEe8zrpVPgm5D+bVzwX+xb=1jsFsZa8F=7Q@mail.gmail.com>
-Subject: Re: [PATCH] bindings: cxx: link using the libtool archives
-To: orbea <orbea@riseup.net>
-Cc: linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=manjaro.org; s=2021;
+	t=1711033265;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Sft1JFZk5skzUoNvqsIk2m0oGI7tbYzzfxLI3ZVhHZo=;
+	b=SiD/LbjNKb4AO6tgV6/Tnd6/ux2gXYJ3AEfGypJAFLS34zSNhV4XKCSvE/81nMKXYNQhF7
+	ts3F5nJiVETb0Sah0NxVllHxkf0/7k++xFSPaPaC7CisDQOwvahcKSqR+5faVYq+aLzZ3i
+	bhNuRVjzJ6AriEpWFupgQFXvoVcfflf7f8IoYBpyFrU3eeLF8F91W0VAw7ajiONOZ+Q1Tw
+	+6hFdXCd9duHSvBucRVIIOkJRpiB4fNzECssiiTWd+kd6EntvPe6HtfiB9Eukv/iM0z1p1
+	mlpiDY1iM7rkx9N6ildz9N+ILdA31tAOirTTM2GfwPibJYUnLgQ7MU6dw1ai4A==
+Date: Thu, 21 Mar 2024 16:01:04 +0100
+From: Dragan Simic <dsimic@manjaro.org>
+To: Alex Bee <knaerzche@gmail.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
+ <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, Linus Walleij
+ <linus.walleij@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+ <broonie@kernel.org>, Chris Zhong <zyw@rock-chips.com>, Zhang Qing
+ <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH 0/5] Add RK816 PMIC support
+In-Reply-To: <20240321143911.90210-2-knaerzche@gmail.com>
+References: <20240321143911.90210-2-knaerzche@gmail.com>
+Message-ID: <9a79e319d671b6a257f13ff945ee87e5@manjaro.org>
+X-Sender: dsimic@manjaro.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Authentication-Results: ORIGINATING;
+	auth=pass smtp.auth=dsimic@manjaro.org smtp.mailfrom=dsimic@manjaro.org
 
-On Thu, Mar 21, 2024 at 2:34=E2=80=AFPM orbea <orbea@riseup.net> wrote:
->
-> Thank you and apologies, I neglected to mention that I was having a
-> hard time getting the tests to build because the check2 in Gentoo
-> doesn't seem compatible with what you expect. Maybe its too new?
->
+Hello Alex,
 
-I suppose you mean Catch2? What version does Gentoo provide?
+On 2024-03-21 15:39, Alex Bee wrote:
+> This series aims to add support for Rockchip RK816 PMIC series. As per
+> datasheet it's targeted for RK3126/RK3128 (RK816-1), RK1108 (RK816-2) 
+> and
+> PX3-SE (RK816-3) but might be used for other SoCs as well. The mfd 
+> consists
+> of an integrated RTC, a GPIO controller, two 32k clock outputs, a power 
+> key
+> (output), 4 buck- and 5 ldo regulators, 3 regulator-switches, and 
+> charger
+> with integrated fuel gauge. Charger and fuel gauge are not part of this
+> series. Two of the switches (otg/boost) are part of the binding, but 
+> not of
+> the driver. They must only ever by enabled if no battery charging is
+> happening, but it will be enabled automatically if a battery is 
+> attached.
+> Thus they need some incorporation of a yet to be added charger driver.
+> Integration in the existing rk8xx-infrastructure was pretty 
+> straightforward
+> and only needed very little tweaking. In order to not further bloat the
+> driver(s) too much with additional definitions I tried to re-use 
+> existing
+> ones wherever possible.
+> 
+> The patches are loosely based on the vendor's implementation, verified
+> against the datasheet and tested/measured on RK3126 board. As they are
+> touching several subsystems I'm sending them (very) early for the
+> 6.10-cycle.
 
-Bart
+I went quickly through all patches in the series except the one that 
+adds
+the bindings, and I've spotted no glaring issues.  My main focus was on
+ensuring there should be no regressions.
+
+Thus, not worth a Reviewed-by tag, but still counting as a review.
+
+> Alex Bee (5):
+>   dt-bindings: mfd: Add rk816 binding
+>   mfd: rk8xx: Add RK816 support
+>   pinctrl: rk805: Add rk816 pinctrl support
+>   regulator: rk808: Support apply_bit for
+>     rk808_set_suspend_voltage_range
+>   regulator: rk808: Add RK816 support
+> 
+>  .../bindings/mfd/rockchip,rk816.yaml          | 259 ++++++++++++++++++
+>  drivers/mfd/Kconfig                           |   4 +-
+>  drivers/mfd/rk8xx-core.c                      | 103 +++++++
+>  drivers/mfd/rk8xx-i2c.c                       |  45 ++-
+>  drivers/pinctrl/pinctrl-rk805.c               |  68 +++++
+>  drivers/regulator/rk808-regulator.c           | 218 ++++++++++++++-
+>  include/linux/mfd/rk808.h                     | 141 ++++++++++
+>  7 files changed, 831 insertions(+), 7 deletions(-)
+>  create mode 100644 
+> Documentation/devicetree/bindings/mfd/rockchip,rk816.yaml
 
