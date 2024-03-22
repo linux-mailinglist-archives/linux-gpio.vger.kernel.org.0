@@ -1,88 +1,85 @@
-Return-Path: <linux-gpio+bounces-4525-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4526-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D425D886BA3
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 12:54:30 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A5708886BD0
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 13:04:43 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 739971F2492C
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 11:54:30 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 5D50828677F
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 12:04:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69AA93FB29;
-	Fri, 22 Mar 2024 11:54:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6853FBA3;
+	Fri, 22 Mar 2024 12:04:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c6EiJl7m"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HBNRKgCx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2DA23FB07;
-	Fri, 22 Mar 2024 11:54:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 242663FB3B;
+	Fri, 22 Mar 2024 12:04:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711108467; cv=none; b=LgqTqq0Xd9Isdn4i93Dh8ph4Pv8/VTh/kMJiDTvC8ewF2uriUdTTJhuf2sTGtXOY4nJ8MERAY+pVVkishwiDgTyz1yqz1uTps+A11Rcg2SDPtre/TRI6lI16NF49kLRDJfZOVSW6a1jzfd2yDQ0FTp6UlhyGD1w2Tfvw+9tCEtA=
+	t=1711109079; cv=none; b=VbjWFUQKtIJThV6Yqmn3xXQ/KQ6lzs6Opf7fePt57VrCiUM6pXr3jp7FWTMvChYzM9I1pCXm1dGAGIPDziZM8Nr87lmvtdVj2mOGChVYSqpvDLtNMpt8sUmeh/Szn7ChdbFERkniHAZQEh65R7u0BdZiQDwTyRzeZyMzCfVxoEw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711108467; c=relaxed/simple;
-	bh=cl4xjErbVI23OC6w9YYx1Y9I9UVaJ3wKtPzhlKhvlaQ=;
+	s=arc-20240116; t=1711109079; c=relaxed/simple;
+	bh=1TCuJ3w/BDoNx9LM4VjC1x6y9/x9YsRVN+lNH7V+/4s=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oexyyT2SBsKwfSvwAn/ELFjAEJ9vyAfxoGlq1T2iIzF2oI1M8t42selBr0mhCj1zrG0ccs83EttUMJWru4HXnUsObugwSfHsDDf75dsEwStqBHK0aPyNqRnlA+dPqf7RA4xaQY/ABEGmLq99K0MlH7Z4m6puqYhdeJhROM0gtYY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=c6EiJl7m; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=ImodAIx/LwW7QVVHXSdEhvmzw9MqAKkM753XWreDZetdwjJaaygrr8mSggD6SqTbJJKrQ8IHb+8EWOlbmLXYFnLqQT0Joa78gIm2rxBWG4/z+4hMkzFMtf9LYlNNtNk1I1wqWFJed+cbbj4r8ncFQWbTq1aa+W8P4w4k2Vnj5SY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HBNRKgCx; arc=none smtp.client-ip=209.85.222.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dca3951ad9so12803295ad.3;
-        Fri, 22 Mar 2024 04:54:25 -0700 (PDT)
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-78a16114b69so189897285a.0;
+        Fri, 22 Mar 2024 05:04:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711108465; x=1711713265; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711109077; x=1711713877; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=sugrI04a69D7TsptgUFH0TrJAHa5oTy/e7UovPooNCg=;
-        b=c6EiJl7mU+JkDh6n3wQSIJxcydAMhQ6+uHiYZjR2iUsyXYFSIjemFxd0awfuGmNgKn
-         XHwpDdwmrY2hshxMqvnbNrfoyDHBvzD26Ss2qmIsPcmMCBD2210pb2JE4SZHwG7Xjhdw
-         nyLFwUe+m3PCz9RCm0ad1FBCi/MF2UOgx2lMtCaIMoMW9pQmIa31//V+/aRQQzKPFhyJ
-         bwYDIvvkQYB8o//7AHGkq02NZd52zeHs4NF6DbyzmcyJ4BRv1F2G1xvMZDr1wBbPIHhQ
-         3Nl+T8rAILy9OSG5C+0COGpuPSuwnYnXqtW9YuK0x5I/bekKNTYiGzxR0ejqBZoTvIHD
-         sVcw==
+        bh=ln7qEJHKHqLJtKwDgDsUNcpQ9J+dt/V2pERnhD5tvGE=;
+        b=HBNRKgCx4sI0FDpZa6DDhHuonrpM4TshSWAQzyqKTaGUyaalfoYDIg04G3XQK1adIH
+         LivBg9xcRzbVHAR2axHAnW0rQGr+qdwnJlu+byLtABvbxvZjY3d3VFpmBke9dj31Ytwv
+         XEtMYz9yKevlJjRKPGzJrBePZv8DBeUUV/by27h3USBvSqmHz5hkgwl0UZTqlrFTYzNz
+         6S6wK8qJbkxkvpUvKkzFbTo3XuK0OW5j9rxm3LV5L4FVUxBhG9HR3tJPQnrhRuXSqq1f
+         5DjWm89TUi7CVLcCEq+Kf+rhfXV1kTYP0/t9aAn2qLvvZElhECFhu8rM2KSFSfbBiE7p
+         ADCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711108465; x=1711713265;
+        d=1e100.net; s=20230601; t=1711109077; x=1711713877;
         h=in-reply-to:content-transfer-encoding:content-disposition
          :mime-version:references:message-id:subject:cc:to:from:date
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sugrI04a69D7TsptgUFH0TrJAHa5oTy/e7UovPooNCg=;
-        b=nkbEjUhstLZHwgut3ZIA0gy5mbtCO4rMB+1KKh9WyMxXBvWHDT5rJWs6FC8yueGWzj
-         1xCq/nsfzFAKzVdBKZwJaP+nB/KWUL3nP1l7f3Y3qT4q1UYmLEvsz+TunJZHKdDygbp3
-         TqdduwMJonIqjfg5T6cQSqMk7XwKHShMFBNTJh7z5vZ3d3Nfc03JhMYgNnpSTh24np0r
-         OrEARFmUenmiqRbKPasXytN0ZzOL+IWvV/slqqSBJSNLT9th/q23gXkhTK6YKQ4o1ScK
-         6rfxm9N9uLKOzT6jvAMJ8k24zjFgW4sk2vfXgegOBXWeUy38TRczuPx29+ECzxe0ugpZ
-         xKgw==
-X-Forwarded-Encrypted: i=1; AJvYcCWYhAt66ZNSHq4uZGwH02Y546mIS5D74Yul6cRGraiuWe0dthhTN7rNrXNSbM44DKSMRucbrtLerE/mHf8+oJwCDfMO+gTkJVQXYq8xWr6CsQ7s96Z+nqITpPMQbRGZvHRn1NKwOP+F1sRjKpUCBg+qLufd8h44tOa9l6gsjpi7Eg==
-X-Gm-Message-State: AOJu0YzbsrRkZdez14Cxnh9qWWL3inyYZUNnxMqeaiEePfH5cXB6u04P
-	mN2dChIU/5PmuZHam0+NsqkNh4zDR8xdLpa91vdKBJK1v2U2aIQF
-X-Google-Smtp-Source: AGHT+IHblRTDxClg0hncaI3YdLPYlc0ctt2Ultcay3fROynXSndppinQVCFztH0kEfmSc0kK5dykdA==
-X-Received: by 2002:a17:902:f7d1:b0:1e0:18b1:d0a2 with SMTP id h17-20020a170902f7d100b001e018b1d0a2mr2184720plw.40.1711108464936;
-        Fri, 22 Mar 2024 04:54:24 -0700 (PDT)
+        bh=ln7qEJHKHqLJtKwDgDsUNcpQ9J+dt/V2pERnhD5tvGE=;
+        b=TnKissL0GNxpuEnPECTjVWDgHk6sSHC4KCmSBTYZ7Yh1w6nS0JWNHF8aGbwoOXkvqI
+         /dkDMZ/Ni9ufYJUD0c+IdHNC/rbhhqDqAkIN41/33DX90aK0Sfg5TNWCPdWltSSeCT33
+         YWKCHnYYMRD3Rbte8kW2ooDMTWxwrNY+zST79R7EeDx0t8kaLThG5uGF6PFjHa7Wa/Yj
+         8cU4s8Sihsz77ooUBOOaPXnZlvjy++ZXw0bGOnFQTgcYYjC6OALDjEvFfIEc3x/cRzw8
+         WQfdIWCC7O/SqiukzhKrJmQVt2bU9NXt74dodnASSrRbun7oQnxrWnYQe+XLhOp2gaGB
+         4Beg==
+X-Forwarded-Encrypted: i=1; AJvYcCU95zy8quaPItBTx2zyPolzXYcA2Is4t5gA+M7qvX0qygIG/StHKewp84Kpd6AdNvJlLlxV5fFJgWKjOou2EWsK8GmJyilVzDKPD3s7UzRNV888vexIMpmDEIc1Pq6SMF2Q3kBNblSvLJ7eintNZ16WY7mcJV33J+n4x58BeVCVlQ==
+X-Gm-Message-State: AOJu0Yy6mmpVLik1cOR+X2g6P8m7dG5Dfnbtmsh+bwcNQb5Wm0RkDSxX
+	bW3ofRTrqGvsnEByHHIDGc4S7FypZBK1tQQztIuzi42dV3lB2jn1xa9PKsDF
+X-Google-Smtp-Source: AGHT+IHPq9y1yWNwFckZtC2dMim5x0Ex/mkhoSW8lHHUcQGNGa9lvNioyg2f6h3Uo27AvTL0k0LFLA==
+X-Received: by 2002:a05:6a20:728f:b0:1a3:ae18:f5f2 with SMTP id o15-20020a056a20728f00b001a3ae18f5f2mr159722pzk.15.1711108680244;
+        Fri, 22 Mar 2024 04:58:00 -0700 (PDT)
 Received: from rigel (110-175-159-48.tpgi.com.au. [110.175.159.48])
-        by smtp.gmail.com with ESMTPSA id l15-20020a170903244f00b001dd98195371sm1686451pls.181.2024.03.22.04.54.21
+        by smtp.gmail.com with ESMTPSA id t68-20020a625f47000000b006e592a2d073sm1525393pfb.161.2024.03.22.04.57.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 22 Mar 2024 04:54:24 -0700 (PDT)
-Date: Fri, 22 Mar 2024 19:54:19 +0800
+        Fri, 22 Mar 2024 04:57:59 -0700 (PDT)
+Date: Fri, 22 Mar 2024 19:57:54 +0800
 From: Kent Gibson <warthog618@gmail.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Alexey Dobriyan <adobriyan@gmail.com>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH] gpio: cdev: sanitize the label before requesting the
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>,
+	stable@vger.kernel.org, Stefan Wahren <wahrenst@gmx.net>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [PATCH v2] gpio: cdev: sanitize the label before requesting the
  interrupt
-Message-ID: <20240322115419.GA31273@rigel>
-References: <20240320125945.16985-1-brgl@bgdev.pl>
- <20240322013034.GA4572@rigel>
- <CAMRc=MfQnZQU_t9-uDPp18vFikz_9eP6LtnWJYG0+KFgWjBcEg@mail.gmail.com>
- <f529d746-f8c5-466b-860b-e2bfaeb2cc27@moroto.mountain>
+Message-ID: <20240322115754.GA45839@rigel>
+References: <20240322090209.13384-1-brgl@bgdev.pl>
+ <20240322111835.GA24228@rigel>
+ <CAMRc=Md87eGmjehSEegdFCdv6D3H1p2On153JowY5cDnW9iw8Q@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -92,52 +89,52 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <f529d746-f8c5-466b-860b-e2bfaeb2cc27@moroto.mountain>
+In-Reply-To: <CAMRc=Md87eGmjehSEegdFCdv6D3H1p2On153JowY5cDnW9iw8Q@mail.gmail.com>
 
-On Fri, Mar 22, 2024 at 12:31:36PM +0300, Dan Carpenter wrote:
-> On Fri, Mar 22, 2024 at 08:46:50AM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Mar 22, 2024 at 2:30 AM Kent Gibson <warthog618@gmail.com> wrote:
-> > >
-> > > On Wed, Mar 20, 2024 at 01:59:44PM +0100, Bartosz Golaszewski wrote:
-> > > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> > > >
-> > > > Let's replace all "/" with "-".
-> > > >
-> > >
-> > > I actually prefer the ":" you originally suggested, as it more clearly
-> > > indicates a tier separation, whereas a hyphen is commonly used for
-> > > multi-word names. And as the hyphen is more commonly used the sanitized
-> > > name is more likely to conflict.
-> > >
+On Fri, Mar 22, 2024 at 12:52:29PM +0100, Bartosz Golaszewski wrote:
+> On Fri, Mar 22, 2024 at 12:18 PM Kent Gibson <warthog618@gmail.com> wrote:
 > >
-> > Sounds good, will do.
-> > > >
-> > > > +     label = make_irq_label(le->label);
-> > > > +     if (!label)
-> > > > +             goto out_free_le;
-> > > > +
+> > On Fri, Mar 22, 2024 at 10:02:08AM +0100, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 > > >
-> > > Need to set ret = -ENOMEM before the goto, else you will return 0.
+> > > @@ -2198,12 +2216,18 @@ static int lineevent_create(struct gpio_device *gdev, void __user *ip)
+> > >       if (ret)
+> > >               goto out_free_le;
 > > >
+> > > +     label = make_irq_label(le->label);
+> > > +     if (!label) {
+> > > +             ret = -ENOMEM;
+> > > +             goto out_free_le;
+> > > +     }
+> > > +
+> > >       /* Request a thread to read the events */
+> > >       ret = request_threaded_irq(irq,
+> > >                                  lineevent_irq_handler,
+> > >                                  lineevent_irq_thread,
+> > >                                  irqflags,
+> > > -                                le->label,
+> > > +                                label,
+> > >                                  le);
+> > >       if (ret)
+> > >               goto out_free_le;
 > >
-> > Eek, right, thanks.
+> > Leaks label if the request_threaded_irq() fails.
+> >
 >
-> Smatch has a warning about this, btw.
-> drivers/gpio/gpiolib-cdev.c:2221 lineevent_create() warn: missing error code 'ret'
->
-
-And that triggered a "what the hell does that mean" warning in my
-wetware error parser ;-).
-
-That could be better worded - it isn't "missing", it hasn't been
-appropriately set. So maybe "unset error code"?
-
-> The other warning here is:
-> drivers/gpio/gpiolib-cdev.c:2269 lineevent_create() warn: 'irq' from request_threaded_irq() not released on lines: 2258.
+> Ah, dammit, I didn't catch the fact that irq_free() will not return
+> the label address if the request failed.
 >
 
-Looks like a false positive to me - as per the comment in the code, that path
-(2258) results in lineevent_release() being called and that releases the irq.
+You caught it in edge_detector_setup() - you call free_irq_label() if
+request_threaded_irq() fails there.
+
+> Nice catch.
+
+The give away here is that the goto targets are the same.
+Bit irritated that I didn't catch it earlier - got distracted by the
+return code problem.
+
+Anyway, third time lucky.
 
 Cheers,
 Kent.
