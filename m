@@ -1,116 +1,136 @@
-Return-Path: <linux-gpio+bounces-4519-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4520-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1E2D88679A
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 08:47:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4AAC98867E8
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 09:06:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9CAE1282E06
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 07:47:09 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61A391C2356F
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 08:06:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24BB412E6F;
-	Fri, 22 Mar 2024 07:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C443E15AD0;
+	Fri, 22 Mar 2024 08:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="wh08Xc6P"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CBrUF++O"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C4FE12E4E
-	for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 07:47:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4E417541
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 08:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711093624; cv=none; b=gDwqE8CatjfqBqXI0dgZz+akQpl9Zi+R8pZ/GfUCDmzkCtS5yUal/2fceXGyrypPCr2690pE3cPwU+PJR6HpiZoGNCCt+ttuvxozyDfXHmo52zsCbh3HIyr2CXqV2GgtNqTCk/qbWJDxVuMMtv3ZDuG/YJHSoTGnV2dfXtLiFXs=
+	t=1711094780; cv=none; b=o3ShIHDYENJrSwUtSYkIrvmm+mRnfOd1CYBtetes/kLdrcBRiJTz3ISTqtvkOoVbZDTw9yDSjnGwlnrDZiwOrlNhUQRSEF7DYT6dnVbhZoYip/Z38wLACUcEfuUrY84I0g0AOVxXu4boZEXgEBshxFWtnVYyFUwhuOP/+QAs1QM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711093624; c=relaxed/simple;
-	bh=Yhw03HSz0idnna+yR34xpIkCEZSpOgZ5Sf0IEYITasY=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=erQ43gHqADQFYtKj0c+QxL7ab2ESF0LPU27V2MtqSh7h4x1UdgBGTsv1bXanajCj7GlY25cUqB4SNjm0dfo5rNOsdEF1tXpxuVkTOa1J6RQoZiBgLTkjk43WQZ+cNp+yoY5zhcDahf2TUXAuapbM1JqIFuUM91fGwhGVa0RmTeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=wh08Xc6P; arc=none smtp.client-ip=209.85.167.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-51588f70d2dso2052645e87.3
-        for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 00:47:02 -0700 (PDT)
+	s=arc-20240116; t=1711094780; c=relaxed/simple;
+	bh=yuz1DDYwwZ+Wu+hp6fEC6IuIktiCN/2dn12Wf0kXYLk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=tyMcdLXxviSiZ3aCC75Qoem9iHcWBac94oWH7fMtXPPvksZ6swfxC2d5irQwdf+F5Mnl5HmApm0DzsY2vCtbW/7+Mn5u50C+Ipp2SxUklGTfVH4CEehpR6LCrJ1tjtyc8416WNfON0RpsLei7MxXIvylnmmZGKR5ffJi8lOPQFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CBrUF++O; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-5684db9147dso2077377a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 01:06:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711093621; x=1711698421; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lPAa0wf/zbSEHcUANifsWrUgwG+6IErJ7w4tI2+ET3Q=;
-        b=wh08Xc6PxaYRBwEUxMN6mhstqUU0qvYsZweCwbjK/MPBu7dlh+sDFexD82/7CXWarZ
-         h/Kssvh0q2LaVpyjoYvToROOgB+INHmE0buwXzTq2ik+UmzTwaB/ixirseNFvMuLvvv2
-         uJxc9XNVu5N8x+Z0KxGeyBLGvwAcqEQM8sLrRhyDtt0PRVam2LVNhTTyt2f/Yrcpjq88
-         NKjswr/46Z/PojMJRVf+x/fa1VanyWfQmArTuvBjeFqzmbS3K1qI13LdyQmquV67TRdS
-         pnTj9lrXwTv1bBXId4ZGHAsL88IH/F9pLdZq7+GZHguWtbKvc8Pq4Td/+eT+1QCFCSL9
-         fywQ==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711094776; x=1711699576; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=XsZLSAJEXmeZxbFin0CImKOsNm3aXacrTABAdgCK260=;
+        b=CBrUF++OF+YmwdF6X7cykeYwFFB9S4gKX91/zNupGnSducv/hPcy1m4P6tCruNlZ7S
+         xas4y+D/4SCEZFHVgSY2G4pNqZUN6GPz9NfUhkb85MzcScr4YLE4FsN0PuDuwF4Iynj8
+         ObSYvEe8YoMS0IjJRdo2KIYRIhK8XroE5ez5ergYLk6pqiU1G4pPriGhEHmwp7f5eF8E
+         v1QKwafh/VkVEL23GO8IljWpuG2qr3GAe17GOSYuEiqDIgdO8u4TNdpS+AbLUO3uRdu/
+         bOk7whClpIa/DtkJ2Vfp8s2pSM93Tk9DL/6OH+FM4VmrHSu+IyuCL5xtxkJU+tff5e8f
+         LAxA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711093621; x=1711698421;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lPAa0wf/zbSEHcUANifsWrUgwG+6IErJ7w4tI2+ET3Q=;
-        b=nIlpPwFHtNq7d3Vf/3XNTGICIey93tX1hAjW3QNFtr9TznLVb0xEkOjz3HDZfLwVLm
-         OZz3hLT70wkMaqNa01bidBzDYqPfu72qGJ8Yi6/h4Hnabo5zY7EkW38FRMeLon1Plqc2
-         pKw7SMtAIGYTkOy+0R3bEPLX0JEJ3LHaM3FmuhTlcPUKIqQBsJoAIH2HJKEBK7g4qJf9
-         HlsaViugB0Z9pJcbweoLX6N4JUi/gcBxPIbCkMGeBGSjrfebSFxacb9JQgnuEN55cVI9
-         IrOgZigMmdWaY6v3gHVEufq4alqUGmb7CljNtouPlpPPQcSFyl48xd59GYEESuxqCHsQ
-         6tfg==
-X-Forwarded-Encrypted: i=1; AJvYcCUR5ltPbx7vBqNY8xbngDb3hq8mQzjJO381uAKDex37bOB/SRFe5sWY/0m/l6Iq7giwkMvdv01tu4VgqUqyMRcus6z+kZHiSJJeBA==
-X-Gm-Message-State: AOJu0Yx9AsnUAzRzU0gZA2rVfKU84bP3YaQwxMJ1hOK+mchWgfDQtKl0
-	YQxEtUdtTUstMjY5yPq2PSS99cU1xl82GGWENljtfZonM4a3oBJNUNTVfJY1LaXpIfCYkxbMRK9
-	KFSYM1p/4+u1Vm7KgOQpuTjqu4M5oATGP3IAqUA==
-X-Google-Smtp-Source: AGHT+IGMlPmh6WdmqSWErCqF67TPp8BSJ8Ax+s3wvqQfGc+YdlHQhOmUL3UDDQEgmrblKQ0L8twrhkOtXf4xDSab2lM=
-X-Received: by 2002:a05:6512:747:b0:513:d8e3:fe3d with SMTP id
- c7-20020a056512074700b00513d8e3fe3dmr939101lfs.26.1711093621110; Fri, 22 Mar
- 2024 00:47:01 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711094776; x=1711699576;
+        h=content-transfer-encoding:in-reply-to:content-language:references
+         :cc:to:from:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=XsZLSAJEXmeZxbFin0CImKOsNm3aXacrTABAdgCK260=;
+        b=uYB9HXzoOMs8Z8un1q31ci0/dDmwF0BkWi+9pB/eno5TMKLBu2ZOn9u2fQSWD2WOha
+         gBRmUUWZncifQ473CFG0AdQN81b0KBezdZb3AsyCUGQ9p1xXebTE6uRyWp/9d/iLF+wz
+         KeI23v98TBbAr68T4bJ/WvwxQAD0+UBrhbygOJo1rizmuoypG2DF+9M9dIlCFB55ZpHi
+         BstuYtXagEMA9fuuHdPLnX7xXjHZuS64hkkd0afk+cP8aH2AjH40uGfnGMkqvAmNP9xG
+         Pyx60rG2XjiMgkkwK5AWhlvinZW6djbolU4UEoJSow8LNEb4XCEK3uhEzZrgdPf1zQMd
+         rUeg==
+X-Forwarded-Encrypted: i=1; AJvYcCW/KgD+hWl5Yg3FFyXAvCtyhPvvagnF3OdxTZEigm6a3iDVaAYRbD5ssXJYRk1nI04/Cs3ECBz+O/SYqqJWoj5oBlrkdnSEzv1ZXw==
+X-Gm-Message-State: AOJu0YzzKac8MjkVzLvH3uJzARTBeH/gwqPfFTromSeVUy9ixsrylEo2
+	jyJmBS+KXvToMGKufIUjs4vQLmJwJr+JG/daoGWQI5ghHMdK6hRqTQhA2RjYjS0=
+X-Google-Smtp-Source: AGHT+IF6hLTM5QsWFB8daZv5l4Na45H7PPkkgF62jW5LxW0NpIpFh38gMORfD2MF7w/c7B8DVIGztA==
+X-Received: by 2002:a50:9b44:0:b0:56b:b7f1:8094 with SMTP id a4-20020a509b44000000b0056bb7f18094mr977606edj.35.1711094775863;
+        Fri, 22 Mar 2024 01:06:15 -0700 (PDT)
+Received: from [192.168.1.70] ([84.102.31.156])
+        by smtp.gmail.com with ESMTPSA id fe8-20020a056402390800b0056bd1e71310sm743729edb.85.2024.03.22.01.06.14
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 01:06:15 -0700 (PDT)
+Message-ID: <b473d940-0301-472d-90f0-297da6815377@baylibre.com>
+Date: Fri, 22 Mar 2024 09:06:13 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240320125945.16985-1-brgl@bgdev.pl> <20240322013034.GA4572@rigel>
-In-Reply-To: <20240322013034.GA4572@rigel>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 22 Mar 2024 08:46:50 +0100
-Message-ID: <CAMRc=MfQnZQU_t9-uDPp18vFikz_9eP6LtnWJYG0+KFgWjBcEg@mail.gmail.com>
-Subject: Re: [PATCH] gpio: cdev: sanitize the label before requesting the interrupt
-To: Kent Gibson <warthog618@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Alexey Dobriyan <adobriyan@gmail.com>, 
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, stable@vger.kernel.org, 
-	Stefan Wahren <wahrenst@gmx.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC
+ pinctrl and GPIO
+From: Julien Panis <jpanis@baylibre.com>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>, linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com, lee@kernel.org, robh+dt@kernel.org,
+ krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org,
+ devicetree@vger.kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org,
+ lgirdwood@gmail.com, broonie@kernel.org, linus.walleij@linaro.org,
+ linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nm@ti.com,
+ vigneshr@ti.com, kristo@kernel.org, eblanc@baylibre.com
+References: <20240320102559.464981-1-bhargav.r@ltts.com>
+ <20240320102559.464981-11-bhargav.r@ltts.com>
+ <775348fb-3227-4609-b4aa-c8a6eddb8953@baylibre.com>
+Content-Language: en-US
+In-Reply-To: <775348fb-3227-4609-b4aa-c8a6eddb8953@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 22, 2024 at 2:30=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
-wrote:
+On 3/21/24 12:10, Julien Panis wrote:
+> On 3/20/24 11:25, Bhargav Raviprakash wrote:
+>> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+>>
+>> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+>> significant functional overlap.
+>> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+>> dedicated device functions.
+>>
+>> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+>> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+>> Acked-by: Linus Walleij <linus.walleij@linaro.org>
 >
-> On Wed, Mar 20, 2024 at 01:59:44PM +0100, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-> >
-> > Let's replace all "/" with "-".
-> >
+> With this patch, an issue is observed on am62a:
 >
-> I actually prefer the ":" you originally suggested, as it more clearly
-> indicates a tier separation, whereas a hyphen is commonly used for
-> multi-word names. And as the hyphen is more commonly used the sanitized
-> name is more likely to conflict.
+> root@am62axx-evm:~# dmesg | grep tps
+> ...
+> [   12.122631] tps6594-pinctrl tps6594-pinctrl.2.auto: error -EINVAL: Couldn't register 
+> gpio_regmap driver
+> [   12.133216] tps6594-pinctrl: probe of tps6594-pinctrl.2.auto failed with error -22
+>
+> Without this patch, the issue disappears. Do you observe
+> the same result with your am62p ?
+>
+> Julien Panis
 >
 
-Sounds good, will do.
-> >
-> > +     label =3D make_irq_label(le->label);
-> > +     if (!label)
-> > +             goto out_free_le;
-> > +
->
-> Need to set ret =3D -ENOMEM before the goto, else you will return 0.
->
+Hi Barghav.
 
-Eek, right, thanks.
+I found the issue in your patch.
 
-Bart
+In probe function you handle TPS652254 and TPS6594 'switch' cases,
+but you do not handle TPS6593 and LP8764 cases.
+Since AM62A uses a TPS6593, it currently falls in the default case,
+and as a result probe fails.
+
+Please fix it for v5.
+
+Julien Panis
 
