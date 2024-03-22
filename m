@@ -1,58 +1,65 @@
-Return-Path: <linux-gpio+bounces-4528-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4529-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 020FD886CB8
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 14:22:19 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F5F8886E29
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 15:11:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 792CDB2462A
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 13:22:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 2B33F28A54B
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 14:11:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B51A45BE4;
-	Fri, 22 Mar 2024 13:22:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bwsf1oQf"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 168104779E;
+	Fri, 22 Mar 2024 14:11:11 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE0D244C89;
-	Fri, 22 Mar 2024 13:22:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E864776F;
+	Fri, 22 Mar 2024 14:11:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711113730; cv=none; b=QcIJy0G+DahxS15b6TD6yZ4AtnTCyweWv0R38kFReTeOxAOIIxLbTmssKUvBVkWkp7MPgZ2jnz7R/6S1HNRSMqYCyixs4+GdlOobZq6SkOt1Jhia4frprfyYK8AkoqDOWNsNcvBQLwqu5i63xkNpKEHi9dlyYm1cEOABjM/np4g=
+	t=1711116670; cv=none; b=H2fbRtqrwEOyzMqaSBt2IbST0sC3AjM/29TQ46seNjvTuPr1DAnZCRyP4PUR2mj6Rt2ZJD/ft7vRW+hiFrBPfY0pX8Fq2q3LGOEjmPzCihOEdEf/v8fJa4VX5uFt0BL2BXU2Jcf+o/iZvvePyArCAbPgi4LtIH+k+ijO/K915zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711113730; c=relaxed/simple;
-	bh=IzPTHowQ7Q8fkZRWBVgOGiKL0cLuf17w+dMOiWBxWCE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=PHpbWMd+p9SIQaLnpNrHOZR9N/PjuUwLu4hjYulTYcVxaMRdFgBLODS/Y5N29faqRDbUTER8LIGwMgGHEGziPO2wz52XM7rPOFN9xcW0CeI2O1RHRdB1H9CDNhwLFMm8GGgQUELEig4FxZZxvDu/6+popV19N86sh0FKH0J5OIE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bwsf1oQf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A23CC433F1;
-	Fri, 22 Mar 2024 13:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711113730;
-	bh=IzPTHowQ7Q8fkZRWBVgOGiKL0cLuf17w+dMOiWBxWCE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=bwsf1oQfGwbXiuRD/ayOVCS1o/ae5GOGvPWESUTJxMdacZpDXqJbT2qQ9Z1F6yntQ
-	 20dBNe0GfWb+Tp+UO0brsa5VGl6UOj4Zk5rbQJUWsli5B1QLmGeqIDtwb6D/TtqxIf
-	 SETrReK+bCI8kYJeRvOulTvXKCfxiQNXvfbcVvydQPoS/8mAL6QeRrAt09VLO9Bgf+
-	 9801FH4sda4jihyWvc54W5Xzig8yIBtPHpE8UGdQRl86etjz+7HrFh3Hw6z5VxjeiA
-	 n68a9OVkXH3/gsmFA1wulYQpL0JNBA03aBsV03AJ/Bh5nV2u5h7e+TUjLpv4WspXzk
-	 gzcw9LDDW6flA==
-From: Arnd Bergmann <arnd@kernel.org>
-To: Andrew Lunn <andrew@lunn.ch>,
-	Gregory Clement <gregory.clement@bootlin.com>,
-	Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>,
+	s=arc-20240116; t=1711116670; c=relaxed/simple;
+	bh=0ngLNG+fpcgu6YV8g75uVpWB9d0bOm6Y2oHAg8Xfao0=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=XeFd5yMvTJ/KOT5uYxNkLJ9EQ23UEWQ9xOo3QAhXk9nJ9IWBQhimqj5OdL7FsgHCysbQgxfMb6OIGKzXxla2YCM2aqkxhg6VOwbnPBtzidrKdVk6Dd3fkD2ZhaQcoG7I0MXpL1BUieezYulT7ma6IddPR+tx1Bg6rApFsdIj8Ec=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: Sco+iRQAbTlF9smETMExkEVw9rwmM1Bc7/GBtWiiRFEZRlovG9zHI7ccPIgyvG3nZGRXOCMomU
+ YVLCY524gUOg==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 22 Mar 2024 19:40:57 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: jpanis@baylibre.com
+Cc: arnd@arndb.de,
+	bhargav.r@ltts.com,
+	broonie@kernel.org,
+	conor+dt@kernel.org,
+	devicetree@vger.kernel.org,
+	eblanc@baylibre.com,
+	gregkh@linuxfoundation.org,
+	kristo@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	lee@kernel.org,
+	lgirdwood@gmail.com,
+	linus.walleij@linaro.org,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH] pinctrl: armada-37xx: remove an unused variable
-Date: Fri, 22 Mar 2024 14:21:43 +0100
-Message-Id: <20240322132205.906729-1-arnd@kernel.org>
-X-Mailer: git-send-email 2.39.2
+	linux-kernel@vger.kernel.org,
+	m.nirmaladevi@ltts.com,
+	nm@ti.com,
+	robh+dt@kernel.org,
+	vigneshr@ti.com
+Subject: Re: [PATCH v4 10/11] pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+Date: Fri, 22 Mar 2024 19:40:43 +0530
+Message-Id: <20240322141043.498005-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <b473d940-0301-472d-90f0-297da6815377@baylibre.com>
+References: <b473d940-0301-472d-90f0-297da6815377@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -61,41 +68,53 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Arnd Bergmann <arnd@arndb.de>
+On Fri, 22 Mar 2024 09:06:13 +0100, Julien Panis wrote:
+> On 3/21/24 12:10, Julien Panis wrote:
+> > On 3/20/24 11:25, Bhargav Raviprakash wrote:
+> >> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> >>
+> >> Add support for TPS65224 pinctrl and GPIOs to TPS6594 driver as they have
+> >> significant functional overlap.
+> >> TPS65224 PMIC has 6 GPIOS which can be configured as GPIO or other
+> >> dedicated device functions.
+> >>
+> >> Signed-off-by: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+> >> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
+> >> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> >
+> > With this patch, an issue is observed on am62a:
+> >
+> > root@am62axx-evm:~# dmesg | grep tps
+> > ...
+> > [   12.122631] tps6594-pinctrl tps6594-pinctrl.2.auto: error -EINVAL: Couldn't register 
+> > gpio_regmap driver
+> > [   12.133216] tps6594-pinctrl: probe of tps6594-pinctrl.2.auto failed with error -22
+> >
+> > Without this patch, the issue disappears. Do you observe
+> > the same result with your am62p ?
+> >
+> > Julien Panis
+> >
+> 
+> Hi Barghav.
+> 
+> I found the issue in your patch.
+> 
+> In probe function you handle TPS652254 and TPS6594 'switch' cases,
+> but you do not handle TPS6593 and LP8764 cases.
+> Since AM62A uses a TPS6593, it currently falls in the default case,
+> and as a result probe fails.
+> 
+> Please fix it for v5.
+> 
+> Julien Panis
 
-This variable has never been used and can be removed to avoid a W=1 warning:
-
-drivers/pinctrl/mvebu/pinctrl-armada-37xx.c:837:6: error: variable 'i' set but not used [-Werror,-Wunused-but-set-variable]
-  837 |         int i = 0;
-
-Fixes: 87466ccd9401 ("pinctrl: armada-37xx: Add pin controller support for Armada 37xx")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 3 ---
- 1 file changed, 3 deletions(-)
-
-diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-index c34719b7506d..4c4ada06423d 100644
---- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-+++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-@@ -834,8 +834,6 @@ static int armada_37xx_gpiochip_register(struct platform_device *pdev,
- static int armada_37xx_add_function(struct armada_37xx_pmx_func *funcs,
- 				    int *funcsize, const char *name)
- {
--	int i = 0;
--
- 	if (*funcsize <= 0)
- 		return -EOVERFLOW;
+Hi Julien,
  
-@@ -847,7 +845,6 @@ static int armada_37xx_add_function(struct armada_37xx_pmx_func *funcs,
- 			return -EEXIST;
- 		}
- 		funcs++;
--		i++;
- 	}
- 
- 	/* append new unique function */
--- 
-2.39.2
+Thanks for pointing it out.
+We added support for TPS6594 alone as mentioned in header description "Pinmux and GPIO driver for tps6594 PMIC". 
+TPS6594 and TPS6593 has similar gpio map, however gpio map for LP8764 is different from TPS6594 / TPS6593.
 
+Regards,
+Bhargav
 
