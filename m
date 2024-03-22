@@ -1,145 +1,160 @@
-Return-Path: <linux-gpio+bounces-4534-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4535-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id C52998870A6
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 17:14:05 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id C474988715A
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 17:57:18 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 62B581F24754
-	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 16:14:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7A3A6289683
+	for <lists+linux-gpio@lfdr.de>; Fri, 22 Mar 2024 16:57:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAA9B5731E;
-	Fri, 22 Mar 2024 16:14:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 42F215FBBA;
+	Fri, 22 Mar 2024 16:53:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5dFFVpe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LFRF7fkq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7867D57305;
-	Fri, 22 Mar 2024 16:14:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FBAE5FBAD
+	for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 16:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711124040; cv=none; b=evEEnb+TIkO+Ofl4aiFtPuYOb9lwRT5lw22/y/eMt0TEf/wsbDffW5VboqRHUFEtV3b9GyswbKoe0m6NH/S22wWTlTrUvysnAJnritnnqwlrx5hKSGh9MTmPkjgI4wmwJ8GLHjBfG4j1zWI+xcA3P/N4Fl5eBIvdB1cjpz8AFcA=
+	t=1711126400; cv=none; b=bNf+it0PgS0px2M3Hd07xRxl5sLwMrzRrixyRFoV+oTMRv+ESGiU+psx60grd0tp0CH5cI0FF2ciIgrd5/grgDNW4NOGRBQ+817JmSzrxCgNXXKcmq764HEn5UVHmH6GwqoxwX4B+ITYPNYYqcxVHnU4DhLAiGYmAgw/QBLvK9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711124040; c=relaxed/simple;
-	bh=I52zT7xEMHe9OcgmHjA8QzaoBxfiFbCv4OAJzUisQ6M=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=lkORNPsaxvp7GoV8ojn43xh7SZ89sEu06cwTv/7hI5y/vIKx7yDJzWmxpOkTidKZySkGuZK1MV5kFRPWLsyLh3C5ty8VPPxRulYLUHsCMd+J92M+GOZioeLSfJZ28cGbGjZdOS46iE1xMa3FMcRW0g/lvvNJ4chG0MC1Xx2XqzE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5dFFVpe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2C00C43390;
-	Fri, 22 Mar 2024 16:13:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711124040;
-	bh=I52zT7xEMHe9OcgmHjA8QzaoBxfiFbCv4OAJzUisQ6M=;
-	h=From:Date:Subject:To:Cc:From;
-	b=c5dFFVpeaZcLlUXL95JMfEnyb2BFC3Gzv3Qf4By8ziKTQyZCZfffIV+TVgq8vNa8t
-	 esVNMYjIPinLU+1nUdP+a7T8t3s51lxYtJ5PrpRfOCdeqa63hSwhYROnrRUTPr4Pdp
-	 uiXxxMoSFvuBPcmpe/ErHi2wEPeUQvzTpNyOcOWOTDtOHrHacje4PjEZQA9hoSjsrI
-	 BnI/9dsXiZONhKyVwbBMSWUZnC6k3/jXVMjS5ecWKpPuBzFiH1GDOYRNpJNXD4f+aV
-	 RDDtCRsHa0O2JARvYcRZO7fzuE/dG+h+xK755+YQiTfbw95mltlcnJ8P0pgSZDbEzF
-	 a9s0NwG3DhCIw==
-From: Mark Brown <broonie@kernel.org>
-Date: Fri, 22 Mar 2024 16:13:04 +0000
-Subject: [PATCH] gpiolib: Add stubs for GPIO lookup functions
+	s=arc-20240116; t=1711126400; c=relaxed/simple;
+	bh=vx3yN0guA2FOX3V5rAXL+YFNjYh0mI7bQ/JkBfHqFQs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=JdhBKY/Fih45seROC30+bhORsjU6AOZs6gakNUtHAosaaBa8Li0syapLlMMeZx/bL/r67jXVrB3G65W4aed8GZvRr/SGsNB/JdXbNuv83JSWhiSmZNeIv8dCWPheMIGB5VzdJ9uY657ewOEcFE870V0OWfe60q2hdvSKceWOuLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=LFRF7fkq; arc=none smtp.client-ip=209.85.208.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f42.google.com with SMTP id 4fb4d7f45d1cf-56bdf81706aso1438453a12.2
+        for <linux-gpio@vger.kernel.org>; Fri, 22 Mar 2024 09:53:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711126396; x=1711731196; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=O62u5y0QOaRfHhYazQdNyLApTvQMwZDuLmZoNOwvWVE=;
+        b=LFRF7fkqD/ICfxxJoN0Nom/2LKOUxwx9GbQCtiiXSeo0q4nAhqt9dAQdP8eIGMuX6f
+         QzF9NX3V0oYu+3En9OamEe9EXTT63l8OToOSSWIlt5anOZU4983nFdY8vH5rLog+IZaR
+         sT9apNbxrEiqn64Q2fXUnb+7c9iY510FxpXEz4srGuEnqFKUCkSmQ6qBVrSuCwTFU0ow
+         +xkXZk6G6UGn4e7xbDvYCaMRv4sHoJGRtyoaNL+EciQ1KvU/3T4LpGJYvS36MyDrEae6
+         UPzzhZ0UDWFB1YgR+eZEyDZtcgGRra0O46ZOJGQOTD8p46tRuJEKgjW5C3L2WjwM5T3p
+         0LTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711126396; x=1711731196;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O62u5y0QOaRfHhYazQdNyLApTvQMwZDuLmZoNOwvWVE=;
+        b=Gv7zwoWUuFvpLiav5hTNSaGzLj78wuQZJe+Z7KyVZ3aE2YTL9L41v1FYwJAnYtvFqH
+         kYMWUYE+UxdRwEeXYQQiWkMiTDfVm00ndX19MFsT1uVCiiuG/arVANqBL5gjchzC818+
+         T+wP7UjPE6ETPfVTmysK0QzqajhOtHXb6QxjeREX/AIMcHaKmX2ik2AI/aJw8EWrd1q6
+         wNsgnQCFLCsisEW4dXvXxVGtUTAJBky1eAyWLSmH7B+k4Y3oCdJaD1Qb7MW950fABVrN
+         J6Dm3oZ72hrhsTNztwxwS/0QhjigjpaBthMfMpe2YAeb12Xx+ZGz8eBaoZFl6hxaFJKD
+         e5Qw==
+X-Gm-Message-State: AOJu0YwngP3oIvBjCrxC5YQd4KhtIhAFsGxenuTrhp1TbfteK9X2WXdH
+	piOnrrw59ZrJKPWZrIcP7vRcTYwmvHN0qEvnJZd8KfV3rhid5zilJfMxGd19pOr6gpgntvu2Sfz
+	9
+X-Google-Smtp-Source: AGHT+IGe3jp/SoBRVu7+PE8TP39IN8A8adEgPqCl3Y8pI1hubRGp7IMHccohvPu+6Pq2dNzQgdszfg==
+X-Received: by 2002:a17:907:36a:b0:a47:3601:1884 with SMTP id rs10-20020a170907036a00b00a4736011884mr159337ejb.52.1711126396593;
+        Fri, 22 Mar 2024 09:53:16 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.222.97])
+        by smtp.gmail.com with ESMTPSA id jy12-20020a170907762c00b00a46ab3adea5sm6903ejc.113.2024.03.22.09.53.15
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 22 Mar 2024 09:53:16 -0700 (PDT)
+Message-ID: <6974777b-7809-420d-ac6e-7fa9660b1380@linaro.org>
+Date: Fri, 22 Mar 2024 17:53:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH] gpiolib: Add stubs for GPIO lookup functions
+To: Mark Brown <broonie@kernel.org>, Linus Walleij
+ <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAA+u/WUC/x3MSwrCMBAA0KuUWTsQRyviVYqLfCZ1QJKQ9GMJu
- XuDy7d5FQpn4QKvoULmTYrE0HG9DGA/OsyM4rqBFN3VjQjnJPErBr0Eh+ZAv4foGMuyGhwfoyf
- 9JKPYQh9SZi+//z69WzsBhR72120AAAA=
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>
-X-Mailer: b4 0.13-dev-a684c
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2663; i=broonie@kernel.org;
- h=from:subject:message-id; bh=I52zT7xEMHe9OcgmHjA8QzaoBxfiFbCv4OAJzUisQ6M=;
- b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBl/a5FkePyvMgHC4Qf0FbOXUhA5WyCvMvKTFMQMcGQ
- eewMIO2JATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZf2uRQAKCRAk1otyXVSH0EnJB/
- 4mGKrGp5cEtYcEeE6yo2R686Y3LY69B8TFL8ZTmR+ysQT0ZODOCLZXtu0QA7Sy8KeDBqpiYkuVz7Np
- D20XXSO5iH+4v9kk9lVyMH1WxIIuwxWRoaFDeMQ9YS/pWX5TGRVEDmt5WlIClpycXiEuZ35PHxhsdw
- J7kPH5zTd9XlVE4XBllurfBXfCITB8bu5olFp/2JoLYS+VX4+ci0Z/SzGAJct6RsftH+gepunqlOX1
- 9c9o+Tmt1d8iOmlrZObj531VGc4K7uao4Zx8w/C4mzWeszLEWKkpBcx0GtCfi5x/B+XY3RWWqjOC2t
- USXBjxmlGi6NhwXRChES9OK6di0P9f
-X-Developer-Key: i=broonie@kernel.org; a=openpgp;
- fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-The gpio_device_find_by_() functions do not have stubs which means that if
-they are referenced from code with an optiona dependency on gpiolib then
-the code will fail to link. Add stubs for lookups via fwnode and label. I
-have not added a stub for plain gpio_device_find() since it seems harder to
-see a use case for that which does not depend on gpiolib.
+On 22/03/2024 17:13, Mark Brown wrote:
+> The gpio_device_find_by_() functions do not have stubs which means that if
+> they are referenced from code with an optiona dependency on gpiolib then
 
-With the addition of the GPIO reset controller (which lacks a gpiolib
-dependency) to the arm64 defconfig this is causing build breaks for arm64
-virtconfig in -next:
+Maybe can be fixed while applying:
+s/optiona/optional/
 
-aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
- /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
+> the code will fail to link. Add stubs for lookups via fwnode and label. I
+> have not added a stub for plain gpio_device_find() since it seems harder to
+> see a use case for that which does not depend on gpiolib.
+> 
+> With the addition of the GPIO reset controller (which lacks a gpiolib
+> dependency) to the arm64 defconfig this is causing build breaks for arm64
+> virtconfig in -next:
+> 
+> aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
+>  /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
+> 
+> Signed-off-by: Mark Brown <broonie@kernel.org>
 
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- include/linux/gpio/driver.h | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index dc75f802e284..f8617eaf08ba 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -646,8 +646,6 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
- struct gpio_device *gpio_device_find(const void *data,
- 				int (*match)(struct gpio_chip *gc,
- 					     const void *data));
--struct gpio_device *gpio_device_find_by_label(const char *label);
--struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
- 
- struct gpio_device *gpio_device_get(struct gpio_device *gdev);
- void gpio_device_put(struct gpio_device *gdev);
-@@ -814,6 +812,9 @@ struct gpio_device *gpiod_to_gpio_device(struct gpio_desc *desc);
- int gpio_device_get_base(struct gpio_device *gdev);
- const char *gpio_device_get_label(struct gpio_device *gdev);
- 
-+struct gpio_device *gpio_device_find_by_label(const char *label);
-+struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
-+
- #else /* CONFIG_GPIOLIB */
- 
- #include <asm/bug.h>
-@@ -843,6 +844,18 @@ static inline const char *gpio_device_get_label(struct gpio_device *gdev)
- 	return NULL;
- }
- 
-+static inline struct gpio_device *gpio_device_find_by_label(const char *label)
-+{
-+	WARN_ON(1);
-+	return NULL;
-+}
-+
-+static inline struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode)
-+{
-+	WARN_ON(1);
-+	return NULL;
-+}
-+
- static inline int gpiochip_lock_as_irq(struct gpio_chip *gc,
- 				       unsigned int offset)
- {
-
----
-base-commit: 13ee4a7161b6fd938aef6688ff43b163f6d83e37
-change-id: 20240322-gpiolib-find-by-fwnode-stub-565f2a82b0ec
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
 Best regards,
--- 
-Mark Brown <broonie@kernel.org>
+Krzysztof
 
 
