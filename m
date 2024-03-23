@@ -1,129 +1,119 @@
-Return-Path: <linux-gpio+bounces-4579-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4581-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 688D3887A6B
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 22:18:10 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40EAB887A75
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 22:25:59 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C9053281E88
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 21:18:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6EE0E1C21148
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 21:25:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D53857315;
-	Sat, 23 Mar 2024 21:18:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 359DC59B52;
+	Sat, 23 Mar 2024 21:25:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UazFPNk9"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EqkcFqFp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68ECB1A38FC;
-	Sat, 23 Mar 2024 21:18:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D677422625;
+	Sat, 23 Mar 2024 21:25:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711228684; cv=none; b=U3eogo6jZSqsGH2+0ApBtfs96EvuuEwqPA4TKUP3IWdW3kq1rqoBYrqryoPAji2dp4GAWul+qWwPobY7NovNqDOFZ+8/EFdRRvUE6gzxBW41M3bWJ6DUfM84b3YxnPHsKJTMZDXAT2yxyEkMJLNDwN5K3C5eyzsHSxDpC++ik3w=
+	t=1711229152; cv=none; b=bqP4w9oz8mKOlR7caySfQB1a28TWuQEhMxHmfFnpSe1KjzHlS45oEmnVFa/ue9KyPYqLWdJ1ZnOgpwE6sY9lHPLLuH7CYUghZlNDCHzGfVM+hOjLW6wi/4XIYGx8z1Uky0MH19M7Edl1eNkW1cn3fN0AA0dVex2ICk3EsS2s50Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711228684; c=relaxed/simple;
-	bh=3IR6+azhCfPyr1SvRmZLmSOsS1saIo/5ABkALBwv9Oo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OI7/qehPWeg07kEih+Ao6IMtyDRyN5tDXdSJzsuTwfd29gP9FmTmDtT0VbSNykIophhnQ4q7+Boabqy31F9PtbUF9puGZwYKEkDIpG75t4aE44nfuBRV6kxgZ6x1WdKMb1nNUymYmCdH5NvDUkH22Er31Zf90QJyFJ5kY307/EA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UazFPNk9; arc=none smtp.client-ip=209.85.128.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-41480df2ce0so5740005e9.3;
-        Sat, 23 Mar 2024 14:18:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711228681; x=1711833481; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=3jrmFxwvHn+1SRq6v+CJ783Vy+oA3qLS0/S9njDH5R0=;
-        b=UazFPNk9ESo3CRgW1H9eQwayQ6/ZBWTeYqyYxQduNQhVayzZcU/ielXP607KBrsiZq
-         JvvmAJvbg6/QAUrjbWQawlSoQy3nrhuSFEmrsmFtdHYt/OJv+EPRLYuJRurcuZOZjzSA
-         5g4s1NrpnZa6nZlABSjzPuxSB00TWfmgcjO+Pl89NZT+HnIYs3IfO1iPxcLArZ2fRID1
-         AGsOA454l6i1B0jk1B50S7BOfLtO5u5ShrvG9sMXH/Wo2rKWcGFLIflG1c9Fb3oae55e
-         SJBXjkIKclJJeUWWZ93VxnTYKhql6TS7aHJuud8lKwPP+XsMpB1PvWNqLXXi7oE7+UEe
-         okrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711228681; x=1711833481;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=3jrmFxwvHn+1SRq6v+CJ783Vy+oA3qLS0/S9njDH5R0=;
-        b=qseD/uCF6i0KBnr+TU/hanEKhlft7nVmFvgP6IXRAkqsojOZsMl7mvfHGfewFx1D+b
-         CewqqLcj3FDamUUlYWGZs9DY2K3wJV3tk9+3Gk0ciCPTRZvdrGAeVMRU63Z16GCVNBJa
-         ogIewqUHUxwtq2q1kgTg9fSPJ1wyOE/YxnyyfkzGECPqa1ejlCA0NttFKYY6VObUDS0V
-         C4K1YO+RxILs3i2sgYPUXeuwiEH6a9lx2SUZB9fbBuPqAhoJyA128M++rPOVyyO5AtT2
-         JsaxcXIQXldl0IkQoxmYyF1C4wVBFsMAPKMJOune4AKmUPGXogaxULGHn9fu+dfmOyQF
-         J8lg==
-X-Forwarded-Encrypted: i=1; AJvYcCUkDrfaNG5CXy+5pfFTThiP1bKzXZAfkU1H6MnEpxRQTfWYGuXvDrWJWVlH5o5qAh5pP18TfzjoLlCrkfrYMi68QJ8t0PvIgHVbhzu6VxQNabvV+XN6MDRSwFsflzwvfYpAk+SilvJBIaJe77NISJ2iZEI2bmkkbgu5dgS3DQyMowfFPRs=
-X-Gm-Message-State: AOJu0YzGkAUsJtaXJcBx57CbmNwZ2RpXriXSwsyPD3BpA9BtRLkZm4JI
-	zHRghBPGJjzprvS4lNZ2voCPOL/qAkDTVenFlD8wlTbeprHxReQ=
-X-Google-Smtp-Source: AGHT+IHAU5vY0etGgtJzkwrqVnlIHq+OT7B0xJ8ln/HDYHEfgXRUTbvf8Bsh0WGUNXkLlj/OuFG+Hg==
-X-Received: by 2002:a05:600c:a43:b0:412:d68c:8229 with SMTP id c3-20020a05600c0a4300b00412d68c8229mr2670298wmq.39.1711228680572;
-        Sat, 23 Mar 2024 14:18:00 -0700 (PDT)
-Received: from ?IPV6:2a02:810b:f40:4600:9d72:900:89e2:b7c1? ([2a02:810b:f40:4600:9d72:900:89e2:b7c1])
-        by smtp.gmail.com with ESMTPSA id fm17-20020a05600c0c1100b0041485a9d633sm968604wmb.25.2024.03.23.14.17.59
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Mar 2024 14:18:00 -0700 (PDT)
-Message-ID: <5bfed075-0228-44d9-84a0-2adba47b86e4@gmail.com>
-Date: Sat, 23 Mar 2024 22:17:58 +0100
+	s=arc-20240116; t=1711229152; c=relaxed/simple;
+	bh=ewbb3fGZ24mY6UOj2n/ZI82QsQGXdDkN3r2W4fSmfmE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=tquH/isln7TBl99qthy/C6CID7Cb8Rz0a4ABUr+dq9POT5OlF0OWYa9TUarSXvX/+nXef45Qc/lw22hjCLiGWKkFwrFUhHoS+IvWzBV0AEyz+7qmeW/NbNNgCjH9tzowk6idZmuVNfHGUjWqAVYtfe0dVXstIEUVlohLu87g10g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EqkcFqFp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F0B2C433C7;
+	Sat, 23 Mar 2024 21:25:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711229151;
+	bh=ewbb3fGZ24mY6UOj2n/ZI82QsQGXdDkN3r2W4fSmfmE=;
+	h=Date:From:To:List-Id:Cc:Subject:In-Reply-To:References:From;
+	b=EqkcFqFpjaM+8tvpkykPmyU63xmAqu09XJoCsUBspu2o1DJkRmb+mcnzXQYMo/4Uo
+	 HJQbZZ+FHKExsRbaxOONgsRwx2VBBY0QRvJW/qQGUlTdWp+HS7rNR+xEpGE27ROtII
+	 9o+30gQOB4yvhejgGb+CBPkUzMyPFItiWZqumLu4SHe7FgYUsyppFN0C/G3YFROsn0
+	 LErzo/LwQ4p6t5cnX8Wdh7PmOofz2y2fiE90tXL+2BxvNxql6wQTCr8lSTDq7RIh9z
+	 C5u7ZFA9dJc38ohrd1EAA+3HUPT6NsBhHCB0yA/3sBzv5aGfEBroWu6UcbJX0SkpZt
+	 4kBo6WiR9ZA+w==
+Date: Sat, 23 Mar 2024 22:25:06 +0100
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Jonathan.Cameron@huawei.com, Laurent.pinchart@ideasonboard.com,
+ airlied@gmail.com, andrzej.hajda@intel.com, arm@kernel.org, arnd@arndb.de,
+ bamv2005@gmail.com, brgl@bgdev.pl, daniel@ffwll.ch, davem@davemloft.net,
+ dianders@chromium.org, dri-devel@lists.freedesktop.org,
+ eajames@linux.ibm.com, gaurav.jain@nxp.com, gregory.clement@bootlin.com,
+ hdegoede@redhat.com, herbert@gondor.apana.org.au, horia.geanta@nxp.com,
+ james.clark@arm.com, james@equiv.tech, jdelvare@suse.com,
+ jernej.skrabec@gmail.com, jonas@kwiboo.se, linus.walleij@linaro.org,
+ linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@roeck-us.net, maarten.lankhorst@linux.intel.com,
+ mazziesaccount@gmail.com, mripard@kernel.org, naresh.solanki@9elements.com,
+ neil.armstrong@linaro.org, pankaj.gupta@nxp.com,
+ patrick.rudolph@9elements.com, rfoss@kernel.org, soc@kernel.org,
+ tzimmermann@suse.de
+Subject: Re: [PATCH v5 08/11] devm-helpers: Add resource managed version of
+ debugfs directory create function
+Message-ID: <20240323222506.4ffbdd71@thinkpad>
+In-Reply-To: <f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
+References: <20240323164359.21642-1-kabel@kernel.org>
+	<20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
+	<f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: Add rk816 binding
-Content-Language: en-US, de-DE
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Lee Jones <lee@kernel.org>, Chris Zhong <zyw@rock-chips.com>,
- Zhang Qing <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org,
- linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
- Rob Herring <robh@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- Heiko Stuebner <heiko@sntech.de>, Linus Walleij <linus.walleij@linaro.org>,
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-References: <20240323132757.141861-2-knaerzche@gmail.com>
- <20240323132757.141861-4-knaerzche@gmail.com>
- <368eb339-4f0f-4471-9367-9263caa3fab7@linaro.org>
-From: Alex Bee <knaerzche@gmail.com>
-In-Reply-To: <368eb339-4f0f-4471-9367-9263caa3fab7@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
+On Sat, 23 Mar 2024 22:10:40 +0100
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-Am 23.03.24 um 15:32 schrieb Krzysztof Kozlowski:
-> On 23/03/2024 14:27, Alex Bee wrote:
->> Add DT binding document for Rockchip's RK816 PMIC
->>
->> Signed-off-by: Alex Bee <knaerzche@gmail.com>
->
->> +  regulators:
->> +    type: object
->> +    patternProperties:
->> +      '^(boost|dcdc[1-4]|ldo[1-6]|otg-switch)$':
->> +        type: object
->> +        $ref: /schemas/regulator/regulator.yaml#
->> +        unevaluatedProperties: false
-> This is good.
->
->> +    unevaluatedProperties: false
-> I missed it last time, apologies. This (second) unevaluated should be
-> "additionalProperties: false" instead.
-Alright. Since there are no driver changes required for this change, I'll
-give the other maintainers some time to review and fix it alongside in v4.
+> > -	return devm_add_action_or_reset(dev, gpio_mockup_debugfs_cleanup, chip);
+> > +	return devm_add_action_or_reset(dev, devm_debugfs_dir_recursive_drop,
+> > +					chip->dbg_dir);  
+> 
+> This look strange. Shouldn't the debugfs_create_dir() call in 
+> gpio_mockup_debugfs_setup() be changed, instead?
+> 
+> (I've not look in the previous version if something was said about it, 
+> so apologies if already discussed)
 
-Alex
+Yeah, this specific user needs a more complicated refactoring.
 
-> With this fixed:
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->
->
-> Best regards,
-> Krzysztof
->
+I was reluctant to do more complicated refactors in the patch that also
+introduces these helpers.
+
+But Guenter asked me to split the patch anyway...
+
+> >   static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
+> >   {
+> > -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
+> > +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
+> > +	if (IS_ERR(pvt->dbgfs_dir))
+> > +		return PTR_ERR(pvt->dbgfs_dir);  
+> 
+> Not sure if the test and error handling should be added here.
+> *If I'm correct*, functions related to debugfs already handle this case 
+> and just do nothing. And failure in debugfs related code is not 
+> considered as something that need to be reported and abort a probe function.
+> 
+> Maybe the same other (already existing) tests in this patch should be 
+> removed as well, in a separated patch.
+
+Functions related to debugfs maybe do, but devm_ resource management
+functions may fail to allocate release structure, and those errors need
+to be handled, AFAIK.
+
+Marek
 
