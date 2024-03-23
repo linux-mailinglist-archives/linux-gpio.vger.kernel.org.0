@@ -1,172 +1,158 @@
-Return-Path: <linux-gpio+bounces-4572-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4573-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C531288791B
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 15:32:34 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17EFB887974
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 17:44:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 831A0284772
-	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 14:32:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 120B81C20B7F
+	for <lists+linux-gpio@lfdr.de>; Sat, 23 Mar 2024 16:44:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2E8039AFF;
-	Sat, 23 Mar 2024 14:32:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DC0547F7A;
+	Sat, 23 Mar 2024 16:44:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCggkiqH"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BSpS9Eg/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DA9C523C
-	for <linux-gpio@vger.kernel.org>; Sat, 23 Mar 2024 14:32:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235747483;
+	Sat, 23 Mar 2024 16:44:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711204344; cv=none; b=eicGPDae4unWncTQ2MXDRZF5AgFLWf7iX2cPa2/KDqL00x7MRmQXlpvEbjDlUZxKGZ6CJtE5PDEsVyzPrPERVWU7xKg7l4MPeyxrhUzgAIu2sYVgb8y3jMz+SMS2y7mV34sJSMF1FKs3txjcrpoLzYxLmsOoOswCFx4+mKnBaQ8=
+	t=1711212247; cv=none; b=bz4da+t3XFa5+t3/yuscuMBkvTzhljJMpDDuO1E4i+XvlYeOENqOeVOqfZsGMzhgihdi5OnYwf/wF8ZO9eHljfLOZv4yyuABuyDdHpwceU5YKrQIMkJToFqjdqxeOoMi20v/+q5A6WMQQmIM35zgzes48zzaAQA903e/41bn/hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711204344; c=relaxed/simple;
-	bh=WtDLMPj2zbZXhxcwSy+0zeJVPQQMep8MPhJQc/cTPfk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kJNl3XP1INQ844peQTnpi0XGYZ/ItdcxLBI+mjxxNWm/YNhPxIbPzCQBQamjhIl8WxpH68keLmXm1Qk6mqfDtQuWQn+WP9svHNMQWcetM9PakEsZSoGdeLCfcRIhWHUXk8lrejEyO/RxMtxGVNcck3Wzeb9NPP8WsuC7mdvl/NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jCggkiqH; arc=none smtp.client-ip=209.85.208.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-56bc5a3aeb9so3950572a12.3
-        for <linux-gpio@vger.kernel.org>; Sat, 23 Mar 2024 07:32:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711204340; x=1711809140; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=/pS4Fkjp9//RInN6U3WNGuPYIypJd83TLg5JczCky6s=;
-        b=jCggkiqHMce89++TN1BzJljxBmG3uJzB9DhFTH971lD4fqTgavVDXHISHLsO55MNCJ
-         8w5GXQDfAFOItQzziSYFBOjqEB8NoaXkD95Ys5we1qnIU//00d/LSC4yKiWJ4KzEWu3h
-         5aoKwbCzuJxeVSnEwqichSBLJVaIKXWoVi7/GQNrFxMG2clMLwU56lFlPYQJQhL+5T+g
-         qtPvARAJ3P+Bc0T9hhDOO6n5+0AdHgFiQ1tUr4UIYW83srWCUidNuv9kMzncwPQa2Nhr
-         +PwsJUTJbbEdJ64PmBCc57b2Bc7uEdE2CxBPRhRZbaO4moRrDaqwf/AgjrNYwHqU5zKj
-         aoBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711204340; x=1711809140;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/pS4Fkjp9//RInN6U3WNGuPYIypJd83TLg5JczCky6s=;
-        b=uWpTA6YhsIbtk0CRdAnTD37RqUwJzGHqnFf0ZryYaCFWNOtXVeK8x4Kb9B/EtPqJXB
-         Po/fmr1uA8/ihwKof7JeQDRoWtmksWFfqokjyT/9+wJ6FrAzNa8tBU1e1F5RtlJVlH8n
-         i6I3aSoU5rvWvQnsiXHbVTqTjFgrnX99Xz82eyevFY0URRYtqE9yNeyQcckp9nUTSiUJ
-         z3R2oZ93nHwybaQ3B99zLSZcqs4yn8hLLSSFbzPh0azaUWXk/wwCFttvuCMS9oO+Sjh+
-         qo2CWYBozUZQZk949KOgNcbIaXVPoxkiPYneVFpEKfIjb+fVpkOzk5NGxdgjBphLSPWT
-         Gtog==
-X-Forwarded-Encrypted: i=1; AJvYcCXFCNIrNDX+oO6y6H9dyLoeVYpgRLVheU/YxdrDsscGQ5BEuVH2VF5zWwGxEAlUXL3YyGg1Pf7cb8cKtYpJErzofTCetxwt1WaD6Q==
-X-Gm-Message-State: AOJu0Yw6MSWcknCI1Pz9YYmxDzxxz9PA/zK3yAD6xgjGjVX23aAaIl2D
-	jH5/hRdwNZbKZHkQ1W7lb0B5VcednBbyoXJeS7Z5JchRcZvNBLL5K6hx4Mb+mjs=
-X-Google-Smtp-Source: AGHT+IFuesNiwfdlhTfyO82tzlzS3jtn4uHl/DjqTAJbv1F8hkMkwhF1jdCCbyte3ZN97MKgybI0YA==
-X-Received: by 2002:a50:8701:0:b0:568:b41b:afd7 with SMTP id i1-20020a508701000000b00568b41bafd7mr1468753edb.29.1711204340196;
-        Sat, 23 Mar 2024 07:32:20 -0700 (PDT)
-Received: from [192.168.1.20] ([178.197.222.97])
-        by smtp.gmail.com with ESMTPSA id ig4-20020a056402458400b00568b6d731e1sm924600edb.4.2024.03.23.07.32.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 23 Mar 2024 07:32:19 -0700 (PDT)
-Message-ID: <368eb339-4f0f-4471-9367-9263caa3fab7@linaro.org>
-Date: Sat, 23 Mar 2024 15:32:17 +0100
+	s=arc-20240116; t=1711212247; c=relaxed/simple;
+	bh=6kri9cAqdeLQSwynoX/Mgs7Zl64zCLiK2ixhjODz/Ms=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EbzVuUUQbH+ql94A7C30/jYNA3s0iUUggBPbZAredasR2ksQUXCAt8hSS0OokgclHLvpWb152jbKcksQrEjn0t1jtQe701DFG8sWtMvjDs/Yy+3joYI7L6HAnNkiSpvRybBKIXl0WTYqMwLVSB/H+O7DrI7nQwYw3lOS87xmGr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BSpS9Eg/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82F63C433F1;
+	Sat, 23 Mar 2024 16:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711212246;
+	bh=6kri9cAqdeLQSwynoX/Mgs7Zl64zCLiK2ixhjODz/Ms=;
+	h=From:List-Id:To:Cc:Subject:Date:From;
+	b=BSpS9Eg/l+jRAko4Tz+ZMN4JCRwHeQdIYDpwIFJvgc226TRfGH4lO7KFm0HfyEk4N
+	 QHc+jaFbJbeJiqblewqW6zH8z311yjUlRYbc8QwrovBl8/iHMp/qfBAYHeRk7oLhdP
+	 5IiBfQzDjXjsCXYQrG9kf7QF/htVTR19FxpQSkB9Zsw3c0mmpSEwLMczirzljbgrWx
+	 sPhY3/3j56aA886Q3ykqgJ3Hga9PU8kyd1Q+FxjDo58YxSUGjuV+z8109u6Ddplcyi
+	 ks2EQegxrXkJvon8ZBFpuoQRquk4cyc/ytK6z0WZ+MvxZ8zzfZeB1se0xXW/QShgFv
+	 f7tmL5+5HfinQ==
+From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+To: Arnd Bergmann <arnd@arndb.de>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>,
+	soc@kernel.org,
+	arm@kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	devicetree@vger.kernel.org,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-rtc@vger.kernel.org,
+	linux-watchdog@vger.kernel.org,
+	Rob Herring <robh+dt@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Hans de Goede <hdegoede@redhat.com>,
+	Matti Vaittinen <mazziesaccount@gmail.com>
+Cc: =?UTF-8?q?Marek=20Beh=C3=BAn?= <kabel@kernel.org>
+Subject: [PATCH v5 00/11] Turris Omnia MCU driver
+Date: Sat, 23 Mar 2024 17:43:48 +0100
+Message-ID: <20240323164359.21642-1-kabel@kernel.org>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v3 1/5] dt-bindings: mfd: Add rk816 binding
-To: Alex Bee <knaerzche@gmail.com>, Lee Jones <lee@kernel.org>,
- Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Linus Walleij <linus.walleij@linaro.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Chris Zhong <zyw@rock-chips.com>, Zhang Qing <zhangqing@rock-chips.com>,
- devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-gpio@vger.kernel.org
-References: <20240323132757.141861-2-knaerzche@gmail.com>
- <20240323132757.141861-4-knaerzche@gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
- 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
- D2GYIS41Kv4Isx2dEFh+/Q==
-In-Reply-To: <20240323132757.141861-4-knaerzche@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 23/03/2024 14:27, Alex Bee wrote:
-> Add DT binding document for Rockchip's RK816 PMIC
-> 
-> Signed-off-by: Alex Bee <knaerzche@gmail.com>
+Hello Andy, Linus, Arnd, Gregory, and others,
 
+I am sending v5 of the series adding Turris Omnia MCU driver.
+See the cover letters for v1, v2, v3 and v4:
+  https://patchwork.kernel.org/project/linux-soc/cover/20230823161012.6986-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20230919103815.16818-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231023143130.11602-1-kabel@kernel.org/
+  https://patchwork.kernel.org/project/linux-soc/cover/20231026161803.16750-1-kabel@kernel.org/
 
-> +  regulators:
-> +    type: object
-> +    patternProperties:
-> +      '^(boost|dcdc[1-4]|ldo[1-6]|otg-switch)$':
-> +        type: object
-> +        $ref: /schemas/regulator/regulator.yaml#
-> +        unevaluatedProperties: false
+Changes since v4:
+- added new patches
+    06/11 devm-helpers: Add resource managed version of irq_create_mapping()
+    07/11 platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+    08/11 devm-helpers: Add resource managed version of debugfs directory create
+          function
+    09/11 platform: cznic: turris-omnia-mcu: Add support for digital message
+          signing via debugfs
+- for changes specific to patches which were also sent in previous versions see
+  the notes in those patches
 
-This is good.
+Marek Behún (11):
+  dt-bindings: arm: add cznic,turris-omnia-mcu binding
+  platform: cznic: Add preliminary support for Turris Omnia MCU
+  platform: cznic: turris-omnia-mcu: Add support for MCU connected GPIOs
+  platform: cznic: turris-omnia-mcu: Add support for poweroff and wakeup
+  platform: cznic: turris-omnia-mcu: Add support for MCU watchdog
+  devm-helpers: Add resource managed version of irq_create_mapping()
+  platform: cznic: turris-omnia-mcu: Add support for MCU provided TRNG
+  devm-helpers: Add resource managed version of debugfs directory create
+    function
+  platform: cznic: turris-omnia-mcu: Add support for digital message
+    signing via debugfs
+  ARM: dts: turris-omnia: Add MCU system-controller node
+  ARM: dts: turris-omnia: Add GPIO key node for front button
 
-> +    unevaluatedProperties: false
+ .../ABI/testing/debugfs-turris-omnia-mcu      |   13 +
+ .../sysfs-bus-i2c-devices-turris-omnia-mcu    |  126 ++
+ .../bindings/arm/cznic,turris-omnia-mcu.yaml  |   86 ++
+ MAINTAINERS                                   |    5 +
+ .../dts/marvell/armada-385-turris-omnia.dts   |   35 +-
+ drivers/crypto/caam/ctrl.c                    |   16 +-
+ drivers/crypto/caam/jr.c                      |    8 +-
+ drivers/gpio/gpio-mockup.c                    |   11 +-
+ drivers/gpu/drm/bridge/ti-sn65dsi86.c         |   13 +-
+ drivers/hwmon/hp-wmi-sensors.c                |   15 +-
+ drivers/hwmon/mr75203.c                       |   15 +-
+ drivers/hwmon/pmbus/pmbus_core.c              |   16 +-
+ drivers/platform/Kconfig                      |    2 +
+ drivers/platform/Makefile                     |    1 +
+ drivers/platform/cznic/Kconfig                |   51 +
+ drivers/platform/cznic/Makefile               |   10 +
+ .../platform/cznic/turris-omnia-mcu-base.c    |  406 +++++++
+ .../platform/cznic/turris-omnia-mcu-debugfs.c |  216 ++++
+ .../platform/cznic/turris-omnia-mcu-gpio.c    | 1056 +++++++++++++++++
+ .../cznic/turris-omnia-mcu-sys-off-wakeup.c   |  258 ++++
+ .../platform/cznic/turris-omnia-mcu-trng.c    |   89 ++
+ .../cznic/turris-omnia-mcu-watchdog.c         |  122 ++
+ drivers/platform/cznic/turris-omnia-mcu.h     |  214 ++++
+ include/linux/devm-helpers.h                  |   94 ++
+ include/linux/turris-omnia-mcu-interface.h    |  238 ++++
+ 25 files changed, 3044 insertions(+), 72 deletions(-)
+ create mode 100644 Documentation/ABI/testing/debugfs-turris-omnia-mcu
+ create mode 100644 Documentation/ABI/testing/sysfs-bus-i2c-devices-turris-omnia-mcu
+ create mode 100644 Documentation/devicetree/bindings/arm/cznic,turris-omnia-mcu.yaml
+ create mode 100644 drivers/platform/cznic/Kconfig
+ create mode 100644 drivers/platform/cznic/Makefile
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-base.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-debugfs.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-gpio.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-sys-off-wakeup.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-trng.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu-watchdog.c
+ create mode 100644 drivers/platform/cznic/turris-omnia-mcu.h
+ create mode 100644 include/linux/turris-omnia-mcu-interface.h
 
-I missed it last time, apologies. This (second) unevaluated should be
-"additionalProperties: false" instead.
-
-With this fixed:
-
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-
-
-Best regards,
-Krzysztof
+-- 
+2.43.2
 
 
