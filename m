@@ -1,125 +1,219 @@
-Return-Path: <linux-gpio+bounces-4583-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4584-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D7D4887C51
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 11:45:21 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC792887C66
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 12:02:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F9691C20D87
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 10:45:20 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8B27BB20F4A
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 11:02:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAD6175AB;
-	Sun, 24 Mar 2024 10:45:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n887v36a"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0EA2C17589;
+	Sun, 24 Mar 2024 11:02:01 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D3215E97
-	for <linux-gpio@vger.kernel.org>; Sun, 24 Mar 2024 10:45:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4456517591
+	for <linux-gpio@vger.kernel.org>; Sun, 24 Mar 2024 11:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711277116; cv=none; b=LfEr96CEChhNUclD4zHkuuvvnIN8B2MGlzDKTkbL1Um6U5ND2CfFb4uDSINciEZ720jN8xMrod1cOb44TE/465Ov7bTOtQMHO6odbRuIznp4wKFKeAg9wBgjIh0VpCOCdnR1tB71QCcYYSc4N+QphBHMmUSdh3rCRsE6EwXjTRk=
+	t=1711278120; cv=none; b=bwMi4uVdNSey3NG9iLmCrr630ogSTPFYzwuW/ng0XWuPdj7Ztjry8jsD8vNpL5QezHGgya6DBcvvea08+g1VKBk1bBVKvxR3f9kvSDCzpCxvCYxjHge0E8oy7TvrQUgBLve9478xiIv/OBkHutoenJ2xLS1E08VZiA2rL2l4XkA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711277116; c=relaxed/simple;
-	bh=sQckmXFITy4Xkbkc59BJtYFx0lkcS3ukS9NHkCGTGSs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JfVs245Y89DFfs5uMbLvTLk6PEWwfrOTJLNDgL0qTBwrqBNMHCxjJclDVnL3jB3H6HANwb+ifWIKVpN0MCxAGMySN9R4nJebbUaKBQYQuegRjGzCzq0XMVh4sqM4+6i+cZmW1FpuNPvOFtzdrtR4Afo48YnJlvxP5N7RxcFTbcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n887v36a; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a468004667aso474669866b.2
-        for <linux-gpio@vger.kernel.org>; Sun, 24 Mar 2024 03:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711277113; x=1711881913; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
-        b=n887v36aoMM9NxY2Dc4wrGGIvVnmsDggw7CQmw3wdRD1SkSXGXfww8ZhfYTdI4QCG+
-         x9Rdk+FQ0hUw6ToYuJj12Gs4RKXBE596EDWdmLBBbpqnzpXTxQY6yIdm2ZDz/H1Ims2f
-         BAkfmakJ0AjXCUwp4g8nhv95eZSFRNXCvpxGr9kwGl22Cj4YxmMcqYlHRXl9QePyB5j+
-         HubheSDXz9hZlL37VfMe/n/5kPng8KWbiKRVSMAdbB2/eCxV9NgpyWstH3pzPGpATOMV
-         8SP2WG2CSlmBXgMx4ZAjgtqGDSXw89D2JYs4JTpi9c+2FuhxffB3l1r/YaRUv37TTNZn
-         X+ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711277113; x=1711881913;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
-        b=f1tG18sXzmgtgDUDEAxtvC4jbCAJaoBzYsykd9vo5myWYOgNKIk62d8OWaYG0+O2Rg
-         22pyth2bL3RmiF5mmJ/MTBZrzcvjigWx5VA+3Q/IOS/ID1zdAHHwDBSm2A/V+nkeNFIE
-         rjlXWa9wG1U76rQ1HwRnXypPfgMRiY31RCludbKWP9/vwCbm52eFSanTckzUru/YPz20
-         hmhgQor81vWvkRF8ThiQ/AWJTItBMXJ1/8z1HKQ+79y9rQp1e6voBUpiNWKmMYAl4Mm5
-         UDeXIIAggmn+Iv2aA+9i49gxQAHRUJgcSItOHD3pof3CcSzofFiq6xR+n5moXiJdM5XM
-         eOLg==
-X-Forwarded-Encrypted: i=1; AJvYcCVEFVKF34ujwuG/mIgcAUOUTtC34gFH4gHqqbpi5N3XVKhBKM+Vg6Te1z3RFfvoJdbBFb3AhGyoQ+/BNVZwth3Xmom2OC/n6IOY6A==
-X-Gm-Message-State: AOJu0YzfqW/3u02LF+N4uR5hiKT3v89f0E8dtTJtFkdlpA8EfSD4scmm
-	4EpwkUIyJQ2lsuMWnJhrr6Mx1FRirE38Y+JMkpHugakIbZieaQIcEhA3aaJlUJM=
-X-Google-Smtp-Source: AGHT+IELgbvcq/YR2JYAdj3UMR62uFgEJo23GKSMx5QvCd5lojQP9akIksslHXLJQFzjzg27Z268bQ==
-X-Received: by 2002:a17:906:a19:b0:a46:f955:3720 with SMTP id w25-20020a1709060a1900b00a46f9553720mr2593989ejf.51.1711277112766;
-        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id ws9-20020a170907704900b00a46caa13e67sm1832993ejb.105.2024.03.24.03.45.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
-Date: Sun, 24 Mar 2024 13:45:09 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	NXP Linux Team <linux-imx@nxp.com>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	AKASHI Takahiro <takahiro.akashi@linaro.org>,
-	Peng Fan <peng.fan@nxp.com>
-Subject: Re: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <b06ab1e3-c00a-444c-908f-0ac8ad4d95fc@moroto.mountain>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
- <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
+	s=arc-20240116; t=1711278120; c=relaxed/simple;
+	bh=lNW864cvfYqn2OeFEfu2Vz3ViVE9lz6fktyhQFwFVhA=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fCCGGcrZNM5sO6i2icAJENudoTxo5hUkW+ucyZB4H4kqUYkg1HwwBDwqAgBruVXVr8t/iRW/pxzBwbQn+IBOdYiObjNqHmVzIuUE1zsVEOQVpld3mNhZKiyoH4XefJhpN3efkhoR27eMjjns0DVyMzpiXJk/3j52wCVBEyXXMCY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
+	id ed5c59f1-e9cd-11ee-abf4-005056bdd08f;
+	Sun, 24 Mar 2024 13:01:56 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Sun, 24 Mar 2024 13:01:55 +0200
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>, soc@kernel.org,
+	arm@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org,
+	Alessandro Zummo <a.zummo@towertech.it>,
+	Alexandre Belloni <alexandre.belloni@bootlin.com>,
+	linux-rtc@vger.kernel.org,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>, linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] platform: cznic: Add preliminary support for
+ Turris Omnia MCU
+Message-ID: <ZgAII1B03bLUisWr@surfacebook.localdomain>
+References: <20240323164359.21642-1-kabel@kernel.org>
+ <20240323164359.21642-3-kabel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240323164359.21642-3-kabel@kernel.org>
 
-On Thu, Mar 21, 2024 at 05:46:53PM +0300, Dan Carpenter wrote:
-> On Thu, Mar 14, 2024 at 09:35:20PM +0800, Peng Fan (OSS) wrote:
-> > +enum scmi_pinctrl_protocol_cmd {
-> > +	PINCTRL_ATTRIBUTES = 0x3,
-> > +	PINCTRL_LIST_ASSOCIATIONS = 0x4,
-> > +	PINCTRL_CONFIG_GET = 0x5,
-> > +	PINCTRL_CONFIG_SET = 0x6,
-> > +	PINCTRL_FUNCTION_SELECT = 0x7,
-> 
-> PINCTRL_FUNCTION_SELECT was removed from the spec so the other cmds were
-> renumbered.  I'm still going through and reviewing this file.  I'll
-> hopefully be done tomorrow.
-> 
+Sat, Mar 23, 2024 at 05:43:50PM +0100, Marek Behún kirjoitti:
+> Add the basic skeleton for a new platform driver for the microcontroller
+> found on the Turris Omnia board.
 
-I think the rest is okay.  It's just updating to the new version of the
-spec.  CONFIG_GET/SET need to be updated and FUNCTION_SELECT gets
-deleted.
+...
 
-regards,
-dan carpenter
+> +++ b/drivers/platform/cznic/Makefile
+> @@ -0,0 +1,4 @@
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +obj-$(CONFIG_TURRIS_OMNIA_MCU)	+= turris-omnia-mcu.o
+> +turris-omnia-mcu-objs		:= turris-omnia-mcu-base.o
+
+'objs' is for user space. You need to use 'y'. Same applies to the entire
+series.
+
+...
+
++ array_size.h
++ bits.h
+
+> +#include <linux/device.h>
+> +#include <linux/hex.h>
+> +#include <linux/i2c.h>
+> +#include <linux/module.h>
+> +#include <linux/turris-omnia-mcu-interface.h>
+> +#include <linux/types.h>
+
++ string.h
+
+> +#include <linux/sysfs.h>
+
+...
+
+> +	err = omnia_cmd_read(mcu->client, bootloader ? CMD_GET_FW_VERSION_BOOT :
+> +						       CMD_GET_FW_VERSION_APP,
+> +			     reply, sizeof(reply));
+
+Wouldn't be better to have a logical split?
+
+	err = omnia_cmd_read(mcu->client,
+			     bootloader ? CMD_GET_FW_VERSION_BOOT : CMD_GET_FW_VERSION_APP,
+			     reply, sizeof(reply));
+
+?
+
+...
+
+> +	struct omnia_mcu *mcu = i2c_get_clientdata(to_i2c_client(dev));
+
+What's wrong with dev_get_drvdata()?
+
+...
+
+> +static ssize_t fw_features_show(struct device *dev, struct device_attribute *a,
+> +				char *buf)
+
+One line?
+
+...
+
+> +	struct omnia_mcu *mcu = i2c_get_clientdata(to_i2c_client(dev));
+
+Use direct call (see above). Same applies to all such constructions in your
+code.
+
+...
+
+> +static const struct attribute_group omnia_mcu_base_group = {
+> +	.attrs = omnia_mcu_base_attrs,
+> +	.is_visible = omnia_mcu_base_attrs_visible,
+> +};
+> +
+> +static const struct attribute_group *omnia_mcu_groups[] = {
+> +	&omnia_mcu_base_group,
+> +	NULL
+> +};
+
+__ATTRIBUTE_GROUPS()
+
+...
+
+> +static struct i2c_driver omnia_mcu_driver = {
+> +	.probe		= omnia_mcu_probe,
+> +	.driver		= {
+> +		.name	= "turris-omnia-mcu",
+> +		.of_match_table = of_omnia_mcu_match,
+> +		.dev_groups = omnia_mcu_groups,
+> +	},
+> +};
+
+> +
+
+Redundant blank line.
+
+> +module_i2c_driver(omnia_mcu_driver);
+
+...
+
+> +#ifndef __TURRIS_OMNIA_MCU_H
+> +#define __TURRIS_OMNIA_MCU_H
+
++ array_size.h
+
+> +#include <linux/i2c.h>
+> +#include <linux/if_ether.h>
+> +#include <linux/types.h>
+> +#include <asm/byteorder.h>
+
+...
+
+> +static inline int omnia_cmd_read(const struct i2c_client *client, u8 cmd,
+> +				 void *reply, unsigned int len)
+> +{
+
+Why is this in the header?
+
+> +	struct i2c_msg msgs[2];
+> +	int ret;
+> +
+> +	msgs[0].addr = client->addr;
+> +	msgs[0].flags = 0;
+> +	msgs[0].len = 1;
+> +	msgs[0].buf = &cmd;
+> +	msgs[1].addr = client->addr;
+> +	msgs[1].flags = I2C_M_RD;
+> +	msgs[1].len = len;
+> +	msgs[1].buf = reply;
+> +
+> +	ret = i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret != ARRAY_SIZE(msgs))
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+
+...
+
+> +#ifndef __TURRIS_OMNIA_MCU_INTERFACE_H
+> +#define __TURRIS_OMNIA_MCU_INTERFACE_H
+> +
+> +#include <linux/bits.h>
+
++ bitfield.h
+
+> +#endif /* __TURRIS_OMNIA_MCU_INTERFACE_H */
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
