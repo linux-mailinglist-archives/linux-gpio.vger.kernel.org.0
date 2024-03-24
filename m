@@ -1,64 +1,73 @@
-Return-Path: <linux-gpio+bounces-4586-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4587-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1BF4887D64
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 16:04:31 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6003D887D69
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 16:08:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DA39B20B38
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 15:04:29 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C8467B20DF1
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 15:08:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93421862B;
-	Sun, 24 Mar 2024 15:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966CE18635;
+	Sun, 24 Mar 2024 15:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgZW4C6i"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CCaqs4Q0"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB26182BF;
-	Sun, 24 Mar 2024 15:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AADB17BC7;
+	Sun, 24 Mar 2024 15:08:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711292663; cv=none; b=P/B4e4mVJw1KQQYcZDW2didvV3JRgxfeaHumGSykd8eooLc99/rCbcG7BIO31IuLBVwLeFAEzQRpOY330vJffw3C7P2JWRmbMnMJ2ZsVpmP+eDUDuMyDfHVKbFLJGcb2XXVabYjUZ0chHzYOUBgmpq+0GQJ54TiiV7RjSSwM4oU=
+	t=1711292923; cv=none; b=qGXsEdQU6nlmHKVnN5X8wSZjlqplxD2FK+vVNVoKAO1m+jJu7T9Y+i0uS8wOkXgvWXcuNqKGTYqd/GphzX9xtIbutiAVd+DnWoiyhagEPIh94l7rbW+tu9vvvMxLUXj+gz8JYrLsl+pO89kwie77OtAswFFtuq4R6TBnINpMY9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711292663; c=relaxed/simple;
-	bh=rf3b26KuECC9MTFW/pddYxruswZh6tBWvG0s53kSfzQ=;
+	s=arc-20240116; t=1711292923; c=relaxed/simple;
+	bh=jbSdBHS0w1eaicjduO3/4ltPjzKnV2+4/Gm18hBir+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=RwVoAfoBOKh1sRAWmkunIlmRY5oqdj1pJQbKRWXU1DbcUNI2I9Ta1udirNF1ry/OHXlsHbvglX3Z3a5lfB78kswANxHAbbzaL1o4CCa1Nh23aKaJnkdvI3OxS1lXJpEBQ+0kZTOVExXoaiXkkI0z7xowUEKQcMXhB2ai/lrMltU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgZW4C6i; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113AEC433F1;
-	Sun, 24 Mar 2024 15:04:13 +0000 (UTC)
+	 MIME-Version:Content-Type; b=ijRQ4lNHlL173oHqBqQ71u+nL5SGXr/O+duF+MwDOia0Qu6RBmViSJOjmLidbjca2gomZpGR0c7pH1wvZQjAp+aZPP1Tb5IpTyLv9nhCQd5gS514DzTSy+NOvP4XSmL/pUxdEZhN3lsa4TWJEG0EyQ9WBT2c7flkKRhCw9bQrjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CCaqs4Q0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE7ADC433C7;
+	Sun, 24 Mar 2024 15:08:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711292663;
-	bh=rf3b26KuECC9MTFW/pddYxruswZh6tBWvG0s53kSfzQ=;
+	s=k20201202; t=1711292923;
+	bh=jbSdBHS0w1eaicjduO3/4ltPjzKnV2+4/Gm18hBir+0=;
 	h=Date:From:To:List-Id:Cc:Subject:In-Reply-To:References:From;
-	b=rgZW4C6iXaOLkEa+zKmkO76TnGVu1vqFEV1NHyarlK01d+Dh4DgoA1NdrvSMuzEkb
-	 eeIMQ3zfm0SbxPIPhF7LKfQImYKUlSy/GxMHUDA8EaW7ih2vQSO6CaWPu108XT2mum
-	 SM6nE2PwD5XPS0EcAgfHmdyHTC/ppv8jNY3Rq7gqbZGql3ziYSZrvDzZ8VVn5oJ5z0
-	 WT3eT3MZyRjJz4gc7pKmHEla/gOk+StjmzwD3H698CFd5BKsqCePolVQ/Fe3w75FOs
-	 dvgyxMVfqKwBolJ8XXJS0SydynGR4nALWDJ4vIA3H68DP3UPsRoSqyeGMDYkTN5bNG
-	 J10G//JxY1zkg==
-Date: Sun, 24 Mar 2024 16:04:08 +0100
+	b=CCaqs4Q0v54OS/qibjDzeR5rnTLCeMB5BEWL9FOQOm8nUsrsP4agxz9UeijgZT7BG
+	 4MKSbYfhrQ29CGt+4vnpliHU74QTU5qGLG+bJ0dnax0OIzumnGe5d79tXGVUDVMCwA
+	 SUnGl4wT7Kx7SgjiwWQGT8hc1XE8NU7wy5/lvXLsYw1SyVT+Lk0Y7KoBDoIr+Sq5kz
+	 G3RLG4eMVQAo0e9iXkjKdxwniW2P5X8xhO9Ro3uHGyprv5IKfuJrfyJjlUyZ06toot
+	 J/zg4uC6SCjy+mHbaghEESneDQeaLg4J7rdI5mJb4e8SPi2cU5WxgujzdHnBylvUEu
+	 2BTwaVwc1gecg==
+Date: Sun, 24 Mar 2024 16:08:28 +0100
 From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT
- <gregory.clement@bootlin.com>, soc@kernel.org, arm@kernel.org, Linus
- Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
- Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, Alessandro
- Zummo <a.zummo@towertech.it>, Alexandre Belloni
- <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, Wim Van
- Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>,
- linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH v5 02/11] platform: cznic: Add preliminary support for
- Turris Omnia MCU
-Message-ID: <20240324160408.77c8574e@thinkpad>
-In-Reply-To: <ZgAII1B03bLUisWr@surfacebook.localdomain>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Jonathan.Cameron@huawei.com, Laurent.pinchart@ideasonboard.com,
+ airlied@gmail.com, andrzej.hajda@intel.com, arm@kernel.org, arnd@arndb.de,
+ bamv2005@gmail.com, brgl@bgdev.pl, daniel@ffwll.ch, davem@davemloft.net,
+ dianders@chromium.org, dri-devel@lists.freedesktop.org,
+ eajames@linux.ibm.com, gaurav.jain@nxp.com, gregory.clement@bootlin.com,
+ hdegoede@redhat.com, herbert@gondor.apana.org.au, horia.geanta@nxp.com,
+ james.clark@arm.com, james@equiv.tech, jdelvare@suse.com,
+ jernej.skrabec@gmail.com, jonas@kwiboo.se, linus.walleij@linaro.org,
+ linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux@roeck-us.net, maarten.lankhorst@linux.intel.com,
+ mazziesaccount@gmail.com, mripard@kernel.org, naresh.solanki@9elements.com,
+ neil.armstrong@linaro.org, pankaj.gupta@nxp.com,
+ patrick.rudolph@9elements.com, rfoss@kernel.org, soc@kernel.org,
+ tzimmermann@suse.de
+Subject: Re: [PATCH v5 08/11] devm-helpers: Add resource managed version of
+ debugfs directory create function
+Message-ID: <20240324160828.7f873a96@thinkpad>
+In-Reply-To: <69264f8a-a113-4d49-b8a6-fb9e858584e4@wanadoo.fr>
 References: <20240323164359.21642-1-kabel@kernel.org>
-	<20240323164359.21642-3-kabel@kernel.org>
-	<ZgAII1B03bLUisWr@surfacebook.localdomain>
+	<20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
+	<f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
+	<20240323222506.4ffbdd71@thinkpad>
+	<69264f8a-a113-4d49-b8a6-fb9e858584e4@wanadoo.fr>
 X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -69,199 +78,60 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Sun, 24 Mar 2024 10:21:28 +0100
+Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
 
-thank you very much for the review. I have some notes and some
-questions, see below.
-
-On Sun, 24 Mar 2024 13:01:55 +0200
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-
-> Sat, Mar 23, 2024 at 05:43:50PM +0100, Marek Beh=C3=BAn kirjoitti:
-> > Add the basic skeleton for a new platform driver for the microcontroller
-> > found on the Turris Omnia board. =20
+> Le 23/03/2024 =C3=A0 22:25, Marek Beh=C3=BAn a =C3=A9crit=C2=A0:
+> > On Sat, 23 Mar 2024 22:10:40 +0100
+> > Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+> >  =20
 >=20
 > ...
 >=20
-> > +++ b/drivers/platform/cznic/Makefile
-> > @@ -0,0 +1,4 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
-> > +
-> > +obj-$(CONFIG_TURRIS_OMNIA_MCU)	+=3D turris-omnia-mcu.o
-> > +turris-omnia-mcu-objs		:=3D turris-omnia-mcu-base.o =20
+> >>>    static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct devi=
+ce *dev)
+> >>>    {
+> >>> -	pvt->dbgfs_dir =3D debugfs_create_dir(dev_name(dev), NULL);
+> >>> +	pvt->dbgfs_dir =3D devm_debugfs_create_dir(dev, dev_name(dev), NULL=
+);
+> >>> +	if (IS_ERR(pvt->dbgfs_dir))
+> >>> +		return PTR_ERR(pvt->dbgfs_dir); =20
+> >>
+> >> Not sure if the test and error handling should be added here.
+> >> *If I'm correct*, functions related to debugfs already handle this case
+> >> and just do nothing. And failure in debugfs related code is not
+> >> considered as something that need to be reported and abort a probe fun=
+ction.
+> >>
+> >> Maybe the same other (already existing) tests in this patch should be
+> >> removed as well, in a separated patch. =20
+> >=20
+> > Functions related to debugfs maybe do, but devm_ resource management
+> > functions may fail to allocate release structure, and those errors need
+> > to be handled, AFAIK. =20
 >=20
-> 'objs' is for user space. You need to use 'y'. Same applies to the entire
-> series.
+> I would say no.
+> If this memory allocation fails, then debugfs_create_dir() will not be=20
+> called, but that's not a really big deal if the driver itself can still=20
+> run normally without it.
 
-Fixed for v6.
+debugfs_create_dir() will always be called. Resource allocation is done
+afterwards, and if it fails, then the created dir will be removed.
 
->=20
-> + array_size.h
-> + bits.h
-
-Fixed for v6. Is there some tool for this?
-
-> + string.h
-
-Fixed for v6.
->=20
-> > +#include <linux/sysfs.h> =20
->=20
-> ...
->=20
-> > +	err =3D omnia_cmd_read(mcu->client, bootloader ? CMD_GET_FW_VERSION_B=
-OOT :
-> > +						       CMD_GET_FW_VERSION_APP,
-> > +			     reply, sizeof(reply)); =20
->=20
-> Wouldn't be better to have a logical split?
->=20
-> 	err =3D omnia_cmd_read(mcu->client,
-> 			     bootloader ? CMD_GET_FW_VERSION_BOOT : CMD_GET_FW_VERSION_APP,
-> 			     reply, sizeof(reply));
-
-Changed for v6 to
-
-> 	err =3D omnia_cmd_read(mcu->client,
-> 			     bootloader ? CMD_GET_FW_VERSION_BOOT
-> 					: CMD_GET_FW_VERSION_APP,
-> 			     reply, sizeof(reply));
-
-There are still some people wanting only 80 columns, and the whole
-driver is written that way.
+But now I don't know what to do, because yes, it seems that the debugfs
+errors are being ignored at many places...
 
 >=20
-> ?
+> Up to you to leave it as-is or remove what I think is a useless error=20
+> handling.
+> At least, maybe it could be said in the commit log, so that maintainers=20
+> can comment on it, if they don't spot the error handling you introduce.
 >=20
-> ...
+> CJ
 >=20
-> > +	struct omnia_mcu *mcu =3D i2c_get_clientdata(to_i2c_client(dev)); =20
->=20
-> What's wrong with dev_get_drvdata()?
-
-Fixed for v6.
-
-> ...
->=20
-> > +static ssize_t fw_features_show(struct device *dev, struct device_attr=
-ibute *a,
-> > +				char *buf) =20
->=20
-> One line?
-
-80 columns...
-
-...
-
-> > +static const struct attribute_group omnia_mcu_base_group =3D {
-> > +	.attrs =3D omnia_mcu_base_attrs,
-> > +	.is_visible =3D omnia_mcu_base_attrs_visible,
-> > +};
-> > +
-> > +static const struct attribute_group *omnia_mcu_groups[] =3D {
-> > +	&omnia_mcu_base_group,
-> > +	NULL
-> > +}; =20
->=20
-> __ATTRIBUTE_GROUPS()
-
-The next patches add more groups into this array, after the whole
-series it looks like this:
-
-static const struct attribute_group *omnia_mcu_groups[] =3D {
-	&omnia_mcu_base_group,
-	&omnia_mcu_gpio_group,
-	&omnia_mcu_poweroff_group,
-	NULL
-};
-
-There is no macro for that. Should I still use __ATTRIBUTE_GROUPS() in
-the first patch and than change it in the next one?
-
->=20
-> ...
->=20
-> > +static struct i2c_driver omnia_mcu_driver =3D {
-> > +	.probe		=3D omnia_mcu_probe,
-> > +	.driver		=3D {
-> > +		.name	=3D "turris-omnia-mcu",
-> > +		.of_match_table =3D of_omnia_mcu_match,
-> > +		.dev_groups =3D omnia_mcu_groups,
-> > +	},
-> > +}; =20
->=20
-> > + =20
->=20
-> Redundant blank line.
->=20
-
-Fixed for v6.
-
-> > +module_i2c_driver(omnia_mcu_driver); =20
->=20
-> ...
->=20
-> > +#ifndef __TURRIS_OMNIA_MCU_H
-> > +#define __TURRIS_OMNIA_MCU_H =20
->=20
-> + array_size.h
-
-Fixed for v6.
-
->=20
-> > +#include <linux/i2c.h>
-> > +#include <linux/if_ether.h>
-> > +#include <linux/types.h>
-> > +#include <asm/byteorder.h> =20
->=20
-> ...
->=20
-> > +static inline int omnia_cmd_read(const struct i2c_client *client, u8 c=
-md,
-> > +				 void *reply, unsigned int len)
-> > +{ =20
->=20
-> Why is this in the header?
-
-I considered it a helper function that should be defined in the header
-file, like the rest of the cmd helpers in this file. If you disagree, I
-will put it into the -base.c file.
-
->=20
-> > +	struct i2c_msg msgs[2];
-> > +	int ret;
-> > +
-> > +	msgs[0].addr =3D client->addr;
-> > +	msgs[0].flags =3D 0;
-> > +	msgs[0].len =3D 1;
-> > +	msgs[0].buf =3D &cmd;
-> > +	msgs[1].addr =3D client->addr;
-> > +	msgs[1].flags =3D I2C_M_RD;
-> > +	msgs[1].len =3D len;
-> > +	msgs[1].buf =3D reply;
-> > +
-> > +	ret =3D i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
-> > +	if (ret < 0)
-> > +		return ret;
-> > +	if (ret !=3D ARRAY_SIZE(msgs))
-> > +		return -EIO;
-> > +
-> > +	return 0;
-> > +} =20
->=20
-> ...
->=20
-> > +#ifndef __TURRIS_OMNIA_MCU_INTERFACE_H
-> > +#define __TURRIS_OMNIA_MCU_INTERFACE_H
-> > +
-> > +#include <linux/bits.h> =20
->=20
-> + bitfield.h
-
-Fixed for v6.
-
->=20
-> > +#endif /* __TURRIS_OMNIA_MCU_INTERFACE_H */ =20
+> >=20
+> > Marek
+> >  =20
 >=20
 
 
