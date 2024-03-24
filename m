@@ -1,182 +1,267 @@
-Return-Path: <linux-gpio+bounces-4585-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4586-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9C98887CA9
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 13:15:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id E1BF4887D64
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 16:04:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 584B31F2147C
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 12:15:34 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 3DA39B20B38
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 15:04:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEB5317BAA;
-	Sun, 24 Mar 2024 12:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E93421862B;
+	Sun, 24 Mar 2024 15:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="rMoadpUU"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rgZW4C6i"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR04-HE1-obe.outbound.protection.outlook.com (mail-he1eur04on2070.outbound.protection.outlook.com [40.107.7.70])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B822179B5;
-	Sun, 24 Mar 2024 12:15:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.7.70
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711282527; cv=fail; b=cgZG+VNRVrCE4h8R23ECosmvAoNHe76WYmq8J5JJYg3cKkCP3myv6xOG7hSoGuiFVoGpzWNjRftYF91I/BIWtkD39Ood5cmAAwYo940BfaYg+31S/rhLJt2/12q+wSwOIcqfekeE41yz2k9HahiCo8ng/OkHvrNwKGYojoWo3nI=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711282527; c=relaxed/simple;
-	bh=9y4MKyOkXabVSwRULticS+16nXCTBmBn/2+tSg5nu7Q=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=GAjPMEA7rIJcnNHZesK5lzlZb3WR1rznvoBEHa43yXj7LfhPjU+dgBfiDqWaAp1JG87KRrTEX0f9WyZN0E6g4ov0Vt98cKM7Bx6+6JWrw/eNLgyi6PG0SIpoOlpeYum3fr9Rkq5DYUAIgE3IAhg7XQdw6GwA6uQJqsWRShHBD5g=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=rMoadpUU; arc=fail smtp.client-ip=40.107.7.70
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fnql1mTm90m91GvGq+ea0LxHRDiO7Mg4lGjq8Dn4VzFiSzoDQLVXws0Kj8Uc40PW8VvYgR1kiWJNnxecGFiVtnkaiWCGGzQnH9RIfUE0fcidQtye9H0zl0ZK42pv+dftioCuIAQyPWxampJPJmmEtufUp92ADOZbzGK3FXJAYC8pGi3k7npwemHLAyU1gikw3AsDfqd4BxDbd8MBq8xithObIj0uD+Y9s0BgMaTFb8RpKjUBhHbl5tbbnG67McHJf9FMuZF+9dgGW4q1Fanuqhbyo6OJea5OmioGHnYLR95DgFaq6SgDc/4lydFd7xE1FeankCINw7me0d3LLkmx5Q==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=1n9Kq2FXCZjzqG79reIgs+4L9ckh3UcX+hw/M71dlBw=;
- b=TcKmF1XudaWdzRVEFHr1JPqaF4cy0WniX8/QShX2P9d3ypdm/jStB/UFx5/jvy0mxIAUt+tkov0ooRko1KQKsDVxH10mHiZljvZSj+//L0wQQ7fSVwvo72JFRxtCexTfb8YWBuCHLG8P92h54SauT8lipeSOsFG2Tu7To4xlhq/mPAfrHTJy833nFv5DZRl/5LyzIeoL31h49lRJNls827PF0cL1gbWgl6zRqFZ8p64QurZNEee4RR63vXJ6aSo8Tk55qrgFYA1y+O5mXDC7yd10xKWnyb263+lvXlr6fnoffpuf5zQFO/QueQQnWhmjZsEM9qCKhyHJDdkX1oH3JQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1n9Kq2FXCZjzqG79reIgs+4L9ckh3UcX+hw/M71dlBw=;
- b=rMoadpUUlMt3crv9BzNy1zG7qXjdJUXzu61giZs5MdzOf2psNI0neT/V48nyHVfIjZrZbEb6MM7KcgvZBMV9Oi89U10/pyELBfyllRR4DxKWeCjsRwEtwOOJNACIdi9ACowi2mrMjdXAwvu7zjZV686h6b8mxNMriE8+wBLn4TM=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by PAXPR04MB8768.eurprd04.prod.outlook.com (2603:10a6:102:20f::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7386.25; Sun, 24 Mar
- 2024 12:15:21 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Sun, 24 Mar 2024
- 12:15:20 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Rob Herring <robh+dt@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>, Linus
- Walleij <linus.walleij@linaro.org>, Shawn Guo <shawnguo@kernel.org>, Sascha
- Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team
-	<kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, dl-linux-imx
-	<linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: RE: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHadhNakUhFqeH4Wkuoe629JrLZ/LFCUROAgARzdICAABkE8A==
-Date: Sun, 24 Mar 2024 12:15:19 +0000
-Message-ID:
- <DU0PR04MB941796214807CFF880E1A31F88372@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
- <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
- <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
- <b06ab1e3-c00a-444c-908f-0ac8ad4d95fc@moroto.mountain>
-In-Reply-To: <b06ab1e3-c00a-444c-908f-0ac8ad4d95fc@moroto.mountain>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nxp.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|PAXPR04MB8768:EE_
-x-ms-office365-filtering-correlation-id: fc82d10e-6683-455f-ff79-08dc4bfc12e1
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- 01C9BITaffJoCpLuN5arEjQjJbj6EZuoTweFPxgDMzToav7K2cS6JbuJxy3YMoBpPA714tjP2Q4XxCqQ/H3IgOncuPbQj7igTo/vn2Qb1O2YRxoID5wL6QqJLqUqMQTdOnErpIm7QtqQMFUcN3EEv6OY1Gi9aobWHSNsHeEeXcVEOgyyMFMy/GB2H0ASNDbnVfEXTx/KFs6zYZSC7fuLe34WAfzQil9BNvu9WhW8uvQ49haxRdRj6xBGztBADUKZ7kGMH8eHu63v1dzix7cneMpC1JQIfdv1rQdFkskVPQAooyJUBJGdu2Bnw/4qQMgMN90uneW7d3Em4nY6TmVSsKYLa1wObwW424qIn/0o3TVCmAbdSNpU048yf1zTCjo52pgehzto8746T/OLFM5THIaKr9dS5tBaWZB2mugKySRaJbgUJHzH6CRQOBxXIolDVXJ9hrz1PMQdXP/xQkHqwY/4eT6Zj4DOENWcYIi27ICITfhavr3wTuZEZllt3aqrCc/KZM97XDxUyyMVeGbyog8qoDR108VIgOKNz6qBlh6rKx2yJ88IsXzv5O6osiCaiIPuqJw7Cs40An32sqkHuTNuC3ro77ISYmRJWuBjWlAP6HpUKzTr5Vbk/4jQkSnAZuV4FcLdmSXiPkdniOWVIsLzelUL6jdjIXuF2OB3JHNVwcIsMa1bmkt3R7XQjmfAIeoiO+ty4FVQhpqR4LhO24En+zKVD8NGP//mBqF8kYM=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(1800799015)(376005)(7416005)(366007)(38070700009);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?R75uXC/ocBOA72J7QxcvfYY/Ks9EtGvjtujk5MUAc9cw0cdswrtfM3m2NiqO?=
- =?us-ascii?Q?qdFsqHt7+8p5Ca7squ3ng8OlQ3rirVrw3UbZf7sVYTix5XrFDjcHYCgZGeby?=
- =?us-ascii?Q?0king5r1dZ4DfrtSXek+CvO0TopVpvUdsVzQ7g4J0Hr2P5nUkIDbwMqvYTvT?=
- =?us-ascii?Q?Iw+B7Q+NqAOqJAIFyh/JL8zaJm8Di1Nz6PZWGyar+jpPdoCQ010OXKheis2U?=
- =?us-ascii?Q?QTAS8UWPfAgkYoEq99X8R+gqT6VogaPKjDMgQMFS5bI2lllsyObiIFISULp9?=
- =?us-ascii?Q?xAuxDujLAwolNByJUvgRP8rpNwajXUP3yYY5Laif0f0sR/72Fx2Ok7bImRz8?=
- =?us-ascii?Q?/2y8ywC2gMq/sqfUAGILuPUgLkvVS41sRUNSDASwVHQoRy6KPC1CPZKutQY7?=
- =?us-ascii?Q?GKz0CfXQp/APJEssQAZLwIyJpEleUmBah7iwHM0EPReI2OkLKKbaT3qiKNXh?=
- =?us-ascii?Q?6IHBGn8bqo+cUBBZ6hKCopc4N0k0F1A24G9it0WYeZ9nMdLWygS0cgxoVIPL?=
- =?us-ascii?Q?qUr5xbUksTclSPrcvwTfVnm66tfnmaTSiIfzlCmXU4o0BhGSEWiYx9Meg1rH?=
- =?us-ascii?Q?+H9USBRzdbNrvaWw1q9pd3NImV2n07BE8oL3bD0Ge6BYMM6atbRZV1amVqwW?=
- =?us-ascii?Q?XRV+kaPAntdhCqBrsHGnp2Y1al7td7pnQFYA3acubw0KlnMHr47R4XhGlL0/?=
- =?us-ascii?Q?krXnL7tLZESmLdwPUlD2fZsyOJ7C/JArjk4lsjAjrcTfpLDeyg6oqXn04kqX?=
- =?us-ascii?Q?SaawY5QNgOKf2RDLklucOv2GsdGebZUmO28a5Xmb9HH5t4YRXcFE32dYGRrX?=
- =?us-ascii?Q?BYJuGzmADfqSlu7ScwztHDUxZBrCCAAQBh8w1lvMz2wgrQK3ERoKljDZ6J8M?=
- =?us-ascii?Q?hDjkHrC1ROuIu6pnweXIjHnVguSoL9gQxwDn6L7NbCaQGAnqku30KhIlOKws?=
- =?us-ascii?Q?zARshmlCXmp7M9in6lNra7EoKIHt3epqOPS/jhnGXFwPBZWkQb0oPNaKWP43?=
- =?us-ascii?Q?eTLCAY/yHwelhZWvpvlpqsnZON1tJYSHJP2S6L2wo3l/wVyZnJhd9fiAGa85?=
- =?us-ascii?Q?PyaJeqMxXbMoRZ3Y9PRVKI7HyC4lr3NyfZQvuehLkjgcC2WneOfKeIowva+p?=
- =?us-ascii?Q?RXB+s+TgQlEhxw4OdgQhZScpsoEou82g6Bbhdh5+v4JUk/NkQVoWvBME3VWi?=
- =?us-ascii?Q?FHgD6CnkcvB1n0h2ucZnSmDd07Drov9RhkBPH69bWbCMKzlYKyfMp40VGv8M?=
- =?us-ascii?Q?8vNNehqrlJfSZBylLUgmKL8cElDwNKiDFlcVTz/2alPyiYsBatu5o33NprbY?=
- =?us-ascii?Q?SI0FZiLOSV/Tpxz4jTtBaSqiRiJuSaS7MjrhklzcHICVgePGjMHziP8Kf482?=
- =?us-ascii?Q?Z7L9b6+oDD0wXzWWFT/mOktTj/i6gB0W8PhQyreCgIuJf0L4Z3zcsciUnkWz?=
- =?us-ascii?Q?c5FyZGSPWLLVz4hZ847vxVqvPJCsMsprv0qz7W1sxPuKlsRHagyLYlFRMLL1?=
- =?us-ascii?Q?uw/To46nTQLQSJVLVN8B2rJQnnQGjUtNuLZpo8ZqcLk7zZqtWwlof4efJtOR?=
- =?us-ascii?Q?RIyusZ2Sn7hglTaBGdw=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EB26182BF;
+	Sun, 24 Mar 2024 15:04:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711292663; cv=none; b=P/B4e4mVJw1KQQYcZDW2didvV3JRgxfeaHumGSykd8eooLc99/rCbcG7BIO31IuLBVwLeFAEzQRpOY330vJffw3C7P2JWRmbMnMJ2ZsVpmP+eDUDuMyDfHVKbFLJGcb2XXVabYjUZ0chHzYOUBgmpq+0GQJ54TiiV7RjSSwM4oU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711292663; c=relaxed/simple;
+	bh=rf3b26KuECC9MTFW/pddYxruswZh6tBWvG0s53kSfzQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RwVoAfoBOKh1sRAWmkunIlmRY5oqdj1pJQbKRWXU1DbcUNI2I9Ta1udirNF1ry/OHXlsHbvglX3Z3a5lfB78kswANxHAbbzaL1o4CCa1Nh23aKaJnkdvI3OxS1lXJpEBQ+0kZTOVExXoaiXkkI0z7xowUEKQcMXhB2ai/lrMltU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rgZW4C6i; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 113AEC433F1;
+	Sun, 24 Mar 2024 15:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711292663;
+	bh=rf3b26KuECC9MTFW/pddYxruswZh6tBWvG0s53kSfzQ=;
+	h=Date:From:To:List-Id:Cc:Subject:In-Reply-To:References:From;
+	b=rgZW4C6iXaOLkEa+zKmkO76TnGVu1vqFEV1NHyarlK01d+Dh4DgoA1NdrvSMuzEkb
+	 eeIMQ3zfm0SbxPIPhF7LKfQImYKUlSy/GxMHUDA8EaW7ih2vQSO6CaWPu108XT2mum
+	 SM6nE2PwD5XPS0EcAgfHmdyHTC/ppv8jNY3Rq7gqbZGql3ziYSZrvDzZ8VVn5oJ5z0
+	 WT3eT3MZyRjJz4gc7pKmHEla/gOk+StjmzwD3H698CFd5BKsqCePolVQ/Fe3w75FOs
+	 dvgyxMVfqKwBolJ8XXJS0SydynGR4nALWDJ4vIA3H68DP3UPsRoSqyeGMDYkTN5bNG
+	 J10G//JxY1zkg==
+Date: Sun, 24 Mar 2024 16:04:08 +0100
+From: Marek =?UTF-8?B?QmVow7pu?= <kabel@kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Gregory CLEMENT
+ <gregory.clement@bootlin.com>, soc@kernel.org, arm@kernel.org, Linus
+ Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>,
+ Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org, Alessandro
+ Zummo <a.zummo@towertech.it>, Alexandre Belloni
+ <alexandre.belloni@bootlin.com>, linux-rtc@vger.kernel.org, Wim Van
+ Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>,
+ linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH v5 02/11] platform: cznic: Add preliminary support for
+ Turris Omnia MCU
+Message-ID: <20240324160408.77c8574e@thinkpad>
+In-Reply-To: <ZgAII1B03bLUisWr@surfacebook.localdomain>
+References: <20240323164359.21642-1-kabel@kernel.org>
+	<20240323164359.21642-3-kabel@kernel.org>
+	<ZgAII1B03bLUisWr@surfacebook.localdomain>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.39; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc82d10e-6683-455f-ff79-08dc4bfc12e1
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Mar 2024 12:15:20.0225
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: +N3TL8ellVsYTzOOA9CKoGQVl4YPgx9spoabcCpYMjcFUVtcr7KpqkhVEnfneDOEC7eTQacW9iJOAGnrmFJGTw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PAXPR04MB8768
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Dan,
+Hi Andy,
 
-> Subject: Re: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> protocol basic support
+thank you very much for the review. I have some notes and some
+questions, see below.
+
+On Sun, 24 Mar 2024 13:01:55 +0200
+Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+
+> Sat, Mar 23, 2024 at 05:43:50PM +0100, Marek Beh=C3=BAn kirjoitti:
+> > Add the basic skeleton for a new platform driver for the microcontroller
+> > found on the Turris Omnia board. =20
 >=20
-> On Thu, Mar 21, 2024 at 05:46:53PM +0300, Dan Carpenter wrote:
-> > On Thu, Mar 14, 2024 at 09:35:20PM +0800, Peng Fan (OSS) wrote:
-> > > +enum scmi_pinctrl_protocol_cmd {
-> > > +	PINCTRL_ATTRIBUTES =3D 0x3,
-> > > +	PINCTRL_LIST_ASSOCIATIONS =3D 0x4,
-> > > +	PINCTRL_CONFIG_GET =3D 0x5,
-> > > +	PINCTRL_CONFIG_SET =3D 0x6,
-> > > +	PINCTRL_FUNCTION_SELECT =3D 0x7,
-> >
-> > PINCTRL_FUNCTION_SELECT was removed from the spec so the other cmds
-> > were renumbered.  I'm still going through and reviewing this file.
-> > I'll hopefully be done tomorrow.
-> >
+> ...
 >=20
-> I think the rest is okay.  It's just updating to the new version of the s=
-pec.
-> CONFIG_GET/SET need to be updated and FUNCTION_SELECT gets deleted.
+> > +++ b/drivers/platform/cznic/Makefile
+> > @@ -0,0 +1,4 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +obj-$(CONFIG_TURRIS_OMNIA_MCU)	+=3D turris-omnia-mcu.o
+> > +turris-omnia-mcu-objs		:=3D turris-omnia-mcu-base.o =20
+>=20
+> 'objs' is for user space. You need to use 'y'. Same applies to the entire
+> series.
 
-V6 has this updated. Thanks for helping reviewing this patchset.
-
-Thanks,
-Peng.
+Fixed for v6.
 
 >=20
-> regards,
-> dan carpenter
+> + array_size.h
+> + bits.h
+
+Fixed for v6. Is there some tool for this?
+
+> + string.h
+
+Fixed for v6.
+>=20
+> > +#include <linux/sysfs.h> =20
+>=20
+> ...
+>=20
+> > +	err =3D omnia_cmd_read(mcu->client, bootloader ? CMD_GET_FW_VERSION_B=
+OOT :
+> > +						       CMD_GET_FW_VERSION_APP,
+> > +			     reply, sizeof(reply)); =20
+>=20
+> Wouldn't be better to have a logical split?
+>=20
+> 	err =3D omnia_cmd_read(mcu->client,
+> 			     bootloader ? CMD_GET_FW_VERSION_BOOT : CMD_GET_FW_VERSION_APP,
+> 			     reply, sizeof(reply));
+
+Changed for v6 to
+
+> 	err =3D omnia_cmd_read(mcu->client,
+> 			     bootloader ? CMD_GET_FW_VERSION_BOOT
+> 					: CMD_GET_FW_VERSION_APP,
+> 			     reply, sizeof(reply));
+
+There are still some people wanting only 80 columns, and the whole
+driver is written that way.
+
+>=20
+> ?
+>=20
+> ...
+>=20
+> > +	struct omnia_mcu *mcu =3D i2c_get_clientdata(to_i2c_client(dev)); =20
+>=20
+> What's wrong with dev_get_drvdata()?
+
+Fixed for v6.
+
+> ...
+>=20
+> > +static ssize_t fw_features_show(struct device *dev, struct device_attr=
+ibute *a,
+> > +				char *buf) =20
+>=20
+> One line?
+
+80 columns...
+
+...
+
+> > +static const struct attribute_group omnia_mcu_base_group =3D {
+> > +	.attrs =3D omnia_mcu_base_attrs,
+> > +	.is_visible =3D omnia_mcu_base_attrs_visible,
+> > +};
+> > +
+> > +static const struct attribute_group *omnia_mcu_groups[] =3D {
+> > +	&omnia_mcu_base_group,
+> > +	NULL
+> > +}; =20
+>=20
+> __ATTRIBUTE_GROUPS()
+
+The next patches add more groups into this array, after the whole
+series it looks like this:
+
+static const struct attribute_group *omnia_mcu_groups[] =3D {
+	&omnia_mcu_base_group,
+	&omnia_mcu_gpio_group,
+	&omnia_mcu_poweroff_group,
+	NULL
+};
+
+There is no macro for that. Should I still use __ATTRIBUTE_GROUPS() in
+the first patch and than change it in the next one?
+
+>=20
+> ...
+>=20
+> > +static struct i2c_driver omnia_mcu_driver =3D {
+> > +	.probe		=3D omnia_mcu_probe,
+> > +	.driver		=3D {
+> > +		.name	=3D "turris-omnia-mcu",
+> > +		.of_match_table =3D of_omnia_mcu_match,
+> > +		.dev_groups =3D omnia_mcu_groups,
+> > +	},
+> > +}; =20
+>=20
+> > + =20
+>=20
+> Redundant blank line.
+>=20
+
+Fixed for v6.
+
+> > +module_i2c_driver(omnia_mcu_driver); =20
+>=20
+> ...
+>=20
+> > +#ifndef __TURRIS_OMNIA_MCU_H
+> > +#define __TURRIS_OMNIA_MCU_H =20
+>=20
+> + array_size.h
+
+Fixed for v6.
+
+>=20
+> > +#include <linux/i2c.h>
+> > +#include <linux/if_ether.h>
+> > +#include <linux/types.h>
+> > +#include <asm/byteorder.h> =20
+>=20
+> ...
+>=20
+> > +static inline int omnia_cmd_read(const struct i2c_client *client, u8 c=
+md,
+> > +				 void *reply, unsigned int len)
+> > +{ =20
+>=20
+> Why is this in the header?
+
+I considered it a helper function that should be defined in the header
+file, like the rest of the cmd helpers in this file. If you disagree, I
+will put it into the -base.c file.
+
+>=20
+> > +	struct i2c_msg msgs[2];
+> > +	int ret;
+> > +
+> > +	msgs[0].addr =3D client->addr;
+> > +	msgs[0].flags =3D 0;
+> > +	msgs[0].len =3D 1;
+> > +	msgs[0].buf =3D &cmd;
+> > +	msgs[1].addr =3D client->addr;
+> > +	msgs[1].flags =3D I2C_M_RD;
+> > +	msgs[1].len =3D len;
+> > +	msgs[1].buf =3D reply;
+> > +
+> > +	ret =3D i2c_transfer(client->adapter, msgs, ARRAY_SIZE(msgs));
+> > +	if (ret < 0)
+> > +		return ret;
+> > +	if (ret !=3D ARRAY_SIZE(msgs))
+> > +		return -EIO;
+> > +
+> > +	return 0;
+> > +} =20
+>=20
+> ...
+>=20
+> > +#ifndef __TURRIS_OMNIA_MCU_INTERFACE_H
+> > +#define __TURRIS_OMNIA_MCU_INTERFACE_H
+> > +
+> > +#include <linux/bits.h> =20
+>=20
+> + bitfield.h
+
+Fixed for v6.
+
+>=20
+> > +#endif /* __TURRIS_OMNIA_MCU_INTERFACE_H */ =20
+>=20
 
 
