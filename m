@@ -1,130 +1,125 @@
-Return-Path: <linux-gpio+bounces-4582-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4583-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E7CC8887C14
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 10:21:58 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2D7D4887C51
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 11:45:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9B5381F216E1
-	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 09:21:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5F9691C20D87
+	for <lists+linux-gpio@lfdr.de>; Sun, 24 Mar 2024 10:45:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6B0716415;
-	Sun, 24 Mar 2024 09:21:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AAD6175AB;
+	Sun, 24 Mar 2024 10:45:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="dyxV2Pmf"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n887v36a"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-24.smtpout.orange.fr [80.12.242.24])
+Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2823C14F64;
-	Sun, 24 Mar 2024 09:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.24
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87D3215E97
+	for <linux-gpio@vger.kernel.org>; Sun, 24 Mar 2024 10:45:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711272111; cv=none; b=e0GyjyQ+9rVKXJ5POjr7wP8qoXkr+uxE6oc3YOGnzQ6OcdTxAH1H6p33DAT75KIoANZW7jawEJdUS7DSVg5mI3ZKNIEsojT+LuKMMDOp/+TKpWwC7nMMKwcECbY0wzRQ+KZ0htu2gd9oQbooSeyTkAjSyx9u1Ga2m9BjFM22wYE=
+	t=1711277116; cv=none; b=LfEr96CEChhNUclD4zHkuuvvnIN8B2MGlzDKTkbL1Um6U5ND2CfFb4uDSINciEZ720jN8xMrod1cOb44TE/465Ov7bTOtQMHO6odbRuIznp4wKFKeAg9wBgjIh0VpCOCdnR1tB71QCcYYSc4N+QphBHMmUSdh3rCRsE6EwXjTRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711272111; c=relaxed/simple;
-	bh=R7Wxt0qKdFSSMJZJybfYiE3c4zjA4PPePd0ymFiZ4ZE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ge6ok1WcbOdFpNCxDTh5ohfFuregRuEU0DLSU7liIMsyK6L42ZJHdxeFTA3sdZTQjypybrR2QIWMsfpXT/IW7zP/uhMIs473op5BHxRwft67xJ66bKZMELw0IuRcL1/RJ7wwVi0SdoioV2C0t7DBb3ihHgRjyFo1VuuMR2lBVQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=dyxV2Pmf; arc=none smtp.client-ip=80.12.242.24
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
-Received: from [192.168.1.18] ([86.243.17.157])
-	by smtp.orange.fr with ESMTPA
-	id oK2irMGMsawLVoK2jrwkZQ; Sun, 24 Mar 2024 10:21:38 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1711272099;
-	bh=URa/scX9JJ6Z40dL8WhIkmALLQ5X37NM9gkybLRw27I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From;
-	b=dyxV2PmfdDK4SdMqDlTsqv99dIOXj8UvQ5ME5HH4EtxbgGSf4TnhnkCGwm4s4G5QI
-	 tvGWZ//51EwFtkGLbv4M4Ue9oEAXee1J7uAg46dOYYP8hXPnYViBgLx/RWoxKp7RWz
-	 8LmeYJio7eISxEVIBB9onYHxN7t3orzI8cXYOclXyY4tQeVSH/7zTv+k18w+BziPFG
-	 pYK8qLUlBndwVIScyE+yX3yFtc7h0eGM7bhZBZchjrveNwHQ5Zamq5YkTumszsnINk
-	 kkjHjc9+pcfIq4OG2Ei6Fsl2EytJV36zDiA9RFlGhioo0yef7vG+RnvUseBasPXaSj
-	 bcgE0WjFPp23Q==
-X-ME-Helo: [192.168.1.18]
-X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Sun, 24 Mar 2024 10:21:39 +0100
-X-ME-IP: 86.243.17.157
-Message-ID: <69264f8a-a113-4d49-b8a6-fb9e858584e4@wanadoo.fr>
-Date: Sun, 24 Mar 2024 10:21:28 +0100
+	s=arc-20240116; t=1711277116; c=relaxed/simple;
+	bh=sQckmXFITy4Xkbkc59BJtYFx0lkcS3ukS9NHkCGTGSs=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JfVs245Y89DFfs5uMbLvTLk6PEWwfrOTJLNDgL0qTBwrqBNMHCxjJclDVnL3jB3H6HANwb+ifWIKVpN0MCxAGMySN9R4nJebbUaKBQYQuegRjGzCzq0XMVh4sqM4+6i+cZmW1FpuNPvOFtzdrtR4Afo48YnJlvxP5N7RxcFTbcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=n887v36a; arc=none smtp.client-ip=209.85.218.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-a468004667aso474669866b.2
+        for <linux-gpio@vger.kernel.org>; Sun, 24 Mar 2024 03:45:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711277113; x=1711881913; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
+        b=n887v36aoMM9NxY2Dc4wrGGIvVnmsDggw7CQmw3wdRD1SkSXGXfww8ZhfYTdI4QCG+
+         x9Rdk+FQ0hUw6ToYuJj12Gs4RKXBE596EDWdmLBBbpqnzpXTxQY6yIdm2ZDz/H1Ims2f
+         BAkfmakJ0AjXCUwp4g8nhv95eZSFRNXCvpxGr9kwGl22Cj4YxmMcqYlHRXl9QePyB5j+
+         HubheSDXz9hZlL37VfMe/n/5kPng8KWbiKRVSMAdbB2/eCxV9NgpyWstH3pzPGpATOMV
+         8SP2WG2CSlmBXgMx4ZAjgtqGDSXw89D2JYs4JTpi9c+2FuhxffB3l1r/YaRUv37TTNZn
+         X+ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711277113; x=1711881913;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=CWY24m2OMeavf9ZqUqvQSQdTD4THnN/BxwjI9GZeFo8=;
+        b=f1tG18sXzmgtgDUDEAxtvC4jbCAJaoBzYsykd9vo5myWYOgNKIk62d8OWaYG0+O2Rg
+         22pyth2bL3RmiF5mmJ/MTBZrzcvjigWx5VA+3Q/IOS/ID1zdAHHwDBSm2A/V+nkeNFIE
+         rjlXWa9wG1U76rQ1HwRnXypPfgMRiY31RCludbKWP9/vwCbm52eFSanTckzUru/YPz20
+         hmhgQor81vWvkRF8ThiQ/AWJTItBMXJ1/8z1HKQ+79y9rQp1e6voBUpiNWKmMYAl4Mm5
+         UDeXIIAggmn+Iv2aA+9i49gxQAHRUJgcSItOHD3pof3CcSzofFiq6xR+n5moXiJdM5XM
+         eOLg==
+X-Forwarded-Encrypted: i=1; AJvYcCVEFVKF34ujwuG/mIgcAUOUTtC34gFH4gHqqbpi5N3XVKhBKM+Vg6Te1z3RFfvoJdbBFb3AhGyoQ+/BNVZwth3Xmom2OC/n6IOY6A==
+X-Gm-Message-State: AOJu0YzfqW/3u02LF+N4uR5hiKT3v89f0E8dtTJtFkdlpA8EfSD4scmm
+	4EpwkUIyJQ2lsuMWnJhrr6Mx1FRirE38Y+JMkpHugakIbZieaQIcEhA3aaJlUJM=
+X-Google-Smtp-Source: AGHT+IELgbvcq/YR2JYAdj3UMR62uFgEJo23GKSMx5QvCd5lojQP9akIksslHXLJQFzjzg27Z268bQ==
+X-Received: by 2002:a17:906:a19:b0:a46:f955:3720 with SMTP id w25-20020a1709060a1900b00a46f9553720mr2593989ejf.51.1711277112766;
+        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id ws9-20020a170907704900b00a46caa13e67sm1832993ejb.105.2024.03.24.03.45.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 24 Mar 2024 03:45:12 -0700 (PDT)
+Date: Sun, 24 Mar 2024 13:45:09 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Shawn Guo <shawnguo@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	NXP Linux Team <linux-imx@nxp.com>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH v5 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <b06ab1e3-c00a-444c-908f-0ac8ad4d95fc@moroto.mountain>
+References: <20240314-pinctrl-scmi-v5-0-b19576e557f2@nxp.com>
+ <20240314-pinctrl-scmi-v5-3-b19576e557f2@nxp.com>
+ <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 08/11] devm-helpers: Add resource managed version of
- debugfs directory create function
-To: =?UTF-8?Q?Marek_Beh=C3=BAn?= <kabel@kernel.org>
-Cc: Jonathan.Cameron@huawei.com, Laurent.pinchart@ideasonboard.com,
- airlied@gmail.com, andrzej.hajda@intel.com, arm@kernel.org, arnd@arndb.de,
- bamv2005@gmail.com, brgl@bgdev.pl, daniel@ffwll.ch, davem@davemloft.net,
- dianders@chromium.org, dri-devel@lists.freedesktop.org,
- eajames@linux.ibm.com, gaurav.jain@nxp.com, gregory.clement@bootlin.com,
- hdegoede@redhat.com, herbert@gondor.apana.org.au, horia.geanta@nxp.com,
- james.clark@arm.com, james@equiv.tech, jdelvare@suse.com,
- jernej.skrabec@gmail.com, jonas@kwiboo.se, linus.walleij@linaro.org,
- linux-crypto@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux@roeck-us.net, maarten.lankhorst@linux.intel.com,
- mazziesaccount@gmail.com, mripard@kernel.org, naresh.solanki@9elements.com,
- neil.armstrong@linaro.org, pankaj.gupta@nxp.com,
- patrick.rudolph@9elements.com, rfoss@kernel.org, soc@kernel.org,
- tzimmermann@suse.de
-References: <20240323164359.21642-1-kabel@kernel.org>
- <20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
- <f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
- <20240323222506.4ffbdd71@thinkpad>
-Content-Language: en-MW
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-In-Reply-To: <20240323222506.4ffbdd71@thinkpad>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7a4a8287-1f86-4ac4-acdf-c02339ba5e1e@moroto.mountain>
 
-Le 23/03/2024 à 22:25, Marek Behún a écrit :
-> On Sat, 23 Mar 2024 22:10:40 +0100
-> Christophe JAILLET <christophe.jaillet@wanadoo.fr> wrote:
+On Thu, Mar 21, 2024 at 05:46:53PM +0300, Dan Carpenter wrote:
+> On Thu, Mar 14, 2024 at 09:35:20PM +0800, Peng Fan (OSS) wrote:
+> > +enum scmi_pinctrl_protocol_cmd {
+> > +	PINCTRL_ATTRIBUTES = 0x3,
+> > +	PINCTRL_LIST_ASSOCIATIONS = 0x4,
+> > +	PINCTRL_CONFIG_GET = 0x5,
+> > +	PINCTRL_CONFIG_SET = 0x6,
+> > +	PINCTRL_FUNCTION_SELECT = 0x7,
+> 
+> PINCTRL_FUNCTION_SELECT was removed from the spec so the other cmds were
+> renumbered.  I'm still going through and reviewing this file.  I'll
+> hopefully be done tomorrow.
 > 
 
-...
+I think the rest is okay.  It's just updating to the new version of the
+spec.  CONFIG_GET/SET need to be updated and FUNCTION_SELECT gets
+deleted.
 
->>>    static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
->>>    {
->>> -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
->>> +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
->>> +	if (IS_ERR(pvt->dbgfs_dir))
->>> +		return PTR_ERR(pvt->dbgfs_dir);
->>
->> Not sure if the test and error handling should be added here.
->> *If I'm correct*, functions related to debugfs already handle this case
->> and just do nothing. And failure in debugfs related code is not
->> considered as something that need to be reported and abort a probe function.
->>
->> Maybe the same other (already existing) tests in this patch should be
->> removed as well, in a separated patch.
-> 
-> Functions related to debugfs maybe do, but devm_ resource management
-> functions may fail to allocate release structure, and those errors need
-> to be handled, AFAIK.
-
-I would say no.
-If this memory allocation fails, then debugfs_create_dir() will not be 
-called, but that's not a really big deal if the driver itself can still 
-run normally without it.
-
-Up to you to leave it as-is or remove what I think is a useless error 
-handling.
-At least, maybe it could be said in the commit log, so that maintainers 
-can comment on it, if they don't spot the error handling you introduce.
-
-CJ
-
-> 
-> Marek
-> 
+regards,
+dan carpenter
 
 
