@@ -1,133 +1,151 @@
-Return-Path: <linux-gpio+bounces-4618-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4619-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 179F588ABB1
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 18:30:36 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 837D988AC3E
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 18:48:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD29530668C
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 17:30:34 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3A7AF324B66
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 17:48:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE4A41369A6;
-	Mon, 25 Mar 2024 16:24:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CE8E76D1C1;
+	Mon, 25 Mar 2024 17:01:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="vaZS80wM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gVz2Sfb3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F098212FF86
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 16:24:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 899EF6D1B0;
+	Mon, 25 Mar 2024 17:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711383860; cv=none; b=RUCKXKm9hjaekCUxnoUjIPmYKC3GUlyw2mYNPNDsIiv460VTGPZkbFrR54XV24/MWjH1Z8S9xheEm6Cn2QErRoTlkwoa+kqlCAg6Jv1Z9PJGmz3hpjQlJk+rSOiB49JuII6+kZqYwjjCERQD2+SktT/a0goGsSTbv3GYrPIxpA4=
+	t=1711386065; cv=none; b=KbYWIIBRVu9oel/Ty1I/g+dpLb1ioDLYXmgpk+FG3Uonu9gH+F9lSOgwHyRpTdzuIwOsWPlEmsqBsCU6aWyV1z44RYYHirzMU8UlVRz0H0K4l7pQKWF4Mt2PalzA2V0VcJlS9Los6wi+gZvpjQtAH2hzmPgzlitGQlVAxtiZlFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711383860; c=relaxed/simple;
-	bh=DwTc1xPkUlLQODfXUI0kq22hkYbJUlklcvCHbGuFgHM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=p8lglJ+jVboYU8CjzLqItfP+mV3WXSm7dwbXKKxNNEMNOikiJPPDbDmnWJSRdiGEVwRD1gGB/27CGyNyrKKxXKWqvn5n5frlAEtYnkrDXB5/MLpcbuTxZoN2Ukb0HmL09vOsoUI6QiXcp52WxbjXeOaVCdtRigaf3uozhk5a5Bs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=vaZS80wM; arc=none smtp.client-ip=209.85.208.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d228a132acso63142481fa.0
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 09:24:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711383857; x=1711988657; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=DwTc1xPkUlLQODfXUI0kq22hkYbJUlklcvCHbGuFgHM=;
-        b=vaZS80wMZuW20l3qcuIi3OFA8WBlXceRqWxmjp8UvlakvcDs4jFrR6YY2FbL5O2v3c
-         sQe3p0YImDHrcmwQ/k1c05PvIwgNb0wtyKnZ2HDHyrKF4Z5g1Z5kXWeR5ezamnH5rI6+
-         zPX5lcW2B1WYNFF67Y+c8TJbEApdhTpUOmza/HQa8jc68NB9iokGjEmUfVPIpjXpb90g
-         XurA6YXG6OynTAu7IWHU929EzG00GmINqdx1456BQmneHFh1SZmyZtHR9j+VEPgbEQSj
-         xLhvTqgCO5Q7f8G7gmGuR0r9ga8sOMSwREzv2OEdHacN3GbVWLfhLDnI22kHNMihhQoO
-         g/XA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711383857; x=1711988657;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=DwTc1xPkUlLQODfXUI0kq22hkYbJUlklcvCHbGuFgHM=;
-        b=KhQoO+eVPxWMIYv74v14DKSFE9jzY8jCyhpLOTvLGXfw/p+OpK/P3Wj7L+o2JuBcl2
-         gZRzGEn8p1zMTSF6sglQGvpNnlE0bVHfnesGOEQhu+pq5/g1kSpYPHm2lsrDiSArP/zU
-         JfHg4lJUgdQ7j86X48er0YmhjdmmyK2w6sTLc/Oo1eGp0t4EJNY/X4m1CPDyDaE0f17L
-         faKoeAj+RnjmMkZXvOjuPmy3A0r6YI7CuBHz9JnnD9caAvxSe01G0Rjs0rfI3nOM28gb
-         5FImW0t92GGSoGNaiYu1mz7LDYAop6WE7dbe0iKr7aao2ZDXdNKK5BHCOuFO4+ty9oUI
-         5Udg==
-X-Forwarded-Encrypted: i=1; AJvYcCVuktggYxkKaU0MMbmdfSu9angK40bQ6SOk/DArgZLpMO7YuXWNyTBbIuBMLPDno2ftJnmM2xJSb4YayLdspayhD7bSLQqszwsCnQ==
-X-Gm-Message-State: AOJu0Yy0z6WkaGXE2hxZRLGedOPD/HopmJ5DtZmyxH6/Hdc55D1OYkuy
-	ChRVOUuj8gGV+0hd/DBiO4HWcvTMWF8uzeGdT2gyO09offZVh8kk0wUUH8Snb6UfOqbhWmmhAd+
-	TArVPrc3YWG/Vv6PO+9wdgdTdvARbkRTF+LyscA==
-X-Google-Smtp-Source: AGHT+IGvMPhJ9VX5BDdfND0XNXaUEUfFNbgZPn8axUAEB40Cl1GyTMUXFIaLprhQ2wgHQno8/1S3AhKHXM4PVbzVGgE=
-X-Received: by 2002:a05:651c:199f:b0:2d6:cd05:1891 with SMTP id
- bx31-20020a05651c199f00b002d6cd051891mr4080497ljb.15.1711383857094; Mon, 25
- Mar 2024 09:24:17 -0700 (PDT)
+	s=arc-20240116; t=1711386065; c=relaxed/simple;
+	bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ZBUKmdiiFk0B7tqIVRbZSx3P3VCXuKiRWqgkomn7gPQujAS0ZE7ldo//NGlL5PwGSz0uuU6n8/UfacixmWHt21Z2jFRRJiE8nyZJXVOjeH5ldTV9Ndw24YtL/XOsoSBCiOVfrvZyHh/idIAQPZoEN1EgtUJPovIPLR8iccFWnAw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gVz2Sfb3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B52F5C433F1;
+	Mon, 25 Mar 2024 17:01:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711386065;
+	bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=gVz2Sfb3dxNAPIRfEUU4KRbK+JBb+s401KhAbTDA+73+4XwqDdv3Do8557ra+Xl9h
+	 XqbewdaTKW2o9M7vVNS4ZtB3EP7Cm2Ki+2kmQ18daSyzzsrF4e2lVWaRkO6ycSKQfx
+	 9X8UJuQP84WIilg6liE4exqQQU++5+ZkgBV5BIaTBzvAiwfXVPERG1UcxUJksWflpR
+	 csT+PHXCmn2CkOnIEAj53DtpcxTQLIbu8RkykAkhFm7u6MS9l3N83LLXwMThjHl5Av
+	 pioNKHrNtAv2fkz3bOxVLI1JLh1WXp5miBpDo1qBurccsbHSvPvEE84uG4o8R9Gu+v
+	 8AnVbpSZLdbfg==
+From: Mark Brown <broonie@kernel.org>
+Date: Mon, 25 Mar 2024 17:00:57 +0000
+Subject: [PATCH v2] gpiolib: Add stubs for GPIO lookup functions
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322073725.3338266-1-peng.fan@oss.nxp.com>
- <CAHp75Vds1dmjbaDa0D+Xxoyt_9CgHhoS2j0cR3EQdMp3sbwg5g@mail.gmail.com>
- <CAMRc=McYbsd8t1_6PDypGBme2OSyvy8erdjR51cUzVhM-qQXZg@mail.gmail.com> <ZgGfgY2hITq_MDvl@smile.fi.intel.com>
-In-Reply-To: <ZgGfgY2hITq_MDvl@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Mon, 25 Mar 2024 17:24:06 +0100
-Message-ID: <CAMRc=Mec5DSegEJHf5khj5ksCE3+SjQoq6vwRPEdnS7arawz4A@mail.gmail.com>
-Subject: Re: [PATCH V3] gpiolib: use dev_err() when gpiod_configure_flags failed
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, linus.walleij@linaro.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240325-gpiolib-find-by-fwnode-stub-v2-1-c843288cb01f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAMmtAWYC/43NQQ6CMBCF4auQWTumHcQYV96DsKAwhYmkJS2ih
+ PTuVk7g8nuL/+0QOQhHuBc7BF4lincZdCqgG1s3MEqfDaTookoiHGbxkxi04no0G9q38z1jXF4
+ Gq2tlqb2RUdxBLsyBrXyOet1kjxIXH7bjbNW/9b/uqlGjqlrVMTNpKh9PDo6nsw8DNCmlL3bZc
+ zHHAAAA
+To: Linus Walleij <linus.walleij@linaro.org>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Mark Brown <broonie@kernel.org>
+X-Mailer: b4 0.14-dev
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2883; i=broonie@kernel.org;
+ h=from:subject:message-id; bh=Lci6nEV6lFRNgmbj/19OAFVfKuyN4Cyp2jW6qAIWwrw=;
+ b=owEBbQGS/pANAwAKASTWi3JdVIfQAcsmYgBmAa3OAuQV7uRj36Qg09JExspAdtoyMZZkLpqLiguh
+ CtqGMmGJATMEAAEKAB0WIQSt5miqZ1cYtZ/in+ok1otyXVSH0AUCZgGtzgAKCRAk1otyXVSH0J97B/
+ 9NmR2soPhHawJZpBXD0I7oRYHT7pNiK04Fo0Slr1PJsarihwQGN6LAzJaQyN10KjOOnsZGKtlyc0s8
+ ao+jEn/EKLJkyyU2MarGVmBHqf99hFzsCfuHOKttezItn8zgD3dhWgDkQSeDXTj9MU5XDxTrtU1nOW
+ pmQEKVExhoTboKZgBt1TDTE1NLbYZw/A/K/P8f8Ehi9vbHNHycoDs+72/Xy5qfI7sPfG5sy9WnolDp
+ 4+QVD5V02PrfdDzSFcJy3FWcvnEXL3eBOdooz/nIONJwiIU93+QhuhH/RqK+1/qhI4+ET26/nDY61i
+ AU9q23NKtVl59n0F0deXobBDNAojBm
+X-Developer-Key: i=broonie@kernel.org; a=openpgp;
+ fpr=3F2568AAC26998F9E813A1C5C3F436CA30F5D8EB
 
-On Mon, Mar 25, 2024 at 5:00=E2=80=AFPM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
->
-> On Mon, Mar 25, 2024 at 04:48:27PM +0100, Bartosz Golaszewski wrote:
-> > On Fri, Mar 22, 2024 at 4:59=E2=80=AFPM Andy Shevchenko
-> > <andy.shevchenko@gmail.com> wrote:
-> > > On Fri, Mar 22, 2024 at 9:29=E2=80=AFAM Peng Fan (OSS) <peng.fan@oss.=
-nxp.com> wrote:
->
-> ...
->
-> > > Bart, are you aware that this will add yet another possibility of
-> > > scary '(null)' in the error level, which is much likely visible to th=
-e
-> > > end users?
-> > >
-> > > I propose to apply my fix first to avoid this happening.
-> > > 20240320165930.1182653-1-andriy.shevchenko@linux.intel.com
-> >
-> > I think you meant the v2[1]?
->
-> Yes!
->
-> > And sure, I will pick it up shortly.
->
-> Thank you!
->
-> > [1] https://lore.kernel.org/lkml/20240320165930.1182653-1-andriy.shevch=
-enko@linux.intel.com/T/
->
-> I can update this patch (rebase it on top) if needed to make less burden =
-on
-> the author's shoulders. Just tell me.
->
+The gpio_device_find_by_() functions do not have stubs which means that if
+they are referenced from code with an optiona dependency on gpiolib then
+the code will fail to link. Add stubs for lookups via fwnode and label. I
+have not added a stub for plain gpio_device_find() since it seems harder to
+see a use case for that which does not depend on gpiolib.
 
-Sure, if you can resend both yours and this one then even better.
+With the addition of the GPIO reset controller (which lacks a gpiolib
+dependency) to the arm64 defconfig this is causing build breaks for arm64
+virtconfig in -next:
 
-Bart
+aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_reset_gpio_lookup':
+ /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined reference to `gpio_device_find_by_fwnode'
 
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+Changes in v2:
+- Rebase onto v6.9-rc1.
+- Link to v1: https://lore.kernel.org/r/20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org
+---
+ include/linux/gpio/driver.h | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index dc75f802e284..f8617eaf08ba 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -646,8 +646,6 @@ int devm_gpiochip_add_data_with_key(struct device *dev, struct gpio_chip *gc,
+ struct gpio_device *gpio_device_find(const void *data,
+ 				int (*match)(struct gpio_chip *gc,
+ 					     const void *data));
+-struct gpio_device *gpio_device_find_by_label(const char *label);
+-struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
+ 
+ struct gpio_device *gpio_device_get(struct gpio_device *gdev);
+ void gpio_device_put(struct gpio_device *gdev);
+@@ -814,6 +812,9 @@ struct gpio_device *gpiod_to_gpio_device(struct gpio_desc *desc);
+ int gpio_device_get_base(struct gpio_device *gdev);
+ const char *gpio_device_get_label(struct gpio_device *gdev);
+ 
++struct gpio_device *gpio_device_find_by_label(const char *label);
++struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode);
++
+ #else /* CONFIG_GPIOLIB */
+ 
+ #include <asm/bug.h>
+@@ -843,6 +844,18 @@ static inline const char *gpio_device_get_label(struct gpio_device *gdev)
+ 	return NULL;
+ }
+ 
++static inline struct gpio_device *gpio_device_find_by_label(const char *label)
++{
++	WARN_ON(1);
++	return NULL;
++}
++
++static inline struct gpio_device *gpio_device_find_by_fwnode(const struct fwnode_handle *fwnode)
++{
++	WARN_ON(1);
++	return NULL;
++}
++
+ static inline int gpiochip_lock_as_irq(struct gpio_chip *gc,
+ 				       unsigned int offset)
+ {
+
+---
+base-commit: 4cece764965020c22cff7665b18a012006359095
+change-id: 20240322-gpiolib-find-by-fwnode-stub-565f2a82b0ec
+
+Best regards,
+-- 
+Mark Brown <broonie@kernel.org>
+
 
