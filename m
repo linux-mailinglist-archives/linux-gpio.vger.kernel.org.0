@@ -1,61 +1,62 @@
-Return-Path: <linux-gpio+bounces-4600-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4601-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE789889C74
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 12:20:32 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F399A88A496
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 15:32:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F20C71C2FF12
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 11:20:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id E6421B2D3D3
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 12:23:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1EA8215B0F5;
-	Mon, 25 Mar 2024 06:36:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2084359B78;
+	Mon, 25 Mar 2024 07:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="fm+HL0cF"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="aGhicSBE"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
+Received: from out203-205-251-60.mail.qq.com (out203-205-251-60.mail.qq.com [203.205.251.60])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B99374718;
-	Mon, 25 Mar 2024 03:01:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5D961741F4;
+	Mon, 25 Mar 2024 03:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.60
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711335675; cv=none; b=HvF4mqzPT4V8y2UTU/zY3RxvtfTJt5kALvdSTr4mJJmEszKT5sKKmO1/MIx/XgGEin5wwbS2xrioBi/tRYr6jhWcRX3hzmoldhTYCOXfJdvbReDCIe3W/4+vdl5fRsd0ZakJJCnqezioRKzsLGJLBExyvCtQ5udiJayQ1z+bMao=
+	t=1711336282; cv=none; b=Smnyv3CeDZsP6m3iN/dFVzRgx/qKZ5Ngpn0sWQe0DZC9wqQ2T3ggsQ7+cJCfQqHC4PeGBc7xt//NW+9sWlgwhZloZSrDegDAajU4MVA3LcN+GwacFI5Y3FexdXE34i/6VnCM9dLCI7kk+TCPFXPUKScZEyQ4HQ7TnuRIHkMe7iM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711335675; c=relaxed/simple;
-	bh=VXgeAPFF1rTPjx3kRfbCpsmSbzT6YcISYipy3cGGt40=;
+	s=arc-20240116; t=1711336282; c=relaxed/simple;
+	bh=QyR7G2g5fKQ3VhpVolyFdNyxQKfewgfnRzTt3lpBxJk=;
 	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
-	 Date:Cc:References:To; b=kcTQ0ArrtAeaAUSY9/UsDRu8taFOPoYR6Ubtv/UG3s4GzAuFmk0YMMbr8fjd3IFvIV1m60hRdZERjuuLODn75Uv9Mwyh4k92MqC4rAo30pUX4pYg43/nfM56nj3kaHvNS2Y1lxbqPoYVxWHOT228JIkXHDr3gtgPFE72Mc0YoTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=fm+HL0cF; arc=none smtp.client-ip=162.62.57.252
+	 Date:Cc:References:To; b=jRLxcgqvVO2++bpSriSkjRyVLSR+M0gK4O++jYAIVc8FokKw9CYySWo4Lp2s6iwwL2iPCD3B9z/w3/txRh/TF6UBhwdKaU8fcTb82AL4V55XX/iiYHKfsRsn2Os4Ns6ML+rUpVcEYUwQ1wa7j1r49LTb5yjMwF0ng2v3ABth4I8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=aGhicSBE; arc=none smtp.client-ip=203.205.251.60
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1711335658; bh=UbW4W4tDsqy0oW2t2W5alPaZDTsu9EiVE5yXBkkWlPE=;
+	t=1711336265; bh=APC1Tm2pZqHjaNLBkpAYawbKau/26igAPeHOWvQ6K9k=;
 	h=Subject:From:In-Reply-To:Date:Cc:References:To;
-	b=fm+HL0cFW8CPraNqxdGc3N9dAacVhh0pRVgoSi/+gcZbf6KgbL0ILznOJOwZNlrZ4
-	 +VrB0ck5RI76jGQOmS68pmBLwrkHKRaIfSvXd6eJyo7+doHqbIzW6XxCjsg5Y6GnDP
-	 Bjg7j3kSzuoHWG/tF2T+NpTKREUuyF9/tIYiF5Dg=
+	b=aGhicSBEbbRvdWpAmdE69COK4YDZCcy32qE4YNLSDl0iapF2ton3exmlyIG7T+/YX
+	 HCIfugpnZxW80LFYRUY+0bZN5fzi/qi/JjGVWuef6nY5uVoBKqOB5SwHYDUf9Nd/+T
+	 nuie4gPT9QzeVsIui3o7UmWSOUFYUXrZtEFIjY+w=
 Received: from smtpclient.apple ([2409:8934:1ed6:2f4f:d8d3:a43a:ef25:fb4f])
-	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
-	id EEB2B8C9; Mon, 25 Mar 2024 10:59:43 +0800
-X-QQ-mid: xmsmtpt1711335583tbr2cbzf9
-Message-ID: <tencent_8D87083646F1F50B566B87380EE1A2C6400A@qq.com>
-X-QQ-XMAILINFO: MPaKaX623R7Y3L+KntZXBnC8s97fvZdHtqkRcEVcfuyicfEK3XGJmSr4XQIfjZ
-	 KyOx4TEqgHvttfv+R1jFaHtuKBOS2UU9Qk7i01cNPm4L0d+w9wDKQuAgL0/YivGsTS5FvXVf0/nk
-	 j/EHpCJwpPrB4XZ9kiv7VxxgI/WjZfZbNlPIaoVVbzyoaLRoYcNRpNwS+YL+JTxSWF2ALX2jr57/
-	 uQmcIISEHFnvVwMl09oyfnC4smEodnCbbyF4YD82tuHhoQjaHAvKuX1wVkuABBIys8L6MvIDHL6F
-	 E6nwsa0ts+9zQjr/Yc5HH76eJsqm0SBfsQKrNFBYyuuKPc2qsYOutSQLj5JtsLATsMW26pj1WfWp
-	 I5L2xZomAW3HR4vvgAYEBxYpEG67okZ//xs7esTekcfg194xv6TMzA4QiEX7KtaCwrjyTT7IYthN
-	 Ko8F9BkQwSeEK7OU6LBiFaaIZLelhl8uSwqepyOKya5/xoG4rwr3NAef/E1xFRyvOhmLyu1fi6J2
-	 56si97T86z16pq1ePT/Cj1xhnePSVjGZ00KSU4+aiCT0oXbwVFlLvbayE0WagDNAHpsiTq5VbpXp
-	 wtxr2jq6EDrb4rqXtbR0zQdjG01br2iUraq0f9zF6kOJu82hfsiAtIOcpqYm6YmaMlxoWFUTGbc/
-	 CAPcdSc99rguCu5g1HJpUkH0G/8ZyIpdjMD46pzb2W7dk5U+6LQxBZIHOuUMfvftfJuLrAMTdL4z
-	 IDpo1lMMSyJ8Ep4t0lZhDi89eOGX/2QCMPzicYKzdwmAiddwHtV8Hxy8VmaSCuiH69tT4V1DA494
-	 37Ufe6SsEvSfkjXA9Hv0ufXLcJhF5C35GHwPp0ELgbixLQLp31gq7vzZx0C3tM3z5Q03mLClKeAz
-	 jJQgb8o/bdnL1I3u0gApmIl7Yrt9iNacKYWVn/VBThEoWikxLm75mDLdUSgcDYp5aNIOUDhvq9w5
-	 XaJ2ax8qOTImSt/4vaNBRyDQuikCJl4Q4FUjVqPOYEHVglnypsS99l82D0v+QxxZLHcIWKgHQ=
+	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
+	id 2BB9002C; Mon, 25 Mar 2024 11:10:59 +0800
+X-QQ-mid: xmsmtpt1711336259t2zniab2n
+Message-ID: <tencent_1C21558D2A7C7B8251DA4E8E08B82E313C08@qq.com>
+X-QQ-XMAILINFO: OK7NBzdNss/RBTqjwMX7XKHxirLNSsvTfV07l/ehhcetDtvXxGNF12+pcL7cd8
+	 1TGlxtdRXYjZrxfxYPLbLdEVf54pFsf/NN+VpeuWoWXBGnhq/Biho/ER3KiAOa3k7vKTmFc26pxX
+	 Z01l+s2Vx6aX0XoLgVllVyifzJbI+hN2zGagES1HiC6AcFqthSvcroC2ACg8t9JgvGhgyjTzOBAy
+	 c3MWgLu6L8YAT1MLFuJ4kI0znKfwNJ0xGJ3oTwIW7wlxE8u9eE2l+E+dzjkzJ7wnIHjPJrd7ZXxO
+	 8xtRBJFd200WK+w92lE0ZHOVYGQJ2IjjKcaOk0X/jncjtnDht9KOd8UYtJM+2CwA6AnRrsP1Vfds
+	 3i/OkrOzzF4l5Eu8vi0lliQNaVQtPwY/d3AErlugPyL5W/Bqm03PdXhIsIKrbV/nwtHeL2+GKoNI
+	 LTh53U7TB2ATwGa5RkutiUsp/C2ID7EwXghUuaAVVtgCUsl7E3luqC9xGSooJMYexhkjksvYOpsA
+	 isNGCi0Yj4NFnV0bTKV/vH1NigS0RC+7ATeem0uhOvgls8AeDymOnlnbsWDsrIJib7FsKlBXe+Hf
+	 Z6egGeNw2CBAbNLZDCqx+gczKB++bQJAwGdKtzVFUMRox0Y9MPRtyWUxFCafmyKYgh6XKJ3zFT8U
+	 aCNdLw7/VIMcMZ8yMU0Y0+H6Rb2SKLZaVudi5z0FyCqhWaJ04H3bw1VtWuvpPtwpfALl+ybsDfXA
+	 OKc5x1FT+2eQ/TNZwyEcm3wWj68etTP3AjaeuZ5s4ZEUcY0/iaZXGfkQIC9QdCPSkOm26KiielTj
+	 elmHSUZBw7Vo60VYCRNDuD+V6rQxDwcxZKPvUrygl+JmyZFxmAFnEeqAkcg4nUWkOGXTqwhqpQjx
+	 S7MbXeukQHF6+LWCrAAr+z5zhJdqjmpPuxxhVn/Lxqz9sbLjHG8D+OyDF/mW2I8Zmgz1NeJOX6ru
+	 1Y2X9LOqQqyhJctY1pid/JtkNmBUBc4WXyV7LGRBe5rVEry3IX9vkTVjTgse+p1KA6lYJ/3ITbpt
+	 UaeXdJ1CR/LcTHnf94r6rZl4xcNXbqT5D+SSparg==
 X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
 Content-Type: text/plain;
 	charset=utf-8
@@ -68,8 +69,8 @@ Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
 Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
  dts
 From: Yangyu Chen <cyy@cyyself.name>
-In-Reply-To: <53963127c181a76f97ca34b721d11158b45d7f65.camel@icenowy.me>
-Date: Mon, 25 Mar 2024 10:59:32 +0800
+In-Reply-To: <c052918c13069cfcf768d03518560c65c990b220.camel@icenowy.me>
+Date: Mon, 25 Mar 2024 11:10:49 +0800
 Cc: linux-riscv@lists.infradead.org,
  Conor Dooley <conor@kernel.org>,
  Damien Le Moal <dlemoal@kernel.org>,
@@ -88,16 +89,16 @@ Cc: linux-riscv@lists.infradead.org,
  devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-X-OQ-MSGID: <7FE50D77-E6FB-4C1C-BFC2-3E4588F4496E@cyyself.name>
+X-OQ-MSGID: <BDA8DE0E-D525-4EEE-A644-54E33B2C703E@cyyself.name>
 References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
  <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
- <53963127c181a76f97ca34b721d11158b45d7f65.camel@icenowy.me>
+ <c052918c13069cfcf768d03518560c65c990b220.camel@icenowy.me>
 To: Icenowy Zheng <uwu@icenowy.me>
 X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
 
 
-> On Mar 25, 2024, at 00:24, Icenowy Zheng <uwu@icenowy.me> wrote:
+> On Mar 25, 2024, at 00:23, Icenowy Zheng <uwu@icenowy.me> wrote:
 >=20
 > =E5=9C=A8 2024-03-23=E6=98=9F=E6=9C=9F=E5=85=AD=E7=9A=84 20:12 =
 +0800=EF=BC=8CYangyu Chen=E5=86=99=E9=81=93=EF=BC=9A
@@ -117,6 +118,14 @@ X-Mailer: Apple Mail (2.3774.500.171.1.1)
 >>=20
 >> Meanwhile, although docs from Canaan said 1.6GHz Core with Vector is
 >> CPU1, the CSR.MHARTID of this core is 0.
+>=20
+> I assume as these two cores do not have any coherency, they are just =
+in
+> different hartid namespace.
+>=20
+
+Thanks for this hint.
+
 >>=20
 >> - Support for "zba" "zbb" "zbc" "zbs" are tested by hand
 >>=20
@@ -156,6 +165,22 @@ X-Mailer: Apple Mail (2.3774.500.171.1.1)
 >> probe and fell back to Sv39. I also tested it on M-Mode software,
 >> writing
 >> Sv48 to satp.mode will not trap but will leave the CSR unchanged.
+>=20
+> It's specified by the spec that writing a unsupported mode to SATP =
+will
+> leave SATP unchanged, and it's also how the kernel detects for =
+Sv48/57.
+>=20
+> If a hardware fail to implement this behavior (make SATP changes when
+> writing an unsupported mode), the kernel will fail to boot and =
+manually
+> specify MMU mode by putting noXlvl to command line is required. This
+> behavior may be observed on FSL1030M SoC of Milk-V Vega (if it ever
+> runs mainline kernel).
+>=20
+
+OK.
+
 >> While
 >> writing Sv39, it will take effect. It shows that this CPU does not
 >> support
@@ -177,6 +202,15 @@ X-Mailer: Apple Mail (2.3774.500.171.1.1)
 >> to Sv39, It will lose dirty cache line modifications that haven't
 >> been
 >> written back to the memory.
+>=20
+> As MXSTATUS has a S-mode read-only mirror known as SXSTATUS, maybe the
+> kernel should detect SXSTATUS to decide whether to use Svpbmt or
+> Xtheadpbmt (BTW Svnapot conflicts with Xtheadpbmt too).
+>=20
+
+Thanks for this hint. I may need to change some code in the T-Head PBMT =
+probe.
+
 >>=20
 >> [1]
 >> =
@@ -212,15 +246,6 @@ https://occ-intl-prod.oss-ap-southeast-1.aliyuncs.com/resource//1699268369=
 >>  dtb-$(CONFIG_ARCH_CANAAN) +=3D k210_generic.dtb
 >> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-canmv.dtb
 >> +dtb-$(CONFIG_ARCH_CANAAN) +=3D k230-evb.dtb
->=20
-> BTW did you test on K230 EVB? I think only CanMV is currently publicly
-> available.
->=20
-> If K230 EVB support is not tested, I suggest not adding it.
->=20
-
-Actually I got one K230 EVB and tested on it.
-
 >>  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_bit.dtb
 >>  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_dock.dtb
 >>  dtb-$(CONFIG_ARCH_CANAAN) +=3D sipeed_maix_go.dtb
