@@ -1,77 +1,69 @@
-Return-Path: <linux-gpio+bounces-4612-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4613-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0C05B88A531
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 15:49:28 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4CDFB88A57B
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 15:58:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A08CE1F3D940
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 14:49:27 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 7E4301C38D67
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 14:58:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7A8B17655C;
-	Mon, 25 Mar 2024 11:46:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBBC0179674;
+	Mon, 25 Mar 2024 11:59:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z4ga62ot"
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="qXUwugYz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.sberdevices.ru (mx1.sberdevices.ru [37.18.73.165])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 926CA1BB742
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 11:17:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1CD4179FB8;
+	Mon, 25 Mar 2024 11:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=37.18.73.165
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711365450; cv=none; b=MKrHroL2GI0tSPzhWwAZPWKzZTtVH2mzvRPIgrea7mWbSs/faM0+FkBfQrjykUxC+XojtcvL4FpXmVLZ1hG4mAWwo8Todx5TvUxewkMvvkIV1Uyj2XJFY4ONztdcMAeIL4RWUrlF8D3I6apBlE1iV9Sqy54JKaknWk3aVrTHP9Q=
+	t=1711366951; cv=none; b=N+uu7XiioFr3B8rrWkv3dIe6pa07ZFvZ39U1Us5LI20op0QobY1PBUlxrKunhuXRDxPLN6G606xqVNr7xhOidNGzkbfCoRv2Yix1O4EWerg4V+5pTySiQY6KbnxGnOiGLVrugEerap3a2pbDW5aa5xUx6+XYc5eD0YaXgdVTMeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711365450; c=relaxed/simple;
-	bh=A5GmzCeiOoM7imiWbeLaeCe+0LR1LRuo2qTti8TzkFo=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=KME3DGZC4Wzk9wnQT6IC/6kzEKfZX1gYIXeJl5KJrrIa+9g5O7TNJ2MujHXhxvntZks19CIM6rvccrRSBGt/7zvDURdyYvvM7hywnpPEq3PRXCRQKG8jcJX116eCm+2wD2Cf0jW/B6H7pyk6AhJ3J/oPND/eZLcg6OuEphCmuo4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z4ga62ot; arc=none smtp.client-ip=209.85.210.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-6e6b54a28d0so2670473b3a.2
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 04:17:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711365448; x=1711970248; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=VjqmqD0pb2LVuJMwKiPqClT1cKdpF7rGWvpiZUhphWo=;
-        b=Z4ga62ot1hZe4/+TYrpG9Uiavblp/mdWdFxDMSBWne8Tf6eK8CpIFVXQZSRqWUdf0U
-         xTesIs5d+vjw+5lnSdgZbejkqsGsRK7Bw4JBDe7ezQ3qKh5/YaAXc+haHVWMD7FjFSQ2
-         /tO06VB5D5TaXUyglYs4TFQ7C+novy6/1GyzByVw1D78727GGgZfahemXUwc3B7sZLzP
-         iTi/3pB5wYu7Oe1J/IIIRSIyYTQX9m1zZLYz+lzvPwtXcqcEmQZN+QwjrDanWmTW7oLL
-         q1JiwPy4vyiGa+Ro7rXK6qwePXvYEBs1udrgIgtK6/4XQBQwcRf880drawdHsjKCgEBL
-         CwVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711365448; x=1711970248;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=VjqmqD0pb2LVuJMwKiPqClT1cKdpF7rGWvpiZUhphWo=;
-        b=mjIt+1UDyIf2o+AUC9MpD8HRq7V8KPeC6aeIgw6SibLaxK1EqCpZNvmQxBlAkM1kBJ
-         xf2MqeyUf/iLh+83aD1CjuLy2QKlEtVjQ4Ik3Tz3T0yrHzQIToBlmY4BRBapW/ci+0+Q
-         3+DbC64Ev6IUAZwFzMiDCVNBnjXbLMLc46Eub/s3lo4JUh1BlKxL2pVY+xZJKC43Hq/A
-         wjRZf3TPDCEu771b9yeMP4zLOl+u24MUqCpkh8V1BZ6ozYiK8jiFPT6E8shz0OS+MXk8
-         kWJBIhp8sEVXsQTOWnNamojpAh8xzWa99hzkFgcLR+5nt/mF1tLssSNSTSB8OnBKx2dE
-         sWUg==
-X-Gm-Message-State: AOJu0YzX2eNfZNazFDsPK8fdVG5+s4o/6oqpgsg1vzQpm997aThAWnFF
-	KGjSR09Q6bnq02Iuj1W0UYp8mtgeoH+gM0RKM4mzACwuGgGXujVmWwmrf14m
-X-Google-Smtp-Source: AGHT+IElDMJo0hHab1kNYd3YJxb4tx87Hqseqt6ae38W/veBqOARWIsaAJKox+VzdjLVWZvy69xObA==
-X-Received: by 2002:a05:6a00:4f8e:b0:6ea:7e56:8dab with SMTP id ld14-20020a056a004f8e00b006ea7e568dabmr7026670pfb.26.1711365447612;
-        Mon, 25 Mar 2024 04:17:27 -0700 (PDT)
-Received: from rigel.home.arpa (110-175-159-48.tpgi.com.au. [110.175.159.48])
-        by smtp.gmail.com with ESMTPSA id k9-20020aa79d09000000b006e535bf8da4sm3885877pfp.57.2024.03.25.04.17.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 04:17:27 -0700 (PDT)
-From: Kent Gibson <warthog618@gmail.com>
-To: linux-gpio@vger.kernel.org,
-	brgl@bgdev.pl
-Cc: Kent Gibson <warthog618@gmail.com>
-Subject: [libgpiod][PATCH] treewide: fix spelling of "immediately".
-Date: Mon, 25 Mar 2024 19:17:17 +0800
-Message-Id: <20240325111717.113610-1-warthog618@gmail.com>
-X-Mailer: git-send-email 2.39.2
+	s=arc-20240116; t=1711366951; c=relaxed/simple;
+	bh=hEabN694l4Vs4GZeNBLusB1rNaW6tug6kVhLmI7YUxs=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Z2t7qqEkboe80e0ZrnytcBUNIkAr3Jih8fasoiYYgN0PpcGYRoS1H/9Tx8+cGHnzzO2Ep8L1a9cDSWDlTCTQPI2aZGv4HpnozJKxluvDihJNL6amANFONZnEr/zpmhJtE1fHe26dsNHDk905yHRzunEFn/8zHSgTLialFRMj984=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=sberdevices.ru; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=qXUwugYz; arc=none smtp.client-ip=37.18.73.165
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sberdevices.ru
+Received: from p-infra-ksmg-sc-msk01 (localhost [127.0.0.1])
+	by mx1.sberdevices.ru (Postfix) with ESMTP id 496EA100006;
+	Mon, 25 Mar 2024 14:32:12 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx1.sberdevices.ru 496EA100006
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=mail; t=1711366332;
+	bh=uIDHjNgEbPo1A4FBxlS0ooHDtdg7rfpWta+TckQZIFQ=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type:From;
+	b=qXUwugYzmv8v0s/PRYKUQdHBqGxhVaaB6+K6W2CERbs3JKNCz2ptAEmY+YxXGhdzc
+	 3FlRAf3vRrBBhl0kIM3Vh5bx+yWH/oyFb+Yww5OQ8SK1DwA70vkY5gDIGZTpFGVfRw
+	 mwO5QzxaHntGNV7cRuOe88LEBZAIupf4qTE5rpYWDI8P/Y5FnmPFBvAMEwAOgvwCxM
+	 bwThcocv9amOlXrqY9rkl2djMJtgKn7PJpwjgQusEZ97ai//DjWgQY7LUSNl3QQF6S
+	 3FucUKDm6jyXRCDWT16OdC0kAT3/9y0FXlwZfrcoJaXBp4p42Q9Rlq9JRL50m1Hqcf
+	 joEVjF8FPxMmw==
+Received: from smtp.sberdevices.ru (p-i-exch-sc-m02.sberdevices.ru [172.16.192.103])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mx1.sberdevices.ru (Postfix) with ESMTPS;
+	Mon, 25 Mar 2024 14:32:12 +0300 (MSK)
+Received: from CAB-WSD-0003115.sberdevices.ru (100.64.160.123) by
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Mon, 25 Mar 2024 14:32:11 +0300
+From: Jan Dakinevich <jan.dakinevich@salutedevices.com>
+To: Jan Dakinevich <jan.dakinevich@salutedevices.com>, Linus Walleij
+	<linus.walleij@linaro.org>, Neil Armstrong <neil.armstrong@linaro.org>, Kevin
+ Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Martin
+ Blumenstingl <martin.blumenstingl@googlemail.com>,
+	<linux-gpio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2] pinctrl/meson: fix typo in PDM's pin name
+Date: Mon, 25 Mar 2024 14:30:58 +0300
+Message-ID: <20240325113058.248022-1-jan.dakinevich@salutedevices.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -79,66 +71,74 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: p-i-exch-sc-m01.sberdevices.ru (172.16.192.107) To
+ p-i-exch-sc-m02.sberdevices.ru (172.16.192.103)
+X-KSMG-Rule-ID: 10
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184391 [Mar 25 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: YVDakinevich@sberdevices.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 11 0.3.11 5ecf9895443a5066245fcb91e8430edf92b1b594, {Tracking_smtp_not_equal_from}, {Tracking_uf_ne_domains}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1;sberdevices.ru:7.1.1,5.0.1;lore.kernel.org:7.1.1;100.64.160.123:7.1.2, FromAlignment: n, {Tracking_smtp_domain_mismatch}, {Tracking_smtp_domain_2level_mismatch}, {Tracking_sender_alignment_int}, {Tracking_white_helo}, ApMailHostAddress: 100.64.160.123
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/25 10:32:00
+X-KSMG-LinksScanning: Clean, bases: 2024/03/25 10:32:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.0.1.6960, bases: 2024/03/25 07:20:00 #24426778
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-"immediately" is incorrectly spelled "immediatelly" in several places, so
-replace with correct spelling.
+Other pins have _a or _x suffix, but this one doesn't have any. Most
+likely this is a typo.
 
-Signed-off-by: Kent Gibson <warthog618@gmail.com>
+Fixes: dabad1ff8561 ("pinctrl: meson: add pinctrl driver support for Meson-A1 SoC")
+Signed-off-by: Jan Dakinevich <jan.dakinevich@salutedevices.com>
 ---
- bindings/cxx/gpiodcxx/chip.hpp         | 2 +-
- bindings/cxx/gpiodcxx/line-request.hpp | 2 +-
- include/gpiod.h                        | 4 ++--
- 3 files changed, 4 insertions(+), 4 deletions(-)
+Links:
 
-diff --git a/bindings/cxx/gpiodcxx/chip.hpp b/bindings/cxx/gpiodcxx/chip.hpp
-index e8b3c0f..297db3d 100644
---- a/bindings/cxx/gpiodcxx/chip.hpp
-+++ b/bindings/cxx/gpiodcxx/chip.hpp
-@@ -126,7 +126,7 @@ public:
- 	 * @brief Wait for line status events on any of the watched lines
- 	 *        exposed by this chip.
- 	 * @param timeout Wait time limit in nanoseconds. If set to 0, the
--	 *                function returns immediatelly. If set to a negative
-+	 *                function returns immediately. If set to a negative
- 	 *                number, the function blocks indefinitely until an
- 	 *                event becomes available.
- 	 * @return True if at least one event is ready to be read. False if the
-diff --git a/bindings/cxx/gpiodcxx/line-request.hpp b/bindings/cxx/gpiodcxx/line-request.hpp
-index 8c1b474..0a47a76 100644
---- a/bindings/cxx/gpiodcxx/line-request.hpp
-+++ b/bindings/cxx/gpiodcxx/line-request.hpp
-@@ -183,7 +183,7 @@ public:
- 	 * @brief Wait for edge events on any of the lines requested with edge
- 	 *        detection enabled.
- 	 * @param timeout Wait time limit in nanoseconds. If set to 0, the
--	 *                function returns immediatelly. If set to a negative
-+	 *                function returns immediately. If set to a negative
- 	 *                number, the function blocks indefinitely until an
- 	 *                event becomes available.
- 	 * @return True if at least one event is ready to be read. False if the
-diff --git a/include/gpiod.h b/include/gpiod.h
-index d86c6ac..cacf97a 100644
---- a/include/gpiod.h
-+++ b/include/gpiod.h
-@@ -246,7 +246,7 @@ int gpiod_chip_get_fd(struct gpiod_chip *chip);
-  *        on the chip.
-  * @param chip GPIO chip object.
-  * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
-- *                   returns immediatelly. If set to a negative number, the
-+ *                   returns immediately. If set to a negative number, the
-  *                   function blocks indefinitely until an event becomes
-  *                   available.
-  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
-@@ -1164,7 +1164,7 @@ int gpiod_line_request_get_fd(struct gpiod_line_request *request);
-  * @brief Wait for edge events on any of the requested lines.
-  * @param request GPIO line request.
-  * @param timeout_ns Wait time limit in nanoseconds. If set to 0, the function
-- *                   returns immediatelly. If set to a negative number, the
-+ *                   returns immediately. If set to a negative number, the
-  *                   function blocks indefinitely until an event becomes
-  *                   available.
-  * @return 0 if wait timed out, -1 if an error occurred, 1 if an event is
+ [1] https://lore.kernel.org/lkml/20240314232201.2102178-1-jan.dakinevich@salutedevices.com/
+
+Changes:
+  v1 -> v2: Detached from v1's series (patch 15)
+
+ drivers/pinctrl/meson/pinctrl-meson-a1.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/pinctrl/meson/pinctrl-meson-a1.c b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+index 79f5d753d7e1..50a87d9618a8 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson-a1.c
++++ b/drivers/pinctrl/meson/pinctrl-meson-a1.c
+@@ -250,7 +250,7 @@ static const unsigned int pdm_dclk_x_pins[]		= { GPIOX_10 };
+ static const unsigned int pdm_din2_a_pins[]		= { GPIOA_6 };
+ static const unsigned int pdm_din1_a_pins[]		= { GPIOA_7 };
+ static const unsigned int pdm_din0_a_pins[]		= { GPIOA_8 };
+-static const unsigned int pdm_dclk_pins[]		= { GPIOA_9 };
++static const unsigned int pdm_dclk_a_pins[]		= { GPIOA_9 };
+ 
+ /* gen_clk */
+ static const unsigned int gen_clk_x_pins[]		= { GPIOX_7 };
+@@ -591,7 +591,7 @@ static struct meson_pmx_group meson_a1_periphs_groups[] = {
+ 	GROUP(pdm_din2_a,		3),
+ 	GROUP(pdm_din1_a,		3),
+ 	GROUP(pdm_din0_a,		3),
+-	GROUP(pdm_dclk,			3),
++	GROUP(pdm_dclk_a,		3),
+ 	GROUP(pwm_c_a,			3),
+ 	GROUP(pwm_b_a,			3),
+ 
+@@ -755,7 +755,7 @@ static const char * const spi_a_groups[] = {
+ 
+ static const char * const pdm_groups[] = {
+ 	"pdm_din0_x", "pdm_din1_x", "pdm_din2_x", "pdm_dclk_x", "pdm_din2_a",
+-	"pdm_din1_a", "pdm_din0_a", "pdm_dclk",
++	"pdm_din1_a", "pdm_din0_a", "pdm_dclk_a",
+ };
+ 
+ static const char * const gen_clk_groups[] = {
 -- 
-2.39.2
+2.34.1
 
 
