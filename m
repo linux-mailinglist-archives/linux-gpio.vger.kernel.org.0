@@ -1,103 +1,107 @@
-Return-Path: <linux-gpio+bounces-4598-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4599-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4BAA889650
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 09:49:44 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBE3C889C1C
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 12:11:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 850551F3175F
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 08:49:44 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 299EA1C33DE2
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 11:11:06 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49049144312;
-	Mon, 25 Mar 2024 05:46:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 19EBC15667D;
+	Mon, 25 Mar 2024 06:25:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyQ9GcpQ"
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="V5v6aVgF"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-231.mail.qq.com (out203-205-221-231.mail.qq.com [203.205.221.231])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7583214BFAD;
-	Mon, 25 Mar 2024 02:13:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B45116D331;
+	Mon, 25 Mar 2024 02:58:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.231
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711332788; cv=none; b=uLxv90YTrSm1WQKHWmnrlkArSAF/5kHlZ2LHD+yzvI5Ldlgti9uE1lLs9in0yMsn6CGlR97EnCmqZlwjqyA73C7TAQldAChcUsLC7BRi2Roc4HTIHETtENoZrWY/48uIiBdme7bfvLNOOQZHTmgnMoC4/yGBmz4u43/+fDaHios=
+	t=1711335491; cv=none; b=TD21ixRKg9/EL7OWfinZ86pX1tCDntJQqAG5/Zcb9PMhk3jK2RsQXbwznP6+F2430/vyaaKLCi9qZeQInuzRRDHzc+yZRBYcWpF1sgW/TXcRYjqMJ4LSMeeoHJNQhlNa5RLdKlyyOtx0namvd6ai+QJM7mx8OqvB9TG5GlYGiOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711332788; c=relaxed/simple;
-	bh=ZjgqCWsmKkuovh6MisooZl+/2MBUKF7fK+TUoxzUHCY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=jfuBFDahOi0A4nCuavFksz9YDWqnSXonY6ZcM6oF9GqT8EGHPNGJGazh+yYqjaEbH/y/7TiyhZcqAUOeFwTFTSIQqClOjQI/SCrM/Xdz3mF4/zMl9Az92I4n64jlb5KVWRh9ScXFHZrLDwHhFrNJ+QoesrPIASTPbsbA9ss/xPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyQ9GcpQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 936DDC43143;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711332787;
-	bh=ZjgqCWsmKkuovh6MisooZl+/2MBUKF7fK+TUoxzUHCY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=UyQ9GcpQVXzojXqUM9nOd0DRpLaGTsf7lQnP/2oEM4OV2s7EmzskxKAF3m0kyMsZ/
-	 EoJSLaEw/RsRKxYAFmogtyUY6LbxNri8zfPW6jlz9Z154rcef8YdgG+MuzEY9GGgbv
-	 0jnG8pZFD1YArL/3LfWRH1fn/6NuZbECfm+o+nbwfpRSCgna7epf1KkgzYdNtq/HNv
-	 BaUu05Vd0gN/UZO3xJzFtAdoxG2xDhVcBlZgKBV8o/JKftE79GMlzoG3KQ0MzDYOlR
-	 19+gaNycmmH6Q5THqCgCzN01lhj3UZVJGH4vldwCskiKeaCOtoJsNMQj48BwHeeUlZ
-	 RYraCD/FCaX5w==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7FFB1D2D0E6;
-	Mon, 25 Mar 2024 02:13:07 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1711335491; c=relaxed/simple;
+	bh=6q3cSj7Dl84jVv87fRaGmOaKhY98faHtxDSaHySMMRs=;
+	h=Message-ID:Content-Type:Mime-Version:Subject:From:In-Reply-To:
+	 Date:Cc:References:To; b=IQOzb7nvCdu/ck/6kt6GS+h7iyWb4QJlQo9lt+SborbUuReXwpsHKLwtnH3S9BpaVOhERkeYYvFU38w8jUj92gGN5m/3bEj8YeJpjPd3UminvW+pxzNFyLauoTyos8xF/dTe6obaWgJa2wu0/NSQAm4ZrB4b1RT5PW/hNnPP1S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=V5v6aVgF; arc=none smtp.client-ip=203.205.221.231
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711335477; bh=cUaB1Qlwp+5KOdt5XNJfaAEphVdI1Mx9/MaeC4ADKag=;
+	h=Subject:From:In-Reply-To:Date:Cc:References:To;
+	b=V5v6aVgF4PVWKrv5l409kP6cytZAnuD3qk7Yn045WLcliiOcGeCdKr5G0W5ohjw5+
+	 i3WQdOjRvmisBQznRZN/TfKxSmt/f9BhVRReYeigKhu15yTi1EaWKt8spvMXd57NOj
+	 1tlnoZr0W4hYMgoiXGsFx1Rrc7zZIASDG04t81Rg=
+Received: from smtpclient.apple ([2409:8934:1ed6:2f4f:d8d3:a43a:ef25:fb4f])
+	by newxmesmtplogicsvrsza7-0.qq.com (NewEsmtp) with SMTP
+	id E73A14B8; Mon, 25 Mar 2024 10:57:51 +0800
+X-QQ-mid: xmsmtpt1711335471td1lycwv1
+Message-ID: <tencent_3A313D213A8D897C9D8224DA538EAFB8B608@qq.com>
+X-QQ-XMAILINFO: MPaKaX623R7Y3L+KntZXBnA7NdwH6aw/GzZNsK/ATSLO+OirAumPXo7IHX44rn
+	 GlUXhRU+dDH0hFDeFjSi3zExYsNQYPEXIt3h0AF/6BhT8G3LJe+/aDv/iQYrLFNcouwOA4GDti1k
+	 UdzvNNI/tLPLMeSMm+uanZG1bbJ/6b0mnM2qU0PsDg9HMNTZFncfBVc08RD1KFFwfPgmyDV3Oyk6
+	 DTm6R1G2abAsPoKxxC6zq1/nKoVL7jeouOgbTZhTzp8GXa18R4V0K0e2ysXfQC05s116LyxZaNJ3
+	 whkyJb/t4U/FzCy+Z6wEYcIHslCq0+z9QrH2A3zzpkYAFo/BpGHMZDBz4C6+NJ5qqTyGB3ANrGI8
+	 eUisisKnAFldkFUDkJ2v+MIlnd01tGWRnHhPTFkle102pL+TG9axkqPYsF8oQ6ILmkU4790MYqsw
+	 9js3tZtkao92myJvumpfht8GhvBdeSLN12iK1rWdkS0wyQVNWXewjJY3DyDIJ/jNFByDFZ69UDfK
+	 fDLEcqb/FWUAVjv+DaCpbjq//miDlHRHGe8AvyELIZH3WJN8SZartS0pgofFSm3O8kXJ4Zx1SSrC
+	 urDurZLQaTGLfRHqIXDn6/6No9ZOnX7RElYKFqApALD4oIe9mxBtJGe72j7yvq2zXh2Mhaj4PQkH
+	 lPQOjFENbVkZYQpDyMOindBn8L3n4e6HqeG7HkGQqZd9X9XkIUn1vUOY7KiyjaLAGBYNB5lL4xep
+	 X76coa3VLbA/Vz8Dcpc3h+tbkrDBNH7FHXND1QuCNeVLmAlHo4p8WuVI+NnqTQ/9+gu3Rbs2NfCO
+	 3vdaDQpD8AEl7zHBDcJaPcOsYnGSd4IUQw9noVCRojyeqT0faerlyyW+iH++YNx06HGDXhQaTqjj
+	 wofz0R6fnvD7D9jFHDo8ZGyZpLX1hlPofnRE1jNMEfeS3DJ1taZ0V6aaANPUNQ8APY/9On6n+0K/
+	 BlChnb3z5IOR3kC5wrr62ihCzdnljsagZB4bjkiRZDlcwfGsWZrQ==
+X-QQ-XMRINFO: NyFYKkN4Ny6FSmKK/uo/jdU=
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH v2] gpio: Add ChromeOS EC GPIO driver
-From: patchwork-bot+chrome-platform@kernel.org
-Message-Id: 
- <171133278751.9916.9482317589165848392.git-patchwork-notify@kernel.org>
-Date: Mon, 25 Mar 2024 02:13:07 +0000
-References: <20240220045230.2852640-1-swboyd@chromium.org>
-In-Reply-To: <20240220045230.2852640-1-swboyd@chromium.org>
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: linus.walleij@linaro.org, brgl@bgdev.pl, linux-kernel@vger.kernel.org,
- patches@lists.linux.dev, devicetree@vger.kernel.org,
- chrome-platform@lists.linux.dev, dianders@chromium.org,
- treapking@chromium.org, linux-gpio@vger.kernel.org, lee@kernel.org,
- bleung@chromium.org, groeck@chromium.org
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3774.500.171.1.1\))
+Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
+ dts
+From: Yangyu Chen <cyy@cyyself.name>
+In-Reply-To: <20240325020334.4033-1-dqfext@gmail.com>
+Date: Mon, 25 Mar 2024 10:57:40 +0800
+Cc: Albert Ou <aou@eecs.berkeley.edu>,
+ Conor Dooley <conor@kernel.org>,
+ devicetree@vger.kernel.org,
+ Damien Le Moal <dlemoal@kernel.org>,
+ Guo Ren <guoren@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ linus.walleij@linaro.org,
+ linux-clk@vger.kernel.org,
+ linux-gpio@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ mturquette@baylibre.com,
+ p.zabel@pengutronix.de,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Rob Herring <robh+dt@kernel.org>,
+ sboyd@kernel.org
+Content-Transfer-Encoding: 7bit
+X-OQ-MSGID: <ED3A5AAA-6A9F-4DA3-99E8-5F94C542F097@cyyself.name>
+References: <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
+ <20240325020334.4033-1-dqfext@gmail.com>
+To: Qingfang Deng <dqfext@gmail.com>
+X-Mailer: Apple Mail (2.3774.500.171.1.1)
 
-Hello:
+Thanks. I will add them at next revision.
 
-This patch was applied to chrome-platform/linux.git (for-next)
-by Bartosz Golaszewski <bartosz.golaszewski@linaro.org>:
-
-On Mon, 19 Feb 2024 20:52:27 -0800 you wrote:
-> The ChromeOS embedded controller (EC) supports setting the state of
-> GPIOs when the system is unlocked, and getting the state of GPIOs in all
-> cases. The GPIOs are on the EC itself, so the EC acts similar to a GPIO
-> expander. Add a driver to get and set the GPIOs on the EC through the
-> host command interface.
+> On Mar 25, 2024, at 10:03, Qingfang Deng <dqfext@gmail.com> wrote:
 > 
-> Cc: Lee Jones <lee@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Bartosz Golaszewski <brgl@bgdev.pl>
-> Cc: Benson Leung <bleung@chromium.org>
-> Cc: Guenter Roeck <groeck@chromium.org>
-> Cc: <linux-gpio@vger.kernel.org>
-> Cc: <chrome-platform@lists.linux.dev>
-> Cc: Pin-yen Lin <treapking@chromium.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Hi Yangyu,
 > 
-> [...]
-
-Here is the summary with links:
-  - [v2] gpio: Add ChromeOS EC GPIO driver
-    https://git.kernel.org/chrome-platform/c/f837fe1bffe6
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+>> - Support for "zicbom" is tested by hand
+> 
+> C908 also supports zicbop and zicboz. You may add them as well.
 
 
