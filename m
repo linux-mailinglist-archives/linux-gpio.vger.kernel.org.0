@@ -1,110 +1,132 @@
-Return-Path: <linux-gpio+bounces-4621-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4623-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 87F7288B341
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 22:56:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A17FA88ACB1
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 18:58:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 36648C0244B
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 17:57:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FAE61FA03C7
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 17:58:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 630B86AFB5;
-	Mon, 25 Mar 2024 17:18:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259575644B;
+	Mon, 25 Mar 2024 17:19:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bwUsFYHl"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YemJ7wqK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C145A4E1AD;
-	Mon, 25 Mar 2024 17:18:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFA453387;
+	Mon, 25 Mar 2024 17:19:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387092; cv=none; b=lSpp0CreSi+JvUAE7SshUlXwthrKBNlE7LQaJfZAuhC/c7xlTEBM06/IZQMfqi1fPoLiKfJR/PnknW/98D24VuaIY3JsmTCWKmkLyYDYKNl0maLcCSz562F5JakvPEF5aFnbWCm5pN32vuh1yd98yY7xQi+3vt6ZNm6oPyspM1Q=
+	t=1711387189; cv=none; b=Aqx01WktuHRrBWDmPcPsSSbMflHtBbWentjgCnlt+KMwbm0FL8pMs35BBwHcTm7BFzERRV0puGmr5hUg0oDc7tjhJvU4+iKmHPd38Spd4N9rIeo0nKt2zmLLXbf31uF3ZoI80FPSVGUoHvHONX1ZBvh29/v8CtneMUDLeal4jTk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387092; c=relaxed/simple;
-	bh=EsZ7DYs0uLdg3p61Jl6f297OkczXhJruCuaScJCVEqg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=T2yEgbFsEk84jWM6ADMYs2WKx7qdz9F3MsOEE/VQDrJVm9vXEwKvpc69cjEYLKqZvQHDNTuaViGwWfFEDAaamSz61vdgRuJ+7R7ohZMQ6xb63I8hPFRWc57d7SK29IhQhZ5y1aLNmqKA/RhL1XF1+Y8YZz47Wu8vzJo591frVc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bwUsFYHl; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1711387091; x=1742923091;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=EsZ7DYs0uLdg3p61Jl6f297OkczXhJruCuaScJCVEqg=;
-  b=bwUsFYHlVTgzNNbnaE6LNBA68zTwD6emZF6PjrImtJ/jgwvR6q5aWrzc
-   rXcsW3eEbOcOG8vn4OngXjHdB205jXsMHULJD7MvqrJrojN4Dh9rBf0lu
-   UVCgGMV+fHEJKqsRtWJBYXH2ynwxbKiVDKzUl/dnjxUo5lYdtf/6LT+gN
-   IawXSF91HGaQB4nn8WW9u2EdQkI1hcak0alpQXNpnTsUBnptl6GTQloOa
-   ozNIvTyN85Wwp4vOu703YpjqgS0UPaW1dv97QNRvlpGaFYLaPOosWgUtA
-   twBgSqA7hF7wPvKj305/UtWS7SdAv+RULTK01RPpE/kfRMYaWX+lOIjcu
-   A==;
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="17546542"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="17546542"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 25 Mar 2024 10:18:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11024"; a="937070689"
-X-IronPort-AV: E=Sophos;i="6.07,153,1708416000"; 
-   d="scan'208";a="937070689"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 25 Mar 2024 10:18:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id BA569643; Mon, 25 Mar 2024 19:18:05 +0200 (EET)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Peng Fan <peng.fan@nxp.com>,
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v4 2/2] gpiolib: use dev_err() when gpiod_configure_flags failed
-Date: Mon, 25 Mar 2024 19:16:26 +0200
-Message-ID: <20240325171804.3375280-3-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
-In-Reply-To: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com>
-References: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1711387189; c=relaxed/simple;
+	bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=o6xbSbUPyV9eZzgOx9+wZIuEZZStNCQ94GAbEZRsfxmy+2o0CkSPo26F1hOrGedwCB5oLaNv+oMNKEV7VtitSDl2lpjQbWFyi7Hqj6XwwhVfu9SNwEunyLDMkMxHUadKpbPSH21p0Z3d31mb2KPznxbeMHASzB9aGr8H9F3kfM4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YemJ7wqK; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56bf6418434so2733227a12.0;
+        Mon, 25 Mar 2024 10:19:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711387187; x=1711991987; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
+        b=YemJ7wqK8p0gAwl7EGPnO4/6aOD74US5F/2KLM6UA4H/8N42BMTjmYc2ioG9TcWHV/
+         JhEhgGAvQO9/X5sUoPG5u1NvMzLzKA4buAwcpBvVArSfTqINEhVB/phZS2EYjXcXK8R9
+         4yOjvaMNOWwJvbLZAN7Z3WYkuiDfNYyEE5yzXx+N1A4jjPQqRkR2fwoQ4z2d5PstLo1f
+         Amz8G5LqRA9pZpXYc2sBW2BrnXmgcCH6WmHljNGdTaeD0DW+0Q5UsrVOGV42koTAQZz5
+         HkuuNXMX7ebiWHB66XEtXPthxCNJcWeuZ0Vmj+0nImkci64MwcNWVbI4jrbufTfIWc/c
+         sx4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711387187; x=1711991987;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
+        b=UmHHF6JGVwDjn64xWdY+lJEK5aKkPfi0Ns/AoDkbJ9npYsja4YKAKMVrrHA17a+ieA
+         RlYidGTV63bXgwLA3RP4iUtISPLqjynl1/94GAdOsymjDeyZY/NIkIL1uqTErZheT3tI
+         PI4gkSxfPhfjhi8TyQe7FQBZ+ubHMOJbc8OYIaKamWiXIXxw8mtd2ta6raG2ClwmQZVr
+         TzIPcPYPtS02yqDcMQzzLVkzE3LL2wOX1rLq7wCHuj/AVsczrpfEZLCz4nDmreZxM1BT
+         Qge8mZ0bBLKkLvGnqWykIxKONpmnOlnEWLdypOQxhXq9MsOveXsNvpCjPjvScyOEtkvP
+         /koA==
+X-Forwarded-Encrypted: i=1; AJvYcCUrnDh0PfBaOSd3rO8KmtNvAk+DrS6yaYOzuSVhnC+pptKRDObjT3rKC2YBq38RFypuRy+xf076KECk5EgQnKB0dN3w1gKP1dTpuCx1bv4AGG/Q+JNAHvQ4w/HcOXxf7B5g4B4utPBrPA==
+X-Gm-Message-State: AOJu0YwBPedPP+LfScpMejUqGgHbD5e9VFidhvDF3C7RsQG9jx2uUsWj
+	g3vGQb/bG514O9VHeecfduXa8ocDR6IKfP3Jyw3j9qc1qotexlH7q8lDIqu2OFKDSnTuBUIM/46
+	mq/3cHZhI68JcaJZQNJblJDMiEl8=
+X-Google-Smtp-Source: AGHT+IG6eOGseMTCjzeAv3soMifKZSfo1+beNKC6+feU9hC2xfExTJZe2LW52tp1M3FwcaOi8a0vLvdYtM6AlLDH48k=
+X-Received: by 2002:a17:906:3650:b0:a46:8c03:b659 with SMTP id
+ r16-20020a170906365000b00a468c03b659mr5122572ejb.42.1711387186608; Mon, 25
+ Mar 2024 10:19:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240322073725.3338266-1-peng.fan@oss.nxp.com>
+ <CAHp75Vds1dmjbaDa0D+Xxoyt_9CgHhoS2j0cR3EQdMp3sbwg5g@mail.gmail.com>
+ <CAMRc=McYbsd8t1_6PDypGBme2OSyvy8erdjR51cUzVhM-qQXZg@mail.gmail.com>
+ <ZgGfgY2hITq_MDvl@smile.fi.intel.com> <CAMRc=Mec5DSegEJHf5khj5ksCE3+SjQoq6vwRPEdnS7arawz4A@mail.gmail.com>
+In-Reply-To: <CAMRc=Mec5DSegEJHf5khj5ksCE3+SjQoq6vwRPEdnS7arawz4A@mail.gmail.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 25 Mar 2024 19:19:09 +0200
+Message-ID: <CAHp75Ve3wYHf2Kp+r1s-9KcQSbYJ2RCSxugBWDxMr_PC4DrL=w@mail.gmail.com>
+Subject: Re: [PATCH V3] gpiolib: use dev_err() when gpiod_configure_flags failed
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, linus.walleij@linaro.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Peng Fan <peng.fan@nxp.com>
+On Mon, Mar 25, 2024 at 6:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
+ wrote:
+> On Mon, Mar 25, 2024 at 5:00=E2=80=AFPM Andy Shevchenko
+> <andy.shevchenko@gmail.com> wrote:
+> > On Mon, Mar 25, 2024 at 04:48:27PM +0100, Bartosz Golaszewski wrote:
+> > > On Fri, Mar 22, 2024 at 4:59=E2=80=AFPM Andy Shevchenko
+> > > <andy.shevchenko@gmail.com> wrote:
+> > > > On Fri, Mar 22, 2024 at 9:29=E2=80=AFAM Peng Fan (OSS) <peng.fan@os=
+s.nxp.com> wrote:
 
-When gpio-ranges property was missed to be added in the gpio node,
-using dev_err() to show an error message will helping to locate issues
-easier.
+...
 
-Signed-off-by: Peng Fan <peng.fan@nxp.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- drivers/gpio/gpiolib.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > Bart, are you aware that this will add yet another possibility of
+> > > > scary '(null)' in the error level, which is much likely visible to =
+the
+> > > > end users?
+> > > >
+> > > > I propose to apply my fix first to avoid this happening.
+> > > > 20240320165930.1182653-1-andriy.shevchenko@linux.intel.com
+> > >
+> > > I think you meant the v2[1]?
+> >
+> > Yes!
+> >
+> > > And sure, I will pick it up shortly.
+> >
+> > Thank you!
+> >
+> > > [1] https://lore.kernel.org/lkml/20240320165930.1182653-1-andriy.shev=
+chenko@linux.intel.com/T/
+> >
+> > I can update this patch (rebase it on top) if needed to make less burde=
+n on
+> > the author's shoulders. Just tell me.
+>
+> Sure, if you can resend both yours and this one then even better.
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index b98cbf4335e3..5589e085ba25 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4236,7 +4236,7 @@ struct gpio_desc *gpiod_find_and_request(struct device *consumer,
- 	ret = gpiod_configure_flags(desc, con_id, lookupflags, flags);
- 	if (ret < 0) {
- 		gpiod_put(desc);
--		dev_dbg(consumer, "setup of GPIO %s failed\n", name);
-+		dev_err(consumer, "setup of GPIO %s failed: %d\n", name, ret);
- 		return ERR_PTR(ret);
- 	}
- 
--- 
-2.43.0.rc1.1.gbec44491f096
+Just sent both as v4.
 
+--=20
+With Best Regards,
+Andy Shevchenko
 
