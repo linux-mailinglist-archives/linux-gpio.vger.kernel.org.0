@@ -1,112 +1,125 @@
-Return-Path: <linux-gpio+bounces-4610-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4608-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD65488A4A3
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 15:35:11 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6AD5988A4C5
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 15:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C469A1C3BDCB
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 14:35:10 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 210742E7858
+	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 14:39:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33E5218D860;
-	Mon, 25 Mar 2024 11:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31DCE1B7CE2;
+	Mon, 25 Mar 2024 11:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ubO3c8P0"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yybf2YRz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+Received: from mail-ej1-f52.google.com (mail-ej1-f52.google.com [209.85.218.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD9F214BF86
-	for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 10:58:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8165A1B7F42
+	for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 11:05:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711364324; cv=none; b=cobJOCf/9Un1yceYarKkogHV17/tAMwpIXo5EqXGPCiE5Qc0au/NxktIzu0GXl4yZaH1bbIoPcPKCyF2eeacxpO8p02FY3XvbK05RioSpHn+C9otS9FmUmlESOKMOL+POoxN6MLMld+qJTN9oPcWbw+Lb9HmxQfxGcPEn1HsgQY=
+	t=1711364738; cv=none; b=lzVUSjZDv06fNV0ZGUbBZo3ap52cWrcZngdQ36dKwyeGEh1eCvGjw6WVDZvPubFIFctTE8Qv2eRsXNHwoEDOb5HtGCGAaKsEXj/qnVnkM2OKcSQpjHtt0z9D1B8EKktd69FJVkMBdRwrwksOZPDrBI63Wv+NG8jhr6PKIXic8JA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711364324; c=relaxed/simple;
-	bh=XL25HA/rMlyrHNwpF1lAFH+pCOsV21peUzjqYOvTZl8=;
-	h=From:To:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=O2MoP1dnMx9b/GCmjSY5TJ2KJn0bXNi7WPST0mV0dhU/1QQcVGwvkduBqyCwvo7XXvHLqnmNdEUooF80MI52MLNd21AKv5ka03hRD7Nm2Ul4tkJLeNStB1P143SqSSWgRdUUaAjZsv7aYvi74bZnyw3quwdLjfX7/Op8Oe+22rs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=ubO3c8P0; arc=none smtp.client-ip=209.85.218.47
+	s=arc-20240116; t=1711364738; c=relaxed/simple;
+	bh=7iS7PHbquIUiCrCMtkBdkxuqi/jTqc2cY3j9OhS1Ij4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=amU6HUlogVnGZnlNMmPLVRu/SXceIq/Lhf1WTSIviQJTNix1anVqWdyvAHkENvWP/kgIQVJXY/XHdiuPlBw3lY7wVLbH2m/5NPZj4GCsuGgD0yxqR4+/w7/oda4CfYW1b35FhgefcXB629xna+jsakP7Jkqg5RoksPfi5L8ehx4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yybf2YRz; arc=none smtp.client-ip=209.85.218.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a4702457ccbso540671766b.3
-        for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 03:58:42 -0700 (PDT)
+Received: by mail-ej1-f52.google.com with SMTP id a640c23a62f3a-a45f257b81fso486153066b.0
+        for <linux-gpio@vger.kernel.org>; Mon, 25 Mar 2024 04:05:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711364321; x=1711969121; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=9+JNuKywlvftNSqF5b7Cj7QzF+9URkW2/+w38BGlUpg=;
-        b=ubO3c8P0QQ515B+i28nRNAd09dhgCOo+ohLNR6cnWEkz5F7iTr5KXs/X543YjtJ343
-         deEss0Y2kwq6zp7LvJvEvbAX9nmCpldkYcb6+EKl6SYOvgrO6GWc5DTI4wedeA4eO+Vi
-         joQsjqTVWS2Z2U0xCGPrS5t6z6pnTQcw9X8o8Be9IG1bMjmDW8UKS9/q7nRYwwNbWOgm
-         5+k+2Ez04oaCdD3kzZKjYH+u3sCF1eOWnH3VqprJhg6sZbAJe8Ul20/WrAePGLRhFHAR
-         Zf8j82dDCkIQNYBYnB/RUbFfqdN5MRZtSetGQpgEzAP5XSi8yjIBoXcbyzd/DzU2tzi3
-         UOVw==
+        d=linaro.org; s=google; t=1711364734; x=1711969534; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=FRILSzvwAIpvZwjiJmtXP3wS29AHppU0XGaszbPtEV8=;
+        b=yybf2YRz6BdziJvnzuIzK0mlybWc0quywKx9lFEYwuMGpFGMwwuqd7rGVqTcWiCUW3
+         u5Kf50ZmAXMWjZ+GVzGk7heO5znoRwDrB6jvIcukzzUm1eWgU/RVzCjnJRZpXBPLjo43
+         CbKYaS4g1qIH+LPfFB38T6MPWDJbOo4WmrVcnpSb/pIB+LM7ftlKQxhZbjK6zezpxki1
+         7QjLFn6ob9ipuRMF1uSgmuzp1bi2pqdlYVKXrfX+BqC3/qy0OfUiQfbvkVC2H6BEvZ7e
+         v9aU1GJeto8AgaSTqYR1GBG2achbjMQBRMacmqkej2SVzjOfSuomr/GiDtspIxppE8gD
+         f3Wg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711364321; x=1711969121;
-        h=content-transfer-encoding:mime-version:date:message-id:subject
-         :references:in-reply-to:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=9+JNuKywlvftNSqF5b7Cj7QzF+9URkW2/+w38BGlUpg=;
-        b=u3pHsJQXJUpEFES7gYhkRSPymEAex8aG5kt+3d7V6UpmnZbAq0eoUVan3/GMSR+Ibk
-         FlYSL7N5WgLTBCTUg1r+tee1412aFpCs1SLQkoGxmijhh9dRGYaFzPVqFhzrAqtQBcck
-         IgvoYyDVZWcSAYp5Q6IGXnV3ql5VdnuCYnQsqrdCD+dvCcfSWy2Jd9fO+GGFdejlHnhX
-         cxKY6Q9PzZKb+DbuFASr4FMvDPMaSWw6+x/A0DlqlvYQUf7g5kF1KNGxA2LwHeJObQdz
-         J3+K25BcRSMWZlMhE7Z70wtpM4GkZmL+GEpiNaDBDY+suy6ggtEYlexynmdtvT3GnpB7
-         3soQ==
-X-Forwarded-Encrypted: i=1; AJvYcCWluNv3+hfh8uvXC9H1IaV2dVZbWMcKIXF6f+r9EhxeIlDbHo3UdXpKg8McjmVoOuAKkxd9NeRmwxm6eadQkt3rRp1Jy8u15O0k7A==
-X-Gm-Message-State: AOJu0YyRHWFLmpUDcQciT43/jl3GYzwj5ezyYmpZ/NpRatoVTw14ilon
-	cShvCRC1ESOlLI2R1u5znb3oXIkpcS4dDNbi4hEjfF8Ssc5bJ2oelHLv0jJ5wMI=
-X-Google-Smtp-Source: AGHT+IGRdluR+ctpxxP9cfjdQCuYGJCipeL0daH2dPwa0geRThKN5t2BbwP0SMuxIbKj6UiewWaR8g==
-X-Received: by 2002:a17:907:7283:b0:a47:4c82:edb2 with SMTP id dt3-20020a170907728300b00a474c82edb2mr3384870ejc.5.1711364321216;
-        Mon, 25 Mar 2024 03:58:41 -0700 (PDT)
-Received: from [127.0.1.1] ([178.197.222.44])
-        by smtp.gmail.com with ESMTPSA id i1-20020a170906a28100b00a4668970f74sm2935707ejz.108.2024.03.25.03.58.40
+        d=1e100.net; s=20230601; t=1711364734; x=1711969534;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=FRILSzvwAIpvZwjiJmtXP3wS29AHppU0XGaszbPtEV8=;
+        b=PqhfVnsvJ8Vux14CUzwANKXPQxi1uEsSR67vXMpM7jhkdVXElnYjavSoZ4DS7rOP3K
+         +2/C2PNLEt7P3Q+9vxK+07c3kzAhDdw9tf0fBQ803qHhXgc/1iSSGLr/QoS744LKl1o0
+         tIiZ6AbAJVvrsm2fyr4wJOpw80tAyQ3+YJNmwpN8J6I+KFIj+SFFbAwyYOF5VHbSnvFl
+         RVhbOpJF/XL7JyxqH6/X0oOTTc/YGtmixxFlheFEEoGg68fltUh2kjEsgMVaLBJ0WchM
+         a5k8WFRa0oeuGoJCFQQe+gAca1rRKf3mic32jmP+xnw+TPwZ1BPIH/fYet7vd1urs5Sz
+         HxBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWUJ7PFIIo24OBltGK4o2TBahT9mojyu4EXWLpXOAg3BeLTB6KiYp4+zMgrbiZKaSB9clrBaAsafAnBqQc9ElH3P519K5DXFXv4SA==
+X-Gm-Message-State: AOJu0Yw042lHzzalcAiaMKe7E5R6ITj5Cr78OfhlDUNLlKaAt23XBbFJ
+	i3u2BP4jnCNGzeQGyqvX2gTsArOE2pbkD2chU3iDBHahIQLuAKLh3SW3lWbEi6Q=
+X-Google-Smtp-Source: AGHT+IEhtdf7x6x6qjqq4K75Nxdbj/nJMl44w91CE9A41I8PB9hLaFhw4s15oV2TjS9l0ZLDyPjoIA==
+X-Received: by 2002:a17:906:40ca:b0:a47:206b:5951 with SMTP id a10-20020a17090640ca00b00a47206b5951mr4770720ejk.59.1711364733579;
+        Mon, 25 Mar 2024 04:05:33 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id m3-20020a1709061ec300b00a449026672esm2901792ejj.81.2024.03.25.04.05.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 25 Mar 2024 03:58:40 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Conor Dooley <conor+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20240312164428.692552-1-krzysztof.kozlowski@linaro.org>
-References: <20240312164428.692552-1-krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH] dt-bindings: pinctrl: samsung: drop unused header with
- register constants
-Message-Id: <171136432013.35586.992518195753048545.b4-ty@linaro.org>
-Date: Mon, 25 Mar 2024 11:58:40 +0100
+        Mon, 25 Mar 2024 04:05:33 -0700 (PDT)
+Date: Mon, 25 Mar 2024 14:05:29 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>,
+	Jonathan.Cameron@huawei.com, Laurent.pinchart@ideasonboard.com,
+	airlied@gmail.com, andrzej.hajda@intel.com, arm@kernel.org,
+	arnd@arndb.de, bamv2005@gmail.com, brgl@bgdev.pl, daniel@ffwll.ch,
+	davem@davemloft.net, dianders@chromium.org,
+	dri-devel@lists.freedesktop.org, eajames@linux.ibm.com,
+	gaurav.jain@nxp.com, gregory.clement@bootlin.com,
+	hdegoede@redhat.com, herbert@gondor.apana.org.au,
+	horia.geanta@nxp.com, james.clark@arm.com, james@equiv.tech,
+	jdelvare@suse.com, jernej.skrabec@gmail.com, jonas@kwiboo.se,
+	linus.walleij@linaro.org, linux-crypto@vger.kernel.org,
+	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux@roeck-us.net,
+	maarten.lankhorst@linux.intel.com, mazziesaccount@gmail.com,
+	mripard@kernel.org, naresh.solanki@9elements.com,
+	neil.armstrong@linaro.org, pankaj.gupta@nxp.com,
+	patrick.rudolph@9elements.com, rfoss@kernel.org, soc@kernel.org,
+	tzimmermann@suse.de
+Subject: Re: [PATCH v5 08/11] devm-helpers: Add resource managed version of
+ debugfs directory create function
+Message-ID: <486947a7-98fc-4884-a5fd-354677fa66ce@moroto.mountain>
+References: <20240323164359.21642-1-kabel@kernel.org>
+ <20240323164359.21642-9-kabel__6885.49310886941$1711212291$gmane$org@kernel.org>
+ <f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Mailer: b4 0.13.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f7c64a5a-2abc-4b7e-95db-7ca57b5427c0@wanadoo.fr>
 
-
-On Tue, 12 Mar 2024 17:44:28 +0100, Krzysztof Kozlowski wrote:
-> The bindings header for Samsung pin controller DTS pin values (holding
-> register values in fact) was deprecated in v6.1 kernel in
-> commit 9d9292576810 ("dt-bindings: pinctrl: samsung: deprecate header
-> with register constants").  This was enough of time for users to switch
-> to in-DTS headers, so drop the bindings header.
+On Sat, Mar 23, 2024 at 10:10:40PM +0100, Christophe JAILLET wrote:
+> >   static int pvt_ts_dbgfs_create(struct pvt_device *pvt, struct device *dev)
+> >   {
+> > -	pvt->dbgfs_dir = debugfs_create_dir(dev_name(dev), NULL);
+> > +	pvt->dbgfs_dir = devm_debugfs_create_dir(dev, dev_name(dev), NULL);
+> > +	if (IS_ERR(pvt->dbgfs_dir))
+> > +		return PTR_ERR(pvt->dbgfs_dir);
 > 
-> 
-> [...]
+> Not sure if the test and error handling should be added here.
 
-Applied, thanks!
+Yep.  debugfs_create_dir() is not supposed to be checked here.  It
+breaks the driver if CONFIG_DEBUGFS is disabled.  I have written a blog
+about this:
 
-[1/1] dt-bindings: pinctrl: samsung: drop unused header with register constants
-      https://git.kernel.org/pinctrl/samsung/c/4184e4912ca69d4f18a800144539af3b37c6a663
+https://staticthinking.wordpress.com/2023/07/24/debugfs-functions-are-not-supposed-to-be-checked/
 
-Best regards,
--- 
-Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+regards,
+dan carpenter
 
 
