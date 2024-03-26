@@ -1,220 +1,180 @@
-Return-Path: <linux-gpio+bounces-4632-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4633-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 870B988BDB6
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 10:22:39 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BD2AB88BED7
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 11:08:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 13F061F3A20A
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 09:22:39 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id ED81EB24A12
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 10:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6458971B2D;
-	Tue, 26 Mar 2024 09:20:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 03E126BFBC;
+	Tue, 26 Mar 2024 10:07:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFINn4Da"
+	dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b="PJFRJLsk";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="DvF0P3cz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from flow2-smtp.messagingengine.com (flow2-smtp.messagingengine.com [103.168.172.137])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 033156FBB7;
-	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD56EAF6;
+	Tue, 26 Mar 2024 10:07:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=103.168.172.137
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711444843; cv=none; b=An8CkD2srOoUwdTYNrTByYUVovVZcXr8Q/7sqhVmSZC3iYkIF4U2PRSAWYphrpREMPI0qgI+MNO3kLZeCWxWvOhhjLT9dCZwiUb5hl9KHTjojYbLl/MIq0ab4e5G3s3TJVn4MpY8BgvTBDATfTqc6cQnCW9BoG3UCiAOe7xrv+w=
+	t=1711447651; cv=none; b=bIUhYWSBSWyGgcqaBiP8vSCJC+Rwa0mryYroh5MLEfsdPrEzimjDU1UjKzfGk6UYAvHQ4QEBTIjD4xf8Zk9x+IBh42REGctJ+m86IlFb8YQWVZbLwyunjlKGFpVK7X/7z9+/9U52HtArloT3cV3F/FjbeyR929ix/TmNzicdvUI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711444843; c=relaxed/simple;
-	bh=caawVOpxHFy9cm3i7DwECM4693fhFarzsOiGy9doXoc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=L1NM2/UnMfMdZrQZlVkcKyRg0vNigRBPZFTU8emL7tCU1weVWqildqRMKRHZHKnZeP/T0DZBjg0zLfAndiKCKnvO/3Nzwa29OQcw+BR8Kuve24UnwwdatX5gxWSMAwxMmE/zzJAXf96PVJR16FJBR4oPAaCWzYJlxMX53bic84Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFINn4Da; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 47ECEC3279F;
-	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711444842;
-	bh=caawVOpxHFy9cm3i7DwECM4693fhFarzsOiGy9doXoc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=XFINn4DaLSM3JvDR3ivw9ybi6n2n0N1fOOqf0Dgy3KPRq6S+FtdxGocRtsMYvWq6P
-	 IH9jXQ0XRpSofETqPrW6pC0ny79jPdf4A8/buO3rN2mqVCWGuOTohFNM/vSfrci6zd
-	 /vt/EPAvISaVlErpXjCs8PNvtDa3nXvXwrw1Nj9DQ0LbRtbWzOhS2l16mzbofUKAsP
-	 9gekGHZSkfrghvaOODDofavBmuUBq9LCAVIrg46vQif1UsAExepWkbYANkTfjd8A2k
-	 x74zQQZZsItKVmIktUxPt1isu3I18xyffKk5fUNxJCEXmwM/ASenpd6M0INnIUER+r
-	 FTaMOP0p93qIw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4070DCD11DB;
-	Tue, 26 Mar 2024 09:20:42 +0000 (UTC)
-From: Nikita Shubin via B4 Relay <devnull+nikita.shubin.maquefel.me@kernel.org>
-Date: Tue, 26 Mar 2024 12:18:52 +0300
-Subject: [PATCH v9 25/38] gpio: ep93xx: add DT support for gpio-ep93xx
+	s=arc-20240116; t=1711447651; c=relaxed/simple;
+	bh=MtysH8+9HAmIANTQD0du5b+w4USbcY1NMUiynk3OwAk=;
+	h=MIME-Version:Message-Id:In-Reply-To:References:Date:From:To:Cc:
+	 Subject:Content-Type; b=eoAnWnQ6EJEZ3+Fb1c+KZQASXqT4SjtOJZeivjuJQNLZdfBV05WwslcZ+epizG9lUW/k2UbNZigrPkciAZyOjEQQ3cIfFCt3bEmbJC4EGsrR1RWW0uE4dHz+IIt+Kg5s5s0PomSmTJe079f3E4KY1iOIqWjMq415KP/9Dj2wxkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de; spf=pass smtp.mailfrom=arndb.de; dkim=pass (2048-bit key) header.d=arndb.de header.i=@arndb.de header.b=PJFRJLsk; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=DvF0P3cz; arc=none smtp.client-ip=103.168.172.137
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arndb.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arndb.de
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+	by mailflow.nyi.internal (Postfix) with ESMTP id 19AEF20063A;
+	Tue, 26 Mar 2024 06:07:29 -0400 (EDT)
+Received: from imap51 ([10.202.2.101])
+  by compute5.internal (MEProxy); Tue, 26 Mar 2024 06:07:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arndb.de; h=cc
+	:cc:content-type:content-type:date:date:from:from:in-reply-to
+	:in-reply-to:message-id:mime-version:references:reply-to:subject
+	:subject:to:to; s=fm1; t=1711447649; x=1711454849; bh=LwutBSd20d
+	Y9F2mV05mJEYeO4BD3EduCXGrjUsQ79Ro=; b=PJFRJLskOPk2rK+iB7VvkPPP1e
+	SLERW5kzTADhItQdrbiFv7tHcH459/NpFcy9PVmm2d3OMZxaeh4ysJYYP5cZf3qj
+	6kjIVklsQy+lvoygejE+/OdIqRnqn7vhNuUyKcCouDezDB2zrzbQAcrOcG5wRx1Q
+	/hyrVAIthJ3IcKcUv70qLinqbc0/cuSq+lRcpEVPspAtrLBo049R/SlUmMrbdiGs
+	TArsa7RG1X/FxCSiLg57bN6iu/mWAPJTP7y/4UxfORaC+BlRTRVj1SlffpoHl5qi
+	pgcEbeW0r+BWpFJHnJbm98mW6OQYQt+6RUbF3F8dlyhbgvQAD4/6+EMJOgig==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-type:content-type:date:date
+	:feedback-id:feedback-id:from:from:in-reply-to:in-reply-to
+	:message-id:mime-version:references:reply-to:subject:subject:to
+	:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1711447649; x=1711454849; bh=LwutBSd20dY9F2mV05mJEYeO4BD3
+	EduCXGrjUsQ79Ro=; b=DvF0P3czs1dT3R3uZ4D9WNdJ2Jvy5Q/+5INgRPqZyxK+
+	hkqBV3aCiIN+QgTQEUKV5qtqUGvod8DLhb4bQ4i/xDPexgDy/LVf/8n/SJG7rush
+	XEBrOGiQWpazHs9g1aNsGBmL9W7WKcnYtFoJnaylqiK3kyAaruyJHAEbhDFJEixz
+	5C4r3h9JlVJuv4pfz8arK6cd1bEtQT3q/wE5BJms9/xT6Cqp7CF1eewQzWbLj6CQ
+	kT+x1WrKGo7OqATRWp5uF+DNlqL9lnGL1Sxa/z3LB3DLbhM/+QCE+v7JbE1GfhI2
+	32FgJGmKdK/NrXqToufcvz/D0yB1o1nZjODsft/Oig==
+X-ME-Sender: <xms:X54CZuxNGYqpCrTpdkoMeYu7QHep-DtABIoilrdxkHD3sWQYbCebew>
+    <xme:X54CZqRRTk4BO6C0XUl_JYlUMa3bpBBaMeXDG4sLQi4OS4DrIkLZzvu8UfG_OQaS1
+    B-Yn9ExIQl6NTvvdyM>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedvledruddufedguddvucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepofgfggfkjghffffhvfevufgtsehttdertderredtnecuhfhrohhmpedftehr
+    nhguuceuvghrghhmrghnnhdfuceorghrnhgusegrrhhnuggsrdguvgeqnecuggftrfgrth
+    htvghrnhepffehueegteeihfegtefhjefgtdeugfegjeelheejueethfefgeeghfektdek
+    teffnecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehmrghilhhfrhhomheprg
+    hrnhgusegrrhhnuggsrdguvg
+X-ME-Proxy: <xmx:X54CZgVzQidMIFZ5N9JpoYFGxrVx7337JziEMcVKsZMuJH165E0AZA>
+    <xmx:X54CZkjjIA4yhyjXlr5VojHurih3Ujo9_CVAICaJW8Ost8Vl5nVLqA>
+    <xmx:X54CZgA618J6_VWBxFs5t0RmjT9d4r6JLbi7Tkm1KxTbcEZMnccM0Q>
+    <xmx:X54CZlJOpkzdS_UtGHyqZuzem8YjLstkDNB3SMS9OX5-aGoBVoQ36w>
+    <xmx:YZ4CZvfWf4jPj0Z4AOpwXEiirjZXkASxh6SPn7mRGqleIMTKC6GJcUpzF9w>
+Feedback-ID: i56a14606:Fastmail
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+	id 717EEB6008D; Tue, 26 Mar 2024 06:07:27 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.11.0-alpha0-328-gc998c829b7-fm-20240325.002-gc998c829
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240326-ep93xx-v9-25-156e2ae5dfc8@maquefel.me>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+Message-Id: <66e1da99-5cf4-4506-b0bf-4bdf04959f41@app.fastmail.com>
 In-Reply-To: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
-To: Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Arnd Bergmann <arnd@arndb.de>, Andy Shevchenko <andy.shevchenko@gmail.com>, 
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-X-Mailer: b4 0.13-dev-e3e53
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1711444837; l=4650;
- i=nikita.shubin@maquefel.me; s=20230718; h=from:subject:message-id;
- bh=veUYE/VzU1y37Z5M8NkA7tAbUvE+Vs49lzqAWz+krrk=;
- b=xHClAB+tIAg3s3CXvsedoXpLj6apxNnAcRbwg0SnuwzQBxhCVbDSr7P/9HRzBPWVePRdAjICa0Cj
- 8NNde3beAhzjy3w6SABVm2R4fv4v3cEFVFPckKqDnEz7Yc3vwNlx
-X-Developer-Key: i=nikita.shubin@maquefel.me; a=ed25519;
- pk=vqf5YIUJ7BJv3EJFaNNxWZgGuMgDH6rwufTLflwU9ac=
-X-Endpoint-Received: by B4 Relay for nikita.shubin@maquefel.me/20230718
- with auth_id=65
-X-Original-From: Nikita Shubin <nikita.shubin@maquefel.me>
-Reply-To: nikita.shubin@maquefel.me
+References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
+Date: Tue, 26 Mar 2024 11:07:06 +0100
+From: "Arnd Bergmann" <arnd@arndb.de>
+To: "Nikita Shubin" <nikita.shubin@maquefel.me>,
+ "Hartley Sweeten" <hsweeten@visionengravers.com>,
+ "Alexander Sverdlin" <alexander.sverdlin@gmail.com>,
+ "Russell King" <linux@armlinux.org.uk>,
+ "Lukasz Majewski" <lukma@denx.de>,
+ "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Andy Shevchenko" <andy@kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>,
+ "Stephen Boyd" <sboyd@kernel.org>, "Sebastian Reichel" <sre@kernel.org>,
+ "Rob Herring" <robh+dt@kernel.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski+dt@linaro.org>,
+ "Conor Dooley" <conor+dt@kernel.org>, "Vinod Koul" <vkoul@kernel.org>,
+ "Wim Van Sebroeck" <wim@linux-watchdog.org>,
+ "Guenter Roeck" <linux@roeck-us.net>,
+ "Thierry Reding" <thierry.reding@gmail.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>,
+ "Mark Brown" <broonie@kernel.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ "Eric Dumazet" <edumazet@google.com>, "Jakub Kicinski" <kuba@kernel.org>,
+ "Paolo Abeni" <pabeni@redhat.com>,
+ "Miquel Raynal" <miquel.raynal@bootlin.com>,
+ "Richard Weinberger" <richard@nod.at>,
+ "Vignesh Raghavendra" <vigneshr@ti.com>,
+ "Damien Le Moal" <dlemoal@kernel.org>,
+ "Sergey Shtylyov" <s.shtylyov@omp.ru>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>,
+ "Liam Girdwood" <lgirdwood@gmail.com>,
+ "Jaroslav Kysela" <perex@perex.cz>, "Takashi Iwai" <tiwai@suse.com>,
+ "Ralf Baechle" <ralf@linux-mips.org>, "Aaron Wu" <Aaron.Wu@analog.com>,
+ "Lee Jones" <lee@kernel.org>, "Olof Johansson" <olof@lixom.net>,
+ "Niklas Cassel" <cassel@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+ linux-clk@vger.kernel.org, linux-pm@vger.kernel.org,
+ devicetree@vger.kernel.org, dmaengine@vger.kernel.org,
+ linux-watchdog@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-spi@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
+ linux-mtd@lists.infradead.org, linux-ide@vger.kernel.org,
+ linux-input@vger.kernel.org, linux-sound@vger.kernel.org,
+ "Bartosz Golaszewski" <bartosz.golaszewski@linaro.org>,
+ "Krzysztof Kozlowski" <krzysztof.kozlowski@linaro.org>,
+ "Andy Shevchenko" <andriy.shevchenko@linux.intel.com>,
+ "Andrew Lunn" <andrew@lunn.ch>, "Andy Shevchenko" <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
+Content-Type: text/plain
 
-From: Nikita Shubin <nikita.shubin@maquefel.me>
+On Tue, Mar 26, 2024, at 10:18, Nikita Shubin via B4 Relay wrote:
+> The goal is to recieve ACKs for all patches in series to merge it via 
+> Arnd branch.
 
-Add OF ID match table.
+Thank you for the continued updates, I really hope we can merge
+it all for 6.10. I've looked through it again and I'm pretty much
+ready to just merge it, though I admit that the process is not
+working out that great, and it would probably have been quicker
+to add DT support to drivers individually through the subsystem
+trees.
 
-Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Signed-off-by: Nikita Shubin <nikita.shubin@maquefel.me>
----
- drivers/gpio/gpio-ep93xx.c | 38 +++++++++++++++++++++++---------------
- 1 file changed, 23 insertions(+), 15 deletions(-)
+> Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse 
+> i hadn't one for a couple of iterations already:
+>
+> Following patches require attention from Stephen Boyd, as they were 
+> converted to aux_dev as suggested:
+>
+> - ARM: ep93xx: add regmap aux_dev
+> - clk: ep93xx: add DT support for Cirrus EP93xx
+>
+> Following patches require attention from Vinod Koul:
+>
+> - dma: cirrus: Convert to DT for Cirrus EP93xx
+> - dma: cirrus: remove platform code
 
-diff --git a/drivers/gpio/gpio-ep93xx.c b/drivers/gpio/gpio-ep93xx.c
-index a55f635585f4..ab798c848215 100644
---- a/drivers/gpio/gpio-ep93xx.c
-+++ b/drivers/gpio/gpio-ep93xx.c
-@@ -12,13 +12,13 @@
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/platform_device.h>
-+#include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
- #include <linux/gpio/driver.h>
- #include <linux/bitops.h>
- #include <linux/seq_file.h>
--#include <linux/interrupt.h>
- 
- struct ep93xx_gpio_irq_chip {
- 	void __iomem *base;
-@@ -138,7 +138,8 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	int port_mask = BIT(irqd_to_hwirq(d));
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	int port_mask = BIT(hwirq);
- 
- 	if (irqd_get_trigger_type(d) == IRQ_TYPE_EDGE_BOTH)
- 		eic->int_type2 ^= port_mask; /* switch edge direction */
-@@ -147,26 +148,28 @@ static void ep93xx_gpio_irq_mask_ack(struct irq_data *d)
- 	ep93xx_gpio_update_int_params(eic);
- 
- 	writeb(port_mask, eic->base + EP93XX_INT_EOI_OFFSET);
--	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void ep93xx_gpio_irq_mask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	eic->int_unmasked &= ~BIT(irqd_to_hwirq(d));
-+	eic->int_unmasked &= ~BIT(hwirq);
- 	ep93xx_gpio_update_int_params(eic);
--	gpiochip_disable_irq(gc, irqd_to_hwirq(d));
-+	gpiochip_disable_irq(gc, hwirq);
- }
- 
- static void ep93xx_gpio_irq_unmask(struct irq_data *d)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
- 
--	gpiochip_enable_irq(gc, irqd_to_hwirq(d));
--	eic->int_unmasked |= BIT(irqd_to_hwirq(d));
-+	gpiochip_enable_irq(gc, hwirq);
-+	eic->int_unmasked |= BIT(hwirq);
- 	ep93xx_gpio_update_int_params(eic);
- }
- 
-@@ -179,11 +182,11 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
- 	struct ep93xx_gpio_irq_chip *eic = to_ep93xx_gpio_irq_chip(gc);
--	irq_hw_number_t offset = irqd_to_hwirq(d);
--	int port_mask = BIT(offset);
-+	irq_hw_number_t hwirq = irqd_to_hwirq(d);
-+	int port_mask = BIT(hwirq);
- 	irq_flow_handler_t handler;
- 
--	gc->direction_input(gc, offset);
-+	gc->direction_input(gc, hwirq);
- 
- 	switch (type) {
- 	case IRQ_TYPE_EDGE_RISING:
-@@ -209,7 +212,7 @@ static int ep93xx_gpio_irq_type(struct irq_data *d, unsigned int type)
- 	case IRQ_TYPE_EDGE_BOTH:
- 		eic->int_type1 |= port_mask;
- 		/* set initial polarity based on current input level */
--		if (gc->get(gc, offset))
-+		if (gc->get(gc, hwirq))
- 			eic->int_type2 &= ~port_mask; /* falling */
- 		else
- 			eic->int_type2 |= port_mask; /* rising */
-@@ -285,9 +288,8 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
- 	if (girq->num_parents == 0)
- 		return -EINVAL;
- 
--	girq->parents = devm_kcalloc(dev, girq->num_parents,
--				   sizeof(*girq->parents),
--				   GFP_KERNEL);
-+	girq->parents = devm_kcalloc(dev, girq->num_parents, sizeof(*girq->parents),
-+				     GFP_KERNEL);
- 	if (!girq->parents)
- 		return -ENOMEM;
- 
-@@ -306,7 +308,7 @@ static int ep93xx_setup_irqs(struct platform_device *pdev,
- 		girq->parent_handler = ep93xx_gpio_f_irq_handler;
- 
- 		for (i = 0; i < girq->num_parents; i++) {
--			irq = platform_get_irq(pdev, i);
-+			irq = platform_get_irq_optional(pdev, i);
- 			if (irq < 0)
- 				continue;
- 
-@@ -359,9 +361,15 @@ static int ep93xx_gpio_probe(struct platform_device *pdev)
- 	return devm_gpiochip_add_data(&pdev->dev, gc, egc);
- }
- 
-+static const struct of_device_id ep93xx_gpio_match[] = {
-+	{ .compatible = "cirrus,ep9301-gpio" },
-+	{ /* sentinel */ }
-+};
-+
- static struct platform_driver ep93xx_gpio_driver = {
- 	.driver		= {
- 		.name	= "gpio-ep93xx",
-+		.of_match_table = ep93xx_gpio_match,
- 	},
- 	.probe		= ep93xx_gpio_probe,
- };
+I suspect that Stephen and Vinod may be missing this, as reviewing
+a 38 patch series tends to be a lot of work, and they may have
+missed that they are on the critical path here. I certainly
+tend to just ignore an entire thread when it looks like I'm not
+immediately going to be reviewing it all and other people are
+likely to have more comments first, so I'm not blaming them.
 
--- 
-2.41.0
+To better catch their attention, I would suggest you repost the
+two smaller sets of patches as a separate series, with only the
+relevant people on Cc. Please also include the respective
+bindings when you send send these patches to Stephen and
+Vinod.
 
-
+      Arnd
 
