@@ -1,114 +1,123 @@
-Return-Path: <linux-gpio+bounces-4637-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4639-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 670D988C162
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 13:00:18 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D206F88C4CB
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 15:13:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 952641C3EE27
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 12:00:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id DD9F81C618A7
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 14:13:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 389D06F066;
-	Tue, 26 Mar 2024 12:00:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DB2748061F;
+	Tue, 26 Mar 2024 14:11:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="meYl6z2H"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="ZHxseVw9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4AD9559150
-	for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 12:00:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E97377F7C8;
+	Tue, 26 Mar 2024 14:11:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711454413; cv=none; b=ChLvY30HcZGXdLlzpIJgdNpdkw4kvK2PVp5ADbNg8OkWhTQcdKM58i117Wn2LwFGQTBL3zOnaPbxu8CTzkh4v2JpTXAsW/PDptXEa1FbF/DgerDpMZp3Yv0UmNUYdktVnyqtHNQNHjjBnl/oU8R7aqYOrwb1UXZaYeH9FPpQi1g=
+	t=1711462290; cv=none; b=K2xP1EFKwMWNZQGPYVnENoQrB5G6Afj2sq1G+rXUtmGGVy5eYsLLVwgOHNYl9YHkMgxA1VOWJaRCicIIv9bF1FEQx1DGSDiRUKQY0jmnssrpd9i+xVjbcR6NHIBjLJDxMgyaAeWX6sITneG9+nCi4R5BM/n0c/dyOL+RwX69mi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711454413; c=relaxed/simple;
-	bh=5DLrqyloRw4HA2iztKCEKBkf1PO/zzmKtFuIEtK1KD0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=KdnqJDJWW45iRV3zXqWCovgD4DqNXVyxoaA4QPEk4mFAQjeOU6EwPo1tR5uQflgYl/Lh0VXhB85BFNCDVu/3ghplwcsapRKg+5ce1WzShcwcQH7+sSZlKRaKD6cX0atJ+Uz0EKig1MJQ0hQ87KnvCvqrQzLC7FY0Y7RPM6NDWsM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=meYl6z2H; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d46dd8b0b8so70496751fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 05:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711454409; x=1712059209; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=SCv5OyIKI9MbyQpyJs4bOZC+lzj0+dfLVYcz2czS3cU=;
-        b=meYl6z2HGqvvCqek/SBsYcOkCtaKFnITbwl32h3incexUXPyhEZH/H/dpBRqQoNCAG
-         LVC/T4aD7FxzYz9bg/NcIbqxJTK/AwGSsldHvdiXbaAdvJBR5M3lmGzBVdafT5UBLQw/
-         Hu2rAcV4NSVmvuj3R3ZqXHslGmXd+tMCBRKT7i6aquf/yXP9/zpb8MwOGuxPzZVRtNn/
-         Pni/Y/Z3FlDrbx5wyZWh4L54cdxZGHbC15tjR06G3Azup3ZfanahUXzUY8Llk/LUKtJm
-         5E4lbB4Y/bSxhh6bQllerL5qTvkKV708KDRUS179g/QEICEUDpJwCi68rF5oJjjk3hNp
-         jsFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711454409; x=1712059209;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=SCv5OyIKI9MbyQpyJs4bOZC+lzj0+dfLVYcz2czS3cU=;
-        b=WEilYlOhdBT9ge/y9S0dc3SnA/zyic2fBCRXyYfcERZ9aEr4FpJxnmt86lxyh6EL0Q
-         ggAkb1GpGSDD57CnNN9Kx/K10ozKKJ+HnSDlWm++PUBNDLsXfYeVs19PYdUX+vHhlbzE
-         6XPpH6K9n+6DAhHi+kUK/vRAe4Xhq9JA5xnZ8ph82GwRcxXz86KeOLTfjOoS1HwnKvTA
-         aqvoC7wbSkij5omXo/IZWOxJX8SNeQPGGjwCm1xUFvMqC/d3cjruj9c3r2MUe/BS+Dix
-         WMz7ptBDhNjNiqWE7paeyKZkEjOGxryMIQinxtB+M7iJ/EPQAebmqg0fOIUFR8Xq6Stz
-         Zn+w==
-X-Forwarded-Encrypted: i=1; AJvYcCXJjYKnCJNif2jpmYuphwmqN7MM/NrhDh1DVMxMVvcqvIYOkxKtRs3X0dTTQqlWzRGy2y4CHGQ7kYOhiAigLeGAZ1dMKKeJR11u5w==
-X-Gm-Message-State: AOJu0YxSdWvGQfjHdrDr94Wf9eSoFSxkKb0L6CQuLZnnn/ayCcDEvH4d
-	JnMMBx3I1BRCjgcqVvDuK0rrVeIyJZnq+6P/D5+e7OuIq7lSOTEintna+p1gqLZQ1LyoMGoaA55
-	XtwF8avVCW1iJoO+pS7VdUqhBjZI4w9V+6f78PQ==
-X-Google-Smtp-Source: AGHT+IFNzs3lUN7jBqt538CCJ/Kmi9XufjzZKlCPHzb2+sbiFzwhETIGqSwEBOwlrE9EYPH1QyZuRmy5e6/qRp6e0hY=
-X-Received: by 2002:a2e:3509:0:b0:2d2:f5fa:f37e with SMTP id
- z9-20020a2e3509000000b002d2f5faf37emr1412010ljz.51.1711454408639; Tue, 26 Mar
- 2024 05:00:08 -0700 (PDT)
+	s=arc-20240116; t=1711462290; c=relaxed/simple;
+	bh=RT6HSUWziNjh0DyUN+VyxLpq9Q8jhGRYp/rHRkgQb4g=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ESPaU9gwVlfwd2hUKGs14iobzHSb55d/UVEcWnbyHg99tDYTJtgiJnk3fZCU7XkmSU2W7ahX6nCkJFMtvljRoM/ZVATr8Y1i7UN4YpkUotyx0uQc4kM8XSwSizQQc8vBWfvDxrZovA7/Nwme3cJq1JZ1hdps9tQDLPfNzljObMM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=ZHxseVw9; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q79uU8026416;
+	Tue, 26 Mar 2024 09:11:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=PODMain02222019; bh=4
+	NtiBv4Lh/zR4jqlmzESI/1KvypLtdYOe+J93npl964=; b=ZHxseVw9iwpqvPEx7
+	dbzAXDyUBKPbLNMZFLfpPP8VxdP2cySxFU7tFUgaWIzEEIf6fzaY+qP+8/HronjK
+	SeXTu1A7X6fWN6pJcnfPrE+G0167IkB1eULpMAI+ZyG4aiufMyx0gmwHURk7Sfjj
+	BvZYYVQMq4hcxpobZEy05IaQvw83fyVEaUopxawuMdyDK7o8sUa8Yu7gLyuou6xF
+	S99Do8CIpcKI9Y8fplgROrg6xe7LCE2AJ/seiFL/xHLUNJbV8DHY0MFmEcfBkmUO
+	pN/Sk78AWbhOr154j92JtGbstLpSnlnhynBi28TUjiLqFX8hhr8UY2l1f/dv2YHt
+	Lid1w==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3x1ugm5b9y-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 09:11:10 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 26 Mar
+ 2024 14:11:08 +0000
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
+ via Frontend Transport; Tue, 26 Mar 2024 14:11:08 +0000
+Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 8FB80820241;
+	Tue, 26 Mar 2024 14:11:08 +0000 (UTC)
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>
+CC: <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: [PATCH 0/3] Add bridged amplifiers to cs42l43
+Date: Tue, 26 Mar 2024 14:11:05 +0000
+Message-ID: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325-gpiolib-find-by-fwnode-stub-v2-1-c843288cb01f@kernel.org>
-In-Reply-To: <20240325-gpiolib-find-by-fwnode-stub-v2-1-c843288cb01f@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 26 Mar 2024 12:59:57 +0100
-Message-ID: <CAMRc=MeeG6+Q0YU21k19ADCDumDqSVej1DDdydi2axJ3J7Yf-w@mail.gmail.com>
-Subject: Re: [PATCH v2] gpiolib: Add stubs for GPIO lookup functions
-To: Mark Brown <broonie@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Proofpoint-ORIG-GUID: yAUZGjQ3m8CNU7ZvWaoqQu5QoNXcgut3
+X-Proofpoint-GUID: yAUZGjQ3m8CNU7ZvWaoqQu5QoNXcgut3
+X-Proofpoint-Spam-Reason: safe
 
-On Mon, Mar 25, 2024 at 6:01=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
->
-> The gpio_device_find_by_() functions do not have stubs which means that i=
-f
-> they are referenced from code with an optiona dependency on gpiolib then
-> the code will fail to link. Add stubs for lookups via fwnode and label. I
-> have not added a stub for plain gpio_device_find() since it seems harder =
-to
-> see a use case for that which does not depend on gpiolib.
->
-> With the addition of the GPIO reset controller (which lacks a gpiolib
-> dependency) to the arm64 defconfig this is causing build breaks for arm64
-> virtconfig in -next:
->
-> aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_rese=
-t_gpio_lookup':
->  /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined ref=
-erence to `gpio_device_find_by_fwnode'
->
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Mark Brown <broonie@kernel.org>
-> ---
+On some cs42l43 systems a couple of cs35l56 amplifiers are attached
+to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
+by a SDCA class driver and these two amplifiers are controlled by
+firmware running on the cs42l43. However, under Linux the decision
+was made to interact with the cs42l43 directly, affording the user
+greater control over the audio system. However, this has resulted
+in an issue where these two bridged cs35l56 amplifiers are not
+populated in ACPI and must be added manually. There is at least an
+SDCA extension unit DT entry we can key off.
 
-Applied, thanks!
+The process of adding this is handled using a software node, firstly the
+ability to add native chip selects to software nodes must be added.
+Secondly, an additional flag for naming the SPI devices is added this
+allows the machine driver to key to the correct amplifier. Then finally,
+the cs42l43 SPI driver adds the two amplifiers directly onto its SPI
+bus.
 
-Bart
+An additional series will follow soon to add the audio machine driver
+parts (in the sof-sdw driver), however that is fairly orthogonal to
+this part of the process, getting the actual amplifiers registered.
+
+Thanks,
+Charles
+
+Charles Keepax (2):
+  gpio: swnode: Add ability to specify native chip selects for SPI
+  spi: Add a mechanism to use the fwnode name for the SPI device
+
+Maciej Strozek (1):
+  spi: cs42l43: Add bridged cs35l56 amplifiers
+
+ drivers/gpio/gpiolib-swnode.c |   8 ++
+ drivers/gpio/gpiolib.c        |   9 ++
+ drivers/spi/spi-cs42l43.c     | 152 +++++++++++++++++++++++++++++++++-
+ drivers/spi/spi.c             |   7 ++
+ include/linux/gpio/consumer.h |   4 +
+ include/linux/spi/spi.h       |   2 +
+ 6 files changed, 181 insertions(+), 1 deletion(-)
+
+-- 
+2.39.2
+
 
