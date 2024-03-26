@@ -1,138 +1,120 @@
-Return-Path: <linux-gpio+bounces-4635-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4636-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2740588C122
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 12:48:02 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AF2AA88C156
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 12:59:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 9FFB4B21F91
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 11:47:59 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D46D2E4D8E
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 11:59:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 14F325A0FC;
-	Tue, 26 Mar 2024 11:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC0816F060;
+	Tue, 26 Mar 2024 11:58:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b="Tdux0Hp8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PEZXVVHe"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mout.gmx.net (mout.gmx.net [212.227.15.15])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f179.google.com (mail-lj1-f179.google.com [209.85.208.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925325810C;
-	Tue, 26 Mar 2024 11:47:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=212.227.15.15
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A3CD6CDCC
+	for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 11:58:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711453675; cv=none; b=Rusve/FtOfyFA3bEjNuG8e7FLKZ0bm2NszWLjkCyjvDGbZCaMCydLBQY1/bw+NmkKh+OLQflXWuibVKlipG+xoSb03pwfRtNavGMnFm2dvAc5PjWDBz1exCT2Wm1c4GWTIIFM29c0lrfiKqLJi+SJ57WQteRaCmAa8TBRqUrmso=
+	t=1711454335; cv=none; b=avBuqzBGuenn1s2FTVQIA470z4+jnjP330jrxVloPaZak/tMc5RCiwGLLokmE7hCOjRGXEmeBvLYJiqOPBYBw0eNT1t+o/YZXSjLovRuJ3ip+ve+77fDk7boukSf+tkPEohhfkqlWsNOZb3Aq7tjbvEHWRso+j9w7OUCZvJfPQI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711453675; c=relaxed/simple;
-	bh=mLLbzPWqXCShXr+6AYIKfaKc6jG654PC5mrnkOY5qLI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dh1LO6/niZfxqwRArG5IkBO7Mgv5pQAaEKgPOrL7viT2UiYS6v9t3wtr3Pn6HlZMsznfQN3XQZdXJX8apUz9f5jBMKw/DYVEUrzQ9IDivPKUgZisEwjV3zXxiwI5rOwskh7F2+Pxk9gn1qOvo4/lC31WOWN8g9jFyS1WqOnu3h0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net; spf=pass smtp.mailfrom=gmx.net; dkim=pass (2048-bit key) header.d=gmx.net header.i=wahrenst@gmx.net header.b=Tdux0Hp8; arc=none smtp.client-ip=212.227.15.15
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=gmx.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmx.net
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gmx.net;
-	s=s31663417; t=1711453655; x=1712058455; i=wahrenst@gmx.net;
-	bh=N6f/j1hvugJht7nU9PzJXYDvvBRoYWFcCZF6PpD/4A4=;
-	h=X-UI-Sender-Class:Date:Subject:To:Cc:References:From:
-	 In-Reply-To;
-	b=Tdux0Hp8WrZs8vQwzzU2WIcKwlFlMpe10zN/x+4b/w2NPCjET8am4A1YVJ+cj1Nl
-	 jV+eF5TsMyKhPoFmwwPX+/GUSKz7BCRVtr9xe6MlUvU7MlS1i1svk6AzebvtfzJ4X
-	 6GdqIxv8RlPQrXr6tWmh+g7uLaIQVxJxyEDOD0VYiDyGGi1erGX1ZshT0bfJA/BBM
-	 mKY9zlSycTD9J/r07KA1SknnB2kx/+qTmL6fsiIzy+b17QA2Xb9ZsZA/hnpsxmCKF
-	 3BpA5uw5GSF/K3tIuYoO5KC2b7HQvJHCPn6PMt0d6baaR+6/dVUP4or1BCPRnsXuv
-	 7aEZS6KtlW8ltSlcZQ==
-X-UI-Sender-Class: 724b4f7f-cbec-4199-ad4e-598c01a50d3a
-Received: from [192.168.1.167] ([37.4.248.43]) by mail.gmx.net (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MpUZ4-1seazL2bsa-00pxzP; Tue, 26
- Mar 2024 12:47:35 +0100
-Message-ID: <45242028-edf7-49fc-80bf-be9eb242b4cd@gmx.net>
-Date: Tue, 26 Mar 2024 12:47:34 +0100
+	s=arc-20240116; t=1711454335; c=relaxed/simple;
+	bh=mSuJQzY/x4nFRGAWr6w24/5X9mMqGb6qSo7jdxE2Vfc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=S3CLyaP5vKT59utpjmftOSEJml5gIg4uK7d3m6yZ7YTIHikt3w57d3hilgt4Ur2OGiRbPXIbwNOGYCsiCizGn6GxCnTs0qOSgVFID0By7D7Ox4dsDW3My5Cffg7IPVZbIfgWEYwqVIPBWwwmT0RekyxT0bV6xsv9g127m22q5yk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PEZXVVHe; arc=none smtp.client-ip=209.85.208.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f179.google.com with SMTP id 38308e7fff4ca-2d41d1bedc9so101220591fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 04:58:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711454331; x=1712059131; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=zL/jmxxtIm5wkejRdpCLJvo91BH250kAbxPb/fDHf7E=;
+        b=PEZXVVHeSd2FtVWuReIHQGluKEAhwSGNTMy3bIHvL9ZgJ3ub6nK8r5XSqfuBxIbAHO
+         vvYOvVyi6iJN+pKzzO7Fe+kkK7l2T76OpJPNNEQ+TDKQUDaP8YvAkSrlcookVc+5thfG
+         PlNNeoy5IeJDc9qSF2wGnGrFU+tHnpSLoP3GFySSDhKdEs4vPqGE/vaZ8DTP4NPAYv4o
+         VPNF5JGnGwDoqiz5664WRwFtNGg5ZF1imCcAy3rHb5xnsXDy0VRmS4hqwfbZkoY55dUf
+         Q7Zp0/BUeog4FN+ELlflCQdLzXC0lUQiBn6+Ruv7/i87jOCK4s/h78LvsMQym70UffJq
+         BcAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711454331; x=1712059131;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=zL/jmxxtIm5wkejRdpCLJvo91BH250kAbxPb/fDHf7E=;
+        b=qO0WQkmMdawaueGihcQvzy8+GindLVCc8nV/dtb+ltWcex227Nkt5HBUwDzo5FbjJQ
+         1vpNdAdTk2e2HSqzxOvqeJlFo74o9pMrgUA0Y04snGmtVg3S7tg24MDHWcuANS23VqSw
+         TNUrjRBK6cSMi8Ickste4BobzILPdxtTEexuxUo4Q4IQRPfj7iM0XUk+DouHYY3sson2
+         is5MedMBF2SqzqaVf8WGribSOMwKKwhYf6i6XfO+uTDOlrc/hiGCUCK+DT171FK8JoTo
+         cOMGA29HyHyN0UCA9sV/g3d9Y14apYdd7D6aK9SM7DeJ4302U+pQCeNZ5clfnw5QqzTt
+         Zo2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXAEaZoCe1h4uULBi7y2afVYPdvbybxff9tIlJFBlQTkImFQhqx5KTsebiJpE31u5trGUuVlmKqTY7YncXbsz4XFw/cnBq0cgoiEQ==
+X-Gm-Message-State: AOJu0Yyg++5niM49zlD5xwjhAVpAfGZ8ZcxV71IsZxZsYdQZd6rb//TH
+	yeqOVk3SG4Qfs49A19cPfKvcVWjiFj/r78E4zCRADVb5v9Zy+XncBLNO8keOrasaMB0YIPPvjOQ
+	UdVTzMQMXlBidliVjmWM+ximCbbz8QionH0dAU0ICk1NBMLh/
+X-Google-Smtp-Source: AGHT+IE/wUOqdcPxZFJQNNGXgXfUkl7+qojfXRZVcxjVlMA+00ZQ+LEJXyyGYTRHAzgyIuUAeJ7COMQDg6fwlTUM2JE=
+X-Received: by 2002:a2e:b90d:0:b0:2d6:ba1e:a54a with SMTP id
+ b13-20020a2eb90d000000b002d6ba1ea54amr6581217ljb.51.1711454331513; Tue, 26
+ Mar 2024 04:58:51 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: arm: bcm: raspberrypi,bcm2835-firmware:
- Add missing properties
-Content-Language: en-US
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
- Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
- devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
- linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
- Dave Stevenson <dave.stevenson@raspberrypi.com>
-Cc: Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
- Conor Dooley <conor+dt@kernel.org>,
- Florian Fainelli <florian.fainelli@broadcom.com>,
- Broadcom internal kernel review list
- <bcm-kernel-feedback-list@broadcom.com>, Ray Jui <rjui@broadcom.com>,
- Scott Branden <sbranden@broadcom.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20240326004902.17054-1-laurent.pinchart@ideasonboard.com>
- <20240326004902.17054-2-laurent.pinchart@ideasonboard.com>
- <6cc81b1a-12e6-4d81-b6c4-6297c213d5c9@linaro.org>
-From: Stefan Wahren <wahrenst@gmx.net>
-In-Reply-To: <6cc81b1a-12e6-4d81-b6c4-6297c213d5c9@linaro.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+References: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com> <20240325171804.3375280-2-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240325171804.3375280-2-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 26 Mar 2024 12:58:40 +0100
+Message-ID: <CAMRc=Mcf0b0HwAcT=ZQ31rdsuWSDJkg=r9Z6Ni1Tcrg-KCsXsQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] gpiolib: Fix debug messaging in gpiod_find_and_request()
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Ferry Toth <ftoth@exalondelft.nl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:sFkdjVxCxLwEVxvh/tMZQaKz5ESRm5BSy2RVwrcpgn94EW6rDMF
- MgjIxThREM+jSIeNikhvlM6hc20tbtghCFeqBPBp/CC87HLg6yIYMPPo6nj49r0nvhdClnB
- OtjFwLNVFblYviI+QYwtQ66Mbw93s65DkgHvPTcWaL0bEygYj/qDl6cQlyRbAiPViDXoMRI
- tr5KUXHJPGnct51TMTwEw==
-X-Spam-Flag: NO
-UI-OutboundReport: notjunk:1;M01:P0:0IOOzE2zISY=;VoanODvOF82VvAMZfHgxHNEhRsQ
- kGIqhjczfnvsix0gw1AqbFR/C1o8tnGyJ1zguFXXUcljDWlIG8pTJ1hN3BHWt/f78FceP3qFT
- yKb5ZmVi+bP876lO2crq3q/xNR2+CwMcWBCXJ8dXlS90Us2za+OcCDfY0o9/u1/6sK1Eb+lu5
- eCKc2+FD6R0YpYJpbSNTjC4JbGCYZAofDSaCJl3qIvQXJmF46ju/WAWZm7ftQSYFT5JTHe1sv
- fPCcbHAWHjJEHj9B/o8l62Jx6gt8WnMct+cAyVAFm1AoZStAfhfgozs6IPPUZI7z045cs9y1N
- 3Y3BEN7wjEDi3kVm47GHqlJGYOO7Z9RBXqfcHtiJuhT1ZaWY2kIAyBRp6gdy6kzngqT3O4RLB
- WbDNOo/R7VwldgYRCoLndC0IMw8b7qKxq/3hwb0hQDmAbfN7iWWOko+QeHRv38WAJ2wldi9TW
- 4tl1Pod957l3EU58xlkoYTkCNltiJ0B5McNbvdDud4Ue5xavfc/kfbCRAtIniG7rELqX5mJjX
- GtjRrPCj5S7IJ3k/CqXtAzUX4c4VRUujFVI8R5tI/efIIxn6v88KKVGOt1tTJT74lWJOryv+S
- PXZeOC+P9jLKUqJyOE0R4akT1eeSexePlq3wiARwo5tDOOYwgPOXEJOMbkClXbYhMwa55DNAf
- 1B4pZAgWuaKZxXm3TmhOKzcdUeum+tjY3+6WQr7L1UWFTWWOcPn4XLy487YYLhlgImjfQg1VO
- 6AAYQpPnZ1aWNr9gFj+Vr7xOWNy6VlUPWUIRekydAffVCAWl/4vwhS5o29CgbkV+eIT+7LGsA
- 7BZTMfbdIcbemOvFzhuuJe9963YiyfpBWads29zVsRfbM=
 
-[add Dave since he's working on DMA for Raspberry Pi 4 and maybe have a
-opinion about this]
-
-[drop Emma Anholt old address since she is not involved anymore]
-
-Am 26.03.24 um 08:06 schrieb Krzysztof Kozlowski:
-> On 26/03/2024 01:49, Laurent Pinchart wrote:
->> The raspberrypi,bcm2835-firmware devices requires a dma-ranges property=
-,
->> and, as a result, also needs to specify #address-cells and #size-cells.
->> Those properties have been added to thebcm2835-rpi.dtsi in commits
->> be08d278eb09 ("ARM: dts: bcm283x: Add cells encoding format to firmware
->> bus") and 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's firmware bus DMA
->> limitations"), but the DT bindings haven't been updated, resulting in
->> validation errors:
->>
->> arch/arm64/boot/dts/broadcom/bcm2711-rpi-4-b.dtb: firmware: '#address-c=
-ells', '#size-cells', 'dma-ranges', 'gpio' do not match any of the regexes=
-: 'pinctrl-[0-9]+'
->>          from schema $id: http://devicetree.org/schemas/arm/bcm/raspber=
-rypi,bcm2835-firmware.yaml#
->>
->> Fix this by adding the properties to the bindings.
->>
->> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Children do not perform any IO on their own, because everything is
-> handled by parent. It is really odd to see dma-ranges without ranges.
-> Referenced commits might be also wrong.
+On Mon, Mar 25, 2024 at 6:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
 >
-> Best regards,
-> Krzysztof
+> When consolidating GPIO lookups in ACPI code, the debug messaging
+> had been reworked that the user may see
 >
+>   [   13.401147] (NULL device *): using ACPI '\_SB.LEDS.led-0' for '(null=
+)' GPIO lookup
+>   [   13.401378] gpio gpiochip0: Persistence not supported for GPIO 40
+>   [   13.401402] gpio-40 (?): no flags found for (null)
 >
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> instead of
+>
+>   [   14.182962] gpio gpiochip0: Persistence not supported for GPIO 40
+>   [   14.182994] gpio-40 (?): no flags found for gpios
+>
+> The '(null)' parts are less informative and likely scare the users.
+> Replace them by '(default)' which can point out to the default connection
+> IDs, such as 'gpios'.
+>
+> While at it, amend other places where con_id is used in the messages.
+>
+> Reported-by: Ferry Toth <ftoth@exalondelft.nl>
+> Fixes: 8eb1f71e7acc ("gpiolib: consolidate GPIO lookups")
+> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Tested-by: Ferry Toth <ftoth@exalondelft.nl>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
 
+I queued this one for fixes. I will take patch 2/2 through the
+for-next tree as it's not really a fix.
+
+Bart
 
