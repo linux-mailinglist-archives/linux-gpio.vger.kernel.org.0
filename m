@@ -1,142 +1,145 @@
-Return-Path: <linux-gpio+bounces-4644-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4645-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D87088C5B6
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 15:49:37 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22A6B88C607
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 15:57:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EC965280C1F
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 14:49:35 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 546A11C65646
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 14:57:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6E213C68E;
-	Tue, 26 Mar 2024 14:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E99B13C696;
+	Tue, 26 Mar 2024 14:56:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="f15vaomC"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A32BED9;
-	Tue, 26 Mar 2024 14:49:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB97157890
+	for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 14:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711464567; cv=none; b=W5aRuY4FA+MFSwww+a9KSGBm6rjqxF/qS+LJFKNBU4hSPwhPIFxU2Jq1/l2LG5AczpGnyOXcEwvCrz/Q3NaPNqAwMPJKDzDYJJ1da4uSW1XH+h3VH+mdRZ4O2ERbQ09krA9hqDHEy8zJZYxtmOTIYcpbBICCxe2Qt3z18yuixBI=
+	t=1711465018; cv=none; b=scO/OVDSqsR31JCiRSrATR0znXbj5AZwe02mWu5c+eFCS50K06q4IgkQYQ+6WXEtBAHisHIJSIPaYsxh+Uy9vIYUb9Yw5NjTeOMTA07lMUD5NeayJOs2sdX/w/1cmfIdP86pGypwO5hnhwb5wk+8MCLc6ud8ZnxgsJb4RbQ5vwc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711464567; c=relaxed/simple;
-	bh=NjGYoZS9MYNf6KYedY89CIBd6GNJTkqJoAov7a2XKRo=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PKa2GUP2mvNfmdnlyNeLbfnsCask9NEB4lp/RWBjl2d0U9X7MSBPz3S8LBcMRCJLBPg2ZLxsqT1391GskXnP9fC6P3xxTX/6E6DPlfevlCTKnIJjxYKl4YICDrwonkiLmXmCzDJBct5JO5U+vELkj+9bAOiu2XeEv2qMEhP4aN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org; spf=fail smtp.mailfrom=kernel.org; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=kernel.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=kernel.org
-X-CSE-ConnectionGUID: u4/HncuNQveTDgvADY/MsQ==
-X-CSE-MsgGUID: xKfSFc0eQ3Cp9nnBEl04Pw==
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="28999055"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="28999055"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:24 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914882408"
-X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
-   d="scan'208";a="914882408"
-Received: from smile.fi.intel.com ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:49:12 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.97)
-	(envelope-from <andy@kernel.org>)
-	id 1rp86t-0000000GKYj-43J8;
-	Tue, 26 Mar 2024 16:49:07 +0200
-Date: Tue, 26 Mar 2024 16:49:07 +0200
-From: Andy Shevchenko <andy@kernel.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: nikita.shubin@maquefel.me,
-	Hartley Sweeten <hsweeten@visionengravers.com>,
-	Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-	Russell King <linux@armlinux.org.uk>,
-	Lukasz Majewski <lukma@denx.de>,
+	s=arc-20240116; t=1711465018; c=relaxed/simple;
+	bh=2y9ctp56HMkbvyZgKo5fx6Q9dshxX5+8r2XntdNWGeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iJB+JoCMzkqvefVtp9lnQdzdIB6/jZvvaTrIUsOa0Q/geh2Ww8yXUOXEqSl+Ja5QkRkC39siADIQ2X7BzqdotuJ5FXMq/FhakvyrObzPtb3sEgXleFf1sV4c3hw2LWdRr3bg5R2Vzg6HTEe1FMlRPUO4jnnMSQ38WM/IibTa67E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=f15vaomC; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-41490cc034aso2192025e9.2
+        for <linux-gpio@vger.kernel.org>; Tue, 26 Mar 2024 07:56:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1711465013; x=1712069813; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z/G1vU/i34n4Yf6dbVXXOkUIfKhQJFotsjQ1E/HHO2A=;
+        b=f15vaomC0cvHnHoFzNXXTfWCoXvbuMy8w/RoqQBw0ku9hs/3EX5LWswwSWV4D/Q5Zv
+         qo+fZhzXcSNhBdt+kpbU40MdUxUVydKwL6nujj5g1XUs+ZbpOC7CsQRsWR/1D6460Ekb
+         pqSMHwZWnCQxOKtxA66IFEoXoR/rSHYvj4Kk6BLykWHE2cIgiEVldCLa5NFt6jiJKtcc
+         FTN0NjKdOXQfCXkmxGaSvasSKuDmQFcKmnEGeEAc5XESzB9lMusV7bVAwv8A/86OS6V2
+         YY6IrAWWhvOk8MrnszbSjeHsPg95zgbnXkZWaIlhxOnD9gnzJuF5DjZd4QJjPQ5ytO10
+         Iu8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711465013; x=1712069813;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z/G1vU/i34n4Yf6dbVXXOkUIfKhQJFotsjQ1E/HHO2A=;
+        b=mQjcTpYRHXIUANqmvQ0TT8KJL2iBgt6pJzyRMVkp3wf4NndgZAf7+9F2dvELOEaBBc
+         o+M7tLi1FTcYctmNXC5SE/uBta0O5SzPTUTSBjSZ5qp3yTKxjv9kv044GLoCQ5BjIAVV
+         l2quul1K5k0tiiB9qxbtdMSmpuqh4X23ScX07ZR9MBtqAupUxxIi4qmgPih1cf4wTb/r
+         qoD1+66l5o6MNz77goxgvXl25jotV24Sep/1agS1xTXDbhuqgxao1tqPuFB3UDQub/4R
+         Cqxr99amrRz6yIkfpK0w398zo7/PDmcNgJocvNzC4f4yQ2U1cblUipGv4Hc22iWrbamE
+         WiPQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU1xVANNS7X0zcJ4xuVbQCJ9buEuBKENSpvn1kiuKeT5RI9o0AaoGxu539l+S8Kb4q0SXpiHWtMLhZ6n6FlnkEAT0AfpIENL/Vysw==
+X-Gm-Message-State: AOJu0Yxr/Q/JbLZNbiYuIzJd7nNIHOf6lQyF+sGhCK3/tMxb90vZhv0G
+	LRrduQA9SSJOFHgmdtXjX/rjPrkdtvBK1QDZOpBmNp9A2bv2FYY+XoZ48o3DFk4=
+X-Google-Smtp-Source: AGHT+IHgX0UjDpUS3pvvXSWQ89lGsdbFRcjbil8q0TiSG1zwcrctb+NcH3iuLaIhpS4dSbwwuyx9yA==
+X-Received: by 2002:a05:600c:4510:b0:414:1351:8662 with SMTP id t16-20020a05600c451000b0041413518662mr1176708wmo.12.1711465013025;
+        Tue, 26 Mar 2024 07:56:53 -0700 (PDT)
+Received: from blmsp.fritz.box ([2001:4091:a246:821e:6f3b:6b50:4762:8343])
+        by smtp.gmail.com with ESMTPSA id f12-20020a05600c4e8c00b00414850d567fsm9838120wmq.1.2024.03.26.07.55.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 26 Mar 2024 07:56:00 -0700 (PDT)
+From: Markus Schneider-Pargmann <msp@baylibre.com>
+To: Grygorii Strashko <grygorii.strashko@ti.com>,
+	Santosh Shilimkar <ssantosh@kernel.org>,
+	Kevin Hilman <khilman@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>, Sebastian Reichel <sre@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>,
-	Mark Brown <broonie@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Sergey Shtylyov <s.shtylyov@omp.ru>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Ralf Baechle <ralf@linux-mips.org>,
-	"Wu, Aaron" <Aaron.Wu@analog.com>, Lee Jones <lee@kernel.org>,
-	Olof Johansson <olof@lixom.net>, Niklas Cassel <cassel@kernel.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	linux-gpio@vger.kernel.org, linux-clk@vger.kernel.org,
-	linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-watchdog@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-spi@vger.kernel.org,
-	netdev@vger.kernel.org, linux-mtd@lists.infradead.org,
-	linux-ide@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-sound@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v9 00/38] ep93xx device tree conversion
-Message-ID: <ZgLgY11N8dkpTZJB@smile.fi.intel.com>
-References: <20240326-ep93xx-v9-0-156e2ae5dfc8@maquefel.me>
- <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: linux-omap@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Markus Schneider-Pargmann <msp@baylibre.com>,
+	Markus Mirevik <markus.mirevik@dpsolutions.se>
+Subject: [PATCH] gpio: omap: Fix double trigger for level interrupts
+Date: Tue, 26 Mar 2024 15:50:14 +0100
+Message-ID: <20240326145439.1293412-1-msp@baylibre.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc3e2cb4-f631-4611-8814-0dc04c5502f0@linaro.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 8bit
 
-On Tue, Mar 26, 2024 at 11:19:54AM +0100, Krzysztof Kozlowski wrote:
-> On 26/03/2024 10:18, Nikita Shubin via B4 Relay wrote:
-> > The goal is to recieve ACKs for all patches in series to merge it via Arnd branch.
-> > 
-> > Some changes since last version (v8):
-> > 
-> > - Most important, fixed bug in Device Tree resulting in CS4271 not working by Alexander Sverdlin.
-> > - added #interrupt-cells to gpio nodes with interrupts-controller
-> > - fixed some EOF in dtsi files
-> > - fixed identation and type in ep93xx-keypad thanks to Andy Shevchenko
-> > 
-> > Stephen Boyd, Vinod Koul PLEASE! give some comments on following, couse i hadn't one for a couple of iterations already:
-> > 
-> > Following patches require attention from Stephen Boyd, as they were converted to aux_dev as suggested:
-> > 
-> > - ARM: ep93xx: add regmap aux_dev
-> > - clk: ep93xx: add DT support for Cirrus EP93xx
-> > 
-> > Following patches require attention from Vinod Koul:
-> > 
-> > - dma: cirrus: Convert to DT for Cirrus EP93xx
-> > - dma: cirrus: remove platform code
-> 
-> A lot of this could have been already merged if you split it... Just
-> saying...
+Set gpio trigger before clearing the irq status.
 
-But you able to apply DT schema patches if you wish.
-Just doing? :-)
+This patch was originally proposed by Grygorii Strashko.
 
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+Reported-by: Markus Mirevik <markus.mirevik@dpsolutions.se>
+Closes: https://lore.kernel.org/all/20220122235959.GA10737@sol/T/
+Signed-off-by: Markus Schneider-Pargmann <msp@baylibre.com>
+---
+Hi everyone,
+
+this patch helped me on the beagleboneblack to remove the mentioned
+double trigger of level interrupts. This diff was proposed by Grygorii
+in the thread linked in the commit message. I am not sure why this never
+made it into the kernel, that's why I sending this patch. I did not
+create the diff just made a patch out of it, I don't care about being
+the author but I would be happy if this would get merged or some other
+solution to the problem.
+
+Thanks!
+
+Best
+Markus
+
+ drivers/gpio/gpio-omap.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-omap.c b/drivers/gpio/gpio-omap.c
+index 76d5d87e9681..74b8fe2995e1 100644
+--- a/drivers/gpio/gpio-omap.c
++++ b/drivers/gpio/gpio-omap.c
+@@ -696,6 +696,9 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	raw_spin_lock_irqsave(&bank->lock, flags);
+ 	omap_set_gpio_irqenable(bank, offset, 1);
+ 
++	if (trigger)
++		omap_set_gpio_triggering(bank, offset, trigger);
++
+ 	/*
+ 	 * For level-triggered GPIOs, clearing must be done after the source
+ 	 * is cleared, thus after the handler has run. OMAP4 needs this done
+@@ -705,9 +708,6 @@ static void omap_gpio_unmask_irq(struct irq_data *d)
+ 	    trigger & (IRQ_TYPE_LEVEL_HIGH | IRQ_TYPE_LEVEL_LOW))
+ 		omap_clear_gpio_irqstatus(bank, offset);
+ 
+-	if (trigger)
+-		omap_set_gpio_triggering(bank, offset, trigger);
+-
+ 	raw_spin_unlock_irqrestore(&bank->lock, flags);
+ }
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.43.0
 
 
