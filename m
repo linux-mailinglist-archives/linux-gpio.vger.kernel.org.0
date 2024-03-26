@@ -1,99 +1,116 @@
-Return-Path: <linux-gpio+bounces-4659-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4660-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 08FB888D05A
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 22:54:15 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C14E88D070
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 23:07:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7E854B22C42
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 21:54:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E6CA31F3EC09
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 22:07:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A85DB13D89A;
-	Tue, 26 Mar 2024 21:54:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7909513D8B8;
+	Tue, 26 Mar 2024 22:07:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="Zgij5KQM"
+	dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b="MsUKIw9y"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D69361BDE2;
-	Tue, 26 Mar 2024 21:54:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4ACE13C831;
+	Tue, 26 Mar 2024 22:07:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711490047; cv=none; b=obSlAign9VzQekBdAXQv1r+jTik8dQl9n84pZC71GF7qzzrxI6YTI0l5oLZcVWDsO0X3R8mgSTR7yQxEVDDSIrb1J4DYW2TyPKT1b1SIw1Je8UAujGc7+6C3/xUN/l4k57SLhNfNCdnGJ8o49beEZiDygWMJJqfstwRf4zBA710=
+	t=1711490854; cv=none; b=mAhAn2z97MeZJ2XiYORj6n3TdK+UDhC5YAFB/5CUhaaskTubYNvOfNKt4viX6F28JZMAry+z/z35gbl0gt7uv2160PvdfqTCRhxZV5rffo32o1Lv7VnI7RaA0Qic+Uhrn0YJpj977gByiMG7ojOs/kF/Imzb7wRU/gtnCC7tzdQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711490047; c=relaxed/simple;
-	bh=0YogUJwlOZxXpf+6tmPxP7JEq8wWzuFiKIVXwOOILUE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=so3PLhhq6ru/SvkLJgiWQpIn1arRezZVPoK19eDAT36YXGFR0sjDOj2FS4hKTmoZYbv+egpZDAJTflUPOVanWUFFJUSqadGFcrvkGCYKUg8Z/zI2bGWTYGIWxB2MmSSgfWFDfty/S2DPXQlDNhq8gEOJFheHruiqUPIYaGOPYRQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=Zgij5KQM; arc=none smtp.client-ip=213.167.242.64
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
-Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
-	by perceval.ideasonboard.com (Postfix) with ESMTPSA id BB29663B;
-	Tue, 26 Mar 2024 22:53:31 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
-	s=mail; t=1711490011;
-	bh=0YogUJwlOZxXpf+6tmPxP7JEq8wWzuFiKIVXwOOILUE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Zgij5KQMPN5Xuvg7wBCtC62cMUuBOx1ORvCnsklRonM1fjtNZVPHYVVc10AiX0QF6
-	 g06ESUM9RZXsW/vELsL3IZXcgKyldtYzqY6we2u5OipTzafysVLPqw4V4H1AXsdHBh
-	 Y/YkN5mJSHqTug2YOXJ7qtK5uKo1jOJaEWoFHhD4=
-Date: Tue, 26 Mar 2024 23:53:54 +0200
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>, Eric Anholt <eric@anholt.net>,
-	Stefan Wahren <wahrenst@gmx.net>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: bcm: raspberrypi,bcm2835-firmware:
- Add missing properties
-Message-ID: <20240326215354.GA15295@pendragon.ideasonboard.com>
-References: <20240326004902.17054-1-laurent.pinchart@ideasonboard.com>
- <20240326004902.17054-2-laurent.pinchart@ideasonboard.com>
- <20240326213053.GA3562515-robh@kernel.org>
+	s=arc-20240116; t=1711490854; c=relaxed/simple;
+	bh=jTS7FgItFpU9cDGgCvhlPoCSnqjTktDvWdP8n9VpBvE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=WOxP3ApGVGwYVqgiH5fzFxhUTiKh4KNrt0VRratED+SqMCCGqCpaN8Ks+roDLGNDHSyuGIxhrY5+UkhmSb035OkGmxlpDL0ijPLWCjDW28YctJjy8UFOEyrHlSARKSSKLiMzXg0ARGBe0PuKAYugheaJ6ghv+OIz2UzoJ+Yvp3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com; spf=pass smtp.mailfrom=quicinc.com; dkim=pass (2048-bit key) header.d=quicinc.com header.i=@quicinc.com header.b=MsUKIw9y; arc=none smtp.client-ip=205.220.180.131
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=quicinc.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=quicinc.com
+Received: from pps.filterd (m0279870.ppops.net [127.0.0.1])
+	by mx0a-0031df01.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42QLj7dG021173;
+	Tue, 26 Mar 2024 22:07:28 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=quicinc.com; h=
+	from:to:cc:subject:date:message-id:mime-version
+	:content-transfer-encoding:content-type; s=qcppdkim1; bh=fS8f3m9
+	ecVLmb249Cl5w4LbFnKVWeHEC1Yz9UUxx2nU=; b=MsUKIw9ykWHDaKfobww/1rm
+	SfxCBTf+2M6Yztz5tHo1L4POyUIM4U0EmlKXZ5YU3mymGiatjDJJkMBJimMUl1Cn
+	3frN28JkFaFih6rkg6jsmc+cmYfyf8KbE8iEJ4Kd5HfKYyXH3S8e8DrMD57SI6OQ
+	KamCLdbxKmxDVHyvSQnYSP7nITUosrDXCDG7SO23iV4udbTeC7c3X4YLWaLfWE42
+	flcKrwVvKn9Jp4bX/R21xYULlwTdwypQkJ7AZbzCFYaz6SgHHP+QbUuBBV9mkJ6w
+	E8tsBtKmYoPB5uAZ2qFgMXLq5wjoWied+ifuV/c2Dq8DXsXceDg7PYRkrr3+cvA=
+	=
+Received: from nalasppmta05.qualcomm.com (Global_NAT1.qualcomm.com [129.46.96.20])
+	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 3x403q14gs-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 22:07:28 +0000 (GMT)
+Received: from nalasex01a.na.qualcomm.com (nalasex01a.na.qualcomm.com [10.47.209.196])
+	by NALASPPMTA05.qualcomm.com (8.17.1.5/8.17.1.5) with ESMTPS id 42QM7R38028659
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 26 Mar 2024 22:07:27 GMT
+Received: from hu-amelende-lv.qualcomm.com (10.49.16.6) by
+ nalasex01a.na.qualcomm.com (10.47.209.196) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1118.40; Tue, 26 Mar 2024 15:07:27 -0700
+From: Anjelique Melendez <quic_amelende@quicinc.com>
+To: <andersson@kernel.org>, <konrad.dybcio@linaro.org>,
+        <linus.walleij@linaro.org>, <robh+dt@kernel.org>,
+        <krzysztof.kozlowski+dt@linaro.org>, <conor+dt@kernel.org>
+CC: <linux-arm-msm@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <quic_subbaram@quicinc.com>, <quic_collinsd@quicinc.com>,
+        <quic_jprakash@quicinc.com>,
+        Anjelique Melendez <quic_amelende@quicinc.com>
+Subject: [PATCH v2 0/4] Add GPIO support for various PMICs
+Date: Tue, 26 Mar 2024 15:06:25 -0700
+Message-ID: <20240326220628.2392802-1-quic_amelende@quicinc.com>
+X-Mailer: git-send-email 2.34.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20240326213053.GA3562515-robh@kernel.org>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: nalasex01c.na.qualcomm.com (10.47.97.35) To
+ nalasex01a.na.qualcomm.com (10.47.209.196)
+X-QCInternal: smtphost
+X-Proofpoint-Virus-Version: vendor=nai engine=6200 definitions=5800 signatures=585085
+X-Proofpoint-ORIG-GUID: zlyno8vQqL6X9TZLupaYIHdKpUcLkJto
+X-Proofpoint-GUID: zlyno8vQqL6X9TZLupaYIHdKpUcLkJto
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
+ definitions=2024-03-26_08,2024-03-21_02,2023-05-22_02
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
+ suspectscore=0 impostorscore=0 bulkscore=0 spamscore=0 priorityscore=1501
+ clxscore=1015 lowpriorityscore=0 phishscore=0 mlxlogscore=720
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.19.0-2403210001 definitions=main-2403260159
 
-Hi Rob,
+Add GPIO support for PMXR2230, PM6450, PMIH0108 and PMD8028
 
-On Tue, Mar 26, 2024 at 04:30:53PM -0500, Rob Herring wrote:
-> On Tue, Mar 26, 2024 at 02:49:01AM +0200, Laurent Pinchart wrote:
-> > The raspberrypi,bcm2835-firmware devices requires a dma-ranges property,
-> > and, as a result, also needs to specify #address-cells and #size-cells.
-> > Those properties have been added to thebcm2835-rpi.dtsi in commits
-> > be08d278eb09 ("ARM: dts: bcm283x: Add cells encoding format to firmware
-> > bus") and 55c7c0621078 ("ARM: dts: bcm283x: Fix vc4's firmware bus DMA
-> > limitations"), but the DT bindings haven't been updated, resulting in
-> > validation errors:
-> 
-> I don't understand. We treat no dma-ranges the same as empty dma-ranges 
-> (dma-ranges;). If we didn't, *every* DT would be broken.
-> 
-> We should never have dma-ranges without ranges either. 
+Changes since v1:
+  - Removed wildcard character from PMIC names
+  - Combined patch 3/5 and 4/5
+  - Made subjects and commit messages consistent between changes
 
-Please see v2 :-)
+Anjelique Melendez (3):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add PMIH0108 and PMD8028 support
+  pinctrl: qcom: spmi-gpio: Add PMXR2230 and PM6450 support
+  pinctrl: qcom: spmi-gpio: Add PMIH0108 and PMD8028 support
 
-https://lore.kernel.org/linux-arm-kernel/20240326195807.15163-3-laurent.pinchart@ideasonboard.com/
-https://lore.kernel.org/linux-arm-kernel/20240326195807.15163-4-laurent.pinchart@ideasonboard.com/
+David Collins (1):
+  dt-bindings: pinctrl: qcom,pmic-gpio: Add PMXR2230 and PM6450 support
+
+ .../bindings/pinctrl/qcom,pmic-gpio.yaml      | 26 +++++++++++++++++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      |  4 +++
+ 2 files changed, 30 insertions(+)
 
 -- 
-Regards,
+2.34.1
 
-Laurent Pinchart
 
