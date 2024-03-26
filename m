@@ -1,316 +1,106 @@
-Return-Path: <linux-gpio+bounces-4641-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4642-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3431988C4CD
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 15:13:44 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2334C88C512
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 15:26:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3CE2A1C617E7
-	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 14:13:43 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 99D20B21E7F
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 14:26:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 403E97FBCC;
-	Tue, 26 Mar 2024 14:11:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FE4812DD93;
+	Tue, 26 Mar 2024 14:26:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="SWJQLccA"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="B/wzM7M9"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96DB7EF05;
-	Tue, 26 Mar 2024 14:11:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DF4D12D765;
+	Tue, 26 Mar 2024 14:26:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711462291; cv=none; b=MbN99nOdt615jLR8aQpwSiAzwwwO1QFDqnipRb/OOLdhx0n/l/0bVxGEd9yfGw38ukm8RH/JXb+raDnuET0frifvU4QlePDXrIHJlZ1WemtCJZPkB+wQrr2jc1+kRGfkNklxMYTA8iyvDLmJMyVMEbY26V09VUJO1HFf4plyp+0=
+	t=1711463172; cv=none; b=J5GxT9RElCkGZgt7Au7mZBiKT+d+mzph5AlmutcbU2kGYp8hDN2nD0Y2T35oZiMXxXmF3jwmuKVqy664knSXCbMFuLwkA5sW0taFePDeHb5d3RAoddOUsV7vl/mI4RkIPJJE+4RMQ2HZhukibbFe+DWVk7Q9US/X/AAeMiIkr9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711462291; c=relaxed/simple;
-	bh=+eDTwCLFN+6oHzjEUNWk7F4lsHMeamQDyDZXLiBW+fo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=GOMyGnVlfz9e5zzlPzqRrZLhY52Qt7ZNlt8ldQwIDVWZtckEmU3PDRft+2a/K9C7dnaD+iQsSFLTJZGMf4FlkQgjc4TUjrhakmGt15chCyHxURCJt1CrK6HL77yScRIg6gyf+ZwETXxlE1OI3uL4RP2GI0K59L9TO9q0+nsfw8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=SWJQLccA; arc=none smtp.client-ip=67.231.152.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-	by mx0b-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42Q79uUA026416;
-	Tue, 26 Mar 2024 09:11:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=Ovuw+SaOftuSi5DbYOc7/XJi0fkbkH92Lk+LQ0sGnSY=; b=
-	SWJQLccAEMGNn2Jk0wVUSnJaugYlXzZzk4d8ZG3N55iSfyt5FYnloYPRztuL0c8I
-	iNRWB+0+i5vaEoz9APWgmuFl+X/E9y9m4vIB/TbzwWvmOWUrf78tl8NXSK58ka58
-	V/UbwvYMB7epH8RAEazVH0Ir5MLhgIaOc6xD2c9+HgFKDIafkLFfdvN9cRRWzRKA
-	A7Ym2Z1QNYTurhchr6DKomUvcH96+SsHuwjdKJupzG+OAF5+gVt4KKk6p0VD12Gz
-	/3enrOKsPslx4Nct58Ygd18a2Z65W1zVPoWDQZD1KsYnqrM2fahDaYH3HqZw4uJE
-	wj7rd+W4plRDMAgjO4exrQ==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3x1ugm5b9y-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 26 Mar 2024 09:11:11 -0500 (CDT)
-Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Tue, 26 Mar
- 2024 14:11:08 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4
- via Frontend Transport; Tue, 26 Mar 2024 14:11:08 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 9764B820258;
-	Tue, 26 Mar 2024 14:11:08 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>
-CC: <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
-Date: Tue, 26 Mar 2024 14:11:08 +0000
-Message-ID: <20240326141108.1079993-4-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
-References: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1711463172; c=relaxed/simple;
+	bh=DNYEsZRuoGx/2qbDmyHpkyB5ZHI17xCru1qD3J5O4jg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Q3HvEvbLS3TdapyLGTCV2ktcbqVgkIejnbE7FLoagsDYAZD9prIlkCFppOV2+o63N17GNd7nfFF1Bti2JZ/q1BzhWLgK1OA7+PyU7IlyQEzgbliaPlr7znn4oav6auVFS4OfXhihGmn9MeoMrQd9L3kCewN4OUL6MnewuowZL3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=B/wzM7M9; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1711463170; x=1742999170;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=DNYEsZRuoGx/2qbDmyHpkyB5ZHI17xCru1qD3J5O4jg=;
+  b=B/wzM7M9x0f86zrrPd+RsJXL9Vw8BJWFT13P5SKQR2cpre4dct47cWyS
+   W43LiR2ZMJ7aFbTnP14pKe4COeXkg337gZLaXRlB5dcU8ybcOsgq8bhD+
+   zyQ9k7B/oiGvd+Gri/26eNhFPjTNFpULTv4gKr7WZayYGtAR7vBiWsCxp
+   HSnigYjNJNGdNOOXYnFX7Jq3ktw4fBjxELYWRoDNvjbrkM0nPxWI0zlXe
+   NDUWPllWd7t4Ad7jQdAG3CVW10KA3l8RzRMS9nlN3l41B4z4i+s8c337w
+   tzF9MPf62Dkw4EQ0TbE+95+uuUToFOtTC4W+L7o3Sh7jfhmwcU82SxiXY
+   w==;
+X-CSE-ConnectionGUID: QkSKV1J5RVGv0fUnQ2DdTg==
+X-CSE-MsgGUID: p/WmUXErSZ6efOWE8+waag==
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="17059745"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="17059745"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:26:09 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11025"; a="914881913"
+X-IronPort-AV: E=Sophos;i="6.07,156,1708416000"; 
+   d="scan'208";a="914881913"
+Received: from smile.fi.intel.com ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Mar 2024 07:26:07 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rp7kb-0000000GKBr-03Jo;
+	Tue, 26 Mar 2024 16:26:05 +0200
+Date: Tue, 26 Mar 2024 16:26:04 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Ferry Toth <ftoth@exalondelft.nl>,
+	Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 1/2] gpiolib: Fix debug messaging in
+ gpiod_find_and_request()
+Message-ID: <ZgLa_ElceniDrlCW@smile.fi.intel.com>
+References: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com>
+ <20240325171804.3375280-2-andriy.shevchenko@linux.intel.com>
+ <CAMRc=Mcf0b0HwAcT=ZQ31rdsuWSDJkg=r9Z6Ni1Tcrg-KCsXsQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-ORIG-GUID: 5VCBO9wa67MyW6DHCC1YDjLgbo3eBJ1z
-X-Proofpoint-GUID: 5VCBO9wa67MyW6DHCC1YDjLgbo3eBJ1z
-X-Proofpoint-Spam-Reason: safe
+In-Reply-To: <CAMRc=Mcf0b0HwAcT=ZQ31rdsuWSDJkg=r9Z6Ni1Tcrg-KCsXsQ@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+On Tue, Mar 26, 2024 at 12:58:40PM +0100, Bartosz Golaszewski wrote:
+> On Mon, Mar 25, 2024 at 6:18 PM Andy Shevchenko
+> <andriy.shevchenko@linux.intel.com> wrote:
 
-On some cs42l43 systems a couple of cs35l56 amplifiers are attached
-to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
-by a SDCA class driver and these two amplifiers are controlled by
-firmware running on the cs42l43. However, under Linux the decision
-was made to interact with the cs42l43 directly, affording the user
-greater control over the audio system. However, this has resulted
-in an issue where these two bridged cs35l56 amplifiers are not
-populated in ACPI and must be added manually.
+...
 
-Check for the presence of the "01fa-cirrus-sidecar-instances" property
-in the SDCA extension unit's ACPI properties to confirm the presence
-of these two amplifiers and if they exist add them manually onto the
-SPI bus.
+> I queued this one for fixes. I will take patch 2/2 through the
+> for-next tree as it's not really a fix.
 
-Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
- drivers/spi/spi-cs42l43.c | 152 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 151 insertions(+), 1 deletion(-)
+But you asked me to sent them both at once... Whatever, thank you!
 
-diff --git a/drivers/spi/spi-cs42l43.c b/drivers/spi/spi-cs42l43.c
-index aabef9fc84bd..3620d4059034 100644
---- a/drivers/spi/spi-cs42l43.c
-+++ b/drivers/spi/spi-cs42l43.c
-@@ -5,6 +5,8 @@
- // Copyright (C) 2022-2023 Cirrus Logic, Inc. and
- //                         Cirrus Logic International Semiconductor Ltd.
- 
-+#include <dt-bindings/gpio/gpio.h>
-+#include <linux/acpi.h>
- #include <linux/bits.h>
- #include <linux/bitfield.h>
- #include <linux/device.h>
-@@ -39,6 +41,59 @@ static const unsigned int cs42l43_clock_divs[] = {
- 	2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30
- };
- 
-+const struct software_node ampl = {
-+	.name			= "cs35l56-left",
-+};
-+
-+const struct software_node ampr = {
-+	.name			= "cs35l56-right",
-+};
-+
-+struct spi_board_info ampl_info = {
-+	.modalias		= "cs35l56",
-+	.max_speed_hz		= 2000000,
-+	.chip_select		= 0,
-+	.mode			= SPI_MODE_0,
-+	.swnode			= &ampl,
-+	.use_fwnode_name	= true,
-+};
-+
-+struct spi_board_info ampr_info = {
-+	.modalias		= "cs35l56",
-+	.max_speed_hz		= 2000000,
-+	.chip_select		= 1,
-+	.mode			= SPI_MODE_0,
-+	.swnode			= &ampr,
-+	.use_fwnode_name	= true,
-+};
-+
-+static const struct software_node cs42l43_gpiochip_swnode = {
-+	.name			= "cs42l43-pinctrl",
-+};
-+
-+static const struct software_node_ref_args cs42l43_cs_refs[] = {
-+	{
-+		.node		= &cs42l43_gpiochip_swnode,
-+		.nargs		= 2,
-+		.args		= { 0, GPIO_ACTIVE_LOW },
-+	},
-+	{
-+		.node		= &swnode_gpio_undefined,
-+		.nargs		= 0,
-+	},
-+};
-+
-+static const struct property_entry cs42l43_cs_props[] = {
-+	{
-+		.name		= "cs-gpios",
-+		.length		= ARRAY_SIZE(cs42l43_cs_refs) *
-+				  sizeof(struct software_node_ref_args),
-+		.type		= DEV_PROP_REF,
-+		.pointer	= cs42l43_cs_refs,
-+	},
-+	{}
-+};
-+
- static int cs42l43_spi_tx(struct regmap *regmap, const u8 *buf, unsigned int len)
- {
- 	const u8 *end = buf + len;
-@@ -203,6 +258,51 @@ static size_t cs42l43_spi_max_length(struct spi_device *spi)
- 	return CS42L43_SPI_MAX_LENGTH;
- }
- 
-+#if IS_ENABLED(CONFIG_ACPI)
-+static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-+{
-+	static const int func_smart_amp = 0x1;
-+	struct fwnode_handle *child_fwnode, *ext_fwnode;
-+	unsigned long long function;
-+	unsigned int val;
-+	int ret;
-+
-+	if (!is_acpi_node(fwnode))
-+		return false;
-+
-+	fwnode_for_each_child_node(fwnode, child_fwnode) {
-+		struct acpi_device *adev = to_acpi_device_node(child_fwnode);
-+
-+		ret = acpi_evaluate_integer(adev->handle, "_ADR", NULL, &function);
-+		if (ACPI_FAILURE(ret))
-+			continue;
-+
-+		if (function != func_smart_amp)
-+			continue;
-+
-+		ext_fwnode = fwnode_get_named_child_node(child_fwnode,
-+				"mipi-sdca-function-expansion-subproperties");
-+		if (!ext_fwnode)
-+			continue;
-+
-+		ret = fwnode_property_read_u32(ext_fwnode,
-+					       "01fa-cirrus-sidecar-instances",
-+					       &val);
-+		if (ret)
-+			continue;
-+
-+		return !!val;
-+	}
-+
-+	return false;
-+}
-+#else
-+static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-+{
-+	return false;
-+}
-+#endif
-+
- static void cs42l43_release_of_node(void *data)
- {
- 	fwnode_handle_put(data);
-@@ -213,6 +313,7 @@ static int cs42l43_spi_probe(struct platform_device *pdev)
- 	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
- 	struct cs42l43_spi *priv;
- 	struct fwnode_handle *fwnode = dev_fwnode(cs42l43->dev);
-+	bool has_sidecar = cs42l43_has_sidecar(fwnode);
- 	int ret;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -266,16 +367,64 @@ static int cs42l43_spi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	device_set_node(&priv->ctlr->dev, fwnode);
-+	if (has_sidecar) {
-+		ret = software_node_register(&cs42l43_gpiochip_swnode);
-+		if (ret) {
-+			dev_err(priv->dev, "Failed to register gpio swnode: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = device_create_managed_software_node(&priv->ctlr->dev, cs42l43_cs_props, NULL);
-+		if (ret) {
-+			dev_err(priv->dev, "Failed to add swnode: %d\n", ret);
-+			goto err;
-+		}
-+
-+	} else {
-+		device_set_node(&priv->ctlr->dev, fwnode);
-+	}
- 
- 	ret = devm_spi_register_controller(priv->dev, priv->ctlr);
- 	if (ret) {
- 		dev_err(priv->dev, "Failed to register SPI controller: %d\n", ret);
-+		goto err;
- 	}
- 
-+	if (has_sidecar) {
-+		if (!spi_new_device(priv->ctlr, &ampl_info)) {
-+			ret = -ENODEV;
-+			dev_err(priv->dev, "Failed to create left amp slave\n");
-+			goto err;
-+		}
-+
-+		if (!spi_new_device(priv->ctlr, &ampr_info)) {
-+			ret = -ENODEV;
-+			dev_err(priv->dev, "Failed to create right amp slave\n");
-+			goto err;
-+		}
-+	}
-+
-+	return 0;
-+
-+err:
-+	if (has_sidecar)
-+		software_node_unregister(&cs42l43_gpiochip_swnode);
-+
- 	return ret;
- }
- 
-+static int cs42l43_spi_remove(struct platform_device *pdev)
-+{
-+	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
-+	struct fwnode_handle *fwnode = dev_fwnode(cs42l43->dev);
-+	bool has_sidecar = cs42l43_has_sidecar(fwnode);
-+
-+	if (has_sidecar)
-+		software_node_unregister(&cs42l43_gpiochip_swnode);
-+
-+	return 0;
-+};
-+
- static const struct platform_device_id cs42l43_spi_id_table[] = {
- 	{ "cs42l43-spi", },
- 	{}
-@@ -288,6 +437,7 @@ static struct platform_driver cs42l43_spi_driver = {
- 	},
- 	.probe		= cs42l43_spi_probe,
- 	.id_table	= cs42l43_spi_id_table,
-+	.remove		= cs42l43_spi_remove,
- };
- module_platform_driver(cs42l43_spi_driver);
- 
 -- 
-2.39.2
+With Best Regards,
+Andy Shevchenko
+
 
 
