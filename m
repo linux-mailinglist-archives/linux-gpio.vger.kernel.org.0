@@ -1,132 +1,95 @@
-Return-Path: <linux-gpio+bounces-4623-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4624-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A17FA88ACB1
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 18:58:26 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E43C688B658
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 01:49:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3FAE61FA03C7
-	for <lists+linux-gpio@lfdr.de>; Mon, 25 Mar 2024 17:58:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1FA721C37DB3
+	for <lists+linux-gpio@lfdr.de>; Tue, 26 Mar 2024 00:49:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 259575644B;
-	Mon, 25 Mar 2024 17:19:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94C1D1BDE6;
+	Tue, 26 Mar 2024 00:49:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YemJ7wqK"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="LN5TZGHm"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from perceval.ideasonboard.com (perceval.ideasonboard.com [213.167.242.64])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AFA453387;
-	Mon, 25 Mar 2024 17:19:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 183A11BF27;
+	Tue, 26 Mar 2024 00:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.167.242.64
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711387189; cv=none; b=Aqx01WktuHRrBWDmPcPsSSbMflHtBbWentjgCnlt+KMwbm0FL8pMs35BBwHcTm7BFzERRV0puGmr5hUg0oDc7tjhJvU4+iKmHPd38Spd4N9rIeo0nKt2zmLLXbf31uF3ZoI80FPSVGUoHvHONX1ZBvh29/v8CtneMUDLeal4jTk=
+	t=1711414156; cv=none; b=ixpJcckJCNXlQqPsx7HPzXcTYy/tV/R7ea6U1IZnfnItZNUQA3quCu93pIvQadChUXpiiaRk/QWvVO+yUn3/uY2nvJnGoZD+dahEzcYTchA4zqwVguPBwjN54PgvVnrMkcB/BV6BG2UQNXlF0GB4FOXlBEBUUbbKozAEe5Kgsys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711387189; c=relaxed/simple;
-	bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=o6xbSbUPyV9eZzgOx9+wZIuEZZStNCQ94GAbEZRsfxmy+2o0CkSPo26F1hOrGedwCB5oLaNv+oMNKEV7VtitSDl2lpjQbWFyi7Hqj6XwwhVfu9SNwEunyLDMkMxHUadKpbPSH21p0Z3d31mb2KPznxbeMHASzB9aGr8H9F3kfM4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YemJ7wqK; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56bf6418434so2733227a12.0;
-        Mon, 25 Mar 2024 10:19:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711387187; x=1711991987; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
-        b=YemJ7wqK8p0gAwl7EGPnO4/6aOD74US5F/2KLM6UA4H/8N42BMTjmYc2ioG9TcWHV/
-         JhEhgGAvQO9/X5sUoPG5u1NvMzLzKA4buAwcpBvVArSfTqINEhVB/phZS2EYjXcXK8R9
-         4yOjvaMNOWwJvbLZAN7Z3WYkuiDfNYyEE5yzXx+N1A4jjPQqRkR2fwoQ4z2d5PstLo1f
-         Amz8G5LqRA9pZpXYc2sBW2BrnXmgcCH6WmHljNGdTaeD0DW+0Q5UsrVOGV42koTAQZz5
-         HkuuNXMX7ebiWHB66XEtXPthxCNJcWeuZ0Vmj+0nImkci64MwcNWVbI4jrbufTfIWc/c
-         sx4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711387187; x=1711991987;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=75ihyrm2v0POCpOny14EBcy365OwfYgPNoejpuqAQ08=;
-        b=UmHHF6JGVwDjn64xWdY+lJEK5aKkPfi0Ns/AoDkbJ9npYsja4YKAKMVrrHA17a+ieA
-         RlYidGTV63bXgwLA3RP4iUtISPLqjynl1/94GAdOsymjDeyZY/NIkIL1uqTErZheT3tI
-         PI4gkSxfPhfjhi8TyQe7FQBZ+ubHMOJbc8OYIaKamWiXIXxw8mtd2ta6raG2ClwmQZVr
-         TzIPcPYPtS02yqDcMQzzLVkzE3LL2wOX1rLq7wCHuj/AVsczrpfEZLCz4nDmreZxM1BT
-         Qge8mZ0bBLKkLvGnqWykIxKONpmnOlnEWLdypOQxhXq9MsOveXsNvpCjPjvScyOEtkvP
-         /koA==
-X-Forwarded-Encrypted: i=1; AJvYcCUrnDh0PfBaOSd3rO8KmtNvAk+DrS6yaYOzuSVhnC+pptKRDObjT3rKC2YBq38RFypuRy+xf076KECk5EgQnKB0dN3w1gKP1dTpuCx1bv4AGG/Q+JNAHvQ4w/HcOXxf7B5g4B4utPBrPA==
-X-Gm-Message-State: AOJu0YwBPedPP+LfScpMejUqGgHbD5e9VFidhvDF3C7RsQG9jx2uUsWj
-	g3vGQb/bG514O9VHeecfduXa8ocDR6IKfP3Jyw3j9qc1qotexlH7q8lDIqu2OFKDSnTuBUIM/46
-	mq/3cHZhI68JcaJZQNJblJDMiEl8=
-X-Google-Smtp-Source: AGHT+IG6eOGseMTCjzeAv3soMifKZSfo1+beNKC6+feU9hC2xfExTJZe2LW52tp1M3FwcaOi8a0vLvdYtM6AlLDH48k=
-X-Received: by 2002:a17:906:3650:b0:a46:8c03:b659 with SMTP id
- r16-20020a170906365000b00a468c03b659mr5122572ejb.42.1711387186608; Mon, 25
- Mar 2024 10:19:46 -0700 (PDT)
+	s=arc-20240116; t=1711414156; c=relaxed/simple;
+	bh=EC9HhPXerzp5Fo0AF0k/kBYIkC/0aEGnQvwHNhkYz3c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=P/2e4KWZv+E/EmDnup1n8JjHTKWdXy+xLoJsLKD1xSnWzQmWVSrE+dqW+XA+CU6YeBxTWHSxB9fFZwgdOxqLRQNLkecWnCslWIBuXNibsJ/gXXUtO2NAyevS4zgcM8+Q8S1bSZeQ0jH+PmKobPMQ9femBntGv8XKVj0FFpKcwQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com; spf=pass smtp.mailfrom=ideasonboard.com; dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b=LN5TZGHm; arc=none smtp.client-ip=213.167.242.64
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ideasonboard.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ideasonboard.com
+Received: from pendragon.ideasonboard.com (81-175-209-231.bb.dnainternet.fi [81.175.209.231])
+	by perceval.ideasonboard.com (Postfix) with ESMTPSA id 9D95463B;
+	Tue, 26 Mar 2024 01:48:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+	s=mail; t=1711414120;
+	bh=EC9HhPXerzp5Fo0AF0k/kBYIkC/0aEGnQvwHNhkYz3c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=LN5TZGHmtFjQ0wccl33XzbHuWR3hJ4+Iw7xEwzqmvSBXjRz1SmcBWHP9ues16wj0R
+	 bgW0XLZXqNyZJvAf1pyEcfc8W4u3iVIV3cKCLGx6ZgwX/ooVZsUnQOKoG0w1ehcpow
+	 sNZU8dKvfqm5OxKINkBxLQP46gvvea5AmHKk2uyI=
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To: devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Eric Anholt <eric@anholt.net>,
+	Stefan Wahren <wahrenst@gmx.net>
+Subject: [PATCH 0/2] dt-bindings: arm: bcm: raspberrypi,bcm2835-firmware: Drive-by fixes
+Date: Tue, 26 Mar 2024 02:49:00 +0200
+Message-ID: <20240326004902.17054-1-laurent.pinchart@ideasonboard.com>
+X-Mailer: git-send-email 2.43.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322073725.3338266-1-peng.fan@oss.nxp.com>
- <CAHp75Vds1dmjbaDa0D+Xxoyt_9CgHhoS2j0cR3EQdMp3sbwg5g@mail.gmail.com>
- <CAMRc=McYbsd8t1_6PDypGBme2OSyvy8erdjR51cUzVhM-qQXZg@mail.gmail.com>
- <ZgGfgY2hITq_MDvl@smile.fi.intel.com> <CAMRc=Mec5DSegEJHf5khj5ksCE3+SjQoq6vwRPEdnS7arawz4A@mail.gmail.com>
-In-Reply-To: <CAMRc=Mec5DSegEJHf5khj5ksCE3+SjQoq6vwRPEdnS7arawz4A@mail.gmail.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 25 Mar 2024 19:19:09 +0200
-Message-ID: <CAHp75Ve3wYHf2Kp+r1s-9KcQSbYJ2RCSxugBWDxMr_PC4DrL=w@mail.gmail.com>
-Subject: Re: [PATCH V3] gpiolib: use dev_err() when gpiod_configure_flags failed
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, linus.walleij@linaro.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Peng Fan <peng.fan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 25, 2024 at 6:24=E2=80=AFPM Bartosz Golaszewski <brgl@bgdev.pl>=
- wrote:
-> On Mon, Mar 25, 2024 at 5:00=E2=80=AFPM Andy Shevchenko
-> <andy.shevchenko@gmail.com> wrote:
-> > On Mon, Mar 25, 2024 at 04:48:27PM +0100, Bartosz Golaszewski wrote:
-> > > On Fri, Mar 22, 2024 at 4:59=E2=80=AFPM Andy Shevchenko
-> > > <andy.shevchenko@gmail.com> wrote:
-> > > > On Fri, Mar 22, 2024 at 9:29=E2=80=AFAM Peng Fan (OSS) <peng.fan@os=
-s.nxp.com> wrote:
+Hello,
 
-...
+This small series includes two drive-by fixes to the
+raspberrypi,bcm2835-firmware DT bindings that fix validation errors with
+the Raspberry Pi 4 device tree sources. I noticed those issues when
+working on the Raspberry Pi Unicam driver, but two patches are
+independent of that work, they can thus be applied separately.
 
-> > > > Bart, are you aware that this will add yet another possibility of
-> > > > scary '(null)' in the error level, which is much likely visible to =
-the
-> > > > end users?
-> > > >
-> > > > I propose to apply my fix first to avoid this happening.
-> > > > 20240320165930.1182653-1-andriy.shevchenko@linux.intel.com
-> > >
-> > > I think you meant the v2[1]?
-> >
-> > Yes!
-> >
-> > > And sure, I will pick it up shortly.
-> >
-> > Thank you!
-> >
-> > > [1] https://lore.kernel.org/lkml/20240320165930.1182653-1-andriy.shev=
-chenko@linux.intel.com/T/
-> >
-> > I can update this patch (rebase it on top) if needed to make less burde=
-n on
-> > the author's shoulders. Just tell me.
->
-> Sure, if you can resend both yours and this one then even better.
+Laurent Pinchart (2):
+  dt-bindings: arm: bcm: raspberrypi,bcm2835-firmware: Add missing
+    properties
+  dt-bindings: arm: bcm: raspberrypi,bcm2835-firmware: Add gpio child
+    node
 
-Just sent both as v4.
+ .../arm/bcm/raspberrypi,bcm2835-firmware.yaml | 45 +++++++++++++++++++
+ .../gpio/raspberrypi,firmware-gpio.txt        | 30 -------------
+ 2 files changed, 45 insertions(+), 30 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/gpio/raspberrypi,firmware-gpio.txt
 
---=20
-With Best Regards,
-Andy Shevchenko
+-- 
+Regards,
+
+Laurent Pinchart
+
 
