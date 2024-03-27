@@ -1,67 +1,69 @@
-Return-Path: <linux-gpio+bounces-4684-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4685-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 893BA88D9CC
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 10:13:47 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 258B388D9CF
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 10:13:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 26FD61F285F3
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 09:13:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 415EB1C22CD4
+	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 09:13:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2837936B0A;
-	Wed, 27 Mar 2024 09:13:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26204376EB;
+	Wed, 27 Mar 2024 09:13:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OqvcAHOs"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="gKYgg1ic"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oa1-f42.google.com (mail-oa1-f42.google.com [209.85.160.42])
+Received: from mail-pf1-f179.google.com (mail-pf1-f179.google.com [209.85.210.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8426F1C11
-	for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 09:13:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0191C11
+	for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 09:13:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711530822; cv=none; b=r1AFcyFNHuTHFXJuxnwK00j1UjFkX+CuGfLPJ/Ekj/Jgs+s2gDgvDks0Ds186OWAmePARTzdJmJpTOx+OSCTqng4tfBvc+m+m4vnf514yBJEH4ZYfmat5M/kofgRiur0NdO4csJiQBhkw9dr8pCYz8cpvdgoYeFwPcQ5QTltQDk=
+	t=1711530824; cv=none; b=UpXf+YLdndm0/JcFIBVfNMRyeozLdbqtS42D7RZdcz/9MdNrKOQCdvCSIKHJluDqKLi4WU2SwCRqMT+OSQoKQiaLXOOytfYC0nDPSxOmRyJ4lfvpJ2N5ptS2XdI1F/lvzLgs2/JNuMsUsF7DAWgFImakVGiPTGkWwFyv/Hywnio=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711530822; c=relaxed/simple;
-	bh=PjDcWxabCM5zhojYO64Rjs9rcFKOjg+P9yQ2hF4+9bw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=c1LcPFxOBzc4opjdr6hgOOpBAcUdreHFivvLiiRSspj76gm8cOW9fufWjFefZf8Pon/vgLLzbtnj0etiSUuQZf7UFPSFh4r3JVYfkOUuDF5X8RSgdE8+Oan7RRX/JvXc2UokEQ40eJRVO3oMP98jRWJ7iml9Cdo1TdKboBLs3zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=OqvcAHOs; arc=none smtp.client-ip=209.85.160.42
+	s=arc-20240116; t=1711530824; c=relaxed/simple;
+	bh=j/C0SCAAOc716GeWq9CRGrnpPBh/Os9U7D52YdIVHpk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hE8ZyFHJZeNsyNSbcp159gsVCZGNnvcMOLyY0cDz4Y9nsgKvIVBrW7q1TSMhRa9AkLJN1Ejp7KJV9ASwv8wXKEQrA3aZ7aIyVD3l/2vFAAihuKuBQTy4Ye/uWhVKmXuafDTg5iwM1ejs9fmqroqoICFYF0aftu3ekpHtEY0ng0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=gKYgg1ic; arc=none smtp.client-ip=209.85.210.179
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
-Received: by mail-oa1-f42.google.com with SMTP id 586e51a60fabf-22215ccbafeso3149001fac.0
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 02:13:41 -0700 (PDT)
+Received: by mail-pf1-f179.google.com with SMTP id d2e1a72fcca58-6e73e8bdea2so5400509b3a.0
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 02:13:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1711530820; x=1712135620; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
-        b=OqvcAHOsm5DHICqRPV1TBh7v9tcWsaLNgTuW2k5xXnDrPPlK/Ihh04JzxtK6RlXupR
-         NPm6zR1HOvT+4ZAS4MW6TzgtKwuSWPdUda7xtzPqbyLqYmrFpyoqLeb5XLD4wWlER4M+
-         yy9obZHcHNBQmoo/jPNQSWJK/MHLFOiSbVOdw=
+        d=chromium.org; s=google; t=1711530823; x=1712135623; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rCP1xxVL+2XFFuRCnhWKsh1+37AXhGb+RDaWbRieDPQ=;
+        b=gKYgg1icNJ7+cKeEiFs+Ash7jz3s1dulAxcoZ+zsBlaLyMoEKzMfgmTZc4ryTZV47a
+         PDv9BVVi4prA6odyC0faQGacLotLB5UVUN92kGNfsvDbKckBrA0kmEPFXdIsaNt0U91n
+         wmEfZH87++dBjlA6v1phk7AXkEu9RSWImFiNA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711530820; x=1712135620;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=mxElVZwgDSK1YSb8hGRkSJE7Hq+zmgPYXh8LPg2gT3Q=;
-        b=DsMtRWuhFQ3vRZux/KiNeQpJAiiPuF5ja6Ft6HZHleTOqDGRA8eX6xJL0kaotCDNXb
-         kT+MLIxkHJWWnRDK/z6Dzqw/r/7gVREsKNIpNfOQ5HwcZbw+TOACP8Es5yHfYMudKmVr
-         Q9LUobjZaXK3NIz4CsRSLgM8TjgZ41nZ/xQNysE7HvfRd4YbYGIq+BJgS6SfXdpLVXX3
-         c7/3U37jQH440Rbtigndh/JOWctt818s6KAjK+zpOaiHxi2WFAWgz+X4Qq2o57bEEcWr
-         utquBDybJUbSHkSbdKEoFAvSS4eiweYqdk5BpmQHbOulI+XAOP+tXQRFFYoCm1nbhra8
-         zr7g==
-X-Forwarded-Encrypted: i=1; AJvYcCXf4LZq1cO0vv/I5xUDllABTEAT502Q6I9NSU9MfCllkTsYY+/5YxaAnMWGxAJibxxFZ6Q2WbCPVmC6GWvFjE4ux52mq3oVtBxvRg==
-X-Gm-Message-State: AOJu0YyjQW+NmJjhKrh5myDrlQzdiP/AtwjaUwhDrsb0KKeuXxcBjJHj
-	0PKS12zOZkG2lAXxqTlRJ5CCII1IRTAjM2PRzpP460n4EmLfkiDDH4YO29EB3Q==
-X-Google-Smtp-Source: AGHT+IEb932ORwMZAWuJMDZYxzAxef8XwPiw/kk7kOZAgwvVteC2Tlm4yt0lNUvQ8BGf1TisMGWnlQ==
-X-Received: by 2002:a05:6870:1c8:b0:229:f61d:7e52 with SMTP id n8-20020a05687001c800b00229f61d7e52mr6040680oad.34.1711530820771;
-        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711530823; x=1712135623;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rCP1xxVL+2XFFuRCnhWKsh1+37AXhGb+RDaWbRieDPQ=;
+        b=Nq8HJ4C2fjLiI/nQFpuB1GVxfSATljAxVqWby8c7FmPvjJCBWKc94eHsVL2GwqFyTY
+         Rogwou6ZNnyWQi1opntVwKcmNe5UTzyUxqTOE2zHslJO5/uhRkcYOCEURrPeK1YvQvrZ
+         d//y8D2cFTbpXdWqPI5Ee/ABm/XzPlSY2TouOp3URbOlkHUN8ipGIVqWY8s47rcgm55b
+         D3V4uKQQkXLA7+I3oqwqc3TjImmEmCSUh5W1NX+KRW0lWJz3qvasJrLcuKpqqgpWw3tE
+         1EXzjw+2/T9VjvdPtYM6d3G2xt0uU7CKRmgRrBTeKXqR3wDc3R6PCyAf2WIt3ps9mAnj
+         4D1w==
+X-Forwarded-Encrypted: i=1; AJvYcCXnBugFNuzSOsyug0B1OXlxeNeeUcU7CPZ0xQOCwrMK+nSyn9V17wdT0RpZFVK7JX5+JWkZaYWYK/dYX24rfYpBsmEhC+g1yKWwRA==
+X-Gm-Message-State: AOJu0YwNwCY7HeK97gQv5ru0pEUlA4EjK+TCFlskoCVsGbUJZpxi+9VC
+	3YsF+cKCLOzYqbSmMugRKEvejKJCjwZkYhBQJ6LuS6Q/viYbtOphZ6gTSNPJdQ==
+X-Google-Smtp-Source: AGHT+IGO/q6xt1tiCf12rN/iTWiDaEhcezoHgM4FVnnPfonMbt9q2BCRE5wf+w6mxtmS4gbOe5GCww==
+X-Received: by 2002:a05:6a00:cc1:b0:6ea:c46a:3b66 with SMTP id b1-20020a056a000cc100b006eac46a3b66mr2396932pfv.16.1711530822949;
+        Wed, 27 Mar 2024 02:13:42 -0700 (PDT)
 Received: from wenstp920.tpe.corp.google.com ([2401:fa00:1:10:74c2:3606:170b:52f3])
-        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.38
+        by smtp.gmail.com with ESMTPSA id fa31-20020a056a002d1f00b006e69cb93585sm7342911pfb.83.2024.03.27.02.13.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 02:13:40 -0700 (PDT)
+        Wed, 27 Mar 2024 02:13:42 -0700 (PDT)
 From: Chen-Yu Tsai <wenst@chromium.org>
 To: Sean Wang <sean.wang@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
@@ -72,10 +74,12 @@ Cc: Chen-Yu Tsai <wenst@chromium.org>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 0/2] pinctrl: mediatek: paris: More pin config cleanups
-Date: Wed, 27 Mar 2024 17:13:32 +0800
-Message-ID: <20240327091336.3434141-1-wenst@chromium.org>
+Subject: [PATCH 1/2] pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
+Date: Wed, 27 Mar 2024 17:13:33 +0800
+Message-ID: <20240327091336.3434141-2-wenst@chromium.org>
 X-Mailer: git-send-email 2.44.0.396.g6e790dbe36-goog
+In-Reply-To: <20240327091336.3434141-1-wenst@chromium.org>
+References: <20240327091336.3434141-1-wenst@chromium.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -84,35 +88,35 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi,
+In the generic pin config library, readback of some options are handled
+differently compared to the setting of those options: the argument value
+is used to convey enable/disable of an option in the set path, but
+success or -EINVAL is used to convey if an option is enabled or disabled
+in the debugfs readback path.
 
-Here are a couple more pin config cleanups for the MediaTek paris
-pinctrl driver library.
+PIN_CONFIG_INPUT_SCHMITT_ENABLE is one such option. Fix the readback of
+the option in the mediatek-paris library, so that the debugfs dump is
+not showing "input schmitt enabled" for pins that don't have it enabled.
 
-Patch 1 fixes readback of PIN_CONFIG_INPUT_SCHMITT_ENABLE. The function
-was passing back the disabled state incorrectly.
+Fixes: 1bea6afbc842 ("pinctrl: mediatek: Refine mtk_pinconf_get()")
+Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+---
+ drivers/pinctrl/mediatek/pinctrl-paris.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Patch 2 reworks support for PIN_CONFIG_{INPUT,OUTPUT}_ENABLE, following
-discussions on the bcm2835/bcm2711 pinctrl drivers [1]. The driver is
-made to follow the definitions of each option as described in the DT
-bindings and pinctrl core.
-
-Please have a look and merge if possible.
-
-
-Thanks
-ChenYu
-
-[1] https://lore.kernel.org/linux-arm-kernel/CAGb2v66XpjvDnTpi2=SPbeAPf844FLCai6YFwvVqvmF9z4Mj=A@mail.gmail.com/
-
-Chen-Yu Tsai (2):
-  pinctrl: mediatek: paris: Fix PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
-  pinctrl: mediatek: paris: Rework support for
-    PIN_CONFIG_{INPUT,OUTPUT}_ENABLE
-
- drivers/pinctrl/mediatek/pinctrl-paris.c | 40 ++++++++----------------
- 1 file changed, 13 insertions(+), 27 deletions(-)
-
+diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
+index b6bc31abd2b0..9353f78a52f0 100644
+--- a/drivers/pinctrl/mediatek/pinctrl-paris.c
++++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
+@@ -193,6 +193,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
+ 		}
+ 
+ 		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SMT, &ret);
++		if (!ret)
++			err = -EINVAL;
+ 		break;
+ 	case PIN_CONFIG_DRIVE_STRENGTH:
+ 		if (!hw->soc->drive_get)
 -- 
 2.44.0.396.g6e790dbe36-goog
 
