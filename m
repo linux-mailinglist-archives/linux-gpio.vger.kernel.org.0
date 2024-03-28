@@ -1,61 +1,64 @@
-Return-Path: <linux-gpio+bounces-4758-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4759-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8A4ED88FE38
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 12:37:39 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9402988FE66
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 12:55:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31C8A1F218D3
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 11:37:39 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id B79B41C27E2D
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 11:55:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 966E47E58D;
-	Thu, 28 Mar 2024 11:37:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A26DC7E588;
+	Thu, 28 Mar 2024 11:55:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7uMJjyR"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bDheQ9M6"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B1C7374F9;
-	Thu, 28 Mar 2024 11:37:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56D2C847C;
+	Thu, 28 Mar 2024 11:55:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711625852; cv=none; b=CRWn6pskGkRZugffrCI+9a6dQMNkh6xDlZpybe+t31xly7Sy7vQDLKvCjEOUDfTC34kk2CwB3wcB9+IVrItkkZUWjmP9Qmxro5tl8IVKbIEmxwhX+EZ0nVYYq6Am84OhoQmn/tp5O6PomhSPakgM4WXcsgVoMtQPNKcrei5p+3E=
+	t=1711626916; cv=none; b=TTrrOGqx1JKT1kDFalVH2riJCNxGFoM+g+zdIstXnjqKZklIq8SrujXH5J86TdWiCqmbfcpTp6yKVF6xQYeBCDCUJAWxwRUvh3ESDci8bgQ9R3bTUCTUyxaa04sGW5ESRFOmEctU+Nt+qyrdIMM6dqZBW0u20n7/x7H3XI2ik/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711625852; c=relaxed/simple;
-	bh=PVbCQcBD9CWn/gNAbIGipQTz8wnyniImrlBgL0zkhjw=;
+	s=arc-20240116; t=1711626916; c=relaxed/simple;
+	bh=ARB33Nc2FhheZtv5qHgeBe0yGMywN/zGFYb4YvYb2t0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IfFrn9ZK28RrjQ/fWbiWPbnlLCrRnOiRzoWhS9kqkatJKuvxnSbcZKlBzJYcSaHIHlLcGsGNEcH75x038S8E2mdmSc29iZRH4k8VED5sIM/xyJ694PjWW5kk9QJlGfLWxrjo+cjhEVHuzVfsbRDX8m8IirCdnQ8/5vdjhjm++fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7uMJjyR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2206EC433C7;
-	Thu, 28 Mar 2024 11:37:27 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=XzlAr8oWK/imjRTw27SnRraLzk6GZHNVPT7fQC/j3mg6rRIh89OY2GzKfyTaOU6w4ytqVtkDcHCs7eAc1bByJ5Hg/9AbJ999sPwYyJNGnWcJYCPO3vz204GtECgKo5o8dU1G/Flc6CvP60opddDXm7SBec05k7CXYko1Q6xaKEA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bDheQ9M6; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC992C433C7;
+	Thu, 28 Mar 2024 11:55:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711625851;
-	bh=PVbCQcBD9CWn/gNAbIGipQTz8wnyniImrlBgL0zkhjw=;
+	s=k20201202; t=1711626915;
+	bh=ARB33Nc2FhheZtv5qHgeBe0yGMywN/zGFYb4YvYb2t0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J7uMJjyRckdKZmMRdYNjQ7wUziTu9fqjJYx9lm0PzzjjqYb3/imPJtrkbwmxHidrs
-	 2pqpPaAvH/1mJ22XEtyQxLKt/GJyZd+tuOHleveFBqrp5wUEdZVpYfnTt9iXDkUBBj
-	 P+WXZaWVYJOlR0qVK5RZPP1KH3SY8dAzLpZxROH9gRFr0ZqPf7yBj43v6qoAyqU5Pw
-	 K8TXc6il04eknWpAT7jnwaYHAi3qTXBEnAOWIyzzUGHK3I7w0bVKU93UVzNU82DPKu
-	 yizSp53bq538s9z6mUtDCFCuk/83Tu7T8qeVzN73hYU5B9jvFgvtHRQAeUW9uIeGVz
-	 DV+8ZifBpt+DQ==
-Date: Thu, 28 Mar 2024 11:37:25 +0000
+	b=bDheQ9M6sTtKlW6rPu40C4XEGL9VPNTvuVoQZ7mrGhKqj8Iz3MBdZVsFVb6hnKGib
+	 bFgEzJ2CN9Pi05PDax2+1YD6gEMdJ9rR7WIDRiW98Mr6ITQvNJWVOXo2JEjZgG1/ng
+	 DAmuEA1vkA3wzTuJQIsbZNkS/MVyb+uoh+XQ/sC8WRZiOzkqpcTyVP6JNoP71k46kN
+	 A50LGP9mks9FisxvpVzFs1KBv4HAKs6BzokJh7cF79BWouBV5/OdimRabF+k8fyZYN
+	 88DEBRQo6T93wRsTBm0Pood7uNzbT0VIG7FWLvZopblWt9sEyqn8ieOF/f3/p/6O6Y
+	 u/WYYLoQAmXHA==
+Date: Thu, 28 Mar 2024 11:55:10 +0000
 From: Lee Jones <lee@kernel.org>
-To: Bhargav Raviprakash <bhargav.r@ltts.com>
-Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com,
-	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, jpanis@baylibre.com,
-	devicetree@vger.kernel.org, arnd@arndb.de,
-	gregkh@linuxfoundation.org, lgirdwood@gmail.com, broonie@kernel.org,
-	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
-	kristo@kernel.org, eblanc@baylibre.com
-Subject: Re: [PATCH v4 03/11] mfd: tps6594: add regmap config in match data
-Message-ID: <20240328113725.GA13211@google.com>
-References: <20240320102559.464981-1-bhargav.r@ltts.com>
- <20240320102559.464981-4-bhargav.r@ltts.com>
+To: Alex Bee <knaerzche@gmail.com>
+Cc: Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Chris Zhong <zyw@rock-chips.com>,
+	Zhang Qing <zhangqing@rock-chips.com>, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] mfd: rk8xx: Add RK816 support
+Message-ID: <20240328115510.GD13211@google.com>
+References: <20240323132757.141861-2-knaerzche@gmail.com>
+ <20240323132757.141861-6-knaerzche@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -65,173 +68,463 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20240320102559.464981-4-bhargav.r@ltts.com>
+In-Reply-To: <20240323132757.141861-6-knaerzche@gmail.com>
 
-On Wed, 20 Mar 2024, Bhargav Raviprakash wrote:
+On Sat, 23 Mar 2024, Alex Bee wrote:
 
-> Introduces a new struct tps6594_match_data. This struct holds fields for
-> chip id and regmap config. Using this struct in of_device_id data field.
-> This helps in adding support for TPS65224 PMIC.
+> This integrates RK816 support in the this existing rk8xx mfd driver.
 > 
-> Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
-> Acked-by: Julien Panis <jpanis@baylibre.com>
+> This version has unaligned interrupt registers, which requires to define a
+> separate get_irq_reg callback for the regmap. Apart from that the
+> integration is straightforward and the existing structures can be used as
+> is. The initialization sequence has been taken from vendor kernel.
+> 
+> Signed-off-by: Alex Bee <knaerzche@gmail.com>
 > ---
->  drivers/mfd/tps6594-i2c.c   | 24 ++++++++++++++++--------
->  drivers/mfd/tps6594-spi.c   | 24 ++++++++++++++++--------
->  include/linux/mfd/tps6594.h | 11 +++++++++++
->  3 files changed, 43 insertions(+), 16 deletions(-)
-
-Mostly fine, just a couple of nits.
-
-Firstly the subject lines for the entire set are inconsistent.
-
-Please use the style set by the subsystem:
-
-  `git log --oneline -- <subsystem>` is your friend.
-
-> diff --git a/drivers/mfd/tps6594-i2c.c b/drivers/mfd/tps6594-i2c.c
-> index c125b474b..9e2ed48b7 100644
-> --- a/drivers/mfd/tps6594-i2c.c
-> +++ b/drivers/mfd/tps6594-i2c.c
-> @@ -192,10 +192,16 @@ static const struct regmap_config tps6594_i2c_regmap_config = {
->  	.write = tps6594_i2c_write,
+> chnages since v1:
+>   - un-constify rk816_get_irq_reg's return type
+> 
+>  drivers/mfd/Kconfig       |   4 +-
+>  drivers/mfd/rk8xx-core.c  | 103 ++++++++++++++++++++++++++++
+>  drivers/mfd/rk8xx-i2c.c   |  45 +++++++++++-
+>  include/linux/mfd/rk808.h | 141 ++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 290 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 4b023ee229cf..2e7286cc98e4 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -1225,7 +1225,7 @@ config MFD_RK8XX
+>  	select MFD_CORE
+>  
+>  config MFD_RK8XX_I2C
+> -	tristate "Rockchip RK805/RK808/RK809/RK817/RK818 Power Management Chip"
+> +	tristate "Rockchip RK805/RK808/RK809/RK816/RK817/RK818 Power Management Chip"
+>  	depends on I2C && OF
+>  	select MFD_CORE
+>  	select REGMAP_I2C
+> @@ -1233,7 +1233,7 @@ config MFD_RK8XX_I2C
+>  	select MFD_RK8XX
+>  	help
+>  	  If you say yes here you get support for the RK805, RK808, RK809,
+> -	  RK817 and RK818 Power Management chips.
+> +	  RK816, RK817 and RK818 Power Management chips.
+>  	  This driver provides common support for accessing the device
+>  	  through I2C interface. The device supports multiple sub-devices
+>  	  including interrupts, RTC, LDO & DCDC regulators, and onkey.
+> diff --git a/drivers/mfd/rk8xx-core.c b/drivers/mfd/rk8xx-core.c
+> index e2261b68b844..c68a380332e7 100644
+> --- a/drivers/mfd/rk8xx-core.c
+> +++ b/drivers/mfd/rk8xx-core.c
+> @@ -28,6 +28,10 @@ static const struct resource rtc_resources[] = {
+>  	DEFINE_RES_IRQ(RK808_IRQ_RTC_ALARM),
 >  };
 >  
-> +static const struct tps6594_match_data match_data[] = {
-> +	[TPS6594] = {TPS6594, &tps6594_i2c_regmap_config},
-> +	[TPS6593] = {TPS6593, &tps6594_i2c_regmap_config},
-> +	[LP8764] = {LP8764, &tps6594_i2c_regmap_config},
-
-Spaces after the '{' and before the '}' please.
+> +static const struct resource rk816_rtc_resources[] = {
+> +	DEFINE_RES_IRQ(RK816_IRQ_RTC_ALARM),
 > +};
 > +
->  static const struct of_device_id tps6594_i2c_of_match_table[] = {
-> -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
-> -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
-> -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-> +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
-> +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
-> +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
->  	{}
+>  static const struct resource rk817_rtc_resources[] = {
+>  	DEFINE_RES_IRQ(RK817_IRQ_RTC_ALARM),
 >  };
->  MODULE_DEVICE_TABLE(of, tps6594_i2c_of_match_table);
-> @@ -205,6 +211,7 @@ static int tps6594_i2c_probe(struct i2c_client *client)
->  	struct device *dev = &client->dev;
->  	struct tps6594 *tps;
->  	const struct of_device_id *match;
-> +	const struct tps6594_match_data *mdata;
->  
->  	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
->  	if (!tps)
-> @@ -216,14 +223,15 @@ static int tps6594_i2c_probe(struct i2c_client *client)
->  	tps->reg = client->addr;
->  	tps->irq = client->irq;
->  
-> -	tps->regmap = devm_regmap_init(dev, NULL, client, &tps6594_i2c_regmap_config);
-> -	if (IS_ERR(tps->regmap))
-> -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
-> -
->  	match = of_match_device(tps6594_i2c_of_match_table, dev);
->  	if (!match)
->  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
-> -	tps->chip_id = (unsigned long)match->data;
-> +	mdata = (struct tps6594_match_data *)match->data;
-
-What happens when you drop this case?
-
-I was under the impression this was not required when casting from (void *)
-
-> +	tps->chip_id = mdata->chip_id;
-> +
-> +	tps->regmap = devm_regmap_init(dev, NULL, client, mdata->config);
-> +	if (IS_ERR(tps->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
-
-"initialise"
-
->  
->  	crc8_populate_msb(tps6594_i2c_crc_table, TPS6594_CRC8_POLYNOMIAL);
->  
-> diff --git a/drivers/mfd/tps6594-spi.c b/drivers/mfd/tps6594-spi.c
-> index 5afb1736f..82a1c02e3 100644
-> --- a/drivers/mfd/tps6594-spi.c
-> +++ b/drivers/mfd/tps6594-spi.c
-> @@ -77,10 +77,16 @@ static const struct regmap_config tps6594_spi_regmap_config = {
->  	.use_single_write = true,
+> @@ -87,6 +91,21 @@ static const struct mfd_cell rk808s[] = {
+>  	},
 >  };
 >  
-> +static const struct tps6594_match_data match_data[] = {
-> +	[TPS6594] = {TPS6594, &tps6594_spi_regmap_config},
-> +	[TPS6593] = {TPS6593, &tps6594_spi_regmap_config},
-> +	[LP8764] = {LP8764, &tps6594_spi_regmap_config},
+> +static const struct mfd_cell rk816s[] = {
+> +	{ .name = "rk805-pinctrl", },
+> +	{ .name = "rk808-clkout", },
+> +	{ .name = "rk808-regulator", },
+> +	{	.name = "rk805-pwrkey",
 
-As above.
+Newline after the '{'.
 
+> +		.num_resources = ARRAY_SIZE(rk805_key_resources),
+> +		.resources = rk805_key_resources,
+> +	},
+> +	{
+> +		.name = "rk808-rtc",
+> +		.num_resources = ARRAY_SIZE(rk816_rtc_resources),
+> +		.resources = rk816_rtc_resources,
+> +	},
 > +};
 > +
->  static const struct of_device_id tps6594_spi_of_match_table[] = {
-> -	{ .compatible = "ti,tps6594-q1", .data = (void *)TPS6594, },
-> -	{ .compatible = "ti,tps6593-q1", .data = (void *)TPS6593, },
-> -	{ .compatible = "ti,lp8764-q1",  .data = (void *)LP8764,  },
-> +	{ .compatible = "ti,tps6594-q1", .data = &match_data[TPS6594], },
-> +	{ .compatible = "ti,tps6593-q1", .data = &match_data[TPS6593], },
-> +	{ .compatible = "ti,lp8764-q1",  .data = &match_data[LP8764], },
->  	{}
->  };
->  MODULE_DEVICE_TABLE(of, tps6594_spi_of_match_table);
-> @@ -90,6 +96,7 @@ static int tps6594_spi_probe(struct spi_device *spi)
->  	struct device *dev = &spi->dev;
->  	struct tps6594 *tps;
->  	const struct of_device_id *match;
-> +	const struct tps6594_match_data *mdata;
->  
->  	tps = devm_kzalloc(dev, sizeof(*tps), GFP_KERNEL);
->  	if (!tps)
-> @@ -101,14 +108,15 @@ static int tps6594_spi_probe(struct spi_device *spi)
->  	tps->reg = spi_get_chipselect(spi, 0);
->  	tps->irq = spi->irq;
->  
-> -	tps->regmap = devm_regmap_init(dev, NULL, spi, &tps6594_spi_regmap_config);
-> -	if (IS_ERR(tps->regmap))
-> -		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
-> -
->  	match = of_match_device(tps6594_spi_of_match_table, dev);
->  	if (!match)
->  		return dev_err_probe(dev, -EINVAL, "Failed to find matching chip ID\n");
-> -	tps->chip_id = (unsigned long)match->data;
-> +	mdata = (struct tps6594_match_data *)match->data;
-> +	tps->chip_id = mdata->chip_id;
-> +
-> +	tps->regmap = devm_regmap_init(dev, NULL, spi, mdata->config);
-> +	if (IS_ERR(tps->regmap))
-> +		return dev_err_probe(dev, PTR_ERR(tps->regmap), "Failed to init regmap\n");
->  
->  	crc8_populate_msb(tps6594_spi_crc_table, TPS6594_CRC8_POLYNOMIAL);
->  
-> diff --git a/include/linux/mfd/tps6594.h b/include/linux/mfd/tps6594.h
-> index 16543fd4d..d781e0fe3 100644
-> --- a/include/linux/mfd/tps6594.h
-> +++ b/include/linux/mfd/tps6594.h
-> @@ -1337,6 +1337,17 @@ struct tps6594 {
->  	struct regmap_irq_chip_data *irq_data;
+>  static const struct mfd_cell rk817s[] = {
+>  	{ .name = "rk808-clkout", },
+>  	{ .name = "rk808-regulator", },
+> @@ -148,6 +167,17 @@ static const struct rk808_reg_data rk808_pre_init_reg[] = {
+>  						    VB_LO_SEL_3500MV },
 >  };
 >  
-> +/**
-> + * struct tps6594_match_data - of match data of PMIC
-> + *
-> + * @chip_id: chip ID of PMIC
-> + * @config: regmap config of PMIC
-> + */
-> +struct tps6594_match_data {
-> +	unsigned long chip_id;
-> +	const struct regmap_config *config;
+> +static const struct rk808_reg_data rk816_pre_init_reg[] = {
+> +	{ RK818_BUCK1_CONFIG_REG, RK817_RAMP_RATE_MASK,
+> +				  RK817_RAMP_RATE_12_5MV_PER_US },
+> +	{ RK818_BUCK2_CONFIG_REG, RK817_RAMP_RATE_MASK,
+> +				  RK817_RAMP_RATE_12_5MV_PER_US },
+> +	{ RK818_BUCK4_CONFIG_REG, BUCK_ILMIN_MASK,  BUCK_ILMIN_250MA },
+> +	{ RK808_THERMAL_REG, TEMP_HOTDIE_MSK, TEMP105C},
+> +	{ RK808_VB_MON_REG, VBAT_LOW_VOL_MASK | VBAT_LOW_ACT_MASK,
+> +			    RK808_VBAT_LOW_3V0 | EN_VABT_LOW_SHUT_DOWN },
 > +};
 > +
->  extern const struct regmap_access_table tps6594_volatile_table;
->  extern const struct regmap_access_table tps65224_volatile_table;
+>  static const struct rk808_reg_data rk817_pre_init_reg[] = {
+>  	{RK817_RTC_CTRL_REG, RTC_STOP, RTC_STOP},
+>  	/* Codec specific registers */
+> @@ -350,6 +380,59 @@ static const struct regmap_irq rk808_irqs[] = {
+>  	},
+>  };
 >  
+> +static const unsigned int rk816_irq_status_offsets[] = {
+> +	(RK816_INT_STS_REG1 - RK816_INT_STS_REG1),
+
+Turn this into a macro please.
+
+> +	(RK816_INT_STS_REG2 - RK816_INT_STS_REG1),
+> +	(RK816_INT_STS_REG3 - RK816_INT_STS_REG1),
+> +};
+> +
+> +static const unsigned int rk816_irq_mask_offsets[] = {
+> +	(RK816_INT_STS_MSK_REG1 - RK816_INT_STS_MSK_REG1),
+> +	(RK816_INT_STS_MSK_REG2 - RK816_INT_STS_MSK_REG1),
+> +	(RK816_INT_STS_MSK_REG3 - RK816_INT_STS_MSK_REG1),
+> +};
+> +
+> +static unsigned int rk816_get_irq_reg(struct regmap_irq_chip_data *data,
+> +				      unsigned int base, int index)
+> +{
+> +	unsigned int irq_reg = base;
+> +
+> +	switch (base) {
+> +	case RK816_INT_STS_REG1:
+> +		irq_reg += rk816_irq_status_offsets[index];
+> +		break;
+> +	case RK816_INT_STS_MSK_REG1:
+> +		irq_reg += rk816_irq_mask_offsets[index];
+> +		break;
+> +	}
+> +
+> +	return irq_reg;
+> +};
+> +
+> +static const struct regmap_irq rk816_irqs[] = {
+> +	/* INT_STS_REG1 IRQs */
+> +	REGMAP_IRQ_REG(RK816_IRQ_PWRON_FALL, 0, RK816_INT_STS_PWRON_FALL),
+> +	REGMAP_IRQ_REG(RK816_IRQ_PWRON_RISE, 0, RK816_INT_STS_PWRON_RISE),
+> +
+> +	/* INT_STS_REG2 IRQs  */
+> +	REGMAP_IRQ_REG(RK816_IRQ_VB_LOW, 1, RK816_INT_STS_VB_LOW),
+> +	REGMAP_IRQ_REG(RK816_IRQ_PWRON, 1, RK816_INT_STS_PWRON),
+> +	REGMAP_IRQ_REG(RK816_IRQ_PWRON_LP, 1, RK816_INT_STS_PWRON_LP),
+> +	REGMAP_IRQ_REG(RK816_IRQ_HOTDIE, 1, RK816_INT_STS_HOTDIE),
+> +	REGMAP_IRQ_REG(RK816_IRQ_RTC_ALARM, 1, RK816_INT_STS_RTC_ALARM),
+> +	REGMAP_IRQ_REG(RK816_IRQ_RTC_PERIOD, 1, RK816_INT_STS_RTC_PERIOD),
+> +	REGMAP_IRQ_REG(RK816_IRQ_USB_OV, 1, RK816_INT_STS_USB_OV),
+> +
+> +	/* INT_STS3 IRQs */
+> +	REGMAP_IRQ_REG(RK816_IRQ_PLUG_IN, 2, RK816_INT_STS_PLUG_IN),
+> +	REGMAP_IRQ_REG(RK816_IRQ_PLUG_OUT, 2, RK816_INT_STS_PLUG_OUT),
+> +	REGMAP_IRQ_REG(RK816_IRQ_CHG_OK, 2, RK816_INT_STS_CHG_OK),
+> +	REGMAP_IRQ_REG(RK816_IRQ_CHG_TE, 2, RK816_INT_STS_CHG_TE),
+> +	REGMAP_IRQ_REG(RK816_IRQ_CHG_TS, 2, RK816_INT_STS_CHG_TS),
+> +	REGMAP_IRQ_REG(RK816_IRQ_CHG_CVTLIM, 2, RK816_INT_STS_CHG_CVTLIM),
+> +	REGMAP_IRQ_REG(RK816_IRQ_DISCHG_ILIM, 2, RK816_INT_STS_DISCHG_ILIM),
+> +};
+> +
+>  static const struct regmap_irq rk818_irqs[] = {
+>  	/* INT_STS */
+>  	[RK818_IRQ_VOUT_LO] = {
+> @@ -482,6 +565,18 @@ static const struct regmap_irq_chip rk808_irq_chip = {
+>  	.init_ack_masked = true,
+>  };
+>  
+> +static const struct regmap_irq_chip rk816_irq_chip = {
+> +	.name = "rk816",
+> +	.irqs = rk816_irqs,
+> +	.num_irqs = ARRAY_SIZE(rk816_irqs),
+> +	.num_regs = 3,
+> +	.get_irq_reg = rk816_get_irq_reg,
+> +	.status_base = RK816_INT_STS_REG1,
+> +	.mask_base = RK816_INT_STS_MSK_REG1,
+> +	.ack_base = RK816_INT_STS_REG1,
+> +	.init_ack_masked = true,
+> +};
+> +
+>  static struct regmap_irq_chip rk817_irq_chip = {
+>  	.name = "rk817",
+>  	.irqs = rk817_irqs,
+> @@ -530,6 +625,7 @@ static int rk808_power_off(struct sys_off_data *data)
+>  		reg = RK817_SYS_CFG(3);
+>  		bit = DEV_OFF;
+>  		break;
+> +	case RK816_ID:
+>  	case RK818_ID:
+>  		reg = RK818_DEVCTRL_REG;
+>  		bit = DEV_OFF;
+> @@ -637,6 +733,13 @@ int rk8xx_probe(struct device *dev, int variant, unsigned int irq, struct regmap
+>  		cells = rk808s;
+>  		nr_cells = ARRAY_SIZE(rk808s);
+>  		break;
+> +	case RK816_ID:
+> +		rk808->regmap_irq_chip = &rk816_irq_chip;
+> +		pre_init_reg = rk816_pre_init_reg;
+> +		nr_pre_init_regs = ARRAY_SIZE(rk816_pre_init_reg);
+> +		cells = rk816s;
+> +		nr_cells = ARRAY_SIZE(rk816s);
+> +		break;
+>  	case RK818_ID:
+>  		rk808->regmap_irq_chip = &rk818_irq_chip;
+>  		pre_init_reg = rk818_pre_init_reg;
+> diff --git a/drivers/mfd/rk8xx-i2c.c b/drivers/mfd/rk8xx-i2c.c
+> index 75b5cf09d5a0..69a6b297d723 100644
+> --- a/drivers/mfd/rk8xx-i2c.c
+> +++ b/drivers/mfd/rk8xx-i2c.c
+> @@ -1,6 +1,6 @@
+>  // SPDX-License-Identifier: GPL-2.0-only
+>  /*
+> - * Rockchip RK808/RK818 Core (I2C) driver
+> + * Rockchip RK805/RK808/RK816/RK817/RK818 Core (I2C) driver
+>   *
+>   * Copyright (c) 2014, Fuzhou Rockchip Electronics Co., Ltd
+>   * Copyright (C) 2016 PHYTEC Messtechnik GmbH
+> @@ -49,6 +49,35 @@ static bool rk808_is_volatile_reg(struct device *dev, unsigned int reg)
+>  	return false;
+>  }
+>  
+> +static bool rk816_is_volatile_reg(struct device *dev, unsigned int reg)
+> +{
+> +	/*
+> +	 * Technically the ROUND_30s bit makes RTC_CTRL_REG volatile, but
+> +	 * we don't use that feature.  It's better to cache.
+> +	 */
+> +
+> +	switch (reg) {
+> +	case RK808_SECONDS_REG ... RK808_WEEKS_REG:
+> +	case RK808_RTC_STATUS_REG:
+> +	case RK808_VB_MON_REG:
+> +	case RK808_THERMAL_REG:
+> +	case RK816_DCDC_EN_REG1:
+> +	case RK816_DCDC_EN_REG2:
+> +	case RK816_INT_STS_REG1:
+> +	case RK816_INT_STS_REG2:
+> +	case RK816_INT_STS_REG3:
+> +	case RK808_DEVCTRL_REG:
+> +	case RK816_SUP_STS_REG:
+> +	case RK816_GGSTS_REG:
+> +	case RK816_ZERO_CUR_ADC_REGH:
+> +	case RK816_ZERO_CUR_ADC_REGL:
+> +	case RK816_GASCNT_REG(0) ... RK816_BAT_VOL_REGL:
+> +		return true;
+> +	}
+> +
+> +	return false;
+> +}
+> +
+>  static bool rk817_is_volatile_reg(struct device *dev, unsigned int reg)
+>  {
+>  	/*
+> @@ -100,6 +129,14 @@ static const struct regmap_config rk808_regmap_config = {
+>  	.volatile_reg = rk808_is_volatile_reg,
+>  };
+>  
+> +static const struct regmap_config rk816_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = RK816_DATA_REG(18),
+> +	.cache_type = REGCACHE_MAPLE,
+> +	.volatile_reg = rk816_is_volatile_reg,
+> +};
+> +
+>  static const struct regmap_config rk817_regmap_config = {
+>  	.reg_bits = 8,
+>  	.val_bits = 8,
+> @@ -123,6 +160,11 @@ static const struct rk8xx_i2c_platform_data rk809_data = {
+>  	.variant = RK809_ID,
+>  };
+>  
+> +static const struct rk8xx_i2c_platform_data rk816_data = {
+> +	.regmap_cfg = &rk816_regmap_config,
+> +	.variant = RK816_ID,
+> +};
+> +
+>  static const struct rk8xx_i2c_platform_data rk817_data = {
+>  	.regmap_cfg = &rk817_regmap_config,
+>  	.variant = RK817_ID,
+> @@ -161,6 +203,7 @@ static const struct of_device_id rk8xx_i2c_of_match[] = {
+>  	{ .compatible = "rockchip,rk805", .data = &rk805_data },
+>  	{ .compatible = "rockchip,rk808", .data = &rk808_data },
+>  	{ .compatible = "rockchip,rk809", .data = &rk809_data },
+> +	{ .compatible = "rockchip,rk816", .data = &rk816_data },
+>  	{ .compatible = "rockchip,rk817", .data = &rk817_data },
+>  	{ .compatible = "rockchip,rk818", .data = &rk818_data },
+>  	{ },
+> diff --git a/include/linux/mfd/rk808.h b/include/linux/mfd/rk808.h
+> index 78e167a92483..b90d1c278790 100644
+> --- a/include/linux/mfd/rk808.h
+> +++ b/include/linux/mfd/rk808.h
+> @@ -113,6 +113,145 @@ enum rk808_reg {
+>  #define RK808_INT_STS_MSK_REG2	0x4f
+>  #define RK808_IO_POL_REG	0x50
+>  
+> +/* RK816 */
+> +enum rk816_reg {
+> +	RK816_ID_DCDC1,
+> +	RK816_ID_DCDC2,
+> +	RK816_ID_DCDC3,
+> +	RK816_ID_DCDC4,
+> +	RK816_ID_LDO1,
+> +	RK816_ID_LDO2,
+> +	RK816_ID_LDO3,
+> +	RK816_ID_LDO4,
+> +	RK816_ID_LDO5,
+> +	RK816_ID_LDO6,
+> +	RK816_ID_BOOST,
+> +	RK816_ID_OTG_SW,
+> +};
+> +
+> +enum rk816_irqs {
+> +	/* INT_STS_REG1 */
+> +	RK816_IRQ_PWRON_FALL,
+> +	RK816_IRQ_PWRON_RISE,
+> +
+> +	/* INT_STS_REG2 */
+> +	RK816_IRQ_VB_LOW,
+> +	RK816_IRQ_PWRON,
+> +	RK816_IRQ_PWRON_LP,
+> +	RK816_IRQ_HOTDIE,
+> +	RK816_IRQ_RTC_ALARM,
+> +	RK816_IRQ_RTC_PERIOD,
+> +	RK816_IRQ_USB_OV,
+> +
+> +	/* INT_STS_REG3 */
+> +	RK816_IRQ_PLUG_IN,
+> +	RK816_IRQ_PLUG_OUT,
+> +	RK816_IRQ_CHG_OK,
+> +	RK816_IRQ_CHG_TE,
+> +	RK816_IRQ_CHG_TS,
+> +	RK816_IRQ_CHG_CVTLIM,
+> +	RK816_IRQ_DISCHG_ILIM,
+> +};
+> +
+> +/* power channel registers */
+> +#define RK816_DCDC_EN_REG1		0x23
+> +
+> +#define RK816_DCDC_EN_REG2		0x24
+> +#define	RK816_BOOST_EN			BIT(1)
+> +#define RK816_OTG_EN			BIT(2)
+> +#define	RK816_BOOST_EN_MSK		BIT(5)
+> +#define RK816_OTG_EN_MSK		BIT(6)
+> +#define RK816_BUCK_DVS_CONFIRM		BIT(7)
+> +
+> +#define RK816_LDO_EN_REG1		0x27
+> +
+> +#define RK816_LDO_EN_REG2		0x28
+> +
+> +/* interrupt registers and irq definitions */
+> +#define RK816_INT_STS_REG1		0x49
+> +#define RK816_INT_STS_MSK_REG1		0x4a
+> +#define RK816_INT_STS_PWRON_FALL	BIT(5)
+> +#define RK816_INT_STS_PWRON_RISE	BIT(6)
+> +
+> +#define RK816_INT_STS_REG2		0x4c
+> +#define RK816_INT_STS_MSK_REG2		0x4d
+> +#define RK816_INT_STS_VB_LOW		BIT(1)
+> +#define RK816_INT_STS_PWRON		BIT(2)
+> +#define RK816_INT_STS_PWRON_LP		BIT(3)
+> +#define RK816_INT_STS_HOTDIE		BIT(4)
+> +#define RK816_INT_STS_RTC_ALARM		BIT(5)
+> +#define RK816_INT_STS_RTC_PERIOD	BIT(6)
+> +#define RK816_INT_STS_USB_OV		BIT(7)
+> +
+> +#define RK816_INT_STS_REG3		0x4e
+> +#define RK816_INT_STS_MSK_REG3		0x4f
+> +#define RK816_INT_STS_PLUG_IN		BIT(0)
+> +#define RK816_INT_STS_PLUG_OUT		BIT(1)
+> +#define RK816_INT_STS_CHG_OK		BIT(2)
+> +#define RK816_INT_STS_CHG_TE		BIT(3)
+> +#define RK816_INT_STS_CHG_TS		BIT(4)
+> +#define RK816_INT_STS_CHG_CVTLIM	BIT(6)
+> +#define RK816_INT_STS_DISCHG_ILIM	BIT(7)
+> +
+> +/* charger, boost and OTG registers */
+> +#define RK816_OTG_BUCK_LDO_CONFIG_REG	0x2a
+> +#define RK816_CHRG_CONFIG_REG		0x2b
+> +#define RK816_BOOST_ON_VESL_REG		0x54
+> +#define RK816_BOOST_SLP_VSEL_REG	0x55
+> +#define RK816_CHRG_BOOST_CONFIG_REG	0x9a
+> +#define RK816_SUP_STS_REG		0xa0
+> +#define RK816_USB_CTRL_REG		0xa1
+> +#define RK816_CHRG_CTRL(x)		(0xa3 + (x))
+> +#define RK816_BAT_CTRL_REG		0xa6
+> +#define RK816_BAT_HTS_TS_REG		0xa8
+> +#define RK816_BAT_LTS_TS_REG		0xa9
+> +
+> +/* adc and fuel gauge registers */
+> +#define RK816_TS_CTRL_REG		0xac
+> +#define RK816_ADC_CTRL_REG		0xad
+> +#define RK816_GGCON_REG			0xb0
+> +#define RK816_GGSTS_REG			0xb1
+> +#define RK816_ZERO_CUR_ADC_REGH		0xb2
+> +#define RK816_ZERO_CUR_ADC_REGL		0xb3
+> +#define RK816_GASCNT_CAL_REG(x)		(0xb7 - (x))
+> +#define RK816_GASCNT_REG(x)		(0xbb - (x))
+> +#define RK816_BAT_CUR_AVG_REGH		0xbc
+> +#define RK816_BAT_CUR_AVG_REGL		0xbd
+> +#define RK816_TS_ADC_REGH		0xbe
+> +#define RK816_TS_ADC_REGL		0xbf
+> +#define RK816_USB_ADC_REGH		0xc0
+> +#define RK816_USB_ADC_REGL		0xc1
+> +#define RK816_BAT_OCV_REGH		0xc2
+> +#define RK816_BAT_OCV_REGL		0xc3
+> +#define RK816_BAT_VOL_REGH		0xc4
+> +#define RK816_BAT_VOL_REGL		0xc5
+> +#define RK816_RELAX_ENTRY_THRES_REGH	0xc6
+> +#define RK816_RELAX_ENTRY_THRES_REGL	0xc7
+> +#define RK816_RELAX_EXIT_THRES_REGH	0xc8
+> +#define RK816_RELAX_EXIT_THRES_REGL	0xc9
+> +#define RK816_RELAX_VOL1_REGH		0xca
+> +#define RK816_RELAX_VOL1_REGL		0xcb
+> +#define RK816_RELAX_VOL2_REGH		0xcc
+> +#define RK816_RELAX_VOL2_REGL		0xcd
+> +#define RK816_RELAX_CUR1_REGH		0xce
+> +#define RK816_RELAX_CUR1_REGL		0xcf
+> +#define RK816_RELAX_CUR2_REGH		0xd0
+> +#define RK816_RELAX_CUR2_REGL		0xd1
+> +#define RK816_CAL_OFFSET_REGH		0xd2
+> +#define RK816_CAL_OFFSET_REGL		0xd3
+> +#define RK816_NON_ACT_TIMER_CNT_REG	0xd4
+> +#define RK816_VCALIB0_REGH		0xd5
+> +#define RK816_VCALIB0_REGL		0xd6
+> +#define RK816_VCALIB1_REGH		0xd7
+> +#define RK816_VCALIB1_REGL		0xd8
+> +#define RK816_FCC_GASCNT_REG(x)		(0xdc - (x))
+> +#define RK816_IOFFSET_REGH		0xdd
+> +#define RK816_IOFFSET_REGL		0xde
+> +#define RK816_SLEEP_CON_SAMP_CUR_REG	0xdf
+> +
+> +/* general purpose data registers 0xe0 ~ 0xf2 */
+> +#define RK816_DATA_REG(x)		(0xe0 + (x))
+> +
+>  /* RK818 */
+>  #define RK818_DCDC1			0
+>  #define RK818_LDO1			4
+> @@ -791,6 +930,7 @@ enum rk806_dvs_mode {
+>  #define VOUT_LO_INT	BIT(0)
+>  #define CLK32KOUT2_EN	BIT(0)
+>  
+> +#define TEMP105C			0x08
+>  #define TEMP115C			0x0c
+>  #define TEMP_HOTDIE_MSK			0x0c
+>  #define SLP_SD_MSK			(0x3 << 2)
+> @@ -1191,6 +1331,7 @@ enum {
+>  	RK806_ID = 0x8060,
+>  	RK808_ID = 0x0000,
+>  	RK809_ID = 0x8090,
+> +	RK816_ID = 0x8160,
+>  	RK817_ID = 0x8170,
+>  	RK818_ID = 0x8180,
+>  };
 > -- 
-> 2.25.1
+> 2.43.2
 > 
 
 -- 
