@@ -1,104 +1,118 @@
-Return-Path: <linux-gpio+bounces-4746-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4748-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C19E88FA81
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 09:57:31 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E0A588FAD1
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 10:12:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2837B24879
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 08:57:28 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id CC6BA1F27F7E
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 09:12:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B121B54775;
-	Thu, 28 Mar 2024 08:57:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A1A25F876;
+	Thu, 28 Mar 2024 09:11:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="i8meCpGh"
+	dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b="WvMTSt/U"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx1.t-argos.ru (mx1.t-argos.ru [109.73.34.58])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C702E645
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 08:57:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E1D528383;
+	Thu, 28 Mar 2024 09:11:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=109.73.34.58
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711616243; cv=none; b=Iz1rBHv+o2mpkqZ7oiW+h/+3gxBQYdmlwrdVuJVVOcvz3+RwtydxWKeayVGy04iKiGEH54+gK6IO4V0hGnJkO0azAKsWA91/0Zm6bgIgYaU6PhmXQ0CDQVN2TVKush8/zUJZKwPR1Ov9HlKsT1tN/w/xsFY//rEwc3YadfKjIts=
+	t=1711617116; cv=none; b=PzbB9UgnseYhoNwAbb5zmeWHiPKjttjM+5puwGGSqROSefZt+Yu9SPJhXAgv/TQGq+YdKGQ6EAUTQemT5Dd3eLaE8iOsJQBYMDNeouz0fJcfGhTRx0FwYHQc2yzea5dgktGXJu0SzYBw+E5FPOvbMeDMVur82iMTrBprJ4yBfA8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711616243; c=relaxed/simple;
-	bh=4F3JozY+G9dFPmMVqsIC2mv1plVDgN7zok2F2MfKt6E=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=GycbSUO0/+ECKWJB/VhT95k0m47wo1E5Yv0cj1VjZR35ODz6EMKH8G1dtum5r0ePSGs6GZ30XkU9PIgFpA2Pcudjsg/VCPdEphj22bnhdqkRvVKH3EqRaZLIOiD0RfpQrzmZrIeB2Qx2MY6W9W31zMcg0eJeB+gSeHZEa5KMsgM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=i8meCpGh; arc=none smtp.client-ip=209.85.219.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-d9b9adaf291so643694276.1
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 01:57:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711616241; x=1712221041; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4F3JozY+G9dFPmMVqsIC2mv1plVDgN7zok2F2MfKt6E=;
-        b=i8meCpGhFn5xCiIILqhnwryOHOOlJrjwaZMRsfKs+/hdnNDugS+2YP4UTDf/j+wQMj
-         Bmpg3nV/aBY1ohvz1siMXvgdHv1c7mdN6N+2HOYAVB0KY3hPvyJF38+Q7uGb/nxSguZC
-         wAm+TZ4ohQzp9YtvGvygHsKCPov3V2mnGzCr7Wct/LVZm8ddgxmDR1nBUdoTHcKK1/Vo
-         oFApd8SgEnfvUga42RmRRMYjj3pgXMjuzkZ/8QSYK4mXoMbfI8nzwlH2B5gf4ryZ2/Hb
-         wca1vJCY67aMg+BEROiKoWMzcBexwB5J7AKoAY6hrTa8Xl4bYAWX6Yu5oQatvu81Q0Q9
-         lfIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711616241; x=1712221041;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=4F3JozY+G9dFPmMVqsIC2mv1plVDgN7zok2F2MfKt6E=;
-        b=DI+w2VQA40Ket582kj0ISY848kfpnSfs0WmWi9IFKXe2XdFR6ksjPOjJ9ejaJhCYof
-         NIYgkBm9eFpioseoVeB8085Zg2dP/CwGYLJCxFSOcd00mCRQYH0DtKu9XxuhfZLz79am
-         RZYQPB3WQWiVqEKRiDIfB8d3arVNGon70wuNcQNARhElqpBtNGldIIDmLQ7sE6CkEdgP
-         Il1P1qM9sws5oqX9+sftaC0F5L4I4xxfNSKQptxLloq6WcrGV//W2/gEupra6tVjEsYN
-         sbsXJlJdGDgZSgCCu2eSjpPn/igTwRd3usBOKb7fbRrszG0dUgRkHfLPuhLWn5RbPJRf
-         68zQ==
-X-Forwarded-Encrypted: i=1; AJvYcCURWu/774bdAboFPy5z1J9fXZXvFPi51D4/5VNCATlcGbt6877v/qwUulUxYYSJZ64D80CIjSoz79M0ySl+j5XDMswJoVh1babjng==
-X-Gm-Message-State: AOJu0YyimTICh2OorMCLd7blvbDOtoIgGpe4AR1ULj9JQL3NkVzPhWvk
-	b3w9oIwxolMEfxNEKF0rJ7k9PjN4SbCahAZ3YNccPgeTmUoORCKNmsqfOWxGoxj3shphlCfgqqQ
-	dyTMeg6FUcUvFU3N+LSfM49PD8NnOEZF6Ai9bSA==
-X-Google-Smtp-Source: AGHT+IGKapoSLxpG9GrnNkjIeTSAnIkOLQk1JL/u0vi14kt6WJXVX3bRQ84jY5/TNx6lXuPoBgs2NzIE5E+MDpY0epU=
-X-Received: by 2002:a25:1606:0:b0:dc7:4725:56df with SMTP id
- 6-20020a251606000000b00dc7472556dfmr1939509ybw.23.1711616241053; Thu, 28 Mar
- 2024 01:57:21 -0700 (PDT)
+	s=arc-20240116; t=1711617116; c=relaxed/simple;
+	bh=xLh6sA1cDo9lAwGZhSFLZxXSoW/5MgW2cFiEZVtezjE=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=qiFKbYx/cMz3h+axA3Bc5kI6N7uHZnucOdgVlsTOsM2L8rtwS75ir7lLij6mvJHWnqKbbkP0wqZU3xmpXGogqSfFmSq6PMqg4qH6zzMV5sYZ3gWYUC3zxnsm4ljSuaMbSF2fhQPsN2G/DVH7rWbAxOZeHk1xxtlvKquxwmlX3Oc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru; spf=pass smtp.mailfrom=t-argos.ru; dkim=pass (2048-bit key) header.d=t-argos.ru header.i=@t-argos.ru header.b=WvMTSt/U; arc=none smtp.client-ip=109.73.34.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=t-argos.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-argos.ru
+Received: from mx1.t-argos.ru (localhost [127.0.0.1])
+	by mx1.t-argos.ru (Postfix) with ESMTP id A47AE100003;
+	Thu, 28 Mar 2024 12:11:34 +0300 (MSK)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=t-argos.ru; s=mail;
+	t=1711617094; bh=2dA60c3u8NMsA53rnbkHUP4JLBJTm4YliDz9GB9JWBE=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type;
+	b=WvMTSt/UHNE28Etstf5/h/lbVATM9C8t72dfsIPPgJm2rSxozA8jjrKL53POnYB7V
+	 hKp2c15fvIoEZvyOZi6IbNpH+qw3PyHDKGjof+cWqaC5Ev6C4j6kHaya3/lssLb5Dd
+	 wWvibFme26QC1oLOM5zXaDhh3fGmDNGuXxBgKVgsrj5PWzuFbPt2S5/MmeNj4/RPct
+	 4xwpoG50cAAVAxWyZkqFxuUyYsf8MKhtz5IPYEKHtEIRl/htdU6rMyDXlNCwgHO/Jx
+	 t6dJj87Rwtgwtwytlpe/AruE3e6KPbljESqzrGSeqGZ/Hr1IId4PnYehwE68WzTERm
+	 LuyT9QIvFC10g==
+Received: from mx1.t-argos.ru.ru (ta-mail-02.ta.t-argos.ru [172.17.13.212])
+	by mx1.t-argos.ru (Postfix) with ESMTP;
+	Thu, 28 Mar 2024 12:10:49 +0300 (MSK)
+Received: from localhost.localdomain (172.17.215.6) by ta-mail-02
+ (172.17.13.212) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Thu, 28 Mar
+ 2024 12:10:28 +0300
+From: Aleksandr Mishin <amishin@t-argos.ru>
+To: Keerthy <j-keerthy@ti.com>
+CC: Aleksandr Mishin <amishin@t-argos.ru>, Linus Walleij
+	<linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, "Andrew F.
+ Davis" <afd@ti.com>, <linux-gpio@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <lvc-project@linuxtesting.org>
+Subject: [PATCH] gpio: davinci: Fix potential buffer overflow
+Date: Thu, 28 Mar 2024 12:10:21 +0300
+Message-ID: <20240328091021.18027-1-amishin@t-argos.ru>
+X-Mailer: git-send-email 2.30.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240312025807.26075-1-quic_tengfan@quicinc.com> <20240312025807.26075-3-quic_tengfan@quicinc.com>
-In-Reply-To: <20240312025807.26075-3-quic_tengfan@quicinc.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Mar 2024 09:57:10 +0100
-Message-ID: <CACRpkdb6LbBkt7aSr_B9=xSpJrjaHhR_MNz9g+LYJwhxdUqDWA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: pinctrl: qcom: update functions to
- match with driver
-To: Tengfei Fan <quic_tengfan@quicinc.com>
-Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh@kernel.org, 
-	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
-	dmitry.baryshkov@linaro.org, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, kernel@quicinc.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: ta-mail-02.ta.t-argos.ru (172.17.13.212) To ta-mail-02
+ (172.17.13.212)
+X-KSMG-Rule-ID: 1
+X-KSMG-Message-Action: clean
+X-KSMG-AntiSpam-Lua-Profiles: 184460 [Mar 28 2024]
+X-KSMG-AntiSpam-Version: 6.1.0.4
+X-KSMG-AntiSpam-Envelope-From: amishin@t-argos.ru
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Info: LuaCore: 13 0.3.13 9d58e50253d512f89cb08f71c87c671a2d0a1bca, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;t-argos.ru:7.1.1;mx1.t-argos.ru.ru:7.1.1;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1, FromAlignment: s
+X-MS-Exchange-Organization-SCL: -1
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiPhishing: Clean, bases: 2024/03/28 07:24:00
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 1.1.2.30, bases: 2024/03/28 06:03:00 #24486213
+X-KSMG-AntiVirus-Status: Clean, skipped
 
-On Tue, Mar 12, 2024 at 3:59=E2=80=AFAM Tengfei Fan <quic_tengfan@quicinc.c=
-om> wrote:
+In davinci_gpio_probe() accessing an element of array 'chips->regs' of size 5 and
+array 'offset_array' of size 5 can lead to a buffer overflow, since the index
+'bank' can have an out of range value 63.
+Fix this bug by limiting top index value.
 
-> Some functions were consolidated in the SM4450 pinctrl driver, but they
-> had not been updated in the binding file before the previous SM4450
-> pinctrl patch series was merged.
-(...)
-> Fixes: 7bf8b78f86db ("dt-bindings: pinctrl: qcom: Add SM4450 pinctrl")
-> Signed-off-by: Tengfei Fan <quic_tengfan@quicinc.com>
+Found by Linux Verification Center (linuxtesting.org) with SVACE.
 
-Patch applied.
+Fixes: c809e37a3b5a ("gpio: davinci: Allocate the correct amount of memory for controller")
+Signed-off-by: Aleksandr Mishin <amishin@t-argos.ru>
+---
+ drivers/gpio/gpio-davinci.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Yours,
-Linus Walleij
+diff --git a/drivers/gpio/gpio-davinci.c b/drivers/gpio/gpio-davinci.c
+index bb499e362912..b65df1f2b83f 100644
+--- a/drivers/gpio/gpio-davinci.c
++++ b/drivers/gpio/gpio-davinci.c
+@@ -257,6 +257,9 @@ static int davinci_gpio_probe(struct platform_device *pdev)
+ 	spin_lock_init(&chips->lock);
+ 
+ 	nbank = DIV_ROUND_UP(ngpio, 32);
++    if (nbank > MAX_REGS_BANKS || nbank > 5) {
++        nbank = MAX_REGS_BANKS < 5 ? MAX_REGS_BANKS : 5;
++	}
+ 	for (bank = 0; bank < nbank; bank++)
+ 		chips->regs[bank] = gpio_base + offset_array[bank];
+ 
+-- 
+2.30.2
+
 
