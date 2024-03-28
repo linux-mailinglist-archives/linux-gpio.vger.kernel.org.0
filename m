@@ -1,138 +1,105 @@
-Return-Path: <linux-gpio+bounces-4801-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4802-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B4E91890A58
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 20:58:01 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E61F0890A5C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 20:58:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6EEB82987DC
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 19:58:00 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 230D31C2EC95
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 19:58:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1F41313A3E2;
-	Thu, 28 Mar 2024 19:54:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55CA113A414;
+	Thu, 28 Mar 2024 19:55:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LlE0bFjJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LCPwoLDJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f175.google.com (mail-vk1-f175.google.com [209.85.221.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 588F61327FC;
-	Thu, 28 Mar 2024 19:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F55B1327FC;
+	Thu, 28 Mar 2024 19:55:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711655698; cv=none; b=ThnLk807HwgS4aWDinULZ3PIEUGG8s1/M/S99bY0pHoGj7W5Mpa0S+haDTM3WJIWH2h5RwudmRAw8ZCooJX5QAwcuQS6IKYE7UNhQj7I6wLjA1e3VSJLONzmQFKA/IaCcbgb4FbLrgIufCXsdqKCxgyOIVY+L7J+c0q+UVZebA8=
+	t=1711655714; cv=none; b=GhjqSprrJbmo4yHeB0SBqz+yGCFZ+TQstNu28OamQAKULYvWJZDCZKkx5v1aKG8HNh2unCyGIADIQYFexgJSokPJSLA88akuK/yUsU3b2YMPKZHnQRm8XVneLwdPO9r+/4pLwSjagSyc2BEEIgnGWICpxgcozXWF1kx0C2e3ecM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711655698; c=relaxed/simple;
-	bh=PSDZovwfsjNCrw5eVrkA8X9sJK4u7vGS2YhntmA5pe4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=JsHYB1fqhtD3xB7hxfArbKCvucbjJxyniuSIlYidtkK82AK43nLL1H0gMk40xAeUHwqeTzqW+oxLbPtM9RTFbrZ5S9TLA/pttMwZC1tIbGsau8mmHN7UjCJlBHwj+uWk5LpwVScTv7hdtF30C6tvvwGJ7o6nJHJ3IYKrDpvBlZg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LlE0bFjJ; arc=none smtp.client-ip=209.85.221.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f175.google.com with SMTP id 71dfb90a1353d-4d43a1f0188so545736e0c.2;
-        Thu, 28 Mar 2024 12:54:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711655696; x=1712260496; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=edpM49hY5bgsJjXAVnncLdk5Mo7gmai926Onh5HepfM=;
-        b=LlE0bFjJthml5zi58FdrRLqLg19JV+WY9BJ9nSk5Fg1Uad0mc/hh6xZpWfVNPsDVoU
-         Gd7MSH8KWAJpVV1x94Qtj7N+cr4XZ+khvtXhq5XMWw1tI3DBL+DjRxBPMSfoCZMxkFOu
-         K3tQGvsbaQ332/YsUdMdfcZ3ZNitDkg8q54QoCpsQsmFcP+NGpRd7apNrWWiVsRdzPBG
-         clpksKCOHmsG8+7rBGOH53TC0tWRWF++JTs3+tMSYlt87Mc86pyUS8k9KhbmElORDqI+
-         v5Y1BFNij1GQ7LB2FTspKh2gdReUYvwRRAU4unESDHCnmoNZwxncBQGSiQaOWkU6xaNG
-         HLbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711655696; x=1712260496;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=edpM49hY5bgsJjXAVnncLdk5Mo7gmai926Onh5HepfM=;
-        b=LiVEaX7Y0iYI6hsepfgSivA2h88uyE/ZLE4fx1Yfc+3KrcBugjY/D1V1CWaAu5u9fO
-         TNNTiwmLGpelkrbUnMnIDDG3GKeJbAuXaJV1DNrbUTsUYmEJfYVMHwNjoP17cEOSMnQf
-         bdGiyy+xCfq1MxtdVsvdMhljBHfvZTcImV1IjpExKt8fGb38zZiqUrh+wBBvfHY7TGDT
-         etoK18GPJ3aQJcJziaeIW+8e4gcRf8AiWeAXp3bxiJJARTu91UMRulaVnp14MDSyUWg9
-         7TrYmZga6FLdcj4tpAoAzAj0EiEuhrbCry124FO7RqZAOAKGlRqwZFxWqPve+jfIx+09
-         vy2g==
-X-Forwarded-Encrypted: i=1; AJvYcCWLTCMo1gcRdBK+ZujZ1iB5WvpPXU5MxhnPIIDzw9NNG4TvU0HkrzXjczHfpsJGq4J3xteR4OPMqXJcFOLVrw8b18FN85Tp01NjYADVT6h8Hsj9RM98jTi+HZ+1Tj1CZ+tU5POi82/N79YDL3LLQPIC3icg8qvmbW3N+r0OA4uoKj/vlvcasmjXMzK4tBKltBx8SX28Q1M655h7stAH4yXuLwPOc+ozEw==
-X-Gm-Message-State: AOJu0YyrkA7NyRao6MzMj1ip2nC1yvy+6Nf1VSkmSo8PQMDZDXd/AUR3
-	JxCKcnfsDl+YB+CnDOn/i8anVJ7i7O3sQXCO0OnlkBIGeumqafjl0Bf9LxySMQ26gc5NyXoxe58
-	uI3DyFHagnAS8xp8jn8QbgVfxGGVK0XLcuac=
-X-Google-Smtp-Source: AGHT+IHa9XAosSfz4PvD/IcWP/NhKOLb0BvmrqJ2Lo2NpQG6t74W5U8h2BiSeNMsW8VD/17fq5eWBQ4y1Ml9pRBhVtY=
-X-Received: by 2002:a05:6122:3982:b0:4d3:398f:8633 with SMTP id
- eq2-20020a056122398200b004d3398f8633mr422285vkb.10.1711655696167; Thu, 28 Mar
- 2024 12:54:56 -0700 (PDT)
+	s=arc-20240116; t=1711655714; c=relaxed/simple;
+	bh=Dyq24aNRTpRP2AlBrzBlIY42U6Q43vHXCPypw35SFNM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=EyHYg+dDae3Q+UGWDjU5tplQe5ChiEeaojPKTzZ/JdH9NZ4aLqR/RmMs7J1SU/PxmvoVpvGu+sVDOcv03bb5iJuk9JIGjmdgIFfAvxnMRTdhFTZ42FaXd15nMAx9s+9T7pNAcIlNAMHaYEr5FYcm/7KTdUp3L+LPsUhn447GygM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LCPwoLDJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D21ECC433F1;
+	Thu, 28 Mar 2024 19:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711655713;
+	bh=Dyq24aNRTpRP2AlBrzBlIY42U6Q43vHXCPypw35SFNM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LCPwoLDJ99lEB9KPJBDfak4y/Mx034iYfykx3FUVUwFuL5qwiNm39VeNOcUP0rl/J
+	 2kXOfH/qsfHsDwgyGVxVZ90kAfXdd8ZNDYu8SOmhruDoYXnZDaLNCbujaEwg/bkOoN
+	 fzjJsfUZmey5dtYiCxleOndfjM1EBD+4ATMS036t98Q2gJsYfWpqi7ClgTbW2uj9eP
+	 L8bO/SKaP9RxYAO+9mt7TLq/hu7WQID25CpjnhZH5O0bohIiBe0z5pr3ypC1KjiMx9
+	 jlHnzz2a3s71Mg2NtP9x32GpC7mmqRAxnntLNwcZ7yVDeURiH2QXFtq4b6eHub4fdc
+	 LGabLtH0ukZLQ==
+Date: Thu, 28 Mar 2024 19:55:07 +0000
+From: Mark Brown <broonie@kernel.org>
+To: Bhargav Raviprakash <bhargav.r@ltts.com>
+Cc: linux-kernel@vger.kernel.org, m.nirmaladevi@ltts.com, lee@kernel.org,
+	robh+dt@kernel.org, krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org, jpanis@baylibre.com,
+	devicetree@vger.kernel.org, arnd@arndb.de,
+	gregkh@linuxfoundation.org, lgirdwood@gmail.com,
+	linus.walleij@linaro.org, linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, nm@ti.com, vigneshr@ti.com,
+	kristo@kernel.org, eblanc@baylibre.com
+Subject: Re: [PATCH v5 09/11] regulator: tps6594-regulator: Add TI TPS65224
+ PMIC regulators
+Message-ID: <3e6d7c20-766c-4d27-aa10-f30f30cbd646@sirena.org.uk>
+References: <20240328124016.161959-1-bhargav.r@ltts.com>
+ <20240328124016.161959-10-bhargav.r@ltts.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240326222844.1422948-7-prabhakar.mahadev-lad.rj@bp.renesas.com> <CAMuHMdWdaiSer10agMytpv9h_gb4bEpEHjThDwRkMShXkKMxzA@mail.gmail.com>
-In-Reply-To: <CAMuHMdWdaiSer10agMytpv9h_gb4bEpEHjThDwRkMShXkKMxzA@mail.gmail.com>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 28 Mar 2024 19:53:12 +0000
-Message-ID: <CA+V-a8udXMwzZvJhDH5kK9J4ihLU00TbpKNb5-YoxOGFtdgpPg@mail.gmail.com>
-Subject: Re: [RFC PATCH 06/13] pinctrl: renesas: pinctrl-rzg2l: Make cfg to
- u64 in struct rzg2l_variable_pin_cfg
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="+rxx+apRdHZ17chU"
+Content-Disposition: inline
+In-Reply-To: <20240328124016.161959-10-bhargav.r@ltts.com>
+X-Cookie: Yes, but which self do you want to be?
+
+
+--+rxx+apRdHZ17chU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Geert,
+On Thu, Mar 28, 2024 at 06:10:14PM +0530, Bhargav Raviprakash wrote:
+> From: Nirmala Devi Mal Nadar <m.nirmaladevi@ltts.com>
+>=20
+> Add support for TPS65224 regulators (bucks and LDOs) to TPS6594 driver as
+> they have significant functional overlap. TPS65224 PMIC has 4 buck
+> regulators and 3 LDOs. BUCK12 can operate in dual phase.
+> The output voltages are configurable and are meant to supply power to the
+> main processor and other components.
 
-Thank you for the review.
+Reviewed-by: Mark Brown <broonie@kernel.org>
 
-On Thu, Mar 28, 2024 at 2:14=E2=80=AFPM Geert Uytterhoeven <geert@linux-m68=
-k.org> wrote:
->
-> Hi Prabhakar,
->
-> On Tue, Mar 26, 2024 at 11:30=E2=80=AFPM Prabhakar <prabhakar.csengg@gmai=
-l.com> wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Now that we have updated the macro PIN_CFG_MASK to allow for the maximu=
-m
-> > configuration bits, update the size of 'cfg' to 'u64' in the
-> > 'struct rzg2l_variable_pin_cfg'.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
->
-> Thanks for your patch!
->
-> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
-> > @@ -241,7 +241,7 @@ struct rzg2l_dedicated_configs {
-> >   * @pin: port pin
-> >   */
-> >  struct rzg2l_variable_pin_cfg {
-> > -       u32 cfg:20;
-> > +       u64 cfg:46;
-> >         u32 port:5;
-> >         u32 pin:3;
->
-> Doesn't this store the 46 cfg bits in a 64-bit word, and the 8 port
-> and pin bits in a different 32-bit word?  Worse, you'll get 4 bytes
-> of padding at the end of the structure.
-Agreed.
+--+rxx+apRdHZ17chU
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> Changing the port and pin to u64 should make sure everything is
-> stored together in a single 64-bit word.
->
-I'll change the port and pin to u64 .
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Prabhakar
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmYFyxoACgkQJNaLcl1U
+h9AmSAf9FWOqRdRhslGis6k+Eil3DKdDypYcR3ewj1nJ7vbgnlf4rhQqNIPn19ne
+LW1mI7b6FfOIirklxrnGRMMiLRqQDAAgO3no0wSVpPDm8+iYdwyQUxL0eMw0lRrC
+OdEorwSOP2WDNunmAj5qTWvaUZrJTvOVZSoucRjywwBMMLMQk5hoEU6ro47Su6c5
+qi13BPGjphA4cxNRP5SVPv53jNUKKMMYNrrgKG42CZQOiEQjO4G1/TfGLCVN+TOI
+Lae3gQsCqO29pt8peeO5N2qUvuUJAuVQTb+6p+9qFweFz7CkpP5CZrM0OtpXRevs
+t6jySrmy1q8uzRSBjIp6dbiiV9SDsw==
+=/eiv
+-----END PGP SIGNATURE-----
+
+--+rxx+apRdHZ17chU--
 
