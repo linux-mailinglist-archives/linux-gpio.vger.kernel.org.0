@@ -1,210 +1,167 @@
-Return-Path: <linux-gpio+bounces-4736-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4737-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F88B88EEC8
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 20:00:51 +0100 (CET)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id CE98B88F713
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 06:17:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F12821F32510
-	for <lists+linux-gpio@lfdr.de>; Wed, 27 Mar 2024 19:00:50 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1D0A1C20A74
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 05:16:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1E7B14F9FF;
-	Wed, 27 Mar 2024 19:00:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF204C600;
+	Thu, 28 Mar 2024 05:16:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CeiqN3GL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gXPbjKTb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f178.google.com (mail-vk1-f178.google.com [209.85.221.178])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F00914F9CC;
-	Wed, 27 Mar 2024 19:00:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8BC4085C
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 05:16:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711566044; cv=none; b=DglguzQ2TCXF9Agl9ljH3choP2sUZz5uLVSPYHLit+zMnxS1WH0P0YstkO/lZLZZmhpyDjuDjqosCYC1SXW1PUOl2JGBOT+pBdehUc2DIWIgfnHWHLZkhLnTR4rVe4+m9scic+Ea8HOHUc1z3WfOrVU71M6a47O/8/lnAgxhXVQ=
+	t=1711602998; cv=none; b=pUo3VI1tE8Ux0v3imAbEJlk71e+ZcdlLh2EbO0npO0pLspo7g6a4tGzXJd1mqgxvrFbM57CrwPt+rExLg31X7kiaSinw/OfO7yfOpkFnfHOZiJt04K+uLu2PQZnvChZ9Hqy3HjKZCMdL1fjZqNk5kEg04JTeuKbVzvtlk84I2pU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711566044; c=relaxed/simple;
-	bh=tFY3qsvVbT0Zq995oHAN6t96RnHL9EvsVFbgj+YDy+g=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S3DcemRbkJ3GH0pQHQce3u2ONGGJ7oQFx/6Bw46rSpqg2NULnGmMtJEgXXNa4TbOqDBgJYP075spOphQOw6tsKb07gAvG4+ib/VeGz5jFbV0Q/RiwFb/FE3+0dGKgFcinbHgnOKfvYKDe/H6HNWYMlAEdfqtvo4qzcMlLo0alRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CeiqN3GL; arc=none smtp.client-ip=209.85.221.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f178.google.com with SMTP id 71dfb90a1353d-4d42ea640f0so60802e0c.3;
-        Wed, 27 Mar 2024 12:00:39 -0700 (PDT)
+	s=arc-20240116; t=1711602998; c=relaxed/simple;
+	bh=sBPTJcGEYTbv3hcgUwqNauzYtskOKb+GWpnb7br0MOg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lbSKhW5A/+hpvvIL1eV++hH/cbKIwU4PeM849tC0zZfq6YP6K2P0umvdJ7Y8mrcxfFNssLMcygGXHWjHYuVrC6tUtTEIVrSbv/eBR3RPtl2deNwZ8Th02pL7PhmFmOL4qpj7QckhwOeRaEZzH+4cQF9NhwwWtfLZ8LB6IaIUFd8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gXPbjKTb; arc=none smtp.client-ip=209.85.161.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a529a1f69aso281360eaf.3
+        for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 22:16:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711566038; x=1712170838; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Hins2IPDwZVL8ICx6pFRq72ob96M45mjuvu0W81u9V0=;
-        b=CeiqN3GLsRsUOJK4+aLf49cMo4cKcat9ifWoiivgMElMSzsMIHxPT9A6vgiPp/gL8D
-         60OuqrRRhiIARL8A6ZYviCQF+J5TeJETNCoqzffV4VW/zer+mgdlL+3AXc/i40RBQcOu
-         NzG7S5+tCA+bsyyTaThSsDUawT2C47gdjtLDBWSldiY8nhr9bE/CqIYx0Ykpi9tMAf4X
-         CyNaOA0jTZPzXFeoMKnipOMGYlsAn2mXzKja7zebAnOcjsCeBjMMrp3NzNomk/v6rAiZ
-         WQl9Yb2546CRWqGm8/DXkynMye5UP/vcmdqZf0VFWHqGzYnP3YEgvHE8VZ8cgLIPbBLP
-         H5ww==
+        d=linaro.org; s=google; t=1711602994; x=1712207794; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NCBBqATkrmhAqNvcc7V5yUc6Bj0MDD2J9Hd2vuTQUac=;
+        b=gXPbjKTbrvtfpT6/qEmVUxns+A30LH6QOiAjT4F0xLZUPzUZg0ordNOvATabg2F/Wl
+         kPv7rlwtWOxfgPm2w1j9yiVchrEqiifXfpuqKbM3c55rO+d/cQmcOVsJtdO/BdsefRN9
+         RxOKLZQ8lQKHo0Up3S4+54dabwBIgvbFJlg0eTR2NGULCedimJYCVi8NEO/uINa2jv1N
+         m9SrGDUqniaEzEwLDKjTqPO6IIW3ujVusL7p6WPrXVYciMFtPwv7L9mAU+/qpWitn5fr
+         hH1CJycNEicAhv28MTJZUrDtXoqvUlSPCv54sDagwBcdt6nzOokgIGUCvI13cWlf71La
+         jDOg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711566038; x=1712170838;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Hins2IPDwZVL8ICx6pFRq72ob96M45mjuvu0W81u9V0=;
-        b=cIbvya408KtjwiLTo1nM7ggVJdHfQH6J+NdtXbgcfzOklf+ynh+rlZkZkjb0O5jvmD
-         uE6mGCgjjNWBh2oWw58IjeXuDL78XEhNH3TAgtfR6EyMf81z8+A067L7K65gh2QJjHIW
-         cPbulpbo6/B4cScHP0XTyk+7UZzrLcbDKx3GjfQ5K7KHb6gyqFdCTT/LdR5fDHva7kFz
-         jOztUGdhp31Pdy+2x55/1jhBwZOKJAKyajZL6COgpsRqj4dlGx/0XINxvjHc7TLKcKRX
-         ugKQFSC/bLPjhWM+m53LGW0jTQHY3I7IwiW+WmiR4aQ1d8XUG06oCC0g6/6w7NjrqfJI
-         5VgA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcHhoYzM5hT6FQeZvim50X92GqHKGDRXt/UiT6H0ycL4a79Zzwpa9ilmHtdajBWnQPSmbhMeXzyC6TWkWPzI8cF/eJJKrOZya/SS5qO1XFEYBxuzqjtGeFGwIwgd70ruWJvazzGg6nQkCAJw0rpcU2FTIzORRTm6oSlR+yXUCxwH70Rh6EgK3Z/V08SSM5dMlok4kJ8o6oHBpuqhHaDpKYdLUfxFz9hg==
-X-Gm-Message-State: AOJu0YyCSKoaVOvzx/u+4w5akD5I7oqjrvrkK2tXv3h5eGccu45fljx7
-	D0CXUzrutzCljjeonWim7BdKgn6vWAOt8amiH29y+Ctnpn/V7xIrXm/GTDorSrzNSaO6bIwtyYX
-	oijGwnDFNapDAlCsvhTu8Me0CWa4=
-X-Google-Smtp-Source: AGHT+IHWbdqtpnoguZT9P+DnYXrJ3uP4UXxPjR/3Aad87Vu+DiiH0+DFP6s2lN+TdFl78boCV7iVbRem4fBppekeuj0=
-X-Received: by 2002:a05:6122:4595:b0:4c0:2d32:612f with SMTP id
- de21-20020a056122459500b004c02d32612fmr1018877vkb.15.1711566036698; Wed, 27
- Mar 2024 12:00:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1711602994; x=1712207794;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NCBBqATkrmhAqNvcc7V5yUc6Bj0MDD2J9Hd2vuTQUac=;
+        b=NcGMnORDmJTOiaXWSs8YbVZPlYPHR5bgTVJiRIaPj45PxCblZ0WX26jGLRQMktSslo
+         62QIOyuP6NhN0WiwMVbQ4lA/BCQj0dliLZRKkOfPJkemAdd5HQ3dL1lq6/12KMRrClR9
+         EZsD85uw8lwKaWtLgBqaLiH2X5hvmw3QDxpF2p7Ta5NmU2D/cSRSzN52Ac9jYpcVjLhO
+         x5JIGDcSdpvudllx5fA8L/rEiHK7UU1yE57e9LrPt+Xvdc7/x8lKcIaoqi27dUsJBFJ5
+         dc+agAHJbjZKny1i76C3ZSz6WGvtgbFI82AQPCsY0FrPbdAH3+9xkpUvPKp6bN3wgkez
+         81xw==
+X-Forwarded-Encrypted: i=1; AJvYcCXdqDEmlvr6boY9bEB5M+eQjnjryYHejeXzWNLnwoKcwP1rQml5eVf3olRidOpQijBN3C4KlTZ57MyESGIFAYDuDAHGnl1JJqKj0Q==
+X-Gm-Message-State: AOJu0YwcWx0kllY4tPCntc2deNcbwTSGOB3lZPOZuZmaeL6JvJgeTSlS
+	zgeINyP0WDtUyTiDYsjzh976jkHbWEOfPZSRGapbSYlL5KnlDZ1I8/rjapU5Muw=
+X-Google-Smtp-Source: AGHT+IENjWm30W77Sho1F7STKjVDKRSghd/5qoLRwkalJNx2D7PN+W1+MnXgZZvq+TiwN/1tI/fojA==
+X-Received: by 2002:a05:6358:5307:b0:17e:8f90:dd31 with SMTP id n7-20020a056358530700b0017e8f90dd31mr1555244rwf.32.1711602994298;
+        Wed, 27 Mar 2024 22:16:34 -0700 (PDT)
+Received: from localhost ([122.172.85.206])
+        by smtp.gmail.com with ESMTPSA id u23-20020a63df17000000b005e857bba96csm433309pgg.10.2024.03.27.22.16.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 27 Mar 2024 22:16:33 -0700 (PDT)
+Date: Thu, 28 Mar 2024 10:46:31 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gonglei <arei.gonglei@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	David Airlie <airlied@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
+	kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
+Message-ID: <20240328051631.c5eitp4mzaj4bh6i@vireshk-i7>
+References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+ <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20240326222844.1422948-3-prabhakar.mahadev-lad.rj@bp.renesas.com> <20240327172439.GA3664500-robh@kernel.org>
-In-Reply-To: <20240327172439.GA3664500-robh@kernel.org>
-From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Wed, 27 Mar 2024 18:58:53 +0000
-Message-ID: <CA+V-a8t5KyDZ3FCP2GqYwK8AY_x0++HB471KxQgAbPdLTVHzGw@mail.gmail.com>
-Subject: Re: [RFC PATCH 02/13] dt-bindings: pinctrl: renesas: Document
- RZ/V2H(P) SoC
-To: Rob Herring <robh@kernel.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, 
-	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
 
-Hi Rob,
+On 27-03-24, 13:41, Krzysztof Kozlowski wrote:
+> virtio core already sets the .owner, so driver does not need to.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> 
+> ---
+> 
+> Depends on the first patch.
+> ---
+>  drivers/gpio/gpio-virtio.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
+> index fcc5e8c08973..9fae8e396c58 100644
+> --- a/drivers/gpio/gpio-virtio.c
+> +++ b/drivers/gpio/gpio-virtio.c
+> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver = {
+>  	.remove			= virtio_gpio_remove,
+>  	.driver			= {
+>  		.name		= KBUILD_MODNAME,
+> -		.owner		= THIS_MODULE,
+>  	},
+>  };
+>  module_virtio_driver(virtio_gpio_driver);
 
-Thank you for the review.
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-On Wed, Mar 27, 2024 at 5:24=E2=80=AFPM Rob Herring <robh@kernel.org> wrote=
-:
->
-> On Tue, Mar 26, 2024 at 10:28:33PM +0000, Prabhakar wrote:
-> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > Add documentation for the pin controller found on the Renesas RZ/V2H(P)
-> > (R9A09G057) SoC. Compared to RZ/G2L family of SoCs there are slight
-> > differences on the RZ/V2H(P) SoC for pinmuxing.
-> >
-> > Also add 'renesas-rzv2h,output-impedance' property. Drive strength
-> > setting on RZ/V2H(P) depends on the different power rails which are
-> > coming out from the PMIC (connected via i2c). These power rails
-> > (required for drive strength) can be 1.2/1.8/3.3V.
-> >
-> > Pin are grouped into 4 groups,
-> >
-> > Group1: Impedance
-> > - 150/75/38/25 ohms (at 3.3 V)
-> > - 130/65/33/22 ohms (at 1.8 V)
-> >
-> > Group2: Impedance
-> > - 50/40/33/25 ohms (at 1.8 V)
-> >
-> > Group3: Impedance
-> > - 150/75/37.5/25 ohms (at 3.3 V)
-> > - 130/65/33/22 ohms (at 1.8 V)
-> >
-> > Group4: Impedance
-> > - 110/55/30/20 ohms (at 1.8 V)
-> > - 150/75/38/25 ohms (at 1.2 V)
-> >
-> > 'renesas-rzv2h,output-impedance' property as documented which can be
-> > [1, 2, 4, 6] indicates x Value strength.
->
-> Looks like the values are x1, x1.5, x3ish, x6...
->
-> >
-> > As the power rail information cannot be available very early in the
-> > boot process as 'renesas-rzv2h,output-impedance' property is added
-> > instead of reusing output-impedance-ohms property.
-> >
-> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../pinctrl/renesas,rzg2l-pinctrl.yaml        | 22 +++++++++++++++----
-> >  1 file changed, 18 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pi=
-nctrl.yaml b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctr=
-l.yaml
-> > index 881e992adca3..77f4fc7f4a21 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > +++ b/Documentation/devicetree/bindings/pinctrl/renesas,rzg2l-pinctrl.y=
-aml
-> > @@ -26,6 +26,7 @@ properties:
-> >                - renesas,r9a07g043-pinctrl # RZ/G2UL{Type-1,Type-2} and=
- RZ/Five
-> >                - renesas,r9a07g044-pinctrl # RZ/G2{L,LC}
-> >                - renesas,r9a08g045-pinctrl # RZ/G3S
-> > +              - renesas,r9a09g057-pinctrl # RZ/V2H(P)
-> >
-> >        - items:
-> >            - enum:
-> > @@ -66,10 +67,14 @@ properties:
-> >      maxItems: 1
-> >
-> >    resets:
-> > -    items:
-> > -      - description: GPIO_RSTN signal
-> > -      - description: GPIO_PORT_RESETN signal
-> > -      - description: GPIO_SPARE_RESETN signal
-> > +    oneOf:
-> > +      - items:
-> > +          - description: GPIO_RSTN signal
-> > +          - description: GPIO_PORT_RESETN signal
-> > +          - description: GPIO_SPARE_RESETN signal
-> > +      - items:
-> > +          - description: PFC main reset
-> > +          - description: Reset for the control register related to WDT=
-UDFCA and WDTUDFFCM pins
-> >
-> >  additionalProperties:
-> >    anyOf:
-> > @@ -111,6 +116,15 @@ additionalProperties:
-> >          output-high: true
-> >          output-low: true
-> >          line-name: true
-> > +        renesas-rzv2h,output-impedance:
->
-> 'renesas-rzv2h' is not a vendor.
->
-I will update this to "renesas,output-impedance".
-
-> That should give you a warning if you actually used this somewhere.
->
-I did run dtbs_check with this property in the DTS and haven't seen
-any warning. Also now I included this property in the example node in
-the binding doc and seen no warnings reported by dt_binding_check too.
-
-> > +          description: |
-> > +            Output impedance for pins on RZ/V2H(P) SoC.
-> > +            x1: Corresponds to 0 in IOLH register.
-> > +            x2: Corresponds to 1 in IOLH register.
-> > +            x4: Corresponds to 2 in IOLH register.
-> > +            x6: Corresponds to 3 in IOLH register.
->
-> Why not just use 0-3 for the values?
->
-Fine by me. I'll update this in the next version.
-
-Cheers,
-Prabhakar
+-- 
+viresh
 
