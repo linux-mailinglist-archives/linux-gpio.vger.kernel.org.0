@@ -1,100 +1,98 @@
-Return-Path: <linux-gpio+bounces-4751-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4752-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 19D6D88FB3B
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 10:25:06 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7463988FB58
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 10:27:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F4011F28819
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 09:25:05 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 004E2B246D6
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 09:27:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B1AD7BAE4;
-	Thu, 28 Mar 2024 09:22:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01F6B64CF2;
+	Thu, 28 Mar 2024 09:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="XIcCcuFY"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v3jrSrfQ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f169.google.com (mail-yb1-f169.google.com [209.85.219.169])
+Received: from mail-yb1-f173.google.com (mail-yb1-f173.google.com [209.85.219.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC4E86FE07
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 09:22:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D7056441
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 09:25:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711617729; cv=none; b=Ej7gXIv8zzO7FDFJ342HGRl1HYms2vuMjA6DJfwQtoL/1fVNkP+0ayetxPdNDYh1MDTP2Ts9fEOCw2Jhdz2+GFn9eLYFDFRBTL576nZDfA2TEaiEPiQ0fyRAaPZAaV5Inw/9UjsRmgxsQ36qveIRXFYFgRcQlaAr6nJgi7W3A3Y=
+	t=1711617958; cv=none; b=hhYMHC8+luVpy1NqSzaqGK5ki5FOdo+SHDgAkyAYXN9gFNmRGnF5pFUhq+fk6TRUJ4xnya5aYe2waMRlGKo8ECcAhm6awThGgqwrzSmyjKbSvWWTMlPXNvcdgkEuZRIljLJZfntA09gXpsi9CWyn75O0LidwH7uZbo/buK0IRUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711617729; c=relaxed/simple;
-	bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
+	s=arc-20240116; t=1711617958; c=relaxed/simple;
+	bh=lW8QqTmIIY5WWx+5Qn+Qztgo2/CDJTQmC1e6LI+YfA0=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VFgPP7vPLnK0KZc1hWuTBvea5SONM4uzKLKL5GPz5C88G4LgYk5jJvC4N51fEjEoITWmhOakfOIEkGLxgAzLNNt+a3x2e63oosq2p8t+p/3yN4P/EAn0q2JfyC5IWSnjnlxSPv7dT7tAGpKvHOqmswS3ICOZAIXkKBQsBN7bs3M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=XIcCcuFY; arc=none smtp.client-ip=209.85.219.169
+	 To:Cc:Content-Type; b=ZgUespo51ECXQPPwgom7oXzVi3yr+CizrOUvBoTzsvGl7T3PUpsPKGPdTTSlaAz3S2T5+cG8kpkCMUZiPswjg5Ae5A3bTVkwSISyt95QCz4hKOUI/IQoOh7eQgv4Poy8Z2ttfdpti0t3VNhCRc4OJ7e8xK1JfOQ0t7Y0LrJZ+jY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=v3jrSrfQ; arc=none smtp.client-ip=209.85.219.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f169.google.com with SMTP id 3f1490d57ef6-dcd9e34430cso756843276.1
-        for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 02:22:07 -0700 (PDT)
+Received: by mail-yb1-f173.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso693408276.3
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 02:25:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711617727; x=1712222527; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1711617956; x=1712222756; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
-        b=XIcCcuFYo/ZGzlCsA9S6F/mv6nJyh+xdp9s6IRpd0uzxm7EEV3a3rWTvSBa6TcfHZV
-         XYkLHKgR3yQpo91TmXsbANVBsZwKRykqrRGN6SCfiqjOdi08P6qW3xvmLiYxEWPu4ZIx
-         TT5WTHUFDxwsbuQi4U4QCuMV3nu+CV2BmK63Z+m0LYJYhbvakRxfzSaV4FOUV9fBp1zU
-         /Qow8jJDSmKQNo60AmPAo4F0lATgKkunvHiGKCbeNk4NdjzarvW4rwzbl6E1vf8O4PR1
-         n9vIXSntHrOjsXe6q3rre+0PBZS/VlYZoN3V0aS+MkWG5tPOximAgqlyjfYJiA0Zvj/M
-         YUvw==
+        bh=lW8QqTmIIY5WWx+5Qn+Qztgo2/CDJTQmC1e6LI+YfA0=;
+        b=v3jrSrfQ7otb2pl6j3f+M3wl9clduYqFmhPX2yXMypjMpSBGMPxUzKYFw5cSMvIIf2
+         CRCRRwF1/HXeuHD3XmaGVAFeafjBT121aX0zXXdL2MHTELLleoDriGz5r2mgIxoOaeWD
+         vlbr7Z5csk+Jv8cMjEDqrJ3o2GPrYngJ2Sy3iagDAD9OCQ7U/l8mHywLhrm1RtzemmFl
+         c2REYacBxvOE2sZvtwJVMU4Nw1WjTWccNsjzXcx+ILFd0qeNfnWUs4Z7VMTv6Rw2uFln
+         0/2yfHlY4ayktljtFDMvwJZpday2emASH0Dei2uke6eW+GjH5K41TxfT5KvbDKlYsf7O
+         9HbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711617727; x=1712222527;
+        d=1e100.net; s=20230601; t=1711617956; x=1712222756;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=KmM01ktywWehktxODkpSjA7WCyV+sF2XwLnzGhFtu0w=;
-        b=A/TzFSC4WlFvkJOebM1+I9Hzx/mmdXXfHaKL9yxn7gESsHxq5dFSYYpweDcFM8yeMd
-         ZQRfo45zGQNI4Q2dSuRXu9teONLrEetYickgA9cIpBzLpUQyO70tZ6ekXrNrsg7DljFD
-         z03NbWAAXVLfYIIZBV+dDWtDP4hRVHdFCSzpPjcoZdiDM4azXAMieRjmuO/dv5YBBcIM
-         J1WRUJQhbt9vkF02fMzAvZb73qc17Z+w70Xp5/AKO/VwiFqQQHh0HtVHY9qdZ4KmcoCY
-         DEHHheKMMisQKtquMQkKMFzZPhh3iMEetFOGI27t8lLzy+STjOiQpMgsGVgfngwhYedH
-         t1/A==
-X-Forwarded-Encrypted: i=1; AJvYcCXnHneTGATZjGfUbes/SjwebKXIeWAd7v4XvAzy0SuRXsqZxAflw8G9imXmkl+QNNiz2nzOg9ksrvGQFehKXqzP5eUOLhbljavVpA==
-X-Gm-Message-State: AOJu0YweMJFQG02iB+wdo8KGUha8srsKV009GhGxZGupHV6xGA9kV4mA
-	Ni/VV+4ybNVAqFN4srpHIqxWhYyTzC0FCwNMSoBpQLV/FkgOZbldmNEGjBj/EdXYJ2v/39PJSP/
-	5ImvuzDh5iPFOAPGnZ999wRsyPk9VXfCoJislwA==
-X-Google-Smtp-Source: AGHT+IGySaDVmJFg1Xn+UuYwx8+Ype6KnAhYqICfy2/PSAfH5Gv9Rq/+PhakcOkeIpkT04dMSdTGtY+WLZOt4y0BmHM=
-X-Received: by 2002:a25:68c1:0:b0:dcd:c3ba:d788 with SMTP id
- d184-20020a2568c1000000b00dcdc3bad788mr2378061ybc.47.1711617726741; Thu, 28
- Mar 2024 02:22:06 -0700 (PDT)
+        bh=lW8QqTmIIY5WWx+5Qn+Qztgo2/CDJTQmC1e6LI+YfA0=;
+        b=EdPo/Uqyt/Y5OOnDFc2H+9q3Se56Rkvdeb+yj164n/QOLQllK4te5L2PuhB+pVI0G4
+         nrSNxWctHKzXbABJseJblCjayetpBD34NpPGpcBmuSCB2xEhpNKod0kgLObYPwXFP7u0
+         IPgXT8AeDBtiu3DpacH4B93XLogE1+d0oHwa3Hl3+mfzMAhHfATj0IczdRROJraatDnz
+         gpc9GNNDUxKV3OUcmHwzgKqh94axffZU7++40xHP15fVgg/6s1Zv4jNrQUX+zo8NhQ6s
+         xSUGF9mWTA9ZM08IXvfKG/mTax0l/YOZ4/Ks+YIScLjWNp5U6vzEF0VKnFt37xwIz/Rn
+         IRxw==
+X-Forwarded-Encrypted: i=1; AJvYcCUWPoKsOb2b/hKu0Cu0Y7cdAyNescAyKAgzPf7B3aqpPQKSgBkkwpjSo6RLPFSQaT33LTvbJLjPOyw8J/r0xNT0cMB2LyvDCEv0sQ==
+X-Gm-Message-State: AOJu0YyrRY+D3eUCEOaNR/X+QJ9l4s5NBss+tqqwLGERCYfq22pYl1yq
+	tN2n8ahmEkvbuyXK2ytdd7i8zsVWKBFNPtaSLGCp6rRAsadZQmxuu1Bml8ZdJmGlHU7pm8mjG/7
+	DjwL2H9Gv2KfpQHtd7beHinH0e+/nUdAL16f8EQ==
+X-Google-Smtp-Source: AGHT+IEh33r/cMIL950w9pM6WTLyu7qyZj+WM7cEtQOkKt3p9m3geR/QDnirj2kZX/VA91a5L6wD2wnlxO8fyT2VdWc=
+X-Received: by 2002:a25:c244:0:b0:dcf:3aa6:7334 with SMTP id
+ s65-20020a25c244000000b00dcf3aa67334mr2478797ybf.7.1711617956166; Thu, 28 Mar
+ 2024 02:25:56 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240313235422.180075-1-andy.shevchenko@gmail.com>
-In-Reply-To: <20240313235422.180075-1-andy.shevchenko@gmail.com>
+References: <20240326220628.2392802-1-quic_amelende@quicinc.com>
+In-Reply-To: <20240326220628.2392802-1-quic_amelende@quicinc.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 28 Mar 2024 10:21:56 +0100
-Message-ID: <CACRpkdZUnmnLj6ZJ8_p2tyN4txCA1fkSvqPo5gTqi=v33FToKg@mail.gmail.com>
-Subject: Re: [PATCH v1 00/11] pinctrl: aw9523: number of cleanups
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+Date: Thu, 28 Mar 2024 10:25:45 +0100
+Message-ID: <CACRpkdbq5iTz6azcdSmsUiaOi97coz_XDg28RwU1GL=SQ3uXKA@mail.gmail.com>
+Subject: Re: [PATCH v2 0/4] Add GPIO support for various PMICs
+To: Anjelique Melendez <quic_amelende@quicinc.com>
+Cc: andersson@kernel.org, konrad.dybcio@linaro.org, robh+dt@kernel.org, 
+	krzysztof.kozlowski+dt@linaro.org, conor+dt@kernel.org, 
+	linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	quic_subbaram@quicinc.com, quic_collinsd@quicinc.com, 
+	quic_jprakash@quicinc.com
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Mar 14, 2024 at 12:54=E2=80=AFAM Andy Shevchenko
-<andy.shevchenko@gmail.com> wrote:
+On Tue, Mar 26, 2024 at 11:07=E2=80=AFPM Anjelique Melendez
+<quic_amelende@quicinc.com> wrote:
 
-> Just noticed that the newly introduced driver has some leftovers or unnee=
-ded
-> customisation. Hence this series. It may (or may not :-) be sent as an up=
-date
-> after v6.9-rc1 for v6.9 cycle, but TBH there is nothing functional critic=
-al.
+> Add GPIO support for PMXR2230, PM6450, PMIH0108 and PMD8028
 
-There is some speling mistake making patch 4 fail according to kernelbot,
-if you rebase on v6.9-rc1 and fix patch 4 I think I can just apply the lot.
+All patches applied for kernel v6.10!
 
 Thanks!
 Linus Walleij
