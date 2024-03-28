@@ -1,167 +1,166 @@
-Return-Path: <linux-gpio+bounces-4737-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4738-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id CE98B88F713
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 06:17:00 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3716C88F977
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 09:03:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E1D0A1C20A74
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 05:16:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B2D4FB256F9
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 08:03:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAF204C600;
-	Thu, 28 Mar 2024 05:16:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6ADF54BED;
+	Thu, 28 Mar 2024 08:01:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gXPbjKTb"
+	dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b="IzCHboNc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
+Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C8BC4085C
-	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 05:16:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C500E657DF
+	for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 08:01:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711602998; cv=none; b=pUo3VI1tE8Ux0v3imAbEJlk71e+ZcdlLh2EbO0npO0pLspo7g6a4tGzXJd1mqgxvrFbM57CrwPt+rExLg31X7kiaSinw/OfO7yfOpkFnfHOZiJt04K+uLu2PQZnvChZ9Hqy3HjKZCMdL1fjZqNk5kEg04JTeuKbVzvtlk84I2pU=
+	t=1711612888; cv=none; b=b3WIHkpIhGjETEGt8jLQ8qk4G/EZOOm6YQczGGoLySf2ptF/ggMHLyGW0b3n4eP88pOZd93hKqmbHNLh+NUIFMXDGeBG5/nxIhkVnOANyIlF2ZQKOaI6LdzZ12TzsRV+mPpJ1cMKuYJJEhoruWpEGZY1hiKpecn9IPb+4kiK1k4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711602998; c=relaxed/simple;
-	bh=sBPTJcGEYTbv3hcgUwqNauzYtskOKb+GWpnb7br0MOg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lbSKhW5A/+hpvvIL1eV++hH/cbKIwU4PeM849tC0zZfq6YP6K2P0umvdJ7Y8mrcxfFNssLMcygGXHWjHYuVrC6tUtTEIVrSbv/eBR3RPtl2deNwZ8Th02pL7PhmFmOL4qpj7QckhwOeRaEZzH+4cQF9NhwwWtfLZ8LB6IaIUFd8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=gXPbjKTb; arc=none smtp.client-ip=209.85.161.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a529a1f69aso281360eaf.3
-        for <linux-gpio@vger.kernel.org>; Wed, 27 Mar 2024 22:16:35 -0700 (PDT)
+	s=arc-20240116; t=1711612888; c=relaxed/simple;
+	bh=iGPkZ93mPGMHekKKmEQJnZAQ7M3hRddQQyp6Ob/5spM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WBW2YTqwmx2uvOGA8lSji12kuVOJgjNAhG2GFHxHbnRAc3jmftbCEnQM+SsXcU0XNBAcl6eQUjFuO3OQ+GtuqpOZAfrnkz+1+01qrGPTgNvn8xgvVadhSz/8pcjp+fm1nG2tpFM7JKvAKnCTcOqjcPUPh4h6gnoaP1gobgvYXLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev; spf=pass smtp.mailfrom=tuxon.dev; dkim=pass (2048-bit key) header.d=tuxon.dev header.i=@tuxon.dev header.b=IzCHboNc; arc=none smtp.client-ip=209.85.128.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=tuxon.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=tuxon.dev
+Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-4151d2322caso4019865e9.0
+        for <linux-gpio@vger.kernel.org>; Thu, 28 Mar 2024 01:01:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711602994; x=1712207794; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=NCBBqATkrmhAqNvcc7V5yUc6Bj0MDD2J9Hd2vuTQUac=;
-        b=gXPbjKTbrvtfpT6/qEmVUxns+A30LH6QOiAjT4F0xLZUPzUZg0ordNOvATabg2F/Wl
-         kPv7rlwtWOxfgPm2w1j9yiVchrEqiifXfpuqKbM3c55rO+d/cQmcOVsJtdO/BdsefRN9
-         RxOKLZQ8lQKHo0Up3S4+54dabwBIgvbFJlg0eTR2NGULCedimJYCVi8NEO/uINa2jv1N
-         m9SrGDUqniaEzEwLDKjTqPO6IIW3ujVusL7p6WPrXVYciMFtPwv7L9mAU+/qpWitn5fr
-         hH1CJycNEicAhv28MTJZUrDtXoqvUlSPCv54sDagwBcdt6nzOokgIGUCvI13cWlf71La
-         jDOg==
+        d=tuxon.dev; s=google; t=1711612882; x=1712217682; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=sOFRtkco0210L/WuRcYQ2nRZLqQCloOmB/yxmLTCTIQ=;
+        b=IzCHboNcSD6S71uyiZCJjwvWfO6o0LaUf+9SOu0KyA5/a8JJCXmKD2/4qjqjEzekUj
+         HlGlpMlIdet8abtzXEw/O4DOa/Q7SWLKOJ3CVPJQuTUdZ8On5zlgjy3DoFbG/HjAwsQs
+         XHi7YulBehbsd0ttOqouZGEW66Ge6C9hCq+mPl31me5jdMF1kzZS3aOAKFdt8cGr+uIf
+         bqsr4ONXzdrN4gnYdoZsT1Y/obcsAHcfLC7BXvxh17JJNzqU/Qzribs6vyd5FxrvRimg
+         sNHymoC1Y4jhWikkBJ0vkZjtCtKZtZ3Y/OnrLuKwMBGX8oWi5ed5PhwM+hQSU2E7mlND
+         Kkqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711602994; x=1712207794;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=NCBBqATkrmhAqNvcc7V5yUc6Bj0MDD2J9Hd2vuTQUac=;
-        b=NcGMnORDmJTOiaXWSs8YbVZPlYPHR5bgTVJiRIaPj45PxCblZ0WX26jGLRQMktSslo
-         62QIOyuP6NhN0WiwMVbQ4lA/BCQj0dliLZRKkOfPJkemAdd5HQ3dL1lq6/12KMRrClR9
-         EZsD85uw8lwKaWtLgBqaLiH2X5hvmw3QDxpF2p7Ta5NmU2D/cSRSzN52Ac9jYpcVjLhO
-         x5JIGDcSdpvudllx5fA8L/rEiHK7UU1yE57e9LrPt+Xvdc7/x8lKcIaoqi27dUsJBFJ5
-         dc+agAHJbjZKny1i76C3ZSz6WGvtgbFI82AQPCsY0FrPbdAH3+9xkpUvPKp6bN3wgkez
-         81xw==
-X-Forwarded-Encrypted: i=1; AJvYcCXdqDEmlvr6boY9bEB5M+eQjnjryYHejeXzWNLnwoKcwP1rQml5eVf3olRidOpQijBN3C4KlTZ57MyESGIFAYDuDAHGnl1JJqKj0Q==
-X-Gm-Message-State: AOJu0YwcWx0kllY4tPCntc2deNcbwTSGOB3lZPOZuZmaeL6JvJgeTSlS
-	zgeINyP0WDtUyTiDYsjzh976jkHbWEOfPZSRGapbSYlL5KnlDZ1I8/rjapU5Muw=
-X-Google-Smtp-Source: AGHT+IENjWm30W77Sho1F7STKjVDKRSghd/5qoLRwkalJNx2D7PN+W1+MnXgZZvq+TiwN/1tI/fojA==
-X-Received: by 2002:a05:6358:5307:b0:17e:8f90:dd31 with SMTP id n7-20020a056358530700b0017e8f90dd31mr1555244rwf.32.1711602994298;
-        Wed, 27 Mar 2024 22:16:34 -0700 (PDT)
-Received: from localhost ([122.172.85.206])
-        by smtp.gmail.com with ESMTPSA id u23-20020a63df17000000b005e857bba96csm433309pgg.10.2024.03.27.22.16.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 22:16:33 -0700 (PDT)
-Date: Thu, 28 Mar 2024 10:46:31 +0530
-From: Viresh Kumar <viresh.kumar@linaro.org>
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-	Richard Weinberger <richard@nod.at>,
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Gonglei <arei.gonglei@huawei.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Viresh Kumar <vireshk@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	David Airlie <airlied@redhat.com>,
-	Gerd Hoffmann <kraxel@redhat.com>,
-	Gurchetan Singh <gurchetansingh@chromium.org>,
-	Chia-I Wu <olvaffe@gmail.com>,
-	Jean-Philippe Brucker <jean-philippe@linaro.org>,
-	Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Eric Van Hensbergen <ericvh@kernel.org>,
-	Latchesar Ionkov <lucho@ionkov.net>,
-	Dominique Martinet <asmadeus@codewreck.org>,
-	Christian Schoenebeck <linux_oss@crudebyte.com>,
-	Stefano Garzarella <sgarzare@redhat.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Dan Williams <dan.j.williams@intel.com>,
-	Vishal Verma <vishal.l.verma@intel.com>,
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	"Martin K. Petersen" <martin.petersen@oracle.com>,
-	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
-	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
-	kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
-	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
-	linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
-Message-ID: <20240328051631.c5eitp4mzaj4bh6i@vireshk-i7>
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
- <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
+        d=1e100.net; s=20230601; t=1711612882; x=1712217682;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=sOFRtkco0210L/WuRcYQ2nRZLqQCloOmB/yxmLTCTIQ=;
+        b=qZvkumDn+YZK1WAsFaRAfTP15gUk/psVV7/ec+7QPosMOC6q6CXo/9NmkCgBSR786D
+         7dx4rz3L1rlVR9s3BklKX0IIp52cvEiVxJxJ6t81paD8nYndMDVnyzbh/M+95TnctYQR
+         QApP3TznENuqcr+TY7kjDjlln2YfCrH2IMp9qjw3OWxmApAAyeoDhiHJ9Mp5GQox4gGS
+         /efnWhYXohk268lAZ2NoybFopI7vXG1EUQlWnnRD3RABjfgc7ShOAF+hSSXg+qI902XN
+         qc2bL9wPvMBRHTIwro0hm4vYwaVAbpXMbdHjLsx3OgKxYKfiyWxdeP+buc/gDcnSri2K
+         acYw==
+X-Forwarded-Encrypted: i=1; AJvYcCWcuHKI++iaoW+fi36BZlDeafWepZ0kl0KkL65d6iNv4s0XuTFubtQ9hme6i8tpCsBQWXSeeuli3Jx862bi17VjGevckVJzteIM5w==
+X-Gm-Message-State: AOJu0YzcUBrnR5jPpSes0xcyLRZ+MwsjdH0FCF5e6WPUnWMeMw7rg70h
+	nMppSD6djbhOolJrJHQN8GBo+ZJP1PnQF4+WytvKenPofgK7EmKjx07sCV2x/r4=
+X-Google-Smtp-Source: AGHT+IEfucJcctzZC8UBvZQeq6f9QZjWkgL5lvSz0lZ62cuXHSgW+76tyPLaKHZwCKmq33V0C3VBOA==
+X-Received: by 2002:a05:600c:5250:b0:413:f3f0:c591 with SMTP id fc16-20020a05600c525000b00413f3f0c591mr1901771wmb.41.1711612882008;
+        Thu, 28 Mar 2024 01:01:22 -0700 (PDT)
+Received: from [192.168.50.4] ([82.78.167.144])
+        by smtp.gmail.com with ESMTPSA id jg5-20020a05600ca00500b00414850d567fsm4609630wmb.1.2024.03.28.01.01.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 28 Mar 2024 01:01:21 -0700 (PDT)
+Message-ID: <c200e87e-1c65-4926-9307-16229e90594e@tuxon.dev>
+Date: Thu, 28 Mar 2024 10:01:19 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 07/13] pinctrl: renesas: pinctrl-rzg2l: Validate power
+ registers for SD and ETH
+Content-Language: en-US
+To: Prabhakar <prabhakar.csengg@gmail.com>,
+ Geert Uytterhoeven <geert+renesas@glider.be>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+ Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Fabrizio Castro <fabrizio.castro.jz@renesas.com>,
+ Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240326222844.1422948-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+From: claudiu beznea <claudiu.beznea@tuxon.dev>
+In-Reply-To: <20240326222844.1422948-8-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 27-03-24, 13:41, Krzysztof Kozlowski wrote:
-> virtio core already sets the .owner, so driver does not need to.
+Hi, Prabhakar,
+
+On 27.03.2024 00:28, Prabhakar wrote:
+> From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > 
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> On RZ/V2H(P) SoC, the power registers for SD and ETH do not exist,
+> resulting in invalid register offsets. Ensure that the register offsets
+> are valid before any read/write operations are performed. If the power
+> registers are not available, both SD and ETH will be set to -EINVAL.
 > 
+> Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 > ---
+>  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
 > 
-> Depends on the first patch.
-> ---
->  drivers/gpio/gpio-virtio.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> index fcc5e8c08973..9fae8e396c58 100644
-> --- a/drivers/gpio/gpio-virtio.c
-> +++ b/drivers/gpio/gpio-virtio.c
-> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver = {
->  	.remove			= virtio_gpio_remove,
->  	.driver			= {
->  		.name		= KBUILD_MODNAME,
-> -		.owner		= THIS_MODULE,
->  	},
+> diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> index 348fdccaff72..705372faaeff 100644
+> --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> @@ -184,8 +184,8 @@
+>   */
+>  struct rzg2l_register_offsets {
+>  	u16 pwpr;
+> -	u16 sd_ch;
+> -	u16 eth_poc;
+> +	int sd_ch;
+> +	int eth_poc;
 >  };
->  module_virtio_driver(virtio_gpio_driver);
+>  
+>  /**
+> @@ -2567,8 +2567,10 @@ static int rzg2l_pinctrl_suspend_noirq(struct device *dev)
+>  	rzg2l_pinctrl_pm_setup_dedicated_regs(pctrl, true);
+>  
+>  	for (u8 i = 0; i < 2; i++) {
+> -		cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
+> -		cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
+> +		if (regs->sd_ch != -EINVAL)
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+As of my knowledge, the current users of this driver uses SD and ETH
+offsets different from zero. To avoid populating these values for all the
+SoCs and avoid increasing the size of these fields I think you can add
+checks like these:
 
--- 
-viresh
+if (regs->sd_ch)
+	// set sd_ch
+
+
+Same for the rest.
+
+> +			cache->sd_ch[i] = readb(pctrl->base + SD_CH(regs->sd_ch, i));
+> +		if (regs->eth_poc != -EINVAL)
+> +			cache->eth_poc[i] = readb(pctrl->base + ETH_POC(regs->eth_poc, i));
+>  	}
+>  
+>  	cache->qspi = readb(pctrl->base + QSPI);
+> @@ -2599,8 +2601,10 @@ static int rzg2l_pinctrl_resume_noirq(struct device *dev)
+>  	writeb(cache->qspi, pctrl->base + QSPI);
+>  	writeb(cache->eth_mode, pctrl->base + ETH_MODE);
+>  	for (u8 i = 0; i < 2; i++) {
+> -		writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
+> -		writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
+> +		if (regs->sd_ch != -EINVAL)
+> +			writeb(cache->sd_ch[i], pctrl->base + SD_CH(regs->sd_ch, i));
+> +		if (regs->eth_poc != -EINVAL)
+> +			writeb(cache->eth_poc[i], pctrl->base + ETH_POC(regs->eth_poc, i));
+>  	}
+>  
+>  	rzg2l_pinctrl_pm_setup_pfc(pctrl);
 
