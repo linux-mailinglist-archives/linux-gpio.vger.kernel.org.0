@@ -1,186 +1,158 @@
-Return-Path: <linux-gpio+bounces-4797-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4798-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8735C8907C0
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 18:55:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id C69B789096C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 20:41:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 11FC31F28148
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 17:55:16 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7BAEA1F230C2
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 19:41:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3CDA31311B9;
-	Thu, 28 Mar 2024 17:54:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3EA62137C26;
+	Thu, 28 Mar 2024 19:41:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P/NdIruk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kaA9Q3h4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-vk1-f172.google.com (mail-vk1-f172.google.com [209.85.221.172])
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B2130E3E;
-	Thu, 28 Mar 2024 17:54:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 701641849;
+	Thu, 28 Mar 2024 19:40:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711648473; cv=none; b=ewox/BEScQQhx3qTH4A0OivEj7GkYzM5VtYqshEyFKIOQnMl9s0AaQAH1gBUB9JPJj2v9SwOMUet8AX6awAio6652pI1BJfk6+GLM8+X/prAnBKfWpvN7eWQ3yWtwBumth5tQ7MrBVziASY4e5Bs0o9netnB9iXj6gEWc5uPz9Y=
+	t=1711654860; cv=none; b=n+00L757N3vT1dZ82YdB3MOdwSfoospGHoxMUWUMLIaS0khyDCncM+yfoWz1HspulBqPej4M2WKiKCLMxmZH6UBePKjNdpJdxUCxtvxCgHV8way5NTenBFRIaxnT21aWPr/ZcG4k671BZ8FFW5nleeptDp0M6jlaqN2ud7AHCdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711648473; c=relaxed/simple;
-	bh=4zbsj4CqH50R7JixcMpO1ri4GLOvlF2Hf8sdLEh/LXs=;
+	s=arc-20240116; t=1711654860; c=relaxed/simple;
+	bh=+3NWWwXtkzvrmA576fnyloztaGBywL+XKq+YksdA5gQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AwWY91D/JrjisFDB3/QHUl21BiBT05nVOkADdFvjWMNTz8qAHWh7vY7X16MiW/sCglDMaIIW/igBgxc6xJRbAY2b6lHm3YAu7plGutcvl/EBc38HgIsMQPII5RXEbZJyzlr1UxC1dmP18ALiCSfFXNtMs9bhf5zWvY2DV5J6PB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P/NdIruk; arc=none smtp.client-ip=209.85.221.172
+	 To:Cc:Content-Type; b=qHDj/yQVgG6GaPJlEoUIAFSKe1lc8CGfwP9G+eSe9AJvOKUuRw4DfGmBVAOi1OYoc7i47o25Gymm6o/wheYEd04wsUMUmk4yXBN1J/Be/F+jQPajk4Yx6Hwi4tAYiusTWIKgb9Zn6OtGGRp+R5pKWLYqVyXLodOYUb8fQSCLNV0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kaA9Q3h4; arc=none smtp.client-ip=209.85.221.182
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vk1-f172.google.com with SMTP id 71dfb90a1353d-4d882358ecaso1185966e0c.1;
-        Thu, 28 Mar 2024 10:54:31 -0700 (PDT)
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-4d438e141d5so714815e0c.0;
+        Thu, 28 Mar 2024 12:40:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1711648470; x=1712253270; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1711654857; x=1712259657; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=P1Cskl/8ULKW24VEzrpd9iTu5S6FVlRzlPxLB+/D2D4=;
-        b=P/NdIrukZv+DtK7KYxosEW+ZakLNhsVfRx2BxvKzxKLOa0+ikV8X3HIYJdF+i1/oaC
-         jaXwtfpJR3JO/sSgBIc1slm4VZakNjotl5Ftb0bkCJaETNLqAQWrWKOBY2xb2+XU4m77
-         bxKvBxkrAcZznepC6jKamAzoA7gJrJ37nIkfnn03o3ueRUjcpypFPJ1cWR91GrBET2cO
-         /9r9ipwWuJ1bKLEntDmVjz6s1Nlz8xAV4WVeWmIpeaR5PKfswvGghzKq9niZcQxYxm+e
-         rCeZqRMcrchSLrOBJpRAPWfABL6pBiDDyW6ocvRPKl+F0CoOJImNIlMQxtRKQfK9yDPi
-         v7jw==
+        bh=pGCaq9OrigqbkBbwFdgSJ7iz+P7VgNUODi7EL0TTbPM=;
+        b=kaA9Q3h42sLRsltH3mK4bf+Kysp/vEkP2EoztKKfGf4F4xo6le+/mbcT4YLDaCYv6Z
+         xyRCPRRVYeFeLtWk60JRQo/lhm0nVbAhWwQdEyuJnCQ5FDVND7S6fF/lESZh8AuAEglD
+         U5rHDu9EO38SqP7eEn3ts72lj4BNehdOye1oINE4wx1KUm189/ee4LkA6rD0DGLNJmC+
+         SKi87e9FI4Wkw1Ts62f9Pta9G9aT1yB2xZRb8KwCWW2yUnbXQy4G33SLOJKEwEa4h5YX
+         IpJgUApWG5cCCjpunC0CbLCFKtnk7uSvKiCvxuSjCLl37Y8abg1i/SJ6qikSxLAIA+eJ
+         3Gyg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711648470; x=1712253270;
+        d=1e100.net; s=20230601; t=1711654857; x=1712259657;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=P1Cskl/8ULKW24VEzrpd9iTu5S6FVlRzlPxLB+/D2D4=;
-        b=wWEuTJUh3WLCPqHXeJeZ8bvvVnI2ZB2C7JKedZbv/J/2kcCP8NTvKpVnO1vPFSaNNv
-         TpgyzEI6dizbIXL2bToS4taM5pTEyGLVvqZnTgWlZ+0ww4bL/KHdo7kAaG87yZsTmMR7
-         98NJgdo21Idf7yJpjGFsIC4Ut7ZGAATMqB3P/FXILpbXBAXjF/wGR+jSsO7Hsy1hovFc
-         sP25dU0A1X079afURRxl1J6QonPbxQtGjgh4ibvK0VsGMvPMnn2YY64OXrc6hInvqZvC
-         R2X/bVXwi4RivIsx1w90/H2e3PJDElaQjz7l4B1In18v66pDBZC24BK1l5KoZG9r3gY3
-         YKCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVG84DN8WM8jM7PlhJXQY30dCPAo0nA7m0Jyo7qwzRiPWX+FMfHI05tmv21e+DUDXetFqUXS/6v4/A02x0INB0j+wL8uWoVh6wY5ayZjxRM2fQyiJiEw06aBvZGwwRsa+sngwM4D0idu4ke76J29U7D+ABR29VWn2qs5NX62OG96nyfg94mAl/Lbw==
-X-Gm-Message-State: AOJu0Yz6VmyjKjMGyioOgxEMCViMWd8JEFF4fsUOPFa0eaSBM2jTmACL
-	ziYdh3U/eoAVH/rrdjVBKNh2//Ri8Cn5zxqn76apu7EAvJvf53PxLbWBh+N96kQLze5a8nvtb6R
-	pZN8xYvtC+DmZ0UfP4ZKTjXABKi0=
-X-Google-Smtp-Source: AGHT+IH+9L+dh1E4M2f6/leVeirNgsQgENRWTsO7oIEw+BU1Lwaa6NwSk8NbVMIJG25/Alr5WUAuhztHGelMXqMehDI=
-X-Received: by 2002:a05:6122:3686:b0:4d8:77d1:fc50 with SMTP id
- ec6-20020a056122368600b004d877d1fc50mr2737325vkb.7.1711648470219; Thu, 28 Mar
- 2024 10:54:30 -0700 (PDT)
+        bh=pGCaq9OrigqbkBbwFdgSJ7iz+P7VgNUODi7EL0TTbPM=;
+        b=a3s489Fbi4hZfjyX/B0EKYrhCm1t3VuQs570uBZTQCl31R2SPSsrdiKvd8pudOzjBx
+         wXI6pTPTISpwU3jOt/is6cC6Qm8WaJSl0+eVmiN9fccXoJGgPZN92iz7AywAKzrxi1oE
+         2h4TyqZN4soRrKPv0SqhnLShTQhWljzSh7Al5RhhPGFbT1aNurlrlvcN2Y7Qdi7i+XjH
+         RbbF7/Grlq6HugKq181Wd3nSuo9fc3LIAhsXkPE3ZB89V5pAuszm3MfqmeQCzkovpD6T
+         wuAMUp9jknOFj3z2Q58t4iTlFmGMca30Tu7OZLCXtJNiwsVyt48XfT08MetR0LTelxdP
+         CrGg==
+X-Forwarded-Encrypted: i=1; AJvYcCU+nzXZJ9kY0ZKk29e1ABHDbAnsnGpfFLM1Q+wWuFcJkBW1QOsw2UH9oWE52rJlV3BjmQcKFxpMAUz32imU8kEFgVg9OK1p5oOzvXxfFd0KdOY2AQ5pP3NkkP8QB93HmgWoJhhE5Sa0PW5KToP9RJmDEd9pBxbXfuWUuN+xdkoMlTonsENPBIggZpE/YT9n86drMwA0phvXEsrTVRvzAVxfLZENcx94wg==
+X-Gm-Message-State: AOJu0YyEFheS7pG4zIkBH9fn3j9FjjOfXf2bgvMXLfTTC3ZXZQ2mKKZy
+	GC20hOjHjnUGRcUW5UsNipqMfHhTX/u98H51iq2VifWd3MgEZr3flsUqtiH6l6IJhHZOtoG/Ohn
+	scYD7hQ3XVt16n4chIV3glVm8xic=
+X-Google-Smtp-Source: AGHT+IGGIZX5yS8mpZls/4SrlztMQeLHRiz+4BGAHryeTkdghkFMlHhUz+zkCt0bmRB5EW/857MaTjogeo0ycR0LGVQ=
+X-Received: by 2002:a05:6122:2806:b0:4c8:df97:139d with SMTP id
+ en6-20020a056122280600b004c8df97139dmr2962055vkb.2.1711654857269; Thu, 28 Mar
+ 2024 12:40:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CA+V-a8uEoyjjNCydK_Lr2CVOPN4j2oL2moVU8RgTravv3ygO9w@mail.gmail.com>
- <CACRpkdbWE7yQxxX1bv5JvSirJq1Dkq8_NDzVr9MaB7o+LZONPw@mail.gmail.com>
-In-Reply-To: <CACRpkdbWE7yQxxX1bv5JvSirJq1Dkq8_NDzVr9MaB7o+LZONPw@mail.gmail.com>
+References: <20240326222844.1422948-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+ <20240326222844.1422948-8-prabhakar.mahadev-lad.rj@bp.renesas.com> <c200e87e-1c65-4926-9307-16229e90594e@tuxon.dev>
+In-Reply-To: <c200e87e-1c65-4926-9307-16229e90594e@tuxon.dev>
 From: "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date: Thu, 28 Mar 2024 17:54:03 +0000
-Message-ID: <CA+V-a8tZBHoFDZ8QZBiStA+yzEhuvVTs50GiD1t_+APnsbTpGg@mail.gmail.com>
-Subject: Re: [QUERY] RZ/V2H pinctrl implementation
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, 
-	Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	"open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Date: Thu, 28 Mar 2024 19:40:31 +0000
+Message-ID: <CA+V-a8vcyxrEmHrhgwDf2bhL1QpiXW6r1+aoH3my3uAJZfCtQA@mail.gmail.com>
+Subject: Re: [RFC PATCH 07/13] pinctrl: renesas: pinctrl-rzg2l: Validate power
+ registers for SD and ETH
+To: claudiu beznea <claudiu.beznea@tuxon.dev>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, 
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Fabrizio Castro <fabrizio.castro.jz@renesas.com>, 
+	Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-CC, DT maintainers.
+Hi Claudiu,
 
-Hi Linus,
+Thank you for the review.
 
-Thank you for the response.
-
-On Thu, Mar 28, 2024 at 3:30=E2=80=AFPM Linus Walleij <linus.walleij@linaro=
-.org> wrote:
+On Thu, Mar 28, 2024 at 8:01=E2=80=AFAM claudiu beznea <claudiu.beznea@tuxo=
+n.dev> wrote:
 >
-> Hi Prabhakar,
+> Hi, Prabhakar,
 >
-> mostly these are questions to Geert because he will have the main
-> interest in keeping the drivers coherent, but I'll pitch in!
+> On 27.03.2024 00:28, Prabhakar wrote:
+> > From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> >
+> > On RZ/V2H(P) SoC, the power registers for SD and ETH do not exist,
+> > resulting in invalid register offsets. Ensure that the register offsets
+> > are valid before any read/write operations are performed. If the power
+> > registers are not available, both SD and ETH will be set to -EINVAL.
+> >
+> > Signed-off-by: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+> > ---
+> >  drivers/pinctrl/renesas/pinctrl-rzg2l.c | 16 ++++++++++------
+> >  1 file changed, 10 insertions(+), 6 deletions(-)
+> >
+> > diff --git a/drivers/pinctrl/renesas/pinctrl-rzg2l.c b/drivers/pinctrl/=
+renesas/pinctrl-rzg2l.c
+> > index 348fdccaff72..705372faaeff 100644
+> > --- a/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > +++ b/drivers/pinctrl/renesas/pinctrl-rzg2l.c
+> > @@ -184,8 +184,8 @@
+> >   */
+> >  struct rzg2l_register_offsets {
+> >       u16 pwpr;
+> > -     u16 sd_ch;
+> > -     u16 eth_poc;
+> > +     int sd_ch;
+> > +     int eth_poc;
+> >  };
+> >
+> >  /**
+> > @@ -2567,8 +2567,10 @@ static int rzg2l_pinctrl_suspend_noirq(struct de=
+vice *dev)
+> >       rzg2l_pinctrl_pm_setup_dedicated_regs(pctrl, true);
+> >
+> >       for (u8 i =3D 0; i < 2; i++) {
+> > -             cache->sd_ch[i] =3D readb(pctrl->base + SD_CH(regs->sd_ch=
+, i));
+> > -             cache->eth_poc[i] =3D readb(pctrl->base + ETH_POC(regs->e=
+th_poc, i));
+> > +             if (regs->sd_ch !=3D -EINVAL)
 >
-thank you.
-
-> On Mon, Mar 18, 2024 at 1:00=E2=80=AFPM Lad, Prabhakar
-> <prabhakar.csengg@gmail.com> wrote:
+> As of my knowledge, the current users of this driver uses SD and ETH
+> offsets different from zero. To avoid populating these values for all the
+> SoCs and avoid increasing the size of these fields I think you can add
+> checks like these:
 >
-> > Option#1
-> > - Passing the power rail information from the PMIC to PFC (pinctrl
-> > driver) so that pinctrl driver can read the voltage level and set the
-> > values accordingly. Here we will be using the
-> > PIN_CONFIG_OUTPUT_IMPEDANCE_OHMS to get/set values
-> > Pros:
-> >   =E2=80=A2 Debugfs can show the value in ohms
-> > Cons:
-> >   =E2=80=A2 Race condition at boot between pfc, i2c, and pmic
->
-> This is something drivers simply have to deal with using e.g. deferred
-> probe. Also, there has been extensive rework to make DT systems
-> resolve dependencies before probing so that providers are always
-> probed before consumers, have you looked into this?
-> There is also the component binding used by some drivers.
->
-Basically it's a cyclic dependency instead of hard dependency. For
-example consider this case, the power rails are coming from a PMIC
-device which is connected via I2C  to the SoC. For I2C to probe we
-need the pinmux so this will be deferred until the PFC driver is
-ready, the PFC driver won't probe until it has power rail information
-from the PMIC.
-
-> >   =E2=80=A2 Late time of probing
->
-> How is this a problem? Everything has to probe eventually.
->
-Agreed not a problem.
-
-> >   =E2=80=A2 Impossible to validate dt-bindings correctly
->
-> Probably not impossible in theory if it parses and cross-examine stuff
-> but in practice maybe yes :) Ask the DT maintainers, they are
-> after all all about describing HW and if there is some HW they can't
-> describe they would be interested.
->
-> NB: describing the HW in the bindings have *nothing* to do with
-> the Linux implementation of the bindings so it is a separate
-> issue altogether.
+> if (regs->sd_ch)
+>         // set sd_ch
 >
 Agreed.
 
-> >   =E2=80=A2 Manual doesn't say that pfc has access to the power rails, =
-this
-> > could be a challenge
 >
-> Hm I don't get it.
->
-Basically what I meant was, as per DT we describe the HW blocks since
-the power rails are connected to the SoC and not going specifically to
-the PFC block passing the regulators to PFC isn't technically correct
-(I may be wrong here).
-
-> > Option#2
-> > - Specify the voltage in the pinmux/pins child node alongside the
-> > output impedance (using power-source property)
-> > Pros:
-> >   =E2=80=A2 both driver and bindings can validate the settings
->
-> You should fix the bindings question first and then think about
-> the driver.
+> Same for the rest.
 >
 OK.
-
-> > Option#3
-> > - Have an IP specific compatible ("renesas,v2h-output-impedance") with
-> > value 1, 2, 4 or 6 (which indicates x1, x2, x4, x6 strength)
->
-> If you can get it by the DT bindings maintainers I guess it is an option.
->
-While I was waiting for feedback on this I already posted a RFC series [0].
-
-[0] https://patchwork.kernel.org/project/linux-renesas-soc/patch/2024032622=
-2844.1422948-3-prabhakar.mahadev-lad.rj@bp.renesas.com/
 
 Cheers,
 Prabhakar
