@@ -1,74 +1,134 @@
-Return-Path: <linux-gpio+bounces-4788-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4789-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9245890649
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 17:51:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 012A48906D1
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 18:08:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 26CF51C308AE
-	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 16:51:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 8CF46B2484C
+	for <lists+linux-gpio@lfdr.de>; Thu, 28 Mar 2024 17:08:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 413E81369B1;
-	Thu, 28 Mar 2024 16:48:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 074427D401;
+	Thu, 28 Mar 2024 17:05:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="pA7jMrWI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54C4043176;
-	Thu, 28 Mar 2024 16:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from out203-205-251-59.mail.qq.com (out203-205-251-59.mail.qq.com [203.205.251.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA513BBEB;
+	Thu, 28 Mar 2024 17:05:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.251.59
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711644520; cv=none; b=ZjMk0rZAKhQqpJ1hhgwU8VJmTUOmMWtT0vJK58vgR/9fJxvLPzY7jKI7LS4f517LjxgFo+TOziAdAITLWea169aQh+O+Md5IG+Oq3vkO7+GB+mYLtUds+Qv90mobO8q3sunp3Os6xTAnrie3JDQClE4/Cmr1Azc1WgK8oJi+ot4=
+	t=1711645549; cv=none; b=Se6/gMu5UcebWBOkJs2vgLvSp8Cnzf4YyU59JRuACeX6+6bpoglp+RoCXFQSqd8ssYEUjaq5PwZunqAqDDK3PaBTEg8DYmdqwMbzghBIQMp89i5SWDRyyhouEP3z6iTSe/Oq1Wo9PGb0hDyqRNlDGcmdQQ+cSaDcsLN622okIWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711644520; c=relaxed/simple;
-	bh=9ly5amQocjcFvC1CcJYDOrRIEtZCFDVfD91fYk933iM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ddTidiSol8bkeOW6KLksKvILtCZL4v8NqTUdiRucRku5GOqYvTJsZWLCUne0ahf/CcUzzJ2R0hL3Pt+lS03vUacyksucmFrPENmuqdm8DNJOo1pFAD6vLy2F3LnnlT6svN3TWHe2DZN9/vU67RHnG9llL4XB7AYpNTN54pp1X3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06CD71476;
-	Thu, 28 Mar 2024 09:49:11 -0700 (PDT)
-Received: from pluto (unknown [172.31.20.19])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DDD793F694;
-	Thu, 28 Mar 2024 09:48:35 -0700 (PDT)
-Date: Thu, 28 Mar 2024 16:48:33 +0000
-From: Cristian Marussi <cristian.marussi@arm.com>
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
+	s=arc-20240116; t=1711645549; c=relaxed/simple;
+	bh=gJC9/6C1oV101Vj85n8xf1JyGlC/E4qL1YrA06etUf4=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=Jm2mShk19YIrISLWOXS8ns/PnSBYThTQxBxMqjUvEXWLPn/1fpLs3lPjp+rzA4OLJysVRgLdvk1o22ahEpDzJAszrcj/kCi9bK2fK3SfrfoSBtbKX2nYVHKfMo1DC0L8R0hBEjfU7hwrEvYE6pcTRB7iN10P9mb+n4XD2uq4xaQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name; spf=none smtp.mailfrom=cyyself.name; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=pA7jMrWI; arc=none smtp.client-ip=203.205.251.59
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=cyyself.name
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=cyyself.name
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
+	t=1711645537; bh=8ssu01htiYsJMJRjHgP4bblrXVq0qnGeiqD2k3sHcKg=;
+	h=From:To:Cc:Subject:Date;
+	b=pA7jMrWIuxQHr6YxFCLosUI6tQUdS37m6QxE24bg6NOKxXkzYKKStC1cKtdayabMt
+	 3dm5tYOJNiGLi6PRPBPwpE2/Detr7ja3bYudWcpe9cgn63FRehSN84bn+0oTteWMU9
+	 zsTsLiNT7tgS2VOihCcx/PErnEDg64WvhNxQA5wg=
+Received: from cyy-pc.lan ([240e:379:2277:8a00:7feb:196a:dd5b:c05f])
+	by newxmesmtplogicsvrsza1-0.qq.com (NewEsmtp) with SMTP
+	id 11335EFA; Fri, 29 Mar 2024 01:04:19 +0800
+X-QQ-mid: xmsmtpt1711645459tb1h7s37q
+Message-ID: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
+X-QQ-XMAILINFO: ORuEwgb9eurk937hgCQc/4UpQ04yu+q4iEC8YqNyGIVokpunePyEspOAdrFfaD
+	 TAZUrsoAzBa67OyGvySF9OBMgKTkKIA8T9Hh4gpac+UcW8/4s8lQd7TSLbfRX04oJHBeBehpJkfd
+	 yfaeUq2t9XWRzewmbxDNmZnmNbLP0qX+UD/NwvtecOIdyIqwxui8BLG5InboZ6yxLJUzWx18OJaZ
+	 NInfgjkEajkg2BM2REbaOoWjRfEjruia2KRNVsPlJAq07Pf3d8zvtf73tlBgwJOi+FkldoXYgh2h
+	 w8cm0GXPJCQiCABsLHlJhR3UE4HV1eovUOFvp+8cfgJv+sXKzcDxPojDqRVeA3uhvkj1zmEdtWJ5
+	 WATnrSDp6GF4vwgZrQfZVpD1tcR/vLF62gE4KXr5PoUfbOzucC2qH2Fu5iWBGqlvazAO6MPD9JwC
+	 2e1PCvQJKcUdhJ9BXsZDw7GBRAY5uFPBasxEqEQqJVXjDYBZbvIk6dGK+Z79sRji0ZaaHfrFaIl6
+	 bTxdAcHvVxeooFqsHRn6Tu/UurCPRsVP9RD05M2SzsfydgKujJ1yZXmD8YTC+K6PmbBC+tQVRcLP
+	 FzMqCVelVo0RRmDRgM6ZnQS7rZ2jMxAjJ5hdHig09+STq9uLx9ttCE+ntZF0m4K4skbvjZT2cmW2
+	 JqFBLShKuoCiwkasVXJC3httmDVrxUWLnwLBfpl2povSQkyM2m+QjAj7jyxESOZW54MTRMuTuvZ9
+	 vve4pLChyAuYBQOmOtLXzgUkEectMa7nVL9xCuK9JfzmmZ+HNx07qcUoHQK5gVuXrsA9tsHLT3Ac
+	 frPaHmtg1waA/McJfGlhrLlS9LtG5cWUvX3kUHHXPVZ5Zg6M+uq5bAUzXbkyL/mzikYXO8aPQnjG
+	 88UNSETFrJ0WKvwOHTukplXk3KVJLDf38eukbzd+h0TMgFaI4DHnWcnCqgH/nc0L/6EIQZIc1rsz
+	 rHe+cUi8/DeoWlc8u8r3mEN5P63Q5VE2QVS/0iyLsEP6/UYJ46cW0iuvjx3UbtZw4LwejHYFCDI2
+	 uCQC8CZQ==
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Yangyu Chen <cyy@cyyself.name>
+To: linux-riscv@lists.infradead.org
+Cc: Conor Dooley <conor@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
 	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: Re: [PATCH v6 0/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZgWfYZNR9M9zFI1v@pluto>
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Yangyu Chen <cyy@cyyself.name>
+Subject: [PATCH v1 0/5] riscv: Kconfig.socs: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
+Date: Fri, 29 Mar 2024 01:03:22 +0800
+X-OQ-MSGID: <20240328170322.119305-1-cyy@cyyself.name>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Mar 23, 2024 at 08:15:13PM +0800, Peng Fan (OSS) wrote:
-> This patchset is a rework from Oleksii's RFC v5 patchset
-> https://lore.kernel.org/all/cover.1698353854.git.oleksii_moisieiev@epam.com/
-> 
+Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+SoCs is already in the mailing list [2,3,4], so we deprecate the use of
+SOC_CANAAN and use ARCH_CANAAN for SoCs vendored by Canaan instead from now
+on.
 
-Hi,
+However, the K210 SoC is so special for NoMMU and built for loader.bin, if
+we share the ARCH_CANAAN symbol directly for K210 and other new SoCs which
+has MMU and no need for loader, it will confuse some users who may try to
+boot MMU Kernel on K210, but it will fail. Thus, this patch set renamed the
+original use of SOC_CANAAN to SOC_CANAAN_K210 for K210 SoC, as Damien
+suggested from the list [5]. Then, it made some adaptations for soc, clk,
+pinctrl, and reset drivers.
 
-beside a few more remarks on the series, I tested this again on my setup
-with the latest v3.2 changes and it works fine.
+Note: This patch set is used to prepare for Canaan K230 Support, which is
+on the mailing list [6]. The next revision for the K230 support patch will
+be based on this patch set.
 
-Thanks,
-Cristian
+[1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@kernel.org/
+[2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0a@spud/
+[3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46bb29@spud/
+[4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655a4d@spud/
+[5] https://lore.kernel.org/linux-riscv/2b0511af-1b5b-4c90-a673-c9113bb58142@kernel.org/
+[6] https://lore.kernel.org/linux-riscv/tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com/
+
+Yangyu Chen (5):
+  riscv: Kconfig.socs: Split ARCH_CANAAN and SOC_CANAAN_K210
+  soc: canaan: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
+  clk: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+  pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+  reset: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+
+ arch/riscv/Kconfig.socs                        | 10 ++++++++--
+ arch/riscv/Makefile                            |  2 +-
+ arch/riscv/configs/nommu_k210_defconfig        |  3 ++-
+ arch/riscv/configs/nommu_k210_sdcard_defconfig |  3 ++-
+ drivers/clk/Kconfig                            |  4 ++--
+ drivers/pinctrl/Kconfig                        |  4 ++--
+ drivers/reset/Kconfig                          |  4 ++--
+ drivers/soc/Makefile                           |  2 +-
+ drivers/soc/canaan/Kconfig                     |  4 ++--
+ 9 files changed, 22 insertions(+), 14 deletions(-)
+
+-- 
+2.43.0
+
 
