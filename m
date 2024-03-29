@@ -1,46 +1,46 @@
-Return-Path: <linux-gpio+bounces-4870-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4871-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7A7B9891E09
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:31:33 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A146B891E62
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:40:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4541286B3E
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 14:31:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 418581F26F5F
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 14:40:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D767B1A648C;
-	Fri, 29 Mar 2024 12:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6CD13BC13;
+	Fri, 29 Mar 2024 12:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QPCRJatJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSki5JRF"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FFA91A6483;
-	Fri, 29 Mar 2024 12:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AB1ACBDC;
+	Fri, 29 Mar 2024 12:49:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716472; cv=none; b=ZYYVJ1XlqvN9xjg2M0fp/0bG2h3Krx69zeJidgLF3Fv3XMrp1BZplIGCHvjI375KF02DwO9aH1SfjCAd0+KnWjjZ0m+cIvFMo8vNiPPO/Y0POvykLJXz2b289mQD86tbr7UpwmJxEBygi113sftBESzRAiyyF24debg2Gp3k0ik=
+	t=1711716545; cv=none; b=VXbzRMPjC+fRNTgGnp8il5JxYGqS3wNmxY4XPE0NN4lDj3oPozzu7X4Py4Sucd9sFDNNqiBFzgdro7w/dHNblZrNpCE6+AiW/V1kPQldszzK9BKMXaDW40GxU4pr722yG9LyP6jR66PkwgA/qp5wvcPsEhQW7VaSvEPBApB6pJc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716472; c=relaxed/simple;
-	bh=gDrerwWCpuVFmxg267SBmknIxzpAnbC2XgLOiKQKd6U=;
+	s=arc-20240116; t=1711716545; c=relaxed/simple;
+	bh=2uwCHh7IWEliOMQHyqYLK0bE6QOlmtBAJmOCypS98x0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UdreY+VXhr0r6salj0Q5k6e6OiKAjJKCp45VpAIfSJ9VZm/D+kzCRZkNnLKip7KK+HIbMLxw1nbS8/rw1wr1iCgIxoLYojy8kajr6wHlOBz2sYVNqsWUgaS12sTG2moVDuecyl/A8BrFBvZJZNXPvjFPAr1aj7ZHjcG0HLCF4Nc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QPCRJatJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0DA9C43390;
-	Fri, 29 Mar 2024 12:47:51 +0000 (UTC)
+	 MIME-Version; b=mzh0iNBPXkuepdXyvnDuIFUef8dNTNHEswkoz9rPL1B1kmGOM6UhpmeeSp5njqlo5TPD0OSlk89vKnJdvqENiTim/wH2zBFX8KFDvr3D2Ijdbvujvd/FLwdcS9SXv/ypNhbBe7FUAwynz0tX9QWEfZUxw+b+G54JFoF67JDC7wc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSki5JRF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320C5C43394;
+	Fri, 29 Mar 2024 12:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716472;
-	bh=gDrerwWCpuVFmxg267SBmknIxzpAnbC2XgLOiKQKd6U=;
+	s=k20201202; t=1711716545;
+	bh=2uwCHh7IWEliOMQHyqYLK0bE6QOlmtBAJmOCypS98x0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QPCRJatJv7LH6czyODh2jpjMj8X1GjH2WUB4g+jkekXXmmKN06kUT68uEupzoodpO
-	 ZR9vjFl7YmOgfHOmzFQytweZhZ4ZCmSq/L18VZPV5xQ0JZCgweneu8xgsP7pnKV2If
-	 NwJTgvBMX5Zb9pO5HEKr5SctdVqiXEZr5so4mqLxTS0XhXGjAtVAsqzRu/AvgxJWIg
-	 d7MjXdt4xlSct0nW1LtSB90kR/VjFCfiY16sXFCS0pTWLT4iPnyM4UdYwf94WHv/tr
-	 019YKompKe90pm1YoDWxEs2AYvhjQYpIkK9lJfo3/rg7vPM/eEi8JQ7Pdx7/SIF2dI
-	 tf4Ti0vrBGG3A==
+	b=OSki5JRFolnUyJy8HcV4bz19muOldP+qxeVPfTJed8kAvRRg5NjdLr6puCxYOpL8j
+	 ZwJJUAdrBWhUGwPHC31jm8LqhFbq2jJKFtw5G0Xj4NlvJuIP8WGPI1V/VKwwgmyhPL
+	 aj9chnVdp5k9tCW7gsmR56ZVslFvevEjwfo3duUIEVLXumltUP7ihQOXWOqHZfu666
+	 SwqsMNmeA5DUHyFoGVJ7VkGrMxnKE06i4t+oXCZmJpYpB9yYIneDpfBB6tKBOwyMvt
+	 AM3S8EwJfnc98SgdTYuAw8+PbneokxHkS5fZ9+JEDvMtCu48hqTAuMAf+D41fSQE1R
+	 b1/eYw3/04SKw==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -49,12 +49,12 @@ Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
 	linus.walleij@linaro.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.15 02/34] pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
-Date: Fri, 29 Mar 2024 08:47:03 -0400
-Message-ID: <20240329124750.3092394-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.10 02/31] pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
+Date: Fri, 29 Mar 2024 08:48:19 -0400
+Message-ID: <20240329124903.3093161-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124750.3092394-1-sashal@kernel.org>
-References: <20240329124750.3092394-1-sashal@kernel.org>
+In-Reply-To: <20240329124903.3093161-1-sashal@kernel.org>
+References: <20240329124903.3093161-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -63,7 +63,7 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.15.153
+X-stable-base: Linux 5.10.214
 Content-Transfer-Encoding: 8bit
 
 From: Geert Uytterhoeven <geert+renesas@glider.be>
@@ -91,7 +91,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
-index 75fc420b6bdf1..8d3b75231f39e 100644
+index 54f1a7334027a..c390854483680 100644
 --- a/drivers/pinctrl/renesas/core.c
 +++ b/drivers/pinctrl/renesas/core.c
 @@ -868,9 +868,11 @@ static void __init sh_pfc_check_cfg_reg(const char *drvname,
