@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-4903-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4904-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB773892504
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 21:13:48 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 25AC3892505
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 21:14:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 72EADB23471
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:13:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id CF0CE28581D
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0DE2C13B5AF;
-	Fri, 29 Mar 2024 20:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2970913A89E;
+	Fri, 29 Mar 2024 20:14:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="4T0aDZ9F"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SrRowCAX"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7717213B59A
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 20:13:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9688713B5A4
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 20:14:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711743220; cv=none; b=QuZK0X9635AoW6t/7yo6MLjvJGBzUaiQx39cqFi/ubpojS0PlTGCMfM3gVj4JINVbenFzolsaCNhcoCA7Rcdv8YOsREKft0F/WK+S1p+ZWJ33dN1i2/6ve/P0vFtLTlqkl9sXHqqS7KZfbOZRBQhqDlc1psxdVvbIefEEHjOgFY=
+	t=1711743283; cv=none; b=qRNsthIi1gRfTQqv7o8RjWFK/IKXaO+SQzna8/N91a5edrRPxQcfpXxA2fdETanItnnF5enPbBYAmg8zAHV1fjmLlboW4ifPmHLFDTTUE3NbYX193FOBjCKvgkeGcNv1hFFWsG2OtS4KQY1wL1O/2DfsAt/56MGK5N/ju3Vz7WU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711743220; c=relaxed/simple;
-	bh=1CIhbiDhLdPetfy8JNPZBtZ4Bo5ffBYFYyqo2HebwIc=;
+	s=arc-20240116; t=1711743283; c=relaxed/simple;
+	bh=Ue67/aWZBFXHbks1VsfgKBe2xxXryMkq5NnPitT7UFs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PE2RqEHVDd6cWppAhWtL1h5Cysq+WdhbO8mcyLGQaCnlBRKEESzykgkRB0JpPunVVUkApx2ONq7qRdmtShoQJVxg8R8Yi/lCxA7nflu5vPCS7xqbTdq4xnnEA58S7lYP+4hfxCCs9jd/01Y8sCbiywReE4ACgBOkEhpGUJvofHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=4T0aDZ9F; arc=none smtp.client-ip=209.85.214.174
+	 Content-Type:Content-Disposition:In-Reply-To; b=i1BIGN/MwxgZrvxIJyCznzoWgiejXcTXepIVCYbo5flFWOmxwXOhlquKlStsbDLqBzQH/S4fvpObkLcqOdca4hzrjk+7WsYJ67wrox3s4AnqvtquP/sNSaXuxH+dKg/2zJgWy5yeCbLr+6EaZGqLnJhRBN49fvpkeBq5IDfG608=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=SrRowCAX; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1dee917abd5so136735ad.1
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 13:13:39 -0700 (PDT)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1e062f3a47bso166285ad.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 13:14:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711743219; x=1712348019; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711743282; x=1712348082; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=qWs7zN/LFor0Uf4kjH3ZAhI6dar6SefwVzRPkQY1ryU=;
-        b=4T0aDZ9Fm2QPaJAKCaVNYyyYAO+oyDf/nrd5B58/e1mrG6ymJjdu0p9xHdF87cThAs
-         3RAAPY69k5SbPV3UYWlRqYm6jgc4nQGeRNq1w54wRd+vru99Kl5ub/sYhrCMWu2Q7GLH
-         vPCJribBXYTwjVwKndWY4yzy72KeZ/0Hr5mRaTMS9f6pUH7le25CzRXFJCVA3nVqHaCz
-         73V0sgP+D8tpLpkXdKiZmwytfcDJ4rH98SzvsfwUsxLP61A7Kodp5qVw0+uGHmtb8pUW
-         vPZ7yUFmEYPwV1wiyrHTV2il0EMngRIcGB005kuDcoYv/YnlWj8zuONRE1DD8InHhi0M
-         GVvQ==
+        bh=KyKDOpyo0CvUhZvmqAETcwlXYmOLuTf1osPn+ePZivQ=;
+        b=SrRowCAX7LLe6QpLPkoa+kW5eL46QpeX4S45NI4hjdGJhlhpM91I1mhdD7uTcPiNb7
+         1QIRqRZBxVzKrL8cANbiWX8iWnaCIG6Dmbgs5TkLCeYqI4hiOOyyeDouj8S1b8tLSQJs
+         yeXqNRozRSzqUlfRV1vDuBr4nA8575vMblzcnMkJJxbQ/HHDOlFCsyxHNTR3jAgVUHh6
+         DMtP78qxXEUWN0HuNmuYPnuTOv5INl8ZCLYw5akCOtisH99SP700l6bpk8+1Q95xRCS1
+         T5DKmD91cZrEHMEROf4sSNxLS4Spv2q/3cVky0Ibuv6GK0IkI6GSyDzxBBPZApnCB6IM
+         SoJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711743219; x=1712348019;
+        d=1e100.net; s=20230601; t=1711743282; x=1712348082;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=qWs7zN/LFor0Uf4kjH3ZAhI6dar6SefwVzRPkQY1ryU=;
-        b=oWq0EZtxdKVOEmewsCG/1Ragd4FU0nBB/4ptDqO3bgq9aPRsVwbtlKm94qfd0RrveR
-         OAewxr+qaZax7CQdqkxCalS1bM0D9JXHN0t9lXfytYxIVFcdRwfwvg+YibNJWyO4+Daw
-         HY3FxbUJTPPJG0+HB3mM4KmhX/3GmRctE1FHQZn6ARs7XhnhIhuXZTVuR5QFe9Fk6wbJ
-         MGGw8KqIJDHOIAYaMBETIB7Ngm0rkfQyFotW4L/+ZxZ1QuLjdChxxJwCSWJEUvSq8JMZ
-         5KisM07UoDgGS80GRT6Y8WsT39l8nQVevxXQXxoE1zrEPw6tVAUI/uK9ZIO+DlIY88wf
-         cQoA==
-X-Forwarded-Encrypted: i=1; AJvYcCVXcIq5X6Q8SEhJpMKs4icSOGYp+8a0iBYVCASnSyyV1oTxCGiB2AMBd8eDJLtO+ju4maAATtP0II++TSQK/XLDsMSmkUrtTOqSqw==
-X-Gm-Message-State: AOJu0YykO8qZ2MPdk2/e/Vh7PezhxM7NLWawp6zUTIT+EqnqefMkBGbu
-	3nluDkGhjRMJo0BUdDKYc8So4BlRJJgyo8hR2jTfDWnNTa23mRUpCFqk6IXK9Q==
-X-Google-Smtp-Source: AGHT+IHsexnfMRJbpIHl9fmuE3u0hPgMNGbbB4LfvtV65/D832Ij+scd+b8wqjyQ7qu7XIMJR5vcbA==
-X-Received: by 2002:a17:903:124c:b0:1e0:984b:6215 with SMTP id u12-20020a170903124c00b001e0984b6215mr270043plh.16.1711743218318;
-        Fri, 29 Mar 2024 13:13:38 -0700 (PDT)
+        bh=KyKDOpyo0CvUhZvmqAETcwlXYmOLuTf1osPn+ePZivQ=;
+        b=uIsBEbXhJQmmHJEN1jArkqMtQRsN0QkxFoFbZlTxyfJ7E1qt/kv+s6CBgWtMta+52u
+         aAjSn4nlpZxEiK+TpmxnogaxKglBJbVf/++NwseojAPSWoCMibqMOxAx/3/s3dq897O2
+         WSVWPlvU2YEdsn7OIuMyhrhu8QhT5lRpgZX6tK/eVytomTnoBenrCG2fi2BRZTnI9t0A
+         TW7kz/PGKzv3BA0QCFxl4YtZww/52SxEuf82BqGuBMlsiFbhAdKuR6W4zpD7QAGSz4Ui
+         T8HME8iAf6Vt1CqueWFt+L9bJDv0qk/YjuLaLbt4j2qA7zhM7Dd8gJihnUt5sz9nemy9
+         mHkw==
+X-Forwarded-Encrypted: i=1; AJvYcCWEWPjhFlR1iwQMEZWBLuGPHijHpZVn9Ylk35+5r51A2AkIWKduxAbXEfuNpJmhHlRl7bhQkLxGsmTAy4cU9wCFkyy7HmEWSQybhw==
+X-Gm-Message-State: AOJu0YyV5IoDJZFBax9kDVfbZqiiq66I8UtlVxFqkLXAQprVGyHslUAg
+	AMOoc9P1YY0b8rDPKwsEKzFxfRC7+5ScaCKuvtbfOlPWFWdLEMhMdpgSb1H5Yg==
+X-Google-Smtp-Source: AGHT+IEs/KL53oMZZ4ceHxkkiQGhFUFfwtYFCC7gcQBKJHFph/5YpTLepHU6Fk1HitA6rVmfl4ITHA==
+X-Received: by 2002:a17:902:f689:b0:1de:fbe1:beb1 with SMTP id l9-20020a170902f68900b001defbe1beb1mr226387plg.7.1711743281527;
+        Fri, 29 Mar 2024 13:14:41 -0700 (PDT)
 Received: from google.com (236.219.125.34.bc.googleusercontent.com. [34.125.219.236])
-        by smtp.gmail.com with ESMTPSA id c21-20020aa78c15000000b006ea8c030c1esm3371937pfd.211.2024.03.29.13.13.36
+        by smtp.gmail.com with ESMTPSA id a8-20020a170902ecc800b001e0eaf9ac5dsm3831012plh.36.2024.03.29.13.14.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 13:13:37 -0700 (PDT)
-Date: Fri, 29 Mar 2024 20:13:33 +0000
+        Fri, 29 Mar 2024 13:14:40 -0700 (PDT)
+Date: Fri, 29 Mar 2024 20:14:37 +0000
 From: Benson Leung <bleung@google.com>
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org,
@@ -76,11 +76,11 @@ Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org,
 	linux-gpio@vger.kernel.org, linux-media@vger.kernel.org,
 	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
 	krzk@kernel.org
-Subject: Re: [PATCH 08/18] platform/chrome: cros_ec_chardev: provide ID table
+Subject: Re: [PATCH 09/18] platform/chrome: cros_ec_debugfs: provide ID table
  for avoiding fallback match
-Message-ID: <Zgcg7bAnp-tM_-oz@google.com>
+Message-ID: <ZgchLZc1jJnPiTLs@google.com>
 References: <20240329075630.2069474-1-tzungbi@kernel.org>
- <20240329075630.2069474-9-tzungbi@kernel.org>
+ <20240329075630.2069474-10-tzungbi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,17 +88,17 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="wFqlCGmJIgYSWWvX"
+	protocol="application/pgp-signature"; boundary="7y0qWvUl4tzyws91"
 Content-Disposition: inline
-In-Reply-To: <20240329075630.2069474-9-tzungbi@kernel.org>
+In-Reply-To: <20240329075630.2069474-10-tzungbi@kernel.org>
 
 
---wFqlCGmJIgYSWWvX
+--7y0qWvUl4tzyws91
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 03:56:20PM +0800, Tzung-Bi Shih wrote:
+On Fri, Mar 29, 2024 at 03:56:21PM +0800, Tzung-Bi Shih wrote:
 > Instead of using fallback driver name match, provide ID table[1] for the
 > primary match.
 >=20
@@ -110,63 +110,64 @@ On Fri, Mar 29, 2024 at 03:56:20PM +0800, Tzung-Bi Shih wrote:
 Reviewed-by: Benson Leung <bleung@chromium.org>
 
 > ---
->  drivers/platform/chrome/cros_ec_chardev.c | 9 ++++++++-
+>  drivers/platform/chrome/cros_ec_debugfs.c | 9 ++++++++-
 >  1 file changed, 8 insertions(+), 1 deletion(-)
 >=20
-> diff --git a/drivers/platform/chrome/cros_ec_chardev.c b/drivers/platform=
-/chrome/cros_ec_chardev.c
-> index 81950bb2c6da..7f034ead7ae4 100644
-> --- a/drivers/platform/chrome/cros_ec_chardev.c
-> +++ b/drivers/platform/chrome/cros_ec_chardev.c
-> @@ -14,6 +14,7 @@
->  #include <linux/device.h>
+> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform=
+/chrome/cros_ec_debugfs.c
+> index 6bf6f0e7b597..e1d313246beb 100644
+> --- a/drivers/platform/chrome/cros_ec_debugfs.c
+> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/debugfs.h>
+>  #include <linux/delay.h>
 >  #include <linux/fs.h>
->  #include <linux/miscdevice.h>
 > +#include <linux/mod_devicetable.h>
 >  #include <linux/module.h>
->  #include <linux/notifier.h>
->  #include <linux/platform_data/cros_ec_chardev.h>
-> @@ -403,17 +404,23 @@ static void cros_ec_chardev_remove(struct platform_=
-device *pdev)
->  	misc_deregister(&data->misc);
->  }
+>  #include <linux/mutex.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+> @@ -564,6 +565,12 @@ static int __maybe_unused cros_ec_debugfs_resume(str=
+uct device *dev)
+>  static SIMPLE_DEV_PM_OPS(cros_ec_debugfs_pm_ops,
+>  			 cros_ec_debugfs_suspend, cros_ec_debugfs_resume);
 > =20
-> +static const struct platform_device_id cros_ec_chardev_id[] =3D {
+> +static const struct platform_device_id cros_ec_debugfs_id[] =3D {
 > +	{ DRV_NAME, 0 },
 > +	{}
 > +};
-> +MODULE_DEVICE_TABLE(platform, cros_ec_chardev_id);
+> +MODULE_DEVICE_TABLE(platform, cros_ec_debugfs_id);
 > +
->  static struct platform_driver cros_ec_chardev_driver =3D {
+>  static struct platform_driver cros_ec_debugfs_driver =3D {
 >  	.driver =3D {
 >  		.name =3D DRV_NAME,
+> @@ -572,10 +579,10 @@ static struct platform_driver cros_ec_debugfs_drive=
+r =3D {
 >  	},
->  	.probe =3D cros_ec_chardev_probe,
->  	.remove_new =3D cros_ec_chardev_remove,
-> +	.id_table =3D cros_ec_chardev_id,
+>  	.probe =3D cros_ec_debugfs_probe,
+>  	.remove_new =3D cros_ec_debugfs_remove,
+> +	.id_table =3D cros_ec_debugfs_id,
 >  };
 > =20
->  module_platform_driver(cros_ec_chardev_driver);
+>  module_platform_driver(cros_ec_debugfs_driver);
 > =20
-> -MODULE_ALIAS("platform:" DRV_NAME);
->  MODULE_AUTHOR("Enric Balletbo i Serra <enric.balletbo@collabora.com>");
->  MODULE_DESCRIPTION("ChromeOS EC Miscellaneous Character Driver");
 >  MODULE_LICENSE("GPL");
+>  MODULE_DESCRIPTION("Debug logs for ChromeOS EC");
+> -MODULE_ALIAS("platform:" DRV_NAME);
 > --=20
 > 2.44.0.478.gd926399ef9-goog
 >=20
 >=20
 
---wFqlCGmJIgYSWWvX
+--7y0qWvUl4tzyws91
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZgcg7QAKCRBzbaomhzOw
-wvrTAP9XyHBI49KZpUJOqS3U6D/DlyctZOrtzWcMGwpPYLOnSwEAn6YA3cLIsuZd
-54v611hE+7u8dPasuYmhfLU8nNUfqwc=
-=mzdp
+iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZgchLAAKCRBzbaomhzOw
+wtX6AP9vqoC57DVK+nXf0l+z9YktOJhv6yXw/fbq5tXbW6H4lQD+PtEfbvOmSXSb
+J9Kw8aSpHvzFt8U3I38LIhsCTGn+KgY=
+=FNvA
 -----END PGP SIGNATURE-----
 
---wFqlCGmJIgYSWWvX--
+--7y0qWvUl4tzyws91--
 
