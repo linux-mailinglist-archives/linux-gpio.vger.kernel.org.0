@@ -1,113 +1,158 @@
-Return-Path: <linux-gpio+bounces-4871-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4872-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A146B891E62
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:40:48 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D921A891F72
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 16:05:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 418581F26F5F
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 14:40:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 66B261F30E75
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:05:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D6CD13BC13;
-	Fri, 29 Mar 2024 12:49:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1D533142E89;
+	Fri, 29 Mar 2024 13:28:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OSki5JRF"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CAX6OoVD"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 254AB1ACBDC;
-	Fri, 29 Mar 2024 12:49:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29D0712D76A
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 13:28:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711716545; cv=none; b=VXbzRMPjC+fRNTgGnp8il5JxYGqS3wNmxY4XPE0NN4lDj3oPozzu7X4Py4Sucd9sFDNNqiBFzgdro7w/dHNblZrNpCE6+AiW/V1kPQldszzK9BKMXaDW40GxU4pr722yG9LyP6jR66PkwgA/qp5wvcPsEhQW7VaSvEPBApB6pJc=
+	t=1711718921; cv=none; b=T3DQa9CQgsX1pTdRvlYY6GtZSnG9K8YvJRosMXnHfZSlDwomG6SBDiFcB0SbLie0bHOJuCv/0OInDKivzIyAD5/JBNKPouzUTUhfOXoVVpPjRtJhnhKcCZGosLSTYH2K2hDLyrf9WgphyzszYQpFZdPnATr0TCLE0KLNWW2H4dg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711716545; c=relaxed/simple;
-	bh=2uwCHh7IWEliOMQHyqYLK0bE6QOlmtBAJmOCypS98x0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mzh0iNBPXkuepdXyvnDuIFUef8dNTNHEswkoz9rPL1B1kmGOM6UhpmeeSp5njqlo5TPD0OSlk89vKnJdvqENiTim/wH2zBFX8KFDvr3D2Ijdbvujvd/FLwdcS9SXv/ypNhbBe7FUAwynz0tX9QWEfZUxw+b+G54JFoF67JDC7wc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OSki5JRF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 320C5C43394;
-	Fri, 29 Mar 2024 12:49:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711716545;
-	bh=2uwCHh7IWEliOMQHyqYLK0bE6QOlmtBAJmOCypS98x0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OSki5JRFolnUyJy8HcV4bz19muOldP+qxeVPfTJed8kAvRRg5NjdLr6puCxYOpL8j
-	 ZwJJUAdrBWhUGwPHC31jm8LqhFbq2jJKFtw5G0Xj4NlvJuIP8WGPI1V/VKwwgmyhPL
-	 aj9chnVdp5k9tCW7gsmR56ZVslFvevEjwfo3duUIEVLXumltUP7ihQOXWOqHZfu666
-	 SwqsMNmeA5DUHyFoGVJ7VkGrMxnKE06i4t+oXCZmJpYpB9yYIneDpfBB6tKBOwyMvt
-	 AM3S8EwJfnc98SgdTYuAw8+PbneokxHkS5fZ9+JEDvMtCu48hqTAuMAf+D41fSQE1R
-	 b1/eYw3/04SKw==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
-	Sasha Levin <sashal@kernel.org>,
-	linus.walleij@linaro.org,
-	linux-renesas-soc@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.10 02/31] pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
-Date: Fri, 29 Mar 2024 08:48:19 -0400
-Message-ID: <20240329124903.3093161-2-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20240329124903.3093161-1-sashal@kernel.org>
-References: <20240329124903.3093161-1-sashal@kernel.org>
+	s=arc-20240116; t=1711718921; c=relaxed/simple;
+	bh=zlmV0sBDPPllGZWjPqa2/c1/r7nXDK5/rzJZO9Fvals=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=kTx65mt1FpiR3dSd87eS/n0DyhXGLo7kfzP6IApyt1WpiQOJYXXHZJ67zkKOJ49xGEYGyL48+Dml6NOfZWw/8q+7xpKbiBH6g/cXIudRdjopyC3KrZQAYaY+Odrdi5ZMnufwogFjC57scJPbVZBBdTdSAvuJn4mYlRISOLUzA+o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=CAX6OoVD; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711718919;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=9b2+syugljaMrrOP++3j3QqL3+aM8ytb7iOaLk3Q4wQ=;
+	b=CAX6OoVDVnn52AkgtNnO3Pc2KcUioajNI90CLWKUrPSq4ltweMNUzvIELD8senVcJ0GUbF
+	N0NgMJrwzTSm+/4p5AoQcnc4xptC4GKZOcFGmutNKXHp2YLmT5iOWKr+QuJnhECCY4WBiE
+	yWeh1JnPEuYKzpzT5i9TCnhPmhKn+5c=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-21-SYED0ykaP3qfWC7QbkkJzA-1; Fri, 29 Mar 2024 09:28:36 -0400
+X-MC-Unique: SYED0ykaP3qfWC7QbkkJzA-1
+Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-33ed0a8beb5so936832f8f.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 06:28:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711718915; x=1712323715;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9b2+syugljaMrrOP++3j3QqL3+aM8ytb7iOaLk3Q4wQ=;
+        b=fNDQJfCcoFcJoy8LPOaukW/ECUnmpZTHvKVFr3kqUS9TcB2ibYGLo3f+1NZEGbcgF3
+         ctj8JZRwYBuJib/CyjaV2wgNk1CRPADYKRsjRINgr89HLMLcp7KiaecQpPAsj/V816JE
+         Rqz11AMbuJdM9K+tFOuueqgOFM6evNuH08lzlXiLDFTBvoFRw6W6l8QXV/50Zps2P8nJ
+         PObgpf/jue+68Riaea64uNzUVo1zRVUJ8mpLavszBOjIog6RV4cFZK4Nai1o1lyOE0sw
+         BfM7EsbZ+3RZI3TgJbYw970qH2ab9S9Ts+HwiCcgsk2fDDACNyjGAiZlQzz/x5eOLOvn
+         5ixg==
+X-Forwarded-Encrypted: i=1; AJvYcCVxEVGmyiTfgHw1fJI6zhunTxgb+F2bgY+tcUokAzwTfxTyKC63OJb8Ntu8q6uAwWbwA9D2ZJG/q9ehFYLdtCAuhJI2lUSoDWzNAw==
+X-Gm-Message-State: AOJu0YwhstUpE76M23cdl3aPC3EHOnb26le6pMAejpEeGbcJC6s6bFz6
+	TSVkFNptdwJx5Urx+DAkySD59gu5b1HmrnNMda5kltQ8VqkiLWGWyhl51xVXcs0aoQhFO7+oINT
+	siXtsRCXlNrjhd39BVs/DSqRRX1829bU7otSgKVlVqtoBFYEmP99HZXdl758=
+X-Received: by 2002:a05:6000:258:b0:343:3e54:6208 with SMTP id m24-20020a056000025800b003433e546208mr405078wrz.55.1711718915572;
+        Fri, 29 Mar 2024 06:28:35 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IG0y693U6Mrafzyu7YFm6f17FVsvRLIAvGL111PeLg9URymVxfxN4rrw7+XNw571qiaGR1ycw==
+X-Received: by 2002:a05:6000:258:b0:343:3e54:6208 with SMTP id m24-20020a056000025800b003433e546208mr405040wrz.55.1711718915211;
+        Fri, 29 Mar 2024 06:28:35 -0700 (PDT)
+Received: from sgarzare-redhat (host-87-12-25-33.business.telecomitalia.it. [87.12.25.33])
+        by smtp.gmail.com with ESMTPSA id e11-20020a056000194b00b00341c6b53358sm4171063wry.66.2024.03.29.06.28.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 29 Mar 2024 06:28:34 -0700 (PDT)
+Date: Fri, 29 Mar 2024 14:28:27 +0100
+From: Stefano Garzarella <sgarzare@redhat.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, 
+	Jason Wang <jasowang@redhat.com>, Xuan Zhuo <xuanzhuo@linux.alibaba.com>, 
+	Richard Weinberger <richard@nod.at>, Anton Ivanov <anton.ivanov@cambridgegreys.com>, 
+	Johannes Berg <johannes@sipsolutions.net>, Paolo Bonzini <pbonzini@redhat.com>, 
+	Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
+	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
+	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gonglei <arei.gonglei@huawei.com>, 
+	"David S. Miller" <davem@davemloft.net>, Viresh Kumar <vireshk@kernel.org>, 
+	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	David Airlie <airlied@redhat.com>, Gerd Hoffmann <kraxel@redhat.com>, 
+	Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu <olvaffe@gmail.com>, 
+	Jean-Philippe Brucker <jean-philippe@linaro.org>, Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, 
+	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+	Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>, 
+	Latchesar Ionkov <lucho@ionkov.net>, Dominique Martinet <asmadeus@codewreck.org>, 
+	Christian Schoenebeck <linux_oss@crudebyte.com>, Kalle Valo <kvalo@kernel.org>, 
+	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
+	Mathieu Poirier <mathieu.poirier@linaro.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, 
+	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>, 
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, 
+	virtualization@lists.linux.dev, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-um@lists.infradead.org, linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org, 
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, netdev@vger.kernel.org, 
+	v9fs@lists.linux.dev, kvm@vger.kernel.org, linux-wireless@vger.kernel.org, 
+	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
+	linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
+Subject: Re: [PATCH 01/22] virtio: store owner from modules with
+ register_virtio_driver()
+Message-ID: <e2xy5kjdctpitcrev2byqc5gcwntvsd6pfutrvp3l2kfe3llgs@l2xp5opj7xu2>
+References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+ <20240327-module-owner-virtio-v1-1-0feffab77d99@linaro.org>
+ <oaoiehcpkjs3wrhc22pwx676pompxml2z5dcq32a6fvsyntonw@hnohrbbp6wpm>
+ <d01cc73e-a365-4ce8-a25f-780ea45bc581@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 5.10.214
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <d01cc73e-a365-4ce8-a25f-780ea45bc581@linaro.org>
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+On Fri, Mar 29, 2024 at 01:07:31PM +0100, Krzysztof Kozlowski wrote:
+>On 29/03/2024 12:42, Stefano Garzarella wrote:
+>>> };
+>>>
+>>> -int register_virtio_driver(struct virtio_driver *driver)
+>>> +int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
+>>> {
+>>> 	/* Catch this early. */
+>>> 	BUG_ON(driver->feature_table_size && !driver->feature_table);
+>>> 	driver->driver.bus = &virtio_bus;
+>>> +	driver->driver.owner = owner;
+>>> +
+>>
+>> `.driver.name =  KBUILD_MODNAME` also seems very common, should we put
+>> that in the macro as well?
+>
+>This is a bit different thing. Every driver is expected to set owner to
+>itself (THIS_MODULE), but is every driver name KBUILD_MODNAME?
 
-[ Upstream commit 3803584a4e9b65bb5b013f862f55c5055aa86c25 ]
+Nope, IIUC we have 2 exceptions:
+- drivers/firmware/arm_scmi/virtio.c
+- arch/um/drivers/virt-pci.c
 
-If the number of provided enum IDs in a variable width config register
-description does not match the expected number, the checker uses the
-expected number for validating the individual enum IDs.
+>Remember that this overrides whatever driver actually put there.
 
-However, this may cause out-of-bounds accesses on the array holding the
-enum IDs, leading to bogus enum_id conflict warnings.  Worse, if the bug
-is an incorrect bit field description (e.g. accidentally using "12"
-instead of "-12" for a reserved field), thousands of warnings may be
-printed, overflowing the kernel log buffer.
+They can call __register_virtio_driver() where we can add the `name`
+parameter. That said, I don't have a strong opinion, we can leave it
+as it is.
 
-Fix this by limiting the enum ID check to the number of provided enum
-IDs.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Link: https://lore.kernel.org/r/c7385f44f2faebb8856bcbb4e908d846fc1531fb.1705930809.git.geert+renesas@glider.be
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/pinctrl/renesas/core.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
-index 54f1a7334027a..c390854483680 100644
---- a/drivers/pinctrl/renesas/core.c
-+++ b/drivers/pinctrl/renesas/core.c
-@@ -868,9 +868,11 @@ static void __init sh_pfc_check_cfg_reg(const char *drvname,
- 		sh_pfc_err("reg 0x%x: var_field_width declares %u instead of %u bits\n",
- 			   cfg_reg->reg, rw, cfg_reg->reg_width);
- 
--	if (n != cfg_reg->nr_enum_ids)
-+	if (n != cfg_reg->nr_enum_ids) {
- 		sh_pfc_err("reg 0x%x: enum_ids[] has %u instead of %u values\n",
- 			   cfg_reg->reg, cfg_reg->nr_enum_ids, n);
-+		n = cfg_reg->nr_enum_ids;
-+	}
- 
- check_enum_ids:
- 	sh_pfc_check_reg_enums(drvname, cfg_reg->reg, cfg_reg->enum_ids, n);
--- 
-2.43.0
+Thanks,
+Stefano
 
 
