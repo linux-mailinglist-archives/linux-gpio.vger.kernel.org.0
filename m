@@ -1,171 +1,79 @@
-Return-Path: <linux-gpio+bounces-4893-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4894-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 406AD8923DA
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:10:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3BE85892432
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:28:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5252B20E71
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 19:10:36 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B9063B24A71
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 19:27:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01D491311AC;
-	Fri, 29 Mar 2024 19:10:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4432A13AD06;
+	Fri, 29 Mar 2024 19:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="caXNQYLo"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from fgw21-7.mail.saunalahti.fi (fgw21-7.mail.saunalahti.fi [62.142.5.82])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4997C6A339
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 19:10:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.82
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02EE613341C;
+	Fri, 29 Mar 2024 19:27:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711739429; cv=none; b=lXaVEXbRr7o8Mt9LiklNemY1oKfeC1jb9xSK3PSfsa8tsndT9PWVC44OKMTLa+kxNcKm/ZJ7OPBcaR38kTm1qUUWzPIJ3f5nF0goiMuGzSwrerdCIP7+6oQoYvMKfz0rtJZnmFxMzaQpEYFgLjE3kKCaZHHJMUn2YuB49m+7D9Q=
+	t=1711740452; cv=none; b=Ga6Vi3nCTNZeqfZ50jAGNp73p4mQ9EuPd9V3pdx7fJC4QGdiOeBpRfAAlluYQ1PJz0lTVkvHxHFeTIfKKAJj/MI5eCP/D4WqAgzOeJxB4I7Qyt74SAfoRC9HDUY5XQd+qQpbsSS7AivTOmfEb4pQMnfByAHIjkzpwEP9Tpd00JU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711739429; c=relaxed/simple;
-	bh=wvyg9g9jnzEB2eV9iE+Drh2zsS96ZqjdjsK1QL3w1M4=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hI5Eo3h/b7ARUiYZgTd8eEMCfiY909yR6MhvT9jIuD+S3ydXNEq/ANnU8Nf5/xgc2Ys5KMglsp3xtgiD3wK5IjjG74ugActE1tzoXl8Zc4fWQK77vub2pLkg0kfuwzuNpPjZtjxPxbV0u04pxwJ2V3L3vfBeUGqRaZ9y8Wazbjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.82
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
-Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
-	by fgw21.mail.saunalahti.fi (Halon) with ESMTP
-	id ff602b77-edff-11ee-abf4-005056bdd08f;
-	Fri, 29 Mar 2024 21:10:25 +0200 (EET)
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Fri, 29 Mar 2024 21:10:25 +0200
-To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
-Cc: Sudeep Holla <sudeep.holla@arm.com>,
-	Cristian Marussi <cristian.marussi@arm.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Dan Carpenter <dan.carpenter@linaro.org>,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-	Peng Fan <peng.fan@nxp.com>,
-	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: Re: [PATCH v6 4/4] pinctrl: Implementation of the generic
- scmi-pinctrl driver
-Message-ID: <ZgcSIb4BVcbVmPyW@surfacebook.localdomain>
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-4-a895243257c0@nxp.com>
+	s=arc-20240116; t=1711740452; c=relaxed/simple;
+	bh=bIiySNcHEEpAhlNGYrNClfJ1PPN1KAReCk7fKpKR/Uk=;
+	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=EYGsipeNsyVl7xJELadClOEe8LkbIYWYd9E6EVN9WGoWrEvd1jxjgwaoOKI71NXOKrT/McNBf5HORnviGxaOu92Pk+TAbPW5cqHDFJ35trvEfdGgFCElavXGmv8IXzEEjfok2zgOSw2KThtg5ygpkKR/DdmL10zdwgBABLFTPA8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=caXNQYLo; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id D8B56C433C7;
+	Fri, 29 Mar 2024 19:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711740451;
+	bh=bIiySNcHEEpAhlNGYrNClfJ1PPN1KAReCk7fKpKR/Uk=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
+	b=caXNQYLo2maw5oSSUg2uMP4xSeOxobRymjlv0o+74Y1cWgKXfALO4iJp3R9SsZ8jV
+	 sGhAhGOtBwpsOtjLN+s4DFAFq1TRXK36Ex8HTDV0pkFGM+nKk4fOUdaA60lNYFG4bC
+	 wjqTtB8AIHLIKtD63chSkTBZXRSuvhqMBzd73WkjcPfiw9jnLawaMaxxxPfNlVWkrh
+	 DGYEoR1gMny5c7Ryxtxmp6J7XVl4268JdlG80HbHDqw7lgOq5+5z7CGFxqBlC9BBbg
+	 8qPse8k5HaWo00PEZ5nRyWzI2DO9rt7RFq0+bOdvISSK/EFEhXHD79LjGbOG89VR2a
+	 i2APICEsUFInw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id D1891D2D0EB;
+	Fri, 29 Mar 2024 19:27:31 +0000 (UTC)
+Subject: Re: [GIT PULL] gpio: fixes for v6.9-rc2
+From: pr-tracker-bot@kernel.org
+In-Reply-To: <20240329105452.17036-1-brgl@bgdev.pl>
+References: <20240329105452.17036-1-brgl@bgdev.pl>
+X-PR-Tracked-List-Id: <linux-gpio.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20240329105452.17036-1-brgl@bgdev.pl>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9-rc2
+X-PR-Tracked-Commit-Id: 5c887b65bbd1a3fc28e2e20399acede0baa83edb
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 033e4491b6c614efddcf58927082887e2b78995d
+Message-Id: <171174045185.16736.1447738889135500472.pr-tracker-bot@kernel.org>
+Date: Fri, 29 Mar 2024 19:27:31 +0000
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240323-pinctrl-scmi-v6-4-a895243257c0@nxp.com>
 
-Sat, Mar 23, 2024 at 08:15:17PM +0800, Peng Fan (OSS) kirjoitti:
-> From: Peng Fan <peng.fan@nxp.com>
-> 
-> scmi-pinctrl driver implements pinctrl driver interface and using
-> SCMI protocol to redirect messages from pinctrl subsystem SDK to
-> SCMI platform firmware, which does the changes in HW.
+The pull request you sent on Fri, 29 Mar 2024 11:54:52 +0100:
 
-...
+> git://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git tags/gpio-fixes-for-v6.9-rc2
 
-> +#include <linux/device.h>
-> +#include <linux/err.h>
-> +#include <linux/module.h>
-> +#include <linux/seq_file.h>
-> +#include <linux/scmi_protocol.h>
-> +#include <linux/slab.h>
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/033e4491b6c614efddcf58927082887e2b78995d
 
-Use IWYU principle. There are missing header inclusions and/or forward
-declarations.
-
-...
-
-> +struct scmi_pinctrl_funcs {
-> +	unsigned int num_groups;
-> +	const char **groups;
-> +};
-
-This is repeating struct pinfunction. Why can't the latter be used?
-
-...
-
-> +err_free:
-> +	devm_kfree(pmx->dev, groups);
-
-Why?!
-
-This is 99.9% that the initial allocation must not be devm. 
-
-...
-
-> +	*p_config_value = kcalloc(num_configs, sizeof(u32), GFP_KERNEL);
-
-sizeof(**p_config_value)?
-
-> +	*p_config_type = kcalloc(num_configs,
-> +				 sizeof(enum scmi_pinctrl_conf_type),
-
-sizeof(**p_config_type)?
-
-> +				 GFP_KERNEL);
-> +
-> +	if (!*p_config_value || !*p_config_type) {
-> +		kfree(*p_config_value);
-> +		kfree(*p_config_type);
-> +		return -ENOMEM;
-
-Why to allocate / free memory in the case when you know that the first one
-failed?
-
-> +	}
-
-...
-
-> +static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
-> +				 struct pinctrl_desc *desc)
-> +{
-> +	struct pinctrl_pin_desc *pins;
-> +	unsigned int npins;
-> +	int ret, i;
-> +
-> +	npins = pinctrl_ops->count_get(pmx->ph, PIN_TYPE);
-> +	pins = devm_kmalloc_array(pmx->dev, npins, sizeof(*pins), GFP_KERNEL);
-> +	if (!pins)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < npins; i++) {
-> +		pins[i].number = i;
-> +		ret = pinctrl_ops->name_get(pmx->ph, i, PIN_TYPE, &pins[i].name);
-> +		if (ret)
-> +			return dev_err_probe(pmx->dev, ret,
-> +					     "Can't get name for pin %d", i);
-> +	}
-> +
-> +	desc->npins = npins;
-> +	desc->pins = pins;
-> +	dev_dbg(pmx->dev, "got pins %d", npins);
-
-%u
-
-> +	return 0;
-> +}
-
-...
-
-> +	pinctrl_ops = handle->devm_protocol_get(sdev, SCMI_PROTOCOL_PINCTRL,
-> +						&ph);
-
-One line.
-
-> +	if (IS_ERR(pinctrl_ops))
-> +		return PTR_ERR(pinctrl_ops);
+Thank you!
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/prtracker.html
 
