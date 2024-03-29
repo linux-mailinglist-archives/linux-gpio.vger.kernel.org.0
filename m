@@ -1,325 +1,200 @@
-Return-Path: <linux-gpio+bounces-4858-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4859-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 026C9891829
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 12:47:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id EAD78891848
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 13:08:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A425B28695B
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 11:47:48 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A0755283DF5
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 12:08:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 00B846BB22;
-	Fri, 29 Mar 2024 11:47:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DE6FF8593D;
+	Fri, 29 Mar 2024 12:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="I9Fa7KWG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="aoHmaiPO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f42.google.com (mail-lf1-f42.google.com [209.85.167.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14D124F606;
-	Fri, 29 Mar 2024 11:47:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861CC8529D
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 12:07:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711712860; cv=none; b=l2qNBrAvyN58wzUjRyNO5HtD9kkacbmGE1pJ/MPFlBaZkOaGCeucj+rRxXbHMpyrs85TFstkzl8Yfzhjz2HJKZ+KPiIW/2S7N9LvQ0kH9NncT2GAhBYwmkyak0K91SaYhdEE6k1ft2mvU+tmuiKVcLyIJx8nMUkW+bFvvfFKFnQ=
+	t=1711714061; cv=none; b=s94RdZLIqDys601ntUBULFp1zPOCISWUCiSN1DO7qR+ZhLg/z1KHjTVgZE0TjpVLecEGRjepizmK2iWscPV4EOZ7QS4mojnlbyLilmzDlVbeKm16NhyWTKEUbb5B2EgBQR3kAqYaAelLrAoFTp7iLaxlGvZxXr+g+dh65W9whic=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711712860; c=relaxed/simple;
-	bh=VLYZT/jTNY2MdMLW10fktg8Qi2AxjSBvAG3LDd+YZUo=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=i82QoTMA7Z6I2o6AYpjUN5sXtzSoojMX1mBkHZQxsNhPmANXF2bKcDLJSz+RWgNjdCDED2aCNvd+9EnZJSGI4Zo2d0HUlN3WiIaKTqo0nRQDPTrMTjBtM3AOQh9kuUupxAd8c54DjyTHrpQBpd//cujEzMnWs1uV5ZJExY+19JM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=I9Fa7KWG; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.17.1.24/8.17.1.24) with ESMTP id 42T51HNK032384;
-	Fri, 29 Mar 2024 06:47:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	from:to:cc:subject:date:message-id:in-reply-to:references
-	:mime-version:content-transfer-encoding:content-type; s=
-	PODMain02222019; bh=0vJgnHi3VGwYeuRAuisAL4gmPmLutHAb0+lrGohDqDM=; b=
-	I9Fa7KWG+cBKY1gCsb1SwfPesS8+YiLw+7dUJ3vUNsqegHcx+N19FkxWonw3jXAI
-	+TiNgiormuY7z+pLJdnpMRW9IGYkg5v+VCq2iZB3Ibt7AZyOefOfvgdH8fXEbH1s
-	q+Y2kbcXmsuwQ9NyQmXz5a5fTST8MX1g+7Hf9Xi1eUtsyFKavQ9sRxBoU5hxPhpl
-	o/4l+gzQdhfXYR7wme3z61/V+3s/uRQkIACu4ODUj+m3+AYc4ydkKSEZQlRuxGPl
-	ICEdjdowlduYihpNEJIWPtVRjOvTa1J1anKRiZ9vIuF9sTfAF3pwK86ZQRyeEClt
-	h9g0W7MJJfx4AEiCT7rbng==
-Received: from ediex01.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3x4k7k4747-3
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 29 Mar 2024 06:47:34 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Fri, 29 Mar
- 2024 11:47:30 +0000
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.4 via Frontend Transport; Fri, 29 Mar 2024 11:47:30 +0000
-Received: from ediswws07.ad.cirrus.com (ediswws07.ad.cirrus.com [198.90.208.14])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTP id 4C555820258;
-	Fri, 29 Mar 2024 11:47:30 +0000 (UTC)
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>
-CC: <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: [PATCH v3 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
-Date: Fri, 29 Mar 2024 11:47:30 +0000
-Message-ID: <20240329114730.360313-4-ckeepax@opensource.cirrus.com>
-X-Mailer: git-send-email 2.39.2
-In-Reply-To: <20240329114730.360313-1-ckeepax@opensource.cirrus.com>
-References: <20240329114730.360313-1-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1711714061; c=relaxed/simple;
+	bh=YZkYcWI4v8u+5a0m4yPP//tx/g8BTa61vun6zu1Ywrw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZtvNngWDjUaDFiGZDhPxQR9mex9jhU6XLHs/CjzlfDNEobJVdeMGZHKHMVUDnFi5A7J8TnPzQy1hZoi3lWbSjKjMgiI3OuzunqFTk/NdKBnxGBzVf32RBj9BG9AagIh4u+QjfQdtjtmetCrZV08dX17fZXq8mqTIhfQljtU5hl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=aoHmaiPO; arc=none smtp.client-ip=209.85.167.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-lf1-f42.google.com with SMTP id 2adb3069b0e04-515c3eeea5dso1982164e87.1
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 05:07:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1711714057; x=1712318857; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=W8qDiDQE4U1dhIeNyeo56va7pUV0k1Jp/1evIHcwWmQ=;
+        b=aoHmaiPOLq20uRGX3Xt3FMe38JqoWgyYjCaOmjFZMR+TzPK7RoXJlu2t306Dh4hfhB
+         O6JhR0tS5SRbjBhdPBIO+Q7HEoff1iPxhS30ZZMRpjsjt3kxsO6A2XRt4tMhe7AnD0Y7
+         W/9QowFKZEB2I0L0TW/ws8JV6r6Y6UwdehJE8JAJJffScKukcyJRNRtEI80cW9m3z6Nr
+         rZEAxQGZUl1jMIBgKskZLU1rCj0A6jMByE+QWiRumZ5IS0x92fiF6XegipilYhRIncwq
+         EuFq9zxTPZjFbRuCjqGyKDyfMH0J3egLXW/iq5O2lvglHQwWunDAforNciAS2b49jP9R
+         xCAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1711714057; x=1712318857;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W8qDiDQE4U1dhIeNyeo56va7pUV0k1Jp/1evIHcwWmQ=;
+        b=dkEQa4L0+26pYWQ0yHeTRuq8cXYFOa/KjzISKKdaTyRc4e0QCG6sjyAINXfl+B/zhC
+         +TyYHDQvNh4X5Ii51hFZE/3geelnIDA6Ar7AkZ4yUxV+m6hhmVEfxVXOANFUDIKKwCGa
+         hkWY0mHNKNXiZIxFOT9FqvtJ5O4AYoimkV3w7/ltBwv5jd39WZEtFujrBxfG/BjF0bTJ
+         cbAs2nmxTd0cDgpbkMuxycrEjtaGnE168nJQ6z4NwgGMahtw4iVnjHY7tns0oBdyu4Cr
+         OzXnlhssiAko9wyWTLsclbasprQuy3u4h8Z9mP2DBOH4qVvWuWh3+vV/b7a80mtx+PZr
+         ZQpg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDBis5Vb4TouoNyA6ah8ypwAAToZYwtW7ruhhdzAWM3yUM8Ws96keR0QWLeGOzt3cGRLFtyjAqpjVrA+aDt7+dEnBbnHHj098c4Q==
+X-Gm-Message-State: AOJu0Yxhj2sKpQqLhPsQhden1YDB27qokoil6azkAUoFCgy7jD4JG4ZW
+	Zp0jJq3ss1F7etVSJskQk+giC60KI0SMqUJDvcXsl4vqF/ChtPN9Qg0AGCdvMsg=
+X-Google-Smtp-Source: AGHT+IH02yRpayObgemkuLwb14zitNARLt9V+ua5xlRF4r65dyCs+nimT1gUTeAtALwILpI3Nm9EFw==
+X-Received: by 2002:a2e:bc21:0:b0:2d6:a699:4bae with SMTP id b33-20020a2ebc21000000b002d6a6994baemr1491889ljf.6.1711714056642;
+        Fri, 29 Mar 2024 05:07:36 -0700 (PDT)
+Received: from [192.168.1.20] ([178.197.223.50])
+        by smtp.gmail.com with ESMTPSA id u15-20020a05600c00cf00b00414041032casm6195937wmm.1.2024.03.29.05.07.32
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 29 Mar 2024 05:07:36 -0700 (PDT)
+Message-ID: <d01cc73e-a365-4ce8-a25f-780ea45bc581@linaro.org>
+Date: Fri, 29 Mar 2024 13:07:31 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-Proofpoint-GUID: h17682zc8J-Bm0bkbYmPmXJVmBLA_KRM
-X-Proofpoint-ORIG-GUID: h17682zc8J-Bm0bkbYmPmXJVmBLA_KRM
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 01/22] virtio: store owner from modules with
+ register_virtio_driver()
+To: Stefano Garzarella <sgarzare@redhat.com>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+ Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>,
+ Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+ Johannes Berg <johannes@sipsolutions.net>,
+ Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>,
+ Jens Axboe <axboe@kernel.dk>, Marcel Holtmann <marcel@holtmann.org>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Olivia Mackall <olivia@selenic.com>, Herbert Xu
+ <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>,
+ Arnd Bergmann <arnd@arndb.de>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ Gonglei <arei.gonglei@huawei.com>, "David S. Miller" <davem@davemloft.net>,
+ Viresh Kumar <vireshk@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
+ Bartosz Golaszewski <brgl@bgdev.pl>, David Airlie <airlied@redhat.com>,
+ Gerd Hoffmann <kraxel@redhat.com>,
+ Gurchetan Singh <gurchetansingh@chromium.org>, Chia-I Wu
+ <olvaffe@gmail.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>,
+ Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Eric Van Hensbergen <ericvh@kernel.org>,
+ Latchesar Ionkov <lucho@ionkov.net>,
+ Dominique Martinet <asmadeus@codewreck.org>,
+ Christian Schoenebeck <linux_oss@crudebyte.com>,
+ Kalle Valo <kvalo@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
+ Vishal Verma <vishal.l.verma@intel.com>, Dave Jiang <dave.jiang@intel.com>,
+ Ira Weiny <ira.weiny@intel.com>, Pankaj Gupta
+ <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>,
+ Mathieu Poirier <mathieu.poirier@linaro.org>,
+ "Martin K. Petersen" <martin.petersen@oracle.com>,
+ Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
+ Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+ linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+ iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
+ kvm@vger.kernel.org, linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev,
+ linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org,
+ linux-sound@vger.kernel.org
+References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
+ <20240327-module-owner-virtio-v1-1-0feffab77d99@linaro.org>
+ <oaoiehcpkjs3wrhc22pwx676pompxml2z5dcq32a6fvsyntonw@hnohrbbp6wpm>
+Content-Language: en-US
+From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Autocrypt: addr=krzysztof.kozlowski@linaro.org; keydata=
+ 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
+ D2GYIS41Kv4Isx2dEFh+/Q==
+In-Reply-To: <oaoiehcpkjs3wrhc22pwx676pompxml2z5dcq32a6fvsyntonw@hnohrbbp6wpm>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+On 29/03/2024 12:42, Stefano Garzarella wrote:
+>> };
+>>
+>> -int register_virtio_driver(struct virtio_driver *driver)
+>> +int __register_virtio_driver(struct virtio_driver *driver, struct module *owner)
+>> {
+>> 	/* Catch this early. */
+>> 	BUG_ON(driver->feature_table_size && !driver->feature_table);
+>> 	driver->driver.bus = &virtio_bus;
+>> +	driver->driver.owner = owner;
+>> +
+> 
+> `.driver.name =  KBUILD_MODNAME` also seems very common, should we put
+> that in the macro as well?
 
-On some cs42l43 systems a couple of cs35l56 amplifiers are attached
-to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
-by a SDCA class driver and these two amplifiers are controlled by
-firmware running on the cs42l43. However, under Linux the decision
-was made to interact with the cs42l43 directly, affording the user
-greater control over the audio system. However, this has resulted
-in an issue where these two bridged cs35l56 amplifiers are not
-populated in ACPI and must be added manually.
+This is a bit different thing. Every driver is expected to set owner to
+itself (THIS_MODULE), but is every driver name KBUILD_MODNAME? Remember
+that this overrides whatever driver actually put there.
 
-Check for the presence of the "01fa-cirrus-sidecar-instances" property
-in the SDCA extension unit's ACPI properties to confirm the presence
-of these two amplifiers and if they exist add them manually onto the
-SPI bus.
-
-Signed-off-by: Maciej Strozek <mstrozek@opensource.cirrus.com>
-Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
----
-
-Changes since v2:
- - Add missing fwnode_handle_puts in cs42l43_has_sidecar
-
-Thanks,
-Charles
-
- drivers/spi/spi-cs42l43.c | 155 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 154 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-cs42l43.c b/drivers/spi/spi-cs42l43.c
-index aabef9fc84bdf..15e93ef7b74d0 100644
---- a/drivers/spi/spi-cs42l43.c
-+++ b/drivers/spi/spi-cs42l43.c
-@@ -5,6 +5,8 @@
- // Copyright (C) 2022-2023 Cirrus Logic, Inc. and
- //                         Cirrus Logic International Semiconductor Ltd.
- 
-+#include <dt-bindings/gpio/gpio.h>
-+#include <linux/acpi.h>
- #include <linux/bits.h>
- #include <linux/bitfield.h>
- #include <linux/device.h>
-@@ -39,6 +41,59 @@ static const unsigned int cs42l43_clock_divs[] = {
- 	2, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30
- };
- 
-+static const struct software_node ampl = {
-+	.name			= "cs35l56-left",
-+};
-+
-+static const struct software_node ampr = {
-+	.name			= "cs35l56-right",
-+};
-+
-+static struct spi_board_info ampl_info = {
-+	.modalias		= "cs35l56",
-+	.max_speed_hz		= 2000000,
-+	.chip_select		= 0,
-+	.mode			= SPI_MODE_0,
-+	.swnode			= &ampl,
-+	.use_fwnode_name	= true,
-+};
-+
-+static struct spi_board_info ampr_info = {
-+	.modalias		= "cs35l56",
-+	.max_speed_hz		= 2000000,
-+	.chip_select		= 1,
-+	.mode			= SPI_MODE_0,
-+	.swnode			= &ampr,
-+	.use_fwnode_name	= true,
-+};
-+
-+static const struct software_node cs42l43_gpiochip_swnode = {
-+	.name			= "cs42l43-pinctrl",
-+};
-+
-+static const struct software_node_ref_args cs42l43_cs_refs[] = {
-+	{
-+		.node		= &cs42l43_gpiochip_swnode,
-+		.nargs		= 2,
-+		.args		= { 0, GPIO_ACTIVE_LOW },
-+	},
-+	{
-+		.node		= &swnode_gpio_undefined,
-+		.nargs		= 0,
-+	},
-+};
-+
-+static const struct property_entry cs42l43_cs_props[] = {
-+	{
-+		.name		= "cs-gpios",
-+		.length		= ARRAY_SIZE(cs42l43_cs_refs) *
-+				  sizeof(struct software_node_ref_args),
-+		.type		= DEV_PROP_REF,
-+		.pointer	= cs42l43_cs_refs,
-+	},
-+	{}
-+};
-+
- static int cs42l43_spi_tx(struct regmap *regmap, const u8 *buf, unsigned int len)
- {
- 	const u8 *end = buf + len;
-@@ -203,6 +258,54 @@ static size_t cs42l43_spi_max_length(struct spi_device *spi)
- 	return CS42L43_SPI_MAX_LENGTH;
- }
- 
-+#if IS_ENABLED(CONFIG_ACPI)
-+static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-+{
-+	static const int func_smart_amp = 0x1;
-+	struct fwnode_handle *child_fwnode, *ext_fwnode;
-+	unsigned long long function;
-+	unsigned int val;
-+	int ret;
-+
-+	if (!is_acpi_node(fwnode))
-+		return false;
-+
-+	fwnode_for_each_child_node(fwnode, child_fwnode) {
-+		struct acpi_device *adev = to_acpi_device_node(child_fwnode);
-+
-+		ret = acpi_evaluate_integer(adev->handle, "_ADR", NULL, &function);
-+		if (ACPI_FAILURE(ret) || function != func_smart_amp) {
-+			fwnode_handle_put(fwnode);
-+			continue;
-+		}
-+
-+		ext_fwnode = fwnode_get_named_child_node(child_fwnode,
-+				"mipi-sdca-function-expansion-subproperties");
-+		if (!ext_fwnode) {
-+			fwnode_handle_put(fwnode);
-+			continue;
-+		}
-+
-+		ret = fwnode_property_read_u32(ext_fwnode,
-+					       "01fa-cirrus-sidecar-instances",
-+					       &val);
-+
-+		fwnode_handle_put(ext_fwnode);
-+		fwnode_handle_put(fwnode);
-+
-+		if (!ret)
-+			return !!val;
-+	}
-+
-+	return false;
-+}
-+#else
-+static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-+{
-+	return false;
-+}
-+#endif
-+
- static void cs42l43_release_of_node(void *data)
- {
- 	fwnode_handle_put(data);
-@@ -213,6 +316,7 @@ static int cs42l43_spi_probe(struct platform_device *pdev)
- 	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
- 	struct cs42l43_spi *priv;
- 	struct fwnode_handle *fwnode = dev_fwnode(cs42l43->dev);
-+	bool has_sidecar = cs42l43_has_sidecar(fwnode);
- 	int ret;
- 
- 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-@@ -266,16 +370,64 @@ static int cs42l43_spi_probe(struct platform_device *pdev)
- 		}
- 	}
- 
--	device_set_node(&priv->ctlr->dev, fwnode);
-+	if (has_sidecar) {
-+		ret = software_node_register(&cs42l43_gpiochip_swnode);
-+		if (ret) {
-+			dev_err(priv->dev, "Failed to register gpio swnode: %d\n", ret);
-+			return ret;
-+		}
-+
-+		ret = device_create_managed_software_node(&priv->ctlr->dev, cs42l43_cs_props, NULL);
-+		if (ret) {
-+			dev_err(priv->dev, "Failed to add swnode: %d\n", ret);
-+			goto err;
-+		}
-+
-+	} else {
-+		device_set_node(&priv->ctlr->dev, fwnode);
-+	}
- 
- 	ret = devm_spi_register_controller(priv->dev, priv->ctlr);
- 	if (ret) {
- 		dev_err(priv->dev, "Failed to register SPI controller: %d\n", ret);
-+		goto err;
-+	}
-+
-+	if (has_sidecar) {
-+		if (!spi_new_device(priv->ctlr, &ampl_info)) {
-+			ret = -ENODEV;
-+			dev_err(priv->dev, "Failed to create left amp slave\n");
-+			goto err;
-+		}
-+
-+		if (!spi_new_device(priv->ctlr, &ampr_info)) {
-+			ret = -ENODEV;
-+			dev_err(priv->dev, "Failed to create right amp slave\n");
-+			goto err;
-+		}
- 	}
- 
-+	return 0;
-+
-+err:
-+	if (has_sidecar)
-+		software_node_unregister(&cs42l43_gpiochip_swnode);
-+
- 	return ret;
- }
- 
-+static int cs42l43_spi_remove(struct platform_device *pdev)
-+{
-+	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
-+	struct fwnode_handle *fwnode = dev_fwnode(cs42l43->dev);
-+	bool has_sidecar = cs42l43_has_sidecar(fwnode);
-+
-+	if (has_sidecar)
-+		software_node_unregister(&cs42l43_gpiochip_swnode);
-+
-+	return 0;
-+};
-+
- static const struct platform_device_id cs42l43_spi_id_table[] = {
- 	{ "cs42l43-spi", },
- 	{}
-@@ -288,6 +440,7 @@ static struct platform_driver cs42l43_spi_driver = {
- 	},
- 	.probe		= cs42l43_spi_probe,
- 	.id_table	= cs42l43_spi_id_table,
-+	.remove		= cs42l43_spi_remove,
- };
- module_platform_driver(cs42l43_spi_driver);
- 
--- 
-2.39.2
+Best regards,
+Krzysztof
 
 
