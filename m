@@ -1,72 +1,72 @@
-Return-Path: <linux-gpio+bounces-4911-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4912-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1AA1892532
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 21:22:07 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 59E77892536
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 21:22:50 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2F9D61C20DDF
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:22:07 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EA564B23EC7
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:22:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1FCB113BC2A;
-	Fri, 29 Mar 2024 20:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35C5D13BC02;
+	Fri, 29 Mar 2024 20:22:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="gbSqpl0O"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="K0OPZVZ1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85AA513A3FF
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 20:21:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A619013792C
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 20:22:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711743719; cv=none; b=rdp+OSOxF8o9kiWj4pThkM/5+2/d0abA+BAuo7INqDw4VcPR2VQl9EfBreLCArg4YaU0S1dMjmvoCOU9+Uw8lCAdIvYBG3LGpRwGlee1CbWwt6k0FT6nYDBPth7G2QX1H8rLNE++cu3yNr+o7caawyXA4OIiQdbIq8Wtt8lyMfk=
+	t=1711743763; cv=none; b=ekHQQt7IY0BGqkWuAEO5pYqUuiiHqj9kw5OJAmnOs0QOP/8GLjIkvqxIv2Nl1vkWo3LTO2YB/VFFPePCjl0OSxBETF/rsIgvnE/2Vdni3rmwGTbnCFSopnBQhdcXJjDs2ynaKLhIgE26BiXg9V2pWrBEmKl1rcLZzZ+kfhX3b4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711743719; c=relaxed/simple;
-	bh=UNaKjzakgC3/YqdJUQaCrQMV5+3RTvaedPtnhZgej14=;
+	s=arc-20240116; t=1711743763; c=relaxed/simple;
+	bh=1a7H4deItoljS/5AtMP1VUdtT5vWBuPjw7iY/Poti1Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bpazxx7ZBraRPoeqZLlEoOMyWmDUXXn+OGxzk3o/Oa4GHj7zIh+9hrYEPadhlnr79DQ/I4soa0jcaRACc4EvuEYISg7afE2JE8WHJXloLqnL4n0hiXO/gM7DVdUrgOzG2i8qAv/zzb3ST0ZEXhfzhRxzeELlny+ImoVW2hUEMfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=gbSqpl0O; arc=none smtp.client-ip=209.85.214.182
+	 Content-Type:Content-Disposition:In-Reply-To; b=MI1ln7ead0hlBYgfjSZMc269P5izGBNpjkB9BOipXV2h8tszU+8OTE3psqrWmjGhqo4AlvZz0AtruY8WitxIyiixEtHasbxY+rYOLlM5WbhfbpKusT8XZ1KS93V+ID3M0GvkA1BRVQ9llqcpQIsAQo2WU++CJIvnXJ8KyiAvOLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=K0OPZVZ1; arc=none smtp.client-ip=209.85.214.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
-Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-1deddb82b43so171595ad.0
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 13:21:58 -0700 (PDT)
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-1deddb82b43so171695ad.0
+        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 13:22:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1711743718; x=1712348518; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1711743761; x=1712348561; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=SLn+lLgkDX5fY2sRI7cVb/miAMO8Hgz/20wFvN6AVl8=;
-        b=gbSqpl0Osl7a2OnkxTK5Akx+B/iJy8mI2EYSVN6Zs0ouPflz54nvtJunLF5Tnhu1n2
-         Rg106zUunQ4zlKoSS89iKM/b5TYveRMR8GTT4/wy0l5/EdooBsp+c1lciBCA+v2im6lx
-         IxBzbRUNZlvTRrBVxuMlG2bq4O/HAMTrFc2rwMEcKK+LQceX0Zx+zd1j6Ef8A05hsqio
-         Z3LWnEShkPaBOFqZi6cUIIhCUvYrsEj8X945Yz2g1WaUCrF3Ar0QviIDSRQ/cJt726im
-         DpC0u9eZlm1B7NnsKjf9sQuysewLUY6JZuGefBMkY2Ew6pk+BYpYv2YH7bySMafY+qmT
-         piew==
+        bh=rtwy1hYH4AJsXrTmyCziUfu7DWwf+fXv0EHGWB5SJck=;
+        b=K0OPZVZ1cm491oPDYM1oI/Vj9cmSZZWfOUjE2sShXAoE/IKWvJ/HMzryiXVcL4VrVs
+         3FcE1UbvfQknPoTSPk2tariKWv+dQ8W0vytloBtgqQeVmyGEfqGK4jCFmjazS3B6FUnQ
+         5geauoBD9U82TwWM4Nrzi82m6wVVFAptWEKKadJLoIUCCVYZiNhk74ZA6z59QBGthdkK
+         Zd910QoXjq/O5O5H+2zbeK/C+pqN8UCGeBlcUQce8JHkYzKOrbE5iJTqCdTKaDWkEAFq
+         Xk3Ps7kWMbkCQIhuhvZKn+eFJeu1a6lPGALQ4LmTeEDcZn5mmmAjF4M3E2o+zyDeGMXP
+         bIaA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711743718; x=1712348518;
+        d=1e100.net; s=20230601; t=1711743761; x=1712348561;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SLn+lLgkDX5fY2sRI7cVb/miAMO8Hgz/20wFvN6AVl8=;
-        b=gfiw/EXYDNFO+g1PAcrMXIQiCLz9cZSVQg9cfKoQpyVj2FhLpP0vvzfCweK9Xx9H/P
-         KEYQkHuZ5i5EWESMnxQ5FKX7f3gCRn1397yPPfQ9ljRb9yCuOOUMVAfjJbRMQ1OJ2CP8
-         jWj3eKFyzJPraUtyrF+Kft/ybMeOlsaZMbZlcLT2Wj812pVwz7R7lg2jd8PCnlI+0bKN
-         v1Fg6glWtMEgbwhYnC8qFqqTU+6X/9ZwHkNvnS/KtzuHVzU8QTcYlcvMvANVEHoMnn3J
-         km+4hrHpKLnwMDnZ1aVRl7A3Go+JOGB/XuCr3l19mjVegfYM36/y9AWTWYVFM+wRMKR6
-         Wm1Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXmmS9blNcnB81RQDA8mu7Wl8JWvlKekxyfmKeOZgKq9mHPwk7Md+Xd5dfZnq/icjJMdaygO/Ch3GbejgNmexe1b5y4ZjP7DH50oA==
-X-Gm-Message-State: AOJu0YySm6zxHvN7pcjPPh4lxVr/4KwumHUu0skEBw6DOsTwIkQTabFE
-	/j8S1YvxpiY9ITZdaJxRQufuYGzSOeH8W5s0/cP8My4JmCu0Oo0ZwIo1T2aOXw==
-X-Google-Smtp-Source: AGHT+IEMJwj2jd4/l859KGpWpENBcoKXmdmgnTzTcBXMh2Vl4SpUYa4OQU9H7SXbsGL7YqZVJFFicA==
-X-Received: by 2002:a17:902:cec6:b0:1e0:f525:a831 with SMTP id d6-20020a170902cec600b001e0f525a831mr275700plg.28.1711743717066;
-        Fri, 29 Mar 2024 13:21:57 -0700 (PDT)
+        bh=rtwy1hYH4AJsXrTmyCziUfu7DWwf+fXv0EHGWB5SJck=;
+        b=YvXUOLpvnEXYRYWjTy0JGQmLfR0XNeFlpUYxB+eKLt6DROp1ZL7WuQZTusNQ5Z5JkV
+         liV+CCFabFvyWL06FRAUNcY9WR1FrPsQzamD5GAoo9YVKZJFZKHnU99daZfh9lmmgCga
+         oqqanrgx2ZlqLBJCTZvRYkgHNr08UZ0cCbClQ+ZzcxUln7brdzNvPHawc3ae/OLJi71E
+         Q8U2pTbCUWnIiX5GD+UbDmAZMeCao/2jGbtCvHlgwF86I6dmh7ttWrdD78eCojRZN+Z4
+         zSnIqe4rmrSZB/u69LZJqiZQKIUR47jD5fIZTiZCLHK31/ugORZJlvoCR86Vmbv2zxQm
+         lHMA==
+X-Forwarded-Encrypted: i=1; AJvYcCVYE8l6y7wIDRjWIKYm9jv2dlhWnZ+nl2K1yHOu/ZcsrqQ+vtN2HffMf7gS+rNeHyklDCaHu6RhJG5pionTIE3rtOQsWP/EUZ+jLA==
+X-Gm-Message-State: AOJu0YzmVYMpxmqKmzehYNx+JutUO4AqdFz9FoOVsGvomIcI1pW0Z8qz
+	mQOmVrPrApONX2fNMOD5yJvJkXtVAvoRGQtM0n0JHpOjA+y1UwwVqst+jPw+bg==
+X-Google-Smtp-Source: AGHT+IF0527Z4k8BmlkJrlCMYyPnjLhI2IhTTtX+58mg7dle3uGDGV4TV4IhwgzTIrPEMO3NEvmKlQ==
+X-Received: by 2002:a17:902:f689:b0:1de:fbe1:beb1 with SMTP id l9-20020a170902f68900b001defbe1beb1mr228342plg.7.1711743760796;
+        Fri, 29 Mar 2024 13:22:40 -0700 (PDT)
 Received: from google.com (236.219.125.34.bc.googleusercontent.com. [34.125.219.236])
-        by smtp.gmail.com with ESMTPSA id bw28-20020a056a02049c00b005dcaa45d87esm2911148pgb.42.2024.03.29.13.21.55
+        by smtp.gmail.com with ESMTPSA id p26-20020a62ab1a000000b006e56e5c09absm3521153pff.14.2024.03.29.13.22.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 29 Mar 2024 13:21:56 -0700 (PDT)
-Date: Fri, 29 Mar 2024 20:21:52 +0000
+        Fri, 29 Mar 2024 13:22:39 -0700 (PDT)
+Date: Fri, 29 Mar 2024 20:22:36 +0000
 From: Benson Leung <bleung@google.com>
 To: Tzung-Bi Shih <tzungbi@kernel.org>
 Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org,
@@ -76,11 +76,11 @@ Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org,
 	linux-gpio@vger.kernel.org, linux-media@vger.kernel.org,
 	linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org,
 	krzk@kernel.org
-Subject: Re: [PATCH 16/18] platform/chrome: wilco_ec: debugfs: provide ID
- table for avoiding fallback match
-Message-ID: <Zgci4OqaNBLBl2yF@google.com>
+Subject: Re: [PATCH 17/18] platform/chrome: wilco_ec: event: remove redundant
+ MODULE_ALIAS
+Message-ID: <ZgcjDKH3WaeC7Vom@google.com>
 References: <20240329075630.2069474-1-tzungbi@kernel.org>
- <20240329075630.2069474-17-tzungbi@kernel.org>
+ <20240329075630.2069474-18-tzungbi@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,84 +88,53 @@ List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="lXtHlkwSH46+O9d2"
+	protocol="application/pgp-signature"; boundary="a4JdWraQe9JHs8ym"
 Content-Disposition: inline
-In-Reply-To: <20240329075630.2069474-17-tzungbi@kernel.org>
+In-Reply-To: <20240329075630.2069474-18-tzungbi@kernel.org>
 
 
---lXtHlkwSH46+O9d2
+--a4JdWraQe9JHs8ym
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 03:56:28PM +0800, Tzung-Bi Shih wrote:
-> Instead of using fallback driver name match, provide ID table[1] for the
-> primary match.
->=20
-> [1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/base/platform.c=
-#L1353
+On Fri, Mar 29, 2024 at 03:56:29PM +0800, Tzung-Bi Shih wrote:
+> There is no platform driver in the file.  Remove the redundant
+> MODULE_ALIAS().
 >=20
 > Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
 Reviewed-by: Benson Leung <bleung@chromium.org>
 
 > ---
->  drivers/platform/chrome/wilco_ec/debugfs.c | 9 ++++++++-
->  1 file changed, 8 insertions(+), 1 deletion(-)
+>  drivers/platform/chrome/wilco_ec/event.c | 1 -
+>  1 file changed, 1 deletion(-)
 >=20
-> diff --git a/drivers/platform/chrome/wilco_ec/debugfs.c b/drivers/platfor=
-m/chrome/wilco_ec/debugfs.c
-> index 93c11f81ca45..983f2fa44ba5 100644
-> --- a/drivers/platform/chrome/wilco_ec/debugfs.c
-> +++ b/drivers/platform/chrome/wilco_ec/debugfs.c
-> @@ -10,6 +10,7 @@
->  #include <linux/ctype.h>
->  #include <linux/debugfs.h>
->  #include <linux/fs.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/wilco-ec.h>
->  #include <linux/platform_device.h>
-> @@ -265,17 +266,23 @@ static void wilco_ec_debugfs_remove(struct platform=
-_device *pdev)
->  	debugfs_remove_recursive(debug_info->dir);
->  }
-> =20
-> +static const struct platform_device_id wilco_ec_debugfs_id[] =3D {
-> +	{ DRV_NAME, 0 },
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(platform, wilco_ec_debugfs_id);
-> +
->  static struct platform_driver wilco_ec_debugfs_driver =3D {
->  	.driver =3D {
->  		.name =3D DRV_NAME,
->  	},
->  	.probe =3D wilco_ec_debugfs_probe,
->  	.remove_new =3D wilco_ec_debugfs_remove,
-> +	.id_table =3D wilco_ec_debugfs_id,
->  };
-> =20
->  module_platform_driver(wilco_ec_debugfs_driver);
-> =20
-> -MODULE_ALIAS("platform:" DRV_NAME);
+> diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/=
+chrome/wilco_ec/event.c
+> index 13291fb4214e..49043c644572 100644
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -575,4 +575,3 @@ module_exit(event_module_exit);
 >  MODULE_AUTHOR("Nick Crews <ncrews@chromium.org>");
->  MODULE_LICENSE("GPL v2");
->  MODULE_DESCRIPTION("Wilco EC debugfs driver");
+>  MODULE_DESCRIPTION("Wilco EC ACPI event driver");
+>  MODULE_LICENSE("GPL");
+> -MODULE_ALIAS("platform:" DRV_NAME);
 > --=20
 > 2.44.0.478.gd926399ef9-goog
 >=20
+>=20
 
---lXtHlkwSH46+O9d2
+--a4JdWraQe9JHs8ym
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZgci4AAKCRBzbaomhzOw
-wia/AP41p7WV0zGE8a4VlHRNVebcAVah1YwJhtCsuzSE1aniUwEA0q9rvwuwO+b9
-QHhNI8FMZWtiwak8zvmc3GzQq3ODqgk=
-=NyE4
+iHUEABYIAB0WIQQCtZK6p/AktxXfkOlzbaomhzOwwgUCZgcjDAAKCRBzbaomhzOw
+wt/XAP43r511JFB/1luZprEYf8Izl6M/QKNK8dwgCrJ00WgdZQD7BuHi8LFHQAi7
+vbhOYIDycQKS8iOS6G+fwXDzbTp5Rg8=
+=VODF
 -----END PGP SIGNATURE-----
 
---lXtHlkwSH46+O9d2--
+--a4JdWraQe9JHs8ym--
 
