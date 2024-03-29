@@ -1,48 +1,47 @@
-Return-Path: <linux-gpio+bounces-4845-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4846-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3092E891735
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 11:57:55 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id EBB5B891737
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 11:58:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA21E1F238EF
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 10:57:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A68F9287DC1
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 10:58:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD8FA8120F;
-	Fri, 29 Mar 2024 10:56:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 49E1982894;
+	Fri, 29 Mar 2024 10:56:51 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from fgw20-7.mail.saunalahti.fi (fgw20-7.mail.saunalahti.fi [62.142.5.81])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB7616FE21
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 10:56:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41EC77D081
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 10:56:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.81
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711709810; cv=none; b=h47ycFb53JCGm/ednXaPw81vZ6F/+bi4o5ItdidHEBkqgopziBZ/2HSc7vvwHEj6LIU37nFOhmjabG2m5N07rem8wnRuuvLpfh9jsan4JdnDL/I5MR0vqrr45fm1yEoF6qHilyiLVX5q403nijuPOvSIWSiFHnBgGUJQblNyFoU=
+	t=1711709811; cv=none; b=NDLq15+actYN11VNCH1lzfEdA80Fq7Zp/PauK6cHjO3QoYid8EWCEDjs7f55QxYLy6toumWROikDvLBet5C5Wb9V/rTDC4DVitlVhQA9losMVSuJRtJtRbiqzluIn9IQ3nFIAfWiDzpO56JWaBOYPPfdzaEZNbI4S/Hc/3QTboU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711709810; c=relaxed/simple;
-	bh=GrV47NT5vn8t81Ahr/eNUVMeiZ6ilTSttqyQGbii5b0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SJy67qikKSmDhUnTV+nl2F42zx8hqVNx6Rv8ANC8ewRPnpDSo//wemZqJ/8aQaD2bvWfOxu0Ud9KutxZER1OMPTdmgDnak/Hj/s/YBsogpMmRFW6PiK7/sagYJhF863PIMVlbkadL4GvU073IwhtsnnBt2Ee9041V5LbtrmYaRU=
+	s=arc-20240116; t=1711709811; c=relaxed/simple;
+	bh=MntR2VoWY9d1UM+GLc/rVG7Vv1KYkGV3SbVUjUoYChA=;
+	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KyCGrSBI/O7FoyCCvMPlJvSLdazbWMpBFwOsy1rV9tS57j+4ODpcR+lTraGTWMkpkeGPyndWqjvGrhbpf3hTa6Q37reOY5VkB/2g89DYyiPhCyylH0aINNaJ9qRCBA9lHPzppJXV4OH7gyQxbkZICub+9of9EfFt5nopeYKXqgE=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.81
 Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
 Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
 	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
-	id 0791ead8-edbb-11ee-b3cf-005056bd6ce9;
-	Fri, 29 Mar 2024 12:56:43 +0200 (EET)
+	id 080b5b1f-edbb-11ee-b3cf-005056bd6ce9;
+	Fri, 29 Mar 2024 12:56:44 +0200 (EET)
 From: Andy Shevchenko <andy.shevchenko@gmail.com>
 To: Linus Walleij <linus.walleij@linaro.org>,
 	Andy Shevchenko <andy.shevchenko@gmail.com>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
 	linux-gpio@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v2 08/11] pinctrl: aw9523: Make use of dev_err_probe()
-Date: Fri, 29 Mar 2024 12:55:22 +0200
-Message-ID: <20240329105634.712457-9-andy.shevchenko@gmail.com>
+Subject: [PATCH v2 09/11] pinctrl: aw9523: Sort headers and group pinctrl/*
+Date: Fri, 29 Mar 2024 12:55:23 +0200
+Message-ID: <20240329105634.712457-10-andy.shevchenko@gmail.com>
 X-Mailer: git-send-email 2.44.0
 In-Reply-To: <20240329105634.712457-1-andy.shevchenko@gmail.com>
 References: <20240329105634.712457-1-andy.shevchenko@gmail.com>
@@ -54,43 +53,42 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Simplify the error handling in probe function by switching from
-dev_err() to dev_err_probe().
+One header was misplaced and group pinctrl/* ones to show the relation
+with the pin control subsystem.
 
 Signed-off-by: Andy Shevchenko <andy.shevchenko@gmail.com>
 ---
- drivers/pinctrl/pinctrl-aw9523.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ drivers/pinctrl/pinctrl-aw9523.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
 diff --git a/drivers/pinctrl/pinctrl-aw9523.c b/drivers/pinctrl/pinctrl-aw9523.c
-index f084dad5c88f9..fe398c59c2d11 100644
+index fe398c59c2d11..49d5035899227 100644
 --- a/drivers/pinctrl/pinctrl-aw9523.c
 +++ b/drivers/pinctrl/pinctrl-aw9523.c
-@@ -816,10 +816,8 @@ static int aw9523_init_irq(struct aw9523 *awi, int irq)
+@@ -13,17 +13,18 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+-#include <linux/mutex.h>
+ #include <linux/module.h>
+-#include <linux/pinctrl/pinconf.h>
+-#include <linux/pinctrl/pinctrl.h>
+-#include <linux/pinctrl/pinmux.h>
+-#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/mutex.h>
+ #include <linux/property.h>
+ #include <linux/regmap.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/slab.h>
  
- 	ret = devm_request_threaded_irq(dev, irq, NULL, aw9523_irq_thread_func,
- 					IRQF_ONESHOT, dev_name(dev), awi);
--	if (ret) {
--		dev_err(dev, "Failed to request irq %d\n", irq);
--		return ret;
--	}
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to request irq %d\n", irq);
- 
- 	girq = &awi->gpio.irq;
- 	gpio_irq_chip_set_chip(girq, &aw9523_irq_chip);
-@@ -1016,8 +1014,7 @@ static int aw9523_probe(struct i2c_client *client)
- 
- 	awi->pctl = devm_pinctrl_register(dev, pdesc, awi);
- 	if (IS_ERR(awi->pctl)) {
--		ret = PTR_ERR(awi->pctl);
--		dev_err(dev, "Cannot register pinctrl: %d", ret);
-+		ret = dev_err_probe(dev, PTR_ERR(awi->pctl), "Cannot register pinctrl");
- 		goto err_disable_vregs;
- 	}
- 
++#include <linux/pinctrl/pinconf-generic.h>
++#include <linux/pinctrl/pinconf.h>
++#include <linux/pinctrl/pinctrl.h>
++#include <linux/pinctrl/pinmux.h>
++
+ #define AW9523_MAX_FUNCS		2
+ #define AW9523_NUM_PORTS		2
+ #define AW9523_PINS_PER_PORT		8
 -- 
 2.44.0
 
