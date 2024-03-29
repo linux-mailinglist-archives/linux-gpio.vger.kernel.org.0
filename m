@@ -1,169 +1,113 @@
-Return-Path: <linux-gpio+bounces-4865-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4867-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 85A3F891899
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 13:22:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id CCADE891BD2
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 14:34:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A71111C23059
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 12:22:47 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A1A81C26B42
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 13:34:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 65F9586128;
-	Fri, 29 Mar 2024 12:22:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C56B177999;
+	Fri, 29 Mar 2024 12:40:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="O7Fi0g/C"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BS4Yh9tZ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5066A34B
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 12:22:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9DAD177990;
+	Fri, 29 Mar 2024 12:40:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711714951; cv=none; b=EcJCKYjHwAA/1CfxJwjNDH+5voKRfFIiTrWTLIMMx66yocJ2e8KcuMScW90oG4YrD28Egn1YxwlpWxjjU97SZKBeCOMkUwKaAkScPESyC2MavMkVSt6Ths0KJ4KxknruTryQjKlHIP8ky5nz+0Rkq+82eBbCnM+CeYn/g0bJF+c=
+	t=1711716014; cv=none; b=jr0IB+lJL/T/XFLYavnxDJ78hN27apMmWyd6VZK3O8GlKsrrgyGwrxzwL85jrF5UtEBdX9/C3uZV4wBF0Kk9d3Ads/EiwX4F6MboVuwnjtTwEdZtcqyeMwwbT5OUi2QYV3WQzbxZ/IxpNwISilaxYZnrRrlT1CBuB85Lk3XwSuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711714951; c=relaxed/simple;
-	bh=leo+Yi4AfSnMVg8mcM4Xju1MFqd5FSUEovb4t8XjI+U=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ns+FLlgXQrP5/V5qZBNjt9XZ/cRTJ3dzceTIvFNCsC2ckvjenVuz7vLUzWvhReW+VOt5+ceONAYC+r6TKWLFKPfDfP7TGuLS61izjRWn/fhksc1p0kOnWpFS384l6uVre8MIkstwZ8q/lpJ8OeYh+XCsL1MFumSYQ2hs/TpWTWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=O7Fi0g/C; arc=none smtp.client-ip=209.85.208.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d4515ec3aaso16324011fa.1
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 05:22:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711714946; x=1712319746; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TdH2/uZDyLmBSFlZ529ZdmMTMc2xJjXR5We9XRvPLc8=;
-        b=O7Fi0g/C5yTqgLj7PJ0zyXIg+iImbY+SKVFGN4a9Zq5xCNky6TjQyYrzlUaERurNpf
-         7LwKDBDW9EciAYhebOlUrfpp7gkwdxw3ffcHgzjAsYvU5YXkkSuF6xm7T7Dgu9iSQ5kl
-         +qqXXyD8PAwdjUTX/VSPOgkEthVy/fYMcmg7/Pdkk27h8K4cpeyzmcdoVIWAeGJYcA4p
-         vgxV5p/AfEY+VZYpyf4uBNc2jICO/cR9owEcZUd+mnQwV27PeBiF08/M0whYSW9XQNrn
-         V/j9jsc5tyhLkFsz1U2crr4Z9BGHhaJ+fjWQ7temGRIJI9xLKbhip75WdFHFUSwGtyRq
-         rj0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711714946; x=1712319746;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=TdH2/uZDyLmBSFlZ529ZdmMTMc2xJjXR5We9XRvPLc8=;
-        b=q93IvfbTY3fDYe1DccXMjvt50dcQrtoKt14hKxVl4oMJD7mDgMbeESJDvmztjbJAbj
-         MfLWLTNwxDs/ZSS+fPhOBfeW9ybyG6cCHGCzfFgfmi5j/I8+eRIEVu6xoim1TVS1Clio
-         6X2Ep7eiZOvhGEox+kkY5vlRvzuCM8e6H0668C8VvNfZrdZo/HRpkRflEXNB7fgwYEFL
-         OjDAnz/VcHD9ApC9m6nmY4jNx8KceDY/3pH2102x0x8cuQDnFpwD6XNzGpZa/CJ925YZ
-         ZKZaCUVplniFD87yVzdaej4badT3Z2CLLrSsMXOVBlgoRdvQ2jrWoJJvAYPE8BnC6V0d
-         +p+A==
-X-Forwarded-Encrypted: i=1; AJvYcCVsf8TP0xO/MwCemnzGrCdkRMmmEq+95db2p4gcauvY1I748QSNHlPuei/PjGkdzl+eA0AigtEHbMnGisos1EPDpQ+Y1iW+AJy/CQ==
-X-Gm-Message-State: AOJu0YyUMx7r1WiybFy8ENGxe4DX7qcdf+lPUlX4tTYfZdCx/vf/3g3x
-	1hYb4IhavJYr7oGsFmDb0op+LFDLa2aY2d7tFFAmTBQR2CbZXyGICgHgEKgrhclVR6fCCwW/F5o
-	nSeJLtB6xCuLsWcmrud38InYq8NA6P+FR73kcFQ==
-X-Google-Smtp-Source: AGHT+IE+HnSCJL2quawa1K1lMrp38Nm79TgJqcEd/z4x+7H7IfVDrdpUOVuBJN0I2Fw0lOyMRLNfqEQZZUdPpNwT2ZM=
-X-Received: by 2002:a2e:8350:0:b0:2d3:5480:92aa with SMTP id
- l16-20020a2e8350000000b002d3548092aamr644831ljh.25.1711714946358; Fri, 29 Mar
- 2024 05:22:26 -0700 (PDT)
+	s=arc-20240116; t=1711716014; c=relaxed/simple;
+	bh=/7Nyd0ElNKtUa/fFvXgp1vH0TNWpn4B6Fz4DJsTV25g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=BDrB56u+XUZgb0yDUpxqoU7jN5vdXfmmsgECIaihEvItjIgvQ6MQAufvzwZkNp0V0jMP2nHqCtO7hEg4GX17TjIbqltuSKLRQhTErae15loTh68yqWDeIizAPOjGh0n+BOy6shTIbLP6bIqnbagOeY9Rlc1GKcMaRbaic4ozfAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BS4Yh9tZ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4058C433C7;
+	Fri, 29 Mar 2024 12:40:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711716013;
+	bh=/7Nyd0ElNKtUa/fFvXgp1vH0TNWpn4B6Fz4DJsTV25g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=BS4Yh9tZFMZUkYmRUqYXd8ZBc4LdwR+/blN5/imqFeUTTaKUMH51LfHTpevb1Y/EU
+	 rW80c4pW9C3AfDVvOh8vtB1j/zEa+Yp9RK/nj2JepuqVSHclEg9dW/PzDB+fL+OFGH
+	 /etDCkQXDwcU8TbfnNoaPQgB8tifH628rCah0AI6XjRlxeG0xEPp4PGTgZM2OIqduA
+	 /kYIct8ujbed1An7zAifKt9/nyXpuRM9jyZm97a8sITr+uKV0KsET3juW4pTvZFUaK
+	 A253B9cfcmf8dqlgbZZfDLZ8GdaGLIUB0P5zF9h8yPcb1Wt1Hsl0/hZ6HKV01dVNIA
+	 dha2CtlA4Z4Hw==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>,
+	Sasha Levin <sashal@kernel.org>,
+	linus.walleij@linaro.org,
+	linux-renesas-soc@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH AUTOSEL 6.8 14/98] pinctrl: renesas: checker: Limit cfg reg enum checks to provided IDs
+Date: Fri, 29 Mar 2024 08:36:45 -0400
+Message-ID: <20240329123919.3087149-14-sashal@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <20240329123919.3087149-1-sashal@kernel.org>
+References: <20240329123919.3087149-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240327-module-owner-virtio-v1-0-0feffab77d99@linaro.org>
- <20240327-module-owner-virtio-v1-9-0feffab77d99@linaro.org>
- <CAMRc=McY6PJj7fmLkNv07ogcYq=8fUb2o6w2uA1=D9cbzyoRoA@mail.gmail.com> <1303b572-719e-410d-a11a-3f17a5bb3b63@linaro.org>
-In-Reply-To: <1303b572-719e-410d-a11a-3f17a5bb3b63@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Fri, 29 Mar 2024 13:22:15 +0100
-Message-ID: <CAMRc=Mfeez9kXkkVxdmUk5dy=L=rbnYkYujO6jSCT5WAyUw2HA@mail.gmail.com>
-Subject: Re: [PATCH 09/22] gpio: virtio: drop owner assignment
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, 
-	Xuan Zhuo <xuanzhuo@linux.alibaba.com>, Richard Weinberger <richard@nod.at>, 
-	Anton Ivanov <anton.ivanov@cambridgegreys.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Paolo Bonzini <pbonzini@redhat.com>, Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>, 
-	Marcel Holtmann <marcel@holtmann.org>, Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gonglei <arei.gonglei@huawei.com>, 
-	"David S. Miller" <davem@davemloft.net>, Viresh Kumar <vireshk@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, David Airlie <airlied@redhat.com>, 
-	Gerd Hoffmann <kraxel@redhat.com>, Gurchetan Singh <gurchetansingh@chromium.org>, 
-	Chia-I Wu <olvaffe@gmail.com>, Jean-Philippe Brucker <jean-philippe@linaro.org>, 
-	Joerg Roedel <joro@8bytes.org>, Alexander Graf <graf@amazon.com>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Eric Van Hensbergen <ericvh@kernel.org>, Latchesar Ionkov <lucho@ionkov.net>, 
-	Dominique Martinet <asmadeus@codewreck.org>, Christian Schoenebeck <linux_oss@crudebyte.com>, 
-	Stefano Garzarella <sgarzare@redhat.com>, Kalle Valo <kvalo@kernel.org>, 
-	Dan Williams <dan.j.williams@intel.com>, Vishal Verma <vishal.l.verma@intel.com>, 
-	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Bjorn Andersson <andersson@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	"Martin K. Petersen" <martin.petersen@oracle.com>, Vivek Goyal <vgoyal@redhat.com>, 
-	Miklos Szeredi <miklos@szeredi.hu>, Anton Yakovlev <anton.yakovlev@opensynergy.com>, 
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, virtualization@lists.linux.dev, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-um@lists.infradead.org, linux-block@vger.kernel.org, 
-	linux-bluetooth@vger.kernel.org, linux-crypto@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, iommu@lists.linux.dev, 
-	netdev@vger.kernel.org, v9fs@lists.linux.dev, kvm@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, nvdimm@lists.linux.dev, 
-	linux-remoteproc@vger.kernel.org, linux-scsi@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, alsa-devel@alsa-project.org, 
-	linux-sound@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.8.2
+Content-Transfer-Encoding: 8bit
 
-On Fri, Mar 29, 2024 at 12:35=E2=80=AFPM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
->
-> On 29/03/2024 11:27, Bartosz Golaszewski wrote:
-> > On Wed, Mar 27, 2024 at 1:45=E2=80=AFPM Krzysztof Kozlowski
-> > <krzysztof.kozlowski@linaro.org> wrote:
-> >>
-> >> virtio core already sets the .owner, so driver does not need to.
-> >>
-> >> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> >>
-> >> ---
-> >>
-> >> Depends on the first patch.
-> >> ---
-> >>  drivers/gpio/gpio-virtio.c | 1 -
-> >>  1 file changed, 1 deletion(-)
-> >>
-> >> diff --git a/drivers/gpio/gpio-virtio.c b/drivers/gpio/gpio-virtio.c
-> >> index fcc5e8c08973..9fae8e396c58 100644
-> >> --- a/drivers/gpio/gpio-virtio.c
-> >> +++ b/drivers/gpio/gpio-virtio.c
-> >> @@ -653,7 +653,6 @@ static struct virtio_driver virtio_gpio_driver =3D=
- {
-> >>         .remove                 =3D virtio_gpio_remove,
-> >>         .driver                 =3D {
-> >>                 .name           =3D KBUILD_MODNAME,
-> >> -               .owner          =3D THIS_MODULE,
-> >>         },
-> >>  };
-> >>  module_virtio_driver(virtio_gpio_driver);
-> >>
-> >> --
-> >> 2.34.1
-> >>
-> >
-> > Applied, thanks!
->
-> I expressed dependency in two places: cover letter and this patch.
-> Please drop it, because without dependency this won't work. Patch could
-> go with the dependency and with your ack or next cycle.
->
-> Best regards,
-> Krzysztof
->
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Dropped, and:
+[ Upstream commit 3803584a4e9b65bb5b013f862f55c5055aa86c25 ]
 
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+If the number of provided enum IDs in a variable width config register
+description does not match the expected number, the checker uses the
+expected number for validating the individual enum IDs.
+
+However, this may cause out-of-bounds accesses on the array holding the
+enum IDs, leading to bogus enum_id conflict warnings.  Worse, if the bug
+is an incorrect bit field description (e.g. accidentally using "12"
+instead of "-12" for a reserved field), thousands of warnings may be
+printed, overflowing the kernel log buffer.
+
+Fix this by limiting the enum ID check to the number of provided enum
+IDs.
+
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Link: https://lore.kernel.org/r/c7385f44f2faebb8856bcbb4e908d846fc1531fb.1705930809.git.geert+renesas@glider.be
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/pinctrl/renesas/core.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/pinctrl/renesas/core.c b/drivers/pinctrl/renesas/core.c
+index 93e51abbf519a..8f6d7cc25b599 100644
+--- a/drivers/pinctrl/renesas/core.c
++++ b/drivers/pinctrl/renesas/core.c
+@@ -907,9 +907,11 @@ static void __init sh_pfc_check_cfg_reg(const char *drvname,
+ 		sh_pfc_err("reg 0x%x: var_field_width declares %u instead of %u bits\n",
+ 			   cfg_reg->reg, rw, cfg_reg->reg_width);
+ 
+-	if (n != cfg_reg->nr_enum_ids)
++	if (n != cfg_reg->nr_enum_ids) {
+ 		sh_pfc_err("reg 0x%x: enum_ids[] has %u instead of %u values\n",
+ 			   cfg_reg->reg, cfg_reg->nr_enum_ids, n);
++		n = cfg_reg->nr_enum_ids;
++	}
+ 
+ check_enum_ids:
+ 	sh_pfc_check_reg_enums(drvname, cfg_reg->reg, cfg_reg->enum_ids, n);
+-- 
+2.43.0
+
 
