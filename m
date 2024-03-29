@@ -1,132 +1,127 @@
-Return-Path: <linux-gpio+bounces-4879-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4880-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98C6A89207F
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 16:33:05 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC2BA8920D8
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 16:50:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 522C4B388B1
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:23:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BDEC1F26A46
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:50:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C477526293;
-	Fri, 29 Mar 2024 15:16:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3B9713FE36;
+	Fri, 29 Mar 2024 15:50:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="s9cFiy5l"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lb5lvVE4"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f45.google.com (mail-lf1-f45.google.com [209.85.167.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D85B321364
-	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 15:16:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA9025778;
+	Fri, 29 Mar 2024 15:50:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711725407; cv=none; b=n3xNTkn8vLL3kfpeKoTcjh7EyRatg8am4sekg3k+HnGaflLlwVr24GQfjUflTy+32L3pBClX6r5y08i/2ltD7edOzxvBQjdyt5Dqctfky4z9IR88yJrnHeJBUhtoKsmkiJDEsIRL2DhpQOKYHYxWOwYlPuRVYiE48zkix0nua28=
+	t=1711727425; cv=none; b=NcrrmXdOQYhCFuPuMXDpH8qjqlv+2MP98c45pVa6b71oZ/tZLKhYMy+dU0WoCBbNwN7Go1lPtiN0iCiI5RQSaMDOFv6LcgQJEMfZvkLL/MmHWa3oNa6s14beziD9Et9HooPXHnoZ0Et7whV3AN2uOfb5cVrtUwkpboYfc3nnNkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711725407; c=relaxed/simple;
-	bh=bXqO9ldKgORkZ+8U29cEO9eCzS1Prl/TZB36JmaV/hs=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aYSG5Ylwjpwhpvhebxfr2T5mDyHIztbvKSWc31QrPrYEyGNlTRI036c7PGebYmtS69MHNNyFjtCEvGy0SSBzuIRiGsVYKE75VX98aMOaDOerEaXE7n4EB+AOfjPMrJ6PXWzz0Z6F5+8f1r013fMzFU3MNndIjkDwoQs6D43137g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=s9cFiy5l; arc=none smtp.client-ip=209.85.167.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f45.google.com with SMTP id 2adb3069b0e04-513cf9bacf1so2512249e87.0
-        for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 08:16:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1711725404; x=1712330204; darn=vger.kernel.org;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqNwX/X38tayRDAW4Zlj0+695u0d2YomcEbZiHh9vxQ=;
-        b=s9cFiy5lFTXh1NSbsmwU1ApVISQdcZ3CD+xGi+nSCIXBUsQDSAVGQYLhJhsbMEbBkv
-         UuU8Yt/PyYeU4aFw3poNADsx3PCzuwKC2eQX+WYxCLji2+EycTv2Q25JWfqvDpFb3f+K
-         DoOPGPj0CbK4M2O2VDc8oxyCj7LH1Zn+dnfj2xeJnSACb+okrFYOLI+BHGn4A72cGDJ9
-         mbV3l819mhJB1C89Q4QthVTk6CfbsovR6hL3H0y2Ch+O03jzLHzHkUHJA2fLaPAmkOz5
-         G5DYigp5+q5H2+/mc7dU9bK80RDXH9+Hx0sTT2x0phddFzaVuF2F/i3Bht16nLBdcQz1
-         Zk0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711725404; x=1712330204;
-        h=cc:to:subject:message-id:date:references:mime-version:in-reply-to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=DqNwX/X38tayRDAW4Zlj0+695u0d2YomcEbZiHh9vxQ=;
-        b=I7hfJq3EWQ/DFCB7dNhpJ56Ual1+j1NBYVWwnEYvhBzdiCNih4s8pXphrVCVi/VcYU
-         +dssg+lg7eIu23AkcSBjBjo3/p0QnoFN6Ruc9a8R39jh5NETSTNeLsvwIveKsKoxTM8r
-         /6+ewoannEtaT5mE/FBLjdPmT3XJwFZ0vcmf3cWq46JrySfnIbY1gWEeqFAeA7bzRukk
-         NO1+8JfdkkvjzFWyyLJcZY/HGXiPXLq/GJGKUwmVVtUcoxPMc7zWPwrJ8MJzwEXTQS5m
-         MZs2OOezPDvASzmaunn2+xuf1ImbivF9yvpqxyPu4+4d9Z6Z4FfghQTl7TMPrAAJemMj
-         ki+Q==
-X-Forwarded-Encrypted: i=1; AJvYcCWdfPOEdRpOz9TmePoBKAeDQWUi2HGzbNIWx9/jda0Ku06RCPKFpPOzIh/ITfR5gsdD+OmKHNBIamaCHu6X9seVtyUWHZKOt3Itdw==
-X-Gm-Message-State: AOJu0YyTwB2tzeW8OZCESq56AuriHtDtw5QbZ/xEE/C1bTdZAU5K8cun
-	wuowoGvhJGEio5uhxmXG8OwDqWrFvpiX8c5MzplMRGL2GWkPRXgYRPN9t+CDiJiEq6/iXZsEdeY
-	iiVjE2fagNjlIePZHRSVDp66aFumV/yRZwL4J/g==
-X-Google-Smtp-Source: AGHT+IG21XPIIeej7UxBpa2cGsWVRF31o4EA+Zq7Y09z8tl5e0tGI8gOndkj1llDUytkKUy8+WDfp10/Oe2W/IeM0aY=
-X-Received: by 2002:ac2:5d71:0:b0:513:c9ca:1333 with SMTP id
- h17-20020ac25d71000000b00513c9ca1333mr1655888lft.22.1711725403783; Fri, 29
- Mar 2024 08:16:43 -0700 (PDT)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 29 Mar 2024 08:16:43 -0700
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-In-Reply-To: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
+	s=arc-20240116; t=1711727425; c=relaxed/simple;
+	bh=X7bFRQb+N6K2Nz1nwV3SfyzI7JqPTSkp9ziVdgKEnBs=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=b6Bl4fPdoGMv/5nveNHakOKpWfPhSLg4hrZqTXJ9aCDhCICRsbPoF0CYHeFhC8o33Z3AFA7MOkiuNAVy7Iev5F/bPHUYi0pWYG6H5kAto8/t8ZRR/HlINKq5s5u18QHdUUph+Tx2frHKEpFzJxufCTlaQWGsFbOl3oTOIEWVFTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lb5lvVE4; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4B7CC433F1;
+	Fri, 29 Mar 2024 15:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1711727424;
+	bh=X7bFRQb+N6K2Nz1nwV3SfyzI7JqPTSkp9ziVdgKEnBs=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=lb5lvVE4y3jxw+8j0bsBQj2FQw2c0MUsbK76z9S8Q6sX7ZA75uYalvQBwt0s3nm+C
+	 DyqXgnS/c8+U5eN6i37PxXgQMYBRwc0IKrEYoubKJOF83Q7fAccMDYk8/nx8aRFI+L
+	 ZemplAARaneZUNYA5Ww4Kbudm8LdvNKX06myJkYAMW70s7NHJyvptkk79OJZxeoBjB
+	 SbTKeHBrsJV87T9zcv9FnKUM2fI98AySDSF5LijhWDhkcuiXL2HBYDPYHrN3hf6WPF
+	 mO2rKXkkkV49PtKLzjOOCIZcQ/zsr+mKy0l8K2Dv0WWfQ4dnl6q2wP5YBelLlw8ZDy
+	 EWRcSKd3OHpUg==
+Message-ID: <4796d53f-687a-4c3b-9ca2-ec7f47b4e9b9@kernel.org>
+Date: Fri, 29 Mar 2024 16:50:18 +0100
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
-Date: Fri, 29 Mar 2024 08:16:43 -0700
-Message-ID: <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
-Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
- is not, initialized, yet kobject_get() errors
-To: Hans de Goede <hans@hansg.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	"regressions@lists.linux.dev" <regressions@lists.linux.dev>, Andy Shevchenko <andy@kernel.org>, 
-	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 07/18] platform/chrome: cros_usbpd_notify: provide ID
+ table for avoiding fallback match
+To: Tzung-Bi Shih <tzungbi@kernel.org>, bleung@chromium.org,
+ groeck@chromium.org, linus.walleij@linaro.org, brgl@bgdev.pl,
+ hverkuil-cisco@xs4all.nl, mchehab@kernel.org, sre@kernel.org,
+ alexandre.belloni@bootlin.com
+Cc: chrome-platform@lists.linux.dev, pmalani@chromium.org,
+ linux-gpio@vger.kernel.org, linux-media@vger.kernel.org,
+ linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+References: <20240329075630.2069474-1-tzungbi@kernel.org>
+ <20240329075630.2069474-8-tzungbi@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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 fv0=
+In-Reply-To: <20240329075630.2069474-8-tzungbi@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
-> Hi All,
->
-> I've already tried to fix this, so let me just copy and paste my half finished patch
-> to explain the problem.
->
-> I was planning on submitting this as a RFC patch at least, but there are also some
-> other new issues with 6.9 on this tablet and I'm not sure how this interacts
-> with those issues and I don't have time to work on this any further this weekend.
->
-> Anyways below is the patch / bug report.
->
-> I'm wondering if a better fix would be to add a "ready" flag to gdev
-> and may gpiochip_find ignore not yet ready chips (we need them on
-> the list before they are ready to reserve the GPIO numbers) ?
->
-> Regards,
->
-> Hans
->
+On 29/03/2024 08:56, Tzung-Bi Shih wrote:
+> Instead of using fallback driver name match, provide ID table[1] for the
+> primary match.
+> 
+> [1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/base/platform.c#L1353
+> 
+> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 
-Hi Hans!
 
-Thanks for the report. I hope I'm not being naive here but would the following
-one-liner work?
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index ce94e37bcbee..69f365ccbfd8 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *data,
+Best regards,
+Krzysztof
 
- 		gc = srcu_dereference(gdev->chip, &gdev->srcu);
-
--		if (gc && match(gc, data))
-+		if (device_is_registered(&gdev->dev) && gc && match(gc, data))
- 			return gpio_device_get(gdev);
- 	}
-
-This would make gpio_device_find() ignore any GPIO device that's not yet
-registered on the GPIO bus which is almost the last step of the registration
-process right before creating the sysfs attributes.
-
-Bartosz
 
