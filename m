@@ -1,128 +1,427 @@
-Return-Path: <linux-gpio+bounces-4891-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4892-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2C01A892103
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 16:55:34 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02A578923CB
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 20:01:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 5D6861C280D1
-	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 15:55:33 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2BE52B20B74
+	for <lists+linux-gpio@lfdr.de>; Fri, 29 Mar 2024 19:01:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8BA9C6A8D2;
-	Fri, 29 Mar 2024 15:55:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blQQS/ze"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 021D451C2B;
+	Fri, 29 Mar 2024 19:01:02 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from fgw23-7.mail.saunalahti.fi (fgw23-7.mail.saunalahti.fi [62.142.5.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6BA5B1E6;
-	Fri, 29 Mar 2024 15:55:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4163A4C61C
+	for <linux-gpio@vger.kernel.org>; Fri, 29 Mar 2024 19:00:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.142.5.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711727727; cv=none; b=rituFX7wKtr5JDGVl4LmNgy4Mk/wxsC48bqdazUj7bB7bJovNsdDZOnW7WXUKw5faFhOispUbNPMvfe/nAyUbok8zMLkbECUyZVabq9fc/aiWT/3ks24dxCyObeAvkERxOF5xJyeaguUhvjXjSC746PLPDf4iT91ZaaVc+4s6h0=
+	t=1711738861; cv=none; b=AuXJUkYMmjsITQOHAmuf7R6NDNVsy+qhcQxIPd8I9WqC2x0CIeXk2navztECUX0mk4NYJWMKPuaPPX1IUmOwgOM8+WKsTpW5liPWxGX9bWIk/tKt9g5hqcStmUm2O9lvYNb6Ftu7aNQO3G6q56oBwiMN5Kl1kvbLdkAdgDP6xN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711727727; c=relaxed/simple;
-	bh=8QThFo/0MRq+6GYzg5ufLVNNjLX3N2qhGYo08JHWd2A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Cc1d89kDvClGv+IO61jDaF1agmrxpSMnQ/USdilWvEaShYgO+S8lcSPwLtjg75YUVjVD/1bAxk9mfRApTNRdd06PNrRh9YZi8jAN5kRQbGp6zDxqQher0Gs6YclfDEy8AO0aCfvieFuh4g98elWTWMjcsC3Hjw/8RgNLDlcnVO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blQQS/ze; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E676EC433F1;
-	Fri, 29 Mar 2024 15:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711727726;
-	bh=8QThFo/0MRq+6GYzg5ufLVNNjLX3N2qhGYo08JHWd2A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=blQQS/zeN3+uXmnUMM3+vvTObyLgXtGaisN2WOrV+P+eMGnZnoXXKLINyoO6G+r6E
-	 Rav5i8To3y3KFJSJyZKEtW5x4saNmCbRfFkBPihys++bniGm07F4fiFdUSaFYmMAnv
-	 T1482wUb/ZmrE/DPkzzXwfAQ4EZ/E6AkYy8VF5bK5UnHa4O27nzc98Lt7snwRaFMLK
-	 SQNTZZDgmxUilQIWdMofF1BqWRnRqnRKJ+H63L+ZPQQZLZqq8uTdOpBZSJQdiT+hpm
-	 oXVOmfUVLbpXktGQUpl8wDQxg3M67dX7u4wsnD71+mvw4x9NQVceyg153dRybvxCzH
-	 CnGGgEZt4ec8w==
-Message-ID: <b927ea54-ba02-4410-8cc6-4f1258d03fce@kernel.org>
-Date: Fri, 29 Mar 2024 16:55:20 +0100
+	s=arc-20240116; t=1711738861; c=relaxed/simple;
+	bh=GsKkA//w/F6p1DceLlnK3us287Q2nZOD7ADya93kfKs=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Jf4rcmMoGNPlr++PijvX0+nOY+B1J3zmcjRmS0FMo3rlhgYVMRGu/LD2gJUGnvJdhVMLCBZWCpQKRRATLd5GzP895T2QA9vyrKn5bWujp34ELAA5s2OK0naJIvN/rWsGQA3L7r6dp9A5+edIRHAb/a7YKwvVeEg+dgAmsEYh5wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com; spf=fail smtp.mailfrom=gmail.com; arc=none smtp.client-ip=62.142.5.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=gmail.com
+Received: from localhost (88-113-26-217.elisa-laajakaista.fi [88.113.26.217])
+	by fgw20.mail.saunalahti.fi (Halon) with ESMTP
+	id a7c36e9b-edfe-11ee-b3cf-005056bd6ce9;
+	Fri, 29 Mar 2024 21:00:49 +0200 (EET)
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Fri, 29 Mar 2024 21:00:48 +0200
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
+References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
+ <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 13/18] platform/chrome: cros_ec_vbc: provide ID table for
- avoiding fallback match
-To: Tzung-Bi Shih <tzungbi@kernel.org>, bleung@chromium.org,
- groeck@chromium.org, linus.walleij@linaro.org, brgl@bgdev.pl,
- hverkuil-cisco@xs4all.nl, mchehab@kernel.org, sre@kernel.org,
- alexandre.belloni@bootlin.com
-Cc: chrome-platform@lists.linux.dev, pmalani@chromium.org,
- linux-gpio@vger.kernel.org, linux-media@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
-References: <20240329075630.2069474-1-tzungbi@kernel.org>
- <20240329075630.2069474-14-tzungbi@kernel.org>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- xsFNBFVDQq4BEAC6KeLOfFsAvFMBsrCrJ2bCalhPv5+KQF2PS2+iwZI8BpRZoV+Bd5kWvN79
- cFgcqTTuNHjAvxtUG8pQgGTHAObYs6xeYJtjUH0ZX6ndJ33FJYf5V3yXqqjcZ30FgHzJCFUu
- JMp7PSyMPzpUXfU12yfcRYVEMQrmplNZssmYhiTeVicuOOypWugZKVLGNm0IweVCaZ/DJDIH
- gNbpvVwjcKYrx85m9cBVEBUGaQP6AT7qlVCkrf50v8bofSIyVa2xmubbAwwFA1oxoOusjPIE
- J3iadrwpFvsZjF5uHAKS+7wHLoW9hVzOnLbX6ajk5Hf8Pb1m+VH/E8bPBNNYKkfTtypTDUCj
- NYcd27tjnXfG+SDs/EXNUAIRefCyvaRG7oRYF3Ec+2RgQDRnmmjCjoQNbFrJvJkFHlPeHaeS
- BosGY+XWKydnmsfY7SSnjAzLUGAFhLd/XDVpb1Een2XucPpKvt9ORF+48gy12FA5GduRLhQU
- vK4tU7ojoem/G23PcowM1CwPurC8sAVsQb9KmwTGh7rVz3ks3w/zfGBy3+WmLg++C2Wct6nM
- Pd8/6CBVjEWqD06/RjI2AnjIq5fSEH/BIfXXfC68nMp9BZoy3So4ZsbOlBmtAPvMYX6U8VwD
- TNeBxJu5Ex0Izf1NV9CzC3nNaFUYOY8KfN01X5SExAoVTr09ewARAQABzSVLcnp5c3p0b2Yg
- S296bG93c2tpIDxrcnprQGtlcm5lbC5vcmc+wsGVBBMBCgA/AhsDBgsJCAcDAgYVCAIJCgsE
- FgIDAQIeAQIXgBYhBJvQfg4MUfjVlne3VBuTQ307QWKbBQJgPO8PBQkUX63hAAoJEBuTQ307
- QWKbBn8P+QFxwl7pDsAKR1InemMAmuykCHl+XgC0LDqrsWhAH5TYeTVXGSyDsuZjHvj+FRP+
- gZaEIYSw2Yf0e91U9HXo3RYhEwSmxUQ4Fjhc9qAwGKVPQf6YuQ5yy6pzI8brcKmHHOGrB3tP
- /MODPt81M1zpograAC2WTDzkICfHKj8LpXp45PylD99J9q0Y+gb04CG5/wXs+1hJy/dz0tYy
- iua4nCuSRbxnSHKBS5vvjosWWjWQXsRKd+zzXp6kfRHHpzJkhRwF6ArXi4XnQ+REnoTfM5Fk
- VmVmSQ3yFKKePEzoIriT1b2sXO0g5QXOAvFqB65LZjXG9jGJoVG6ZJrUV1MVK8vamKoVbUEe
- 0NlLl/tX96HLowHHoKhxEsbFzGzKiFLh7hyboTpy2whdonkDxpnv/H8wE9M3VW/fPgnL2nPe
- xaBLqyHxy9hA9JrZvxg3IQ61x7rtBWBUQPmEaK0azW+l3ysiNpBhISkZrsW3ZUdknWu87nh6
- eTB7mR7xBcVxnomxWwJI4B0wuMwCPdgbV6YDUKCuSgRMUEiVry10xd9KLypR9Vfyn1AhROrq
- AubRPVeJBf9zR5UW1trJNfwVt3XmbHX50HCcHdEdCKiT9O+FiEcahIaWh9lihvO0ci0TtVGZ
- MCEtaCE80Q3Ma9RdHYB3uVF930jwquplFLNF+IBCn5JRzsFNBFVDXDQBEADNkrQYSREUL4D3
- Gws46JEoZ9HEQOKtkrwjrzlw/tCmqVzERRPvz2Xg8n7+HRCrgqnodIYoUh5WsU84N03KlLue
- MNsWLJBvBaubYN4JuJIdRr4dS4oyF1/fQAQPHh8Thpiz0SAZFx6iWKB7Qrz3OrGCjTPcW6ei
- OMheesVS5hxietSmlin+SilmIAPZHx7n242u6kdHOh+/SyLImKn/dh9RzatVpUKbv34eP1wA
- GldWsRxbf3WP9pFNObSzI/Bo3kA89Xx2rO2roC+Gq4LeHvo7ptzcLcrqaHUAcZ3CgFG88CnA
- 6z6lBZn0WyewEcPOPdcUB2Q7D/NiUY+HDiV99rAYPJztjeTrBSTnHeSBPb+qn5ZZGQwIdUW9
- YegxWKvXXHTwB5eMzo/RB6vffwqcnHDoe0q7VgzRRZJwpi6aMIXLfeWZ5Wrwaw2zldFuO4Dt
- 91pFzBSOIpeMtfgb/Pfe/a1WJ/GgaIRIBE+NUqckM+3zJHGmVPqJP/h2Iwv6nw8U+7Yyl6gU
- BLHFTg2hYnLFJI4Xjg+AX1hHFVKmvl3VBHIsBv0oDcsQWXqY+NaFahT0lRPjYtrTa1v3tem/
- JoFzZ4B0p27K+qQCF2R96hVvuEyjzBmdq2esyE6zIqftdo4MOJho8uctOiWbwNNq2U9pPWmu
- 4vXVFBYIGmpyNPYzRm0QPwARAQABwsF8BBgBCgAmAhsMFiEEm9B+DgxR+NWWd7dUG5NDfTtB
- YpsFAmA872oFCRRflLYACgkQG5NDfTtBYpvScw/9GrqBrVLuJoJ52qBBKUBDo4E+5fU1bjt0
- Gv0nh/hNJuecuRY6aemU6HOPNc2t8QHMSvwbSF+Vp9ZkOvrM36yUOufctoqON+wXrliEY0J4
- ksR89ZILRRAold9Mh0YDqEJc1HmuxYLJ7lnbLYH1oui8bLbMBM8S2Uo9RKqV2GROLi44enVt
- vdrDvo+CxKj2K+d4cleCNiz5qbTxPUW/cgkwG0lJc4I4sso7l4XMDKn95c7JtNsuzqKvhEVS
- oic5by3fbUnuI0cemeizF4QdtX2uQxrP7RwHFBd+YUia7zCcz0//rv6FZmAxWZGy5arNl6Vm
- lQqNo7/Poh8WWfRS+xegBxc6hBXahpyUKphAKYkah+m+I0QToCfnGKnPqyYIMDEHCS/RfqA5
- t8F+O56+oyLBAeWX7XcmyM6TGeVfb+OZVMJnZzK0s2VYAuI0Rl87FBFYgULdgqKV7R7WHzwD
- uZwJCLykjad45hsWcOGk3OcaAGQS6NDlfhM6O9aYNwGL6tGt/6BkRikNOs7VDEa4/HlbaSJo
- 7FgndGw1kWmkeL6oQh7wBvYll2buKod4qYntmNKEicoHGU+x91Gcan8mCoqhJkbqrL7+nXG2
- 5Q/GS5M9RFWS+nYyJh+c3OcfKqVcZQNANItt7+ULzdNJuhvTRRdC3g9hmCEuNSr+CLMdnRBY fv0=
-In-Reply-To: <20240329075630.2069474-14-tzungbi@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com>
 
-On 29/03/2024 08:56, Tzung-Bi Shih wrote:
-> Instead of using fallback driver name match, provide ID table[1] for the
-> primary match.
+Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) kirjoitti:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> [1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/base/platform.c#L1353
-> 
-> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> ---
->  drivers/platform/chrome/cros_ec_vbc.c | 9 ++++++++-
+> Add basic implementation of the SCMI v3.2 pincontrol protocol.
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+...
 
-Best regards,
-Krzysztof
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_VIRTIO) += virtio.o
+>  scmi-transport-$(CONFIG_ARM_SCMI_TRANSPORT_OPTEE) += optee.o
+>  scmi-protocols-y = base.o clock.o perf.o power.o reset.o sensors.o system.o voltage.o powercap.o
+
+Actually you want to have := here.
+
+> +scmi-protocols-y += pinctrl.o
+
+
+
+>  scmi-module-objs := $(scmi-driver-y) $(scmi-protocols-y) $(scmi-transport-y)
+
+Side note: The -objs has to be -y
+
+...
+
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
+
+This is semi-random list of headers. Please, follow IWYU principle
+(include what you use). There are a lot of inclusions I see missing
+(just in the context of this page I see bits.h, types.h, and
+ asm/byteorder.h).
+
+...
+
+> +enum scmi_pinctrl_protocol_cmd {
+> +	PINCTRL_ATTRIBUTES = 0x3,
+> +	PINCTRL_LIST_ASSOCIATIONS = 0x4,
+> +	PINCTRL_SETTINGS_GET = 0x5,
+> +	PINCTRL_SETTINGS_CONFIGURE = 0x6,
+> +	PINCTRL_REQUEST = 0x7,
+> +	PINCTRL_RELEASE = 0x8,
+> +	PINCTRL_NAME_GET = 0x9,
+> +	PINCTRL_SET_PERMISSIONS = 0xa
+
+Leave trailing comma as it's not a termination.
+
+> +};
+
+...
+
+> +static int scmi_pinctrl_attributes_get(const struct scmi_protocol_handle *ph,
+> +				       struct scmi_pinctrl_info *pi)
+> +{
+> +	int ret;
+> +	struct scmi_xfer *t;
+> +	struct scmi_msg_pinctrl_protocol_attributes *attr;
+> +
+> +	ret = ph->xops->xfer_get_init(ph, PROTOCOL_ATTRIBUTES, 0, sizeof(*attr),
+> +				      &t);
+
+This looks much better on a single line.
+
+> +	if (ret)
+> +		return ret;
+> +
+> +	attr = t->rx.buf;
+> +
+> +	ret = ph->xops->do_xfer(ph, t);
+> +	if (!ret) {
+> +		pi->nr_functions = GET_FUNCTIONS_NR(attr->attributes_high);
+> +		pi->nr_groups = GET_GROUPS_NR(attr->attributes_low);
+> +		pi->nr_pins = GET_PINS_NR(attr->attributes_low);
+> +	}
+> +
+> +	ph->xops->xfer_put(ph, t);
+> +	return ret;
+> +}
+
+...
+
+> +	ret = ph->xops->xfer_get_init(ph, PINCTRL_ATTRIBUTES, sizeof(*tx),
+> +				      sizeof(*rx), &t);
+
+Possible to have on a single line (if you use relaxed 100 limit).
+Or (re)split it more logically:
+
+	ret = ph->xops->xfer_get_init(ph, PINCTRL_ATTRIBUTES,
+				      sizeof(*tx), sizeof(*rx), &t);
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +	/*
+> +	 * If supported overwrite short name with the extended one;
+> +	 * on error just carry on and use already provided short name.
+> +	 */
+> +	if (!ret && ext_name_flag)
+
+Please, use standard pattern, i.e.
+
+	if (ret)
+		return ret;
+
+> +		ph->hops->extended_name_get(ph, PINCTRL_NAME_GET, selector,
+> +					    (u32 *)&type, name,
+
+Why is an explicit casting needed?
+
+> +					    SCMI_MAX_STR_SIZE);
+> +	return ret;
+
+...
+
+> +	iter = ph->hops->iter_response_init(ph, &ops, size,
+> +					    PINCTRL_LIST_ASSOCIATIONS,
+> +					    sizeof(struct scmi_msg_pinctrl_list_assoc),
+> +					    &ipriv);
+
+> +
+
+Redundant blank line.
+
+> +	if (IS_ERR(iter))
+> +		return PTR_ERR(iter);
+
+...
+
+> +	if (p->flag == 1)
+> +		attributes |= FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
+> +	else if (!p->flag)
+
+Be consistent, i.e. if (p->flag == 0)
+
+> +		attributes |= FIELD_PREP(CONFIG_TYPE_MASK, p->config_types[0]);
+
+...
+
+> +		st->num_remaining = le32_get_bits(r->num_configs,
+> +						  GENMASK(31, 24));
+
+One line?
+
+...
+
+> +	if (!p->flag) {
+> +		if (p->config_types[0] !=
+> +		    le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7, 0)))
+> +			return -EINVAL;
+> +	} else if (p->flag == 1) {
+> +		p->config_types[st->desc_index + st->loop_idx] =
+> +			le32_get_bits(r->configs[st->loop_idx * 2],
+> +				      GENMASK(7, 0));
+
+With a temporary variable for r->configs[st->loop_idx * 2] the above can be
+written in much better way.
+
+> +	} else if (p->flag == 2) {
+> +		return 0;
+> +	}
+
+> +	p->config_values[st->desc_index + st->loop_idx] =
+> +		le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
+
+For the sake of consistency with the above suggestion also temporary for next
+config value.
+
+...
+
+> +	iter = ph->hops->iter_response_init(ph, &ops, 1, PINCTRL_SETTINGS_GET,
+> +					    sizeof(struct scmi_msg_settings_get),
+> +					    &ipriv);
+
+> +
+
+Redundant blank line.
+
+> +	if (IS_ERR(iter))
+> +		return PTR_ERR(iter);
+
+...
+
+> +static int scmi_pinctrl_get_group_info(const struct scmi_protocol_handle *ph,
+> +				       u32 selector,
+> +				       struct scmi_group_info *group)
+> +{
+> +	int ret;
+
+> +	if (!group)
+> +		return -EINVAL;
+
+When the above is not a dead code?
+
+> +	ret = scmi_pinctrl_attributes(ph, GROUP_TYPE, selector,
+> +				      group->name,
+> +				      &group->nr_pins);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (!group->nr_pins) {
+> +		dev_err(ph->dev, "Group %d has 0 elements", selector);
+> +		return -ENODATA;
+> +	}
+> +
+> +	group->group_pins = kmalloc_array(group->nr_pins,
+> +					  sizeof(*group->group_pins),
+> +					  GFP_KERNEL);
+> +	if (!group->group_pins)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_pinctrl_list_associations(ph, selector, GROUP_TYPE,
+> +					     group->nr_pins, group->group_pins);
+> +	if (ret) {
+> +		kfree(group->group_pins);
+> +		return ret;
+> +	}
+> +
+> +	group->present = true;
+> +	return 0;
+> +}
+
+...
+
+> +		ret = scmi_pinctrl_get_group_info(ph, selector,
+> +						  &pi->groups[selector]);
+
+One line?
+
+> +		if (ret)
+> +			return ret;
+
+...
+
+> +	ret = scmi_pinctrl_attributes(ph, FUNCTION_TYPE, selector,
+> +				      func->name,
+> +				      &func->nr_groups);
+
+At least last two lines can be joined.
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +	ret = scmi_pinctrl_attributes(ph, PIN_TYPE, selector,
+> +				      pin->name, NULL);
+
+It's pleany of room on the previous line.
+
+> +	if (ret)
+> +		return ret;
+
+...
+
+> +		ret = scmi_pinctrl_get_pin_info(ph, selector,
+> +						&pi->pins[selector]);
+
+Ditto.
+
+> +		if (ret)
+> +			return ret;
+
+...
+
+> +static int scmi_pinctrl_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +	int ret;
+> +	u32 version;
+> +	struct scmi_pinctrl_info *pinfo;
+> +
+> +	ret = ph->xops->version_get(ph, &version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(ph->dev, "Pinctrl Version %d.%d\n",
+> +		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +	pinfo = devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
+
+Huh?!
+
+Please, get yourself familiar with the scope of devm APIs.
+
+> +	if (!pinfo)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_pinctrl_attributes_get(ph, pinfo);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pinfo->pins = devm_kcalloc(ph->dev, pinfo->nr_pins,
+> +				   sizeof(*pinfo->pins),
+> +				   GFP_KERNEL);
+> +	if (!pinfo->pins)
+> +		return -ENOMEM;
+> +
+> +	pinfo->groups = devm_kcalloc(ph->dev, pinfo->nr_groups,
+> +				     sizeof(*pinfo->groups),
+> +				     GFP_KERNEL);
+> +	if (!pinfo->groups)
+> +		return -ENOMEM;
+> +
+> +	pinfo->functions = devm_kcalloc(ph->dev, pinfo->nr_functions,
+> +					sizeof(*pinfo->functions),
+> +					GFP_KERNEL);
+> +	if (!pinfo->functions)
+> +		return -ENOMEM;
+> +
+> +	pinfo->version = version;
+> +
+> +	return ph->set_priv(ph, pinfo, version);
+> +}
+> +
+> +static int scmi_pinctrl_protocol_deinit(const struct scmi_protocol_handle *ph)
+> +{
+> +	int i;
+> +	struct scmi_pinctrl_info *pi = ph->get_priv(ph);
+> +
+> +	for (i = 0; i < pi->nr_groups; i++) {
+> +		if (pi->groups[i].present) {
+> +			kfree(pi->groups[i].group_pins);
+> +			pi->groups[i].present = false;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < pi->nr_functions; i++) {
+> +		if (pi->functions[i].present) {
+> +			kfree(pi->functions[i].groups);
+
+This is wrong in conjunction with the above.
+
+> +			pi->functions[i].present = false;
+> +		}
+> +	}
+> +
+> +	return 0;
+> +}
+
+...
+
+> +static const struct scmi_protocol scmi_pinctrl = {
+> +	.id = SCMI_PROTOCOL_PINCTRL,
+> +	.owner = THIS_MODULE,
+> +	.instance_init = &scmi_pinctrl_protocol_init,
+> +	.instance_deinit = &scmi_pinctrl_protocol_deinit,
+> +	.ops = &pinctrl_proto_ops,
+> +	.supported_version = SCMI_PROTOCOL_SUPPORTED_VERSION,
+> +};
+
+> +
+
+Redundant blank line.
+
+> +DEFINE_SCMI_PROTOCOL_REGISTER_UNREGISTER(pinctrl, scmi_pinctrl)
+
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
