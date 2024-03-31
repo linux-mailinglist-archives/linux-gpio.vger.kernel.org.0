@@ -1,113 +1,93 @@
-Return-Path: <linux-gpio+bounces-4918-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4919-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id E351D892D6C
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Mar 2024 22:10:08 +0100 (CET)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id F258F892E89
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 06:06:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 985AF1F216B4
-	for <lists+linux-gpio@lfdr.de>; Sat, 30 Mar 2024 21:10:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 0D595B2166B
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 04:06:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CDCE2482E5;
-	Sat, 30 Mar 2024 21:10:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDYRHKqH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BE321C2D;
+	Sun, 31 Mar 2024 04:06:21 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B62443AC2
-	for <linux-gpio@vger.kernel.org>; Sat, 30 Mar 2024 21:09:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C71F15A5;
+	Sun, 31 Mar 2024 04:06:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711833001; cv=none; b=FEUhOCow8iQXsn12ppxNRTK/GUrwJZKwPBhl9AYt9Pw2UR5eu+E9oQfkGF+wZZKmZH24L4GgZmHw+/teEtzWyXIErpFTNBEyXUZrmrvj9OYWZWdfSIEgVMtSsDPNvQl9vAQiUVWbcj2xkZv/YB27SbAm0uYNX4ssi5It6r062Ko=
+	t=1711857981; cv=none; b=RXz6u4bPbdizqQF8XF7PS7cKzfGJq1zSUz2vziQdt4FG06gsM5B7+foABAoPcH9dscXvDTy162KttUkKAFZuCWnG8iJRLi53lzKfKIkgwk40XZHfYwboAz/2E4bIA1IKgB79/r5zoB/0OvDVhT4ySv2XcflwcbR0EECS9ZVqIm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711833001; c=relaxed/simple;
-	bh=jpeN1Yqiy86IASrMw5IJ3mejJAeGCwK9WF/sWpjQR4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jyUQkafrbiSh0F0PqpmTOVqvTnZ5pfr0hSyDuHH93DsML4FEKI+u6471o0wO6GYhMywdVe/dkO9x9n6h/2EpZAFonBQXMsHL1XocLot9zAd1CgXdcwdoQWzxdVBRfLGgWlZUA/8L8/L/4gfHtAE1CFkSWbx4wwJX/F1Sj6FQpAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SDYRHKqH; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-4155f5b8cefso753925e9.1
-        for <linux-gpio@vger.kernel.org>; Sat, 30 Mar 2024 14:09:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711832997; x=1712437797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFZ6AvemSHHbcptkzhx+Eo5vulQUyGFEmtEeYrKTAdw=;
-        b=SDYRHKqHgC8sVL3OuWEyFHNfmVwVLU2DiDCA6TS8+9qshlNe6rE9veV3ziGHMMl0/q
-         10KaSpr57Ochd33Li73lI+QqB8ZDDwqA6lQ4FPgv+qPMkHjLEleWtZbeYD4IRgvJK+Vc
-         Ktxfye+CWgeX98pyBHbrydYN5WiDYKbCEc9vnvFmkiqBHWqDW0ZLrD6LKi+qvAUP51my
-         ZdNFPkjapRRpjmW4+sFO+BMh/KZZtF9YufL7msB+ILKL94znr0TsclsYbHsZ5mjZlFxx
-         QNgSM1ZTP8TkXQU0SQQLm5fcIBblTo95SCPAosN4SMu6l8CDZl9iYpRFy6CZQzAg2A05
-         CZRg==
+	s=arc-20240116; t=1711857981; c=relaxed/simple;
+	bh=e3bRxDH+wQoPJin/nfB62E2/Uu/KG61lMcFAauOvRdw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dUtIxRFEpNk/v9KFhsh0tfPMTuoMf3BAMU2g5Bw2qKK1AZ6XamXtSTjAk52UEbngdcKYWZEPwSIYum7AMIwxpCeT4SNVk3Cf6f6CBqMn58ZijENIgxn14cGFT5FQCMWv89KnzPaRrCp5IO76QoiSMoJHZlRtdLm8YpVXK49APSo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=csie.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-513d247e3c4so2928152e87.0;
+        Sat, 30 Mar 2024 21:06:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711832997; x=1712437797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lFZ6AvemSHHbcptkzhx+Eo5vulQUyGFEmtEeYrKTAdw=;
-        b=d9NgYESiWGYWzPGdQYEO7AmBJvRD34dsn3nslvEBh8shzZ1sCwSx2vNaXeRoF5e2JK
-         X1qYwUxwThtjhPRo3VnT7Sj+enV+mD180Y/9We720Evm8cCvsqkWhSMF6asS4GRErDKs
-         1lyNVjKYQ/c/FQCSbXSQPHsJouZSuYHj8SlBTQBFkifWs/ksarbv1S+HQY5GP9YBKbmG
-         PctGHPxENjY+UiQDThWfE21gx3f1BLku7zoGR8zk1M0DLFyZuL29ufsEBDu6fpEK4z+Y
-         WQuixYcHjfr+M/Q8hrZWloojR5XzG4JtHfSk++sKQKUoy3ACeMM8i2uENSNhBb8US8aX
-         83xQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW8fQWdmafbHepLH/Vcd5IPKO4BJXllak0xkADV9RfK+AYy4rTHJdxJQXXn9y1vlvbAS91I251rkMAJfZkmtd7MwyKFRnwudX8xfw==
-X-Gm-Message-State: AOJu0Yy/eiu4kWdytHnnkE/6V2NSbdvSLayujONJ32uRStXLz4r6Tr8Y
-	iylnUJV56+7R9CuBvTGZkDu1+zTHZfl+mR5rTGW17b6YmkzOQ8RIiIFrWxUTeF4=
-X-Google-Smtp-Source: AGHT+IGdfuyJzSIxSkkcrfLi5TlHT2+g+ykSm6cJanYYnEITTKeGYlCFJjitdO5Wziu0DGC7W0P2jw==
-X-Received: by 2002:a05:600c:5114:b0:414:1eb:301a with SMTP id o20-20020a05600c511400b0041401eb301amr3461429wms.28.1711832997494;
-        Sat, 30 Mar 2024 14:09:57 -0700 (PDT)
-Received: from krzk-bin.. ([178.197.223.16])
-        by smtp.gmail.com with ESMTPSA id je4-20020a05600c1f8400b0041496734318sm11500465wmb.24.2024.03.30.14.09.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 30 Mar 2024 14:09:57 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] pinctrl: sunxi: sun9i-a80-r: drop driver owner assignment
-Date: Sat, 30 Mar 2024 22:09:54 +0100
-Message-Id: <20240330210954.100842-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
+        d=1e100.net; s=20230601; t=1711857975; x=1712462775;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :reply-to:in-reply-to:references:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=e3bRxDH+wQoPJin/nfB62E2/Uu/KG61lMcFAauOvRdw=;
+        b=I1F2S5VYy3rLcPzz9C3DkCbp+ZcjzEQtCOIIxORk1qM037SN8O5zrkcp9Jwx34U1TZ
+         0QpxesOBv/3oLsBiL+n6LNxDporrCS20E3b7ICFnE2Wl8sg2V4p5fbzLJyitF0AxbEjC
+         eVLBxRDmSq4Ig96jT/Es5GINAKWxHowSQ8jABLV4iM6dQEgOJJpOKfl7MC+CCgBJSJCL
+         7rQuVyUNTLu0hoeMNfCp7URb6MgzT0PfrwHkHoAoqbD2kwZQobY2OSL5l/wsR3r1+WaU
+         mUuMcHR6alfROgrIQVMDSHo/9pXdxOkTfhWQcuJ72ZcJQmwFaC9DpIJLcP9pixFrUC1m
+         mcCg==
+X-Forwarded-Encrypted: i=1; AJvYcCXDrTypFd+gt6HT18ZL6k5NCFdDIfFXSciaCDBSPnH3AB452oefcFBUXUM2Kdqk6E5NTFiqYUe8jZTPupCkpMN7chSlsKJCAFTcmwzallsBifa/csHV99I25qSvKuUm+TlC8ZwKKL7MPw==
+X-Gm-Message-State: AOJu0YxmV2g3i++ZOM0UT4Tfe+KGgSYnFv/zBHDkTlnFWXyfbFm24rXs
+	/s2k0FRILBzGfsfhI/4VWlE+MZb344cyrJVvay+oPCOCc4Fm1zYxAUYZISuqFH8=
+X-Google-Smtp-Source: AGHT+IG6RBaueZP6VDXU5oiCyPxSA+oHr/37vq/u50rDkqdHZ+Omc2Q5aHxcYBSebIdmW0PBCYSlAA==
+X-Received: by 2002:a19:384f:0:b0:515:8a20:71de with SMTP id d15-20020a19384f000000b005158a2071demr3049154lfj.5.1711857974945;
+        Sat, 30 Mar 2024 21:06:14 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id q12-20020a05651c054c00b002d437894f49sm988817ljp.100.2024.03.30.21.06.13
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 30 Mar 2024 21:06:14 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id 2adb3069b0e04-516a01c8490so503218e87.1;
+        Sat, 30 Mar 2024 21:06:13 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCXKoPIlvQB8kfKIQ4VgbcOrJXElzR5ox6PAXR4R0Avnq70TmLNJpCe0DSpKoaMDb/vE03Rlb5q/mVvyER0eBVbtRlyLY8Usy+EwLGY61KfboAUCjyHEsO1nLhoiNq0vpZ4wZ3bKPRrQIA==
+X-Received: by 2002:a2e:a167:0:b0:2d6:b801:a85a with SMTP id
+ u7-20020a2ea167000000b002d6b801a85amr2088014ljl.23.1711857973221; Sat, 30 Mar
+ 2024 21:06:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240330210954.100842-1-krzysztof.kozlowski@linaro.org>
+In-Reply-To: <20240330210954.100842-1-krzysztof.kozlowski@linaro.org>
+Reply-To: wens@csie.org
+From: Chen-Yu Tsai <wens@csie.org>
+Date: Sun, 31 Mar 2024 12:05:59 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65vSm5i7qN4t7vsrMA1LpfLWmMBk7tbOXieQNk-egPYYA@mail.gmail.com>
+Message-ID: <CAGb2v65vSm5i7qN4t7vsrMA1LpfLWmMBk7tbOXieQNk-egPYYA@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: sunxi: sun9i-a80-r: drop driver owner assignment
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, linux-gpio@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Core in platform_driver_register() already sets the .owner, so driver
-does not need to.
+On Sun, Mar 31, 2024 at 5:10=E2=80=AFAM Krzysztof Kozlowski
+<krzysztof.kozlowski@linaro.org> wrote:
+>
+> Core in platform_driver_register() already sets the .owner, so driver
+> does not need to.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-index 919b6a20af83..5b4822f77d2a 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-@@ -169,7 +169,6 @@ static struct platform_driver sun9i_a80_r_pinctrl_driver = {
- 	.probe	= sun9i_a80_r_pinctrl_probe,
- 	.driver	= {
- 		.name		= "sun9i-a80-r-pinctrl",
--		.owner		= THIS_MODULE,
- 		.of_match_table	= sun9i_a80_r_pinctrl_match,
- 	},
- };
--- 
-2.34.1
-
+Acked-by: Chen-Yu Tsai <wens@csie.org>
 
