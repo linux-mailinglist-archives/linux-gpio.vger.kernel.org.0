@@ -1,154 +1,126 @@
-Return-Path: <linux-gpio+bounces-4951-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4952-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16CF6893419
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 18:56:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02B97893589
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 21:15:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 67D34B21002
-	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 16:56:17 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 33EC11C21D89
+	for <lists+linux-gpio@lfdr.de>; Sun, 31 Mar 2024 19:15:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 70567158D87;
-	Sun, 31 Mar 2024 16:40:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDYRHKqH"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2F9E147C67;
+	Sun, 31 Mar 2024 19:14:58 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from a.mx.secunet.com (a.mx.secunet.com [62.96.220.36])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A8AE146D53;
-	Sun, 31 Mar 2024 16:40:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=62.96.220.36
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711903259; cv=pass; b=LXsMnrnI1uvlIoVeE6kfolEmycgb7BZFMid8GTWoUZ/O86YF0iKn9ZrSjVPPyAaCRp/JnFsv43eP1xtxWsos0l1Kz/uoMTDBJ73s2P7BC/ChmPiRG2Ak6E7HfRcRtJ1IQSQ/SXHJHFGlZgLmrcLIRmDp1yOLamXuWItq3JxbF7U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711903259; c=relaxed/simple;
-	bh=jpeN1Yqiy86IASrMw5IJ3mejJAeGCwK9WF/sWpjQR4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=uB+wKYWROU9Z0vUeHrY4kx6Ipu3gRVa7TSSH7ndG8svxfZGpERmN+ZAcJrAxT58dMSRUQex0HpGZM4Hfs5+U5NAef+cvll1JAfKyrvBeHlRgLG2V3Gc/NKB/YQjTAUcB/PnFdD96OW2yehHGPm8HnDGQrtkV/0PNFaVdUQewoE4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=fail smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SDYRHKqH; arc=none smtp.client-ip=209.85.128.51; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; arc=pass smtp.client-ip=62.96.220.36
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=linaro.org
-Received: from localhost (localhost [127.0.0.1])
-	by a.mx.secunet.com (Postfix) with ESMTP id C30FE2082B;
-	Sun, 31 Mar 2024 18:40:55 +0200 (CEST)
-X-Virus-Scanned: by secunet
-Received: from a.mx.secunet.com ([127.0.0.1])
-	by localhost (a.mx.secunet.com [127.0.0.1]) (amavisd-new, port 10024)
-	with ESMTP id 5rpALt8aPQOr; Sun, 31 Mar 2024 18:40:55 +0200 (CEST)
-Received: from mailout2.secunet.com (mailout2.secunet.com [62.96.220.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by a.mx.secunet.com (Postfix) with ESMTPS id 02F3A208C3;
-	Sun, 31 Mar 2024 18:40:55 +0200 (CEST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 02F3A208C3
-Received: from cas-essen-01.secunet.de (unknown [10.53.40.201])
-	by mailout2.secunet.com (Postfix) with ESMTP id EA16D80005E;
-	Sun, 31 Mar 2024 18:40:54 +0200 (CEST)
-Received: from mbx-essen-01.secunet.de (10.53.40.197) by
- cas-essen-01.secunet.de (10.53.40.201) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.35; Sun, 31 Mar 2024 18:40:54 +0200
-Received: from Pickup by mbx-essen-01.secunet.de with Microsoft SMTP Server id
- 15.1.2507.17; Sun, 31 Mar 2024 16:37:05 +0000
-X-sender: <linux-kernel+bounces-125885-steffen.klassert=secunet.com@vger.kernel.org>
-X-Receiver: <steffen.klassert@secunet.com> ORCPT=rfc822;steffen.klassert@secunet.com
-X-CreatedBy: MSExchange15
-X-HeloDomain: mbx-dresden-01.secunet.de
-X-ExtendedProps: BQBjAAoAVmQFfe5Q3AgFADcAAgAADwA8AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5NYWlsUmVjaXBpZW50Lk9yZ2FuaXphdGlvblNjb3BlEQAAAAAAAAAAAAAAAAAAAAAADwA/AAAATWljcm9zb2Z0LkV4Y2hhbmdlLlRyYW5zcG9ydC5EaXJlY3RvcnlEYXRhLk1haWxEZWxpdmVyeVByaW9yaXR5DwADAAAATG93
-X-Source: SMTP:Default MBX-ESSEN-02
-X-SourceIPAddress: 10.53.40.199
-X-EndOfInjectedXHeaders: 9571
-X-Virus-Scanned: by secunet
-Received-SPF: Pass (sender SPF authorized) identity=mailfrom; client-ip=147.75.48.161; helo=sy.mirrors.kernel.org; envelope-from=linux-kernel+bounces-125885-steffen.klassert=secunet.com@vger.kernel.org; receiver=steffen.klassert@secunet.com 
-DKIM-Filter: OpenDKIM Filter v2.11.0 a.mx.secunet.com 2CA1320520
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
-ARC-Seal: i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711833000; cv=none; b=A3WJTgZOcw0pU7B2l+uyyNoQP9d9t42yjAOSpfXp8w7hpEopwQicSgHiuyzSg3aafZky29V9MI5Xn0yD6DdAsoo/klI5arabEJ6WX/XpU2Lqx6KvesU+sG2nAvm/rmyuT4cJ3r0HTGfOwdsaxNulvmRbtx0JeZsau8q/3hY8d1g=
-ARC-Message-Signature: i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711833000; c=relaxed/simple;
-	bh=jpeN1Yqiy86IASrMw5IJ3mejJAeGCwK9WF/sWpjQR4Q=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=M9m6TGFNR5aOHZVKzB2COxCrCd1MzK7Oz1A1MLHmTM0SHcDb69Lyn06uecCOr6cpjQY5+ZPC4m26vWrKUuyTSH0lCrzOkQi+ipObkV4CZ5lJ64RqB8lqtoO2S7Zqz1ff4b2gg6olVhlPBoPHtfiLJ7kH4BCM4uiFB2rJsCbZct8=
-ARC-Authentication-Results: i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=SDYRHKqH; arc=none smtp.client-ip=209.85.128.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1711832997; x=1712437797; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=lFZ6AvemSHHbcptkzhx+Eo5vulQUyGFEmtEeYrKTAdw=;
-        b=SDYRHKqHgC8sVL3OuWEyFHNfmVwVLU2DiDCA6TS8+9qshlNe6rE9veV3ziGHMMl0/q
-         10KaSpr57Ochd33Li73lI+QqB8ZDDwqA6lQ4FPgv+qPMkHjLEleWtZbeYD4IRgvJK+Vc
-         Ktxfye+CWgeX98pyBHbrydYN5WiDYKbCEc9vnvFmkiqBHWqDW0ZLrD6LKi+qvAUP51my
-         ZdNFPkjapRRpjmW4+sFO+BMh/KZZtF9YufL7msB+ILKL94znr0TsclsYbHsZ5mjZlFxx
-         QNgSM1ZTP8TkXQU0SQQLm5fcIBblTo95SCPAosN4SMu6l8CDZl9iYpRFy6CZQzAg2A05
-         CZRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711832997; x=1712437797;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=lFZ6AvemSHHbcptkzhx+Eo5vulQUyGFEmtEeYrKTAdw=;
-        b=gNWQIhOLopaadm5LTqeWKd5UdffjIG7ODUstBEe42DfHEjR3EDdpmTW3aqS57FaRfF
-         mzLwscqLT+2YKFbIHBGj8Kwb+amrPFc8yDnSoGDWJNG4RJMkLhSf33WeqRa3qoPmEVre
-         4VUNKxQyC0tTu7+qmuyGG/tBkH0Oj7t8fFRW/bO/3u80c2Ob8PUWsolNKjEeGps121Gq
-         nm3+IgCerS9vy1eqXemYFeosMbTTw5vOPsT6zF2Ex44fJTyjcGRT4fUc0dsUpYjrzzOS
-         YfwlhOr+aYYVIszbVAYKeiEcpKzLVljgNZZTbWgAI6/JGM4KFcGNJrgLniqB87NntBsi
-         aUCw==
-X-Forwarded-Encrypted: i=1; AJvYcCVYPkQALvd+UA/GqQfESQEH3tZlWUxanGjqxgCiGSWtBazM6SiLMR5Z6Q1MEXgqaTccVVn4WmHtL6Ac1jGrCA3hUA52n4WKicZmiVfq
-X-Gm-Message-State: AOJu0YxQCDFIOyA0qllSJ2O+kOOiArNX38j+TCnfyPPh3HMFgdoqWveh
-	3YK4nh2tybGKABstyZrqsMlb7r4GwcC55z/c55Y4t43UDlZUe3U4JXUWb3ZBEvE=
-X-Google-Smtp-Source: AGHT+IGdfuyJzSIxSkkcrfLi5TlHT2+g+ykSm6cJanYYnEITTKeGYlCFJjitdO5Wziu0DGC7W0P2jw==
-X-Received: by 2002:a05:600c:5114:b0:414:1eb:301a with SMTP id o20-20020a05600c511400b0041401eb301amr3461429wms.28.1711832997494;
-        Sat, 30 Mar 2024 14:09:57 -0700 (PDT)
-From: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: [PATCH] pinctrl: sunxi: sun9i-a80-r: drop driver owner assignment
-Date: Sat, 30 Mar 2024 22:09:54 +0100
-Message-Id: <20240330210954.100842-1-krzysztof.kozlowski@linaro.org>
-X-Mailer: git-send-email 2.34.1
-Precedence: bulk
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 336FC146D65;
+	Sun, 31 Mar 2024 19:14:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1711912498; cv=none; b=oh+O+MSTwZtz3rMb9RxAFvq0sd4dbREus/XhsuLVEwvCpQTa0MIRGF+UqVrNnoG30Se8RLjt/9svBVLIQwSTcs6ROPMAXbuJC66+3LztDAslqTJ1cUR2nFJYUhQR2BjAkgUW4+ulifnQrROPEpGN6KQR+M1bNjHp4Si+w5qw9Ro=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1711912498; c=relaxed/simple;
+	bh=aisnBOSe6twHW7ZdfD8orcM1pcSwRgzSY+oaCtUg+fQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=oaddLqaYhj38gbrRb+5S3E5fETBJnjBr6Oe8of6qM/G6vVUMM4YKHovxK8jjaJ5u8XfTSP/sRu6lpDw+EPm4+VjfIZjT9vV5i8mEol4eG4BPW189xl1Goget4l0Sw2IT2c6Bhe7+Do/Gopoy8uSbiQcDrmAxvXRg7IVmEiAF0+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EA63713D5;
+	Sun, 31 Mar 2024 12:15:20 -0700 (PDT)
+Received: from bogus (unknown [10.57.81.195])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E84A3F64C;
+	Sun, 31 Mar 2024 12:14:34 -0700 (PDT)
+Date: Sun, 31 Mar 2024 20:14:32 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>,
+	Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
+	Jonathan Corbet <corbet@lwn.net>,
+	David Hildenbrand <david@redhat.com>,
+	Gerd Hoffmann <kraxel@redhat.com>,
+	Richard Weinberger <richard@nod.at>,
+	Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	Paolo Bonzini <pbonzini@redhat.com>,
+	Stefan Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Olivia Mackall <olivia@selenic.com>,
+	Herbert Xu <herbert@gondor.apana.org.au>,
+	Amit Shah <amit@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Gonglei <arei.gonglei@huawei.com>,
+	"David S. Miller" <davem@davemloft.net>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Viresh Kumar <vireshk@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	David Airlie <airlied@redhat.com>,
+	Gurchetan Singh <gurchetansingh@chromium.org>,
+	Chia-I Wu <olvaffe@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	Daniel Vetter <daniel@ffwll.ch>,
+	Jean-Philippe Brucker <jean-philippe@linaro.org>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Alexander Graf <graf@amazon.com>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Eric Van Hensbergen <ericvh@kernel.org>,
+	Latchesar Ionkov <lucho@ionkov.net>,
+	Dominique Martinet <asmadeus@codewreck.org>,
+	Christian Schoenebeck <linux_oss@crudebyte.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Dan Williams <dan.j.williams@intel.com>,
+	Vishal Verma <vishal.l.verma@intel.com>,
+	Dave Jiang <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
+	Pankaj Gupta <pankaj.gupta.linux@gmail.com>,
+	Bjorn Andersson <andersson@kernel.org>,
+	Mathieu Poirier <mathieu.poirier@linaro.org>,
+	"James E.J. Bottomley" <jejb@linux.ibm.com>,
+	"Martin K. Petersen" <martin.petersen@oracle.com>,
+	Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
+	Anton Yakovlev <anton.yakovlev@opensynergy.com>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
+	linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
+	kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
+	nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
+	linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+	Sudeep Holla <sudeep.holla@arm.com>, alsa-devel@alsa-project.org,
+	linux-sound@vger.kernel.org
+Subject: Re: [PATCH v2 11/25] firmware: arm_scmi: virtio: drop owner
+ assignment
+Message-ID: <20240331191432.sfp5dq6nyvf4yf34@bogus>
+References: <20240331-module-owner-virtio-v2-0-98f04bfaf46a@linaro.org>
+ <20240331-module-owner-virtio-v2-11-98f04bfaf46a@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: 2c86f778-e09b-4440-8b15-867914633a10
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240331-module-owner-virtio-v2-11-98f04bfaf46a@linaro.org>
 
-Core in platform_driver_register() already sets the .owner, so driver
-does not need to.
+On Sun, Mar 31, 2024 at 10:43:58AM +0200, Krzysztof Kozlowski wrote:
+> virtio core already sets the .owner, so driver does not need to.
+>
 
-Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
----
- drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c | 1 -
- 1 file changed, 1 deletion(-)
+Acked-by: Sudeep Holla <sudeep.holla@arm.com>
 
-diff --git a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-index 919b6a20af83..5b4822f77d2a 100644
---- a/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-+++ b/drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c
-@@ -169,7 +169,6 @@ static struct platform_driver sun9i_a80_r_pinctrl_driver = {
- 	.probe	= sun9i_a80_r_pinctrl_probe,
- 	.driver	= {
- 		.name		= "sun9i-a80-r-pinctrl",
--		.owner		= THIS_MODULE,
- 		.of_match_table	= sun9i_a80_r_pinctrl_match,
- 	},
- };
 -- 
-2.34.1
-
-
+Regards,
+Sudeep
 
