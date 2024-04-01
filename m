@@ -1,61 +1,65 @@
-Return-Path: <linux-gpio+bounces-4969-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4970-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B69FC894453
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Apr 2024 19:30:19 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F3B8894643
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Apr 2024 22:50:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7231A28153E
-	for <lists+linux-gpio@lfdr.de>; Mon,  1 Apr 2024 17:30:18 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C824BB21DE5
+	for <lists+linux-gpio@lfdr.de>; Mon,  1 Apr 2024 20:50:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 490FB4D108;
-	Mon,  1 Apr 2024 17:30:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 48032537F7;
+	Mon,  1 Apr 2024 20:50:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="OG80Arm7"
+	dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b="byCKusv8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.smtpout.orange.fr (smtp-30.smtpout.orange.fr [80.12.242.30])
+Received: from msa.smtpout.orange.fr (msa-209.smtpout.orange.fr [193.252.23.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4574481BF;
-	Mon,  1 Apr 2024 17:30:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.12.242.30
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 150E04E1D5;
+	Mon,  1 Apr 2024 20:50:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.252.23.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711992613; cv=none; b=FyRgy8WNezbvYgSi3hwg6nozeEuyXa1AHZ4yxWHX9ovJB7WU+TLz0TFMckJEC7uYf/p9NHJ/k2PIfwjHMqP/bZZfX7Gl1i41msw/5UyjcZxGzNFyCdtmAzdhTRSQlUOvWFYJ0OwMN1rD2PfeLabNkFFi7Q4y/4Q51jsjs5WEu8Q=
+	t=1712004616; cv=none; b=oQIcSQFbIFEyz/y7l6E+9vQYU/hZlqw9CVbjtc7fSE6yCg5KgEyeLhmWlg4oEnTXXl3OUM3NMazV8uh4YT64qCNE4KMZAwY0v6RN7o7/iuzvzNOhEWFfm6jBa9+v7/zJLRNXAdA3noFqUgtqAjI9t/RGNP3Z5xKpaq1aNyGGn/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711992613; c=relaxed/simple;
-	bh=2GW7LvQ/k+2zA/eFgtYcHdUDrylqo2s4FaCiIiR+q1A=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Jo63Z29kUy1oflsReOHqan830Me+S4EmFp1x7ooG4uifM48VQQfzFYUW4wpsS/ySIETjMZpYbk9aTYCDOZVYx9LlOTSTDjtTEQwtwjC1MxBloMOXLJ0Hp5liK6Jdkl3WL5bvDGC7Gxsii0/FPTkD00eKNTE0G+iTfEKI09Bh8vY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=OG80Arm7; arc=none smtp.client-ip=80.12.242.30
+	s=arc-20240116; t=1712004616; c=relaxed/simple;
+	bh=VKgxvyuMDn6pPuzrSQH/fyXU71CRcxvmHV5mShrhvU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=srOgBqivxnNESPDECyDSDCvFNvTQ95lxotCoMfaD6X+scOUE9hgVl4XNHeKCJSYYXpI0QC/5CCtAS5K4bXKXh9OLTiBUTrj1A2hJIAgQ+xts9jhUu7v/x1l3vVDiwEU3qZYKO6HhFE2XXOQKPpLuj8YHp4pUwjtQ9cdzyaSdYNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr; spf=pass smtp.mailfrom=wanadoo.fr; dkim=pass (2048-bit key) header.d=wanadoo.fr header.i=@wanadoo.fr header.b=byCKusv8; arc=none smtp.client-ip=193.252.23.209
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=wanadoo.fr
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=wanadoo.fr
 Received: from fedora.home ([86.243.17.157])
 	by smtp.orange.fr with ESMTPA
-	id rLTzrtoGMFDStrLTzrz7Im; Mon, 01 Apr 2024 19:30:07 +0200
+	id rOaSrTguCRo54rOaTrI000; Mon, 01 Apr 2024 22:49:03 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=wanadoo.fr;
-	s=t20230301; t=1711992607;
-	bh=WCJsrsV8vLNvTZgdKOiZouZAVMrzQfL7VDSnh6ylrOM=;
+	s=t20230301; t=1712004543;
+	bh=VPi98jZXacwHLVzFnIc7JUWg7LJMcQPKff2POQefCl8=;
 	h=From:To:Subject:Date:Message-ID:MIME-Version;
-	b=OG80Arm7XkLFOReigdtgBIMeqoplFDX7h5lDMj8uM1NwDNczTyYHPTp/YRjh5VRzs
-	 p3KIJpL4p7UZWfPdhygxdo683/rcj3jdbd+ykhsimtneEKQ6o/d3bPgHVU2cgGdDyQ
-	 sJ5Z0Ro/L3X1Y1me5JhzCCSpcFofViXmaGXYt9PxF9Z2qdSTLv5OC28zTekiwxlTxh
-	 0VNzDHvGFXs5fBXRepu4yR72PPgpJOyohxEVdfGtgfj9wwXmSOpQfh6WSfu6Y27+eK
-	 Fwu+zdUXpZNKpI5+L7XHeESdlg0wZjR5mgzHxzhUYN3/w0UdCYOWTlOJGqOv05x03j
-	 GFB7+/YM3QIzA==
+	b=byCKusv8wkGLaFBaQFNvZ5G2kLW3RWNvThLQQygSe4RTcCOdA6jG9JascXZynUFlZ
+	 MHXcF1oKKwslBSp5r+R0wD5D2YuhMvCr7lGoKdOnifttuEoe/S0i0zlBhJWsVJP/rC
+	 Ae/+eVgT2pCScoEUlXmec83fcVkBjYQDm+kEQrI3vsilo5u5jybTmI4yZ1bdsf8PjL
+	 /CyUHTq4djDRlTVdRkS6Gy5GNOSOR5bLFdumIV2wO+FxQ8+xoAoc3YrvK2I3s3PoJ3
+	 xUMyciEpw0oZ9v3rYfcDWSu/n7ijHBVJXXzNJUwcuvFbNAUseeMS5g422Tns91Eq/f
+	 YTR7sA2fxIR9A==
 X-ME-Helo: fedora.home
 X-ME-Auth: Y2hyaXN0b3BoZS5qYWlsbGV0QHdhbmFkb28uZnI=
-X-ME-Date: Mon, 01 Apr 2024 19:30:07 +0200
+X-ME-Date: Mon, 01 Apr 2024 22:49:03 +0200
 X-ME-IP: 86.243.17.157
 From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-To: Linus Walleij <linus.walleij@linaro.org>
+To: Tony Lindgren <tony@atomide.com>,
+	Haojian Zhuang <haojian.zhuang@linaro.org>,
+	Linus Walleij <linus.walleij@linaro.org>
 Cc: linux-kernel@vger.kernel.org,
 	kernel-janitors@vger.kernel.org,
 	Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+	linux-arm-kernel@lists.infradead.org,
+	linux-omap@vger.kernel.org,
 	linux-gpio@vger.kernel.org
-Subject: [PATCH] pinctrl: max77620: Remove an unused fields in struct max77620_pin_info and max77620_pctrl_info
-Date: Mon,  1 Apr 2024 19:30:05 +0200
-Message-ID: <60af8968864ae4a83a76e589b39a2b1e1f65c9db.1711992588.git.christophe.jaillet@wanadoo.fr>
+Subject: [PATCH] pinctrl: pinctrl-single: Remove some unused fields in struct pcs_function
+Date: Mon,  1 Apr 2024 22:48:55 +0200
+Message-ID: <a6b653642298d35b1e3656e9bfc6d1b322fbbe68.1712004518.git.christophe.jaillet@wanadoo.fr>
 X-Mailer: git-send-email 2.44.0
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
@@ -65,13 +69,11 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-In "struct max77620_pin_info", the 'pull_config' field is unused.
-In "struct max77620_pctrl_info", the 'pins_current_opt' field is unused.
+In "struct pcs_function", the 'pgnames' and 'npgnames' fields are unused.
+This is a left-over from commit 571aec4df5b7 ("pinctrl: single: Use generic
+pinmux helpers for managing functions");
 
 Remove them.
-
-On my x86_64 config, with allmodconfig, this shrinks the struct
-max77620_pctrl_info from 360 bytes to 296.
 
 Found with cppcheck, unusedStructMember.
 
@@ -79,29 +81,31 @@ Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
 ---
 Compile tested only.
 ---
- drivers/pinctrl/pinctrl-max77620.c | 2 --
- 1 file changed, 2 deletions(-)
+ drivers/pinctrl/pinctrl-single.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-max77620.c b/drivers/pinctrl/pinctrl-max77620.c
-index ab723ab4ec1d..d236daa7c13e 100644
---- a/drivers/pinctrl/pinctrl-max77620.c
-+++ b/drivers/pinctrl/pinctrl-max77620.c
-@@ -88,7 +88,6 @@ struct max77620_pingroup {
- 
- struct max77620_pin_info {
- 	enum max77620_pin_ppdrv drv_type;
--	int pull_config;
- };
- 
- struct max77620_fps_config {
-@@ -104,7 +103,6 @@ struct max77620_pctrl_info {
- 	struct device *dev;
- 	struct pinctrl_dev *pctl;
- 	struct regmap *rmap;
--	int pins_current_opt[MAX77620_GPIO_NR];
- 	const struct max77620_pin_function *functions;
- 	unsigned int num_functions;
- 	const struct max77620_pingroup *pin_groups;
+diff --git a/drivers/pinctrl/pinctrl-single.c b/drivers/pinctrl/pinctrl-single.c
+index 19cc0db771a5..2261d4663d19 100644
+--- a/drivers/pinctrl/pinctrl-single.c
++++ b/drivers/pinctrl/pinctrl-single.c
+@@ -81,8 +81,6 @@ struct pcs_conf_type {
+  * @name:	pinctrl function name
+  * @vals:	register and vals array
+  * @nvals:	number of entries in vals array
+- * @pgnames:	array of pingroup names the function uses
+- * @npgnames:	number of pingroup names the function uses
+  * @conf:	array of pin configurations
+  * @nconfs:	number of pin configurations available
+  * @node:	list node
+@@ -91,8 +89,6 @@ struct pcs_function {
+ 	const char *name;
+ 	struct pcs_func_vals *vals;
+ 	unsigned nvals;
+-	const char **pgnames;
+-	int npgnames;
+ 	struct pcs_conf_vals *conf;
+ 	int nconfs;
+ 	struct list_head node;
 -- 
 2.44.0
 
