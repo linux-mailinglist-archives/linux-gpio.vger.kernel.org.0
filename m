@@ -1,151 +1,175 @@
-Return-Path: <linux-gpio+bounces-4995-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4996-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B24B6895432
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:07:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A81589550B
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:17:32 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6B958284E5E
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:06:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF0EA1F24AF2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:17:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 26EA28060D;
-	Tue,  2 Apr 2024 13:06:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D7884FCC;
+	Tue,  2 Apr 2024 13:14:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ah3OVEvh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNvqjAaL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 373BA7D07A;
-	Tue,  2 Apr 2024 13:06:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E177F7D3;
+	Tue,  2 Apr 2024 13:14:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063206; cv=none; b=JwKcETz8a4ZNU59f6XR03VlgN8QF8osMcxkn4LlbHL9oal/lVJTivRMcaKrTl+PBOB9B8HgJbtOJkeyN9ZgcgfBJFnuqBzWN9vBtujQDScu8ehKZe2ipY8W/SvYMbDI1wvQuiHGRNJYL+LomTzBjc3hov1b64ZTPSiV3LItMsKo=
+	t=1712063680; cv=none; b=eeb1zP6iV6oQobFm/w2/g2toUxGubF0MMn5Jn7HxGE0oumjw2Y5b8KrX/joOlDPFDR0a/aRfI4zLr/rWacu0j96trq2hnetjZgLf8osA6KtBZdoqTl2esYRLItTi3igyyqWRG6ZkMwnft45itqkJGtxqRm01NNEopkTzAKeXUyA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063206; c=relaxed/simple;
-	bh=iB2gSDbR2dkyx4edtpLxbP9l7fU0ngFgBmwg4Y7zQVk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=aU8tGqBUWAiOQDL65fq955bzmIrn8CS4t2Ce6s6hHS/HoUyUa7CA+sNTrNu3MC25NZBfd2S4PH4rGARdCjMx9L4VLstJvG1L1k7EcWtxYBOYfPujiSjs6105nBOZqKeA2Ra9HiILfPaXAgfev6ufZqbbFCf/dMOnst+6lX4lFB8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ah3OVEvh; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a4a387ff7acso616868266b.2;
-        Tue, 02 Apr 2024 06:06:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712063203; x=1712668003; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=f65VZK2taIgLTzjNB/2fmY7WG5Qnc3EYR1bvxekrFWY=;
-        b=ah3OVEvhNQxVFJ0es031qCw//Xh8+YF/V7+tlVK6k9Dpda+5j7tKMzQl8zUIBrOMpY
-         aYzMTTrPKqLzkRrSg27XKyC8WXugXbS22igHW6GjfsfOCqbp73VQ+ctqEqbdFW1puMAO
-         Cnfy9brY1WyMzeVkZQPDEKBkZ4K5x35Ju+36k2u7thzkgeDuf4t8O+qMR890YArpYKIW
-         x60BnfHbGtuP0k8FYFGi4zRc03xaZ6fPOiN0paAWPUrDfBzRpdifHq5yKHuWvMz59UHL
-         zRypvKjvPAV5vOSIkMBCZTIH8uO0vRLTKM4kAFYzsw0pMxBLOspzy2KPyFynGa7bAn37
-         NBLA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712063203; x=1712668003;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=f65VZK2taIgLTzjNB/2fmY7WG5Qnc3EYR1bvxekrFWY=;
-        b=CRG3LbQDkcw5oQpsDrbt3BIFvgWTKb7sGjzu/z/VQUBtWBrp9lXubwnTvRBt14yE+4
-         BoC3kLfgFPFXjfS9asCY0IRPNF6brJHby5Pi8TXKF4Bfd9c+jHQPIKdHeOyqo4a8Gf2E
-         xWrP0TgMkeTokzm08hFRIGkMuF1B5hw2nWBUUT6d53AOnuKtq4hEhl5zSrqHf0bluhdU
-         ed+kDkkVGtQuSWU7oO0yA5knTrJNRB5RJXNU0JoE1sG3vqIDQyJvw0VRQR+QKi+eKTBF
-         DkWH+fkql4wIWy8adBqU5qJy7SpizkStOXjCtmAbHlXj0adx99LYDG+tUJQQNoNrA6A/
-         2Elg==
-X-Forwarded-Encrypted: i=1; AJvYcCXvT/OTE83N6VlSnbhYVX5m4oIMuSSUKfI3kQEkXFoZ5fx9llGcgp63Ut01X166bUIP/kewPdIWT2jXMAhnptDHTGPJTSZHV/9jz8gNIVdn8HDOj3+uiEMCENx6J63N4axDm9+10/G558+OLCXcwNrJrn7lNjyjHv/yMfVhkH9X7OsQi4c=
-X-Gm-Message-State: AOJu0YxkaMfqCRaqgNaYTGGvrW5U6G9w75qhEk4CezSohcP9E1IIeKNW
-	0dTh5vaXlWllbKViIfsVPKbKzEwIJKrgbVJkjNVG5s+pNg1c0aNz1rDI4FKulGYOSoj6nhtGpH0
-	Ufxv+vXHmVGR6PeC3GOLNuZDyI/U=
-X-Google-Smtp-Source: AGHT+IGFhidDICd1DuDLTMF6/GRfDHMz7a0kUh4LJPUOf9njSYivo6aIkq7WkYN426AVp/ihVUC3mr9bilSLextXDJg=
-X-Received: by 2002:a17:907:7da0:b0:a4e:6957:de24 with SMTP id
- oz32-20020a1709077da000b00a4e6957de24mr4995499ejc.37.1712063203115; Tue, 02
- Apr 2024 06:06:43 -0700 (PDT)
+	s=arc-20240116; t=1712063680; c=relaxed/simple;
+	bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=I134HRyrxsSzAy1HGBhTJfHT50fAtJzSYqdzO4v1QonQf1AONYVbrxQRtnf9rzI+vITmzwmlN2hVdWoldxGxCLVs6nNN44+CgclIf3MnWcAqMOK/voc+LfW307o9L4ZqMTc8Tym1dasHZQx5Vdr7ZiZXzUuFdGcHC/FEyDJM+YY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNvqjAaL; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712063678; x=1743599678;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
+  b=hNvqjAaLYDpyPnV29zeS0RCRihuhJ4+iuBXIlRjln1/7L1Izt20oRT1x
+   zfS4hQKklR4w/eDqQvPZUG2y1az0nFdk18TpPbo1ChFVNkGfwUcZWj+KJ
+   FjMuGFNZbOomFEd48FHGJW1kahivd7doYoLiNqs98mHBHYqKH3W1QVtTT
+   5UwWv4WkHQF+F3sqStjAA6v3WAH3auvVwptU5ew672nISWbe7wMsHyYzE
+   WhdoNAMw2nMljMZnbKIYeT2TtqNg88BU9tMslcEgEMAC0i2dwsMUYiVkw
+   2RJxsizkVIdALxc9l7jVrSlzZLUWykfI3UOixapWmu1yEDi+V0muR+gcO
+   g==;
+X-CSE-ConnectionGUID: 5FvuF+rFR/Wd59lPMsobUg==
+X-CSE-MsgGUID: S5p3n9rESEi3PJiQadbSug==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="32630976"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="32630976"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:37 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="915140683"
+X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
+   d="scan'208";a="915140683"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:33 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rrdyB-00000000oc0-1Wc3;
+	Tue, 02 Apr 2024 16:14:31 +0300
+Date: Tue, 2 Apr 2024 16:14:31 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <ZgwEtxj-qi6uy_m2@smile.fi.intel.com>
+References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
+ <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240323-pinctrl-scmi-v6-0-a895243257c0@nxp.com>
- <20240323-pinctrl-scmi-v6-3-a895243257c0@nxp.com> <ZgcP4IkTQGks9ehH@surfacebook.localdomain>
- <DU0PR04MB9417E797F4E0F7BB6154B3BE88382@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <Zgu4Tok43W5t8KM0@pluto>
-In-Reply-To: <Zgu4Tok43W5t8KM0@pluto>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Tue, 2 Apr 2024 16:06:06 +0300
-Message-ID: <CAHp75VdAaTeQ_Ag3gd0s9UfT=kAT2hwibeJ9-YFXJx4z=R3e+g@mail.gmail.com>
-Subject: Re: [PATCH v6 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-To: Cristian Marussi <cristian.marussi@arm.com>
-Cc: Peng Fan <peng.fan@nxp.com>, "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, 
-	Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Dan Carpenter <dan.carpenter@linaro.org>, 
-	"linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 2, 2024 at 10:48=E2=80=AFAM Cristian Marussi
-<cristian.marussi@arm.com> wrote:
-> On Sun, Mar 31, 2024 at 01:44:28PM +0000, Peng Fan wrote:
-> > > Sat, Mar 23, 2024 at 08:15:16PM +0800, Peng Fan (OSS) kirjoitti:
+On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
 
 ...
 
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/scmi_protocol.h>
-> > > > +#include <linux/slab.h>
-> > >
-> > > This is semi-random list of headers. Please, follow IWYU principle (i=
-nclude
-> > > what you use). There are a lot of inclusions I see missing (just in t=
-he context of
-> > > this page I see bits.h, types.h, and  asm/byteorder.h).
-> >
-> > Is there any documentation about this requirement?
-> > Some headers are already included by others.
+> +#include <linux/module.h>
+> +#include <linux/scmi_protocol.h>
+> +#include <linux/slab.h>
 
-The documentation here is called "a common sense".
-The C language is built like this and we expect that nobody will
-invest into the dependency hell that we have already, that's why IWYU
-principle, please follow it.
+Please, follow IWYU principle, a lot of headers are missed.
 
-> Andy made (mostly) the same remarks on this same patch ~1-year ago on
-> this same patch while it was posted by Oleksii.
->
-> And I told that time that most of the remarks around devm_ usage were
-> wrong due to how the SCMI core handles protocol initialization (using a
-> devres group transparently).
->
-> This is what I answered that time.
->
-> https://lore.kernel.org/linux-arm-kernel/ZJ78hBcjAhiU+ZBO@e120937-lin/#t
->
-> I wont repeat myself, but, in a nutshell the memory allocation like it
-> is now is fine: a bit happens via devm_ at protocol initialization, the
-> other is doe via explicit kmalloc at runtime and freed via kfree at
-> remove time (if needed...i.e. checking the present flag of some structs)
+> +#include "common.h"
+> +#include "protocols.h"
 
-This sounds like a mess. devm_ is expected to be used only for the
-->probe() stage, otherwise you may consider cleanup.h (__free() macro)
-to have automatic free at the paths where memory is not needed.
+...
 
-And the function naming doesn't suggest that you have a probe-remove
-pair. Moreover, if the init-deinit part is called in the probe-remove,
-the devm_ must not be mixed with non-devm ones, as it breaks the order
-and leads to subtle mistakes.
+> +		ret = scmi_pinctrl_get_pin_info(ph, selector,
+> +						&pi->pins[selector]);
 
-> I'll made further remarks on v7 that you just posted.
+It's netter as a single line.
 
---=20
+> +		if (ret)
+> +			return ret;
+> +	}
+
+...
+
+> +static int scmi_pinctrl_protocol_init(const struct scmi_protocol_handle *ph)
+> +{
+> +	int ret;
+> +	u32 version;
+> +	struct scmi_pinctrl_info *pinfo;
+> +
+> +	ret = ph->xops->version_get(ph, &version);
+> +	if (ret)
+> +		return ret;
+> +
+> +	dev_dbg(ph->dev, "Pinctrl Version %d.%d\n",
+> +		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
+> +
+> +	pinfo = devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
+> +	if (!pinfo)
+> +		return -ENOMEM;
+> +
+> +	ret = scmi_pinctrl_attributes_get(ph, pinfo);
+> +	if (ret)
+> +		return ret;
+> +
+> +	pinfo->pins = devm_kcalloc(ph->dev, pinfo->nr_pins,
+> +				   sizeof(*pinfo->pins), GFP_KERNEL);
+> +	if (!pinfo->pins)
+> +		return -ENOMEM;
+> +
+> +	pinfo->groups = devm_kcalloc(ph->dev, pinfo->nr_groups,
+> +				     sizeof(*pinfo->groups), GFP_KERNEL);
+> +	if (!pinfo->groups)
+> +		return -ENOMEM;
+> +
+> +	pinfo->functions = devm_kcalloc(ph->dev, pinfo->nr_functions,
+> +					sizeof(*pinfo->functions), GFP_KERNEL);
+> +	if (!pinfo->functions)
+> +		return -ENOMEM;
+> +
+> +	pinfo->version = version;
+> +
+> +	return ph->set_priv(ph, pinfo, version);
+
+Same comments as per previous version. devm_ here is simply wrong.
+It breaks the order of freeing resources.
+
+I.o.w. I see *no guarantee* that these init-deinit functions will be properly
+called from the respective probe-remove. Moreover the latter one may also have
+its own devm allocations (which are rightfully placed) and you get completely
+out of control the resource management.
+
+> +}
+
+-- 
 With Best Regards,
 Andy Shevchenko
+
+
 
