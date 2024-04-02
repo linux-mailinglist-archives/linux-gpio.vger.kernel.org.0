@@ -1,116 +1,124 @@
-Return-Path: <linux-gpio+bounces-4978-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4979-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 67D5C894DA4
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:35:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id CF100894DEC
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:50:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 03042B22ED3
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:35:02 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A347282C8F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:50:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EF8F3EA73;
-	Tue,  2 Apr 2024 08:34:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A27C56B89;
+	Tue,  2 Apr 2024 08:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="TxyENgd7"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="feF4YrKc"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5015413AC5;
-	Tue,  2 Apr 2024 08:34:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EC256451
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:50:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712046893; cv=none; b=ZlCq0Id27yNjT4Ju8pZMNuLc6PvqAnQ+/EU6aSk0+ca3mdNnAVVU+Gpzwwc7RycaD+EpX33peLiQ+/zAZojj4svMtr8GkgkgNL5XeW6YwRrql8J2tzvppXXpaVPPGvoUJwZF2ug47VPX1u/vxe1+PilJuOtQ+pef4SShuRBTHzA=
+	t=1712047814; cv=none; b=RwKo/5ec74rYNms+BXpFl/lNyvQ1SDUaHZSFqX+QUPFINaYULoIOl+xr86eRUz/wLlP3JY2NdShqVc/NVCc6q6LwBI04LQOO/1mypDnobnFuDad0VnvCDgkxuzNTrVhAOX4WvD3uHSK6Yeorlxi4Y4NrvZbkYSMrQBbdT5ZzUTw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712046893; c=relaxed/simple;
-	bh=N+vg+rqPUjXewNa+Z2tDR6F5vyf+yMWtt3YikIb7Uec=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uJ//xFC/f4vVXnBmEeORUGksKgTQjBVuF3g69gg2/Hfk17UHckxIiwembZWo390CDZkEfPA2pSd1qAvNayFxBrWsHMxzLdI2b3YAirrfKSgdEDZZmtMC/x7JZ2PoVpbwOo3a6kS3kJlq4p2uCEPy9En/kkEGOJDAlbTcpdqvY00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=TxyENgd7; arc=none smtp.client-ip=198.175.65.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712046891; x=1743582891;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=N+vg+rqPUjXewNa+Z2tDR6F5vyf+yMWtt3YikIb7Uec=;
-  b=TxyENgd7aBU9oJBSBtQC6BMGcSOBnbPgTWkndax3EbRT33gyWl/FKDak
-   WHtux31rVV4roq/EHez7rKsy+oXl4uca2esFu7C+1SYgUY+NU4nnOBUN3
-   hS8l0rkSJ0wICjGMirZtrQbyZzwvoDl47DpFCtnH7dfH8Aht7wwLhQkaU
-   KPt4KK4A1kwrY+4UqLT1uVJAuZQxsjezqTzlSeQ4IoLCQZhgSLeP8swcW
-   74BkdWGqqTDmBXKqWh3rEuG4is8ekDq79Sa8jCPjiZk5L8/JSIyvYrQsl
-   tbxQVYRoTVEcclmkADQuDxSKTKsjAa2TUED38O5b77drObYJ9DU2IplAT
-   g==;
-X-CSE-ConnectionGUID: 975jYRv6S0yRcVsHmWR+Ug==
-X-CSE-MsgGUID: Z1b+LfyfS0u2T44PO2bhCQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="29680621"
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="29680621"
-Received: from fmviesa005.fm.intel.com ([10.60.135.145])
-  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 01:34:50 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,174,1708416000"; 
-   d="scan'208";a="22439172"
-Received: from lkp-server02.sh.intel.com (HELO 90ee3aa53dbd) ([10.239.97.151])
-  by fmviesa005.fm.intel.com with ESMTP; 02 Apr 2024 01:34:49 -0700
-Received: from kbuild by 90ee3aa53dbd with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1rrZbS-00013J-30;
-	Tue, 02 Apr 2024 08:34:46 +0000
-Date: Tue, 2 Apr 2024 16:34:24 +0800
-From: kernel test robot <lkp@intel.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@somainline.org>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH v2 11/11] pinctrl: aw9523: Remove redundant dependency to
- OF
-Message-ID: <202404021642.1I0w7URO-lkp@intel.com>
-References: <20240329105634.712457-12-andy.shevchenko@gmail.com>
+	s=arc-20240116; t=1712047814; c=relaxed/simple;
+	bh=b2/5wE1yEwkP0HttKjeaTzoQ1ndvbDbH7ChWswL5hUo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Jwbq0p+wH+dYWG5yjLbY/FfWC0saR2Hpk3f4XC4NmCbhPFFcohkJtq40ZCf6Z11D3/LgghP8VTPNt/OQzeVHKSeLtC8byNpk5WGpWN5ZMLuujJYcO3MRj3fjmRYgktB/JIVO7oCck8SfkZ7JjG6z7sV1p0opyzmoyJ0QjESppmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=feF4YrKc; arc=none smtp.client-ip=209.85.167.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-515d55ab035so1757762e87.2
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:50:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712047811; x=1712652611; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=beOpGT1BPMzUzerIhx34u+wlWdi9LklhjtlLJFBuyHE=;
+        b=feF4YrKcG0jVD59pgWUzBhUafVjsSW7ppfJfR+zo0Yxdstn9Cs1H6HBSpaYGpspJ+c
+         eWKGIOoebto4H+DM71THkG9k/P2AtqXKQMi1o7YNWW6l6Cgy0LRJAYxhV2hsLfhl9bkF
+         /o4eLNDDqRxTCNUSqYtXj6ikq80gF/onQLdr1T3k0SqQrbKvFzIcGYdkQ0Sxofy1BnPK
+         nZrKd7JXqnakMwIn3D4kypYF/tqQEvMVasJEyGyKHRN54qAbb76F0a40mrz4RyhdOfZg
+         TXBQHcD70U0aPE4c0GZpFSh1K+UgupPX8w31h1uKPf6kcem6pCiRJYuiO9gu4iuVFCNn
+         6MEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712047811; x=1712652611;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=beOpGT1BPMzUzerIhx34u+wlWdi9LklhjtlLJFBuyHE=;
+        b=qwuXZ+oBB/NZEg5vlRR+PsgVuAlY63fuYNqXir3xgyVaJF9aJ1GWnqDKgF8B61uZns
+         6X0lKgETLOFPsAX79Cw2dywfx7mnpOmNblhq/XlPs5zfIjpNDewHsp7mZJ+3U0RbdmRf
+         BVT9SowttgbW9l1hLjrr5F6aY56shjwaPsWrBCqlDYhx9CDBMq/xRLYHDhEMcwuHMXFM
+         x4ATLcYUlR/hTiOuJ167YZSxfIPaKNYSDERN4KDVHnJumPvvsfm5KUnDYHAF9mG4T2N1
+         RU9of/0l2v30vCmrkYf4gT3dWKz/ByHzjKLZhGT+c0OPC+bhpiAYgMuxc2fIXtUknMRa
+         AHjA==
+X-Forwarded-Encrypted: i=1; AJvYcCUMMst2Y7wytrwIlQ0AbUKwJBryNqgdpLpt+ktaUOYKDugCEQj0VmKZbstWdl916MECyEEB1J8BsTzgg7FDEvtD7PsZODy/Kgs/0g==
+X-Gm-Message-State: AOJu0YxxJ6DvT75vFA2m8da89GYuM8MRfuTQ7M+rWEoPXhO3qddqQoBo
+	jP/IHM9Ow8Os6Uh0qBi8uU3GRzQw1fU0N1w4spthuvGW1qJu4ggIxpuzYlvE4olY8+/mZUkPpmy
+	LxmKY+igH1rEC69XXOVmHz1VrGslvR6+Bjg/P2w==
+X-Google-Smtp-Source: AGHT+IHe76+zDe7cVdgOiSqvxf958Lt0oux0QPrVSIMhTf7pRv5UnwH+O+W1tzopKaMsZ4SB8smLNO/M63F1ErCoYZk=
+X-Received: by 2002:a2e:9e87:0:b0:2d5:122a:4b1f with SMTP id
+ f7-20020a2e9e87000000b002d5122a4b1fmr7525841ljk.43.1712047811681; Tue, 02 Apr
+ 2024 01:50:11 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240329105634.712457-12-andy.shevchenko@gmail.com>
+References: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com> <20240325171804.3375280-3-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20240325171804.3375280-3-andriy.shevchenko@linux.intel.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 2 Apr 2024 10:50:00 +0200
+Message-ID: <CAMRc=McE-CcRrWpa6Zw_5NGgYJhg+4Ru=uqcaW_WeQ_P25utgA@mail.gmail.com>
+Subject: Re: [PATCH v4 2/2] gpiolib: use dev_err() when gpiod_configure_flags failed
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Peng Fan <peng.fan@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Andy,
+On Mon, Mar 25, 2024 at 6:18=E2=80=AFPM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> From: Peng Fan <peng.fan@nxp.com>
+>
+> When gpio-ranges property was missed to be added in the gpio node,
+> using dev_err() to show an error message will helping to locate issues
+> easier.
+>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> ---
+>  drivers/gpio/gpiolib.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index b98cbf4335e3..5589e085ba25 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -4236,7 +4236,7 @@ struct gpio_desc *gpiod_find_and_request(struct dev=
+ice *consumer,
+>         ret =3D gpiod_configure_flags(desc, con_id, lookupflags, flags);
+>         if (ret < 0) {
+>                 gpiod_put(desc);
+> -               dev_dbg(consumer, "setup of GPIO %s failed\n", name);
+> +               dev_err(consumer, "setup of GPIO %s failed: %d\n", name, =
+ret);
+>                 return ERR_PTR(ret);
+>         }
+>
+> --
+> 2.43.0.rc1.1.gbec44491f096
+>
 
-kernel test robot noticed the following build errors:
+Applied, thanks!
 
-[auto build test ERROR on linusw-pinctrl/devel]
-[also build test ERROR on linusw-pinctrl/for-next linus/master v6.9-rc2 next-20240402]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
-
-url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/pinctrl-aw9523-Destroy-mutex-on-remove/20240329-185957
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-pinctrl.git devel
-patch link:    https://lore.kernel.org/r/20240329105634.712457-12-andy.shevchenko%40gmail.com
-patch subject: [PATCH v2 11/11] pinctrl: aw9523: Remove redundant dependency to OF
-config: i386-randconfig-054-20240401 (https://download.01.org/0day-ci/archive/20240402/202404021642.1I0w7URO-lkp@intel.com/config)
-compiler: gcc-12 (Ubuntu 12.3.0-9ubuntu2) 12.3.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240402/202404021642.1I0w7URO-lkp@intel.com/reproduce)
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404021642.1I0w7URO-lkp@intel.com/
-
-All errors (new ones prefixed by >>):
-
-   ld: drivers/pinctrl/pinctrl-aw9523.o: in function `pinconf_generic_dt_node_to_map_pin':
-   include/linux/pinctrl/pinconf-generic.h:216:(.text+0x891): undefined reference to `pinconf_generic_dt_node_to_map'
->> ld: drivers/pinctrl/pinctrl-aw9523.o:(.rodata+0x4f4): undefined reference to `pinconf_generic_dt_free_map'
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Bart
 
