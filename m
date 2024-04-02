@@ -1,169 +1,125 @@
-Return-Path: <linux-gpio+bounces-4985-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4986-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C665894F03
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 11:49:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 304B1894F5B
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 11:59:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 2B076B23001
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 09:48:59 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B3304B20B75
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 09:59:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7773359161;
-	Tue,  2 Apr 2024 09:48:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83AAB5915A;
+	Tue,  2 Apr 2024 09:59:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="OHa1spJy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KngIa3hu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D53D5915A
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 09:48:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A906651C52
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 09:59:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712051320; cv=none; b=ShEiA8tpeVTbP+GKsMliilU7Wq7X1HsfM6KjHrSyD5ZKQRmDD8qF6iehenrpb9KGYgcrNNivC+svrXt/Z8ufeI1nXDXkkYZDhvZ6h0gu26zfKBnkOyBebEFQ36k5o5ttn4Hx1OGDA2/1MF2cjqr05f9CHhsODNcpNocfHmZjLQI=
+	t=1712051991; cv=none; b=bFbh8a+NYPNTIQeAhxRRA6RUW7SjN7a1TwgO2oEVZ3YQCn40lT7aRbQithQrxNFTxixAFKyp+pgRylqUj1ryMM8MHTlYOUjrr1aeBkFqYUJeKE4/RvhrhxBu1yXq5Thtr+yVai4l3YmkAcIIGgOG5qnWMuL3dP1CqiYPCAUdYIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712051320; c=relaxed/simple;
-	bh=MfgLsLZHTAI2m35bZRl8ZqcgKZZdKPeTA0idRU0cIRM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=H4ifxT3R9h1aWBalUA4uISc7CJH5xDTuInTaIIf5NzJdaqenb47pVUo5CcXwmpYg8NhHtf/H4mZ7Bearye3QHwFFf1DkmrOMgXSu8iOLvWrF66Oj8KbjqqDGu8+jS/VQwtH8bbqkANiR/qUTBjMrEfB4x4Edn9+/5mKNi/CDzeU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=OHa1spJy; arc=none smtp.client-ip=209.85.208.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d094bc2244so53569341fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 02:48:37 -0700 (PDT)
+	s=arc-20240116; t=1712051991; c=relaxed/simple;
+	bh=Kgs/Vdaio0oR2w2PgaAMR40kUb748GCJI4HpRtOWrCk=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=k8po9qaABnR1XoHDQMG690592j05kJIP6C+nsVhRVt0EtxEl9O9ej6iayS9Ak63qK7K+XBKDsFk3s7JomKHmAc890LSKLBh8WNuMD3GCmeNe3xva927iuIsBSL3GxA+Z5SlbHXdWWubEqLR5lyXhdl9xZ6yL47lxSoXB+dWj/vw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=KngIa3hu; arc=none smtp.client-ip=209.85.208.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-56df1dbb15dso381580a12.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 02:59:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712051316; x=1712656116; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wlCSs1dvO7phEwEbHxz8y4nuHMbuMtpriFYCSddRRjg=;
-        b=OHa1spJyV6ICuFmleOMMx1jSpEealf+t4idiAguuc5IMf3A4HcctK7rbxZqX8Vx819
-         sGw4V1XCs0MFj1p+oBCwZf5ArW12nyOUWRBPqTbcG1Klp5kPA3IDC4eMcj0Whp6vHpW8
-         43/NR3J/J0jSBAgYoLa6pV7hjbuuammM4ezOfdXy9ChprbXYI4gZhQYepMvog5CKpEz6
-         sfw+bQ9l0TmBIQmVQFUNvERhXflJbyaP8rkFxx9jQA9uwiH+YOMDC0u8K2M6VbcjdLEm
-         ETzT2/WQoQAvNMOccGNgV8ixK3k2xcr2JyWk23phbRwYiwYnqlBaKEBs8ge/0SAfwfd/
-         NZZA==
+        d=linaro.org; s=google; t=1712051988; x=1712656788; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=LIK3my8ABKRdtJyG7KGkkQYs6AXtO/OOQOFft5RPt10=;
+        b=KngIa3hubClapZ5U7t6gBiUajdEt7MjQBFh6AWAhyxAehQe/674ybfXfl2J/lErROz
+         9DBGl8zHKjx/jS1B61NtZVzUoCNivwlzvnCijWF67xvEpCnqXgIjBN0bemO0sNfYMslK
+         XT83n+3PvI0ecD4GBkJIJ/T4V8thDxSLf+MNrgjvM8KxK34HavcjYWVB7plU4V/3keBC
+         pqGTHA9NK0Ist48tQ0yuiohEuPrLqkhzLlwupKNsZq2YfEu6r3rUmXkAkLpLku1Wz/fE
+         lY/y2mht0YXdsufOwo/zysvgism2hY7ckLQYwW+dt1vV0NQ/cq5175NSvqrr7YMVs/dP
+         /elw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712051316; x=1712656116;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=wlCSs1dvO7phEwEbHxz8y4nuHMbuMtpriFYCSddRRjg=;
-        b=D9EZoQOEVw68VulQbdiMCX02SdkKgX86lP2mZ2yxjREF74ngA+CYTRFt1H71059cE/
-         tQmtWNv4hn1tSh1n4rKumosyLILGbbvZX1p1S4YMRNlW+sSeXwMqzNspJZppr3fINWNR
-         ufOVYbhqEr8vMeTnFYjIUywxv5wbB3UAkl/KwJJbSBtxL3REfLKSyH0xuaHGsLmiGamH
-         xqfMHZyHnFquDNYHo3IDRb8Agw93rMRSt0KerIVJkLG9Z0RIvgRC1q7hgzen3X0/CnaK
-         phgbtLFotwmDloNipIBbwDxL1I4RCTBfm2x65Z9eX0T1dzghKE2StJ3GX2KD3UFXTAsJ
-         xp8g==
-X-Forwarded-Encrypted: i=1; AJvYcCVAGiWap4ghl2vj+Yf5WiSMnPGvb8RmNF2gxJHvohaRzHEZJaPbaBis5HPeQtOcx3J71EOeTRkZyAbUCinGFziSEfIyC1utaMKxtw==
-X-Gm-Message-State: AOJu0YxJ9kYfJF4jMsaLWCZG7qK/KuJ4prLQlxLcehEvQ7qvtg2GIAti
-	HlGc4MdfmIdQaVLWsZI9YzHvUUAqkuitVQVlbag3vYjaZomXjRJRud7hjgIvZ/i2Rb5XVhr1PYn
-	69jZ/xPh3E9VBECarUe81SLwnECaZOgRmwDi73w==
-X-Google-Smtp-Source: AGHT+IH3dQRr3+F3qt/N/bQHIgBkoP/sOmCHm2gldMwm2b6jEsbGiB5d1FsOfsxCog7KbAXbHnI8QE+RZ6NxXoeV24Y=
-X-Received: by 2002:a2e:3812:0:b0:2d5:9703:263c with SMTP id
- f18-20020a2e3812000000b002d59703263cmr6564315lja.4.1712051316345; Tue, 02 Apr
- 2024 02:48:36 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712051988; x=1712656788;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=LIK3my8ABKRdtJyG7KGkkQYs6AXtO/OOQOFft5RPt10=;
+        b=en4FWlC4BMeYFmSSMF3vlARkHvtbMGz5yXl1oa+nKRnJvfzb7T6kCN6gqsUFJrJ2sr
+         s08t3HRC+xSlYq1mHDiuTrP6CydgDhFhKBk9fckAPg8AgmKEXRRqTutXrHtXiFKywELq
+         hs9ThfekiIlvqnapV+VdYc95rcojB+AgGUKZe/8AIWVHjwPSFVWUPO2qzYnFbVUfAWId
+         L5VSLnx1lwxAjGu20btlMJrz6+ku/a1steK8x6r30UdfI6XODoNfshyFxAz8+wgIcPJ6
+         shWEp6RLRX73F7xK86W6XnnECPtqeygn+3+oJ7Oek0eOA5+/TyR4mQG5crVNwvLQWn60
+         gw1w==
+X-Forwarded-Encrypted: i=1; AJvYcCVKwN/ODE7O2a/D+9AfHmliNxUUS3Ca48jhZzqSRxhZ128mFml1p/9CRS9vyARivxnKrq8hbnG7drE+TvUomKY043wQ+m/qdwCUTg==
+X-Gm-Message-State: AOJu0Yz/3i8H5U51h16Mi3DL8qiikg4iAWoSmqjlEaUHtLBX+96FHKFq
+	4BtnylPd/7l74OchxHdBNz1in7nP2U4xTybJ8iJkn8si+ZacmIsFOElcc/Q+b9A9bBw9VgZVXvm
+	c
+X-Google-Smtp-Source: AGHT+IHiPuNBTdnlzshXbP/5TpbBgxsfsjL3mHvPWbZ/i8OnttVYGnTesKL64t9BOLVMqjcBTGlyrw==
+X-Received: by 2002:a17:906:aa4c:b0:a47:4e09:e685 with SMTP id kn12-20020a170906aa4c00b00a474e09e685mr8026763ejb.32.1712051987776;
+        Tue, 02 Apr 2024 02:59:47 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id k5-20020a170906a38500b00a4761c94a5esm6360373ejz.107.2024.04.02.02.59.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Apr 2024 02:59:47 -0700 (PDT)
+Date: Tue, 2 Apr 2024 12:59:43 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Marek =?iso-8859-1?Q?Beh=FAn?= <kabel@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>,
+	Gregory CLEMENT <gregory.clement@bootlin.com>, soc@kernel.org,
+	arm@kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Andy Shevchenko <andy@kernel.org>, linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v5 03/11] platform: cznic: turris-omnia-mcu: Add support
+ for MCU connected GPIOs
+Message-ID: <38fc3188-7c44-4797-b2ab-b06b7f60d1a9@moroto.mountain>
+References: <20240323164359.21642-1-kabel@kernel.org>
+ <20240323164359.21642-4-kabel@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <CACRpkdZf5-QR0aU+jhqpsCbNbD+57TN6Yq_Naq8JoLSWSsM8kw@mail.gmail.com>
- <20240402093534.212283-1-naresh.kamboju@linaro.org>
-In-Reply-To: <20240402093534.212283-1-naresh.kamboju@linaro.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Apr 2024 11:48:25 +0200
-Message-ID: <CAMRc=MdruyeZtvj_L6ZbwO36o8hxGPyLjMzNVu27rc7o0ZenPQ@mail.gmail.com>
-Subject: Re: [PATCH v3] gpio: cdev: sanitize the label before requesting the interrupt
-To: Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc: linus.walleij@linaro.org, adobriyan@gmail.com, 
-	bartosz.golaszewski@linaro.org, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org, wahrenst@gmx.net, 
-	warthog618@gmail.com, lkft-triage@lists.linaro.org, anders.roxell@linaro.org, 
-	Linux Kernel Functional Testing <lkft@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240323164359.21642-4-kabel@kernel.org>
 
-On Tue, Apr 2, 2024 at 11:35=E2=80=AFAM Naresh Kamboju
-<naresh.kamboju@linaro.org> wrote:
->
-> Results from Linaro=E2=80=99s test farm.
-> Regressions on arm64, arm, x86_64, and i386 with libgpiod tests.
->
-> libgpiod test regressions noticed on Linux stable-rc 6.8, 6.7 and 6.6
-> and Linux next and mainline master v6.9-rc2.
->
-> Anders bisected and found this first bad commit,
->   gpio: cdev: sanitize the label before requesting the interrupt
->   commit b34490879baa847d16fc529c8ea6e6d34f004b38 upstream.
->
-> Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
->
-> LKFT is running libgpiod test suite version
->   v2.0.1-0-gae275c3 (and also tested v2.1)
->
-> libgpiod
->   - _gpiod_edge-event_edge_event_wait_timeout
->   - _gpiod_edge-event_event_copy
->   - _gpiod_edge-event_null_buffer
->   - _gpiod_edge-event_read_both_events
->   - _gpiod_edge-event_read_both_events_blocking
->   - _gpiod_edge-event_read_falling_edge_event
->   - _gpiod_edge-event_read_rising_edge_event
->   - _gpiod_edge-event_read_rising_edge_event_polled
->   - _gpiod_edge-event_reading_more_events_than_the_queue_contains_doesnt_=
-block
->   - _gpiod_edge-event_seqno
->   - _gpiod_line-info_edge_detection_settings
->
-> Test log:
-> -------
-> ok 16 /gpiod/edge-event/edge_event_buffer_max_capacity
-> **
-> gpiod-test:ERROR:tests-edge-event.c:52:_gpiod_test_func_edge_event_wait_t=
-imeout: '_request' should not be NULL
-> # gpiod-test:ERROR:tests-edge-event.c:52:_gpiod_test_func_edge_event_wait=
-_timeout: '_request' should not be NULL
-> not ok 17 /gpiod/edge-event/edge_event_wait_timeout
-> ok 18 /gpiod/edge-event/cannot_request_lines_in_output_mode_with_edge_det=
-ection
-> **
-> gpiod-test:ERROR:tests-edge-event.c:125:_gpiod_test_func_read_both_events=
-: '_request' should not be NULL
-> # gpiod-test:ERROR:tests-edge-event.c:125:_gpiod_test_func_read_both_even=
-ts: '_request' should not be NULL
-> not ok 19 /gpiod/edge-event/read_both_events
->
-> Steps to reproduce:
-> -----
-> https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2eUlyN8H=
-N4R1u0RyLwN6hx7IV0I/reproducer
->
-> Links:
->  - https://qa-reports.linaro.org/lkft/linux-next-master/build/next-202404=
-02/testrun/23265184/suite/libgpiod/tests/
->  - https://qa-reports.linaro.org/lkft/linux-mainline-master/build/v6.9-rc=
-2/testrun/23244617/suite/libgpiod/tests/
->  - https://tuxapi.tuxsuite.com/v1/groups/linaro/projects/lkft/tests/2eUly=
-N8HN4R1u0RyLwN6hx7IV0I
->  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.8.y/build/v=
-6.8.2-400-gbffeaccf18b5/testrun/23252337/suite/libgpiod/tests/
->  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.7.y/build/v=
-6.7.11-433-gb15156435f06/testrun/23252698/suite/libgpiod/tests/
->  - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v=
-6.6.23-397-g75a2533b74d0/testrun/23254910/suite/libgpiod/tests/
->
-> --
-> Linaro LKFT
-> https://lkft.linaro.org
+On Sat, Mar 23, 2024 at 05:43:51PM +0100, Marek Behún wrote:
+> +static ssize_t front_button_mode_store(struct device *dev,
+> +				       struct device_attribute *a,
+> +				       const char *buf, size_t count)
+> +{
+> +	struct omnia_mcu *mcu = i2c_get_clientdata(to_i2c_client(dev));
+> +	u8 mask, val;
+> +	int err, i;
+> +
+> +	mask = CTL_BUTTON_MODE;
 
-Hi!
+No need for the mask variable.  Just use CTL_BUTTON_MODE directly.
 
-Yes, I confirm the issue, I will have a fix ready soon.
+regards,
+dan carpenter
 
-Thanks!
-Bart
+> +
+> +	i = sysfs_match_string(front_button_modes, buf);
+> +	if (i < 0)
+> +		return i;
+> +
+> +	val = i ? mask : 0;
+> +	err = omnia_ctl_cmd_locked(mcu, CMD_GENERAL_CONTROL, val, mask);
+> +	if (err)
+> +		return err;
+> +
+> +	return count;
+> +}
+> +static DEVICE_ATTR_RW(front_button_mode);
+
 
