@@ -1,118 +1,148 @@
-Return-Path: <linux-gpio+bounces-4980-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4981-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 27AC1894DFE
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:51:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id D62AF894E16
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:59:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51C691C228D2
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:51:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C4C31F23676
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:59:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35BBD535D9;
-	Tue,  2 Apr 2024 08:50:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95C04778E;
+	Tue,  2 Apr 2024 08:59:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fZ+Mu4f8"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="G202nPmq"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A534CB4A
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:50:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8C24C601
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:58:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712047857; cv=none; b=sFcEvdPN0K4fqIvdTKLXz0ifzGQq+fQFq4ywRoQwF8MVSlUXZ80c4GUe8rekJUO12imK7Efjapo5JpvAeJkpmSrYofgynf0BXUJJQOcCirMh69/16IsdaVe5clsEqav70cJE2rdQ9Pbri6vJ5MkSSzWgbjZ3RTYPaF5b2jowAGI=
+	t=1712048340; cv=none; b=E0azP5hIwqTP3HcgWmXC/7LopGIeG60QBQbGVIPjbqVWOR245tM2dlLiZWCHoJ2QwjWgbkTOq14arCpu62amvs+DNUquioPM5JFpE119kiTIU/d55BDN0JOf6FwaZVl00ZNrEYyzfz/CQ/Vlgb53fx4rtrWN7SlvZ7hZBdmzbOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712047857; c=relaxed/simple;
-	bh=d56KSz8sH4cc/CJcFH4xN0gZ6zRS/QTrszJ0H2z6WYU=;
+	s=arc-20240116; t=1712048340; c=relaxed/simple;
+	bh=HNm6Lh879crSqV0ZGzaJmrt3ssAvgX20Rq/oXJRJF9c=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LtRSAhbYw+d3B4b8lqAf5DvznKdXr+UkGeokuTJEej7dziHhuY3iy3+iMqRW+mDGhisz2zvrkX+mdhFBBB975+/Ctu8UlhFTVb1n+j6jPOQChaATqAcNarT22RA3qC2nrMwt7jIeVrM76y7WWppBDYG26juyYih7i+jfMlIZV2A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fZ+Mu4f8; arc=none smtp.client-ip=209.85.208.172
+	 To:Cc:Content-Type; b=Ta2kf/arxFNJEq/qOk894Yja/UhJrB3QCf/PQ8t8iqjv7oG4LmDheL17AwlYkXVc22ZAv3RnYEXXB4Mn/kxn9czif4X0QE9TjjVZdt99ykIJbjOoxvEYJJWxsojzEpCvu8t1LVNWCxyeiUjtrirBQTpt7sLYcpodBkA3qkDcduo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=G202nPmq; arc=none smtp.client-ip=209.85.208.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d8129797fcso27841291fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:50:55 -0700 (PDT)
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d68c6a4630so51122281fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:58:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712047853; x=1712652653; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712048337; x=1712653137; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wv6+xX61JtxGpKWZ45wliW2pFq+S5fBIUaTwceo8xO4=;
-        b=fZ+Mu4f8Zv0Se3wyF76ZSUh2LSawVq9Xlnx6CMHyso6UY0M6IxFizcenlEQoi/eqq9
-         oTpmzdbIVXFSJFjgwRp261n9N8+sasNx2AK0z66AVin8RRUIhD98g9qtN+OmQv+HwXcR
-         VUzA42gllfP6CaraHvKbs1K2eiGKGQ2TVAGokFvuZpHUz6bOlFrUWj+64db1+mqu1O1h
-         UD/q8qfv1SUkEKn1wTHpbadrh6X6JFi7Rx+f6Ya/sVTTadcDcp0QlG9JfY8rylpOiB8F
-         3Wiq6T+nVEuqo2qcnNg3UUbps4Do1iLUQ4vhL9sD2Fszzv9FNadkDJ6bAjkLJHYm5E9I
-         p3Rg==
+        bh=+EQziKXdKEAMdx/dPCGDP7jmLVDHvzi4KCtf8hrHXHs=;
+        b=G202nPmq3BLahFpIpsyBtxc0Pe2+9I2BcQONef2a3bgNkiBlgjsCZJ2cZkpstvoeLS
+         528rrTC6yUBa/gd8930W/PWBbGH3ps0xN0Lvn3ta6QLfjTmKdDK51rLvjT+mBqQdBjGF
+         axw+CumeE7Bhkud2qcXP6aU7SgnRKr4zqco/7mmGteybc8mofF74j7eCy4MlEjN/ssQV
+         HOmdB+2zY3P/viMU3n8kalzI131B+tibh+JZi7COXR/3Nn8U4/bXyw6uGNG/xSy16Srw
+         UUckBu+4ufvwMKgOqOa1lCR2tEtMI9YiaVRYblXRiT5m1RFvZ+KR7im58F6JdYdce+Ys
+         nUvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712047853; x=1712652653;
+        d=1e100.net; s=20230601; t=1712048337; x=1712653137;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wv6+xX61JtxGpKWZ45wliW2pFq+S5fBIUaTwceo8xO4=;
-        b=v8pHnn5qQ+xFPCYr3jNJuqOruDKQO+rcOwT7Hp919rwyKzuGYfLOiUJ82BQM2AD5/+
-         nAFhmcX0HPzj3ZmqTuQmD5kf+mqeDyDaUUJ5dq7ODsYodkwBbiSUNb6xil5ymrhEhiT1
-         4xm3x5n0ZW2MADV7un5HCCIcs8sizlIWJJ++4hpJ+0EBmS0xGgxToZIVnMZtHw9Fq0oQ
-         6bUhKVilZN7Tq/JzZxwwTCMdIG3ausPWtI9fBrDkpqdfREpS6kxk08fSD6+aDZb9w4pv
-         hid3IcDRVvMyk5Ah5LVuitNg/j6gJRtKQxqMA4f1bGLOQaML+SDWOl1YrFJfCjgRI1gk
-         AZPg==
-X-Forwarded-Encrypted: i=1; AJvYcCW9I+BF9NTHx5FXotcABvjm06eJAW1iX5wpuO1NvzOaZvR+E+e9YI51oNC5LEe1iiFquKuWdJ/V6L+RR1bfBG7icCq8I3Gs0QDIIQ==
-X-Gm-Message-State: AOJu0Yxh74ntZqkNPzaZsXxvWzRjaOOEG8luOMG1T4nfxoV0fljw7LqJ
-	ytcw9J1TxWMdQ+/xIRvPcnyc5VrUMKnj8DN1oUELIQCETl0ju4h2XWAqHbtimctdywzsMY7RDGq
-	U1e5l7mfN60DJEwgL1opJ17LehFrxvda3LMPO8OI9zwAZ4sjS
-X-Google-Smtp-Source: AGHT+IGduSNxIydN/eNgINSn+xOiMxlwqSzSVthVPSafiIs8o0sXpk5/cAWBdV4gf12hs+oVvORpHioikkxS0Cer+n0=
-X-Received: by 2002:a2e:a7c3:0:b0:2d4:3e82:117e with SMTP id
- x3-20020a2ea7c3000000b002d43e82117emr9024835ljp.32.1712047853624; Tue, 02 Apr
- 2024 01:50:53 -0700 (PDT)
+        bh=+EQziKXdKEAMdx/dPCGDP7jmLVDHvzi4KCtf8hrHXHs=;
+        b=LRagONeQMfLyuWpjuw7tm0fZ6UK7pUbxzmXPe6DfDLGXPz7Qj8On1EX2/igU2JK0eo
+         FWV1HY67n9BCkVJOjspn+3LZYe+PEEqdWMZzlcOzk0pyTT9of1CBoOCn+C8+B5uZQ0ow
+         xuY1H7lnghP6xxhY/4e1tt7vFYVvrgzb/+f5kb0wAQPA2ubMnnE2np96kWBsgb3Em+qE
+         fK8e0sHpc+RY8trKg9OssB/oc+qp9QLf6vHPSwqrxRXDAVgDqRDiU7J1GPXQ+jQ3qxaQ
+         FR3xNa0gra4sM1q0nwfVuuIxwMzK7fmSC8r+/8wSE3eY1h0rXhHF4IVPY4pqfQoOX283
+         FeWw==
+X-Forwarded-Encrypted: i=1; AJvYcCVdpl/15e/lQVRJ43D5r+MmTmocNnvp/ZccupOji5k7I8VdRTmdlRcojjzfuGQV2r2+03Ut7CMaCZrKZyXFAj4JKkwWsEXQQOTkjg==
+X-Gm-Message-State: AOJu0YzPOrm1lOJieES3N5/8vnMcQM2tXmkFZOHA4MT0WoFiZ7QQkAQ1
+	CrAJLv2z4wtRFDEcfs2pr5NbEiXxh234G9vl6t3/FlySo24HYtRquJs+abaPf1pscucp/89FYMz
+	gYMNS7B8ASmtLbphp1MXZJvZ0VHQ/e9xFPiRCXA==
+X-Google-Smtp-Source: AGHT+IHgVoVAQjY0SVm1Am+geVCD8kGxkvgjD4vTaFUHh5+1OWnpBP+5APV4hCgBud/LOc79OuLkSI2vz2dPlk4j4wE=
+X-Received: by 2002:a2e:8699:0:b0:2d4:6815:fc6f with SMTP id
+ l25-20020a2e8699000000b002d46815fc6fmr7057550lji.30.1712048337278; Tue, 02
+ Apr 2024 01:58:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240329144318.376939-1-dlechner@baylibre.com>
-In-Reply-To: <20240329144318.376939-1-dlechner@baylibre.com>
+References: <20240401030052.2887845-1-tzungbi@kernel.org> <20240401030052.2887845-3-tzungbi@kernel.org>
+In-Reply-To: <20240401030052.2887845-3-tzungbi@kernel.org>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Apr 2024 10:50:42 +0200
-Message-ID: <CAMRc=MfUQ5+Tq3M8=gABA_t+bumWs8=5RZ8gVJXxFLg0cvcMpA@mail.gmail.com>
-Subject: Re: [PATCH] Documentation: gpio: fix typo
-To: David Lechner <dlechner@baylibre.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org, 
-	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 2 Apr 2024 10:58:46 +0200
+Message-ID: <CAMRc=Md+v=zWGa=pYUzKkBMipJj_NgYW08XTfvdCFyErOVdvYw@mail.gmail.com>
+Subject: Re: [PATCH v2 2/6] gpio: cros-ec: provide ID table for avoiding
+ fallback match
+To: Tzung-Bi Shih <tzungbi@kernel.org>
+Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org, 
+	hverkuil-cisco@xs4all.nl, mchehab@kernel.org, sre@kernel.org, 
+	chrome-platform@lists.linux.dev, pmalani@chromium.org, 
+	linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, 
+	linux-pm@vger.kernel.org, krzk@kernel.org, 
+	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 29, 2024 at 3:43=E2=80=AFPM David Lechner <dlechner@baylibre.co=
-m> wrote:
+On Mon, Apr 1, 2024 at 5:01=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org> w=
+rote:
 >
-> EOPNOTSUPP has two 'P's.
+> Instead of using fallback driver name match, provide ID table[1] for the
+> primary match.  Also allow automatic module loading by adding
+> MODULE_DEVICE_TABLE().
 >
-> Signed-off-by: David Lechner <dlechner@baylibre.com>
+> [1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/base/platform.c=
+#L1353
+>
+> Reviewed-by: Benson Leung <bleung@chromium.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
 > ---
->  Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Changes from v1:
+> - No code changes.
+> - Add R-b tags.
 >
-> diff --git a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst =
-b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
-> index 56b975801b6a..6615d6ced755 100644
-> --- a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
-> +++ b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
-> @@ -81,7 +81,7 @@ Only one event clock flag, ``GPIO_V2_LINE_FLAG_EVENT_CL=
-OCK_xxx``, may be set.
->  If none are set then the event clock defaults to ``CLOCK_MONOTONIC``.
->  The ``GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE`` flag requires supporting hardw=
-are
->  and a kernel with ``CONFIG_HTE`` set.  Requesting HTE from a device that
-> -doesn't support it is an error (**EOPNOTSUP**).
-> +doesn't support it is an error (**EOPNOTSUPP**).
+>  drivers/gpio/gpio-cros-ec.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 >
->  The :c:type:`debounce_period_us<gpio_v2_line_attribute>` attribute may o=
-nly
->  be applied to lines with ``GPIO_V2_LINE_FLAG_INPUT`` set. When set, debo=
-unce
+> diff --git a/drivers/gpio/gpio-cros-ec.c b/drivers/gpio/gpio-cros-ec.c
+> index 842e1c060414..0c09bb54dc0c 100644
+> --- a/drivers/gpio/gpio-cros-ec.c
+> +++ b/drivers/gpio/gpio-cros-ec.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/gpio/driver.h>
+>  #include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_data/cros_ec_commands.h>
+>  #include <linux/platform_data/cros_ec_proto.h>
+> @@ -197,11 +198,18 @@ static int cros_ec_gpio_probe(struct platform_devic=
+e *pdev)
+>         return devm_gpiochip_add_data(dev, gc, cros_ec);
+>  }
+>
+> +static const struct platform_device_id cros_ec_gpio_id[] =3D {
+> +       { "cros-ec-gpio", 0 },
+> +       {}
+> +};
+> +MODULE_DEVICE_TABLE(platform, cros_ec_gpio_id);
+> +
+>  static struct platform_driver cros_ec_gpio_driver =3D {
+>         .probe =3D cros_ec_gpio_probe,
+>         .driver =3D {
+>                 .name =3D "cros-ec-gpio",
+>         },
+> +       .id_table =3D cros_ec_gpio_id,
+>  };
+>  module_platform_driver(cros_ec_gpio_driver);
+>
 > --
-> 2.43.2
+> 2.44.0.478.gd926399ef9-goog
 >
 
 Applied, thanks!
