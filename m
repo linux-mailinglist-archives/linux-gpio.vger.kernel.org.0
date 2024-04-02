@@ -1,67 +1,67 @@
-Return-Path: <linux-gpio+bounces-4996-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4997-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4A81589550B
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:17:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9389B895541
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:23:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DF0EA1F24AF2
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:17:31 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 25E58B2175A
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:23:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33D7884FCC;
-	Tue,  2 Apr 2024 13:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B862E8526C;
+	Tue,  2 Apr 2024 13:22:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hNvqjAaL"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="kG6vC4hx"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36E177F7D3;
-	Tue,  2 Apr 2024 13:14:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E700685260;
+	Tue,  2 Apr 2024 13:22:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712063680; cv=none; b=eeb1zP6iV6oQobFm/w2/g2toUxGubF0MMn5Jn7HxGE0oumjw2Y5b8KrX/joOlDPFDR0a/aRfI4zLr/rWacu0j96trq2hnetjZgLf8osA6KtBZdoqTl2esYRLItTi3igyyqWRG6ZkMwnft45itqkJGtxqRm01NNEopkTzAKeXUyA=
+	t=1712064174; cv=none; b=DvXh9nNjhAI9upN/GvgYiswiwZvF3ij0GJ2dgEyrPpVl7OenJuiKzAnA/WqtYh2CJ6fWr5YiqW83aoUqx2rpuN+ENAFSC1gMkM7SWYvfvQykqdx0lt3OkBBJf0YMzVldIcAx3CjEyWQzaYQW7vxGeAVq/AclHp6Y+pNYKyY/QyY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712063680; c=relaxed/simple;
-	bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
+	s=arc-20240116; t=1712064174; c=relaxed/simple;
+	bh=5B4VAqRtah3hwR9aUAuF7xCrOB8pdBZXUCtToZA8hZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I134HRyrxsSzAy1HGBhTJfHT50fAtJzSYqdzO4v1QonQf1AONYVbrxQRtnf9rzI+vITmzwmlN2hVdWoldxGxCLVs6nNN44+CgclIf3MnWcAqMOK/voc+LfW307o9L4ZqMTc8Tym1dasHZQx5Vdr7ZiZXzUuFdGcHC/FEyDJM+YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hNvqjAaL; arc=none smtp.client-ip=192.198.163.7
+	 Content-Type:Content-Disposition:In-Reply-To; b=IcBTMi62iTGZkSYNjFxOOQdT1vxNw9eq6slNkOlU0AHLCtZ0DxsMkaEq8H0G2a32xe4S8MRJ7bxnsRaqAuX+Ly7K1c5iJ9xv76oZOBeOJG6dVS6iX+dgXeKtjEMC7/88x7fpuQ4XYhFJv5gZ6Tcg6bWtgYjtkjnXZp2zwx4SobE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=kG6vC4hx; arc=none smtp.client-ip=192.198.163.9
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712063678; x=1743599678;
+  t=1712064173; x=1743600173;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=dNhWs1tSERBEqpT1H1jI1gPA9tR9hFX3rMeei4wKg3I=;
-  b=hNvqjAaLYDpyPnV29zeS0RCRihuhJ4+iuBXIlRjln1/7L1Izt20oRT1x
-   zfS4hQKklR4w/eDqQvPZUG2y1az0nFdk18TpPbo1ChFVNkGfwUcZWj+KJ
-   FjMuGFNZbOomFEd48FHGJW1kahivd7doYoLiNqs98mHBHYqKH3W1QVtTT
-   5UwWv4WkHQF+F3sqStjAA6v3WAH3auvVwptU5ew672nISWbe7wMsHyYzE
-   WhdoNAMw2nMljMZnbKIYeT2TtqNg88BU9tMslcEgEMAC0i2dwsMUYiVkw
-   2RJxsizkVIdALxc9l7jVrSlzZLUWykfI3UOixapWmu1yEDi+V0muR+gcO
-   g==;
-X-CSE-ConnectionGUID: 5FvuF+rFR/Wd59lPMsobUg==
-X-CSE-MsgGUID: S5p3n9rESEi3PJiQadbSug==
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="32630976"
+  bh=5B4VAqRtah3hwR9aUAuF7xCrOB8pdBZXUCtToZA8hZ4=;
+  b=kG6vC4hxcKz0LZjhKa1X31X/fhur5kpBoGxshV+8ElZ9DpvJitFKcME+
+   WTbebnhvzwBiKHv8SJr43ES5XYYPLhPLwY4pI5qOvUMDxoi0hAcGYkfmy
+   GYuwIUQvycTlwSV9oR/nm9MKQhmC3lWKZON7nrazp+RDQwK0a6MP7fz+6
+   /8euDZKHPWLMrXva5x75d86M+CzQKSVbOzqCjliZWm1EhrXGWFkC9cszz
+   6OApT44GJe/CHklpc6pJj6K5HaIZTBdvleYZVGd0bcbJRncZs7T5y6qau
+   MYz1N3Jbq3XnctrSnU1tZeR7soef7npDZsw2KQjTEEuwTkCWYjFt9YLSO
+   w==;
+X-CSE-ConnectionGUID: dnMNQZqzTqqyNUirhK/XRQ==
+X-CSE-MsgGUID: 8eUayibbSui69kbWr2wQEg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="17960339"
 X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="32630976"
+   d="scan'208";a="17960339"
 Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:37 -0700
+  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:22:52 -0700
 X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="915140683"
+X-IronPort-AV: E=McAfee;i="6600,9927,11031"; a="915140889"
 X-IronPort-AV: E=Sophos;i="6.07,175,1708416000"; 
-   d="scan'208";a="915140683"
+   d="scan'208";a="915140889"
 Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:14:33 -0700
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 02 Apr 2024 06:22:48 -0700
 Received: from andy by smile with local (Exim 4.97)
 	(envelope-from <andriy.shevchenko@intel.com>)
-	id 1rrdyB-00000000oc0-1Wc3;
-	Tue, 02 Apr 2024 16:14:31 +0300
-Date: Tue, 2 Apr 2024 16:14:31 +0300
+	id 1rre6A-00000000oj8-0Wz8;
+	Tue, 02 Apr 2024 16:22:46 +0300
+Date: Tue, 2 Apr 2024 16:22:45 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
 Cc: Sudeep Holla <sudeep.holla@arm.com>,
@@ -75,11 +75,11 @@ Cc: Sudeep Holla <sudeep.holla@arm.com>,
 	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
 	Peng Fan <peng.fan@nxp.com>,
 	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Message-ID: <ZgwEtxj-qi6uy_m2@smile.fi.intel.com>
+Subject: Re: [PATCH v7 4/4] pinctrl: Implementation of the generic
+ scmi-pinctrl driver
+Message-ID: <ZgwGpZ6S13vjk8jh@smile.fi.intel.com>
 References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
- <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
+ <20240402-pinctrl-scmi-v7-4-3ea519d12cf7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -88,84 +88,89 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
+In-Reply-To: <20240402-pinctrl-scmi-v7-4-3ea519d12cf7@nxp.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
+On Tue, Apr 02, 2024 at 10:22:24AM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+> 
+> scmi-pinctrl driver implements pinctrl driver interface and using
+> SCMI protocol to redirect messages from pinctrl subsystem SDK to
+> SCMI platform firmware, which does the changes in HW.
 
 ...
 
+> +#include <linux/device.h>
+> +#include <linux/err.h>
 > +#include <linux/module.h>
+> +#include <linux/seq_file.h>
 > +#include <linux/scmi_protocol.h>
 > +#include <linux/slab.h>
 
-Please, follow IWYU principle, a lot of headers are missed.
-
-> +#include "common.h"
-> +#include "protocols.h"
+Missing headers.
 
 ...
 
-> +		ret = scmi_pinctrl_get_pin_info(ph, selector,
-> +						&pi->pins[selector]);
+> +	*p_groups = (const char * const *)func->groups;
 
-It's netter as a single line.
-
-> +		if (ret)
-> +			return ret;
-> +	}
+Is this casting needed?
 
 ...
 
-> +static int scmi_pinctrl_protocol_init(const struct scmi_protocol_handle *ph)
+> +static int pinctrl_scmi_pinconf_get(struct pinctrl_dev *pctldev,
+> +				    unsigned int _pin, unsigned long *config)
+
+Why underscored parameter name?
+
+...
+
+> +static int pinctrl_scmi_get_pins(struct scmi_pinctrl *pmx,
+> +				 struct pinctrl_desc *desc)
 > +{
-> +	int ret;
-> +	u32 version;
-> +	struct scmi_pinctrl_info *pinfo;
+> +	struct pinctrl_pin_desc *pins;
+> +	unsigned int npins;
+> +	int ret, i;
 > +
-> +	ret = ph->xops->version_get(ph, &version);
-> +	if (ret)
-> +		return ret;
-> +
-> +	dev_dbg(ph->dev, "Pinctrl Version %d.%d\n",
-> +		PROTOCOL_REV_MAJOR(version), PROTOCOL_REV_MINOR(version));
-> +
-> +	pinfo = devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
-> +	if (!pinfo)
-> +		return -ENOMEM;
-> +
-> +	ret = scmi_pinctrl_attributes_get(ph, pinfo);
-> +	if (ret)
-> +		return ret;
-> +
-> +	pinfo->pins = devm_kcalloc(ph->dev, pinfo->nr_pins,
-> +				   sizeof(*pinfo->pins), GFP_KERNEL);
-> +	if (!pinfo->pins)
-> +		return -ENOMEM;
-> +
-> +	pinfo->groups = devm_kcalloc(ph->dev, pinfo->nr_groups,
-> +				     sizeof(*pinfo->groups), GFP_KERNEL);
-> +	if (!pinfo->groups)
-> +		return -ENOMEM;
-> +
-> +	pinfo->functions = devm_kcalloc(ph->dev, pinfo->nr_functions,
-> +					sizeof(*pinfo->functions), GFP_KERNEL);
-> +	if (!pinfo->functions)
-> +		return -ENOMEM;
-> +
-> +	pinfo->version = version;
-> +
-> +	return ph->set_priv(ph, pinfo, version);
+> +	npins = pinctrl_ops->count_get(pmx->ph, PIN_TYPE);
+> +	/*
+> +	 * npins will never be zero, the scmi pinctrl driver has bailed out
+> +	 * if npins is zero.
+> +	 */
 
-Same comments as per previous version. devm_ here is simply wrong.
-It breaks the order of freeing resources.
+This is fragile, but at least it is documented.
 
-I.o.w. I see *no guarantee* that these init-deinit functions will be properly
-called from the respective probe-remove. Moreover the latter one may also have
-its own devm allocations (which are rightfully placed) and you get completely
-out of control the resource management.
+> +	pins = devm_kmalloc_array(pmx->dev, npins, sizeof(*pins), GFP_KERNEL);
+> +	if (!pins)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < npins; i++) {
+> +		pins[i].number = i;
+> +		ret = pinctrl_ops->name_get(pmx->ph, i, PIN_TYPE, &pins[i].name);
+> +		if (ret)
 
+How does the cleanup work for the previously assigned pin names? Is it needed?
+Maybe a comment?
+
+> +			return dev_err_probe(pmx->dev, ret,
+> +					     "Can't get name for pin %d", i);
+> +	}
+> +
+> +	desc->npins = npins;
+> +	desc->pins = pins;
+> +	dev_dbg(pmx->dev, "got pins %u", npins);
+> +
+> +	return 0;
 > +}
+
+...
+
+> +static const struct scmi_device_id scmi_id_table[] = {
+> +	{ SCMI_PROTOCOL_PINCTRL, "pinctrl" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(scmi, scmi_id_table);
+
+Move this closer to the user.
 
 -- 
 With Best Regards,
