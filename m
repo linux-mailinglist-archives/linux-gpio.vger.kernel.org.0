@@ -1,86 +1,55 @@
-Return-Path: <linux-gpio+bounces-4988-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4989-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 29781894FA0
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 12:10:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49BDD89500E
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 12:29:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4D06E1C20B9B
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:10:56 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6DC1F1C210B3
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:29:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BE64F5A4E1;
-	Tue,  2 Apr 2024 10:10:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdHDG0hD"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA2825B694;
+	Tue,  2 Apr 2024 10:29:09 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0A7759B56
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 10:10:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.47
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D6C655914D;
+	Tue,  2 Apr 2024 10:29:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712052642; cv=none; b=D2PNhmuOEKYWFmdoKJv1JoaXzfbvOLW+xZi/gIbW0quD3wQRkqXrAiSA4I3iWf+b+P98OjIyNxg6/pSri9+8bJeIrV951+c86eANx14gSPDYOxwYHVihrfogslMy/jh+WxgR8nluYB/wQKyjg4JfK5dUQHDNlB6Iu3+Km476KMc=
+	t=1712053749; cv=none; b=bCZFmJFWQnj2KNMt7DZOftfeMZLAL3A2r4bRATj8F2ppVrSlLUlDNk6pTiPr1dFYZP0cQo8tZn3FiwUvdoUgSRB5edvtAvkDTnjJjgF8u3PUoCmdjbj8qCocnG5d3tdot61zgVirN/9/Kat2VjrZRA15fH6yVCC7Sxjrb+bNkXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712052642; c=relaxed/simple;
-	bh=WWVfJ5cioUxz6S/7fvZQePLLUrTUQzf8HJTUqnq+zNM=;
+	s=arc-20240116; t=1712053749; c=relaxed/simple;
+	bh=rHe9zTeLCUNpEv2T8ZyDtYvDoeBuaQwap25Ev7nWSH4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Uc5JR2TK/+NNEn/Ch3Mxqlgm8jbKR7GsUm3fyGGsLBV11F88ZRlhPokltOlc5LiD3RfpoZ+J9yuLA0R3mLdzEzs2zcWMtIRH2MzFUGQhnebC6IIV2W6tXCYHFsezJ1hzlD6pLwGE9O5Mxd85ejhoJuixphUMY9ZxGhCZLFJlUB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=PdHDG0hD; arc=none smtp.client-ip=209.85.167.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-513ccc70a6dso8228721e87.1
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 03:10:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712052639; x=1712657439; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=p3dTkfTfTmTvc+VC+51bPMt1Qpx/m6tf4J512elF7jQ=;
-        b=PdHDG0hDrwftoYcsL2ubR2chrjaAZAyQvWxwE9l59a0GGaFfJeYHQjR8wZZ9sXV2BE
-         LImCsTZ+JBrpk/Gg1eDMXpjKxokHoEeA7Rb3+LMP2plPczGSc9BW0ia3B4tjj4Y0W427
-         L6aZ2+a1qPMfkegJpZgYMIRroue+Q8SOE9hZU2UdIUrZvkpD0P/rhTWxLFQNjcU5IFQs
-         eOT4h9ckhKknLXSQynhzblAWmZS9ElZ2KzEOgI9QI0GFwj3+C7gcyn+aWUhjUWm7L7GI
-         yauBvpI+LCwl86dOpBExPgVw6UzOAXBGJJqqRLxOiepl/72NICStbGNdYVJZWB9pHr5Y
-         w9WA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712052639; x=1712657439;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=p3dTkfTfTmTvc+VC+51bPMt1Qpx/m6tf4J512elF7jQ=;
-        b=MZMMt9b69K339MMOAYQ7kZhhf4ttblXS2qwJjCk3uwDs+fSSINJxGGWwUcCRv4scwb
-         DESut19pGmzbPpNDmfHq9gFxNGpksR2imGegmkLPwT1yzBgJBiqe1iMXZQvOGDEKt5li
-         PeUEq5TJ4E+bynZOz/QL66Ambdo+TTJ8VX9c5ss1mT7g64tEvUu12SxrepQmNNgDKaFE
-         6yzpB+2lbzfsP52Sa8cPLBIwdVCIBaNPJi7kL9QVySCDi2bhMAGyQ0ttSpX6fBAe661d
-         ksFJVglB+6wapMylGEcwvMe2D1Bcx8VxW07zvqdkkWFZX4KdZH/RPXQDjALkYmsoMKty
-         zwSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXJ79NYJggUW44w80A2gxp9u5BzKMMXSJ3lCQ66wuYHIeDU3ogYeVsiSG6PEDS4n1UeI2nAm10FijO5vtY0c7n0nVeZn9tm2RzJmQ==
-X-Gm-Message-State: AOJu0YyMfn/0u5WrmLQM88dsNGF8dUSoxNg3JuY/TybAkV04vbISeJLu
-	bvgPbO6g6/tLcf9f62Lo0H6JLnF1iWY/66C34UovionpBPjSRoK25+AdM545rnE=
-X-Google-Smtp-Source: AGHT+IHNkFT8bTmOdfTTgGqZjVoDCZyaezeA9aZ2HSvnF4VqQ6nRD668Hld3aD1xS3tB5xSXeI+ptA==
-X-Received: by 2002:a05:6512:312d:b0:512:fe25:550b with SMTP id p13-20020a056512312d00b00512fe25550bmr1006845lfd.47.1712052638622;
-        Tue, 02 Apr 2024 03:10:38 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id js18-20020a170906ca9200b00a4e57c8e947sm3385482ejb.118.2024.04.02.03.10.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 02 Apr 2024 03:10:38 -0700 (PDT)
-Date: Tue, 2 Apr 2024 13:10:34 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Chen-Yu Tsai <wenst@chromium.org>
-Cc: Sean Wang <sean.wang@kernel.org>,
+	 Content-Type:Content-Disposition:In-Reply-To; b=J4nLCd1lu9b9P9T0d+pIIQtw3XaBNAly2G9eSqaDBLFVlLdy8LbbQd0sT/nP5E6ZdWTBMLxZ0Fr8ox6UinB0dj46SiFt1emgcZfVV0juAEoAeEB8H9iDX4Wrce5C54sbzy85MQJJLSb0XUHxUmWn+XAMFKRBCRbgsqVk6gJ7eH0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0B7EBFEC;
+	Tue,  2 Apr 2024 03:29:39 -0700 (PDT)
+Received: from pluto (unknown [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5E0AB3F766;
+	Tue,  2 Apr 2024 03:29:05 -0700 (PDT)
+Date: Tue, 2 Apr 2024 11:29:02 +0100
+From: Cristian Marussi <cristian.marussi@arm.com>
+To: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
+	Conor Dooley <conor+dt@kernel.org>,
 	Linus Walleij <linus.walleij@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/2] pinctrl: mediatek: paris: Fix
- PIN_CONFIG_INPUT_SCHMITT_ENABLE readback
-Message-ID: <88555630-7232-4762-8215-afb65006e290@moroto.mountain>
-References: <20240327091336.3434141-1-wenst@chromium.org>
- <20240327091336.3434141-2-wenst@chromium.org>
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
+	Peng Fan <peng.fan@nxp.com>,
+	Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
+ protocol basic support
+Message-ID: <Zgvd7npz1jdJSu-b@pluto>
+References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
+ <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -89,43 +58,283 @@ List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240327091336.3434141-2-wenst@chromium.org>
+In-Reply-To: <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
 
-On Wed, Mar 27, 2024 at 05:13:33PM +0800, Chen-Yu Tsai wrote:
-> In the generic pin config library, readback of some options are handled
-> differently compared to the setting of those options: the argument value
-> is used to convey enable/disable of an option in the set path, but
-> success or -EINVAL is used to convey if an option is enabled or disabled
-> in the debugfs readback path.
+On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
+> From: Peng Fan <peng.fan@nxp.com>
 > 
-> PIN_CONFIG_INPUT_SCHMITT_ENABLE is one such option. Fix the readback of
-> the option in the mediatek-paris library, so that the debugfs dump is
-> not showing "input schmitt enabled" for pins that don't have it enabled.
+> Add basic implementation of the SCMI v3.2 pincontrol protocol.
 > 
-> Fixes: 1bea6afbc842 ("pinctrl: mediatek: Refine mtk_pinconf_get()")
-> Signed-off-by: Chen-Yu Tsai <wenst@chromium.org>
+
+Hi,
+
+
+> Co-developed-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> Signed-off-by: Oleksii Moisieiev <oleksii_moisieiev@epam.com>
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > ---
->  drivers/pinctrl/mediatek/pinctrl-paris.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> index b6bc31abd2b0..9353f78a52f0 100644
-> --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> @@ -193,6 +193,8 @@ static int mtk_pinconf_get(struct pinctrl_dev *pctldev,
->  		}
->  
->  		err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_SMT, &ret);
-> +		if (!ret)
-> +			err = -EINVAL;
 
-In this function "ret" contains a mix of different data depending on
-what the param is.  It's not always clear what "ret" means from one
-line to the next.  I think it would be more clear to say
-if (ret == MTK_DISABLE) in this case...
+[snip]
 
-(I'm sorry to the list for sending so many nit picks today).
 
-regards,
-dan carpenter
+> +struct scmi_settings_get_ipriv {
+> +	u32 selector;
+> +	enum scmi_pinctrl_selector_type type;
+> +	bool get_all;
+> +	enum scmi_pinctrl_conf_type *config_types;
+> +	u32 *config_values;
+> +};
+> +
+> +static void
+> +iter_pinctrl_settings_get_prepare_message(void *message, u32 desc_index,
+> +					  const void *priv)
+> +{
+> +	struct scmi_msg_settings_get *msg = message;
+> +	const struct scmi_settings_get_ipriv *p = priv;
+> +	u32 attributes;
+> +
+> +	attributes = FIELD_PREP(SELECTOR_MASK, p->type);
+> +
+> +	if (p->get_all) {
+> +		attributes |= FIELD_PREP(CONFIG_FLAG_MASK, 1) |
+> +			FIELD_PREP(SKIP_CONFIGS_MASK, desc_index);
+> +	} else {
+> +		attributes |= FIELD_PREP(CONFIG_TYPE_MASK, p->config_types[0]);
+> +	}
+> +
+> +	msg->attributes = cpu_to_le32(attributes);
+> +	msg->identifier = cpu_to_le32(p->selector);
+> +}
+> +
+> +static int
+> +iter_pinctrl_settings_get_update_state(struct scmi_iterator_state *st,
+> +				       const void *response, void *priv)
+> +{
+> +	const struct scmi_resp_settings_get *r = response;
+> +	struct scmi_settings_get_ipriv *p = priv;
+> +
+> +	if (p->get_all) {
+> +		st->num_returned = le32_get_bits(r->num_configs, GENMASK(7, 0));
+> +		st->num_remaining = le32_get_bits(r->num_configs, GENMASK(31, 24));
+> +	} else {
+> +		st->num_returned = 1;
+> +		st->num_remaining = 0;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +iter_pinctrl_settings_get_process_response(const struct scmi_protocol_handle *ph,
+> +					   const void *response,
+> +					   struct scmi_iterator_state *st,
+> +					   void *priv)
+> +{
+> +	const struct scmi_resp_settings_get *r = response;
+> +	struct scmi_settings_get_ipriv *p = priv;
+> +	u32 type = le32_get_bits(r->configs[st->loop_idx * 2], GENMASK(7, 0));
+> +	u32 val = le32_to_cpu(r->configs[st->loop_idx * 2 + 1]);
+> +
+> +	if (p->get_all) {
+> +		p->config_types[st->desc_index + st->loop_idx] = type;
+> +	} else {
+> +		if (p->config_types[0] != type)
+> +			return -EINVAL;
+> +	}
+> +
+> +	p->config_values[st->desc_index + st->loop_idx] = val;
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32 selector,
+> +			  enum scmi_pinctrl_selector_type type,
+> +			  enum scmi_pinctrl_conf_type config_type,
+> +			  u32 *config_value, bool get_all)
+> +{
+> +	int ret;
+> +	void *iter;
+> +	struct scmi_iterator_ops ops = {
+> +		.prepare_message = iter_pinctrl_settings_get_prepare_message,
+> +		.update_state = iter_pinctrl_settings_get_update_state,
+> +		.process_response = iter_pinctrl_settings_get_process_response,
+> +	};
+> +	struct scmi_settings_get_ipriv ipriv = {
+> +		.selector = selector,
+> +		.type = type,
+> +		.get_all = get_all,
+> +		.config_types = &config_type,
+> +		.config_values = config_value,
+> +	};
+> +
+> +	if (!config_value || type == FUNCTION_TYPE)
+> +		return -EINVAL;
+> +
+> +	ret = scmi_pinctrl_validate_id(ph, selector, type);
+> +	if (ret)
+> +		return ret;
+> +
+> +	iter = ph->hops->iter_response_init(ph, &ops, SCMI_PIN_OEM_END,
+> +					    PINCTRL_SETTINGS_GET,
+> +					    sizeof(struct scmi_msg_settings_get),
+> +					    &ipriv);
+> +	if (IS_ERR(iter))
+> +		return PTR_ERR(iter);
+> +
+> +	return ph->hops->iter_response_run(iter);
+> +}
+> +
+> +static int scmi_pinctrl_settings_get_one(const struct scmi_protocol_handle *ph,
+> +					 u32 selector,
+> +					 enum scmi_pinctrl_selector_type type,
+> +					 enum scmi_pinctrl_conf_type config_type,
+> +					 u32 *config_value)
+> +{
+> +	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
+> +					 config_value, false);
+> +}
+> +
+> +static int scmi_pinctrl_settings_get_all(const struct scmi_protocol_handle *ph,
+> +					 u32 selector,
+> +					 enum scmi_pinctrl_selector_type type,
+> +					 enum scmi_pinctrl_conf_type config_type,
+> +					 u32 *config_value)
+> +{
+> +	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
+> +					 config_value, true);
+> +}
+> +
+
+If you generalize the scmi_pinctrl_settings_get() and reintroduce a
+.settings_get_all() ops (even though unused by pinctrl driver, I am fine
+with this..), you should take care to pass as an input parameter NOT only
+the array of config_values BUT also an array of config_types since you could
+get back up to 256 OEM types: for this reason you will need also to pass to
+scmi_pinctrl_settings_get() an input param that specifies the sizes of the
+2 array input params (in order to avoid oveflows) AND use that same inout
+param also as an output param to report at the end how many OEM types were
+effectively found and returned....
+
+IOW, I did this on top of your V7 to make the settings_get_all work:
+
+---8<---
+diff --git a/drivers/firmware/arm_scmi/pinctrl.c b/drivers/firmware/arm_scmi/pinctrl.c
+index b75af1dd75fa..f4937af66c4d 100644
+--- a/drivers/firmware/arm_scmi/pinctrl.c
++++ b/drivers/firmware/arm_scmi/pinctrl.c
+@@ -317,6 +317,7 @@ struct scmi_settings_get_ipriv {
+ 	u32 selector;
+ 	enum scmi_pinctrl_selector_type type;
+ 	bool get_all;
++	unsigned int *nr_configs;
+ 	enum scmi_pinctrl_conf_type *config_types;
+ 	u32 *config_values;
+ };
+@@ -379,6 +380,7 @@ iter_pinctrl_settings_get_process_response(const struct scmi_protocol_handle *ph
+ 	}
+ 
+ 	p->config_values[st->desc_index + st->loop_idx] = val;
++	++*p->nr_configs;
+ 
+ 	return 0;
+ }
+@@ -386,11 +388,13 @@ iter_pinctrl_settings_get_process_response(const struct scmi_protocol_handle *ph
+ static int
+ scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32 selector,
+ 			  enum scmi_pinctrl_selector_type type,
+-			  enum scmi_pinctrl_conf_type config_type,
+-			  u32 *config_value, bool get_all)
++			  unsigned int *nr_configs,
++			  enum scmi_pinctrl_conf_type *config_types,
++			  u32 *config_values)
+ {
+ 	int ret;
+ 	void *iter;
++	unsigned int max_configs = *nr_configs;
+ 	struct scmi_iterator_ops ops = {
+ 		.prepare_message = iter_pinctrl_settings_get_prepare_message,
+ 		.update_state = iter_pinctrl_settings_get_update_state,
+@@ -399,19 +403,22 @@ scmi_pinctrl_settings_get(const struct scmi_protocol_handle *ph, u32 selector,
+ 	struct scmi_settings_get_ipriv ipriv = {
+ 		.selector = selector,
+ 		.type = type,
+-		.get_all = get_all,
+-		.config_types = &config_type,
+-		.config_values = config_value,
++		.get_all = (max_configs > 1),
++		.nr_configs = nr_configs,
++		.config_types = config_types,
++		.config_values = config_values,
+ 	};
+ 
+-	if (!config_value || type == FUNCTION_TYPE)
++	if (!config_types || !config_values || type == FUNCTION_TYPE)
+ 		return -EINVAL;
+ 
+ 	ret = scmi_pinctrl_validate_id(ph, selector, type);
+ 	if (ret)
+ 		return ret;
+ 
+-	iter = ph->hops->iter_response_init(ph, &ops, SCMI_PIN_OEM_END,
++	/* Prepare to count returned configs */
++	*nr_configs = 0;
++	iter = ph->hops->iter_response_init(ph, &ops, max_configs,
+ 					    PINCTRL_SETTINGS_GET,
+ 					    sizeof(struct scmi_msg_settings_get),
+ 					    &ipriv);
+@@ -427,18 +434,24 @@ static int scmi_pinctrl_settings_get_one(const struct scmi_protocol_handle *ph,
+ 					 enum scmi_pinctrl_conf_type config_type,
+ 					 u32 *config_value)
+ {
+-	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
+-					 config_value, false);
++	unsigned int nr_configs = 1;
++
++	return scmi_pinctrl_settings_get(ph, selector, type, &nr_configs,
++					 &config_type, config_value);
+ }
+ 
+ static int scmi_pinctrl_settings_get_all(const struct scmi_protocol_handle *ph,
+ 					 u32 selector,
+ 					 enum scmi_pinctrl_selector_type type,
+-					 enum scmi_pinctrl_conf_type config_type,
+-					 u32 *config_value)
++					 unsigned int *nr_configs,
++					 enum scmi_pinctrl_conf_type *config_types,
++					 u32 *config_values)
+ {
+-	return scmi_pinctrl_settings_get(ph, selector, type, config_type,
+-					 config_value, true);
++	if (!nr_configs || *nr_configs == 0)
++		return -EINVAL;
++
++	return scmi_pinctrl_settings_get(ph, selector, type, nr_configs,
++					 config_types, config_values);
+ }
+ 
+ static int
+diff --git a/include/linux/scmi_protocol.h b/include/linux/scmi_protocol.h
+index abaf6122ea37..7915792efd81 100644
+--- a/include/linux/scmi_protocol.h
++++ b/include/linux/scmi_protocol.h
+@@ -882,8 +882,9 @@ struct scmi_pinctrl_proto_ops {
+ 	int (*settings_get_all)(const struct scmi_protocol_handle *ph,
+ 				u32 selector,
+ 				enum scmi_pinctrl_selector_type type,
+-				enum scmi_pinctrl_conf_type config_type,
+-				u32 *config_value);
++				unsigned int *nr_configs,
++				enum scmi_pinctrl_conf_type *config_types,
++				u32 *config_values);
+ 	int (*settings_conf)(const struct scmi_protocol_handle *ph,
+ 			     u32 selector, enum scmi_pinctrl_selector_type type,
+ 			     unsigned int nr_configs,
+--->8-----
+
+Please check if this addition sounds good to you and integrate into v8
+eventually...
+
+Thanks,
+Cristian
 
