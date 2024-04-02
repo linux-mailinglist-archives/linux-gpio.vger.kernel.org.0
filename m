@@ -1,121 +1,118 @@
-Return-Path: <linux-gpio+bounces-4979-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4980-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF100894DEC
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:50:34 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27AC1894DFE
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:51:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8A347282C8F
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:50:33 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 51C691C228D2
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:51:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A27C56B89;
-	Tue,  2 Apr 2024 08:50:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35BBD535D9;
+	Tue,  2 Apr 2024 08:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="feF4YrKc"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="fZ+Mu4f8"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f46.google.com (mail-lf1-f46.google.com [209.85.167.46])
+Received: from mail-lj1-f172.google.com (mail-lj1-f172.google.com [209.85.208.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61EC256451
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:50:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70A534CB4A
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:50:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712047814; cv=none; b=RwKo/5ec74rYNms+BXpFl/lNyvQ1SDUaHZSFqX+QUPFINaYULoIOl+xr86eRUz/wLlP3JY2NdShqVc/NVCc6q6LwBI04LQOO/1mypDnobnFuDad0VnvCDgkxuzNTrVhAOX4WvD3uHSK6Yeorlxi4Y4NrvZbkYSMrQBbdT5ZzUTw=
+	t=1712047857; cv=none; b=sFcEvdPN0K4fqIvdTKLXz0ifzGQq+fQFq4ywRoQwF8MVSlUXZ80c4GUe8rekJUO12imK7Efjapo5JpvAeJkpmSrYofgynf0BXUJJQOcCirMh69/16IsdaVe5clsEqav70cJE2rdQ9Pbri6vJ5MkSSzWgbjZ3RTYPaF5b2jowAGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712047814; c=relaxed/simple;
-	bh=b2/5wE1yEwkP0HttKjeaTzoQ1ndvbDbH7ChWswL5hUo=;
+	s=arc-20240116; t=1712047857; c=relaxed/simple;
+	bh=d56KSz8sH4cc/CJcFH4xN0gZ6zRS/QTrszJ0H2z6WYU=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Jwbq0p+wH+dYWG5yjLbY/FfWC0saR2Hpk3f4XC4NmCbhPFFcohkJtq40ZCf6Z11D3/LgghP8VTPNt/OQzeVHKSeLtC8byNpk5WGpWN5ZMLuujJYcO3MRj3fjmRYgktB/JIVO7oCck8SfkZ7JjG6z7sV1p0opyzmoyJ0QjESppmc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=feF4YrKc; arc=none smtp.client-ip=209.85.167.46
+	 To:Cc:Content-Type; b=LtRSAhbYw+d3B4b8lqAf5DvznKdXr+UkGeokuTJEej7dziHhuY3iy3+iMqRW+mDGhisz2zvrkX+mdhFBBB975+/Ctu8UlhFTVb1n+j6jPOQChaATqAcNarT22RA3qC2nrMwt7jIeVrM76y7WWppBDYG26juyYih7i+jfMlIZV2A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=fZ+Mu4f8; arc=none smtp.client-ip=209.85.208.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f46.google.com with SMTP id 2adb3069b0e04-515d55ab035so1757762e87.2
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:50:13 -0700 (PDT)
+Received: by mail-lj1-f172.google.com with SMTP id 38308e7fff4ca-2d8129797fcso27841291fa.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:50:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712047811; x=1712652611; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712047853; x=1712652653; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=beOpGT1BPMzUzerIhx34u+wlWdi9LklhjtlLJFBuyHE=;
-        b=feF4YrKcG0jVD59pgWUzBhUafVjsSW7ppfJfR+zo0Yxdstn9Cs1H6HBSpaYGpspJ+c
-         eWKGIOoebto4H+DM71THkG9k/P2AtqXKQMi1o7YNWW6l6Cgy0LRJAYxhV2hsLfhl9bkF
-         /o4eLNDDqRxTCNUSqYtXj6ikq80gF/onQLdr1T3k0SqQrbKvFzIcGYdkQ0Sxofy1BnPK
-         nZrKd7JXqnakMwIn3D4kypYF/tqQEvMVasJEyGyKHRN54qAbb76F0a40mrz4RyhdOfZg
-         TXBQHcD70U0aPE4c0GZpFSh1K+UgupPX8w31h1uKPf6kcem6pCiRJYuiO9gu4iuVFCNn
-         6MEw==
+        bh=wv6+xX61JtxGpKWZ45wliW2pFq+S5fBIUaTwceo8xO4=;
+        b=fZ+Mu4f8Zv0Se3wyF76ZSUh2LSawVq9Xlnx6CMHyso6UY0M6IxFizcenlEQoi/eqq9
+         oTpmzdbIVXFSJFjgwRp261n9N8+sasNx2AK0z66AVin8RRUIhD98g9qtN+OmQv+HwXcR
+         VUzA42gllfP6CaraHvKbs1K2eiGKGQ2TVAGokFvuZpHUz6bOlFrUWj+64db1+mqu1O1h
+         UD/q8qfv1SUkEKn1wTHpbadrh6X6JFi7Rx+f6Ya/sVTTadcDcp0QlG9JfY8rylpOiB8F
+         3Wiq6T+nVEuqo2qcnNg3UUbps4Do1iLUQ4vhL9sD2Fszzv9FNadkDJ6bAjkLJHYm5E9I
+         p3Rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712047811; x=1712652611;
+        d=1e100.net; s=20230601; t=1712047853; x=1712652653;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=beOpGT1BPMzUzerIhx34u+wlWdi9LklhjtlLJFBuyHE=;
-        b=qwuXZ+oBB/NZEg5vlRR+PsgVuAlY63fuYNqXir3xgyVaJF9aJ1GWnqDKgF8B61uZns
-         6X0lKgETLOFPsAX79Cw2dywfx7mnpOmNblhq/XlPs5zfIjpNDewHsp7mZJ+3U0RbdmRf
-         BVT9SowttgbW9l1hLjrr5F6aY56shjwaPsWrBCqlDYhx9CDBMq/xRLYHDhEMcwuHMXFM
-         x4ATLcYUlR/hTiOuJ167YZSxfIPaKNYSDERN4KDVHnJumPvvsfm5KUnDYHAF9mG4T2N1
-         RU9of/0l2v30vCmrkYf4gT3dWKz/ByHzjKLZhGT+c0OPC+bhpiAYgMuxc2fIXtUknMRa
-         AHjA==
-X-Forwarded-Encrypted: i=1; AJvYcCUMMst2Y7wytrwIlQ0AbUKwJBryNqgdpLpt+ktaUOYKDugCEQj0VmKZbstWdl916MECyEEB1J8BsTzgg7FDEvtD7PsZODy/Kgs/0g==
-X-Gm-Message-State: AOJu0YxxJ6DvT75vFA2m8da89GYuM8MRfuTQ7M+rWEoPXhO3qddqQoBo
-	jP/IHM9Ow8Os6Uh0qBi8uU3GRzQw1fU0N1w4spthuvGW1qJu4ggIxpuzYlvE4olY8+/mZUkPpmy
-	LxmKY+igH1rEC69XXOVmHz1VrGslvR6+Bjg/P2w==
-X-Google-Smtp-Source: AGHT+IHe76+zDe7cVdgOiSqvxf958Lt0oux0QPrVSIMhTf7pRv5UnwH+O+W1tzopKaMsZ4SB8smLNO/M63F1ErCoYZk=
-X-Received: by 2002:a2e:9e87:0:b0:2d5:122a:4b1f with SMTP id
- f7-20020a2e9e87000000b002d5122a4b1fmr7525841ljk.43.1712047811681; Tue, 02 Apr
- 2024 01:50:11 -0700 (PDT)
+        bh=wv6+xX61JtxGpKWZ45wliW2pFq+S5fBIUaTwceo8xO4=;
+        b=v8pHnn5qQ+xFPCYr3jNJuqOruDKQO+rcOwT7Hp919rwyKzuGYfLOiUJ82BQM2AD5/+
+         nAFhmcX0HPzj3ZmqTuQmD5kf+mqeDyDaUUJ5dq7ODsYodkwBbiSUNb6xil5ymrhEhiT1
+         4xm3x5n0ZW2MADV7un5HCCIcs8sizlIWJJ++4hpJ+0EBmS0xGgxToZIVnMZtHw9Fq0oQ
+         6bUhKVilZN7Tq/JzZxwwTCMdIG3ausPWtI9fBrDkpqdfREpS6kxk08fSD6+aDZb9w4pv
+         hid3IcDRVvMyk5Ah5LVuitNg/j6gJRtKQxqMA4f1bGLOQaML+SDWOl1YrFJfCjgRI1gk
+         AZPg==
+X-Forwarded-Encrypted: i=1; AJvYcCW9I+BF9NTHx5FXotcABvjm06eJAW1iX5wpuO1NvzOaZvR+E+e9YI51oNC5LEe1iiFquKuWdJ/V6L+RR1bfBG7icCq8I3Gs0QDIIQ==
+X-Gm-Message-State: AOJu0Yxh74ntZqkNPzaZsXxvWzRjaOOEG8luOMG1T4nfxoV0fljw7LqJ
+	ytcw9J1TxWMdQ+/xIRvPcnyc5VrUMKnj8DN1oUELIQCETl0ju4h2XWAqHbtimctdywzsMY7RDGq
+	U1e5l7mfN60DJEwgL1opJ17LehFrxvda3LMPO8OI9zwAZ4sjS
+X-Google-Smtp-Source: AGHT+IGduSNxIydN/eNgINSn+xOiMxlwqSzSVthVPSafiIs8o0sXpk5/cAWBdV4gf12hs+oVvORpHioikkxS0Cer+n0=
+X-Received: by 2002:a2e:a7c3:0:b0:2d4:3e82:117e with SMTP id
+ x3-20020a2ea7c3000000b002d43e82117emr9024835ljp.32.1712047853624; Tue, 02 Apr
+ 2024 01:50:53 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240325171804.3375280-1-andriy.shevchenko@linux.intel.com> <20240325171804.3375280-3-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240325171804.3375280-3-andriy.shevchenko@linux.intel.com>
+References: <20240329144318.376939-1-dlechner@baylibre.com>
+In-Reply-To: <20240329144318.376939-1-dlechner@baylibre.com>
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Apr 2024 10:50:00 +0200
-Message-ID: <CAMRc=McE-CcRrWpa6Zw_5NGgYJhg+4Ru=uqcaW_WeQ_P25utgA@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] gpiolib: use dev_err() when gpiod_configure_flags failed
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Peng Fan <peng.fan@nxp.com>
+Date: Tue, 2 Apr 2024 10:50:42 +0200
+Message-ID: <CAMRc=MfUQ5+Tq3M8=gABA_t+bumWs8=5RZ8gVJXxFLg0cvcMpA@mail.gmail.com>
+Subject: Re: [PATCH] Documentation: gpio: fix typo
+To: David Lechner <dlechner@baylibre.com>
+Cc: Kent Gibson <warthog618@gmail.com>, Jonathan Corbet <corbet@lwn.net>, linux-gpio@vger.kernel.org, 
+	linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 25, 2024 at 6:18=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Fri, Mar 29, 2024 at 3:43=E2=80=AFPM David Lechner <dlechner@baylibre.co=
+m> wrote:
 >
-> From: Peng Fan <peng.fan@nxp.com>
+> EOPNOTSUPP has two 'P's.
 >
-> When gpio-ranges property was missed to be added in the gpio node,
-> using dev_err() to show an error message will helping to locate issues
-> easier.
->
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Signed-off-by: David Lechner <dlechner@baylibre.com>
 > ---
->  drivers/gpio/gpiolib.c | 2 +-
+>  Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index b98cbf4335e3..5589e085ba25 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -4236,7 +4236,7 @@ struct gpio_desc *gpiod_find_and_request(struct dev=
-ice *consumer,
->         ret =3D gpiod_configure_flags(desc, con_id, lookupflags, flags);
->         if (ret < 0) {
->                 gpiod_put(desc);
-> -               dev_dbg(consumer, "setup of GPIO %s failed\n", name);
-> +               dev_err(consumer, "setup of GPIO %s failed: %d\n", name, =
-ret);
->                 return ERR_PTR(ret);
->         }
+> diff --git a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst =
+b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+> index 56b975801b6a..6615d6ced755 100644
+> --- a/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+> +++ b/Documentation/userspace-api/gpio/gpio-v2-get-line-ioctl.rst
+> @@ -81,7 +81,7 @@ Only one event clock flag, ``GPIO_V2_LINE_FLAG_EVENT_CL=
+OCK_xxx``, may be set.
+>  If none are set then the event clock defaults to ``CLOCK_MONOTONIC``.
+>  The ``GPIO_V2_LINE_FLAG_EVENT_CLOCK_HTE`` flag requires supporting hardw=
+are
+>  and a kernel with ``CONFIG_HTE`` set.  Requesting HTE from a device that
+> -doesn't support it is an error (**EOPNOTSUP**).
+> +doesn't support it is an error (**EOPNOTSUPP**).
 >
+>  The :c:type:`debounce_period_us<gpio_v2_line_attribute>` attribute may o=
+nly
+>  be applied to lines with ``GPIO_V2_LINE_FLAG_INPUT`` set. When set, debo=
+unce
 > --
-> 2.43.0.rc1.1.gbec44491f096
+> 2.43.2
 >
 
 Applied, thanks!
