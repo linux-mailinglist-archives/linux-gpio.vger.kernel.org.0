@@ -1,112 +1,120 @@
-Return-Path: <linux-gpio+bounces-4992-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4993-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FFE58952F7
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 14:30:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2B6D4895302
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 14:32:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DEAEB28474C
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 12:30:22 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id D543E1F263C5
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 12:32:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 086FC6E602;
-	Tue,  2 Apr 2024 12:30:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A7A379B87;
+	Tue,  2 Apr 2024 12:31:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mc3r2EQe"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AcFkuFOJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f174.google.com (mail-yb1-f174.google.com [209.85.219.174])
+Received: from mail-yb1-f175.google.com (mail-yb1-f175.google.com [209.85.219.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 462A22D78A
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 12:30:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02AAF22067
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 12:31:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712061018; cv=none; b=gPEMPp/yv1aPpcCNWs2l67ECUQdgI0w2VZU9vtV0wPNm98Fl41tzW2ceejyx6V5QNpTBGrz00CXHWhJHwtNjqZKu7Ol2g3tff04oiinJ8IlNy2uM9YjSH+HiqmXsOeGQT2VMNtLyhL2qpi7n3YfcpNzAPpfZzNuF/e2KdEmLeJg=
+	t=1712061111; cv=none; b=euPORxoWvd9sDnr9hFw2O4kFWS9Gxzr7XZ9OAT/ZOsCUiCB7xCJjuPNTmWmuvFW7K0kl6EPC1gnGs+AI+ieZbi5j7wnsx68nYkCyE5R7WXXYL7E3Fsqn20jt4QRp5cjxd7+4fOxPcFDnhM8i9oZrMsrZR8X5bMwN/l8+q02FUGs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712061018; c=relaxed/simple;
-	bh=Zs7RYzJuxbghkdLPqGTx29qLDxS9pI02mK9pwl5L2Vc=;
+	s=arc-20240116; t=1712061111; c=relaxed/simple;
+	bh=p0a8acw+7ULihTf8lE/ghLH059TUPnJn47JiEnYgccM=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=DFyfteqtt+ZIf4BCLZJUSn6FEj27hc2grQEj95VX4DB9Jp7w2iTwf+wX6lGvJnmVgW7mAexWW34B6VI7O54Z1AfibqCzfb9SivRZA7xJgDLdOVbis28foWxTkm/Z3EtKUqKTOi57U5UX8mYwI41H7AMwojvOgW0akpsLSoLCRus=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Mc3r2EQe; arc=none smtp.client-ip=209.85.219.174
+	 To:Cc:Content-Type; b=mi+dHa1y6vRa+racVOakpBd0Y3y7B+dldh3jWc8rpCML2i2V1GVcFHQ3eVRH6UUPhUrsGD29mn0PMLqOPiqj6PNJQjrLHlURHsqZY8kQukW9xSO0/QstY4W9IIvk3m5HFep85fBOb3QZIoFuCs7jXrOqcyyVdzAVsQ/JvEF4euo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AcFkuFOJ; arc=none smtp.client-ip=209.85.219.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f174.google.com with SMTP id 3f1490d57ef6-dcbd1d4904dso4703952276.3
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 05:30:17 -0700 (PDT)
+Received: by mail-yb1-f175.google.com with SMTP id 3f1490d57ef6-dc74435c428so4878987276.2
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 05:31:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712061016; x=1712665816; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712061107; x=1712665907; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=mIcPIkXXOlhDttAffO2gh5drI+8AQ9cgDL80itbQeww=;
-        b=Mc3r2EQef3j/j0PJ/EZzAut1j/h+so5o6H2qGqCvmQ9aDQody/BCsAQjCJhBOnUe6M
-         wIDXLuZcHFW4IHuhdHEL5uBbHM3RcvQqd1RGxD1qUwAa+3c2sOHpn713S0D8DwCMhhmK
-         nqfVaYTcbW+T3VGDELI/a0BAPdPB7ApZr8m6a6k/Sto7kJvZMh9Uw7Jkm5HVhW4gWZWS
-         5OwVvoYdi9/rGZYHT8dIvOIg8/KINo8b8GG54u1tgZvqyzwJEngCRYJKBBxBPLkwcDxp
-         Q/N7+2D+PuIMgqmGdnViYq0phkFdTSVkePeFodMIovaYkUc/6jCUmn43nNy8yyIhb8A7
-         PWpA==
+        bh=p0a8acw+7ULihTf8lE/ghLH059TUPnJn47JiEnYgccM=;
+        b=AcFkuFOJwh6/OSIC2P6CN+t5N8yM49Tio8HVEsm9NC1HNJCNNVgKc2/Dkb3jTefFL6
+         SeBWPt1GUPkHUPEA9RAVg6Y+DQem3a2hYwXwjdeecWrWv1EQEpH1aiq0vqDRzLrTDWLD
+         1qUj9oYWttSSh3vHU7vuM4JujJOGMQU2euPPH0oeogAB0iOKUCfie3ASXqXjXmrOxYfH
+         zU+INEwdROhwLAR4DP9QoG7ndxdwbChFbCZ1efkgoIr88olR6HnpsCdY87zdd2smTu7N
+         95DuzmryhyQFqmoxoACsUTZSFgUpsaITa1qGf6PmP71lC3NJQ3G4i7kG2ZqihM8JjY2+
+         MWPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712061016; x=1712665816;
+        d=1e100.net; s=20230601; t=1712061107; x=1712665907;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=mIcPIkXXOlhDttAffO2gh5drI+8AQ9cgDL80itbQeww=;
-        b=n7yNIHNDoWQ0//Q0vuM9iOG0GsBp6tDPutduIq3QeLDc2wNTsd9CW4eoa4bBh+oHye
-         lbTVAnPa4we18IEx9ffkZA6OWgLeDKUUJpR+oqw1V82MpyNeQiDq0WYAt/+8cl73D9gb
-         M4u2TXwDeQEsNnDuKwf4CFOUhOII/7/FfRsXsO+NYUIcgkuY98rK8T4N3KqfiE1vMFXp
-         foe8n/Y4ug1Z+2+2fmw/w/gjmYFn0zhMNSb5HY7RcUHQyv6VNyF6j/0AypHEeqKZxeeA
-         qCDvXaP3V9TM4jtnO7IfVYXHNjoiEZ8ljiRo+6s+5CBTgcor1FmBbowTExli8+aCMbak
-         P7bg==
-X-Forwarded-Encrypted: i=1; AJvYcCVqOa4XjdBfAMkQyOPE7lSbGzu7l712Z0p1jTKUzAE7ztGKtWPKE/0UvrbBt7FmUxo3cGBqfGGyAOJNhRLHdDYM7e6cwCNRPEZ0/w==
-X-Gm-Message-State: AOJu0Yyt+YRmRabtDA/aBVbdbzcEsxfk5GOfgpTDLGCepcbO8Kl2ld6q
-	mbMH6+nMNGLHFiCj7WWyW1bwwR60UVRNQg3OUJaJk/tDswiLuGmZpg8COwvohuUNI4EFxHxtUb+
-	lNSE5piCLHY0pbDC2itoVd/KMpIHioGsOQI9ZuUXaCm3riDTq
-X-Google-Smtp-Source: AGHT+IErRszW5P64U+kk4mUR3NVbU4m6Fv323kf9eS0aVuwmDLT5AdRvQYEQHF2q6E575YZZsy2hpqyd64ENJXefK/g=
-X-Received: by 2002:a25:807:0:b0:dcc:a446:553 with SMTP id 7-20020a250807000000b00dcca4460553mr9476757ybi.57.1712061016321;
- Tue, 02 Apr 2024 05:30:16 -0700 (PDT)
+        bh=p0a8acw+7ULihTf8lE/ghLH059TUPnJn47JiEnYgccM=;
+        b=BHne3h5JTlh+7T/PaDM46LqHIr2siUTKcXteKCywu6uA58qnBgqHS2TPkQRGpUc0fx
+         rFbcwAQOJqmorjuPD7sJqgokKKwIjhv+LdNySELqCP4l7QSXJjKFJsPUEO2mDad6Hoc4
+         Qhzzq3+Qnta1bpipMrLh4xZbrTKkEZjb9ARdsleDneE9+KIqYQJVvl1s9vvUqgMluwNc
+         c5yXsrcFJTbNKPL+cQ+677ya8QmS0ZCL+Co5GK5JqhT4pRUz221BWl+i9oyAYMF0bDgx
+         VrFhhyUkrM9yE58x7IQ7VcF94IIvMGy/fTQFfjKboW3NoJbmWujakg1gW8BPxkknG3T8
+         Zw7w==
+X-Forwarded-Encrypted: i=1; AJvYcCWwxaFfQxUZkRn//T7rrm/6dF9+VUoUjcmZ32kd1DCaJg+66IGTxjaC6X6PwFz4cpFkk6IAoJn+Je/vxsnW/tEjbNfX7o3L23vZPQ==
+X-Gm-Message-State: AOJu0YwycDyK7dS61KRDNqtFQHShXYmVLU2fGf0/Rhyz++XATEUndarp
+	ZA1nYhUY2jfK0DgjWNLQM0KU1UnMq7t9r7tyVmTj8xdRjaHxlmivWbcxG78MvjmpOfIEko73E7v
+	6OF8ACNDpthNHboq1LrWy8my/kiyixcynvmWMLA==
+X-Google-Smtp-Source: AGHT+IE0J84TqRbakQrC6l14h9si7x2di9LmRSJuCIgA2LQ8vJmxYu7A/iE7PWTtStw1Hw8SCsS1GQo4L/akposnPKg=
+X-Received: by 2002:a25:a14a:0:b0:dcb:b3dd:4f95 with SMTP id
+ z68-20020a25a14a000000b00dcbb3dd4f95mr10698210ybh.43.1712061107020; Tue, 02
+ Apr 2024 05:31:47 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
-In-Reply-To: <20240322-gpiolib-find-by-fwnode-stub-v1-1-05a0ceee2123@kernel.org>
+References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com> <tencent_6D10A9C63E3E0F412EED33477B5CDB98C207@qq.com>
+In-Reply-To: <tencent_6D10A9C63E3E0F412EED33477B5CDB98C207@qq.com>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 2 Apr 2024 14:30:05 +0200
-Message-ID: <CACRpkdZn+eZEa62ZjttxS3sgT63t5bRtpueFmrG3fsrqDw=xSQ@mail.gmail.com>
-Subject: Re: [PATCH] gpiolib: Add stubs for GPIO lookup functions
-To: Mark Brown <broonie@kernel.org>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Date: Tue, 2 Apr 2024 14:31:36 +0200
+Message-ID: <CACRpkdY1wpGM7M5QV5rN0M6JMN_yugQJ7CEtnQjzsheD5AT23A@mail.gmail.com>
+Subject: Re: [PATCH v6 08/11] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+To: Yangyu Chen <cyy@cyyself.name>
+Cc: linux-riscv@lists.infradead.org, Conor Dooley <conor@kernel.org>, 
+	Damien Le Moal <dlemoal@kernel.org>, Rob Herring <robh+dt@kernel.org>, 
+	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org, 
+	linux-clk@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Mar 22, 2024 at 5:14=E2=80=AFPM Mark Brown <broonie@kernel.org> wro=
-te:
+On Sat, Mar 23, 2024 at 1:13=E2=80=AFPM Yangyu Chen <cyy@cyyself.name> wrot=
+e:
 
-> The gpio_device_find_by_() functions do not have stubs which means that i=
-f
-> they are referenced from code with an optiona dependency on gpiolib then
-> the code will fail to link. Add stubs for lookups via fwnode and label. I
-> have not added a stub for plain gpio_device_find() since it seems harder =
-to
-> see a use case for that which does not depend on gpiolib.
+> Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+> SoCs is already on the mailing list [2,3,4], we remove the use of
+> SOC_CANAAN and introduced SOC_CANAAN_K210 for K210-specific drivers,
 >
-> With the addition of the GPIO reset controller (which lacks a gpiolib
-> dependency) to the arm64 defconfig this is causing build breaks for arm64
-> virtconfig in -next:
+> Thus, we replace its drivers depends on SOC_CANAAN_K210 and default selec=
+t
+> when it has the symbol SOC_CANAAN_K210.
 >
-> aarch64-linux-gnu-ld: drivers/reset/core.o: in function `__reset_add_rese=
-t_gpio_lookup':
->  /build/stage/linux/drivers/reset/core.c:861:(.text+0xccc): undefined ref=
-erence to `gpio_device_find_by_fwnode'
+> [1] https://lore.kernel.org/linux-riscv/20221121221414.109965-1-conor@ker=
+nel.org/
+> [2] https://lore.kernel.org/linux-riscv/20240305-praying-clad-c4fbcaa7ed0=
+a@spud/
+> [3] https://lore.kernel.org/linux-riscv/20240305-fled-undrilled-41dc0c46b=
+b29@spud/
+> [4] https://lore.kernel.org/linux-riscv/20240305-stress-earflap-d7ddb8655=
+a4d@spud/
 >
-> Signed-off-by: Mark Brown <broonie@kernel.org>
+> Signed-off-by: Yangyu Chen <cyy@cyyself.name>
 
-Since we have already exposed the innards of gpiolib as much
-as we have I guess it's a must:
 Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+Is this patch something I can just apply to the pinctrl tree?
 
 Yours,
 Linus Walleij
