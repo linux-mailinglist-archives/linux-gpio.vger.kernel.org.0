@@ -1,251 +1,179 @@
-Return-Path: <linux-gpio+bounces-4998-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4999-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0DC7D89555D
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:28:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D38B895593
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 15:42:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B7F4B28F296
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:28:24 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 332EC1C20BAB
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 13:42:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 84BCB86622;
-	Tue,  2 Apr 2024 13:27:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BA72085283;
+	Tue,  2 Apr 2024 13:41:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="bdy2tBsN"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PIN+aeL1"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from EUR05-AM6-obe.outbound.protection.outlook.com (mail-am6eur05on2121.outbound.protection.outlook.com [40.107.22.121])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27B588593F;
-	Tue,  2 Apr 2024 13:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.22.121
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712064445; cv=fail; b=aebcBwzNHkmrj//GYAY5KcHINfqQCu8ELWHbI29U7IzTwlDO+KeV+mWpDYstBydovOmscTB9iXF8AjPSfUIMu3fedDHdGZPtjBxgFiQqX0ztSmpOPU1b9FER2HdYVkwkryWOsj44WF/Cgqh6d/R3KkHjemxXBjH3jgmhcwcHfJM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712064445; c=relaxed/simple;
-	bh=KG/NLtQEO2PxpCeWJC+6m436ugeUk7JMWwJY5os1ohs=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=BJ0oUkbYgtl7cL8nMVlzMuhfGeKTVDklE/1Q8/65Tv9hpYru3fQCziHjEL3nTW+vBhEAclvwYbsS1I36hrRMgZ1K2gBWUKx50sKxRmsVfU2m8rj1+tMZ7WCBHU1pbnSweyNSjPkudBskOBNnECOLw4ifoPPkA5yxR6nIbfkf+gY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b=bdy2tBsN; arc=fail smtp.client-ip=40.107.22.121
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RbvWpQIxt1oc5jpGYSxYatrKnG1hZGBU33VrRN5u9kZ8qsHbDht7vGC6WvAr0UYTf/wFtNePxwkRBbC4+ErnlxHQbKEfct7z7EwDbVk66pe49ub0qqqoTXqgq+gob/AVt4O6j/hLRLvHLO1gqVrSD4bgRndDrm/vKOP7v4zHKxAPtJWVpQ8/X9VITWWtqlp0eUn1bNETn5ab1Y/ne2v0ui3Onstcpoxuomu8rszw65Dgm6ySshG70ymbXutTxrk6lSHG5+FjoJSoq1dQGZ9SG7DJAanOUxPsH6Paq09Bsm/3nA+092LD5JoZyU6ATIK5FV80VLzA1qxUPGAFCHc2cQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=RV7THYemy5hvntRIZCYocas0C6dkPEYCi1+INXXRZ44=;
- b=PXMa1nHdz/t/YsGD+q+hh9pvXijA/QzXFSUhKi0Ch7i1IQO7rS1lsaYzum40jIXa8wvWlpVN2BWrQXX6gdZC7TlK/CnyseGMuUCcydCfB3FJMn5BGzuAGlTcF+TupIQwdf1Lf7gRtWIMmyAZuHK9julvNHbphUsP85GwEU2M35BXkI/H6RvWSj3i0loBM4YrRCprLV++UyzKMu9EhGGxs71YinBKvayTDFbFJVyuNfMOX4svQ1Vw9ApLero24w4YOmqfm1LNhEAxi9+hmKg4BxsMIn0isg2fc6CheN42MUeHurwwXrI0KcwwkksSLx/nO+iSRCnNiEOb8uDhjZC8Ag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=RV7THYemy5hvntRIZCYocas0C6dkPEYCi1+INXXRZ44=;
- b=bdy2tBsNGxr1D0r+DyGK/iEl17xjJlz677t9N+LfF4epbN80CQrR67OUpWb7HgdclNjbgjiBfugKylm3pvAEz7eeyLIYHmH/tVyQI+d2JZgL6PtoOXx11pIclVTYcgJQc7jTCGTqmRNp6xN8cIn4pKtPSubv83M4Ix9DEn4BOYk=
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com (2603:10a6:10:358::11)
- by DBBPR04MB8058.eurprd04.prod.outlook.com (2603:10a6:10:1e7::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Tue, 2 Apr
- 2024 13:27:19 +0000
-Received: from DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d]) by DU0PR04MB9417.eurprd04.prod.outlook.com
- ([fe80::d30b:44e7:e78e:662d%4]) with mapi id 15.20.7386.037; Tue, 2 Apr 2024
- 13:27:19 +0000
-From: Peng Fan <peng.fan@nxp.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>, "Peng Fan (OSS)"
-	<peng.fan@oss.nxp.com>
-CC: Sudeep Holla <sudeep.holla@arm.com>, Cristian Marussi
-	<cristian.marussi@arm.com>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzysztof.kozlowski+dt@linaro.org>, Conor Dooley
-	<conor+dt@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Dan
- Carpenter <dan.carpenter@linaro.org>, "linux-arm-kernel@lists.infradead.org"
-	<linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>, Oleksii Moisieiev <oleksii_moisieiev@epam.com>
-Subject: RE: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Topic: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
- protocol basic support
-Thread-Index: AQHahKOBYTQv1KoiVkioSbRA3lNLQLFU9h6AgAACEtA=
-Date: Tue, 2 Apr 2024 13:27:19 +0000
-Message-ID:
- <DU0PR04MB941780B4C28DB353C64966F8883E2@DU0PR04MB9417.eurprd04.prod.outlook.com>
-References: <20240402-pinctrl-scmi-v7-0-3ea519d12cf7@nxp.com>
- <20240402-pinctrl-scmi-v7-3-3ea519d12cf7@nxp.com>
- <ZgwEtxj-qi6uy_m2@smile.fi.intel.com>
-In-Reply-To: <ZgwEtxj-qi6uy_m2@smile.fi.intel.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: DU0PR04MB9417:EE_|DBBPR04MB8058:EE_
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info:
- TfoIOAel3JNtqCCcY/R3sdkh4bneSDq41cPVRp4JbOIjCfQ563C1L2S+xHgYtTFj46Y5Dfyno8/lcWxZdCMZOZsDUWfUyr76+TdD1tMDUhnVKJJ5+7CwOgnGYstTRVwGExst/wlwm5b/JhrbnDIJ28RC5B29hCbAIRgRCUeD+/Ygqh4X6liMZTSbUOmIsSRkC7YvEoZUpEG3topPJkA8ypN7B9FMy2lLIr5DJ9qaU1FV/29NWrf07RY5YEEBDdJGkqW1YxWgHGn+xONONO5sSpePlpkHO1mpiRghKF8oxKGxKEMVe7WSqTWfW8t5ZJ/3iH8BACfySrF/CWvgSUXUDUXwEnFHk8yXdVmtnRsHjaa392oURzFkKWRofc6rsl/+vaIo6rEdd3r1vKG1yidJILIhF5JK2Gq31nR7zZiZrcL9OTOqnXs21aY/bhYacjj0cfXD1M57PaAIqdyi4iN490riOh8FrvImjuQkgCh0L6D/BcxuOYbbU5+8DijIYZD3ul/4i/dDUAGRWOOvYPYGN5jJZI5iFGN2ijObNxbt4F9MWDFv9Vv1oYqlYAyBOG2ivlYb2mZXHYZHylDe3f/qYfBx6sW17HjR1jS+DVsZtLE=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9417.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(366007)(1800799015);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?us-ascii?Q?AkLa5wqYT/teBhPzwEHU+RZAwCFunnM9ZyBelP2irwUo07feuiJjiY6mbqzI?=
- =?us-ascii?Q?Cyq9LxKhp3EozGtOAHy5qwDSejhKKSk7Z5IWMT5RAdCGUz9xUC/+aOtOIZ5+?=
- =?us-ascii?Q?dKjOpbXwa2EgNSpR1SXkvmvoPz+onfz7kBwO/a7fyn/9PEBNR7qyHTQMHQhU?=
- =?us-ascii?Q?7etiFJe9hLrIud1y6PBgysSBAYxUaqKdpbAJQzojEKvjSUr7rSlInqshtGCH?=
- =?us-ascii?Q?WR4XBQWH7SQZoBeOD4/HzsCmYU8HteS35K7ailra/6boT5jhbBOEDtOoaEXC?=
- =?us-ascii?Q?7UxIHac2VbsUUYyrcmTCc767F4136NCZboYRX1ZRauxoSFK1do2JkO35SJxd?=
- =?us-ascii?Q?TlgWb6X+tQm0bjKMIn397XAK9wvAsLStg8slOTTMyuB6TEhMJv7+liJgx7eV?=
- =?us-ascii?Q?hSUeoFXtv93atsnIe3RvQi7qFp8BPs4Bcp3mgub6Tfn5RtwlXP5RyO3VXnyd?=
- =?us-ascii?Q?H0RAdxeuRy+MOobWDcYES1PXS3wyjwlx93P1qXV5yOKCoEyU70uo1dpu38p8?=
- =?us-ascii?Q?doYk40kjtVL8+SE8vP/S1gBUcHEynUQtArbJ9oz97+q0LdY7SJv6w6o1czAO?=
- =?us-ascii?Q?x2aimLS52RYVRH2/aQajMMRViYIkDdXmNfe4hjiAaDT0viEraenlTniwL/Dy?=
- =?us-ascii?Q?Ly+Ia4ZVqjflaYQ6FaYo3hWEhGPDgcrzO6n19TVSJQ1WHpG/FtCwGsLT3oWw?=
- =?us-ascii?Q?0vtll85botpLqGNWt9oHr+cT4o2/3LuuaA9FKRSo+fQzXzd3hfCImv6nZbxd?=
- =?us-ascii?Q?281wHummW4eScygZQnp8ORWX9PIxaXsCyQbLUXEJbj3Hsyzo0qkXx84kzA3V?=
- =?us-ascii?Q?S09J4opPqwaBWIVq4tb4NnFAM8gtcSWOYzfXScJTELr1ju6C7Pc5j9P+PCIm?=
- =?us-ascii?Q?ZYVD0PpMjDBEEBBrRbN9vAWHDM1Z458PU4LngV2+kV4L7mvKboUa0ZGNnb5P?=
- =?us-ascii?Q?56O3JpegCOiVfXpiSOVBSdAttruVo8zjMfJaul2iSDKwh5F4vQNu3Zcd6qdn?=
- =?us-ascii?Q?9M6DFRkf2mlRvioLtwPN5CvXbOw64yGHDdMO99RFHSzl0YPHFyHT3/EJjGCC?=
- =?us-ascii?Q?/NyBbRrsglpm1YnrWYfpbJZN4ppyWZAwopWiNvwCMh9aRsze8dyp0YgAgZJQ?=
- =?us-ascii?Q?KXRPlfDz3ceDJJrOIVdvJuPjKdnkIBGo774xPqcA22G0RoNbBUwiS81iIoIL?=
- =?us-ascii?Q?KBhcT20Mka/HhdlRXeoNsCeNgSHDL8VvI7PDc59WOL0oBznJVaxroW2CvZyK?=
- =?us-ascii?Q?sS4DcbsEDp/7aO7V2pVnY3PEHLQLVbcrJQm0F8GZ0/Vh2zSFo4RzO2ZwDTV6?=
- =?us-ascii?Q?US6FR+K0wzYtugtR5NwhZiT6JS2lqCmo0hrg2HCsRYywJ0Vj3MHZe6aDbROr?=
- =?us-ascii?Q?XDn+jRc/1nnJBblGgQVx+fgeFQrdz0Kjw0R2Ryu1iXlPcpfkQ+UuaScx1vFL?=
- =?us-ascii?Q?hJlCFq+adPezHrzOAG19GgSFXGC/Uz5yXLS7fyxlDfYEYKMWGJjK0eEF8+5U?=
- =?us-ascii?Q?sfHGNlAKsVBKdqolSCYv0DGBIRJIq3Un4YzY8LKQ81wQ2Se3l/N6++9Yi7Q7?=
- =?us-ascii?Q?4p3BkbJMLqaD2J2tf+4=3D?=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACFB884FA9
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 13:41:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712065267; cv=none; b=S7KR4yc8/qfhcyJBz5oaeisP685dQiN6+c3uFg5Kd8MXCS9Dg1MFvC++iNLsC6NQN1ipztE5yrcbBaI+9MCBe+SWJCJL8pRyODvRWhAnEiLjqAv1VnM67JBabNz1iZvcwtWN6gro0lqWiWrz3SktGl7lZnhLwCtp86tcwCkrPLY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712065267; c=relaxed/simple;
+	bh=fSmUEcJkMiaEn5CB8sSP3SxvGvNVpxw0TJkE/LxdJVc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TLg/9DADVvml6awIJmvzAvQYPtUCeE++IBVNHo3Xl1ZgSD4i/16h2f8Ou6A9wBcoRbWiFyr546f4CvFHEeyODblvHo71KPahrEdrx04ztbEpXIeXx9Spp/YRe4j/AeehzhjK793NNIROHLHrgTMJCBBxQn2wahjeFyW+9TvxodU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=PIN+aeL1; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712065264;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=c1iNybg/HGgjMFLmB8r7gE55WyymvOpYihwbPUaOsCw=;
+	b=PIN+aeL13Lq8EovH9xu6brrmjQu+s0UD32AWZLIKz+jLqIeBGI9qC2pwt15/912B4r3IjR
+	wBJF5FcnE93VX8MUhGuVd/UsvlLjNeAGm/fs3l5Vz52lFjfexTBA2CI2gDzLr2uFO+93M2
+	OnZeknSH1vU6xOcWubFHxEpF2gznxsU=
+Received: from mail-ej1-f70.google.com (mail-ej1-f70.google.com
+ [209.85.218.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-680-s8Gx2uBRN0CtsW4XhN9aIA-1; Tue, 02 Apr 2024 09:41:03 -0400
+X-MC-Unique: s8Gx2uBRN0CtsW4XhN9aIA-1
+Received: by mail-ej1-f70.google.com with SMTP id a640c23a62f3a-a46bae02169so528323866b.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 06:41:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712065262; x=1712670062;
+        h=content-transfer-encoding:in-reply-to:from:references:cc:to
+         :content-language:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=c1iNybg/HGgjMFLmB8r7gE55WyymvOpYihwbPUaOsCw=;
+        b=P5lzpRwfwaQiKlrNOzpjaKzJZFdEXtvCMu6ymEAF/Xp+2CxbF2eigBU3UQr+zslHrT
+         07lBGHjXkWY/Y+xCBOXS/ZAYAXJ9TYPlrnk5L3Al8W1KpgpslTBSEvjOUV3N/VxRkpIM
+         u1npCaVwIl2szI5TY7KQ14S7czpYPhZ9Af1xanUoi0vQu3qTlhT5+wT0h7zQK1hqd7Vv
+         /lnzkgr+dz3pwTkdHyqW08d2+O3c3uIISU/R1o8d4aQc4SAphDreZ3PnV62KSVOfYoIu
+         iqiau9MlUOj4/oAipKS7BWbaabZfjXDDdp+93m866tZSNSpwRCoTEob0dRHMRuCPCUgs
+         FcHg==
+X-Forwarded-Encrypted: i=1; AJvYcCVk1D46kwFjKNFatiV8a3486SlN8kUhPhrfKC1e1ZOPj5IcnTwvm+LywgzZaW2JECJinrwQIcN7Ui3ZEnnD4bSvhVtiPu7JTKlmaA==
+X-Gm-Message-State: AOJu0YyRnVqIt/zD0kX/4v/oMyOjQsgRuWm/tbeUvVYOrpMBhdaD+4c3
+	AOltYgS3Jg1nv1tcmHpLdrbpXdpLvQNMXNtWifvGL/dwjPUb9a2zHVc1YOYAYF73bpOJNvM/UhU
+	MajSnpD6Y62qBCN67UDg9+LHcDfp6We+88GkoW8t4GIy8H0oxjxhRximof4rNWaRc67A=
+X-Received: by 2002:a17:907:9488:b0:a4e:58f0:922d with SMTP id dm8-20020a170907948800b00a4e58f0922dmr7866363ejc.22.1712065262045;
+        Tue, 02 Apr 2024 06:41:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHKDmFGZIoVsSTi0KlJmjjJyKBZ8ifM82H0Bfvo0aF8XA2+r0tQ3lZ/fAvcHNpyQfvO2WGsMg==
+X-Received: by 2002:a17:907:9488:b0:a4e:58f0:922d with SMTP id dm8-20020a170907948800b00a4e58f0922dmr7866344ejc.22.1712065261575;
+        Tue, 02 Apr 2024 06:41:01 -0700 (PDT)
+Received: from ?IPV6:2001:1c00:c32:7800:5bfa:a036:83f0:f9ec? (2001-1c00-0c32-7800-5bfa-a036-83f0-f9ec.cable.dynamic.v6.ziggo.nl. [2001:1c00:c32:7800:5bfa:a036:83f0:f9ec])
+        by smtp.gmail.com with ESMTPSA id w17-20020a170906185100b00a4e9359fbe8sm259504eje.44.2024.04.02.06.41.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 02 Apr 2024 06:41:01 -0700 (PDT)
+Message-ID: <634bbfb6-a5a4-40ae-b89f-5fc50db43d4f@redhat.com>
+Date: Tue, 2 Apr 2024 15:41:00 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: DU0PR04MB9417.eurprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b22decdf-2976-4316-a3c3-08dc53189f38
-X-MS-Exchange-CrossTenant-originalarrivaltime: 02 Apr 2024 13:27:19.4818
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oSdtxMQGh5WF7HJKP/Jz4Mva37F+h/8kv1FENt0OeL8ndYmwCAiYyNQCJkjp9+vsUDJv1VgXEOTrGfS/8mlcjA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DBBPR04MB8058
+User-Agent: Mozilla Thunderbird
+Subject: Re: [6.9 gpiolib regression] gpiolib: triggers: kobject: 'gpiochipX'
+ is not, initialized, yet kobject_get() errors
+Content-Language: en-US, nl
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Hans de Goede <hans@hansg.org>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+ Linus Walleij <linus.walleij@linaro.org>,
+ "regressions@lists.linux.dev" <regressions@lists.linux.dev>,
+ Andy Shevchenko <andy@kernel.org>,
+ "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+References: <bdea97a5-93e5-471f-88fc-a3c6ae74970a@hansg.org>
+ <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+From: Hans de Goede <hdegoede@redhat.com>
+In-Reply-To: <CAMRc=MdM0hNf73jVVd7kSchUVVBXmtQqSwmhNXus4TVovBSeHQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Andy
+Hi Bartosz,
 
-> Subject: Re: [PATCH v7 3/4] firmware: arm_scmi: Add SCMI v3.2 pincontrol
-> protocol basic support
->=20
-> On Tue, Apr 02, 2024 at 10:22:23AM +0800, Peng Fan (OSS) wrote:
->=20
-> ...
->=20
-> > +#include <linux/module.h>
-> > +#include <linux/scmi_protocol.h>
-> > +#include <linux/slab.h>
->=20
-> Please, follow IWYU principle, a lot of headers are missed.
+On 3/29/24 4:16 PM, Bartosz Golaszewski wrote:
+> On Fri, 29 Mar 2024 15:11:21 +0100, Hans de Goede <hans@hansg.org> said:
+>> Hi All,
+>>
+>> I've already tried to fix this, so let me just copy and paste my half finished patch
+>> to explain the problem.
+>>
+>> I was planning on submitting this as a RFC patch at least, but there are also some
+>> other new issues with 6.9 on this tablet and I'm not sure how this interacts
+>> with those issues and I don't have time to work on this any further this weekend.
+>>
+>> Anyways below is the patch / bug report.
+>>
+>> I'm wondering if a better fix would be to add a "ready" flag to gdev
+>> and may gpiochip_find ignore not yet ready chips (we need them on
+>> the list before they are ready to reserve the GPIO numbers) ?
+>>
+>> Regards,
+>>
+>> Hans
+>>
+> 
+> Hi Hans!
+> 
+> Thanks for the report. I hope I'm not being naive here but would the following
+> one-liner work?
+> 
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index ce94e37bcbee..69f365ccbfd8 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -1179,7 +1179,7 @@ struct gpio_device *gpio_device_find(const void *data,
+> 
+>  		gc = srcu_dereference(gdev->chip, &gdev->srcu);
+> 
+> -		if (gc && match(gc, data))
+> +		if (device_is_registered(&gdev->dev) && gc && match(gc, data))
+>  			return gpio_device_get(gdev);
+>  	}
+> 
+> This would make gpio_device_find() ignore any GPIO device that's not yet
+> registered on the GPIO bus which is almost the last step of the registration
+> process right before creating the sysfs attributes.
 
-ok. I will try to figure out. BTW, is there an easy way to filter
-out what is missed?
+Yes that should work and it has the added advantage that it also waits
+for things like the irqchip to be setup before gpio_device_find() will
+find the gpio-device.
 
->=20
-> > +#include "common.h"
-> > +#include "protocols.h"
->=20
-> ...
->=20
-> > +		ret =3D scmi_pinctrl_get_pin_info(ph, selector,
-> > +						&pi->pins[selector]);
->=20
-> It's netter as a single line.
+I cannot trigger the race every boot, but I do hit it quite regularly
+and with this change I've done 10 successful consecutive boots, so
+I believe that this indeed fixes the race.
 
-I try to follow 80 max chars per SCMI coding style. If Sudeep and Cristian
-is ok, I could use a single line.
+I've prepared a patch with this fix now which I'll send out shortly.
 
->=20
-> > +		if (ret)
-> > +			return ret;
-> > +	}
->=20
-> ...
->=20
-> > +static int scmi_pinctrl_protocol_init(const struct
-> > +scmi_protocol_handle *ph) {
-> > +	int ret;
-> > +	u32 version;
-> > +	struct scmi_pinctrl_info *pinfo;
-> > +
-> > +	ret =3D ph->xops->version_get(ph, &version);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	dev_dbg(ph->dev, "Pinctrl Version %d.%d\n",
-> > +		PROTOCOL_REV_MAJOR(version),
-> PROTOCOL_REV_MINOR(version));
-> > +
-> > +	pinfo =3D devm_kzalloc(ph->dev, sizeof(*pinfo), GFP_KERNEL);
-> > +	if (!pinfo)
-> > +		return -ENOMEM;
-> > +
-> > +	ret =3D scmi_pinctrl_attributes_get(ph, pinfo);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	pinfo->pins =3D devm_kcalloc(ph->dev, pinfo->nr_pins,
-> > +				   sizeof(*pinfo->pins), GFP_KERNEL);
-> > +	if (!pinfo->pins)
-> > +		return -ENOMEM;
-> > +
-> > +	pinfo->groups =3D devm_kcalloc(ph->dev, pinfo->nr_groups,
-> > +				     sizeof(*pinfo->groups), GFP_KERNEL);
-> > +	if (!pinfo->groups)
-> > +		return -ENOMEM;
-> > +
-> > +	pinfo->functions =3D devm_kcalloc(ph->dev, pinfo->nr_functions,
-> > +					sizeof(*pinfo->functions),
-> GFP_KERNEL);
-> > +	if (!pinfo->functions)
-> > +		return -ENOMEM;
-> > +
-> > +	pinfo->version =3D version;
-> > +
-> > +	return ph->set_priv(ph, pinfo, version);
->=20
-> Same comments as per previous version. devm_ here is simply wrong.
-> It breaks the order of freeing resources.
->=20
-> I.o.w. I see *no guarantee* that these init-deinit functions will be prop=
-erly
-> called from the respective probe-remove. Moreover the latter one may also
-> have its own devm allocations (which are rightfully placed) and you get
-> completely out of control the resource management.
+As for Andy's suggestion I'm not all that familiar with the RCU stuff,
+but I think that if we were to go that route then the device_is_registered()
+check should be moved up to above the "guard(srcu)(&gdev->srcu);"
+line rather then above the "gc = srcu_deref..." line, since in that
+case we are not using the gdev->chip pointer at all if we bail ?
 
-I see an old thread.
-https://lore.kernel.org/linux-arm-kernel/ZJ78hBcjAhiU+ZBO@e120937-lin/#t
+Anyways for now I've just gone with your suggested 1 liner.
 
-The free in deinit is not to free the ones alloced in init, it is to free t=
-he ones
-alloced such as in scmi_pinctrl_get_function_info
+Regards,
 
-Thanks,
-Peng.
+Hans
 
->=20
-> > +}
->=20
-> --
-> With Best Regards,
-> Andy Shevchenko
->=20
+
+p.s.
+
+While looking into this I noticed one other possible problem,
+unless gpiochip_add_data_with_key() and gpiolib_dev_init() are
+guaranteed to never run at the same time then we may end up calling
+gpiochip_setup_dev() twice, once from gpiolib_dev_init() and
+once from gpiochip_add_data_with_key() when the 2 race.
+
 
 
