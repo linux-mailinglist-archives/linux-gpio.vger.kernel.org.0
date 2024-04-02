@@ -1,151 +1,174 @@
-Return-Path: <linux-gpio+bounces-4981-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-4982-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id D62AF894E16
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 10:59:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id DA0E8894E7F
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 11:18:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4C4C31F23676
-	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 08:59:05 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4BD9F1F23D35
+	for <lists+linux-gpio@lfdr.de>; Tue,  2 Apr 2024 09:18:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B95C04778E;
-	Tue,  2 Apr 2024 08:59:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3675B57876;
+	Tue,  2 Apr 2024 09:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="G202nPmq"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AxrmFDKu"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C8C24C601
-	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 08:58:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C74FC57306
+	for <linux-gpio@vger.kernel.org>; Tue,  2 Apr 2024 09:18:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712048340; cv=none; b=E0azP5hIwqTP3HcgWmXC/7LopGIeG60QBQbGVIPjbqVWOR245tM2dlLiZWCHoJ2QwjWgbkTOq14arCpu62amvs+DNUquioPM5JFpE119kiTIU/d55BDN0JOf6FwaZVl00ZNrEYyzfz/CQ/Vlgb53fx4rtrWN7SlvZ7hZBdmzbOc=
+	t=1712049518; cv=none; b=MqH9k5fO2qjwD71duh/B+C9gqH1Fv843OB8tDK7+E/CdNu7hLIY02/5MJ4VlYIRkspu2LopFPhF8Cm8zfdxQjxjh+xYmnmPZFSwUx5c6zqN8RzkdzSHiZ9UEArS3njS+weoQVtTjUdbbvuBi3KLo01WFXLG5ztZcxBPhCYS/3R8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712048340; c=relaxed/simple;
-	bh=HNm6Lh879crSqV0ZGzaJmrt3ssAvgX20Rq/oXJRJF9c=;
+	s=arc-20240116; t=1712049518; c=relaxed/simple;
+	bh=o/P8asTQgXNr+LtSR/rVKgTHlr8EJ1cZ5yL0HTpm700=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ta2kf/arxFNJEq/qOk894Yja/UhJrB3QCf/PQ8t8iqjv7oG4LmDheL17AwlYkXVc22ZAv3RnYEXXB4Mn/kxn9czif4X0QE9TjjVZdt99ykIJbjOoxvEYJJWxsojzEpCvu8t1LVNWCxyeiUjtrirBQTpt7sLYcpodBkA3qkDcduo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=G202nPmq; arc=none smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-2d68c6a4630so51122281fa.3
-        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 01:58:58 -0700 (PDT)
+	 To:Cc:Content-Type; b=bSJoWQfsxz6obKqaCe7km8r4WmVRC8VOYjKGIzuqvWmeHJ5p80j+UQuTLaQ2E4QC5GEXG2kaBA+TDBJNFDKN5zxCRe6IOo6cJn98rJ99qp9veKz0P1Wva1JDdTeKePi0UCbQ0Y1gpzpdJq4UgYToF+WHeEQLth8zUf1XgToMux4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=AxrmFDKu; arc=none smtp.client-ip=209.85.222.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-7e074f8ac06so1390422241.1
+        for <linux-gpio@vger.kernel.org>; Tue, 02 Apr 2024 02:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712048337; x=1712653137; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712049514; x=1712654314; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=+EQziKXdKEAMdx/dPCGDP7jmLVDHvzi4KCtf8hrHXHs=;
-        b=G202nPmq3BLahFpIpsyBtxc0Pe2+9I2BcQONef2a3bgNkiBlgjsCZJ2cZkpstvoeLS
-         528rrTC6yUBa/gd8930W/PWBbGH3ps0xN0Lvn3ta6QLfjTmKdDK51rLvjT+mBqQdBjGF
-         axw+CumeE7Bhkud2qcXP6aU7SgnRKr4zqco/7mmGteybc8mofF74j7eCy4MlEjN/ssQV
-         HOmdB+2zY3P/viMU3n8kalzI131B+tibh+JZi7COXR/3Nn8U4/bXyw6uGNG/xSy16Srw
-         UUckBu+4ufvwMKgOqOa1lCR2tEtMI9YiaVRYblXRiT5m1RFvZ+KR7im58F6JdYdce+Ys
-         nUvg==
+        bh=r66TFNSLT4YD94GnwLNWPiQzwjcsChSUIFxq6D9Qnwo=;
+        b=AxrmFDKuEdTLStgKfjFi6XG/w6/Uo+d7xgk2Jv/eNzzSaOI5HZooT+s6XC6c9A8+vV
+         MctSlMidQO5CCBt1iqe+v8o3JDZlL+zi5qVEV97xoKp/cKNH5M9WAZQrkKkxtKpMQ9io
+         Qv2/ni4yxcSkB1jXZaJtNQda75GmmmMW3zIABphAzaePbvUHqROUHvLrxUb3G01euL7q
+         f98/HPNaLnAP+bPmHuNKuCMPan7Q8dhEo6lNSXIHux82u4naymLEALvEaqHOlQZ3lLKM
+         zfM3w1t7ZoTSuJYMfEIYNcLSAxfxYpXm9YQ1YfMAMrcc5XO/mr1MiCvv0AvbqPvYoHz+
+         lZrA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712048337; x=1712653137;
+        d=1e100.net; s=20230601; t=1712049514; x=1712654314;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=+EQziKXdKEAMdx/dPCGDP7jmLVDHvzi4KCtf8hrHXHs=;
-        b=LRagONeQMfLyuWpjuw7tm0fZ6UK7pUbxzmXPe6DfDLGXPz7Qj8On1EX2/igU2JK0eo
-         FWV1HY67n9BCkVJOjspn+3LZYe+PEEqdWMZzlcOzk0pyTT9of1CBoOCn+C8+B5uZQ0ow
-         xuY1H7lnghP6xxhY/4e1tt7vFYVvrgzb/+f5kb0wAQPA2ubMnnE2np96kWBsgb3Em+qE
-         fK8e0sHpc+RY8trKg9OssB/oc+qp9QLf6vHPSwqrxRXDAVgDqRDiU7J1GPXQ+jQ3qxaQ
-         FR3xNa0gra4sM1q0nwfVuuIxwMzK7fmSC8r+/8wSE3eY1h0rXhHF4IVPY4pqfQoOX283
-         FeWw==
-X-Forwarded-Encrypted: i=1; AJvYcCVdpl/15e/lQVRJ43D5r+MmTmocNnvp/ZccupOji5k7I8VdRTmdlRcojjzfuGQV2r2+03Ut7CMaCZrKZyXFAj4JKkwWsEXQQOTkjg==
-X-Gm-Message-State: AOJu0YzPOrm1lOJieES3N5/8vnMcQM2tXmkFZOHA4MT0WoFiZ7QQkAQ1
-	CrAJLv2z4wtRFDEcfs2pr5NbEiXxh234G9vl6t3/FlySo24HYtRquJs+abaPf1pscucp/89FYMz
-	gYMNS7B8ASmtLbphp1MXZJvZ0VHQ/e9xFPiRCXA==
-X-Google-Smtp-Source: AGHT+IHgVoVAQjY0SVm1Am+geVCD8kGxkvgjD4vTaFUHh5+1OWnpBP+5APV4hCgBud/LOc79OuLkSI2vz2dPlk4j4wE=
-X-Received: by 2002:a2e:8699:0:b0:2d4:6815:fc6f with SMTP id
- l25-20020a2e8699000000b002d46815fc6fmr7057550lji.30.1712048337278; Tue, 02
- Apr 2024 01:58:57 -0700 (PDT)
+        bh=r66TFNSLT4YD94GnwLNWPiQzwjcsChSUIFxq6D9Qnwo=;
+        b=TunzbhM8w9WfXljQ8z+4AAMU7uTftMIobzjwWYnawuztd84AsRzshlxZ+SOfBWmLAD
+         c0LSsEN1d+5c534X9oosINHeUx1Zmm+0QK4d/0YobCYAKeSNaSXp/KLhz+0FZ/EoXP1G
+         4q7Nf5dy6kQWz+2+edRlEVehNZyBMtpmKIMLyPdYWemFQS5KoibKGsy/XVuck7QslwTi
+         Y+yijDIB6hWFV0yqo1+EpxlY8wWFD9aTK3peSMSgnPRIjQIlnDv44SRlETtkiRY6WGyv
+         e7muVF7jtPXs/22SZX6wMpifN3KHB6CphhLd/rNrFiVpv4/O4fFOdUhHtMjCoY0LV6IZ
+         gFtg==
+X-Forwarded-Encrypted: i=1; AJvYcCVgZb0Rq0XYazZO1ciJo7hjxnfUquUPnj435HXGeXxzShXmufIqxg/OQRAF+WQS1HDYhBikQzqj2fsCqn5fj2W3z1gJd/4ivnv/6Q==
+X-Gm-Message-State: AOJu0YyZpPPHCk3EQIhqOrley/jodnkk/8q6a/WwFVV6a9LIoL+febpu
+	GslAQwmcN6UTZz/c9EymoSVDhp5UQLcHObLnrmVcnlwsnzQr4qCUDt08ngPqj6FqpRCyeYJIFB6
+	pZyBpwPlXUKqn8YkrkWivUa/K2vQZSGKSa/+FfQ==
+X-Google-Smtp-Source: AGHT+IHQ73nyKalKwygD4j92nMTrgX97gI21W8eoJIJZkooD2dfv2lbsfKe7svLrUcejklRdqZgrt81nkzCspg1NleI=
+X-Received: by 2002:a05:6102:2459:b0:475:111d:c0dc with SMTP id
+ g25-20020a056102245900b00475111dc0dcmr8809724vss.14.1712049514705; Tue, 02
+ Apr 2024 02:18:34 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240401030052.2887845-1-tzungbi@kernel.org> <20240401030052.2887845-3-tzungbi@kernel.org>
-In-Reply-To: <20240401030052.2887845-3-tzungbi@kernel.org>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 2 Apr 2024 10:58:46 +0200
-Message-ID: <CAMRc=Md+v=zWGa=pYUzKkBMipJj_NgYW08XTfvdCFyErOVdvYw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/6] gpio: cros-ec: provide ID table for avoiding
- fallback match
-To: Tzung-Bi Shih <tzungbi@kernel.org>
-Cc: bleung@chromium.org, groeck@chromium.org, linus.walleij@linaro.org, 
-	hverkuil-cisco@xs4all.nl, mchehab@kernel.org, sre@kernel.org, 
-	chrome-platform@lists.linux.dev, pmalani@chromium.org, 
-	linux-gpio@vger.kernel.org, linux-media@vger.kernel.org, 
-	linux-pm@vger.kernel.org, krzk@kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+References: <20240401152547.867452742@linuxfoundation.org>
+In-Reply-To: <20240401152547.867452742@linuxfoundation.org>
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Tue, 2 Apr 2024 14:48:23 +0530
+Message-ID: <CA+G9fYuiYQk8FrF=1kvMW-7jeNskkL309+3qtmgoMjF8KMQnxA@mail.gmail.com>
+Subject: Re: [PATCH 6.6 000/396] 6.6.24-rc1 review
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, patches@lists.linux.dev, 
+	linux-kernel@vger.kernel.org, torvalds@linux-foundation.org, 
+	akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org, 
+	patches@kernelci.org, lkft-triage@lists.linaro.org, pavel@denx.de, 
+	jonathanh@nvidia.com, f.fainelli@gmail.com, sudipm.mukherjee@gmail.com, 
+	srw@sladewatkins.net, rwarsow@gmx.de, conor@kernel.org, allen.lkml@gmail.com, 
+	broonie@kernel.org, Anders Roxell <anders.roxell@linaro.org>, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Stefan Wahren <wahrenst@gmx.net>, 
+	Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	"open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 1, 2024 at 5:01=E2=80=AFAM Tzung-Bi Shih <tzungbi@kernel.org> w=
-rote:
+On Mon, 1 Apr 2024 at 22:06, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> Instead of using fallback driver name match, provide ID table[1] for the
-> primary match.  Also allow automatic module loading by adding
-> MODULE_DEVICE_TABLE().
+> This is the start of the stable review cycle for the 6.6.24 release.
+> There are 396 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 >
-> [1]: https://elixir.bootlin.com/linux/v6.8/source/drivers/base/platform.c=
-#L1353
+> Responses should be made by Wed, 03 Apr 2024 15:24:46 +0000.
+> Anything received after that time might be too late.
 >
-> Reviewed-by: Benson Leung <bleung@chromium.org>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> Signed-off-by: Tzung-Bi Shih <tzungbi@kernel.org>
-> ---
-> Changes from v1:
-> - No code changes.
-> - Add R-b tags.
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v6.x/stable-review/patch-=
+6.6.24-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-6.6.y
+> and the diffstat can be found below.
 >
->  drivers/gpio/gpio-cros-ec.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> thanks,
 >
-> diff --git a/drivers/gpio/gpio-cros-ec.c b/drivers/gpio/gpio-cros-ec.c
-> index 842e1c060414..0c09bb54dc0c 100644
-> --- a/drivers/gpio/gpio-cros-ec.c
-> +++ b/drivers/gpio/gpio-cros-ec.c
-> @@ -12,6 +12,7 @@
->  #include <linux/errno.h>
->  #include <linux/gpio/driver.h>
->  #include <linux/kernel.h>
-> +#include <linux/mod_devicetable.h>
->  #include <linux/module.h>
->  #include <linux/platform_data/cros_ec_commands.h>
->  #include <linux/platform_data/cros_ec_proto.h>
-> @@ -197,11 +198,18 @@ static int cros_ec_gpio_probe(struct platform_devic=
-e *pdev)
->         return devm_gpiochip_add_data(dev, gc, cros_ec);
->  }
->
-> +static const struct platform_device_id cros_ec_gpio_id[] =3D {
-> +       { "cros-ec-gpio", 0 },
-> +       {}
-> +};
-> +MODULE_DEVICE_TABLE(platform, cros_ec_gpio_id);
-> +
->  static struct platform_driver cros_ec_gpio_driver =3D {
->         .probe =3D cros_ec_gpio_probe,
->         .driver =3D {
->                 .name =3D "cros-ec-gpio",
->         },
-> +       .id_table =3D cros_ec_gpio_id,
->  };
->  module_platform_driver(cros_ec_gpio_driver);
->
-> --
-> 2.44.0.478.gd926399ef9-goog
->
+> greg k-h
 
-Applied, thanks!
+Results from Linaro=E2=80=99s test farm.
+Regressions on arm64, arm, x86_64, and i386 with libgpiod tests.
 
-Bart
+libgpiod test regressions noticed on Linux stable-rc 6.8, 6.7 and 6.6
+and Linux next and mainline master.
+
+Anders bisected and found this first bad commit,
+  gpio: cdev: sanitize the label before requesting the interrupt
+  commit b34490879baa847d16fc529c8ea6e6d34f004b38 upstream.
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+LKFT is running libgpiod test suite version
+  v2.0.1-0-gae275c3 (and also tested v2.1)
+
+libgpiod
+  - _gpiod_edge-event_edge_event_wait_timeout
+  - _gpiod_edge-event_event_copy
+  - _gpiod_edge-event_null_buffer
+  - _gpiod_edge-event_read_both_events
+  - _gpiod_edge-event_read_both_events_blocking
+  - _gpiod_edge-event_read_falling_edge_event
+  - _gpiod_edge-event_read_rising_edge_event
+  - _gpiod_edge-event_read_rising_edge_event_polled
+  - _gpiod_edge-event_reading_more_events_than_the_queue_contains_doesnt_bl=
+ock
+  - _gpiod_edge-event_seqno
+  - _gpiod_line-info_edge_detection_settings
+
+Test log:
+-------
+ok 16 /gpiod/edge-event/edge_event_buffer_max_capacity
+**
+gpiod-test:ERROR:tests-edge-event.c:52:_gpiod_test_func_edge_event_wait_tim=
+eout:
+'_request' should not be NULL
+# gpiod-test:ERROR:tests-edge-event.c:52:_gpiod_test_func_edge_event_wait_t=
+imeout:
+'_request' should not be NULL
+not ok 17 /gpiod/edge-event/edge_event_wait_timeout
+ok 18 /gpiod/edge-event/cannot_request_lines_in_output_mode_with_edge_detec=
+tion
+**
+gpiod-test:ERROR:tests-edge-event.c:125:_gpiod_test_func_read_both_events:
+'_request' should not be NULL
+# gpiod-test:ERROR:tests-edge-event.c:125:_gpiod_test_func_read_both_events=
+:
+'_request' should not be NULL
+not ok 19 /gpiod/edge-event/read_both_events
+
+Links:
+ - https://qa-reports.linaro.org/lkft/linux-stable-rc-linux-6.6.y/build/v6.=
+6.23-397-g75a2533b74d0/testrun/23254910/suite/libgpiod/tests/
+
+--
+Linaro LKFT
+https://lkft.linaro.org
 
