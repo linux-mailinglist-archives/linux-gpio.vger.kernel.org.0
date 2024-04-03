@@ -1,119 +1,118 @@
-Return-Path: <linux-gpio+bounces-5051-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5052-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C352896FDE
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Apr 2024 15:06:09 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 31632896FF5
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Apr 2024 15:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 169A1282E63
-	for <lists+linux-gpio@lfdr.de>; Wed,  3 Apr 2024 13:06:08 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DB1631F28135
+	for <lists+linux-gpio@lfdr.de>; Wed,  3 Apr 2024 13:15:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2FC081487DE;
-	Wed,  3 Apr 2024 13:05:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71709147C8E;
+	Wed,  3 Apr 2024 13:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="apHUNtpR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvCPfL53"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08569146D72;
-	Wed,  3 Apr 2024 13:05:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9AF7147C6C;
+	Wed,  3 Apr 2024 13:15:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712149550; cv=none; b=mQQaBPu+RssPCIYAdmZyaYh+qnGxejbd3EbEt3oUAFH/Mwv1wLnybqsIhFWlg1qmZFSmqftE1BiWiyyH3RjDsI9u9FNX3TMTraZkB15fjpXeOitUIJBu9ZnI9QYoP/d8XDgeCZtk0Y6VQJNodWRFud9Hlu5cv3GpNhQ8fhtL3jM=
+	t=1712150137; cv=none; b=eLAMmBw06ERAEVNKiKVEtJiSyx02yPV4UK/sYdsDLjcO2g3N++gzcxKeAqAu/GZYqEfGSFvgcZ9g7mbwiPrvuZIyAHwWSDxyA85hyS6pEpGL26KRD0WcmQ3YJtq3BfpYZo4uheL0Uv3eCywV9+iymHQBevOayg1NT1/tCXSmZkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712149550; c=relaxed/simple;
-	bh=ND3jNXeXD8UCa8WzVy98aeHA4SFwZtX43lGgSbkdjqg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sSxT24ylxmguiqGrTmejpWoqiZDzkMdxZCSCcFyT1WKxXPdfcpMxXS8DoNd+atXMGFHrZ7gBCR5i73SJLeyzB3UZuEBEBZ2l9K6zAy1+FHKbE2AZGbgbcVJGsdQBMfmAM968b7kmhNbbSPZNYuZH92PynD8lOtDHBII+tqVeE/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=apHUNtpR; arc=none smtp.client-ip=192.198.163.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712149548; x=1743685548;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=ND3jNXeXD8UCa8WzVy98aeHA4SFwZtX43lGgSbkdjqg=;
-  b=apHUNtpR7UTQtGLy3gYaxv4uPVCrasYY2GG/lYUAt2LOrUQAtJ4LNKs3
-   gJk9j2eaOGVspOdZVGrOobpBlhndW0IIWz8KsjEbLUnfVfEHaL9anMeU4
-   otmGIWdsTWLO+/ciA7PNU0hiJmfQvQ7wT+wPKsNztnnBewFvyH30P+C0r
-   x1v4MclW7zeCe2duPFiItOZrp0lN4cFWdT45Fgp8NK1bqHqsoI3NcsHLq
-   nML3tDLsjsVLvHjHH2WpmuiLPuEA/y+wEvbNddsRvKbbi29WcU/5dn90i
-   e8YHHJRcO+noVD6wp18DRWtTEkaYejPuW3ncQ3sJSvbrpPu35n6f7UtrG
-   Q==;
-X-CSE-ConnectionGUID: +JQm8PsAQLa3v3O2K/aqAg==
-X-CSE-MsgGUID: I2TZ4D3tRs2JpFr3SQR93A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="17992665"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="17992665"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:05:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11033"; a="915182954"
-X-IronPort-AV: E=Sophos;i="6.07,177,1708416000"; 
-   d="scan'208";a="915182954"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Apr 2024 06:05:43 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rs0JB-000000017iB-00E6;
-	Wed, 03 Apr 2024 16:05:41 +0300
-Date: Wed, 3 Apr 2024 16:05:40 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Jonathan Corbet <corbet@lwn.net>, Alex Shi <alexs@kernel.org>,
-	Yanteng Si <siyanteng@loongson.cn>,
-	Hu Haowen <2023002089@link.tyut.edu.cn>,
-	Daniel Mack <daniel@zonque.org>,
-	Haojian Zhuang <haojian.zhuang@gmail.com>,
-	Robert Jarzmik <robert.jarzmik@free.fr>,
-	Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v1 0/3] gpiolib: Get rid of
- gpio_free_array()/gpio_request_array()
-Message-ID: <Zg1UJPhFnQoIfNBR@smile.fi.intel.com>
-References: <20240307135109.3778316-1-andriy.shevchenko@linux.intel.com>
- <ZgxRzyQGeSAl4MzX@smile.fi.intel.com>
- <CAMRc=Md_81qY02=XPmQA5_EWRC1eU0zYAjRwjbAGxvGg2kOL+A@mail.gmail.com>
+	s=arc-20240116; t=1712150137; c=relaxed/simple;
+	bh=99Sd3x5Xh1f02Tnql1T2bE/GVVfEXYhK1ySRwme2Zjk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CIx2xL8IurZzNFBHkZH7nCU0XgEcMLUauFWEQdk2+9aWHidlb9IuveAbZSyG6PlQVpMiCdU10iLDI0PxaXnO85+TkXiJ1mdA+fLwlxjVBAMmkggoVzbGeQTtpyM9h8cToNOteHim2bPaIDo6fTGS4r6JBijePlXTpBQ/F0PYZ18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SvCPfL53; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e0878b76f3so7857475ad.0;
+        Wed, 03 Apr 2024 06:15:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712150135; x=1712754935; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=vryS7oL+jDPlvXHR7J1pUsOMtwPuprIobWABdrxaKrA=;
+        b=SvCPfL53OeFmmMQw3kueZMNRaZ153pVDUthDgeqQ6RlOFJuoEGCErie4d7aq5be77F
+         FcFgUHE/z82o/JO+ocmmFt6Z4zAi80XHl4V2QQiQJvWP+lt+ufOqHb/iNPYkxiQPseVa
+         QGGunckiL/ksOo7j/6XdK1cBRksir7Hn+zpUFDcjS4t+GQCPEfi8ganiHAfi2nyF/3LT
+         zKR24ZOKvs02Yi4w8R6cc2xOpnh/3HPjeN9hHKeF9PEPNtdHH0mrZ7vSl4Ip8285es98
+         minxJBLQKpLinUeGjF5D8DnTONPhfvR4JJb/ZN/pcI7z/yAi/ypAaGWwHBZdmZy2XuIp
+         ZFuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712150135; x=1712754935;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=vryS7oL+jDPlvXHR7J1pUsOMtwPuprIobWABdrxaKrA=;
+        b=addCamtdt+PB26oeNKqjhr/6ipU6OhfG76jRbMWb/83FcjOtNXlWbW2i9gkHIVJVY6
+         /HGnyhIqirmotofyNHgt3F1bqA4UlIGHesKiXaVjlTzjtIYMfcP86opeURjlcQOkRAWc
+         r1qxHBvcoXHsVxYGmOwZnmI08SYKYI9BQnqwLwEyhErMmdFPIqZpthcWBMDdK0Oo07E7
+         MWZ3O44VgkZEWC7g7ZqqBTZmHflvyspXrFRRqm0NKmRk1VgBp+PreVovq6qw6zz/y1qw
+         mphvR+RTXCWU1PI+XDm212zWBJMzCdjj8bzjTImoFV+jegz1l9EJbY3Sad8hj+grZwvW
+         QEHA==
+X-Forwarded-Encrypted: i=1; AJvYcCWpXTQkbqlW8kpEjuXnMW9pSdhYF7EM8du/uyBWrZZw0nAOQbfktjH/fOfuZWWTQvyGYU1/Qjwr6agvun8iPdZ2UJ16qM/bfUO3Qw==
+X-Gm-Message-State: AOJu0YyNz80Ye08GiXEJg6azlgHov6NLPbhqcJ4DAlbmzgZJbrco4c/n
+	DhMS5NJUMJfbJe1zQjVbDIPOZt54YxJbJc9WHJSB+8S5gXasDQP2t2n3PPO6
+X-Google-Smtp-Source: AGHT+IH/o/OdeDTGk0CkkreQTj2PkHzoSqNF4sSYyOvqPozKaQCJbacYUHOEK+/1WMkqnsr3tvWSdQ==
+X-Received: by 2002:a17:902:dacd:b0:1e2:6482:db0f with SMTP id q13-20020a170902dacd00b001e26482db0fmr3247603plx.29.1712150134970;
+        Wed, 03 Apr 2024 06:15:34 -0700 (PDT)
+Received: from rigel.home.arpa (194-223-186-215.tpgi.com.au. [194.223.186.215])
+        by smtp.gmail.com with ESMTPSA id e14-20020a170902784e00b001e010c1628fsm13417604pln.124.2024.04.03.06.15.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 06:15:34 -0700 (PDT)
+From: Kent Gibson <warthog618@gmail.com>
+To: linux-kernel@vger.kernel.org,
+	linux-gpio@vger.kernel.org,
+	brgl@bgdev.pl,
+	linus.walleij@linaro.org
+Cc: Kent Gibson <warthog618@gmail.com>
+Subject: [PATCH 0/2] gpio: cdev: label sanitization fixes
+Date: Wed,  3 Apr 2024 21:15:16 +0800
+Message-Id: <20240403131518.61392-1-warthog618@gmail.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Md_81qY02=XPmQA5_EWRC1eU0zYAjRwjbAGxvGg2kOL+A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Wed, Apr 03, 2024 at 01:09:13PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 2, 2024 at 8:43 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> >
-> > On Thu, Mar 07, 2024 at 03:49:02PM +0200, Andy Shevchenko wrote:
-> > > There are only two users left of the gpio_free_array()/gpio_request_array().
-> > > Convert them to very basic legacy APIs (it requires much less work for
-> > > now) and drop no more used gpio_free_array()/gpio_request_array().
-> >
-> > Any comments on this? We really want to get rid of the legacy APIs.
-> 
-> I applied the patches, they only touch the GPIO part in legacy
-> platform code. It's not very controversial IMO.
+This series fixes a couple of bugs in the sanitization of labels
+being passed to irq.
 
-Thank you!
+Patch 1 fixes a missed path in the sanitization changes that can result
+in memory corruption.
 
-FWIW, In case of issue(s) I would like to help to fix, but I don't think
-it will be even one.
+Patch 2 fixes the case where userspace provides empty labels.
 
+I've placed my Patch 1 before Bart's Patch 2 as it has to relocate
+make_irq_label() and free_irq_label(), while Bart's patch modifies
+them. This order keeps the patch sizes minimal and the attribution
+where it belongs.  Patch 2 has been very lightly modified to rebase it
+onto Patch 1, including extending it to cover the modified error
+return for the debounce_setup() case.
+
+Cheers,
+Kent.
+
+Bartosz Golaszewski (1):
+  gpio: cdev: check for NULL labels when sanitizing them for irqs
+
+Kent Gibson (1):
+  gpio: cdev: fix missed label sanitizing in debounce_setup()
+
+ drivers/gpio/gpiolib-cdev.c | 48 ++++++++++++++++++++++++-------------
+ 1 file changed, 32 insertions(+), 16 deletions(-)
+
+
+base-commit: 782f4e47ffc19622bf80b3c0cf9cadd2b0b9a644
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.39.2
 
 
