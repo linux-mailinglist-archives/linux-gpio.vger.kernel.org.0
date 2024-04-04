@@ -1,164 +1,119 @@
-Return-Path: <linux-gpio+bounces-5088-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5089-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CF24F898CC6
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 18:58:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8983F898CF2
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 19:05:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8AB132831C6
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 16:57:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C1371F2915E
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 17:05:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 394D712AACB;
-	Thu,  4 Apr 2024 16:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AE7EB12BF22;
+	Thu,  4 Apr 2024 17:05:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="gCFUcowO"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ERmAQndG"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f44.google.com (mail-lf1-f44.google.com [209.85.167.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31B1412836E
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Apr 2024 16:57:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 538251C6BC;
+	Thu,  4 Apr 2024 17:05:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712249874; cv=none; b=r7QOi3lspT3XoneKHVKiE7bWG+SAe+orp9Q6I9iQnTNeAKcgKtvGnoYCIphEDulL9hOTsWqfeYS4yZcWXc+XYbGDfzS7niUWSluwcubMA1A4h+ffzuzdB8JrjjRO3EUJWyVHHQZ23vkIOIFgB9gKoIwXv9dOL7PppZZH3FDsuNo=
+	t=1712250314; cv=none; b=GrBSE3sxk8GguurQMl/Bwnf64uL9v9w5fMurR84zTB04AxApaXqRa0Ew3GN7kWrtzZ5TrRCDw49SenDASpqmzHAzhJ2DqkafdULMMqaZ8yEkUyqQFFbxtsFQk2KcaMj0etrJda/bsqFtoeOp+6QQYUrHYfq1+ruACzuY+ucVHe8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712249874; c=relaxed/simple;
-	bh=2KPWHevbjorOUSsHZapNRmUD0fpaRYqhSR1Dgg8DGcU=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=rGttsp9qtm3/741CvqO90UALIfD6RW5zCRwKM4T6+Za68Q2tM1czrYeEXVb9gq6kXU4plfChddHUWpM8oUlo1MPFqN+SJrPjpr6iuXjg+kgqlZcHbFREFj/Pp+fQTZvpsNKJKo+1rk8Jkqf2qcEiswmyV01qKsUoocvnv/43mUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=gCFUcowO; arc=none smtp.client-ip=209.85.167.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lf1-f44.google.com with SMTP id 2adb3069b0e04-516c547fb4eso1696417e87.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Apr 2024 09:57:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712249870; x=1712854670; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lTE8+oh/R1tis1FpRuf547JjNaef5iXS7/FKBvUGN+U=;
-        b=gCFUcowOCbOm/9NdxQBKmh/ioVV9o3cAMbVHhnnxyBAZiCnHznWLLeIq9ZvAc1c9As
-         WcFSS4q1X8W9z3ldcUtQcvqAzI+mto4jbEW1DDJNx7J0ZvYeH2kgYZdIH/A+rsQGLPmq
-         41WUPlP3FYK2zWstV7se0zLYc1yRoFZUxFb53ASJKlRN9OHhFi8Df0J2VnUr3AJhYa2i
-         P5AZaYe6h99h759hQsvHWuf8FU22kKP3yaFsCWJgLOhrcdXybC5v8erR5gBvVK7fKSUS
-         irrKf9cqwmPm4r4iBKmM1K1oNecfUZhSw8GjNjRVs05Exiw21iy7xLsvNMo71BTa6BPu
-         bgOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712249870; x=1712854670;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=lTE8+oh/R1tis1FpRuf547JjNaef5iXS7/FKBvUGN+U=;
-        b=MUPcTXNoZ+7lFx6+jLRdMa3cynb2TiQowP7varw3dp1MYzf1k1ed5Fz+e/edrzH3yn
-         jIIJ/lZx7a8n8zr+W4XmWRw2nLSFYtpU6OBc/P2Sw4eQKYYJLqj7uaQMLcMFANpnno6n
-         IRAUw9qWhZeryeDUucZGNW5dncwmUlb4hIZlR0CbhmaArNbJQYMcTHmOF483hCTLunlK
-         ZQ7AicLDGhufPI8BidYyMTOV873tZ9jnB+/hrPn6UQoyLel5vPw8+99ugw3zcVc7XUDR
-         ChI/ECFKI/BgkcMas5U10BzuDExPMflTXCqBdBZHSLCG07s93XDru6OmEQhUETv2P7d7
-         eBzA==
-X-Forwarded-Encrypted: i=1; AJvYcCXpudtWa5wkrqGHQQPshs2C6L7H0WCmGeCt9WVWUgRLLWWTdFGjDaM0qoT2Dlw0IgzH1DSU3yRdYRQGZ3iYDf9XBGdZ4dPEsccpkQ==
-X-Gm-Message-State: AOJu0YxHLG229J8sJLyOXWN/ei3nL718UcukSJMOUKck84DUK3WWxQX5
-	FQJn7f/muidps3vRL2c5i9s8xAfaX+mVna7b4ty9tqWoDXU+O/9DYtlg8VTFuWPwvz1sA9r9TqL
-	LZdtGI73q515eB23Jpr7XuYEQpFjs3LolitDnNg==
-X-Google-Smtp-Source: AGHT+IFE0+ahlc5nRL1hgLfZODKxbfrTp1Qc4vXsx4HOv/uC4g10dvAfQIHFs1k8Dy9M4egSuyjIIZGniBCN0XY0PDc=
-X-Received: by 2002:ac2:4826:0:b0:516:d1af:e4e9 with SMTP id
- 6-20020ac24826000000b00516d1afe4e9mr17779lft.25.1712249870133; Thu, 04 Apr
- 2024 09:57:50 -0700 (PDT)
+	s=arc-20240116; t=1712250314; c=relaxed/simple;
+	bh=ciuhxV+lxpulzdqgBI0ASX/tPUFRGPCHizIhzVA75GQ=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FyMzruATG6zB/uS+DMZxziQQhuOR+2ya7E4m9CxFbORgPhnLlR0wXhBZdW4vqmqTYpR5vebw6MOnHc7t/2/Go5flZs+89CMjRvctmj9zm/1KEjxKTna/t31ot4jekI/SAqQiwQMfYs77RirgpGffrzxc9oV7Hf36wddsatxiEr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ERmAQndG; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712250312; x=1743786312;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=ciuhxV+lxpulzdqgBI0ASX/tPUFRGPCHizIhzVA75GQ=;
+  b=ERmAQndGdDzEZ37USJLxIjNOOJidrSz6xozPYe+HJeV4a54cqtXGts0f
+   PGXGlVIncBJQPcs1hBsZqLa0ZXhs8QyRKNlEivDCd8YBgfaaGcQ7C2vWr
+   Dd4pH8v5FsezWA/5mjIDU5LdHX/TMnxq+xnzZuzCvR7VbRWWIeJEFRC60
+   5N2daMzVX7FFUCof8EeXuQkQNEkKm04pWM4RogTwdckZdT7u/1R8HBjm6
+   PV5vYipZHnp2RYBj/Y5bQK4hU0ggZHHHwb+92Kb3iEHlhAZJrJAzG4Uam
+   4ZYZ+rhtQgosIAR/La+WNOWkAanklD/jl07jdNk7CMQaeEyyCi/p24MBw
+   w==;
+X-CSE-ConnectionGUID: p3iTTt48TzKiYiVCax8MDQ==
+X-CSE-MsgGUID: eXPQlIF5TLuEhKpVDDOfrg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="32949982"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="32949982"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:05:10 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11034"; a="915223889"
+X-IronPort-AV: E=Sophos;i="6.07,179,1708416000"; 
+   d="scan'208";a="915223889"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 Apr 2024 10:05:08 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rsQWP-00000001WTh-3noL;
+	Thu, 04 Apr 2024 20:05:05 +0300
+Date: Thu, 4 Apr 2024 20:05:05 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "Peng Fan (OSS)" <peng.fan@oss.nxp.com>, brgl@bgdev.pl,
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	cristian.marussi@arm.com, sudeep.holla@arm.com,
+	Peng Fan <peng.fan@nxp.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+Message-ID: <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+ <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240404093328.21604-1-brgl@bgdev.pl> <20240404093328.21604-3-brgl@bgdev.pl>
- <Zg7I7nYkZLcIgETq@smile.fi.intel.com>
-In-Reply-To: <Zg7I7nYkZLcIgETq@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 4 Apr 2024 18:57:39 +0200
-Message-ID: <CAMRc=Me=nH0bWzd3WstJnkQYmLHN7c+c4_wq41JXzcfp5pODRg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/2] gpio: cdev: fix missed label sanitizing in debounce_setup()
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Kent Gibson <warthog618@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Alexey Dobriyan <adobriyan@gmail.com>, stable@vger.kernel.org, 
-	Stefan Wahren <wahrenst@gmx.net>, Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Thu, Apr 4, 2024 at 5:36=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@intel.com> wrote:
->
-> On Thu, Apr 04, 2024 at 11:33:28AM +0200, Bartosz Golaszewski wrote:
-> > From: Kent Gibson <warthog618@gmail.com>
+On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
+> On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com> wrote:
+> 
+> > From: Peng Fan <peng.fan@nxp.com>
 > >
-> > When adding sanitization of the label, the path through
-> > edge_detector_setup() that leads to debounce_setup() was overlooked.
-> > A request taking this path does not allocate a new label and the
-> > request label is freed twice when the request is released, resulting
-> > in memory corruption.
+> > The SCMI error value SCMI_ERR_SUPPORT maps to linux error value
+> > '-EOPNOTSUPP', so when dump configs, need check the error value
+> > EOPNOTSUPP, otherwise there will be log "ERROR READING CONFIG SETTING".
 > >
-> > Add label sanitization to debounce_setup().
->
-> ...
->
-> > +static inline char *make_irq_label(const char *orig)
-> > +{
-> > +     char *new;
-> > +
-> > +     if (!orig)
-> > +             return NULL;
-> > +
-> > +     new =3D kstrdup_and_replace(orig, '/', ':', GFP_KERNEL);
-> > +     if (!new)
-> > +             return ERR_PTR(-ENOMEM);
-> > +
-> > +     return new;
-> > +}
-> > +
-> > +static inline void free_irq_label(const char *label)
-> > +{
-> > +     kfree(label);
-> > +}
->
-> First of all this could have been done in the previous patch already, but=
- okay.
->
-> ...
->
-> > +                     label =3D make_irq_label(line->req->label);
-> > +                     if (IS_ERR(label))
-> > +                             return -ENOMEM;
-> > +
-> >                       irqflags =3D IRQF_TRIGGER_FALLING | IRQF_TRIGGER_=
-RISING;
-> >                       ret =3D request_irq(irq, debounce_irq_handler, ir=
-qflags,
-> >                                         line->req->label, line);
->
-> But the main point how does this change fix anything?
->
-> Shouldn't be
->
-> -                                         line->req->label, line);
-> +                                         label, line);
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> (...)
+> >                         ret = pin_config_get_for_pin(pctldev, pin, &config);
+> >                 /* These are legal errors */
+> > -               if (ret == -EINVAL || ret == -ENOTSUPP)
+> > +               if (ret == -EINVAL || ret == -ENOTSUPP || ret == -EOPNOTSUPP)
+> 
+> TBH it's a bit odd to call an in-kernel API such as pin_config_get_for_pin()
+> and get -EOPNOTSUPP back. But it's not like I care a lot, so patch applied.
 
-It should, I badly copy-pasted Kent's correct code. Thanks, I fixed it in t=
-ree.
+Hmm... I would like actually to get this being consistent. The documentation
+explicitly says that in-kernel APIs uses Linux error code and not POSIX one.
 
-Bart
+This check opens a Pandora box.
 
->
-> ?
->
-> > +                     if (ret) {
-> > +                             free_irq_label(label);
-> >                               return ret;
-> > +                     }
->
-> --
-> With Best Regards,
-> Andy Shevchenko
->
->
+FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to
+have them being moved to ENOTSUPP, rather this patch.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
