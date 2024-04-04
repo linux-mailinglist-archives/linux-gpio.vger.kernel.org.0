@@ -1,99 +1,100 @@
-Return-Path: <linux-gpio+bounces-5081-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5082-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1E3AD898652
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 13:46:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A9646898656
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 13:47:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 52156288D9B
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 11:46:17 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 638E428999D
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 11:47:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E60CD7350E;
-	Thu,  4 Apr 2024 11:46:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32F4E84D12;
+	Thu,  4 Apr 2024 11:47:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E/mH3OX3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jp37XKjr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f179.google.com (mail-yw1-f179.google.com [209.85.128.179])
+Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DA7A7F7C8
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Apr 2024 11:46:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 717FB745C3
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Apr 2024 11:47:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712231169; cv=none; b=cZDLlQFF4XB4d5Urq+5i7HwEOt3muqk0uKcYnENcZrNMfY4kbhmlm5lXoCYVkgTmDpCNaa319eiHj26D2GrXP9OBA9HfZ/OE4AdVCq/c/PwKTMHB3eT5vEf50Fj1N3LG3q8x0mcDagbMZ4LDpQCjWnJNBfAb4W8UtcKRgLcJ51o=
+	t=1712231223; cv=none; b=oIetWBiHRmoV9bLdnYZfGiAZRidSM1khC4WXlefydLgxBK0gJbgDOhEHJc2D+x2jywZnohoStARd38vp6/LgBpz4Z07hEktVcJ0Hp0G6OKKI5hAYT/pdgBIMqpeozbxwzS1zf68AvGgsT/zpz1YecNsestyS9T0ovY5mSYQv1AM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712231169; c=relaxed/simple;
-	bh=0bAFYCn0S1dJ2yrIEz0ZS7aIjMo0R6DrZJPHkE7bWBA=;
+	s=arc-20240116; t=1712231223; c=relaxed/simple;
+	bh=/cfTb2VAwub8pYQSCzhjTlLFbA/bhq6Di6P54hY2C8Q=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=sadV3HxRmYBgpljbiGm7Rih1S5/7XHZ1B5roq56LQkq46JC9cuzd2PmqvBiOK3NlgGaXOK/PBc6WOQ5A9PYdMj1mHWHsKd1m89yF5k+7Yv56oK5k9rKVX0HTnrnrCiT8lb9CR12itWgJOhHNzo3Ki0tIF6sF5ZXaO76ZfDFAKbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=E/mH3OX3; arc=none smtp.client-ip=209.85.128.179
+	 To:Cc:Content-Type; b=ZDP5FuRAMsyeDa9bR8IfdLm7zrB3OwuTBu4kNfqqf3pDGu50BHBQLYAq065ZPiSpF6SpPfp1eXtT9BNqHtie12rIn+w4KmI4D5O3S34qfOXVCgFzlHfEht/Sev3JRzvckCducNN9/k65g4NoMsaV4H76t8PdDGbuGA6yqLWAs2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=jp37XKjr; arc=none smtp.client-ip=209.85.128.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-61495e769bdso8643877b3.0
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Apr 2024 04:46:07 -0700 (PDT)
+Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6152be7c58bso9604347b3.0
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Apr 2024 04:47:01 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712231166; x=1712835966; darn=vger.kernel.org;
+        d=linaro.org; s=google; t=1712231220; x=1712836020; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=0bAFYCn0S1dJ2yrIEz0ZS7aIjMo0R6DrZJPHkE7bWBA=;
-        b=E/mH3OX3I0ioJybT4i+Im8tS8fxJYAPYZ/RvaYq6PDJCEDh7ujMkpAd1QaNn/crAaO
-         aRDi467gxpjz5m2okD9Gzh9oucXwxEQWlRJA5Z0dr8gjF8nUJOVhnVZkDGKXbx95cxgi
-         s1047OsdmhN1JShDAmRFH9WZ/OQ8fI4Y8TUjzYXEUpjtEtC/zRFs6kGvyX4d0J96I/cB
-         Ayrji5gvJHdvNBD/niHLLjs4dcSqxzyjs/ARKc30JUSfl+PuGCPbq69F0Gn5dwBiZLpF
-         WKTuZM4PJFOQUvgTJ6vRcAkr0S9Pemnjpgx/EP8Nlhw69/XdVEwPncS8tgPj7oLaZB3F
-         PpWA==
+        bh=/cfTb2VAwub8pYQSCzhjTlLFbA/bhq6Di6P54hY2C8Q=;
+        b=jp37XKjrENlOH/kqi52bW69kmslU66UXAJit+oZZ4BUQXWW52NRhLAaWVT0Bx9Av6t
+         ANsTmRLh481lUoibpCNoCPp5MmtISgUrAr22B2WldcElTf9Nlp3S0AWD5Rz1VwtsaKFs
+         ecSBRTjHguwd3HG/FNBJxRAL9peWH4w+aio+mCv1hW6D6sBJV33Sjn0TgoP4nw0XC5xo
+         Ey8e8sCJXtIrfQeWXXxZyefMXIMgLQi+5IOK7WqCcNN0V5Kf9C6xJYP+D/QSAqeM0/gH
+         7SRsbXkSqkMAM6d+sNF5ZsQl4xocPAlMKEBBpWlKJLbFywYsQAncqcDV0HaFD0FQ078q
+         J4Sw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712231166; x=1712835966;
+        d=1e100.net; s=20230601; t=1712231220; x=1712836020;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=0bAFYCn0S1dJ2yrIEz0ZS7aIjMo0R6DrZJPHkE7bWBA=;
-        b=Ce5B5IUxmKe04W45lrTAtTbQCu8abdqordWeu1I/VnTtPVOR/uTKL7nOYepOjNmuEg
-         C/KCySCExD+r+T6woEedGI3oFtrRjKkNaWRxUyrW+odKZ/5lSV/qwUF1L+YDBdwSA5Qn
-         lvry9PePwHTDKjpWVJjjn77koxGQYEU6hsPWKmBOXj/7euKoBB4QeAJOoUL+pMFYaleL
-         pFLgAapbGiuHkZHHjqoz1h2WKz/bW2Sz7Vh43iSY9/taCINbp9l2wH/TTnFZx5YCojtr
-         HpxNjjwCdv6uyBcapKb+qGZpaaYQ6Lhr8L8BhNhxuVsu+nbMEivR8cOKY8OVnqZGm6EZ
-         PZPg==
-X-Forwarded-Encrypted: i=1; AJvYcCXLazhVm5c7lPbOh862bTb8l0SIl+G7QLKuJHZgZT65s5LOyypH6t+8J4dLRmHidQBB8Ypx8RGMoWFxTcspf1mta2HtqwspXpQHJw==
-X-Gm-Message-State: AOJu0YxZUIBj+qnlDnUXyIshvTr/cRWFh9x6urMAJWijjN2AzY92Cjke
-	3lsKFKALuXExrDJKGHgm96Qsz0bAqrQv2gixoIzRYTQJYDZO726zIR8Lm1Hrr2TyFM9X59ugrRI
-	Yjw4FapqCHdosKBl0XNSRgih36TMK/6/XAvn9fQ==
-X-Google-Smtp-Source: AGHT+IGu74Af53iaIgk2XgFUj5ga3mO2b15/RLozSRxzXstnfq8AhJlMB9p+lzkEfYDrX2Fvnpr0i0qNbGQS0bdtK/k=
-X-Received: by 2002:a81:ab4c:0:b0:611:481:9117 with SMTP id
- d12-20020a81ab4c000000b0061104819117mr1965101ywk.1.1712231166433; Thu, 04 Apr
- 2024 04:46:06 -0700 (PDT)
+        bh=/cfTb2VAwub8pYQSCzhjTlLFbA/bhq6Di6P54hY2C8Q=;
+        b=tChExx+fnYPZQwI1NauSTO32Y51dewt9XIyhMP/T7OmDrKS+UCTqTwJl0pu0rBcF/H
+         HWIh2gr9NpMlWxiNJvyGK87KRIokDBgHRFq4bkB44iES+Fo/ketfLN+r3rxeCTr+eNaa
+         6hAz9zjoKM3WQs5n9JuTNVRXEKyk4fxlQso+ZZ7mR375FzW/30+xMk8/vhiMewr03Eu2
+         +yqGOoyizqGUS9BeP3W9Yk1b+BwXgVsRVIIwsO8itzY7kdfkckqdLe8JxXylz/4bsT3E
+         KC75+YOogadB+qxeMLjA4tQWVwkX5iKhnQ8Lix9rgAdzjmaruTCtEGqATOIP2ynKmIdW
+         BSIw==
+X-Forwarded-Encrypted: i=1; AJvYcCVKMwV6/UOC9Rp+v+SsvofdEWuyE1SRR558V7cCSd/o05hwCksxxfL7WrHSRDUW2CXyhlhQWrgzGVTJTQ3cM/Bzafcs6k04fvrEJw==
+X-Gm-Message-State: AOJu0Ywx5ZXYUga1gWPHwjvwgTw48QRih4Ksc/IRTR5k3H4GdBLsIUS4
+	Ro9QhQJgOkg6BX06FzXpZeqNurgaC9vLZRY7kfiFzlvmqYeDvFKVZY+dTHTwomLav6rXQ8sPiq2
+	mHDyHw8/rQFHs6oBE79AH2qwXB7DI0fUUDOEE8w==
+X-Google-Smtp-Source: AGHT+IFFVdVOk+E7MDuKQ2cnteoYCIQKxsAsT5THCCEHiF9/XfDRwbjfBVeXdHYdUt6nUzx6qtMXhLYbOK1EtTJvdqE=
+X-Received: by 2002:a81:a18b:0:b0:615:17f3:55e9 with SMTP id
+ y133-20020a81a18b000000b0061517f355e9mr2067506ywg.15.1712231220589; Thu, 04
+ Apr 2024 04:47:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <60af8968864ae4a83a76e589b39a2b1e1f65c9db.1711992588.git.christophe.jaillet@wanadoo.fr>
-In-Reply-To: <60af8968864ae4a83a76e589b39a2b1e1f65c9db.1711992588.git.christophe.jaillet@wanadoo.fr>
+References: <a6b653642298d35b1e3656e9bfc6d1b322fbbe68.1712004518.git.christophe.jaillet@wanadoo.fr>
+In-Reply-To: <a6b653642298d35b1e3656e9bfc6d1b322fbbe68.1712004518.git.christophe.jaillet@wanadoo.fr>
 From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Apr 2024 13:45:55 +0200
-Message-ID: <CACRpkdaeMr=gKH2FSL4kkSyOirD__Pc3YYGoPga2GUvX3kjYBw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: max77620: Remove an unused fields in struct
- max77620_pin_info and max77620_pctrl_info
+Date: Thu, 4 Apr 2024 13:46:49 +0200
+Message-ID: <CACRpkdZeXwGoMVCtCC_6oSSACkcu-v5yt7yDi-vSSPrL43A05Q@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-single: Remove some unused fields in
+ struct pcs_function
 To: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+Cc: Tony Lindgren <tony@atomide.com>, Haojian Zhuang <haojian.zhuang@linaro.org>, 
+	linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, 
 	linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 1, 2024 at 7:30=E2=80=AFPM Christophe JAILLET
+On Mon, Apr 1, 2024 at 10:49=E2=80=AFPM Christophe JAILLET
 <christophe.jaillet@wanadoo.fr> wrote:
 
-> In "struct max77620_pin_info", the 'pull_config' field is unused.
-> In "struct max77620_pctrl_info", the 'pins_current_opt' field is unused.
+> In "struct pcs_function", the 'pgnames' and 'npgnames' fields are unused.
+> This is a left-over from commit 571aec4df5b7 ("pinctrl: single: Use gener=
+ic
+> pinmux helpers for managing functions");
 >
 > Remove them.
->
-> On my x86_64 config, with allmodconfig, this shrinks the struct
-> max77620_pctrl_info from 360 bytes to 296.
 >
 > Found with cppcheck, unusedStructMember.
 >
