@@ -1,119 +1,109 @@
-Return-Path: <linux-gpio+bounces-5084-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5085-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B815C8986AF
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 14:01:03 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA033898732
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 14:22:23 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 41B2128EA84
-	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 12:01:02 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 26555B259DA
+	for <lists+linux-gpio@lfdr.de>; Thu,  4 Apr 2024 12:22:21 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2AA048662A;
-	Thu,  4 Apr 2024 12:00:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5CF5D128378;
+	Thu,  4 Apr 2024 12:20:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eWdQNQqt"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="CEQ+1Vah"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+Received: from mail-lf1-f48.google.com (mail-lf1-f48.google.com [209.85.167.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531D78286B
-	for <linux-gpio@vger.kernel.org>; Thu,  4 Apr 2024 12:00:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 317AA84FDB
+	for <linux-gpio@vger.kernel.org>; Thu,  4 Apr 2024 12:20:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712232034; cv=none; b=Vx7s+I0sPX4qkRLKrvqJt2nLTdmqdnDN1TxHK33VFOA00U0vCNNRhmt0Z9hSPeUbTSS7avPe25xI+CxnUVDnxiI84eQNfUEupNDZMqy0/wQCMSCSV4SrqANGLfaQmxUB0DuDoIZJceABd86oRN/sUnMyTKdH5UaoKphHOvOkn/Q=
+	t=1712233235; cv=none; b=X3JgpiL2ABwcXf/o6mh5ASY9HlTCHrY7xBry97pLsa6HMZYUXbWkU2JTjpKnRJQSAbJA7+JOm7HMC0tpDuwxTGysfEGgM/Hj5+2dEo8924yzVE4bHpiPf2nNvArrrrjxTjltfuYcUcgCGFfb3UanEdH3mvKJIayAsqmpHp2E6z4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712232034; c=relaxed/simple;
-	bh=8iw7mOeyVDZ0niVvfjQyNmrucbFUKpaFK5zyc7QXi4E=;
+	s=arc-20240116; t=1712233235; c=relaxed/simple;
+	bh=H3f5IYJ1QWgMCxp8QqRnm74odB6YZNBaYMyZ5mE9B8E=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tnzyO0kfu/nWq5sH6cWCdA+RYbXoh08cUJCRtqlOXUATt6Jla+pjd1r1wJFppQBsyZg6oCK89EQCiGQStyC5YH7MoFUqAJboSHsExTbYxJyH9K5CxDIB8Ry/V59m0KwhANpYV01WEpPz+TEVNLz2L/qYqfCCcMROUy5dXq+Qut8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eWdQNQqt; arc=none smtp.client-ip=209.85.219.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dc6d8bd612dso994841276.1
-        for <linux-gpio@vger.kernel.org>; Thu, 04 Apr 2024 05:00:33 -0700 (PDT)
+	 To:Cc:Content-Type; b=vADGXZAe8hrdA/odoBvNrLBCcEfCQarFzaMiua9/v6eISl+b/bdxd87JGHFyXP5hyzDrRYhBmZ1328RjS/wcLUXUrSFR6Jxz2SkHiu1IBpqIpxaKeUmh2XtfDke36wGkjWnDMXUFDwTu/I7XV33sXzRcbBwtTKgIBe3p/Sw4/BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=CEQ+1Vah; arc=none smtp.client-ip=209.85.167.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f48.google.com with SMTP id 2adb3069b0e04-516d1c8dc79so62987e87.1
+        for <linux-gpio@vger.kernel.org>; Thu, 04 Apr 2024 05:20:32 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712232032; x=1712836832; darn=vger.kernel.org;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712233231; x=1712838031; darn=vger.kernel.org;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8iw7mOeyVDZ0niVvfjQyNmrucbFUKpaFK5zyc7QXi4E=;
-        b=eWdQNQqtJNKTIzZb8i1fghgfJPeHP5f+XzjXiGOa7DL7y97o5ik0tS3BBfoktgc+BP
-         FdSfQ+c+1UmD6OCRQT/mxQ633wAS1jHY1pNdvqaAdgReXhYpFLEZ0yjNOX9Dag7ikkdy
-         C/ZqMf3mIMouZnVp8TC9hT4xWHgcgWH/uR1ESxR5Sj/xvRYtaF+mVB3doeF0wVscLZz/
-         Vvm+L0sxSGukbY8ON0JAL3YLPWejJrbhVMdUORSlFrbHvJmAmF2anhBDHsPiwjMmQSyO
-         6/ScnNVcPZRl3pBfHT6yvODLSS9zy43z5T2Il2xRitwcqpYnO2veS8maN8tCz5JRDpoe
-         /apQ==
+        bh=DUbfvRaTdYI6FJXs+PUDsLKnWz2I5THsnSsWjhmBFSg=;
+        b=CEQ+1VahHY1lnHONUcj2WZxOs6Qkp/iF0KkGR/SZ1mL2VsVRudtZAR8laVgyetoym0
+         uD4x4KSK59RSy8umCfC5v4WN4lqKep7557O3xU7+jsDSCMlgCNvAqjIGOsgEGh5o1jgT
+         7Hx1eBySF4pWlM/uClIfHE/7pz2sGTgc5cQoh1y7adb9/tg6e5vh8fgc3fgpLNpPLR3H
+         YAR9V8qqF/33Kcs/P63IWE7bFNjbH+EV9PQw6NnJdLuv1s82+rDJhhJNfPP92enfetXa
+         mSfcaw6Ar4jcFjcBfnt+JEijmLotomS2JCLUDF8KYwkyKhdrGp/jKan2j9lhOUd2La0v
+         vXCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712232032; x=1712836832;
+        d=1e100.net; s=20230601; t=1712233231; x=1712838031;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8iw7mOeyVDZ0niVvfjQyNmrucbFUKpaFK5zyc7QXi4E=;
-        b=ueDDvlx5byOcWVHpXYDVYKMc7jP4kqqeQzXulTFkPGTs2NL3evU9bTwxIShcPnEnvQ
-         ebGh8uUjQz6j2UsldYP7jVcn302mTajwBKvug1GPO8lI9OremyqnrlmKff1rJLnBiVPo
-         umxfKQIlWCBJy9zRVacaM+FfkouIISVX3UGiFdJL4k6k32IookVCPVX0KAofm9q0QkWM
-         8qMPvjWF2j4qyyHWMoGXDZaowTx9YfInX9HT31a46HxdBFK88AlL0hHCUMEh1joYSbEh
-         +n59lSdBn3LYUdGMdLIMB9uaZD+hqIRInhFIe/jpKqItFm+EoZVivS0LNryNgoSR3y3j
-         feaA==
-X-Forwarded-Encrypted: i=1; AJvYcCWjFl75nN+qBekz7wFC/4ksr2lNbtSpHgIEig6rUvmFjebiji+D8gmA6NDHclChgzdEgaHOxvfgP0R5QOLs4cBqtNZ0Ptt3ZU31Yw==
-X-Gm-Message-State: AOJu0YxaPxCZZ1OPpXMetrb2x0G6Kzn+sSTRnPjFR+VX2Ehs+H5BvnkO
-	Xpp5yBfHIOxMw+JsbY3nJwWLBz+8aOy6oJMQJKvu/cmB8+yEbc9RkE2QZicm56yA9q2lUy+aWI9
-	4MHKWyClaALuFIp29iQJ+TmYuqQ/ZmPNIGz1puA==
-X-Google-Smtp-Source: AGHT+IFDnGWYkUjulcl3b72iVoeMkRwAikOQXFL7/ONb9PVXD/x1iz8l+R04Quu2n+bUEuz2YG/VA0DhNbH70FEGXro=
-X-Received: by 2002:a25:a3c5:0:b0:dcc:8c7d:970d with SMTP id
- e63-20020a25a3c5000000b00dcc8c7d970dmr2174589ybi.47.1712232032207; Thu, 04
- Apr 2024 05:00:32 -0700 (PDT)
+        bh=DUbfvRaTdYI6FJXs+PUDsLKnWz2I5THsnSsWjhmBFSg=;
+        b=ZlbL7zmSu8kGT85ke+jBn68genFfk20cvTJCHIHbtU9EPjZ0H6jGxS9/eMPf+D3Op6
+         i1OEw9uq4sFIMCIucmSeprh/ORvHjA2WWACzoj0wAk2o83aGlCIEuHTT5qP10DVuwKCX
+         yBH8e/XFRF6r1ceeIPpqUVDRiQmkake6NIo3nI5VmVPHAojQnu/SLwZYXKKFu6KqXTdV
+         kwfia7Q1C+MuwxzpPxWchoROA0s0v2QRg79aS9NgY0a13MiAjRP9mikZp6c3e+Zi4D2G
+         pJmmx8CWKtEU5sO2beEqk0GT4Hq2wRo/HsoPG3kVAlKQdLFye4vF2Pv4xX5/ah4zINB0
+         2m/A==
+X-Forwarded-Encrypted: i=1; AJvYcCV6jeiaj0tdgmCAw/T9TU6zsXiRrXvaDBoUztT/WfqDRI0sfeZ4juY3yLeqIJwt8Lk9UDoj5Q2u6MrG9WcDhGFtbofC0Ba6o8Mm0g==
+X-Gm-Message-State: AOJu0YwVjoCy9BLYDvgeHVskHl2MGXG8Pju0tPI+J/ve+MnMgmfV2o/u
+	kkCUDQC37s4vtylZTFE8E5nUEJStOnHlDwtlF5p1WT0w890jHRVI6jBPDpuVQCb9arS11UyyMQJ
+	JVraVkPxzAjs5S/b4aw1VxfWWOm5QGNzsgjRYWA==
+X-Google-Smtp-Source: AGHT+IFXuY19yD67Vs0YeBOAYv5IS0ycYwSWTF9HWesGz64hK8qtn9PkV2yqkWQlXtSA4rvLO2hBr6dSTjjx6khY+oo=
+X-Received: by 2002:a05:6512:60b:b0:515:d038:5548 with SMTP id
+ b11-20020a056512060b00b00515d0385548mr1623137lfe.31.1712233231216; Thu, 04
+ Apr 2024 05:20:31 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <Zflxi8SCzzouP9zW@login.tika.stderr.nl> <20240319110633.230329-1-matthijs@stdin.nl>
-In-Reply-To: <20240319110633.230329-1-matthijs@stdin.nl>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Thu, 4 Apr 2024 14:00:21 +0200
-Message-ID: <CACRpkdaBXtR9m-ksn=rAwD3+dPDN_74zRVM183pam0zk=bf9Nw@mail.gmail.com>
-Subject: Re: [PATCH] pinctrl: single: Fix PIN_CONFIG_BIAS_DISABLE handling
-To: Matthijs Kooijman <matthijs@stdin.nl>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, Tony Lindgren <tony@atomide.com>, 
-	linux-gpio@vger.kernel.org, linux-omap@vger.kernel.org
+References: <20240403131518.61392-1-warthog618@gmail.com> <20240403131518.61392-2-warthog618@gmail.com>
+ <CAMRc=Mf0DPN1-npNPQA=3ivQd-PMhf_ZAa6eSFjmQ26Y8_Gv=g@mail.gmail.com> <20240404105912.GA94230@rigel>
+In-Reply-To: <20240404105912.GA94230@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Thu, 4 Apr 2024 14:20:20 +0200
+Message-ID: <CAMRc=MeOW6mcYFR6GL5c0hyfH_ZvqmLqKFSk50jKa-d+4aa4iQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] gpio: cdev: fix missed label sanitizing in debounce_setup()
+To: Kent Gibson <warthog618@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, 
+	linus.walleij@linaro.org, stable@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Mar 19, 2024 at 12:07=E2=80=AFPM Matthijs Kooijman <matthijs@stdin.=
-nl> wrote:
+On Thu, Apr 4, 2024 at 12:59=E2=80=AFPM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Thu, Apr 04, 2024 at 10:20:29AM +0200, Bartosz Golaszewski wrote:
+> >
+> > Now that I look at the actual patch, I don't really like it. We
+> > introduce a bug just to fix it a commit later. Such things have been
+> > frowned upon in the past.
+> >
+> > Let me shuffle the code a bit, I'll try to make it a bit more correct.
+> >
+>
+> The debounce_setup() oversight bug is the more severe, so it makes more
+> sense to me to fix it first.  But then I my preferred solution would be
+> to pull the original patch and submit a corrected patch that merges all
+> three, so no bugs, but I assume that isn't an option.
+>
 
-> The pinctrl-single driver handles pin_config_set by looking up the
-> requested setting in a DT-defined lookup table, which defines what bits
-> correspond to each setting. There is no way to add
-> PIN_CONFIG_BIAS_DISABLE entries to the table, since there is instead
-> code to disable the bias by applying the disable values of both the
-> pullup and pulldown entries in the table.
->
-> However, this code is inside the table-lookup loop, so it would only
-> execute if there is an entry for PIN_CONFIG_BIAS_DISABLE in the table,
-> which can never exist, so this code never runs.
->
-> This commit lifts the offending code out of the loop, so it just
-> executes directly whenever PIN_CONFIG_BIAS_DISABLE is requested,
-> skippipng the table lookup loop.
->
-> This also introduces a new `param` variable to make the code slightly
-> more readable.
->
-> This bug seems to have existed when this code was first merged in commit
-> 9dddb4df90d13 ("pinctrl: single: support generic pinconf"). Earlier
-> versions of this patch did have an entry for PIN_CONFIG_BIAS_DISABLE in
-> the lookup table, but that was removed, which is probably how this bug
-> was introduced.
->
-> Signed-off-by: Matthijs Kooijman <matthijs@stdin.nl>
+Nah, let's not needlessly rebase it. Most I can do is merge the two
+but they are really functionally separate so I'd keep it as is in v2.
 
-Patch applied!
-
-Yours,
-Linus Walleij
+Bart
 
