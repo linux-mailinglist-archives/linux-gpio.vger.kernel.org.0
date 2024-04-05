@@ -1,133 +1,151 @@
-Return-Path: <linux-gpio+bounces-5116-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5117-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8490289A1E7
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:52:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0D60689A1F7
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:55:49 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3D81E282D16
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:52:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3EA2D1C21B7D
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:55:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4464F17109B;
-	Fri,  5 Apr 2024 15:52:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83CF616FF5A;
+	Fri,  5 Apr 2024 15:55:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Om3T7B+X"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BHl3hekz"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE248171084;
-	Fri,  5 Apr 2024 15:52:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72A2616F82C;
+	Fri,  5 Apr 2024 15:55:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332353; cv=none; b=tJILLuSavG02VEZ58XPTSus+Qg1QM7bsrpCiyHdkGS9Cucj8OC8sn6i4RnOIgTPqvY0REZuRHhRl62xUKfiVHsg0y2CulpNTnFRUEnRBUp4TQWgRk7t6Szz85pmYAdy/IMJ0wDNTeabSNXrQRr9b3idW2vGdO8MWZE4MMPOKeBA=
+	t=1712332542; cv=none; b=eFoXixmfVvtVDRe2QbAvU04kSak0FNwYNnHsBU1VYJ6yDlhCYTaHfwS67TPZh5zkflA9n0ZmtR91viPCuopWb3dao73vzrbIjYRSsbu84Oc4vZ/QyTaKKEpSnzt0gF01CZvxHKXXO8Hky1IhpwUaZtnE3wsT7U3B0U4cRvbn7YI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332353; c=relaxed/simple;
-	bh=1TYQ2nOf7m5eWfWsRNd18xHaQuIeo9EkWggomHT0qUI=;
+	s=arc-20240116; t=1712332542; c=relaxed/simple;
+	bh=IeVzIxhCDd7OCAhIrOHOjZa0aKtNab8CgE1Nq2v+tZw=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lVNJHrwVF3whS360w/NyQETjavxYRVT2DYBNoY8uWMtltLrzRtp68/XpkBZYve9gZAKAnd0grt+dP2OS62CaMSiEovjfISjmSEpu+OwDPudWgYBmgrTbzRsuee9mwjvqmgM9u0KI86AU73JsPdaZZeBMJ380D1zqGdIh1WE92cQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Om3T7B+X; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C456C433F1;
-	Fri,  5 Apr 2024 15:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712332352;
-	bh=1TYQ2nOf7m5eWfWsRNd18xHaQuIeo9EkWggomHT0qUI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Om3T7B+XSv2dLDaDtUMT1+Bj89NktWuLG9ZRiHO6pDXJCKOFbWt3CuoJPum7E3X2j
-	 TWI7MtUFfRcF7Mdq4DvRdXsYGbaMY2y8A53XSgX6Wr06fq4MvfRcCohMT/67DUID7J
-	 jn9BmSmUHZ5xj+761vczmdGa3K6e386tRbc4MsOnT11ooeZlA5p18lWpvUUq4Ljj6T
-	 Y5/S5MbstQZLh48LDyA8yYRFhk+Y3YmpoD9RevHhIJuUa7C1CecIPzSAkWhza6DnPK
-	 RlmUbsLkYrUKL8Nxk0yFvPuDgLFb64V2/yFNrQ/Zyj7TvtVGTJYWQJ3iNjxsB06OXr
-	 IxlcVyAXZ0RvQ==
-Date: Fri, 5 Apr 2024 16:52:27 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yangyu Chen <cyy@cyyself.name>
-Cc: Icenowy Zheng <uwu@icenowy.me>, linux-riscv@lists.infradead.org,
-	Damien Le Moal <dlemoal@kernel.org>,
-	Rob Herring <robh+dt@kernel.org>,
-	Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Guo Ren <guoren@kernel.org>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>, linux-gpio@vger.kernel.org,
-	linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v6 10/11] riscv: dts: add initial canmv-k230 and k230-evb
- dts
-Message-ID: <20240405-election-stubble-6b7e3d530d3c@spud>
-References: <tencent_F76EB8D731C521C18D5D7C4F8229DAA58E08@qq.com>
- <tencent_DF5D7CD182AFDA188E0FB80E314A21038D08@qq.com>
- <c052918c13069cfcf768d03518560c65c990b220.camel@icenowy.me>
- <tencent_1C21558D2A7C7B8251DA4E8E08B82E313C08@qq.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=VKsv+NF82I91n5xWS3Xv9rtAZTszFTx07T8cCFFLWHMXARm2Bqev+KVAW7Pzw8vT9z3ei74BKOGG7rtdkehvvmfgXPp1ndyB5Yhk10/cjbsyGe61np0iI1gw+jpxPO0oQSP2G2bgaJf/6yz6dllxCHeZChcl+cdrU+Ev6YTwmZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BHl3hekz; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712332541; x=1743868541;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=IeVzIxhCDd7OCAhIrOHOjZa0aKtNab8CgE1Nq2v+tZw=;
+  b=BHl3hekzSokXBnfM70zu+gSqWvnbIB20fNVGBzK/oAN1nIkQicXwZ04/
+   9lWIe7jy+cAoMdr1+xsVYJGyl0gk15qkng+28KEfDi90hcNEruWMgBF9u
+   eAUVOUsytETeJcj7M8Y4aFCKQ55Wwfoiw9Ae9gHsTt4V/ji7DJh05sr2R
+   MSpUCDKqEox1GdAcrQD4sYSxOI6htF1Zgjae+BUudLeu8kzwMVwlg+ClB
+   R6tNv+IdGVN2cg55NI5vharzmUbL128Zf68jHPJLl6EZukgAAA24sSnUh
+   zfGKQZfEuGVI/fE1DbIBpUL3GuoYGEv/+G9M7e5fuwnijrQWnKzRRu0TO
+   w==;
+X-CSE-ConnectionGUID: Hw6Q36LQQnGtwM/usVSjJw==
+X-CSE-MsgGUID: SG1P5OhUT/aqlTuWebhBsQ==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7568603"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="7568603"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:55:40 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915257712"
+X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
+   d="scan'208";a="915257712"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:55:37 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@intel.com>)
+	id 1rslug-00000001n9M-2yqb;
+	Fri, 05 Apr 2024 18:55:34 +0300
+Date: Fri, 5 Apr 2024 18:55:34 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Peng Fan <peng.fan@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"cristian.marussi@arm.com" <cristian.marussi@arm.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+Message-ID: <ZhAe9oFz9wLQi4de@smile.fi.intel.com>
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+ <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+ <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
+ <DU0PR04MB941777DA29D70013342721A788032@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <ZhAa3NPO19mINYJP@smile.fi.intel.com>
+ <ZhAdB4T7sTa2Z7db@bogus>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="zGrM3zVsiNMs8DNg"
-Content-Disposition: inline
-In-Reply-To: <tencent_1C21558D2A7C7B8251DA4E8E08B82E313C08@qq.com>
-
-
---zGrM3zVsiNMs8DNg
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhAdB4T7sTa2Z7db@bogus>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-On Mon, Mar 25, 2024 at 11:10:49AM +0800, Yangyu Chen wrote:
-> > On Mar 25, 2024, at 00:23, Icenowy Zheng <uwu@icenowy.me> wrote:
-> > =E5=9C=A8 2024-03-23=E6=98=9F=E6=9C=9F=E5=85=AD=E7=9A=84 20:12 +0800=EF=
-=BC=8CYangyu Chen=E5=86=99=E9=81=93=EF=BC=9A
-> >> - Svpbmt and T-Head MAEE both supported
-> >>=20
-> >> T-Head C908 does support both Svpbmt and T-Head MAEE for page-based
-> >> memory
-> >> attributes and is controlled by BIT(21) on CSR.MXSTATUS. The Svpbmt
-> >> is used
-> >> here for mainline kernel support for K230. If the kernel wants to use
-> >> Svpbmt, the M-Mode software should unset BIT(21) of CSR.MXSTATUS
-> >> before
-> >> entering the S-Mode kernel. Otherwise, the kernel will not boot, as 0
-> >> on
-> >> T-Head MAEE is NonCachable Memory. Once the kernel switches from bare
-> >> metal
-> >> to Sv39, It will lose dirty cache line modifications that haven't
-> >> been
-> >> written back to the memory.
-> >=20
-> > As MXSTATUS has a S-mode read-only mirror known as SXSTATUS, maybe the
-> > kernel should detect SXSTATUS to decide whether to use Svpbmt or
-> > Xtheadpbmt (BTW Svnapot conflicts with Xtheadpbmt too).
-> >=20
->=20
-> Thanks for this hint. I may need to change some code in the T-Head PBMT p=
-robe.
+On Fri, Apr 05, 2024 at 04:47:19PM +0100, Sudeep Holla wrote:
+> On Fri, Apr 05, 2024 at 06:38:04PM +0300, Andy Shevchenko wrote:
+> > On Fri, Apr 05, 2024 at 02:13:28AM +0000, Peng Fan wrote:
+> > > > On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
+> > > > > On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com>
+> > > > wrote:
 
-For now, I'd rather we just focused on supporting the standard
-extensions on this SoC in mainline. I've applied the patches re-doing
-the Kconfig options just now, feel free to resend these patches
-whenever.
+...
 
-Thanks,
-Conor.
+> > > > This check opens a Pandora box.
+> > > >
+> > > > FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to have
+> > > > them being moved to ENOTSUPP, rather this patch.
+> > >
+> > > I see many patches convert to use EOPNOTSUPP by checking git log.
+> >
+> > How is that related? You mean for GPIO/pin control drivers?
+> >
+> > > And checkpatch.pl reports warning for using ENOTSUPP.
+> >
+> > checkpatch has false-positives, this is just one of them.
+> 
+> Fair enough.
+> 
+> > > BTW: is there any issue if using EOPNOTSUPP here?
+> >
+> > Yes. we don't want to be inconsistent. Using both in one subsystem is asking
+> > for troubles. If you want EOPNOTSUPP, please convert *all* users and drop
+> > ENOTSUPP completely (series out of ~100+ patches I believe :-), which probably
+> > will be not welcome).
+> 
+> Well, I don't agree with that 100% now since this is GPIO/pinmux sub-system
+> practice only.
 
---zGrM3zVsiNMs8DNg
-Content-Type: application/pgp-signature; name="signature.asc"
+	git grep -lw ENOTSUPP
 
------BEGIN PGP SIGNATURE-----
+utterly disagrees with you.
 
-iHUEABYIAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCZhAeOgAKCRB4tDGHoIJi
-0s3NAP9jV2FX5X2ERdKTaT8zG4y7prr8i8ld575p2m0u1mmbNQD/SIHdnbGSOOp0
-XurrRRps4Y469JrQ/R9fmQG+RFel5AY=
-=Xusz
------END PGP SIGNATURE-----
+> What if we change the source/root error cause(SCMI) in this
+> case and keep GPIO/pinmux happy today but tomorrow when this needs to be
+> used in some other subsystem which uses EOPNOTSUPP by default/consistently.
 
---zGrM3zVsiNMs8DNg--
+This is different case. For that we may shadow error codes with explicit
+comments.
+
+> Now how do we address that then, hence I mentioned I am not 100% in agreement
+> now while I was before knowing that this is GPIO/pinmux strategy.
+> 
+> I don't know how to proceed now 🙁.
+
+KISS principle? There are only 10+ drivers to fix (I showed a rough list)
+to use ENOTSUPP instead of 100s+ otherwise.
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
