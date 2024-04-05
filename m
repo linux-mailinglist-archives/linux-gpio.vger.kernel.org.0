@@ -1,113 +1,102 @@
-Return-Path: <linux-gpio+bounces-5101-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5102-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7ABE899406
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 06:10:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3429489966F
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 09:23:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0D6341C2494E
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 04:10:21 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCA9F1F21F2F
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 07:23:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 92D001BF54;
-	Fri,  5 Apr 2024 04:10:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E75F1364C6;
+	Fri,  5 Apr 2024 07:23:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d3g6iIFk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="eD32bQH/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AC0F18E2A;
-	Fri,  5 Apr 2024 04:10:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15A4A36133
+	for <linux-gpio@vger.kernel.org>; Fri,  5 Apr 2024 07:23:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712290215; cv=none; b=JUD9ILNUkRmTJG+83G5u/AyO0mLe6R/qq7/oP956kGFuFzYcj2MX1Gi8cOvjsgpYyX/R2ErYGCB/BlipQJBtnPckVATMJxnltYD3hvsGSbWRegvGoN3DLKhdxJObATKUSui3HVv0SXBYSmg98GEDry07vIRfUjQWbqQodt7cODI=
+	t=1712301795; cv=none; b=W5v80LNIPKXSsrsSdbvVcP1aAWriQ0Fs3LhsW/qzXugsBj7UAu3FxTS5Cb6+9x3Sn+1Q3bE3r3G3V7gwI3QbIAeW9lOOyKgY+ehNlXJYPiCzbheWOmAAz73Ld6NHrP5sDPh3SfNAJofsAoJjjbrNirXzVasI5GRki92Gd2Fl73M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712290215; c=relaxed/simple;
-	bh=g7BQtInmRrLi+M5GE0wFlNQnSVd6g23d07lp51zGVzI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AkvcTORALrBrWvjkjg8qtvpCEssYfPNyFONm6+8pzhAiD5wlIeiGDdD60rGH35Eo3Q/uHnUbKpya12WDdrlOkrAft7I8kv42S3dXlh+9xIpbYqpVvPPO2ilxt6lDH5C8/+FKjFhJrCOhAA2TQWcz3ncWHZpV1mkTKkwp0MNirr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=d3g6iIFk; arc=none smtp.client-ip=198.137.202.133
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
-	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
-	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
-	bh=nSPrZsWCYvArB4boS+pxoaKtULxq2hWNfqCbSHuZGp0=; b=d3g6iIFkTBjoDGDsoT4rR4mRKB
-	fnoRlIasjLao0N0/kvQ4SyspHeB22M+5OV+KfpBJkWEMfEQCj/piOe29f+EOfjYr6vXYLULT+CMpX
-	EHCmvYaE47DTi/cFYiFmmCPVrI1dnDXenLCJqFTY8JUKVF9XnEwNiP49Ub+82ip+1945FVdGVA3aF
-	HGYmdhaSsqA0IA/sLo8ciSfoRnUi2hONym1a13L3KJwopqoWvzGFzt/SncuS/zPl1JicXRe09AZ4A
-	jyVrXN8d8z63xnzXtrYJXksxPOvfWbjQWl5yWEiPgLn6u9ZEL5SXVaRF9ANriu0xffFYuOny83MWL
-	syZsNBeQ==;
-Received: from [50.53.2.121] (helo=[192.168.254.15])
-	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
-	id 1rsau3-000000057M5-1q8y;
-	Fri, 05 Apr 2024 04:10:11 +0000
-Message-ID: <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
-Date: Thu, 4 Apr 2024 21:10:09 -0700
+	s=arc-20240116; t=1712301795; c=relaxed/simple;
+	bh=+tNTqydU4581p38UmnWmCeIibmbcb+alKyUkuT1zHJ8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mzo4Z9kgnr1UtpF2dmrBXnNRbOwue+V0fBYpXAmwLHhPynLipkNmNs2j9twZs/IGuPsV923BYfaSZenvjckVy9HLVij8yzmC5IXh9r14Xk4WSKE0SrLmKv/ncODfJQvZoJ1PBJ4R4HeexyHmgluiJa2JniUq5MX26rjRtCIOzWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=eD32bQH/; arc=none smtp.client-ip=209.85.218.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-a46a7208eedso256716766b.0
+        for <linux-gpio@vger.kernel.org>; Fri, 05 Apr 2024 00:23:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712301792; x=1712906592; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=XpWHBLrC+gnaL6TTZpQPIWKatda4WwjRCTQdFM/+mOs=;
+        b=eD32bQH/HAC3gW9mYQVL3nd4FIHX94yWZ+SsaunqhHLO0NIGixCsjgdpevkvVKm7oa
+         SSdgQg6finEP26Uit2WXYVG7iFPkVwv0ZF2c3zt7eCxJcr4lLlugJ32RppsBbyE90pu/
+         cwmD2YEKxIscLIJc3o83Ke7uj9v0qG4Xpo6yL5GgSC2txwzhHW7Jzw4+cHykBrx9msNw
+         ST+RyPrCiIx4F9f93v171ibjeyR6GGM88juSMK5cjjKFYuLqamVmytlflGCwTnHi9OMY
+         t1qarQI75+OuGuvSNjYZ+pa9UXCCA7UHgWMi8VpCHuHImWXrT9ghmqWB3l048beShMxG
+         pXgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712301792; x=1712906592;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XpWHBLrC+gnaL6TTZpQPIWKatda4WwjRCTQdFM/+mOs=;
+        b=wizQuBML8eqpH02z9nu/c7Boz2gjGWVIZufNlXmQBbmx8ah18bGODABWD/9xFHTUXb
+         VyYIbMKKqWvfGltzOu9nagmyrAjuobwXepa5bgyf85oCAX0CbKa5pkia4vG1VMj9jaAW
+         3rpuV+crlrJc8sPeGmme03CW26IpFzWxPFl6RPKCQbHCYPDihYf6GiHVZrnW1aear2po
+         yqE+RyLUtt0H0dzzOn9V0Ena66Ip2i4dM8LLhKyejlp8dg8b1CXK74pmNP2Oabv0n6kN
+         36jOZCWlB2uJWHDMnobKfq0DGElWN9p8V0nQ4xuZaNtiqZDJxAWyDyF/5zD9iUu7U7MA
+         6c/w==
+X-Forwarded-Encrypted: i=1; AJvYcCUFo7xbPzaFS++P20qWrYA+jnxfnBvqAa+8iN/H1d76+xcRv5ivOHXeNBu4Wzd8WXGPT2WQD9+w0JEL2quoSD1obGgwVbOrJqFkKA==
+X-Gm-Message-State: AOJu0Ywj8yc0yVRynLMp2F01PLACQ69fviXZmL7vWeiJ+aI4m4CWToQt
+	zNgAAvVA9u3oxPPLF7WDhp6AX1aG6RvC8PlJxj33FUzHjKf/BRFGFaIJx2/dpHQ=
+X-Google-Smtp-Source: AGHT+IHa2X947HJGnoLjdggroNUsEszX1cWQXP5frXhO7wlFmZu0gq410ZYzc/kn6AuszN3J8xTe/A==
+X-Received: by 2002:a17:906:412:b0:a51:9916:ba77 with SMTP id d18-20020a170906041200b00a519916ba77mr361028eja.51.1712301792228;
+        Fri, 05 Apr 2024 00:23:12 -0700 (PDT)
+Received: from localhost ([102.222.70.76])
+        by smtp.gmail.com with ESMTPSA id hy26-20020a1709068a7a00b00a4e4c944e77sm523561ejc.40.2024.04.05.00.23.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 00:23:11 -0700 (PDT)
+Date: Fri, 5 Apr 2024 10:23:07 +0300
+From: Dan Carpenter <dan.carpenter@linaro.org>
+To: Randy Dunlap <rdunlap@infradead.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
+ Return sections
+Message-ID: <b7d5ad29-1f0e-49e1-81b1-9400542a4074@moroto.mountain>
+References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
+ <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
- Return sections
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
- Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
- linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>
-References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Randy Dunlap <rdunlap@infradead.org>
-In-Reply-To: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
 
-Hi,
-
-On 4/4/24 2:27 PM, Andy Shevchenko wrote:
-> $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> 67
+On Thu, Apr 04, 2024 at 09:10:09PM -0700, Randy Dunlap wrote:
 > 
-> Fix these by adding Return sections. While at it, make sure all of
-> Return sections use the same style.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib-acpi.c   |  22 +++--
->  drivers/gpio/gpiolib-cdev.c   |   8 +-
->  drivers/gpio/gpiolib-devres.c |  44 +++++++++-
->  drivers/gpio/gpiolib-legacy.c |   3 +
->  drivers/gpio/gpiolib-of.c     |  48 ++++++++---
->  drivers/gpio/gpiolib-swnode.c |   4 +-
->  drivers/gpio/gpiolib-sysfs.c  |   6 +-
->  drivers/gpio/gpiolib.c        | 157 +++++++++++++++++++++++++++-------
->  8 files changed, 233 insertions(+), 59 deletions(-)
+> I would s/active-low/active low/
 
+Active-low is the correct jargon in this case.
 
-I would use %true, %false, %NULL, %0, and %1 in a few places.
-
-s/error-code/error code/
-or
-s/error-code/errno/
-
-I would s/active-low/active low/
-
-
-or it can just be merged as is. It's a nice improvement.
-
-
-
-Reviewed-by: Randy Dunlap <rdunlap@infradead.org>
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
--- 
-#Randy
+regards,
+dan carpenter
 
