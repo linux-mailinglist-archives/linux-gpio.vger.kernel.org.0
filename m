@@ -1,138 +1,135 @@
-Return-Path: <linux-gpio+bounces-5113-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5114-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1338B89A18E
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:41:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7671A89A1B9
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:47:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 448F11C22921
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:41:24 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1DA61F24D98
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:47:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5271916FF44;
-	Fri,  5 Apr 2024 15:41:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zrbi3bY6"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D3116FF33;
+	Fri,  5 Apr 2024 15:47:26 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A501DFE4;
-	Fri,  5 Apr 2024 15:41:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1622516FF38;
+	Fri,  5 Apr 2024 15:47:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331677; cv=none; b=JHP+3zWJ2nzeQZAXmGpuQvNT32eebRUrCMySdeEQwx/EEDDAwiUdJvd6olUzxlsSNpD30G3JV4ndcMTZFLNOmrNKQLsGECCQVWbc2Jy0EngSqS+NTgQ6/UTMIxHUXdfM9MyH8lKL2/PY55GUi97nOAbywtlboyuAQNRACaXKcG4=
+	t=1712332046; cv=none; b=S7oOskpisSIMlNGGNidFZsR0eeJg0Zt5RPu96zUAT7+Zvfuqen0cFOnWAS58Cbk34f5ULOxeJaJxthUP7/IOq437PAit9/sHyrsU3aNWB07klkDppdk6P+xUxE/cUWoRbskraH731MT+oZ5VeHe2AvGhJwknzoj9+kIkqrjOTM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331677; c=relaxed/simple;
-	bh=rZJGyKNtzoutcmvD9yBAQBRLOt5WkG7MywHLVvMRWZ4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=N1U25hQPW7/iEgBTPtKJl0Pwx6+vJJfyPr2l0HHxlDOKrJ/irLWSyiljqZNkXgO3SvlMRwu1txNMHVt8MnxAZLK1/Vdi33g/IKno/zyPeNa9SbGeRzVfsLOGF6llGqDk9Z9vENwGMTzHYt7qRfBoQC9S3/hELWFtaZIhujcLT98=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zrbi3bY6; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4163181a7ceso4796085e9.0;
-        Fri, 05 Apr 2024 08:41:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712331674; x=1712936474; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
-        b=Zrbi3bY6TWu8nzzhcBUiUS9i51HQAy+PP8m+ions/eaLgCT2afnymTyF6ZPX2L5jj0
-         O2QUpcQZOZhGVF33VidqinJidL9dDTLqFjp49lcpGxmx5OcoEqDhkSY+0IjFB1SuAZbn
-         vbuwk/TXT/DXX0SkoqZhQQFJC1l58Y1LpCxn9bh1ofqHrp47m4toz847at/FEXioKin9
-         mGHqBf7upSb3L5vCOPZHVXtjooiQe5+C2TsZgmVzUIPuHdu1SYdbo5JG9mDLDzu8m60v
-         DFDoYqFODUUXR4MWq/T2ZklzdBF4qVWsWUdJJUxs7j2eMPBCOtx7olJcQpfWG+aTXpbC
-         Y9BA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712331674; x=1712936474;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
-        b=V75OqEkMGHuO5XVOOCwDm+4cIjcenJ1nPTCI9ZnLXWPZrXneHknzLZTYWlyi8dNPGD
-         nKRepRjtonTaLSfrbp4eALSXjg4n07U8Z4Aem9LY7fcZAFO54Gq80i4zpDM56jDjSZOV
-         mcLy+0G6sUnkfPSVvKXoS0/4KobrsRT4V6nevsufh3/rZRGeZmr9pUzK1Xf++w1LuyZO
-         pHT88Znvf8xOeVB/SPhpt5AsN8JdOBAqu3/cV74g9JBU2KYEUsQuDQPoGi27Qz4GTAQ5
-         Rs7CLY14RzHQDRCf6fxsO+PqvJnAdWkXT6kDVMUP87t93Pj3Gjk8lD76ddv4hIEZ8jED
-         +Rxw==
-X-Forwarded-Encrypted: i=1; AJvYcCX87hIdpjqcDNB/8KoGLWp571LT54RgXumry5CJI9sfUglLdNSHYiJqA3qAfYpyySN6pIHbchSvu8zwqD+LXCyfuaBlik6TyoJRRgwz/fGrmN8d9704Q8PlfTpmJxcHBVI5Utox8cJFy69vcCLVQPFbHoKMYFD30w+op1m0Jg9izaX+umoxh09+qycKTKXZZy5JNTuOdy/+ikyGrzfGZWlfzbQ11eVtXlhPp/qmuiXp7z/A5TQfzNUgyb1YxyMYNdt3WpPRPl494mhZCvTWF6UfjBBH8d3nCKbj45LhlxOkJe6S6QwsogXegaHvwJaRkr9QuIc=
-X-Gm-Message-State: AOJu0YzGFCrTxq/voXaZURL2XeOsNKwiwup2aFnrQvotGneJ5wkuJfQ7
-	vH16VVKnVivchoc0yFchZtCMZoSu+8KNeDLkxLpU0RlVoJNCkAuns24H+e5XnzyO+futuy3jq1X
-	qs2BHpd7Vj7VhoPLQ6hR2GMklOEfjpfcMYYc=
-X-Google-Smtp-Source: AGHT+IEH9WiGdwQmFDR3UUpRkcaEXiGYsc+rbm05qeGkTnAd0VuAIEH5g2EodOENEkeRm+TdhthkOlf3f027HucPkCY=
-X-Received: by 2002:a05:600c:19cd:b0:416:2bef:ce81 with SMTP id
- u13-20020a05600c19cd00b004162befce81mr1484706wmq.1.1712331657141; Fri, 05 Apr
- 2024 08:40:57 -0700 (PDT)
+	s=arc-20240116; t=1712332046; c=relaxed/simple;
+	bh=QOPo52fRuvQqcTrD1klKb5S8Y6y2nkTuw3B0REf1mV4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UNLV9/DPZwbfPt1xqSgBmLBMqLWP2qi5jUZiNgLA4tQZmoexc3hCOfE5rDn0ZcY/t+3hp73sqml2F3WvqEn78gttrxg7ZYb2KA6X1v19gH4N8SvktMDkiO1i2qDm29rvyW5bc6bYiL7/OU7+u9vc2OoM3SIsQQu1LsTvKvO68So=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD4DCFEC;
+	Fri,  5 Apr 2024 08:47:53 -0700 (PDT)
+Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E89113F64C;
+	Fri,  5 Apr 2024 08:47:21 -0700 (PDT)
+Date: Fri, 5 Apr 2024 16:47:19 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+To: Andy Shevchenko <andriy.shevchenko@intel.com>
+Cc: Peng Fan <peng.fan@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
+	Sudeep Holla <sudeep.holla@arm.com>,
+	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
+	"brgl@bgdev.pl" <brgl@bgdev.pl>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"cristian.marussi@arm.com" <cristian.marussi@arm.com>
+Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
+Message-ID: <ZhAdB4T7sTa2Z7db@bogus>
+References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
+ <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
+ <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
+ <DU0PR04MB941777DA29D70013342721A788032@DU0PR04MB9417.eurprd04.prod.outlook.com>
+ <ZhAa3NPO19mINYJP@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <202404052349.lQch9J7G-lkp@intel.com>
-In-Reply-To: <202404052349.lQch9J7G-lkp@intel.com>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Fri, 5 Apr 2024 08:40:45 -0700
-Message-ID: <CAADnVQJXq1bSe20FgBN=BL1E5d8qOfLv_Ettq+724h5QfRuuKg@mail.gmail.com>
-Subject: Re: [linux-next:master] BUILD REGRESSION 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
-To: kernel test robot <lkp@intel.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, 
-	Linux Memory Management List <linux-mm@kvack.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
-	bpf <bpf@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
-	freedreno@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
-	intel-xe@lists.freedesktop.org, lima@lists.freedesktop.org, 
-	linux-arch <linux-arch@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
-	nouveau@lists.freedesktop.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ZhAa3NPO19mINYJP@smile.fi.intel.com>
 
-On Fri, Apr 5, 2024 at 8:37=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
-ote:
+On Fri, Apr 05, 2024 at 06:38:04PM +0300, Andy Shevchenko wrote:
+> On Fri, Apr 05, 2024 at 02:13:28AM +0000, Peng Fan wrote:
+> > > On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
+> > > > On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com>
+> > > wrote:
 >
-> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-n=
-ext.git master
-> branch HEAD: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc  Add linux-next spe=
-cific files for 20240405
+> ...
 >
-> Error/Warning reports:
+> > > > >                         ret = pin_config_get_for_pin(pctldev, pin, &config);
+> > > > >                 /* These are legal errors */
+> > > > > -               if (ret == -EINVAL || ret == -ENOTSUPP)
+> > > > > +               if (ret == -EINVAL || ret == -ENOTSUPP || ret ==
+> > > > > + -EOPNOTSUPP)
+> > > >
+> > > > TBH it's a bit odd to call an in-kernel API such as
+> > > > pin_config_get_for_pin() and get -EOPNOTSUPP back. But it's not like I care
+> > > a lot, so patch applied.
+> > >
+> > > Hmm... I would like actually to get this being consistent. The documentation
+> > > explicitly says that in-kernel APIs uses Linux error code and not POSIX one.
+> >
+> > Would you please share me the documentation?
 >
-> https://lore.kernel.org/oe-kbuild-all/202404051333.7und7PPW-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404051423.eiaXLwhX-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404051659.aawUkGUQ-lkp@intel.com
-> https://lore.kernel.org/oe-kbuild-all/202404052022.Cwf2ilBp-lkp@intel.com
+> Sure.
+> https://elixir.bootlin.com/linux/latest/source/include/linux/pinctrl/pinconf.h#L24
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L2825
+> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L2845
 >
-> Error/Warning: (recently discovered and may have been fixed)
+> I admit that this is not the best documented, feel free to produce a proper
+> documentation.
 >
-> aarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xdbb4): undefined r=
-eference to `__SCK__perf_snapshot_branch_stack'
-> aarch64-linux-ld: verifier.c:(.text+0x17c3c): undefined reference to `__S=
-CK__perf_snapshot_branch_stack'
-> drivers/i2c/busses/i2c-i801.c:1407:(.text+0x1d2ef4a): undefined reference=
- to `i2c_root_adapter'
-> kernel/bpf/verifier.c:20223:(.text+0xdba4): dangerous relocation: unsuppo=
-rted relocation
-> loongarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xa818): undefin=
-ed reference to `__SCK__perf_snapshot_branch_stack'
-> loongarch64-linux-ld: verifier.c:(.text+0xa964): undefined reference to `=
-__SCK__perf_snapshot_branch_stack'
-> mips64el-linux-ld: verifier.c:(.text.do_misc_fixups+0xd9c): undefined ref=
-erence to `__SCK__perf_snapshot_branch_stack'
-> riscv32-linux-ld: section .data LMA [00369000,00907967] overlaps section =
-.text LMA [0007899c,01a6a6af]
-> s390-linux-ld: verifier.c:(.text+0x13038): undefined reference to `__SCK_=
-_perf_snapshot_branch_stack'
-> verifier.c:(.text+0x17c14): relocation truncated to fit: R_AARCH64_ADR_PR=
-EL_PG_HI21 against undefined symbol `__SCK__perf_snapshot_branch_stack'
-> verifier.c:(.text+0xa960): undefined reference to `__SCK__perf_snapshot_b=
-ranch_stack'
-> verifier.c:(.text+0xadd0): dangerous relocation: unsupported relocation
-> verifier.c:(.text.do_misc_fixups+0xd98): undefined reference to `__SCK__p=
-erf_snapshot_branch_stack'
 
-Fixed in bpf-next with commit:
-https://lore.kernel.org/all/20240405142637.577046-1-arnd@kernel.org/
+Ah OK, my bad. I assumed you were referring to the entire kernel tree and
+not just GPIO/pinux. Sorry for that.
+
+> > > This check opens a Pandora box.
+> > >
+> > > FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to have
+> > > them being moved to ENOTSUPP, rather this patch.
+> >
+> > I see many patches convert to use EOPNOTSUPP by checking git log.
+>
+> How is that related? You mean for GPIO/pin control drivers?
+>
+> > And checkpatch.pl reports warning for using ENOTSUPP.
+>
+> checkpatch has false-positives, this is just one of them.
+>
+
+Fair enough.
+
+> > BTW: is there any issue if using EOPNOTSUPP here?
+>
+> Yes. we don't want to be inconsistent. Using both in one subsystem is asking
+> for troubles. If you want EOPNOTSUPP, please convert *all* users and drop
+> ENOTSUPP completely (series out of ~100+ patches I believe :-), which probably
+> will be not welcome).
+>
+
+Well, I don't agree with that 100% now since this is GPIO/pinmux sub-system
+practice only. What if we change the source/root error cause(SCMI) in this
+case and keep GPIO/pinmux happy today but tomorrow when this needs to be
+used in some other subsystem which uses EOPNOTSUPP by default/consistently.
+Now how do we address that then, hence I mentioned I am not 100% in agreement
+now while I was before knowing that this is GPIO/pinmux strategy.
+
+I don't know how to proceed now 🙁.
+
+--
+Regards,
+Sudeep
 
