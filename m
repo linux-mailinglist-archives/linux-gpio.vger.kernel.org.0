@@ -1,118 +1,108 @@
-Return-Path: <linux-gpio+bounces-5129-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5130-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7AE2789A2D1
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 18:46:50 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC20389A351
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 19:12:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15ECD1F223FE
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 16:46:50 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 21F4BB2748C
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:12:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C446171657;
-	Fri,  5 Apr 2024 16:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 376CE171E56;
+	Fri,  5 Apr 2024 17:11:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OMQ2If/S"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PWhQyiBI"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865651D530;
-	Fri,  5 Apr 2024 16:46:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8591916C854;
+	Fri,  5 Apr 2024 17:11:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712335604; cv=none; b=G6J59Vj1orSQkAmk4zwcuad1vV5C3n86nQxid7b4EdcnPwBvteeQjm2uT3ax63gKVipO/UL6PL1tcbzmwpM7al2ygUQZZEFowb1S9V4X9eLKEqy3LoQ/5Dvqc+qX91P999k++NVRpvyv7qIO3d+dr/OKbYSVQdzn/MJMLtafQFI=
+	t=1712337099; cv=none; b=ccHCHWqPHvRwQM0ZkZ3bDUjfRDAf7OT8vLY6hQyPbpp6gdq/TE9vrabMau4zWITG8gM9GTz4NrmEGrvl8UW5cs0tyYTzVR/z+sx8BhGslpl7EIsdDZb4cGOrapxmQU7ygSvk5b33OG3ehx0gYGx7YnhvtXTUWUzbTLNw/zbxsnc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712335604; c=relaxed/simple;
-	bh=DxzqwTFUD4Mv1j19NTjgo+XFNfXl/Rg/xD/MZTnQQMY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Mf6470K/HfwADoHNoT4Cknt61XisowSmgMR9C/VsmlN9DzCYtAQXOKwLv7Z3s3NpCMo+NqicFpV/zTVNbmiY8m1WEhUIerSqujbDfeeSqrxobRdou4GGL0HhiqYHHPRijqeGhFnbM67hes1LkZx3MNHNJInO4xs4vjtks0E70Us=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OMQ2If/S; arc=none smtp.client-ip=192.198.163.17
+	s=arc-20240116; t=1712337099; c=relaxed/simple;
+	bh=u8cXblyK/4P/wYRYqj8sdv2kkiFjbBCmb0PczkRJoww=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=OWvLhk7vERp5qHLwWHeNKwYhEcDM6NuQy4kikh+HZ8vQvFlAOIGI9I/NAhAgMkxRunmQqJZ9JjNCQHLdPPJ7P6cT2IIRYpwP8/7XY0KFUk6KbSt2tru/OXF5/26u+zN2cFZ/YlL8THK4LNjMjzighCr4ZkaSidAkPinZMQVLfVQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PWhQyiBI; arc=none smtp.client-ip=192.198.163.10
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712335603; x=1743871603;
-  h=message-id:date:mime-version:subject:to:cc:references:
-   from:in-reply-to:content-transfer-encoding;
-  bh=DxzqwTFUD4Mv1j19NTjgo+XFNfXl/Rg/xD/MZTnQQMY=;
-  b=OMQ2If/Sa8Ir+lhVuPievJfpNyeZuk2xpqX/aTFkRPYe2MKkMB3vPkR7
-   whhQsNFdyJUshB3j1VElVocMvUXgNOEnHfRcWaFJ3FYOB8jY7/ys63mns
-   Zq6lA8pDPOjiWFI/o+219R3IAk1i7xaKnR1pO/kibgPW6AmScNL3Gwd2d
-   wAly2sQ/IOsdaJ3VZn5Fs67MZOW1YCp1KaahH1VCERaukepM2VqSxRcnP
-   AJdbJh6KbXR5aLIft80c8bddOzdGySOtiG4SDbs3tN5Fkc8TeT3kxEPCg
-   YUqGd+GhJZad1akZt3nMIAArOAtj55OtUNMXg6BF2m4kYK1yxkpbQOgSe
-   A==;
-X-CSE-ConnectionGUID: jhoaMKsUTQqw5M1B8AErlw==
-X-CSE-MsgGUID: eYwe5MHRTwWf6DsEhpSB/A==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7537977"
+  t=1712337097; x=1743873097;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=u8cXblyK/4P/wYRYqj8sdv2kkiFjbBCmb0PczkRJoww=;
+  b=PWhQyiBIaUuxjz5eCAdmBVV90azYILoU4uGSCquuZV1Q0MgqBuob0XM5
+   JnyNrIxiLGLtvNhdp5vm+HmQQ9ldM12cBm6VZiuS+58E72KrVoC94fbNi
+   Jt7Jtbr5BJVdobY9DuIaYGKmrJHIfKYQLN4PqNFnnbZiPTRt0F4XP6gJ5
+   hHzXaLnnt+9GhUWJmOiBk4XVkYMvgiJ0iq8WA30C6FQMZQZysCvwFXApf
+   xLwzGWUl3BwU8rg4dRh4nZk7G/sYfaS33EzgzU2TgjtWeVoaiTLd0fYn0
+   trk/3t4wJg4iDwgF11DLY8+aXOpt8ULwCBtdRVrRS3+RhSkeRVFmZ49pR
+   g==;
+X-CSE-ConnectionGUID: 8lIt9+HyRGKLto/+APgYbQ==
+X-CSE-MsgGUID: NvbrUNGPTW2gP1pjIMfOkg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="19030943"
 X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="7537977"
-Received: from orviesa005.jf.intel.com ([10.64.159.145])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 09:46:41 -0700
-X-CSE-ConnectionGUID: orsP5Vu6R4eJKtbFa4yiYQ==
-X-CSE-MsgGUID: xjbLHS8+SH+PQi5DGs4tBQ==
+   d="scan'208";a="19030943"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmvoesa104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 10:11:37 -0700
 X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915259734"
 X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="23932351"
-Received: from twwright-mobl1.amr.corp.intel.com (HELO [10.209.65.212]) ([10.209.65.212])
-  by orviesa005-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 09:46:41 -0700
-Message-ID: <564688b7-7d21-414d-9878-5a736777660d@linux.intel.com>
-Date: Fri, 5 Apr 2024 09:46:40 -0700
+   d="scan'208";a="915259734"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 10:11:35 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rsn6C-00000001oCc-2NcW;
+	Fri, 05 Apr 2024 20:11:32 +0300
+Date: Fri, 5 Apr 2024 20:11:32 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Cristian Marussi <cristian.marussi@arm.com>,
+	Sudeep Holla <sudeep.holla@arm.com>, peng.fan@oss.nxp.com
+Subject: Re: [PATCH v1 1/1] gpio: wcove: Use -ENOTSUPP consistently
+Message-ID: <ZhAwxOQ107rrnSHG@smile.fi.intel.com>
+References: <20240405162521.3774111-1-andriy.shevchenko@linux.intel.com>
+ <564688b7-7d21-414d-9878-5a736777660d@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v1 1/1] gpio: wcove: Use -ENOTSUPP consistently
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
- linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Andy Shevchenko <andy@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
- <brgl@bgdev.pl>, Cristian Marussi <cristian.marussi@arm.com>,
- Sudeep Holla <sudeep.holla@arm.com>, peng.fan@oss.nxp.com
-References: <20240405162521.3774111-1-andriy.shevchenko@linux.intel.com>
-Content-Language: en-US
-From: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-In-Reply-To: <20240405162521.3774111-1-andriy.shevchenko@linux.intel.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <564688b7-7d21-414d-9878-5a736777660d@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
+On Fri, Apr 05, 2024 at 09:46:40AM -0700, Kuppuswamy Sathyanarayanan wrote:
+> 
+> On 4/5/24 9:25 AM, Andy Shevchenko wrote:
+> > The GPIO library expects the drivers to return -ENOTSUPP in some
+> > cases and not using analogue POSIX code. Make the driver to follow
+> > this.
+> >
+> > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > ---
+> 
+> Looks good to me.
+> 
+> Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 
-On 4/5/24 9:25 AM, Andy Shevchenko wrote:
-> The GPIO library expects the drivers to return -ENOTSUPP in some
-> cases and not using analogue POSIX code. Make the driver to follow
-> this.
->
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
-
-Looks good to me.
-
-Reviewed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
-
->  drivers/gpio/gpio-wcove.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpio/gpio-wcove.c b/drivers/gpio/gpio-wcove.c
-> index c18b6b47384f..94ca9d03c094 100644
-> --- a/drivers/gpio/gpio-wcove.c
-> +++ b/drivers/gpio/gpio-wcove.c
-> @@ -104,7 +104,7 @@ static inline int to_reg(int gpio, enum ctrl_register type)
->  	unsigned int reg = type == CTRL_IN ? GPIO_IN_CTRL_BASE : GPIO_OUT_CTRL_BASE;
->  
->  	if (gpio >= WCOVE_GPIO_NUM)
-> -		return -EOPNOTSUPP;
-> +		return -ENOTSUPP;
->  
->  	return reg + gpio;
->  }
+Pushed to my review and testing queue, thanks!
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+With Best Regards,
+Andy Shevchenko
+
 
 
