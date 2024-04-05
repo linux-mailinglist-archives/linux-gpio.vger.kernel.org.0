@@ -1,135 +1,116 @@
-Return-Path: <linux-gpio+bounces-5114-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5115-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7671A89A1B9
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:47:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id AEF8C89A1C2
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:49:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id E1DA61F24D98
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:47:32 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id EA2BB1C20D79
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:49:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 72D3116FF33;
-	Fri,  5 Apr 2024 15:47:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 66E74171075;
+	Fri,  5 Apr 2024 15:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZNCLxQV/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from foss.arm.com (foss.arm.com [217.140.110.172])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1622516FF38;
-	Fri,  5 Apr 2024 15:47:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2122E17106D;
+	Fri,  5 Apr 2024 15:48:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332046; cv=none; b=S7oOskpisSIMlNGGNidFZsR0eeJg0Zt5RPu96zUAT7+Zvfuqen0cFOnWAS58Cbk34f5ULOxeJaJxthUP7/IOq437PAit9/sHyrsU3aNWB07klkDppdk6P+xUxE/cUWoRbskraH731MT+oZ5VeHe2AvGhJwknzoj9+kIkqrjOTM0=
+	t=1712332137; cv=none; b=Mb5torBwP8WpqbXyQ7fyQ63akeUp8+3d1G6Pv0vcSA+A52ygBr79f2F85y/4P0nc3H0+M1012ZMmXFH4FRuTe0cGcUmDr3M3XQhajc/kFhH1cCrKFJA/vR9TNSqu2mY0HBJL8vDC1lzoeoc8TBzovU4vsRpus6iKgOt4qNPzfc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332046; c=relaxed/simple;
-	bh=QOPo52fRuvQqcTrD1klKb5S8Y6y2nkTuw3B0REf1mV4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=UNLV9/DPZwbfPt1xqSgBmLBMqLWP2qi5jUZiNgLA4tQZmoexc3hCOfE5rDn0ZcY/t+3hp73sqml2F3WvqEn78gttrxg7ZYb2KA6X1v19gH4N8SvktMDkiO1i2qDm29rvyW5bc6bYiL7/OU7+u9vc2OoM3SIsQQu1LsTvKvO68So=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; arc=none smtp.client-ip=217.140.110.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CD4DCFEC;
-	Fri,  5 Apr 2024 08:47:53 -0700 (PDT)
-Received: from bogus (e103737-lin.cambridge.arm.com [10.1.197.49])
-	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E89113F64C;
-	Fri,  5 Apr 2024 08:47:21 -0700 (PDT)
-Date: Fri, 5 Apr 2024 16:47:19 +0100
-From: Sudeep Holla <sudeep.holla@arm.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Peng Fan <peng.fan@nxp.com>, Linus Walleij <linus.walleij@linaro.org>,
-	Sudeep Holla <sudeep.holla@arm.com>,
-	"Peng Fan (OSS)" <peng.fan@oss.nxp.com>,
-	"brgl@bgdev.pl" <brgl@bgdev.pl>,
-	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"cristian.marussi@arm.com" <cristian.marussi@arm.com>
-Subject: Re: [PATCH] pinctrl: pinconf-generic: check error value EOPNOTSUPP
-Message-ID: <ZhAdB4T7sTa2Z7db@bogus>
-References: <20240401141031.3106216-1-peng.fan@oss.nxp.com>
- <CACRpkdZAuNXGyg2wwYcQG4oO9w7jPS6vj4Vt0=kqX5fJ+QpNmw@mail.gmail.com>
- <Zg7dwcFz5eD7Am2u@smile.fi.intel.com>
- <DU0PR04MB941777DA29D70013342721A788032@DU0PR04MB9417.eurprd04.prod.outlook.com>
- <ZhAa3NPO19mINYJP@smile.fi.intel.com>
+	s=arc-20240116; t=1712332137; c=relaxed/simple;
+	bh=IgoFna4ozbyY4uim9EA58wTZVLELUeO04TswSLteP6s=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=DzWxP4GQd9O4OIpgLNN3ZAaDloMrUh/XW3kdsdTL9zW+/gJKiFLqFxqTBD1zEZOJPkmE+9lTRVvVCOT3AVaLnQQyDNCoB1oOwAhKnLrgeK+91ZKMSYRI49UcdZeLHj5cdI2bE4XoH5PV01AcNFmrBDqzsAyqWKpBxQXFxIy+ZHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNCLxQV/; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBC0C433B1;
+	Fri,  5 Apr 2024 15:48:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712332137;
+	bh=IgoFna4ozbyY4uim9EA58wTZVLELUeO04TswSLteP6s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=ZNCLxQV/d9Gm8N9ut19bdF6HDO8Xy+cMGp/jd3klpEHI9GaRqDgTpd+BEyR/Ne7+m
+	 jmzc7s4ds+hI4pRDmzI0bnHMXtYvqA1G171h8rzfmeT0U4Taorij1FLbUgitNeitcj
+	 HvOLoIXoz+qZzCjTnM6FpZeRSfnt/+czJccKjMFVFU/OsSGZ8tP4qz3ATyVApCe6em
+	 sRKC0PXoChZKTfUOybhKGkukVeUuMeOUSif3EmyuqCNJBGtMi3xYqV+GO4gNjnmR/z
+	 ua5epYOwdOisi0YLgiqbbvyai5CxnwUubZrMrUinYnVOwmr730HIb6U1tW4zMnSV8G
+	 pgE01LuYwi7DA==
+From: Conor Dooley <conor@kernel.org>
+To: linux-riscv@lists.infradead.org,
+	Yangyu Chen <cyy@cyyself.name>
+Cc: Conor Dooley <conor.dooley@microchip.com>,
+	Conor Dooley <conor@kernel.org>,
+	Damien Le Moal <dlemoal@kernel.org>,
+	Dan Carpenter <dan.carpenter@linaro.org>,
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>,
+	Guo Ren <guoren@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	linux-gpio@vger.kernel.org,
+	linux-clk@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1 0/5] riscv: Kconfig.socs: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
+Date: Fri,  5 Apr 2024 16:47:36 +0100
+Message-ID: <20240405-revolt-food-4654ca0ac5b4@spud>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
+References: <tencent_2E60E33C1F88A090B6B3A332AE528C6B8806@qq.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1455; i=conor.dooley@microchip.com; h=from:subject:message-id; bh=MZ6COhcm44GicWVOSRcaxUS9DaBxroGchNqsbFCZFmg=; b=owGbwMvMwCFWscWwfUFT0iXG02pJDGkCsuIr+IwaOV9x8rQLzjqXWXXzZomHRVWxd3DoOmmNX rPIwJKOUhYGMQ4GWTFFlsTbfS1S6/+47HDueQszh5UJZAgDF6cATGTrbEaGB2F7Vix9F969e0Fx VOaE7aXFhWHTlr8TvT2zZZrlUX6LIEaGlkl2b/7KfJCc8Fm175dm+YW5rlzyWkxLQ7ZzTFKa1fu eEwA=
+X-Developer-Key: i=conor.dooley@microchip.com; a=openpgp; fpr=F9ECA03CF54F12CD01F1655722E2C55B37CF380C
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <ZhAa3NPO19mINYJP@smile.fi.intel.com>
 
-On Fri, Apr 05, 2024 at 06:38:04PM +0300, Andy Shevchenko wrote:
-> On Fri, Apr 05, 2024 at 02:13:28AM +0000, Peng Fan wrote:
-> > > On Thu, Apr 04, 2024 at 01:44:50PM +0200, Linus Walleij wrote:
-> > > > On Mon, Apr 1, 2024 at 4:02 PM Peng Fan (OSS) <peng.fan@oss.nxp.com>
-> > > wrote:
->
-> ...
->
-> > > > >                         ret = pin_config_get_for_pin(pctldev, pin, &config);
-> > > > >                 /* These are legal errors */
-> > > > > -               if (ret == -EINVAL || ret == -ENOTSUPP)
-> > > > > +               if (ret == -EINVAL || ret == -ENOTSUPP || ret ==
-> > > > > + -EOPNOTSUPP)
-> > > >
-> > > > TBH it's a bit odd to call an in-kernel API such as
-> > > > pin_config_get_for_pin() and get -EOPNOTSUPP back. But it's not like I care
-> > > a lot, so patch applied.
-> > >
-> > > Hmm... I would like actually to get this being consistent. The documentation
-> > > explicitly says that in-kernel APIs uses Linux error code and not POSIX one.
-> >
-> > Would you please share me the documentation?
->
-> Sure.
-> https://elixir.bootlin.com/linux/latest/source/include/linux/pinctrl/pinconf.h#L24
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L2825
-> https://elixir.bootlin.com/linux/latest/source/drivers/gpio/gpiolib.c#L2845
->
-> I admit that this is not the best documented, feel free to produce a proper
-> documentation.
->
+From: Conor Dooley <conor.dooley@microchip.com>
 
-Ah OK, my bad. I assumed you were referring to the entire kernel tree and
-not just GPIO/pinux. Sorry for that.
+On Fri, 29 Mar 2024 01:03:22 +0800, Yangyu Chen wrote:
+> Since SOC_FOO should be deprecated from patch [1], and cleanup for other
+> SoCs is already in the mailing list [2,3,4], so we deprecate the use of
+> SOC_CANAAN and use ARCH_CANAAN for SoCs vendored by Canaan instead from now
+> on.
+> 
+> However, the K210 SoC is so special for NoMMU and built for loader.bin, if
+> we share the ARCH_CANAAN symbol directly for K210 and other new SoCs which
+> has MMU and no need for loader, it will confuse some users who may try to
+> boot MMU Kernel on K210, but it will fail. Thus, this patch set renamed the
+> original use of SOC_CANAAN to SOC_CANAAN_K210 for K210 SoC, as Damien
+> suggested from the list [5]. Then, it made some adaptations for soc, clk,
+> pinctrl, and reset drivers.
+> 
+> [...]
 
-> > > This check opens a Pandora box.
-> > >
-> > > FWIW, it just like dozen or so drivers that needs to be fixed, I prefer to have
-> > > them being moved to ENOTSUPP, rather this patch.
-> >
-> > I see many patches convert to use EOPNOTSUPP by checking git log.
->
-> How is that related? You mean for GPIO/pin control drivers?
->
-> > And checkpatch.pl reports warning for using ENOTSUPP.
->
-> checkpatch has false-positives, this is just one of them.
->
+Applied to riscv-dt-for-next, thanks!
 
-Fair enough.
+[1/5] riscv: Kconfig.socs: Split ARCH_CANAAN and SOC_CANAAN_K210
+      https://git.kernel.org/conor/c/ef10bdf9c3e6
+[2/5] soc: canaan: Deprecate SOC_CANAAN and use SOC_CANAAN_K210 for K210
+      https://git.kernel.org/conor/c/915fb0e31c5b
+[3/5] clk: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+      https://git.kernel.org/conor/c/8e5b7234ded5
+[4/5] pinctrl: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+      https://git.kernel.org/conor/c/c1556a9b426e
+[5/5] reset: k210: Deprecate SOC_CANAAN and use SOC_CANAAN_K210
+      https://git.kernel.org/conor/c/68f41105ea07
 
-> > BTW: is there any issue if using EOPNOTSUPP here?
->
-> Yes. we don't want to be inconsistent. Using both in one subsystem is asking
-> for troubles. If you want EOPNOTSUPP, please convert *all* users and drop
-> ENOTSUPP completely (series out of ~100+ patches I believe :-), which probably
-> will be not welcome).
->
+I added another commit at the end, deleting SOC_CANAAN given all the users
+are gone and it is not user-visible:
+	https://git.kernel.org/conor/c/0eea987088a22d73d81e968de7347cdc7e594f72
 
-Well, I don't agree with that 100% now since this is GPIO/pinmux sub-system
-practice only. What if we change the source/root error cause(SCMI) in this
-case and keep GPIO/pinmux happy today but tomorrow when this needs to be
-used in some other subsystem which uses EOPNOTSUPP by default/consistently.
-Now how do we address that then, hence I mentioned I am not 100% in agreement
-now while I was before knowing that this is GPIO/pinmux strategy.
-
-I don't know how to proceed now 🙁.
-
---
-Regards,
-Sudeep
+Thanks,
+Conor.
 
