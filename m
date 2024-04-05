@@ -1,120 +1,138 @@
-Return-Path: <linux-gpio+bounces-5112-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5113-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5388C89A185
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:40:58 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1338B89A18E
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 17:41:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8550F1C236A1
-	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:40:57 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 448F11C22921
+	for <lists+linux-gpio@lfdr.de>; Fri,  5 Apr 2024 15:41:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB1C016FF2B;
-	Fri,  5 Apr 2024 15:40:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5271916FF44;
+	Fri,  5 Apr 2024 15:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="UFKUDwYo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zrbi3bY6"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6F751DFE4;
-	Fri,  5 Apr 2024 15:40:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62A501DFE4;
+	Fri,  5 Apr 2024 15:41:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712331653; cv=none; b=tPJsIdtVge9tl6eXJW88A0x8R0/SZ3UJKKfJ/Od+h/cn4nIoTRCmFg4Yn/Z8Vo29cEi6pqVMTb71ez9cZH6o//6d8vi84jPFs/W/v/2ukDvwm8d/AH2V91odM7mMkG1Rd8w70yAdC+kPgv6Mn9DtXQ1tDsAO26JS/SMvcpSWWCI=
+	t=1712331677; cv=none; b=JHP+3zWJ2nzeQZAXmGpuQvNT32eebRUrCMySdeEQwx/EEDDAwiUdJvd6olUzxlsSNpD30G3JV4ndcMTZFLNOmrNKQLsGECCQVWbc2Jy0EngSqS+NTgQ6/UTMIxHUXdfM9MyH8lKL2/PY55GUi97nOAbywtlboyuAQNRACaXKcG4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712331653; c=relaxed/simple;
-	bh=oEGg+zdE+WnyIiCnbzgQ7uRmt3VoH/bWDMJdCz6YnxE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oU8gtY0RTkqe2x7J7vULgIDH5UnyZyBV8PuRnmYL/CupD87KIYBs/+uPSUcs1Pn3f+K43qOrFPeD8DuqKfXFV90sRnAM3eFpd/mnYRt7nmnrHJDzhV7qqiTknCwQmEQEkpuOr/y6MPYgu596pOnx/1vHXn7c+9WBx4RP3hOh4pc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=UFKUDwYo; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712331652; x=1743867652;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=oEGg+zdE+WnyIiCnbzgQ7uRmt3VoH/bWDMJdCz6YnxE=;
-  b=UFKUDwYorl+ZePM0igE7YL1+EXmeTNtz4QO5/TBJ8wAJJ0dAbFGqjnJz
-   V5ATCQ9/7TBFdgV1KynHSkQ+gFHry0P+xz8H/+r2I+FSxqT3Z9xI+hcNS
-   0PVMDCM9dJIRekZKYK0iYrXa4VltiLvZTQQa1kJyVReZ/dWnYMiXB2ZMl
-   zGkGoWGZnK/wW1UCcCkGyX7vV58O52zPPTpsmo2PQBBRu5N4YIaZhB1KL
-   KO095FJba6PzUJXjkTYK9gZixDDoQyrfJ4WvwZUERIkFi1dbKVEwY2SUB
-   WsN96jI83xI49CGdzXtG9tHrA1nRQCDEEvpsyK2EQBRrKxo11FlrxI3bC
-   Q==;
-X-CSE-ConnectionGUID: AJMlaFpkQvy6XhMjgZFWjw==
-X-CSE-MsgGUID: Bt830bM2T6aPJaNYzfIIBQ==
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="7566076"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="7566076"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:40:51 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11035"; a="915257359"
-X-IronPort-AV: E=Sophos;i="6.07,181,1708416000"; 
-   d="scan'208";a="915257359"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 08:40:48 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rslgM-00000001mwV-05xP;
-	Fri, 05 Apr 2024 18:40:46 +0300
-Date: Fri, 5 Apr 2024 18:40:45 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
- Return sections
-Message-ID: <ZhAbfcGkt-Bjj9NY@smile.fi.intel.com>
-References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
- <2df0e132-5599-4cb5-93f8-4ed664a5d1cc@infradead.org>
- <ZhAYeMNzHg0x97gN@smile.fi.intel.com>
- <47955de8-dfe5-48c0-bc9b-4e930b8f943e@infradead.org>
+	s=arc-20240116; t=1712331677; c=relaxed/simple;
+	bh=rZJGyKNtzoutcmvD9yBAQBRLOt5WkG7MywHLVvMRWZ4=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=N1U25hQPW7/iEgBTPtKJl0Pwx6+vJJfyPr2l0HHxlDOKrJ/irLWSyiljqZNkXgO3SvlMRwu1txNMHVt8MnxAZLK1/Vdi33g/IKno/zyPeNa9SbGeRzVfsLOGF6llGqDk9Z9vENwGMTzHYt7qRfBoQC9S3/hELWFtaZIhujcLT98=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zrbi3bY6; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-4163181a7ceso4796085e9.0;
+        Fri, 05 Apr 2024 08:41:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712331674; x=1712936474; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
+        b=Zrbi3bY6TWu8nzzhcBUiUS9i51HQAy+PP8m+ions/eaLgCT2afnymTyF6ZPX2L5jj0
+         O2QUpcQZOZhGVF33VidqinJidL9dDTLqFjp49lcpGxmx5OcoEqDhkSY+0IjFB1SuAZbn
+         vbuwk/TXT/DXX0SkoqZhQQFJC1l58Y1LpCxn9bh1ofqHrp47m4toz847at/FEXioKin9
+         mGHqBf7upSb3L5vCOPZHVXtjooiQe5+C2TsZgmVzUIPuHdu1SYdbo5JG9mDLDzu8m60v
+         DFDoYqFODUUXR4MWq/T2ZklzdBF4qVWsWUdJJUxs7j2eMPBCOtx7olJcQpfWG+aTXpbC
+         Y9BA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712331674; x=1712936474;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vWae/TQVR4lDMRxTHKpFB8Vkf/PIFo/hlHy1KJVttno=;
+        b=V75OqEkMGHuO5XVOOCwDm+4cIjcenJ1nPTCI9ZnLXWPZrXneHknzLZTYWlyi8dNPGD
+         nKRepRjtonTaLSfrbp4eALSXjg4n07U8Z4Aem9LY7fcZAFO54Gq80i4zpDM56jDjSZOV
+         mcLy+0G6sUnkfPSVvKXoS0/4KobrsRT4V6nevsufh3/rZRGeZmr9pUzK1Xf++w1LuyZO
+         pHT88Znvf8xOeVB/SPhpt5AsN8JdOBAqu3/cV74g9JBU2KYEUsQuDQPoGi27Qz4GTAQ5
+         Rs7CLY14RzHQDRCf6fxsO+PqvJnAdWkXT6kDVMUP87t93Pj3Gjk8lD76ddv4hIEZ8jED
+         +Rxw==
+X-Forwarded-Encrypted: i=1; AJvYcCX87hIdpjqcDNB/8KoGLWp571LT54RgXumry5CJI9sfUglLdNSHYiJqA3qAfYpyySN6pIHbchSvu8zwqD+LXCyfuaBlik6TyoJRRgwz/fGrmN8d9704Q8PlfTpmJxcHBVI5Utox8cJFy69vcCLVQPFbHoKMYFD30w+op1m0Jg9izaX+umoxh09+qycKTKXZZy5JNTuOdy/+ikyGrzfGZWlfzbQ11eVtXlhPp/qmuiXp7z/A5TQfzNUgyb1YxyMYNdt3WpPRPl494mhZCvTWF6UfjBBH8d3nCKbj45LhlxOkJe6S6QwsogXegaHvwJaRkr9QuIc=
+X-Gm-Message-State: AOJu0YzGFCrTxq/voXaZURL2XeOsNKwiwup2aFnrQvotGneJ5wkuJfQ7
+	vH16VVKnVivchoc0yFchZtCMZoSu+8KNeDLkxLpU0RlVoJNCkAuns24H+e5XnzyO+futuy3jq1X
+	qs2BHpd7Vj7VhoPLQ6hR2GMklOEfjpfcMYYc=
+X-Google-Smtp-Source: AGHT+IEH9WiGdwQmFDR3UUpRkcaEXiGYsc+rbm05qeGkTnAd0VuAIEH5g2EodOENEkeRm+TdhthkOlf3f027HucPkCY=
+X-Received: by 2002:a05:600c:19cd:b0:416:2bef:ce81 with SMTP id
+ u13-20020a05600c19cd00b004162befce81mr1484706wmq.1.1712331657141; Fri, 05 Apr
+ 2024 08:40:57 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <47955de8-dfe5-48c0-bc9b-4e930b8f943e@infradead.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <202404052349.lQch9J7G-lkp@intel.com>
+In-Reply-To: <202404052349.lQch9J7G-lkp@intel.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 5 Apr 2024 08:40:45 -0700
+Message-ID: <CAADnVQJXq1bSe20FgBN=BL1E5d8qOfLv_Ettq+724h5QfRuuKg@mail.gmail.com>
+Subject: Re: [linux-next:master] BUILD REGRESSION 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
+To: kernel test robot <lkp@intel.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, 
+	Linux Memory Management List <linux-mm@kvack.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, 
+	bpf <bpf@vger.kernel.org>, dri-devel@lists.freedesktop.org, 
+	freedreno@lists.freedesktop.org, intel-gfx@lists.freedesktop.org, 
+	intel-xe@lists.freedesktop.org, lima@lists.freedesktop.org, 
+	linux-arch <linux-arch@vger.kernel.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, 
+	nouveau@lists.freedesktop.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Fri, Apr 05, 2024 at 08:33:26AM -0700, Randy Dunlap wrote:
-> On 4/5/24 8:27 AM, Andy Shevchenko wrote:
-> > On Thu, Apr 04, 2024 at 09:10:09PM -0700, Randy Dunlap wrote:
-> >> On 4/4/24 2:27 PM, Andy Shevchenko wrote:
-> >>> $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> >>> 67
-> >>>
-> >>> Fix these by adding Return sections. While at it, make sure all of
-> >>> Return sections use the same style.
+On Fri, Apr 5, 2024 at 8:37=E2=80=AFAM kernel test robot <lkp@intel.com> wr=
+ote:
+>
+> tree/branch: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-n=
+ext.git master
+> branch HEAD: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc  Add linux-next spe=
+cific files for 20240405
+>
+> Error/Warning reports:
+>
+> https://lore.kernel.org/oe-kbuild-all/202404051333.7und7PPW-lkp@intel.com
+> https://lore.kernel.org/oe-kbuild-all/202404051423.eiaXLwhX-lkp@intel.com
+> https://lore.kernel.org/oe-kbuild-all/202404051659.aawUkGUQ-lkp@intel.com
+> https://lore.kernel.org/oe-kbuild-all/202404052022.Cwf2ilBp-lkp@intel.com
+>
+> Error/Warning: (recently discovered and may have been fixed)
+>
+> aarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xdbb4): undefined r=
+eference to `__SCK__perf_snapshot_branch_stack'
+> aarch64-linux-ld: verifier.c:(.text+0x17c3c): undefined reference to `__S=
+CK__perf_snapshot_branch_stack'
+> drivers/i2c/busses/i2c-i801.c:1407:(.text+0x1d2ef4a): undefined reference=
+ to `i2c_root_adapter'
+> kernel/bpf/verifier.c:20223:(.text+0xdba4): dangerous relocation: unsuppo=
+rted relocation
+> loongarch64-linux-ld: kernel/bpf/verifier.c:20223:(.text+0xa818): undefin=
+ed reference to `__SCK__perf_snapshot_branch_stack'
+> loongarch64-linux-ld: verifier.c:(.text+0xa964): undefined reference to `=
+__SCK__perf_snapshot_branch_stack'
+> mips64el-linux-ld: verifier.c:(.text.do_misc_fixups+0xd9c): undefined ref=
+erence to `__SCK__perf_snapshot_branch_stack'
+> riscv32-linux-ld: section .data LMA [00369000,00907967] overlaps section =
+.text LMA [0007899c,01a6a6af]
+> s390-linux-ld: verifier.c:(.text+0x13038): undefined reference to `__SCK_=
+_perf_snapshot_branch_stack'
+> verifier.c:(.text+0x17c14): relocation truncated to fit: R_AARCH64_ADR_PR=
+EL_PG_HI21 against undefined symbol `__SCK__perf_snapshot_branch_stack'
+> verifier.c:(.text+0xa960): undefined reference to `__SCK__perf_snapshot_b=
+ranch_stack'
+> verifier.c:(.text+0xadd0): dangerous relocation: unsupported relocation
+> verifier.c:(.text.do_misc_fixups+0xd98): undefined reference to `__SCK__p=
+erf_snapshot_branch_stack'
 
-...
-
-> >> I would use %true, %false, %NULL, %0, and %1 in a few places.
-> > 
-> > Why? I specifically removed % from all of them, it's not so useful.
-> > Do we have, btw, generated HTML with these % as an example to see
-> > the difference. Maybe that helps to understand this better?
-> 
-> The leading '%' just changes the font style of constants.
-> I don't know of any HTML that compares them.
-
-I meant to compare the (HTML) render to see the difference, but you already
-explained that it adds/modifies <font> tag or so.
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Fixed in bpf-next with commit:
+https://lore.kernel.org/all/20240405142637.577046-1-arnd@kernel.org/
 
