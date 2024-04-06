@@ -1,263 +1,207 @@
-Return-Path: <linux-gpio+bounces-5136-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5137-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 459E089A82C
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Apr 2024 03:16:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B764489AACC
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Apr 2024 14:37:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C90E71F23F13
-	for <lists+linux-gpio@lfdr.de>; Sat,  6 Apr 2024 01:16:55 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 7C961B2150F
+	for <lists+linux-gpio@lfdr.de>; Sat,  6 Apr 2024 12:37:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4D4F11CA9;
-	Sat,  6 Apr 2024 01:16:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB5B02869B;
+	Sat,  6 Apr 2024 12:37:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WmoEHDEr";
-	dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b="kkmyAnqJ"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ezHtOohw"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-00069f02.pphosted.com (mx0b-00069f02.pphosted.com [205.220.177.32])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C62FEFBEE;
-	Sat,  6 Apr 2024 01:16:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=205.220.177.32
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712366203; cv=fail; b=kfiRwb8Ms9ZarFgIQhmCdzYM8CLOs71WCSeECwwITnF+oNWfNW+goq0D6cUHep0nJf4Xo1oAtbUEZxsX9bBj/lTjAm2IbAE+VpumA9hiH861y9RvJ0/cVY0G20nNBJa539EhrGsr1suARSUmcpzOBG2+W13bvBbojwMu3TjMqaY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712366203; c=relaxed/simple;
-	bh=5x+zUh/gigPwU77qrJdoLgtub/FslB/KDFaot4xzF7A=;
-	h=To:Cc:Subject:From:In-Reply-To:Message-ID:References:Date:
-	 Content-Type:MIME-Version; b=dsHoECH2SjPKc7MegpQnhsfV7GF81XGFWxrczlvSc6csaz7j91VfacZpV/p0cidB0anjnFrBbHsNL3GAadePH++e6he0spIRveRQa1vpUVZNvQ7fgs3vMy2TJymnMm+S6Tzx3S6HdC78HDv4blGaufeE8Xdwtmu3D3SDxF2TEy4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com; spf=pass smtp.mailfrom=oracle.com; dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b=WmoEHDEr; dkim=pass (1024-bit key) header.d=oracle.onmicrosoft.com header.i=@oracle.onmicrosoft.com header.b=kkmyAnqJ; arc=fail smtp.client-ip=205.220.177.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=oracle.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oracle.com
-Received: from pps.filterd (m0333520.ppops.net [127.0.0.1])
-	by mx0b-00069f02.pphosted.com (8.17.1.19/8.17.1.19) with ESMTP id 4360iJHE016377;
-	Sat, 6 Apr 2024 01:15:56 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : in-reply-to : message-id : references : date : content-type :
- mime-version; s=corp-2023-11-20;
- bh=V46fxPXPKkIuq+fDVPYM5K6s+NTMlm1XiN3ewDC58bw=;
- b=WmoEHDErfwUXeszF70MDZ8yVIQh1xhCuEZoaGRDLIQLK3QdrGFbIhKRTq57gvkWWRZK+
- SX6unj3iWv/MiMok7sKMwPgSEAaBl0AB7QVwgDcOpzSfh6NmCohZUb9lNlgvErahGA6P
- gWSsnTVxG8ulynafAqVa+MNZxd2XtAP1rw4PPRX203KSG4hmGOPBjvC8vIgHIBIUC5A1
- +ojnItwSw+PKmf6uWVCZplGYTJlmTX3q4HNMJoAJUZkAXmCoiw7DjRpdSUrH7zPbz+me
- bKUDPBz03Fgv1fYSo5w4oQ5ZG6Larbw0LmqbILmnKCJFezE+MLmQadc3jD749HERxOzQ WA== 
-Received: from iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (iadpaimrmta03.appoci.oracle.com [130.35.103.27])
-	by mx0b-00069f02.pphosted.com (PPS) with ESMTPS id 3x9emvvnas-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 06 Apr 2024 01:15:55 +0000
-Received: from pps.filterd (iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com [127.0.0.1])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (8.17.1.19/8.17.1.19) with ESMTP id 435MHfc2030595;
-	Sat, 6 Apr 2024 01:15:54 GMT
-Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2169.outbound.protection.outlook.com [104.47.56.169])
-	by iadpaimrmta03.imrmtpd1.prodappiadaev1.oraclevcn.com (PPS) with ESMTPS id 3x9emys2gw-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Sat, 06 Apr 2024 01:15:54 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=N1otC6Q4EdjdFFXVM+mcmVfRB+I+BXz1XBvtzwVrLoRc+GH1YeJ+JP8WlUmeEtGZas9PU6MSoCYRwgK3M2IbExLD9NH8RZSUbXAXaS4CWxW5TyfedwESwsT5YjxDzZg8wtIr990ONUAbE/9DxwO8AC5uv0vWKWvZfxKCOyxAdjbsIrciElZzSimmQO9+NoFLQ0ugyjZ81kdlbJJYLiC7tw/ztHH6yonbbqKuQRDiD8DNTFcNUqwXx2bhQx5UruyCOPSs7RwiBh0N3cbTnA/wi673ZD9YeE+a3bxt1MNQjamCK6sqMTtdfFBbKpiru594KrBIr+OQmAjKXrbTkWD5eA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=V46fxPXPKkIuq+fDVPYM5K6s+NTMlm1XiN3ewDC58bw=;
- b=HNssJvP25alxa/LhqX1auIleR00yA0MWRTkL9yeOrS6Kj+VHk9DEbY7PX1/Vn4C2h8B23aL2x95zSffxZcVLl4azgE0Ho9yh8MuphG1xkXyvZ/RI1Mj1PatBiAr7SR0ruV8+CKvodv5GVViIslHCvw2sHVAufjgpqer/b7/gOUFBsurINrsZxrYqJWcyICefFej4lBbTRs3C1EyBnohrWPcZikViB/PWFg8tMVQ+C5w84aWoOJ0Sl+yA0/8//PZJwMCNloBPkUkkeDXrdFiIf5FKZ2YZ6uGggT5KrtOAlaJD7Jxq9dBpKV5xJ/f9Y4hIyOIH1cc8PBPHSOgN3UgwDA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=oracle.com; dmarc=pass action=none header.from=oracle.com;
- dkim=pass header.d=oracle.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=oracle.onmicrosoft.com; s=selector2-oracle-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=V46fxPXPKkIuq+fDVPYM5K6s+NTMlm1XiN3ewDC58bw=;
- b=kkmyAnqJ2ccLLOg1FrfbNRMQlOxTxdywstKfQGtPZw8VprEzjTk7VQ7DmYcjxoN+hI1e/dMapRBjX294GBzI6YkHnhNPmTicHNHwdk81Uupz60V9JePEcSckeQEhK97LCFAmNPvDiFr/vDglnYQtriMa7Bgbu8jccL/ay++4O8M=
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com (2603:10b6:510:3d::12)
- by CYXPR10MB7973.namprd10.prod.outlook.com (2603:10b6:930:dd::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7409.46; Sat, 6 Apr
- 2024 01:15:50 +0000
-Received: from PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::7856:8db7:c1f6:fc59]) by PH0PR10MB4759.namprd10.prod.outlook.com
- ([fe80::7856:8db7:c1f6:fc59%4]) with mapi id 15.20.7409.042; Sat, 6 Apr 2024
- 01:15:49 +0000
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang
- <jasowang@redhat.com>,
-        Xuan Zhuo <xuanzhuo@linux.alibaba.com>,
-        Jonathan
- Corbet <corbet@lwn.net>,
-        David Hildenbrand <david@redhat.com>,
-        Gerd
- Hoffmann <kraxel@redhat.com>,
-        Richard Weinberger <richard@nod.at>,
-        Anton
- Ivanov <anton.ivanov@cambridgegreys.com>,
-        Johannes Berg
- <johannes@sipsolutions.net>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan
- Hajnoczi <stefanha@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        Marcel
- Holtmann <marcel@holtmann.org>,
-        Luiz Augusto von Dentz
- <luiz.dentz@gmail.com>,
-        Olivia Mackall <olivia@selenic.com>,
-        Herbert Xu
- <herbert@gondor.apana.org.au>, Amit Shah <amit@kernel.org>,
-        Arnd
- Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman
- <gregkh@linuxfoundation.org>,
-        Gonglei <arei.gonglei@huawei.com>,
-        "David
- S. Miller" <davem@davemloft.net>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Cristian Marussi <cristian.marussi@arm.com>,
-        Viresh Kumar
- <vireshk@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz
- Golaszewski <brgl@bgdev.pl>,
-        David Airlie <airlied@redhat.com>,
-        Gurchetan Singh <gurchetansingh@chromium.org>,
-        Chia-I Wu
- <olvaffe@gmail.com>,
-        Maarten Lankhorst
- <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Thomas Zimmermann <tzimmermann@suse.de>,
-        Daniel Vetter
- <daniel@ffwll.ch>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin
- Murphy <robin.murphy@arm.com>, Alexander Graf <graf@amazon.com>,
-        Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>,
-        Eric Van Hensbergen <ericvh@kernel.org>,
-        Latchesar Ionkov <lucho@ionkov.net>,
-        Dominique Martinet
- <asmadeus@codewreck.org>,
-        Christian Schoenebeck
- <linux_oss@crudebyte.com>,
-        Stefano Garzarella <sgarzare@redhat.com>,
-        Kalle Valo <kvalo@kernel.org>, Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang
- <dave.jiang@intel.com>, Ira Weiny <ira.weiny@intel.com>,
-        Pankaj Gupta
- <pankaj.gupta.linux@gmail.com>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        "James E.J. Bottomley"
- <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Vivek Goyal <vgoyal@redhat.com>, Miklos Szeredi <miklos@szeredi.hu>,
-        Anton Yakovlev <anton.yakovlev@opensynergy.com>,
-        Jaroslav Kysela
- <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-        virtualization@lists.linux.dev, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-um@lists.infradead.org,
-        linux-block@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        iommu@lists.linux.dev, netdev@vger.kernel.org, v9fs@lists.linux.dev,
-        kvm@vger.kernel.org, linux-wireless@vger.kernel.org,
-        nvdimm@lists.linux.dev, linux-remoteproc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-sound@vger.kernel.org
-Subject: Re: [PATCH v2 23/25] scsi: virtio: drop owner assignment
-From: "Martin K. Petersen" <martin.petersen@oracle.com>
-In-Reply-To: <20240331-module-owner-virtio-v2-23-98f04bfaf46a@linaro.org>
-	(Krzysztof Kozlowski's message of "Sun, 31 Mar 2024 10:44:10 +0200")
-Organization: Oracle Corporation
-Message-ID: <yq1ttkfqolf.fsf@ca-mkp.ca.oracle.com>
-References: <20240331-module-owner-virtio-v2-0-98f04bfaf46a@linaro.org>
-	<20240331-module-owner-virtio-v2-23-98f04bfaf46a@linaro.org>
-Date: Fri, 05 Apr 2024 21:15:47 -0400
-Content-Type: text/plain
-X-ClientProxiedBy: PH7P222CA0022.NAMP222.PROD.OUTLOOK.COM
- (2603:10b6:510:33a::27) To PH0PR10MB4759.namprd10.prod.outlook.com
- (2603:10b6:510:3d::12)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8949E546
+	for <linux-gpio@vger.kernel.org>; Sat,  6 Apr 2024 12:37:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1712407046; cv=none; b=SnY2UTng07Ex1jIFaw2tFmDmlrktTXE88Cp9MkzJ47XefQAAk49GtaghfFXm5ZAAPEWMeS1EFG9bI/jwlDAgwMjGoMaTYPprZjXwZoI6AJljBP8yH554vz7krTnGa6lNe7vSe4KIKue29mGQK4rg40WXc3sUw7rjfczP5c/vD/M=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1712407046; c=relaxed/simple;
+	bh=djAgCNDPkGxZBDK2u+hwo6ciFDlBIRLcaRzMAj+Qaco=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=H7wE8pwpeLzMRrIpvXrRY3o8A3V4PnDXvCZWVknYOXv2vR4QPImQt+3vbs/TrTaio0NurzH+OOwaoHGVyuwnYaJAZvVNck9Wy0HJEZKnE4OPh4CcJrcxeV0Aw4+NNulWuF8sOJOjNJOyXaBkOFw35ZAnJSAJpNUY7njJuiDN/8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ezHtOohw; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712407043;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=rAHjUhjq3IcYGXiSV9+nIDKpr6zTDbIeZL9dtn04BEU=;
+	b=ezHtOohw2wklbabsTi9cA7x0vWbKE61iGQKQ+oDRLmZUq/6X2oHitZYOIZ1Yv0gMUm/YZt
+	GhQ06FshzQGBT/yAYSgALWMrvK+SDAiIcrFTImW0RUD8BxxIxRGMtFCzoKfC+lobPZLliz
+	13MwStdmuTkfR2cgEI6CHBWUmq5YWKQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-130-J3nNPmtNNeWHZb-LF77Z2Q-1; Sat, 06 Apr 2024 08:37:20 -0400
+X-MC-Unique: J3nNPmtNNeWHZb-LF77Z2Q-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 525E9185A781;
+	Sat,  6 Apr 2024 12:37:20 +0000 (UTC)
+Received: from localhost.localdomain (unknown [10.39.192.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 6CF07C04120;
+	Sat,  6 Apr 2024 12:37:19 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH 1/2] pinctrl: baytrail: Fix selecting gpio pinctrl state
+Date: Sat,  6 Apr 2024 14:35:05 +0200
+Message-ID: <20240406123506.12078-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: PH0PR10MB4759:EE_|CYXPR10MB7973:EE_
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: 
-	2+RvhkbvzGKL+l9+r1wutWaaziZNpCMThfCHIkOj7NLnMqIhEsuhFQ7ePy60RZcX4lETV4k7XtOGxcnsM3MUWnaGQtDyuOh3WouU1Oj70uEdE7145Z1sPej8zn9X97iRmNixq6fXOC5RH28Sv0RdIidlxFoLle6jJ3+Cl9XiYl4y8wzhZoR5g8+/TFCz8LQ13L2MqPUqmt35ljCyFG9jUIMPlePIEmaCbAIJ7am61nggpDPmMD/JZkvodvkUGjd3t9BIIkaE7LzpASI2zYtSi4CH2Wf40/pD7h0X8l+AaG/eYssF3GBUXo/L/kTraK9Qr+719Vin5DitTIOW4j2PLIHTaRPuU8B9Xt9F3JlYA3TXb7PeyzRPCCum4fV779gd5MXsfA5dRKsEconHlKHCu+A+brLsSVjVWBO+wpEzTKuZv14WWVLzQarEKAF1W1otBlAmtQEgyg2l//F9tfWbo58uNkBpPG6JQd5Tt0rsmEWBzNPi3yX1009VzDZnPGPePk1wN9X8ri41fp/wLD00ukThRFVDeeSwS214Z4KOVhkCjlYudB2OWEfFjebeGQgHBnLMCA6uycb6YVlAeE8E+edcidNlL7PN0XK3misHjpxKQ0P8b+jkHIHRR0+7tscuMZSZaFRj5X9uA9zJDnQAO2+/BhBQW63cVN09c0c++Pg=
-X-Forefront-Antispam-Report: 
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:PH0PR10MB4759.namprd10.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(376005)(1800799015)(366007);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: 
-	=?us-ascii?Q?fCzv4Ruty7AsumpLqEfBYa0w7qG8LIsX9xNzvJMazVMgyeSi9oHlvV55v4+l?=
- =?us-ascii?Q?KEOblFrKlvIErgOa/ELnOLvLYBYCj1rNIuRIiv8LgYGGZNLeyUyfJh948HxM?=
- =?us-ascii?Q?JZV6aucUlFLn4TDg7yq+IibBWUevEvTl9tumJuduDHtmsTyqxbPnBODkkh3s?=
- =?us-ascii?Q?6S9IX2S3/+Van2ToEtV87UlagcDi9YFmbXbx21ZME7B/LCHRkNCeiW6ZfTZx?=
- =?us-ascii?Q?T9SRhq8QZZvz26qNuA3Gma+4w6RdvNqIbcrHZ1Fhpw5Flyke+ywddG5mv2VF?=
- =?us-ascii?Q?wOmAxMNHUBhXWRvlFe8P7d51CwbADXm8YHTnq4IGGajy7lTr58zqAwpzmQ0o?=
- =?us-ascii?Q?PyUQKae9NoWhSAvg/RkFsxL63OVLYhWCGxzPuSvQcmue1Bkg3JpLJTovwNDc?=
- =?us-ascii?Q?clKb2xOpm2xn5irBBgUxHNotGX9ne2HscMm1YjkKaYYoVxICr8g+ehdwgE2X?=
- =?us-ascii?Q?znBkm4/bDLF6Ox+stEWF//2kGo5vicCq4YkkIzWQMtIyQoCixPZeNRgB3JRU?=
- =?us-ascii?Q?XGLLSD/Z35k+ctrEyG0TYjuHyHQ5VRXbleW7zhfkpE8L6hpGu9MuH0yr3Srw?=
- =?us-ascii?Q?kipM90jr5hby6TnUUqr3Eueas7Q7pj1mZzYslkdJmHGx/T5yjpHs0rthNP9U?=
- =?us-ascii?Q?aWcS/frgK/BRj8TkCfgNDin8PQFbVbn8eyggZlBDGMspSFJ5u6+8oPJQVfcH?=
- =?us-ascii?Q?1CKXgwZGJOTMc+fFM1wGqrMwcr0a+1G7TBjO5aX2vQzlyyIeiDxADIeCxnrZ?=
- =?us-ascii?Q?7nI6zNHGTBmrHio6K5lF2WLtRbsoNbQ6nK7XjzRJ5IIIoWEpNjlnN0WUGIKS?=
- =?us-ascii?Q?B/3e4zov/Q5Z29b6Tsnkex1PytgbnGuCrEaQHs/xnB8xvfJKLWAvE9HV27dY?=
- =?us-ascii?Q?Z/g1Ekzsa3ZBda3ErZXN7TQONTbA5zPDHx6HudFKQlIERGwUPEmUJHjCGW0h?=
- =?us-ascii?Q?yPAV93Es2MMgMx9d0egELO21FKAfsnBFYrthwATAR4awJ8eyLoaORS/OwKYQ?=
- =?us-ascii?Q?OwlCEbXRtFhnZNyfpKHNyVNzV6iOCwED05P+NW+EUs+t0XQXcdraEy3QYSna?=
- =?us-ascii?Q?baJ5CooZfRxN/HKgohxAK0DcqPbi4KYte+/gpEp4LlGaa5ChxXkrBwV44hzo?=
- =?us-ascii?Q?fBUutNyansr08fw5UUmpDAxjoIeVEv5uFrKUBg4LCF18p2hJQWqzCFVTxZ3s?=
- =?us-ascii?Q?b+iyt1W7E9Hjr5Vk9mm/aXeUErCkf5kT55DXezR0AvjDH2BnX3kSB1YOLY/T?=
- =?us-ascii?Q?enZKk0/y5JdYSU3wE9kY7VeDdTdVsgedVhHDVaSbf115ZaneUdIoVuucjCM8?=
- =?us-ascii?Q?F4ANPRbe2wo0etgplvICZrsT6Q3kjWV6u1r+yPPWMQeZCUyxNcvW7G4OglGH?=
- =?us-ascii?Q?MBezj45hjwmWafjpPCQOOjXtE7kkhfY/FGAP/4twx2yXPMumF6MNZD1rska0?=
- =?us-ascii?Q?GwoSqirH6iNP3+4icqs2MbfNIPL7E1McELEGfNDfeYrg3oU5ccZVwnoTFB94?=
- =?us-ascii?Q?40QhjO670wF2PTAqq1NvSSA2h96NQUCdGl4BD1k+iJMkdOp7S6l0f2H16524?=
- =?us-ascii?Q?jIvasKCaaFgXv3O0S6ZfrmBLuf1fWgwTEZh6HF2ThpA/MVGitda7N/El6TdN?=
- =?us-ascii?Q?rA=3D=3D?=
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-ExternalHop-MessageData-0: 
-	WldqGYUH6gJp6FEaUu0cEC0TbSPaizmKuyyVjJXfFlwL04Zsjnh0aBfF4fDB6v/z29AQ6+XIxmFglidDEo2W1YrslRf3T9g1YYdOqTLf1oaqgIrLxC6XqUWlnliNuszGKA+2hJfchjR0FSLLOiRmpVRgIpyDxcKUfgtcWAalm0j9tYLjAdVfalJDYb9ACZQq3lS+2ZAPMfRL6qv2OpUUMYMagZeeKO7VFHeWZNvUuLg4XfYzXfC9CNM1y4lFjag+PcEuxw4TQUeDnJm9l4OC/ZNiju0xE28Bwt19+B2FQdxeAL464AOWi2Hw6BRBSDLsj3Y2hwtp8hKkOHZvBuO7NqwA2GQ4MHw2l3TolvFkbsoUfrWwa9VDX8QHO3dituwgwNQSaUGbWulYy6QTbqE8AEx5Ha7SJC76dIjyR6qijSUZ3NI+20LbpDjpyCx0lxs1pJh4UOsATX8Gq2nKiVqzDdNOvSpjMMr9BYwvCQl3VRxWHl3c/92nw/N5STGMs8vgimQ7Bw+r+jgv7ta9JAqCsqHwNYlZSNx/dvpL1/yfcS1eaBdFJ2TDG/DU9TFVHO/gm/ke1E9MglZ74oyStWUZALEBKaV06SKSWxRyzJyRbx8=
-X-OriginatorOrg: oracle.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a1c66396-928e-4122-24fc-08dc55d71871
-X-MS-Exchange-CrossTenant-AuthSource: PH0PR10MB4759.namprd10.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Apr 2024 01:15:49.7550
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 4e2c6054-71cb-48f1-bd6c-3a9705aca71b
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: QwUZDmZYyxSxD8sbWopBPEvJ518bmsqIucjBdWHXAbzFRe7xsHCfRp0NZkPp2MNtqUjNqhdwCubKewUJ7o4lSTO/AKhxGlon1MOPY7FW1wc=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CYXPR10MB7973
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.272,Aquarius:18.0.1011,Hydra:6.0.619,FMLib:17.11.176.26
- definitions=2024-04-05_31,2024-04-05_02,2023-05-22_02
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 bulkscore=0 mlxlogscore=999
- suspectscore=0 mlxscore=0 adultscore=0 spamscore=0 phishscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2404010000 definitions=main-2404060007
-X-Proofpoint-GUID: hVds4OPjqfLHoO491QkmqqJUZ-Ij3hev
-X-Proofpoint-ORIG-GUID: hVds4OPjqfLHoO491QkmqqJUZ-Ij3hev
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.8
 
+For all the "score" pin-groups all the intel_pingroup-s to select
+the non GPIO function are re-used for byt_score_gpio_groups[].
 
-Krzysztof,
+But this is incorrect since a pin-group includes the mode setting,
+which for the non GPIO functions generally is 1, where as to select
+the GPIO function mode must be set to 0.
 
-> virtio core already sets the .owner, so driver does not need to.
+So the GPIO function needs separate intel_pingroup-s with their own mode
+value of 0.
 
-virtio_scsi looks OK to me.
+Add foo_gpio entries for each function to byt_score_groups[] and make all
+the byt_score_gpio_groups[] entries point to these instead to fix this.
 
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
+The "sus" pin-groups got this correct until commit 2f46d7f7e959 ("pinctrl:
+baytrail: Add pinconf group + function for the pmu_clk") added support for
+the pmu_clk pins following the broken "score" model.
 
+Add pmu_clk?_grp_gpio entries to byt_sus_groups[] and point to those
+in byt_sus_gpio_groups[] to fix this.
+
+Fixes: 2f46d7f7e959 ("pinctrl: baytrail: Add pinconf group + function for the pmu_clk")
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+ drivers/pinctrl/intel/pinctrl-baytrail.c | 45 ++++++++++++++++++++----
+ 1 file changed, 38 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/pinctrl/intel/pinctrl-baytrail.c b/drivers/pinctrl/intel/pinctrl-baytrail.c
+index 7865ef587788..019a886a37ae 100644
+--- a/drivers/pinctrl/intel/pinctrl-baytrail.c
++++ b/drivers/pinctrl/intel/pinctrl-baytrail.c
+@@ -279,32 +279,59 @@ static const unsigned int byt_score_smbus_pins[] = { 51, 52, 53 };
+ 
+ static const struct intel_pingroup byt_score_groups[] = {
+ 	PIN_GROUP("uart1_grp", byt_score_uart1_pins, 1),
++	PIN_GROUP("uart1_grp_gpio", byt_score_uart1_pins, 0),
+ 	PIN_GROUP("uart2_grp", byt_score_uart2_pins, 1),
++	PIN_GROUP("uart2_grp_gpio", byt_score_uart2_pins, 0),
+ 	PIN_GROUP("pwm0_grp", byt_score_pwm0_pins, 1),
++	PIN_GROUP("pwm0_grp_gpio", byt_score_pwm0_pins, 0),
+ 	PIN_GROUP("pwm1_grp", byt_score_pwm1_pins, 1),
++	PIN_GROUP("pwm1_grp_gpio", byt_score_pwm1_pins, 0),
+ 	PIN_GROUP("ssp2_grp", byt_score_ssp2_pins, 1),
++	PIN_GROUP("ssp2_grp_gpio", byt_score_ssp2_pins, 0),
+ 	PIN_GROUP("sio_spi_grp", byt_score_sio_spi_pins, 1),
++	PIN_GROUP("sio_spi_grp_gpio", byt_score_sio_spi_pins, 0),
+ 	PIN_GROUP("i2c5_grp", byt_score_i2c5_pins, 1),
++	PIN_GROUP("i2c5_grp_gpio", byt_score_i2c5_pins, 0),
+ 	PIN_GROUP("i2c6_grp", byt_score_i2c6_pins, 1),
++	PIN_GROUP("i2c6_grp_gpio", byt_score_i2c6_pins, 0),
+ 	PIN_GROUP("i2c4_grp", byt_score_i2c4_pins, 1),
++	PIN_GROUP("i2c4_grp_gpio", byt_score_i2c4_pins, 0),
+ 	PIN_GROUP("i2c3_grp", byt_score_i2c3_pins, 1),
++	PIN_GROUP("i2c3_grp_gpio", byt_score_i2c3_pins, 0),
+ 	PIN_GROUP("i2c2_grp", byt_score_i2c2_pins, 1),
++	PIN_GROUP("i2c2_grp_gpio", byt_score_i2c2_pins, 0),
+ 	PIN_GROUP("i2c1_grp", byt_score_i2c1_pins, 1),
++	PIN_GROUP("i2c1_grp_gpio", byt_score_i2c1_pins, 0),
+ 	PIN_GROUP("i2c0_grp", byt_score_i2c0_pins, 1),
++	PIN_GROUP("i2c0_grp_gpio", byt_score_i2c0_pins, 0),
+ 	PIN_GROUP("ssp0_grp", byt_score_ssp0_pins, 1),
++	PIN_GROUP("ssp0_grp_gpio", byt_score_ssp0_pins, 0),
+ 	PIN_GROUP("ssp1_grp", byt_score_ssp1_pins, 1),
++	PIN_GROUP("ssp1_grp_gpio", byt_score_ssp1_pins, 0),
+ 	PIN_GROUP("sdcard_grp", byt_score_sdcard_pins, byt_score_sdcard_mux_values),
++	PIN_GROUP("sdcard_grp_gpio", byt_score_sdcard_pins, 0),
+ 	PIN_GROUP("sdio_grp", byt_score_sdio_pins, 1),
++	PIN_GROUP("sdio_grp_gpio", byt_score_sdio_pins, 0),
+ 	PIN_GROUP("emmc_grp", byt_score_emmc_pins, 1),
++	PIN_GROUP("emmc_grp_gpio", byt_score_emmc_pins, 0),
+ 	PIN_GROUP("lpc_grp", byt_score_ilb_lpc_pins, 1),
++	PIN_GROUP("lpc_grp_gpio", byt_score_ilb_lpc_pins, 0),
+ 	PIN_GROUP("sata_grp", byt_score_sata_pins, 1),
++	PIN_GROUP("sata_grp_gpio", byt_score_sata_pins, 0),
+ 	PIN_GROUP("plt_clk0_grp", byt_score_plt_clk0_pins, 1),
++	PIN_GROUP("plt_clk0_grp_gpio", byt_score_plt_clk0_pins, 0),
+ 	PIN_GROUP("plt_clk1_grp", byt_score_plt_clk1_pins, 1),
++	PIN_GROUP("plt_clk1_grp_gpio", byt_score_plt_clk1_pins, 0),
+ 	PIN_GROUP("plt_clk2_grp", byt_score_plt_clk2_pins, 1),
++	PIN_GROUP("plt_clk2_grp_gpio", byt_score_plt_clk2_pins, 0),
+ 	PIN_GROUP("plt_clk3_grp", byt_score_plt_clk3_pins, 1),
++	PIN_GROUP("plt_clk3_grp_gpio", byt_score_plt_clk3_pins, 0),
+ 	PIN_GROUP("plt_clk4_grp", byt_score_plt_clk4_pins, 1),
++	PIN_GROUP("plt_clk4_grp_gpio", byt_score_plt_clk4_pins, 0),
+ 	PIN_GROUP("plt_clk5_grp", byt_score_plt_clk5_pins, 1),
++	PIN_GROUP("plt_clk5_grp_gpio", byt_score_plt_clk5_pins, 0),
+ 	PIN_GROUP("smbus_grp", byt_score_smbus_pins, 1),
++	PIN_GROUP("smbus_grp_gpio", byt_score_smbus_pins, 0),
+ };
+ 
+ static const char * const byt_score_uart_groups[] = {
+@@ -332,12 +359,14 @@ static const char * const byt_score_plt_clk_groups[] = {
+ };
+ static const char * const byt_score_smbus_groups[] = { "smbus_grp" };
+ static const char * const byt_score_gpio_groups[] = {
+-	"uart1_grp", "uart2_grp", "pwm0_grp", "pwm1_grp", "ssp0_grp",
+-	"ssp1_grp", "ssp2_grp", "sio_spi_grp", "i2c0_grp", "i2c1_grp",
+-	"i2c2_grp", "i2c3_grp", "i2c4_grp", "i2c5_grp", "i2c6_grp",
+-	"sdcard_grp", "sdio_grp", "emmc_grp", "lpc_grp", "sata_grp",
+-	"plt_clk0_grp", "plt_clk1_grp", "plt_clk2_grp", "plt_clk3_grp",
+-	"plt_clk4_grp", "plt_clk5_grp", "smbus_grp",
++	"uart1_grp_gpio", "uart2_grp_gpio", "pwm0_grp_gpio",
++	"pwm1_grp_gpio", "ssp0_grp_gpio", "ssp1_grp_gpio", "ssp2_grp_gpio",
++	"sio_spi_grp_gpio", "i2c0_grp_gpio", "i2c1_grp_gpio", "i2c2_grp_gpio",
++	"i2c3_grp_gpio", "i2c4_grp_gpio", "i2c5_grp_gpio", "i2c6_grp_gpio",
++	"sdcard_grp_gpio", "sdio_grp_gpio", "emmc_grp_gpio", "lpc_grp_gpio",
++	"sata_grp_gpio", "plt_clk0_grp_gpio", "plt_clk1_grp_gpio",
++	"plt_clk2_grp_gpio", "plt_clk3_grp_gpio", "plt_clk4_grp_gpio",
++	"plt_clk5_grp_gpio", "smbus_grp_gpio",
+ };
+ 
+ static const struct intel_function byt_score_functions[] = {
+@@ -457,7 +486,9 @@ static const struct intel_pingroup byt_sus_groups[] = {
+ 	PIN_GROUP("usb_ulpi_grp_gpio", byt_sus_usb_ulpi_pins, byt_sus_usb_ulpi_gpio_mode_values),
+ 	PIN_GROUP("pcu_spi_grp_gpio", byt_sus_pcu_spi_pins, byt_sus_pcu_spi_gpio_mode_values),
+ 	PIN_GROUP("pmu_clk1_grp", byt_sus_pmu_clk1_pins, 1),
++	PIN_GROUP("pmu_clk1_grp_gpio", byt_sus_pmu_clk1_pins, 0),
+ 	PIN_GROUP("pmu_clk2_grp", byt_sus_pmu_clk2_pins, 1),
++	PIN_GROUP("pmu_clk2_grp_gpio", byt_sus_pmu_clk2_pins, 0),
+ };
+ 
+ static const char * const byt_sus_usb_groups[] = {
+@@ -469,7 +500,7 @@ static const char * const byt_sus_pmu_clk_groups[] = {
+ };
+ static const char * const byt_sus_gpio_groups[] = {
+ 	"usb_oc_grp_gpio", "usb_ulpi_grp_gpio", "pcu_spi_grp_gpio",
+-	"pmu_clk1_grp", "pmu_clk2_grp",
++	"pmu_clk1_grp_gpio", "pmu_clk2_grp_gpio",
+ };
+ 
+ static const struct intel_function byt_sus_functions[] = {
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+2.44.0
+
 
