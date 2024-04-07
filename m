@@ -1,164 +1,162 @@
-Return-Path: <linux-gpio+bounces-5145-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5146-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93E1789B0E4
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Apr 2024 14:49:46 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DEF1789B2B7
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Apr 2024 17:33:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 416AE1F2187A
-	for <lists+linux-gpio@lfdr.de>; Sun,  7 Apr 2024 12:49:46 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C63E5B211D1
+	for <lists+linux-gpio@lfdr.de>; Sun,  7 Apr 2024 15:33:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8B362BAFD;
-	Sun,  7 Apr 2024 12:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ED3639FFF;
+	Sun,  7 Apr 2024 15:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qSha4Hyp"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f173.google.com (mail-pf1-f173.google.com [209.85.210.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E03E4C7B;
-	Sun,  7 Apr 2024 12:49:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43ED18485;
+	Sun,  7 Apr 2024 15:32:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712494180; cv=none; b=j62qt1VXQr8n+q/2P672WyalYKb8OHc5M6JJVE3VIQN0fnpkkxg5QygW3IHIYdAe6N1gfudifoUfGO1zRuZfOq9gR1k4vf1x7zn24CxwuQcITblVdy4mloo85YC8BHTuZxqG37D4QllKhOEuUkH3xeOu+HIquVPO9xWLLHV89UY=
+	t=1712503983; cv=none; b=K7Av1UtgiCl9J2vrO7vLEdv09e23+GH+QbHd5076O5gD67PUs5d6DiqJUJ9BEISAVyOjhqwfD87uM0Mlh2qV1VL4Fo9ldmJ0A7qBtjU/wpMcgN3pYDwH5fLdIamsXqpcrWWHNcp9dAO+0SuV31B/2+g/aK/+pSyLIxmNLKzCd74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712494180; c=relaxed/simple;
-	bh=J1H/qX8SRFDlHJ/QBkm7cFTa1sYh0vN4k5jahtXiAaQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UMFyPKfVQso35X0c1TW6cQ5hMTV5uh4gxvHeky3pMzYHSb0OC+ILfQIObatVlJkYYLrPuTuCFj9Pm9G2E4o1fI/JQDgMLEmVERLGMVoQU5veCSTQ/ftKk+9xHo/+hR3WrChcntwquCBh1cqguHbkqaS/u2z/4HWdBhYTri16+Cw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.210.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f173.google.com with SMTP id d2e1a72fcca58-6ecee443c79so411687b3a.0;
-        Sun, 07 Apr 2024 05:49:38 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712494178; x=1713098978;
-        h=content-transfer-encoding:mime-version:list-id:references
-         :in-reply-to:message-id:date:subject:cc:to:from:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=gH1KKOCelF2ThGU1cHU4FIyi0LwXgGcMVoj+JXuvN68=;
-        b=MIJA0Wot1Qghh8EQLxxyyfbLrBYRKDYh7aNXOqdQNmN+CJsqDCipBR5eWRnI5x70mA
-         05ThpeHeLEPSk6/XVVESA2RV4GWzaoHMel2tjwzV5syjTsJ2BwN372/5wZGIiAqGKZNd
-         KOEQj1kF0io5iNGktVOjZ2+3e4fvLsI0NL5ReralF9Z7Pu5I304/F0+Kf1uuuYCmZv5Q
-         2ZlumbaNpx+/rMqHYmU6zX1KXstrozYLXpsNSXFrTdivtIvQAzfBxZKxd6W4Sp0ozlch
-         0OfRM6kGgQTZGxvVUc2CRGBFTIw0ypRD99rhEY8QzyRjk7ammTF+7PhoJvKBH4+8tb3h
-         Rjow==
-X-Forwarded-Encrypted: i=1; AJvYcCVhM7fTIZhDD8Qshqy0I1Kc+w+bKR6q8OPoXVvUfiT80bnhn7cjloNKQKeVCO8z9UihmhScWZomyQ7t6oEtiBuNbbVInSnLvJGIejYjn1+1ZZ1AY36HRJCcflcMJDtd5ptl4mtZSwOMzD3GmTgCNhyb0VyR8VBUlZedclQ9Q+uEKfsSDBV4FcMLrlqNd2m52tHKeGXWm+1p4hZQ6xW5EGTpMODLCktTwfLZNAIl6jExjFoBha2wYg5K2vYFtiCVjCQKJ/M=
-X-Gm-Message-State: AOJu0YzZ+GU6xzTsuqvNvmEw68gC55YnLvWajrm9EvkASsqJwWIquiNj
-	/LnTlCGxp9e+fasH2hrXUfs6HHq081bQJQYuC4hUCFfUKzcv+uh4
-X-Google-Smtp-Source: AGHT+IGmwZEw1xm9D6NmAXuVXmOZeBYvUcoCH5DdguExSt3s8bitCu93PDdAZPDeUUAbx3SB5z+oag==
-X-Received: by 2002:a05:6a20:2452:b0:1a7:17d:8863 with SMTP id t18-20020a056a20245200b001a7017d8863mr8555787pzc.4.1712494177572;
-        Sun, 07 Apr 2024 05:49:37 -0700 (PDT)
-Received: from tgsp-ThinkPad-X280.. ([223.153.78.230])
-        by smtp.gmail.com with ESMTPSA id e7-20020a63aa07000000b005f09e966e8asm4495442pgf.60.2024.04.07.05.49.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 05:49:37 -0700 (PDT)
-From: xiongxin <xiongxin@kylinos.cn>
-To: mario.limonciello@amd.com,
-	Rafael Wysocki <rafael@kernel.org>,
-	hdegoede@redhat.com,
-	linus.walleij@linaro.org
-Cc: Basavaraj.Natikar@amd.com,
-	Shyam-sundar.S-k@amd.com,
-	linux-pm@vger.kernel.org,
-	linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	platform-driver-x86@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: [PATCH v4 1/4] include/linux/suspend.h: Only show pm_pr_dbg messages at suspend/resume
-Date: Sun,  7 Apr 2024 20:49:15 +0800
-Message-Id: <20230602073025.22884-1-mario.limonciello@amd.com>
-X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20230602073025.22884-1-mario.limonciello@amd.com>
-References: <20230602073025.22884-1-mario.limonciello@amd.com>
+	s=arc-20240116; t=1712503983; c=relaxed/simple;
+	bh=AvRYUhFInEf5FxUp/Xb5Vz8WYz3KdPlt9mAh9CIAq7Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=f/XLlDcjgdwD969C0rcTSlzEWIUUA74IeYjYkt0wkMFjdfsU3SvPuMQlJTzZ8sXHKnXvtvBBjizhRT4yCKJQrrLW4wOb55hjJ1v10KcFtd19s8SgRbAI8Y48b9iL7GorfLUj5sJioCsO5HK5Y3m5dqBqZG6IPicId2U15YI4kbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=qSha4Hyp; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=MLm6iC4WNTdIn+XgL/qIwT01bSJfAFu6/aMBhdI31mM=; b=qSha4Hyp47jW+Iw55N4ejDVPWe
+	R50J4MZBkjl1ljsl8lmbCyXXeRCtIkvr9H8+MhKWL1RqgS0YadiGyTeVkQtJaLxMBUmny++XLamZo
+	naMhlFfBA9Wj1dQyIMiwAlars/PfCZtyAe8Qt8T38x8MmzZhs7Y1Ke7WKWdMmJ+2iKSuM9sTd8kWc
+	ti03BmHsO/GPxs1BL3ZrhSW3dzRvZi1ubQEIkPXTCog0N0uUXnTD9dbqqZoA4UhU85Rav2dPWANty
+	RjPUjL9YjSqCk29sHdsFWuEV0tSwNWrASf/6aoPtQvkCY0ATh+zI1NiDBPE0hrxAeAGIGnclSDIPv
+	c5aq+uNQ==;
+Received: from [50.53.2.121] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1rtUVo-0000000CuIr-3hLx;
+	Sun, 07 Apr 2024 15:32:52 +0000
+Message-ID: <7a8bc242-d41e-425b-9a62-36835aca7721@infradead.org>
+Date: Sun, 7 Apr 2024 08:32:49 -0700
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v4 1/4] include/linux/suspend.h: Only show pm_pr_dbg
+ messages at suspend/resume
+To: xiongxin <xiongxin@kylinos.cn>, mario.limonciello@amd.com,
+ Rafael Wysocki <rafael@kernel.org>, hdegoede@redhat.com,
+ linus.walleij@linaro.org
+Cc: Basavaraj.Natikar@amd.com, Shyam-sundar.S-k@amd.com,
+ linux-pm@vger.kernel.org, linux-acpi@vger.kernel.org,
+ linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+ linux-gpio@vger.kernel.org
+References: <20230602073025.22884-1-mario.limonciello@amd.com>
+ <20230602073025.22884-1-mario.limonciello@amd.com>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20230602073025.22884-1-mario.limonciello@amd.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Mario Limonciello <mario.limonciello@amd.com>
 
-All uses in the kernel are currently already oriented around
-suspend/resume. As some other parts of the kernel may also use these
-messages in functions that could also be used outside of
-suspend/resume, only enable in suspend/resume path.
 
-Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
----
-v3->v4:
- * add back do/while as it wasn't pointless.  It fixes a warning.
----
- include/linux/suspend.h | 8 +++++---
- kernel/power/main.c     | 6 ++++++
- 2 files changed, 11 insertions(+), 3 deletions(-)
+On 4/7/24 5:49 AM, xiongxin wrote:
+> From: Mario Limonciello <mario.limonciello@amd.com>
+> 
+> All uses in the kernel are currently already oriented around
+> suspend/resume. As some other parts of the kernel may also use these
+> messages in functions that could also be used outside of
+> suspend/resume, only enable in suspend/resume path.
+> 
+> Signed-off-by: Mario Limonciello <mario.limonciello@amd.com>
+> ---
+> v3->v4:
+>  * add back do/while as it wasn't pointless.  It fixes a warning.
+> ---
+>  include/linux/suspend.h | 8 +++++---
+>  kernel/power/main.c     | 6 ++++++
+>  2 files changed, 11 insertions(+), 3 deletions(-)
+> 
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 1a0426e6761c..74f406c53ac0 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -555,6 +555,7 @@ static inline void unlock_system_sleep(unsigned int flags) {}
+>  #ifdef CONFIG_PM_SLEEP_DEBUG
+>  extern bool pm_print_times_enabled;
+>  extern bool pm_debug_messages_on;
+> +extern bool pm_debug_messages_should_print(void);
+>  static inline int pm_dyn_debug_messages_on(void)
+>  {
+>  #ifdef CONFIG_DYNAMIC_DEBUG
+> @@ -568,14 +569,14 @@ static inline int pm_dyn_debug_messages_on(void)
+>  #endif
+>  #define __pm_pr_dbg(fmt, ...)					\
+>  	do {							\
+> -		if (pm_debug_messages_on)			\
+> +		if (pm_debug_messages_should_print())		\
+>  			printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
+>  		else if (pm_dyn_debug_messages_on())		\
+>  			pr_debug(fmt, ##__VA_ARGS__);	\
+>  	} while (0)
+>  #define __pm_deferred_pr_dbg(fmt, ...)				\
+>  	do {							\
+> -		if (pm_debug_messages_on)			\
+> +		if (pm_debug_messages_should_print())		\
+>  			printk_deferred(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
+>  	} while (0)
+>  #else
+> @@ -593,7 +594,8 @@ static inline int pm_dyn_debug_messages_on(void)
+>  /**
+>   * pm_pr_dbg - print pm sleep debug messages
+>   *
+> - * If pm_debug_messages_on is enabled, print message.
+> + * If pm_debug_messages_on is enabled and the system is entering/leaving
+> + *      suspend, print message.
+>   * If pm_debug_messages_on is disabled and CONFIG_DYNAMIC_DEBUG is enabled,
+>   *	print message only from instances explicitly enabled on dynamic debug's
+>   *	control.
+> diff --git a/kernel/power/main.c b/kernel/power/main.c
+> index 3113ec2f1db4..daa535012e51 100644
+> --- a/kernel/power/main.c
+> +++ b/kernel/power/main.c
+> @@ -556,6 +556,12 @@ power_attr_ro(pm_wakeup_irq);
+>  
+>  bool pm_debug_messages_on __read_mostly;
+>  
+> +bool pm_debug_messages_should_print(void)
+> +{
+> +	return pm_debug_messages_on && pm_suspend_target_state != PM_SUSPEND_ON;
+> 
+>> hibernate processes also mostly use the pm_pr_dbg() function, which
+>> results in hibernate processes only being able to output such logs
+>> through dynamic debug, which is unfriendly to kernels without
+>> CONFIG_DYNAMIC_DEBUG configuration.
 
-diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-index 1a0426e6761c..74f406c53ac0 100644
---- a/include/linux/suspend.h
-+++ b/include/linux/suspend.h
-@@ -555,6 +555,7 @@ static inline void unlock_system_sleep(unsigned int flags) {}
- #ifdef CONFIG_PM_SLEEP_DEBUG
- extern bool pm_print_times_enabled;
- extern bool pm_debug_messages_on;
-+extern bool pm_debug_messages_should_print(void);
- static inline int pm_dyn_debug_messages_on(void)
- {
- #ifdef CONFIG_DYNAMIC_DEBUG
-@@ -568,14 +569,14 @@ static inline int pm_dyn_debug_messages_on(void)
- #endif
- #define __pm_pr_dbg(fmt, ...)					\
- 	do {							\
--		if (pm_debug_messages_on)			\
-+		if (pm_debug_messages_should_print())		\
- 			printk(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
- 		else if (pm_dyn_debug_messages_on())		\
- 			pr_debug(fmt, ##__VA_ARGS__);	\
- 	} while (0)
- #define __pm_deferred_pr_dbg(fmt, ...)				\
- 	do {							\
--		if (pm_debug_messages_on)			\
-+		if (pm_debug_messages_should_print())		\
- 			printk_deferred(KERN_DEBUG pr_fmt(fmt), ##__VA_ARGS__);	\
- 	} while (0)
- #else
-@@ -593,7 +594,8 @@ static inline int pm_dyn_debug_messages_on(void)
- /**
-  * pm_pr_dbg - print pm sleep debug messages
-  *
-- * If pm_debug_messages_on is enabled, print message.
-+ * If pm_debug_messages_on is enabled and the system is entering/leaving
-+ *      suspend, print message.
-  * If pm_debug_messages_on is disabled and CONFIG_DYNAMIC_DEBUG is enabled,
-  *	print message only from instances explicitly enabled on dynamic debug's
-  *	control.
-diff --git a/kernel/power/main.c b/kernel/power/main.c
-index 3113ec2f1db4..daa535012e51 100644
---- a/kernel/power/main.c
-+++ b/kernel/power/main.c
-@@ -556,6 +556,12 @@ power_attr_ro(pm_wakeup_irq);
- 
- bool pm_debug_messages_on __read_mostly;
- 
-+bool pm_debug_messages_should_print(void)
-+{
-+	return pm_debug_messages_on && pm_suspend_target_state != PM_SUSPEND_ON;
+This part of the patch doesn't look so good. ^^^^^^^^^^^^^^^^^^^^
 
-> hibernate processes also mostly use the pm_pr_dbg() function, which
-> results in hibernate processes only being able to output such logs
-> through dynamic debug, which is unfriendly to kernels without
-> CONFIG_DYNAMIC_DEBUG configuration.
-
-+}
-+EXPORT_SYMBOL_GPL(pm_debug_messages_should_print);
-+
- static ssize_t pm_debug_messages_show(struct kobject *kobj,
- 				      struct kobj_attribute *attr, char *buf)
- {
+> 
+> +}
+> +EXPORT_SYMBOL_GPL(pm_debug_messages_should_print);
+> +
+>  static ssize_t pm_debug_messages_show(struct kobject *kobj,
+>  				      struct kobj_attribute *attr, char *buf)
+>  {
+> 
 
 -- 
-2.34.1
+#Randy
 
