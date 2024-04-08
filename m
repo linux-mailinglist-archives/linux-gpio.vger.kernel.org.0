@@ -1,123 +1,237 @@
-Return-Path: <linux-gpio+bounces-5193-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5192-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4684189C87C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 17:36:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C43B089C870
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 17:36:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCD051F22D09
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:36:26 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7B920286DDF
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:36:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1B261420B0;
-	Mon,  8 Apr 2024 15:36:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A6361411D0;
+	Mon,  8 Apr 2024 15:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k2UZDhr5"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="mB2Cdges"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-ej1-f46.google.com (mail-ej1-f46.google.com [209.85.218.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE8211411EF;
-	Mon,  8 Apr 2024 15:36:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF181E4AF;
+	Mon,  8 Apr 2024 15:35:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712590576; cv=none; b=hC7kZX1sFHtlMFpRCc+SKW6Xz/bRWhCvtQYZpSfhhKM7L/K6nXtBOvCU2oAEHpDA+qtaR5Z1ha5m0xlgAfczeURbdmDOuln/FcWx6M3lAq4hg8/xvOHuAejm0Ht7OV8Xt/g+QYeBNd7jdQSlNYLv2i5eAv/CDWSDKtFul9mBYhA=
+	t=1712590556; cv=none; b=WQ5XxZd7mCUrpSjNdV/zsU0YJSICB4ShcgvRpQ+RLFm28JJgFbtucWEUlCof/qxDs1/X+UiiUd4LMVitnVoR6JVYWSdisvULGkkAIgy0cunfA+oWoHf6hdBefKXQ0NkarV1D6GYRCgNSYsyI7wsvD56ap3ZRSAXwtp2E28YQ8qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712590576; c=relaxed/simple;
-	bh=ElEBboZZmhHmo+fflG6/dLQkwXH+6/Jt3imK/vp90K0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ldwolADAo0QKK4SKMS6EgQPSgiVoqmrlLT2O/j6/qzS6//lb0NrEPNAPYCn2LOy2yNcmY0Gj+5jlD/fsIkJuHRxlcizMO/f1qCz4sWumH+b+Vmrd3nLcC6t5elNVTBOGlXTChNN570OBKTVP7cXG+gCGjzK1gfeLePY5HEEsbKc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k2UZDhr5; arc=none smtp.client-ip=209.85.218.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ej1-f46.google.com with SMTP id a640c23a62f3a-a5199906493so440384866b.1;
-        Mon, 08 Apr 2024 08:36:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712590573; x=1713195373; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ElEBboZZmhHmo+fflG6/dLQkwXH+6/Jt3imK/vp90K0=;
-        b=k2UZDhr5+O7cPcFCTb3t1ZzHlYT5/XCnO3pAFI4RbrQ10aOGN2vIdO5jPT5Za7aoAf
-         hrMj0ewrN+ZOQ5EaTAD/rxXRwgJ6P2TZnVtB6gAS4YpySxyOsjGci2Li2HUZRcOLmfMd
-         uPJk+SO+jz6og6XuPsDI6G106wqJ9HJ+0UAXGlCBzWQpPmCVy8nO4+33+4p7qlLGZkwQ
-         ppFSUEtKbZMNxwaVWlj1JIGQLaZUgK0GzoByYMMZODilZmDGuNsvRMFT8fDee2ODKBiO
-         t5jxc/fF7BMrdX351KDxz+cqfeMmyRqt5W5qx/OYZ6L/gpWacUkHjUab1Z+Ew59on4jb
-         u1dQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712590573; x=1713195373;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ElEBboZZmhHmo+fflG6/dLQkwXH+6/Jt3imK/vp90K0=;
-        b=f5B0jfa3U/B3U4pqq1i5MFshNvmKdec0rP0Ldy8X6CBdBCntLImLbR1b02VEHv6u9l
-         sjqZYEqFnu2Hffd64/p+znMp+aCoQJZqp64Lg2KEKRw9kE0Oc18LgBKhz7edCTUwrrPO
-         3LY5iitHgRhihmOAXfMQlY+76rLl1aC09UHTLcSq/hKmcz9kre7YQ4oRB7iF34DNV/3Z
-         ThBu/2W7kdAxytdeizkkXLgftO8lCMUd9FblGzmXUIkqs1PhzJQ1kskdZmxaElk+J7t8
-         1GJqbBcHSMz95sQ++BkLbhH4jQ0q9NQfWjMw7eWD13pSCS/3rpuEKW/IDDjkDt4Gs2H8
-         6RSQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUhra7sye9srUsXSUCcGvoBLoHM7ACqErXqRVqisWrQhaRkdo4J0SMRraIDu+z4UaJyOXQrXU7fj3lcqpYmMhoVPnt7oLMaSX5i2uLPXONBU3Yas7M4vGvXSml5e+Vk06Wk9BZstA==
-X-Gm-Message-State: AOJu0Yz1zqUkHUDi370N5dTI1bq7jOrtEc789/XpQJPcJFjU0T5BGbOU
-	qnFREyMqisVzFNVeWile20hcYCbn7mNBAyfgarARv99FW/11WdaYJLZp7yholP4QuWLoM0JO6UB
-	WEI7hT0biL1rjhw2Yslu5jqn3iWw=
-X-Google-Smtp-Source: AGHT+IFVf4lpZN05DBhUUba0o3Qn7pGE/745rbeti1y5rvdlMmYVqhhSf2HIdl3wBA8Ote60ZMibrzXmtZ9XY7qZkGk=
-X-Received: by 2002:a17:907:9708:b0:a51:18cf:b776 with SMTP id
- jg8-20020a170907970800b00a5118cfb776mr8601571ejc.2.1712590572856; Mon, 08 Apr
- 2024 08:36:12 -0700 (PDT)
+	s=arc-20240116; t=1712590556; c=relaxed/simple;
+	bh=nfhXUuDM+wQiCwJoJQ/JfBm25BuzySMiazVENfH/Afo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=hNFtW1GuX/tCxr13e0xSRS7wx8ZZ+EWE88kdRuUFXwpW+v1Zv8W36p7XcXQJ/gW9zkj9OjCEkQTw3q7PYc1IaZ92QpEkimZrSHjxBw2rNGNnnzRaUh4cRDOB9eby+uZAoo9T/12ZaP9zKyViLIAJcADgOBNQiVmRBgf0UmuXhBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=mB2Cdges; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 43850rko005178;
+	Mon, 8 Apr 2024 10:35:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=5ZqHoK67TZfwoNt
+	kp7APkFwF8BKF7L62HyD7fMD140Q=; b=mB2Cdges9z4sLBZE7oOYF2U1KYUTQ3K
+	k0at5brq/pU0MafzkcvKWBs8RXYQbtteGwS4Frtufbg0bdQqW+QGkSAFjwTzZ3Lh
+	0ZohfgF1PHiTMqxcUGYMRiPsNqZsk6Hdm6dSH8wkNHdHJpG7/3E2JG5ui4A4I7Eb
+	dawMIx3NdjneMLUH23CL103rmomb6M+NeHkf0SJ4LixW4lv8u90cAIgpuptYhhNl
+	EQLBAGZ2LanxNBc1a6ZTkrew0VEIfNmozGv6m8pbAeYYCRVEzrytspr0F/9bSequ
+	qNNUWOaj5cNT26uK4FupF7vDnIxoReFxfpmX7RKFFbBLV7MLz6xELJg==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxhmbc-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 10:35:49 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
+ 16:35:47 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 8 Apr 2024 16:35:47 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 57F72820242;
+	Mon,  8 Apr 2024 15:35:47 +0000 (UTC)
+Date: Mon, 8 Apr 2024 15:35:46 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v3 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
+Message-ID: <ZhQO0vTvr67bR2O9@ediswmail9.ad.cirrus.com>
+References: <20240329114730.360313-1-ckeepax@opensource.cirrus.com>
+ <20240329114730.360313-4-ckeepax@opensource.cirrus.com>
+ <Zg3AaNM0eizfC6Bk@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240407200453.40829-1-hdegoede@redhat.com> <ZhQL7KmvVYgRpz46@smile.fi.intel.com>
- <01494b5d-b7de-48b7-b68b-69a32da9fa5b@redhat.com>
-In-Reply-To: <01494b5d-b7de-48b7-b68b-69a32da9fa5b@redhat.com>
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Date: Mon, 8 Apr 2024 18:35:36 +0300
-Message-ID: <CAHp75VcVdvWux=3rxBjHisMhKC=69Ldhrn-eZiBgMgm0OHs23w@mail.gmail.com>
-Subject: Re: [PATCH 1/6] mmc: core: Add mmc_gpiod_set_cd_config() function
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Andy Shevchenko <andy@kernel.org>, Adrian Hunter <adrian.hunter@intel.com>, 
-	Ulf Hansson <ulf.hansson@linaro.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	linux-mmc@vger.kernel.org, linux-gpio@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Zg3AaNM0eizfC6Bk@surfacebook.localdomain>
+X-Proofpoint-ORIG-GUID: 7zXdBPhC_44Yvty_oRGT4tIjoWOFl76p
+X-Proofpoint-GUID: 7zXdBPhC_44Yvty_oRGT4tIjoWOFl76p
+X-Proofpoint-Spam-Reason: safe
 
-On Mon, Apr 8, 2024 at 6:27=E2=80=AFPM Hans de Goede <hdegoede@redhat.com> =
-wrote:
-> On 4/8/24 5:23 PM, Andy Shevchenko wrote:
-> > On Sun, Apr 07, 2024 at 10:04:48PM +0200, Hans de Goede wrote:
-> >> Some mmc host drivers may need to fixup a card-detection GPIO's config
-> >> to e.g. enable the GPIO controllers builtin pull-up resistor on device=
-s
-> >> where the firmware description of the GPIO is broken (e.g. GpioInt wit=
-h
-> >> PullNone instead of PullUp in ACPI DSDT).
-> >>
-> >> Since this is the exception rather then the rule adding a config
-> >> parameter to mmc_gpiod_request_cd() seems undesirable, so instead
-> >> add a new mmc_gpiod_set_cd_config() function. This is simply a wrapper
-> >> to call gpiod_set_config() on the card-detect GPIO acquired through
-> >> mmc_gpiod_request_cd().
-> >
-> > FWIW,
-> > Reviewed-by: Andy Shevchenko <andy@kernel.org>
->
-> for just this patch or for the series ?
+On Wed, Apr 03, 2024 at 11:47:36PM +0300, Andy Shevchenko wrote:
+> Fri, Mar 29, 2024 at 11:47:30AM +0000, Charles Keepax kirjoitti:
+> > From: Maciej Strozek <mstrozek@opensource.cirrus.com>
+> > +#include <dt-bindings/gpio/gpio.h>
+> 
+> Hmm... Is it requirement by gpiolib-swnode? (I haven't looked at the use cases,
+> I'm not the author of this idea, hence the Q).
 
-You have no cover-letter, your choice :-)
-(yes, for the series, but really it's better to have a even small
-cover letter, `b4` can use it for good in a few ways, although dunno
-what MMC maintainers use)
+It's required for the GPIO_ACTIVE_LOW used in the swnode stuff.
 
-> > assuming you considered addressing nit-picks.
->
-> Ack will do.
+> > +#include <linux/acpi.h>
+> 
+> You need array_size.h (and perhaps overflow.h) and property.h.
 
+Good spot will add those.
 
---=20
-With Best Regards,
-Andy Shevchenko
+> > +static struct spi_board_info ampl_info = {
+> > +	.modalias		= "cs35l56",
+> > +	.max_speed_hz		= 2000000,
+> 
+> Maybe HZ_PER_MHZ from units.h?
+
+Can do.
+
+> > +static const struct software_node_ref_args cs42l43_cs_refs[] = {
+> Please, use SOFTWARE_NODE_REFERENCE().
+
+> > +static const struct property_entry cs42l43_cs_props[] = {
+> You want PROPERTY_ENTRY_REF_ARRAY().. 
+
+Can do.
+
+> > +static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
+> > +{
+> > +	static const int func_smart_amp = 0x1;
+> > +	struct fwnode_handle *child_fwnode, *ext_fwnode;
+> > +	unsigned long long function;
+> > +	unsigned int val;
+> > +	int ret;
+> 
+> > +	if (!is_acpi_node(fwnode))
+> > +		return false;
+> 
+> Dup, your loop will perform the same effectivelly.
+
+Are you sure? Won't adev end up being NULL and the adev->handle
+will dereference it?
+
+> > +	fwnode_for_each_child_node(fwnode, child_fwnode) {
+> 
+> > +		struct acpi_device *adev = to_acpi_device_node(child_fwnode);
+> > +
+> > +		ret = acpi_evaluate_integer(adev->handle, "_ADR", NULL, &function);
+> > +		if (ACPI_FAILURE(ret) || function != func_smart_amp) {
+> > +			fwnode_handle_put(fwnode);
+> > +			continue;
+> > +		}
+> 
+> acpi_get_local_address() (it has a stub for CONFIG_ACPI=n).
+
+Thanks was looking for something like that not sure how I missed
+that.
+
+> > +		ext_fwnode = fwnode_get_named_child_node(child_fwnode,
+> > +				"mipi-sdca-function-expansion-subproperties");
+> > +		if (!ext_fwnode) {
+> 
+> > +			fwnode_handle_put(fwnode);
+> 
+> Are you sure?
+
+oops, yeah those should all be child_fwnode.
+
+> > +	if (has_sidecar) {
+> > +		ret = software_node_register(&cs42l43_gpiochip_swnode);
+> > +		if (ret) {
+> > +			dev_err(priv->dev, "Failed to register gpio swnode: %d\n", ret);
+> > +			return ret;
+> > +		}
+> 
+> > +		ret = device_create_managed_software_node(&priv->ctlr->dev, cs42l43_cs_props, NULL);
+> 
+> No, this must not be used (I'm talking about _managed variant), this is a hack
+> for backward compatibility.
+
+Hm... odd, feels like the function could use a comment or something
+to say don't use me. But we can go back to managing it manually
+no problems.
+
+> > +		if (ret) {
+> > +			dev_err(priv->dev, "Failed to add swnode: %d\n", ret);
+> > +			goto err;
+> > +		}
+> 
+> > +
+> 
+> Redundant blank line.
+
+yup.
+
+> > +	} else {
+> > +		device_set_node(&priv->ctlr->dev, fwnode);
+> > +	}
+> >  
+> >  	ret = devm_spi_register_controller(priv->dev, priv->ctlr);
+> >  	if (ret) {
+> >  		dev_err(priv->dev, "Failed to register SPI controller: %d\n", ret);
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (has_sidecar) {
+> > +		if (!spi_new_device(priv->ctlr, &ampl_info)) {
+> > +			ret = -ENODEV;
+> > +			dev_err(priv->dev, "Failed to create left amp slave\n");
+> > +			goto err;
+> > +		}
+> > +
+> > +		if (!spi_new_device(priv->ctlr, &ampr_info)) {
+> > +			ret = -ENODEV;
+> > +			dev_err(priv->dev, "Failed to create right amp slave\n");
+> > +			goto err;
+> > +		}
+> >  	}
+> >  
+> > +	return 0;
+> > +
+> > +err:
+> > +	if (has_sidecar)
+> > +		software_node_unregister(&cs42l43_gpiochip_swnode);
+> > +
+> >  	return ret;
+> >  }
+> 
+> Wondering why don't you use return dev_err_probe() / ret = dev_err_probe() /
+> dev_err_probe(ret)?
+
+Yeah some of those should be, will update.
+
+> > +static int cs42l43_spi_remove(struct platform_device *pdev)
+> > +{
+> > +	struct cs42l43 *cs42l43 = dev_get_drvdata(pdev->dev.parent);
+> 
+> platform_get_drvdata()
+> 
+> > +	struct fwnode_handle *fwnode = dev_fwnode(cs42l43->dev);
+> 
+> Is this dev the same as &pdev->dev?
+
+No, this is MFD parent device, to be fair could probably use
+parent directly here. Will have a think about that.
+
+Thanks,
+Charles
 
