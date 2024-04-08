@@ -1,129 +1,157 @@
-Return-Path: <linux-gpio+bounces-5165-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5169-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 038CB89BE1B
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 13:26:09 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id A56E489BF2B
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 14:42:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 350461C213B9
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 11:26:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 118D4B25879
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 12:42:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3729657C1;
-	Mon,  8 Apr 2024 11:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JY5uD7Ux"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C3A2F6F06E;
+	Mon,  8 Apr 2024 12:42:20 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from esa2.ltts.com (unknown [14.140.155.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60CDB657B6;
-	Mon,  8 Apr 2024 11:26:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDDFA2D057;
+	Mon,  8 Apr 2024 12:42:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712575563; cv=none; b=EThUAKgzO0tH/Dg0cFzVm64gpu2Lqo1iT24ifAiuiJFY1E9Slyr6a112fAqlqLUHvebT+IrJDb3wz6eaeJnQrTlglZrre8ljPEGeiNSXM+3dhl9JCC95u3yzasSQykIMKiP3R6Y+8Kz/N6bm1zueN5npW3QFSODCXKaAjhTXJtE=
+	t=1712580140; cv=none; b=WP636mpj3ZOXsHwZX/ayEM6loB/CBbohxuOJLhu4zdJzMd23M6BGDAVz/khp0Zz3iMKHhnPSWgQ3ynrSF1uFsWPhgeMbM/RyY4ODOWl4wJfJzWR+0XRSbr7Tl1APc7dZvfv54AXKc2IbOP3D6C2Mq7gg1L1XSqqVzJkCi8a61Mw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712575563; c=relaxed/simple;
-	bh=pu31DqzdIAUThdu05vllJ6aO/HR5oJpRFf3su6h7bbU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DWaNNxjGF9z6LRWY5rOeL6YK2x97hIrauMDhJRs9uEewJtcqZWcja/Pc0ci9R8b/XMb43Cvhs2XsLdYCaeeJgLWSXGjv3FV+dJeV5H9CAc6TnG7s3/mVKdGGMJ/CMcc7gPqWBIBI1p/EgoUG8uBNKl2IqdI6jq0HakHtRI/Zb74=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JY5uD7Ux; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E61C43390;
-	Mon,  8 Apr 2024 11:25:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712575563;
-	bh=pu31DqzdIAUThdu05vllJ6aO/HR5oJpRFf3su6h7bbU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JY5uD7Uxv37sdCSHsPFl7O+sMsnG2xT11Xm6rGdNbMqMwlmY1S4dOQhtf11gqQJwd
-	 CaH8VrR+kD2KbfwT40YlGu5DKEwcszL+BLXNHEfC5MMb9mnIiRonbszXzyPnnvCGxQ
-	 vQTEGEnVYLXy63VoE4UsRIF0h2bajPn0jkOQ3wafMRI0jFX2h+M6bmLspaw6oaHK+X
-	 c0ulIUGNokyg3QBO10+4frkYHhpHu6T94ReggHpccTjTwSnm8+VaRXChPfl/heCm84
-	 qtpN7oNS5fpPQFXiTtsmh2kT2Uh+9TwnMxwQE4pqgULROdXKP6mDp0GoAm+WC+uy0u
-	 JTFkgDXq3Zt8Q==
-Message-ID: <434c41bd-4a48-47ea-a3ef-6190e7033332@kernel.org>
-Date: Mon, 8 Apr 2024 13:25:56 +0200
+	s=arc-20240116; t=1712580140; c=relaxed/simple;
+	bh=4KoBWQJ8F7B0mWMu96tsQo9bqI4843gXdehwB5urs6Q=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nVs2lilHRS+soCwhqxCIDtbYJjXJYHdmSCRR/+GThER7xoXKiKJKCov125EglLfw/57JvlvpFFDTSHJUIEs02ZCeBhby5D12/BuIGg/km5rn+3vDC5Yih2qF0VXjgGAjw/jGFeTCbKVSzRGwur6MJMsdGKL9mU/YgHd/JIJvbC0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
+IronPort-SDR: JNqtrZ7ABL9Xa/s63myixw0s2rathzfd5Pavffzr1QJzZh4c0Tr4bFBDvM9xPuOXm7KdsMWDg5
+ tIPo6rrvwKnw==
+Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
+  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:01 +0530
+From: Bhargav Raviprakash <bhargav.r@ltts.com>
+To: linux-kernel@vger.kernel.org
+Cc: m.nirmaladevi@ltts.com,
+	lee@kernel.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	jpanis@baylibre.com,
+	devicetree@vger.kernel.org,
+	arnd@arndb.de,
+	gregkh@linuxfoundation.org,
+	lgirdwood@gmail.com,
+	broonie@kernel.org,
+	linus.walleij@linaro.org,
+	linux-gpio@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	nm@ti.com,
+	vigneshr@ti.com,
+	kristo@kernel.org,
+	eblanc@baylibre.com,
+	Bhargav Raviprakash <bhargav.r@ltts.com>
+Subject: [PATCH v6 00/11] Add support for TI TPS65224 PMIC
+Date: Mon,  8 Apr 2024 18:10:36 +0530
+Message-Id: <20240408124047.191895-1-bhargav.r@ltts.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] dt-bindings: pinctrl: mediatek: mt7622: add "gpio-ranges"
- property
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>,
- Sean Wang <sean.wang@kernel.org>, Linus Walleij <linus.walleij@linaro.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>,
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
- Hsin-Yi Wang <hsinyi@chromium.org>, linux-mediatek@lists.infradead.org,
- linux-gpio@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?=
- <rafal@milecki.pl>
-References: <20240408105128.30586-1-zajec5@gmail.com>
-Content-Language: en-US
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 fv0=
-In-Reply-To: <20240408105128.30586-1-zajec5@gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 08/04/2024 12:51, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> Allow specifying pin to GPIO mapping. It can be find in in-Linux DTS
-> file for MT7622.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+This series modifies the existing TPS6594 drivers to add support for the
+TPS65224 PMIC device that is a derivative of TPS6594. TPS65224 has a
+similar register map to TPS6594 with a few differences. SPI, I2C, ESM,
+PFSM, Regulators and GPIO features overlap between the two devices.
+
+TPS65224 is a Power Management IC (PMIC) which provides regulators and
+other features like GPIOs, Watchdog, Error Signal Monitor (ESM) and
+Pre-configurable Finite State Machine (PFSM). The SoC and the PMIC can
+communicate through the I2C or SPI interfaces. The PMIC TPS65224
+additionally has a 12-bit ADC.
+Data Sheet for TPS65224: https://www.ti.com/product/TPS65224-Q1
+
+Driver re-use is applied following the advice of the following series:
+https://lore.kernel.org/lkml/2f467b0a-1d11-4ec7-8ca6-6c4ba66e5887@baylibre.com/
+
+The features implemented in this series are:
+- TPS65224 Register definitions
+- Core (MFD I2C and SPI entry points)
+- PFSM	
+- Regulators
+- Pinctrl
+
+TPS65224 Register definitions:
+This patch adds macros for register field definitions of TPS65224
+to the existing TPS6594 driver.  
+
+Core description:
+I2C and SPI interface protocols are implemented, with and without
+the bit-integrity error detection feature (CRC mode).
+
+PFSM description:
+Strictly speaking, PFSM is not hardware. It is a piece of code.
+PMIC integrates a state machine which manages operational modes.
+Depending on the current operational mode, some voltage domains
+remain energized while others can be off.
+PFSM driver can be used to trigger transitions between configured
+states.
+
+Regulators description:
+4 BUCKs and 3 LDOs.
+BUCK12 can be used in dual-phase mode.
+
+Pinctrl description:
+TPS65224 family has 6 GPIOs. Those GPIOs can also serve different
+functions such as I2C or SPI interface or watchdog disable functions.
+The driver provides both pinmuxing for the functions and GPIO capability.
+
+This series was tested on linux-next tag: next-20240118
+
+Test logs can be found here:
+https://gist.github.com/LeonardMH/58ec135921fb1062ffd4a8b384831eb0
+
+Changelog v5 -> v6:
+- Refactoring regulator driver: pass both array and size
+  in tps6594_regulator_irq_handler function
+
+Bhargav Raviprakash (8):
+  mfd: tps6594: use volatile_table instead of volatile_reg
+  mfd: tps6594: add regmap config in match data
+  dt-bindings: mfd: ti,tps6594: Add TI TPS65224 PMIC
+  mfd: tps6594-i2c: Add TI TPS65224 PMIC I2C
+  mfd: tps6594-spi: Add TI TPS65224 PMIC SPI
+  mfd: tps6594-core: Add TI TPS65224 PMIC core
+  misc: tps6594-pfsm: Add TI TPS65224 PMIC PFSM
+  arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P
+    dts
+
+Nirmala Devi Mal Nadar (3):
+  mfd: tps6594: Add register definitions for TI TPS65224 PMIC
+  regulator: tps6594-regulator: Add TI TPS65224 PMIC regulators
+  pinctrl: pinctrl-tps6594: Add TPS65224 PMIC pinctrl and GPIO
+
+ .../devicetree/bindings/mfd/ti,tps6594.yaml   |   1 +
+ arch/arm64/boot/dts/ti/k3-am62p5-sk.dts       |  95 +++++
+ drivers/mfd/tps6594-core.c                    | 253 ++++++++++--
+ drivers/mfd/tps6594-i2c.c                     |  41 +-
+ drivers/mfd/tps6594-spi.c                     |  43 ++-
+ drivers/misc/tps6594-pfsm.c                   |  48 ++-
+ drivers/pinctrl/pinctrl-tps6594.c             | 275 ++++++++++---
+ drivers/regulator/Kconfig                     |   4 +-
+ drivers/regulator/tps6594-regulator.c         | 243 ++++++++++--
+ include/linux/mfd/tps6594.h                   | 362 +++++++++++++++++-
+ 10 files changed, 1221 insertions(+), 144 deletions(-)
 
 
-Acked-by: Krzysztof Kozlowski <krzk@kernel.org>
-
-Best regards,
-Krzysztof
+base-commit: 2863b714f3ad0a9686f2de1b779228ad8c7a8052
+-- 
+2.25.1
 
 
