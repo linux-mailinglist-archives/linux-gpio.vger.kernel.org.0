@@ -1,209 +1,114 @@
-Return-Path: <linux-gpio+bounces-5168-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5178-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 71E8789BF26
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 14:42:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E67A89C200
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:26:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 95A011C2230E
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 12:42:04 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 330F31C21CD2
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 13:26:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C63B7757E3;
-	Mon,  8 Apr 2024 12:41:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E20A57D091;
+	Mon,  8 Apr 2024 13:21:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UhGchK5H"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from esa2.ltts.com (unknown [14.140.155.42])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D268171B47;
-	Mon,  8 Apr 2024 12:41:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=14.140.155.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D7087CF1A;
+	Mon,  8 Apr 2024 13:21:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712580092; cv=none; b=lDLLbhELpJvVM5lEdonRNeAsAGfqtjsA+oyJ9MwW6LCLR2K5/744hU5+M4sy2mGPLutTJRTEZhOcxktY4gGiN8SOwjZb0crmuzsnF6Ka4IU++idHQmdLMNDgB96tBuEQovE3VdJ85gMjiablw4PYrnNoiSLaADDtLtUnLIORDTE=
+	t=1712582501; cv=none; b=i5lL3qOJuEBg/n3jQ3VD+Sex2OHguUKIFVnwR/Noc3O4zsTG58WdaVBHvimLMgkdv+sJTZoUFoIclbILBpJg2uKUF2hXrqW8q+QGvg9iZ8zROgH4Is8K7lsE4viCKgtM/Q9JtOZBiu1vHtNmcYWGJoY7q5U2lkrzT66BL9B3qgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712580092; c=relaxed/simple;
-	bh=/z6DZH45bLOkfq/gVueWFPb4M8m52qtDKhLklz3wx38=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=rM2RMrlmcxt2RsHGe5PMAzfJdDgiNM8XNoDP+HSXaouZVEttcklCs3myya6Ce4DZzD+ipzjcOOXC/vuVQOzTUlMeqw9INRsj6ZeNguVwnLQnD3a6rdH69KOVK20L6K7yTR21nxNppNz+jiwUtRJlKSw4RwvRotr20yZyePdzMhc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com; spf=pass smtp.mailfrom=ltts.com; arc=none smtp.client-ip=14.140.155.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ltts.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ltts.com
-IronPort-SDR: w6Kdt8ZmnvpgPA1o2uIndLjVLlbWA2/ozduYRp+PAd+sqOcxk9ZcyrPhWka0gv+mSlnbnS0YwG
- Ek5HbuyrWlNg==
-Received: from unknown (HELO localhost.localdomain) ([192.168.34.55])
-  by esa2.ltts.com with ESMTP; 08 Apr 2024 18:11:25 +0530
-From: Bhargav Raviprakash <bhargav.r@ltts.com>
-To: linux-kernel@vger.kernel.org
-Cc: m.nirmaladevi@ltts.com,
-	lee@kernel.org,
-	robh+dt@kernel.org,
-	krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org,
-	jpanis@baylibre.com,
-	devicetree@vger.kernel.org,
-	arnd@arndb.de,
-	gregkh@linuxfoundation.org,
-	lgirdwood@gmail.com,
-	broonie@kernel.org,
-	linus.walleij@linaro.org,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	nm@ti.com,
-	vigneshr@ti.com,
-	kristo@kernel.org,
-	eblanc@baylibre.com,
-	Bhargav Raviprakash <bhargav.r@ltts.com>
-Subject: [PATCH v6 11/11] arch: arm64: dts: ti: k3-am62p5-sk: Add TPS65224 PMIC support in AM62P dts
-Date: Mon,  8 Apr 2024 18:10:47 +0530
-Message-Id: <20240408124047.191895-12-bhargav.r@ltts.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20240408124047.191895-1-bhargav.r@ltts.com>
-References: <20240408124047.191895-1-bhargav.r@ltts.com>
+	s=arc-20240116; t=1712582501; c=relaxed/simple;
+	bh=CjpQJ8b4aFU0oVh0NvrFnDn+6wxRLAMcXQbbztGERgo=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=a1SLrjp5rlASxwlMqoPAlGyPuGDu3i3Uiw4DyN9jZ32QdIIfkhPa8/aOSTXlnAr9E7Hs0UecbMkd+xQFQK09J0yiA+jPcejXgac2Fg9aIIqiUYFGfvhSJBD1un5TqEJ+3RkR2Bp6K2Z7dgQlEDAZ4Uu3ExwX1G5RdAAfGcaCKcM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UhGchK5H; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4385mlGN032409;
+	Mon, 8 Apr 2024 08:21:35 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:content-transfer-encoding:in-reply-to; s=
+	PODMain02222019; bh=Qfd5ZEN/T7ufn1fZ9013Xf77fPXo1Wh3Ymch+PVCmWU=; b=
+	UhGchK5H2RdyhX33o/nvO+PxaiO5h8EmFRl72t+h2Px1OryVeaPyCgOlRHLwQsKr
+	/C+CSlg5GfeJaDObciJmfv3ZJGe8axnwz5/tfj760H2Ih+CdMCR/WWZ0eLR6AGtU
+	TONoTy7SsKP5SkO/SfozD3e/eX+V3yiWwhc3s1JmTFF3BKfZHo3AlrCTack7/07r
+	93ZPTWNd4Ln2aqGnu4lnosO13TD8FYYMyYCPbAsOcCrL15PmDOV8sCSNrIj1ViMW
+	588lulgWOzNiFN6tp1WJ3rO3/UvJL+qopob0yZ/W2FcRPxt/mtMFjd1mtN2XNPkJ
+	omOLcm/cJFr0fRlygUl1Dw==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxhfum-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 08:21:35 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
+ 14:21:33 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 8 Apr 2024 14:21:33 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id DE554820243;
+	Mon,  8 Apr 2024 13:21:32 +0000 (UTC)
+Date: Mon, 8 Apr 2024 13:21:31 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Linus Walleij <linus.walleij@linaro.org>
+CC: <broonie@kernel.org>, <brgl@bgdev.pl>, <linux-gpio@vger.kernel.org>,
+        <linux-spi@vger.kernel.org>, <patches@opensource.cirrus.com>
+Subject: Re: [PATCH 1/3] gpio: swnode: Add ability to specify native chip
+ selects for SPI
+Message-ID: <ZhPvW46kGeOnG++E@ediswmail9.ad.cirrus.com>
+References: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
+ <20240326141108.1079993-2-ckeepax@opensource.cirrus.com>
+ <CACRpkdZP_9y-Z=eZcbQe=ZF2ejutP6gD2ofTxXNvGTh7CUfwFg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <CACRpkdZP_9y-Z=eZcbQe=ZF2ejutP6gD2ofTxXNvGTh7CUfwFg@mail.gmail.com>
+X-Proofpoint-ORIG-GUID: VjLAU6ilhXmXIYpGhs6LqVtTqz40TE3x
+X-Proofpoint-GUID: VjLAU6ilhXmXIYpGhs6LqVtTqz40TE3x
+X-Proofpoint-Spam-Reason: safe
 
-Add support for TPS65224 PMIC in device tree of AM62P EVM. Adds regulator
-configuration, pinmux configurations and pmic device nodes.
+On Thu, Apr 04, 2024 at 10:16:35AM +0200, Linus Walleij wrote:
+> On Tue, Mar 26, 2024 at 3:11 PM Charles Keepax
+> <ckeepax@opensource.cirrus.com> wrote:
+> > +const struct software_node swnode_gpio_undefined = {
+> > +       .name = "gpio-internal-undefined",
+> > +};
+> > +EXPORT_SYMBOL_GPL(swnode_gpio_undefined);
+> 
+> This needs a comment in the code telling exactly why this is here.
+> It is also taking up space and code here on systems that have no use
+> for it, so I wonder if it is possible to make this optional.
+> 
 
-Signed-off-by: Bhargav Raviprakash <bhargav.r@ltts.com>
----
- arch/arm64/boot/dts/ti/k3-am62p5-sk.dts | 95 +++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+Happy to add the comment, less sure about how to make it
+optional. I could ifdef it based the SPI config, but whilst that
+is the current user the mechanism feels like it is more generic
+than that and could be used in other bindings as well.
 
-diff --git a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-index 1773c05f7..5d8e4321b 100644
---- a/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am62p5-sk.dts
-@@ -112,6 +112,16 @@ vddshv_sdio: regulator-3 {
- 		bootph-all;
- 	};
- 
-+	vcc_3v3_main: regulator-4 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3_main";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vmain_pd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-names = "default";
-@@ -580,6 +590,12 @@ &main_uart1 {
- &mcu_pmx0 {
- 	bootph-all;
- 
-+	pmic_irq_pins_default: pmic-irq-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x000, PIN_INPUT, 7) /* (B10) MCU_GPIO0_0 */
-+		>;
-+	};
-+
- 	wkup_uart0_pins_default: wkup-uart0-default-pins {
- 		pinctrl-single,pins = <
- 			AM62PX_MCU_IOPAD(0x02c, PIN_INPUT, 0)	/* (C7) WKUP_UART0_CTSn */
-@@ -589,6 +605,13 @@ AM62PX_MCU_IOPAD(0x028, PIN_OUTPUT, 0)	/* (D7) WKUP_UART0_TXD */
- 		>;
- 		bootph-all;
- 	};
-+
-+	wkup_i2c0_pins_default: wkup-i2c0-default-pins {
-+		pinctrl-single,pins = <
-+			AM62PX_MCU_IOPAD(0x04c, PIN_INPUT, 0) /* (A13) WKUP_I2C0_SCL */
-+			AM62PX_MCU_IOPAD(0x050, PIN_INPUT, 0) /* (C11) WKUP_I2C0_SDA */
-+		>;
-+	};
- };
- 
- &wkup_uart0 {
-@@ -599,6 +622,78 @@ &wkup_uart0 {
- 	bootph-all;
- };
- 
-+&wkup_i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&wkup_i2c0_pins_default>;
-+	clock-frequency = <400000>;
-+
-+	tps65224: pmic@48 {
-+		compatible = "ti,tps65224-q1";
-+		reg = <0x48>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pmic_irq_pins_default>;
-+		interrupt-parent = <&mcu_gpio0>;
-+		interrupts = <0 IRQ_TYPE_EDGE_FALLING>;
-+		ti,primary-pmic;
-+
-+		gpio-controller;
-+		#gpio-cells = <2>;
-+
-+		buck12-supply = <&vcc_3v3_main>;
-+		buck3-supply = <&vcc_3v3_main>;
-+		buck4-supply = <&vcc_3v3_main>;
-+
-+		ldo1-supply = <&vcc_3v3_main>;
-+		ldo2-supply = <&vcc_3v3_main>;
-+		ldo3-supply = <&vcc1v8_sys>;
-+
-+		regulators {
-+			vcc_core: buck12 {
-+				regulator-name = "vcc_core_buck12";
-+				regulator-min-microvolt = <715000>;
-+				regulator-max-microvolt = <895000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v8_sys: buck3 {
-+				regulator-name = "vcc1v8_sys_buck3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc1v1: buck4 {
-+				regulator-name = "vcc1v1_buck4";
-+				regulator-min-microvolt = <1100000>;
-+				regulator-max-microvolt = <1100000>;
-+				regulator-always-on;
-+			};
-+
-+			vdda1v8: ldo1 {
-+				regulator-name = "vdda1v8_ldo1";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+			};
-+
-+			dvdd3v3: ldo2 {
-+				regulator-name = "dvdd3v3_ldo2";
-+				regulator-min-microvolt = <3300000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-always-on;
-+			};
-+
-+			vcc_0v85: ldo3 {
-+				regulator-name = "vcc_0v85_ldo3";
-+				regulator-min-microvolt = <850000>;
-+				regulator-max-microvolt = <850000>;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
- /* mcu_gpio0 and mcu_gpio_intr are reserved for mcu firmware usage */
- &mcu_gpio0 {
- 	status = "reserved";
--- 
-2.25.1
+> > +       if (!strcmp(gdev_node->name, "gpio-internal-undefined"))
+> > +               return ERR_PTR(-ENOENT);
+> 
+> This needs a comment stating why this check is here, it's not
+> obvious.
 
+Happy to add a comment here as well.
+
+Thanks,
+Charles
 
