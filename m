@@ -1,152 +1,134 @@
-Return-Path: <linux-gpio+bounces-5180-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5181-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 05DAF89C450
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:47:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91C2F89C4FD
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:52:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B725028380A
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 13:47:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 336C41F2316D
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 13:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADE1C129E8F;
-	Mon,  8 Apr 2024 13:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6752F71B3D;
+	Mon,  8 Apr 2024 13:52:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HOydUxe9"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UhOp5kSr"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from relay7-d.mail.gandi.net (relay7-d.mail.gandi.net [217.70.183.200])
+Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3D471292FC;
-	Mon,  8 Apr 2024 13:44:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20242046;
+	Mon,  8 Apr 2024 13:52:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712583853; cv=none; b=ZOnzbOfYjiDjySahU0BbWUmm/kgFdFZ3bFXN1DYmiezuAT4DxHnbyPv/O41J+F0ksn9VaNTNc9yadjZt4kxmzmnsvJmfxtDyr/CJgqZJD675QNnmx/fkvq9yCXtWMEhDig1ONuRjM6O4e4kQRs5DM3NjAVDEIP1aXyUssdsjYgE=
+	t=1712584328; cv=none; b=Y2rwEw/iOLsAmmqxAejZ+eN+s5TMwNsV2rijtlaKdbktl4yy/RoKqwyJIgEq151TbkD5rtgjX/Gv1hqje7nAbJB7VDfl0wdh91m5zz2hir3L9bggGAt0GQJNSOv6JYiwT0mJ0QGMiuR2+2fZmBFIh8JM5j60vZKwuR5gkrqi48c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712583853; c=relaxed/simple;
-	bh=KUCbhlX3wcsQmPwAru7ZPERm//vLmfFFHqmh1fEhbIU=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=ir13ATfs+yGy34Tg0to+YAXPUPuyEFW2hIYzc+1xvKzchwUAG8Ca/4dhxlyZoBBAOOWFSbhfHXriKUcBMK35/+ePJz4PMic5PfwpzsugMc43ru6Q/9ozE9nEPnBKhTqk9KdnMlvI9+PyprnU6GMCfgUkHuyThGiV351ijCikw1Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HOydUxe9; arc=none smtp.client-ip=217.70.183.200
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id 96E8620008;
-	Mon,  8 Apr 2024 13:44:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1712583849;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=RBqmEBenZUQ/4iAbGHaHJV+1t6aW5OMI+rOt8q34zEU=;
-	b=HOydUxe9TYXJY4k85e2X9PXbYH+pWKo7G1TV/lwpT0r68vaA67gUcRUA3zXum8GNJNC9R8
-	PWekFHMNduKaPFM7r47glHYAsrwGCTTxpetu3pN7sFjX4ZeN46FKeLWHbJjdtayXW0IhAj
-	zii2bA2cA3Yc3Ri4n5uSCh4CIozSXy+HMgOx3pIc5JtQmkwg0APUP5DWOkZI/HPKm79dgt
-	Z4wEj2/QHkfYDmPZvXhgglVCue06AFoMPssXRkhpWnarOVuTSe8OmWZlnPA/ZOz0GVHmJQ
-	OiUT6/ZvBFjgB4TWhGcz6OmgBOQAaFd9ZZ/6jYKp/pPTP3fxSvOn9BYdBIZ8zg==
-Date: Mon, 8 Apr 2024 15:44:07 +0200
-From: Herve Codina <herve.codina@bootlin.com>
-To: Saravana Kannan <saravanak@google.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Linus Walleij
- <linus.walleij@linaro.org>, Pavel Machek <pavel@ucw.cz>, Lee Jones
- <lee@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-leds@vger.kernel.org, Luca Ceresoli <luca.ceresoli@bootlin.com>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Android Kernel Team
- <kernel-team@android.com>
-Subject: Re: [PATCH RESEND 0/2] leds: gpio: Add devlink between the
- leds-gpio device and the gpio used.
-Message-ID: <20240408154407.3a90a518@bootlin.com>
-In-Reply-To: <CAGETcx_=g1dCH=YMUkc7VquUmLs=bNZMspUxH+V49uhcV0Bx2w@mail.gmail.com>
-References: <20240220133950.138452-1-herve.codina@bootlin.com>
-	<CAMRc=MfWPEOHeNvAwra-JxHZBFMrQbP+273zbFLDZfxi7fx8Yg@mail.gmail.com>
-	<20240220155347.693e46e1@bootlin.com>
-	<CAMRc=MeSgCOLZvFOXF4eQOp=bTz38K5Krzuy9r569-jnDx1zFA@mail.gmail.com>
-	<20240220164730.03412479@bootlin.com>
-	<CAGETcx_=g1dCH=YMUkc7VquUmLs=bNZMspUxH+V49uhcV0Bx2w@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 4.2.0 (GTK 3.24.41; x86_64-redhat-linux-gnu)
+	s=arc-20240116; t=1712584328; c=relaxed/simple;
+	bh=hScNN0HYUzamWk/llNxgGUD9v9tyqvTGC+z/Qu9eB9k=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MWpkycJPjVUhK7bCjcUgUdsgaZGd/9PmcK9Fk6cYbkEFUd8C7KsnvIaWtQGYnsQl1fflgqmLCQXE8AbBXOcPHiM+/FQE+MOXOTHGH3gsr8mGKzRD1wBe+1qS8hZr/CfYyNLLr830WMK3SQAF/IXJuYwbUGBC9lvE4nZh2XPF0pA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UhOp5kSr; arc=none smtp.client-ip=67.231.149.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
+	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4385hdpX025891;
+	Mon, 8 Apr 2024 08:51:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=+/c10AJLr7NTCpE
+	00N+TlGmqctFAyufOMmFo7vIntc8=; b=UhOp5kSrjB9uOF4q1raNp0V1FLNjgH7
+	1UXwM/cgUd7z/fwWEZracizAYxKHrlaCS8K2Ubp9+FgEBnCQztIr6boy0uQOHIyJ
+	VsB/WiSfr4aDIic/D9MEM3zGxaawhKkLO5Qf57KFdWGXlyW65iB3bZnaaD/H4XWm
+	aPYl80TzEudsKtEhI33L/yP+1YXYU3y/EdNX+1T/ZYrevNzeNWo8LJSfzvXcgeln
+	uWDZMrR7RNFZkSViKbRO6aubtunKR7Kztj/Un41f6jObCfyF39vG5mCFmJd8ErCx
+	aUZUmIdOEJ7kDKRzqojKv6Km2nnUDkqF4JzCNHUvxNQpeOy/hSR8CdA==
+Received: from ediex02.ad.cirrus.com ([84.19.233.68])
+	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxhgqj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 08 Apr 2024 08:51:59 -0500 (CDT)
+Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
+ (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
+ 14:51:57 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
+ 15.2.1544.9 via Frontend Transport; Mon, 8 Apr 2024 14:51:57 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 52C6C820242;
+	Mon,  8 Apr 2024 13:51:57 +0000 (UTC)
+Date: Mon, 8 Apr 2024 13:51:56 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
+        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v3 2/3] spi: Add a mechanism to use the fwnode name for
+ the SPI device
+Message-ID: <ZhP2fPYd28sXw7EZ@ediswmail9.ad.cirrus.com>
+References: <20240329114730.360313-1-ckeepax@opensource.cirrus.com>
+ <20240329114730.360313-3-ckeepax@opensource.cirrus.com>
+ <Zg28J59MRvk3B-_J@surfacebook.localdomain>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-GND-Sasl: herve.codina@bootlin.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <Zg28J59MRvk3B-_J@surfacebook.localdomain>
+X-Proofpoint-ORIG-GUID: Oy083IP-aOlpJ2XYB3MKmg76O9Ff2pdV
+X-Proofpoint-GUID: Oy083IP-aOlpJ2XYB3MKmg76O9Ff2pdV
+X-Proofpoint-Spam-Reason: safe
 
-Hi Saravana,
+On Wed, Apr 03, 2024 at 11:29:27PM +0300, Andy Shevchenko wrote:
+> Fri, Mar 29, 2024 at 11:47:29AM +0000, Charles Keepax kirjoitti:
+> >  	struct acpi_device *adev = ACPI_COMPANION(&spi->dev);
+> > +	struct fwnode_handle *fwnode = dev_fwnode(&spi->dev);
+> > +
+> > +	if (spi->use_fwnode_name && fwnode) {
+> > +		dev_set_name(&spi->dev, "spi-%s", fwnode_get_name(fwnode));
+> > +		return;
+> > +	}
+> >  
+> >  	if (adev) {
+> >  		dev_set_name(&spi->dev, "spi-%s", acpi_dev_name(adev));
+> 
+> This should be something like this
+> 
+> 	struct device *dev = &spi->dev;
+> 	struct fwnode_handle *fwnode = dev_fwnode(dev);
+> 
+> 	if (is_acpi_device_node(fwnode)) {
+> 		dev_set_name(dev, "spi-%s", acpi_dev_name(to_acpi_device_node(fwnode)));
+> 		return;
+> 	}
+> 
+> 	if (is_software_node(fwnode)) {
+> 		dev_set_name(dev, "spi-%s", fwnode_get_name(fwnode));
+> 		return;
+> 	}
+> 
+> i.o.w. we don't need to have two ways of checking fwnode type and you may get
+> rid of unneeded variable, and always use fwnode name for swnode.
+> 
+> ...
+> 
+> > +	proxy->use_fwnode_name = chip->use_fwnode_name;
+> 
+> Unneeded variable. See above.
+> 
 
-On Tue, 20 Feb 2024 19:28:17 -0800
-Saravana Kannan <saravanak@google.com> wrote:
+Hmm... I guess I was viewing this feature more as something that
+users would opt into. So other firmware mechanisms could use it
+if required, and so most swnode based controllers would still get
+caught by the standard naming at the bottom of the function.
 
-...
-> > >
-> > > Do I understand correctly that the devlink is created between "led-5"
-> > > and "tca6424_dock_2" but actually should also be created between
-> > > "leds-dock" and "tca6424_dock_2"?
-> > >  
-> >
-> > Yes, that's my understanding too.  
-> 
-> I'm replying here instead of the RESEND because here's where the
-> context and example are provided.
-> 
-> I quickly poked into the gpio-leds driver. Please correct me if I'm
-> misunderstanding anything.
-> 
-> It looks like led-5 will be added as a class device. But the
-> dev->fwnode is not set before it's added because it uses
-> device_create_with_groups(). So, fw_devlink doesn't create a link
-> between led-5 and tca6424_dock_2 unless tca6424_dock_2 is added after
-> led-5. Which coincidentally seems to be the case here. Might want to
-> explicitly create the device in gpio-leds driver.
-> 
-> The issue you are trying to fix is a generic issue that I'd like to
-> fix in a generic fashion. It's one of my TODOs which I've mentioned
-> before in conferences/emails to LKML: device links framework has a
-> bunch of gaps when it comes to class devices. I've been thinking about
-> it for a while, but it needs a lot more work and testing. I'll roll in
-> this case when I deal with it in a generic fashion. But here's the
-> general idea of things that need to be addressed:
-> 
-> 1. "Managed" device links allow having a class device as a supplier,
-> but that'll mean the consumer will never probe.
-> 2. What if a class device is a consumer and the supplier isn't ready.
-> What does it mean for the class device to be added? Is it available
-> for use? Probably not. Can we do something here that'll be useful for
-> the class implementation?
-> 3. What if the supplier and consumer are class devices, when does the
-> consumer class device become "available" (do we check the suppliers of
-> the supplier?)?
-> 4. What happens if the supplier of a class device gets removed? Do we
-> notify the class so it can do the right thing? Do we force unbind the
-> first ancestor that's on a bus? (your case).
-> 5. What if a supplier class device is removed, should we unbind the
-> consumer (if it's a bus device)?
-> 
-> I'm currently working on a patch to break dependency cycles. Once
-> that's in, the next TODO item I work on is going to be this or clock
-> framework sync_state() support.
-> 
-> So, I'd recommend waiting this out if it's not urgent.
-> 
-> Heh, here's my commit on my local repo from a year ago when I touched
-> on this and realised the scope of the work.
-> 
-> commit 7dcaad52e569209104408f3e472fde4ef8cd5585 (class-devlinks-v1)
-> Author: Saravana Kannan <saravanak@google.com>
-> Date:   Mon Feb 13 13:40:43 2023 -0800
-> 
->     add class support to device links
-> 
-> 
-> Thanks,
-> Saravana
+From my perspective it will do what I need either way, so happy
+to update it to always use this for software nodes if consensus
+goes that way.
 
-Did you move forward on this topic ?
-
-Best regards,
-Hervé
+Thanks,
+Charles
 
