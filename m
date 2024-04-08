@@ -1,120 +1,102 @@
-Return-Path: <linux-gpio+bounces-5200-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5201-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id C071989CAC5
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 19:27:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id ECA6789CB9C
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 20:21:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7CE5328A750
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 17:27:37 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EA6F28A7E0
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 18:21:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DCDE1448CB;
-	Mon,  8 Apr 2024 17:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457551448D4;
+	Mon,  8 Apr 2024 18:21:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="V0Owr5Gd"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N+EJOHe3"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6DA144300
-	for <linux-gpio@vger.kernel.org>; Mon,  8 Apr 2024 17:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FB1E532;
+	Mon,  8 Apr 2024 18:21:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712597215; cv=none; b=ZCPViKdd1gY1CBLvD1VSfpDOTATRVcILdWDK4M+Is8ErNrYlgRjZv/W7vQeZa+XMJJwOHPPm+RqMkC0QLKqEY9Ht8zyRZhtiKE0GSW20uIapUvwbrGYz1OX+X/6anmVuOw2A6NeIABFcS8DWV/gJwUw+AA/PftYjGK0Brp+WIfg=
+	t=1712600479; cv=none; b=tSDU0CFqZQfyS4pxwmjlFHpX7wqGVb4nXrlAUHF9vAkNjhP8FpET89p7+JImW7UwxgfUi3dkfxMDA86lhG42AGReeHRu/9XQo22MhohfqwzDFQUsZJn62+CTzJ3/iaiQ0FcCgM0Qa7hcqeRFec2uv9zcPDAM3uWzaSbVeSzzIn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712597215; c=relaxed/simple;
-	bh=di1fZE/NdPgQEly4hs4vKPLsKw0xKFpHQOpERMLkIqc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aNqYGNA2aulH1fZ//NAuYDoNBJn2bmrXhKmm4ZKMuElvjQcvEh6h19ck1P86Zrh+WpZtgIbvoFl8/4R7apDhni1durZmJXkzFoJjiORjBDeGB8s1CpGblLZ5lIbm1akbc3YL2p9ax18n1LWb3auNLGCp55fiBOXQLqss8zZd//o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=V0Owr5Gd; arc=none smtp.client-ip=209.85.167.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-516d6c1e238so3369843e87.2
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Apr 2024 10:26:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712597211; x=1713202011; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=YnWxjGpHsquU6yu3iiYYdxaEux1iqzEpGys5Zu0Xiy4=;
-        b=V0Owr5GdYDgKciyt+03vDpMucyvb9nGRXNJGDeKX99C4Mr2pajPzGWvh+1aH1huDFc
-         Sehj8/3rgW66T9hIruGPDaKZtVXLJiFYDCEtSdKCEW+7JGDK1WN1VeCYB634SQ8tpgAi
-         EBRxL4/RFA0CTgK4+wfDGQqx9E+Sw7XGDf0mdTT2FEvOE6+GBAzC9T48tZknpymfmXin
-         eTNPS9/eJAHBfKEH2Ocq4jfPMYXT7KVT+4q8l6Ex4vy10I2paChTTP14KN1Vw0Fg34HT
-         sXIlBnsT30SEGV1SttOga/kSVRexBVUi7oSWNP7N56CoCtQcvn6uRg3hPXgDFjisKXdf
-         eX6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712597211; x=1713202011;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=YnWxjGpHsquU6yu3iiYYdxaEux1iqzEpGys5Zu0Xiy4=;
-        b=ptnex6QJsnZsf4YIpcvkEIYUuehZE1LghZG7MP6IazjuJ+/6kBtmQyejqwn3pS45vX
-         R4Np7jE8sZ5S4aBnFROd98qwDgBnIhdVUVuyz+jvXMcXTIufkKuNRIRVfhhyokX4d4s7
-         xQHFE/trzg9UPNGytvOCCsQEdat13gQigvyOCFElooFeEfhvLnhvNXm9NPcz0qdDxsui
-         3xkkW/4tYUEHbFsFVCLnO+FpF2iLDfOzV5x99VMNdoWsGSXGe1E/S6taXbomgDhF/DUk
-         kI/4mwplGBc0g+KC6Sh1pgbGtecr9P3K7oU+TIWb07RhEichu/aC9GmCKxtEksvFOiJ0
-         ZA2Q==
-X-Forwarded-Encrypted: i=1; AJvYcCUhyXv+J3D16PH4p1wQOxCLF5bk87YFFGWU7D5mibx9vx0ecZ4GB5lECVB+UCYd8j5FqseojElQD7b2NFrcGk3sir/uqNnC68SXKg==
-X-Gm-Message-State: AOJu0YzTRHbf/xlB/sZNWEWRvXTsWo/dMsEEheFduqb8p5Rg9RljWvg5
-	VfsPQNFGRJx/GSkxU0AM+lCAYqYmX+EOeO5mF8SRLY+utuf1BG1FFGrG97bJbEQ=
-X-Google-Smtp-Source: AGHT+IEnJUAo3DBmpf41CIoTlZWQyHmNHUulRSi6MOsB78hKpauHf1ARPbItv9kKkKMQ0/XCs5RmLA==
-X-Received: by 2002:ac2:545b:0:b0:516:c3e1:15c5 with SMTP id d27-20020ac2545b000000b00516c3e115c5mr5703479lfn.69.1712597211312;
-        Mon, 08 Apr 2024 10:26:51 -0700 (PDT)
-Received: from [172.30.204.25] (UNUSED.212-182-62-129.lubman.net.pl. [212.182.62.129])
-        by smtp.gmail.com with ESMTPSA id v22-20020a056512349600b00515cbf19fe2sm1247477lfr.142.2024.04.08.10.26.49
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 08 Apr 2024 10:26:50 -0700 (PDT)
-Message-ID: <794f7e3c-6467-4da1-bc9f-3853459bbd78@linaro.org>
-Date: Mon, 8 Apr 2024 19:26:49 +0200
+	s=arc-20240116; t=1712600479; c=relaxed/simple;
+	bh=z34/j1vtWd7zC0EObYfQ9rp8AHR0JiC5h7Q/5NrsV78=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=V8/rKVN1NHosZj0hnOHnRrizyVQw2gQ+J+fjEC7OSt88W49a9hgM/8yC9XUTSvDLo0UklBZxORcZZluH7shc1P14MUZUl8DTRBBfBipxkEVM62iOIb+A/As+5T9jTgb1wThvSH/F61X7/hiHP+2ICuXCw7km0ab9J/M2fSCfFWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N+EJOHe3; arc=none smtp.client-ip=198.175.65.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712600477; x=1744136477;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=z34/j1vtWd7zC0EObYfQ9rp8AHR0JiC5h7Q/5NrsV78=;
+  b=N+EJOHe3FGMBMePRpngDxDa5I8iHtXAAINYHncT0J3rCIJXLWfPFLHyo
+   /ioHdeN3HmOgjLKahXZH6YKkGren9s/VSs3bj4TkFQuZd1ISuoOhWxJ4c
+   Qluad/toQ9nqGx1as89kG/HrOlkYA/kZrpSYcxdUZbsMvcmI3phpYgP8N
+   Dxh7f9K3qgCxp2tjerXEpxFs6kakXMhG4LCbWuVrRhXqevSLBu0vZvuE0
+   dezSI0jzkJXYX+1Gkq4lcn5qOnaxO3ng9T9KN/XizVgDcmPQ3DxMg4eCY
+   1xNqSG4hAxaKu/h9QW1IVM+0AMDuZhmARo2S3iW6hjuUAV9l+H0g0iNb0
+   Q==;
+X-CSE-ConnectionGUID: DIoouLBHQhaj9fTQ4UQayA==
+X-CSE-MsgGUID: Zju/Hrh3T9yWbB5cfBGzIg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7801089"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="7801089"
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 11:21:16 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="915373773"
+X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
+   d="scan'208";a="915373773"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
+  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 11:21:14 -0700
+Received: from andy by smile with local (Exim 4.97)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1rttcF-00000002bo6-3kBX;
+	Mon, 08 Apr 2024 21:21:11 +0300
+Date: Mon, 8 Apr 2024 21:21:11 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
+	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
+ Return sections
+Message-ID: <ZhQ1l6naYpVlmlex@smile.fi.intel.com>
+References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,pmic-gpio: Allow gpio-hog
- nodes
-To: Luca Weiss <luca@z3ntu.xyz>, ~postmarketos/upstreaming@lists.sr.ht,
- phone-devel@vger.kernel.org, Bjorn Andersson <andersson@kernel.org>,
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20240408-qcom-pmic-gpio-hog-v1-0-f61fc5323110@z3ntu.xyz>
- <20240408-qcom-pmic-gpio-hog-v1-1-f61fc5323110@z3ntu.xyz>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@linaro.org>
-In-Reply-To: <20240408-qcom-pmic-gpio-hog-v1-1-f61fc5323110@z3ntu.xyz>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
 
-
-
-On 4/8/24 18:39, Luca Weiss wrote:
-> Allow specifying a GPIO hog, as already used on
-> qcom-msm8974-lge-nexus5-hammerhead.dts.
+On Fri, Apr 05, 2024 at 12:27:06AM +0300, Andy Shevchenko wrote:
+> $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
+> 67
 > 
-> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
-> ---
->   .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml          | 12 ++++++++++++
->   1 file changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> index a786357ed1af..510a05369dbb 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
-> @@ -424,6 +424,10 @@ patternProperties:
->               $ref: "#/$defs/qcom-pmic-gpio-state"
->           additionalProperties: false
->   
-> +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+> Fix these by adding Return sections. While at it, make sure all of
+> Return sections use the same style.
 
-I see a couple bindings do this, but I'm not sure if we want two
-allow two styles for no reason.. Rob?
+Bart, this is the biggest part from the v1, I would like to have that applied
+first if no objections since it fixes kernel doc warnings. What do you think?
 
-Konrad
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
