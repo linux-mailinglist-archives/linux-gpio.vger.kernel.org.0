@@ -1,134 +1,74 @@
-Return-Path: <linux-gpio+bounces-5181-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5182-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 91C2F89C4FD
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 15:52:11 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id BBA3189C77F
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 16:51:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 336C41F2316D
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 13:52:11 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A6396B277AA
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 14:49:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6752F71B3D;
-	Mon,  8 Apr 2024 13:52:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="UhOp5kSr"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12B8C13F437;
+	Mon,  8 Apr 2024 14:48:07 +0000 (UTC)
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mx0b-001ae601.pphosted.com (mx0a-001ae601.pphosted.com [67.231.149.25])
+Received: from mailout10.t-online.de (mailout10.t-online.de [194.25.134.21])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C20242046;
-	Mon,  8 Apr 2024 13:52:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.149.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8185E13F43C
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Apr 2024 14:48:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.25.134.21
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712584328; cv=none; b=Y2rwEw/iOLsAmmqxAejZ+eN+s5TMwNsV2rijtlaKdbktl4yy/RoKqwyJIgEq151TbkD5rtgjX/Gv1hqje7nAbJB7VDfl0wdh91m5zz2hir3L9bggGAt0GQJNSOv6JYiwT0mJ0QGMiuR2+2fZmBFIh8JM5j60vZKwuR5gkrqi48c=
+	t=1712587686; cv=none; b=gK4/oaBP2Z4FiSKs1z0Qqofdj68h9h6e1hg+a2VTrMAGbiXMoG5w26khDaRF2AwKKK/C13hBI4XDklmP1+SWHtywfcZebkcSqY8+RmZfFfw9wMFtx0K7sCgUMeZC257OKj1XMrnZH/LuHCoZKC6TBijHQA/8fukPAH/ZLGuA9kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712584328; c=relaxed/simple;
-	bh=hScNN0HYUzamWk/llNxgGUD9v9tyqvTGC+z/Qu9eB9k=;
-	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MWpkycJPjVUhK7bCjcUgUdsgaZGd/9PmcK9Fk6cYbkEFUd8C7KsnvIaWtQGYnsQl1fflgqmLCQXE8AbBXOcPHiM+/FQE+MOXOTHGH3gsr8mGKzRD1wBe+1qS8hZr/CfYyNLLr830WMK3SQAF/IXJuYwbUGBC9lvE4nZh2XPF0pA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=UhOp5kSr; arc=none smtp.client-ip=67.231.149.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
-Received: from pps.filterd (m0077473.ppops.net [127.0.0.1])
-	by mx0a-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4385hdpX025891;
-	Mon, 8 Apr 2024 08:51:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
-	date:from:to:cc:subject:message-id:references:mime-version
-	:content-type:in-reply-to; s=PODMain02222019; bh=+/c10AJLr7NTCpE
-	00N+TlGmqctFAyufOMmFo7vIntc8=; b=UhOp5kSrjB9uOF4q1raNp0V1FLNjgH7
-	1UXwM/cgUd7z/fwWEZracizAYxKHrlaCS8K2Ubp9+FgEBnCQztIr6boy0uQOHIyJ
-	VsB/WiSfr4aDIic/D9MEM3zGxaawhKkLO5Qf57KFdWGXlyW65iB3bZnaaD/H4XWm
-	aPYl80TzEudsKtEhI33L/yP+1YXYU3y/EdNX+1T/ZYrevNzeNWo8LJSfzvXcgeln
-	uWDZMrR7RNFZkSViKbRO6aubtunKR7Kztj/Un41f6jObCfyF39vG5mCFmJd8ErCx
-	aUZUmIdOEJ7kDKRzqojKv6Km2nnUDkqF4JzCNHUvxNQpeOy/hSR8CdA==
-Received: from ediex02.ad.cirrus.com ([84.19.233.68])
-	by mx0a-001ae601.pphosted.com (PPS) with ESMTPS id 3xb3sxhgqj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 08 Apr 2024 08:51:59 -0500 (CDT)
-Received: from ediex02.ad.cirrus.com (198.61.84.81) by ediex02.ad.cirrus.com
- (198.61.84.81) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Mon, 8 Apr 2024
- 14:51:57 +0100
-Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
- anon-ediex02.ad.cirrus.com (198.61.84.81) with Microsoft SMTP Server id
- 15.2.1544.9 via Frontend Transport; Mon, 8 Apr 2024 14:51:57 +0100
-Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
-	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 52C6C820242;
-	Mon,  8 Apr 2024 13:51:57 +0000 (UTC)
-Date: Mon, 8 Apr 2024 13:51:56 +0000
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-CC: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>,
-        <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v3 2/3] spi: Add a mechanism to use the fwnode name for
- the SPI device
-Message-ID: <ZhP2fPYd28sXw7EZ@ediswmail9.ad.cirrus.com>
-References: <20240329114730.360313-1-ckeepax@opensource.cirrus.com>
- <20240329114730.360313-3-ckeepax@opensource.cirrus.com>
- <Zg28J59MRvk3B-_J@surfacebook.localdomain>
+	s=arc-20240116; t=1712587686; c=relaxed/simple;
+	bh=cYchh2G4kde1skkQmV7ig5I+bgekn/LsTGKAd//ZgAI=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=NynOyoAFHYQ5Z4q0LGF2vZxuklrSvcybZHwQYj9VAuRRPkyg50+c3IyZqYuoZp3/DTfqV8JqMHLLW4WSJ6XtBv1ie0h5ciWTCOn7IyXZRH+SIRJAWtAz4vsmabIhH2JAww9KIW6sbMkk6ZWTcbGzCCeBNRGQK6m11++6WWP/MkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de; spf=pass smtp.mailfrom=t-online.de; arc=none smtp.client-ip=194.25.134.21
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=t-online.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=t-online.de
+Received: from fwd78.aul.t-online.de (fwd78.aul.t-online.de [10.223.144.104])
+	by mailout10.t-online.de (Postfix) with SMTP id B643B2F028
+	for <linux-gpio@vger.kernel.org>; Mon,  8 Apr 2024 16:47:55 +0200 (CEST)
+Received: from [192.168.0.32] ([37.4.231.157]) by fwd78.t-online.de
+	with (TLSv1.3:TLS_AES_256_GCM_SHA384 encrypted)
+	esmtp id 1rtqHq-1MUxmb0; Mon, 8 Apr 2024 16:47:54 +0200
+Message-ID: <02ee3fea-5099-442e-9fcd-4167c7bb4a80@t-online.de>
+Date: Mon, 8 Apr 2024 16:47:54 +0200
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <Zg28J59MRvk3B-_J@surfacebook.localdomain>
-X-Proofpoint-ORIG-GUID: Oy083IP-aOlpJ2XYB3MKmg76O9Ff2pdV
-X-Proofpoint-GUID: Oy083IP-aOlpJ2XYB3MKmg76O9Ff2pdV
-X-Proofpoint-Spam-Reason: safe
+User-Agent: Mozilla Thunderbird
+To: linux-gpio@vger.kernel.org
+From: =?UTF-8?Q?Oliver_Sch=C3=BCtt?= <oliverschuett@t-online.de>
+Subject: libgpiod 2.1.1: Installation under ubuntu 22.04.4
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-TOI-EXPURGATEID: 150726::1712587674-077FD915-F5D9A663/0/0 CLEAN NORMAL
+X-TOI-MSGID: 9a9b2658-95bf-4447-8630-2f352f9bbcba
 
-On Wed, Apr 03, 2024 at 11:29:27PM +0300, Andy Shevchenko wrote:
-> Fri, Mar 29, 2024 at 11:47:29AM +0000, Charles Keepax kirjoitti:
-> >  	struct acpi_device *adev = ACPI_COMPANION(&spi->dev);
-> > +	struct fwnode_handle *fwnode = dev_fwnode(&spi->dev);
-> > +
-> > +	if (spi->use_fwnode_name && fwnode) {
-> > +		dev_set_name(&spi->dev, "spi-%s", fwnode_get_name(fwnode));
-> > +		return;
-> > +	}
-> >  
-> >  	if (adev) {
-> >  		dev_set_name(&spi->dev, "spi-%s", acpi_dev_name(adev));
-> 
-> This should be something like this
-> 
-> 	struct device *dev = &spi->dev;
-> 	struct fwnode_handle *fwnode = dev_fwnode(dev);
-> 
-> 	if (is_acpi_device_node(fwnode)) {
-> 		dev_set_name(dev, "spi-%s", acpi_dev_name(to_acpi_device_node(fwnode)));
-> 		return;
-> 	}
-> 
-> 	if (is_software_node(fwnode)) {
-> 		dev_set_name(dev, "spi-%s", fwnode_get_name(fwnode));
-> 		return;
-> 	}
-> 
-> i.o.w. we don't need to have two ways of checking fwnode type and you may get
-> rid of unneeded variable, and always use fwnode name for swnode.
-> 
-> ...
-> 
-> > +	proxy->use_fwnode_name = chip->use_fwnode_name;
-> 
-> Unneeded variable. See above.
-> 
+Hi All,
 
-Hmm... I guess I was viewing this feature more as something that
-users would opt into. So other firmware mechanisms could use it
-if required, and so most swnode based controllers would still get
-caught by the standard naming at the bottom of the function.
+i am currently trying to utilize the GPIO pins on an embedded plattform,
+a PicoSYS PC with a Fintek SuperI/O chip and Ubuntu 22.04.4 installed.
 
-From my perspective it will do what I need either way, so happy
-to update it to always use this for software nodes if consensus
-goes that way.
+For this i want to use libgpiod and gpiod but i am very new to this and
+wondering if you could kindly give me some guidance.
 
-Thanks,
-Charles
+I downloaded the tar.gz for version 2.1.1 and extracted into my home
+directory, then installed autoconf and invoked the autogen.sh installing
+it into a dedicated folder in my home folder. After make and make install it
+seemed to install just fine, i could call gpiodetect from terminal but
+it gave me an error: "cannot find GPIO chip character device". Do i need
+to install it in a seperate directory or am i missing some 
+driver/dependency?
+
+Thank you very much in advance and with best regards
+
+Oliver
+
 
