@@ -1,102 +1,103 @@
-Return-Path: <linux-gpio+bounces-5201-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5202-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id ECA6789CB9C
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 20:21:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3423D89CBC3
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 20:36:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3EA6F28A7E0
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 18:21:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DFE272832BD
+	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 18:36:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457551448D4;
-	Mon,  8 Apr 2024 18:21:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3CC0535C8;
+	Mon,  8 Apr 2024 18:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="N+EJOHe3"
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="KWaMjJX/"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.21])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547FB1E532;
-	Mon,  8 Apr 2024 18:21:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C401119A;
+	Mon,  8 Apr 2024 18:36:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712600479; cv=none; b=tSDU0CFqZQfyS4pxwmjlFHpX7wqGVb4nXrlAUHF9vAkNjhP8FpET89p7+JImW7UwxgfUi3dkfxMDA86lhG42AGReeHRu/9XQo22MhohfqwzDFQUsZJn62+CTzJ3/iaiQ0FcCgM0Qa7hcqeRFec2uv9zcPDAM3uWzaSbVeSzzIn8=
+	t=1712601370; cv=none; b=jNH3S32uEEvGd5xPiclZdJOotJcXatX/uKd1qF0EDI4uybVXVEz3PKk00CaE3kJcBG/ycAQeMRduLYUDtWTggKs339HXrA2rDtruF0XpofmVkVYQS/mgpCv/ggnijPEw0aBqVJ/RDVFVm6n0gfRHrumoMCnhLw4uLsyhomL/IMU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712600479; c=relaxed/simple;
-	bh=z34/j1vtWd7zC0EObYfQ9rp8AHR0JiC5h7Q/5NrsV78=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V8/rKVN1NHosZj0hnOHnRrizyVQw2gQ+J+fjEC7OSt88W49a9hgM/8yC9XUTSvDLo0UklBZxORcZZluH7shc1P14MUZUl8DTRBBfBipxkEVM62iOIb+A/As+5T9jTgb1wThvSH/F61X7/hiHP+2ICuXCw7km0ab9J/M2fSCfFWg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=N+EJOHe3; arc=none smtp.client-ip=198.175.65.21
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712600477; x=1744136477;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=z34/j1vtWd7zC0EObYfQ9rp8AHR0JiC5h7Q/5NrsV78=;
-  b=N+EJOHe3FGMBMePRpngDxDa5I8iHtXAAINYHncT0J3rCIJXLWfPFLHyo
-   /ioHdeN3HmOgjLKahXZH6YKkGren9s/VSs3bj4TkFQuZd1ISuoOhWxJ4c
-   Qluad/toQ9nqGx1as89kG/HrOlkYA/kZrpSYcxdUZbsMvcmI3phpYgP8N
-   Dxh7f9K3qgCxp2tjerXEpxFs6kakXMhG4LCbWuVrRhXqevSLBu0vZvuE0
-   dezSI0jzkJXYX+1Gkq4lcn5qOnaxO3ng9T9KN/XizVgDcmPQ3DxMg4eCY
-   1xNqSG4hAxaKu/h9QW1IVM+0AMDuZhmARo2S3iW6hjuUAV9l+H0g0iNb0
-   Q==;
-X-CSE-ConnectionGUID: DIoouLBHQhaj9fTQ4UQayA==
-X-CSE-MsgGUID: Zju/Hrh3T9yWbB5cfBGzIg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="7801089"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="7801089"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa113.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 11:21:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="915373773"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="915373773"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 11:21:14 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1rttcF-00000002bo6-3kBX;
-	Mon, 08 Apr 2024 21:21:11 +0300
-Date: Mon, 8 Apr 2024 21:21:11 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>, linux-gpio@vger.kernel.org,
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH v1 1/1] gpiolib: Update the kernel documentation - add
- Return sections
-Message-ID: <ZhQ1l6naYpVlmlex@smile.fi.intel.com>
-References: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1712601370; c=relaxed/simple;
+	bh=PG1o3L91lYgh8vv/DGFGkaxqiPASzURvCwbdexZwJXE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=RyJbz6HS+wvRRsMYkFPXVgNs5eEytnY0Byv4/YIEdYxHqeu2cvhZohZxqu3LbYBA18iFUp9bvvcYmN2RrYTq0BNTobEqg4TKBUCy4IHn7fpDFAsa2xfjaLiX8AqORQO44p8Klx0XfQZQabrDKohqHwGBAyd4rboQ9fCKRl7ktfU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=KWaMjJX/; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1712601366; bh=PG1o3L91lYgh8vv/DGFGkaxqiPASzURvCwbdexZwJXE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References;
+	b=KWaMjJX/Twh+ifm5VlUNa7OhDTmR63O5NKwhUeqQtZjpgsa6nLTLsrRYu6fRTW00k
+	 p7EWYmG0idPNOAmLcUVWDoC7xVrBu6GZWbeTlEmhEiYl8Vkwq5ASEh9yf+tE+mhf/x
+	 j2PrTUkC/MbaKy5GPwTo/yPtm9VHepbf+5ZClz/g=
+From: Luca Weiss <luca@z3ntu.xyz>
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org,
+ Bjorn Andersson <andersson@kernel.org>,
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH 1/2] dt-bindings: pinctrl: qcom,pmic-gpio: Allow gpio-hog nodes
+Date: Mon, 08 Apr 2024 20:36:04 +0200
+Message-ID: <5894182.DvuYhMxLoT@g550jk>
+In-Reply-To: <794f7e3c-6467-4da1-bc9f-3853459bbd78@linaro.org>
+References:
+ <20240408-qcom-pmic-gpio-hog-v1-0-f61fc5323110@z3ntu.xyz>
+ <20240408-qcom-pmic-gpio-hog-v1-1-f61fc5323110@z3ntu.xyz>
+ <794f7e3c-6467-4da1-bc9f-3853459bbd78@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240404212706.3587456-1-andriy.shevchenko@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Apr 05, 2024 at 12:27:06AM +0300, Andy Shevchenko wrote:
-> $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> 67
+On Montag, 8. April 2024 19:26:49 CEST Konrad Dybcio wrote:
 > 
-> Fix these by adding Return sections. While at it, make sure all of
-> Return sections use the same style.
+> On 4/8/24 18:39, Luca Weiss wrote:
+> > Allow specifying a GPIO hog, as already used on
+> > qcom-msm8974-lge-nexus5-hammerhead.dts.
+> > 
+> > Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> > ---
+> >   .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml          | 12 ++++++++++++
+> >   1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> > index a786357ed1af..510a05369dbb 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> > +++ b/Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml
+> > @@ -424,6 +424,10 @@ patternProperties:
+> >               $ref: "#/$defs/qcom-pmic-gpio-state"
+> >           additionalProperties: false
+> >   
+> > +  "^(hog-[0-9]+|.+-hog(-[0-9]+)?)$":
+> 
+> I see a couple bindings do this, but I'm not sure if we want two
+> allow two styles for no reason.. Rob?
 
-Bart, this is the biggest part from the v1, I would like to have that applied
-first if no objections since it fixes kernel doc warnings. What do you think?
+This regex is actually from the gpio-hog.yaml base
+https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/gpio/gpio-hog.yaml#L23
 
--- 
-With Best Regards,
-Andy Shevchenko
+Why it's made this way I cannot tell you, but I didn't want to 'artifically'
+restrict the pattern for qcom,pmic-gpio.
+
+> 
+> Konrad
+> 
+
+
 
 
 
