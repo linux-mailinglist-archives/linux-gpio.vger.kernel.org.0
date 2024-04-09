@@ -1,138 +1,98 @@
-Return-Path: <linux-gpio+bounces-5245-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5246-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25A4C89DC4E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 16:30:41 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE88889DD2D
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 16:47:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 57CD61C22321
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 14:30:40 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A956F28B4DC
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 14:47:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9796812FF63;
-	Tue,  9 Apr 2024 14:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A5DDB50260;
+	Tue,  9 Apr 2024 14:46:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="d8yN6uRp"
+	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="gQRkUozU"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+Received: from mx0b-001ae601.pphosted.com (mx0b-001ae601.pphosted.com [67.231.152.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A3612FF65;
-	Tue,  9 Apr 2024 14:29:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF27E4AED6;
+	Tue,  9 Apr 2024 14:46:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=67.231.152.168
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712672987; cv=none; b=ghdvR9p67ty3Pc7XsvT+9xOZPnhiKCjW3FTa3DL8FSEsdm8ZCOKbAjISCRb4u+E/9NoWpyCjqVk50CVYMIINPgrusI0car3qwhhaBipI7LO2D7cIQq5qVvCclFWwe9wRtDU6vKn3znfJtiGp0FKv1Q4LrnuttMgywDw03m8MFMQ=
+	t=1712674016; cv=none; b=N9l/ldIcfvb5EsdH8yuFyV9YfYhusVBDyUNrrCEk0AQRsTs5FoyLT9TVKRYUb2kH42IJE7pJMgKIK9MqQKkvyOFSuLpYKrR/XQGjYZN3cePLNTRclY0MdVWPWZGbvQWeMwXPzhbNEIwNG+8cCUALmGzUOBPrfV04WFDkq6ZIA1c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712672987; c=relaxed/simple;
-	bh=Y8bgT3Mgnddc7ZwsZVd6eKFtCdR1CtVYYgKNg/kledY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tuX75BGY8AHMhLE2BUJYsx2ykucqJmBcwhy35XFGoptpMPy6qsFkx7UdMhEAz6v++5yUtffuvAuss6uXsrk4vUgS4PMtXWrKNNi9QI3StGSbAG5B00Si13WB8T4TcRuYhrvysSPEOviTzWQepE8L4R1Ku2rZVJq81xBHmhvqVfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=d8yN6uRp; arc=none smtp.client-ip=198.175.65.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712672986; x=1744208986;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Y8bgT3Mgnddc7ZwsZVd6eKFtCdR1CtVYYgKNg/kledY=;
-  b=d8yN6uRpFEDkGq0JdMKahnXynTjRli+mmmZ0+jZ57FVKyS+1tcGkYBwu
-   jY2cUbDxGwYNjU7jJYv+651DUf2BIN8rMPZvi3jdFN/QTXqVM5WiUfYFg
-   L+jmPZRo/XuXjWWdI5d4y8fxY41EvI5y++IoBrTZ9UsZJknwGqS1R3pK+
-   k8p1zQhSxuqrcOwWRtB2wV0WhQSidum2+5F4FS0lgGo3t2MF+AVVUK/bN
-   W4dXic8RFiXAHkC69ChwX30r5ypYixBxaixcOai0M6AXdEBBTPduWd5B/
-   eY2fdNaSth+lR20Sv5scH56bhvAi4ZAOu3+3USEeM5n6YOmnIO3hlhpAA
-   Q==;
-X-CSE-ConnectionGUID: jVb3WtQsRyiS3CMtsjHopw==
-X-CSE-MsgGUID: xKZBwl6LT0Gxggjfikaswg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11828767"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="11828767"
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:29:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="915401236"
-X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
-   d="scan'208";a="915401236"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.54])
-  by fmsmga002.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 07:29:41 -0700
-Received: from andy by smile with local (Exim 4.97)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1ruCTi-00000002pQ9-2wX7;
-	Tue, 09 Apr 2024 17:29:38 +0300
-Date: Tue, 9 Apr 2024 17:29:38 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	Kent Gibson <warthog618@gmail.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com,
-	Mika Westerberg <mika.westerberg@linux.intel.com>,
-	Arend van Spriel <arend.vanspriel@broadcom.com>,
-	Kalle Valo <kvalo@kernel.org>,
-	Charles Keepax <ckeepax@opensource.cirrus.com>,
-	Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 2/2] gpiolib: Update the kernel documentation - add
- Return sections
-Message-ID: <ZhVQ0tmpmhFHNxqO@smile.fi.intel.com>
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
- <20240408231727.396452-3-andriy.shevchenko@linux.intel.com>
- <ZhU57jB_pVvDz0ZR@smile.fi.intel.com>
- <CAMRc=Mdzc2gSEX0h0Uwcxr2qMgwLLXfhJda=3AkNNYsDBQre7A@mail.gmail.com>
- <ZhVLcNI3rRhWs9_D@smile.fi.intel.com>
- <CAMRc=Mf7aNuQfQtOEGO42jMNpCsLjetLYg5YwavLyDu2rz6X1A@mail.gmail.com>
+	s=arc-20240116; t=1712674016; c=relaxed/simple;
+	bh=BWVCdwaC4GmD8YcGR8jGJ7wgG3+7C56FaooXFqYmk9Y=;
+	h=Date:From:To:CC:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=PgKJ+cAx7OcON7ALq7MazEiqAgLUaYybJO/EFqpG5XqO7tmLFVenN/bMVcAWm+00OVTsX0qEyaq2DjwPgWPmYjR/ylBcn903R3Nj3aHatR7VjI7cdsHKV5LXXBX0vvwdIGPEhBsOFuFeIN2oknGKRXEIHV+O9vZXE0QfmH9sAvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com; spf=pass smtp.mailfrom=opensource.cirrus.com; dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b=gQRkUozU; arc=none smtp.client-ip=67.231.152.168
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=opensource.cirrus.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=opensource.cirrus.com
+Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
+	by mx0b-001ae601.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 4394GgMO018460;
+	Tue, 9 Apr 2024 09:46:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=
+	date:from:to:cc:subject:message-id:references:mime-version
+	:content-type:in-reply-to; s=PODMain02222019; bh=S9sAqbv6Po9AMNW
+	mJuDHwqAVsAsTZHg+rdoYaa5AYaU=; b=gQRkUozUSrfRDlxi2XvorNrH+5oifXR
+	0CD37y5JpRK6fqTmW5IbS8q7mkQoe7RrjmRcqLCix0Vz+kuCIVWUQ4m59ucVH5Gj
+	VQ40RBBRWjpDUWBmShs2QuEw4VVxQLhB4cT7IExlgP/yhX/uvCIJG9LJL5iL8nSp
+	ithg38UH5Ugb5sJNLOk777iNUrjxXPp6BP4A4Xfuy+a/OuTj/f4tYXIWdAu46T2M
+	8nnERjwKPt7avnYMT5c/yrjQi+ASOWiWZUI4+LhinrdnPA3wNm9yfjFHf2SJJJa2
+	S4fhnJWIBbuN/Fdxk43TWU2HHqOKtIjw+zL/AFvqwVIyfGOGZ01fwVA==
+Received: from ediex01.ad.cirrus.com ([84.19.233.68])
+	by mx0b-001ae601.pphosted.com (PPS) with ESMTPS id 3xb2tjjyv6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 09 Apr 2024 09:46:50 -0500 (CDT)
+Received: from ediex01.ad.cirrus.com (198.61.84.80) by ediex01.ad.cirrus.com
+ (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9; Tue, 9 Apr 2024
+ 15:46:48 +0100
+Received: from ediswmail9.ad.cirrus.com (198.61.86.93) by
+ ediex01.ad.cirrus.com (198.61.84.80) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.9
+ via Frontend Transport; Tue, 9 Apr 2024 15:46:48 +0100
+Received: from ediswmail9.ad.cirrus.com (ediswmail9.ad.cirrus.com [198.61.86.93])
+	by ediswmail9.ad.cirrus.com (Postfix) with ESMTPS id 9B6F482024A;
+	Tue,  9 Apr 2024 14:46:48 +0000 (UTC)
+Date: Tue, 9 Apr 2024 14:46:47 +0000
+From: Charles Keepax <ckeepax@opensource.cirrus.com>
+To: <broonie@kernel.org>, <linus.walleij@linaro.org>, <brgl@bgdev.pl>
+CC: <linux-gpio@vger.kernel.org>, <linux-spi@vger.kernel.org>,
+        <patches@opensource.cirrus.com>
+Subject: Re: [PATCH v4 2/3] spi: Add a mechanism to use the fwnode name for
+ the SPI device
+Message-ID: <ZhVU165FxJEZTRJ0@ediswmail9.ad.cirrus.com>
+References: <20240409132126.1117916-1-ckeepax@opensource.cirrus.com>
+ <20240409132126.1117916-3-ckeepax@opensource.cirrus.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAMRc=Mf7aNuQfQtOEGO42jMNpCsLjetLYg5YwavLyDu2rz6X1A@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20240409132126.1117916-3-ckeepax@opensource.cirrus.com>
+X-Proofpoint-ORIG-GUID: JNHpiD_Hr2E3n0NO821I-es28mDlWaIR
+X-Proofpoint-GUID: JNHpiD_Hr2E3n0NO821I-es28mDlWaIR
+X-Proofpoint-Spam-Reason: safe
 
-On Tue, Apr 09, 2024 at 04:18:46PM +0200, Bartosz Golaszewski wrote:
-> On Tue, Apr 9, 2024 at 4:06 PM Andy Shevchenko
-> <andriy.shevchenko@linux.intel.com> wrote:
-> > On Tue, Apr 09, 2024 at 04:01:43PM +0200, Bartosz Golaszewski wrote:
-> > > On Tue, Apr 9, 2024 at 2:52 PM Andy Shevchenko
-> > > <andriy.shevchenko@linux.intel.com> wrote:
-> > > > On Tue, Apr 09, 2024 at 02:12:51AM +0300, Andy Shevchenko wrote:
-> > > > > $ scripts/kernel-doc -v -none -Wall drivers/gpio/gpiolib* 2>&1 | grep -w warning | wc -l
-> > > > > 67
-> > > > >
-> > > > > Fix these by adding Return sections. While at it, make sure all of
-> > > > > Return sections use the same style.
-> > > >
-> > > > Since there shouldn't be hard dependency to the first one, can you consider
-> > > > applying this one, so it unblocks me?
-> > >
-> > > I'm not sure what the resolution is for % and HTML <font> tags in the end?
-> >
-> > Most of the constants are without %, so less churn now is to drop %.
-> > If you think otherwise, please, fix it and I will rebase my patches later.
-> >
+On Tue, Apr 09, 2024 at 02:21:25PM +0100, Charles Keepax wrote:
+> Add a mechanism to force the use of the fwnode name for the name of the
+> SPI device itself. This is useful when devices need to be manually added
+> within the kernel.
 > 
-> I'm not sure I get the logic of it. If the kernel-wide standard is to
-> use %, then we should work towards using it across the GPIO code even
-> if we do it a few lines at a time instead of going backwards just for
-> consistency in drivers/gpio/, no? We don't need to fix everything now
-> but if you're touching this code, then I'd go with %.
-> 
-> Also: what about the s/error-code/error code/g issue? While we should
-> always say "active-low", I think error code looks better as two words.
+> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+> ---
 
-I also have no much time for these details. :(
-Let's drop this series then. Feel free to consider this as a problem report.
+Apologies looking at this I really should have updated the commit
+message as well. I will send a new rev soon if there are no new
+comments.
 
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+Thanks,
+Charles
 
