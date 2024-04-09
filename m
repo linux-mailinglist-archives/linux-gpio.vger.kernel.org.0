@@ -1,106 +1,104 @@
-Return-Path: <linux-gpio+bounces-5256-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5257-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2FD4C89E2AB
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 20:37:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A850A89E2B1
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 20:39:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DA0131F22324
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 18:37:18 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 489CD1F2394F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 18:39:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF7F6157476;
-	Tue,  9 Apr 2024 18:36:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8E542156F3E;
+	Tue,  9 Apr 2024 18:39:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="MV3p69d3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O+7syKAS"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29EA4156C51;
-	Tue,  9 Apr 2024 18:36:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27E6F12FF67
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 18:39:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712687817; cv=none; b=QoeXcUqeLbChl1tonPR5bsdyAUVjU2vWeLlIMgtihg7InIC1ty4w035Yq7cfsUQ95yhsYQoEVfrVG7pGrwRqtZIPHrsdGaZO6jYwdTQxBw8gFfvjCR0oofQQ5NLW0QP7gPx2mfg9t6WIYyOLsm/ZwVwwWtj5qZlKuFfFJRtCN+U=
+	t=1712687968; cv=none; b=qhqzUxHxM/zkiJDaF5FAk409qBCsM/RUvbuRNUa6fj5NbvVB0+h5OwGQ/VyF3kuQJrIJRyR9HzK2S0vDwc/+sZiLZLUD3Lq8Xkx4AJrak/seHQnWZQVbTYU2mZ7CG75ab2Lz0SstTMFwoSA9j+Ge73Qdxriyd3Us4XD/TjbLbYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712687817; c=relaxed/simple;
-	bh=+ayaTanXY1BoZODK0R5VCBAqY8Ylbg2XOaM+3Rh7RfI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=P0HpiPNHSP+X35YgFPp7PeGe3JjygWV3bUE9bLEhfs/XE4TjkSr4iOm0pbAtZ9FOnfWr2wYLxai5R1aT8AoslLS0hfvojsMkWJiRDE/ceRDi9lGT1KzAsWTPH6Z3IjY+Ddcup6/7ufxgqU6uTnDQmMTPOMQPeQCrHwoq36C+Lz0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=MV3p69d3; arc=none smtp.client-ip=128.199.32.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
-	t=1712687813; bh=+ayaTanXY1BoZODK0R5VCBAqY8Ylbg2XOaM+3Rh7RfI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=MV3p69d312eA9OfMiSwLW7UnZChrckze4sNfGc374bb0Y78wshOhc8JiLq5gznVbB
-	 lzetwF/8XI1DevwWKmRCa5FYx7+ds+ygBabfhgl8Mn0gOqtRS5k6bftr1C9vUhh24v
-	 gRpQRN1DdYF2AN4afdMafVbCFMczqs2tUmpOFx2s=
-From: Luca Weiss <luca@z3ntu.xyz>
-Date: Tue, 09 Apr 2024 20:36:37 +0200
-Subject: [PATCH v2 2/2] ARM: dts: qcom: msm8974-hammerhead: Update gpio hog
- node name
+	s=arc-20240116; t=1712687968; c=relaxed/simple;
+	bh=BwPr7SrsQf4b7g+pojJ443HjHLELotWIZE/wilGloq0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ETYkLyNDPQYmZFZo2Z86bhcdaMYrEJ2hsKoG5Vo4l39nqK7JFaoL12vewcwh8RibxW5jtGirRMvKzwdOPJVTO7pXTMktipHl+34ClcDXEidNJ33JPrICa86RsVMBepPVOqDjojUMw8X86QCWOIbLCwTQmZHc3V8/zecyu+ZB/Yo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=O+7syKAS; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-dcbc6a6808fso5871891276.2
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 11:39:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1712687965; x=1713292765; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=hAdR0lfI/Ap3S0wzwjpUHjQuKqdM6aVtl85wb7tRnRA=;
+        b=O+7syKASBx2JiFlsf6BUFWTgvb8hzJc1kYl/sTbv+8cPiBaRynz8Gbcm8FlAELTX+m
+         /l0SKde+GrmSENTVJydNz3kLE420nx0i+Ang2TYm9BI0i4Yvbyj/6XrOEBaabpfK7TLp
+         nR1+C0huxdZbrnNUdWg8Zdsq+I9VsFm/B8NYahsJpdIQ1cGqzlWHw/dUtwt5LaKoIVJM
+         FZF7LiqqdVlwwV4gqB56ml1T7x8Utc60xBYQcFlNn7wj+z2UdvDO6UmdkqWHMeyGmBf9
+         5unKzwqIU0O5N5Azvb8EvL7u151ziPbwU1i4UJJvP8NhcMY1OL78frGZyAGXGT38yvOe
+         moGw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712687965; x=1713292765;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hAdR0lfI/Ap3S0wzwjpUHjQuKqdM6aVtl85wb7tRnRA=;
+        b=LMQFIkQPHygT5q/tHmgSkZ8W1Wq3Cyx0tm0Z5BGB4L202FtLCY1k197j9aYUxpQQ2E
+         w/RjzrnyHnkKcbtUWaxiDoRBnl0CNPEZZrPuqReHZZJVP65S87X+NkVMOmV6mWv/fBYw
+         o60ugwqmIOQincZEiULOf4DbXWsmctZeF5NxU32tcCbjXIaxL6N59MfgTabHl1GuuevW
+         zLaEdwkhTCeZksTVZxu8BEnLH5/McPbBtQk8khSLB6UHa5PP6miUPAEfJ1802x+w5Dkd
+         FaDSPQbkHQNdochtTu8LZnG1LVunvFsNz23/en/+Eb2wr//gKYnYTzU2NCnCZQrC0/jl
+         7Zkg==
+X-Forwarded-Encrypted: i=1; AJvYcCVaSvOI5IpUW128ZIWT4vzusk/fMnkS+Kt0mdluBdZIJjYMhz7lu4OIS7SUjkjOzHe0/8gxBezkmfZ2+L23OWykSv2/70/8urYiCg==
+X-Gm-Message-State: AOJu0Yz0iKSqqqp0W0dL8H1EHtQ9PJW3xNegLLt1ICjDRERnOBWhkJPn
+	womue9lSblyR6kkzSyK/+pWoCXA8wR/5inUNuEo1fKMPCoxkOw4SPWwmil8OpEoCtrT8GWCXu3j
+	KpRuaMTjiRu0YAogkX2EXkBBJRJRQXo1UqoPJPB3RHYnhHao/
+X-Google-Smtp-Source: AGHT+IHq5NVO+WfWmq3XyvBYt0xQLngoIVqzHjLiDg5l97bez8m7/Sp8OhTA5vGPOslEtZDyb+Woew1HHexx4xjD/3U=
+X-Received: by 2002:a05:6902:c0b:b0:dc2:1f53:3a4f with SMTP id
+ fs11-20020a0569020c0b00b00dc21f533a4fmr750553ybb.5.1712687965237; Tue, 09 Apr
+ 2024 11:39:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240409-qcom-pmic-gpio-hog-v2-2-5ff812d2baed@z3ntu.xyz>
-References: <20240409-qcom-pmic-gpio-hog-v2-0-5ff812d2baed@z3ntu.xyz>
-In-Reply-To: <20240409-qcom-pmic-gpio-hog-v2-0-5ff812d2baed@z3ntu.xyz>
-To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
- Bjorn Andersson <andersson@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, 
- Konrad Dybcio <konrad.dybcio@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- Luca Weiss <luca@z3ntu.xyz>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=763; i=luca@z3ntu.xyz;
- h=from:subject:message-id; bh=+ayaTanXY1BoZODK0R5VCBAqY8Ylbg2XOaM+3Rh7RfI=;
- b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmFYrDsi6aMOVf5AY4ya9hmCJhzhKb32Ryq6Y4N
- mQE6VbLYT6JAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZhWKwwAKCRBy2EO4nU3X
- VrowEAC3NbGH98YVuUC6KW5U1GmVH/ouiBhiZuGM5fMLb6204TUZRlXV/BnNhzk1AvEi0btph2t
- xeDzbh0HdjBGiJ3Bm6e83au6QqQTsIlCCoy7buqpMkh5thnnI9wGpoBZUSRaT3Ta2qRlOXT5Pid
- Zmg8tOrGZTpYqg2ed9sgDpU7vFJrTWY+HprNi3qGjOt5opEcneiazQkePGRaeRIy1XDA6xHLOoD
- 8k4vuRxbTGzq/hdIfj3Z780Uwc0ldxpZxAOT4Dhf5jAZIuljZUCl46g6o5Ek+zvIhPuZN/uFoCj
- aR2Ub6TOy0I/i1odrdwWLfetM5TbhOqmM4emHOz93hGvDGnJRYRiezWC8YYH6QNSv9RO7iMHWM3
- GsshlHZSlWUseuIJzqyTGnjRFzxmVhZCdSTDEmd3IUJ7wQ++1O2leLxhPE/SELOITs3UugySz9a
- 4O6wpufGj/2sEpjA+7suYqS5T3m7V0b/p1X6pZ5QJqcJhK5FTLo4ivZnTPneLwS4FMfgsy6nxjo
- qi69g927Q+/Bqt2gU2sWPG5+67CLb2EPXe7mRbi8UF3Fu62m+e2vuwZsqfoN2w30DiBLuxHqjMD
- UmsGfSx+krtUnEYm5ssz0D/S/zDrHyOxKGLbJ6NUDEqxsuMd2uyEd2gCVYsS1qhOxDKGmeHcRUc
- EaMTy3JjkI0KKUw==
-X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
- fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
+References: <20240409-qcom-pmic-gpio-hog-v2-0-5ff812d2baed@z3ntu.xyz> <20240409-qcom-pmic-gpio-hog-v2-2-5ff812d2baed@z3ntu.xyz>
+In-Reply-To: <20240409-qcom-pmic-gpio-hog-v2-2-5ff812d2baed@z3ntu.xyz>
+From: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
+Date: Tue, 9 Apr 2024 21:39:14 +0300
+Message-ID: <CAA8EJppzfBbTi7htJDmMowtXXTi3ASfzQpEpkCjPngBFH=TE-A@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: qcom: msm8974-hammerhead: Update gpio
+ hog node name
+To: Luca Weiss <luca@z3ntu.xyz>
+Cc: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+	Bjorn Andersson <andersson@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Konrad Dybcio <konrad.dybcio@linaro.org>, linux-arm-msm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-Follow the gpio-hog bindings and use otg-hog as node name.
+On Tue, 9 Apr 2024 at 21:37, Luca Weiss <luca@z3ntu.xyz> wrote:
+>
+> Follow the gpio-hog bindings and use otg-hog as node name.
+>
+> Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+> ---
+>  arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
 
-Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
----
- arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts b/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-index 4aaae8537a3f..06549051be50 100644
---- a/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-+++ b/arch/arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts
-@@ -328,7 +328,7 @@ wlan_regulator_pin: wl-reg-active-state {
- 		power-source = <PM8941_GPIO_S3>;
- 	};
- 
--	otg {
-+	otg-hog {
- 		gpio-hog;
- 		gpios = <35 GPIO_ACTIVE_HIGH>;
- 		output-high;
+Reviewed-by: Dmitry Baryshkov <dmitry.baryshkov@linaro.org>
 
 -- 
-2.44.0
-
+With best wishes
+Dmitry
 
