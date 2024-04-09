@@ -1,178 +1,114 @@
-Return-Path: <linux-gpio+bounces-5211-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5212-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6AC7989CEF6
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 01:32:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id ABBEF89D04C
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 04:15:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D309F1F24EEC
-	for <lists+linux-gpio@lfdr.de>; Mon,  8 Apr 2024 23:32:16 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BB931C24190
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 02:15:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 94B8E146A9A;
-	Mon,  8 Apr 2024 23:32:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2B574F1E4;
+	Tue,  9 Apr 2024 02:15:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nAH4ZiT8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnvRQ9qK"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C204A2EAE9;
-	Mon,  8 Apr 2024 23:32:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196874F1E2
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 02:15:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712619130; cv=none; b=PLn/t66WPtL2NAXbuCKzh93AI9OfT0TmQukx20XKcE6pznxF3r1OAWaxefIeSMSXsKSZGRGNO3Gr86gOTgWhaaAGrdB4OeQ2R5ZggOoZiIJWoIvEk6hI+5N5EZxbgDOIkZziy+2fUGrxKRjrWwNmOcpliFVOpERUStOcORop1Pk=
+	t=1712628948; cv=none; b=jibX2WTjz4ycekuYJqqoqookrlagOLwyBQ3llPBBqpkox/vvKMaiCO+sgUxMf2SoQOHW4rECftBYI7ez5m0WDUQr6fod2dUwypziPQ5fI6Mq4BFapCCextx8PpQwKXE8ste9OI9prQi6xNdaVKCjZUnAeYDdtMwrWJGG4TRbrkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712619130; c=relaxed/simple;
-	bh=yIZB8EQSaWasDjEcyEiSbsUsfMZm9fU7bYPjnokrYis=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=uUURFfJkbD21kLkBXBbH0AxJN2zsxbz6zgEHnJVISK/vB4gFzepxBIlxP+Fqm2uKQcRxNw8ORptB+zflN2zbC947WBshT5iiLc9CEWW14gejDpRfYsMJ6rJtoyTNgK1WTSDFmcpMFKaQUEuAowNDDPqnTvvVJgPsSwmSKJ6FoVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nAH4ZiT8; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712619129; x=1744155129;
-  h=from:to:cc:subject:date:message-id:mime-version:
-   content-transfer-encoding;
-  bh=yIZB8EQSaWasDjEcyEiSbsUsfMZm9fU7bYPjnokrYis=;
-  b=nAH4ZiT8/uiUssxtKTw8xuwGOgVi6QlMORBROeqN6Sy/h9lcxWkQj4xS
-   Zed7lmz1GDb2Im74QiurXfae6ORqtMBbAkM3biCPsKvANi2pek0e8Sp6O
-   umdSr+X+t08q/3ZyRlkHHvpV4x/smwdMCWbFGQsQSaTUrdDcRs0pgAswo
-   OU1nLfxMfBPbUSvH/TgjrQE482GxEZabb/Kb3NLmafLsHKuQF0pmIDjOE
-   Yn3VYCE4FYoFSdQx3570fljf1XmU+8dzw5xIxn+KCj4AZIkK8d71hMcWz
-   Lj9kuu6ttbnzEJ8or06iUIvc17I7I18onf3FxJNvoLpcRV+g9IXVne5zW
-   w==;
-X-CSE-ConnectionGUID: 1JwhNWEJQTCAOivomm22NQ==
-X-CSE-MsgGUID: 21wDuZ1ZS2qJ7EFZI38ePg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="19350648"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="19350648"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 16:32:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="937092379"
-X-IronPort-AV: E=Sophos;i="6.07,187,1708416000"; 
-   d="scan'208";a="937092379"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 08 Apr 2024 16:32:06 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 288F112C; Tue,  9 Apr 2024 02:32:04 +0300 (EEST)
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-	linux-gpio@vger.kernel.org,
-	linux-doc@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v1 1/1] Documentation: gpio: Replace leading TABs by spaces in the code blocks
-Date: Tue,  9 Apr 2024 02:32:01 +0300
-Message-ID: <20240408233201.419893-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.43.0.rc1.1.gbec44491f096
+	s=arc-20240116; t=1712628948; c=relaxed/simple;
+	bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=JWP748uTzBQ3Bbqma/DP6bqm80tQBdoQESJZNkv3IPjjsBCYcBPjtEXrlATPsP96iEGRXuCL8YyT0fugGQJdhQTJ9qApw5A4pDBynoe+RGzjPTWsJcAwK6KPoCH+6Ldc7A4ASd6AEWe+vBjmtKxSb1pviwgyg7FhbZdTHEzoL90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnvRQ9qK; arc=none smtp.client-ip=209.85.210.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed5109d924so1023244b3a.0
+        for <linux-gpio@vger.kernel.org>; Mon, 08 Apr 2024 19:15:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712628946; x=1713233746; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
+        b=AnvRQ9qKTsemIpkdzxIsMPV61YrgAUKixP90O2wUDEtAqf6Cf0RGbbBYIch+3/tv3m
+         Bt6qHDtBIUMeYS+woE5OoBixG9zBFZEtnzeWtLggPrB54O1rhLMFBp1hnWHyKMj2WvDO
+         KxErCZYMcJrhOo/n40k3xsH0ICIyO3Al4WThcSMD/Vi6cymgSfyh8x1T1fUq/jFXuwS8
+         +W3Vfu13slNqXR7ONvg9bcNhYvtofrrCT4FWp9ZPywepr6PFbe1FbAJm9LJ7gH3IxHJ1
+         P6pAKwkKbPGIwewUKssltRQUN8ksquzeEeJEiLtVSp6A1f98lGB/LkkeCPVm3+DCc8Hx
+         C9yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712628946; x=1713233746;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
+        b=n+bRk/0kcSqumEhaTW7kzAnBydAHwEjxMkI7jbN3J7SAelXES0BoelZJ0NnRQlC8ZV
+         lVxwOTlIHIT8KOdkHxvSRz5z49aM2FXFYdd1GAD3F8t0lRugfJJxUTnppHc/V7E+Zug4
+         QpMj2vzJFfSG6AF/auZfDv/E9HOo+KGmyBtRXiNvy7PYbRuXWI/2ICidjupUb76zOvnp
+         HkLrHr9JegG0Rr1HEzBpCK1QXax/BNbFSbh0u9CXa3qimhEOMzzgWyddtew0xTZEbxzn
+         W2tSoZJ5ZEp+KUmX0cze5NSgE+Pr9wpEiZ4TycZwEaT3xy98cqr/CYwFRFY9etOKdbT1
+         8GmQ==
+X-Gm-Message-State: AOJu0YzS2jf/kgt61n4+uAcdQeqGkkpGJd2brNYCXB5lhZ7eepQWxy10
+	Ko/UZmPc1ThQIWl1NnIkFT/H4SBiGeeMeRZzHnCJtnCg24xDLq5R
+X-Google-Smtp-Source: AGHT+IGbEeM1yYqt0THmPJ8epo4onBfLT1LCBMp2W+rGSI5eV7GcFmqToEZwxwMuKjsDTDSORpvttA==
+X-Received: by 2002:a05:6a00:a13:b0:6ea:afd2:b1dc with SMTP id p19-20020a056a000a1300b006eaafd2b1dcmr10638604pfh.29.1712628946278;
+        Mon, 08 Apr 2024 19:15:46 -0700 (PDT)
+Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
+        by smtp.gmail.com with ESMTPSA id g10-20020aa79dca000000b006ea80883ce3sm7178521pfq.133.2024.04.08.19.15.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 08 Apr 2024 19:15:45 -0700 (PDT)
+Date: Tue, 9 Apr 2024 10:15:42 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Oliver =?iso-8859-1?Q?Sch=FCtt?= <oliverschuett@t-online.de>
+Cc: linux-gpio@vger.kernel.org
+Subject: Re: libgpiod 2.1.1: Installation under ubuntu 22.04.4
+Message-ID: <20240409021542.GA6010@rigel>
+References: <02ee3fea-5099-442e-9fcd-4167c7bb4a80@t-online.de>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <02ee3fea-5099-442e-9fcd-4167c7bb4a80@t-online.de>
 
-The code blocks are indented with two spaces, if the leading TAB
-is occurred the syntax highlighting might be broken in some editors.
-To prevent that unify all code blocks by using spaces instead of
-leading TAB(s).
+On Mon, Apr 08, 2024 at 04:47:54PM +0200, Oliver Schütt wrote:
+> Hi All,
+>
+> i am currently trying to utilize the GPIO pins on an embedded plattform,
+> a PicoSYS PC with a Fintek SuperI/O chip and Ubuntu 22.04.4 installed.
+>
+> For this i want to use libgpiod and gpiod but i am very new to this and
+> wondering if you could kindly give me some guidance.
+>
+> I downloaded the tar.gz for version 2.1.1 and extracted into my home
+> directory, then installed autoconf and invoked the autogen.sh installing
+> it into a dedicated folder in my home folder. After make and make install it
+> seemed to install just fine, i could call gpiodetect from terminal but
+> it gave me an error: "cannot find GPIO chip character device". Do i need
+> to install it in a seperate directory or am i missing some
+> driver/dependency?
+>
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- Documentation/driver-api/gpio/driver.rst | 28 ++++++++++++------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+The error means it cannot find /dev/gpiochip0, or more generally any
+/dev/gpiochipN, and that is due to your kernel missing the appropriate
+GPIO driver or configuration to setup that driver.
 
-diff --git a/Documentation/driver-api/gpio/driver.rst b/Documentation/driver-api/gpio/driver.rst
-index bf6319cc531b..e541bd2e898b 100644
---- a/Documentation/driver-api/gpio/driver.rst
-+++ b/Documentation/driver-api/gpio/driver.rst
-@@ -7,7 +7,7 @@ This document serves as a guide for writers of GPIO chip drivers.
- Each GPIO controller driver needs to include the following header, which defines
- the structures used to define a GPIO driver::
- 
--	#include <linux/gpio/driver.h>
-+  #include <linux/gpio/driver.h>
- 
- 
- Internal Representation of GPIOs
-@@ -144,7 +144,7 @@ is not open, it will present a high-impedance (tristate) to the external rail::
-      in ----||                   |/
-             ||--+         in ----|
-                 |                |\
--               GND	           GND
-+               GND                 GND
- 
- This configuration is normally used as a way to achieve one of two things:
- 
-@@ -550,10 +550,10 @@ the interrupt separately and go with it:
-   struct my_gpio *g;
-   struct gpio_irq_chip *girq;
- 
--  ret = devm_request_threaded_irq(dev, irq, NULL,
--		irq_thread_fn, IRQF_ONESHOT, "my-chip", g);
-+  ret = devm_request_threaded_irq(dev, irq, NULL, irq_thread_fn,
-+                                  IRQF_ONESHOT, "my-chip", g);
-   if (ret < 0)
--	return ret;
-+      return ret;
- 
-   /* Get a pointer to the gpio_irq_chip */
-   girq = &g->gc.irq;
-@@ -681,12 +681,12 @@ certain operations and keep track of usage inside of the gpiolib subsystem.
- Input GPIOs can be used as IRQ signals. When this happens, a driver is requested
- to mark the GPIO as being used as an IRQ::
- 
--	int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
-+  int gpiochip_lock_as_irq(struct gpio_chip *chip, unsigned int offset)
- 
- This will prevent the use of non-irq related GPIO APIs until the GPIO IRQ lock
- is released::
- 
--	void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset)
-+  void gpiochip_unlock_as_irq(struct gpio_chip *chip, unsigned int offset)
- 
- When implementing an irqchip inside a GPIO driver, these two functions should
- typically be called in the .startup() and .shutdown() callbacks from the
-@@ -708,12 +708,12 @@ When a GPIO is used as an IRQ signal, then gpiolib also needs to know if
- the IRQ is enabled or disabled. In order to inform gpiolib about this,
- the irqchip driver should call::
- 
--	void gpiochip_disable_irq(struct gpio_chip *chip, unsigned int offset)
-+  void gpiochip_disable_irq(struct gpio_chip *chip, unsigned int offset)
- 
- This allows drivers to drive the GPIO as an output while the IRQ is
- disabled. When the IRQ is enabled again, a driver should call::
- 
--	void gpiochip_enable_irq(struct gpio_chip *chip, unsigned int offset)
-+  void gpiochip_enable_irq(struct gpio_chip *chip, unsigned int offset)
- 
- When implementing an irqchip inside a GPIO driver, these two functions should
- typically be called in the .irq_disable() and .irq_enable() callbacks from the
-@@ -763,12 +763,12 @@ Sometimes it is useful to allow a GPIO chip driver to request its own GPIO
- descriptors through the gpiolib API. A GPIO driver can use the following
- functions to request and free descriptors::
- 
--	struct gpio_desc *gpiochip_request_own_desc(struct gpio_desc *desc,
--						    u16 hwnum,
--						    const char *label,
--						    enum gpiod_flags flags)
-+  struct gpio_desc *gpiochip_request_own_desc(struct gpio_desc *desc,
-+                                              u16 hwnum,
-+                                              const char *label,
-+                                              enum gpiod_flags flags)
- 
--	void gpiochip_free_own_desc(struct gpio_desc *desc)
-+  void gpiochip_free_own_desc(struct gpio_desc *desc)
- 
- Descriptors requested with gpiochip_request_own_desc() must be released with
- gpiochip_free_own_desc().
--- 
-2.43.0.rc1.1.gbec44491f096
+So your problem is with your kernel, not libgpiod.
+
+Cheers,
+Kent.
 
 
