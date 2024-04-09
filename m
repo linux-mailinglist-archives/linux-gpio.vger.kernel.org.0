@@ -1,128 +1,170 @@
-Return-Path: <linux-gpio+bounces-5223-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5224-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E19A89D5C0
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 11:42:56 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 50DE689D60B
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 11:56:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8D1FC2826A3
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 09:42:54 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A52FDB2280F
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 09:56:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D600F7FBDF;
-	Tue,  9 Apr 2024 09:42:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CEE980604;
+	Tue,  9 Apr 2024 09:56:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="24aIgIE5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TUCGSqHs"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f182.google.com (mail-lj1-f182.google.com [209.85.208.182])
+Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1848D7E774
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 09:42:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C27C38060A;
+	Tue,  9 Apr 2024 09:56:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712655771; cv=none; b=hGIjRE/ob3NlRnm/+TaORu+rHQYNgLzlbkaWWXTwuEkgsJ3Ot8sCo/F1s9um/ZzNHYaT0cY5ZAlq60fH8VPhRUTRvZ15sLnAvj8RtcnLH1g88kBeNC60iPWS8yBi1nmQNyNkNidkvt2JapYcH07nVJvIF/5N1pXZVHdAPc/3RaM=
+	t=1712656605; cv=none; b=VoCqXUSeqfyRvFQSP3JzD2noNcsUjH9StRx69QdY6Cb7Xkcyimu/nxt7txUwrPkRm9bCaJwyaBuCCSqyKUmnmLVWjac4Bp7S0Js4iiesPzP/pzPrfOS/v4fgJXin6llFGDEQC4QqYCYLwsDDlX46gL83o5QocQ5Bqhk3Li3jnEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712655771; c=relaxed/simple;
-	bh=ytL7QdYp2hCqyew7adjYY1rWgd8CDCZw9v1gyruAj60=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=c6o3XQIAW2T/KffVJgCrW1M52Gint+xf+a14k9HBjNvX6/rfKXCUHkvEb/umK+58t0OwnZjPVS5Sv+kLnfiCy1vz4NFky4iKa/RUeOeFFl9CGAA9vuHwdvMV0W2LuD8BTKQHB03CzZWIGy8SAqTeCSi1+i0qf+qLY/NgFnQ/NP8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=24aIgIE5; arc=none smtp.client-ip=209.85.208.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f182.google.com with SMTP id 38308e7fff4ca-2d700beb6beso58979631fa.2
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 02:42:49 -0700 (PDT)
+	s=arc-20240116; t=1712656605; c=relaxed/simple;
+	bh=5kdIyr7d+TqYs/Wm27GviIdtHrnkZbUdmJ6L1NB2+mw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=NJidscL3aPLNCXrhzpIJJgRqmqlVaUE+G5nSO+mU3Izo2bw7IS7wJsnYqo4Sqpv3MICV19pAsT9CUpVOL0aIhOidDGkho2Rwvq6c8agz7dmiQS2D+uv3GpzTvGKiIERVlcLSqIr63z00PUUM6KcxPY/gmABNXtXunuZgwm86Gcc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TUCGSqHs; arc=none smtp.client-ip=209.85.214.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1e244c7cbf8so45122195ad.0;
+        Tue, 09 Apr 2024 02:56:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712655768; x=1713260568; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=FRkNsSj/lYNCA3MRycU0zvpqCVRND9tlWV8O4KsTnlc=;
-        b=24aIgIE5l28MQNHvET+s3C24ag0SoSC46oVvfz/e4VBtyuEWZ5PbH/Omv9IktBmAXW
-         fPCm2/G4EdjNcxxrfkZHCIucBiZmWMnVAcGrezFIQCW1EeSrebkCULblOK2ow2AEBZA6
-         ScKTVLz8SkDxV3ZuI/GnoQg7FTwAtHEaWGLfU+2tVv+Y/x4sRsWbd2dBM1008heX5Ekz
-         xQpF3v9tAGD+bSzz9zfYR5p96a57/H6Qd4xMkK4LrIPSj5bFiYYbEgMztmrPgMkRAu8k
-         smePAjVlnlP5QSduD0z1R3/IkWL/t6F7AUvnkDwAsT40D/0PbwpFw1swGMm/RYlr2pLM
-         yMRA==
+        d=gmail.com; s=20230601; t=1712656603; x=1713261403; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hYDT1gagtsYDBQ7j1Wl4qvL1OaVYrsLw8iRUF0LZZa4=;
+        b=TUCGSqHszkifKbFkWyFqbw+HW6hV1xLWwJLKLNq5T1w1rbMINEQCbk8uV3TrNus2K2
+         n19wOhf0s88ZWoDTsajd6dvntj7tGrXzCGi2tit+X1RN9erCCya6lFFDHdC6Mk6JaYJb
+         gAy4wMArXfMW49U9pq/LrTojoniWIoDq6mJa4Udu19iXgi8KBytnC7ym6cRA6btqr32z
+         7tdP1InyQX7ZC1JkG9a4BjebDcN8HaDrplH43hS8ko+0zXP5M/+Qji2+bH1/YSe/2slz
+         ce9ACb8MoXqEWVmlaBQ90yKvCgurF36kaHwqgN6XFvTcnbjm0gYMipPAjF7fRDMMCVYV
+         gcXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712655768; x=1713260568;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=FRkNsSj/lYNCA3MRycU0zvpqCVRND9tlWV8O4KsTnlc=;
-        b=Hx33G928jM71792oIyccjaST62OyFBsc/ZOiUChHhN4Pd9lZqUHVE5DPWx43ZJ7G4z
-         ThyVjDayMx1QV+HI1k72uzqeLy4Ssr7ciJwSN2KwLBafd8qmhTAjbAoX7SkJuhM6YKf3
-         qBYc6vdljV9Pp0eqiIGIzFAC4zIiww/ptdVIyu0KD7yFQr4l50dyNf0m3KZu3UdmG2RT
-         e93tIMPh5rcR5FoZ4PoEyCPYsc2TJK4CR3jmv9PSXc+PegZf8snRfdTVQlBi7poRvg2R
-         XTrZDgVygeMdtqhw5wfxrzCzCscKzY/Ad02rnf5Nf4ZEeAhQ+5A7IciXupYmBp+c7+Me
-         PxQA==
-X-Forwarded-Encrypted: i=1; AJvYcCXH6DsoVnJHobycAQz7ah7WCUEOUe53N36sVo5gtA123f3z7zGfQilNTv8h9q03GgXihcvjmXLoZcFkaNatV032Oy6ErkBb5JDpSw==
-X-Gm-Message-State: AOJu0YyQDlBqi66G0+wn/Er2+Z7dagqtWmaHKNGpVI1/ok22IukIkkxI
-	sITXreATdJzEKW1e/YyC/BzgDQ5UDq3lypCyGFhtVCacQMmzIBUvJaE/RYpZJCy+nuELfC/0Y6w
-	ko7t+5PnAMTg0D7w2nYjNr00Uvj/gU6jZZ8WHyA==
-X-Google-Smtp-Source: AGHT+IGLok3BTsdCtcp+mQF0FlIfpGRtTXkNrJj6FjV/E2JhCIYngUvEmtKxHaZSUGiU6FzXlS6ipOOBorjeZLPGLJA=
-X-Received: by 2002:a2e:854c:0:b0:2d8:5af9:9097 with SMTP id
- u12-20020a2e854c000000b002d85af99097mr6406610ljj.42.1712655768359; Tue, 09
- Apr 2024 02:42:48 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712656603; x=1713261403;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hYDT1gagtsYDBQ7j1Wl4qvL1OaVYrsLw8iRUF0LZZa4=;
+        b=NSIBP9noLaK9GjvC6n6qcd4/XPKzJ7aLC2tU9ZqalcLE+im/RNO6DnliWh8ijcLdP5
+         IFDmOTqzkvHiPBLUlKy87QDH5EBrFGNWt9IrOYuw4cjrpJ1FnIODvhqEhQD1EhJmdCLM
+         FZL/fVKUcagn0ED9CCBjlwQjfc0bka62xH2NNPd76d9z2IEqgLxYZP0tHI3ewxr8clL9
+         lw6c6uE+MVUzZpR0/9Kq5BleA69VRt+muPuCSa9cY8K4PhCZc194a3IzIPds2Ua//7cw
+         jiI2yJh9oBjjCntTxE3oU2nzxKJiSe4JVF1KX6Bwx14dzGSbnL3OV8YvipPUUbi7ooOj
+         T2oQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXZlP4uJj/uQrnG0ztlUn1sn6uqiKcjVE1ZgZHC0UIaN8Vza27NoRBcYWMGGbSfOg35ytthhT8P+qUahWdp+VqntrwKAlXoS9klIIGmnQ1XzDyCo6CG5FG+nCgIdNwFby33UJdkTBsmPAXbeleyPtUo2txxWVRKIH7SQmJmSXS0G+qsrBU=
+X-Gm-Message-State: AOJu0Yy/z6djReloNHBb+Lb6ZvwtbkF0zWvK+2L5yhCYIKWnmTBFxctV
+	6yVgIbSaCoWSqKIubql3scC/txyC4FvrGwYmlhaA7n23oRDf5SGW
+X-Google-Smtp-Source: AGHT+IGbspmJ4y0DWy0bXoZNhmrveZTGkCJ0U/luzwHbiILv8Pozmxr4Mq8N7vYEE073vwEM59r/Tg==
+X-Received: by 2002:a17:902:d2d1:b0:1e3:f2d0:1a4d with SMTP id n17-20020a170902d2d100b001e3f2d01a4dmr7381037plc.45.1712656602759;
+        Tue, 09 Apr 2024 02:56:42 -0700 (PDT)
+Received: from a28aa0606c51.. (60-250-192-107.hinet-ip.hinet.net. [60.250.192.107])
+        by smtp.gmail.com with ESMTPSA id o17-20020a170902d4d100b001e3f1596baasm5100445plg.298.2024.04.09.02.56.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 02:56:42 -0700 (PDT)
+From: Jacky Huang <ychuang570808@gmail.com>
+To: linus.walleij@linaro.org,
+	robh+dt@kernel.org,
+	krzysztof.kozlowski+dt@linaro.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	j.neuschaefer@gmx.net
+Cc: linux-arm-kernel@lists.infradead.org,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	ychuang3@nuvoton.com,
+	schung@nuvoton.com
+Subject: [PATCH v7 0/3] Add support for nuvoton ma35d1 pin control
+Date: Tue,  9 Apr 2024 09:56:34 +0000
+Message-Id: <20240409095637.2135-1-ychuang570808@gmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com> <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
-In-Reply-To: <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 9 Apr 2024 11:42:37 +0200
-Message-ID: <CAMRc=Mf73fFHo83gNvDXGy9BosB1MNz_=8kt56hLA12bPBb8CA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
-	brcm80211-dev-list.pdl@broadcom.com, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Arend van Spriel <arend.vanspriel@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 9, 2024 at 1:17=E2=80=AFAM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
->
-> The GPIO_* flag definitions are *almost* duplicated in two files
-> (with unmatches OPEN_SOURCE / OPEN_DRAIN). Moreover, some code relies
-> on one set of definitions while the rest is on the other. Clean up
-> this mess by providing only one source of the definitions to all.
->
-> Fixes: b424808115cb ("brcm80211: brcmsmac: Move LEDs to GPIO descriptors"=
-)
-> Fixes: 5923ea6c2ce6 ("gpio: pass lookup and descriptor flags to request_o=
-wn")
-> Fixes: fed7026adc7c ("gpiolib: Make use of enum gpio_lookup_flags consist=
-ent")
-> Fixes: 4c0facddb7d8 ("gpio: core: Decouple open drain/source flag with ac=
-tive low/high")
-> Fixes: 69d301fdd196 ("gpio: add DT bindings for existing consumer flags")
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> ---
->  drivers/gpio/gpiolib-of.c                     |  5 ++---
->  drivers/gpio/gpiolib.c                        |  8 +++-----
->  .../broadcom/brcm80211/brcmsmac/led.c         |  2 +-
->  include/linux/gpio/driver.h                   |  3 +--
->  include/linux/gpio/machine.h                  | 20 +++++--------------
->  5 files changed, 12 insertions(+), 26 deletions(-)
->
+From: Jacky Huang <ychuang3@nuvoton.com>
 
-I don't think ./dt-bindings/gpio/gpio.h is the right source of these
-defines for everyone - including non-OF systems. I would prefer the
-ones in include/linux/gpio/machine.h be the upstream source but then
-headers in include/dt-bindings/ cannot include them so my second-best
-suggestion is to rename the ones in include/linux/gpio/machine.h and
-treewide too. In general values from ./dt-bindings/gpio/gpio.h should
-only be used in DTS sources and gpiolib-of code.
+This patch series adds the pin control and GPIO driver for the nuvoton ma35d1
+ARMv8 SoC. It includes DT binding documentation and the ma35d1 pin control driver.
 
-Bart
+This pin control driver has been tested on the ma35d1 som board with Linux 6.9.0.
+
+v7:
+  - Replace the magic numbers appearing in the driver with defined constants, or
+    provide comments to explain them.
+  - Update the ma35_irq_irqtype()
+    - irq_set_handler_locked(d, handle_edge_irq) and
+      irq_set_handler_locked(d, handle_level_irq)
+    - add case IRQ_TYPE_EDGE_BOTH
+  - Use handle_bad_irq for girq->handler, instead of handle_level_irq
+
+v6:
+  - Remove DTS from this patchset. The DTS will be submitted in another patchset.
+
+v5:
+  - Update the pinctrl driver header file pinctrl-ma35.h
+    - Include platform_device.h to fix compile issues.
+
+v4:
+  - Update the pinctrl driver Kconfig
+    - Add depends to CONFIG_PINCTRL_MA35D1 to prevent compilation errors.
+  - Update the pinctrl driver
+    - Utilize devm_kcalloc() instead of devm_kzalloc().
+    - Employ ARRAY_SIZE() instead of sizeof()/sizeof().
+
+v3:
+  - Update DTS and YAML files
+    - Corrected the unit address of nodes gpioa ~ gpion.
+    - Removed the invalid "pin-default" node.
+    - Removed the phandle entry from "nuvoton,pins".
+  - Update pinctrl driver
+    - Fixed the Kconfig by using "depend on" instead of "if".
+    - Removed unused #include of header files.
+    - Utilized immutable irq_chip instead of dynamic irq_chip.
+    - Replaced ma35_dt_free_map() with pinconf_generic_dt_free_map().
+    - Implemented other minor fixes as suggested by the reviewer.
+
+v2:
+  - Update nuvoton,ma35d1-pinctrl.yaml
+    - Update the 'nuvoton,pins' to follow the style of rockchip pinctrl approch.
+    - Use power-source to indicate the pin voltage selection which follow the
+      realtek pinctrl approch.
+    - Instead of integer, use drive-strength-microamp to specify the real driving
+      strength capability of IO pins.
+  - Update ma35d1 pinctrl driver
+    - Add I/O drive strength lookup table for translating device tree setting
+      into control register.
+  - Remove ma35d1-pinfunc.h which is unused after update definition of 'nuvoton,pins'.
+
+
+Jacky Huang (3):
+  dt-bindings: reset: Add syscon to nuvoton ma35d1 system-management
+    node
+  dt-bindings: pinctrl: Document nuvoton ma35d1 pin control
+  pinctrl: nuvoton: Add ma35d1 pinctrl and GPIO driver
+
+ .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       |  163 ++
+ .../bindings/reset/nuvoton,ma35d1-reset.yaml  |    3 +-
+ drivers/pinctrl/nuvoton/Kconfig               |   19 +
+ drivers/pinctrl/nuvoton/Makefile              |    2 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35.c        | 1233 +++++++++++
+ drivers/pinctrl/nuvoton/pinctrl-ma35.h        |   51 +
+ drivers/pinctrl/nuvoton/pinctrl-ma35d1.c      | 1797 +++++++++++++++++
+ 7 files changed, 3267 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.c
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35.h
+ create mode 100644 drivers/pinctrl/nuvoton/pinctrl-ma35d1.c
+
+-- 
+2.34.1
+
 
