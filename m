@@ -1,158 +1,249 @@
-Return-Path: <linux-gpio+bounces-5259-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5261-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B740989E5DB
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 01:03:21 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4425C89E619
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 01:33:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 7109D282E25
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 23:03:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6719C1C221E1
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 23:33:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BD4C158DB2;
-	Tue,  9 Apr 2024 23:03:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B51BD1591E1;
+	Tue,  9 Apr 2024 23:33:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="i+DGsmQO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CQdSBHmk"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f172.google.com (mail-pg1-f172.google.com [209.85.215.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35473158DAD
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 23:03:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFC2D1591E0
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 23:33:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712703795; cv=none; b=tKqwC+cEJBdjtHSd/FZ8R4v4JZ5nqer0yXj7PIbeaq5eWG1SzLPmkCQGrYO3aILPyo4zURhTwTbCTniLvFh0KqRow7ggUHhGkJJHThMMAGgHOoL7Vu6xKYb3vUXvdrg9L505bzCCrCHShll46VXzcf6PDkTsI6kEJiwAHG2j6TI=
+	t=1712705585; cv=none; b=jkzOdYQGd3hPISj0qnT8WYQiCDw4ahN7Pcwpghn1wEdyh2t+WMRsPI6N0csBD0V1PnnyDLcRaLadfZ2iIH3xdLebzBsFs+svkUoDeUUPZUmHvb9R+zW+9fe9C6rLcw15HpM3dO5kUVQ87d2go3v07spatUYjD4O19lRhUU1za1M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712703795; c=relaxed/simple;
-	bh=Qu76JXn8dQqXebQRDlocfL+b7uNDQ4ZTIjTiZf4Cctg=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=oMD99X0xwvkQcPWVV+soyxoTOBYjiIsAn0jaJgeq84d+rN9ebWvaBdc1Sb9nRUtH9moZX9XN4kdSmhCWF4qFuby8wHbBRNjGoBrg7/LcX0n7wdZROg6fSoiK8X50b7fc4MeMhvOcvc8aIZrmlJMNoKcrlBEtanFdpTZoZklu0A4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=i+DGsmQO; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1712703794; x=1744239794;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Qu76JXn8dQqXebQRDlocfL+b7uNDQ4ZTIjTiZf4Cctg=;
-  b=i+DGsmQOCFK6BEpF1SDOMEQsL/S65U17Ys5fQFQq2PYTzZApbAsmKInM
-   67or6h66MDSrjvAqOZKdt29vcfuWKKwvba8RO+l2y5v/k8uyQhuUU8kGw
-   ddC/OMySPck2VHvJFJTZqE84Jk7PJKiV6m6PXsrgIk2KlyIUMmtaTAJIW
-   xxoqyudQlm2FuX2Ehp06nff+W1wHa6OKRr1Ph/UEdpe1w0Uq4nkeWN4Tt
-   VitLekThBTvcfAEiPFPR/6tlLZdnmxvDcim/MS2Xs25+yv4TMZpK60ILm
-   +FVYpcdnFxcncyF/YjuqWqL+i882QV+sBN/DpqRYOMsXEo/R+Q2h05KF/
-   w==;
-X-CSE-ConnectionGUID: JxiO4pVvQaSze4KUF3ChLA==
-X-CSE-MsgGUID: R6naiFdGT5+I+AyCssCMqA==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="7899624"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="7899624"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 16:03:11 -0700
-X-CSE-ConnectionGUID: y6g2VrOWTECaqsl5CFAc/Q==
-X-CSE-MsgGUID: X7NjIqP+TISOCEqWP9okLw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="20247313"
-Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 09 Apr 2024 16:03:10 -0700
-Received: from kbuild by e61807b1d151 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1ruKUc-0006bE-2x;
-	Tue, 09 Apr 2024 23:03:06 +0000
-Date: Wed, 10 Apr 2024 07:03:06 +0800
-From: kernel test robot <lkp@intel.com>
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-gpio@vger.kernel.org
-Subject: [linusw-gpio:b4/descriptors-wireless 2/2]
- drivers/gpio/gpio-ath79.c:240:32: error: 'pdev' undeclared; did you mean
- 'dev'?
-Message-ID: <202404100624.vZIIfZvs-lkp@intel.com>
+	s=arc-20240116; t=1712705585; c=relaxed/simple;
+	bh=APh2p+9yJdQkRfzD6vxILr6e+hWSrr0+pbdmea5+RV0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Vd5fmiFhMq8QfpCVtQivU78FoaedHyRMumVlQ91uo6g2axCW4M7oPrEFNqSQcKUIohXVE+NYKjTaoojz+KelrKR9oLntVub4OJLrAhNFQb8/UR6kE0BilIQ3Wv3WWs64V0DsyTxCVqxCXidYx2Ytbai+wsXBeCiNRlpYwBzKxvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CQdSBHmk; arc=none smtp.client-ip=209.85.215.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f172.google.com with SMTP id 41be03b00d2f7-5f034b4dcecso4176192a12.1
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 16:33:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712705583; x=1713310383; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Yq8usQ8SKhr9EuN31FwcsDr8GYsXKxXtBlmHu5t/Anc=;
+        b=CQdSBHmkJBZEHF0aVwlFDwd9lTkyXb4R6KjZoZkaIlvE5GiXBhf5RvkNNcEl5nXs5a
+         HzdQ6xHPGRbRC1T6tGplg7aqj9ayKlPUPWgh1mfyo7+y8tQMACa1oKifdzu7Ey1NMCmP
+         r0kfJHkTXmRNVaPqrwMcJWryW8gFsEwva8qrzROMxREIZ5n564+mZ2GblLm8YSQ2p5d1
+         BYx92FYHKSvlLhZ7OGGeHoTdXw0ePy5wFYk8qpYKLH24aTNR5ulZgy68QdwR29TV3DEI
+         xgJlcTTYO1EoB0UDrXga71g5v+VV9w1moCzQBbCzcgSf/2c9+0IzwL+7yY1Cx61ZgXgO
+         Rzew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712705583; x=1713310383;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Yq8usQ8SKhr9EuN31FwcsDr8GYsXKxXtBlmHu5t/Anc=;
+        b=aGw5Q3iIkylnfZUkdHVIFHXtHxZSpIfOfs8i1C91UN3ls/NGqmxCR6nLRknyVOpsrn
+         nmZWsmBwnTfm9vlwTIR2IS4SdhNh5byjROAPiq+Ut037D7KnZjxj/Bq5rcks0uVc1x+/
+         jAYQbsAGdIb0SIy/zEf+aldzjfS7l9ytlRs/vV1HIFyqaSnTdYa2T23hgSlkqCNOvPEa
+         WiYQeE2+e1NPEcN6mj6C8tTPDshXlfLMgadKztQ8rmh8DVw9H6OedJ5Jep/jCetnI32T
+         7Iag3MqHE6Vq+aXBThqxcOI0UobHd5NfLML9G6WIgu4Sp6htPQxb8v5PoIm9kTDLC8Ad
+         qS+A==
+X-Forwarded-Encrypted: i=1; AJvYcCWwEjmmWxEn+7yY+j7FLvr9vA7dNKKSt+iCdo6w6sU+uFRURMckmd8jN8egdwTA5OIH0D5pYFMq/mXUqXwbcp9EurwzM0VQiiNnkA==
+X-Gm-Message-State: AOJu0YwTLnp6DcGJRGNIF/TKPJ3nz256ZnmKDh4CGcyBnPU8AEYFd5Z+
+	n3ZGSt5q5H4BnxMbbjQDspnYFfliA4ypAPU4qEpJdVlSaNcCLyQ+Cf8An2qi
+X-Google-Smtp-Source: AGHT+IGjaCCDiJXsjdk7ksT5cmg0uCCxGM3W/FUAf40NCmLqLmAjOqn7nPV+IskOZGXR/egBT3YYuQ==
+X-Received: by 2002:a17:90b:4393:b0:2a5:6f5f:210d with SMTP id in19-20020a17090b439300b002a56f5f210dmr1390240pjb.23.1712705583123;
+        Tue, 09 Apr 2024 16:33:03 -0700 (PDT)
+Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
+        by smtp.gmail.com with ESMTPSA id o9-20020a17090a5b0900b002a2b28de64esm163327pji.14.2024.04.09.16.33.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 16:33:02 -0700 (PDT)
+Date: Wed, 10 Apr 2024 07:32:57 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Gunnar =?iso-8859-1?Q?Th=F6rnqvist?= <gunnar@igl.se>,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 2/2] tools: allow longer time periods
+Message-ID: <20240409233257.GA3000@rigel>
+References: <20240409093333.138408-1-brgl@bgdev.pl>
+ <20240409093333.138408-3-brgl@bgdev.pl>
+ <20240409125551.GA69328@rigel>
+ <CAMRc=MfiUAfZ6RjNWJQQpD-Z20_L9n6P=2QGN1NtzSpTtvraxA@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMRc=MfiUAfZ6RjNWJQQpD-Z20_L9n6P=2QGN1NtzSpTtvraxA@mail.gmail.com>
 
-tree:   https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git b4/descriptors-wireless
-head:   3ca0eec7ecfa5c404f41e9b1e7690ec64de77b53
-commit: 3ca0eec7ecfa5c404f41e9b1e7690ec64de77b53 [2/2] wifi: ath9k: Obtain system GPIOS from descriptors
-config: alpha-allyesconfig (https://download.01.org/0day-ci/archive/20240410/202404100624.vZIIfZvs-lkp@intel.com/config)
-compiler: alpha-linux-gcc (GCC) 13.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240410/202404100624.vZIIfZvs-lkp@intel.com/reproduce)
+On Tue, Apr 09, 2024 at 05:59:59PM +0200, Bartosz Golaszewski wrote:
+> On Tue, Apr 9, 2024 at 2:56 PM Kent Gibson <warthog618@gmail.com> wrote:
+> >
+> > On Tue, Apr 09, 2024 at 11:33:33AM +0200, Bartosz Golaszewski wrote:
+> > > From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > >
+> > > We currently store time as milliseconds in 32-bit integers and allow
+> > > seconds as the longest time unit when parsing command-line arguments
+> > > limiting the time period possible to specify when passing arguments such
+> > > as --hold-period to 35 minutes. Let's use 64-bit integers to vastly
+> > > increase that.
+> > >
+> >
+> > I don't think all timers should be extended, only where it
+> > makes sense to do so, so gpioset (toggle and hold periods).
+> > And maybe gpiomon (idle timeout), though you haven't extended that one,
+> > cos poll()?  Maybe switch that to ppoll()?
+> >
+> > More on this below.
+>
+> Makes sense.
+>
+> >
+> > > Use nanosleep() instead of usleep() to extend the possible sleep time
+> > > range.
+> > >
+> > > Reported-by: Gunnar Thörnqvist <gunnar@igl.se>
+> > > Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> > > ---
+> > >  configure.ac         |  2 ++
+> > >  tools/gpioget.c      |  4 ++--
+> > >  tools/gpiomon.c      | 19 ++++++++++++++-----
+> > >  tools/gpioset.c      | 16 ++++++++--------
+> > >  tools/tools-common.c | 22 ++++++++++++++++------
+> > >  tools/tools-common.h |  5 +++--
+> > >  6 files changed, 45 insertions(+), 23 deletions(-)
+> > >
+> > > diff --git a/configure.ac b/configure.ac
+> > > index 3b5bbf2..a2370c5 100644
+> > > --- a/configure.ac
+> > > +++ b/configure.ac
+> > > @@ -120,6 +120,8 @@ AS_IF([test "x$with_tools" = xtrue],
+> > >       AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_TOOLS([asprintf])])
+> > >       AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_TOOLS([scandir])])
+> > >       AC_CHECK_FUNC([versionsort], [], [FUNC_NOT_FOUND_TOOLS([versionsort])])
+> > > +     AC_CHECK_FUNC([strtoull], [], [FUNC_NOT_FOUND_TOOLS([strtoull])])
+> > > +     AC_CHECK_FUNC([nanosleep], [], [FUNC_NOT_FOUND_TOOLS([nanosleep])])
+> > >       AS_IF([test "x$with_gpioset_interactive" = xtrue],
+> > >               [PKG_CHECK_MODULES([LIBEDIT], [libedit >= 3.1])])
+> > >       ])
+> > > diff --git a/tools/gpioget.c b/tools/gpioget.c
+> > > index f611737..bad7667 100644
+> > > --- a/tools/gpioget.c
+> > > +++ b/tools/gpioget.c
+> > > @@ -19,7 +19,7 @@ struct config {
+> > >       bool unquoted;
+> > >       enum gpiod_line_bias bias;
+> > >       enum gpiod_line_direction direction;
+> > > -     unsigned int hold_period_us;
+> > > +     unsigned long long hold_period_us;
+> > >       const char *chip_id;
+> > >       const char *consumer;
+> > >  };
+> > > @@ -205,7 +205,7 @@ int main(int argc, char **argv)
+> > >                       die_perror("unable to request lines");
+> > >
+> > >               if (cfg.hold_period_us)
+> > > -                     usleep(cfg.hold_period_us);
+> > > +                     sleep_us(cfg.hold_period_us);
+> >
+> > Got a use case where a hold period is measured in more than seconds?
+> > Specifically for a get.
+> >
+>
+> Yeah, like Gunnar responded, he needs to hold the line for an hour. I
+> think it makes sense.
+>
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202404100624.vZIIfZvs-lkp@intel.com/
+And as I noted, I was interested in the get, the point being is a long
+period always necessary and appropriate?
 
-All errors (new ones prefixed by >>):
+> > >
+> > >               ret = gpiod_line_request_get_values(request, values);
+> > >               if (ret)
+> > > diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+> > > index e3abb2d..a8a3302 100644
+> > > --- a/tools/gpiomon.c
+> > > +++ b/tools/gpiomon.c
+> > > @@ -5,6 +5,7 @@
+> > >  #include <getopt.h>
+> > >  #include <gpiod.h>
+> > >  #include <inttypes.h>
+> > > +#include <limits.h>
+> > >  #include <poll.h>
+> > >  #include <stdio.h>
+> > >  #include <stdlib.h>
+> > > @@ -24,13 +25,13 @@ struct config {
+> > >       enum gpiod_line_bias bias;
+> > >       enum gpiod_line_edge edges;
+> > >       int events_wanted;
+> > > -     unsigned int debounce_period_us;
+> > > +     unsigned long long debounce_period_us;
+> > >       const char *chip_id;
+> > >       const char *consumer;
+> > >       const char *fmt;
+> > >       enum gpiod_line_clock event_clock;
+> > >       int timestamp_fmt;
+> > > -     int timeout;
+> > > +     long long timeout;
+> >
+> > Can we rename this to idle_timeout?  A variable named "timeout" is
+> > lacking context.
+> >
+>
+> Sure but it's a different patch. Also: it's your code, just send me
+> the patch. :)
+>
 
-   drivers/gpio/gpio-ath79.c: In function 'ath79_gpio_register_wifi_descriptors':
->> drivers/gpio/gpio-ath79.c:240:32: error: 'pdev' undeclared (first use in this function); did you mean 'dev'?
-     240 |         lookup = devm_kzalloc(&pdev->dev,
-         |                                ^~~~
-         |                                dev
-   drivers/gpio/gpio-ath79.c:240:32: note: each undeclared identifier is reported only once for each function it appears in
->> drivers/gpio/gpio-ath79.c:251:25: error: implicit declaration of function 'PIO_LOOKUP_IDX'; did you mean 'GPIO_LOOKUP_IDX'? [-Werror=implicit-function-declaration]
-     251 |                         PIO_LOOKUP_IDX(label, 0, NULL, i,
-         |                         ^~~~~~~~~~~~~~
-         |                         GPIO_LOOKUP_IDX
->> drivers/gpio/gpio-ath79.c:252:40: error: conversion to non-scalar type requested
-     252 |                                        GPIO_ACTIVE_HIGH);
-         |                                        ^~~~~~~~~~~~~~~~
-   cc1: some warnings being treated as errors
+Check the blame - NOT my code.
 
+> > >  };
+> > >
+> > >  static void print_help(void)
+> > > @@ -389,9 +390,17 @@ int main(int argc, char **argv)
+> > >       if (cfg.active_low)
+> > >               gpiod_line_settings_set_active_low(settings, true);
+> > >
+> > > -     if (cfg.debounce_period_us)
+> > > +     if (cfg.debounce_period_us) {
+> > > +             if (cfg.debounce_period_us > UINT_MAX)
+> > > +                     die("invalid debounce period: %llu",
+> > > +                         cfg.debounce_period_us);
+> > > +
+> > >               gpiod_line_settings_set_debounce_period_us(
+> > > -                     settings, cfg.debounce_period_us);
+> > > +                     settings, (unsigned long)cfg.debounce_period_us);
+> > > +     }
+> > > +
+> > > +     if (cfg.timeout > INT_MAX)
+> > > +             die("invalid idle timeout: %llu", cfg.timeout);
+> > >
+> >
+> > Not a fan of parsing to long, only to do a smaller range check here.
+> > How about providing two parsers - one for int sized periods and
+> > one for long periods, e.g. parse_long_period().
+>
+> I actually prefer to parse the larger range and then limit the max
+> size. I would be fine with adding a limit argument to parse_period()
+> like long long parse_period(const char *option, long long limit);
+>
 
-vim +240 drivers/gpio/gpio-ath79.c
+I can live with that.
 
-   225	
-   226	#if IS_ENABLED(CONFIG_ATH9K_AHB)
-   227	/*
-   228	 * This registers all of the ath79k GPIOs as descriptors to be picked
-   229	 * directly from the ATH79K wifi driver if the two are jitted together
-   230	 * in the same SoC.
-   231	 */
-   232	#define ATH79K_WIFI_DESCS 32
-   233	static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-   234							const char *label)
-   235	{
-   236		struct gpiod_lookup_table *lookup;
-   237		int i;
-   238	
-   239		/* Create a gpiod lookup using gpiochip-local offsets + 1 for NULL */
- > 240	        lookup = devm_kzalloc(&pdev->dev,
-   241				      struct_size(lookup, table, ATH79K_WIFI_DESCS + 1),
-   242				      GFP_KERNEL);
-   243	
-   244		if (!lookup)
-   245			return -ENOMEM;
-   246	
-   247		lookup->dev_id = "ath9k";
-   248	
-   249		for (i = 0; i < ATH79K_WIFI_DESCS; i++) {
-   250			lookup->table[i] = (struct gpiod_lookup)
- > 251				PIO_LOOKUP_IDX(label, 0, NULL, i,
- > 252					       GPIO_ACTIVE_HIGH);
-   253		}
-   254	
-   255		gpiod_add_lookup_table(lookup);
-   256	
-   257		return 0;
-   258	}
-   259	#else
-   260	static int ath79_gpio_register_wifi_descriptors(struct device *dev,
-   261							const char *label)
-   262	{
-   263	}
-   264	#endif
-   265	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Cheers,
+Kent.
 
