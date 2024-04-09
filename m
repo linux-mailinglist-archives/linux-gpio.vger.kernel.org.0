@@ -1,144 +1,219 @@
-Return-Path: <linux-gpio+bounces-5233-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5234-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5CFE089D97C
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 14:55:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7EF889D980
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 14:56:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B1CDFB2185F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 12:55:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6CDD028BFB8
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 12:56:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86DAD12E1C8;
-	Tue,  9 Apr 2024 12:55:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 899EE12DDAB;
+	Tue,  9 Apr 2024 12:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="jtKIzC4E"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZDW8frEO"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
+Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 530FF12D777
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 12:55:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6D7D12D777
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 12:56:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712667335; cv=none; b=EeKbd/eY4Y56kYbhhFJ78WqMGJTmMoTAQ4cDJAnWXvN6tE2FPd5tFafkg+kRj3kX27Sx0LXIyaeQWNOSWtcXAuaXc3rUtIBlwBzqsKJv0OvzYgJyR5Dnxj8g3N7LIJHlGhV07MbFJuAg84WfRJbZT4czwHJxza16T9imlqoGflg=
+	t=1712667366; cv=none; b=DX8fPlgaNl3f84AoAaxkpTyUzODQj9HTefW3EYUfNkoqdYHYFgVLZTd/bk/DxD3Q0pZE5HawHoTAP/QMMD7gEPKrwxaCjOIxP6bvKk1r2yDocrGF+F3Y2TkToBW9Sc2IDmSGU8gm2ShXF1Hdtn9cwxCCdLHIwH7STLdxnjFIUd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712667335; c=relaxed/simple;
-	bh=28FvpAkubR7U/YnsKwvZJdGYuQx67JP9jJ7DevI04Bs=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=AHXXIxecSVnsgXc/W7LslW7lq4CPRaYCQsLAtBCMlv9XRUn8SbmjQE2imlOmkeduwS2uiJTJmJUC57yAfdoCpv+/ws3P8QslIONxInh99xnvt8zBbxjjtlzAv5etcbsokPGepA9/FRSV5QZBz7djVXdFENZC3N85uwqlWfC5k+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=jtKIzC4E; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-2d886dd4f18so27552211fa.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 05:55:32 -0700 (PDT)
+	s=arc-20240116; t=1712667366; c=relaxed/simple;
+	bh=vZBS/QtvIhPGgPJdsGQ1OLpez40TGoDkwBRwVvPt/7Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QxluXTpFkIT3ze/Dh6QNsLuREpzLil/K/f3Nskkusi0+EpgJDCt7e/62QffSrodslSahuBb2uHxKbIKgiTyCCE3OiVi6T8LSJ7nsa7k3rRxyTkweTO3FS7a8WkGVbHNzgciYPHi3EgKLkJSBfY1PNiMPlYm4WrN0+kpUyPYa5SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZDW8frEO; arc=none smtp.client-ip=209.85.161.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5aa241232faso2280042eaf.0
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 05:56:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712667331; x=1713272131; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ElDlfqr37WkHv45h6Xgla3cstFx6EJxDXR9PqWmhUCY=;
-        b=jtKIzC4EmhsRGAK0P45mAs7G0xtcD7TiD1cuzc19o7WQMN0ofEC4v7stbzvS3tnbcj
-         cokgJ51myXn3uqv4w31rAYzxBY3x/PT+ovEWu4H6041DSfK/wXxkRtPbNH9WBbny7cMN
-         Y7nyKuDV6SESnjVEl4ZIpuLAgp50m5kw0JI7a1ekHoD/1gB1SpRYf/EzmJqrOlAsvgbj
-         zWcUqiyxyVtswEC7kqYFi9s+Akv5sxL1OYHUHo7etzuwGq/6fnuQRe+HDu7SB4DVeRQG
-         +/XhDHy+SvqAoKanUsn/PCi69dJDoJ7V/0jRcDdbNvmUwSnIL8lk0v2ZI8omunrYREDX
-         qFOw==
+        d=gmail.com; s=20230601; t=1712667364; x=1713272164; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/g4p7eevy4+cgKIyB6W9QE8mvx3t8Q0YaCaoj9lz7n4=;
+        b=ZDW8frEOdO7VNt7X9OlezXhFfXVPLvQHtNO6eaQ6v3rl5o9Ppj+M5cVixSDM0dNSPo
+         M+9AjzBLijcH/Y98tkbDBkK/dOqRslomjgoCK2NZhw8hLsAWa8l/5o+cS59vfrkNARBg
+         aUGhHJwEh8tFo7j5z5DdhiN0O1vBkMcaMzAN0wKVE1gqlpWTHsfWHYt32msNG2OIGnaM
+         S8vPMMN2tJEgEit0yXip5V8fFQlTib9pu3zuHA/QqThE/O/EKVHXhXXyjYJpB6vSwkKD
+         IY0Sxe/E2sc+MoaC2JGfp2JZJXaB9MMZCoJ9YbkIytuWBTFjyTczzrz2wS7rVIZbth/f
+         HXKg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712667331; x=1713272131;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ElDlfqr37WkHv45h6Xgla3cstFx6EJxDXR9PqWmhUCY=;
-        b=s0/JdB/UBUEaKzy9Q3Z5CXxPM+88juA9piB3SGWWgES2qW2hali8Cu14Mlizr67E4p
-         NjS41zj7hkITjkYuOkmqalgZ3lgBRzAaND3TeYuuAkVVr6BVcrLjRlFBKt6DEXK2kNZs
-         gvTGgSD8GkfKSKdDKnJXkF7F8n7JPIP/x6U8ph2DSp2h+I1zKD9lozMOVpcbH206DCMR
-         2lK9V0zYjjZn9AsGXMa8odpoDKrWfpZoU52jNuMtR3jdtbmb88ZBe1EacwvAk9kygNLp
-         6+5dwN8kFLBywgdxfqU67necLOeWT5c3+5DpMeNRnT8XfowCcmOS5JG5w1mhQHaSvd/B
-         +v3g==
-X-Forwarded-Encrypted: i=1; AJvYcCWQnHFMUGCn417/roW31Z0wuzQCSKKqxpsC17z5yPD63g/nsoY0nHKBXNC2a0t2dSPziSQVagGMLVCw7/ipvLIr3oHeckzUUSIjOw==
-X-Gm-Message-State: AOJu0Yw4F2yYoRLDQ97ECAEXU/olM6qWItiLwIJUvnqiQ/Zp8JuulzTX
-	eoLcvGSrTJyXrazrl9o+t4qNo+wWjgFxrX+q6vmNBW3m6sbeCzwkYLs/pw2gHM+s6T3AwVQZthP
-	nukw/0PD4qaAAcwcjKB9D1DZ1xLw71okjvlKwNUcwgrcNrW+A
-X-Google-Smtp-Source: AGHT+IElreytHxSdK3MjFouAJM+ZDxBIAatjdrl9atwum0J18I0K0pLO6B4r+Kvm4+ejftK0BHc2qci1wKAPT0U5X2E=
-X-Received: by 2002:a2e:2285:0:b0:2d8:2fb1:3d with SMTP id i127-20020a2e2285000000b002d82fb1003dmr6423456lji.22.1712667331365;
- Tue, 09 Apr 2024 05:55:31 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712667364; x=1713272164;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/g4p7eevy4+cgKIyB6W9QE8mvx3t8Q0YaCaoj9lz7n4=;
+        b=djhbog6yG+Z+MowbKdPoRBq9q2oJ97QbhHfw45Y0tYLPd9yGevIH/WlYK/WFbpMzQ4
+         A6A6M1EzYM0lnbxgaOzBLpThGX2XR+1mMb5FBsQU+6Ac5hc41ivnKd4VbwV5fiE/Q75I
+         xE24/JAiV3l1XSG9H0rC4cERqMUds1Lmze4kyZJj2UzHZEv/GHN7cOKCcOkm0hgfSeFp
+         4dN84KglhBwkYiqFPRisUcxEB2LzxA3JKdCaPBGYeu0azabCn85WhRb+GxunxUy2ijL0
+         uddbcokQS7wOucWRVQfQ9yySxf2WqDE+skid2OGr4GpcMGxuCyhU7XPv1LBqtcLIXheF
+         ndYw==
+X-Forwarded-Encrypted: i=1; AJvYcCXMiUtHi9Pmc1JMJ06R5kvG3AhdyAIhyGTTYy2z5kK7wyjRqrq4NmTouFlW0DTE+YveXqqCH3aGQlI9rGdwImC6vmO8yJy2oA9zjw==
+X-Gm-Message-State: AOJu0YwMSWcL/YqLua9Q/XBpE62ypUkUL+LanoI/Fo8Uw03ze5uc/3lh
+	UmoY+fV9G9QZ6lg/82aa2xKP05mqlstfBxJmQNcVMiIPmHnDwqjpIa5vRtuk
+X-Google-Smtp-Source: AGHT+IEEelCf9g0azoDsJ2b1NrTjwSB8gDk3JFe9EZ9GmY9FxttVC1VknpIBg3LxYu9ItOVZ3k+WRw==
+X-Received: by 2002:a05:6358:729a:b0:186:5cb:30cb with SMTP id w26-20020a056358729a00b0018605cb30cbmr8636254rwf.29.1712667363602;
+        Tue, 09 Apr 2024 05:56:03 -0700 (PDT)
+Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
+        by smtp.gmail.com with ESMTPSA id p16-20020a637410000000b005dbed0ffb10sm8042995pgc.83.2024.04.09.05.55.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 05:55:56 -0700 (PDT)
+Date: Tue, 9 Apr 2024 20:55:51 +0800
+From: Kent Gibson <warthog618@gmail.com>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Linus Walleij <linus.walleij@linaro.org>,
+	Gunnar =?iso-8859-1?Q?Th=F6rnqvist?= <gunnar@igl.se>,
+	linux-gpio@vger.kernel.org,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Subject: Re: [libgpiod][PATCH 2/2] tools: allow longer time periods
+Message-ID: <20240409125551.GA69328@rigel>
+References: <20240409093333.138408-1-brgl@bgdev.pl>
+ <20240409093333.138408-3-brgl@bgdev.pl>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240408231727.396452-1-andriy.shevchenko@linux.intel.com>
- <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
- <CAMRc=Mf73fFHo83gNvDXGy9BosB1MNz_=8kt56hLA12bPBb8CA@mail.gmail.com> <ZhU5uDJk_M_TtKH2@smile.fi.intel.com>
-In-Reply-To: <ZhU5uDJk_M_TtKH2@smile.fi.intel.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Tue, 9 Apr 2024 14:55:20 +0200
-Message-ID: <CAMRc=Meh6K2zxpVPHvsDcr5vMMeagK7FGhnUPz3bb2rQQCPHJA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>, Kent Gibson <warthog618@gmail.com>, 
-	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
-	linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-wireless@vger.kernel.org, brcm80211@lists.linux.dev, 
-	brcm80211-dev-list.pdl@broadcom.com, 
-	Mika Westerberg <mika.westerberg@linux.intel.com>, 
-	Arend van Spriel <arend.vanspriel@broadcom.com>, Kalle Valo <kvalo@kernel.org>, 
-	Charles Keepax <ckeepax@opensource.cirrus.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20240409093333.138408-3-brgl@bgdev.pl>
 
-On Tue, Apr 9, 2024 at 2:51=E2=80=AFPM Andy Shevchenko
-<andriy.shevchenko@linux.intel.com> wrote:
+On Tue, Apr 09, 2024 at 11:33:33AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 >
-> On Tue, Apr 09, 2024 at 11:42:37AM +0200, Bartosz Golaszewski wrote:
-> > On Tue, Apr 9, 2024 at 1:17=E2=80=AFAM Andy Shevchenko
-> > <andriy.shevchenko@linux.intel.com> wrote:
-> > >
-> > > The GPIO_* flag definitions are *almost* duplicated in two files
-> > > (with unmatches OPEN_SOURCE / OPEN_DRAIN). Moreover, some code relies
-> > > on one set of definitions while the rest is on the other. Clean up
-> > > this mess by providing only one source of the definitions to all.
-> > >
-> > > Fixes: b424808115cb ("brcm80211: brcmsmac: Move LEDs to GPIO descript=
-ors")
-> > > Fixes: 5923ea6c2ce6 ("gpio: pass lookup and descriptor flags to reque=
-st_own")
-> > > Fixes: fed7026adc7c ("gpiolib: Make use of enum gpio_lookup_flags con=
-sistent")
-> > > Fixes: 4c0facddb7d8 ("gpio: core: Decouple open drain/source flag wit=
-h active low/high")
-> > > Fixes: 69d301fdd196 ("gpio: add DT bindings for existing consumer fla=
-gs")
-> > > Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > > ---
-> > >  drivers/gpio/gpiolib-of.c                     |  5 ++---
-> > >  drivers/gpio/gpiolib.c                        |  8 +++-----
-> > >  .../broadcom/brcm80211/brcmsmac/led.c         |  2 +-
-> > >  include/linux/gpio/driver.h                   |  3 +--
-> > >  include/linux/gpio/machine.h                  | 20 +++++------------=
---
-> > >  5 files changed, 12 insertions(+), 26 deletions(-)
-> >
-> > I don't think ./dt-bindings/gpio/gpio.h is the right source of these
-> > defines for everyone - including non-OF systems. I would prefer the
-> > ones in include/linux/gpio/machine.h be the upstream source but then
-> > headers in include/dt-bindings/ cannot include them so my second-best
-> > suggestion is to rename the ones in include/linux/gpio/machine.h and
-> > treewide too. In general values from ./dt-bindings/gpio/gpio.h should
-> > only be used in DTS sources and gpiolib-of code.
->
-> Then, please fix that your way. It's quite annoying issue.
+> We currently store time as milliseconds in 32-bit integers and allow
+> seconds as the longest time unit when parsing command-line arguments
+> limiting the time period possible to specify when passing arguments such
+> as --hold-period to 35 minutes. Let's use 64-bit integers to vastly
+> increase that.
 >
 
-This is not difficult in itself but it's a tree-wide change so we will
-probably have to send it to Torvalds at the end of the merge window in
-a separate pull-request.
+I don't think all timers should be extended, only where it
+makes sense to do so, so gpioset (toggle and hold periods).
+And maybe gpiomon (idle timeout), though you haven't extended that one,
+cos poll()?  Maybe switch that to ppoll()?
 
-I don't really have time now, I'll be travelling for 5 weeks in a row.
-I'll see closer to the merge window. Or next release cycle.
+More on this below.
 
-Bart
+> Use nanosleep() instead of usleep() to extend the possible sleep time
+> range.
+>
+> Reported-by: Gunnar Thörnqvist <gunnar@igl.se>
+> Signed-off-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+> ---
+>  configure.ac         |  2 ++
+>  tools/gpioget.c      |  4 ++--
+>  tools/gpiomon.c      | 19 ++++++++++++++-----
+>  tools/gpioset.c      | 16 ++++++++--------
+>  tools/tools-common.c | 22 ++++++++++++++++------
+>  tools/tools-common.h |  5 +++--
+>  6 files changed, 45 insertions(+), 23 deletions(-)
+>
+> diff --git a/configure.ac b/configure.ac
+> index 3b5bbf2..a2370c5 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -120,6 +120,8 @@ AS_IF([test "x$with_tools" = xtrue],
+>  	AC_CHECK_FUNC([asprintf], [], [FUNC_NOT_FOUND_TOOLS([asprintf])])
+>  	AC_CHECK_FUNC([scandir], [], [FUNC_NOT_FOUND_TOOLS([scandir])])
+>  	AC_CHECK_FUNC([versionsort], [], [FUNC_NOT_FOUND_TOOLS([versionsort])])
+> +	AC_CHECK_FUNC([strtoull], [], [FUNC_NOT_FOUND_TOOLS([strtoull])])
+> +	AC_CHECK_FUNC([nanosleep], [], [FUNC_NOT_FOUND_TOOLS([nanosleep])])
+>  	AS_IF([test "x$with_gpioset_interactive" = xtrue],
+>  		[PKG_CHECK_MODULES([LIBEDIT], [libedit >= 3.1])])
+>  	])
+> diff --git a/tools/gpioget.c b/tools/gpioget.c
+> index f611737..bad7667 100644
+> --- a/tools/gpioget.c
+> +++ b/tools/gpioget.c
+> @@ -19,7 +19,7 @@ struct config {
+>  	bool unquoted;
+>  	enum gpiod_line_bias bias;
+>  	enum gpiod_line_direction direction;
+> -	unsigned int hold_period_us;
+> +	unsigned long long hold_period_us;
+>  	const char *chip_id;
+>  	const char *consumer;
+>  };
+> @@ -205,7 +205,7 @@ int main(int argc, char **argv)
+>  			die_perror("unable to request lines");
+>
+>  		if (cfg.hold_period_us)
+> -			usleep(cfg.hold_period_us);
+> +			sleep_us(cfg.hold_period_us);
+
+Got a use case where a hold period is measured in more than seconds?
+Specifically for a get.
+
+>
+>  		ret = gpiod_line_request_get_values(request, values);
+>  		if (ret)
+> diff --git a/tools/gpiomon.c b/tools/gpiomon.c
+> index e3abb2d..a8a3302 100644
+> --- a/tools/gpiomon.c
+> +++ b/tools/gpiomon.c
+> @@ -5,6 +5,7 @@
+>  #include <getopt.h>
+>  #include <gpiod.h>
+>  #include <inttypes.h>
+> +#include <limits.h>
+>  #include <poll.h>
+>  #include <stdio.h>
+>  #include <stdlib.h>
+> @@ -24,13 +25,13 @@ struct config {
+>  	enum gpiod_line_bias bias;
+>  	enum gpiod_line_edge edges;
+>  	int events_wanted;
+> -	unsigned int debounce_period_us;
+> +	unsigned long long debounce_period_us;
+>  	const char *chip_id;
+>  	const char *consumer;
+>  	const char *fmt;
+>  	enum gpiod_line_clock event_clock;
+>  	int timestamp_fmt;
+> -	int timeout;
+> +	long long timeout;
+
+Can we rename this to idle_timeout?  A variable named "timeout" is
+lacking context.
+
+>  };
+>
+>  static void print_help(void)
+> @@ -389,9 +390,17 @@ int main(int argc, char **argv)
+>  	if (cfg.active_low)
+>  		gpiod_line_settings_set_active_low(settings, true);
+>
+> -	if (cfg.debounce_period_us)
+> +	if (cfg.debounce_period_us) {
+> +		if (cfg.debounce_period_us > UINT_MAX)
+> +			die("invalid debounce period: %llu",
+> +			    cfg.debounce_period_us);
+> +
+>  		gpiod_line_settings_set_debounce_period_us(
+> -			settings, cfg.debounce_period_us);
+> +			settings, (unsigned long)cfg.debounce_period_us);
+> +	}
+> +
+> +	if (cfg.timeout > INT_MAX)
+> +		die("invalid idle timeout: %llu", cfg.timeout);
+>
+
+Not a fan of parsing to long, only to do a smaller range check here.
+How about providing two parsers - one for int sized periods and
+one for long periods, e.g. parse_long_period().
+
+Cheers,
+Kent.
 
