@@ -1,197 +1,107 @@
-Return-Path: <linux-gpio+bounces-5253-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5254-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3ECF389E27E
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 20:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id EE85389E2A3
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 20:37:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id D22EB1F21D60
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 18:26:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8F9F41F22167
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 18:37:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DCDE4156C4D;
-	Tue,  9 Apr 2024 18:26:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55C8E156F2F;
+	Tue,  9 Apr 2024 18:36:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b="XHJ57bpL"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from ahti.lucaweiss.eu (ahti.lucaweiss.eu [128.199.32.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85BEF156892;
-	Tue,  9 Apr 2024 18:26:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A97156863;
+	Tue,  9 Apr 2024 18:36:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=128.199.32.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712687210; cv=none; b=MrR289ggAJy62ajTck3h0dzRelvTkExznCkJDP6REok8QuQRTLrhO0gq3YiJwRh1yN60CFkGGIpW8jbQ2N/myCzT3aGdTcnR+k2JHbMup5MjigERhCLl8Mq6VvCLRAlJpRlY+hay+xKtKvlRLaGeCCNqM2gNJntkGasJewQdsnY=
+	t=1712687816; cv=none; b=lsZObHQ2CNZnVvUkTgPjxLzQgzeZzFrH1pFYeL0Dk410e1vz28DaGxV66S5m6sbVxYZ1svPaReWg9ybgU5uA9rOlgxIm8rdAHCz3MhV262txr824OsvpWxlMs5F0LZnrra2O0K8xbljpWbYb+EIjR9hwPBCNlP+8fv8PvVYDl78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712687210; c=relaxed/simple;
-	bh=sE41A36unxs9xF9gJ4myqUWYHNi43pa7OySsXW4BmZ8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tkSkRE4ZRd/2j2SCwRTUcAgIwoeTms6mZ+qz21Vt5oW0PmMIBvKjoH2zYmg43THx9PetW8fTy2Xw3CiZSu4eXyBO+ORpA7nlDPNEqz5uIqZ/9y+w5anto1W99XAyUBTWb4KbmZKsUC2OOxFBDWkp0941TlEQs8Y9rhGK7VVTL7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=black.fi.intel.com; spf=pass smtp.mailfrom=intel.com; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=black.fi.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-X-CSE-ConnectionGUID: mzEY1YzETti7oqn0Ys5/jw==
-X-CSE-MsgGUID: 3lELVDI1S9Ca8+arOBkqQg==
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="11794435"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="11794435"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 11:26:48 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=McAfee;i="6600,9927,11039"; a="937093733"
-X-IronPort-AV: E=Sophos;i="6.07,190,1708416000"; 
-   d="scan'208";a="937093733"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga001.fm.intel.com with ESMTP; 09 Apr 2024 11:26:45 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-	id 9E1F6193; Tue,  9 Apr 2024 21:26:44 +0300 (EEST)
-Date: Tue, 9 Apr 2024 21:26:44 +0300
-From: Andy Shevchenko <andy@black.fi.intel.com>
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, linus.walleij@linaro.org, brgl@bgdev.pl,
-	linux-gpio@vger.kernel.org, linux-spi@vger.kernel.org,
-	patches@opensource.cirrus.com
-Subject: Re: [PATCH v4 3/3] spi: cs42l43: Add bridged cs35l56 amplifiers
-Message-ID: <ZhWIZFvfYb85Pftm@black.fi.intel.com>
-References: <20240409132126.1117916-1-ckeepax@opensource.cirrus.com>
- <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
+	s=arc-20240116; t=1712687816; c=relaxed/simple;
+	bh=rHZbSTbfYXgHTDhJr9jRwzMsCYeJg2OgLGQ+5ogbYsw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=gqEE8zuDbGTOTES5CErfiPk+HLSiLiNzzyCz0D/ahNCHJb0mgTzir+lHLmghKbC6bqH9cXE0Ay+2DfW1ZLeBmOYkfXhda71MVvZu2auyEcgxZ1/m844qhPwbD4ZjDBrs4E2iFGQQM6PwVfLJdGE/Z/hW90/A6SMAJb7iLFxiNWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz; spf=pass smtp.mailfrom=z3ntu.xyz; dkim=pass (1024-bit key) header.d=z3ntu.xyz header.i=@z3ntu.xyz header.b=XHJ57bpL; arc=none smtp.client-ip=128.199.32.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=z3ntu.xyz
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=z3ntu.xyz
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=z3ntu.xyz; s=s1;
+	t=1712687812; bh=rHZbSTbfYXgHTDhJr9jRwzMsCYeJg2OgLGQ+5ogbYsw=;
+	h=From:Subject:Date:To:Cc;
+	b=XHJ57bpLQoR/aqryvWnVeoAny928eJdNCr+f9UrjxYy8voxJIK08DMxK5U6Aa1nLz
+	 H1EUrmL/dbe80jN47M7hlcRRM0L1Eilf3nNzvPCFL6WU0u8du6KGGqogK6q0J2neiy
+	 wJETIKwEWh+o0F69MqxSbSusoRGJERxBjhJwP//g=
+From: Luca Weiss <luca@z3ntu.xyz>
+Subject: [PATCH v2 0/2] Allow gpio-hog nodes in qcom,pmic-gpio bindings (&
+ dt fixup)
+Date: Tue, 09 Apr 2024 20:36:35 +0200
+Message-Id: <20240409-qcom-pmic-gpio-hog-v2-0-5ff812d2baed@z3ntu.xyz>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409132126.1117916-4-ckeepax@opensource.cirrus.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALSKFWYC/32NTQ7CIBBGr9LM2jEM0Ma48h6mC0VoZ9FSoZL+h
+ LuLPYDL95LvfTtEG9hGuFY7BJs4sh8LyFMFpn+MnUV+FQYppBZaXPBt/IDTwAa7iT32vkP51KZ
+ 2JBTJBspwCtbxckTvbeGe4+zDenwk+tm/uUQo0DXkTK2kIhK3TY3z57ysG7Q55y+1IMEitAAAA
+ A==
+To: ~postmarketos/upstreaming@lists.sr.ht, phone-devel@vger.kernel.org, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Konrad Dybcio <konrad.dybcio@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-gpio@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Luca Weiss <luca@z3ntu.xyz>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=791; i=luca@z3ntu.xyz;
+ h=from:subject:message-id; bh=rHZbSTbfYXgHTDhJr9jRwzMsCYeJg2OgLGQ+5ogbYsw=;
+ b=owEBbQKS/ZANAwAIAXLYQ7idTddWAcsmYgBmFYq/kttYH9CI/Y8ue4hlGZYTq3MO9tu+dSTsp
+ NicZk2yXsKJAjMEAAEIAB0WIQQ5utIvCCzakboVj/py2EO4nU3XVgUCZhWKvwAKCRBy2EO4nU3X
+ Vs5yD/41MhuQujprVoWFe/mAsJoluZ504qQFZQBUzGHo1yd47g62NNv9UaNQEem4+5UxMCabA+y
+ 3oH43dT2kFK4N11nBgEwTtyzJA32ZvsOhfVFwIEjNR7yH2Kk1zfIULQ54IdpW+KcebvjiEBAq/P
+ AIAbZK/SN4nv1Stes47DduIOO2hjcCkb5G6Ow1r2vktmR4TLTSb3mrHic5eh1h+3vKz2Eq+9zmS
+ zfBKiGQ42A+/nI87kZu/whP6+lFVlnzwO63p9/BJnvgnSpRTlfD5WiIhlhH3N+Po0AMkVYYHEW7
+ IGWOgjZ0K9Z/8Pc6SeFUPLdAAx5UBhq0Ftkf/cYH5TKK8exRm3phqvi3SAsb/axdh7FLqF1YDbP
+ bre60qJQC8HLm+7HPrvFX75qVvBYG9+3PpZP5gz5Axwqltey2ZgGyoVj/JnK7NkolGS9J68CiLi
+ 3LjTnjUtlsf0SumfegQBvGn3GAZudSg5ZaPO8uRFgEketHE0uNIgl7byWtCfHfBD3YtqZPVnZ+z
+ 81vmaRZAiYEuWW+Mht5Oxf3mew8dtvx7Y8rICxFns6DhmnxkIqY1B84+QWTkYBy22HTwCEkz9Yq
+ 11zQULyaTlqXQdXt38JsX6MHt41p4xbRE3lvo6RJW+0JIKXKfnug+/WjDCjmcx4YUslCHJdJ3hm
+ NQev3PF4YdkZpzw==
+X-Developer-Key: i=luca@z3ntu.xyz; a=openpgp;
+ fpr=BD04DA24C971B8D587B2B8D7FAF69CF6CD2D02CD
 
-On Tue, Apr 09, 2024 at 02:21:26PM +0100, Charles Keepax wrote:
-> From: Maciej Strozek <mstrozek@opensource.cirrus.com>
-> 
-> On some cs42l43 systems a couple of cs35l56 amplifiers are attached
-> to the cs42l43's SPI and I2S. On Windows the cs42l43 is controlled
-> by a SDCA class driver and these two amplifiers are controlled by
-> firmware running on the cs42l43. However, under Linux the decision
-> was made to interact with the cs42l43 directly, affording the user
-> greater control over the audio system. However, this has resulted
-> in an issue where these two bridged cs35l56 amplifiers are not
-> populated in ACPI and must be added manually.
-> 
-> Check for the presence of the "01fa-cirrus-sidecar-instances" property
-> in the SDCA extension unit's ACPI properties to confirm the presence
-> of these two amplifiers and if they exist add them manually onto the
-> SPI bus.
+Resolve the dt validation failure on Nexus 5.
 
-...
+Signed-off-by: Luca Weiss <luca@z3ntu.xyz>
+---
+Changes in v2:
+- Use simpler regex from tlmm bindings (Krzysztof)
+- Link to v1: https://lore.kernel.org/r/20240408-qcom-pmic-gpio-hog-v1-0-f61fc5323110@z3ntu.xyz
 
-> +#include <linux/acpi.h>
-> +#include <linux/array_size.h>
->  #include <linux/bits.h>
->  #include <linux/bitfield.h>
->  #include <linux/device.h>
->  #include <linux/errno.h>
-> +#include <linux/gpio/machine.h>
+---
+Luca Weiss (2):
+      dt-bindings: pinctrl: qcom,pmic-gpio: Allow gpio-hog nodes
+      ARM: dts: qcom: msm8974-hammerhead: Update gpio hog node name
 
-Shouldn't you include gpio/property.h as well?
-Ah, in the previous patch you put swnode to consumer.h instead of
-gpio/property.h. Please, fix that.
+ .../devicetree/bindings/pinctrl/qcom,pmic-gpio.yaml          | 12 ++++++++++++
+ .../arm/boot/dts/qcom/qcom-msm8974-lge-nexus5-hammerhead.dts |  2 +-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
+---
+base-commit: 8568bb2ccc278f344e6ac44af6ed010a90aa88dc
+change-id: 20240408-qcom-pmic-gpio-hog-2b4c5f103126
 
->  #include <linux/mfd/cs42l43.h>
->  #include <linux/mfd/cs42l43-regs.h>
->  #include <linux/mod_devicetable.h>
-
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/property.h>
->  #include <linux/regmap.h>
->  #include <linux/spi/spi.h>
->  #include <linux/units.h>
-
-...
-
-> +static const struct software_node ampl = {
-> +	.name			= "cs35l56-left",
-> +};
-> +
-> +static const struct software_node ampr = {
-> +	.name			= "cs35l56-right",
-> +};
-
-What these swnodes are for?
-
-...
-
-> +static bool cs42l43_has_sidecar(struct fwnode_handle *fwnode)
-> +{
-> +	static const u32 func_smart_amp = 0x1;
-> +	struct fwnode_handle *child_fwnode, *ext_fwnode;
-> +	unsigned int val;
-> +	u32 function;
-> +	int ret;
-> +
-> +	fwnode_for_each_child_node(fwnode, child_fwnode) {
-> +		struct acpi_device *adev = to_acpi_device_node(child_fwnode);
-> +
-> +		if (!adev)
-> +			continue;
-> +
-> +		ret = acpi_get_local_address(adev->handle, &function);
-> +		if (ret || function != func_smart_amp) {
-
-> +			fwnode_handle_put(child_fwnode);
-
-Why?
-
-> +			continue;
-> +		}
-> +
-> +		ext_fwnode = fwnode_get_named_child_node(child_fwnode,
-> +				"mipi-sdca-function-expansion-subproperties");
-> +		if (!ext_fwnode) {
-
-> +			fwnode_handle_put(child_fwnode);
-
-Ditto.
-
-> +			continue;
-> +		}
-> +
-> +		ret = fwnode_property_read_u32(ext_fwnode,
-> +					       "01fa-cirrus-sidecar-instances",
-> +					       &val);
-> +
-> +		fwnode_handle_put(ext_fwnode);
-
-> +		fwnode_handle_put(child_fwnode);
-
-Ditto.
-
-Haven't you get reference underflow?
-
-> +
-> +		if (!ret)
-> +			return !!val;
-> +	}
-> +
-
-> +	return false;
-> +}
-
-...
-
-> +MODULE_IMPORT_NS(GPIO_SWNODE);
-
-> +
-
-Stray blank line.
-
->  MODULE_DESCRIPTION("CS42L43 SPI Driver");
->  MODULE_AUTHOR("Lucas Tanure <tanureal@opensource.cirrus.com>");
->  MODULE_AUTHOR("Maciej Strozek <mstrozek@opensource.cirrus.com>");
-
+Best regards,
 -- 
-With Best Regards,
-Andy Shevchenko
-
+Luca Weiss <luca@z3ntu.xyz>
 
 
