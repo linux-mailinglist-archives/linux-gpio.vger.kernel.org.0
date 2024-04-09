@@ -1,114 +1,164 @@
-Return-Path: <linux-gpio+bounces-5212-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5213-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id ABBEF89D04C
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 04:15:52 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B039E89D18E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 06:38:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8BB931C24190
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 02:15:51 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id BB07DB231A2
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 04:38:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A2B574F1E4;
-	Tue,  9 Apr 2024 02:15:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B24A3BBE4;
+	Tue,  9 Apr 2024 04:38:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnvRQ9qK"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="oAMAo2iP"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.8])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196874F1E2
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 02:15:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C1E0EAE5;
+	Tue,  9 Apr 2024 04:38:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.8
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712628948; cv=none; b=jibX2WTjz4ycekuYJqqoqookrlagOLwyBQ3llPBBqpkox/vvKMaiCO+sgUxMf2SoQOHW4rECftBYI7ez5m0WDUQr6fod2dUwypziPQ5fI6Mq4BFapCCextx8PpQwKXE8ste9OI9prQi6xNdaVKCjZUnAeYDdtMwrWJGG4TRbrkU=
+	t=1712637526; cv=none; b=exSP/hzglhIWIIY4kX0lqAOTXA5XO89qUc++QpKLgqEcBaItqm7kCaBr7VdicigmKlVJ6GKiKzOfeYfCF9IwfzdVhR05cwTnWKvC4T1a8UyX4v0izOyBcAL83DbIZAK+HByXZ+j0tkOs4HfpmpBFPodcUnCKBVEJCc9Xq434jB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712628948; c=relaxed/simple;
-	bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
+	s=arc-20240116; t=1712637526; c=relaxed/simple;
+	bh=FwDRjCBN71NNWbuqJwe1vhuFGM+457CREEz1uKWOfUI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JWP748uTzBQ3Bbqma/DP6bqm80tQBdoQESJZNkv3IPjjsBCYcBPjtEXrlATPsP96iEGRXuCL8YyT0fugGQJdhQTJ9qApw5A4pDBynoe+RGzjPTWsJcAwK6KPoCH+6Ldc7A4ASd6AEWe+vBjmtKxSb1pviwgyg7FhbZdTHEzoL90=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AnvRQ9qK; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-6ed5109d924so1023244b3a.0
-        for <linux-gpio@vger.kernel.org>; Mon, 08 Apr 2024 19:15:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712628946; x=1713233746; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
-        b=AnvRQ9qKTsemIpkdzxIsMPV61YrgAUKixP90O2wUDEtAqf6Cf0RGbbBYIch+3/tv3m
-         Bt6qHDtBIUMeYS+woE5OoBixG9zBFZEtnzeWtLggPrB54O1rhLMFBp1hnWHyKMj2WvDO
-         KxErCZYMcJrhOo/n40k3xsH0ICIyO3Al4WThcSMD/Vi6cymgSfyh8x1T1fUq/jFXuwS8
-         +W3Vfu13slNqXR7ONvg9bcNhYvtofrrCT4FWp9ZPywepr6PFbe1FbAJm9LJ7gH3IxHJ1
-         P6pAKwkKbPGIwewUKssltRQUN8ksquzeEeJEiLtVSp6A1f98lGB/LkkeCPVm3+DCc8Hx
-         C9yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712628946; x=1713233746;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=EACAzNMESwHXTAO8TuNLzFl5LsfH+9ZMjLdm0RTjihg=;
-        b=n+bRk/0kcSqumEhaTW7kzAnBydAHwEjxMkI7jbN3J7SAelXES0BoelZJ0NnRQlC8ZV
-         lVxwOTlIHIT8KOdkHxvSRz5z49aM2FXFYdd1GAD3F8t0lRugfJJxUTnppHc/V7E+Zug4
-         QpMj2vzJFfSG6AF/auZfDv/E9HOo+KGmyBtRXiNvy7PYbRuXWI/2ICidjupUb76zOvnp
-         HkLrHr9JegG0Rr1HEzBpCK1QXax/BNbFSbh0u9CXa3qimhEOMzzgWyddtew0xTZEbxzn
-         W2tSoZJ5ZEp+KUmX0cze5NSgE+Pr9wpEiZ4TycZwEaT3xy98cqr/CYwFRFY9etOKdbT1
-         8GmQ==
-X-Gm-Message-State: AOJu0YzS2jf/kgt61n4+uAcdQeqGkkpGJd2brNYCXB5lhZ7eepQWxy10
-	Ko/UZmPc1ThQIWl1NnIkFT/H4SBiGeeMeRZzHnCJtnCg24xDLq5R
-X-Google-Smtp-Source: AGHT+IGbEeM1yYqt0THmPJ8epo4onBfLT1LCBMp2W+rGSI5eV7GcFmqToEZwxwMuKjsDTDSORpvttA==
-X-Received: by 2002:a05:6a00:a13:b0:6ea:afd2:b1dc with SMTP id p19-20020a056a000a1300b006eaafd2b1dcmr10638604pfh.29.1712628946278;
-        Mon, 08 Apr 2024 19:15:46 -0700 (PDT)
-Received: from rigel (194-223-186-215.tpgi.com.au. [194.223.186.215])
-        by smtp.gmail.com with ESMTPSA id g10-20020aa79dca000000b006ea80883ce3sm7178521pfq.133.2024.04.08.19.15.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 08 Apr 2024 19:15:45 -0700 (PDT)
-Date: Tue, 9 Apr 2024 10:15:42 +0800
-From: Kent Gibson <warthog618@gmail.com>
-To: Oliver =?iso-8859-1?Q?Sch=FCtt?= <oliverschuett@t-online.de>
-Cc: linux-gpio@vger.kernel.org
-Subject: Re: libgpiod 2.1.1: Installation under ubuntu 22.04.4
-Message-ID: <20240409021542.GA6010@rigel>
-References: <02ee3fea-5099-442e-9fcd-4167c7bb4a80@t-online.de>
+	 Content-Type:Content-Disposition:In-Reply-To; b=etgjGytc7APIXUYkdHwcLPN2N6ZVRcjRuF8CCfg+qyHo4oRGCczuZdEnic71F8Y+Lf7uC4L5y8par6GT0JKbzsq0tA2Vrtxd+gnsJofQaiEY0oPVf53kYnfMzb8vfOhYXP8cifP2oeGoccnakH9w5YM3qxzoz5/vC/EKqRHFWAA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=oAMAo2iP; arc=none smtp.client-ip=192.198.163.8
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712637524; x=1744173524;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FwDRjCBN71NNWbuqJwe1vhuFGM+457CREEz1uKWOfUI=;
+  b=oAMAo2iPP3fui8EI/E5HMMr5k0Xf2FGzQk6JjabSMxQuaalq8AYxM24p
+   z7w4t0bubp5QC7co71gKnTKnA7IPQ2gBOmJo6vUp3UkfJ/50pnSOfcYyU
+   Y5y+3ew7vzyzVhFS06TzuZ55/V1ha0GqSrfkiH5V6i4aJ7QJFeX2Buevf
+   pQrcnfA7G4KDgpFDCHEHVkN11hFZXqFlqX9ubSlK38FCWZaEhT88qJFQL
+   jFO1XMIsiPeEaGOvIZdWV1jzxHVeThA/GNHSFPf8AkUF7FnBWVo/UrZyE
+   KsHILzX2/8PpL1xog+NPFA0BWrwAKb26mau/07+HWGpPUX6Ptc32YVVo7
+   w==;
+X-CSE-ConnectionGUID: ff0V6GGwTha4WV7QqYbc9A==
+X-CSE-MsgGUID: 4ocxdPmdS8+Q5WFitXeBYg==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="25440832"
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="25440832"
+Received: from orviesa009.jf.intel.com ([10.64.159.149])
+  by fmvoesa102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 Apr 2024 21:38:44 -0700
+X-CSE-ConnectionGUID: e33hYWNgRzu9vk7HTBhA9w==
+X-CSE-MsgGUID: n4YA2P8CTm+jg8h8Evwn1Q==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,188,1708416000"; 
+   d="scan'208";a="20017073"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa009.jf.intel.com with ESMTP; 08 Apr 2024 21:38:40 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ru3Fm-0005jy-0R;
+	Tue, 09 Apr 2024 04:38:38 +0000
+Date: Tue, 9 Apr 2024 12:38:35 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com
+Cc: oe-kbuild-all@lists.linux.dev,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
+Message-ID: <202404091205.rnu1DOaq-lkp@intel.com>
+References: <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <02ee3fea-5099-442e-9fcd-4167c7bb4a80@t-online.de>
+In-Reply-To: <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
 
-On Mon, Apr 08, 2024 at 04:47:54PM +0200, Oliver Schütt wrote:
-> Hi All,
->
-> i am currently trying to utilize the GPIO pins on an embedded plattform,
-> a PicoSYS PC with a Fintek SuperI/O chip and Ubuntu 22.04.4 installed.
->
-> For this i want to use libgpiod and gpiod but i am very new to this and
-> wondering if you could kindly give me some guidance.
->
-> I downloaded the tar.gz for version 2.1.1 and extracted into my home
-> directory, then installed autoconf and invoked the autogen.sh installing
-> it into a dedicated folder in my home folder. After make and make install it
-> seemed to install just fine, i could call gpiodetect from terminal but
-> it gave me an error: "cannot find GPIO chip character device". Do i need
-> to install it in a seperate directory or am i missing some
-> driver/dependency?
->
+Hi Andy,
 
-The error means it cannot find /dev/gpiochip0, or more generally any
-/dev/gpiochipN, and that is due to your kernel missing the appropriate
-GPIO driver or configuration to setup that driver.
+kernel test robot noticed the following build warnings:
 
-So your problem is with your kernel, not libgpiod.
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on wireless-next/main wireless/main linus/master v6.9-rc3 next-20240408]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-Cheers,
-Kent.
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpiolib-Fix-a-mess-with-the-GPIO_-flags/20240409-071911
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20240408231727.396452-2-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
+config: i386-allmodconfig (https://download.01.org/0day-ci/archive/20240409/202404091205.rnu1DOaq-lkp@intel.com/config)
+compiler: gcc-13 (Ubuntu 13.2.0-4ubuntu3) 13.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240409/202404091205.rnu1DOaq-lkp@intel.com/reproduce)
 
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404091205.rnu1DOaq-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/x86/include/asm/geode.h:12,
+                    from arch/x86/platform/geode/alix.c:28:
+>> include/linux/cs5535.h:149: warning: "GPIO_PULL_UP" redefined
+     149 | #define GPIO_PULL_UP            0x18
+         | 
+   In file included from include/linux/gpio/machine.h:5,
+                    from arch/x86/platform/geode/alix.c:25:
+   include/dt-bindings/gpio/gpio.h:37: note: this is the location of the previous definition
+      37 | #define GPIO_PULL_UP 16
+         | 
+>> include/linux/cs5535.h:150: warning: "GPIO_PULL_DOWN" redefined
+     150 | #define GPIO_PULL_DOWN          0x1C
+         | 
+   include/dt-bindings/gpio/gpio.h:40: note: this is the location of the previous definition
+      40 | #define GPIO_PULL_DOWN 32
+         | 
+
+
+vim +/GPIO_PULL_UP +149 include/linux/cs5535.h
+
+f060f27007b393 Andres Salomon 2009-12-14  141  
+5f0a96b044d8ed Andres Salomon 2009-12-14  142  /* GPIOs */
+5f0a96b044d8ed Andres Salomon 2009-12-14  143  #define GPIO_OUTPUT_VAL		0x00
+5f0a96b044d8ed Andres Salomon 2009-12-14  144  #define GPIO_OUTPUT_ENABLE	0x04
+5f0a96b044d8ed Andres Salomon 2009-12-14  145  #define GPIO_OUTPUT_OPEN_DRAIN	0x08
+5f0a96b044d8ed Andres Salomon 2009-12-14  146  #define GPIO_OUTPUT_INVERT	0x0C
+5f0a96b044d8ed Andres Salomon 2009-12-14  147  #define GPIO_OUTPUT_AUX1	0x10
+5f0a96b044d8ed Andres Salomon 2009-12-14  148  #define GPIO_OUTPUT_AUX2	0x14
+5f0a96b044d8ed Andres Salomon 2009-12-14 @149  #define GPIO_PULL_UP		0x18
+5f0a96b044d8ed Andres Salomon 2009-12-14 @150  #define GPIO_PULL_DOWN		0x1C
+5f0a96b044d8ed Andres Salomon 2009-12-14  151  #define GPIO_INPUT_ENABLE	0x20
+5f0a96b044d8ed Andres Salomon 2009-12-14  152  #define GPIO_INPUT_INVERT	0x24
+5f0a96b044d8ed Andres Salomon 2009-12-14  153  #define GPIO_INPUT_FILTER	0x28
+5f0a96b044d8ed Andres Salomon 2009-12-14  154  #define GPIO_INPUT_EVENT_COUNT	0x2C
+5f0a96b044d8ed Andres Salomon 2009-12-14  155  #define GPIO_READ_BACK		0x30
+5f0a96b044d8ed Andres Salomon 2009-12-14  156  #define GPIO_INPUT_AUX1		0x34
+5f0a96b044d8ed Andres Salomon 2009-12-14  157  #define GPIO_EVENTS_ENABLE	0x38
+5f0a96b044d8ed Andres Salomon 2009-12-14  158  #define GPIO_LOCK_ENABLE	0x3C
+5f0a96b044d8ed Andres Salomon 2009-12-14  159  #define GPIO_POSITIVE_EDGE_EN	0x40
+5f0a96b044d8ed Andres Salomon 2009-12-14  160  #define GPIO_NEGATIVE_EDGE_EN	0x44
+5f0a96b044d8ed Andres Salomon 2009-12-14  161  #define GPIO_POSITIVE_EDGE_STS	0x48
+5f0a96b044d8ed Andres Salomon 2009-12-14  162  #define GPIO_NEGATIVE_EDGE_STS	0x4C
+5f0a96b044d8ed Andres Salomon 2009-12-14  163  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
