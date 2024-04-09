@@ -1,277 +1,115 @@
-Return-Path: <linux-gpio+bounces-5249-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5250-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8BFEB89E05F
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 18:30:08 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4113889E17A
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 19:25:08 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 18A5E1F225B4
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 16:30:08 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id D5025B23864
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 17:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C4A5013E402;
-	Tue,  9 Apr 2024 16:30:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99F47155746;
+	Tue,  9 Apr 2024 17:24:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WI8L30wi"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="PM/5HHru"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com [209.85.208.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BF7213E3F2;
-	Tue,  9 Apr 2024 16:30:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F44515539C
+	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 17:24:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712680202; cv=none; b=IgTp4TKyo6HDEp6QkZ02ivVvyL1X/DKeE5yOulLiYtXdXZZJY2VJ33nRxfim+4TLvChJ6CGOGLvkNM9BP+ACE5C7FVnktF+bIybcf+eQ820KBrErOGF2UpLlnsMJKCpRR1R0huMOStmsgkKGfGzMeb6+v/C5IALWC3U75UhvNhg=
+	t=1712683499; cv=none; b=b/2HCOPl9ycz1hUWtdkWZkj4Ifwdr1q+H94UlPVEuzOeiKwal7+KvfD9Te2tsx33tFwaCpdH2IJzNLDacNQn9jdwIIuypHTYNJ2/WFJ5NQxr9ShU/Q6gH19bfDiR551NAkRcNaw+txirlyjgy7uPm9vbFKXBnYnbCGNTzPns3po=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712680202; c=relaxed/simple;
-	bh=sqluHhiDFTvPVAtAz82cjsGRqtZJ0+0bxToUl7j52aw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BUqurf3Nz+7BMMaxajnICijj85Z+1vn65uK7IpOSpXhb0vC71mOk6q0yVfmIAQDb/S3QbdttaYlJFpqgMSgD3w7o4x/gPUVwNAqnkK/4IY9xF4qOL+GN3Alhw1P/nZVzv8KruiW+FqjUxH0eR5QGRZklRbjmCzdidutaoYdlOPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WI8L30wi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C948FC433C7;
-	Tue,  9 Apr 2024 16:30:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712680202;
-	bh=sqluHhiDFTvPVAtAz82cjsGRqtZJ0+0bxToUl7j52aw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=WI8L30wi8+cPsQ6t6sJvESP3xYGy3z94xyR0hDTjzF51FDi+hyftf0KHT1sdnz/E/
-	 Al/MCkZqa3cUfRwvHPauc0pM8XyTmcB8mSBRcKyAMvF0qwUngqU93+RiiC+GjBnZDU
-	 /+/DVYHh91an/ZtxGP+zyRObpJQP+vDgXvEcqLZc4BfyodxH+2KTtlGZd5k3ajgd59
-	 drm0WCZ8NkEDBzYC1dYz3BmzNwpAgNGapY4faSK+LIkeB7IazpJcJ1plTH2+WAoW7A
-	 jiLORtsazrRCL9eC8WeTBbHTMZw5h7Wak8bKbuMpClwqbPpN09D6kgsEvGkaEEQ0HE
-	 gDz6pq0QXmoRg==
-Date: Tue, 9 Apr 2024 11:29:59 -0500
-From: Rob Herring <robh@kernel.org>
-To: Jacky Huang <ychuang570808@gmail.com>
-Cc: linus.walleij@linaro.org, krzysztof.kozlowski+dt@linaro.org,
-	conor+dt@kernel.org, p.zabel@pengutronix.de, j.neuschaefer@gmx.net,
-	linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ychuang3@nuvoton.com, schung@nuvoton.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v7 2/3] dt-bindings: pinctrl: Document nuvoton ma35d1 pin
- control
-Message-ID: <20240409162959.GA1370985-robh@kernel.org>
-References: <20240409095637.2135-1-ychuang570808@gmail.com>
- <20240409095637.2135-3-ychuang570808@gmail.com>
+	s=arc-20240116; t=1712683499; c=relaxed/simple;
+	bh=UyS87rbDBP9uC9iF4fOtAuObzBHCSMEiN1ZVJmVrCSI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=L0U4Z/Egm+WXaG7IpUNSL1swxT836EaMuxQgx4/eJAgFTqXwW6W+mDfzS1v9UiUSmWi5h57Ee/MmL2wzHMht+YAjTLSsp0OmvDUG34djokkZ8KE4m5Fjr3AfAhskfAGGk4uP7KyLvzeMn6ytuAvaoCc7N4LntKE13SWh1G9pvbI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=PM/5HHru; arc=none smtp.client-ip=209.85.208.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f170.google.com with SMTP id 38308e7fff4ca-2d8863d8a6eso42935861fa.3
+        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 10:24:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712683495; x=1713288295; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=UyS87rbDBP9uC9iF4fOtAuObzBHCSMEiN1ZVJmVrCSI=;
+        b=PM/5HHrumwG5P5otMz8aUqeG3qXEjO7brR/pRbK+oANvrgLuPtwT/aw6+EWRL+4vOG
+         ns95h8np+Y9E7GJYjE8jOTMHuKrkbZ37rLYYtOcgy3qbIoagWbUpL1zf0fyBpzuUCMtK
+         2Rr1Qj63NQ0GPI2b/6r4d9BPqwquDTICYwz+00ppcO+NW+b7Q9h83Ex9S2rxkoHKLjCa
+         ghYdV7Ug24RJ88RyJBslmCCqQ5Kx0oZ9MaxYSrlWMcBcBJpFFsn31GhDZmGEYkkS+GJs
+         vcBa94TzgcGcZf44Ziv50t3vbJfnrz6B0JR5AVKYs8ubL12N3f6zSTWWsniQAE6zokDD
+         UFzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712683495; x=1713288295;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=UyS87rbDBP9uC9iF4fOtAuObzBHCSMEiN1ZVJmVrCSI=;
+        b=P1pq9PUj1mKbJVpshrnyynPJa1qvVdDkGUsYnXFRe8m26Tqm/tP76hyfVXbJTHizpU
+         E/QsbRFvoXSPVfAzFwxLxQYlKcyc8k2VPu7WWQof2npCMq7T38ia2wHdX2/yeR5SoxjE
+         ccJS98qXoAWx8OV5oAF1sX4QoKLstBbEAk30w02YtEgbQOoiYx71t7/jcb5ZlFEGQykK
+         pU9YCRXsrqPDUAe3UPQcQ/uRzK21YseKG0vitHL7nJ2pfc06/f3jV+DmejfYZG0wQNyj
+         ob6+jfkv0TR2U1Qh0ema2WWs3Y8+8wNB0r2UgDzMOAxrizNI51m13pTCeF6r2R7vkOe2
+         YGFw==
+X-Forwarded-Encrypted: i=1; AJvYcCVA1B49/1gE05tgpcFTqxR6pgc0mJ6e8fR9E68+d3Y9LxmaUfmVkIctXhrOdwTcBzxP8a9JySHo9vnWKkOgQREJzZRMHtHgbQ1hxA==
+X-Gm-Message-State: AOJu0YyFyzDvkIgbiuRF8+HitVEXn4Yqq79lUkuOgtGtUSig+P92svxb
+	2ImkJuZ09HPS3eVQO0aK892IWP7dl3gZzWcp5lxydy2Dad+w1mUpot5Lwo7Ix4rg5lT1UKsCY1S
+	dd3U1KB7FwUU1axbTeob7GxBWRqXaKo5mlqqQpw==
+X-Google-Smtp-Source: AGHT+IEEk+Uem+ljsUU6dksYPHYe+2B+Sn5U1mgvcDf4WkzCxW2XxuQs2pC7R+713jkzcEUKikScV+uWnh7KOWd7n04=
+X-Received: by 2002:a2e:a30b:0:b0:2d2:7702:cb74 with SMTP id
+ l11-20020a2ea30b000000b002d27702cb74mr393047lje.20.1712683495379; Tue, 09 Apr
+ 2024 10:24:55 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240409095637.2135-3-ychuang570808@gmail.com>
+References: <20240409093333.138408-1-brgl@bgdev.pl> <20240409093333.138408-3-brgl@bgdev.pl>
+ <20240409125551.GA69328@rigel> <3f31c7bc-de8a-4552-ba48-4432b335f413@igl.se> <20240409160516.GA211845@rigel>
+In-Reply-To: <20240409160516.GA211845@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Tue, 9 Apr 2024 19:24:43 +0200
+Message-ID: <CAMRc=Md3U=sEypUOSzSiWwQasOxqLn1LGCCHE2fUU5ohnCkKqg@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/2] tools: allow longer time periods
+To: Kent Gibson <warthog618@gmail.com>
+Cc: =?UTF-8?Q?Gunnar_Th=C3=B6rnqvist?= <gunnar@igl.se>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, Apr 09, 2024 at 09:56:36AM +0000, Jacky Huang wrote:
-> From: Jacky Huang <ychuang3@nuvoton.com>
-> 
-> Add documentation to describe nuvoton ma35d1 pin control and GPIO.
-> 
-> Signed-off-by: Jacky Huang <ychuang3@nuvoton.com>
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-> ---
->  .../pinctrl/nuvoton,ma35d1-pinctrl.yaml       | 163 ++++++++++++++++++
->  1 file changed, 163 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..8b9ec263213f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/nuvoton,ma35d1-pinctrl.yaml
-> @@ -0,0 +1,163 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pinctrl/nuvoton,ma35d1-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Nuvoton MA35D1 pin control and GPIO
-> +
-> +maintainers:
-> +  - Shan-Chun Hung <schung@nuvoton.com>
-> +  - Jacky Huang <ychuang3@nuvoton.com>
-> +
-> +allOf:
-> +  - $ref: pinctrl.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - nuvoton,ma35d1-pinctrl
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 1
-> +
-> +  nuvoton,sys:
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +    description:
-> +      phandle of the system-management node.
+On Tue, Apr 9, 2024 at 6:05=E2=80=AFPM Kent Gibson <warthog618@gmail.com> w=
+rote:
+>
+> On Tue, Apr 09, 2024 at 04:58:52PM +0200, Gunnar Th=C3=B6rnqvist wrote:
+> > Hi, Got a use case where a hold period is measured in more than seconds=
+?
+> > Specifically for a get.:::
+> >
+> > I can see a large number of use cases where the time can be hours, days=
+ and
+> > weeks. In my case, pin 17 controls a relay that heats water when electr=
+icity
+> > is cheapest. It is ok to only have seconds as unit but the range must b=
+e
+> > larger. /Gunnar
+> >
+>
+> I was asking specifically about the case for gpioget, where a long hold
+> period makes absolutely no sense.
+>
 
-If these are the *only* registers to access the pinctrl functions, then 
-this binding should be a child node of the system-management node and 
-then you don't need this property.
+One could argue that this option doesn't make sense at all for gpioget. :)
 
-And if the registers for pinctrl are a defined range, you should add a 
-'reg' property (even though Linux and regmap don't use it).
+I don't think it hurts to support a longer period of time even if only
+for code reuse and less surface for bugs.
 
-> +
-> +  ranges: true
-
-This property makes no sense with the binding as-is. You don't have 
-any address to translate. Maybe with the above changes it will.
-
-> +
-> +patternProperties:
-> +  "^gpio@[0-9a-f]+$":
-> +    type: object
-> +    additionalProperties: false
-> +    properties:
-> +      gpio-controller: true
-> +
-> +      '#gpio-cells':
-> +        const: 2
-> +
-> +      reg:
-> +        maxItems: 1
-> +
-> +      clocks:
-> +        maxItems: 1
-> +
-> +      interrupt-controller: true
-> +
-> +      '#interrupt-cells':
-> +        const: 2
-> +
-> +      interrupts:
-> +        description:
-> +          The interrupt outputs to sysirq.
-> +        maxItems: 1
-> +
-> +    required:
-> +      - gpio-controller
-> +      - '#gpio-cells'
-> +      - reg
-> +      - clocks
-> +      - interrupt-controller
-> +      - '#interrupt-cells'
-> +      - interrupts
-> +
-> +  "^pin-[a-z0-9]+$":
-> +    type: object
-> +    description:
-> +      A pinctrl node should contain at least one subnodes representing the
-> +      pinctrl groups available on the machine. Each subnode will list the
-> +      pins it needs, and how they should be configured, with regard to muxer
-> +      configuration, pullups, drive strength, input enable/disable and input
-> +      schmitt.
-> +
-> +    $ref: pincfg-node.yaml#
-> +
-> +    properties:
-> +      power-source:
-> +        description: |
-> +          Valid arguments are described as below:
-> +          0: power supply of 1.8V
-> +          1: power supply of 3.3V
-> +        enum: [0, 1]
-> +
-> +      drive-strength-microamp:
-> +        oneOf:
-> +          - enum: [ 2900, 4400, 5800, 7300, 8600, 10100, 11500, 13000 ]
-> +            description: 1.8V I/O driving strength
-> +          - enum: [ 17100, 25600, 34100, 42800, 48000, 56000, 77000, 82000 ]
-> +            description: 3.3V I/O driving strength
-> +
-> +    unevaluatedProperties: false
-
-In the indented cases, it's preferred to put this before 'properties'.
-
-
-> +
-> +  "-grp$":
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-
-Missing $ref to common properties and 'unevaluatedProperties'.
-
-> +    properties:
-> +      nuvoton,pins:
-> +        description:
-> +          Each entry consists of 4 parameters and represents the mux and config
-> +          setting for one pin.
-> +        $ref: /schemas/types.yaml#/definitions/uint32-matrix
-> +        minItems: 1
-> +        items:
-> +          items:
-> +            - minimum: 0
-> +              maximum: 13
-> +              description:
-> +                Pin bank.
-> +            - minimum: 0
-> +              maximum: 15
-> +              description:
-> +                Pin bank index.
-> +            - minimum: 0
-> +              maximum: 15
-> +              description:
-> +                Mux 0 means GPIO and mux 1 to 15 means the specific device function.
-> +
-> +required:
-> +  - compatible
-> +  - nuvoton,sys
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +    #include <dt-bindings/gpio/gpio.h>
-> +    #include <dt-bindings/clock/nuvoton,ma35d1-clk.h>
-> +
-> +    pinctrl@40040000 {
-> +        compatible = "nuvoton,ma35d1-pinctrl";
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +        nuvoton,sys = <&sys>;
-> +        ranges = <0 0x40040000 0xc00>;
-> +
-> +        gpio@0 {
-> +            reg = <0x0 0x40>;
-> +            interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
-> +            clocks = <&clk GPA_GATE>;
-> +            gpio-controller;
-> +            #gpio-cells = <2>;
-> +            interrupt-controller;
-> +            #interrupt-cells = <2>;
-> +        };
-> +
-> +        uart-grp {
-> +            uart11-pins {
-
-This is not what the schema says.
-
-> +                nuvoton,pins = <11 0 2>,
-> +                               <11 1 2>,
-> +                               <11 2 2>,
-> +                               <11 3 2>;
-> +                bias-disable;
-> +                power-source = <1>;
-> +            };
-> +        };
-
-Include a pin-* node in the example.
-
-> +    };
-> -- 
-> 2.34.1
-> 
+Bart
 
