@@ -1,115 +1,165 @@
-Return-Path: <linux-gpio+bounces-5215-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5216-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 25D9189D2D8
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 09:12:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id CF95189D3E7
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 10:13:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 528DD1C21679
-	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 07:12:20 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F23191C20B8E
+	for <lists+linux-gpio@lfdr.de>; Tue,  9 Apr 2024 08:13:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 357E977F1B;
-	Tue,  9 Apr 2024 07:12:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A35907E58E;
+	Tue,  9 Apr 2024 08:13:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="iCAyqF97"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="XsW/77te"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.14])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77BBF6A012
-	for <linux-gpio@vger.kernel.org>; Tue,  9 Apr 2024 07:12:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 690317E0F6;
+	Tue,  9 Apr 2024 08:12:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.14
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712646736; cv=none; b=gh99vd00TZBGAfabqOgKniysNHJwtkEVm2g7ZeUEXYmQnv28Fr5P3R2pBgJtLPvWaTJ/Gg87eEZVmtJoD20rlC4PHCpm389BIK6g0eYp1hQA2jFriFjApz7oCAAnMYyGeb09iDwwKu4HevAx9pWFdzNcD8lNBsbRV23hNm7D3fc=
+	t=1712650381; cv=none; b=ouXS52GJ9zNLjb2LhScDEz/MV6qzueUaiKzPqb81vmYZQEmn9EjJFtJ8DJszwt0IHo3/cA1XB9QeXIe9FCKlg4JEo7uj7J4NIiX/xKLHgxSi+IHOIn939Har7sg7WEgQz5yuy53kRN14qY2mgseojbHSMyJe6x+GgGACEuXUI8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712646736; c=relaxed/simple;
-	bh=7k2kwrD+6dkxa0Jp5JiZOG2oLIzIdChr8NsQEX492TM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=V6Bmj4oJv0tfquu0mketArSFuogO2S4PhDv6WpkcBBlogihX4NtcMf1ktQAjmnLZ4SkIzFxuw00s4Fg8l0XohQ72p+YotOtzfvHOZuN2rOOHmLJXTcRR1P9ZANCkfSc/cYHa3V0diumkUSIqoSQOmMsDinj9YQtf72/Q49uyxCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=iCAyqF97; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-61587aa956eso48691607b3.1
-        for <linux-gpio@vger.kernel.org>; Tue, 09 Apr 2024 00:12:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1712646733; x=1713251533; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8tiescK9NNjrWaswI2dTbql6lo1cCUF+evpx7dXZ6iw=;
-        b=iCAyqF97upmQiLt+WKUZOJ431mWwCRSzXMrmDboKn1+fkoTMi72sRP7jv2VoKNqHtR
-         Szf/2fXU0sVZidhKdlh7QXNZyFx+VS6aEu5F6Et9J3FWva03J4F1w0pkgwzUAKiu9fpn
-         GuUdL2EumX8Ut+494gfxel21fdZu8Vcp9Dxk+afHnPQZyOJ19ino5cnxu80QZrw5O1TM
-         WF2CsSpz1fkvDvuFCprn1Lhpmpo9jec659g7HSvDIaXAtXQz+EaqC4Nm/vn5UOINjScl
-         Q7vShyyPEOLiTJk8YF0QiNAW0tELOMYvpwa7Hft2pMOWIypZzQQd86r3iIUKZXv0MTo/
-         l15Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712646733; x=1713251533;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8tiescK9NNjrWaswI2dTbql6lo1cCUF+evpx7dXZ6iw=;
-        b=LYKUGDor13MFiZ4r+z0aegnwOr38od/jT+3Wjz7A1nkwBcP8uMgAeDTF3cTt1fO81E
-         Y203MZt8V2MtPO98uuPuSFW+4PHjVTvLr5vpy7GbfBNuDybCq+Zd+fQ16X/6FKcfdSZn
-         FA9/E/w7ie55QJ/4CoyDolVKPp68EXMCga/+GO7LW8U9Qz/lew3lXusPmF/+lEzL8RcF
-         uo5pNpv5ekNW6zWHzcg1ZZw+2gcVzB+957o8z9cu7x8n8QyZohpIZlDxolPC4wwwnjcq
-         Nvvwnev8C7FzDFXrvGYHaSoCygeK732eipkWrBwE86G0ZUNY//qz2w2sma476naIBDRX
-         A1Fg==
-X-Forwarded-Encrypted: i=1; AJvYcCX974zbUIN5UVtQFrndch3QRAAzwzzmOzWzPZGCfaArtDf6UOHA45gCqicknJ30VWj7XGRx/AKVBE0S9CVkfWkRKCNsgvJANGwzGA==
-X-Gm-Message-State: AOJu0Yym/IW/ZcZwO2qj0itUQy6Gx6sR+PJpE2XFNNbSS9nMmcAqZ3Yd
-	TWb6HnOK07y9a5THjJepNWNGyAMd6iZhbOFmtpJxwonFgygtVVCc65RXSWofp1ioIT0sK/ZfVxu
-	ugeAIf998TIDqEHklYAw2tkJGg4tXTZQ2k8/5+Q==
-X-Google-Smtp-Source: AGHT+IGEK2Xj+dHjqiAUu27AtZmeqL/hwR/FjaVb1jfrwvY1S0MafUhiePMSOX3+YMW2y8o36YzLWHrXgKm7qo8ElqI=
-X-Received: by 2002:a25:df97:0:b0:de0:e3aa:e61 with SMTP id
- w145-20020a25df97000000b00de0e3aa0e61mr6801877ybg.37.1712646733510; Tue, 09
- Apr 2024 00:12:13 -0700 (PDT)
+	s=arc-20240116; t=1712650381; c=relaxed/simple;
+	bh=jFMEUXcHKpY2CByBls3VxrCp6NDpZv4FstKTHJezeYE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e75cEBLwjbOICq+iP8hfOewmC4dbyAAItKHOhoL4dGvRG0HsbXobvi/hxZoR5sl0J8YaexWqnB3pzIrRm6ToDPbet4xZZGjfmR6emVLjyP9wZKvXI+KLc9wRbuz82Zb4fp/EIlvrXQ2bJzUj02/JxvdsoilfYlgEgAN/gDfq0/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=XsW/77te; arc=none smtp.client-ip=198.175.65.14
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1712650379; x=1744186379;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=jFMEUXcHKpY2CByBls3VxrCp6NDpZv4FstKTHJezeYE=;
+  b=XsW/77tez4K8q8LiVjasJhUxS6Oh1+EIoW5sHLEFgngHYqEhCzY++HO2
+   H8zNmZJ28iu+nC4VhOcfp4VI8Aykz92lWrW1E2FEu0LWz9a/ZRVsAE0MD
+   h90UZkM2Zz+9E8rnq64kpswuGwmr8rmiL1woKwwIKxI+2czHMuPOUysDT
+   5A7IOuirel0a2TktbH0j+D0ZTppbEpVrHKybkqbpkO40AP3i2A6lNM0Xf
+   V/I8YBzQTfD6+8D191O/JTRaBphAFMnlfWsNEPNGKz6WRJFdC2I/Bxdjc
+   WDTNesGEQ+nBWpiGtrAlNEEcLY+gTya0T+U2bbBcwiwYllY9Qyi6B1Unq
+   A==;
+X-CSE-ConnectionGUID: P2//5VHkTVmt6puFgadbJA==
+X-CSE-MsgGUID: FrN9EnG5RVmeMceh/7CQCA==
+X-IronPort-AV: E=McAfee;i="6600,9927,11038"; a="11794489"
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="11794489"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by orvoesa106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Apr 2024 01:12:59 -0700
+X-CSE-ConnectionGUID: 9hBXjKEUT462toanihZRYw==
+X-CSE-MsgGUID: CBkeg03FRrWz4l8Ovm+pwg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.07,189,1708416000"; 
+   d="scan'208";a="20041447"
+Received: from lkp-server01.sh.intel.com (HELO e61807b1d151) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 09 Apr 2024 01:12:54 -0700
+Received: from kbuild by e61807b1d151 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1ru6b6-0005sv-1j;
+	Tue, 09 Apr 2024 08:12:52 +0000
+Date: Tue, 9 Apr 2024 16:12:27 +0800
+From: kernel test robot <lkp@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	Kent Gibson <warthog618@gmail.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	linux-gpio@vger.kernel.org, linux-acpi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+	brcm80211@lists.linux.dev, brcm80211-dev-list.pdl@broadcom.com
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	Arend van Spriel <arend.vanspriel@broadcom.com>,
+	Kalle Valo <kvalo@kernel.org>,
+	Charles Keepax <ckeepax@opensource.cirrus.com>
+Subject: Re: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
+Message-ID: <202404091557.rf8NTu9B-lkp@intel.com>
+References: <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20240326141108.1079993-1-ckeepax@opensource.cirrus.com>
- <20240326141108.1079993-2-ckeepax@opensource.cirrus.com> <CACRpkdZP_9y-Z=eZcbQe=ZF2ejutP6gD2ofTxXNvGTh7CUfwFg@mail.gmail.com>
- <ZhPvW46kGeOnG++E@ediswmail9.ad.cirrus.com>
-In-Reply-To: <ZhPvW46kGeOnG++E@ediswmail9.ad.cirrus.com>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Tue, 9 Apr 2024 09:12:01 +0200
-Message-ID: <CACRpkdZQNrDt35d30xJSRz=03rhs6vOODWorpqMsJ=Lo4huJmQ@mail.gmail.com>
-Subject: Re: [PATCH 1/3] gpio: swnode: Add ability to specify native chip
- selects for SPI
-To: Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc: broonie@kernel.org, brgl@bgdev.pl, linux-gpio@vger.kernel.org, 
-	linux-spi@vger.kernel.org, patches@opensource.cirrus.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240408231727.396452-2-andriy.shevchenko@linux.intel.com>
 
-On Mon, Apr 8, 2024 at 3:21=E2=80=AFPM Charles Keepax
-<ckeepax@opensource.cirrus.com> wrote:
-> On Thu, Apr 04, 2024 at 10:16:35AM +0200, Linus Walleij wrote:
-> > On Tue, Mar 26, 2024 at 3:11=E2=80=AFPM Charles Keepax
-> > <ckeepax@opensource.cirrus.com> wrote:
-> > > +const struct software_node swnode_gpio_undefined =3D {
-> > > +       .name =3D "gpio-internal-undefined",
-> > > +};
-> > > +EXPORT_SYMBOL_GPL(swnode_gpio_undefined);
-> >
-> > This needs a comment in the code telling exactly why this is here.
-> > It is also taking up space and code here on systems that have no use
-> > for it, so I wonder if it is possible to make this optional.
-> >
->
-> Happy to add the comment, less sure about how to make it
-> optional. I could ifdef it based the SPI config, but whilst that
-> is the current user the mechanism feels like it is more generic
-> than that and could be used in other bindings as well.
+Hi Andy,
 
-That's a fair point.
-Maybe a new bool Kconfig symbol that the SPI drivers or
-other potential users can select?
+kernel test robot noticed the following build warnings:
 
-Yours,
-Linus Walleij
+[auto build test WARNING on brgl/gpio/for-next]
+[also build test WARNING on wireless-next/main wireless/main linus/master v6.9-rc3 next-20240409]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Andy-Shevchenko/gpiolib-Fix-a-mess-with-the-GPIO_-flags/20240409-071911
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/brgl/linux.git gpio/for-next
+patch link:    https://lore.kernel.org/r/20240408231727.396452-2-andriy.shevchenko%40linux.intel.com
+patch subject: [PATCH v2 1/2] gpiolib: Fix a mess with the GPIO_* flags
+config: i386-buildonly-randconfig-002-20240409 (https://download.01.org/0day-ci/archive/20240409/202404091557.rf8NTu9B-lkp@intel.com/config)
+compiler: clang version 17.0.6 (https://github.com/llvm/llvm-project 6009708b4367171ccdbf4b5905cb6a803753fe18)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240409/202404091557.rf8NTu9B-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202404091557.rf8NTu9B-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from arch/x86/platform/geode/net5501.c:25:
+   In file included from arch/x86/include/asm/geode.h:12:
+>> include/linux/cs5535.h:149:9: warning: 'GPIO_PULL_UP' macro redefined [-Wmacro-redefined]
+     149 | #define GPIO_PULL_UP            0x18
+         |         ^
+   include/dt-bindings/gpio/gpio.h:37:9: note: previous definition is here
+      37 | #define GPIO_PULL_UP 16
+         |         ^
+   In file included from arch/x86/platform/geode/net5501.c:25:
+   In file included from arch/x86/include/asm/geode.h:12:
+>> include/linux/cs5535.h:150:9: warning: 'GPIO_PULL_DOWN' macro redefined [-Wmacro-redefined]
+     150 | #define GPIO_PULL_DOWN          0x1C
+         |         ^
+   include/dt-bindings/gpio/gpio.h:40:9: note: previous definition is here
+      40 | #define GPIO_PULL_DOWN 32
+         |         ^
+   2 warnings generated.
+
+
+vim +/GPIO_PULL_UP +149 include/linux/cs5535.h
+
+f060f27007b393 Andres Salomon 2009-12-14  141  
+5f0a96b044d8ed Andres Salomon 2009-12-14  142  /* GPIOs */
+5f0a96b044d8ed Andres Salomon 2009-12-14  143  #define GPIO_OUTPUT_VAL		0x00
+5f0a96b044d8ed Andres Salomon 2009-12-14  144  #define GPIO_OUTPUT_ENABLE	0x04
+5f0a96b044d8ed Andres Salomon 2009-12-14  145  #define GPIO_OUTPUT_OPEN_DRAIN	0x08
+5f0a96b044d8ed Andres Salomon 2009-12-14  146  #define GPIO_OUTPUT_INVERT	0x0C
+5f0a96b044d8ed Andres Salomon 2009-12-14  147  #define GPIO_OUTPUT_AUX1	0x10
+5f0a96b044d8ed Andres Salomon 2009-12-14  148  #define GPIO_OUTPUT_AUX2	0x14
+5f0a96b044d8ed Andres Salomon 2009-12-14 @149  #define GPIO_PULL_UP		0x18
+5f0a96b044d8ed Andres Salomon 2009-12-14 @150  #define GPIO_PULL_DOWN		0x1C
+5f0a96b044d8ed Andres Salomon 2009-12-14  151  #define GPIO_INPUT_ENABLE	0x20
+5f0a96b044d8ed Andres Salomon 2009-12-14  152  #define GPIO_INPUT_INVERT	0x24
+5f0a96b044d8ed Andres Salomon 2009-12-14  153  #define GPIO_INPUT_FILTER	0x28
+5f0a96b044d8ed Andres Salomon 2009-12-14  154  #define GPIO_INPUT_EVENT_COUNT	0x2C
+5f0a96b044d8ed Andres Salomon 2009-12-14  155  #define GPIO_READ_BACK		0x30
+5f0a96b044d8ed Andres Salomon 2009-12-14  156  #define GPIO_INPUT_AUX1		0x34
+5f0a96b044d8ed Andres Salomon 2009-12-14  157  #define GPIO_EVENTS_ENABLE	0x38
+5f0a96b044d8ed Andres Salomon 2009-12-14  158  #define GPIO_LOCK_ENABLE	0x3C
+5f0a96b044d8ed Andres Salomon 2009-12-14  159  #define GPIO_POSITIVE_EDGE_EN	0x40
+5f0a96b044d8ed Andres Salomon 2009-12-14  160  #define GPIO_NEGATIVE_EDGE_EN	0x44
+5f0a96b044d8ed Andres Salomon 2009-12-14  161  #define GPIO_POSITIVE_EDGE_STS	0x48
+5f0a96b044d8ed Andres Salomon 2009-12-14  162  #define GPIO_NEGATIVE_EDGE_STS	0x4C
+5f0a96b044d8ed Andres Salomon 2009-12-14  163  
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
