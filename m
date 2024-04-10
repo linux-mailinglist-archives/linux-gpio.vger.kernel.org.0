@@ -1,122 +1,123 @@
-Return-Path: <linux-gpio+bounces-5306-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5307-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B7738A000E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 20:52:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id C803D8A006F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 21:16:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 31FD71F23ECA
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 18:52:30 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F2C961C22C3F
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 19:16:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 929D817BB2D;
-	Wed, 10 Apr 2024 18:52:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2274D18130D;
+	Wed, 10 Apr 2024 19:16:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I6OuxsVT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="IINT8dBJ"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E41A16F0DF;
-	Wed, 10 Apr 2024 18:52:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643F0180A92
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 19:16:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712775142; cv=none; b=sLhWb8bu+Xr78gnHNTKCsJJnX3WxaL4QfEt0UVeySYPu+9qGdAQDLNKYMNYliAjFgcFxp8N9G6q7/eIc1NCeq+TCj3atLfBS6MGpGU3uJWzN3R3p+nKeE7uj0Aylmcn2YqKF1ExqTD/CVg0hi1tThbqN15InqYCss3geYaG4f3M=
+	t=1712776613; cv=none; b=JNTYTS7b451v7bjOffhqdFae/3l8s8KEleY5vEzofdcD/OdubHMJxNvmwU9lmS3nDIf6exmbRaRfFP3W6Cbhl/ywz/lWtag1mAqAqulYpnJBqZ42knNrSZxq/FODpnPVBPa1Y1BLgS9mDSRH8lSGM8+nAqYSD9zxSNeKug8Yub0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712775142; c=relaxed/simple;
-	bh=z5JVLaH+fp0+7NF0boo5IQT2gY7gn3yvbn52zrvcvJ0=;
-	h=Date:Content-Type:MIME-Version:From:To:Cc:In-Reply-To:References:
-	 Message-Id:Subject; b=o90WXOtYo2qlap/p+3CUY6xbgD8+uB+483Sgrdn8VEy+UOV/Yco3t4pnczQK3acsz0wtOxPiPe9U2333UhQIGIJEaP6THoFpD3+LrWAc/SMpt1zNQWVIe9GUy/mAXBoKF1VtPMez0NVgtQo+77w1ZIR7om0cqsAh4jPNGnpV3+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I6OuxsVT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F86AC433F1;
-	Wed, 10 Apr 2024 18:52:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712775141;
-	bh=z5JVLaH+fp0+7NF0boo5IQT2gY7gn3yvbn52zrvcvJ0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=I6OuxsVT4AkYCNqtMs94w+YdgDTmc7sZi1OxRFxEEY7TdKkHVJLcff0Ns9HQaWzZJ
-	 CJzELzUg6LhW/Zb2WUONLbjORl/K/NFFYoiLPrAM9BlAsKDbk2d0opNG3Oe/mBsz/f
-	 LSIY661NBeHfccgnhAeH1yRgTFxTnGCfX5FWEGYNzFHgzKfk7qsgH8sc5xD/S3x/DU
-	 svDLtE/k8eLctNrc8VUwJn+aoiuNdhTEFhChq/a7rgOmJGEr6sHa+OUHyvvjVUkKaR
-	 mxiam+sNWKUBU7VM5dtuK6YPrlAybjIy+Uubf/kxua+j/QwydgWgS+mGV46n6F7ekT
-	 1tGYgjy5Mebig==
-Date: Wed, 10 Apr 2024 13:52:20 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1712776613; c=relaxed/simple;
+	bh=p+THzd48hQUVMEur3ENuOSA0lDZ0jQ4EJJ+0Q2LLq0k=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=f1eZCK/z0DYsPJcfNL3SyQtBIWxH11GRpCUtB76MeWUERTz9U8EJNrwVSu5eK6ly4KvtymVPESTRn1keZvkpM1HDxf6+D2SY1WxPdocNNvLY0mMgTTymdvIvEAz8MR+8vud+wE4I8L8cLRdXj81hKxf8K+Tiygh+UXytkIcDRJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=IINT8dBJ; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712776611;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=DVLmiV+FHhixrjqT4DJ7t6PVY4+lI7IXVqA4SStqmj8=;
+	b=IINT8dBJ205zkYntQgZd71c2nqTxdK4hctavpDH4lLef7r4afJSnCdBYy8v0n5rWpLc3zr
+	2j+4cuYZ17ySMKsDnbDRR0yTxG05VByE1HiznGVb/+KXuVCFfcsENd2BDss4HR9lh8YxFc
+	+Yb82dB5JLnan6nlIOuB8E+AkPokk1U=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-390-QtjjBTjsOhS98i8d8s0Ljg-1; Wed,
+ 10 Apr 2024 15:16:45 -0400
+X-MC-Unique: QtjjBTjsOhS98i8d8s0Ljg-1
+Received: from smtp.corp.redhat.com (int-mx10.intmail.prod.int.rdu2.redhat.com [10.11.54.10])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 1AD9929AA3BA;
+	Wed, 10 Apr 2024 19:16:45 +0000 (UTC)
+Received: from shalem.redhat.com (unknown [10.39.192.79])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 0B60C44434C;
+	Wed, 10 Apr 2024 19:16:43 +0000 (UTC)
+From: Hans de Goede <hdegoede@redhat.com>
+To: Adrian Hunter <adrian.hunter@intel.com>,
+	Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>,
+	Andy Shevchenko <andy@kernel.org>,
+	Mika Westerberg <mika.westerberg@linux.intel.com>,
+	linux-mmc@vger.kernel.org,
+	linux-gpio@vger.kernel.org
+Subject: [PATCH v3 0/6] mmc: sdhci-acpi: Add some DMI quirks to fix various issues on Bay Trail devices
+Date: Wed, 10 Apr 2024 21:16:33 +0200
+Message-ID: <20240410191639.526324-1-hdegoede@redhat.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: Rob Herring <robh@kernel.org>
-To: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
-Cc: Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
- Philipp Zabel <p.zabel@pengutronix.de>, 
- Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
- linux-gpio@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, 
- linux-clk@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, 
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
- Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
- Stephen Boyd <sboyd@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
- linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, 
- devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>
-In-Reply-To: <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
-References: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
- <20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com>
-Message-Id: <171277513936.883835.18187305941709008733.robh@kernel.org>
-Subject: Re: [PATCH 01/11] dt-bindings: soc: mobileye: add EyeQ5 OLB system
- controller
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.10
+
+Hi All,
+
+Here is v3 of my series adding DMI quirks to fix various issues on Intel
+Bay Trail tablets.
+
+Changes in v3:
+- Replace "mmc: sdhci-acpi: Disable UHS/1.8V modes on Lenovo Yoga
+  Tablet 2 series sdcard slot" with a new patch from Adrian which
+  actually fixes these modes:
+  "[PATCH v3 2/6] mmc: sdhci: Add support for "Tuning Error" interrupts"
+
+  Note this is missing a Signed-off-by from Adrian since this started out
+  as a quick test patch from Adrian.
+  Adrian, can you provide your S-o-b for this patch?
+
+Changes in v2:
+- Address a few small remarks from Andy and adds Andy's Reviewed-by
+  to the patches
+
+Regards,
+
+Hans
 
 
-On Wed, 10 Apr 2024 19:12:30 +0200, Théo Lebrun wrote:
-> Add documentation to describe the "Other Logic Block" syscon.
-> 
-> Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
-> ---
->  .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 125 +++++++++++++++++++++
->  MAINTAINERS                                        |   1 +
->  2 files changed, 126 insertions(+)
-> 
+Adrian Hunter (1):
+  mmc: sdhci: Add support for "Tuning Error" interrupts
 
-My bot found errors running 'make dt_binding_check' on your patch:
+Hans de Goede (5):
+  mmc: core: Add mmc_gpiod_set_cd_config() function
+  mmc: sdhci-acpi: Sort DMI quirks alphabetically
+  mmc: sdhci-acpi: Fix Lenovo Yoga Tablet 2 Pro 1380 sdcard slot not
+    working
+  mmc: sdhci-acpi: Disable write protect detection on Toshiba WT10-A
+  mmc: sdhci-acpi: Add quirk to enable pull-up on the card-detect GPIO
+    on Asus T100TA
 
-yamllint warnings/errors:
+ drivers/mmc/core/slot-gpio.c  | 20 ++++++++++++
+ drivers/mmc/host/sdhci-acpi.c | 61 +++++++++++++++++++++++++++++++----
+ drivers/mmc/host/sdhci.c      | 10 ++++--
+ drivers/mmc/host/sdhci.h      |  3 +-
+ include/linux/mmc/slot-gpio.h |  1 +
+ 5 files changed, 86 insertions(+), 9 deletions(-)
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040:compatible:0: 'mobileye,eyeq5-clk' was expected
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040:reg: [[64, 56]] is too short
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: clock-controller@d2003040: 'reg-names' is a required property
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:compatible:0: 'mobileye,eyeq5-reset' was expected
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:reg: [[0, 60]] is too short
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000:#reset-cells:0:0: 2 was expected
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: system-controller@d2003000: reset-controller@d2003000: 'reg-names' is a required property
-	from schema $id: http://devicetree.org/schemas/soc/mobileye/mobileye,eyeq5-olb.yaml#
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-1/soc/system-controller@d2003000/reset-controller@d2003000: failed to match any schema with compatible: ['mobileye,eyeq6h-acc-reset']
-Documentation/devicetree/bindings/soc/mobileye/mobileye,eyeq5-olb.example.dtb: /example-1/soc/system-controller@d2003000/clock-controller@d2003040: failed to match any schema with compatible: ['mobileye,eyeq6h-acc-clk']
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.ozlabs.org/project/devicetree-bindings/patch/20240410-mbly-olb-v1-1-335e496d7be3@bootlin.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
+-- 
+2.44.0
 
 
