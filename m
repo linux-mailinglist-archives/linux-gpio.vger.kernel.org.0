@@ -1,74 +1,57 @@
-Return-Path: <linux-gpio+bounces-5289-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5290-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id C8DF989FDA0
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 19:03:06 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4328E89FDA7
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 19:03:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 066D21C237F5
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 17:03:06 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC6E91F22439
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 17:03:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0E44317BB28;
-	Wed, 10 Apr 2024 17:02:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 688BB17BB23;
+	Wed, 10 Apr 2024 17:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eaaofxEP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMWIUT+U"
 X-Original-To: linux-gpio@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7DBE17BB03;
-	Wed, 10 Apr 2024 17:02:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFC017BB04;
+	Wed, 10 Apr 2024 17:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768550; cv=none; b=fWjrHW1n0nqFgVHvzZHdoEgc7Hd/+Gyj90LqK2sO5k/lYpmqH7c2yfzsAYttybqGkGqZFDr8IdpVzW6tILq721dTjUL+CObdciVw2PPbhF0yR/SDJ2+OZqnnHryAUetursbg84St3xrxX7192Jqo6OtWVLzSs7W1fhDFRcnEfEU=
+	t=1712768591; cv=none; b=sC4flb2XgYodTt0k0I3dGt8Z13qbTnvzYp+oPn8oWK1AwMXIDUAv+jT9cJeitx1iFhrd/w1HFwx3QpylzU4NSr/yPgIE1Kz8k2CZYP5Jk4CzOr9t2C6gYHRbP6M0AB51fCzRc04rkESgO+neeRg6xNMEIZQPL+XTh7p2eOfA8X4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768550; c=relaxed/simple;
-	bh=X5Xl+Apo8HTXG6kNLMLPU23egnj69bbwrAOoPVmLBzw=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=pfeIfNlM6i5JSLa9TP8SL1/S5eWlS9i/JfE64B2adVCiWXvNaXQAxx3c8FpFMoAfcTGqeaHZMlfcFIvC2bd5FBJGCIb//UQFZPyXRUj4sntmI/FJQE81irKMAExmc1OR7XkCBlzISqyTs0w/ApKWFIDWRW47QYwO/YN8xRJH0PA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eaaofxEP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92E12C433B1;
-	Wed, 10 Apr 2024 17:02:25 +0000 (UTC)
+	s=arc-20240116; t=1712768591; c=relaxed/simple;
+	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cKjZG3twLoOueGdfAAghobZVx/mmwRqdLYMIAX+MS7/TK0O6AX/VIBsuqClyVYg01NRnnKx+PlcHExFXVAqcAOrIcOhC8e9ZfOAQriY+3TshalrYtXyfvY37zetTZzIWzEHAmKhZesHYLbzukUOSZam4z7HbLIo8U9n7m4VAIhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMWIUT+U; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97517C433C7;
+	Wed, 10 Apr 2024 17:03:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712768550;
-	bh=X5Xl+Apo8HTXG6kNLMLPU23egnj69bbwrAOoPVmLBzw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eaaofxEPTrlwI7/JwDfIgCY4I/zqZCAz4yDo9ua+4mP5AxSehSI2PP5pBwe1W14Wt
-	 RiaFNXRqtw3/EGbbeduCBluKm/YbSLbsh8jhiHrGfN6MSYVqBcrN/kwwYVQdvFeO3o
-	 3ia8P70evuxbLmjkHFFvXcNYtYpfEwDclm9DMIUfd9TATx+rE1lcSB2MV++DrTtVB1
-	 3hDBo6NHfBi0+YNjsQjKWb0lNuI7ai2tRvbDl/8VIqjJCm/URcK52tsYbt9oilL3HW
-	 8NkPCkdXKSCrhAQcbzTq0AOv3a0RaUJyswXOsndrhHcP3IOBh/YEyKACwS5Xd5wnzW
-	 CpIbQRycVkNLw==
+	s=k20201202; t=1712768590;
+	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=eMWIUT+UXcRUDE7PHz4Gz2Snr9yDR/7AFj/ApMgha1qTlaqcRIDqr3sl+W6z+bP8O
+	 5mqv9QHqE0mHr6f06CVsfF6QsTd7pWFTOZVyy5k2qvMeEk0a0zc8aqK3ND81tIHX1r
+	 yCFHeAYTvEZelpf71cn6wmfdz5UFIcyh9OitrLYodqYCItkvjZick2Ehvb2vYPnDuu
+	 ugH6ocIAXwAXwHJgTIF6CqSX8BQfbqBLZgkKmNIG70gPHr5rkFeoI2o8LRTp5OphhL
+	 QszNn5802IGpnEhyRWSeAFuPEF/LQTqbc+eYBq+rnwJnIbye4lQ7aOO6ph1UXYqTJY
+	 3lSaMZ2xHXetA==
 From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Dong Aisheng <aisheng.dong@nxp.com>,
-	Fabio Estevam <festevam@gmail.com>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Jacky Bai <ping.bai@nxp.com>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Sean Wang <sean.wang@kernel.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	zhanghongchen <zhanghongchen@loongson.cn>,
-	Yinbo Zhu <zhuyinbo@loongson.cn>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Konrad Dybcio <konrad.dybcio@linaro.org>,
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>,
+	Vladimir Zapolskiy <vz@mleia.com>,
 	linux-gpio@vger.kernel.org,
-	imx@lists.linux.dev,
 	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-mediatek@lists.infradead.org,
-	linux-arm-msm@vger.kernel.org
+	linux-kernel@vger.kernel.org
 Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH 5/5] pinctrl: realtek: fix module autoloading
-Date: Wed, 10 Apr 2024 19:01:50 +0200
-Message-Id: <20240410170150.248428-5-krzk@kernel.org>
+Subject: [PATCH] gpio: lpc32xx: fix module autoloading
+Date: Wed, 10 Apr 2024 19:03:05 +0200
+Message-Id: <20240410170305.248683-1-krzk@kernel.org>
 X-Mailer: git-send-email 2.34.1
-In-Reply-To: <20240410170150.248428-1-krzk@kernel.org>
-References: <20240410170150.248428-1-krzk@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
@@ -78,39 +61,25 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-based on the alias from of_device_id table.  Pin controllers are
-considered core components, so usually they are built-in, however these
+based on the alias from of_device_id table.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- drivers/pinctrl/realtek/pinctrl-rtd1315e.c | 1 +
- drivers/pinctrl/realtek/pinctrl-rtd1319d.c | 1 +
- 2 files changed, 2 insertions(+)
+ drivers/gpio/gpio-lpc32xx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-index 10afc736a52b..86f919122bed 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1315e.c
-@@ -1414,6 +1414,7 @@ static const struct of_device_id rtd1315e_pinctrl_of_match[] = {
- 	{ .compatible = "realtek,rtd1315e-pinctrl", },
- 	{},
+diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
+index 5ef8af824980..c097e310c9e8 100644
+--- a/drivers/gpio/gpio-lpc32xx.c
++++ b/drivers/gpio/gpio-lpc32xx.c
+@@ -529,6 +529,7 @@ static const struct of_device_id lpc32xx_gpio_of_match[] = {
+ 	{ .compatible = "nxp,lpc3220-gpio", },
+ 	{ },
  };
-+MODULE_DEVICE_TABLE(of, rtd1315e_pinctrl_of_match);
++MODULE_DEVICE_TABLE(of, lpc32xx_gpio_of_match);
  
- static struct platform_driver rtd1315e_pinctrl_driver = {
- 	.driver = {
-diff --git a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-index b1a654ac30dc..474c337d2d05 100644
---- a/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-+++ b/drivers/pinctrl/realtek/pinctrl-rtd1319d.c
-@@ -1584,6 +1584,7 @@ static const struct of_device_id rtd1319d_pinctrl_of_match[] = {
- 	{ .compatible = "realtek,rtd1319d-pinctrl", },
- 	{},
- };
-+MODULE_DEVICE_TABLE(of, rtd1319d_pinctrl_of_match);
- 
- static struct platform_driver rtd1319d_pinctrl_driver = {
- 	.driver = {
+ static struct platform_driver lpc32xx_gpio_driver = {
+ 	.driver		= {
 -- 
 2.34.1
 
