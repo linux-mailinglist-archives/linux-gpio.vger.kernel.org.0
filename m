@@ -1,86 +1,184 @@
-Return-Path: <linux-gpio+bounces-5290-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5291-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4328E89FDA7
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 19:03:47 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 289AF89FDDA
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 19:12:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id EC6E91F22439
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 17:03:46 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 4CD531C2124D
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 17:12:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 688BB17BB23;
-	Wed, 10 Apr 2024 17:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D9DB17BB3D;
+	Wed, 10 Apr 2024 17:12:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eMWIUT+U"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="AxOGyNET"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BFC017BB04;
-	Wed, 10 Apr 2024 17:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A068D17BB05;
+	Wed, 10 Apr 2024 17:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712768591; cv=none; b=sC4flb2XgYodTt0k0I3dGt8Z13qbTnvzYp+oPn8oWK1AwMXIDUAv+jT9cJeitx1iFhrd/w1HFwx3QpylzU4NSr/yPgIE1Kz8k2CZYP5Jk4CzOr9t2C6gYHRbP6M0AB51fCzRc04rkESgO+neeRg6xNMEIZQPL+XTh7p2eOfA8X4=
+	t=1712769157; cv=none; b=qqZj3XkRY6ird6BJSKcbEAABNVodvHxfXKurZSvOmvMnTupyY/tY+vxo57q4BdKPvAvpgF3PWYcyW1SYxwmbZrJBan/lU9kQMsQmANslS/bmnu1dYlEdFnxM0E/QewZGMXofhWFx3lQDyLx2EHpZXkCcV590+MV5z8sYWU6oNHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712768591; c=relaxed/simple;
-	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cKjZG3twLoOueGdfAAghobZVx/mmwRqdLYMIAX+MS7/TK0O6AX/VIBsuqClyVYg01NRnnKx+PlcHExFXVAqcAOrIcOhC8e9ZfOAQriY+3TshalrYtXyfvY37zetTZzIWzEHAmKhZesHYLbzukUOSZam4z7HbLIo8U9n7m4VAIhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eMWIUT+U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97517C433C7;
-	Wed, 10 Apr 2024 17:03:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712768590;
-	bh=xehGgLUQjh8/yjMno5bm1Yrj+8g5Zw6i7tTbr0V6/Rs=;
-	h=From:To:Cc:Subject:Date:From;
-	b=eMWIUT+UXcRUDE7PHz4Gz2Snr9yDR/7AFj/ApMgha1qTlaqcRIDqr3sl+W6z+bP8O
-	 5mqv9QHqE0mHr6f06CVsfF6QsTd7pWFTOZVyy5k2qvMeEk0a0zc8aqK3ND81tIHX1r
-	 yCFHeAYTvEZelpf71cn6wmfdz5UFIcyh9OitrLYodqYCItkvjZick2Ehvb2vYPnDuu
-	 ugH6ocIAXwAXwHJgTIF6CqSX8BQfbqBLZgkKmNIG70gPHr5rkFeoI2o8LRTp5OphhL
-	 QszNn5802IGpnEhyRWSeAFuPEF/LQTqbc+eYBq+rnwJnIbye4lQ7aOO6ph1UXYqTJY
-	 3lSaMZ2xHXetA==
-From: Krzysztof Kozlowski <krzk@kernel.org>
-To: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Vladimir Zapolskiy <vz@mleia.com>,
-	linux-gpio@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] gpio: lpc32xx: fix module autoloading
-Date: Wed, 10 Apr 2024 19:03:05 +0200
-Message-Id: <20240410170305.248683-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1712769157; c=relaxed/simple;
+	bh=UZN6bZ/VOXpFVmBzCZFb4rCBgwKePZT8MRaqGDGNeJc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=EZRfgsGpz+2iz1BS4P0uvFo+9VhlZjn4VOVySF61cSGyx9+o7LRo8umVDJ9OhoINVD/WQfGR44IYv+Z+ZZ6A4M9t+SYHXwZTC1/3eapHphnMPpvAAqWDhyY46352+XfQHaG7X4i24hkISenyih6pcNVfqLcVNea71SVg+nnLTNQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=AxOGyNET; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 316DC1C0007;
+	Wed, 10 Apr 2024 17:12:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1712769153;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=dqccYW4TTVMR245oWOMT2QE+v65GZJhVyqPmQez5YqY=;
+	b=AxOGyNET4LG1HW8fSstIXz09u4haS/irmvIXJwE+egN4x7TBc7ozRAEpcDcq+Ho1M4zbdQ
+	9ApaXNMtozqImA5//vRRIIfJ9bBnadcfrS6ylMxAFTP7BK92xLEFslIW/VakwDZZBerra7
+	9vQ2DEp6kLggGdis0ULzAQJGitGq3Wl8xYIaJPq3syuIcBl9TYFW2lQHfaHfu7VkbTMB+T
+	F15GVbK2S2jcX7ZcjC8sAozClZZYmP6E2BFSijilbI2YyLLHPrJZz3xkLAqdDvbiH4KFEG
+	X7fal4duV454FlGG14edLIRRkblyevjDN0ERjeB6sQyw9DUW+y7E4qR477aPNg==
+From: =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+Subject: [PATCH 00/11] Add Mobileye EyeQ system controller support (clk,
+ reset, pinctrl)
+Date: Wed, 10 Apr 2024 19:12:29 +0200
+Message-Id: <20240410-mbly-olb-v1-0-335e496d7be3@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAH3IFmYC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
+ vPSU3UzU4B8JSMDIxMDEwML3dyknErd/JwkXXPTRAvTNNPktJRUYyWg8oKi1LTMCrBR0bG1tQD
+ bvinJWgAAAA==
+To: Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski+dt@linaro.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+ Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-mips@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, 
+ Vladimir Kondratiev <vladimir.kondratiev@mobileye.com>, 
+ Gregory CLEMENT <gregory.clement@bootlin.com>, 
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+ Tawfik Bayouk <tawfik.bayouk@mobileye.com>, 
+ =?utf-8?q?Th=C3=A9o_Lebrun?= <theo.lebrun@bootlin.com>
+X-Mailer: b4 0.13.0
+X-GND-Sasl: theo.lebrun@bootlin.com
 
-Add MODULE_DEVICE_TABLE(), so the module could be properly autoloaded
-based on the alias from of_device_id table.
+Hello,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+This builds on previous EyeQ5 system-controller revisions [0] and adds
+EyeQ6L + EyeQ6H support. Pinctrl is not affected because it is not
+handled in the same manner on those new platforms; it will be dealt
+with with pinctrl-single. Only clk and reset expand to support those
+new platform.
+
+Changes in drivers are pretty massive, which explains why I started a
+new revision count.
+
+EyeQ6H is particular in that it has not one but seven OLB instances.
+All seven host a (different) clock controller. Three host a reset
+controller.
+
+Patches are targeting MIPS, clk, reset and pinctrl trees independently.
+
+ - dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+ - MIPS: mobileye: eyeq5: add OLB syscon node
+ - MIPS: mobileye: eyeq5: use OLB clocks controller node
+ - MIPS: mobileye: eyeq5: add OLB reset controller node
+ - MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
+
+   Patches have no dependencies on this series. All required devicetrees
+   and bindings got in the last release. Bindings changes below are
+   only related to EyeQ6L/EyeQ6H.
+
+ - dt-bindings: clock: mobileye,eyeq5-clk: add EyeQ6L and EyeQ6H
+ - clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+ - clk: eyeq: add driver
+
+   Clocks on all three platforms are rather similar. We have a bunch of
+   PLLs children to the main crystal, some being required early
+   (at of_clk_init(), before platform bus init).
+
+   We have a few divider clocks in some instances. A custom clk-divider
+   flag is introduced for the divisor because one clk would have a 256
+   entries table otherwise.
+
+   Compatible match data stores it all, nothing is declared in DT. Match
+   data has three arrays for the three types of clocks: early PLLs,
+   standard PLLs and divider clks.
+
+ - dt-bindings: reset: mobileye,eyeq5-reset: add EyeQ6L and EyeQ6H
+ - reset: eyeq: add platform driver
+
+   Resets on all three platforms are rather similar. We therefore
+   declare reset domain types and assign compatibles to an array of
+   domains, with types and valid masks associated. The rest is pretty
+   similar to previous code.
+
+   EyeQ6H west and east OLB each host an instance of the same compat.
+
+ - pinctrl: eyeq5: add platform driver
+
+   Not affected by EyeQ6L/EyeQ6H additions. It has not changed.
+
+Have a nice day,
+Théo
+
+[0]: https://lore.kernel.org/lkml/20240301-mbly-clk-v9-0-cbf06eb88708@bootlin.com/
+
+Signed-off-by: Théo Lebrun <theo.lebrun@bootlin.com>
 ---
- drivers/gpio/gpio-lpc32xx.c | 1 +
- 1 file changed, 1 insertion(+)
+Théo Lebrun (11):
+      dt-bindings: soc: mobileye: add EyeQ5 OLB system controller
+      dt-bindings: clock: mobileye,eyeq5-clk: add EyeQ6L and EyeQ6H
+      dt-bindings: reset: mobileye,eyeq5-reset: add EyeQ6L and EyeQ6H
+      clk: divider: Introduce CLK_DIVIDER_EVEN_INTEGERS flag
+      clk: eyeq: add driver
+      reset: eyeq: add platform driver
+      pinctrl: eyeq5: add platform driver
+      MIPS: mobileye: eyeq5: add OLB syscon node
+      MIPS: mobileye: eyeq5: use OLB clocks controller node
+      MIPS: mobileye: eyeq5: add OLB reset controller node
+      MIPS: mobileye: eyeq5: add pinctrl node & pinmux function nodes
 
-diff --git a/drivers/gpio/gpio-lpc32xx.c b/drivers/gpio/gpio-lpc32xx.c
-index 5ef8af824980..c097e310c9e8 100644
---- a/drivers/gpio/gpio-lpc32xx.c
-+++ b/drivers/gpio/gpio-lpc32xx.c
-@@ -529,6 +529,7 @@ static const struct of_device_id lpc32xx_gpio_of_match[] = {
- 	{ .compatible = "nxp,lpc3220-gpio", },
- 	{ },
- };
-+MODULE_DEVICE_TABLE(of, lpc32xx_gpio_of_match);
- 
- static struct platform_driver lpc32xx_gpio_driver = {
- 	.driver		= {
+ .../bindings/clock/mobileye,eyeq5-clk.yaml         | 103 +++-
+ .../bindings/reset/mobileye,eyeq5-reset.yaml       |  88 ++-
+ .../bindings/soc/mobileye/mobileye,eyeq5-olb.yaml  | 125 ++++
+ MAINTAINERS                                        |   8 +
+ .../{eyeq5-fixed-clocks.dtsi => eyeq5-clocks.dtsi} |  54 +-
+ arch/mips/boot/dts/mobileye/eyeq5-pins.dtsi        | 125 ++++
+ arch/mips/boot/dts/mobileye/eyeq5.dtsi             |  42 +-
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-divider.c                          |  12 +-
+ drivers/clk/clk-eyeq.c                             | 644 +++++++++++++++++++++
+ drivers/pinctrl/Kconfig                            |  14 +
+ drivers/pinctrl/Makefile                           |   1 +
+ drivers/pinctrl/pinctrl-eyeq5.c                    | 579 ++++++++++++++++++
+ drivers/reset/Kconfig                              |  13 +
+ drivers/reset/Makefile                             |   1 +
+ drivers/reset/reset-eyeq.c                         | 543 +++++++++++++++++
+ include/dt-bindings/clock/mobileye,eyeq5-clk.h     |  21 +
+ include/linux/clk-provider.h                       |  11 +-
+ 19 files changed, 2322 insertions(+), 74 deletions(-)
+---
+base-commit: c8e31f416e99bd460f6f8847709bf69c72a3e146
+change-id: 20240408-mbly-olb-75a85f5cfde3
+
+Best regards,
 -- 
-2.34.1
+Théo Lebrun <theo.lebrun@bootlin.com>
 
 
