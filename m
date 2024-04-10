@@ -1,93 +1,142 @@
-Return-Path: <linux-gpio+bounces-5275-lists+linux-gpio=lfdr.de@vger.kernel.org>
+Return-Path: <linux-gpio+bounces-5276-lists+linux-gpio=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-gpio@lfdr.de
 Delivered-To: lists+linux-gpio@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8D01289ECAC
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:52:15 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4F45089ECBB
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 09:54:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (wormhole.subspace.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id EBC42B2155E
-	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:52:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id E38051F21820
+	for <lists+linux-gpio@lfdr.de>; Wed, 10 Apr 2024 07:54:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2D6113D296;
-	Wed, 10 Apr 2024 07:52:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F185F13D292;
+	Wed, 10 Apr 2024 07:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b="1FBMhjvz"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="DjW/HCsb"
 X-Original-To: linux-gpio@vger.kernel.org
-Received: from mail11.truemail.it (mail11.truemail.it [217.194.8.81])
+Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49FF28BE8;
-	Wed, 10 Apr 2024 07:51:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.194.8.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E59E98BE8
+	for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 07:54:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712735523; cv=none; b=SsRTxttaetLQLALFFIh6dmNmNpgkLnG6Eaq3wQPU7s8Zg5wl5LcenpYoWEtCWebHLpPHQD/C3Ca7KHBqbNFpaaNY1ALQWVxzcwoJCH1ECXp6ZJXjv39BFzSmR72X37c1Mk0UuDVQJ2VJhK7M6/tYQdncEKn7kFpCqlNeI2VDSSg=
+	t=1712735643; cv=none; b=B1nBsoq9lu1drHAIblgm56LhSSFF0waLbv+o5vWn5q3AlwD6qO8+fMlZVnLI4S3X8Q0vqYPkuQ7oqU9FryRU1JkJW8A/Px3h3w0aGZwiRXYPZCvzjPssCSsR7OmiM2ljn15teT0DfVvBUO/vmn3RZ4Pn0hXsookn/1wt0X3Xb88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712735523; c=relaxed/simple;
-	bh=siJ2QNW2b3ebPf5Jy5J3KNvU1Jw8yyo8OvyNbFZ7pRk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WubqBXIgCdrUu4Ovx/ahoYhLK0dGhBM8XDFBNbi/Qrl+K6otkRsI8rTFf7FJCYG7eNWOcNGJ3KiV7DfC86uAGU54KNZPrEABErCwHh2pPwLsiJ9+YYwVvWtHB6pECqyco0127NOFHhdSZ447aDUmjnmWnAtFUt8vvoAGpQ79B1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it; spf=pass smtp.mailfrom=dolcini.it; dkim=pass (2048-bit key) header.d=dolcini.it header.i=@dolcini.it header.b=1FBMhjvz; arc=none smtp.client-ip=217.194.8.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=dolcini.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=dolcini.it
-Received: from francesco-nb (93-49-2-63.ip317.fastwebnet.it [93.49.2.63])
-	by mail11.truemail.it (Postfix) with ESMTPA id E3FA21F9C5;
-	Wed, 10 Apr 2024 09:51:55 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dolcini.it;
-	s=default; t=1712735516;
-	bh=Rf9tbmyHVVZAveMk9B3qlTo48OjSr4wSqvHKOQgw4WY=; h=From:To:Subject;
-	b=1FBMhjvzVLPhdRUPpxqL+ggGPFh8OQluY/51j/ktYpw5jg5BKtEEj0UiWFswmx4HY
-	 AhPpbmaJiF/zqrCZIz5xQslhKx9lEerphyQNoQPVvR1QkMAnWezd8PY1vnhmh7YCPv
-	 UyPjN12ZckhNMKaN+dXi/dqVHbWiLvW0N86ZoxgZ1mNe37rmllXlpZ/O0F5hj7cB2H
-	 q8iB1HWNUCCxfdq+dYWekLIWrie+uNmEmz7i5Sb1HYJkB42gdGCcxeJkG+MZhgtRps
-	 /gZMljhuJvgcyMTD0yw5Hr+9hXxQ1q8b4S5LYaj1hqDTmcctAjvjwtIixXAYzFdQWU
-	 vuLayzDsOM4Zg==
-Date: Wed, 10 Apr 2024 09:51:52 +0200
-From: Francesco Dolcini <francesco@dolcini.it>
-To: Thomas Richard <thomas.richard@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Andy Shevchenko <andy@kernel.org>, Tony Lindgren <tony@atomide.com>,
-	Haojian Zhuang <haojian.zhuang@linaro.org>,
-	Vignesh R <vigneshr@ti.com>, Aaro Koskinen <aaro.koskinen@iki.fi>,
-	Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-	Andi Shyti <andi.shyti@kernel.org>, Peter Rosin <peda@axentia.se>,
-	Vinod Koul <vkoul@kernel.org>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kw@linux.com>,
-	Rob Herring <robh@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>,
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org,
-	linux-i2c@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pci@vger.kernel.org, gregory.clement@bootlin.com,
-	theo.lebrun@bootlin.com, thomas.petazzoni@bootlin.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v4 16/18] PCI: j721e: Use dev_err_probe() in the probe()
- function
-Message-ID: <20240410075152.GA7748@francesco-nb>
-References: <20240102-j7200-pcie-s2r-v4-0-6f1f53390c85@bootlin.com>
- <20240102-j7200-pcie-s2r-v4-16-6f1f53390c85@bootlin.com>
+	s=arc-20240116; t=1712735643; c=relaxed/simple;
+	bh=nR0IWHqtkSfIjg+soMmvLFJ4DL/3ZoW8xJc6mrIk52A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=BFU8dokZHVTmrjmflOReXkvVlPZJNJFx/VyYxtZSbyQi+7NTyLZMgFxlqhw8RMx7r3j34focwWHzPbicwLIbVH7+k5LBaszoNM1KtpJk6pbnYcVW9Wdyhb0zqJIYiWHH1X1+E953J/yrPVf6GvvBK+nWn0gXXOeWMqk7Ji9iL4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=DjW/HCsb; arc=none smtp.client-ip=209.85.208.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lj1-f169.google.com with SMTP id 38308e7fff4ca-2d485886545so112914711fa.2
+        for <linux-gpio@vger.kernel.org>; Wed, 10 Apr 2024 00:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1712735640; x=1713340440; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=N4oTJnxyJQlNOfZuMx5BC0HCjDFBZT3NKLWCDu+9kCc=;
+        b=DjW/HCsb4WumD3VS/JM6nzn+r+Rw38IpA6NMiRcIWXCc7QzSaOPgnFtSb2gPCvNCGU
+         YwidsfRxjSEbHtbAtRHzXXSEPKrlOCt2CFu2kEN4Sbduweb5XmzioT4+HDCRZ7JZv3M9
+         1Pf6HrCDxrzylTlpNs1RrdpDx/bRuO7XTTyyq98GuGsdqaN/F8tjyDbWLtH2HJ7Fs3P6
+         nRFqK5UV8P4oF//PWFGusxc9TUfmw+V/Ni5GQbEFsbS0SLgZNDJf2YU+ZiD9YK3Cajxx
+         kN1MfouipDLzOgrtGwwaPOdU27nxbXOnIV2ajIF8b0GXi1qqBQsY54MGpPyD/BQJlk9j
+         M7UA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712735640; x=1713340440;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=N4oTJnxyJQlNOfZuMx5BC0HCjDFBZT3NKLWCDu+9kCc=;
+        b=lES7FiZRgZqBgOJ9LJqepVvDKvjDtQtF143h5g4/oi2aNW/c4YEIq/a//cxuBjcS+I
+         GTk78pCUTStjnYLqkoZf7PGelNw2fmOcB02wN1TY5BiW+Z9QdGkhTa1cMGVxn5aUseJs
+         /kDCdbuBguuO5VmkHwdj7py3GcPnfwxjpy5m5KfZliFyovNO2qjEKkjTCj9qIvf23Zv0
+         8sn5L4jXk4dPUL3XVTaV4rmI+oinE+pzhWP+ckUWirEUOgFZxU87lrhjD26s7J2SmAhg
+         pnGPJBwA51de5cr8nbtgpFIaFYIp8p8D4Tf+DfERcLroxiR2JN+aTpbsO1mRwia+F5TM
+         ZF8w==
+X-Forwarded-Encrypted: i=1; AJvYcCX5iz8s0oTDn0WpAkvUlL3c7URzZ4GpIaoOfJneR+6ZMDHFi+yY/iiZ1hO+UE9StIea7z5abLplWJKgQGe9t2uoUnZyG4/UNQOIJA==
+X-Gm-Message-State: AOJu0Yz5Kc31gjNKh00hKj1hEpyDPMEw9dZh+hJXHzRvARmfw+8hJWiW
+	5kw2wdJxvHTz56pWLkZ4nV8QFRR/yoR6n9x/gMCPtLLs9bRrCM3E/JD8X2Ce9/kpBjobUKidLSd
+	RyPieqH69E61s2VqqRBZMKYarmTQJfpL7413VXg==
+X-Google-Smtp-Source: AGHT+IGIKZ5T4W3tveinr9vgbenPXBsr0YQOdk5u+mjRMfPQJMHDTGs3QF62Fy/0ZG+iXT03Gt4XItI5HLkRyx2Wmuw=
+X-Received: by 2002:a2e:8e93:0:b0:2d6:f5c6:e5a1 with SMTP id
+ z19-20020a2e8e93000000b002d6f5c6e5a1mr1536198ljk.12.1712735640058; Wed, 10
+ Apr 2024 00:54:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-gpio@vger.kernel.org
 List-Id: <linux-gpio.vger.kernel.org>
 List-Subscribe: <mailto:linux-gpio+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-gpio+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240102-j7200-pcie-s2r-v4-16-6f1f53390c85@bootlin.com>
+References: <20240409093333.138408-1-brgl@bgdev.pl> <20240409093333.138408-3-brgl@bgdev.pl>
+ <20240409125551.GA69328@rigel> <3f31c7bc-de8a-4552-ba48-4432b335f413@igl.se>
+ <20240409160516.GA211845@rigel> <CAMRc=Md3U=sEypUOSzSiWwQasOxqLn1LGCCHE2fUU5ohnCkKqg@mail.gmail.com>
+ <20240409233747.GB3000@rigel>
+In-Reply-To: <20240409233747.GB3000@rigel>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Wed, 10 Apr 2024 09:53:49 +0200
+Message-ID: <CAMRc=Mem+PaLK+CyWXf3z47U1R4myZxFH5TEj3rmTyqOqHXYSA@mail.gmail.com>
+Subject: Re: [libgpiod][PATCH 2/2] tools: allow longer time periods
+To: Kent Gibson <warthog618@gmail.com>
+Cc: =?UTF-8?Q?Gunnar_Th=C3=B6rnqvist?= <gunnar@igl.se>, 
+	Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, 
+	Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Mar 04, 2024 at 04:35:59PM +0100, Thomas Richard wrote:
-> Use dev_err_probe() instead of dev_err() in the probe() function to
-> simplify the code and standardize the error output.
-> 
-> Signed-off-by: Thomas Richard <thomas.richard@bootlin.com>
+On Wed, Apr 10, 2024 at 1:37=E2=80=AFAM Kent Gibson <warthog618@gmail.com> =
+wrote:
+>
+> On Tue, Apr 09, 2024 at 07:24:43PM +0200, Bartosz Golaszewski wrote:
+> > On Tue, Apr 9, 2024 at 6:05=E2=80=AFPM Kent Gibson <warthog618@gmail.co=
+m> wrote:
+> > >
+> > > On Tue, Apr 09, 2024 at 04:58:52PM +0200, Gunnar Th=C3=B6rnqvist wrot=
+e:
+> > > > Hi, Got a use case where a hold period is measured in more than sec=
+onds?
+> > > > Specifically for a get.:::
+> > > >
+> > > > I can see a large number of use cases where the time can be hours, =
+days and
+> > > > weeks. In my case, pin 17 controls a relay that heats water when el=
+ectricity
+> > > > is cheapest. It is ok to only have seconds as unit but the range mu=
+st be
+> > > > larger. /Gunnar
+> > > >
+> > >
+> > > I was asking specifically about the case for gpioget, where a long ho=
+ld
+> > > period makes absolutely no sense.
+> > >
+> >
+> > One could argue that this option doesn't make sense at all for gpioget.=
+ :)
+> >
+>
+> And one would be wrong.  The point of the hold period for gets is to
+> allow the line to settle after a config change before the get itself is
+> performed.
+>
 
-Reviewed-by: Francesco Dolcini <francesco.dolcini@toradex.com>
+One is indeed wrong.
 
-Franceco
+> > I don't think it hurts to support a longer period of time even if only
+> > for code reuse and less surface for bugs.
+> >
+>
+> Well that is a complicated bit of code.
+>
 
+I'll submit the daemon RFC tomorrow or on Friday. Maybe this change
+isn't even needed after all.
+
+Bart
+
+> Cheers,
+> Kent.
 
